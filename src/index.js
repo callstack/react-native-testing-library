@@ -26,17 +26,18 @@ export const flushMicrotasksQueue = (): Promise<any> =>
  * Renders test component deeply using react-test-renderer and exposes helpers
  * to assert on the output.
  */
-export const render = (component: React.Element<*>) => {
-  const renderer = TestRenderer.create(component);
+export const render = (
+  component: React.Element<*>,
+  options?: { createNodeMock: (element: React.Element<*>) => any }
+) => {
+  const renderer = TestRenderer.create(component, options);
   const instance = renderer.root;
 
   return {
-    instance,
-    renderer,
     getByTestId: (testID: string) => instance.findByProps({ testID }),
-    getByName: (name: string) =>
+    getByName: (name: string | React.Element<*>) =>
       instance.find(node => getNodeByName(node, name)),
-    getAllByName: (name: string) =>
+    getAllByName: (name: string | React.Element<*>) =>
       instance.findAll(node => getNodeByName(node, name)),
     getByText: (text: string | RegExp) =>
       instance.find(node => getNodeByText(node, text)),
@@ -46,6 +47,8 @@ export const render = (component: React.Element<*>) => {
       instance.findByProps(props),
     getAllByProps: (props: { [propName: string]: any }) =>
       instance.findAllByProps(props),
+    update: renderer.update,
+    unmount: renderer.unmount,
   };
 };
 
