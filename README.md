@@ -46,7 +46,7 @@ test('should verify two questions', () => {
 Open a Terminal in your project's folder and run:
 
 ```sh
-yarn add --dev react-testing-library
+yarn add --dev react-native-testing-library
 ```
 
 This library has a peerDependencies listing for `react-test-renderer`, `pretty-format` and, of course, `react`. Make sure to install them too!
