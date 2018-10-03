@@ -18,7 +18,28 @@ This library is a replacement for [Enzyme](http://airbnb.io/enzyme/).
 
 ## Example
 
-TBD
+```jsx
+import { render } from 'react-native-testing-library';
+import { QuestionsBoard } from '../QuestionsBoard';
+
+function setAnswer(getAllByName, index, answer) {
+  getAllByName('Question')[index].props.onChangeText(answer);
+}
+
+test('should verify two questions', () => {
+  const { getAllByName, getByText } = render(<QuestionsBoard {...props} />);
+
+  setAnswer(getAllByName, 0, 'a1');
+  setAnswer(getAllByName, 1, 'a2');
+
+  getByText('submit').props.onPress();
+
+  expect(props.verifyQuestions).toBeCalledWith({
+    '1': { q: 'q1', a: 'a1' },
+    '2': { q: 'q2', a: 'a2' },
+  });
+});
+```
 
 ## Installation
 
@@ -28,19 +49,82 @@ Open a Terminal in your project's folder and run:
 yarn add --dev react-testing-library
 ```
 
-This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`.
+This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!
+
+As you may have noticed, it's not tied to React Native at all – you can safely use it in your React components if you feel like not interacting directly with DOM.
 
 ## Usage
 
 ## `render`
 
-Deeply render given React component and returns helpers to query the output. For convenience it also returns `react-test-renderer`'s `instance` and `renderer` objects, in case you need more control.
+Defined as:
+
+```jsx
+function render(
+  component: React.Element<*>,
+  options?: {
+    /* You won't often use this, but it's helpful when testing refs */
+    createNodeMock: (element: React.Element<*>) => any,
+  }
+): RenderResult {}
+```
+
+Deeply render given React element and returns helpers to query the output. For convenience it also returns `react-test-renderer`'s `instance` and `renderer` objects, in case you need more control.
 
 ```jsx
 import { render } from 'react-native-testing-library';
 
-const { getByTestId, instance /*...*/ } = render(<Component />);
+const { getByTestId, getByName /*...*/ } = render(<Component />);
 ```
+
+Returns a `RenderResult` object with following properties:
+
+### `getByTestId: (testID: string)`
+
+A method returning a `ReactTestInstance` with matching `testID` prop. Throws when no matches.
+
+_Note: most methods like this one return a [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance) with following properties that you may be interested in:_
+
+```jsx
+type ReactTestInstance = {
+  type: string | Function,
+  props: { [propName: string]: any },
+  parent: null | ReactTestInstance,
+  children: Array<ReactTestInstance | string>,
+};
+```
+
+### `getByName: (name: string | React.Element<*>)`
+
+A method returning a `ReactTestInstance` with matching name – may be a string or React Element. Throws when no matches.
+
+### `getAllByName: (name: string | React.Element<*>)`
+
+A method returning an array of `ReactTestInstance`s with matching name – may be a string or React Element.
+
+### `getByText: (text: string | RegExp)`
+
+A method returning a `ReactTestInstance` with matching text – may be a string or regular expression. Throws when no matches.
+
+### `getAllByText: (text: string | RegExp)`
+
+A method returning an array of `ReactTestInstance`s with matching text – may be a string or regular expression.
+
+### `getByProps: (props: { [propName: string]: any })`
+
+A method returning a `ReactTestInstance` with matching props object. Throws when no matches.
+
+### `getAllByProps: (props: { [propName: string]: any })`
+
+A method returning an array of `ReactTestInstance`s with matching props object.
+
+### `update: (element: React.Element<*>) => void`
+
+Re-render the in-memory tree with a new root element. This simulates a React update at the root. If the new element has the same type and key as the previous element, the tree will be updated; otherwise, it will re-mount a new tree.
+
+### `unmount: () => void`
+
+Unmount the in-memory tree, triggering the appropriate lifecycle events
 
 When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases it's convenient to create your custom `render` method. [Follow this great guide on how to set this up](https://github.com/kentcdodds/react-testing-library#custom-render).
 
