@@ -39,20 +39,21 @@ Deeply render given React component and returns helpers to query the output. For
 ```jsx
 import { render } from 'react-native-testing-library';
 
-const { ... } = render(<Component />);
+const { getByTestId, instance /*...*/ } = render(<Component />);
 ```
 
-You'll likely want to wrap `render` with some React Context Providers, creating your custom render. [Follow this great guide on how to set this up](https://github.com/kentcdodds/react-testing-library#custom-render).
+When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases it's convenient to create your custom `render` method. [Follow this great guide on how to set this up](https://github.com/kentcdodds/react-testing-library#custom-render).
 
 ## `shallow`
 
-Shallowly render given React copmonents. Since it (currently) doesn't return helpers to query the output, it's mostly adviced to used for snapshot testing.
+Shallowly render given React copmonent. Since it doesn't return helpers to query the output, it's mostly adviced to used for snapshot testing (short snapshots are best for code reviewers).
 
 ```jsx
 import { shallow } from 'react-native-testing-library';
 
 test('Component has a structure', () => {
-  expect(shallow(<Component />)).toMatchSnapshot();
+  const { output } = shallow(<Component />);
+  expect(output).toMatchSnapshot();
 });
 ```
 

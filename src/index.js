@@ -60,9 +60,11 @@ export const shallow = (instance: ReactTestInstance | React.Element<*>) => {
   } else {
     renderer.render(React.createElement(instance.type, instance.props));
   }
-  const result = renderer.getRenderOutput();
+  const output = renderer.getRenderOutput();
 
-  return result;
+  return {
+    output,
+  };
 };
 
 /**
@@ -72,9 +74,10 @@ export const debug = (
   instance: ReactTestInstance | React.Element<*>,
   message?: any
 ) => {
+  const { output } = shallow(instance);
   // eslint-disable-next-line no-console
   console.log(
-    prettyFormat(shallow(instance), {
+    prettyFormat(output, {
       plugins: [plugins.ReactTestComponent, plugins.ReactElement],
     }),
     message
