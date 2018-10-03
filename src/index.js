@@ -17,7 +17,7 @@ const getNodeByText = (node, text) =>
     : text.test(node.props.children));
 
 /**
- * Wait for microtask queue to flush
+ * Wait for microtasks queue to flush
  */
 export const flushMicrotasksQueue = (): Promise<any> =>
   new Promise(resolve => setImmediate(resolve));
