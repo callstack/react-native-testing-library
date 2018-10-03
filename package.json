@@ -1,6 +1,6 @@
 {
   "name": "react-native-testing-library",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Simple React Native testing utilities helping you write better tests with less effort",
   "main": "src/index.js",
   "repository": "git@github.com:callstack/react-native-testing-library.git",
