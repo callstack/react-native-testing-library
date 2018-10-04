@@ -22,15 +22,16 @@ This library is a replacement for [Enzyme](http://airbnb.io/enzyme/).
 import { render } from 'react-native-testing-library';
 import { QuestionsBoard } from '../QuestionsBoard';
 
-function setAnswer(getAllByName, index, answer) {
-  getAllByName('Question')[index].props.onChangeText(answer);
+function setAnswer(question, answer) {
+  question.props.onChangeText(answer);
 }
 
 test('should verify two questions', () => {
   const { getAllByName, getByText } = render(<QuestionsBoard {...props} />);
+  const allQuestions = getAllByName('Question');
 
-  setAnswer(getAllByName, 0, 'a1');
-  setAnswer(getAllByName, 1, 'a2');
+  setAnswer(allQuestions[0], 'a1');
+  setAnswer(allQuestions[1], 'a2');
 
   getByText('submit').props.onPress();
 
