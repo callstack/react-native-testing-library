@@ -33,18 +33,39 @@ export const render = (
   const renderer = TestRenderer.create(component, options);
   const instance = renderer.root;
 
+  const getByName = (name: string | React.Element<*>) => {
+    try {
+      return instance.find(node => getNodeByName(node, name));
+    } catch (error) {
+      throw new ErrorWithStack(`Error: Component not found.`, getByName);
+    }
+  };
+
+  const getByText = (text: string | RegExp) => {
+    try {
+      return instance.find(node => getNodeByText(node, text));
+    } catch (error) {
+      throw new ErrorWithStack(`Error: Component not found.`, getByText);
+    }
+  };
+
+  const getByProps = (props: { [propName: string]: any }) => {
+    try {
+      return instance.findByProps(props);
+    } catch (error) {
+      throw new ErrorWithStack(`Error: Component not found.`, getByProps);
+    }
+  };
+
   return {
     getByTestId: (testID: string) => instance.findByProps({ testID }),
-    getByName: (name: string | React.Element<*>) =>
-      instance.find(node => getNodeByName(node, name)),
+    getByName,
     getAllByName: (name: string | React.Element<*>) =>
       instance.findAll(node => getNodeByName(node, name)),
-    getByText: (text: string | RegExp) =>
-      instance.find(node => getNodeByText(node, text)),
+    getByText,
     getAllByText: (text: string | RegExp) =>
       instance.findAll(node => getNodeByText(node, text)),
-    getByProps: (props: { [propName: string]: any }) =>
-      instance.findByProps(props),
+    getByProps,
     getAllByProps: (props: { [propName: string]: any }) =>
       instance.findAllByProps(props),
     update: renderer.update,
@@ -79,10 +100,19 @@ export const debug = (
 ) => {
   const { output } = shallow(instance);
   // eslint-disable-next-line no-console
-  console.log(
-    prettyFormat(output, {
-      plugins: [plugins.ReactTestComponent, plugins.ReactElement],
-    }),
-    message || ''
-  );
+  console.log(format(output), message || '');
 };
+
+const format = input =>
+  prettyFormat(input, {
+    plugins: [plugins.ReactTestComponent, plugins.ReactElement],
+  });
+
+class ErrorWithStack extends Error {
+  constructor(message: ?string, callsite: Function) {
+    super(message);
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, callsite);
+    }
+  }
+}
