@@ -83,6 +83,6 @@ export const debug = (
     prettyFormat(output, {
       plugins: [plugins.ReactTestComponent, plugins.ReactElement],
     }),
-    message
+    message || ''
   );
 };
