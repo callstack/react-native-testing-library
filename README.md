@@ -2,7 +2,7 @@
 
 Simple React Native testing utilities helping you write better tests with less effort
 
-_Appreiciation notice: This project is heavily inspired by [react-testing-library](https://github.com/kentcdodds/react-testing-library). Go check it out and use it to test your web React apps._
+_Appreciation notice: This project is heavily inspired by [react-testing-library](https://github.com/kentcdodds/react-testing-library). Go check it out and use it to test your web React apps._
 
 ## The problem
 
