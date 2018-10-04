@@ -8,11 +8,15 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/runtime": "^7.1.2",
     "@callstack/eslint-config": "^2.0.0",
+    "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "eslint": "^5.6.1",
     "flow-bin": "^0.81.0",
     "jest": "^23.6.0",
+    "metro-react-native-babel-preset": "^0.47.1",
     "pretty-format": "^23.6.0",
     "react": "^16.5.2",
     "react-test-renderer": "^16.5.2"
