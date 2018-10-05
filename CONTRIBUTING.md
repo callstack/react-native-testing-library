@@ -1,31 +1,72 @@
 # Contributing to react-native-testing-library
-Contributing to react-native-testing-library isn't limited to just filing bugs, users are more than welcomed to make suggestions, report any issue they may find, and make pull requests to help make react-native-testing-library better.
 
-## Working on react-native-testing-library
-### Prerequisites
-* [Git](https://git-scm.com/)
+## Code of Conduct
 
-### Getting react-native-testing-library
-1. Fork a copy of our repo
-2. Open up Git in an environment of your choice
-3. Run the following
+We want this community to be friendly and respectful to each other. Please read [the full text](/CODE_OF_CONDUCT.md) so that you can understand what actions will and will not be tolerated.
 
-```
-$ git clone https://github.com/YOUR-GITHUB-PROFILE-NAME/react-native-testing-library.git
-$ cd react-native-testing-library
-```
+## Our Development Process
 
-### Please pay attention to
-1. open an issue describing the feature/bug you wish to contribute first to start a discussion, explain why, what and how
-2. follow the eslint rules
-3. write tests covering 100% of the library code you produce
-4. one PR per feature/fix unless you follow [standard-version](https://github.com/conventional-changelog/standard-version) commit guidelines
+The core team works directly on GitHub and all work is public.
 
-### Using branches
-When working on any issue on Github, it's a good practice to make branches that are specific to the issue you're currently working on. For instance, if you're working on an issue with a name like "NAME OF ISSUE #1234", from the master branch run the following code: `git checkout -b Issue#1234`. In doing so, you'll be making a branch that specifically identifies the issue at hand, and moves you right into it with the `checkout` flag. This keeps your main (master) repository clean and your personal workflow cruft out of sight when making a pull request. 
+### Development workflow
 
-### Finding issues to fix
-After you've forked and cloned our repo, you can find issues to work on by heading over to our [issues list](https://github.com/callstack/react-native-testing-library/issues). We advise looking at the issues with the labels [help wanted](https://github.com/callstack/react-native-testing-library/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) or [good first issue](https://github.com/callstack/react-native-testing-library/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22), as they will help you get familiar with the react-native-testing-library code. 
+> **Working on your first pull request?** You can learn how from this *free* series: [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
 
-### Rules of the discussions
-Remember to be very clear and transparent when discussing any issue in the discussions boards. We ask that you keep the language to English and keep on track with the issue at hand. Lastly, please be respectful of our fellow contributors and keep an exemplary level of professionalism at all times.  
+1. Fork the repo and create your branch from `master` (a guide on [how to fork a repository](https://help.github.com/articles/fork-a-repo/)).
+2. Run `yarn bootstrap` to setup the developement environment.
+3. Do the changes you want and test them out in the example app before sending a pull request.
+
+### Commit message convention
+
+We prefix our commit messages with one of the following to signify the kind of change:
+
+* `fix`: bug fixes, e.g. fix Button color on DarkTheme.
+* `feat`: new features, e.g. add Snackbar component.
+* `refactor`: code/structure refactor, e.g. new structure folder for components.
+* `docs`: changes into documentation, e.g. add usage example for Button.
+* `test`: adding or updating tests, eg unit, snapshot testing.
+* `chore`: tooling changes, e.g. change circle ci config.
+* `BREAKING`: for changes that break existing usage, e.g. change API of a component.
+
+Our pre-commit hooks verify that your commit message matches this format when committing.
+
+### Linting and tests
+
+We use `flow` for type checking, `eslint` with `prettier` for linting and formatting the code, and `jest` for testing. Our pre-commit hooks verify that the linter and tests pass when commiting. You can also run the following commands manually:
+
+* `yarn flow`: run flow on all files.
+* `yarn lint`: run eslint and prettier.
+* `yarn test`: run tests.
+
+### Sending a pull request
+
+When you're sending a pull request:
+
+* Prefer small pull requests focused on one change.
+* Verify that `flow`, `eslint` and tests are passing.
+* Preview the documentation to make sure it looks good.
+* Follow the pull request template when opening a pull request.
+
+When you're working on a component:
+
+* Follow the guidelines described in the [official material design docs](https://material.io/guidelines/).
+* Write a brief description of every prop when defining `type Props` to aid with documentation.
+* Provide an example usage for the component (check other components to get a idea).
+
+### Running the example
+
+The example app uses [Expo](https://expo.io/). You will need to install the Expo app for [Android](https://play.google.com/store/apps/details?id=host.exp.exponent) and [iOS](https://itunes.apple.com/app/apple-store/id982107779) to start developing.
+
+After you're done, you can run `yarn start` or `expo start` in the `example/` folder and scan the QR code to launch it on your device.
+
+### Working on documentation
+
+The documentation is automatically generated from the [flowtype](https://flowtype.org) annotations in the components. You can add comments above the type annotations to add descriptions. To preview the generated documentation, run `yarn start` in the `docs/` folder.
+
+## Reporting issues
+
+You can report issues on our [bug tracker](https://github.com/callstack/react-native-testing-library/issues). Please follow the issue template when opening an issue.
+
+## License
+
+By contributing to react-native-testing-library, you agree that your contributions will be licensed under its **MIT** license.
