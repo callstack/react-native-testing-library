@@ -147,8 +147,8 @@ test('Component has a structure', () => {
   expect(output).toMatchSnapshot();
 });
 ```
-
-## `fireEvent: (element: ReactTestInstance, eventName: string, data?: *) => void`
+## `FireEvent API`
+### `fireEvent: (element: ReactTestInstance, eventName: string, data?: *) => void`
 
 Invokes named event handler on the element or parent element in the tree.
 
@@ -165,7 +165,7 @@ const { getByTestId } = render(
 fireEvent(getByTestId('custom'), 'myCustomEvent');
 ```
 
-### `press: (element: ReactTestInstance) => void`
+### `fireEvent.press: (element: ReactTestInstance) => void`
 
 Invokes `press` event handler on the element or parent element in the tree.
 
@@ -186,7 +186,7 @@ const { getByTestId } = render(
 fireEvent.press(getByTestId('button'));
 ```
 
-### `doublePress: (element: ReactTestInstance) => void`
+### `fireEvent.doublePress: (element: ReactTestInstance) => void`
 
 Invokes `doublePress` event handler on the element or parent element in the tree.
 
@@ -205,7 +205,7 @@ const { getByTestId } = render(
 fireEvent.doublePress(getByTestId('button-text'));
 ```
 
-### `changeText: (element: ReactTestInstance, data?: *) => void`
+### `fireEvent.changeText: (element: ReactTestInstance, data?: *) => void`
 
 Invokes `changeText` event handler on the element or parent element in the tree.
 
@@ -225,7 +225,7 @@ const { getByTestId } = render(
 fireEvent.changeText(getByTestId('text-input'), CHANGE_TEXT);
 ```
 
-### `scroll: (element: ReactTestInstance, data?: *) => void`
+### `fireEvent.scroll: (element: ReactTestInstance, data?: *) => void`
 
 Invokes `scroll` event handler on the element or parent element in the tree.
 
