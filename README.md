@@ -2,6 +2,12 @@
 
 Simple React Native testing utilities helping you write better tests with less effort
 
+[![Build Status][build-badge]][build]
+[![Version][version-badge]][package]
+[![MIT License][license-badge]][license]
+[![PRs Welcome][prs-welcome-badge]][prs-welcome]
+[![Chat][chat-badge]][chat]
+
 _Appreciation notice: This project is heavily inspired by [react-testing-library](https://github.com/kentcdodds/react-testing-library). Go check it out and use it to test your web React apps._
 
 ## The problem
@@ -170,3 +176,15 @@ test('fetch data', async () => {
   expect(getByText('fetch').props.title).toBe('loaded');
 });
 ```
+
+<!-- badges -->
+[build-badge]: https://img.shields.io/circleci/project/github/callstack/react-native-testing-library/master.svg?style=flat-square
+[build]: https://circleci.com/gh/callstack/react-native-testing-library
+[version-badge]: https://img.shields.io/npm/v/react-native-testing-library.svg?style=flat-square
+[package]: https://www.npmjs.com/package/react-native-testing-library
+[license-badge]: https://img.shields.io/npm/l/react-native-testing-library.svg?style=flat-square
+[license]: https://opensource.org/licenses/MIT
+[prs-welcome-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
+[prs-welcome]: http://makeapullrequest.com
+[chat-badge]: https://img.shields.io/discord/426714625279524876.svg?style=flat-square&colorB=758ED3
+[chat]: https://discord.gg/QbGezWe

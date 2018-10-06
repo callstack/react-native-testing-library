@@ -1,2 +1,5 @@
 [libs]
 flow-typed
+
+[options]
+include_warnings=true
