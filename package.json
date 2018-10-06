@@ -28,5 +28,10 @@
   },
   "dependencies": {
     "react-is": "^16.5.2"
+  },
+  "scripts": {
+    "test": "jest",
+    "flow-check": "flow check",
+    "lint": "eslint src --cache"
   }
 }
