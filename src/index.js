@@ -4,6 +4,7 @@ import { isValidElementType } from 'react-is';
 import TestRenderer from 'react-test-renderer'; // eslint-disable-line import/no-extraneous-dependencies
 import ShallowRenderer from 'react-test-renderer/shallow'; // eslint-disable-line import/no-extraneous-dependencies
 import prettyFormat, { plugins } from 'pretty-format'; // eslint-disable-line import/no-extraneous-dependencies
+import fireEvent from './fireEvent';
 
 const getNodeByName = (node, name) =>
   node.type.name === name ||
@@ -58,6 +59,7 @@ export const render = (
   };
 
   return {
+    fireEvent,
     getByTestId: (testID: string) => instance.findByProps({ testID }),
     getByName,
     getAllByName: (name: string | React.Element<*>) =>

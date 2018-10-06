@@ -1,9 +1,9 @@
 // @flow
-import * as React from 'react';
-
 const findEventHandler = (element: ReactTestInstance, eventName: string) => {
-  if (typeof element.props[`on${eventName}`] === 'function') {
-    return element.props[`on${eventName}`];
+  const eventHandler = toEventHandlerName(eventName);
+
+  if (typeof element.props[eventHandler] === 'function') {
+    return element.props[eventHandler];
   }
 
   if (element.parent === null) {
@@ -18,13 +18,13 @@ const invokeEvent = (
   eventName: string,
   data: any
 ) => {
-  const handler = findEventHandler(element, capitalize(eventName));
+  const handler = findEventHandler(element, eventName);
 
   return handler(data);
 };
 
-const capitalize = (name: string) =>
-  name.charAt(0).toUpperCase() + name.slice(1);
+const toEventHandlerName = (eventName: string) =>
+  `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 
 const press = (element: ReactTestInstance) => invokeEvent(element, 'press');
 const doublePress = (element: ReactTestInstance) =>
