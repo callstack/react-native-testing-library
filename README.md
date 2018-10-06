@@ -1,12 +1,12 @@
 # react-native-testing-library
 
+Simple React Native testing utilities helping you write better tests with less effort
+
 [![Build Status][build-badge]][build]
 [![Version][version-badge]][package]
 [![MIT License][license-badge]][license]
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
 [![Chat][chat-badge]][chat]
-
-Simple React Native testing utilities helping you write better tests with less effort
 
 _Appreciation notice: This project is heavily inspired by [react-testing-library](https://github.com/kentcdodds/react-testing-library). Go check it out and use it to test your web React apps._
 
