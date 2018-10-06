@@ -72,9 +72,7 @@ test('getByTestId', () => {
   const component = getByTestId('bananaFresh');
 
   expect(component.props.children).toBe('not fresh');
-  expect(() => {
-    getByTestId('InExistent');
-  }).toThrow();
+  expect(() => getByTestId('InExistent')).toThrow();
 });
 
 test('getByName', () => {
@@ -91,9 +89,7 @@ test('getByName', () => {
 
   expect(bananaFresh.props.children).toBe('not fresh');
 
-  expect(() => {
-    getByName('InExistent');
-  }).toThrow();
+  expect(() => getByName('InExistent')).toThrow();
 });
 
 test('getAllByName', () => {
@@ -103,7 +99,7 @@ test('getAllByName', () => {
   expect(text.props.children).toBe('Is the banana fresh?');
   expect(status.props.children).toBe('not fresh');
   expect(button.props.children).toBe('Change freshness!');
-  expect(getAllByName('InExistent')).toHaveLength(0);
+  expect(() => getAllByName('InExistent')).toThrow();
 });
 
 test('getByText', () => {
@@ -115,9 +111,7 @@ test('getByText', () => {
   const sameButton = getByText('not fresh');
 
   expect(sameButton.props.children).toBe('not fresh');
-  expect(() => {
-    getByText('InExistent');
-  }).toThrow();
+  expect(() => getByText('InExistent')).toThrow();
 });
 
 test('getAllByText', () => {
@@ -125,7 +119,7 @@ test('getAllByText', () => {
   const button = getAllByText(/fresh/i);
 
   expect(button).toHaveLength(3);
-  expect(getAllByText('InExistent')).toHaveLength(0);
+  expect(() => getAllByText('InExistent')).toThrow();
 });
 
 test('getByProps', () => {
@@ -133,9 +127,7 @@ test('getByProps', () => {
   const primaryType = getByProps({ type: 'primary' });
 
   expect(primaryType.props.children).toBe('Change freshness!');
-  expect(() => {
-    getByProps({ type: 'inexistent' });
-  }).toThrow();
+  expect(() => getByProps({ type: 'inexistent' })).toThrow();
 });
 
 test('getAllByProps', () => {
@@ -143,7 +135,7 @@ test('getAllByProps', () => {
   const primaryTypes = getAllByProps({ type: 'primary' });
 
   expect(primaryTypes).toHaveLength(1);
-  expect(getAllByProps({ type: 'inexistent' })).toHaveLength(0);
+  expect(() => getAllByProps({ type: 'inexistent' })).toThrow();
 });
 
 test('update', () => {
