@@ -135,7 +135,7 @@ test('getAllByProps', () => {
   const primaryTypes = getAllByProps({ type: 'primary' });
 
   expect(primaryTypes).toHaveLength(1);
-  expect(() => getAllByProps('InExistent')).toThrow();
+  expect(() => getAllByProps({ type: 'inexistent' })).toThrow();
 });
 
 test('update', () => {
