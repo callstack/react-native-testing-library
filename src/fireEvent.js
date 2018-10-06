@@ -26,18 +26,38 @@ const invokeEvent = (
 const toEventHandlerName = (eventName: string) =>
   `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 
-const press = (element: ReactTestInstance) => invokeEvent(element, 'press');
-const doublePress = (element: ReactTestInstance) =>
+const pressHandler = (element: ReactTestInstance) =>
+  invokeEvent(element, 'press');
+const doublePressHandler = (element: ReactTestInstance) =>
   invokeEvent(element, 'doublePress');
-const changeText = (element: ReactTestInstance, data: any) =>
+const changeTextHandler = (element: ReactTestInstance, data: any) =>
   invokeEvent(element, 'changeText', data);
-const scroll = (element: ReactTestInstance, data: any) =>
+const scrollHandler = (element: ReactTestInstance, data: any) =>
   invokeEvent(element, 'scroll', data);
 
-export default {
-  press,
-  doublePress,
-  changeText,
-  scroll,
-  invokeEvent,
-};
+const EVENTS = [
+  {
+    name: 'press',
+    handler: pressHandler,
+  },
+  {
+    name: 'doublePress',
+    handler: doublePressHandler,
+  },
+  {
+    name: 'changeText',
+    handler: changeTextHandler,
+  },
+  {
+    name: 'scroll',
+    handler: scrollHandler,
+  },
+];
+
+const fireEvent = invokeEvent;
+
+EVENTS.forEach(event => {
+  fireEvent[event.name] = event.handler;
+});
+
+export default fireEvent;

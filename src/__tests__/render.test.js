@@ -1,23 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native'; // eslint-disable-line import/no-unresolved
+import { View, Text, TouchableOpacity } from '../__mocks__/reactNativeMock';
 import { render } from '..';
-
-jest.mock(
-  'react-native',
-  () => ({
-    View(props) {
-      return props.children;
-    },
-    Text(props) {
-      return props.children;
-    },
-    TouchableOpacity(props) {
-      return props.children;
-    },
-  }),
-  { virtual: true }
-);
 
 class Button extends React.Component {
   render() {

@@ -5,7 +5,7 @@ import {
   Text,
   ScrollView,
   TextInput,
-} from 'react-native'; // eslint-disable-line import/no-unresolved
+} from '../__mocks__/reactNativeMock';
 import fireEvent from '../fireEvent';
 import { render } from '..';
 
@@ -29,34 +29,12 @@ const CustomEventComponent = ({ onCustomEvent }) => (
   </TouchableOpacity>
 );
 
-jest.mock(
-  'react-native',
-  () => ({
-    View(props) {
-      return props.children;
-    },
-    ScrollView(props) {
-      return props.children;
-    },
-    Text(props) {
-      return props.children;
-    },
-    TextInput() {
-      return null;
-    },
-    TouchableOpacity(props) {
-      return props.children;
-    },
-  }),
-  { virtual: true }
-);
-
-describe('fireEvent.invokeEvent', () => {
+describe('fireEvent', () => {
   test('should invoke specified event', () => {
     const onPressMock = jest.fn();
     const { getByTestId } = render(<OnPressComponent onPress={onPressMock} />);
 
-    fireEvent.invokeEvent(getByTestId('button'), 'press');
+    fireEvent(getByTestId('button'), 'press');
 
     expect(onPressMock).toHaveBeenCalled();
   });
@@ -65,7 +43,7 @@ describe('fireEvent.invokeEvent', () => {
     const onPressMock = jest.fn();
     const { getByTestId } = render(<OnPressComponent onPress={onPressMock} />);
 
-    fireEvent.invokeEvent(getByTestId('text-button'), 'press');
+    fireEvent(getByTestId('text-button'), 'press');
 
     expect(onPressMock).toHaveBeenCalled();
   });
@@ -73,9 +51,9 @@ describe('fireEvent.invokeEvent', () => {
   test('should throw an Error when event handler was not found', () => {
     const { getByTestId } = render(<WithoutEventComponent />);
 
-    expect(() =>
-      fireEvent.invokeEvent(getByTestId('text'), 'press')
-    ).toThrowError('No handler function found for event: press');
+    expect(() => fireEvent(getByTestId('text'), 'press')).toThrowError(
+      'No handler function found for event: press'
+    );
   });
 
   test('should invoke event with custom name', () => {
@@ -88,7 +66,7 @@ describe('fireEvent.invokeEvent', () => {
       </View>
     );
 
-    fireEvent.invokeEvent(getByTestId('custom'), 'customEvent', EVENT_DATA);
+    fireEvent(getByTestId('custom'), 'customEvent', EVENT_DATA);
 
     expect(handlerMock).toHaveBeenCalledWith(EVENT_DATA);
   });

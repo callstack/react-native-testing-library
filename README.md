@@ -148,6 +148,12 @@ test('Component has a structure', () => {
 });
 ```
 
+## `fireEvent`
+
+### press
+
+Invokes `press` event on the element or parent element
+
 ## `debug`
 
 Log prettified shallowly rendered component or test instance (just like snapshot) to stdout.
