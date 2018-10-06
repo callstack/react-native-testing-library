@@ -148,11 +148,108 @@ test('Component has a structure', () => {
 });
 ```
 
-## `fireEvent`
+## `fireEvent: (element: ReactTestInstance, eventName: string, data?: *) => void`
 
-### press
+Invokes named event handler on the element or parent element in the tree.
 
-Invokes `press` event on the element or parent element
+```jsx
+import { View } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+import { MyComponent } from './MyComponent';
+
+const onEventMock = jest.fn();
+const { getByTestId } = render(
+  <MyComponent testID="custom" onMyCustomEvent={onEventMock} />
+);
+
+fireEvent(getByTestId('custom'), 'myCustomEvent');
+```
+
+### `press: (element: ReactTestInstance) => void`
+
+Invokes `press` event handler on the element or parent element in the tree.
+
+```jsx
+import { View, Text, TouchableOpacity } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+
+const onPressMock = jest.fn();
+
+const { getByTestId } = render(
+  <View>
+    <TouchableOpacity onPress={onPressMock} testID="button">
+      <Text>Press me</Text>
+    </TouchableOpacity>
+  </View>
+);
+
+fireEvent.press(getByTestId('button'));
+```
+
+### `doublePress: (element: ReactTestInstance) => void`
+
+Invokes `doublePress` event handler on the element or parent element in the tree.
+
+```jsx
+import { TouchableOpacity, Text } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+
+const onDoublePressMock = jest.fn();
+
+const { getByTestId } = render(
+  <TouchableOpacity onDoublePress={onDoublePressMock}>
+    <Text testID="button-text">Click me</Text>
+  </TouchableOpacity>
+);
+
+fireEvent.doublePress(getByTestId('button-text'));
+```
+
+### `changeText: (element: ReactTestInstance, data?: *) => void`
+
+Invokes `changeText` event handler on the element or parent element in the tree.
+
+```jsx
+import { View, TextInput } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+
+const onChangeTextMock = jest.fn();
+const CHANGE_TEXT = 'content';
+
+const { getByTestId } = render(
+  <View>
+    <TextInput testID="text-input" onChangeText={onChangeTextMock} />
+  </View>
+);
+
+fireEvent.changeText(getByTestId('text-input'), CHANGE_TEXT);
+```
+
+### `scroll: (element: ReactTestInstance, data?: *) => void`
+
+Invokes `scroll` event handler on the element or parent element in the tree.
+
+```jsx
+import { ScrollView, TextInput } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+
+const onScrollMock = jest.fn();
+const eventData = {
+  nativeEvent: {
+    contentOffset: {
+      y: 200,
+    },
+  },
+};
+
+const { getByTestId } = render(
+  <ScrollView testID="scroll-view" onScroll={onScrollMock}>
+    <Text>XD</Text>
+  </ScrollView>
+);
+
+fireEvent.scroll(getByTestId('scroll-view'), eventData);
+```
 
 ## `debug`
 

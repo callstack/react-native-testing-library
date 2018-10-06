@@ -16,7 +16,7 @@ const findEventHandler = (element: ReactTestInstance, eventName: string) => {
 const invokeEvent = (
   element: ReactTestInstance,
   eventName: string,
-  data: any
+  data?: *
 ) => {
   const handler = findEventHandler(element, eventName);
 
@@ -30,9 +30,9 @@ const pressHandler = (element: ReactTestInstance) =>
   invokeEvent(element, 'press');
 const doublePressHandler = (element: ReactTestInstance) =>
   invokeEvent(element, 'doublePress');
-const changeTextHandler = (element: ReactTestInstance, data: any) =>
+const changeTextHandler = (element: ReactTestInstance, data?: *) =>
   invokeEvent(element, 'changeText', data);
-const scrollHandler = (element: ReactTestInstance, data: any) =>
+const scrollHandler = (element: ReactTestInstance, data?: *) =>
   invokeEvent(element, 'scroll', data);
 
 const EVENTS = [
