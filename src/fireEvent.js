@@ -40,29 +40,11 @@ const changeTextHandler = (element: ReactTestInstance, data?: *) =>
 const scrollHandler = (element: ReactTestInstance, data?: *) =>
   invokeEvent(element, 'scroll', data);
 
-const EVENTS = [
-  {
-    name: 'press',
-    handler: pressHandler,
-  },
-  {
-    name: 'doublePress',
-    handler: doublePressHandler,
-  },
-  {
-    name: 'changeText',
-    handler: changeTextHandler,
-  },
-  {
-    name: 'scroll',
-    handler: scrollHandler,
-  },
-];
-
 const fireEvent = invokeEvent;
 
-EVENTS.forEach(event => {
-  fireEvent[event.name] = event.handler;
-});
+fireEvent.press = pressHandler;
+fireEvent.doublePress = doublePressHandler;
+fireEvent.changeText = changeTextHandler;
+fireEvent.scroll = scrollHandler;
 
 export default fireEvent;
