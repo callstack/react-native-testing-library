@@ -7,7 +7,7 @@ Simple React Native testing utilities helping you write better tests with less e
 [![MIT License][license-badge]][license]
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
 [![Chat][chat-badge]][chat]
-[![Greenkeeper badge](https://badges.greenkeeper.io/callstack/react-native-testing-library.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge][greenkeeper-badge]][greenkeeper]
 
 _Appreciation notice: This project is heavily inspired by [react-testing-library](https://github.com/kentcdodds/react-testing-library). Go check it out and use it to test your web React apps._
 
@@ -319,3 +319,5 @@ expect(submitButtons).toHaveLength(3); // expect 3 elements
 [prs-welcome]: http://makeapullrequest.com
 [chat-badge]: https://img.shields.io/discord/426714625279524876.svg?style=flat-square&colorB=758ED3
 [chat]: https://discord.gg/QbGezWe
+[greenkeeper-badge]: https://badges.greenkeeper.io/callstack/react-native-testing-library.svg?style=flat-square
+[greenkeeper]: https://greenkeeper.io/
