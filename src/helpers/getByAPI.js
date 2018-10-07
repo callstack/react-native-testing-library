@@ -13,68 +13,64 @@ const getNodeByText = (node, text) =>
     ? text === node.props.children
     : text.test(node.props.children));
 
-export const getByName = (instance: ReactTestInstance) => (
-  name: string | React.ComponentType<*>
-) => {
-  try {
-    return instance.find(node => getNodeByName(node, name));
-  } catch (error) {
-    throw new ErrorWithStack(`Error: Component not found.`, getByName);
-  }
-};
+export const getByName = (instance: ReactTestInstance) =>
+  function getByNameFn(name: string | React.ComponentType<*>) {
+    try {
+      return instance.find(node => getNodeByName(node, name));
+    } catch (error) {
+      throw new ErrorWithStack(`Component not found.`, getByNameFn);
+    }
+  };
 
-export const getByText = (instance: ReactTestInstance) => (
-  text: string | RegExp
-) => {
-  try {
-    return instance.find(node => getNodeByText(node, text));
-  } catch (error) {
-    throw new ErrorWithStack(`Error: Component not found.`, getByText);
-  }
-};
+export const getByText = (instance: ReactTestInstance) =>
+  function getByTextFn(text: string | RegExp) {
+    try {
+      return instance.find(node => getNodeByText(node, text));
+    } catch (error) {
+      throw new ErrorWithStack(`Component not found.`, getByTextFn);
+    }
+  };
 
-export const getByProps = (instance: ReactTestInstance) => (props: {
-  [propName: string]: any,
-}) => {
-  try {
-    return instance.findByProps(props);
-  } catch (error) {
-    throw new ErrorWithStack(`Error: Component not found.`, getByProps);
-  }
-};
+export const getByProps = (instance: ReactTestInstance) =>
+  function getByPropsFn(props: { [propName: string]: any }) {
+    try {
+      return instance.findByProps(props);
+    } catch (error) {
+      throw new ErrorWithStack(`Component not found.`, getByPropsFn);
+    }
+  };
 
-export const getByTestId = (instance: ReactTestInstance) => (testID: string) =>
-  getByProps(instance)({ testID });
+export const getByTestId = (instance: ReactTestInstance) =>
+  function getByTestIdFn(testID: string) {
+    return getByProps(instance)({ testID });
+  };
 
-export const getAllByName = (instance: ReactTestInstance) => (
-  name: string | React.ComponentType<*>
-) => {
-  const results = instance.findAll(node => getNodeByName(node, name));
-  if (results.length === 0) {
-    throw new ErrorWithStack(`Error: Components not found.`, getAllByName);
-  }
-  return results;
-};
+export const getAllByName = (instance: ReactTestInstance) =>
+  function getAllByNameFn(name: string | React.ComponentType<*>) {
+    const results = instance.findAll(node => getNodeByName(node, name));
+    if (results.length === 0) {
+      throw new ErrorWithStack(`Components not found.`, getAllByNameFn);
+    }
+    return results;
+  };
 
-export const getAllByText = (instance: ReactTestInstance) => (
-  text: string | RegExp
-) => {
-  const results = instance.findAll(node => getNodeByText(node, text));
-  if (results.length === 0) {
-    throw new ErrorWithStack(`Error: Components not found.`, getAllByText);
-  }
-  return results;
-};
+export const getAllByText = (instance: ReactTestInstance) =>
+  function getAllByTextFn(text: string | RegExp) {
+    const results = instance.findAll(node => getNodeByText(node, text));
+    if (results.length === 0) {
+      throw new ErrorWithStack(`Components not found.`, getAllByTextFn);
+    }
+    return results;
+  };
 
-export const getAllByProps = (instance: ReactTestInstance) => (props: {
-  [propName: string]: any,
-}) => {
-  const results = instance.findAllByProps(props);
-  if (results.length === 0) {
-    throw new ErrorWithStack(`Error: Components not found.`, getAllByProps);
-  }
-  return results;
-};
+export const getAllByProps = (instance: ReactTestInstance) =>
+  function getAllByPropsFn(props: { [propName: string]: any }) {
+    const results = instance.findAllByProps(props);
+    if (results.length === 0) {
+      throw new ErrorWithStack(`Components not found.`, getAllByPropsFn);
+    }
+    return results;
+  };
 
 export const getByAPI = (instance: ReactTestInstance) => ({
   getByTestId: getByTestId(instance),
