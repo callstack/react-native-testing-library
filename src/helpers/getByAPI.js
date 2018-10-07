@@ -14,7 +14,7 @@ const getNodeByText = (node, text) =>
     : text.test(node.props.children));
 
 export const getByName = (instance: ReactTestInstance) => (
-  name: string | React.Element<*>
+  name: string | React.ComponentType<*>
 ) => {
   try {
     return instance.find(node => getNodeByName(node, name));
@@ -47,7 +47,7 @@ export const getByTestId = (instance: ReactTestInstance) => (testID: string) =>
   getByProps(instance)({ testID });
 
 export const getAllByName = (instance: ReactTestInstance) => (
-  name: string | React.Element<*>
+  name: string | React.ComponentType<*>
 ) => {
   const results = instance.findAll(node => getNodeByName(node, name));
   if (results.length === 0) {

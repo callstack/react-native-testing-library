@@ -11,7 +11,7 @@ import {
 } from './getByAPI';
 
 export const queryByName = (instance: ReactTestInstance) => (
-  name: string | React.Element<*>
+  name: string | React.ComponentType<*>
 ) => {
   try {
     return getByName(instance)(name);
@@ -51,7 +51,7 @@ export const queryByTestId = (instance: ReactTestInstance) => (
 };
 
 export const queryAllByName = (instance: ReactTestInstance) => (
-  name: string | React.Element<*>
+  name: string | React.ComponentType<*>
 ) => {
   try {
     return getAllByName(instance)(name);

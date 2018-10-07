@@ -1,9 +1,10 @@
+// @flow
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { View, Text, TouchableOpacity } from '../__mocks__/reactNativeMock';
 import { render } from '..';
 
-class Button extends React.Component {
+class Button extends React.Component<*> {
   render() {
     return (
       <TouchableOpacity onPress={this.props.onPress}>
@@ -13,7 +14,7 @@ class Button extends React.Component {
   }
 }
 
-class Banana extends React.Component {
+class Banana extends React.Component<*, *> {
   state = {
     fresh: false,
   };
