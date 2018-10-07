@@ -7,6 +7,7 @@ Simple React Native testing utilities helping you write better tests with less e
 [![MIT License][license-badge]][license]
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
 [![Chat][chat-badge]][chat]
+[![Greenkeeper badge](https://badges.greenkeeper.io/callstack/react-native-testing-library.svg)](https://greenkeeper.io/)
 
 _Appreciation notice: This project is heavily inspired by [react-testing-library](https://github.com/kentcdodds/react-testing-library). Go check it out and use it to test your web React apps._
 
