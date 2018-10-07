@@ -8,7 +8,7 @@ import {
   getAllByName,
   getAllByText,
   getAllByProps,
-} from './getBy';
+} from './getByAPI';
 
 export const queryByName = (instance: ReactTestInstance) => (
   name: string | React.Element<*>
@@ -79,3 +79,13 @@ export const queryAllByProps = (instance: ReactTestInstance) => (props: {
     return [];
   }
 };
+
+export const queryByAPI = (instance: ReactTestInstance) => ({
+  queryByTestId: queryByTestId(instance),
+  queryByName: queryByName(instance),
+  queryByText: queryByText(instance),
+  queryByProps: queryByProps(instance),
+  queryAllByName: queryAllByName(instance),
+  queryAllByText: queryAllByText(instance),
+  queryAllByProps: queryAllByProps(instance),
+});
