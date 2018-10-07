@@ -284,7 +284,7 @@ test('fetch data', async () => {
 
 ## `query` APIs
 
-Each of the get APIs listed in the render section above have a complimentary query API. The get APIs will throw errors if a proper node cannot be found. This is normally the desired effect. However, if you want to make an assertion that an element is not present in the DOM, then you can use the query API instead:
+Each of the get APIs listed in the render section above have a complimentary query API. The get APIs will throw errors if a proper node cannot be found. This is normally the desired effect. However, if you want to make an assertion that an element is not present in the hierarchy, then you can use the query API instead:
 
 ```jsx
 import { render } from 'react-native-testing-library';
