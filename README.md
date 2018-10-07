@@ -102,11 +102,11 @@ type ReactTestInstance = {
 };
 ```
 
-### `getByName: (name: string | React.Element<*>)`
+### `getByName: (name: string | React.ComponentType<*>)`
 
 A method returning a `ReactTestInstance` with matching name – may be a string or React Element. Throws when no matches.
 
-### `getAllByName: (name: string | React.Element<*>)`
+### `getAllByName: (name: string | React.ComponentType<*>)`
 
 A method returning an array of `ReactTestInstance`s with matching name – may be a string or React Element.
 
