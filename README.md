@@ -1,5 +1,7 @@
 # react-native-testing-library
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/callstack/react-native-testing-library.svg)](https://greenkeeper.io/)
+
 Simple React Native testing utilities helping you write better tests with less effort
 
 [![Build Status][build-badge]][build]
