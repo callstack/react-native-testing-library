@@ -42,7 +42,11 @@ export const getByProps = (instance: ReactTestInstance) =>
 
 export const getByTestId = (instance: ReactTestInstance) =>
   function getByTestIdFn(testID: string) {
-    return getByProps(instance)({ testID });
+    try {
+      return instance.findByProps({ testID });
+    } catch (error) {
+      throw new ErrorWithStack(`Component not found.`, getByTestIdFn);
+    }
   };
 
 export const getAllByName = (instance: ReactTestInstance) =>
