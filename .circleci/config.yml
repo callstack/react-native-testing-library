@@ -33,6 +33,13 @@ jobs:
       - run: |
           yarn lint
           yarn flow-check
+  typescript:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/react-native-testing-library
+      - run: |
+          yarn typescript-check
   tests:
     <<: *defaults
     steps:
@@ -49,6 +56,9 @@ workflows:
     jobs:
       - install-dependencies
       - lint-and-flow:
+          requires:
+            - install-dependencies
+      - typescript:
           requires:
             - install-dependencies
       - tests:
