@@ -294,7 +294,7 @@ const submitButton = queryByText('submit');
 expect(submitButton).toBeNull(); // it doesn't exist
 ```
 
-## `queryAll` API
+## `queryAll` APIs
 
 Each of the query APIs have a corresponding queryAll version that always returns an Array of matching nodes. getAll is the same but throws when the array has a length of 0.
 
