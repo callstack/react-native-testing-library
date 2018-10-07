@@ -1,4 +1,6 @@
 // @flow
+import ErrorWithStack from './helpers/errorWithStack';
+
 const findEventHandler = (element: ReactTestInstance, eventName: string) => {
   const eventHandler = toEventHandlerName(eventName);
 
@@ -7,7 +9,10 @@ const findEventHandler = (element: ReactTestInstance, eventName: string) => {
   }
 
   if (element.parent === null) {
-    throw new Error(`No handler function found for event: ${eventName}`);
+    throw new ErrorWithStack(
+      `No handler function found for event: ${eventName}`,
+      invokeEvent
+    );
   }
 
   return findEventHandler(element.parent, eventName);
