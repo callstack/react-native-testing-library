@@ -3,6 +3,7 @@
   "version": "0.2.2",
   "description": "Simple React Native testing utilities helping you write better tests with less effort",
   "main": "src/index.js",
+  "typings": "./typings/index.d.ts",
   "repository": "git@github.com:callstack/react-native-testing-library.git",
   "author": "Michał Pierzchała <thymikee@gmail.com>",
   "license": "MIT",
@@ -11,6 +12,8 @@
     "@babel/core": "^7.1.2",
     "@babel/runtime": "^7.1.2",
     "@callstack/eslint-config": "^2.0.0",
+    "@types/react": "^16.4.15",
+    "@types/react-test-renderer": "^16.0.3",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "eslint": "^5.6.1",
@@ -19,7 +22,8 @@
     "metro-react-native-babel-preset": "^0.48.0",
     "pretty-format": "^23.6.0",
     "react": "^16.5.2",
-    "react-test-renderer": "^16.5.2"
+    "react-test-renderer": "^16.5.2",
+    "typescript": "^3.1.1"
   },
   "peerDependencies": {
     "pretty-format": ">=20.0.0",
@@ -32,6 +36,7 @@
   "scripts": {
     "test": "jest",
     "flow-check": "flow check",
+    "typescript-check": "tsc --noEmit --skipLibCheck --jsx react ./typings/__tests__/*",
     "lint": "eslint src --cache"
   }
 }
