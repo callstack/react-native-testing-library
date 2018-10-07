@@ -282,6 +282,30 @@ test('fetch data', async () => {
 });
 ```
 
+## `query` APIs
+
+Each of the get APIs listed in the render section above have a complimentary query API. The get APIs will throw errors if a proper node cannot be found. This is normally the desired effect. However, if you want to make an assertion that an element is not present in the hierarchy, then you can use the query API instead:
+
+```jsx
+import { render } from 'react-native-testing-library';
+
+const { queryByText } = render(<Form />);
+const submitButton = queryByText('submit');
+expect(submitButton).toBeNull(); // it doesn't exist
+```
+
+## `queryAll` APIs
+
+Each of the query APIs have a corresponding queryAll version that always returns an Array of matching nodes. getAll is the same but throws when the array has a length of 0.
+
+```jsx
+import { render } from 'react-native-testing-library';
+
+const { queryAllByText } = render(<Forms />);
+const submitButtons = queryAllByText('submit');
+expect(submitButtons).toHaveLength(3); // expect 3 elements
+```
+
 <!-- badges -->
 
 [build-badge]: https://img.shields.io/circleci/project/github/callstack/react-native-testing-library/master.svg?style=flat-square

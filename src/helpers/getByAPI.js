@@ -75,3 +75,13 @@ export const getAllByProps = (instance: ReactTestInstance) => (props: {
   }
   return results;
 };
+
+export const getByAPI = (instance: ReactTestInstance) => ({
+  getByTestId: getByTestId(instance),
+  getByName: getByName(instance),
+  getByText: getByText(instance),
+  getByProps: getByProps(instance),
+  getAllByName: getAllByName(instance),
+  getAllByText: getAllByText(instance),
+  getAllByProps: getAllByProps(instance),
+});
