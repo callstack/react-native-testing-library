@@ -56,7 +56,7 @@ export const queryAllByName = (instance: ReactTestInstance) => (
   try {
     return getAllByName(instance)(name);
   } catch (error) {
-    return null;
+    return [];
   }
 };
 
@@ -66,7 +66,7 @@ export const queryAllByText = (instance: ReactTestInstance) => (
   try {
     return getAllByText(instance)(text);
   } catch (error) {
-    return null;
+    return [];
   }
 };
 
@@ -76,6 +76,6 @@ export const queryAllByProps = (instance: ReactTestInstance) => (props: {
   try {
     return getAllByProps(instance)(props);
   } catch (error) {
-    return null;
+    return [];
   }
 };

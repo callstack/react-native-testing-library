@@ -91,7 +91,7 @@ test('getAllByName, queryAllByName', () => {
   expect(() => getAllByName('InExistent')).toThrow();
 
   expect(queryAllByName('Text')[1]).toBe(status);
-  expect(queryAllByName('InExistent')).toBeNull();
+  expect(queryAllByName('InExistent')).toHaveLength(0);
 });
 
 test('getByText, queryByText', () => {
@@ -117,7 +117,7 @@ test('getAllByText, queryAllByText', () => {
   expect(() => getAllByText('InExistent')).toThrow();
 
   expect(queryAllByText(/fresh/i)).toEqual(buttons);
-  expect(queryAllByText('InExistent')).toBeNull();
+  expect(queryAllByText('InExistent')).toHaveLength(0);
 });
 
 test('getByProps, queryByProps', () => {
@@ -139,7 +139,7 @@ test('getAllByProp, queryAllByProps', () => {
   expect(() => getAllByProps({ type: 'inexistent' })).toThrow();
 
   expect(queryAllByProps({ type: 'primary' })).toEqual(primaryTypes);
-  expect(queryAllByProps({ type: 'inexistent' })).toBeNull();
+  expect(queryAllByProps({ type: 'inexistent' })).toHaveLength(0);
 });
 
 test('update', () => {
