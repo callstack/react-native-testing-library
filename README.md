@@ -25,11 +25,11 @@ This library is a replacement for [Enzyme](http://airbnb.io/enzyme/).
 ## Example
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render, fireEvent } from 'react-native-testing-library';
 import { QuestionsBoard } from '../QuestionsBoard';
 
 function setAnswer(question, answer) {
-  question.props.onChangeText(answer);
+  fireEvent.changeText(question, answer);
 }
 
 test('should verify two questions', () => {
@@ -39,7 +39,7 @@ test('should verify two questions', () => {
   setAnswer(allQuestions[0], 'a1');
   setAnswer(allQuestions[1], 'a2');
 
-  getByText('submit').props.onPress();
+  fireEvent.press(getByText('submit'));
 
   expect(props.verifyQuestions).toBeCalledWith({
     '1': { q: 'q1', a: 'a1' },
@@ -147,7 +147,9 @@ test('Component has a structure', () => {
   expect(output).toMatchSnapshot();
 });
 ```
+
 ## `FireEvent API`
+
 ### `fireEvent: (element: ReactTestInstance, eventName: string, data?: *) => void`
 
 Invokes named event handler on the element or parent element in the tree.
@@ -281,6 +283,7 @@ test('fetch data', async () => {
 ```
 
 <!-- badges -->
+
 [build-badge]: https://img.shields.io/circleci/project/github/callstack/react-native-testing-library/master.svg?style=flat-square
 [build]: https://circleci.com/gh/callstack/react-native-testing-library
 [version-badge]: https://img.shields.io/npm/v/react-native-testing-library.svg?style=flat-square
