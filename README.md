@@ -25,11 +25,11 @@ This library is a replacement for [Enzyme](http://airbnb.io/enzyme/).
 ## Example
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render, fireEvent } from 'react-native-testing-library';
 import { QuestionsBoard } from '../QuestionsBoard';
 
 function setAnswer(question, answer) {
-  question.props.onChangeText(answer);
+  fireEvent.changeText(question, answer);
 }
 
 test('should verify two questions', () => {
@@ -39,7 +39,7 @@ test('should verify two questions', () => {
   setAnswer(allQuestions[0], 'a1');
   setAnswer(allQuestions[1], 'a2');
 
-  getByText('submit').props.onPress();
+  fireEvent.press(getByText('submit'));
 
   expect(props.verifyQuestions).toBeCalledWith({
     '1': { q: 'q1', a: 'a1' },
@@ -148,6 +148,111 @@ test('Component has a structure', () => {
 });
 ```
 
+## `FireEvent API`
+
+### `fireEvent: (element: ReactTestInstance, eventName: string, data?: *) => void`
+
+Invokes named event handler on the element or parent element in the tree.
+
+```jsx
+import { View } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+import { MyComponent } from './MyComponent';
+
+const onEventMock = jest.fn();
+const { getByTestId } = render(
+  <MyComponent testID="custom" onMyCustomEvent={onEventMock} />
+);
+
+fireEvent(getByTestId('custom'), 'myCustomEvent');
+```
+
+### `fireEvent.press: (element: ReactTestInstance) => void`
+
+Invokes `press` event handler on the element or parent element in the tree.
+
+```jsx
+import { View, Text, TouchableOpacity } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+
+const onPressMock = jest.fn();
+
+const { getByTestId } = render(
+  <View>
+    <TouchableOpacity onPress={onPressMock} testID="button">
+      <Text>Press me</Text>
+    </TouchableOpacity>
+  </View>
+);
+
+fireEvent.press(getByTestId('button'));
+```
+
+### `fireEvent.doublePress: (element: ReactTestInstance) => void`
+
+Invokes `doublePress` event handler on the element or parent element in the tree.
+
+```jsx
+import { TouchableOpacity, Text } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+
+const onDoublePressMock = jest.fn();
+
+const { getByTestId } = render(
+  <TouchableOpacity onDoublePress={onDoublePressMock}>
+    <Text testID="button-text">Click me</Text>
+  </TouchableOpacity>
+);
+
+fireEvent.doublePress(getByTestId('button-text'));
+```
+
+### `fireEvent.changeText: (element: ReactTestInstance, data?: *) => void`
+
+Invokes `changeText` event handler on the element or parent element in the tree.
+
+```jsx
+import { View, TextInput } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+
+const onChangeTextMock = jest.fn();
+const CHANGE_TEXT = 'content';
+
+const { getByTestId } = render(
+  <View>
+    <TextInput testID="text-input" onChangeText={onChangeTextMock} />
+  </View>
+);
+
+fireEvent.changeText(getByTestId('text-input'), CHANGE_TEXT);
+```
+
+### `fireEvent.scroll: (element: ReactTestInstance, data?: *) => void`
+
+Invokes `scroll` event handler on the element or parent element in the tree.
+
+```jsx
+import { ScrollView, TextInput } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+
+const onScrollMock = jest.fn();
+const eventData = {
+  nativeEvent: {
+    contentOffset: {
+      y: 200,
+    },
+  },
+};
+
+const { getByTestId } = render(
+  <ScrollView testID="scroll-view" onScroll={onScrollMock}>
+    <Text>XD</Text>
+  </ScrollView>
+);
+
+fireEvent.scroll(getByTestId('scroll-view'), eventData);
+```
+
 ## `debug`
 
 Log prettified shallowly rendered component or test instance (just like snapshot) to stdout.
@@ -178,6 +283,7 @@ test('fetch data', async () => {
 ```
 
 <!-- badges -->
+
 [build-badge]: https://img.shields.io/circleci/project/github/callstack/react-native-testing-library/master.svg?style=flat-square
 [build]: https://circleci.com/gh/callstack/react-native-testing-library
 [version-badge]: https://img.shields.io/npm/v/react-native-testing-library.svg?style=flat-square
