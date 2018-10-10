@@ -266,8 +266,7 @@ function waitForExpect<T: ReactTestInstance>(
 ): Promise<T> {}
 ```
 
-Wait for non-deterministic periods of time until your element appears or times out.
-`waitForExpect` periodically calls `expectation` every `interval` milliseconds.
+Wait for non-deterministic periods of time until your element appears or times out. `waitForExpect` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
 
 ```jsx
 import { render, waitForElement } from 'react-testing-library';
@@ -278,6 +277,8 @@ test('waiting for an Banana to be ready', async () => {
   await waitForElement(() => getByText('Banana ready'));
 });
 ```
+
+If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to use `async/await` syntax as it will stall your tests.
 
 ## `debug`
 
