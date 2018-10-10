@@ -3,7 +3,7 @@ export default function waitForExpect<T: *>(
   expectation: () => T,
   timeout: number = 4500,
   interval: number = 50
-) {
+): Promise<T> {
   const startTime = Date.now();
   return new Promise<T>((resolve, reject) => {
     const rejectOrRerun = error => {
