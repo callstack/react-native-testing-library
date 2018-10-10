@@ -7,8 +7,7 @@ import {
   ScrollView,
   TextInput,
 } from '../__mocks__/reactNativeMock';
-import fireEvent from '../fireEvent';
-import { render } from '..';
+import { render, fireEvent } from '..';
 
 const OnPressComponent = ({ onPress }) => (
   <View>
