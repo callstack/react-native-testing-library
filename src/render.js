@@ -20,5 +20,7 @@ export default function render(
     ...queryByAPI(instance),
     update: renderer.update,
     unmount: renderer.unmount,
+    toJSON: renderer.toJSON,
+    toTree: renderer.toTree,
   };
 }
