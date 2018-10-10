@@ -138,7 +138,7 @@ When using React context providers, like Redux Provider, you'll likely want to w
 
 ## `shallow`
 
-Shallowly render given React copmonent. Since it doesn't return helpers to query the output, it's mostly adviced to used for snapshot testing (short snapshots are best for code reviewers).
+Shallowly render given React component. Since it doesn't return helpers to query the output, it's mostly advised to used for snapshot testing (short snapshots are best for code reviewers).
 
 ```jsx
 import { shallow } from 'react-native-testing-library';
