@@ -45,6 +45,12 @@ export type FireEventAPI = FireEventFunction & {
   scroll: (element: ReactTestInstance, data?: any) => any;
 };
 
+export type WaitForElementFunction = <T = any>(
+  expectation: () => T,
+  timeout?: number,
+  interval?: number
+) => Promise<T>;
+
 export declare const render: (
   component: React.ReactElement<any>,
   options?: RenderOptions
@@ -57,3 +63,4 @@ export declare const debug: (
   instance: ReactTestInstance | React.ReactElement<any>
 ) => void;
 export declare const fireEvent: FireEventAPI;
+export declare const waitForElement: WaitForElementFunction;

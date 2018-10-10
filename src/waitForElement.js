@@ -1,5 +1,5 @@
 // @flow
-export default function waitForExpect<T: ReactTestInstance>(
+export default function waitForExpect<T: *>(
   expectation: () => T,
   timeout: number = 4500,
   interval: number = 50

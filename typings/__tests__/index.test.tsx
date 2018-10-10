@@ -1,6 +1,13 @@
 import * as React from 'react';
 import { ReactTestInstance } from 'react-test-renderer';
-import { render, fireEvent, shallow, flushMicrotasksQueue, debug } from '../..';
+import {
+  render,
+  fireEvent,
+  shallow,
+  flushMicrotasksQueue,
+  debug,
+  waitForElement,
+} from '../..';
 
 const View = props => props.children;
 const Text = props => props.children;
@@ -77,3 +84,10 @@ const waitForFlush: Promise<any> = flushMicrotasksQueue();
 
 debug(<TestComponent />);
 debug(getByNameString);
+
+const waitBy: Promise<ReactTestInstance> = waitForElement<ReactTestInstance>(
+  () => tree.getByName('View')
+);
+const waitByAll: Promise<Array<ReactTestInstance>> = waitForElement<
+  Array<ReactTestInstance>
+>(() => tree.getAllByName('View'), 1000, 50);
