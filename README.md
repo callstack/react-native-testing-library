@@ -259,7 +259,7 @@ fireEvent.scroll(getByTestId('scroll-view'), eventData);
 Defined as:
 
 ```jsx
-function waitForExpect<T: ReactTestInstance>(
+function waitForExpect<T: *>(
   expectation: () => T,
   timeout: number = 4500,
   interval: number = 50
