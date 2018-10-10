@@ -1,11 +1,11 @@
 // @flow
-export default function waitForExpect(
-  expectation: () => ReactTestInstance,
+export default function waitForExpect<T: ReactTestInstance>(
+  expectation: () => T,
   timeout: number = 4500,
   interval: number = 50
 ) {
   const startTime = Date.now();
-  return new Promise<ReactTestInstance>((resolve, reject) => {
+  return new Promise<T>((resolve, reject) => {
     const rejectOrRerun = error => {
       if (Date.now() - startTime >= timeout) {
         reject(error);

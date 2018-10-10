@@ -254,6 +254,31 @@ const { getByTestId } = render(
 fireEvent.scroll(getByTestId('scroll-view'), eventData);
 ```
 
+## `waitForElement`
+
+Defined as:
+
+```jsx
+function waitForExpect<T: ReactTestInstance>(
+  expectation: () => T,
+  timeout: number = 4500,
+  interval: number = 50
+): Promise<T> {}
+```
+
+Wait for non-deterministic periods of time until your element appears or times out.
+`waitForExpect` periodically calls `expectation` every `interval` milliseconds.
+
+```jsx
+import { render, waitForElement } from 'react-testing-library';
+
+test('waiting for an Banana to be ready', async () => {
+  const { getByText } = render(<Banana />);
+
+  await waitForElement(() => getByText('Banana ready'));
+});
+```
+
 ## `debug`
 
 Log prettified shallowly rendered component or test instance (just like snapshot) to stdout.
