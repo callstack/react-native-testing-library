@@ -16,7 +16,7 @@ jobs:
           keys:
             - dependencies-{{ checksum "package.json" }}
             - dependencies-
-      - run: yarn install --frozen-lockfile
+      - run: yarn install
       - save_cache:
           key: dependencies-{{ checksum "package.json" }}
           paths:
