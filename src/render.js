@@ -16,6 +16,8 @@ export default function render(
   const instance = renderer.root;
 
   return {
+    instance,
+    renderer,
     ...getByAPI(instance),
     ...queryByAPI(instance),
     update: renderer.update,
