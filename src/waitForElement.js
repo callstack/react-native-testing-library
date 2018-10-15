@@ -5,7 +5,7 @@ export default function waitForExpect<T: *>(
   interval: number = 50
 ): Promise<T> {
   const startTime = Date.now();
-  return new Promise<T>((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const rejectOrRerun = error => {
       if (Date.now() - startTime >= timeout) {
         reject(error);
