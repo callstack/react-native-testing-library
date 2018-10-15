@@ -8,7 +8,8 @@ const findEventHandler = (element: ReactTestInstance, eventName: string) => {
     return element.props[eventHandler];
   }
 
-  if (element.parent === null) {
+  // Do not bubble event to the root element
+  if (element.parent === null || element.parent.parent === null) {
     throw new ErrorWithStack(
       `No handler function found for event: ${eventName}`,
       invokeEvent

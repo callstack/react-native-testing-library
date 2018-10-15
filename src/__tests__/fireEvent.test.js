@@ -29,6 +29,12 @@ const CustomEventComponent = ({ onCustomEvent }) => (
   </TouchableOpacity>
 );
 
+const DoublePressComponent = ({ onDoublePress }) => (
+  <TouchableOpacity onDoublePress={onDoublePress}>
+    <Text testID="button-text">Click me</Text>
+  </TouchableOpacity>
+);
+
 describe('fireEvent', () => {
   test('should invoke specified event', () => {
     const onPressMock = jest.fn();
@@ -70,6 +76,18 @@ describe('fireEvent', () => {
 
     expect(handlerMock).toHaveBeenCalledWith(EVENT_DATA);
   });
+
+  test('should not bubble event to root element', () => {
+    const onPressMock = jest.fn();
+    const { getByTestId } = render(
+      <TouchableOpacity onPress={onPressMock}>
+        <Text testID="test">Content</Text>
+      </TouchableOpacity>
+    );
+
+    expect(() => fireEvent.press(getByTestId('test'))).toThrowError();
+    expect(onPressMock).not.toHaveBeenCalled();
+  });
 });
 
 test('fireEvent.press', () => {
@@ -104,11 +122,8 @@ test('fireEvent.scroll', () => {
 
 test('fireEvent.doublePress', () => {
   const onDoublePressMock = jest.fn();
-
   const { getByTestId } = render(
-    <TouchableOpacity onDoublePress={onDoublePressMock}>
-      <Text testID="button-text">Click me</Text>
-    </TouchableOpacity>
+    <DoublePressComponent onDoublePress={onDoublePressMock} />
   );
 
   fireEvent.doublePress(getByTestId('button-text'));
