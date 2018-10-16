@@ -193,25 +193,6 @@ const { getByTestId } = render(
 fireEvent.press(getByTestId('button'));
 ```
 
-### `fireEvent.doublePress: (element: ReactTestInstance) => void`
-
-Invokes `doublePress` event handler on the element or parent element in the tree.
-
-```jsx
-import { TouchableOpacity, Text } from 'react-native';
-import { render, fireEvent } from 'react-native-testing-library';
-
-const onDoublePressMock = jest.fn();
-
-const { getByTestId } = render(
-  <TouchableOpacity onDoublePress={onDoublePressMock}>
-    <Text testID="button-text">Click me</Text>
-  </TouchableOpacity>
-);
-
-fireEvent.doublePress(getByTestId('button-text'));
-```
-
 ### `fireEvent.changeText: (element: ReactTestInstance, data?: *) => void`
 
 Invokes `changeText` event handler on the element or parent element in the tree.

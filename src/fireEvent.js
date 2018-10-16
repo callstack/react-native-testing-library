@@ -34,8 +34,6 @@ const toEventHandlerName = (eventName: string) =>
 
 const pressHandler = (element: ReactTestInstance) =>
   invokeEvent(element, 'press');
-const doublePressHandler = (element: ReactTestInstance) =>
-  invokeEvent(element, 'doublePress');
 const changeTextHandler = (element: ReactTestInstance, data?: *) =>
   invokeEvent(element, 'changeText', data);
 const scrollHandler = (element: ReactTestInstance, data?: *) =>
@@ -44,7 +42,6 @@ const scrollHandler = (element: ReactTestInstance, data?: *) =>
 const fireEvent = invokeEvent;
 
 fireEvent.press = pressHandler;
-fireEvent.doublePress = doublePressHandler;
 fireEvent.changeText = changeTextHandler;
 fireEvent.scroll = scrollHandler;
 

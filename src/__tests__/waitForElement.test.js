@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { View, Text, TouchableOpacity } from '../__mocks__/reactNativeMock';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { render, fireEvent, waitForElement } from '..';
 
 class Banana extends React.Component<*, *> {
@@ -13,7 +13,7 @@ class Banana extends React.Component<*, *> {
     return (
       <View>
         {this.props.fresh && <Text testID="fresh">Fresh</Text>}
-        <TouchableOpacity onPress={this.changeFresh} type="primary">
+        <TouchableOpacity onPress={this.changeFresh}>
           Change freshness!
         </TouchableOpacity>
       </View>

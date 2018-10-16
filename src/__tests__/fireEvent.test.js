@@ -6,7 +6,7 @@ import {
   Text,
   ScrollView,
   TextInput,
-} from '../__mocks__/reactNativeMock';
+} from 'react-native';
 import { render, fireEvent } from '..';
 
 const OnPressComponent = ({ onPress }) => (
@@ -26,12 +26,6 @@ const WithoutEventComponent = () => (
 const CustomEventComponent = ({ onCustomEvent }) => (
   <TouchableOpacity onPress={onCustomEvent}>
     <Text>Click me</Text>
-  </TouchableOpacity>
-);
-
-const DoublePressComponent = ({ onDoublePress }) => (
-  <TouchableOpacity onDoublePress={onDoublePress}>
-    <Text testID="button-text">Click me</Text>
   </TouchableOpacity>
 );
 
@@ -118,17 +112,6 @@ test('fireEvent.scroll', () => {
   fireEvent.scroll(getByTestId('scroll-view'), eventData);
 
   expect(onScrollMock).toHaveBeenCalledWith(eventData);
-});
-
-test('fireEvent.doublePress', () => {
-  const onDoublePressMock = jest.fn();
-  const { getByTestId } = render(
-    <DoublePressComponent onDoublePress={onDoublePressMock} />
-  );
-
-  fireEvent.doublePress(getByTestId('button-text'));
-
-  expect(onDoublePressMock).toHaveBeenCalled();
 });
 
 test('fireEvent.changeText', () => {

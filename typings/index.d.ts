@@ -41,7 +41,6 @@ export type FireEventFunction = (
 
 export type FireEventAPI = FireEventFunction & {
   press: (element: ReactTestInstance) => any;
-  doublePress: (element: ReactTestInstance) => any;
   changeText: (element: ReactTestInstance, data?: any) => any;
   scroll: (element: ReactTestInstance, data?: any) => any;
 };
