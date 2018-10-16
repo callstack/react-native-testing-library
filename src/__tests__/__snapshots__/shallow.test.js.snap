@@ -6,7 +6,6 @@ exports[`shallow rendering React Test Instance 1`] = `
   allowFontScaling={true}
   ellipsizeMode="tail"
   forwardedRef={null}
-  onPress={[Function]}
   testID="text-button"
 >
   Press me
@@ -16,7 +15,6 @@ exports[`shallow rendering React Test Instance 1`] = `
 exports[`shallow rendering React elements 1`] = `
 <Component>
   <Component
-    onPress={[Function]}
     testID="text-button"
   >
     Press me
