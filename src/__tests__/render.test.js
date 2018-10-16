@@ -161,3 +161,9 @@ test('unmount', () => {
   unmount();
   expect(fn).toHaveBeenCalled();
 });
+
+test('toJSON', () => {
+  const { toJSON } = render(<Button>press me</Button>);
+
+  expect(toJSON()).toMatchSnapshot();
+});

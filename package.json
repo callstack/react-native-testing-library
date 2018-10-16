@@ -30,9 +30,7 @@
     "react": ">=16.0.0",
     "react-test-renderer": ">= 16.0.0"
   },
-  "dependencies": {
-    "react-is": "^16.5.2"
-  },
+  "dependencies": {},
   "scripts": {
     "test": "jest",
     "flow-check": "flow check",
