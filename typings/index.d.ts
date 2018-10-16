@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ReactTestInstance } from 'react-test-renderer';
+import { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
 
 export interface GetByAPI {
   getByName: (name: React.ReactType) => ReactTestInstance;
@@ -30,6 +30,7 @@ export interface RenderOptions {
 export interface RenderAPI extends GetByAPI, QueryByAPI {
   update(nextElement: React.ReactElement<any>): void;
   unmount(nextElement?: React.ReactElement<any>): void;
+  toJSON(): ReactTestRendererJSON | null;
 }
 
 export type FireEventFunction = (
