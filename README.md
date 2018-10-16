@@ -136,6 +136,10 @@ Unmount the in-memory tree, triggering the appropriate lifecycle events
 
 When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases it's convenient to create your custom `render` method. [Follow this great guide on how to set this up](https://github.com/kentcdodds/react-testing-library#custom-render).
 
+### `toJSON: () => ?ReactTestRendererJSON`
+
+Get the rendered component JSON representation, e.g. for snapshot testing.
+
 ## `shallow`
 
 Shallowly render given React component. Since it doesn't return helpers to query the output, it's mostly advised to used for snapshot testing (short snapshots are best for code reviewers).
