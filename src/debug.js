@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import prettyFormat, { plugins } from 'pretty-format'; // eslint-disable-line import/no-extraneous-dependencies
-import { shallow } from '.';
+import shallow from './shallow';
 
 /**
  * Log pretty-printed shallow test component instance
