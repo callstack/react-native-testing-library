@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { View, Text, TouchableOpacity } from '../__mocks__/reactNativeMock';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { render } from '..';
 
 class Button extends React.Component<*> {

@@ -1,31 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`shallow rendering React Test Instance 1`] = `
-<TouchableOpacity
+<TouchableText
+  accessible={true}
+  allowFontScaling={true}
+  ellipsizeMode="tail"
+  forwardedRef={null}
   onPress={[Function]}
-  testID="button"
+  testID="text-button"
 >
-  <Text
-    testID="text-button"
-  >
-    Press me
-  </Text>
-</TouchableOpacity>
+  Press me
+</TouchableText>
 `;
 
 exports[`shallow rendering React elements 1`] = `
-<View
-  testID="root"
->
-  <TouchableOpacity
+<Component>
+  <Component
     onPress={[Function]}
-    testID="button"
+    testID="text-button"
   >
-    <Text
-      testID="text-button"
-    >
-      Press me
-    </Text>
-  </TouchableOpacity>
-</View>
+    Press me
+  </Component>
+</Component>
 `;

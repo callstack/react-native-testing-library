@@ -21,8 +21,9 @@
     "jest": "^23.6.0",
     "metro-react-native-babel-preset": "^0.48.0",
     "pretty-format": "^23.6.0",
-    "react": "^16.5.2",
-    "react-test-renderer": "^16.5.2",
+    "react": "16.6.0-alpha.8af6728",
+    "react-native": "^0.57.3",
+    "react-test-renderer": "16.6.0-alpha.8af6728",
     "typescript": "^3.1.1"
   },
   "peerDependencies": {
@@ -35,5 +36,8 @@
     "flow-check": "flow check",
     "typescript-check": "tsc --noEmit --skipLibCheck --jsx react ./typings/__tests__/*",
     "lint": "eslint src --cache"
+  },
+  "jest": {
+    "preset": "react-native"
   }
 }

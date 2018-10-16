@@ -71,7 +71,6 @@ tree.unmount();
 fireEvent(getByNameString, 'press');
 fireEvent(getByNameString, 'press', 'data');
 fireEvent.press(getByNameString);
-fireEvent.doublePress(getByNameString);
 fireEvent.changeText(getByNameString, 'string');
 fireEvent.scroll(getByNameString, 'eventData');
 

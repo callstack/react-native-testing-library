@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
-import { View, TouchableOpacity, Text } from '../__mocks__/reactNativeMock';
+import { View, Text } from 'react-native';
 import { shallow, render } from '..';
 
 const OnPressComponent = ({ onPress }) => (
-  <View testID="root">
-    <TouchableOpacity onPress={onPress} testID="button">
-      <Text testID="text-button">Press me</Text>
-    </TouchableOpacity>
+  <View>
+    <Text onPress={onPress} testID="text-button">
+      Press me
+    </Text>
   </View>
 );
 
@@ -19,7 +19,7 @@ test('shallow rendering React elements', () => {
 
 test('shallow rendering React Test Instance', () => {
   const { getByTestId } = render(<OnPressComponent onPress={jest.fn} />);
-  const { output } = shallow(getByTestId('root'));
+  const { output } = shallow(getByTestId('text-button'));
 
   expect(output).toMatchSnapshot();
 });
