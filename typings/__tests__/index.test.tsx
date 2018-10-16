@@ -81,8 +81,15 @@ const shallowTree: { output: React.ReactElement<any> } = shallow(
 
 const waitForFlush: Promise<any> = flushMicrotasksQueue();
 
+// debug API
 debug(<TestComponent />);
+debug(<TestComponent />, 'message');
 debug(getByNameString);
+debug(getByNameString, 'message');
+debug.shallow(<TestComponent />);
+debug.shallow(<TestComponent />, 'message');
+debug.deep(<TestComponent />);
+debug.deep(<TestComponent />, 'message');
 
 const waitBy: Promise<ReactTestInstance> = waitForElement<ReactTestInstance>(
   () => tree.getByName('View')

@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`debug 1`] = `
+"<TouchableOpacity
+  activeOpacity={0.2}
+  onPress={[Function bound fn]}
+>
+  <TextComponent
+    text=\\"Press me\\"
+  />
+</TouchableOpacity>"
+`;
+
+exports[`debug.deep 1`] = `
+"<View
+  accessible={true}
+  isTVSelectable={true}
+  onResponderGrant={[Function bound touchableHandleResponderGrant]}
+  onResponderMove={[Function bound touchableHandleResponderMove]}
+  onResponderRelease={[Function bound touchableHandleResponderRelease]}
+  onResponderTerminate={[Function bound touchableHandleResponderTerminate]}
+  onResponderTerminationRequest={[Function bound touchableHandleResponderTerminationRequest]}
+  onStartShouldSetResponder={[Function bound touchableHandleStartShouldSetResponder]}
+  style={
+    Object {
+      \\"opacity\\": 1,
+    }
+  }
+>
+  <Text>
+    Press me
+  </Text>
+</View>"
+`;

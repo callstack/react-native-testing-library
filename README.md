@@ -273,11 +273,51 @@ Log prettified shallowly rendered component or test instance (just like snapshot
 import { debug } from 'react-native-testing-library';
 
 debug(<Component />);
-// console.log:
-// <View>
-//   <Text>Component</Text>
-// </View>
+debug.shallow(<Component />); // an alias for `debug`
 ```
+
+logs:
+
+```jsx
+<TouchableOpacity
+  activeOpacity={0.2}
+  onPress={[Function bound fn]}
+>
+  <TextComponent
+    text="Press me"
+  />
+</TouchableOpacity>
+```
+
+There's also `debug.deep` that renders deeply to stdout.
+
+```jsx
+import { debug } from 'react-native-testing-library';
+
+debug.deep(<Component />);
+```
+
+logs:
+
+```jsx
+<View
+  accessible={true}
+  isTVSelectable={true}
+  onResponderGrant={[Function bound touchableHandleResponderGrant]}
+  // ... more props
+  style={
+    Object {
+      \\"opacity\\": 1,
+    }
+  }
+>
+  <Text>
+    Press me
+  </Text>
+</View>
+```
+
+Optionally you can provide a string message as a second argument to `debug`, which will be displayed right after the component.
 
 ## `flushMicrotasksQueue`
 
