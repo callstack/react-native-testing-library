@@ -20,10 +20,19 @@ function debugShallow(
 /**
  * Log pretty-printed deep test component instance
  */
-function debugDeep(instance: React.Element<*>, message?: any) {
-  const { toJSON } = render(instance);
-
-  console.log(format(toJSON()), message || '');
+function debugDeep(
+  instance: React.Element<*> | ?ReactTestRendererJSON,
+  message?: any
+) {
+  try {
+    // We're assuming React.Element<*> here and fallback to
+    // rendering ?ReactTestRendererJSON
+    // $FlowFixMe
+    const { toJSON } = render(instance);
+    console.log(format(toJSON()), message || '');
+  } catch (e) {
+    console.log(format(instance), message || '');
+  }
 }
 
 const format = input =>

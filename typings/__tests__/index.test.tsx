@@ -90,6 +90,7 @@ debug.shallow(<TestComponent />);
 debug.shallow(<TestComponent />, 'message');
 debug.deep(<TestComponent />);
 debug.deep(<TestComponent />, 'message');
+debug.deep(tree.toJSON());
 
 const waitBy: Promise<ReactTestInstance> = waitForElement<ReactTestInstance>(
   () => tree.getByName('View')

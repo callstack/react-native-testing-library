@@ -3,10 +3,10 @@
 exports[`debug 1`] = `
 "<TouchableOpacity
   activeOpacity={0.2}
-  onPress={[Function bound fn]}
+  onPress={[Function _callee]}
 >
   <TextComponent
-    text=\\"Press me\\"
+    text=\\"Press me 0\\"
   />
 </TouchableOpacity>"
 `;
@@ -28,7 +28,29 @@ exports[`debug.deep 1`] = `
   }
 >
   <Text>
-    Press me
+    Press me 0
+  </Text>
+</View>"
+`;
+
+exports[`debug.deep async test 1`] = `
+"<View
+  accessible={true}
+  isTVSelectable={true}
+  onResponderGrant={[Function bound touchableHandleResponderGrant]}
+  onResponderMove={[Function bound touchableHandleResponderMove]}
+  onResponderRelease={[Function bound touchableHandleResponderRelease]}
+  onResponderTerminate={[Function bound touchableHandleResponderTerminate]}
+  onResponderTerminationRequest={[Function bound touchableHandleResponderTerminationRequest]}
+  onStartShouldSetResponder={[Function bound touchableHandleStartShouldSetResponder]}
+  style={
+    Object {
+      \\"opacity\\": 1,
+    }
+  }
+>
+  <Text>
+    Press me 1
   </Text>
 </View>"
 `;

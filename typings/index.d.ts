@@ -58,7 +58,10 @@ export type DebugFunction = (
 
 export type DebugAPI = DebugFunction & {
   shallow: DebugFunction;
-  deep: (instance: React.ReactElement<any>, message?: string) => void;
+  deep: (
+    instance: React.ReactElement<any> | ReactTestRendererJSON | null,
+    message?: string
+  ) => void;
 };
 
 export declare const render: (
