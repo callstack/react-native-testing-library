@@ -55,6 +55,8 @@ We use [release-it](https://github.com/webpro/release-it) to automate our releas
 yarn release
 ```
 
+NOTE: You must have a `GITHUB_TOKEN` environment variable available. You can create a GitHub access token with the "repo" access [here](https://github.com/settings/tokens).
+
 ## Reporting issues
 
 You can report issues on our [bug tracker](https://github.com/callstack/react-native-testing-library/issues). Please follow the issue template when opening an issue.
