@@ -16,6 +16,9 @@
     "@types/react-test-renderer": "^16.0.3",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
+    "chalk": "^2.4.1",
+    "conventional-changelog-cli": "^2.0.5",
+    "dedent": "^0.7.0",
     "eslint": "^5.6.1",
     "flow-bin": "^0.83.0",
     "jest": "^23.6.0",
@@ -24,6 +27,7 @@
     "react": "16.6.0-alpha.8af6728",
     "react-native": "^0.57.3",
     "react-test-renderer": "16.6.0-alpha.8af6728",
+    "release-it": "^7.6.2",
     "strip-ansi": "^5.0.0",
     "typescript": "^3.1.1"
   },
@@ -36,9 +40,13 @@
     "test": "jest",
     "flow-check": "flow check",
     "typescript-check": "tsc --noEmit --skipLibCheck --jsx react ./typings/__tests__/*",
-    "lint": "eslint src --cache"
+    "lint": "eslint src --cache",
+    "release": "release-it"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   }
 }
