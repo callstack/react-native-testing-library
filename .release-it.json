@@ -10,6 +10,7 @@
     "publish": true
   },
   "github": {
-    "release": true
+    "release": true,
+    "releaseName": "v%s"
   }
 }
