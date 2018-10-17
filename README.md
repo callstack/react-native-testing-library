@@ -295,6 +295,7 @@ There's also `debug.deep` that renders deeply to stdout.
 import { debug } from 'react-native-testing-library';
 
 debug.deep(<Component />);
+debug.deep(toJSON(), 'actually debug JSON too'); // useful when Component state changes
 ```
 
 logs:
