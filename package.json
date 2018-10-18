@@ -1,6 +1,6 @@
 {
   "name": "react-native-testing-library",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Simple React Native testing utilities helping you write better tests with less effort",
   "main": "src/index.js",
   "typings": "./typings/index.d.ts",
