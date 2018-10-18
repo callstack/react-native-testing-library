@@ -22,16 +22,16 @@ function debugShallow(
  */
 function debugDeep(
   instance: React.Element<*> | ?ReactTestRendererJSON,
-  message?: any
+  message?: any = ''
 ) {
   try {
     // We're assuming React.Element<*> here and fallback to
     // rendering ?ReactTestRendererJSON
     // $FlowFixMe
     const { toJSON } = render(instance);
-    console.log(format(toJSON()), message || '');
+    console.log(format(toJSON()), message);
   } catch (e) {
-    console.log(format(instance), message || '');
+    console.log(format(instance), message);
   }
 }
 
