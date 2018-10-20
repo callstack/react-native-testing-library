@@ -77,7 +77,7 @@ function render(
 ): RenderResult {}
 ```
 
-Deeply render given React element and returns helpers to query the output. For convenience it also returns `react-test-renderer`'s `instance` and `renderer` objects, in case you need more control.
+Deeply render given React element and returns helpers to query the output.
 
 ```jsx
 import { render } from 'react-native-testing-library';
