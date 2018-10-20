@@ -21,5 +21,6 @@ export default function render(
     update: renderer.update,
     unmount: renderer.unmount,
     toJSON: renderer.toJSON,
+    getInstance: () => renderer.getInstance()
   };
 }
