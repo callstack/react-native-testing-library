@@ -64,6 +64,7 @@ include_warnings=true
 .*/Libraries/Components/View/ViewPropTypes.js
 .*/Libraries/YellowBox/UI/YellowBoxInspectorFooter.js
 .*/Libraries/YellowBox/UI/YellowBoxList.js
+.*/Libraries/StyleSheet/processTransform.js
 
 [version]
-^0.83.0
+^0.84.0
