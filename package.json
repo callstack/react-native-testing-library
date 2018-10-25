@@ -23,9 +23,9 @@
     "flow-bin": "^0.84.0",
     "jest": "^23.6.0",
     "metro-react-native-babel-preset": "^0.48.0",
-    "react": "16.6.0-alpha.8af6728",
+    "react": "16.6.0",
     "react-native": "^0.57.3",
-    "react-test-renderer": "16.6.0-alpha.8af6728",
+    "react-test-renderer": "16.6.0",
     "release-it": "^7.6.2",
     "strip-ansi": "^5.0.0",
     "typescript": "^3.1.1"
