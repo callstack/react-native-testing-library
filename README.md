@@ -13,9 +13,11 @@ _Appreciation notice: This project is heavily inspired by [react-testing-library
 
 ## The problem
 
-You want to write maintainable tests for your React Native components without testing implementation details, but then you're told to use Enzyme, which only supports shallow rendering in React Native environment. And you want to render deep! But doing so with `react-test-renderer` is so painful.
+You want to write maintainable tests for your React Native components without testing implementation details, but then you're told to use Enzyme, which you learn has no React Native adapter, meaning only shallow rendering is supported. And you want to render deep! But deep rendering may otherwise require jsdom (React Native isn't the web!), while doing deep rendering with `react-test-renderer` is so painful.
 
 You would also like to use the newest React features, but you need to wait for your testing library's abstractions to catch up and it takes a while.
+
+You finally want to approach testing using only best practices, while Enzyme may encourage assertions on implementation details.
 
 ## This solution
 
