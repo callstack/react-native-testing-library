@@ -1,0 +1,4 @@
+{
+  "presets": ["@babel/env", "@babel/flow"],
+  "plugins": ["@babel/plugin-proposal-object-rest-spread"]
+}
