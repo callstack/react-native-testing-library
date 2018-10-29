@@ -2,7 +2,7 @@
   "name": "react-native-testing-library",
   "version": "1.4.0",
   "description": "Simple React Native testing utilities helping you write better tests with less effort",
-  "main": "src/index.js",
+  "main": "build/index.js",
   "typings": "./typings/index.d.ts",
   "repository": "git@github.com:callstack/react-native-testing-library.git",
   "author": "Michał Pierzchała <thymikee@gmail.com>",
@@ -10,7 +10,6 @@
   "private": false,
   "devDependencies": {
     "@babel/core": "^7.1.2",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/runtime": "^7.1.2",
     "@callstack/eslint-config": "^3.0.0",
     "@types/react": "^16.4.15",
@@ -18,8 +17,6 @@
     "@babel/cli": "^7.1.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-flow": "^7.0.0",
     "chalk": "^2.4.1",
     "conventional-changelog-cli": "^2.0.11",
     "dedent": "^0.7.0",
@@ -47,7 +44,7 @@
     "typescript-check": "tsc --noEmit --skipLibCheck --jsx react ./typings/__tests__/*",
     "lint": "eslint src --cache",
     "release": "release-it",
-    "build": "babel src --out-dir build --ignore 'src/__tests__/*'"
+    "build": "babel src --out-dir build --presets=module:metro-react-native-babel-preset  --ignore 'src/__tests__/*'"
   },
   "jest": {
     "preset": "react-native"
