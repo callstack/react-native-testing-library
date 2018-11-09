@@ -67,4 +67,4 @@ include_warnings=true
 .*/Libraries/StyleSheet/processTransform.js
 
 [version]
-^0.84.0
+^0.86.0
