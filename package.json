@@ -17,7 +17,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "chalk": "^2.4.1",
-    "conventional-changelog-cli": "^2.0.5",
+    "conventional-changelog-cli": "^2.0.11",
     "dedent": "^0.7.0",
     "eslint": "^5.6.1",
     "flow-bin": "^0.86.0",
