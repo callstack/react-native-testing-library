@@ -60,11 +60,13 @@ include_warnings=true
 [untyped]
 ; bugs in react-native typings
 .*/Libraries/Components/Navigation/NavigatorIOS.ios.js
-.*/Libraries/Components/TextInput/InputAccessoryView.js
 .*/Libraries/Components/View/ViewPropTypes.js
-.*/Libraries/YellowBox/UI/YellowBoxInspectorFooter.js
-.*/Libraries/YellowBox/UI/YellowBoxList.js
+.*/Libraries/LayoutAnimation/LayoutAnimation.js
+.*/Libraries/Lists/VirtualizedSectionList.js
 .*/Libraries/StyleSheet/processTransform.js
+.*/Libraries/StyleSheet/StyleSheetValidation.js
+.*/Libraries/Text/TextAncestor.js
+.*/Libraries/YellowBox/UI/YellowBoxList.js
 
 [version]
-^0.84.0
+^0.86.0
