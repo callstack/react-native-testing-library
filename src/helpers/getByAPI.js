@@ -5,7 +5,7 @@ import ErrorWithStack from './errorWithStack';
 const getNodeByName = (node, name) =>
   node.type.name === name ||
   node.type.displayName === name ||
-  node.type === name;
+  (typeof name === 'function' && node.type === name);
 
 const getNodeByText = (node, text) =>
   (getNodeByName(node, 'Text') || getNodeByName(node, 'TextInput')) &&
