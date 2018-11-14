@@ -24,7 +24,7 @@
     "jest": "^23.6.0",
     "metro-react-native-babel-preset": "^0.49.0",
     "react": "16.6.1",
-    "react-native": "^0.57.5",
+    "react-native": "^0.57.3",
     "react-test-renderer": "16.6.1",
     "release-it": "^7.6.2",
     "strip-ansi": "^5.0.0",
