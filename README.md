@@ -30,6 +30,7 @@ This library is a replacement for [Enzyme](http://airbnb.io/enzyme/).
 ```jsx
 import { render, fireEvent } from 'react-native-testing-library';
 import { QuestionsBoard } from '../QuestionsBoard';
+import { Question } from '../Question';
 
 function setAnswer(question, answer) {
   fireEvent.changeText(question, answer);
@@ -37,7 +38,7 @@ function setAnswer(question, answer) {
 
 test('should verify two questions', () => {
   const { getAllByName, getByText } = render(<QuestionsBoard {...props} />);
-  const allQuestions = getAllByName('Question');
+  const allQuestions = getAllByName(Question);
 
   setAnswer(allQuestions[0], 'a1');
   setAnswer(allQuestions[1], 'a2');
@@ -84,7 +85,7 @@ Deeply render given React element and returns helpers to query the output.
 ```jsx
 import { render } from 'react-native-testing-library';
 
-const { getByTestId, getByName /*...*/ } = render(<Component />);
+const { getByTestId, getByText /*...*/ } = render(<Component />);
 ```
 
 Returns a `RenderResult` object with following properties:
@@ -104,13 +105,13 @@ type ReactTestInstance = {
 };
 ```
 
-### `getByName: (name: string | React.ComponentType<*>)`
+### `getByName: (name: React.ComponentType<*>)`
 
-A method returning a `ReactTestInstance` with matching name – may be a string or React Element. Throws when no matches.
+A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
 
-### `getAllByName: (name: string | React.ComponentType<*>)`
+### `getAllByName: (name: React.ComponentType<*>)`
 
-A method returning an array of `ReactTestInstance`s with matching name – may be a string or React Element.
+A method returning an array of `ReactTestInstance`s with matching a React component type.
 
 ### `getByText: (text: string | RegExp)`
 
