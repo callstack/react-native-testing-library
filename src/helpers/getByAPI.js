@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
-import ErrorWithStack from './errorWithStack';
+import { ErrorWithStack, createLibraryNotSupportedError } from './errors';
 
-const getNodeByType = (node, type) => node.type === type;
+const filterNodeByType = (node, type) => node.type === type;
 
-const getNodeByName = (node, name) =>
+const filterNodeByName = (node, name) =>
   typeof node.type !== 'string' &&
   (node.type.displayName === name || node.type.name === name);
 
@@ -14,15 +14,13 @@ const getNodeByText = (node, text) => {
     // eslint-disable-next-line
     const { Text, TextInput } = require('react-native');
     return (
-      (getNodeByType(node, Text) || getNodeByType(node, TextInput)) &&
+      (filterNodeByType(node, Text) || filterNodeByType(node, TextInput)) &&
       (typeof text === 'string'
         ? text === node.props.children
         : text.test(node.props.children))
     );
   } catch (error) {
-    throw new Error(
-      `Currently the only supported library to search by text is \`react-native\`.\n\n${error}`
-    );
+    throw createLibraryNotSupportedError(error);
   }
 };
 
@@ -35,7 +33,7 @@ export const getByName = (instance: ReactTestInstance) =>
   function getByNameFn(name: string | React.ComponentType<*>) {
     try {
       return typeof name === 'string'
-        ? instance.find(node => getNodeByName(node, name))
+        ? instance.find(node => filterNodeByName(node, name))
         : instance.findByType(name);
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByNameFn);
@@ -74,7 +72,7 @@ export const getAllByName = (instance: ReactTestInstance) =>
   function getAllByNameFn(name: string | React.ComponentType<*>) {
     const results =
       typeof name === 'string'
-        ? instance.findAll(node => getNodeByName(node, name))
+        ? instance.findAll(node => filterNodeByName(node, name))
         : instance.findAllByType(name);
     if (results.length === 0) {
       throw new ErrorWithStack('No instances found', getAllByNameFn);
