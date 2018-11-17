@@ -1,24 +1,42 @@
 // @flow
 import * as React from 'react';
-import ErrorWithStack from './errorWithStack';
+import prettyFormat from 'pretty-format';
+import { ErrorWithStack, createLibraryNotSupportedError } from './errors';
 
-const getNodeByName = (node, name) =>
-  node.type.name === name ||
-  node.type.displayName === name ||
-  node.type === name;
+const filterNodeByType = (node, type) => node.type === type;
 
-const getNodeByText = (node, text) =>
-  (getNodeByName(node, 'Text') || getNodeByName(node, 'TextInput')) &&
-  (typeof text === 'string'
-    ? text === node.props.children
-    : text.test(node.props.children));
+const filterNodeByName = (node, name) =>
+  typeof node.type !== 'string' &&
+  (node.type.displayName === name || node.type.name === name);
 
+const getNodeByText = (node, text) => {
+  try {
+    // eslint-disable-next-line
+    const { Text, TextInput } = require('react-native');
+    return (
+      (filterNodeByType(node, Text) || filterNodeByType(node, TextInput)) &&
+      (typeof text === 'string'
+        ? text === node.props.children
+        : text.test(node.props.children))
+    );
+  } catch (error) {
+    throw createLibraryNotSupportedError(error);
+  }
+};
+
+const prepareErrorMessage = error =>
+  // Strip info about custom predicate
+  error.message.replace(/ matching custom predicate[^]*/gm, '');
+
+// TODO: deprecate getByName(string | type) in favor of getByType(type)
 export const getByName = (instance: ReactTestInstance) =>
   function getByNameFn(name: string | React.ComponentType<*>) {
     try {
-      return instance.find(node => getNodeByName(node, name));
+      return typeof name === 'string'
+        ? instance.find(node => filterNodeByName(node, name))
+        : instance.findByType(name);
     } catch (error) {
-      throw new ErrorWithStack(`Component not found.`, getByNameFn);
+      throw new ErrorWithStack(prepareErrorMessage(error), getByNameFn);
     }
   };
 
@@ -27,7 +45,7 @@ export const getByText = (instance: ReactTestInstance) =>
     try {
       return instance.find(node => getNodeByText(node, text));
     } catch (error) {
-      throw new ErrorWithStack(`Component not found.`, getByTextFn);
+      throw new ErrorWithStack(prepareErrorMessage(error), getByTextFn);
     }
   };
 
@@ -36,7 +54,7 @@ export const getByProps = (instance: ReactTestInstance) =>
     try {
       return instance.findByProps(props);
     } catch (error) {
-      throw new ErrorWithStack(`Component not found.`, getByPropsFn);
+      throw new ErrorWithStack(prepareErrorMessage(error), getByPropsFn);
     }
   };
 
@@ -45,15 +63,19 @@ export const getByTestId = (instance: ReactTestInstance) =>
     try {
       return instance.findByProps({ testID });
     } catch (error) {
-      throw new ErrorWithStack(`Component not found.`, getByTestIdFn);
+      throw new ErrorWithStack(prepareErrorMessage(error), getByTestIdFn);
     }
   };
 
+// TODO: deprecate getAllByName(string | type) in favor of getAllByType(type)
 export const getAllByName = (instance: ReactTestInstance) =>
   function getAllByNameFn(name: string | React.ComponentType<*>) {
-    const results = instance.findAll(node => getNodeByName(node, name));
+    const results =
+      typeof name === 'string'
+        ? instance.findAll(node => filterNodeByName(node, name))
+        : instance.findAllByType(name);
     if (results.length === 0) {
-      throw new ErrorWithStack(`Components not found.`, getAllByNameFn);
+      throw new ErrorWithStack('No instances found', getAllByNameFn);
     }
     return results;
   };
@@ -62,7 +84,10 @@ export const getAllByText = (instance: ReactTestInstance) =>
   function getAllByTextFn(text: string | RegExp) {
     const results = instance.findAll(node => getNodeByText(node, text));
     if (results.length === 0) {
-      throw new ErrorWithStack(`Components not found.`, getAllByTextFn);
+      throw new ErrorWithStack(
+        `No instances found with text: ${String(text)}`,
+        getAllByTextFn
+      );
     }
     return results;
   };
@@ -71,7 +96,10 @@ export const getAllByProps = (instance: ReactTestInstance) =>
   function getAllByPropsFn(props: { [propName: string]: any }) {
     const results = instance.findAllByProps(props);
     if (results.length === 0) {
-      throw new ErrorWithStack(`Components not found.`, getAllByPropsFn);
+      throw new ErrorWithStack(
+        `No instances found with props:\n${prettyFormat(props)}`,
+        getAllByPropsFn
+      );
     }
     return results;
   };

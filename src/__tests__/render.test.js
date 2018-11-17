@@ -57,7 +57,7 @@ test('getByTestId, queryByTestId', () => {
   const component = getByTestId('bananaFresh');
 
   expect(component.props.children).toBe('not fresh');
-  expect(() => getByTestId('InExistent')).toThrow();
+  expect(() => getByTestId('InExistent')).toThrow('No instances found');
 
   expect(getByTestId('bananaFresh')).toBe(component);
   expect(queryByTestId('InExistent')).toBeNull();
@@ -76,7 +76,8 @@ test('getByName, queryByName', () => {
   sameButton.props.onPress();
 
   expect(bananaFresh.props.children).toBe('not fresh');
-  expect(() => getByName('InExistent')).toThrow();
+  expect(() => getByName('InExistent')).toThrow('No instances found');
+  expect(() => getByName(Text)).toThrow('Expected 1 but found 3');
 
   expect(queryByName('Button')).toBe(button);
   expect(queryByName('InExistent')).toBeNull();
@@ -89,7 +90,7 @@ test('getAllByName, queryAllByName', () => {
   expect(text.props.children).toBe('Is the banana fresh?');
   expect(status.props.children).toBe('not fresh');
   expect(button.props.children).toBe('Change freshness!');
-  expect(() => getAllByName('InExistent')).toThrow();
+  expect(() => getAllByName('InExistent')).toThrow('No instances found');
 
   expect(queryAllByName('Text')[1]).toBe(status);
   expect(queryAllByName('InExistent')).toHaveLength(0);
@@ -104,7 +105,7 @@ test('getByText, queryByText', () => {
   const sameButton = getByText('not fresh');
 
   expect(sameButton.props.children).toBe('not fresh');
-  expect(() => getByText('InExistent')).toThrow();
+  expect(() => getByText('InExistent')).toThrow('No instances found');
 
   expect(queryByText(/change/i)).toBe(button);
   expect(queryByText('InExistent')).toBeNull();
@@ -115,7 +116,7 @@ test('getAllByText, queryAllByText', () => {
   const buttons = getAllByText(/fresh/i);
 
   expect(buttons).toHaveLength(3);
-  expect(() => getAllByText('InExistent')).toThrow();
+  expect(() => getAllByText('InExistent')).toThrow('No instances found');
 
   expect(queryAllByText(/fresh/i)).toEqual(buttons);
   expect(queryAllByText('InExistent')).toHaveLength(0);
@@ -126,7 +127,9 @@ test('getByProps, queryByProps', () => {
   const primaryType = getByProps({ type: 'primary' });
 
   expect(primaryType.props.children).toBe('Change freshness!');
-  expect(() => getByProps({ type: 'inexistent' })).toThrow();
+  expect(() => getByProps({ type: 'inexistent' })).toThrow(
+    'No instances found'
+  );
 
   expect(queryByProps({ type: 'primary' })).toBe(primaryType);
   expect(queryByProps({ type: 'inexistent' })).toBeNull();
@@ -137,7 +140,9 @@ test('getAllByProp, queryAllByProps', () => {
   const primaryTypes = getAllByProps({ type: 'primary' });
 
   expect(primaryTypes).toHaveLength(1);
-  expect(() => getAllByProps({ type: 'inexistent' })).toThrow();
+  expect(() => getAllByProps({ type: 'inexistent' })).toThrow(
+    'No instances found'
+  );
 
   expect(queryAllByProps({ type: 'primary' })).toEqual(primaryTypes);
   expect(queryAllByProps({ type: 'inexistent' })).toHaveLength(0);

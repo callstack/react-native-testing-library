@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable no-console */
 import * as React from 'react';
-import prettyFormat, { plugins } from 'pretty-format'; // eslint-disable-line import/no-extraneous-dependencies
+import prettyFormat, { plugins } from 'pretty-format';
 import shallow from './shallow';
 import render from './render';
 

@@ -13,11 +13,11 @@ exports[`shallow rendering React Test Instance 1`] = `
 `;
 
 exports[`shallow rendering React elements 1`] = `
-<Component>
-  <Component
+<View>
+  <Text
     testID="text-button"
   >
     Press me
-  </Component>
-</Component>
+  </Text>
+</View>
 `;

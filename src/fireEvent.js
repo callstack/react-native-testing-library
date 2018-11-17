@@ -1,5 +1,5 @@
 // @flow
-import ErrorWithStack from './helpers/errorWithStack';
+import { ErrorWithStack } from './helpers/errors';
 
 const findEventHandler = (element: ReactTestInstance, eventName: string) => {
   const eventHandler = toEventHandlerName(eventName);
