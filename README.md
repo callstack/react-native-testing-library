@@ -166,6 +166,10 @@ optional message
 
 Prints shallowly rendered component passed to `render` with optional message on top. Uses [debug.shallow](#debug) under the hood, but it's easier to use.
 
+### `toJSON: () => ?ReactTestRendererJSON`
+
+Get the rendered component JSON representation, e.g. for snapshot testing.
+
 ## `shallow`
 
 Shallowly render given React component. Since it doesn't return helpers to query the output, it's mostly advised to used for snapshot testing (short snapshots are best for code reviewers).
