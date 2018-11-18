@@ -3,6 +3,7 @@ import * as React from 'react';
 import TestRenderer from 'react-test-renderer'; // eslint-disable-line import/no-extraneous-dependencies
 import { getByAPI } from './helpers/getByAPI';
 import { queryByAPI } from './helpers/queryByAPI';
+import debug from './debug';
 
 /**
  * Renders test component deeply using react-test-renderer and exposes helpers
@@ -21,5 +22,14 @@ export default function render(
     update: renderer.update,
     unmount: renderer.unmount,
     toJSON: renderer.toJSON,
+    debug: renderDebug(instance, renderer),
   };
+}
+
+function renderDebug(instance: ReactTestInstance, renderer) {
+  function renderDebugImpl(message?: string) {
+    return debug.deep(renderer.toJSON(), message);
+  }
+  renderDebugImpl.shallow = message => debug.shallow(instance, message);
+  return renderDebugImpl;
 }

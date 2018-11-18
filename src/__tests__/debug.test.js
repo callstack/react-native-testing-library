@@ -43,7 +43,7 @@ test('debug', () => {
 
   debug(component, 'test message');
 
-  expect(console.log).toBeCalledWith(output, 'test message');
+  expect(console.log).toBeCalledWith('test message\n\n', output);
 });
 
 test('debug.shallow', () => {
@@ -56,7 +56,8 @@ test('debug.deep', () => {
   const component = <Button onPress={jest.fn} text="Press me" />;
   debug.deep(component);
 
-  const output = console.log.mock.calls[0][0];
+  const mockCalls = console.log.mock.calls;
+  const output = mockCalls[0][0];
 
   expect(stripAnsi(output)).not.toEqual(output);
   expect(stripAnsi(output)).toMatchSnapshot();
@@ -65,7 +66,7 @@ test('debug.deep', () => {
 
   debug.deep(component, 'test message');
 
-  expect(console.log).toBeCalledWith(output, 'test message');
+  expect(console.log).toBeCalledWith('test message\n\n', output);
 });
 
 test('debug.deep async test', async () => {
@@ -80,7 +81,8 @@ test('debug.deep async test', async () => {
 
   debug.deep(toJSON());
 
-  const output = console.log.mock.calls[0][0];
+  const mockCalls = console.log.mock.calls;
+  const output = mockCalls[0][0];
 
   expect(stripAnsi(output)).toMatchSnapshot();
 });

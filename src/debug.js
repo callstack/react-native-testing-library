@@ -14,7 +14,11 @@ function debugShallow(
 ) {
   const { output } = shallow(instance);
 
-  console.log(format(output), message || '');
+  if (message) {
+    console.log(`${message}\n\n`, format(output));
+  } else {
+    console.log(format(output));
+  }
 }
 
 /**
@@ -29,9 +33,17 @@ function debugDeep(
     // rendering ?ReactTestRendererJSON
     // $FlowFixMe
     const { toJSON } = render(instance);
-    console.log(format(toJSON()), message);
+    if (message) {
+      console.log(`${message}\n\n`, format(toJSON()));
+    } else {
+      console.log(format(toJSON()));
+    }
   } catch (e) {
-    console.log(format(instance), message);
+    if (message) {
+      console.log(`${message}\n\n`, format(instance));
+    } else {
+      console.log(format(instance));
+    }
   }
 }
 

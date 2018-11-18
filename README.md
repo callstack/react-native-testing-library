@@ -139,9 +139,32 @@ Unmount the in-memory tree, triggering the appropriate lifecycle events
 
 When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases it's convenient to create your custom `render` method. [Follow this great guide on how to set this up](https://github.com/kentcdodds/react-testing-library#custom-render).
 
-### `toJSON: () => ?ReactTestRendererJSON`
+### `debug: (message?: string) => void`
 
-Get the rendered component JSON representation, e.g. for snapshot testing.
+Prints deeply rendered component passed to `render` with optional message on top. Uses [debug.deep](#debug) under the hood, but it's easier to use.
+
+```jsx
+const { debug } = render(<Component />);
+
+debug('optional message');
+```
+
+logs optional message and colored JSX:
+
+```jsx
+optional message
+
+<TouchableOpacity
+  activeOpacity={0.2}
+  onPress={[Function bound fn]}
+>
+  <Text>Press me</Text>
+</TouchableOpacity>
+```
+
+### `debug.shallow: (message?: string) => void`
+
+Prints shallowly rendered component passed to `render` with optional message on top. Uses [debug.shallow](#debug) under the hood, but it's easier to use.
 
 ## `shallow`
 
