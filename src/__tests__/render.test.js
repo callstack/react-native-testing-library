@@ -96,6 +96,20 @@ test('getAllByName, queryAllByName', () => {
   expect(queryAllByName('InExistent')).toHaveLength(0);
 });
 
+test('getAllByType, queryAllByType', () => {
+  const { getAllByType, queryAllByType } = render(<Banana />);
+  const [text, status, button] = getAllByType(Text);
+  const InExistent = () => null;
+
+  expect(text.props.children).toBe('Is the banana fresh?');
+  expect(status.props.children).toBe('not fresh');
+  expect(button.props.children).toBe('Change freshness!');
+  expect(() => getAllByType(InExistent)).toThrow('No instances found');
+
+  expect(queryAllByType(Text)[1]).toBe(status);
+  expect(queryAllByType(InExistent)).toHaveLength(0);
+});
+
 test('getByText, queryByText', () => {
   const { getByText, queryByText } = render(<Banana />);
   const button = getByText(/change/i);
