@@ -14,3 +14,27 @@ export const createLibraryNotSupportedError = (error: Error) =>
       error.message
     }`
   );
+
+const warned = {
+  getByName: false,
+  getAllByName: false,
+  queryByName: false,
+  queryAllByName: false,
+};
+
+export const logDeprecationWarning = (
+  deprecatedFnName: string,
+  alternativeFnName: string
+) => {
+  if (warned[deprecatedFnName]) {
+    return;
+  }
+  console.warn(`Deprecation Warning:
+
+  "${deprecatedFnName}" is deprecated and will be removed in next major release. Please use "${alternativeFnName}" instead.
+
+  Docs: https://github.com/callstack/react-native-testing-library#${alternativeFnName.toLowerCase()}-type-reactcomponenttype
+    `);
+
+  warned[deprecatedFnName] = true;
+};

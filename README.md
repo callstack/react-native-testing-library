@@ -105,22 +105,6 @@ type ReactTestInstance = {
 };
 ```
 
-### `getByName: (name: React.ComponentType<*>)`
-
-A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
-
-### `getAllByName: (name: React.ComponentType<*>)`
-
-A method returning an array of `ReactTestInstance`s with matching a React component type.
-
-### `getByType: (type: React.ComponentType<*>)`
-
-A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
-
-### `getAllByType: (type: React.ComponentType<*>)`
-
-A method returning an array of `ReactTestInstance`s with matching a React component type.
-
 ### `getByText: (text: string | RegExp)`
 
 A method returning a `ReactTestInstance` with matching text – may be a string or regular expression. Throws when no matches.
@@ -136,6 +120,26 @@ A method returning a `ReactTestInstance` with matching props object. Throws when
 ### `getAllByProps: (props: { [propName: string]: any })`
 
 A method returning an array of `ReactTestInstance`s with matching props object.
+
+### `getByType: (type: React.ComponentType<*>)`
+
+A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
+
+### `getAllByType: (type: React.ComponentType<*>)`
+
+A method returning an array of `ReactTestInstance`s with matching a React component type.
+
+### `[DEPRECATED] getByName: (name: React.ComponentType<*>)`
+
+A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
+
+> This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. It will be removed in next major release (v2.0). Use [`getByType`](#getbytype-type-reactcomponenttype) instead.
+
+### `[DEPRECATED] getAllByName: (name: React.ComponentType<*>)`
+
+A method returning an array of `ReactTestInstance`s with matching a React component type.
+
+> This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. It will be removed in next major release (v2.0). Use [`getAllByType`](#getallbytype-type-reactcomponenttype) instead.
 
 ### `update: (element: React.Element<*>) => void`
 

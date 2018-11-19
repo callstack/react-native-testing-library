@@ -1,7 +1,11 @@
 // @flow
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
-import { ErrorWithStack, createLibraryNotSupportedError } from './errors';
+import {
+  ErrorWithStack,
+  createLibraryNotSupportedError,
+  logDeprecationWarning,
+} from './errors';
 
 const filterNodeByType = (node, type) => node.type === type;
 
@@ -28,9 +32,9 @@ const prepareErrorMessage = error =>
   // Strip info about custom predicate
   error.message.replace(/ matching custom predicate[^]*/gm, '');
 
-// TODO: deprecate getByName(string | type) in favor of getByType(type)
 export const getByName = (instance: ReactTestInstance) =>
   function getByNameFn(name: string | React.ComponentType<*>) {
+    logDeprecationWarning('getByName', 'getByType');
     try {
       return typeof name === 'string'
         ? instance.find(node => filterNodeByName(node, name))
@@ -76,9 +80,9 @@ export const getByTestId = (instance: ReactTestInstance) =>
     }
   };
 
-// TODO: deprecate getAllByName(string | type) in favor of getAllByType(type)
 export const getAllByName = (instance: ReactTestInstance) =>
   function getAllByNameFn(name: string | React.ComponentType<*>) {
+    logDeprecationWarning('getAllByName', 'getAllByType');
     const results =
       typeof name === 'string'
         ? instance.findAll(node => filterNodeByName(node, name))

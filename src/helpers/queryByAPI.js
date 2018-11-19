@@ -11,10 +11,12 @@ import {
   getAllByText,
   getAllByProps,
 } from './getByAPI';
+import { logDeprecationWarning } from './errors';
 
 export const queryByName = (instance: ReactTestInstance) => (
   name: string | React.ComponentType<*>
 ) => {
+  logDeprecationWarning('queryByName', 'getByName');
   try {
     return getByName(instance)(name);
   } catch (error) {
@@ -65,6 +67,7 @@ export const queryByTestId = (instance: ReactTestInstance) => (
 export const queryAllByName = (instance: ReactTestInstance) => (
   name: string | React.ComponentType<*>
 ) => {
+  logDeprecationWarning('queryAllByName', 'getAllByName');
   try {
     return getAllByName(instance)(name);
   } catch (error) {
