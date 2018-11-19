@@ -4,6 +4,7 @@ import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import stripAnsi from 'strip-ansi';
 import { debug, render, fireEvent, flushMicrotasksQueue } from '..';
+import debugShallow from '../helpers/debugShallow';
 
 function TextComponent({ text }) {
   return <Text>{text}</Text>;
@@ -43,11 +44,11 @@ test('debug', () => {
 
   debug(component, 'test message');
 
-  expect(console.log).toBeCalledWith(output, 'test message');
+  expect(console.log).toBeCalledWith('test message\n\n', output);
 });
 
 test('debug.shallow', () => {
-  expect(debug.shallow).toBe(debug);
+  expect(debug.shallow).toBe(debugShallow);
 });
 
 test('debug.deep', () => {
@@ -65,7 +66,7 @@ test('debug.deep', () => {
 
   debug.deep(component, 'test message');
 
-  expect(console.log).toBeCalledWith(output, 'test message');
+  expect(console.log).toBeCalledWith('test message\n\n', output);
 });
 
 test('debug.deep async test', async () => {

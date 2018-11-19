@@ -35,6 +35,7 @@ export interface RenderAPI extends GetByAPI, QueryByAPI {
   update(nextElement: React.ReactElement<any>): void;
   unmount(nextElement?: React.ReactElement<any>): void;
   toJSON(): ReactTestRendererJSON | null;
+  debug(message?: string): void;
 }
 
 export type FireEventFunction = (

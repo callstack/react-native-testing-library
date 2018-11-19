@@ -1,26 +1,15 @@
 // @flow
 /* eslint-disable no-console */
 import * as React from 'react';
-import prettyFormat, { plugins } from 'pretty-format';
-import shallow from './shallow';
 import render from './render';
-
-/**
- * Log pretty-printed shallow test component instance
- */
-function debugShallow(
-  instance: ReactTestInstance | React.Element<*>,
-  message?: any
-) {
-  const { output } = shallow(instance);
-
-  console.log(format(output), message || '');
-}
+import debugShallow from './helpers/debugShallow';
+import debugDeep from './helpers/debugDeep';
+import format from './helpers/format';
 
 /**
  * Log pretty-printed deep test component instance
  */
-function debugDeep(
+function debugDeepElementOrInstance(
   instance: React.Element<*> | ?ReactTestRendererJSON,
   message?: any = ''
 ) {
@@ -29,21 +18,22 @@ function debugDeep(
     // rendering ?ReactTestRendererJSON
     // $FlowFixMe
     const { toJSON } = render(instance);
-    console.log(format(toJSON()), message);
+    if (message) {
+      console.log(`${message}\n\n`, format(toJSON()));
+    } else {
+      console.log(format(toJSON()));
+    }
   } catch (e) {
-    console.log(format(instance), message);
+    // $FlowFixMe
+    debugDeep(instance);
   }
 }
 
-const format = input =>
-  prettyFormat(input, {
-    plugins: [plugins.ReactTestComponent, plugins.ReactElement],
-    highlight: true,
-  });
-
-const debug = debugShallow;
+function debug(instance: ReactTestInstance | React.Element<*>, message?: any) {
+  return debugShallow(instance, message);
+}
 
 debug.shallow = debugShallow;
-debug.deep = debugDeep;
+debug.deep = debugDeepElementOrInstance;
 
 export default debug;

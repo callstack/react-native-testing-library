@@ -1,5 +1,143 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`debug 1`] = `
+"<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID=\\"bananaFresh\\"
+  >
+    not fresh
+  </Text>
+  <View
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function bound touchableHandleResponderGrant]}
+    onResponderMove={[Function bound touchableHandleResponderMove]}
+    onResponderRelease={[Function bound touchableHandleResponderRelease]}
+    onResponderTerminate={[Function bound touchableHandleResponderTerminate]}
+    onResponderTerminationRequest={[Function bound touchableHandleResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function bound touchableHandleStartShouldSetResponder]}
+    style={
+      Object {
+        \\"opacity\\": 1,
+      }
+    }
+  >
+    <Text>
+      Change freshness!
+    </Text>
+  </View>
+</View>"
+`;
+
+exports[`debug changing component: bananaFresh button message should now be "fresh" 1`] = `
+"<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID=\\"bananaFresh\\"
+  >
+    fresh
+  </Text>
+  <View
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function bound touchableHandleResponderGrant]}
+    onResponderMove={[Function bound touchableHandleResponderMove]}
+    onResponderRelease={[Function bound touchableHandleResponderRelease]}
+    onResponderTerminate={[Function bound touchableHandleResponderTerminate]}
+    onResponderTerminationRequest={[Function bound touchableHandleResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function bound touchableHandleStartShouldSetResponder]}
+    style={
+      Object {
+        \\"opacity\\": 1,
+      }
+    }
+  >
+    <Text>
+      Change freshness!
+    </Text>
+  </View>
+</View>"
+`;
+
+exports[`debug: shallow 1`] = `
+"<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID=\\"bananaFresh\\"
+  >
+    not fresh
+  </Text>
+  <Button
+    onPress={[Function anonymous]}
+    type=\\"primary\\"
+  >
+    Change freshness!
+  </Button>
+</View>"
+`;
+
+exports[`debug: shallow with message 1`] = `
+"my other custom message
+
+<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID=\\"bananaFresh\\"
+  >
+    not fresh
+  </Text>
+  <Button
+    onPress={[Function anonymous]}
+    type=\\"primary\\"
+  >
+    Change freshness!
+  </Button>
+</View>"
+`;
+
+exports[`debug: with message 1`] = `
+"my custom message
+
+<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID=\\"bananaFresh\\"
+  >
+    not fresh
+  </Text>
+  <View
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function bound touchableHandleResponderGrant]}
+    onResponderMove={[Function bound touchableHandleResponderMove]}
+    onResponderRelease={[Function bound touchableHandleResponderRelease]}
+    onResponderTerminate={[Function bound touchableHandleResponderTerminate]}
+    onResponderTerminationRequest={[Function bound touchableHandleResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function bound touchableHandleStartShouldSetResponder]}
+    style={
+      Object {
+        \\"opacity\\": 1,
+      }
+    }
+  >
+    <Text>
+      Change freshness!
+    </Text>
+  </View>
+</View>"
+`;
+
 exports[`toJSON 1`] = `
 <View
   accessible={true}

@@ -2,7 +2,8 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { render } from '..';
+import stripAnsi from 'strip-ansi';
+import { render, fireEvent } from '..';
 
 class Button extends React.Component<*> {
   render() {
@@ -185,4 +186,44 @@ test('toJSON', () => {
   const { toJSON } = render(<Button>press me</Button>);
 
   expect(toJSON()).toMatchSnapshot();
+});
+
+test('debug', () => {
+  jest.spyOn(console, 'log').mockImplementation(x => x);
+
+  const { debug } = render(<Banana />);
+
+  debug();
+  debug('my custom message');
+  debug.shallow();
+  debug.shallow('my other custom message');
+
+  // eslint-disable-next-line no-console
+  const mockCalls = console.log.mock.calls;
+
+  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+  expect(stripAnsi(mockCalls[1][0] + mockCalls[1][1])).toMatchSnapshot(
+    'with message'
+  );
+  expect(stripAnsi(mockCalls[2][0])).toMatchSnapshot('shallow');
+  expect(stripAnsi(mockCalls[3][0] + mockCalls[3][1])).toMatchSnapshot(
+    'shallow with message'
+  );
+});
+
+test('debug changing component', () => {
+  jest.spyOn(console, 'log').mockImplementation(x => x);
+
+  const { getByProps, debug } = render(<Banana />);
+
+  fireEvent.press(getByProps({ type: 'primary' }));
+
+  debug();
+
+  // eslint-disable-next-line no-console
+  const mockCalls = console.log.mock.calls;
+
+  expect(stripAnsi(mockCalls[4][0])).toMatchSnapshot(
+    'bananaFresh button message should now be "fresh"'
+  );
 });
