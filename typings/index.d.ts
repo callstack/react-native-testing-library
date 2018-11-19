@@ -3,20 +3,24 @@ import { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
 
 export interface GetByAPI {
   getByName: (name: React.ReactType) => ReactTestInstance;
+  getByType: (type: React.ComponentType) => ReactTestInstance;
   getByText: (text: string | RegExp) => ReactTestInstance;
   getByProps: (props: Record<string, any>) => ReactTestInstance;
   getByTestId: (testID: string) => ReactTestInstance;
   getAllByName: (name: React.ReactType) => Array<ReactTestInstance>;
+  getAllByType: (type: React.ComponentType) => Array<ReactTestInstance>;
   getAllByText: (text: string | RegExp) => Array<ReactTestInstance>;
   getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>;
 }
 
 export interface QueryByAPI {
   queryByName: (name: React.ReactType) => ReactTestInstance | null;
+  queryByType: (type: React.ComponentType) => ReactTestInstance | null;
   queryByText: (name: string | RegExp) => ReactTestInstance | null;
   queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
   queryByTestId: (testID: string) => ReactTestInstance | null;
   queryAllByName: (name: React.ReactType) => Array<ReactTestInstance> | [];
+  queryAllByType: (type: React.ComponentType) => Array<ReactTestInstance> | [];
   queryAllByText: (text: string | RegExp) => Array<ReactTestInstance> | [];
   queryAllByProps: (
     props: Record<string, any>

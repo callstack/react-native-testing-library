@@ -3,9 +3,11 @@ import * as React from 'react';
 import {
   getByTestId,
   getByName,
+  getByType,
   getByText,
   getByProps,
   getAllByName,
+  getAllByType,
   getAllByText,
   getAllByProps,
 } from './getByAPI';
@@ -15,6 +17,16 @@ export const queryByName = (instance: ReactTestInstance) => (
 ) => {
   try {
     return getByName(instance)(name);
+  } catch (error) {
+    return null;
+  }
+};
+
+export const queryByType = (instance: ReactTestInstance) => (
+  type: React.ComponentType<*>
+) => {
+  try {
+    return getByType(instance)(type);
   } catch (error) {
     return null;
   }
@@ -60,6 +72,16 @@ export const queryAllByName = (instance: ReactTestInstance) => (
   }
 };
 
+export const queryAllByType = (instance: ReactTestInstance) => (
+  type: React.ComponentType<*>
+) => {
+  try {
+    return getAllByType(instance)(type);
+  } catch (error) {
+    return [];
+  }
+};
+
 export const queryAllByText = (instance: ReactTestInstance) => (
   text: string | RegExp
 ) => {
@@ -83,9 +105,11 @@ export const queryAllByProps = (instance: ReactTestInstance) => (props: {
 export const queryByAPI = (instance: ReactTestInstance) => ({
   queryByTestId: queryByTestId(instance),
   queryByName: queryByName(instance),
+  queryByType: queryByType(instance),
   queryByText: queryByText(instance),
   queryByProps: queryByProps(instance),
   queryAllByName: queryAllByName(instance),
+  queryAllByType: queryAllByType(instance),
   queryAllByText: queryAllByText(instance),
   queryAllByProps: queryAllByProps(instance),
 });

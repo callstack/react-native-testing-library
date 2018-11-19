@@ -40,6 +40,15 @@ export const getByName = (instance: ReactTestInstance) =>
     }
   };
 
+export const getByType = (instance: ReactTestInstance) =>
+  function getByTypeFn(type: React.ComponentType<*>) {
+    try {
+      return instance.findByType(type);
+    } catch (error) {
+      throw new ErrorWithStack(prepareErrorMessage(error), getByTypeFn);
+    }
+  };
+
 export const getByText = (instance: ReactTestInstance) =>
   function getByTextFn(text: string | RegExp) {
     try {
@@ -80,6 +89,15 @@ export const getAllByName = (instance: ReactTestInstance) =>
     return results;
   };
 
+export const getAllByType = (instance: ReactTestInstance) =>
+  function getAllByTypeFn(type: React.ComponentType<*>) {
+    const results = instance.findAllByType(type);
+    if (results.length === 0) {
+      throw new ErrorWithStack('No instances found', getAllByTypeFn);
+    }
+    return results;
+  };
+
 export const getAllByText = (instance: ReactTestInstance) =>
   function getAllByTextFn(text: string | RegExp) {
     const results = instance.findAll(node => getNodeByText(node, text));
@@ -107,9 +125,11 @@ export const getAllByProps = (instance: ReactTestInstance) =>
 export const getByAPI = (instance: ReactTestInstance) => ({
   getByTestId: getByTestId(instance),
   getByName: getByName(instance),
+  getByType: getByType(instance),
   getByText: getByText(instance),
   getByProps: getByProps(instance),
   getAllByName: getAllByName(instance),
+  getAllByType: getAllByType(instance),
   getAllByText: getAllByText(instance),
   getAllByProps: getAllByProps(instance),
 });

@@ -23,6 +23,7 @@ const tree = render(<TestComponent />);
 // getByAPI tests
 const getByNameString: ReactTestInstance = tree.getByName('View');
 const getByNameContructor: ReactTestInstance = tree.getByName(View);
+const getByType: ReactTestInstance = tree.getByType(View);
 const getByTextString: ReactTestInstance = tree.getByText('<View />');
 const getByTextRegExp: ReactTestInstance = tree.getByText(/View/g);
 const getByProps: ReactTestInstance = tree.getByProps({ value: 2 });
@@ -31,6 +32,7 @@ const getAllByNameString: Array<ReactTestInstance> = tree.getAllByName('View');
 const getAllByNameConstructor: Array<ReactTestInstance> = tree.getAllByName(
   View
 );
+const getAllByType: Array<ReactTestInstance> = tree.getAllByType(View);
 const getAllByTextString: Array<ReactTestInstance> = tree.getAllByText(
   '<View />'
 );
@@ -42,6 +44,7 @@ const getAllByProps: Array<ReactTestInstance> = tree.getAllByProps({
 // queuryByAPI tests
 const queryByNameString: ReactTestInstance | null = tree.queryByName('View');
 const queryByNameConstructor: ReactTestInstance | null = tree.queryByName(View);
+const queryByType: ReactTestInstance | null = tree.queryByType(View);
 const queryByTextString: ReactTestInstance | null = tree.queryByText(
   '<View />'
 );
@@ -54,6 +57,7 @@ const queryAllByNameString: Array<ReactTestInstance> = tree.getAllByName(
 const queryAllByNameConstructor: Array<ReactTestInstance> = tree.getAllByName(
   View
 );
+const queryAllByType: Array<ReactTestInstance> = tree.getAllByType(View);
 const queryAllByTextString: Array<ReactTestInstance> = tree.queryAllByText(
   'View'
 );
