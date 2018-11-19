@@ -113,6 +113,14 @@ A method returning a `ReactTestInstance` with matching a React component type. T
 
 A method returning an array of `ReactTestInstance`s with matching a React component type.
 
+### `getByType: (type: React.ComponentType<*>)`
+
+A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
+
+### `getAllByType: (type: React.ComponentType<*>)`
+
+A method returning an array of `ReactTestInstance`s with matching a React component type.
+
 ### `getByText: (text: string | RegExp)`
 
 A method returning a `ReactTestInstance` with matching text – may be a string or regular expression. Throws when no matches.
