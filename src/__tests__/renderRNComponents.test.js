@@ -26,7 +26,7 @@ class RNComponents extends React.Component<*> {
               <Text>t2</Text>
               <Text>t3</Text>
             </TouchableOpacity>
-            <ActivityIndicator show />
+            <ActivityIndicator />
           </ScrollView>
         </Modal>
       </View>
