@@ -1,6 +1,6 @@
 # API / Usage
 
-This page gathers all available APIs and usage examples.
+This page gathers public API of `react-native-testing-library` along with usage examples.
 
 ## `render`
 
