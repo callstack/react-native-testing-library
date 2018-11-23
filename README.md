@@ -66,13 +66,13 @@ As you may have noticed, it's not tied to React Native at all – you can safely
 
 ## API / Usage
 
-The [public API](docs/api) of `react-native-testing-library` is focused around these essential methods:
+The [public API](docs/api.md) of `react-native-testing-library` is focused around these essential methods:
 
-- [`render`](docs/api#render) – deeply renders given React element and returns helpers to query the output components.
-- [`shallow`](docs/api#shallow) – shallowly renders given React component. It doesn't return any helpers to query the output.
-- [`fireEvent`](docs/api#fireevent) - invokes named event handler on the element.
-- [`waitForElement`](docs/api#waitforelement) - waits for non-deterministic periods of time until your element appears or times out.
-- [`flushMicrotasksQueue`](docs/api#flushmicrotasksqueue) - waits for microtasks queue to flush.
+- [`render`](docs/api.md#render) – deeply renders given React element and returns helpers to query the output components.
+- [`shallow`](docs/api.md#shallow) – shallowly renders given React component. It doesn't return any helpers to query the output.
+- [`fireEvent`](docs/api.md#fireevent) - invokes named event handler on the element.
+- [`waitForElement`](docs/api.md#waitforelement) - waits for non-deterministic periods of time until your element appears or times out.
+- [`flushMicrotasksQueue`](docs/api.md#flushmicrotasksqueue) - waits for microtasks queue to flush.
 
 <!-- badges -->
 
