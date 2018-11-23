@@ -1,4 +1,4 @@
-## API / Usage
+# API / Usage
 
 This page gathers all available APIs and usage examples.
 
