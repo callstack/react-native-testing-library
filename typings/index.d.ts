@@ -1,5 +1,5 @@
-import * as React from "react";
-import { ReactTestInstance, ReactTestRendererJSON } from "react-test-renderer";
+import * as React from 'react';
+import { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
 
 export interface GetByAPI {
   getByName: (name: React.ReactType) => ReactTestInstance;
