@@ -14,11 +14,7 @@ const TextPress = ({ dummyID }: Props) => (
 );
 
 test('shallow rendering React elements', () => {
-  const { output } = shallow(
-    <TextPress dummyID="2">
-      <Text>ka</Text>
-    </TextPress>
-  );
+  const { output } = shallow(<TextPress dummyID="2" />);
 
   expect(output).toMatchSnapshot();
 });
