@@ -8,10 +8,10 @@ Defined as:
 
 ```jsx
 function render(
-  component: React.Element<*>,
+  component: React.Element<any>,
   options?: {
     /* You won't often use this, but it's helpful when testing refs */
-    createNodeMock: (element: React.Element<*>) => any,
+    createNodeMock: (element: React.Element<any>) => any,
   }
 ): RenderResult {}
 ```
@@ -81,7 +81,7 @@ A method returning an array of `ReactTestInstance`s with matching a React compon
 
 > This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. It will be removed in next major release (v2.0). Use [`getAllByType`](#getallbytype-type-reactcomponenttype) instead.
 
-### `update: (element: React.Element<*>) => void`
+### `update: (element: React.Element<any>) => void`
 
 Re-render the in-memory tree with a new root element. This simulates a React update at the root. If the new element has the same type and key as the previous element, the tree will be updated; otherwise, it will re-mount a new tree.
 

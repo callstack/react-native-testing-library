@@ -7,7 +7,7 @@ import format from './format';
  * Log pretty-printed shallow test component instance
  */
 export default function debugShallow(
-  instance: ReactTestInstance | React.Element<*>,
+  instance: ReactTestInstance | React.Element<any>,
   message?: any
 ) {
   const { output } = shallow(instance);
