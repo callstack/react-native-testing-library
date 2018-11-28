@@ -13,7 +13,9 @@ exports[`shallow rendering React Test Instance 1`] = `
 `;
 
 exports[`shallow rendering React elements 1`] = `
-<View>
+<View
+  testID="2"
+>
   <Text
     testID="text-button"
   >
