@@ -59,9 +59,13 @@ A method returning an array of `ReactTestInstance`s with matching props object.
 
 ### `getByType: (type: React.ComponentType<*>)`
 
+> Note: added in v1.4
+
 A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
 
 ### `getAllByType: (type: React.ComponentType<*>)`
+
+> Note: added in v1.4
 
 A method returning an array of `ReactTestInstance`s with matching a React component type.
 
