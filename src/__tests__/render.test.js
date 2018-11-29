@@ -124,6 +124,7 @@ test('getByText, queryByText', () => {
 
   expect(queryByText(/change/i)).toBe(button);
   expect(queryByText('InExistent')).toBeNull();
+  expect(() => queryByText(/fresh/)).toThrow('Expected 1 but found 3');
 });
 
 test('getAllByText, queryAllByText', () => {

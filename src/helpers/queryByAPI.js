@@ -11,58 +11,60 @@ import {
   getAllByText,
   getAllByProps,
 } from './getByAPI';
-import { logDeprecationWarning } from './errors';
+import { ErrorWithStack, logDeprecationWarning } from './errors';
 
-export const queryByName = (instance: ReactTestInstance) => (
-  name: string | React.ComponentType<*>
-) => {
-  logDeprecationWarning('queryByName', 'getByName');
-  try {
-    return getByName(instance)(name);
-  } catch (error) {
+const createQueryByError = (error: Error, callsite: Function) => {
+  if (error.message.includes('No instances found')) {
     return null;
   }
+  throw new ErrorWithStack(error.message, callsite);
 };
 
-export const queryByType = (instance: ReactTestInstance) => (
-  type: React.ComponentType<*>
-) => {
-  try {
-    return getByType(instance)(type);
-  } catch (error) {
-    return null;
-  }
-};
+export const queryByName = (instance: ReactTestInstance) =>
+  function queryByNameFn(name: string | React.ComponentType<*>) {
+    logDeprecationWarning('queryByName', 'getByName');
+    try {
+      return getByName(instance)(name);
+    } catch (error) {
+      return createQueryByError(error, queryByNameFn);
+    }
+  };
 
-export const queryByText = (instance: ReactTestInstance) => (
-  text: string | RegExp
-) => {
-  try {
-    return getByText(instance)(text);
-  } catch (error) {
-    return null;
-  }
-};
+export const queryByType = (instance: ReactTestInstance) =>
+  function queryByTypeFn(type: React.ComponentType<*>) {
+    try {
+      return getByType(instance)(type);
+    } catch (error) {
+      return createQueryByError(error, queryByTypeFn);
+    }
+  };
 
-export const queryByProps = (instance: ReactTestInstance) => (props: {
-  [propName: string]: any,
-}) => {
-  try {
-    return getByProps(instance)(props);
-  } catch (error) {
-    return null;
-  }
-};
+export const queryByText = (instance: ReactTestInstance) =>
+  function queryByTextFn(text: string | RegExp) {
+    try {
+      return getByText(instance)(text);
+    } catch (error) {
+      return createQueryByError(error, queryByTextFn);
+    }
+  };
 
-export const queryByTestId = (instance: ReactTestInstance) => (
-  testID: string
-) => {
-  try {
-    return getByTestId(instance)(testID);
-  } catch (error) {
-    return null;
-  }
-};
+export const queryByProps = (instance: ReactTestInstance) =>
+  function queryByPropsFn(props: { [propName: string]: any }) {
+    try {
+      return getByProps(instance)(props);
+    } catch (error) {
+      return createQueryByError(error, queryByPropsFn);
+    }
+  };
+
+export const queryByTestId = (instance: ReactTestInstance) =>
+  function queryByTestIdFn(testID: string) {
+    try {
+      return getByTestId(instance)(testID);
+    } catch (error) {
+      return createQueryByError(error, queryByTestIdFn);
+    }
+  };
 
 export const queryAllByName = (instance: ReactTestInstance) => (
   name: string | React.ComponentType<*>
