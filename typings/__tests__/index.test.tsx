@@ -86,8 +86,8 @@ const queryAllByTextRegExp: Array<ReactTestInstance> = tree.queryAllByText(
 const queryAllByProps: Array<ReactTestInstance> = tree.getAllByProps({
   value: 2,
 });
-const debugFn = tree.debug()
-const debugFnWithMessage = tree.debug('my message')
+const debugFn = tree.debug();
+const debugFnWithMessage = tree.debug('my message');
 
 tree.update(<View />);
 tree.unmount();

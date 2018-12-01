@@ -2,24 +2,24 @@ import * as React from 'react';
 import { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
 
 export interface GetByAPI {
-  getByName: (name: React.ReactType) => ReactTestInstance;
+  getByName: (name: React.ReactType | string) => ReactTestInstance;
   getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
   getByText: (text: string | RegExp) => ReactTestInstance;
   getByProps: (props: Record<string, any>) => ReactTestInstance;
   getByTestId: (testID: string) => ReactTestInstance;
-  getAllByName: (name: React.ReactType) => Array<ReactTestInstance>;
+  getAllByName: (name: React.ReactType | string) => Array<ReactTestInstance>;
   getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
   getAllByText: (text: string | RegExp) => Array<ReactTestInstance>;
   getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>;
 }
 
 export interface QueryByAPI {
-  queryByName: (name: React.ReactType) => ReactTestInstance | null;
+  queryByName: (name: React.ReactType | string) => ReactTestInstance | null;
   queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
   queryByText: (name: string | RegExp) => ReactTestInstance | null;
   queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
   queryByTestId: (testID: string) => ReactTestInstance | null;
-  queryAllByName: (name: React.ReactType) => Array<ReactTestInstance> | [];
+  queryAllByName: (name: React.ReactType | string) => Array<ReactTestInstance> | [];
   queryAllByType: <P>(
     type: React.ComponentType<P>
   ) => Array<ReactTestInstance> | [];
