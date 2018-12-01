@@ -80,9 +80,6 @@ class HomeSplash extends React.Component {
         <Logo img_src={imgUrl('docusaurus.svg')} />
         <div className="inner">
           <ProjectTitle />
-          <PromoSection>
-            <Button href={docUrl('example.html', language)}>Example</Button>
-          </PromoSection>
         </div>
       </SplashContainer>
     );
