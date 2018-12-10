@@ -3,14 +3,18 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { shallow, render } from '..';
 
-const TextPress = () => (
-  <View>
+type Props = {|
+  +dummyID?: string,
+|};
+
+const TextPress = ({ dummyID }: Props) => (
+  <View testID={dummyID}>
     <Text testID="text-button">Press me</Text>
   </View>
 );
 
 test('shallow rendering React elements', () => {
-  const { output } = shallow(<TextPress />);
+  const { output } = shallow(<TextPress dummyID="2" />);
 
   expect(output).toMatchSnapshot();
 });

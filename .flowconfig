@@ -69,4 +69,4 @@ include_warnings=true
 .*/Libraries/YellowBox/UI/YellowBoxList.js
 
 [version]
-^0.86.0
+^0.88.0

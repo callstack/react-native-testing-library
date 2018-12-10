@@ -10,11 +10,11 @@ import format from './helpers/format';
  * Log pretty-printed deep test component instance
  */
 function debugDeepElementOrInstance(
-  instance: React.Element<*> | ?ReactTestRendererJSON,
+  instance: React.Element<any> | ?ReactTestRendererJSON,
   message?: any = ''
 ) {
   try {
-    // We're assuming React.Element<*> here and fallback to
+    // We're assuming React.Element<any> here and fallback to
     // rendering ?ReactTestRendererJSON
     // $FlowFixMe
     const { toJSON } = render(instance);
@@ -29,7 +29,10 @@ function debugDeepElementOrInstance(
   }
 }
 
-function debug(instance: ReactTestInstance | React.Element<*>, message?: any) {
+function debug(
+  instance: ReactTestInstance | React.Element<any>,
+  message?: any
+) {
   return debugShallow(instance, message);
 }
 

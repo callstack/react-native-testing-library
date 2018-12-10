@@ -11,8 +11,8 @@ import debugDeep from './helpers/debugDeep';
  * to assert on the output.
  */
 export default function render(
-  component: React.Element<*>,
-  options?: { createNodeMock: (element: React.Element<*>) => any }
+  component: React.Element<any>,
+  options?: { createNodeMock: (element: React.Element<any>) => any }
 ) {
   const renderer = TestRenderer.create(component, options);
   const instance = renderer.root;
