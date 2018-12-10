@@ -52,6 +52,13 @@
   "jest": {
     "preset": "react-native"
   },
+  "greenkeeper": {
+    "ignore": [
+      "react",
+      "react-test-renderer",
+      "metro-react-native-babel-preset"
+    ]
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   }
