@@ -41,7 +41,7 @@
   },
   "scripts": {
     "test": "jest",
-    "flow-check": "flow check",
+    "flow-check": "flow check --ignore-version",
     "typescript-check": "tsc --noEmit --skipLibCheck --jsx react ./typings/__tests__/*",
     "lint": "eslint src --cache",
     "release": "release-it",
