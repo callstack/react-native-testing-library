@@ -19,7 +19,9 @@ export interface QueryByAPI {
   queryByText: (name: string | RegExp) => ReactTestInstance | null;
   queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
   queryByTestId: (testID: string) => ReactTestInstance | null;
-  queryAllByName: (name: React.ReactType | string) => Array<ReactTestInstance> | [];
+  queryAllByName: (
+    name: React.ReactType | string
+  ) => Array<ReactTestInstance> | [];
   queryAllByType: <P>(
     type: React.ComponentType<P>
   ) => Array<ReactTestInstance> | [];
@@ -58,6 +60,12 @@ export type WaitForElementFunction = <T = any>(
   interval?: number
 ) => Promise<T>;
 
+export type WaitFunction = (
+  expectation: () => Promise<{}>,
+  timeout?: number,
+  interval?: number
+) => Promise<{}>;
+
 export type DebugFunction = (
   instance: ReactTestInstance | React.ReactElement<any>,
   message?: string
@@ -82,3 +90,4 @@ export declare const flushMicrotasksQueue: () => Promise<any>;
 export declare const debug: DebugAPI;
 export declare const fireEvent: FireEventAPI;
 export declare const waitForElement: WaitForElementFunction;
+export declare const wait: WaitFunction;

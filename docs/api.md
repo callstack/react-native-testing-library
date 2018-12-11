@@ -247,6 +247,33 @@ test('waiting for an Banana to be ready', async () => {
 });
 ```
 
+## `wait`
+
+Defined as:
+
+```jsx
+function wait(
+  expectation: () => Promise<{}> = () => Promise.resolve({}),
+  timeout: number = 4500,
+  interval: number = 50
+): Promise<{}> {}
+```
+
+Waits for non-deterministic periods of time until your expectation function succeed or times out. `wait` is an alias
+of the `waitForElement` function with a default empty expectation that can be used to make a one tick wait.
+
+```jsx
+import { render, wait } from 'react-testing-library';
+
+test('waiting for an Banana to be ready', async () => {
+  const { getByText, toJSON } = render(<Banana />);
+
+  const loadingScreenHasDisappearedTest = () => expect(getByText('Loading...')).toThrow();
+  await wait(loadingScreenHasDisappearedTest);
+  expect(toJSON()).toMatchSnapshot();
+});
+```
+
 If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to use `async/await` syntax as it will stall your tests.
 
 ## `debug`
