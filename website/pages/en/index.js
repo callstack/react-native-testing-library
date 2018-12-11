@@ -5,27 +5,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+const React = require('react'); // eslint-disable-line import/no-extraneous-dependencies
 
 const {
   MarkdownBlock,
   Container,
   GridBlock,
-} = require('../../core/CompLibrary.js');
+} = require('../../core/CompLibrary.js'); // eslint-disable-line import/no-unresolved
 
 const siteConfig = require(`${process.cwd()}/siteConfig.js`);
 
-function imgUrl(img) {
-  return `${siteConfig.baseUrl}img/${img}`;
-}
+// function imgUrl(img) {
+//   return `${siteConfig.baseUrl}img/${img}`;
+// }
 
 function docUrl(doc, language) {
   return `${siteConfig.baseUrl}docs/${language ? `${language}/` : ''}${doc}`;
 }
 
-function pageUrl(page, language) {
-  return siteConfig.baseUrl + (language ? `${language}/` : '') + page;
-}
+// function pageUrl(page, language) {
+//   return siteConfig.baseUrl + (language ? `${language}/` : '') + page;
+// }
 
 class Button extends React.Component {
   render() {
@@ -111,15 +111,15 @@ const Features = () => (
   </Block>
 );
 
-const FeatureCallout = () => (
-  <div
-    className="productShowcaseSection paddingBottom"
-    style={{ textAlign: 'center' }}
-  >
-    <h2>Feature Callout</h2>
-    <MarkdownBlock>These are features of this project</MarkdownBlock>
-  </div>
-);
+// const FeatureCallout = () => (
+//   <div
+//     className="productShowcaseSection paddingBottom"
+//     style={{ textAlign: 'center' }}
+//   >
+//     <h2>Feature Callout</h2>
+//     <MarkdownBlock>These are features of this project</MarkdownBlock>
+//   </div>
+// );
 
 class Index extends React.Component {
   render() {
@@ -131,7 +131,6 @@ class Index extends React.Component {
         <div className="mainContainer">
           <Features />
           {/* <FeatureCallout /> */}
-          {/* <LearnHow /> */}
         </div>
       </div>
     );
