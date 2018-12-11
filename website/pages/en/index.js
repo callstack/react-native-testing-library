@@ -8,7 +8,7 @@
 const React = require('react'); // eslint-disable-line import/no-extraneous-dependencies
 
 const {
-  MarkdownBlock,
+  // MarkdownBlock,
   Container,
   GridBlock,
 } = require('../../core/CompLibrary.js'); // eslint-disable-line import/no-unresolved
