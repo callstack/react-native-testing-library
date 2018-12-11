@@ -1,4 +1,7 @@
-# API / Usage
+---
+id: api
+title: API
+---
 
 This page gathers public API of `react-native-testing-library` along with usage examples.
 

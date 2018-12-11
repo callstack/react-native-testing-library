@@ -3,22 +3,22 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "A website for testing",
+    "tagline": "Helps you to write better tests with less effort.",
     "docs": {
       "api": {
-        "title": "api"
+        "title": "API"
       },
-      "example": {
-        "title": "Example"
+      "getting-started": {
+        "title": "Getting Started"
       }
     },
     "links": {
-      "API": "API",
-      "Help": "Help"
+      "Docs": "Docs",
+      "GitHub": "GitHub"
     },
     "categories": {
-      "Docusaurus": "Docusaurus",
-      "First Category": "First Category"
+      "Introduction": "Introduction",
+      "API Reference": "API Reference"
     }
   },
   "pages-strings": {

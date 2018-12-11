@@ -1,8 +1,6 @@
 {
   "docs": {
-    "Docusaurus": ["example", "api"]
-  },
-  "docs-other": {
-    "First Category": ["doc4", "doc5"]
+    "Introduction": ["getting-started"],
+    "API Reference": ["api"]
   }
 }

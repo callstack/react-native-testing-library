@@ -8,26 +8,13 @@
 // See https://docusaurus.io/docs/site-config for all the possible
 // site configuration options.
 
-// List of projects/orgs using your project for the users page.
-const users = [
-  {
-    caption: 'User1',
-    // You will need to prepend the image path with your baseUrl
-    // if it is not '/', like: '/test-site/img/docusaurus.svg'.
-    image: '/img/docusaurus.svg',
-    infoLink: 'https://www.facebook.com',
-    pinned: true,
-  },
-];
+const repoUrl = 'https://github.com/callstack/react-native-testing-library';
 
 const siteConfig = {
   title: 'React Native Testing Library', // Title for your website.
-  tagline: 'A website for testing',
-  url: 'https://your-docusaurus-test-site.com', // Your website URL
-  baseUrl: '/', // Base URL for your project */
-  // For github.io type URLs, you would set the url and baseUrl like:
-  //   url: 'https://facebook.github.io',
-  //   baseUrl: '/test-site/',
+  tagline: 'Helps you to write better tests with less effort.',
+  url: 'https://callstack.github.io', // Your website URL
+  baseUrl: '/react-native-testing-library/', // Base URL for your project
 
   // Used for publishing and more
   projectName: 'react-native-testing-library',
@@ -38,23 +25,19 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    {doc: 'api', label: 'API'},
-    {page: 'help', label: 'Help'},
-    // {blog: false, label: 'Blog'},
+    { doc: 'getting-started', label: 'Docs' },
+    { href: repoUrl, label: 'GitHub' },
   ],
 
-  // If you have users set above, you add it here:
-  users,
-
   /* path to images for header/footer */
-  headerIcon: 'img/docusaurus.svg',
-  footerIcon: 'img/docusaurus.svg',
-  favicon: 'img/favicon.png',
+  // headerIcon: 'img/docusaurus.svg',
+  // footerIcon: 'img/docusaurus.svg',
+  // favicon: 'img/favicon.png',
 
   /* Colors for website */
   colors: {
-    primaryColor: '#2E8555',
-    secondaryColor: '#205C3B',
+    primaryColor: '#3274ff',
+    secondaryColor: '#3bffed',
   },
 
   /* Custom fonts for website */
@@ -99,7 +82,8 @@ const siteConfig = {
 
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
-  //   repoUrl: 'https://github.com/facebook/test-site',
+  repoUrl,
+  usePrism: ['jsx'],
 };
 
 module.exports = siteConfig;

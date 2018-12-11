@@ -1,6 +1,7 @@
 {
   "extends": "@callstack",
   "rules": {
-    "flowtype/no-weak-types": 0
+    "flowtype/no-weak-types": 0,
+    "react/no-multi-comp": 0
   }
 }
