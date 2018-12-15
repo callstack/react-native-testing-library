@@ -66,7 +66,7 @@ As you may have noticed, it's not tied to React Native at all – you can safely
 
 ## API / Usage
 
-The [public API](docs/api.md) of `react-native-testing-library` is focused around these essential methods:
+The [public API](docs/API.md) of `react-native-testing-library` is focused around these essential methods:
 
 - [`render`](docs/API.md#render) – deeply renders given React element and returns helpers to query the output components.
 - [`shallow`](docs/API.md#shallow) – shallowly renders given React component. It doesn't return any helpers to query the output.
