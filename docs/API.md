@@ -200,6 +200,25 @@ const { getByTestId } = render(
 fireEvent.changeText(getByTestId('text-input'), CHANGE_TEXT);
 ```
 
+### `fireEvent.blur: (element: ReactTestInstance) => void`
+
+Invokes `blur` event handler on the element or parent element in the tree.
+
+```jsx
+import { View, TextInput } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+
+const onBlurMock = jest.fn();
+
+const { getByTestId } = render(
+  <View>
+    <TextInput testID="text-input" onBlur={onBlurMock} />
+  </View>
+);
+
+fireEvent.blur(getByTestId('text-input'));
+```
+
 ### `fireEvent.scroll: (element: ReactTestInstance, data?: *) => void`
 
 Invokes `scroll` event handler on the element or parent element in the tree.
