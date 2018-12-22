@@ -56,7 +56,7 @@ A method returning an array of `ReactTestInstance`s with matching text – may b
 
 A method returning a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression. Throws when no matches.
 
-### `getAllByPlaceholder: (text: string | RegExp)`
+### `getAllByPlaceholder: (placeholder: string | RegExp)`
 
 A method returning an array of `ReactTestInstance`s for `TextInput`'s with a matching placeholder – may be a string or regular expression.
 
