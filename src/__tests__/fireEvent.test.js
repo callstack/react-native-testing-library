@@ -128,3 +128,17 @@ test('fireEvent.changeText', () => {
 
   expect(onChangeTextMock).toHaveBeenCalledWith(CHANGE_TEXT);
 });
+
+test('fireEvent.blur', () => {
+  const onBlurMock = jest.fn();
+
+  const { getByTestId } = render(
+    <View>
+      <TextInput testID="text-input" onBlur={onBlurMock} />
+    </View>
+  );
+
+  fireEvent.blur(getByTestId('text-input'));
+
+  expect(onBlurMock).toHaveBeenCalled();
+});
