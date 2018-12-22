@@ -10,6 +10,18 @@ exports[`debug 1`] = `
   >
     not fresh
   </Text>
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Add custom freshness\\"
+    testID=\\"bananaCustomFreshness\\"
+    underlineColorAndroid=\\"transparent\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Who inspected freshness?\\"
+    testID=\\"bananaChef\\"
+    underlineColorAndroid=\\"transparent\\"
+  />
   <View
     accessible={true}
     isTVSelectable={true}
@@ -42,6 +54,18 @@ exports[`debug changing component: bananaFresh button message should now be "fre
   >
     fresh
   </Text>
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Add custom freshness\\"
+    testID=\\"bananaCustomFreshness\\"
+    underlineColorAndroid=\\"transparent\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Who inspected freshness?\\"
+    testID=\\"bananaChef\\"
+    underlineColorAndroid=\\"transparent\\"
+  />
   <View
     accessible={true}
     isTVSelectable={true}
@@ -74,6 +98,18 @@ exports[`debug: shallow 1`] = `
   >
     not fresh
   </Text>
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Add custom freshness\\"
+    testID=\\"bananaCustomFreshness\\"
+    underlineColorAndroid=\\"transparent\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Who inspected freshness?\\"
+    testID=\\"bananaChef\\"
+    underlineColorAndroid=\\"transparent\\"
+  />
   <Button
     onPress={[Function anonymous]}
     type=\\"primary\\"
@@ -95,6 +131,18 @@ exports[`debug: shallow with message 1`] = `
   >
     not fresh
   </Text>
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Add custom freshness\\"
+    testID=\\"bananaCustomFreshness\\"
+    underlineColorAndroid=\\"transparent\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Who inspected freshness?\\"
+    testID=\\"bananaChef\\"
+    underlineColorAndroid=\\"transparent\\"
+  />
   <Button
     onPress={[Function anonymous]}
     type=\\"primary\\"
@@ -116,6 +164,18 @@ exports[`debug: with message 1`] = `
   >
     not fresh
   </Text>
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Add custom freshness\\"
+    testID=\\"bananaCustomFreshness\\"
+    underlineColorAndroid=\\"transparent\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Who inspected freshness?\\"
+    testID=\\"bananaChef\\"
+    underlineColorAndroid=\\"transparent\\"
+  />
   <View
     accessible={true}
     isTVSelectable={true}

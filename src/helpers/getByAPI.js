@@ -28,6 +28,21 @@ const getNodeByText = (node, text) => {
   }
 };
 
+const getTextInputNodeByPlaceholder = (node, placeholder) => {
+  try {
+    // eslint-disable-next-line
+    const { TextInput } = require('react-native');
+    return (
+      filterNodeByType(node, TextInput) &&
+      (typeof placeholder === 'string'
+        ? placeholder === node.props.placeholder
+        : placeholder.test(node.props.placeholder))
+    );
+  } catch (error) {
+    throw createLibraryNotSupportedError(error);
+  }
+};
+
 const prepareErrorMessage = error =>
   // Strip info about custom predicate
   error.message.replace(/ matching custom predicate[^]*/gm, '');
@@ -59,6 +74,17 @@ export const getByText = (instance: ReactTestInstance) =>
       return instance.find(node => getNodeByText(node, text));
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByTextFn);
+    }
+  };
+
+export const getByPlaceholder = (instance: ReactTestInstance) =>
+  function getByPlaceholderFn(placeholder: string | RegExp) {
+    try {
+      return instance.find(node =>
+        getTextInputNodeByPlaceholder(node, placeholder)
+      );
+    } catch (error) {
+      throw new ErrorWithStack(prepareErrorMessage(error), getByPlaceholderFn);
     }
   };
 
@@ -114,6 +140,20 @@ export const getAllByText = (instance: ReactTestInstance) =>
     return results;
   };
 
+export const getAllByPlaceholder = (instance: ReactTestInstance) =>
+  function getAllByPlaceholderFn(placeholder: string | RegExp) {
+    const results = instance.findAll(node =>
+      getTextInputNodeByPlaceholder(node, placeholder)
+    );
+    if (results.length === 0) {
+      throw new ErrorWithStack(
+        `No instances found with placeholder: ${String(placeholder)}`,
+        getAllByPlaceholderFn
+      );
+    }
+    return results;
+  };
+
 export const getAllByProps = (instance: ReactTestInstance) =>
   function getAllByPropsFn(props: { [propName: string]: any }) {
     const results = instance.findAllByProps(props);
@@ -131,9 +171,11 @@ export const getByAPI = (instance: ReactTestInstance) => ({
   getByName: getByName(instance),
   getByType: getByType(instance),
   getByText: getByText(instance),
+  getByPlaceholder: getByPlaceholder(instance),
   getByProps: getByProps(instance),
   getAllByName: getAllByName(instance),
   getAllByType: getAllByType(instance),
   getAllByText: getAllByText(instance),
+  getAllByPlaceholder: getAllByPlaceholder(instance),
   getAllByProps: getAllByProps(instance),
 });

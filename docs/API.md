@@ -52,6 +52,14 @@ A method returning a `ReactTestInstance` with matching text – may be a string 
 
 A method returning an array of `ReactTestInstance`s with matching text – may be a string or regular expression.
 
+### `getByPlaceholder: (placeholder: string | RegExp)`
+
+A method returning a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression. Throws when no matches.
+
+### `getAllByPlaceholder: (placeholder: string | RegExp)`
+
+A method returning an array of `ReactTestInstance`s for `TextInput`'s with a matching placeholder – may be a string or regular expression.
+
 ### `getByProps: (props: { [propName: string]: any })`
 
 A method returning a `ReactTestInstance` with matching props object. Throws when no matches.
