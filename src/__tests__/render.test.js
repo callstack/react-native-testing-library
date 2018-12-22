@@ -1,9 +1,12 @@
 // @flow
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import stripAnsi from 'strip-ansi';
 import { render, fireEvent } from '..';
+
+const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
+const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 
 class Button extends React.Component<*> {
   render() {
@@ -45,6 +48,11 @@ class Banana extends React.Component<*, *> {
         <Text testID="bananaFresh">
           {this.state.fresh ? 'fresh' : 'not fresh'}
         </Text>
+        <TextInput
+          testID="bananaCustomFreshness"
+          placeholder={PLACEHOLDER_FRESHNESS}
+        />
+        <TextInput testID="bananaChef" placeholder={PLACEHOLDER_CHEF} />
         <Button onPress={this.changeFresh} type="primary">
           Change freshness!
         </Button>
@@ -136,6 +144,37 @@ test('getAllByText, queryAllByText', () => {
 
   expect(queryAllByText(/fresh/i)).toEqual(buttons);
   expect(queryAllByText('InExistent')).toHaveLength(0);
+});
+
+test('getByPlaceholder, queryByPlaceholder', () => {
+  const { getByPlaceholder, queryByPlaceholder } = render(<Banana />);
+  const input = getByPlaceholder(/custom/i);
+
+  expect(input.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
+
+  const sameInput = getByPlaceholder(PLACEHOLDER_FRESHNESS);
+
+  expect(sameInput.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
+  expect(() => getByPlaceholder('no placeholder')).toThrow(
+    'No instances found'
+  );
+
+  expect(queryByPlaceholder(/add/i)).toBe(input);
+  expect(queryByPlaceholder('no placeholder')).toBeNull();
+  expect(() => queryByPlaceholder(/fresh/)).toThrow('Expected 1 but found 2');
+});
+
+test('getAllByPlaceholder, queryAllByPlaceholder', () => {
+  const { getAllByPlaceholder, queryAllByPlaceholder } = render(<Banana />);
+  const inputs = getAllByPlaceholder(/fresh/i);
+
+  expect(inputs).toHaveLength(2);
+  expect(() => getAllByPlaceholder('no placeholder')).toThrow(
+    'No instances found'
+  );
+
+  expect(queryAllByPlaceholder(/fresh/i)).toEqual(inputs);
+  expect(queryAllByPlaceholder('no placeholder')).toHaveLength(0);
 });
 
 test('getByProps, queryByProps', () => {
