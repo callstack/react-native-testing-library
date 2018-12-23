@@ -140,14 +140,13 @@ test('Component has a structure', () => {
 
 ## `fireEvent`
 
-Invokes given event handler on the element bubbling to the root of the rendered tree.
+Invokes a given event handler (whether native or custom) on the element, bubbling to the root of the rendered tree. The three most common events (`press`, `changeText`, and `scroll`) have been aliased for convenience.
 
 ### `fireEvent: (element: ReactTestInstance, eventName: string, data?: *) => void`
 
 Invokes named event handler on the element or parent element in the tree. For better readability, `fireEvent` strips the `on` part of the handler prop name, so it will fire `onMyCustomEvent` when `myCustomEvent` is passed as `eventName`.
 
 ```jsx
-import { View } from 'react-native';
 import { render, fireEvent } from 'react-native-testing-library';
 import { MyComponent } from './MyComponent';
 
@@ -157,6 +156,23 @@ const { getByTestId } = render(
 );
 
 fireEvent(getByTestId('custom'), 'myCustomEvent');
+```
+
+An example using `fireEvent` with native events that aren't already aliased by the `fireEvent` api.
+
+```jsx
+import { TextInput, View } from 'react-native';
+import { fireEvent, render } from 'react-native-testing-library';
+
+const onBlurMock = jest.fn();
+
+const { getByPlaceholder } = render(
+  <View>
+    <TextInput placeholder="my placeholder" onBlur={onBlurMock} />
+  </View>
+);
+
+fireEvent(getByPlaceholder('my placeholder'), 'blur');
 ```
 
 ### `fireEvent.press: (element: ReactTestInstance) => void`
