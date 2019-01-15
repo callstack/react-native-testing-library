@@ -288,7 +288,6 @@ If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsN
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/debug.test.js)
 
-
 Log prettified shallowly rendered component or test instance (just like snapshot) to stdout.
 
 ```jsx
