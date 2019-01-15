@@ -5,7 +5,9 @@ title: API
 
 This page gathers public API of `react-native-testing-library` along with usage examples.
 
-## `render` - [`Sample of code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/render.test.js)
+## `render` 
+
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/render.test.js)
 
 Defined as:
 
@@ -133,7 +135,9 @@ Prints shallowly rendered component passed to `render` with optional message on 
 
 Get the rendered component JSON representation, e.g. for snapshot testing.
 
-## `shallow` - [`Sample of code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/shallow.test.js)
+## `shallow`
+
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/shallow.test.js)
 
 Shallowly renders given React component. Since it doesn't return helpers to query the output, it's mostly advised to used for snapshot testing (short snapshots are best for code reviewers).
 
@@ -146,7 +150,9 @@ test('Component has a structure', () => {
 });
 ```
 
-## `fireEvent` - [`Sample of code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/fireEvent.test.js)
+## `fireEvent`
+
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/fireEvent.test.js)
 
 Invokes a given event handler (whether native or custom) on the element, bubbling to the root of the rendered tree. The three most common events (`press`, `changeText`, and `scroll`) have been aliased for convenience.
 
@@ -250,7 +256,9 @@ const { getByTestId } = render(
 fireEvent.scroll(getByTestId('scroll-view'), eventData);
 ```
 
-## `waitForElement`- [`Sample of code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitForElement.test.js)
+## `waitForElement`
+
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitForElement.test.js)
 
 Defined as:
 
@@ -276,7 +284,9 @@ test('waiting for an Banana to be ready', async () => {
 
 If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to use `async/await` syntax as it will stall your tests.
 
-## `debug`- [`Sample of code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/debug.test.js)
+## `debug`
+
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/debug.test.js)
 
 
 Log prettified shallowly rendered component or test instance (just like snapshot) to stdout.
