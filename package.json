@@ -28,7 +28,7 @@
     "react": "16.6.1",
     "react-native": "^0.57.8",
     "react-test-renderer": "16.6.1",
-    "release-it": "^9.0.0",
+    "release-it": "^10.0.0",
     "strip-ansi": "^5.0.0",
     "typescript": "^3.1.1"
   },
