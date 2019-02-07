@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react'); // eslint-disable-line import/no-extraneous-dependencies
+const React = require('react');
 
 const siteConfig = require(`${process.cwd()}/siteConfig.js`);
 
