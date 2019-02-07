@@ -57,7 +57,7 @@ class Footer extends React.Component {
           <div>
             <h5>Community</h5>
             <a
-              href="http://stackoverflow.com/questions/tagged/"
+              href="http://stackoverflow.com/questions/tagged/react-native-testing-library"
               target="_blank"
               rel="noreferrer noopener"
             >
