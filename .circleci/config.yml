@@ -1,5 +1,11 @@
 version: 2
 
+aliases:
+  - &filter-only-master
+    branches:
+      only:
+        - master
+
 defaults: &defaults
   docker:
     - image: circleci/node:10
@@ -49,6 +55,17 @@ jobs:
       - store_artifacts:
           path: coverage
           destination: coverage
+  deploy-website:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Deploying to GitHub Pages
+          command: |
+            git config --global user.email "thymikee@users.noreply.github.com"
+            git config --global user.name "Michał Pierzchała"
+            echo "machine github.com login thymikee password $GITHUB_TOKEN" > ~/.netrc
+            cd website && yarn install && GIT_USER=thymikee yarn run publish-gh-pages
 
 workflows:
   version: 2
@@ -64,3 +81,7 @@ workflows:
       - tests:
           requires:
             - install-dependencies
+      - deploy-website:
+          requires:
+            - install-dependencies
+          filters: *filter-only-master
