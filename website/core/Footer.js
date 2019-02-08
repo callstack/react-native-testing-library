@@ -34,30 +34,18 @@ class Footer extends React.Component {
           </a>
           <div>
             <h5>Docs</h5>
-            <a
-              href={this.docUrl(
-                'getting-started.html'
-                // TODO: fix i18n
-                /* , this.props.language */
-              )}
-            >
+            <a href={this.docUrl('getting-started.html', this.props.language)}>
               Getting Started
             </a>
 
-            <a
-              href={this.docUrl(
-                'api.html'
-                // TODO: fix i18n
-                /* , this.props.language */
-              )}
-            >
+            <a href={this.docUrl('api.html', this.props.language)}>
               API Reference
             </a>
           </div>
           <div>
             <h5>Community</h5>
             <a
-              href="http://stackoverflow.com/questions/tagged/"
+              href="http://stackoverflow.com/questions/tagged/react-native-testing-library"
               target="_blank"
               rel="noreferrer noopener"
             >
@@ -82,19 +70,6 @@ class Footer extends React.Component {
           </div>
         </section>
 
-        {/* <a
-          href="https://code.facebook.com/projects/"
-          target="_blank"
-          rel="noreferrer noopener"
-          className="fbOpenSource"
-        >
-          <img
-            src={`${this.props.config.baseUrl}img/oss_logo.png`}
-            alt="Facebook Open Source"
-            width="170"
-            height="45"
-          />
-        </a> */}
         <section className="copyright">{this.props.config.copyright}</section>
       </footer>
     );
