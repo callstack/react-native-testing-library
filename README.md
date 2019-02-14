@@ -74,6 +74,8 @@ The [public API](docs/API.md) of `react-native-testing-library` is focused aroun
 - [`waitForElement`](docs/API.md#waitforelement) - waits for non-deterministic periods of time until your element appears or times out.
 - [`flushMicrotasksQueue`](docs/API.md#flushmicrotasksqueue) - waits for microtasks queue to flush.
 
+**Note to users who are more familiar with react-testing-library:** This API does not expose `cleanup` because it doesn't interact with the DOM. There's nothing to clean up.
+
 ---
 
 Supported and used by [Rally Health](https://www.rallyhealth.com/company/careers).
