@@ -65,6 +65,8 @@ include_warnings=true
 .*/Libraries/Components/Slider/Slider.js
 .*/Libraries/Components/Touchable/TouchableHighlight.js
 .*/Libraries/Components/Touchable/TouchableOpacity.js
+.*/Libraries/Components/SegmentedControlIOS/SegmentedControlIOS.ios.js
+.*/Libraries/Components/ProgressViewIOS/ProgressViewIOS.ios.js
 .*/Libraries/Image/Image.ios.js
 .*/Libraries/Text/Text.js
 .*/Libraries/LayoutAnimation/LayoutAnimation.js
