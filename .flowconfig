@@ -61,6 +61,14 @@ include_warnings=true
 ; bugs in react-native typings
 .*/Libraries/Components/Navigation/NavigatorIOS.ios.js
 .*/Libraries/Components/View/ViewPropTypes.js
+.*/Libraries/Components/ActivityIndicator/ActivityIndicator.js
+.*/Libraries/Components/Slider/Slider.js
+.*/Libraries/Components/Touchable/TouchableHighlight.js
+.*/Libraries/Components/Touchable/TouchableOpacity.js
+.*/Libraries/Components/SegmentedControlIOS/SegmentedControlIOS.ios.js
+.*/Libraries/Components/ProgressViewIOS/ProgressViewIOS.ios.js
+.*/Libraries/Image/Image.ios.js
+.*/Libraries/Text/Text.js
 .*/Libraries/LayoutAnimation/LayoutAnimation.js
 .*/Libraries/Lists/VirtualizedSectionList.js
 .*/Libraries/StyleSheet/processTransform.js
@@ -69,4 +77,4 @@ include_warnings=true
 .*/Libraries/YellowBox/UI/YellowBoxList.js
 
 [version]
-^0.88.0
+^0.93.0
