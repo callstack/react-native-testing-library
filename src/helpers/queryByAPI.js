@@ -5,10 +5,12 @@ import {
   getByName,
   getByType,
   getByText,
+  getByPlaceholder,
   getByProps,
   getAllByName,
   getAllByType,
   getAllByText,
+  getAllByPlaceholder,
   getAllByProps,
 } from './getByAPI';
 import { ErrorWithStack, logDeprecationWarning } from './errors';
@@ -45,6 +47,15 @@ export const queryByText = (instance: ReactTestInstance) =>
       return getByText(instance)(text);
     } catch (error) {
       return createQueryByError(error, queryByTextFn);
+    }
+  };
+
+export const queryByPlaceholder = (instance: ReactTestInstance) =>
+  function queryByPlaceholderFn(placeholder: string | RegExp) {
+    try {
+      return getByPlaceholder(instance)(placeholder);
+    } catch (error) {
+      return createQueryByError(error, queryByPlaceholder);
     }
   };
 
@@ -97,6 +108,16 @@ export const queryAllByText = (instance: ReactTestInstance) => (
   }
 };
 
+export const queryAllByPlaceholder = (instance: ReactTestInstance) => (
+  placeholder: string | RegExp
+) => {
+  try {
+    return getAllByPlaceholder(instance)(placeholder);
+  } catch (error) {
+    return [];
+  }
+};
+
 export const queryAllByProps = (instance: ReactTestInstance) => (props: {
   [propName: string]: any,
 }) => {
@@ -112,9 +133,11 @@ export const queryByAPI = (instance: ReactTestInstance) => ({
   queryByName: queryByName(instance),
   queryByType: queryByType(instance),
   queryByText: queryByText(instance),
+  queryByPlaceholder: queryByPlaceholder(instance),
   queryByProps: queryByProps(instance),
   queryAllByName: queryAllByName(instance),
   queryAllByType: queryAllByType(instance),
   queryAllByText: queryAllByText(instance),
+  queryAllByPlaceholder: queryAllByPlaceholder(instance),
   queryAllByProps: queryAllByProps(instance),
 });

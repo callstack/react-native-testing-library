@@ -15,6 +15,7 @@ interface HasRequiredProp {
 
 const View = props => props.children;
 const Text = props => props.children;
+const TextInput = props => props.children;
 const ElementWithRequiredProps = (props: HasRequiredProp) => (
   <Text>{props.requiredProp}</Text>
 );
@@ -22,6 +23,7 @@ const ElementWithRequiredProps = (props: HasRequiredProp) => (
 const TestComponent = () => (
   <View>
     <Text>Test component</Text>
+    <TextInput placeholder="my placeholder" />
   </View>
 );
 
@@ -36,6 +38,8 @@ const getByTypeWithRequiredProps: ReactTestInstance = tree.getByType(
 );
 const getByTextString: ReactTestInstance = tree.getByText('<View />');
 const getByTextRegExp: ReactTestInstance = tree.getByText(/View/g);
+const getByPlaceholderString: ReactTestInstance = tree.getByPlaceholder('my placeholder');
+const getByPlaceholderRegExp: ReactTestInstance = tree.getByPlaceholder(/placeholder/g);
 const getByProps: ReactTestInstance = tree.getByProps({ value: 2 });
 const getByTestId: ReactTestInstance = tree.getByTestId('test-id');
 const getAllByNameString: Array<ReactTestInstance> = tree.getAllByName('View');
@@ -65,6 +69,10 @@ const queryByTextString: ReactTestInstance | null = tree.queryByText(
   '<View />'
 );
 const queryByTextRegExp: ReactTestInstance | null = tree.queryByText(/View/g);
+const queryByPlaceholderString: ReactTestInstance | null = tree.queryByText(
+  'my placeholder'
+);
+const queryByPlaceholderRegExp: ReactTestInstance | null = tree.queryByText(/placeholder/g);
 const queryByProps: ReactTestInstance | null = tree.queryByProps({ value: 2 });
 const queryByTestId: ReactTestInstance | null = tree.queryByTestId('test-id');
 const queryAllByNameString: Array<ReactTestInstance> = tree.getAllByName(

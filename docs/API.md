@@ -5,7 +5,9 @@ title: API
 
 This page gathers public API of `react-native-testing-library` along with usage examples.
 
-## `render`
+## `render` 
+
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/render.test.js)
 
 Defined as:
 
@@ -51,6 +53,14 @@ A method returning a `ReactTestInstance` with matching text – may be a string 
 ### `getAllByText: (text: string | RegExp)`
 
 A method returning an array of `ReactTestInstance`s with matching text – may be a string or regular expression.
+
+### `getByPlaceholder: (placeholder: string | RegExp)`
+
+A method returning a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression. Throws when no matches.
+
+### `getAllByPlaceholder: (placeholder: string | RegExp)`
+
+A method returning an array of `ReactTestInstance`s for `TextInput`'s with a matching placeholder – may be a string or regular expression.
 
 ### `getByProps: (props: { [propName: string]: any })`
 
@@ -127,6 +137,8 @@ Get the rendered component JSON representation, e.g. for snapshot testing.
 
 ## `shallow`
 
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/shallow.test.js)
+
 Shallowly renders given React component. Since it doesn't return helpers to query the output, it's mostly advised to used for snapshot testing (short snapshots are best for code reviewers).
 
 ```jsx
@@ -140,14 +152,15 @@ test('Component has a structure', () => {
 
 ## `fireEvent`
 
-Invokes given event handler on the element bubbling to the root of the rendered tree.
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/fireEvent.test.js)
+
+Invokes a given event handler (whether native or custom) on the element, bubbling to the root of the rendered tree. The three most common events (`press`, `changeText`, and `scroll`) have been aliased for convenience.
 
 ### `fireEvent: (element: ReactTestInstance, eventName: string, data?: *) => void`
 
 Invokes named event handler on the element or parent element in the tree. For better readability, `fireEvent` strips the `on` part of the handler prop name, so it will fire `onMyCustomEvent` when `myCustomEvent` is passed as `eventName`.
 
 ```jsx
-import { View } from 'react-native';
 import { render, fireEvent } from 'react-native-testing-library';
 import { MyComponent } from './MyComponent';
 
@@ -157,6 +170,23 @@ const { getByTestId } = render(
 );
 
 fireEvent(getByTestId('custom'), 'myCustomEvent');
+```
+
+An example using `fireEvent` with native events that aren't already aliased by the `fireEvent` api.
+
+```jsx
+import { TextInput, View } from 'react-native';
+import { fireEvent, render } from 'react-native-testing-library';
+
+const onBlurMock = jest.fn();
+
+const { getByPlaceholder } = render(
+  <View>
+    <TextInput placeholder="my placeholder" onBlur={onBlurMock} />
+  </View>
+);
+
+fireEvent(getByPlaceholder('my placeholder'), 'blur');
 ```
 
 ### `fireEvent.press: (element: ReactTestInstance) => void`
@@ -228,6 +258,8 @@ fireEvent.scroll(getByTestId('scroll-view'), eventData);
 
 ## `waitForElement`
 
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitForElement.test.js)
+
 Defined as:
 
 ```jsx
@@ -253,6 +285,8 @@ test('waiting for an Banana to be ready', async () => {
 If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to use `async/await` syntax as it will stall your tests.
 
 ## `debug`
+
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/debug.test.js)
 
 Log prettified shallowly rendered component or test instance (just like snapshot) to stdout.
 

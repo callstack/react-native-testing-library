@@ -1,6 +1,6 @@
 {
   "name": "react-native-testing-library",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Simple React Native testing utilities helping you write better tests with less effort",
   "main": "build/index.js",
   "typings": "./typings/index.d.ts",
@@ -15,25 +15,24 @@
     "@callstack/eslint-config": "^3.0.0",
     "@types/react": "^16.7.11",
     "@types/react-test-renderer": "^16.0.3",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "^23.6.0",
+    "babel-jest": "^24.1.0",
     "chalk": "^2.4.1",
     "conventional-changelog-cli": "^2.0.11",
     "dedent": "^0.7.0",
     "eslint": "^5.6.1",
     "flow-bin": "^0.93.0",
     "flow-copy-source": "^2.0.2",
-    "jest": "^23.6.0",
-    "metro-react-native-babel-preset": "^0.49.0",
-    "react": "16.6.1",
-    "react-native": "^0.57.7",
-    "react-test-renderer": "16.6.1",
-    "release-it": "^9.0.0",
+    "jest": "^24.1.0",
+    "metro-react-native-babel-preset": "^0.49.1",
+    "react": "16.6.3",
+    "react-native": "^0.58.3",
+    "react-test-renderer": "16.6.3",
+    "release-it": "^10.0.0",
     "strip-ansi": "^5.0.0",
     "typescript": "^3.1.1"
   },
   "dependencies": {
-    "pretty-format": "^23.6.0"
+    "pretty-format": "^24.0.0"
   },
   "peerDependencies": {
     "react": ">=16.0.0",
@@ -50,7 +49,8 @@
     "build": "rm -rf build; babel src --out-dir build --presets=module:metro-react-native-babel-preset  --ignore 'src/__tests__/*'"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "moduleFileExtensions": ["js", "json"]
   },
   "greenkeeper": {
     "ignore": [
