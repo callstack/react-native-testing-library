@@ -1,4 +1,5 @@
 // @flow
+import act from './act';
 import render from './render';
 import shallow from './shallow';
 import flushMicrotasksQueue from './flushMicrotasksQueue';
@@ -12,3 +13,4 @@ export { flushMicrotasksQueue };
 export { debug };
 export { fireEvent };
 export { waitForElement };
+export { act };

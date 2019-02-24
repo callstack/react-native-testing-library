@@ -9,13 +9,13 @@ type ReactComponentInstance = React$Component<any>;
 type ReactTestRendererJSON = {
   type: string,
   props: { [propName: string]: any },
-  children: null | ReactTestRendererJSON[]
+  children: null | ReactTestRendererJSON[],
 };
 
 type ReactTestRendererTree = ReactTestRendererJSON & {
-  nodeType: "component" | "host",
+  nodeType: 'component' | 'host',
   instance: ?ReactComponentInstance,
-  rendered: null | ReactTestRendererTree
+  rendered: null | ReactTestRendererTree,
 };
 
 type ReactTestInstance = {
@@ -40,30 +40,36 @@ type ReactTestInstance = {
   findAllByProps(
     props: { [propName: string]: any },
     options?: { deep: boolean }
-  ): ReactTestInstance[]
+  ): ReactTestInstance[],
 };
 
 type TestRendererOptions = {
-  createNodeMock(element: React$Element<any>): any
+  createNodeMock(element: React$Element<any>): any,
 };
 
-declare module "react-test-renderer" {
+type Thenable = {
+  then(resolve: () => mixed, reject?: () => mixed): mixed,
+};
+
+declare module 'react-test-renderer' {
   declare export type ReactTestRenderer = {
     toJSON(): null | ReactTestRendererJSON,
     toTree(): null | ReactTestRendererTree,
     unmount(nextElement?: React$Element<any>): void,
     update(nextElement: React$Element<any>): void,
     getInstance(): ?ReactComponentInstance,
-    root: ReactTestInstance
+    root: ReactTestInstance,
   };
 
   declare function create(
     nextElement: React$Element<any>,
     options?: TestRendererOptions
   ): ReactTestRenderer;
+
+  declare function act(callback: () => void): Thenable;
 }
 
-declare module "react-test-renderer/shallow" {
+declare module 'react-test-renderer/shallow' {
   declare export default class ShallowRenderer {
     static createRenderer(): ShallowRenderer;
     getMountedInstance(): ReactTestInstance;

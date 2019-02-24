@@ -7,6 +7,7 @@ import {
   flushMicrotasksQueue,
   debug,
   waitForElement,
+  act,
 } from '../..';
 
 interface HasRequiredProp {
@@ -131,3 +132,7 @@ const waitBy: Promise<ReactTestInstance> = waitForElement<ReactTestInstance>(
 const waitByAll: Promise<Array<ReactTestInstance>> = waitForElement<
   Array<ReactTestInstance>
 >(() => tree.getAllByName('View'), 1000, 50);
+
+act(() => {
+  render(<TestComponent />);
+});
