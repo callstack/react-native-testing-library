@@ -1,4 +1,5 @@
 // @flow
+import act from './act';
 import { ErrorWithStack } from './helpers/errors';
 
 const findEventHandler = (element: ReactTestInstance, eventName: string) => {
@@ -23,10 +24,16 @@ const invokeEvent = (
   element: ReactTestInstance,
   eventName: string,
   data?: *
-) => {
+): any => {
   const handler = findEventHandler(element, eventName);
 
-  return handler(data);
+  let returnValue;
+
+  act(() => {
+    returnValue = handler(data);
+  });
+
+  return returnValue;
 };
 
 const toEventHandlerName = (eventName: string) =>

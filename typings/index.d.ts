@@ -33,6 +33,10 @@ export interface QueryByAPI {
   ) => Array<ReactTestInstance> | [];
 }
 
+export interface Thenable {
+  then: (resolve: () => any, reject?: () => any) => any,
+}
+
 export interface RenderOptions {
   createNodeMock: (element: React.ReactElement<any>) => any;
 }
@@ -86,3 +90,4 @@ export declare const flushMicrotasksQueue: () => Promise<any>;
 export declare const debug: DebugAPI;
 export declare const fireEvent: FireEventAPI;
 export declare const waitForElement: WaitForElementFunction;
+export declare const act: (callback: () => void) => Thenable;

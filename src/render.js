@@ -1,10 +1,15 @@
 // @flow
 import * as React from 'react';
-import TestRenderer from 'react-test-renderer'; // eslint-disable-line import/no-extraneous-dependencies
+import TestRenderer, { type ReactTestRenderer } from 'react-test-renderer'; // eslint-disable-line import/no-extraneous-dependencies
+import act from './act';
 import { getByAPI } from './helpers/getByAPI';
 import { queryByAPI } from './helpers/queryByAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
+
+type Options = {
+  createNodeMock: (element: React.Element<any>) => any,
+};
 
 /**
  * Renders test component deeply using react-test-renderer and exposes helpers
@@ -12,9 +17,10 @@ import debugDeep from './helpers/debugDeep';
  */
 export default function render(
   component: React.Element<any>,
-  options?: { createNodeMock: (element: React.Element<any>) => any }
+  options?: Options
 ) {
-  const renderer = TestRenderer.create(component, options);
+  const renderer = renderWithAct(component, options);
+
   const instance = renderer.root;
 
   return {
@@ -25,6 +31,19 @@ export default function render(
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
   };
+}
+
+function renderWithAct(
+  component: React.Element<any>,
+  options?: Options
+): ReactTestRenderer {
+  let renderer: ReactTestRenderer;
+
+  act(() => {
+    renderer = TestRenderer.create(component, options);
+  });
+
+  return ((renderer: any): ReactTestRenderer);
 }
 
 function debug(instance: ReactTestInstance, renderer) {
