@@ -23,7 +23,7 @@
     "flow-bin": "^0.94.0",
     "flow-copy-source": "^2.0.2",
     "jest": "^24.1.0",
-    "metro-react-native-babel-preset": "^0.50.0",
+    "metro-react-native-babel-preset": "^0.52.0",
     "react": "^16.8.3",
     "react-native": "^0.58.6",
     "react-test-renderer": "^16.8.3",
