@@ -11,8 +11,6 @@
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.3.4",
-    "@babel/preset-flow": "^7.0.0",
     "@babel/runtime": "^7.1.2",
     "@callstack/eslint-config": "^3.0.0",
     "@types/react": "^16.7.11",
@@ -25,6 +23,7 @@
     "flow-bin": "^0.94.0",
     "flow-copy-source": "^2.0.2",
     "jest": "^24.1.0",
+    "metro-react-native-babel-preset": "^0.50.0",
     "react": "^16.8.3",
     "react-native": "^0.58.6",
     "react-test-renderer": "^16.8.3",
@@ -47,7 +46,7 @@
     "release": "release-it",
     "prepublish": "yarn build && yarn copy-flowtypes",
     "copy-flowtypes": "flow-copy-source --ignore __tests__/*.js src build",
-    "build": "rm -rf build; babel src --out-dir build  --ignore 'src/__tests__/*'"
+    "build": "rm -rf build; babel src --out-dir build --ignore 'src/__tests__/*'"
   },
   "jest": {
     "preset": "react-native",
@@ -59,7 +58,8 @@
   "greenkeeper": {
     "ignore": [
       "react",
-      "react-test-renderer"
+      "react-test-renderer",
+      "metro-react-native-babel-preset"
     ]
   },
   "publishConfig": {
