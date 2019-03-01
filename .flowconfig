@@ -75,6 +75,3 @@ include_warnings=true
 .*/Libraries/StyleSheet/StyleSheetValidation.js
 .*/Libraries/Text/TextAncestor.js
 .*/Libraries/YellowBox/UI/YellowBoxList.js
-
-[version]
-^0.93.0
