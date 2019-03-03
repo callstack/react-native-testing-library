@@ -66,13 +66,13 @@ As you may have noticed, it's not tied to React Native at all – you can safely
 
 ## API / Usage
 
-The [public API](docs/API.md) of `react-native-testing-library` is focused around these essential methods:
+The [public API](https://callstack.github.io/react-native-testing-library/docs/api) of `react-native-testing-library` is focused around these essential methods:
 
-- [`render`](docs/API.md#render) – deeply renders given React element and returns helpers to query the output components.
-- [`shallow`](docs/API.md#shallow) – shallowly renders given React component. It doesn't return any helpers to query the output.
-- [`fireEvent`](docs/API.md#fireevent) - invokes named event handler on the element.
-- [`waitForElement`](docs/API.md#waitforelement) - waits for non-deterministic periods of time until your element appears or times out.
-- [`flushMicrotasksQueue`](docs/API.md#flushmicrotasksqueue) - waits for microtasks queue to flush.
+- [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – deeply renders given React element and returns helpers to query the output components.
+- [`shallow`](https://callstack.github.io/react-native-testing-library/docs/api#shallow) – shallowly renders given React component. It doesn't return any helpers to query the output.
+- [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/api#fireevent) - invokes named event handler on the element.
+- [`waitForElement`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelement) - waits for non-deterministic periods of time until your element appears or times out.
+- [`flushMicrotasksQueue`](https://callstack.github.io/react-native-testing-library/docs/api#flushmicrotasksqueue) - waits for microtasks queue to flush.
 
 **Note to users who are more familiar with `react-testing-library`:** This API does not expose `cleanup` because it doesn't interact with the DOM. There's nothing to clean up.
 
