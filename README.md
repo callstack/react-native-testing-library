@@ -1,6 +1,6 @@
 # react-native-testing-library
 
-Simple React Native testing utilities helping you write better tests with less effort
+Lightweight React Native testing utilities helping you write better tests with less effort.
 
 [![Build Status][build-badge]][build]
 [![Version][version-badge]][package]
