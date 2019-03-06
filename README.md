@@ -1,4 +1,4 @@
-# react-native-testing-library
+# React Native Testing Library
 
 Lightweight React Native testing utilities helping you write better tests with less effort.
 
@@ -8,6 +8,7 @@ Lightweight React Native testing utilities helping you write better tests with l
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
 [![Chat][chat-badge]][chat]
 [![Greenkeeper badge][greenkeeper-badge]][greenkeeper]
+[![Sponsored by Callstack][callstack-badge]][callstack]
 
 _Appreciation notice: This project is heavily inspired by [react-testing-library](https://github.com/kentcdodds/react-testing-library). Go check it out and use it to test your web React apps._
 
@@ -76,6 +77,10 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 
 **Note to users who are more familiar with `react-testing-library`:** This API does not expose `cleanup` because it doesn't interact with the DOM. There's nothing to clean up.
 
+## Made with ❤️ at Callstack
+
+React Native Testing Library is an open source project and will always remain free to use. If you think it's cool, please star it 🌟. [Callstack](https://callstack.com) is a group of React and React Native geeks, contact us at [hello@callstack.com](mailto:hello@callstack.com) if you need any help with these or just want to say hi!
+
 ---
 
 Supported and used by [Rally Health](https://www.rallyhealth.com/company/careers).
@@ -94,3 +99,5 @@ Supported and used by [Rally Health](https://www.rallyhealth.com/company/careers
 [chat]: https://discord.gg/QbGezWe
 [greenkeeper-badge]: https://badges.greenkeeper.io/callstack/react-native-testing-library.svg?style=flat-square
 [greenkeeper]: https://greenkeeper.io/
+[callstack-badge]: https://callstack.com/images/callstack-badge.svg
+[callstack]: https://callstack.com/open-source/?utm_source=github.com&utm_medium=referral&utm_campaign=react-native-testing-library&utm_term=readme
