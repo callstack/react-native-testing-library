@@ -139,7 +139,7 @@ Get the rendered component JSON representation, e.g. for snapshot testing.
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/shallow.test.js)
 
-Shallowly renders given React component. Since it doesn't return helpers to query the output, it's mostly advised to used for snapshot testing (short snapshots are best for code reviewers).
+Shallowly renders given React component.
 
 ```jsx
 import { shallow } from 'react-native-testing-library';
