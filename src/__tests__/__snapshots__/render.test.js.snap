@@ -13,12 +13,14 @@ exports[`debug 1`] = `
   <TextInput
     allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
+    rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
     underlineColorAndroid=\\"transparent\\"
   />
   <TextInput
     allowFontScaling={true}
     placeholder=\\"Who inspected freshness?\\"
+    rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
   />
@@ -57,12 +59,14 @@ exports[`debug changing component: bananaFresh button message should now be "fre
   <TextInput
     allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
+    rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
     underlineColorAndroid=\\"transparent\\"
   />
   <TextInput
     allowFontScaling={true}
     placeholder=\\"Who inspected freshness?\\"
+    rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
   />
@@ -101,12 +105,14 @@ exports[`debug: shallow 1`] = `
   <TextInput
     allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
+    rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
     underlineColorAndroid=\\"transparent\\"
   />
   <TextInput
     allowFontScaling={true}
     placeholder=\\"Who inspected freshness?\\"
+    rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
   />
@@ -134,12 +140,14 @@ exports[`debug: shallow with message 1`] = `
   <TextInput
     allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
+    rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
     underlineColorAndroid=\\"transparent\\"
   />
   <TextInput
     allowFontScaling={true}
     placeholder=\\"Who inspected freshness?\\"
+    rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
   />
@@ -167,12 +175,14 @@ exports[`debug: with message 1`] = `
   <TextInput
     allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
+    rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
     underlineColorAndroid=\\"transparent\\"
   />
   <TextInput
     allowFontScaling={true}
     placeholder=\\"Who inspected freshness?\\"
+    rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
   />
