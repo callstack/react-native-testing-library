@@ -17,12 +17,20 @@ const getNodeByText = (node, text) => {
   try {
     // eslint-disable-next-line
     const { Text, TextInput } = require('react-native');
-    return (
-      (filterNodeByType(node, Text) || filterNodeByType(node, TextInput)) &&
-      (typeof text === 'string'
-        ? text === node.props.children
-        : text.test(node.props.children))
-    );
+    const isTextNode =
+      filterNodeByType(node, Text) || filterNodeByType(node, TextInput);
+    if (isTextNode) {
+      const textChildren = React.Children.map(node.props.children, child =>
+        child.toString()
+      );
+      if (textChildren) {
+        const textToTest = textChildren.join('');
+        return typeof text === 'string'
+          ? text === textToTest
+          : text.test(textToTest);
+      }
+    }
+    return false;
   } catch (error) {
     throw createLibraryNotSupportedError(error);
   }

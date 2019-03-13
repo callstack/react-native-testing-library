@@ -149,8 +149,22 @@ test('getByText, queryByText with children as Array', () => {
   );
 
   const { getByText } = render(<BananaStore />);
+
+  const { toJSON } = render(<BananaCounter numBananas={3} />);
+  expect(toJSON()).toMatchInlineSnapshot(`
+<Text>
+  There are 
+  3
+   bananas in the bunch
+</Text>
+`);
+
   const threeBananaBunch = getByText('There are 3 bananas in the bunch');
-  expect(threeBananaBunch.props.numBananas).toEqual(3);
+  expect(threeBananaBunch.props.children).toEqual([
+    'There are ',
+    3,
+    ' bananas in the bunch',
+  ]);
 });
 
 test('getAllByText, queryAllByText', () => {
