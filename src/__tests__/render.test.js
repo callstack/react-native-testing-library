@@ -135,6 +135,24 @@ test('getByText, queryByText', () => {
   expect(() => queryByText(/fresh/)).toThrow('Expected 1 but found 3');
 });
 
+test('getByText, queryByText with children as Array', () => {
+  const BananaCounter = ({ numBananas }) => (
+    <Text>There are {numBananas} bananas in the bunch</Text>
+  );
+
+  const BananaStore = () => (
+    <View>
+      <BananaCounter numBananas={3} />
+      <BananaCounter numBananas={6} />
+      <BananaCounter numBananas={5} />
+    </View>
+  );
+
+  const { getByText } = render(<BananaStore />);
+  const threeBananaBunch = getByText('There are 3 bananas in the bunch');
+  expect(threeBananaBunch.props.numBananas).toEqual(3);
+});
+
 test('getAllByText, queryAllByText', () => {
   const { getAllByText, queryAllByText } = render(<Banana />);
   const buttons = getAllByText(/fresh/i);
