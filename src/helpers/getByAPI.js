@@ -17,9 +17,9 @@ const getNodeByText = (node, text) => {
   try {
     // eslint-disable-next-line
     const { Text, TextInput } = require('react-native');
-    const isTextNode =
+    const isTextComponent =
       filterNodeByType(node, Text) || filterNodeByType(node, TextInput);
-    if (isTextNode) {
+    if (isTextComponent) {
       const textChildren = React.Children.map(node.props.children, child =>
         child.toString()
       );
