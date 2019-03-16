@@ -44,7 +44,7 @@ test('debug', () => {
 
   debug(component, 'test message');
 
-  expect(console.log).toBeCalledWith('test message\n\n', output);
+  expect(console.log).toHaveBeenCalledWith('test message\n\n', output);
 });
 
 test('debug.shallow', () => {
@@ -66,7 +66,7 @@ test('debug.deep', () => {
 
   debug.deep(component, 'test message');
 
-  expect(console.log).toBeCalledWith('test message\n\n', output);
+  expect(console.log).toHaveBeenCalledWith('test message\n\n', output);
 });
 
 test('debug.deep async test', async () => {

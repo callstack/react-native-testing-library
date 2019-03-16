@@ -51,7 +51,7 @@ describe('fireEvent', () => {
   test('should throw an Error when event handler was not found', () => {
     const { getByTestId } = render(<WithoutEventComponent />);
 
-    expect(() => fireEvent(getByTestId('text'), 'press')).toThrowError(
+    expect(() => fireEvent(getByTestId('text'), 'press')).toThrow(
       'No handler function found for event: press'
     );
   });
@@ -79,7 +79,7 @@ describe('fireEvent', () => {
       </TouchableOpacity>
     );
 
-    expect(() => fireEvent.press(getByTestId('test'))).toThrowError();
+    expect(() => fireEvent.press(getByTestId('test'))).toThrow();
     expect(onPressMock).not.toHaveBeenCalled();
   });
 });
