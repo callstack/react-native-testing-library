@@ -14,7 +14,7 @@ class Banana extends React.Component<*, *> {
       <View>
         {this.props.fresh && <Text testID="fresh">Fresh</Text>}
         <TouchableOpacity onPress={this.changeFresh}>
-          Change freshness!
+          <Text>Change freshness!</Text>
         </TouchableOpacity>
       </View>
     );
@@ -69,7 +69,7 @@ test('waits for element with custom interval', async () => {
     // suppress
   }
 
-  expect(mockFn).toBeCalledTimes(3);
+  expect(mockFn).toHaveBeenCalledTimes(3);
 });
 
 test('works with fake timers', async () => {
@@ -86,7 +86,7 @@ test('works with fake timers', async () => {
   }
   jest.runTimersToTime(400);
 
-  expect(mockFn).toBeCalledTimes(3);
+  expect(mockFn).toHaveBeenCalledTimes(3);
 
   jest.useRealTimers();
 });
