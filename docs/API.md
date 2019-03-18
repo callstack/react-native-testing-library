@@ -50,6 +50,8 @@ type ReactTestInstance = {
 
 A method returning a `ReactTestInstance` with matching text – may be a string or regular expression. Throws when no matches.
 
+This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://facebook.github.io/react-native/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
+
 ### `getAllByText: (text: string | RegExp)`
 
 A method returning an array of `ReactTestInstance`s with matching text – may be a string or regular expression.
