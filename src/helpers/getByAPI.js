@@ -20,8 +20,9 @@ const getNodeByText = (node, text) => {
     const isTextComponent =
       filterNodeByType(node, Text) || filterNodeByType(node, TextInput);
     if (isTextComponent) {
-      const textChildren = React.Children.map(node.props.children, child =>
-        child.toString()
+      const textChildren = React.Children.map(
+        node.props.children,
+        child => (child ? child.toString() : '')
       );
       if (textChildren) {
         const textToTest = textChildren.join('');
