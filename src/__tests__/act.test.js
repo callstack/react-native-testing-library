@@ -28,6 +28,14 @@ test('render should trigger useEffect', () => {
   expect(effectCallback).toHaveBeenCalledTimes(1);
 });
 
+test('updaate should trigger useEffect', () => {
+  const effectCallback = jest.fn();
+  const { update } = render(<UseEffect callback={effectCallback} />);
+  update(<UseEffect callback={effectCallback} />);
+
+  expect(effectCallback).toHaveBeenCalledTimes(2);
+});
+
 test('fireEvent should trigger useState', () => {
   const { getByTestId } = render(<Counter />);
   const counter = getByTestId('counter');

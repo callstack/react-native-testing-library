@@ -26,7 +26,7 @@ export default function render(
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),
-    update: renderer.update,
+    update: updateWithAct(renderer),
     unmount: renderer.unmount,
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
@@ -44,6 +44,15 @@ function renderWithAct(
   });
 
   return ((renderer: any): ReactTestRenderer);
+}
+
+function updateWithAct(renderer: ReactTestRenderer) {
+  function updateImpl(component: React.Element<any>) {
+    act(() => {
+      renderer.update(component);
+    });
+  }
+  return updateImpl;
 }
 
 function debug(instance: ReactTestInstance, renderer) {
