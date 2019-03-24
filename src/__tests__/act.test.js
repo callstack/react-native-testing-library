@@ -28,7 +28,7 @@ test('render should trigger useEffect', () => {
   expect(effectCallback).toHaveBeenCalledTimes(1);
 });
 
-test('updaate should trigger useEffect', () => {
+test('update should trigger useEffect', () => {
   const effectCallback = jest.fn();
   const { update } = render(<UseEffect callback={effectCallback} />);
   update(<UseEffect callback={effectCallback} />);
