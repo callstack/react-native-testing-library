@@ -47,12 +47,11 @@ function renderWithAct(
 }
 
 function updateWithAct(renderer: ReactTestRenderer) {
-  function updateImpl(component: React.Element<any>) {
+  return function(component: React.Element<any>) {
     act(() => {
       renderer.update(component);
     });
-  }
-  return updateImpl;
+  };
 }
 
 function debug(instance: ReactTestInstance, renderer) {
