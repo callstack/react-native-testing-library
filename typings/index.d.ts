@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
+import { ReactTestInstance, ReactTestRendererJSON, TestRendererOptions } from 'react-test-renderer';
 
 export interface GetByAPI {
   getByName: (name: React.ReactType | string) => ReactTestInstance;
@@ -35,10 +35,6 @@ export interface QueryByAPI {
 
 export interface Thenable {
   then: (resolve: () => any, reject?: () => any) => any,
-}
-
-export interface RenderOptions {
-  createNodeMock: (element: React.ReactElement<any>) => any;
 }
 
 export interface RenderAPI extends GetByAPI, QueryByAPI {
@@ -79,9 +75,9 @@ export type DebugAPI = DebugFunction & {
   ) => void;
 };
 
-export declare const render: (
-  component: React.ReactElement<any>,
-  options?: RenderOptions
+export declare const render: <P = {}>(
+  component: React.ReactElement<P>,
+  options?: TestRendererOptions
 ) => RenderAPI;
 export declare const shallow: <P = {}>(
   instance: ReactTestInstance | React.ReactElement<P>
