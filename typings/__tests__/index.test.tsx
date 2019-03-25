@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ReactTestInstance } from 'react-test-renderer';
 import {
   render,
+  renderHook,
   fireEvent,
   shallow,
   flushMicrotasksQueue,
@@ -112,6 +113,16 @@ fireEvent.scroll(getByNameString, 'eventData');
 const shallowTree: { output: React.ReactElement<any> } = shallow(
   <TestComponent />
 );
+
+// renderHook API
+const { rerender, unmount, getResult } = renderHook((
+  firstParam: boolean, secondParam: number) => `${firstParam} ${secondParam}`,
+  false,
+  42,
+);
+rerender(true, 1337);
+getResult();
+unmount();
 
 const waitForFlush: Promise<any> = flushMicrotasksQueue();
 

@@ -44,6 +44,12 @@ export interface RenderAPI extends GetByAPI, QueryByAPI {
   debug(message?: string): void;
 }
 
+export interface RenderHookAPI<HP extends any[] = [], R = any> {
+  getResult(): R;
+  rerender(...hookParameters: HP): void;
+  unmount(): void;
+};
+
 export type FireEventFunction = (
   element: ReactTestInstance,
   eventName: string,
@@ -82,6 +88,7 @@ export declare const render: <P = {}>(
 export declare const shallow: <P = {}>(
   instance: ReactTestInstance | React.ReactElement<P>
 ) => { output: React.ReactElement<P> };
+export declare const renderHook: <THook extends (...args: any[]) => any>(hook: THook, ...initialParams: Parameters<THook>) => RenderHookAPI<Parameters<THook>, ReturnType<THook>>;
 export declare const flushMicrotasksQueue: () => Promise<any>;
 export declare const debug: DebugAPI;
 export declare const fireEvent: FireEventAPI;
