@@ -53,7 +53,9 @@
     "moduleFileExtensions": [
       "js",
       "json"
-    ]
+    ],
+    "setupFilesAfterEnv": "<rootDir>/src/custom-matchers/extendExpect.js"
+
   },
   "greenkeeper": {
     "ignore": [
