@@ -1,12 +1,10 @@
 // @flow
 
-export function toBeEmpty(
-  node: ReactTestInstance
-): { message: () => string, pass: boolean } {
+export function toBeEmpty(node: ReactTestInstance) {
   const isEmpty = node.props.children === undefined;
 
   return {
     pass: isEmpty,
-    message: () => `Expected node ${isEmpty ? 'not ' : ''}to be empty`,
+    message: () => `Expected node ${isEmpty ? "not " : ""}to be empty`
   };
 }

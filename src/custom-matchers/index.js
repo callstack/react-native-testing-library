@@ -1,4 +1,5 @@
-import { toBeDisabled } from './toBeDisabled';
-import { toBeEmpty } from './toBeEmpty';
+// @flow
 
-export default { toBeDisabled, toBeEmpty };
+export { toBeDisabled } from "./toBeDisabled";
+export { toBeEmpty } from "./toBeEmpty";
+
