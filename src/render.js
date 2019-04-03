@@ -26,11 +26,15 @@ export default function render(
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),
-    update: renderer.update,
+    update: (element) => updateWithAct(element, renderer),
     unmount: renderer.unmount,
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
   };
+}
+
+function updateWithAct(element, renderer) {
+  act(() => renderer.update(element));
 }
 
 function renderWithAct(
