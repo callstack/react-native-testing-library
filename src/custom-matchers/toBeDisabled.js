@@ -5,6 +5,6 @@ export function toBeDisabled(node: ReactTestInstance) {
 
   return {
     pass: isDisabled,
-    message: () => `Expected node ${isDisabled ? "not " : ""}to be disabled`
+    message: () => `Expected node ${isDisabled ? 'not ' : ''}to be disabled`,
   };
 }

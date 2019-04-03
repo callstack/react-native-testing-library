@@ -1,5 +1,5 @@
 // @flow
 
-import * as extensions from "./index";
+import * as extensions from './index';
 
 expect.extend(extensions);
