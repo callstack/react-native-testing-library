@@ -7,6 +7,8 @@ const findEventHandler = (element: ReactTestInstance, eventName: string) => {
 
   if (typeof element.props[eventHandler] === 'function') {
     return element.props[eventHandler];
+  } else if (typeof element.props[eventName] === 'function') {
+    return element.props[eventName];
   }
 
   // Do not bubble event to the root element
