@@ -29,6 +29,14 @@ const CustomEventComponent = ({ onCustomEvent }) => (
   </TouchableOpacity>
 );
 
+const MyCustomButton = ({ handlePress }) => (
+  <OnPressComponent onPress={handlePress} />
+);
+
+const CustomEventComponentWithCustomName = ({ handlePress }) => (
+  <MyCustomButton testID="my-custom-button" handlePress={handlePress} />
+);
+
 describe('fireEvent', () => {
   test('should invoke specified event', () => {
     const onPressMock = jest.fn();
@@ -127,4 +135,16 @@ test('fireEvent.changeText', () => {
   fireEvent.changeText(getByTestId('text-input'), CHANGE_TEXT);
 
   expect(onChangeTextMock).toHaveBeenCalledWith(CHANGE_TEXT);
+});
+
+test('custom component with custom event name', () => {
+  const handlePress = jest.fn();
+
+  const { getByTestId } = render(
+    <CustomEventComponentWithCustomName handlePress={handlePress} />
+  );
+
+  fireEvent(getByTestId('my-custom-button'), 'handlePress');
+
+  expect(handlePress).toHaveBeenCalled();
 });
