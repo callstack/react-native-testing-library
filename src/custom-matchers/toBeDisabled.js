@@ -1,8 +1,6 @@
 // @flow
 
-export function toBeDisabled(
-  node: ReactTestInstance
-): { message: () => string, pass: boolean } {
+export function toBeDisabled(node: ReactTestInstance) {
   const isDisabled = node.props.disabled === true;
 
   return {
