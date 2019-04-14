@@ -1,5 +1,5 @@
-<div align="center">
-  <span style="font-size: 100px">🦉</span>
+<div align='center'>
+  <span style='font-size: 100px'>🦉</span>
   <h1>React Native Testing Library</h1>
 
   <p>Lightweight React Native testing utilities helping you write better tests with less effort.</P>
@@ -30,26 +30,26 @@ This library is a replacement for [Enzyme](http://airbnb.io/enzyme/). It is test
 ## Example
 
 ```jsx
-import { render, fireEvent } from "react-native-testing-library";
-import { QuestionsBoard } from "../QuestionsBoard";
-import { Question } from "../Question";
+import { render, fireEvent } from 'react-native-testing-library';
+import { QuestionsBoard } from '../QuestionsBoard';
+import { Question } from '../Question';
 
 function setAnswer(question, answer) {
   fireEvent.changeText(question, answer);
 }
 
-test("should verify two questions", () => {
+test('should verify two questions', () => {
   const { getAllByType, getByText } = render(<QuestionsBoard {...props} />);
   const allQuestions = getAllByType(Question);
 
-  setAnswer(allQuestions[0], "a1");
-  setAnswer(allQuestions[1], "a2");
+  setAnswer(allQuestions[0], 'a1');
+  setAnswer(allQuestions[1], 'a2');
 
-  fireEvent.press(getByText("submit"));
+  fireEvent.press(getByText('submit'));
 
   expect(props.verifyQuestions).toBeCalledWith({
-    "1": { q: "q1", a: "a1" },
-    "2": { q: "q2", a: "a2" }
+    '1': { q: 'q1', a: 'a1' },
+    '2': { q: 'q2', a: 'a2' }
   });
 });
 ```
