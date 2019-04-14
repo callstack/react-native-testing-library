@@ -27,6 +27,7 @@ export default function render(
     ...getByAPI(instance),
     ...queryByAPI(instance),
     update: updateWithAct(renderer),
+    rerender: updateWithAct(renderer), // alias for `update`
     unmount: renderer.unmount,
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),

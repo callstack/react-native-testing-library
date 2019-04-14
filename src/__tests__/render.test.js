@@ -237,14 +237,15 @@ test('getAllByProp, queryAllByProps', () => {
 
 test('update', () => {
   const fn = jest.fn();
-  const { getByName, update } = render(<Banana onUpdate={fn} />);
+  const { getByName, update, rerender } = render(<Banana onUpdate={fn} />);
   const button = getByName('Button');
 
   button.props.onPress();
 
   update(<Banana onUpdate={fn} />);
+  rerender(<Banana onUpdate={fn} />);
 
-  expect(fn).toHaveBeenCalledTimes(2);
+  expect(fn).toHaveBeenCalledTimes(3);
 });
 
 test('unmount', () => {
