@@ -29,88 +29,36 @@ import { render } from 'react-native-testing-library';
 const { getByTestId, getByText /*...*/ } = render(<Component />);
 ```
 
-Returns a `RenderResult` object with following properties:
+Returns a `RenderResult` object with [Queries](./Queries.md) and following helpers:
 
-### `getByTestId: (testID: string)`
-
-A method returning a `ReactTestInstance` with matching `testID` prop. Throws when no matches.
-
-_Note: most methods like this one return a [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance) with following properties that you may be interested in:_
-
-```jsx
-type ReactTestInstance = {
-  type: string | Function,
-  props: { [propName: string]: any },
-  parent: null | ReactTestInstance,
-  children: Array<ReactTestInstance | string>,
-};
-```
-
-### `getByText: (text: string | RegExp)`
-
-A method returning a `ReactTestInstance` with matching text – may be a string or regular expression. Throws when no matches.
-
-This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://facebook.github.io/react-native/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
-
-### `getAllByText: (text: string | RegExp)`
-
-A method returning an array of `ReactTestInstance`s with matching text – may be a string or regular expression.
-
-### `getByPlaceholder: (placeholder: string | RegExp)`
-
-A method returning a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression. Throws when no matches.
-
-### `getAllByPlaceholder: (placeholder: string | RegExp)`
-
-A method returning an array of `ReactTestInstance`s for `TextInput`'s with a matching placeholder – may be a string or regular expression.
-
-### `getByProps: (props: { [propName: string]: any })`
-
-A method returning a `ReactTestInstance` with matching props object. Throws when no matches.
-
-### `getAllByProps: (props: { [propName: string]: any })`
-
-A method returning an array of `ReactTestInstance`s with matching props object.
-
-### `getByType: (type: React.ComponentType<*>)`
-
-> Note: added in v1.4
-
-A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
-
-### `getAllByType: (type: React.ComponentType<*>)`
-
-> Note: added in v1.4
-
-A method returning an array of `ReactTestInstance`s with matching a React component type.
-
-### `[DEPRECATED] getByName: (name: React.ComponentType<*>)`
-
-A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
-
-> This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. It will be removed in next major release (v2.0). Use [`getByType`](#getbytype-type-reactcomponenttype) instead.
-
-### `[DEPRECATED] getAllByName: (name: React.ComponentType<*>)`
-
-A method returning an array of `ReactTestInstance`s with matching a React component type.
-
-> This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. It will be removed in next major release (v2.0). Use [`getAllByType`](#getallbytype-type-reactcomponenttype) instead.
-
-### `update: (element: React.Element<any>) => void`
+### `update`
 
 _Also available under `rerender` alias_
+
+```ts
+update(element: React.Element<any>): void
+rerender(element: React.Element<any>): void
+```
 
 Re-render the in-memory tree with a new root element. This simulates a React update at the root. If the new element has the same type and key as the previous element, the tree will be updated; otherwise, it will re-mount a new tree. This is useful when testing for `componentDidUpdate` behavior, by passing updated props to the component.
 
 [Example code](https://github.com/callstack/react-native-testing-library/blob/f96d782d26dd4815dbfd01de6ef7a647efd1f693/src/__tests__/act.test.js#L31-L37)
 
-### `unmount: () => void`
+### `unmount`
+
+```ts
+unmount(): void
+```
 
 Unmount the in-memory tree, triggering the appropriate lifecycle events
 
 When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases it's convenient to create your custom `render` method. [Follow this great guide on how to set this up](https://github.com/kentcdodds/react-testing-library#custom-render).
 
-### `debug: (message?: string) => void`
+### `debug`
+
+```ts
+debug(message?: string): void
+```
 
 Prints deeply rendered component passed to `render` with optional message on top. Uses [debug.deep](#debug) under the hood, but it's easier to use.
 
@@ -133,11 +81,15 @@ optional message
 </TouchableOpacity>
 ```
 
-### `debug.shallow: (message?: string) => void`
+#### `debug.shallow`
 
 Prints shallowly rendered component passed to `render` with optional message on top. Uses [debug.shallow](#debug) under the hood, but it's easier to use.
 
-### `toJSON: () => ?ReactTestRendererJSON`
+### `toJSON`
+
+```ts
+toJSON(): ReactTestRendererJSON | null
+```
 
 Get the rendered component JSON representation, e.g. for snapshot testing.
 
@@ -158,24 +110,27 @@ test('Component has a structure', () => {
 
 ## `fireEvent`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/fireEvent.test.js)
+```ts
+fireEvent(element: ReactTestInstance, eventName: string, data?: *): void
+```
 
-Invokes a given event handler (whether native or custom) on the element, bubbling to the root of the rendered tree. The three most common events (`press`, `changeText`, and `scroll`) have been aliased for convenience.
+Fires native-like event with data.
 
-### `fireEvent: (element: ReactTestInstance, eventName: string, data?: *) => void`
-
-Invokes named event handler on the element or parent element in the tree. For better readability, `fireEvent` strips the `on` part of the handler prop name, so it will fire `onMyCustomEvent` when `myCustomEvent` is passed as `eventName`.
+Invokes a given event handler (whether native or custom) on the element, bubbling to the root of the rendered tree.
 
 ```jsx
 import { render, fireEvent } from 'react-native-testing-library';
-import { MyComponent } from './MyComponent';
 
-const onEventMock = jest.fn();
-const { getByTestId } = render(
-  <MyComponent testID="custom" onMyCustomEvent={onEventMock} />
-);
+test('fire changeText event', () => {
+  const onEventMock = jest.fn();
+  const { getByTestId } = render(
+    // MyComponent renders TextInput with `onChangeText` bound to handleChangeText
+    <MyComponent testID="change" handleChangeText={onEventMock} />
+  );
 
-fireEvent(getByTestId('custom'), 'myCustomEvent');
+  fireEvent(getByTestId('change'), 'onChangeText', 'ab');
+  expect(onEventMock).toHaveBeenCalledWith('ab');
+});
 ```
 
 An example using `fireEvent` with native events that aren't already aliased by the `fireEvent` api.
@@ -192,8 +147,17 @@ const { getByPlaceholder } = render(
   </View>
 );
 
+// you can omit the `on` prefix
 fireEvent(getByPlaceholder('my placeholder'), 'blur');
 ```
+
+## `fireEvent[eventName]`
+
+```ts
+fireEvent[eventName](element: ReactTestInstance, data?: *): void
+```
+
+Convenience methods for common events like: `press`, `changeText`, `scroll`.
 
 ### `fireEvent.press: (element: ReactTestInstance) => void`
 
