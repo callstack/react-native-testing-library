@@ -5,7 +5,6 @@
     alt="owl"
     src="https://raw.githubusercontent.com/callstack/react-native-testing-library/master/website/static/img/owl.png"
   />
-  <span style='font-size: 100px'>🦉</span>
   <h1>React Native Testing Library</h1>
 
   <p>Lightweight React Native testing utilities helping you write better tests with less effort.</P>
