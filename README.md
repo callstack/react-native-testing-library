@@ -1,6 +1,9 @@
-# React Native Testing Library
+<div align='center'>
+  <span style='font-size: 100px'>🦉</span>
+  <h1>React Native Testing Library</h1>
 
-Lightweight React Native testing utilities helping you write better tests with less effort.
+  <p>Lightweight React Native testing utilities helping you write better tests with less effort.</P>
+</div>
 
 [![Version][version-badge]][package]
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
@@ -46,7 +49,7 @@ test('should verify two questions', () => {
 
   expect(props.verifyQuestions).toBeCalledWith({
     '1': { q: 'q1', a: 'a1' },
-    '2': { q: 'q2', a: 'a2' },
+    '2': { q: 'q2', a: 'a2' }
   });
 });
 ```

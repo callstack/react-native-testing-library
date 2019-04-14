@@ -6,6 +6,7 @@
  */
 
 const React = require('react');
+const CompLibrary = require('../../core/CompLibrary.js');
 
 const siteConfig = require(`${process.cwd()}/siteConfig.js`);
 
@@ -52,8 +53,37 @@ class HomeSplash extends React.Component {
     return (
       <SplashContainer>
         <div className="inner">
+          <img src={`${siteConfig.baseUrl}img/owl.png`} />
           <ProjectTitle />
         </div>
+        <CompLibrary.Container padding={['top', 'bottom']}>
+          <CompLibrary.GridBlock
+            align="center"
+            layout="threeColumn"
+            contents={[
+              {
+                title: 'Maintainable',
+                content: 'Write maintainable tests for your React Native apps',
+                image: `${siteConfig.baseUrl}img/tools.png`,
+                imageAlign: 'top',
+              },
+              {
+                title: 'Reliable',
+                content:
+                  'Promotes testing public APIs and avoiding implementation details',
+                image: `${siteConfig.baseUrl}img/hit.png`,
+                imageAlign: 'top',
+              },
+              {
+                title: 'Community Driven',
+                content:
+                  'Supported by React Native community and its core contributors',
+                image: `${siteConfig.baseUrl}img/locomotive.png`,
+                imageAlign: 'top',
+              },
+            ]}
+          />
+        </CompLibrary.Container>
       </SplashContainer>
     );
   }
