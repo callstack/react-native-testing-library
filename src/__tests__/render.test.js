@@ -153,7 +153,7 @@ test('getByText, queryByText with children as Array', () => {
   const { toJSON } = render(<BananaCounter numBananas={3} />);
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text>
-  There are
+  There are 
   3
    bananas in the bunch
 </Text>
