@@ -3,4 +3,5 @@
 <url> <loc>https://callstack.github.io/react-native-testing-library/index</loc> <changefreq>weekly</changefreq> <priority>0.5</priority> <xhtml:link rel="alternate" hreflang="en" href="https://callstack.github.io/react-native-testing-library/en/index" /> </url>
 <url> <loc>https://callstack.github.io/react-native-testing-library/docs/api</loc> <changefreq>hourly</changefreq> <priority>1.0</priority> <xhtml:link rel="alternate" hreflang="en" href="https://callstack.github.io/react-native-testing-library/docs/api" /> </url>
 <url> <loc>https://callstack.github.io/react-native-testing-library/docs/getting-started</loc> <changefreq>hourly</changefreq> <priority>1.0</priority> <xhtml:link rel="alternate" hreflang="en" href="https://callstack.github.io/react-native-testing-library/docs/getting-started" /> </url>
+<url> <loc>https://callstack.github.io/react-native-testing-library/docs/api-queries</loc> <changefreq>hourly</changefreq> <priority>1.0</priority> <xhtml:link rel="alternate" hreflang="en" href="https://callstack.github.io/react-native-testing-library/docs/api-queries" /> </url>
 </urlset>
