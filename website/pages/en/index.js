@@ -70,13 +70,14 @@ class HomeSplash extends React.Component {
               {
                 title: 'Reliable',
                 content:
-                  'Rely on your tests without testing implementation details',
+                  'Promotes testing public APIs and avoiding implementation details',
                 image: `${siteConfig.baseUrl}img/hit.png`,
                 imageAlign: 'top',
               },
               {
                 title: 'Community Driven',
-                content: 'Supported by React Native core contributors',
+                content:
+                  'Supported by React Native community and its core contributors',
                 image: `${siteConfig.baseUrl}img/locomotive.png`,
                 imageAlign: 'top',
               },
