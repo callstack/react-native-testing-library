@@ -8,6 +8,12 @@
   "author": "Michał Pierzchała <thymikee@gmail.com>",
   "license": "MIT",
   "private": false,
+  "keywords": [
+    "react-native",
+    "react",
+    "test",
+    "integration"
+  ],
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
