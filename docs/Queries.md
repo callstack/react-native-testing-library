@@ -29,25 +29,6 @@ present.
 `queryAllBy*` queries return an array of all matching nodes for a query, and
 return an empty array (`[]`) if no elements match.
 
-<!-- uncomment once we have findBy apis
-### findBy
-
-`findBy*` queries return a promise which resolves when an element is found which
-matches the given query. The promise is rejected if no element is found after a
-default timeout of `4500`ms.
-
-> Note, this is a simple combination of `getBy*` queries and
-> [`waitForElement`](/docs/api-async#waitforelement). The `findBy*` queries
-> accept the `waitForElement` options as the last argument. (i.e.
-> `findByText(container, 'text', queryOptions, waitForElementOptions)`)
-
-### findAllBy
-
-`findAllBy*` queries return a promise which resolves to an array of elements
-when any elements are found which match the given query. The promise is rejected
-if no elements are found after a default timeout of `4500`ms.
--->
-
 ## Queries
 
 _Note: most methods like this one return a [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance) with following properties that you may be interested in:_
@@ -91,7 +72,7 @@ const element = getByPlaceholder('username');
 
 ### `ByTestId`
 
-> getByTestId, queryByTestId, getAllByTestId, queryAllByTestId,
+> getByTestId, getAllByTestId, queryByTestId, queryAllByTestId
 
 Returns a `ReactTestInstance` with matching `testID` prop.
 
