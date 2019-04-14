@@ -87,7 +87,7 @@ const element = getByTestId('unique-id');
 
 > Use sparingly and responsibly, escape hatches here
 
-`render` from `react-native-testing-library` exposes additional queries that **should not be used in component integration testing**, but some users (like component library creators) interested in certain implemntation details for unit testing may find helpful.
+`render` from `react-native-testing-library` exposes additional queries that **should not be used in component integration testing**, but some users (like component library creators) interested in unit testing some components may find helpful.
 
 <details>
   <summary>Queries helpful in unit testing</summary>
