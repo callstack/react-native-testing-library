@@ -99,6 +99,7 @@ const debugFn = tree.debug();
 const debugFnWithMessage = tree.debug('my message');
 
 tree.update(<View />);
+tree.rerender(<View />);
 tree.unmount();
 
 // fireEvent API tests

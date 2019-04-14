@@ -5,7 +5,7 @@ title: API
 
 This page gathers public API of `react-native-testing-library` along with usage examples.
 
-## `render` 
+## `render`
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/render.test.js)
 
@@ -97,6 +97,8 @@ A method returning an array of `ReactTestInstance`s with matching a React compon
 > This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. It will be removed in next major release (v2.0). Use [`getAllByType`](#getallbytype-type-reactcomponenttype) instead.
 
 ### `update: (element: React.Element<any>) => void`
+
+_Also available under `rerender` alias_
 
 Re-render the in-memory tree with a new root element. This simulates a React update at the root. If the new element has the same type and key as the previous element, the tree will be updated; otherwise, it will re-mount a new tree. This is useful when testing for `componentDidUpdate` behavior, by passing updated props to the component.
 
