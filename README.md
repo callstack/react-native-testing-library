@@ -28,7 +28,7 @@ You finally want to approach testing using only best practices, while Enzyme may
 
 ## This solution
 
-The `react-native-testing-library` is a lightweight solution for testing your React Native components. It provides light utility functions on top of `react-test-renderer` letting you always be up to date with latest React features and write any component tests you like, be it shallow or deeply rendered ones. But really not any, it prevents you from testing implementation details because we stand this is a very bad practice.
+The `react-native-testing-library` is a lightweight solution for testing your React Native components. It provides light utility functions on top of `react-test-renderer` letting you always be up to date with latest React features and write any component tests you like. But really not any, it prevents you from testing implementation details because we stand this is a very bad practice.
 
 This library is a replacement for [Enzyme](http://airbnb.io/enzyme/). It is tested to work with Jest, but it should work with other test runners as well.
 
@@ -76,7 +76,6 @@ As you may have noticed, it's not tied to React Native at all – you can safely
 The [public API](https://callstack.github.io/react-native-testing-library/docs/api) of `react-native-testing-library` is focused around these essential methods:
 
 - [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – deeply renders given React element and returns helpers to query the output components.
-- [`shallow`](https://callstack.github.io/react-native-testing-library/docs/api#shallow) – shallowly renders given React component. It doesn't return any helpers to query the output.
 - [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/api#fireevent) - invokes named event handler on the element.
 - [`waitForElement`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelement) - waits for non-deterministic periods of time until your element appears or times out.
 - [`flushMicrotasksQueue`](https://callstack.github.io/react-native-testing-library/docs/api#flushmicrotasksqueue) - waits for microtasks queue to flush.

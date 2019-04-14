@@ -93,21 +93,6 @@ toJSON(): ReactTestRendererJSON | null
 
 Get the rendered component JSON representation, e.g. for snapshot testing.
 
-## `shallow`
-
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/shallow.test.js)
-
-Shallowly renders given React component.
-
-```jsx
-import { shallow } from 'react-native-testing-library';
-
-test('Component has a structure', () => {
-  const { output } = shallow(<Component />);
-  expect(output).toMatchSnapshot();
-});
-```
-
 ## `fireEvent`
 
 ```ts
