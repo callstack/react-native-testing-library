@@ -1,4 +1,10 @@
 <div align='center'>
+  <img
+    height="80"
+    width="80"
+    alt="owl"
+    src="https://raw.githubusercontent.com/callstack/react-native-testing-library/master/website/static/img/owl.png"
+  />
   <span style='font-size: 100px'>🦉</span>
   <h1>React Native Testing Library</h1>
 
@@ -49,7 +55,7 @@ test('should verify two questions', () => {
 
   expect(props.verifyQuestions).toBeCalledWith({
     '1': { q: 'q1', a: 'a1' },
-    '2': { q: 'q2', a: 'a2' }
+    '2': { q: 'q2', a: 'a2' },
   });
 });
 ```
