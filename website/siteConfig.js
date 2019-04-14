@@ -30,14 +30,14 @@ const siteConfig = {
   ],
 
   /* path to images for header/footer */
-  // headerIcon: 'img/docusaurus.svg',
-  // footerIcon: 'img/docusaurus.svg',
-  // favicon: 'img/favicon.png',
+  headerIcon: 'img/owl.png',
+  footerIcon: 'img/owl.png',
+  favicon: 'img/owl.png',
 
   /* Colors for website */
   colors: {
-    primaryColor: '#3274ff',
-    secondaryColor: '#3bffed',
+    primaryColor: '#262626',
+    secondaryColor: '#bf8a65',
   },
 
   /* Custom fonts for website */
