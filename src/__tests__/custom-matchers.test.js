@@ -7,18 +7,11 @@ import { render } from '..';
 describe('custom-matchers', () => {
   describe('.toBeDisabled', () => {
     describe('Button', () => {
-      const BUTTON_EXPLICIT_DISABLED = 'button-explicit-disabled';
       const BUTTON_IMPLICIT_DISABLED = 'button-implicit-disabled';
       const BUTTON_EXPLICIT_ENABLED = 'button-explicit-enabled';
       const BUTTON_IMPLICIT_ENABLED = 'button-implicit-enabled';
       const TestComponent = () => (
         <View>
-          <Button
-            testID={BUTTON_EXPLICIT_DISABLED}
-            disabled={true}
-            title="Click Me"
-            onPress={() => {}}
-          />
           <Button
             testID={BUTTON_IMPLICIT_DISABLED}
             disabled
@@ -39,7 +32,7 @@ describe('custom-matchers', () => {
         </View>
       );
 
-      test.each([BUTTON_EXPLICIT_DISABLED, BUTTON_IMPLICIT_DISABLED])(
+      test.each([BUTTON_IMPLICIT_DISABLED])(
         'node with %s testID is disabled',
         (testID: string) => {
           const { getByTestId } = render(<TestComponent />);
