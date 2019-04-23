@@ -88,7 +88,7 @@ React Native Testing Library is an open source project and will always remain fr
 
 ---
 
-Supported and used by [Rally Health](https://www.rallyhealth.com/company/careers).
+Supported and used by [Rally Health](https://www.rallyhealth.com/careers-home).
 
 <!-- badges -->
 
