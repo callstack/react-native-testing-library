@@ -32,7 +32,7 @@
     "react": "^16.8.3",
     "react-native": "^0.59.8",
     "react-test-renderer": "^16.8.3",
-    "release-it": "^10.0.0",
+    "release-it": "^12.1.0",
     "strip-ansi": "^5.0.0",
     "typescript": "^3.1.1"
   },
