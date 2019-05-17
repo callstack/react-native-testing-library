@@ -15,6 +15,8 @@ Defined as:
 function render(
   component: React.Element<any>,
   options?: {
+    /* Provide a React Component to have it rendered around the inner element on initial  render and on rerender/update  */
+    wrapper?: React.ComponentType<any>,
     /* You won't often use this, but it's helpful when testing refs */
     createNodeMock: (element: React.Element<any>) => any,
   }

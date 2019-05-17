@@ -9,6 +9,10 @@ import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 
 type Options = {
+  wrapper?: React.ComponentType<any>,
+  createNodeMock?: (element: React.Element<any>) => any,
+};
+type TestRendererOptions = {
   createNodeMock: (element: React.Element<any>) => any,
 };
 
@@ -18,9 +22,19 @@ type Options = {
  */
 export default function render(
   component: React.Element<any>,
-  options?: Options
+  { wrapper: WrapperComponent, createNodeMock }: Options = {}
 ) {
-  const renderer = renderWithAct(component, options);
+  const wrapUiIfNeeded = (innerElement: React.Element<any>) =>
+    WrapperComponent ? (
+      <WrapperComponent>{innerElement}</WrapperComponent>
+    ) : (
+      innerElement
+    );
+
+  const renderer = renderWithAct(
+    wrapUiIfNeeded(component),
+    createNodeMock ? { createNodeMock } : undefined
+  );
 
   const instance = renderer.root;
 
@@ -28,8 +42,8 @@ export default function render(
     ...getByAPI(instance),
     ...queryByAPI(instance),
     ...a11yAPI(instance),
-    update: updateWithAct(renderer),
-    rerender: updateWithAct(renderer), // alias for `update`
+    update: updateWithAct(renderer, wrapUiIfNeeded),
+    rerender: updateWithAct(renderer, wrapUiIfNeeded), // alias for `update`
     unmount: renderer.unmount,
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
@@ -38,7 +52,7 @@ export default function render(
 
 function renderWithAct(
   component: React.Element<any>,
-  options?: Options
+  options?: TestRendererOptions
 ): ReactTestRenderer {
   let renderer: ReactTestRenderer;
 
@@ -49,10 +63,13 @@ function renderWithAct(
   return ((renderer: any): ReactTestRenderer);
 }
 
-function updateWithAct(renderer: ReactTestRenderer) {
+function updateWithAct(
+  renderer: ReactTestRenderer,
+  wrapUiIfNeeded: (innerElement: React.Element<any>) => React.Element<any>
+) {
   return function(component: React.Element<any>) {
     act(() => {
-      renderer.update(component);
+      renderer.update(wrapUiIfNeeded(component));
     });
   };
 }
