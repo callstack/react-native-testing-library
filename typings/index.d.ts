@@ -74,7 +74,8 @@ export interface Thenable {
 }
 
 export interface RenderOptions {
-  createNodeMock: (element: React.ReactElement<any>) => any;
+  wrapper?: React.ComponentType<any>;
+  createNodeMock?: (element: React.ReactElement<any>) => any;
 }
 
 export interface RenderAPI extends GetByAPI, QueryByAPI, A11yAPI {

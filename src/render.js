@@ -38,12 +38,14 @@ export default function render(
 
   const instance = renderer.root;
 
+  const update = updateWithAct(renderer, wrapUiIfNeeded);
+
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),
     ...a11yAPI(instance),
-    update: updateWithAct(renderer, wrapUiIfNeeded),
-    rerender: updateWithAct(renderer, wrapUiIfNeeded), // alias for `update`
+    update,
+    rerender: update, // alias for `update`
     unmount: renderer.unmount,
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
