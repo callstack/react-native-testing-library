@@ -6,7 +6,6 @@ import {
   createLibraryNotSupportedError,
   logDeprecationWarning,
 } from './errors';
-import makeMatchers from './makeMatchers';
 
 const filterNodeByType = (node, type) => node.type === type;
 
@@ -189,5 +188,4 @@ export const getByAPI = (instance: ReactTestInstance) => ({
   getAllByText: getAllByText(instance),
   getAllByPlaceholder: getAllByPlaceholder(instance),
   getAllByProps: getAllByProps(instance),
-  ...makeMatchers('accessibilityLabel')(instance),
 });
