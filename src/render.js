@@ -24,7 +24,7 @@ export default function render(
   component: React.Element<any>,
   { wrapper: WrapperComponent, createNodeMock }: Options = {}
 ) {
-  const wrapUiIfNeeded = (innerElement: React.Element<any>) =>
+  const wrap = (innerElement: React.Element<any>) =>
     WrapperComponent ? (
       <WrapperComponent>{innerElement}</WrapperComponent>
     ) : (
@@ -32,13 +32,13 @@ export default function render(
     );
 
   const renderer = renderWithAct(
-    wrapUiIfNeeded(component),
+    wrap(component),
     createNodeMock ? { createNodeMock } : undefined
   );
 
   const instance = renderer.root;
 
-  const update = updateWithAct(renderer, wrapUiIfNeeded);
+  const update = updateWithAct(renderer, wrap);
 
   return {
     ...getByAPI(instance),
