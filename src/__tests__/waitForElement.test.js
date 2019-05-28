@@ -13,7 +13,7 @@ class Banana extends React.Component<*, *> {
     return (
       <View>
         {this.props.fresh && <Text testID="fresh">Fresh</Text>}
-        <TouchableOpacity onPress={this.changeFresh}>
+        <TouchableOpacity testID="changeFreshness" onPress={this.changeFresh}>
           <Text>Change freshness!</Text>
         </TouchableOpacity>
       </View>
@@ -37,9 +37,9 @@ class BananaContainer extends React.Component<*, *> {
 }
 
 test('waits for element until it stops throwing', async () => {
-  const { getByTestId, getByName, queryByTestId } = render(<BananaContainer />);
+  const { getByTestId, queryByTestId } = render(<BananaContainer />);
 
-  fireEvent.press(getByName('TouchableOpacity'));
+  fireEvent.press(getByTestId('changeFreshness'));
 
   expect(queryByTestId('fresh')).toBeNull();
 
@@ -49,9 +49,9 @@ test('waits for element until it stops throwing', async () => {
 });
 
 test('waits for element until timeout is met', async () => {
-  const { getByTestId, getByName } = render(<BananaContainer />);
+  const { getByTestId } = render(<BananaContainer />);
 
-  fireEvent.press(getByName('TouchableOpacity'));
+  fireEvent.press(getByTestId('changeFreshness'));
 
   await expect(
     waitForElement(() => getByTestId('fresh'), 100)

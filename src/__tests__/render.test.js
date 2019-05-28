@@ -53,7 +53,11 @@ class Banana extends React.Component<*, *> {
           placeholder={PLACEHOLDER_FRESHNESS}
         />
         <TextInput testID="bananaChef" placeholder={PLACEHOLDER_CHEF} />
-        <Button onPress={this.changeFresh} type="primary">
+        <Button
+          testID="changeFreshness"
+          onPress={this.changeFresh}
+          type="primary"
+        >
           Change freshness!
         </Button>
       </View>
@@ -70,53 +74,6 @@ test('getByTestId, queryByTestId', () => {
 
   expect(getByTestId('bananaFresh')).toBe(component);
   expect(queryByTestId('InExistent')).toBeNull();
-});
-
-test('getByName, queryByName', () => {
-  const { getByTestId, getByName, queryByName } = render(<Banana />);
-  const bananaFresh = getByTestId('bananaFresh');
-  const button = getByName('Button');
-
-  button.props.onPress();
-
-  expect(bananaFresh.props.children).toBe('fresh');
-
-  const sameButton = getByName(Button);
-  sameButton.props.onPress();
-
-  expect(bananaFresh.props.children).toBe('not fresh');
-  expect(() => getByName('InExistent')).toThrow('No instances found');
-  expect(() => getByName(Text)).toThrow('Expected 1 but found 3');
-
-  expect(queryByName('Button')).toBe(button);
-  expect(queryByName('InExistent')).toBeNull();
-});
-
-test('getAllByName, queryAllByName', () => {
-  const { getAllByName, queryAllByName } = render(<Banana />);
-  const [text, status, button] = getAllByName('Text');
-
-  expect(text.props.children).toBe('Is the banana fresh?');
-  expect(status.props.children).toBe('not fresh');
-  expect(button.props.children).toBe('Change freshness!');
-  expect(() => getAllByName('InExistent')).toThrow('No instances found');
-
-  expect(queryAllByName('Text')[1]).toBe(status);
-  expect(queryAllByName('InExistent')).toHaveLength(0);
-});
-
-test('getAllByType, queryAllByType', () => {
-  const { getAllByType, queryAllByType } = render(<Banana />);
-  const [text, status, button] = getAllByType(Text);
-  const InExistent = () => null;
-
-  expect(text.props.children).toBe('Is the banana fresh?');
-  expect(status.props.children).toBe('not fresh');
-  expect(button.props.children).toBe('Change freshness!');
-  expect(() => getAllByType(InExistent)).toThrow('No instances found');
-
-  expect(queryAllByType(Text)[1]).toBe(status);
-  expect(queryAllByType(InExistent)).toHaveLength(0);
 });
 
 test('getByText, queryByText', () => {
@@ -200,36 +157,10 @@ test('getAllByPlaceholder, queryAllByPlaceholder', () => {
   expect(queryAllByPlaceholder('no placeholder')).toHaveLength(0);
 });
 
-test('getByProps, queryByProps', () => {
-  const { getByProps, queryByProps } = render(<Banana />);
-  const primaryType = getByProps({ type: 'primary' });
-
-  expect(primaryType.props.children).toBe('Change freshness!');
-  expect(() => getByProps({ type: 'inexistent' })).toThrow(
-    'No instances found'
-  );
-
-  expect(queryByProps({ type: 'primary' })).toBe(primaryType);
-  expect(queryByProps({ type: 'inexistent' })).toBeNull();
-});
-
-test('getAllByProp, queryAllByProps', () => {
-  const { getAllByProps, queryAllByProps } = render(<Banana />);
-  const primaryTypes = getAllByProps({ type: 'primary' });
-
-  expect(primaryTypes).toHaveLength(1);
-  expect(() => getAllByProps({ type: 'inexistent' })).toThrow(
-    'No instances found'
-  );
-
-  expect(queryAllByProps({ type: 'primary' })).toEqual(primaryTypes);
-  expect(queryAllByProps({ type: 'inexistent' })).toHaveLength(0);
-});
-
 test('update', () => {
   const fn = jest.fn();
-  const { getByName, update, rerender } = render(<Banana onUpdate={fn} />);
-  const button = getByName('Button');
+  const { getByTestId, update, rerender } = render(<Banana onUpdate={fn} />);
+  const button = getByTestId('changeFreshness');
 
   button.props.onPress();
 
@@ -278,9 +209,9 @@ test('debug', () => {
 test('debug changing component', () => {
   jest.spyOn(console, 'log').mockImplementation(x => x);
 
-  const { getByProps, debug } = render(<Banana />);
+  const { getByTestId, debug } = render(<Banana />);
 
-  fireEvent.press(getByProps({ type: 'primary' }));
+  fireEvent.press(getByTestId('changeFreshness'));
 
   debug();
 

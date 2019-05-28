@@ -1,17 +1,8 @@
 // @flow
 import * as React from 'react';
-import prettyFormat from 'pretty-format';
-import {
-  ErrorWithStack,
-  createLibraryNotSupportedError,
-  logDeprecationWarning,
-} from './errors';
+import { ErrorWithStack, createLibraryNotSupportedError } from './errors';
 
 const filterNodeByType = (node, type) => node.type === type;
-
-const filterNodeByName = (node, name) =>
-  typeof node.type !== 'string' &&
-  (node.type.displayName === name || node.type.name === name);
 
 const getNodeByText = (node, text) => {
   try {
@@ -57,27 +48,6 @@ const prepareErrorMessage = error =>
   // Strip info about custom predicate
   error.message.replace(/ matching custom predicate[^]*/gm, '');
 
-export const getByName = (instance: ReactTestInstance) =>
-  function getByNameFn(name: string | React.ComponentType<*>) {
-    logDeprecationWarning('getByName', 'getByType');
-    try {
-      return typeof name === 'string'
-        ? instance.find(node => filterNodeByName(node, name))
-        : instance.findByType(name);
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByNameFn);
-    }
-  };
-
-export const getByType = (instance: ReactTestInstance) =>
-  function getByTypeFn(type: React.ComponentType<*>) {
-    try {
-      return instance.findByType(type);
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByTypeFn);
-    }
-  };
-
 export const getByText = (instance: ReactTestInstance) =>
   function getByTextFn(text: string | RegExp) {
     try {
@@ -98,15 +68,6 @@ export const getByPlaceholder = (instance: ReactTestInstance) =>
     }
   };
 
-export const getByProps = (instance: ReactTestInstance) =>
-  function getByPropsFn(props: { [propName: string]: any }) {
-    try {
-      return instance.findByProps(props);
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByPropsFn);
-    }
-  };
-
 export const getByTestId = (instance: ReactTestInstance) =>
   function getByTestIdFn(testID: string) {
     try {
@@ -114,28 +75,6 @@ export const getByTestId = (instance: ReactTestInstance) =>
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByTestIdFn);
     }
-  };
-
-export const getAllByName = (instance: ReactTestInstance) =>
-  function getAllByNameFn(name: string | React.ComponentType<*>) {
-    logDeprecationWarning('getAllByName', 'getAllByType');
-    const results =
-      typeof name === 'string'
-        ? instance.findAll(node => filterNodeByName(node, name))
-        : instance.findAllByType(name);
-    if (results.length === 0) {
-      throw new ErrorWithStack('No instances found', getAllByNameFn);
-    }
-    return results;
-  };
-
-export const getAllByType = (instance: ReactTestInstance) =>
-  function getAllByTypeFn(type: React.ComponentType<*>) {
-    const results = instance.findAllByType(type);
-    if (results.length === 0) {
-      throw new ErrorWithStack('No instances found', getAllByTypeFn);
-    }
-    return results;
   };
 
 export const getAllByText = (instance: ReactTestInstance) =>
@@ -164,28 +103,10 @@ export const getAllByPlaceholder = (instance: ReactTestInstance) =>
     return results;
   };
 
-export const getAllByProps = (instance: ReactTestInstance) =>
-  function getAllByPropsFn(props: { [propName: string]: any }) {
-    const results = instance.findAllByProps(props);
-    if (results.length === 0) {
-      throw new ErrorWithStack(
-        `No instances found with props:\n${prettyFormat(props)}`,
-        getAllByPropsFn
-      );
-    }
-    return results;
-  };
-
 export const getByAPI = (instance: ReactTestInstance) => ({
   getByTestId: getByTestId(instance),
-  getByName: getByName(instance),
-  getByType: getByType(instance),
   getByText: getByText(instance),
   getByPlaceholder: getByPlaceholder(instance),
-  getByProps: getByProps(instance),
-  getAllByName: getAllByName(instance),
-  getAllByType: getAllByType(instance),
   getAllByText: getAllByText(instance),
   getAllByPlaceholder: getAllByPlaceholder(instance),
-  getAllByProps: getAllByProps(instance),
 });

@@ -118,6 +118,7 @@ exports[`debug: shallow 1`] = `
   />
   <Button
     onPress={[Function anonymous]}
+    testID=\\"changeFreshness\\"
     type=\\"primary\\"
   >
     Change freshness!
@@ -153,6 +154,7 @@ exports[`debug: shallow with message 1`] = `
   />
   <Button
     onPress={[Function anonymous]}
+    testID=\\"changeFreshness\\"
     type=\\"primary\\"
   >
     Change freshness!
