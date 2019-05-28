@@ -6,14 +6,7 @@ import {
   getAllByText,
   getAllByPlaceholder,
 } from './getByAPI';
-import { ErrorWithStack } from './errors';
-
-const createQueryByError = (error: Error, callsite: Function) => {
-  if (error.message.includes('No instances found')) {
-    return null;
-  }
-  throw new ErrorWithStack(error.message, callsite);
-};
+import { createQueryByError } from './errors';
 
 export const queryByText = (instance: ReactTestInstance) =>
   function queryByTextFn(text: string | RegExp) {

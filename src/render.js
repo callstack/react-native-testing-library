@@ -4,6 +4,7 @@ import TestRenderer, { type ReactTestRenderer } from 'react-test-renderer'; // e
 import act from './act';
 import { getByAPI } from './helpers/getByAPI';
 import { queryByAPI } from './helpers/queryByAPI';
+import a11yAPI from './helpers/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 
@@ -26,6 +27,7 @@ export default function render(
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),
+    ...a11yAPI(instance),
     update: updateWithAct(renderer),
     rerender: updateWithAct(renderer), // alias for `update`
     unmount: renderer.unmount,

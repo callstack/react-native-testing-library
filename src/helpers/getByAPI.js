@@ -1,6 +1,10 @@
 // @flow
 import * as React from 'react';
-import { ErrorWithStack, createLibraryNotSupportedError } from './errors';
+import {
+  ErrorWithStack,
+  createLibraryNotSupportedError,
+  prepareErrorMessage,
+} from './errors';
 
 const filterNodeByType = (node, type) => node.type === type;
 
@@ -43,10 +47,6 @@ const getTextInputNodeByPlaceholder = (node, placeholder) => {
     throw createLibraryNotSupportedError(error);
   }
 };
-
-const prepareErrorMessage = error =>
-  // Strip info about custom predicate
-  error.message.replace(/ matching custom predicate[^]*/gm, '');
 
 export const getByText = (instance: ReactTestInstance) =>
   function getByTextFn(text: string | RegExp) {
