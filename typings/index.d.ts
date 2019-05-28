@@ -11,7 +11,9 @@ export interface GetByAPI {
   getAllByName: (name: React.ReactType | string) => Array<ReactTestInstance>;
   getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
   getAllByText: (text: string | RegExp) => Array<ReactTestInstance>;
-  getAllByPlaceholder: (placeholder: string | RegExp) => Array<ReactTestInstance>;
+  getAllByPlaceholder: (
+    placeholder: string | RegExp
+  ) => Array<ReactTestInstance>;
   getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>;
 }
 
@@ -19,29 +21,63 @@ export interface QueryByAPI {
   queryByName: (name: React.ReactType | string) => ReactTestInstance | null;
   queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
   queryByText: (name: string | RegExp) => ReactTestInstance | null;
-  queryByPlaceholder: (placeholder: string | RegExp) => ReactTestInstance | null;
+  queryByPlaceholder: (
+    placeholder: string | RegExp
+  ) => ReactTestInstance | null;
   queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
   queryByTestId: (testID: string) => ReactTestInstance | null;
-  queryAllByName: (name: React.ReactType | string) => Array<ReactTestInstance> | [];
+  queryAllByName: (
+    name: React.ReactType | string
+  ) => Array<ReactTestInstance> | [];
   queryAllByType: <P>(
     type: React.ComponentType<P>
   ) => Array<ReactTestInstance> | [];
   queryAllByText: (text: string | RegExp) => Array<ReactTestInstance> | [];
-  queryAllByPlaceholder: (placeholder: string | RegExp) => Array<ReactTestInstance> | [];
+  queryAllByPlaceholder: (
+    placeholder: string | RegExp
+  ) => Array<ReactTestInstance> | [];
   queryAllByProps: (
     props: Record<string, any>
   ) => Array<ReactTestInstance> | [];
 }
 
+type QueryFn = (text: string | RegExp) => ReactTestInstance | null;
+type GetFn = (text: string | RegExp) => ReactTestInstance;
+type GetAllFn = (text: string | RegExp) => Array<ReactTestInstance> | [];
+type ArrayQueryFn = (text: string | Array<string>) => ReactTestInstance | null;
+type ArrayGetFn = (text: string | Array<string>) => ReactTestInstance;
+type ArrayGetAllFn = (
+  text: string | Array<string>
+) => Array<ReactTestInstance> | [];
+
+export interface A11yAPI {
+  getByA11yLabel: GetFn;
+  getAllByA11yLabel: GetAllFn;
+  queryByA11yLabel: QueryFn;
+  queryAllByA11yLabel: GetAllFn;
+  getByA11yHint: GetFn;
+  getAllByA11yHint: GetAllFn;
+  queryByA11yHint: QueryFn;
+  queryAllByA11yHint: GetAllFn;
+  getByA11yRole: GetFn;
+  getAllByA11yRole: GetAllFn;
+  queryByA11yRole: QueryFn;
+  queryAllByA11yRole: GetAllFn;
+  getByA11yStates: ArrayGetFn;
+  getAllByA11yStates: ArrayGetAllFn;
+  queryByA11yStates: ArrayQueryFn;
+  queryAllByA11yStates: ArrayGetAllFn;
+}
+
 export interface Thenable {
-  then: (resolve: () => any, reject?: () => any) => any,
+  then: (resolve: () => any, reject?: () => any) => any;
 }
 
 export interface RenderOptions {
   createNodeMock: (element: React.ReactElement<any>) => any;
 }
 
-export interface RenderAPI extends GetByAPI, QueryByAPI {
+export interface RenderAPI extends GetByAPI, QueryByAPI, A11yAPI {
   update(nextElement: React.ReactElement<any>): void;
   rerender(nextElement: React.ReactElement<any>): void;
   unmount(nextElement?: React.ReactElement<any>): void;

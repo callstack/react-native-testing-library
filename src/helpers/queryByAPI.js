@@ -13,14 +13,7 @@ import {
   getAllByPlaceholder,
   getAllByProps,
 } from './getByAPI';
-import { ErrorWithStack, logDeprecationWarning } from './errors';
-
-const createQueryByError = (error: Error, callsite: Function) => {
-  if (error.message.includes('No instances found')) {
-    return null;
-  }
-  throw new ErrorWithStack(error.message, callsite);
-};
+import { logDeprecationWarning, createQueryByError } from './errors';
 
 export const queryByName = (instance: ReactTestInstance) =>
   function queryByNameFn(name: string | React.ComponentType<*>) {
