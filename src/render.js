@@ -61,11 +61,11 @@ function renderWithAct(
 
 function updateWithAct(
   renderer: ReactTestRenderer,
-  wrapUiIfNeeded: (innerElement: React.Element<any>) => React.Element<any>
+  wrap: (innerElement: React.Element<any>) => React.Element<any>
 ) {
   return function(component: React.Element<any>) {
     act(() => {
-      renderer.update(wrapUiIfNeeded(component));
+      renderer.update(wrap(component));
     });
   };
 }
