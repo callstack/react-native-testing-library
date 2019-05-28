@@ -13,6 +13,12 @@ function isNodeValid(node: ReactTestInstance) {
   );
 }
 
+function makeAliases(aliases: Array<string>, query: Function) {
+  return aliases
+    .map(alias => ({ [alias]: query }))
+    .reduce((acc, query) => ({ ...acc, ...query }), {});
+}
+
 const createQueryByError = (error: Error, callsite: Function) => {
   if (error.message.includes('No instances found')) {
     return null;
@@ -21,10 +27,10 @@ const createQueryByError = (error: Error, callsite: Function) => {
 };
 
 type QueryNames = {
-  getBy: string,
-  getAllBy: string,
-  queryBy: string,
-  queryAllBy: string,
+  getBy: Array<string>,
+  getAllBy: Array<string>,
+  queryBy: Array<string>,
+  queryAllBy: Array<string>,
 };
 
 const makeQuery = <P: mixed, M: mixed>(
@@ -71,10 +77,10 @@ const makeQuery = <P: mixed, M: mixed>(
   };
 
   return {
-    [queryNames.getBy]: getBy,
-    [queryNames.getAllBy]: getAllBy,
-    [queryNames.queryBy]: queryBy,
-    [queryNames.queryAllBy]: queryAllBy,
+    ...makeAliases(queryNames.getBy, getBy),
+    ...makeAliases(queryNames.getAllBy, getAllBy),
+    ...makeAliases(queryNames.queryBy, queryBy),
+    ...makeAliases(queryNames.queryAllBy, queryAllBy),
   };
 };
 

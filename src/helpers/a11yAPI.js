@@ -56,40 +56,40 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
     ...makeQuery(
       'accessibilityLabel',
       {
-        getBy: 'getByA11yLabel',
-        getAllBy: 'getAllByA11yLabel',
-        queryBy: 'queryByA11yLabel',
-        queryAllBy: 'queryAllByA11yLabel',
+        getBy: ['getByA11yLabel', ''],
+        getAllBy: ['getAllByA11yLabel', ''],
+        queryBy: ['queryByA11yLabel', ''],
+        queryAllBy: ['queryAllByA11yLabel', ''],
       },
       matchStringValue
     )(instance),
     ...makeQuery(
       'accessibilityHint',
       {
-        getBy: 'getByA11yHint',
-        getAllBy: 'getAllByA11yHint',
-        queryBy: 'queryByA11yHint',
-        queryAllBy: 'queryAllByA11yHint',
+        getBy: ['getByA11yHint', ''],
+        getAllBy: ['getAllByA11yHint', ''],
+        queryBy: ['queryByA11yHint', ''],
+        queryAllBy: ['queryAllByA11yHint', ''],
       },
       matchStringValue
     )(instance),
     ...makeQuery(
       'accessibilityRole',
       {
-        getBy: 'getByA11yRole',
-        getAllBy: 'getAllByA11yRole',
-        queryBy: 'queryByA11yRole',
-        queryAllBy: 'queryAllByA11yRole',
+        getBy: ['getByA11yRole', ''],
+        getAllBy: ['getAllByA11yRole', ''],
+        queryBy: ['queryByA11yRole', ''],
+        queryAllBy: ['queryAllByA11yRole', ''],
       },
       matchStringValue
     )(instance),
     ...makeQuery(
       'accessibilityStates',
       {
-        getBy: 'getByA11yStates',
-        getAllBy: 'getAllByA11yStates',
-        queryBy: 'queryByA11yStates',
-        queryAllBy: 'queryAllByA11yStates',
+        getBy: ['getByA11yStates', ''],
+        getAllBy: ['getAllByA11yStates', ''],
+        queryBy: ['queryByA11yStates', ''],
+        queryAllBy: ['queryAllByA11yStates', ''],
       },
       matchArrayValue
     )(instance),
