@@ -39,7 +39,7 @@ export function matchArrayValue(
   prop?: Array<string>,
   matcher: string | Array<string>
 ) {
-  if (!prop) {
+  if (!prop || matcher.length === 0) {
     return false;
   }
 
