@@ -15,6 +15,8 @@ Defined as:
 function render(
   component: React.Element<any>,
   options?: {
+    /* A React Component that renders `component` as children */
+    wrapper?: React.ComponentType<any>,
     /* You won't often use this, but it's helpful when testing refs */
     createNodeMock: (element: React.Element<any>) => any,
   }

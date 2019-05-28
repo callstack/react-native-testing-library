@@ -9,6 +9,10 @@ import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 
 type Options = {
+  wrapper?: React.ComponentType<any>,
+  createNodeMock?: (element: React.Element<any>) => any,
+};
+type TestRendererOptions = {
   createNodeMock: (element: React.Element<any>) => any,
 };
 
@@ -16,20 +20,26 @@ type Options = {
  * Renders test component deeply using react-test-renderer and exposes helpers
  * to assert on the output.
  */
-export default function render(
-  component: React.Element<any>,
-  options?: Options
+export default function render<T>(
+  component: React.Element<T>,
+  { wrapper: Wrapper, createNodeMock }: Options = {}
 ) {
-  const renderer = renderWithAct(component, options);
+  const wrap = (innerElement: React.Element<any>) =>
+    Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement;
 
+  const renderer = renderWithAct(
+    wrap(component),
+    createNodeMock ? { createNodeMock } : undefined
+  );
+  const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
 
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),
     ...a11yAPI(instance),
-    update: updateWithAct(renderer),
-    rerender: updateWithAct(renderer), // alias for `update`
+    update,
+    rerender: update, // alias for `update`
     unmount: renderer.unmount,
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
@@ -38,7 +48,7 @@ export default function render(
 
 function renderWithAct(
   component: React.Element<any>,
-  options?: Options
+  options?: TestRendererOptions
 ): ReactTestRenderer {
   let renderer: ReactTestRenderer;
 
@@ -49,10 +59,13 @@ function renderWithAct(
   return ((renderer: any): ReactTestRenderer);
 }
 
-function updateWithAct(renderer: ReactTestRenderer) {
+function updateWithAct(
+  renderer: ReactTestRenderer,
+  wrap: (innerElement: React.Element<any>) => React.Element<any>
+) {
   return function(component: React.Element<any>) {
     act(() => {
-      renderer.update(component);
+      renderer.update(wrap(component));
     });
   };
 }

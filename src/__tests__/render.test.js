@@ -1,7 +1,13 @@
 // @flow
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
 import stripAnsi from 'strip-ansi';
 import { render, fireEvent } from '..';
 
@@ -290,4 +296,51 @@ test('debug changing component', () => {
   expect(stripAnsi(mockCalls[4][0])).toMatchSnapshot(
     'bananaFresh button message should now be "fresh"'
   );
+});
+
+test('renders options.wrapper around node', () => {
+  const WrapperComponent = ({ children }) => (
+    <SafeAreaView testID="wrapper">{children}</SafeAreaView>
+  );
+
+  const { toJSON, getByTestId } = render(<View testID="inner" />, {
+    wrapper: WrapperComponent,
+  });
+
+  expect(getByTestId('wrapper')).toBeTruthy();
+  expect(toJSON()).toMatchInlineSnapshot(`
+    <RCTSafeAreaView
+      emulateUnlessSupported={true}
+      testID="wrapper"
+    >
+      <View
+        testID="inner"
+      />
+    </RCTSafeAreaView>
+  `);
+});
+
+test('renders options.wrapper around updated node', () => {
+  const WrapperComponent = ({ children }) => (
+    <SafeAreaView testID="wrapper">{children}</SafeAreaView>
+  );
+
+  const { toJSON, getByTestId, rerender } = render(<View testID="inner" />, {
+    wrapper: WrapperComponent,
+  });
+
+  rerender(<View testID="inner" accessibilityLabel="test" />);
+
+  expect(getByTestId('wrapper')).toBeTruthy();
+  expect(toJSON()).toMatchInlineSnapshot(`
+    <RCTSafeAreaView
+      emulateUnlessSupported={true}
+      testID="wrapper"
+    >
+      <View
+        accessibilityLabel="test"
+        testID="inner"
+      />
+    </RCTSafeAreaView>
+  `);
 });
