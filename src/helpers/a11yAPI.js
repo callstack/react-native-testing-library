@@ -56,40 +56,40 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
     ...makeQuery(
       'accessibilityLabel',
       {
-        getBy: ['getByA11yLabel', ''],
-        getAllBy: ['getAllByA11yLabel', ''],
-        queryBy: ['queryByA11yLabel', ''],
-        queryAllBy: ['queryAllByA11yLabel', ''],
+        getBy: ['getByA11yLabel', 'getByAccessibilityLabel'],
+        getAllBy: ['getAllByA11yLabel', 'getAllByAccessibilityLabel'],
+        queryBy: ['queryByA11yLabel', 'queryByAccessibilityLabel'],
+        queryAllBy: ['queryAllByA11yLabel', 'queryAllByAccessibilityLabel'],
       },
       matchStringValue
     )(instance),
     ...makeQuery(
       'accessibilityHint',
       {
-        getBy: ['getByA11yHint', ''],
-        getAllBy: ['getAllByA11yHint', ''],
-        queryBy: ['queryByA11yHint', ''],
-        queryAllBy: ['queryAllByA11yHint', ''],
+        getBy: ['getByA11yHint', 'getByAccessibilityHint'],
+        getAllBy: ['getAllByA11yHint', 'getAllByAccessibilityHint'],
+        queryBy: ['queryByA11yHint', 'queryByAccessibilityHint'],
+        queryAllBy: ['queryAllByA11yHint', 'queryAllByAccessibilityHint'],
       },
       matchStringValue
     )(instance),
     ...makeQuery(
       'accessibilityRole',
       {
-        getBy: ['getByA11yRole', ''],
-        getAllBy: ['getAllByA11yRole', ''],
-        queryBy: ['queryByA11yRole', ''],
-        queryAllBy: ['queryAllByA11yRole', ''],
+        getBy: ['getByA11yRole', 'getByAccessibilityRole'],
+        getAllBy: ['getAllByA11yRole', 'getAllByAccessibilityRole'],
+        queryBy: ['queryByA11yRole', 'queryByAccessibilityRole'],
+        queryAllBy: ['queryAllByA11yRole', 'queryAllByAccessibilityRole'],
       },
       matchStringValue
     )(instance),
     ...makeQuery(
       'accessibilityStates',
       {
-        getBy: ['getByA11yStates', ''],
-        getAllBy: ['getAllByA11yStates', ''],
-        queryBy: ['queryByA11yStates', ''],
-        queryAllBy: ['queryAllByA11yStates', ''],
+        getBy: ['getByA11yStates', 'getByAccessibilityStates'],
+        getAllBy: ['getAllByA11yStates', 'getAllByAccessibilityStates'],
+        queryBy: ['queryByA11yStates', 'queryByAccessibilityStates'],
+        queryAllBy: ['queryAllByA11yStates', 'queryAllByAccessibilityStates'],
       },
       matchArrayValue
     )(instance),
