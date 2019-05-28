@@ -29,8 +29,8 @@ function setAnswer(question, answer) {
 }
 
 test('should verify two questions', () => {
-  const { getAllByType, getByText } = render(<QuestionsBoard {...props} />);
-  const allQuestions = getAllByType(Question);
+  const { getAllByText, getByText } = render(<QuestionsBoard {...props} />);
+  const allQuestions = getAllByText('Question?');
 
   setAnswer(allQuestions[0], 'a1');
   setAnswer(allQuestions[1], 'a2');

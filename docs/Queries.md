@@ -139,32 +139,3 @@ import { render } from 'react-native-testing-library';
 const { getByA11yRole } = render(<MyComponent />);
 const element = getByA11yRole('button');
 ```
-
-## Unit testing helpers
-
-> Use sparingly and responsibly, escape hatches here
-
-`render` from `react-native-testing-library` exposes additional queries that **should not be used in component integration testing**, but some users (like component library creators) interested in unit testing some components may find helpful.
-
-<details>
-  <summary>Queries helpful in unit testing</summary>
-
-The interface is the same as for other queries, but we won't provide full names so that they're harder to find by search engines.
-
-### `ByType`
-
-> Note: added in v1.4
-
-A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
-
-### `ByProps`
-
-A method returning a `ReactTestInstance` with matching props object
-
-### `ByName`
-
-> This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. **DON'T USE IT**. It will be removed in next major release (v2.0). Use [`getByTestId`](#bytestid) instead. It's listed here only for back-compat purposes for early adopters of the library
-
-A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
-
-</details>
