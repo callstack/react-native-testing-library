@@ -5,6 +5,7 @@ import {
   ErrorWithStack,
   createLibraryNotSupportedError,
   logDeprecationWarning,
+  prepareErrorMessage,
 } from './errors';
 
 const filterNodeByType = (node, type) => node.type === type;
@@ -52,10 +53,6 @@ const getTextInputNodeByPlaceholder = (node, placeholder) => {
     throw createLibraryNotSupportedError(error);
   }
 };
-
-const prepareErrorMessage = error =>
-  // Strip info about custom predicate
-  error.message.replace(/ matching custom predicate[^]*/gm, '');
 
 export const getByName = (instance: ReactTestInstance) =>
   function getByNameFn(name: string | React.ComponentType<*>) {

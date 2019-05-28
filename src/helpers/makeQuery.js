@@ -1,9 +1,5 @@
 // @flow
-import { ErrorWithStack } from './errors';
-
-const prepareErrorMessage = error =>
-  // Strip info about custom predicate
-  error.message.replace(/ matching custom predicate[^]*/gm, '');
+import { ErrorWithStack, prepareErrorMessage } from './errors';
 
 function getNodeName(node: ReactTestInstance) {
   return typeof node.type !== 'string'
@@ -31,7 +27,7 @@ type QueryNames = {
   queryAllBy: string,
 };
 
-const makeQuery = <P: any, M: any>(
+const makeQuery = <P: mixed, M: mixed>(
   name: string,
   queryNames: QueryNames,
   matcherFn: (prop: P, value: M) => boolean

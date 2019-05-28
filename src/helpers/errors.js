@@ -38,3 +38,7 @@ export const logDeprecationWarning = (
 
   warned[deprecatedFnName] = true;
 };
+
+export const prepareErrorMessage = (error: Error) =>
+  // Strip info about custom predicate
+  error.message.replace(/ matching custom predicate[^]*/gm, '');
