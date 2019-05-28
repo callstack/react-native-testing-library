@@ -309,15 +309,15 @@ test('renders options.wrapper around node', () => {
 
   expect(getByTestId('wrapper')).toBeTruthy();
   expect(toJSON()).toMatchInlineSnapshot(`
-                <RCTSafeAreaView
-                  emulateUnlessSupported={true}
-                  testID="wrapper"
-                >
-                  <View
-                    testID="inner"
-                  />
-                </RCTSafeAreaView>
-        `);
+    <RCTSafeAreaView
+      emulateUnlessSupported={true}
+      testID="wrapper"
+    >
+      <View
+        testID="inner"
+      />
+    </RCTSafeAreaView>
+  `);
 });
 
 test('renders options.wrapper around updated node', () => {
@@ -333,14 +333,14 @@ test('renders options.wrapper around updated node', () => {
 
   expect(getByTestId('wrapper')).toBeTruthy();
   expect(toJSON()).toMatchInlineSnapshot(`
-        <RCTSafeAreaView
-          emulateUnlessSupported={true}
-          testID="wrapper"
-        >
-          <View
-            accessibilityLabel="test"
-            testID="inner"
-          />
-        </RCTSafeAreaView>
-    `);
+    <RCTSafeAreaView
+      emulateUnlessSupported={true}
+      testID="wrapper"
+    >
+      <View
+        accessibilityLabel="test"
+        testID="inner"
+      />
+    </RCTSafeAreaView>
+  `);
 });
