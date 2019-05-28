@@ -62,9 +62,8 @@ test('getByA11yLabel, queryByA11yLabel', () => {
   expect(getByA11yLabel(BUTTON_LABEL).props.accessibilityLabel).toEqual(
     BUTTON_LABEL
   );
-  expect(queryByA11yLabel(/button/g).props.accessibilityLabel).toEqual(
-    BUTTON_LABEL
-  );
+  const button = queryByA11yLabel(/button/g);
+  expect(button && button.props.accessibilityLabel).toEqual(BUTTON_LABEL);
   expect(() => getByA11yLabel(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
   expect(queryByA11yLabel(NO_MATCHES_TEXT)).toBeNull();
 
@@ -87,9 +86,8 @@ test('getByA11yHint, queryByA11yHint', () => {
   expect(getByA11yHint(BUTTON_HINT).props.accessibilityHint).toEqual(
     BUTTON_HINT
   );
-  expect(queryByA11yHint(/button/g).props.accessibilityHint).toEqual(
-    BUTTON_HINT
-  );
+  const button = queryByA11yHint(/button/g);
+  expect(button && button.props.accessibilityHint).toEqual(BUTTON_HINT);
   expect(() => getByA11yHint(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
   expect(queryByA11yHint(NO_MATCHES_TEXT)).toBeNull();
 
@@ -110,7 +108,8 @@ test('getByA11yRole, queryByA11yRole', () => {
   const { getByA11yRole, queryByA11yRole } = render(<Section />);
 
   expect(getByA11yRole('button').props.accessibilityRole).toEqual('button');
-  expect(queryByA11yRole(/button/g).props.accessibilityRole).toEqual('button');
+  const button = queryByA11yRole(/button/g);
+  expect(button && button.props.accessibilityRole).toEqual('button');
   expect(() => getByA11yRole(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
   expect(queryByA11yRole(NO_MATCHES_TEXT)).toBeNull();
 
@@ -134,12 +133,14 @@ test('getByA11yStates, queryByA11yStates', () => {
     'selected',
     'disabled',
   ]);
-  expect(queryByA11yStates(['disabled']).props.accessibilityStates).toEqual([
+  const disabled = queryByA11yStates(['disabled']);
+  expect(disabled && disabled.props.accessibilityStates).toMatchObject([
     'selected',
     'disabled',
   ]);
+  const disabledSelected = queryByA11yStates(['selected', 'disabled']);
   expect(
-    queryByA11yStates(['selected', 'disabled']).props.accessibilityStates
+    disabledSelected && disabledSelected.props.accessibilityStates
   ).toEqual(['selected', 'disabled']);
 
   expect(() => getByA11yStates(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);

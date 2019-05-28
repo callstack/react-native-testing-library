@@ -1,26 +1,30 @@
 // @flow
 import makeQuery from './makeQuery';
 
-type TextQueryFn = (string | RegExp) => ReactTestInstance;
-type ArrayQueryFn = (string | Array<string>) => ReactTestInstance;
+type QueryFn = (string | RegExp) => ReactTestInstance | null;
+type GetFn = (string | RegExp) => ReactTestInstance;
+type GetAllFn = (string | RegExp) => Array<ReactTestInstance> | [];
+type ArrayQueryFn = (string | Array<string>) => ReactTestInstance | null;
+type ArrayGetFn = (string | Array<string>) => ReactTestInstance;
+type ArrayGetAllFn = (string | Array<string>) => Array<ReactTestInstance> | [];
 
 type A11yAPI = {
-  getByA11yLabel: TextQueryFn,
-  getAllByA11yLabel: TextQueryFn,
-  queryByA11yLabel: TextQueryFn,
-  queryAllByA11yLabel: TextQueryFn,
-  getByA11yHint: TextQueryFn,
-  getAllByA11yHint: TextQueryFn,
-  queryByA11yHint: TextQueryFn,
-  queryAllByA11yHint: TextQueryFn,
-  getByA11yRole: TextQueryFn,
-  getAllByA11yRole: TextQueryFn,
-  queryByA11yRole: TextQueryFn,
-  queryAllByA11yRole: TextQueryFn,
-  getByA11yStates: ArrayQueryFn,
-  getAllByA11yStates: ArrayQueryFn,
+  getByA11yLabel: GetFn,
+  getAllByA11yLabel: GetAllFn,
+  queryByA11yLabel: QueryFn,
+  queryAllByA11yLabel: GetAllFn,
+  getByA11yHint: GetFn,
+  getAllByA11yHint: GetAllFn,
+  queryByA11yHint: QueryFn,
+  queryAllByA11yHint: GetAllFn,
+  getByA11yRole: GetFn,
+  getAllByA11yRole: GetAllFn,
+  queryByA11yRole: QueryFn,
+  queryAllByA11yRole: GetAllFn,
+  getByA11yStates: ArrayGetFn,
+  getAllByA11yStates: ArrayGetAllFn,
   queryByA11yStates: ArrayQueryFn,
-  queryAllByA11yStates: ArrayQueryFn,
+  queryAllByA11yStates: ArrayGetAllFn,
 };
 
 export function matchStringValue(prop?: string, matcher: string | RegExp) {
