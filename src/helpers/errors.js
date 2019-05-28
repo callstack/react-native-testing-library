@@ -42,3 +42,10 @@ export const logDeprecationWarning = (
 export const prepareErrorMessage = (error: Error) =>
   // Strip info about custom predicate
   error.message.replace(/ matching custom predicate[^]*/gm, '');
+
+export const createQueryByError = (error: Error, callsite: Function) => {
+  if (error.message.includes('No instances found')) {
+    return null;
+  }
+  throw new ErrorWithStack(error.message, callsite);
+};

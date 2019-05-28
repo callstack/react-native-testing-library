@@ -1,5 +1,9 @@
 // @flow
-import { ErrorWithStack, prepareErrorMessage } from './errors';
+import {
+  ErrorWithStack,
+  prepareErrorMessage,
+  createQueryByError,
+} from './errors';
 
 function getNodeName(node: ReactTestInstance) {
   return typeof node.type !== 'string'
@@ -18,13 +22,6 @@ function makeAliases(aliases: Array<string>, query: Function) {
     .map(alias => ({ [alias]: query }))
     .reduce((acc, query) => ({ ...acc, ...query }), {});
 }
-
-const createQueryByError = (error: Error, callsite: Function) => {
-  if (error.message.includes('No instances found')) {
-    return null;
-  }
-  throw new ErrorWithStack(error.message, callsite);
-};
 
 type QueryNames = {
   getBy: Array<string>,
