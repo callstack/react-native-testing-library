@@ -83,6 +83,63 @@ const { getByTestId } = render(<MyComponent />);
 const element = getByTestId('unique-id');
 ```
 
+### `ByA11yLabel`, `ByAccessibilityLabel`
+
+> getByA11yLabel, getAllByA11yLabel, queryByA11yLabel, queryAllByA11yLabel
+> getByAccessibilityLabel, getAllByAccessibilityLabel, queryByAccessibilityLabel, queryAllByAccessibilityLabel
+
+Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
+
+```jsx
+import { render } from 'react-native-testing-library';
+
+const { getByA11yLabel } = render(<MyComponent />);
+const element = getByA11yLabel('my-label');
+```
+
+### `ByA11yHint`, `ByAccessibilityHint`
+
+> getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint
+> getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint
+
+Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
+
+```jsx
+import { render } from 'react-native-testing-library';
+
+const { getByA11yHint } = render(<MyComponent />);
+const element = getByA11yHint('my-hint');
+```
+
+### `ByA11yStates`, `ByAccessibilityStates`
+
+> getByA11yStates, getAllByA11yStates, queryByA11yStates, queryAllByA11yStates
+> getByAccessibilityStates, getAllByAccessibilityStates, queryByAccessibilityStates, queryAllByAccessibilityStates
+
+Returns a `ReactTestInstance` with matching `accessibilityStates` prop.
+
+```jsx
+import { render } from 'react-native-testing-library';
+
+const { getByA11yStates } = render(<MyComponent />);
+const element = getByA11yStates(['checked']);
+const element2 = getByA11yStates('checked');
+```
+
+### `ByA11yRole`, `ByAccessibilityRole`
+
+> getByA11yRole, getAllByA11yRole, queryByA11yRole, queryAllByA11yRole
+> getByAccessibilityRole, getAllByAccessibilityRole, queryByAccessibilityRole, queryAllByAccessibilityRole
+
+Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
+
+```jsx
+import { render } from 'react-native-testing-library';
+
+const { getByA11yRole } = render(<MyComponent />);
+const element = getByA11yRole('button');
+```
+
 ## Unit testing helpers
 
 > Use sparingly and responsibly, escape hatches here
