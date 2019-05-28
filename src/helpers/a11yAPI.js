@@ -47,7 +47,7 @@ export function matchArrayValue(
     return prop.includes(matcher);
   }
 
-  // $FlowFixMe
+  // $FlowFixMe - callback is sync hence prop exists
   return !matcher.some(e => !prop.includes(e));
 }
 

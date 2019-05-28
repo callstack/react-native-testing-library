@@ -5,16 +5,8 @@ import {
   createQueryByError,
 } from './errors';
 
-function getNodeName(node: ReactTestInstance) {
-  return typeof node.type !== 'string'
-    ? node.type.displayName || node.type.name
-    : '';
-}
-
 function isNodeValid(node: ReactTestInstance) {
-  return ['View', 'Text', 'TextInput', 'Image', 'ScrollViewMock'].includes(
-    getNodeName(node)
-  );
+  return typeof node.type === 'string';
 }
 
 function makeAliases(aliases: Array<string>, query: Function) {
@@ -37,8 +29,8 @@ const makeQuery = <P: mixed, M: mixed>(
 ) => (instance: ReactTestInstance) => {
   const getBy = (matcher: M) => {
     try {
-      return instance.find(node =>
-        Boolean(isNodeValid(node) && matcherFn(node.props[name], matcher))
+      return instance.find(
+        node => isNodeValid(node) && matcherFn(node.props[name], matcher)
       );
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getBy);
@@ -46,8 +38,8 @@ const makeQuery = <P: mixed, M: mixed>(
   };
 
   const getAllBy = (matcher: M) => {
-    const results = instance.findAll(node =>
-      Boolean(isNodeValid(node) && matcherFn(node.props[name], matcher))
+    const results = instance.findAll(
+      node => isNodeValid(node) && matcherFn(node.props[name], matcher)
     );
 
     if (results.length === 0) {

@@ -40,7 +40,7 @@ class Button extends React.Component<*> {
   }
 }
 
-function Something() {
+function Section() {
   return (
     <>
       <Typography
@@ -57,7 +57,7 @@ function Something() {
 }
 
 test('getByA11yLabel, queryByA11yLabel', () => {
-  const { getByA11yLabel, queryByA11yLabel } = render(<Something />);
+  const { getByA11yLabel, queryByA11yLabel } = render(<Section />);
 
   expect(getByA11yLabel(BUTTON_LABEL).props.accessibilityLabel).toEqual(
     BUTTON_LABEL
@@ -73,7 +73,7 @@ test('getByA11yLabel, queryByA11yLabel', () => {
 });
 
 test('getAllByA11yLabel, queryAllByA11yLabel', () => {
-  const { getAllByA11yLabel, queryAllByA11yLabel } = render(<Something />);
+  const { getAllByA11yLabel, queryAllByA11yLabel } = render(<Section />);
 
   expect(getAllByA11yLabel(TEXT_LABEL)).toHaveLength(2);
   expect(queryAllByA11yLabel(/cool/g)).toHaveLength(3);
@@ -82,7 +82,7 @@ test('getAllByA11yLabel, queryAllByA11yLabel', () => {
 });
 
 test('getByA11yHint, queryByA11yHint', () => {
-  const { getByA11yHint, queryByA11yHint } = render(<Something />);
+  const { getByA11yHint, queryByA11yHint } = render(<Section />);
 
   expect(getByA11yHint(BUTTON_HINT).props.accessibilityHint).toEqual(
     BUTTON_HINT
@@ -98,7 +98,7 @@ test('getByA11yHint, queryByA11yHint', () => {
 });
 
 test('getAllByA11yHint, queryAllByA11yHint', () => {
-  const { getAllByA11yHint, queryAllByA11yHint } = render(<Something />);
+  const { getAllByA11yHint, queryAllByA11yHint } = render(<Section />);
 
   expect(getAllByA11yHint(TEXT_HINT)).toHaveLength(2);
   expect(queryAllByA11yHint(/static/g)).toHaveLength(2);
@@ -107,7 +107,7 @@ test('getAllByA11yHint, queryAllByA11yHint', () => {
 });
 
 test('getByA11yRole, queryByA11yRole', () => {
-  const { getByA11yRole, queryByA11yRole } = render(<Something />);
+  const { getByA11yRole, queryByA11yRole } = render(<Section />);
 
   expect(getByA11yRole('button').props.accessibilityRole).toEqual('button');
   expect(queryByA11yRole(/button/g).props.accessibilityRole).toEqual('button');
@@ -119,7 +119,7 @@ test('getByA11yRole, queryByA11yRole', () => {
 });
 
 test('getAllByA11yRole, queryAllByA11yRole', () => {
-  const { getAllByA11yRole, queryAllByA11yRole } = render(<Something />);
+  const { getAllByA11yRole, queryAllByA11yRole } = render(<Section />);
 
   expect(getAllByA11yRole('link')).toHaveLength(2);
   expect(queryAllByA11yRole(/ink/g)).toHaveLength(2);
@@ -128,7 +128,7 @@ test('getAllByA11yRole, queryAllByA11yRole', () => {
 });
 
 test('getByA11yStates, queryByA11yStates', () => {
-  const { getByA11yStates, queryByA11yStates } = render(<Something />);
+  const { getByA11yStates, queryByA11yStates } = render(<Section />);
 
   expect(getByA11yStates('disabled').props.accessibilityStates).toEqual([
     'selected',
@@ -151,7 +151,7 @@ test('getByA11yStates, queryByA11yStates', () => {
 });
 
 test('getAllByA11yStates, queryAllByA11yStates', () => {
-  const { getAllByA11yStates, queryAllByA11yStates } = render(<Something />);
+  const { getAllByA11yStates, queryAllByA11yStates } = render(<Section />);
 
   expect(getAllByA11yStates('selected')).toHaveLength(3);
   expect(queryAllByA11yStates(['selected'])).toHaveLength(3);
