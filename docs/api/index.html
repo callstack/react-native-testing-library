@@ -36,6 +36,8 @@
 <pre><code class="hljs css language-jsx"><span class="token keyword">function</span> <span class="token function">render</span><span class="token punctuation">(</span>
   component<span class="token punctuation">:</span> React<span class="token punctuation">.</span>Element<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>any</span><span class="token punctuation">></span></span><span class="token punctuation">,</span>
   options<span class="token operator">?</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    <span class="token comment">/* A React Component that renders `component` as children */</span>
+    wrapper<span class="token operator">?</span><span class="token punctuation">:</span> React<span class="token punctuation">.</span>ComponentType<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>any</span><span class="token punctuation">></span></span><span class="token punctuation">,</span>
     <span class="token comment">/* You won't often use this, but it's helpful when testing refs */</span>
     createNodeMock<span class="token punctuation">:</span> <span class="token punctuation">(</span>element<span class="token punctuation">:</span> React<span class="token punctuation">.</span>Element<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>any</span><span class="token punctuation">></span></span><span class="token punctuation">)</span> <span class="token operator">=></span> any<span class="token punctuation">,</span>
   <span class="token punctuation">}</span>
