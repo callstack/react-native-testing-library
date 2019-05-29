@@ -893,6 +893,17 @@
     xcode "^2.0.0"
     xmldoc "^0.4.0"
 
+"@release-it/conventional-changelog@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@release-it/conventional-changelog/-/conventional-changelog-1.1.0.tgz#42e33ceff37d6ae4ad1667b4a1b1586b75e58fca"
+  integrity sha512-3uyHg2hgCEJMFjIbRTnGgqU//PK9u89dBlKRUmbSNALARCXiKN4XvJOWni54TsFeDSWmM3IUh9bgoGvj55ia4A==
+  dependencies:
+    concat-stream "^2.0.0"
+    conventional-changelog "^3.1.8"
+    conventional-recommended-bump "^5.0.0"
+    prepend-file "^1.3.1"
+    release-it "^12.2.1"
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -2035,6 +2046,16 @@ concat-stream@^1.6.0:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
+concat-stream@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/concat-stream/-/concat-stream-2.0.0.tgz#414cf5af790a48c60ab9be4527d56d5e41133cb1"
+  integrity sha512-MWufYdFw53ccGjCA+Ol7XJYpAlW6/prSMzuPOTRnJGcGzuhLn4Scrz7qf6o8bROZ514ltazcIFJZevcfbo0x7A==
+  dependencies:
+    buffer-from "^1.0.0"
+    inherits "^2.0.3"
+    readable-stream "^3.0.2"
+    typedarray "^0.0.6"
+
 configstore@^3.0.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/configstore/-/configstore-3.1.2.tgz#c6f25defaeef26df12dd33414b001fe81a543f8f"
@@ -2219,6 +2240,20 @@ conventional-commits-parser@^3.0.2:
     split2 "^2.0.0"
     through2 "^3.0.0"
     trim-off-newlines "^1.0.0"
+
+conventional-recommended-bump@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/conventional-recommended-bump/-/conventional-recommended-bump-5.0.0.tgz#019d45a1f3d2cc14a26e9bad1992406ded5baa23"
+  integrity sha512-CsfdICpbUe0pmM4MTG90GPUqnFgB1SWIR2HAh+vS+JhhJdPWvc0brs8oadWoYGhFOQpQwe57JnvzWEWU0m2OSg==
+  dependencies:
+    concat-stream "^2.0.0"
+    conventional-changelog-preset-loader "^2.1.1"
+    conventional-commits-filter "^2.0.2"
+    conventional-commits-parser "^3.0.2"
+    git-raw-commits "2.0.0"
+    git-semver-tags "^2.0.2"
+    meow "^4.0.0"
+    q "^1.5.1"
 
 convert-source-map@^1.1.0, convert-source-map@^1.4.0:
   version "1.6.0"
@@ -6089,7 +6124,7 @@ os-name@3.1.0, os-name@^3.0.0:
     macos-release "^2.2.0"
     windows-release "^3.1.0"
 
-os-tmpdir@^1.0.0, os-tmpdir@~1.0.2:
+os-tmpdir@^1.0.0, os-tmpdir@~1.0.1, os-tmpdir@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
@@ -6412,6 +6447,13 @@ prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
+
+prepend-file@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/prepend-file/-/prepend-file-1.3.1.tgz#83b16e0b4ac1901fce88dbd945a22f4cc81df579"
+  integrity sha1-g7FuC0rBkB/OiNvZRaIvTMgd9Xk=
+  dependencies:
+    tmp "0.0.31"
 
 prepend-http@^1.0.1:
   version "1.0.4"
@@ -6747,7 +6789,7 @@ read-pkg@^3.0.0:
     normalize-package-data "^2.3.2"
     path-type "^3.0.0"
 
-"readable-stream@2 || 3":
+"readable-stream@2 || 3", readable-stream@^3.0.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.4.0.tgz#a51c26754658e0a3c21dbf59163bd45ba6f447fc"
   integrity sha512-jItXPLmrSR8jmTRmRWJXCnGJsfy85mB3Wd/uINMXA65yrnFo0cPClFIUWzo2najVNSl+mx7/4W8ttlLWJe99pQ==
@@ -6897,6 +6939,40 @@ release-it@^12.1.0:
   version "12.2.1"
   resolved "https://registry.yarnpkg.com/release-it/-/release-it-12.2.1.tgz#13aa5102723716200d37f8686fc272f167633498"
   integrity sha512-MudVfmqXKPWJKdQdYk/dUzMdiRNPuE6Y/c9tnT8QgZeIFhLCWHnRvkSTiNN/4Gs29zHauEEcHWbzgG1wzy3+sA==
+  dependencies:
+    "@iarna/toml" "2.2.3"
+    "@octokit/rest" "16.25.0"
+    async-retry "1.2.3"
+    chalk "2.4.2"
+    cosmiconfig "5.2.0"
+    debug "4.1.1"
+    deprecated-obj "1.0.0"
+    detect-repo-changelog "1.0.1"
+    find-up "3.0.0"
+    form-data "2.3.3"
+    git-url-parse "11.1.2"
+    globby "9.2.0"
+    got "9.6.0"
+    import-cwd "2.1.0"
+    inquirer "6.3.1"
+    is-ci "2.0.0"
+    lodash "4.17.11"
+    mime-types "2.1.24"
+    ora "3.4.0"
+    os-name "3.1.0"
+    semver "6.0.0"
+    shelljs "0.8.3"
+    supports-color "6.1.0"
+    update-notifier "2.5.0"
+    url-join "4.0.0"
+    uuid "3.3.2"
+    window-size "1.1.1"
+    yargs-parser "13.0.0"
+
+release-it@^12.2.1:
+  version "12.2.2"
+  resolved "https://registry.yarnpkg.com/release-it/-/release-it-12.2.2.tgz#bafa99392e8b4ea8ed9f4d72eab51185aca460be"
+  integrity sha512-zr00XYO6YioLirehTJcMIef/xfF+K9grd5CELqYMEJoMNSvumYVxp2syl8IJpvAj8d8u3AD4TqfUvgJ5o6eYgQ==
   dependencies:
     "@iarna/toml" "2.2.3"
     "@octokit/rest" "16.25.0"
@@ -7765,6 +7841,13 @@ timed-out@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/timed-out/-/timed-out-4.0.1.tgz#f32eacac5a175bea25d7fab565ab3ed8741ef56f"
   integrity sha1-8y6srFoXW+ol1/q1Zas+2HQe9W8=
+
+tmp@0.0.31:
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.31.tgz#8f38ab9438e17315e5dbd8b3657e8bfb277ae4a7"
+  integrity sha1-jzirlDjhcxXl29izZX6L+yd65Kc=
+  dependencies:
+    os-tmpdir "~1.0.1"
 
 tmp@^0.0.33:
   version "0.0.33"
