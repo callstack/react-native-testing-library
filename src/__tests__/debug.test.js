@@ -6,6 +6,8 @@ import stripAnsi from 'strip-ansi';
 import { debug, render, fireEvent, flushMicrotasksQueue } from '..';
 import debugShallow from '../helpers/debugShallow';
 
+type ConsoleLogMock = JestMockFn<Array<string>, void>;
+
 function TextComponent({ text }) {
   return <Text>{text}</Text>;
 }
@@ -30,17 +32,16 @@ class Button extends React.Component<*, *> {
 }
 
 test('debug', () => {
-  // $FlowFixMe
-  console.log = jest.fn();
+  jest.spyOn(console, 'log').mockImplementation(x => x);
   const component = <Button onPress={jest.fn} text="Press me" />;
   debug(component);
 
-  const output = console.log.mock.calls[0][0];
+  const output = (console.log: ConsoleLogMock).mock.calls[0][0];
 
   expect(stripAnsi(output)).not.toEqual(output);
   expect(stripAnsi(output)).toMatchSnapshot();
 
-  console.log.mockReset();
+  (console.log: ConsoleLogMock).mockReset();
 
   debug(component, 'test message');
 
@@ -57,12 +58,12 @@ test('debug.deep', () => {
   const component = <Button onPress={jest.fn} text="Press me" />;
   debug.deep(component);
 
-  const output = console.log.mock.calls[0][0];
+  const output = (console.log: ConsoleLogMock).mock.calls[0][0];
 
   expect(stripAnsi(output)).not.toEqual(output);
   expect(stripAnsi(output)).toMatchSnapshot();
 
-  console.log.mockReset();
+  (console.log: ConsoleLogMock).mockReset();
 
   debug.deep(component, 'test message');
 
@@ -81,7 +82,7 @@ test('debug.deep async test', async () => {
 
   debug.deep(toJSON());
 
-  const output = console.log.mock.calls[0][0];
+  const output = (console.log: ConsoleLogMock).mock.calls[0][0];
 
   expect(stripAnsi(output)).toMatchSnapshot();
 });
