@@ -17,6 +17,18 @@ const OnPressComponent = ({ onPress }) => (
   </View>
 );
 
+const DisabledComponent = ({ onPress, disabled = false }) => (
+  <View>
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled}
+      accessibilityStates={[disabled ? 'disabled' : 'selected']}
+    >
+      <Text testID="disabled-press-me">Press me</Text>
+    </TouchableOpacity>
+  </View>
+);
+
 const WithoutEventComponent = () => (
   <View>
     <Text testID="text">Content</Text>
@@ -60,7 +72,7 @@ describe('fireEvent', () => {
     const { getByTestId } = render(<WithoutEventComponent />);
 
     expect(() => fireEvent(getByTestId('text'), 'press')).toThrow(
-      'No handler function found for event: press'
+      'No handler function found for event: "press"'
     );
   });
 
@@ -88,6 +100,17 @@ describe('fireEvent', () => {
     );
 
     expect(() => fireEvent.press(getByTestId('test'))).toThrow();
+    expect(onPressMock).not.toHaveBeenCalled();
+  });
+
+  test('should not stop bubbling when disabled element found', () => {
+    const onPressMock = jest.fn();
+
+    const { getByTestId } = render(
+      <DisabledComponent disabled onPress={onPressMock} />
+    );
+    fireEvent.press(getByTestId('disabled-press-me'));
+
     expect(onPressMock).not.toHaveBeenCalled();
   });
 });
