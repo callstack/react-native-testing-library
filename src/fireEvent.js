@@ -2,30 +2,12 @@
 import act from './act';
 import { ErrorWithStack } from './helpers/errors';
 
-const isDisabled = element => {
-  const { disabled, accessibilityStates = [] } = element.props;
-  const hasA11yDisabledState = accessibilityStates.includes('disabled');
-  // TODO: make this throw an error in v2, so user can get a more helpful message with a codeframe
-  if (disabled && !hasA11yDisabledState) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      `Element disabled but not accessible. Please consider adding \`accessibilityStates: ["disabled"]\` prop next to "disabled".`
-    );
-  }
-
-  return disabled;
-};
-
 const findEventHandler = (
   element: ReactTestInstance,
   eventName: string,
   callsite?: any
 ) => {
   const eventHandler = toEventHandlerName(eventName);
-
-  if (isDisabled(element)) {
-    return null;
-  }
 
   if (typeof element.props[eventHandler] === 'function') {
     return element.props[eventHandler];
