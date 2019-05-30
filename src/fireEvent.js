@@ -2,7 +2,11 @@
 import act from './act';
 import { ErrorWithStack } from './helpers/errors';
 
-const findEventHandler = (element: ReactTestInstance, eventName: string) => {
+const findEventHandler = (
+  element: ReactTestInstance,
+  eventName: string,
+  callsite?: any
+) => {
   const eventHandler = toEventHandlerName(eventName);
 
   if (typeof element.props[eventHandler] === 'function') {
@@ -14,20 +18,25 @@ const findEventHandler = (element: ReactTestInstance, eventName: string) => {
   // Do not bubble event to the root element
   if (element.parent === null || element.parent.parent === null) {
     throw new ErrorWithStack(
-      `No handler function found for event: ${eventName}`,
-      invokeEvent
+      `No handler function found for event: "${eventName}"`,
+      callsite || invokeEvent
     );
   }
 
-  return findEventHandler(element.parent, eventName);
+  return findEventHandler(element.parent, eventName, callsite);
 };
 
 const invokeEvent = (
   element: ReactTestInstance,
   eventName: string,
-  data?: *
-): any => {
-  const handler = findEventHandler(element, eventName);
+  data?: any,
+  callsite?: any
+) => {
+  const handler = findEventHandler(element, eventName, callsite);
+
+  if (!handler) {
+    return null;
+  }
 
   let returnValue;
 
@@ -42,11 +51,11 @@ const toEventHandlerName = (eventName: string) =>
   `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 
 const pressHandler = (element: ReactTestInstance) =>
-  invokeEvent(element, 'press');
+  invokeEvent(element, 'press', undefined, pressHandler);
 const changeTextHandler = (element: ReactTestInstance, data?: *) =>
-  invokeEvent(element, 'changeText', data);
+  invokeEvent(element, 'changeText', data, changeTextHandler);
 const scrollHandler = (element: ReactTestInstance, data?: *) =>
-  invokeEvent(element, 'scroll', data);
+  invokeEvent(element, 'scroll', data, scrollHandler);
 
 const fireEvent = invokeEvent;
 

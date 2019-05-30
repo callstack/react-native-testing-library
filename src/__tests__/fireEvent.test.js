@@ -60,7 +60,7 @@ describe('fireEvent', () => {
     const { getByTestId } = render(<WithoutEventComponent />);
 
     expect(() => fireEvent(getByTestId('text'), 'press')).toThrow(
-      'No handler function found for event: press'
+      'No handler function found for event: "press"'
     );
   });
 
