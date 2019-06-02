@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
+import isPlainObject from 'is-plain-object';
 import {
   ErrorWithStack,
   createLibraryNotSupportedError,
@@ -53,6 +54,48 @@ const getTextInputNodeByPlaceholder = (node, placeholder) => {
     throw createLibraryNotSupportedError(error);
   }
 };
+
+const makePaths = criteria =>
+  [].concat(
+    ...Object.keys(criteria).map(key =>
+      isPlainObject(criteria[key])
+        ? makePaths(criteria[key]).map(({ path, value }) => ({
+            path: [key, ...path],
+            value,
+          }))
+        : [{ path: [key], value: criteria[key] }]
+    )
+  );
+
+const makeTest = criteria => {
+  if (criteria.testID) {
+    criteria.props = { testID: criteria.testID, ...criteria.props };
+    delete criteria.testID;
+  }
+  const paths = makePaths(criteria);
+
+  return node =>
+    paths.every(({ path: [...path], value }) => {
+      let curr = node;
+      while (path.length) {
+        curr = curr[path.shift()];
+        if (!curr) return false;
+      }
+      return value instanceof RegExp && typeof curr === 'string'
+        ? new RegExp(value).test(curr)
+        : curr === value;
+    });
+};
+
+export const getBy = (instance: ReactTestInstance) =>
+  function getByFn(criteria: Function | { [string]: any }) {
+    try {
+      const test = typeof criteria === 'object' ? makeTest(criteria) : criteria;
+      return instance.find(test);
+    } catch (error) {
+      throw new ErrorWithStack(prepareErrorMessage(error), getByFn);
+    }
+  };
 
 export const getByName = (instance: ReactTestInstance) =>
   function getByNameFn(name: string | React.ComponentType<*>) {
@@ -111,6 +154,19 @@ export const getByTestId = (instance: ReactTestInstance) =>
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByTestIdFn);
     }
+  };
+
+export const getAllBy = (instance: ReactTestInstance) =>
+  function getAllByFn(criteria: Function | { [string]: any }) {
+    const test = typeof criteria === 'object' ? makeTest(criteria) : criteria;
+    const results = instance.findAll(test);
+    if (results.length === 0) {
+      throw new ErrorWithStack(
+        `No instances found with for criteria:\n${prettyFormat(criteria)}`,
+        getAllByFn
+      );
+    }
+    return results;
   };
 
 export const getAllByName = (instance: ReactTestInstance) =>
@@ -186,12 +242,14 @@ export const getAllByTestId = (instance: ReactTestInstance) =>
   };
 
 export const getByAPI = (instance: ReactTestInstance) => ({
+  getBy: getBy(instance),
   getByTestId: getByTestId(instance),
   getByName: getByName(instance),
   getByType: getByType(instance),
   getByText: getByText(instance),
   getByPlaceholder: getByPlaceholder(instance),
   getByProps: getByProps(instance),
+  getAllBy: getAllBy(instance),
   getAllByTestId: getAllByTestId(instance),
   getAllByName: getAllByName(instance),
   getAllByType: getAllByType(instance),

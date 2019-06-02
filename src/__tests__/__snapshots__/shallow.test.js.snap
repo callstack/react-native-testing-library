@@ -1,15 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`shallow rendering React Test Instance 1`] = `
-<TouchableText
-  accessible={true}
-  allowFontScaling={true}
-  ellipsizeMode="tail"
-  forwardedRef={null}
+<Text
   testID="text-button"
 >
   Press me
-</TouchableText>
+</Text>
 `;
 
 exports[`shallow rendering React elements 1`] = `

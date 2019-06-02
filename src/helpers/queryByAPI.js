@@ -1,12 +1,14 @@
 // @flow
 import * as React from 'react';
 import {
+  getBy,
   getByTestId,
   getByName,
   getByType,
   getByText,
   getByPlaceholder,
   getByProps,
+  getAllBy,
   getAllByTestId,
   getAllByName,
   getAllByType,
@@ -15,6 +17,15 @@ import {
   getAllByProps,
 } from './getByAPI';
 import { logDeprecationWarning, createQueryByError } from './errors';
+
+export const queryBy = (instance: ReactTestInstance) =>
+  function queryByFn(criteria: Function | { [string]: any }) {
+    try {
+      return getBy(instance)(criteria);
+    } catch (error) {
+      return createQueryByError(error, queryByFn);
+    }
+  };
 
 export const queryByName = (instance: ReactTestInstance) =>
   function queryByNameFn(name: string | React.ComponentType<*>) {
@@ -70,6 +81,16 @@ export const queryByTestId = (instance: ReactTestInstance) =>
       return createQueryByError(error, queryByTestIdFn);
     }
   };
+
+export const queryAllBy = (instance: ReactTestInstance) => (
+  criteria: Function | { [string]: any }
+) => {
+  try {
+    return getAllBy(instance)(criteria);
+  } catch (error) {
+    return [];
+  }
+};
 
 export const queryAllByName = (instance: ReactTestInstance) => (
   name: string | React.ComponentType<*>
@@ -133,12 +154,14 @@ export const queryAllByTestId = (instance: ReactTestInstance) => (
 };
 
 export const queryByAPI = (instance: ReactTestInstance) => ({
+  queryBy: queryBy(instance),
   queryByTestId: queryByTestId(instance),
   queryByName: queryByName(instance),
   queryByType: queryByType(instance),
   queryByText: queryByText(instance),
   queryByPlaceholder: queryByPlaceholder(instance),
   queryByProps: queryByProps(instance),
+  queryAllBy: queryAllBy(instance),
   queryAllByTestId: queryAllByTestId(instance),
   queryAllByName: queryAllByName(instance),
   queryAllByType: queryAllByType(instance),
