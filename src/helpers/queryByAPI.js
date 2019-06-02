@@ -7,6 +7,7 @@ import {
   getByText,
   getByPlaceholder,
   getByProps,
+  getAllByTestId,
   getAllByName,
   getAllByType,
   getAllByText,
@@ -121,6 +122,16 @@ export const queryAllByProps = (instance: ReactTestInstance) => (props: {
   }
 };
 
+export const queryAllByTestId = (instance: ReactTestInstance) => (
+  testID: string
+) => {
+  try {
+    return getAllByTestId(instance)(testID);
+  } catch (error) {
+    return [];
+  }
+};
+
 export const queryByAPI = (instance: ReactTestInstance) => ({
   queryByTestId: queryByTestId(instance),
   queryByName: queryByName(instance),
@@ -128,6 +139,7 @@ export const queryByAPI = (instance: ReactTestInstance) => ({
   queryByText: queryByText(instance),
   queryByPlaceholder: queryByPlaceholder(instance),
   queryByProps: queryByProps(instance),
+  queryAllByTestId: queryAllByTestId(instance),
   queryAllByName: queryAllByName(instance),
   queryAllByType: queryAllByType(instance),
   queryAllByText: queryAllByText(instance),
