@@ -6,6 +6,7 @@ export interface GetByAPI {
   getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
   getByText: (text: string | RegExp) => ReactTestInstance;
   getByPlaceholder: (placeholder: string | RegExp) => ReactTestInstance;
+  getByDisplayValue: (value: string | RegExp) => ReactTestInstance;
   getByProps: (props: Record<string, any>) => ReactTestInstance;
   getByTestId: (testID: string) => ReactTestInstance;
   getAllByName: (name: React.ReactType | string) => Array<ReactTestInstance>;
@@ -14,6 +15,7 @@ export interface GetByAPI {
   getAllByPlaceholder: (
     placeholder: string | RegExp
   ) => Array<ReactTestInstance>;
+  getAllByDisplayValue: (value: string | RegExp) => Array<ReactTestInstance>;
   getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>;
 }
 
@@ -24,6 +26,7 @@ export interface QueryByAPI {
   queryByPlaceholder: (
     placeholder: string | RegExp
   ) => ReactTestInstance | null;
+  queryByDisplayValue: (value: string | RegExp) => ReactTestInstance | null;
   queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
   queryByTestId: (testID: string) => ReactTestInstance | null;
   queryAllByName: (
@@ -35,6 +38,9 @@ export interface QueryByAPI {
   queryAllByText: (text: string | RegExp) => Array<ReactTestInstance> | [];
   queryAllByPlaceholder: (
     placeholder: string | RegExp
+  ) => Array<ReactTestInstance> | [];
+  queryAllByDisplayValue: (
+    value: string | RegExp
   ) => Array<ReactTestInstance> | [];
   queryAllByProps: (
     props: Record<string, any>

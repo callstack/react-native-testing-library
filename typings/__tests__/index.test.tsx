@@ -46,6 +46,12 @@ const getByPlaceholderString: ReactTestInstance = tree.getByPlaceholder(
 const getByPlaceholderRegExp: ReactTestInstance = tree.getByPlaceholder(
   /placeholder/g
 );
+const getByDisplayValueString: ReactTestInstance = tree.getByDisplayValue(
+  'my value'
+);
+const getByDisplayValueRegExp: ReactTestInstance = tree.getByDisplayValue(
+  /value/g
+);
 const getByProps: ReactTestInstance = tree.getByProps({ value: 2 });
 const getByTestId: ReactTestInstance = tree.getByTestId('test-id');
 const getAllByNameString: Array<ReactTestInstance> = tree.getAllByName('View');
@@ -71,15 +77,19 @@ const queryByType: ReactTestInstance | null = tree.queryByType(View);
 const queryByTypeWithRequiredProps: ReactTestInstance | null = tree.queryByType(
   ElementWithRequiredProps
 );
-const queryByTextString: ReactTestInstance | null = tree.queryByText(
-  '<View />'
-);
+const queryByTextString: ReactTestInstance | null = tree.queryByText('View');
 const queryByTextRegExp: ReactTestInstance | null = tree.queryByText(/View/g);
-const queryByPlaceholderString: ReactTestInstance | null = tree.queryByText(
+const queryByPlaceholderString: ReactTestInstance | null = tree.queryByPlaceholder(
   'my placeholder'
 );
-const queryByPlaceholderRegExp: ReactTestInstance | null = tree.queryByText(
+const queryByPlaceholderRegExp: ReactTestInstance | null = tree.queryByPlaceholder(
   /placeholder/g
+);
+const queryByDisplayValueString: ReactTestInstance | null = tree.queryByDisplayValue(
+  'my value'
+);
+const queryByDisplayValueRegExp: ReactTestInstance | null = tree.queryByDisplayValue(
+  /value/g
 );
 const queryByProps: ReactTestInstance | null = tree.queryByProps({ value: 2 });
 const queryByTestId: ReactTestInstance | null = tree.queryByTestId('test-id');
@@ -99,6 +109,12 @@ const queryAllByTextString: Array<ReactTestInstance> = tree.queryAllByText(
 const queryAllByTextRegExp: Array<ReactTestInstance> = tree.queryAllByText(
   /View/g
 );
+const queryAllByDisplayValueString: Array<
+  ReactTestInstance
+> = tree.queryAllByDisplayValue('View');
+const queryAllByDisplayValueRegExp: Array<
+  ReactTestInstance
+> = tree.queryAllByDisplayValue(/View/g);
 
 // Accessibility queries
 const getByA11yLabel: ReactTestInstance = tree.getByA11yLabel('label');

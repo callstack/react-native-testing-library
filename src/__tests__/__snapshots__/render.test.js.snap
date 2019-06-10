@@ -16,6 +16,7 @@ exports[`debug 1`] = `
     rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
     underlineColorAndroid=\\"transparent\\"
+    value=\\"Custom Freshie\\"
   />
   <TextInput
     allowFontScaling={true}
@@ -23,6 +24,7 @@ exports[`debug 1`] = `
     rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
+    value=\\"I inspected freshie\\"
   />
   <View
     accessible={true}
@@ -62,6 +64,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
     underlineColorAndroid=\\"transparent\\"
+    value=\\"Custom Freshie\\"
   />
   <TextInput
     allowFontScaling={true}
@@ -69,6 +72,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
+    value=\\"I inspected freshie\\"
   />
   <View
     accessible={true}
@@ -108,6 +112,7 @@ exports[`debug: shallow 1`] = `
     rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
     underlineColorAndroid=\\"transparent\\"
+    value=\\"Custom Freshie\\"
   />
   <TextInput
     allowFontScaling={true}
@@ -115,6 +120,7 @@ exports[`debug: shallow 1`] = `
     rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
+    value=\\"I inspected freshie\\"
   />
   <Button
     onPress={[Function anonymous]}
@@ -143,6 +149,7 @@ exports[`debug: shallow with message 1`] = `
     rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
     underlineColorAndroid=\\"transparent\\"
+    value=\\"Custom Freshie\\"
   />
   <TextInput
     allowFontScaling={true}
@@ -150,6 +157,7 @@ exports[`debug: shallow with message 1`] = `
     rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
+    value=\\"I inspected freshie\\"
   />
   <Button
     onPress={[Function anonymous]}
@@ -178,6 +186,7 @@ exports[`debug: with message 1`] = `
     rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
     underlineColorAndroid=\\"transparent\\"
+    value=\\"Custom Freshie\\"
   />
   <TextInput
     allowFontScaling={true}
@@ -185,6 +194,7 @@ exports[`debug: with message 1`] = `
     rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
+    value=\\"I inspected freshie\\"
   />
   <View
     accessible={true}
