@@ -18,8 +18,7 @@ const getNodeByText = (node, text) => {
   try {
     // eslint-disable-next-line
     const { Text, TextInput } = require('react-native');
-    const isTextComponent =
-      filterNodeByType(node, Text) || filterNodeByType(node, TextInput);
+    const isTextComponent = filterNodeByType(node, Text);
     if (isTextComponent) {
       const textChildren = React.Children.map(
         node.props.children,
@@ -48,6 +47,21 @@ const getTextInputNodeByPlaceholder = (node, placeholder) => {
       (typeof placeholder === 'string'
         ? placeholder === node.props.placeholder
         : placeholder.test(node.props.placeholder))
+    );
+  } catch (error) {
+    throw createLibraryNotSupportedError(error);
+  }
+};
+
+const getTextInputNodeByDisplayValue = (node, value) => {
+  try {
+    // eslint-disable-next-line
+    const { TextInput } = require('react-native');
+    return (
+      filterNodeByType(node, TextInput) &&
+      (typeof value === 'string'
+        ? value === node.props.value
+        : value.test(node.props.value))
     );
   } catch (error) {
     throw createLibraryNotSupportedError(error);
@@ -92,6 +106,17 @@ export const getByPlaceholder = (instance: ReactTestInstance) =>
       );
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByPlaceholderFn);
+    }
+  };
+
+export const getByDisplayValue = (instance: ReactTestInstance) =>
+  function getByDisplayValueFn(placeholder: string | RegExp) {
+    try {
+      return instance.find(node =>
+        getTextInputNodeByDisplayValue(node, placeholder)
+      );
+    } catch (error) {
+      throw new ErrorWithStack(prepareErrorMessage(error), getByDisplayValueFn);
     }
   };
 
@@ -161,6 +186,20 @@ export const getAllByPlaceholder = (instance: ReactTestInstance) =>
     return results;
   };
 
+export const getAllByDisplayValue = (instance: ReactTestInstance) =>
+  function getAllByDisplayValueFn(value: string | RegExp) {
+    const results = instance.findAll(node =>
+      getTextInputNodeByDisplayValue(node, value)
+    );
+    if (results.length === 0) {
+      throw new ErrorWithStack(
+        `No instances found with display value: ${String(value)}`,
+        getAllByDisplayValueFn
+      );
+    }
+    return results;
+  };
+
 export const getAllByProps = (instance: ReactTestInstance) =>
   function getAllByPropsFn(props: { [propName: string]: any }) {
     const results = instance.findAllByProps(props);
@@ -179,10 +218,12 @@ export const getByAPI = (instance: ReactTestInstance) => ({
   getByType: getByType(instance),
   getByText: getByText(instance),
   getByPlaceholder: getByPlaceholder(instance),
+  getByDisplayValue: getByDisplayValue(instance),
   getByProps: getByProps(instance),
   getAllByName: getAllByName(instance),
   getAllByType: getAllByType(instance),
   getAllByText: getAllByText(instance),
   getAllByPlaceholder: getAllByPlaceholder(instance),
+  getAllByDisplayValue: getAllByDisplayValue(instance),
   getAllByProps: getAllByProps(instance),
 });

@@ -70,6 +70,19 @@ const { getByPlaceholder } = render(<MyComponent />);
 const element = getByPlaceholder('username');
 ```
 
+### `ByDisplayValue`
+
+> getByDisplayValue, getAllByDisplayValue, queryByDisplayValue, queryAllByDisplayValue
+
+Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
+
+```jsx
+import { render } from 'react-native-testing-library';
+
+const { getByDisplayValue } = render(<MyComponent />);
+const element = getByDisplayValue('username');
+```
+
 ### `ByTestId`
 
 > getByTestId, getAllByTestId, queryByTestId, queryAllByTestId

@@ -15,6 +15,8 @@ type ConsoleLogMock = JestMockFn<Array<string>, void>;
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
+const INPUT_FRESHNESS = 'Custom Freshie';
+const INPUT_CHEF = 'I inspected freshie';
 
 class Button extends React.Component<*> {
   render() {
@@ -59,8 +61,13 @@ class Banana extends React.Component<*, *> {
         <TextInput
           testID="bananaCustomFreshness"
           placeholder={PLACEHOLDER_FRESHNESS}
+          value={INPUT_FRESHNESS}
         />
-        <TextInput testID="bananaChef" placeholder={PLACEHOLDER_CHEF} />
+        <TextInput
+          testID="bananaChef"
+          placeholder={PLACEHOLDER_CHEF}
+          value={INPUT_CHEF}
+        />
         <Button onPress={this.changeFresh} type="primary">
           Change freshness!
         </Button>
@@ -206,6 +213,33 @@ test('getAllByPlaceholder, queryAllByPlaceholder', () => {
 
   expect(queryAllByPlaceholder(/fresh/i)).toEqual(inputs);
   expect(queryAllByPlaceholder('no placeholder')).toHaveLength(0);
+});
+
+test('getByDisplayValue, queryByDisplayValue', () => {
+  const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
+  const input = getByDisplayValue(/custom/i);
+
+  expect(input.props.value).toBe(INPUT_FRESHNESS);
+
+  const sameInput = getByDisplayValue(INPUT_FRESHNESS);
+
+  expect(sameInput.props.value).toBe(INPUT_FRESHNESS);
+  expect(() => getByDisplayValue('no value')).toThrow('No instances found');
+
+  expect(queryByDisplayValue(/custom/i)).toBe(input);
+  expect(queryByDisplayValue('no value')).toBeNull();
+  expect(() => queryByDisplayValue(/fresh/i)).toThrow('Expected 1 but found 2');
+});
+
+test('getAllByDisplayValue, queryAllByDisplayValue', () => {
+  const { getAllByDisplayValue, queryAllByDisplayValue } = render(<Banana />);
+  const inputs = getAllByDisplayValue(/fresh/i);
+
+  expect(inputs).toHaveLength(2);
+  expect(() => getAllByDisplayValue('no value')).toThrow('No instances found');
+
+  expect(queryAllByDisplayValue(/fresh/i)).toEqual(inputs);
+  expect(queryAllByDisplayValue('no value')).toHaveLength(0);
 });
 
 test('getByProps, queryByProps', () => {
