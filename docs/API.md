@@ -27,9 +27,17 @@ Deeply renders given React element and returns helpers to query the output compo
 
 ```jsx
 import { render } from 'react-native-testing-library';
+import { QuestionsBoard } from '../QuestionsBoard';
 
-const { getByTestId, getByText /*...*/ } = render(<Component />);
+test('should verify two questions', () => {
+  const { queryAllByA11yRole } = render(<QuestionsBoard {...props} />);
+  const allQuestions = queryAllByA11yRole('header');
+
+  expect(allQuestions).toHaveLength(2);
+});
 ```
+
+> When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases it's convenient to create your custom `render` method. [Follow this great guide on how to set this up](https://testing-library.com/docs/react-testing-library/setup#custom-render).
 
 The `render` method returns a `RenderResult` object that has a few properties:
 
@@ -42,7 +50,9 @@ See [Queries](./Queries.md) for a complete list.
 #### Example
 
 ```jsx
-const { getByText, queryByA11yRole } = render(<Component />);
+import { render } from 'react-native-testing-library';
+
+const { getByText, queryByA11yStates } = render(<Component />);
 ```
 
 ### `update`
@@ -65,8 +75,6 @@ unmount(): void
 ```
 
 Unmount the in-memory tree, triggering the appropriate lifecycle events
-
-When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases it's convenient to create your custom `render` method. [Follow this great guide on how to set this up](https://github.com/kentcdodds/react-testing-library#custom-render).
 
 ### `debug`
 
