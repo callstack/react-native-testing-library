@@ -31,7 +31,19 @@ import { render } from 'react-native-testing-library';
 const { getByTestId, getByText /*...*/ } = render(<Component />);
 ```
 
-Returns a `RenderResult` object with [Queries](./Queries.md) and following helpers:
+The `render` method returns a `RenderResult` object that has a few properties:
+
+### `...queries`
+
+The most important feature of `render` is providing a set of helpful queries that allow you to find certain elements in the view hierarchy.
+
+See [Queries](./Queries.md) for a complete list.
+
+#### Example
+
+```jsx
+const { getByText, queryByA11yRole } = render(<Component />);
+```
 
 ### `update`
 
