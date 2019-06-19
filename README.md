@@ -69,7 +69,7 @@ yarn add --dev react-native-testing-library
 
 This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!
 
-Note for [Flow](https://flow.org) users – you'll also need to install typings for `react-test-rednerer`:
+Note for [Flow](https://flow.org) users – you'll also need to install typings for `react-test-renderer`:
 
 ```sh
 flow-typed install react-test-renderer
