@@ -26,7 +26,7 @@
     "chalk": "^2.4.1",
     "conventional-changelog-cli": "^2.0.11",
     "dedent": "^0.7.0",
-    "eslint": "^5.15.2",
+    "eslint": "^6.0.0",
     "flow-bin": "^0.103.0",
     "flow-copy-source": "^2.0.6",
     "jest": "^24.7.1",
