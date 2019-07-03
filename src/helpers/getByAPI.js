@@ -213,7 +213,7 @@ export const getAllByProps = (instance: ReactTestInstance) =>
   };
 
 export const getAllByTestId = (instance: ReactTestInstance) =>
-  function getAllByTestIdFn(testID: string) {
+  function getAllByTestIdFn(testID: string): ReactTestInstance[] {
     const results = instance
       .findAllByProps({ testID })
       .filter(element => typeof element.type === 'string');
