@@ -9,6 +9,7 @@ export interface GetByAPI {
   getByDisplayValue: (value: string | RegExp) => ReactTestInstance;
   getByProps: (props: Record<string, any>) => ReactTestInstance;
   getByTestId: (testID: string) => ReactTestInstance;
+  getAllByTestId: (testID: string) => Array<ReactTestInstance>;
   getAllByName: (name: React.ReactType | string) => Array<ReactTestInstance>;
   getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
   getAllByText: (text: string | RegExp) => Array<ReactTestInstance>;
@@ -29,6 +30,7 @@ export interface QueryByAPI {
   queryByDisplayValue: (value: string | RegExp) => ReactTestInstance | null;
   queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
   queryByTestId: (testID: string) => ReactTestInstance | null;
+  queryAllByTestId: (testID: string) => Array<ReactTestInstance> | null;
   queryAllByName: (
     name: React.ReactType | string
   ) => Array<ReactTestInstance> | [];

@@ -54,6 +54,7 @@ const getByDisplayValueRegExp: ReactTestInstance = tree.getByDisplayValue(
 );
 const getByProps: ReactTestInstance = tree.getByProps({ value: 2 });
 const getByTestId: ReactTestInstance = tree.getByTestId('test-id');
+const getAllByTestId: ReactTestInstance[] = tree.getAllByTestId('test-id');
 const getAllByNameString: Array<ReactTestInstance> = tree.getAllByName('View');
 const getAllByNameConstructor: Array<ReactTestInstance> = tree.getAllByName(
   View
@@ -93,6 +94,9 @@ const queryByDisplayValueRegExp: ReactTestInstance | null = tree.queryByDisplayV
 );
 const queryByProps: ReactTestInstance | null = tree.queryByProps({ value: 2 });
 const queryByTestId: ReactTestInstance | null = tree.queryByTestId('test-id');
+const queryAllByTestId: ReactTestInstance[] | null = tree.queryAllByTestId(
+  'test-id'
+);
 const queryAllByNameString: Array<ReactTestInstance> = tree.queryAllByName(
   'View'
 );

@@ -212,6 +212,21 @@ export const getAllByProps = (instance: ReactTestInstance) =>
     return results;
   };
 
+export const getAllByTestId = (instance: ReactTestInstance) =>
+  function getAllByTestIdFn(testID: string): ReactTestInstance[] {
+    const results = instance
+      .findAllByProps({ testID })
+      .filter(element => typeof element.type === 'string');
+
+    if (results.length === 0) {
+      throw new ErrorWithStack(
+        `No instances found with testID: ${String(testID)}`,
+        getAllByTestIdFn
+      );
+    }
+    return results;
+  };
+
 export const getByAPI = (instance: ReactTestInstance) => ({
   getByTestId: getByTestId(instance),
   getByName: getByName(instance),
@@ -220,6 +235,7 @@ export const getByAPI = (instance: ReactTestInstance) => ({
   getByPlaceholder: getByPlaceholder(instance),
   getByDisplayValue: getByDisplayValue(instance),
   getByProps: getByProps(instance),
+  getAllByTestId: getAllByTestId(instance),
   getAllByName: getAllByName(instance),
   getAllByType: getAllByType(instance),
   getAllByText: getAllByText(instance),
