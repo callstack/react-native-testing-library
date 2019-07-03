@@ -214,7 +214,10 @@ export const getAllByProps = (instance: ReactTestInstance) =>
 
 export const getAllByTestId = (instance: ReactTestInstance) =>
   function getAllByTestIdFn(testID: string) {
-    const results = instance.findAllByProps({ testID });
+    const results = instance
+      .findAllByProps({ testID })
+      .filter(element => typeof element.type === 'string');
+
     if (results.length === 0) {
       throw new ErrorWithStack(
         `No instances found with testID: ${String(testID)}`,

@@ -71,6 +71,8 @@ class Banana extends React.Component<*, *> {
         <Button onPress={this.changeFresh} type="primary">
           Change freshness!
         </Button>
+        <Text testID="duplicateText">First Text</Text>
+        <Text testID="duplicateText">Second Text</Text>
       </View>
     );
   }
@@ -87,6 +89,25 @@ test('getByTestId, queryByTestId', () => {
   expect(queryByTestId('InExistent')).toBeNull();
 });
 
+test('getAllByTestId, queryAllByTestId', () => {
+  const { getAllByTestId, queryAllByTestId } = render(<Banana />);
+  const textElements = getAllByTestId('duplicateText');
+
+  expect(textElements.length).toBe(2);
+  expect(textElements[0].props.children).toBe('First Text');
+  expect(textElements[1].props.children).toBe('Second Text');
+  expect(() => getAllByTestId('nonExistentTestId')).toThrow(
+    'No instances found'
+  );
+
+  const queriedTextElements = queryAllByTestId('duplicateText');
+
+  expect(queriedTextElements.length).toBe(2);
+  expect(queriedTextElements[0]).toBe(textElements[0]);
+  expect(queriedTextElements[1]).toBe(textElements[1]);
+  expect(queryAllByTestId('nonExistentTestId')).toHaveLength(0);
+});
+
 test('getByName, queryByName', () => {
   const { getByTestId, getByName, queryByName } = render(<Banana />);
   const bananaFresh = getByTestId('bananaFresh');
@@ -101,7 +122,7 @@ test('getByName, queryByName', () => {
 
   expect(bananaFresh.props.children).toBe('not fresh');
   expect(() => getByName('InExistent')).toThrow('No instances found');
-  expect(() => getByName(Text)).toThrow('Expected 1 but found 3');
+  expect(() => getByName(Text)).toThrow('Expected 1 but found 5');
 
   expect(queryByName('Button')).toBe(button);
   expect(queryByName('InExistent')).toBeNull();

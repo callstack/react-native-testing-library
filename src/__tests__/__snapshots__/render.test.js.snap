@@ -45,6 +45,16 @@ exports[`debug 1`] = `
       Change freshness!
     </Text>
   </View>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    First Text
+  </Text>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    Second Text
+  </Text>
 </View>"
 `;
 
@@ -93,6 +103,16 @@ exports[`debug changing component: bananaFresh button message should now be "fre
       Change freshness!
     </Text>
   </View>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    First Text
+  </Text>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    Second Text
+  </Text>
 </View>"
 `;
 
@@ -128,6 +148,16 @@ exports[`debug: shallow 1`] = `
   >
     Change freshness!
   </Button>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    First Text
+  </Text>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    Second Text
+  </Text>
 </View>"
 `;
 
@@ -165,6 +195,16 @@ exports[`debug: shallow with message 1`] = `
   >
     Change freshness!
   </Button>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    First Text
+  </Text>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    Second Text
+  </Text>
 </View>"
 `;
 
@@ -215,6 +255,16 @@ exports[`debug: with message 1`] = `
       Change freshness!
     </Text>
   </View>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    First Text
+  </Text>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    Second Text
+  </Text>
 </View>"
 `;
 
