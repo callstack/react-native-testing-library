@@ -148,3 +148,15 @@ test('custom component with custom event name', () => {
 
   expect(handlePress).toHaveBeenCalled();
 });
+
+test('event with multiple handler parameters', () => {
+  const handlePress = jest.fn();
+
+  const { getByTestId } = render(
+    <CustomEventComponentWithCustomName handlePress={handlePress} />
+  );
+
+  fireEvent(getByTestId('my-custom-button'), 'handlePress', 'param1', 'param2');
+
+  expect(handlePress).toHaveBeenCalledWith('param1', 'param2');
+});

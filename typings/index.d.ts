@@ -97,13 +97,13 @@ export interface RenderAPI extends GetByAPI, QueryByAPI, A11yAPI {
 export type FireEventFunction = (
   element: ReactTestInstance,
   eventName: string,
-  data?: any
+  ...data: Array<any>
 ) => any;
 
 export type FireEventAPI = FireEventFunction & {
   press: (element: ReactTestInstance) => any;
-  changeText: (element: ReactTestInstance, data?: any) => any;
-  scroll: (element: ReactTestInstance, data?: any) => any;
+  changeText: (element: ReactTestInstance, ...data: Array<any>) => any;
+  scroll: (element: ReactTestInstance, ...data: Array<any>) => any;
 };
 
 export type WaitForElementFunction = <T = any>(

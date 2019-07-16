@@ -118,7 +118,7 @@ Get the rendered component JSON representation, e.g. for snapshot testing.
 ## `fireEvent`
 
 ```ts
-fireEvent(element: ReactTestInstance, eventName: string, data?: *): void
+fireEvent(element: ReactTestInstance, eventName: string, ...data: Array<any>): void
 ```
 
 Fires native-like event with data.
@@ -161,7 +161,7 @@ fireEvent(getByPlaceholder('my placeholder'), 'blur');
 ## `fireEvent[eventName]`
 
 ```ts
-fireEvent[eventName](element: ReactTestInstance, data?: *): void
+fireEvent[eventName](element: ReactTestInstance, ...data: Array<any>): void
 ```
 
 Convenience methods for common events like: `press`, `changeText`, `scroll`.
@@ -187,7 +187,7 @@ const { getByTestId } = render(
 fireEvent.press(getByTestId('button'));
 ```
 
-### `fireEvent.changeText: (element: ReactTestInstance, data?: *) => void`
+### `fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void`
 
 Invokes `changeText` event handler on the element or parent element in the tree.
 
@@ -207,7 +207,7 @@ const { getByTestId } = render(
 fireEvent.changeText(getByTestId('text-input'), CHANGE_TEXT);
 ```
 
-### `fireEvent.scroll: (element: ReactTestInstance, data?: *) => void`
+### `fireEvent.scroll: (element: ReactTestInstance, ...data: Array<any>) => void`
 
 Invokes `scroll` event handler on the element or parent element in the tree.
 

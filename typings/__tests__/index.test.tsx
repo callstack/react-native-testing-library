@@ -174,6 +174,7 @@ tree.unmount();
 // fireEvent API tests
 fireEvent(getByNameString, 'press');
 fireEvent(getByNameString, 'press', 'data');
+fireEvent(getByNameString, 'press', 'param1', 'param2');
 fireEvent.press(getByNameString);
 fireEvent.changeText(getByNameString, 'string');
 fireEvent.scroll(getByNameString, 'eventData');
