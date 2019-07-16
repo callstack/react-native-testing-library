@@ -36,12 +36,12 @@ test('debug', () => {
   const component = <Button onPress={jest.fn} text="Press me" />;
   debug(component);
 
-  const output = (console.log: ConsoleLogMock).mock.calls[0][0];
+  const output = ((console.log: any): ConsoleLogMock).mock.calls[0][0];
 
   expect(stripAnsi(output)).not.toEqual(output);
   expect(stripAnsi(output)).toMatchSnapshot();
 
-  (console.log: ConsoleLogMock).mockReset();
+  ((console.log: any): ConsoleLogMock).mockReset();
 
   debug(component, 'test message');
 
@@ -58,12 +58,12 @@ test('debug.deep', () => {
   const component = <Button onPress={jest.fn} text="Press me" />;
   debug.deep(component);
 
-  const output = (console.log: ConsoleLogMock).mock.calls[0][0];
+  const output = ((console.log: any): ConsoleLogMock).mock.calls[0][0];
 
   expect(stripAnsi(output)).not.toEqual(output);
   expect(stripAnsi(output)).toMatchSnapshot();
 
-  (console.log: ConsoleLogMock).mockReset();
+  ((console.log: any): ConsoleLogMock).mockReset();
 
   debug.deep(component, 'test message');
 
@@ -82,7 +82,7 @@ test('debug.deep async test', async () => {
 
   debug.deep(toJSON());
 
-  const output = (console.log: ConsoleLogMock).mock.calls[0][0];
+  const output = ((console.log: any): ConsoleLogMock).mock.calls[0][0];
 
   expect(stripAnsi(output)).toMatchSnapshot();
 });
