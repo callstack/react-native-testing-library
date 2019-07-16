@@ -28,7 +28,9 @@ exports[`debug 1`] = `
   />
   <View
     accessible={true}
+    clickable={true}
     isTVSelectable={true}
+    onClick={[Function bound touchableHandlePress]}
     onResponderGrant={[Function bound touchableHandleResponderGrant]}
     onResponderMove={[Function bound touchableHandleResponderMove]}
     onResponderRelease={[Function bound touchableHandleResponderRelease]}
@@ -86,7 +88,9 @@ exports[`debug changing component: bananaFresh button message should now be "fre
   />
   <View
     accessible={true}
+    clickable={true}
     isTVSelectable={true}
+    onClick={[Function bound touchableHandlePress]}
     onResponderGrant={[Function bound touchableHandleResponderGrant]}
     onResponderMove={[Function bound touchableHandleResponderMove]}
     onResponderRelease={[Function bound touchableHandleResponderRelease]}
@@ -238,7 +242,9 @@ exports[`debug: with message 1`] = `
   />
   <View
     accessible={true}
+    clickable={true}
     isTVSelectable={true}
+    onClick={[Function bound touchableHandlePress]}
     onResponderGrant={[Function bound touchableHandleResponderGrant]}
     onResponderMove={[Function bound touchableHandleResponderMove]}
     onResponderRelease={[Function bound touchableHandleResponderRelease]}
@@ -271,7 +277,9 @@ exports[`debug: with message 1`] = `
 exports[`toJSON 1`] = `
 <View
   accessible={true}
+  clickable={false}
   isTVSelectable={true}
+  onClick={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}

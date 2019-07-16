@@ -14,7 +14,9 @@ exports[`debug 1`] = `
 exports[`debug.deep 1`] = `
 "<View
   accessible={true}
+  clickable={true}
   isTVSelectable={true}
+  onClick={[Function bound touchableHandlePress]}
   onResponderGrant={[Function bound touchableHandleResponderGrant]}
   onResponderMove={[Function bound touchableHandleResponderMove]}
   onResponderRelease={[Function bound touchableHandleResponderRelease]}
@@ -36,7 +38,9 @@ exports[`debug.deep 1`] = `
 exports[`debug.deep async test 1`] = `
 "<View
   accessible={true}
+  clickable={true}
   isTVSelectable={true}
+  onClick={[Function bound touchableHandlePress]}
   onResponderGrant={[Function bound touchableHandleResponderGrant]}
   onResponderMove={[Function bound touchableHandleResponderMove]}
   onResponderRelease={[Function bound touchableHandleResponderRelease]}
