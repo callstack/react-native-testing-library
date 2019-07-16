@@ -29,8 +29,8 @@ const findEventHandler = (
 const invokeEvent = (
   element: ReactTestInstance,
   eventName: string,
-  data?: any,
-  callsite?: any
+  callsite?: any,
+  ...data: Array<any>
 ) => {
   const handler = findEventHandler(element, eventName, callsite);
 
@@ -41,7 +41,7 @@ const invokeEvent = (
   let returnValue;
 
   act(() => {
-    returnValue = handler(data);
+    returnValue = handler(...data);
   });
 
   return returnValue;
@@ -51,13 +51,17 @@ const toEventHandlerName = (eventName: string) =>
   `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 
 const pressHandler = (element: ReactTestInstance) =>
-  invokeEvent(element, 'press', undefined, pressHandler);
-const changeTextHandler = (element: ReactTestInstance, data?: *) =>
-  invokeEvent(element, 'changeText', data, changeTextHandler);
-const scrollHandler = (element: ReactTestInstance, data?: *) =>
-  invokeEvent(element, 'scroll', data, scrollHandler);
+  invokeEvent(element, 'press', pressHandler);
+const changeTextHandler = (element: ReactTestInstance, ...data: Array<any>) =>
+  invokeEvent(element, 'changeText', changeTextHandler, ...data);
+const scrollHandler = (element: ReactTestInstance, ...data: Array<any>) =>
+  invokeEvent(element, 'scroll', scrollHandler, ...data);
 
-const fireEvent = invokeEvent;
+const fireEvent = (
+  element: ReactTestInstance,
+  eventName: string,
+  ...data: Array<any>
+) => invokeEvent(element, eventName, fireEvent, ...data);
 
 fireEvent.press = pressHandler;
 fireEvent.changeText = changeTextHandler;
