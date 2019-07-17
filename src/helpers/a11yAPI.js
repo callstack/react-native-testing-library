@@ -3,7 +3,7 @@ import makeQuery from './makeQuery';
 
 type QueryFn = (string | RegExp) => ReactTestInstance | null;
 type GetFn = (string | RegExp) => ReactTestInstance;
-type GetAllFn = (string | RegExp) => Array<ReactTestInstance> | [];
+type GetAllFn = (string | RegExp) => Array<ReactTestInstance>;
 type ArrayQueryFn = (string | Array<string>) => ReactTestInstance | null;
 type ArrayGetFn = (string | Array<string>) => ReactTestInstance;
 type ArrayGetAllFn = (string | Array<string>) => Array<ReactTestInstance> | [];
