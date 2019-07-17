@@ -2,29 +2,33 @@
 import makeQuery from './makeQuery';
 
 type QueryFn = (string | RegExp) => ReactTestInstance | null;
+type QueryAllFn = (string | RegExp) => Array<ReactTestInstance> | [];
 type GetFn = (string | RegExp) => ReactTestInstance;
 type GetAllFn = (string | RegExp) => Array<ReactTestInstance>;
 type ArrayQueryFn = (string | Array<string>) => ReactTestInstance | null;
+type ArrayQueryAllFn = (
+  string | Array<string>
+) => Array<ReactTestInstance> | [];
 type ArrayGetFn = (string | Array<string>) => ReactTestInstance;
-type ArrayGetAllFn = (string | Array<string>) => Array<ReactTestInstance> | [];
+type ArrayGetAllFn = (string | Array<string>) => Array<ReactTestInstance>;
 
 type A11yAPI = {
   getByA11yLabel: GetFn,
   getAllByA11yLabel: GetAllFn,
   queryByA11yLabel: QueryFn,
-  queryAllByA11yLabel: GetAllFn,
+  queryAllByA11yLabel: QueryAllFn,
   getByA11yHint: GetFn,
   getAllByA11yHint: GetAllFn,
   queryByA11yHint: QueryFn,
-  queryAllByA11yHint: GetAllFn,
+  queryAllByA11yHint: QueryAllFn,
   getByA11yRole: GetFn,
   getAllByA11yRole: GetAllFn,
   queryByA11yRole: QueryFn,
-  queryAllByA11yRole: GetAllFn,
+  queryAllByA11yRole: QueryAllFn,
   getByA11yStates: ArrayGetFn,
   getAllByA11yStates: ArrayGetAllFn,
   queryByA11yStates: ArrayQueryFn,
-  queryAllByA11yStates: ArrayGetAllFn,
+  queryAllByA11yStates: ArrayQueryAllFn,
 };
 
 export function matchStringValue(prop?: string, matcher: string | RegExp) {
