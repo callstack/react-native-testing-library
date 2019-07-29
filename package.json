@@ -27,7 +27,7 @@
     "conventional-changelog-cli": "^2.0.11",
     "dedent": "^0.7.0",
     "eslint": "^6.0.1",
-    "flow-bin": "^0.103.0",
+    "flow-bin": "^0.104.0",
     "flow-copy-source": "^2.0.6",
     "jest": "^24.7.1",
     "metro-react-native-babel-preset": "^0.52.0",
