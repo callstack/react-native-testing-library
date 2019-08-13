@@ -21,7 +21,7 @@
     "@release-it/conventional-changelog": "^1.1.0",
     "@types/react": "^16.7.11",
     "@types/react-test-renderer": "^16.0.3",
-    "@typescript-eslint/eslint-plugin": "^1.10.2",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
     "babel-jest": "^24.7.1",
     "chalk": "^2.4.1",
     "conventional-changelog-cli": "^2.0.11",
