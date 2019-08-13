@@ -20,13 +20,12 @@ jobs:
           at: ~/react-native-testing-library
       - restore_cache:
           keys:
-            - dependencies-{{ checksum "package.json" }}
-            - dependencies-
-      - run: yarn install
+            - dependencies-{{ checksum "yarn.lock" }}
+      - run: yarn install --frozen-lockfile --no-progress --non-interactive --cache-folder ~/.cache/yarn
       - save_cache:
-          key: dependencies-{{ checksum "package.json" }}
+          key: dependencies-{{ checksum "yarn.lock" }}
           paths:
-            - node_modules
+            - ~/.cache/yarn
       - persist_to_workspace:
           root: .
           paths:
