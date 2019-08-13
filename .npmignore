@@ -3,3 +3,5 @@ __tests__
 __mocks__
 .github
 .circleci
+src
+website
