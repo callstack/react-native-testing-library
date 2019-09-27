@@ -211,8 +211,10 @@ fireEvent.changeText(getByTestId('text-input'), CHANGE_TEXT);
 
 Invokes `scroll` event handler on the element or parent element in the tree.
 
+#### On a `ScrollView`
+
 ```jsx
-import { ScrollView, TextInput } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { render, fireEvent } from 'react-native-testing-library';
 
 const onScrollMock = jest.fn();
@@ -231,6 +233,43 @@ const { getByTestId } = render(
 );
 
 fireEvent.scroll(getByTestId('scroll-view'), eventData);
+```
+
+#### On a `FlatList`
+
+```jsx
+import { FlatList, View } from 'react-native';
+import { render, fireEvent } from 'react-native-testing-library';
+
+const onEndReached = jest.fn();
+const { getByType } = render(
+  <FlatList
+    data={Array.from({ length: 10 }, (_, key) => ({ key: `${key}` }))}
+    renderItem={() => <View style={{ height: 500, width: 100 }} />}
+    onEndReached={onEndReached}
+    onEndReachedThreshold={0.2}
+  />
+);
+const eventData = {
+  nativeEvent: {
+    contentOffset: {
+      y: 500,
+    },
+    contentSize: {
+      // Dimensions of the scrollable content
+      height: 500,
+      width: 100,
+    },
+    layoutMeasurement: {
+      // Dimensions of the device
+      height: 100,
+      width: 100,
+    },
+  },
+};
+
+fireEvent.scroll(getByType(ScrollView), eventData);
+expect(onEndReached).toHaveBeenCalled();
 ```
 
 ## `waitForElement`
