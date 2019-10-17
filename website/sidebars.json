@@ -1,0 +1,6 @@
+{
+  "docs": {
+    "Introduction": ["getting-started"],
+    "API Reference": ["api", "api-queries"]
+  }
+}
