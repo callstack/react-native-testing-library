@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2017-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 import React from "react";
 import classnames from "classnames";
 import Layout from "@theme/Layout";
@@ -47,7 +40,7 @@ function Home() {
     return (
         <Layout
             title={`${siteConfig.title}`}
-            description="Description will go into a meta tag in <head />"
+            description={`${siteConfig.tagline}`}
         >
             <header className={classnames(styles.heroBanner)}>
                 <div className="container">
@@ -63,8 +56,8 @@ function Home() {
                             )}
                         </div>
                     ))}
-                    <h1 className="hero__title">{siteConfig.title}</h1>
-                    <p className="hero__subtitle">{siteConfig.tagline}</p>
+                    <h1>{siteConfig.title}</h1>
+                    <p>{siteConfig.tagline}</p>
                     <div className={styles.buttons}>
                         <Link
                             className={classnames(

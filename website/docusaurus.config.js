@@ -1,24 +1,13 @@
-/**
- * Copyright (c) 2017-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-const repoUrl = 'https://github.com/callstack/react-native-testing-library';
-
 const siteConfig = {
     title: 'React Native Testing Library', // Title for your website.
     tagline: 'Helps you to write better tests with less effort.',
     url: 'https://callstack.github.io', // Your website URL
     baseUrl: '/react-native-testing-library/', // Base URL for your project
     favicon: 'img/owl.png',
-    // Used for publishing and more
+
     projectName: 'react-native-testing-library',
     organizationName: 'callstack',
-    // For top-level user or org sites, the organization is still the same.
-    // e.g., for the https://JoelMarcey.github.io site, it would be set like...
-    //   organizationName: 'JoelMarcey'
+
     themeConfig: {
         navbar: {
             title: 'React Native Testing Library',
@@ -82,25 +71,6 @@ const siteConfig = {
             ],
             // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
             copyright: `Copyright © ${new Date().getFullYear()} Callstack Open Source`,
-            highlight: {
-                // Highlight.js theme to use for syntax highlighting in code blocks.
-                theme: 'dark',
-            },
-
-            // Add custom scripts here that would be placed in <script> tags.
-            scripts: [],
-
-
-            // On page navigation for the current documentation page.
-            onPageNav: 'separate',
-            // No .html extensions for paths.
-            cleanUrl: true,
-
-            // Open Graph and Twitter card images.
-            ogImage: 'img/docusaurus.png',
-            twitterImage: 'img/docusaurus.png',
-            repoUrl,
-            usePrism: ['jsx'],
         },
     },
     presets: [
