@@ -60,12 +60,7 @@ const siteConfig = {
                         {
                             label: 'Github',
                             href: 'https://github.com/callstack/react-native-testing-library',
-                        },
-                        {
-                            label: 'Star',
-                            href: 'https://github.com/callstack/react-native-testing-library',
-                        },
-
+                        }
                     ],
                 },
             ],
