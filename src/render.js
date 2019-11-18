@@ -34,6 +34,10 @@ export default function render<T>(
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
 
+  if (render.unmountQueue) {
+    render.unmountQueue.push(renderer.unmount);
+  }
+
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),

@@ -139,3 +139,4 @@ export declare const debug: DebugAPI;
 export declare const fireEvent: FireEventAPI;
 export declare const waitForElement: WaitForElementFunction;
 export declare const act: (callback: () => void) => Thenable;
+export declare const autoUnmount: () => void;
