@@ -8,7 +8,6 @@ import { queryByAPI } from './helpers/queryByAPI';
 import a11yAPI from './helpers/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
-import cleanup from './cleanup';
 
 type Options = {
   wrapper?: React.ComponentType<any>,

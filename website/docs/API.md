@@ -351,7 +351,7 @@ Defined as:
 function within(instance: ReactTestInstance): Queries
 ```
 
-Perform [queries](./Queries.md) scoped to given element. 
+Perform [queries](./Queries.md) scoped to given element.
 
 :::note
 Please note that additional `render` specific operations like `update`, `unmount`, `debug`, `toJSON` are _not_ included.
