@@ -123,6 +123,8 @@ const cleanup: () => void;
 
 Unmounts React trees that were mounted with `render`.
 
+> Please note that this is done automatically if the testing framework you're using supports the `afterEach` global (like mocha, Jest, and Jasmine). If not, you will need to do manual cleanups after each test.
+
 For example, if you're using the `jest` testing framework, then you would need to use the `afterEach` hook like so:
 
 ```jsx
