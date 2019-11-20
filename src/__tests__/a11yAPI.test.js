@@ -26,12 +26,20 @@ class Button extends React.Component<*> {
         accessibilityLabel={BUTTON_LABEL}
         accessibilityRole={BUTTON_ROLE}
         accessibilityStates={['selected']}
+        accessibilityState={{
+          selected: true,
+        }}
+        // accessibilityValue={{ min: 80 }}
       >
         <Typography
           accessibilityHint={TEXT_HINT}
           accessibilityLabel={TEXT_LABEL}
           accessibilityRole={TEXT_ROLE}
           accessibilityStates={['selected']}
+          accessibilityState={{
+            selected: true,
+          }}
+          // accessibilityValue={{ min: 100, max: 250 }}
         >
           {this.props.children}
         </Typography>
@@ -48,6 +56,11 @@ function Section() {
         accessibilityLabel={TEXT_LABEL}
         accessibilityRole={TEXT_ROLE}
         accessibilityStates={['selected', 'disabled']}
+        accessibilityState={{
+          selected: true,
+          disabled: true,
+        }}
+        // accessibilityValue={{ min: 100, max: 200 }}
       >
         Title
       </Typography>
@@ -110,8 +123,6 @@ test('getByA11yRole, queryByA11yRole', () => {
   expect(getByA11yRole('button').props.accessibilityRole).toEqual('button');
   const button = queryByA11yRole(/button/g);
   expect(button && button.props.accessibilityRole).toEqual('button');
-  expect(() => getByA11yRole(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
-  expect(queryByA11yRole(NO_MATCHES_TEXT)).toBeNull();
 
   expect(() => getByA11yRole('link')).toThrow(FOUND_TWO_INSTANCES);
   expect(() => queryByA11yRole('link')).toThrow(FOUND_TWO_INSTANCES);
@@ -122,8 +133,6 @@ test('getAllByA11yRole, queryAllByA11yRole', () => {
 
   expect(getAllByA11yRole('link')).toHaveLength(2);
   expect(queryAllByA11yRole(/ink/g)).toHaveLength(2);
-  expect(() => getAllByA11yRole(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
-  expect(queryAllByA11yRole(NO_MATCHES_TEXT)).toEqual([]);
 });
 
 test('getByA11yStates, queryByA11yStates', () => {
@@ -143,8 +152,6 @@ test('getByA11yStates, queryByA11yStates', () => {
     disabledSelected && disabledSelected.props.accessibilityStates
   ).toEqual(['selected', 'disabled']);
 
-  expect(() => getByA11yStates(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
-  expect(queryByA11yStates(NO_MATCHES_TEXT)).toBeNull();
   expect(queryByA11yStates([])).toBeNull();
 
   expect(() => getByA11yStates('selected')).toThrow(FOUND_TWO_INSTANCES);
@@ -158,5 +165,70 @@ test('getAllByA11yStates, queryAllByA11yStates', () => {
   expect(queryAllByA11yStates(['selected'])).toHaveLength(3);
 
   expect(() => getAllByA11yStates([])).toThrow(NO_INSTANCES_FOUND);
-  expect(queryAllByA11yStates(NO_MATCHES_TEXT)).toEqual([]);
+});
+
+test('getByA11yState, questyByA11yState', () => {
+  const { getByA11yState, queryByA11yState } = render(<Section />);
+
+  expect(getByA11yState({ disabled: true }).props.accessibilityState).toEqual({
+    disabled: true,
+    selected: true,
+  });
+  const disabled = queryByA11yState({ disabled: true });
+  expect(disabled && disabled.props.accessibilityState).toMatchObject({
+    disabled: true,
+    selected: true,
+  });
+  const disabledSelected = queryByA11yState({ selected: true, disabled: true });
+  expect(disabledSelected && disabledSelected.props.accessibilityState).toEqual(
+    { disabled: true, selected: true }
+  );
+
+  expect(() => getByA11yState({ disabled: false, selected: true })).toThrow(
+    NO_INSTANCES_FOUND
+  );
+  expect(queryByA11yState({ checked: 'mixed' })).toBeNull();
+  expect(queryByA11yState({})).toBeNull();
+
+  expect(() => getByA11yState({ selected: true })).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => queryByA11yState({ selected: true })).toThrow(
+    FOUND_TWO_INSTANCES
+  );
+});
+
+test('getAllByA11yState, queryAllByA11yState', () => {
+  const { getAllByA11yState, queryAllByA11yState } = render(<Section />);
+
+  expect(getAllByA11yState({ selected: true })).toHaveLength(3);
+  expect(queryAllByA11yState({ selected: true })).toHaveLength(3);
+
+  expect(() => getAllByA11yState({})).toThrow(NO_INSTANCES_FOUND);
+  expect(queryAllByA11yState({ expanded: true })).toEqual([]);
+});
+
+test.skip('getByA11yValue, queryByA11yValue', () => {
+  const { getByA11yValue, queryByA11yValue } = render(<Section />);
+
+  expect(() => getByA11yValue({ min: 100 })).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => queryByA11yValue({ min: 100 })).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => getByA11yValue({ min: 50 })).toThrow(NO_INSTANCES_FOUND);
+  expect(queryByA11yValue({ max: 30 })).toBeNull();
+  expect(getByA11yValue({ max: 200 }).props.accessibilityValue).toEqual({
+    min: 100,
+    max: 200,
+  });
+  expect(queryByA11yValue({ max: 200 })?.props.accessibilityValue).toEqual({
+    min: 100,
+    max: 200,
+  });
+});
+
+test.skip('getAllByA11yValue, queryAllByA11yValue', () => {
+  const { getAllByA11yValue, queryAllByA11yValue } = render(<Section />);
+
+  expect(getAllByA11yValue({ min: 100 })).toHaveLength(2);
+  expect(queryAllByA11yValue({ min: 100 })).toHaveLength(2);
+
+  expect(() => getAllByA11yValue({ min: 150 })).toThrow(NO_INSTANCES_FOUND);
+  expect(queryAllByA11yValue({ max: 20 })).toEqual([]);
 });
