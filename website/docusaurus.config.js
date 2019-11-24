@@ -19,7 +19,7 @@ const siteConfig = {
             links: [
                 {to: 'docs/getting-started', label: 'Docs', position: 'right'},
                 {
-                    href: 'https://github.com/facebook/docusaurus',
+                    repoUrl: 'https://github.com/facebook/docusaurus',
                     label: 'GitHub',
                     position: 'right',
                 },
@@ -64,9 +64,7 @@ const siteConfig = {
                     ],
                 },
             ],
-            // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
-            copyright: `Copyright © ${new Date().getFullYear()} Callstack Open Source`,
-        },
+    },
     },
     presets: [
         [

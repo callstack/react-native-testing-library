@@ -9,9 +9,8 @@ services:
     volumes:
       - ./docs:/app/docs
       - ./website/blog:/app/website/blog
-      - ./website/i18n:/app/website/i18n
       - ./website/pages:/app/website/pages
       - ./website/static:/app/website/static
       - ./website/sidebars.json:/app/website/sidebars.json
-      - ./website/siteConfig.js:/app/website/docusaurus.config.js
+      - ./website/docusaurus.config.js:/app/website/docusaurus.config.js
     working_dir: /app/website
