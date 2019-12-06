@@ -1,5 +1,5 @@
 // @flow
-export default function waitForExpect<T: mixed>(
+export default function waitForElement<T>(
   expectation: () => T,
   timeout: number = 4500,
   interval: number = 50
