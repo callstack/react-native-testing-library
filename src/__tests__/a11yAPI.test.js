@@ -10,7 +10,6 @@ const TEXT_LABEL = 'cool text';
 const TEXT_HINT = 'static text';
 const TEXT_ROLE = 'link';
 const NO_MATCHES_TEXT = 'not-existent-element';
-
 const NO_INSTANCES_FOUND = 'No instances found';
 const FOUND_TWO_INSTANCES = 'Expected 1 but found 2 instances';
 
@@ -18,7 +17,7 @@ const Typography = ({ children, ...rest }) => {
   return <Text {...rest}>{children}</Text>;
 };
 
-class Button extends React.Component<*> {
+class Button extends React.Component<any> {
   render() {
     return (
       <TouchableOpacity

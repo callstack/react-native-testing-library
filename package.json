@@ -17,17 +17,15 @@
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
-    "@callstack/eslint-config": "^7.0.0",
+    "@callstack/eslint-config": "^8.0.0",
     "@release-it/conventional-changelog": "^1.1.0",
     "@types/react": "^16.7.11",
     "@types/react-test-renderer": "^16.0.3",
-    "@typescript-eslint/eslint-plugin": "^1.10.2",
     "babel-jest": "^24.7.1",
-    "chalk": "^2.4.1",
     "conventional-changelog-cli": "^2.0.11",
     "dedent": "^0.7.0",
-    "eslint": "^6.0.1",
-    "flow-bin": "^0.104.0",
+    "eslint": "^6.7.2",
+    "flow-bin": "^0.107.0",
     "flow-copy-source": "^2.0.6",
     "jest": "^24.7.1",
     "metro-react-native-babel-preset": "^0.52.0",
@@ -36,14 +34,14 @@
     "react-test-renderer": "16.8.6",
     "release-it": "^12.3.3",
     "strip-ansi": "^5.2.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.7.3"
   },
   "dependencies": {
     "pretty-format": "^24.0.0"
   },
   "peerDependencies": {
     "react": ">=16.0.0",
-    "react-test-renderer": ">= 16.0.0"
+    "react-test-renderer": ">=16.0.0"
   },
   "scripts": {
     "test": "jest",
@@ -71,8 +69,5 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
-  },
-  "resolutions": {
-    "eslint-plugin-import": "2.18.0"
   }
 }

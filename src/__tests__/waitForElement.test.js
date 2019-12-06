@@ -1,10 +1,9 @@
 // @flow
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { render, fireEvent, waitForElement } from '..';
 
-class Banana extends React.Component<*, *> {
+class Banana extends React.Component<any> {
   changeFresh = () => {
     this.props.onChangeFresh();
   };
@@ -21,7 +20,7 @@ class Banana extends React.Component<*, *> {
   }
 }
 
-class BananaContainer extends React.Component<*, *> {
+class BananaContainer extends React.Component<{}, any> {
   state = { fresh: false };
 
   onChangeFresh = async () => {
