@@ -1,6 +1,13 @@
+// @flow
+let cleanupQueue = new Set();
+
 export default function cleanup() {
-  cleanup.queue.forEach(fn => fn());
-  cleanup.queue.clear();
+  cleanupQueue.forEach(fn => fn());
+  cleanupQueue.clear();
 }
 
-cleanup.queue = new Set();
+export function addToCleanupQueue(
+  fn: (nextElement?: React$Element<any>) => void
+) {
+  cleanupQueue.add(fn);
+}

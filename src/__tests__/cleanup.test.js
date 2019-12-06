@@ -17,8 +17,11 @@ class Test extends React.Component<*> {
 
 test('cleanup', () => {
   const fn = jest.fn();
+
+  render(<Test onUnmount={fn} />);
   render(<Test onUnmount={fn} />);
   expect(fn).not.toHaveBeenCalled();
+
   cleanup();
-  expect(fn).toHaveBeenCalled();
+  expect(fn).toHaveBeenCalledTimes(2);
 });

@@ -2,12 +2,12 @@
 import * as React from 'react';
 import TestRenderer, { type ReactTestRenderer } from 'react-test-renderer'; // eslint-disable-line import/no-extraneous-dependencies
 import act from './act';
+import { addToCleanupQueue } from './cleanup';
 import { getByAPI } from './helpers/getByAPI';
 import { queryByAPI } from './helpers/queryByAPI';
 import a11yAPI from './helpers/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
-import cleanup from './cleanup';
 
 type Options = {
   wrapper?: React.ComponentType<any>,
@@ -35,7 +35,8 @@ export default function render<T>(
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
 
-  cleanup.queue.add(renderer.unmount);
+  addToCleanupQueue(renderer.unmount);
+
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),
