@@ -12,7 +12,7 @@ type ArrayQueryAllFn = (
 type ArrayGetFn = (string | Array<string>) => ReactTestInstance;
 type ArrayGetAllFn = (string | Array<string>) => Array<ReactTestInstance>;
 
-type A11yAPI = {
+type A11yAPI = {|
   getByA11yLabel: GetFn,
   getAllByA11yLabel: GetAllFn,
   queryByA11yLabel: QueryFn,
@@ -29,7 +29,7 @@ type A11yAPI = {
   getAllByA11yStates: ArrayGetAllFn,
   queryByA11yStates: ArrayQueryFn,
   queryAllByA11yStates: ArrayQueryAllFn,
-};
+|};
 
 export function matchStringValue(prop?: string, matcher: string | RegExp) {
   if (!prop) {
@@ -55,7 +55,6 @@ export function matchArrayValue(
     return prop.includes(matcher);
   }
 
-  // $FlowFixMe - callback is sync hence prop exists
   return !matcher.some(e => !prop.includes(e));
 }
 

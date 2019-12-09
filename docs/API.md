@@ -318,14 +318,14 @@ expect(onEndReached).toHaveBeenCalled();
 Defined as:
 
 ```jsx
-function waitForExpect<T: *>(
+function waitForElement<T>(
   expectation: () => T,
   timeout: number = 4500,
   interval: number = 50
 ): Promise<T> {}
 ```
 
-Waits for non-deterministic periods of time until your element appears or times out. `waitForExpect` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
+Waits for non-deterministic periods of time until your element appears or times out. `waitForElement` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
 
 ```jsx
 import { render, waitForElement } from 'react-testing-library';

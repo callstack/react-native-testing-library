@@ -3,6 +3,7 @@
   "rules": {
     "flowtype/no-weak-types": 0,
     "react-native/no-raw-text": 0,
-    "no-console": 1
+    "no-console": 1,
+    "react/no-multi-comp": 0
   }
 }

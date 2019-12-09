@@ -69,7 +69,7 @@ const getTextInputNodeByDisplayValue = (node, value) => {
 };
 
 export const getByName = (instance: ReactTestInstance) =>
-  function getByNameFn(name: string | React.ComponentType<*>) {
+  function getByNameFn(name: string | React.ComponentType<any>) {
     logDeprecationWarning('getByName', 'getByType');
     try {
       return typeof name === 'string'
@@ -81,7 +81,7 @@ export const getByName = (instance: ReactTestInstance) =>
   };
 
 export const getByType = (instance: ReactTestInstance) =>
-  function getByTypeFn(type: React.ComponentType<*>) {
+  function getByTypeFn(type: React.ComponentType<any>) {
     try {
       return instance.findByType(type);
     } catch (error) {
@@ -139,7 +139,7 @@ export const getByTestId = (instance: ReactTestInstance) =>
   };
 
 export const getAllByName = (instance: ReactTestInstance) =>
-  function getAllByNameFn(name: string | React.ComponentType<*>) {
+  function getAllByNameFn(name: string | React.ComponentType<any>) {
     logDeprecationWarning('getAllByName', 'getAllByType');
     const results =
       typeof name === 'string'
@@ -152,7 +152,7 @@ export const getAllByName = (instance: ReactTestInstance) =>
   };
 
 export const getAllByType = (instance: ReactTestInstance) =>
-  function getAllByTypeFn(type: React.ComponentType<*>) {
+  function getAllByTypeFn(type: React.ComponentType<any>) {
     const results = instance.findAllByType(type);
     if (results.length === 0) {
       throw new ErrorWithStack('No instances found', getAllByTypeFn);

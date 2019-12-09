@@ -12,7 +12,7 @@ function TextComponent({ text }) {
   return <Text>{text}</Text>;
 }
 
-class Button extends React.Component<*, *> {
+class Button extends React.Component<any, any> {
   state = { counter: 0 };
 
   onPress = async () => {

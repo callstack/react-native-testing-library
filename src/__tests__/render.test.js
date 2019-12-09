@@ -1,5 +1,4 @@
 // @flow
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {
   View,
@@ -18,7 +17,7 @@ const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 
-class Button extends React.Component<*> {
+class Button extends React.Component<any> {
   render() {
     return (
       <TouchableOpacity onPress={this.props.onPress}>
@@ -28,7 +27,7 @@ class Button extends React.Component<*> {
   }
 }
 
-class Banana extends React.Component<*, *> {
+class Banana extends React.Component<any, any> {
   state = {
     fresh: false,
   };
