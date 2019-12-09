@@ -115,6 +115,45 @@ toJSON(): ReactTestRendererJSON | null
 
 Get the rendered component JSON representation, e.g. for snapshot testing.
 
+## `cleanup`
+
+```ts
+const cleanup: () => void
+```
+
+Unmounts React trees that were mounted with `render`.
+
+For example, if you're using the `jest` testing framework, then you would need to use the `afterEach` hook like so:
+
+```jsx
+import { cleanup, render } from 'react-native-testing-library'
+import { View } from 'react-native'
+
+afterEach(cleanup)
+
+it('renders a view', () => {
+  render(<View />)
+  // ...
+})
+```
+
+The `afterEach(cleanup)` call also works in `describe` blocks:
+
+```jsx
+describe('when logged in', () => {
+  afterEach(cleanup)
+
+  it('renders the user', () => {
+    render(<SiteHeader />)
+    // ...
+  });
+})
+```
+
+Failing to call `cleanup` when you've called `render` could result in a memory leak and tests which are not "idempotent" (which can lead to difficult to debug errors in your tests).
+
+The alternative to `cleanup` is balancing every `render` with an `unmount` method call.
+
 ## `fireEvent`
 
 ```ts

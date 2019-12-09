@@ -2,6 +2,7 @@
 import * as React from 'react';
 import TestRenderer, { type ReactTestRenderer } from 'react-test-renderer'; // eslint-disable-line import/no-extraneous-dependencies
 import act from './act';
+import { addToCleanupQueue } from './cleanup';
 import { getByAPI } from './helpers/getByAPI';
 import { queryByAPI } from './helpers/queryByAPI';
 import a11yAPI from './helpers/a11yAPI';
@@ -33,6 +34,8 @@ export default function render<T>(
   );
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
+
+  addToCleanupQueue(renderer.unmount);
 
   return {
     ...getByAPI(instance),
