@@ -260,13 +260,13 @@ fireEvent<span class="token punctuation">.</span><span class="token function">sc
 <li><a href="https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitForElement.test.js"><code>Example code</code></a></li>
 </ul>
 <p>Defined as:</p>
-<pre><code class="hljs css language-jsx"><span class="token keyword">function</span> waitForExpect<span class="token operator">&lt;</span><span class="token constant">T</span><span class="token punctuation">:</span> <span class="token operator">*</span><span class="token operator">></span><span class="token punctuation">(</span>
+<pre><code class="hljs css language-jsx"><span class="token keyword">function</span> waitForElement<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>T</span><span class="token punctuation">></span></span><span class="token punctuation">(</span>
   expectation<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token constant">T</span><span class="token punctuation">,</span>
   timeout<span class="token punctuation">:</span> number <span class="token operator">=</span> <span class="token number">4500</span><span class="token punctuation">,</span>
   interval<span class="token punctuation">:</span> number <span class="token operator">=</span> <span class="token number">50</span>
 <span class="token punctuation">)</span><span class="token punctuation">:</span> Promise<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>T</span><span class="token punctuation">></span></span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
 </code></pre>
-<p>Waits for non-deterministic periods of time until your element appears or times out. <code>waitForExpect</code> periodically calls <code>expectation</code> every <code>interval</code> milliseconds to determine whether the element appeared or not.</p>
+<p>Waits for non-deterministic periods of time until your element appears or times out. <code>waitForElement</code> periodically calls <code>expectation</code> every <code>interval</code> milliseconds to determine whether the element appeared or not.</p>
 <pre><code class="hljs css language-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> render<span class="token punctuation">,</span> waitForElement <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'react-testing-library'</span><span class="token punctuation">;</span>
 
 <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'waiting for an Banana to be ready'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
