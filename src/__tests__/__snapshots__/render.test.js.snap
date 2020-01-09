@@ -57,6 +57,9 @@ exports[`debug 1`] = `
   >
     Second Text
   </Text>
+  <Text>
+    0
+  </Text>
 </View>"
 `;
 
@@ -117,6 +120,9 @@ exports[`debug changing component: bananaFresh button message should now be "fre
   >
     Second Text
   </Text>
+  <Text>
+    0
+  </Text>
 </View>"
 `;
 
@@ -161,6 +167,9 @@ exports[`debug: shallow 1`] = `
     testID=\\"duplicateText\\"
   >
     Second Text
+  </Text>
+  <Text>
+    0
   </Text>
 </View>"
 `;
@@ -208,6 +217,9 @@ exports[`debug: shallow with message 1`] = `
     testID=\\"duplicateText\\"
   >
     Second Text
+  </Text>
+  <Text>
+    0
   </Text>
 </View>"
 `;
@@ -270,6 +282,9 @@ exports[`debug: with message 1`] = `
     testID=\\"duplicateText\\"
   >
     Second Text
+  </Text>
+  <Text>
+    0
   </Text>
 </View>"
 `;

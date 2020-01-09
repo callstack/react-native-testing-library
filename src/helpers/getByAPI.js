@@ -22,8 +22,8 @@ const getNodeByText = (node, text) => {
     if (isTextComponent) {
       const textChildren = React.Children.map(
         node.props.children,
-        // In some cases child might be undefined
-        child => (child ? child.toString() : '')
+        // In some cases child might be undefined or null
+        child => (child !== undefined && child !== null ? child.toString() : '')
       );
       if (textChildren) {
         const textToTest = textChildren.join('');
