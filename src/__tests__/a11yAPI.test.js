@@ -39,6 +39,28 @@ class Button extends React.Component<any> {
   }
 }
 
+class NewButton extends React.Component<any> {
+  render() {
+    return (
+      <TouchableOpacity
+        accessibilityHint={BUTTON_HINT}
+        accessibilityLabel={BUTTON_LABEL}
+        accessibilityRole={BUTTON_ROLE}
+        accessibilityState={{ selected: true }}
+      >
+        <Typography
+          accessibilityHint={TEXT_HINT}
+          accessibilityLabel={TEXT_LABEL}
+          accessibilityRole={TEXT_ROLE}
+          accessibilityState={{ selected: true }}
+        >
+          {this.props.children}
+        </Typography>
+      </TouchableOpacity>
+    );
+  }
+}
+
 function Section() {
   return (
     <>
@@ -51,6 +73,22 @@ function Section() {
         Title
       </Typography>
       <Button>{TEXT_LABEL}</Button>
+    </>
+  );
+}
+
+function NewSection() {
+  return (
+    <>
+      <Typography
+        accessibilityHint={TEXT_HINT}
+        accessibilityLabel={TEXT_LABEL}
+        accessibilityRole={TEXT_ROLE}
+        accessibilityState={{ selected: true, disabled: true }}
+      >
+        Title
+      </Typography>
+      <NewButton>{TEXT_LABEL}</NewButton>
     </>
   );
 }
@@ -158,4 +196,38 @@ test('getAllByA11yStates, queryAllByA11yStates', () => {
 
   expect(() => getAllByA11yStates([])).toThrow(NO_INSTANCES_FOUND);
   expect(queryAllByA11yStates(NO_MATCHES_TEXT)).toEqual([]);
+});
+
+test('getAllByA11yState, queryAllByA11yState', () => {
+  const { getAllByA11yState, queryAllByA11yState } = render(<NewSection />);
+
+  expect(getAllByA11yState({ selected: true })).toHaveLength(2);
+  expect(queryAllByA11yState({ selected: true })).toHaveLength(2);
+
+  expect(() => getAllByA11yState({})).toThrow(NO_INSTANCES_FOUND);
+  expect(queryAllByA11yState(NO_MATCHES_TEXT)).toEqual([]);
+});
+
+test('getByA11yState, queryByA11yState', () => {
+  const { getByA11yState, queryByA11yState } = render(<NewSection />);
+
+  expect(getByA11yState({ disabled: true }).props.accessibilityState).toEqual({
+    selected: true,
+    disabled: true,
+  });
+  const disabled = queryByA11yState({ disabled: true });
+  expect(disabled && disabled.props.accessibilityState.disabled).toEqual(true);
+  const disabledSelected = queryByA11yState({ selected: true, disabled: true });
+  expect(
+    disabledSelected && disabledSelected.props.accessibilityState
+  ).toEqual({ selected: true, disabled: true });
+
+  expect(() => getByA11yState(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
+  expect(queryByA11yState(NO_MATCHES_TEXT)).toBeNull();
+  expect(queryByA11yState({})).toBeNull();
+
+  expect(() => getByA11yState({ selected: true })).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => queryByA11yState({ selected: true })).toThrow(
+    FOUND_TWO_INSTANCES
+  );
 });

@@ -145,6 +145,16 @@ const queryByA11yRole: ReactTestInstance = tree.queryByA11yRole('label');
 const queryAllByA11yRole: Array<ReactTestInstance> = tree.queryAllByA11yRole(
   'label'
 );
+const getByA11yStateArray: ReactTestInstance = tree.getByA11yState({ checked: true });
+const getAllByA11yState: Array<
+    ReactTestInstance
+    > = tree.getAllByA11yState({ checked: true });
+const queryByA11yState: ReactTestInstance = tree.queryByA11yState({ checked: true });
+const queryAllByA11yState: Array<
+    ReactTestInstance
+    > = tree.queryAllByA11yState({ checked: true });
+
+// Legacy accessibility states queries
 const getByA11yStates: ReactTestInstance = tree.getByA11yStates('label');
 const getByA11yStatesArray: ReactTestInstance = tree.getByA11yStates(['label']);
 const getAllByA11yStates: Array<ReactTestInstance> = tree.getAllByA11yStates(

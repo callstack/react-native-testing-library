@@ -59,6 +59,10 @@ type ArrayQueryAllFn = (
 ) => Array<ReactTestInstance> | [];
 type ArrayGetFn = (text: string | Array<string>) => ReactTestInstance;
 type ArrayGetAllFn = (text: string | Array<string>) => Array<ReactTestInstance>;
+type ObjectQueryFn = (obj: Object) => ReactTestInstance | null;
+type ObjectQueryAllFn = (obj: Object) => Array<ReactTestInstance> | [];
+type ObjectGetFn = (obj: Object) => ReactTestInstance;
+type ObjectGetAllFn = (obj: Object) => Array<ReactTestInstance>;
 
 export interface A11yAPI {
   getByA11yLabel: GetFn;
@@ -73,6 +77,10 @@ export interface A11yAPI {
   getAllByA11yRole: GetAllFn;
   queryByA11yRole: QueryFn;
   queryAllByA11yRole: QueryAllFn;
+  getByA11yState: ObjectGetFn;
+  getAllByA11yState: ObjectGetAllFn;
+  queryByA11yState: ObjectQueryFn;
+  queryAllByA11yState: ObjectQueryAllFn;
   getByA11yStates: ArrayGetFn;
   getAllByA11yStates: ArrayGetAllFn;
   queryByA11yStates: ArrayQueryFn;

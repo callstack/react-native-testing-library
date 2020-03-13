@@ -11,6 +11,10 @@ type ArrayQueryAllFn = (
 ) => Array<ReactTestInstance> | [];
 type ArrayGetFn = (string | Array<string>) => ReactTestInstance;
 type ArrayGetAllFn = (string | Array<string>) => Array<ReactTestInstance>;
+type ObjectQueryFn = (obj: Object) => ReactTestInstance | null;
+type ObjectQueryAllFn = (obj: Object) => Array<ReactTestInstance> | [];
+type ObjectGetFn = (obj: Object) => ReactTestInstance;
+type ObjectGetAllFn = (obj: Object) => Array<ReactTestInstance>;
 
 type A11yAPI = {|
   getByA11yLabel: GetFn,
@@ -29,7 +33,26 @@ type A11yAPI = {|
   getAllByA11yStates: ArrayGetAllFn,
   queryByA11yStates: ArrayQueryFn,
   queryAllByA11yStates: ArrayQueryAllFn,
+  getByA11yState: ObjectGetFn,
+  getAllByA11yState: ObjectGetAllFn,
+  queryByA11yState: ObjectQueryFn,
+  queryAllByA11yState: ObjectQueryAllFn,
 |};
+
+export function matchObjectValue(prop?: Object, matcher: Object) {
+  if (
+    !prop ||
+    Object.getOwnPropertyNames(matcher).length === 0 ||
+    matcher.length === 0
+  ) {
+    return false;
+  }
+
+  return Object.entries(matcher).reduce(
+    (acc, curr) => acc && prop[curr[0]] === curr[1],
+    true
+  );
+}
 
 export function matchStringValue(prop?: string, matcher: string | RegExp) {
   if (!prop) {
@@ -89,6 +112,16 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
         queryAllBy: ['queryAllByA11yRole', 'queryAllByAccessibilityRole'],
       },
       matchStringValue
+    )(instance),
+    ...makeQuery(
+      'accessibilityState',
+      {
+        getBy: ['getByA11yState', 'getByAccessibilityState'],
+        getAllBy: ['getAllByA11yState', 'getAllByAccessibilityState'],
+        queryBy: ['queryByA11yState', 'queryByAccessibilityState'],
+        queryAllBy: ['queryAllByA11yState', 'queryAllByAccessibilityState'],
+      },
+      matchObjectValue
     )(instance),
     ...makeQuery(
       'accessibilityStates',
