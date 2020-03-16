@@ -84,6 +84,12 @@ const siteConfig = {
   // template. For example, if you need your repo's URL...
   repoUrl,
   usePrism: ['jsx'],
+  
+  // search
+  algolia: {
+    apiKey: 'cd9b8b73f97b64ed04570e41c507683f',
+    indexName: 'react-native-testing-library',
+  },
 };
 
 module.exports = siteConfig;

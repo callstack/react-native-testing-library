@@ -1,5 +1,4 @@
 // @flow
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {
   View,
@@ -18,7 +17,7 @@ const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 
-class Button extends React.Component<*> {
+class Button extends React.Component<any> {
   render() {
     return (
       <TouchableOpacity onPress={this.props.onPress}>
@@ -28,7 +27,7 @@ class Button extends React.Component<*> {
   }
 }
 
-class Banana extends React.Component<*, *> {
+class Banana extends React.Component<any, any> {
   state = {
     fresh: false,
   };
@@ -52,6 +51,7 @@ class Banana extends React.Component<*, *> {
   };
 
   render() {
+    const test = 0;
     return (
       <View>
         <Text>Is the banana fresh?</Text>
@@ -73,6 +73,7 @@ class Banana extends React.Component<*, *> {
         </Button>
         <Text testID="duplicateText">First Text</Text>
         <Text testID="duplicateText">Second Text</Text>
+        <Text>{test}</Text>
       </View>
     );
   }
@@ -122,7 +123,7 @@ test('getByName, queryByName', () => {
 
   expect(bananaFresh.props.children).toBe('not fresh');
   expect(() => getByName('InExistent')).toThrow('No instances found');
-  expect(() => getByName(Text)).toThrow('Expected 1 but found 5');
+  expect(() => getByName(Text)).toThrow('Expected 1 but found 6');
 
   expect(queryByName('Button')).toBe(button);
   expect(queryByName('InExistent')).toBeNull();
@@ -166,9 +167,12 @@ test('getByText, queryByText', () => {
   expect(sameButton.props.children).toBe('not fresh');
   expect(() => getByText('InExistent')).toThrow('No instances found');
 
+  const zeroText = getByText('0');
+
   expect(queryByText(/change/i)).toBe(button);
   expect(queryByText('InExistent')).toBeNull();
   expect(() => queryByText(/fresh/)).toThrow('Expected 1 but found 3');
+  expect(queryByText('0')).toBe(zeroText);
 });
 
 test('getByText, queryByText with children as Array', () => {

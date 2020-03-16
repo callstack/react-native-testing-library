@@ -135,6 +135,7 @@ export declare const shallow: <P = {}>(
   instance: ReactTestInstance | React.ReactElement<P>
 ) => { output: React.ReactElement<P> };
 export declare const flushMicrotasksQueue: () => Promise<any>;
+export declare const cleanup: () => void;
 export declare const debug: DebugAPI;
 export declare const fireEvent: FireEventAPI;
 export declare const waitForElement: WaitForElementFunction;

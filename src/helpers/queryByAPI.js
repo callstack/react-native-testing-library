@@ -19,7 +19,7 @@ import {
 import { logDeprecationWarning, createQueryByError } from './errors';
 
 export const queryByName = (instance: ReactTestInstance) =>
-  function queryByNameFn(name: string | React.ComponentType<*>) {
+  function queryByNameFn(name: string | React.ComponentType<any>) {
     logDeprecationWarning('queryByName', 'getByName');
     try {
       return getByName(instance)(name);
@@ -29,7 +29,7 @@ export const queryByName = (instance: ReactTestInstance) =>
   };
 
 export const queryByType = (instance: ReactTestInstance) =>
-  function queryByTypeFn(type: React.ComponentType<*>) {
+  function queryByTypeFn(type: React.ComponentType<any>) {
     try {
       return getByType(instance)(type);
     } catch (error) {
@@ -83,7 +83,7 @@ export const queryByTestId = (instance: ReactTestInstance) =>
   };
 
 export const queryAllByName = (instance: ReactTestInstance) => (
-  name: string | React.ComponentType<*>
+  name: string | React.ComponentType<any>
 ) => {
   logDeprecationWarning('queryAllByName', 'getAllByName');
   try {
@@ -94,7 +94,7 @@ export const queryAllByName = (instance: ReactTestInstance) => (
 };
 
 export const queryAllByType = (instance: ReactTestInstance) => (
-  type: React.ComponentType<*>
+  type: React.ComponentType<any>
 ) => {
   try {
     return getAllByType(instance)(type);
