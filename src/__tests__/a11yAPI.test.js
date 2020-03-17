@@ -9,11 +9,12 @@ const BUTTON_ROLE = 'button';
 const TEXT_LABEL = 'cool text';
 const TEXT_HINT = 'static text';
 const TEXT_ROLE = 'link';
-const NO_MATCHES_TEXT = 'not-existent-element';
+// Little hack to make all the methods happy with type
+const NO_MATCHES_TEXT: any = 'not-existent-element';
 const NO_INSTANCES_FOUND = 'No instances found';
 const FOUND_TWO_INSTANCES = 'Expected 1 but found 2 instances';
 
-const Typography = ({ children, ...rest }) => {
+const Typography = ({ children, ...rest }: any) => {
   return <Text {...rest}>{children}</Text>;
 };
 
@@ -31,6 +32,7 @@ class Button extends React.Component<any> {
           accessibilityLabel={TEXT_LABEL}
           accessibilityRole={TEXT_ROLE}
           accessibilityStates={['selected']}
+          accessibilityState={{ expanded: false, selected: true }}
         >
           {this.props.children}
         </Typography>
@@ -47,6 +49,7 @@ function Section() {
         accessibilityLabel={TEXT_LABEL}
         accessibilityRole={TEXT_ROLE}
         accessibilityStates={['selected', 'disabled']}
+        accessibilityState={{ expanded: false }}
       >
         Title
       </Typography>
@@ -158,4 +161,44 @@ test('getAllByA11yStates, queryAllByA11yStates', () => {
 
   expect(() => getAllByA11yStates([])).toThrow(NO_INSTANCES_FOUND);
   expect(queryAllByA11yStates(NO_MATCHES_TEXT)).toEqual([]);
+});
+
+test('getByA11yState, queryByA11yState', () => {
+  const { getByA11yState, queryByA11yState } = render(<Section />);
+
+  expect(getByA11yState({ selected: true }).props.accessibilityState).toEqual({
+    selected: true,
+    expanded: false,
+  });
+  expect(
+    queryByA11yState({ selected: true })?.props.accessibilityState
+  ).toEqual({
+    selected: true,
+    expanded: false,
+  });
+
+  expect(() => getByA11yState({ disabled: true })).toThrow(NO_INSTANCES_FOUND);
+  expect(queryByA11yState({ disabled: true })).toEqual(null);
+
+  expect(() => getByA11yState({ expanded: false })).toThrow(
+    FOUND_TWO_INSTANCES
+  );
+  expect(() => queryByA11yState({ expanded: false })).toThrow(
+    FOUND_TWO_INSTANCES
+  );
+});
+
+test('getAllByA11yState, queryAllByA11yState', () => {
+  const { getAllByA11yState, queryAllByA11yState } = render(<Section />);
+
+  expect(getAllByA11yState({ selected: true }).length).toEqual(1);
+  expect(queryAllByA11yState({ selected: true }).length).toEqual(1);
+
+  expect(() => getAllByA11yState({ disabled: true })).toThrow(
+    NO_INSTANCES_FOUND
+  );
+  expect(queryAllByA11yState({ disabled: true })).toEqual([]);
+
+  expect(getAllByA11yState({ expanded: false }).length).toEqual(2);
+  expect(queryAllByA11yState({ expanded: false }).length).toEqual(2);
 });

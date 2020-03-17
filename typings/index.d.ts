@@ -49,35 +49,81 @@ export interface QueryByAPI {
   ) => Array<ReactTestInstance> | [];
 }
 
-type QueryFn = (text: string | RegExp) => ReactTestInstance | null;
-type QueryAllFn = (text: string | RegExp) => Array<ReactTestInstance> | [];
-type GetFn = (text: string | RegExp) => ReactTestInstance;
-type GetAllFn = (text: string | RegExp) => Array<ReactTestInstance>;
-type ArrayQueryFn = (text: string | Array<string>) => ReactTestInstance | null;
-type ArrayQueryAllFn = (
-  text: string | Array<string>
-) => Array<ReactTestInstance> | [];
-type ArrayGetFn = (text: string | Array<string>) => ReactTestInstance;
-type ArrayGetAllFn = (text: string | Array<string>) => Array<ReactTestInstance>;
+export type A11yRole =
+  | 'none'
+  | 'button'
+  | 'link'
+  | 'search'
+  | 'image'
+  | 'keyboardkey'
+  | 'text'
+  | 'adjustable'
+  | 'imagebutton'
+  | 'header'
+  | 'summary'
+  | 'alert'
+  | 'checkbox'
+  | 'combobox'
+  | 'menu'
+  | 'menubar'
+  | 'menuitem'
+  | 'progressbar'
+  | 'radio'
+  | 'radiogroup'
+  | 'scrollbar'
+  | 'spinbutton'
+  | 'switch'
+  | 'tab'
+  | 'tablist'
+  | 'timer'
+  | 'toolbar';
 
-export interface A11yAPI {
-  getByA11yLabel: GetFn;
-  getAllByA11yLabel: GetAllFn;
-  queryByA11yLabel: QueryFn;
-  queryAllByA11yLabel: QueryAllFn;
-  getByA11yHint: GetFn;
-  getAllByA11yHint: GetAllFn;
-  queryByA11yHint: QueryFn;
-  queryAllByA11yHint: QueryAllFn;
-  getByA11yRole: GetFn;
-  getAllByA11yRole: GetAllFn;
-  queryByA11yRole: QueryFn;
-  queryAllByA11yRole: QueryAllFn;
-  getByA11yStates: ArrayGetFn;
-  getAllByA11yStates: ArrayGetAllFn;
-  queryByA11yStates: ArrayQueryFn;
-  queryAllByA11yStates: ArrayQueryAllFn;
-}
+export type A11yState = {
+  disabled?: boolean,
+  selected?: boolean,
+  checked?: boolean | 'mixed',
+  busy?: boolean,
+  expanded?: boolean,
+};
+
+export type A11yStates = 'selected' | 'disabled';
+
+type GetReturn = ReactTestInstance;
+type GetAllReturn = Array<ReactTestInstance>;
+type QueryReturn = ReactTestInstance | null;
+type QueryAllReturn = Array<ReactTestInstance> | [];
+
+type A11yAPI = {
+  // Label
+  getByA11yLabel: (matcher: string | RegExp) => GetReturn,
+  getAllByA11yLabel: (matcher: string | RegExp) => GetAllReturn,
+  queryByA11yLabel: (matcher: string | RegExp) => QueryReturn,
+  queryAllByA11yLabel: (matcher: string | RegExp) => QueryAllReturn,
+
+  // Hint
+  getByA11yHint: (matcher: string | RegExp) => GetReturn,
+  getAllByA11yHint: (matcher: string | RegExp) => GetAllReturn,
+  queryByA11yHint: (matcher: string | RegExp) => QueryReturn,
+  queryAllByA11yHint: (matcher: string | RegExp) => QueryAllReturn,
+
+  // Role
+  getByA11yRole: (matcher: A11yRole | RegExp) => GetReturn,
+  getAllByA11yRole: (matcher: A11yRole | RegExp) => GetAllReturn,
+  queryByA11yRole: (matcher: A11yRole | RegExp) => QueryReturn,
+  queryAllByA11yRole: (matcher: A11yRole | RegExp) => QueryAllReturn,
+
+  // States
+  getByA11yStates: (matcher: A11yStates | Array<A11yStates>) => GetReturn,
+  getAllByA11yStates: (matcher: A11yStates | Array<A11yStates>) => GetAllReturn,
+  queryByA11yStates: (matcher: A11yStates | Array<A11yStates>) => QueryReturn,
+  queryAllByA11yStates: (matcher: A11yStates | Array<A11yStates>) => QueryAllReturn,
+
+  // State
+  getByA11yState: (matcher: A11yState) => GetReturn,
+  getAllByA11yState: (matcher: A11yState) => GetAllReturn,
+  queryByA11yState: (matcher: A11yState) => QueryReturn,
+  queryAllByA11yState: (matcher: A11yState) => QueryAllReturn,
+};
 
 export interface Thenable {
   then: (resolve: () => any, reject?: () => any) => any;
