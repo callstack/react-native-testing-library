@@ -13,30 +13,6 @@ export const createLibraryNotSupportedError = (error: Error) =>
     `Currently the only supported library to search by text is "react-native".\n\n${error.message}`
   );
 
-const warned = {
-  getByName: false,
-  getAllByName: false,
-  queryByName: false,
-  queryAllByName: false,
-};
-
-export const logDeprecationWarning = (
-  deprecatedFnName: string,
-  alternativeFnName: string
-) => {
-  if (warned[deprecatedFnName]) {
-    return;
-  }
-  console.warn(`Deprecation Warning:
-
-  "${deprecatedFnName}" is deprecated and will be removed in next major release. Please use "${alternativeFnName}" instead.
-
-  Docs: https://github.com/callstack/react-native-testing-library#${alternativeFnName.toLowerCase()}-type-reactcomponenttype
-    `);
-
-  warned[deprecatedFnName] = true;
-};
-
 export const prepareErrorMessage = (error: Error) =>
   // Strip info about custom predicate
   error.message.replace(/ matching custom predicate[^]*/gm, '');
@@ -47,3 +23,34 @@ export const createQueryByError = (error: Error, callsite: Function) => {
   }
   throw new ErrorWithStack(error.message, callsite);
 };
+
+const warned = {
+  getByName: false,
+  getAllByName: false,
+  queryByName: false,
+  queryAllByName: false,
+
+  getByProps: false,
+  getAllByProps: false,
+  queryByProps: false,
+  queryAllByProps: false,
+
+  getByType: false,
+  getAllByType: false,
+  queryByType: false,
+  queryAllByType: false,
+};
+
+export function printDeprecationWarning(functionName: string) {
+  if (warned[functionName]) {
+    return;
+  }
+
+  console.warn(`
+  Deprecation Warning:
+  ${functionName} is not recommended for use and has been renamed to UNSAFE_${functionName}.
+  In react-native-testing-library 2.x only the UNSAFE_${functionName} name will work.
+  `);
+
+  warned[functionName] = true;
+}
