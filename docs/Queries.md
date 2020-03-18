@@ -187,14 +187,23 @@ const element = getByA11yValue({ min: 40 });
 
 The interface is the same as for other queries, but we won't provide full names so that they're harder to find by search engines.
 
-### `UNSAFE_ByType`
+### `UNSAFE_ByType`, `ByType`
 
 > Note: added in v1.4
 
+> This method has been **deprecated** and has been prepended with `UNSAFE_` prefix. In react-native-testing-library 2.x only the prefixed version will work.
+
 A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
 
-### `UNSAFE_ByProps`
+### `UNSAFE_ByProps`, `ByProps`
+
+> This method has been **deprecated** and has been prepended with `UNSAFE_` prefix. In react-native-testing-library 2.x only the prefixed version will work.
 
 A method returning a `ReactTestInstance` with matching props object
+
+### `ByName`
+
+> This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. **DON'T USE IT**. It will be removed in next major release (v2.0). Use [`getByTestId`](#bytestid) instead. It's listed here only for back-compat purposes for early adopters of the library
+A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
 
 </details>
