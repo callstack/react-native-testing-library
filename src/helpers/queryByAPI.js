@@ -2,35 +2,19 @@
 import * as React from 'react';
 import {
   getByTestId,
-  getByName,
   getByType,
   getByText,
   getByPlaceholder,
   getByDisplayValue,
   getByProps,
   getAllByTestId,
-  getAllByName,
   getAllByType,
   getAllByText,
   getAllByPlaceholder,
   getAllByDisplayValue,
   getAllByProps,
 } from './getByAPI';
-import {
-  createQueryByError,
-  printDeprecationWarning,
-  printUnsafeWarning,
-} from './errors';
-
-export const queryByName = (instance: ReactTestInstance, warnFn?: Function) =>
-  function queryByNameFn(name: string | React.ComponentType<any>) {
-    warnFn && warnFn('queryByName');
-    try {
-      return getByName(instance)(name);
-    } catch (error) {
-      return createQueryByError(error, queryByNameFn);
-    }
-  };
+import { createQueryByError, printUnsafeWarning } from './errors';
 
 export const queryByType = (instance: ReactTestInstance, warnFn?: Function) =>
   function queryByTypeFn(type: React.ComponentType<any>) {
@@ -87,18 +71,6 @@ export const queryByTestId = (instance: ReactTestInstance) =>
       return createQueryByError(error, queryByTestIdFn);
     }
   };
-
-export const queryAllByName = (
-  instance: ReactTestInstance,
-  warnFn?: Function
-) => (name: string | React.ComponentType<any>) => {
-  warnFn && warnFn('queryAllByName');
-  try {
-    return getAllByName(instance)(name);
-  } catch (error) {
-    return [];
-  }
-};
 
 export const queryAllByType = (
   instance: ReactTestInstance,
@@ -166,23 +138,17 @@ export const queryAllByTestId = (instance: ReactTestInstance) => (
 
 export const queryByAPI = (instance: ReactTestInstance) => ({
   queryByTestId: queryByTestId(instance),
-  queryByName: queryByName(instance, printDeprecationWarning),
-  queryByType: queryByType(instance, printUnsafeWarning),
   queryByText: queryByText(instance),
   queryByPlaceholder: queryByPlaceholder(instance),
   queryByDisplayValue: queryByDisplayValue(instance),
-  queryByProps: queryByProps(instance, printUnsafeWarning),
   queryAllByTestId: queryAllByTestId(instance),
-  queryAllByName: queryAllByName(instance, printDeprecationWarning),
-  queryAllByType: queryAllByType(instance, printUnsafeWarning),
   queryAllByText: queryAllByText(instance),
   queryAllByPlaceholder: queryAllByPlaceholder(instance),
   queryAllByDisplayValue: queryAllByDisplayValue(instance),
-  queryAllByProps: queryAllByProps(instance, printUnsafeWarning),
 
   // Unsafe aliases
-  UNSAFE_queryByType: queryByType(instance),
-  UNSAFE_queryAllByType: queryAllByType(instance),
-  UNSAFE_queryByProps: queryByProps(instance),
-  UNSAFE_queryAllByProps: queryAllByProps(instance),
+  UNSAFE_queryByType: queryByType(instance, printUnsafeWarning),
+  UNSAFE_queryAllByType: queryAllByType(instance, printUnsafeWarning),
+  UNSAFE_queryByProps: queryByProps(instance, printUnsafeWarning),
+  UNSAFE_queryAllByProps: queryAllByProps(instance, printUnsafeWarning),
 });

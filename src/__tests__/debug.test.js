@@ -73,11 +73,11 @@ test('debug.deep', () => {
 test('debug.deep async test', async () => {
   // $FlowFixMe
   console.log = jest.fn();
-  const { toJSON, getByName } = render(
+  const { toJSON, getByText } = render(
     <Button onPress={jest.fn} text="Press me" />
   );
 
-  fireEvent.press(getByName('TouchableOpacity'));
+  fireEvent.press(getByText(/Press me/g));
   await flushMicrotasksQueue();
 
   debug.deep(toJSON());

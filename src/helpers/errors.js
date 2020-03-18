@@ -25,34 +25,16 @@ export const createQueryByError = (error: Error, callsite: Function) => {
 };
 
 const warned = {
-  getByName: false,
-  getAllByName: false,
-  queryByName: false,
-  queryAllByName: false,
+  UNSAFE_getByProps: false,
+  UNSAFE_getAllByProps: false,
+  UNSAFE_queryByProps: false,
+  UNSAFE_queryAllByProps: false,
 
-  getByProps: false,
-  getAllByProps: false,
-  queryByProps: false,
-  queryAllByProps: false,
-
-  getByType: false,
-  getAllByType: false,
-  queryByType: false,
-  queryAllByType: false,
+  UNSAFE_getByType: false,
+  UNSAFE_getAllByType: false,
+  UNSAFE_queryByType: false,
+  UNSAFE_queryAllByType: false,
 };
-
-export function printDeprecationWarning(functionName: string) {
-  if (warned[functionName]) {
-    return;
-  }
-
-  console.warn(`
-  Deprecation Warning:
-  ${functionName} is not recommended for use and will be deleted in react-native-testing-library 2.x.
-  `);
-
-  warned[functionName] = true;
-}
 
 export function printUnsafeWarning(functionName: string) {
   if (warned[functionName]) {
@@ -61,8 +43,7 @@ export function printUnsafeWarning(functionName: string) {
 
   console.warn(`
   Deprecation Warning:
-  ${functionName} is not recommended for use and has been renamed to UNSAFE_${functionName}.
-  In react-native-testing-library 2.x only the UNSAFE_${functionName} name will work.
+  ${functionName} has been deprecated and is not recommended.
   `);
 
   warned[functionName] = true;

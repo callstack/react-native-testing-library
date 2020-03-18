@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import { View, Text } from 'react-native';
-import { shallow, render } from '..';
+import { render } from '..';
+import shallow from '../shallow';
 
 type Props = {|
   +dummyID?: string,

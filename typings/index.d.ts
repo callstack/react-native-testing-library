@@ -3,22 +3,16 @@ import { AccessibilityState, AccessibilityStates, AccessibilityRole } from 'reac
 import { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
 
 export interface GetByAPI {
-  getByName: (name: React.ReactType | string) => ReactTestInstance;
-  getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
   getByText: (text: string | RegExp) => ReactTestInstance;
   getByPlaceholder: (placeholder: string | RegExp) => ReactTestInstance;
   getByDisplayValue: (value: string | RegExp) => ReactTestInstance;
-  getByProps: (props: Record<string, any>) => ReactTestInstance;
   getByTestId: (testID: string) => ReactTestInstance;
   getAllByTestId: (testID: string) => Array<ReactTestInstance>;
-  getAllByName: (name: React.ReactType | string) => Array<ReactTestInstance>;
-  getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
   getAllByText: (text: string | RegExp) => Array<ReactTestInstance>;
   getAllByPlaceholder: (
     placeholder: string | RegExp
   ) => Array<ReactTestInstance>;
   getAllByDisplayValue: (value: string | RegExp) => Array<ReactTestInstance>;
-  getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>;
 
 
   // Unsafe aliases
@@ -29,31 +23,19 @@ export interface GetByAPI {
 }
 
 export interface QueryByAPI {
-  queryByName: (name: React.ReactType | string) => ReactTestInstance | null;
-  queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
   queryByText: (name: string | RegExp) => ReactTestInstance | null;
   queryByPlaceholder: (
     placeholder: string | RegExp
   ) => ReactTestInstance | null;
   queryByDisplayValue: (value: string | RegExp) => ReactTestInstance | null;
-  queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
   queryByTestId: (testID: string) => ReactTestInstance | null;
   queryAllByTestId: (testID: string) => Array<ReactTestInstance> | null;
-  queryAllByName: (
-    name: React.ReactType | string
-  ) => Array<ReactTestInstance> | [];
-  queryAllByType: <P>(
-    type: React.ComponentType<P>
-  ) => Array<ReactTestInstance> | [];
   queryAllByText: (text: string | RegExp) => Array<ReactTestInstance> | [];
   queryAllByPlaceholder: (
     placeholder: string | RegExp
   ) => Array<ReactTestInstance> | [];
   queryAllByDisplayValue: (
     value: string | RegExp
-  ) => Array<ReactTestInstance> | [];
-  queryAllByProps: (
-    props: Record<string, any>
   ) => Array<ReactTestInstance> | [];
 
   // Unsafe aliases

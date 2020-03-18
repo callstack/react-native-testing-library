@@ -5,15 +5,10 @@ import {
   ErrorWithStack,
   createLibraryNotSupportedError,
   prepareErrorMessage,
-  printDeprecationWarning,
   printUnsafeWarning,
 } from './errors';
 
 const filterNodeByType = (node, type) => node.type === type;
-
-const filterNodeByName = (node, name) =>
-  typeof node.type !== 'string' &&
-  (node.type.displayName === name || node.type.name === name);
 
 const getNodeByText = (node, text) => {
   try {
@@ -68,18 +63,6 @@ const getTextInputNodeByDisplayValue = (node, value) => {
     throw createLibraryNotSupportedError(error);
   }
 };
-
-export const getByName = (instance: ReactTestInstance, warnFn?: Function) =>
-  function getByNameFn(name: string | React.ComponentType<any>) {
-    warnFn && warnFn('getByName');
-    try {
-      return typeof name === 'string'
-        ? instance.find(node => filterNodeByName(node, name))
-        : instance.findByType(name);
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByNameFn);
-    }
-  };
 
 export const getByType = (instance: ReactTestInstance, warnFn?: Function) =>
   function getByTypeFn(type: React.ComponentType<any>) {
@@ -139,19 +122,6 @@ export const getByTestId = (instance: ReactTestInstance) =>
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByTestIdFn);
     }
-  };
-
-export const getAllByName = (instance: ReactTestInstance, warnFn?: Function) =>
-  function getAllByNameFn(name: string | React.ComponentType<any>) {
-    warnFn && warnFn('getAllByName');
-    const results =
-      typeof name === 'string'
-        ? instance.findAll(node => filterNodeByName(node, name))
-        : instance.findAllByType(name);
-    if (results.length === 0) {
-      throw new ErrorWithStack('No instances found', getAllByNameFn);
-    }
-    return results;
   };
 
 export const getAllByType = (instance: ReactTestInstance, warnFn?: Function) =>
@@ -234,23 +204,17 @@ export const getAllByTestId = (instance: ReactTestInstance) =>
 
 export const getByAPI = (instance: ReactTestInstance) => ({
   getByTestId: getByTestId(instance),
-  getByName: getByName(instance, printDeprecationWarning),
-  getByType: getByType(instance, printUnsafeWarning),
   getByText: getByText(instance),
   getByPlaceholder: getByPlaceholder(instance),
   getByDisplayValue: getByDisplayValue(instance),
-  getByProps: getByProps(instance, printUnsafeWarning),
   getAllByTestId: getAllByTestId(instance),
-  getAllByName: getAllByName(instance, printDeprecationWarning),
-  getAllByType: getAllByType(instance, printUnsafeWarning),
   getAllByText: getAllByText(instance),
   getAllByPlaceholder: getAllByPlaceholder(instance),
   getAllByDisplayValue: getAllByDisplayValue(instance),
-  getAllByProps: getAllByProps(instance, printUnsafeWarning),
 
   // Unsafe aliases
-  UNSAFE_getByType: getByType(instance),
-  UNSAFE_getAllByType: getAllByType(instance),
-  UNSAFE_getByProps: getByProps(instance),
-  UNSAFE_getAllByProps: getAllByProps(instance),
+  UNSAFE_getByType: getByType(instance, printUnsafeWarning),
+  UNSAFE_getAllByType: getAllByType(instance, printUnsafeWarning),
+  UNSAFE_getByProps: getByProps(instance, printUnsafeWarning),
+  UNSAFE_getAllByProps: getAllByProps(instance, printUnsafeWarning),
 });
