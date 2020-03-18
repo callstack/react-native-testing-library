@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { AccessibilityState, AccessibilityStates, AccessibilityRole } from 'react-native';
 import { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
 
 export interface GetByAPI {
@@ -49,45 +50,6 @@ export interface QueryByAPI {
   ) => Array<ReactTestInstance> | [];
 }
 
-export type A11yRole =
-  | 'none'
-  | 'button'
-  | 'link'
-  | 'search'
-  | 'image'
-  | 'keyboardkey'
-  | 'text'
-  | 'adjustable'
-  | 'imagebutton'
-  | 'header'
-  | 'summary'
-  | 'alert'
-  | 'checkbox'
-  | 'combobox'
-  | 'menu'
-  | 'menubar'
-  | 'menuitem'
-  | 'progressbar'
-  | 'radio'
-  | 'radiogroup'
-  | 'scrollbar'
-  | 'spinbutton'
-  | 'switch'
-  | 'tab'
-  | 'tablist'
-  | 'timer'
-  | 'toolbar';
-
-export type A11yState = {
-  disabled?: boolean,
-  selected?: boolean,
-  checked?: boolean | 'mixed',
-  busy?: boolean,
-  expanded?: boolean,
-};
-
-export type A11yStates = 'selected' | 'disabled';
-
 type GetReturn = ReactTestInstance;
 type GetAllReturn = Array<ReactTestInstance>;
 type QueryReturn = ReactTestInstance | null;
@@ -107,22 +69,22 @@ type A11yAPI = {
   queryAllByA11yHint: (matcher: string | RegExp) => QueryAllReturn,
 
   // Role
-  getByA11yRole: (matcher: A11yRole | RegExp) => GetReturn,
-  getAllByA11yRole: (matcher: A11yRole | RegExp) => GetAllReturn,
-  queryByA11yRole: (matcher: A11yRole | RegExp) => QueryReturn,
-  queryAllByA11yRole: (matcher: A11yRole | RegExp) => QueryAllReturn,
+  getByA11yRole: (matcher: AccessibilityRole | RegExp) => GetReturn,
+  getAllByA11yRole: (matcher: AccessibilityRole | RegExp) => GetAllReturn,
+  queryByA11yRole: (matcher: AccessibilityRole | RegExp) => QueryReturn,
+  queryAllByA11yRole: (matcher: AccessibilityRole | RegExp) => QueryAllReturn,
 
   // States
-  getByA11yStates: (matcher: A11yStates | Array<A11yStates>) => GetReturn,
-  getAllByA11yStates: (matcher: A11yStates | Array<A11yStates>) => GetAllReturn,
-  queryByA11yStates: (matcher: A11yStates | Array<A11yStates>) => QueryReturn,
-  queryAllByA11yStates: (matcher: A11yStates | Array<A11yStates>) => QueryAllReturn,
+  getByA11yStates: (matcher: AccessibilityStates | Array<AccessibilityStates>) => GetReturn,
+  getAllByA11yStates: (matcher: AccessibilityStates | Array<AccessibilityStates>) => GetAllReturn,
+  queryByA11yStates: (matcher: AccessibilityStates | Array<AccessibilityStates>) => QueryReturn,
+  queryAllByA11yStates: (matcher: AccessibilityStates | Array<AccessibilityStates>) => QueryAllReturn,
 
   // State
-  getByA11yState: (matcher: A11yState) => GetReturn,
-  getAllByA11yState: (matcher: A11yState) => GetAllReturn,
-  queryByA11yState: (matcher: A11yState) => QueryReturn,
-  queryAllByA11yState: (matcher: A11yState) => QueryAllReturn,
+  getByA11yState: (matcher: AccessibilityState) => GetReturn,
+  getAllByA11yState: (matcher: AccessibilityState) => GetAllReturn,
+  queryByA11yState: (matcher: AccessibilityState) => QueryReturn,
+  queryAllByA11yState: (matcher: AccessibilityState) => QueryAllReturn,
 };
 
 export interface Thenable {

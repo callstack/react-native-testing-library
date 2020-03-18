@@ -37,4 +37,12 @@ export type A11yState = {|
   expanded?: boolean,
 |};
 
-export type A11yStates = 'selected' | 'disabled';
+export type A11yStates =
+  | 'disabled'
+  | 'selected'
+  | 'checked'
+  | 'unchecked'
+  | 'busy'
+  | 'expanded'
+  | 'collapsed'
+  | 'hasPopup';
