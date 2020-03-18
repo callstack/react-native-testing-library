@@ -44,7 +44,7 @@ export function printUnsafeWarning(functionName: string) {
   console.warn(`
   Warning:
   ${functionName} promotes testing implementation details and is not recommended.
-  It may be removed it in the future. Please test observable outcomes of rendering components.
+  It may be removed in the future. Please test observable outcomes of rendering components.
   `);
 
   warned[functionName] = true;
