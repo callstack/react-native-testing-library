@@ -19,6 +19,13 @@ export interface GetByAPI {
   ) => Array<ReactTestInstance>;
   getAllByDisplayValue: (value: string | RegExp) => Array<ReactTestInstance>;
   getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>;
+
+
+  // Unsafe aliases
+  UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance,
+  UNSAFE_getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>,
+  UNSAFE_getByProps: (props: Record<string, any>) => ReactTestInstance,
+  UNSAFE_getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>,
 }
 
 export interface QueryByAPI {
@@ -48,6 +55,12 @@ export interface QueryByAPI {
   queryAllByProps: (
     props: Record<string, any>
   ) => Array<ReactTestInstance> | [];
+
+  // Unsafe aliases
+  UNSAFE_queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null,
+  UNSAFE_queryAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance> | [],
+  UNSAFE_queryByProps: (props: Record<string, any>) => ReactTestInstance | null,
+  UNSAFE_queryAllByProps: (props: Record<string, any>) => Array<ReactTestInstance> | [],
 }
 
 type GetReturn = ReactTestInstance;

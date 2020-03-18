@@ -16,11 +16,15 @@ import {
   getAllByDisplayValue,
   getAllByProps,
 } from './getByAPI';
-import { logDeprecationWarning, createQueryByError } from './errors';
+import {
+  createQueryByError,
+  printDeprecationWarning,
+  printUnsafeWarning,
+} from './errors';
 
-export const queryByName = (instance: ReactTestInstance) =>
+export const queryByName = (instance: ReactTestInstance, warnFn?: Function) =>
   function queryByNameFn(name: string | React.ComponentType<any>) {
-    logDeprecationWarning('queryByName', 'getByName');
+    warnFn && warnFn('queryByName');
     try {
       return getByName(instance)(name);
     } catch (error) {
@@ -28,8 +32,9 @@ export const queryByName = (instance: ReactTestInstance) =>
     }
   };
 
-export const queryByType = (instance: ReactTestInstance) =>
+export const queryByType = (instance: ReactTestInstance, warnFn?: Function) =>
   function queryByTypeFn(type: React.ComponentType<any>) {
+    warnFn && warnFn('queryByType');
     try {
       return getByType(instance)(type);
     } catch (error) {
@@ -64,8 +69,9 @@ export const queryByDisplayValue = (instance: ReactTestInstance) =>
     }
   };
 
-export const queryByProps = (instance: ReactTestInstance) =>
+export const queryByProps = (instance: ReactTestInstance, warnFn?: Function) =>
   function queryByPropsFn(props: { [propName: string]: any }) {
+    warnFn && warnFn('queryByProps');
     try {
       return getByProps(instance)(props);
     } catch (error) {
@@ -82,10 +88,11 @@ export const queryByTestId = (instance: ReactTestInstance) =>
     }
   };
 
-export const queryAllByName = (instance: ReactTestInstance) => (
-  name: string | React.ComponentType<any>
-) => {
-  logDeprecationWarning('queryAllByName', 'getAllByName');
+export const queryAllByName = (
+  instance: ReactTestInstance,
+  warnFn?: Function
+) => (name: string | React.ComponentType<any>) => {
+  warnFn && warnFn('queryAllByName');
   try {
     return getAllByName(instance)(name);
   } catch (error) {
@@ -93,9 +100,11 @@ export const queryAllByName = (instance: ReactTestInstance) => (
   }
 };
 
-export const queryAllByType = (instance: ReactTestInstance) => (
-  type: React.ComponentType<any>
-) => {
+export const queryAllByType = (
+  instance: ReactTestInstance,
+  warnFn?: Function
+) => (type: React.ComponentType<any>) => {
+  warnFn && warnFn('queryAllByType');
   try {
     return getAllByType(instance)(type);
   } catch (error) {
@@ -133,9 +142,11 @@ export const queryAllByDisplayValue = (instance: ReactTestInstance) => (
   }
 };
 
-export const queryAllByProps = (instance: ReactTestInstance) => (props: {
-  [propName: string]: any,
-}) => {
+export const queryAllByProps = (
+  instance: ReactTestInstance,
+  warnFn?: Function
+) => (props: { [propName: string]: any }) => {
+  warnFn && warnFn('queryAllByProps');
   try {
     return getAllByProps(instance)(props);
   } catch (error) {
@@ -155,17 +166,23 @@ export const queryAllByTestId = (instance: ReactTestInstance) => (
 
 export const queryByAPI = (instance: ReactTestInstance) => ({
   queryByTestId: queryByTestId(instance),
-  queryByName: queryByName(instance),
-  queryByType: queryByType(instance),
+  queryByName: queryByName(instance, printDeprecationWarning),
+  queryByType: queryByType(instance, printUnsafeWarning),
   queryByText: queryByText(instance),
   queryByPlaceholder: queryByPlaceholder(instance),
   queryByDisplayValue: queryByDisplayValue(instance),
-  queryByProps: queryByProps(instance),
+  queryByProps: queryByProps(instance, printUnsafeWarning),
   queryAllByTestId: queryAllByTestId(instance),
-  queryAllByName: queryAllByName(instance),
-  queryAllByType: queryAllByType(instance),
+  queryAllByName: queryAllByName(instance, printDeprecationWarning),
+  queryAllByType: queryAllByType(instance, printUnsafeWarning),
   queryAllByText: queryAllByText(instance),
   queryAllByPlaceholder: queryAllByPlaceholder(instance),
   queryAllByDisplayValue: queryAllByDisplayValue(instance),
-  queryAllByProps: queryAllByProps(instance),
+  queryAllByProps: queryAllByProps(instance, printUnsafeWarning),
+
+  // Unsafe aliases
+  UNSAFE_queryByType: queryByType(instance),
+  UNSAFE_queryAllByType: queryAllByType(instance),
+  UNSAFE_queryByProps: queryByProps(instance),
+  UNSAFE_queryAllByProps: queryAllByProps(instance),
 });
