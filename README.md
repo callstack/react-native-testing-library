@@ -13,7 +13,6 @@
 [![Version][version-badge]][package]
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
 [![Chat][chat-badge]][chat]
-[![Greenkeeper badge][greenkeeper-badge]][greenkeeper]
 [![Sponsored by Callstack][callstack-badge]][callstack]
 
 _Appreciation notice: This project is heavily inspired by [react-testing-library](https://github.com/kentcdodds/react-testing-library). Go check it out and use it to test your web React apps._
@@ -104,7 +103,5 @@ Supported and used by [Rally Health](https://www.rallyhealth.com/careers-home).
 [prs-welcome]: http://makeapullrequest.com
 [chat-badge]: https://img.shields.io/discord/426714625279524876.svg?style=flat-square&colorB=758ED3
 [chat]: https://discord.gg/QbGezWe
-[greenkeeper-badge]: https://badges.greenkeeper.io/callstack/react-native-testing-library.svg?style=flat-square
-[greenkeeper]: https://greenkeeper.io/
 [callstack-badge]: https://callstack.com/images/callstack-badge.svg
 [callstack]: https://callstack.com/open-source/?utm_source=github.com&utm_medium=referral&utm_campaign=react-native-testing-library&utm_term=readme
