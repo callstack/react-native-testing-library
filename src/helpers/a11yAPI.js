@@ -1,37 +1,48 @@
 // @flow
 import makeQuery from './makeQuery';
+import type { A11yRole, A11yStates, A11yState } from '../types.flow';
 
-type QueryFn = (string | RegExp) => ReactTestInstance | null;
-type QueryAllFn = (string | RegExp) => Array<ReactTestInstance> | [];
-type GetFn = (string | RegExp) => ReactTestInstance;
-type GetAllFn = (string | RegExp) => Array<ReactTestInstance>;
-type ArrayQueryFn = (string | Array<string>) => ReactTestInstance | null;
-type ArrayQueryAllFn = (
-  string | Array<string>
-) => Array<ReactTestInstance> | [];
-type ArrayGetFn = (string | Array<string>) => ReactTestInstance;
-type ArrayGetAllFn = (string | Array<string>) => Array<ReactTestInstance>;
+type GetReturn = ReactTestInstance;
+type GetAllReturn = Array<ReactTestInstance>;
+type QueryReturn = ReactTestInstance | null;
+type QueryAllReturn = Array<ReactTestInstance> | [];
 
 type A11yAPI = {|
-  getByA11yLabel: GetFn,
-  getAllByA11yLabel: GetAllFn,
-  queryByA11yLabel: QueryFn,
-  queryAllByA11yLabel: QueryAllFn,
-  getByA11yHint: GetFn,
-  getAllByA11yHint: GetAllFn,
-  queryByA11yHint: QueryFn,
-  queryAllByA11yHint: QueryAllFn,
-  getByA11yRole: GetFn,
-  getAllByA11yRole: GetAllFn,
-  queryByA11yRole: QueryFn,
-  queryAllByA11yRole: QueryAllFn,
-  getByA11yStates: ArrayGetFn,
-  getAllByA11yStates: ArrayGetAllFn,
-  queryByA11yStates: ArrayQueryFn,
-  queryAllByA11yStates: ArrayQueryAllFn,
+  // Label
+  getByA11yLabel: (string | RegExp) => GetReturn,
+  getAllByA11yLabel: (string | RegExp) => GetAllReturn,
+  queryByA11yLabel: (string | RegExp) => QueryReturn,
+  queryAllByA11yLabel: (string | RegExp) => QueryAllReturn,
+
+  // Hint
+  getByA11yHint: (string | RegExp) => GetReturn,
+  getAllByA11yHint: (string | RegExp) => GetAllReturn,
+  queryByA11yHint: (string | RegExp) => QueryReturn,
+  queryAllByA11yHint: (string | RegExp) => QueryAllReturn,
+
+  // Role
+  getByA11yRole: (A11yRole | RegExp) => GetReturn,
+  getAllByA11yRole: (A11yRole | RegExp) => GetAllReturn,
+  queryByA11yRole: (A11yRole | RegExp) => QueryReturn,
+  queryAllByA11yRole: (A11yRole | RegExp) => QueryAllReturn,
+
+  // States
+  getByA11yStates: (A11yStates | Array<A11yStates>) => GetReturn,
+  getAllByA11yStates: (A11yStates | Array<A11yStates>) => GetAllReturn,
+  queryByA11yStates: (A11yStates | Array<A11yStates>) => QueryReturn,
+  queryAllByA11yStates: (A11yStates | Array<A11yStates>) => QueryAllReturn,
+
+  // State
+  getByA11yState: A11yState => GetReturn,
+  getAllByA11yState: A11yState => GetAllReturn,
+  queryByA11yState: A11yState => QueryReturn,
+  queryAllByA11yState: A11yState => QueryAllReturn,
 |};
 
-export function matchStringValue(prop?: string, matcher: string | RegExp) {
+export function matchStringValue(
+  prop?: string,
+  matcher: string | RegExp
+): boolean {
   if (!prop) {
     return false;
   }
@@ -46,7 +57,7 @@ export function matchStringValue(prop?: string, matcher: string | RegExp) {
 export function matchArrayValue(
   prop?: Array<string>,
   matcher: string | Array<string>
-) {
+): boolean {
   if (!prop || matcher.length === 0) {
     return false;
   }
@@ -56,6 +67,14 @@ export function matchArrayValue(
   }
 
   return !matcher.some(e => !prop.includes(e));
+}
+
+export function matchObject<T: {}>(prop?: T, matcher: T): boolean {
+  return prop
+    ? Object.keys(matcher).length !== 0 &&
+        Object.keys(prop).length !== 0 &&
+        !Object.keys(matcher).some(key => prop[key] !== matcher[key])
+    : false;
 }
 
 const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
@@ -99,6 +118,16 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
         queryAllBy: ['queryAllByA11yStates', 'queryAllByAccessibilityStates'],
       },
       matchArrayValue
+    )(instance),
+    ...makeQuery(
+      'accessibilityState',
+      {
+        getBy: ['getByA11yState', 'getByAccessibilityState'],
+        getAllBy: ['getAllByA11yState', 'getAllByAccessibilityState'],
+        queryBy: ['queryByA11yState', 'queryByAccessibilityState'],
+        queryAllBy: ['queryAllByA11yState', 'queryAllByAccessibilityState'],
+      },
+      matchObject
     )(instance),
   }: any);
 

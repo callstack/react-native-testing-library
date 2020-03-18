@@ -137,32 +137,37 @@ const queryByA11yHint: ReactTestInstance = tree.queryByA11yHint('label');
 const queryAllByA11yHint: Array<ReactTestInstance> = tree.queryAllByA11yHint(
   'label'
 );
-const getByA11yRole: ReactTestInstance = tree.getByA11yRole('label');
+const getByA11yRole: ReactTestInstance = tree.getByA11yRole('button');
 const getAllByA11yRole: Array<ReactTestInstance> = tree.getAllByA11yRole(
-  'label'
+  'button'
 );
-const queryByA11yRole: ReactTestInstance = tree.queryByA11yRole('label');
+const queryByA11yRole: ReactTestInstance = tree.queryByA11yRole('button');
 const queryAllByA11yRole: Array<ReactTestInstance> = tree.queryAllByA11yRole(
-  'label'
+  'button'
 );
-const getByA11yStates: ReactTestInstance = tree.getByA11yStates('label');
-const getByA11yStatesArray: ReactTestInstance = tree.getByA11yStates(['label']);
+const getByA11yStates: ReactTestInstance = tree.getByA11yStates('selected');
+const getByA11yStatesArray: ReactTestInstance = tree.getByA11yStates(['selected']);
 const getAllByA11yStates: Array<ReactTestInstance> = tree.getAllByA11yStates(
-  'label'
+  'selected'
 );
 const getAllByA11yStatesArray: Array<
   ReactTestInstance
-> = tree.getAllByA11yStates(['label']);
-const queryByA11yStates: ReactTestInstance = tree.queryByA11yStates('label');
+> = tree.getAllByA11yStates(['selected']);
+const queryByA11yStates: ReactTestInstance = tree.queryByA11yStates('selected');
 const queryByA11yStatesArray: ReactTestInstance = tree.queryByA11yStates([
-  'label',
+  'selected',
 ]);
 const queryAllByA11yStates: Array<
   ReactTestInstance
-> = tree.queryAllByA11yStates('label');
+> = tree.queryAllByA11yStates('selected');
 const queryAllByA11yStatesArray: Array<
   ReactTestInstance
-> = tree.queryAllByA11yStates(['label']);
+> = tree.queryAllByA11yStates(['selected']);
+
+const getByA11yState: ReactTestInstance = tree.getByA11yState({ busy: true });
+const getAllByA11yState: Array<ReactTestInstance> = tree.getAllByA11yState({ busy: true });
+const queryByA11yState: ReactTestInstance = tree.queryByA11yState({ busy: true });
+const queryAllByA11yState: Array<ReactTestInstance> = tree.queryAllByA11yState({ busy: true });
 
 const debugFn = tree.debug();
 const debugFnWithMessage = tree.debug('my message');
