@@ -191,7 +191,7 @@ The interface is the same as for other queries, but we won't provide full names 
 
 > Note: added in v1.4
 
-> This method has been **deprecated** and is not recommended for use.
+> This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
 
 A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
 
