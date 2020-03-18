@@ -55,6 +55,14 @@ type GetAllReturn = Array<ReactTestInstance>;
 type QueryReturn = ReactTestInstance | null;
 type QueryAllReturn = Array<ReactTestInstance> | [];
 
+// Not yet available in DefinitelyTyped
+export type A11yValue = {
+  min?: number,
+  max?: number,
+  now?: number,
+  text?: string,
+};
+
 type A11yAPI = {
   // Label
   getByA11yLabel: (matcher: string | RegExp) => GetReturn,
@@ -85,6 +93,12 @@ type A11yAPI = {
   getAllByA11yState: (matcher: AccessibilityState) => GetAllReturn,
   queryByA11yState: (matcher: AccessibilityState) => QueryReturn,
   queryAllByA11yState: (matcher: AccessibilityState) => QueryAllReturn,
+
+  // Value
+  getByA11yValue: (matcher: A11yValue) => GetReturn,
+  getAllByA11yValue: (matcher: A11yValue) => GetAllReturn,
+  queryByA11yValue: (matcher: A11yValue) => QueryReturn,
+  queryAllByA11yValue: (matcher: A11yValue) => QueryAllReturn,
 };
 
 export interface Thenable {

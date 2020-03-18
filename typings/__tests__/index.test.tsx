@@ -169,6 +169,11 @@ const getAllByA11yState: Array<ReactTestInstance> = tree.getAllByA11yState({ bus
 const queryByA11yState: ReactTestInstance = tree.queryByA11yState({ busy: true });
 const queryAllByA11yState: Array<ReactTestInstance> = tree.queryAllByA11yState({ busy: true });
 
+const getByA11yValue: ReactTestInstance = tree.getByA11yValue({ min: 10 });
+const getAllByA11yValue: Array<ReactTestInstance> = tree.getAllByA11yValue({ min: 10 });
+const queryByA11yValue: ReactTestInstance = tree.queryByA11yValue({ min: 10 });
+const queryAllByA11yValue: Array<ReactTestInstance> = tree.queryAllByA11yValue({ min: 10 });
+
 const debugFn = tree.debug();
 const debugFnWithMessage = tree.debug('my message');
 

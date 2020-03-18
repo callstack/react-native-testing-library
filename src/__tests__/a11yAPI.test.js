@@ -33,6 +33,7 @@ class Button extends React.Component<any> {
           accessibilityRole={TEXT_ROLE}
           accessibilityStates={['selected']}
           accessibilityState={{ expanded: false, selected: true }}
+          accessibilityValue={{ min: 40, max: 60 }}
         >
           {this.props.children}
         </Typography>
@@ -50,6 +51,7 @@ function Section() {
         accessibilityRole={TEXT_ROLE}
         accessibilityStates={['selected', 'disabled']}
         accessibilityState={{ expanded: false }}
+        accessibilityValue={{ max: 60 }}
       >
         Title
       </Typography>
@@ -201,4 +203,36 @@ test('getAllByA11yState, queryAllByA11yState', () => {
 
   expect(getAllByA11yState({ expanded: false }).length).toEqual(2);
   expect(queryAllByA11yState({ expanded: false }).length).toEqual(2);
+});
+
+test('getByA11yValue, queryByA11yValue', () => {
+  const { getByA11yValue, queryByA11yValue } = render(<Section />);
+
+  expect(getByA11yValue({ min: 40 }).props.accessibilityValue).toEqual({
+    min: 40,
+    max: 60,
+  });
+  expect(queryByA11yValue({ min: 40 })?.props.accessibilityValue).toEqual({
+    min: 40,
+    max: 60,
+  });
+
+  expect(() => getByA11yValue({ min: 50 })).toThrow(NO_INSTANCES_FOUND);
+  expect(queryByA11yValue({ min: 50 })).toEqual(null);
+
+  expect(() => getByA11yValue({ max: 60 })).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => queryByA11yValue({ max: 60 })).toThrow(FOUND_TWO_INSTANCES);
+});
+
+test('getAllByA11yValue, queryAllByA11yValue', () => {
+  const { getAllByA11yValue, queryAllByA11yValue } = render(<Section />);
+
+  expect(getAllByA11yValue({ min: 40 }).length).toEqual(1);
+  expect(queryAllByA11yValue({ min: 40 }).length).toEqual(1);
+
+  expect(() => getAllByA11yValue({ min: 50 })).toThrow(NO_INSTANCES_FOUND);
+  expect(queryAllByA11yValue({ min: 50 })).toEqual([]);
+
+  expect(getAllByA11yValue({ max: 60 }).length).toEqual(2);
+  expect(queryAllByA11yValue({ max: 60 }).length).toEqual(2);
 });
