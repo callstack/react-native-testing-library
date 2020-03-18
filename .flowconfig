@@ -35,7 +35,7 @@ node_modules/react-native/flow/
 flow-typed
 
 [options]
-server.max_workers=1
+server.max_workers=4
 emoji=true
 
 esproposal.optional_chaining=enable
