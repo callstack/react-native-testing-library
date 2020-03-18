@@ -70,14 +70,11 @@ export function matchArrayValue(
 }
 
 export function matchObject<T: {}>(prop?: T, matcher: T): boolean {
-  return (
-    Boolean(prop) &&
-    Object.keys(matcher).length !== 0 &&
-    // $FlowFixMe Already checked
-    Object.keys(prop).length !== 0 &&
-    // $FlowFixMe Already checked
-    !Object.keys(matcher).some(key => prop[key] !== matcher[key])
-  );
+  return prop
+    ? Object.keys(matcher).length !== 0 &&
+        Object.keys(prop).length !== 0 &&
+        !Object.keys(matcher).some(key => prop[key] !== matcher[key])
+    : false;
 }
 
 const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
