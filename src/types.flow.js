@@ -46,3 +46,10 @@ export type A11yStates =
   | 'expanded'
   | 'collapsed'
   | 'hasPopup';
+
+export type A11yValue = {
+  min?: number,
+  max?: number,
+  now?: number,
+  text?: string,
+};

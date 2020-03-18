@@ -1,6 +1,6 @@
 // @flow
 import makeQuery from './makeQuery';
-import type { A11yRole, A11yStates, A11yState } from '../types.flow';
+import type { A11yRole, A11yStates, A11yState, A11yValue } from '../types.flow';
 
 type GetReturn = ReactTestInstance;
 type GetAllReturn = Array<ReactTestInstance>;
@@ -37,6 +37,12 @@ type A11yAPI = {|
   getAllByA11yState: A11yState => GetAllReturn,
   queryByA11yState: A11yState => QueryReturn,
   queryAllByA11yState: A11yState => QueryAllReturn,
+
+  // Value
+  getByA11yValue: A11yValue => GetReturn,
+  getAllByA11yValue: A11yValue => GetAllReturn,
+  queryByA11yValue: A11yValue => QueryReturn,
+  queryAllByA11yValue: A11yValue => QueryAllReturn,
 |};
 
 export function matchStringValue(
@@ -126,6 +132,16 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
         getAllBy: ['getAllByA11yState', 'getAllByAccessibilityState'],
         queryBy: ['queryByA11yState', 'queryByAccessibilityState'],
         queryAllBy: ['queryAllByA11yState', 'queryAllByAccessibilityState'],
+      },
+      matchObject
+    )(instance),
+    ...makeQuery(
+      'accessibilityValue',
+      {
+        getBy: ['getByA11yValue', 'getByAccessibilityValue'],
+        getAllBy: ['getAllByA11yValue', 'getAllByAccessibilityValue'],
+        queryBy: ['queryByA11yValue', 'queryByAccessibilityValue'],
+        queryAllBy: ['queryAllByA11yValue', 'queryAllByAccessibilityValue'],
       },
       matchObject
     )(instance),
