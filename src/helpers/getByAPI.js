@@ -6,6 +6,7 @@ import {
   createLibraryNotSupportedError,
   prepareErrorMessage,
   printDeprecationWarning,
+  printUnsafeWarning,
 } from './errors';
 
 const filterNodeByType = (node, type) => node.type === type;
@@ -234,22 +235,20 @@ export const getAllByTestId = (instance: ReactTestInstance) =>
 export const getByAPI = (instance: ReactTestInstance) => ({
   getByTestId: getByTestId(instance),
   getByName: getByName(instance, printDeprecationWarning),
-  getByType: getByType(instance, printDeprecationWarning),
+  getByType: getByType(instance, printUnsafeWarning),
   getByText: getByText(instance),
   getByPlaceholder: getByPlaceholder(instance),
   getByDisplayValue: getByDisplayValue(instance),
-  getByProps: getByProps(instance, printDeprecationWarning),
+  getByProps: getByProps(instance, printUnsafeWarning),
   getAllByTestId: getAllByTestId(instance),
   getAllByName: getAllByName(instance, printDeprecationWarning),
-  getAllByType: getAllByType(instance, printDeprecationWarning),
+  getAllByType: getAllByType(instance, printUnsafeWarning),
   getAllByText: getAllByText(instance),
   getAllByPlaceholder: getAllByPlaceholder(instance),
   getAllByDisplayValue: getAllByDisplayValue(instance),
-  getAllByProps: getAllByProps(instance, printDeprecationWarning),
+  getAllByProps: getAllByProps(instance, printUnsafeWarning),
 
   // Unsafe aliases
-  UNSAFE_getByName: getByName(instance),
-  UNSAFE_getAllByName: getAllByName(instance),
   UNSAFE_getByType: getByType(instance),
   UNSAFE_getAllByType: getAllByType(instance),
   UNSAFE_getByProps: getByProps(instance),

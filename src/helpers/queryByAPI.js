@@ -16,7 +16,11 @@ import {
   getAllByDisplayValue,
   getAllByProps,
 } from './getByAPI';
-import { createQueryByError, printDeprecationWarning } from './errors';
+import {
+  createQueryByError,
+  printDeprecationWarning,
+  printUnsafeWarning,
+} from './errors';
 
 export const queryByName = (instance: ReactTestInstance, warnFn?: Function) =>
   function queryByNameFn(name: string | React.ComponentType<any>) {
@@ -163,22 +167,20 @@ export const queryAllByTestId = (instance: ReactTestInstance) => (
 export const queryByAPI = (instance: ReactTestInstance) => ({
   queryByTestId: queryByTestId(instance),
   queryByName: queryByName(instance, printDeprecationWarning),
-  queryByType: queryByType(instance, printDeprecationWarning),
+  queryByType: queryByType(instance, printUnsafeWarning),
   queryByText: queryByText(instance),
   queryByPlaceholder: queryByPlaceholder(instance),
   queryByDisplayValue: queryByDisplayValue(instance),
-  queryByProps: queryByProps(instance, printDeprecationWarning),
+  queryByProps: queryByProps(instance, printUnsafeWarning),
   queryAllByTestId: queryAllByTestId(instance),
   queryAllByName: queryAllByName(instance, printDeprecationWarning),
-  queryAllByType: queryAllByType(instance, printDeprecationWarning),
+  queryAllByType: queryAllByType(instance, printUnsafeWarning),
   queryAllByText: queryAllByText(instance),
   queryAllByPlaceholder: queryAllByPlaceholder(instance),
   queryAllByDisplayValue: queryAllByDisplayValue(instance),
-  queryAllByProps: queryAllByProps(instance, printDeprecationWarning),
+  queryAllByProps: queryAllByProps(instance, printUnsafeWarning),
 
   // Unsafe aliases
-  UNSAFE_queryByName: queryByName(instance),
-  UNSAFE_queryAllByName: queryAllByName(instance),
   UNSAFE_queryByType: queryByType(instance),
   UNSAFE_queryAllByType: queryAllByType(instance),
   UNSAFE_queryByProps: queryByProps(instance),

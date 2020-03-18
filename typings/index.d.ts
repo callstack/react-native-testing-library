@@ -21,8 +21,6 @@ export interface GetByAPI {
 
 
   // Unsafe aliases
-  UNSAFE_getByName: (name: React.ReactType | string) => ReactTestInstance,
-  UNSAFE_getAllByName: (name: React.ReactType | string) => Array<ReactTestInstance>,
   UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance,
   UNSAFE_getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>,
   UNSAFE_getByProps: (props: Record<string, any>) => ReactTestInstance,
@@ -58,8 +56,6 @@ export interface QueryByAPI {
   ) => Array<ReactTestInstance> | [];
 
   // Unsafe aliases
-  UNSAFE_queryByName: (name: React.ReactType | string) => ReactTestInstance | null,
-  UNSAFE_queryAllByName: (name: React.ReactType | string) => Array<ReactTestInstance> | [],
   UNSAFE_queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null,
   UNSAFE_queryAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance> | [],
   UNSAFE_queryByProps: (props: Record<string, any>) => ReactTestInstance | null,

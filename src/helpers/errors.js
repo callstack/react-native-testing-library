@@ -48,6 +48,19 @@ export function printDeprecationWarning(functionName: string) {
 
   console.warn(`
   Deprecation Warning:
+  ${functionName} is not recommended for use and will be deleted in react-native-testing-library 2.x.
+  `);
+
+  warned[functionName] = true;
+}
+
+export function printUnsafeWarning(functionName: string) {
+  if (warned[functionName]) {
+    return;
+  }
+
+  console.warn(`
+  Deprecation Warning:
   ${functionName} is not recommended for use and has been renamed to UNSAFE_${functionName}.
   In react-native-testing-library 2.x only the UNSAFE_${functionName} name will work.
   `);
