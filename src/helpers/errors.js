@@ -42,8 +42,9 @@ export function printUnsafeWarning(functionName: string) {
   }
 
   console.warn(`
-  Deprecation Warning:
-  ${functionName} has been deprecated and is not recommended.
+  Warning:
+  ${functionName} promotes testing implementation details and is not recommended.
+  It may be removed it in the future. Please test observable outcomes of rendering components.
   `);
 
   warned[functionName] = true;

@@ -197,7 +197,7 @@ A method returning a `ReactTestInstance` with matching a React component type. T
 
 ### `UNSAFE_ByProps`
 
-> This method has been **deprecated** and is not recommended for use.
+> This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
 
 A method returning a `ReactTestInstance` with matching props object
 
