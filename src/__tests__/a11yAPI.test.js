@@ -21,6 +21,7 @@ const Typography = ({ children, ...rest }: any) => {
 class Button extends React.Component<any> {
   render() {
     return (
+      // $FlowFixMe - accessibilityStates removed in RN 0.62
       <TouchableOpacity
         accessibilityHint={BUTTON_HINT}
         accessibilityLabel={BUTTON_LABEL}
@@ -49,6 +50,7 @@ function Section() {
         accessibilityHint={TEXT_HINT}
         accessibilityLabel={TEXT_LABEL}
         accessibilityRole={TEXT_ROLE}
+        // $FlowFixMe - removed in RN 0.62
         accessibilityStates={['selected', 'disabled']}
         accessibilityState={{ expanded: false }}
         accessibilityValue={{ max: 60 }}
