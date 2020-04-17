@@ -29,14 +29,13 @@ exports[`debug 1`] = `
   <View
     accessible={true}
     focusable={true}
-    isTVSelectable={true}
-    onClick={[Function bound touchableHandlePress]}
-    onResponderGrant={[Function bound touchableHandleResponderGrant]}
-    onResponderMove={[Function bound touchableHandleResponderMove]}
-    onResponderRelease={[Function bound touchableHandleResponderRelease]}
-    onResponderTerminate={[Function bound touchableHandleResponderTerminate]}
-    onResponderTerminationRequest={[Function bound touchableHandleResponderTerminationRequest]}
-    onStartShouldSetResponder={[Function bound touchableHandleStartShouldSetResponder]}
+    onClick={[Function onClick]}
+    onResponderGrant={[Function onResponderGrant]}
+    onResponderMove={[Function onResponderMove]}
+    onResponderRelease={[Function onResponderRelease]}
+    onResponderTerminate={[Function onResponderTerminate]}
+    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
     style={
       Object {
         \\"opacity\\": 1,
@@ -92,14 +91,13 @@ exports[`debug changing component: bananaFresh button message should now be "fre
   <View
     accessible={true}
     focusable={true}
-    isTVSelectable={true}
-    onClick={[Function bound touchableHandlePress]}
-    onResponderGrant={[Function bound touchableHandleResponderGrant]}
-    onResponderMove={[Function bound touchableHandleResponderMove]}
-    onResponderRelease={[Function bound touchableHandleResponderRelease]}
-    onResponderTerminate={[Function bound touchableHandleResponderTerminate]}
-    onResponderTerminationRequest={[Function bound touchableHandleResponderTerminationRequest]}
-    onStartShouldSetResponder={[Function bound touchableHandleStartShouldSetResponder]}
+    onClick={[Function onClick]}
+    onResponderGrant={[Function onResponderGrant]}
+    onResponderMove={[Function onResponderMove]}
+    onResponderRelease={[Function onResponderRelease]}
+    onResponderTerminate={[Function onResponderTerminate]}
+    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
     style={
       Object {
         \\"opacity\\": 1,
@@ -136,7 +134,7 @@ exports[`debug: shallow 1`] = `
   >
     not fresh
   </Text>
-  <TextInput
+  <Component
     allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
     rejectResponderTermination={true}
@@ -144,7 +142,7 @@ exports[`debug: shallow 1`] = `
     underlineColorAndroid=\\"transparent\\"
     value=\\"Custom Freshie\\"
   />
-  <TextInput
+  <Component
     allowFontScaling={true}
     placeholder=\\"Who inspected freshness?\\"
     rejectResponderTermination={true}
@@ -186,7 +184,7 @@ exports[`debug: shallow with message 1`] = `
   >
     not fresh
   </Text>
-  <TextInput
+  <Component
     allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
     rejectResponderTermination={true}
@@ -194,7 +192,7 @@ exports[`debug: shallow with message 1`] = `
     underlineColorAndroid=\\"transparent\\"
     value=\\"Custom Freshie\\"
   />
-  <TextInput
+  <Component
     allowFontScaling={true}
     placeholder=\\"Who inspected freshness?\\"
     rejectResponderTermination={true}
@@ -255,14 +253,13 @@ exports[`debug: with message 1`] = `
   <View
     accessible={true}
     focusable={true}
-    isTVSelectable={true}
-    onClick={[Function bound touchableHandlePress]}
-    onResponderGrant={[Function bound touchableHandleResponderGrant]}
-    onResponderMove={[Function bound touchableHandleResponderMove]}
-    onResponderRelease={[Function bound touchableHandleResponderRelease]}
-    onResponderTerminate={[Function bound touchableHandleResponderTerminate]}
-    onResponderTerminationRequest={[Function bound touchableHandleResponderTerminationRequest]}
-    onStartShouldSetResponder={[Function bound touchableHandleStartShouldSetResponder]}
+    onClick={[Function onClick]}
+    onResponderGrant={[Function onResponderGrant]}
+    onResponderMove={[Function onResponderMove]}
+    onResponderRelease={[Function onResponderRelease]}
+    onResponderTerminate={[Function onResponderTerminate]}
+    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
     style={
       Object {
         \\"opacity\\": 1,
@@ -293,7 +290,6 @@ exports[`toJSON 1`] = `
 <View
   accessible={true}
   focusable={false}
-  isTVSelectable={true}
   onClick={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
