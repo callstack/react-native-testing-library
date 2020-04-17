@@ -13,6 +13,9 @@
       },
       "api-queries": {
         "title": "Queries"
+      },
+      "redux-integration": {
+        "title": "Redux Integration"
       }
     },
     "links": {
@@ -21,6 +24,7 @@
     },
     "categories": {
       "Introduction": "Introduction",
+      "Examples": "Examples",
       "API Reference": "API Reference"
     }
   },
