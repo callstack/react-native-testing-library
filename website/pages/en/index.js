@@ -30,7 +30,7 @@ Button.defaultProps = {
   target: '_self',
 };
 
-const SplashContainer = (props) => (
+const SplashContainer = props => (
   <div className="homeContainer">
     <div className="homeSplashFade">
       <div className="wrapper homeWrapper">{props.children}</div>
