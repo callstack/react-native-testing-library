@@ -1,28 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`debug 1`] = `
-"<TouchableOpacity
-  activeOpacity={0.2}
+"<ForwardRef
   onPress={[Function _callee]}
 >
   <TextComponent
     text=\\"Press me 0\\"
   />
-</TouchableOpacity>"
+</ForwardRef>"
 `;
 
 exports[`debug.deep 1`] = `
 "<View
   accessible={true}
   focusable={true}
-  isTVSelectable={true}
-  onClick={[Function bound touchableHandlePress]}
-  onResponderGrant={[Function bound touchableHandleResponderGrant]}
-  onResponderMove={[Function bound touchableHandleResponderMove]}
-  onResponderRelease={[Function bound touchableHandleResponderRelease]}
-  onResponderTerminate={[Function bound touchableHandleResponderTerminate]}
-  onResponderTerminationRequest={[Function bound touchableHandleResponderTerminationRequest]}
-  onStartShouldSetResponder={[Function bound touchableHandleStartShouldSetResponder]}
+  onClick={[Function onClick]}
+  onResponderGrant={[Function onResponderGrant]}
+  onResponderMove={[Function onResponderMove]}
+  onResponderRelease={[Function onResponderRelease]}
+  onResponderTerminate={[Function onResponderTerminate]}
+  onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+  onStartShouldSetResponder={[Function onStartShouldSetResponder]}
   style={
     Object {
       \\"opacity\\": 1,
@@ -39,14 +37,13 @@ exports[`debug.deep async test 1`] = `
 "<View
   accessible={true}
   focusable={true}
-  isTVSelectable={true}
-  onClick={[Function bound touchableHandlePress]}
-  onResponderGrant={[Function bound touchableHandleResponderGrant]}
-  onResponderMove={[Function bound touchableHandleResponderMove]}
-  onResponderRelease={[Function bound touchableHandleResponderRelease]}
-  onResponderTerminate={[Function bound touchableHandleResponderTerminate]}
-  onResponderTerminationRequest={[Function bound touchableHandleResponderTerminationRequest]}
-  onStartShouldSetResponder={[Function bound touchableHandleStartShouldSetResponder]}
+  onClick={[Function onClick]}
+  onResponderGrant={[Function onResponderGrant]}
+  onResponderMove={[Function onResponderMove]}
+  onResponderRelease={[Function onResponderRelease]}
+  onResponderTerminate={[Function onResponderTerminate]}
+  onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+  onStartShouldSetResponder={[Function onStartShouldSetResponder]}
   style={
     Object {
       \\"opacity\\": 1,

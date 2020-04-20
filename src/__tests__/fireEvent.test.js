@@ -57,7 +57,9 @@ describe('fireEvent', () => {
   });
 
   test('should throw an Error when event handler was not found', () => {
-    const { getByTestId } = render(<WithoutEventComponent />);
+    const { getByTestId } = render(
+      <WithoutEventComponent onPress={() => 'this is not passed to children'} />
+    );
 
     expect(() => fireEvent(getByTestId('text'), 'press')).toThrow(
       'No handler function found for event: "press"'
@@ -77,18 +79,6 @@ describe('fireEvent', () => {
     fireEvent(getByTestId('custom'), 'customEvent', EVENT_DATA);
 
     expect(handlerMock).toHaveBeenCalledWith(EVENT_DATA);
-  });
-
-  test('should not bubble event to root element', () => {
-    const onPressMock = jest.fn();
-    const { getByTestId } = render(
-      <TouchableOpacity onPress={onPressMock}>
-        <Text testID="test">Content</Text>
-      </TouchableOpacity>
-    );
-
-    expect(() => fireEvent.press(getByTestId('test'))).toThrow();
-    expect(onPressMock).not.toHaveBeenCalled();
   });
 });
 

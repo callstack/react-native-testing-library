@@ -21,6 +21,7 @@ const Typography = ({ children, ...rest }: any) => {
 class Button extends React.Component<any> {
   render() {
     return (
+      // $FlowFixMe - accessibilityStates removed in RN 0.62
       <TouchableOpacity
         accessibilityHint={BUTTON_HINT}
         accessibilityLabel={BUTTON_LABEL}
@@ -49,6 +50,7 @@ function Section() {
         accessibilityHint={TEXT_HINT}
         accessibilityLabel={TEXT_LABEL}
         accessibilityRole={TEXT_ROLE}
+        // $FlowFixMe - removed in RN 0.62
         accessibilityStates={['selected', 'disabled']}
         accessibilityState={{ expanded: false }}
         accessibilityValue={{ max: 60 }}
@@ -130,7 +132,8 @@ test('getAllByA11yRole, queryAllByA11yRole', () => {
   expect(queryAllByA11yRole(NO_MATCHES_TEXT)).toEqual([]);
 });
 
-test('getByA11yStates, queryByA11yStates', () => {
+// TODO: accessibilityStates was removed from RN 0.62
+test.skip('getByA11yStates, queryByA11yStates', () => {
   const { getByA11yStates, queryByA11yStates } = render(<Section />);
 
   expect(getByA11yStates('disabled').props.accessibilityStates).toEqual([
@@ -155,7 +158,8 @@ test('getByA11yStates, queryByA11yStates', () => {
   expect(() => queryByA11yStates('selected')).toThrow(FOUND_TWO_INSTANCES);
 });
 
-test('getAllByA11yStates, queryAllByA11yStates', () => {
+// TODO: accessibilityStates was removed from RN 0.62
+test.skip('getAllByA11yStates, queryAllByA11yStates', () => {
   const { getAllByA11yStates, queryAllByA11yStates } = render(<Section />);
 
   expect(getAllByA11yStates('selected')).toHaveLength(3);
