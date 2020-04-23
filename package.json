@@ -16,7 +16,7 @@
   ],
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.7",
+    "@babel/core": "^7.9.0",
     "@callstack/eslint-config": "^9.1.0",
     "@release-it/conventional-changelog": "^1.1.0",
     "@types/react": "^16.9.34",
