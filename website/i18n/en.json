@@ -14,8 +14,8 @@
       "api-queries": {
         "title": "Queries"
       },
-      "redux-integration": {
-        "title": "Redux Integration"
+      "react-navigation": {
+        "title": "React Navigation"
       }
     },
     "links": {
