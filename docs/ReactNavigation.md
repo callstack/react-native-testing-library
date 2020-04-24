@@ -13,7 +13,7 @@ Install the packages required for React Navigation. For this example, we will us
 $ yarn add @react-native-community/masked-view @react-navigation/native @react-navigation/stack react-native-gesture-handler react-native-reanimated react-native-safe-area-context react-native-screens
 ```
 
-Create a `./AppNavigator.js` which will list the navigation stack
+Create an [`./AppNavigator.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/AppNavigator.js) component which will list the navigation stack:
 
 ```jsx
 import 'react-native-gesture-handler';
@@ -37,12 +37,9 @@ export default function Navigation() {
 }
 ```
 
-Create your two screens which we will transition to and from them. The homescreen, found in `./screens/HomeScreen.js`, will simply contain a list of elements presented in a list view. On tap of any of these items will move to the details screen with the item number.
-
-The details screen, found in `./screens/DetailsScreen.js` will simply contain a header with the item number passed from the home screen.
+Create your two screens which we will transition to and from them. The homescreen, found in [`./screens/HomeScreen.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/screens/HomeScreen.js), contains a list of elements presented in a list view. On tap of any of these items will move to the details screen with the item number:
 
 ```jsx
-// ./screens/HomeScreen.js
 import React from 'react';
 import {
   Text,
@@ -95,6 +92,8 @@ const styles = StyleSheet.create({
 });
 ```
 
+The details screen, found in [`./screens/DetailsScreen.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/screens/DetailsScreen.js), contains a header with the item number passed from the home screen:
+
 ```jsx
 // ./screens/DetailsScreen.js
 import React from 'react';
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
 
 ## Setting up the test environment
 
-To setup, simply install `jest`, `react-native-testing-library` and the other devDependencies listed [above](#test-packages-required)
+Install required dev dependencies:
 
 ```
 $ yarn add -D jest react-native-testing-library
@@ -143,11 +142,16 @@ module.exports = {
 };
 ```
 
+Notice the 2 entries that don't come with the default React Native project:
+
+- `setupFiles` – an array of files that Jest is going to execute before running your tests. In this case, we run `react-native-gesture-handler/jestSetup.js` which sets up necessary mocks for `react-native-gesture-handler` native module
+- `transformIgnorePatterns` – an array of paths that Jest ignores when transforming code. In this case, the negative lookahead regular expression is used, to tell Jest to transform (with Babel) every package inside `node_modules/` that starts with `react-native`, `@react-native-community` or `@react-navigation` (added by us, the rest is in `react-native` preset by default, so you don't have to worry about it).
+
 For this example, we are going to test out two things. The first thing is that the page is laid out as expected. The second, and most important, is that the page will transition to the detail screen when any item is tapped on.
 
-We create a `__tests__` directory and create our `Navigation.test.js` file:
+Let's a [`AppNavigator.test.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/__tests__/AppNavigator.js) file in `src/__tests__` directory:
 
-```js
+```jsx
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { render, fireEvent, cleanup } from 'react-native-testing-library';
@@ -198,7 +202,7 @@ describe('Testing react navigation', () => {
 
 ## Running tests
 
-To run the tests, simply place a test script inside your `package.json`
+To run the tests, place a test script inside your `package.json`
 
 ```json
 {
@@ -208,4 +212,4 @@ To run the tests, simply place a test script inside your `package.json`
 }
 ```
 
-Run the test script and watch the magic.
+And run the `test` script with `npm test` or `yarn test`.

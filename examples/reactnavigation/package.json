@@ -1,6 +1,6 @@
 {
-  "name": "reactnavigation",
-  "description": "Testing react-native-testing-library with react-navigation",
+  "name": "react-navigation-example",
+  "description": "Testing react-navigation with react-native-testing-library",
   "version": "0.0.1",
   "private": true,
   "scripts": {
