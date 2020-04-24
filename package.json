@@ -4,7 +4,11 @@
   "description": "Simple React Native testing utilities helping you write better tests with less effort",
   "main": "build/index.js",
   "typings": "./typings/index.d.ts",
-  "repository": "git@github.com:callstack/react-native-testing-library.git",
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/callstack/react-native-testing-library.git"
+  },
+  "homepage": "https://callstack.github.io/react-native-testing-library",
   "author": "Michał Pierzchała <thymikee@gmail.com>",
   "license": "MIT",
   "private": false,
