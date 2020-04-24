@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { render, fireEvent, cleanup } from 'react-native-testing-library';
 
-import Navigation from '../src/Navigation';
+import Navigation from '../Navigation';
 
 // Resolves the error in https://github.com/facebook/react-native/issues/11094#issuecomment-263240420
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');

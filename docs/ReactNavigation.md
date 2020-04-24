@@ -3,16 +3,11 @@ id: react-navigation
 title: React Navigation
 ---
 
-This section deals with integrating RNTL with `react-navigation`. To get started with the example project, create a new project using [this guide](https://reactnative.dev/docs/environment-setup)
-
-## Test packages required:
-
-- `jest`
-- `react-native-testing-library`
+This section deals with integrating `react-native-testing-library` with `react-navigation`, using Jest.
 
 ## Setting up
 
-Install the packages required for react navigation. For this example, we will use a [stack navigator](https://reactnavigation.org/docs/stack-navigator/) to transition to the second page when any of the items are clicked on.
+Install the packages required for React Navigation. For this example, we will use a [stack navigator](https://reactnavigation.org/docs/stack-navigator/) to transition to the second page when any of the items are clicked on.
 
 ```
 $ yarn add @react-native-community/masked-view @react-navigation/native @react-navigation/stack react-native-gesture-handler react-native-reanimated react-native-safe-area-context react-native-screens
@@ -42,7 +37,7 @@ export default function Navigation() {
 }
 ```
 
-Create your two screens which we will transition to and from them. The homescreen, found in `./screens/HomeScreen.js` will simply contain a list of elements presented in a list view. On tap of any of these items will move to the details screen with the item number.
+Create your two screens which we will transition to and from them. The homescreen, found in `./screens/HomeScreen.js`, will simply contain a list of elements presented in a list view. On tap of any of these items will move to the details screen with the item number.
 
 The details screen, found in `./screens/DetailsScreen.js` will simply contain a header with the item number passed from the home screen.
 
@@ -150,7 +145,7 @@ module.exports = {
 
 For this example, we are going to test out two things. The first thing is that the page is laid out as expected. The second, and most important, is that the page will transition to the detail screen when any item is tapped on.
 
-We create a `tests` directory and create our `Navigation.test.js` file:
+We create a `__tests__` directory and create our `Navigation.test.js` file:
 
 ```js
 import React from 'react';
