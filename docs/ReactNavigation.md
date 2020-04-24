@@ -154,7 +154,7 @@ import { render, fireEvent, cleanup } from 'react-native-testing-library';
 
 import AppNavigator from '../AppNavigator';
 
-// Resolves the error in https://github.com/facebook/react-native/issues/11094#issuecomment-263240420
+// Silence the warning https://github.com/facebook/react-native/issues/11094#issuecomment-263240420
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
 
 describe('Testing react navigation', () => {
