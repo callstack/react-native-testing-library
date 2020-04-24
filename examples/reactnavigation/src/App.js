@@ -2,7 +2,7 @@ import React from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
-import Navigation from './Navigation';
+import AppNavigator from './AppNavigator';
 
 export default function App() {
   return (
@@ -10,7 +10,7 @@ export default function App() {
       <View style={styles.container}>
         <StatusBar barStyle="dark-content" />
 
-        <Navigation />
+        <AppNavigator />
       </View>
     </NavigationContainer>
   );

@@ -13,7 +13,7 @@ Install the packages required for React Navigation. For this example, we will us
 $ yarn add @react-native-community/masked-view @react-navigation/native @react-navigation/stack react-native-gesture-handler react-native-reanimated react-native-safe-area-context react-native-screens
 ```
 
-Create a `./navigation.js` which will list the navigation stack
+Create a `./AppNavigator.js` which will list the navigation stack
 
 ```jsx
 import 'react-native-gesture-handler';
@@ -152,7 +152,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { render, fireEvent, cleanup } from 'react-native-testing-library';
 
-import Navigation from '../Navigation';
+import AppNavigator from '../AppNavigator';
 
 // Resolves the error in https://github.com/facebook/react-native/issues/11094#issuecomment-263240420
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
@@ -163,7 +163,7 @@ describe('Testing react navigation', () => {
   test('page contains the header and 10 items', () => {
     const component = (
       <NavigationContainer>
-        <Navigation />
+        <AppNavigator />
       </NavigationContainer>
     );
 
@@ -179,7 +179,7 @@ describe('Testing react navigation', () => {
   test('clicking on one item takes you to the details screen', async () => {
     const component = (
       <NavigationContainer>
-        <Navigation />
+        <AppNavigator />
       </NavigationContainer>
     );
 
