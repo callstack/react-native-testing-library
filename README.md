@@ -36,27 +36,29 @@ This library is a replacement for [Enzyme](http://airbnb.io/enzyme/). It is test
 ```jsx
 import { render, fireEvent } from 'react-native-testing-library';
 import { QuestionsBoard } from '../QuestionsBoard';
-import { Question } from '../Question';
 
-function setAnswer(question, answer) {
-  fireEvent.changeText(question, answer);
-}
+test('form submits two answers', () => {
+  const allQuestions = ['q1', 'q2'];
+  const mockFn = jest.fn();
 
-test('should verify two questions', () => {
-  const { getAllByA11yRole, getByText } = render(<QuestionsBoard {...props} />);
-  const allQuestions = getAllByA11yRole('header');
+  const { getAllByA11yLabel, getByText } = render(
+    <QuestionsBoard questions={allQuestions} onSubmit={mockFn} />
+  );
 
-  setAnswer(allQuestions[0], 'a1');
-  setAnswer(allQuestions[1], 'a2');
+  const answerInputs = getAllByA11yLabel('answer input');
 
-  fireEvent.press(getByText('submit'));
+  fireEvent.changeText(answerInputs[0], 'a1');
+  fireEvent.changeText(answerInputs[1], 'a2');
+  fireEvent.press(getByText('Submit'));
 
-  expect(props.verifyQuestions).toBeCalledWith({
+  expect(mockFn).toBeCalledWith({
     '1': { q: 'q1', a: 'a1' },
     '2': { q: 'q2', a: 'a2' },
   });
 });
 ```
+
+You can find the source of `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/questionsBoard.test.js).
 
 ## Installation
 
