@@ -22,9 +22,7 @@
     "@babel/core": "^7.9.0",
     "@babel/runtime": "^7.9.2",
     "babel-jest": "^25.4.0",
-    "identity-obj-proxy": "^3.0.0",
     "jest": "^25.4.0",
-    "jest-transform-stub": "^2.0.0",
     "metro-react-native-babel-preset": "^0.59.0",
     "react-native-testing-library": "^1.13.0",
     "react-test-renderer": "^16.13.1"

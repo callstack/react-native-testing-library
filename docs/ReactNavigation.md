@@ -9,8 +9,6 @@ This section deals with integrating RNTL with `react-navigation`. To get started
 
 - `jest`
 - `react-native-testing-library`
-- `identity-obj-proxy`
-- `jest-transform-stub`
 
 ## Setting up
 
@@ -135,7 +133,7 @@ const styles = StyleSheet.create({
 To setup, simply install `jest`, `react-native-testing-library` and the other devDependencies listed [above](#test-packages-required)
 
 ```
-$ yarn add -D jest react-native-testing-library identity-obj-proxy jest-transform-stub
+$ yarn add -D jest react-native-testing-library
 ```
 
 Create your `jest.config.js` file (or place the following properties in your `package.json` as a "jest" property)
@@ -144,11 +142,6 @@ Create your `jest.config.js` file (or place the following properties in your `pa
 module.exports = {
   preset: 'react-native',
   setupFiles: ['./node_modules/react-native-gesture-handler/jestSetup.js'],
-  moduleNameMapper: {
-    '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':
-      'jest-transform-stub',
-    '\\.(css|less)$': 'identity-obj-proxy',
-  },
 };
 ```
 
