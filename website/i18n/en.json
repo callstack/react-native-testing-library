@@ -13,6 +13,9 @@
       },
       "api-queries": {
         "title": "Queries"
+      },
+      "react-navigation": {
+        "title": "React Navigation"
       }
     },
     "links": {
@@ -21,7 +24,8 @@
     },
     "categories": {
       "Introduction": "Introduction",
-      "API Reference": "API Reference"
+      "API Reference": "API Reference",
+      "Examples": "Examples"
     }
   },
   "pages-strings": {

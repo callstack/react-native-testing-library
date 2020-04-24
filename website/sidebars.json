@@ -1,6 +1,7 @@
 {
   "docs": {
     "Introduction": ["getting-started"],
-    "API Reference": ["api", "api-queries"]
+    "API Reference": ["api", "api-queries"],
+    "Examples": ["react-navigation"]
   }
 }

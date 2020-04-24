@@ -59,7 +59,8 @@
     "moduleFileExtensions": [
       "js",
       "json"
-    ]
+    ],
+    "rootDir": "./src"
   },
   "greenkeeper": {
     "ignore": [

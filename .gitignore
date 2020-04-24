@@ -4,3 +4,6 @@ node_modules
 build
 .idea
 .DS_Store
+
+# Ignore lock files in examples for now
+examples/**/yarn.lock
