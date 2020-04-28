@@ -18,14 +18,10 @@ const filterNodeByName = (node, name) =>
 const getNodeByText = (node, text) => {
   try {
     // eslint-disable-next-line
-    const { Text, TextInput } = require('react-native');
+    const { Text } = require('react-native');
     const isTextComponent = filterNodeByType(node, Text);
     if (isTextComponent) {
-      const textChildren = React.Children.map(
-        node.props.children,
-        // In some cases child might be undefined or null
-        child => (child !== undefined && child !== null ? child.toString() : '')
-      );
+      const textChildren = getChildrenAsText(node.props.children);
       if (textChildren) {
         const textToTest = textChildren.join('');
         return typeof text === 'string'
@@ -37,6 +33,20 @@ const getNodeByText = (node, text) => {
   } catch (error) {
     throw createLibraryNotSupportedError(error);
   }
+};
+
+const getChildrenAsText = children => {
+  return React.Children.map(children, child => {
+    if (typeof child === 'string') {
+      return child;
+    }
+
+    if (typeof child === 'number') {
+      return child.toString();
+    }
+
+    return '';
+  });
 };
 
 const getTextInputNodeByPlaceholder = (node, placeholder) => {
