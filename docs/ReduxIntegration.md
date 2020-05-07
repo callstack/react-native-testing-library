@@ -74,7 +74,7 @@ export default combineReducers({
 });
 ```
 
-We then proceed to create our store. Simply called `./store.js`
+We then proceed to create our store called `./store.js`
 
 ```js
 import { createStore } from 'redux';
