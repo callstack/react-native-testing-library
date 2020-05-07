@@ -7,7 +7,7 @@ This section deals with testing RN applications developed with Redux. We will be
 
 ## Setting up
 
-Install the packages required for Redux and it up. For this example we will simply install `react-redux` and `redux`. We will then proceed to create our action creators (found in `./actions/todoActions.js`) and our reducers (found in `./reducers/index.js`)
+Install the packages required for Redux and it up. For this example we will install `react-redux` and `redux`. We will then proceed to create our action creators (found in `./actions/todoActions.js`) and our reducers (found in `./reducers/index.js`)
 
 ```js
 // ./actions.todoActions.js
