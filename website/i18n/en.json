@@ -16,6 +16,9 @@
       },
       "react-navigation": {
         "title": "React Navigation"
+      },
+      "redux-integration": {
+        "title": "Redux Integration"
       }
     },
     "links": {
