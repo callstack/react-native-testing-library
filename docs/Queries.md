@@ -203,7 +203,7 @@ A method returning a `ReactTestInstance` with matching props object
 
 ### `ByName`
 
-> This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. **DON'T USE IT**. It will be removed in next major release (v2.0). Use [`getByTestId`](#bytestid) instead. It's listed here only for back-compat purposes for early adopters of the library
-A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
+> This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. **DON'T USE IT**. It will be removed in next major release (v2.0). Use the other alternatives, such as [`getByText`](#bytext) instead. It's listed here only for back-compat purposes for early adopters of the library
+> A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
 
 </details>

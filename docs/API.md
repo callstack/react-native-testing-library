@@ -118,7 +118,7 @@ Get the rendered component JSON representation, e.g. for snapshot testing.
 ## `cleanup`
 
 ```ts
-const cleanup: () => void
+const cleanup: () => void;
 ```
 
 Unmounts React trees that were mounted with `render`.
@@ -126,28 +126,28 @@ Unmounts React trees that were mounted with `render`.
 For example, if you're using the `jest` testing framework, then you would need to use the `afterEach` hook like so:
 
 ```jsx
-import { cleanup, render } from 'react-native-testing-library'
-import { View } from 'react-native'
+import { cleanup, render } from 'react-native-testing-library';
+import { View } from 'react-native';
 
-afterEach(cleanup)
+afterEach(cleanup);
 
 it('renders a view', () => {
-  render(<View />)
+  render(<View />);
   // ...
-})
+});
 ```
 
 The `afterEach(cleanup)` call also works in `describe` blocks:
 
 ```jsx
 describe('when logged in', () => {
-  afterEach(cleanup)
+  afterEach(cleanup);
 
   it('renders the user', () => {
-    render(<SiteHeader />)
+    render(<SiteHeader />);
     // ...
   });
-})
+});
 ```
 
 Failing to call `cleanup` when you've called `render` could result in a memory leak and tests which are not "idempotent" (which can lead to difficult to debug errors in your tests).
@@ -169,12 +169,13 @@ import { render, fireEvent } from 'react-native-testing-library';
 
 test('fire changeText event', () => {
   const onEventMock = jest.fn();
-  const { getByTestId } = render(
-    // MyComponent renders TextInput with `onChangeText` bound to handleChangeText
-    <MyComponent testID="change" handleChangeText={onEventMock} />
+  const { getByPlaceholder } = render(
+    // MyComponent renders TextInput which has a placeholder 'Enter details'
+    // and with `onChangeText` bound to handleChangeText
+    <MyComponent handleChangeText={onEventMock} />
   );
 
-  fireEvent(getByTestId('change'), 'onChangeText', 'ab');
+  fireEvent(getByPlaceholder('change'), 'onChangeText', 'ab');
   expect(onEventMock).toHaveBeenCalledWith('ab');
 });
 ```
@@ -215,15 +216,16 @@ import { render, fireEvent } from 'react-native-testing-library';
 
 const onPressMock = jest.fn();
 
-const { getByTestId } = render(
+const { getByText } = render(
   <View>
-    <TouchableOpacity onPress={onPressMock} testID="button">
+    <TouchableOpacity onPress={onPressMock}>
       <Text>Press me</Text>
     </TouchableOpacity>
   </View>
 );
 
-fireEvent.press(getByTestId('button'));
+fireEvent.press(getByText('Press me'));
+expect(onPressMock).toHaveBeenCalled();
 ```
 
 ### `fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void`
@@ -237,13 +239,13 @@ import { render, fireEvent } from 'react-native-testing-library';
 const onChangeTextMock = jest.fn();
 const CHANGE_TEXT = 'content';
 
-const { getByTestId } = render(
+const { getByPlaceholder } = render(
   <View>
-    <TextInput testID="text-input" onChangeText={onChangeTextMock} />
+    <TextInput placeholder="Enter data" onChangeText={onChangeTextMock} />
   </View>
 );
 
-fireEvent.changeText(getByTestId('text-input'), CHANGE_TEXT);
+fireEvent.changeText(getByPlaceholder('Enter data'), CHANGE_TEXT);
 ```
 
 ### `fireEvent.scroll: (element: ReactTestInstance, ...data: Array<any>) => void`
@@ -265,13 +267,13 @@ const eventData = {
   },
 };
 
-const { getByTestId } = render(
-  <ScrollView testID="scroll-view" onScroll={onScrollMock}>
+const { getByText } = render(
+  <ScrollView onScroll={onScrollMock}>
     <Text>XD</Text>
   </ScrollView>
 );
 
-fireEvent.scroll(getByTestId('scroll-view'), eventData);
+fireEvent.scroll(getByText('scroll-view'), eventData);
 ```
 
 #### On a `FlatList`
