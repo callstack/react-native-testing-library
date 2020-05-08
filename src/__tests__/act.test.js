@@ -14,11 +14,8 @@ const UseEffect = ({ callback }: { callback: Function }) => {
 const Counter = () => {
   const [count, setCount] = React.useState(0);
 
-  return (
-    <Text testID="counter" onPress={() => setCount(count + 1)}>
-      {count}
-    </Text>
-  );
+  const text = `Total count: ${count}`;
+  return <Text onPress={() => setCount(count + 1)}>{text}</Text>;
 };
 
 test('render should trigger useEffect', () => {
@@ -37,12 +34,12 @@ test('update should trigger useEffect', () => {
 });
 
 test('fireEvent should trigger useState', () => {
-  const { getByTestId } = render(<Counter />);
-  const counter = getByTestId('counter');
+  const { getByText } = render(<Counter />);
+  const counter = getByText(/Total count/i);
 
-  expect(counter.props.children).toEqual(0);
+  expect(counter.props.children).toEqual('Total count: 0');
   fireEvent.press(counter);
-  expect(counter.props.children).toEqual(1);
+  expect(counter.props.children).toEqual('Total count: 1');
 });
 
 test('should act even if there is no act in react-test-renderer', () => {

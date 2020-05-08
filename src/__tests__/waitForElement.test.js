@@ -11,7 +11,7 @@ class Banana extends React.Component<any> {
   render() {
     return (
       <View>
-        {this.props.fresh && <Text testID="fresh">Fresh</Text>}
+        {this.props.fresh && <Text>Fresh</Text>}
         <TouchableOpacity onPress={this.changeFresh}>
           <Text>Change freshness!</Text>
         </TouchableOpacity>
@@ -36,25 +36,23 @@ class BananaContainer extends React.Component<{}, any> {
 }
 
 test('waits for element until it stops throwing', async () => {
-  const { getByTestId, getByName, queryByTestId } = render(<BananaContainer />);
+  const { getByText, getByName, queryByText } = render(<BananaContainer />);
 
   fireEvent.press(getByName('TouchableOpacity'));
 
-  expect(queryByTestId('fresh')).toBeNull();
+  expect(queryByText('Fresh')).toBeNull();
 
-  const freshBananaText = await waitForElement(() => getByTestId('fresh'));
+  const freshBananaText = await waitForElement(() => getByText('Fresh'));
 
   expect(freshBananaText.props.children).toBe('Fresh');
 });
 
 test('waits for element until timeout is met', async () => {
-  const { getByTestId, getByName } = render(<BananaContainer />);
+  const { getByText, getByName } = render(<BananaContainer />);
 
   fireEvent.press(getByName('TouchableOpacity'));
 
-  await expect(
-    waitForElement(() => getByTestId('fresh'), 100)
-  ).rejects.toThrow();
+  await expect(waitForElement(() => getByText('Fresh'), 100)).rejects.toThrow();
 });
 
 test('waits for element with custom interval', async () => {
