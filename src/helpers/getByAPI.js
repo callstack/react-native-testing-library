@@ -36,17 +36,37 @@ const getNodeByText = (node, text) => {
 };
 
 const getChildrenAsText = children => {
-  return React.Children.map(children, child => {
+  let textContent = [];
+
+  React.Children.map(children, child => {
     if (typeof child === 'string') {
-      return child;
+      return textContent.push(child);
     }
 
     if (typeof child === 'number') {
-      return child.toString();
+      return textContent.push(child.toString());
     }
 
-    return '';
+    if (child.props.children) {
+      const { children } = child.props;
+
+      if (children instanceof Array) {
+        children.forEach(node => {
+          // eslint-disable-next-line
+          const { Text } = require('react-native');
+          if (filterNodeByType(node, Text)) {
+            return textContent.push(node.props.children);
+          }
+        });
+      } else {
+        if (typeof children === 'string') {
+          return textContent.push(children);
+        }
+      }
+    }
   });
+
+  return textContent;
 };
 
 const getTextInputNodeByPlaceholder = (node, placeholder) => {
