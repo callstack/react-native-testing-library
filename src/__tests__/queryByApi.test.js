@@ -47,3 +47,13 @@ test('queryByText not found', () => {
     ).queryByText('SomethingElse')
   ).toBeFalsy();
 });
+
+test('queryByText nested <Text> in <Text>', () => {
+  expect(
+    render(
+      <Text>
+        Hello <Text>World!</Text>
+      </Text>
+    ).queryByText('Hello World!')
+  ).toBeTruthy();
+});
