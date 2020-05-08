@@ -110,8 +110,8 @@ test('getAllByTestId, queryAllByTestId', () => {
 });
 
 test('getByName, queryByName', () => {
-  const { getByTestId, getByName, queryByName } = render(<Banana />);
-  const bananaFresh = getByTestId('bananaFresh');
+  const { getByText, getByName, queryByName } = render(<Banana />);
+  const bananaFresh = getByText('not fresh');
   const button = getByName('Button');
 
   button.props.onPress();

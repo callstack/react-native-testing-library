@@ -20,8 +20,8 @@ test('shallow rendering React elements', () => {
 });
 
 test('shallow rendering React Test Instance', () => {
-  const { getByTestId } = render(<TextPress />);
-  const { output } = shallow(getByTestId('text-button'));
+  const { getByText } = render(<TextPress />);
+  const { output } = shallow(getByText('Press me'));
 
   expect(output).toMatchSnapshot();
 });
