@@ -12,6 +12,7 @@ const siteConfig = {
   favicon: 'img/owl.png',
 
   themeConfig: {
+    sidebarCollapsible: false,
     navbar: {
       title,
       logo: {
