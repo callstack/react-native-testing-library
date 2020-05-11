@@ -105,7 +105,6 @@ const siteConfig = {
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
-        usePrism: ['jsx'],
       },
     ],
   ],
