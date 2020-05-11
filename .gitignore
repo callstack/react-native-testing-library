@@ -7,3 +7,4 @@ build
 
 # Ignore lock files in examples for now
 examples/**/yarn.lock
+.docusaurus

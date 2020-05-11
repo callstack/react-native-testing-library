@@ -1,0 +1,15 @@
+:root {
+  --ifm-link-color: #bf8a65;
+  --ifm-menu-color-active: #bf8a65;
+  --ifm-button-border-color: #bf8a65;
+  --ifm-link-decoration: none;
+  --ifm-link-hover-color: black;
+  --ifm-link-hover-decoration: none;
+  --ifm-font-size-base: 15px;
+  --ifm-footer-link-color: rgba(255, 255, 255, 0.125);
+  --ifm-footer-link-hover-color: #ffffff;
+}
+
+.footer .footer__links {
+  margin-bottom: 3rem;
+}
