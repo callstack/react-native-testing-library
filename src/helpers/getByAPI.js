@@ -15,13 +15,16 @@ const filterNodeByName = (node, name) =>
   typeof node.type !== 'string' &&
   (node.type.displayName === name || node.type.name === name);
 
+let textContent = [];
+
 const getNodeByText = (node, text) => {
   try {
     // eslint-disable-next-line
-    const { Text } = require('react-native');
+    const { Text } = require('react-native'); 
+    textContent = [];
     const isTextComponent = filterNodeByType(node, Text);
     if (isTextComponent) {
-      const textChildren = getChildrenAsText(node.props.children);
+      const textChildren = getChildrenAsText(node.props.children, Text);
       if (textChildren) {
         const textToTest = textChildren.join('');
         return typeof text === 'string'
@@ -35,9 +38,7 @@ const getNodeByText = (node, text) => {
   }
 };
 
-const getChildrenAsText = children => {
-  let textContent = [];
-
+const getChildrenAsText = (children, textComponent) => {
   React.Children.map(children, child => {
     if (typeof child === 'string') {
       return textContent.push(child);
@@ -48,21 +49,7 @@ const getChildrenAsText = children => {
     }
 
     if (child.props.children) {
-      const { children } = child.props;
-
-      if (children instanceof Array) {
-        children.forEach(node => {
-          // eslint-disable-next-line
-          const { Text } = require('react-native');
-          if (filterNodeByType(node, Text)) {
-            return textContent.push(node.props.children);
-          }
-        });
-      } else {
-        if (typeof children === 'string') {
-          return textContent.push(children);
-        }
-      }
+      getChildrenAsText(child.props.children, textComponent);
     }
   });
 
