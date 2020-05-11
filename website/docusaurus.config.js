@@ -81,6 +81,10 @@ const siteConfig = {
       darkTheme: require('prism-react-renderer/themes/dracula'),
       defaultLanguage: 'jsx',
     },
+    algolia: {
+      apiKey: 'cd9b8b73f97b64ed04570e41c507683f',
+      indexName: 'react-native-testing-library',
+    },
   },
 
   presets: [
