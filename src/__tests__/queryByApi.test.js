@@ -47,3 +47,31 @@ test('queryByText not found', () => {
     ).queryByText('SomethingElse')
   ).toBeFalsy();
 });
+
+test('queryByText nested multiple <Text> in <Text>', () => {
+  expect(
+    render(
+      <Text>
+        Hello{' '}
+        <Text>
+          World
+          <Text>!{true}</Text>
+        </Text>
+      </Text>
+    ).queryByText('Hello World!')
+  ).toBeTruthy();
+});
+
+test('queryByText nested <CustomText> in <Text>', () => {
+  const CustomText = ({ children }) => {
+    return <Text>{children}</Text>;
+  };
+
+  expect(
+    render(
+      <Text>
+        Hello <CustomText>World!</CustomText>
+      </Text>
+    ).queryByText('Hello World!')
+  ).toBeTruthy();
+});

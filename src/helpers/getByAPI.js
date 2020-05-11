@@ -21,7 +21,7 @@ const getNodeByText = (node, text) => {
     const { Text } = require('react-native');
     const isTextComponent = filterNodeByType(node, Text);
     if (isTextComponent) {
-      const textChildren = getChildrenAsText(node.props.children);
+      const textChildren = getChildrenAsText(node.props.children, Text);
       if (textChildren) {
         const textToTest = textChildren.join('');
         return typeof text === 'string'
@@ -35,18 +35,24 @@ const getNodeByText = (node, text) => {
   }
 };
 
-const getChildrenAsText = children => {
-  return React.Children.map(children, child => {
+const getChildrenAsText = (children, TextComponent, textContent = []) => {
+  React.Children.forEach(children, child => {
     if (typeof child === 'string') {
-      return child;
+      textContent.push(child);
+      return;
     }
 
     if (typeof child === 'number') {
-      return child.toString();
+      textContent.push(child.toString());
+      return;
     }
 
-    return '';
+    if (child?.props?.children) {
+      getChildrenAsText(child.props.children, TextComponent, textContent);
+    }
   });
+
+  return textContent;
 };
 
 const getTextInputNodeByPlaceholder = (node, placeholder) => {
