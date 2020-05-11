@@ -54,7 +54,8 @@ test('queryByText nested multiple <Text> in <Text>', () => {
       <Text>
         Hello{' '}
         <Text>
-          World<Text>!</Text>
+          World
+          <Text>!{true}</Text>
         </Text>
       </Text>
     ).queryByText('Hello World!')

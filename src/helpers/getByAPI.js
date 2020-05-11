@@ -15,13 +15,10 @@ const filterNodeByName = (node, name) =>
   typeof node.type !== 'string' &&
   (node.type.displayName === name || node.type.name === name);
 
-let textContent = [];
-
 const getNodeByText = (node, text) => {
   try {
     // eslint-disable-next-line
-    const { Text } = require('react-native'); 
-    textContent = [];
+    const { Text } = require('react-native');
     const isTextComponent = filterNodeByType(node, Text);
     if (isTextComponent) {
       const textChildren = getChildrenAsText(node.props.children, Text);
@@ -38,18 +35,20 @@ const getNodeByText = (node, text) => {
   }
 };
 
-const getChildrenAsText = (children, textComponent) => {
-  React.Children.map(children, child => {
+const getChildrenAsText = (children, TextComponent, textContent = []) => {
+  React.Children.forEach(children, child => {
     if (typeof child === 'string') {
-      return textContent.push(child);
+      textContent.push(child);
+      return;
     }
 
     if (typeof child === 'number') {
-      return textContent.push(child.toString());
+      textContent.push(child.toString());
+      return;
     }
 
-    if (child.props.children) {
-      getChildrenAsText(child.props.children, textComponent);
+    if (child?.props?.children) {
+      getChildrenAsText(child.props.children, TextComponent, textContent);
     }
   });
 
