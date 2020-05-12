@@ -23,7 +23,7 @@ node_modules/warning/.*
 [libs]
 node_modules/react-native/interface.js
 node_modules/react-native/flow/
-flow-typed
+flow-typed/
 
 [options]
 server.max_workers=4
@@ -58,7 +58,6 @@ untyped-type-import=warn
 nonstrict-import=warn
 deprecated-type=warn
 unsafe-getters-setters=warn
-inexact-spread=warn
 unnecessary-invariant=warn
 signature-verification-failure=warn
 deprecated-utility=error
