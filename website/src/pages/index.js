@@ -1,9 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import Layout from '@theme/Layout';
-import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from '../css/index.module.css';
 import Feature from '../components/Feature';
 
@@ -48,7 +46,7 @@ export default function Home() {
 
   return (
     <Layout title={`${siteConfig.title}`} description={siteConfig.tagline}>
-      <main className="home-container">
+      <main>
         <div className={classnames(styles.container__inner)}>
           <img
             src={`${siteConfig.baseUrl}img/owl.png`}
