@@ -1,6 +1,17 @@
 import * as React from 'react';
-import { AccessibilityState, AccessibilityStates, AccessibilityRole } from 'react-native';
+import {
+  AccessibilityState,
+  AccessibilityStates,
+  AccessibilityRole,
+} from 'react-native';
 import { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
+
+type GetReturn = ReactTestInstance;
+type GetAllReturn = Array<ReactTestInstance>;
+type QueryReturn = ReactTestInstance | null;
+type QueryAllReturn = Array<ReactTestInstance> | [];
+type FindReturn = Promise<ReactTestInstance>;
+type FindAllReturn = Promise<ReactTestInstance[]>;
 
 export interface GetByAPI {
   getByName: (name: React.ReactType | string) => ReactTestInstance;
@@ -20,12 +31,15 @@ export interface GetByAPI {
   getAllByDisplayValue: (value: string | RegExp) => Array<ReactTestInstance>;
   getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>;
 
-
   // Unsafe aliases
-  UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance,
-  UNSAFE_getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>,
-  UNSAFE_getByProps: (props: Record<string, any>) => ReactTestInstance,
-  UNSAFE_getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>,
+  UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
+  UNSAFE_getAllByType: <P>(
+    type: React.ComponentType<P>
+  ) => Array<ReactTestInstance>;
+  UNSAFE_getByProps: (props: Record<string, any>) => ReactTestInstance;
+  UNSAFE_getAllByProps: (
+    props: Record<string, any>
+  ) => Array<ReactTestInstance>;
 }
 
 export interface QueryByAPI {
@@ -57,61 +71,147 @@ export interface QueryByAPI {
   ) => Array<ReactTestInstance> | [];
 
   // Unsafe aliases
-  UNSAFE_queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null,
-  UNSAFE_queryAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance> | [],
-  UNSAFE_queryByProps: (props: Record<string, any>) => ReactTestInstance | null,
-  UNSAFE_queryAllByProps: (props: Record<string, any>) => Array<ReactTestInstance> | [],
+  UNSAFE_queryByType: <P>(
+    type: React.ComponentType<P>
+  ) => ReactTestInstance | null;
+  UNSAFE_queryAllByType: <P>(
+    type: React.ComponentType<P>
+  ) => Array<ReactTestInstance> | [];
+  UNSAFE_queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
+  UNSAFE_queryAllByProps: (
+    props: Record<string, any>
+  ) => Array<ReactTestInstance> | [];
 }
 
-type GetReturn = ReactTestInstance;
-type GetAllReturn = Array<ReactTestInstance>;
-type QueryReturn = ReactTestInstance | null;
-type QueryAllReturn = Array<ReactTestInstance> | [];
+export interface WaitForOptions {
+  timeout: number;
+  interval: number;
+}
+
+export interface FindByAPI {
+  findByText: (
+    text: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findByPlaceholder: (
+    placeholder: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findByDisplayValue: (
+    value: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findByTestId: (testID: string, waitForOptions?: WaitForOptions) => FindReturn;
+  findAllByText: (
+    text: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
+  findAllByPlaceholder: (
+    placeholder: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
+  findAllByDisplayValue: (
+    value: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
+  findAllByTestId: (
+    testID: string,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
+}
 
 // Not yet available in DefinitelyTyped
 export type A11yValue = {
-  min?: number,
-  max?: number,
-  now?: number,
-  text?: string,
+  min?: number;
+  max?: number;
+  now?: number;
+  text?: string;
 };
 
 type A11yAPI = {
   // Label
-  getByA11yLabel: (matcher: string | RegExp) => GetReturn,
-  getAllByA11yLabel: (matcher: string | RegExp) => GetAllReturn,
-  queryByA11yLabel: (matcher: string | RegExp) => QueryReturn,
-  queryAllByA11yLabel: (matcher: string | RegExp) => QueryAllReturn,
+  getByA11yLabel: (matcher: string | RegExp) => GetReturn;
+  getAllByA11yLabel: (matcher: string | RegExp) => GetAllReturn;
+  queryByA11yLabel: (matcher: string | RegExp) => QueryReturn;
+  queryAllByA11yLabel: (matcher: string | RegExp) => QueryAllReturn;
+  findByA11yLabel: (
+    matcher: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findAllByA11yLabel: (
+    matcher: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
 
   // Hint
-  getByA11yHint: (matcher: string | RegExp) => GetReturn,
-  getAllByA11yHint: (matcher: string | RegExp) => GetAllReturn,
-  queryByA11yHint: (matcher: string | RegExp) => QueryReturn,
-  queryAllByA11yHint: (matcher: string | RegExp) => QueryAllReturn,
+  getByA11yHint: (matcher: string | RegExp) => GetReturn;
+  getAllByA11yHint: (matcher: string | RegExp) => GetAllReturn;
+  queryByA11yHint: (matcher: string | RegExp) => QueryReturn;
+  queryAllByA11yHint: (matcher: string | RegExp) => QueryAllReturn;
+  findByA11yHint: (
+    matcher: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findAllByA11yHint: (
+    matcher: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
 
   // Role
-  getByA11yRole: (matcher: AccessibilityRole | RegExp) => GetReturn,
-  getAllByA11yRole: (matcher: AccessibilityRole | RegExp) => GetAllReturn,
-  queryByA11yRole: (matcher: AccessibilityRole | RegExp) => QueryReturn,
-  queryAllByA11yRole: (matcher: AccessibilityRole | RegExp) => QueryAllReturn,
+  getByA11yRole: (matcher: AccessibilityRole | RegExp) => GetReturn;
+  getAllByA11yRole: (matcher: AccessibilityRole | RegExp) => GetAllReturn;
+  queryByA11yRole: (matcher: AccessibilityRole | RegExp) => QueryReturn;
+  queryAllByA11yRole: (matcher: AccessibilityRole | RegExp) => QueryAllReturn;
+  findByA11yRole: (
+    matcher: AccessibilityRole | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findAllByA11yRole: (
+    matcher: AccessibilityRole | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
 
   // States
-  getByA11yStates: (matcher: AccessibilityStates | Array<AccessibilityStates>) => GetReturn,
-  getAllByA11yStates: (matcher: AccessibilityStates | Array<AccessibilityStates>) => GetAllReturn,
-  queryByA11yStates: (matcher: AccessibilityStates | Array<AccessibilityStates>) => QueryReturn,
-  queryAllByA11yStates: (matcher: AccessibilityStates | Array<AccessibilityStates>) => QueryAllReturn,
+  getByA11yStates: (
+    matcher: AccessibilityStates | Array<AccessibilityStates>
+  ) => GetReturn;
+  getAllByA11yStates: (
+    matcher: AccessibilityStates | Array<AccessibilityStates>
+  ) => GetAllReturn;
+  queryByA11yStates: (
+    matcher: AccessibilityStates | Array<AccessibilityStates>
+  ) => QueryReturn;
+  queryAllByA11yStates: (
+    matcher: AccessibilityStates | Array<AccessibilityStates>
+  ) => QueryAllReturn;
 
   // State
-  getByA11yState: (matcher: AccessibilityState) => GetReturn,
-  getAllByA11yState: (matcher: AccessibilityState) => GetAllReturn,
-  queryByA11yState: (matcher: AccessibilityState) => QueryReturn,
-  queryAllByA11yState: (matcher: AccessibilityState) => QueryAllReturn,
+  getByA11yState: (matcher: AccessibilityState) => GetReturn;
+  getAllByA11yState: (matcher: AccessibilityState) => GetAllReturn;
+  queryByA11yState: (matcher: AccessibilityState) => QueryReturn;
+  queryAllByA11yState: (matcher: AccessibilityState) => QueryAllReturn;
+  findByA11yState: (
+    matcher: AccessibilityState,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findAllByA11yState: (
+    matcher: AccessibilityState,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
 
   // Value
-  getByA11yValue: (matcher: A11yValue) => GetReturn,
-  getAllByA11yValue: (matcher: A11yValue) => GetAllReturn,
-  queryByA11yValue: (matcher: A11yValue) => QueryReturn,
-  queryAllByA11yValue: (matcher: A11yValue) => QueryAllReturn,
+  getByA11yValue: (matcher: A11yValue) => GetReturn;
+  getAllByA11yValue: (matcher: A11yValue) => GetAllReturn;
+  queryByA11yValue: (matcher: A11yValue) => QueryReturn;
+  queryAllByA11yValue: (matcher: A11yValue) => QueryAllReturn;
+  findByA11yValue: (
+    matcher: A11yValue,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findAllByA11yValue: (
+    matcher: A11yValue,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
 };
 
 export interface Thenable {
@@ -123,7 +223,7 @@ export interface RenderOptions {
   createNodeMock?: (element: React.ReactElement<any>) => any;
 }
 
-export interface RenderAPI extends GetByAPI, QueryByAPI, A11yAPI {
+export interface RenderAPI extends GetByAPI, QueryByAPI, FindByAPI, A11yAPI {
   update(nextElement: React.ReactElement<any>): void;
   rerender(nextElement: React.ReactElement<any>): void;
   unmount(nextElement?: React.ReactElement<any>): void;
