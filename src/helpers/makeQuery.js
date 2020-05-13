@@ -4,6 +4,8 @@ import {
   prepareErrorMessage,
   createQueryByError,
 } from './errors';
+import waitForElement from '../waitForElement';
+import type { WaitForOptions } from './findByAPI';
 
 function isNodeValid(node: ReactTestInstance) {
   return typeof node.type === 'string';
@@ -20,6 +22,8 @@ type QueryNames = {
   getAllBy: Array<string>,
   queryBy: Array<string>,
   queryAllBy: Array<string>,
+  findBy: Array<string>,
+  findAllBy: Array<string>,
 };
 
 const makeQuery = <P: mixed, M: mixed>(
@@ -65,11 +69,29 @@ const makeQuery = <P: mixed, M: mixed>(
     }
   };
 
+  const findBy = (matcher: M, waitForOptions?: WaitForOptions) => {
+    return waitForElement(
+      () => getBy(matcher),
+      waitForOptions?.timeout,
+      waitForOptions?.interval
+    );
+  };
+
+  const findAllBy = (matcher: M, waitForOptions?: WaitForOptions) => {
+    return waitForElement(
+      () => getAllBy(matcher),
+      waitForOptions?.timeout,
+      waitForOptions?.interval
+    );
+  };
+
   return {
     ...makeAliases(queryNames.getBy, getBy),
     ...makeAliases(queryNames.getAllBy, getAllBy),
     ...makeAliases(queryNames.queryBy, queryBy),
     ...makeAliases(queryNames.queryAllBy, queryAllBy),
+    ...makeAliases(queryNames.findBy, findBy),
+    ...makeAliases(queryNames.findAllBy, findAllBy),
   };
 };
 

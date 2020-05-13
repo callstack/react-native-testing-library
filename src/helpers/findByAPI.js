@@ -11,7 +11,7 @@ import {
 } from './getByAPI';
 import waitForElement from '../waitForElement';
 
-type WaitForOptions = {
+export type WaitForOptions = {
   timeout?: number,
   interval?: number,
 };
