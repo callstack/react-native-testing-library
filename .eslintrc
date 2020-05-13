@@ -4,6 +4,11 @@
     "flowtype/no-weak-types": 0,
     "react-native/no-raw-text": 0,
     "no-console": 1,
-    "react/no-multi-comp": 0
+    "react/no-multi-comp": 0,
+    // Ignore certain webpack alias because it can't be resolved
+    "import/no-unresolved": [
+      2,
+      { "ignore": ["^@theme", "^@docusaurus", "^@generated"] }
+    ]
   }
 }
