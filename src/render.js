@@ -68,7 +68,7 @@ function updateWithAct(
   renderer: ReactTestRenderer,
   wrap: (innerElement: React.Element<any>) => React.Element<any>
 ) {
-  return function (component: React.Element<any>) {
+  return function(component: React.Element<any>) {
     act(() => {
       renderer.update(wrap(component));
     });
@@ -79,6 +79,6 @@ function debug(instance: ReactTestInstance, renderer) {
   function debugImpl(message?: string) {
     return debugDeep(renderer.toJSON(), message);
   }
-  debugImpl.shallow = (message) => debugShallow(instance, message);
+  debugImpl.shallow = message => debugShallow(instance, message);
   return debugImpl;
 }
