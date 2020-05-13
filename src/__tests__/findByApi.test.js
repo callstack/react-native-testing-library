@@ -26,8 +26,12 @@ test('findBy queries work asynchronously', async () => {
   await expect(
     findAllByPlaceholder('Placeholder Text', options)
   ).rejects.toBeTruthy();
-  await expect(findByDisplayValue('Display Value')).rejects.toBeTruthy();
-  await expect(findAllByDisplayValue('Display Value')).rejects.toBeTruthy();
+  await expect(
+    findByDisplayValue('Display Value', options)
+  ).rejects.toBeTruthy();
+  await expect(
+    findAllByDisplayValue('Display Value', options)
+  ).rejects.toBeTruthy();
 
   setTimeout(
     () =>
