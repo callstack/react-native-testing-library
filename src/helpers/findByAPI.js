@@ -1,6 +1,6 @@
 // @flow
 import {
-  getByTestId,
+  fixedGetByTestId,
   getAllByTestId,
   getByText,
   getAllByText,
@@ -31,27 +31,12 @@ const makeFindQuery = <Text, Result>(
 export const findByTestId = (instance: ReactTestInstance) => (
   testId: string,
   waitForOptions: WaitForOptions = {}
-) => makeFindQuery(instance, getByTestId, testId, waitForOptions);
-
-export const findByTestId2 = (instance: ReactTestInstance) => (
-  testID: string,
-  waitForOptions: WaitForOptions = {}
-) =>
-  waitForElement(
-    () => getByTestId(instance)(testID),
-    waitForOptions.timeout,
-    waitForOptions.interval
-  );
+) => makeFindQuery(instance, fixedGetByTestId, testId, waitForOptions);
 
 export const findAllByTestId = (instance: ReactTestInstance) => (
-  testID: string,
+  testId: string,
   waitForOptions: WaitForOptions = {}
-) =>
-  waitForElement(
-    () => getAllByTestId(instance)(testID),
-    waitForOptions.timeout,
-    waitForOptions.interval
-  );
+) => makeFindQuery(instance, getAllByTestId, testId, waitForOptions);
 
 export const findByText = (instance: ReactTestInstance) => (
   text: string | RegExp,
