@@ -161,14 +161,16 @@ export const fixedGetByTestId = (instance: ReactTestInstance) =>
   function getByTestIdFn(testID: string) {
     try {
       const results = getAllByTestId(instance)(testID);
-      if (results.length === 1) return results[0];
-      else
+      if (results.length === 1) {
+        return results[0];
+      } else {
         throw new ErrorWithStack(
           ` Expected 1 but found ${
             results.length
           } instances with testID: ${String(testID)}`,
           getByTestIdFn
         );
+      }
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByTestIdFn);
     }
