@@ -5,7 +5,6 @@ import {
   AccessibilityRole,
 } from 'react-native';
 import { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
-import { ReactTestInstance } from 'react-test-renderer';
 
 export interface GetByAPI {
   getByName: (name: React.ReactType | string) => ReactTestInstance;
