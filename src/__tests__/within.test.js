@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
-import { render } from '..';
-import { within } from '../within';
+import { render, within } from '..';
 
 test('within() exposes basic queries', () => {
   const rootQueries = render(
