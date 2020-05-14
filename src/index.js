@@ -7,6 +7,7 @@ import flushMicrotasksQueue from './flushMicrotasksQueue';
 import render from './render';
 import shallow from './shallow';
 import waitForElement from './waitForElement';
+import within from './within';
 
 export { act };
 export { cleanup };
@@ -16,3 +17,4 @@ export { flushMicrotasksQueue };
 export { render };
 export { shallow };
 export { waitForElement };
+export { within };
