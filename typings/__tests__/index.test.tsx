@@ -9,6 +9,7 @@ import {
   debug,
   waitForElement,
   act,
+  within,
 } from '../..';
 
 interface HasRequiredProp {
@@ -376,3 +377,115 @@ const waitByAll: Promise<Array<ReactTestInstance>> = waitForElement<
 act(() => {
   render(<TestComponent />);
 });
+
+// within API
+const instance: ReactTestInstance = tree.getByText('<View />');
+const withinGetByText: ReactTestInstance = within(instance).getByText('Test');
+const withinGetAllByText: ReactTestInstance[] = within(instance).getAllByText(
+  'Test'
+);
+const withinGetByDisplayValue: ReactTestInstance = within(
+  instance
+).getByDisplayValue('Test');
+const withinGetAllByDisplayValue: ReactTestInstance[] = within(
+  instance
+).getAllByDisplayValue('Test');
+const withinGetByPlaceholder: ReactTestInstance = within(
+  instance
+).getByPlaceholder('Test');
+const withinGetAllByPlaceholder: ReactTestInstance[] = within(
+  instance
+).getAllByPlaceholder('Test');
+const withinGetByTestId: ReactTestInstance = within(instance).getByTestId(
+  'Test'
+);
+const withinGetAllByTestId: ReactTestInstance[] = within(
+  instance
+).getAllByTestId('Test');
+
+const withinQueryByText: ReactTestInstance | null = within(
+  instance
+).queryByText('Test');
+const withinQueryAllByText: ReactTestInstance[] = within(
+  instance
+).queryAllByText('Test');
+const withinQueryByDisplayValue: ReactTestInstance | null = within(
+  instance
+).queryByDisplayValue('Test');
+const withinQueryAllByDisplayValue: ReactTestInstance[] = within(
+  instance
+).queryAllByDisplayValue('Test');
+const withinQueryByPlaceholder: ReactTestInstance | null = within(
+  instance
+).queryByPlaceholder('Test');
+const withinQueryAllByPlaceholder: ReactTestInstance[] = within(
+  instance
+).queryAllByPlaceholder('Test');
+const withinQueryByTestId: ReactTestInstance | null = within(
+  instance
+).queryByTestId('Test');
+const withinQueryAllByTestId: ReactTestInstance[] = within(
+  instance
+).queryAllByTestId('Test');
+
+const withinGetByA11yLabel: ReactTestInstance = within(instance).getByA11yLabel(
+  'Test'
+);
+const withinGetAllByA11yLabel: ReactTestInstance[] = within(
+  instance
+).getAllByA11yLabel('Test');
+const withinGetByA11yHint: ReactTestInstance = within(instance).getByA11yHint(
+  'Test'
+);
+const withinGetAllByA11yHint: ReactTestInstance[] = within(
+  instance
+).getAllByA11yHint('Test');
+const withinGetByA11yRole: ReactTestInstance = within(instance).getByA11yRole(
+  'button'
+);
+const withinGetAllByA11yRole: ReactTestInstance[] = within(
+  instance
+).getAllByA11yRole('button');
+const withinGetByA11yState: ReactTestInstance = within(
+  instance
+).getByA11yState({ busy: true });
+const withinGetAllByA11yState: ReactTestInstance[] = within(
+  instance
+).getAllByA11yState({ busy: true });
+const withinGetByA11yValue: ReactTestInstance = within(
+  instance
+).getByA11yValue({ min: 10 });
+const withinGetAllByA11yValue: ReactTestInstance[] = within(
+  instance
+).getAllByA11yValue({ min: 10 });
+
+const withinQueryByA11yLabel: ReactTestInstance | null = within(
+  instance
+).queryByA11yLabel('Test');
+const withinQueryAllByA11yLabel: ReactTestInstance[] = within(
+  instance
+).queryAllByA11yLabel('Test');
+const withinQueryByA11yHint: ReactTestInstance | null = within(
+  instance
+).queryByA11yHint('Test');
+const withinQueryAllByA11yHint: ReactTestInstance[] = within(
+  instance
+).queryAllByA11yHint('Test');
+const withinQueryByA11yRole: ReactTestInstance | null = within(
+  instance
+).queryByA11yRole('button');
+const withinQueryAllByA11yRole: ReactTestInstance[] = within(
+  instance
+).queryAllByA11yRole('button');
+const withinQueryByA11yState: ReactTestInstance | null = within(
+  instance
+).queryByA11yState({ busy: true });
+const withinQueryAllByA11yState: ReactTestInstance[] = within(
+  instance
+).queryAllByA11yState({ busy: true });
+const withinQueryByA11yValue: ReactTestInstance | null = within(
+  instance
+).queryByA11yValue({ min: 10 });
+const withinQueryAllByA11yValue: ReactTestInstance[] = within(
+  instance
+).queryAllByA11yValue({ min: 10 });

@@ -202,7 +202,9 @@ export interface RenderOptions {
   createNodeMock?: (element: React.ReactElement<any>) => any;
 }
 
-export interface RenderAPI extends GetByAPI, QueryByAPI, FindByAPI, A11yAPI {
+type Queries = GetByAPI & QueryByAPI & FindByAPI & A11yAPI;
+
+export interface RenderAPI extends Queries {
   update(nextElement: React.ReactElement<any>): void;
   rerender(nextElement: React.ReactElement<any>): void;
   unmount(nextElement?: React.ReactElement<any>): void;
@@ -254,3 +256,4 @@ export declare const debug: DebugAPI;
 export declare const fireEvent: FireEventAPI;
 export declare const waitForElement: WaitForElementFunction;
 export declare const act: (callback: () => void) => Thenable;
+export declare const within: (instance: ReactTestInstance) => Queries;
