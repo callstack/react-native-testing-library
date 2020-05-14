@@ -1,7 +1,10 @@
 // @flow
-import makeQuery from './makeQuery';
 import type { A11yRole, A11yStates, A11yState, A11yValue } from '../types.flow';
+<<<<<<< HEAD
 import type { WaitForOptions } from './findByAPI';
+=======
+import makeQuery from './makeQuery';
+>>>>>>> chore: bump eslint config to latest
 
 type GetReturn = ReactTestInstance;
 type GetAllReturn = Array<ReactTestInstance>;
@@ -87,14 +90,14 @@ export function matchArrayValue(
     return prop.includes(matcher);
   }
 
-  return !matcher.some(e => !prop.includes(e));
+  return !matcher.some((e) => !prop.includes(e));
 }
 
 export function matchObject<T: {}>(prop?: T, matcher: T): boolean {
   return prop
     ? Object.keys(matcher).length !== 0 &&
         Object.keys(prop).length !== 0 &&
-        !Object.keys(matcher).some(key => prop[key] !== matcher[key])
+        !Object.keys(matcher).some((key) => prop[key] !== matcher[key])
     : false;
 }
 

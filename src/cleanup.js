@@ -2,7 +2,7 @@
 let cleanupQueue = new Set();
 
 export default function cleanup() {
-  cleanupQueue.forEach(fn => fn());
+  cleanupQueue.forEach((fn) => fn());
   cleanupQueue.clear();
 }
 

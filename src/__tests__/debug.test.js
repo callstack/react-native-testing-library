@@ -32,7 +32,7 @@ class Button extends React.Component<any, any> {
 }
 
 test('debug', () => {
-  jest.spyOn(console, 'log').mockImplementation(x => x);
+  jest.spyOn(console, 'log').mockImplementation((x) => x);
   const component = <Button onPress={jest.fn} text="Press me" />;
   debug(component);
 

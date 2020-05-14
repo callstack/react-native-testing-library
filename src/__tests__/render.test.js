@@ -390,7 +390,9 @@ test('renders options.wrapper around updated node', () => {
     wrapper: WrapperComponent,
   });
 
-  rerender(<View testID="inner" accessibilityLabel="test" />);
+  rerender(
+    <View testID="inner" accessibilityLabel="test" accessibilityHint="test" />
+  );
 
   expect(getByTestId('wrapper')).toBeTruthy();
   expect(toJSON()).toMatchInlineSnapshot(`
@@ -399,6 +401,7 @@ test('renders options.wrapper around updated node', () => {
       testID="wrapper"
     >
       <View
+        accessibilityHint="test"
         accessibilityLabel="test"
         testID="inner"
       />

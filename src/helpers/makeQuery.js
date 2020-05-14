@@ -13,7 +13,7 @@ function isNodeValid(node: ReactTestInstance) {
 
 function makeAliases(aliases: Array<string>, query: Function) {
   return aliases
-    .map(alias => ({ [alias]: query }))
+    .map((alias) => ({ [alias]: query }))
     .reduce((acc, query) => ({ ...acc, ...query }), {});
 }
 
@@ -34,7 +34,7 @@ const makeQuery = <P: mixed, M: mixed>(
   const getBy = (matcher: M) => {
     try {
       return instance.find(
-        node => isNodeValid(node) && matcherFn(node.props[name], matcher)
+        (node) => isNodeValid(node) && matcherFn(node.props[name], matcher)
       );
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getBy);
@@ -43,7 +43,7 @@ const makeQuery = <P: mixed, M: mixed>(
 
   const getAllBy = (matcher: M) => {
     const results = instance.findAll(
-      node => isNodeValid(node) && matcherFn(node.props[name], matcher)
+      (node) => isNodeValid(node) && matcherFn(node.props[name], matcher)
     );
 
     if (results.length === 0) {

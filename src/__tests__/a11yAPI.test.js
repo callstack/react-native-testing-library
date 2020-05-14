@@ -27,13 +27,13 @@ class Button extends React.Component<any> {
       <TouchableOpacity
         accessibilityHint={BUTTON_HINT}
         accessibilityLabel={BUTTON_LABEL}
-        accessibilityRole={BUTTON_ROLE}
+        accessibilityRole={BUTTON_ROLE} // eslint-disable-line react-native-a11y/has-valid-accessibility-role
         accessibilityStates={['selected']}
       >
         <Typography
           accessibilityHint={TEXT_HINT}
           accessibilityLabel={TEXT_LABEL}
-          accessibilityRole={TEXT_ROLE}
+          accessibilityRole={TEXT_ROLE} // eslint-disable-line react-native-a11y/has-valid-accessibility-role
           accessibilityStates={['selected']}
           accessibilityState={{ expanded: false, selected: true }}
           accessibilityValue={{ min: 40, max: 60 }}
@@ -51,7 +51,7 @@ function Section() {
       <Typography
         accessibilityHint={TEXT_HINT}
         accessibilityLabel={TEXT_LABEL}
-        accessibilityRole={TEXT_ROLE}
+        accessibilityRole={TEXT_ROLE} // eslint-disable-line react-native-a11y/has-valid-accessibility-role
         // $FlowFixMe - removed in RN 0.62
         accessibilityStates={['selected', 'disabled']}
         accessibilityState={{ expanded: false }}
