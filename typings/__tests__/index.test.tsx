@@ -122,84 +122,55 @@ const queryAllByDisplayValueRegExp: Array<
 > = tree.queryAllByDisplayValue(/View/g);
 
 // findBy API tests
-const findByTextString: Promise<ReactTestInstance> = tree.findByText('View');
-const findByTextRegExp: Promise<ReactTestInstance> = tree.findByText(/View/g);
-const findByTextStringWithTimeout: Promise<ReactTestInstance> = tree.findByText(
-  'View',
-  { timeout: 10, interval: 10 }
-);
-const findByTextRegExpWithTimeout: Promise<ReactTestInstance> = tree.findByText(
-  /View/g,
-  {
-    timeout: 10,
-    interval: 5,
-  }
-);
-const findAllByTextRegExp: Promise<ReactTestInstance[]> = tree.findAllByText(
-  /View/g
-);
-const findAllByTextRegExpWithTimeout: Promise<ReactTestInstance[]> = tree.findAllByText(
-  /View/g,
-  {
-    timeout: 10,
-    interval: 5,
-  }
-);
+const findBy: Promise<ReactTestInstance>[] = [
+  tree.findByText('View'),
+  tree.findByText('View', { timeout: 10, interval: 10 }),
+  tree.findByText(/View/g),
+  tree.findByText(/View/g, { timeout: 10, interval: 5 }),
+  tree.findByPlaceholder('my placeholder'),
+  tree.findByPlaceholder('my placeholder', { timeout: 10, interval: 5 }),
+  tree.findByPlaceholder(/placeholder/g),
+  tree.findByPlaceholder(/placeholder/g, { timeout: 10, interval: 5 }),
+  tree.findByDisplayValue('my value'),
+  tree.findByDisplayValue('my value', { timeout: 10, interval: 10 }),
+  tree.findByDisplayValue(/value/g),
+  tree.findByDisplayValue(/value/g, { timeout: 10, interval: 10 }),
+  tree.findByTestId('test-id'),
+  tree.findByTestId('test-id', { timeout: 10, interval: 10 }),
+  tree.findByA11yLabel('label'),
+  tree.findByA11yLabel('label', { timeout: 10, interval: 10 }),
+  tree.findByA11yHint('label'),
+  tree.findByA11yHint('label', { timeout: 10, interval: 10 }),
+  tree.findByA11yRole('button'),
+  tree.findByA11yRole('button', { timeout: 10, interval: 10 }),
+  tree.findByA11yState({ busy: true }),
+  tree.findByA11yState({ busy: true }, { timeout: 10, interval: 10 }),
+  tree.findByA11yValue({ min: 10 }),
+  tree.findByA11yValue({ min: 10 }, { timeout: 10, interval: 10 }),
+];
 
-const findByPlaceholderString: Promise<ReactTestInstance> = tree.findByPlaceholder(
-  'my placeholder'
-);
-const findByPlaceholderRegExp: Promise<ReactTestInstance> = tree.findByPlaceholder(
-  /placeholder/g
-);
-const findByPlaceholderStringWithTimeout: Promise<ReactTestInstance> = tree.findByPlaceholder(
-  'my placeholder',
-  { timeout: 10, interval: 10 }
-);
-const findByPlaceholderRegExpWithTimeout: Promise<ReactTestInstance> = tree.findByPlaceholder(
-  /placeholder/g,
-  { timeout: 10, interval: 10 }
-);
-const findByDisplayValueString: Promise<ReactTestInstance> = tree.findByDisplayValue(
-  'my value'
-);
-const findByDisplayValueRegExp: Promise<ReactTestInstance> = tree.findByDisplayValue(
-  /value/g
-);
-const findByDisplayValueStringWithTimeout: Promise<ReactTestInstance> = tree.findByDisplayValue(
-  'my value',
-  { timeout: 10, interval: 10 }
-);
-const findByDisplayValueRegExpWithTimeout: Promise<ReactTestInstance> = tree.findByDisplayValue(
-  /value/g,
-  { timeout: 10, interval: 10 }
-);
-const findAllByDisplayValueString: Promise<ReactTestInstance[]> = tree.findAllByDisplayValue(
-  'View'
-);
-const findAllByDisplayValueStringWithTimeout: Promise<ReactTestInstance[]> = tree.findAllByDisplayValue(
-  'View',
-  { timeout: 10, interval: 10 }
-);
-const findAllByDisplayValueRegExp: Promise<ReactTestInstance[]> = tree.findAllByDisplayValue(
-  /View/g
-);
-const findAllByDisplayValueRegExpWithTimeout: Promise<ReactTestInstance[]> = tree.findAllByDisplayValue(
-  /View/g,
-  { timeout: 10, interval: 10 }
-);
-const findByTestId: Promise<ReactTestInstance> = tree.findByTestId('test-id');
-const findByTestIdWithTimeout: Promise<ReactTestInstance> = tree.findByTestId(
-  'test-id',
-  { timeout: 10, interval: 10 }
-);
-const findAllByTestId: Promise<ReactTestInstance[]> = tree.findAllByTestId(
-  'test-id'
-);
-const findAllByTestIdWithTimeout: Promise<ReactTestInstance[]> = tree.findAllByTestId(
-  'test-id',
-  { timeout: 10, interval: 10 }
-);
+const findAllBy: Promise<ReactTestInstance[]>[] = [
+  tree.findAllByText('View'),
+  tree.findAllByText('View', { timeout: 10, interval: 10 }),
+  tree.findAllByText(/View/g),
+  tree.findAllByText(/View/g, { timeout: 10, interval: 5 }),
+  tree.findAllByPlaceholder('my placeholder'),
+  tree.findAllByPlaceholder('my placeholder', { timeout: 10, interval: 10 }),
+  tree.findAllByPlaceholder(/placeholder/g),
+  tree.findAllByPlaceholder(/placeholder/g, { timeout: 10, interval: 10 }),
+  tree.findAllByDisplayValue('View'),
+  tree.findAllByDisplayValue('View', { timeout: 10, interval: 10 }),
+  tree.findAllByDisplayValue(/View/g),
+  tree.findAllByDisplayValue(/View/g, { timeout: 10, interval: 10 }),
+  tree.findAllByTestId('test-id'),
+  tree.findAllByTestId('test-id', { timeout: 10, interval: 10 }),
+  tree.findAllByA11yHint('label'),
+  tree.findAllByA11yHint('label', { timeout: 10, interval: 10 }),
+  tree.findAllByA11yState({ busy: true }),
+  tree.findAllByA11yState({ busy: true }, { timeout: 10, interval: 10 }),
+  tree.findAllByA11yValue({ min: 10 }),
+  tree.findAllByA11yValue({ min: 10 }, { timeout: 10, interval: 10 }),
+];
 
 // Accessibility queries
 const getByA11yLabel: ReactTestInstance = tree.getByA11yLabel('label');
@@ -210,20 +181,6 @@ const queryByA11yLabel: ReactTestInstance = tree.queryByA11yLabel('label');
 const queryAllByA11yLabel: Array<ReactTestInstance> = tree.queryAllByA11yLabel(
   'label'
 );
-const findByA11yLabel: Promise<ReactTestInstance> = tree.findByA11yLabel(
-  'label'
-);
-const findAllByA11yLabel: Promise<ReactTestInstance[]> = tree.findAllByA11yLabel(
-  'label'
-);
-const findByA11yLabelWithTimeout: Promise<ReactTestInstance> = tree.findByA11yLabel(
-  'label',
-  { timeout: 10, interval: 10 }
-);
-const findAllByA11yLabelWithTimeout: Promise<ReactTestInstance[]> = tree.findAllByA11yLabel(
-  'label',
-  { timeout: 10, interval: 10 }
-);
 
 const getByA11yHint: ReactTestInstance = tree.getByA11yHint('label');
 const getAllByA11yHint: Array<ReactTestInstance> = tree.getAllByA11yHint(
@@ -233,18 +190,6 @@ const queryByA11yHint: ReactTestInstance = tree.queryByA11yHint('label');
 const queryAllByA11yHint: Array<ReactTestInstance> = tree.queryAllByA11yHint(
   'label'
 );
-const findByA11yHint: Promise<ReactTestInstance> = tree.findByA11yHint('label');
-const findAllByA11yHint: Promise<ReactTestInstance[]> = tree.findAllByA11yHint(
-  'label',
-  { timeout: 10, interval: 10 }
-);
-const findByA11yHintWithTimeout: Promise<ReactTestInstance> = tree.findByA11yHint(
-  'label'
-);
-const findAllByA11yHintWithTimeout: Promise<ReactTestInstance[]> = tree.findAllByA11yHint(
-  'label',
-  { timeout: 10, interval: 10 }
-);
 
 const getByA11yRole: ReactTestInstance = tree.getByA11yRole('button');
 const getAllByA11yRole: Array<ReactTestInstance> = tree.getAllByA11yRole(
@@ -253,20 +198,6 @@ const getAllByA11yRole: Array<ReactTestInstance> = tree.getAllByA11yRole(
 const queryByA11yRole: ReactTestInstance = tree.queryByA11yRole('button');
 const queryAllByA11yRole: Array<ReactTestInstance> = tree.queryAllByA11yRole(
   'button'
-);
-const findByA11yRole: Promise<ReactTestInstance> = tree.findByA11yRole(
-  'button'
-);
-const findAllByA11yRole: Promise<ReactTestInstance[]> = tree.findAllByA11yRole(
-  'button',
-  { timeout: 10, interval: 10 }
-);
-const findByA11yRoleWithTimeout: Promise<ReactTestInstance> = tree.findByA11yRole(
-  'button'
-);
-const findAllByA11yRoleWithTimeout: Promise<ReactTestInstance[]> = tree.findAllByA11yRole(
-  'button',
-  { timeout: 10, interval: 10 }
 );
 
 const getByA11yStates: ReactTestInstance = tree.getByA11yStates('selected');
@@ -292,47 +223,11 @@ const getByA11yState: ReactTestInstance = tree.getByA11yState({ busy: true });
 const getAllByA11yState: Array<ReactTestInstance> = tree.getAllByA11yState({ busy: true });
 const queryByA11yState: ReactTestInstance = tree.queryByA11yState({ busy: true });
 const queryAllByA11yState: Array<ReactTestInstance> = tree.queryAllByA11yState({ busy: true });
-const findByA11yState: Promise<ReactTestInstance> = tree.findByA11yState({
-  busy: true,
-});
-const findAllByA11yState: Promise<ReactTestInstance[]> = tree.findAllByA11yState(
-  {
-    busy: true,
-  }
-);
-const findByA11yStateWithTimeout: Promise<ReactTestInstance> = tree.findByA11yState(
-  { busy: true },
-  { timeout: 10, interval: 10 }
-);
-const findAllByA11yStateWithTimeout: Promise<ReactTestInstance[]> = tree.findAllByA11yState(
-  {
-    busy: true,
-  },
-  { timeout: 10, interval: 10 }
-);
 
 const getByA11yValue: ReactTestInstance = tree.getByA11yValue({ min: 10 });
 const getAllByA11yValue: Array<ReactTestInstance> = tree.getAllByA11yValue({ min: 10 });
 const queryByA11yValue: ReactTestInstance = tree.queryByA11yValue({ min: 10 });
 const queryAllByA11yValue: Array<ReactTestInstance> = tree.queryAllByA11yValue({ min: 10 });
-const findByA11yValue: Promise<ReactTestInstance> = tree.findByA11yValue({
-  min: 10,
-});
-const findAllByA11yValue: Promise<ReactTestInstance[]> = tree.findAllByA11yValue(
-  {
-    min: 10,
-  },
-  { timeout: 10, interval: 10 }
-);
-const findByA11yValueWithTimeout: Promise<ReactTestInstance> = tree.findByA11yValue(
-  { min: 10 }
-);
-const findAllByA11yValueWithTimeout: Promise<ReactTestInstance[]> = tree.findAllByA11yValue(
-  {
-    min: 10,
-  },
-  { timeout: 10, interval: 10 }
-);
 
 const debugFn = tree.debug();
 const debugFnWithMessage = tree.debug('my message');
