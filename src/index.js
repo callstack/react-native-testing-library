@@ -7,6 +7,7 @@ import { cleanup } from './pure';
 // if you don't like this then either import the `pure` module
 // or set the RTL_SKIP_AUTO_CLEANUP env variable to 'true'.
 if (typeof afterEach === 'function' && !process.env.RTL_SKIP_AUTO_CLEANUP) {
+  // eslint-disable-next-line no-undef
   afterEach(async () => {
     await flushMicrotasksQueue();
     cleanup();
