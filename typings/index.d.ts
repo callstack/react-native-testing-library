@@ -13,7 +13,7 @@ type QueryAllReturn = Array<ReactTestInstance> | [];
 type FindReturn = Promise<ReactTestInstance>;
 type FindAllReturn = Promise<ReactTestInstance[]>;
 
-export interface GetByAPI {
+interface GetByAPI {
   getByName: (name: React.ReactType | string) => ReactTestInstance;
   getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
   getByText: (text: string | RegExp) => ReactTestInstance;
@@ -42,7 +42,7 @@ export interface GetByAPI {
   ) => Array<ReactTestInstance>;
 }
 
-export interface QueryByAPI {
+interface QueryByAPI {
   queryByName: (name: React.ReactType | string) => ReactTestInstance | null;
   queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
   queryByText: (name: string | RegExp) => ReactTestInstance | null;
@@ -88,7 +88,7 @@ export interface WaitForOptions {
   interval: number;
 }
 
-export interface FindByAPI {
+interface FindByAPI {
   findByText: (
     text: string | RegExp,
     waitForOptions?: WaitForOptions
