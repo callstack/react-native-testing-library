@@ -6,11 +6,11 @@ import { render, within } from '..';
 test('within() exposes basic queries', () => {
   const rootQueries = render(
     <View>
-      <View testID="first">
+      <View accessibilityHint="first">
         <Text>Same Text</Text>
         <TextInput value="Same Value" placeholder="Same Placeholder" />
       </View>
-      <View testID="second">
+      <View accessibilityHint="second">
         <Text>Same Text</Text>
         <TextInput value="Same Value" placeholder="Same Placeholder" />
       </View>
@@ -21,7 +21,7 @@ test('within() exposes basic queries', () => {
   expect(rootQueries.getAllByDisplayValue('Same Value')).toHaveLength(2);
   expect(rootQueries.getAllByPlaceholder('Same Placeholder')).toHaveLength(2);
 
-  const firstQueries = within(rootQueries.getAllByTestId('first')[0]);
+  const firstQueries = within(rootQueries.getByA11yHint('first'));
   expect(firstQueries.getAllByText('Same Text')).toHaveLength(1);
   expect(firstQueries.getByText('Same Text')).toBeTruthy();
   expect(firstQueries.queryAllByText('Same Text')).toHaveLength(1);
@@ -29,7 +29,7 @@ test('within() exposes basic queries', () => {
   expect(firstQueries.getByDisplayValue('Same Value')).toBeTruthy();
   expect(firstQueries.getByPlaceholder('Same Placeholder')).toBeTruthy();
 
-  const secondQueries = within(rootQueries.getAllByTestId('second')[0]);
+  const secondQueries = within(rootQueries.getByA11yHint('second'));
   expect(secondQueries.getAllByText('Same Text')).toHaveLength(1);
   expect(secondQueries.getByText('Same Text')).toBeTruthy();
   expect(secondQueries.queryAllByText('Same Text')).toHaveLength(1);
@@ -41,14 +41,14 @@ test('within() exposes basic queries', () => {
 test('within() exposes a11y queries', () => {
   const rootQueries = render(
     <View>
-      <View testID="first">
+      <View accessibilityHint="first">
         <TextInput
           value="Same Value"
           accessibilityLabel="Same Label"
           accessibilityHint="Same Hint"
         />
       </View>
-      <View testID="second">
+      <View accessibilityHint="second">
         <TextInput
           value="Same Value"
           accessibilityLabel="Same Label"
@@ -61,11 +61,11 @@ test('within() exposes a11y queries', () => {
   expect(rootQueries.getAllByA11yLabel('Same Label')).toHaveLength(2);
   expect(rootQueries.getAllByA11yHint('Same Hint')).toHaveLength(2);
 
-  const firstQueries = within(rootQueries.getAllByTestId('first')[0]);
+  const firstQueries = within(rootQueries.getByA11yHint('first'));
   expect(firstQueries.getByA11yLabel('Same Label')).toBeTruthy();
   expect(firstQueries.getByA11yHint('Same Hint')).toBeTruthy();
 
-  const secondQueries = within(rootQueries.getAllByTestId('second')[0]);
+  const secondQueries = within(rootQueries.getByA11yHint('second'));
   expect(secondQueries.getAllByA11yLabel('Same Label')).toHaveLength(1);
   expect(secondQueries.getAllByA11yHint('Same Hint')).toHaveLength(1);
 });
