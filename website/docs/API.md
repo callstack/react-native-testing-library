@@ -341,6 +341,30 @@ test('waiting for an Banana to be ready', async () => {
 
 If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to use `async/await` syntax as it will stall your tests.
 
+## `within`
+
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/within.test.js)
+
+Defined as:
+
+```jsx
+function within(instance: ReactTestInstance): Queries
+```
+
+Perform [queries](./Queries.md) scoped to given element. 
+
+```jsx
+const detailsScreen = within(getByA11yHint('Details Screen'));
+expect(detailsScreen.getByText('Some Text')).toBeTruthy();
+expect(detailsScreen.getByDisplayValue('Some Value')).toBeTruthy();
+expect(detailsScreen.getByA11yLabel('Some Label')).toBeTruthy();
+expect(detailsScreen.getByA11yHint('Some Label')).toBeTruthy();
+```
+
+Use cases for scoped queries include:
+* queries scoped to a single item inside a FlatList containing many items
+* queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
+
 ## `debug`
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/debug.test.js)
