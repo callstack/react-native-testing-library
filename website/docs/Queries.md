@@ -91,7 +91,9 @@ const { getByTestId } = render(<MyComponent />);
 const element = getByTestId('unique-id');
 ```
 
-*Note:* Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead. 
+:::caution
+Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead. 
+:::
 
 :::danger
 Current implementation of `getByTestId` and `queryByTestId` has a serious flaw, which results in finding more IDs than there really would be present in native React host components. Fixing it may break some of your tests so we'll do it in next major release (v2). As a temporary workaround, please use `getAllByTestId('your-id')[0]` or `queryAllByTestId('your-id')[0]` or migrate off testing with testID, which is considered to be an escape hatch.
