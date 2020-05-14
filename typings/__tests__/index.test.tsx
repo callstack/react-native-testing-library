@@ -9,6 +9,7 @@ import {
   debug,
   waitForElement,
   act,
+  within,
 } from '../..';
 
 interface HasRequiredProp {
@@ -60,9 +61,9 @@ const getAllByNameConstructor: Array<ReactTestInstance> = tree.getAllByName(
   View
 );
 const getAllByType: Array<ReactTestInstance> = tree.getAllByType(View);
-const getAllByTypeWithRequiredProps: Array<
-  ReactTestInstance
-> = tree.getAllByType(ElementWithRequiredProps);
+const getAllByTypeWithRequiredProps: Array<ReactTestInstance> = tree.getAllByType(
+  ElementWithRequiredProps
+);
 const getAllByTextString: Array<ReactTestInstance> = tree.getAllByText(
   '<View />'
 );
@@ -104,21 +105,21 @@ const queryAllByNameConstructor: Array<ReactTestInstance> = tree.queryAllByName(
   View
 );
 const queryAllByType: Array<ReactTestInstance> = tree.queryAllByType(View);
-const queryAllByTypeWithRequiredProps: Array<
-  ReactTestInstance
-> = tree.queryAllByType(ElementWithRequiredProps);
+const queryAllByTypeWithRequiredProps: Array<ReactTestInstance> = tree.queryAllByType(
+  ElementWithRequiredProps
+);
 const queryAllByTextString: Array<ReactTestInstance> = tree.queryAllByText(
   'View'
 );
 const queryAllByTextRegExp: Array<ReactTestInstance> = tree.queryAllByText(
   /View/g
 );
-const queryAllByDisplayValueString: Array<
-  ReactTestInstance
-> = tree.queryAllByDisplayValue('View');
-const queryAllByDisplayValueRegExp: Array<
-  ReactTestInstance
-> = tree.queryAllByDisplayValue(/View/g);
+const queryAllByDisplayValueString: Array<ReactTestInstance> = tree.queryAllByDisplayValue(
+  'View'
+);
+const queryAllByDisplayValueRegExp: Array<ReactTestInstance> = tree.queryAllByDisplayValue(
+  /View/g
+);
 
 // Accessibility queries
 const getByA11yLabel: ReactTestInstance = tree.getByA11yLabel('label');
@@ -146,33 +147,45 @@ const queryAllByA11yRole: Array<ReactTestInstance> = tree.queryAllByA11yRole(
   'button'
 );
 const getByA11yStates: ReactTestInstance = tree.getByA11yStates('selected');
-const getByA11yStatesArray: ReactTestInstance = tree.getByA11yStates(['selected']);
+const getByA11yStatesArray: ReactTestInstance = tree.getByA11yStates([
+  'selected',
+]);
 const getAllByA11yStates: Array<ReactTestInstance> = tree.getAllByA11yStates(
   'selected'
 );
-const getAllByA11yStatesArray: Array<
-  ReactTestInstance
-> = tree.getAllByA11yStates(['selected']);
+const getAllByA11yStatesArray: Array<ReactTestInstance> = tree.getAllByA11yStates(
+  ['selected']
+);
 const queryByA11yStates: ReactTestInstance = tree.queryByA11yStates('selected');
 const queryByA11yStatesArray: ReactTestInstance = tree.queryByA11yStates([
   'selected',
 ]);
-const queryAllByA11yStates: Array<
-  ReactTestInstance
-> = tree.queryAllByA11yStates('selected');
-const queryAllByA11yStatesArray: Array<
-  ReactTestInstance
-> = tree.queryAllByA11yStates(['selected']);
+const queryAllByA11yStates: Array<ReactTestInstance> = tree.queryAllByA11yStates(
+  'selected'
+);
+const queryAllByA11yStatesArray: Array<ReactTestInstance> = tree.queryAllByA11yStates(
+  ['selected']
+);
 
 const getByA11yState: ReactTestInstance = tree.getByA11yState({ busy: true });
-const getAllByA11yState: Array<ReactTestInstance> = tree.getAllByA11yState({ busy: true });
-const queryByA11yState: ReactTestInstance = tree.queryByA11yState({ busy: true });
-const queryAllByA11yState: Array<ReactTestInstance> = tree.queryAllByA11yState({ busy: true });
+const getAllByA11yState: Array<ReactTestInstance> = tree.getAllByA11yState({
+  busy: true,
+});
+const queryByA11yState: ReactTestInstance = tree.queryByA11yState({
+  busy: true,
+});
+const queryAllByA11yState: Array<ReactTestInstance> = tree.queryAllByA11yState({
+  busy: true,
+});
 
 const getByA11yValue: ReactTestInstance = tree.getByA11yValue({ min: 10 });
-const getAllByA11yValue: Array<ReactTestInstance> = tree.getAllByA11yValue({ min: 10 });
+const getAllByA11yValue: Array<ReactTestInstance> = tree.getAllByA11yValue({
+  min: 10,
+});
 const queryByA11yValue: ReactTestInstance = tree.queryByA11yValue({ min: 10 });
-const queryAllByA11yValue: Array<ReactTestInstance> = tree.queryAllByA11yValue({ min: 10 });
+const queryAllByA11yValue: Array<ReactTestInstance> = tree.queryAllByA11yValue({
+  min: 10,
+});
 
 const debugFn = tree.debug();
 const debugFnWithMessage = tree.debug('my message');
@@ -217,3 +230,115 @@ const waitByAll: Promise<Array<ReactTestInstance>> = waitForElement<
 act(() => {
   render(<TestComponent />);
 });
+
+// within API
+const instance: ReactTestInstance = tree.getByText('<View />');
+const withinGetByText: ReactTestInstance = within(instance).getByText('Test');
+const withinGetAllByText: ReactTestInstance[] = within(instance).getAllByText(
+  'Test'
+);
+const withinGetByDisplayValue: ReactTestInstance = within(
+  instance
+).getByDisplayValue('Test');
+const withinGetAllByDisplayValue: ReactTestInstance[] = within(
+  instance
+).getAllByDisplayValue('Test');
+const withinGetByPlaceholder: ReactTestInstance = within(
+  instance
+).getByPlaceholder('Test');
+const withinGetAllByPlaceholder: ReactTestInstance[] = within(
+  instance
+).getAllByPlaceholder('Test');
+const withinGetByTestId: ReactTestInstance = within(instance).getByTestId(
+  'Test'
+);
+const withinGetAllByTestId: ReactTestInstance[] = within(
+  instance
+).getAllByTestId('Test');
+
+const withinQueryByText: ReactTestInstance | null = within(
+  instance
+).queryByText('Test');
+const withinQueryAllByText: ReactTestInstance[] = within(
+  instance
+).queryAllByText('Test');
+const withinQueryByDisplayValue: ReactTestInstance | null = within(
+  instance
+).queryByDisplayValue('Test');
+const withinQueryAllByDisplayValue: ReactTestInstance[] = within(
+  instance
+).queryAllByDisplayValue('Test');
+const withinQueryByPlaceholder: ReactTestInstance | null = within(
+  instance
+).queryByPlaceholder('Test');
+const withinQueryAllByPlaceholder: ReactTestInstance[] = within(
+  instance
+).queryAllByPlaceholder('Test');
+const withinQueryByTestId: ReactTestInstance | null = within(
+  instance
+).queryByTestId('Test');
+const withinQueryAllByTestId: ReactTestInstance[] = within(
+  instance
+).queryAllByTestId('Test');
+
+const withinGetByA11yLabel: ReactTestInstance = within(instance).getByA11yLabel(
+  'Test'
+);
+const withinGetAllByA11yLabel: ReactTestInstance[] = within(
+  instance
+).getAllByA11yLabel('Test');
+const withinGetByA11yHint: ReactTestInstance = within(instance).getByA11yHint(
+  'Test'
+);
+const withinGetAllByA11yHint: ReactTestInstance[] = within(
+  instance
+).getAllByA11yHint('Test');
+const withinGetByA11yRole: ReactTestInstance = within(instance).getByA11yRole(
+  'button'
+);
+const withinGetAllByA11yRole: ReactTestInstance[] = within(
+  instance
+).getAllByA11yRole('button');
+const withinGetByA11yState: ReactTestInstance = within(
+  instance
+).getByA11yState({ busy: true });
+const withinGetAllByA11yState: ReactTestInstance[] = within(
+  instance
+).getAllByA11yState({ busy: true });
+const withinGetByA11yValue: ReactTestInstance = within(
+  instance
+).getByA11yValue({ min: 10 });
+const withinGetAllByA11yValue: ReactTestInstance[] = within(
+  instance
+).getAllByA11yValue({ min: 10 });
+
+const withinQueryByA11yLabel: ReactTestInstance | null = within(
+  instance
+).queryByA11yLabel('Test');
+const withinQueryAllByA11yLabel: ReactTestInstance[] = within(
+  instance
+).queryAllByA11yLabel('Test');
+const withinQueryByA11yHint: ReactTestInstance | null = within(
+  instance
+).queryByA11yHint('Test');
+const withinQueryAllByA11yHint: ReactTestInstance[] = within(
+  instance
+).queryAllByA11yHint('Test');
+const withinQueryByA11yRole: ReactTestInstance | null = within(
+  instance
+).queryByA11yRole('button');
+const withinQueryAllByA11yRole: ReactTestInstance[] = within(
+  instance
+).queryAllByA11yRole('button');
+const withinQueryByA11yState: ReactTestInstance | null = within(
+  instance
+).queryByA11yState({ busy: true });
+const withinQueryAllByA11yState: ReactTestInstance[] = within(
+  instance
+).queryAllByA11yState({ busy: true });
+const withinQueryByA11yValue: ReactTestInstance | null = within(
+  instance
+).queryByA11yValue({ min: 10 });
+const withinQueryAllByA11yValue: ReactTestInstance[] = within(
+  instance
+).queryAllByA11yValue({ min: 10 });
