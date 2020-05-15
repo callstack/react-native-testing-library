@@ -1,10 +1,8 @@
 // @flow
-/* eslint-disable react-native/no-color-literals */
 import React from 'react';
 import { StyleSheet, View, Button, Text } from 'react-native';
 import { render } from '..';
 import '@testing-library/jest-native/extend-expect';
-import { TestScheduler } from 'jest';
 
 const style = StyleSheet.create({
   style1: {
