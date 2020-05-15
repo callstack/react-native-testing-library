@@ -351,7 +351,7 @@ Defined as:
 function within(instance: ReactTestInstance): Queries
 ```
 
-Perform [queries](./Queries.md) scoped to given element. 
+Perform [queries](./Queries.md) scoped to given element.
 
 :::note
 Please note that additional `render` specific operations like `update`, `unmount`, `debug`, `toJSON` are _not_ included.
@@ -361,13 +361,14 @@ Please note that additional `render` specific operations like `update`, `unmount
 const detailsScreen = within(getByA11yHint('Details Screen'));
 expect(detailsScreen.getByText('Some Text')).toBeTruthy();
 expect(detailsScreen.getByDisplayValue('Some Value')).toBeTruthy();
-expect(detailsScreen.getByA11yLabel('Some Label')).toBeTruthy();
-expect(detailsScreen.getByA11yHint('Some Label')).toBeTruthy();
+expect(detailsScreen.queryByA11yLabel('Some Label')).toBeTruthy();
+await expect(detailsScreen.findByA11yHint('Some Label')).resolves.toBeTruthy();
 ```
 
 Use cases for scoped queries include:
-* queries scoped to a single item inside a FlatList containing many items
-* queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
+
+- queries scoped to a single item inside a FlatList containing many items
+- queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
 
 ## `debug`
 

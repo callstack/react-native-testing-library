@@ -24,6 +24,19 @@ title: Queries
 
 `queryAllBy*` queries return an array of all matching nodes for a query, and return an empty array (`[]`) if no elements match.
 
+### findBy
+
+`findBy` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 4500ms. If you need to find more than one element, then use `findAllBy`.
+
+### findAllBy
+
+`findAllBy` queries return a promise which resolves to an array when any matching elements are found. The promise is rejected if no elements match after a default timeout of 4500ms.
+
+
+:::info
+`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective arguments to [`waitForElement`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelement) function. 
+:::
+
 ## Queries
 
 _Note: most methods like this one return a [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance) with following properties that you may be interested in:_
@@ -39,7 +52,7 @@ type ReactTestInstance = {
 
 ### `ByText`
 
-> getByText, getAllByText, queryByText, queryAllByText
+> getByText, getAllByText, queryByText, queryAllByText, findByText, findAllByText
 
 Returns a `ReactTestInstance` with matching text – may be a string or regular expression.
 
@@ -54,7 +67,7 @@ const element = getByText('banana');
 
 ### `ByPlaceholder`
 
-> getByPlaceholder, getAllByPlaceholder, queryByPlaceholder, queryAllByPlaceholder
+> getByPlaceholder, getAllByPlaceholder, queryByPlaceholder, queryAllByPlaceholder, findByPlaceholder, findAllByPlaceholder
 
 Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
 
@@ -67,7 +80,7 @@ const element = getByPlaceholder('username');
 
 ### `ByDisplayValue`
 
-> getByDisplayValue, getAllByDisplayValue, queryByDisplayValue, queryAllByDisplayValue
+> getByDisplayValue, getAllByDisplayValue, queryByDisplayValue, queryAllByDisplayValue, findByDisplayValue, findAllByDisplayValue
 
 Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
 
@@ -80,7 +93,7 @@ const element = getByDisplayValue('username');
 
 ### `ByTestId`
 
-> getByTestId, getAllByTestId, queryByTestId, queryAllByTestId
+> getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, findByTestId, findAllByTestId
 
 Returns a `ReactTestInstance` with matching `testID` prop.
 
@@ -101,8 +114,8 @@ Current implementation of `getByTestId` and `queryByTestId` has a serious flaw, 
 
 ### `ByA11yLabel`, `ByAccessibilityLabel`
 
-> getByA11yLabel, getAllByA11yLabel, queryByA11yLabel, queryAllByA11yLabel
-> getByAccessibilityLabel, getAllByAccessibilityLabel, queryByAccessibilityLabel, queryAllByAccessibilityLabel
+> getByA11yLabel, getAllByA11yLabel, queryByA11yLabel, queryAllByA11yLabel, findByA11yLabel, findAllByA11yLabel
+> getByAccessibilityLabel, getAllByAccessibilityLabel, queryByAccessibilityLabel, queryAllByAccessibilityLabel, findByAccessibilityLabel, findAllByAccessibilityLabel
 
 Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
 
@@ -115,8 +128,8 @@ const element = getByA11yLabel('my-label');
 
 ### `ByA11yHint`, `ByAccessibilityHint`
 
-> getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint
-> getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint
+> getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint, findByA11yHint, findAllByA11yHint
+> getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint, findByAccessibilityHint, findAllByAccessibilityHint
 
 Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
 
@@ -144,8 +157,8 @@ const element2 = getByA11yStates('checked');
 
 ### `ByA11yRole`, `ByAccessibilityRole`
 
-> getByA11yRole, getAllByA11yRole, queryByA11yRole, queryAllByA11yRole
-> getByAccessibilityRole, getAllByAccessibilityRole, queryByAccessibilityRole, queryAllByAccessibilityRole
+> getByA11yRole, getAllByA11yRole, queryByA11yRole, queryAllByA11yRole, findByA11yRole, findAllByA11yRole
+> getByAccessibilityRole, getAllByAccessibilityRole, queryByAccessibilityRole, queryAllByAccessibilityRole, findByAccessibilityRole, findAllByAccessibilityRole
 
 Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
 
@@ -158,8 +171,8 @@ const element = getByA11yRole('button');
 
 ### `ByA11yState`, `ByAccessibilityState`
 
-> getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState
-> getByAccessibilityState, getAllByAccessibilityState, queryByAccessibilityState, queryAllByAccessibilityState
+> getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState, findByA11yState, findAllByA11yState
+> getByAccessibilityState, getAllByAccessibilityState, queryByAccessibilityState, queryAllByAccessibilityState, findByAccessibilityState, findAllByAccessibilityState
 
 Returns a `ReactTestInstance` with matching `accessibilityState` prop.
 
@@ -172,8 +185,8 @@ const element = getByA11yState({ disabled: true });
 
 ### `ByA11Value`, `ByAccessibilityValue`
 
-> getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue
-> getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue
+> getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue, findByA11yValue, findAllByA11yValue
+> getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue, findByAccessibilityValue, findAllByAccessibilityValue
 
 Returns a `ReactTestInstance` with matching `accessibilityValue` prop.
 

@@ -5,6 +5,7 @@ import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getByAPI } from './helpers/getByAPI';
 import { queryByAPI } from './helpers/queryByAPI';
+import { findByAPI } from './helpers/findByAPI';
 import a11yAPI from './helpers/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
@@ -40,6 +41,7 @@ export default function render<T>(
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),
+    ...findByAPI(instance),
     ...a11yAPI(instance),
     update,
     rerender: update, // alias for `update`
