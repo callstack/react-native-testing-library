@@ -31,7 +31,10 @@ test('jest-native matchers work correctly', () => {
     </View>
   );
 
+  // $FlowFixMe - TODO: fix @testing-library/jest-native flow typings
   expect(getByText('Enabled Button')).toBeEnabled();
+
+  // $FlowFixMe - TODO: fix @testing-library/jest-native flow typings
   expect(getByText('Disabled Button')).not.toBeEnabled();
 
   expect(getByText('Disabled Button')).toBeDisabled();
@@ -42,17 +45,21 @@ test('jest-native matchers work correctly', () => {
   expect(getByA11yHint('Not Empty Text')).not.toBeEmpty();
   expect(getByA11yHint('Not Empty View')).not.toBeEmpty();
 
+  // $FlowFixMe - TODO: fix @testing-library/jest-native flow typings
   expect(getByA11yHint('Container View')).toContainElement(
     getByA11yHint('First-Level Child')
   );
+  // $FlowFixMe - TODO: fix @testing-library/jest-native flow typings
   expect(getByA11yHint('Container View')).toContainElement(
     getByText('Second-Level Child')
   );
+  // $FlowFixMe - TODO: fix @testing-library/jest-native flow typings
   expect(getByA11yHint('Container View')).not.toContainElement(
     getByText('Enabled Button')
   );
 
   expect(getByA11yHint('Not Empty Text')).toHaveTextContent('Not empty');
+  // $FlowFixMe - TODO: fix @testing-library/jest-native flow typings
   expect(getByA11yHint('Not Empty Text')).toHaveTextContent(/Not empty/);
   expect(getByA11yHint('Not Empty Text')).not.toHaveTextContent('Is empty');
 
