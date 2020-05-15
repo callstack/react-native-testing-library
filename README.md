@@ -70,6 +70,18 @@ yarn add --dev react-native-testing-library
 
 This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!
 
+### Additional jest matchers
+
+In order to use addtional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add following line to your jest.config.js:
+
+```js
+module.exports = {
+  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect']
+}
+```
+
+### Flow
+
 Note for [Flow](https://flow.org) users – you'll also need to install typings for `react-test-renderer`:
 
 ```sh
