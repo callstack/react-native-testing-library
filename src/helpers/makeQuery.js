@@ -1,10 +1,10 @@
 // @flow
+import waitForElement from '../waitForElement';
 import {
   ErrorWithStack,
   prepareErrorMessage,
   createQueryByError,
 } from './errors';
-import waitForElement from '../waitForElement';
 import type { WaitForOptions } from './findByAPI';
 
 function isNodeValid(node: ReactTestInstance) {

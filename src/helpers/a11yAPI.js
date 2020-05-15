@@ -1,10 +1,7 @@
 // @flow
 import type { A11yRole, A11yStates, A11yState, A11yValue } from '../types.flow';
-<<<<<<< HEAD
 import type { WaitForOptions } from './findByAPI';
-=======
 import makeQuery from './makeQuery';
->>>>>>> chore: bump eslint config to latest
 
 type GetReturn = ReactTestInstance;
 type GetAllReturn = Array<ReactTestInstance>;
@@ -47,18 +44,18 @@ type A11yAPI = {|
   findAllByA11yStates: (A11yStates, ?WaitForOptions) => FindAllReturn,
 
   // State
-  getByA11yState: A11yState => GetReturn,
-  getAllByA11yState: A11yState => GetAllReturn,
-  queryByA11yState: A11yState => QueryReturn,
-  queryAllByA11yState: A11yState => QueryAllReturn,
+  getByA11yState: (A11yState) => GetReturn,
+  getAllByA11yState: (A11yState) => GetAllReturn,
+  queryByA11yState: (A11yState) => QueryReturn,
+  queryAllByA11yState: (A11yState) => QueryAllReturn,
   findByA11yState: (A11yState, ?WaitForOptions) => FindReturn,
   findAllByA11yState: (A11yState, ?WaitForOptions) => FindAllReturn,
 
   // Value
-  getByA11yValue: A11yValue => GetReturn,
-  getAllByA11yValue: A11yValue => GetAllReturn,
-  queryByA11yValue: A11yValue => QueryReturn,
-  queryAllByA11yValue: A11yValue => QueryAllReturn,
+  getByA11yValue: (A11yValue) => GetReturn,
+  getAllByA11yValue: (A11yValue) => GetAllReturn,
+  queryByA11yValue: (A11yValue) => QueryReturn,
+  queryAllByA11yValue: (A11yValue) => QueryAllReturn,
   findByA11yValue: (A11yValue, ?WaitForOptions) => FindReturn,
   findAllByA11yValue: (A11yValue, ?WaitForOptions) => FindAllReturn,
 |};
