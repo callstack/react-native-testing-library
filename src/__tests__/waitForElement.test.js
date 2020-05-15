@@ -24,7 +24,7 @@ class BananaContainer extends React.Component<{}, any> {
   state = { fresh: false };
 
   onChangeFresh = async () => {
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
     this.setState({ fresh: true });
   };
 

@@ -5,10 +5,8 @@ import { render } from '..';
 
 const BUTTON_LABEL = 'cool button';
 const BUTTON_HINT = 'click this button';
-const BUTTON_ROLE = 'button';
 const TEXT_LABEL = 'cool text';
 const TEXT_HINT = 'static text';
-const TEXT_ROLE = 'link';
 // Little hack to make all the methods happy with type
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 const NO_INSTANCES_FOUND = 'No instances found';
@@ -27,13 +25,13 @@ class Button extends React.Component<any> {
       <TouchableOpacity
         accessibilityHint={BUTTON_HINT}
         accessibilityLabel={BUTTON_LABEL}
-        accessibilityRole={BUTTON_ROLE}
+        accessibilityRole="button"
         accessibilityStates={['selected']}
       >
         <Typography
           accessibilityHint={TEXT_HINT}
           accessibilityLabel={TEXT_LABEL}
-          accessibilityRole={TEXT_ROLE}
+          accessibilityRole="link"
           accessibilityStates={['selected']}
           accessibilityState={{ expanded: false, selected: true }}
           accessibilityValue={{ min: 40, max: 60 }}
@@ -51,7 +49,7 @@ function Section() {
       <Typography
         accessibilityHint={TEXT_HINT}
         accessibilityLabel={TEXT_LABEL}
-        accessibilityRole={TEXT_ROLE}
+        accessibilityRole="link"
         // $FlowFixMe - removed in RN 0.62
         accessibilityStates={['selected', 'disabled']}
         accessibilityState={{ expanded: false }}
