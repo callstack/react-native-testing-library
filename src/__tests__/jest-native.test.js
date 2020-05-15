@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { StyleSheet, View, Button, Text } from 'react-native';
+import { StyleSheet, View, Button, Text, TextInput } from 'react-native';
 import { render } from '..';
 import '@testing-library/jest-native/extend-expect';
 
@@ -27,6 +27,12 @@ test('jest-native matchers work correctly', () => {
           <Text>Second-Level Child</Text>
         </View>
       </View>
+      <TextInput
+        accessibilityHint="Text Input"
+        allowFontScaling={false}
+        secureTextEntry={true}
+        defaultValue="111"
+      />
     </View>
   );
 
@@ -72,18 +78,13 @@ test('jest-native matchers work correctly', () => {
     color: 'green',
     backgroundColor: 'green',
   });
-});
 
-test.skip('toHaveProp matchers works correctly', () => {
-  const { getByText, getByA11yHint } = render(
-    <View>
-      <Button title="Enabled Button" onPress={jest.fn()} />
-      <Text accessibilityHint="Not Empty Text">Not empty</Text>
-    </View>
-  );
-
-  // All of the following lines using `toHaveProp` matchers, because it things the looked up prop is `null`.
-  expect(getByText('Enabled Button')).toHaveProp('title');
-  expect(getByText('Enabled Button')).toHaveProp('title', 'Enabled Button');
-  expect(getByA11yHint('Not Empty Text')).toHaveProp('text', 'Not empty');
+  const textInput = getByA11yHint('Text Input');
+  expect(textInput).toBeTruthy();
+  expect(textInput).toHaveProp('allowFontScaling');
+  expect(textInput).toHaveProp('allowFontScaling', false);
+  expect(textInput).toHaveProp('secureTextEntry');
+  expect(textInput).toHaveProp('secureTextEntry', true);
+  expect(textInput).toHaveProp('defaultValue');
+  expect(textInput).toHaveProp('defaultValue', '111');
 });
