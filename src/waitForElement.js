@@ -6,7 +6,7 @@ export default function waitForElement<T>(
 ): Promise<T> {
   const startTime = Date.now();
   return new Promise((resolve, reject) => {
-    const rejectOrRerun = error => {
+    const rejectOrRerun = (error) => {
       if (Date.now() - startTime >= timeout) {
         reject(error);
         return;

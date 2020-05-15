@@ -45,7 +45,7 @@ class Banana extends React.Component<any, any> {
   }
 
   changeFresh = () => {
-    this.setState(state => ({
+    this.setState((state) => ({
       fresh: !state.fresh,
     }));
   };
@@ -320,7 +320,7 @@ test('toJSON', () => {
 });
 
 test('debug', () => {
-  jest.spyOn(console, 'log').mockImplementation(x => x);
+  jest.spyOn(console, 'log').mockImplementation((x) => x);
 
   const { debug } = render(<Banana />);
 
@@ -343,7 +343,7 @@ test('debug', () => {
 });
 
 test('debug changing component', () => {
-  jest.spyOn(console, 'log').mockImplementation(x => x);
+  jest.spyOn(console, 'log').mockImplementation((x) => x);
 
   const { getByProps, debug } = render(<Banana />);
 
@@ -390,7 +390,9 @@ test('renders options.wrapper around updated node', () => {
     wrapper: WrapperComponent,
   });
 
-  rerender(<View testID="inner" accessibilityLabel="test" />);
+  rerender(
+    <View testID="inner" accessibilityLabel="test" accessibilityHint="test" />
+  );
 
   expect(getByTestId('wrapper')).toBeTruthy();
   expect(toJSON()).toMatchInlineSnapshot(`
@@ -399,6 +401,7 @@ test('renders options.wrapper around updated node', () => {
       testID="wrapper"
     >
       <View
+        accessibilityHint="test"
         accessibilityLabel="test"
         testID="inner"
       />

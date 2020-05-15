@@ -36,7 +36,7 @@ const getNodeByText = (node, text) => {
 };
 
 const getChildrenAsText = (children, TextComponent, textContent = []) => {
-  React.Children.forEach(children, child => {
+  React.Children.forEach(children, (child) => {
     if (typeof child === 'string') {
       textContent.push(child);
       return;
@@ -90,7 +90,7 @@ export const getByName = (instance: ReactTestInstance, warnFn?: Function) =>
     warnFn && warnFn('getByName');
     try {
       return typeof name === 'string'
-        ? instance.find(node => filterNodeByName(node, name))
+        ? instance.find((node) => filterNodeByName(node, name))
         : instance.findByType(name);
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByNameFn);
@@ -110,7 +110,7 @@ export const getByType = (instance: ReactTestInstance, warnFn?: Function) =>
 export const getByText = (instance: ReactTestInstance) =>
   function getByTextFn(text: string | RegExp) {
     try {
-      return instance.find(node => getNodeByText(node, text));
+      return instance.find((node) => getNodeByText(node, text));
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByTextFn);
     }
@@ -119,7 +119,7 @@ export const getByText = (instance: ReactTestInstance) =>
 export const getByPlaceholder = (instance: ReactTestInstance) =>
   function getByPlaceholderFn(placeholder: string | RegExp) {
     try {
-      return instance.find(node =>
+      return instance.find((node) =>
         getTextInputNodeByPlaceholder(node, placeholder)
       );
     } catch (error) {
@@ -130,7 +130,7 @@ export const getByPlaceholder = (instance: ReactTestInstance) =>
 export const getByDisplayValue = (instance: ReactTestInstance) =>
   function getByDisplayValueFn(placeholder: string | RegExp) {
     try {
-      return instance.find(node =>
+      return instance.find((node) =>
         getTextInputNodeByDisplayValue(node, placeholder)
       );
     } catch (error) {
@@ -181,7 +181,7 @@ export const getAllByName = (instance: ReactTestInstance, warnFn?: Function) =>
     warnFn && warnFn('getAllByName');
     const results =
       typeof name === 'string'
-        ? instance.findAll(node => filterNodeByName(node, name))
+        ? instance.findAll((node) => filterNodeByName(node, name))
         : instance.findAllByType(name);
     if (results.length === 0) {
       throw new ErrorWithStack('No instances found', getAllByNameFn);
@@ -201,7 +201,7 @@ export const getAllByType = (instance: ReactTestInstance, warnFn?: Function) =>
 
 export const getAllByText = (instance: ReactTestInstance) =>
   function getAllByTextFn(text: string | RegExp) {
-    const results = instance.findAll(node => getNodeByText(node, text));
+    const results = instance.findAll((node) => getNodeByText(node, text));
     if (results.length === 0) {
       throw new ErrorWithStack(
         `No instances found with text: ${String(text)}`,
@@ -213,7 +213,7 @@ export const getAllByText = (instance: ReactTestInstance) =>
 
 export const getAllByPlaceholder = (instance: ReactTestInstance) =>
   function getAllByPlaceholderFn(placeholder: string | RegExp) {
-    const results = instance.findAll(node =>
+    const results = instance.findAll((node) =>
       getTextInputNodeByPlaceholder(node, placeholder)
     );
     if (results.length === 0) {
@@ -227,7 +227,7 @@ export const getAllByPlaceholder = (instance: ReactTestInstance) =>
 
 export const getAllByDisplayValue = (instance: ReactTestInstance) =>
   function getAllByDisplayValueFn(value: string | RegExp) {
-    const results = instance.findAll(node =>
+    const results = instance.findAll((node) =>
       getTextInputNodeByDisplayValue(node, value)
     );
     if (results.length === 0) {
@@ -256,7 +256,7 @@ export const getAllByTestId = (instance: ReactTestInstance) =>
   function getAllByTestIdFn(testID: string): ReactTestInstance[] {
     const results = instance
       .findAllByProps({ testID })
-      .filter(element => typeof element.type === 'string');
+      .filter((element) => typeof element.type === 'string');
 
     if (results.length === 0) {
       throw new ErrorWithStack(

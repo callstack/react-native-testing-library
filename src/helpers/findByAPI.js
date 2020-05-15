@@ -1,4 +1,5 @@
 // @flow
+import waitForElement from '../waitForElement';
 import {
   fixedGetByTestId,
   getAllByTestId,
@@ -9,7 +10,6 @@ import {
   getByDisplayValue,
   getAllByDisplayValue,
 } from './getByAPI';
-import waitForElement from '../waitForElement';
 
 export type WaitForOptions = {
   timeout?: number,
