@@ -37,7 +37,7 @@
     "react": "^16.13.1",
     "react-native": "^0.63.0-rc.1",
     "react-test-renderer": "^16.13.1",
-    "release-it": "^12.3.3",
+    "release-it": "^13.6.0",
     "strip-ansi": "^5.2.0",
     "typescript": "^3.8.3"
   },
