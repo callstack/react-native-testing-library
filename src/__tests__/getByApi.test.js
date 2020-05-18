@@ -7,13 +7,8 @@ const MyComponent = () => {
   return <Text>My Component</Text>;
 };
 
-test('byTestId returns only native elements', () => {
-  const {
-    getByTestId,
-    getAllByTestId,
-    queryByTestId,
-    queryAllByTestId,
-  } = render(
+test('getByTestId returns only native elements', () => {
+  const { getByTestId, getAllByTestId } = render(
     <View>
       <Text testID="text">Text</Text>
       <TextInput testID="textInput" />
@@ -33,6 +28,6 @@ test('byTestId returns only native elements', () => {
   expect(getAllByTestId('view')).toHaveLength(1);
   expect(getAllByTestId('button')).toHaveLength(1);
 
-  expect(queryByTestId('myComponent')).toBeFalsy();
-  expect(queryAllByTestId('myComponent')).toHaveLength(0);
+  expect(() => getByTestId('myComponent')).toThrowError();
+  expect(() => getAllByTestId('myComponent')).toThrowError();
 });
