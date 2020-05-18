@@ -1,6 +1,11 @@
-# Migration to 2.0
+---
+id: migration20
+title: Migration to 2.0
+---
 
-### Some `byTestId` queries behavior changes
+This guides describes major steps involved in migrating your testing code from using React Native Testing Library version `1.x` to version `2.0`.
+
+## Some `byTestId` queries behavior changes
 
 In version `1.x` `getByTestId` and `queryByTestId` could return non-native elements in tests. This was in contrast with other query functions: `getAllByTestId`, `queryAllByTestId`, `findByTestId` and `findAllByTestId` which returned only elements that would be rendered to native components (e.g. `View`, `Text`, etc).
 
