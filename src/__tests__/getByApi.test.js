@@ -28,6 +28,10 @@ test('getByTestId returns only native elements', () => {
   expect(getAllByTestId('view')).toHaveLength(1);
   expect(getAllByTestId('button')).toHaveLength(1);
 
-  expect(() => getByTestId('myComponent')).toThrowError();
-  expect(() => getAllByTestId('myComponent')).toThrowError();
+  expect(() => getByTestId('myComponent')).toThrowError(
+    'No instances found with testID: myComponent'
+  );
+  expect(() => getAllByTestId('myComponent')).toThrowError(
+    'No instances found with testID: myComponent'
+  );
 });
