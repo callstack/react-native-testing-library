@@ -78,7 +78,7 @@ npm install --save-dev react-native-testing-library
 
 This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!
 
-### Additional jest matchers
+### Additional Jest matchers
 
 In order to use addtional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
 
