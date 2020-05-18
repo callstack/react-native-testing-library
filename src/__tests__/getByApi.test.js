@@ -3,8 +3,6 @@ import React from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
 import { render } from '..';
 
-const options = { timeout: 10 }; // Short timeout so that this test runs quickly
-
 const MyComponent = () => {
   return <Text>My Component</Text>;
 };
