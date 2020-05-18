@@ -12,5 +12,5 @@ In version `1.x` `getByTestId` and `queryByTestId` could return non-native eleme
 If you relied on setting `testID` for your custom components, you should probably set them on the root element of the returned JSX.
 
 :::caution
-In general, you should avoid `byTestId` queries when possible and rather use queries that check things that can been seen by the user (e.g. `byTest`, `byPlaceholder`, etc) or accessability queries (e.g. `byA11yHint`, `byA11yLabel`, etc).
+In general, you should avoid `byTestId` queries when possible and rather use queries that check things that can been seen by the user (e.g. `byText`, `byPlaceholder`, etc) or accessability queries (e.g. `byA11yHint`, `byA11yLabel`, etc).
 :::
