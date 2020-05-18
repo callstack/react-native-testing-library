@@ -1,6 +1,6 @@
 // @flow
 import type { A11yRole, A11yStates, A11yState, A11yValue } from '../types.flow';
-import type { WaitForOptions } from '../waitFor.js';
+import type { WaitForOptions } from '../waitFor';
 import makeQuery from './makeQuery';
 
 type GetReturn = ReactTestInstance;
