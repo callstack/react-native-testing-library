@@ -6,7 +6,6 @@ import {
   createLibraryNotSupportedError,
   prepareErrorMessage,
   throwRemovedFunctionError,
-  printUnsafeWarning,
 } from './errors';
 
 const filterNodeByType = (node, type) => node.type === type;
