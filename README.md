@@ -118,7 +118,7 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 
 - [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – deeply renders given React element and returns helpers to query the output components.
 - [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/api#fireevent) - invokes named event handler on the element.
-- [`waitForElement`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelement) - waits for non-deterministic periods of time until your element appears or times out.
+- [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/api#waitfor) - waits for non-deterministic periods of time until your element appears or times out.
 - [`within`](https://callstack.github.io/react-native-testing-library/docs/api#within) - creates a queries object scoped for given element.
 - [`flushMicrotasksQueue`](https://callstack.github.io/react-native-testing-library/docs/api#flushmicrotasksqueue) - waits for microtasks queue to flush.
 

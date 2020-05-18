@@ -1,10 +1,21 @@
 // @flow
-export default function waitForElement<T>(
+
+const DEFAULT_TIMEOUT = 4500;
+const DEFAULT_INTERVAL = 50;
+
+export type WaitForOptions = {
+  timeout?: number,
+  interval?: number,
+};
+
+export default function waitFor<T>(
   expectation: () => T,
-  timeout: number = 4500,
-  interval: number = 50
+  options?: WaitForOptions
 ): Promise<T> {
+  const timeout = options?.timeout ?? DEFAULT_TIMEOUT;
+  const interval = options?.interval ?? DEFAULT_INTERVAL;
   const startTime = Date.now();
+
   return new Promise((resolve, reject) => {
     const rejectOrRerun = (error) => {
       if (Date.now() - startTime >= timeout) {

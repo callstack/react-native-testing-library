@@ -313,29 +313,28 @@ fireEvent.scroll(getByType(ScrollView), eventData);
 expect(onEndReached).toHaveBeenCalled();
 ```
 
-## `waitForElement`
+## `waitFor`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitForElement.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitFor.test.js)
 
 Defined as:
 
 ```jsx
-function waitForElement<T>(
+function waitFor<T>(
   expectation: () => T,
-  timeout: number = 4500,
-  interval: number = 50
+  { timeout: number = 4500, interval: number = 50 }
 ): Promise<T> {}
 ```
 
-Waits for non-deterministic periods of time until your element appears or times out. `waitForElement` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
+Waits for non-deterministic periods of time until your element appears or times out. `waitFor` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
 
 ```jsx
-import { render, waitForElement } from 'react-testing-library';
+import { render, waitFor } from 'react-testing-library';
 
 test('waiting for an Banana to be ready', async () => {
   const { getByText } = render(<Banana />);
 
-  await waitForElement(() => getByText('Banana ready'));
+  await waitFor(() => getByText('Banana ready'));
 });
 ```
 
