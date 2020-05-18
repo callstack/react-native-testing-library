@@ -151,15 +151,6 @@ export const getByProps = (instance: ReactTestInstance, warnFn?: Function) =>
 export const getByTestId = (instance: ReactTestInstance) =>
   function getByTestIdFn(testID: string) {
     try {
-      return instance.findByProps({ testID });
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByTestIdFn);
-    }
-  };
-
-export const fixedGetByTestId = (instance: ReactTestInstance) =>
-  function getByTestIdFn(testID: string) {
-    try {
       const results = getAllByTestId(instance)(testID);
       if (results.length === 1) {
         return results[0];

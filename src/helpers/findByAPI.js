@@ -1,7 +1,7 @@
 // @flow
 import waitForElement from '../waitForElement';
 import {
-  fixedGetByTestId,
+  getByTestId,
   getAllByTestId,
   getByText,
   getAllByText,
@@ -31,7 +31,7 @@ const makeFindQuery = <Text, Result>(
 export const findByTestId = (instance: ReactTestInstance) => (
   testId: string,
   waitForOptions: WaitForOptions = {}
-) => makeFindQuery(instance, fixedGetByTestId, testId, waitForOptions);
+) => makeFindQuery(instance, getByTestId, testId, waitForOptions);
 
 export const findAllByTestId = (instance: ReactTestInstance) => (
   testId: string,
