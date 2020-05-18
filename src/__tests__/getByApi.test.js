@@ -20,7 +20,7 @@ test('byTestId returns only native elements', () => {
       <Text testID="text">Text</Text>
       <TextInput testID="textInput" />
       <View testID="view" />
-      <Button testID="button" title="Button" />
+      <Button testID="button" title="Button" onPress={jest.fn()} />
       <MyComponent testID="myComponent" />
     </View>
   );
