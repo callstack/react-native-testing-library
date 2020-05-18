@@ -2,7 +2,7 @@ module.exports = {
   docs: {
     Introduction: ['getting-started'],
     'API Reference': ['api', 'api-queries'],
-    Guides: ['migration20'],
+    Guides: ['migration-v2'],
     Examples: ['react-navigation', 'redux-integration'],
   },
 };

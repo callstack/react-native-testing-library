@@ -1,14 +1,31 @@
 ---
-id: migration20
+id: migration-v2
 title: Migration to 2.0
 ---
 
 This guides describes major steps involved in migrating your testing code from using React Native Testing Library version `1.x` to version `2.0`.
 
-
 ## Removed global `debug` function
 
 Global debug function has been removed in favor of `debug()` method returned from `render()` function.
+
+## Removed functions
+
+Following query fuctions have been removed after being deprecated:
+
+- `getByName`
+- `getAllByName`
+- `queryByName`
+- `queryAllByName`
+
+Following query functions have been prefixes with `UNSAFE_`:
+
+- `UNSAFE_getByType`
+- `UNSAFE_getAllByType`
+- `UNSAFE_getByProps`
+- `UNSAFE_getAllByProps`
+
+Global `shallow` debug functions has been removed after being deprecated.
 
 ## Some `byTestId` queries behavior changes
 
