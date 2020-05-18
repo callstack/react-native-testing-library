@@ -230,19 +230,6 @@ export type WaitForElementFunction = <T = any>(
   interval?: number
 ) => Promise<T>;
 
-export type DebugFunction = (
-  instance: ReactTestInstance | React.ReactElement<any>,
-  message?: string
-) => void;
-
-export type DebugAPI = DebugFunction & {
-  shallow: DebugFunction;
-  deep: (
-    instance: React.ReactElement<any> | ReactTestRendererJSON | null,
-    message?: string
-  ) => void;
-};
-
 export declare const render: (
   component: React.ReactElement<any>,
   options?: RenderOptions
@@ -252,7 +239,6 @@ export declare const shallow: <P = {}>(
 ) => { output: React.ReactElement<P> };
 export declare const flushMicrotasksQueue: () => Promise<any>;
 export declare const cleanup: () => void;
-export declare const debug: DebugAPI;
 export declare const fireEvent: FireEventAPI;
 export declare const waitForElement: WaitForElementFunction;
 export declare const act: (callback: () => void) => Thenable;

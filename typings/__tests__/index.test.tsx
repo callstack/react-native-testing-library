@@ -6,7 +6,6 @@ import {
   fireEvent,
   shallow,
   flushMicrotasksQueue,
-  debug,
   waitForElement,
   act,
   within,
@@ -250,17 +249,6 @@ const shallowTree: { output: React.ReactElement<any> } = shallow(
 );
 
 const waitForFlush: Promise<any> = flushMicrotasksQueue();
-
-// debug API
-debug(<TestComponent />);
-debug(<TestComponent />, 'message');
-debug(getByNameString);
-debug(getByNameString, 'message');
-debug.shallow(<TestComponent />);
-debug.shallow(<TestComponent />, 'message');
-debug.deep(<TestComponent />);
-debug.deep(<TestComponent />, 'message');
-debug.deep(tree.toJSON());
 
 const waitBy: Promise<ReactTestInstance> = waitForElement<ReactTestInstance>(
   () => tree.getByName('View')
