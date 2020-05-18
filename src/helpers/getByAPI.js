@@ -5,7 +5,7 @@ import {
   ErrorWithStack,
   createLibraryNotSupportedError,
   prepareErrorMessage,
-  printDeprecationWarning,
+  throwRemovedFunctionError,
   printUnsafeWarning,
 } from './errors';
 
@@ -259,24 +259,26 @@ export const getAllByTestId = (instance: ReactTestInstance) =>
   };
 
 export const getByAPI = (instance: ReactTestInstance) => ({
-  getByTestId: getByTestId(instance),
-  getByName: getByName(instance, printDeprecationWarning),
-  getByType: getByType(instance, printUnsafeWarning),
   getByText: getByText(instance),
   getByPlaceholder: getByPlaceholder(instance),
   getByDisplayValue: getByDisplayValue(instance),
-  getByProps: getByProps(instance, printUnsafeWarning),
-  getAllByTestId: getAllByTestId(instance),
-  getAllByName: getAllByName(instance, printDeprecationWarning),
-  getAllByType: getAllByType(instance, printUnsafeWarning),
+  getByTestId: getByTestId(instance),
   getAllByText: getAllByText(instance),
   getAllByPlaceholder: getAllByPlaceholder(instance),
   getAllByDisplayValue: getAllByDisplayValue(instance),
-  getAllByProps: getAllByProps(instance, printUnsafeWarning),
+  getAllByTestId: getAllByTestId(instance),
 
   // Unsafe aliases
   UNSAFE_getByType: getByType(instance),
   UNSAFE_getAllByType: getAllByType(instance),
   UNSAFE_getByProps: getByProps(instance),
   UNSAFE_getAllByProps: getAllByProps(instance),
+
+  // Removed
+  getByName: () => throwRemovedFunctionError('getByName'),
+  getAllByName: () => throwRemovedFunctionError('getAllByName'),
+  getByType: () => throwRemovedFunctionError('getByType'),
+  getAllByType: () => throwRemovedFunctionError('getAllByType'),
+  getByProps: () => throwRemovedFunctionError('getByProps'),
+  getAllByProps: () => throwRemovedFunctionError('getAllByProps'),
 });

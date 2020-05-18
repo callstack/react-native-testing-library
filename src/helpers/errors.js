@@ -54,6 +54,20 @@ export function printDeprecationWarning(functionName: string) {
   warned[functionName] = true;
 }
 
+export function throwRemovedFunctionError(
+  functionName: string,
+  docsHash: string
+) {
+  if (warned[functionName]) {
+    return;
+  }
+
+  warned[functionName] = true;
+  throw new Error(
+    `${functionName} has been removed in version 2.0.\n\nPlease consult the migration guide: https://callstack.github.io/react-native-testing-library/docs/migration-v2#${docsHash}`
+  );
+}
+
 export function printUnsafeWarning(functionName: string) {
   if (warned[functionName]) {
     return;

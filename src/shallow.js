@@ -21,7 +21,5 @@ export function shallowInternal(
 export default function shallow(
   instance: ReactTestInstance | React.Element<any>
 ) {
-  printDeprecationWarning('shallow');
-
-  return shallowInternal(instance);
+  throwRemovedFunctionError('shallow');
 }
