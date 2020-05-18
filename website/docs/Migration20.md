@@ -35,6 +35,10 @@ Both changes should improve code readibility.
 Please note that in many cases `waitFor` call can be replaced by proper use of `findBy` asynchonous queries resulting in more streamlined test code.
 :::
 
+## Removed global `debug` function
+
+Global debug function has been removed in favor of `debug()` method returned from `render()` function.
+
 ## Some `byTestId` queries behavior changes
 
 In version `1.x` `getByTestId` and `queryByTestId` could return non-native elements in tests. This was in contrast with other query functions: `getAllByTestId`, `queryAllByTestId`, `findByTestId` and `findAllByTestId` which returned only elements that would be rendered to native components (e.g. `View`, `Text`, etc).
