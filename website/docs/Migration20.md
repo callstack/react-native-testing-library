@@ -5,6 +5,10 @@ title: Migration to 2.0
 
 This guides describes major steps involved in migrating your testing code from using React Native Testing Library version `1.x` to version `2.0`.
 
+## Dropping Node 8
+
+Node 8 reached its EOL more than 5 months ago, so it's about time to target the library to Node 10. If you used lower version, you'll have to upgrade to v10, but we suggest using the latest LTS version.
+
 ## WaitFor API changes
 
 `waitForElement` function has been renamed to `waitFor` for consistency with React Testing Library. Additionally the signature has slightly changed from:
