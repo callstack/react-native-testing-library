@@ -66,7 +66,7 @@ This library has a peerDependencies listing for `react-test-renderer` and, of co
 
 As you may have noticed, it's not tied to React Native at all – you can safely use it in your React components if you feel like not interacting directly with DOM.
 
-### Additional jest matchers
+### Additional Jest matchers
 
 In order to use addtional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
 
