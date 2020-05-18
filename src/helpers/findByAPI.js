@@ -1,5 +1,5 @@
 // @flow
-import waitForElement from '../waitFor';
+import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 import {
   fixedGetByTestId,
@@ -17,8 +17,7 @@ const makeFindQuery = <Text, Result>(
   getQuery: (instance: ReactTestInstance) => (text: Text) => Result,
   text: Text,
   waitForOptions: WaitForOptions
-): Promise<Result> =>
-  waitForElement(() => getQuery(instance)(text), waitForOptions);
+): Promise<Result> => waitFor(() => getQuery(instance)(text), waitForOptions);
 
 export const findByTestId = (instance: ReactTestInstance) => (
   testId: string,

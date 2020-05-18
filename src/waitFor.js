@@ -8,7 +8,7 @@ export type WaitForOptions = {
   interval?: number,
 };
 
-export default function waitForElement<T>(
+export default function waitFor<T>(
   expectation: () => T,
   options?: WaitForOptions
 ): Promise<T> {

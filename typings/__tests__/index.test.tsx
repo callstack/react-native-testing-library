@@ -7,7 +7,7 @@ import {
   shallow,
   flushMicrotasksQueue,
   debug,
-  waitForElement,
+  waitFor,
   act,
   within,
 } from '../..';
@@ -262,12 +262,13 @@ debug.deep(<TestComponent />);
 debug.deep(<TestComponent />, 'message');
 debug.deep(tree.toJSON());
 
-const waitBy: Promise<ReactTestInstance> = waitForElement<ReactTestInstance>(
-  () => tree.getByName('View')
+const waitBy: Promise<ReactTestInstance> = waitFor<ReactTestInstance>(() =>
+  tree.getByName('View')
 );
-const waitByAll: Promise<Array<ReactTestInstance>> = waitForElement<
-  Array<ReactTestInstance>
->(() => tree.getAllByName('View'), 1000, 50);
+const waitByAll: Promise<ReactTestInstance[]> = waitFor<ReactTestInstance[]>(
+  () => tree.getAllByName('View'),
+  { timeout: 1000, interval: 50 }
+);
 
 act(() => {
   render(<TestComponent />);

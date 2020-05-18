@@ -1,5 +1,5 @@
 // @flow
-import waitForElement from '../waitFor';
+import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 import {
   ErrorWithStack,
@@ -70,11 +70,11 @@ const makeQuery = <P: mixed, M: mixed>(
   };
 
   const findBy = (matcher: M, waitForOptions?: WaitForOptions) => {
-    return waitForElement(() => getBy(matcher), waitForOptions);
+    return waitFor(() => getBy(matcher), waitForOptions);
   };
 
   const findAllBy = (matcher: M, waitForOptions?: WaitForOptions) => {
-    return waitForElement(() => getAllBy(matcher), waitForOptions);
+    return waitFor(() => getAllBy(matcher), waitForOptions);
   };
 
   return {

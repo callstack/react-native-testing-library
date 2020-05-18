@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { render, fireEvent, waitForElement } from '..';
+import { render, fireEvent, waitFor } from '..';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {
@@ -42,7 +42,7 @@ test('waits for element until it stops throwing', async () => {
 
   expect(queryByText('Fresh')).toBeNull();
 
-  const freshBananaText = await waitForElement(() => getByText('Fresh'));
+  const freshBananaText = await waitFor(() => getByText('Fresh'));
 
   expect(freshBananaText.props.children).toBe('Fresh');
 });
@@ -53,7 +53,7 @@ test('waits for element until timeout is met', async () => {
   fireEvent.press(getByName('TouchableOpacity'));
 
   await expect(
-    waitForElement(() => getByText('Fresh'), { timeout: 100 })
+    waitFor(() => getByText('Fresh'), { timeout: 100 })
   ).rejects.toThrow();
 });
 
@@ -63,7 +63,7 @@ test('waits for element with custom interval', async () => {
   });
 
   try {
-    await waitForElement(() => mockFn(), { timeout: 400, interval: 200 });
+    await waitFor(() => mockFn(), { timeout: 400, interval: 200 });
   } catch (e) {
     // suppress
   }
@@ -79,7 +79,7 @@ test('works with fake timers', async () => {
   });
 
   try {
-    waitForElement(() => mockFn(), { timeout: 400, interval: 200 });
+    waitFor(() => mockFn(), { timeout: 400, interval: 200 });
   } catch (e) {
     // suppress
   }

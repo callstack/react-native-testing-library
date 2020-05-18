@@ -32,9 +32,8 @@ title: Queries
 
 `findAllBy` queries return a promise which resolves to an array when any matching elements are found. The promise is rejected if no elements match after a default timeout of 4500ms.
 
-
 :::info
-`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective arguments to [`waitForElement`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelement) function. 
+`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective options for [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/api#waitfor) function.
 :::
 
 ## Queries
@@ -105,7 +104,7 @@ const element = getByTestId('unique-id');
 ```
 
 :::caution
-Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead. 
+Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead.
 :::
 
 :::danger
