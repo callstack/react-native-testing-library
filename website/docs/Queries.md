@@ -32,9 +32,8 @@ title: Queries
 
 `findAllBy` queries return a promise which resolves to an array when any matching elements are found. The promise is rejected if no elements match after a default timeout of 4500ms.
 
-
 :::info
-`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective arguments to [`waitForElement`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelement) function. 
+`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective arguments to [`waitForElement`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelement) function.
 :::
 
 ## Queries
@@ -105,11 +104,7 @@ const element = getByTestId('unique-id');
 ```
 
 :::caution
-Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead. 
-:::
-
-:::danger
-Current implementation of `getByTestId` and `queryByTestId` has a serious flaw, which results in finding more IDs than there really would be present in native React host components. Fixing it may break some of your tests so we'll do it in next major release (v2). As a temporary workaround, please use `getAllByTestId('your-id')[0]` or `queryAllByTestId('your-id')[0]` or migrate off testing with testID, which is considered to be an escape hatch.
+Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead.
 :::
 
 ### `ByA11yLabel`, `ByAccessibilityLabel`
