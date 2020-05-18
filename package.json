@@ -30,7 +30,7 @@
     "babel-jest": "^26.0.1",
     "conventional-changelog-cli": "^2.0.11",
     "dedent": "^0.7.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.0.0",
     "flow-bin": "^0.122.0",
     "flow-copy-source": "^2.0.9",
     "jest": "^26.0.1",
@@ -38,7 +38,7 @@
     "react": "^16.13.1",
     "react-native": "^0.63.0-rc.1",
     "react-test-renderer": "^16.13.1",
-    "release-it": "^12.3.3",
+    "release-it": "^13.6.0",
     "strip-ansi": "^5.2.0",
     "typescript": "^3.8.3"
   },
