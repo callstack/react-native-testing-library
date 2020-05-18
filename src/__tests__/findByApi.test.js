@@ -55,4 +55,4 @@ test('findBy queries work asynchronously', async () => {
   );
   await expect(findByDisplayValue('Display Value')).resolves.toBeTruthy();
   await expect(findAllByDisplayValue('Display Value')).resolves.toHaveLength(1);
-}, 10000);
+}, 20000);

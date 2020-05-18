@@ -122,7 +122,9 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 - [`within`](https://callstack.github.io/react-native-testing-library/docs/api#within) - creates a queries object scoped for given element.
 - [`flushMicrotasksQueue`](https://callstack.github.io/react-native-testing-library/docs/api#flushmicrotasksqueue) - waits for microtasks queue to flush.
 
-**Note to users who are more familiar with `react-testing-library`:** This API does not expose `cleanup` because it doesn't interact with the DOM. There's nothing to clean up.
+## Migration Guides
+
+- [Migration to 2.0](https://callstack.github.io/react-native-testing-library/docs/migration20)
 
 ## Made with ❤️ at Callstack
 
