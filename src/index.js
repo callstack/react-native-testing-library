@@ -6,7 +6,7 @@ import fireEvent from './fireEvent';
 import flushMicrotasksQueue from './flushMicrotasksQueue';
 import render from './render';
 import shallow from './shallow';
-import waitForElement from './waitForElement';
+import waitForElement from './waitFor';
 import within from './within';
 
 export { act };

@@ -52,7 +52,9 @@ test('waits for element until timeout is met', async () => {
 
   fireEvent.press(getByName('TouchableOpacity'));
 
-  await expect(waitForElement(() => getByText('Fresh'), 100)).rejects.toThrow();
+  await expect(
+    waitForElement(() => getByText('Fresh'), { timeout: 100 })
+  ).rejects.toThrow();
 });
 
 test('waits for element with custom interval', async () => {
@@ -61,7 +63,7 @@ test('waits for element with custom interval', async () => {
   });
 
   try {
-    await waitForElement(() => mockFn(), 400, 200);
+    await waitForElement(() => mockFn(), { timeout: 400, interval: 200 });
   } catch (e) {
     // suppress
   }
@@ -77,7 +79,7 @@ test('works with fake timers', async () => {
   });
 
   try {
-    waitForElement(() => mockFn(), 400, 200);
+    waitForElement(() => mockFn(), { timeout: 400, interval: 200 });
   } catch (e) {
     // suppress
   }

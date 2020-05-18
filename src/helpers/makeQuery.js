@@ -1,11 +1,11 @@
 // @flow
-import waitForElement from '../waitForElement';
+import waitForElement from '../waitFor';
+import type { WaitForOptions } from '../waitFor';
 import {
   ErrorWithStack,
   prepareErrorMessage,
   createQueryByError,
 } from './errors';
-import type { WaitForOptions } from './findByAPI';
 
 function isNodeValid(node: ReactTestInstance) {
   return typeof node.type === 'string';
@@ -70,19 +70,11 @@ const makeQuery = <P: mixed, M: mixed>(
   };
 
   const findBy = (matcher: M, waitForOptions?: WaitForOptions) => {
-    return waitForElement(
-      () => getBy(matcher),
-      waitForOptions?.timeout,
-      waitForOptions?.interval
-    );
+    return waitForElement(() => getBy(matcher), waitForOptions);
   };
 
   const findAllBy = (matcher: M, waitForOptions?: WaitForOptions) => {
-    return waitForElement(
-      () => getAllBy(matcher),
-      waitForOptions?.timeout,
-      waitForOptions?.interval
-    );
+    return waitForElement(() => getAllBy(matcher), waitForOptions);
   };
 
   return {
