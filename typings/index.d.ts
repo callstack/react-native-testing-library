@@ -224,9 +224,14 @@ export type FireEventAPI = FireEventFunction & {
   scroll: (element: ReactTestInstance, ...data: Array<any>) => any;
 };
 
+type WaitForOptions = {
+  timeout?: number;
+  interval?: number;
+};
+
 export type WaitForFunction = <T = any>(
   expectation: () => T,
-  { timeout?: number, interval?: number }?
+  options?: WaitForOptions
 ) => Promise<T>;
 
 export type DebugFunction = (
