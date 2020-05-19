@@ -223,6 +223,4 @@ Returns a `ReactTestInstance` with matching props object.
 This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
 :::
 
-### `ByName`
-
 </details>
