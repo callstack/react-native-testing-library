@@ -264,8 +264,7 @@ test('update', () => {
   const fn = jest.fn();
   const { getByText, update, rerender } = render(<Banana onUpdate={fn} />);
 
-  const button = getByText('Change freshness!');
-  fireEvent.press(button);
+  fireEvent.press(getByText('Change freshness!'));
 
   update(<Banana onUpdate={fn} />);
   rerender(<Banana onUpdate={fn} />);

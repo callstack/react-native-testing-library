@@ -185,12 +185,8 @@ export const getAllByTestId = (instance: ReactTestInstance) =>
     return results;
   };
 
-export const UNSAFE_getByType = (
-  instance: ReactTestInstance,
-  warnFn?: Function
-) =>
+export const UNSAFE_getByType = (instance: ReactTestInstance) =>
   function getByTypeFn(type: React.ComponentType<any>) {
-    warnFn && warnFn('getByType');
     try {
       return instance.findByType(type);
     } catch (error) {
@@ -198,12 +194,8 @@ export const UNSAFE_getByType = (
     }
   };
 
-export const UNSAFE_getByProps = (
-  instance: ReactTestInstance,
-  warnFn?: Function
-) =>
+export const UNSAFE_getByProps = (instance: ReactTestInstance) =>
   function getByPropsFn(props: { [propName: string]: any }) {
-    warnFn && warnFn('getByProps');
     try {
       return instance.findByProps(props);
     } catch (error) {
@@ -211,12 +203,8 @@ export const UNSAFE_getByProps = (
     }
   };
 
-export const UNSAFE_getAllByType = (
-  instance: ReactTestInstance,
-  warnFn?: Function
-) =>
+export const UNSAFE_getAllByType = (instance: ReactTestInstance) =>
   function getAllByTypeFn(type: React.ComponentType<any>) {
-    warnFn && warnFn('getAllByType');
     const results = instance.findAllByType(type);
     if (results.length === 0) {
       throw new ErrorWithStack('No instances found', getAllByTypeFn);
@@ -224,12 +212,8 @@ export const UNSAFE_getAllByType = (
     return results;
   };
 
-export const UNSAFE_getAllByProps = (
-  instance: ReactTestInstance,
-  warnFn?: Function
-) =>
+export const UNSAFE_getAllByProps = (instance: ReactTestInstance) =>
   function getAllByPropsFn(props: { [propName: string]: any }) {
-    warnFn && warnFn('getAllByProps');
     const results = instance.findAllByProps(props);
     if (results.length === 0) {
       throw new ErrorWithStack(
