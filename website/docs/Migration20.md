@@ -39,9 +39,13 @@ Both changes should improve code readibility.
 Please note that in many cases `waitFor` call can be replaced by proper use of `findBy` asynchonous queries resulting in more streamlined test code.
 :::
 
-## Removed global debug functions
+## Removed global `debug` function
 
-Global `debug()` and `shallow()` functions have been removed in favor of `debug()` method returned from `render()` function.
+Global `debug()` function has been removed in favor of `debug()` method returned from `render()` function.
+
+## Removed global `shallow` function
+
+Global `shallow()` functions which has been previously deprecated has been removed.
 
 ## Removed functions
 
