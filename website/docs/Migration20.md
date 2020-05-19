@@ -45,7 +45,7 @@ Global `debug()` and `shallow()` functions have been removed in favor of `debug(
 
 ## Removed functions
 
-Following query fuctions have been removed after being deprecated:
+Following query functions have been removed after being deprecated for more than a year now:
 
 - `getByName`
 - `getAllByName`
