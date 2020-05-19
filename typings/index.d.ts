@@ -32,11 +32,29 @@ interface GetByAPI {
   ) => Array<ReactTestInstance>;
 
   // Removed
+  /**
+   * @deprecated This functions has been removed. Please use other queries.
+   */
   getByName: (name: React.ReactType | string) => ReactTestInstance;
+  /**
+   * @deprecated This functions has been renamed to `UNSAFE_getByType`.
+   */
   getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
+  /**
+   * @deprecated This functions has been renamed to `UNSAFE_getByProps`.
+   */
   getByProps: (props: Record<string, any>) => ReactTestInstance;
+  /**
+   * @deprecated This functions has been removed. Please use other queries.
+   */
   getAllByName: (name: React.ReactType | string) => Array<ReactTestInstance>;
+  /**
+   * @deprecated This functions has been renamed to `UNSAFE_getAllByType`.
+   */
   getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
+  /**
+   * @deprecated This functions has been renamed to `UNSAFE_getAllByProps`.
+   */
   getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>;
 }
 
@@ -75,11 +93,6 @@ interface QueryByAPI {
   queryAllByProps: (
     props: Record<string, any>
   ) => Array<ReactTestInstance> | [];
-}
-
-export interface WaitForOptions {
-  timeout: number;
-  interval: number;
 }
 
 interface FindByAPI {
@@ -245,12 +258,22 @@ export declare const render: (
   component: React.ReactElement<any>,
   options?: RenderOptions
 ) => RenderAPI;
-export declare const shallow: <P = {}>(
-  instance: ReactTestInstance | React.ReactElement<P>
-) => { output: React.ReactElement<P> };
+
 export declare const flushMicrotasksQueue: () => Promise<any>;
 export declare const cleanup: () => void;
 export declare const fireEvent: FireEventAPI;
 export declare const waitFor: WaitForFunction;
 export declare const act: (callback: () => void) => Thenable;
 export declare const within: (instance: ReactTestInstance) => Queries;
+
+/**
+ * @deprecated This functions has been removed. Please use `waitFor` function.
+ */
+export declare const waitForElement: WaitForFunction;
+
+/**
+ * @deprecated This functions has been removed.
+ */
+export declare const shallow: <P = {}>(
+  instance: ReactTestInstance | React.ReactElement<P>
+) => { output: React.ReactElement<P> };

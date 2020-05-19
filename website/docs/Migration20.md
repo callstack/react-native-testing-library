@@ -47,6 +47,19 @@ Global `debug()` function has been removed in favor of `debug()` method returned
 
 Global `shallow()` functions which has been previously deprecated has been removed.
 
+Shallow rendering React component is usually not a good idea, so we decided to remove the API. However, if you find it useful or need to support legacy tests, feel free to implement it yourself. Here's a sample implementation:
+
+```js
+import ShallowRenderer from 'react-test-renderer/shallow';
+
+export function shallow(instance: ReactTestInstance | React.Element<any>) {
+  const renderer = new ShallowRenderer();
+  renderer.render(React.createElement(instance.type, instance.props));
+
+  return { output: renderer.getRenderOutput() };
+}
+```
+
 ## Removed functions
 
 Following query functions have been removed after being deprecated for more than a year now:
