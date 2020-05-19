@@ -40,8 +40,8 @@ export default function waitFor<T>(
 
 export function waitForElement<T>(
   expectation: () => T,
-  timeout: number = 4500, // eslint-disable-line no-unused-vars
-  interval: number = 50 // eslint-disable-line no-unused-vars
+  _timeout: number = 4500,
+  _interval: number = 50
 ): Promise<T> {
   throwRemovedFunctionError(
     'waitForElement',
