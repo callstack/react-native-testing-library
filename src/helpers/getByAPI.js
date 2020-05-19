@@ -274,10 +274,19 @@ export const getByAPI = (instance: ReactTestInstance) => ({
   UNSAFE_getAllByProps: getAllByProps(instance),
 
   // Removed
-  getByName: () => throwRemovedFunctionError('getByName'),
-  getAllByName: () => throwRemovedFunctionError('getAllByName'),
-  getByType: () => throwRemovedFunctionError('getByType'),
-  getAllByType: () => throwRemovedFunctionError('getAllByType'),
-  getByProps: () => throwRemovedFunctionError('getByProps'),
-  getAllByProps: () => throwRemovedFunctionError('getAllByProps'),
+  getByName: () =>
+    throwRemovedFunctionError('getByName', 'migration-v2#removed-functions'),
+  getAllByName: () =>
+    throwRemovedFunctionError('getAllByName', 'migration-v2#removed-functions'),
+  getByType: () =>
+    throwRemovedFunctionError('getByType', 'migration-v2#removed-functions'),
+  getAllByType: () =>
+    throwRemovedFunctionError('getAllByType', 'migration-v2#removed-functions'),
+  getByProps: () =>
+    throwRemovedFunctionError('getByProps', 'migration-v2#removed-functions'),
+  getAllByProps: () =>
+    throwRemovedFunctionError(
+      'getAllByProps',
+      'migration-v2#removed-functions'
+    ),
 });

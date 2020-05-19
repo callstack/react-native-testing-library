@@ -19,5 +19,8 @@ export function shallowInternal(
 }
 
 export default function shallow(_: ReactTestInstance | React.Element<any>) {
-  throwRemovedFunctionError('shallow');
+  throwRemovedFunctionError(
+    'shallow',
+    'migration-v2#removed-global-debug-functions'
+  );
 }

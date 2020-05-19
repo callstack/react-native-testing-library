@@ -1,5 +1,7 @@
 // @flow
 
+import { throwRemovedFunctionError } from './helpers/errors';
+
 const DEFAULT_TIMEOUT = 4500;
 const DEFAULT_INTERVAL = 50;
 
@@ -34,4 +36,17 @@ export default function waitFor<T>(
     }
     setTimeout(runExpectation, 0);
   });
+}
+
+export function waitForElement<T>(
+  expectation: () => T,
+  timeout: number = 4500, // eslint-disable-line no-unused-vars
+  interval: number = 50 // eslint-disable-line no-unused-vars
+): Promise<T> {
+  throwRemovedFunctionError(
+    'waitForElement',
+    'migration-v2#waitfor-api-changes'
+  );
+
+  return Promise.reject();
 }
