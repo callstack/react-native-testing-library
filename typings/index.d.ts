@@ -81,15 +81,33 @@ interface QueryByAPI {
   UNSAFE_queryAllByProps: (props: Record<string, any>) => Array<ReactTestInstance> | [];
 
   // Removed
+  /**
+   * @deprecated This functions has been removed. Please use other queries.
+   */
   queryByName: (name: React.ReactType | string) => ReactTestInstance | null;
+  /**
+   * @deprecated This functions has been renamed to `UNSAFE_queryByType`.
+   */
   queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
+  /**
+   * @deprecated This functions has been renamed to `UNSAFE_queryByProps`.
+   */
   queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
+  /**
+   * @deprecated This functions has been removed. Please use other queries.
+   */
   queryAllByName: (
     name: React.ReactType | string
   ) => Array<ReactTestInstance> | [];
+  /**
+   * @deprecated This functions has been renamed to `UNSAFE_queryAllByType`.
+   */
   queryAllByType: <P>(
     type: React.ComponentType<P>
   ) => Array<ReactTestInstance> | [];
+  /**
+   * @deprecated This functions has been renamed to `UNSAFE_queryAllByProps`.
+   */
   queryAllByProps: (
     props: Record<string, any>
   ) => Array<ReactTestInstance> | [];
@@ -129,10 +147,10 @@ interface FindByAPI {
 
 // Not yet available in DefinitelyTyped
 export type A11yValue = {
-  min?: number,
-  max?: number,
-  now?: number,
-  text?: string,
+  min?: number;
+  max?: number;
+  now?: number;
+  text?: string;
 };
 
 type A11yAPI = {
