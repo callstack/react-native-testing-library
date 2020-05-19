@@ -5,7 +5,7 @@ import fireEvent from './fireEvent';
 import flushMicrotasksQueue from './flushMicrotasksQueue';
 import render from './render';
 import shallow from './shallow';
-import waitFor from './waitFor';
+import waitFor, { waitForElement } from './waitFor';
 import within from './within';
 
 export { act };
@@ -14,5 +14,5 @@ export { fireEvent };
 export { flushMicrotasksQueue };
 export { render };
 export { shallow };
-export { waitFor };
+export { waitFor, waitForElement };
 export { within };
