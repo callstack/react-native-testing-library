@@ -56,8 +56,12 @@ Following query functions are still available but have been prefixed with `UNSAF
 
 - `UNSAFE_getByType`
 - `UNSAFE_getAllByType`
+- `UNSAFE_queryByType`
+- `UNSAFE_queryAllByType`
 - `UNSAFE_getByProps`
 - `UNSAFE_getAllByProps`
+- `UNSAFE_queryByProps`
+- `UNSAFE_queryAllByProps`
 
 ## Some `byTestId` queries behavior changes
 
