@@ -24,22 +24,7 @@ export const createQueryByError = (error: Error, callsite: Function) => {
   throw new ErrorWithStack(error.message, callsite);
 };
 
-const warned = {
-  getByName: false,
-  getAllByName: false,
-  queryByName: false,
-  queryAllByName: false,
-
-  getByProps: false,
-  getAllByProps: false,
-  queryByProps: false,
-  queryAllByProps: false,
-
-  getByType: false,
-  getAllByType: false,
-  queryByType: false,
-  queryAllByType: false,
-};
+const warned = {};
 
 export function printDeprecationWarning(functionName: string) {
   if (warned[functionName]) {
@@ -54,17 +39,11 @@ export function printDeprecationWarning(functionName: string) {
   warned[functionName] = true;
 }
 
-export function printUnsafeWarning(functionName: string) {
-  if (warned[functionName]) {
-    return;
-  }
-
-  console.warn(`
-    Deprecation Warning:
-    Warning:
-    ${functionName} promotes testing implementation details and is not recommended.
-    It may be removed in the future. Please test observable outcomes of rendering components.
-  `);
-
-  warned[functionName] = true;
+export function throwRemovedFunctionError(
+  functionName: string,
+  docsRef: string
+) {
+  throw new Error(
+    `${functionName} has been removed in version 2.0.\n\nPlease consult: https://callstack.github.io/react-native-testing-library/docs/${docsRef}`
+  );
 }
