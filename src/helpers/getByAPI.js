@@ -5,14 +5,10 @@ import {
   ErrorWithStack,
   createLibraryNotSupportedError,
   prepareErrorMessage,
-  printDeprecationWarning,
+  throwRemovedFunctionError,
 } from './errors';
 
 const filterNodeByType = (node, type) => node.type === type;
-
-const filterNodeByName = (node, name) =>
-  typeof node.type !== 'string' &&
-  (node.type.displayName === name || node.type.name === name);
 
 const getNodeByText = (node, text) => {
   try {
@@ -84,28 +80,6 @@ const getTextInputNodeByDisplayValue = (node, value) => {
   }
 };
 
-export const getByName = (instance: ReactTestInstance, warnFn?: Function) =>
-  function getByNameFn(name: string | React.ComponentType<any>) {
-    warnFn && warnFn('getByName');
-    try {
-      return typeof name === 'string'
-        ? instance.find((node) => filterNodeByName(node, name))
-        : instance.findByType(name);
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByNameFn);
-    }
-  };
-
-export const getByType = (instance: ReactTestInstance, warnFn?: Function) =>
-  function getByTypeFn(type: React.ComponentType<any>) {
-    warnFn && warnFn('getByType');
-    try {
-      return instance.findByType(type);
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByTypeFn);
-    }
-  };
-
 export const getByText = (instance: ReactTestInstance) =>
   function getByTextFn(text: string | RegExp) {
     try {
@@ -137,16 +111,6 @@ export const getByDisplayValue = (instance: ReactTestInstance) =>
     }
   };
 
-export const getByProps = (instance: ReactTestInstance, warnFn?: Function) =>
-  function getByPropsFn(props: { [propName: string]: any }) {
-    warnFn && warnFn('getByProps');
-    try {
-      return instance.findByProps(props);
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByPropsFn);
-    }
-  };
-
 export const getByTestId = (instance: ReactTestInstance) =>
   function getByTestIdFn(testID: string) {
     try {
@@ -164,29 +128,6 @@ export const getByTestId = (instance: ReactTestInstance) =>
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByTestIdFn);
     }
-  };
-
-export const getAllByName = (instance: ReactTestInstance, warnFn?: Function) =>
-  function getAllByNameFn(name: string | React.ComponentType<any>) {
-    warnFn && warnFn('getAllByName');
-    const results =
-      typeof name === 'string'
-        ? instance.findAll((node) => filterNodeByName(node, name))
-        : instance.findAllByType(name);
-    if (results.length === 0) {
-      throw new ErrorWithStack('No instances found', getAllByNameFn);
-    }
-    return results;
-  };
-
-export const getAllByType = (instance: ReactTestInstance, warnFn?: Function) =>
-  function getAllByTypeFn(type: React.ComponentType<any>) {
-    warnFn && warnFn('getAllByType');
-    const results = instance.findAllByType(type);
-    if (results.length === 0) {
-      throw new ErrorWithStack('No instances found', getAllByTypeFn);
-    }
-    return results;
   };
 
 export const getAllByText = (instance: ReactTestInstance) =>
@@ -229,19 +170,6 @@ export const getAllByDisplayValue = (instance: ReactTestInstance) =>
     return results;
   };
 
-export const getAllByProps = (instance: ReactTestInstance, warnFn?: Function) =>
-  function getAllByPropsFn(props: { [propName: string]: any }) {
-    warnFn && warnFn('getAllByProps');
-    const results = instance.findAllByProps(props);
-    if (results.length === 0) {
-      throw new ErrorWithStack(
-        `No instances found with props:\n${prettyFormat(props)}`,
-        getAllByPropsFn
-      );
-    }
-    return results;
-  };
-
 export const getAllByTestId = (instance: ReactTestInstance) =>
   function getAllByTestIdFn(testID: string): ReactTestInstance[] {
     const results = instance
@@ -257,25 +185,75 @@ export const getAllByTestId = (instance: ReactTestInstance) =>
     return results;
   };
 
+export const UNSAFE_getByType = (instance: ReactTestInstance) =>
+  function getByTypeFn(type: React.ComponentType<any>) {
+    try {
+      return instance.findByType(type);
+    } catch (error) {
+      throw new ErrorWithStack(prepareErrorMessage(error), getByTypeFn);
+    }
+  };
+
+export const UNSAFE_getByProps = (instance: ReactTestInstance) =>
+  function getByPropsFn(props: { [propName: string]: any }) {
+    try {
+      return instance.findByProps(props);
+    } catch (error) {
+      throw new ErrorWithStack(prepareErrorMessage(error), getByPropsFn);
+    }
+  };
+
+export const UNSAFE_getAllByType = (instance: ReactTestInstance) =>
+  function getAllByTypeFn(type: React.ComponentType<any>) {
+    const results = instance.findAllByType(type);
+    if (results.length === 0) {
+      throw new ErrorWithStack('No instances found', getAllByTypeFn);
+    }
+    return results;
+  };
+
+export const UNSAFE_getAllByProps = (instance: ReactTestInstance) =>
+  function getAllByPropsFn(props: { [propName: string]: any }) {
+    const results = instance.findAllByProps(props);
+    if (results.length === 0) {
+      throw new ErrorWithStack(
+        `No instances found with props:\n${prettyFormat(props)}`,
+        getAllByPropsFn
+      );
+    }
+    return results;
+  };
+
 export const getByAPI = (instance: ReactTestInstance) => ({
-  getByTestId: getByTestId(instance),
-  getByName: getByName(instance, printDeprecationWarning),
-  getByType: getByType(instance, printUnsafeWarning),
   getByText: getByText(instance),
   getByPlaceholder: getByPlaceholder(instance),
   getByDisplayValue: getByDisplayValue(instance),
-  getByProps: getByProps(instance, printUnsafeWarning),
-  getAllByTestId: getAllByTestId(instance),
-  getAllByName: getAllByName(instance, printDeprecationWarning),
-  getAllByType: getAllByType(instance, printUnsafeWarning),
+  getByTestId: getByTestId(instance),
   getAllByText: getAllByText(instance),
   getAllByPlaceholder: getAllByPlaceholder(instance),
   getAllByDisplayValue: getAllByDisplayValue(instance),
-  getAllByProps: getAllByProps(instance, printUnsafeWarning),
+  getAllByTestId: getAllByTestId(instance),
 
-  // Unsafe aliases
-  UNSAFE_getByType: getByType(instance),
-  UNSAFE_getAllByType: getAllByType(instance),
-  UNSAFE_getByProps: getByProps(instance),
-  UNSAFE_getAllByProps: getAllByProps(instance),
+  // Unsafe
+  UNSAFE_getByType: UNSAFE_getByType(instance),
+  UNSAFE_getAllByType: UNSAFE_getAllByType(instance),
+  UNSAFE_getByProps: UNSAFE_getByProps(instance),
+  UNSAFE_getAllByProps: UNSAFE_getAllByProps(instance),
+
+  // Removed
+  getByName: () =>
+    throwRemovedFunctionError('getByName', 'migration-v2#removed-functions'),
+  getAllByName: () =>
+    throwRemovedFunctionError('getAllByName', 'migration-v2#removed-functions'),
+  getByType: () =>
+    throwRemovedFunctionError('getByType', 'migration-v2#removed-functions'),
+  getAllByType: () =>
+    throwRemovedFunctionError('getAllByType', 'migration-v2#removed-functions'),
+  getByProps: () =>
+    throwRemovedFunctionError('getByProps', 'migration-v2#removed-functions'),
+  getAllByProps: () =>
+    throwRemovedFunctionError(
+      'getAllByProps',
+      'migration-v2#removed-functions'
+    ),
 });

@@ -15,9 +15,9 @@ interface HasRequiredProp {
   requiredProp: string;
 }
 
-const View = props => props.children;
-const Text = props => props.children;
-const TextInput = props => props.children;
+const View = (props) => props.children;
+const Text = (props) => props.children;
+const TextInput = (props) => props.children;
 const ElementWithRequiredProps = (props: HasRequiredProp) => (
   <Text>{props.requiredProp}</Text>
 );
@@ -32,10 +32,8 @@ const TestComponent = () => (
 const tree = render(<TestComponent />);
 
 // getByAPI tests
-const getByNameString: ReactTestInstance = tree.getByName('View');
-const getByNameContructor: ReactTestInstance = tree.getByName(View);
-const getByType: ReactTestInstance = tree.getByType(View);
-const getByTypeWithRequiredProps: ReactTestInstance = tree.getByType(
+const getByType: ReactTestInstance = tree.UNSAFE_getByType(View);
+const getByTypeWithRequiredProps: ReactTestInstance = tree.UNSAFE_getByType(
   ElementWithRequiredProps
 );
 const getByTextString: ReactTestInstance = tree.getByText('<View />');
@@ -52,30 +50,24 @@ const getByDisplayValueString: ReactTestInstance = tree.getByDisplayValue(
 const getByDisplayValueRegExp: ReactTestInstance = tree.getByDisplayValue(
   /value/g
 );
-const getByProps: ReactTestInstance = tree.getByProps({ value: 2 });
+const getByProps: ReactTestInstance = tree.UNSAFE_getByProps({ value: 2 });
 const getByTestId: ReactTestInstance = tree.getByTestId('test-id');
 const getAllByTestId: ReactTestInstance[] = tree.getAllByTestId('test-id');
-const getAllByNameString: Array<ReactTestInstance> = tree.getAllByName('View');
-const getAllByNameConstructor: Array<ReactTestInstance> = tree.getAllByName(
-  View
+const getAllByType: Array<ReactTestInstance> = tree.UNSAFE_getAllByType(View);
+const getAllByTypeWithRequiredProps: Array<ReactTestInstance> = tree.UNSAFE_getAllByType(
+  ElementWithRequiredProps
 );
-const getAllByType: Array<ReactTestInstance> = tree.getAllByType(View);
-const getAllByTypeWithRequiredProps: Array<
-  ReactTestInstance
-> = tree.getAllByType(ElementWithRequiredProps);
 const getAllByTextString: Array<ReactTestInstance> = tree.getAllByText(
   '<View />'
 );
 const getAllByTextRegExp: Array<ReactTestInstance> = tree.getAllByText(/Text/g);
-const getAllByProps: Array<ReactTestInstance> = tree.getAllByProps({
+const getAllByProps: Array<ReactTestInstance> = tree.UNSAFE_getAllByProps({
   value: 2,
 });
 
 // queuryByAPI tests
-const queryByNameString: ReactTestInstance | null = tree.queryByName('View');
-const queryByNameConstructor: ReactTestInstance | null = tree.queryByName(View);
-const queryByType: ReactTestInstance | null = tree.queryByType(View);
-const queryByTypeWithRequiredProps: ReactTestInstance | null = tree.queryByType(
+const queryByType: ReactTestInstance | null = tree.UNSAFE_queryByType(View);
+const queryByTypeWithRequiredProps: ReactTestInstance | null = tree.UNSAFE_queryByType(
   ElementWithRequiredProps
 );
 const queryByTextString: ReactTestInstance | null = tree.queryByText('View');
@@ -92,33 +84,31 @@ const queryByDisplayValueString: ReactTestInstance | null = tree.queryByDisplayV
 const queryByDisplayValueRegExp: ReactTestInstance | null = tree.queryByDisplayValue(
   /value/g
 );
-const queryByProps: ReactTestInstance | null = tree.queryByProps({ value: 2 });
+const queryByProps: ReactTestInstance | null = tree.UNSAFE_queryByProps({
+  value: 2,
+});
 const queryByTestId: ReactTestInstance | null = tree.queryByTestId('test-id');
 const queryAllByTestId: ReactTestInstance[] | null = tree.queryAllByTestId(
   'test-id'
 );
-const queryAllByNameString: Array<ReactTestInstance> = tree.queryAllByName(
-  'View'
-);
-const queryAllByNameConstructor: Array<ReactTestInstance> = tree.queryAllByName(
+const queryAllByType: Array<ReactTestInstance> = tree.UNSAFE_queryAllByType(
   View
 );
-const queryAllByType: Array<ReactTestInstance> = tree.queryAllByType(View);
-const queryAllByTypeWithRequiredProps: Array<
-  ReactTestInstance
-> = tree.queryAllByType(ElementWithRequiredProps);
+const queryAllByTypeWithRequiredProps: Array<ReactTestInstance> = tree.UNSAFE_queryAllByType(
+  ElementWithRequiredProps
+);
 const queryAllByTextString: Array<ReactTestInstance> = tree.queryAllByText(
   'View'
 );
 const queryAllByTextRegExp: Array<ReactTestInstance> = tree.queryAllByText(
   /View/g
 );
-const queryAllByDisplayValueString: Array<
-  ReactTestInstance
-> = tree.queryAllByDisplayValue('View');
-const queryAllByDisplayValueRegExp: Array<
-  ReactTestInstance
-> = tree.queryAllByDisplayValue(/View/g);
+const queryAllByDisplayValueString: Array<ReactTestInstance> = tree.queryAllByDisplayValue(
+  'View'
+);
+const queryAllByDisplayValueRegExp: Array<ReactTestInstance> = tree.queryAllByDisplayValue(
+  /View/g
+);
 
 // findBy API tests
 const findBy: Promise<ReactTestInstance>[] = [
@@ -200,33 +190,45 @@ const queryAllByA11yRole: Array<ReactTestInstance> = tree.queryAllByA11yRole(
 );
 
 const getByA11yStates: ReactTestInstance = tree.getByA11yStates('selected');
-const getByA11yStatesArray: ReactTestInstance = tree.getByA11yStates(['selected']);
+const getByA11yStatesArray: ReactTestInstance = tree.getByA11yStates([
+  'selected',
+]);
 const getAllByA11yStates: Array<ReactTestInstance> = tree.getAllByA11yStates(
   'selected'
 );
-const getAllByA11yStatesArray: Array<
-  ReactTestInstance
-> = tree.getAllByA11yStates(['selected']);
+const getAllByA11yStatesArray: Array<ReactTestInstance> = tree.getAllByA11yStates(
+  ['selected']
+);
 const queryByA11yStates: ReactTestInstance = tree.queryByA11yStates('selected');
 const queryByA11yStatesArray: ReactTestInstance = tree.queryByA11yStates([
   'selected',
 ]);
-const queryAllByA11yStates: Array<
-  ReactTestInstance
-> = tree.queryAllByA11yStates('selected');
-const queryAllByA11yStatesArray: Array<
-  ReactTestInstance
-> = tree.queryAllByA11yStates(['selected']);
+const queryAllByA11yStates: Array<ReactTestInstance> = tree.queryAllByA11yStates(
+  'selected'
+);
+const queryAllByA11yStatesArray: Array<ReactTestInstance> = tree.queryAllByA11yStates(
+  ['selected']
+);
 
 const getByA11yState: ReactTestInstance = tree.getByA11yState({ busy: true });
-const getAllByA11yState: Array<ReactTestInstance> = tree.getAllByA11yState({ busy: true });
-const queryByA11yState: ReactTestInstance = tree.queryByA11yState({ busy: true });
-const queryAllByA11yState: Array<ReactTestInstance> = tree.queryAllByA11yState({ busy: true });
+const getAllByA11yState: Array<ReactTestInstance> = tree.getAllByA11yState({
+  busy: true,
+});
+const queryByA11yState: ReactTestInstance = tree.queryByA11yState({
+  busy: true,
+});
+const queryAllByA11yState: Array<ReactTestInstance> = tree.queryAllByA11yState({
+  busy: true,
+});
 
 const getByA11yValue: ReactTestInstance = tree.getByA11yValue({ min: 10 });
-const getAllByA11yValue: Array<ReactTestInstance> = tree.getAllByA11yValue({ min: 10 });
+const getAllByA11yValue: Array<ReactTestInstance> = tree.getAllByA11yValue({
+  min: 10,
+});
 const queryByA11yValue: ReactTestInstance = tree.queryByA11yValue({ min: 10 });
-const queryAllByA11yValue: Array<ReactTestInstance> = tree.queryAllByA11yValue({ min: 10 });
+const queryAllByA11yValue: Array<ReactTestInstance> = tree.queryAllByA11yValue({
+  min: 10,
+});
 
 const debugFn = tree.debug();
 const debugFnWithMessage = tree.debug('my message');
@@ -236,12 +238,12 @@ tree.rerender(<View />);
 tree.unmount();
 
 // fireEvent API tests
-fireEvent(getByNameString, 'press');
-fireEvent(getByNameString, 'press', 'data');
-fireEvent(getByNameString, 'press', 'param1', 'param2');
-fireEvent.press(getByNameString);
-fireEvent.changeText(getByNameString, 'string');
-fireEvent.scroll(getByNameString, 'eventData');
+fireEvent(getByA11yLabel, 'press');
+fireEvent(getByA11yLabel, 'press', 'data');
+fireEvent(getByA11yLabel, 'press', 'param1', 'param2');
+fireEvent.press(getByA11yLabel);
+fireEvent.changeText(getByA11yLabel, 'string');
+fireEvent.scroll(getByA11yLabel, 'eventData');
 
 // shallow API
 const shallowTree: { output: React.ReactElement<any> } = shallow(
@@ -251,10 +253,10 @@ const shallowTree: { output: React.ReactElement<any> } = shallow(
 const waitForFlush: Promise<any> = flushMicrotasksQueue();
 
 const waitBy: Promise<ReactTestInstance> = waitFor<ReactTestInstance>(() =>
-  tree.getByName('View')
+  tree.getByA11yLabel('label')
 );
 const waitByAll: Promise<ReactTestInstance[]> = waitFor<ReactTestInstance[]>(
-  () => tree.getAllByName('View'),
+  () => tree.getAllByA11yLabel('label'),
   { timeout: 1000, interval: 50 }
 );
 

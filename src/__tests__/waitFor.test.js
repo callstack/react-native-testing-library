@@ -36,9 +36,9 @@ class BananaContainer extends React.Component<{}, any> {
 }
 
 test('waits for element until it stops throwing', async () => {
-  const { getByText, getByName, queryByText } = render(<BananaContainer />);
+  const { getByText, queryByText } = render(<BananaContainer />);
 
-  fireEvent.press(getByName('TouchableOpacity'));
+  fireEvent.press(getByText('Change freshness!'));
 
   expect(queryByText('Fresh')).toBeNull();
 
@@ -48,9 +48,9 @@ test('waits for element until it stops throwing', async () => {
 });
 
 test('waits for element until timeout is met', async () => {
-  const { getByText, getByName } = render(<BananaContainer />);
+  const { getByText } = render(<BananaContainer />);
 
-  fireEvent.press(getByName('TouchableOpacity'));
+  fireEvent.press(getByText('Change freshness!'));
 
   await expect(
     waitFor(() => getByText('Fresh'), { timeout: 100 })
