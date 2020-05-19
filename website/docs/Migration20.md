@@ -69,16 +69,16 @@ Following query functions have been removed after being deprecated for more than
 - `queryByName`
 - `queryAllByName`
 
-Following query functions are still available but have been prefixed with `UNSAFE_`:
+The `*ByType` and `*ByProps` queries has been prefixed with `UNSAFE_`. You can safely rename them using global search/replace in your project:
 
-- `UNSAFE_getByType`
-- `UNSAFE_getAllByType`
-- `UNSAFE_queryByType`
-- `UNSAFE_queryAllByType`
-- `UNSAFE_getByProps`
-- `UNSAFE_getAllByProps`
-- `UNSAFE_queryByProps`
-- `UNSAFE_queryAllByProps`
+- `getByType` -> `UNSAFE_getByType`
+- `getAllByType` -> `UNSAFE_getAllByType`
+- `queryByType` -> `UNSAFE_queryByType`
+- `queryAllByType` -> `UNSAFE_queryAllByType`
+- `getByProps` -> `UNSAFE_getByProps`
+- `getAllByProps` -> `UNSAFE_getAllByProps`
+- `queryByProps` -> `UNSAFE_queryByProps`
+- `queryAllByProps` -> `UNSAFE_queryAllByProps`
 
 ## Some `byTestId` queries behavior changes
 
