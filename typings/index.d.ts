@@ -33,27 +33,27 @@ interface GetByAPI {
 
   // Removed
   /**
-   * @deprecated This functions has been removed. Please use other queries.
+   * @deprecated This function has been removed. Please use other queries.
    */
   getByName: (name: React.ReactType | string) => ReactTestInstance;
   /**
-   * @deprecated This functions has been renamed to `UNSAFE_getByType`.
+   * @deprecated This function has been renamed to `UNSAFE_getByType`.
    */
   getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
   /**
-   * @deprecated This functions has been renamed to `UNSAFE_getByProps`.
+   * @deprecated This function has been renamed to `UNSAFE_getByProps`.
    */
   getByProps: (props: Record<string, any>) => ReactTestInstance;
   /**
-   * @deprecated This functions has been removed. Please use other queries.
+   * @deprecated This function has been removed. Please use other queries.
    */
   getAllByName: (name: React.ReactType | string) => Array<ReactTestInstance>;
   /**
-   * @deprecated This functions has been renamed to `UNSAFE_getAllByType`.
+   * @deprecated This function has been renamed to `UNSAFE_getAllByType`.
    */
   getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
   /**
-   * @deprecated This functions has been renamed to `UNSAFE_getAllByProps`.
+   * @deprecated This function has been renamed to `UNSAFE_getAllByProps`.
    */
   getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>;
 }
@@ -82,31 +82,31 @@ interface QueryByAPI {
 
   // Removed
   /**
-   * @deprecated This functions has been removed. Please use other queries.
+   * @deprecated This function has been removed. Please use other queries.
    */
   queryByName: (name: React.ReactType | string) => ReactTestInstance | null;
   /**
-   * @deprecated This functions has been renamed to `UNSAFE_queryByType`.
+   * @deprecated This function has been renamed to `UNSAFE_queryByType`.
    */
   queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
   /**
-   * @deprecated This functions has been renamed to `UNSAFE_queryByProps`.
+   * @deprecated This function has been renamed to `UNSAFE_queryByProps`.
    */
   queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
   /**
-   * @deprecated This functions has been removed. Please use other queries.
+   * @deprecated This function has been removed. Please use other queries.
    */
   queryAllByName: (
     name: React.ReactType | string
   ) => Array<ReactTestInstance> | [];
   /**
-   * @deprecated This functions has been renamed to `UNSAFE_queryAllByType`.
+   * @deprecated This function has been renamed to `UNSAFE_queryAllByType`.
    */
   queryAllByType: <P>(
     type: React.ComponentType<P>
   ) => Array<ReactTestInstance> | [];
   /**
-   * @deprecated This functions has been renamed to `UNSAFE_queryAllByProps`.
+   * @deprecated This function has been renamed to `UNSAFE_queryAllByProps`.
    */
   queryAllByProps: (
     props: Record<string, any>
@@ -285,12 +285,12 @@ export declare const act: (callback: () => void) => Thenable;
 export declare const within: (instance: ReactTestInstance) => Queries;
 
 /**
- * @deprecated This functions has been removed. Please use `waitFor` function.
+ * @deprecated This function has been removed. Please use `waitFor` function.
  */
 export declare const waitForElement: WaitForFunction;
 
 /**
- * @deprecated This functions has been removed.
+ * @deprecated This function has been removed.
  */
 export declare const shallow: <P = {}>(
   instance: ReactTestInstance | React.ReactElement<P>
