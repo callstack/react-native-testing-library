@@ -10,48 +10,44 @@ type FindReturn = Promise<ReactTestInstance>;
 type FindAllReturn = Promise<ReactTestInstance[]>;
 
 interface GetByAPI {
-  getByName: (name: React.ReactType | string) => ReactTestInstance;
-  getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
   getByText: (text: string | RegExp) => ReactTestInstance;
   getByPlaceholder: (placeholder: string | RegExp) => ReactTestInstance;
   getByDisplayValue: (value: string | RegExp) => ReactTestInstance;
-  getByProps: (props: Record<string, any>) => ReactTestInstance;
   getByTestId: (testID: string) => ReactTestInstance;
   getAllByTestId: (testID: string) => Array<ReactTestInstance>;
-  getAllByName: (name: React.ReactType | string) => Array<ReactTestInstance>;
-  getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
   getAllByText: (text: string | RegExp) => Array<ReactTestInstance>;
   getAllByPlaceholder: (
     placeholder: string | RegExp
   ) => Array<ReactTestInstance>;
   getAllByDisplayValue: (value: string | RegExp) => Array<ReactTestInstance>;
-  getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>;
-
 
   // Unsafe aliases
   UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance,
-  UNSAFE_getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>,
+  UNSAFE_getAllByType: <P>(
+    type: React.ComponentType<P>
+  ) => Array<ReactTestInstance>;
   UNSAFE_getByProps: (props: Record<string, any>) => ReactTestInstance,
-  UNSAFE_getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>,
+  UNSAFE_getAllByProps: (
+    props: Record<string, any>
+  ) => Array<ReactTestInstance>;
+
+  // Removed
+  getByName: (name: React.ReactType | string) => ReactTestInstance;
+  getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
+  getByProps: (props: Record<string, any>) => ReactTestInstance;
+  getAllByName: (name: React.ReactType | string) => Array<ReactTestInstance>;
+  getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
+  getAllByProps: (props: Record<string, any>) => Array<ReactTestInstance>;
 }
 
 interface QueryByAPI {
-  queryByName: (name: React.ReactType | string) => ReactTestInstance | null;
-  queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
   queryByText: (name: string | RegExp) => ReactTestInstance | null;
   queryByPlaceholder: (
     placeholder: string | RegExp
   ) => ReactTestInstance | null;
   queryByDisplayValue: (value: string | RegExp) => ReactTestInstance | null;
-  queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
   queryByTestId: (testID: string) => ReactTestInstance | null;
   queryAllByTestId: (testID: string) => Array<ReactTestInstance> | null;
-  queryAllByName: (
-    name: React.ReactType | string
-  ) => Array<ReactTestInstance> | [];
-  queryAllByType: <P>(
-    type: React.ComponentType<P>
-  ) => Array<ReactTestInstance> | [];
   queryAllByText: (text: string | RegExp) => Array<ReactTestInstance> | [];
   queryAllByPlaceholder: (
     placeholder: string | RegExp
@@ -59,15 +55,26 @@ interface QueryByAPI {
   queryAllByDisplayValue: (
     value: string | RegExp
   ) => Array<ReactTestInstance> | [];
+
+  // Unsafe aliases
+  UNSAFE_queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
+  UNSAFE_queryAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance> | [];
+  UNSAFE_queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
+  UNSAFE_queryAllByProps: (props: Record<string, any>) => Array<ReactTestInstance> | [];
+
+  // Removed
+  queryByName: (name: React.ReactType | string) => ReactTestInstance | null;
+  queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
+  queryByProps: (props: Record<string, any>) => ReactTestInstance | null;
+  queryAllByName: (
+    name: React.ReactType | string
+  ) => Array<ReactTestInstance> | [];
+  queryAllByType: <P>(
+    type: React.ComponentType<P>
+  ) => Array<ReactTestInstance> | [];
   queryAllByProps: (
     props: Record<string, any>
   ) => Array<ReactTestInstance> | [];
-
-  // Unsafe aliases
-  UNSAFE_queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null,
-  UNSAFE_queryAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance> | [],
-  UNSAFE_queryByProps: (props: Record<string, any>) => ReactTestInstance | null,
-  UNSAFE_queryAllByProps: (props: Record<string, any>) => Array<ReactTestInstance> | [],
 }
 
 export interface WaitForOptions {
