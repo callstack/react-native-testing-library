@@ -16,11 +16,7 @@ import {
   getAllByDisplayValue,
   getAllByProps,
 } from './getByAPI';
-import {
-  createQueryByError,
-  printDeprecationWarning,
-  printUnsafeWarning,
-} from './errors';
+import { createQueryByError, printDeprecationWarning } from './errors';
 
 export const queryByName = (instance: ReactTestInstance, warnFn?: Function) =>
   function queryByNameFn(name: string | React.ComponentType<any>) {
