@@ -92,12 +92,8 @@ export const queryAllByTestId = (instance: ReactTestInstance) => (
   }
 };
 
-export const UNSAFE_queryByType = (
-  instance: ReactTestInstance,
-  warnFn?: Function
-) =>
+export const UNSAFE_queryByType = (instance: ReactTestInstance) =>
   function queryByTypeFn(type: React.ComponentType<any>) {
-    warnFn && warnFn('queryByType');
     try {
       return UNSAFE_getByType(instance)(type);
     } catch (error) {
@@ -105,12 +101,8 @@ export const UNSAFE_queryByType = (
     }
   };
 
-export const UNSAFE_queryByProps = (
-  instance: ReactTestInstance,
-  warnFn?: Function
-) =>
+export const UNSAFE_queryByProps = (instance: ReactTestInstance) =>
   function queryByPropsFn(props: { [propName: string]: any }) {
-    warnFn && warnFn('queryByProps');
     try {
       return UNSAFE_getByProps(instance)(props);
     } catch (error) {
@@ -118,11 +110,9 @@ export const UNSAFE_queryByProps = (
     }
   };
 
-export const UNSAFE_queryAllByType = (
-  instance: ReactTestInstance,
-  warnFn?: Function
-) => (type: React.ComponentType<any>) => {
-  warnFn && warnFn('queryAllByType');
+export const UNSAFE_queryAllByType = (instance: ReactTestInstance) => (
+  type: React.ComponentType<any>
+) => {
   try {
     return UNSAFE_getAllByType(instance)(type);
   } catch (error) {
@@ -130,11 +120,9 @@ export const UNSAFE_queryAllByType = (
   }
 };
 
-export const UNSAFE_queryAllByProps = (
-  instance: ReactTestInstance,
-  warnFn?: Function
-) => (props: { [propName: string]: any }) => {
-  warnFn && warnFn('queryAllByProps');
+export const UNSAFE_queryAllByProps = (instance: ReactTestInstance) => (props: {
+  [propName: string]: any,
+}) => {
   try {
     return UNSAFE_getAllByProps(instance)(props);
   } catch (error) {
