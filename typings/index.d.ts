@@ -224,10 +224,14 @@ export type FireEventAPI = FireEventFunction & {
   scroll: (element: ReactTestInstance, ...data: Array<any>) => any;
 };
 
-export type WaitForElementFunction = <T = any>(
+type WaitForOptions = {
+  timeout?: number;
+  interval?: number;
+};
+
+export type WaitForFunction = <T = any>(
   expectation: () => T,
-  timeout?: number,
-  interval?: number
+  options?: WaitForOptions
 ) => Promise<T>;
 
 export declare const render: (
@@ -240,6 +244,6 @@ export declare const shallow: <P = {}>(
 export declare const flushMicrotasksQueue: () => Promise<any>;
 export declare const cleanup: () => void;
 export declare const fireEvent: FireEventAPI;
-export declare const waitForElement: WaitForElementFunction;
+export declare const waitFor: WaitForFunction;
 export declare const act: (callback: () => void) => Thenable;
 export declare const within: (instance: ReactTestInstance) => Queries;
