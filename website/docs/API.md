@@ -74,7 +74,11 @@ Re-render the in-memory tree with a new root element. This simulates a React upd
 unmount(): void
 ```
 
-Unmount the in-memory tree, triggering the appropriate lifecycle events
+Unmount the in-memory tree, triggering the appropriate lifecycle events.
+
+:::note
+Usually you should not need to call `unmount` as it is done automatically if your test runner supports `afterEach` hook (like Jest, mocha, Jasmine).
+:::
 
 ### `debug`
 
@@ -123,10 +127,14 @@ const cleanup: () => void;
 
 Unmounts React trees that were mounted with `render`.
 
+:::info
+Please note that this is done automatically if the testing framework you're using supports the `afterEach` global (like mocha, Jest, and Jasmine). If not, you will need to do manual cleanups after each test.
+:::
+
 For example, if you're using the `jest` testing framework, then you would need to use the `afterEach` hook like so:
 
 ```jsx
-import { cleanup, render } from 'react-native-testing-library';
+import { cleanup, render } from 'react-native-testing-library/pure';
 import { View } from 'react-native';
 
 afterEach(cleanup);

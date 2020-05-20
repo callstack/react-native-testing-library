@@ -55,6 +55,10 @@ test('waits for element until timeout is met', async () => {
   await expect(
     waitFor(() => getByText('Fresh'), { timeout: 100 })
   ).rejects.toThrow();
+
+  // Async action ends after 300ms and we only waited 100ms, so we need to wait
+  // for the remaining async actions to finish
+  await waitFor(() => getByText('Fresh'));
 });
 
 test('waits for element with custom interval', async () => {
