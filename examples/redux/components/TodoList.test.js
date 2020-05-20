@@ -1,12 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { cleanup, fireEvent, render } from 'react-native-testing-library';
+import { fireEvent, render } from 'react-native-testing-library';
 import configureStore from '../store';
 import TodoList from './TodoList';
 
 describe('Application test', () => {
-  afterEach(cleanup);
-
   test('it should execute with a store with 4 elements', () => {
     const initialState = {
       todos: [

@@ -9,6 +9,30 @@ This guides describes major steps involved in migrating your testing code from u
 
 Node 8 reached its EOL more than 5 months ago, so it's about time to target the library to Node 10. If you used lower version, you'll have to upgrade to v10, but we suggest using the latest LTS version.
 
+## Auto Cleanup
+
+`cleanup()` function is now called automatically after every test, if your testing framework supports `afterEach` hook (like Jest, mocha, and Jasmine).
+
+You should be able to safely remove all `afterEach(cleanup)` calls in your code.
+
+This change might break your code, if you tests are not isolated, i.e. you call `render` outside `test` block. Generally, you should [keep your tests isolated](https://kentcdodds.com/blog/test-isolation-with-react), but if you can't or don't want to do this right away you can prevent this behavior using any of the foloowing ways:
+
+1. by importing `'react-native-testing-library/pure'` instead of `'react-native-testing-library'`
+
+2. by importing `'react-native-testing-library/dont-cleanup-after-each'` before importing `'react-native-testing-library'`. You can do it in a global way by using Jest's `setupFiles` like this:
+
+```js
+{
+  setupFiles: ['react-native-testing-library/dont-cleanup-after-each'];
+}
+```
+
+3. by setting `RTNL_SKIP_AUTO_CLEANUP` env variable to `true`. You can do this with `cross-evn` like this:
+
+```sh
+cross-env RNTL_SKIP_AUTO_CLEANUP=true jest
+```
+
 ## WaitFor API changes
 
 `waitForElement` function has been renamed to `waitFor` for consistency with React Testing Library. Additionally the signature has slightly changed from:

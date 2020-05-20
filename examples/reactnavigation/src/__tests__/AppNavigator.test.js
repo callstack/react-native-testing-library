@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { render, fireEvent, cleanup } from 'react-native-testing-library';
+import { render, fireEvent } from 'react-native-testing-library';
 
 import AppNavigator from '../AppNavigator';
 
@@ -8,8 +8,6 @@ import AppNavigator from '../AppNavigator';
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
 
 describe('Testing react navigation', () => {
-  afterEach(cleanup);
-
   test('page contains the header and 10 items', () => {
     const component = (
       <NavigationContainer>

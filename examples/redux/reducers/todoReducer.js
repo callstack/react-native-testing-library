@@ -6,7 +6,6 @@ export default function todoReducer(state = [], action) {
       return state.concat(action.payload);
 
     case actions.REMOVE:
-      console.log(action);
       return state.filter((todo) => todo.id !== action.payload.id);
 
     case actions.MODIFY:
