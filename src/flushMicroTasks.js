@@ -7,9 +7,9 @@ import { printDeprecationWarning } from './helpers/errors';
  */
 export default function flushMicrotasksQueue(): Promise<any> {
   printDeprecationWarning('flushMicrotasksQueue');
-  return flushMicrotasksQueueInternal();
+  return flushMicroTasks();
 }
 
-export function flushMicrotasksQueueInternal(): Promise<any> {
+export function flushMicroTasks(): Promise<any> {
   return new Promise((resolve) => setImmediate(resolve));
 }
