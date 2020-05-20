@@ -54,7 +54,7 @@ export default function HomeScreen({ navigation }) {
     new Array(20).fill(null).map((_, idx) => idx + 1)
   );
 
-  const onOpacityPress = item => navigation.navigate('Details', item);
+  const onOpacityPress = (item) => navigation.navigate('Details', item);
 
   return (
     <View>
@@ -162,8 +162,6 @@ import AppNavigator from '../AppNavigator';
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
 
 describe('Testing react navigation', () => {
-  afterEach(cleanup);
-
   test('page contains the header and 10 items', () => {
     const component = (
       <NavigationContainer>
