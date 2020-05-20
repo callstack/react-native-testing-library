@@ -9,6 +9,8 @@
     "import/no-unresolved": [
       2,
       { "ignore": ["^@theme", "^@docusaurus", "^@generated"] }
-    ]
+    ],
+    "react-native-a11y/has-valid-accessibility-ignores-invert-colors": 0,
+    "react-native/no-color-literals": "off"
   }
 }

@@ -315,29 +315,28 @@ fireEvent.scroll(getByType(ScrollView), eventData);
 expect(onEndReached).toHaveBeenCalled();
 ```
 
-## `waitForElement`
+## `waitFor`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitForElement.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitFor.test.js)
 
 Defined as:
 
 ```jsx
-function waitForElement<T>(
+function waitFor<T>(
   expectation: () => T,
-  timeout: number = 4500,
-  interval: number = 50
+  { timeout: number = 4500, interval: number = 50 }
 ): Promise<T> {}
 ```
 
-Waits for non-deterministic periods of time until your element appears or times out. `waitForElement` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
+Waits for non-deterministic periods of time until your element appears or times out. `waitFor` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
 
 ```jsx
-import { render, waitForElement } from 'react-testing-library';
+import { render, waitFor } from 'react-testing-library';
 
 test('waiting for an Banana to be ready', async () => {
   const { getByText } = render(<Banana />);
 
-  await waitForElement(() => getByText('Banana ready'));
+  await waitFor(() => getByText('Banana ready'));
 });
 ```
 
@@ -363,70 +362,14 @@ Please note that additional `render` specific operations like `update`, `unmount
 const detailsScreen = within(getByA11yHint('Details Screen'));
 expect(detailsScreen.getByText('Some Text')).toBeTruthy();
 expect(detailsScreen.getByDisplayValue('Some Value')).toBeTruthy();
-expect(detailsScreen.getByA11yLabel('Some Label')).toBeTruthy();
-expect(detailsScreen.getByA11yHint('Some Label')).toBeTruthy();
+expect(detailsScreen.queryByA11yLabel('Some Label')).toBeTruthy();
+await expect(detailsScreen.findByA11yHint('Some Label')).resolves.toBeTruthy();
 ```
 
 Use cases for scoped queries include:
-* queries scoped to a single item inside a FlatList containing many items
-* queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
 
-## `debug`
-
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/debug.test.js)
-
-Log prettified shallowly rendered component or test instance (just like snapshot) to stdout.
-
-```jsx
-import { debug } from 'react-native-testing-library';
-
-debug(<Component />);
-debug.shallow(<Component />); // an alias for `debug`
-```
-
-logs:
-
-```jsx
-<TouchableOpacity
-  activeOpacity={0.2}
-  onPress={[Function bound fn]}
->
-  <TextComponent
-    text="Press me"
-  />
-</TouchableOpacity>
-```
-
-There's also `debug.deep` that renders deeply to stdout.
-
-```jsx
-import { debug } from 'react-native-testing-library';
-
-debug.deep(<Component />);
-debug.deep(toJSON(), 'actually debug JSON too'); // useful when Component state changes
-```
-
-logs:
-
-```jsx
-<View
-  accessible={true}
-  isTVSelectable={true}
-  onResponderGrant={[Function bound touchableHandleResponderGrant]}
-  // ... more props
-  style={
-    Object {
-      \\"opacity\\": 1,
-    }
-  }
->
-  <Text>
-    Press me
-  </Text>
-</View>
-```
-
-Optionally you can provide a string message as a second argument to `debug`, which will be displayed right after the component.
+- queries scoped to a single item inside a FlatList containing many items
+- queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
 
 ## `flushMicrotasksQueue`
 

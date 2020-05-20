@@ -24,6 +24,18 @@ title: Queries
 
 `queryAllBy*` queries return an array of all matching nodes for a query, and return an empty array (`[]`) if no elements match.
 
+### findBy
+
+`findBy` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 4500ms. If you need to find more than one element, then use `findAllBy`.
+
+### findAllBy
+
+`findAllBy` queries return a promise which resolves to an array when any matching elements are found. The promise is rejected if no elements match after a default timeout of 4500ms.
+
+:::info
+`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective options for [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/api#waitfor) function.
+:::
+
 ## Queries
 
 _Note: most methods like this one return a [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance) with following properties that you may be interested in:_
@@ -39,7 +51,7 @@ type ReactTestInstance = {
 
 ### `ByText`
 
-> getByText, getAllByText, queryByText, queryAllByText
+> getByText, getAllByText, queryByText, queryAllByText, findByText, findAllByText
 
 Returns a `ReactTestInstance` with matching text – may be a string or regular expression.
 
@@ -54,7 +66,7 @@ const element = getByText('banana');
 
 ### `ByPlaceholder`
 
-> getByPlaceholder, getAllByPlaceholder, queryByPlaceholder, queryAllByPlaceholder
+> getByPlaceholder, getAllByPlaceholder, queryByPlaceholder, queryAllByPlaceholder, findByPlaceholder, findAllByPlaceholder
 
 Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
 
@@ -67,7 +79,7 @@ const element = getByPlaceholder('username');
 
 ### `ByDisplayValue`
 
-> getByDisplayValue, getAllByDisplayValue, queryByDisplayValue, queryAllByDisplayValue
+> getByDisplayValue, getAllByDisplayValue, queryByDisplayValue, queryAllByDisplayValue, findByDisplayValue, findAllByDisplayValue
 
 Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
 
@@ -80,7 +92,7 @@ const element = getByDisplayValue('username');
 
 ### `ByTestId`
 
-> getByTestId, getAllByTestId, queryByTestId, queryAllByTestId
+> getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, findByTestId, findAllByTestId
 
 Returns a `ReactTestInstance` with matching `testID` prop.
 
@@ -92,17 +104,13 @@ const element = getByTestId('unique-id');
 ```
 
 :::caution
-Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead. 
-:::
-
-:::danger
-Current implementation of `getByTestId` and `queryByTestId` has a serious flaw, which results in finding more IDs than there really would be present in native React host components. Fixing it may break some of your tests so we'll do it in next major release (v2). As a temporary workaround, please use `getAllByTestId('your-id')[0]` or `queryAllByTestId('your-id')[0]` or migrate off testing with testID, which is considered to be an escape hatch.
+Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead.
 :::
 
 ### `ByA11yLabel`, `ByAccessibilityLabel`
 
-> getByA11yLabel, getAllByA11yLabel, queryByA11yLabel, queryAllByA11yLabel
-> getByAccessibilityLabel, getAllByAccessibilityLabel, queryByAccessibilityLabel, queryAllByAccessibilityLabel
+> getByA11yLabel, getAllByA11yLabel, queryByA11yLabel, queryAllByA11yLabel, findByA11yLabel, findAllByA11yLabel
+> getByAccessibilityLabel, getAllByAccessibilityLabel, queryByAccessibilityLabel, queryAllByAccessibilityLabel, findByAccessibilityLabel, findAllByAccessibilityLabel
 
 Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
 
@@ -115,8 +123,8 @@ const element = getByA11yLabel('my-label');
 
 ### `ByA11yHint`, `ByAccessibilityHint`
 
-> getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint
-> getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint
+> getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint, findByA11yHint, findAllByA11yHint
+> getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint, findByAccessibilityHint, findAllByAccessibilityHint
 
 Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
 
@@ -144,8 +152,8 @@ const element2 = getByA11yStates('checked');
 
 ### `ByA11yRole`, `ByAccessibilityRole`
 
-> getByA11yRole, getAllByA11yRole, queryByA11yRole, queryAllByA11yRole
-> getByAccessibilityRole, getAllByAccessibilityRole, queryByAccessibilityRole, queryAllByAccessibilityRole
+> getByA11yRole, getAllByA11yRole, queryByA11yRole, queryAllByA11yRole, findByA11yRole, findAllByA11yRole
+> getByAccessibilityRole, getAllByAccessibilityRole, queryByAccessibilityRole, queryAllByAccessibilityRole, findByAccessibilityRole, findAllByAccessibilityRole
 
 Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
 
@@ -158,8 +166,8 @@ const element = getByA11yRole('button');
 
 ### `ByA11yState`, `ByAccessibilityState`
 
-> getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState
-> getByAccessibilityState, getAllByAccessibilityState, queryByAccessibilityState, queryAllByAccessibilityState
+> getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState, findByA11yState, findAllByA11yState
+> getByAccessibilityState, getAllByAccessibilityState, queryByAccessibilityState, queryAllByAccessibilityState, findByAccessibilityState, findAllByAccessibilityState
 
 Returns a `ReactTestInstance` with matching `accessibilityState` prop.
 
@@ -172,8 +180,8 @@ const element = getByA11yState({ disabled: true });
 
 ### `ByA11Value`, `ByAccessibilityValue`
 
-> getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue
-> getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue
+> getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue, findByA11yValue, findAllByA11yValue
+> getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue, findByAccessibilityValue, findAllByAccessibilityValue
 
 Returns a `ReactTestInstance` with matching `accessibilityValue` prop.
 
@@ -195,23 +203,24 @@ const element = getByA11yValue({ min: 40 });
 
 The interface is the same as for other queries, but we won't provide full names so that they're harder to find by search engines.
 
-### `UNSAFE_ByType`, `ByType`
+### `UNSAFE_ByType`
 
-> Note: added in v1.4
+> UNSAFE_getByType, UNSAFE_getAllByType, UNSAFE_queryByType, UNSAFE_queryAllByType
 
-> This method has been **deprecated** and has been prepended with `UNSAFE_` prefix. In react-native-testing-library 2.x only the prefixed version will work.
+Returns a `ReactTestInstance` with matching a React component type.
 
-A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
+:::caution
+This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+:::
 
-### `UNSAFE_ByProps`, `ByProps`
+### `UNSAFE_ByProps`
 
-> This method has been **deprecated** and has been prepended with `UNSAFE_` prefix. In react-native-testing-library 2.x only the prefixed version will work.
+> UNSAFE_getByProps, UNSAFE_getAllByProps, UNSAFE_queryByProps, UNSAFE_queryAllByProps
 
-A method returning a `ReactTestInstance` with matching props object
+Returns a `ReactTestInstance` with matching props object.
 
-### `ByName`
-
-> This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. **DON'T USE IT**. It will be removed in next major release (v2.0). Use the other alternatives, such as [`getByText`](#bytext) instead. It's listed here only for back-compat purposes for early adopters of the library
-> A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
+:::caution
+This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+:::
 
 </details>

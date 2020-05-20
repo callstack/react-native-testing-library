@@ -17,7 +17,7 @@ const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 
-class Button extends React.Component<any> {
+class MyButton extends React.Component<any> {
   render() {
     return (
       <TouchableOpacity onPress={this.props.onPress}>
@@ -45,7 +45,7 @@ class Banana extends React.Component<any, any> {
   }
 
   changeFresh = () => {
-    this.setState(state => ({
+    this.setState((state) => ({
       fresh: !state.fresh,
     }));
   };
@@ -68,9 +68,9 @@ class Banana extends React.Component<any, any> {
           placeholder={PLACEHOLDER_CHEF}
           value={INPUT_CHEF}
         />
-        <Button onPress={this.changeFresh} type="primary">
+        <MyButton onPress={this.changeFresh} type="primary">
           Change freshness!
-        </Button>
+        </MyButton>
         <Text testID="duplicateText">First Text</Text>
         <Text testID="duplicateText">Second Text</Text>
         <Text>{test}</Text>
@@ -109,51 +109,18 @@ test('getAllByTestId, queryAllByTestId', () => {
   expect(queryAllByTestId('nonExistentTestId')).toHaveLength(0);
 });
 
-test('getByName, queryByName', () => {
-  const { getByText, getByName, queryByName } = render(<Banana />);
-  const bananaFresh = getByText('not fresh');
-  const button = getByName('Button');
-
-  button.props.onPress();
-
-  expect(bananaFresh.props.children).toBe('fresh');
-
-  const sameButton = getByName(Button);
-  sameButton.props.onPress();
-
-  expect(bananaFresh.props.children).toBe('not fresh');
-  expect(() => getByName('InExistent')).toThrow('No instances found');
-  expect(() => getByName(Text)).toThrow('Expected 1 but found 6');
-
-  expect(queryByName('Button')).toBe(button);
-  expect(queryByName('InExistent')).toBeNull();
-});
-
-test('getAllByName, queryAllByName', () => {
-  const { getAllByName, queryAllByName } = render(<Banana />);
-  const [text, status, button] = getAllByName('Text');
-
-  expect(text.props.children).toBe('Is the banana fresh?');
-  expect(status.props.children).toBe('not fresh');
-  expect(button.props.children).toBe('Change freshness!');
-  expect(() => getAllByName('InExistent')).toThrow('No instances found');
-
-  expect(queryAllByName('Text')[1]).toBe(status);
-  expect(queryAllByName('InExistent')).toHaveLength(0);
-});
-
-test('getAllByType, queryAllByType', () => {
-  const { getAllByType, queryAllByType } = render(<Banana />);
-  const [text, status, button] = getAllByType(Text);
+test('UNSAFE_getAllByType, UNSAFE_queryAllByType', () => {
+  const { UNSAFE_getAllByType, UNSAFE_queryAllByType } = render(<Banana />);
+  const [text, status, button] = UNSAFE_getAllByType(Text);
   const InExistent = () => null;
 
   expect(text.props.children).toBe('Is the banana fresh?');
   expect(status.props.children).toBe('not fresh');
   expect(button.props.children).toBe('Change freshness!');
-  expect(() => getAllByType(InExistent)).toThrow('No instances found');
+  expect(() => UNSAFE_getAllByType(InExistent)).toThrow('No instances found');
 
-  expect(queryAllByType(Text)[1]).toBe(status);
-  expect(queryAllByType(InExistent)).toHaveLength(0);
+  expect(UNSAFE_queryAllByType(Text)[1]).toBe(status);
+  expect(UNSAFE_queryAllByType(InExistent)).toHaveLength(0);
 });
 
 test('getByText, queryByText', () => {
@@ -267,38 +234,37 @@ test('getAllByDisplayValue, queryAllByDisplayValue', () => {
   expect(queryAllByDisplayValue('no value')).toHaveLength(0);
 });
 
-test('getByProps, queryByProps', () => {
-  const { getByProps, queryByProps } = render(<Banana />);
-  const primaryType = getByProps({ type: 'primary' });
+test('UNSAFE_getByProps, UNSAFE_queryByProps', () => {
+  const { UNSAFE_getByProps, UNSAFE_queryByProps } = render(<Banana />);
+  const primaryType = UNSAFE_getByProps({ type: 'primary' });
 
   expect(primaryType.props.children).toBe('Change freshness!');
-  expect(() => getByProps({ type: 'inexistent' })).toThrow(
+  expect(() => UNSAFE_getByProps({ type: 'inexistent' })).toThrow(
     'No instances found'
   );
 
-  expect(queryByProps({ type: 'primary' })).toBe(primaryType);
-  expect(queryByProps({ type: 'inexistent' })).toBeNull();
+  expect(UNSAFE_queryByProps({ type: 'primary' })).toBe(primaryType);
+  expect(UNSAFE_queryByProps({ type: 'inexistent' })).toBeNull();
 });
 
-test('getAllByProp, queryAllByProps', () => {
-  const { getAllByProps, queryAllByProps } = render(<Banana />);
-  const primaryTypes = getAllByProps({ type: 'primary' });
+test('UNSAFE_getAllByProp, UNSAFE_queryAllByProps', () => {
+  const { UNSAFE_getAllByProps, UNSAFE_queryAllByProps } = render(<Banana />);
+  const primaryTypes = UNSAFE_getAllByProps({ type: 'primary' });
 
   expect(primaryTypes).toHaveLength(1);
-  expect(() => getAllByProps({ type: 'inexistent' })).toThrow(
+  expect(() => UNSAFE_getAllByProps({ type: 'inexistent' })).toThrow(
     'No instances found'
   );
 
-  expect(queryAllByProps({ type: 'primary' })).toEqual(primaryTypes);
-  expect(queryAllByProps({ type: 'inexistent' })).toHaveLength(0);
+  expect(UNSAFE_queryAllByProps({ type: 'primary' })).toEqual(primaryTypes);
+  expect(UNSAFE_queryAllByProps({ type: 'inexistent' })).toHaveLength(0);
 });
 
 test('update', () => {
   const fn = jest.fn();
-  const { getByName, update, rerender } = render(<Banana onUpdate={fn} />);
-  const button = getByName('Button');
+  const { getByText, update, rerender } = render(<Banana onUpdate={fn} />);
 
-  button.props.onPress();
+  fireEvent.press(getByText('Change freshness!'));
 
   update(<Banana onUpdate={fn} />);
   rerender(<Banana onUpdate={fn} />);
@@ -314,13 +280,13 @@ test('unmount', () => {
 });
 
 test('toJSON', () => {
-  const { toJSON } = render(<Button>press me</Button>);
+  const { toJSON } = render(<MyButton>press me</MyButton>);
 
   expect(toJSON()).toMatchSnapshot();
 });
 
 test('debug', () => {
-  jest.spyOn(console, 'log').mockImplementation(x => x);
+  jest.spyOn(console, 'log').mockImplementation((x) => x);
 
   const { debug } = render(<Banana />);
 
@@ -343,11 +309,11 @@ test('debug', () => {
 });
 
 test('debug changing component', () => {
-  jest.spyOn(console, 'log').mockImplementation(x => x);
+  jest.spyOn(console, 'log').mockImplementation((x) => x);
 
-  const { getByProps, debug } = render(<Banana />);
+  const { UNSAFE_getByProps, debug } = render(<Banana />);
 
-  fireEvent.press(getByProps({ type: 'primary' }));
+  fireEvent.press(UNSAFE_getByProps({ type: 'primary' }));
 
   debug();
 
@@ -390,7 +356,9 @@ test('renders options.wrapper around updated node', () => {
     wrapper: WrapperComponent,
   });
 
-  rerender(<View testID="inner" accessibilityLabel="test" />);
+  rerender(
+    <View testID="inner" accessibilityLabel="test" accessibilityHint="test" />
+  );
 
   expect(getByTestId('wrapper')).toBeTruthy();
   expect(toJSON()).toMatchInlineSnapshot(`
@@ -399,6 +367,7 @@ test('renders options.wrapper around updated node', () => {
       testID="wrapper"
     >
       <View
+        accessibilityHint="test"
         accessibilityLabel="test"
         testID="inner"
       />

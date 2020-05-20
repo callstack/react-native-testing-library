@@ -64,11 +64,45 @@ You can find the source of `QuestionsBoard` component and this example [here](ht
 
 Open a Terminal in your project's folder and run:
 
+#### Using `yarn`
+
 ```sh
 yarn add --dev react-native-testing-library
 ```
 
+#### Using `npm`
+
+```sh
+npm install --save-dev react-native-testing-library
+```
+
 This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!
+
+### Additional Jest matchers
+
+In order to use addtional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
+
+#### Using `yarn`
+
+```sh
+yarn add --dev @testing-library/jest-native
+```
+
+#### Using `npm`
+
+```sh
+npm install --save-dev @testing-library/jest-native
+```
+
+Then automatically add it to your jest tests by using `setupFilesAfterEnv` option in the `jest.config.js` file:
+
+```js
+module.exports = {
+  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
+};
+```
+
+### Flow
 
 Note for [Flow](https://flow.org) users – you'll also need to install typings for `react-test-renderer`:
 
@@ -84,11 +118,13 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 
 - [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – deeply renders given React element and returns helpers to query the output components.
 - [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/api#fireevent) - invokes named event handler on the element.
-- [`waitForElement`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelement) - waits for non-deterministic periods of time until your element appears or times out.
+- [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/api#waitfor) - waits for non-deterministic periods of time until your element appears or times out.
 - [`within`](https://callstack.github.io/react-native-testing-library/docs/api#within) - creates a queries object scoped for given element.
 - [`flushMicrotasksQueue`](https://callstack.github.io/react-native-testing-library/docs/api#flushmicrotasksqueue) - waits for microtasks queue to flush.
 
-**Note to users who are more familiar with `react-testing-library`:** This API does not expose `cleanup` because it doesn't interact with the DOM. There's nothing to clean up.
+## Migration Guides
+
+- [Migration to 2.0](https://callstack.github.io/react-native-testing-library/docs/migration-v2)
 
 ## Made with ❤️ at Callstack
 

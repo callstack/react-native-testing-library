@@ -150,12 +150,12 @@ exports[`debug: shallow 1`] = `
     underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
   />
-  <Button
+  <MyButton
     onPress={[Function anonymous]}
     type=\\"primary\\"
   >
     Change freshness!
-  </Button>
+  </MyButton>
   <Text
     testID=\\"duplicateText\\"
   >
@@ -200,12 +200,12 @@ exports[`debug: shallow with message 1`] = `
     underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
   />
-  <Button
+  <MyButton
     onPress={[Function anonymous]}
     type=\\"primary\\"
   >
     Change freshness!
-  </Button>
+  </MyButton>
   <Text
     testID=\\"duplicateText\\"
   >

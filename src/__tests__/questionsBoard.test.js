@@ -20,8 +20,9 @@ function QuestionsBoard({ questions, onSubmit }) {
             <Text>{q}</Text>
             <TextInput
               accessibilityLabel="answer input"
-              onChangeText={text => {
-                setData(state => ({
+              accessibilityHint="input"
+              onChangeText={(text) => {
+                setData((state) => ({
                   ...state,
                   [index + 1]: { q, a: text },
                 }));

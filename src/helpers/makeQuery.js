@@ -1,4 +1,6 @@
 // @flow
+import waitFor from '../waitFor';
+import type { WaitForOptions } from '../waitFor';
 import {
   ErrorWithStack,
   prepareErrorMessage,
@@ -11,7 +13,7 @@ function isNodeValid(node: ReactTestInstance) {
 
 function makeAliases(aliases: Array<string>, query: Function) {
   return aliases
-    .map(alias => ({ [alias]: query }))
+    .map((alias) => ({ [alias]: query }))
     .reduce((acc, query) => ({ ...acc, ...query }), {});
 }
 
@@ -20,6 +22,8 @@ type QueryNames = {
   getAllBy: Array<string>,
   queryBy: Array<string>,
   queryAllBy: Array<string>,
+  findBy: Array<string>,
+  findAllBy: Array<string>,
 };
 
 const makeQuery = <P: mixed, M: mixed>(
@@ -30,7 +34,7 @@ const makeQuery = <P: mixed, M: mixed>(
   const getBy = (matcher: M) => {
     try {
       return instance.find(
-        node => isNodeValid(node) && matcherFn(node.props[name], matcher)
+        (node) => isNodeValid(node) && matcherFn(node.props[name], matcher)
       );
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getBy);
@@ -39,7 +43,7 @@ const makeQuery = <P: mixed, M: mixed>(
 
   const getAllBy = (matcher: M) => {
     const results = instance.findAll(
-      node => isNodeValid(node) && matcherFn(node.props[name], matcher)
+      (node) => isNodeValid(node) && matcherFn(node.props[name], matcher)
     );
 
     if (results.length === 0) {
@@ -65,11 +69,21 @@ const makeQuery = <P: mixed, M: mixed>(
     }
   };
 
+  const findBy = (matcher: M, waitForOptions?: WaitForOptions) => {
+    return waitFor(() => getBy(matcher), waitForOptions);
+  };
+
+  const findAllBy = (matcher: M, waitForOptions?: WaitForOptions) => {
+    return waitFor(() => getAllBy(matcher), waitForOptions);
+  };
+
   return {
     ...makeAliases(queryNames.getBy, getBy),
     ...makeAliases(queryNames.getAllBy, getAllBy),
     ...makeAliases(queryNames.queryBy, queryBy),
     ...makeAliases(queryNames.queryAllBy, queryAllBy),
+    ...makeAliases(queryNames.findBy, findBy),
+    ...makeAliases(queryNames.findAllBy, findAllBy),
   };
 };
 
