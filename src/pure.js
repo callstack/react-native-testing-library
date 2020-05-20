@@ -2,7 +2,7 @@
 import act from './act';
 import cleanup from './cleanup';
 import fireEvent from './fireEvent';
-import flushMicrotasksQueue from './flushMicrotasksQueue';
+import flushMicrotasksQueue from './flushMicroTasks';
 import render from './render';
 import shallow from './shallow';
 import waitFor, { waitForElement } from './waitFor';

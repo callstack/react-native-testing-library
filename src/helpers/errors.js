@@ -33,7 +33,7 @@ export function printDeprecationWarning(functionName: string) {
 
   console.warn(`
   Deprecation Warning:
-  ${functionName} is not recommended for use and will be deleted in react-native-testing-library 2.x.
+  Use of ${functionName} is not recommended and will be deleted in future versions of react-native-testing-library.
   `);
 
   warned[functionName] = true;
