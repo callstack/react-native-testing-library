@@ -74,7 +74,11 @@ Re-render the in-memory tree with a new root element. This simulates a React upd
 unmount(): void
 ```
 
-Unmount the in-memory tree, triggering the appropriate lifecycle events
+Unmount the in-memory tree, triggering the appropriate lifecycle events.
+
+:::note
+Usually you should not need to call `unmount` as it is done automatically if your test runner supports `afterEach` hook (like Jest, mocha, Jasmine).
+:::
 
 ### `debug`
 
