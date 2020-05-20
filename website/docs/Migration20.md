@@ -15,7 +15,7 @@ Node 8 reached its EOL more than 5 months ago, so it's about time to target the 
 
 You should be able to safely remove all `afterEach(cleanup)` calls in your code.
 
-This change might break your code, if you tests are not isolated, i.e. you call `render` outside `test` block. Generally, you should [keep your tests isolated](https://kentcdodds.com/blog/test-isolation-with-react), but if you can't or don't want to do this right away you can prevent this behavior using any of the foloowing ways:
+This change might break your code, if you tests are not isolated, i.e. you call `render` outside `test` block. Generally, you should [keep your tests isolated](https://kentcdodds.com/blog/test-isolation-with-react), but if you can't or don't want to do this right away you can prevent this behavior using any of the following ways:
 
 1. by importing `'react-native-testing-library/pure'` instead of `'react-native-testing-library'`
 
