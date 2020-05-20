@@ -134,7 +134,7 @@ Please note that this is done automatically if the testing framework you're usin
 For example, if you're using the `jest` testing framework, then you would need to use the `afterEach` hook like so:
 
 ```jsx
-import { cleanup, render } from 'react-native-testing-library';
+import { cleanup, render } from 'react-native-testing-library/pure';
 import { View } from 'react-native';
 
 afterEach(cleanup);
