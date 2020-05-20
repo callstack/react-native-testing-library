@@ -1,5 +1,6 @@
 import React from 'react';
 import { SafeAreaView, ScrollView, StatusBar } from 'react-native';
+import PureNativeModule from './PureNativeModule';
 import StorageView from './StorageView';
 
 export default function App() {
@@ -9,6 +10,7 @@ export default function App() {
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           <StorageView />
+          <PureNativeModule />
         </ScrollView>
       </SafeAreaView>
     </React.Fragment>
