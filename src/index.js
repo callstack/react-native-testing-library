@@ -1,6 +1,6 @@
 // @flow
-import flushMicrotasksQueue from './flushMicrotasksQueue';
 import { cleanup } from './pure';
+import { flushMicrotasksQueueInternal } from './flushMicrotasksQueue';
 
 // If we're running in a test runner that supports afterEach
 // then we'll automatically run cleanup afterEach test
@@ -10,7 +10,7 @@ import { cleanup } from './pure';
 if (typeof afterEach === 'function' && !process.env.RNTL_SKIP_AUTO_CLEANUP) {
   // eslint-disable-next-line no-undef
   afterEach(async () => {
-    await flushMicrotasksQueue();
+    await flushMicrotasksQueueInternal();
     cleanup();
   });
 }

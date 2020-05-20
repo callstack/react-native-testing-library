@@ -295,7 +295,6 @@ export declare const render: (
   options?: RenderOptions
 ) => RenderAPI;
 
-export declare const flushMicrotasksQueue: () => Promise<any>;
 export declare const cleanup: () => void;
 export declare const fireEvent: FireEventAPI;
 export declare const waitFor: WaitForFunction;
@@ -306,6 +305,11 @@ export declare const within: (instance: ReactTestInstance) => Queries;
  * @deprecated This function has been removed. Please use `waitFor` function.
  */
 export declare const waitForElement: WaitForFunction;
+
+/**
+ * @deprecated This function has been deprecated and will be removed in the next release.
+ */
+export declare const flushMicrotasksQueue: () => Promise<any>;
 
 /**
  * @deprecated This function has been removed.

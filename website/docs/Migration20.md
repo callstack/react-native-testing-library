@@ -113,3 +113,15 @@ If you relied on setting `testID` for your custom components, you should probabl
 :::caution
 In general, you should avoid `byTestId` queries when possible and rather use queries that check things that can been seen by the user (e.g. `byText`, `byPlaceholder`, etc) or accessability queries (e.g. `byA11yHint`, `byA11yLabel`, etc).
 :::
+
+## Deprecated `flushMicrotasksQueue`
+
+We have deprecated `flushMicrotasksQueue` and plan to remove it in the next major version, as currently there are better available alternatives for helping you write async tests: `findBy` async queries and `waitFor` helper.
+
+If you can't or don't want to migrate your tests, you can get rid of the deprecation warning by copy-pasting function's implementation into your project:
+
+```js
+function flushMicrotasksQueue() {
+  return new Promise((resolve) => setImmediate(resolve));
+}
+```
