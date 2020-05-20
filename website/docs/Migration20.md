@@ -116,7 +116,7 @@ In general, you should avoid `byTestId` queries when possible and rather use que
 
 ## Deprecated `flushMicrotasksQueue`
 
-We have deprecated `flushMicrotasksQueue` and plan to remove it in the next major version, as currently there are better available alternatives for helping you write async tests: `findBy` async queries and `waitFor` helper.
+We have deprecated `flushMicrotasksQueue` and plan to remove it in the next major version, as currently there are better alternatives available for helping you write async tests: `findBy` async queries and `waitFor` helper.
 
 If you can't or don't want to migrate your tests, you can get rid of the deprecation warning by copy-pasting function's implementation into your project:
 
