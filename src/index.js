@@ -1,3 +1,4 @@
+// @flow
 import flushMicrotasksQueue from './flushMicrotasksQueue';
 import { cleanup } from './pure';
 

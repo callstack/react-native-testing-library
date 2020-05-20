@@ -26,15 +26,14 @@ class Test extends React.Component<*> {
   }
 }
 
-// This just verifies that by importing RNTL in an
-// environment which supports afterEach (like jest)
-// we'll get automatic cleanup between tests.
-test('first', () => {
+// This just verifies that by importing RNTL in pure mode in an environment which supports
+// afterEach (like jest) we won't get automatic cleanup between tests.
+test('component is mounted, but not umounted before test ends', () => {
   const fn = jest.fn();
   render(<Test onUnmount={fn} />);
   expect(fn).not.toHaveBeenCalled();
 });
 
-test('second', () => {
+test('component is NOT automatically umounted after first test ends', () => {
   expect(isMounted).toEqual(true);
 });
