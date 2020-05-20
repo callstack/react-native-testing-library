@@ -2,7 +2,7 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { View } from 'react-native';
-import { cleanup, render } from '..';
+import { cleanup, render } from '../pure';
 
 class Test extends React.Component<*> {
   componentWillUnmount() {
