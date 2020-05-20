@@ -377,21 +377,6 @@ Use cases for scoped queries include:
 - queries scoped to a single item inside a FlatList containing many items
 - queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
 
-## `flushMicrotasksQueue`
-
-Waits for microtasks queue to flush. Useful if you want to wait for some promises with `async/await`.
-
-```jsx
-import { flushMicrotasksQueue, render } from 'react-native-testing-library';
-
-test('fetch data', async () => {
-  const { getByText } = render(<FetchData />);
-  getByText('fetch');
-  await flushMicrotasksQueue();
-  expect(getByText('fetch').props.title).toBe('loaded');
-});
-```
-
 ## `query` APIs
 
 Each of the get APIs listed in the render section above have a complimentary query API. The get APIs will throw errors if a proper node cannot be found. This is normally the desired effect. However, if you want to make an assertion that an element is not present in the hierarchy, then you can use the query API instead:
