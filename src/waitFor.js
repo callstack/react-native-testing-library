@@ -50,7 +50,7 @@ export default async function waitFor<T>(
     result = await waitForInternal(expectation, options);
   });
 
-  //$FlowFixMe: either we have result or `waitFor` there error
+  //$FlowFixMe: either we have result or `waitFor` threw error
   return result;
 }
 
