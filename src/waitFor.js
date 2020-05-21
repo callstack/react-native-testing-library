@@ -11,7 +11,7 @@ function checkReactVersionAtLeast(major: number, minor: number): boolean {
   if (React.version === undefined) return false;
   const [actualMajor, actualMinor] = React.version
     .split('.')
-    .map((n) => parseInt(n, 10));
+    .map(Number);
 
   return actualMajor > major || (actualMajor == major && actualMinor >= minor);
 }
