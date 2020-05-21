@@ -13,7 +13,7 @@ function checkReactVersionAtLeast(major: number, minor: number): boolean {
     .split('.')
     .map(Number);
 
-  return actualMajor > major || (actualMajor == major && actualMinor >= minor);
+  return actualMajor > major || (actualMajor === major && actualMinor >= minor);
 }
 
 export type WaitForOptions = {
