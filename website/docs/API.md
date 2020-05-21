@@ -336,6 +336,10 @@ function waitFor<T>(
 
 Waits for non-deterministic periods of time until your element appears or times out. `waitFor` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
 
+:::info
+In order to properly use `waitFor` you need at least React >=16.9.0 (featuing async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+:::
+
 ```jsx
 import { render, waitFor } from 'react-testing-library';
 
@@ -403,4 +407,4 @@ expect(submitButtons).toHaveLength(3); // expect 3 elements
 
 ## `act`
 
-Useful function to help testing components that use hooks API. By default any `render`, `update`, and `fireEvent` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/master/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
+Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/master/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
