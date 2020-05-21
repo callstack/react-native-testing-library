@@ -58,6 +58,8 @@ export default function waitFor<T>(
 
 Both changes should improve code readibility.
 
+`waitFor` calls (and hence also `findBy` queries) are now wrapped in `act` by default, so that you should no longer need to use `act` directly in your tests.
+
 :::tip
 You can usually avoid `waitFor` by a proper use of `findBy` asynchronous queries. It will result in more streamlined testing experience.
 :::
