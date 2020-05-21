@@ -337,7 +337,7 @@ function waitFor<T>(
 Waits for non-deterministic periods of time until your element appears or times out. `waitFor` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
 
 :::info
-In order to properly use `waitFor` you need at least React >=16.9.0 (featuing async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
 :::
 
 ```jsx
