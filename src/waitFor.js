@@ -45,7 +45,7 @@ export default async function waitFor<T>(
 ): Promise<T> {
   let result: T;
 
-  //$FlowFixMe: this is just too complicated for flow
+  //$FlowFixMe: `act` has incorrect typing
   await act(async () => {
     result = await waitForInternal(expectation, options);
   });
