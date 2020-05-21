@@ -54,7 +54,7 @@ export default async function waitFor<T>(
   options?: WaitForOptions
 ): Promise<T> {
   if (!checkReactVersionAtLeast(16, 9)) {
-    return await waitForInternal(expectation, options);
+    return waitForInternal(expectation, options);
   }
 
   let result: T;
