@@ -1,5 +1,6 @@
 // @flow
 
+import act from './act';
 import { throwRemovedFunctionError } from './helpers/errors';
 
 const DEFAULT_TIMEOUT = 4500;
@@ -10,7 +11,7 @@ export type WaitForOptions = {
   interval?: number,
 };
 
-export default function waitFor<T>(
+function waitForInternal<T>(
   expectation: () => T,
   options?: WaitForOptions
 ): Promise<T> {
@@ -36,6 +37,21 @@ export default function waitFor<T>(
     }
     setTimeout(runExpectation, 0);
   });
+}
+
+export default async function waitFor<T>(
+  expectation: () => T,
+  options?: WaitForOptions
+): Promise<T> {
+  let result: T;
+
+  //$FlowFixMe: this is just too complicated for flow
+  await act(async () => {
+    result = await waitForInternal(expectation, options);
+  });
+
+  //$FlowFixMe: either we have result or `waitFor` there error
+  return result;
 }
 
 export function waitForElement<T>(
