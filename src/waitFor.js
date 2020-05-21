@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import act from './act';
 import { throwRemovedFunctionError } from './helpers/errors';
 
