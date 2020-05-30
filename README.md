@@ -94,12 +94,13 @@ yarn add --dev @testing-library/jest-native
 npm install --save-dev @testing-library/jest-native
 ```
 
-Then automatically add it to your jest tests by using `setupFilesAfterEnv` option in the `jest.config.js` file:
+Then automatically add it to your jest tests by using `setupFilesAfterEnv` option in your Jest configuration (it's usually located either in `package.json` under `"jest"` key or in a `jest.config.js` file):
 
-```js
-module.exports = {
-  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
-};
+```json
+{
+  "preset": "react-native",
+  "setupFilesAfterEnv": ["@testing-library/jest-native/extend-expect"]
+}
 ```
 
 ### Flow
