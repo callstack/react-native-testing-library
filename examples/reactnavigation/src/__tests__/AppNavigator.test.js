@@ -8,17 +8,17 @@ import AppNavigator from '../AppNavigator';
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
 
 describe('Testing react navigation', () => {
-  test('page contains the header and 10 items', () => {
+  test('page contains the header and 10 items', async () => {
     const component = (
       <NavigationContainer>
         <AppNavigator />
       </NavigationContainer>
     );
 
-    const { getByText, getAllByText } = render(component);
+    const { findByText, findAllByText } = render(component);
 
-    const header = getByText('List of numbers from 1 to 20');
-    const items = getAllByText(/Item number/);
+    const header = await findByText('List of numbers from 1 to 20');
+    const items = await findAllByText(/Item number/);
 
     expect(header).toBeTruthy();
     expect(items.length).toBe(10);
@@ -31,12 +31,12 @@ describe('Testing react navigation', () => {
       </NavigationContainer>
     );
 
-    const { getByText } = render(component);
-    const toClick = getByText('Item number 5');
+    const { findByText } = render(component);
+    const toClick = await findByText('Item number 5');
 
     fireEvent(toClick, 'press');
-    const newHeader = getByText('Showing details for 5');
-    const newBody = getByText('the number you have chosen is 5');
+    const newHeader = await findByText('Showing details for 5');
+    const newBody = await findByText('the number you have chosen is 5');
 
     expect(newHeader).toBeTruthy();
     expect(newBody).toBeTruthy();
