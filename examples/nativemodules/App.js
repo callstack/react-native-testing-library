@@ -1,16 +1,28 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, StatusBar } from 'react-native';
-import PureNativeModule from './PureNativeModule';
+import { requireNativeComponent, View, StyleSheet } from 'react-native';
+
+const PureButton = requireNativeComponent('PureButton');
 
 export default function App() {
+  const handlePress = () => {
+    // Handle the press here
+  };
+
   return (
-    <React.Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView contentInsetAdjustmentBehavior="automatic">
-          <PureNativeModule />
-        </ScrollView>
-      </SafeAreaView>
-    </React.Fragment>
+    <View>
+      <PureButton
+        style={styles.button}
+        title="Hello world"
+        accessibilityHint="Test element"
+        onPress={handlePress}
+      />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    height: 40,
+    width: 500,
+  },
+});
