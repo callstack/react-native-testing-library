@@ -32,9 +32,12 @@ title: Queries
 
 `findAllBy` queries return a promise which resolves to an array when any matching elements are found. The promise is rejected if no elements match after a default timeout of 4500ms.
 
+:::info
+In order to properly use `findBy` and `findAllBy` queries you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+:::
 
 :::info
-`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective arguments to [`waitForElement`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelement) function. 
+`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective options for [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/api#waitfor) function.
 :::
 
 ## Queries
@@ -105,11 +108,7 @@ const element = getByTestId('unique-id');
 ```
 
 :::caution
-Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead. 
-:::
-
-:::danger
-Current implementation of `getByTestId` and `queryByTestId` has a serious flaw, which results in finding more IDs than there really would be present in native React host components. Fixing it may break some of your tests so we'll do it in next major release (v2). As a temporary workaround, please use `getAllByTestId('your-id')[0]` or `queryAllByTestId('your-id')[0]` or migrate off testing with testID, which is considered to be an escape hatch.
+Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead.
 :::
 
 ### `ByA11yLabel`, `ByAccessibilityLabel`
@@ -208,23 +207,24 @@ const element = getByA11yValue({ min: 40 });
 
 The interface is the same as for other queries, but we won't provide full names so that they're harder to find by search engines.
 
-### `UNSAFE_ByType`, `ByType`
+### `UNSAFE_ByType`
 
-> Note: added in v1.4
+> UNSAFE_getByType, UNSAFE_getAllByType, UNSAFE_queryByType, UNSAFE_queryAllByType
 
-> This method has been **deprecated** and has been prepended with `UNSAFE_` prefix. In react-native-testing-library 2.x only the prefixed version will work.
+Returns a `ReactTestInstance` with matching a React component type.
 
-A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
+:::caution
+This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+:::
 
-### `UNSAFE_ByProps`, `ByProps`
+### `UNSAFE_ByProps`
 
-> This method has been **deprecated** and has been prepended with `UNSAFE_` prefix. In react-native-testing-library 2.x only the prefixed version will work.
+> UNSAFE_getByProps, UNSAFE_getAllByProps, UNSAFE_queryByProps, UNSAFE_queryAllByProps
 
-A method returning a `ReactTestInstance` with matching props object
+Returns a `ReactTestInstance` with matching props object.
 
-### `ByName`
-
-> This method has been **deprecated** because using it results in fragile tests that may break between minor React Native versions. **DON'T USE IT**. It will be removed in next major release (v2.0). Use the other alternatives, such as [`getByText`](#bytext) instead. It's listed here only for back-compat purposes for early adopters of the library
-> A method returning a `ReactTestInstance` with matching a React component type. Throws when no matches.
+:::caution
+This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+:::
 
 </details>

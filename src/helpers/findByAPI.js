@@ -1,7 +1,8 @@
 // @flow
-import waitForElement from '../waitForElement';
+import waitFor from '../waitFor';
+import type { WaitForOptions } from '../waitFor';
 import {
-  fixedGetByTestId,
+  getByTestId,
   getAllByTestId,
   getByText,
   getAllByText,
@@ -11,27 +12,17 @@ import {
   getAllByDisplayValue,
 } from './getByAPI';
 
-export type WaitForOptions = {
-  timeout?: number,
-  interval?: number,
-};
-
 const makeFindQuery = <Text, Result>(
   instance: ReactTestInstance,
   getQuery: (instance: ReactTestInstance) => (text: Text) => Result,
   text: Text,
   waitForOptions: WaitForOptions
-): Promise<Result> =>
-  waitForElement(
-    () => getQuery(instance)(text),
-    waitForOptions.timeout,
-    waitForOptions.interval
-  );
+): Promise<Result> => waitFor(() => getQuery(instance)(text), waitForOptions);
 
 export const findByTestId = (instance: ReactTestInstance) => (
   testId: string,
   waitForOptions: WaitForOptions = {}
-) => makeFindQuery(instance, fixedGetByTestId, testId, waitForOptions);
+) => makeFindQuery(instance, getByTestId, testId, waitForOptions);
 
 export const findAllByTestId = (instance: ReactTestInstance) => (
   testId: string,

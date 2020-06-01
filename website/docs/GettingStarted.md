@@ -66,6 +66,10 @@ This library has a peerDependencies listing for `react-test-renderer` and, of co
 
 As you may have noticed, it's not tied to React Native at all – you can safely use it in your React components if you feel like not interacting directly with DOM.
 
+:::info
+In order to properly use helpers for async tests (`findBy` queries and `waitFor`) you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+:::
+
 ### Additional Jest matchers
 
 In order to use addtional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
@@ -82,10 +86,11 @@ yarn add --dev @testing-library/jest-native
 npm install --save-dev @testing-library/jest-native
 ```
 
-Then automatically add it to your jest tests by using `setupFilesAfterEnv` option in the `jest.config.js` file:
+Then automatically add it to your jest tests by using `setupFilesAfterEnv` option in your Jest configuration (it's usually located either in `package.json` under `"jest"` key or in a `jest.config.js` file):
 
-```js
-module.exports = {
-  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
-};
+```json
+{
+  "preset": "react-native",
+  "setupFilesAfterEnv": ["@testing-library/jest-native/extend-expect"]
+}
 ```

@@ -74,7 +74,11 @@ Re-render the in-memory tree with a new root element. This simulates a React upd
 unmount(): void
 ```
 
-Unmount the in-memory tree, triggering the appropriate lifecycle events
+Unmount the in-memory tree, triggering the appropriate lifecycle events.
+
+:::note
+Usually you should not need to call `unmount` as it is done automatically if your test runner supports `afterEach` hook (like Jest, mocha, Jasmine).
+:::
 
 ### `debug`
 
@@ -123,10 +127,14 @@ const cleanup: () => void;
 
 Unmounts React trees that were mounted with `render`.
 
+:::info
+Please note that this is done automatically if the testing framework you're using supports the `afterEach` global (like mocha, Jest, and Jasmine). If not, you will need to do manual cleanups after each test.
+:::
+
 For example, if you're using the `jest` testing framework, then you would need to use the `afterEach` hook like so:
 
 ```jsx
-import { cleanup, render } from 'react-native-testing-library';
+import { cleanup, render } from 'react-native-testing-library/pure';
 import { View } from 'react-native';
 
 afterEach(cleanup);
@@ -313,29 +321,32 @@ fireEvent.scroll(getByType(ScrollView), eventData);
 expect(onEndReached).toHaveBeenCalled();
 ```
 
-## `waitForElement`
+## `waitFor`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitForElement.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitFor.test.js)
 
 Defined as:
 
 ```jsx
-function waitForElement<T>(
+function waitFor<T>(
   expectation: () => T,
-  timeout: number = 4500,
-  interval: number = 50
+  { timeout: number = 4500, interval: number = 50 }
 ): Promise<T> {}
 ```
 
-Waits for non-deterministic periods of time until your element appears or times out. `waitForElement` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
+Waits for non-deterministic periods of time until your element appears or times out. `waitFor` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
+
+:::info
+In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+:::
 
 ```jsx
-import { render, waitForElement } from 'react-testing-library';
+import { render, waitFor } from 'react-testing-library';
 
 test('waiting for an Banana to be ready', async () => {
   const { getByText } = render(<Banana />);
 
-  await waitForElement(() => getByText('Banana ready'));
+  await waitFor(() => getByText('Banana ready'));
 });
 ```
 
@@ -370,78 +381,6 @@ Use cases for scoped queries include:
 - queries scoped to a single item inside a FlatList containing many items
 - queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
 
-## `debug`
-
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/debug.test.js)
-
-Log prettified shallowly rendered component or test instance (just like snapshot) to stdout.
-
-```jsx
-import { debug } from 'react-native-testing-library';
-
-debug(<Component />);
-debug.shallow(<Component />); // an alias for `debug`
-```
-
-logs:
-
-```jsx
-<TouchableOpacity
-  activeOpacity={0.2}
-  onPress={[Function bound fn]}
->
-  <TextComponent
-    text="Press me"
-  />
-</TouchableOpacity>
-```
-
-There's also `debug.deep` that renders deeply to stdout.
-
-```jsx
-import { debug } from 'react-native-testing-library';
-
-debug.deep(<Component />);
-debug.deep(toJSON(), 'actually debug JSON too'); // useful when Component state changes
-```
-
-logs:
-
-```jsx
-<View
-  accessible={true}
-  isTVSelectable={true}
-  onResponderGrant={[Function bound touchableHandleResponderGrant]}
-  // ... more props
-  style={
-    Object {
-      \\"opacity\\": 1,
-    }
-  }
->
-  <Text>
-    Press me
-  </Text>
-</View>
-```
-
-Optionally you can provide a string message as a second argument to `debug`, which will be displayed right after the component.
-
-## `flushMicrotasksQueue`
-
-Waits for microtasks queue to flush. Useful if you want to wait for some promises with `async/await`.
-
-```jsx
-import { flushMicrotasksQueue, render } from 'react-native-testing-library';
-
-test('fetch data', async () => {
-  const { getByText } = render(<FetchData />);
-  getByText('fetch');
-  await flushMicrotasksQueue();
-  expect(getByText('fetch').props.title).toBe('loaded');
-});
-```
-
 ## `query` APIs
 
 Each of the get APIs listed in the render section above have a complimentary query API. The get APIs will throw errors if a proper node cannot be found. This is normally the desired effect. However, if you want to make an assertion that an element is not present in the hierarchy, then you can use the query API instead:
@@ -468,4 +407,4 @@ expect(submitButtons).toHaveLength(3); // expect 3 elements
 
 ## `act`
 
-Useful function to help testing components that use hooks API. By default any `render`, `update`, and `fireEvent` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/master/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
+Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/master/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).

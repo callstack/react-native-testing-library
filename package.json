@@ -1,6 +1,6 @@
 {
   "name": "react-native-testing-library",
-  "version": "1.14.0",
+  "version": "2.0.0",
   "description": "Simple React Native testing utilities helping you write better tests with less effort",
   "main": "build/index.js",
   "typings": "./typings/index.d.ts",
@@ -21,6 +21,10 @@
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-flow": "^7.9.0",
+    "@babel/preset-react": "^7.9.4",
     "@callstack/eslint-config": "^10.0.0",
     "@release-it/conventional-changelog": "^1.1.0",
     "@testing-library/jest-native": "~3.1.0",
@@ -34,7 +38,6 @@
     "flow-bin": "^0.122.0",
     "flow-copy-source": "^2.0.9",
     "jest": "^26.0.1",
-    "metro-react-native-babel-preset": "^0.58.0",
     "react": "^16.13.1",
     "react-native": "^0.63.0-rc.1",
     "react-test-renderer": "^16.13.1",

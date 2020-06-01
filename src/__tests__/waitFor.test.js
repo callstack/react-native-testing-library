@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { render, fireEvent, waitForElement } from '..';
+import { render, fireEvent, waitFor } from '..';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {
@@ -36,23 +36,29 @@ class BananaContainer extends React.Component<{}, any> {
 }
 
 test('waits for element until it stops throwing', async () => {
-  const { getByText, getByName, queryByText } = render(<BananaContainer />);
+  const { getByText, queryByText } = render(<BananaContainer />);
 
-  fireEvent.press(getByName('TouchableOpacity'));
+  fireEvent.press(getByText('Change freshness!'));
 
   expect(queryByText('Fresh')).toBeNull();
 
-  const freshBananaText = await waitForElement(() => getByText('Fresh'));
+  const freshBananaText = await waitFor(() => getByText('Fresh'));
 
   expect(freshBananaText.props.children).toBe('Fresh');
 });
 
 test('waits for element until timeout is met', async () => {
-  const { getByText, getByName } = render(<BananaContainer />);
+  const { getByText } = render(<BananaContainer />);
 
-  fireEvent.press(getByName('TouchableOpacity'));
+  fireEvent.press(getByText('Change freshness!'));
 
-  await expect(waitForElement(() => getByText('Fresh'), 100)).rejects.toThrow();
+  await expect(
+    waitFor(() => getByText('Fresh'), { timeout: 100 })
+  ).rejects.toThrow();
+
+  // Async action ends after 300ms and we only waited 100ms, so we need to wait
+  // for the remaining async actions to finish
+  await waitFor(() => getByText('Fresh'));
 });
 
 test('waits for element with custom interval', async () => {
@@ -61,7 +67,7 @@ test('waits for element with custom interval', async () => {
   });
 
   try {
-    await waitForElement(() => mockFn(), 400, 200);
+    await waitFor(() => mockFn(), { timeout: 400, interval: 200 });
   } catch (e) {
     // suppress
   }
@@ -77,7 +83,7 @@ test('works with fake timers', async () => {
   });
 
   try {
-    waitForElement(() => mockFn(), 400, 200);
+    waitFor(() => mockFn(), { timeout: 400, interval: 200 });
   } catch (e) {
     // suppress
   }

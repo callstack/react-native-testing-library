@@ -1,12 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { cleanup, fireEvent, render } from 'react-native-testing-library';
+import { fireEvent, render } from 'react-native-testing-library';
 import configureStore from '../store';
 import AddTodo from './AddTodo';
 
 describe('Application test', () => {
-  afterEach(cleanup);
-
   test('adds a new test when entry has been included', () => {
     const store = configureStore();
 
