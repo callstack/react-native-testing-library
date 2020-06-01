@@ -92,7 +92,7 @@ Following query functions have been removed after being deprecated for more than
 - `queryByName`
 - `queryAllByName`
 
-The `*ByType` and `*ByProps` queries has been prefixed with `UNSAFE_`. You can rename them using global search/replace in your project:
+The `*ByType` and `*ByProps` queries has been prefixed with `UNSAFE_`. These `UNSAFE_` functions are not planned for removal in future versions but their usage is discouraged. You can rename them using global search/replace in your project:
 
 - `getByType` -> `UNSAFE_getByType`
 - `getAllByType` -> `UNSAFE_getAllByType`
