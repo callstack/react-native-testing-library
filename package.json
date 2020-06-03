@@ -18,6 +18,12 @@
     "test",
     "integration"
   ],
+  "files": [
+    "build/",
+    "typings/index.d.ts",
+    "pure.js",
+    "dont-cleanup-after-each.js"
+  ],
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
@@ -69,15 +75,5 @@
       "json"
     ],
     "rootDir": "./src"
-  },
-  "greenkeeper": {
-    "ignore": [
-      "react",
-      "react-test-renderer",
-      "metro-react-native-babel-preset"
-    ]
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
   }
 }

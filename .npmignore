@@ -1,7 +1,0 @@
-yarn.lock
-__tests__
-__mocks__
-.github
-.circleci
-src
-website
