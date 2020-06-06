@@ -3,11 +3,15 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { render, fireEvent, waitForElementToBeRemoved } from '..';
 
-const TestSetup = () => {
+const TestSetup = ({ shouldUseDelay = true }) => {
   const [isAdded, setIsAdded] = useState(true);
 
   const removeElement = async () => {
-    setTimeout(() => setIsAdded(false), 300);
+    if (shouldUseDelay) {
+      setTimeout(() => setIsAdded(false), 300);
+    } else {
+      setIsAdded(false);
+    }
   };
 
   return (
@@ -65,6 +69,19 @@ test('waits when using queryAllBy query', async () => {
   expect(screen.queryByText('Observed Element')).toBeNull();
 });
 
+test('checks if elements exist at start', async () => {
+  const screen = render(<TestSetup shouldUseDelay={false} />);
+
+  fireEvent.press(screen.getByText('Remove Element'));
+  expect(screen.queryByText('Observed Element')).toBeNull();
+
+  await expect(
+    waitForElementToBeRemoved(() => screen.queryByText('Observed Element'))
+  ).rejects.toThrow(
+    'The element(s) given to waitForElementToBeRemoved are already removed. waitForElementToBeRemoved requires that the element(s) exist(s) before waiting for removal.'
+  );
+});
+
 test('waits until timeout', async () => {
   const screen = render(<TestSetup />);
 
@@ -94,7 +111,7 @@ test('waits with custom interval', async () => {
     // Suppress expected error
   }
 
-  expect(mockFn).toHaveBeenCalledTimes(3);
+  expect(mockFn).toHaveBeenCalledTimes(4);
 });
 
 test('works with fake timers', async () => {
@@ -108,5 +125,5 @@ test('works with fake timers', async () => {
   });
 
   jest.advanceTimersByTime(400);
-  expect(mockFn).toHaveBeenCalledTimes(3);
+  expect(mockFn).toHaveBeenCalledTimes(4);
 });
