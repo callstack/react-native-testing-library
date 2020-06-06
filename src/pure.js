@@ -6,6 +6,7 @@ import flushMicrotasksQueue from './flushMicroTasks';
 import render from './render';
 import shallow from './shallow';
 import waitFor, { waitForElement } from './waitFor';
+import waitForElementToBeRemoved from './waitForElementToBeRemoved';
 import within from './within';
 
 export { act };
@@ -15,4 +16,5 @@ export { flushMicrotasksQueue };
 export { render };
 export { shallow };
 export { waitFor, waitForElement };
+export { waitForElementToBeRemoved };
 export { within };
