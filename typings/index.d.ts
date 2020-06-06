@@ -305,7 +305,7 @@ export type WaitForElementToBeRemovedFunction = <T = any>(
   options?: WaitForOptions
 ) => Promise<null>;
 
-export declare const WaitForElementToBeRemoved: WaitForElementToBeRemovedFunction;
+export declare const waitForElementToBeRemoved: WaitForElementToBeRemovedFunction;
 
 export declare const act: (callback: () => void) => Thenable;
 export declare const within: (instance: ReactTestInstance) => Queries;

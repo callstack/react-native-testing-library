@@ -6,6 +6,7 @@ import {
   fireEvent,
   flushMicrotasksQueue,
   waitFor,
+  waitForElementToBeRemoved,
   act,
   within,
 } from '../..';
@@ -204,6 +205,66 @@ const waitGetAllBy: Promise<ReactTestInstance[]>[] = [
     timeout: 100,
     interval: 10,
   }),
+];
+
+// waitForElementToBeRemoved API
+const waitForElementToBeRemovedAPI: Promise<null>[] = [
+  waitForElementToBeRemoved<ReactTestInstance>(() => tree.getByText('text')),
+  waitForElementToBeRemoved<ReactTestInstance>(() => tree.getByText('text'), {
+    timeout: 10,
+  }),
+  waitForElementToBeRemoved<ReactTestInstance>(() => tree.getByText('text'), {
+    timeout: 100,
+    interval: 10,
+  }),
+  waitForElementToBeRemoved<ReactTestInstance[]>(() =>
+    tree.getAllByText('text')
+  ),
+  waitForElementToBeRemoved<ReactTestInstance[]>(
+    () => tree.getAllByText('text'),
+    {
+      timeout: 10,
+    }
+  ),
+  waitForElementToBeRemoved<ReactTestInstance[]>(
+    () => tree.getAllByText('text'),
+    {
+      timeout: 100,
+      interval: 10,
+    }
+  ),
+  waitForElementToBeRemoved<ReactTestInstance | null>(() =>
+    tree.queryByText('text')
+  ),
+  waitForElementToBeRemoved<ReactTestInstance | null>(
+    () => tree.queryByText('text'),
+    {
+      timeout: 10,
+    }
+  ),
+  waitForElementToBeRemoved<ReactTestInstance | null>(
+    () => tree.queryByText('text'),
+    {
+      timeout: 100,
+      interval: 10,
+    }
+  ),
+  waitForElementToBeRemoved<ReactTestInstance[]>(() =>
+    tree.queryAllByText('text')
+  ),
+  waitForElementToBeRemoved<ReactTestInstance[]>(
+    () => tree.queryAllByText('text'),
+    {
+      timeout: 10,
+    }
+  ),
+  waitForElementToBeRemoved<ReactTestInstance[]>(
+    () => tree.queryAllByText('text'),
+    {
+      timeout: 100,
+      interval: 10,
+    }
+  ),
 ];
 
 const waitForFlush: Promise<any> = flushMicrotasksQueue();
