@@ -280,6 +280,14 @@ export type FireEventAPI = FireEventFunction & {
   scroll: (element: ReactTestInstance, ...data: Array<any>) => any;
 };
 
+export declare const render: (
+  component: React.ReactElement<any>,
+  options?: RenderOptions
+) => RenderAPI;
+
+export declare const cleanup: () => void;
+export declare const fireEvent: FireEventAPI;
+
 type WaitForOptions = {
   timeout?: number;
   interval?: number;
@@ -290,14 +298,15 @@ export type WaitForFunction = <T = any>(
   options?: WaitForOptions
 ) => Promise<T>;
 
-export declare const render: (
-  component: React.ReactElement<any>,
-  options?: RenderOptions
-) => RenderAPI;
-
-export declare const cleanup: () => void;
-export declare const fireEvent: FireEventAPI;
 export declare const waitFor: WaitForFunction;
+
+export type WaitForElementToBeRemovedFunction = <T = any>(
+  expectation: () => T,
+  options?: WaitForOptions
+) => Promise<null>;
+
+export declare const WaitForElementToBeRemoved: WaitForElementToBeRemovedFunction;
+
 export declare const act: (callback: () => void) => Thenable;
 export declare const within: (instance: ReactTestInstance) => Queries;
 
