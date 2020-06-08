@@ -336,10 +336,6 @@ function waitFor<T>(
 
 Waits for non-deterministic periods of time until your element appears or times out. `waitFor` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
 
-:::info
-In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
-:::
-
 ```jsx
 import { render, waitFor } from 'react-testing-library';
 
@@ -349,6 +345,45 @@ test('waiting for an Banana to be ready', async () => {
   await waitFor(() => getByText('Banana ready'));
 });
 ```
+
+:::info
+In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+:::
+
+If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to use `async/await` syntax as it will stall your tests.
+
+## `waitForElementToBeRemoved`
+
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitForElementToBeRemoved.test.js)
+
+Defined as:
+
+```jsx
+function waitForElementToBeRemoved<T>(
+  expectation: () => T,
+  { timeout: number = 4500, interval: number = 50 }
+): Promise<T> {}
+```
+
+Waits for non-deterministic periods of time until queried element is removed or times out. `waitForElementToBeRemoved` periodically calls `expectation` every `interval` milliseconds to determine whether the element has been removed or not.
+
+```jsx
+import { render, waitForElementToBeRemoved } from 'react-testing-library';
+
+test('waiting for an Banana to be removed', async () => {
+  const { getByText } = render(<Banana />);
+
+  await waitForElementToBeRemoved(() => getByText('Banana ready'));
+});
+```
+
+This method expects that the element is initally present in the render tree and then is removed from it. If the element is not present when you call this method it throws an error.
+
+You can use any of `getBy`, `getAllBy`, `queryBy` and `queryAllBy` queries for `expectation` parameter.
+
+:::info
+In order to properly use `waitForElementToBeRemoved` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+:::
 
 If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to use `async/await` syntax as it will stall your tests.
 
