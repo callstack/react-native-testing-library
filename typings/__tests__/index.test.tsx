@@ -185,85 +185,76 @@ fireEvent.changeText(element, 'string');
 fireEvent.scroll(element, 'eventData');
 
 // waitFor API
+const timeout = { timeout: 10 };
+const timeoutInterval = { timeout: 100, interval: 10 };
+
 const waitGetBy: Promise<ReactTestInstance>[] = [
   waitFor<ReactTestInstance>(() => tree.getByA11yLabel('label')),
-  waitFor<ReactTestInstance>(() => tree.getByA11yLabel('label'), {
-    timeout: 10,
-  }),
-  waitFor<ReactTestInstance>(() => tree.getByA11yLabel('label'), {
-    timeout: 100,
-    interval: 10,
-  }),
+  waitFor<ReactTestInstance>(() => tree.getByA11yLabel('label'), timeout),
+  waitFor<ReactTestInstance>(
+    () => tree.getByA11yLabel('label'),
+    timeoutInterval
+  ),
 ];
 
 const waitGetAllBy: Promise<ReactTestInstance[]>[] = [
   waitFor<ReactTestInstance[]>(() => tree.getAllByA11yLabel('label')),
-  waitFor<ReactTestInstance[]>(() => tree.getAllByA11yLabel('label'), {
-    timeout: 10,
-  }),
-  waitFor<ReactTestInstance[]>(() => tree.getAllByA11yLabel('label'), {
-    timeout: 100,
-    interval: 10,
-  }),
+  waitFor<ReactTestInstance[]>(() => tree.getAllByA11yLabel('label'), timeout),
+  waitFor<ReactTestInstance[]>(
+    () => tree.getAllByA11yLabel('label'),
+    timeoutInterval
+  ),
 ];
 
 // waitForElementToBeRemoved API
-const waitForElementToBeRemovedAPI: Promise<null>[] = [
+const waitForElementToBeRemovedGetBy: Promise<ReactTestInstance>[] = [
   waitForElementToBeRemoved<ReactTestInstance>(() => tree.getByText('text')),
-  waitForElementToBeRemoved<ReactTestInstance>(() => tree.getByText('text'), {
-    timeout: 10,
-  }),
-  waitForElementToBeRemoved<ReactTestInstance>(() => tree.getByText('text'), {
-    timeout: 100,
-    interval: 10,
-  }),
+  waitForElementToBeRemoved<ReactTestInstance>(
+    () => tree.getByText('text'),
+    timeout
+  ),
+  waitForElementToBeRemoved<ReactTestInstance>(
+    () => tree.getByText('text'),
+    timeoutInterval
+  ),
+];
+const waitForElementToBeRemovedGetAllBy: Promise<ReactTestInstance[]>[] = [
   waitForElementToBeRemoved<ReactTestInstance[]>(() =>
     tree.getAllByText('text')
   ),
   waitForElementToBeRemoved<ReactTestInstance[]>(
     () => tree.getAllByText('text'),
-    {
-      timeout: 10,
-    }
+    timeout
   ),
   waitForElementToBeRemoved<ReactTestInstance[]>(
     () => tree.getAllByText('text'),
-    {
-      timeout: 100,
-      interval: 10,
-    }
+    timeoutInterval
   ),
+];
+const waitForElementToBeRemovedQueryBy: Promise<ReactTestInstance | null>[] = [
   waitForElementToBeRemoved<ReactTestInstance | null>(() =>
     tree.queryByText('text')
   ),
   waitForElementToBeRemoved<ReactTestInstance | null>(
     () => tree.queryByText('text'),
-    {
-      timeout: 10,
-    }
+    timeout
   ),
   waitForElementToBeRemoved<ReactTestInstance | null>(
     () => tree.queryByText('text'),
-    {
-      timeout: 100,
-      interval: 10,
-    }
+    timeoutInterval
   ),
+];
+const waitForElementToBeRemovedQueryAllBy: Promise<ReactTestInstance[]>[] = [
   waitForElementToBeRemoved<ReactTestInstance[]>(() =>
     tree.queryAllByText('text')
   ),
   waitForElementToBeRemoved<ReactTestInstance[]>(
     () => tree.queryAllByText('text'),
-    {
-      timeout: 10,
-    }
+    timeout
   ),
   waitForElementToBeRemoved<ReactTestInstance[]>(
     () => tree.queryAllByText('text'),
-    {
-      timeout: 100,
-      interval: 10,
-    }
+    timeoutInterval
   ),
 ];
 

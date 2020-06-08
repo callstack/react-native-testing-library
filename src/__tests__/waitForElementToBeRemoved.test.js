@@ -29,44 +29,56 @@ test('waits when using getBy query', async () => {
   const screen = render(<TestSetup />);
 
   fireEvent.press(screen.getByText('Remove Element'));
-  expect(screen.getByText('Observed Element')).toBeTruthy();
+  const element = screen.getByText('Observed Element');
+  expect(element).toBeTruthy();
 
-  await waitForElementToBeRemoved(() => screen.getByText('Observed Element'));
+  const result = await waitForElementToBeRemoved(() =>
+    screen.getByText('Observed Element')
+  );
   expect(screen.queryByText('Observed Element')).toBeNull();
+  expect(result).toEqual(element);
 });
 
 test('waits when using getAllBy query', async () => {
   const screen = render(<TestSetup />);
 
   fireEvent.press(screen.getByText('Remove Element'));
-  expect(screen.getByText('Observed Element')).toBeTruthy();
+  const elements = screen.getAllByText('Observed Element');
+  expect(elements).toBeTruthy();
 
-  await waitForElementToBeRemoved(() =>
+  const result = await waitForElementToBeRemoved(() =>
     screen.getAllByText('Observed Element')
   );
   expect(screen.queryByText('Observed Element')).toBeNull();
+  expect(result).toEqual(elements);
 });
 
 test('waits when using queryBy query', async () => {
   const screen = render(<TestSetup />);
 
   fireEvent.press(screen.getByText('Remove Element'));
-  expect(screen.getByText('Observed Element')).toBeTruthy();
+  const element = screen.getByText('Observed Element');
+  expect(element).toBeTruthy();
 
-  await waitForElementToBeRemoved(() => screen.queryByText('Observed Element'));
+  const result = await waitForElementToBeRemoved(() =>
+    screen.queryByText('Observed Element')
+  );
   expect(screen.queryByText('Observed Element')).toBeNull();
+  expect(result).toEqual(element);
 });
 
 test('waits when using queryAllBy query', async () => {
   const screen = render(<TestSetup />);
 
   fireEvent.press(screen.getByText('Remove Element'));
-  expect(screen.getByText('Observed Element')).toBeTruthy();
+  const elements = screen.getAllByText('Observed Element');
+  expect(elements).toBeTruthy();
 
-  await waitForElementToBeRemoved(() =>
+  const result = await waitForElementToBeRemoved(() =>
     screen.queryAllByText('Observed Element')
   );
   expect(screen.queryByText('Observed Element')).toBeNull();
+  expect(result).toEqual(elements);
 });
 
 test('checks if elements exist at start', async () => {

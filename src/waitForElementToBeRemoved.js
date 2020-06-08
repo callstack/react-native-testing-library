@@ -8,7 +8,7 @@ const isRemoved = (result) =>
 export default async function waitForElementToBeRemoved<T>(
   expectation: () => T,
   options?: WaitForOptions
-): Promise<null> {
+): Promise<T> {
   // Created here so we get a nice stacktrace
   const timeoutError = new Error('Timed out in waitForElementToBeRemoved.');
 
@@ -25,13 +25,13 @@ export default async function waitForElementToBeRemoved<T>(
     try {
       result = expectation();
     } catch (error) {
-      return null;
+      return initialElements;
     }
 
     if (!isRemoved(result)) {
       throw timeoutError;
     }
 
-    return null;
+    return initialElements;
   }, options);
 }

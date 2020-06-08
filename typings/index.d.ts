@@ -303,7 +303,7 @@ export declare const waitFor: WaitForFunction;
 export type WaitForElementToBeRemovedFunction = <T = any>(
   expectation: () => T,
   options?: WaitForOptions
-) => Promise<null>;
+) => Promise<T>;
 
 export declare const waitForElementToBeRemoved: WaitForElementToBeRemovedFunction;
 
