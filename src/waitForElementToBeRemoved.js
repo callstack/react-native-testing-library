@@ -1,6 +1,6 @@
 // @flow
-import waitFor from './waitFor';
-import type { WaitForOptions } from './waitFor';
+import waitFor, { type WaitForOptions } from './waitFor';
+import { ErrorWithStack } from './helpers/errors';
 
 const isRemoved = (result) =>
   !result || (Array.isArray(result) && !result.length);
@@ -10,13 +10,17 @@ export default async function waitForElementToBeRemoved<T>(
   options?: WaitForOptions
 ): Promise<T> {
   // Created here so we get a nice stacktrace
-  const timeoutError = new Error('Timed out in waitForElementToBeRemoved.');
+  const timeoutError = new ErrorWithStack(
+    'Timed out in waitForElementToBeRemoved.',
+    waitForElementToBeRemoved
+  );
 
   // Elements have to be present initally and then removed.
   const initialElements = expectation();
   if (isRemoved(initialElements)) {
-    throw new Error(
-      'The element(s) given to waitForElementToBeRemoved are already removed. waitForElementToBeRemoved requires that the element(s) exist(s) before waiting for removal.'
+    throw new ErrorWithStack(
+      'The element(s) given to waitForElementToBeRemoved are already removed. waitForElementToBeRemoved requires that the element(s) exist(s) before waiting for removal.',
+      waitForElementToBeRemoved
     );
   }
 
