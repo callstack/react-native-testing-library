@@ -64,12 +64,12 @@ const siteConfig = {
             {
               key: 5,
               label: 'GitHub',
-              href: '/callstack/react-native-testing-library',
+              href: repoUrl,
             },
             {
               key: 6,
               label: 'Star',
-              href: '/callstack/react-native-testing-library',
+              href: repoUrl,
             },
           ],
         },
