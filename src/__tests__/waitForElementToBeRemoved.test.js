@@ -25,6 +25,10 @@ const TestSetup = ({ shouldUseDelay = true }) => {
   );
 };
 
+afterEach(() => {
+  jest.useRealTimers();
+});
+
 test('waits when using getBy query', async () => {
   const screen = render(<TestSetup />);
 
@@ -128,6 +132,20 @@ test('waits with custom interval', async () => {
 
 test('works with fake timers', async () => {
   jest.useFakeTimers();
+
+  const mockFn = jest.fn(() => <View />);
+
+  waitForElementToBeRemoved(() => mockFn(), {
+    timeout: 400,
+    interval: 200,
+  });
+
+  jest.advanceTimersByTime(400);
+  expect(mockFn).toHaveBeenCalledTimes(4);
+});
+
+test('works with modern fake timers', async () => {
+  jest.useFakeTimers('modern');
 
   const mockFn = jest.fn(() => <View />);
 
