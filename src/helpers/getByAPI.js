@@ -172,17 +172,26 @@ export const getAllByDisplayValue = (instance: ReactTestInstance) =>
 
 export const getAllByTestId = (instance: ReactTestInstance) =>
   function getAllByTestIdFn(testID: string): ReactTestInstance[] {
-    const results = instance
+    let results = instance
       .findAllByProps({ testID })
       .filter((element) => typeof element.type === 'string');
-
-    if (results.length === 0) {
-      throw new ErrorWithStack(
-        `No instances found with testID: ${String(testID)}`,
-        getAllByTestIdFn
-      );
+    
+    if (results.length !== 0) {
+      return results;
     }
-    return results;
+    
+    results = instance
+      .findAllByProps({ "data-testid": testID })
+      .filter((element) => typeof element.type === 'string');
+    
+    if (results.length !== 0) {
+      return results;
+    }
+
+    throw new ErrorWithStack(
+      `No instances found with testID: ${String(testID)}`,
+      getAllByTestIdFn
+    );
   };
 
 export const UNSAFE_getByType = (instance: ReactTestInstance) =>
