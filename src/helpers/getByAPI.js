@@ -172,8 +172,12 @@ export const getAllByDisplayValue = (instance: ReactTestInstance) =>
 
 export const getAllByTestId = (instance: ReactTestInstance) =>
   function getAllByTestIdFn(testID: string): ReactTestInstance[] {
+    // eslint-disable-next-line
+    const { Platform } = require('react-native');
+
+    const testIdProp: string = Platform.OS === 'web' ? 'data-testid' : 'testID';
     const results = instance
-      .findAllByProps({ testID })
+      .findAllByProps({ [testIdProp]: testID })
       .filter((element) => typeof element.type === 'string');
 
     if (results.length === 0) {
