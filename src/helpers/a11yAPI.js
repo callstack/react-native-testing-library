@@ -3,6 +3,9 @@ import type { A11yRole, A11yStates, A11yState, A11yValue } from '../types.flow';
 import type { WaitForOptions } from '../waitFor';
 import makeQuery from './makeQuery';
 
+// eslint-disable-next-line
+const { Platform } = require('react-native');
+
 type GetReturn = ReactTestInstance;
 type GetAllReturn = Array<ReactTestInstance>;
 type QueryReturn = ReactTestInstance | null;
@@ -98,10 +101,11 @@ export function matchObject<T: {}>(prop?: T, matcher: T): boolean {
     : false;
 }
 
+const isWeb = Platform.OS === 'web';
 const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
   ({
     ...makeQuery(
-      'accessibilityLabel',
+      isWeb ? 'aria-label' : 'accessibilityLabel',
       {
         getBy: ['getByA11yLabel', 'getByAccessibilityLabel'],
         getAllBy: ['getAllByA11yLabel', 'getAllByAccessibilityLabel'],
