@@ -105,7 +105,7 @@ The `*ByType` and `*ByProps` queries has been prefixed with `UNSAFE_`. These `UN
 
 ## Some `ByTestId` queries behavior changes
 
-In version `1.x` the `getByTestId` and `queryByTestId` queries could return non-native tinstances. This was a serious bug. Other query functions like `getAllByTestId`, `queryAllByTestId`, `findByTestId` and `findAllByTestId` didn't have this issue. These correctly returned only native components instances (e.g. `View`, `Text`, etc) that got the `testID`.
+In version `1.x` the `getByTestId` and `queryByTestId` queries could return non-native instances. This was a serious bug. Other query functions like `getAllByTestId`, `queryAllByTestId`, `findByTestId` and `findAllByTestId` didn't have this issue. These correctly returned only native components instances (e.g. `View`, `Text`, etc) that got the `testID`.
 
 In v2 we fixed this inconsistency, which may result in failing tests, if you relied on this behavior. There are few ways to handle these failures:
 
