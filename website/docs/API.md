@@ -337,7 +337,7 @@ function waitFor<T>(
 Waits for non-deterministic periods of time until your element appears or times out. `waitFor` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
 
 ```jsx
-import { render, waitFor } from 'react-testing-library';
+import { render, waitFor } from 'react-native-testing-library';
 
 test('waiting for an Banana to be ready', async () => {
   const { getByText } = render(<Banana />);
@@ -368,7 +368,7 @@ function waitForElementToBeRemoved<T>(
 Waits for non-deterministic periods of time until queried element is removed or times out. `waitForElementToBeRemoved` periodically calls `expectation` every `interval` milliseconds to determine whether the element has been removed or not.
 
 ```jsx
-import { render, waitForElementToBeRemoved } from 'react-testing-library';
+import { render, waitForElementToBeRemoved } from 'react-native-testing-library';
 
 test('waiting for an Banana to be removed', async () => {
   const { getByText } = render(<Banana />);
