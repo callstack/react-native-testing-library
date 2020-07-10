@@ -33,13 +33,13 @@ test('component is automatically umounted after first test ends', () => {
   expect(isMounted).toEqual(false);
 });
 
-test('does not time out with fake timers', () => {
-  jest.useFakeTimers();
+test('does not time out with legacy fake timers', () => {
+  jest.useFakeTimers('legacy');
   render(<Test />);
   expect(isMounted).toEqual(true);
 });
 
-test('does not time out with modern fake timers', () => {
+test('does not time out with fake timers', () => {
   jest.useFakeTimers('modern');
   render(<Test />);
   expect(isMounted).toEqual(true);

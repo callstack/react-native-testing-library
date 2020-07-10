@@ -130,8 +130,8 @@ test('waits with custom interval', async () => {
   expect(mockFn).toHaveBeenCalledTimes(4);
 });
 
-test('works with fake timers', async () => {
-  jest.useFakeTimers();
+test('works with legacy fake timers', async () => {
+  jest.useFakeTimers('legacy');
 
   const mockFn = jest.fn(() => <View />);
 
@@ -144,7 +144,7 @@ test('works with fake timers', async () => {
   expect(mockFn).toHaveBeenCalledTimes(4);
 });
 
-test('works with modern fake timers', async () => {
+test('works with fake timers', async () => {
   jest.useFakeTimers('modern');
 
   const mockFn = jest.fn(() => <View />);
