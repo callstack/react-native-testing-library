@@ -12,18 +12,9 @@ export default function flushMicrotasksQueue(): SimpleThenable {
   return flushMicroTasks();
 }
 
-let enqueueTask;
-try {
-  // assuming we're in node, let's try to get node's
-  // version of setImmediate, bypassing fake timers if any.
-  // $FlowFixMe - timers is internal Node module
-  enqueueTask = require('timers').setImmediate;
-} catch (_err) {
-  // we're in a browser, do nothing
-  enqueueTask = (resolve) => {
-    resolve();
-  };
-}
+// let's try to get node's version of setImmediate, bypassing fake timers if
+// any. $FlowFixMe - timers is internal Node module
+const enqueueTask = require('timers').setImmediate;
 
 export function flushMicroTasks(): SimpleThenable {
   return {
