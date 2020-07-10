@@ -2,12 +2,12 @@
 
 import { printDeprecationWarning } from './helpers/errors';
 
-type SimpleThenable = { then: (() => mixed) => mixed };
+type Thenable = { then: (() => mixed) => mixed };
 
 /**
  * Wait for microtasks queue to flush
  */
-export default function flushMicrotasksQueue(): SimpleThenable {
+export default function flushMicrotasksQueue(): Thenable {
   printDeprecationWarning('flushMicrotasksQueue');
   return flushMicroTasks();
 }
@@ -16,7 +16,7 @@ export default function flushMicrotasksQueue(): SimpleThenable {
 // any. $FlowFixMe - timers is internal Node module
 const enqueueTask = require('timers').setImmediate;
 
-export function flushMicroTasks(): SimpleThenable {
+export function flushMicroTasks(): Thenable {
   return {
     then(resolve) {
       enqueueTask(resolve);
