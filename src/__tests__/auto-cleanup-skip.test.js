@@ -4,7 +4,7 @@ import { View } from 'react-native';
 let render;
 beforeAll(() => {
   process.env.RNTL_SKIP_AUTO_CLEANUP = 'true';
-  const rtl = require('../');
+  const rtl = require('..');
   render = rtl.render;
 });
 

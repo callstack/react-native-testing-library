@@ -20,6 +20,10 @@ class Test extends React.Component<*> {
   }
 }
 
+afterEach(() => {
+  jest.useRealTimers();
+});
+
 // This just verifies that by importing RNTL in an environment which supports afterEach (like jest)
 // we'll get automatic cleanup between tests.
 test('component is mounted, but not umounted before test ends', () => {

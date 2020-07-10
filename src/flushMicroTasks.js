@@ -1,25 +1,22 @@
 // @flow
-
 import { printDeprecationWarning } from './helpers/errors';
 
-type Thenable = { then: (() => mixed) => mixed };
+type Thenable<T> = { then: (() => T) => mixed };
 
 /**
  * Wait for microtasks queue to flush
  */
-export default function flushMicrotasksQueue(): Thenable {
+export default function flushMicrotasksQueue<T>(): Thenable<T> {
   printDeprecationWarning('flushMicrotasksQueue');
   return flushMicroTasks();
 }
 
-// let's try to get node's version of setImmediate, bypassing fake timers if
-// any. $FlowFixMe - timers is internal Node module
-const enqueueTask = require('timers').setImmediate;
-
-export function flushMicroTasks(): Thenable {
+export function flushMicroTasks<T>(): Thenable<T> {
   return {
+    // using "thenable" instead of a Promise, because otherwise it breaks when
+    // using "modern" fake timers
     then(resolve) {
-      enqueueTask(resolve);
+      setImmediate(resolve);
     },
   };
 }
