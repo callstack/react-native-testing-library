@@ -35,6 +35,10 @@ class BananaContainer extends React.Component<{}, any> {
   }
 }
 
+afterEach(() => {
+  jest.useRealTimers();
+});
+
 test('waits for element until it stops throwing', async () => {
   const { getByText, queryByText } = render(<BananaContainer />);
 
@@ -75,8 +79,8 @@ test('waits for element with custom interval', async () => {
   expect(mockFn).toHaveBeenCalledTimes(3);
 });
 
-test('works with fake timers', async () => {
-  jest.useFakeTimers();
+test('works with legacy fake timers', async () => {
+  jest.useFakeTimers('legacy');
 
   const mockFn = jest.fn(() => {
     throw Error('test');
@@ -87,9 +91,24 @@ test('works with fake timers', async () => {
   } catch (e) {
     // suppress
   }
-  jest.runTimersToTime(400);
+  jest.advanceTimersByTime(400);
 
   expect(mockFn).toHaveBeenCalledTimes(3);
+});
 
-  jest.useRealTimers();
+test('works with fake timers', async () => {
+  jest.useFakeTimers('modern');
+
+  const mockFn = jest.fn(() => {
+    throw Error('test');
+  });
+
+  try {
+    waitFor(() => mockFn(), { timeout: 400, interval: 200 });
+  } catch (e) {
+    // suppress
+  }
+  jest.advanceTimersByTime(400);
+
+  expect(mockFn).toHaveBeenCalledTimes(3);
 });

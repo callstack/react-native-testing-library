@@ -4,8 +4,8 @@ import { View } from 'react-native';
 let render;
 beforeAll(() => {
   process.env.RNTL_SKIP_AUTO_CLEANUP = 'true';
-  const rtl = require('../');
-  render = rtl.render;
+  const rntl = require('..');
+  render = rntl.render;
 });
 
 let isMounted = false;

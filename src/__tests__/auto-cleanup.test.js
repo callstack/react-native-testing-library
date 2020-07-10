@@ -20,14 +20,31 @@ class Test extends React.Component<*> {
   }
 }
 
+afterEach(() => {
+  jest.useRealTimers();
+});
+
 // This just verifies that by importing RNTL in an environment which supports afterEach (like jest)
 // we'll get automatic cleanup between tests.
 test('component is mounted, but not umounted before test ends', () => {
   const fn = jest.fn();
   render(<Test onUnmount={fn} />);
+  expect(isMounted).toEqual(true);
   expect(fn).not.toHaveBeenCalled();
 });
 
 test('component is automatically umounted after first test ends', () => {
   expect(isMounted).toEqual(false);
+});
+
+test('does not time out with legacy fake timers', () => {
+  jest.useFakeTimers('legacy');
+  render(<Test />);
+  expect(isMounted).toEqual(true);
+});
+
+test('does not time out with fake timers', () => {
+  jest.useFakeTimers('modern');
+  render(<Test />);
+  expect(isMounted).toEqual(true);
 });
