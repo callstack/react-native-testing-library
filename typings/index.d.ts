@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   AccessibilityState,
+  // @ts-ignore AccessibilityStates was deprecated in RN0.62 https://reactnative.dev/blog/2020/03/26/version-0.62#breaking-changes
   AccessibilityStates,
   AccessibilityRole,
 } from 'react-native';
