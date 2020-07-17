@@ -13,27 +13,45 @@ type FindAllReturn = Promise<GetAllReturn>;
 type A11yAPI = {|
   // Label
   getByA11yLabel: (string | RegExp) => GetReturn,
+  getByLabelText: (string | RegExp) => GetReturn,
   getAllByA11yLabel: (string | RegExp) => GetAllReturn,
+  getAllByLabelText: (string | RegExp) => GetAllReturn,
   queryByA11yLabel: (string | RegExp) => QueryReturn,
+  queryByLabelText: (string | RegExp) => QueryReturn,
   queryAllByA11yLabel: (string | RegExp) => QueryAllReturn,
+  queryAllByLabelText: (string | RegExp) => QueryAllReturn,
   findByA11yLabel: (string | RegExp, ?WaitForOptions) => FindReturn,
+  findByLabelText: (string | RegExp, ?WaitForOptions) => FindReturn,
   findAllByA11yLabel: (string | RegExp, ?WaitForOptions) => FindAllReturn,
+  findAllByLabelText: (string | RegExp, ?WaitForOptions) => FindAllReturn,
 
   // Hint
   getByA11yHint: (string | RegExp) => GetReturn,
+  getByHintText: (string | RegExp) => GetReturn,
   getAllByA11yHint: (string | RegExp) => GetAllReturn,
+  getAllByHintText: (string | RegExp) => GetAllReturn,
   queryByA11yHint: (string | RegExp) => QueryReturn,
+  queryByHintText: (string | RegExp) => QueryReturn,
   queryAllByA11yHint: (string | RegExp) => QueryAllReturn,
+  queryAllByHintText: (string | RegExp) => QueryAllReturn,
   findByA11yHint: (string | RegExp, ?WaitForOptions) => FindReturn,
+  findByHintText: (string | RegExp, ?WaitForOptions) => FindReturn,
   findAllByA11yHint: (string | RegExp, ?WaitForOptions) => FindAllReturn,
+  findAllByHintText: (string | RegExp, ?WaitForOptions) => FindAllReturn,
 
   // Role
   getByA11yRole: (A11yRole | RegExp) => GetReturn,
+  getByRole: (A11yRole | RegExp) => GetReturn,
   getAllByA11yRole: (A11yRole | RegExp) => GetAllReturn,
+  getAllByRole: (A11yRole | RegExp) => GetAllReturn,
   queryByA11yRole: (A11yRole | RegExp) => QueryReturn,
+  queryByRole: (A11yRole | RegExp) => QueryReturn,
   queryAllByA11yRole: (A11yRole | RegExp) => QueryAllReturn,
+  queryAllByRole: (A11yRole | RegExp) => QueryAllReturn,
   findByA11yRole: (A11yRole, ?WaitForOptions) => FindReturn,
+  findByRole: (A11yRole, ?WaitForOptions) => FindReturn,
   findAllByA11yRole: (A11yRole, ?WaitForOptions) => FindAllReturn,
+  findAllByRole: (A11yRole, ?WaitForOptions) => FindAllReturn,
 
   // States
   getByA11yStates: (A11yStates | Array<A11yStates>) => GetReturn,

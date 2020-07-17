@@ -167,10 +167,18 @@ export type A11yValue = {
 type A11yAPI = {
   // Label
   getByA11yLabel: (matcher: string | RegExp) => GetReturn;
+  getByLabelText: (matcher: string | RegExp) => GetReturn;
   getAllByA11yLabel: (matcher: string | RegExp) => GetAllReturn;
+  getAllByLabelText: (matcher: string | RegExp) => GetAllReturn;
   queryByA11yLabel: (matcher: string | RegExp) => QueryReturn;
+  queryByLabelText: (matcher: string | RegExp) => QueryReturn;
   queryAllByA11yLabel: (matcher: string | RegExp) => QueryAllReturn;
+  queryAllByLabelText: (matcher: string | RegExp) => QueryAllReturn;
   findByA11yLabel: (
+    matcher: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findByLabelText: (
     matcher: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
@@ -178,13 +186,25 @@ type A11yAPI = {
     matcher: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
+  findAllByLabelText: (
+    matcher: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
 
   // Hint
   getByA11yHint: (matcher: string | RegExp) => GetReturn;
+  getByHintText: (matcher: string | RegExp) => GetReturn;
   getAllByA11yHint: (matcher: string | RegExp) => GetAllReturn;
+  getAllByHintText: (matcher: string | RegExp) => GetAllReturn;
   queryByA11yHint: (matcher: string | RegExp) => QueryReturn;
+  queryByHintText: (matcher: string | RegExp) => QueryReturn;
   queryAllByA11yHint: (matcher: string | RegExp) => QueryAllReturn;
+  queryAllByHintText: (matcher: string | RegExp) => QueryAllReturn;
   findByA11yHint: (
+    matcher: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findByHintText: (
     matcher: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
@@ -192,17 +212,33 @@ type A11yAPI = {
     matcher: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
+  findAllByHintText: (
+    matcher: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
 
   // Role
   getByA11yRole: (matcher: AccessibilityRole | RegExp) => GetReturn;
+  getByRole: (matcher: AccessibilityRole | RegExp) => GetReturn;
   getAllByA11yRole: (matcher: AccessibilityRole | RegExp) => GetAllReturn;
+  getAllByRole: (matcher: AccessibilityRole | RegExp) => GetAllReturn;
   queryByA11yRole: (matcher: AccessibilityRole | RegExp) => QueryReturn;
+  queryByRole: (matcher: AccessibilityRole | RegExp) => QueryReturn;
   queryAllByA11yRole: (matcher: AccessibilityRole | RegExp) => QueryAllReturn;
+  queryAllByRole: (matcher: AccessibilityRole | RegExp) => QueryAllReturn;
   findByA11yRole: (
     matcher: AccessibilityRole | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
+  findByRole: (
+    matcher: AccessibilityRole | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
   findAllByA11yRole: (
+    matcher: AccessibilityRole | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
+  findAllByRole: (
     matcher: AccessibilityRole | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
