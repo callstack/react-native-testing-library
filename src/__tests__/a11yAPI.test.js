@@ -90,7 +90,35 @@ test('getByA11yLabel, queryByA11yLabel, findByA11yLabel', async () => {
   );
 });
 
-test('getAllByA11yLabel, queryAllByA11yLabel', async () => {
+test('getByLabelText, queryByLabelText, findByLabelText', async () => {
+  const { getByLabelText, queryByLabelText, findByLabelText } = render(
+    <Section />
+  );
+
+  expect(getByLabelText(BUTTON_LABEL).props.accessibilityLabel).toEqual(
+    BUTTON_LABEL
+  );
+  const button = queryByLabelText(/button/g);
+  expect(button && button.props.accessibilityLabel).toEqual(BUTTON_LABEL);
+
+  expect(() => getByLabelText(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
+  expect(queryByLabelText(NO_MATCHES_TEXT)).toBeNull();
+
+  expect(() => getByLabelText(TEXT_LABEL)).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => queryByLabelText(TEXT_LABEL)).toThrow(FOUND_TWO_INSTANCES);
+
+  const asyncButton = await findByLabelText(BUTTON_LABEL);
+  expect(asyncButton.props.accessibilityLabel).toEqual(BUTTON_LABEL);
+  await expect(
+    findByLabelText(NO_MATCHES_TEXT, waitForOptions)
+  ).rejects.toThrow(NO_INSTANCES_FOUND);
+
+  await expect(findByLabelText(TEXT_LABEL, waitForOptions)).rejects.toThrow(
+    FOUND_TWO_INSTANCES
+  );
+});
+
+test('getAllByA11yLabel, queryAllByA11yLabel, findAllByA11yLabel', async () => {
   const { getAllByA11yLabel, queryAllByA11yLabel, findAllByA11yLabel } = render(
     <Section />
   );
@@ -103,6 +131,23 @@ test('getAllByA11yLabel, queryAllByA11yLabel', async () => {
 
   await expect(findAllByA11yLabel(TEXT_LABEL)).resolves.toHaveLength(2);
   await expect(findAllByA11yLabel(NO_MATCHES_TEXT)).rejects.toThrow(
+    NO_INSTANCES_FOUND
+  );
+});
+
+test('getAllByLabelText, queryAllByLabelText, findAllByLabelText', async () => {
+  const { getAllByLabelText, queryAllByLabelText, findAllByLabelText } = render(
+    <Section />
+  );
+
+  expect(getAllByLabelText(TEXT_LABEL)).toHaveLength(2);
+  expect(queryAllByLabelText(/cool/g)).toHaveLength(3);
+
+  expect(() => getAllByLabelText(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
+  expect(queryAllByLabelText(NO_MATCHES_TEXT)).toEqual([]);
+
+  await expect(findAllByLabelText(TEXT_LABEL)).resolves.toHaveLength(2);
+  await expect(findAllByLabelText(NO_MATCHES_TEXT)).rejects.toThrow(
     NO_INSTANCES_FOUND
   );
 });
@@ -134,7 +179,34 @@ test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
   );
 });
 
-test('getAllByA11yHint, queryAllByA11yHint', async () => {
+test('getByHintText, queryByHintText, findByHintText', async () => {
+  const { getByHintText, queryByHintText, findByHintText } = render(
+    <Section />
+  );
+
+  expect(getByHintText(BUTTON_HINT).props.accessibilityHint).toEqual(
+    BUTTON_HINT
+  );
+  const button = queryByHintText(/button/g);
+  expect(button && button.props.accessibilityHint).toEqual(BUTTON_HINT);
+
+  expect(() => getByHintText(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
+  expect(queryByHintText(NO_MATCHES_TEXT)).toBeNull();
+
+  expect(() => getByHintText(TEXT_HINT)).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => queryByHintText(TEXT_HINT)).toThrow(FOUND_TWO_INSTANCES);
+
+  const asyncButton = await findByHintText(BUTTON_HINT);
+  expect(asyncButton.props.accessibilityHint).toEqual(BUTTON_HINT);
+  await expect(findByHintText(NO_MATCHES_TEXT, waitForOptions)).rejects.toThrow(
+    NO_INSTANCES_FOUND
+  );
+  await expect(findByHintText(TEXT_HINT, waitForOptions)).rejects.toThrow(
+    FOUND_TWO_INSTANCES
+  );
+});
+
+test('getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint', async () => {
   const { getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint } = render(
     <Section />
   );
@@ -147,6 +219,23 @@ test('getAllByA11yHint, queryAllByA11yHint', async () => {
 
   await expect(findAllByA11yHint(TEXT_HINT)).resolves.toHaveLength(2);
   await expect(findAllByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
+    NO_INSTANCES_FOUND
+  );
+});
+
+test('getAllByHintText, queryAllByHintText, findAllByHintText', async () => {
+  const { getAllByHintText, queryAllByHintText, findAllByHintText } = render(
+    <Section />
+  );
+
+  expect(getAllByHintText(TEXT_HINT)).toHaveLength(2);
+  expect(queryAllByHintText(/static/g)).toHaveLength(2);
+
+  expect(() => getAllByHintText(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
+  expect(queryAllByHintText(NO_MATCHES_TEXT)).toEqual([]);
+
+  await expect(findAllByHintText(TEXT_HINT)).resolves.toHaveLength(2);
+  await expect(findAllByHintText(NO_MATCHES_TEXT)).rejects.toThrow(
     NO_INSTANCES_FOUND
   );
 });
@@ -174,6 +263,27 @@ test('getByA11yRole, queryByA11yRole, findByA11yRole', async () => {
   await expect(findByA11yRole('link')).rejects.toThrow(FOUND_TWO_INSTANCES);
 });
 
+test('getByRole, queryByRole, findByRole', async () => {
+  const { getByRole, queryByRole, findByRole } = render(<Section />);
+
+  expect(getByRole('button').props.accessibilityRole).toEqual('button');
+  const button = queryByRole(/button/g);
+  expect(button && button.props.accessibilityRole).toEqual('button');
+
+  expect(() => getByRole(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
+  expect(queryByRole(NO_MATCHES_TEXT)).toBeNull();
+
+  expect(() => getByRole('link')).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => queryByRole('link')).toThrow(FOUND_TWO_INSTANCES);
+
+  const asyncButton = await findByRole('button');
+  expect(asyncButton.props.accessibilityRole).toEqual('button');
+  await expect(findByRole(NO_MATCHES_TEXT, waitForOptions)).rejects.toThrow(
+    NO_INSTANCES_FOUND
+  );
+  await expect(findByRole('link')).rejects.toThrow(FOUND_TWO_INSTANCES);
+});
+
 test('getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole', async () => {
   const { getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole } = render(
     <Section />
@@ -189,6 +299,21 @@ test('getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole', async () => {
   await expect(
     findAllByA11yRole(NO_MATCHES_TEXT, waitForOptions)
   ).rejects.toThrow(NO_INSTANCES_FOUND);
+});
+
+test('getAllByRole, queryAllByRole, findAllByRole', async () => {
+  const { getAllByRole, queryAllByRole, findAllByRole } = render(<Section />);
+
+  expect(getAllByRole('link')).toHaveLength(2);
+  expect(queryAllByRole(/ink/g)).toHaveLength(2);
+
+  expect(() => getAllByRole(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
+  expect(queryAllByRole(NO_MATCHES_TEXT)).toEqual([]);
+
+  await expect(findAllByRole('link')).resolves.toHaveLength(2);
+  await expect(findAllByRole(NO_MATCHES_TEXT, waitForOptions)).rejects.toThrow(
+    NO_INSTANCES_FOUND
+  );
 });
 
 // TODO: accessibilityStates was removed from RN 0.62
