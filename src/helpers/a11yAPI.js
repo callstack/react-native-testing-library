@@ -135,12 +135,28 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
     ...makeQuery(
       'accessibilityHint',
       {
-        getBy: ['getByA11yHint', 'getByAccessibilityHint'],
-        getAllBy: ['getAllByA11yHint', 'getAllByAccessibilityHint'],
-        queryBy: ['queryByA11yHint', 'queryByAccessibilityHint'],
-        queryAllBy: ['queryAllByA11yHint', 'queryAllByAccessibilityHint'],
-        findBy: ['findByA11yHint', 'findByAccessibilityHint'],
-        findAllBy: ['findAllByA11yHint', 'findAllByAccessibilityHint'],
+        getBy: ['getByA11yHint', 'getByAccessibilityHint', 'getByHintText'],
+        getAllBy: [
+          'getAllByA11yHint',
+          'getAllByAccessibilityHint',
+          'getAllByHintText',
+        ],
+        queryBy: [
+          'queryByA11yHint',
+          'queryByAccessibilityHint',
+          'queryByHintText',
+        ],
+        queryAllBy: [
+          'queryAllByA11yHint',
+          'queryAllByAccessibilityHint',
+          'queryAllByHintText',
+        ],
+        findBy: ['findByA11yHint', 'findByAccessibilityHint', 'findByHintText'],
+        findAllBy: [
+          'findAllByA11yHint',
+          'findAllByAccessibilityHint',
+          'findAllByHintText',
+        ],
       },
       matchStringValue
     )(instance),
