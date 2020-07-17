@@ -163,12 +163,24 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
     ...makeQuery(
       'accessibilityRole',
       {
-        getBy: ['getByA11yRole', 'getByAccessibilityRole'],
-        getAllBy: ['getAllByA11yRole', 'getAllByAccessibilityRole'],
-        queryBy: ['queryByA11yRole', 'queryByAccessibilityRole'],
-        queryAllBy: ['queryAllByA11yRole', 'queryAllByAccessibilityRole'],
-        findBy: ['findByA11yRole', 'findByAccessibilityRole'],
-        findAllBy: ['findAllByA11yRole', 'findAllByAccessibilityRole'],
+        getBy: ['getByA11yRole', 'getByAccessibilityRole', 'getByRole'],
+        getAllBy: [
+          'getAllByA11yRole',
+          'getAllByAccessibilityRole',
+          'getAllByRole',
+        ],
+        queryBy: ['queryByA11yRole', 'queryByAccessibilityRole', 'queryByRole'],
+        queryAllBy: [
+          'queryAllByA11yRole',
+          'queryAllByAccessibilityRole',
+          'queryAllByRole',
+        ],
+        findBy: ['findByA11yRole', 'findByAccessibilityRole', 'findByRole'],
+        findAllBy: [
+          'findAllByA11yRole',
+          'findAllByAccessibilityRole',
+          'findAllByRole',
+        ],
       },
       matchStringValue
     )(instance),
