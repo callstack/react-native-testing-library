@@ -111,10 +111,11 @@ const element = getByTestId('unique-id');
 Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead.
 :::
 
-### `ByA11yLabel`, `ByAccessibilityLabel`
+### `ByA11yLabel`, `ByAccessibilityLabel`, `ByLabelText`
 
 > getByA11yLabel, getAllByA11yLabel, queryByA11yLabel, queryAllByA11yLabel, findByA11yLabel, findAllByA11yLabel
 > getByAccessibilityLabel, getAllByAccessibilityLabel, queryByAccessibilityLabel, queryAllByAccessibilityLabel, findByAccessibilityLabel, findAllByAccessibilityLabel
+> getByLabelText, getAllByLabelText, queryByLabelText, queryAllByLabelText, findByLabelText, findAllByLabelText
 
 Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
 
@@ -125,10 +126,11 @@ const { getByA11yLabel } = render(<MyComponent />);
 const element = getByA11yLabel('my-label');
 ```
 
-### `ByA11yHint`, `ByAccessibilityHint`
+### `ByA11yHint`, `ByAccessibilityHint`, `ByHintText`
 
 > getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint, findByA11yHint, findAllByA11yHint
 > getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint, findByAccessibilityHint, findAllByAccessibilityHint
+> getByHintText, getAllByHintText, queryByHintText, queryAllByHintText, findByHintText, findAllByHintText
 
 Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
 
@@ -154,10 +156,11 @@ const element = getByA11yStates(['checked']);
 const element2 = getByA11yStates('checked');
 ```
 
-### `ByA11yRole`, `ByAccessibilityRole`
+### `ByA11yRole`, `ByAccessibilityRole`, `ByRole`
 
 > getByA11yRole, getAllByA11yRole, queryByA11yRole, queryAllByA11yRole, findByA11yRole, findAllByA11yRole
 > getByAccessibilityRole, getAllByAccessibilityRole, queryByAccessibilityRole, queryAllByAccessibilityRole, findByAccessibilityRole, findAllByAccessibilityRole
+> getByRole, getAllByRole, queryByRole, queryAllByRole, findByRole, findAllByRole
 
 Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
 
