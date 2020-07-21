@@ -127,6 +127,11 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 
 - [Migration to 2.0](https://callstack.github.io/react-native-testing-library/docs/migration-v2)
 
+## Related External Resources
+
+- [Real world extensive examples repo](https://github.com/vanGalilea/react-native-testing)
+- [Where and how to start testing 🧪 your react-native app ⚛️ and how to keep on testin’](https://blog.usejournal.com/where-and-how-to-start-testing-your-react-native-app-%EF%B8%8F-and-how-to-keep-on-testin-ec3464fb9b41)
+
 ## Made with ❤️ at Callstack
 
 React Native Testing Library is an open source project and will always remain free to use. If you think it's cool, please star it 🌟. [Callstack](https://callstack.com) is a group of React and React Native geeks, contact us at [hello@callstack.com](mailto:hello@callstack.com) if you need any help with these or just want to say hi!
