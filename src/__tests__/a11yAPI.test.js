@@ -192,9 +192,14 @@ test('getAllByA11yHint, getAllByHintText, queryAllByA11yHint, queryAllByHintText
 });
 
 test('getByA11yRole, getByRole, queryByA11yRole, queryByRole, findByA11yRole, findByRole', async () => {
-  const { getByA11yRole, getByRole, queryByA11yRole, queryByRole, findByA11yRole, findByRole } = render(
-    <Section />
-  );
+  const {
+    getByA11yRole,
+    getByRole,
+    queryByA11yRole,
+    queryByRole,
+    findByA11yRole,
+    findByRole,
+  } = render(<Section />);
 
   // Assert that query aliases are referencing the same function
   expect(getByA11yRole).toBe(getByRole);
@@ -220,9 +225,14 @@ test('getByA11yRole, getByRole, queryByA11yRole, queryByRole, findByA11yRole, fi
 });
 
 test('getAllByA11yRole, getAllByRole, queryAllByA11yRole, queryAllByRole, findAllByA11yRole, findAllByRole', async () => {
-  const { getAllByA11yRole, getAllByRole, queryAllByA11yRole, queryAllByRole, findAllByA11yRole, findAllByRole } = render(
-    <Section />
-  );
+  const {
+    getAllByA11yRole,
+    getAllByRole,
+    queryAllByA11yRole,
+    queryAllByRole,
+    findAllByA11yRole,
+    findAllByRole,
+  } = render(<Section />);
 
   // Assert that query aliases are referencing the same function
   expect(getAllByA11yRole).toBe(getAllByRole);
