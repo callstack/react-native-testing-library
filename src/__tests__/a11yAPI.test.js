@@ -90,7 +90,7 @@ test('getByA11yLabel, queryByA11yLabel, findByA11yLabel', async () => {
   );
 });
 
-test('getAllByA11yLabel, queryAllByA11yLabel', async () => {
+test('getAllByA11yLabel, queryAllByA11yLabel, findAllByA11yLabel', async () => {
   const { getAllByA11yLabel, queryAllByA11yLabel, findAllByA11yLabel } = render(
     <Section />
   );
@@ -134,7 +134,7 @@ test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
   );
 });
 
-test('getAllByA11yHint, queryAllByA11yHint', async () => {
+test('getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint', async () => {
   const { getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint } = render(
     <Section />
   );
@@ -344,4 +344,79 @@ test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
     NO_INSTANCES_FOUND
   );
   await expect(findAllByA11yValue({ max: 60 })).resolves.toHaveLength(2);
+});
+
+test('a11y label queries have aliases', () => {
+  const {
+    getByA11yLabel,
+    getByLabelText,
+    queryByA11yLabel,
+    queryByLabelText,
+    findByA11yLabel,
+    findByLabelText,
+    getAllByA11yLabel,
+    getAllByLabelText,
+    queryAllByA11yLabel,
+    queryAllByLabelText,
+    findAllByA11yLabel,
+    findAllByLabelText,
+  } = render(<Section />);
+
+  // Assert that query aliases are referencing the same function
+  expect(getByA11yLabel).toBe(getByLabelText);
+  expect(queryByA11yLabel).toBe(queryByLabelText);
+  expect(findByA11yLabel).toBe(findByLabelText);
+  expect(getAllByA11yLabel).toBe(getAllByLabelText);
+  expect(queryAllByA11yLabel).toBe(queryAllByLabelText);
+  expect(findAllByA11yLabel).toBe(findAllByLabelText);
+});
+
+test('a11y hint queries have aliases', () => {
+  const {
+    getByA11yHint,
+    getByHintText,
+    queryByA11yHint,
+    queryByHintText,
+    findByA11yHint,
+    findByHintText,
+    getAllByA11yHint,
+    getAllByHintText,
+    queryAllByA11yHint,
+    queryAllByHintText,
+    findAllByA11yHint,
+    findAllByHintText,
+  } = render(<Section />);
+
+  // Assert that query aliases are referencing the same function
+  expect(getByA11yHint).toBe(getByHintText);
+  expect(queryByA11yHint).toBe(queryByHintText);
+  expect(findByA11yHint).toBe(findByHintText);
+  expect(getAllByA11yHint).toBe(getAllByHintText);
+  expect(queryAllByA11yHint).toBe(queryAllByHintText);
+  expect(findAllByA11yHint).toBe(findAllByHintText);
+});
+
+test('a11y role queries have aliases', () => {
+  const {
+    getByA11yRole,
+    getByRole,
+    queryByA11yRole,
+    queryByRole,
+    findByA11yRole,
+    findByRole,
+    getAllByA11yRole,
+    getAllByRole,
+    queryAllByA11yRole,
+    queryAllByRole,
+    findAllByA11yRole,
+    findAllByRole,
+  } = render(<Section />);
+
+  // Assert that query aliases are referencing the same function
+  expect(getByA11yRole).toBe(getByRole);
+  expect(queryByA11yRole).toBe(queryByRole);
+  expect(findByA11yRole).toBe(findByRole);
+  expect(getAllByA11yRole).toBe(getAllByRole);
+  expect(queryAllByA11yRole).toBe(queryAllByRole);
+  expect(findAllByA11yRole).toBe(findAllByRole);
 });

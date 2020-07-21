@@ -13,27 +13,45 @@ type FindAllReturn = Promise<GetAllReturn>;
 type A11yAPI = {|
   // Label
   getByA11yLabel: (string | RegExp) => GetReturn,
+  getByLabelText: (string | RegExp) => GetReturn,
   getAllByA11yLabel: (string | RegExp) => GetAllReturn,
+  getAllByLabelText: (string | RegExp) => GetAllReturn,
   queryByA11yLabel: (string | RegExp) => QueryReturn,
+  queryByLabelText: (string | RegExp) => QueryReturn,
   queryAllByA11yLabel: (string | RegExp) => QueryAllReturn,
+  queryAllByLabelText: (string | RegExp) => QueryAllReturn,
   findByA11yLabel: (string | RegExp, ?WaitForOptions) => FindReturn,
+  findByLabelText: (string | RegExp, ?WaitForOptions) => FindReturn,
   findAllByA11yLabel: (string | RegExp, ?WaitForOptions) => FindAllReturn,
+  findAllByLabelText: (string | RegExp, ?WaitForOptions) => FindAllReturn,
 
   // Hint
   getByA11yHint: (string | RegExp) => GetReturn,
+  getByHintText: (string | RegExp) => GetReturn,
   getAllByA11yHint: (string | RegExp) => GetAllReturn,
+  getAllByHintText: (string | RegExp) => GetAllReturn,
   queryByA11yHint: (string | RegExp) => QueryReturn,
+  queryByHintText: (string | RegExp) => QueryReturn,
   queryAllByA11yHint: (string | RegExp) => QueryAllReturn,
+  queryAllByHintText: (string | RegExp) => QueryAllReturn,
   findByA11yHint: (string | RegExp, ?WaitForOptions) => FindReturn,
+  findByHintText: (string | RegExp, ?WaitForOptions) => FindReturn,
   findAllByA11yHint: (string | RegExp, ?WaitForOptions) => FindAllReturn,
+  findAllByHintText: (string | RegExp, ?WaitForOptions) => FindAllReturn,
 
   // Role
   getByA11yRole: (A11yRole | RegExp) => GetReturn,
+  getByRole: (A11yRole | RegExp) => GetReturn,
   getAllByA11yRole: (A11yRole | RegExp) => GetAllReturn,
+  getAllByRole: (A11yRole | RegExp) => GetAllReturn,
   queryByA11yRole: (A11yRole | RegExp) => QueryReturn,
+  queryByRole: (A11yRole | RegExp) => QueryReturn,
   queryAllByA11yRole: (A11yRole | RegExp) => QueryAllReturn,
+  queryAllByRole: (A11yRole | RegExp) => QueryAllReturn,
   findByA11yRole: (A11yRole, ?WaitForOptions) => FindReturn,
+  findByRole: (A11yRole, ?WaitForOptions) => FindReturn,
   findAllByA11yRole: (A11yRole, ?WaitForOptions) => FindAllReturn,
+  findAllByRole: (A11yRole, ?WaitForOptions) => FindAllReturn,
 
   // States
   getByA11yStates: (A11yStates | Array<A11yStates>) => GetReturn,
@@ -103,36 +121,84 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
     ...makeQuery(
       'accessibilityLabel',
       {
-        getBy: ['getByA11yLabel', 'getByAccessibilityLabel'],
-        getAllBy: ['getAllByA11yLabel', 'getAllByAccessibilityLabel'],
-        queryBy: ['queryByA11yLabel', 'queryByAccessibilityLabel'],
-        queryAllBy: ['queryAllByA11yLabel', 'queryAllByAccessibilityLabel'],
-        findBy: ['findByA11yLabel', 'findByAccessibilityLabel'],
-        findAllBy: ['findAllByA11yLabel', 'findAllByAccessibilityLabel'],
+        getBy: ['getByA11yLabel', 'getByAccessibilityLabel', 'getByLabelText'],
+        getAllBy: [
+          'getAllByA11yLabel',
+          'getAllByAccessibilityLabel',
+          'getAllByLabelText',
+        ],
+        queryBy: [
+          'queryByA11yLabel',
+          'queryByAccessibilityLabel',
+          'queryByLabelText',
+        ],
+        queryAllBy: [
+          'queryAllByA11yLabel',
+          'queryAllByAccessibilityLabel',
+          'queryAllByLabelText',
+        ],
+        findBy: [
+          'findByA11yLabel',
+          'findByAccessibilityLabel',
+          'findByLabelText',
+        ],
+        findAllBy: [
+          'findAllByA11yLabel',
+          'findAllByAccessibilityLabel',
+          'findAllByLabelText',
+        ],
       },
       matchStringValue
     )(instance),
     ...makeQuery(
       'accessibilityHint',
       {
-        getBy: ['getByA11yHint', 'getByAccessibilityHint'],
-        getAllBy: ['getAllByA11yHint', 'getAllByAccessibilityHint'],
-        queryBy: ['queryByA11yHint', 'queryByAccessibilityHint'],
-        queryAllBy: ['queryAllByA11yHint', 'queryAllByAccessibilityHint'],
-        findBy: ['findByA11yHint', 'findByAccessibilityHint'],
-        findAllBy: ['findAllByA11yHint', 'findAllByAccessibilityHint'],
+        getBy: ['getByA11yHint', 'getByAccessibilityHint', 'getByHintText'],
+        getAllBy: [
+          'getAllByA11yHint',
+          'getAllByAccessibilityHint',
+          'getAllByHintText',
+        ],
+        queryBy: [
+          'queryByA11yHint',
+          'queryByAccessibilityHint',
+          'queryByHintText',
+        ],
+        queryAllBy: [
+          'queryAllByA11yHint',
+          'queryAllByAccessibilityHint',
+          'queryAllByHintText',
+        ],
+        findBy: ['findByA11yHint', 'findByAccessibilityHint', 'findByHintText'],
+        findAllBy: [
+          'findAllByA11yHint',
+          'findAllByAccessibilityHint',
+          'findAllByHintText',
+        ],
       },
       matchStringValue
     )(instance),
     ...makeQuery(
       'accessibilityRole',
       {
-        getBy: ['getByA11yRole', 'getByAccessibilityRole'],
-        getAllBy: ['getAllByA11yRole', 'getAllByAccessibilityRole'],
-        queryBy: ['queryByA11yRole', 'queryByAccessibilityRole'],
-        queryAllBy: ['queryAllByA11yRole', 'queryAllByAccessibilityRole'],
-        findBy: ['findByA11yRole', 'findByAccessibilityRole'],
-        findAllBy: ['findAllByA11yRole', 'findAllByAccessibilityRole'],
+        getBy: ['getByA11yRole', 'getByAccessibilityRole', 'getByRole'],
+        getAllBy: [
+          'getAllByA11yRole',
+          'getAllByAccessibilityRole',
+          'getAllByRole',
+        ],
+        queryBy: ['queryByA11yRole', 'queryByAccessibilityRole', 'queryByRole'],
+        queryAllBy: [
+          'queryAllByA11yRole',
+          'queryAllByAccessibilityRole',
+          'queryAllByRole',
+        ],
+        findBy: ['findByA11yRole', 'findByAccessibilityRole', 'findByRole'],
+        findAllBy: [
+          'findAllByA11yRole',
+          'findAllByAccessibilityRole',
+          'findAllByRole',
+        ],
       },
       matchStringValue
     )(instance),
