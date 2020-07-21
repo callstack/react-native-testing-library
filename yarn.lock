@@ -1115,9 +1115,9 @@
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
 "@callstack/eslint-config@^10.0.0":
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/@callstack/eslint-config/-/eslint-config-10.0.0.tgz#d7a6c1e950dbc27c65b486c403a6e8ab17d61756"
-  integrity sha512-VywLiGompJeUEHAEVt20Y66k5z6016F7r2cEHB7/SQMjtcK9Cftakp7KJcH0acgbyaSciGV2hzDuwd8402YJGw==
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/@callstack/eslint-config/-/eslint-config-10.0.1.tgz#aedd18706df5cea767778d6a62625c94f40426c7"
+  integrity sha512-CY/2HH5KpZrhZimcfR28FJDVwRTj3pgKFNBBfKwnk+zPXnl2HB7428rrhWUG8upFt+zZssBRy1rAhoMrFiI7eQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^2.31.0"
     "@typescript-eslint/parser" "^2.31.0"
