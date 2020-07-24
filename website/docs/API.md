@@ -177,13 +177,13 @@ import { render, fireEvent } from 'react-native-testing-library';
 
 test('fire changeText event', () => {
   const onEventMock = jest.fn();
-  const { getByPlaceholder } = render(
+  const { getByPlaceholderText } = render(
     // MyComponent renders TextInput which has a placeholder 'Enter details'
     // and with `onChangeText` bound to handleChangeText
     <MyComponent handleChangeText={onEventMock} />
   );
 
-  fireEvent(getByPlaceholder('change'), 'onChangeText', 'ab');
+  fireEvent(getByPlaceholderText('change'), 'onChangeText', 'ab');
   expect(onEventMock).toHaveBeenCalledWith('ab');
 });
 ```
@@ -196,14 +196,14 @@ import { fireEvent, render } from 'react-native-testing-library';
 
 const onBlurMock = jest.fn();
 
-const { getByPlaceholder } = render(
+const { getByPlaceholderText } = render(
   <View>
     <TextInput placeholder="my placeholder" onBlur={onBlurMock} />
   </View>
 );
 
 // you can omit the `on` prefix
-fireEvent(getByPlaceholder('my placeholder'), 'blur');
+fireEvent(getByPlaceholderText('my placeholder'), 'blur');
 ```
 
 ## `fireEvent[eventName]`
@@ -247,13 +247,13 @@ import { render, fireEvent } from 'react-native-testing-library';
 const onChangeTextMock = jest.fn();
 const CHANGE_TEXT = 'content';
 
-const { getByPlaceholder } = render(
+const { getByPlaceholderText } = render(
   <View>
     <TextInput placeholder="Enter data" onChangeText={onChangeTextMock} />
   </View>
 );
 
-fireEvent.changeText(getByPlaceholder('Enter data'), CHANGE_TEXT);
+fireEvent.changeText(getByPlaceholderText('Enter data'), CHANGE_TEXT);
 ```
 
 ### `fireEvent.scroll: (element: ReactTestInstance, ...data: Array<any>) => void`

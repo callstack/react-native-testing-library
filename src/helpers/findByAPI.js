@@ -6,11 +6,12 @@ import {
   getAllByTestId,
   getByText,
   getAllByText,
-  getByPlaceholder,
-  getAllByPlaceholder,
+  getByPlaceholderText,
+  getAllByPlaceholderText,
   getByDisplayValue,
   getAllByDisplayValue,
 } from './getByAPI';
+import { throwRenamedFunctionError } from './errors';
 
 const makeFindQuery = <Text, Result>(
   instance: ReactTestInstance,
@@ -39,15 +40,16 @@ export const findAllByText = (instance: ReactTestInstance) => (
   waitForOptions: WaitForOptions = {}
 ) => makeFindQuery(instance, getAllByText, text, waitForOptions);
 
-export const findByPlaceholder = (instance: ReactTestInstance) => (
+export const findByPlaceholderText = (instance: ReactTestInstance) => (
   placeholder: string | RegExp,
   waitForOptions: WaitForOptions = {}
-) => makeFindQuery(instance, getByPlaceholder, placeholder, waitForOptions);
+) => makeFindQuery(instance, getByPlaceholderText, placeholder, waitForOptions);
 
-export const findAllByPlaceholder = (instance: ReactTestInstance) => (
+export const findAllByPlaceholderText = (instance: ReactTestInstance) => (
   placeholder: string | RegExp,
   waitForOptions: WaitForOptions = {}
-) => makeFindQuery(instance, getAllByPlaceholder, placeholder, waitForOptions);
+) =>
+  makeFindQuery(instance, getAllByPlaceholderText, placeholder, waitForOptions);
 
 export const findByDisplayValue = (instance: ReactTestInstance) => (
   value: string | RegExp,
@@ -62,10 +64,19 @@ export const findAllByDisplayValue = (instance: ReactTestInstance) => (
 export const findByAPI = (instance: ReactTestInstance) => ({
   findByTestId: findByTestId(instance),
   findByText: findByText(instance),
-  findByPlaceholder: findByPlaceholder(instance),
+  findByPlaceholderText: findByPlaceholderText(instance),
   findByDisplayValue: findByDisplayValue(instance),
   findAllByTestId: findAllByTestId(instance),
   findAllByText: findAllByText(instance),
-  findAllByPlaceholder: findAllByPlaceholder(instance),
+  findAllByPlaceholderText: findAllByPlaceholderText(instance),
   findAllByDisplayValue: findAllByDisplayValue(instance),
+
+  // Renamed
+  findByPlaceholder: () =>
+    throwRenamedFunctionError('findByPlaceholder', 'findByPlaceholderText'),
+  findAllByPlaceholder: () =>
+    throwRenamedFunctionError(
+      'findAllByPlaceholder',
+      'findAllByPlaceholderText'
+    ),
 });

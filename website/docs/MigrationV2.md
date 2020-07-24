@@ -114,7 +114,7 @@ In v2 we fixed this inconsistency, which may result in failing tests, if you rel
 - use safe queries like `*ByText` or `*ByA11yHint`
 
 :::caution
-In general, you should avoid `*byTestId` queries when possible. Use queries that check things that the user can interact with. Like `*ByText` or `*ByPlaceholder` or accessibility queries (e.g. `*ByA11yHint`, `*ByA11yLabel`).
+In general, you should avoid `*byTestId` queries when possible. Use queries that check things that the user can interact with. Like `*ByText` or `*ByPlaceholderText` or accessibility queries (e.g. `*ByA11yHint`, `*ByA11yLabel`).
 :::
 
 ## Deprecated `flushMicrotasksQueue`

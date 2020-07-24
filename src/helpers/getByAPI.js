@@ -6,6 +6,7 @@ import {
   createLibraryNotSupportedError,
   prepareErrorMessage,
   throwRemovedFunctionError,
+  throwRenamedFunctionError,
 } from './errors';
 
 const filterNodeByType = (node, type) => node.type === type;
@@ -50,7 +51,7 @@ const getChildrenAsText = (children, TextComponent, textContent = []) => {
   return textContent;
 };
 
-const getTextInputNodeByPlaceholder = (node, placeholder) => {
+const getTextInputNodeByPlaceholderText = (node, placeholder) => {
   try {
     // eslint-disable-next-line
     const { TextInput } = require('react-native');
@@ -89,14 +90,17 @@ export const getByText = (instance: ReactTestInstance) =>
     }
   };
 
-export const getByPlaceholder = (instance: ReactTestInstance) =>
-  function getByPlaceholderFn(placeholder: string | RegExp) {
+export const getByPlaceholderText = (instance: ReactTestInstance) =>
+  function getByPlaceholderTextFn(placeholder: string | RegExp) {
     try {
       return instance.find((node) =>
-        getTextInputNodeByPlaceholder(node, placeholder)
+        getTextInputNodeByPlaceholderText(node, placeholder)
       );
     } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByPlaceholderFn);
+      throw new ErrorWithStack(
+        prepareErrorMessage(error),
+        getByPlaceholderTextFn
+      );
     }
   };
 
@@ -142,15 +146,15 @@ export const getAllByText = (instance: ReactTestInstance) =>
     return results;
   };
 
-export const getAllByPlaceholder = (instance: ReactTestInstance) =>
-  function getAllByPlaceholderFn(placeholder: string | RegExp) {
+export const getAllByPlaceholderText = (instance: ReactTestInstance) =>
+  function getAllByPlaceholderTextFn(placeholder: string | RegExp) {
     const results = instance.findAll((node) =>
-      getTextInputNodeByPlaceholder(node, placeholder)
+      getTextInputNodeByPlaceholderText(node, placeholder)
     );
     if (results.length === 0) {
       throw new ErrorWithStack(
         `No instances found with placeholder: ${String(placeholder)}`,
-        getAllByPlaceholderFn
+        getAllByPlaceholderTextFn
       );
     }
     return results;
@@ -226,11 +230,11 @@ export const UNSAFE_getAllByProps = (instance: ReactTestInstance) =>
 
 export const getByAPI = (instance: ReactTestInstance) => ({
   getByText: getByText(instance),
-  getByPlaceholder: getByPlaceholder(instance),
+  getByPlaceholderText: getByPlaceholderText(instance),
   getByDisplayValue: getByDisplayValue(instance),
   getByTestId: getByTestId(instance),
   getAllByText: getAllByText(instance),
-  getAllByPlaceholder: getAllByPlaceholder(instance),
+  getAllByPlaceholderText: getAllByPlaceholderText(instance),
   getAllByDisplayValue: getAllByDisplayValue(instance),
   getAllByTestId: getAllByTestId(instance),
 
@@ -256,4 +260,10 @@ export const getByAPI = (instance: ReactTestInstance) => ({
       'getAllByProps',
       'migration-v2#removed-functions'
     ),
+
+  // Renamed
+  getByPlaceholder: () =>
+    throwRenamedFunctionError('getByPlaceholder', 'getByPlaceholderText'),
+  getAllByPlaceholder: () =>
+    throwRenamedFunctionError('getAllByPlaceholder', 'getByPlaceholderText'),
 });

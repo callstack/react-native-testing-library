@@ -11,8 +11,8 @@ test('findBy queries work asynchronously', async () => {
     findAllByTestId,
     findByText,
     findAllByText,
-    findByPlaceholder,
-    findAllByPlaceholder,
+    findByPlaceholderText,
+    findAllByPlaceholderText,
     findByDisplayValue,
     findAllByDisplayValue,
   } = render(<View />);
@@ -21,10 +21,10 @@ test('findBy queries work asynchronously', async () => {
   await expect(findByText('Some Text', options)).rejects.toBeTruthy();
   await expect(findAllByText('Some Text', options)).rejects.toBeTruthy();
   await expect(
-    findByPlaceholder('Placeholder Text', options)
+    findByPlaceholderText('Placeholder Text', options)
   ).rejects.toBeTruthy();
   await expect(
-    findAllByPlaceholder('Placeholder Text', options)
+    findAllByPlaceholderText('Placeholder Text', options)
   ).rejects.toBeTruthy();
   await expect(
     findByDisplayValue('Display Value', options)
@@ -49,10 +49,10 @@ test('findBy queries work asynchronously', async () => {
   await expect(findAllByTestId('aTestId')).resolves.toHaveLength(1);
   await expect(findByText('Some Text')).resolves.toBeTruthy();
   await expect(findAllByText('Some Text')).resolves.toHaveLength(1);
-  await expect(findByPlaceholder('Placeholder Text')).resolves.toBeTruthy();
-  await expect(findAllByPlaceholder('Placeholder Text')).resolves.toHaveLength(
-    1
-  );
+  await expect(findByPlaceholderText('Placeholder Text')).resolves.toBeTruthy();
+  await expect(
+    findAllByPlaceholderText('Placeholder Text')
+  ).resolves.toHaveLength(1);
   await expect(findByDisplayValue('Display Value')).resolves.toBeTruthy();
   await expect(findAllByDisplayValue('Display Value')).resolves.toHaveLength(1);
 }, 20000);

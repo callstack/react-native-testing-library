@@ -32,11 +32,11 @@ describe('AddTodo component test', () => {
       </Provider>
     );
 
-    const { getByPlaceholder, getByText } = render(component);
+    const { getByPlaceholderText, getByText } = render(component);
 
     // There is a TextInput.
     // https://github.com/callstack/react-native-testing-library/blob/ae3d4af370487e1e8fedd8219f77225690aefc59/examples/redux/components/AddTodo.js#L24
-    const input = getByPlaceholder(/repository/i);
+    const input = getByPlaceholderText(/repository/i);
     expect(input).toBeTruthy();
 
     const textToEnter = 'This is a random element';
