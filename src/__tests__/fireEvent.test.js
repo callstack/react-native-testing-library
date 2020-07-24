@@ -123,7 +123,7 @@ test('fireEvent.changeText', () => {
   const onChangeTextMock = jest.fn();
   const CHANGE_TEXT = 'content';
 
-  const { getByPlaceholder } = render(
+  const { getByPlaceholderText } = render(
     <View>
       <TextInput
         placeholder="Customer placeholder"
@@ -132,7 +132,10 @@ test('fireEvent.changeText', () => {
     </View>
   );
 
-  fireEvent.changeText(getByPlaceholder('Customer placeholder'), CHANGE_TEXT);
+  fireEvent.changeText(
+    getByPlaceholderText('Customer placeholder'),
+    CHANGE_TEXT
+  );
 
   expect(onChangeTextMock).toHaveBeenCalledWith(CHANGE_TEXT);
 });
