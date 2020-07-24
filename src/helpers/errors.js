@@ -44,6 +44,16 @@ export function throwRemovedFunctionError(
   docsRef: string
 ) {
   throw new Error(
-    `${functionName} has been removed in version 2.0.\n\nPlease consult: https://callstack.github.io/react-native-testing-library/docs/${docsRef}`
+    `"${functionName}" has been removed.\n\nPlease consult: https://callstack.github.io/react-native-testing-library/docs/${docsRef}`
+  );
+}
+
+export function throwRenamedFunctionError(
+  functionName: string,
+  newFunctionName: string
+) {
+  throw new ErrorWithStack(
+    `The "${functionName}" function has been renamed to "${newFunctionName}". Please replace all occurrences.`,
+    throwRenamedFunctionError
   );
 }

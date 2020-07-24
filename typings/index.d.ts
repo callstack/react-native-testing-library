@@ -16,12 +16,12 @@ type FindAllReturn = Promise<ReactTestInstance[]>;
 
 interface GetByAPI {
   getByText: (text: string | RegExp) => ReactTestInstance;
-  getByPlaceholder: (placeholder: string | RegExp) => ReactTestInstance;
+  getByPlaceholderText: (placeholder: string | RegExp) => ReactTestInstance;
   getByDisplayValue: (value: string | RegExp) => ReactTestInstance;
   getByTestId: (testID: string) => ReactTestInstance;
   getAllByTestId: (testID: string) => Array<ReactTestInstance>;
   getAllByText: (text: string | RegExp) => Array<ReactTestInstance>;
-  getAllByPlaceholder: (
+  getAllByPlaceholderText: (
     placeholder: string | RegExp
   ) => Array<ReactTestInstance>;
   getAllByDisplayValue: (value: string | RegExp) => Array<ReactTestInstance>;
@@ -65,14 +65,14 @@ interface GetByAPI {
 
 interface QueryByAPI {
   queryByText: (name: string | RegExp) => ReactTestInstance | null;
-  queryByPlaceholder: (
+  queryByPlaceholderText: (
     placeholder: string | RegExp
   ) => ReactTestInstance | null;
   queryByDisplayValue: (value: string | RegExp) => ReactTestInstance | null;
   queryByTestId: (testID: string) => ReactTestInstance | null;
   queryAllByTestId: (testID: string) => Array<ReactTestInstance> | null;
   queryAllByText: (text: string | RegExp) => Array<ReactTestInstance> | [];
-  queryAllByPlaceholder: (
+  queryAllByPlaceholderText: (
     placeholder: string | RegExp
   ) => Array<ReactTestInstance> | [];
   queryAllByDisplayValue: (
@@ -129,7 +129,7 @@ interface FindByAPI {
     text: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
-  findByPlaceholder: (
+  findByPlaceholderText: (
     placeholder: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
@@ -142,7 +142,7 @@ interface FindByAPI {
     text: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
-  findAllByPlaceholder: (
+  findAllByPlaceholderText: (
     placeholder: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
