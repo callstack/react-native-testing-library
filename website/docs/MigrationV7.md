@@ -95,3 +95,16 @@ The `disabled` prop on "Touchable\*" components is treated in the same manner as
 If you feel strongly about this difference, please send a PR to React Native, adding JavaScript logic to "onPress" functions, making them aware of disabled state in JS logic as well (it's handled on native side for at least iOS, which is the default platform that tests are running in).
 
 As a mitigation, you'll likely need to modify the logic of "touchable" components to bail if they're pressed in disabled state.
+
+## Firing events changes
+
+There are slight differences in how `fireEvent` works in both libraries:
+
+1. Our library doesn't perform validation checks for events fired upon tested components.
+1. Signature is different:
+   ```diff
+   -fireEvent[eventName](node: FiberRoot, eventProperties: NativeTestEvent)
+   +fireEvent(element: ReactTestInstance, eventName: string, ...data: Array<any>)
+   ```
+1. There is no `NativeTestEvent` - second and rest arguments are used instead.
+1. There are only 3 short-hand events: [`fireEvent.press`](`/docs/api/#fireeventpress-element-reacttestinstance--void`), [`fireEvent.changeText`](https://callstack.github.io/react-native-testing-library/docs/api/#fireeventchangetext-element-reacttestinstance-data-arrayany--void), [`fireEvent.scroll`](https://callstack.github.io/react-native-testing-library/docs/api/#fireeventchangetext-element-reacttestinstance-data-arrayany--void). For all other or custom events you can use the base signature.
