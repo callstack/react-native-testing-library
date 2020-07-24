@@ -55,7 +55,9 @@ This guide describes steps necessary to migrate from `@testing-library/react-nat
 
 ## Missing queries
 
-Our library doesn't implement `ByTitle` queries, which are targetting components with `title` prop, specifically `Button` and `RefreshControl`. To mitigate this issue, if you really need to query these components and can't figure out other way around it, you can use e.g. `UNSAFE_getByProps({title})` query.
+Our library doesn't implement `ByTitle` queries, which are targetting components with `title` prop, specifically `Button` and `RefreshControl`. If your tests only use `ByTitle` to target `Button` components, you can replace them with `ByText` queries, since React Native renders normal `Text` component under the hood.
+
+If you need to query `RefreshControl` component and can't figure out other way around it, you can use e.g. `UNSAFE_getByProps({title})` query.
 
 ## No custom Jest configuration
 
