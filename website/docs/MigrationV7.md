@@ -96,6 +96,14 @@ If you feel strongly about this difference, please send a PR to React Native, ad
 
 As a mitigation, you'll likely need to modify the logic of "touchable" components to bail if they're pressed in disabled state.
 
+## No [NativeTestInstance](https://www.native-testing-library.com/docs/api-test-instance) abstraction
+
+We don't provide any abstraction over `ReactTestInstance` returned by queries, but allow to use it directly to access queried component's `props` or `type` for that example.
+
+## No `container` returned from `render`
+
+There's no such key returned from the `render` function. If you must, use `react-test-renderer` directly, although we advise not doing so.
+
 ## Firing events changes
 
 There are slight differences in how `fireEvent` works in both libraries:
