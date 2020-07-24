@@ -14,9 +14,9 @@ describe('Application test', () => {
       </Provider>
     );
 
-    const { getByPlaceholder, getByText } = render(component);
+    const { getByPlaceholderText, getByText } = render(component);
 
-    const input = getByPlaceholder(/repository/i);
+    const input = getByPlaceholderText(/repository/i);
     expect(input).toBeTruthy();
 
     const textToEnter = 'This is a random element';

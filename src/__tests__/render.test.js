@@ -176,35 +176,39 @@ test('getAllByText, queryAllByText', () => {
   expect(queryAllByText('InExistent')).toHaveLength(0);
 });
 
-test('getByPlaceholder, queryByPlaceholder', () => {
-  const { getByPlaceholder, queryByPlaceholder } = render(<Banana />);
-  const input = getByPlaceholder(/custom/i);
+test('getByPlaceholderText, queryByPlaceholderText', () => {
+  const { getByPlaceholderText, queryByPlaceholderText } = render(<Banana />);
+  const input = getByPlaceholderText(/custom/i);
 
   expect(input.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
 
-  const sameInput = getByPlaceholder(PLACEHOLDER_FRESHNESS);
+  const sameInput = getByPlaceholderText(PLACEHOLDER_FRESHNESS);
 
   expect(sameInput.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
-  expect(() => getByPlaceholder('no placeholder')).toThrow(
+  expect(() => getByPlaceholderText('no placeholder')).toThrow(
     'No instances found'
   );
 
-  expect(queryByPlaceholder(/add/i)).toBe(input);
-  expect(queryByPlaceholder('no placeholder')).toBeNull();
-  expect(() => queryByPlaceholder(/fresh/)).toThrow('Expected 1 but found 2');
+  expect(queryByPlaceholderText(/add/i)).toBe(input);
+  expect(queryByPlaceholderText('no placeholder')).toBeNull();
+  expect(() => queryByPlaceholderText(/fresh/)).toThrow(
+    'Expected 1 but found 2'
+  );
 });
 
-test('getAllByPlaceholder, queryAllByPlaceholder', () => {
-  const { getAllByPlaceholder, queryAllByPlaceholder } = render(<Banana />);
-  const inputs = getAllByPlaceholder(/fresh/i);
+test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
+  const { getAllByPlaceholderText, queryAllByPlaceholderText } = render(
+    <Banana />
+  );
+  const inputs = getAllByPlaceholderText(/fresh/i);
 
   expect(inputs).toHaveLength(2);
-  expect(() => getAllByPlaceholder('no placeholder')).toThrow(
+  expect(() => getAllByPlaceholderText('no placeholder')).toThrow(
     'No instances found'
   );
 
-  expect(queryAllByPlaceholder(/fresh/i)).toEqual(inputs);
-  expect(queryAllByPlaceholder('no placeholder')).toHaveLength(0);
+  expect(queryAllByPlaceholderText(/fresh/i)).toEqual(inputs);
+  expect(queryAllByPlaceholderText('no placeholder')).toHaveLength(0);
 });
 
 test('getByDisplayValue, queryByDisplayValue', () => {

@@ -68,17 +68,17 @@ const { getByText } = render(<MyComponent />);
 const element = getByText('banana');
 ```
 
-### `ByPlaceholder`
+### `ByPlaceholderText`
 
-> getByPlaceholder, getAllByPlaceholder, queryByPlaceholder, queryAllByPlaceholder, findByPlaceholder, findAllByPlaceholder
+> getByPlaceholderText, getAllByPlaceholderText, queryByPlaceholderText, queryAllByPlaceholderText, findByPlaceholderText, findAllByPlaceholderText
 
 Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
 
 ```jsx
 import { render } from 'react-native-testing-library';
 
-const { getByPlaceholder } = render(<MyComponent />);
-const element = getByPlaceholder('username');
+const { getByPlaceholderText } = render(<MyComponent />);
+const element = getByPlaceholderText('username');
 ```
 
 ### `ByDisplayValue`

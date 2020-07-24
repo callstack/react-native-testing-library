@@ -3,18 +3,22 @@ import * as React from 'react';
 import {
   getByTestId,
   getByText,
-  getByPlaceholder,
+  getByPlaceholderText,
   getByDisplayValue,
   getAllByTestId,
   getAllByText,
-  getAllByPlaceholder,
+  getAllByPlaceholderText,
   getAllByDisplayValue,
   UNSAFE_getByType,
   UNSAFE_getByProps,
   UNSAFE_getAllByType,
   UNSAFE_getAllByProps,
 } from './getByAPI';
-import { createQueryByError, throwRemovedFunctionError } from './errors';
+import {
+  createQueryByError,
+  throwRemovedFunctionError,
+  throwRenamedFunctionError,
+} from './errors';
 
 export const queryByText = (instance: ReactTestInstance) =>
   function queryByTextFn(text: string | RegExp) {
@@ -25,12 +29,12 @@ export const queryByText = (instance: ReactTestInstance) =>
     }
   };
 
-export const queryByPlaceholder = (instance: ReactTestInstance) =>
-  function queryByPlaceholderFn(placeholder: string | RegExp) {
+export const queryByPlaceholderText = (instance: ReactTestInstance) =>
+  function queryByPlaceholderTextFn(placeholder: string | RegExp) {
     try {
-      return getByPlaceholder(instance)(placeholder);
+      return getByPlaceholderText(instance)(placeholder);
     } catch (error) {
-      return createQueryByError(error, queryByPlaceholderFn);
+      return createQueryByError(error, queryByPlaceholderTextFn);
     }
   };
 
@@ -62,11 +66,11 @@ export const queryAllByText = (instance: ReactTestInstance) => (
   }
 };
 
-export const queryAllByPlaceholder = (instance: ReactTestInstance) => (
+export const queryAllByPlaceholderText = (instance: ReactTestInstance) => (
   placeholder: string | RegExp
 ) => {
   try {
-    return getAllByPlaceholder(instance)(placeholder);
+    return getAllByPlaceholderText(instance)(placeholder);
   } catch (error) {
     return [];
   }
@@ -133,11 +137,11 @@ export const UNSAFE_queryAllByProps = (instance: ReactTestInstance) => (props: {
 export const queryByAPI = (instance: ReactTestInstance) => ({
   queryByTestId: queryByTestId(instance),
   queryByText: queryByText(instance),
-  queryByPlaceholder: queryByPlaceholder(instance),
+  queryByPlaceholderText: queryByPlaceholderText(instance),
   queryByDisplayValue: queryByDisplayValue(instance),
   queryAllByTestId: queryAllByTestId(instance),
   queryAllByText: queryAllByText(instance),
-  queryAllByPlaceholder: queryAllByPlaceholder(instance),
+  queryAllByPlaceholderText: queryAllByPlaceholderText(instance),
   queryAllByDisplayValue: queryAllByDisplayValue(instance),
 
   // Unsafe
@@ -167,5 +171,14 @@ export const queryByAPI = (instance: ReactTestInstance) => ({
     throwRemovedFunctionError(
       'queryAllByProps',
       'migration-v2#removed-functions'
+    ),
+
+  // Renamed
+  queryByPlaceholder: () =>
+    throwRenamedFunctionError('queryByPlaceholder', 'queryByPlaceholderText'),
+  queryAllByPlaceholder: () =>
+    throwRenamedFunctionError(
+      'queryAllByPlaceholder',
+      'queryAllByPlaceholderText'
     ),
 });
