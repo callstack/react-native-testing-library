@@ -1,0 +1,95 @@
+---
+id: migration-v7
+title: Migration to 7.0
+---
+
+:::caution
+We renamed the `react-native-testing-library` npm package to `@testing-library/react-native`, joining the Testing Library family.
+:::
+
+This guide consists of two parts, because it involves merging two libraries together into a single one. Please choose the one that's relevant to you:
+
+- [guide for `react-native-testing-library` users](#guide-for-react-native-testing-library-users)
+- [guide for `@testing-library/react-native` users](#guide-for-testing-libraryreact-native-users)
+
+# Guide for `react-native-testing-library` users
+
+This guide describes steps necessary to migrate from React Native Testing Library `v2.x` to `v7.0`.
+
+## Renaming the library
+
+1. Install `@testing-library/react-native`.
+1. Uninstall `react-native-testing-library`.
+1. Rename all references of `react-native-testing-library` to `@testing-library/react-native`.
+
+You may have noticed a strange v2 to v7 upgrade, skipping versions 3, 4, 5 and 6. This is because we renamed the `react-native-testing-library` npm package to `@testing-library/react-native`, officially joining the "Testing Library" family 🎉. We're merging existing two libraries into a single one. The [native-testing-library](https://github.com/testing-library/native-testing-library) repository will soon be archived and using `@testing-library/react-native` below v7, sourced from mentioned repository, is deprecated.
+
+For branding purposes we keep the "React Native Testing Library" name, similar to "React Testing Library". Only the npm published package is changing. The code repository also stays the same under Callstack governance.
+
+## New aliases
+
+To ease the migration of `@testing-library/react-native` users using version below v7, we've introduced new aliases to our accessibility queries:
+
+- `ByLabelText` aliasing `ByA11yLabel` queries
+- `ByHintText` aliasing `ByA11yHint` queries
+- `ByRole` aliasing `ByA11yRole` queries
+
+We like the new names and consider removing the aliases in future releases.
+
+## Renaming `ByPlaceholder` queries
+
+To ease the migration of `@testing-library/react-native` users using version below v7, we've renamed following queries:
+
+- `ByPlaceholder` -> `ByPlaceholderText`
+
+Please replace all occurrences of these queries in your codebase.
+
+# Guide for `@testing-library/react-native` users
+
+This guide describes steps necessary to migrate from `@testing-library/react-native` from `v6.0` to `v7.0`. Although the name stays the same, this is a different library, sourced at [Callstack GitHub repository](https://github.com/callstack/react-native-testing-library). We made sure the upgrade path is as easy for you as possible.
+
+## Changed helpers
+
+- `getQueriesForElement` is removed, rename it to `within`
+- `wait` and `waitForElement` is removed, rename these to `waitFor`
+
+## Missing queries
+
+Our library doesn't implement `ByTitle` queries, which are targetting components with `title` prop, specifically `Button` and `RefreshControl`. To mitigate this issue, if you really need to query these components and can't figure out other way around it, you can use e.g. `UNSAFE_getByProps({title})` query.
+
+## No custom Jest configuration
+
+Use the official React Native preset for Jest:
+
+```diff
+{
+  "jest": {
+-    "preset": "@testing-library/react-native"
++    "preset": "react-native"
+  }
+}
+```
+
+We're told this should also speed up your tests startup on cold cache. Using official preset has another benefit. The library is compatible with any version of React Native without introducing breaking changes.
+
+## Cleanup is included by default
+
+Cleaning up (unmounting) components after each test is included by default in the same manner as in React Testing Library. Please remove this setup file from Jest config:
+
+```diff
+{
+  "jest": {
+-    "setupFilesAfterEnv": ["@testing-library/react-native/cleanup-after-each"]
+  }
+}
+```
+
+You can opt-out of this behavior by running tests with `RNTL_SKIP_AUTO_CLEANUP=true` flag or importing from `@testing-library/react-native/pure`. We encourage you to keep the default though.
+
+## No special handling for `disabled` prop
+
+The `disabled` prop on "Touchable\*" components is treated in the same manner as any other prop. We realize that with our library you can press "touchable" components even though they're in "disabled" state, however this is something that we strongly believe should be fixed upstream, in React Native core.
+
+If you feel strongly about this difference, please send a PR to React Native, adding JavaScript logic to "onPress" functions, making them aware of disabled state in JS logic as well (it's handled on native side for at least iOS, which is the default platform that tests are running in).
+
+As a mitigation, you'll likely need to modify the logic of "touchable" components to bail if they're pressed in disabled state.
