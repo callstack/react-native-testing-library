@@ -197,17 +197,9 @@ test('should pass event up on disabled TouchableOpacity', () => {
   const handleInnerPress = jest.fn();
   const handleOuterPress = jest.fn();
   const screen = render(
-    <TouchableOpacity
-      testID="Outer"
-      onPress={handleOuterPress}
-      disabled={false}
-    >
-      <TouchableOpacity
-        testID="Inner"
-        onPress={handleInnerPress}
-        disabled={true}
-      >
-        <Text testID="Text">Inner Trigger</Text>
+    <TouchableOpacity onPress={handleOuterPress}>
+      <TouchableOpacity onPress={handleInnerPress} disabled={true}>
+        <Text>Inner Trigger</Text>
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -221,9 +213,9 @@ test('should pass event up on disabled Pressable', () => {
   const handleInnerPress = jest.fn();
   const handleOuterPress = jest.fn();
   const screen = render(
-    <Pressable testID="Outer" onPress={handleOuterPress} disabled={false}>
-      <Pressable testID="Inner" onPress={handleInnerPress} disabled={true}>
-        <Text testID="Text">Inner Trigger</Text>
+    <Pressable onPress={handleOuterPress}>
+      <Pressable onPress={handleInnerPress} disabled={true}>
+        <Text>Inner Trigger</Text>
       </Pressable>
     </Pressable>
   );
