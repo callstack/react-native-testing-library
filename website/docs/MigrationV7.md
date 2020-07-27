@@ -7,7 +7,7 @@ title: Migration to 7.0
 We renamed the `react-native-testing-library` npm package to `@testing-library/react-native`, joining the Testing Library family.
 :::
 
-This guide consists of two parts, because it involves merging two libraries together into a single one. Please choose the one that's relevant to you:
+As the version 7.0 involves merging two libraries together, there are two variants for migration guide, dependent on library you used previously:
 
 - [guide for `react-native-testing-library` users](#guide-for-react-native-testing-library-users)
 - [guide for `@testing-library/react-native` users](#guide-for-testing-libraryreact-native-users)
