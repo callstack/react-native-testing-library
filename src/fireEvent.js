@@ -9,9 +9,15 @@ const findEventHandler = (
 ) => {
   const eventHandler = toEventHandlerName(eventName);
 
-  if (typeof element.props[eventHandler] === 'function') {
+  if (
+    typeof element.props[eventHandler] === 'function' &&
+    element.props.disabled !== true
+  ) {
     return element.props[eventHandler];
-  } else if (typeof element.props[eventName] === 'function') {
+  } else if (
+    typeof element.props[eventName] === 'function' &&
+    element.props.disabled !== true
+  ) {
     return element.props[eventName];
   }
 

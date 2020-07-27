@@ -217,7 +217,7 @@ test('should pass event up on disabled TouchableOpacity', () => {
   expect(handleOuterPress).toHaveBeenCalledTimes(1);
 });
 
-test.only('should pass event up on disabled Pressable', () => {
+test('should pass event up on disabled Pressable', () => {
   const handleInnerPress = jest.fn();
   const handleOuterPress = jest.fn();
   const screen = render(
