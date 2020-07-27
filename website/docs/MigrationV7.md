@@ -38,7 +38,7 @@ We like the new names and consider removing the aliases in future releases.
 
 ## Renaming `ByPlaceholder` queries
 
-To ease the migration of `@testing-library/react-native` users using version below v7, we've renamed following queries:
+To improve compatibility with React Testing Library, and to ease the migration for `@testing-library/react-native` users using version below v7, we've renamed following queries:
 
 - `ByPlaceholder` -> `ByPlaceholderText`
 
