@@ -22,7 +22,7 @@ This guide describes steps necessary to migrate from React Native Testing Librar
 1. Uninstall `react-native-testing-library`.
 1. Rename all references of `react-native-testing-library` to `@testing-library/react-native`.
 
-You may have noticed a strange v2 to v7 upgrade, skipping versions 3, 4, 5 and 6. This is because we renamed the `react-native-testing-library` npm package to `@testing-library/react-native`, officially joining the "Testing Library" family 🎉. We're merging existing two libraries into a single one. The [native-testing-library](https://github.com/testing-library/native-testing-library) repository will soon be archived and using `@testing-library/react-native` below v7, sourced from mentioned repository, is deprecated.
+You may have noticed a strange v2 to v7 upgrade, skipping versions 3, 4, 5 and 6. This is because we renamed the `react-native-testing-library` npm package to `@testing-library/react-native`, officially joining the "Testing Library" family 🎉. We're merging existing two libraries into a single one. The [native-testing-library](https://github.com/testing-library/native-testing-library) repository, which had v6, will soon be archived and using `@testing-library/react-native` below v7, sourced from mentioned repository, is deprecated.
 
 For branding purposes we keep the "React Native Testing Library" name, similar to "React Testing Library". Only the npm published package is changing. The code repository also stays the same under Callstack governance.
 
