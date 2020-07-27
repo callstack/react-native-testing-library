@@ -28,7 +28,7 @@ For branding purposes we keep the "React Native Testing Library" name, similar t
 
 ## New aliases
 
-To ease the migration of `@testing-library/react-native` users using version below v7, we've introduced new aliases to our accessibility queries:
+To improve compatibility with React Testing Library, and ease the migration for `@testing-library/react-native` users using version below v7, we've introduced new aliases to our accessibility queries:
 
 - `ByLabelText` aliasing `ByA11yLabel` queries
 - `ByHintText` aliasing `ByA11yHint` queries
