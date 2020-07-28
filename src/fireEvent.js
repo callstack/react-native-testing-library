@@ -5,13 +5,19 @@ import { ErrorWithStack } from './helpers/errors';
 const findEventHandler = (
   element: ReactTestInstance,
   eventName: string,
-  callsite?: any
+  callsite?: any,
+  nearestHostDescendent?: ReactTestInstance
 ) => {
-  const eventHandler = toEventHandlerName(eventName);
+  const isHostComponent = typeof element.type === 'string';
+  const hostElement = isHostComponent ? element : nearestHostDescendent;
+  const isEventEnabled =
+    hostElement?.props.onStartShouldSetResponder?.() !== false;
 
-  if (typeof element.props[eventHandler] === 'function') {
-    return element.props[eventHandler];
-  } else if (typeof element.props[eventName] === 'function') {
+  const eventHandlerName = toEventHandlerName(eventName);
+
+  if (typeof element.props[eventHandlerName] === 'function' && isEventEnabled) {
+    return element.props[eventHandlerName];
+  } else if (typeof element.props[eventName] === 'function' && isEventEnabled) {
     return element.props[eventName];
   }
 
@@ -23,7 +29,7 @@ const findEventHandler = (
     );
   }
 
-  return findEventHandler(element.parent, eventName, callsite);
+  return findEventHandler(element.parent, eventName, callsite, hostElement);
 };
 
 const invokeEvent = (
