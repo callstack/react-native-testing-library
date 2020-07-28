@@ -27,14 +27,14 @@ You finally want to approach testing using only best practices, while Enzyme may
 
 ## This solution
 
-The `react-native-testing-library` is a lightweight solution for testing your React Native components. It provides light utility functions on top of `react-test-renderer` letting you always be up to date with latest React features and write any component tests you like. But really not any, it prevents you from testing implementation details because we stand this is a very bad practice.
+The React Native Testing Library is a lightweight solution for testing your React Native components. It provides light utility functions on top of `react-test-renderer` letting you always be up to date with latest React features and write any component tests you like. But really not any, it prevents you from testing implementation details because we stand this is a very bad practice.
 
 This library is a replacement for [Enzyme](http://airbnb.io/enzyme/). It is tested to work with Jest, but it should work with other test runners as well.
 
 ## Example
 
 ```jsx
-import { render, fireEvent } from 'react-native-testing-library';
+import { render, fireEvent } from '@testing-library/react-native';
 import { QuestionsBoard } from '../QuestionsBoard';
 
 test('form submits two answers', () => {
@@ -67,13 +67,13 @@ Open a Terminal in your project's folder and run:
 #### Using `yarn`
 
 ```sh
-yarn add --dev react-native-testing-library
+yarn add --dev @testing-library/react-native
 ```
 
 #### Using `npm`
 
 ```sh
-npm install --save-dev react-native-testing-library
+npm install --save-dev @testing-library/react-native
 ```
 
 This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!
@@ -115,7 +115,7 @@ As you may have noticed, it's not tied to React Native at all – you can safely
 
 ## API / Usage
 
-The [public API](https://callstack.github.io/react-native-testing-library/docs/api) of `react-native-testing-library` is focused around these essential methods:
+The [public API](https://callstack.github.io/react-native-testing-library/docs/api) of `@testing-library/react-native` is focused around these essential methods:
 
 - [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – deeply renders given React element and returns helpers to query the output components.
 - [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/api#fireevent) - invokes named event handler on the element.
