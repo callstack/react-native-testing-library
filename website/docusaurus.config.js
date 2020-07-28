@@ -7,7 +7,7 @@ const siteConfig = {
   url: 'https://callstack.github.io', // Your website URL
   baseUrl: '/react-native-testing-library/', // Base URL for your project
   // Used for publishing and more
-  projectName: 'react-native-testing-library',
+  projectName: '@testing-library/react-native',
   organizationName: 'callstack',
   favicon: 'img/owl.png',
 
