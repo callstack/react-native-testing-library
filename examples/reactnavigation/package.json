@@ -1,6 +1,6 @@
 {
   "name": "react-navigation-example",
-  "description": "Testing react-navigation with react-native-testing-library",
+  "description": "Testing React Navigation with RNTL",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -24,7 +24,7 @@
     "babel-jest": "^25.4.0",
     "jest": "^25.4.0",
     "metro-react-native-babel-preset": "^0.59.0",
-    "react-native-testing-library": "^1.13.0",
+    "@testing-library/react-native": "^7.0.0-rc.0",
     "react-test-renderer": "^16.13.1"
   }
 }

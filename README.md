@@ -142,8 +142,8 @@ Supported and used by [Rally Health](https://www.rallyhealth.com/careers-home).
 
 <!-- badges -->
 
-[version-badge]: https://img.shields.io/npm/v/react-native-testing-library.svg?style=flat-square
-[package]: https://www.npmjs.com/package/react-native-testing-library
+[version-badge]: https://img.shields.io/npm/v/@testing-library/react-native.svg?style=flat-square
+[package]: https://www.npmjs.com/package/@testing-library/react-native
 [prs-welcome-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs-welcome]: http://makeapullrequest.com
 [chat-badge]: https://img.shields.io/discord/426714625279524876.svg?style=flat-square&colorB=758ED3
