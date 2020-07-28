@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
-import { render, within } from '..';
+import { render, within, getQueriesForElement } from '..';
 
 test('within() exposes basic queries', async () => {
   const rootQueries = render(
@@ -90,4 +90,8 @@ test('within() exposes a11y queries', async () => {
   await expect(
     secondQueries.findAllByA11yHint('Same Hint')
   ).resolves.toHaveLength(1);
+});
+
+test('getQueriesForElement is alias to within', () => {
+  expect(getQueriesForElement).toBe(within);
 });

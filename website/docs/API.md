@@ -368,7 +368,10 @@ function waitForElementToBeRemoved<T>(
 Waits for non-deterministic periods of time until queried element is removed or times out. `waitForElementToBeRemoved` periodically calls `expectation` every `interval` milliseconds to determine whether the element has been removed or not.
 
 ```jsx
-import { render, waitForElementToBeRemoved } from 'react-native-testing-library';
+import {
+  render,
+  waitForElementToBeRemoved,
+} from 'react-native-testing-library';
 
 test('waiting for an Banana to be removed', async () => {
   const { getByText } = render(<Banana />);
@@ -387,7 +390,7 @@ In order to properly use `waitForElementToBeRemoved` you need at least React >=1
 
 If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to use `async/await` syntax as it will stall your tests.
 
-## `within`
+## `within`, `getQueriesForElement`
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/within.test.js)
 
@@ -395,9 +398,10 @@ Defined as:
 
 ```jsx
 function within(instance: ReactTestInstance): Queries
+function getQueriesForElement(instance: ReactTestInstance): Queries
 ```
 
-Perform [queries](./Queries.md) scoped to given element.
+`within` (also available as `getQueriesForElement` alias) performs [queries](./Queries.md) scoped to given element.
 
 :::note
 Please note that additional `render` specific operations like `update`, `unmount`, `debug`, `toJSON` are _not_ included.
