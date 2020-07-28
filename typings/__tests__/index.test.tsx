@@ -9,6 +9,7 @@ import {
   waitForElementToBeRemoved,
   act,
   within,
+  getQueriesForElement,
 } from '../..';
 
 interface HasRequiredProp {
@@ -306,6 +307,18 @@ const withinGet: Array<ReactTestInstance> = [
   within(instance).getByRole('button'),
   within(instance).getByA11yState({ busy: true }),
   within(instance).getByA11yValue({ min: 10 }),
+  getQueriesForElement(instance).getByText('Test'),
+  getQueriesForElement(instance).getByDisplayValue('Test'),
+  getQueriesForElement(instance).getByPlaceholderText('Test'),
+  getQueriesForElement(instance).getByTestId('Test'),
+  getQueriesForElement(instance).getByA11yLabel('Test'),
+  getQueriesForElement(instance).getByLabelText('Test'),
+  getQueriesForElement(instance).getByA11yHint('Test'),
+  getQueriesForElement(instance).getByHintText('Test'),
+  getQueriesForElement(instance).getByA11yRole('button'),
+  getQueriesForElement(instance).getByRole('button'),
+  getQueriesForElement(instance).getByA11yState({ busy: true }),
+  getQueriesForElement(instance).getByA11yValue({ min: 10 }),
 ];
 
 const withinGetAll: Array<ReactTestInstance[]> = [
@@ -321,6 +334,18 @@ const withinGetAll: Array<ReactTestInstance[]> = [
   within(instance).getAllByRole('button'),
   within(instance).getAllByA11yState({ busy: true }),
   within(instance).getAllByA11yValue({ min: 10 }),
+  getQueriesForElement(instance).getAllByText('Test'),
+  getQueriesForElement(instance).getAllByDisplayValue('Test'),
+  getQueriesForElement(instance).getAllByPlaceholderText('Test'),
+  getQueriesForElement(instance).getAllByTestId('Test'),
+  getQueriesForElement(instance).getAllByA11yLabel('Test'),
+  getQueriesForElement(instance).getAllByLabelText('button'),
+  getQueriesForElement(instance).getAllByA11yHint('Test'),
+  getQueriesForElement(instance).getAllByHintText('button'),
+  getQueriesForElement(instance).getAllByA11yRole('button'),
+  getQueriesForElement(instance).getAllByRole('button'),
+  getQueriesForElement(instance).getAllByA11yState({ busy: true }),
+  getQueriesForElement(instance).getAllByA11yValue({ min: 10 }),
 ];
 
 const withinQuery: Array<ReactTestInstance | null> = [
@@ -336,6 +361,18 @@ const withinQuery: Array<ReactTestInstance | null> = [
   within(instance).queryByRole('button'),
   within(instance).queryByA11yState({ busy: true }),
   within(instance).queryByA11yValue({ min: 10 }),
+  getQueriesForElement(instance).queryByText('Test'),
+  getQueriesForElement(instance).queryByDisplayValue('Test'),
+  getQueriesForElement(instance).queryByPlaceholderText('Test'),
+  getQueriesForElement(instance).queryByTestId('Test'),
+  getQueriesForElement(instance).queryByA11yLabel('Test'),
+  getQueriesForElement(instance).queryByLabelText('button'),
+  getQueriesForElement(instance).queryByA11yHint('Test'),
+  getQueriesForElement(instance).queryByHintText('button'),
+  getQueriesForElement(instance).queryByA11yRole('button'),
+  getQueriesForElement(instance).queryByRole('button'),
+  getQueriesForElement(instance).queryByA11yState({ busy: true }),
+  getQueriesForElement(instance).queryByA11yValue({ min: 10 }),
 ];
 
 const withinQueryAll: Array<ReactTestInstance[]> = [
@@ -351,6 +388,18 @@ const withinQueryAll: Array<ReactTestInstance[]> = [
   within(instance).queryAllByRole('button'),
   within(instance).queryAllByA11yState({ busy: true }),
   within(instance).queryAllByA11yValue({ min: 10 }),
+  getQueriesForElement(instance).queryAllByText('Test'),
+  getQueriesForElement(instance).queryAllByDisplayValue('Test'),
+  getQueriesForElement(instance).queryAllByPlaceholderText('Test'),
+  getQueriesForElement(instance).queryAllByTestId('Test'),
+  getQueriesForElement(instance).queryAllByA11yLabel('Test'),
+  getQueriesForElement(instance).queryAllByLabelText('Test'),
+  getQueriesForElement(instance).queryAllByA11yHint('Test'),
+  getQueriesForElement(instance).queryAllByHintText('Test'),
+  getQueriesForElement(instance).queryAllByA11yRole('button'),
+  getQueriesForElement(instance).queryAllByRole('button'),
+  getQueriesForElement(instance).queryAllByA11yState({ busy: true }),
+  getQueriesForElement(instance).queryAllByA11yValue({ min: 10 }),
 ];
 
 const withinFind: Promise<ReactTestInstance>[] = [
@@ -366,6 +415,18 @@ const withinFind: Promise<ReactTestInstance>[] = [
   within(instance).findByRole('button'),
   within(instance).findByA11yState({ busy: true }),
   within(instance).findByA11yValue({ min: 10 }),
+  getQueriesForElement(instance).findByText('Test'),
+  getQueriesForElement(instance).findByDisplayValue('Test'),
+  getQueriesForElement(instance).findByPlaceholderText('Test'),
+  getQueriesForElement(instance).findByTestId('Test'),
+  getQueriesForElement(instance).findByA11yLabel('Test'),
+  getQueriesForElement(instance).findByLabelText('Test'),
+  getQueriesForElement(instance).findByA11yHint('Test'),
+  getQueriesForElement(instance).findByHintText('Test'),
+  getQueriesForElement(instance).findByA11yRole('button'),
+  getQueriesForElement(instance).findByRole('button'),
+  getQueriesForElement(instance).findByA11yState({ busy: true }),
+  getQueriesForElement(instance).findByA11yValue({ min: 10 }),
 ];
 
 const withinFindAll: Promise<ReactTestInstance[]>[] = [
@@ -381,4 +442,16 @@ const withinFindAll: Promise<ReactTestInstance[]>[] = [
   within(instance).findAllByRole('button'),
   within(instance).findAllByA11yState({ busy: true }),
   within(instance).findAllByA11yValue({ min: 10 }),
+  getQueriesForElement(instance).findAllByText('Test'),
+  getQueriesForElement(instance).findAllByDisplayValue('Test'),
+  getQueriesForElement(instance).findAllByPlaceholderText('Test'),
+  getQueriesForElement(instance).findAllByTestId('Test'),
+  getQueriesForElement(instance).findAllByA11yLabel('Test'),
+  getQueriesForElement(instance).findAllByLabelText('Test'),
+  getQueriesForElement(instance).findAllByA11yHint('Test'),
+  getQueriesForElement(instance).findAllByHintText('Test'),
+  getQueriesForElement(instance).findAllByA11yRole('button'),
+  getQueriesForElement(instance).findAllByRole('button'),
+  getQueriesForElement(instance).findAllByA11yState({ busy: true }),
+  getQueriesForElement(instance).findAllByA11yValue({ min: 10 }),
 ];
