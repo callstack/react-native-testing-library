@@ -224,3 +224,21 @@ test('should pass event up on disabled Pressable', () => {
   expect(handleInnerPress).not.toHaveBeenCalled();
   expect(handleOuterPress).toHaveBeenCalledTimes(1);
 });
+
+const TestComponent = ({ onPress }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Text>Trigger Test</Text>
+    </TouchableOpacity>
+  );
+};
+
+test('is not fooled by non-native disabled prop', () => {
+  const handlePress = jest.fn();
+  const screen = render(
+    <TestComponent onPress={handlePress} disabled={true} />
+  );
+
+  fireEvent.press(screen.getByText('Trigger Test'));
+  expect(handlePress).toHaveBeenCalledTimes(1);
+});
