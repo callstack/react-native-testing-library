@@ -9,21 +9,15 @@ const findEventHandler = (
   nearestHostDescendent?: ReactTestInstance
 ) => {
   const isHostComponent = typeof element.type === 'string';
-  const nearestHostComponent = isHostComponent
-    ? element
-    : nearestHostDescendent;
+  const hostElement = isHostComponent ? element : nearestHostDescendent;
+  const isEventEnabled =
+    hostElement?.props.onStartShouldSetResponder?.() !== false;
 
-  const eventHandler = toEventHandlerName(eventName);
+  const eventHandlerName = toEventHandlerName(eventName);
 
-  if (
-    typeof element.props[eventHandler] === 'function' &&
-    nearestHostComponent?.props.onStartShouldSetResponder?.() !== false
-  ) {
-    return element.props[eventHandler];
-  } else if (
-    typeof element.props[eventName] === 'function' &&
-    nearestHostComponent?.props.onStartShouldSetResponder?.() !== false
-  ) {
+  if (typeof element.props[eventHandlerName] === 'function' && isEventEnabled) {
+    return element.props[eventHandlerName];
+  } else if (typeof element.props[eventName] === 'function' && isEventEnabled) {
     return element.props[eventName];
   }
 
@@ -35,12 +29,7 @@ const findEventHandler = (
     );
   }
 
-  return findEventHandler(
-    element.parent,
-    eventName,
-    callsite,
-    nearestHostComponent
-  );
+  return findEventHandler(element.parent, eventName, callsite, hostElement);
 };
 
 const invokeEvent = (
