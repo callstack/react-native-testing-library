@@ -7,7 +7,7 @@ import render from './render';
 import shallow from './shallow';
 import waitFor, { waitForElement } from './waitFor';
 import waitForElementToBeRemoved from './waitForElementToBeRemoved';
-import within from './within';
+import { within, getQueriesForElement } from './within';
 
 export { act };
 export { cleanup };
@@ -17,4 +17,4 @@ export { render };
 export { shallow };
 export { waitFor, waitForElement };
 export { waitForElementToBeRemoved };
-export { within };
+export { within, getQueriesForElement };
