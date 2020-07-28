@@ -3,7 +3,7 @@ id: api
 title: API
 ---
 
-This page gathers public API of `@testing-library/react-native` along with usage examples.
+This page gathers public API of React Native Testing Library along with usage examples.
 
 ## `render`
 
