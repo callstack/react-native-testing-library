@@ -67,13 +67,13 @@ Open a Terminal in your project's folder and run:
 #### Using `yarn`
 
 ```sh
-yarn add --dev react-native-testing-library
+yarn add --dev @testing-library/react-native
 ```
 
 #### Using `npm`
 
 ```sh
-npm install --save-dev react-native-testing-library
+npm install --save-dev @testing-library/react-native
 ```
 
 This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!
@@ -115,7 +115,7 @@ As you may have noticed, it's not tied to React Native at all – you can safely
 
 ## API / Usage
 
-The [public API](https://callstack.github.io/react-native-testing-library/docs/api) of `react-native-testing-library` is focused around these essential methods:
+The [public API](https://callstack.github.io/react-native-testing-library/docs/api) of `@testing-library/react-native` is focused around these essential methods:
 
 - [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – deeply renders given React element and returns helpers to query the output components.
 - [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/api#fireevent) - invokes named event handler on the element.
