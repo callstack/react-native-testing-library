@@ -50,7 +50,6 @@ This guide describes steps necessary to migrate from `@testing-library/react-nat
 
 ## Changed helpers
 
-- `getQueriesForElement` is removed, rename it to `within`
 - `wait` and `waitForElement` is removed, rename these to `waitFor`
 
 ## Missing queries

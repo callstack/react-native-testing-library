@@ -346,6 +346,9 @@ export declare const waitForElementToBeRemoved: WaitForElementToBeRemovedFunctio
 
 export declare const act: (callback: () => void) => Thenable;
 export declare const within: (instance: ReactTestInstance) => Queries;
+export declare const getQueriesForElement: (
+  instance: ReactTestInstance
+) => Queries;
 
 /**
  * @deprecated This function has been removed. Please use `waitFor` function.
