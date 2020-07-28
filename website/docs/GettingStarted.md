@@ -13,14 +13,14 @@ You finally want to approach testing using only best practices, while Enzyme may
 
 ## This solution
 
-The `react-native-testing-library` is a lightweight solution for testing your React Native components. It provides light utility functions on top of `react-test-renderer` letting you always be up to date with latest React features and write any component tests you like. It also prevents you from testing implementation details because we believe this is a very bad practice.
+The React Native Testing Library is a lightweight solution for testing your React Native components. It provides light utility functions on top of `react-test-renderer` letting you always be up to date with latest React features and write any component tests you like. It also prevents you from testing implementation details because we believe this is a very bad practice.
 
 This library is a replacement for [Enzyme](http://airbnb.io/enzyme/).
 
 ## Example
 
 ```jsx
-import { render, fireEvent } from 'react-native-testing-library';
+import { render, fireEvent } from '@testing-library/react-native';
 import { QuestionsBoard } from '../QuestionsBoard';
 
 test('form submits two answers', () => {
@@ -53,13 +53,13 @@ Open a Terminal in your project's folder and run:
 #### Using `yarn`
 
 ```sh
-yarn add --dev react-native-testing-library
+yarn add --dev @testing-library/react-native
 ```
 
 #### Using `npm`
 
 ```sh
-npm install --save-dev react-native-testing-library
+npm install --save-dev @testing-library/react-native
 ```
 
 This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!

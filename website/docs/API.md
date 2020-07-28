@@ -3,7 +3,7 @@ id: api
 title: API
 ---
 
-This page gathers public API of `react-native-testing-library` along with usage examples.
+This page gathers public API of React Native Testing Library along with usage examples.
 
 ## `render`
 
@@ -26,7 +26,7 @@ function render(
 Deeply renders given React element and returns helpers to query the output components structure.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 import { QuestionsBoard } from '../QuestionsBoard';
 
 test('should verify two questions', () => {
@@ -50,7 +50,7 @@ See [Queries](./Queries.md) for a complete list.
 #### Example
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { getByText, queryByA11yStates } = render(<Component />);
 ```
@@ -134,7 +134,7 @@ Please note that this is done automatically if the testing framework you're usin
 For example, if you're using the `jest` testing framework, then you would need to use the `afterEach` hook like so:
 
 ```jsx
-import { cleanup, render } from 'react-native-testing-library/pure';
+import { cleanup, render } from '@testing-library/react-native/pure';
 import { View } from 'react-native';
 
 afterEach(cleanup);
@@ -173,7 +173,7 @@ Fires native-like event with data.
 Invokes a given event handler (whether native or custom) on the element, bubbling to the root of the rendered tree.
 
 ```jsx
-import { render, fireEvent } from 'react-native-testing-library';
+import { render, fireEvent } from '@testing-library/react-native';
 
 test('fire changeText event', () => {
   const onEventMock = jest.fn();
@@ -192,7 +192,7 @@ An example using `fireEvent` with native events that aren't already aliased by t
 
 ```jsx
 import { TextInput, View } from 'react-native';
-import { fireEvent, render } from 'react-native-testing-library';
+import { fireEvent, render } from '@testing-library/react-native';
 
 const onBlurMock = jest.fn();
 
@@ -220,7 +220,7 @@ Invokes `press` event handler on the element or parent element in the tree.
 
 ```jsx
 import { View, Text, TouchableOpacity } from 'react-native';
-import { render, fireEvent } from 'react-native-testing-library';
+import { render, fireEvent } from '@testing-library/react-native';
 
 const onPressMock = jest.fn();
 
@@ -242,7 +242,7 @@ Invokes `changeText` event handler on the element or parent element in the tree.
 
 ```jsx
 import { View, TextInput } from 'react-native';
-import { render, fireEvent } from 'react-native-testing-library';
+import { render, fireEvent } from '@testing-library/react-native';
 
 const onChangeTextMock = jest.fn();
 const CHANGE_TEXT = 'content';
@@ -264,7 +264,7 @@ Invokes `scroll` event handler on the element or parent element in the tree.
 
 ```jsx
 import { ScrollView, Text } from 'react-native';
-import { render, fireEvent } from 'react-native-testing-library';
+import { render, fireEvent } from '@testing-library/react-native';
 
 const onScrollMock = jest.fn();
 const eventData = {
@@ -288,7 +288,7 @@ fireEvent.scroll(getByText('scroll-view'), eventData);
 
 ```jsx
 import { FlatList, View } from 'react-native';
-import { render, fireEvent } from 'react-native-testing-library';
+import { render, fireEvent } from '@testing-library/react-native';
 
 const onEndReached = jest.fn();
 const { getByType } = render(
@@ -337,7 +337,7 @@ function waitFor<T>(
 Waits for non-deterministic periods of time until your element appears or times out. `waitFor` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
 
 ```jsx
-import { render, waitFor } from 'react-native-testing-library';
+import { render, waitFor } from '@testing-library/react-native';
 
 test('waiting for an Banana to be ready', async () => {
   const { getByText } = render(<Banana />);
@@ -371,7 +371,7 @@ Waits for non-deterministic periods of time until queried element is removed or 
 import {
   render,
   waitForElementToBeRemoved,
-} from 'react-native-testing-library';
+} from '@testing-library/react-native';
 
 test('waiting for an Banana to be removed', async () => {
   const { getByText } = render(<Banana />);
@@ -425,7 +425,7 @@ Use cases for scoped queries include:
 Each of the get APIs listed in the render section above have a complimentary query API. The get APIs will throw errors if a proper node cannot be found. This is normally the desired effect. However, if you want to make an assertion that an element is not present in the hierarchy, then you can use the query API instead:
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { queryByText } = render(<Form />);
 const submitButton = queryByText('submit');
@@ -437,7 +437,7 @@ expect(submitButton).toBeNull(); // it doesn't exist
 Each of the query APIs have a corresponding queryAll version that always returns an Array of matching nodes. getAll is the same but throws when the array has a length of 0.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { queryAllByText } = render(<Forms />);
 const submitButtons = queryAllByText('submit');
