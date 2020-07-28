@@ -3,7 +3,7 @@ id: react-navigation
 title: React Navigation
 ---
 
-This section deals with integrating `react-native-testing-library` with `react-navigation`, using Jest.
+This section deals with integrating `@testing-library/react-native` with `react-navigation`, using Jest.
 
 ## Setting up
 
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
 Install required dev dependencies:
 
 ```
-$ yarn add -D jest react-native-testing-library
+$ yarn add -D jest @testing-library/react-native
 ```
 
 Create your `jest.config.js` file (or place the following properties in your `package.json` as a "jest" property)
@@ -154,7 +154,7 @@ Let's a [`AppNavigator.test.js`](https://github.com/callstack/react-native-testi
 ```jsx
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { render, fireEvent } from 'react-native-testing-library';
+import { render, fireEvent } from '@testing-library/react-native';
 
 import AppNavigator from '../AppNavigator';
 

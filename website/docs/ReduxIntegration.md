@@ -18,7 +18,7 @@ For `./components/AddTodo.test.js`
 ```jsx
 import React from 'react';
 import { Provider } from 'react-redux';
-import { cleanup, fireEvent, render } from 'react-native-testing-library';
+import { cleanup, fireEvent, render } from '@testing-library/react-native';
 import configureStore from '../store';
 import AddTodo from './AddTodo';
 
@@ -65,7 +65,7 @@ For the `./components/TodoList.js`
 ```jsx
 import React from 'react';
 import { Provider } from 'react-redux';
-import { fireEvent, render } from 'react-native-testing-library';
+import { fireEvent, render } from '@testing-library/react-native';
 import configureStore from '../store';
 import TodoList from './TodoList';
 

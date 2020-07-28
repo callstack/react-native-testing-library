@@ -63,4 +63,4 @@ You can report issues on our [bug tracker](https://github.com/callstack/react-na
 
 ## License
 
-By contributing to `react-native-testing-library`, you agree that your contributions will be licensed under its **MIT** license.
+By contributing to `@testing-library/react-native`, you agree that your contributions will be licensed under its **MIT** license.
