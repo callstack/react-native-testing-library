@@ -188,6 +188,10 @@ test('fire changeText event', () => {
 });
 ```
 
+:::note
+Please note that from version `7.0` `fireEvent` performs checks that should prevent events firing on disabled elements.
+:::
+
 An example using `fireEvent` with native events that aren't already aliased by the `fireEvent` api.
 
 ```jsx

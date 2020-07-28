@@ -44,6 +44,12 @@ To improve compatibility with React Testing Library, and to ease the migration f
 
 Please replace all occurrences of these queries in your codebase.
 
+## `fireEvent` support for disabled components
+
+To improve compatibility with real React Native environment `fireEvent` now performs checks whether the component is disabled before firing an event on it. The checks internally uses `onStartShouldSetResponder` prop to establish should event fire, which should resemble the actual React Native runtime.
+
+If your code contained any workarounds for preventing events firing on disabled events, you should now be able to remove them.
+
 # Guide for `@testing-library/react-native` users
 
 This guide describes steps necessary to migrate from `@testing-library/react-native` from `v6.0` to `v7.0`. Although the name stays the same, this is a different library, sourced at [Callstack GitHub repository](https://github.com/callstack/react-native-testing-library). We made sure the upgrade path is as easy for you as possible.
@@ -87,14 +93,6 @@ Cleaning up (unmounting) components after each test is included by default in th
 ```
 
 You can opt-out of this behavior by running tests with `RNTL_SKIP_AUTO_CLEANUP=true` flag or importing from `@testing-library/react-native/pure`. We encourage you to keep the default though.
-
-## No special handling for `disabled` prop
-
-The `disabled` prop on "Touchable\*" components is treated in the same manner as any other prop. We realize that with our library you can press "touchable" components even though they're in "disabled" state, however this is something that we strongly believe should be fixed upstream, in React Native core.
-
-If you feel strongly about this difference, please send a PR to React Native, adding JavaScript logic to "onPress" functions, making them aware of disabled state in JS logic as well (it's handled on native side for at least iOS, which is the default platform that tests are running in).
-
-As a mitigation, you'll likely need to modify the logic of "touchable" components to bail if they're pressed in disabled state.
 
 ## No [NativeTestInstance](https://www.native-testing-library.com/docs/api-test-instance) abstraction
 
