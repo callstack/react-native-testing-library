@@ -3,6 +3,7 @@ import React from 'react';
 import {
   View,
   TouchableOpacity,
+  Pressable,
   Text,
   ScrollView,
   TextInput,
@@ -162,4 +163,82 @@ test('event with multiple handler parameters', () => {
   fireEvent(getByText('Custom component'), 'handlePress', 'param1', 'param2');
 
   expect(handlePress).toHaveBeenCalledWith('param1', 'param2');
+});
+
+test('should not fire on disabled TouchableOpacity', () => {
+  const handlePress = jest.fn();
+  const screen = render(
+    <TouchableOpacity onPress={handlePress} disabled={true}>
+      <Text>Trigger</Text>
+    </TouchableOpacity>
+  );
+
+  expect(() => fireEvent.press(screen.getByText('Trigger'))).toThrow(
+    'No handler function found for event: "press"'
+  );
+  expect(handlePress).not.toHaveBeenCalled();
+});
+
+test('should not fire on disabled Pressable', () => {
+  const handlePress = jest.fn();
+  const screen = render(
+    <Pressable onPress={handlePress} disabled={true}>
+      <Text>Trigger</Text>
+    </Pressable>
+  );
+
+  expect(() => fireEvent.press(screen.getByText('Trigger'))).toThrow(
+    'No handler function found for event: "press"'
+  );
+  expect(handlePress).not.toHaveBeenCalled();
+});
+
+test('should pass event up on disabled TouchableOpacity', () => {
+  const handleInnerPress = jest.fn();
+  const handleOuterPress = jest.fn();
+  const screen = render(
+    <TouchableOpacity onPress={handleOuterPress}>
+      <TouchableOpacity onPress={handleInnerPress} disabled={true}>
+        <Text>Inner Trigger</Text>
+      </TouchableOpacity>
+    </TouchableOpacity>
+  );
+
+  fireEvent.press(screen.getByText('Inner Trigger'));
+  expect(handleInnerPress).not.toHaveBeenCalled();
+  expect(handleOuterPress).toHaveBeenCalledTimes(1);
+});
+
+test('should pass event up on disabled Pressable', () => {
+  const handleInnerPress = jest.fn();
+  const handleOuterPress = jest.fn();
+  const screen = render(
+    <Pressable onPress={handleOuterPress}>
+      <Pressable onPress={handleInnerPress} disabled={true}>
+        <Text>Inner Trigger</Text>
+      </Pressable>
+    </Pressable>
+  );
+
+  fireEvent.press(screen.getByText('Inner Trigger'));
+  expect(handleInnerPress).not.toHaveBeenCalled();
+  expect(handleOuterPress).toHaveBeenCalledTimes(1);
+});
+
+const TestComponent = ({ onPress }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Text>Trigger Test</Text>
+    </TouchableOpacity>
+  );
+};
+
+test('is not fooled by non-native disabled prop', () => {
+  const handlePress = jest.fn();
+  const screen = render(
+    <TestComponent onPress={handlePress} disabled={true} />
+  );
+
+  fireEvent.press(screen.getByText('Trigger Test'));
+  expect(handlePress).toHaveBeenCalledTimes(1);
 });
