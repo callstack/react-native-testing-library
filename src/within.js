@@ -4,7 +4,7 @@ import { queryByAPI } from './helpers/queryByAPI';
 import { findByAPI } from './helpers/findByAPI';
 import a11yAPI from './helpers/a11yAPI';
 
-export default function within(instance: ReactTestInstance) {
+export function within(instance: ReactTestInstance) {
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),
@@ -12,3 +12,5 @@ export default function within(instance: ReactTestInstance) {
     ...a11yAPI(instance),
   };
 }
+
+export const getQueriesForElement = within;
