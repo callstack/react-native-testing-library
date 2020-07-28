@@ -125,6 +125,7 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 
 ## Migration Guides
 
+- [Migration to 7.0](https://callstack.github.io/react-native-testing-library/docs/migration-v7)
 - [Migration to 2.0](https://callstack.github.io/react-native-testing-library/docs/migration-v2)
 
 ## Related External Resources
