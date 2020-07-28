@@ -154,7 +154,7 @@ Let's a [`AppNavigator.test.js`](https://github.com/callstack/react-native-testi
 ```jsx
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { render, fireEvent } from 'react-native-testing-library';
+import { render, fireEvent } from '@testing-library/react-native';
 
 import AppNavigator from '../AppNavigator';
 

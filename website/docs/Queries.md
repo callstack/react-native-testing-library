@@ -62,7 +62,7 @@ Returns a `ReactTestInstance` with matching text – may be a string or regular 
 This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://facebook.github.io/react-native/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { getByText } = render(<MyComponent />);
 const element = getByText('banana');
@@ -75,7 +75,7 @@ const element = getByText('banana');
 Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { getByPlaceholderText } = render(<MyComponent />);
 const element = getByPlaceholderText('username');
@@ -88,7 +88,7 @@ const element = getByPlaceholderText('username');
 Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { getByDisplayValue } = render(<MyComponent />);
 const element = getByDisplayValue('username');
@@ -101,7 +101,7 @@ const element = getByDisplayValue('username');
 Returns a `ReactTestInstance` with matching `testID` prop.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { getByTestId } = render(<MyComponent />);
 const element = getByTestId('unique-id');
@@ -120,7 +120,7 @@ Please be mindful when using these API and **treat it as an escape hatch**. Your
 Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { getByA11yLabel } = render(<MyComponent />);
 const element = getByA11yLabel('my-label');
@@ -135,7 +135,7 @@ const element = getByA11yLabel('my-label');
 Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { getByA11yHint } = render(<MyComponent />);
 const element = getByA11yHint('my-hint');
@@ -149,7 +149,7 @@ const element = getByA11yHint('my-hint');
 Returns a `ReactTestInstance` with matching `accessibilityStates` prop.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { getByA11yStates } = render(<MyComponent />);
 const element = getByA11yStates(['checked']);
@@ -165,7 +165,7 @@ const element2 = getByA11yStates('checked');
 Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { getByA11yRole } = render(<MyComponent />);
 const element = getByA11yRole('button');
@@ -179,7 +179,7 @@ const element = getByA11yRole('button');
 Returns a `ReactTestInstance` with matching `accessibilityState` prop.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { getByA11yState } = render(<Component />);
 const element = getByA11yState({ disabled: true });
@@ -193,7 +193,7 @@ const element = getByA11yState({ disabled: true });
 Returns a `ReactTestInstance` with matching `accessibilityValue` prop.
 
 ```jsx
-import { render } from 'react-native-testing-library';
+import { render } from '@testing-library/react-native';
 
 const { getByA11yValue } = render(<Component />);
 const element = getByA11yValue({ min: 40 });

@@ -20,7 +20,7 @@ This library is a replacement for [Enzyme](http://airbnb.io/enzyme/).
 ## Example
 
 ```jsx
-import { render, fireEvent } from 'react-native-testing-library';
+import { render, fireEvent } from '@testing-library/react-native';
 import { QuestionsBoard } from '../QuestionsBoard';
 
 test('form submits two answers', () => {
