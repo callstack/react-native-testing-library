@@ -4,17 +4,17 @@ title: Migration to 7.0
 ---
 
 :::caution
-We renamed the `react-native-testing-library` npm package to `@testing-library/react-native`, joining the Testing Library family.
+We renamed the `react-native-testing-library` npm package to `@testing-library/react-native`, officially joining the "Testing Library" family 🎉.
 :::
 
 As the version 7.0 involves merging two libraries together, there are two variants for migration guide, dependent on library you used previously:
 
-- [guide for `react-native-testing-library` users](#guide-for-react-native-testing-library-users)
-- [guide for `@testing-library/react-native` users](#guide-for-testing-libraryreact-native-users)
+- [Guide for `react-native-testing-library` users](#guide-for-react-native-testing-library-users)
+- [Guide for `@testing-library/react-native` users](#guide-for-testing-libraryreact-native-users)
 
 # Guide for `react-native-testing-library` users
 
-This guide describes steps necessary to migrate from React Native Testing Library `v2.x` to `v7.0`.
+This guide describes steps necessary to migrate from React Native Testing Library `v2.x` or `v6.0` to `v7.0`.
 
 ## Renaming the library
 
@@ -46,7 +46,7 @@ Please replace all occurrences of these queries in your codebase.
 
 ## `fireEvent` support for disabled components
 
-To improve compatibility with real React Native environment `fireEvent` now performs checks whether the component is disabled before firing an event on it. The checks internally uses `onStartShouldSetResponder` prop to establish should event fire, which should resemble the actual React Native runtime.
+To improve compatibility with the real React Native environment `fireEvent` now performs checks whether the component is "disabled" before firing an event on it. It uses the Responder system to establish should the event fire, which resembles the actual React Native runtime closer than we used to.
 
 If your code contained any workarounds for preventing events firing on disabled events, you should now be able to remove them.
 
@@ -54,13 +54,17 @@ If your code contained any workarounds for preventing events firing on disabled 
 
 This guide describes steps necessary to migrate from `@testing-library/react-native` from `v6.0` to `v7.0`. Although the name stays the same, this is a different library, sourced at [Callstack GitHub repository](https://github.com/callstack/react-native-testing-library). We made sure the upgrade path is as easy for you as possible.
 
-## Changed helpers
+## Renaming "wait" helpers
 
-- `wait` and `waitForElement` are removed, rename these to `waitFor`
+The `wait` and `waitForElement` helpers are replaced by `waitFor`. Please rename all occurrences of these in your codebase.
 
-## Missing queries
+## Changes to `ByTestId` queries
 
-Our library doesn't implement `ByTitle` queries, which are targetting components with `title` prop, specifically `Button` and `RefreshControl`. If your tests only use `ByTitle` to target `Button` components, you can replace them with `ByText` queries, since React Native renders normal `Text` component under the hood.
+The `ByTestId` queries don't accept RegExps. Please use strings instead. We're happy to accept PRs adding this functionality :).
+
+## No `ByTitle` queries
+
+Our library doesn't implement `ByTitle` queries, which are targetting components with `title` prop, specifically `Button` and `RefreshControl`. If your tests only use `ByTitle` to target `Button` components, you can replace them with `ByText` queries, since React Native renders `Text` under the hood.
 
 If you need to query `RefreshControl` component and can't figure out other way around it, you can use e.g. `UNSAFE_getByProps({title})` query.
 
@@ -77,7 +81,7 @@ Use the official React Native preset for Jest:
 }
 ```
 
-We're told this should also speed up your tests startup on cold cache. Using official preset has another benefit. The library is compatible with any version of React Native without introducing breaking changes.
+We're told this also speeds up your tests startup on cold cache. Using official preset has another benefit – the library is compatible with any version of React Native without introducing breaking changes.
 
 ## Cleanup is included by default
 
@@ -112,4 +116,4 @@ There are slight differences in how `fireEvent` works in both libraries:
    +fireEvent(element: ReactTestInstance, eventName: string, ...data: Array<any>)
    ```
 1. There is no `NativeTestEvent` - second and rest arguments are used instead.
-1. There are only 3 short-hand events: [`fireEvent.press`](`/docs/api/#fireeventpress-element-reacttestinstance--void`), [`fireEvent.changeText`](https://callstack.github.io/react-native-testing-library/docs/api/#fireeventchangetext-element-reacttestinstance-data-arrayany--void), [`fireEvent.scroll`](https://callstack.github.io/react-native-testing-library/docs/api/#fireeventchangetext-element-reacttestinstance-data-arrayany--void). For all other or custom events you can use the base signature.
+1. There are only 3 short-hand events: [`fireEvent.press`](`/docs/api/#fireeventpress-element-reacttestinstance--void`), [`fireEvent.changeText`](https://callstack.github.io/react-native-testing-library/docs/api/#fireeventchangetext-element-reacttestinstance-data-arrayany--void) and [`fireEvent.scroll`](https://callstack.github.io/react-native-testing-library/docs/api/#fireeventchangetext-element-reacttestinstance-data-arrayany--void). For all other or custom events you can use the base signature.
