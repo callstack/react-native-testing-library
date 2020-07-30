@@ -1,13 +1,12 @@
 <div align='center'>
+  <h1>React Native Testing Library</h1>
   <img
     height="80"
     width="80"
     alt="owl"
     src="https://raw.githubusercontent.com/callstack/react-native-testing-library/master/website/static/img/owl.png"
   />
-  <h1>React Native Testing Library</h1>
-
-  <p>Lightweight React Native testing utilities helping you write better tests with less effort.</P>
+  <p>Simple and complete React Native testing utilities that encourage good testing practices.</P>
 </div>
 
 [![Version][version-badge]][package]
@@ -15,50 +14,17 @@
 [![Chat][chat-badge]][chat]
 [![Sponsored by Callstack][callstack-badge]][callstack]
 
-_Appreciation notice: This project is heavily inspired by [react-testing-library](https://github.com/testing-library/react-testing-library). Go check it out and use it to test your web React apps._
-
 ## The problem
 
-You want to write maintainable tests for your React Native components without testing implementation details, but then you're told to use Enzyme, which you learn has no React Native adapter, meaning only shallow rendering is supported. And you want to render deep! But deep rendering may otherwise require jsdom (React Native isn't the web!), while doing deep rendering with `react-test-renderer` is so painful.
-
-You would also like to use the newest React features, but you need to wait for your testing library's abstractions to catch up and it takes a while.
-
-You finally want to approach testing using only best practices, while Enzyme may encourage assertions on implementation details.
+You want to write maintainable tests for your React Native components. As a part of this goal, you want your tests to avoid including implementation details of your components and rather focus on making your tests give you the confidence for which they are intended. As part of this, you want your testbase to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don't break your tests and slow you and your team down.
 
 ## This solution
 
-The React Native Testing Library is a lightweight solution for testing your React Native components. It provides light utility functions on top of `react-test-renderer` letting you always be up to date with latest React features and write any component tests you like. But really not any, it prevents you from testing implementation details because we stand this is a very bad practice.
+The React Native Testing Library (RNTL) is a lightweight solution for testing React Native components. It provides light utility functions on top of `react-test-renderer`, in a way that encourages better testing practices. Its primary guiding principle is:
 
-This library is a replacement for [Enzyme](http://airbnb.io/enzyme/). It is tested to work with Jest, but it should work with other test runners as well.
+> The more your tests resemble the way your software is used, the more confidence they can give you.
 
-## Example
-
-```jsx
-import { render, fireEvent } from '@testing-library/react-native';
-import { QuestionsBoard } from '../QuestionsBoard';
-
-test('form submits two answers', () => {
-  const allQuestions = ['q1', 'q2'];
-  const mockFn = jest.fn();
-
-  const { getAllByA11yLabel, getByText } = render(
-    <QuestionsBoard questions={allQuestions} onSubmit={mockFn} />
-  );
-
-  const answerInputs = getAllByA11yLabel('answer input');
-
-  fireEvent.changeText(answerInputs[0], 'a1');
-  fireEvent.changeText(answerInputs[1], 'a2');
-  fireEvent.press(getByText('Submit'));
-
-  expect(mockFn).toBeCalledWith({
-    '1': { q: 'q1', a: 'a1' },
-    '2': { q: 'q2', a: 'a2' },
-  });
-});
-```
-
-You can find the source of `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/questionsBoard.test.js).
+This project is inspired by [React Testing Library](https://github.com/testing-library/react-testing-library). Tested to work with Jest, but it should work with other test runners as well.
 
 ## Installation
 
@@ -77,6 +43,8 @@ npm install --save-dev @testing-library/react-native
 ```
 
 This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!
+
+> In order to properly use helpers for async tests (`findBy` queries and `waitFor`) you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
 
 ### Additional Jest matchers
 
@@ -111,7 +79,34 @@ Note for [Flow](https://flow.org) users – you'll also need to install typings 
 flow-typed install react-test-renderer
 ```
 
-As you may have noticed, it's not tied to React Native at all – you can safely use it in your React components if you feel like not interacting directly with DOM.
+## Example
+
+```jsx
+import { render, fireEvent } from '@testing-library/react-native';
+import { QuestionsBoard } from '../QuestionsBoard';
+
+test('form submits two answers', () => {
+  const allQuestions = ['q1', 'q2'];
+  const mockFn = jest.fn();
+
+  const { getAllByA11yLabel, getByText } = render(
+    <QuestionsBoard questions={allQuestions} onSubmit={mockFn} />
+  );
+
+  const answerInputs = getAllByA11yLabel('answer input');
+
+  fireEvent.changeText(answerInputs[0], 'a1');
+  fireEvent.changeText(answerInputs[1], 'a2');
+  fireEvent.press(getByText('Submit'));
+
+  expect(mockFn).toBeCalledWith({
+    '1': { q: 'q1', a: 'a1' },
+    '2': { q: 'q2', a: 'a2' },
+  });
+});
+```
+
+You can find the source of `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/questionsBoard.test.js).
 
 ## API / Usage
 
