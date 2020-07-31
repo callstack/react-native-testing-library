@@ -173,9 +173,7 @@ test('should not fire on disabled TouchableOpacity', () => {
     </TouchableOpacity>
   );
 
-  expect(() => fireEvent.press(screen.getByText('Trigger'))).toThrow(
-    'No handler function found for event: "press"'
-  );
+  expect(() => fireEvent.press(screen.getByText('Trigger'))).not.toThrow();
   expect(handlePress).not.toHaveBeenCalled();
 });
 
@@ -187,9 +185,7 @@ test('should not fire on disabled Pressable', () => {
     </Pressable>
   );
 
-  expect(() => fireEvent.press(screen.getByText('Trigger'))).toThrow(
-    'No handler function found for event: "press"'
-  );
+  expect(() => fireEvent.press(screen.getByText('Trigger'))).not.toThrow();
   expect(handlePress).not.toHaveBeenCalled();
 });
 
