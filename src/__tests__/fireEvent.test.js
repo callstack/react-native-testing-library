@@ -173,7 +173,7 @@ test('should not fire on disabled TouchableOpacity', () => {
     </TouchableOpacity>
   );
 
-  expect(() => fireEvent.press(screen.getByText('Trigger'))).not.toThrow();
+  fireEvent.press(screen.getByText('Trigger'));
   expect(handlePress).not.toHaveBeenCalled();
 });
 
@@ -185,7 +185,7 @@ test('should not fire on disabled Pressable', () => {
     </Pressable>
   );
 
-  expect(() => fireEvent.press(screen.getByText('Trigger'))).not.toThrow();
+  fireEvent.press(screen.getByText('Trigger'));
   expect(handlePress).not.toHaveBeenCalled();
 });
 

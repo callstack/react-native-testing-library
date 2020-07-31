@@ -20,12 +20,14 @@ const findEventHandler = (
 
   // Do not bubble event to the root element
   if (element.parent === null || element.parent.parent === null) {
-    if (hasHandler) return null;
-    else
+    if (hasHandler) {
+      return null;
+    } else {
       throw new ErrorWithStack(
         `No handler function found for event: "${eventName}"`,
         callsite || invokeEvent
       );
+    }
   }
 
   return findEventHandler(
