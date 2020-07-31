@@ -6,30 +6,48 @@ const findEventHandler = (
   element: ReactTestInstance,
   eventName: string,
   callsite?: any,
-  nearestHostDescendent?: ReactTestInstance
+  nearestHostDescendent?: ReactTestInstance,
+  hasDescendandHandler?: boolean
 ) => {
+  const handler = getEventHandler(element, eventName);
+  const hasHandler = handler != null || hasDescendandHandler;
+
   const isHostComponent = typeof element.type === 'string';
   const hostElement = isHostComponent ? element : nearestHostDescendent;
   const isEventEnabled =
     hostElement?.props.onStartShouldSetResponder?.() !== false;
-
-  const eventHandlerName = toEventHandlerName(eventName);
-
-  if (typeof element.props[eventHandlerName] === 'function' && isEventEnabled) {
-    return element.props[eventHandlerName];
-  } else if (typeof element.props[eventName] === 'function' && isEventEnabled) {
-    return element.props[eventName];
-  }
+  if (handler && isEventEnabled) return handler;
 
   // Do not bubble event to the root element
   if (element.parent === null || element.parent.parent === null) {
-    throw new ErrorWithStack(
-      `No handler function found for event: "${eventName}"`,
-      callsite || invokeEvent
-    );
+    if (hasHandler) return null;
+    else
+      throw new ErrorWithStack(
+        `No handler function found for event: "${eventName}"`,
+        callsite || invokeEvent
+      );
   }
 
-  return findEventHandler(element.parent, eventName, callsite, hostElement);
+  return findEventHandler(
+    element.parent,
+    eventName,
+    callsite,
+    hostElement,
+    hasHandler
+  );
+};
+
+const getEventHandler = (element: ReactTestInstance, eventName: string) => {
+  const eventHandlerName = toEventHandlerName(eventName);
+  if (typeof element.props[eventHandlerName] === 'function') {
+    return element.props[eventHandlerName];
+  }
+
+  if (typeof element.props[eventName] === 'function') {
+    return element.props[eventName];
+  }
+
+  return undefined;
 };
 
 const invokeEvent = (
