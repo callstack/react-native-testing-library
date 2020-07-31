@@ -168,9 +168,11 @@ test('event with multiple handler parameters', () => {
 test('should not fire on disabled TouchableOpacity', () => {
   const handlePress = jest.fn();
   const screen = render(
-    <TouchableOpacity onPress={handlePress} disabled={true}>
-      <Text>Trigger</Text>
-    </TouchableOpacity>
+    <View>
+      <TouchableOpacity onPress={handlePress} disabled={true}>
+        <Text>Trigger</Text>
+      </TouchableOpacity>
+    </View>
   );
 
   fireEvent.press(screen.getByText('Trigger'));
@@ -180,9 +182,11 @@ test('should not fire on disabled TouchableOpacity', () => {
 test('should not fire on disabled Pressable', () => {
   const handlePress = jest.fn();
   const screen = render(
-    <Pressable onPress={handlePress} disabled={true}>
-      <Text>Trigger</Text>
-    </Pressable>
+    <View>
+      <Pressable onPress={handlePress} disabled={true}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
   );
 
   fireEvent.press(screen.getByText('Trigger'));
