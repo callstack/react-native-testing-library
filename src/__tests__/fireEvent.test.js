@@ -168,28 +168,28 @@ test('event with multiple handler parameters', () => {
 test('should not fire on disabled TouchableOpacity', () => {
   const handlePress = jest.fn();
   const screen = render(
-    <TouchableOpacity onPress={handlePress} disabled={true}>
-      <Text>Trigger</Text>
-    </TouchableOpacity>
+    <View>
+      <TouchableOpacity onPress={handlePress} disabled={true}>
+        <Text>Trigger</Text>
+      </TouchableOpacity>
+    </View>
   );
 
-  expect(() => fireEvent.press(screen.getByText('Trigger'))).toThrow(
-    'No handler function found for event: "press"'
-  );
+  fireEvent.press(screen.getByText('Trigger'));
   expect(handlePress).not.toHaveBeenCalled();
 });
 
 test('should not fire on disabled Pressable', () => {
   const handlePress = jest.fn();
   const screen = render(
-    <Pressable onPress={handlePress} disabled={true}>
-      <Text>Trigger</Text>
-    </Pressable>
+    <View>
+      <Pressable onPress={handlePress} disabled={true}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
   );
 
-  expect(() => fireEvent.press(screen.getByText('Trigger'))).toThrow(
-    'No handler function found for event: "press"'
-  );
+  fireEvent.press(screen.getByText('Trigger'));
   expect(handlePress).not.toHaveBeenCalled();
 });
 
