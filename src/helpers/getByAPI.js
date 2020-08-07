@@ -44,6 +44,18 @@ const getChildrenAsText = (children, TextComponent, textContent = []) => {
     }
 
     if (child?.props?.children) {
+      // This means that down in the tree of a <TextComponent /> there's another TextComponent that
+      // contains a string, but the parent itself doesn't contain any other string
+      // We should then match against this child, since querying aims to always return the element
+      // the closest to the target text. For instance in this example we don't want
+      // getChildrenAsText to match on the Text of nativeID "1", but the one of nativeID "2"
+      // <Text nativeID="1">
+      //   <Text nativeID="2">My text</Text>
+      // </Text>
+      if (filterNodeByType(child, TextComponent) && textContent.length === 0) {
+        return;
+      }
+
       getChildrenAsText(child.props.children, TextComponent, textContent);
     }
   });
