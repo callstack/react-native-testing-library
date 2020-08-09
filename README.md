@@ -129,6 +129,7 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 
 - [Real world extensive examples repo](https://github.com/vanGalilea/react-native-testing)
 - [Where and how to start testing 🧪 your react-native app ⚛️ and how to keep on testin’](https://blog.usejournal.com/where-and-how-to-start-testing-your-react-native-app-%EF%B8%8F-and-how-to-keep-on-testin-ec3464fb9b41)
+- [Intro to React Native Testing Library & Jest Native](https://youtu.be/CpTQb0XWlRc)
 
 ## Made with ❤️ at Callstack
 
