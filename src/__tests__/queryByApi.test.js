@@ -87,8 +87,6 @@ test('queryByText with nested Text components each with text return the lowest o
   expect(getByText('My text').props.nativeID).toBe('2');
 });
 
-
-
 test('queryByText nested <CustomText> in <Text>', () => {
   const CustomText = ({ children }) => {
     return <Text>{children}</Text>;
