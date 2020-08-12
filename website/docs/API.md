@@ -86,7 +86,7 @@ Usually you should not need to call `unmount` as it is done automatically if you
 debug(message?: string): void
 ```
 
-Prints deeply rendered component passed to `render` with optional message on top. Uses [debug.deep](#debug) under the hood, but it's easier to use.
+Pretty prints deeply rendered component passed to `render` with optional message on top.
 
 ```jsx
 const { debug } = render(<Component />);
@@ -99,17 +99,16 @@ logs optional message and colored JSX:
 ```jsx
 optional message
 
-<TouchableOpacity
-  activeOpacity={0.2}
+<View
   onPress={[Function bound fn]}
 >
   <Text>Press me</Text>
-</TouchableOpacity>
+</View>
 ```
 
 #### `debug.shallow`
 
-Prints shallowly rendered component passed to `render` with optional message on top. Uses [debug.shallow](#debug) under the hood, but it's easier to use.
+Pretty prints shallowly rendered component passed to `render` with optional message on top.
 
 ### `toJSON`
 
