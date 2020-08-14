@@ -44,14 +44,10 @@ const getChildrenAsText = (children, TextComponent, textContent = []) => {
     }
 
     if (child?.props?.children) {
-      // This means that down in the tree of a <TextComponent /> there's another TextComponent that
-      // contains a string, but the parent itself doesn't contain any other string
-      // We should then match against this child, since querying aims to always return the element
-      // the closest to the target text. For instance in this example we don't want
-      // getChildrenAsText to match on the Text of nativeID "1", but the one of nativeID "2"
-      // <Text nativeID="1">
-      //   <Text nativeID="2">My text</Text>
-      // </Text>
+      // Bail on traversing text children down the tree if current node (child)
+      // has no text. In such situations, react-test-renderer will traverse down
+      // this tree in a separate call and run this query again. As a result, the
+      // query will match a deeper text node that may have text some content.
       if (filterNodeByType(child, TextComponent) && textContent.length === 0) {
         return;
       }
