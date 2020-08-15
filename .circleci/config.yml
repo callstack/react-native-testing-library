@@ -35,6 +35,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/react-native-testing-library
+      - run: cd packages/react-native-testing-library
       - run: |
           yarn lint
           yarn flow-check
@@ -43,6 +44,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/react-native-testing-library
+      - run: cd packages/react-native-testing-library
       - run: |
           yarn typescript-check
   tests:
@@ -50,6 +52,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/react-native-testing-library
+      - run: cd packages/react-native-testing-library
       - run: yarn test
       - store_artifacts:
           path: coverage
