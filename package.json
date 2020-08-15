@@ -17,11 +17,7 @@
     "@types/react-test-renderer": "^16.9.3",
     "babel-jest": "^26.3.0",
     "eslint": "^7.7.0",
-    "flow-mono-cli": "^1.5.3",
     "jest": "^26.4.0",
     "react-test-renderer": "^16.13.1"
-  },
-  "scripts": {
-    "postinstall": "flow-mono create-symlinks packages/react-native-testing-library/.flowconfig"
   }
 }
