@@ -1,79 +1,27 @@
 {
-  "name": "@testing-library/react-native",
-  "version": "7.0.1",
-  "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
-  "main": "build/index.js",
-  "typings": "./typings/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "https://www.github.com/callstack/react-native-testing-library.git"
-  },
-  "homepage": "https://callstack.github.io/react-native-testing-library",
-  "author": "Michał Pierzchała <thymikee@gmail.com>",
-  "license": "MIT",
-  "private": false,
-  "keywords": [
-    "react-native",
-    "react",
-    "test",
-    "integration"
+  "name": "react-native-testing-library",
+  "private": true,
+  "workspaces": [
+    "examples/*",
+    "packages/*",
+    "website"
   ],
-  "files": [
-    "build/",
-    "typings/index.d.ts",
-    "pure.js",
-    "dont-cleanup-after-each.js"
-  ],
-  "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/preset-env": "^7.9.6",
-    "@babel/preset-flow": "^7.9.0",
-    "@babel/preset-react": "^7.9.4",
-    "@callstack/eslint-config": "^10.0.0",
-    "@release-it/conventional-changelog": "^1.1.0",
-    "@testing-library/jest-native": "~3.3.0",
-    "@types/react": "^16.9.34",
-    "@types/react-native": "^0.63.0",
-    "@types/react-test-renderer": "^16.9.2",
-    "babel-jest": "^26.0.1",
-    "conventional-changelog-cli": "^2.0.11",
-    "dedent": "^0.7.0",
-    "eslint": "^7.0.0",
-    "flow-bin": "^0.122.0",
-    "flow-copy-source": "^2.0.9",
-    "jest": "^26.0.1",
-    "react": "^16.13.1",
-    "react-native": "^0.63.0-rc.1",
-    "react-test-renderer": "^16.13.1",
-    "release-it": "^13.6.0",
-    "strip-ansi": "^6.0.0",
-    "typescript": "^3.8.3"
-  },
   "dependencies": {
-    "pretty-format": "^26.0.1"
+    "react": "^16.13.1",
+    "react-native": "^0.63.2"
   },
-  "peerDependencies": {
-    "react": ">=16.0.0",
-    "react-test-renderer": ">=16.0.0"
+  "devDependencies": {
+    "@callstack/eslint-config": "^10.0.1",
+    "@types/react": "^16.9.46",
+    "@types/react-native": "^0.63.8",
+    "@types/react-test-renderer": "^16.9.3",
+    "babel-jest": "^26.3.0",
+    "eslint": "^7.7.0",
+    "flow-mono-cli": "^1.5.3",
+    "jest": "^26.4.0",
+    "react-test-renderer": "^16.13.1"
   },
   "scripts": {
-    "test": "jest",
-    "flow-check": "flow check",
-    "typescript-check": "tsc --noEmit --skipLibCheck --jsx react ./typings/__tests__/*",
-    "lint": "eslint src --cache",
-    "release": "release-it",
-    "prepublish": "yarn build && yarn copy-flowtypes",
-    "copy-flowtypes": "flow-copy-source --ignore __tests__/*.js src build",
-    "build": "rm -rf build; babel src --out-dir build --ignore 'src/__tests__/*'"
-  },
-  "jest": {
-    "preset": "react-native",
-    "moduleFileExtensions": [
-      "js",
-      "json"
-    ],
-    "rootDir": "./src"
+    "postinstall": "flow-mono create-symlinks packages/react-native-testing-library/.flowconfig"
   }
 }
