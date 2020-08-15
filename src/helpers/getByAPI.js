@@ -47,7 +47,7 @@ const getChildrenAsText = (children, TextComponent, textContent = []) => {
       // Bail on traversing text children down the tree if current node (child)
       // has no text. In such situations, react-test-renderer will traverse down
       // this tree in a separate call and run this query again. As a result, the
-      // query will match a deeper text node that may have text some content.
+      // query will match the deepest text node that matches requested text.
       if (filterNodeByType(child, TextComponent) && textContent.length === 0) {
         return;
       }
