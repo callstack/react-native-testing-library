@@ -49,17 +49,17 @@ test('queryByText not found', () => {
 });
 
 test('queryByText nested text across multiple <Text> in <Text>', () => {
-  expect(
-    render(
-      <Text>
-        Hello{' '}
-        <Text>
-          World
-          <Text>!{true}</Text>
-        </Text>
+  const { queryByText } = render(
+    <Text nativeID="1">
+      Hello{' '}
+      <Text nativeID="2">
+        World
+        <Text>!{true}</Text>
       </Text>
-    ).queryByText('Hello World!')
-  ).toBeTruthy();
+    </Text>
+  );
+
+  expect(queryByText('Hello World!')?.props.nativeID).toBe('1');
 });
 
 test('queryByText with nested Text components return the closest Text', () => {
