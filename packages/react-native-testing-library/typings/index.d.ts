@@ -70,7 +70,7 @@ interface QueryByAPI {
   ) => ReactTestInstance | null;
   queryByDisplayValue: (value: string | RegExp) => ReactTestInstance | null;
   queryByTestId: (testID: string) => ReactTestInstance | null;
-  queryAllByTestId: (testID: string) => Array<ReactTestInstance> | null;
+  queryAllByTestId: (testID: string) => Array<ReactTestInstance> | [];
   queryAllByText: (text: string | RegExp) => Array<ReactTestInstance> | [];
   queryAllByPlaceholderText: (
     placeholder: string | RegExp

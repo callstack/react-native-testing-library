@@ -2978,9 +2978,9 @@ ajv-keywords@^3.1.0, ajv-keywords@^3.4.1:
   integrity sha512-5p6WTN0DdTGVQk6VjcEju19IgaHudalcfabD7yhDGeA6bcQnmL+CpveLJq/3hvfwd1aof6L386Ougkx6RfyMIQ==
 
 ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.2, ajv@^6.12.3:
-  version "6.12.3"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.3.tgz#18c5af38a111ddeb4f2697bd78d68abc1cabd706"
-  integrity sha512-4K0cK3L1hsqk9xIb2z9vs/XU+PGJZ9PNpJRDS9YLzmNdX6jmVPfamLvTJr0aDAusnHyCHO6MjzlkAsgtqp9teA==
+  version "6.12.4"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.4.tgz#0614facc4522127fa713445c6bfd3ebd376e2234"
+  integrity sha512-eienB2c9qVQs2KWexhkrdMLVDoIQCz5KSeLxwg9Lzk4DOfBtIK9PQwwufcsn1jjGuf9WZmqPMbGxOzfcuphJCQ==
   dependencies:
     fast-deep-equal "^3.1.1"
     fast-json-stable-stringify "^2.0.0"
@@ -6140,9 +6140,9 @@ eslint-plugin-react-hooks@^4.0.0:
   integrity sha512-6SSb5AiMCPd8FDJrzah+Z4F44P2CdOaK026cXFV+o/xSRzfOiV1FNFeLl2z6xm3yqWOQEZ5OfVgiec90qV2xrQ==
 
 eslint-plugin-react-native-a11y@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react-native-a11y/-/eslint-plugin-react-native-a11y-2.0.1.tgz#68892b35e7821feea8e1ced5be0b84dbab384e34"
-  integrity sha512-CoqjPDq19W2j8K5AqA/hR40uEH85gU/7Bc6mZCdrPxQjRcm51OBIf4ZUA09B9ddUnraHKnnxGzQJ9reBa/VesQ==
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react-native-a11y/-/eslint-plugin-react-native-a11y-2.0.2.tgz#aed30f49fe2696db1c918a42eb34df9a5ec48b69"
+  integrity sha512-PmB7iL0g0k9iDPANWM9F6c/DXh3YwHCZ4WupMDgNPr24//38UjvEQYXWsB/L/eK6lvCBZUgQtx2/jqZhjo64Tg==
   dependencies:
     "@babel/runtime" "^7.10.5"
     ast-types-flow "^0.0.7"
