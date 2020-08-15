@@ -69,9 +69,9 @@ test('queryByText with nested Text components return the closest Text', () => {
     </Text>
   );
 
-  const { getByText } = render(<NestedTexts />);
+  const { queryByText } = render(<NestedTexts />);
 
-  expect(getByText('My text').props.nativeID).toBe('2');
+  expect(queryByText('My text')?.props.nativeID).toBe('2');
 });
 
 test('queryByText with nested Text components each with text return the lowest one', () => {
@@ -82,9 +82,9 @@ test('queryByText with nested Text components each with text return the lowest o
     </Text>
   );
 
-  const { getByText } = render(<NestedTexts />);
+  const { queryByText } = render(<NestedTexts />);
 
-  expect(getByText('My text').props.nativeID).toBe('2');
+  expect(queryByText('My text')?.props.nativeID).toBe('2');
 });
 
 test('queryByText nested <CustomText> in <Text>', () => {
