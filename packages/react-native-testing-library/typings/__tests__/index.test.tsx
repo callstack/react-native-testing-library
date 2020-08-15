@@ -10,7 +10,7 @@ import {
   act,
   within,
   getQueriesForElement,
-} from '../..';
+} from '..';
 
 interface HasRequiredProp {
   requiredProp: string;
