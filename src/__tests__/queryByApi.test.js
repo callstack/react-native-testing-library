@@ -48,18 +48,43 @@ test('queryByText not found', () => {
   ).toBeFalsy();
 });
 
-test('queryByText nested multiple <Text> in <Text>', () => {
-  expect(
-    render(
-      <Text>
-        Hello{' '}
-        <Text>
-          World
-          <Text>!{true}</Text>
-        </Text>
+test('queryByText nested text across multiple <Text> in <Text>', () => {
+  const { queryByText } = render(
+    <Text nativeID="1">
+      Hello{' '}
+      <Text nativeID="2">
+        World
+        <Text>!{true}</Text>
       </Text>
-    ).queryByText('Hello World!')
-  ).toBeTruthy();
+    </Text>
+  );
+
+  expect(queryByText('Hello World!')?.props.nativeID).toBe('1');
+});
+
+test('queryByText with nested Text components return the closest Text', () => {
+  const NestedTexts = () => (
+    <Text nativeID="1">
+      <Text nativeID="2">My text</Text>
+    </Text>
+  );
+
+  const { queryByText } = render(<NestedTexts />);
+
+  expect(queryByText('My text')?.props.nativeID).toBe('2');
+});
+
+test('queryByText with nested Text components each with text return the lowest one', () => {
+  const NestedTexts = () => (
+    <Text nativeID="1">
+      bob
+      <Text nativeID="2">My text</Text>
+    </Text>
+  );
+
+  const { queryByText } = render(<NestedTexts />);
+
+  expect(queryByText('My text')?.props.nativeID).toBe('2');
 });
 
 test('queryByText nested <CustomText> in <Text>', () => {
@@ -71,6 +96,20 @@ test('queryByText nested <CustomText> in <Text>', () => {
     render(
       <Text>
         Hello <CustomText>World!</CustomText>
+      </Text>
+    ).queryByText('Hello World!')
+  ).toBeTruthy();
+});
+
+test('queryByText nested deep <CustomText> in <Text>', () => {
+  const CustomText = ({ children }) => {
+    return <Text>{children}</Text>;
+  };
+
+  expect(
+    render(
+      <Text>
+        <CustomText>Hello</CustomText> <CustomText>World!</CustomText>
       </Text>
     ).queryByText('Hello World!')
   ).toBeTruthy();
