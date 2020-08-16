@@ -19,7 +19,7 @@ const siteConfig = {
         alt: title,
         src: 'img/owl.png',
       },
-      links: [
+      items: [
         { to: 'docs/getting-started', label: 'Docs', position: 'right' },
         { href: repoUrl, label: 'GitHub', position: 'right' },
       ],
