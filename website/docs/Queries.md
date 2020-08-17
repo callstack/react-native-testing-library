@@ -37,7 +37,7 @@ In order to properly use `findBy` and `findAllBy` queries you need at least Reac
 :::
 
 :::info
-`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective options for [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/api#waitfor) function.
+`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
 :::
 
 ## Queries
@@ -59,7 +59,7 @@ type ReactTestInstance = {
 
 Returns a `ReactTestInstance` with matching text – may be a string or regular expression.
 
-This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://facebook.github.io/react-native/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
+This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
 
 ```jsx
 import { render } from '@testing-library/react-native';

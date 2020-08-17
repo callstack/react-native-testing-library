@@ -116,4 +116,4 @@ There are slight differences in how `fireEvent` works in both libraries:
    +fireEvent(element: ReactTestInstance, eventName: string, ...data: Array<any>)
    ```
 1. There is no `NativeTestEvent` - second and rest arguments are used instead.
-1. There are only 3 short-hand events: [`fireEvent.press`](`/docs/api/#fireeventpress-element-reacttestinstance--void`), [`fireEvent.changeText`](https://callstack.github.io/react-native-testing-library/docs/api/#fireeventchangetext-element-reacttestinstance-data-arrayany--void) and [`fireEvent.scroll`](https://callstack.github.io/react-native-testing-library/docs/api/#fireeventchangetext-element-reacttestinstance-data-arrayany--void). For all other or custom events you can use the base signature.
+1. There are only 3 short-hand events: [`fireEvent.press`](api/#fireeventpress-element-reacttestinstance--void), [`fireEvent.changeText`](api/#fireeventchangetext-element-reacttestinstance-data-arrayany--void) and [`fireEvent.scroll`](api/#fireeventscroll-element-reacttestinstance-data-arrayany--void). For all other or custom events you can use the base signature.
