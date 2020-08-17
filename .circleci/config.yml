@@ -5,6 +5,10 @@ aliases:
     branches:
       only:
         - master
+  - &filter-ignore-master
+    branches:
+      ignore:
+        - master
 
 defaults: &defaults
   docker:
@@ -54,6 +58,13 @@ jobs:
       - store_artifacts:
           path: coverage
           destination: coverage
+  test-website:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/react-native-testing-library
+      - run: |
+          cd website && yarn install && yarn build
   deploy-website:
     <<: *defaults
     steps:
@@ -80,6 +91,11 @@ workflows:
       - tests:
           requires:
             - install-dependencies
+      - test-website:
+          requires:
+            - install-dependencies
+          # docusuarus build is running when deploying website as well
+          filters: *filter-ignore-master
       - deploy-website:
           requires:
             - install-dependencies
