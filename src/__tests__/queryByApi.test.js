@@ -114,3 +114,17 @@ test('queryByText nested deep <CustomText> in <Text>', () => {
     ).queryByText('Hello World!')
   ).toBeTruthy();
 });
+
+test('queryByText nested deep <CustomText> in <Custom>', () => {
+  const CustomText = ({ children }) => {
+    return <Text>{children}</Text>;
+  };
+
+  expect(
+    render(
+      <CustomText>
+        <CustomText>Hello</CustomText> <CustomText>World!</CustomText>
+      </CustomText>
+    ).queryByText('Hello World!')
+  ).toBeTruthy();
+});

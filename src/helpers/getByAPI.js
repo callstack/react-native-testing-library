@@ -31,16 +31,21 @@ const getNodeByText = (node, text) => {
   }
 };
 
-const getChildrenAsText = (children, TextComponent, textContent = []) => {
-  React.Children.forEach(children, (child) => {
-    if (typeof child === 'string') {
-      textContent.push(child);
-      return;
-    }
+const isTextContentType = (candidate) =>
+  ['string', 'number'].includes(typeof candidate);
 
-    if (typeof child === 'number') {
-      textContent.push(child.toString());
-      return;
+const getChildrenAsText = (children, TextComponent, textContent = []) => {
+  if (
+    typeof children === 'object' &&
+    isTextContentType(children.props?.children)
+  ) {
+    return textContent;
+  }
+
+  React.Children.forEach(children, (child) => {
+    if (isTextContentType(child)) {
+      textContent.push(child + '');
+      return textContent;
     }
 
     if (child?.props?.children) {
@@ -49,7 +54,7 @@ const getChildrenAsText = (children, TextComponent, textContent = []) => {
       // this tree in a separate call and run this query again. As a result, the
       // query will match the deepest text node that matches requested text.
       if (filterNodeByType(child, TextComponent) && textContent.length === 0) {
-        return;
+        return textContent;
       }
 
       getChildrenAsText(child.props.children, TextComponent, textContent);

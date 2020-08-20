@@ -35,3 +35,54 @@ test('getByTestId returns only native elements', () => {
     'No instances found with testID: myComponent'
   );
 });
+
+test('getByText with nested native Text component get closest Text', () => {
+  const NestedText = () => {
+    return (
+      <Text testID="outer">
+        <Text testID="inner">Test</Text>
+      </Text>
+    );
+  };
+
+  const { getByText } = render(<NestedText />);
+
+  expect(getByText('Test').props.testID).toBe('inner');
+});
+
+test('getByText with nested multiple custom Text component get closest Text', () => {
+  const CustomText = ({ children, ...rest }) => (
+    <Text {...rest}>{children}</Text>
+  );
+
+  const NestedText = () => {
+    return (
+      <CustomText testID="outer">
+        <CustomText testID="inner1">Test1</CustomText>
+        <CustomText testID="inner2">Test2</CustomText>
+      </CustomText>
+    );
+  };
+
+  const { getByText } = render(<NestedText />);
+
+  expect(getByText('Test1').props.testID).toBe('inner1');
+});
+
+test('getByText with nested custom Text component get closest Text', () => {
+  const CustomText = ({ children, ...rest }) => (
+    <Text {...rest}>{children}</Text>
+  );
+
+  const NestedText = () => {
+    return (
+      <CustomText testID="outer">
+        <CustomText testID="inner">Test</CustomText>
+      </CustomText>
+    );
+  };
+
+  const { getByText } = render(<NestedText />);
+
+  expect(getByText('Test').props.testID).toBe('inner');
+});
