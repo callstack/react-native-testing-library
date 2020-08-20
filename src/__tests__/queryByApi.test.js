@@ -115,7 +115,7 @@ test('queryByText nested deep <CustomText> in <Text>', () => {
   ).toBeTruthy();
 });
 
-test('queryByText nested deep <CustomText> in <Custom>', () => {
+test('queryByText nested deep <CustomText> in <CustomText>', () => {
   const CustomText = ({ children }) => {
     return <Text>{children}</Text>;
   };
