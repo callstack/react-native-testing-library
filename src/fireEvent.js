@@ -2,6 +2,12 @@
 import act from './act';
 import { ErrorWithStack } from './helpers/errors';
 
+const isTextInputComponent = (element: ReactTestInstance) => {
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  const { TextInput } = require('react-native');
+  return element.type === TextInput;
+};
+
 const findEventHandler = (
   element: ReactTestInstance,
   eventName: string,
@@ -14,8 +20,11 @@ const findEventHandler = (
 
   const isHostComponent = typeof element.type === 'string';
   const hostElement = isHostComponent ? element : nearestHostDescendent;
-  const isEventEnabled =
-    hostElement?.props.onStartShouldSetResponder?.() !== false;
+
+  const isEventEnabled = isTextInputComponent(element)
+    ? element.props.editable !== false
+    : hostElement?.props.onStartShouldSetResponder?.() !== false;
+
   if (handler && isEventEnabled) return handler;
 
   // Do not bubble event to the root element
