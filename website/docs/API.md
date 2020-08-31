@@ -294,12 +294,13 @@ import { FlatList, View } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 
 const onEndReached = jest.fn();
-const { getByType } = render(
+const { getByTestId } = render(
   <FlatList
     data={Array.from({ length: 10 }, (_, key) => ({ key: `${key}` }))}
     renderItem={() => <View style={{ height: 500, width: 100 }} />}
     onEndReached={onEndReached}
     onEndReachedThreshold={0.2}
+    testID="flat-list"
   />
 );
 const eventData = {
@@ -320,7 +321,7 @@ const eventData = {
   },
 };
 
-fireEvent.scroll(getByType(ScrollView), eventData);
+fireEvent.scroll(getByTestId('flat-list'), eventData);
 expect(onEndReached).toHaveBeenCalled();
 ```
 
