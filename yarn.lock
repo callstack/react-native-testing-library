@@ -7604,17 +7604,7 @@ pretty-format@^25.1.0, pretty-format@^25.2.0:
     ansi-styles "^4.0.0"
     react-is "^16.12.0"
 
-pretty-format@^26.0.1:
-  version "26.3.0"
-  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.3.0.tgz#d9a7b4bb2948cabc646e6a7729b12f686f3fed36"
-  integrity sha512-24kRw4C2Ok8+SHquydTZZCZPF2fvANI7rChGs8sNu784+1Jkq5jVFMvNAJSLuLy6XUcP3Fnw+SscLIQag/CG8Q==
-  dependencies:
-    "@jest/types" "^26.3.0"
-    ansi-regex "^5.0.0"
-    ansi-styles "^4.0.0"
-    react-is "^16.12.0"
-
-pretty-format@^26.4.2:
+pretty-format@^26.0.1, pretty-format@^26.4.2:
   version "26.4.2"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.4.2.tgz#d081d032b398e801e2012af2df1214ef75a81237"
   integrity sha512-zK6Gd8zDsEiVydOCGLkoBoZuqv8VTiHyAbKznXe/gaph/DAeZOmit9yMfgIz5adIgAMMs5XfoYSwAX3jcCO1tA==
@@ -8621,7 +8611,7 @@ source-map-url@^0.4.0:
   resolved "https://registry.yarnpkg.com/source-map-url/-/source-map-url-0.4.0.tgz#3e935d7ddd73631b97659956d55128e87b5084a3"
   integrity sha1-PpNdfd1zYxuXZZlW1VEo6HtQhKM=
 
-source-map@^0.5.0, source-map@^0.5.6:
+source-map@^0.5.6:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
   integrity sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=
