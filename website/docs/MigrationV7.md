@@ -101,9 +101,9 @@ You can opt-out of this behavior by running tests with `RNTL_SKIP_AUTO_CLEANUP=t
 
 We don't provide any abstraction over `ReactTestInstance` returned by queries, but allow to use it directly to access queried component's `props` or `type` for that example.
 
-## No `container` returned from `render`
+## No `container` nor `baseElement` returned from `render`
 
-There's no such key returned from the `render` function. If you must, use `react-test-renderer` directly, although we advise not doing so.
+There's no `container` returned from the `render` function. If you must, use `react-test-renderer` directly, although we advise not doing so. We also don't implement `baseElement` beacuse of that, since there's no `document.documentElement` nor `container`.
 
 ## Firing events changes
 
