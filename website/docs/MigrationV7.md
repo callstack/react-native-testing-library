@@ -103,7 +103,7 @@ We don't provide any abstraction over `ReactTestInstance` returned by queries, b
 
 ## No `container` nor `baseElement` returned from `render`
 
-There's no `container` returned from the `render` function. If you must, use `react-test-renderer` directly, although we advise not doing so. We also don't implement `baseElement` beacuse of that, since there's no `document.documentElement` nor `container`.
+There's no `container` returned from the `render` function. If you must, use `react-test-renderer` directly, although we advise against doing so. We also don't implement `baseElement` because of that, since there's no `document.documentElement` nor `container`.
 
 ## Firing events changes
 
