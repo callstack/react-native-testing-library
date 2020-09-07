@@ -21,7 +21,7 @@ const makeFindQuery = <Text, Result>(
 ): Promise<Result> => waitFor(() => getQuery(instance)(text), waitForOptions);
 
 export const findByTestId = (instance: ReactTestInstance) => (
-  testId: string,
+  testId: string | RegExp,
   waitForOptions: WaitForOptions = {}
 ) => makeFindQuery(instance, getByTestId, testId, waitForOptions);
 

@@ -18,7 +18,7 @@ interface GetByAPI {
   getByText: (text: string | RegExp) => ReactTestInstance;
   getByPlaceholderText: (placeholder: string | RegExp) => ReactTestInstance;
   getByDisplayValue: (value: string | RegExp) => ReactTestInstance;
-  getByTestId: (testID: string) => ReactTestInstance;
+  getByTestId: (testID: string | RegExp) => ReactTestInstance;
   getAllByTestId: (testID: string | RegExp) => Array<ReactTestInstance>;
   getAllByText: (text: string | RegExp) => Array<ReactTestInstance>;
   getAllByPlaceholderText: (
@@ -69,7 +69,7 @@ interface QueryByAPI {
     placeholder: string | RegExp
   ) => ReactTestInstance | null;
   queryByDisplayValue: (value: string | RegExp) => ReactTestInstance | null;
-  queryByTestId: (testID: string) => ReactTestInstance | null;
+  queryByTestId: (testID: string | RegExp) => ReactTestInstance | null;
   queryAllByTestId: (testID: string | RegExp) => Array<ReactTestInstance> | [];
   queryAllByText: (text: string | RegExp) => Array<ReactTestInstance> | [];
   queryAllByPlaceholderText: (
@@ -137,7 +137,7 @@ interface FindByAPI {
     value: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
-  findByTestId: (testID: string, waitForOptions?: WaitForOptions) => FindReturn;
+  findByTestId: (testID: string | RegExp, waitForOptions?: WaitForOptions) => FindReturn;
   findAllByText: (
     text: string | RegExp,
     waitForOptions?: WaitForOptions

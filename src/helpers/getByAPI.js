@@ -134,7 +134,7 @@ export const getByDisplayValue = (instance: ReactTestInstance) =>
   };
 
 export const getByTestId = (instance: ReactTestInstance) =>
-  function getByTestIdFn(testID: string) {
+  function getByTestIdFn(testID: string | RegExp) {
     try {
       const results = getAllByTestId(instance)(testID);
       if (results.length === 1) {
