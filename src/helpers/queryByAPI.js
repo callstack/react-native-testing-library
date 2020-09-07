@@ -87,7 +87,7 @@ export const queryAllByDisplayValue = (instance: ReactTestInstance) => (
 };
 
 export const queryAllByTestId = (instance: ReactTestInstance) => (
-  testID: string
+  testID: string | RegExp
 ) => {
   try {
     return getAllByTestId(instance)(testID);

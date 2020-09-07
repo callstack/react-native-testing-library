@@ -26,7 +26,7 @@ export const findByTestId = (instance: ReactTestInstance) => (
 ) => makeFindQuery(instance, getByTestId, testId, waitForOptions);
 
 export const findAllByTestId = (instance: ReactTestInstance) => (
-  testId: string,
+  testId: string | RegExp,
   waitForOptions: WaitForOptions = {}
 ) => makeFindQuery(instance, getAllByTestId, testId, waitForOptions);
 
