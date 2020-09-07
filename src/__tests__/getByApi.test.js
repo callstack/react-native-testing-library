@@ -36,8 +36,8 @@ test('getByTestId returns only native elements', () => {
   );
 });
 
-test('getAllByTestId supports a regex matcher', () => {
-  const { getAllByTestId } = render(
+test('supports a regex matcher', () => {
+  const { getByTestId, getAllByTestId } = render(
     <View>
       <Text testID="text">Text</Text>
       <TextInput testID="textInput" />
@@ -47,5 +47,6 @@ test('getAllByTestId supports a regex matcher', () => {
     </View>
   );
 
+  expect(getByTestId(/view/)).toBeTruthy();
   expect(getAllByTestId(/text/)).toHaveLength(2);
 });
