@@ -90,13 +90,9 @@ const getTextInputNodeByDisplayValue = (node, value) => {
 };
 
 const getNodeByTestId = (node, testID) => {
-  try {
-    return typeof testID === 'string'
-      ? testID === node.props.testID
-      : testID.test(node.props.testID);
-  } catch (error) {
-    throw createLibraryNotSupportedError(error);
-  }
+  return typeof testID === 'string'
+    ? testID === node.props.testID
+    : testID.test(node.props.testID);
 };
 
 export const getByText = (instance: ReactTestInstance) =>
