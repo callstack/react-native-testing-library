@@ -35,3 +35,17 @@ test('getByTestId returns only native elements', () => {
     'No instances found with testID: myComponent'
   );
 });
+
+test('getAllByTestId supports a regex matcher', () => {
+  const { getAllByTestId } = render(
+    <View>
+      <Text testID="text">Text</Text>
+      <TextInput testID="textInput" />
+      <View testID="view" />
+      <Button testID="button" title="Button" onPress={jest.fn()} />
+      <MyComponent testID="myComponent" />
+    </View>
+  );
+
+  expect(getAllByTestId(/text/)).toHaveLength(2);
+});
