@@ -48,7 +48,7 @@ export const queryByDisplayValue = (instance: ReactTestInstance) =>
   };
 
 export const queryByTestId = (instance: ReactTestInstance) =>
-  function queryByTestIdFn(testID: string) {
+  function queryByTestIdFn(testID: string | RegExp) {
     try {
       return getByTestId(instance)(testID);
     } catch (error) {
@@ -87,7 +87,7 @@ export const queryAllByDisplayValue = (instance: ReactTestInstance) => (
 };
 
 export const queryAllByTestId = (instance: ReactTestInstance) => (
-  testID: string
+  testID: string | RegExp
 ) => {
   try {
     return getAllByTestId(instance)(testID);

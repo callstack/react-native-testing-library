@@ -98,7 +98,7 @@ const element = getByDisplayValue('username');
 
 > getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, findByTestId, findAllByTestId
 
-Returns a `ReactTestInstance` with matching `testID` prop.
+Returns a `ReactTestInstance` with matching `testID` prop. `testID` – may be a string or a regular expression.
 
 ```jsx
 import { render } from '@testing-library/react-native';
