@@ -53,6 +53,9 @@ type ReactTestInstance = {
 };
 ```
 
+### Options
+Query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](api-queries#textmatch) for more info.
+
 ### `ByText`
 
 > getByText, getAllByText, queryByText, queryAllByText, findByText, findAllByText
@@ -198,6 +201,53 @@ import { render } from '@testing-library/react-native';
 const { getByA11yValue } = render(<Component />);
 const element = getByA11yValue({ min: 40 });
 ```
+
+## TextMatch
+Some APIs accept an object containing options affecting precision of string matching as the last argument:
+
+```typescript
+type TextMatchOptions = {
+  exact: boolean,
+};
+```
+
+`exact` option defaults to `true` but if you want to search for a text slice or make text matching case-insensitive you can override it. That being said we advise you to use regex in more complex scenarios.
+
+### Examples
+
+Given the following render:
+```jsx
+const { getByText } = render(<Text>Hello World</Text>);
+```
+
+Will **find a match**:
+
+```js
+// Matching a string:
+getByText('Hello World'); // full string match
+getByText('llo Worl', { exact: false }); // substring match
+getByText('hello world', { exact: false }); // ignore case-sensitivity
+
+// Matching a regex:
+getByText(/World/); // substring match
+getByText(/world/i); // substring match, ignore case
+getByText(/^hello world$/i); // full string match, ignore case-sensitivity
+getByText(/Hello W?oRlD/i); // advanced regex
+```
+
+Will **NOT find a match**
+
+```js
+// substring does not match
+getByText('llo Worl');
+// full string does not match
+getByText('Goodbye World');
+
+// case-sensitive regex with different case
+getByText(/hello world/);
+```
+
+
 
 ## Unit testing helpers
 
