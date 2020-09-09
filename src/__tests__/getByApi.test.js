@@ -50,3 +50,61 @@ test('supports a regex matcher', () => {
   expect(getByTestId(/view/)).toBeTruthy();
   expect(getAllByTestId(/text/)).toHaveLength(2);
 });
+
+describe('Supports a TextMatch options', () => {
+  test('getByText, getAllByText', () => {
+    const { getByText, getAllByText } = render(
+      <View>
+        <Text testID="text">Text and details</Text>
+        <Button
+          testID="button"
+          title="Button and a detail"
+          onPress={jest.fn()}
+        />
+      </View>
+    );
+
+    expect(getByText('details', { exact: false })).toBeTruthy();
+    expect(getAllByText('detail', { exact: false })).toHaveLength(2);
+  });
+
+  test('getByPlaceholderText, getAllByPlaceholderText', () => {
+    const { getByPlaceholderText, getAllByPlaceholderText } = render(
+      <View>
+        <TextInput placeholder={'Placeholder with details'} />
+        <TextInput placeholder={'Placeholder with a DETAIL'} />
+      </View>
+    );
+
+    expect(getByPlaceholderText('details', { exact: false })).toBeTruthy();
+    expect(getAllByPlaceholderText('detail', { exact: false })).toHaveLength(2);
+  });
+
+  test('getByDisplayValue, getAllByDisplayValue', () => {
+    const { getByDisplayValue, getAllByDisplayValue } = render(
+      <View>
+        <TextInput value={'Value with details'} />
+        <TextInput value={'Value with a detail'} />
+      </View>
+    );
+
+    expect(getByDisplayValue('details', { exact: false })).toBeTruthy();
+    expect(getAllByDisplayValue('detail', { exact: false })).toHaveLength(2);
+  });
+
+  test('with TextMatch option exact === false text search is NOT case sensitive', () => {
+    const { getByText, getAllByText } = render(
+      <View>
+        <Text testID="text">Text and details</Text>
+        <Button
+          testID="button"
+          title="Button and a DeTAil"
+          onPress={jest.fn()}
+        />
+      </View>
+    );
+
+    expect(getByText('DeTaIlS', { exact: false })).toBeTruthy();
+    expect(getAllByText('detail', { exact: false })).toHaveLength(2);
+  });
+});

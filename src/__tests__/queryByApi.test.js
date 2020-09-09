@@ -60,6 +60,7 @@ test('queryByText nested text across multiple <Text> in <Text>', () => {
   );
 
   expect(queryByText('Hello World!')?.props.nativeID).toBe('1');
+  expect(queryByText('hello Wo', { exact: false })?.props.nativeID).toBe('1');
 });
 
 test('queryByText with nested Text components return the closest Text', () => {
@@ -72,6 +73,7 @@ test('queryByText with nested Text components return the closest Text', () => {
   const { queryByText } = render(<NestedTexts />);
 
   expect(queryByText('My text')?.props.nativeID).toBe('2');
+  expect(queryByText('My text', { exact: false })?.props.nativeID).toBe('2');
 });
 
 test('queryByText with nested Text components each with text return the lowest one', () => {
@@ -85,6 +87,19 @@ test('queryByText with nested Text components each with text return the lowest o
   const { queryByText } = render(<NestedTexts />);
 
   expect(queryByText('My text')?.props.nativeID).toBe('2');
+});
+
+test('queryByText with nested Text components each with text return the top one when using not-exact text match', () => {
+  const NestedTexts = () => (
+    <Text nativeID="1">
+      bob
+      <Text nativeID="2">My text</Text>
+    </Text>
+  );
+
+  const { queryByText } = render(<NestedTexts />);
+
+  expect(queryByText('My text', { exact: false })?.props.nativeID).toBe('1');
 });
 
 test('queryByText nested <CustomText> in <Text>', () => {
