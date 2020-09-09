@@ -107,10 +107,6 @@ const { getByTestId } = render(<MyComponent />);
 const element = getByTestId('unique-id');
 ```
 
-:::caution
-Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead.
-:::
-
 ### `ByA11yLabel`, `ByAccessibilityLabel`, `ByLabelText`
 
 > getByA11yLabel, getAllByA11yLabel, queryByA11yLabel, queryAllByA11yLabel, findByA11yLabel, findAllByA11yLabel
@@ -138,7 +134,7 @@ Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
 import { render } from '@testing-library/react-native';
 
 const { getByA11yHint } = render(<MyComponent />);
-const element = getByA11yHint('my-hint');
+const element = getByA11yHint('Plays a song');
 ```
 
 ### `ByA11yStates`, `ByAccessibilityStates`
