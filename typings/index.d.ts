@@ -15,16 +15,17 @@ type FindReturn = Promise<ReactTestInstance>;
 type FindAllReturn = Promise<ReactTestInstance[]>;
 
 interface GetByAPI {
-  getByText: (text: string | RegExp) => ReactTestInstance;
-  getByPlaceholderText: (placeholder: string | RegExp) => ReactTestInstance;
-  getByDisplayValue: (value: string | RegExp) => ReactTestInstance;
+  getByText: (text: string | RegExp, options?: TextMatchOptions) => ReactTestInstance;
+  getByPlaceholderText: (placeholder: string | RegExp, options?: TextMatchOptions) => ReactTestInstance;
+  getByDisplayValue: (value: string | RegExp, options?: TextMatchOptions) => ReactTestInstance;
   getByTestId: (testID: string | RegExp) => ReactTestInstance;
   getAllByTestId: (testID: string | RegExp) => Array<ReactTestInstance>;
-  getAllByText: (text: string | RegExp) => Array<ReactTestInstance>;
+  getAllByText: (text: string | RegExp, options?: TextMatchOptions) => Array<ReactTestInstance>;
   getAllByPlaceholderText: (
-    placeholder: string | RegExp
+    placeholder: string | RegExp,
+    options?: TextMatchOptions,
   ) => Array<ReactTestInstance>;
-  getAllByDisplayValue: (value: string | RegExp) => Array<ReactTestInstance>;
+  getAllByDisplayValue: (value: string | RegExp, options?: TextMatchOptions) => Array<ReactTestInstance>;
 
   // Unsafe aliases
   UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
@@ -64,19 +65,22 @@ interface GetByAPI {
 }
 
 interface QueryByAPI {
-  queryByText: (name: string | RegExp) => ReactTestInstance | null;
+  queryByText: (name: string | RegExp, options?: TextMatchOptions) => ReactTestInstance | null;
   queryByPlaceholderText: (
-    placeholder: string | RegExp
+    placeholder: string | RegExp,
+    options?: TextMatchOptions,
   ) => ReactTestInstance | null;
-  queryByDisplayValue: (value: string | RegExp) => ReactTestInstance | null;
+  queryByDisplayValue: (value: string | RegExp, options?: TextMatchOptions) => ReactTestInstance | null;
   queryByTestId: (testID: string | RegExp) => ReactTestInstance | null;
   queryAllByTestId: (testID: string | RegExp) => Array<ReactTestInstance> | [];
-  queryAllByText: (text: string | RegExp) => Array<ReactTestInstance> | [];
+  queryAllByText: (text: string | RegExp, options?: TextMatchOptions) => Array<ReactTestInstance> | [];
   queryAllByPlaceholderText: (
-    placeholder: string | RegExp
+    placeholder: string | RegExp,
+    options?: TextMatchOptions,
   ) => Array<ReactTestInstance> | [];
   queryAllByDisplayValue: (
-    value: string | RegExp
+    value: string | RegExp,
+    options?: TextMatchOptions,
   ) => Array<ReactTestInstance> | [];
 
   // Unsafe aliases
@@ -127,28 +131,34 @@ interface QueryByAPI {
 interface FindByAPI {
   findByText: (
     text: string | RegExp,
-    waitForOptions?: WaitForOptions
+    waitForOptions?: WaitForOptions,
+    options?: TextMatchOptions,
   ) => FindReturn;
   findByPlaceholderText: (
     placeholder: string | RegExp,
-    waitForOptions?: WaitForOptions
+    waitForOptions?: WaitForOptions,
+    options?: TextMatchOptions,
   ) => FindReturn;
   findByDisplayValue: (
     value: string | RegExp,
-    waitForOptions?: WaitForOptions
+    waitForOptions?: WaitForOptions,
+    options?: TextMatchOptions,
   ) => FindReturn;
   findByTestId: (testID: string | RegExp, waitForOptions?: WaitForOptions) => FindReturn;
   findAllByText: (
     text: string | RegExp,
-    waitForOptions?: WaitForOptions
+    waitForOptions?: WaitForOptions,
+    options?: TextMatchOptions,
   ) => FindAllReturn;
   findAllByPlaceholderText: (
     placeholder: string | RegExp,
-    waitForOptions?: WaitForOptions
+    waitForOptions?: WaitForOptions,
+    options?: TextMatchOptions,
   ) => FindAllReturn;
   findAllByDisplayValue: (
     value: string | RegExp,
-    waitForOptions?: WaitForOptions
+    waitForOptions?: WaitForOptions,
+    options?: TextMatchOptions,
   ) => FindAllReturn;
   findAllByTestId: (
     testID: string | RegExp,
@@ -324,6 +334,10 @@ export declare const render: (
 
 export declare const cleanup: () => void;
 export declare const fireEvent: FireEventAPI;
+
+type TextMatchOptions = {
+  exact: boolean,
+};
 
 type WaitForOptions = {
   timeout?: number;
