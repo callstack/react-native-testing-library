@@ -122,8 +122,8 @@ Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
 ```jsx
 import { render } from '@testing-library/react-native';
 
-const { getByA11yLabel } = render(<MyComponent />);
-const element = getByA11yLabel('my-label');
+const { getByLabelText } = render(<MyComponent />);
+const element = getByLabelText('my-label');
 ```
 
 ### `ByA11yHint`, `ByAccessibilityHint`, `ByHintText`
@@ -137,8 +137,8 @@ Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
 ```jsx
 import { render } from '@testing-library/react-native';
 
-const { getByA11yHint } = render(<MyComponent />);
-const element = getByA11yHint('Plays a song');
+const { getByHintText } = render(<MyComponent />);
+const element = getByHintText('Plays a song');
 ```
 
 :::info
