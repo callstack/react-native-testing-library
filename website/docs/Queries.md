@@ -107,6 +107,10 @@ const { getByTestId } = render(<MyComponent />);
 const element = getByTestId('unique-id');
 ```
 
+:::info
+In the spirit of [the guiding principles](https://testing-library.com/docs/guiding-principles), it is recommended to use this only after the other queries don't work for your use case. Using `testID` attributes do not resemble how your software is used and should be avoided if possible. That said, they are way better than querying based on View hierarchy and are particularly useful for end-to-end testing on real devices, e.g. using Detox. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
+:::
+
 ### `ByA11yLabel`, `ByAccessibilityLabel`, `ByLabelText`
 
 > getByA11yLabel, getAllByA11yLabel, queryByA11yLabel, queryAllByA11yLabel, findByA11yLabel, findAllByA11yLabel
@@ -136,6 +140,10 @@ import { render } from '@testing-library/react-native';
 const { getByA11yHint } = render(<MyComponent />);
 const element = getByA11yHint('Plays a song');
 ```
+
+:::info
+Please consult [Apple guidelines on how `accessibilityHint` should be used](https://developer.apple.com/documentation/objectivec/nsobject/1615093-accessibilityhint).
+:::
 
 ### `ByA11yStates`, `ByAccessibilityStates`
 
