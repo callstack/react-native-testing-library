@@ -113,10 +113,6 @@ In v2 we fixed this inconsistency, which may result in failing tests, if you rel
 - replace `testID` with proper `accessibilityHint` or `accessibilityLabel` if it benefits the user
 - use safe queries like `*ByText` or `*ByA11yHint`
 
-:::caution
-In general, you should avoid `*byTestId` queries when possible. Use queries that check things that the user can interact with. Like `*ByText` or `*ByPlaceholderText` or accessibility queries (e.g. `*ByA11yHint`, `*ByA11yLabel`).
-:::
-
 ## Deprecated `flushMicrotasksQueue`
 
 We have deprecated `flushMicrotasksQueue` and plan to remove it in the next major. We have better alternatives available for helping you write async tests – `findBy` async queries and `waitFor` helper.

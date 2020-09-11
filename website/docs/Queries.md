@@ -107,8 +107,8 @@ const { getByTestId } = render(<MyComponent />);
 const element = getByTestId('unique-id');
 ```
 
-:::caution
-Please be mindful when using these API and **treat it as an escape hatch**. Your users can't interact with `testID` anyhow, so you may end up writing tests that provide false sense of security. Favor text and accessibility queries instead.
+:::info
+In the spirit of [the guiding principles](https://testing-library.com/docs/guiding-principles), it is recommended to use this only after the other queries don't work for your use case. Using `testID` attributes do not resemble how your software is used and should be avoided if possible. However, they are particularly useful for end-to-end testing on real devices, e.g. using Detox and it's an encouraged technique to use there. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
 :::
 
 ### `ByA11yLabel`, `ByAccessibilityLabel`, `ByLabelText`
@@ -122,8 +122,8 @@ Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
 ```jsx
 import { render } from '@testing-library/react-native';
 
-const { getByA11yLabel } = render(<MyComponent />);
-const element = getByA11yLabel('my-label');
+const { getByLabelText } = render(<MyComponent />);
+const element = getByLabelText('my-label');
 ```
 
 ### `ByA11yHint`, `ByAccessibilityHint`, `ByHintText`
@@ -137,9 +137,13 @@ Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
 ```jsx
 import { render } from '@testing-library/react-native';
 
-const { getByA11yHint } = render(<MyComponent />);
-const element = getByA11yHint('my-hint');
+const { getByHintText } = render(<MyComponent />);
+const element = getByHintText('Plays a song');
 ```
+
+:::info
+Please consult [Apple guidelines on how `accessibilityHint` should be used](https://developer.apple.com/documentation/objectivec/nsobject/1615093-accessibilityhint).
+:::
 
 ### `ByA11yStates`, `ByAccessibilityStates`
 
