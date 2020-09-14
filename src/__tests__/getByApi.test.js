@@ -108,3 +108,54 @@ describe('Supports a TextMatch options', () => {
     expect(getAllByText('detail', { exact: false })).toHaveLength(2);
   });
 });
+
+describe('Supports normalization', () => {
+  test('trims and collapses whitespace by default', () => {
+    const { getByText } = render(
+      <View>
+        <Text>{`  Text     and
+        
+        
+        whitespace`}</Text>
+      </View>
+    );
+
+    expect(getByText('Text and whitespace')).toBeTruthy();
+  });
+
+  test('trim and collapseWhitespace is customizable by queryOptions param', () => {
+    const testTextWithWhitespace = `  Text     and
+        
+        
+        whitespace`;
+    const { getByText } = render(
+      <View>
+        <Text>{testTextWithWhitespace}</Text>
+      </View>
+    );
+
+    expect(
+      getByText(testTextWithWhitespace, {
+        trim: false,
+        collapseWhitespace: false,
+      })
+    ).toBeTruthy();
+  });
+
+  test('normalizer function is customisable', () => {
+    const testText = 'A TO REMOVE text';
+    const normalizerFn = (textToNormalize: string) =>
+      textToNormalize.replace('TO REMOVE ', '');
+    const { getByText } = render(
+      <View>
+        <Text>{testText}</Text>
+      </View>
+    );
+
+    expect(
+      getByText('A text', {
+        normalizer: normalizerFn,
+      })
+    ).toBeTruthy();
+  });
+});
