@@ -50,3 +50,10 @@ test('supports a regex matcher', () => {
   expect(getByTestId(/view/)).toBeTruthy();
   expect(getAllByTestId(/text/)).toHaveLength(2);
 });
+
+test('throws when no text matching is found', () => {
+  const { getByText } = render(<Text>Hello</Text>);
+  expect(() => getByText('SomethingElse')).toThrowError(
+    'No instances found with text: SomethingElse'
+  );
+});

@@ -114,3 +114,32 @@ test('queryByText nested deep <CustomText> in <Text>', () => {
     ).queryByText('Hello World!')
   ).toBeTruthy();
 });
+
+test('queryByText subset of longer text', () => {
+  expect(
+    render(<Text>This is a long text</Text>).queryByText('long text')
+  ).toBeTruthy();
+});
+
+test('queryAllByText does not match several times the same text', () => {
+  const allMatched = render(
+    <Text nativeID="1">
+      Start
+      <Text nativeID="2">This is a long text</Text>
+    </Text>
+  ).queryAllByText('long text');
+  expect(allMatched.length).toBe(1);
+  expect(allMatched[0].props.nativeID).toBe('2');
+});
+
+test('queryAllByText matches all the matching nodes', () => {
+  const allMatched = render(
+    <Text nativeID="1">
+      Start
+      <Text nativeID="2">This is a long text</Text>
+      <Text nativeID="3">This is another long text</Text>
+    </Text>
+  ).queryAllByText('long text');
+  expect(allMatched.length).toBe(2);
+  expect(allMatched.map((node) => node.props.nativeID)).toEqual(['2', '3']);
+});

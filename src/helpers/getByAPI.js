@@ -20,12 +20,29 @@ const getNodeByText = (node, text) => {
       const textChildren = getChildrenAsText(node.props.children, Text);
       if (textChildren) {
         const textToTest = textChildren.join('');
-        return typeof text === 'string'
-          ? text === textToTest
-          : text.test(textToTest);
+        if (typeof text === 'string') {
+          if (text === textToTest) {
+            return { exact: true };
+          } else {
+            if (textToTest.includes(text)) {
+              return {
+                exact: false,
+                text,
+              };
+            }
+
+            return null;
+          }
+        } else {
+          return text.test(textToTest)
+            ? {
+                exact: true,
+              }
+            : null;
+        }
       }
     }
-    return false;
+    return null;
   } catch (error) {
     throw createLibraryNotSupportedError(error);
   }
@@ -95,13 +112,46 @@ const getNodeByTestId = (node, testID) => {
     : testID.test(node.props.testID);
 };
 
+export const nonErroringGetByText = (instance: ReactTestInstance) =>
+  function nonErroringGetByTextFn(text: string | RegExp) {
+    const matchingInstances = instance.findAll((node) =>
+      getNodeByText(node, text)
+    );
+    if (matchingInstances.length === 0) {
+      return null;
+    }
+
+    const matches = matchingInstances.map((instance: ReactTestInstance) => ({
+      instance,
+      ...getNodeByText(instance, text),
+    }));
+
+    // Sort the matches from the best to the worst (exact matches should come first, then closest
+    // matching text)
+    matches.sort((firstMatch, secondMatch) => {
+      if (firstMatch.exact) {
+        return -1;
+      }
+      if (secondMatch.exact) {
+        return 1;
+      }
+      return secondMatch.text.length - firstMatch.text.length;
+    });
+
+    return matches[0].instance;
+  };
+
 export const getByText = (instance: ReactTestInstance) =>
   function getByTextFn(text: string | RegExp) {
-    try {
-      return instance.find((node) => getNodeByText(node, text));
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByTextFn);
+    const match = nonErroringGetByText(instance)(text);
+    if (match) {
+      return match;
     }
+
+    throw new ErrorWithStack(
+      `No instances found with text: ${String(text)}`,
+      getByTextFn
+    );
   };
 
 export const getByPlaceholderText = (instance: ReactTestInstance) =>
@@ -148,9 +198,29 @@ export const getByTestId = (instance: ReactTestInstance) =>
     }
   };
 
-export const getAllByText = (instance: ReactTestInstance) =>
+export const getAllByText = (rootInstance: ReactTestInstance) =>
   function getAllByTextFn(text: string | RegExp) {
-    const results = instance.findAll((node) => getNodeByText(node, text));
+    const results = rootInstance.findAll((instance) => {
+      // We want to match only if there's no better match down the tree.
+      const match = getNodeByText(instance, text);
+      if (match && match.exact === false) {
+        const matchingInstances = instance.findAll((node) =>
+          getNodeByText(node, text)
+        );
+        if (matchingInstances.length === 0) {
+          return false;
+        }
+
+        if (matchingInstances.length === 1) {
+          return true;
+        }
+
+        // There's more than 1 match, that means that down the tree there will be a better matching node
+        return false;
+      }
+
+      return Boolean(match);
+    });
     if (results.length === 0) {
       throw new ErrorWithStack(
         `No instances found with text: ${String(text)}`,

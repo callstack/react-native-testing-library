@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   getByTestId,
-  getByText,
+  nonErroringGetByText,
   getByPlaceholderText,
   getByDisplayValue,
   getAllByTestId,
@@ -23,7 +23,7 @@ import {
 export const queryByText = (instance: ReactTestInstance) =>
   function queryByTextFn(text: string | RegExp) {
     try {
-      return getByText(instance)(text);
+      return nonErroringGetByText(instance)(text);
     } catch (error) {
       return createQueryByError(error, queryByTextFn);
     }
