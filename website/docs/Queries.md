@@ -44,7 +44,7 @@ In order to properly use `findBy` and `findAllBy` queries you need at least Reac
 
 _Note: most methods like this one return a [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance) with following properties that you may be interested in:_
 
-```jsx
+```typescript
 type ReactTestInstance = {
   type: string | Function,
   props: { [propName: string]: any },
@@ -54,6 +54,7 @@ type ReactTestInstance = {
 ```
 
 ### Options
+
 Query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](api-queries#textmatch) for more info.
 
 ### `ByText`
@@ -203,19 +204,58 @@ const element = getByA11yValue({ min: 40 });
 ```
 
 ## TextMatch
+
 Some APIs accept an object containing options affecting precision of string matching as the last argument:
 
 ```typescript
 type TextMatchOptions = {
-  exact: boolean,
+  exact?: boolean;
+  normalizer?: (textToNormalize: string) => string;
+  trim?: boolean;
+  collapseWhitespace?: boolean;
 };
 ```
 
 `exact` option defaults to `true` but if you want to search for a text slice or make text matching case-insensitive you can override it. That being said we advise you to use regex in more complex scenarios.
 
-### Examples
+### Normalization
+
+Before running any matching logic against text, it is automatically normalized. By default, normalization consists of trimming whitespace from the start and end of text, and collapsing multiple adjacent whitespace characters into a single space.
+
+If you want to prevent that normalization, or provide alternative normalization (e.g. to remove Unicode control characters), you can provide a `normalizer` function in the options object. This function will be given a string and is expected to return a normalized version of that string.
+
+:::info
+Specifying a value for `normalizer` replaces the built-in normalization, but you can call `getDefaultNormalizer` to obtain a built-in normalizer, either to adjust that normalization or to call it from your own normalizer.
+:::
+
+`getDefaultNormalizer` take options object which allows the selection of behaviour:
+
+- `trim`: Defaults to `true`. Trims leading and trailing whitespace.
+- `collapseWhitespace`: Defaults to `true`. Collapses inner whitespace (newlines, tabs repeated spaces) into a single space.
+
+#### Normalization Examples
+
+To perform a match against text without trimming:
+
+```typescript
+getByText(node, 'text', {
+  normalizer: getDefaultNormalizer({ trim: false }),
+});
+```
+
+To override normalization to remove some Unicode characters whilst keeping some (but not all) of the built-in normalization behavior:
+
+```typescript
+getByText(node, 'text', {
+  normalizer: (str) =>
+    getDefaultNormalizer({ trim: false })(str).replace(/[\u200E-\u200F]*/g, ''),
+});
+```
+
+### TextMatch Examples
 
 Given the following render:
+
 ```jsx
 const { getByText } = render(<Text>Hello World</Text>);
 ```
@@ -246,8 +286,6 @@ getByText('Goodbye World');
 // case-sensitive regex with different case
 getByText(/hello world/);
 ```
-
-
 
 ## Unit testing helpers
 
