@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
+import { makeNormalizer, matches } from '../matches';
+import type { NormalizerFn } from '../matches';
 import {
   ErrorWithStack,
   createLibraryNotSupportedError,
@@ -10,31 +12,15 @@ import {
 } from './errors';
 
 export type TextMatchOptions = {
-  exact: boolean,
-};
-
-const DEFAULT_TEXT_MATCH_OPTIONS: TextMatchOptions = {
-  exact: true,
+  exact?: boolean,
+  normalizer?: NormalizerFn,
+  trim?: boolean,
+  collapseWhitespace?: boolean,
 };
 
 const filterNodeByType = (node, type) => node.type === type;
 
-const matchText = (
-  match: string | RegExp,
-  textToTest: string,
-  options?: TextMatchOptions
-): boolean => {
-  const exact = options?.exact ?? DEFAULT_TEXT_MATCH_OPTIONS.exact;
-  if (typeof match === 'string') {
-    return exact
-      ? match === textToTest
-      : textToTest.toLowerCase().includes(match.toLowerCase());
-  } else {
-    return match.test(textToTest);
-  }
-};
-
-const getNodeByText = (node, text, options?: TextMatchOptions) => {
+const getNodeByText = (node, text, options?: TextMatchOptions = {}) => {
   try {
     // eslint-disable-next-line
     const { Text } = require('react-native');
@@ -43,7 +29,13 @@ const getNodeByText = (node, text, options?: TextMatchOptions) => {
       const textChildren = getChildrenAsText(node.props.children, Text);
       if (textChildren) {
         const textToTest = textChildren.join('');
-        return matchText(text, textToTest, options);
+        const { exact, normalizer, trim, collapseWhitespace } = options;
+        const normalizerFn = makeNormalizer({
+          trim,
+          collapseWhitespace,
+          normalizer,
+        });
+        return matches(textToTest, text, normalizerFn, exact);
       }
     }
     return false;
@@ -83,14 +75,20 @@ const getChildrenAsText = (children, TextComponent, textContent = []) => {
 const getTextInputNodeByPlaceholderText = (
   node,
   placeholder,
-  options?: TextMatchOptions
+  options?: TextMatchOptions = {}
 ) => {
   try {
     // eslint-disable-next-line
     const { TextInput } = require('react-native');
+    const { exact, normalizer, trim, collapseWhitespace } = options;
+    const normalizerFn = makeNormalizer({
+      trim,
+      collapseWhitespace,
+      normalizer,
+    });
     return (
       filterNodeByType(node, TextInput) &&
-      matchText(placeholder, node.props.placeholder, options)
+      matches(node.props.placeholder, placeholder, normalizerFn, exact)
     );
   } catch (error) {
     throw createLibraryNotSupportedError(error);
@@ -100,14 +98,20 @@ const getTextInputNodeByPlaceholderText = (
 const getTextInputNodeByDisplayValue = (
   node,
   value,
-  options?: TextMatchOptions
+  options?: TextMatchOptions = {}
 ) => {
   try {
     // eslint-disable-next-line
     const { TextInput } = require('react-native');
+    const { exact, normalizer, trim, collapseWhitespace } = options;
+    const normalizerFn = makeNormalizer({
+      trim,
+      collapseWhitespace,
+      normalizer,
+    });
     return (
       filterNodeByType(node, TextInput) &&
-      matchText(value, node.props.value, options)
+      matches(node.props.value, value, normalizerFn, exact)
     );
   } catch (error) {
     throw createLibraryNotSupportedError(error);

@@ -21,9 +21,9 @@ const makeFindQuery = <Text, Result>(
   ) => (text: Text, options?: TextMatchOptions) => Result,
   text: Text,
   waitForOptions: WaitForOptions,
-  textMatchOptions?: TextMatchOptions
+  queryOptions?: TextMatchOptions
 ): Promise<Result> =>
-  waitFor(() => getQuery(instance)(text, textMatchOptions), waitForOptions);
+  waitFor(() => getQuery(instance)(text, queryOptions), waitForOptions);
 
 export const findByTestId = (instance: ReactTestInstance) => (
   testId: string | RegExp,
@@ -38,66 +38,65 @@ export const findAllByTestId = (instance: ReactTestInstance) => (
 export const findByText = (instance: ReactTestInstance) => (
   text: string | RegExp,
   waitForOptions: WaitForOptions = {},
-  textMatchOptions?: TextMatchOptions
-) => makeFindQuery(instance, getByText, text, waitForOptions, textMatchOptions);
+  queryOptions?: TextMatchOptions
+) => makeFindQuery(instance, getByText, text, waitForOptions, queryOptions);
 
 export const findAllByText = (instance: ReactTestInstance) => (
   text: string | RegExp,
   waitForOptions: WaitForOptions = {},
-  textMatchOptions?: TextMatchOptions
-) =>
-  makeFindQuery(instance, getAllByText, text, waitForOptions, textMatchOptions);
+  queryOptions?: TextMatchOptions
+) => makeFindQuery(instance, getAllByText, text, waitForOptions, queryOptions);
 
 export const findByPlaceholderText = (instance: ReactTestInstance) => (
   placeholder: string | RegExp,
   waitForOptions: WaitForOptions = {},
-  textMatchOptions?: TextMatchOptions
+  queryOptions?: TextMatchOptions
 ) =>
   makeFindQuery(
     instance,
     getByPlaceholderText,
     placeholder,
     waitForOptions,
-    textMatchOptions
+    queryOptions
   );
 
 export const findAllByPlaceholderText = (instance: ReactTestInstance) => (
   placeholder: string | RegExp,
   waitForOptions: WaitForOptions = {},
-  textMatchOptions?: TextMatchOptions
+  queryOptions?: TextMatchOptions
 ) =>
   makeFindQuery(
     instance,
     getAllByPlaceholderText,
     placeholder,
     waitForOptions,
-    textMatchOptions
+    queryOptions
   );
 
 export const findByDisplayValue = (instance: ReactTestInstance) => (
   value: string | RegExp,
   waitForOptions: WaitForOptions = {},
-  textMatchOptions?: TextMatchOptions
+  queryOptions?: TextMatchOptions
 ) =>
   makeFindQuery(
     instance,
     getByDisplayValue,
     value,
     waitForOptions,
-    textMatchOptions
+    queryOptions
   );
 
 export const findAllByDisplayValue = (instance: ReactTestInstance) => (
   value: string | RegExp,
   waitForOptions: WaitForOptions = {},
-  textMatchOptions?: TextMatchOptions
+  queryOptions?: TextMatchOptions
 ) =>
   makeFindQuery(
     instance,
     getAllByDisplayValue,
     value,
     waitForOptions,
-    textMatchOptions
+    queryOptions
   );
 
 export const findByAPI = (instance: ReactTestInstance) => ({

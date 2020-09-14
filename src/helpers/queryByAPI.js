@@ -22,9 +22,12 @@ import {
 import type { TextMatchOptions } from './getByAPI';
 
 export const queryByText = (instance: ReactTestInstance) =>
-  function queryByTextFn(text: string | RegExp, options?: TextMatchOptions) {
+  function queryByTextFn(
+    text: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) {
     try {
-      return getByText(instance)(text, options);
+      return getByText(instance)(text, queryOptions);
     } catch (error) {
       return createQueryByError(error, queryByTextFn);
     }
@@ -33,10 +36,10 @@ export const queryByText = (instance: ReactTestInstance) =>
 export const queryByPlaceholderText = (instance: ReactTestInstance) =>
   function queryByPlaceholderTextFn(
     placeholder: string | RegExp,
-    options?: TextMatchOptions
+    queryOptions?: TextMatchOptions
   ) {
     try {
-      return getByPlaceholderText(instance)(placeholder, options);
+      return getByPlaceholderText(instance)(placeholder, queryOptions);
     } catch (error) {
       return createQueryByError(error, queryByPlaceholderTextFn);
     }
@@ -45,10 +48,10 @@ export const queryByPlaceholderText = (instance: ReactTestInstance) =>
 export const queryByDisplayValue = (instance: ReactTestInstance) =>
   function queryByDisplayValueFn(
     value: string | RegExp,
-    options?: TextMatchOptions
+    queryOptions?: TextMatchOptions
   ) {
     try {
-      return getByDisplayValue(instance)(value, options);
+      return getByDisplayValue(instance)(value, queryOptions);
     } catch (error) {
       return createQueryByError(error, queryByDisplayValueFn);
     }
@@ -65,10 +68,10 @@ export const queryByTestId = (instance: ReactTestInstance) =>
 
 export const queryAllByText = (instance: ReactTestInstance) => (
   text: string | RegExp,
-  options?: TextMatchOptions
+  queryOptions?: TextMatchOptions
 ) => {
   try {
-    return getAllByText(instance)(text, options);
+    return getAllByText(instance)(text, queryOptions);
   } catch (error) {
     return [];
   }
@@ -76,10 +79,10 @@ export const queryAllByText = (instance: ReactTestInstance) => (
 
 export const queryAllByPlaceholderText = (instance: ReactTestInstance) => (
   placeholder: string | RegExp,
-  options?: TextMatchOptions
+  queryOptions?: TextMatchOptions
 ) => {
   try {
-    return getAllByPlaceholderText(instance)(placeholder, options);
+    return getAllByPlaceholderText(instance)(placeholder, queryOptions);
   } catch (error) {
     return [];
   }
@@ -87,10 +90,10 @@ export const queryAllByPlaceholderText = (instance: ReactTestInstance) => (
 
 export const queryAllByDisplayValue = (instance: ReactTestInstance) => (
   value: string | RegExp,
-  options?: TextMatchOptions
+  queryOptions?: TextMatchOptions
 ) => {
   try {
-    return getAllByDisplayValue(instance)(value, options);
+    return getAllByDisplayValue(instance)(value, queryOptions);
   } catch (error) {
     return [];
   }
