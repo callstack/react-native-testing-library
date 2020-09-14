@@ -341,12 +341,10 @@ type NormalizerFn = (textToNormalize: string) => string;
 type NormalizerConfig = {
   trim?: boolean,
   collapseWhitespace?: boolean,
-}
+};
 type TextMatchOptions = {
   exact?: boolean,
   normalizer?: NormalizerFn,
-  trim?: boolean,
-  collapseWhitespace?: boolean,
 };
 
 type WaitForOptions = {
@@ -374,7 +372,7 @@ export declare const getQueriesForElement: (
   instance: ReactTestInstance
 ) => Queries;
 
-export declare const getDefaultNormalizer: (normalizerConfig: NormalizerConfig) => NormalizerFn
+export declare const getDefaultNormalizer: (normalizerConfig: NormalizerConfig) => NormalizerFn;
 
 /**
  * @deprecated This function has been removed. Please use `waitFor` function.

@@ -21,10 +21,15 @@ function matches(
   }
 }
 
+type NormalizerConfig = {
+  trim?: boolean,
+  collapseWhitespace?: boolean,
+};
+
 function getDefaultNormalizer({
   trim = true,
   collapseWhitespace = true,
-}: NormalizerInput = {}): NormalizerFn {
+}: NormalizerConfig = {}): NormalizerFn {
   return (text: string) => {
     let normalizedText = text;
     normalizedText = trim ? normalizedText.trim() : normalizedText;
@@ -36,29 +41,11 @@ function getDefaultNormalizer({
 }
 
 type NormalizerInput = {
-  trim?: boolean,
-  collapseWhitespace?: boolean,
   normalizer?: NormalizerFn,
 };
 
-function makeNormalizer({
-  trim,
-  collapseWhitespace,
-  normalizer,
-}: NormalizerInput = {}): NormalizerFn {
-  if (normalizer) {
-    if (trim !== undefined || collapseWhitespace !== undefined) {
-      throw new Error(
-        'trim and collapseWhitespace are not supported with a normalizer. ' +
-          'If you want to use the default trim and collapseWhitespace logic in your normalizer, ' +
-          'use "getDefaultNormalizer({trim, collapseWhitespace})" and compose that into your normalizer'
-      );
-    }
-
-    return normalizer;
-  } else {
-    return getDefaultNormalizer({ trim, collapseWhitespace });
-  }
+function makeNormalizer({ normalizer }: NormalizerInput = {}): NormalizerFn {
+  return normalizer ? normalizer : getDefaultNormalizer();
 }
 
 export { matches, getDefaultNormalizer, makeNormalizer };

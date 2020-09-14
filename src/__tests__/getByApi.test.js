@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
-import { render } from '..';
+import { render, getDefaultNormalizer } from '..';
 
 const MyComponent = () => {
   return <Text>My Component</Text>;
@@ -123,7 +123,7 @@ describe('Supports normalization', () => {
     expect(getByText('Text and whitespace')).toBeTruthy();
   });
 
-  test('trim and collapseWhitespace is customizable by queryOptions param', () => {
+  test('trim and collapseWhitespace is customizable by getDefaultNormalizer param', () => {
     const testTextWithWhitespace = `  Text     and
         
         
@@ -136,8 +136,10 @@ describe('Supports normalization', () => {
 
     expect(
       getByText(testTextWithWhitespace, {
-        trim: false,
-        collapseWhitespace: false,
+        normalizer: getDefaultNormalizer({
+          trim: false,
+          collapseWhitespace: false,
+        }),
       })
     ).toBeTruthy();
   });

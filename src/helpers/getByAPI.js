@@ -14,8 +14,6 @@ import {
 export type TextMatchOptions = {
   exact?: boolean,
   normalizer?: NormalizerFn,
-  trim?: boolean,
-  collapseWhitespace?: boolean,
 };
 
 const filterNodeByType = (node, type) => node.type === type;
@@ -29,10 +27,8 @@ const getNodeByText = (node, text, options?: TextMatchOptions = {}) => {
       const textChildren = getChildrenAsText(node.props.children, Text);
       if (textChildren) {
         const textToTest = textChildren.join('');
-        const { exact, normalizer, trim, collapseWhitespace } = options;
+        const { exact, normalizer } = options;
         const normalizerFn = makeNormalizer({
-          trim,
-          collapseWhitespace,
           normalizer,
         });
         return matches(textToTest, text, normalizerFn, exact);
@@ -80,10 +76,8 @@ const getTextInputNodeByPlaceholderText = (
   try {
     // eslint-disable-next-line
     const { TextInput } = require('react-native');
-    const { exact, normalizer, trim, collapseWhitespace } = options;
+    const { exact, normalizer } = options;
     const normalizerFn = makeNormalizer({
-      trim,
-      collapseWhitespace,
       normalizer,
     });
     return (
@@ -103,10 +97,8 @@ const getTextInputNodeByDisplayValue = (
   try {
     // eslint-disable-next-line
     const { TextInput } = require('react-native');
-    const { exact, normalizer, trim, collapseWhitespace } = options;
+    const { exact, normalizer } = options;
     const normalizerFn = makeNormalizer({
-      trim,
-      collapseWhitespace,
       normalizer,
     });
     return (
