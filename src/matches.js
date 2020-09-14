@@ -47,10 +47,7 @@ function makeNormalizer({
   normalizer,
 }: NormalizerInput = {}): NormalizerFn {
   if (normalizer) {
-    if (
-      typeof trim !== 'undefined' ||
-      typeof collapseWhitespace !== 'undefined'
-    ) {
+    if (trim !== undefined || collapseWhitespace !== undefined) {
       throw new Error(
         'trim and collapseWhitespace are not supported with a normalizer. ' +
           'If you want to use the default trim and collapseWhitespace logic in your normalizer, ' +

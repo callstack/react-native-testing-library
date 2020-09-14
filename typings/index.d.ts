@@ -338,6 +338,10 @@ export declare const cleanup: () => void;
 export declare const fireEvent: FireEventAPI;
 
 type NormalizerFn = (textToNormalize: string) => string;
+type NormalizerConfig = {
+  trim?: boolean,
+  collapseWhitespace?: boolean,
+}
 type TextMatchOptions = {
   exact?: boolean,
   normalizer?: NormalizerFn,
@@ -369,6 +373,8 @@ export declare const within: (instance: ReactTestInstance) => Queries;
 export declare const getQueriesForElement: (
   instance: ReactTestInstance
 ) => Queries;
+
+export declare const getDefaultNormalizer: (normalizerConfig: NormalizerConfig) => NormalizerFn
 
 /**
  * @deprecated This function has been removed. Please use `waitFor` function.
