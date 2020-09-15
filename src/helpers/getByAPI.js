@@ -117,9 +117,32 @@ const getNodeByTestId = (node, testID) => {
 };
 
 export const getByText = (instance: ReactTestInstance) =>
-  function getByTextFn(text: string | RegExp, options?: TextMatchOptions) {
+  function getByTextFn(
+    text: string | RegExp,
+    options: TextMatchOptions = { exact: true }
+  ) {
     try {
-      return instance.find((node) => getNodeByText(node, text, options));
+      const matches = instance.findAll((node) =>
+        getNodeByText(node, text, options)
+      );
+
+      if (matches.length === 0) {
+        throw new ErrorWithStack(
+          `No instances found with text: ${String(text)}`,
+          getByTextFn
+        );
+      }
+
+      if (options.exact && matches.length > 1) {
+        throw new ErrorWithStack(
+          `Expected 1 but found ${
+            matches.length
+          } instances matching text ${String(text)}`,
+          getByTextFn
+        );
+      }
+      // when using exact === false we want to return last match (most deeply nested in component tree)
+      return matches[matches.length - 1];
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByTextFn);
     }

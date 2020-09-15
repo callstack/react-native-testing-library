@@ -89,17 +89,28 @@ test('queryByText with nested Text components each with text return the lowest o
   expect(queryByText('My text')?.props.nativeID).toBe('2');
 });
 
-test('queryByText with nested Text components each with text return the top one when using not-exact text match', () => {
-  const NestedTexts = () => (
+test('queryByText with nested Text components: not-exact text match returns the most deeply nested common component', () => {
+  const { queryByText: queryByTextFirstCase } = render(
     <Text nativeID="1">
       bob
-      <Text nativeID="2">My text</Text>
+      <Text nativeID="2">My </Text>
+      <Text nativeID="3">text</Text>
     </Text>
   );
 
-  const { queryByText } = render(<NestedTexts />);
+  const { queryByText: queryByTextSecondCase } = render(
+    <Text nativeID="1">
+      bob
+      <Text nativeID="2">My text for test</Text>
+    </Text>
+  );
 
-  expect(queryByText('My text', { exact: false })?.props.nativeID).toBe('1');
+  expect(
+    queryByTextFirstCase('My text', { exact: false })?.props.nativeID
+  ).toBe('1');
+  expect(
+    queryByTextSecondCase('My text', { exact: false })?.props.nativeID
+  ).toBe('2');
 });
 
 test('queryByText nested <CustomText> in <Text>', () => {
