@@ -205,7 +205,8 @@ const element = getByA11yValue({ min: 40 });
 
 ## TextMatch
 
-Some APIs accept an object containing options affecting precision of string matching as the last argument:
+
+Several APIs accept a `TextMatch` which can be a `string` or `regex`.
 
 ```typescript
 type TextMatchOptions = {
