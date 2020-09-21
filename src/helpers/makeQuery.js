@@ -39,7 +39,7 @@ const makeQuery = <P: mixed, M: mixed>(
     } catch (error) {
       throw new ErrorWithStack(
         `${prepareErrorMessage(error)} with ${name} '${
-          typeof matcher === 'string' ? matcher : ''
+          typeof matcher === 'string' ? matcher : JSON.stringify(matcher) || ''
         }'`,
         getBy
       );
@@ -54,7 +54,7 @@ const makeQuery = <P: mixed, M: mixed>(
     if (results.length === 0) {
       throw new ErrorWithStack(
         `No instances found with ${name} '${
-          typeof matcher === 'string' ? matcher : ''
+          typeof matcher === 'string' ? matcher : JSON.stringify(matcher) || ''
         }'`,
         getAllBy
       );
