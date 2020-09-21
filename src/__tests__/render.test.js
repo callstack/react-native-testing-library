@@ -132,7 +132,9 @@ test('getByText, queryByText', () => {
   const sameButton = getByText('not fresh');
 
   expect(sameButton.props.children).toBe('not fresh');
-  expect(() => getByText('InExistent')).toThrow('No instances found');
+  expect(() => getByText('InExistent')).toThrow(
+    "No instances found with text 'InExistent'"
+  );
 
   const zeroText = getByText('0');
 
@@ -186,7 +188,7 @@ test('getByPlaceholderText, queryByPlaceholderText', () => {
 
   expect(sameInput.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
   expect(() => getByPlaceholderText('no placeholder')).toThrow(
-    'No instances found'
+    "No instances found with placeholder text 'no placeholder'"
   );
 
   expect(queryByPlaceholderText(/add/i)).toBe(input);
@@ -220,7 +222,9 @@ test('getByDisplayValue, queryByDisplayValue', () => {
   const sameInput = getByDisplayValue(INPUT_FRESHNESS);
 
   expect(sameInput.props.value).toBe(INPUT_FRESHNESS);
-  expect(() => getByDisplayValue('no value')).toThrow('No instances found');
+  expect(() => getByDisplayValue('no value')).toThrow(
+    "No instances found with display value 'no value'"
+  );
 
   expect(queryByDisplayValue(/custom/i)).toBe(input);
   expect(queryByDisplayValue('no value')).toBeNull();

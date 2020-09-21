@@ -100,7 +100,12 @@ export const getByText = (instance: ReactTestInstance) =>
     try {
       return instance.find((node) => getNodeByText(node, text));
     } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByTextFn);
+      throw new ErrorWithStack(
+        `${prepareErrorMessage(error)} with text '${
+          typeof text === 'string' ? text : text.toString()
+        }'`,
+        getByTextFn
+      );
     }
   };
 
@@ -112,20 +117,29 @@ export const getByPlaceholderText = (instance: ReactTestInstance) =>
       );
     } catch (error) {
       throw new ErrorWithStack(
-        prepareErrorMessage(error),
+        `${prepareErrorMessage(error)} with placeholder text '${
+          typeof placeholder === 'string' ? placeholder : placeholder.toString()
+        }'`,
         getByPlaceholderTextFn
       );
     }
   };
 
 export const getByDisplayValue = (instance: ReactTestInstance) =>
-  function getByDisplayValueFn(placeholder: string | RegExp) {
+  function getByDisplayValueFn(displayValue: string | RegExp) {
     try {
       return instance.find((node) =>
-        getTextInputNodeByDisplayValue(node, placeholder)
+        getTextInputNodeByDisplayValue(node, displayValue)
       );
     } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByDisplayValueFn);
+      throw new ErrorWithStack(
+        `${prepareErrorMessage(error)} with display value '${
+          typeof displayValue === 'string'
+            ? displayValue
+            : displayValue.toString()
+        }'`,
+        getByDisplayValueFn
+      );
     }
   };
 
