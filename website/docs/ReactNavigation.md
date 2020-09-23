@@ -149,7 +149,7 @@ Notice the 2 entries that don't come with the default React Native project:
 
 For this example, we are going to test out two things. The first thing is that the page is laid out as expected. The second, and most important, is that the page will transition to the detail screen when any item is tapped on.
 
-Let's a [`AppNavigator.test.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/__tests__/AppNavigator.js) file in `src/__tests__` directory:
+Let's add a [`AppNavigator.test.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/__tests__/AppNavigator.js) file in `src/__tests__` directory:
 
 ```jsx
 import React from 'react';
