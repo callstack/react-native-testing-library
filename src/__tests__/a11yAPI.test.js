@@ -11,7 +11,7 @@ const TEXT_HINT = 'static text';
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 const FOUND_TWO_INSTANCES = 'Expected 1 but found 2 instances';
 
-const fullNoInstanceError = (name: string, value: string = NO_MATCHES_TEXT) => {
+const getNoInstancesFoundMessage = (prop: string, value: string = NO_MATCHES_TEXT) => {
   return `No instances found with ${name} '${value}'`;
 };
 
