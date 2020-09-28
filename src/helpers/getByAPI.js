@@ -101,9 +101,7 @@ export const getByText = (instance: ReactTestInstance) =>
       return instance.find((node) => getNodeByText(node, text));
     } catch (error) {
       throw new ErrorWithStack(
-        `${prepareErrorMessage(error)} with text '${
-          typeof text === 'string' ? text : text.toString()
-        }'`,
+        prepareErrorMessage(error, 'text', text),
         getByTextFn
       );
     }
@@ -117,9 +115,7 @@ export const getByPlaceholderText = (instance: ReactTestInstance) =>
       );
     } catch (error) {
       throw new ErrorWithStack(
-        `${prepareErrorMessage(error)} with placeholder text '${
-          typeof placeholder === 'string' ? placeholder : placeholder.toString()
-        }'`,
+        prepareErrorMessage(error, 'placeholder', placeholder),
         getByPlaceholderTextFn
       );
     }
@@ -133,11 +129,7 @@ export const getByDisplayValue = (instance: ReactTestInstance) =>
       );
     } catch (error) {
       throw new ErrorWithStack(
-        `${prepareErrorMessage(error)} with display value '${
-          typeof displayValue === 'string'
-            ? displayValue
-            : displayValue.toString()
-        }'`,
+        prepareErrorMessage(error, 'display value', displayValue),
         getByDisplayValueFn
       );
     }

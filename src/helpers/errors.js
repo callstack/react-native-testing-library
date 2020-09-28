@@ -1,4 +1,6 @@
 // @flow
+import prettyFormat from 'pretty-format';
+
 export class ErrorWithStack extends Error {
   constructor(message: ?string, callsite: Function) {
     super(message);
@@ -13,9 +15,22 @@ export const createLibraryNotSupportedError = (error: Error) =>
     `Currently the only supported library to search by text is "react-native".\n\n${error.message}`
   );
 
-export const prepareErrorMessage = (error: Error) =>
+export const prepareErrorMessage = (
+  error: Error,
+  name: ?string,
+  value: ?mixed
+) => {
   // Strip info about custom predicate
-  error.message.replace(/ matching custom predicate[^]*/gm, '');
+  let errorMessage = error.message.replace(
+    / matching custom predicate[^]*/gm,
+    ''
+  );
+
+  if (name && value) {
+    errorMessage += ` with ${name} ${prettyFormat(value, { min: true })}`;
+  }
+  return errorMessage;
+};
 
 export const createQueryByError = (error: Error, callsite: Function) => {
   if (error.message.includes('No instances found')) {

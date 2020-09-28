@@ -1,4 +1,5 @@
 // @flow
+import prettyFormat from 'pretty-format';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 import {
@@ -38,9 +39,7 @@ const makeQuery = <P: mixed, M: mixed>(
       );
     } catch (error) {
       throw new ErrorWithStack(
-        `${prepareErrorMessage(error)} with ${name} '${
-          typeof matcher === 'string' ? matcher : JSON.stringify(matcher) || ''
-        }'`,
+        prepareErrorMessage(error, name, matcher),
         getBy
       );
     }
@@ -53,9 +52,7 @@ const makeQuery = <P: mixed, M: mixed>(
 
     if (results.length === 0) {
       throw new ErrorWithStack(
-        `No instances found with ${name} '${
-          typeof matcher === 'string' ? matcher : JSON.stringify(matcher) || ''
-        }'`,
+        prepareErrorMessage(new Error('No instances found'), name, matcher),
         getAllBy
       );
     }
