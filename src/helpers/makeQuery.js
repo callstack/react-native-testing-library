@@ -1,5 +1,4 @@
 // @flow
-import prettyFormat from 'pretty-format';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 import {
