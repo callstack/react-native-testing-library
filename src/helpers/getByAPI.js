@@ -123,27 +123,17 @@ export const getByText = (instance: ReactTestInstance) =>
     options: TextMatchOptions = { exact: true }
   ) {
     try {
-      const matches = instance.findAll((node) =>
-        getNodeByText(node, text, options)
-      );
-
-      if (matches.length === 0) {
-        throw new ErrorWithStack(
-          `No instances found with text: ${String(text)}`,
-          getByTextFn
-        );
-      }
-
-      if (options.exact && matches.length > 1) {
+      const results = getAllByText(instance)(text, options);
+      if (results.length === 1) {
+        return results[0];
+      } else {
         throw new ErrorWithStack(
           `Expected 1 but found ${
-            matches.length
+            results.length
           } instances matching text ${String(text)}`,
           getByTextFn
         );
       }
-      // when using exact === false we want to return last match (most deeply nested in component tree)
-      return matches[matches.length - 1];
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByTextFn);
     }
