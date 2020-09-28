@@ -48,7 +48,7 @@ test('queryByText not found', () => {
   ).toBeFalsy();
 });
 
-test('queryByText nested text across multiple <Text> in <Text>', () => {
+test('queryByText does not match nested text across multiple <Text> in <Text>', () => {
   const { queryByText } = render(
     <Text nativeID="1">
       Hello{' '}
@@ -59,8 +59,7 @@ test('queryByText nested text across multiple <Text> in <Text>', () => {
     </Text>
   );
 
-  expect(queryByText('Hello World!')?.props.nativeID).toBe('1');
-  expect(queryByText('hello Wo', { exact: false })?.props.nativeID).toBe('1');
+  expect(queryByText('Hello World!')).toBe(null);
 });
 
 test('queryByText with nested Text components return the closest Text', () => {
@@ -105,26 +104,10 @@ test('queryByText with nested Text components: not-exact text match returns the 
     </Text>
   );
 
-  expect(
-    queryByTextFirstCase('My text', { exact: false })?.props.nativeID
-  ).toBe('1');
+  expect(queryByTextFirstCase('My text')).toBe(null);
   expect(
     queryByTextSecondCase('My text', { exact: false })?.props.nativeID
   ).toBe('2');
-});
-
-test('queryByText nested <CustomText> in <Text>', () => {
-  const CustomText = ({ children }) => {
-    return <Text>{children}</Text>;
-  };
-
-  expect(
-    render(
-      <Text>
-        Hello <CustomText>World!</CustomText>
-      </Text>
-    ).queryByText('Hello World!')
-  ).toBeTruthy();
 });
 
 test('queryByText nested deep <CustomText> in <Text>', () => {
@@ -138,5 +121,28 @@ test('queryByText nested deep <CustomText> in <Text>', () => {
         <CustomText>Hello</CustomText> <CustomText>World!</CustomText>
       </Text>
     ).queryByText('Hello World!')
-  ).toBeTruthy();
+  ).toBe(null);
+});
+
+test('queryAllByText does not match several times the same text', () => {
+  const allMatched = render(
+    <Text nativeID="1">
+      Start
+      <Text nativeID="2">This is a long text</Text>
+    </Text>
+  ).queryAllByText('long text', { exact: false });
+  expect(allMatched.length).toBe(1);
+  expect(allMatched[0].props.nativeID).toBe('2');
+});
+
+test('queryAllByText matches all the matching nodes', () => {
+  const allMatched = render(
+    <Text nativeID="1">
+      Start
+      <Text nativeID="2">This is a long text</Text>
+      <Text nativeID="3">This is another long text</Text>
+    </Text>
+  ).queryAllByText('long text', { exact: false });
+  expect(allMatched.length).toBe(2);
+  expect(allMatched.map((node) => node.props.nativeID)).toEqual(['2', '3']);
 });

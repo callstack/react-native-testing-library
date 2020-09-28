@@ -40,7 +40,8 @@ const getNodeByText = (node, text, options?: TextMatchOptions = {}) => {
   }
 };
 
-const getChildrenAsText = (children, TextComponent, textContent = []) => {
+const getChildrenAsText = (children, TextComponent) => {
+  const textContent = [];
   React.Children.forEach(children, (child) => {
     if (typeof child === 'string') {
       textContent.push(child);
@@ -61,7 +62,7 @@ const getChildrenAsText = (children, TextComponent, textContent = []) => {
         return;
       }
 
-      getChildrenAsText(child.props.children, TextComponent, textContent);
+      getChildrenAsText(child.props.children, TextComponent);
     }
   });
 

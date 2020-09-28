@@ -31,6 +31,7 @@ export function printDeprecationWarning(functionName: string) {
     return;
   }
 
+  // eslint-disable-next-line no-console
   console.warn(`
   Deprecation Warning:
   Use of ${functionName} is not recommended and will be deleted in future versions of @testing-library/react-native.
