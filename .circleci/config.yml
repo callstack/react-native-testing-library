@@ -65,6 +65,15 @@ jobs:
           at: ~/react-native-testing-library
       - run: |
           cd website && yarn install && yarn build
+  test-examples:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/react-native-testing-library
+      - run: |
+          cd examples/reactnavigation && yarn install && yarn test
+      - run: |
+          cd examples/redux && yarn install && yarn test
   deploy-website:
     <<: *defaults
     steps:
@@ -96,6 +105,10 @@ workflows:
             - install-dependencies
           # docusuarus build is running when deploying website as well
           filters: *filter-ignore-master
+      - test-examples:
+          requires:
+            - install-dependencies
+          filters: *filter-only-master
       - deploy-website:
           requires:
             - install-dependencies
