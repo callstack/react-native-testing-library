@@ -71,9 +71,7 @@ jobs:
       - attach_workspace:
           at: ~/react-native-testing-library
       - run: |
-          cd examples/reactnavigation && yarn install && yarn test
-      - run: |
-          cd examples/redux && yarn install && yarn test
+          ls -d ./examples/* | xargs -I {} bash -c "cd '{}' && npm install && npm run test"
   deploy-website:
     <<: *defaults
     steps:
