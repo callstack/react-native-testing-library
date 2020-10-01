@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
+import { makeNormalizer, matches } from '../matches';
+import type { NormalizerFn } from '../matches';
 import {
   ErrorWithStack,
   createLibraryNotSupportedError,
@@ -9,9 +11,14 @@ import {
   throwRenamedFunctionError,
 } from './errors';
 
+export type TextMatchOptions = {
+  exact?: boolean,
+  normalizer?: NormalizerFn,
+};
+
 const filterNodeByType = (node, type) => node.type === type;
 
-const getNodeByText = (node, text) => {
+const getNodeByText = (node, text, options?: TextMatchOptions = {}) => {
   try {
     // eslint-disable-next-line
     const { Text } = require('react-native');
@@ -20,9 +27,11 @@ const getNodeByText = (node, text) => {
       const textChildren = getChildrenAsText(node.props.children, Text);
       if (textChildren) {
         const textToTest = textChildren.join('');
-        return typeof text === 'string'
-          ? text === textToTest
-          : text.test(textToTest);
+        const { exact, normalizer } = options;
+        const normalizerFn = makeNormalizer({
+          normalizer,
+        });
+        return matches(textToTest, text, normalizerFn, exact);
       }
     }
     return false;
@@ -59,30 +68,42 @@ const getChildrenAsText = (children, TextComponent, textContent = []) => {
   return textContent;
 };
 
-const getTextInputNodeByPlaceholderText = (node, placeholder) => {
+const getTextInputNodeByPlaceholderText = (
+  node,
+  placeholder,
+  options?: TextMatchOptions = {}
+) => {
   try {
     // eslint-disable-next-line
     const { TextInput } = require('react-native');
+    const { exact, normalizer } = options;
+    const normalizerFn = makeNormalizer({
+      normalizer,
+    });
     return (
       filterNodeByType(node, TextInput) &&
-      (typeof placeholder === 'string'
-        ? placeholder === node.props.placeholder
-        : placeholder.test(node.props.placeholder))
+      matches(node.props.placeholder, placeholder, normalizerFn, exact)
     );
   } catch (error) {
     throw createLibraryNotSupportedError(error);
   }
 };
 
-const getTextInputNodeByDisplayValue = (node, value) => {
+const getTextInputNodeByDisplayValue = (
+  node,
+  value,
+  options?: TextMatchOptions = {}
+) => {
   try {
     // eslint-disable-next-line
     const { TextInput } = require('react-native');
+    const { exact, normalizer } = options;
+    const normalizerFn = makeNormalizer({
+      normalizer,
+    });
     return (
       filterNodeByType(node, TextInput) &&
-      (typeof value === 'string'
-        ? value === node.props.value
-        : value.test(node.props.value))
+      matches(node.props.value, value, normalizerFn, exact)
     );
   } catch (error) {
     throw createLibraryNotSupportedError(error);
@@ -96,19 +117,45 @@ const getNodeByTestId = (node, testID) => {
 };
 
 export const getByText = (instance: ReactTestInstance) =>
-  function getByTextFn(text: string | RegExp) {
+  function getByTextFn(
+    text: string | RegExp,
+    options: TextMatchOptions = { exact: true }
+  ) {
     try {
-      return instance.find((node) => getNodeByText(node, text));
+      const matches = instance.findAll((node) =>
+        getNodeByText(node, text, options)
+      );
+
+      if (matches.length === 0) {
+        throw new ErrorWithStack(
+          `No instances found with text: ${String(text)}`,
+          getByTextFn
+        );
+      }
+
+      if (options.exact && matches.length > 1) {
+        throw new ErrorWithStack(
+          `Expected 1 but found ${
+            matches.length
+          } instances matching text ${String(text)}`,
+          getByTextFn
+        );
+      }
+      // when using exact === false we want to return last match (most deeply nested in component tree)
+      return matches[matches.length - 1];
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByTextFn);
     }
   };
 
 export const getByPlaceholderText = (instance: ReactTestInstance) =>
-  function getByPlaceholderTextFn(placeholder: string | RegExp) {
+  function getByPlaceholderTextFn(
+    placeholder: string | RegExp,
+    options?: TextMatchOptions
+  ) {
     try {
       return instance.find((node) =>
-        getTextInputNodeByPlaceholderText(node, placeholder)
+        getTextInputNodeByPlaceholderText(node, placeholder, options)
       );
     } catch (error) {
       throw new ErrorWithStack(
@@ -119,10 +166,13 @@ export const getByPlaceholderText = (instance: ReactTestInstance) =>
   };
 
 export const getByDisplayValue = (instance: ReactTestInstance) =>
-  function getByDisplayValueFn(placeholder: string | RegExp) {
+  function getByDisplayValueFn(
+    placeholder: string | RegExp,
+    options?: TextMatchOptions
+  ) {
     try {
       return instance.find((node) =>
-        getTextInputNodeByDisplayValue(node, placeholder)
+        getTextInputNodeByDisplayValue(node, placeholder, options)
       );
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByDisplayValueFn);
@@ -149,8 +199,10 @@ export const getByTestId = (instance: ReactTestInstance) =>
   };
 
 export const getAllByText = (instance: ReactTestInstance) =>
-  function getAllByTextFn(text: string | RegExp) {
-    const results = instance.findAll((node) => getNodeByText(node, text));
+  function getAllByTextFn(text: string | RegExp, options?: TextMatchOptions) {
+    const results = instance.findAll((node) =>
+      getNodeByText(node, text, options)
+    );
     if (results.length === 0) {
       throw new ErrorWithStack(
         `No instances found with text: ${String(text)}`,
@@ -161,9 +213,12 @@ export const getAllByText = (instance: ReactTestInstance) =>
   };
 
 export const getAllByPlaceholderText = (instance: ReactTestInstance) =>
-  function getAllByPlaceholderTextFn(placeholder: string | RegExp) {
+  function getAllByPlaceholderTextFn(
+    placeholder: string | RegExp,
+    options?: TextMatchOptions
+  ) {
     const results = instance.findAll((node) =>
-      getTextInputNodeByPlaceholderText(node, placeholder)
+      getTextInputNodeByPlaceholderText(node, placeholder, options)
     );
     if (results.length === 0) {
       throw new ErrorWithStack(
@@ -175,9 +230,12 @@ export const getAllByPlaceholderText = (instance: ReactTestInstance) =>
   };
 
 export const getAllByDisplayValue = (instance: ReactTestInstance) =>
-  function getAllByDisplayValueFn(value: string | RegExp) {
+  function getAllByDisplayValueFn(
+    value: string | RegExp,
+    options?: TextMatchOptions
+  ) {
     const results = instance.findAll((node) =>
-      getTextInputNodeByDisplayValue(node, value)
+      getTextInputNodeByDisplayValue(node, value, options)
     );
     if (results.length === 0) {
       throw new ErrorWithStack(
