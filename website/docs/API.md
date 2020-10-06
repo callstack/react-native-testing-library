@@ -118,6 +118,14 @@ toJSON(): ReactTestRendererJSON | null
 
 Get the rendered component JSON representation, e.g. for snapshot testing.
 
+### `root`
+
+```ts
+root: ReactTestInstance
+```
+
+Reference to the root [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance). A similar object as the one returned by [queries](Queries.md).
+
 ## `cleanup`
 
 ```ts
