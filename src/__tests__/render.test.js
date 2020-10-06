@@ -382,3 +382,28 @@ test('renders options.wrapper around updated node', () => {
     </RCTSafeAreaView>
   `);
 });
+
+it('returns root test instance', () => {
+  // when
+  const renderResult = render(<View testID="inner" />);
+
+  // then
+  expect(renderResult.root).toBeDefined();
+  expect(renderResult.root.type).toBe(View);
+});
+
+it('returns wrapped component as root test instance', () => {
+  // given
+  const WrapperComponent = ({ children }) => (
+    <SafeAreaView testID="wrapper">{children}</SafeAreaView>
+  );
+
+  // when
+  const renderResult = render(<View testID="inner" />, {
+    wrapper: WrapperComponent,
+  });
+
+  // then
+  expect(renderResult.root).toBeDefined();
+  expect(renderResult.root.type).toBe(WrapperComponent);
+});
