@@ -7,6 +7,7 @@ import {
   throwRemovedFunctionError,
   copyStackTrace,
 } from './helpers/errors';
+import { setTimeout } from './helpers/getTimerFuncs';
 
 const DEFAULT_TIMEOUT = 4500;
 const DEFAULT_INTERVAL = 50;
@@ -28,14 +29,17 @@ function waitForInternal<T>(
   options?: WaitForOptions
 ): Promise<T> {
   const timeout = options?.timeout ?? DEFAULT_TIMEOUT;
-  const interval = options?.interval ?? DEFAULT_INTERVAL;
-  const startTime = Date.now();
+  let interval = options?.interval ?? DEFAULT_INTERVAL;
   // Being able to display a useful stack trace requires generating it before doing anything async
   const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', waitFor);
 
+  if (interval < 1) interval = 1;
+  const maxTries = Math.ceil(timeout / interval);
+  let tries = 0;
+
   return new Promise((resolve, reject) => {
     const rejectOrRerun = (error) => {
-      if (Date.now() - startTime >= timeout) {
+      if (tries > maxTries) {
         copyStackTrace(error, stackTraceError);
         reject(error);
         return;
@@ -43,8 +47,9 @@ function waitForInternal<T>(
       setTimeout(runExpectation, interval);
     };
     function runExpectation() {
+      tries += 1;
       try {
-        const result = expectation();
+        const result = Promise.resolve(expectation());
         resolve(result);
       } catch (error) {
         rejectOrRerun(error);

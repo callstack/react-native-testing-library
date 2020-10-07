@@ -75,6 +75,7 @@
       "js",
       "json"
     ],
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "testPathIgnorePatterns": ["timerUtils"]
   }
 }
