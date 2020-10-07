@@ -92,6 +92,17 @@ describe('Supports a TextMatch options', () => {
     expect(getAllByDisplayValue('detail', { exact: false })).toHaveLength(2);
   });
 
+  test('getByTestId, getAllByTestId', () => {
+    const { getByTestId, getAllByTestId } = render(
+      <View>
+        <View testID="test" />
+        <View testID="tests id" />
+      </View>
+    );
+    expect(getByTestId('id', { exact: false })).toBeTruthy();
+    expect(getAllByTestId('test', { exact: false })).toHaveLength(2);
+  });
+
   test('with TextMatch option exact === false text search is NOT case sensitive', () => {
     const { getByText, getAllByText } = render(
       <View>

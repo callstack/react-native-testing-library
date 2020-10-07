@@ -111,10 +111,12 @@ const getTextInputNodeByDisplayValue = (
   }
 };
 
-const getNodeByTestId = (node, testID) => {
-  return typeof testID === 'string'
-    ? testID === node.props.testID
-    : testID.test(node.props.testID);
+const getNodeByTestId = (node, testID, options?: TextMatchOptions = {}) => {
+  const { exact, normalizer } = options;
+  const normalizerFn = makeNormalizer({
+    normalizer,
+  });
+  return matches(node.props.testID, testID, normalizerFn, exact);
 };
 
 export const getByText = (instance: ReactTestInstance) =>
@@ -171,9 +173,12 @@ export const getByDisplayValue = (instance: ReactTestInstance) =>
   };
 
 export const getByTestId = (instance: ReactTestInstance) =>
-  function getByTestIdFn(testID: string | RegExp) {
+  function getByTestIdFn(
+    testID: string | RegExp,
+    queryOptions?: TextMatchOptions = { exact: true }
+  ) {
     try {
-      const results = getAllByTestId(instance)(testID);
+      const results = getAllByTestId(instance)(testID, queryOptions);
       if (results.length === 1) {
         return results[0];
       } else {
@@ -238,9 +243,12 @@ export const getAllByDisplayValue = (instance: ReactTestInstance) =>
   };
 
 export const getAllByTestId = (instance: ReactTestInstance) =>
-  function getAllByTestIdFn(testID: string | RegExp): ReactTestInstance[] {
+  function getAllByTestIdFn(
+    testID: string | RegExp,
+    queryOptions?: TextMatchOptions = { exact: true }
+  ): ReactTestInstance[] {
     const results = instance
-      .findAll((node) => getNodeByTestId(node, testID))
+      .findAll((node) => getNodeByTestId(node, testID, queryOptions))
       .filter((element) => typeof element.type === 'string');
 
     if (results.length === 0) {

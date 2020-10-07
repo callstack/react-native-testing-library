@@ -27,13 +27,16 @@ const makeFindQuery = <Text, Result>(
 
 export const findByTestId = (instance: ReactTestInstance) => (
   testId: string | RegExp,
+  queryOptions?: TextMatchOptions,
   waitForOptions: WaitForOptions = {}
-) => makeFindQuery(instance, getByTestId, testId, {}, waitForOptions);
+) => makeFindQuery(instance, getByTestId, testId, queryOptions, waitForOptions);
 
 export const findAllByTestId = (instance: ReactTestInstance) => (
   testId: string | RegExp,
+  queryOptions?: TextMatchOptions,
   waitForOptions: WaitForOptions = {}
-) => makeFindQuery(instance, getAllByTestId, testId, {}, waitForOptions);
+) =>
+  makeFindQuery(instance, getAllByTestId, testId, queryOptions, waitForOptions);
 
 export const findByText = (instance: ReactTestInstance) => (
   text: string | RegExp,
