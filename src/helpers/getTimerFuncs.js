@@ -21,7 +21,6 @@ function runWithRealTimers(callback) {
 }
 
 function getJestFakeTimersType() {
-  // istanbul ignore if
   if (
     typeof jest === 'undefined' ||
     typeof globalObj.setTimeout === 'undefined'
@@ -52,13 +51,11 @@ function getJestFakeTimersType() {
 }
 
 // we only run our tests in node, and setImmediate is supported in node.
-// istanbul ignore next
 function setImmediatePolyfill(fn) {
   return globalObj.setTimeout(fn, 0);
 }
 
 function getTimeFunctions() {
-  // istanbul ignore next
   return {
     clearTimeoutFn: globalObj.clearTimeout,
     setImmediateFn: globalObj.setImmediate || setImmediatePolyfill,

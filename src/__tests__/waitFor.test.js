@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { render, fireEvent, waitFor } from '..';
-import { FakeTimerTypes, setupFakeTimers } from './timerUtils';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { fireEvent, render, waitFor } from '..';
+import { FakeTimerTypes, setupFakeTimers, sleep } from './timerUtils';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {
@@ -137,3 +137,30 @@ test.each(FakeTimerTypes)(
     expect(mockFn).toHaveBeenCalledTimes(3);
   }
 );
+
+// this test leads to a console error: Warning: You called act(async () => ...) without await, but does not fail the test
+// it is included to show that the previous approach of faking modern timers still works
+// the gotcha is that the try catch will fail to catch the final error, which is why we need to stop throwing
+test('non-awaited approach is not affected by fake modern timers', async () => {
+  jest.useFakeTimers('modern');
+
+  let calls = 0;
+  const mockFn = jest.fn(() => {
+    calls += 1;
+    if (calls < 3) {
+      throw Error('test');
+    }
+  });
+
+  try {
+    waitFor(() => mockFn(), { timeout: 400, interval: 200 });
+  } catch (e) {
+    // suppress
+  }
+  jest.advanceTimersByTime(400);
+  expect(mockFn).toHaveBeenCalledTimes(0);
+
+  jest.useRealTimers();
+  await sleep(500);
+  expect(mockFn).toHaveBeenCalledTimes(3);
+});

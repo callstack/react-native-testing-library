@@ -1,3 +1,5 @@
+import { setTimeout } from '../helpers/getTimerFuncs';
+
 const FakeTimerTypes = [
   'default',
   'legacy',
@@ -18,4 +20,8 @@ function setupFakeTimers(fakeTimerType) {
   }
 }
 
-export { FakeTimerTypes, setupFakeTimers };
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export { FakeTimerTypes, setupFakeTimers, sleep };
