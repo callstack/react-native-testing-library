@@ -104,6 +104,50 @@ export const getByText = (instance: ReactTestInstance) =>
     }
   };
 
+export const getByTextWithType = (instance: ReactTestInstance) =>
+  function getByTextWithTypeFn(
+    text: string | RegExp,
+    type: React.ComponentType<any>
+  ) {
+    const nodes = instance.findAll((node) => getNodeByText(node, text));
+    let found = [];
+    for (const node of nodes) {
+      let n = node;
+      while (n !== null) {
+        if (n.type === type) {
+          found.push(n);
+          break;
+        }
+
+        n = n.parent;
+      }
+    }
+
+    if (found.length === 0) {
+      throw new ErrorWithStack(
+        `No instances found with text: "${String(text)}" with type: ${String(
+          type.name
+        )}`,
+        getByTextWithTypeFn
+      );
+    } else if (found.length > 1) {
+      throw new ErrorWithStack(
+        `Expected 1 but found ${found.length} instances`,
+        getByTextWithTypeFn
+      );
+    }
+
+    return found[0];
+  };
+
+const printParents = (node: ReactTestInstance) => {
+  let n = node;
+  while (n !== null) {
+    console.log({ node: n, type: n.type });
+    n = n.parent;
+  }
+};
+
 export const getByPlaceholderText = (instance: ReactTestInstance) =>
   function getByPlaceholderTextFn(placeholder: string | RegExp) {
     try {
@@ -158,6 +202,37 @@ export const getAllByText = (instance: ReactTestInstance) =>
       );
     }
     return results;
+  };
+
+export const getAllByTextWithType = (instance: ReactTestInstance) =>
+  function getAllByTextWithTypeFn(
+    text: string | RegExp,
+    type: React.ComponentType<any>
+  ) {
+    const nodes = instance.findAll((node) => getNodeByText(node, text));
+    let found = [];
+    for (const node of nodes) {
+      let n = node;
+      while (n !== null) {
+        if (n.type === type) {
+          found.push(n);
+          break;
+        }
+
+        n = n.parent;
+      }
+    }
+
+    if (found.length === 0) {
+      throw new ErrorWithStack(
+        `No instances found with text: "${String(text)}" with type: ${String(
+          type.name
+        )}`,
+        getAllByTextWithTypeFn
+      );
+    }
+
+    return found;
   };
 
 export const getAllByPlaceholderText = (instance: ReactTestInstance) =>
@@ -244,10 +319,12 @@ export const UNSAFE_getAllByProps = (instance: ReactTestInstance) =>
 
 export const getByAPI = (instance: ReactTestInstance) => ({
   getByText: getByText(instance),
+  getByTextWithType: getByTextWithType(instance),
   getByPlaceholderText: getByPlaceholderText(instance),
   getByDisplayValue: getByDisplayValue(instance),
   getByTestId: getByTestId(instance),
   getAllByText: getAllByText(instance),
+  getAllByTextWithType: getAllByTextWithType(instance),
   getAllByPlaceholderText: getAllByPlaceholderText(instance),
   getAllByDisplayValue: getAllByDisplayValue(instance),
   getAllByTestId: getAllByTestId(instance),

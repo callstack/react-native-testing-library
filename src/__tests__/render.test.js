@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {
+  Button,
   View,
   Text,
   TextInput,
@@ -73,6 +74,8 @@ class Banana extends React.Component<any, any> {
         </MyButton>
         <Text testID="duplicateText">First Text</Text>
         <Text testID="duplicateText">Second Text</Text>
+        <Text>multiple</Text>
+        <Text>multiple</Text>
         <Text>{test}</Text>
       </View>
     );
@@ -133,6 +136,9 @@ test('getByText, queryByText', () => {
 
   expect(sameButton.props.children).toBe('not fresh');
   expect(() => getByText('InExistent')).toThrow('No instances found');
+  expect(() => getByText('multiple')).toThrow(
+    'Expected 1 but found 2 instances'
+  );
 
   const zeroText = getByText('0');
 
@@ -163,6 +169,103 @@ test('getByText, queryByText with children as Array', () => {
     3,
     ' bananas in the bunch',
   ]);
+});
+
+const MyText = (props) => <Text {...props} />;
+
+const Component = () => {
+  return (
+    <View>
+      <Button testID="b1" title="wow" />
+      <Button testID="b2" title="wow" />
+      <Button testID="b3" title="amazing" />
+      <Text testID="t1">wow</Text>
+      <Text testID="t2">amazing</Text>
+      <MyText testID="m1">wow</MyText>
+      <MyText testID="m2">amazing</MyText>
+    </View>
+  );
+};
+
+test('getByTextWithType', () => {
+  const { getByTextWithType, getByText, getAllByText } = render(<Component />);
+
+  // sanity checks
+  expect(getAllByText('wow')).toHaveLength(4);
+  expect(getAllByText('amazing')).toHaveLength(3);
+  expect(() => getByText('non-existent')).toThrow('No instances found');
+
+  // find Buttons
+  expect(getByTextWithType('amazing', Button).type).toBe(Button);
+  expect(getByTextWithType('amazing', Button).props.testID).toBe('b3');
+  expect(getByTextWithType('amazing', Button).props.title).toBe('amazing');
+
+  expect(() => getByTextWithType('wow', Button).type).toThrow(
+    'Expected 1 but found 2 instances'
+  );
+  expect(() => getByTextWithType('non-existent', Button)).toThrow(
+    'No instances found'
+  );
+
+  // Text is also inside a Button, so looking for a Text with "wow" returns 3 instances:
+  // the two Buttons plus the one Text
+  expect(() => getByTextWithType('wow', Text).type).toThrow(
+    'Expected 1 but found 4 instances'
+  );
+  expect(() => getByTextWithType('amazing', Text).type).toThrow(
+    'Expected 1 but found 3 instances'
+  );
+
+  // If we are using "higher level" component to look for our text, we can be more accurate
+  expect(getByTextWithType('amazing', MyText).type).toBe(MyText);
+  expect(getByTextWithType('amazing', MyText).props.testID).toBe('m2');
+  expect(getByTextWithType('amazing', MyText).props.children).toBe('amazing');
+});
+
+test('getAllByTextWithType', () => {
+  const { getAllByTextWithType } = render(<Component />);
+
+  // find Buttons
+  expect(getAllByTextWithType('wow', Button)).toHaveLength(2);
+  expect(getAllByTextWithType('wow', Button)[0].type).toBe(Button);
+  expect(getAllByTextWithType('wow', Button)[0].props.testID).toBe('b1');
+  expect(getAllByTextWithType('wow', Button)[0].props.title).toBe('wow');
+  expect(getAllByTextWithType('wow', Button)[1].type).toBe(Button);
+  expect(getAllByTextWithType('wow', Button)[1].props.testID).toBe('b2');
+  expect(getAllByTextWithType('wow', Button)[1].props.title).toBe('wow');
+
+  expect(getAllByTextWithType('amazing', Button)).toHaveLength(1);
+  expect(getAllByTextWithType('amazing', Button)[0].type).toBe(Button);
+  expect(getAllByTextWithType('amazing', Button)[0].props.testID).toBe('b3');
+  expect(getAllByTextWithType('amazing', Button)[0].props.title).toBe(
+    'amazing'
+  );
+
+  expect(() => getAllByTextWithType('non-existent', Button)).toThrow(
+    'No instances found'
+  );
+
+  // Text is also inside a Button, so looking for a Text with "wow" returns 3 instances:
+  // the two Buttons plus the one Text
+  expect(getAllByTextWithType('wow', Text)).toHaveLength(4);
+  expect(getAllByTextWithType('amazing', Text)).toHaveLength(3);
+  expect(getAllByTextWithType('amazing', Text)[0].props.children).toBe(
+    'amazing'
+  );
+  expect(getAllByTextWithType('amazing', Text)[1].props.children).toBe(
+    'amazing'
+  );
+  expect(getAllByTextWithType('amazing', Text)[2].props.children).toBe(
+    'amazing'
+  );
+
+  // If we are using "higher level" component to look for our text, we can be more accurate
+  expect(getAllByTextWithType('amazing', MyText)).toHaveLength(1);
+  expect(getAllByTextWithType('amazing', MyText)[0].type).toBe(MyText);
+  expect(getAllByTextWithType('amazing', MyText)[0].props.testID).toBe('m2');
+  expect(getAllByTextWithType('amazing', MyText)[0].props.children).toBe(
+    'amazing'
+  );
 });
 
 test('getAllByText, queryAllByText', () => {

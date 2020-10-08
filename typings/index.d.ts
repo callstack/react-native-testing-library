@@ -16,6 +16,7 @@ type FindAllReturn = Promise<ReactTestInstance[]>;
 
 interface GetByAPI {
   getByText: (text: string | RegExp) => ReactTestInstance;
+  getByTextWithType: <P>(text: string | RegExp, type: React.ComponentType<P>) => ReactTestInstance;
   getByPlaceholderText: (placeholder: string | RegExp) => ReactTestInstance;
   getByDisplayValue: (value: string | RegExp) => ReactTestInstance;
   getByTestId: (testID: string | RegExp) => ReactTestInstance;
