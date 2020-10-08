@@ -140,14 +140,6 @@ export const getByTextWithType = (instance: ReactTestInstance) =>
     return found[0];
   };
 
-const printParents = (node: ReactTestInstance) => {
-  let n = node;
-  while (n !== null) {
-    console.log({ node: n, type: n.type });
-    n = n.parent;
-  }
-};
-
 export const getByPlaceholderText = (instance: ReactTestInstance) =>
   function getByPlaceholderTextFn(placeholder: string | RegExp) {
     try {
