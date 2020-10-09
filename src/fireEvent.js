@@ -12,14 +12,15 @@ const findEventHandler = (
   element: ReactTestInstance,
   eventName: string,
   callsite?: any,
-  nearestHostDescendent?: ReactTestInstance,
+  nearestHostResponderDescendent?: ReactTestInstance,
   hasDescendandHandler?: boolean
 ) => {
   const handler = getEventHandler(element, eventName);
   const hasHandler = handler != null || hasDescendandHandler;
 
   const isHostComponent = typeof element.type === 'string';
-  const hostElement = isHostComponent ? element : nearestHostDescendent;
+  const hostElement = isHostComponent ? element : nearestHostResponderDescendent;
+  const isHostElementResponder = hostElement ? (isTextInputComponent(hostElement) || !!hostElement?.props.onStartShouldSetResponder) : false;
 
   const isEventEnabled = isTextInputComponent(element)
     ? element.props.editable !== false
@@ -43,7 +44,7 @@ const findEventHandler = (
     element.parent,
     eventName,
     callsite,
-    hostElement,
+    isHostElementResponder ? hostElement : (nearestHostResponderDescendent || element),
     hasHandler
   );
 };
