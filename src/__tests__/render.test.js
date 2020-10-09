@@ -382,3 +382,18 @@ test('renders options.wrapper around updated node', () => {
     </RCTSafeAreaView>
   `);
 });
+
+test('returns custom queries added', () => {
+  const _getByCustom = (instance: ReactTestInstance) =>
+    function (someArg: string) {
+      return `You sent: ${someArg}`;
+    };
+
+  const { getByCustom } = render(<View />, {
+    extendWithQueries: (instance) => ({
+      getByCustom: _getByCustom(instance),
+    }),
+  });
+
+  expect(getByCustom('yass!!')).toBe('You sent: yass!!');
+});
