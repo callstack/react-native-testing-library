@@ -290,7 +290,7 @@ function TestChildTouchableComponent({ onPress, someProp }) {
         <Text>Trigger</Text>
       </TouchableOpacity>
     </View>
-  )
+  );
 }
 
 test('is not fooled by non-responder wrapping host elements', () => {

@@ -19,8 +19,13 @@ const findEventHandler = (
   const hasHandler = handler != null || hasDescendandHandler;
 
   const isHostComponent = typeof element.type === 'string';
-  const hostElement = isHostComponent ? element : nearestHostResponderDescendent;
-  const isHostElementResponder = hostElement ? (isTextInputComponent(hostElement) || !!hostElement?.props.onStartShouldSetResponder) : false;
+  const hostElement = isHostComponent
+    ? element
+    : nearestHostResponderDescendent;
+  const isHostElementResponder = hostElement
+    ? isTextInputComponent(hostElement) ||
+      !!hostElement?.props.onStartShouldSetResponder
+    : false;
 
   const isEventEnabled = isTextInputComponent(element)
     ? element.props.editable !== false
@@ -44,7 +49,9 @@ const findEventHandler = (
     element.parent,
     eventName,
     callsite,
-    isHostElementResponder ? hostElement : (nearestHostResponderDescendent || element),
+    isHostElementResponder
+      ? hostElement
+      : nearestHostResponderDescendent || element,
     hasHandler
   );
 };
