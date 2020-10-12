@@ -37,7 +37,10 @@ const makeQuery = <P: mixed, M: mixed>(
         (node) => isNodeValid(node) && matcherFn(node.props[name], matcher)
       );
     } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getBy);
+      throw new ErrorWithStack(
+        prepareErrorMessage(error, name, matcher),
+        getBy
+      );
     }
   };
 
@@ -47,7 +50,10 @@ const makeQuery = <P: mixed, M: mixed>(
     );
 
     if (results.length === 0) {
-      throw new ErrorWithStack('No instances found', getAllBy);
+      throw new ErrorWithStack(
+        prepareErrorMessage(new Error('No instances found'), name, matcher),
+        getAllBy
+      );
     }
 
     return results;
