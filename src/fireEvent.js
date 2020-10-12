@@ -12,7 +12,7 @@ const findEventHandler = (
   element: ReactTestInstance,
   eventName: string,
   callsite?: any,
-  nearestHostResponderDescendent?: ReactTestInstance,
+  nearestHostDescendent?: ReactTestInstance,
   hasDescendandHandler?: boolean
 ) => {
   const handler = getEventHandler(element, eventName);
@@ -21,11 +21,7 @@ const findEventHandler = (
   const isHostComponent = typeof element.type === 'string';
   const hostElement = isHostComponent
     ? element
-    : nearestHostResponderDescendent;
-  const isHostElementResponder = hostElement
-    ? isTextInputComponent(hostElement) ||
-      !!hostElement?.props.onStartShouldSetResponder
-    : false;
+    : nearestHostDescendent;
 
   const isEventEnabled = isTextInputComponent(element)
     ? element.props.editable !== false
@@ -45,13 +41,25 @@ const findEventHandler = (
     }
   }
 
+  // Check if the host element can receive touch events. Either it is a
+  // TextInput component or has a onStartShouldSetResponder prop
+  const isHostElementATouchResponder = hostElement
+  ? (isTextInputComponent(hostElement) ||
+    !!hostElement?.props.onStartShouldSetResponder)
+  : false;
+
+  // If the host element is a receiver of touch events than it is the new
+  // nearest host descendant. Otherwise, pass the previously received nearest
+  // host descendant (or current element if a nearest host descendent is falsy)
+  const targetDescendent = isHostElementATouchResponder
+    ? hostElement
+    : (nearestHostDescendent || element)
+
   return findEventHandler(
     element.parent,
     eventName,
     callsite,
-    isHostElementResponder
-      ? hostElement
-      : nearestHostResponderDescendent || element,
+    targetDescendent,
     hasHandler
   );
 };
