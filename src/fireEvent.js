@@ -7,7 +7,6 @@ const isHostElement = (element?: ReactTestInstance) => {
 };
 
 const isTextInput = (element?: ReactTestInstance) => {
-  // eslint-disable-next-line import/no-extraneous-dependencies
   const { TextInput } = require('react-native');
   return element?.type === TextInput;
 };

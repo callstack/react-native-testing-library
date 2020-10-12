@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { View } from 'react-native';
 import TestRenderer, { type ReactTestRenderer } from 'react-test-renderer'; // eslint-disable-line import/no-extraneous-dependencies
 import act from './act';
