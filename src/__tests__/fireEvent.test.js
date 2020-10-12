@@ -62,9 +62,7 @@ describe('fireEvent', () => {
   });
 
   test('should throw an Error when event handler was not found', () => {
-    const { getByText } = render(
-      <WithoutEventComponent onPress={() => 'this is not passed to children'} />
-    );
+    const { getByText } = render(<WithoutEventComponent />);
 
     expect(() => fireEvent(getByText('Without event'), 'press')).toThrow(
       'No handler function found for event: "press"'

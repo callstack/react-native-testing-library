@@ -383,16 +383,16 @@ test('renders options.wrapper around updated node', () => {
   `);
 });
 
-it('returns root test instance', () => {
+test('returns container', () => {
   // when
   const renderResult = render(<View testID="inner" />);
 
   // then
-  expect(renderResult.root).toBeDefined();
-  expect(renderResult.root.type).toBe(View);
+  expect(renderResult.container).toBeDefined();
+  expect(renderResult.container.type).toBe(View);
 });
 
-it('returns wrapped component as root test instance', () => {
+test('returns wrapped component as container', () => {
   // given
   const WrapperComponent = ({ children }) => (
     <SafeAreaView testID="wrapper">{children}</SafeAreaView>
@@ -404,6 +404,6 @@ it('returns wrapped component as root test instance', () => {
   });
 
   // then
-  expect(renderResult.root).toBeDefined();
-  expect(renderResult.root.type).toBe(WrapperComponent);
+  expect(renderResult.container).toBeDefined();
+  expect(renderResult.container.type).toBe(WrapperComponent);
 });
