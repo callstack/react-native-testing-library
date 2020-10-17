@@ -50,7 +50,7 @@ This library has a peerDependencies listing for `react-test-renderer` and, of co
 
 ### Additional Jest matchers
 
-In order to use addtional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
+In order to use additional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
 
 #### Using `yarn`
 
