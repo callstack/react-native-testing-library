@@ -384,9 +384,9 @@ test('renders options.wrapper around updated node', () => {
 });
 
 test('returns custom queries added', () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _getByCustom = (instance: ReactTestInstance) =>
     function (someArg: string) {
+      console.log({ instance });
       return `You sent: ${someArg}`;
     };
 
