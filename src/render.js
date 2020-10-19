@@ -13,7 +13,7 @@ import debugDeep from './helpers/debugDeep';
 type Options = {
   wrapper?: React.ComponentType<any>,
   createNodeMock?: (element: React.Element<any>) => any,
-  extendWithQueries?: (instance: ReactTestInstance) => any,
+  queries?: (instance: ReactTestInstance) => any,
 };
 type TestRendererOptions = {
   createNodeMock: (element: React.Element<any>) => any,
@@ -25,11 +25,7 @@ type TestRendererOptions = {
  */
 export default function render<T>(
   component: React.Element<T>,
-  {
-    wrapper: Wrapper,
-    createNodeMock,
-    extendWithQueries = () => ({}),
-  }: Options = {}
+  { wrapper: Wrapper, createNodeMock, queries = () => ({}) }: Options = {}
 ) {
   const wrap = (innerElement: React.Element<any>) =>
     Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement;
@@ -48,7 +44,7 @@ export default function render<T>(
     ...queryByAPI(instance),
     ...findByAPI(instance),
     ...a11yAPI(instance),
-    ...extendWithQueries(instance),
+    ...queries(instance),
     update,
     rerender: update, // alias for `update`
     unmount: renderer.unmount,

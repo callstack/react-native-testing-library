@@ -391,7 +391,7 @@ test('returns custom queries added', () => {
     };
 
   const { getByCustom } = render(<View />, {
-    extendWithQueries: (instance) => ({
+    queries: (instance) => ({
       getByCustom: _getByCustom(instance),
     }),
   });
