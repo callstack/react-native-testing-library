@@ -121,10 +121,10 @@ Get the rendered component JSON representation, e.g. for snapshot testing.
 ### `container`
 
 ```ts
-container: ReactTestInstance
+container: ReactTestInstance;
 ```
 
-Reference to the root element. It is a `View` component by default, or a Wrapper component provided in `options`.
+A reference to the rendered root element.
 
 ## `cleanup`
 
