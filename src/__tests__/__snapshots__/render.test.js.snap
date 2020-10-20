@@ -2,135 +2,173 @@
 
 exports[`debug 1`] = `
 "<View>
-  <View>
-    <Text>
-      Is the banana fresh?
-    </Text>
-    <Text
-      testID=\\"bananaFresh\\"
-    >
-      not fresh
-    </Text>
-    <TextInput
-      allowFontScaling={true}
-      placeholder=\\"Add custom freshness\\"
-      rejectResponderTermination={true}
-      testID=\\"bananaCustomFreshness\\"
-      underlineColorAndroid=\\"transparent\\"
-      value=\\"Custom Freshie\\"
-    />
-    <TextInput
-      allowFontScaling={true}
-      placeholder=\\"Who inspected freshness?\\"
-      rejectResponderTermination={true}
-      testID=\\"bananaChef\\"
-      underlineColorAndroid=\\"transparent\\"
-      value=\\"I inspected freshie\\"
-    />
-    <View
-      accessible={true}
-      focusable={true}
-      onClick={[Function onClick]}
-      onResponderGrant={[Function onResponderGrant]}
-      onResponderMove={[Function onResponderMove]}
-      onResponderRelease={[Function onResponderRelease]}
-      onResponderTerminate={[Function onResponderTerminate]}
-      onResponderTerminationRequest={[Function onResponderTerminationRequest]}
-      onStartShouldSetResponder={[Function onStartShouldSetResponder]}
-      style={
-        Object {
-          \\"opacity\\": 1,
-        }
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID=\\"bananaFresh\\"
+  >
+    not fresh
+  </Text>
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Add custom freshness\\"
+    rejectResponderTermination={true}
+    testID=\\"bananaCustomFreshness\\"
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"Custom Freshie\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Who inspected freshness?\\"
+    rejectResponderTermination={true}
+    testID=\\"bananaChef\\"
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"I inspected freshie\\"
+  />
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function onClick]}
+    onResponderGrant={[Function onResponderGrant]}
+    onResponderMove={[Function onResponderMove]}
+    onResponderRelease={[Function onResponderRelease]}
+    onResponderTerminate={[Function onResponderTerminate]}
+    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
+    style={
+      Object {
+        \\"opacity\\": 1,
       }
-    >
-      <Text>
-        Change freshness!
-      </Text>
-    </View>
-    <Text
-      testID=\\"duplicateText\\"
-    >
-      First Text
-    </Text>
-    <Text
-      testID=\\"duplicateText\\"
-    >
-      Second Text
-    </Text>
+    }
+  >
     <Text>
-      0
+      Change freshness!
     </Text>
   </View>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    First Text
+  </Text>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
 </View>"
 `;
 
 exports[`debug changing component: bananaFresh button message should now be "fresh" 1`] = `
 "<View>
-  <View>
-    <Text>
-      Is the banana fresh?
-    </Text>
-    <Text
-      testID=\\"bananaFresh\\"
-    >
-      fresh
-    </Text>
-    <TextInput
-      allowFontScaling={true}
-      placeholder=\\"Add custom freshness\\"
-      rejectResponderTermination={true}
-      testID=\\"bananaCustomFreshness\\"
-      underlineColorAndroid=\\"transparent\\"
-      value=\\"Custom Freshie\\"
-    />
-    <TextInput
-      allowFontScaling={true}
-      placeholder=\\"Who inspected freshness?\\"
-      rejectResponderTermination={true}
-      testID=\\"bananaChef\\"
-      underlineColorAndroid=\\"transparent\\"
-      value=\\"I inspected freshie\\"
-    />
-    <View
-      accessible={true}
-      focusable={true}
-      onClick={[Function onClick]}
-      onResponderGrant={[Function onResponderGrant]}
-      onResponderMove={[Function onResponderMove]}
-      onResponderRelease={[Function onResponderRelease]}
-      onResponderTerminate={[Function onResponderTerminate]}
-      onResponderTerminationRequest={[Function onResponderTerminationRequest]}
-      onStartShouldSetResponder={[Function onStartShouldSetResponder]}
-      style={
-        Object {
-          \\"opacity\\": 1,
-        }
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID=\\"bananaFresh\\"
+  >
+    fresh
+  </Text>
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Add custom freshness\\"
+    rejectResponderTermination={true}
+    testID=\\"bananaCustomFreshness\\"
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"Custom Freshie\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Who inspected freshness?\\"
+    rejectResponderTermination={true}
+    testID=\\"bananaChef\\"
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"I inspected freshie\\"
+  />
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function onClick]}
+    onResponderGrant={[Function onResponderGrant]}
+    onResponderMove={[Function onResponderMove]}
+    onResponderRelease={[Function onResponderRelease]}
+    onResponderTerminate={[Function onResponderTerminate]}
+    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
+    style={
+      Object {
+        \\"opacity\\": 1,
       }
-    >
-      <Text>
-        Change freshness!
-      </Text>
-    </View>
-    <Text
-      testID=\\"duplicateText\\"
-    >
-      First Text
-    </Text>
-    <Text
-      testID=\\"duplicateText\\"
-    >
-      Second Text
-    </Text>
+    }
+  >
     <Text>
-      0
+      Change freshness!
     </Text>
   </View>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    First Text
+  </Text>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
 </View>"
 `;
 
 exports[`debug: shallow 1`] = `
 "<View>
-  <Banana />
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID=\\"bananaFresh\\"
+  >
+    not fresh
+  </Text>
+  <Component
+    allowFontScaling={true}
+    placeholder=\\"Add custom freshness\\"
+    rejectResponderTermination={true}
+    testID=\\"bananaCustomFreshness\\"
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"Custom Freshie\\"
+  />
+  <Component
+    allowFontScaling={true}
+    placeholder=\\"Who inspected freshness?\\"
+    rejectResponderTermination={true}
+    testID=\\"bananaChef\\"
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"I inspected freshie\\"
+  />
+  <MyButton
+    onPress={[Function anonymous]}
+    type=\\"primary\\"
+  >
+    Change freshness!
+  </MyButton>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    First Text
+  </Text>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
 </View>"
 `;
 
@@ -138,7 +176,49 @@ exports[`debug: shallow with message 1`] = `
 "my other custom message
 
 <View>
-  <Banana />
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID=\\"bananaFresh\\"
+  >
+    not fresh
+  </Text>
+  <Component
+    allowFontScaling={true}
+    placeholder=\\"Add custom freshness\\"
+    rejectResponderTermination={true}
+    testID=\\"bananaCustomFreshness\\"
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"Custom Freshie\\"
+  />
+  <Component
+    allowFontScaling={true}
+    placeholder=\\"Who inspected freshness?\\"
+    rejectResponderTermination={true}
+    testID=\\"bananaChef\\"
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"I inspected freshie\\"
+  />
+  <MyButton
+    onPress={[Function anonymous]}
+    type=\\"primary\\"
+  >
+    Change freshness!
+  </MyButton>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    First Text
+  </Text>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
 </View>"
 `;
 
@@ -146,89 +226,85 @@ exports[`debug: with message 1`] = `
 "my custom message
 
 <View>
-  <View>
-    <Text>
-      Is the banana fresh?
-    </Text>
-    <Text
-      testID=\\"bananaFresh\\"
-    >
-      not fresh
-    </Text>
-    <TextInput
-      allowFontScaling={true}
-      placeholder=\\"Add custom freshness\\"
-      rejectResponderTermination={true}
-      testID=\\"bananaCustomFreshness\\"
-      underlineColorAndroid=\\"transparent\\"
-      value=\\"Custom Freshie\\"
-    />
-    <TextInput
-      allowFontScaling={true}
-      placeholder=\\"Who inspected freshness?\\"
-      rejectResponderTermination={true}
-      testID=\\"bananaChef\\"
-      underlineColorAndroid=\\"transparent\\"
-      value=\\"I inspected freshie\\"
-    />
-    <View
-      accessible={true}
-      focusable={true}
-      onClick={[Function onClick]}
-      onResponderGrant={[Function onResponderGrant]}
-      onResponderMove={[Function onResponderMove]}
-      onResponderRelease={[Function onResponderRelease]}
-      onResponderTerminate={[Function onResponderTerminate]}
-      onResponderTerminationRequest={[Function onResponderTerminationRequest]}
-      onStartShouldSetResponder={[Function onStartShouldSetResponder]}
-      style={
-        Object {
-          \\"opacity\\": 1,
-        }
-      }
-    >
-      <Text>
-        Change freshness!
-      </Text>
-    </View>
-    <Text
-      testID=\\"duplicateText\\"
-    >
-      First Text
-    </Text>
-    <Text
-      testID=\\"duplicateText\\"
-    >
-      Second Text
-    </Text>
-    <Text>
-      0
-    </Text>
-  </View>
-</View>"
-`;
-
-exports[`toJSON 1`] = `
-<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID=\\"bananaFresh\\"
+  >
+    not fresh
+  </Text>
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Add custom freshness\\"
+    rejectResponderTermination={true}
+    testID=\\"bananaCustomFreshness\\"
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"Custom Freshie\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    placeholder=\\"Who inspected freshness?\\"
+    rejectResponderTermination={true}
+    testID=\\"bananaChef\\"
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"I inspected freshie\\"
+  />
   <View
     accessible={true}
-    focusable={false}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
+    focusable={true}
+    onClick={[Function onClick]}
+    onResponderGrant={[Function onResponderGrant]}
+    onResponderMove={[Function onResponderMove]}
+    onResponderRelease={[Function onResponderRelease]}
+    onResponderTerminate={[Function onResponderTerminate]}
+    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
     style={
       Object {
-        "opacity": 1,
+        \\"opacity\\": 1,
       }
     }
   >
     <Text>
-      press me
+      Change freshness!
     </Text>
   </View>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    First Text
+  </Text>
+  <Text
+    testID=\\"duplicateText\\"
+  >
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
+</View>"
+`;
+
+exports[`toJSON 1`] = `
+<View
+  accessible={true}
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "opacity": 1,
+    }
+  }
+>
+  <Text>
+    press me
+  </Text>
 </View>
 `;

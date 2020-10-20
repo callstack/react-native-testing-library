@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { View } from 'react-native';
 import TestRenderer, { type ReactTestRenderer } from 'react-test-renderer'; // eslint-disable-line import/no-extraneous-dependencies
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
@@ -28,7 +27,7 @@ export default function render<T>(
   { wrapper: Wrapper, createNodeMock }: Options = {}
 ) {
   const wrap = (innerElement: React.Element<any>) =>
-    Wrapper ? <Wrapper>{innerElement}</Wrapper> : <View>{innerElement}</View>;
+    Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement;
 
   const renderer = renderWithAct(
     wrap(component),
