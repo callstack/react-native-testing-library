@@ -137,7 +137,10 @@ interface FindByAPI {
     value: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
-  findByTestId: (testID: string | RegExp, waitForOptions?: WaitForOptions) => FindReturn;
+  findByTestId: (
+    testID: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
   findAllByText: (
     text: string | RegExp,
     waitForOptions?: WaitForOptions
@@ -293,6 +296,9 @@ export interface Thenable {
 export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement<any>) => any;
+  queries?: {
+    [key: string]: (instance: ReactTestInstance, ...rest: Array<any>) => any;
+  };
 }
 
 type Queries = GetByAPI & QueryByAPI & FindByAPI & A11yAPI;

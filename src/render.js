@@ -3,17 +3,16 @@ import * as React from 'react';
 import TestRenderer, { type ReactTestRenderer } from 'react-test-renderer'; // eslint-disable-line import/no-extraneous-dependencies
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
-import { getByAPI } from './helpers/getByAPI';
-import { queryByAPI } from './helpers/queryByAPI';
-import { findByAPI } from './helpers/findByAPI';
-import a11yAPI from './helpers/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
+import { getQueriesForElement } from './within';
 
 type Options = {
   wrapper?: React.ComponentType<any>,
   createNodeMock?: (element: React.Element<any>) => any,
-  queries?: (instance: ReactTestInstance) => any,
+  queries?: {
+    [key: string]: (instance: ReactTestInstance, ...rest: Array<any>) => any,
+  },
 };
 type TestRendererOptions = {
   createNodeMock: (element: React.Element<any>) => any,
@@ -25,7 +24,7 @@ type TestRendererOptions = {
  */
 export default function render<T>(
   component: React.Element<T>,
-  { wrapper: Wrapper, createNodeMock, queries = () => ({}) }: Options = {}
+  { wrapper: Wrapper, createNodeMock, queries = {} }: Options = {}
 ) {
   const wrap = (innerElement: React.Element<any>) =>
     Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement;
@@ -37,14 +36,17 @@ export default function render<T>(
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
 
+  for (let query in queries) {
+    queries[query] = queries[query].bind(null, instance);
+  }
+
   addToCleanupQueue(renderer.unmount);
 
   return {
-    ...getByAPI(instance),
-    ...queryByAPI(instance),
-    ...findByAPI(instance),
-    ...a11yAPI(instance),
-    ...queries(instance),
+    ...(queries: {
+      [key: $Keys<typeof queries>]: (...rest: Array<any>) => any,
+    }),
+    ...getQueriesForElement(instance),
     update,
     rerender: update, // alias for `update`
     unmount: renderer.unmount,

@@ -384,16 +384,14 @@ test('renders options.wrapper around updated node', () => {
 });
 
 test('returns custom queries added', () => {
-  const _getByCustom = (instance: ReactTestInstance) =>
-    function (someArg: string) {
-      console.log({ instance });
-      return `You sent: ${someArg}`;
-    };
+  const _getByCustom = (instance: ReactTestInstance, someArg: string) => {
+    return `You sent: ${someArg}`;
+  };
 
   const { getByCustom } = render(<View />, {
-    queries: (instance) => ({
-      getByCustom: _getByCustom(instance),
-    }),
+    queries: {
+      getByCustom: _getByCustom,
+    },
   });
 
   expect(getByCustom('yass!!')).toBe('You sent: yass!!');
