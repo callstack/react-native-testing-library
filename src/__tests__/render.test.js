@@ -384,10 +384,10 @@ test('renders options.wrapper around updated node', () => {
 });
 
 test('returns container', () => {
-  const renderResult = render(<View testID="inner" />);
+  const { container } = render(<View testID="inner" />);
 
-  expect(renderResult.container).toBeDefined();
-  expect(renderResult.container.type).toBe(View);
+  expect(container).toBeDefined();
+  expect(container.type).toBe(View);
 });
 
 test('returns wrapped component as container', () => {
@@ -395,10 +395,10 @@ test('returns wrapped component as container', () => {
     <SafeAreaView testID="wrapper">{children}</SafeAreaView>
   );
 
-  const renderResult = render(<View testID="inner" />, {
+  const { container } = render(<View testID="inner" />, {
     wrapper: WrapperComponent,
   });
 
-  expect(renderResult.container).toBeDefined();
-  expect(renderResult.container.type).toBe(WrapperComponent);
+  expect(container).toBeDefined();
+  expect(container.type).toBe(WrapperComponent);
 });
