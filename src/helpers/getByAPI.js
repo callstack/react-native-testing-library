@@ -13,7 +13,6 @@ const filterNodeByType = (node, type) => node.type === type;
 
 const getNodeByText = (node, text) => {
   try {
-    // eslint-disable-next-line
     const { Text } = require('react-native');
     const isTextComponent = filterNodeByType(node, Text);
     if (isTextComponent) {
@@ -61,7 +60,6 @@ const getChildrenAsText = (children, TextComponent, textContent = []) => {
 
 const getTextInputNodeByPlaceholderText = (node, placeholder) => {
   try {
-    // eslint-disable-next-line
     const { TextInput } = require('react-native');
     return (
       filterNodeByType(node, TextInput) &&
@@ -76,7 +74,6 @@ const getTextInputNodeByPlaceholderText = (node, placeholder) => {
 
 const getTextInputNodeByDisplayValue = (node, value) => {
   try {
-    // eslint-disable-next-line
     const { TextInput } = require('react-native');
     return (
       filterNodeByType(node, TextInput) &&

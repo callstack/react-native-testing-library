@@ -44,6 +44,7 @@ export default function render<T>(
     ...findByAPI(instance),
     ...a11yAPI(instance),
     update,
+    container: instance,
     rerender: update, // alias for `update`
     unmount: renderer.unmount,
     toJSON: renderer.toJSON,
