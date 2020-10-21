@@ -383,7 +383,7 @@ test('renders options.wrapper around updated node', () => {
   `);
 });
 
-test('returns custom queries added', () => {
+test('uses custom queries', () => {
   const _getByCustom = (instance: ReactTestInstance, someArg: string) => {
     return `You sent: ${someArg}`;
   };
