@@ -2,32 +2,47 @@
 import act from './act';
 import { ErrorWithStack } from './helpers/errors';
 
-const isTextInputComponent = (element: ReactTestInstance) => {
+const isHostElement = (element?: ReactTestInstance) => {
+  return typeof element?.type === 'string';
+};
+
+const isTextInput = (element?: ReactTestInstance) => {
   // eslint-disable-next-line import/no-extraneous-dependencies
   const { TextInput } = require('react-native');
-  return element.type === TextInput;
+  return element?.type === TextInput;
+};
+
+const isTouchResponder = (element?: ReactTestInstance) => {
+  if (!isHostElement(element)) return false;
+
+  return !!element?.props.onStartShouldSetResponder || isTextInput(element);
+};
+
+const isEventEnabled = (
+  element?: ReactTestInstance,
+  touchResponder?: ReactTestInstance
+) => {
+  if (isTextInput(element)) return element?.props.editable !== false;
+
+  return touchResponder?.props.onStartShouldSetResponder?.() !== false;
 };
 
 const findEventHandler = (
   element: ReactTestInstance,
   eventName: string,
   callsite?: any,
-  nearestHostDescendent?: ReactTestInstance,
+  nearestTouchResponder?: ReactTestInstance,
   hasDescendandHandler?: boolean
 ) => {
+  const touchResponder = isTouchResponder(element)
+    ? element
+    : nearestTouchResponder;
+
   const handler = getEventHandler(element, eventName);
-  const hasHandler = handler != null || hasDescendandHandler;
-
-  const isHostComponent = typeof element.type === 'string';
-  const hostElement = isHostComponent ? element : nearestHostDescendent;
-
-  const isEventEnabled = isTextInputComponent(element)
-    ? element.props.editable !== false
-    : hostElement?.props.onStartShouldSetResponder?.() !== false;
-
-  if (handler && isEventEnabled) return handler;
+  if (handler && isEventEnabled(element, touchResponder)) return handler;
 
   // Do not bubble event to the root element
+  const hasHandler = handler != null || hasDescendandHandler;
   if (element.parent === null || element.parent.parent === null) {
     if (hasHandler) {
       return null;
@@ -43,7 +58,7 @@ const findEventHandler = (
     element.parent,
     eventName,
     callsite,
-    hostElement,
+    touchResponder,
     hasHandler
   );
 };

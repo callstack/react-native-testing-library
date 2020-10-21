@@ -282,3 +282,26 @@ test('is not fooled by non-native disabled prop', () => {
   fireEvent.press(screen.getByText('Trigger Test'));
   expect(handlePress).toHaveBeenCalledTimes(1);
 });
+
+function TestChildTouchableComponent({ onPress, someProp }) {
+  return (
+    <View>
+      <TouchableOpacity onPress={onPress} disabled={someProp}>
+        <Text>Trigger</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+test('is not fooled by non-responder wrapping host elements', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View>
+      <TestChildTouchableComponent onPress={handlePress} someProp={true} />
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).not.toHaveBeenCalled();
+});
