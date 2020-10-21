@@ -387,6 +387,8 @@ test('returns container', () => {
   const { container } = render(<View testID="inner" />);
 
   expect(container).toBeDefined();
+  // `View` composite component is returned. This behavior will break if we
+  // start returning only host components.
   expect(container.type).toBe(View);
   expect(container.props.testID).toBe('inner');
 });
@@ -401,6 +403,8 @@ test('returns wrapped component as container', () => {
   });
 
   expect(container).toBeDefined();
+  // `WrapperComponent` composite component is returned with no testID passed to
+  // it. This behavior will break if we start returning only host components.
   expect(container.type).toBe(WrapperComponent);
   expect(container.props.testID).not.toBeDefined();
 });
