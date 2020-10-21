@@ -388,6 +388,7 @@ test('returns container', () => {
 
   expect(container).toBeDefined();
   expect(container.type).toBe(View);
+  expect(container.props.testID).toBe('inner');
 });
 
 test('returns wrapped component as container', () => {
@@ -401,4 +402,5 @@ test('returns wrapped component as container', () => {
 
   expect(container).toBeDefined();
   expect(container.type).toBe(WrapperComponent);
+  expect(container.props.testID).not.toBeDefined();
 });
