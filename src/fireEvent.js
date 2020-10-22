@@ -23,7 +23,13 @@ const isEventEnabled = (
 ) => {
   if (isTextInput(element)) return element?.props.editable !== false;
 
-  return touchResponder?.props.onStartShouldSetResponder?.() !== false;
+  const touchStart = touchResponder?.props.onStartShouldSetResponder?.();
+  const touchMove = touchResponder?.props.onMoveShouldSetResponder?.();
+
+  if (touchStart) return true;
+  if (touchMove) return true;
+
+  return touchStart === undefined && touchMove === undefined;
 };
 
 const findEventHandler = (

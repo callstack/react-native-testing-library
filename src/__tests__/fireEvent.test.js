@@ -3,6 +3,7 @@ import React from 'react';
 import {
   View,
   TouchableOpacity,
+  PanResponder,
   Pressable,
   Text,
   ScrollView,
@@ -304,4 +305,28 @@ test('is not fooled by non-responder wrapping host elements', () => {
 
   fireEvent.press(screen.getByText('Trigger'));
   expect(handlePress).not.toHaveBeenCalled();
+});
+
+function TestDraggableComponent({ onDrag }) {
+  const responderHandlers = PanResponder.create({
+    onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
+    onPanResponderMove: onDrag,
+  }).panHandlers;
+
+  return (
+    <View {...responderHandlers}>
+      <Text>Trigger</Text>
+    </View>
+  );
+}
+
+test('has only onMove', () => {
+  const handleDrag = jest.fn();
+
+  const screen = render(<TestDraggableComponent onDrag={handleDrag} />);
+
+  fireEvent(screen.getByText('Trigger'), 'responderMove', {
+    touchHistory: { mostRecentTimeStamp: '2', touchBank: [] },
+  });
+  expect(handleDrag).toHaveBeenCalled();
 });
