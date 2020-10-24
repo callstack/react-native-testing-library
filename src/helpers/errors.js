@@ -39,6 +39,13 @@ export const createQueryByError = (error: Error, callsite: Function) => {
   throw new ErrorWithStack(error.message, callsite);
 };
 
+export function copyStackTrace(target: Error, stackTraceSource: Error) {
+  target.stack = stackTraceSource.stack.replace(
+    stackTraceSource.message,
+    target.message
+  );
+}
+
 const warned = {};
 
 export function printDeprecationWarning(functionName: string) {
