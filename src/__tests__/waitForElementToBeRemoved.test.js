@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { render, fireEvent, waitForElementToBeRemoved } from '..';
-import { FakeTimerTypes, setupFakeTimers } from './timerUtils';
+import { TimerMode, setupFakeTimers } from './timerUtils';
 
 const TestSetup = ({ shouldUseDelay = true }) => {
   const [isAdded, setIsAdded] = useState(true);
@@ -131,7 +131,7 @@ test('waits with custom interval', async () => {
   expect(mockFn).toHaveBeenCalledTimes(4);
 });
 
-test.each(FakeTimerTypes)(
+test.each([TimerMode.Default, TimerMode.Legacy])(
   'works with %s fake timers',
   async (fakeTimerType) => {
     setupFakeTimers(fakeTimerType);
