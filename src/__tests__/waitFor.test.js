@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { fireEvent, render, waitFor } from '..';
-import { FakeTimerTypes, setupFakeTimers, sleep } from './timerUtils';
+import { TimerMode, setupFakeTimers, sleep } from './timerUtils';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {
@@ -80,7 +80,7 @@ test('waits for element with custom interval', async () => {
   expect(mockFn).toHaveBeenCalledTimes(3);
 });
 
-test.each(FakeTimerTypes)(
+test.each([TimerMode.Default, TimerMode.Legacy])(
   'waits for element until it stops throwing using %s fake timers',
   async (fakeTimerType) => {
     setupFakeTimers(fakeTimerType);
@@ -96,7 +96,7 @@ test.each(FakeTimerTypes)(
   }
 );
 
-test.each(FakeTimerTypes)(
+test.each([TimerMode.Default, TimerMode.Legacy])(
   'waits for assertion until timeout is met with %s fake timers',
   async (fakeTimerType) => {
     setupFakeTimers(fakeTimerType);
@@ -115,7 +115,7 @@ test.each(FakeTimerTypes)(
   }
 );
 
-test.each(FakeTimerTypes)(
+test.each([TimerMode.Default, TimerMode.Legacy])(
   'awaiting something that succeeds before timeout works with %s fake timers',
   async (fakeTimerType) => {
     setupFakeTimers(fakeTimerType);
@@ -142,7 +142,7 @@ test.each(FakeTimerTypes)(
 // it is included to show that the previous approach of faking modern timers still works
 // the gotcha is that the try catch will fail to catch the final error, which is why we need to stop throwing
 test('non-awaited approach is not affected by fake modern timers', async () => {
-  jest.useFakeTimers('modern');
+  setupFakeTimers(TimerMode.Modern);
 
   let calls = 0;
   const mockFn = jest.fn(() => {
