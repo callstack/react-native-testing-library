@@ -303,6 +303,7 @@ export interface RenderAPI extends Queries {
   unmount(nextElement?: React.ReactElement<any>): void;
   toJSON(): ReactTestRendererJSON | null;
   debug(message?: string): void;
+  container: ReactTestInstance;
 }
 
 export type FireEventFunction = (
