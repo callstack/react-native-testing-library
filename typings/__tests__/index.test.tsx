@@ -199,6 +199,8 @@ const findAllBy: Promise<ReactTestInstance[]>[] = [
 // debug API
 const debugFn = tree.debug();
 const debugFnWithMessage = tree.debug('my message');
+const shallowDebug = tree.debug.shallow();
+const shallowDebugWithMessage = tree.debug.shallow('my message');
 
 // update API
 tree.update(<View />);
