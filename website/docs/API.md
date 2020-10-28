@@ -106,10 +106,6 @@ optional message
 </View>
 ```
 
-#### `debug.shallow`
-
-Pretty prints shallowly rendered component passed to `render` with optional message on top.
-
 ### `toJSON`
 
 ```ts
