@@ -137,7 +137,10 @@ interface FindByAPI {
     value: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
-  findByTestId: (testID: string | RegExp, waitForOptions?: WaitForOptions) => FindReturn;
+  findByTestId: (
+    testID: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
   findAllByText: (
     text: string | RegExp,
     waitForOptions?: WaitForOptions
@@ -295,6 +298,11 @@ export interface RenderOptions {
   createNodeMock?: (element: React.ReactElement<any>) => any;
 }
 
+type Debug = {
+  (message?: string);
+  shallow: (message?: string) => void;
+};
+
 type Queries = GetByAPI & QueryByAPI & FindByAPI & A11yAPI;
 
 export interface RenderAPI extends Queries {
@@ -302,7 +310,7 @@ export interface RenderAPI extends Queries {
   rerender(nextElement: React.ReactElement<any>): void;
   unmount(nextElement?: React.ReactElement<any>): void;
   toJSON(): ReactTestRendererJSON | null;
-  debug(message?: string): void;
+  debug: Debug;
   container: ReactTestInstance;
 }
 
