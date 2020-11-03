@@ -26,8 +26,7 @@ const isEventEnabled = (
   const touchStart = touchResponder?.props.onStartShouldSetResponder?.();
   const touchMove = touchResponder?.props.onMoveShouldSetResponder?.();
 
-  if (touchStart) return true;
-  if (touchMove) return true;
+  if (touchStart || touchMove) return true;
 
   return touchStart === undefined && touchMove === undefined;
 };
