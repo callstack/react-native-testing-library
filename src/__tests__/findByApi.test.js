@@ -7,8 +7,6 @@ test('findBy queries work asynchronously', async () => {
   const options = { timeout: 10 }; // Short timeout so that this test runs quickly
   const {
     rerender,
-    findByTestId,
-    findAllByTestId,
     findByText,
     findAllByText,
     findByPlaceholderText,
@@ -16,8 +14,6 @@ test('findBy queries work asynchronously', async () => {
     findByDisplayValue,
     findAllByDisplayValue,
   } = render(<View />);
-  await expect(findByTestId('aTestId', options)).rejects.toBeTruthy();
-  await expect(findAllByTestId('aTestId', options)).rejects.toBeTruthy();
   await expect(findByText('Some Text', options)).rejects.toBeTruthy();
   await expect(findAllByText('Some Text', options)).rejects.toBeTruthy();
   await expect(
@@ -45,8 +41,6 @@ test('findBy queries work asynchronously', async () => {
     20
   );
 
-  await expect(findByTestId('aTestId')).resolves.toBeTruthy();
-  await expect(findAllByTestId('aTestId')).resolves.toHaveLength(1);
   await expect(findByText('Some Text')).resolves.toBeTruthy();
   await expect(findAllByText('Some Text')).resolves.toHaveLength(1);
   await expect(findByPlaceholderText('Placeholder Text')).resolves.toBeTruthy();
