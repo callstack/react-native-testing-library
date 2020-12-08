@@ -5,7 +5,9 @@ title: React Navigation
 
 This section deals with integrating `@testing-library/react-native` with `react-navigation`, using Jest.
 
-## Setting up
+## Stack Navigator
+
+### Setting up
 
 Install the packages required for React Navigation. For this example, we will use a [stack navigator](https://reactnavigation.org/docs/stack-navigator/) to transition to the second page when any of the items are clicked on.
 
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-## Setting up the test environment
+### Setting up the test environment
 
 Install required dev dependencies:
 
@@ -146,6 +148,8 @@ Notice the 2 entries that don't come with the default React Native project:
 
 - `setupFiles` – an array of files that Jest is going to execute before running your tests. In this case, we run `react-native-gesture-handler/jestSetup.js` which sets up necessary mocks for `react-native-gesture-handler` native module
 - `transformIgnorePatterns` – an array of paths that Jest ignores when transforming code. In this case, the negative lookahead regular expression is used, to tell Jest to transform (with Babel) every package inside `node_modules/` that starts with `react-native`, `@react-native-community` or `@react-navigation` (added by us, the rest is in `react-native` preset by default, so you don't have to worry about it).
+
+### Example tests
 
 For this example, we are going to test out two things. The first thing is that the page is laid out as expected. The second, and most important, is that the page will transition to the detail screen when any item is tapped on.
 
@@ -194,6 +198,155 @@ describe('Testing react navigation', () => {
 
     expect(newHeader).toBeTruthy();
     expect(newBody).toBeTruthy();
+  });
+});
+```
+
+## Drawer Navigator
+
+Testing the Drawer Navigation requires an additional setup step for mocking the Reanimated library.
+
+### Setting up
+
+Install the packages required for React Navigation. For this example, we will use a [drawer navigator](https://reactnavigation.org/docs/drawer-navigator/) to transition between a home screen and an additional screen.
+
+```
+$ yarn add @react-native-community/masked-view @react-navigation/native @react-navigation/drawer react-native-gesture-handler react-native-reanimated react-native-safe-area-context react-native-screens
+```
+
+Create a [`./DrawerAppNavigator.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/DrawerAppNavigator.js) component which will list the navigation stack:
+
+```jsx
+import 'react-native-gesture-handler';
+import React from 'react';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+
+const { Screen, Navigator } = createDrawerNavigator();
+
+export default function Navigation() {
+  const options = {};
+
+  return (
+    <Navigator>
+      <Screen name="Home" component={HomeScreen} />
+      <Screen name="Notifications" component={NotificationsScreen} />
+    </Navigator>
+  );
+}
+```
+
+Create your two screens which we will transition to and from:
+
+```jsx
+function HomeScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Welcome!</Text>
+      <Button
+        onPress={() => navigation.navigate('Notifications')}
+        title="Go to notifications"
+      />
+    </View>
+  );
+}
+
+function NotificationsScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>This is the notifications screen</Text>
+      <Button onPress={() => navigation.goBack()} title="Go back home" />
+    </View>
+  );
+}
+```
+
+### Setting up the test environment
+
+Install required dev dependencies:
+
+```
+$ yarn add -D jest @testing-library/react-native
+```
+
+Create a [`mock file`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/jest-mocks.js) necessary for your tests:
+
+```jsx
+import 'react-native-gesture-handler/jestSetup';
+
+jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock');
+
+  // The mock for `call` immediately calls the callback which is incorrect
+  // So we override it with a no-op
+  Reanimated.default.call = () => {};
+
+  return Reanimated;
+});
+
+// Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
+jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
+```
+
+Create your `jest.config.js` file (or place the following properties in your `package.json` as a "jest" property)
+
+```js
+module.exports = {
+  preset: 'react-native',
+  setupFiles: ['./jest-mocks.js'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(jest-)?react-native|@react-native-community|@react-navigation)',
+  ],
+};
+```
+
+Make sure that the path to the file in `setupFiles` is correct. Jest will run these files before running your tests, so it's the best place to put your global mocks.
+
+This setup is copied from the [React Navigation documentation](https://reactnavigation.org/docs/testing/).
+
+### Example tests
+
+For this example, we are going to test out two things. The first thing is that the screen is loaded correctly. The second, and most important, is that the page will transition to the notifications screen when the button is tapped on.
+
+Let's add a [`DrawerAppNavigator.test.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/__tests__/DrawerAppNavigator.js) file in `src/__tests__` directory:
+
+```jsx
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { render, fireEvent } from '@testing-library/react-native';
+
+import DrawerAppNavigator from '../DrawerAppNavigator';
+
+describe('Testing react navigation', () => {
+  test('screen contains a button linking to the notifications page', async () => {
+    const component = (
+      <NavigationContainer>
+        <DrawerAppNavigator />
+      </NavigationContainer>
+    );
+
+    const { findByText, findAllByText } = render(component);
+    const button = await findByText('Go to notifications');
+
+    expect(button).toBeTruthy();
+  });
+
+  test('clicking on the button takes you to the notifications screen', async () => {
+    const component = (
+      <NavigationContainer>
+        <DrawerAppNavigator />
+      </NavigationContainer>
+    );
+
+    const { queryByText, findByText } = render(component);
+    const oldScreen = queryByText('Welcome!');
+    const button = await findByText('Go to notifications');
+
+    expect(oldScreen).toBeTruthy();
+
+    fireEvent(button, 'press');
+    const newScreen = await findByText('This is the notifications screen');
+
+    expect(newScreen).toBeTruthy();
   });
 });
 ```
