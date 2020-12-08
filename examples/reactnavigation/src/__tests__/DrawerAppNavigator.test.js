@@ -25,8 +25,11 @@ describe('Testing react navigation', () => {
       </NavigationContainer>
     );
 
-    const { findByText } = render(component);
+    const { queryByText, findByText } = render(component);
+    const oldScreen = queryByText('Welcome!');
     const button = await findByText('Go to notifications');
+
+    expect(oldScreen).toBeTruthy();
 
     fireEvent(button, 'press');
     const newScreen = await findByText('This is the notifications screen');
