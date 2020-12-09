@@ -8,7 +8,7 @@ import { throwRemovedFunctionError } from './helpers/errors';
  */
 export function shallowInternal(
   instance: ReactTestInstance | React.Element<any>
-) {
+): {|output: any|} {
   const renderer = new ShallowRenderer();
 
   renderer.render(React.createElement(instance.type, instance.props));

@@ -5,4 +5,4 @@ const actMock = (callback: () => void) => {
   callback();
 };
 
-export default act || actMock;
+export default (act || actMock: (callback: () => void) => Thenable);

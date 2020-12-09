@@ -25,7 +25,7 @@ type TestRendererOptions = {
 export default function render<T>(
   component: React.Element<T>,
   { wrapper: Wrapper, createNodeMock }: Options = {}
-) {
+): any {
   const wrap = (innerElement: React.Element<any>) =>
     Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement;
 

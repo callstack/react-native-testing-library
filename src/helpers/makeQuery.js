@@ -30,7 +30,7 @@ const makeQuery = <P: mixed, M: mixed>(
   name: string,
   queryNames: QueryNames,
   matcherFn: (prop: P, value: M) => boolean
-) => (instance: ReactTestInstance) => {
+): ((instance: ReactTestInstance) => any | {...}) => (instance: ReactTestInstance) => {
   const getBy = (matcher: M) => {
     try {
       return instance.find(

@@ -32,6 +32,9 @@ emoji=true
 esproposal.optional_chaining=enable
 esproposal.nullish_coalescing=enable
 
+well_formed_exports=true
+types_first=true
+
 module.file_ext=.js
 module.file_ext=.json
 module.file_ext=.ios.js

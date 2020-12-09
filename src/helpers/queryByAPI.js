@@ -20,7 +20,7 @@ import {
   throwRenamedFunctionError,
 } from './errors';
 
-export const queryByText = (instance: ReactTestInstance) =>
+export const queryByText = (instance: ReactTestInstance): ((text: string | RegExp) => any) =>
   function queryByTextFn(text: string | RegExp) {
     try {
       return getByText(instance)(text);
@@ -29,7 +29,7 @@ export const queryByText = (instance: ReactTestInstance) =>
     }
   };
 
-export const queryByPlaceholderText = (instance: ReactTestInstance) =>
+export const queryByPlaceholderText = (instance: ReactTestInstance): ((placeholder: string | RegExp) => any) =>
   function queryByPlaceholderTextFn(placeholder: string | RegExp) {
     try {
       return getByPlaceholderText(instance)(placeholder);
@@ -38,7 +38,7 @@ export const queryByPlaceholderText = (instance: ReactTestInstance) =>
     }
   };
 
-export const queryByDisplayValue = (instance: ReactTestInstance) =>
+export const queryByDisplayValue = (instance: ReactTestInstance): ((value: string | RegExp) => any) =>
   function queryByDisplayValueFn(value: string | RegExp) {
     try {
       return getByDisplayValue(instance)(value);
@@ -47,7 +47,7 @@ export const queryByDisplayValue = (instance: ReactTestInstance) =>
     }
   };
 
-export const queryByTestId = (instance: ReactTestInstance) =>
+export const queryByTestId = (instance: ReactTestInstance): ((testID: string | RegExp) => any) =>
   function queryByTestIdFn(testID: string | RegExp) {
     try {
       return getByTestId(instance)(testID);
@@ -56,7 +56,7 @@ export const queryByTestId = (instance: ReactTestInstance) =>
     }
   };
 
-export const queryAllByText = (instance: ReactTestInstance) => (
+export const queryAllByText = (instance: ReactTestInstance): ((text: string | RegExp) => any | Array<any>) => (
   text: string | RegExp
 ) => {
   try {
@@ -66,7 +66,7 @@ export const queryAllByText = (instance: ReactTestInstance) => (
   }
 };
 
-export const queryAllByPlaceholderText = (instance: ReactTestInstance) => (
+export const queryAllByPlaceholderText = (instance: ReactTestInstance): ((placeholder: string | RegExp) => any | Array<any>) => (
   placeholder: string | RegExp
 ) => {
   try {
@@ -76,7 +76,7 @@ export const queryAllByPlaceholderText = (instance: ReactTestInstance) => (
   }
 };
 
-export const queryAllByDisplayValue = (instance: ReactTestInstance) => (
+export const queryAllByDisplayValue = (instance: ReactTestInstance): ((value: string | RegExp) => any | Array<any>) => (
   value: string | RegExp
 ) => {
   try {
@@ -86,7 +86,7 @@ export const queryAllByDisplayValue = (instance: ReactTestInstance) => (
   }
 };
 
-export const queryAllByTestId = (instance: ReactTestInstance) => (
+export const queryAllByTestId = (instance: ReactTestInstance): ((testID: string | RegExp) => any | Array<any>) => (
   testID: string | RegExp
 ) => {
   try {
@@ -96,7 +96,7 @@ export const queryAllByTestId = (instance: ReactTestInstance) => (
   }
 };
 
-export const UNSAFE_queryByType = (instance: ReactTestInstance) =>
+export const UNSAFE_queryByType = (instance: ReactTestInstance): ((type: React.ComponentType<any>) => any) =>
   function queryByTypeFn(type: React.ComponentType<any>) {
     try {
       return UNSAFE_getByType(instance)(type);
@@ -105,7 +105,7 @@ export const UNSAFE_queryByType = (instance: ReactTestInstance) =>
     }
   };
 
-export const UNSAFE_queryByProps = (instance: ReactTestInstance) =>
+export const UNSAFE_queryByProps = (instance: ReactTestInstance): ((props: {[propName: string]: any}) => any) =>
   function queryByPropsFn(props: { [propName: string]: any }) {
     try {
       return UNSAFE_getByProps(instance)(props);
@@ -114,7 +114,7 @@ export const UNSAFE_queryByProps = (instance: ReactTestInstance) =>
     }
   };
 
-export const UNSAFE_queryAllByType = (instance: ReactTestInstance) => (
+export const UNSAFE_queryAllByType = (instance: ReactTestInstance): ((type: React.ComponentType<any>) => any | Array<any>) => (
   type: React.ComponentType<any>
 ) => {
   try {
@@ -124,7 +124,7 @@ export const UNSAFE_queryAllByType = (instance: ReactTestInstance) => (
   }
 };
 
-export const UNSAFE_queryAllByProps = (instance: ReactTestInstance) => (props: {
+export const UNSAFE_queryAllByProps = (instance: ReactTestInstance): ((props: {[propName: string]: any}) => any | Array<any>) => (props: {
   [propName: string]: any,
 }) => {
   try {
