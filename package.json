@@ -34,7 +34,7 @@
     "@callstack/eslint-config": "^10.0.0",
     "@release-it/conventional-changelog": "^2.0.0",
     "@testing-library/jest-native": "~3.4.3",
-    "@types/react": "^16.9.34",
+    "@types/react": "^17.0.0",
     "@types/react-native": "^0.63.0",
     "@types/react-test-renderer": "^16.9.2",
     "babel-jest": "^26.0.1",
