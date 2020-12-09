@@ -89,7 +89,7 @@ const invokeEvent = (
   const handler = findEventHandler(element, eventName, callsite);
 
   if (!handler) {
-    return null;
+    return;
   }
 
   let returnValue;
@@ -104,23 +104,20 @@ const invokeEvent = (
 const toEventHandlerName = (eventName: string) =>
   `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 
-const pressHandler = (element: ReactTestInstance): null | void =>
+const pressHandler = (element: ReactTestInstance): void =>
   invokeEvent(element, 'press', pressHandler);
 const changeTextHandler = (
   element: ReactTestInstance,
   ...data: Array<any>
-): null | void =>
-  invokeEvent(element, 'changeText', changeTextHandler, ...data);
-const scrollHandler = (
-  element: ReactTestInstance,
-  ...data: Array<any>
-): null | void => invokeEvent(element, 'scroll', scrollHandler, ...data);
+): void => invokeEvent(element, 'changeText', changeTextHandler, ...data);
+const scrollHandler = (element: ReactTestInstance, ...data: Array<any>): void =>
+  invokeEvent(element, 'scroll', scrollHandler, ...data);
 
 const fireEvent = (
   element: ReactTestInstance,
   eventName: string,
   ...data: Array<any>
-): null | void => invokeEvent(element, eventName, fireEvent, ...data);
+): void => invokeEvent(element, eventName, fireEvent, ...data);
 
 fireEvent.press = pressHandler;
 fireEvent.changeText = changeTextHandler;
