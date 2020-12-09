@@ -35,7 +35,7 @@ export default function render<T>(
   rerender: (component: React.Element<any>) => void,
   unmount: (nextElement?: React.Element<any>) => void,
   toJSON: () => null | ReactTestRendererJSON,
-  debug: $Call<typeof debug, any, any>,
+  debug: DebugFunction,
 } {
   const wrap = (innerElement: React.Element<any>) =>
     Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement;
