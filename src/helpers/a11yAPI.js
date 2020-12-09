@@ -6,11 +6,11 @@ import makeQuery from './makeQuery';
 type GetReturn = ReactTestInstance;
 type GetAllReturn = Array<ReactTestInstance>;
 type QueryReturn = ReactTestInstance | null;
-type QueryAllReturn = Array<ReactTestInstance> | [];
+type QueryAllReturn = Array<ReactTestInstance>;
 type FindReturn = Promise<GetReturn>;
 type FindAllReturn = Promise<GetAllReturn>;
 
-type A11yAPI = {|
+export type A11yAPI = {|
   // Label
   getByA11yLabel: (string | RegExp) => GetReturn,
   getByLabelText: (string | RegExp) => GetReturn,
@@ -116,7 +116,7 @@ export function matchObject<T: {}>(prop?: T, matcher: T): boolean {
     : false;
 }
 
-const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
+export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
   ({
     ...makeQuery(
       'accessibilityLabel',
@@ -239,5 +239,3 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       matchObject
     )(instance),
   }: any);
-
-export default a11yAPI;

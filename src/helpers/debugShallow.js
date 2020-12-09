@@ -8,7 +8,7 @@ import format from './format';
  */
 export default function debugShallow(
   instance: ReactTestInstance | React.Element<any>,
-  message?: any
+  message?: string
 ) {
   const { output } = shallowInternal(instance);
 
