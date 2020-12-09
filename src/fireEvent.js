@@ -106,10 +106,15 @@ const toEventHandlerName = (eventName: string) =>
 
 const pressHandler = (element: ReactTestInstance): null | void =>
   invokeEvent(element, 'press', pressHandler);
-const changeTextHandler = (element: ReactTestInstance, ...data: Array<any>): null | void =>
+const changeTextHandler = (
+  element: ReactTestInstance,
+  ...data: Array<any>
+): null | void =>
   invokeEvent(element, 'changeText', changeTextHandler, ...data);
-const scrollHandler = (element: ReactTestInstance, ...data: Array<any>): null | void =>
-  invokeEvent(element, 'scroll', scrollHandler, ...data);
+const scrollHandler = (
+  element: ReactTestInstance,
+  ...data: Array<any>
+): null | void => invokeEvent(element, 'scroll', scrollHandler, ...data);
 
 const fireEvent = (
   element: ReactTestInstance,
