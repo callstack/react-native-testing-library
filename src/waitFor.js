@@ -2,7 +2,11 @@
 
 import * as React from 'react';
 import act from './act';
-import { throwRemovedFunctionError } from './helpers/errors';
+import {
+  ErrorWithStack,
+  throwRemovedFunctionError,
+  copyStackTrace,
+} from './helpers/errors';
 
 const DEFAULT_TIMEOUT = 4500;
 const DEFAULT_INTERVAL = 50;
@@ -26,10 +30,13 @@ function waitForInternal<T>(
   const timeout = options?.timeout ?? DEFAULT_TIMEOUT;
   const interval = options?.interval ?? DEFAULT_INTERVAL;
   const startTime = Date.now();
+  // Being able to display a useful stack trace requires generating it before doing anything async
+  const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', waitFor);
 
   return new Promise((resolve, reject) => {
     const rejectOrRerun = (error) => {
       if (Date.now() - startTime >= timeout) {
+        copyStackTrace(error, stackTraceError);
         reject(error);
         return;
       }
