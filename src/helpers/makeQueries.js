@@ -5,6 +5,7 @@ import { ErrorWithStack } from './errors';
 
 type AllQuery = <T>(
   instance: ReactTestInstance
+  // $FlowFixMe - Property @@iterator is missing in T [1] but exists in $Iterable [2]
 ) => (...args: T) => Array<ReactTestInstance>;
 
 export function makeGetAllQuery<T>(
