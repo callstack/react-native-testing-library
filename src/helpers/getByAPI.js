@@ -9,6 +9,37 @@ import {
   throwRenamedFunctionError,
 } from './errors';
 
+type GetByAPI = {|
+  getByText: (text: string | RegExp) => ReactTestInstance,
+  getByPlaceholderText: (placeholder: string | RegExp) => ReactTestInstance,
+  getByDisplayValue: (value: string | RegExp) => ReactTestInstance,
+  getByTestId: (testID: string | RegExp) => ReactTestInstance,
+  getAllByTestId: (testID: string | RegExp) => Array<ReactTestInstance>,
+  getAllByText: (text: string | RegExp) => Array<ReactTestInstance>,
+  getAllByPlaceholderText: (
+    placeholder: string | RegExp
+  ) => Array<ReactTestInstance>,
+  getAllByDisplayValue: (value: string | RegExp) => Array<ReactTestInstance>,
+
+  // Unsafe aliases
+  UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance,
+  UNSAFE_getAllByType: <P>(
+    type: React.ComponentType<P>
+  ) => Array<ReactTestInstance>,
+  UNSAFE_getByProps: (props: { [string]: any }) => ReactTestInstance,
+  UNSAFE_getAllByProps: (props: { [string]: any }) => Array<ReactTestInstance>,
+
+  getByName: () => void,
+  getByType: () => void,
+  getByProps: () => void,
+  getAllByName: () => void,
+  getAllByType: () => void,
+  getAllByProps: () => void,
+
+  getByPlaceholder: () => void,
+  getAllByPlaceholder: () => void,
+|};
+
 const filterNodeByType = (node, type) => node.type === type;
 
 const getNodeByText = (node, text) => {
@@ -269,7 +300,7 @@ export const UNSAFE_getAllByProps = (
     return results;
   };
 
-export const getByAPI = (instance: ReactTestInstance) => ({
+export const getByAPI = (instance: ReactTestInstance): GetByAPI => ({
   getByText: getByText(instance),
   getByPlaceholderText: getByPlaceholderText(instance),
   getByDisplayValue: getByDisplayValue(instance),

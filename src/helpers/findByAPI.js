@@ -13,6 +13,43 @@ import {
 } from './getByAPI';
 import { throwRenamedFunctionError } from './errors';
 
+type FindByAPI = {|
+  findAllByDisplayValue: (
+    value: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => Promise<any>,
+  findAllByPlaceholder: () => void,
+  findAllByPlaceholderText: (
+    placeholder: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => Promise<any>,
+  findAllByTestId: (
+    testId: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => Promise<any>,
+  findAllByText: (
+    text: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => Promise<any>,
+  findByDisplayValue: (
+    value: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => Promise<any>,
+  findByPlaceholder: () => void,
+  findByPlaceholderText: (
+    placeholder: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => Promise<any>,
+  findByTestId: (
+    testId: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => Promise<any>,
+  findByText: (
+    text: string | RegExp,
+    waitForOptions?: WaitForOptions
+  ) => Promise<any>,
+|};
+
 const makeFindQuery = <Text, Result>(
   instance: ReactTestInstance,
   getQuery: (instance: ReactTestInstance) => (text: Text) => Result,
@@ -101,44 +138,7 @@ export const findAllByDisplayValue = (
   waitForOptions: WaitForOptions = {}
 ) => makeFindQuery(instance, getAllByDisplayValue, value, waitForOptions);
 
-export const findByAPI = (
-  instance: ReactTestInstance
-): ({|
-  findAllByDisplayValue: (
-    value: string | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => Promise<any>,
-  findAllByPlaceholder: () => void,
-  findAllByPlaceholderText: (
-    placeholder: string | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => Promise<any>,
-  findAllByTestId: (
-    testId: string | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => Promise<any>,
-  findAllByText: (
-    text: string | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => Promise<any>,
-  findByDisplayValue: (
-    value: string | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => Promise<any>,
-  findByPlaceholder: () => void,
-  findByPlaceholderText: (
-    placeholder: string | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => Promise<any>,
-  findByTestId: (
-    testId: string | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => Promise<any>,
-  findByText: (
-    text: string | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => Promise<any>,
-|}) => ({
+export const findByAPI = (instance: ReactTestInstance): FindByAPI => ({
   findByTestId: findByTestId(instance),
   findByText: findByText(instance),
   findByPlaceholderText: findByPlaceholderText(instance),

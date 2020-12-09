@@ -1,5 +1,9 @@
 // @flow
 
+export type Thenable = {
+  then(resolve: () => mixed, reject?: () => mixed): mixed,
+};
+
 export type A11yRole =
   | 'none'
   | 'button'

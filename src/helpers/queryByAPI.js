@@ -20,6 +20,45 @@ import {
   throwRenamedFunctionError,
 } from './errors';
 
+type QueryByAPI = {|
+  queryByText: (name: string | RegExp) => ReactTestInstance | null,
+  queryByPlaceholderText: (
+    placeholder: string | RegExp
+  ) => ReactTestInstance | null,
+  queryByDisplayValue: (value: string | RegExp) => ReactTestInstance | null,
+  queryByTestId: (testID: string | RegExp) => ReactTestInstance | null,
+  queryAllByTestId: (testID: string | RegExp) => Array<ReactTestInstance> | [],
+  queryAllByText: (text: string | RegExp) => Array<ReactTestInstance> | [],
+  queryAllByPlaceholderText: (
+    placeholder: string | RegExp
+  ) => Array<ReactTestInstance> | [],
+  queryAllByDisplayValue: (
+    value: string | RegExp
+  ) => Array<ReactTestInstance> | [],
+
+  // Unsafe aliases
+  UNSAFE_queryByType: <P>(
+    type: React.ComponentType<P>
+  ) => ReactTestInstance | null,
+  UNSAFE_queryAllByType: <P>(
+    type: React.ComponentType<P>
+  ) => Array<ReactTestInstance> | [],
+  UNSAFE_queryByProps: (props: { [string]: any }) => ReactTestInstance | null,
+  UNSAFE_queryAllByProps: (props: { [string]: any }) =>
+    | Array<ReactTestInstance>
+    | [],
+
+  queryByName: () => void,
+  queryByType: () => void,
+  queryByProps: () => void,
+  queryAllByName: () => void,
+  queryAllByType: () => void,
+  queryAllByProps: () => void,
+
+  queryByPlaceholder: () => void,
+  queryAllByPlaceholder: () => void,
+|};
+
 export const queryByText = (
   instance: ReactTestInstance
 ): ((text: string | RegExp) => any) =>
@@ -156,7 +195,7 @@ export const UNSAFE_queryAllByProps = (
   }
 };
 
-export const queryByAPI = (instance: ReactTestInstance) => ({
+export const queryByAPI = (instance: ReactTestInstance): QueryByAPI => ({
   queryByTestId: queryByTestId(instance),
   queryByText: queryByText(instance),
   queryByPlaceholderText: queryByPlaceholderText(instance),

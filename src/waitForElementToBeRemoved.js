@@ -2,8 +2,9 @@
 import waitFor, { type WaitForOptions } from './waitFor';
 import { ErrorWithStack } from './helpers/errors';
 
-const isRemoved = (result) =>
-  !result || (Array.isArray(result) && !result.length);
+function isRemoved<T>(result: T): boolean {
+  return !result || (Array.isArray(result) && !result.length);
+}
 
 export default async function waitForElementToBeRemoved<T>(
   expectation: () => T,
@@ -17,7 +18,7 @@ export default async function waitForElementToBeRemoved<T>(
 
   // Elements have to be present initally and then removed.
   const initialElements = expectation();
-  if (isRemoved(initialElements)) {
+  if (isRemoved<T>(initialElements)) {
     throw new ErrorWithStack(
       'The element(s) given to waitForElementToBeRemoved are already removed. waitForElementToBeRemoved requires that the element(s) exist(s) before waiting for removal.',
       waitForElementToBeRemoved
@@ -32,7 +33,7 @@ export default async function waitForElementToBeRemoved<T>(
       return initialElements;
     }
 
-    if (!isRemoved(result)) {
+    if (!isRemoved<T>(result)) {
       throw timeoutError;
     }
 
