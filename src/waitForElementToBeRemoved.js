@@ -18,7 +18,7 @@ export default async function waitForElementToBeRemoved<T>(
 
   // Elements have to be present initally and then removed.
   const initialElements = expectation();
-  if (isRemoved<T>(initialElements)) {
+  if (isRemoved(initialElements)) {
     throw new ErrorWithStack(
       'The element(s) given to waitForElementToBeRemoved are already removed. waitForElementToBeRemoved requires that the element(s) exist(s) before waiting for removal.',
       waitForElementToBeRemoved
@@ -33,7 +33,7 @@ export default async function waitForElementToBeRemoved<T>(
       return initialElements;
     }
 
-    if (!isRemoved<T>(result)) {
+    if (!isRemoved(result)) {
       throw timeoutError;
     }
 
