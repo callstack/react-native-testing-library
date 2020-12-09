@@ -9,7 +9,7 @@ import {
   throwRenamedFunctionError,
 } from './errors';
 
-type GetByAPI = {|
+export type GetByAPI = {|
   getByText: (text: string | RegExp) => ReactTestInstance,
   getByPlaceholderText: (placeholder: string | RegExp) => ReactTestInstance,
   getByDisplayValue: (value: string | RegExp) => ReactTestInstance,

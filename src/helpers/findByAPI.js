@@ -13,41 +13,41 @@ import {
 } from './getByAPI';
 import { throwRenamedFunctionError } from './errors';
 
-type FindByAPI = {|
+export type FindByAPI = {|
   findAllByDisplayValue: (
     value: string | RegExp,
     waitForOptions?: WaitForOptions
-  ) => Promise<any>,
+  ) => Promise<Array<ReactTestInstance>>,
   findAllByPlaceholder: () => void,
   findAllByPlaceholderText: (
     placeholder: string | RegExp,
     waitForOptions?: WaitForOptions
-  ) => Promise<any>,
+  ) => Promise<Array<ReactTestInstance>>,
   findAllByTestId: (
     testId: string | RegExp,
     waitForOptions?: WaitForOptions
-  ) => Promise<any>,
+  ) => Promise<Array<ReactTestInstance>>,
   findAllByText: (
     text: string | RegExp,
     waitForOptions?: WaitForOptions
-  ) => Promise<any>,
+  ) => Promise<Array<ReactTestInstance>>,
   findByDisplayValue: (
     value: string | RegExp,
     waitForOptions?: WaitForOptions
-  ) => Promise<any>,
+  ) => Promise<ReactTestInstance>,
   findByPlaceholder: () => void,
   findByPlaceholderText: (
     placeholder: string | RegExp,
     waitForOptions?: WaitForOptions
-  ) => Promise<any>,
+  ) => Promise<ReactTestInstance>,
   findByTestId: (
     testId: string | RegExp,
     waitForOptions?: WaitForOptions
-  ) => Promise<any>,
+  ) => Promise<ReactTestInstance>,
   findByText: (
     text: string | RegExp,
     waitForOptions?: WaitForOptions
-  ) => Promise<any>,
+  ) => Promise<ReactTestInstance>,
 |};
 
 const makeFindQuery = <Text, Result>(
