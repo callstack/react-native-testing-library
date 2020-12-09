@@ -58,7 +58,7 @@ export type QueryByAPI = {|
 
 export const queryByText = (
   instance: ReactTestInstance
-): ((text: string | RegExp) => any) =>
+): ((text: string | RegExp) => ReactTestInstance | null) =>
   function queryByTextFn(text: string | RegExp) {
     try {
       return getByText(instance)(text);
@@ -69,7 +69,7 @@ export const queryByText = (
 
 export const queryByPlaceholderText = (
   instance: ReactTestInstance
-): ((placeholder: string | RegExp) => any) =>
+): ((placeholder: string | RegExp) => ReactTestInstance | null) =>
   function queryByPlaceholderTextFn(placeholder: string | RegExp) {
     try {
       return getByPlaceholderText(instance)(placeholder);
@@ -80,7 +80,7 @@ export const queryByPlaceholderText = (
 
 export const queryByDisplayValue = (
   instance: ReactTestInstance
-): ((value: string | RegExp) => any) =>
+): ((value: string | RegExp) => ReactTestInstance | null) =>
   function queryByDisplayValueFn(value: string | RegExp) {
     try {
       return getByDisplayValue(instance)(value);
@@ -91,7 +91,7 @@ export const queryByDisplayValue = (
 
 export const queryByTestId = (
   instance: ReactTestInstance
-): ((testID: string | RegExp) => any) =>
+): ((testID: string | RegExp) => ReactTestInstance | null) =>
   function queryByTestIdFn(testID: string | RegExp) {
     try {
       return getByTestId(instance)(testID);
@@ -102,7 +102,9 @@ export const queryByTestId = (
 
 export const queryAllByText = (
   instance: ReactTestInstance
-): ((text: string | RegExp) => any | Array<any>) => (text: string | RegExp) => {
+): ((text: string | RegExp) => Array<ReactTestInstance>) => (
+  text: string | RegExp
+) => {
   try {
     return getAllByText(instance)(text);
   } catch (error) {
@@ -112,7 +114,7 @@ export const queryAllByText = (
 
 export const queryAllByPlaceholderText = (
   instance: ReactTestInstance
-): ((placeholder: string | RegExp) => any | Array<any>) => (
+): ((placeholder: string | RegExp) => Array<ReactTestInstance>) => (
   placeholder: string | RegExp
 ) => {
   try {
@@ -124,7 +126,7 @@ export const queryAllByPlaceholderText = (
 
 export const queryAllByDisplayValue = (
   instance: ReactTestInstance
-): ((value: string | RegExp) => any | Array<any>) => (
+): ((value: string | RegExp) => Array<ReactTestInstance>) => (
   value: string | RegExp
 ) => {
   try {
@@ -136,7 +138,7 @@ export const queryAllByDisplayValue = (
 
 export const queryAllByTestId = (
   instance: ReactTestInstance
-): ((testID: string | RegExp) => any | Array<any>) => (
+): ((testID: string | RegExp) => Array<ReactTestInstance>) => (
   testID: string | RegExp
 ) => {
   try {
@@ -148,7 +150,7 @@ export const queryAllByTestId = (
 
 export const UNSAFE_queryByType = (
   instance: ReactTestInstance
-): ((type: React.ComponentType<any>) => any) =>
+): ((type: React.ComponentType<any>) => ReactTestInstance | null) =>
   function queryByTypeFn(type: React.ComponentType<any>) {
     try {
       return UNSAFE_getByType(instance)(type);
@@ -159,7 +161,7 @@ export const UNSAFE_queryByType = (
 
 export const UNSAFE_queryByProps = (
   instance: ReactTestInstance
-): ((props: { [propName: string]: any }) => any) =>
+): ((props: { [propName: string]: any }) => ReactTestInstance | null) =>
   function queryByPropsFn(props: { [propName: string]: any }) {
     try {
       return UNSAFE_getByProps(instance)(props);
@@ -170,7 +172,7 @@ export const UNSAFE_queryByProps = (
 
 export const UNSAFE_queryAllByType = (
   instance: ReactTestInstance
-): ((type: React.ComponentType<any>) => any | Array<any>) => (
+): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) => (
   type: React.ComponentType<any>
 ) => {
   try {
@@ -182,9 +184,9 @@ export const UNSAFE_queryAllByType = (
 
 export const UNSAFE_queryAllByProps = (
   instance: ReactTestInstance
-): ((props: { [propName: string]: any }) => any | Array<any>) => (props: {
+): ((props: {
   [propName: string]: any,
-}) => {
+}) => Array<ReactTestInstance>) => (props: { [propName: string]: any }) => {
   try {
     return UNSAFE_getAllByProps(instance)(props);
   } catch (error) {
