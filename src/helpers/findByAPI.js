@@ -62,7 +62,7 @@ export const findByTestId = (
 ): ((
   testId: string | RegExp,
   waitForOptions?: WaitForOptions
-) => Promise<any>) => (
+) => Promise<ReactTestInstance>) => (
   testId: string | RegExp,
   waitForOptions: WaitForOptions = {}
 ) => makeFindQuery(instance, getByTestId, testId, waitForOptions);
@@ -72,7 +72,7 @@ export const findAllByTestId = (
 ): ((
   testId: string | RegExp,
   waitForOptions?: WaitForOptions
-) => Promise<any>) => (
+) => Promise<Array<ReactTestInstance>>) => (
   testId: string | RegExp,
   waitForOptions: WaitForOptions = {}
 ) => makeFindQuery(instance, getAllByTestId, testId, waitForOptions);
@@ -82,7 +82,7 @@ export const findByText = (
 ): ((
   text: string | RegExp,
   waitForOptions?: WaitForOptions
-) => Promise<any>) => (
+) => Promise<ReactTestInstance>) => (
   text: string | RegExp,
   waitForOptions: WaitForOptions = {}
 ) => makeFindQuery(instance, getByText, text, waitForOptions);
@@ -92,7 +92,7 @@ export const findAllByText = (
 ): ((
   text: string | RegExp,
   waitForOptions?: WaitForOptions
-) => Promise<any>) => (
+) => Promise<Array<ReactTestInstance>>) => (
   text: string | RegExp,
   waitForOptions: WaitForOptions = {}
 ) => makeFindQuery(instance, getAllByText, text, waitForOptions);
@@ -102,7 +102,7 @@ export const findByPlaceholderText = (
 ): ((
   placeholder: string | RegExp,
   waitForOptions?: WaitForOptions
-) => Promise<any>) => (
+) => Promise<ReactTestInstance>) => (
   placeholder: string | RegExp,
   waitForOptions: WaitForOptions = {}
 ) => makeFindQuery(instance, getByPlaceholderText, placeholder, waitForOptions);
@@ -112,7 +112,7 @@ export const findAllByPlaceholderText = (
 ): ((
   placeholder: string | RegExp,
   waitForOptions?: WaitForOptions
-) => Promise<any>) => (
+) => Promise<Array<ReactTestInstance>>) => (
   placeholder: string | RegExp,
   waitForOptions: WaitForOptions = {}
 ) =>
@@ -123,7 +123,7 @@ export const findByDisplayValue = (
 ): ((
   value: string | RegExp,
   waitForOptions?: WaitForOptions
-) => Promise<any>) => (
+) => Promise<ReactTestInstance>) => (
   value: string | RegExp,
   waitForOptions: WaitForOptions = {}
 ) => makeFindQuery(instance, getByDisplayValue, value, waitForOptions);
@@ -133,7 +133,7 @@ export const findAllByDisplayValue = (
 ): ((
   value: string | RegExp,
   waitForOptions?: WaitForOptions
-) => Promise<any>) => (
+) => Promise<Array<ReactTestInstance>>) => (
   value: string | RegExp,
   waitForOptions: WaitForOptions = {}
 ) => makeFindQuery(instance, getAllByDisplayValue, value, waitForOptions);
