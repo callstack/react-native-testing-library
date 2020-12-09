@@ -96,10 +96,10 @@ test('getByTestId returns only native elements', () => {
   expect(getAllByTestId('button')).toHaveLength(1);
 
   expect(() => getByTestId('myComponent')).toThrowError(
-    'No instances found with testID: myComponent'
+    'Unable to find an element with testID: myComponent'
   );
   expect(() => getAllByTestId('myComponent')).toThrowError(
-    'No instances found with testID: myComponent'
+    'Unable to find an element with testID: myComponent'
   );
 });
 
@@ -123,7 +123,9 @@ test('getByTestId, queryByTestId', () => {
   const component = getByTestId('bananaFresh');
 
   expect(component.props.children).toBe('not fresh');
-  expect(() => getByTestId('InExistent')).toThrow('No instances found');
+  expect(() => getByTestId('InExistent')).toThrow(
+    'Unable to find an element with testID: InExistent'
+  );
 
   expect(getByTestId('bananaFresh')).toBe(component);
   expect(queryByTestId('InExistent')).toBeNull();
@@ -137,7 +139,7 @@ test('getAllByTestId, queryAllByTestId', () => {
   expect(textElements[0].props.children).toBe('First Text');
   expect(textElements[1].props.children).toBe('Second Text');
   expect(() => getAllByTestId('nonExistentTestId')).toThrow(
-    'No instances found'
+    'Unable to find an element with testID: nonExistentTestId'
   );
 
   const queriedTextElements = queryAllByTestId('duplicateText');

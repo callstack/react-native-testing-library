@@ -13,46 +13,43 @@ const getNodeByTestId = (node, testID) => {
     : testID.test(node.props.testID);
 };
 
-export const queryAllByTestId = (instance: ReactTestInstance) =>
-  function getAllByTestIdFn(testID: string | RegExp): ReactTestInstance[] {
+export const queryAllByTestId = (
+  instance: ReactTestInstance
+): ((testId: string | RegExp) => Array<ReactTestInstance>) =>
+  function getAllByTestIdFn(testId) {
     const results = instance
-      .findAll((node) => getNodeByTestId(node, testID))
+      .findAll((node) => getNodeByTestId(node, testId))
       .filter((element) => typeof element.type === 'string');
 
     return results;
   };
 
-export const getAllByTestId = (instance: ReactTestInstance) =>
-  makeGetAllQuery(
-    queryAllByTestId,
-    instance,
-    (testId) => `No instances found with testID: ${String(testId)}`
-  );
+const getMultipleError = (testId) =>
+  `Found multiple elements with testID: ${String(testId)}`;
+const getMissingError = (testId) =>
+  `Unable to find an element with testID: ${String(testId)}`;
 
-export const queryByTestId = (instance: ReactTestInstance) =>
-  makeSingleQuery(
-    queryAllByTestId,
-    instance,
-    (testId: string, nbResults: number) =>
-      ` Expected 1 but found ${nbResults} instances with testID: ${String(
-        testId
-      )}`
-  );
+export const getAllByTestId = (
+  instance: ReactTestInstance
+): ((testId: string | RegExp) => Array<ReactTestInstance>) =>
+  makeGetAllQuery(queryAllByTestId, instance, getMissingError);
 
-export const getByTestId = (instance: ReactTestInstance) =>
-  makeGetQuery(
-    queryAllByTestId,
-    instance,
-    (testId: string, nbResults: number) =>
-      nbResults > 1
-        ? ` Expected 1 but found ${nbResults} instances with testID: ${String(
-            testId
-          )}`
-        : `No instances found with testID: ${String(testId)}`
-  );
+export const queryByTestId = (
+  instance: ReactTestInstance
+): ((testId: string | RegExp) => ReactTestInstance | null) =>
+  makeSingleQuery(queryAllByTestId, instance, getMultipleError);
 
-export const findAllByTestId = (instance: ReactTestInstance) =>
+export const getByTestId = (
+  instance: ReactTestInstance
+): ((testId: string | RegExp) => ReactTestInstance) =>
+  makeGetQuery(queryAllByTestId, instance, getMultipleError, getMissingError);
+
+export const findAllByTestId = (
+  instance: ReactTestInstance
+): ((testId: string | RegExp) => Promise<Array<ReactTestInstance>>) =>
   makeFindAllQuery(getAllByTestId, instance);
 
-export const findByTestId = (instance: ReactTestInstance) =>
+export const findByTestId = (
+  instance: ReactTestInstance
+): ((testId: string | RegExp) => Promise<ReactTestInstance>) =>
   makeFindQuery(getByTestId, instance);

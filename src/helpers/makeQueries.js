@@ -3,37 +3,36 @@ import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 import { ErrorWithStack } from './errors';
 
-type AllQuery = (
+type AllQuery = <T>(
   instance: ReactTestInstance
-) => (args: any) => Array<ReactTestInstance>;
+) => (...args: T) => Array<ReactTestInstance>;
 
-export const makeGetAllQuery = (
+export function makeGetAllQuery<T>(
   allQuery: AllQuery,
   instance: ReactTestInstance,
-  getMissingElementError: (args: any) => string
-) =>
-  function getAllFn(...args: Array<any>) {
+  getMissingError: (args: T) => string
+): (...args: Array<T>) => Array<ReactTestInstance> {
+  return function getAllFn(...args: Array<T>) {
     const results = allQuery(instance)(...args);
-    if (!results.length) {
-      throw new ErrorWithStack(getMissingElementError(...args), getAllFn);
+
+    if (results.length === 0) {
+      throw new ErrorWithStack(getMissingError(...args), getAllFn);
     }
 
     return results;
   };
+}
 
-export const makeSingleQuery = (
+export function makeSingleQuery<T>(
   allQuery: AllQuery,
   instance: ReactTestInstance,
-  getMissingElementError: (args: any, nbResults: number) => string
-) =>
-  function singleQueryFn(...args: Array<any>) {
+  getMultipleError: (args: T) => string
+): (...args: Array<T>) => null | ReactTestInstance {
+  return function singleQueryFn(...args: Array<T>) {
     const results = allQuery(instance)(...args);
 
     if (results.length > 1) {
-      throw new ErrorWithStack(
-        getMissingElementError(...args, results.length),
-        singleQueryFn
-      );
+      throw new ErrorWithStack(getMultipleError(...args), singleQueryFn);
     }
 
     if (results.length === 0) {
@@ -42,37 +41,45 @@ export const makeSingleQuery = (
 
     return results[0];
   };
+}
 
-export const makeGetQuery = (
+export function makeGetQuery<T>(
   allQuery: AllQuery,
   instance: ReactTestInstance,
-  getMissingElementError: (args: any, nbResults: number) => string
-) =>
-  function getFn(...args: Array<any>) {
+  getMultipleError: (args: T) => string,
+  getMissingError: (args: T) => string
+): (...args: Array<T>) => ReactTestInstance {
+  return function getFn(...args: Array<T>) {
     const results = allQuery(instance)(...args);
 
-    if (results.length !== 1) {
-      throw new ErrorWithStack(
-        getMissingElementError(...args, results.length),
-        getFn
-      );
+    if (results.length > 1) {
+      throw new ErrorWithStack(getMultipleError(...args), getFn);
+    }
+
+    if (results.length === 0) {
+      throw new ErrorWithStack(getMissingError(...args), getFn);
     }
 
     return results[0];
   };
+}
 
-export const makeFindAllQuery = (
+export function makeFindAllQuery<T>(
   getAllQuery: AllQuery,
   instance: ReactTestInstance
-) =>
-  function findAllFn(args: any, waitForOptions: WaitForOptions = {}) {
+): (
+  args: T,
+  waitForOptions?: WaitForOptions
+) => Promise<Array<ReactTestInstance>> {
+  return function findAllFn(args: T, waitForOptions: WaitForOptions = {}) {
     return waitFor(() => getAllQuery(instance)(args), waitForOptions);
   };
-
-export const makeFindQuery = (
+}
+export function makeFindQuery<T>(
   getQuery: (instance: ReactTestInstance) => (args: any) => ReactTestInstance,
   instance: ReactTestInstance
-) =>
-  function findFn(args: any, waitForOptions: WaitForOptions = {}) {
+): (args: T, waitForOptions?: WaitForOptions) => Promise<ReactTestInstance> {
+  return function findFn(args: T, waitForOptions: WaitForOptions = {}) {
     return waitFor(() => getQuery(instance)(args), waitForOptions);
   };
+}
