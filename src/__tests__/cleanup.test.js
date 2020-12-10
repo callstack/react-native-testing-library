@@ -1,6 +1,6 @@
 // @flow
 /* eslint-disable react/no-multi-comp */
-import React from 'react';
+import * as React from 'react';
 import { View } from 'react-native';
 import { cleanup, render } from '../pure';
 

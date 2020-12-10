@@ -9,6 +9,37 @@ import {
   throwRenamedFunctionError,
 } from './errors';
 
+export type GetByAPI = {|
+  getByText: (text: string | RegExp) => ReactTestInstance,
+  getByPlaceholderText: (placeholder: string | RegExp) => ReactTestInstance,
+  getByDisplayValue: (value: string | RegExp) => ReactTestInstance,
+  getByTestId: (testID: string | RegExp) => ReactTestInstance,
+  getAllByTestId: (testID: string | RegExp) => Array<ReactTestInstance>,
+  getAllByText: (text: string | RegExp) => Array<ReactTestInstance>,
+  getAllByPlaceholderText: (
+    placeholder: string | RegExp
+  ) => Array<ReactTestInstance>,
+  getAllByDisplayValue: (value: string | RegExp) => Array<ReactTestInstance>,
+
+  // Unsafe aliases
+  UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance,
+  UNSAFE_getAllByType: <P>(
+    type: React.ComponentType<P>
+  ) => Array<ReactTestInstance>,
+  UNSAFE_getByProps: (props: { [string]: any }) => ReactTestInstance,
+  UNSAFE_getAllByProps: (props: { [string]: any }) => Array<ReactTestInstance>,
+
+  getByName: () => void,
+  getByType: () => void,
+  getByProps: () => void,
+  getAllByName: () => void,
+  getAllByType: () => void,
+  getAllByProps: () => void,
+
+  getByPlaceholder: () => void,
+  getAllByPlaceholder: () => void,
+|};
+
 const filterNodeByType = (node, type) => node.type === type;
 
 const getNodeByText = (node, text) => {
@@ -92,7 +123,9 @@ const getNodeByTestId = (node, testID) => {
     : testID.test(node.props.testID);
 };
 
-export const getByText = (instance: ReactTestInstance) =>
+export const getByText = (
+  instance: ReactTestInstance
+): ((text: string | RegExp) => ReactTestInstance) =>
   function getByTextFn(text: string | RegExp) {
     try {
       return instance.find((node) => getNodeByText(node, text));
@@ -104,7 +137,9 @@ export const getByText = (instance: ReactTestInstance) =>
     }
   };
 
-export const getByPlaceholderText = (instance: ReactTestInstance) =>
+export const getByPlaceholderText = (
+  instance: ReactTestInstance
+): ((placeholder: string | RegExp) => ReactTestInstance) =>
   function getByPlaceholderTextFn(placeholder: string | RegExp) {
     try {
       return instance.find((node) =>
@@ -118,7 +153,9 @@ export const getByPlaceholderText = (instance: ReactTestInstance) =>
     }
   };
 
-export const getByDisplayValue = (instance: ReactTestInstance) =>
+export const getByDisplayValue = (
+  instance: ReactTestInstance
+): ((displayValue: string | RegExp) => ReactTestInstance) =>
   function getByDisplayValueFn(displayValue: string | RegExp) {
     try {
       return instance.find((node) =>
@@ -132,7 +169,9 @@ export const getByDisplayValue = (instance: ReactTestInstance) =>
     }
   };
 
-export const getByTestId = (instance: ReactTestInstance) =>
+export const getByTestId = (
+  instance: ReactTestInstance
+): ((testID: string | RegExp) => ReactTestInstance) =>
   function getByTestIdFn(testID: string | RegExp) {
     try {
       const results = getAllByTestId(instance)(testID);
@@ -151,7 +190,9 @@ export const getByTestId = (instance: ReactTestInstance) =>
     }
   };
 
-export const getAllByText = (instance: ReactTestInstance) =>
+export const getAllByText = (
+  instance: ReactTestInstance
+): ((text: string | RegExp) => Array<ReactTestInstance>) =>
   function getAllByTextFn(text: string | RegExp) {
     const results = instance.findAll((node) => getNodeByText(node, text));
     if (results.length === 0) {
@@ -163,7 +204,9 @@ export const getAllByText = (instance: ReactTestInstance) =>
     return results;
   };
 
-export const getAllByPlaceholderText = (instance: ReactTestInstance) =>
+export const getAllByPlaceholderText = (
+  instance: ReactTestInstance
+): ((placeholder: string | RegExp) => Array<ReactTestInstance>) =>
   function getAllByPlaceholderTextFn(placeholder: string | RegExp) {
     const results = instance.findAll((node) =>
       getTextInputNodeByPlaceholderText(node, placeholder)
@@ -177,7 +220,9 @@ export const getAllByPlaceholderText = (instance: ReactTestInstance) =>
     return results;
   };
 
-export const getAllByDisplayValue = (instance: ReactTestInstance) =>
+export const getAllByDisplayValue = (
+  instance: ReactTestInstance
+): ((value: string | RegExp) => Array<ReactTestInstance>) =>
   function getAllByDisplayValueFn(value: string | RegExp) {
     const results = instance.findAll((node) =>
       getTextInputNodeByDisplayValue(node, value)
@@ -191,7 +236,9 @@ export const getAllByDisplayValue = (instance: ReactTestInstance) =>
     return results;
   };
 
-export const getAllByTestId = (instance: ReactTestInstance) =>
+export const getAllByTestId = (
+  instance: ReactTestInstance
+): ((testID: string | RegExp) => Array<ReactTestInstance>) =>
   function getAllByTestIdFn(testID: string | RegExp): ReactTestInstance[] {
     const results = instance
       .findAll((node) => getNodeByTestId(node, testID))
@@ -206,7 +253,9 @@ export const getAllByTestId = (instance: ReactTestInstance) =>
     return results;
   };
 
-export const UNSAFE_getByType = (instance: ReactTestInstance) =>
+export const UNSAFE_getByType = (
+  instance: ReactTestInstance
+): ((type: React.ComponentType<any>) => ReactTestInstance) =>
   function getByTypeFn(type: React.ComponentType<any>) {
     try {
       return instance.findByType(type);
@@ -215,7 +264,9 @@ export const UNSAFE_getByType = (instance: ReactTestInstance) =>
     }
   };
 
-export const UNSAFE_getByProps = (instance: ReactTestInstance) =>
+export const UNSAFE_getByProps = (
+  instance: ReactTestInstance
+): ((props: { [propName: string]: any }) => ReactTestInstance) =>
   function getByPropsFn(props: { [propName: string]: any }) {
     try {
       return instance.findByProps(props);
@@ -224,7 +275,9 @@ export const UNSAFE_getByProps = (instance: ReactTestInstance) =>
     }
   };
 
-export const UNSAFE_getAllByType = (instance: ReactTestInstance) =>
+export const UNSAFE_getAllByType = (
+  instance: ReactTestInstance
+): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) =>
   function getAllByTypeFn(type: React.ComponentType<any>) {
     const results = instance.findAllByType(type);
     if (results.length === 0) {
@@ -233,7 +286,9 @@ export const UNSAFE_getAllByType = (instance: ReactTestInstance) =>
     return results;
   };
 
-export const UNSAFE_getAllByProps = (instance: ReactTestInstance) =>
+export const UNSAFE_getAllByProps = (
+  instance: ReactTestInstance
+): ((props: { [propName: string]: any }) => Array<ReactTestInstance>) =>
   function getAllByPropsFn(props: { [propName: string]: any }) {
     const results = instance.findAllByProps(props);
     if (results.length === 0) {
@@ -245,7 +300,7 @@ export const UNSAFE_getAllByProps = (instance: ReactTestInstance) =>
     return results;
   };
 
-export const getByAPI = (instance: ReactTestInstance) => ({
+export const getByAPI = (instance: ReactTestInstance): GetByAPI => ({
   getByText: getByText(instance),
   getByPlaceholderText: getByPlaceholderText(instance),
   getByDisplayValue: getByDisplayValue(instance),

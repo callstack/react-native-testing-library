@@ -134,7 +134,7 @@ exports[`debug: shallow 1`] = `
   >
     not fresh
   </Text>
-  <Component
+  <TextInput
     allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
     rejectResponderTermination={true}
@@ -142,7 +142,7 @@ exports[`debug: shallow 1`] = `
     underlineColorAndroid=\\"transparent\\"
     value=\\"Custom Freshie\\"
   />
-  <Component
+  <TextInput
     allowFontScaling={true}
     placeholder=\\"Who inspected freshness?\\"
     rejectResponderTermination={true}
@@ -184,7 +184,7 @@ exports[`debug: shallow with message 1`] = `
   >
     not fresh
   </Text>
-  <Component
+  <TextInput
     allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
     rejectResponderTermination={true}
@@ -192,7 +192,7 @@ exports[`debug: shallow with message 1`] = `
     underlineColorAndroid=\\"transparent\\"
     value=\\"Custom Freshie\\"
   />
-  <Component
+  <TextInput
     allowFontScaling={true}
     placeholder=\\"Who inspected freshness?\\"
     rejectResponderTermination={true}

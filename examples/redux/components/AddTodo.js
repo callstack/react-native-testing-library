@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button, StyleSheet, Text, View, TextInput } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
