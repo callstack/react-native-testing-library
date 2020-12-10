@@ -17,7 +17,7 @@ Create an [`./AppNavigator.js`](https://github.com/callstack/react-native-testin
 
 ```jsx
 import 'react-native-gesture-handler';
-import React from 'react';
+import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from './screens/HomeScreen';
@@ -40,7 +40,7 @@ export default function Navigation() {
 Create your two screens which we will transition to and from them. The homescreen, found in [`./screens/HomeScreen.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/screens/HomeScreen.js), contains a list of elements presented in a list view. On tap of any of these items will move to the details screen with the item number:
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import {
   Text,
   View,
@@ -96,7 +96,7 @@ The details screen, found in [`./screens/DetailsScreen.js`](https://github.com/c
 
 ```jsx
 // ./screens/DetailsScreen.js
-import React from 'react';
+import * as React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 
 export default function DetailsScreen(props) {
@@ -152,7 +152,7 @@ For this example, we are going to test out two things. The first thing is that t
 Let's add a [`AppNavigator.test.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/__tests__/AppNavigator.js) file in `src/__tests__` directory:
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { render, fireEvent } from '@testing-library/react-native';
 
