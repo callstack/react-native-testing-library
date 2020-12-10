@@ -1,4 +1,3 @@
-import 'react-native-gesture-handler';
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {View, Button, Text} from 'react-native';
@@ -27,8 +26,6 @@ function NotificationsScreen({ navigation }) {
 }
 
 export default function Navigation() {
-  const options = {};
-
   return (
     <Navigator>
       <Screen name="Home" component={HomeScreen} />
