@@ -333,6 +333,10 @@ fireEvent.scroll(getByTestId('flat-list'), eventData);
 expect(onEndReached).toHaveBeenCalled();
 ```
 
+:::note
+If you're noticing that components are not being found on a list, even after mocking a scroll event, try changing the [`initialNumToRender`](https://reactnative.dev/docs/flatlist#initialnumtorender) that you have set. If you aren't comfortable changing the code to accept this prop from the unit test, try using an e2e test that might better suit what use case you're attempting to replicate.
+:::
+
 ## `waitFor`
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitFor.test.js)
