@@ -3,11 +3,6 @@ import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 import { ErrorWithStack } from './errors';
 
-// TODO: fix typing
-// is it always string | RegExp for every query?
-// what about options for each query?
-type QueryArg = string | RegExp;
-
 type QueryFunction<ArgType, ReturnType> = (
   instance: ReactTestInstance
 ) => (args: ArgType) => ReturnType;
@@ -16,28 +11,37 @@ type FindQueryFunction<ArgType, ReturnType> = (
   instance: ReactTestInstance
 ) => (args: ArgType, waitForOptions?: WaitForOptions) => Promise<ReturnType>;
 
-type QueryAllByQuery = QueryFunction<QueryArg, Array<ReactTestInstance>>;
-type QueryByQuery = QueryFunction<QueryArg, null | ReactTestInstance>;
+type QueryAllByQuery<QueryArg> = QueryFunction<
+  QueryArg,
+  Array<ReactTestInstance>
+>;
+type QueryByQuery<QueryArg> = QueryFunction<QueryArg, null | ReactTestInstance>;
 
-type GetAllByQuery = QueryFunction<QueryArg, Array<ReactTestInstance>>;
-type GetByQuery = QueryFunction<QueryArg, ReactTestInstance>;
+type GetAllByQuery<QueryArg> = QueryFunction<
+  QueryArg,
+  Array<ReactTestInstance>
+>;
+type GetByQuery<QueryArg> = QueryFunction<QueryArg, ReactTestInstance>;
 
-type FindAllByQuery = FindQueryFunction<QueryArg, Array<ReactTestInstance>>;
-type FindByQuery = FindQueryFunction<QueryArg, ReactTestInstance>;
+type FindAllByQuery<QueryArg> = FindQueryFunction<
+  QueryArg,
+  Array<ReactTestInstance>
+>;
+type FindByQuery<QueryArg> = FindQueryFunction<QueryArg, ReactTestInstance>;
 
-export type Queries = {
-  getBy: GetByQuery,
-  getAllBy: GetAllByQuery,
-  queryBy: QueryByQuery,
-  findBy: FindByQuery,
-  findAllBy: FindAllByQuery,
+export type Queries<QueryArg> = {
+  getBy: GetByQuery<QueryArg>,
+  getAllBy: GetAllByQuery<QueryArg>,
+  queryBy: QueryByQuery<QueryArg>,
+  findBy: FindByQuery<QueryArg>,
+  findAllBy: FindAllByQuery<QueryArg>,
 };
 
-export function makeQueries(
-  queryAllByQuery: QueryAllByQuery,
+export function makeQueries<QueryArg>(
+  queryAllByQuery: QueryAllByQuery<QueryArg>,
   getMissingError: (args: QueryArg) => string,
   getMultipleError: (args: QueryArg) => string
-): Queries {
+): Queries<QueryArg> {
   function getAllByQuery(instance: ReactTestInstance) {
     return function getAllFn(args: QueryArg) {
       const results = queryAllByQuery(instance)(args);

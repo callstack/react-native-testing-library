@@ -30,7 +30,11 @@ const {
   queryBy: queryByTestId,
   findBy: findByTestId,
   findAllBy: findAllByTestId,
-}: Queries = makeQueries(queryAllByTestId, getMissingError, getMultipleError);
+}: Queries<string | RegExp> = makeQueries(
+  queryAllByTestId,
+  getMissingError,
+  getMultipleError
+);
 
 export {
   getByTestId,
