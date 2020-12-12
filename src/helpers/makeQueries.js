@@ -25,7 +25,7 @@ type GetByQuery = QueryFunction<QueryArg, ReactTestInstance>;
 type FindAllByQuery = FindQueryFunction<QueryArg, Array<ReactTestInstance>>;
 type FindByQuery = FindQueryFunction<QueryArg, ReactTestInstance>;
 
-type Queries = {
+export type Queries = {
   getBy: GetByQuery,
   getAllBy: GetAllByQuery,
   queryBy: QueryByQuery,

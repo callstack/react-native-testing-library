@@ -1,5 +1,6 @@
 // @flow
 import { makeQueries } from './makeQueries';
+import type { Queries } from './makeQueries';
 
 const getNodeByTestId = (node, testID) => {
   return typeof testID === 'string'
@@ -29,7 +30,7 @@ const {
   queryBy: queryByTestId,
   findBy: findByTestId,
   findAllBy: findAllByTestId,
-} = makeQueries(queryAllByTestId, getMissingError, getMultipleError);
+}: Queries = makeQueries(queryAllByTestId, getMissingError, getMultipleError);
 
 export {
   getByTestId,
