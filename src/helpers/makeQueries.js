@@ -3,6 +3,9 @@ import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 import { ErrorWithStack } from './errors';
 
+// TODO: fix typing
+// is it always string | RegExp for every query?
+// what about options for each query?
 type QueryArg = string | RegExp;
 
 type QueryFunction<ArgType, ReturnType> = (
