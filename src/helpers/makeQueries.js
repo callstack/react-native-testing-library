@@ -3,84 +3,105 @@ import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 import { ErrorWithStack } from './errors';
 
-type AllQuery = <T>(
+type QueryArg = string | RegExp;
+
+type QueryFunction<ArgType, ReturnType> = (
   instance: ReactTestInstance
-  // $FlowFixMe - Property @@iterator is missing in T [1] but exists in $Iterable [2]
-) => (...args: T) => Array<ReactTestInstance>;
+) => (args: ArgType) => ReturnType;
 
-export function makeGetAllQuery<T>(
-  allQuery: AllQuery,
-  instance: ReactTestInstance,
-  getMissingError: (args: T) => string
-): (...args: Array<T>) => Array<ReactTestInstance> {
-  return function getAllFn(...args: Array<T>) {
-    const results = allQuery(instance)(...args);
-
-    if (results.length === 0) {
-      throw new ErrorWithStack(getMissingError(...args), getAllFn);
-    }
-
-    return results;
-  };
-}
-
-export function makeSingleQuery<T>(
-  allQuery: AllQuery,
-  instance: ReactTestInstance,
-  getMultipleError: (args: T) => string
-): (...args: Array<T>) => null | ReactTestInstance {
-  return function singleQueryFn(...args: Array<T>) {
-    const results = allQuery(instance)(...args);
-
-    if (results.length > 1) {
-      throw new ErrorWithStack(getMultipleError(...args), singleQueryFn);
-    }
-
-    if (results.length === 0) {
-      return null;
-    }
-
-    return results[0];
-  };
-}
-
-export function makeGetQuery<T>(
-  allQuery: AllQuery,
-  instance: ReactTestInstance,
-  getMultipleError: (args: T) => string,
-  getMissingError: (args: T) => string
-): (...args: Array<T>) => ReactTestInstance {
-  return function getFn(...args: Array<T>) {
-    const results = allQuery(instance)(...args);
-
-    if (results.length > 1) {
-      throw new ErrorWithStack(getMultipleError(...args), getFn);
-    }
-
-    if (results.length === 0) {
-      throw new ErrorWithStack(getMissingError(...args), getFn);
-    }
-
-    return results[0];
-  };
-}
-
-export function makeFindAllQuery<T>(
-  getAllQuery: AllQuery,
+type FindQueryFunction<ArgType, ReturnType> = (
   instance: ReactTestInstance
-): (
-  args: T,
-  waitForOptions?: WaitForOptions
-) => Promise<Array<ReactTestInstance>> {
-  return function findAllFn(args: T, waitForOptions: WaitForOptions = {}) {
-    return waitFor(() => getAllQuery(instance)(args), waitForOptions);
-  };
-}
-export function makeFindQuery<T>(
-  getQuery: (instance: ReactTestInstance) => (args: any) => ReactTestInstance,
-  instance: ReactTestInstance
-): (args: T, waitForOptions?: WaitForOptions) => Promise<ReactTestInstance> {
-  return function findFn(args: T, waitForOptions: WaitForOptions = {}) {
-    return waitFor(() => getQuery(instance)(args), waitForOptions);
+) => (args: ArgType, waitForOptions?: WaitForOptions) => Promise<ReturnType>;
+
+type QueryAllByQuery = QueryFunction<QueryArg, Array<ReactTestInstance>>;
+type QueryByQuery = QueryFunction<QueryArg, null | ReactTestInstance>;
+
+type GetAllByQuery = QueryFunction<QueryArg, Array<ReactTestInstance>>;
+type GetByQuery = QueryFunction<QueryArg, ReactTestInstance>;
+
+type FindAllByQuery = FindQueryFunction<QueryArg, Array<ReactTestInstance>>;
+type FindByQuery = FindQueryFunction<QueryArg, ReactTestInstance>;
+
+type Queries = {
+  getBy: GetByQuery,
+  getAllBy: GetAllByQuery,
+  queryBy: QueryByQuery,
+  findBy: FindByQuery,
+  findAllBy: FindAllByQuery,
+};
+
+export function makeQueries(
+  queryAllByQuery: QueryAllByQuery,
+  getMissingError: (args: QueryArg) => string,
+  getMultipleError: (args: QueryArg) => string
+): Queries {
+  function getAllByQuery(instance: ReactTestInstance) {
+    return function getAllFn(args: QueryArg) {
+      const results = queryAllByQuery(instance)(args);
+
+      if (results.length === 0) {
+        throw new ErrorWithStack(getMissingError(args), getAllFn);
+      }
+
+      return results;
+    };
+  }
+
+  function queryByQuery(instance: ReactTestInstance) {
+    return function singleQueryFn(args: QueryArg) {
+      const results = queryAllByQuery(instance)(args);
+
+      if (results.length > 1) {
+        throw new ErrorWithStack(getMultipleError(args), singleQueryFn);
+      }
+
+      if (results.length === 0) {
+        return null;
+      }
+
+      return results[0];
+    };
+  }
+
+  function getByQuery(instance: ReactTestInstance) {
+    return function getFn(args: QueryArg) {
+      const results = queryAllByQuery(instance)(args);
+
+      if (results.length > 1) {
+        throw new ErrorWithStack(getMultipleError(args), getFn);
+      }
+
+      if (results.length === 0) {
+        throw new ErrorWithStack(getMissingError(args), getFn);
+      }
+
+      return results[0];
+    };
+  }
+
+  function findAllByQuery(instance: ReactTestInstance) {
+    return function findAllFn(
+      args: QueryArg,
+      waitForOptions?: WaitForOptions = {}
+    ) {
+      return waitFor(() => getAllByQuery(instance)(args), waitForOptions);
+    };
+  }
+
+  function findByQuery(instance: ReactTestInstance) {
+    return function findFn(
+      args: QueryArg,
+      waitForOptions?: WaitForOptions = {}
+    ) {
+      return waitFor(() => getByQuery(instance)(args), waitForOptions);
+    };
+  }
+
+  return {
+    getBy: getByQuery,
+    getAllBy: getAllByQuery,
+    queryBy: queryByQuery,
+    findBy: findByQuery,
+    findAllBy: findAllByQuery,
   };
 }
