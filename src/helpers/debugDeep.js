@@ -6,7 +6,7 @@ import format from './format';
  */
 export default function debugDeep(
   instance: ?ReactTestRendererJSON,
-  message?: any = ''
+  message?: string
 ) {
   if (message) {
     console.log(`${message}\n\n`, format(instance));

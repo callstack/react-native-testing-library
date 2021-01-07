@@ -1,10 +1,12 @@
 // @flow
-import { getByAPI } from './helpers/getByAPI';
-import { queryByAPI } from './helpers/queryByAPI';
-import { findByAPI } from './helpers/findByAPI';
-import a11yAPI from './helpers/a11yAPI';
+import { getByAPI, type GetByAPI } from './helpers/getByAPI';
+import { queryByAPI, type QueryByAPI } from './helpers/queryByAPI';
+import { findByAPI, type FindByAPI } from './helpers/findByAPI';
+import { a11yAPI, type A11yAPI } from './helpers/a11yAPI';
 
-export function within(instance: ReactTestInstance) {
+export function within(
+  instance: ReactTestInstance
+): { ...FindByAPI, ...QueryByAPI, ...GetByAPI, ...A11yAPI } {
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),

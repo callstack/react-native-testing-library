@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { StyleSheet, View, Button, Text, TextInput } from 'react-native';
 import { render } from '..';
 import '@testing-library/jest-native/extend-expect';

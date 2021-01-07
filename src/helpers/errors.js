@@ -10,7 +10,7 @@ export class ErrorWithStack extends Error {
   }
 }
 
-export const createLibraryNotSupportedError = (error: Error) =>
+export const createLibraryNotSupportedError = (error: Error): Error =>
   new Error(
     `Currently the only supported library to search by text is "react-native".\n\n${error.message}`
   );
@@ -19,7 +19,7 @@ export const prepareErrorMessage = (
   error: Error,
   name: ?string,
   value: ?mixed
-) => {
+): string => {
   // Strip info about custom predicate
   let errorMessage = error.message.replace(
     / matching custom predicate[^]*/gm,
@@ -32,12 +32,19 @@ export const prepareErrorMessage = (
   return errorMessage;
 };
 
-export const createQueryByError = (error: Error, callsite: Function) => {
+export const createQueryByError = (error: Error, callsite: Function): null => {
   if (error.message.includes('No instances found')) {
     return null;
   }
   throw new ErrorWithStack(error.message, callsite);
 };
+
+export function copyStackTrace(target: Error, stackTraceSource: Error) {
+  target.stack = stackTraceSource.stack.replace(
+    stackTraceSource.message,
+    target.message
+  );
+}
 
 const warned = {};
 
