@@ -224,8 +224,6 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 const { Screen, Navigator } = createDrawerNavigator();
 
 export default function Navigation() {
-  const options = {};
-
   return (
     <Navigator>
       <Screen name="Home" component={HomeScreen} />
