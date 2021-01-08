@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,7 +10,6 @@ export default function App() {
     <NavigationContainer>
       <View style={styles.container}>
         <StatusBar barStyle="dark-content" />
-
         <AppNavigator />
       </View>
     </NavigationContainer>
