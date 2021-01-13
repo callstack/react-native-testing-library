@@ -79,36 +79,6 @@ class Banana extends React.Component<any, any> {
   }
 }
 
-test('getByTestId, queryByTestId', () => {
-  const { getByTestId, queryByTestId } = render(<Banana />);
-  const component = getByTestId('bananaFresh');
-
-  expect(component.props.children).toBe('not fresh');
-  expect(() => getByTestId('InExistent')).toThrow('No instances found');
-
-  expect(getByTestId('bananaFresh')).toBe(component);
-  expect(queryByTestId('InExistent')).toBeNull();
-});
-
-test('getAllByTestId, queryAllByTestId', () => {
-  const { getAllByTestId, queryAllByTestId } = render(<Banana />);
-  const textElements = getAllByTestId('duplicateText');
-
-  expect(textElements.length).toBe(2);
-  expect(textElements[0].props.children).toBe('First Text');
-  expect(textElements[1].props.children).toBe('Second Text');
-  expect(() => getAllByTestId('nonExistentTestId')).toThrow(
-    'No instances found'
-  );
-
-  const queriedTextElements = queryAllByTestId('duplicateText');
-
-  expect(queriedTextElements.length).toBe(2);
-  expect(queriedTextElements[0]).toBe(textElements[0]);
-  expect(queriedTextElements[1]).toBe(textElements[1]);
-  expect(queryAllByTestId('nonExistentTestId')).toHaveLength(0);
-});
-
 test('UNSAFE_getAllByType, UNSAFE_queryAllByType', () => {
   const { UNSAFE_getAllByType, UNSAFE_queryAllByType } = render(<Banana />);
   const [text, status, button] = UNSAFE_getAllByType(Text);

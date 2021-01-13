@@ -8,6 +8,7 @@ import {
   throwRemovedFunctionError,
   throwRenamedFunctionError,
 } from './errors';
+import { getAllByTestId, getByTestId } from './byTestId';
 
 export type GetByAPI = {|
   getByText: (text: string | RegExp) => ReactTestInstance,
@@ -117,12 +118,6 @@ const getTextInputNodeByDisplayValue = (node, value) => {
   }
 };
 
-const getNodeByTestId = (node, testID) => {
-  return typeof testID === 'string'
-    ? testID === node.props.testID
-    : testID.test(node.props.testID);
-};
-
 export const getByText = (
   instance: ReactTestInstance
 ): ((text: string | RegExp) => ReactTestInstance) =>
@@ -169,27 +164,6 @@ export const getByDisplayValue = (
     }
   };
 
-export const getByTestId = (
-  instance: ReactTestInstance
-): ((testID: string | RegExp) => ReactTestInstance) =>
-  function getByTestIdFn(testID: string | RegExp) {
-    try {
-      const results = getAllByTestId(instance)(testID);
-      if (results.length === 1) {
-        return results[0];
-      } else {
-        throw new ErrorWithStack(
-          ` Expected 1 but found ${
-            results.length
-          } instances with testID: ${String(testID)}`,
-          getByTestIdFn
-        );
-      }
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByTestIdFn);
-    }
-  };
-
 export const getAllByText = (
   instance: ReactTestInstance
 ): ((text: string | RegExp) => Array<ReactTestInstance>) =>
@@ -231,23 +205,6 @@ export const getAllByDisplayValue = (
       throw new ErrorWithStack(
         `No instances found with display value: ${String(value)}`,
         getAllByDisplayValueFn
-      );
-    }
-    return results;
-  };
-
-export const getAllByTestId = (
-  instance: ReactTestInstance
-): ((testID: string | RegExp) => Array<ReactTestInstance>) =>
-  function getAllByTestIdFn(testID: string | RegExp): ReactTestInstance[] {
-    const results = instance
-      .findAll((node) => getNodeByTestId(node, testID))
-      .filter((element) => typeof element.type === 'string');
-
-    if (results.length === 0) {
-      throw new ErrorWithStack(
-        `No instances found with testID: ${String(testID)}`,
-        getAllByTestIdFn
       );
     }
     return results;
