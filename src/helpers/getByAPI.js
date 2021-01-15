@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
+import { filterNodeByType } from './filterNodeByType';
 import {
   ErrorWithStack,
   createLibraryNotSupportedError,
@@ -40,8 +41,6 @@ export type GetByAPI = {|
   getByPlaceholder: () => void,
   getAllByPlaceholder: () => void,
 |};
-
-const filterNodeByType = (node, type) => node.type === type;
 
 const getNodeByText = (node, text) => {
   try {
