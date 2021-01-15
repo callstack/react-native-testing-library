@@ -1,10 +1,8 @@
 // @flow
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
-import { filterNodeByType } from './filterNodeByType';
 import {
   ErrorWithStack,
-  createLibraryNotSupportedError,
   prepareErrorMessage,
   throwRemovedFunctionError,
   throwRenamedFunctionError,
@@ -15,6 +13,7 @@ import {
   getAllByPlaceholderText,
   getByPlaceholderText,
 } from './byPlaceholderText';
+import { getAllByDisplayValue, getByDisplayValue } from './byDisplayValue';
 
 export type GetByAPI = {|
   getByText: (text: string | RegExp) => ReactTestInstance,
@@ -46,54 +45,6 @@ export type GetByAPI = {|
   getByPlaceholder: () => void,
   getAllByPlaceholder: () => void,
 |};
-
-const getTextInputNodeByDisplayValue = (node, value) => {
-  try {
-    const { TextInput } = require('react-native');
-    const nodeValue =
-      node.props.value !== undefined
-        ? node.props.value
-        : node.props.defaultValue;
-    return (
-      filterNodeByType(node, TextInput) &&
-      (typeof value === 'string' ? value === nodeValue : value.test(nodeValue))
-    );
-  } catch (error) {
-    throw createLibraryNotSupportedError(error);
-  }
-};
-
-export const getByDisplayValue = (
-  instance: ReactTestInstance
-): ((displayValue: string | RegExp) => ReactTestInstance) =>
-  function getByDisplayValueFn(displayValue: string | RegExp) {
-    try {
-      return instance.find((node) =>
-        getTextInputNodeByDisplayValue(node, displayValue)
-      );
-    } catch (error) {
-      throw new ErrorWithStack(
-        prepareErrorMessage(error, 'display value', displayValue),
-        getByDisplayValueFn
-      );
-    }
-  };
-
-export const getAllByDisplayValue = (
-  instance: ReactTestInstance
-): ((value: string | RegExp) => Array<ReactTestInstance>) =>
-  function getAllByDisplayValueFn(value: string | RegExp) {
-    const results = instance.findAll((node) =>
-      getTextInputNodeByDisplayValue(node, value)
-    );
-    if (results.length === 0) {
-      throw new ErrorWithStack(
-        `No instances found with display value: ${String(value)}`,
-        getAllByDisplayValueFn
-      );
-    }
-    return results;
-  };
 
 export const UNSAFE_getByType = (
   instance: ReactTestInstance

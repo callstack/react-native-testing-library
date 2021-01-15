@@ -202,12 +202,14 @@ test('getByDisplayValue, queryByDisplayValue', () => {
 
   expect(sameInput.props.value).toBe(INPUT_FRESHNESS);
   expect(() => getByDisplayValue('no value')).toThrow(
-    'No instances found with display value "no value"'
+    'Unable to find an element with displayValue: no value'
   );
 
   expect(queryByDisplayValue(/custom/i)).toBe(input);
   expect(queryByDisplayValue('no value')).toBeNull();
-  expect(() => queryByDisplayValue(/fresh/i)).toThrow('Expected 1 but found 2');
+  expect(() => queryByDisplayValue(/fresh/i)).toThrow(
+    'Found multiple elements with display value: /fresh/i'
+  );
 });
 
 test('getByDisplayValue, queryByDisplayValue get element by default value only when value is undefined', () => {
@@ -227,7 +229,9 @@ test('getAllByDisplayValue, queryAllByDisplayValue', () => {
   const inputs = getAllByDisplayValue(/fresh/i);
 
   expect(inputs).toHaveLength(2);
-  expect(() => getAllByDisplayValue('no value')).toThrow('No instances found');
+  expect(() => getAllByDisplayValue('no value')).toThrow(
+    'Unable to find an element with displayValue: no value'
+  );
 
   expect(queryAllByDisplayValue(/fresh/i)).toEqual(inputs);
   expect(queryAllByDisplayValue('no value')).toHaveLength(0);

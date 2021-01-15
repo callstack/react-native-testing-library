@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
 import {
-  getByDisplayValue,
-  getAllByDisplayValue,
   UNSAFE_getByType,
   UNSAFE_getByProps,
   UNSAFE_getAllByType,
@@ -14,6 +12,7 @@ import {
   queryByPlaceholderText,
   queryAllByPlaceholderText,
 } from './byPlaceholderText';
+import { queryByDisplayValue, queryAllByDisplayValue } from './byDisplayValue';
 import {
   createQueryByError,
   throwRemovedFunctionError,
@@ -55,29 +54,6 @@ export type QueryByAPI = {|
   queryByPlaceholder: () => void,
   queryAllByPlaceholder: () => void,
 |};
-
-export const queryByDisplayValue = (
-  instance: ReactTestInstance
-): ((value: string | RegExp) => ReactTestInstance | null) =>
-  function queryByDisplayValueFn(value: string | RegExp) {
-    try {
-      return getByDisplayValue(instance)(value);
-    } catch (error) {
-      return createQueryByError(error, queryByDisplayValueFn);
-    }
-  };
-
-export const queryAllByDisplayValue = (
-  instance: ReactTestInstance
-): ((value: string | RegExp) => Array<ReactTestInstance>) => (
-  value: string | RegExp
-) => {
-  try {
-    return getAllByDisplayValue(instance)(value);
-  } catch (error) {
-    return [];
-  }
-};
 
 export const UNSAFE_queryByType = (
   instance: ReactTestInstance
