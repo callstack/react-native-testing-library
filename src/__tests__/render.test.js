@@ -108,14 +108,16 @@ test('getByText, queryByText', () => {
 
   expect(sameButton.props.children).toBe('not fresh');
   expect(() => getByText('InExistent')).toThrow(
-    'No instances found with text "InExistent"'
+    'Unable to find an element with text: InExistent'
   );
 
   const zeroText = getByText('0');
 
   expect(queryByText(/change/i)).toBe(button);
   expect(queryByText('InExistent')).toBeNull();
-  expect(() => queryByText(/fresh/)).toThrow('Expected 1 but found 3');
+  expect(() => queryByText(/fresh/)).toThrow(
+    'Found multiple elements with text: /fresh/'
+  );
   expect(queryByText('0')).toBe(zeroText);
 });
 
@@ -147,7 +149,9 @@ test('getAllByText, queryAllByText', () => {
   const buttons = getAllByText(/fresh/i);
 
   expect(buttons).toHaveLength(3);
-  expect(() => getAllByText('InExistent')).toThrow('No instances found');
+  expect(() => getAllByText('InExistent')).toThrow(
+    'Unable to find an element with text: InExistent'
+  );
 
   expect(queryAllByText(/fresh/i)).toEqual(buttons);
   expect(queryAllByText('InExistent')).toHaveLength(0);

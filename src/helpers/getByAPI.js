@@ -10,6 +10,7 @@ import {
   throwRenamedFunctionError,
 } from './errors';
 import { getAllByTestId, getByTestId } from './byTestId';
+import { getAllByText, getByText } from './byText';
 
 export type GetByAPI = {|
   getByText: (text: string | RegExp) => ReactTestInstance,
@@ -42,53 +43,6 @@ export type GetByAPI = {|
   getAllByPlaceholder: () => void,
 |};
 
-const getNodeByText = (node, text) => {
-  try {
-    const { Text } = require('react-native');
-    const isTextComponent = filterNodeByType(node, Text);
-    if (isTextComponent) {
-      const textChildren = getChildrenAsText(node.props.children, Text);
-      if (textChildren) {
-        const textToTest = textChildren.join('');
-        return typeof text === 'string'
-          ? text === textToTest
-          : text.test(textToTest);
-      }
-    }
-    return false;
-  } catch (error) {
-    throw createLibraryNotSupportedError(error);
-  }
-};
-
-const getChildrenAsText = (children, TextComponent, textContent = []) => {
-  React.Children.forEach(children, (child) => {
-    if (typeof child === 'string') {
-      textContent.push(child);
-      return;
-    }
-
-    if (typeof child === 'number') {
-      textContent.push(child.toString());
-      return;
-    }
-
-    if (child?.props?.children) {
-      // Bail on traversing text children down the tree if current node (child)
-      // has no text. In such situations, react-test-renderer will traverse down
-      // this tree in a separate call and run this query again. As a result, the
-      // query will match the deepest text node that matches requested text.
-      if (filterNodeByType(child, TextComponent) && textContent.length === 0) {
-        return;
-      }
-
-      getChildrenAsText(child.props.children, TextComponent, textContent);
-    }
-  });
-
-  return textContent;
-};
-
 const getTextInputNodeByPlaceholderText = (node, placeholder) => {
   try {
     const { TextInput } = require('react-native');
@@ -118,20 +72,6 @@ const getTextInputNodeByDisplayValue = (node, value) => {
     throw createLibraryNotSupportedError(error);
   }
 };
-
-export const getByText = (
-  instance: ReactTestInstance
-): ((text: string | RegExp) => ReactTestInstance) =>
-  function getByTextFn(text: string | RegExp) {
-    try {
-      return instance.find((node) => getNodeByText(node, text));
-    } catch (error) {
-      throw new ErrorWithStack(
-        prepareErrorMessage(error, 'text', text),
-        getByTextFn
-      );
-    }
-  };
 
 export const getByPlaceholderText = (
   instance: ReactTestInstance
@@ -163,20 +103,6 @@ export const getByDisplayValue = (
         getByDisplayValueFn
       );
     }
-  };
-
-export const getAllByText = (
-  instance: ReactTestInstance
-): ((text: string | RegExp) => Array<ReactTestInstance>) =>
-  function getAllByTextFn(text: string | RegExp) {
-    const results = instance.findAll((node) => getNodeByText(node, text));
-    if (results.length === 0) {
-      throw new ErrorWithStack(
-        `No instances found with text: ${String(text)}`,
-        getAllByTextFn
-      );
-    }
-    return results;
   };
 
 export const getAllByPlaceholderText = (

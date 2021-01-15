@@ -1,10 +1,8 @@
 // @flow
 import * as React from 'react';
 import {
-  getByText,
   getByPlaceholderText,
   getByDisplayValue,
-  getAllByText,
   getAllByPlaceholderText,
   getAllByDisplayValue,
   UNSAFE_getByType,
@@ -13,6 +11,7 @@ import {
   UNSAFE_getAllByProps,
 } from './getByAPI';
 import { queryByTestId, queryAllByTestId } from './byTestId';
+import { queryByText, queryAllByText } from './byText';
 import {
   createQueryByError,
   throwRemovedFunctionError,
@@ -55,17 +54,6 @@ export type QueryByAPI = {|
   queryAllByPlaceholder: () => void,
 |};
 
-export const queryByText = (
-  instance: ReactTestInstance
-): ((text: string | RegExp) => ReactTestInstance | null) =>
-  function queryByTextFn(text: string | RegExp) {
-    try {
-      return getByText(instance)(text);
-    } catch (error) {
-      return createQueryByError(error, queryByTextFn);
-    }
-  };
-
 export const queryByPlaceholderText = (
   instance: ReactTestInstance
 ): ((placeholder: string | RegExp) => ReactTestInstance | null) =>
@@ -87,18 +75,6 @@ export const queryByDisplayValue = (
       return createQueryByError(error, queryByDisplayValueFn);
     }
   };
-
-export const queryAllByText = (
-  instance: ReactTestInstance
-): ((text: string | RegExp) => Array<ReactTestInstance>) => (
-  text: string | RegExp
-) => {
-  try {
-    return getAllByText(instance)(text);
-  } catch (error) {
-    return [];
-  }
-};
 
 export const queryAllByPlaceholderText = (
   instance: ReactTestInstance

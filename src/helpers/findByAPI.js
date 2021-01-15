@@ -2,14 +2,13 @@
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 import {
-  getByText,
-  getAllByText,
   getByPlaceholderText,
   getAllByPlaceholderText,
   getByDisplayValue,
   getAllByDisplayValue,
 } from './getByAPI';
 import { findAllByTestId, findByTestId } from './byTestId';
+import { findAllByText, findByText } from './byText';
 import { throwRenamedFunctionError } from './errors';
 
 export type FindByAPI = {|
@@ -55,26 +54,6 @@ const makeFindQuery = <Text, Result>(
   text: Text,
   waitForOptions: WaitForOptions
 ): Promise<Result> => waitFor(() => getQuery(instance)(text), waitForOptions);
-
-export const findByText = (
-  instance: ReactTestInstance
-): ((
-  text: string | RegExp,
-  waitForOptions?: WaitForOptions
-) => Promise<ReactTestInstance>) => (
-  text: string | RegExp,
-  waitForOptions: WaitForOptions = {}
-) => makeFindQuery(instance, getByText, text, waitForOptions);
-
-export const findAllByText = (
-  instance: ReactTestInstance
-): ((
-  text: string | RegExp,
-  waitForOptions?: WaitForOptions
-) => Promise<Array<ReactTestInstance>>) => (
-  text: string | RegExp,
-  waitForOptions: WaitForOptions = {}
-) => makeFindQuery(instance, getAllByText, text, waitForOptions);
 
 export const findByPlaceholderText = (
   instance: ReactTestInstance
