@@ -11,7 +11,7 @@ const getNodeByTestId = (node, testID) => {
 const queryAllByTestId = (
   instance: ReactTestInstance
 ): ((testId: string | RegExp) => Array<ReactTestInstance>) =>
-  function getAllByTestIdFn(testId) {
+  function queryAllByTestIdFn(testId) {
     const results = instance
       .findAll((node) => getNodeByTestId(node, testId))
       .filter((element) => typeof element.type === 'string');
