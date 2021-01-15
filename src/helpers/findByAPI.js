@@ -1,14 +1,13 @@
 // @flow
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
-import {
-  getByPlaceholderText,
-  getAllByPlaceholderText,
-  getByDisplayValue,
-  getAllByDisplayValue,
-} from './getByAPI';
+import { getByDisplayValue, getAllByDisplayValue } from './getByAPI';
 import { findAllByTestId, findByTestId } from './byTestId';
 import { findAllByText, findByText } from './byText';
+import {
+  findAllByPlaceholderText,
+  findByPlaceholderText,
+} from './byPlaceholderText';
 import { throwRenamedFunctionError } from './errors';
 
 export type FindByAPI = {|
@@ -54,27 +53,6 @@ const makeFindQuery = <Text, Result>(
   text: Text,
   waitForOptions: WaitForOptions
 ): Promise<Result> => waitFor(() => getQuery(instance)(text), waitForOptions);
-
-export const findByPlaceholderText = (
-  instance: ReactTestInstance
-): ((
-  placeholder: string | RegExp,
-  waitForOptions?: WaitForOptions
-) => Promise<ReactTestInstance>) => (
-  placeholder: string | RegExp,
-  waitForOptions: WaitForOptions = {}
-) => makeFindQuery(instance, getByPlaceholderText, placeholder, waitForOptions);
-
-export const findAllByPlaceholderText = (
-  instance: ReactTestInstance
-): ((
-  placeholder: string | RegExp,
-  waitForOptions?: WaitForOptions
-) => Promise<Array<ReactTestInstance>>) => (
-  placeholder: string | RegExp,
-  waitForOptions: WaitForOptions = {}
-) =>
-  makeFindQuery(instance, getAllByPlaceholderText, placeholder, waitForOptions);
 
 export const findByDisplayValue = (
   instance: ReactTestInstance

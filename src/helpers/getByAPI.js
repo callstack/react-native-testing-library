@@ -11,6 +11,10 @@ import {
 } from './errors';
 import { getAllByTestId, getByTestId } from './byTestId';
 import { getAllByText, getByText } from './byText';
+import {
+  getAllByPlaceholderText,
+  getByPlaceholderText,
+} from './byPlaceholderText';
 
 export type GetByAPI = {|
   getByText: (text: string | RegExp) => ReactTestInstance,
@@ -43,20 +47,6 @@ export type GetByAPI = {|
   getAllByPlaceholder: () => void,
 |};
 
-const getTextInputNodeByPlaceholderText = (node, placeholder) => {
-  try {
-    const { TextInput } = require('react-native');
-    return (
-      filterNodeByType(node, TextInput) &&
-      (typeof placeholder === 'string'
-        ? placeholder === node.props.placeholder
-        : placeholder.test(node.props.placeholder))
-    );
-  } catch (error) {
-    throw createLibraryNotSupportedError(error);
-  }
-};
-
 const getTextInputNodeByDisplayValue = (node, value) => {
   try {
     const { TextInput } = require('react-native');
@@ -73,22 +63,6 @@ const getTextInputNodeByDisplayValue = (node, value) => {
   }
 };
 
-export const getByPlaceholderText = (
-  instance: ReactTestInstance
-): ((placeholder: string | RegExp) => ReactTestInstance) =>
-  function getByPlaceholderTextFn(placeholder: string | RegExp) {
-    try {
-      return instance.find((node) =>
-        getTextInputNodeByPlaceholderText(node, placeholder)
-      );
-    } catch (error) {
-      throw new ErrorWithStack(
-        prepareErrorMessage(error, 'placeholder', placeholder),
-        getByPlaceholderTextFn
-      );
-    }
-  };
-
 export const getByDisplayValue = (
   instance: ReactTestInstance
 ): ((displayValue: string | RegExp) => ReactTestInstance) =>
@@ -103,22 +77,6 @@ export const getByDisplayValue = (
         getByDisplayValueFn
       );
     }
-  };
-
-export const getAllByPlaceholderText = (
-  instance: ReactTestInstance
-): ((placeholder: string | RegExp) => Array<ReactTestInstance>) =>
-  function getAllByPlaceholderTextFn(placeholder: string | RegExp) {
-    const results = instance.findAll((node) =>
-      getTextInputNodeByPlaceholderText(node, placeholder)
-    );
-    if (results.length === 0) {
-      throw new ErrorWithStack(
-        `No instances found with placeholder: ${String(placeholder)}`,
-        getAllByPlaceholderTextFn
-      );
-    }
-    return results;
   };
 
 export const getAllByDisplayValue = (

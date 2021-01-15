@@ -167,13 +167,13 @@ test('getByPlaceholderText, queryByPlaceholderText', () => {
 
   expect(sameInput.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
   expect(() => getByPlaceholderText('no placeholder')).toThrow(
-    'No instances found with placeholder "no placeholder"'
+    'Unable to find an element with placeholder: no placeholder'
   );
 
   expect(queryByPlaceholderText(/add/i)).toBe(input);
   expect(queryByPlaceholderText('no placeholder')).toBeNull();
   expect(() => queryByPlaceholderText(/fresh/)).toThrow(
-    'Expected 1 but found 2'
+    'Found multiple elements with placeholder: /fresh/ '
   );
 });
 
@@ -185,7 +185,7 @@ test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
 
   expect(inputs).toHaveLength(2);
   expect(() => getAllByPlaceholderText('no placeholder')).toThrow(
-    'No instances found'
+    'Unable to find an element with placeholder: no placeholder'
   );
 
   expect(queryAllByPlaceholderText(/fresh/i)).toEqual(inputs);
