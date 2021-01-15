@@ -26,7 +26,7 @@ type QueryNames = {
   findAllBy: Array<string>,
 };
 
-const makeQuery = <P: mixed, M: mixed>(
+const makeA11yQuery = <P: mixed, M: mixed>(
   name: string,
   queryNames: QueryNames,
   matcherFn: (prop: P, value: M) => boolean
@@ -95,4 +95,4 @@ const makeQuery = <P: mixed, M: mixed>(
   };
 };
 
-export default makeQuery;
+export default makeA11yQuery;

@@ -1,7 +1,7 @@
 // @flow
 import type { A11yRole, A11yStates, A11yState, A11yValue } from '../types.flow';
 import type { WaitForOptions } from '../waitFor';
-import makeQuery from './makeQuery';
+import makeA11yQuery from './makeA11yQuery';
 
 type GetReturn = ReactTestInstance;
 type GetAllReturn = Array<ReactTestInstance>;
@@ -118,7 +118,7 @@ export function matchObject<T: {}>(prop?: T, matcher: T): boolean {
 
 export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
   ({
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityLabel',
       {
         getBy: ['getByA11yLabel', 'getByAccessibilityLabel', 'getByLabelText'],
@@ -150,7 +150,7 @@ export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       },
       matchStringValue
     )(instance),
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityHint',
       {
         getBy: ['getByA11yHint', 'getByAccessibilityHint', 'getByHintText'],
@@ -178,7 +178,7 @@ export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       },
       matchStringValue
     )(instance),
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityRole',
       {
         getBy: ['getByA11yRole', 'getByAccessibilityRole', 'getByRole'],
@@ -202,7 +202,7 @@ export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       },
       matchStringValue
     )(instance),
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityStates',
       {
         getBy: ['getByA11yStates', 'getByAccessibilityStates'],
@@ -214,7 +214,7 @@ export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       },
       matchArrayValue
     )(instance),
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityState',
       {
         getBy: ['getByA11yState', 'getByAccessibilityState'],
@@ -226,7 +226,7 @@ export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       },
       matchObject
     )(instance),
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityValue',
       {
         getBy: ['getByA11yValue', 'getByAccessibilityValue'],
