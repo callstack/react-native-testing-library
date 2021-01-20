@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { render, fireEvent, waitForElementToBeRemoved } from '..';
-import { TimerMode, setupFakeTimers } from './timerUtils';
+import { TimerMode } from './timerUtils';
 
 const TestSetup = ({ shouldUseDelay = true }) => {
   const [isAdded, setIsAdded] = useState(true);
@@ -121,7 +121,7 @@ test('waits with custom interval', async () => {
 
   try {
     await waitForElementToBeRemoved(() => mockFn(), {
-      timeout: 400,
+      timeout: 600,
       interval: 200,
     });
   } catch (e) {
@@ -131,10 +131,10 @@ test('waits with custom interval', async () => {
   expect(mockFn).toHaveBeenCalledTimes(4);
 });
 
-test.each([TimerMode.Default, TimerMode.Legacy])(
+test.each([TimerMode.Legacy, TimerMode.Modern])(
   'works with %s fake timers',
   async (fakeTimerType) => {
-    setupFakeTimers(fakeTimerType);
+    jest.useFakeTimers(fakeTimerType);
 
     const mockFn = jest.fn(() => <View />);
 
@@ -146,6 +146,6 @@ test.each([TimerMode.Default, TimerMode.Legacy])(
     } catch (e) {
       // Suppress expected error
     }
-    expect(mockFn).toHaveBeenCalledTimes(4);
+    expect(mockFn).toHaveBeenCalledTimes(2);
   }
 );

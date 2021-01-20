@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { fireEvent, render, waitFor } from '..';
-import { TimerMode, setupFakeTimers, sleep } from './timerUtils';
+import { TimerMode } from './timerUtils';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {
@@ -77,13 +77,13 @@ test('waits for element with custom interval', async () => {
     // suppress
   }
 
-  expect(mockFn).toHaveBeenCalledTimes(3);
+  expect(mockFn).toHaveBeenCalledTimes(2);
 });
 
-test.each([TimerMode.Default, TimerMode.Legacy])(
+test.each([TimerMode.Legacy, TimerMode.Modern])(
   'waits for element until it stops throwing using %s fake timers',
   async (fakeTimerType) => {
-    setupFakeTimers(fakeTimerType);
+    jest.useFakeTimers(fakeTimerType);
     const { getByText, queryByText } = render(<BananaContainer />);
 
     fireEvent.press(getByText('Change freshness!'));
@@ -96,10 +96,10 @@ test.each([TimerMode.Default, TimerMode.Legacy])(
   }
 );
 
-test.each([TimerMode.Default, TimerMode.Legacy])(
+test.each([TimerMode.Legacy, TimerMode.Modern])(
   'waits for assertion until timeout is met with %s fake timers',
   async (fakeTimerType) => {
-    setupFakeTimers(fakeTimerType);
+    jest.useFakeTimers(fakeTimerType);
 
     const mockFn = jest.fn(() => {
       throw Error('test');
@@ -115,10 +115,10 @@ test.each([TimerMode.Default, TimerMode.Legacy])(
   }
 );
 
-test.each([TimerMode.Default, TimerMode.Legacy])(
+test.each([TimerMode.Legacy, TimerMode.Legacy])(
   'awaiting something that succeeds before timeout works with %s fake timers',
   async (fakeTimerType) => {
-    setupFakeTimers(fakeTimerType);
+    jest.useFakeTimers(fakeTimerType);
 
     let calls = 0;
     const mockFn = jest.fn(() => {
@@ -137,30 +137,3 @@ test.each([TimerMode.Default, TimerMode.Legacy])(
     expect(mockFn).toHaveBeenCalledTimes(3);
   }
 );
-
-// this test leads to a console error: Warning: You called act(async () => ...) without await, but does not fail the test
-// it is included to show that the previous approach of faking modern timers still works
-// the gotcha is that the try catch will fail to catch the final error, which is why we need to stop throwing
-test('non-awaited approach is not affected by fake modern timers', async () => {
-  setupFakeTimers(TimerMode.Modern);
-
-  let calls = 0;
-  const mockFn = jest.fn(() => {
-    calls += 1;
-    if (calls < 3) {
-      throw Error('test');
-    }
-  });
-
-  try {
-    waitFor(() => mockFn(), { timeout: 400, interval: 200 });
-  } catch (e) {
-    // suppress
-  }
-  jest.advanceTimersByTime(400);
-  expect(mockFn).toHaveBeenCalledTimes(0);
-
-  jest.useRealTimers();
-  await sleep(500);
-  expect(mockFn).toHaveBeenCalledTimes(3);
-});

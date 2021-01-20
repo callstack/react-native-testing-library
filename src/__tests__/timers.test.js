@@ -1,10 +1,12 @@
 import waitFor from '../waitFor';
-import { TimerMode, setupFakeTimers } from './timerUtils';
+import { TimerMode } from './timerUtils';
 
-describe.each([TimerMode.Default, TimerMode.Legacy])(
+describe.each([TimerMode.Legacy, TimerMode.Modern])(
   '%s fake timers tests',
   (fakeTimerType) => {
-    beforeEach(() => setupFakeTimers(fakeTimerType));
+    beforeEach(() => {
+      jest.useFakeTimers(fakeTimerType);
+    });
 
     test('it successfully runs tests', () => {
       expect(true).toBeTruthy();

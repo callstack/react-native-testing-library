@@ -1,11 +1,11 @@
-/* eslint-disable no-undef */
-
-// Contents of this file sourced directly from https://github.com/testing-library/dom-testing-library/blob/master/src/helpers.js
+// Most content of this file sourced directly from https://github.com/testing-library/dom-testing-library/blob/master/src/helpers.js
+// @flow
+/* globals jest */
 
 const globalObj = typeof window === 'undefined' ? global : window;
 
 // Currently this fn only supports jest timers, but it could support other test runners in the future.
-function runWithRealTimers(callback) {
+function runWithRealTimers<T>(callback: () => T): T {
   const fakeTimersType = getJestFakeTimersType();
   if (fakeTimersType) {
     jest.useRealTimers();
@@ -21,6 +21,7 @@ function runWithRealTimers(callback) {
 }
 
 function getJestFakeTimersType() {
+  // istanbul ignore if
   if (
     typeof jest === 'undefined' ||
     typeof globalObj.setTimeout === 'undefined'
@@ -37,10 +38,12 @@ function getJestFakeTimersType() {
 
   if (
     typeof globalObj.setTimeout.clock !== 'undefined' &&
+    // $FlowIgnore[prop-missing]
     typeof jest.getRealSystemTime !== 'undefined'
   ) {
     try {
       // jest.getRealSystemTime is only supported for Jest's `modern` fake timers and otherwise throws
+      // $FlowExpectedError
       jest.getRealSystemTime();
       return 'modern';
     } catch {
@@ -50,12 +53,21 @@ function getJestFakeTimersType() {
   return null;
 }
 
+const jestFakeTimersAreEnabled = (): boolean =>
+  Boolean(getJestFakeTimersType());
+
 // we only run our tests in node, and setImmediate is supported in node.
 function setImmediatePolyfill(fn) {
   return globalObj.setTimeout(fn, 0);
 }
 
-function getTimeFunctions() {
+type BindTimeFunctions = {
+  clearTimeoutFn: typeof clearTimeout,
+  setImmediateFn: typeof setImmediate,
+  setTimeoutFn: typeof setTimeout,
+};
+
+function bindTimeFunctions(): BindTimeFunctions {
   return {
     clearTimeoutFn: globalObj.clearTimeout,
     setImmediateFn: globalObj.setImmediate || setImmediatePolyfill,
@@ -63,11 +75,13 @@ function getTimeFunctions() {
   };
 }
 
-const { clearTimeoutFn, setImmediateFn, setTimeoutFn } = runWithRealTimers(
-  getTimeFunctions
-);
+const { clearTimeoutFn, setImmediateFn, setTimeoutFn } = (runWithRealTimers(
+  bindTimeFunctions
+): BindTimeFunctions);
 
 export {
+  runWithRealTimers,
+  jestFakeTimersAreEnabled,
   clearTimeoutFn as clearTimeout,
   setImmediateFn as setImmediate,
   setTimeoutFn as setTimeout,
