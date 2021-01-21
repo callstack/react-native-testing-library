@@ -234,7 +234,7 @@ test('should not fire on non-editable TextInput with nested Text', () => {
   expect(onChangeTextMock).not.toHaveBeenCalled();
 });
 
-test.only('should not fire on non-targetable View', () => {
+test('should not fire on none pointerEvents View', () => {
   const handlePress = jest.fn();
 
   const screen = render(
@@ -242,6 +242,38 @@ test.only('should not fire on non-targetable View', () => {
       <Pressable onPress={handlePress}>
         <Text>Trigger</Text>
       </Pressable>
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).not.toHaveBeenCalled();
+});
+
+test('should not fire on box-only pointerEvents View', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="box-only">
+      <Pressable onPress={handlePress}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).not.toHaveBeenCalled();
+});
+
+test('should not fire on none pointerEvents View with nested elements', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="box-only">
+      <View>
+        <Pressable onPress={handlePress}>
+          <Text>Trigger</Text>
+        </Pressable>
+      </View>
     </View>
   );
 
