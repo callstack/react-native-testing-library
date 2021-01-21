@@ -264,6 +264,21 @@ test('should not fire on box-only pointerEvents View', () => {
   expect(handlePress).not.toHaveBeenCalled();
 });
 
+test('should fire on box-none pointerEvents View', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="box-none">
+      <Pressable onPress={handlePress}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).toHaveBeenCalled();
+});
+
 test('should not fire on none pointerEvents View with nested elements', () => {
   const handlePress = jest.fn();
 
