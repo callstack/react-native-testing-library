@@ -234,6 +234,21 @@ test('should not fire on non-editable TextInput with nested Text', () => {
   expect(onChangeTextMock).not.toHaveBeenCalled();
 });
 
+test.only('should not fire on non-targetable View', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="none">
+      <Pressable onPress={handlePress}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).not.toHaveBeenCalled();
+});
+
 test('should pass event up on disabled TouchableOpacity', () => {
   const handleInnerPress = jest.fn();
   const handleOuterPress = jest.fn();
