@@ -20,11 +20,18 @@ exports[`debug 1`] = `
   />
   <TextInput
     allowFontScaling={true}
+    defaultValue=\\"What did you inspect?\\"
     placeholder=\\"Who inspected freshness?\\"
     rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    defaultValue=\\"What banana?\\"
+    rejectResponderTermination={true}
+    underlineColorAndroid=\\"transparent\\"
   />
   <View
     accessible={true}
@@ -82,11 +89,18 @@ exports[`debug changing component: bananaFresh button message should now be "fre
   />
   <TextInput
     allowFontScaling={true}
+    defaultValue=\\"What did you inspect?\\"
     placeholder=\\"Who inspected freshness?\\"
     rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    defaultValue=\\"What banana?\\"
+    rejectResponderTermination={true}
+    underlineColorAndroid=\\"transparent\\"
   />
   <View
     accessible={true}
@@ -144,11 +158,18 @@ exports[`debug: shallow 1`] = `
   />
   <TextInput
     allowFontScaling={true}
+    defaultValue=\\"What did you inspect?\\"
     placeholder=\\"Who inspected freshness?\\"
     rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    defaultValue=\\"What banana?\\"
+    rejectResponderTermination={true}
+    underlineColorAndroid=\\"transparent\\"
   />
   <MyButton
     onPress={[Function anonymous]}
@@ -194,11 +215,18 @@ exports[`debug: shallow with message 1`] = `
   />
   <TextInput
     allowFontScaling={true}
+    defaultValue=\\"What did you inspect?\\"
     placeholder=\\"Who inspected freshness?\\"
     rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    defaultValue=\\"What banana?\\"
+    rejectResponderTermination={true}
+    underlineColorAndroid=\\"transparent\\"
   />
   <MyButton
     onPress={[Function anonymous]}
@@ -244,11 +272,18 @@ exports[`debug: with message 1`] = `
   />
   <TextInput
     allowFontScaling={true}
+    defaultValue=\\"What did you inspect?\\"
     placeholder=\\"Who inspected freshness?\\"
     rejectResponderTermination={true}
     testID=\\"bananaChef\\"
     underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    defaultValue=\\"What banana?\\"
+    rejectResponderTermination={true}
+    underlineColorAndroid=\\"transparent\\"
   />
   <View
     accessible={true}

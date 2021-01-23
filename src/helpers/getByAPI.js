@@ -107,11 +107,10 @@ const getTextInputNodeByPlaceholderText = (node, placeholder) => {
 const getTextInputNodeByDisplayValue = (node, value) => {
   try {
     const { TextInput } = require('react-native');
+    const nodeValue = node.props.value || node.props.defaultValue;
     return (
       filterNodeByType(node, TextInput) &&
-      (typeof value === 'string'
-        ? value === node.props.value
-        : value.test(node.props.value))
+      (typeof value === 'string' ? value === nodeValue : value.test(nodeValue))
     );
   } catch (error) {
     throw createLibraryNotSupportedError(error);
