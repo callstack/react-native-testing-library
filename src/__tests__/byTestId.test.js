@@ -129,6 +129,13 @@ test('getByTestId, queryByTestId', () => {
 
   expect(getByTestId('bananaFresh')).toBe(component);
   expect(queryByTestId('InExistent')).toBeNull();
+
+  expect(() => getByTestId('duplicateText')).toThrow(
+    'Found multiple elements with testID: duplicateText'
+  );
+  expect(() => queryByTestId('duplicateText')).toThrow(
+    'Found multiple elements with testID: duplicateText'
+  );
 });
 
 test('getAllByTestId, queryAllByTestId', () => {
