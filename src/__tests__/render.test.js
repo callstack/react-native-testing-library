@@ -16,6 +16,8 @@ const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
+const DEFAULT_INPUT_CHEF = 'What did you inspect?';
+const DEFAULT_INPUT_CUSTOMER = 'What banana?';
 
 class MyButton extends React.Component<any> {
   render() {
@@ -67,7 +69,10 @@ class Banana extends React.Component<any, any> {
           testID="bananaChef"
           placeholder={PLACEHOLDER_CHEF}
           value={INPUT_CHEF}
+          defaultValue={DEFAULT_INPUT_CHEF}
         />
+        <TextInput defaultValue={DEFAULT_INPUT_CUSTOMER} />
+        <TextInput defaultValue={'hello'} value="" />
         <MyButton onPress={this.changeFresh} type="primary">
           Change freshness!
         </MyButton>
@@ -199,6 +204,18 @@ test('getByDisplayValue, queryByDisplayValue', () => {
   expect(queryByDisplayValue(/custom/i)).toBe(input);
   expect(queryByDisplayValue('no value')).toBeNull();
   expect(() => queryByDisplayValue(/fresh/i)).toThrow('Expected 1 but found 2');
+});
+
+test('getByDisplayValue, queryByDisplayValue get element by default value only when value is undefined', () => {
+  const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
+  expect(() => getByDisplayValue(DEFAULT_INPUT_CHEF)).toThrow();
+  expect(queryByDisplayValue(DEFAULT_INPUT_CHEF)).toBeNull();
+
+  expect(() => getByDisplayValue('hello')).toThrow();
+  expect(queryByDisplayValue('hello')).toBeNull();
+
+  expect(getByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
+  expect(queryByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
 });
 
 test('getAllByDisplayValue, queryAllByDisplayValue', () => {
