@@ -64,7 +64,7 @@ yarn add --dev @testing-library/jest-native
 npm install --save-dev @testing-library/jest-native
 ```
 
-Then automatically add it to your jest tests by using `setupFilesAfterEnv` option in your Jest configuration (it's usually located either in `package.json` under `"jest"` key or in a `jest.config.js` file):
+Then automatically add it to your jest tests by using `setupFilesAfterEnv` option in your Jest configuration (it's usually located either in `package.json` under `"jest"` key or in a `jest.config.json` file):
 
 ```json
 {
