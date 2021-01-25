@@ -279,6 +279,21 @@ test('should fire on box-none pointerEvents View', () => {
   expect(handlePress).toHaveBeenCalled();
 });
 
+test('should fire on auto pointerEvents View', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="auto">
+      <Pressable onPress={handlePress}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).toHaveBeenCalled();
+});
+
 test('should not fire on none pointerEvents View with nested elements', () => {
   const handlePress = jest.fn();
 
