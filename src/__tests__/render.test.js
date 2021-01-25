@@ -72,6 +72,7 @@ class Banana extends React.Component<any, any> {
           defaultValue={DEFAULT_INPUT_CHEF}
         />
         <TextInput defaultValue={DEFAULT_INPUT_CUSTOMER} />
+        <TextInput defaultValue={'hello'} value="" />
         <MyButton onPress={this.changeFresh} type="primary">
           Change freshness!
         </MyButton>
@@ -209,6 +210,9 @@ test('getByDisplayValue, queryByDisplayValue get element by default value only w
   const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
   expect(() => getByDisplayValue(DEFAULT_INPUT_CHEF)).toThrow();
   expect(queryByDisplayValue(DEFAULT_INPUT_CHEF)).toBeNull();
+
+  expect(() => getByDisplayValue('hello')).toThrow();
+  expect(queryByDisplayValue('hello')).toBeNull();
 
   expect(getByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
   expect(queryByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();

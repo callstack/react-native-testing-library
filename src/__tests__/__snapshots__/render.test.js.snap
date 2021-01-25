@@ -33,6 +33,13 @@ exports[`debug 1`] = `
     rejectResponderTermination={true}
     underlineColorAndroid=\\"transparent\\"
   />
+  <TextInput
+    allowFontScaling={true}
+    defaultValue=\\"hello\\"
+    rejectResponderTermination={true}
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"\\"
+  />
   <View
     accessible={true}
     focusable={true}
@@ -101,6 +108,13 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     defaultValue=\\"What banana?\\"
     rejectResponderTermination={true}
     underlineColorAndroid=\\"transparent\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    defaultValue=\\"hello\\"
+    rejectResponderTermination={true}
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"\\"
   />
   <View
     accessible={true}
@@ -171,6 +185,13 @@ exports[`debug: shallow 1`] = `
     rejectResponderTermination={true}
     underlineColorAndroid=\\"transparent\\"
   />
+  <TextInput
+    allowFontScaling={true}
+    defaultValue=\\"hello\\"
+    rejectResponderTermination={true}
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"\\"
+  />
   <MyButton
     onPress={[Function anonymous]}
     type=\\"primary\\"
@@ -228,6 +249,13 @@ exports[`debug: shallow with message 1`] = `
     rejectResponderTermination={true}
     underlineColorAndroid=\\"transparent\\"
   />
+  <TextInput
+    allowFontScaling={true}
+    defaultValue=\\"hello\\"
+    rejectResponderTermination={true}
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"\\"
+  />
   <MyButton
     onPress={[Function anonymous]}
     type=\\"primary\\"
@@ -284,6 +312,13 @@ exports[`debug: with message 1`] = `
     defaultValue=\\"What banana?\\"
     rejectResponderTermination={true}
     underlineColorAndroid=\\"transparent\\"
+  />
+  <TextInput
+    allowFontScaling={true}
+    defaultValue=\\"hello\\"
+    rejectResponderTermination={true}
+    underlineColorAndroid=\\"transparent\\"
+    value=\\"\\"
   />
   <View
     accessible={true}

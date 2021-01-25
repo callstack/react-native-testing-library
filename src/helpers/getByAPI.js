@@ -107,7 +107,10 @@ const getTextInputNodeByPlaceholderText = (node, placeholder) => {
 const getTextInputNodeByDisplayValue = (node, value) => {
   try {
     const { TextInput } = require('react-native');
-    const nodeValue = node.props.value || node.props.defaultValue;
+    const nodeValue =
+      node.props.value !== undefined
+        ? node.props.value
+        : node.props.defaultValue;
     return (
       filterNodeByType(node, TextInput) &&
       (typeof value === 'string' ? value === nodeValue : value.test(nodeValue))
