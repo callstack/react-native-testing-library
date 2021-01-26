@@ -294,7 +294,7 @@ test('should fire on auto pointerEvents View', () => {
   expect(handlePress).toHaveBeenCalled();
 });
 
-test('should not fire on none pointerEvents View with nested elements', () => {
+test('should not fire on box-only pointerEvents View with nested elements', () => {
   const handlePress = jest.fn();
 
   const screen = render(
