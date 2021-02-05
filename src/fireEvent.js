@@ -17,11 +17,29 @@ const isTouchResponder = (element?: ReactTestInstance) => {
   return !!element?.props.onStartShouldSetResponder || isTextInput(element);
 };
 
+const isPointerEventEnabled = (
+  element?: ReactTestInstance,
+  isParent?: boolean
+) => {
+  const parentCondition = isParent
+    ? element?.props.pointerEvents === 'box-only'
+    : element?.props.pointerEvents === 'box-none';
+
+  if (element?.props.pointerEvents === 'none' || parentCondition) {
+    return false;
+  }
+
+  if (!element?.parent) return true;
+
+  return isPointerEventEnabled(element.parent, true);
+};
+
 const isEventEnabled = (
   element?: ReactTestInstance,
   touchResponder?: ReactTestInstance
 ) => {
   if (isTextInput(element)) return element?.props.editable !== false;
+  if (!isPointerEventEnabled(element)) return false;
 
   const touchStart = touchResponder?.props.onStartShouldSetResponder?.();
   const touchMove = touchResponder?.props.onMoveShouldSetResponder?.();
