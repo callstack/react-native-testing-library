@@ -108,14 +108,16 @@ test('getByText, queryByText', () => {
 
   expect(sameButton.props.children).toBe('not fresh');
   expect(() => getByText('InExistent')).toThrow(
-    'No instances found with text "InExistent"'
+    'Unable to find an element with text: InExistent'
   );
 
   const zeroText = getByText('0');
 
   expect(queryByText(/change/i)).toBe(button);
   expect(queryByText('InExistent')).toBeNull();
-  expect(() => queryByText(/fresh/)).toThrow('Expected 1 but found 3');
+  expect(() => queryByText(/fresh/)).toThrow(
+    'Found multiple elements with text: /fresh/'
+  );
   expect(queryByText('0')).toBe(zeroText);
 });
 
@@ -147,7 +149,9 @@ test('getAllByText, queryAllByText', () => {
   const buttons = getAllByText(/fresh/i);
 
   expect(buttons).toHaveLength(3);
-  expect(() => getAllByText('InExistent')).toThrow('No instances found');
+  expect(() => getAllByText('InExistent')).toThrow(
+    'Unable to find an element with text: InExistent'
+  );
 
   expect(queryAllByText(/fresh/i)).toEqual(buttons);
   expect(queryAllByText('InExistent')).toHaveLength(0);
@@ -163,13 +167,13 @@ test('getByPlaceholderText, queryByPlaceholderText', () => {
 
   expect(sameInput.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
   expect(() => getByPlaceholderText('no placeholder')).toThrow(
-    'No instances found with placeholder "no placeholder"'
+    'Unable to find an element with placeholder: no placeholder'
   );
 
   expect(queryByPlaceholderText(/add/i)).toBe(input);
   expect(queryByPlaceholderText('no placeholder')).toBeNull();
   expect(() => queryByPlaceholderText(/fresh/)).toThrow(
-    'Expected 1 but found 2'
+    'Found multiple elements with placeholder: /fresh/ '
   );
 });
 
@@ -181,7 +185,7 @@ test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
 
   expect(inputs).toHaveLength(2);
   expect(() => getAllByPlaceholderText('no placeholder')).toThrow(
-    'No instances found'
+    'Unable to find an element with placeholder: no placeholder'
   );
 
   expect(queryAllByPlaceholderText(/fresh/i)).toEqual(inputs);
@@ -198,12 +202,14 @@ test('getByDisplayValue, queryByDisplayValue', () => {
 
   expect(sameInput.props.value).toBe(INPUT_FRESHNESS);
   expect(() => getByDisplayValue('no value')).toThrow(
-    'No instances found with display value "no value"'
+    'Unable to find an element with displayValue: no value'
   );
 
   expect(queryByDisplayValue(/custom/i)).toBe(input);
   expect(queryByDisplayValue('no value')).toBeNull();
-  expect(() => queryByDisplayValue(/fresh/i)).toThrow('Expected 1 but found 2');
+  expect(() => queryByDisplayValue(/fresh/i)).toThrow(
+    'Found multiple elements with display value: /fresh/i'
+  );
 });
 
 test('getByDisplayValue, queryByDisplayValue get element by default value only when value is undefined', () => {
@@ -223,7 +229,9 @@ test('getAllByDisplayValue, queryAllByDisplayValue', () => {
   const inputs = getAllByDisplayValue(/fresh/i);
 
   expect(inputs).toHaveLength(2);
-  expect(() => getAllByDisplayValue('no value')).toThrow('No instances found');
+  expect(() => getAllByDisplayValue('no value')).toThrow(
+    'Unable to find an element with displayValue: no value'
+  );
 
   expect(queryAllByDisplayValue(/fresh/i)).toEqual(inputs);
   expect(queryAllByDisplayValue('no value')).toHaveLength(0);

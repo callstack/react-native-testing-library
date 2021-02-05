@@ -1,18 +1,18 @@
 // @flow
 import * as React from 'react';
 import {
-  getByText,
-  getByPlaceholderText,
-  getByDisplayValue,
-  getAllByText,
-  getAllByPlaceholderText,
-  getAllByDisplayValue,
   UNSAFE_getByType,
   UNSAFE_getByProps,
   UNSAFE_getAllByType,
   UNSAFE_getAllByProps,
 } from './getByAPI';
 import { queryByTestId, queryAllByTestId } from './byTestId';
+import { queryByText, queryAllByText } from './byText';
+import {
+  queryByPlaceholderText,
+  queryAllByPlaceholderText,
+} from './byPlaceholderText';
+import { queryByDisplayValue, queryAllByDisplayValue } from './byDisplayValue';
 import {
   createQueryByError,
   throwRemovedFunctionError,
@@ -54,75 +54,6 @@ export type QueryByAPI = {|
   queryByPlaceholder: () => void,
   queryAllByPlaceholder: () => void,
 |};
-
-export const queryByText = (
-  instance: ReactTestInstance
-): ((text: string | RegExp) => ReactTestInstance | null) =>
-  function queryByTextFn(text: string | RegExp) {
-    try {
-      return getByText(instance)(text);
-    } catch (error) {
-      return createQueryByError(error, queryByTextFn);
-    }
-  };
-
-export const queryByPlaceholderText = (
-  instance: ReactTestInstance
-): ((placeholder: string | RegExp) => ReactTestInstance | null) =>
-  function queryByPlaceholderTextFn(placeholder: string | RegExp) {
-    try {
-      return getByPlaceholderText(instance)(placeholder);
-    } catch (error) {
-      return createQueryByError(error, queryByPlaceholderTextFn);
-    }
-  };
-
-export const queryByDisplayValue = (
-  instance: ReactTestInstance
-): ((value: string | RegExp) => ReactTestInstance | null) =>
-  function queryByDisplayValueFn(value: string | RegExp) {
-    try {
-      return getByDisplayValue(instance)(value);
-    } catch (error) {
-      return createQueryByError(error, queryByDisplayValueFn);
-    }
-  };
-
-export const queryAllByText = (
-  instance: ReactTestInstance
-): ((text: string | RegExp) => Array<ReactTestInstance>) => (
-  text: string | RegExp
-) => {
-  try {
-    return getAllByText(instance)(text);
-  } catch (error) {
-    return [];
-  }
-};
-
-export const queryAllByPlaceholderText = (
-  instance: ReactTestInstance
-): ((placeholder: string | RegExp) => Array<ReactTestInstance>) => (
-  placeholder: string | RegExp
-) => {
-  try {
-    return getAllByPlaceholderText(instance)(placeholder);
-  } catch (error) {
-    return [];
-  }
-};
-
-export const queryAllByDisplayValue = (
-  instance: ReactTestInstance
-): ((value: string | RegExp) => Array<ReactTestInstance>) => (
-  value: string | RegExp
-) => {
-  try {
-    return getAllByDisplayValue(instance)(value);
-  } catch (error) {
-    return [];
-  }
-};
 
 export const UNSAFE_queryByType = (
   instance: ReactTestInstance
