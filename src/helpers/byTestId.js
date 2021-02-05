@@ -37,10 +37,10 @@ const {
 );
 
 export {
-  getByTestId,
-  getAllByTestId,
-  queryByTestId,
-  findByTestId,
   findAllByTestId,
+  findByTestId,
+  getAllByTestId,
+  getByTestId,
   queryAllByTestId,
+  queryByTestId,
 };

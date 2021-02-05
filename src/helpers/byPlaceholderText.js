@@ -45,10 +45,10 @@ const {
 );
 
 export {
-  getByPlaceholderText,
-  getAllByPlaceholderText,
-  queryByPlaceholderText,
-  findByPlaceholderText,
   findAllByPlaceholderText,
+  findByPlaceholderText,
+  getAllByPlaceholderText,
+  getByPlaceholderText,
   queryAllByPlaceholderText,
+  queryByPlaceholderText,
 };

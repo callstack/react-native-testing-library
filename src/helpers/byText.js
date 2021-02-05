@@ -79,10 +79,10 @@ const {
 );
 
 export {
-  getByText,
-  getAllByText,
-  queryByText,
-  findByText,
   findAllByText,
+  findByText,
+  getAllByText,
+  getByText,
   queryAllByText,
+  queryByText,
 };

@@ -47,10 +47,10 @@ const {
 );
 
 export {
-  getByDisplayValue,
-  getAllByDisplayValue,
-  queryByDisplayValue,
-  findByDisplayValue,
   findAllByDisplayValue,
+  findByDisplayValue,
+  getAllByDisplayValue,
+  getByDisplayValue,
   queryAllByDisplayValue,
+  queryByDisplayValue,
 };
