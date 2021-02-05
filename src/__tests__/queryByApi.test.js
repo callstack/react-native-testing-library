@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Text, Image } from 'react-native';
+import { Text, Image, View } from 'react-native';
 import { render } from '..';
 
 test('queryByText nested <Image> in <Text> at start', () => {
@@ -127,4 +127,18 @@ test('queryByText nested <React.Fragment> in <Text>', () => {
       </Text>
     ).queryByText('Hello World')
   ).toBeTruthy();
+});
+
+test('queryByText nested <React.Fragment> in <View>', () => {
+  const CustomText = () => {
+    return <React.Fragment>Hello World</React.Fragment>;
+  };
+
+  expect(
+    render(
+      <View>
+        <CustomText />
+      </View>
+    ).queryByText('Hello World')
+  ).toBeFalsy();
 });
