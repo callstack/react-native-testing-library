@@ -56,6 +56,14 @@ const getNodeByText = (node, text) => {
           : text.test(textToTest);
       }
     }
+
+    // Fragments
+    if (typeof node.children?.[0] === 'string') {
+      const textToTest = node.children.join('');
+      return typeof text === 'string'
+        ? text === textToTest
+        : text.test(textToTest);
+    }
     return false;
   } catch (error) {
     throw createLibraryNotSupportedError(error);

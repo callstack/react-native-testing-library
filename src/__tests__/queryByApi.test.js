@@ -114,3 +114,17 @@ test('queryByText nested deep <CustomText> in <Text>', () => {
     ).queryByText('Hello World!')
   ).toBeTruthy();
 });
+
+test('queryByText nested <React.Fragment> in <Text>', () => {
+  const CustomText = () => {
+    return <React.Fragment>Hello World</React.Fragment>;
+  };
+
+  expect(
+    render(
+      <Text>
+        <CustomText />
+      </Text>
+    ).queryByText('Hello World')
+  ).toBeTruthy();
+});
