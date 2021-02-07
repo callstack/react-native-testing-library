@@ -7,15 +7,11 @@ test('findBy queries work asynchronously', async () => {
   const options = { timeout: 10 }; // Short timeout so that this test runs quickly
   const {
     rerender,
-    findByText,
-    findAllByText,
     findByPlaceholderText,
     findAllByPlaceholderText,
     findByDisplayValue,
     findAllByDisplayValue,
   } = render(<View />);
-  await expect(findByText('Some Text', options)).rejects.toBeTruthy();
-  await expect(findAllByText('Some Text', options)).rejects.toBeTruthy();
   await expect(
     findByPlaceholderText('Placeholder Text', options)
   ).rejects.toBeTruthy();
@@ -41,8 +37,6 @@ test('findBy queries work asynchronously', async () => {
     20
   );
 
-  await expect(findByText('Some Text')).resolves.toBeTruthy();
-  await expect(findAllByText('Some Text')).resolves.toHaveLength(1);
   await expect(findByPlaceholderText('Placeholder Text')).resolves.toBeTruthy();
   await expect(
     findAllByPlaceholderText('Placeholder Text')

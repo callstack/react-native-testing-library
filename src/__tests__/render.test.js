@@ -98,65 +98,6 @@ test('UNSAFE_getAllByType, UNSAFE_queryAllByType', () => {
   expect(UNSAFE_queryAllByType(InExistent)).toHaveLength(0);
 });
 
-test('getByText, queryByText', () => {
-  const { getByText, queryByText } = render(<Banana />);
-  const button = getByText(/change/i);
-
-  expect(button.props.children).toBe('Change freshness!');
-
-  const sameButton = getByText('not fresh');
-
-  expect(sameButton.props.children).toBe('not fresh');
-  expect(() => getByText('InExistent')).toThrow(
-    'Unable to find an element with text: InExistent'
-  );
-
-  const zeroText = getByText('0');
-
-  expect(queryByText(/change/i)).toBe(button);
-  expect(queryByText('InExistent')).toBeNull();
-  expect(() => queryByText(/fresh/)).toThrow(
-    'Found multiple elements with text: /fresh/'
-  );
-  expect(queryByText('0')).toBe(zeroText);
-});
-
-test('getByText, queryByText with children as Array', () => {
-  const BananaCounter = ({ numBananas }) => (
-    <Text>There are {numBananas} bananas in the bunch</Text>
-  );
-
-  const BananaStore = () => (
-    <View>
-      <BananaCounter numBananas={3} />
-      <BananaCounter numBananas={6} />
-      <BananaCounter numBananas={5} />
-    </View>
-  );
-
-  const { getByText } = render(<BananaStore />);
-
-  const threeBananaBunch = getByText('There are 3 bananas in the bunch');
-  expect(threeBananaBunch.props.children).toEqual([
-    'There are ',
-    3,
-    ' bananas in the bunch',
-  ]);
-});
-
-test('getAllByText, queryAllByText', () => {
-  const { getAllByText, queryAllByText } = render(<Banana />);
-  const buttons = getAllByText(/fresh/i);
-
-  expect(buttons).toHaveLength(3);
-  expect(() => getAllByText('InExistent')).toThrow(
-    'Unable to find an element with text: InExistent'
-  );
-
-  expect(queryAllByText(/fresh/i)).toEqual(buttons);
-  expect(queryAllByText('InExistent')).toHaveLength(0);
-});
-
 test('getByPlaceholderText, queryByPlaceholderText', () => {
   const { getByPlaceholderText, queryByPlaceholderText } = render(<Banana />);
   const input = getByPlaceholderText(/custom/i);
