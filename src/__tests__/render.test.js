@@ -133,51 +133,6 @@ test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
   expect(queryAllByPlaceholderText('no placeholder')).toHaveLength(0);
 });
 
-test('getByDisplayValue, queryByDisplayValue', () => {
-  const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
-  const input = getByDisplayValue(/custom/i);
-
-  expect(input.props.value).toBe(INPUT_FRESHNESS);
-
-  const sameInput = getByDisplayValue(INPUT_FRESHNESS);
-
-  expect(sameInput.props.value).toBe(INPUT_FRESHNESS);
-  expect(() => getByDisplayValue('no value')).toThrow(
-    'Unable to find an element with displayValue: no value'
-  );
-
-  expect(queryByDisplayValue(/custom/i)).toBe(input);
-  expect(queryByDisplayValue('no value')).toBeNull();
-  expect(() => queryByDisplayValue(/fresh/i)).toThrow(
-    'Found multiple elements with display value: /fresh/i'
-  );
-});
-
-test('getByDisplayValue, queryByDisplayValue get element by default value only when value is undefined', () => {
-  const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
-  expect(() => getByDisplayValue(DEFAULT_INPUT_CHEF)).toThrow();
-  expect(queryByDisplayValue(DEFAULT_INPUT_CHEF)).toBeNull();
-
-  expect(() => getByDisplayValue('hello')).toThrow();
-  expect(queryByDisplayValue('hello')).toBeNull();
-
-  expect(getByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
-  expect(queryByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
-});
-
-test('getAllByDisplayValue, queryAllByDisplayValue', () => {
-  const { getAllByDisplayValue, queryAllByDisplayValue } = render(<Banana />);
-  const inputs = getAllByDisplayValue(/fresh/i);
-
-  expect(inputs).toHaveLength(2);
-  expect(() => getAllByDisplayValue('no value')).toThrow(
-    'Unable to find an element with displayValue: no value'
-  );
-
-  expect(queryAllByDisplayValue(/fresh/i)).toEqual(inputs);
-  expect(queryAllByDisplayValue('no value')).toHaveLength(0);
-});
-
 test('UNSAFE_getByProps, UNSAFE_queryByProps', () => {
   const { UNSAFE_getByProps, UNSAFE_queryByProps } = render(<Banana />);
   const primaryType = UNSAFE_getByProps({ type: 'primary' });
