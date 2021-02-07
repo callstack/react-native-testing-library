@@ -98,41 +98,6 @@ test('UNSAFE_getAllByType, UNSAFE_queryAllByType', () => {
   expect(UNSAFE_queryAllByType(InExistent)).toHaveLength(0);
 });
 
-test('getByPlaceholderText, queryByPlaceholderText', () => {
-  const { getByPlaceholderText, queryByPlaceholderText } = render(<Banana />);
-  const input = getByPlaceholderText(/custom/i);
-
-  expect(input.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
-
-  const sameInput = getByPlaceholderText(PLACEHOLDER_FRESHNESS);
-
-  expect(sameInput.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
-  expect(() => getByPlaceholderText('no placeholder')).toThrow(
-    'Unable to find an element with placeholder: no placeholder'
-  );
-
-  expect(queryByPlaceholderText(/add/i)).toBe(input);
-  expect(queryByPlaceholderText('no placeholder')).toBeNull();
-  expect(() => queryByPlaceholderText(/fresh/)).toThrow(
-    'Found multiple elements with placeholder: /fresh/ '
-  );
-});
-
-test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
-  const { getAllByPlaceholderText, queryAllByPlaceholderText } = render(
-    <Banana />
-  );
-  const inputs = getAllByPlaceholderText(/fresh/i);
-
-  expect(inputs).toHaveLength(2);
-  expect(() => getAllByPlaceholderText('no placeholder')).toThrow(
-    'Unable to find an element with placeholder: no placeholder'
-  );
-
-  expect(queryAllByPlaceholderText(/fresh/i)).toEqual(inputs);
-  expect(queryAllByPlaceholderText('no placeholder')).toHaveLength(0);
-});
-
 test('UNSAFE_getByProps, UNSAFE_queryByProps', () => {
   const { UNSAFE_getByProps, UNSAFE_queryByProps } = render(<Banana />);
   const primaryType = UNSAFE_getByProps({ type: 'primary' });
