@@ -1,14 +1,7 @@
 // @flow
 import * as React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { render } from '..';
-
-const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
-const PLACEHOLDER_CHEF = 'Who inspected freshness?';
-const INPUT_FRESHNESS = 'Custom Freshie';
-const INPUT_CHEF = 'I inspected freshie';
-const DEFAULT_INPUT_CHEF = 'What did you inspect?';
-const DEFAULT_INPUT_CUSTOMER = 'What banana?';
 
 class MyButton extends React.Component<any> {
   render() {
@@ -21,50 +14,14 @@ class MyButton extends React.Component<any> {
 }
 
 class Banana extends React.Component<any, any> {
-  state = {
-    fresh: false,
-  };
-
-  componentDidUpdate() {
-    if (this.props.onUpdate) {
-      this.props.onUpdate();
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.props.onUnmount) {
-      this.props.onUnmount();
-    }
-  }
-
-  changeFresh = () => {
-    this.setState((state) => ({
-      fresh: !state.fresh,
-    }));
-  };
-
   render() {
     const test = 0;
     return (
       <View>
         <Text>Is the banana fresh?</Text>
-        <Text testID="bananaFresh">
-          {this.state.fresh ? 'fresh' : 'not fresh'}
-        </Text>
-        <TextInput
-          testID="bananaCustomFreshness"
-          placeholder={PLACEHOLDER_FRESHNESS}
-          value={INPUT_FRESHNESS}
-        />
-        <TextInput
-          testID="bananaChef"
-          placeholder={PLACEHOLDER_CHEF}
-          value={INPUT_CHEF}
-          defaultValue={DEFAULT_INPUT_CHEF}
-        />
-        <TextInput defaultValue={DEFAULT_INPUT_CUSTOMER} />
-        <TextInput defaultValue={'hello'} value="" />
-        <MyButton onPress={this.changeFresh} type="primary">
+        <Text testID="bananaFresh">not fresh</Text>
+
+        <MyButton onPress={jest.fn()} type="primary">
           Change freshness!
         </MyButton>
         <Text testID="duplicateText">First Text</Text>
