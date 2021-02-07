@@ -8,28 +8,24 @@ const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 
-class Banana extends React.Component<any, any> {
-  render() {
-    return (
-      <View>
-        <Text>Is the banana fresh?</Text>
-        <Text testID="bananaFresh">not fresh</Text>
-        <TextInput
-          testID="bananaCustomFreshness"
-          placeholder={PLACEHOLDER_FRESHNESS}
-          value={INPUT_FRESHNESS}
-        />
-        <TextInput
-          testID="bananaChef"
-          placeholder={PLACEHOLDER_CHEF}
-          value={INPUT_CHEF}
-        />
-        <Text testID="duplicateText">First Text</Text>
-        <Text testID="duplicateText">Second Text</Text>
-      </View>
-    );
-  }
-}
+const Banana = () => (
+  <View>
+    <Text>Is the banana fresh?</Text>
+    <Text testID="bananaFresh">not fresh</Text>
+    <TextInput
+      testID="bananaCustomFreshness"
+      placeholder={PLACEHOLDER_FRESHNESS}
+      value={INPUT_FRESHNESS}
+    />
+    <TextInput
+      testID="bananaChef"
+      placeholder={PLACEHOLDER_CHEF}
+      value={INPUT_CHEF}
+    />
+    <Text testID="duplicateText">First Text</Text>
+    <Text testID="duplicateText">Second Text</Text>
+  </View>
+);
 
 const MyComponent = () => <Text>My Component</Text>;
 

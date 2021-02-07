@@ -9,25 +9,21 @@ const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
 
-class Banana extends React.Component<any, any> {
-  render() {
-    return (
-      <View>
-        <TextInput
-          testID="bananaCustomFreshness"
-          placeholder={PLACEHOLDER_FRESHNESS}
-          value={INPUT_FRESHNESS}
-        />
-        <TextInput
-          testID="bananaChef"
-          placeholder={PLACEHOLDER_CHEF}
-          value={INPUT_CHEF}
-          defaultValue={DEFAULT_INPUT_CHEF}
-        />
-      </View>
-    );
-  }
-}
+const Banana = () => (
+  <View>
+    <TextInput
+      testID="bananaCustomFreshness"
+      placeholder={PLACEHOLDER_FRESHNESS}
+      value={INPUT_FRESHNESS}
+    />
+    <TextInput
+      testID="bananaChef"
+      placeholder={PLACEHOLDER_CHEF}
+      value={INPUT_CHEF}
+      defaultValue={DEFAULT_INPUT_CHEF}
+    />
+  </View>
+);
 
 test('getByPlaceholderText, queryByPlaceholderText', () => {
   const { getByPlaceholderText, queryByPlaceholderText } = render(<Banana />);

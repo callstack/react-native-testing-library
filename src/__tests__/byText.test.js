@@ -3,34 +3,28 @@ import * as React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { render } from '..';
 
-class MyButton extends React.Component<any> {
-  render() {
-    return (
-      <TouchableOpacity onPress={this.props.onPress}>
-        <Text>{this.props.children}</Text>
-      </TouchableOpacity>
-    );
-  }
-}
+const MyButton = ({ children, onPress }) => (
+  <TouchableOpacity onPress={onPress}>
+    <Text>{children}</Text>
+  </TouchableOpacity>
+);
 
-class Banana extends React.Component<any, any> {
-  render() {
-    const test = 0;
-    return (
-      <View>
-        <Text>Is the banana fresh?</Text>
-        <Text testID="bananaFresh">not fresh</Text>
+const Banana = () => {
+  const test = 0;
+  return (
+    <View>
+      <Text>Is the banana fresh?</Text>
+      <Text testID="bananaFresh">not fresh</Text>
 
-        <MyButton onPress={jest.fn()} type="primary">
-          Change freshness!
-        </MyButton>
-        <Text testID="duplicateText">First Text</Text>
-        <Text testID="duplicateText">Second Text</Text>
-        <Text>{test}</Text>
-      </View>
-    );
-  }
-}
+      <MyButton onPress={jest.fn()} type="primary">
+        Change freshness!
+      </MyButton>
+      <Text testID="duplicateText">First Text</Text>
+      <Text testID="duplicateText">Second Text</Text>
+      <Text>{test}</Text>
+    </View>
+  );
+};
 
 test('getByText, queryByText', () => {
   const { getByText, queryByText } = render(<Banana />);

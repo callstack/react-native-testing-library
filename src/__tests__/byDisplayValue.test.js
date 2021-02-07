@@ -11,27 +11,23 @@ const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
 const DEFAULT_INPUT_CUSTOMER = 'What banana?';
 
-class Banana extends React.Component<any, any> {
-  render() {
-    return (
-      <View>
-        <TextInput
-          testID="bananaCustomFreshness"
-          placeholder={PLACEHOLDER_FRESHNESS}
-          value={INPUT_FRESHNESS}
-        />
-        <TextInput
-          testID="bananaChef"
-          placeholder={PLACEHOLDER_CHEF}
-          value={INPUT_CHEF}
-          defaultValue={DEFAULT_INPUT_CHEF}
-        />
-        <TextInput defaultValue={DEFAULT_INPUT_CUSTOMER} />
-        <TextInput defaultValue={'hello'} value="" />
-      </View>
-    );
-  }
-}
+const Banana = () => (
+  <View>
+    <TextInput
+      testID="bananaCustomFreshness"
+      placeholder={PLACEHOLDER_FRESHNESS}
+      value={INPUT_FRESHNESS}
+    />
+    <TextInput
+      testID="bananaChef"
+      placeholder={PLACEHOLDER_CHEF}
+      value={INPUT_CHEF}
+      defaultValue={DEFAULT_INPUT_CHEF}
+    />
+    <TextInput defaultValue={DEFAULT_INPUT_CUSTOMER} />
+    <TextInput defaultValue={'hello'} value="" />
+  </View>
+);
 
 test('getByDisplayValue, queryByDisplayValue', () => {
   const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
