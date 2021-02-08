@@ -1,0 +1,1 @@
+global.Promise = global.originalPromise;
