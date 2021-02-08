@@ -146,6 +146,8 @@ test.each([TimerMode.Legacy, TimerMode.Modern])(
     } catch (e) {
       // Suppress expected error
     }
-    expect(mockFn).toHaveBeenCalledTimes(2);
+
+    // waitForElementToBeRemoved runs an initial call of the expectation
+    expect(mockFn).toHaveBeenCalledTimes(4);
   }
 );
