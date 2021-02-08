@@ -52,6 +52,7 @@ function waitForInternal<T>(
     const overallTimeoutTimer = setTimeout(handleTimeout, timeout);
 
     const usingFakeTimers = jestFakeTimersAreEnabled();
+
     if (usingFakeTimers) {
       checkExpectation();
       // this is a dangerous rule to disable because it could lead to an
@@ -59,6 +60,7 @@ function waitForInternal<T>(
       // setting finished inside `onDone` which will be called when we're done
       // waiting or when we've timed out.
       // eslint-disable-next-line no-unmodified-loop-condition
+      let fakeTimeRemaining = timeout;
       while (!finished) {
         if (!jestFakeTimersAreEnabled()) {
           const error = new Error(
@@ -70,6 +72,14 @@ function waitForInternal<T>(
           reject(error);
           return;
         }
+
+        // when fake timers are used we want to simulate the interval time passing
+        if (fakeTimeRemaining <= 0) {
+          return;
+        } else {
+          fakeTimeRemaining -= interval;
+        }
+
         // we *could* (maybe should?) use `advanceTimersToNextTimer` but it's
         // possible that could make this loop go on forever if someone is using
         // third party code that's setting up recursive timers so rapidly that
