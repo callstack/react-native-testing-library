@@ -124,6 +124,10 @@ const toEventHandlerName = (eventName: string) =>
 
 const pressHandler = (element: ReactTestInstance): void =>
   invokeEvent(element, 'press', pressHandler);
+const focusHandler = (element: ReactTestInstance): void =>
+  invokeEvent(element, 'focus', pressHandler);
+const blurHandler = (element: ReactTestInstance): void =>
+  invokeEvent(element, 'blur', pressHandler);
 const changeTextHandler = (
   element: ReactTestInstance,
   ...data: Array<any>
@@ -138,6 +142,8 @@ const fireEvent = (
 ): void => invokeEvent(element, eventName, fireEvent, ...data);
 
 fireEvent.press = pressHandler;
+fireEvent.focus = focusHandler;
+fireEvent.blur = blurHandler;
 fireEvent.changeText = changeTextHandler;
 fireEvent.scroll = scrollHandler;
 
