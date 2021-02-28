@@ -266,7 +266,7 @@ Install required dev dependencies:
 $ yarn add -D jest @testing-library/react-native
 ```
 
-Create a [`mock file`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/jest-mocks.js) necessary for your tests:
+Create a [`mock file`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/jest-setup.js) necessary for your tests:
 
 ```jsx
 import 'react-native-gesture-handler/jestSetup';
@@ -290,7 +290,7 @@ Create your `jest.config.js` file (or place the following properties in your `pa
 ```js
 module.exports = {
   preset: 'react-native',
-  setupFiles: ['./jest-mocks.js'],
+  setupFiles: ['./jest-setup.js'],
   transformIgnorePatterns: [
     'node_modules/(?!(jest-)?react-native|@react-native-community|@react-navigation)',
   ],
