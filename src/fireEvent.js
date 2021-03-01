@@ -1,6 +1,5 @@
 // @flow
 import act from './act';
-import { ErrorWithStack } from './helpers/errors';
 
 const isHostElement = (element?: ReactTestInstance) => {
   return typeof element?.type === 'string';
@@ -66,14 +65,7 @@ const findEventHandler = (
   // Do not bubble event to the root element
   const hasHandler = handler != null || hasDescendandHandler;
   if (element.parent === null || element.parent.parent === null) {
-    if (hasHandler) {
-      return null;
-    } else {
-      throw new ErrorWithStack(
-        `No handler function found for event: "${eventName}"`,
-        callsite || invokeEvent
-      );
-    }
+    return null;
   }
 
   return findEventHandler(
