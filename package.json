@@ -20,6 +20,7 @@
   ],
   "files": [
     "build/",
+    "jest-preset/",
     "typings/index.d.ts",
     "pure.js",
     "dont-cleanup-after-each.js"
@@ -70,7 +71,7 @@
     "build": "rm -rf build; babel src --out-dir build --ignore 'src/__tests__/*'"
   },
   "jest": {
-    "preset": "../jest/preset.js",
+    "preset": "../jest-preset",
     "moduleFileExtensions": [
       "js",
       "json"
