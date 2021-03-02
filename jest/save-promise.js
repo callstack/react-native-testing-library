@@ -1,1 +1,1 @@
-global.originalPromise = Promise;
+global.$RNTL_ORIGINAL_PROMISE = Promise;

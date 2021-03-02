@@ -1,3 +1,4 @@
+// @flow
 import waitFor from '../waitFor';
 import { TimerMode } from './timerUtils';
 
