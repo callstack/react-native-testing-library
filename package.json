@@ -70,11 +70,12 @@
     "build": "rm -rf build; babel src --out-dir build --ignore 'src/__tests__/*'"
   },
   "jest": {
-    "preset": "react-native",
+    "preset": "../jest/preset.js",
     "moduleFileExtensions": [
       "js",
       "json"
     ],
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "testPathIgnorePatterns": ["timerUtils"]
   }
 }

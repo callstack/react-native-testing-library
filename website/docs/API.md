@@ -366,8 +366,6 @@ test('waiting for an Banana to be ready', async () => {
 In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
 :::
 
-If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to await the return of `waitFor` as it will stall your tests.
-
 ## `waitForElementToBeRemoved`
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitForElementToBeRemoved.test.js)
@@ -403,8 +401,6 @@ You can use any of `getBy`, `getAllBy`, `queryBy` and `queryAllBy` queries for `
 :::info
 In order to properly use `waitForElementToBeRemoved` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
 :::
-
-If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to await the return of `waitFor` as it will stall your tests.
 
 ## `within`, `getQueriesForElement`
 

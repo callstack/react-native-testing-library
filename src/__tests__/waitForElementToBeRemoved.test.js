@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { render, fireEvent, waitForElementToBeRemoved } from '..';
+import { TimerMode } from './timerUtils';
 
 const TestSetup = ({ shouldUseDelay = true }) => {
   const [isAdded, setIsAdded] = useState(true);
@@ -120,7 +121,7 @@ test('waits with custom interval', async () => {
 
   try {
     await waitForElementToBeRemoved(() => mockFn(), {
-      timeout: 400,
+      timeout: 600,
       interval: 200,
     });
   } catch (e) {
@@ -130,30 +131,23 @@ test('waits with custom interval', async () => {
   expect(mockFn).toHaveBeenCalledTimes(4);
 });
 
-test('works with legacy fake timers', async () => {
-  jest.useFakeTimers('legacy');
+test.each([TimerMode.Legacy, TimerMode.Modern])(
+  'works with %s fake timers',
+  async (fakeTimerType) => {
+    jest.useFakeTimers(fakeTimerType);
 
-  const mockFn = jest.fn(() => <View />);
+    const mockFn = jest.fn(() => <View />);
 
-  waitForElementToBeRemoved(() => mockFn(), {
-    timeout: 400,
-    interval: 200,
-  });
+    try {
+      await waitForElementToBeRemoved(() => mockFn(), {
+        timeout: 400,
+        interval: 200,
+      });
+    } catch (e) {
+      // Suppress expected error
+    }
 
-  jest.advanceTimersByTime(400);
-  expect(mockFn).toHaveBeenCalledTimes(4);
-});
-
-test('works with fake timers', async () => {
-  jest.useFakeTimers('modern');
-
-  const mockFn = jest.fn(() => <View />);
-
-  waitForElementToBeRemoved(() => mockFn(), {
-    timeout: 400,
-    interval: 200,
-  });
-
-  jest.advanceTimersByTime(400);
-  expect(mockFn).toHaveBeenCalledTimes(4);
-});
+    // waitForElementToBeRemoved runs an initial call of the expectation
+    expect(mockFn).toHaveBeenCalledTimes(4);
+  }
+);
