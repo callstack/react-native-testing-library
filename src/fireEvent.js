@@ -52,8 +52,7 @@ const findEventHandler = (
   element: ReactTestInstance,
   eventName: string,
   callsite?: any,
-  nearestTouchResponder?: ReactTestInstance,
-  hasDescendandHandler?: boolean
+  nearestTouchResponder?: ReactTestInstance
 ) => {
   const touchResponder = isTouchResponder(element)
     ? element
@@ -62,19 +61,11 @@ const findEventHandler = (
   const handler = getEventHandler(element, eventName);
   if (handler && isEventEnabled(element, touchResponder)) return handler;
 
-  // Do not bubble event to the root element
-  const hasHandler = handler != null || hasDescendandHandler;
   if (element.parent === null || element.parent.parent === null) {
     return null;
   }
 
-  return findEventHandler(
-    element.parent,
-    eventName,
-    callsite,
-    touchResponder,
-    hasHandler
-  );
+  return findEventHandler(element.parent, eventName, callsite, touchResponder);
 };
 
 const getEventHandler = (element: ReactTestInstance, eventName: string) => {
