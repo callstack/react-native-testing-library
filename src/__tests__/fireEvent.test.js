@@ -62,14 +62,14 @@ describe('fireEvent', () => {
     expect(onPressMock).toHaveBeenCalled();
   });
 
-  test('should throw an Error when event handler was not found', () => {
+  test('should not fire if the press handler is not passed to children', () => {
+    const onPressMock = jest.fn();
     const { getByText } = render(
-      <WithoutEventComponent onPress={() => 'this is not passed to children'} />
+      // TODO: this functionality is buggy, i.e. it will fail if we wrap this component with a View.
+      <WithoutEventComponent onPress={onPressMock} />
     );
-
-    expect(() => fireEvent(getByText('Without event'), 'press')).toThrow(
-      'No handler function found for event: "press"'
-    );
+    fireEvent(getByText('Without event'), 'press');
+    expect(onPressMock).not.toHaveBeenCalled();
   });
 
   test('should invoke event with custom name', () => {
