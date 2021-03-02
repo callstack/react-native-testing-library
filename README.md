@@ -73,6 +73,24 @@ Then automatically add it to your jest tests by using `setupFilesAfterEnv` optio
 }
 ```
 
+### Custom Jest Preset
+
+> **important** if you use "modern" Fake Timers
+
+We generally advice to use the "react-native" preset when testing with this library. However, if you use ["modern" Fake Timers](https://jestjs.io/blog/2020/05/05/jest-26#new-fake-timers) (default since Jest 27), you'll need to apply our custom Jest preset or awaiting promises, like `waitFor`, will timeout.
+
+This is a [known issue](https://github.com/facebook/react-native/issues/29303). It happens because React Native's Jest preset overrides native Promise. Our preset restores it to defaults, which is not a problem in most apps out there.
+
+Here's how you apply a custom preset in your Jest config:
+
+```json
+{
+  "preset": "@testing-library/react-native"
+}
+```
+
+If this doesn't work for you, please fall back to using "legacy" fake timers.
+
 ### Flow
 
 Note for [Flow](https://flow.org) users – you'll also need to install typings for `react-test-renderer`:
