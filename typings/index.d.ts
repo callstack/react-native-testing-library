@@ -299,7 +299,7 @@ export interface RenderOptions {
 }
 
 type Debug = {
-  (message?: string);
+  (message?: string): any;
   shallow: (message?: string) => void;
 };
 
