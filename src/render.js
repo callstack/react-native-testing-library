@@ -46,8 +46,13 @@ export default function render<T>(
   );
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
+  const unmount = () => {
+    act(() => {
+      renderer.unmount();
+    });
+  };
 
-  addToCleanupQueue(renderer.unmount);
+  addToCleanupQueue(unmount);
 
   return {
     ...getByAPI(instance),
@@ -55,9 +60,9 @@ export default function render<T>(
     ...findByAPI(instance),
     ...a11yAPI(instance),
     update,
+    unmount,
     container: instance,
     rerender: update, // alias for `update`
-    unmount: renderer.unmount,
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
   };

@@ -282,6 +282,20 @@ test('unmount', () => {
   expect(fn).toHaveBeenCalled();
 });
 
+test('unmount should handle cleanup functions', () => {
+  const cleanup = jest.fn();
+  const Component = () => {
+    React.useEffect(() => cleanup);
+    return null;
+  };
+
+  const { unmount } = render(<Component />);
+
+  unmount();
+
+  expect(cleanup).toHaveBeenCalledTimes(1);
+});
+
 test('toJSON', () => {
   const { toJSON } = render(<MyButton>press me</MyButton>);
 
