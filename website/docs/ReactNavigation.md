@@ -165,6 +165,9 @@ import AppNavigator from '../AppNavigator';
 // Silence the warning https://github.com/facebook/react-native/issues/11094#issuecomment-263240420
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
 
+// Use the following mock instead if you're running React Native@0.64.0 or higher
+// jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+
 describe('Testing react navigation', () => {
   test('page contains the header and 10 items', async () => {
     const component = (
