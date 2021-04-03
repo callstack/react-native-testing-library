@@ -166,7 +166,7 @@ import AppNavigator from '../AppNavigator';
 // Use with React Native <= 0.63
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
 
-// Use the following mock instead if you're running React Native@0.64.0 or higher
+// Use this instead with React Native >= 0.64
 // jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 
 describe('Testing react navigation', () => {
