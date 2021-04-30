@@ -7677,9 +7677,9 @@ react-native-codegen@^0.0.6:
     nullthrows "^1.1.1"
 
 react-native@^0.64.0-rc.1:
-  version "0.64.0-rc.4"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.64.0-rc.4.tgz#e8d7c98e4659c7cf9214b1a3f67814d034e00414"
-  integrity sha512-lmEzO71jGHt/7gzp12JjmivKzzVGZa5KevDea54h8ZsCKZylfacOugrrN+2gFeuXesMh5Tqp11iqltk5ZkuvCg==
+  version "0.64.0"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.64.0.tgz#c3bde5b638bf8bcf12bae6e094930d39cb942ab7"
+  integrity sha512-8dhSHBthgGwAjU+OjqUEA49229ThPMQH7URH0u8L0xoQFCnZO2sZ9Wc6KcbxI0x9KSmjCMFFZqRe3w3QsRv64g==
   dependencies:
     "@jest/create-cache-key-function" "^26.5.0"
     "@react-native-community/cli" "^5.0.1-alpha.0"
