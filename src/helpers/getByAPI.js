@@ -29,7 +29,7 @@ const getNodeByText = (node, text, options?: TextMatchOptions = {}) => {
         const textToTest = textChildren.join('');
         const { exact, normalizer } = options;
         const normalizerFn = normalizer ?? getDefaultNormalizer();
-        return matches(textToTest, text, normalizerFn, exact);
+        return matches(text, textToTest, normalizerFn, exact);
       }
     }
     return false;
@@ -77,10 +77,9 @@ const getTextInputNodeByPlaceholderText = (
     const { TextInput } = require('react-native');
     const { exact, normalizer } = options;
     const normalizerFn = normalizer ?? getDefaultNormalizer();
-
     return (
       filterNodeByType(node, TextInput) &&
-      matches(node.props.placeholder, placeholder, normalizerFn, exact)
+      matches(placeholder, node.props.placeholder, normalizerFn, exact)
     );
   } catch (error) {
     throw createLibraryNotSupportedError(error);
@@ -97,10 +96,9 @@ const getTextInputNodeByDisplayValue = (
     const { TextInput } = require('react-native');
     const { exact, normalizer } = options;
     const normalizerFn = normalizer ?? getDefaultNormalizer();
-
     return (
       filterNodeByType(node, TextInput) &&
-      matches(node.props.value, value, normalizerFn, exact)
+      matches(value, node.props.value, normalizerFn, exact)
     );
   } catch (error) {
     throw createLibraryNotSupportedError(error);
@@ -111,7 +109,7 @@ const getNodeByTestId = (node, testID, options?: TextMatchOptions = {}) => {
   const { exact, normalizer } = options;
   const normalizerFn = normalizer ?? getDefaultNormalizer();
 
-  return matches(node.props.testID, testID, normalizerFn, exact);
+  return matches(testID, node.props.testID, normalizerFn, exact);
 };
 
 export const getByText = (instance: ReactTestInstance) =>

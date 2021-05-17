@@ -2,16 +2,16 @@
 export type NormalizerFn = (textToNormalize: string) => string;
 
 function matches(
-  textToMatch: string,
   matcher: string | RegExp,
+  text: string,
   normalizer: NormalizerFn,
   exact?: boolean = true
 ) {
-  if (typeof textToMatch !== 'string') {
+  if (typeof text !== 'string') {
     return false;
   }
 
-  const normalizedText = normalizer(textToMatch);
+  const normalizedText = normalizer(text);
   if (typeof matcher === 'string') {
     return exact
       ? normalizedText === matcher
