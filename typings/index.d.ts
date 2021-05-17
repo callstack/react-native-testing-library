@@ -14,20 +14,32 @@ type QueryAllReturn = Array<ReactTestInstance> | [];
 type FindReturn = Promise<ReactTestInstance>;
 type FindAllReturn = Promise<ReactTestInstance[]>;
 
-type TextMatch = string | RegExp
+type TextMatch = string | RegExp;
 
 interface GetByAPI {
   getByText: (text: TextMatch, options?: TextMatchOptions) => ReactTestInstance;
-  getByPlaceholderText: (placeholder: TextMatch, options?: TextMatchOptions) => ReactTestInstance;
-  getByDisplayValue: (value: TextMatch, options?: TextMatchOptions) => ReactTestInstance;
+  getByPlaceholderText: (
+    placeholder: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance;
+  getByDisplayValue: (
+    value: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance;
   getByTestId: (testID: TextMatch) => ReactTestInstance;
   getAllByTestId: (testID: TextMatch) => Array<ReactTestInstance>;
-  getAllByText: (text: TextMatch, options?: TextMatchOptions) => Array<ReactTestInstance>;
+  getAllByText: (
+    text: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance>;
   getAllByPlaceholderText: (
     placeholder: TextMatch,
-    options?: TextMatchOptions,
+    options?: TextMatchOptions
   ) => Array<ReactTestInstance>;
-  getAllByDisplayValue: (value: TextMatch, options?: TextMatchOptions) => Array<ReactTestInstance>;
+  getAllByDisplayValue: (
+    value: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance>;
 
   // Unsafe aliases
   UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
@@ -67,22 +79,31 @@ interface GetByAPI {
 }
 
 interface QueryByAPI {
-  queryByText: (name: TextMatch, options?: TextMatchOptions) => ReactTestInstance | null;
+  queryByText: (
+    name: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance | null;
   queryByPlaceholderText: (
     placeholder: TextMatch,
-    options?: TextMatchOptions,
+    options?: TextMatchOptions
   ) => ReactTestInstance | null;
-  queryByDisplayValue: (value: TextMatch, options?: TextMatchOptions) => ReactTestInstance | null;
+  queryByDisplayValue: (
+    value: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance | null;
   queryByTestId: (testID: TextMatch) => ReactTestInstance | null;
   queryAllByTestId: (testID: TextMatch) => Array<ReactTestInstance> | [];
-  queryAllByText: (text: TextMatch, options?: TextMatchOptions) => Array<ReactTestInstance> | [];
+  queryAllByText: (
+    text: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance> | [];
   queryAllByPlaceholderText: (
     placeholder: TextMatch,
-    options?: TextMatchOptions,
+    options?: TextMatchOptions
   ) => Array<ReactTestInstance> | [];
   queryAllByDisplayValue: (
     value: TextMatch,
-    options?: TextMatchOptions,
+    options?: TextMatchOptions
   ) => Array<ReactTestInstance> | [];
 
   // Unsafe aliases
@@ -134,33 +155,36 @@ interface FindByAPI {
   findByText: (
     text: TextMatch,
     waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions,
+    options?: TextMatchOptions
   ) => FindReturn;
   findByPlaceholderText: (
     placeholder: TextMatch,
     waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions,
+    options?: TextMatchOptions
   ) => FindReturn;
   findByDisplayValue: (
     value: TextMatch,
     waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions,
+    options?: TextMatchOptions
   ) => FindReturn;
-  findByTestId: (testID: TextMatch, waitForOptions?: WaitForOptions) => FindReturn;
+  findByTestId: (
+    testID: TextMatch,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
   findAllByText: (
     text: TextMatch,
     waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions,
+    options?: TextMatchOptions
   ) => FindAllReturn;
   findAllByPlaceholderText: (
     placeholder: TextMatch,
     waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions,
+    options?: TextMatchOptions
   ) => FindAllReturn;
   findAllByDisplayValue: (
     value: TextMatch,
     waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions,
+    options?: TextMatchOptions
   ) => FindAllReturn;
   findAllByTestId: (
     testID: TextMatch,
@@ -339,12 +363,12 @@ export declare const fireEvent: FireEventAPI;
 
 type NormalizerFn = (textToNormalize: string) => string;
 type NormalizerConfig = {
-  trim?: boolean,
-  collapseWhitespace?: boolean,
+  trim?: boolean;
+  collapseWhitespace?: boolean;
 };
 type TextMatchOptions = {
-  exact?: boolean,
-  normalizer?: NormalizerFn,
+  exact?: boolean;
+  normalizer?: NormalizerFn;
 };
 
 type WaitForOptions = {
@@ -372,7 +396,9 @@ export declare const getQueriesForElement: (
   instance: ReactTestInstance
 ) => Queries;
 
-export declare const getDefaultNormalizer: (normalizerConfig: NormalizerConfig) => NormalizerFn;
+export declare const getDefaultNormalizer: (
+  normalizerConfig?: NormalizerConfig
+) => NormalizerFn;
 
 /**
  * @deprecated This function has been removed. Please use `waitFor` function.
