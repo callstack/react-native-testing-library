@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Button } from 'react-native';
+import { View, Text, TextInput, Button } from 'react-native';
 import { render } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
@@ -8,71 +8,26 @@ const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 
-class MyButton extends React.Component<any> {
-  render() {
-    return (
-      <TouchableOpacity onPress={this.props.onPress}>
-        <Text>{this.props.children}</Text>
-      </TouchableOpacity>
-    );
-  }
-}
+const Banana = () => (
+  <View>
+    <Text>Is the banana fresh?</Text>
+    <Text testID="bananaFresh">not fresh</Text>
+    <TextInput
+      testID="bananaCustomFreshness"
+      placeholder={PLACEHOLDER_FRESHNESS}
+      value={INPUT_FRESHNESS}
+    />
+    <TextInput
+      testID="bananaChef"
+      placeholder={PLACEHOLDER_CHEF}
+      value={INPUT_CHEF}
+    />
+    <Text testID="duplicateText">First Text</Text>
+    <Text testID="duplicateText">Second Text</Text>
+  </View>
+);
 
-class Banana extends React.Component<any, any> {
-  state = {
-    fresh: false,
-  };
-
-  componentDidUpdate() {
-    if (this.props.onUpdate) {
-      this.props.onUpdate();
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.props.onUnmount) {
-      this.props.onUnmount();
-    }
-  }
-
-  changeFresh = () => {
-    this.setState((state) => ({
-      fresh: !state.fresh,
-    }));
-  };
-
-  render() {
-    const test = 0;
-    return (
-      <View>
-        <Text>Is the banana fresh?</Text>
-        <Text testID="bananaFresh">
-          {this.state.fresh ? 'fresh' : 'not fresh'}
-        </Text>
-        <TextInput
-          testID="bananaCustomFreshness"
-          placeholder={PLACEHOLDER_FRESHNESS}
-          value={INPUT_FRESHNESS}
-        />
-        <TextInput
-          testID="bananaChef"
-          placeholder={PLACEHOLDER_CHEF}
-          value={INPUT_CHEF}
-        />
-        <MyButton onPress={this.changeFresh} type="primary">
-          Change freshness!
-        </MyButton>
-        <Text testID="duplicateText">First Text</Text>
-        <Text testID="duplicateText">Second Text</Text>
-        <Text>{test}</Text>
-      </View>
-    );
-  }
-}
-
-const MyComponent = () => {
-  return <Text>My Component</Text>;
-};
+const MyComponent = () => <Text>My Component</Text>;
 
 test('getByTestId returns only native elements', () => {
   const { getByTestId, getAllByTestId } = render(
