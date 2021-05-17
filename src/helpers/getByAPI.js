@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
-import { makeNormalizer, matches } from '../matches';
+import { getDefaultNormalizer, matches } from '../matches';
 import type { NormalizerFn } from '../matches';
 import {
   ErrorWithStack,
@@ -28,9 +28,7 @@ const getNodeByText = (node, text, options?: TextMatchOptions = {}) => {
       if (textChildren) {
         const textToTest = textChildren.join('');
         const { exact, normalizer } = options;
-        const normalizerFn = makeNormalizer({
-          normalizer,
-        });
+        const normalizerFn = normalizer ?? getDefaultNormalizer();
         return matches(textToTest, text, normalizerFn, exact);
       }
     }
@@ -78,9 +76,8 @@ const getTextInputNodeByPlaceholderText = (
     // eslint-disable-next-line
     const { TextInput } = require('react-native');
     const { exact, normalizer } = options;
-    const normalizerFn = makeNormalizer({
-      normalizer,
-    });
+    const normalizerFn = normalizer ?? getDefaultNormalizer();
+
     return (
       filterNodeByType(node, TextInput) &&
       matches(node.props.placeholder, placeholder, normalizerFn, exact)
@@ -99,9 +96,8 @@ const getTextInputNodeByDisplayValue = (
     // eslint-disable-next-line
     const { TextInput } = require('react-native');
     const { exact, normalizer } = options;
-    const normalizerFn = makeNormalizer({
-      normalizer,
-    });
+    const normalizerFn = normalizer ?? getDefaultNormalizer();
+
     return (
       filterNodeByType(node, TextInput) &&
       matches(node.props.value, value, normalizerFn, exact)
@@ -113,9 +109,8 @@ const getTextInputNodeByDisplayValue = (
 
 const getNodeByTestId = (node, testID, options?: TextMatchOptions = {}) => {
   const { exact, normalizer } = options;
-  const normalizerFn = makeNormalizer({
-    normalizer,
-  });
+  const normalizerFn = normalizer ?? getDefaultNormalizer();
+
   return matches(node.props.testID, testID, normalizerFn, exact);
 };
 

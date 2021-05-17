@@ -44,8 +44,4 @@ type NormalizerInput = {
   normalizer?: NormalizerFn,
 };
 
-function makeNormalizer({ normalizer }: NormalizerInput = {}): NormalizerFn {
-  return normalizer ? normalizer : getDefaultNormalizer();
-}
-
-export { matches, getDefaultNormalizer, makeNormalizer };
+export { matches, getDefaultNormalizer };
