@@ -29,10 +29,10 @@ test('getByTestId returns only native elements', () => {
   expect(getAllByTestId('button')).toHaveLength(1);
 
   expect(() => getByTestId('myComponent')).toThrowError(
-    'No instances found with testID: myComponent'
+    'Unable to find an element with testID: myComponent'
   );
   expect(() => getAllByTestId('myComponent')).toThrowError(
-    'No instances found with testID: myComponent'
+    'Unable to find an element with testID: myComponent'
   );
 });
 
@@ -125,8 +125,8 @@ describe('Supports normalization', () => {
     const { getByText } = render(
       <View>
         <Text>{`  Text     and
-        
-        
+
+
         whitespace`}</Text>
       </View>
     );
@@ -136,8 +136,8 @@ describe('Supports normalization', () => {
 
   test('trim and collapseWhitespace is customizable by getDefaultNormalizer param', () => {
     const testTextWithWhitespace = `  Text     and
-        
-        
+
+
         whitespace`;
     const { getByText } = render(
       <View>

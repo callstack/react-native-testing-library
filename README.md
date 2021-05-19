@@ -50,7 +50,7 @@ This library has a peerDependencies listing for `react-test-renderer` and, of co
 
 ### Additional Jest matchers
 
-In order to use addtional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
+In order to use additional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
 
 #### Using `yarn`
 
@@ -64,7 +64,7 @@ yarn add --dev @testing-library/jest-native
 npm install --save-dev @testing-library/jest-native
 ```
 
-Then automatically add it to your jest tests by using `setupFilesAfterEnv` option in your Jest configuration (it's usually located either in `package.json` under `"jest"` key or in a `jest.config.js` file):
+Then automatically add it to your jest tests by using `setupFilesAfterEnv` option in your Jest configuration (it's usually located either in `package.json` under `"jest"` key or in a `jest.config.json` file):
 
 ```json
 {
@@ -72,6 +72,24 @@ Then automatically add it to your jest tests by using `setupFilesAfterEnv` optio
   "setupFilesAfterEnv": ["@testing-library/jest-native/extend-expect"]
 }
 ```
+
+### Custom Jest Preset
+
+> **important** if you use "modern" Fake Timers
+
+We generally advise to use the "react-native" preset when testing with this library. However, if you use ["modern" Fake Timers](https://jestjs.io/blog/2020/05/05/jest-26#new-fake-timers) (default since Jest 27), you'll need to apply our custom Jest preset or awaiting promises, like `waitFor`, will timeout.
+
+This is a [known issue](https://github.com/facebook/react-native/issues/29303). It happens because React Native's Jest preset overrides native Promise. Our preset restores it to defaults, which is not a problem in most apps out there.
+
+Here's how you apply a custom preset in your Jest config:
+
+```json
+{
+  "preset": "@testing-library/react-native"
+}
+```
+
+If this doesn't work for you, please fall back to using "legacy" fake timers.
 
 ### Flow
 

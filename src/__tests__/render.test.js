@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,8 @@ const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
+const DEFAULT_INPUT_CHEF = 'What did you inspect?';
+const DEFAULT_INPUT_CUSTOMER = 'What banana?';
 
 class MyButton extends React.Component<any> {
   render() {
@@ -67,7 +69,10 @@ class Banana extends React.Component<any, any> {
           testID="bananaChef"
           placeholder={PLACEHOLDER_CHEF}
           value={INPUT_CHEF}
+          defaultValue={DEFAULT_INPUT_CHEF}
         />
+        <TextInput defaultValue={DEFAULT_INPUT_CUSTOMER} />
+        <TextInput defaultValue={'hello'} value="" />
         <MyButton onPress={this.changeFresh} type="primary">
           Change freshness!
         </MyButton>
@@ -78,36 +83,6 @@ class Banana extends React.Component<any, any> {
     );
   }
 }
-
-test('getByTestId, queryByTestId', () => {
-  const { getByTestId, queryByTestId } = render(<Banana />);
-  const component = getByTestId('bananaFresh');
-
-  expect(component.props.children).toBe('not fresh');
-  expect(() => getByTestId('InExistent')).toThrow('No instances found');
-
-  expect(getByTestId('bananaFresh')).toBe(component);
-  expect(queryByTestId('InExistent')).toBeNull();
-});
-
-test('getAllByTestId, queryAllByTestId', () => {
-  const { getAllByTestId, queryAllByTestId } = render(<Banana />);
-  const textElements = getAllByTestId('duplicateText');
-
-  expect(textElements.length).toBe(2);
-  expect(textElements[0].props.children).toBe('First Text');
-  expect(textElements[1].props.children).toBe('Second Text');
-  expect(() => getAllByTestId('nonExistentTestId')).toThrow(
-    'No instances found'
-  );
-
-  const queriedTextElements = queryAllByTestId('duplicateText');
-
-  expect(queriedTextElements.length).toBe(2);
-  expect(queriedTextElements[0]).toBe(textElements[0]);
-  expect(queriedTextElements[1]).toBe(textElements[1]);
-  expect(queryAllByTestId('nonExistentTestId')).toHaveLength(0);
-});
 
 test('UNSAFE_getAllByType, UNSAFE_queryAllByType', () => {
   const { UNSAFE_getAllByType, UNSAFE_queryAllByType } = render(<Banana />);
@@ -121,121 +96,6 @@ test('UNSAFE_getAllByType, UNSAFE_queryAllByType', () => {
 
   expect(UNSAFE_queryAllByType(Text)[1]).toBe(status);
   expect(UNSAFE_queryAllByType(InExistent)).toHaveLength(0);
-});
-
-test('getByText, queryByText', () => {
-  const { getByText, queryByText } = render(<Banana />);
-  const button = getByText(/change/i);
-
-  expect(button.props.children).toBe('Change freshness!');
-
-  const sameButton = getByText('not fresh');
-
-  expect(sameButton.props.children).toBe('not fresh');
-  expect(() => getByText('InExistent')).toThrow('No instances found');
-
-  const zeroText = getByText('0');
-
-  expect(queryByText(/change/i)).toBe(button);
-  expect(queryByText('InExistent')).toBeNull();
-  expect(() => queryByText(/fresh/)).toThrow('Expected 1 but found 3');
-  expect(queryByText('0')).toBe(zeroText);
-});
-
-test('getByText, queryByText with children as Array', () => {
-  const BananaCounter = ({ numBananas }) => (
-    <Text>There are {numBananas} bananas in the bunch</Text>
-  );
-
-  const BananaStore = () => (
-    <View>
-      <BananaCounter numBananas={3} />
-      <BananaCounter numBananas={6} />
-      <BananaCounter numBananas={5} />
-    </View>
-  );
-
-  const { getByText } = render(<BananaStore />);
-
-  const threeBananaBunch = getByText('There are 3 bananas in the bunch');
-  expect(threeBananaBunch.props.children).toEqual([
-    'There are ',
-    3,
-    ' bananas in the bunch',
-  ]);
-});
-
-test('getAllByText, queryAllByText', () => {
-  const { getAllByText, queryAllByText } = render(<Banana />);
-  const buttons = getAllByText(/fresh/i);
-
-  expect(buttons).toHaveLength(3);
-  expect(() => getAllByText('InExistent')).toThrow('No instances found');
-
-  expect(queryAllByText(/fresh/i)).toEqual(buttons);
-  expect(queryAllByText('InExistent')).toHaveLength(0);
-});
-
-test('getByPlaceholderText, queryByPlaceholderText', () => {
-  const { getByPlaceholderText, queryByPlaceholderText } = render(<Banana />);
-  const input = getByPlaceholderText(/custom/i);
-
-  expect(input.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
-
-  const sameInput = getByPlaceholderText(PLACEHOLDER_FRESHNESS);
-
-  expect(sameInput.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
-  expect(() => getByPlaceholderText('no placeholder')).toThrow(
-    'No instances found'
-  );
-
-  expect(queryByPlaceholderText(/add/i)).toBe(input);
-  expect(queryByPlaceholderText('no placeholder')).toBeNull();
-  expect(() => queryByPlaceholderText(/fresh/)).toThrow(
-    'Expected 1 but found 2'
-  );
-});
-
-test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
-  const { getAllByPlaceholderText, queryAllByPlaceholderText } = render(
-    <Banana />
-  );
-  const inputs = getAllByPlaceholderText(/fresh/i);
-
-  expect(inputs).toHaveLength(2);
-  expect(() => getAllByPlaceholderText('no placeholder')).toThrow(
-    'No instances found'
-  );
-
-  expect(queryAllByPlaceholderText(/fresh/i)).toEqual(inputs);
-  expect(queryAllByPlaceholderText('no placeholder')).toHaveLength(0);
-});
-
-test('getByDisplayValue, queryByDisplayValue', () => {
-  const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
-  const input = getByDisplayValue(/custom/i);
-
-  expect(input.props.value).toBe(INPUT_FRESHNESS);
-
-  const sameInput = getByDisplayValue(INPUT_FRESHNESS);
-
-  expect(sameInput.props.value).toBe(INPUT_FRESHNESS);
-  expect(() => getByDisplayValue('no value')).toThrow('No instances found');
-
-  expect(queryByDisplayValue(/custom/i)).toBe(input);
-  expect(queryByDisplayValue('no value')).toBeNull();
-  expect(() => queryByDisplayValue(/fresh/i)).toThrow('Expected 1 but found 2');
-});
-
-test('getAllByDisplayValue, queryAllByDisplayValue', () => {
-  const { getAllByDisplayValue, queryAllByDisplayValue } = render(<Banana />);
-  const inputs = getAllByDisplayValue(/fresh/i);
-
-  expect(inputs).toHaveLength(2);
-  expect(() => getAllByDisplayValue('no value')).toThrow('No instances found');
-
-  expect(queryAllByDisplayValue(/fresh/i)).toEqual(inputs);
-  expect(queryAllByDisplayValue('no value')).toHaveLength(0);
 });
 
 test('UNSAFE_getByProps, UNSAFE_queryByProps', () => {
@@ -281,6 +141,20 @@ test('unmount', () => {
   const { unmount } = render(<Banana onUnmount={fn} />);
   unmount();
   expect(fn).toHaveBeenCalled();
+});
+
+test('unmount should handle cleanup functions', () => {
+  const cleanup = jest.fn();
+  const Component = () => {
+    React.useEffect(() => cleanup);
+    return null;
+  };
+
+  const { unmount } = render(<Component />);
+
+  unmount();
+
+  expect(cleanup).toHaveBeenCalledTimes(1);
 });
 
 test('toJSON', () => {
@@ -377,4 +251,30 @@ test('renders options.wrapper around updated node', () => {
       />
     </RCTSafeAreaView>
   `);
+});
+
+test('returns container', () => {
+  const { container } = render(<View testID="inner" />);
+
+  expect(container).toBeDefined();
+  // `View` composite component is returned. This behavior will break if we
+  // start returning only host components.
+  expect(container.type).toBe(View);
+  expect(container.props.testID).toBe('inner');
+});
+
+test('returns wrapped component as container', () => {
+  const WrapperComponent = ({ children }) => (
+    <SafeAreaView testID="wrapper">{children}</SafeAreaView>
+  );
+
+  const { container } = render(<View testID="inner" />, {
+    wrapper: WrapperComponent,
+  });
+
+  expect(container).toBeDefined();
+  // `WrapperComponent` composite component is returned with no testID passed to
+  // it. This behavior will break if we start returning only host components.
+  expect(container.type).toBe(WrapperComponent);
+  expect(container.props.testID).not.toBeDefined();
 });

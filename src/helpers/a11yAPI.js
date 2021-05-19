@@ -1,16 +1,16 @@
 // @flow
 import type { A11yRole, A11yStates, A11yState, A11yValue } from '../types.flow';
 import type { WaitForOptions } from '../waitFor';
-import makeQuery from './makeQuery';
+import makeA11yQuery from './makeA11yQuery';
 
 type GetReturn = ReactTestInstance;
 type GetAllReturn = Array<ReactTestInstance>;
 type QueryReturn = ReactTestInstance | null;
-type QueryAllReturn = Array<ReactTestInstance> | [];
+type QueryAllReturn = Array<ReactTestInstance>;
 type FindReturn = Promise<GetReturn>;
 type FindAllReturn = Promise<GetAllReturn>;
 
-type A11yAPI = {|
+export type A11yAPI = {|
   // Label
   getByA11yLabel: (string | RegExp) => GetReturn,
   getByLabelText: (string | RegExp) => GetReturn,
@@ -116,9 +116,9 @@ export function matchObject<T: {}>(prop?: T, matcher: T): boolean {
     : false;
 }
 
-const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
+export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
   ({
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityLabel',
       {
         getBy: ['getByA11yLabel', 'getByAccessibilityLabel', 'getByLabelText'],
@@ -150,7 +150,7 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       },
       matchStringValue
     )(instance),
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityHint',
       {
         getBy: ['getByA11yHint', 'getByAccessibilityHint', 'getByHintText'],
@@ -178,7 +178,7 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       },
       matchStringValue
     )(instance),
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityRole',
       {
         getBy: ['getByA11yRole', 'getByAccessibilityRole', 'getByRole'],
@@ -202,7 +202,7 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       },
       matchStringValue
     )(instance),
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityStates',
       {
         getBy: ['getByA11yStates', 'getByAccessibilityStates'],
@@ -214,7 +214,7 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       },
       matchArrayValue
     )(instance),
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityState',
       {
         getBy: ['getByA11yState', 'getByAccessibilityState'],
@@ -226,7 +226,7 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       },
       matchObject
     )(instance),
-    ...makeQuery(
+    ...makeA11yQuery(
       'accessibilityValue',
       {
         getBy: ['getByA11yValue', 'getByAccessibilityValue'],
@@ -239,5 +239,3 @@ const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       matchObject
     )(instance),
   }: any);
-
-export default a11yAPI;

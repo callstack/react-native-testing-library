@@ -1,8 +1,9 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import {
   View,
   TouchableOpacity,
+  PanResponder,
   Pressable,
   Text,
   ScrollView,
@@ -61,14 +62,14 @@ describe('fireEvent', () => {
     expect(onPressMock).toHaveBeenCalled();
   });
 
-  test('should throw an Error when event handler was not found', () => {
+  test('should not fire if the press handler is not passed to children', () => {
+    const onPressMock = jest.fn();
     const { getByText } = render(
-      <WithoutEventComponent onPress={() => 'this is not passed to children'} />
+      // TODO: this functionality is buggy, i.e. it will fail if we wrap this component with a View.
+      <WithoutEventComponent onPress={onPressMock} />
     );
-
-    expect(() => fireEvent(getByText('Without event'), 'press')).toThrow(
-      'No handler function found for event: "press"'
-    );
+    fireEvent(getByText('Without event'), 'press');
+    expect(onPressMock).not.toHaveBeenCalled();
   });
 
   test('should invoke event with custom name', () => {
@@ -233,6 +234,83 @@ test('should not fire on non-editable TextInput with nested Text', () => {
   expect(onChangeTextMock).not.toHaveBeenCalled();
 });
 
+test('should not fire on none pointerEvents View', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="none">
+      <Pressable onPress={handlePress}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).not.toHaveBeenCalled();
+});
+
+test('should not fire on box-only pointerEvents View', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="box-only">
+      <Pressable onPress={handlePress}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).not.toHaveBeenCalled();
+});
+
+test('should fire on box-none pointerEvents View', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="box-none">
+      <Pressable onPress={handlePress}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).toHaveBeenCalled();
+});
+
+test('should fire on auto pointerEvents View', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="auto">
+      <Pressable onPress={handlePress}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).toHaveBeenCalled();
+});
+
+test('should not fire on box-only pointerEvents View with nested elements', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="box-only">
+      <View>
+        <Pressable onPress={handlePress}>
+          <Text>Trigger</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).not.toHaveBeenCalled();
+});
+
 test('should pass event up on disabled TouchableOpacity', () => {
   const handleInnerPress = jest.fn();
   const handleOuterPress = jest.fn();
@@ -281,4 +359,51 @@ test('is not fooled by non-native disabled prop', () => {
 
   fireEvent.press(screen.getByText('Trigger Test'));
   expect(handlePress).toHaveBeenCalledTimes(1);
+});
+
+function TestChildTouchableComponent({ onPress, someProp }) {
+  return (
+    <View>
+      <TouchableOpacity onPress={onPress} disabled={someProp}>
+        <Text>Trigger</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+test('is not fooled by non-responder wrapping host elements', () => {
+  const handlePress = jest.fn();
+
+  const screen = render(
+    <View>
+      <TestChildTouchableComponent onPress={handlePress} someProp={true} />
+    </View>
+  );
+
+  fireEvent.press(screen.getByText('Trigger'));
+  expect(handlePress).not.toHaveBeenCalled();
+});
+
+function TestDraggableComponent({ onDrag }) {
+  const responderHandlers = PanResponder.create({
+    onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
+    onPanResponderMove: onDrag,
+  }).panHandlers;
+
+  return (
+    <View {...responderHandlers}>
+      <Text>Trigger</Text>
+    </View>
+  );
+}
+
+test('has only onMove', () => {
+  const handleDrag = jest.fn();
+
+  const screen = render(<TestDraggableComponent onDrag={handleDrag} />);
+
+  fireEvent(screen.getByText('Trigger'), 'responderMove', {
+    touchHistory: { mostRecentTimeStamp: '2', touchBank: [] },
+  });
+  expect(handleDrag).toHaveBeenCalled();
 });

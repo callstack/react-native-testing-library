@@ -3,10 +3,10 @@ import * as React from 'react';
 import TestRenderer, { type ReactTestRenderer } from 'react-test-renderer'; // eslint-disable-line import/no-extraneous-dependencies
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
-import { getByAPI } from './helpers/getByAPI';
-import { queryByAPI } from './helpers/queryByAPI';
-import { findByAPI } from './helpers/findByAPI';
-import a11yAPI from './helpers/a11yAPI';
+import { getByAPI, type GetByAPI } from './helpers/getByAPI';
+import { queryByAPI, type QueryByAPI } from './helpers/queryByAPI';
+import { findByAPI, type FindByAPI } from './helpers/findByAPI';
+import { a11yAPI, type A11yAPI } from './helpers/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 
@@ -25,7 +25,18 @@ type TestRendererOptions = {
 export default function render<T>(
   component: React.Element<T>,
   { wrapper: Wrapper, createNodeMock }: Options = {}
-) {
+): {
+  ...FindByAPI,
+  ...QueryByAPI,
+  ...GetByAPI,
+  ...A11yAPI,
+  update: (component: React.Element<any>) => void,
+  container: ReactTestInstance,
+  rerender: (component: React.Element<any>) => void,
+  unmount: (nextElement?: React.Element<any>) => void,
+  toJSON: () => null | ReactTestRendererJSON,
+  debug: DebugFunction,
+} {
   const wrap = (innerElement: React.Element<any>) =>
     Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement;
 
@@ -35,8 +46,13 @@ export default function render<T>(
   );
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
+  const unmount = () => {
+    act(() => {
+      renderer.unmount();
+    });
+  };
 
-  addToCleanupQueue(renderer.unmount);
+  addToCleanupQueue(unmount);
 
   return {
     ...getByAPI(instance),
@@ -44,8 +60,9 @@ export default function render<T>(
     ...findByAPI(instance),
     ...a11yAPI(instance),
     update,
+    unmount,
+    container: instance,
     rerender: update, // alias for `update`
-    unmount: renderer.unmount,
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
   };
@@ -75,7 +92,15 @@ function updateWithAct(
   };
 }
 
-function debug(instance: ReactTestInstance, renderer) {
+interface DebugFunction {
+  (message?: string): void;
+  shallow: (message?: string) => void;
+}
+
+function debug(
+  instance: ReactTestInstance,
+  renderer: ReactTestRenderer
+): DebugFunction {
   function debugImpl(message?: string) {
     return debugDeep(renderer.toJSON(), message);
   }

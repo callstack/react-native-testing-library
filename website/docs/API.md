@@ -118,6 +118,14 @@ toJSON(): ReactTestRendererJSON | null
 
 Get the rendered component JSON representation, e.g. for snapshot testing.
 
+### `container`
+
+```ts
+container: ReactTestInstance;
+```
+
+A reference to the rendered root element.
+
 ## `cleanup`
 
 ```ts
@@ -325,6 +333,10 @@ fireEvent.scroll(getByTestId('flat-list'), eventData);
 expect(onEndReached).toHaveBeenCalled();
 ```
 
+:::note
+If you're noticing that components are not being found on a list, even after mocking a scroll event, try changing the [`initialNumToRender`](https://reactnative.dev/docs/flatlist#initialnumtorender) that you have set. If you aren't comfortable changing the code to accept this prop from the unit test, try using an e2e test that might better suit what use case you're attempting to replicate.
+:::
+
 ## `waitFor`
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitFor.test.js)
@@ -353,8 +365,6 @@ test('waiting for an Banana to be ready', async () => {
 :::info
 In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
 :::
-
-If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to await the return of `waitFor` as it will stall your tests.
 
 ## `waitForElementToBeRemoved`
 
@@ -391,8 +401,6 @@ You can use any of `getBy`, `getAllBy`, `queryBy` and `queryAllBy` queries for `
 :::info
 In order to properly use `waitForElementToBeRemoved` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
 :::
-
-If you're using Jest's [Timer Mocks](https://jestjs.io/docs/en/timer-mocks#docsNav), remember not to use `async/await` syntax as it will stall your tests.
 
 ## `within`, `getQueriesForElement`
 

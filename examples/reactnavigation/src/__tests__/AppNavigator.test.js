@@ -1,11 +1,8 @@
-import React from 'react';
+import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { render, fireEvent } from '@testing-library/react-native';
 
 import AppNavigator from '../AppNavigator';
-
-// Silence the warning https://github.com/facebook/react-native/issues/11094#issuecomment-263240420
-jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
 
 describe('Testing react navigation', () => {
   test('page contains the header and 10 items', async () => {

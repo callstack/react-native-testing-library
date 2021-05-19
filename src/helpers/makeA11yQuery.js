@@ -26,18 +26,23 @@ type QueryNames = {
   findAllBy: Array<string>,
 };
 
-const makeQuery = <P: mixed, M: mixed>(
+const makeA11yQuery = <P: mixed, M: mixed>(
   name: string,
   queryNames: QueryNames,
   matcherFn: (prop: P, value: M) => boolean
-) => (instance: ReactTestInstance) => {
+): ((instance: ReactTestInstance) => { ... }) => (
+  instance: ReactTestInstance
+) => {
   const getBy = (matcher: M) => {
     try {
       return instance.find(
         (node) => isNodeValid(node) && matcherFn(node.props[name], matcher)
       );
     } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getBy);
+      throw new ErrorWithStack(
+        prepareErrorMessage(error, name, matcher),
+        getBy
+      );
     }
   };
 
@@ -47,7 +52,10 @@ const makeQuery = <P: mixed, M: mixed>(
     );
 
     if (results.length === 0) {
-      throw new ErrorWithStack('No instances found', getAllBy);
+      throw new ErrorWithStack(
+        prepareErrorMessage(new Error('No instances found'), name, matcher),
+        getAllBy
+      );
     }
 
     return results;
@@ -87,4 +95,4 @@ const makeQuery = <P: mixed, M: mixed>(
   };
 };
 
-export default makeQuery;
+export default makeA11yQuery;

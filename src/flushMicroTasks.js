@@ -1,5 +1,6 @@
 // @flow
 import { printDeprecationWarning } from './helpers/errors';
+import { setImmediate } from './helpers/timers';
 
 type Thenable<T> = { then: (() => T) => mixed };
 

@@ -6,7 +6,7 @@ function matches(
   text: string,
   normalizer: NormalizerFn,
   exact?: boolean = true
-) {
+): boolean {
   if (typeof text !== 'string') {
     return false;
   }
@@ -39,9 +39,5 @@ function getDefaultNormalizer({
     return normalizedText;
   };
 }
-
-type NormalizerInput = {
-  normalizer?: NormalizerFn,
-};
 
 export { matches, getDefaultNormalizer };
