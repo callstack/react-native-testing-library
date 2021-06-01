@@ -38,7 +38,7 @@
     "@types/react": "^17.0.0",
     "@types/react-native": "^0.64.4",
     "@types/react-test-renderer": "^17.0.0",
-    "babel-jest": "^26.0.1",
+    "babel-jest": "^27.0.2",
     "conventional-changelog-cli": "^2.0.11",
     "dedent": "^0.7.0",
     "eslint": "^7.0.0",
