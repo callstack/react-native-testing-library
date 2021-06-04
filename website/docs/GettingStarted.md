@@ -64,6 +64,28 @@ Then automatically add it to your jest tests by using `setupFilesAfterEnv` optio
 }
 ```
 
+### Expo with TypeScript
+
+Note for [TypeScript](https://www.typescriptlang.org/) with [Expo](https://docs.expo.io/guides/testing-with-jest/)  users  – you'll also need to add [moduleFileExtensions option](https://forums.expo.io/t/tdd-typescript-testing-testing-library-react-native/42700) in your Jest configuration, for example:
+
+```json
+"jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|sentry-expo|@sentry/.*|native-base)"
+    ],
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-native/extend-expect"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx"
+    ]
+  },
+```
+
 ### Flow
 
 Note for [Flow](https://flow.org) users – you'll also need to install typings for `react-test-renderer`:
