@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 0;
+  padding: 2rem var(--ifm-spacing-horizontal);
 }
 
 .logo {
@@ -44,6 +44,7 @@
   width: 100%;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   padding: 5rem 1rem;
@@ -54,6 +55,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  flex: 1;
   padding: 0 1rem;
 }
 
