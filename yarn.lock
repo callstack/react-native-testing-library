@@ -4344,10 +4344,10 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.1.0.tgz#a5d06b4a8b01e3a63771daa5cb7a1903e2e57067"
   integrity sha512-tW+UkmtNg/jv9CSofAKvgVcO7c2URjhTdW1ZTkcAritblu8tajiYy7YisnIflEwtKssCtOxpnBRoCB7iap0/TA==
 
-flow-bin@^0.141.0:
-  version "0.141.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.141.0.tgz#f9e33ad29392824823c97b6db7de5ab972c7f872"
-  integrity sha512-NxaECTjIWfs2Y91GuA1PlgPd5uCulZcqR9wiXRg6n7/AbmvVetM2ewoGxCKxJm7wIml3f0/5KXIZvZa/3msqXg==
+flow-bin@^0.154.0:
+  version "0.154.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.154.0.tgz#e086964398e671daa8f56ed8663d7876337f77e5"
+  integrity sha512-I6u2ETdkAyard+8C5na6bfZp4EM0zIMB7O5zH4GKzBLv9/y8/NYRTxEXQe5T0hvj9R9DxFBUoPsFK76ziweUFw==
 
 flow-copy-source@^2.0.9:
   version "2.0.9"
