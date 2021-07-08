@@ -11,9 +11,22 @@ import {
 } from 'react-native';
 import { render, fireEvent } from '..';
 
-const OnPressComponent = ({ onPress, text }) => (
+const OnPressComponent = ({
+  onPress,
+  onLongPress,
+  onPressIn,
+  onPressOut,
+  onFocus,
+  text,
+}) => (
   <View>
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity
+      onPress={onPress}
+      onLongPress={onLongPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      onFocus={onFocus}
+    >
       <Text>{text}</Text>
     </TouchableOpacity>
   </View>
@@ -98,6 +111,86 @@ test('fireEvent.press', () => {
   fireEvent.press(getByText(text));
 
   expect(onPressMock).toHaveBeenCalled();
+});
+
+test('fireEvent.press all events', () => {
+  const callOrder = [];
+  const onPressInMock = jest.fn(() => callOrder.push('onPressIn'));
+  const onPressOutMock = jest.fn(() => callOrder.push('onPressOut'));
+  const onPressMock = jest.fn(() => callOrder.push('onPress'));
+  const onFocusMock = jest.fn(() => callOrder.push('onFocus'));
+  const onLongPressMock = jest.fn();
+  const text = 'Fireevent press';
+  const { getByText } = render(
+    <OnPressComponent
+      onPress={onPressMock}
+      onLongPress={onLongPressMock}
+      onPressIn={onPressInMock}
+      onPressOut={onPressOutMock}
+      onFocus={onFocusMock}
+      text={text}
+    />
+  );
+
+  fireEvent.press(getByText(text));
+
+  expect(onLongPressMock).not.toHaveBeenCalled();
+  expect(onPressInMock).toHaveBeenCalled();
+  expect(onPressOutMock).toHaveBeenCalled();
+  expect(onPressMock).toHaveBeenCalled();
+  expect(onFocusMock).toHaveBeenCalled();
+  expect(callOrder).toStrictEqual([
+    'onPressIn',
+    'onPressOut',
+    'onPress',
+    'onFocus',
+  ]);
+});
+
+test('fireEvent.longPress', () => {
+  const onLongPressMock = jest.fn();
+  const text = 'Fireevent longpress';
+  const { getByText } = render(
+    <OnPressComponent onLongPress={onLongPressMock} text={text} />
+  );
+
+  fireEvent.longPress(getByText(text));
+
+  expect(onLongPressMock).toHaveBeenCalled();
+});
+
+test('fireEvent.longPress all events', () => {
+  const callOrder = [];
+  const onPressInMock = jest.fn(() => callOrder.push('onPressIn'));
+  const onLongPressMock = jest.fn(() => callOrder.push('onLongPress'));
+  const onPressOutMock = jest.fn(() => callOrder.push('onPressOut'));
+  const onPressMock = jest.fn();
+  const onFocusMock = jest.fn(() => callOrder.push('onFocus'));
+  const text = 'Fireevent longpress';
+  const { getByText } = render(
+    <OnPressComponent
+      onPress={onPressMock}
+      onLongPress={onLongPressMock}
+      onPressIn={onPressInMock}
+      onPressOut={onPressOutMock}
+      onFocus={onFocusMock}
+      text={text}
+    />
+  );
+
+  fireEvent.longPress(getByText(text));
+
+  expect(onPressInMock).toHaveBeenCalled();
+  expect(onLongPressMock).toHaveBeenCalled();
+  expect(onPressOutMock).toHaveBeenCalled();
+  expect(onPressMock).not.toHaveBeenCalled();
+  expect(onFocusMock).toHaveBeenCalled();
+  expect(callOrder).toStrictEqual([
+    'onPressIn',
+    'onLongPress',
+    'onPressOut',
+    'onFocus',
+  ]);
 });
 
 test('fireEvent.scroll', () => {

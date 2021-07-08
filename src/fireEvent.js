@@ -5,6 +5,10 @@ const isHostElement = (element?: ReactTestInstance) => {
   return typeof element?.type === 'string';
 };
 
+const isFocused = (element?: ReactTestInstance) => {
+  return element?._component?.isFocused?.();
+};
+
 const isTextInput = (element?: ReactTestInstance) => {
   const { TextInput } = require('react-native');
   return element?.type === TextInput;
@@ -105,8 +109,27 @@ const invokeEvent = (
 const toEventHandlerName = (eventName: string) =>
   `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 
-const pressHandler = (element: ReactTestInstance): void =>
-  invokeEvent(element, 'press', pressHandler);
+const pressHandler = (
+  element: ReactTestInstance,
+  isLongPress: boolean
+): void => {
+  invokeEvent(element, 'pressIn', pressHandler);
+  if (isLongPress) {
+    invokeEvent(element, 'longPress', pressHandler);
+    invokeEvent(element, 'pressOut', pressHandler);
+  } else {
+    invokeEvent(element, 'pressOut', pressHandler);
+    invokeEvent(element, 'press', pressHandler);
+  }
+
+  if (!isFocused(element)) {
+    invokeEvent(element, 'focus', pressHandler);
+  }
+};
+
+const longPressHandler = (element: ReactTestInstance): void =>
+  pressHandler(element, true);
+
 const changeTextHandler = (
   element: ReactTestInstance,
   ...data: Array<any>
@@ -121,6 +144,7 @@ const fireEvent = (
 ): void => invokeEvent(element, eventName, fireEvent, ...data);
 
 fireEvent.press = pressHandler;
+fireEvent.longPress = longPressHandler;
 fireEvent.changeText = changeTextHandler;
 fireEvent.scroll = scrollHandler;
 
