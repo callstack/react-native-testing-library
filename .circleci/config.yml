@@ -1,14 +1,14 @@
 version: 2
 
 aliases:
-  - &filter-only-master
+  - &filter-only-main
     branches:
       only:
-        - master
-  - &filter-ignore-master
+        - main
+  - &filter-ignore-main
     branches:
       ignore:
-        - master
+        - main
 
 defaults: &defaults
   docker:
@@ -102,12 +102,12 @@ workflows:
           requires:
             - install-dependencies
           # docusuarus build is running when deploying website as well
-          filters: *filter-ignore-master
+          filters: *filter-ignore-main
       - test-examples:
           requires:
             - install-dependencies
-          filters: *filter-only-master
+          filters: *filter-only-main
       - deploy-website:
           requires:
             - install-dependencies
-          filters: *filter-only-master
+          filters: *filter-only-main

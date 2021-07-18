@@ -4,7 +4,7 @@
     height="80"
     width="80"
     alt="owl"
-    src="https://raw.githubusercontent.com/callstack/react-native-testing-library/master/website/static/img/owl.png"
+    src="https://raw.githubusercontent.com/callstack/react-native-testing-library/main/website/static/img/owl.png"
   />
   <p>Simple and complete React Native testing utilities that encourage good testing practices.</P>
 </div>
@@ -126,7 +126,7 @@ test('form submits two answers', () => {
 });
 ```
 
-You can find the source of `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/questionsBoard.test.js).
+You can find the source of `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/questionsBoard.test.js).
 
 ## API / Usage
 

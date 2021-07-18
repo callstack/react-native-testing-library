@@ -95,12 +95,12 @@ const siteConfig = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: `${repoUrl}/blob/master`,
+          editUrl: `${repoUrl}/blob/main`,
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
-          editUrl: `${repoUrl}/blob/master/blog`,
+          editUrl: `${repoUrl}/blob/main/blog`,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

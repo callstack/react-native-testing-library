@@ -15,7 +15,7 @@ Install the packages required for React Navigation. For this example, we will us
 $ yarn add @react-native-community/masked-view @react-navigation/native @react-navigation/stack react-native-gesture-handler react-native-reanimated react-native-safe-area-context react-native-screens
 ```
 
-Create an [`./AppNavigator.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/AppNavigator.js) component which will list the navigation stack:
+Create an [`./AppNavigator.js`](https://github.com/callstack/react-native-testing-library/blob/main/examples/reactnavigation/src/AppNavigator.js) component which will list the navigation stack:
 
 ```jsx
 import 'react-native-gesture-handler';
@@ -39,7 +39,7 @@ export default function Navigation() {
 }
 ```
 
-Create your two screens which we will transition to and from them. The homescreen, found in [`./screens/HomeScreen.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/screens/HomeScreen.js), contains a list of elements presented in a list view. On tap of any of these items will move to the details screen with the item number:
+Create your two screens which we will transition to and from them. The homescreen, found in [`./screens/HomeScreen.js`](https://github.com/callstack/react-native-testing-library/blob/main/examples/reactnavigation/src/screens/HomeScreen.js), contains a list of elements presented in a list view. On tap of any of these items will move to the details screen with the item number:
 
 ```jsx
 import * as React from 'react';
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-The details screen, found in [`./screens/DetailsScreen.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/screens/DetailsScreen.js), contains a header with the item number passed from the home screen:
+The details screen, found in [`./screens/DetailsScreen.js`](https://github.com/callstack/react-native-testing-library/blob/main/examples/reactnavigation/src/screens/DetailsScreen.js), contains a header with the item number passed from the home screen:
 
 ```jsx
 // ./screens/DetailsScreen.js
@@ -153,7 +153,7 @@ Notice the 2 entries that don't come with the default React Native project:
 
 For this example, we are going to test out two things. The first thing is that the page is laid out as expected. The second, and most important, is that the page will transition to the detail screen when any item is tapped on.
 
-Let's add a [`AppNavigator.test.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/__tests__/AppNavigator.js) file in `src/__tests__` directory:
+Let's add a [`AppNavigator.test.js`](https://github.com/callstack/react-native-testing-library/blob/main/examples/reactnavigation/src/__tests__/AppNavigator.js) file in `src/__tests__` directory:
 
 ```jsx
 import * as React from 'react';
@@ -218,12 +218,12 @@ Install the packages required for React Navigation. For this example, we will us
 $ yarn add @react-native-community/masked-view @react-navigation/native @react-navigation/drawer react-native-gesture-handler react-native-reanimated react-native-safe-area-context react-native-screens
 ```
 
-Create a [`./DrawerAppNavigator.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/DrawerAppNavigator.js) component which will list the navigation stack:
+Create a [`./DrawerAppNavigator.js`](https://github.com/callstack/react-native-testing-library/blob/main/examples/reactnavigation/src/DrawerAppNavigator.js) component which will list the navigation stack:
 
 ```jsx
 import 'react-native-gesture-handler';
 import React from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const { Screen, Navigator } = createDrawerNavigator();
 
@@ -270,7 +270,7 @@ Install required dev dependencies:
 $ yarn add -D jest @testing-library/react-native
 ```
 
-Create a [`mock file`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/jest-setup.js) necessary for your tests:
+Create a [`mock file`](https://github.com/callstack/react-native-testing-library/blob/main/examples/reactnavigation/jest-setup.js) necessary for your tests:
 
 ```jsx
 import 'react-native-gesture-handler/jestSetup';
@@ -309,7 +309,7 @@ This setup is copied from the [React Navigation documentation](https://reactnavi
 
 For this example, we are going to test out two things. The first thing is that the screen is loaded correctly. The second, and most important, is that the page will transition to the notifications screen when the button is tapped on.
 
-Let's add a [`DrawerAppNavigator.test.js`](https://github.com/callstack/react-native-testing-library/blob/master/examples/reactnavigation/src/__tests__/DrawerAppNavigator.js) file in `src/__tests__` directory:
+Let's add a [`DrawerAppNavigator.test.js`](https://github.com/callstack/react-native-testing-library/blob/main/examples/reactnavigation/src/__tests__/DrawerAppNavigator.js) file in `src/__tests__` directory:
 
 ```jsx
 import React from 'react';

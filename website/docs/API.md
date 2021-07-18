@@ -7,7 +7,7 @@ This page gathers public API of React Native Testing Library along with usage ex
 
 ## `render`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/render.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/render.test.js)
 
 Defined as:
 
@@ -339,7 +339,7 @@ If you're noticing that components are not being found on a list, even after moc
 
 ## `waitFor`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitFor.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitFor.test.js)
 
 Defined as:
 
@@ -368,7 +368,7 @@ In order to properly use `waitFor` you need at least React >=16.9.0 (featuring a
 
 ## `waitForElementToBeRemoved`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitForElementToBeRemoved.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitForElementToBeRemoved.test.js)
 
 Defined as:
 
@@ -404,7 +404,7 @@ In order to properly use `waitForElementToBeRemoved` you need at least React >=1
 
 ## `within`, `getQueriesForElement`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/within.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/within.test.js)
 
 Defined as:
 
@@ -458,4 +458,4 @@ expect(submitButtons).toHaveLength(3); // expect 3 elements
 
 ## `act`
 
-Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/master/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
+Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/main/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
