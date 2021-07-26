@@ -13,6 +13,7 @@ import debugDeep from './helpers/debugDeep';
 type Options = {
   wrapper?: React.ComponentType<any>,
   createNodeMock?: (element: React.Element<any>) => any,
+  respectAccessibilityProps?: boolean,
 };
 type TestRendererOptions = {
   createNodeMock: (element: React.Element<any>) => any,
@@ -24,7 +25,7 @@ type TestRendererOptions = {
  */
 export default function render<T>(
   component: React.Element<T>,
-  { wrapper: Wrapper, createNodeMock }: Options = {}
+  { wrapper: Wrapper, createNodeMock, respectAccessibilityProps }: Options = {}
 ): {
   ...FindByAPI,
   ...QueryByAPI,
@@ -42,10 +43,11 @@ export default function render<T>(
 
   const renderer = renderWithAct(
     wrap(component),
-    createNodeMock ? { createNodeMock } : undefined
+    createNodeMock ? { createNodeMock } : undefined,
+    // respectAccessibilityProps
   );
   const update = updateWithAct(renderer, wrap);
-  const instance = renderer.root;
+  const instance = respectAccessibilityProps ? appendFindAllTrap(renderer) : renderer.root;
   const unmount = () => {
     act(() => {
       renderer.unmount();
@@ -70,7 +72,7 @@ export default function render<T>(
 
 function renderWithAct(
   component: React.Element<any>,
-  options?: TestRendererOptions
+  options?: TestRendererOptions,
 ): ReactTestRenderer {
   let renderer: ReactTestRenderer;
 
@@ -106,4 +108,30 @@ function debug(
   }
   debugImpl.shallow = (message) => debugShallow(instance, message);
   return debugImpl;
+}
+
+function appendFindAllTrap(renderer: ReactTestRenderer) {
+  return new Proxy(renderer.root, {
+    get(target, prop) {
+      const isFindAllProp = prop === "findAll";
+      const newFindAll = (fn, node = target) => {
+
+        if (node.props.accessibilityElementsHidden) {
+          return [];
+        }
+
+        const initial = fn(node) ? [node] : [];
+
+        return node.children.reduce((result, child) => {
+          if (typeof child === 'string') {
+            return result;
+          }
+
+          return result.concat(newFindAll(fn, child));
+        }, initial);
+      }
+
+      return isFindAllProp ? newFindAll : Reflect.get(...arguments);
+    }
+  });
 }
