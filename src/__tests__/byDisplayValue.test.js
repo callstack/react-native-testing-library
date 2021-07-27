@@ -119,7 +119,7 @@ test('all queries should respect accessibility', async () => {
     queryAllByDisplayValue,
     getByDisplayValue,
     queryByDisplayValue
-  } = render(<Comp />, { respectAccessibilityProps: true });
+  } = render(<Comp />, { respectAccessibility: true });
 
   await expect(findAllByDisplayValue("test_01")).rejects.toBeTruthy();
   await expect(findByDisplayValue("test_01")).rejects.toBeTruthy();

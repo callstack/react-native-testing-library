@@ -77,7 +77,7 @@ test("queries should respect accessibility", async () => {
     queryAllByPlaceholderText,
     queryByPlaceholderText
   } = render(<Comp />, {
-    respectAccessibilityProps: true,
+    respectAccessibility: true,
   });
 
   await expect(findAllByPlaceholderText("hidden")).rejects.toBeTruthy();

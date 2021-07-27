@@ -152,7 +152,7 @@ test("queries should respect accessibility", async () => {
     queryAllByTestId,
     queryByTestId
   } = render(<Comp />, {
-    respectAccessibilityProps: true,
+    respectAccessibility: true,
   });
 
   await expect(findAllByTestId("test")).rejects.toBeTruthy();

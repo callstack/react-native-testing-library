@@ -103,7 +103,7 @@ test('queries should respect accessibility', async () => {
     queryAllByText,
     queryByText
   } = render(<Comp />, {
-    respectAccessibilityProps: true,
+    respectAccessibility: true,
   });
 
   await expect(findAllByText("hello world")).rejects.toBeTruthy();
@@ -128,7 +128,7 @@ test('queryAllByText returns an empty array if respectAccessibilityProps is true
     </View>
   );
   const { queryAllByText } = render(<Comp />, {
-    respectAccessibilityProps: true,
+    respectAccessibility: true,
   });
 
   expect(queryAllByText(/hello world/i)).toHaveLength(0);
@@ -144,7 +144,7 @@ test('getAllByText throws if respectAccessibilityProps is true', () => {
     </View>
   );
   const { getAllByText } = render(<Comp />, {
-    respectAccessibilityProps: true,
+    respectAccessibility: true,
   });
 
   expect(() => getAllByText(/hello world/i)).toThrow(
