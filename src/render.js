@@ -13,7 +13,7 @@ import debugDeep from './helpers/debugDeep';
 type Options = {
   wrapper?: React.ComponentType<any>,
   createNodeMock?: (element: React.Element<any>) => any,
-  respectAccessibilityProps?: boolean,
+  respectAccessibility?: boolean,
 };
 type TestRendererOptions = {
   createNodeMock: (element: React.Element<any>) => any,
@@ -25,7 +25,7 @@ type TestRendererOptions = {
  */
 export default function render<T>(
   component: React.Element<T>,
-  { wrapper: Wrapper, createNodeMock, respectAccessibilityProps }: Options = {}
+  { wrapper: Wrapper, createNodeMock, respectAccessibility }: Options = {}
 ): {
   ...FindByAPI,
   ...QueryByAPI,
@@ -47,7 +47,7 @@ export default function render<T>(
     // respectAccessibilityProps
   );
   const update = updateWithAct(renderer, wrap);
-  const instance = respectAccessibilityProps
+  const instance = respectAccessibility
     ? appendFindAllTrap(renderer)
     : renderer.root;
   const unmount = () => {
