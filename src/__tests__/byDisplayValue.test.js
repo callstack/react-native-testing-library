@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { View, TextInput } from 'react-native';
-import { isExportDeclaration } from 'typescript';
 
 import { render } from '..';
 
@@ -118,17 +117,17 @@ test('all queries should respect accessibility', async () => {
     getAllByDisplayValue,
     queryAllByDisplayValue,
     getByDisplayValue,
-    queryByDisplayValue
+    queryByDisplayValue,
   } = render(<Comp />, { respectAccessibility: true });
 
-  await expect(findAllByDisplayValue("test_01")).rejects.toBeTruthy();
-  await expect(findByDisplayValue("test_01")).rejects.toBeTruthy();
-  await expect(() => getAllByDisplayValue("test_01")).toThrow(
-    "Unable to find an element with displayValue: test_01"
+  await expect(findAllByDisplayValue('test_01')).rejects.toBeTruthy();
+  await expect(findByDisplayValue('test_01')).rejects.toBeTruthy();
+  await expect(() => getAllByDisplayValue('test_01')).toThrow(
+    'Unable to find an element with displayValue: test_01'
   );
-  await expect(queryAllByDisplayValue("test_01")).toHaveLength(0);
-  await expect(() => getByDisplayValue("test_01")).toThrow(
-    "Unable to find an element with displayValue: test_01"
+  await expect(queryAllByDisplayValue('test_01')).toHaveLength(0);
+  await expect(() => getByDisplayValue('test_01')).toThrow(
+    'Unable to find an element with displayValue: test_01'
   );
-  await expect(queryByDisplayValue("test_01")).toBeNull();
+  await expect(queryByDisplayValue('test_01')).toBeNull();
 });

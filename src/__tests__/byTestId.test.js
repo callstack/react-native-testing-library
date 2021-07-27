@@ -134,7 +134,7 @@ test('findByTestId and findAllByTestId work asynchronously', async () => {
   await expect(findAllByTestId('aTestId')).resolves.toHaveLength(1);
 }, 20000);
 
-test("queries should respect accessibility", async () => {
+test('queries should respect accessibility', async () => {
   const Comp = () => (
     <View>
       <View accessibilityElementsHidden>
@@ -144,25 +144,25 @@ test("queries should respect accessibility", async () => {
     </View>
   );
 
-  const { 
+  const {
     findAllByTestId,
     findByTestId,
     getAllByTestId,
     getByTestId,
     queryAllByTestId,
-    queryByTestId
+    queryByTestId,
   } = render(<Comp />, {
     respectAccessibility: true,
   });
 
-  await expect(findAllByTestId("test")).rejects.toBeTruthy();
-  await expect(findByTestId("test")).rejects.toBeTruthy();
-  await expect(() => getAllByTestId("test")).toThrow(
-    "Unable to find an element with testID: test"
+  await expect(findAllByTestId('test')).rejects.toBeTruthy();
+  await expect(findByTestId('test')).rejects.toBeTruthy();
+  await expect(() => getAllByTestId('test')).toThrow(
+    'Unable to find an element with testID: test'
   );
-  await expect(() => getByTestId("test")).toThrow(
-    "Unable to find an element with testID: test"
+  await expect(() => getByTestId('test')).toThrow(
+    'Unable to find an element with testID: test'
   );
-  await expect(queryAllByTestId("test")).toHaveLength(0);
-  await expect(queryByTestId("test")).toBeNull();
+  await expect(queryAllByTestId('test')).toHaveLength(0);
+  await expect(queryByTestId('test')).toBeNull();
 });

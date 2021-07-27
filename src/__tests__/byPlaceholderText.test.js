@@ -60,7 +60,7 @@ test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
   expect(queryAllByPlaceholderText('no placeholder')).toHaveLength(0);
 });
 
-test("queries should respect accessibility", async () => {
+test('queries should respect accessibility', async () => {
   const Comp = () => (
     <View>
       <View accessibilityElementsHidden>
@@ -69,25 +69,25 @@ test("queries should respect accessibility", async () => {
     </View>
   );
 
-  const { 
+  const {
     findAllByPlaceholderText,
     findByPlaceholderText,
     getAllByPlaceholderText,
     getByPlaceholderText,
     queryAllByPlaceholderText,
-    queryByPlaceholderText
+    queryByPlaceholderText,
   } = render(<Comp />, {
     respectAccessibility: true,
   });
 
-  await expect(findAllByPlaceholderText("hidden")).rejects.toBeTruthy();
-  await expect(findByPlaceholderText("hidden")).rejects.toBeTruthy();
-  await expect(() => getAllByPlaceholderText("hidden")).toThrow(
-    "Unable to find an element with placeholder: hidden"
+  await expect(findAllByPlaceholderText('hidden')).rejects.toBeTruthy();
+  await expect(findByPlaceholderText('hidden')).rejects.toBeTruthy();
+  await expect(() => getAllByPlaceholderText('hidden')).toThrow(
+    'Unable to find an element with placeholder: hidden'
   );
-  await expect(() => getByPlaceholderText("hidden")).toThrow(
-    "Unable to find an element with placeholder: hidden"
+  await expect(() => getByPlaceholderText('hidden')).toThrow(
+    'Unable to find an element with placeholder: hidden'
   );
-  await expect(queryAllByPlaceholderText("hidden")).toHaveLength(0);
-  await expect(queryByPlaceholderText("hidden")).toBeNull();
+  await expect(queryAllByPlaceholderText('hidden')).toHaveLength(0);
+  await expect(queryByPlaceholderText('hidden')).toBeNull();
 });

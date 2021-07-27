@@ -95,27 +95,27 @@ test('queries should respect accessibility', async () => {
     </View>
   );
 
-  const { 
+  const {
     findAllByText,
     findByText,
     getAllByText,
     getByText,
     queryAllByText,
-    queryByText
+    queryByText,
   } = render(<Comp />, {
     respectAccessibility: true,
   });
 
-  await expect(findAllByText("hello world")).rejects.toBeTruthy();
-  await expect(findByText("hello world")).rejects.toBeTruthy();
-  await expect(() => getAllByText("hello world")).toThrow(
-    "Unable to find an element with text: hello world"
+  await expect(findAllByText('hello world')).rejects.toBeTruthy();
+  await expect(findByText('hello world')).rejects.toBeTruthy();
+  await expect(() => getAllByText('hello world')).toThrow(
+    'Unable to find an element with text: hello world'
   );
-  await expect(() => getByText("hello world")).toThrow(
-    "Unable to find an element with text: hello world"
+  await expect(() => getByText('hello world')).toThrow(
+    'Unable to find an element with text: hello world'
   );
-  await expect(queryAllByText("hello world")).toHaveLength(0);
-  await expect(queryByText("hello world")).toBeNull();
+  await expect(queryAllByText('hello world')).toHaveLength(0);
+  await expect(queryByText('hello world')).toBeNull();
 });
 
 test('queryAllByText returns an empty array if respectAccessibilityProps is true', () => {
