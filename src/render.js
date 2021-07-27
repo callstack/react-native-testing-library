@@ -43,11 +43,13 @@ export default function render<T>(
 
   const renderer = renderWithAct(
     wrap(component),
-    createNodeMock ? { createNodeMock } : undefined,
+    createNodeMock ? { createNodeMock } : undefined
     // respectAccessibilityProps
   );
   const update = updateWithAct(renderer, wrap);
-  const instance = respectAccessibilityProps ? appendFindAllTrap(renderer) : renderer.root;
+  const instance = respectAccessibilityProps
+    ? appendFindAllTrap(renderer)
+    : renderer.root;
   const unmount = () => {
     act(() => {
       renderer.unmount();
@@ -72,7 +74,7 @@ export default function render<T>(
 
 function renderWithAct(
   component: React.Element<any>,
-  options?: TestRendererOptions,
+  options?: TestRendererOptions
 ): ReactTestRenderer {
   let renderer: ReactTestRenderer;
 
@@ -113,9 +115,8 @@ function debug(
 function appendFindAllTrap(renderer: ReactTestRenderer) {
   return new Proxy(renderer.root, {
     get(target, prop) {
-      const isFindAllProp = prop === "findAll";
+      const isFindAllProp = prop === 'findAll';
       const newFindAll = (fn, node = target) => {
-
         if (node.props.accessibilityElementsHidden) {
           return [];
         }
@@ -129,9 +130,9 @@ function appendFindAllTrap(renderer: ReactTestRenderer) {
 
           return result.concat(newFindAll(fn, child));
         }, initial);
-      }
+      };
 
       return isFindAllProp ? newFindAll : Reflect.get(...arguments);
-    }
+    },
   });
 }

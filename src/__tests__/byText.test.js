@@ -85,6 +85,73 @@ test('getAllByText, queryAllByText', () => {
   expect(queryAllByText('InExistent')).toHaveLength(0);
 });
 
+test('queries should respect accessibility', async () => {
+  const Comp = () => (
+    <View>
+      <View accessibilityElementsHidden>
+        <Text>hello world</Text>
+      </View>
+      <Text>hello space</Text>
+    </View>
+  );
+
+  const { 
+    findAllByText,
+    findByText,
+    getAllByText,
+    getByText,
+    queryAllByText,
+    queryByText
+  } = render(<Comp />, {
+    respectAccessibilityProps: true,
+  });
+
+  await expect(findAllByText("hello world")).rejects.toBeTruthy();
+  await expect(findByText("hello world")).rejects.toBeTruthy();
+  await expect(() => getAllByText("hello world")).toThrow(
+    "Unable to find an element with text: hello world"
+  );
+  await expect(() => getByText("hello world")).toThrow(
+    "Unable to find an element with text: hello world"
+  );
+  await expect(queryAllByText("hello world")).toHaveLength(0);
+  await expect(queryByText("hello world")).toBeNull();
+});
+
+test('queryAllByText returns an empty array if respectAccessibilityProps is true', () => {
+  const Comp = () => (
+    <View>
+      <View accessibilityElementsHidden>
+        <Text>hello world</Text>
+      </View>
+      <Text>hello space</Text>
+    </View>
+  );
+  const { queryAllByText } = render(<Comp />, {
+    respectAccessibilityProps: true,
+  });
+
+  expect(queryAllByText(/hello world/i)).toHaveLength(0);
+});
+
+test('getAllByText throws if respectAccessibilityProps is true', () => {
+  const Comp = () => (
+    <View>
+      <View accessibilityElementsHidden>
+        <Text>hello world</Text>
+      </View>
+      <Text>hello space</Text>
+    </View>
+  );
+  const { getAllByText } = render(<Comp />, {
+    respectAccessibilityProps: true,
+  });
+
+  expect(() => getAllByText(/hello world/i)).toThrow(
+    'Unable to find an element with text: /hello world/i'
+  );
+});
+
 test('findByText queries work asynchronously', async () => {
   const options = { timeout: 10 }; // Short timeout so that this test runs quickly
   const { rerender, findByText, findAllByText } = render(<View />);
