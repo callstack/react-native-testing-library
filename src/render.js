@@ -44,7 +44,6 @@ export default function render<T>(
   const renderer = renderWithAct(
     wrap(component),
     createNodeMock ? { createNodeMock } : undefined
-    // respectAccessibilityProps
   );
   const update = updateWithAct(renderer, wrap);
   const instance = respectAccessibility
