@@ -111,7 +111,7 @@ test('all queries should respect accessibility', async () => {
   );
   const Comp = () => (
     <View>
-      <OtherComp accessibilityElementsHidden />
+      <OtherComp importantForAccessibility="no-hide-descendants" />
       <TextInput value="test_02" />
       <View>
         <TextInput value="test_02" />
