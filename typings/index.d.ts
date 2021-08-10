@@ -296,6 +296,7 @@ export interface Thenable {
 export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement<any>) => any;
+  respectAccessibility?: boolean;
 }
 
 type Debug = {
