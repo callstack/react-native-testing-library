@@ -131,8 +131,8 @@ function newFindAll(instance: ReactTestInstance) {
 
 function isReactTestElementVisibleToAccessibility(instance: ReactTestInstance): boolean {
   const isElementVisible = 
-    !instance.props.accessibilityElementsHidden;
-    //&& instance.props.importantForAccessibility !== "no-hide-descendants";
+    !instance.props.accessibilityElementsHidden
+    && instance.props.importantForAccessibility !== "no-hide-descendants";
 
   if (!instance.parent) {
     return isElementVisible;

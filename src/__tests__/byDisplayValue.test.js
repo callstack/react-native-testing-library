@@ -102,7 +102,7 @@ test('findBy queries work asynchronously', async () => {
 }, 20000);
 
 test('all queries should respect accessibility', async () => {
-  const Input = () => (
+  const OtherComp = () => (
     <View >
       <View>
         <TextInput value="test_01" />
@@ -111,7 +111,7 @@ test('all queries should respect accessibility', async () => {
   );
   const Comp = () => (
     <View>
-      <Input accessibilityElementsHidden />
+      <OtherComp accessibilityElementsHidden />
       <TextInput value="test_02" />
       <View>
         <TextInput value="test_02" />

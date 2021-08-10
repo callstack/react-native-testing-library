@@ -86,7 +86,7 @@ test('getAllByText, queryAllByText', () => {
 });
 
 test('queries should respect accessibility', async () => {
-  const Input = () => (
+  const OtherComp = () => (
     <View >
       <View>
         <Text>test_01</Text>
@@ -95,7 +95,7 @@ test('queries should respect accessibility', async () => {
   );
   const Comp = () => (
     <View>
-      <Input accessibilityElementsHidden />
+      <OtherComp importantForAccessibility="no-hide-descendants" />
       <Text>test_02</Text>
       <View>
         <Text>test_02</Text>

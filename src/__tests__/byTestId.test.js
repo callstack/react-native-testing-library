@@ -135,7 +135,7 @@ test('findByTestId and findAllByTestId work asynchronously', async () => {
 }, 20000);
 
 test('queries should respect accessibility', async () => {
-  const Input = () => (
+  const OtherComp = () => (
     <View >
       <View>
         <TextInput testID="test_01" />
@@ -144,7 +144,7 @@ test('queries should respect accessibility', async () => {
   );
   const Comp = () => (
     <View>
-      <Input accessibilityElementsHidden />
+      <OtherComp importantForAccessibility="no-hide-descendants" />
       <TextInput testID="test_02" />
       <View>
         <TextInput testID="test_02" />

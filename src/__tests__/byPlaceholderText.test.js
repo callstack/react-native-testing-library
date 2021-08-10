@@ -62,7 +62,7 @@ test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
 });
 
 test('queries should respect accessibility', async () => {
-  const Input = () => (
+  const OtherComp = () => (
     <View >
       <View>
         <TextInput placeholder="test_01" />
@@ -71,7 +71,7 @@ test('queries should respect accessibility', async () => {
   );
   const Comp = () => (
     <View>
-      <Input accessibilityElementsHidden />
+      <OtherComp importantForAccessibility="no-hide-descendants" />
       <TextInput placeholder="test_02" />
       <View>
         <TextInput placeholder="test_02" />
