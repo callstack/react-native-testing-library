@@ -116,21 +116,29 @@ function appendFindAllTrap(renderer: ReactTestRenderer) {
     get(target, prop) {
       const isFindAllProp = prop === 'findAll';
 
-      return isFindAllProp ? newFindAll(target) : Reflect.get(...arguments);
+      return isFindAllProp ? newFindAll(target) : target[prop];
     },
   });
 }
 
 function newFindAll(instance: ReactTestInstance) {
-  return (originalPredicate: (instance: ReactTestInstance) => boolean) => {
-    const elements = instance.findAll(originalPredicate);
+  return (predicate: (instance: ReactTestInstance) => boolean): ReactTestInstance[] => {
+    const elements = instance.findAll(predicate);
 
     return elements.filter(isReactTestElementVisibleToAccessibility);
   }
 }
 
-function isReactTestElementVisibleToAccessibility(instance: ReactTestInstance) {
-  const isElementVisible = !instance.props.accessibilityElementsHidden;
-  const isParentVisible = !instance.parent || isReactTestElementVisibleToAccessibility(instance.parent);
+function isReactTestElementVisibleToAccessibility(instance: ReactTestInstance): boolean {
+  const isElementVisible = 
+    !instance.props.accessibilityElementsHidden;
+    //&& instance.props.importantForAccessibility !== "no-hide-descendants";
+
+  if (!instance.parent) {
+    return isElementVisible;
+  }
+
+  const isParentVisible = isReactTestElementVisibleToAccessibility(instance.parent);
+
   return isParentVisible && isElementVisible;
 }
