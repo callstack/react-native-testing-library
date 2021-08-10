@@ -86,12 +86,23 @@ test('getAllByText, queryAllByText', () => {
 });
 
 test('queries should respect accessibility', async () => {
+  const Input = () => (
+    <View >
+      <View>
+        <Text>test_01</Text>
+      </View>
+    </View>
+  );
   const Comp = () => (
     <View>
-      <View accessibilityElementsHidden>
-        <Text>hello world</Text>
+      <Input accessibilityElementsHidden />
+      <Text>test_02</Text>
+      <View>
+        <Text>test_02</Text>
       </View>
-      <Text>hello space</Text>
+      <View accessibilityElementsHidden>
+        <Text>test_01</Text>
+      </View>
     </View>
   );
 
@@ -106,49 +117,31 @@ test('queries should respect accessibility', async () => {
     respectAccessibility: true,
   });
 
-  await expect(findAllByText('hello world')).rejects.toBeTruthy();
-  await expect(findByText('hello world')).rejects.toBeTruthy();
-  await expect(() => getAllByText('hello world')).toThrow(
-    'Unable to find an element with text: hello world'
+  await expect(() => getAllByText('test_01')).toThrow(
+    'Unable to find an element with text: test_01'
   );
-  await expect(() => getByText('hello world')).toThrow(
-    'Unable to find an element with text: hello world'
+  await expect(getAllByText('test_02')).toHaveLength(2);
+  await expect(() => getByText('test_01')).toThrow(
+    'Unable to find an element with text: test_01'
   );
-  await expect(queryAllByText('hello world')).toHaveLength(0);
-  await expect(queryByText('hello world')).toBeNull();
-});
-
-test('queryAllByText returns an empty array if respectAccessibilityProps is true', () => {
-  const Comp = () => (
-    <View>
-      <View accessibilityElementsHidden>
-        <Text>hello world</Text>
-      </View>
-      <Text>hello space</Text>
-    </View>
+  await expect(() => getByText('test_02')).toThrow(
+    "Found multiple elements with text: test_02"
+  )
+  await expect(queryAllByText('test_01')).toHaveLength(0);
+  await expect(queryAllByText('test_02')).toHaveLength(2);
+  await expect(queryByText('test_01')).toBeNull();
+  await expect(() => queryByText('test_02')).toThrow(
+    "Found multiple elements with text: test_02"
+  )
+  await expect(findAllByText('test_01')).rejects.toEqual(
+    new Error('Unable to find an element with text: test_01')
   );
-  const { queryAllByText } = render(<Comp />, {
-    respectAccessibility: true,
-  });
-
-  expect(queryAllByText(/hello world/i)).toHaveLength(0);
-});
-
-test('getAllByText throws if respectAccessibilityProps is true', () => {
-  const Comp = () => (
-    <View>
-      <View accessibilityElementsHidden>
-        <Text>hello world</Text>
-      </View>
-      <Text>hello space</Text>
-    </View>
+  await expect(findAllByText('test_02')).resolves.toHaveLength(2);
+  await expect(findByText('test_01')).rejects.toEqual(
+    new Error('Unable to find an element with text: test_01')
   );
-  const { getAllByText } = render(<Comp />, {
-    respectAccessibility: true,
-  });
-
-  expect(() => getAllByText(/hello world/i)).toThrow(
-    'Unable to find an element with text: /hello world/i'
+  await expect(findByText('test_02')).rejects.toEqual(
+    new Error("Found multiple elements with text: test_02")
   );
 });
 

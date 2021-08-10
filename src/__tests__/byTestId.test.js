@@ -135,12 +135,23 @@ test('findByTestId and findAllByTestId work asynchronously', async () => {
 }, 20000);
 
 test('queries should respect accessibility', async () => {
+  const Input = () => (
+    <View >
+      <View>
+        <TextInput testID="test_01" />
+      </View>
+    </View>
+  );
   const Comp = () => (
     <View>
-      <View accessibilityElementsHidden>
-        <Text testID="test">hello world</Text>
+      <Input accessibilityElementsHidden />
+      <TextInput testID="test_02" />
+      <View>
+        <TextInput testID="test_02" />
       </View>
-      <Text>hello space</Text>
+      <View>
+        <TextInput accessibilityElementsHidden testID="test_01" />
+      </View>
     </View>
   );
 
@@ -155,14 +166,30 @@ test('queries should respect accessibility', async () => {
     respectAccessibility: true,
   });
 
-  await expect(findAllByTestId('test')).rejects.toBeTruthy();
-  await expect(findByTestId('test')).rejects.toBeTruthy();
-  await expect(() => getAllByTestId('test')).toThrow(
+  await expect(() => getAllByTestId('test_01')).toThrow(
     'Unable to find an element with testID: test'
   );
-  await expect(() => getByTestId('test')).toThrow(
-    'Unable to find an element with testID: test'
+  await expect(getAllByTestId('test_02')).toHaveLength(2);
+  await expect(() => getByTestId('test_01')).toThrow(
+    'Unable to find an element with testID: test_01'
   );
-  await expect(queryAllByTestId('test')).toHaveLength(0);
-  await expect(queryByTestId('test')).toBeNull();
+  await expect(() => getByTestId('test_02')).toThrow(
+    "Found multiple elements with testID: test_02"
+  )
+  await expect(queryAllByTestId('test_01')).toHaveLength(0);
+  await expect(queryAllByTestId('test_02')).toHaveLength(2);
+  await expect(queryByTestId('test_01')).toBeNull();
+  await expect(() => queryByTestId('test_02')).toThrow(
+    "Found multiple elements with testID: test_02"
+  );
+  await expect(findAllByTestId('test_01')).rejects.toEqual(
+    new Error('Unable to find an element with testID: test_01')
+  );
+  await expect(findAllByTestId('test_02')).resolves.toHaveLength(2);
+  await expect(findByTestId('test_01')).rejects.toEqual(
+    new Error('Unable to find an element with testID: test_01')
+  );
+  await expect(findByTestId('test_02')).rejects.toEqual(
+    new Error("Found multiple elements with testID: test_02")
+  );
 });

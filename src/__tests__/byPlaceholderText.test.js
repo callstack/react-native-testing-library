@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { View, TextInput } from 'react-native';
 import { render } from '..';
+import { queryAllByDisplayValue } from '../helpers/byDisplayValue';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -61,10 +62,22 @@ test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
 });
 
 test('queries should respect accessibility', async () => {
+  const Input = () => (
+    <View >
+      <View>
+        <TextInput placeholder="test_01" />
+      </View>
+    </View>
+  );
   const Comp = () => (
     <View>
-      <View accessibilityElementsHidden>
-        <TextInput placeholder="hidden" value={INPUT_FRESHNESS} />
+      <Input accessibilityElementsHidden />
+      <TextInput placeholder="test_02" />
+      <View>
+        <TextInput placeholder="test_02" />
+      </View>
+      <View>
+        <TextInput accessibilityElementsHidden placeholder="test_01" />
       </View>
     </View>
   );
@@ -80,14 +93,30 @@ test('queries should respect accessibility', async () => {
     respectAccessibility: true,
   });
 
-  await expect(findAllByPlaceholderText('hidden')).rejects.toBeTruthy();
-  await expect(findByPlaceholderText('hidden')).rejects.toBeTruthy();
-  await expect(() => getAllByPlaceholderText('hidden')).toThrow(
-    'Unable to find an element with placeholder: hidden'
+  await expect(() => getAllByPlaceholderText('test_01')).toThrow(
+    'Unable to find an element with placeholder: test_01'
   );
-  await expect(() => getByPlaceholderText('hidden')).toThrow(
-    'Unable to find an element with placeholder: hidden'
+  await expect(getAllByPlaceholderText("test_02")).toHaveLength(2);
+  await expect(() => getByPlaceholderText('test_01')).toThrow(
+    'Unable to find an element with placeholder: test_01'
   );
-  await expect(queryAllByPlaceholderText('hidden')).toHaveLength(0);
-  await expect(queryByPlaceholderText('hidden')).toBeNull();
+  await expect(() => getByPlaceholderText("test_02")).toThrow(
+    "Found multiple elements with placeholder: test_02 "
+  )
+  await expect(queryAllByPlaceholderText('test_01')).toHaveLength(0);
+  await expect(queryAllByPlaceholderText('test_02')).toHaveLength(2);
+  await expect(queryByPlaceholderText('test_01')).toBeNull();
+  await expect(() => queryByPlaceholderText('test_02')).toThrow(
+    "Found multiple elements with placeholder: test_02 "
+  );
+  await expect(findAllByPlaceholderText('test_01')).rejects.toEqual(
+    new Error('Unable to find an element with placeholder: test_01')
+  );
+  await expect(findAllByPlaceholderText('test_02')).resolves.toHaveLength(2);
+  await expect(findByPlaceholderText('test_01')).rejects.toEqual(
+    new Error('Unable to find an element with placeholder: test_01')
+  );
+  await expect(findByPlaceholderText('test_02')).rejects.toEqual(
+    new Error("Found multiple elements with placeholder: test_02 ")
+  );
 });
