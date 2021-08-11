@@ -103,7 +103,7 @@ test('findBy queries work asynchronously', async () => {
 
 test('all queries should respect accessibility', async () => {
   const OtherComp = () => (
-    <View >
+    <View>
       <View>
         <TextInput value="test_01" />
       </View>
@@ -115,7 +115,7 @@ test('all queries should respect accessibility', async () => {
   const Comp = () => (
     <View>
       <OtherComp importantForAccessibility="no-hide-descendants" />
-      <OtherComp style={{display: "none"}} />
+      <OtherComp style={{ display: 'none' }} />
       <OtherComp />
       <View>
         <TextInput value="test_02" />
@@ -135,30 +135,30 @@ test('all queries should respect accessibility', async () => {
     queryByDisplayValue,
   } = render(<Comp />, { respectAccessibility: true });
 
-  await expect(getAllByDisplayValue("test_02")).toHaveLength(2);
+  await expect(getAllByDisplayValue('test_02')).toHaveLength(2);
   await expect(() => getAllByDisplayValue('test_01')).toThrow(
     'Unable to find an element with displayValue: test_01'
   );
-  await expect(() => getByDisplayValue("test_02")).toThrow(
-    "Found multiple elements with display value: test_02 "
+  await expect(() => getByDisplayValue('test_02')).toThrow(
+    'Found multiple elements with display value: test_02 '
   );
   await expect(() => getByDisplayValue('test_01')).toThrow(
     'Unable to find an element with displayValue: test_01'
   );
   await expect(queryAllByDisplayValue('test_01')).toHaveLength(0);
-  await expect(queryAllByDisplayValue("test_02")).toHaveLength(2);
+  await expect(queryAllByDisplayValue('test_02')).toHaveLength(2);
   await expect(queryByDisplayValue('test_01')).toBeNull();
-  await expect(() => queryByDisplayValue("test_02")).toThrow(
-    "Found multiple elements with display value: test_02 "
+  await expect(() => queryByDisplayValue('test_02')).toThrow(
+    'Found multiple elements with display value: test_02 '
   );
   await expect(findAllByDisplayValue('test_01')).rejects.toEqual(
-    new Error("Unable to find an element with displayValue: test_01")
+    new Error('Unable to find an element with displayValue: test_01')
   );
   await expect(findAllByDisplayValue('test_02')).resolves.toHaveLength(2);
   await expect(findByDisplayValue('test_01')).rejects.toEqual(
-    new Error("Unable to find an element with displayValue: test_01")
+    new Error('Unable to find an element with displayValue: test_01')
   );
   await expect(findByDisplayValue('test_02')).rejects.toEqual(
-    new Error("Found multiple elements with display value: test_02 ")
+    new Error('Found multiple elements with display value: test_02 ')
   );
 });

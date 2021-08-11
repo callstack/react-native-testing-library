@@ -87,7 +87,7 @@ test('getAllByText, queryAllByText', () => {
 
 test('queries should respect accessibility', async () => {
   const OtherComp = () => (
-    <View >
+    <View>
       <View>
         <Text>test_01</Text>
       </View>
@@ -99,7 +99,7 @@ test('queries should respect accessibility', async () => {
   const Comp = () => (
     <View>
       <OtherComp importantForAccessibility="no-hide-descendants" />
-      <OtherComp style={{display: "none"}} />
+      <OtherComp style={{ display: 'none' }} />
       <OtherComp />
       <Text>test_02</Text>
       <View accessibilityElementsHidden>
@@ -127,14 +127,14 @@ test('queries should respect accessibility', async () => {
     'Unable to find an element with text: test_01'
   );
   await expect(() => getByText('test_02')).toThrow(
-    "Found multiple elements with text: test_02"
-  )
+    'Found multiple elements with text: test_02'
+  );
   await expect(queryAllByText('test_01')).toHaveLength(0);
   await expect(queryAllByText('test_02')).toHaveLength(2);
   await expect(queryByText('test_01')).toBeNull();
   await expect(() => queryByText('test_02')).toThrow(
-    "Found multiple elements with text: test_02"
-  )
+    'Found multiple elements with text: test_02'
+  );
   await expect(findAllByText('test_01')).rejects.toEqual(
     new Error('Unable to find an element with text: test_01')
   );
@@ -143,7 +143,7 @@ test('queries should respect accessibility', async () => {
     new Error('Unable to find an element with text: test_01')
   );
   await expect(findByText('test_02')).rejects.toEqual(
-    new Error("Found multiple elements with text: test_02")
+    new Error('Found multiple elements with text: test_02')
   );
 });
 

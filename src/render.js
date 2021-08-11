@@ -122,14 +122,18 @@ function appendFindAllTrap(renderer: ReactTestRenderer) {
 }
 
 function newFindAll(instance: ReactTestInstance) {
-  return (predicate: (instance: ReactTestInstance) => boolean): ReactTestInstance[] => {
+  return (
+    predicate: (instance: ReactTestInstance) => boolean
+  ): ReactTestInstance[] => {
     const elements = instance.findAll(predicate);
 
     return elements.filter(isReactTestElementVisibleToAccessibility);
-  }
+  };
 }
 
-function isReactTestElementVisibleToAccessibility(instance: ReactTestInstance): boolean {
+function isReactTestElementVisibleToAccessibility(
+  instance: ReactTestInstance
+): boolean {
   const isElementVisible =
     !accessibilityHiddenIOS(instance) &&
     !accessibilityHiddenAndroid(instance) &&
@@ -139,7 +143,9 @@ function isReactTestElementVisibleToAccessibility(instance: ReactTestInstance): 
     return isElementVisible;
   }
 
-  const isParentVisible = isReactTestElementVisibleToAccessibility(instance.parent);
+  const isParentVisible = isReactTestElementVisibleToAccessibility(
+    instance.parent
+  );
 
   return isParentVisible && isElementVisible;
 }
@@ -147,16 +153,15 @@ function isReactTestElementVisibleToAccessibility(instance: ReactTestInstance): 
 function accessibilityHiddenIOS(instance: ReactTestInstance): boolean {
   const siblingHasAccessibilityViewIsModal =
     instance.parent &&
-    instance
-      .parent
-      .children
-      .some(c => (
-        c.props && 
-        c.props.accessibilityViewIsModal && 
-        !Object.is(c, instance)
-      ));
+    instance.parent.children.some(
+      (c) =>
+        c.props && c.props.accessibilityViewIsModal && !Object.is(c, instance)
+    );
 
-  return instance.props.accessibilityElementsHidden || siblingHasAccessibilityViewIsModal;
+  return (
+    instance.props.accessibilityElementsHidden ||
+    siblingHasAccessibilityViewIsModal
+  );
 }
 
 function accessibilityHiddenAndroid(instance: ReactTestInstance) {
@@ -164,5 +169,5 @@ function accessibilityHiddenAndroid(instance: ReactTestInstance) {
 }
 
 function hiddenByStyles(instance: ReactTestInstance) {
-  return instance.props.style && instance.props.style.display === "none";
+  return instance.props.style && instance.props.style.display === 'none';
 }

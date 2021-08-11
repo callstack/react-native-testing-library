@@ -136,7 +136,7 @@ test('findByTestId and findAllByTestId work asynchronously', async () => {
 
 test('queries should respect accessibility', async () => {
   const OtherComp = () => (
-    <View >
+    <View>
       <View>
         <TextInput testID="test_01" />
       </View>
@@ -148,7 +148,7 @@ test('queries should respect accessibility', async () => {
   const Comp = () => (
     <View>
       <OtherComp importantForAccessibility="no-hide-descendants" />
-      <OtherComp style={{display: "none"}} />
+      <OtherComp style={{ display: 'none' }} />
       <OtherComp />
       <View>
         <TextInput testID="test_02" />
@@ -178,13 +178,13 @@ test('queries should respect accessibility', async () => {
     'Unable to find an element with testID: test_01'
   );
   await expect(() => getByTestId('test_02')).toThrow(
-    "Found multiple elements with testID: test_02"
-  )
+    'Found multiple elements with testID: test_02'
+  );
   await expect(queryAllByTestId('test_01')).toHaveLength(0);
   await expect(queryAllByTestId('test_02')).toHaveLength(2);
   await expect(queryByTestId('test_01')).toBeNull();
   await expect(() => queryByTestId('test_02')).toThrow(
-    "Found multiple elements with testID: test_02"
+    'Found multiple elements with testID: test_02'
   );
   await expect(findAllByTestId('test_01')).rejects.toEqual(
     new Error('Unable to find an element with testID: test_01')
@@ -194,6 +194,6 @@ test('queries should respect accessibility', async () => {
     new Error('Unable to find an element with testID: test_01')
   );
   await expect(findByTestId('test_02')).rejects.toEqual(
-    new Error("Found multiple elements with testID: test_02")
+    new Error('Found multiple elements with testID: test_02')
   );
 });
