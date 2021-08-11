@@ -67,13 +67,16 @@ test('queries should respect accessibility', async () => {
       <View>
         <TextInput placeholder="test_01" />
       </View>
+      <View accessibilityViewIsModal>
+        <TextInput placeholder="test_02" />
+      </View>
     </View>
   );
   const Comp = () => (
     <View>
       <OtherComp importantForAccessibility="no-hide-descendants" />
       <OtherComp style={{display: "none"}} />
-      <TextInput placeholder="test_02" />
+      <OtherComp />
       <View>
         <TextInput placeholder="test_02" />
       </View>
