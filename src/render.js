@@ -130,9 +130,10 @@ function newFindAll(instance: ReactTestInstance) {
 }
 
 function isReactTestElementVisibleToAccessibility(instance: ReactTestInstance): boolean {
-  const isElementVisible = 
-    !instance.props.accessibilityElementsHidden
-    && instance.props.importantForAccessibility !== "no-hide-descendants";
+  const isElementVisible =
+    !accessibilityHiddenIOS(instance) &&
+    !accessibilityHiddenAndroid(instance) &&
+    !hiddenByStyles(instance);
 
   if (!instance.parent) {
     return isElementVisible;
@@ -141,4 +142,27 @@ function isReactTestElementVisibleToAccessibility(instance: ReactTestInstance): 
   const isParentVisible = isReactTestElementVisibleToAccessibility(instance.parent);
 
   return isParentVisible && isElementVisible;
+}
+
+function accessibilityHiddenIOS(instance: ReactTestInstance): boolean {
+  const siblingHasAccessibilityViewIsModal =
+    instance.parent &&
+    instance
+      .parent
+      .children
+      .some(c => (
+        typeof c !== "string" && 
+        c.props.accessibilityViewIsModal && 
+        !Object.is(c, instance)
+      ));
+
+  return instance.props.accessibilityElementsHidden || siblingHasAccessibilityViewIsModal;
+}
+
+function accessibilityHiddenAndroid(instance: ReactTestInstance) {
+  return instance.props.importantForAccessibility === 'no-hide-descendants';
+}
+
+function hiddenByStyles(instance: ReactTestInstance) {
+  return instance.props.style && instance.props.style.display === "none";
 }
