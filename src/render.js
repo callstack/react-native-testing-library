@@ -151,7 +151,7 @@ function accessibilityHiddenIOS(instance: ReactTestInstance): boolean {
       .parent
       .children
       .some(c => (
-        typeof c !== "string" && 
+        c.props && 
         c.props.accessibilityViewIsModal && 
         !Object.is(c, instance)
       ));
