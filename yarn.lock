@@ -1386,6 +1386,17 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@jest/types@^27.1.1":
+  version "27.1.1"
+  resolved "https://registry.yarnpkg.com/@jest/types/-/types-27.1.1.tgz#77a3fc014f906c65752d12123a0134359707c0ad"
+  integrity sha512-yqJPDDseb0mXgKqmNqypCsb85C22K1aY5+LUxh7syIM9n/b0AsaltxNy+o6tt29VcfGDpYEve175bm3uOhcehA==
+  dependencies:
+    "@types/istanbul-lib-coverage" "^2.0.0"
+    "@types/istanbul-reports" "^3.0.0"
+    "@types/node" "*"
+    "@types/yargs" "^16.0.0"
+    chalk "^4.0.0"
+
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents":
   version "2.1.8-no-fsevents"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/chokidar-2/-/chokidar-2-2.1.8-no-fsevents.tgz#da7c3996b8e6e19ebd14d82eaced2313e7769f9b"
@@ -1964,6 +1975,13 @@
   dependencies:
     "@types/yargs-parser" "*"
 
+"@types/yargs@^16.0.0":
+  version "16.0.4"
+  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-16.0.4.tgz#26aad98dd2c2a38e421086ea9ad42b9e51642977"
+  integrity sha512-T8Yc9wt/5LbJyCaLiHPReJa0kApcIgJ7Bn735GjItUfh08Z1pJvu8QZqb9s+mMvKV6WUQRV7K2R46YbjMXTTJw==
+  dependencies:
+    "@types/yargs-parser" "*"
+
 "@typescript-eslint/eslint-plugin@^4.15.0":
   version "4.15.2"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-4.15.2.tgz#981b26b4076c62a5a55873fbef3fe98f83360c61"
@@ -2194,6 +2212,11 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   integrity sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==
   dependencies:
     color-convert "^2.0.1"
+
+ansi-styles@^5.0.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-5.2.0.tgz#07449690ad45777d1924ac2abb2fc8895dba836b"
+  integrity sha512-Cxwpt2SfTzTtXcfOlzGEee8O+c+MmUgGrNiBcXnuWxuFJHe6a5Hz7qwhwe5OgaSYI0IJvkLqWX1ASG+cJOkEiA==
 
 anymatch@^2.0.0:
   version "2.0.0"
@@ -7521,7 +7544,7 @@ pretty-format@^24.0.0, pretty-format@^24.9.0:
     ansi-styles "^3.2.0"
     react-is "^16.8.4"
 
-pretty-format@^26.0.1, pretty-format@^26.5.2, pretty-format@^26.6.2:
+pretty-format@^26.5.2, pretty-format@^26.6.2:
   version "26.6.2"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.6.2.tgz#e35c2705f14cb7fe2fe94fa078345b444120fc93"
   integrity sha512-7AeGuCYNGmycyQbCqd/3PWH4eOoX/OiCa0uphp57NVTeAGdJGaAliecxwBDHYQCIvrW7aDBZCYeNTP/WX69mkg==
@@ -7529,6 +7552,16 @@ pretty-format@^26.0.1, pretty-format@^26.5.2, pretty-format@^26.6.2:
     "@jest/types" "^26.6.2"
     ansi-regex "^5.0.0"
     ansi-styles "^4.0.0"
+    react-is "^17.0.1"
+
+pretty-format@^27.2.0:
+  version "27.2.0"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-27.2.0.tgz#ee37a94ce2a79765791a8649ae374d468c18ef19"
+  integrity sha512-KyJdmgBkMscLqo8A7K77omgLx5PWPiXJswtTtFV7XgVZv2+qPk6UivpXXO+5k6ZEbWIbLoKdx1pZ6ldINzbwTA==
+  dependencies:
+    "@jest/types" "^27.1.1"
+    ansi-regex "^5.0.0"
+    ansi-styles "^5.0.0"
     react-is "^17.0.1"
 
 process-nextick-args@~2.0.0:
@@ -9172,9 +9205,9 @@ typedarray@^0.0.6:
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
 typescript@^4.0.2:
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.2.tgz#1450f020618f872db0ea17317d16d8da8ddb8c4c"
-  integrity sha512-tbb+NVrLfnsJy3M59lsDgrzWIflR4d4TIUjz+heUnHZwdF7YsrMTKoRERiIvI2lvBG95dfpLxB21WZhys1bgaQ==
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.2.tgz#6d618640d430e3569a1dfb44f7d7e600ced3ee86"
+  integrity sha512-gzP+t5W4hdy4c+68bfcv0t400HVJMMd2+H9B7gae1nQlBzCqvrXX+6GL/b3GAgyTH966pzrZ70/fRjwAtZksSQ==
 
 uglify-es@^3.1.9:
   version "3.3.9"
