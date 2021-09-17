@@ -27,11 +27,25 @@ Open a Terminal in your project's folder and run:
 yarn add --dev @testing-library/react-native
 ```
 
+You'll also need jest to run the tests
+
+```sh
+yarn add --dev jest
+```
+
+
 #### Using `npm`
 
 ```sh
 npm install --save-dev @testing-library/react-native
 ```
+
+You'll also need jest to run the tests
+
+```sh
+npm install --save-dev jest
+```
+
 
 This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!
 
@@ -100,3 +114,12 @@ test('form submits two answers', () => {
 ```
 
 You can find the source of `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/questionsBoard.test.js).
+
+## Run your test
+
+Place the above test for example into a `/test` directory in the root of your project as `QuestionsBoard.test.js`.
+
+Run it with:
+```sh
+yarn jest
+```
