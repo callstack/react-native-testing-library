@@ -36,7 +36,7 @@ npm install --save-dev @testing-library/react-native
 This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!
 
 :::info
-In order to properly use helpers for async tests (`findBy` queries and `waitFor`) you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+In order to properly use helpers for async tests (`findBy` queries and `waitFor`) you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
 :::
 
 ### Additional Jest matchers
