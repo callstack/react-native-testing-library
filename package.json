@@ -79,6 +79,7 @@
     "rootDir": "./src",
     "testPathIgnorePatterns": [
       "timerUtils"
-    ]
+    ],
+    "testTimeout": 30000
   }
 }
