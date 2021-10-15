@@ -363,7 +363,7 @@ test('waiting for an Banana to be ready', async () => {
 ```
 
 :::info
-In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
 :::
 
 ## `waitForElementToBeRemoved`
@@ -399,7 +399,7 @@ This method expects that the element is initally present in the render tree and 
 You can use any of `getBy`, `getAllBy`, `queryBy` and `queryAllBy` queries for `expectation` parameter.
 
 :::info
-In order to properly use `waitForElementToBeRemoved` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+In order to properly use `waitForElementToBeRemoved` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
 :::
 
 ## `within`, `getQueriesForElement`
