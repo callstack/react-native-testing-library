@@ -42,7 +42,7 @@
     "conventional-changelog-cli": "^2.0.11",
     "dedent": "^0.7.0",
     "eslint": "^7.0.0",
-    "flow-bin": "^0.141.0",
+    "flow-bin": "^0.162.0",
     "flow-copy-source": "^2.0.9",
     "jest": "^27.0.0",
     "react": "^17.0.2",
