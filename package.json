@@ -1,6 +1,6 @@
 {
   "name": "@testing-library/react-native",
-  "version": "8.0.0-rc.1",
+  "version": "8.0.0",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
   "main": "build/index.js",
   "typings": "./typings/index.d.ts",
