@@ -105,8 +105,8 @@ const invokeEvent = (
 const toEventHandlerName = (eventName: string) =>
   `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 
-const pressHandler = (element: ReactTestInstance): void =>
-  invokeEvent(element, 'press', pressHandler);
+const pressHandler = (element: ReactTestInstance, ...data: Array<any>): void =>
+  invokeEvent(element, 'press', pressHandler, ...data);
 const changeTextHandler = (
   element: ReactTestInstance,
   ...data: Array<any>

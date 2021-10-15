@@ -225,7 +225,7 @@ fireEvent[eventName](element: ReactTestInstance, ...data: Array<any>): void
 
 Convenience methods for common events like: `press`, `changeText`, `scroll`.
 
-### `fireEvent.press: (element: ReactTestInstance) => void`
+### `fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void`
 
 Invokes `press` event handler on the element or parent element in the tree.
 
@@ -234,6 +234,12 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 
 const onPressMock = jest.fn();
+const eventData = {
+  nativeEvent: {
+    pageX: 20,
+    pageY: 30,
+  },
+};
 
 const { getByText } = render(
   <View>
@@ -243,8 +249,8 @@ const { getByText } = render(
   </View>
 );
 
-fireEvent.press(getByText('Press me'));
-expect(onPressMock).toHaveBeenCalled();
+fireEvent.press(getByText('Press me'), eventData);
+expect(onPressMock).toHaveBeenCalledWith(eventData);
 ```
 
 ### `fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void`

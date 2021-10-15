@@ -91,13 +91,19 @@ describe('fireEvent', () => {
 test('fireEvent.press', () => {
   const onPressMock = jest.fn();
   const text = 'Fireevent press';
+  const eventData = {
+    nativeEvent: {
+      pageX: 20,
+      pageY: 30,
+    },
+  };
   const { getByText } = render(
     <OnPressComponent onPress={onPressMock} text={text} />
   );
 
-  fireEvent.press(getByText(text));
+  fireEvent.press(getByText(text), eventData);
 
-  expect(onPressMock).toHaveBeenCalled();
+  expect(onPressMock).toHaveBeenCalledWith(eventData);
 });
 
 test('fireEvent.scroll', () => {
