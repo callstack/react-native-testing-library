@@ -107,10 +107,18 @@ const toEventHandlerName = (eventName: string) =>
 
 const pressHandler = (element: ReactTestInstance, ...data: Array<any>): void =>
   invokeEvent(element, 'press', pressHandler, ...data);
-const changeTextHandler = (
-  element: ReactTestInstance,
-  ...data: Array<any>
-): void => invokeEvent(element, 'changeText', changeTextHandler, ...data);
+
+const changeTextHandler = (element: ReactTestInstance, text: string): void => {
+  invokeEvent(element, 'changeText', changeTextHandler, text);
+  invokeEvent(element, 'change', changeTextHandler, {
+    nativeEvent: {
+      target: element?.instance,
+      text,
+      eventCount: undefined,
+    },
+  });
+};
+
 const scrollHandler = (element: ReactTestInstance, ...data: Array<any>): void =>
   invokeEvent(element, 'scroll', scrollHandler, ...data);
 

@@ -127,25 +127,84 @@ test('fireEvent.scroll', () => {
   expect(onScrollMock).toHaveBeenCalledWith(eventData);
 });
 
-test('fireEvent.changeText', () => {
-  const onChangeTextMock = jest.fn();
-  const CHANGE_TEXT = 'content';
+describe('fireEvent.changeText', () => {
+  test('fires the onChangeText and onChange listeners on TextInput', () => {
+    const onChangeTextMock = jest.fn();
+    const onChangeMock = jest.fn();
 
-  const { getByPlaceholderText } = render(
-    <View>
-      <TextInput
-        placeholder="Customer placeholder"
-        onChangeText={onChangeTextMock}
-      />
-    </View>
-  );
+    const CHANGE_TEXT = 'content';
 
-  fireEvent.changeText(
-    getByPlaceholderText('Customer placeholder'),
-    CHANGE_TEXT
-  );
+    const { getByPlaceholderText } = render(
+      <View>
+        <TextInput
+          placeholder="Customer placeholder"
+          onChangeText={onChangeTextMock}
+          onChange={onChangeMock}
+        />
+      </View>
+    );
 
-  expect(onChangeTextMock).toHaveBeenCalledWith(CHANGE_TEXT);
+    fireEvent.changeText(
+      getByPlaceholderText('Customer placeholder'),
+      CHANGE_TEXT
+    );
+
+    expect(onChangeTextMock).toHaveBeenCalledWith(CHANGE_TEXT);
+    expect(onChangeMock).toHaveBeenCalledWith({
+      nativeEvent: {
+        target: expect.any(React.Component),
+        text: CHANGE_TEXT,
+        eventCount: undefined,
+      },
+    });
+  });
+
+  test('should not fire on non-editable TextInput', () => {
+    const placeholder = 'Test placeholder';
+    const onChangeTextMock = jest.fn();
+    const onChangeMock = jest.fn();
+
+    const NEW_TEXT = 'New text';
+
+    const { getByPlaceholderText } = render(
+      <View>
+        <TextInput
+          editable={false}
+          placeholder={placeholder}
+          onChangeText={onChangeTextMock}
+          onChange={onChangeMock}
+        />
+      </View>
+    );
+
+    fireEvent.changeText(getByPlaceholderText(placeholder), NEW_TEXT);
+    expect(onChangeTextMock).not.toHaveBeenCalled();
+    expect(onChangeMock).not.toHaveBeenCalled();
+  });
+
+  test('should not fire on non-editable TextInput with nested Text', () => {
+    const placeholder = 'Test placeholder';
+    const onChangeTextMock = jest.fn();
+    const onChangeMock = jest.fn();
+    const NEW_TEXT = 'New text';
+
+    const { getByPlaceholderText } = render(
+      <View>
+        <TextInput
+          editable={false}
+          placeholder={placeholder}
+          onChangeText={onChangeTextMock}
+          onChange={onChangeMock}
+        >
+          <Text>Test text</Text>
+        </TextInput>
+      </View>
+    );
+
+    fireEvent.changeText(getByPlaceholderText(placeholder), NEW_TEXT);
+    expect(onChangeTextMock).not.toHaveBeenCalled();
+    expect(onChangeMock).not.toHaveBeenCalled();
+  });
 });
 
 test('custom component with custom event name', () => {
@@ -198,46 +257,6 @@ test('should not fire on disabled Pressable', () => {
 
   fireEvent.press(screen.getByText('Trigger'));
   expect(handlePress).not.toHaveBeenCalled();
-});
-
-test('should not fire on non-editable TextInput', () => {
-  const placeholder = 'Test placeholder';
-  const onChangeTextMock = jest.fn();
-  const NEW_TEXT = 'New text';
-
-  const { getByPlaceholderText } = render(
-    <View>
-      <TextInput
-        editable={false}
-        placeholder={placeholder}
-        onChangeText={onChangeTextMock}
-      />
-    </View>
-  );
-
-  fireEvent.changeText(getByPlaceholderText(placeholder), NEW_TEXT);
-  expect(onChangeTextMock).not.toHaveBeenCalled();
-});
-
-test('should not fire on non-editable TextInput with nested Text', () => {
-  const placeholder = 'Test placeholder';
-  const onChangeTextMock = jest.fn();
-  const NEW_TEXT = 'New text';
-
-  const { getByPlaceholderText } = render(
-    <View>
-      <TextInput
-        editable={false}
-        placeholder={placeholder}
-        onChangeText={onChangeTextMock}
-      >
-        <Text>Test text</Text>
-      </TextInput>
-    </View>
-  );
-
-  fireEvent.changeText(getByPlaceholderText(placeholder), NEW_TEXT);
-  expect(onChangeTextMock).not.toHaveBeenCalled();
 });
 
 test('should not fire on none pointerEvents View', () => {
