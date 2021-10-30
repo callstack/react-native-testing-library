@@ -12,7 +12,7 @@ type FindQueryFunction<ArgType, ReturnType> = (
   instance: ReactTestInstance
 ) => (
   args: ArgType,
-  queryOptions?: TextMatchOptions,
+  queryOptions?: TextMatchOptions & WaitForOptions,
   waitForOptions?: WaitForOptions
 ) => Promise<ReturnType>;
 
@@ -40,6 +40,34 @@ export type Queries<QueryArg> = {
   queryBy: QueryByQuery<QueryArg>,
   findBy: FindByQuery<QueryArg>,
   findAllBy: FindAllByQuery<QueryArg>,
+};
+
+// The WaitForOptions as been moved to the second option param of findBy* methods with the adding of TextMatchOptions
+// To make the migration easier and avoid a breaking change, keep reading this options from the first param but warn
+const deprecatedKeys: $Keys<WaitForOptions>[] = [
+  'timeout',
+  'interval',
+  'stackTraceError',
+];
+const extractDeprecatedWaitForOptionUsage = (queryOptions?: WaitForOptions) => {
+  if (queryOptions) {
+    const waitForOptions: WaitForOptions = {
+      timeout: queryOptions.timeout,
+      interval: queryOptions.interval,
+      stackTraceError: queryOptions.stackTraceError,
+    };
+    deprecatedKeys.forEach((key) => {
+      if (queryOptions[key]) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Use of option ${key} in a findBy* query's first option parameter, TextMatchOptions, is deprecated. Please pass this option in the WaitForOptions parameter. For instance, "findByText(instance, {}, {${key}: ${queryOptions[
+            key
+          ].toString()}})"`
+        );
+      }
+    });
+    return waitForOptions;
+  }
 };
 
 export function makeQueries<QueryArg>(
@@ -97,26 +125,32 @@ export function makeQueries<QueryArg>(
   function findAllByQuery(instance: ReactTestInstance) {
     return function findAllFn(
       args: QueryArg,
-      queryOptions?: TextMatchOptions,
+      queryOptions?: TextMatchOptions & WaitForOptions,
       waitForOptions?: WaitForOptions = {}
     ) {
-      return waitFor(
-        () => getAllByQuery(instance)(args, queryOptions),
-        waitForOptions
+      const deprecatedWaitForOptions = extractDeprecatedWaitForOptionUsage(
+        queryOptions
       );
+      return waitFor(() => getAllByQuery(instance)(args, queryOptions), {
+        ...deprecatedWaitForOptions,
+        ...waitForOptions,
+      });
     };
   }
 
   function findByQuery(instance: ReactTestInstance) {
     return function findFn(
       args: QueryArg,
-      queryOptions?: TextMatchOptions,
+      queryOptions?: TextMatchOptions & WaitForOptions,
       waitForOptions?: WaitForOptions = {}
     ) {
-      return waitFor(
-        () => getByQuery(instance)(args, queryOptions),
-        waitForOptions
+      const deprecatedWaitForOptions = extractDeprecatedWaitForOptionUsage(
+        queryOptions
       );
+      return waitFor(() => getByQuery(instance)(args, queryOptions), {
+        ...deprecatedWaitForOptions,
+        ...waitForOptions,
+      });
     };
   }
 
