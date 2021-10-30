@@ -105,6 +105,37 @@ test('findByText queries work asynchronously', async () => {
   await expect(findAllByText('Some Text')).resolves.toHaveLength(1);
 }, 20000);
 
+test.skip('getByText works properly with custom text component', () => {
+  function BoldText({ children }) {
+    return <Text>{children}</Text>;
+  }
+
+  expect(
+    render(
+      <Text>
+        <BoldText>Hello</BoldText>
+      </Text>
+    ).getByText('Hello')
+  ).toBeTruthy();
+});
+
+test.skip('getByText works properly with custom text container', () => {
+  function MyText({ children }) {
+    return <Text>{children}</Text>;
+  }
+  function BoldText({ children }) {
+    return <Text>{children}</Text>;
+  }
+
+  expect(
+    render(
+      <MyText>
+        <BoldText>Hello</BoldText>
+      </MyText>
+    ).getByText('Hello')
+  ).toBeTruthy();
+});
+
 test('queryByText nested <Image> in <Text> at start', () => {
   expect(
     render(

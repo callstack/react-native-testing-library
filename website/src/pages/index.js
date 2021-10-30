@@ -67,6 +67,14 @@ export default function Home() {
           >
             {renderFeatures()}
           </div>
+          <div>
+            Like the project? ⚛️{' '}
+            <a href="https://callstack.com/careers/?utm_campaign=Senior_RN&utm_source=github&utm_medium=readme">
+              Join the team
+            </a>{' '}
+            who does amazing stuff for clients and drives React Native Open
+            Source! 🔥
+          </div>
         </div>
       </main>
     </Layout>

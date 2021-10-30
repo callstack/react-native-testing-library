@@ -342,7 +342,7 @@ export interface RenderAPI extends Queries {
   update(nextElement: React.ReactElement<any>): void;
   rerender(nextElement: React.ReactElement<any>): void;
   unmount(nextElement?: React.ReactElement<any>): void;
-  toJSON(): ReactTestRendererJSON | null;
+  toJSON(): ReactTestRendererJSON[] | ReactTestRendererJSON | null;
   debug: Debug;
   container: ReactTestInstance;
 }
