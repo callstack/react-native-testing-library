@@ -7,7 +7,7 @@ This section deals with testing RN applications developed with Redux. We will be
 
 ## Setting up
 
-An example of setting up can be found [here](https://github.com/callstack/react-native-testing-library/tree/master/examples/redux).
+An example of setting up can be found [here](https://github.com/callstack/react-native-testing-library/tree/main/examples/redux).
 
 ## Test cases
 

@@ -11,38 +11,28 @@ exports[`debug 1`] = `
     not fresh
   </Text>
   <TextInput
-    allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
-    rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
-    underlineColorAndroid=\\"transparent\\"
     value=\\"Custom Freshie\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"What did you inspect?\\"
     placeholder=\\"Who inspected freshness?\\"
-    rejectResponderTermination={true}
     testID=\\"bananaChef\\"
-    underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"What banana?\\"
-    rejectResponderTermination={true}
-    underlineColorAndroid=\\"transparent\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"hello\\"
-    rejectResponderTermination={true}
-    underlineColorAndroid=\\"transparent\\"
     value=\\"\\"
   />
   <View
     accessible={true}
+    collapsable={false}
     focusable={true}
+    nativeID=\\"animatedComponent\\"
     onClick={[Function onClick]}
     onResponderGrant={[Function onResponderGrant]}
     onResponderMove={[Function onResponderMove]}
@@ -87,33 +77,21 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     fresh
   </Text>
   <TextInput
-    allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
-    rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
-    underlineColorAndroid=\\"transparent\\"
     value=\\"Custom Freshie\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"What did you inspect?\\"
     placeholder=\\"Who inspected freshness?\\"
-    rejectResponderTermination={true}
     testID=\\"bananaChef\\"
-    underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"What banana?\\"
-    rejectResponderTermination={true}
-    underlineColorAndroid=\\"transparent\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"hello\\"
-    rejectResponderTermination={true}
-    underlineColorAndroid=\\"transparent\\"
     value=\\"\\"
   />
   <View
@@ -163,33 +141,21 @@ exports[`debug: shallow 1`] = `
     not fresh
   </Text>
   <TextInput
-    allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
-    rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
-    underlineColorAndroid=\\"transparent\\"
     value=\\"Custom Freshie\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"What did you inspect?\\"
     placeholder=\\"Who inspected freshness?\\"
-    rejectResponderTermination={true}
     testID=\\"bananaChef\\"
-    underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"What banana?\\"
-    rejectResponderTermination={true}
-    underlineColorAndroid=\\"transparent\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"hello\\"
-    rejectResponderTermination={true}
-    underlineColorAndroid=\\"transparent\\"
     value=\\"\\"
   />
   <MyButton
@@ -227,33 +193,21 @@ exports[`debug: shallow with message 1`] = `
     not fresh
   </Text>
   <TextInput
-    allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
-    rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
-    underlineColorAndroid=\\"transparent\\"
     value=\\"Custom Freshie\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"What did you inspect?\\"
     placeholder=\\"Who inspected freshness?\\"
-    rejectResponderTermination={true}
     testID=\\"bananaChef\\"
-    underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"What banana?\\"
-    rejectResponderTermination={true}
-    underlineColorAndroid=\\"transparent\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"hello\\"
-    rejectResponderTermination={true}
-    underlineColorAndroid=\\"transparent\\"
     value=\\"\\"
   />
   <MyButton
@@ -291,38 +245,28 @@ exports[`debug: with message 1`] = `
     not fresh
   </Text>
   <TextInput
-    allowFontScaling={true}
     placeholder=\\"Add custom freshness\\"
-    rejectResponderTermination={true}
     testID=\\"bananaCustomFreshness\\"
-    underlineColorAndroid=\\"transparent\\"
     value=\\"Custom Freshie\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"What did you inspect?\\"
     placeholder=\\"Who inspected freshness?\\"
-    rejectResponderTermination={true}
     testID=\\"bananaChef\\"
-    underlineColorAndroid=\\"transparent\\"
     value=\\"I inspected freshie\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"What banana?\\"
-    rejectResponderTermination={true}
-    underlineColorAndroid=\\"transparent\\"
   />
   <TextInput
-    allowFontScaling={true}
     defaultValue=\\"hello\\"
-    rejectResponderTermination={true}
-    underlineColorAndroid=\\"transparent\\"
     value=\\"\\"
   />
   <View
     accessible={true}
+    collapsable={false}
     focusable={true}
+    nativeID=\\"animatedComponent\\"
     onClick={[Function onClick]}
     onResponderGrant={[Function onResponderGrant]}
     onResponderMove={[Function onResponderMove]}
@@ -359,7 +303,9 @@ exports[`debug: with message 1`] = `
 exports[`toJSON 1`] = `
 <View
   accessible={true}
+  collapsable={false}
   focusable={false}
+  nativeID="animatedComponent"
   onClick={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}

@@ -1,4 +1,4 @@
-// Most content of this file sourced directly from https://github.com/testing-library/dom-testing-library/blob/master/src/helpers.js
+// Most content of this file sourced directly from https://github.com/testing-library/dom-testing-library/blob/main/src/helpers.js
 // @flow
 /* globals jest */
 

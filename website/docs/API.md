@@ -7,7 +7,7 @@ This page gathers public API of React Native Testing Library along with usage ex
 
 ## `render`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/render.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/render.test.js)
 
 Defined as:
 
@@ -225,7 +225,7 @@ fireEvent[eventName](element: ReactTestInstance, ...data: Array<any>): void
 
 Convenience methods for common events like: `press`, `changeText`, `scroll`.
 
-### `fireEvent.press: (element: ReactTestInstance) => void`
+### `fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void`
 
 Invokes `press` event handler on the element or parent element in the tree.
 
@@ -234,6 +234,12 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 
 const onPressMock = jest.fn();
+const eventData = {
+  nativeEvent: {
+    pageX: 20,
+    pageY: 30,
+  },
+};
 
 const { getByText } = render(
   <View>
@@ -243,8 +249,8 @@ const { getByText } = render(
   </View>
 );
 
-fireEvent.press(getByText('Press me'));
-expect(onPressMock).toHaveBeenCalled();
+fireEvent.press(getByText('Press me'), eventData);
+expect(onPressMock).toHaveBeenCalledWith(eventData);
 ```
 
 ### `fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void`
@@ -339,7 +345,7 @@ If you're noticing that components are not being found on a list, even after moc
 
 ## `waitFor`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitFor.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitFor.test.js)
 
 Defined as:
 
@@ -363,12 +369,12 @@ test('waiting for an Banana to be ready', async () => {
 ```
 
 :::info
-In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
 :::
 
 ## `waitForElementToBeRemoved`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/waitForElementToBeRemoved.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitForElementToBeRemoved.test.js)
 
 Defined as:
 
@@ -399,12 +405,12 @@ This method expects that the element is initally present in the render tree and 
 You can use any of `getBy`, `getAllBy`, `queryBy` and `queryAllBy` queries for `expectation` parameter.
 
 :::info
-In order to properly use `waitForElementToBeRemoved` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.60 (which comes with React >=16.9.0).
+In order to properly use `waitForElementToBeRemoved` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
 :::
 
 ## `within`, `getQueriesForElement`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/master/src/__tests__/within.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/within.test.js)
 
 Defined as:
 
@@ -458,4 +464,4 @@ expect(submitButtons).toHaveLength(3); // expect 3 elements
 
 ## `act`
 
-Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/master/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
+Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/main/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
