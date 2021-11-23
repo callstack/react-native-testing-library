@@ -10,6 +10,7 @@ import {
   act,
   within,
   getQueriesForElement,
+  getDefaultNormalizer,
 } from '../..';
 
 interface HasRequiredProp {
@@ -133,19 +134,23 @@ const queryAllBy: ReactTestInstance[][] = [
 // findBy API
 const findBy: Promise<ReactTestInstance>[] = [
   tree.findByText('View'),
-  tree.findByText('View', { timeout: 10, interval: 10 }),
+  tree.findByText('View', {}, { timeout: 10, interval: 10 }),
   tree.findByText(/View/g),
-  tree.findByText(/View/g, { timeout: 10, interval: 5 }),
+  tree.findByText(/View/g, {}, { timeout: 10, interval: 5 }),
   tree.findByPlaceholderText('my placeholder'),
-  tree.findByPlaceholderText('my placeholder', { timeout: 10, interval: 5 }),
+  tree.findByPlaceholderText(
+    'my placeholder',
+    {},
+    { timeout: 10, interval: 5 }
+  ),
   tree.findByPlaceholderText(/placeholder/g),
-  tree.findByPlaceholderText(/placeholder/g, { timeout: 10, interval: 5 }),
+  tree.findByPlaceholderText(/placeholder/g, {}, { timeout: 10, interval: 5 }),
   tree.findByDisplayValue('my value'),
-  tree.findByDisplayValue('my value', { timeout: 10, interval: 10 }),
+  tree.findByDisplayValue('my value', {}, { timeout: 10, interval: 10 }),
   tree.findByDisplayValue(/value/g),
-  tree.findByDisplayValue(/value/g, { timeout: 10, interval: 10 }),
+  tree.findByDisplayValue(/value/g, {}, { timeout: 10, interval: 10 }),
   tree.findByTestId('test-id'),
-  tree.findByTestId(/test-id/, { timeout: 10, interval: 10 }),
+  tree.findByTestId(/test-id/, {}, { timeout: 10, interval: 10 }),
   tree.findByA11yLabel('label'),
   tree.findByA11yLabel('label', { timeout: 10, interval: 10 }),
   tree.findByLabelText('label'),
@@ -166,22 +171,30 @@ const findBy: Promise<ReactTestInstance>[] = [
 
 const findAllBy: Promise<ReactTestInstance[]>[] = [
   tree.findAllByText('View'),
-  tree.findAllByText('View', { timeout: 10, interval: 10 }),
+  tree.findAllByText('View', {}, { timeout: 10, interval: 10 }),
   tree.findAllByText(/View/g),
-  tree.findAllByText(/View/g, { timeout: 10, interval: 5 }),
+  tree.findAllByText(/View/g, { exact: false }, { timeout: 10, interval: 5 }),
   tree.findAllByPlaceholderText('my placeholder'),
-  tree.findAllByPlaceholderText('my placeholder', {
-    timeout: 10,
-    interval: 10,
-  }),
+  tree.findAllByPlaceholderText(
+    'my placeholder',
+    { exact: false },
+    {
+      timeout: 10,
+      interval: 10,
+    }
+  ),
   tree.findAllByPlaceholderText(/placeholder/g),
-  tree.findAllByPlaceholderText(/placeholder/g, { timeout: 10, interval: 10 }),
+  tree.findAllByPlaceholderText(
+    /placeholder/g,
+    {},
+    { timeout: 10, interval: 10 }
+  ),
   tree.findAllByDisplayValue('View'),
-  tree.findAllByDisplayValue('View', { timeout: 10, interval: 10 }),
+  tree.findAllByDisplayValue('View', {}, { timeout: 10, interval: 10 }),
   tree.findAllByDisplayValue(/View/g),
-  tree.findAllByDisplayValue(/View/g, { timeout: 10, interval: 10 }),
+  tree.findAllByDisplayValue(/View/g, {}, { timeout: 10, interval: 10 }),
   tree.findAllByTestId('test-id'),
-  tree.findAllByTestId(/test-id/, { timeout: 10, interval: 10 }),
+  tree.findAllByTestId(/test-id/, {}, { timeout: 10, interval: 10 }),
   tree.findAllByA11yLabel('label'),
   tree.findAllByA11yLabel('label', { timeout: 10, interval: 10 }),
   tree.findAllByLabelText('label'),
@@ -461,3 +474,13 @@ const withinFindAll: Promise<ReactTestInstance[]>[] = [
   getQueriesForElement(instance).findAllByA11yState({ busy: true }),
   getQueriesForElement(instance).findAllByA11yValue({ min: 10 }),
 ];
+
+// TextMatch
+const normalizer = getDefaultNormalizer({
+  trim: false,
+  collapseWhitespace: true,
+});
+tree.getByText('text', { exact: false, normalizer });
+tree.getByPlaceholderText('text', { exact: false, normalizer });
+tree.getByDisplayValue('text', { exact: true, normalizer });
+tree.getByTestId('text', { exact: false, normalizer });

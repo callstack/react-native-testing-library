@@ -26,8 +26,14 @@ interface GetByAPI {
     value: TextMatch,
     options?: TextMatchOptions
   ) => ReactTestInstance;
-  getByTestId: (testID: TextMatch) => ReactTestInstance;
-  getAllByTestId: (testID: TextMatch) => Array<ReactTestInstance>;
+  getByTestId: (
+    testID: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance;
+  getAllByTestId: (
+    testID: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance>;
   getAllByText: (
     text: TextMatch,
     options?: TextMatchOptions
@@ -154,40 +160,42 @@ interface QueryByAPI {
 interface FindByAPI {
   findByText: (
     text: TextMatch,
-    waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions
+    queryOptions?: TextMatchOptions,
+    waitForOptions?: WaitForOptions
   ) => FindReturn;
   findByPlaceholderText: (
     placeholder: TextMatch,
-    waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions
+    queryOptions?: TextMatchOptions,
+    waitForOptions?: WaitForOptions
   ) => FindReturn;
   findByDisplayValue: (
     value: TextMatch,
-    waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions
+    queryOptions?: TextMatchOptions,
+    waitForOptions?: WaitForOptions
   ) => FindReturn;
   findByTestId: (
     testID: TextMatch,
+    queryOptions?: TextMatchOptions,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByText: (
     text: TextMatch,
-    waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions
+    queryOptions?: TextMatchOptions,
+    waitForOptions?: WaitForOptions
   ) => FindAllReturn;
   findAllByPlaceholderText: (
     placeholder: TextMatch,
-    waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions
+    queryOptions?: TextMatchOptions,
+    waitForOptions?: WaitForOptions
   ) => FindAllReturn;
   findAllByDisplayValue: (
     value: TextMatch,
-    waitForOptions?: WaitForOptions,
-    options?: TextMatchOptions
+    queryOptions?: TextMatchOptions,
+    waitForOptions?: WaitForOptions
   ) => FindAllReturn;
   findAllByTestId: (
     testID: TextMatch,
+    queryOptions?: TextMatchOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 }

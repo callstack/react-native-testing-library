@@ -42,7 +42,7 @@ export type Queries<QueryArg> = {
   findAllBy: FindAllByQuery<QueryArg>,
 };
 
-// The WaitForOptions as been moved to the second option param of findBy* methods with the adding of TextMatchOptions
+// The WaitForOptions has been moved to the second option param of findBy* methods with the adding of TextMatchOptions
 // To make the migration easier and avoid a breaking change, keep reading this options from the first param but warn
 const deprecatedKeys: $Keys<WaitForOptions>[] = [
   'timeout',
@@ -60,9 +60,10 @@ const extractDeprecatedWaitForOptionUsage = (queryOptions?: WaitForOptions) => {
       if (queryOptions[key]) {
         // eslint-disable-next-line no-console
         console.warn(
-          `Use of option ${key} in a findBy* query's first option parameter, TextMatchOptions, is deprecated. Please pass this option in the WaitForOptions parameter. For instance, "findByText(instance, {}, {${key}: ${queryOptions[
-            key
-          ].toString()}})"`
+          `Use of option "${key}" in a findBy* query's second parameter, TextMatchOptions, is deprecated. Please pass this option in the third, WaitForOptions, parameter. 
+Example: 
+
+  findByText(text, {}, { ${key}: ${queryOptions[key].toString()} })`
         );
       }
     });

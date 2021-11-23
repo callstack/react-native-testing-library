@@ -1,7 +1,14 @@
 // @flow
 import * as React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { render } from '..';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Button,
+  TextInput,
+} from 'react-native';
+import { render, getDefaultNormalizer } from '..';
 
 const MyButton = ({ children, onPress }) => (
   <TouchableOpacity onPress={onPress}>
@@ -105,30 +112,38 @@ test('findByText queries work asynchronously', async () => {
   await expect(findAllByText('Some Text')).resolves.toHaveLength(1);
 }, 20000);
 
-test('findByText queries warn on deprecated use of WaitForOptions', async () => {
-  const options = { timeout: 10 };
-  // mock implementation to avoid warning in the test suite
-  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  const { rerender, findByText } = render(<View />);
-  await expect(findByText('Some Text', options)).rejects.toBeTruthy();
+describe('findBy options deprecations', () => {
+  let warnSpy;
+  beforeEach(() => {
+    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
 
-  setTimeout(
-    () =>
-      rerender(
-        <View>
-          <Text>Some Text</Text>
-        </View>
-      ),
-    20
-  );
+  test('findByText queries warn on deprecated use of WaitForOptions', async () => {
+    const options = { timeout: 10 };
+    // mock implementation to avoid warning in the test suite
+    const { rerender, findByText } = render(<View />);
+    await expect(findByText('Some Text', options)).rejects.toBeTruthy();
 
-  await expect(findByText('Some Text')).resolves.toBeTruthy();
+    setTimeout(
+      () =>
+        rerender(
+          <View>
+            <Text>Some Text</Text>
+          </View>
+        ),
+      20
+    );
 
-  expect(warnSpy).toHaveBeenCalledWith(
-    expect.stringContaining('Use of option timeout')
-  );
-  // TODO remove mock
-}, 20000);
+    await expect(findByText('Some Text')).resolves.toBeTruthy();
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Use of option "timeout"')
+    );
+  }, 20000);
+});
 
 test.skip('getByText works properly with custom text component', () => {
   function BoldText({ children }) {
@@ -302,4 +317,122 @@ test('queryAllByText matches all the matching nodes', () => {
   ).queryAllByText('long text', { exact: false });
   expect(allMatched.length).toBe(2);
   expect(allMatched.map((node) => node.props.nativeID)).toEqual(['2', '3']);
+});
+
+describe('supports TextMatch options', () => {
+  test('getByText, getAllByText', () => {
+    const { getByText, getAllByText } = render(
+      <View>
+        <Text testID="text">Text and details</Text>
+        <Button
+          testID="button"
+          title="Button and a detail"
+          onPress={jest.fn()}
+        />
+      </View>
+    );
+
+    expect(getByText('details', { exact: false })).toBeTruthy();
+    expect(getAllByText('detail', { exact: false })).toHaveLength(2);
+  });
+
+  test('getByPlaceholderText, getAllByPlaceholderText', () => {
+    const { getByPlaceholderText, getAllByPlaceholderText } = render(
+      <View>
+        <TextInput placeholder={'Placeholder with details'} />
+        <TextInput placeholder={'Placeholder with a DETAIL'} />
+      </View>
+    );
+
+    expect(getByPlaceholderText('details', { exact: false })).toBeTruthy();
+    expect(getAllByPlaceholderText('detail', { exact: false })).toHaveLength(2);
+  });
+
+  test('getByDisplayValue, getAllByDisplayValue', () => {
+    const { getByDisplayValue, getAllByDisplayValue } = render(
+      <View>
+        <TextInput value={'Value with details'} />
+        <TextInput value={'Value with a detail'} />
+      </View>
+    );
+
+    expect(getByDisplayValue('details', { exact: false })).toBeTruthy();
+    expect(getAllByDisplayValue('detail', { exact: false })).toHaveLength(2);
+  });
+
+  test('getByTestId, getAllByTestId', () => {
+    const { getByTestId, getAllByTestId } = render(
+      <View>
+        <View testID="test" />
+        <View testID="tests id" />
+      </View>
+    );
+    expect(getByTestId('id', { exact: false })).toBeTruthy();
+    expect(getAllByTestId('test', { exact: false })).toHaveLength(2);
+  });
+
+  test('with TextMatch option exact === false text search is NOT case sensitive', () => {
+    const { getByText, getAllByText } = render(
+      <View>
+        <Text testID="text">Text and details</Text>
+        <Button
+          testID="button"
+          title="Button and a DeTAil"
+          onPress={jest.fn()}
+        />
+      </View>
+    );
+
+    expect(getByText('DeTaIlS', { exact: false })).toBeTruthy();
+    expect(getAllByText('detail', { exact: false })).toHaveLength(2);
+  });
+});
+
+describe('Supports normalization', () => {
+  test('trims and collapses whitespace by default', () => {
+    const { getByText } = render(
+      <View>
+        <Text>{`  Text     and
+
+
+        whitespace`}</Text>
+      </View>
+    );
+
+    expect(getByText('Text and whitespace')).toBeTruthy();
+  });
+
+  test('trim and collapseWhitespace is customizable by getDefaultNormalizer param', () => {
+    const testTextWithWhitespace = `  Text     and
+
+
+        whitespace`;
+    const { getByText } = render(
+      <View>
+        <Text>{testTextWithWhitespace}</Text>
+      </View>
+    );
+
+    expect(
+      getByText(testTextWithWhitespace, {
+        normalizer: getDefaultNormalizer({
+          trim: false,
+          collapseWhitespace: false,
+        }),
+      })
+    ).toBeTruthy();
+  });
+
+  test('normalizer function is customisable', () => {
+    const testText = 'A TO REMOVE text';
+    const normalizerFn = (textToNormalize) =>
+      textToNormalize.replace('TO REMOVE ', '');
+    const { getByText } = render(
+      <View>
+        <Text>{testText}</Text>
+      </View>
+    );
+
+    expect(getByText('A text', { normalizer: normalizerFn })).toBeTruthy();
+  });
 });

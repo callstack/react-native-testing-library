@@ -46,16 +46,16 @@ _Note: most methods like this one return a [`ReactTestInstance`](https://reactjs
 
 ```typescript
 type ReactTestInstance = {
-  type: string | Function,
-  props: { [propName: string]: any },
-  parent: null | ReactTestInstance,
-  children: Array<ReactTestInstance | string>,
+  type: string | Function;
+  props: { [propName: string]: any };
+  parent: null | ReactTestInstance;
+  children: Array<ReactTestInstance | string>;
 };
 ```
 
 ### Options
 
-Query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](api-queries#textmatch) for more info.
+Query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#TextMatch) for more info.
 
 ### `ByText`
 
@@ -209,8 +209,7 @@ const element = getByA11yValue({ min: 40 });
 
 ## TextMatch
 
-
-Several APIs accept a `TextMatch` which can be a `string` or `regex`.
+Most of the query APIs take a `TextMatch` as an argument, which means the argument can be either a _string_ or _regex_.
 
 ```typescript
 type TextMatchOptions = {
@@ -220,6 +219,50 @@ type TextMatchOptions = {
   collapseWhitespace?: boolean;
 };
 ```
+
+### Examples
+
+Given the following render:
+
+```jsx
+const { getByText } = render(<Text>Hello World</Text>);
+```
+
+Will **find a match**:
+
+```js
+// Matching a string:
+getByText('Hello World'); // full string match
+getByText('llo Worl', { exact: false }); // substring match
+getByText('hello world', { exact: false }); // ignore case-sensitivity
+
+// Matching a regex:
+getByText(/World/); // substring match
+getByText(/world/i); // substring match, ignore case
+getByText(/^hello world$/i); // full string match, ignore case-sensitivity
+getByText(/Hello W?oRlD/i); // advanced regex
+```
+
+Will **NOT find a match**
+
+```js
+// substring does not match
+getByText('llo Worl');
+// full string does not match
+getByText('Goodbye World');
+
+// case-sensitive regex with different case
+getByText(/hello world/);
+```
+
+### Precision
+
+Queries that take a `TextMatch` also accept an object as the final argument that can contain options that affect the precision of string matching:
+
+- `exact`: Defaults to `true`; matches full strings, case-sensitive. When false, matches substrings and is not case-sensitive.
+  - `exact` has no effect on regex argument.
+  - In most cases using a `regex` instead of a string gives you more control over fuzzy matching and should be preferred over `{ exact: false }`.
+- `normalizer`: An optional function which overrides normalization behavior. See [Normalization](#Normalization).
 
 `exact` option defaults to `true` but if you want to search for a text slice or make text matching case-insensitive you can override it. That being said we advise you to use regex in more complex scenarios.
 
@@ -255,41 +298,6 @@ getByText(node, 'text', {
   normalizer: (str) =>
     getDefaultNormalizer({ trim: false })(str).replace(/[\u200E-\u200F]*/g, ''),
 });
-```
-
-### TextMatch Examples
-
-Given the following render:
-
-```jsx
-const { getByText } = render(<Text>Hello World</Text>);
-```
-
-Will **find a match**:
-
-```js
-// Matching a string:
-getByText('Hello World'); // full string match
-getByText('llo Worl', { exact: false }); // substring match
-getByText('hello world', { exact: false }); // ignore case-sensitivity
-
-// Matching a regex:
-getByText(/World/); // substring match
-getByText(/world/i); // substring match, ignore case
-getByText(/^hello world$/i); // full string match, ignore case-sensitivity
-getByText(/Hello W?oRlD/i); // advanced regex
-```
-
-Will **NOT find a match**
-
-```js
-// substring does not match
-getByText('llo Worl');
-// full string does not match
-getByText('Goodbye World');
-
-// case-sensitive regex with different case
-getByText(/hello world/);
 ```
 
 ## Unit testing helpers
