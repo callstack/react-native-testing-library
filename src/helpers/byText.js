@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { getDefaultNormalizer, matches } from '../matches';
+import { matches } from '../matches';
 import type { NormalizerFn } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
@@ -54,8 +54,7 @@ const getNodeByText = (
       if (textChildren) {
         const textToTest = textChildren.join('');
         const { exact, normalizer } = options;
-        const normalizerFn = normalizer ?? getDefaultNormalizer();
-        return matches(text, textToTest, normalizerFn, exact);
+        return matches(text, textToTest, normalizer, exact);
       }
     }
     return false;

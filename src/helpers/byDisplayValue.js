@@ -1,5 +1,5 @@
 // @flow
-import { getDefaultNormalizer, matches } from '../matches';
+import { matches } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
 import { filterNodeByType } from './filterNodeByType';
@@ -14,14 +14,13 @@ const getTextInputNodeByDisplayValue = (
   try {
     const { TextInput } = require('react-native');
     const { exact, normalizer } = options;
-    const normalizerFn = normalizer ?? getDefaultNormalizer();
     const nodeValue =
       node.props.value !== undefined
         ? node.props.value
         : node.props.defaultValue;
     return (
       filterNodeByType(node, TextInput) &&
-      matches(value, nodeValue, normalizerFn, exact)
+      matches(value, nodeValue, normalizer, exact)
     );
   } catch (error) {
     throw createLibraryNotSupportedError(error);

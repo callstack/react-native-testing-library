@@ -1,14 +1,12 @@
 // @flow
-import { getDefaultNormalizer, matches } from '../matches';
+import { matches } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
 import type { TextMatchOptions } from './byText';
 
 const getNodeByTestId = (node, testID, options?: TextMatchOptions = {}) => {
   const { exact, normalizer } = options;
-  const normalizerFn = normalizer ?? getDefaultNormalizer();
-
-  return matches(testID, node.props.testID, normalizerFn, exact);
+  return matches(testID, node.props.testID, normalizer, exact);
 };
 
 const queryAllByTestId = (

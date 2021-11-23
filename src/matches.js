@@ -1,10 +1,10 @@
 // @flow
 export type NormalizerFn = (textToNormalize: string) => string;
 
-function matches(
+export function matches(
   matcher: string | RegExp,
   text: string,
-  normalizer: NormalizerFn,
+  normalizer?: NormalizerFn = getDefaultNormalizer(),
   exact?: boolean = true
 ): boolean {
   if (typeof text !== 'string') {
@@ -26,7 +26,7 @@ type NormalizerConfig = {
   collapseWhitespace?: boolean,
 };
 
-function getDefaultNormalizer({
+export function getDefaultNormalizer({
   trim = true,
   collapseWhitespace = true,
 }: NormalizerConfig = {}): NormalizerFn {
@@ -39,5 +39,3 @@ function getDefaultNormalizer({
     return normalizedText;
   };
 }
-
-export { matches, getDefaultNormalizer };
