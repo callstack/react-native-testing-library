@@ -36,7 +36,7 @@
     "@release-it/conventional-changelog": "^2.0.0",
     "@testing-library/jest-native": "~4.0.2",
     "@types/react": "^17.0.0",
-    "@types/react-native": "^0.65.7",
+    "@types/react-native": "^0.66.5",
     "@types/react-test-renderer": "^17.0.0",
     "babel-jest": "^27.0.0",
     "conventional-changelog-cli": "^2.0.11",
