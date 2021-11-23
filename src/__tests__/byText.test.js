@@ -142,7 +142,6 @@ describe('findBy options deprecations', () => {
     expect(warnSpy).toHaveBeenCalledWith(
       expect.stringContaining('Use of option "timeout"')
     );
-    warnSpy.mockRestore();
   }, 20000);
 });
 
