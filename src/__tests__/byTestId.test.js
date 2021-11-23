@@ -115,8 +115,8 @@ test('getAllByTestId, queryAllByTestId', () => {
 test('findByTestId and findAllByTestId work asynchronously', async () => {
   const options = { timeout: 10 }; // Short timeout so that this test runs quickly
   const { rerender, findByTestId, findAllByTestId } = render(<View />);
-  await expect(findByTestId('aTestId', options)).rejects.toBeTruthy();
-  await expect(findAllByTestId('aTestId', options)).rejects.toBeTruthy();
+  await expect(findByTestId('aTestId', {}, options)).rejects.toBeTruthy();
+  await expect(findAllByTestId('aTestId', {}, options)).rejects.toBeTruthy();
 
   setTimeout(
     () =>

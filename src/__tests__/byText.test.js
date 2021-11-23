@@ -1,7 +1,14 @@
 // @flow
 import * as React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { render } from '..';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Button,
+  TextInput,
+} from 'react-native';
+import { render, getDefaultNormalizer } from '..';
 
 const MyButton = ({ children, onPress }) => (
   <TouchableOpacity onPress={onPress}>
@@ -88,8 +95,8 @@ test('getAllByText, queryAllByText', () => {
 test('findByText queries work asynchronously', async () => {
   const options = { timeout: 10 }; // Short timeout so that this test runs quickly
   const { rerender, findByText, findAllByText } = render(<View />);
-  await expect(findByText('Some Text', options)).rejects.toBeTruthy();
-  await expect(findAllByText('Some Text', options)).rejects.toBeTruthy();
+  await expect(findByText('Some Text', {}, options)).rejects.toBeTruthy();
+  await expect(findAllByText('Some Text', {}, options)).rejects.toBeTruthy();
 
   setTimeout(
     () =>
@@ -104,6 +111,39 @@ test('findByText queries work asynchronously', async () => {
   await expect(findByText('Some Text')).resolves.toBeTruthy();
   await expect(findAllByText('Some Text')).resolves.toHaveLength(1);
 }, 20000);
+
+describe('findBy options deprecations', () => {
+  let warnSpy;
+  beforeEach(() => {
+    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
+  test('findByText queries warn on deprecated use of WaitForOptions', async () => {
+    const options = { timeout: 10 };
+    // mock implementation to avoid warning in the test suite
+    const { rerender, findByText } = render(<View />);
+    await expect(findByText('Some Text', options)).rejects.toBeTruthy();
+
+    setTimeout(
+      () =>
+        rerender(
+          <View>
+            <Text>Some Text</Text>
+          </View>
+        ),
+      20
+    );
+
+    await expect(findByText('Some Text')).resolves.toBeTruthy();
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Use of option "timeout"')
+    );
+  }, 20000);
+});
 
 test.skip('getByText works properly with custom text component', () => {
   function BoldText({ children }) {
@@ -181,7 +221,7 @@ test('queryByText not found', () => {
   ).toBeFalsy();
 });
 
-test('queryByText nested text across multiple <Text> in <Text>', () => {
+test('queryByText does not match nested text across multiple <Text> in <Text>', () => {
   const { queryByText } = render(
     <Text nativeID="1">
       Hello{' '}
@@ -192,7 +232,7 @@ test('queryByText nested text across multiple <Text> in <Text>', () => {
     </Text>
   );
 
-  expect(queryByText('Hello World!')?.props.nativeID).toBe('1');
+  expect(queryByText('Hello World!')).toBe(null);
 });
 
 test('queryByText with nested Text components return the closest Text', () => {
@@ -204,7 +244,7 @@ test('queryByText with nested Text components return the closest Text', () => {
 
   const { queryByText } = render(<NestedTexts />);
 
-  expect(queryByText('My text')?.props.nativeID).toBe('2');
+  expect(queryByText('My text', { exact: false })?.props.nativeID).toBe('2');
 });
 
 test('queryByText with nested Text components each with text return the lowest one', () => {
@@ -217,21 +257,7 @@ test('queryByText with nested Text components each with text return the lowest o
 
   const { queryByText } = render(<NestedTexts />);
 
-  expect(queryByText('My text')?.props.nativeID).toBe('2');
-});
-
-test('queryByText nested <CustomText> in <Text>', () => {
-  const CustomText = ({ children }) => {
-    return <Text>{children}</Text>;
-  };
-
-  expect(
-    render(
-      <Text>
-        Hello <CustomText>World!</CustomText>
-      </Text>
-    ).queryByText('Hello World!')
-  ).toBeTruthy();
+  expect(queryByText('My text', { exact: false })?.props.nativeID).toBe('2');
 });
 
 test('queryByText nested deep <CustomText> in <Text>', () => {
@@ -245,5 +271,168 @@ test('queryByText nested deep <CustomText> in <Text>', () => {
         <CustomText>Hello</CustomText> <CustomText>World!</CustomText>
       </Text>
     ).queryByText('Hello World!')
-  ).toBeTruthy();
+  ).toBe(null);
+});
+
+test('queryByText with nested Text components: not-exact text match returns the most deeply nested common component', () => {
+  const { queryByText: queryByTextFirstCase } = render(
+    <Text nativeID="1">
+      bob
+      <Text nativeID="2">My </Text>
+      <Text nativeID="3">text</Text>
+    </Text>
+  );
+
+  const { queryByText: queryByTextSecondCase } = render(
+    <Text nativeID="1">
+      bob
+      <Text nativeID="2">My text for test</Text>
+    </Text>
+  );
+
+  expect(queryByTextFirstCase('My text')).toBe(null);
+  expect(
+    queryByTextSecondCase('My text', { exact: false })?.props.nativeID
+  ).toBe('2');
+});
+
+test('queryAllByText does not match several times the same text', () => {
+  const allMatched = render(
+    <Text nativeID="1">
+      Start
+      <Text nativeID="2">This is a long text</Text>
+    </Text>
+  ).queryAllByText('long text', { exact: false });
+  expect(allMatched.length).toBe(1);
+  expect(allMatched[0].props.nativeID).toBe('2');
+});
+
+test('queryAllByText matches all the matching nodes', () => {
+  const allMatched = render(
+    <Text nativeID="1">
+      Start
+      <Text nativeID="2">This is a long text</Text>
+      <Text nativeID="3">This is another long text</Text>
+    </Text>
+  ).queryAllByText('long text', { exact: false });
+  expect(allMatched.length).toBe(2);
+  expect(allMatched.map((node) => node.props.nativeID)).toEqual(['2', '3']);
+});
+
+describe('supports TextMatch options', () => {
+  test('getByText, getAllByText', () => {
+    const { getByText, getAllByText } = render(
+      <View>
+        <Text testID="text">Text and details</Text>
+        <Button
+          testID="button"
+          title="Button and a detail"
+          onPress={jest.fn()}
+        />
+      </View>
+    );
+
+    expect(getByText('details', { exact: false })).toBeTruthy();
+    expect(getAllByText('detail', { exact: false })).toHaveLength(2);
+  });
+
+  test('getByPlaceholderText, getAllByPlaceholderText', () => {
+    const { getByPlaceholderText, getAllByPlaceholderText } = render(
+      <View>
+        <TextInput placeholder={'Placeholder with details'} />
+        <TextInput placeholder={'Placeholder with a DETAIL'} />
+      </View>
+    );
+
+    expect(getByPlaceholderText('details', { exact: false })).toBeTruthy();
+    expect(getAllByPlaceholderText('detail', { exact: false })).toHaveLength(2);
+  });
+
+  test('getByDisplayValue, getAllByDisplayValue', () => {
+    const { getByDisplayValue, getAllByDisplayValue } = render(
+      <View>
+        <TextInput value={'Value with details'} />
+        <TextInput value={'Value with a detail'} />
+      </View>
+    );
+
+    expect(getByDisplayValue('details', { exact: false })).toBeTruthy();
+    expect(getAllByDisplayValue('detail', { exact: false })).toHaveLength(2);
+  });
+
+  test('getByTestId, getAllByTestId', () => {
+    const { getByTestId, getAllByTestId } = render(
+      <View>
+        <View testID="test" />
+        <View testID="tests id" />
+      </View>
+    );
+    expect(getByTestId('id', { exact: false })).toBeTruthy();
+    expect(getAllByTestId('test', { exact: false })).toHaveLength(2);
+  });
+
+  test('with TextMatch option exact === false text search is NOT case sensitive', () => {
+    const { getByText, getAllByText } = render(
+      <View>
+        <Text testID="text">Text and details</Text>
+        <Button
+          testID="button"
+          title="Button and a DeTAil"
+          onPress={jest.fn()}
+        />
+      </View>
+    );
+
+    expect(getByText('DeTaIlS', { exact: false })).toBeTruthy();
+    expect(getAllByText('detail', { exact: false })).toHaveLength(2);
+  });
+});
+
+describe('Supports normalization', () => {
+  test('trims and collapses whitespace by default', () => {
+    const { getByText } = render(
+      <View>
+        <Text>{`  Text     and
+
+
+        whitespace`}</Text>
+      </View>
+    );
+
+    expect(getByText('Text and whitespace')).toBeTruthy();
+  });
+
+  test('trim and collapseWhitespace is customizable by getDefaultNormalizer param', () => {
+    const testTextWithWhitespace = `  Text     and
+
+
+        whitespace`;
+    const { getByText } = render(
+      <View>
+        <Text>{testTextWithWhitespace}</Text>
+      </View>
+    );
+
+    expect(
+      getByText(testTextWithWhitespace, {
+        normalizer: getDefaultNormalizer({
+          trim: false,
+          collapseWhitespace: false,
+        }),
+      })
+    ).toBeTruthy();
+  });
+
+  test('normalizer function is customisable', () => {
+    const testText = 'A TO REMOVE text';
+    const normalizerFn = (textToNormalize) =>
+      textToNormalize.replace('TO REMOVE ', '');
+    const { getByText } = render(
+      <View>
+        <Text>{testText}</Text>
+      </View>
+    );
+
+    expect(getByText('A text', { normalizer: normalizerFn })).toBeTruthy();
+  });
 });

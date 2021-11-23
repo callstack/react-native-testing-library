@@ -1,17 +1,22 @@
 // @flow
+import { matches } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
 import { filterNodeByType } from './filterNodeByType';
 import { createLibraryNotSupportedError } from './errors';
+import type { TextMatchOptions } from './byText';
 
-const getTextInputNodeByPlaceholderText = (node, placeholder) => {
+const getTextInputNodeByPlaceholderText = (
+  node,
+  placeholder,
+  options?: TextMatchOptions = {}
+) => {
   try {
     const { TextInput } = require('react-native');
+    const { exact, normalizer } = options;
     return (
       filterNodeByType(node, TextInput) &&
-      (typeof placeholder === 'string'
-        ? placeholder === node.props.placeholder
-        : placeholder.test(node.props.placeholder))
+      matches(placeholder, node.props.placeholder, normalizer, exact)
     );
   } catch (error) {
     throw createLibraryNotSupportedError(error);
@@ -20,10 +25,13 @@ const getTextInputNodeByPlaceholderText = (node, placeholder) => {
 
 const queryAllByPlaceholderText = (
   instance: ReactTestInstance
-): ((placeholder: string | RegExp) => Array<ReactTestInstance>) =>
-  function queryAllByPlaceholderFn(placeholder) {
+): ((
+  placeholder: string | RegExp,
+  queryOptions?: TextMatchOptions
+) => Array<ReactTestInstance>) =>
+  function queryAllByPlaceholderFn(placeholder, queryOptions) {
     return instance.findAll((node) =>
-      getTextInputNodeByPlaceholderText(node, placeholder)
+      getTextInputNodeByPlaceholderText(node, placeholder, queryOptions)
     );
   };
 

@@ -1,11 +1,19 @@
 // @flow
 import * as React from 'react';
+import { matches } from '../matches';
+import type { NormalizerFn } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
 import { filterNodeByType } from './filterNodeByType';
 import { createLibraryNotSupportedError } from './errors';
 
-const getChildrenAsText = (children, TextComponent, textContent = []) => {
+export type TextMatchOptions = {
+  exact?: boolean,
+  normalizer?: NormalizerFn,
+};
+
+const getChildrenAsText = (children, TextComponent) => {
+  const textContent = [];
   React.Children.forEach(children, (child) => {
     if (typeof child === 'string') {
       textContent.push(child);
@@ -26,14 +34,18 @@ const getChildrenAsText = (children, TextComponent, textContent = []) => {
         return;
       }
 
-      getChildrenAsText(child.props.children, TextComponent, textContent);
+      getChildrenAsText(child.props.children, TextComponent);
     }
   });
 
   return textContent;
 };
 
-const getNodeByText = (node, text: string | RegExp) => {
+const getNodeByText = (
+  node,
+  text: string | RegExp,
+  options?: TextMatchOptions = {}
+) => {
   try {
     const { Text } = require('react-native');
     const isTextComponent = filterNodeByType(node, Text);
@@ -41,9 +53,8 @@ const getNodeByText = (node, text: string | RegExp) => {
       const textChildren = getChildrenAsText(node.props.children, Text);
       if (textChildren) {
         const textToTest = textChildren.join('');
-        return typeof text === 'string'
-          ? text === textToTest
-          : text.test(textToTest);
+        const { exact, normalizer } = options;
+        return matches(text, textToTest, normalizer, exact);
       }
     }
     return false;
@@ -54,9 +65,14 @@ const getNodeByText = (node, text: string | RegExp) => {
 
 const queryAllByText = (
   instance: ReactTestInstance
-): ((text: string | RegExp) => Array<ReactTestInstance>) =>
-  function queryAllByTextFn(text) {
-    const results = instance.findAll((node) => getNodeByText(node, text));
+): ((
+  text: string | RegExp,
+  queryOptions?: TextMatchOptions
+) => Array<ReactTestInstance>) =>
+  function queryAllByTextFn(text, queryOptions) {
+    const results = instance.findAll((node) =>
+      getNodeByText(node, text, queryOptions)
+    );
 
     return results;
   };

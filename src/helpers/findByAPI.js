@@ -1,5 +1,6 @@
 // @flow
 import type { WaitForOptions } from '../waitFor';
+import type { TextMatchOptions } from './byText';
 import { findAllByTestId, findByTestId } from './byTestId';
 import { findAllByText, findByText } from './byText';
 import {
@@ -12,36 +13,44 @@ import { throwRenamedFunctionError } from './errors';
 export type FindByAPI = {|
   findAllByDisplayValue: (
     value: string | RegExp,
+    queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<Array<ReactTestInstance>>,
   findAllByPlaceholder: () => void,
   findAllByPlaceholderText: (
     placeholder: string | RegExp,
+    queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<Array<ReactTestInstance>>,
   findAllByTestId: (
     testId: string | RegExp,
+    queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<Array<ReactTestInstance>>,
   findAllByText: (
     text: string | RegExp,
+    queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<Array<ReactTestInstance>>,
   findByDisplayValue: (
     value: string | RegExp,
+    queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<ReactTestInstance>,
   findByPlaceholder: () => void,
   findByPlaceholderText: (
     placeholder: string | RegExp,
+    queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<ReactTestInstance>,
   findByTestId: (
     testId: string | RegExp,
+    queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<ReactTestInstance>,
   findByText: (
     text: string | RegExp,
+    queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<ReactTestInstance>,
 |};

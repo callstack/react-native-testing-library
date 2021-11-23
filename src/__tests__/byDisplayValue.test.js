@@ -81,10 +81,10 @@ test('findBy queries work asynchronously', async () => {
   );
 
   await expect(
-    findByDisplayValue('Display Value', options)
+    findByDisplayValue('Display Value', {}, options)
   ).rejects.toBeTruthy();
   await expect(
-    findAllByDisplayValue('Display Value', options)
+    findAllByDisplayValue('Display Value', {}, options)
   ).rejects.toBeTruthy();
 
   setTimeout(

@@ -14,18 +14,41 @@ import {
   getByPlaceholderText,
 } from './byPlaceholderText';
 import { getAllByDisplayValue, getByDisplayValue } from './byDisplayValue';
+import type { TextMatchOptions } from './byText';
 
 export type GetByAPI = {|
-  getByText: (text: string | RegExp) => ReactTestInstance,
-  getByPlaceholderText: (placeholder: string | RegExp) => ReactTestInstance,
-  getByDisplayValue: (value: string | RegExp) => ReactTestInstance,
-  getByTestId: (testID: string | RegExp) => ReactTestInstance,
-  getAllByTestId: (testID: string | RegExp) => Array<ReactTestInstance>,
-  getAllByText: (text: string | RegExp) => Array<ReactTestInstance>,
-  getAllByPlaceholderText: (
-    placeholder: string | RegExp
+  getByText: (
+    text: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => ReactTestInstance,
+  getByPlaceholderText: (
+    placeholder: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => ReactTestInstance,
+  getByDisplayValue: (
+    value: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => ReactTestInstance,
+  getByTestId: (
+    testID: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => ReactTestInstance,
+  getAllByTestId: (
+    testID: string | RegExp,
+    queryOptions?: TextMatchOptions
   ) => Array<ReactTestInstance>,
-  getAllByDisplayValue: (value: string | RegExp) => Array<ReactTestInstance>,
+  getAllByText: (
+    text: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => Array<ReactTestInstance>,
+  getAllByPlaceholderText: (
+    placeholder: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => Array<ReactTestInstance>,
+  getAllByDisplayValue: (
+    value: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => Array<ReactTestInstance>,
 
   // Unsafe aliases
   UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance,

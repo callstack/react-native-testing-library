@@ -1,19 +1,23 @@
 // @flow
+import { matches } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
+import type { TextMatchOptions } from './byText';
 
-const getNodeByTestId = (node, testID) => {
-  return typeof testID === 'string'
-    ? testID === node.props.testID
-    : testID.test(node.props.testID);
+const getNodeByTestId = (node, testID, options?: TextMatchOptions = {}) => {
+  const { exact, normalizer } = options;
+  return matches(testID, node.props.testID, normalizer, exact);
 };
 
 const queryAllByTestId = (
   instance: ReactTestInstance
-): ((testId: string | RegExp) => Array<ReactTestInstance>) =>
-  function queryAllByTestIdFn(testId) {
+): ((
+  testId: string | RegExp,
+  queryOptions?: TextMatchOptions
+) => Array<ReactTestInstance>) =>
+  function queryAllByTestIdFn(testId, queryOptions) {
     const results = instance
-      .findAll((node) => getNodeByTestId(node, testId))
+      .findAll((node) => getNodeByTestId(node, testId, queryOptions))
       .filter((element) => typeof element.type === 'string');
 
     return results;

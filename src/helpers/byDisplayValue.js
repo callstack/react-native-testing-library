@@ -1,19 +1,26 @@
 // @flow
+import { matches } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
 import { filterNodeByType } from './filterNodeByType';
 import { createLibraryNotSupportedError } from './errors';
+import type { TextMatchOptions } from './byText';
 
-const getTextInputNodeByDisplayValue = (node, value) => {
+const getTextInputNodeByDisplayValue = (
+  node,
+  value,
+  options?: TextMatchOptions = {}
+) => {
   try {
     const { TextInput } = require('react-native');
+    const { exact, normalizer } = options;
     const nodeValue =
       node.props.value !== undefined
         ? node.props.value
         : node.props.defaultValue;
     return (
       filterNodeByType(node, TextInput) &&
-      (typeof value === 'string' ? value === nodeValue : value.test(nodeValue))
+      matches(value, nodeValue, normalizer, exact)
     );
   } catch (error) {
     throw createLibraryNotSupportedError(error);
@@ -22,10 +29,13 @@ const getTextInputNodeByDisplayValue = (node, value) => {
 
 const queryAllByDisplayValue = (
   instance: ReactTestInstance
-): ((displayValue: string | RegExp) => Array<ReactTestInstance>) =>
-  function queryAllByDisplayValueFn(displayValue) {
+): ((
+  displayValue: string | RegExp,
+  queryOptions?: TextMatchOptions
+) => Array<ReactTestInstance>) =>
+  function queryAllByDisplayValueFn(displayValue, queryOptions) {
     return instance.findAll((node) =>
-      getTextInputNodeByDisplayValue(node, displayValue)
+      getTextInputNodeByDisplayValue(node, displayValue, queryOptions)
     );
   };
 

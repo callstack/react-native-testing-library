@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { TextMatchOptions } from './byText';
 import {
   UNSAFE_getByType,
   UNSAFE_getByProps,
@@ -20,18 +21,32 @@ import {
 } from './errors';
 
 export type QueryByAPI = {|
-  queryByText: (name: string | RegExp) => ReactTestInstance | null,
-  queryByPlaceholderText: (
-    placeholder: string | RegExp
+  queryByText: (
+    name: string | RegExp,
+    queryOptions?: TextMatchOptions
   ) => ReactTestInstance | null,
-  queryByDisplayValue: (value: string | RegExp) => ReactTestInstance | null,
+  queryAllByText: (
+    text: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => Array<ReactTestInstance>,
+  queryByPlaceholderText: (
+    placeholder: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => ReactTestInstance | null,
+  queryAllByPlaceholderText: (
+    placeholder: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => Array<ReactTestInstance>,
+  queryByDisplayValue: (
+    value: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => ReactTestInstance | null,
+  queryAllByDisplayValue: (
+    value: string | RegExp,
+    queryOptions?: TextMatchOptions
+  ) => Array<ReactTestInstance>,
   queryByTestId: (testID: string | RegExp) => ReactTestInstance | null,
   queryAllByTestId: (testID: string | RegExp) => Array<ReactTestInstance>,
-  queryAllByText: (text: string | RegExp) => Array<ReactTestInstance>,
-  queryAllByPlaceholderText: (
-    placeholder: string | RegExp
-  ) => Array<ReactTestInstance>,
-  queryAllByDisplayValue: (value: string | RegExp) => Array<ReactTestInstance>,
 
   // Unsafe aliases
   UNSAFE_queryByType: <P>(
