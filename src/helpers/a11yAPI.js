@@ -10,6 +10,15 @@ type QueryAllReturn = Array<ReactTestInstance>;
 type FindReturn = Promise<GetReturn>;
 type FindAllReturn = Promise<GetAllReturn>;
 
+type QueryOptions = {
+  name: string | RegExp,
+};
+
+export type WaitForOptionsWithName = {
+  ...WaitForOptions,
+  ...$Exact<QueryOptions>,
+};
+
 export type A11yAPI = {|
   // Label
   getByA11yLabel: (string | RegExp) => GetReturn,
@@ -40,18 +49,18 @@ export type A11yAPI = {|
   findAllByHintText: (string | RegExp, ?WaitForOptions) => FindAllReturn,
 
   // Role
-  getByA11yRole: (A11yRole | RegExp) => GetReturn,
-  getByRole: (A11yRole | RegExp) => GetReturn,
-  getAllByA11yRole: (A11yRole | RegExp) => GetAllReturn,
-  getAllByRole: (A11yRole | RegExp) => GetAllReturn,
-  queryByA11yRole: (A11yRole | RegExp) => QueryReturn,
-  queryByRole: (A11yRole | RegExp) => QueryReturn,
-  queryAllByA11yRole: (A11yRole | RegExp) => QueryAllReturn,
-  queryAllByRole: (A11yRole | RegExp) => QueryAllReturn,
-  findByA11yRole: (A11yRole, ?WaitForOptions) => FindReturn,
-  findByRole: (A11yRole, ?WaitForOptions) => FindReturn,
-  findAllByA11yRole: (A11yRole, ?WaitForOptions) => FindAllReturn,
-  findAllByRole: (A11yRole, ?WaitForOptions) => FindAllReturn,
+  getByA11yRole: (A11yRole | RegExp, ?QueryOptions, ?QueryOptions) => GetReturn,
+  getByRole: (A11yRole | RegExp, ?QueryOptions) => GetReturn,
+  getAllByA11yRole: (A11yRole | RegExp, ?QueryOptions) => GetAllReturn,
+  getAllByRole: (A11yRole | RegExp, ?QueryOptions) => GetAllReturn,
+  queryByA11yRole: (A11yRole | RegExp, ?QueryOptions) => QueryReturn,
+  queryByRole: (A11yRole | RegExp, ?QueryOptions) => QueryReturn,
+  queryAllByA11yRole: (A11yRole | RegExp, ?QueryOptions) => QueryAllReturn,
+  queryAllByRole: (A11yRole | RegExp, ?QueryOptions) => QueryAllReturn,
+  findByA11yRole: (A11yRole, ?WaitForOptionsWithName) => FindReturn,
+  findByRole: (A11yRole, ?WaitForOptionsWithName) => FindReturn,
+  findAllByA11yRole: (A11yRole, ?WaitForOptionsWithName) => FindAllReturn,
+  findAllByRole: (A11yRole, ?WaitForOptionsWithName) => FindAllReturn,
 
   // States
   getByA11yStates: (A11yStates | Array<A11yStates>) => GetReturn,
