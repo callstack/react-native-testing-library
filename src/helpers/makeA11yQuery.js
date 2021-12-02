@@ -1,6 +1,7 @@
 // @flow
 import waitFor from '../waitFor';
-import type { WaitForOptions } from '../waitFor';
+import { getQueriesForElement } from '../within';
+import type { WaitForOptionsWithName } from './a11yAPI';
 import {
   ErrorWithStack,
   prepareErrorMessage,
@@ -26,6 +27,10 @@ type QueryNames = {
   findAllBy: Array<string>,
 };
 
+type QueryOptions = {
+  name: string | RegExp,
+};
+
 const makeA11yQuery = <P: mixed, M: mixed>(
   name: string,
   queryNames: QueryNames,
@@ -33,8 +38,19 @@ const makeA11yQuery = <P: mixed, M: mixed>(
 ): ((instance: ReactTestInstance) => { ... }) => (
   instance: ReactTestInstance
 ) => {
-  const getBy = (matcher: M) => {
+  const getBy = (matcher: M, options?: QueryOptions) => {
     try {
+      if (options?.name) {
+        return instance.find((node) => {
+          const matchesRole =
+            isNodeValid(node) && matcherFn(node.props[name], matcher);
+
+          if (!matchesRole) return false;
+
+          return !!getQueriesForElement(node).queryByText(options.name);
+        });
+      }
+
       return instance.find(
         (node) => isNodeValid(node) && matcherFn(node.props[name], matcher)
       );
@@ -46,10 +62,23 @@ const makeA11yQuery = <P: mixed, M: mixed>(
     }
   };
 
-  const getAllBy = (matcher: M) => {
-    const results = instance.findAll(
-      (node) => isNodeValid(node) && matcherFn(node.props[name], matcher)
-    );
+  const getAllBy = (matcher: M, options?: QueryOptions) => {
+    let results = [];
+
+    if (options?.name) {
+      results = instance.find((node) => {
+        const matchesRole =
+          isNodeValid(node) && matcherFn(node.props[name], matcher);
+
+        if (!matchesRole) return false;
+
+        return !!getQueriesForElement(node).queryByText(options.name);
+      });
+    } else {
+      results = instance.findAll(
+        (node) => isNodeValid(node) && matcherFn(node.props[name], matcher)
+      );
+    }
 
     if (results.length === 0) {
       throw new ErrorWithStack(
@@ -61,28 +90,28 @@ const makeA11yQuery = <P: mixed, M: mixed>(
     return results;
   };
 
-  const queryBy = (matcher: M) => {
+  const queryBy = (matcher: M, options?: QueryOptions) => {
     try {
-      return getBy(matcher);
+      return getBy(matcher, options);
     } catch (error) {
       return createQueryByError(error, queryBy);
     }
   };
 
-  const queryAllBy = (matcher: M) => {
+  const queryAllBy = (matcher: M, options?: QueryOptions) => {
     try {
-      return getAllBy(matcher);
+      return getAllBy(matcher, options);
     } catch (error) {
       return [];
     }
   };
 
-  const findBy = (matcher: M, waitForOptions?: WaitForOptions) => {
-    return waitFor(() => getBy(matcher), waitForOptions);
+  const findBy = (matcher: M, waitForOptions?: WaitForOptionsWithName) => {
+    return waitFor(() => getBy(matcher, waitForOptions));
   };
 
-  const findAllBy = (matcher: M, waitForOptions?: WaitForOptions) => {
-    return waitFor(() => getAllBy(matcher), waitForOptions);
+  const findAllBy = (matcher: M, waitForOptions?: WaitForOptionsWithName) => {
+    return waitFor(() => getAllBy(matcher, waitForOptions));
   };
 
   return {

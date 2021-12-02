@@ -7,6 +7,8 @@ const BUTTON_LABEL = 'cool button';
 const BUTTON_HINT = 'click this button';
 const TEXT_LABEL = 'cool text';
 const TEXT_HINT = 'static text';
+const SINGLE_OCCURANCE = 'more words';
+const TWO_OCCURANCE = 'cooler text';
 // Little hack to make all the methods happy with type
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 const FOUND_TWO_INSTANCES = 'Expected 1 but found 2 instances';
@@ -66,6 +68,22 @@ function Section() {
         Title
       </Typography>
       <Button>{TEXT_LABEL}</Button>
+    </>
+  );
+}
+
+function ButtonsWithText() {
+  return (
+    <>
+      <TouchableOpacity accessibilityRole="button">
+        <Text>{TWO_OCCURANCE}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity accessibilityRole="button">
+        <Text>{TWO_OCCURANCE}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity accessibilityRole="button">
+        <Text>{SINGLE_OCCURANCE}</Text>
+      </TouchableOpacity>
     </>
   );
 }
@@ -192,6 +210,34 @@ test('getByA11yRole, queryByA11yRole, findByA11yRole', async () => {
   await expect(findByA11yRole('link')).rejects.toThrow(FOUND_TWO_INSTANCES);
 });
 
+test('getByA11yRole, queryByA11yRole, findByA11yRole with name', async () => {
+  const { getByA11yRole, queryByA11yRole, findByA11yRole } = render(
+    <ButtonsWithText />
+  );
+
+  expect(() => getByA11yRole(/button/g, { name: TWO_OCCURANCE })).toThrow(
+    FOUND_TWO_INSTANCES
+  );
+  getByA11yRole(/button/g, { name: SINGLE_OCCURANCE });
+
+  expect(queryByA11yRole(/button/g, { name: NO_MATCHES_TEXT })).toBeNull();
+  expect(() => queryByA11yRole(/button/g, { name: TWO_OCCURANCE })).toThrow(
+    FOUND_TWO_INSTANCES
+  );
+
+  await findByA11yRole('button', {
+    name: SINGLE_OCCURANCE,
+  });
+  await expect(
+    findByA11yRole('button', { ...waitForOptions, name: NO_MATCHES_TEXT })
+  ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityRole', 'button'));
+  await expect(
+    findByA11yRole('button', {
+      name: TWO_OCCURANCE,
+    })
+  ).rejects.toThrow(FOUND_TWO_INSTANCES);
+});
+
 test('getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole', async () => {
   const { getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole } = render(
     <Section />
@@ -210,6 +256,8 @@ test('getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole', async () => {
     findAllByA11yRole(NO_MATCHES_TEXT, waitForOptions)
   ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityRole'));
 });
+
+test.todo('getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole with name');
 
 // TODO: accessibilityStates was removed from RN 0.62
 test.skip('getByA11yStates, queryByA11yStates', () => {
