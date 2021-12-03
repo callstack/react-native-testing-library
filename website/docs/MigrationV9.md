@@ -19,11 +19,11 @@ getByText('Hello'); // Doesn't match
 getByText('hello', { exact: false }); // ignore case-sensitivity and does partial matching
 ```
 
-`findBy*` queries used to take a `waitForOptions` parameter (e.g. `findByText('Hello world', {timeout: 3000})`), that parameter has been moved to the third place: `findByText('Hello world', {exact: true}, {timeout: 3000})`. For backward compatibility, `@testing-library/react-native@9.0` still reads `waitForOptions` from the second parameter but will print a deprecation warning: `findByText('Hello world', {timeout: 3000, exact: false})`.
+The `findBy*` queries used to take a `waitForOptions` parameter as a second argument, e.g. `findByText('Hello world', {timeout: 3000})`. It has now been moved to the third argument: `findByText('Hello world', {exact: true}, {timeout: 3000})`. For backward compatibility, `@testing-library/react-native@9.0` can still read `waitForOptions` from the second argument but will print a deprecation warning.
 
 ## Stop matching across several nodes (breaking change)
 
-When text is spread across several nodes `<Text>Hello <Text>world</Text</Text>`, `@testing-library/react-native` used to allow matching the full string `getByText('Hello world')`. However this behaviour was different than the web one, and wouldn't always be straightforward to reason about (it could match text nodes far from each other on the screen). From v9, this type of match will not work. A work around is to use `within`:
+When text is spread across several nodes, like: `<Text>Hello <Text>world</Text</Text>`, React Native Testing Library used to allow matching the full string using `getByText('Hello world')`. However this behaviour was different than the web one, and wouldn't always be straightforward to reason about. For instance it could match text nodes far from each other on the screen. From v9, this type of match will not work. A work around is to use `within`:
 
 ```tsx
 import {Text} from 'react-native'
@@ -31,10 +31,9 @@ import {render, within} from '@testing-library/react-native'
 
 const {getByText} = render(<Text>Hello <Text>world</Text</Text>)
 
-// exact: false
 within(getByText('Hello', {exact: false})).getByText('world')
 ```
 
 # Future plans
 
-This release changes a lot of internal logic in `@testing-library/react-native`, paving the way for more more improvements to bring us closer from our web counterpart, with for instance a better support for accessibility queries.
+This release changes a lot of internal logic in the library, paving the way for more improvements to bring us closer to our web counterpart, with a possibly better story for accessibility queries.
