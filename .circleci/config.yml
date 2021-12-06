@@ -42,12 +42,13 @@ jobs:
       - run: |
           yarn lint
           yarn typecheck
-  : <<: *defaults
+  flow:
+    <<: *defaults
     steps:
       - attach_workspace:
           at: ~/react-native-testing-library
       - run: |
-          yarn typecheck:flow
+          yarn flow
   tests:
     <<: *defaults
     steps:
