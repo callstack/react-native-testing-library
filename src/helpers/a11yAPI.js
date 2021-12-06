@@ -10,15 +10,9 @@ type QueryAllReturn = Array<ReactTestInstance>;
 type FindReturn = Promise<GetReturn>;
 type FindAllReturn = Promise<GetAllReturn>;
 
-type QueryOptions = {
-  name: string | RegExp,
+export type QueryOptions = {
+  name?: string | RegExp,
 };
-
-export type WaitForOptionsWithName = {
-  ...WaitForOptions,
-  ...$Exact<QueryOptions>,
-};
-
 export type A11yAPI = {|
   // Label
   getByA11yLabel: (string | RegExp) => GetReturn,
@@ -57,10 +51,14 @@ export type A11yAPI = {|
   queryByRole: (A11yRole | RegExp, ?QueryOptions) => QueryReturn,
   queryAllByA11yRole: (A11yRole | RegExp, ?QueryOptions) => QueryAllReturn,
   queryAllByRole: (A11yRole | RegExp, ?QueryOptions) => QueryAllReturn,
-  findByA11yRole: (A11yRole, ?WaitForOptionsWithName) => FindReturn,
-  findByRole: (A11yRole, ?WaitForOptionsWithName) => FindReturn,
-  findAllByA11yRole: (A11yRole, ?WaitForOptionsWithName) => FindAllReturn,
-  findAllByRole: (A11yRole, ?WaitForOptionsWithName) => FindAllReturn,
+  findByA11yRole: (A11yRole, ?QueryOptions, ?WaitForOptions) => FindReturn,
+  findByRole: (A11yRole, ?QueryOptions, ?WaitForOptions) => FindReturn,
+  findAllByA11yRole: (
+    A11yRole,
+    ?QueryOptions,
+    ?WaitForOptions
+  ) => FindAllReturn,
+  findAllByRole: (A11yRole, ?QueryOptions, ?WaitForOptions) => FindAllReturn,
 
   // States
   getByA11yStates: (A11yStates | Array<A11yStates>) => GetReturn,

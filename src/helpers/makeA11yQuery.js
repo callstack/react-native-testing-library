@@ -1,7 +1,8 @@
 // @flow
 import waitFor from '../waitFor';
 import { getQueriesForElement } from '../within';
-import type { WaitForOptionsWithName } from './a11yAPI';
+import type { WaitForOptions } from '../waitFor';
+import type { QueryOptions } from './a11yAPI';
 import {
   ErrorWithStack,
   prepareErrorMessage,
@@ -27,10 +28,6 @@ type QueryNames = {
   findAllBy: Array<string>,
 };
 
-type QueryOptions = {
-  name: string | RegExp,
-};
-
 const makeA11yQuery = <P: mixed, M: mixed>(
   name: string,
   queryNames: QueryNames,
@@ -51,10 +48,12 @@ const makeA11yQuery = <P: mixed, M: mixed>(
     );
   };
 
-  const getBy = (matcher: M, options?: QueryOptions) => {
+  const getBy = (matcher: M, queryOptions?: QueryOptions) => {
     try {
-      if (options?.name) {
-        return instance.find((node) => filterWithName(node, options, matcher));
+      if (queryOptions?.name) {
+        return instance.find((node) =>
+          filterWithName(node, queryOptions, matcher)
+        );
       }
 
       return instance.find(
@@ -72,7 +71,9 @@ const makeA11yQuery = <P: mixed, M: mixed>(
     let results = [];
 
     if (options?.name) {
-      results = instance.find((node) => filterWithName(node, options, matcher));
+      results = instance.findAll((node) =>
+        filterWithName(node, options, matcher)
+      );
     } else {
       results = instance.findAll(
         (node) => isNodeValid(node) && matcherFn(node.props[name], matcher)
@@ -105,12 +106,20 @@ const makeA11yQuery = <P: mixed, M: mixed>(
     }
   };
 
-  const findBy = (matcher: M, waitForOptions?: WaitForOptionsWithName) => {
-    return waitFor(() => getBy(matcher, waitForOptions));
+  const findBy = (
+    matcher: M,
+    queryOptions?: QueryOptions,
+    waitForOptions?: WaitForOptions
+  ) => {
+    return waitFor(() => getBy(matcher, queryOptions), waitForOptions);
   };
 
-  const findAllBy = (matcher: M, waitForOptions?: WaitForOptionsWithName) => {
-    return waitFor(() => getAllBy(matcher, waitForOptions));
+  const findAllBy = (
+    matcher: M,
+    queryOptions: QueryOptions,
+    waitForOptions?: WaitForOptions
+  ) => {
+    return waitFor(() => getAllBy(matcher, queryOptions), waitForOptions);
   };
 
   return {
