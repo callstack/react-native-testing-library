@@ -1,6 +1,6 @@
 {
   "name": "@testing-library/react-native",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
   "main": "build/index.js",
   "typings": "./typings/index.d.ts",
@@ -41,7 +41,7 @@
     "babel-jest": "^27.0.0",
     "conventional-changelog-cli": "^2.0.11",
     "dedent": "^0.7.0",
-    "eslint": "^7.0.0",
+    "eslint": "^8.4.0",
     "flow-bin": "^0.141.0",
     "flow-copy-source": "^2.0.9",
     "jest": "^27.0.0",
