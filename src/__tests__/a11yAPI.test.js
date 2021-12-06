@@ -7,7 +7,7 @@ const BUTTON_LABEL = 'cool button';
 const BUTTON_HINT = 'click this button';
 const TEXT_LABEL = 'cool text';
 const TEXT_HINT = 'static text';
-const SINGLE_OCCURANCE = 'more words';
+const ONE_OCCURANCE = 'more words';
 const TWO_OCCURANCE = 'cooler text';
 // Little hack to make all the methods happy with type
 const NO_MATCHES_TEXT: any = 'not-existent-element';
@@ -82,7 +82,7 @@ function ButtonsWithText() {
         <Text>{TWO_OCCURANCE}</Text>
       </TouchableOpacity>
       <TouchableOpacity accessibilityRole="button">
-        <Text>{SINGLE_OCCURANCE}</Text>
+        <Text>{ONE_OCCURANCE}</Text>
       </TouchableOpacity>
     </>
   );
@@ -204,9 +204,9 @@ test('getByA11yRole, queryByA11yRole, findByA11yRole', async () => {
 
   const asyncButton = await findByA11yRole('button');
   expect(asyncButton.props.accessibilityRole).toEqual('button');
-  await expect(findByA11yRole(NO_MATCHES_TEXT, waitForOptions)).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityRole')
-  );
+  await expect(
+    findByA11yRole(NO_MATCHES_TEXT, {}, waitForOptions)
+  ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityRole'));
   await expect(findByA11yRole('link')).rejects.toThrow(FOUND_TWO_INSTANCES);
 });
 
@@ -215,18 +215,18 @@ test('getByA11yRole, queryByA11yRole, findByA11yRole with name', async () => {
     <ButtonsWithText />
   );
 
-  expect(() => getByA11yRole(/button/g, { name: TWO_OCCURANCE })).toThrow(
+  expect(() => getByA11yRole('button', { name: TWO_OCCURANCE })).toThrow(
     FOUND_TWO_INSTANCES
   );
-  getByA11yRole(/button/g, { name: SINGLE_OCCURANCE });
+  getByA11yRole('button', { name: ONE_OCCURANCE });
 
-  expect(queryByA11yRole(/button/g, { name: NO_MATCHES_TEXT })).toBeNull();
-  expect(() => queryByA11yRole(/button/g, { name: TWO_OCCURANCE })).toThrow(
+  expect(queryByA11yRole('button', { name: NO_MATCHES_TEXT })).toBeNull();
+  expect(() => queryByA11yRole('button', { name: TWO_OCCURANCE })).toThrow(
     FOUND_TWO_INSTANCES
   );
 
   await findByA11yRole('button', {
-    name: SINGLE_OCCURANCE,
+    name: ONE_OCCURANCE,
   });
   await expect(
     findByA11yRole('button', { ...waitForOptions, name: NO_MATCHES_TEXT })
@@ -253,11 +253,31 @@ test('getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole', async () => {
 
   await expect(findAllByA11yRole('link')).resolves.toHaveLength(2);
   await expect(
-    findAllByA11yRole(NO_MATCHES_TEXT, waitForOptions)
+    findAllByA11yRole(NO_MATCHES_TEXT, {}, waitForOptions)
   ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityRole'));
 });
 
-test.todo('getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole with name');
+test('getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole with name', async () => {
+  const { getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole } = render(
+    <ButtonsWithText />
+  );
+
+  expect(getAllByA11yRole('button', { name: TWO_OCCURANCE })).toHaveLength(2);
+  expect(getAllByA11yRole('button', { name: ONE_OCCURANCE })).toHaveLength(1);
+  expect(queryAllByA11yRole('button', { name: TWO_OCCURANCE })).toHaveLength(2);
+
+  expect(() => getAllByA11yRole('button', { name: NO_MATCHES_TEXT })).toThrow(
+    getNoInstancesFoundMessage('accessibilityRole', 'button')
+  );
+  expect(queryAllByA11yRole('button', { name: NO_MATCHES_TEXT })).toEqual([]);
+
+  await expect(
+    findAllByA11yRole('button', { name: TWO_OCCURANCE })
+  ).resolves.toHaveLength(2);
+  await expect(
+    findAllByA11yRole('button', { name: NO_MATCHES_TEXT })
+  ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityRole', 'button'));
+});
 
 // TODO: accessibilityStates was removed from RN 0.62
 test.skip('getByA11yStates, queryByA11yStates', () => {
