@@ -38,17 +38,23 @@ const makeA11yQuery = <P: mixed, M: mixed>(
 ): ((instance: ReactTestInstance) => { ... }) => (
   instance: ReactTestInstance
 ) => {
+  const filterWithName = (
+    node: ReactTestInstance,
+    options: QueryOptions,
+    matcher: M
+  ) => {
+    const matchesRole =
+      isNodeValid(node) && matcherFn(node.props[name], matcher);
+
+    return (
+      matchesRole && !!getQueriesForElement(node).queryByText(options.name)
+    );
+  };
+
   const getBy = (matcher: M, options?: QueryOptions) => {
     try {
       if (options?.name) {
-        return instance.find((node) => {
-          const matchesRole =
-            isNodeValid(node) && matcherFn(node.props[name], matcher);
-
-          if (!matchesRole) return false;
-
-          return !!getQueriesForElement(node).queryByText(options.name);
-        });
+        return instance.find((node) => filterWithName(node, options, matcher));
       }
 
       return instance.find(
@@ -66,14 +72,7 @@ const makeA11yQuery = <P: mixed, M: mixed>(
     let results = [];
 
     if (options?.name) {
-      results = instance.find((node) => {
-        const matchesRole =
-          isNodeValid(node) && matcherFn(node.props[name], matcher);
-
-        if (!matchesRole) return false;
-
-        return !!getQueriesForElement(node).queryByText(options.name);
-      });
+      results = instance.find((node) => filterWithName(node, options, matcher));
     } else {
       results = instance.findAll(
         (node) => isNodeValid(node) && matcherFn(node.props[name], matcher)
