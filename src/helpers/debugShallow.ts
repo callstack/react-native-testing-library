@@ -13,8 +13,10 @@ export default function debugShallow(
   const { output } = shallowInternal(instance);
 
   if (message) {
+    // eslint-disable-next-line no-console
     console.log(`${message}\n\n`, format(output));
   } else {
+    // eslint-disable-next-line no-console
     console.log(format(output));
   }
 }

@@ -219,7 +219,7 @@ test.skip('getByA11yStates, queryByA11yStates', () => {
     'disabled',
   ]);
   const disabled = queryByA11yStates(['disabled']);
-  expect(disabled && disabled.props.accessibilityStates).toMatchObject([
+  expect(disabled?.props.accessibilityStates).toMatchObject([
     'selected',
     'disabled',
   ]);

@@ -34,21 +34,20 @@ jobs:
           root: .
           paths:
             - .
-  lint-and-flow:
+  lint-and-typescript:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/react-native-testing-library
       - run: |
           yarn lint
-          yarn flow-check
-  typescript:
-    <<: *defaults
+          yarn typecheck
+  : <<: *defaults
     steps:
       - attach_workspace:
           at: ~/react-native-testing-library
       - run: |
-          yarn typescript-check
+          yarn typecheck:flow
   tests:
     <<: *defaults
     steps:
