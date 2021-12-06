@@ -29,14 +29,17 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-transform-flow-strip-types": "^7.16.0",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-flow": "^7.9.0",
     "@babel/preset-react": "^7.9.4",
+    "@babel/preset-typescript": "^7.16.0",
     "@callstack/eslint-config": "^11.0.0",
     "@release-it/conventional-changelog": "^2.0.0",
     "@testing-library/jest-native": "~4.0.2",
+    "@types/jest": "^27.0.0",
     "@types/react": "^17.0.0",
-    "@types/react-native": "^0.66.5",
+    "@types/react-native": "^0.66.6",
     "@types/react-test-renderer": "^17.0.0",
     "babel-jest": "^27.0.0",
     "conventional-changelog-cli": "^2.0.11",
@@ -62,24 +65,21 @@
   },
   "scripts": {
     "test": "jest",
-    "flow-check": "flow check",
-    "typescript-check": "tsc --noEmit --skipLibCheck --jsx react ./typings/__tests__/*",
+    "typecheck": "tsc",
     "lint": "eslint src --cache",
     "release": "release-it",
-    "prepublish": "yarn build && yarn copy-flowtypes",
-    "copy-flowtypes": "flow-copy-source --ignore __tests__/*.js src build",
+    "prepublish": "yarn build",
     "build": "rm -rf build; babel src --out-dir build --ignore 'src/__tests__/*'"
   },
   "jest": {
     "preset": "../jest-preset",
-    "moduleFileExtensions": [
-      "js",
-      "json"
-    ],
     "rootDir": "./src",
     "testPathIgnorePatterns": [
       "timerUtils"
     ],
-    "testTimeout": 30000
+    "testTimeout": 30000,
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(@react-native|react-native)/).*/"
+    ]
   }
 }

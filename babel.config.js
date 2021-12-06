@@ -1,6 +1,6 @@
 module.exports = {
   presets: [
-    '@babel/preset-flow',
+    '@babel/preset-typescript',
     '@babel/preset-react',
     [
       '@babel/preset-env',
@@ -12,5 +12,8 @@ module.exports = {
       },
     ],
   ],
-  plugins: ['@babel/plugin-proposal-class-properties'],
+  plugins: [
+    '@babel/plugin-proposal-class-properties',
+    '@babel/plugin-transform-flow-strip-types',
+  ],
 };
