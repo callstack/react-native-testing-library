@@ -6,6 +6,7 @@ import waitFor from './waitFor';
 import waitForElementToBeRemoved from './waitForElementToBeRemoved';
 import { within, getQueriesForElement } from './within';
 import { getDefaultNormalizer } from './matches';
+import { renderHook } from './renderHook';
 
 export { act };
 export { cleanup };
@@ -15,3 +16,4 @@ export { waitFor };
 export { waitForElementToBeRemoved };
 export { within, getQueriesForElement };
 export { getDefaultNormalizer };
+export { renderHook };
