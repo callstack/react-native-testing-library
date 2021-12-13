@@ -203,7 +203,8 @@ test('debug changing component', () => {
 });
 
 test('renders options.wrapper around node', () => {
-  const WrapperComponent = ({ children }: { children: React.ReactNode }) => (
+  type WrapperComponentProps = { children: React.ReactNode };
+  const WrapperComponent = ({ children }: WrapperComponentProps) => (
     <SafeAreaView testID="wrapper">{children}</SafeAreaView>
   );
 
@@ -225,7 +226,8 @@ test('renders options.wrapper around node', () => {
 });
 
 test('renders options.wrapper around updated node', () => {
-  const WrapperComponent = ({ children }: { children: React.ReactNode }) => (
+  type WrapperComponentProps = { children: React.ReactNode };
+  const WrapperComponent = ({ children }: WrapperComponentProps) => (
     <SafeAreaView testID="wrapper">{children}</SafeAreaView>
   );
 
@@ -263,7 +265,8 @@ test('returns container', () => {
 });
 
 test('returns wrapped component as container', () => {
-  const WrapperComponent = ({ children }: { children: React.ReactNode }) => (
+  type WrapperComponentProps = { children: React.ReactNode };
+  const WrapperComponent = ({ children }: WrapperComponentProps) => (
     <SafeAreaView testID="wrapper">{children}</SafeAreaView>
   );
 

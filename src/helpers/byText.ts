@@ -66,10 +66,7 @@ const getNodeByText = (
     }
     return false;
   } catch (error) {
-    if (error instanceof Error) {
-      throw createLibraryNotSupportedError(error);
-    }
-    return false;
+    throw createLibraryNotSupportedError(error);
   }
 };
 

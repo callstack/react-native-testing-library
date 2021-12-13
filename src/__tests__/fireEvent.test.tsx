@@ -10,13 +10,11 @@ import {
 } from 'react-native';
 import { render, fireEvent } from '..';
 
-const OnPressComponent = ({
-  onPress,
-  text,
-}: {
+type OnPressComponentProps = {
   onPress: () => void;
   text: string;
-}) => (
+};
+const OnPressComponent = ({ onPress, text }: OnPressComponentProps) => (
   <View>
     <TouchableOpacity onPress={onPress}>
       <Text>{text}</Text>
@@ -24,35 +22,38 @@ const OnPressComponent = ({
   </View>
 );
 
-const WithoutEventComponent = (_props: { onPress: () => void }) => (
+type WithoutEventComponentProps = { onPress: () => void };
+const WithoutEventComponent = (_props: WithoutEventComponentProps) => (
   <View>
     <Text>Without event</Text>
   </View>
 );
 
-const CustomEventComponent = ({
-  onCustomEvent,
-}: {
+type CustomEventComponentProps = {
   onCustomEvent: () => void;
-}) => (
+};
+const CustomEventComponent = ({ onCustomEvent }: CustomEventComponentProps) => (
   <TouchableOpacity onPress={onCustomEvent}>
     <Text>Custom event component</Text>
   </TouchableOpacity>
 );
 
-const MyCustomButton = ({
-  handlePress,
-  text,
-}: {
+type MyCustomButtonProps = {
   handlePress: () => void;
   text: string;
-}) => <OnPressComponent onPress={handlePress} text={text} />;
+};
+const MyCustomButton = ({ handlePress, text }: MyCustomButtonProps) => (
+  <OnPressComponent onPress={handlePress} text={text} />
+);
 
+type CustomEventComponentWithCustomNameProps = {
+  handlePress: () => void;
+};
 const CustomEventComponentWithCustomName = ({
   handlePress,
-}: {
-  handlePress: () => void;
-}) => <MyCustomButton handlePress={handlePress} text="Custom component" />;
+}: CustomEventComponentWithCustomNameProps) => (
+  <MyCustomButton handlePress={handlePress} text="Custom component" />
+);
 
 describe('fireEvent', () => {
   test('should invoke specified event', () => {
@@ -364,12 +365,11 @@ test('should pass event up on disabled Pressable', () => {
   expect(handleOuterPress).toHaveBeenCalledTimes(1);
 });
 
-const TestComponent = ({
-  onPress,
-}: {
+type TestComponentProps = {
   onPress: () => void;
   disabled?: boolean;
-}) => {
+};
+const TestComponent = ({ onPress }: TestComponentProps) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <Text>Trigger Test</Text>
@@ -387,13 +387,14 @@ test('is not fooled by non-native disabled prop', () => {
   expect(handlePress).toHaveBeenCalledTimes(1);
 });
 
+type TestChildTouchableComponentProps = {
+  onPress: () => void;
+  someProp: boolean;
+};
 function TestChildTouchableComponent({
   onPress,
   someProp,
-}: {
-  onPress: () => void;
-  someProp: boolean;
-}) {
+}: TestChildTouchableComponentProps) {
   return (
     <View>
       <TouchableOpacity onPress={onPress} disabled={someProp}>
@@ -416,7 +417,8 @@ test('is not fooled by non-responder wrapping host elements', () => {
   expect(handlePress).not.toHaveBeenCalled();
 });
 
-function TestDraggableComponent({ onDrag }: { onDrag: () => void }) {
+type TestDraggableComponentProps = { onDrag: () => void };
+function TestDraggableComponent({ onDrag }: TestDraggableComponentProps) {
   const responderHandlers = PanResponder.create({
     onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
     onPanResponderMove: onDrag,

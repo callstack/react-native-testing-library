@@ -9,13 +9,11 @@ import {
 } from 'react-native';
 import { render, getDefaultNormalizer } from '..';
 
-const MyButton = ({
-  children,
-  onPress,
-}: {
+type MyButtonProps = {
   children: React.ReactNode;
   onPress: () => void;
-}) => (
+};
+const MyButton = ({ children, onPress }: MyButtonProps) => (
   <TouchableOpacity onPress={onPress}>
     <Text>{children}</Text>
   </TouchableOpacity>
@@ -60,7 +58,8 @@ test('getByText, queryByText', () => {
 });
 
 test('getByText, queryByText with children as Array', () => {
-  const BananaCounter = ({ numBananas }: { numBananas: number }) => (
+  type BananaCounterProps = { numBananas: number };
+  const BananaCounter = ({ numBananas }: BananaCounterProps) => (
     <Text>There are {numBananas} bananas in the bunch</Text>
   );
 
@@ -149,7 +148,8 @@ describe('findBy options deprecations', () => {
 });
 
 test.skip('getByText works properly with custom text component', () => {
-  function BoldText({ children }: { children: React.ReactNode }) {
+  type BoldTextProps = { children: React.ReactNode };
+  function BoldText({ children }: BoldTextProps) {
     return <Text>{children}</Text>;
   }
 
@@ -163,10 +163,12 @@ test.skip('getByText works properly with custom text component', () => {
 });
 
 test.skip('getByText works properly with custom text container', () => {
-  function MyText({ children }: { children: React.ReactNode }) {
+  type MyTextProps = { children: React.ReactNode };
+  function MyText({ children }: MyTextProps) {
     return <Text>{children}</Text>;
   }
-  function BoldText({ children }: { children: React.ReactNode }) {
+  type BoldTextProps = { children: React.ReactNode };
+  function BoldText({ children }: BoldTextProps) {
     return <Text>{children}</Text>;
   }
 
@@ -264,7 +266,8 @@ test('queryByText with nested Text components each with text return the lowest o
 });
 
 test('queryByText nested deep <CustomText> in <Text>', () => {
-  const CustomText = ({ children }: { children: React.ReactNode }) => {
+  type CustomTextProps = { children: React.ReactNode };
+  const CustomText = ({ children }: CustomTextProps) => {
     return <Text>{children}</Text>;
   };
 

@@ -8,13 +8,11 @@ import {
 } from 'react-native';
 import { render, fireEvent } from '..';
 
-function QuestionsBoard({
-  questions,
-  onSubmit,
-}: {
+type QuestionsBoardProps = {
   questions: string[];
   onSubmit: (obj: {}) => void;
-}) {
+};
+function QuestionsBoard({ questions, onSubmit }: QuestionsBoardProps) {
   const [data, setData] = React.useState({});
 
   return (

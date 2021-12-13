@@ -89,10 +89,10 @@ workflows:
   build-and-test:
     jobs:
       - install-dependencies
-      - lint-and-flow:
+      - lint-and-typescript:
           requires:
             - install-dependencies
-      - typescript:
+      - flow:
           requires:
             - install-dependencies
       - tests:

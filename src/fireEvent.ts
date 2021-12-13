@@ -1,6 +1,8 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import act from './act';
 
+type EventHandler = (...args: any) => unknown;
+
 const isHostElement = (element?: ReactTestInstance) => {
   return typeof element?.type === 'string';
 };
@@ -53,7 +55,7 @@ const findEventHandler = (
   eventName: string,
   callsite?: any,
   nearestTouchResponder?: ReactTestInstance
-): Function | null => {
+): EventHandler | null => {
   const touchResponder = isTouchResponder(element)
     ? element
     : nearestTouchResponder;
@@ -71,7 +73,7 @@ const findEventHandler = (
 const getEventHandler = (
   element: ReactTestInstance,
   eventName: string
-): Function | undefined => {
+): EventHandler | undefined => {
   const eventHandlerName = toEventHandlerName(eventName);
   if (typeof element.props[eventHandlerName] === 'function') {
     return element.props[eventHandlerName];

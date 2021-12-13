@@ -23,10 +23,7 @@ const getTextInputNodeByDisplayValue = (
       matches(value, nodeValue, normalizer, exact)
     );
   } catch (error) {
-    if (error instanceof Error) {
-      throw createLibraryNotSupportedError(error);
-    }
-    return false;
+    throw createLibraryNotSupportedError(error);
   }
 };
 

@@ -19,10 +19,7 @@ const getTextInputNodeByPlaceholderText = (
       matches(placeholder, node.props.placeholder, normalizer, exact)
     );
   } catch (error) {
-    if (error instanceof Error) {
-      throw createLibraryNotSupportedError(error);
-    }
-    return false;
+    throw createLibraryNotSupportedError(error);
   }
 };
 

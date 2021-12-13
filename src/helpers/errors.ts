@@ -9,21 +9,32 @@ export class ErrorWithStack extends Error {
   }
 }
 
-export const createLibraryNotSupportedError = (error: Error): Error =>
+export const createLibraryNotSupportedError = (error: unknown): Error =>
   new Error(
-    `Currently the only supported library to search by text is "react-native".\n\n${error.message}`
+    `Currently the only supported library to search by text is "react-native".\n\n${
+      error instanceof Error ? error.message : ''
+    }`
   );
 
 export const prepareErrorMessage = (
-  error: Error,
-  name?: string | undefined,
-  value?: unknown | undefined
+  // TS states that error caught in a catch close are of type `unknown`
+  // most real cases will be `Error`, but better safe than sorry
+  error: unknown,
+  name?: string,
+  value?: unknown
 ): string => {
-  // Strip info about custom predicate
-  let errorMessage = error.message.replace(
-    / matching custom predicate[^]*/gm,
-    ''
-  );
+  let errorMessage: string;
+  if (error instanceof Error) {
+    // Strip info about custom predicate
+    errorMessage = error.message.replace(
+      / matching custom predicate[^]*/gm,
+      ''
+    );
+  } else if (error && typeof error === 'object') {
+    errorMessage = error.toString();
+  } else {
+    errorMessage = 'Caught unknown error';
+  }
 
   if (name && value) {
     errorMessage += ` with ${name} ${prettyFormat(value, { min: true })}`;
@@ -42,7 +53,12 @@ export const createQueryByError = (
     throw new ErrorWithStack(error.message, callsite);
   }
 
-  throw new ErrorWithStack('Something wrong happened when querying', callsite);
+  throw new ErrorWithStack(
+    // generic refining of `unknown` is very hard, you cannot do `'toString' in error` or anything like that
+    // Converting as any with extra safe optional chaining will do the job just as well
+    `Query: caught unknown error type: ${typeof error}, value: ${(error as any)?.toString?.()}`,
+    callsite
+  );
 };
 
 export function copyStackTrace(target: unknown, stackTraceSource: Error) {

@@ -38,13 +38,7 @@ const makeA11yQuery = <P extends unknown, M extends unknown>(
       );
     } catch (error) {
       throw new ErrorWithStack(
-        prepareErrorMessage(
-          error instanceof Error
-            ? error
-            : new Error('Something wrong happened'),
-          name,
-          matcher
-        ),
+        prepareErrorMessage(error, name, matcher),
         getBy
       );
     }

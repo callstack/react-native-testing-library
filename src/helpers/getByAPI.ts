@@ -63,13 +63,7 @@ export const UNSAFE_getByType = (
     try {
       return instance.findByType(type);
     } catch (error) {
-      if (error instanceof Error) {
-        throw new ErrorWithStack(prepareErrorMessage(error), getByTypeFn);
-      }
-      throw new ErrorWithStack(
-        'Something wrong happened when querying by type',
-        getByTypeFn
-      );
+      throw new ErrorWithStack(prepareErrorMessage(error), getByTypeFn);
     }
   };
 
@@ -80,14 +74,7 @@ export const UNSAFE_getByProps = (
     try {
       return instance.findByProps(props);
     } catch (error) {
-      if (error instanceof Error) {
-        throw new ErrorWithStack(prepareErrorMessage(error), getByPropsFn);
-      }
-
-      throw new ErrorWithStack(
-        'Something wrong happened when querying by prop',
-        getByPropsFn
-      );
+      throw new ErrorWithStack(prepareErrorMessage(error), getByPropsFn);
     }
   };
 
