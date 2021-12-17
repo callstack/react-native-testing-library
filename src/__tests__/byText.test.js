@@ -176,6 +176,20 @@ test.skip('getByText works properly with custom text container', () => {
   ).toBeTruthy();
 });
 
+test('getByText works properly with React.Fragment nested in <Text>', () => {
+  function FragmentText({ children }) {
+    return <React.Fragment>{children}</React.Fragment>;
+  }
+
+  const { getByText, queryByText } = render(
+    <Text>
+      <FragmentText>Hello</FragmentText>
+    </Text>
+  );
+  expect(getByText('Hello')).toBeTruthy();
+  expect(queryByText('Hello')).not.toBeNull();
+});
+
 test('queryByText nested <Image> in <Text> at start', () => {
   expect(
     render(

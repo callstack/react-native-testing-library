@@ -57,6 +57,18 @@ const getNodeByText = (
         return matches(text, textToTest, normalizer, exact);
       }
     }
+    if (node?.parent?.parent) {
+      const isParentTextComponent = filterNodeByType(node.parent?.parent, Text);
+      if (isParentTextComponent && !isTextComponent) {
+        if (typeof node.children?.[0] === 'string') {
+          const textToTest = node.children.join('');
+          return typeof text === 'string'
+            ? text === textToTest
+            : text.test(textToTest);
+        }
+      }
+    }
+
     return false;
   } catch (error) {
     throw createLibraryNotSupportedError(error);
