@@ -16,7 +16,7 @@ Also, some rules have become useless, unless maybe you're using an old version o
 
 - [no-wait-for-empty-callback](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-wait-for-empty-callback.md): waitFor callback param is no longer optional
 
-To get the rule [consistent-data-testid](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/consistent-data-testid.md) to work, you need to configure it to check the testID attribute by adding the following in your eslint config file, the testIdPattern being whichever pattern you want to enforce:
+To get the rule [consistent-data-testid](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/consistent-data-testid.md) to work, you need to configure it to check the testID attribute by adding the following in your eslint config file, the `testIdPattern` being whichever pattern you want to enforce:
 
 ```javascript
 {
