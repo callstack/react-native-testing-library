@@ -20,26 +20,14 @@ type FindAllReturn = Promise<GetAllReturn>;
 
 export type A11yAPI = {
   // Label
-  getByA11yLabel: (label: string | RegExp) => GetReturn;
   getByLabelText: (label: string | RegExp) => GetReturn;
-  getAllByA11yLabel: (label: string | RegExp) => GetAllReturn;
   getAllByLabelText: (label: string | RegExp) => GetAllReturn;
-  queryByA11yLabel: (label: string | RegExp) => QueryReturn;
   queryByLabelText: (label: string | RegExp) => QueryReturn;
-  queryAllByA11yLabel: (label: string | RegExp) => QueryAllReturn;
   queryAllByLabelText: (label: string | RegExp) => QueryAllReturn;
-  findByA11yLabel: (
-    label: string | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
   findByLabelText: (
     label: string | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
-  findAllByA11yLabel: (
-    label: string | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
   findAllByLabelText: (
     label: string | RegExp,
     waitForOptions?: WaitForOptions
@@ -72,26 +60,14 @@ export type A11yAPI = {
   ) => FindAllReturn;
 
   // Role
-  getByA11yRole: (role: AccessibilityRole | RegExp) => GetReturn;
   getByRole: (role: AccessibilityRole | RegExp) => GetReturn;
-  getAllByA11yRole: (role: AccessibilityRole | RegExp) => GetAllReturn;
   getAllByRole: (role: AccessibilityRole | RegExp) => GetAllReturn;
-  queryByA11yRole: (role: AccessibilityRole | RegExp) => QueryReturn;
   queryByRole: (role: AccessibilityRole | RegExp) => QueryReturn;
-  queryAllByA11yRole: (role: AccessibilityRole | RegExp) => QueryAllReturn;
   queryAllByRole: (role: AccessibilityRole | RegExp) => QueryAllReturn;
-  findByA11yRole: (
-    role: AccessibilityRole,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
   findByRole: (
     role: AccessibilityRole,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
-  findAllByA11yRole: (
-    role: AccessibilityRole,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
   findAllByRole: (
     role: AccessibilityRole,
     waitForOptions?: WaitForOptions
@@ -196,32 +172,12 @@ export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
     ...makeA11yQuery(
       'accessibilityLabel',
       {
-        getBy: ['getByA11yLabel', 'getByAccessibilityLabel', 'getByLabelText'],
-        getAllBy: [
-          'getAllByA11yLabel',
-          'getAllByAccessibilityLabel',
-          'getAllByLabelText',
-        ],
-        queryBy: [
-          'queryByA11yLabel',
-          'queryByAccessibilityLabel',
-          'queryByLabelText',
-        ],
-        queryAllBy: [
-          'queryAllByA11yLabel',
-          'queryAllByAccessibilityLabel',
-          'queryAllByLabelText',
-        ],
-        findBy: [
-          'findByA11yLabel',
-          'findByAccessibilityLabel',
-          'findByLabelText',
-        ],
-        findAllBy: [
-          'findAllByA11yLabel',
-          'findAllByAccessibilityLabel',
-          'findAllByLabelText',
-        ],
+        getBy: ['getByLabelText'],
+        getAllBy: ['getAllByLabelText'],
+        queryBy: ['queryByLabelText'],
+        queryAllBy: ['queryAllByLabelText'],
+        findBy: ['findByLabelText'],
+        findAllBy: ['findAllByLabelText'],
       },
       matchStringValue
     )(instance),
@@ -256,24 +212,20 @@ export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
     ...makeA11yQuery(
       'accessibilityRole',
       {
-        getBy: ['getByA11yRole', 'getByAccessibilityRole', 'getByRole'],
+        getBy: ['getByRole'],
         getAllBy: [
           'getAllByA11yRole',
           'getAllByAccessibilityRole',
           'getAllByRole',
         ],
-        queryBy: ['queryByA11yRole', 'queryByAccessibilityRole', 'queryByRole'],
+        queryBy: ['queryByRole'],
         queryAllBy: [
           'queryAllByA11yRole',
           'queryAllByAccessibilityRole',
           'queryAllByRole',
         ],
-        findBy: ['findByA11yRole', 'findByAccessibilityRole', 'findByRole'],
-        findAllBy: [
-          'findAllByA11yRole',
-          'findAllByAccessibilityRole',
-          'findAllByRole',
-        ],
+        findBy: ['findByRole'],
+        findAllBy: ['findAllByRole'],
       },
       matchStringValue
     )(instance),
