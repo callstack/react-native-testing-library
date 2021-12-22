@@ -209,26 +209,14 @@ interface FindByAPI {
 
 interface A11yAPI {
   // Label
-  getByA11yLabel: (matcher: TextMatch) => GetReturn;
   getByLabelText: (matcher: TextMatch) => GetReturn;
-  getAllByA11yLabel: (matcher: TextMatch) => GetAllReturn;
   getAllByLabelText: (matcher: TextMatch) => GetAllReturn;
-  queryByA11yLabel: (matcher: TextMatch) => QueryReturn;
   queryByLabelText: (matcher: TextMatch) => QueryReturn;
-  queryAllByA11yLabel: (matcher: TextMatch) => QueryAllReturn;
   queryAllByLabelText: (matcher: TextMatch) => QueryAllReturn;
-  findByA11yLabel: (
-    matcher: TextMatch,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
   findByLabelText: (
     matcher: TextMatch,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
-  findAllByA11yLabel: (
-    matcher: TextMatch,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
   findAllByLabelText: (
     matcher: TextMatch,
     waitForOptions?: WaitForOptions
@@ -261,26 +249,14 @@ interface A11yAPI {
   ) => FindAllReturn;
 
   // Role
-  getByA11yRole: (matcher: A11yRole | RegExp) => GetReturn;
   getByRole: (matcher: A11yRole | RegExp) => GetReturn;
-  getAllByA11yRole: (matcher: A11yRole | RegExp) => GetAllReturn;
   getAllByRole: (matcher: A11yRole | RegExp) => GetAllReturn;
-  queryByA11yRole: (matcher: A11yRole | RegExp) => QueryReturn;
   queryByRole: (matcher: A11yRole | RegExp) => QueryReturn;
-  queryAllByA11yRole: (matcher: A11yRole | RegExp) => QueryAllReturn;
   queryAllByRole: (matcher: A11yRole | RegExp) => QueryAllReturn;
-  findByA11yRole: (
-    matcher: A11yRole | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
   findByRole: (
     matcher: A11yRole | RegExp,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
-  findAllByA11yRole: (
-    matcher: A11yRole | RegExp,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
   findAllByRole: (
     matcher: A11yRole | RegExp,
     waitForOptions?: WaitForOptions

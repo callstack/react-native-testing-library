@@ -30,8 +30,8 @@ import { render } from '@testing-library/react-native';
 import { QuestionsBoard } from '../QuestionsBoard';
 
 test('should verify two questions', () => {
-  const { queryAllByA11yRole } = render(<QuestionsBoard {...props} />);
-  const allQuestions = queryAllByA11yRole('header');
+  const { queryAllByRole } = render(<QuestionsBoard {...props} />);
+  const allQuestions = queryAllByRole('header');
 
   expect(allQuestions).toHaveLength(2);
 });
@@ -429,7 +429,7 @@ Please note that additional `render` specific operations like `update`, `unmount
 const detailsScreen = within(getByA11yHint('Details Screen'));
 expect(detailsScreen.getByText('Some Text')).toBeTruthy();
 expect(detailsScreen.getByDisplayValue('Some Value')).toBeTruthy();
-expect(detailsScreen.queryByA11yLabel('Some Label')).toBeTruthy();
+expect(detailsScreen.queryByLabelText('Some Label')).toBeTruthy();
 await expect(detailsScreen.findByA11yHint('Some Label')).resolves.toBeTruthy();
 ```
 

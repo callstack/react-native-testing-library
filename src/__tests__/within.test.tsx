@@ -65,26 +65,26 @@ test('within() exposes a11y queries', async () => {
     </View>
   );
 
-  expect(rootQueries.getAllByA11yLabel('Same Label')).toHaveLength(2);
+  expect(rootQueries.getAllByLabelText('Same Label')).toHaveLength(2);
   expect(rootQueries.getAllByA11yHint('Same Hint')).toHaveLength(2);
 
   const firstQueries = within(rootQueries.getByA11yHint('first'));
-  expect(firstQueries.getByA11yLabel('Same Label')).toBeTruthy();
+  expect(firstQueries.getByLabelText('Same Label')).toBeTruthy();
   expect(firstQueries.getByA11yHint('Same Hint')).toBeTruthy();
-  expect(firstQueries.queryByA11yLabel('Same Label')).toBeTruthy();
+  expect(firstQueries.queryByLabelText('Same Label')).toBeTruthy();
   expect(firstQueries.queryByA11yHint('Same Hint')).toBeTruthy();
   await expect(
-    firstQueries.findByA11yLabel('Same Label')
+    firstQueries.findByLabelText('Same Label')
   ).resolves.toBeTruthy();
   await expect(firstQueries.findByA11yHint('Same Hint')).resolves.toBeTruthy();
 
   const secondQueries = within(rootQueries.getByA11yHint('second'));
-  expect(secondQueries.getAllByA11yLabel('Same Label')).toHaveLength(1);
+  expect(secondQueries.getAllByLabelText('Same Label')).toHaveLength(1);
   expect(secondQueries.getAllByA11yHint('Same Hint')).toHaveLength(1);
-  expect(secondQueries.queryAllByA11yLabel('Same Label')).toHaveLength(1);
+  expect(secondQueries.queryAllByLabelText('Same Label')).toHaveLength(1);
   expect(secondQueries.queryAllByA11yHint('Same Hint')).toHaveLength(1);
   await expect(
-    secondQueries.findAllByA11yLabel('Same Label')
+    secondQueries.findAllByLabelText('Same Label')
   ).resolves.toHaveLength(1);
   await expect(
     secondQueries.findAllByA11yHint('Same Hint')

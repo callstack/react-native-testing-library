@@ -69,51 +69,51 @@ function Section() {
   );
 }
 
-test('getByA11yLabel, queryByA11yLabel, findByA11yLabel', async () => {
-  const { getByA11yLabel, queryByA11yLabel, findByA11yLabel } = render(
+test('getByLabelText, queryByLabelText, findByLabelText', async () => {
+  const { getByLabelText, queryByLabelText, findByLabelText } = render(
     <Section />
   );
 
-  expect(getByA11yLabel(BUTTON_LABEL).props.accessibilityLabel).toEqual(
+  expect(getByLabelText(BUTTON_LABEL).props.accessibilityLabel).toEqual(
     BUTTON_LABEL
   );
-  const button = queryByA11yLabel(/button/g);
+  const button = queryByLabelText(/button/g);
   expect(button?.props.accessibilityLabel).toEqual(BUTTON_LABEL);
 
-  expect(() => getByA11yLabel(NO_MATCHES_TEXT)).toThrow(
+  expect(() => getByLabelText(NO_MATCHES_TEXT)).toThrow(
     getNoInstancesFoundMessage('accessibilityLabel')
   );
-  expect(queryByA11yLabel(NO_MATCHES_TEXT)).toBeNull();
+  expect(queryByLabelText(NO_MATCHES_TEXT)).toBeNull();
 
-  expect(() => getByA11yLabel(TEXT_LABEL)).toThrow(FOUND_TWO_INSTANCES);
-  expect(() => queryByA11yLabel(TEXT_LABEL)).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => getByLabelText(TEXT_LABEL)).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => queryByLabelText(TEXT_LABEL)).toThrow(FOUND_TWO_INSTANCES);
 
-  const asyncButton = await findByA11yLabel(BUTTON_LABEL);
+  const asyncButton = await findByLabelText(BUTTON_LABEL);
   expect(asyncButton.props.accessibilityLabel).toEqual(BUTTON_LABEL);
   await expect(
-    findByA11yLabel(NO_MATCHES_TEXT, waitForOptions)
+    findByLabelText(NO_MATCHES_TEXT, waitForOptions)
   ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityLabel'));
 
-  await expect(findByA11yLabel(TEXT_LABEL, waitForOptions)).rejects.toThrow(
+  await expect(findByLabelText(TEXT_LABEL, waitForOptions)).rejects.toThrow(
     FOUND_TWO_INSTANCES
   );
 });
 
-test('getAllByA11yLabel, queryAllByA11yLabel, findAllByA11yLabel', async () => {
-  const { getAllByA11yLabel, queryAllByA11yLabel, findAllByA11yLabel } = render(
+test('getAllByLabelText, queryAllByLabelText, findAllByLabelText', async () => {
+  const { getAllByLabelText, queryAllByLabelText, findAllByLabelText } = render(
     <Section />
   );
 
-  expect(getAllByA11yLabel(TEXT_LABEL)).toHaveLength(2);
-  expect(queryAllByA11yLabel(/cool/g)).toHaveLength(3);
+  expect(getAllByLabelText(TEXT_LABEL)).toHaveLength(2);
+  expect(queryAllByLabelText(/cool/g)).toHaveLength(3);
 
-  expect(() => getAllByA11yLabel(NO_MATCHES_TEXT)).toThrow(
+  expect(() => getAllByLabelText(NO_MATCHES_TEXT)).toThrow(
     getNoInstancesFoundMessage('accessibilityLabel')
   );
-  expect(queryAllByA11yLabel(NO_MATCHES_TEXT)).toEqual([]);
+  expect(queryAllByLabelText(NO_MATCHES_TEXT)).toEqual([]);
 
-  await expect(findAllByA11yLabel(TEXT_LABEL)).resolves.toHaveLength(2);
-  await expect(findAllByA11yLabel(NO_MATCHES_TEXT)).rejects.toThrow(
+  await expect(findAllByLabelText(TEXT_LABEL)).resolves.toHaveLength(2);
+  await expect(findAllByLabelText(NO_MATCHES_TEXT)).rejects.toThrow(
     getNoInstancesFoundMessage('accessibilityLabel')
   );
 });
@@ -166,48 +166,44 @@ test('getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint', async () => {
   );
 });
 
-test('getByA11yRole, queryByA11yRole, findByA11yRole', async () => {
-  const { getByA11yRole, queryByA11yRole, findByA11yRole } = render(
-    <Section />
-  );
+test('getByRole, queryByRole, findByRole', async () => {
+  const { getByRole, queryByRole, findByRole } = render(<Section />);
 
-  expect(getByA11yRole('button').props.accessibilityRole).toEqual('button');
-  const button = queryByA11yRole(/button/g);
+  expect(getByRole('button').props.accessibilityRole).toEqual('button');
+  const button = queryByRole(/button/g);
   expect(button?.props.accessibilityRole).toEqual('button');
 
-  expect(() => getByA11yRole(NO_MATCHES_TEXT)).toThrow(
+  expect(() => getByRole(NO_MATCHES_TEXT)).toThrow(
     getNoInstancesFoundMessage('accessibilityRole')
   );
-  expect(queryByA11yRole(NO_MATCHES_TEXT)).toBeNull();
+  expect(queryByRole(NO_MATCHES_TEXT)).toBeNull();
 
-  expect(() => getByA11yRole('link')).toThrow(FOUND_TWO_INSTANCES);
-  expect(() => queryByA11yRole('link')).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => getByRole('link')).toThrow(FOUND_TWO_INSTANCES);
+  expect(() => queryByRole('link')).toThrow(FOUND_TWO_INSTANCES);
 
-  const asyncButton = await findByA11yRole('button');
+  const asyncButton = await findByRole('button');
   expect(asyncButton.props.accessibilityRole).toEqual('button');
-  await expect(findByA11yRole(NO_MATCHES_TEXT, waitForOptions)).rejects.toThrow(
+  await expect(findByRole(NO_MATCHES_TEXT, waitForOptions)).rejects.toThrow(
     getNoInstancesFoundMessage('accessibilityRole')
   );
-  await expect(findByA11yRole('link')).rejects.toThrow(FOUND_TWO_INSTANCES);
+  await expect(findByRole('link')).rejects.toThrow(FOUND_TWO_INSTANCES);
 });
 
-test('getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole', async () => {
-  const { getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole } = render(
-    <Section />
-  );
+test('getAllByRole, queryAllByRole, findAllByRole', async () => {
+  const { getAllByRole, queryAllByRole, findAllByRole } = render(<Section />);
 
-  expect(getAllByA11yRole('link')).toHaveLength(2);
-  expect(queryAllByA11yRole(/ink/g)).toHaveLength(2);
+  expect(getAllByRole('link')).toHaveLength(2);
+  expect(queryAllByRole(/ink/g)).toHaveLength(2);
 
-  expect(() => getAllByA11yRole(NO_MATCHES_TEXT)).toThrow(
+  expect(() => getAllByRole(NO_MATCHES_TEXT)).toThrow(
     getNoInstancesFoundMessage('accessibilityRole')
   );
-  expect(queryAllByA11yRole(NO_MATCHES_TEXT)).toEqual([]);
+  expect(queryAllByRole(NO_MATCHES_TEXT)).toEqual([]);
 
-  await expect(findAllByA11yRole('link')).resolves.toHaveLength(2);
-  await expect(
-    findAllByA11yRole(NO_MATCHES_TEXT, waitForOptions)
-  ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityRole'));
+  await expect(findAllByRole('link')).resolves.toHaveLength(2);
+  await expect(findAllByRole(NO_MATCHES_TEXT, waitForOptions)).rejects.toThrow(
+    getNoInstancesFoundMessage('accessibilityRole')
+  );
 });
 
 // TODO: accessibilityStates was removed from RN 0.62
@@ -396,31 +392,6 @@ test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
   await expect(findAllByA11yValue({ max: 60 })).resolves.toHaveLength(2);
 });
 
-test('a11y label queries have aliases', () => {
-  const {
-    getByA11yLabel,
-    getByLabelText,
-    queryByA11yLabel,
-    queryByLabelText,
-    findByA11yLabel,
-    findByLabelText,
-    getAllByA11yLabel,
-    getAllByLabelText,
-    queryAllByA11yLabel,
-    queryAllByLabelText,
-    findAllByA11yLabel,
-    findAllByLabelText,
-  } = render(<Section />);
-
-  // Assert that query aliases are referencing the same function
-  expect(getByA11yLabel).toBe(getByLabelText);
-  expect(queryByA11yLabel).toBe(queryByLabelText);
-  expect(findByA11yLabel).toBe(findByLabelText);
-  expect(getAllByA11yLabel).toBe(getAllByLabelText);
-  expect(queryAllByA11yLabel).toBe(queryAllByLabelText);
-  expect(findAllByA11yLabel).toBe(findAllByLabelText);
-});
-
 test('a11y hint queries have aliases', () => {
   const {
     getByA11yHint,
@@ -444,29 +415,4 @@ test('a11y hint queries have aliases', () => {
   expect(getAllByA11yHint).toBe(getAllByHintText);
   expect(queryAllByA11yHint).toBe(queryAllByHintText);
   expect(findAllByA11yHint).toBe(findAllByHintText);
-});
-
-test('a11y role queries have aliases', () => {
-  const {
-    getByA11yRole,
-    getByRole,
-    queryByA11yRole,
-    queryByRole,
-    findByA11yRole,
-    findByRole,
-    getAllByA11yRole,
-    getAllByRole,
-    queryAllByA11yRole,
-    queryAllByRole,
-    findAllByA11yRole,
-    findAllByRole,
-  } = render(<Section />);
-
-  // Assert that query aliases are referencing the same function
-  expect(getByA11yRole).toBe(getByRole);
-  expect(queryByA11yRole).toBe(queryByRole);
-  expect(findByA11yRole).toBe(findByRole);
-  expect(getAllByA11yRole).toBe(getAllByRole);
-  expect(queryAllByA11yRole).toBe(queryAllByRole);
-  expect(findAllByA11yRole).toBe(findAllByRole);
 });

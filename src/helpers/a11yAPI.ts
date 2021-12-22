@@ -213,17 +213,9 @@ export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
       'accessibilityRole',
       {
         getBy: ['getByRole'],
-        getAllBy: [
-          'getAllByA11yRole',
-          'getAllByAccessibilityRole',
-          'getAllByRole',
-        ],
+        getAllBy: ['getAllByRole'],
         queryBy: ['queryByRole'],
-        queryAllBy: [
-          'queryAllByA11yRole',
-          'queryAllByAccessibilityRole',
-          'queryAllByRole',
-        ],
+        queryAllBy: ['queryAllByRole'],
         findBy: ['findByRole'],
         findAllBy: ['findAllByRole'],
       },
