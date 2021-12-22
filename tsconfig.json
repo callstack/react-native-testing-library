@@ -11,7 +11,7 @@
     "moduleResolution": "node",
     "declaration": true,
     "noEmit": true,
-    "outDir": "dist"
+    "outDir": "build"
   },
   "include": ["src/**/*"]
 }
