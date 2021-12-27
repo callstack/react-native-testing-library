@@ -388,6 +388,7 @@ type TextMatchOptions = {
 type WaitForOptions = {
   timeout?: number;
   interval?: number;
+  onTimeout?: (error: Error) => Error;
 };
 
 export type WaitForFunction = <T = any>(
