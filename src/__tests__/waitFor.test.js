@@ -115,6 +115,32 @@ test.each([TimerMode.Legacy, TimerMode.Modern])(
   }
 );
 
+test.each([TimerMode.Legacy, TimerMode.Modern])(
+  'waits for assertion until timeout is met with %s fake timers',
+  async (fakeTimerType) => {
+    jest.useFakeTimers(fakeTimerType);
+
+    const mockErrorFn = jest.fn(() => {
+      throw Error('test');
+    });
+
+    const mockHandleFn = jest.fn((e) => e);
+
+    try {
+      await waitFor(() => mockErrorFn(), {
+        timeout: 400,
+        interval: 200,
+        onTimeout: mockHandleFn,
+      });
+    } catch (error) {
+      // suppress
+    }
+
+    expect(mockErrorFn).toHaveBeenCalledTimes(3);
+    expect(mockHandleFn).toHaveBeenCalledTimes(1);
+  }
+);
+
 test.each([TimerMode.Legacy, TimerMode.Legacy])(
   'awaiting something that succeeds before timeout works with %s fake timers',
   async (fakeTimerType) => {

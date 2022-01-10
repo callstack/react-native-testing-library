@@ -29,6 +29,7 @@ export type WaitForOptions = {
   timeout?: number,
   interval?: number,
   stackTraceError?: ErrorWithStack,
+  onTimeout?: (error: Error) => Error,
 };
 
 function waitForInternal<T>(
@@ -37,6 +38,7 @@ function waitForInternal<T>(
     timeout = DEFAULT_TIMEOUT,
     interval = DEFAULT_INTERVAL,
     stackTraceError,
+    onTimeout,
   }: WaitForOptions
 ): Promise<T> {
   if (typeof expectation !== 'function') {
@@ -178,6 +180,9 @@ function waitForInternal<T>(
         if (stackTraceError) {
           copyStackTrace(error, stackTraceError);
         }
+      }
+      if (typeof onTimeout === 'function') {
+        onTimeout(error);
       }
       onDone(error, null);
     }
