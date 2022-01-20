@@ -262,7 +262,7 @@ Queries that take a `TextMatch` also accept an object as the final argument that
 - `exact`: Defaults to `true`; matches full strings, case-sensitive. When false, matches substrings and is not case-sensitive.
   - `exact` has no effect on regex argument.
   - In most cases using a `regex` instead of a string gives you more control over fuzzy matching and should be preferred over `{ exact: false }`.
-- `normalizer`: An optional function which overrides normalization behavior. See [Normalization](#Normalization).
+- `normalizer`: An optional function which overrides normalization behavior. See [Normalization](#normalization).
 
 `exact` option defaults to `true` but if you want to search for a text slice or make text matching case-insensitive you can override it. That being said we advise you to use regex in more complex scenarios.
 
