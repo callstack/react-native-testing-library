@@ -55,7 +55,7 @@ type ReactTestInstance = {
 
 ### Options
 
-Query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#TextMatch) for more info.
+Query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#textmatch) for more info.
 
 ### `ByText`
 
