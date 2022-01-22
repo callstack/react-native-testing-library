@@ -317,6 +317,36 @@ test('should not fire on box-only pointerEvents View with nested elements', () =
   expect(handlePress).not.toHaveBeenCalled();
 });
 
+test('should fire non-terminal touch events on box-none pointerEvents View', () => {
+  const handleTouchStart = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="box-none" onTouchStart={handleTouchStart}>
+      <Pressable onPress={() => {}}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
+  );
+
+  fireEvent(screen.getByText('Trigger'), 'touchStart');
+  expect(handleTouchStart).toHaveBeenCalled();
+});
+
+test('should fire non-touch events on box-none pointerEvents View', () => {
+  const handleLayout = jest.fn();
+
+  const screen = render(
+    <View pointerEvents="box-none" onLayout={handleLayout}>
+      <Pressable onPress={() => {}}>
+        <Text>Trigger</Text>
+      </Pressable>
+    </View>
+  );
+
+  fireEvent(screen.getByText('Trigger'), 'layout');
+  expect(handleLayout).toHaveBeenCalled();
+});
+
 test('should pass event up on disabled TouchableOpacity', () => {
   const handleInnerPress = jest.fn();
   const handleOuterPress = jest.fn();
