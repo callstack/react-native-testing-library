@@ -321,14 +321,18 @@ test('should fire non-terminal touch events on box-none pointerEvents View', () 
   const handleTouchStart = jest.fn();
 
   const screen = render(
-    <View pointerEvents="box-none" onTouchStart={handleTouchStart}>
+    <View
+      pointerEvents="box-none"
+      onTouchStart={handleTouchStart}
+      testID="touch-start-view"
+    >
       <Pressable onPress={() => {}}>
         <Text>Trigger</Text>
       </Pressable>
     </View>
   );
 
-  fireEvent(screen.getByText('Trigger'), 'touchStart');
+  fireEvent(screen.getByTestId('touch-start-view'), 'touchStart');
   expect(handleTouchStart).toHaveBeenCalled();
 });
 
@@ -336,14 +340,14 @@ test('should fire non-touch events on box-none pointerEvents View', () => {
   const handleLayout = jest.fn();
 
   const screen = render(
-    <View pointerEvents="box-none" onLayout={handleLayout}>
+    <View pointerEvents="box-none" onLayout={handleLayout} testID="layout-view">
       <Pressable onPress={() => {}}>
         <Text>Trigger</Text>
       </Pressable>
     </View>
   );
 
-  fireEvent(screen.getByText('Trigger'), 'layout');
+  fireEvent(screen.getByTestId('layout-view'), 'layout');
   expect(handleLayout).toHaveBeenCalled();
 });
 
