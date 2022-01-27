@@ -317,7 +317,7 @@ test('should not fire on box-only pointerEvents View with nested elements', () =
   expect(handlePress).not.toHaveBeenCalled();
 });
 
-test('should fire non-terminal touch events on box-none pointerEvents View', () => {
+test('should fire non-pointer events on box-none pointerEvents View', () => {
   const handleTouchStart = jest.fn();
 
   const screen = render(
