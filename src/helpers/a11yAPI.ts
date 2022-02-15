@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import type { AccessibilityRole, AccessibilityState } from 'react-native';
 import type { WaitForOptions } from '../waitFor';
+import type { TextMatch } from '../matches';
 import makeA11yQuery from './makeA11yQuery';
 
 type AccessibilityStateKey = keyof AccessibilityState;
@@ -20,42 +21,42 @@ type FindAllReturn = Promise<GetAllReturn>;
 
 export type A11yAPI = {
   // Label
-  getByLabelText: (label: string | RegExp) => GetReturn;
-  getAllByLabelText: (label: string | RegExp) => GetAllReturn;
-  queryByLabelText: (label: string | RegExp) => QueryReturn;
-  queryAllByLabelText: (label: string | RegExp) => QueryAllReturn;
+  getByLabelText: (label: TextMatch) => GetReturn;
+  getAllByLabelText: (label: TextMatch) => GetAllReturn;
+  queryByLabelText: (label: TextMatch) => QueryReturn;
+  queryAllByLabelText: (label: TextMatch) => QueryAllReturn;
   findByLabelText: (
-    label: string | RegExp,
+    label: TextMatch,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByLabelText: (
-    label: string | RegExp,
+    label: TextMatch,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 
   // Hint
-  getByA11yHint: (a11yHint: string | RegExp) => GetReturn;
-  getByHintText: (a11yHint: string | RegExp) => GetReturn;
-  getAllByA11yHint: (a11yHint: string | RegExp) => GetAllReturn;
-  getAllByHintText: (a11yHint: string | RegExp) => GetAllReturn;
-  queryByA11yHint: (a11yHint: string | RegExp) => QueryReturn;
-  queryByHintText: (a11yHint: string | RegExp) => QueryReturn;
-  queryAllByA11yHint: (a11yHint: string | RegExp) => QueryAllReturn;
-  queryAllByHintText: (a11yHint: string | RegExp) => QueryAllReturn;
+  getByA11yHint: (a11yHint: TextMatch) => GetReturn;
+  getByHintText: (a11yHint: TextMatch) => GetReturn;
+  getAllByA11yHint: (a11yHint: TextMatch) => GetAllReturn;
+  getAllByHintText: (a11yHint: TextMatch) => GetAllReturn;
+  queryByA11yHint: (a11yHint: TextMatch) => QueryReturn;
+  queryByHintText: (a11yHint: TextMatch) => QueryReturn;
+  queryAllByA11yHint: (a11yHint: TextMatch) => QueryAllReturn;
+  queryAllByHintText: (a11yHint: TextMatch) => QueryAllReturn;
   findByA11yHint: (
-    a11yHint: string | RegExp,
+    a11yHint: TextMatch,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findByHintText: (
-    a11yHint: string | RegExp,
+    a11yHint: TextMatch,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByA11yHint: (
-    a11yHint: string | RegExp,
+    a11yHint: TextMatch,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
   findAllByHintText: (
-    a11yHint: string | RegExp,
+    a11yHint: TextMatch,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 
@@ -128,7 +129,7 @@ export type A11yAPI = {
 
 export function matchStringValue(
   prop: string | undefined,
-  matcher: string | RegExp
+  matcher: TextMatch
 ): boolean {
   if (!prop) {
     return false;

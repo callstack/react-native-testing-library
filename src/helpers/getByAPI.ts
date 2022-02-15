@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
+import type { TextMatch } from '../matches';
 import { ErrorWithStack, prepareErrorMessage } from './errors';
 import { getAllByTestId, getByTestId } from './byTestId';
 import { getAllByText, getByText } from './byText';
@@ -13,35 +14,35 @@ import type { TextMatchOptions } from './byText';
 
 export type GetByAPI = {
   getByText: (
-    text: string | RegExp,
+    text: TextMatch,
     queryOptions?: TextMatchOptions
   ) => ReactTestInstance;
   getByPlaceholderText: (
-    placeholder: string | RegExp,
+    placeholder: TextMatch,
     queryOptions?: TextMatchOptions
   ) => ReactTestInstance;
   getByDisplayValue: (
-    value: string | RegExp,
+    value: TextMatch,
     queryOptions?: TextMatchOptions
   ) => ReactTestInstance;
   getByTestId: (
-    testID: string | RegExp,
+    testID: TextMatch,
     queryOptions?: TextMatchOptions
   ) => ReactTestInstance;
   getAllByTestId: (
-    testID: string | RegExp,
+    testID: TextMatch,
     queryOptions?: TextMatchOptions
   ) => Array<ReactTestInstance>;
   getAllByText: (
-    text: string | RegExp,
+    text: TextMatch,
     queryOptions?: TextMatchOptions
   ) => Array<ReactTestInstance>;
   getAllByPlaceholderText: (
-    placeholder: string | RegExp,
+    placeholder: TextMatch,
     queryOptions?: TextMatchOptions
   ) => Array<ReactTestInstance>;
   getAllByDisplayValue: (
-    value: string | RegExp,
+    value: TextMatch,
     queryOptions?: TextMatchOptions
   ) => Array<ReactTestInstance>;
 

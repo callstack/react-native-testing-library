@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import type { WaitForOptions } from '../waitFor';
+import type { TextMatch } from '../matches';
 import type { TextMatchOptions } from './byText';
 import { findAllByTestId, findByTestId } from './byTestId';
 import { findAllByText, findByText } from './byText';
@@ -12,44 +13,44 @@ import { throwRenamedFunctionError } from './errors';
 
 export type FindByAPI = {
   findAllByDisplayValue: (
-    value: string | RegExp,
+    value: TextMatch,
     queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<Array<ReactTestInstance>>;
   findAllByPlaceholder: () => void;
   findAllByPlaceholderText: (
-    placeholder: string | RegExp,
+    placeholder: TextMatch,
     queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<Array<ReactTestInstance>>;
   findAllByTestId: (
-    testId: string | RegExp,
+    testId: TextMatch,
     queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<Array<ReactTestInstance>>;
   findAllByText: (
-    text: string | RegExp,
+    text: TextMatch,
     queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<Array<ReactTestInstance>>;
   findByDisplayValue: (
-    value: string | RegExp,
+    value: TextMatch,
     queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<ReactTestInstance>;
   findByPlaceholder: () => void;
   findByPlaceholderText: (
-    placeholder: string | RegExp,
+    placeholder: TextMatch,
     queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<ReactTestInstance>;
   findByTestId: (
-    testId: string | RegExp,
+    testId: TextMatch,
     queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<ReactTestInstance>;
   findByText: (
-    text: string | RegExp,
+    text: TextMatch,
     queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<ReactTestInstance>;

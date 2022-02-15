@@ -4,7 +4,7 @@ import { render } from '..';
 
 let isMounted = false;
 
-class Test extends React.Component<{ onUnmount?: () => void }> {
+class Test extends React.Component<{ onUnmount?(): void }> {
   componentDidMount() {
     isMounted = true;
   }

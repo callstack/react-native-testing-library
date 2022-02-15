@@ -10,7 +10,7 @@ beforeAll(() => {
 
 let isMounted = false;
 
-class Test extends React.Component<any> {
+class Test extends React.Component<{ onUnmount?(): void }> {
   componentDidMount() {
     isMounted = true;
   }

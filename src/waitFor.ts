@@ -204,6 +204,6 @@ export default async function waitFor<T>(
     result = await waitForInternal(expectation, optionsWithStackTrace);
   });
 
-  // @ts-ignore either we have result or `waitFor` threw error
-  return result;
+  // Either we have result or `waitFor` threw error
+  return result!;
 }

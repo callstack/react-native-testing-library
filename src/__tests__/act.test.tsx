@@ -5,7 +5,7 @@ import act from '../act';
 import render from '../render';
 import fireEvent from '../fireEvent';
 
-type UseEffectProps = { callback: () => void };
+type UseEffectProps = { callback(): void };
 const UseEffect = ({ callback }: UseEffectProps) => {
   React.useEffect(callback);
   return null;

@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
-import { matches } from '../matches';
+import { matches, TextMatch } from '../matches';
 import type { NormalizerFn } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
@@ -13,7 +13,7 @@ export type TextMatchOptions = {
 };
 
 const getChildrenAsText = (
-  children: (string | number | React.ReactElement)[],
+  children: React.ReactChild[],
   TextComponent: React.ComponentType
 ) => {
   const textContent: string[] = [];
@@ -50,7 +50,7 @@ const getChildrenAsText = (
 
 const getNodeByText = (
   node: ReactTestInstance,
-  text: string | RegExp,
+  text: TextMatch,
   options: TextMatchOptions = {}
 ) => {
   try {
@@ -73,7 +73,7 @@ const getNodeByText = (
 const queryAllByText = (
   instance: ReactTestInstance
 ): ((
-  text: string | RegExp,
+  text: TextMatch,
   queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByTextFn(text, queryOptions) {
@@ -84,9 +84,9 @@ const queryAllByText = (
     return results;
   };
 
-const getMultipleError = (text: string | RegExp) =>
+const getMultipleError = (text: TextMatch) =>
   `Found multiple elements with text: ${String(text)}`;
-const getMissingError = (text: string | RegExp) =>
+const getMissingError = (text: TextMatch) =>
   `Unable to find an element with text: ${String(text)}`;
 
 const {
@@ -95,7 +95,7 @@ const {
   queryBy: queryByText,
   findBy: findByText,
   findAllBy: findAllByText,
-}: Queries<string | RegExp> = makeQueries(
+}: Queries<TextMatch> = makeQueries(
   queryAllByText,
   getMissingError,
   getMultipleError

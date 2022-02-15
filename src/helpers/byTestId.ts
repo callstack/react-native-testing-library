@@ -1,12 +1,12 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { matches } from '../matches';
+import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
 import type { TextMatchOptions } from './byText';
 
 const getNodeByTestId = (
   node: ReactTestInstance,
-  testID: string | RegExp,
+  testID: TextMatch,
   options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
@@ -16,7 +16,7 @@ const getNodeByTestId = (
 const queryAllByTestId = (
   instance: ReactTestInstance
 ): ((
-  testId: string | RegExp,
+  testId: TextMatch,
   queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByTestIdFn(testId, queryOptions) {
@@ -27,9 +27,9 @@ const queryAllByTestId = (
     return results;
   };
 
-const getMultipleError = (testId: string | RegExp) =>
+const getMultipleError = (testId: TextMatch) =>
   `Found multiple elements with testID: ${String(testId)}`;
-const getMissingError = (testId: string | RegExp) =>
+const getMissingError = (testId: TextMatch) =>
   `Unable to find an element with testID: ${String(testId)}`;
 
 const {
@@ -38,7 +38,7 @@ const {
   queryBy: queryByTestId,
   findBy: findByTestId,
   findAllBy: findAllByTestId,
-}: Queries<string | RegExp> = makeQueries(
+}: Queries<TextMatch> = makeQueries(
   queryAllByTestId,
   getMissingError,
   getMultipleError

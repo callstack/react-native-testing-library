@@ -34,6 +34,8 @@ const Banana = () => {
   );
 };
 
+type ChildrenProps = { children: React.ReactNode };
+
 test('getByText, queryByText', () => {
   const { getByText, queryByText } = render(<Banana />);
   const button = getByText(/change/i);
@@ -148,8 +150,7 @@ describe('findBy options deprecations', () => {
 });
 
 test.skip('getByText works properly with custom text component', () => {
-  type BoldTextProps = { children: React.ReactNode };
-  function BoldText({ children }: BoldTextProps) {
+  function BoldText({ children }: ChildrenProps) {
     return <Text>{children}</Text>;
   }
 
@@ -163,12 +164,10 @@ test.skip('getByText works properly with custom text component', () => {
 });
 
 test.skip('getByText works properly with custom text container', () => {
-  type MyTextProps = { children: React.ReactNode };
-  function MyText({ children }: MyTextProps) {
+  function MyText({ children }: ChildrenProps) {
     return <Text>{children}</Text>;
   }
-  type BoldTextProps = { children: React.ReactNode };
-  function BoldText({ children }: BoldTextProps) {
+  function BoldText({ children }: ChildrenProps) {
     return <Text>{children}</Text>;
   }
 
@@ -266,8 +265,7 @@ test('queryByText with nested Text components each with text return the lowest o
 });
 
 test('queryByText nested deep <CustomText> in <Text>', () => {
-  type CustomTextProps = { children: React.ReactNode };
-  const CustomText = ({ children }: CustomTextProps) => {
+  const CustomText = ({ children }: ChildrenProps) => {
     return <Text>{children}</Text>;
   };
 

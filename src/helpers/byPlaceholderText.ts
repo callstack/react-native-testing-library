@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { matches } from '../matches';
+import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
 import { filterNodeByType } from './filterNodeByType';
@@ -8,7 +8,7 @@ import type { TextMatchOptions } from './byText';
 
 const getTextInputNodeByPlaceholderText = (
   node: ReactTestInstance,
-  placeholder: string | RegExp,
+  placeholder: TextMatch,
   options: TextMatchOptions = {}
 ) => {
   try {
@@ -26,7 +26,7 @@ const getTextInputNodeByPlaceholderText = (
 const queryAllByPlaceholderText = (
   instance: ReactTestInstance
 ): ((
-  placeholder: string | RegExp,
+  placeholder: TextMatch,
   queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
@@ -35,9 +35,9 @@ const queryAllByPlaceholderText = (
     );
   };
 
-const getMultipleError = (placeholder: string | RegExp) =>
+const getMultipleError = (placeholder: TextMatch) =>
   `Found multiple elements with placeholder: ${String(placeholder)} `;
-const getMissingError = (placeholder: string | RegExp) =>
+const getMissingError = (placeholder: TextMatch) =>
   `Unable to find an element with placeholder: ${String(placeholder)}`;
 
 const {
@@ -46,7 +46,7 @@ const {
   queryBy: queryByPlaceholderText,
   findBy: findByPlaceholderText,
   findAllBy: findAllByPlaceholderText,
-}: Queries<string | RegExp> = makeQueries(
+}: Queries<TextMatch> = makeQueries(
   queryAllByPlaceholderText,
   getMissingError,
   getMultipleError

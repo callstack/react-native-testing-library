@@ -28,16 +28,16 @@ function getJestFakeTimersType() {
   }
 
   if (
-    // @ts-ignore jest mutates setTimeout
+    // @ts-expect-error jest mutates setTimeout
     typeof globalObj.setTimeout._isMockFunction !== 'undefined' &&
-    // @ts-ignore jest mutates setTimeout
+    // @ts-expect-error jest mutates setTimeout
     globalObj.setTimeout._isMockFunction
   ) {
     return 'legacy';
   }
 
   if (
-    // @ts-ignore jest mutates setTimeout
+    // @ts-expect-error jest mutates setTimeout
     typeof globalObj.setTimeout.clock !== 'undefined' &&
     typeof jest.getRealSystemTime !== 'undefined'
   ) {

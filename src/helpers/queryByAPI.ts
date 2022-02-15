@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
+import type { TextMatch } from '../matches';
 import type { TextMatchOptions } from './byText';
 import {
   UNSAFE_getByType,
@@ -22,31 +23,31 @@ import {
 
 export type QueryByAPI = {
   queryByText: (
-    name: string | RegExp,
+    name: TextMatch,
     queryOptions?: TextMatchOptions
   ) => ReactTestInstance | null;
   queryAllByText: (
-    text: string | RegExp,
+    text: TextMatch,
     queryOptions?: TextMatchOptions
   ) => Array<ReactTestInstance>;
   queryByPlaceholderText: (
-    placeholder: string | RegExp,
+    placeholder: TextMatch,
     queryOptions?: TextMatchOptions
   ) => ReactTestInstance | null;
   queryAllByPlaceholderText: (
-    placeholder: string | RegExp,
+    placeholder: TextMatch,
     queryOptions?: TextMatchOptions
   ) => Array<ReactTestInstance>;
   queryByDisplayValue: (
-    value: string | RegExp,
+    value: TextMatch,
     queryOptions?: TextMatchOptions
   ) => ReactTestInstance | null;
   queryAllByDisplayValue: (
-    value: string | RegExp,
+    value: TextMatch,
     queryOptions?: TextMatchOptions
   ) => Array<ReactTestInstance>;
-  queryByTestId: (testID: string | RegExp) => ReactTestInstance | null;
-  queryAllByTestId: (testID: string | RegExp) => Array<ReactTestInstance>;
+  queryByTestId: (testID: TextMatch) => ReactTestInstance | null;
+  queryAllByTestId: (testID: TextMatch) => Array<ReactTestInstance>;
 
   // Unsafe aliases
   UNSAFE_queryByType: <P>(

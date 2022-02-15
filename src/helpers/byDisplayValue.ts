@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { matches } from '../matches';
+import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
 import { filterNodeByType } from './filterNodeByType';
@@ -8,7 +8,7 @@ import type { TextMatchOptions } from './byText';
 
 const getTextInputNodeByDisplayValue = (
   node: ReactTestInstance,
-  value: string | RegExp,
+  value: TextMatch,
   options: TextMatchOptions = {}
 ) => {
   try {
@@ -30,7 +30,7 @@ const getTextInputNodeByDisplayValue = (
 const queryAllByDisplayValue = (
   instance: ReactTestInstance
 ): ((
-  displayValue: string | RegExp,
+  displayValue: TextMatch,
   queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
@@ -39,9 +39,9 @@ const queryAllByDisplayValue = (
     );
   };
 
-const getMultipleError = (displayValue: string | RegExp) =>
+const getMultipleError = (displayValue: TextMatch) =>
   `Found multiple elements with display value: ${String(displayValue)} `;
-const getMissingError = (displayValue: string | RegExp) =>
+const getMissingError = (displayValue: TextMatch) =>
   `Unable to find an element with displayValue: ${String(displayValue)}`;
 
 const {
@@ -50,7 +50,7 @@ const {
   queryBy: queryByDisplayValue,
   findBy: findByDisplayValue,
   findAllBy: findAllByDisplayValue,
-}: Queries<string | RegExp> = makeQueries(
+}: Queries<TextMatch> = makeQueries(
   queryAllByDisplayValue,
   getMissingError,
   getMultipleError
