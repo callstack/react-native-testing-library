@@ -436,3 +436,36 @@ describe('Supports normalization', () => {
     expect(getByText('A text', { normalizer: normalizerFn })).toBeTruthy();
   });
 });
+
+test('getByText and queryByText work properly with text nested in React.Fragment', () => {
+  const { getByText, queryByText } = render(
+    <Text>
+      <>Hello</>
+    </Text>
+  );
+  expect(getByText('Hello')).toBeTruthy();
+  expect(queryByText('Hello')).not.toBeNull();
+});
+
+test('getByText and queryByText work properly with text partially nested in React.Fragment', () => {
+  const { getByText, queryByText } = render(
+    <Text>
+      He<>llo</>
+    </Text>
+  );
+  expect(getByText('Hello')).toBeTruthy();
+  expect(queryByText('Hello')).not.toBeNull();
+});
+
+test('getByText and queryByText work properly with multiple nested fragments', () => {
+  const { getByText, queryByText } = render(
+    <Text>
+      He
+      <>
+        l<>l</>o
+      </>
+    </Text>
+  );
+  expect(getByText('Hello')).toBeTruthy();
+  expect(queryByText('Hello')).not.toBeNull();
+});
