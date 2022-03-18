@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactNative from 'react-native'
 import {
   AccessibilityState,
   // @ts-ignore AccessibilityStates was deprecated in RN0.62 https://reactnative.dev/blog/2020/03/26/version-0.62#breaking-changes
@@ -48,9 +49,9 @@ interface GetByAPI {
   ) => Array<ReactTestInstance>;
 
   // Unsafe aliases
-  UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
-  UNSAFE_getAllByType: <P>(
-    type: React.ComponentType<P>
+  UNSAFE_getByType: (type: keyof typeof ReactNative) => ReactTestInstance;
+  UNSAFE_getAllByType: (
+    type: keyof typeof ReactNative
   ) => Array<ReactTestInstance>;
   UNSAFE_getByProps: (props: Record<string, any>) => ReactTestInstance;
   UNSAFE_getAllByProps: (
