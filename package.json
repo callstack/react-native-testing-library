@@ -2,8 +2,8 @@
   "name": "@testing-library/react-native",
   "version": "9.1.0",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
-  "main": "build/index.js",
-  "typings": "./typings/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://www.github.com/callstack/react-native-testing-library.git"
@@ -21,7 +21,7 @@
   "files": [
     "build/",
     "jest-preset/",
-    "typings/index.d.ts",
+    "typings/index.flow.js",
     "pure.js",
     "dont-cleanup-after-each.js"
   ],
@@ -29,18 +29,23 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-transform-flow-strip-types": "^7.16.0",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-flow": "^7.9.0",
     "@babel/preset-react": "^7.9.4",
+    "@babel/preset-typescript": "^7.16.0",
     "@callstack/eslint-config": "^11.0.0",
     "@release-it/conventional-changelog": "^2.0.0",
     "@testing-library/jest-native": "~4.0.2",
+    "@types/jest": "^27.0.0",
     "@types/react": "^17.0.0",
-    "@types/react-native": "^0.66.5",
+    "@types/react-native": "^0.66.6",
     "@types/react-test-renderer": "^17.0.0",
     "babel-jest": "^27.0.0",
     "conventional-changelog-cli": "^2.0.11",
+    "cp-cli": "^2.0.0",
     "dedent": "^0.7.0",
+    "del-cli": "^3.0.1",
     "eslint": "^7.0.0",
     "flow-bin": "^0.141.0",
     "flow-copy-source": "^2.0.9",
@@ -61,25 +66,30 @@
     "react-test-renderer": ">=16.0.0"
   },
   "scripts": {
+    "clean": "del build",
     "test": "jest",
-    "flow-check": "flow check",
-    "typescript-check": "tsc --noEmit --skipLibCheck --jsx react ./typings/__tests__/*",
+    "typecheck": "tsc",
+    "flow": "flow",
+    "copy-flowtypes": "cp typings/index.flow.js build",
     "lint": "eslint src --cache",
     "release": "release-it",
-    "prepublish": "yarn build && yarn copy-flowtypes",
-    "copy-flowtypes": "flow-copy-source --ignore __tests__/*.js src build",
-    "build": "rm -rf build; babel src --out-dir build --ignore 'src/__tests__/*'"
+    "prepublish": "yarn build",
+    "build:js": "babel src --out-dir build --extensions \".js,.ts\" --source-maps --ignore \"**/__tests__/**\"",
+    "build:js:watch": "yarn build:js --watch",
+    "build:ts": "tsc --build tsconfig.release.json",
+    "build:ts:watch": "yarn build:ts --watch --preserveWatchOutput",
+    "build": "yarn clean && yarn build:js && yarn build:ts && yarn copy-flowtypes",
+    "prepare": "yarn build"
   },
   "jest": {
     "preset": "../jest-preset",
-    "moduleFileExtensions": [
-      "js",
-      "json"
-    ],
     "rootDir": "./src",
     "testPathIgnorePatterns": [
       "timerUtils"
     ],
-    "testTimeout": 30000
+    "testTimeout": 30000,
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(@react-native|react-native)/).*/"
+    ]
   }
 }

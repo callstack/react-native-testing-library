@@ -1,6 +1,6 @@
 module.exports = {
   presets: [
-    '@babel/preset-flow',
+    '@babel/preset-typescript',
     '@babel/preset-react',
     [
       '@babel/preset-env',
@@ -13,4 +13,10 @@ module.exports = {
     ],
   ],
   plugins: ['@babel/plugin-proposal-class-properties'],
+  env: {
+    test: {
+      // https://github.com/react-native-community/upgrade-support/issues/152
+      plugins: ['@babel/plugin-transform-flow-strip-types'],
+    },
+  },
 };
