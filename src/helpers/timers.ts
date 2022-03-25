@@ -2,8 +2,6 @@
 /* globals jest */
 const globalObj = typeof window === 'undefined' ? global : window;
 
-// trigger pipeline
-
 // Currently this fn only supports jest timers, but it could support other test runners in the future.
 function runWithRealTimers<T>(callback: () => T): T {
   const fakeTimersType = getJestFakeTimersType();
