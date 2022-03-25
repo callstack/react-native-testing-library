@@ -30,11 +30,15 @@ const getChildrenAsText = (children, TextComponent) => {
       // has no text. In such situations, react-test-renderer will traverse down
       // this tree in a separate call and run this query again. As a result, the
       // query will match the deepest text node that matches requested text.
-      if (filterNodeByType(child, TextComponent) && textContent.length === 0) {
+      if (filterNodeByType(child, TextComponent)) {
         return;
       }
 
-      getChildrenAsText(child.props.children, TextComponent);
+      if (filterNodeByType(child, React.Fragment)) {
+        textContent.push(
+          ...getChildrenAsText(child.props.children, TextComponent)
+        );
+      }
     }
   });
 
