@@ -21,7 +21,7 @@ function makeAliases(aliases: Array<string>, query: Function) {
 // The WaitForOptions has been moved to the third param of findBy* methods with the addition of QueryOptions.
 // To make the migration easier and to avoid a breaking change, keep reading these options from second param
 // but warn.
-const deprecatedKeys: $Keys<WaitForOptions>[] = [
+const deprecatedKeys: (keyof WaitForOptions)[] = [
   'timeout',
   'interval',
   'stackTraceError',
@@ -39,7 +39,7 @@ const warnDeprectedWaitForOptionsUsage = (queryOptions?: WaitForOptions) => {
         console.warn(
           `Use of option "${key}" in a findBy* query's second parameter, QueryOptions, is deprecated. Please pass this option in the third, WaitForOptions, parameter. 
 Example: 
-  findByText(text, {}, { ${key}: ${queryOptions[key].toString()} })`
+  findByText(text, {}, { ${key}: ${queryOptions[key]} })`
         );
       }
     });
@@ -138,8 +138,8 @@ const makeA11yQuery = <P extends unknown, M extends unknown>(
 
   const findBy = (
     matcher: M,
-    queryOptions?: QueryOptions,
-    waitForOptions?: WaitForOptions = {}
+    queryOptions?: QueryOptions & WaitForOptions,
+    waitForOptions?: WaitForOptions
   ) => {
     const deprecatedWaitForOptions = warnDeprectedWaitForOptionsUsage(
       queryOptions
@@ -153,8 +153,8 @@ const makeA11yQuery = <P extends unknown, M extends unknown>(
 
   const findAllBy = (
     matcher: M,
-    queryOptions: QueryOptions,
-    waitForOptions?: WaitForOptions = {}
+    queryOptions?: QueryOptions & WaitForOptions,
+    waitForOptions?: WaitForOptions
   ) => {
     const deprecatedWaitForOptions = warnDeprectedWaitForOptionsUsage(
       queryOptions
