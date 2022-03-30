@@ -8,10 +8,6 @@ import {
   createQueryByError,
 } from './errors';
 
-type QueryOptions = {
-  name: string | RegExp,
-};
-
 function isNodeValid(node: ReactTestInstance) {
   return typeof node.type === 'string';
 }
@@ -21,6 +17,39 @@ function makeAliases(aliases: Array<string>, query: Function) {
     .map((alias) => ({ [alias]: query }))
     .reduce((acc, query) => ({ ...acc, ...query }), {});
 }
+
+// The WaitForOptions has been moved to the third param of findBy* methods with the addition of QueryOptions.
+// To make the migration easier and to avoid a breaking change, keep reading these options from second param
+// but warn.
+const deprecatedKeys: $Keys<WaitForOptions>[] = [
+  'timeout',
+  'interval',
+  'stackTraceError',
+];
+const warnDeprectedWaitForOptionsUsage = (queryOptions?: WaitForOptions) => {
+  if (queryOptions) {
+    const waitForOptions: WaitForOptions = {
+      timeout: queryOptions.timeout,
+      interval: queryOptions.interval,
+      stackTraceError: queryOptions.stackTraceError,
+    };
+    deprecatedKeys.forEach((key) => {
+      if (queryOptions[key]) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Use of option "${key}" in a findBy* query's second parameter, QueryOptions, is deprecated. Please pass this option in the third, WaitForOptions, parameter. 
+Example: 
+  findByText(text, {}, { ${key}: ${queryOptions[key].toString()} })`
+        );
+      }
+    });
+    return waitForOptions;
+  }
+};
+
+type QueryOptions = {
+  name: string | RegExp,
+};
 
 type QueryNames = {
   getBy: Array<string>,
@@ -112,17 +141,31 @@ const makeA11yQuery = <P: mixed, M: mixed>(
   const findBy = (
     matcher: M,
     queryOptions?: QueryOptions,
-    waitForOptions?: WaitForOptions
+    waitForOptions?: WaitForOptions = {}
   ) => {
-    return waitFor(() => getBy(matcher, queryOptions), waitForOptions);
+    const deprecatedWaitForOptions = warnDeprectedWaitForOptionsUsage(
+      queryOptions
+    );
+
+    return waitFor(() => getBy(matcher, queryOptions), {
+      ...deprecatedWaitForOptions,
+      ...waitForOptions,
+    });
   };
 
   const findAllBy = (
     matcher: M,
     queryOptions: QueryOptions,
-    waitForOptions?: WaitForOptions
+    waitForOptions?: WaitForOptions = {}
   ) => {
-    return waitFor(() => getAllBy(matcher, queryOptions), waitForOptions);
+    const deprecatedWaitForOptions = warnDeprectedWaitForOptionsUsage(
+      queryOptions
+    );
+
+    return waitFor(() => getAllBy(matcher, queryOptions), {
+      ...deprecatedWaitForOptions,
+      ...waitForOptions,
+    });
   };
 
   return {

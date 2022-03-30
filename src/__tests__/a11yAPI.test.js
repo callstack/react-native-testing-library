@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import { render } from '..';
 
 const BUTTON_LABEL = 'cool button';
@@ -110,10 +110,10 @@ test('getByA11yLabel, queryByA11yLabel, findByA11yLabel', async () => {
   const asyncButton = await findByA11yLabel(BUTTON_LABEL);
   expect(asyncButton.props.accessibilityLabel).toEqual(BUTTON_LABEL);
   await expect(
-    findByA11yLabel(NO_MATCHES_TEXT, waitForOptions)
+    findByA11yLabel(NO_MATCHES_TEXT, {}, waitForOptions)
   ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityLabel'));
 
-  await expect(findByA11yLabel(TEXT_LABEL, waitForOptions)).rejects.toThrow(
+  await expect(findByA11yLabel(TEXT_LABEL, {}, waitForOptions)).rejects.toThrow(
     FOUND_TWO_INSTANCES
   );
 });
@@ -158,10 +158,10 @@ test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
 
   const asyncButton = await findByA11yHint(BUTTON_HINT);
   expect(asyncButton.props.accessibilityHint).toEqual(BUTTON_HINT);
-  await expect(findByA11yHint(NO_MATCHES_TEXT, waitForOptions)).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityHint')
-  );
-  await expect(findByA11yHint(TEXT_HINT, waitForOptions)).rejects.toThrow(
+  await expect(
+    findByA11yHint(NO_MATCHES_TEXT, {}, waitForOptions)
+  ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityHint'));
+  await expect(findByA11yHint(TEXT_HINT, {}, waitForOptions)).rejects.toThrow(
     FOUND_TWO_INSTANCES
   );
 });
@@ -229,7 +229,7 @@ test('getByA11yRole, queryByA11yRole, findByA11yRole with name', async () => {
     name: ONE_OCCURANCE,
   });
   await expect(
-    findByA11yRole('button', { ...waitForOptions, name: NO_MATCHES_TEXT })
+    findByA11yRole('button', { name: NO_MATCHES_TEXT }, waitForOptions)
   ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityRole', 'button'));
   await expect(
     findByA11yRole('button', {
@@ -255,6 +255,39 @@ test('getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole', async () => {
   await expect(
     findAllByA11yRole(NO_MATCHES_TEXT, {}, waitForOptions)
   ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityRole'));
+});
+
+describe('findBy options deprecations', () => {
+  let warnSpy;
+  beforeEach(() => {
+    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
+  test('findByText queries warn on deprecated use of WaitForOptions', async () => {
+    const options = { timeout: 10 };
+    // mock implementation to avoid warning in the test suite
+    const { rerender, findByText } = render(<View />);
+    await expect(findByText('Some Text', options)).rejects.toBeTruthy();
+
+    setTimeout(
+      () =>
+        rerender(
+          <View>
+            <Text>Some Text</Text>
+          </View>
+        ),
+      20
+    );
+
+    await expect(findByText('Some Text')).resolves.toBeTruthy();
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Use of option "timeout"')
+    );
+  }, 20000);
 });
 
 test('getAllByA11yRole, queryAllByA11yRole, findAllByA11yRole with name', async () => {
@@ -358,7 +391,7 @@ test('getByA11yState, queryByA11yState, findByA11yState', async () => {
     expanded: false,
   });
   await expect(
-    findByA11yState({ disabled: true }, waitForOptions)
+    findByA11yState({ disabled: true }, {}, waitForOptions)
   ).rejects.toThrow(
     getNoInstancesFoundMessage(
       'accessibilityState',
@@ -367,7 +400,7 @@ test('getByA11yState, queryByA11yState, findByA11yState', async () => {
     )
   );
   await expect(
-    findByA11yState({ expanded: false }, waitForOptions)
+    findByA11yState({ expanded: false }, {}, waitForOptions)
   ).rejects.toThrow(FOUND_TWO_INSTANCES);
 });
 
@@ -393,7 +426,7 @@ test('getAllByA11yState, queryAllByA11yState, findAllByA11yState', async () => {
 
   await expect(findAllByA11yState({ selected: true })).resolves.toHaveLength(1);
   await expect(
-    findAllByA11yState({ disabled: true }, waitForOptions)
+    findAllByA11yState({ disabled: true }, {}, waitForOptions)
   ).rejects.toThrow(
     getNoInstancesFoundMessage(
       'accessibilityState',
@@ -433,12 +466,14 @@ test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
     min: 40,
     max: 60,
   });
-  await expect(findByA11yValue({ min: 50 }, waitForOptions)).rejects.toThrow(
+  await expect(
+    findByA11yValue({ min: 50 }, {}, waitForOptions)
+  ).rejects.toThrow(
     getNoInstancesFoundMessage('accessibilityValue', '{"min": 50}', false)
   );
-  await expect(findByA11yValue({ max: 60 }, waitForOptions)).rejects.toThrow(
-    FOUND_TWO_INSTANCES
-  );
+  await expect(
+    findByA11yValue({ max: 60 }, {}, waitForOptions)
+  ).rejects.toThrow(FOUND_TWO_INSTANCES);
 });
 
 test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
@@ -458,7 +493,9 @@ test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
   expect(getAllByA11yValue({ max: 60 })).toHaveLength(2);
 
   await expect(findAllByA11yValue({ min: 40 })).resolves.toHaveLength(1);
-  await expect(findAllByA11yValue({ min: 50 }, waitForOptions)).rejects.toThrow(
+  await expect(
+    findAllByA11yValue({ min: 50 }, {}, waitForOptions)
+  ).rejects.toThrow(
     getNoInstancesFoundMessage('accessibilityValue', '{"min": 50}', false)
   );
   await expect(findAllByA11yValue({ max: 60 })).resolves.toHaveLength(2);
