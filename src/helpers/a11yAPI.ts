@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import type { AccessibilityRole, AccessibilityState } from 'react-native';
+import type { AccessibilityState } from 'react-native';
 import type { WaitForOptions } from '../waitFor';
 import type { TextMatch } from '../matches';
 import makeA11yQuery from './makeA11yQuery';
@@ -11,6 +11,34 @@ type A11yValue = {
   now?: number;
   text?: string;
 };
+type A11yRole =
+  | 'none'
+  | 'button'
+  | 'link'
+  | 'search'
+  | 'image'
+  | 'keyboardkey'
+  | 'text'
+  | 'adjustable'
+  | 'imagebutton'
+  | 'header'
+  | 'summary'
+  | 'alert'
+  | 'checkbox'
+  | 'combobox'
+  | 'menu'
+  | 'menubar'
+  | 'menuitem'
+  | 'progressbar'
+  | 'radio'
+  | 'radiogroup'
+  | 'scrollbar'
+  | 'spinbutton'
+  | 'switch'
+  | 'tab'
+  | 'tablist'
+  | 'timer'
+  | 'toolbar';
 
 type GetReturn = ReactTestInstance;
 type GetAllReturn = Array<ReactTestInstance>;
@@ -18,6 +46,10 @@ type QueryReturn = ReactTestInstance | null;
 type QueryAllReturn = Array<ReactTestInstance>;
 type FindReturn = Promise<GetReturn>;
 type FindAllReturn = Promise<GetAllReturn>;
+
+export type QueryOptions = {
+  name?: string | RegExp;
+};
 
 export type A11yAPI = {
   // Label
@@ -61,16 +93,30 @@ export type A11yAPI = {
   ) => FindAllReturn;
 
   // Role
-  getByRole: (role: AccessibilityRole | RegExp) => GetReturn;
-  getAllByRole: (role: AccessibilityRole | RegExp) => GetAllReturn;
-  queryByRole: (role: AccessibilityRole | RegExp) => QueryReturn;
-  queryAllByRole: (role: AccessibilityRole | RegExp) => QueryAllReturn;
+  getByRole: (
+    role: A11yRole | RegExp,
+    queryOptions?: QueryOptions
+  ) => GetReturn;
+  getAllByRole: (
+    role: A11yRole | RegExp,
+    queryOptions?: QueryOptions
+  ) => GetAllReturn;
+  queryByRole: (
+    role: A11yRole | RegExp,
+    queryOptions?: QueryOptions
+  ) => QueryReturn;
+  queryAllByRole: (
+    role: A11yRole | RegExp,
+    queryOptions?: QueryOptions
+  ) => QueryAllReturn;
   findByRole: (
-    role: AccessibilityRole,
+    role: A11yRole,
+    queryOptions?: QueryOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByRole: (
-    role: AccessibilityRole,
+    role: A11yRole,
+    queryOptions?: QueryOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 

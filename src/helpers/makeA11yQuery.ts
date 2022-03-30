@@ -48,7 +48,7 @@ Example:
 };
 
 type QueryOptions = {
-  name: string | RegExp,
+  name: string | RegExp;
 };
 
 type QueryNames = {
@@ -64,9 +64,7 @@ const makeA11yQuery = <P extends unknown, M extends unknown>(
   name: string,
   queryNames: QueryNames,
   matcherFn: (prop: P, value: M) => boolean
-): ((instance: ReactTestInstance) => { ... }) => (
-  instance: ReactTestInstance
-) => {
+) => (instance: ReactTestInstance) => {
   const filterWithName = (
     node: ReactTestInstance,
     options: QueryOptions,
