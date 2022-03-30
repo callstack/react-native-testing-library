@@ -2,12 +2,15 @@
 import waitFor from '../waitFor';
 import { getQueriesForElement } from '../within';
 import type { WaitForOptions } from '../waitFor';
-import type { QueryOptions } from './a11yAPI';
 import {
   ErrorWithStack,
   prepareErrorMessage,
   createQueryByError,
 } from './errors';
+
+type QueryOptions = {
+  name: string | RegExp,
+};
 
 function isNodeValid(node: ReactTestInstance) {
   return typeof node.type === 'string';
