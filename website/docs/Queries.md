@@ -55,7 +55,7 @@ type ReactTestInstance = {
 
 ### Options
 
-Query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#TextMatch) for more info.
+Query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#textmatch) for more info.
 
 ### `ByText`
 
@@ -115,10 +115,8 @@ const element = getByTestId('unique-id');
 In the spirit of [the guiding principles](https://testing-library.com/docs/guiding-principles), it is recommended to use this only after the other queries don't work for your use case. Using `testID` attributes do not resemble how your software is used and should be avoided if possible. However, they are particularly useful for end-to-end testing on real devices, e.g. using Detox and it's an encouraged technique to use there. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
 :::
 
-### `ByA11yLabel`, `ByAccessibilityLabel`, `ByLabelText`
+### `ByLabelText`
 
-> getByA11yLabel, getAllByA11yLabel, queryByA11yLabel, queryAllByA11yLabel, findByA11yLabel, findAllByA11yLabel
-> getByAccessibilityLabel, getAllByAccessibilityLabel, queryByAccessibilityLabel, queryAllByAccessibilityLabel, findByAccessibilityLabel, findAllByAccessibilityLabel
 > getByLabelText, getAllByLabelText, queryByLabelText, queryAllByLabelText, findByLabelText, findAllByLabelText
 
 Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
@@ -164,10 +162,8 @@ const element = getByA11yStates(['checked']);
 const element2 = getByA11yStates('checked');
 ```
 
-### `ByA11yRole`, `ByAccessibilityRole`, `ByRole`
+### `ByRole`
 
-> getByA11yRole, getAllByA11yRole, queryByA11yRole, queryAllByA11yRole, findByA11yRole, findAllByA11yRole
-> getByAccessibilityRole, getAllByAccessibilityRole, queryByAccessibilityRole, queryAllByAccessibilityRole, findByAccessibilityRole, findAllByAccessibilityRole
 > getByRole, getAllByRole, queryByRole, queryAllByRole, findByRole, findAllByRole
 
 Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
@@ -175,8 +171,8 @@ Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
 ```jsx
 import { render } from '@testing-library/react-native';
 
-const { getByA11yRole } = render(<MyComponent />);
-const element = getByA11yRole('button');
+const { getByRole } = render(<MyComponent />);
+const element = getByRole('button');
 ```
 
 ### `ByA11yState`, `ByAccessibilityState`
@@ -262,7 +258,7 @@ Queries that take a `TextMatch` also accept an object as the final argument that
 - `exact`: Defaults to `true`; matches full strings, case-sensitive. When false, matches substrings and is not case-sensitive.
   - `exact` has no effect on regex argument.
   - In most cases using a `regex` instead of a string gives you more control over fuzzy matching and should be preferred over `{ exact: false }`.
-- `normalizer`: An optional function which overrides normalization behavior. See [Normalization](#Normalization).
+- `normalizer`: An optional function which overrides normalization behavior. See [Normalization](#normalization).
 
 `exact` option defaults to `true` but if you want to search for a text slice or make text matching case-insensitive you can override it. That being said we advise you to use regex in more complex scenarios.
 
