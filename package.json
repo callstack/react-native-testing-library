@@ -2,8 +2,8 @@
   "name": "@testing-library/react-native",
   "version": "9.1.0",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://www.github.com/callstack/react-native-testing-library.git"
@@ -74,7 +74,7 @@
     "lint": "eslint src --cache",
     "release": "release-it",
     "prepublish": "yarn build",
-    "build:js": "babel src --out-dir build --extensions \".js,.ts\" --source-maps --ignore \"**/__tests__/**\"",
+    "build:js": "babel src --out-dir build --extensions \".js,.ts,.jsx,.tsx\" --source-maps --ignore \"**/__tests__/**\"",
     "build:js:watch": "yarn build:js --watch",
     "build:ts": "tsc --build tsconfig.release.json",
     "build:ts:watch": "yarn build:ts --watch --preserveWatchOutput",
