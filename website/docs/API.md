@@ -7,7 +7,7 @@ This page gathers public API of React Native Testing Library along with usage ex
 
 ## `render`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/render.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/render.test.tsx)
 
 Defined as:
 
@@ -345,7 +345,7 @@ If you're noticing that components are not being found on a list, even after moc
 
 ## `waitFor`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitFor.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitFor.test.tsx)
 
 Defined as:
 
@@ -374,7 +374,7 @@ In order to properly use `waitFor` you need at least React >=16.9.0 (featuring a
 
 ## `waitForElementToBeRemoved`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitForElementToBeRemoved.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitForElementToBeRemoved.test.tsx)
 
 Defined as:
 
@@ -410,7 +410,7 @@ In order to properly use `waitForElementToBeRemoved` you need at least React >=1
 
 ## `within`, `getQueriesForElement`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/within.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/within.test.tsx)
 
 Defined as:
 
