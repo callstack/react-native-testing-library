@@ -7,7 +7,7 @@ This page gathers public API of React Native Testing Library along with usage ex
 
 ## `render`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/render.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/render.test.tsx)
 
 Defined as:
 
@@ -66,7 +66,7 @@ rerender(element: React.Element<any>): void
 
 Re-render the in-memory tree with a new root element. This simulates a React update at the root. If the new element has the same type and key as the previous element, the tree will be updated; otherwise, it will re-mount a new tree. This is useful when testing for `componentDidUpdate` behavior, by passing updated props to the component.
 
-[Example code](https://github.com/callstack/react-native-testing-library/blob/f96d782d26dd4815dbfd01de6ef7a647efd1f693/src/__tests__/act.test.js#L31-L37)
+[Example code](https://github.com/callstack/react-native-testing-library/blob/f96d782d26dd4815dbfd01de6ef7a647efd1f693/src/__tests__/act.test.tsx#L31-L37)
 
 ### `unmount`
 
@@ -345,7 +345,7 @@ If you're noticing that components are not being found on a list, even after moc
 
 ## `waitFor`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitFor.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitFor.test.tsx)
 
 Defined as:
 
@@ -374,7 +374,7 @@ In order to properly use `waitFor` you need at least React >=16.9.0 (featuring a
 
 ## `waitForElementToBeRemoved`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitForElementToBeRemoved.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitForElementToBeRemoved.test.tsx)
 
 Defined as:
 
@@ -410,7 +410,7 @@ In order to properly use `waitForElementToBeRemoved` you need at least React >=1
 
 ## `within`, `getQueriesForElement`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/within.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/within.test.tsx)
 
 Defined as:
 
