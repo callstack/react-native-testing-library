@@ -336,6 +336,17 @@ type FireEventAPI = FireEventFunction & {
   scroll: (element: ReactTestInstance, ...data: Array<any>) => any,
 };
 
+type RenderHookResult<Result, Props> = {
+  rerender: (props: Props) => void,
+  result: { current: Result },
+  unmount: () => void,
+};
+
+type RenderHookOptions<Props> = {
+  initialProps?: Props,
+  wrapper?: React.ComponentType<any>,
+};
+
 declare module '@testing-library/react-native' {
   declare export var render: (
     component: React.Element<any>,
@@ -363,4 +374,11 @@ declare module '@testing-library/react-native' {
   declare export var getDefaultNormalizer: (
     normalizerConfig?: NormalizerConfig
   ) => NormalizerFn;
+
+  declare type RenderHookFunction = <Result, Props>(
+    renderCallback: (props: Props) => Result,
+    options?: RenderHookOptions<Props>
+  ) => RenderHookResult<Result, Props>;
+
+  declare export var renderHook: RenderHookFunction;
 }
