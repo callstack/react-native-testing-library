@@ -465,3 +465,139 @@ expect(submitButtons).toHaveLength(3); // expect 3 elements
 ## `act`
 
 Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/main/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
+
+## `renderHook`
+
+Defined as:
+
+```ts
+function renderHook(
+  callback: (props?: any) => any,
+  options?: RenderHookOptions
+): RenderHookResult;
+```
+
+Renders a test component that will call the provided `callback`, including any hooks it calls, every time it renders. Returns [`RenderHookResult`](#renderhookresult-object) object, which you can interact with.
+
+```ts
+import { renderHook } from '@testing-library/react-native';
+import { useCount } from '../useCount';
+
+it('should increment count', () => {
+  const { result } = renderHook(() => useCount());
+
+  expect(result.current.count).toBe(0);
+  act(() => {
+    // Note that you should wrap the calls to functions your hook returns with `act` if they trigger an update of your hook's state to ensure pending useEffects are run before your next assertion.
+    result.increment();
+  });
+  expect(result.current.count).toBe(1);
+});
+```
+
+```ts
+// useCount.js
+export const useCount = () => {
+  const [count, setCount] = useState(0);
+  const increment = () => setCount((previousCount) => previousCount + 1);
+
+  return { count, increment };
+};
+```
+
+The `renderHook` function accepts the following arguments:
+
+### `callback`
+
+The function that is called each `render` of the test component. This function should call one or more hooks for testing.
+
+The `props` passed into the callback will be the `initialProps` provided in the `options` to `renderHook`, unless new props are provided by a subsequent `rerender` call.
+
+### `options` (Optional)
+
+A `RenderHookOptions` object to modify the execution of the `callback` function, containing the following properties:
+
+#### `initialProps`
+
+The initial values to pass as `props` to the `callback` function of `renderHook`.
+
+#### `wrapper`
+
+A React component to wrap the test component in when rendering. This is usually used to add context providers from `React.createContext` for the hook to access with `useContext`. `initialProps` and props subsequently set by `rerender` will be provided to the wrapper.
+
+### `RenderHookResult` object
+
+The `renderHook` function returns an object that has the following properties:
+
+#### `result`
+
+```jsx
+{
+  all: Array<any>
+  current: any,
+  error: Error
+}
+```
+
+The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`. Any thrown values from the latest call will be reflected in the `error` value of the `result`. The `all` value is an array containing all the returns (including the most recent) from the callback. These could be `result` or an `error` depending on what the callback returned at the time.
+
+#### `rerender`
+
+function rerender(newProps?: any): void
+
+A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders.
+
+#### `unmount`
+
+function unmount(): void
+
+A function to unmount the test component. This is commonly used to trigger cleanup effects for `useEffect` hooks.
+
+### Examples
+
+Here we present some extra examples of using `renderHook` API.
+
+#### With `initialProps`
+
+```jsx
+const useCount = (initialCount: number) => {
+  const [count, setCount] = useState(initialCount);
+  const increment = () => setCount((previousCount) => previousCount + 1);
+
+  useEffect(() => {
+    setCount(initialCount);
+  }, [initialCount]);
+
+  return { count, increment };
+};
+
+it('should increment count', () => {
+  const { result, rerender } = renderHook(
+    (initialCount: number) => useCount(initialCount),
+    { initialProps: 1 }
+  );
+
+  expect(result.current.count).toBe(1);
+
+  act(() => {
+    result.increment();
+  });
+
+  expect(result.current.count).toBe(2);
+  rerender(5);
+  expect(result.current.count).toBe(5);
+});
+```
+
+#### With `wrapper`
+
+```jsx
+it('should work properly', () => {
+  function Wrapper({ children }: { children: ReactNode }) {
+    return <Context.Provider value="provided">{children}</Context.Provider>;
+  }
+
+  const { result } = renderHook(() => useHook(), { wrapper: Wrapper });
+  // ...
+});
+```
