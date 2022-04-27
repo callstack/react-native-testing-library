@@ -400,7 +400,7 @@ test('waiting for an Banana to be removed', async () => {
 });
 ```
 
-This method expects that the element is initally present in the render tree and then is removed from it. If the element is not present when you call this method it throws an error.
+This method expects that the element is initially present in the render tree and then is removed from it. If the element is not present when you call this method it throws an error.
 
 You can use any of `getBy`, `getAllBy`, `queryBy` and `queryAllBy` queries for `expectation` parameter.
 
@@ -533,13 +533,11 @@ The `renderHook` function returns an object that has the following properties:
 
 ```jsx
 {
-  all: Array<any>
-  current: any,
-  error: Error
+  current: any
 }
 ```
 
-The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`. Any thrown values from the latest call will be reflected in the `error` value of the `result`. The `all` value is an array containing all the returns (including the most recent) from the callback. These could be `result` or an `error` depending on what the callback returned at the time.
+The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`.
 
 #### `rerender`
 
@@ -592,7 +590,7 @@ it('should increment count', () => {
 #### With `wrapper`
 
 ```jsx
-it('should work properly', () => {
+it('should use context value', () => {
   function Wrapper({ children }: { children: ReactNode }) {
     return <Context.Provider value="provided">{children}</Context.Provider>;
   }
