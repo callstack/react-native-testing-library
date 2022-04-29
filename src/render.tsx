@@ -5,7 +5,6 @@ import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getByAPI } from './queries/getByAPI';
 import { queryByAPI } from './queries/queryByAPI';
-import { findByAPI } from './queries/findByAPI';
 import { a11yAPI } from './queries/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
@@ -50,7 +49,6 @@ export default function render<T>(
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),
-    ...findByAPI(instance),
     ...a11yAPI(instance),
     ...bindByTextQueries(instance),
     ...bindByTestIdQueries(instance),
