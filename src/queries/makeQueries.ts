@@ -1,7 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
-import { ErrorWithStack } from './errors';
+import { ErrorWithStack } from '../helpers/errors';
 import type { TextMatchOptions } from './byText';
 
 type QueryFunction<ArgType, ReturnType> = (

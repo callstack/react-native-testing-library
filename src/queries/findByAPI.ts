@@ -9,7 +9,7 @@ import {
   findByPlaceholderText,
 } from './byPlaceholderText';
 import { findAllByDisplayValue, findByDisplayValue } from './byDisplayValue';
-import { throwRenamedFunctionError } from './errors';
+import { throwRenamedFunctionError } from '../helpers/errors';
 
 export type FindByAPI = {
   findAllByDisplayValue: (

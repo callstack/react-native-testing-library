@@ -2,7 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
 import type { TextMatch } from '../matches';
-import { ErrorWithStack, prepareErrorMessage } from './errors';
+import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
 import { getAllByTestId, getByTestId } from './byTestId';
 import { getAllByText, getByText } from './byText';
 import {

@@ -19,7 +19,7 @@ import {
   createQueryByError,
   throwRemovedFunctionError,
   throwRenamedFunctionError,
-} from './errors';
+} from '../helpers/errors';
 
 export type QueryByAPI = {
   queryByText: (

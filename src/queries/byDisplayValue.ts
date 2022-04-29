@@ -2,8 +2,8 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
-import { filterNodeByType } from './filterNodeByType';
-import { createLibraryNotSupportedError } from './errors';
+import { filterNodeByType } from '../helpers/filterNodeByType';
+import { createLibraryNotSupportedError } from '../helpers/errors';
 import type { TextMatchOptions } from './byText';
 
 const getTextInputNodeByDisplayValue = (

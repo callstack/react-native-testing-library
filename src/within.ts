@@ -1,8 +1,8 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { getByAPI } from './helpers/getByAPI';
-import { queryByAPI } from './helpers/queryByAPI';
-import { findByAPI } from './helpers/findByAPI';
-import { a11yAPI } from './helpers/a11yAPI';
+import { getByAPI } from './queries/getByAPI';
+import { queryByAPI } from './queries/queryByAPI';
+import { findByAPI } from './queries/findByAPI';
+import { a11yAPI } from './queries/a11yAPI';
 
 export function within(instance: ReactTestInstance) {
   return {

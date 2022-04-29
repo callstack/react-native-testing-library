@@ -3,10 +3,10 @@ import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import * as React from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
-import { getByAPI } from './helpers/getByAPI';
-import { queryByAPI } from './helpers/queryByAPI';
-import { findByAPI } from './helpers/findByAPI';
-import { a11yAPI } from './helpers/a11yAPI';
+import { getByAPI } from './queries/getByAPI';
+import { queryByAPI } from './queries/queryByAPI';
+import { findByAPI } from './queries/findByAPI';
+import { a11yAPI } from './queries/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 
