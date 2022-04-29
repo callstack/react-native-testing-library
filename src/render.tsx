@@ -3,16 +3,9 @@ import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import * as React from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
-import { a11yAPI } from './queries/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
-import { bindByTextQueries } from './queries/text';
-import { bindByTestIdQueries } from './queries/testId';
-import { bindByDisplayValueQueries } from './queries/displayValue';
-import { bindByPlaceholderTextQueries } from './queries/placeholderText';
-import { bindUnsafeByTypeQueries } from './queries/unsafeType';
-import { bindUnsafeByNameQueries } from './queries/unsafeName';
-import { bindUnsafeByPropsQueries } from './queries/unsafeProps';
+import { getQueriesForElement } from './within';
 
 type Options = {
   wrapper?: React.ComponentType<any>;
@@ -48,14 +41,7 @@ export default function render<T>(
   addToCleanupQueue(unmount);
 
   return {
-    ...bindByTextQueries(instance),
-    ...bindByTestIdQueries(instance),
-    ...bindByDisplayValueQueries(instance),
-    ...bindByPlaceholderTextQueries(instance),
-    ...bindUnsafeByTypeQueries(instance),
-    ...bindUnsafeByPropsQueries(instance),
-    ...bindUnsafeByNameQueries(instance),
-    ...a11yAPI(instance),
+    ...getQueriesForElement(instance),
     update,
     unmount,
     container: instance,
