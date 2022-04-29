@@ -13,12 +13,10 @@ import {
   UNSAFE_getAllByType,
   UNSAFE_getAllByProps,
 } from './getByAPI';
-import { queryByTestId, queryAllByTestId } from './byTestId';
 import {
   queryByPlaceholderText,
   queryAllByPlaceholderText,
 } from './byPlaceholderText';
-import { queryByDisplayValue, queryAllByDisplayValue } from './byDisplayValue';
 
 export type QueryByAPI = {
   queryByPlaceholderText: (
@@ -29,16 +27,6 @@ export type QueryByAPI = {
     placeholder: TextMatch,
     queryOptions?: TextMatchOptions
   ) => Array<ReactTestInstance>;
-  queryByDisplayValue: (
-    value: TextMatch,
-    queryOptions?: TextMatchOptions
-  ) => ReactTestInstance | null;
-  queryAllByDisplayValue: (
-    value: TextMatch,
-    queryOptions?: TextMatchOptions
-  ) => Array<ReactTestInstance>;
-  queryByTestId: (testID: TextMatch) => ReactTestInstance | null;
-  queryAllByTestId: (testID: TextMatch) => Array<ReactTestInstance>;
 
   // Unsafe aliases
   UNSAFE_queryByType: <P>(
@@ -111,12 +99,8 @@ export const UNSAFE_queryAllByProps = (
 };
 
 export const queryByAPI = (instance: ReactTestInstance): QueryByAPI => ({
-  queryByTestId: queryByTestId(instance),
   queryByPlaceholderText: queryByPlaceholderText(instance),
-  queryByDisplayValue: queryByDisplayValue(instance),
-  queryAllByTestId: queryAllByTestId(instance),
   queryAllByPlaceholderText: queryAllByPlaceholderText(instance),
-  queryAllByDisplayValue: queryAllByDisplayValue(instance),
 
   // Unsafe
   UNSAFE_queryByType: UNSAFE_queryByType(instance),

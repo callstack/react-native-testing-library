@@ -3,7 +3,14 @@ import { createLibraryNotSupportedError } from '../helpers/errors';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
-import type { Queries } from './makeQueries';
+import type {
+  FindAllByQuery,
+  FindByQuery,
+  GetAllByQuery,
+  GetByQuery,
+  QueryAllByQuery,
+  QueryByQuery,
+} from './makeQueries';
 import type { TextMatchOptions } from './byText';
 
 const getTextInputNodeByDisplayValue = (
@@ -50,11 +57,27 @@ const {
   queryBy: queryByDisplayValue,
   findBy: findByDisplayValue,
   findAllBy: findAllByDisplayValue,
-}: Queries<TextMatch, TextMatchOptions> = makeQueries(
-  queryAllByDisplayValue,
-  getMissingError,
-  getMultipleError
-);
+} = makeQueries(queryAllByDisplayValue, getMissingError, getMultipleError);
+
+export type ByDisplayValueQueries = {
+  getByDisplayValue: GetByQuery<TextMatch, TextMatchOptions>;
+  getAllByDisplayValue: GetAllByQuery<TextMatch, TextMatchOptions>;
+  queryByDisplayValue: QueryByQuery<TextMatch, TextMatchOptions>;
+  queryAllByDisplayValue: QueryAllByQuery<TextMatch, TextMatchOptions>;
+  findByDisplayValue: FindByQuery<TextMatch, TextMatchOptions>;
+  findAllByDisplayValue: FindAllByQuery<TextMatch, TextMatchOptions>;
+};
+
+export const bindByDisplayValueQueries = (
+  instance: ReactTestInstance
+): ByDisplayValueQueries => ({
+  getByDisplayValue: getByDisplayValue(instance),
+  getAllByDisplayValue: getAllByDisplayValue(instance),
+  queryByDisplayValue: queryByDisplayValue(instance),
+  queryAllByDisplayValue: queryAllByDisplayValue(instance),
+  findByDisplayValue: findByDisplayValue(instance),
+  findAllByDisplayValue: findAllByDisplayValue(instance),
+});
 
 export {
   findAllByDisplayValue,

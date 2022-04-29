@@ -10,6 +10,8 @@ import { a11yAPI } from './queries/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 import { bindByTextQueries } from './queries/byText';
+import { bindByTestIdQueries } from './queries/byTestId';
+import { bindByDisplayValueQueries } from './queries/byDisplayValue';
 
 type Options = {
   wrapper?: React.ComponentType<any>;
@@ -50,6 +52,8 @@ export default function render<T>(
     ...findByAPI(instance),
     ...a11yAPI(instance),
     ...bindByTextQueries(instance),
+    ...bindByTestIdQueries(instance),
+    ...bindByDisplayValueQueries(instance),
     update,
     unmount,
     container: instance,

@@ -1,7 +1,14 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
-import type { Queries } from './makeQueries';
+import type {
+  FindAllByQuery,
+  FindByQuery,
+  GetAllByQuery,
+  GetByQuery,
+  QueryAllByQuery,
+  QueryByQuery,
+} from './makeQueries';
 import type { TextMatchOptions } from './byText';
 
 const getNodeByTestId = (
@@ -38,11 +45,27 @@ const {
   queryBy: queryByTestId,
   findBy: findByTestId,
   findAllBy: findAllByTestId,
-}: Queries<TextMatch, TextMatchOptions> = makeQueries(
-  queryAllByTestId,
-  getMissingError,
-  getMultipleError
-);
+} = makeQueries(queryAllByTestId, getMissingError, getMultipleError);
+
+export type ByTestIdQueries = {
+  getByTestId: GetByQuery<TextMatch, TextMatchOptions>;
+  getAllByTestId: GetAllByQuery<TextMatch, TextMatchOptions>;
+  queryByTestId: QueryByQuery<TextMatch, TextMatchOptions>;
+  queryAllByTestId: QueryAllByQuery<TextMatch, TextMatchOptions>;
+  findByTestId: FindByQuery<TextMatch, TextMatchOptions>;
+  findAllByTestId: FindAllByQuery<TextMatch, TextMatchOptions>;
+};
+
+export const bindByTestIdQueries = (
+  instance: ReactTestInstance
+): ByTestIdQueries => ({
+  getByTestId: getByTestId(instance),
+  getAllByTestId: getAllByTestId(instance),
+  queryByTestId: queryByTestId(instance),
+  queryAllByTestId: queryAllByTestId(instance),
+  findByTestId: findByTestId(instance),
+  findAllByTestId: findAllByTestId(instance),
+});
 
 export {
   findAllByTestId,
