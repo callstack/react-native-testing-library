@@ -4,7 +4,6 @@ import prettyFormat from 'pretty-format';
 import type { TextMatch } from '../matches';
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
 import { getAllByTestId, getByTestId } from './byTestId';
-import { getAllByText, getByText } from './byText';
 import {
   getAllByPlaceholderText,
   getByPlaceholderText,
@@ -13,10 +12,6 @@ import { getAllByDisplayValue, getByDisplayValue } from './byDisplayValue';
 import type { TextMatchOptions } from './byText';
 
 export type GetByAPI = {
-  getByText: (
-    text: TextMatch,
-    queryOptions?: TextMatchOptions
-  ) => ReactTestInstance;
   getByPlaceholderText: (
     placeholder: TextMatch,
     queryOptions?: TextMatchOptions
@@ -31,10 +26,6 @@ export type GetByAPI = {
   ) => ReactTestInstance;
   getAllByTestId: (
     testID: TextMatch,
-    queryOptions?: TextMatchOptions
-  ) => Array<ReactTestInstance>;
-  getAllByText: (
-    text: TextMatch,
     queryOptions?: TextMatchOptions
   ) => Array<ReactTestInstance>;
   getAllByPlaceholderText: (
@@ -105,11 +96,9 @@ export const UNSAFE_getAllByProps = (
   };
 
 export const getByAPI = (instance: ReactTestInstance): GetByAPI => ({
-  getByText: getByText(instance),
   getByPlaceholderText: getByPlaceholderText(instance),
   getByDisplayValue: getByDisplayValue(instance),
   getByTestId: getByTestId(instance),
-  getAllByText: getAllByText(instance),
   getAllByPlaceholderText: getAllByPlaceholderText(instance),
   getAllByDisplayValue: getAllByDisplayValue(instance),
   getAllByTestId: getAllByTestId(instance),

@@ -1,6 +1,11 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
 import type { TextMatch } from '../matches';
+import {
+  createQueryByError,
+  throwRemovedFunctionError,
+  throwRenamedFunctionError,
+} from '../helpers/errors';
 import type { TextMatchOptions } from './byText';
 import {
   UNSAFE_getByType,
@@ -9,27 +14,13 @@ import {
   UNSAFE_getAllByProps,
 } from './getByAPI';
 import { queryByTestId, queryAllByTestId } from './byTestId';
-import { queryByText, queryAllByText } from './byText';
 import {
   queryByPlaceholderText,
   queryAllByPlaceholderText,
 } from './byPlaceholderText';
 import { queryByDisplayValue, queryAllByDisplayValue } from './byDisplayValue';
-import {
-  createQueryByError,
-  throwRemovedFunctionError,
-  throwRenamedFunctionError,
-} from '../helpers/errors';
 
 export type QueryByAPI = {
-  queryByText: (
-    name: TextMatch,
-    queryOptions?: TextMatchOptions
-  ) => ReactTestInstance | null;
-  queryAllByText: (
-    text: TextMatch,
-    queryOptions?: TextMatchOptions
-  ) => Array<ReactTestInstance>;
   queryByPlaceholderText: (
     placeholder: TextMatch,
     queryOptions?: TextMatchOptions
@@ -121,11 +112,9 @@ export const UNSAFE_queryAllByProps = (
 
 export const queryByAPI = (instance: ReactTestInstance): QueryByAPI => ({
   queryByTestId: queryByTestId(instance),
-  queryByText: queryByText(instance),
   queryByPlaceholderText: queryByPlaceholderText(instance),
   queryByDisplayValue: queryByDisplayValue(instance),
   queryAllByTestId: queryAllByTestId(instance),
-  queryAllByText: queryAllByText(instance),
   queryAllByPlaceholderText: queryAllByPlaceholderText(instance),
   queryAllByDisplayValue: queryAllByDisplayValue(instance),
 

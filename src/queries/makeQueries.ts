@@ -2,44 +2,47 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
-import type { TextMatchOptions } from './byText';
 
-type QueryFunction<ArgType, ReturnType> = (
-  instance: ReactTestInstance
-) => (args: ArgType, queryOptions?: TextMatchOptions) => ReturnType;
+export type GetByQuery<Predicate, Options> = (
+  predicate: Predicate,
+  options?: Options
+) => ReactTestInstance;
 
-type FindQueryFunction<ArgType, ReturnType> = (
-  instance: ReactTestInstance
-) => (
-  args: ArgType,
-  queryOptions?: TextMatchOptions & WaitForOptions,
+export type GetAllByQuery<Predicate, Options> = (
+  predicate: Predicate,
+  options?: Options
+) => ReactTestInstance[];
+
+export type QueryByQuery<Predicate, Options> = (
+  predicate: Predicate,
+  options?: Options
+) => ReactTestInstance | null;
+
+export type QueryAllByQuery<Predicate, Options> = (
+  predicate: Predicate,
+  options?: Options
+) => ReactTestInstance[];
+
+export type FindByQuery<Predicate, Options> = (
+  predicate: Predicate,
+  options?: Options & WaitForOptions,
   waitForOptions?: WaitForOptions
-) => Promise<ReturnType>;
+) => Promise<ReactTestInstance>;
 
-type QueryAllByQuery<QueryArg> = QueryFunction<
-  QueryArg,
-  Array<ReactTestInstance>
->;
-type QueryByQuery<QueryArg> = QueryFunction<QueryArg, null | ReactTestInstance>;
+export type FindAllByQuery<Predicate, Options> = (
+  predicate: Predicate,
+  options?: Options & WaitForOptions,
+  waitForOptions?: WaitForOptions
+) => Promise<ReactTestInstance[]>;
 
-type GetAllByQuery<QueryArg> = QueryFunction<
-  QueryArg,
-  Array<ReactTestInstance>
->;
-type GetByQuery<QueryArg> = QueryFunction<QueryArg, ReactTestInstance>;
+type QueryFactor<Query> = (instance: ReactTestInstance) => Query;
 
-type FindAllByQuery<QueryArg> = FindQueryFunction<
-  QueryArg,
-  Array<ReactTestInstance>
->;
-type FindByQuery<QueryArg> = FindQueryFunction<QueryArg, ReactTestInstance>;
-
-export type Queries<QueryArg> = {
-  getBy: GetByQuery<QueryArg>;
-  getAllBy: GetAllByQuery<QueryArg>;
-  queryBy: QueryByQuery<QueryArg>;
-  findBy: FindByQuery<QueryArg>;
-  findAllBy: FindAllByQuery<QueryArg>;
+export type Queries<Predicate, Options> = {
+  getBy: QueryFactor<GetByQuery<Predicate, Options>>;
+  getAllBy: QueryFactor<GetAllByQuery<Predicate, Options>>;
+  queryBy: QueryFactor<QueryByQuery<Predicate, Options>>;
+  findBy: QueryFactor<FindByQuery<Predicate, Options>>;
+  findAllBy: QueryFactor<FindAllByQuery<Predicate, Options>>;
 };
 
 // The WaitForOptions has been moved to the second option param of findBy* methods with the adding of TextMatchOptions
@@ -72,17 +75,17 @@ Example:
   }
 };
 
-export function makeQueries<QueryArg>(
-  queryAllByQuery: QueryAllByQuery<QueryArg>,
-  getMissingError: (args: QueryArg) => string,
-  getMultipleError: (args: QueryArg) => string
-): Queries<QueryArg> {
+export function makeQueries<Predicate, Options>(
+  queryAllByQuery: QueryFactor<QueryAllByQuery<Predicate, Options>>,
+  getMissingError: (predicate: Predicate) => string,
+  getMultipleError: (predicate: Predicate) => string
+): Queries<Predicate, Options> {
   function getAllByQuery(instance: ReactTestInstance) {
-    return function getAllFn(args: QueryArg, queryOptions?: TextMatchOptions) {
-      const results = queryAllByQuery(instance)(args, queryOptions);
+    return function getAllFn(predicate: Predicate, options?: Options) {
+      const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length === 0) {
-        throw new ErrorWithStack(getMissingError(args), getAllFn);
+        throw new ErrorWithStack(getMissingError(predicate), getAllFn);
       }
 
       return results;
@@ -90,14 +93,11 @@ export function makeQueries<QueryArg>(
   }
 
   function queryByQuery(instance: ReactTestInstance) {
-    return function singleQueryFn(
-      args: QueryArg,
-      queryOptions?: TextMatchOptions
-    ) {
-      const results = queryAllByQuery(instance)(args, queryOptions);
+    return function singleQueryFn(predicate: Predicate, options?: Options) {
+      const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length > 1) {
-        throw new ErrorWithStack(getMultipleError(args), singleQueryFn);
+        throw new ErrorWithStack(getMultipleError(predicate), singleQueryFn);
       }
 
       if (results.length === 0) {
@@ -109,15 +109,15 @@ export function makeQueries<QueryArg>(
   }
 
   function getByQuery(instance: ReactTestInstance) {
-    return function getFn(args: QueryArg, queryOptions?: TextMatchOptions) {
-      const results = queryAllByQuery(instance)(args, queryOptions);
+    return function getFn(predicate: Predicate, options?: Options) {
+      const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length > 1) {
-        throw new ErrorWithStack(getMultipleError(args), getFn);
+        throw new ErrorWithStack(getMultipleError(predicate), getFn);
       }
 
       if (results.length === 0) {
-        throw new ErrorWithStack(getMissingError(args), getFn);
+        throw new ErrorWithStack(getMissingError(predicate), getFn);
       }
 
       return results[0];
@@ -126,14 +126,14 @@ export function makeQueries<QueryArg>(
 
   function findAllByQuery(instance: ReactTestInstance) {
     return function findAllFn(
-      args: QueryArg,
-      queryOptions?: TextMatchOptions & WaitForOptions,
+      predicate: Predicate,
+      queryOptions?: Options & WaitForOptions,
       waitForOptions: WaitForOptions = {}
     ) {
       const deprecatedWaitForOptions = extractDeprecatedWaitForOptionUsage(
         queryOptions
       );
-      return waitFor(() => getAllByQuery(instance)(args, queryOptions), {
+      return waitFor(() => getAllByQuery(instance)(predicate, queryOptions), {
         ...deprecatedWaitForOptions,
         ...waitForOptions,
       });
@@ -142,14 +142,14 @@ export function makeQueries<QueryArg>(
 
   function findByQuery(instance: ReactTestInstance) {
     return function findFn(
-      args: QueryArg,
-      queryOptions?: TextMatchOptions & WaitForOptions,
+      predicate: Predicate,
+      queryOptions?: Options & WaitForOptions,
       waitForOptions: WaitForOptions = {}
     ) {
       const deprecatedWaitForOptions = extractDeprecatedWaitForOptionUsage(
         queryOptions
       );
-      return waitFor(() => getByQuery(instance)(args, queryOptions), {
+      return waitFor(() => getByQuery(instance)(predicate, queryOptions), {
         ...deprecatedWaitForOptions,
         ...waitForOptions,
       });

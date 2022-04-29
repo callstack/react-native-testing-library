@@ -38,7 +38,7 @@ const {
   queryBy: queryByTestId,
   findBy: findByTestId,
   findAllBy: findAllByTestId,
-}: Queries<TextMatch> = makeQueries(
+}: Queries<TextMatch, TextMatchOptions> = makeQueries(
   queryAllByTestId,
   getMissingError,
   getMultipleError

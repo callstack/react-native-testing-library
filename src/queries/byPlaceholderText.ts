@@ -46,7 +46,7 @@ const {
   queryBy: queryByPlaceholderText,
   findBy: findByPlaceholderText,
   findAllBy: findAllByPlaceholderText,
-}: Queries<TextMatch> = makeQueries(
+}: Queries<TextMatch, TextMatchOptions> = makeQueries(
   queryAllByPlaceholderText,
   getMissingError,
   getMultipleError

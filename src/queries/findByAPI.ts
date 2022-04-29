@@ -4,7 +4,6 @@ import type { TextMatch } from '../matches';
 import { throwRenamedFunctionError } from '../helpers/errors';
 import type { TextMatchOptions } from './byText';
 import { findAllByTestId, findByTestId } from './byTestId';
-import { findAllByText, findByText } from './byText';
 import {
   findAllByPlaceholderText,
   findByPlaceholderText,
@@ -28,11 +27,6 @@ export type FindByAPI = {
     queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<Array<ReactTestInstance>>;
-  findAllByText: (
-    text: TextMatch,
-    queryOptions?: TextMatchOptions & WaitForOptions,
-    waitForOptions?: WaitForOptions
-  ) => Promise<Array<ReactTestInstance>>;
   findByDisplayValue: (
     value: TextMatch,
     queryOptions?: TextMatchOptions & WaitForOptions,
@@ -49,20 +43,13 @@ export type FindByAPI = {
     queryOptions?: TextMatchOptions & WaitForOptions,
     waitForOptions?: WaitForOptions
   ) => Promise<ReactTestInstance>;
-  findByText: (
-    text: TextMatch,
-    queryOptions?: TextMatchOptions & WaitForOptions,
-    waitForOptions?: WaitForOptions
-  ) => Promise<ReactTestInstance>;
 };
 
 export const findByAPI = (instance: ReactTestInstance): FindByAPI => ({
   findByTestId: findByTestId(instance),
-  findByText: findByText(instance),
   findByPlaceholderText: findByPlaceholderText(instance),
   findByDisplayValue: findByDisplayValue(instance),
   findAllByTestId: findAllByTestId(instance),
-  findAllByText: findAllByText(instance),
   findAllByPlaceholderText: findAllByPlaceholderText(instance),
   findAllByDisplayValue: findAllByDisplayValue(instance),
 

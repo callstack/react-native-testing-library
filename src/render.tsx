@@ -9,6 +9,7 @@ import { findByAPI } from './queries/findByAPI';
 import { a11yAPI } from './queries/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
+import { bindByTextQueries } from './queries/byText';
 
 type Options = {
   wrapper?: React.ComponentType<any>;
@@ -48,6 +49,7 @@ export default function render<T>(
     ...queryByAPI(instance),
     ...findByAPI(instance),
     ...a11yAPI(instance),
+    ...bindByTextQueries(instance),
     update,
     unmount,
     container: instance,

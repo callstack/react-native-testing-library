@@ -50,7 +50,7 @@ const {
   queryBy: queryByDisplayValue,
   findBy: findByDisplayValue,
   findAllBy: findAllByDisplayValue,
-}: Queries<TextMatch> = makeQueries(
+}: Queries<TextMatch, TextMatchOptions> = makeQueries(
   queryAllByDisplayValue,
   getMissingError,
   getMultipleError

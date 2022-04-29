@@ -5,7 +5,14 @@ import { filterNodeByType } from '../helpers/filterNodeByType';
 import { matches, TextMatch } from '../matches';
 import type { NormalizerFn } from '../matches';
 import { makeQueries } from './makeQueries';
-import type { Queries } from './makeQueries';
+import type {
+  FindAllByQuery,
+  FindByQuery,
+  GetAllByQuery,
+  GetByQuery,
+  QueryAllByQuery,
+  QueryByQuery,
+} from './makeQueries';
 
 export type TextMatchOptions = {
   exact?: boolean;
@@ -74,11 +81,11 @@ const queryAllByText = (
   instance: ReactTestInstance
 ): ((
   text: TextMatch,
-  queryOptions?: TextMatchOptions
+  options?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
-  function queryAllByTextFn(text, queryOptions) {
+  function queryAllByTextFn(text, options) {
     const results = instance.findAll((node) =>
-      getNodeByText(node, text, queryOptions)
+      getNodeByText(node, text, options)
     );
 
     return results;
@@ -95,11 +102,27 @@ const {
   queryBy: queryByText,
   findBy: findByText,
   findAllBy: findAllByText,
-}: Queries<TextMatch> = makeQueries(
-  queryAllByText,
-  getMissingError,
-  getMultipleError
-);
+} = makeQueries(queryAllByText, getMissingError, getMultipleError);
+
+export type ByTextQueries = {
+  getByText: GetByQuery<TextMatch, TextMatchOptions>;
+  getAllByText: GetAllByQuery<TextMatch, TextMatchOptions>;
+  queryByText: QueryByQuery<TextMatch, TextMatchOptions>;
+  queryAllByText: QueryAllByQuery<TextMatch, TextMatchOptions>;
+  findByText: FindByQuery<TextMatch, TextMatchOptions>;
+  findAllByText: FindAllByQuery<TextMatch, TextMatchOptions>;
+};
+
+export const bindByTextQueries = (
+  instance: ReactTestInstance
+): ByTextQueries => ({
+  getByText: getByText(instance),
+  getAllByText: getAllByText(instance),
+  queryByText: queryByText(instance),
+  queryAllByText: queryAllByText(instance),
+  findByText: findByText(instance),
+  findAllByText: findAllByText(instance),
+});
 
 export {
   findAllByText,
