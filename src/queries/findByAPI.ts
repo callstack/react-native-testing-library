@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import type { WaitForOptions } from '../waitFor';
 import type { TextMatch } from '../matches';
+import { throwRenamedFunctionError } from '../helpers/errors';
 import type { TextMatchOptions } from './byText';
 import { findAllByTestId, findByTestId } from './byTestId';
 import { findAllByText, findByText } from './byText';
@@ -9,7 +10,6 @@ import {
   findByPlaceholderText,
 } from './byPlaceholderText';
 import { findAllByDisplayValue, findByDisplayValue } from './byDisplayValue';
-import { throwRenamedFunctionError } from '../helpers/errors';
 
 export type FindByAPI = {
   findAllByDisplayValue: (
