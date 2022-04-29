@@ -50,7 +50,7 @@ const getMultipleError = (placeholder: TextMatch) =>
 const getMissingError = (placeholder: TextMatch) =>
   `Unable to find an element with placeholder: ${String(placeholder)}`;
 
-const { getBy, getAllBy, queryBy, findBy, findAllBy } = makeQueries(
+const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByPlaceholderText,
   getMissingError,
   getMultipleError
@@ -79,7 +79,7 @@ export const bindByPlaceholderTextQueries = (
   getByPlaceholderText: getBy(instance),
   getAllByPlaceholderText: getAllBy(instance),
   queryByPlaceholderText: queryBy(instance),
-  queryAllByPlaceholderText: queryAllByPlaceholderText(instance),
+  queryAllByPlaceholderText: queryAllBy(instance),
   findByPlaceholderText: findBy(instance),
   findAllByPlaceholderText: findAllBy(instance),
 

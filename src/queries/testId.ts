@@ -39,7 +39,7 @@ const getMultipleError = (testId: TextMatch) =>
 const getMissingError = (testId: TextMatch) =>
   `Unable to find an element with testID: ${String(testId)}`;
 
-const { getBy, getAllBy, queryBy, findBy, findAllBy } = makeQueries(
+const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByTestId,
   getMissingError,
   getMultipleError
@@ -60,7 +60,7 @@ export const bindByTestIdQueries = (
   getByTestId: getBy(instance),
   getAllByTestId: getAllBy(instance),
   queryByTestId: queryBy(instance),
-  queryAllByTestId: queryAllByTestId(instance),
+  queryAllByTestId: queryAllBy(instance),
   findByTestId: findBy(instance),
   findAllByTestId: findAllBy(instance),
 });

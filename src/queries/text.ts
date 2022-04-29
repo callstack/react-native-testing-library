@@ -96,7 +96,7 @@ const getMultipleError = (text: TextMatch) =>
 const getMissingError = (text: TextMatch) =>
   `Unable to find an element with text: ${String(text)}`;
 
-const { getBy, getAllBy, queryBy, findBy, findAllBy } = makeQueries(
+const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByText,
   getMissingError,
   getMultipleError
@@ -117,7 +117,7 @@ export const bindByTextQueries = (
   getByText: getBy(instance),
   getAllByText: getAllBy(instance),
   queryByText: queryBy(instance),
-  queryAllByText: queryAllByText(instance),
+  queryAllByText: queryAllBy(instance),
   findByText: findBy(instance),
   findAllByText: findAllBy(instance),
 });

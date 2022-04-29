@@ -35,14 +35,15 @@ export type FindAllByQuery<Predicate, Options> = (
   waitForOptions?: WaitForOptions
 ) => Promise<ReactTestInstance[]>;
 
-type QueryFactor<Query> = (instance: ReactTestInstance) => Query;
+type UnboundQuery<Query> = (instance: ReactTestInstance) => Query;
 
-export type Queries<Predicate, Options> = {
-  getBy: QueryFactor<GetByQuery<Predicate, Options>>;
-  getAllBy: QueryFactor<GetAllByQuery<Predicate, Options>>;
-  queryBy: QueryFactor<QueryByQuery<Predicate, Options>>;
-  findBy: QueryFactor<FindByQuery<Predicate, Options>>;
-  findAllBy: QueryFactor<FindAllByQuery<Predicate, Options>>;
+export type UnboundQueries<Predicate, Options> = {
+  getBy: UnboundQuery<GetByQuery<Predicate, Options>>;
+  getAllBy: UnboundQuery<GetAllByQuery<Predicate, Options>>;
+  queryBy: UnboundQuery<QueryByQuery<Predicate, Options>>;
+  queryAllBy: UnboundQuery<QueryAllByQuery<Predicate, Options>>;
+  findBy: UnboundQuery<FindByQuery<Predicate, Options>>;
+  findAllBy: UnboundQuery<FindAllByQuery<Predicate, Options>>;
 };
 
 // The WaitForOptions has been moved to the second option param of findBy* methods with the adding of TextMatchOptions
@@ -76,10 +77,10 @@ Example:
 };
 
 export function makeQueries<Predicate, Options>(
-  queryAllByQuery: QueryFactor<QueryAllByQuery<Predicate, Options>>,
+  queryAllByQuery: UnboundQuery<QueryAllByQuery<Predicate, Options>>,
   getMissingError: (predicate: Predicate) => string,
   getMultipleError: (predicate: Predicate) => string
-): Queries<Predicate, Options> {
+): UnboundQueries<Predicate, Options> {
   function getAllByQuery(instance: ReactTestInstance) {
     return function getAllFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
@@ -160,6 +161,7 @@ export function makeQueries<Predicate, Options>(
     getBy: getByQuery,
     getAllBy: getAllByQuery,
     queryBy: queryByQuery,
+    queryAllBy: queryAllByQuery,
     findBy: findByQuery,
     findAllBy: findAllByQuery,
   };

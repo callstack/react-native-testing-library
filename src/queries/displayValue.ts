@@ -51,7 +51,7 @@ const getMultipleError = (displayValue: TextMatch) =>
 const getMissingError = (displayValue: TextMatch) =>
   `Unable to find an element with displayValue: ${String(displayValue)}`;
 
-const { getBy, getAllBy, queryBy, findBy, findAllBy } = makeQueries(
+const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByDisplayValue,
   getMissingError,
   getMultipleError
@@ -72,7 +72,7 @@ export const bindByDisplayValueQueries = (
   getByDisplayValue: getBy(instance),
   getAllByDisplayValue: getAllBy(instance),
   queryByDisplayValue: queryBy(instance),
-  queryAllByDisplayValue: queryAllByDisplayValue(instance),
+  queryAllByDisplayValue: queryAllBy(instance),
   findByDisplayValue: findBy(instance),
   findAllByDisplayValue: findAllBy(instance),
 });
