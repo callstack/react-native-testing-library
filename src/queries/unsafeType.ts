@@ -65,6 +65,7 @@ export type UnsafeByTypeQueries = {
   ) => Array<ReactTestInstance>;
 
   // Renamed
+  // TODO: remove in the next release
   queryByType: () => void;
   queryAllByType: () => void;
 };
@@ -78,6 +79,7 @@ export const bindUnsafeByTypeQueries = (
   UNSAFE_queryAllByType: UNSAFE_queryAllByType(instance),
 
   // Renamed
+  // TODO: remove in the next release
   queryByType: () =>
     throwRemovedFunctionError('queryByType', 'migration-v2#removed-functions'),
   queryAllByType: () =>
