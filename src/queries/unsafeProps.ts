@@ -75,6 +75,7 @@ export type UnsafeByPropsQueries = {
   queryAllByProps: () => void;
 };
 
+// TODO: migrate to makeQueries pattern
 export const bindUnsafeByPropsQueries = (
   instance: ReactTestInstance
 ): UnsafeByPropsQueries => ({

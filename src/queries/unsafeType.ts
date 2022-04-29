@@ -70,6 +70,7 @@ export type UnsafeByTypeQueries = {
   queryAllByType: () => void;
 };
 
+// TODO: migrate to makeQueries pattern
 export const bindUnsafeByTypeQueries = (
   instance: ReactTestInstance
 ): UnsafeByTypeQueries => ({

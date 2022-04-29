@@ -51,13 +51,11 @@ const getMultipleError = (displayValue: TextMatch) =>
 const getMissingError = (displayValue: TextMatch) =>
   `Unable to find an element with displayValue: ${String(displayValue)}`;
 
-const {
-  getBy: getByDisplayValue,
-  getAllBy: getAllByDisplayValue,
-  queryBy: queryByDisplayValue,
-  findBy: findByDisplayValue,
-  findAllBy: findAllByDisplayValue,
-} = makeQueries(queryAllByDisplayValue, getMissingError, getMultipleError);
+const { getBy, getAllBy, queryBy, findBy, findAllBy } = makeQueries(
+  queryAllByDisplayValue,
+  getMissingError,
+  getMultipleError
+);
 
 export type ByDisplayValueQueries = {
   getByDisplayValue: GetByQuery<TextMatch, TextMatchOptions>;
@@ -71,19 +69,10 @@ export type ByDisplayValueQueries = {
 export const bindByDisplayValueQueries = (
   instance: ReactTestInstance
 ): ByDisplayValueQueries => ({
-  getByDisplayValue: getByDisplayValue(instance),
-  getAllByDisplayValue: getAllByDisplayValue(instance),
-  queryByDisplayValue: queryByDisplayValue(instance),
+  getByDisplayValue: getBy(instance),
+  getAllByDisplayValue: getAllBy(instance),
+  queryByDisplayValue: queryBy(instance),
   queryAllByDisplayValue: queryAllByDisplayValue(instance),
-  findByDisplayValue: findByDisplayValue(instance),
-  findAllByDisplayValue: findAllByDisplayValue(instance),
+  findByDisplayValue: findBy(instance),
+  findAllByDisplayValue: findAllBy(instance),
 });
-
-export {
-  findAllByDisplayValue,
-  findByDisplayValue,
-  getAllByDisplayValue,
-  getByDisplayValue,
-  queryAllByDisplayValue,
-  queryByDisplayValue,
-};
