@@ -1,9 +1,19 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { createLibraryNotSupportedError } from '../helpers/errors';
+import {
+  createLibraryNotSupportedError,
+  throwRenamedFunctionError,
+} from '../helpers/errors';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
-import type { Queries } from './makeQueries';
+import type {
+  FindAllByQuery,
+  FindByQuery,
+  GetAllByQuery,
+  GetByQuery,
+  QueryAllByQuery,
+  QueryByQuery,
+} from './makeQueries';
 import type { TextMatchOptions } from './byText';
 
 const getTextInputNodeByPlaceholderText = (
@@ -46,11 +56,55 @@ const {
   queryBy: queryByPlaceholderText,
   findBy: findByPlaceholderText,
   findAllBy: findAllByPlaceholderText,
-}: Queries<TextMatch, TextMatchOptions> = makeQueries(
-  queryAllByPlaceholderText,
-  getMissingError,
-  getMultipleError
-);
+} = makeQueries(queryAllByPlaceholderText, getMissingError, getMultipleError);
+
+export type ByPlaceholderTextQueries = {
+  getByPlaceholderText: GetByQuery<TextMatch, TextMatchOptions>;
+  getAllByPlaceholderText: GetAllByQuery<TextMatch, TextMatchOptions>;
+  queryByPlaceholderText: QueryByQuery<TextMatch, TextMatchOptions>;
+  queryAllByPlaceholderText: QueryAllByQuery<TextMatch, TextMatchOptions>;
+  findByPlaceholderText: FindByQuery<TextMatch, TextMatchOptions>;
+  findAllByPlaceholderText: FindAllByQuery<TextMatch, TextMatchOptions>;
+
+  // Renamed
+  getByPlaceholder: () => void;
+  getAllByPlaceholder: () => void;
+  queryByPlaceholder: () => void;
+  queryAllByPlaceholder: () => void;
+  findByPlaceholder: () => void;
+  findAllByPlaceholder: () => void;
+};
+
+export const bindByPlaceholderTextQueries = (
+  instance: ReactTestInstance
+): ByPlaceholderTextQueries => ({
+  getByPlaceholderText: getByPlaceholderText(instance),
+  getAllByPlaceholderText: getAllByPlaceholderText(instance),
+  queryByPlaceholderText: queryByPlaceholderText(instance),
+  queryAllByPlaceholderText: queryAllByPlaceholderText(instance),
+  findByPlaceholderText: findByPlaceholderText(instance),
+  findAllByPlaceholderText: findAllByPlaceholderText(instance),
+
+  // Renamed
+  getByPlaceholder: () =>
+    throwRenamedFunctionError('getByPlaceholder', 'getByPlaceholderText'),
+  getAllByPlaceholder: () =>
+    throwRenamedFunctionError('getAllByPlaceholder', 'getAllByPlaceholderText'),
+  queryByPlaceholder: () =>
+    throwRenamedFunctionError('queryByPlaceholder', 'queryByPlaceholderText'),
+  queryAllByPlaceholder: () =>
+    throwRenamedFunctionError(
+      'queryAllByPlaceholder',
+      'queryAllByPlaceholderText'
+    ),
+  findByPlaceholder: () =>
+    throwRenamedFunctionError('findByPlaceholder', 'findByPlaceholderText'),
+  findAllByPlaceholder: () =>
+    throwRenamedFunctionError(
+      'findAllByPlaceholder',
+      'findAllByPlaceholderText'
+    ),
+});
 
 export {
   findAllByPlaceholderText,

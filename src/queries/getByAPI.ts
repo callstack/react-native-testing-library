@@ -1,24 +1,9 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
-import type { TextMatch } from '../matches';
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
-import {
-  getAllByPlaceholderText,
-  getByPlaceholderText,
-} from './byPlaceholderText';
-import type { TextMatchOptions } from './byText';
 
 export type GetByAPI = {
-  getByPlaceholderText: (
-    placeholder: TextMatch,
-    queryOptions?: TextMatchOptions
-  ) => ReactTestInstance;
-  getAllByPlaceholderText: (
-    placeholder: TextMatch,
-    queryOptions?: TextMatchOptions
-  ) => Array<ReactTestInstance>;
-
   // Unsafe aliases
   UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
   UNSAFE_getAllByType: <P>(
@@ -78,9 +63,6 @@ export const UNSAFE_getAllByProps = (
   };
 
 export const getByAPI = (instance: ReactTestInstance): GetByAPI => ({
-  getByPlaceholderText: getByPlaceholderText(instance),
-  getAllByPlaceholderText: getAllByPlaceholderText(instance),
-
   // Unsafe
   UNSAFE_getByType: UNSAFE_getByType(instance),
   UNSAFE_getAllByType: UNSAFE_getAllByType(instance),

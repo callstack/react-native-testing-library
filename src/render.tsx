@@ -12,6 +12,7 @@ import debugDeep from './helpers/debugDeep';
 import { bindByTextQueries } from './queries/byText';
 import { bindByTestIdQueries } from './queries/byTestId';
 import { bindByDisplayValueQueries } from './queries/byDisplayValue';
+import { bindByPlaceholderTextQueries } from './queries/byPlaceholderText';
 
 type Options = {
   wrapper?: React.ComponentType<any>;
@@ -54,6 +55,7 @@ export default function render<T>(
     ...bindByTextQueries(instance),
     ...bindByTestIdQueries(instance),
     ...bindByDisplayValueQueries(instance),
+    ...bindByPlaceholderTextQueries(instance),
     update,
     unmount,
     container: instance,

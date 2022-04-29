@@ -1,33 +1,18 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
-import type { TextMatch } from '../matches';
 import {
   createQueryByError,
   throwRemovedFunctionError,
   throwRenamedFunctionError,
 } from '../helpers/errors';
-import type { TextMatchOptions } from './byText';
 import {
   UNSAFE_getByType,
   UNSAFE_getByProps,
   UNSAFE_getAllByType,
   UNSAFE_getAllByProps,
 } from './getByAPI';
-import {
-  queryByPlaceholderText,
-  queryAllByPlaceholderText,
-} from './byPlaceholderText';
 
 export type QueryByAPI = {
-  queryByPlaceholderText: (
-    placeholder: TextMatch,
-    queryOptions?: TextMatchOptions
-  ) => ReactTestInstance | null;
-  queryAllByPlaceholderText: (
-    placeholder: TextMatch,
-    queryOptions?: TextMatchOptions
-  ) => Array<ReactTestInstance>;
-
   // Unsafe aliases
   UNSAFE_queryByType: <P>(
     type: React.ComponentType<P>
@@ -47,9 +32,6 @@ export type QueryByAPI = {
   queryAllByName: () => void;
   queryAllByType: () => void;
   queryAllByProps: () => void;
-
-  queryByPlaceholder: () => void;
-  queryAllByPlaceholder: () => void;
 };
 
 export const UNSAFE_queryByType = (
@@ -99,9 +81,6 @@ export const UNSAFE_queryAllByProps = (
 };
 
 export const queryByAPI = (instance: ReactTestInstance): QueryByAPI => ({
-  queryByPlaceholderText: queryByPlaceholderText(instance),
-  queryAllByPlaceholderText: queryAllByPlaceholderText(instance),
-
   // Unsafe
   UNSAFE_queryByType: UNSAFE_queryByType(instance),
   UNSAFE_queryAllByType: UNSAFE_queryAllByType(instance),
@@ -129,14 +108,5 @@ export const queryByAPI = (instance: ReactTestInstance): QueryByAPI => ({
     throwRemovedFunctionError(
       'queryAllByProps',
       'migration-v2#removed-functions'
-    ),
-
-  // Renamed
-  queryByPlaceholder: () =>
-    throwRenamedFunctionError('queryByPlaceholder', 'queryByPlaceholderText'),
-  queryAllByPlaceholder: () =>
-    throwRenamedFunctionError(
-      'queryAllByPlaceholder',
-      'queryAllByPlaceholderText'
     ),
 });
