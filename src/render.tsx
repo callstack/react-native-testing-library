@@ -6,13 +6,13 @@ import { addToCleanupQueue } from './cleanup';
 import { a11yAPI } from './queries/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
-import { bindByTextQueries } from './queries/byText';
-import { bindByTestIdQueries } from './queries/byTestId';
-import { bindByDisplayValueQueries } from './queries/byDisplayValue';
-import { bindByPlaceholderTextQueries } from './queries/byPlaceholderText';
-import { bindUnsafeByTypeQueries } from './queries/unsafeByType';
-import { bindUnsafeByNameQueries } from './queries/unsafeByName';
-import { bindUnsafeByPropsQueries } from './queries/unsafeByProps';
+import { bindByTextQueries } from './queries/text';
+import { bindByTestIdQueries } from './queries/testId';
+import { bindByDisplayValueQueries } from './queries/displayValue';
+import { bindByPlaceholderTextQueries } from './queries/placeholderText';
+import { bindUnsafeByTypeQueries } from './queries/unsafeType';
+import { bindUnsafeByNameQueries } from './queries/unsafeName';
+import { bindUnsafeByPropsQueries } from './queries/unsafeProps';
 
 type Options = {
   wrapper?: React.ComponentType<any>;

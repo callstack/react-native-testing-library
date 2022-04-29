@@ -6,7 +6,7 @@ import {
   throwRemovedFunctionError,
 } from '../helpers/errors';
 
-export const UNSAFE_getByType = (
+const UNSAFE_getByType = (
   instance: ReactTestInstance
 ): ((type: React.ComponentType<any>) => ReactTestInstance) =>
   function getByTypeFn(type: React.ComponentType<any>) {
@@ -17,7 +17,7 @@ export const UNSAFE_getByType = (
     }
   };
 
-export const UNSAFE_getAllByType = (
+const UNSAFE_getAllByType = (
   instance: ReactTestInstance
 ): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) =>
   function getAllByTypeFn(type: React.ComponentType<any>) {
@@ -28,7 +28,7 @@ export const UNSAFE_getAllByType = (
     return results;
   };
 
-export const UNSAFE_queryByType = (
+const UNSAFE_queryByType = (
   instance: ReactTestInstance
 ): ((type: React.ComponentType<any>) => ReactTestInstance | null) =>
   function queryByTypeFn(type: React.ComponentType<any>) {
@@ -39,7 +39,7 @@ export const UNSAFE_queryByType = (
     }
   };
 
-export const UNSAFE_queryAllByType = (
+const UNSAFE_queryAllByType = (
   instance: ReactTestInstance
 ): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) => (
   type: React.ComponentType<any>

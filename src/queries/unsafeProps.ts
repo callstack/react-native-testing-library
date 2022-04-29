@@ -1,5 +1,4 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import * as React from 'react';
 import prettyFormat from 'pretty-format';
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
 import {
@@ -7,18 +6,7 @@ import {
   throwRemovedFunctionError,
 } from '../helpers/errors';
 
-export const UNSAFE_getByType = (
-  instance: ReactTestInstance
-): ((type: React.ComponentType<any>) => ReactTestInstance) =>
-  function getByTypeFn(type: React.ComponentType<any>) {
-    try {
-      return instance.findByType(type);
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByTypeFn);
-    }
-  };
-
-export const UNSAFE_getByProps = (
+const UNSAFE_getByProps = (
   instance: ReactTestInstance
 ): ((props: { [propName: string]: any }) => ReactTestInstance) =>
   function getByPropsFn(props: { [propName: string]: any }) {
@@ -29,18 +17,7 @@ export const UNSAFE_getByProps = (
     }
   };
 
-export const UNSAFE_getAllByType = (
-  instance: ReactTestInstance
-): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) =>
-  function getAllByTypeFn(type: React.ComponentType<any>) {
-    const results = instance.findAllByType(type);
-    if (results.length === 0) {
-      throw new ErrorWithStack('No instances found', getAllByTypeFn);
-    }
-    return results;
-  };
-
-export const UNSAFE_getAllByProps = (
+const UNSAFE_getAllByProps = (
   instance: ReactTestInstance
 ): ((props: { [propName: string]: any }) => Array<ReactTestInstance>) =>
   function getAllByPropsFn(props: { [propName: string]: any }) {
@@ -54,18 +31,7 @@ export const UNSAFE_getAllByProps = (
     return results;
   };
 
-export const UNSAFE_queryByType = (
-  instance: ReactTestInstance
-): ((type: React.ComponentType<any>) => ReactTestInstance | null) =>
-  function queryByTypeFn(type: React.ComponentType<any>) {
-    try {
-      return UNSAFE_getByType(instance)(type);
-    } catch (error) {
-      return createQueryByError(error, queryByTypeFn);
-    }
-  };
-
-export const UNSAFE_queryByProps = (
+const UNSAFE_queryByProps = (
   instance: ReactTestInstance
 ): ((props: { [propName: string]: any }) => ReactTestInstance | null) =>
   function queryByPropsFn(props: { [propName: string]: any }) {
@@ -76,19 +42,7 @@ export const UNSAFE_queryByProps = (
     }
   };
 
-export const UNSAFE_queryAllByType = (
-  instance: ReactTestInstance
-): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) => (
-  type: React.ComponentType<any>
-) => {
-  try {
-    return UNSAFE_getAllByType(instance)(type);
-  } catch (error) {
-    return [];
-  }
-};
-
-export const UNSAFE_queryAllByProps = (
+const UNSAFE_queryAllByProps = (
   instance: ReactTestInstance
 ): ((props: {
   [propName: string]: any;

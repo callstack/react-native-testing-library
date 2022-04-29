@@ -1,12 +1,12 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { a11yAPI } from './queries/a11yAPI';
-import { bindByTextQueries } from './queries/byText';
-import { bindByTestIdQueries } from './queries/byTestId';
-import { bindByDisplayValueQueries } from './queries/byDisplayValue';
-import { bindByPlaceholderTextQueries } from './queries/byPlaceholderText';
-import { bindUnsafeByTypeQueries } from './queries/unsafeByType';
-import { bindUnsafeByPropsQueries } from './queries/unsafeByProps';
-import { bindUnsafeByNameQueries } from './queries/unsafeByName';
+import { bindByTextQueries } from './queries/text';
+import { bindByTestIdQueries } from './queries/testId';
+import { bindByDisplayValueQueries } from './queries/displayValue';
+import { bindByPlaceholderTextQueries } from './queries/placeholderText';
+import { bindUnsafeByTypeQueries } from './queries/unsafeType';
+import { bindUnsafeByPropsQueries } from './queries/unsafeProps';
+import { bindUnsafeByNameQueries } from './queries/unsafeName';
 
 export function within(instance: ReactTestInstance) {
   return {
