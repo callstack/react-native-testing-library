@@ -471,10 +471,10 @@ Useful function to help testing components that use hooks API. By default any `r
 Defined as:
 
 ```ts
-function renderHook(
-  callback: (props?: any) => any,
-  options?: RenderHookOptions
-): RenderHookResult;
+function renderHook<Result, Props>(
+  callback: (props?: Props) => Result,
+  options?: RenderHookOptions<Props>
+): RenderHookResult<Result, Props>;
 ```
 
 Renders a test component that will call the provided `callback`, including any hooks it calls, every time it renders. Returns [`RenderHookResult`](#renderhookresult-object) object, which you can interact with.
@@ -515,17 +515,17 @@ The `props` passed into the callback will be the `initialProps` provided in the 
 
 ### `options` (Optional)
 
-A `RenderHookOptions` object to modify the execution of the `callback` function, containing the following properties:
+A `RenderHookOptions<Props>` object to modify the execution of the `callback` function, containing the following properties:
 
 #### `initialProps`
 
-The initial values to pass as `props` to the `callback` function of `renderHook`.
+The initial values to pass as `props` to the `callback` function of `renderHook`.  The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
 
 #### `wrapper`
 
-A React component to wrap the test component in when rendering. This is usually used to add context providers from `React.createContext` for the hook to access with `useContext`. `initialProps` and props subsequently set by `rerender` will be provided to the wrapper.
+A React component to wrap the test component in when rendering. This is usually used to add context providers from `React.createContext` for the hook to access with `useContext`.
 
-### `RenderHookResult` object
+### `RenderHookResult<Result, Props>` object
 
 The `renderHook` function returns an object that has the following properties:
 
@@ -533,21 +533,25 @@ The `renderHook` function returns an object that has the following properties:
 
 ```jsx
 {
-  current: any
+  current: Result
 }
 ```
 
-The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`.
+The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`.  The `Result` type is determined by the type passed to or inferred by the `renderHook` call.
 
 #### `rerender`
 
-function rerender(newProps?: any): void
+```ts
+function rerender(newProps?: Props): void;
+```
 
-A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders.
+A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders.  The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
 
 #### `unmount`
 
-function unmount(): void
+```ts
+function unmount(): void;
+```
 
 A function to unmount the test component. This is commonly used to trigger cleanup effects for `useEffect` hooks.
 
@@ -557,7 +561,7 @@ Here we present some extra examples of using `renderHook` API.
 
 #### With `initialProps`
 
-```jsx
+```ts
 const useCount = (initialCount: number) => {
   const [count, setCount] = useState(initialCount);
   const increment = () => setCount((previousCount) => previousCount + 1);
@@ -589,7 +593,7 @@ it('should increment count', () => {
 
 #### With `wrapper`
 
-```jsx
+```tsx
 it('should use context value', () => {
   function Wrapper({ children }: { children: ReactNode }) {
     return <Context.Provider value="provided">{children}</Context.Provider>;
