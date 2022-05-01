@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
@@ -28,13 +28,13 @@ const getTextInputNodeByDisplayValue = (
 };
 
 const queryAllByDisplayValue = (
-  instance: ReactTestInstance
+  renderer: ReactTestRenderer
 ): ((
   displayValue: TextMatch,
   queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
-    return instance.findAll((node) =>
+    return renderer.root.findAll((node) =>
       getTextInputNodeByDisplayValue(node, displayValue, queryOptions)
     );
   };

@@ -1,10 +1,13 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type {
+  ReactTestInstance,
+  ReactTestRenderer,
+  ReactTestRendererTree,
+} from 'react-test-renderer';
 import * as React from 'react';
 import { matches, TextMatch } from '../matches';
 import type { NormalizerFn } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
-import { filterNodeByType } from './filterNodeByType';
 import { createLibraryNotSupportedError } from './errors';
 
 export type TextMatchOptions = {
@@ -13,75 +16,117 @@ export type TextMatchOptions = {
 };
 
 const getChildrenAsText = (
-  children: React.ReactChild[],
+  children: ReactTestRendererTree | ReactTestRendererTree[] | null,
   TextComponent: React.ComponentType
-) => {
+): string[] => {
+  if (!children) {
+    return [];
+  }
+
+  if (typeof children === 'string') {
+    return [children];
+  }
+
   const textContent: string[] = [];
-  React.Children.forEach(children, (child) => {
-    if (typeof child === 'string') {
-      textContent.push(child);
-      return;
+  if (!Array.isArray(children)) {
+    // Bail on traversing text children down the tree if current node (child)
+    // has no text. In such situations, react-test-renderer will traverse down
+    // this tree in a separate call and run this query again. As a result, the
+    // query will match the deepest text node that matches requested text.
+    if (children.type === 'Text') {
+      return [];
     }
 
-    if (typeof child === 'number') {
-      textContent.push(child.toString());
-      return;
-    }
+    return getChildrenAsText(children.rendered, TextComponent);
+  }
 
-    if (child?.props?.children) {
-      // Bail on traversing text children down the tree if current node (child)
-      // has no text. In such situations, react-test-renderer will traverse down
-      // this tree in a separate call and run this query again. As a result, the
-      // query will match the deepest text node that matches requested text.
-      if (filterNodeByType(child, TextComponent)) {
-        return;
-      }
-
-      if (filterNodeByType(child, React.Fragment)) {
-        textContent.push(
-          ...getChildrenAsText(child.props.children, TextComponent)
-        );
-      }
-    }
-  });
+  children.forEach((child) =>
+    textContent.push(...getChildrenAsText(child, TextComponent))
+  );
 
   return textContent;
 };
 
-const getNodeByText = (
-  node: ReactTestInstance,
+const getInstancesByText = (
+  tree: ReactTestRendererTree,
   text: TextMatch,
   options: TextMatchOptions = {}
-) => {
+): Omit<ReactTestInstance, 'parent'>[] => {
+  const instances: Omit<ReactTestInstance, 'parent'>[] = [];
+
   try {
+    if (!tree.rendered) {
+      return [];
+    }
+
+    if (!tree.instance) {
+      if (!Array.isArray(tree.rendered)) {
+        return [...getInstancesByText(tree.rendered, text, options)];
+      }
+
+      tree.rendered.forEach((rendered) => {
+        instances.push(...getInstancesByText(rendered, text, options));
+      });
+      return instances;
+    }
+
+    const textChildren: string[] = [];
     const { Text } = require('react-native');
-    const isTextComponent = filterNodeByType(node, Text);
-    if (isTextComponent) {
-      const textChildren = getChildrenAsText(node.props.children, Text);
-      if (textChildren) {
-        const textToTest = textChildren.join('');
-        const { exact, normalizer } = options;
-        return matches(text, textToTest, normalizer, exact);
+    if (!Array.isArray(tree.rendered)) {
+      if (tree.rendered.type === 'Text') {
+        textChildren.push(...getChildrenAsText(tree.rendered.rendered, Text));
+      }
+      instances.push(...getInstancesByText(tree.rendered, text, options));
+    } else {
+      tree.rendered.forEach((child) => {
+        if (child.type === 'Text') {
+          textChildren.push(...getChildrenAsText(child, Text));
+        } else {
+          instances.push(...getInstancesByText(child, text, options));
+        }
+      });
+    }
+
+    if (textChildren.length) {
+      const textToTest = textChildren.join('');
+      const { exact, normalizer } = options;
+      if (matches(text, textToTest, normalizer, exact)) {
+        instances.push(tree.instance);
       }
     }
-    return false;
+
+    return instances;
   } catch (error) {
     throw createLibraryNotSupportedError(error);
   }
 };
 
 const queryAllByText = (
-  instance: ReactTestInstance
+  renderer: ReactTestRenderer
 ): ((
   text: TextMatch,
   queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByTextFn(text, queryOptions) {
-    const results = instance.findAll((node) =>
-      getNodeByText(node, text, queryOptions)
-    );
+    const tree = renderer.toTree();
+    const treeInstance = renderer.root;
 
-    return results;
+    if (!tree) {
+      return [];
+    }
+
+    const instancesFound = getInstancesByText(tree, text, queryOptions);
+
+    // Instances in the tree are not of type ReactTestInstance because they do not have parent
+    // This is problematic when firing events so we find in the root nodes the one that matches
+    return instancesFound.map((instanceFound) => {
+      return treeInstance.find((treeInstance) => {
+        return (
+          treeInstance.instance &&
+          treeInstance.instance._reactInternals.stateNode === instanceFound
+        );
+      });
+    });
   };
 
 const getMultipleError = (text: TextMatch) =>

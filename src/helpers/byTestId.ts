@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
@@ -14,13 +14,13 @@ const getNodeByTestId = (
 };
 
 const queryAllByTestId = (
-  instance: ReactTestInstance
+  renderer: ReactTestRenderer
 ): ((
   testId: TextMatch,
   queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByTestIdFn(testId, queryOptions) {
-    const results = instance
+    const results = renderer.root
       .findAll((node) => getNodeByTestId(node, testId, queryOptions))
       .filter((element) => typeof element.type === 'string');
 

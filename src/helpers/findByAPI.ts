@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import type { WaitForOptions } from '../waitFor';
 import type { TextMatch } from '../matches';
 import type { TextMatchOptions } from './byText';
@@ -56,15 +56,15 @@ export type FindByAPI = {
   ) => Promise<ReactTestInstance>;
 };
 
-export const findByAPI = (instance: ReactTestInstance): FindByAPI => ({
-  findByTestId: findByTestId(instance),
-  findByText: findByText(instance),
-  findByPlaceholderText: findByPlaceholderText(instance),
-  findByDisplayValue: findByDisplayValue(instance),
-  findAllByTestId: findAllByTestId(instance),
-  findAllByText: findAllByText(instance),
-  findAllByPlaceholderText: findAllByPlaceholderText(instance),
-  findAllByDisplayValue: findAllByDisplayValue(instance),
+export const findByAPI = (renderer: ReactTestRenderer): FindByAPI => ({
+  findByTestId: findByTestId(renderer),
+  findByText: findByText(renderer),
+  findByPlaceholderText: findByPlaceholderText(renderer),
+  findByDisplayValue: findByDisplayValue(renderer),
+  findAllByTestId: findAllByTestId(renderer),
+  findAllByText: findAllByText(renderer),
+  findAllByPlaceholderText: findAllByPlaceholderText(renderer),
+  findAllByDisplayValue: findAllByDisplayValue(renderer),
 
   // Renamed
   findByPlaceholder: () =>

@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type { Queries } from './makeQueries';
@@ -24,13 +24,13 @@ const getTextInputNodeByPlaceholderText = (
 };
 
 const queryAllByPlaceholderText = (
-  instance: ReactTestInstance
+  renderer: ReactTestRenderer
 ): ((
   placeholder: TextMatch,
   queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
-    return instance.findAll((node) =>
+    return renderer.root.findAll((node) =>
       getTextInputNodeByPlaceholderText(node, placeholder, queryOptions)
     );
   };

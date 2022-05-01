@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import * as React from 'react';
 import type { TextMatch } from '../matches';
 import type { TextMatchOptions } from './byText';
@@ -119,21 +119,21 @@ export const UNSAFE_queryAllByProps = (
   }
 };
 
-export const queryByAPI = (instance: ReactTestInstance): QueryByAPI => ({
-  queryByTestId: queryByTestId(instance),
-  queryByText: queryByText(instance),
-  queryByPlaceholderText: queryByPlaceholderText(instance),
-  queryByDisplayValue: queryByDisplayValue(instance),
-  queryAllByTestId: queryAllByTestId(instance),
-  queryAllByText: queryAllByText(instance),
-  queryAllByPlaceholderText: queryAllByPlaceholderText(instance),
-  queryAllByDisplayValue: queryAllByDisplayValue(instance),
+export const queryByAPI = (renderer: ReactTestRenderer): QueryByAPI => ({
+  queryByTestId: queryByTestId(renderer),
+  queryByText: queryByText(renderer),
+  queryByPlaceholderText: queryByPlaceholderText(renderer),
+  queryByDisplayValue: queryByDisplayValue(renderer),
+  queryAllByTestId: queryAllByTestId(renderer),
+  queryAllByText: queryAllByText(renderer),
+  queryAllByPlaceholderText: queryAllByPlaceholderText(renderer),
+  queryAllByDisplayValue: queryAllByDisplayValue(renderer),
 
   // Unsafe
-  UNSAFE_queryByType: UNSAFE_queryByType(instance),
-  UNSAFE_queryAllByType: UNSAFE_queryAllByType(instance),
-  UNSAFE_queryByProps: UNSAFE_queryByProps(instance),
-  UNSAFE_queryAllByProps: UNSAFE_queryAllByProps(instance),
+  UNSAFE_queryByType: UNSAFE_queryByType(renderer.root),
+  UNSAFE_queryAllByType: UNSAFE_queryAllByType(renderer.root),
+  UNSAFE_queryByProps: UNSAFE_queryByProps(renderer.root),
+  UNSAFE_queryAllByProps: UNSAFE_queryAllByProps(renderer.root),
 
   // Removed
   queryByName: () =>

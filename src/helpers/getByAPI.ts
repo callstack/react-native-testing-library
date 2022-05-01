@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import * as React from 'react';
 import prettyFormat from 'pretty-format';
 import type { TextMatch } from '../matches';
@@ -104,19 +104,19 @@ export const UNSAFE_getAllByProps = (
     return results;
   };
 
-export const getByAPI = (instance: ReactTestInstance): GetByAPI => ({
-  getByText: getByText(instance),
-  getByPlaceholderText: getByPlaceholderText(instance),
-  getByDisplayValue: getByDisplayValue(instance),
-  getByTestId: getByTestId(instance),
-  getAllByText: getAllByText(instance),
-  getAllByPlaceholderText: getAllByPlaceholderText(instance),
-  getAllByDisplayValue: getAllByDisplayValue(instance),
-  getAllByTestId: getAllByTestId(instance),
+export const getByAPI = (renderer: ReactTestRenderer): GetByAPI => ({
+  getByText: getByText(renderer),
+  getByPlaceholderText: getByPlaceholderText(renderer),
+  getByDisplayValue: getByDisplayValue(renderer),
+  getByTestId: getByTestId(renderer),
+  getAllByText: getAllByText(renderer),
+  getAllByPlaceholderText: getAllByPlaceholderText(renderer),
+  getAllByDisplayValue: getAllByDisplayValue(renderer),
+  getAllByTestId: getAllByTestId(renderer),
 
   // Unsafe
-  UNSAFE_getByType: UNSAFE_getByType(instance),
-  UNSAFE_getAllByType: UNSAFE_getAllByType(instance),
-  UNSAFE_getByProps: UNSAFE_getByProps(instance),
-  UNSAFE_getAllByProps: UNSAFE_getAllByProps(instance),
+  UNSAFE_getByType: UNSAFE_getByType(renderer.root),
+  UNSAFE_getAllByType: UNSAFE_getAllByType(renderer.root),
+  UNSAFE_getByProps: UNSAFE_getByProps(renderer.root),
+  UNSAFE_getAllByProps: UNSAFE_getAllByProps(renderer.root),
 });

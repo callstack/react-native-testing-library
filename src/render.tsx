@@ -44,9 +44,9 @@ export default function render<T>(
   addToCleanupQueue(unmount);
 
   return {
-    ...getByAPI(instance),
-    ...queryByAPI(instance),
-    ...findByAPI(instance),
+    ...getByAPI(renderer),
+    ...queryByAPI(renderer),
+    ...findByAPI(renderer),
     ...a11yAPI(instance),
     update,
     unmount,

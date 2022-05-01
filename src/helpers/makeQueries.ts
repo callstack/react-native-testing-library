@@ -1,15 +1,15 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 import { ErrorWithStack } from './errors';
 import type { TextMatchOptions } from './byText';
 
 type QueryFunction<ArgType, ReturnType> = (
-  instance: ReactTestInstance
+  tree: ReactTestRenderer
 ) => (args: ArgType, queryOptions?: TextMatchOptions) => ReturnType;
 
 type FindQueryFunction<ArgType, ReturnType> = (
-  instance: ReactTestInstance
+  tree: ReactTestRenderer
 ) => (
   args: ArgType,
   queryOptions?: TextMatchOptions & WaitForOptions,
@@ -77,9 +77,9 @@ export function makeQueries<QueryArg>(
   getMissingError: (args: QueryArg) => string,
   getMultipleError: (args: QueryArg) => string
 ): Queries<QueryArg> {
-  function getAllByQuery(instance: ReactTestInstance) {
+  function getAllByQuery(tree: ReactTestRenderer) {
     return function getAllFn(args: QueryArg, queryOptions?: TextMatchOptions) {
-      const results = queryAllByQuery(instance)(args, queryOptions);
+      const results = queryAllByQuery(tree)(args, queryOptions);
 
       if (results.length === 0) {
         throw new ErrorWithStack(getMissingError(args), getAllFn);
@@ -89,12 +89,12 @@ export function makeQueries<QueryArg>(
     };
   }
 
-  function queryByQuery(instance: ReactTestInstance) {
+  function queryByQuery(tree: ReactTestRenderer) {
     return function singleQueryFn(
       args: QueryArg,
       queryOptions?: TextMatchOptions
     ) {
-      const results = queryAllByQuery(instance)(args, queryOptions);
+      const results = queryAllByQuery(tree)(args, queryOptions);
 
       if (results.length > 1) {
         throw new ErrorWithStack(getMultipleError(args), singleQueryFn);
@@ -108,9 +108,9 @@ export function makeQueries<QueryArg>(
     };
   }
 
-  function getByQuery(instance: ReactTestInstance) {
+  function getByQuery(tree: ReactTestRenderer) {
     return function getFn(args: QueryArg, queryOptions?: TextMatchOptions) {
-      const results = queryAllByQuery(instance)(args, queryOptions);
+      const results = queryAllByQuery(tree)(args, queryOptions);
 
       if (results.length > 1) {
         throw new ErrorWithStack(getMultipleError(args), getFn);
@@ -124,7 +124,7 @@ export function makeQueries<QueryArg>(
     };
   }
 
-  function findAllByQuery(instance: ReactTestInstance) {
+  function findAllByQuery(tree: ReactTestRenderer) {
     return function findAllFn(
       args: QueryArg,
       queryOptions?: TextMatchOptions & WaitForOptions,
@@ -133,14 +133,14 @@ export function makeQueries<QueryArg>(
       const deprecatedWaitForOptions = extractDeprecatedWaitForOptionUsage(
         queryOptions
       );
-      return waitFor(() => getAllByQuery(instance)(args, queryOptions), {
+      return waitFor(() => getAllByQuery(tree)(args, queryOptions), {
         ...deprecatedWaitForOptions,
         ...waitForOptions,
       });
     };
   }
 
-  function findByQuery(instance: ReactTestInstance) {
+  function findByQuery(tree: ReactTestRenderer) {
     return function findFn(
       args: QueryArg,
       queryOptions?: TextMatchOptions & WaitForOptions,
@@ -149,7 +149,7 @@ export function makeQueries<QueryArg>(
       const deprecatedWaitForOptions = extractDeprecatedWaitForOptionUsage(
         queryOptions
       );
-      return waitFor(() => getByQuery(instance)(args, queryOptions), {
+      return waitFor(() => getByQuery(tree)(args, queryOptions), {
         ...deprecatedWaitForOptions,
         ...waitForOptions,
       });

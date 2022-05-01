@@ -473,3 +473,21 @@ test('getByText and queryByText work properly with multiple nested fragments', (
   expect(getByText('Hello')).toBeTruthy();
   expect(queryByText('Hello')).not.toBeNull();
 });
+
+const TranslationText = ({
+  translationKey,
+}: {
+  translationKey: string;
+}): React.ReactElement => {
+  return <>{translationKey}</>;
+};
+
+test('it should be abdle to find text nested in components that render as string', () => {
+  const { getByText } = render(
+    <Text>
+      <TranslationText translationKey="hello" />
+    </Text>
+  );
+
+  expect(getByText('hello')).toBeTruthy();
+});
