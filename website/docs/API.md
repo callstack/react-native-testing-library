@@ -372,6 +372,10 @@ test('waiting for an Banana to be ready', async () => {
 In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
 :::
 
+:::note
+If you receive warnings related to `act()` function consult our [Undestanding Act](./UnderstandingAct.md) function document.
+:::
+
 ## `waitForElementToBeRemoved`
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitForElementToBeRemoved.test.tsx)
@@ -406,6 +410,10 @@ You can use any of `getBy`, `getAllBy`, `queryBy` and `queryAllBy` queries for `
 
 :::info
 In order to properly use `waitForElementToBeRemoved` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
+:::
+
+:::note
+If you receive warnings related to `act()` function consult our [Undestanding Act](./UnderstandingAct.md) function document.
 :::
 
 ## `within`, `getQueriesForElement`
@@ -465,6 +473,8 @@ expect(submitButtons).toHaveLength(3); // expect 3 elements
 ## `act`
 
 Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/main/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
+
+Consult our [Undestanding Act](./UnderstandingAct.md) function document for more understanding of its intricacies.
 
 ## `renderHook`
 
