@@ -220,3 +220,7 @@ testing behaviour, interleaving multiple act calls and mixing their scopes. You 
 React decides to show this error whenever it detects that async `act()`call [has not been awaited](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react/src/ReactAct.js#L93).
 
 The exact reasons why you might see async `act()`warnings vary, but finally it means that `act()` has been called with callback that returns `Promise`-like object, but it has not been waited on.
+
+## References
+
+- [React `act` implementation source](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js)
