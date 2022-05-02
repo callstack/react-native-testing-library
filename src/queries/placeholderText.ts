@@ -1,8 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import {
-  createLibraryNotSupportedError,
-  throwRenamedFunctionError,
-} from '../helpers/errors';
+import { createLibraryNotSupportedError } from '../helpers/errors';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
@@ -63,14 +60,6 @@ export type ByPlaceholderTextQueries = {
   queryAllByPlaceholderText: QueryAllByQuery<TextMatch, TextMatchOptions>;
   findByPlaceholderText: FindByQuery<TextMatch, TextMatchOptions>;
   findAllByPlaceholderText: FindAllByQuery<TextMatch, TextMatchOptions>;
-
-  // Renamed
-  getByPlaceholder: () => void;
-  getAllByPlaceholder: () => void;
-  queryByPlaceholder: () => void;
-  queryAllByPlaceholder: () => void;
-  findByPlaceholder: () => void;
-  findAllByPlaceholder: () => void;
 };
 
 export const bindByPlaceholderTextQueries = (
@@ -82,24 +71,4 @@ export const bindByPlaceholderTextQueries = (
   queryAllByPlaceholderText: queryAllBy(instance),
   findByPlaceholderText: findBy(instance),
   findAllByPlaceholderText: findAllBy(instance),
-
-  // Renamed
-  getByPlaceholder: () =>
-    throwRenamedFunctionError('getByPlaceholder', 'getByPlaceholderText'),
-  getAllByPlaceholder: () =>
-    throwRenamedFunctionError('getAllByPlaceholder', 'getAllByPlaceholderText'),
-  queryByPlaceholder: () =>
-    throwRenamedFunctionError('queryByPlaceholder', 'queryByPlaceholderText'),
-  queryAllByPlaceholder: () =>
-    throwRenamedFunctionError(
-      'queryAllByPlaceholder',
-      'queryAllByPlaceholderText'
-    ),
-  findByPlaceholder: () =>
-    throwRenamedFunctionError('findByPlaceholder', 'findByPlaceholderText'),
-  findAllByPlaceholder: () =>
-    throwRenamedFunctionError(
-      'findAllByPlaceholder',
-      'findAllByPlaceholderText'
-    ),
 });

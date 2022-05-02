@@ -6,7 +6,6 @@ import { bindByDisplayValueQueries } from './queries/displayValue';
 import { bindByPlaceholderTextQueries } from './queries/placeholderText';
 import { bindUnsafeByTypeQueries } from './queries/unsafeType';
 import { bindUnsafeByPropsQueries } from './queries/unsafeProps';
-import { bindUnsafeByNameQueries } from './queries/unsafeName';
 
 export function within(instance: ReactTestInstance) {
   return {
@@ -16,7 +15,6 @@ export function within(instance: ReactTestInstance) {
     ...bindByPlaceholderTextQueries(instance),
     ...bindUnsafeByTypeQueries(instance),
     ...bindUnsafeByPropsQueries(instance),
-    ...bindUnsafeByNameQueries(instance),
     ...a11yAPI(instance),
   };
 }

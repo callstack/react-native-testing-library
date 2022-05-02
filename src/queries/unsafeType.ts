@@ -1,10 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
-import {
-  createQueryByError,
-  throwRemovedFunctionError,
-} from '../helpers/errors';
+import { createQueryByError } from '../helpers/errors';
 
 const UNSAFE_getByType = (
   instance: ReactTestInstance
@@ -63,11 +60,6 @@ export type UnsafeByTypeQueries = {
   UNSAFE_queryAllByType: <P>(
     type: React.ComponentType<P>
   ) => Array<ReactTestInstance>;
-
-  // Renamed
-  // TODO: remove in the next release
-  queryByType: () => void;
-  queryAllByType: () => void;
 };
 
 // TODO: migrate to makeQueries pattern
@@ -78,14 +70,4 @@ export const bindUnsafeByTypeQueries = (
   UNSAFE_getAllByType: UNSAFE_getAllByType(instance),
   UNSAFE_queryByType: UNSAFE_queryByType(instance),
   UNSAFE_queryAllByType: UNSAFE_queryAllByType(instance),
-
-  // Renamed
-  // TODO: remove in the next release
-  queryByType: () =>
-    throwRemovedFunctionError('queryByType', 'migration-v2#removed-functions'),
-  queryAllByType: () =>
-    throwRemovedFunctionError(
-      'queryAllByType',
-      'migration-v2#removed-functions'
-    ),
 });

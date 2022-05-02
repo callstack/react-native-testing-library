@@ -1,10 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import prettyFormat from 'pretty-format';
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
-import {
-  createQueryByError,
-  throwRemovedFunctionError,
-} from '../helpers/errors';
+import { createQueryByError } from '../helpers/errors';
 
 const UNSAFE_getByProps = (
   instance: ReactTestInstance
@@ -66,13 +63,6 @@ export type UnsafeByPropsQueries = {
   UNSAFE_queryAllByProps: (props: {
     [key: string]: any;
   }) => Array<ReactTestInstance>;
-
-  // Removed aliases
-  // TODO: remove in the next release
-  queryByName: () => void;
-  queryByProps: () => void;
-  queryAllByName: () => void;
-  queryAllByProps: () => void;
 };
 
 // TODO: migrate to makeQueries pattern
@@ -83,21 +73,4 @@ export const bindUnsafeByPropsQueries = (
   UNSAFE_getAllByProps: UNSAFE_getAllByProps(instance),
   UNSAFE_queryByProps: UNSAFE_queryByProps(instance),
   UNSAFE_queryAllByProps: UNSAFE_queryAllByProps(instance),
-
-  // Removed aliases
-  // TODO: remove in the next release
-  queryByName: () =>
-    throwRemovedFunctionError('queryByName', 'migration-v2#removed-functions'),
-  queryAllByName: () =>
-    throwRemovedFunctionError(
-      'queryAllByName',
-      'migration-v2#removed-functions'
-    ),
-  queryByProps: () =>
-    throwRemovedFunctionError('queryByProps', 'migration-v2#removed-functions'),
-  queryAllByProps: () =>
-    throwRemovedFunctionError(
-      'queryAllByProps',
-      'migration-v2#removed-functions'
-    ),
 });
