@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, TextInput } from 'react-native';
-import { render } from '..';
+import { render } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
