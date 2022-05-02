@@ -474,7 +474,7 @@ expect(submitButtons).toHaveLength(3); // expect 3 elements
 
 Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/main/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
 
-Consult our [Undestanding Act](./UnderstandingAct.md) function document for more understanding of its intricacies.
+Consult our [Undestanding Act function](./UnderstandingAct.md) document for more understanding of its intricacies.
 
 ## `renderHook`
 

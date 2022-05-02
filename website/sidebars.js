@@ -8,6 +8,7 @@ module.exports = {
       'migration-v2',
       'how-should-i-query',
       'eslint-plugin-testing-library',
+      'understanding-act',
     ],
     Examples: ['react-navigation', 'redux-integration'],
   },

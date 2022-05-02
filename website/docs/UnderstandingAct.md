@@ -3,11 +3,9 @@ id: understanding-act
 title: Understanding Act function
 ---
 
-# Understanding Act function
-
 When writing RNTL tests one of the things that confuses developers the most are cryptic `act()` function errors logged into console. In this article I will try to build an understanding of the purpose and behaviour of `act()` so you can build your tests with more confidence.
 
-# The act warnings
+## The act warnings
 
 Let’s start with typical `act()` warnings logged to console. There are two kinds of these issues, let’s call the first one sync `act()` warnings:
 
@@ -25,12 +23,14 @@ act(() => {
 The second one relates to async usage of `act` so let’s call it async `act` error:
 
 ```
-Warning: You called act(async () => ...) without await. This could lead to unexpected testing behaviour, interleaving multiple act calls and mixing their scopes. You should - await act(async () => ...);
+Warning: You called act(async () => ...) without await. This could lead to unexpected
+testing behaviour, interleaving multiple act calls and mixing their scopes. You should
+- await act(async () => ...);
 ```
 
-# Sync act
+## Synchronous act
 
-## Responsibility
+### Responsibility
 
 This function is intended only for using in automated tests and works only in development mode. Attempting to use it in production build will throw an error.
 
@@ -78,7 +78,7 @@ test('render with act', () => {
 
 When wrapping rendering call with `act` we see that the changes caused by `useEffect` hook have been applied as we would expect.
 
-## When to use act
+### When to use act
 
 The name `act` comes from [Arrange-Act-Assert](http://wiki.c2.com/?ArrangeActAssert) unit testing pattern. Which means it’s related to part of the test when we execute some actions on the component tree.
 
@@ -94,17 +94,17 @@ Thankfully, for these basic cases RNTL has got you covered as our `render`, `upd
 
 Note that `act`calls can be safely nested and internally form a stack of calls. However, overlapping `act` calls, which can be achieved using async version of `act`, [are not supported](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js#L161).
 
-## Implementation
+### Implementation
 
 As of React version of 18.1.0, the `act` implementation is defined in the [ReactAct.js source file](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js) inside React repository. This implementation has been fairly stable since React 17.0.
 
 RNTL exports `act` for convenience of the users as defined in the [act.ts source file](https://github.com/callstack/react-native-testing-library/blob/main/src/act.ts). That file refers to [ReactTestRenderer.js source](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react-test-renderer/src/ReactTestRenderer.js#L52) file from React Test Renderer package, which finally leads to React `act` implementation mentioned above.
 
-# Async act
+## Asynchronous act
 
 So far we have seen synchronous version of `act` which runs its callback immediately. This can deal with things like synchronous effects or mocks using already resolved promises. However, not all component code is synchronous. Frequently our components or mocks contain some asynchronous behaviours like `setTimeout` calls or network calls. Starting from React 16.9, `act` can also be called in asynchronous mode. In such case `act` implementation checks that the passed callback returns [object resembling promise](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react/src/ReactAct.js#L60).
 
-## Basics
+### Asynchronous code
 
 Asynchronous version of `act` also is executed immediately, but the callback is not yet completed because of some asynchronous operations inside.
 
@@ -145,9 +145,9 @@ act(() => {
 
 Note that this is not yet the infamous async act warning. It only asks us to wrap our event code with `act` calls. However, this time our immediate state change does not originate from externally triggered events but rather forms an internal part of the component. So how can we apply `act` in such scenario?
 
-### Async act and fake timers
+### Solution with fake timers
 
-First solution is to use jest fake timers inside out tests.
+First solution is to use jest fake timers inside out tests:
 
 ```jsx
 test('render with fake timers', () => {
@@ -163,11 +163,9 @@ test('render with fake timers', () => {
 
 That way we can wrap `jest.runAllTimers()` call which triggers the `setTimeout` updates inside an `act` call, hence resolving the act warning. Note that this whole code is synchronous thanks to usage of Jest fake timers.
 
-### Async act and real timers
+### Solution with real timers
 
-If we wanted to stick with real timers then things get a bit more complex.
-
-Let’s start by applying a crude solution of opening async `act()` call for the expected duration of components updates:
+If we wanted to stick with real timers then things get a bit more complex. Let’s start by applying a crude solution of opening async `act()` call for the expected duration of components updates:
 
 ```jsx
 test('render with real timers - sleep', async () => {
@@ -209,12 +207,14 @@ This also works since `findByText` internally calls `waitFor` which uses async `
 
 Note that all of the above examples are async tests using & awaiting async `act()` function call.
 
-### Async act warnings
+### Async act warning
 
 If we modify any of the above async tests and remove `await` keyword, then we will trigger the notorious async `act()`warning:
 
 ```jsx
-Warning: You called act(async () => ...) without await. This could lead to unexpected testing behaviour, interleaving multiple act calls and mixing their scopes. You should - await act(async () => ...);
+Warning: You called act(async () => ...) without await. This could lead to unexpected
+testing behaviour, interleaving multiple act calls and mixing their scopes. You should
+- await act(async () => ...);
 ```
 
 React decides to show this error whenever it detects that async `act()`call [has not been awaited](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react/src/ReactAct.js#L93).
