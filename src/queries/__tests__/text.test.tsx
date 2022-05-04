@@ -7,7 +7,7 @@ import {
   Button,
   TextInput,
 } from 'react-native';
-import { render, getDefaultNormalizer } from '..';
+import { render, getDefaultNormalizer } from '../..';
 
 type MyButtonProps = {
   children: React.ReactNode;

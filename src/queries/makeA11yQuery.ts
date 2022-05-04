@@ -5,7 +5,7 @@ import {
   ErrorWithStack,
   prepareErrorMessage,
   createQueryByError,
-} from './errors';
+} from '../helpers/errors';
 
 function isNodeValid(node: ReactTestInstance) {
   return typeof node.type === 'string';

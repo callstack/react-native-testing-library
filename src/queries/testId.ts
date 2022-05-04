@@ -1,8 +1,15 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
-import type { Queries } from './makeQueries';
-import type { TextMatchOptions } from './byText';
+import type {
+  FindAllByQuery,
+  FindByQuery,
+  GetAllByQuery,
+  GetByQuery,
+  QueryAllByQuery,
+  QueryByQuery,
+} from './makeQueries';
+import type { TextMatchOptions } from './text';
 
 const getNodeByTestId = (
   node: ReactTestInstance,
@@ -32,23 +39,28 @@ const getMultipleError = (testId: TextMatch) =>
 const getMissingError = (testId: TextMatch) =>
   `Unable to find an element with testID: ${String(testId)}`;
 
-const {
-  getBy: getByTestId,
-  getAllBy: getAllByTestId,
-  queryBy: queryByTestId,
-  findBy: findByTestId,
-  findAllBy: findAllByTestId,
-}: Queries<TextMatch> = makeQueries(
+const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByTestId,
   getMissingError,
   getMultipleError
 );
 
-export {
-  findAllByTestId,
-  findByTestId,
-  getAllByTestId,
-  getByTestId,
-  queryAllByTestId,
-  queryByTestId,
+export type ByTestIdQueries = {
+  getByTestId: GetByQuery<TextMatch, TextMatchOptions>;
+  getAllByTestId: GetAllByQuery<TextMatch, TextMatchOptions>;
+  queryByTestId: QueryByQuery<TextMatch, TextMatchOptions>;
+  queryAllByTestId: QueryAllByQuery<TextMatch, TextMatchOptions>;
+  findByTestId: FindByQuery<TextMatch, TextMatchOptions>;
+  findAllByTestId: FindAllByQuery<TextMatch, TextMatchOptions>;
 };
+
+export const bindByTestIdQueries = (
+  instance: ReactTestInstance
+): ByTestIdQueries => ({
+  getByTestId: getBy(instance),
+  getAllByTestId: getAllBy(instance),
+  queryByTestId: queryBy(instance),
+  queryAllByTestId: queryAllBy(instance),
+  findByTestId: findBy(instance),
+  findAllByTestId: findAllBy(instance),
+});

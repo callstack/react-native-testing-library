@@ -1,10 +1,17 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import { createLibraryNotSupportedError } from '../helpers/errors';
+import { filterNodeByType } from '../helpers/filterNodeByType';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
-import type { Queries } from './makeQueries';
-import { filterNodeByType } from './filterNodeByType';
-import { createLibraryNotSupportedError } from './errors';
-import type { TextMatchOptions } from './byText';
+import type {
+  FindAllByQuery,
+  FindByQuery,
+  GetAllByQuery,
+  GetByQuery,
+  QueryAllByQuery,
+  QueryByQuery,
+} from './makeQueries';
+import type { TextMatchOptions } from './text';
 
 const getTextInputNodeByPlaceholderText = (
   node: ReactTestInstance,
@@ -40,23 +47,28 @@ const getMultipleError = (placeholder: TextMatch) =>
 const getMissingError = (placeholder: TextMatch) =>
   `Unable to find an element with placeholder: ${String(placeholder)}`;
 
-const {
-  getBy: getByPlaceholderText,
-  getAllBy: getAllByPlaceholderText,
-  queryBy: queryByPlaceholderText,
-  findBy: findByPlaceholderText,
-  findAllBy: findAllByPlaceholderText,
-}: Queries<TextMatch> = makeQueries(
+const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByPlaceholderText,
   getMissingError,
   getMultipleError
 );
 
-export {
-  findAllByPlaceholderText,
-  findByPlaceholderText,
-  getAllByPlaceholderText,
-  getByPlaceholderText,
-  queryAllByPlaceholderText,
-  queryByPlaceholderText,
+export type ByPlaceholderTextQueries = {
+  getByPlaceholderText: GetByQuery<TextMatch, TextMatchOptions>;
+  getAllByPlaceholderText: GetAllByQuery<TextMatch, TextMatchOptions>;
+  queryByPlaceholderText: QueryByQuery<TextMatch, TextMatchOptions>;
+  queryAllByPlaceholderText: QueryAllByQuery<TextMatch, TextMatchOptions>;
+  findByPlaceholderText: FindByQuery<TextMatch, TextMatchOptions>;
+  findAllByPlaceholderText: FindAllByQuery<TextMatch, TextMatchOptions>;
 };
+
+export const bindByPlaceholderTextQueries = (
+  instance: ReactTestInstance
+): ByPlaceholderTextQueries => ({
+  getByPlaceholderText: getBy(instance),
+  getAllByPlaceholderText: getAllBy(instance),
+  queryByPlaceholderText: queryBy(instance),
+  queryAllByPlaceholderText: queryAllBy(instance),
+  findByPlaceholderText: findBy(instance),
+  findAllByPlaceholderText: findAllBy(instance),
+});

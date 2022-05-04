@@ -3,12 +3,9 @@ import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import * as React from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
-import { getByAPI } from './helpers/getByAPI';
-import { queryByAPI } from './helpers/queryByAPI';
-import { findByAPI } from './helpers/findByAPI';
-import { a11yAPI } from './helpers/a11yAPI';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
+import { getQueriesForElement } from './within';
 
 type Options = {
   wrapper?: React.ComponentType<any>;
@@ -44,10 +41,7 @@ export default function render<T>(
   addToCleanupQueue(unmount);
 
   return {
-    ...getByAPI(instance),
-    ...queryByAPI(instance),
-    ...findByAPI(instance),
-    ...a11yAPI(instance),
+    ...getQueriesForElement(instance),
     update,
     unmount,
     container: instance,

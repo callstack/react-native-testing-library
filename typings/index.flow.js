@@ -73,87 +73,6 @@ declare type A11yValue = {
   text?: string,
 };
 
-interface GetByAPI {
-  getByText: (text: TextMatch, options?: TextMatchOptions) => ReactTestInstance;
-  getByPlaceholderText: (
-    placeholder: TextMatch,
-    options?: TextMatchOptions
-  ) => ReactTestInstance;
-  getByDisplayValue: (
-    value: TextMatch,
-    options?: TextMatchOptions
-  ) => ReactTestInstance;
-  getByTestId: (
-    testID: TextMatch,
-    options?: TextMatchOptions
-  ) => ReactTestInstance;
-  getAllByTestId: (
-    testID: TextMatch,
-    options?: TextMatchOptions
-  ) => Array<ReactTestInstance>;
-  getAllByText: (
-    text: TextMatch,
-    options?: TextMatchOptions
-  ) => Array<ReactTestInstance>;
-  getAllByPlaceholderText: (
-    placeholder: TextMatch,
-    options?: TextMatchOptions
-  ) => Array<ReactTestInstance>;
-  getAllByDisplayValue: (
-    value: TextMatch,
-    options?: TextMatchOptions
-  ) => Array<ReactTestInstance>;
-
-  // Unsafe aliases
-  UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
-  UNSAFE_getAllByType: <P>(
-    type: React.ComponentType<P>
-  ) => Array<ReactTestInstance>;
-  UNSAFE_getByProps: (props: { [string]: any }) => ReactTestInstance;
-  UNSAFE_getAllByProps: (props: { [string]: any }) => Array<ReactTestInstance>;
-}
-
-interface QueryByAPI {
-  queryByText: (
-    name: TextMatch,
-    options?: TextMatchOptions
-  ) => ReactTestInstance | null;
-  queryByPlaceholderText: (
-    placeholder: TextMatch,
-    options?: TextMatchOptions
-  ) => ReactTestInstance | null;
-  queryByDisplayValue: (
-    value: TextMatch,
-    options?: TextMatchOptions
-  ) => ReactTestInstance | null;
-  queryByTestId: (testID: TextMatch) => ReactTestInstance | null;
-  queryAllByTestId: (testID: TextMatch) => Array<ReactTestInstance> | [];
-  queryAllByText: (
-    text: TextMatch,
-    options?: TextMatchOptions
-  ) => Array<ReactTestInstance> | [];
-  queryAllByPlaceholderText: (
-    placeholder: TextMatch,
-    options?: TextMatchOptions
-  ) => Array<ReactTestInstance> | [];
-  queryAllByDisplayValue: (
-    value: TextMatch,
-    options?: TextMatchOptions
-  ) => Array<ReactTestInstance> | [];
-
-  // Unsafe aliases
-  UNSAFE_queryByType: <P>(
-    type: React.ComponentType<P>
-  ) => ReactTestInstance | null;
-  UNSAFE_queryAllByType: <P>(
-    type: React.ComponentType<P>
-  ) => Array<ReactTestInstance> | [];
-  UNSAFE_queryByProps: (props: { [string]: any }) => ReactTestInstance | null;
-  UNSAFE_queryAllByProps: (props: { [string]: any }) =>
-    | Array<ReactTestInstance>
-    | [];
-}
-
 type WaitForOptions = {
   timeout?: number,
   interval?: number,
@@ -164,24 +83,22 @@ type WaitForFunction = <T = any>(
   options?: WaitForOptions
 ) => Promise<T>;
 
-interface FindByAPI {
+interface ByTextQueries {
+  getByText: (text: TextMatch, options?: TextMatchOptions) => ReactTestInstance;
+  getAllByText: (
+    text: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance>;
+  queryByText: (
+    name: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance | null;
+  queryAllByText: (
+    text: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance> | [];
   findByText: (
     text: TextMatch,
-    queryOptions?: TextMatchOptions,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
-  findByPlaceholderText: (
-    placeholder: TextMatch,
-    queryOptions?: TextMatchOptions,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
-  findByDisplayValue: (
-    value: TextMatch,
-    queryOptions?: TextMatchOptions,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
-  findByTestId: (
-    testID: TextMatch,
     queryOptions?: TextMatchOptions,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
@@ -190,16 +107,24 @@ interface FindByAPI {
     queryOptions?: TextMatchOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
-  findAllByPlaceholderText: (
-    placeholder: TextMatch,
+}
+
+interface ByTestIdQueries {
+  getByTestId: (
+    testID: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance;
+  getAllByTestId: (
+    testID: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance>;
+  queryByTestId: (testID: TextMatch) => ReactTestInstance | null;
+  queryAllByTestId: (testID: TextMatch) => Array<ReactTestInstance> | [];
+  findByTestId: (
+    testID: TextMatch,
     queryOptions?: TextMatchOptions,
     waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
-  findAllByDisplayValue: (
-    value: TextMatch,
-    queryOptions?: TextMatchOptions,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
+  ) => FindReturn;
   findAllByTestId: (
     testID: TextMatch,
     queryOptions?: TextMatchOptions,
@@ -207,6 +132,85 @@ interface FindByAPI {
   ) => FindAllReturn;
 }
 
+interface ByDisplayValueQueries {
+  getByDisplayValue: (
+    value: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance;
+  getAllByDisplayValue: (
+    value: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance>;
+  queryByDisplayValue: (
+    value: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance | null;
+  queryAllByDisplayValue: (
+    value: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance> | [];
+  findByDisplayValue: (
+    value: TextMatch,
+    queryOptions?: TextMatchOptions,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findAllByDisplayValue: (
+    value: TextMatch,
+    queryOptions?: TextMatchOptions,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
+}
+
+interface ByPlaceholderTextQueries {
+  getByPlaceholderText: (
+    placeholder: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance;
+  getAllByPlaceholderText: (
+    placeholder: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance>;
+  queryByPlaceholderText: (
+    placeholder: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance | null;
+  queryAllByPlaceholderText: (
+    placeholder: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance> | [];
+  findByPlaceholderText: (
+    placeholder: TextMatch,
+    queryOptions?: TextMatchOptions,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findAllByPlaceholderText: (
+    placeholder: TextMatch,
+    queryOptions?: TextMatchOptions,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
+}
+
+interface UnsafeByTypeQueries {
+  UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
+  UNSAFE_getAllByType: <P>(
+    type: React.ComponentType<P>
+  ) => Array<ReactTestInstance>;
+  UNSAFE_queryByType: <P>(
+    type: React.ComponentType<P>
+  ) => ReactTestInstance | null;
+  UNSAFE_queryAllByType: <P>(
+    type: React.ComponentType<P>
+  ) => Array<ReactTestInstance> | [];
+}
+
+interface UnsafeByPropsQueries {
+  UNSAFE_getByProps: (props: { [string]: any }) => ReactTestInstance;
+  UNSAFE_getAllByProps: (props: { [string]: any }) => Array<ReactTestInstance>;
+  UNSAFE_queryByProps: (props: { [string]: any }) => ReactTestInstance | null;
+  UNSAFE_queryAllByProps: (props: { [string]: any }) =>
+    | Array<ReactTestInstance>
+    | [];
+}
 interface A11yAPI {
   // Label
   getByLabelText: (matcher: TextMatch) => GetReturn;
@@ -313,7 +317,13 @@ type Debug = {
   shallow: (message?: string) => void,
 };
 
-type Queries = GetByAPI & QueryByAPI & FindByAPI & A11yAPI;
+type Queries = ByTextQueries &
+  ByTestIdQueries &
+  ByDisplayValueQueries &
+  ByPlaceholderTextQueries &
+  UnsafeByTypeQueries &
+  UnsafeByPropsQueries &
+  A11yAPI;
 
 interface RenderAPI extends Queries {
   update(nextElement: React.Element<any>): void;

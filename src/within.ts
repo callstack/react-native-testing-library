@@ -1,14 +1,20 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { getByAPI } from './helpers/getByAPI';
-import { queryByAPI } from './helpers/queryByAPI';
-import { findByAPI } from './helpers/findByAPI';
-import { a11yAPI } from './helpers/a11yAPI';
+import { a11yAPI } from './queries/a11yAPI';
+import { bindByTextQueries } from './queries/text';
+import { bindByTestIdQueries } from './queries/testId';
+import { bindByDisplayValueQueries } from './queries/displayValue';
+import { bindByPlaceholderTextQueries } from './queries/placeholderText';
+import { bindUnsafeByTypeQueries } from './queries/unsafeType';
+import { bindUnsafeByPropsQueries } from './queries/unsafeProps';
 
 export function within(instance: ReactTestInstance) {
   return {
-    ...getByAPI(instance),
-    ...queryByAPI(instance),
-    ...findByAPI(instance),
+    ...bindByTextQueries(instance),
+    ...bindByTestIdQueries(instance),
+    ...bindByDisplayValueQueries(instance),
+    ...bindByPlaceholderTextQueries(instance),
+    ...bindUnsafeByTypeQueries(instance),
+    ...bindUnsafeByPropsQueries(instance),
     ...a11yAPI(instance),
   };
 }
