@@ -10,6 +10,7 @@ import { bindByA11yStateQueries } from './queries/a11yState';
 import { bindByA11yValueQueries } from './queries/a11yValue';
 import { bindUnsafeByTypeQueries } from './queries/unsafeType';
 import { bindUnsafeByPropsQueries } from './queries/unsafeProps';
+import { bindByPredicateQueries } from './queries/predicate';
 
 export function within(instance: ReactTestInstance) {
   return {
@@ -22,6 +23,7 @@ export function within(instance: ReactTestInstance) {
     ...bindByRoleQueries(instance),
     ...bindByA11yStateQueries(instance),
     ...bindByA11yValueQueries(instance),
+    ...bindByPredicateQueries(instance),
     ...bindUnsafeByTypeQueries(instance),
     ...bindUnsafeByPropsQueries(instance),
   };
