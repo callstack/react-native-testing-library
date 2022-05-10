@@ -11,7 +11,7 @@ An example of setting up can be found [here](https://github.com/callstack/react-
 
 ## Test cases
 
-Our test is on the components that either dispatch actions on the redux store or read some data from the redux store. This means we will test `./components/TodoElem.js` and `./components/TodoList.js`. Thus we will create `./components/AddTodo.test.js` and `./components/TodoList.test.js`
+Our test is on the components that either dispatch actions on the redux store or read some data from the redux store. This means we will test `./components/AddTodo.js` and `./components/TodoList.js`. Thus we will create `./components/AddTodo.test.js` and `./components/TodoList.test.js`
 
 For `./components/AddTodo.test.js`
 
@@ -60,7 +60,7 @@ describe('AddTodo component test', () => {
 });
 ```
 
-For the `./components/TodoList.js`
+For `./components/TodoList.test.js`
 
 ```jsx
 import * as React from 'react';
