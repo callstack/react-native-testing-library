@@ -69,55 +69,6 @@ function Section() {
   );
 }
 
-test('getByLabelText, queryByLabelText, findByLabelText', async () => {
-  const { getByLabelText, queryByLabelText, findByLabelText } = render(
-    <Section />
-  );
-
-  expect(getByLabelText(BUTTON_LABEL).props.accessibilityLabel).toEqual(
-    BUTTON_LABEL
-  );
-  const button = queryByLabelText(/button/g);
-  expect(button?.props.accessibilityLabel).toEqual(BUTTON_LABEL);
-
-  expect(() => getByLabelText(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage('accessibilityLabel')
-  );
-  expect(queryByLabelText(NO_MATCHES_TEXT)).toBeNull();
-
-  expect(() => getByLabelText(TEXT_LABEL)).toThrow(FOUND_TWO_INSTANCES);
-  expect(() => queryByLabelText(TEXT_LABEL)).toThrow(FOUND_TWO_INSTANCES);
-
-  const asyncButton = await findByLabelText(BUTTON_LABEL);
-  expect(asyncButton.props.accessibilityLabel).toEqual(BUTTON_LABEL);
-  await expect(
-    findByLabelText(NO_MATCHES_TEXT, waitForOptions)
-  ).rejects.toThrow(getNoInstancesFoundMessage('accessibilityLabel'));
-
-  await expect(findByLabelText(TEXT_LABEL, waitForOptions)).rejects.toThrow(
-    FOUND_TWO_INSTANCES
-  );
-});
-
-test('getAllByLabelText, queryAllByLabelText, findAllByLabelText', async () => {
-  const { getAllByLabelText, queryAllByLabelText, findAllByLabelText } = render(
-    <Section />
-  );
-
-  expect(getAllByLabelText(TEXT_LABEL)).toHaveLength(2);
-  expect(queryAllByLabelText(/cool/g)).toHaveLength(3);
-
-  expect(() => getAllByLabelText(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage('accessibilityLabel')
-  );
-  expect(queryAllByLabelText(NO_MATCHES_TEXT)).toEqual([]);
-
-  await expect(findAllByLabelText(TEXT_LABEL)).resolves.toHaveLength(2);
-  await expect(findAllByLabelText(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityLabel')
-  );
-});
-
 test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
   const { getByA11yHint, queryByA11yHint, findByA11yHint } = render(
     <Section />

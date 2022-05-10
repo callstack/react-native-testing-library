@@ -20,20 +20,6 @@ type FindReturn = Promise<GetReturn>;
 type FindAllReturn = Promise<GetAllReturn>;
 
 export type A11yAPI = {
-  // Label
-  getByLabelText: (label: TextMatch) => GetReturn;
-  getAllByLabelText: (label: TextMatch) => GetAllReturn;
-  queryByLabelText: (label: TextMatch) => QueryReturn;
-  queryAllByLabelText: (label: TextMatch) => QueryAllReturn;
-  findByLabelText: (
-    label: TextMatch,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
-  findAllByLabelText: (
-    label: TextMatch,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
-
   // Hint
   getByA11yHint: (a11yHint: TextMatch) => GetReturn;
   getByHintText: (a11yHint: TextMatch) => GetReturn;
@@ -170,18 +156,6 @@ export function matchObject<T extends Record<string, unknown>>(
 
 export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
   ({
-    ...makeA11yQuery(
-      'accessibilityLabel',
-      {
-        getBy: ['getByLabelText'],
-        getAllBy: ['getAllByLabelText'],
-        queryBy: ['queryByLabelText'],
-        queryAllBy: ['queryAllByLabelText'],
-        findBy: ['findByLabelText'],
-        findAllBy: ['findAllByLabelText'],
-      },
-      matchStringValue
-    )(instance),
     ...makeA11yQuery(
       'accessibilityHint',
       {
