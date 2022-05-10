@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import type { AccessibilityRole, AccessibilityState } from 'react-native';
+import type { AccessibilityState } from 'react-native';
 import type { WaitForOptions } from '../waitFor';
 import type { TextMatch } from '../matches';
 import makeA11yQuery from './makeA11yQuery';
@@ -20,20 +20,6 @@ type FindReturn = Promise<GetReturn>;
 type FindAllReturn = Promise<GetAllReturn>;
 
 export type A11yAPI = {
-  // Role
-  getByRole: (role: AccessibilityRole | RegExp) => GetReturn;
-  getAllByRole: (role: AccessibilityRole | RegExp) => GetAllReturn;
-  queryByRole: (role: AccessibilityRole | RegExp) => QueryReturn;
-  queryAllByRole: (role: AccessibilityRole | RegExp) => QueryAllReturn;
-  findByRole: (
-    role: AccessibilityRole,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
-  findAllByRole: (
-    role: AccessibilityRole,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
-
   // States
   getByA11yStates: (
     accessibilityStateKey: AccessibilityStateKey | Array<AccessibilityStateKey>
@@ -130,18 +116,6 @@ export function matchObject<T extends Record<string, unknown>>(
 
 export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
   ({
-    ...makeA11yQuery(
-      'accessibilityRole',
-      {
-        getBy: ['getByRole'],
-        getAllBy: ['getAllByRole'],
-        queryBy: ['queryByRole'],
-        queryAllBy: ['queryAllByRole'],
-        findBy: ['findByRole'],
-        findAllBy: ['findAllByRole'],
-      },
-      matchStringValue
-    )(instance),
     ...makeA11yQuery(
       'accessibilityStates',
       {

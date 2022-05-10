@@ -69,46 +69,6 @@ function Section() {
   );
 }
 
-test('getByRole, queryByRole, findByRole', async () => {
-  const { getByRole, queryByRole, findByRole } = render(<Section />);
-
-  expect(getByRole('button').props.accessibilityRole).toEqual('button');
-  const button = queryByRole(/button/g);
-  expect(button?.props.accessibilityRole).toEqual('button');
-
-  expect(() => getByRole(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage('accessibilityRole')
-  );
-  expect(queryByRole(NO_MATCHES_TEXT)).toBeNull();
-
-  expect(() => getByRole('link')).toThrow(FOUND_TWO_INSTANCES);
-  expect(() => queryByRole('link')).toThrow(FOUND_TWO_INSTANCES);
-
-  const asyncButton = await findByRole('button');
-  expect(asyncButton.props.accessibilityRole).toEqual('button');
-  await expect(findByRole(NO_MATCHES_TEXT, waitForOptions)).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityRole')
-  );
-  await expect(findByRole('link')).rejects.toThrow(FOUND_TWO_INSTANCES);
-});
-
-test('getAllByRole, queryAllByRole, findAllByRole', async () => {
-  const { getAllByRole, queryAllByRole, findAllByRole } = render(<Section />);
-
-  expect(getAllByRole('link')).toHaveLength(2);
-  expect(queryAllByRole(/ink/g)).toHaveLength(2);
-
-  expect(() => getAllByRole(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage('accessibilityRole')
-  );
-  expect(queryAllByRole(NO_MATCHES_TEXT)).toEqual([]);
-
-  await expect(findAllByRole('link')).resolves.toHaveLength(2);
-  await expect(findAllByRole(NO_MATCHES_TEXT, waitForOptions)).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityRole')
-  );
-});
-
 // TODO: accessibilityStates was removed from RN 0.62
 test.skip('getByA11yStates, queryByA11yStates', () => {
   const { getByA11yStates, queryByA11yStates } = render(<Section />);
