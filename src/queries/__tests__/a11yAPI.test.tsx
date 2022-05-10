@@ -69,54 +69,6 @@ function Section() {
   );
 }
 
-test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
-  const { getByA11yHint, queryByA11yHint, findByA11yHint } = render(
-    <Section />
-  );
-
-  expect(getByA11yHint(BUTTON_HINT).props.accessibilityHint).toEqual(
-    BUTTON_HINT
-  );
-  const button = queryByA11yHint(/button/g);
-  expect(button?.props.accessibilityHint).toEqual(BUTTON_HINT);
-
-  expect(() => getByA11yHint(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage('accessibilityHint')
-  );
-  expect(queryByA11yHint(NO_MATCHES_TEXT)).toBeNull();
-
-  expect(() => getByA11yHint(TEXT_HINT)).toThrow(FOUND_TWO_INSTANCES);
-  expect(() => queryByA11yHint(TEXT_HINT)).toThrow(FOUND_TWO_INSTANCES);
-
-  const asyncButton = await findByA11yHint(BUTTON_HINT);
-  expect(asyncButton.props.accessibilityHint).toEqual(BUTTON_HINT);
-  await expect(findByA11yHint(NO_MATCHES_TEXT, waitForOptions)).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityHint')
-  );
-  await expect(findByA11yHint(TEXT_HINT, waitForOptions)).rejects.toThrow(
-    FOUND_TWO_INSTANCES
-  );
-});
-
-test('getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint', async () => {
-  const { getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint } = render(
-    <Section />
-  );
-
-  expect(getAllByA11yHint(TEXT_HINT)).toHaveLength(2);
-  expect(queryAllByA11yHint(/static/g)).toHaveLength(2);
-
-  expect(() => getAllByA11yHint(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage('accessibilityHint')
-  );
-  expect(queryAllByA11yHint(NO_MATCHES_TEXT)).toEqual([]);
-
-  await expect(findAllByA11yHint(TEXT_HINT)).resolves.toHaveLength(2);
-  await expect(findAllByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityHint')
-  );
-});
-
 test('getByRole, queryByRole, findByRole', async () => {
   const { getByRole, queryByRole, findByRole } = render(<Section />);
 
@@ -341,29 +293,4 @@ test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
     getNoInstancesFoundMessage('accessibilityValue', '{"min": 50}', false)
   );
   await expect(findAllByA11yValue({ max: 60 })).resolves.toHaveLength(2);
-});
-
-test('a11y hint queries have aliases', () => {
-  const {
-    getByA11yHint,
-    getByHintText,
-    queryByA11yHint,
-    queryByHintText,
-    findByA11yHint,
-    findByHintText,
-    getAllByA11yHint,
-    getAllByHintText,
-    queryAllByA11yHint,
-    queryAllByHintText,
-    findAllByA11yHint,
-    findAllByHintText,
-  } = render(<Section />);
-
-  // Assert that query aliases are referencing the same function
-  expect(getByA11yHint).toBe(getByHintText);
-  expect(queryByA11yHint).toBe(queryByHintText);
-  expect(findByA11yHint).toBe(findByHintText);
-  expect(getAllByA11yHint).toBe(getAllByHintText);
-  expect(queryAllByA11yHint).toBe(queryAllByHintText);
-  expect(findAllByA11yHint).toBe(findAllByHintText);
 });

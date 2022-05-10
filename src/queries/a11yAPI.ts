@@ -20,32 +20,6 @@ type FindReturn = Promise<GetReturn>;
 type FindAllReturn = Promise<GetAllReturn>;
 
 export type A11yAPI = {
-  // Hint
-  getByA11yHint: (a11yHint: TextMatch) => GetReturn;
-  getByHintText: (a11yHint: TextMatch) => GetReturn;
-  getAllByA11yHint: (a11yHint: TextMatch) => GetAllReturn;
-  getAllByHintText: (a11yHint: TextMatch) => GetAllReturn;
-  queryByA11yHint: (a11yHint: TextMatch) => QueryReturn;
-  queryByHintText: (a11yHint: TextMatch) => QueryReturn;
-  queryAllByA11yHint: (a11yHint: TextMatch) => QueryAllReturn;
-  queryAllByHintText: (a11yHint: TextMatch) => QueryAllReturn;
-  findByA11yHint: (
-    a11yHint: TextMatch,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
-  findByHintText: (
-    a11yHint: TextMatch,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
-  findAllByA11yHint: (
-    a11yHint: TextMatch,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
-  findAllByHintText: (
-    a11yHint: TextMatch,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
-
   // Role
   getByRole: (role: AccessibilityRole | RegExp) => GetReturn;
   getAllByRole: (role: AccessibilityRole | RegExp) => GetAllReturn;
@@ -156,34 +130,6 @@ export function matchObject<T extends Record<string, unknown>>(
 
 export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
   ({
-    ...makeA11yQuery(
-      'accessibilityHint',
-      {
-        getBy: ['getByA11yHint', 'getByAccessibilityHint', 'getByHintText'],
-        getAllBy: [
-          'getAllByA11yHint',
-          'getAllByAccessibilityHint',
-          'getAllByHintText',
-        ],
-        queryBy: [
-          'queryByA11yHint',
-          'queryByAccessibilityHint',
-          'queryByHintText',
-        ],
-        queryAllBy: [
-          'queryAllByA11yHint',
-          'queryAllByAccessibilityHint',
-          'queryAllByHintText',
-        ],
-        findBy: ['findByA11yHint', 'findByAccessibilityHint', 'findByHintText'],
-        findAllBy: [
-          'findAllByA11yHint',
-          'findAllByAccessibilityHint',
-          'findAllByHintText',
-        ],
-      },
-      matchStringValue
-    )(instance),
     ...makeA11yQuery(
       'accessibilityRole',
       {
