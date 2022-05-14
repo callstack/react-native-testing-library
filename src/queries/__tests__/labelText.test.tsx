@@ -9,11 +9,11 @@ const TEXT_HINT = 'static text';
 // Little hack to make all the methods happy with type
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
-const getMultipleInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+const getMultipleInstancesFoundMessage = (value: string) => {
   return `Found multiple elements with accessibilityLabel: ${value}`;
 };
 
-const getNoInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+const getNoInstancesFoundMessage = (value: string) => {
   return `Unable to find an element with accessibilityLabel: ${value}`;
 };
 
@@ -53,7 +53,7 @@ test('getByLabelText, queryByLabelText, findByLabelText', async () => {
   expect(button?.props.accessibilityLabel).toEqual(BUTTON_LABEL);
 
   expect(() => getByLabelText(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage()
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
   expect(queryByLabelText(NO_MATCHES_TEXT)).toBeNull();
 
@@ -67,7 +67,7 @@ test('getByLabelText, queryByLabelText, findByLabelText', async () => {
   const asyncButton = await findByLabelText(BUTTON_LABEL);
   expect(asyncButton.props.accessibilityLabel).toEqual(BUTTON_LABEL);
   await expect(findByLabelText(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage()
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
 
   await expect(findByLabelText(TEXT_LABEL)).rejects.toThrow(
@@ -84,12 +84,12 @@ test('getAllByLabelText, queryAllByLabelText, findAllByLabelText', async () => {
   expect(queryAllByLabelText(/cool/g)).toHaveLength(3);
 
   expect(() => getAllByLabelText(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage()
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
   expect(queryAllByLabelText(NO_MATCHES_TEXT)).toEqual([]);
 
   await expect(findAllByLabelText(TEXT_LABEL)).resolves.toHaveLength(2);
   await expect(findAllByLabelText(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage()
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
 });

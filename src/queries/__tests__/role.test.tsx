@@ -7,11 +7,11 @@ const TEXT_LABEL = 'cool text';
 // Little hack to make all the methods happy with type
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
-const getMultipleInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+const getMultipleInstancesFoundMessage = (value: string) => {
   return `Found multiple elements with accessibilityRole: ${value}`;
 };
 
-const getNoInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+const getNoInstancesFoundMessage = (value: string) => {
   return `Unable to find an element with accessibilityRole: ${value}`;
 };
 
@@ -40,7 +40,7 @@ test('getByRole, queryByRole, findByRole', async () => {
   expect(button?.props.accessibilityRole).toEqual('button');
 
   expect(() => getByRole(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage()
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
   expect(queryByRole(NO_MATCHES_TEXT)).toBeNull();
 
@@ -54,7 +54,7 @@ test('getByRole, queryByRole, findByRole', async () => {
   const asyncButton = await findByRole('button');
   expect(asyncButton.props.accessibilityRole).toEqual('button');
   await expect(findByRole(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage()
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
   await expect(findByRole('link')).rejects.toThrow(
     getMultipleInstancesFoundMessage('link')
@@ -68,12 +68,12 @@ test('getAllByRole, queryAllByRole, findAllByRole', async () => {
   expect(queryAllByRole(/ink/g)).toHaveLength(2);
 
   expect(() => getAllByRole(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage()
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
   expect(queryAllByRole(NO_MATCHES_TEXT)).toEqual([]);
 
   await expect(findAllByRole('link')).resolves.toHaveLength(2);
   await expect(findAllByRole(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage()
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
 });

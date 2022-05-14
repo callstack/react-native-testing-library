@@ -6,11 +6,11 @@ const TEXT_LABEL = 'cool text';
 // Little hack to make all the methods happy with type
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
-const getMultipleInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+const getMultipleInstancesFoundMessage = (value: string) => {
   return `Found multiple elements with accessibilityStates: ${value}`;
 };
 
-const getNoInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+const getNoInstancesFoundMessage = (value: string) => {
   return `Unable to find an element with accessibilityStates: ${value}`;
 };
 
