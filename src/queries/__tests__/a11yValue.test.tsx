@@ -4,12 +4,12 @@ import { render } from '../..';
 
 const TEXT_LABEL = 'cool text';
 
-const getMultipleInstancesFoundMessage = (name: string, value: string) => {
-  return `Found multiple elements with ${name}: ${value}`;
+const getMultipleInstancesFoundMessage = (value: string) => {
+  return `Found multiple elements with accessibilityValue: ${value}`;
 };
 
-const getNoInstancesFoundMessage = (name: string, value: string) => {
-  return `Unable to find an element with ${name}: ${value}`;
+const getNoInstancesFoundMessage = (value: string) => {
+  return `Unable to find an element with accessibilityValue: ${value}`;
 };
 
 const Typography = ({ children, ...rest }: any) => {
@@ -46,15 +46,15 @@ test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
   });
 
   expect(() => getByA11yValue({ min: 50 })).toThrow(
-    getNoInstancesFoundMessage('accessibilityValue', '{"min":50}')
+    getNoInstancesFoundMessage('{"min":50}')
   );
   expect(queryByA11yValue({ min: 50 })).toEqual(null);
 
   expect(() => getByA11yValue({ max: 60 })).toThrow(
-    getMultipleInstancesFoundMessage('accessibilityValue', '{"max":60}')
+    getMultipleInstancesFoundMessage('{"max":60}')
   );
   expect(() => queryByA11yValue({ max: 60 })).toThrow(
-    getMultipleInstancesFoundMessage('accessibilityValue', '{"max":60}')
+    getMultipleInstancesFoundMessage('{"max":60}')
   );
 
   const asyncElement = await findByA11yValue({ min: 40 });
@@ -63,10 +63,10 @@ test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
     max: 60,
   });
   await expect(findByA11yValue({ min: 50 })).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityValue', '{"min":50}')
+    getNoInstancesFoundMessage('{"min":50}')
   );
   await expect(findByA11yValue({ max: 60 })).rejects.toThrow(
-    getMultipleInstancesFoundMessage('accessibilityValue', '{"max":60}')
+    getMultipleInstancesFoundMessage('{"max":60}')
   );
 });
 
@@ -79,7 +79,7 @@ test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
   expect(queryAllByA11yValue({ min: 40 })).toHaveLength(1);
 
   expect(() => getAllByA11yValue({ min: 50 })).toThrow(
-    getNoInstancesFoundMessage('accessibilityValue', '{"min":50}')
+    getNoInstancesFoundMessage('{"min":50}')
   );
   expect(queryAllByA11yValue({ min: 50 })).toEqual([]);
 
@@ -88,7 +88,7 @@ test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
 
   await expect(findAllByA11yValue({ min: 40 })).resolves.toHaveLength(1);
   await expect(findAllByA11yValue({ min: 50 })).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityValue', '{"min":50}')
+    getNoInstancesFoundMessage('{"min":50}')
   );
   await expect(findAllByA11yValue({ max: 60 })).resolves.toHaveLength(2);
 });

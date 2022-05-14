@@ -6,18 +6,12 @@ const TEXT_LABEL = 'cool text';
 // Little hack to make all the methods happy with type
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
-const getMultipleInstancesFoundMessage = (
-  name: string,
-  value: string = NO_MATCHES_TEXT
-) => {
-  return `Found multiple elements with ${name}: ${value}`;
+const getMultipleInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+  return `Found multiple elements with accessibilityStates: ${value}`;
 };
 
-const getNoInstancesFoundMessage = (
-  name: string,
-  value: string = NO_MATCHES_TEXT
-) => {
-  return `Unable to find an element with ${name}: ${value}`;
+const getNoInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+  return `Unable to find an element with accessibilityStates: ${value}`;
 };
 
 const Typography = ({ children, ...rest }: any) => {
@@ -71,10 +65,10 @@ test.skip('getByA11yStates, queryByA11yStates', () => {
   expect(queryByA11yStates([])).toBeNull();
 
   expect(() => getByA11yStates('selected')).toThrow(
-    getMultipleInstancesFoundMessage('accessibilityStates', '["selected"]')
+    getMultipleInstancesFoundMessage('["selected"]')
   );
   expect(() => queryByA11yStates('selected')).toThrow(
-    getMultipleInstancesFoundMessage('accessibilityStates', '["selected"]')
+    getMultipleInstancesFoundMessage('["selected"]')
   );
 });
 
@@ -86,7 +80,7 @@ test.skip('getAllByA11yStates, queryAllByA11yStates', () => {
   expect(queryAllByA11yStates(['selected'])).toHaveLength(3);
 
   expect(() => getAllByA11yStates([])).toThrow(
-    getNoInstancesFoundMessage('accessibilityStates')
+    getNoInstancesFoundMessage('[]')
   );
   expect(queryAllByA11yStates(NO_MATCHES_TEXT)).toEqual([]);
 });

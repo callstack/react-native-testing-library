@@ -4,12 +4,12 @@ import { render } from '../..';
 
 const TEXT_LABEL = 'cool text';
 
-const getMultipleInstancesFoundMessage = (name: string, value: string) => {
-  return `Found multiple elements with ${name}: ${value}`;
+const getMultipleInstancesFoundMessage = (value: string) => {
+  return `Found multiple elements with accessibilityState: ${value}`;
 };
 
-const getNoInstancesFoundMessage = (name: string, value: string) => {
-  return `Unable to find an element with ${name}: ${value}`;
+const getNoInstancesFoundMessage = (value: string) => {
+  return `Unable to find an element with accessibilityState: ${value}`;
 };
 
 const Typography = ({ children, ...rest }: any) => {
@@ -48,15 +48,15 @@ test('getByA11yState, queryByA11yState, findByA11yState', async () => {
   });
 
   expect(() => getByA11yState({ disabled: true })).toThrow(
-    getNoInstancesFoundMessage('accessibilityState', '{"disabled":true}')
+    getNoInstancesFoundMessage('{"disabled":true}')
   );
   expect(queryByA11yState({ disabled: true })).toEqual(null);
 
   expect(() => getByA11yState({ expanded: false })).toThrow(
-    getMultipleInstancesFoundMessage('accessibilityState', '{"expanded":false}')
+    getMultipleInstancesFoundMessage('{"expanded":false}')
   );
   expect(() => queryByA11yState({ expanded: false })).toThrow(
-    getMultipleInstancesFoundMessage('accessibilityState', '{"expanded":false}')
+    getMultipleInstancesFoundMessage('{"expanded":false}')
   );
 
   const asyncButton = await findByA11yState({ selected: true });
@@ -65,10 +65,10 @@ test('getByA11yState, queryByA11yState, findByA11yState', async () => {
     expanded: false,
   });
   await expect(findByA11yState({ disabled: true })).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityState', '{"disabled":true}')
+    getNoInstancesFoundMessage('{"disabled":true}')
   );
   await expect(findByA11yState({ expanded: false })).rejects.toThrow(
-    getMultipleInstancesFoundMessage('accessibilityState', '{"expanded":false}')
+    getMultipleInstancesFoundMessage('{"expanded":false}')
   );
 });
 
@@ -81,7 +81,7 @@ test('getAllByA11yState, queryAllByA11yState, findAllByA11yState', async () => {
   expect(queryAllByA11yState({ selected: true })).toHaveLength(1);
 
   expect(() => getAllByA11yState({ disabled: true })).toThrow(
-    getNoInstancesFoundMessage('accessibilityState', '{"disabled":true}')
+    getNoInstancesFoundMessage('{"disabled":true}')
   );
   expect(queryAllByA11yState({ disabled: true })).toEqual([]);
 
@@ -90,7 +90,7 @@ test('getAllByA11yState, queryAllByA11yState, findAllByA11yState', async () => {
 
   await expect(findAllByA11yState({ selected: true })).resolves.toHaveLength(1);
   await expect(findAllByA11yState({ disabled: true })).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityState', '{"disabled":true}')
+    getNoInstancesFoundMessage('{"disabled":true}')
   );
   await expect(findAllByA11yState({ expanded: false })).resolves.toHaveLength(
     2

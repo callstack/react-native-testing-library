@@ -7,18 +7,12 @@ const TEXT_LABEL = 'cool text';
 // Little hack to make all the methods happy with type
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
-const getMultipleInstancesFoundMessage = (
-  name: string,
-  value: string = NO_MATCHES_TEXT
-) => {
-  return `Found multiple elements with ${name}: ${value}`;
+const getMultipleInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+  return `Found multiple elements with accessibilityRole: ${value}`;
 };
 
-const getNoInstancesFoundMessage = (
-  name: string,
-  value: string = NO_MATCHES_TEXT
-) => {
-  return `Unable to find an element with ${name}: ${value}`;
+const getNoInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+  return `Unable to find an element with accessibilityRole: ${value}`;
 };
 
 const Typography = ({ children, ...rest }: any) => {
@@ -46,24 +40,24 @@ test('getByRole, queryByRole, findByRole', async () => {
   expect(button?.props.accessibilityRole).toEqual('button');
 
   expect(() => getByRole(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage('accessibilityRole')
+    getNoInstancesFoundMessage()
   );
   expect(queryByRole(NO_MATCHES_TEXT)).toBeNull();
 
   expect(() => getByRole('link')).toThrow(
-    getMultipleInstancesFoundMessage('accessibilityRole', 'link')
+    getMultipleInstancesFoundMessage('link')
   );
   expect(() => queryByRole('link')).toThrow(
-    getMultipleInstancesFoundMessage('accessibilityRole', 'link')
+    getMultipleInstancesFoundMessage('link')
   );
 
   const asyncButton = await findByRole('button');
   expect(asyncButton.props.accessibilityRole).toEqual('button');
   await expect(findByRole(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityRole')
+    getNoInstancesFoundMessage()
   );
   await expect(findByRole('link')).rejects.toThrow(
-    getMultipleInstancesFoundMessage('accessibilityRole', 'link')
+    getMultipleInstancesFoundMessage('link')
   );
 });
 
@@ -74,12 +68,12 @@ test('getAllByRole, queryAllByRole, findAllByRole', async () => {
   expect(queryAllByRole(/ink/g)).toHaveLength(2);
 
   expect(() => getAllByRole(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage('accessibilityRole')
+    getNoInstancesFoundMessage()
   );
   expect(queryAllByRole(NO_MATCHES_TEXT)).toEqual([]);
 
   await expect(findAllByRole('link')).resolves.toHaveLength(2);
   await expect(findAllByRole(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityRole')
+    getNoInstancesFoundMessage()
   );
 });

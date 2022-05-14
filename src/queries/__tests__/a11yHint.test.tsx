@@ -7,18 +7,12 @@ const TEXT_HINT = 'static text';
 // Little hack to make all the methods happy with type
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
-const getMultipleInstancesFoundMessage = (
-  name: string,
-  value: string = NO_MATCHES_TEXT
-) => {
-  return `Found multiple elements with ${name}: ${value}`;
+const getMultipleInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+  return `Found multiple elements with accessibilityHint: ${value}`;
 };
 
-const getNoInstancesFoundMessage = (
-  name: string,
-  value: string = NO_MATCHES_TEXT
-) => {
-  return `Unable to find an element with ${name}: ${value}`;
+const getNoInstancesFoundMessage = (value: string = NO_MATCHES_TEXT) => {
+  return `Unable to find an element with accessibilityHint: ${value}`;
 };
 
 const Typography = ({ children, ...rest }: any) => {
@@ -50,25 +44,25 @@ test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
   expect(button?.props.accessibilityHint).toEqual(BUTTON_HINT);
 
   expect(() => getByA11yHint(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage('accessibilityHint')
+    getNoInstancesFoundMessage()
   );
   expect(queryByA11yHint(NO_MATCHES_TEXT)).toBeNull();
 
   expect(() => getByA11yHint(TEXT_HINT)).toThrow(
-    getMultipleInstancesFoundMessage('accessibilityHint', TEXT_HINT)
+    getMultipleInstancesFoundMessage(TEXT_HINT)
   );
   expect(() => queryByA11yHint(TEXT_HINT)).toThrow(
-    getMultipleInstancesFoundMessage('accessibilityHint', TEXT_HINT)
+    getMultipleInstancesFoundMessage(TEXT_HINT)
   );
 
   const asyncButton = await findByA11yHint(BUTTON_HINT);
   expect(asyncButton.props.accessibilityHint).toEqual(BUTTON_HINT);
   await expect(findByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityHint')
+    getNoInstancesFoundMessage()
   );
 
   await expect(findByA11yHint(TEXT_HINT)).rejects.toThrow(
-    getMultipleInstancesFoundMessage('accessibilityHint', TEXT_HINT)
+    getMultipleInstancesFoundMessage(TEXT_HINT)
   );
 });
 
@@ -81,12 +75,12 @@ test('getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint', async () => {
   expect(queryAllByA11yHint(TEXT_HINT)).toHaveLength(2);
 
   expect(() => getAllByA11yHint(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage('accessibilityHint')
+    getNoInstancesFoundMessage()
   );
   expect(queryAllByA11yHint(NO_MATCHES_TEXT)).toEqual([]);
 
   await expect(findAllByA11yHint(TEXT_HINT)).resolves.toHaveLength(2);
   await expect(findAllByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage('accessibilityHint')
+    getNoInstancesFoundMessage()
   );
 });
