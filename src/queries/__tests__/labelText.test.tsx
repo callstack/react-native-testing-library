@@ -27,34 +27,25 @@ const Typography = ({ children, ...rest }: any) => {
   return <Text {...rest}>{children}</Text>;
 };
 
-class Button extends React.Component<any> {
-  render() {
-    return (
-      <TouchableOpacity
-        accessibilityHint={BUTTON_HINT}
-        accessibilityLabel={BUTTON_LABEL}
-      >
-        <Typography
-          accessibilityHint={TEXT_HINT}
-          accessibilityLabel={TEXT_LABEL}
-        >
-          {this.props.children}
-        </Typography>
-      </TouchableOpacity>
-    );
-  }
-}
+const Button = ({ children }: { children: React.ReactNode }) => (
+  <TouchableOpacity
+    accessibilityHint={BUTTON_HINT}
+    accessibilityLabel={BUTTON_LABEL}
+  >
+    <Typography accessibilityHint={TEXT_HINT} accessibilityLabel={TEXT_LABEL}>
+      {children}
+    </Typography>
+  </TouchableOpacity>
+);
 
-function Section() {
-  return (
-    <>
-      <Typography accessibilityHint={TEXT_HINT} accessibilityLabel={TEXT_LABEL}>
-        Title
-      </Typography>
-      <Button>{TEXT_LABEL}</Button>
-    </>
-  );
-}
+const Section = () => (
+  <>
+    <Typography accessibilityHint={TEXT_HINT} accessibilityLabel={TEXT_LABEL}>
+      Title
+    </Typography>
+    <Button>{TEXT_LABEL}</Button>
+  </>
+);
 
 test('getByLabelText, queryByLabelText, findByLabelText', async () => {
   const { getByLabelText, queryByLabelText, findByLabelText } = render(

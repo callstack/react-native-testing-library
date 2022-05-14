@@ -25,24 +25,18 @@ const Typography = ({ children, ...rest }: any) => {
   return <Text {...rest}>{children}</Text>;
 };
 
-class Button extends React.Component<any> {
-  render() {
-    return (
-      <TouchableOpacity accessibilityRole="button">
-        <Typography accessibilityRole="link">{this.props.children}</Typography>
-      </TouchableOpacity>
-    );
-  }
-}
+const Button = ({ children }: { children: React.ReactNode }) => (
+  <TouchableOpacity accessibilityRole="button">
+    <Typography accessibilityRole="link">{children}</Typography>
+  </TouchableOpacity>
+);
 
-function Section() {
-  return (
-    <>
-      <Typography accessibilityRole="link">Title</Typography>
-      <Button>{TEXT_LABEL}</Button>
-    </>
-  );
-}
+const Section = () => (
+  <>
+    <Typography accessibilityRole="link">Title</Typography>
+    <Button>{TEXT_LABEL}</Button>
+  </>
+);
 
 test('getByRole, queryByRole, findByRole', async () => {
   const { getByRole, queryByRole, findByRole } = render(<Section />);

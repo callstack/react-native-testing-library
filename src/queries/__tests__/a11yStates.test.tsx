@@ -24,34 +24,26 @@ const Typography = ({ children, ...rest }: any) => {
   return <Text {...rest}>{children}</Text>;
 };
 
-class Button extends React.Component<any> {
-  render() {
-    return (
-      <TouchableOpacity
-        // @ts-ignore - accessibilityStates removed in RN 0.62
-        accessibilityStates={['selected']}
-      >
-        <Typography accessibilityStates={['selected']}>
-          {this.props.children}
-        </Typography>
-      </TouchableOpacity>
-    );
-  }
-}
+const Button = ({ children }: { children: React.ReactNode }) => (
+  <TouchableOpacity
+    // @ts-ignore - accessibilityStates removed in RN 0.62
+    accessibilityStates={['selected']}
+  >
+    <Typography accessibilityStates={['selected']}>{children}</Typography>
+  </TouchableOpacity>
+);
 
-function Section() {
-  return (
-    <>
-      <Typography
-        // @ts-ignore - accessibilityStates removed in RN 0.62
-        accessibilityStates={['selected', 'disabled']}
-      >
-        Title
-      </Typography>
-      <Button>{TEXT_LABEL}</Button>
-    </>
-  );
-}
+const Section = () => (
+  <>
+    <Typography
+      // @ts-ignore - accessibilityStates removed in RN 0.62
+      accessibilityStates={['selected', 'disabled']}
+    >
+      Title
+    </Typography>
+    <Button>{TEXT_LABEL}</Button>
+  </>
+);
 
 // TODO: accessibilityStates was removed from RN 0.62
 test.skip('getByA11yStates, queryByA11yStates', () => {

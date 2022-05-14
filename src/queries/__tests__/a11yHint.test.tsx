@@ -25,26 +25,18 @@ const Typography = ({ children, ...rest }: any) => {
   return <Text {...rest}>{children}</Text>;
 };
 
-class Button extends React.Component<any> {
-  render() {
-    return (
-      <TouchableOpacity accessibilityHint={BUTTON_HINT}>
-        <Typography accessibilityHint={TEXT_HINT}>
-          {this.props.children}
-        </Typography>
-      </TouchableOpacity>
-    );
-  }
-}
+const Button = ({ children }: { children: React.ReactNode }) => (
+  <TouchableOpacity accessibilityHint={BUTTON_HINT}>
+    <Typography accessibilityHint={TEXT_HINT}>{children}</Typography>
+  </TouchableOpacity>
+);
 
-function Section() {
-  return (
-    <>
-      <Typography accessibilityHint={TEXT_HINT}>Title</Typography>
-      <Button>Hello</Button>
-    </>
-  );
-}
+const Section = () => (
+  <>
+    <Typography accessibilityHint={TEXT_HINT}>Title</Typography>
+    <Button>Hello</Button>
+  </>
+);
 
 test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
   const { getByA11yHint, queryByA11yHint, findByA11yHint } = render(

@@ -16,26 +16,20 @@ const Typography = ({ children, ...rest }: any) => {
   return <Text {...rest}>{children}</Text>;
 };
 
-class Button extends React.Component<any> {
-  render() {
-    return (
-      <TouchableOpacity>
-        <Typography accessibilityValue={{ min: 40, max: 60 }}>
-          {this.props.children}
-        </Typography>
-      </TouchableOpacity>
-    );
-  }
-}
+const Button = ({ children }: { children: React.ReactNode }) => (
+  <TouchableOpacity>
+    <Typography accessibilityValue={{ min: 40, max: 60 }}>
+      {children}
+    </Typography>
+  </TouchableOpacity>
+);
 
-function Section() {
-  return (
-    <>
-      <Typography accessibilityValue={{ max: 60 }}>Title</Typography>
-      <Button>{TEXT_LABEL}</Button>
-    </>
-  );
-}
+const Section = () => (
+  <>
+    <Typography accessibilityValue={{ max: 60 }}>Title</Typography>
+    <Button>{TEXT_LABEL}</Button>
+  </>
+);
 
 test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
   const { getByA11yValue, queryByA11yValue, findByA11yValue } = render(
