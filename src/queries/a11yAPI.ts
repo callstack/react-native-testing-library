@@ -42,22 +42,6 @@ export type A11yAPI = {
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 
-  // State
-  getByA11yState: (accessibilityState: AccessibilityState) => GetReturn;
-  getAllByA11yState: (accessibilityState: AccessibilityState) => GetAllReturn;
-  queryByA11yState: (accessibilityState: AccessibilityState) => QueryReturn;
-  queryAllByA11yState: (
-    accessibilityState: AccessibilityState
-  ) => QueryAllReturn;
-  findByA11yState: (
-    accessibilityState: AccessibilityState,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
-  findAllByA11yState: (
-    accessibilityState: AccessibilityState,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
-
   // Value
   getByA11yValue: (a11yValue: A11yValue) => GetReturn;
   getAllByA11yValue: (a11yValue: A11yValue) => GetAllReturn;
@@ -127,18 +111,6 @@ export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
         findAllBy: ['findAllByA11yStates', 'findAllByAccessibilityStates'],
       },
       matchArrayValue
-    )(instance),
-    ...makeA11yQuery(
-      'accessibilityState',
-      {
-        getBy: ['getByA11yState', 'getByAccessibilityState'],
-        getAllBy: ['getAllByA11yState', 'getAllByAccessibilityState'],
-        queryBy: ['queryByA11yState', 'queryByAccessibilityState'],
-        queryAllBy: ['queryAllByA11yState', 'queryAllByAccessibilityState'],
-        findBy: ['findByA11yState', 'findByAccessibilityState'],
-        findAllBy: ['findAllByA11yState', 'findAllByAccessibilityState'],
-      },
-      matchObject
     )(instance),
     ...makeA11yQuery(
       'accessibilityValue',

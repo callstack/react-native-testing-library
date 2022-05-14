@@ -9,6 +9,7 @@ import { bindUnsafeByPropsQueries } from './queries/unsafeProps';
 import { bindByLabelTextQueries } from './queries/labelText';
 import { bindByA11yHintQueries } from './queries/a11yHint';
 import { bindByRoleQueries } from './queries/role';
+import { bindByA11yStateQueries } from './queries/a11yState';
 
 export function within(instance: ReactTestInstance) {
   return {
@@ -21,6 +22,7 @@ export function within(instance: ReactTestInstance) {
     ...bindByLabelTextQueries(instance),
     ...bindByRoleQueries(instance),
     ...bindByA11yHintQueries(instance),
+    ...bindByA11yStateQueries(instance),
     ...a11yAPI(instance),
   };
 }
