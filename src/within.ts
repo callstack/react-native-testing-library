@@ -1,5 +1,4 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { a11yAPI } from './queries/a11yAPI';
 import { bindByTextQueries } from './queries/text';
 import { bindByTestIdQueries } from './queries/testId';
 import { bindByDisplayValueQueries } from './queries/displayValue';
@@ -11,6 +10,7 @@ import { bindByA11yHintQueries } from './queries/a11yHint';
 import { bindByRoleQueries } from './queries/role';
 import { bindByA11yStateQueries } from './queries/a11yState';
 import { bindByA11yValueQueries } from './queries/a11yValue';
+import { bindByA11yStatesQueries } from './queries/a11yStates';
 
 export function within(instance: ReactTestInstance) {
   return {
@@ -25,7 +25,7 @@ export function within(instance: ReactTestInstance) {
     ...bindByA11yHintQueries(instance),
     ...bindByA11yStateQueries(instance),
     ...bindByA11yValueQueries(instance),
-    ...a11yAPI(instance),
+    ...bindByA11yStatesQueries(instance),
   };
 }
 
