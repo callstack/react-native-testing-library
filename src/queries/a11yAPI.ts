@@ -5,12 +5,6 @@ import type { TextMatch } from '../matches';
 import makeA11yQuery from './makeA11yQuery';
 
 type AccessibilityStateKey = keyof AccessibilityState;
-type A11yValue = {
-  min?: number;
-  max?: number;
-  now?: number;
-  text?: string;
-};
 
 type GetReturn = ReactTestInstance;
 type GetAllReturn = Array<ReactTestInstance>;
@@ -39,20 +33,6 @@ export type A11yAPI = {
   ) => FindReturn;
   findAllByA11yStates: (
     accessibilityStateKey: AccessibilityStateKey,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
-
-  // Value
-  getByA11yValue: (a11yValue: A11yValue) => GetReturn;
-  getAllByA11yValue: (a11yValue: A11yValue) => GetAllReturn;
-  queryByA11yValue: (a11yValue: A11yValue) => QueryReturn;
-  queryAllByA11yValue: (a11yValue: A11yValue) => QueryAllReturn;
-  findByA11yValue: (
-    a11yValue: A11yValue,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
-  findAllByA11yValue: (
-    a11yValue: A11yValue,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 };
@@ -111,17 +91,5 @@ export const a11yAPI = (instance: ReactTestInstance): A11yAPI =>
         findAllBy: ['findAllByA11yStates', 'findAllByAccessibilityStates'],
       },
       matchArrayValue
-    )(instance),
-    ...makeA11yQuery(
-      'accessibilityValue',
-      {
-        getBy: ['getByA11yValue', 'getByAccessibilityValue'],
-        getAllBy: ['getAllByA11yValue', 'getAllByAccessibilityValue'],
-        queryBy: ['queryByA11yValue', 'queryByAccessibilityValue'],
-        queryAllBy: ['queryAllByA11yValue', 'queryAllByAccessibilityValue'],
-        findBy: ['findByA11yValue', 'findByAccessibilityValue'],
-        findAllBy: ['findAllByA11yValue', 'findAllByAccessibilityValue'],
-      },
-      matchObject
     )(instance),
   } as any);

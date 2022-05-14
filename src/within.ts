@@ -10,6 +10,7 @@ import { bindByLabelTextQueries } from './queries/labelText';
 import { bindByA11yHintQueries } from './queries/a11yHint';
 import { bindByRoleQueries } from './queries/role';
 import { bindByA11yStateQueries } from './queries/a11yState';
+import { bindByA11yValueQueries } from './queries/a11yValue';
 
 export function within(instance: ReactTestInstance) {
   return {
@@ -23,6 +24,7 @@ export function within(instance: ReactTestInstance) {
     ...bindByRoleQueries(instance),
     ...bindByA11yHintQueries(instance),
     ...bindByA11yStateQueries(instance),
+    ...bindByA11yValueQueries(instance),
     ...a11yAPI(instance),
   };
 }
