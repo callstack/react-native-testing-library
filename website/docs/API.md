@@ -3,6 +3,34 @@ id: api
 title: API
 ---
 
+### Table of contents:
+
+- [`render`](#render)
+  - [`update`](#update)
+  - [`unmount`](#unmount)
+  - [`debug`](#debug)
+  - [`toJSON`](#tojson)
+  - [`container`](#container)
+- [`cleanup`](#cleanup)
+- [`fireEvent`](#fireevent)
+- [`fireEvent[eventName]`](#fireeventeventname)
+  - [`fireEvent.press`](#fireeventpress)
+  - [`fireEvent.changeText`](#fireeventchangetext)
+  - [`fireEvent.scroll`](#fireeventscroll)
+- [`waitFor`](#waitfor)
+- [`waitForElementToBeRemoved`](#waitforelementtoberemoved)
+- [`within, getQueriesForElement`](#within-getqueriesforelement)
+- [`query` APIs](#query-apis)
+- [`queryAll` APIs](#queryall-apis)
+- [`act`](#act)
+- [`renderHook`](#renderhook)
+  - [`callback`](#callback)
+  - [`options`](#options-optional)
+  - [`RenderHookResult` object](#renderhookresult-object)
+    - [`result`](#result)
+    - [`rerender`](#rerender)
+    - [`unmount`](#unmount-1)
+
 This page gathers public API of React Native Testing Library along with usage examples.
 
 ## `render`
@@ -225,7 +253,11 @@ fireEvent[eventName](element: ReactTestInstance, ...data: Array<any>): void
 
 Convenience methods for common events like: `press`, `changeText`, `scroll`.
 
-### `fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void`
+### `fireEvent.press`
+
+```
+fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void
+```
 
 Invokes `press` event handler on the element or parent element in the tree.
 
@@ -253,7 +285,11 @@ fireEvent.press(getByText('Press me'), eventData);
 expect(onPressMock).toHaveBeenCalledWith(eventData);
 ```
 
-### `fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void`
+### `fireEvent.changeText`
+
+```
+fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void
+```
 
 Invokes `changeText` event handler on the element or parent element in the tree.
 
@@ -273,7 +309,11 @@ const { getByPlaceholderText } = render(
 fireEvent.changeText(getByPlaceholderText('Enter data'), CHANGE_TEXT);
 ```
 
-### `fireEvent.scroll: (element: ReactTestInstance, ...data: Array<any>) => void`
+### `fireEvent.scroll`
+
+```
+fireEvent.scroll: (element: ReactTestInstance, ...data: Array<any>) => void
+```
 
 Invokes `scroll` event handler on the element or parent element in the tree.
 
@@ -519,39 +559,33 @@ A `RenderHookOptions<Props>` object to modify the execution of the `callback` fu
 
 #### `initialProps`
 
-The initial values to pass as `props` to the `callback` function of `renderHook`.  The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
+The initial values to pass as `props` to the `callback` function of `renderHook`. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
 
 #### `wrapper`
 
 A React component to wrap the test component in when rendering. This is usually used to add context providers from `React.createContext` for the hook to access with `useContext`.
 
-### `RenderHookResult<Result, Props>` object
+### `RenderHookResult` object
+
+```ts
+interface RenderHookResult<Result, Props> {
+  result: { current: Result };
+  rerender: (props: Props) => void;
+  unmount: () => void;
+}
+```
 
 The `renderHook` function returns an object that has the following properties:
 
 #### `result`
 
-```jsx
-{
-  current: Result
-}
-```
-
-The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`.  The `Result` type is determined by the type passed to or inferred by the `renderHook` call.
+The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`. The `Result` type is determined by the type passed to or inferred by the `renderHook` call.
 
 #### `rerender`
 
-```ts
-function rerender(newProps?: Props): void;
-```
-
-A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders.  The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
+A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
 
 #### `unmount`
-
-```ts
-function unmount(): void;
-```
 
 A function to unmount the test component. This is commonly used to trigger cleanup effects for `useEffect` hooks.
 
