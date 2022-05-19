@@ -3,6 +3,33 @@ id: api-queries
 title: Queries
 ---
 
+### Table of contents:
+
+- [Variants](#variants)
+  - [`getBy`](#getby)
+  - [`getAllBy`](#getallby)
+  - [`queryBy`](#queryby)
+  - [`queryAllBy`](#queryallby)
+  - [`findBy`](#findby)
+  - [`findAllBy`](#findallby)
+- [Queries](#queries)
+  - [`options`](#options)
+  - [`ByText`](#bytext)
+  - [`ByPlaceholderText`](#byplaceholdertext)
+  - [`ByDisplayValue`](#bydisplayvalue)
+  - [`ByTestId`](#bytestid)
+  - [`ByLabelText`](#bylabeltext)
+  - [`ByHintText`, `ByA11yHint`, `ByAccessibilityHint`](#byhinttext-bya11yhint-byaccessibilityhint)
+  - [`ByA11yStates`, `ByAccessibilityStates`](#bya11ystates-byaccessibilitystates)
+  - [`ByRole`](#byrole)
+  - [`ByA11yState`, `ByAccessibilityState`](#bya11ystate-byaccessibilitystate)
+  - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
+- [`TextMatch`](#textmatch)
+  - [Examples](#examples)
+  - [Precision](#precision)
+  - [Normalization](#normalization)
+- [Unit testing helpers](#unit-testing-helpers)
+
 ## Variants
 
 > `getBy` queries are shown by default in the [query documentation](#queries)
@@ -55,7 +82,7 @@ type ReactTestInstance = {
 
 ### Options
 
-Query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#textmatch) for more info.
+Usually query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#textmatch) for more info.
 
 ### `ByText`
 
@@ -128,7 +155,7 @@ const { getByLabelText } = render(<MyComponent />);
 const element = getByLabelText('my-label');
 ```
 
-### `ByA11yHint`, `ByAccessibilityHint`, `ByHintText`
+### `ByHintText`, `ByA11yHint`, `ByAccessibilityHint`
 
 > getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint, findByA11yHint, findAllByA11yHint
 > getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint, findByAccessibilityHint, findAllByAccessibilityHint
