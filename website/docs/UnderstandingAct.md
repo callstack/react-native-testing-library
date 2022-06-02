@@ -7,7 +7,7 @@ When writing RNTL tests one of the things that confuses developers the most are 
 
 ## The act warnings
 
-Let’s start with typical `act()` warnings logged to console. There are two kinds of these issues, let’s call the first one a sync `act()` warning:
+Let’s start with typical `act()` warnings logged to console. There are two kinds of these issues, let’s call the first one the "sync `act()`" warning:
 
 ```
 Warning: An update to Component inside a test was not wrapped in act(...).
@@ -20,7 +20,7 @@ act(() => {
 /* assert on the output */
 ```
 
-The second one relates to async usage of `act` so let’s call it an "async `act`" error:
+The second one relates to async usage of `act` so let’s call it the "async `act`" error:
 
 ```
 Warning: You called act(async () => ...) without await. This could lead to unexpected
@@ -171,7 +171,7 @@ If we wanted to stick with real timers then things get a bit more complex. Let�
 test('render with real timers - sleep', async () => {
   const view = render(<TestAsyncComponent />);
   await act(async () => {
-    await sleep(50 + 10); // Wait a bit longer than setTimeout in `TestAsyncComponent`
+    await sleep(100); // Wait a bit longer than setTimeout in `TestAsyncComponent`
   });
 
   expect(view.getByText('Count 1')).toBeTruthy();
@@ -219,7 +219,7 @@ testing behaviour, interleaving multiple act calls and mixing their scopes. You 
 
 React decides to show this error whenever it detects that async `act()`call [has not been awaited](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react/src/ReactAct.js#L93).
 
-The exact reasons why you might see async `act()`warnings vary, but finally it means that `act()` has been called with callback that returns `Promise`-like object, but it has not been waited on.
+The exact reasons why you might see async `act()` warnings vary, but finally it means that `act()` has been called with callback that returns `Promise`-like object, but it has not been waited on.
 
 ## References
 
