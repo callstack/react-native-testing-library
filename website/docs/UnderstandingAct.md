@@ -3,11 +3,11 @@ id: understanding-act
 title: Understanding Act function
 ---
 
-When writing RNTL tests one of the things that confuses developers the most are cryptic `act()` function errors logged into console. In this article I will try to build an understanding of the purpose and behaviour of `act()` so you can build your tests with more confidence.
+When writing RNTL tests one of the things that confuses developers the most are cryptic [`act()`](https://reactjs.org/docs/testing-recipes.html#act) function errors logged into console. In this article I will try to build an understanding of the purpose and behaviour of `act()` so you can build your tests with more confidence.
 
 ## The act warnings
 
-Let’s start with typical `act()` warnings logged to console. There are two kinds of these issues, let’s call the first one sync `act()` warnings:
+Let’s start with typical `act()` warnings logged to console. There are two kinds of these issues, let’s call the first one a sync `act()` warning:
 
 ```
 Warning: An update to Component inside a test was not wrapped in act(...).
@@ -20,7 +20,7 @@ act(() => {
 /* assert on the output */
 ```
 
-The second one relates to async usage of `act` so let’s call it async `act` error:
+The second one relates to async usage of `act` so let’s call it an "async `act`" error:
 
 ```
 Warning: You called act(async () => ...) without await. This could lead to unexpected
@@ -84,21 +84,21 @@ The name `act` comes from [Arrange-Act-Assert](http://wiki.c2.com/?ArrangeActAss
 
 So far we learned that `act` function allows tests to wait for all pending React interactions to be applied before we make our assertions. When using `act` we get guarantee that any state updates will be executed as well as any enqueued effects will be executed.
 
-Therefore, we should use `act` whenever the is some action that causes element tree to render, particularly:
+Therefore, we should use `act` whenever there is some action that causes element tree to render, particularly:
 
 - initial render call - `ReactTestRenderer.create` call
 - re-rendering of component -`renderer.update` call
 - triggering any event handlers that cause component tree render
 
-Thankfully, for these basic cases RNTL has got you covered as our `render`, `update` and `fireEvent` calls already wrap their calls in sync `act` so that you do not have to do it explicitly.
+Thankfully, for these basic cases RNTL has got you covered as our `render`, `update` and `fireEvent` methods already wrap their calls in sync `act` so that you do not have to do it explicitly.
 
-Note that `act`calls can be safely nested and internally form a stack of calls. However, overlapping `act` calls, which can be achieved using async version of `act`, [are not supported](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js#L161).
+Note that `act` calls can be safely nested and internally form a stack of calls. However, overlapping `act` calls, which can be achieved using async version of `act`, [are not supported](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js#L161).
 
 ### Implementation
 
 As of React version of 18.1.0, the `act` implementation is defined in the [ReactAct.js source file](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js) inside React repository. This implementation has been fairly stable since React 17.0.
 
-RNTL exports `act` for convenience of the users as defined in the [act.ts source file](https://github.com/callstack/react-native-testing-library/blob/main/src/act.ts). That file refers to [ReactTestRenderer.js source](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react-test-renderer/src/ReactTestRenderer.js#L52) file from React Test Renderer package, which finally leads to React `act` implementation mentioned above.
+RNTL exports `act` for convenience of the users as defined in the [act.ts source file](https://github.com/callstack/react-native-testing-library/blob/main/src/act.ts). That file refers to [ReactTestRenderer.js source](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react-test-renderer/src/ReactTestRenderer.js#L52) file from React Test Renderer package, which finally leads to React act implementation in ReactAct.js (already mentioned above).
 
 ## Asynchronous act
 
@@ -108,7 +108,7 @@ So far we have seen synchronous version of `act` which runs its callback immedia
 
 Asynchronous version of `act` also is executed immediately, but the callback is not yet completed because of some asynchronous operations inside.
 
-Lets look at a simple example with component using `setTimeout`call to simulate asynchronous behaviour:
+Lets look at a simple example with component using `setTimeout` call to simulate asynchronous behaviour:
 
 ```jsx
 function TestAsyncComponent() {
@@ -147,7 +147,7 @@ Note that this is not yet the infamous async act warning. It only asks us to wra
 
 ### Solution with fake timers
 
-First solution is to use jest fake timers inside out tests:
+First solution is to use Jest's fake timers inside out tests:
 
 ```jsx
 test('render with fake timers', () => {
@@ -171,7 +171,7 @@ If we wanted to stick with real timers then things get a bit more complex. Let�
 test('render with real timers - sleep', async () => {
   const view = render(<TestAsyncComponent />);
   await act(async () => {
-    await sleep(50 + 10); // Wait a bit longer then setTimeout in component
+    await sleep(50 + 10); // Wait a bit longer than setTimeout in `TestAsyncComponent`
   });
 
   expect(view.getByText('Count 1')).toBeTruthy();
@@ -191,7 +191,7 @@ test('render with real timers - waitFor', async () => {
 });
 ```
 
-This also works correctly, because `waitFor` calls executes async `act()` call internally.
+This also works correctly, because `waitFor` call executes async `act()` call internally.
 
 The above code can be simplified using `findBy` query:
 
@@ -224,3 +224,4 @@ The exact reasons why you might see async `act()`warnings vary, but finally it m
 ## References
 
 - [React `act` implementation source](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js)
+- [React testing recipes: `act()`](https://reactjs.org/docs/testing-recipes.html#act)
