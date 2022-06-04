@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { TextMatch } from '../matches';
+import { matchStringValue } from '../helpers/matchers/matchStringValue';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -9,21 +10,6 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-
-export function matchStringValue(
-  prop: string | undefined,
-  matcher: TextMatch
-): boolean {
-  if (!prop) {
-    return false;
-  }
-
-  if (typeof matcher === 'string') {
-    return prop === matcher;
-  }
-
-  return Boolean(prop.match(matcher));
-}
 
 const queryAllByLabelText = (
   instance: ReactTestInstance
