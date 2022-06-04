@@ -23,23 +23,19 @@ export function matchObject<T extends Record<string, unknown>>(
 
 const queryAllByA11yState = (
   instance: ReactTestInstance
-): ((accessibilityStateKey: AccessibilityState) => Array<ReactTestInstance>) =>
-  function queryAllByA11yStateFn(accessibilityStateKey) {
+): ((state: AccessibilityState) => Array<ReactTestInstance>) =>
+  function queryAllByA11yStateFn(state) {
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&
-        matchObject(node.props.accessibilityState, accessibilityStateKey)
+        matchObject(node.props.accessibilityState, state)
     );
   };
 
-const getMultipleError = (a11yState: AccessibilityState) =>
-  `Found multiple elements with accessibilityState: ${JSON.stringify(
-    a11yState
-  )}`;
-const getMissingError = (a11yState: AccessibilityState) =>
-  `Unable to find an element with accessibilityState: ${JSON.stringify(
-    a11yState
-  )}`;
+const getMultipleError = (state: AccessibilityState) =>
+  `Found multiple elements with accessibilityState: ${JSON.stringify(state)}`;
+const getMissingError = (state: AccessibilityState) =>
+  `Unable to find an element with accessibilityState: ${JSON.stringify(state)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByA11yState,
