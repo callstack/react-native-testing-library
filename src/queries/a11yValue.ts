@@ -23,7 +23,7 @@ export function matchObject<T extends Record<string, unknown>>(
   return prop
     ? Object.keys(matcher).length !== 0 &&
         Object.keys(prop).length !== 0 &&
-        !Object.keys(matcher).some((key) => prop[key] !== matcher[key])
+        Object.keys(matcher).every((key) => prop[key] === matcher[key])
     : false;
 }
 
