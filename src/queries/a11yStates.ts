@@ -11,7 +11,7 @@ import type {
 } from './makeQueries';
 
 type AccessibilityStateKey = keyof AccessibilityState;
-type AccessibilityStateKeyQueryParam =
+type AccessibilityStateKeys =
   | AccessibilityStateKey
   | Array<AccessibilityStateKey>;
 
@@ -33,7 +33,7 @@ export function matchArrayValue(
 const queryAllByA11yStates = (
   instance: ReactTestInstance
 ): ((
-  accessibilityStateKey: AccessibilityStateKeyQueryParam
+  accessibilityStateKey: AccessibilityStateKeys
 ) => Array<ReactTestInstance>) =>
   function queryAllByDisplayValueFn(accessibilityStateKey) {
     return instance.findAll(
@@ -43,11 +43,11 @@ const queryAllByA11yStates = (
     );
   };
 
-const getMultipleError = (a11yStates: AccessibilityStateKeyQueryParam) =>
+const getMultipleError = (a11yStates: AccessibilityStateKeys) =>
   `Found multiple elements with accessibilityState: ${JSON.stringify(
     a11yStates
   )}`;
-const getMissingError = (a11yStates: AccessibilityStateKeyQueryParam) =>
+const getMissingError = (a11yStates: AccessibilityStateKeys) =>
   `Unable to find an element with accessibilityState: ${JSON.stringify(
     a11yStates
   )}`;
@@ -59,12 +59,12 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByA11yStatesQueries = {
-  getByA11yStates: GetByQuery<AccessibilityStateKeyQueryParam>;
-  getAllByA11yStates: GetAllByQuery<AccessibilityStateKeyQueryParam>;
-  queryByA11yStates: QueryByQuery<AccessibilityStateKeyQueryParam>;
-  queryAllByA11yStates: QueryAllByQuery<AccessibilityStateKeyQueryParam>;
-  findByA11yStates: FindByQuery<AccessibilityStateKeyQueryParam>;
-  findAllByA11yStates: FindAllByQuery<AccessibilityStateKeyQueryParam>;
+  getByA11yStates: GetByQuery<AccessibilityStateKeys>;
+  getAllByA11yStates: GetAllByQuery<AccessibilityStateKeys>;
+  queryByA11yStates: QueryByQuery<AccessibilityStateKeys>;
+  queryAllByA11yStates: QueryAllByQuery<AccessibilityStateKeys>;
+  findByA11yStates: FindByQuery<AccessibilityStateKeys>;
+  findAllByA11yStates: FindAllByQuery<AccessibilityStateKeys>;
 };
 
 export const bindByA11yStatesQueries = (
