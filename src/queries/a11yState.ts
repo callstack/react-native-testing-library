@@ -24,7 +24,7 @@ export function matchObject<T extends Record<string, unknown>>(
 const queryAllByA11yState = (
   instance: ReactTestInstance
 ): ((accessibilityStateKey: AccessibilityState) => Array<ReactTestInstance>) =>
-  function queryAllByDisplayValueFn(accessibilityStateKey) {
+  function queryAllByA11yStateFn(accessibilityStateKey) {
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&

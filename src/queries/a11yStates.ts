@@ -35,7 +35,7 @@ const queryAllByA11yStates = (
 ): ((
   accessibilityStates: AccessibilityStateKeys
 ) => Array<ReactTestInstance>) =>
-  function queryAllByDisplayValueFn(accessibilityStates) {
+  function queryAllByA11yStatesFn(accessibilityStates) {
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&

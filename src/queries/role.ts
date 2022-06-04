@@ -28,7 +28,7 @@ export function matchStringValue(
 const queryAllByRole = (
   instance: ReactTestInstance
 ): ((displayValue: TextMatch) => Array<ReactTestInstance>) =>
-  function queryAllByDisplayValueFn(displayValue) {
+  function queryAllByRoleFn(displayValue) {
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&

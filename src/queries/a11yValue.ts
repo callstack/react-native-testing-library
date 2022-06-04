@@ -30,7 +30,7 @@ export function matchObject<T extends Record<string, unknown>>(
 const queryAllByA11yValue = (
   instance: ReactTestInstance
 ): ((displayValue: A11yValue) => Array<ReactTestInstance>) =>
-  function queryAllByDisplayValueFn(displayValue) {
+  function queryAllByA11yValueFn(displayValue) {
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&
