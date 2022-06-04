@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { AccessibilityState } from 'react-native';
+import { matchObject } from '../helpers/matchers/matchObject';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -9,17 +10,6 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-
-export function matchObject<T extends Record<string, unknown>>(
-  prop: T | undefined,
-  matcher: T
-): boolean {
-  return prop
-    ? Object.keys(matcher).length !== 0 &&
-        Object.keys(prop).length !== 0 &&
-        !Object.keys(matcher).some((key) => prop[key] !== matcher[key])
-    : false;
-}
 
 const queryAllByA11yState = (
   instance: ReactTestInstance

@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import { matchObject } from '../helpers/matchers/matchObject';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -15,17 +16,6 @@ type A11yValue = {
   now?: number;
   text?: string;
 };
-
-export function matchObject<T extends Record<string, unknown>>(
-  prop: T | undefined,
-  matcher: T
-): boolean {
-  return prop
-    ? Object.keys(matcher).length !== 0 &&
-        Object.keys(prop).length !== 0 &&
-        Object.keys(matcher).every((key) => prop[key] === matcher[key])
-    : false;
-}
 
 const queryAllByA11yValue = (
   instance: ReactTestInstance
