@@ -10,5 +10,5 @@ export function matchArrayValue(
     return prop.includes(matcher);
   }
 
-  return !matcher.some((e) => !prop.includes(e));
+  return matcher.every((e) => prop.includes(e));
 }
