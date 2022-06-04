@@ -27,19 +27,19 @@ export function matchStringValue(
 
 const queryAllByA11yHint = (
   instance: ReactTestInstance
-): ((displayValue: TextMatch) => Array<ReactTestInstance>) =>
-  function queryAllByDisplayValueFn(displayValue) {
+): ((hint: TextMatch) => Array<ReactTestInstance>) =>
+  function queryAllByA11yHintFn(hint) {
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&
-        matchStringValue(node.props.accessibilityHint, displayValue)
+        matchStringValue(node.props.accessibilityHint, hint)
     );
   };
 
-const getMultipleError = (a11yHint: TextMatch) =>
-  `Found multiple elements with accessibilityHint: ${String(a11yHint)} `;
-const getMissingError = (a11yHint: TextMatch) =>
-  `Unable to find an element with accessibilityHint: ${String(a11yHint)}`;
+const getMultipleError = (hint: TextMatch) =>
+  `Found multiple elements with accessibilityHint: ${String(hint)} `;
+const getMissingError = (hint: TextMatch) =>
+  `Unable to find an element with accessibilityHint: ${String(hint)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByA11yHint,
