@@ -33,13 +33,13 @@ export function matchArrayValue(
 const queryAllByA11yStates = (
   instance: ReactTestInstance
 ): ((
-  accessibilityStateKey: AccessibilityStateKeys
+  accessibilityStates: AccessibilityStateKeys
 ) => Array<ReactTestInstance>) =>
-  function queryAllByDisplayValueFn(accessibilityStateKey) {
+  function queryAllByDisplayValueFn(accessibilityStates) {
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&
-        matchArrayValue(node.props.accessibilityState, accessibilityStateKey)
+        matchArrayValue(node.props.accessibilityState, accessibilityStates)
     );
   };
 
