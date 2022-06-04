@@ -27,12 +27,12 @@ export function matchStringValue(
 
 const queryAllByRole = (
   instance: ReactTestInstance
-): ((displayValue: TextMatch) => Array<ReactTestInstance>) =>
-  function queryAllByRoleFn(displayValue) {
+): ((role: TextMatch) => Array<ReactTestInstance>) =>
+  function queryAllByRoleFn(role) {
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&
-        matchStringValue(node.props.accessibilityRole, displayValue)
+        matchStringValue(node.props.accessibilityRole, role)
     );
   };
 
