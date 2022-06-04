@@ -27,12 +27,12 @@ export function matchStringValue(
 
 const queryAllByLabelText = (
   instance: ReactTestInstance
-): ((displayValue: TextMatch) => Array<ReactTestInstance>) =>
-  function queryAllByDisplayValueFn(displayValue) {
+): ((text: TextMatch) => Array<ReactTestInstance>) =>
+  function queryAllByLabelTextFn(text) {
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&
-        matchStringValue(node.props.accessibilityLabel, displayValue)
+        matchStringValue(node.props.accessibilityLabel, text)
     );
   };
 
