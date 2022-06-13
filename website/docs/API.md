@@ -3,11 +3,39 @@ id: api
 title: API
 ---
 
+### Table of contents:
+
+- [`render`](#render)
+  - [`update`](#update)
+  - [`unmount`](#unmount)
+  - [`debug`](#debug)
+  - [`toJSON`](#tojson)
+  - [`container`](#container)
+- [`cleanup`](#cleanup)
+- [`fireEvent`](#fireevent)
+- [`fireEvent[eventName]`](#fireeventeventname)
+  - [`fireEvent.press`](#fireeventpress)
+  - [`fireEvent.changeText`](#fireeventchangetext)
+  - [`fireEvent.scroll`](#fireeventscroll)
+- [`waitFor`](#waitfor)
+- [`waitForElementToBeRemoved`](#waitforelementtoberemoved)
+- [`within, getQueriesForElement`](#within-getqueriesforelement)
+- [`query` APIs](#query-apis)
+- [`queryAll` APIs](#queryall-apis)
+- [`act`](#act)
+- [`renderHook`](#renderhook)
+  - [`callback`](#callback)
+  - [`options`](#options-optional)
+  - [`RenderHookResult` object](#renderhookresult-object)
+    - [`result`](#result)
+    - [`rerender`](#rerender)
+    - [`unmount`](#unmount-1)
+
 This page gathers public API of React Native Testing Library along with usage examples.
 
 ## `render`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/render.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/render.test.tsx)
 
 Defined as:
 
@@ -30,8 +58,8 @@ import { render } from '@testing-library/react-native';
 import { QuestionsBoard } from '../QuestionsBoard';
 
 test('should verify two questions', () => {
-  const { queryAllByA11yRole } = render(<QuestionsBoard {...props} />);
-  const allQuestions = queryAllByA11yRole('header');
+  const { queryAllByRole } = render(<QuestionsBoard {...props} />);
+  const allQuestions = queryAllByRole('header');
 
   expect(allQuestions).toHaveLength(2);
 });
@@ -225,7 +253,11 @@ fireEvent[eventName](element: ReactTestInstance, ...data: Array<any>): void
 
 Convenience methods for common events like: `press`, `changeText`, `scroll`.
 
-### `fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void`
+### `fireEvent.press`
+
+```
+fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void
+```
 
 Invokes `press` event handler on the element or parent element in the tree.
 
@@ -253,7 +285,11 @@ fireEvent.press(getByText('Press me'), eventData);
 expect(onPressMock).toHaveBeenCalledWith(eventData);
 ```
 
-### `fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void`
+### `fireEvent.changeText`
+
+```
+fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void
+```
 
 Invokes `changeText` event handler on the element or parent element in the tree.
 
@@ -273,7 +309,11 @@ const { getByPlaceholderText } = render(
 fireEvent.changeText(getByPlaceholderText('Enter data'), CHANGE_TEXT);
 ```
 
-### `fireEvent.scroll: (element: ReactTestInstance, ...data: Array<any>) => void`
+### `fireEvent.scroll`
+
+```
+fireEvent.scroll: (element: ReactTestInstance, ...data: Array<any>) => void
+```
 
 Invokes `scroll` event handler on the element or parent element in the tree.
 
@@ -345,7 +385,7 @@ If you're noticing that components are not being found on a list, even after moc
 
 ## `waitFor`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitFor.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitFor.test.tsx)
 
 Defined as:
 
@@ -374,7 +414,7 @@ In order to properly use `waitFor` you need at least React >=16.9.0 (featuring a
 
 ## `waitForElementToBeRemoved`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitForElementToBeRemoved.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitForElementToBeRemoved.test.tsx)
 
 Defined as:
 
@@ -400,7 +440,7 @@ test('waiting for an Banana to be removed', async () => {
 });
 ```
 
-This method expects that the element is initally present in the render tree and then is removed from it. If the element is not present when you call this method it throws an error.
+This method expects that the element is initially present in the render tree and then is removed from it. If the element is not present when you call this method it throws an error.
 
 You can use any of `getBy`, `getAllBy`, `queryBy` and `queryAllBy` queries for `expectation` parameter.
 
@@ -410,7 +450,7 @@ In order to properly use `waitForElementToBeRemoved` you need at least React >=1
 
 ## `within`, `getQueriesForElement`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/within.test.js)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/within.test.tsx)
 
 Defined as:
 
@@ -429,7 +469,7 @@ Please note that additional `render` specific operations like `update`, `unmount
 const detailsScreen = within(getByA11yHint('Details Screen'));
 expect(detailsScreen.getByText('Some Text')).toBeTruthy();
 expect(detailsScreen.getByDisplayValue('Some Value')).toBeTruthy();
-expect(detailsScreen.queryByA11yLabel('Some Label')).toBeTruthy();
+expect(detailsScreen.queryByLabelText('Some Label')).toBeTruthy();
 await expect(detailsScreen.findByA11yHint('Some Label')).resolves.toBeTruthy();
 ```
 
@@ -465,3 +505,135 @@ expect(submitButtons).toHaveLength(3); // expect 3 elements
 ## `act`
 
 Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/main/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
+
+## `renderHook`
+
+Defined as:
+
+```ts
+function renderHook<Result, Props>(
+  callback: (props?: Props) => Result,
+  options?: RenderHookOptions<Props>
+): RenderHookResult<Result, Props>;
+```
+
+Renders a test component that will call the provided `callback`, including any hooks it calls, every time it renders. Returns [`RenderHookResult`](#renderhookresult-object) object, which you can interact with.
+
+```ts
+import { renderHook } from '@testing-library/react-native';
+import { useCount } from '../useCount';
+
+it('should increment count', () => {
+  const { result } = renderHook(() => useCount());
+
+  expect(result.current.count).toBe(0);
+  act(() => {
+    // Note that you should wrap the calls to functions your hook returns with `act` if they trigger an update of your hook's state to ensure pending useEffects are run before your next assertion.
+    result.increment();
+  });
+  expect(result.current.count).toBe(1);
+});
+```
+
+```ts
+// useCount.js
+export const useCount = () => {
+  const [count, setCount] = useState(0);
+  const increment = () => setCount((previousCount) => previousCount + 1);
+
+  return { count, increment };
+};
+```
+
+The `renderHook` function accepts the following arguments:
+
+### `callback`
+
+The function that is called each `render` of the test component. This function should call one or more hooks for testing.
+
+The `props` passed into the callback will be the `initialProps` provided in the `options` to `renderHook`, unless new props are provided by a subsequent `rerender` call.
+
+### `options` (Optional)
+
+A `RenderHookOptions<Props>` object to modify the execution of the `callback` function, containing the following properties:
+
+#### `initialProps`
+
+The initial values to pass as `props` to the `callback` function of `renderHook`. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
+
+#### `wrapper`
+
+A React component to wrap the test component in when rendering. This is usually used to add context providers from `React.createContext` for the hook to access with `useContext`.
+
+### `RenderHookResult` object
+
+```ts
+interface RenderHookResult<Result, Props> {
+  result: { current: Result };
+  rerender: (props: Props) => void;
+  unmount: () => void;
+}
+```
+
+The `renderHook` function returns an object that has the following properties:
+
+#### `result`
+
+The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`. The `Result` type is determined by the type passed to or inferred by the `renderHook` call.
+
+#### `rerender`
+
+A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
+
+#### `unmount`
+
+A function to unmount the test component. This is commonly used to trigger cleanup effects for `useEffect` hooks.
+
+### Examples
+
+Here we present some extra examples of using `renderHook` API.
+
+#### With `initialProps`
+
+```ts
+const useCount = (initialCount: number) => {
+  const [count, setCount] = useState(initialCount);
+  const increment = () => setCount((previousCount) => previousCount + 1);
+
+  useEffect(() => {
+    setCount(initialCount);
+  }, [initialCount]);
+
+  return { count, increment };
+};
+
+it('should increment count', () => {
+  const { result, rerender } = renderHook(
+    (initialCount: number) => useCount(initialCount),
+    { initialProps: 1 }
+  );
+
+  expect(result.current.count).toBe(1);
+
+  act(() => {
+    result.increment();
+  });
+
+  expect(result.current.count).toBe(2);
+  rerender(5);
+  expect(result.current.count).toBe(5);
+});
+```
+
+#### With `wrapper`
+
+```tsx
+it('should use context value', () => {
+  function Wrapper({ children }: { children: ReactNode }) {
+    return <Context.Provider value="provided">{children}</Context.Provider>;
+  }
+
+  const { result } = renderHook(() => useHook(), { wrapper: Wrapper });
+  // ...
+});
+```

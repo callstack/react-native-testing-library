@@ -15,7 +15,7 @@ The React Native Testing Library (RNTL) is a lightweight solution for testing Re
 
 This project is inspired by [React Testing Library](https://github.com/testing-library/react-testing-library). Tested to work with Jest, but it should work with other test runners as well.
 
-You can find the source of `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/questionsBoard.test.js).
+You can find the source of `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/questionsBoard.test.tsx).
 
 ## Installation
 
@@ -82,11 +82,11 @@ test('form submits two answers', () => {
   const allQuestions = ['q1', 'q2'];
   const mockFn = jest.fn();
 
-  const { getAllByA11yLabel, getByText } = render(
+  const { getAllByLabelText, getByText } = render(
     <QuestionsBoard questions={allQuestions} onSubmit={mockFn} />
   );
 
-  const answerInputs = getAllByA11yLabel('answer input');
+  const answerInputs = getAllByLabelText('answer input');
 
   fireEvent.changeText(answerInputs[0], 'a1');
   fireEvent.changeText(answerInputs[1], 'a2');
@@ -99,4 +99,4 @@ test('form submits two answers', () => {
 });
 ```
 
-You can find the source of `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/questionsBoard.test.js).
+You can find the source of `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/questionsBoard.test.tsx).

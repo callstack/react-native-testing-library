@@ -3,6 +3,33 @@ id: api-queries
 title: Queries
 ---
 
+### Table of contents:
+
+- [Variants](#variants)
+  - [`getBy`](#getby)
+  - [`getAllBy`](#getallby)
+  - [`queryBy`](#queryby)
+  - [`queryAllBy`](#queryallby)
+  - [`findBy`](#findby)
+  - [`findAllBy`](#findallby)
+- [Queries](#queries)
+  - [`options`](#options)
+  - [`ByText`](#bytext)
+  - [`ByPlaceholderText`](#byplaceholdertext)
+  - [`ByDisplayValue`](#bydisplayvalue)
+  - [`ByTestId`](#bytestid)
+  - [`ByLabelText`](#bylabeltext)
+  - [`ByHintText`, `ByA11yHint`, `ByAccessibilityHint`](#byhinttext-bya11yhint-byaccessibilityhint)
+  - [`ByA11yStates`, `ByAccessibilityStates`](#bya11ystates-byaccessibilitystates)
+  - [`ByRole`](#byrole)
+  - [`ByA11yState`, `ByAccessibilityState`](#bya11ystate-byaccessibilitystate)
+  - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
+- [`TextMatch`](#textmatch)
+  - [Examples](#examples)
+  - [Precision](#precision)
+  - [Normalization](#normalization)
+- [Unit testing helpers](#unit-testing-helpers)
+
 ## Variants
 
 > `getBy` queries are shown by default in the [query documentation](#queries)
@@ -55,7 +82,7 @@ type ReactTestInstance = {
 
 ### Options
 
-Query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#textmatch) for more info.
+Usually query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#textmatch) for more info.
 
 ### `ByText`
 
@@ -115,10 +142,8 @@ const element = getByTestId('unique-id');
 In the spirit of [the guiding principles](https://testing-library.com/docs/guiding-principles), it is recommended to use this only after the other queries don't work for your use case. Using `testID` attributes do not resemble how your software is used and should be avoided if possible. However, they are particularly useful for end-to-end testing on real devices, e.g. using Detox and it's an encouraged technique to use there. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
 :::
 
-### `ByA11yLabel`, `ByAccessibilityLabel`, `ByLabelText`
+### `ByLabelText`
 
-> getByA11yLabel, getAllByA11yLabel, queryByA11yLabel, queryAllByA11yLabel, findByA11yLabel, findAllByA11yLabel
-> getByAccessibilityLabel, getAllByAccessibilityLabel, queryByAccessibilityLabel, queryAllByAccessibilityLabel, findByAccessibilityLabel, findAllByAccessibilityLabel
 > getByLabelText, getAllByLabelText, queryByLabelText, queryAllByLabelText, findByLabelText, findAllByLabelText
 
 Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
@@ -130,7 +155,7 @@ const { getByLabelText } = render(<MyComponent />);
 const element = getByLabelText('my-label');
 ```
 
-### `ByA11yHint`, `ByAccessibilityHint`, `ByHintText`
+### `ByHintText`, `ByA11yHint`, `ByAccessibilityHint`
 
 > getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint, findByA11yHint, findAllByA11yHint
 > getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint, findByAccessibilityHint, findAllByAccessibilityHint
@@ -164,10 +189,8 @@ const element = getByA11yStates(['checked']);
 const element2 = getByA11yStates('checked');
 ```
 
-### `ByA11yRole`, `ByAccessibilityRole`, `ByRole`
+### `ByRole`
 
-> getByA11yRole, getAllByA11yRole, queryByA11yRole, queryAllByA11yRole, findByA11yRole, findAllByA11yRole
-> getByAccessibilityRole, getAllByAccessibilityRole, queryByAccessibilityRole, queryAllByAccessibilityRole, findByAccessibilityRole, findAllByAccessibilityRole
 > getByRole, getAllByRole, queryByRole, queryAllByRole, findByRole, findAllByRole
 
 Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
@@ -175,8 +198,8 @@ Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
 ```jsx
 import { render } from '@testing-library/react-native';
 
-const { getByA11yRole } = render(<MyComponent />);
-const element = getByA11yRole('button');
+const { getByRole } = render(<MyComponent />);
+const element = getByRole('button');
 ```
 
 ### `ByA11yState`, `ByAccessibilityState`
