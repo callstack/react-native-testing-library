@@ -1,0 +1,39 @@
+import * as React from 'react';
+import { Text } from 'react-native';
+import { render, screen } from '..';
+
+test('screen has the same queries as render result', () => {
+  const result = render(<Text>Mt. Everest</Text>);
+  expect(screen).toBe(result);
+
+  expect(screen.getByText('Mt. Everest')).toBeTruthy();
+  expect(screen.queryByText('Mt. Everest')).toBeTruthy();
+  expect(screen.getAllByText('Mt. Everest')).toHaveLength(1);
+  expect(screen.queryAllByText('Mt. Everest')).toHaveLength(1);
+});
+
+test('screen holds last render result', () => {
+  render(<Text>Mt. Everest</Text>);
+  render(<Text>Mt. Blanc</Text>);
+  const finalResult = render(<Text>Śnieżka</Text>);
+  expect(screen).toBe(finalResult);
+
+  expect(screen.getByText('Śnieżka')).toBeTruthy();
+  expect(screen.queryByText('Mt. Everest')).toBeFalsy();
+  expect(screen.queryByText('Mt. Blanc')).toBeFalsy();
+});
+
+test('screen throws without render', () => {
+  expect(() => screen.container).toThrowError(
+    '`render` method has not been called'
+  );
+  expect(() => screen.debug()).toThrowError(
+    '`render` method has not been called'
+  );
+  expect(() => screen.debug.shallow()).toThrowError(
+    '`render` method has not been called'
+  );
+  expect(() => screen.getByText('Mt. Everest')).toThrowError(
+    '`render` method has not been called'
+  );
+});

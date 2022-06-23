@@ -1,20 +1,22 @@
 import act from './act';
 import cleanup from './cleanup';
 import fireEvent from './fireEvent';
-import render from './render';
+import render, { RenderResult } from './render';
 import waitFor from './waitFor';
 import waitForElementToBeRemoved from './waitForElementToBeRemoved';
 import { within, getQueriesForElement } from './within';
 import { getDefaultNormalizer } from './matches';
 import { renderHook } from './renderHook';
+import { screen } from './screen';
 
 export { act };
 export { cleanup };
 export { fireEvent };
-export { render };
+export { render, RenderResult };
 export { waitFor };
 export { waitForElementToBeRemoved };
 export { within, getQueriesForElement };
 export { getDefaultNormalizer };
 export { renderHook };
+export { screen };
 export type RenderAPI = ReturnType<typeof render>;
