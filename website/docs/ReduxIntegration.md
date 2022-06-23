@@ -18,7 +18,7 @@ For `./components/AddTodo.test.js`
 ```jsx
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { cleanup, fireEvent, render } from '@testing-library/react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
 import configureStore from '../store';
 import AddTodo from './AddTodo';
 
@@ -32,16 +32,16 @@ describe('AddTodo component test', () => {
       </Provider>
     );
 
-    const { getByPlaceholderText, getByText } = render(component);
+    render(component);
 
     // There is a TextInput.
     // https://github.com/callstack/react-native-testing-library/blob/ae3d4af370487e1e8fedd8219f77225690aefc59/examples/redux/components/AddTodo.js#L24
-    const input = getByPlaceholderText(/repository/i);
+    const input = screen.getByPlaceholderText(/repository/i);
     expect(input).toBeTruthy();
 
     const textToEnter = 'This is a random element';
     fireEvent.changeText(input, textToEnter);
-    fireEvent.press(getByText('Submit form'));
+    fireEvent.press(screen.getByText('Submit form'));
 
     const todosState = store.getState().todos;
 
@@ -65,7 +65,7 @@ For `./components/TodoList.test.js`
 ```jsx
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { fireEvent, render } from '@testing-library/react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
 import configureStore from '../store';
 import TodoList from './TodoList';
 
@@ -87,8 +87,8 @@ describe('TodoList component test', () => {
       </Provider>
     );
 
-    const { getAllByText } = render(component);
-    const todoElems = getAllByText(/something/i);
+    render(component);
+    const todoElems = screen.getAllByText(/something/i);
 
     expect(todoElems.length).toEqual(4);
   });
@@ -108,16 +108,16 @@ describe('TodoList component test', () => {
       </Provider>
     );
 
-    const { getAllByText } = render(component);
-    const todoElems = getAllByText(/something/i);
+    render(component);
+    const todoElems = screen.getAllByText(/something/i);
 
     expect(todoElems.length).toBe(2);
 
-    const buttons = getAllByText('Delete');
+    const buttons = screen.getAllByText('Delete');
     expect(buttons.length).toBe(2);
 
     fireEvent.press(buttons[0]);
-    expect(getAllByText('Delete').length).toBe(1);
+    expect(screen.getAllByText('Delete').length).toBe(1);
   });
 });
 ```
