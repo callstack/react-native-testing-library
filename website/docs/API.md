@@ -14,6 +14,7 @@ title: API
     - [`debug.shallow`](#debugshallow)
   - [`toJSON`](#tojson)
   - [`container`](#container)
+- [`screen`](#screen)
 - [`cleanup`](#cleanup)
 - [`fireEvent`](#fireevent)
 - [`fireEvent[eventName]`](#fireeventeventname)
@@ -77,7 +78,13 @@ test('should verify two questions', () => {
 
 > When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases it's convenient to create your custom `render` method. [Follow this great guide on how to set this up](https://testing-library.com/docs/react-testing-library/setup#custom-render).
 
-The `render` method returns a `RenderResult` object that has a few properties:
+The `render` method returns a `RenderResult` object having properties described below.
+
+:::info
+Latest `render` result is kept in [`screen`](#screen) variable that can be imported from `@testing-library/react-native` package. 
+
+Using `screen` instead of destructuring `render` result is recommended approach. See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
+:::
 
 ### `...queries`
 
@@ -164,11 +171,15 @@ container: ReactTestInstance;
 
 A reference to the rendered root element.
 
-:::info
-Last `render` result is kept in `screen` variable that you can import from `@testing-library/react-native` package. 
+## `screen`
 
-Using screen instead of destructuring `render` result is recommended apprach. See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
-:::
+```ts
+let screen: RenderResult;
+```
+
+Hold the value of latest render call for easier access to query and other functions returned by [`render`](#render). 
+
+It's value is automatically cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test then it holds a special object that implements `RenderResult` but throws a helpful error on each property and method access.
 
 ## `cleanup`
 
@@ -176,7 +187,7 @@ Using screen instead of destructuring `render` result is recommended apprach. Se
 const cleanup: () => void;
 ```
 
-Unmounts React trees that were mounted with `render`.
+Unmounts React trees that were mounted with `render` and clears `screen` variable that holds latest `render` output.
 
 :::info
 Please note that this is done automatically if the testing framework you're using supports the `afterEach` global (like mocha, Jest, and Jasmine). If not, you will need to do manual cleanups after each test.
@@ -210,8 +221,6 @@ describe('when logged in', () => {
 ```
 
 Failing to call `cleanup` when you've called `render` could result in a memory leak and tests which are not "idempotent" (which can lead to difficult to debug errors in your tests).
-
-The alternative to `cleanup` is balancing every `render` with an `unmount` method call.
 
 ## `fireEvent`
 
