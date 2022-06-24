@@ -10,6 +10,7 @@ import { renderHook } from './renderHook';
 import { screen } from './screen';
 
 export type { RenderResult };
+export type RenderAPI = RenderResult;
 
 export { act };
 export { cleanup };
@@ -21,4 +22,3 @@ export { within, getQueriesForElement };
 export { getDefaultNormalizer };
 export { renderHook };
 export { screen };
-export type RenderAPI = ReturnType<typeof render>;
