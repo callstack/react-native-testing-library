@@ -17,3 +17,4 @@ export { waitForElementToBeRemoved };
 export { within, getQueriesForElement };
 export { getDefaultNormalizer };
 export { renderHook };
+export type RenderAPI = ReturnType<typeof render>;

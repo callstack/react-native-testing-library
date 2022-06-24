@@ -7,7 +7,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import stripAnsi from 'strip-ansi';
-import { render, fireEvent } from '..';
+import { render, fireEvent, RenderAPI } from '..';
 
 type ConsoleLogMock = jest.Mock<Array<string>>;
 
@@ -279,4 +279,9 @@ test('returns wrapped component as container', () => {
   // it. This behavior will break if we start returning only host components.
   expect(container.type).toBe(WrapperComponent);
   expect(container.props.testID).not.toBeDefined();
+});
+
+test('RenderAPI type', () => {
+  render(<Banana />) as RenderAPI;
+  expect(true).toBeTruthy();
 });
