@@ -96,10 +96,10 @@ Returns a `ReactTestInstance` with matching text – may be a string or regular 
 This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByText } = render(<MyComponent />);
-const element = getByText('banana');
+render(<MyComponent />);
+const element = screen.getByText('banana');
 ```
 
 ### `ByPlaceholderText`
@@ -109,10 +109,10 @@ const element = getByText('banana');
 Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByPlaceholderText } = render(<MyComponent />);
-const element = getByPlaceholderText('username');
+render(<MyComponent />);
+const element = screen.getByPlaceholderText('username');
 ```
 
 ### `ByDisplayValue`
@@ -122,10 +122,10 @@ const element = getByPlaceholderText('username');
 Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByDisplayValue } = render(<MyComponent />);
-const element = getByDisplayValue('username');
+render(<MyComponent />);
+const element = screen.getByDisplayValue('username');
 ```
 
 ### `ByTestId`
@@ -135,10 +135,10 @@ const element = getByDisplayValue('username');
 Returns a `ReactTestInstance` with matching `testID` prop. `testID` – may be a string or a regular expression.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByTestId } = render(<MyComponent />);
-const element = getByTestId('unique-id');
+render(<MyComponent />);
+const element = screen.getByTestId('unique-id');
 ```
 
 :::info

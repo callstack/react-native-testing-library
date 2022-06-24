@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { render, screen } from '..';
 
 test('screen has the same queries as render result', () => {
@@ -21,6 +21,34 @@ test('screen holds last render result', () => {
   expect(screen.getByText('Śnieżka')).toBeTruthy();
   expect(screen.queryByText('Mt. Everest')).toBeFalsy();
   expect(screen.queryByText('Mt. Blanc')).toBeFalsy();
+});
+
+test('screen works with updating rerender', () => {
+  const result = render(<Text>Mt. Everest</Text>);
+  expect(screen).toBe(result);
+
+  screen.rerender(<Text>Śnieżka</Text>);
+  expect(screen).toBe(result);
+  expect(screen.getByText('Śnieżka')).toBeTruthy();
+});
+
+test('screen works with nested re-mounting rerender', () => {
+  const result = render(
+    <View>
+      <Text>Mt. Everest</Text>
+    </View>
+  );
+  expect(screen).toBe(result);
+
+  screen.rerender(
+    <View>
+      <View>
+        <Text>Śnieżka</Text>
+      </View>
+    </View>
+  );
+  expect(screen).toBe(result);
+  expect(screen.getByText('Śnieżka')).toBeTruthy();
 });
 
 test('screen throws without render', () => {
