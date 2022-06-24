@@ -179,7 +179,7 @@ let screen: RenderResult;
 
 Hold the value of latest render call for easier access to query and other functions returned by [`render`](#render). 
 
-It's value is automatically cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test then it holds a special object that implements `RenderResult` but throws a helpful error on each property and method access.
+Its value is automatically cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test then it holds a special object that implements `RenderResult` but throws a helpful error on each property and method access.
 
 ## `cleanup`
 

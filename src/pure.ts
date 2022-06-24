@@ -9,10 +9,12 @@ import { getDefaultNormalizer } from './matches';
 import { renderHook } from './renderHook';
 import { screen } from './screen';
 
+export type { RenderResult };
+
 export { act };
 export { cleanup };
 export { fireEvent };
-export { render, RenderResult };
+export { render };
 export { waitFor };
 export { waitForElementToBeRemoved };
 export { within, getQueriesForElement };
