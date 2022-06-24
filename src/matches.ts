@@ -13,9 +13,10 @@ export function matches(
 
   const normalizedText = normalizer(text);
   if (typeof matcher === 'string') {
+    const normalizedMatcher = normalizer(matcher);
     return exact
-      ? normalizedText === matcher
-      : normalizedText.toLowerCase().includes(matcher.toLowerCase());
+      ? normalizedText === normalizedMatcher
+      : normalizedText.toLowerCase().includes(normalizedMatcher.toLowerCase());
   } else {
     return matcher.test(normalizedText);
   }
