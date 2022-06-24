@@ -7,7 +7,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import stripAnsi from 'strip-ansi';
-import { render, fireEvent, type RenderAPI } from '..';
+import { render, fireEvent, RenderAPI } from '..';
 
 type ConsoleLogMock = jest.Mock<Array<string>>;
 
@@ -282,6 +282,6 @@ test('returns wrapped component as container', () => {
 });
 
 test('RenderAPI type', () => {
-  render(<Banana />) as RenderAPI
-  expect(true).toBeTruthy()
-})
+  render(<Banana />) as RenderAPI;
+  expect(true).toBeTruthy();
+});
