@@ -6,14 +6,14 @@ title: Queries
 ### Table of contents:
 
 - [Variants](#variants)
-  - [`getBy`](#getby)
-  - [`getAllBy`](#getallby)
-  - [`queryBy`](#queryby)
-  - [`queryAllBy`](#queryallby)
-  - [`findBy`](#findby)
-  - [`findAllBy`](#findallby)
+  - [getBy](#getby)
+  - [getAllBy](#getallby)
+  - [queryBy](#queryby)
+  - [queryAllBy](#queryallby)
+  - [findBy](#findby)
+  - [findAllBy](#findallby)
 - [Queries](#queries)
-  - [`options`](#options)
+  - [Options](#options)
   - [`ByText`](#bytext)
   - [`ByPlaceholderText`](#byplaceholdertext)
   - [`ByDisplayValue`](#bydisplayvalue)
@@ -24,11 +24,14 @@ title: Queries
   - [`ByRole`](#byrole)
   - [`ByA11yState`, `ByAccessibilityState`](#bya11ystate-byaccessibilitystate)
   - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
-- [`TextMatch`](#textmatch)
+- [TextMatch](#textmatch)
   - [Examples](#examples)
   - [Precision](#precision)
   - [Normalization](#normalization)
+    - [Normalization Examples](#normalization-examples)
 - [Unit testing helpers](#unit-testing-helpers)
+  - [`UNSAFE_ByType`](#unsafe_bytype)
+  - [`UNSAFE_ByProps`](#unsafe_byprops)
 
 ## Variants
 
@@ -93,10 +96,10 @@ Returns a `ReactTestInstance` with matching text – may be a string or regular 
 This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByText } = render(<MyComponent />);
-const element = getByText('banana');
+render(<MyComponent />);
+const element = screen.getByText('banana');
 ```
 
 ### `ByPlaceholderText`
@@ -106,10 +109,10 @@ const element = getByText('banana');
 Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByPlaceholderText } = render(<MyComponent />);
-const element = getByPlaceholderText('username');
+render(<MyComponent />);
+const element = screen.getByPlaceholderText('username');
 ```
 
 ### `ByDisplayValue`
@@ -119,10 +122,10 @@ const element = getByPlaceholderText('username');
 Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByDisplayValue } = render(<MyComponent />);
-const element = getByDisplayValue('username');
+render(<MyComponent />);
+const element = screen.getByDisplayValue('username');
 ```
 
 ### `ByTestId`
@@ -132,10 +135,10 @@ const element = getByDisplayValue('username');
 Returns a `ReactTestInstance` with matching `testID` prop. `testID` – may be a string or a regular expression.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByTestId } = render(<MyComponent />);
-const element = getByTestId('unique-id');
+render(<MyComponent />);
+const element = screen.getByTestId('unique-id');
 ```
 
 :::info
@@ -149,10 +152,10 @@ In the spirit of [the guiding principles](https://testing-library.com/docs/guidi
 Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByLabelText } = render(<MyComponent />);
-const element = getByLabelText('my-label');
+render(<MyComponent />);
+const element = screen.getByLabelText('my-label');
 ```
 
 ### `ByHintText`, `ByA11yHint`, `ByAccessibilityHint`
@@ -164,10 +167,10 @@ const element = getByLabelText('my-label');
 Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByHintText } = render(<MyComponent />);
-const element = getByHintText('Plays a song');
+render(<MyComponent />);
+const element = screen.getByHintText('Plays a song');
 ```
 
 :::info
@@ -182,11 +185,11 @@ Please consult [Apple guidelines on how `accessibilityHint` should be used](http
 Returns a `ReactTestInstance` with matching `accessibilityStates` prop.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByA11yStates } = render(<MyComponent />);
-const element = getByA11yStates(['checked']);
-const element2 = getByA11yStates('checked');
+render(<MyComponent />);
+const element = screen.getByA11yStates(['checked']);
+const element2 = screen.getByA11yStates('checked');
 ```
 
 ### `ByRole`
@@ -196,10 +199,10 @@ const element2 = getByA11yStates('checked');
 Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByRole } = render(<MyComponent />);
-const element = getByRole('button');
+render(<MyComponent />);
+const element = screen.getByRole('button');
 ```
 
 ### `ByA11yState`, `ByAccessibilityState`
@@ -210,10 +213,10 @@ const element = getByRole('button');
 Returns a `ReactTestInstance` with matching `accessibilityState` prop.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByA11yState } = render(<Component />);
-const element = getByA11yState({ disabled: true });
+render(<Component />);
+const element = screen.getByA11yState({ disabled: true });
 ```
 
 ### `ByA11Value`, `ByAccessibilityValue`
@@ -224,10 +227,10 @@ const element = getByA11yState({ disabled: true });
 Returns a `ReactTestInstance` with matching `accessibilityValue` prop.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByA11yValue } = render(<Component />);
-const element = getByA11yValue({ min: 40 });
+render(<Component />);
+const element = screen.getByA11yValue({ min: 40 });
 ```
 
 ## TextMatch
@@ -248,34 +251,34 @@ type TextMatchOptions = {
 Given the following render:
 
 ```jsx
-const { getByText } = render(<Text>Hello World</Text>);
+render(<Text>Hello World</Text>);
 ```
 
 Will **find a match**:
 
 ```js
 // Matching a string:
-getByText('Hello World'); // full string match
-getByText('llo Worl', { exact: false }); // substring match
-getByText('hello world', { exact: false }); // ignore case-sensitivity
+screen.getByText('Hello World'); // full string match
+screen.getByText('llo Worl', { exact: false }); // substring match
+screen.getByText('hello world', { exact: false }); // ignore case-sensitivity
 
 // Matching a regex:
-getByText(/World/); // substring match
-getByText(/world/i); // substring match, ignore case
-getByText(/^hello world$/i); // full string match, ignore case-sensitivity
-getByText(/Hello W?oRlD/i); // advanced regex
+screen.getByText(/World/); // substring match
+screen.getByText(/world/i); // substring match, ignore case
+screen.getByText(/^hello world$/i); // full string match, ignore case-sensitivity
+screen.getByText(/Hello W?oRlD/i); // advanced regex
 ```
 
 Will **NOT find a match**
 
 ```js
 // substring does not match
-getByText('llo Worl');
+screen.getByText('llo Worl');
 // full string does not match
-getByText('Goodbye World');
+screen.getByText('Goodbye World');
 
 // case-sensitive regex with different case
-getByText(/hello world/);
+screen.getByText(/hello world/);
 ```
 
 ### Precision
@@ -309,7 +312,7 @@ Specifying a value for `normalizer` replaces the built-in normalization, but you
 To perform a match against text without trimming:
 
 ```typescript
-getByText(node, 'text', {
+screen.getByText(node, 'text', {
   normalizer: getDefaultNormalizer({ trim: false }),
 });
 ```
@@ -317,9 +320,8 @@ getByText(node, 'text', {
 To override normalization to remove some Unicode characters whilst keeping some (but not all) of the built-in normalization behavior:
 
 ```typescript
-getByText(node, 'text', {
-  normalizer: (str) =>
-    getDefaultNormalizer({ trim: false })(str).replace(/[\u200E-\u200F]*/g, ''),
+screen.getByText(node, 'text', {
+  normalizer: (str) => getDefaultNormalizer({ trim: false })(str).replace(/[\u200E-\u200F]*/g, ''),
 });
 ```
 

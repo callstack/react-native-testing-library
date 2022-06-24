@@ -6,30 +6,41 @@ title: API
 ### Table of contents:
 
 - [`render`](#render)
+  - [`...queries`](#queries)
+    - [Example](#example)
   - [`update`](#update)
   - [`unmount`](#unmount)
   - [`debug`](#debug)
+    - [`debug.shallow`](#debugshallow)
   - [`toJSON`](#tojson)
   - [`container`](#container)
+- [`screen`](#screen)
 - [`cleanup`](#cleanup)
 - [`fireEvent`](#fireevent)
 - [`fireEvent[eventName]`](#fireeventeventname)
   - [`fireEvent.press`](#fireeventpress)
   - [`fireEvent.changeText`](#fireeventchangetext)
   - [`fireEvent.scroll`](#fireeventscroll)
+    - [On a `ScrollView`](#on-a-scrollview)
+    - [On a `FlatList`](#on-a-flatlist)
 - [`waitFor`](#waitfor)
 - [`waitForElementToBeRemoved`](#waitforelementtoberemoved)
-- [`within, getQueriesForElement`](#within-getqueriesforelement)
+- [`within`, `getQueriesForElement`](#within-getqueriesforelement)
 - [`query` APIs](#query-apis)
 - [`queryAll` APIs](#queryall-apis)
 - [`act`](#act)
 - [`renderHook`](#renderhook)
   - [`callback`](#callback)
-  - [`options`](#options-optional)
+  - [`options` (Optional)](#options-optional)
+    - [`initialProps`](#initialprops)
+    - [`wrapper`](#wrapper)
   - [`RenderHookResult` object](#renderhookresult-object)
     - [`result`](#result)
     - [`rerender`](#rerender)
     - [`unmount`](#unmount-1)
+  - [Examples](#examples)
+    - [With `initialProps`](#with-initialprops)
+    - [With `wrapper`](#with-wrapper)
 
 This page gathers public API of React Native Testing Library along with usage examples.
 
@@ -58,8 +69,8 @@ import { render } from '@testing-library/react-native';
 import { QuestionsBoard } from '../QuestionsBoard';
 
 test('should verify two questions', () => {
-  const { queryAllByRole } = render(<QuestionsBoard {...props} />);
-  const allQuestions = queryAllByRole('header');
+  render(<QuestionsBoard {...props} />);
+  const allQuestions = screen.queryAllByRole('header');
 
   expect(allQuestions).toHaveLength(2);
 });
@@ -67,7 +78,13 @@ test('should verify two questions', () => {
 
 > When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases it's convenient to create your custom `render` method. [Follow this great guide on how to set this up](https://testing-library.com/docs/react-testing-library/setup#custom-render).
 
-The `render` method returns a `RenderResult` object that has a few properties:
+The `render` method returns a `RenderResult` object having properties described below.
+
+:::info
+Latest `render` result is kept in [`screen`](#screen) variable that can be imported from `@testing-library/react-native` package. 
+
+Using `screen` instead of destructuring `render` result is recommended approach. See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
+:::
 
 ### `...queries`
 
@@ -117,9 +134,9 @@ debug(message?: string): void
 Pretty prints deeply rendered component passed to `render` with optional message on top.
 
 ```jsx
-const { debug } = render(<Component />);
+render(<Component />);
 
-debug('optional message');
+screen.debug('optional message');
 ```
 
 logs optional message and colored JSX:
@@ -154,13 +171,23 @@ container: ReactTestInstance;
 
 A reference to the rendered root element.
 
+## `screen`
+
+```ts
+let screen: RenderResult;
+```
+
+Hold the value of latest render call for easier access to query and other functions returned by [`render`](#render). 
+
+Its value is automatically cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test then it holds a special object that implements `RenderResult` but throws a helpful error on each property and method access.
+
 ## `cleanup`
 
 ```ts
 const cleanup: () => void;
 ```
 
-Unmounts React trees that were mounted with `render`.
+Unmounts React trees that were mounted with `render` and clears `screen` variable that holds latest `render` output.
 
 :::info
 Please note that this is done automatically if the testing framework you're using supports the `afterEach` global (like mocha, Jest, and Jasmine). If not, you will need to do manual cleanups after each test.
@@ -195,8 +222,6 @@ describe('when logged in', () => {
 
 Failing to call `cleanup` when you've called `render` could result in a memory leak and tests which are not "idempotent" (which can lead to difficult to debug errors in your tests).
 
-The alternative to `cleanup` is balancing every `render` with an `unmount` method call.
-
 ## `fireEvent`
 
 ```ts
@@ -208,17 +233,17 @@ Fires native-like event with data.
 Invokes a given event handler (whether native or custom) on the element, bubbling to the root of the rendered tree.
 
 ```jsx
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
 
 test('fire changeText event', () => {
   const onEventMock = jest.fn();
-  const { getByPlaceholderText } = render(
+  render(
     // MyComponent renders TextInput which has a placeholder 'Enter details'
     // and with `onChangeText` bound to handleChangeText
     <MyComponent handleChangeText={onEventMock} />
   );
 
-  fireEvent(getByPlaceholderText('change'), 'onChangeText', 'ab');
+  fireEvent(screen.getByPlaceholderText('change'), 'onChangeText', 'ab');
   expect(onEventMock).toHaveBeenCalledWith('ab');
 });
 ```
@@ -235,14 +260,14 @@ import { fireEvent, render } from '@testing-library/react-native';
 
 const onBlurMock = jest.fn();
 
-const { getByPlaceholderText } = render(
+render(
   <View>
     <TextInput placeholder="my placeholder" onBlur={onBlurMock} />
   </View>
 );
 
 // you can omit the `on` prefix
-fireEvent(getByPlaceholderText('my placeholder'), 'blur');
+fireEvent(screen.getByPlaceholderText('my placeholder'), 'blur');
 ```
 
 ## `fireEvent[eventName]`
@@ -263,7 +288,7 @@ Invokes `press` event handler on the element or parent element in the tree.
 
 ```jsx
 import { View, Text, TouchableOpacity } from 'react-native';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
 
 const onPressMock = jest.fn();
 const eventData = {
@@ -273,7 +298,7 @@ const eventData = {
   },
 };
 
-const { getByText } = render(
+render(
   <View>
     <TouchableOpacity onPress={onPressMock}>
       <Text>Press me</Text>
@@ -281,7 +306,7 @@ const { getByText } = render(
   </View>
 );
 
-fireEvent.press(getByText('Press me'), eventData);
+fireEvent.press(screen.getByText('Press me'), eventData);
 expect(onPressMock).toHaveBeenCalledWith(eventData);
 ```
 
@@ -295,18 +320,18 @@ Invokes `changeText` event handler on the element or parent element in the tree.
 
 ```jsx
 import { View, TextInput } from 'react-native';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
 
 const onChangeTextMock = jest.fn();
 const CHANGE_TEXT = 'content';
 
-const { getByPlaceholderText } = render(
+render(
   <View>
     <TextInput placeholder="Enter data" onChangeText={onChangeTextMock} />
   </View>
 );
 
-fireEvent.changeText(getByPlaceholderText('Enter data'), CHANGE_TEXT);
+fireEvent.changeText(screen.getByPlaceholderText('Enter data'), CHANGE_TEXT);
 ```
 
 ### `fireEvent.scroll`
@@ -321,7 +346,7 @@ Invokes `scroll` event handler on the element or parent element in the tree.
 
 ```jsx
 import { ScrollView, Text } from 'react-native';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
 
 const onScrollMock = jest.fn();
 const eventData = {
@@ -332,23 +357,23 @@ const eventData = {
   },
 };
 
-const { getByText } = render(
+render(
   <ScrollView onScroll={onScrollMock}>
     <Text>XD</Text>
   </ScrollView>
 );
 
-fireEvent.scroll(getByText('scroll-view'), eventData);
+fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 ```
 
 #### On a `FlatList`
 
 ```jsx
 import { FlatList, View } from 'react-native';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
 
 const onEndReached = jest.fn();
-const { getByTestId } = render(
+render(
   <FlatList
     data={Array.from({ length: 10 }, (_, key) => ({ key: `${key}` }))}
     renderItem={() => <View style={{ height: 500, width: 100 }} />}
@@ -375,7 +400,7 @@ const eventData = {
   },
 };
 
-fireEvent.scroll(getByTestId('flat-list'), eventData);
+fireEvent.scroll(screen.getByTestId('flat-list'), eventData);
 expect(onEndReached).toHaveBeenCalled();
 ```
 
@@ -399,12 +424,12 @@ function waitFor<T>(
 Waits for non-deterministic periods of time until your element appears or times out. `waitFor` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
 
 ```jsx
-import { render, waitFor } from '@testing-library/react-native';
+import { render, screen, waitFor } from '@testing-library/react-native';
 
 test('waiting for an Banana to be ready', async () => {
-  const { getByText } = render(<Banana />);
+  render(<Banana />);
 
-  await waitFor(() => getByText('Banana ready'));
+  await waitFor(() => screen.getByText('Banana ready'));
 });
 ```
 
@@ -428,15 +453,12 @@ function waitForElementToBeRemoved<T>(
 Waits for non-deterministic periods of time until queried element is removed or times out. `waitForElementToBeRemoved` periodically calls `expectation` every `interval` milliseconds to determine whether the element has been removed or not.
 
 ```jsx
-import {
-  render,
-  waitForElementToBeRemoved,
-} from '@testing-library/react-native';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react-native';
 
 test('waiting for an Banana to be removed', async () => {
-  const { getByText } = render(<Banana />);
+  render(<Banana />);
 
-  await waitForElementToBeRemoved(() => getByText('Banana ready'));
+  await waitForElementToBeRemoved(() => screen.getByText('Banana ready'));
 });
 ```
 
@@ -466,7 +488,7 @@ Please note that additional `render` specific operations like `update`, `unmount
 :::
 
 ```jsx
-const detailsScreen = within(getByA11yHint('Details Screen'));
+const detailsScreen = within(screen.getByA11yHint('Details Screen'));
 expect(detailsScreen.getByText('Some Text')).toBeTruthy();
 expect(detailsScreen.getByDisplayValue('Some Value')).toBeTruthy();
 expect(detailsScreen.queryByLabelText('Some Label')).toBeTruthy();
@@ -483,10 +505,10 @@ Use cases for scoped queries include:
 Each of the get APIs listed in the render section above have a complimentary query API. The get APIs will throw errors if a proper node cannot be found. This is normally the desired effect. However, if you want to make an assertion that an element is not present in the hierarchy, then you can use the query API instead:
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { queryByText } = render(<Form />);
-const submitButton = queryByText('submit');
+render(<Form />);
+const submitButton = screen.queryByText('submit');
 expect(submitButton).toBeNull(); // it doesn't exist
 ```
 
@@ -497,8 +519,8 @@ Each of the query APIs have a corresponding queryAll version that always returns
 ```jsx
 import { render } from '@testing-library/react-native';
 
-const { queryAllByText } = render(<Forms />);
-const submitButtons = queryAllByText('submit');
+render(<Forms />);
+const submitButtons = screen.queryAllByText('submit');
 expect(submitButtons).toHaveLength(3); // expect 3 elements
 ```
 

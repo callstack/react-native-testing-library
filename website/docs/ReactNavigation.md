@@ -158,7 +158,7 @@ Let's add a [`AppNavigator.test.js`](https://github.com/callstack/react-native-t
 ```jsx
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
 
 import AppNavigator from '../AppNavigator';
 
@@ -177,10 +177,10 @@ describe('Testing react navigation', () => {
       </NavigationContainer>
     );
 
-    const { findByText, findAllByText } = render(component);
+    render(component);
 
-    const header = await findByText('List of numbers from 1 to 20');
-    const items = await findAllByText(/Item number/);
+    const header = await screen.findByText('List of numbers from 1 to 20');
+    const items = await screen.findAllByText(/Item number/);
 
     expect(header).toBeTruthy();
     expect(items.length).toBe(10);
@@ -193,12 +193,12 @@ describe('Testing react navigation', () => {
       </NavigationContainer>
     );
 
-    const { findByText } = render(component);
-    const toClick = await findByText('Item number 5');
+    render(component);
+    const toClick = await screen.findByText('Item number 5');
 
     fireEvent(toClick, 'press');
-    const newHeader = await findByText('Showing details for 5');
-    const newBody = await findByText('the number you have chosen is 5');
+    const newHeader = await screen.findByText('Showing details for 5');
+    const newBody = await screen.findByText('the number you have chosen is 5');
 
     expect(newHeader).toBeTruthy();
     expect(newBody).toBeTruthy();
@@ -314,7 +314,7 @@ Let's add a [`DrawerAppNavigator.test.js`](https://github.com/callstack/react-na
 ```jsx
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
 
 import DrawerAppNavigator from '../DrawerAppNavigator';
 
@@ -326,8 +326,8 @@ describe('Testing react navigation', () => {
       </NavigationContainer>
     );
 
-    const { findByText, findAllByText } = render(component);
-    const button = await findByText('Go to notifications');
+    render(component);
+    const button = await screen.findByText('Go to notifications');
 
     expect(button).toBeTruthy();
   });
@@ -339,14 +339,14 @@ describe('Testing react navigation', () => {
       </NavigationContainer>
     );
 
-    const { queryByText, findByText } = render(component);
-    const oldScreen = queryByText('Welcome!');
-    const button = await findByText('Go to notifications');
+    render(component);
+    const oldScreen = screen.queryByText('Welcome!');
+    const button = await screen.findByText('Go to notifications');
 
     expect(oldScreen).toBeTruthy();
 
     fireEvent(button, 'press');
-    const newScreen = await findByText('This is the notifications screen');
+    const newScreen = await screen.findByText('This is the notifications screen');
 
     expect(newScreen).toBeTruthy();
   });

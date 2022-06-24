@@ -31,3 +31,15 @@ The the negative side:
 For instance, [react-native's ScrollView](https://reactnative.dev/docs/scrollview) has several props that depend on native calls. While you can trigger `onScroll` call with `fireEvent.scroll`, `onMomentumScrollBegin` is called from the native side and will therefore not be called.
 
 </details>
+
+<details>
+  <summary>Should I use/migrate to `screen` queries?</summary>
+
+<br />
+
+There is no need to migrate existing test code to use `screen`-bases queries. You can still use
+queries and other functions returned by `render`. In fact `screen` hold just that value, the latest `render` result.
+
+For newer code you can either use `screen` or `render` result destructuring. However, there are some good reasons to use `screen`, which are described in [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) by Kent C. Dodds.
+
+</details>
