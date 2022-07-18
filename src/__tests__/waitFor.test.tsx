@@ -79,21 +79,31 @@ test('waits for element with custom interval', async () => {
   expect(mockFn).toHaveBeenCalledTimes(2);
 });
 
-test.each([TimerMode.Legacy, TimerMode.Modern])(
-  'waits for element until it stops throwing using %s fake timers',
-  async (fakeTimerType) => {
-    jest.useFakeTimers(fakeTimerType);
-    const { getByText, queryByText } = render(<BananaContainer />);
+test('waits for element until it stops throwing using modern fake timers', async () => {
+  jest.useFakeTimers('modern');
+  const { getByText, queryByText } = render(<BananaContainer />);
 
-    fireEvent.press(getByText('Change freshness!'));
-    expect(queryByText('Fresh')).toBeNull();
+  fireEvent.press(getByText('Change freshness!'));
+  expect(queryByText('Fresh')).toBeNull();
 
-    jest.advanceTimersByTime(300);
-    const freshBananaText = await waitFor(() => getByText('Fresh'));
+  jest.advanceTimersByTime(300);
+  const freshBananaText = await waitFor(() => getByText('Fresh'));
 
-    expect(freshBananaText.props.children).toBe('Fresh');
-  }
-);
+  expect(freshBananaText.props.children).toBe('Fresh');
+});
+
+test('waits for element until it stops throwing using legacy fake timers', async () => {
+  jest.useFakeTimers('legacy');
+  const { getByText, queryByText } = render(<BananaContainer />);
+
+  fireEvent.press(getByText('Change freshness!'));
+  expect(queryByText('Fresh')).toBeNull();
+
+  jest.advanceTimersByTime(300);
+  const freshBananaText = await waitFor(() => getByText('Fresh'));
+
+  expect(freshBananaText.props.children).toBe('Fresh');
+});
 
 test.each([TimerMode.Legacy, TimerMode.Modern])(
   'waits for assertion until timeout is met with %s fake timers',
