@@ -2,6 +2,8 @@
 /* globals jest */
 const globalObj = typeof window === 'undefined' ? global : window;
 
+type FakeTimersTypes = 'modern' | 'legacy';
+
 // Currently this fn only supports jest timers, but it could support other test runners in the future.
 function runWithRealTimers<T>(callback: () => T): T {
   const fakeTimersType = getJestFakeTimersType();
@@ -12,13 +14,14 @@ function runWithRealTimers<T>(callback: () => T): T {
   const callbackReturnValue = callback();
 
   if (fakeTimersType) {
-    jest.useFakeTimers(fakeTimersType);
+    const fakeTimersConfig = getFakeTimersConfigFromType(fakeTimersType);
+    jest.useFakeTimers(fakeTimersConfig);
   }
 
   return callbackReturnValue;
 }
 
-function getJestFakeTimersType() {
+function getJestFakeTimersType(): FakeTimersTypes | null {
   // istanbul ignore if
   if (
     typeof jest === 'undefined' ||
@@ -49,7 +52,14 @@ function getJestFakeTimersType() {
       // not using Jest's modern fake timers
     }
   }
+
   return null;
+}
+
+function getFakeTimersConfigFromType(type: FakeTimersTypes) {
+  return type === 'legacy'
+    ? { legacyFakeTimers: true }
+    : { legacyFakeTimers: false };
 }
 
 const jestFakeTimersAreEnabled = (): boolean =>
