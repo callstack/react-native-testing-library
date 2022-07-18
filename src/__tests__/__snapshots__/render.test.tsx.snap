@@ -32,7 +32,6 @@ exports[`debug 1`] = `
     accessible={true}
     collapsable={false}
     focusable={true}
-    nativeID=\\"animatedComponent\\"
     onClick={[Function onClick]}
     onResponderGrant={[Function onResponderGrant]}
     onResponderMove={[Function onResponderMove]}
@@ -96,6 +95,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
   />
   <View
     accessible={true}
+    collapsable={false}
     focusable={true}
     onClick={[Function onClick]}
     onResponderGrant={[Function onResponderGrant]}
@@ -266,7 +266,6 @@ exports[`debug: with message 1`] = `
     accessible={true}
     collapsable={false}
     focusable={true}
-    nativeID=\\"animatedComponent\\"
     onClick={[Function onClick]}
     onResponderGrant={[Function onResponderGrant]}
     onResponderMove={[Function onResponderMove]}
@@ -305,7 +304,6 @@ exports[`toJSON 1`] = `
   accessible={true}
   collapsable={false}
   focusable={false}
-  nativeID="animatedComponent"
   onClick={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
