@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { fireEvent, render, waitFor } from '..';
-import { TimerMode } from './timerUtils';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {

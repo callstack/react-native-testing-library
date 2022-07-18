@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { render, fireEvent, waitForElementToBeRemoved } from '..';
-import { TimerMode } from './timerUtils';
 
 const TestSetup = ({ shouldUseDelay = true }) => {
   const [isAdded, setIsAdded] = useState(true);
