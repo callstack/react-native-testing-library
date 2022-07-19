@@ -46,15 +46,38 @@ export type ByA11yValueQueries = {
   queryAllByA11yValue: QueryAllByQuery<A11yValue>;
   findByA11yValue: FindByQuery<A11yValue>;
   findAllByA11yValue: FindAllByQuery<A11yValue>;
+
+  getByAccessibilityValue: GetByQuery<A11yValue>;
+  getAllByAccessibilityValue: GetAllByQuery<A11yValue>;
+  queryByAccessibilityValue: QueryByQuery<A11yValue>;
+  queryAllByAccessibilityValue: QueryAllByQuery<A11yValue>;
+  findByAccessibilityValue: FindByQuery<A11yValue>;
+  findAllByAccessibilityValue: FindAllByQuery<A11yValue>;
 };
 
 export const bindByA11yValueQueries = (
   instance: ReactTestInstance
-): ByA11yValueQueries => ({
-  getByA11yValue: getBy(instance),
-  getAllByA11yValue: getAllBy(instance),
-  queryByA11yValue: queryBy(instance),
-  queryAllByA11yValue: queryAllBy(instance),
-  findByA11yValue: findBy(instance),
-  findAllByA11yValue: findAllBy(instance),
-});
+): ByA11yValueQueries => {
+  const getByA11yValue = getBy(instance);
+  const getAllByA11yValue = getAllBy(instance);
+  const queryByA11yValue = queryBy(instance);
+  const queryAllByA11yValue = queryAllBy(instance);
+  const findByA11yValue = findBy(instance);
+  const findAllByA11yValue = findAllBy(instance);
+
+  return {
+    getByA11yValue,
+    getAllByA11yValue,
+    queryByA11yValue,
+    queryAllByA11yValue,
+    findByA11yValue,
+    findAllByA11yValue,
+
+    getByAccessibilityValue: getByA11yValue,
+    getAllByAccessibilityValue: getAllByA11yValue,
+    queryByAccessibilityValue: queryByA11yValue,
+    queryAllByAccessibilityValue: queryAllByA11yValue,
+    findByAccessibilityValue: findByA11yValue,
+    findAllByAccessibilityValue: findAllByA11yValue,
+  };
+};
