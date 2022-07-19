@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { TextMatch } from '../matches';
-import { matchStringValue } from '../helpers/matchers/matchStringValue';
+import { matchStringProp } from '../helpers/matchers/matchStringProp';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -18,7 +18,7 @@ const queryAllByLabelText = (
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&
-        matchStringValue(node.props.accessibilityLabel, text)
+        matchStringProp(node.props.accessibilityLabel, text)
     );
   };
 

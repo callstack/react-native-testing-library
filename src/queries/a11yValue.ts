@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { matchObject } from '../helpers/matchers/matchObject';
+import { matchObjectProp } from '../helpers/matchers/matchObjectProp';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -24,7 +24,7 @@ const queryAllByA11yValue = (
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&
-        matchObject(node.props.accessibilityValue, value)
+        matchObjectProp(node.props.accessibilityValue, value)
     );
   };
 

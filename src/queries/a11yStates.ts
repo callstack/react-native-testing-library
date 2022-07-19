@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { AccessibilityState } from 'react-native';
-import { matchArrayValue } from '../helpers/matchers/matchArrayValue';
+import { matchArrayProp } from '../helpers/matchers/matchArrayProp';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -25,7 +25,7 @@ const queryAllByA11yStates = (
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&
-        matchArrayValue(node.props.accessibilityState, accessibilityStates)
+        matchArrayProp(node.props.accessibilityState, accessibilityStates)
     );
   };
 

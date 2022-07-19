@@ -1,4 +1,4 @@
-import { matchStringValue } from '../matchStringValue';
+import { matchStringProp } from '../matchStringProp';
 
 test.each`
   prop         | matcher     | expectedResult
@@ -10,6 +10,6 @@ test.each`
 `(
   'returns $expectedResult given prop $prop and matcher $matcher',
   ({ prop, matcher, expectedResult }) => {
-    expect(matchStringValue(prop, matcher)).toEqual(expectedResult);
+    expect(matchStringProp(prop, matcher)).toEqual(expectedResult);
   }
 );
