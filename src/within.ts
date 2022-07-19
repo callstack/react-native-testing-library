@@ -5,7 +5,7 @@ import { bindByDisplayValueQueries } from './queries/displayValue';
 import { bindByPlaceholderTextQueries } from './queries/placeholderText';
 import { bindByLabelTextQueries } from './queries/labelText';
 import { bindByRoleQueries } from './queries/role';
-import { bindByA11yHintQueries } from './queries/a11yHint';
+import { bindByHintTextQueries } from './queries/hintText';
 import { bindByA11yStateQueries } from './queries/a11yState';
 import { bindByA11yStatesQueries } from './queries/a11yStates';
 import { bindByA11yValueQueries } from './queries/a11yValue';
@@ -20,7 +20,7 @@ export function within(instance: ReactTestInstance) {
     ...bindByPlaceholderTextQueries(instance),
     ...bindByLabelTextQueries(instance),
     ...bindByRoleQueries(instance),
-    ...bindByA11yHintQueries(instance),
+    ...bindByHintTextQueries(instance),
     ...bindByA11yStateQueries(instance),
     ...bindByA11yStatesQueries(instance),
     ...bindByA11yValueQueries(instance),
