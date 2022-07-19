@@ -29,13 +29,11 @@ const queryAllByA11yStates = (
     );
   };
 
-const getMultipleError = (a11yStates: AccessibilityStateKeys) =>
-  `Found multiple elements with accessibilityState: ${JSON.stringify(
-    a11yStates
-  )}`;
-const getMissingError = (a11yStates: AccessibilityStateKeys) =>
+const getMultipleError = (states: AccessibilityStateKeys) =>
+  `Found multiple elements with accessibilityState: ${JSON.stringify(states)}`;
+const getMissingError = (states: AccessibilityStateKeys) =>
   `Unable to find an element with accessibilityState: ${JSON.stringify(
-    a11yStates
+    states
   )}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
