@@ -1,6 +1,6 @@
 {
   "name": "@testing-library/react-native",
-  "version": "9.2.0",
+  "version": "10.1.1",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -29,7 +29,7 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-transform-flow-strip-types": "^7.16.0",
+    "@babel/plugin-transform-flow-strip-types": "^7.18.0",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-flow": "^7.9.0",
     "@babel/preset-react": "^7.9.4",
@@ -37,22 +37,22 @@
     "@callstack/eslint-config": "^11.0.0",
     "@release-it/conventional-changelog": "^2.0.0",
     "@testing-library/jest-native": "~4.0.2",
-    "@types/jest": "^27.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-native": "^0.66.6",
-    "@types/react-test-renderer": "^17.0.0",
-    "babel-jest": "^27.0.0",
+    "@types/jest": "^28.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-native": "^0.69.1",
+    "@types/react-test-renderer": "^18.0.0",
+    "babel-jest": "^28.0.0",
     "conventional-changelog-cli": "^2.0.11",
     "cp-cli": "^2.0.0",
     "dedent": "^0.7.0",
     "del-cli": "^3.0.1",
-    "eslint": "^7.0.0",
-    "flow-bin": "^0.141.0",
+    "eslint": "^7.32.0",
+    "flow-bin": "~0.170.0",
     "flow-copy-source": "^2.0.9",
-    "jest": "^27.0.0",
-    "react": "^17.0.2",
-    "react-native": "^0.66.0",
-    "react-test-renderer": "^17.0.2",
+    "jest": "^28.0.0",
+    "react": "^18.0.0",
+    "react-native": "~0.69.1",
+    "react-test-renderer": "^18.0.0",
     "release-it": "^14.0.3",
     "strip-ansi": "^6.0.0",
     "typescript": "^4.0.2"
@@ -82,12 +82,12 @@
     "prepare": "yarn build"
   },
   "jest": {
-    "preset": "../jest-preset",
-    "rootDir": "./src",
+    "preset": "./jest-preset",
     "testPathIgnorePatterns": [
-      "timerUtils"
+      "timerUtils",
+      "examples/"
     ],
-    "testTimeout": 30000,
+    "testTimeout": 60000,
     "transformIgnorePatterns": [
       "/node_modules/(?!(@react-native|react-native)/).*/"
     ]

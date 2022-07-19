@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { render, fireEvent, waitForElementToBeRemoved } from '..';
-import { TimerMode } from './timerUtils';
 
 const TestSetup = ({ shouldUseDelay = true }) => {
   const [isAdded, setIsAdded] = useState(true);
@@ -130,10 +129,10 @@ test('waits with custom interval', async () => {
   expect(mockFn).toHaveBeenCalledTimes(4);
 });
 
-test.each([TimerMode.Legacy, TimerMode.Modern])(
-  'works with %s fake timers',
-  async (fakeTimerType) => {
-    jest.useFakeTimers(fakeTimerType);
+test.each([false, true])(
+  'works with fake timers (legacyFakeTimers = %s)',
+  async (legacyFakeTimers) => {
+    jest.useFakeTimers({ legacyFakeTimers });
 
     const mockFn = jest.fn(() => <View />);
 

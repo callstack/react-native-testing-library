@@ -363,6 +363,8 @@ declare module '@testing-library/react-native' {
     options?: RenderOptions
   ) => RenderAPI;
 
+  declare export var screen: RenderAPI;
+
   declare export var cleanup: () => void;
   declare export var fireEvent: FireEventAPI;
 

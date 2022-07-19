@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { fireEvent, render, waitFor } from '..';
-import { TimerMode } from './timerUtils';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {
@@ -79,10 +78,10 @@ test('waits for element with custom interval', async () => {
   expect(mockFn).toHaveBeenCalledTimes(2);
 });
 
-test.each([TimerMode.Legacy, TimerMode.Modern])(
-  'waits for element until it stops throwing using %s fake timers',
-  async (fakeTimerType) => {
-    jest.useFakeTimers(fakeTimerType);
+test.each([false, true])(
+  'waits for element until it stops throwing using fake timers (legacyFakeTimers = %s)',
+  async (legacyFakeTimers) => {
+    jest.useFakeTimers({ legacyFakeTimers });
     const { getByText, queryByText } = render(<BananaContainer />);
 
     fireEvent.press(getByText('Change freshness!'));
@@ -95,10 +94,10 @@ test.each([TimerMode.Legacy, TimerMode.Modern])(
   }
 );
 
-test.each([TimerMode.Legacy, TimerMode.Modern])(
-  'waits for assertion until timeout is met with %s fake timers',
-  async (fakeTimerType) => {
-    jest.useFakeTimers(fakeTimerType);
+test.each([false, true])(
+  'waits for assertion until timeout is met with fake timers (legacyFakeTimers = %s)',
+  async (legacyFakeTimers) => {
+    jest.useFakeTimers({ legacyFakeTimers });
 
     const mockFn = jest.fn(() => {
       throw Error('test');
@@ -114,10 +113,10 @@ test.each([TimerMode.Legacy, TimerMode.Modern])(
   }
 );
 
-test.each([TimerMode.Legacy, TimerMode.Modern])(
-  'waits for assertion until timeout is met with %s fake timers',
-  async (fakeTimerType) => {
-    jest.useFakeTimers(fakeTimerType);
+test.each([false, true])(
+  'waits for assertion until timeout is met with fake timers (legacyFakeTimers = %s)',
+  async (legacyFakeTimers) => {
+    jest.useFakeTimers({ legacyFakeTimers });
 
     const mockErrorFn = jest.fn(() => {
       throw Error('test');
@@ -140,10 +139,10 @@ test.each([TimerMode.Legacy, TimerMode.Modern])(
   }
 );
 
-test.each([TimerMode.Legacy, TimerMode.Legacy])(
-  'awaiting something that succeeds before timeout works with %s fake timers',
-  async (fakeTimerType) => {
-    jest.useFakeTimers(fakeTimerType);
+test.each([false, true])(
+  'awaiting something that succeeds before timeout works with fake timers (legacyFakeTimers = %s)',
+  async (legacyFakeTimers) => {
+    jest.useFakeTimers({ legacyFakeTimers });
 
     let calls = 0;
     const mockFn = jest.fn(() => {

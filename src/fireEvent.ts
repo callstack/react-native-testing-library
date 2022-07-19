@@ -35,12 +35,17 @@ const isPointerEventEnabled = (
   return isPointerEventEnabled(element.parent, true);
 };
 
+const isTouchEvent = (eventName?: string) => {
+  return eventName === 'press';
+};
+
 const isEventEnabled = (
   element?: ReactTestInstance,
-  touchResponder?: ReactTestInstance
+  touchResponder?: ReactTestInstance,
+  eventName?: string
 ) => {
   if (isTextInput(element)) return element?.props.editable !== false;
-  if (!isPointerEventEnabled(element)) return false;
+  if (!isPointerEventEnabled(element) && isTouchEvent(eventName)) return false;
 
   const touchStart = touchResponder?.props.onStartShouldSetResponder?.();
   const touchMove = touchResponder?.props.onMoveShouldSetResponder?.();
@@ -61,7 +66,8 @@ const findEventHandler = (
     : nearestTouchResponder;
 
   const handler = getEventHandler(element, eventName);
-  if (handler && isEventEnabled(element, touchResponder)) return handler;
+  if (handler && isEventEnabled(element, touchResponder, eventName))
+    return handler;
 
   if (element.parent === null || element.parent.parent === null) {
     return null;

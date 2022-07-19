@@ -473,3 +473,17 @@ test('getByText and queryByText work properly with multiple nested fragments', (
   expect(getByText('Hello')).toBeTruthy();
   expect(queryByText('Hello')).not.toBeNull();
 });
+
+test('getByText and queryByText work with newlines', () => {
+  const textWithNewLines = 'Line 1\nLine 2';
+  const { getByText, queryByText } = render(<Text>{textWithNewLines}</Text>);
+  expect(getByText(textWithNewLines)).toBeTruthy();
+  expect(queryByText(textWithNewLines)).toBeTruthy();
+});
+
+test('getByText and queryByText work with tabs', () => {
+  const textWithTabs = 'Line 1\tLine 2';
+  const { getByText, queryByText } = render(<Text>{textWithTabs}</Text>);
+  expect(getByText(textWithTabs)).toBeTruthy();
+  expect(queryByText(textWithTabs)).toBeTruthy();
+});

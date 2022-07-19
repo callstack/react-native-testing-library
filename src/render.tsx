@@ -6,6 +6,7 @@ import { addToCleanupQueue } from './cleanup';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
+import { setRenderResult } from './screen';
 
 type Options = {
   wrapper?: React.ComponentType<any>;
@@ -14,6 +15,8 @@ type Options = {
 type TestRendererOptions = {
   createNodeMock: (element: React.ReactElement) => any;
 };
+
+export type RenderResult = ReturnType<typeof render>;
 
 /**
  * Renders test component deeply using react-test-renderer and exposes helpers
@@ -40,7 +43,7 @@ export default function render<T>(
 
   addToCleanupQueue(unmount);
 
-  return {
+  const result = {
     ...getQueriesForElement(instance),
     update,
     unmount,
@@ -49,6 +52,9 @@ export default function render<T>(
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
   };
+
+  setRenderResult(result);
+  return result;
 }
 
 function renderWithAct(
