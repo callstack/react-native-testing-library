@@ -141,6 +141,10 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 - [Migration to 7.0](https://callstack.github.io/react-native-testing-library/docs/migration-v7)
 - [Migration to 2.0](https://callstack.github.io/react-native-testing-library/docs/migration-v2)
 
+## Troubleshooting
+
+- [Understanding `act` function](https://callstack.github.io/react-native-testing-library/docs/undestanding-act)
+
 ## Related External Resources
 
 - [Real world extensive examples repo](https://github.com/vanGalilea/react-native-testing)

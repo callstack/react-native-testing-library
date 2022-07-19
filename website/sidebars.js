@@ -9,6 +9,7 @@ module.exports = {
       'how-should-i-query',
       'faq',
       'eslint-plugin-testing-library',
+      'understanding-act',
     ],
     Examples: ['react-navigation', 'redux-integration'],
   },
