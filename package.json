@@ -67,7 +67,7 @@
   },
   "scripts": {
     "clean": "del build",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "typecheck": "tsc",
     "flow": "flow",
     "copy-flowtypes": "cp typings/index.flow.js build",

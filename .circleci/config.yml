@@ -54,9 +54,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/react-native-testing-library
-      - run:
-          command: yarn test
-          no_output_timeout: 20m
+      - run: yarn test
       - store_artifacts:
           path: coverage
           destination: coverage
