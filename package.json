@@ -87,7 +87,7 @@
       "timerUtils",
       "examples/"
     ],
-    "testTimeout": 600000,
+    "testTimeout": 60000,
     "transformIgnorePatterns": [
       "/node_modules/(?!(@react-native|react-native)/).*/"
     ]
