@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { render, within, getQueriesForElement } from '..';
 
-test.skip('within() exposes basic queries', async () => {
+test('within() exposes basic queries', async () => {
   const rootQueries = render(
     <View>
       <View accessibilityHint="first">
@@ -91,6 +91,6 @@ test('within() exposes a11y queries', async () => {
   ).resolves.toHaveLength(1);
 });
 
-test.skip('getQueriesForElement is alias to within', () => {
+test('getQueriesForElement is alias to within', () => {
   expect(getQueriesForElement).toBe(within);
 });
