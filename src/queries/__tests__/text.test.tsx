@@ -116,39 +116,6 @@ test('findByText queries work asynchronously', async () => {
   await expect(findAllByText('Some Text')).resolves.toHaveLength(1);
 }, 20000);
 
-describe('findBy options deprecations', () => {
-  let warnSpy: jest.SpyInstance;
-  beforeEach(() => {
-    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  });
-  afterEach(() => {
-    warnSpy.mockRestore();
-  });
-
-  test('findByText queries warn on deprecated use of WaitForOptions', async () => {
-    const options = { timeout: 10 };
-    // mock implementation to avoid warning in the test suite
-    const { rerender, findByText } = render(<View />);
-    await expect(findByText('Some Text', options)).rejects.toBeTruthy();
-
-    setTimeout(
-      () =>
-        rerender(
-          <View>
-            <Text>Some Text</Text>
-          </View>
-        ),
-      20
-    );
-
-    await expect(findByText('Some Text')).resolves.toBeTruthy();
-
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Use of option "timeout"')
-    );
-  }, 20000);
-});
-
 test('getByText works properly with custom text component', () => {
   function BoldText({ children }: ChildrenProps) {
     return <Text>{children}</Text>;

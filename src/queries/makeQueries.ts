@@ -25,13 +25,13 @@ export type QueryAllByQuery<Predicate, Options = void> = (
 
 export type FindByQuery<Predicate, Options = void> = (
   predicate: Predicate,
-  options?: Options & WaitForOptions,
+  options?: Options,
   waitForOptions?: WaitForOptions
 ) => Promise<ReactTestInstance>;
 
 export type FindAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
-  options?: Options & WaitForOptions,
+  options?: Options,
   waitForOptions?: WaitForOptions
 ) => Promise<ReactTestInstance[]>;
 
@@ -44,36 +44,6 @@ export type UnboundQueries<Predicate, Options> = {
   queryAllBy: UnboundQuery<QueryAllByQuery<Predicate, Options>>;
   findBy: UnboundQuery<FindByQuery<Predicate, Options>>;
   findAllBy: UnboundQuery<FindAllByQuery<Predicate, Options>>;
-};
-
-// The WaitForOptions has been moved to the second option param of findBy* methods with the adding of TextMatchOptions
-// To make the migration easier and avoid a breaking change, keep reading this options from the first param but warn
-const deprecatedKeys: (keyof WaitForOptions)[] = [
-  'timeout',
-  'interval',
-  'stackTraceError',
-];
-const extractDeprecatedWaitForOptionUsage = (queryOptions?: WaitForOptions) => {
-  if (queryOptions) {
-    const waitForOptions: WaitForOptions = {
-      timeout: queryOptions.timeout,
-      interval: queryOptions.interval,
-      stackTraceError: queryOptions.stackTraceError,
-    };
-    deprecatedKeys.forEach((key) => {
-      const option = queryOptions[key];
-      if (option) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `Use of option "${key}" in a findBy* query's second parameter, TextMatchOptions, is deprecated. Please pass this option in the third, WaitForOptions, parameter. 
-Example: 
-
-  findByText(text, {}, { ${key}: ${option.toString()} })`
-        );
-      }
-    });
-    return waitForOptions;
-  }
 };
 
 export function makeQueries<Predicate, Options>(
@@ -128,32 +98,26 @@ export function makeQueries<Predicate, Options>(
   function findAllByQuery(instance: ReactTestInstance) {
     return function findAllFn(
       predicate: Predicate,
-      queryOptions?: Options & WaitForOptions,
-      waitForOptions: WaitForOptions = {}
+      queryOptions?: Options,
+      waitForOptions?: WaitForOptions
     ) {
-      const deprecatedWaitForOptions = extractDeprecatedWaitForOptionUsage(
-        queryOptions
+      return waitFor(
+        () => getAllByQuery(instance)(predicate, queryOptions),
+        waitForOptions
       );
-      return waitFor(() => getAllByQuery(instance)(predicate, queryOptions), {
-        ...deprecatedWaitForOptions,
-        ...waitForOptions,
-      });
     };
   }
 
   function findByQuery(instance: ReactTestInstance) {
     return function findFn(
       predicate: Predicate,
-      queryOptions?: Options & WaitForOptions,
-      waitForOptions: WaitForOptions = {}
+      queryOptions?: Options,
+      waitForOptions?: WaitForOptions
     ) {
-      const deprecatedWaitForOptions = extractDeprecatedWaitForOptionUsage(
-        queryOptions
+      return waitFor(
+        () => getByQuery(instance)(predicate, queryOptions),
+        waitForOptions
       );
-      return waitFor(() => getByQuery(instance)(predicate, queryOptions), {
-        ...deprecatedWaitForOptions,
-        ...waitForOptions,
-      });
     };
   }
 
