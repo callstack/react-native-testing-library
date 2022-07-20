@@ -54,7 +54,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/react-native-testing-library
-      - run: yarn test
+      - run: yarn test:ci
       - store_artifacts:
           path: coverage
           destination: coverage
