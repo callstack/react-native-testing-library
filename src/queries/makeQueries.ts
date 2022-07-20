@@ -3,33 +3,33 @@ import { ErrorWithStack } from '../helpers/errors';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 
-export type GetByQuery<Predicate, Options> = (
+export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options
 ) => ReactTestInstance;
 
-export type GetAllByQuery<Predicate, Options> = (
+export type GetAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options
 ) => ReactTestInstance[];
 
-export type QueryByQuery<Predicate, Options> = (
+export type QueryByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options
 ) => ReactTestInstance | null;
 
-export type QueryAllByQuery<Predicate, Options> = (
+export type QueryAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options
 ) => ReactTestInstance[];
 
-export type FindByQuery<Predicate, Options> = (
+export type FindByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options & WaitForOptions,
   waitForOptions?: WaitForOptions
 ) => Promise<ReactTestInstance>;
 
-export type FindAllByQuery<Predicate, Options> = (
+export type FindAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options & WaitForOptions,
   waitForOptions?: WaitForOptions
