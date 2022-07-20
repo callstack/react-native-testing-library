@@ -56,16 +56,6 @@ declare type A11yState = {|
   expanded?: boolean,
 |};
 
-declare type A11yStates =
-  | 'disabled'
-  | 'selected'
-  | 'checked'
-  | 'unchecked'
-  | 'busy'
-  | 'expanded'
-  | 'collapsed'
-  | 'hasPopup';
-
 declare type A11yValue = {
   min?: number,
   max?: number,
@@ -266,25 +256,17 @@ interface A11yAPI {
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 
-  // States
-  getByA11yStates: (matcher: A11yStates | Array<A11yStates>) => GetReturn;
-  getAllByA11yStates: (matcher: A11yStates | Array<A11yStates>) => GetAllReturn;
-  queryByA11yStates: (matcher: A11yStates | Array<A11yStates>) => QueryReturn;
-  queryAllByA11yStates: (
-    matcher: A11yStates | Array<A11yStates>
-  ) => QueryAllReturn;
-
   // State
-  getByA11yState: (matcher: A11yStates) => GetReturn;
-  getAllByA11yState: (matcher: A11yStates) => GetAllReturn;
-  queryByA11yState: (matcher: A11yStates) => QueryReturn;
-  queryAllByA11yState: (matcher: A11yStates) => QueryAllReturn;
+  getByA11yState: (matcher: A11yState) => GetReturn;
+  getAllByA11yState: (matcher: A11yState) => GetAllReturn;
+  queryByA11yState: (matcher: A11yState) => QueryReturn;
+  queryAllByA11yState: (matcher: A11yState) => QueryAllReturn;
   findByA11yState: (
-    matcher: A11yStates,
+    matcher: A11yState,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByA11yState: (
-    matcher: A11yStates,
+    matcher: A11yState,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 

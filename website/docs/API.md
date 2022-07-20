@@ -97,7 +97,7 @@ See [Queries](./Queries.md) for a complete list.
 ```jsx
 import { render } from '@testing-library/react-native';
 
-const { getByText, queryByA11yStates } = render(<Component />);
+const { getByText, queryByA11yState } = render(<Component />);
 ```
 
 ### `update`
