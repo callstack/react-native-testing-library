@@ -20,7 +20,6 @@ title: Queries
   - [`ByTestId`](#bytestid)
   - [`ByLabelText`](#bylabeltext)
   - [`ByHintText`, `ByA11yHint`, `ByAccessibilityHint`](#byhinttext-bya11yhint-byaccessibilityhint)
-  - [`ByA11yStates`, `ByAccessibilityStates`](#bya11ystates-byaccessibilitystates)
   - [`ByRole`](#byrole)
   - [`ByA11yState`, `ByAccessibilityState`](#bya11ystate-byaccessibilitystate)
   - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
@@ -176,21 +175,6 @@ const element = screen.getByHintText('Plays a song');
 :::info
 Please consult [Apple guidelines on how `accessibilityHint` should be used](https://developer.apple.com/documentation/objectivec/nsobject/1615093-accessibilityhint).
 :::
-
-### `ByA11yStates`, `ByAccessibilityStates`
-
-> getByA11yStates, getAllByA11yStates, queryByA11yStates, queryAllByA11yStates
-> getByAccessibilityStates, getAllByAccessibilityStates, queryByAccessibilityStates, queryAllByAccessibilityStates
-
-Returns a `ReactTestInstance` with matching `accessibilityStates` prop.
-
-```jsx
-import { render, screen } from '@testing-library/react-native';
-
-render(<MyComponent />);
-const element = screen.getByA11yStates(['checked']);
-const element2 = screen.getByA11yStates('checked');
-```
 
 ### `ByRole`
 
