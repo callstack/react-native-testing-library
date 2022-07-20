@@ -149,7 +149,7 @@ describe('findBy options deprecations', () => {
   }, 20000);
 });
 
-test.skip('getByText works properly with custom text component', () => {
+test('getByText works properly with custom text component', () => {
   function BoldText({ children }: ChildrenProps) {
     return <Text>{children}</Text>;
   }
@@ -163,7 +163,7 @@ test.skip('getByText works properly with custom text component', () => {
   ).toBeTruthy();
 });
 
-test.skip('getByText works properly with custom text container', () => {
+test('getByText works properly with custom text container', () => {
   function MyText({ children }: ChildrenProps) {
     return <Text>{children}</Text>;
   }
