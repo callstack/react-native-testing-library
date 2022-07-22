@@ -9,7 +9,7 @@ Migration to React Native Testing Library version 11 from version 9.x or 10.x sh
 
 ## Update to Jest 28 if you use fake timers
 
-If you use fake timers in any of your tests you should update your Jest dependencies to version 28.
+If you use fake timers in any of your tests you should update your Jest dependencies to version 28. This is due to the fact that [`jest.useFakeTimers()` config structure](https://jestjs.io/docs/jest-object#jestusefaketimersfaketimersconfig) has changed.
 
 ## Refactor legacy `waitForOptions` position
 
