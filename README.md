@@ -14,8 +14,6 @@
 [![Chat][chat-badge]][chat]
 [![Sponsored by Callstack][callstack-badge]][callstack]
 
-> We renamed the `react-native-testing-library` npm package to `@testing-library/react-native`, officially joining the "Testing Library" family 🎉. Read the [migration guide](https://callstack.github.io/react-native-testing-library/docs/migration-v7).
-
 ## The problem
 
 You want to write maintainable tests for your React Native components. As a part of this goal, you want your tests to avoid including implementation details of your components and rather focus on making your tests give you the confidence for which they are intended. As part of this, you want your testbase to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don't break your tests and slow you and your team down.
@@ -138,6 +136,8 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 
 ## Migration Guides
 
+- [Migration to 11.0](https://callstack.github.io/react-native-testing-library/docs/migration-v11)
+- [Migration to 9.0](https://callstack.github.io/react-native-testing-library/docs/migration-v9)
 - [Migration to 7.0](https://callstack.github.io/react-native-testing-library/docs/migration-v7)
 - [Migration to 2.0](https://callstack.github.io/react-native-testing-library/docs/migration-v2)
 
