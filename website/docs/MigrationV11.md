@@ -13,16 +13,16 @@ If you use fake timers in any of your tests you should update your Jest dependen
 
 ## Refactor legacy `waitForOptions` position
 
-In version 9 we introducted option query parameters for each query type. This affected `findBy` and `findAllBy` queries because their signature chagnes from:
+In version 9 we introducted query `options` parameters for each query type. This affected `findBy` and `findAllBy` queries because their signature chagned from:
 
-```
+```ts
 function findByText(text: TextMatch, waitForOptions?: WaitForOptions)
 function findAllByText(text: TextMatch, waitForOptions?: WaitForOptions)
 ```
 
 to 
 
-```
+```ts
 function findByText(text: TextMatch, options?: TextMatchOptions, waitForOptions?: WaitForOptions)
 function findAllByText(text: TextMatch, options?: TextMatchOptions, waitForOptions?: WaitForOptions)
 ```
@@ -30,13 +30,14 @@ function findAllByText(text: TextMatch, options?: TextMatchOptions, waitForOptio
 In order to facilitate transition we provided a temporary possibility to pass `WaitForOptions` as `options` argument. In this release we require passing these as the proper, third parameter.
 
 This change is easy to implement:
-```
+
+```ts
 findByText(/Text/, { timeout: 1000 })
 ```
 
 should become
 
-```
+```ts
 findByText(/Text/, {}, { timeout: 1000 })
 ```
 
