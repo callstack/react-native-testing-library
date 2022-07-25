@@ -1,6 +1,6 @@
 ---
 id: migration-v11
-title: Migration to 1.0
+title: Migration to 11.0
 ---
 
 Migration to React Native Testing Library version 11 from version 9.x or 10.x should be a relatively easy task due small amount of breaking changes.
