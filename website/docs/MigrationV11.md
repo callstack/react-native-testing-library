@@ -60,5 +60,5 @@ From version 11, RNTL continues to disable `press` event for these targets but a
 * chore: reenable skipped byText tests by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1017
 
 # Full Changelog
-https://github.com/callstack/react-native-testing-library/compare/v10.1.1...v11.0.0-rc.0
+https://github.com/callstack/react-native-testing-library/compare/v10.1.1...v11.0.0
 
