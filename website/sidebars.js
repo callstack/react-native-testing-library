@@ -3,6 +3,7 @@ module.exports = {
     Introduction: ['getting-started'],
     'API Reference': ['api', 'api-queries'],
     Guides: [
+      'migration-v11',
       'migration-v9',
       'migration-v7',
       'migration-v2',
