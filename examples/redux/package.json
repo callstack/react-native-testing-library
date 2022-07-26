@@ -14,10 +14,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
+    "@testing-library/react-native": "^11.0.0",
     "@types/jest": "^28.0.0",
     "jest": "^28.0.0",
     "metro-react-native-babel-preset": "^0.70.0",
-    "@testing-library/react-native": "^11.0.0",
     "react-test-renderer": "^18.0.0"
   }
 }

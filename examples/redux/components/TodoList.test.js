@@ -16,7 +16,7 @@ test('it should execute with a store with 4 elements', () => {
   renderWithRedux(<TodoList />, { initialState });
 
   const todoElems = screen.getAllByText(/something/i);
-  expect(todoElems.length).toEqual(4);
+  expect(todoElems).toHaveLength(4);
 });
 
 test('should execute with 2 elements and end up with 1 after delete', () => {
@@ -26,9 +26,9 @@ test('should execute with 2 elements and end up with 1 after delete', () => {
   expect(todoElems.length).toBe(4);
 
   const buttons = screen.getAllByText('Delete');
-  expect(buttons.length).toBe(4);
+  expect(buttons).toHaveLength(4);
   fireEvent.press(buttons[0]);
 
   const buttonsAfterDelete = screen.getAllByText('Delete');
-  expect(buttonsAfterDelete.length).toBe(3);
+  expect(buttonsAfterDelete).toHaveLength(3);
 });

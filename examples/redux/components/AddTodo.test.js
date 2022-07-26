@@ -14,7 +14,7 @@ test('adds a new test when entry has been included', () => {
   fireEvent.press(screen.getByText('Submit form'));
 
   const todosState = store.getState().todos;
-  expect(todosState.length).toEqual(1);
+  expect(todosState).toHaveLength(1);
   expect(todosState).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
