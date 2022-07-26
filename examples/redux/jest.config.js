@@ -1,4 +1,4 @@
 module.exports = {
-  preset: 'react-native',
+  preset: '@testing-library/react-native',
   setupFiles: ['./jest-setup.js'],
 };
