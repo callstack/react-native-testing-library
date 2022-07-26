@@ -4,16 +4,14 @@ import { render, screen, fireEvent } from '@testing-library/react-native';
 import configureStore from '../store';
 import AddTodo from './AddTodo';
 
+function renderWithRedux(ui, options) {
+  const store = options?.store ?? configureStore(options?.initialState);
+  const queries = render(<Provider store={store}>{ui}</Provider>);
+  return { ...queries, store };
+}
+
 test('adds a new test when entry has been included', () => {
-  const store = configureStore();
-
-  const component = (
-    <Provider store={store}>
-      <AddTodo />
-    </Provider>
-  );
-
-  render(component);
+  const { store } = renderWithRedux(<AddTodo />);
 
   const input = screen.getByPlaceholderText(/repository/i);
   expect(input).toBeTruthy();

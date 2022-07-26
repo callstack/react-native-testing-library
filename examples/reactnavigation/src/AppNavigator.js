@@ -6,16 +6,10 @@ import DetailsScreen from './screens/DetailsScreen';
 const Stack = createNativeStackNavigator();
 
 export default function Navigation() {
-  const options = {};
-
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen
-        options={options}
-        name="Details"
-        component={DetailsScreen}
-      />
+      <Stack.Screen name="Details" component={DetailsScreen} />
     </Stack.Navigator>
   );
 }

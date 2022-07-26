@@ -13,25 +13,20 @@ const initialState = {
   ],
 };
 
-test('it should execute with a store with 4 elements', () => {
+function renderWithRedux(ui, initialState) {
   const store = configureStore(initialState);
-  render(
-    <Provider store={store}>
-      <TodoList />
-    </Provider>
-  );
+  return render(<Provider store={store}>{ui}</Provider>);
+}
+
+test('it should execute with a store with 4 elements', () => {
+  renderWithRedux(<TodoList />, initialState);
 
   const todoElems = screen.getAllByText(/something/i);
   expect(todoElems.length).toEqual(4);
 });
 
 test('should execute with 2 elements and end up with 1 after delete', () => {
-  const store = configureStore(initialState);
-  render(
-    <Provider store={store}>
-      <TodoList />
-    </Provider>
-  );
+  renderWithRedux(<TodoList />, initialState);
 
   const todoElems = screen.getAllByText(/something/i);
   expect(todoElems.length).toBe(4);
