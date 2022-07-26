@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { render, screen, fireEvent } from '@testing-library/react-native';
-import AppNavigator from '../AppNavigator';
+import AppNavigator from './AppNavigator';
 
 /** Render helper that renders `ui` within `NavigationContainer`. */
 function renderWithNavigation(ui) {
