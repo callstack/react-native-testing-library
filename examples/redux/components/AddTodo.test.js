@@ -3,7 +3,7 @@ import { screen, fireEvent } from '@testing-library/react-native';
 import { renderWithRedux } from '../test-utils';
 import AddTodo from './AddTodo';
 
-test('adds a new test when entry has been included', () => {
+test('adds a new todo to redux store when submitting form', () => {
   const { store } = renderWithRedux(<AddTodo />);
 
   const input = screen.getByPlaceholderText(/repository/i);
