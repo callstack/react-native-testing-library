@@ -12,7 +12,7 @@ export default function HomeScreen({ navigation }) {
     new Array(20).fill(null).map((_, idx) => idx + 1)
   );
 
-  const onOpacityPress = item => navigation.navigate('Details', item);
+  const onOpacityPress = (item) => navigation.navigate('Details', item);
 
   return (
     <View>
