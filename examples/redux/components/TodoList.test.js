@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Provider } from 'react-redux';
-import { render, screen, fireEvent } from '@testing-library/react-native';
-import configureStore from '../store';
+import { screen, fireEvent } from '@testing-library/react-native';
+import { renderWithRedux } from '../test-utils';
 import TodoList from './TodoList';
 
 const initialState = {
@@ -13,20 +12,15 @@ const initialState = {
   ],
 };
 
-function renderWithRedux(ui, initialState) {
-  const store = configureStore(initialState);
-  return render(<Provider store={store}>{ui}</Provider>);
-}
-
 test('it should execute with a store with 4 elements', () => {
-  renderWithRedux(<TodoList />, initialState);
+  renderWithRedux(<TodoList />, { initialState });
 
   const todoElems = screen.getAllByText(/something/i);
   expect(todoElems.length).toEqual(4);
 });
 
 test('should execute with 2 elements and end up with 1 after delete', () => {
-  renderWithRedux(<TodoList />, initialState);
+  renderWithRedux(<TodoList />, { initialState });
 
   const todoElems = screen.getAllByText(/something/i);
   expect(todoElems.length).toBe(4);

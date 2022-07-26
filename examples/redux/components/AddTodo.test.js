@@ -1,14 +1,7 @@
 import * as React from 'react';
-import { Provider } from 'react-redux';
-import { render, screen, fireEvent } from '@testing-library/react-native';
-import configureStore from '../store';
+import { screen, fireEvent } from '@testing-library/react-native';
+import { renderWithRedux } from '../test-utils';
 import AddTodo from './AddTodo';
-
-function renderWithRedux(ui, options) {
-  const store = options?.store ?? configureStore(options?.initialState);
-  const queries = render(<Provider store={store}>{ui}</Provider>);
-  return { ...queries, store };
-}
 
 test('adds a new test when entry has been included', () => {
   const { store } = renderWithRedux(<AddTodo />);

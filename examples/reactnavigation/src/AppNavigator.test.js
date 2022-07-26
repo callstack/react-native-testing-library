@@ -1,12 +1,7 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { render, screen, fireEvent } from '@testing-library/react-native';
+import { screen, fireEvent } from '@testing-library/react-native';
+import { renderWithNavigation } from './test-utils';
 import AppNavigator from './AppNavigator';
-
-/** Render helper that renders `ui` within `NavigationContainer`. */
-function renderWithNavigation(ui) {
-  return render(<NavigationContainer>{ui}</NavigationContainer>);
-}
 
 test('page contains the header and 10 items', async () => {
   renderWithNavigation(<AppNavigator />);
