@@ -6,5 +6,5 @@ import App from '../App';
 test('renders correctly', () => {
   render(<App />);
 
-  expect(screen.getByText('Welcome to React Native')).toBeTruthy();
+  expect(screen.getByText('Sign in to Admin Panel')).toBeTruthy();
 });
