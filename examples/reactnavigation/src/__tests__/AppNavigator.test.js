@@ -1,41 +1,29 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { render, fireEvent } from '@testing-library/react-native';
-
+import { render, screen, fireEvent } from '@testing-library/react-native';
 import AppNavigator from '../AppNavigator';
 
-describe('Testing react navigation', () => {
-  test('page contains the header and 10 items', async () => {
-    const component = (
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    );
+/** Render helper that renders `ui` within `NavigationContainer`. */
+function renderWithNavigation(ui) {
+  return render(<NavigationContainer>{ui}</NavigationContainer>);
+}
 
-    const { findByText, findAllByText } = render(component);
+test('page contains the header and 10 items', async () => {
+  renderWithNavigation(<AppNavigator />);
 
-    const header = await findByText('List of numbers from 1 to 20');
-    const items = await findAllByText(/Item number/);
+  const header = await screen.findByText('List of numbers from 1 to 20');
+  expect(header).toBeTruthy();
 
-    expect(header).toBeTruthy();
-    expect(items.length).toBe(10);
-  });
+  const items = screen.getAllByText(/Item number/);
+  expect(items.length).toBe(10);
+});
 
-  test('clicking on one item takes you to the details screen', async () => {
-    const component = (
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    );
+test('clicking on one item takes you to the details screen', async () => {
+  renderWithNavigation(<AppNavigator />);
 
-    const { findByText } = render(component);
-    const toClick = await findByText('Item number 5');
+  const toClick = await screen.findByText('Item number 5');
+  fireEvent(toClick, 'press');
 
-    fireEvent(toClick, 'press');
-    const newHeader = await findByText('Showing details for 5');
-    const newBody = await findByText('the number you have chosen is 5');
-
-    expect(newHeader).toBeTruthy();
-    expect(newBody).toBeTruthy();
-  });
+  expect(screen.getByText('Showing details for 5')).toBeTruthy();
+  expect(screen.getByText('the number you have chosen is 5')).toBeTruthy();
 });
