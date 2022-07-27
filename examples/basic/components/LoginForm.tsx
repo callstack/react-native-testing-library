@@ -1,26 +1,21 @@
 import * as React from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 
-export function LoginScreen() {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+type Props = {
+  onLoginSuccess: (user: string) => void;
+};
+
+export function LoginForm({ onLoginSuccess }: Props) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState<string | undefined>();
 
-  if (isLoggedIn) {
-    return (
-      <View>
-        <Text>Welcome {username}!</Text>
-      </View>
-    );
-  }
-
   const handleSignIn = () => {
-    // Simulate async operation
+    // Simulate API call using async operation
     setTimeout(() => {
       const hasValidCredentials = username === 'admin' && password === 'admin1';
       if (hasValidCredentials) {
-        setIsLoggedIn(true);
+        onLoginSuccess(username);
         setError(undefined);
       } else {
         setError('Incorrect username or password!');
@@ -30,7 +25,7 @@ export function LoginScreen() {
 
   return (
     <View>
-      <Text>Sign in to Admin Panel</Text>
+      <Text>Sign in to Example App</Text>
 
       <Text>Username</Text>
       <TextInput value={username} onChangeText={setUsername} accessibilityLabel="Username" />
