@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
 type Props = {
   user: string;
@@ -7,8 +7,20 @@ type Props = {
 
 export function Home({ user }: Props) {
   return (
-    <View>
-      <Text>Welcome {user}!</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Welcome {user}!</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  title: {
+    alignSelf: 'center',
+    fontSize: 24,
+    marginTop: 8,
+    marginBottom: 40,
+  },
+});

@@ -71,7 +71,7 @@ test('User will see errors for incorrect credentials', async () => {
   fireEvent.changeText(screen.getByLabelText('Password'), 'qwerty123');
   fireEvent.press(screen.getByText('Sign In'));
 
-  expect(await screen.findByText('Incorrect username or password!')).toBeTruthy();
+  expect(await screen.findByText('Incorrect username or password')).toBeTruthy();
   expect(screen.getByText('Sign in to Example App')).toBeTruthy();
   expect(screen.getByText('Username')).toBeTruthy();
   expect(screen.getByText('Password')).toBeTruthy();
@@ -91,7 +91,7 @@ test('User can sign in after incorrect attempt', async () => {
   fireEvent.changeText(screen.getByLabelText('Password'), 'qwerty123');
   fireEvent.press(screen.getByText('Sign In'));
 
-  expect(await screen.findByText('Incorrect username or password!')).toBeTruthy();
+  expect(await screen.findByText('Incorrect username or password')).toBeTruthy();
 
   fireEvent.changeText(screen.getByLabelText('Password'), 'admin1');
   fireEvent.press(screen.getByText('Sign In'));
