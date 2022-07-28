@@ -6,17 +6,9 @@ import { Home } from './components/Home';
 const App = () => {
   const [user, setUser] = React.useState<string | null>(null);
 
-  if (user == null) {
-    return (
-      <SafeAreaView>
-        <LoginForm onLoginSuccess={setUser} />
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView>
-      <Home user={user} />
+      {user == null ? <LoginForm onLoginSuccess={setUser} /> : <Home user={user} />}
     </SafeAreaView>
   );
 };
