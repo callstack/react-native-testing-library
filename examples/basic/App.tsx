@@ -8,7 +8,11 @@ const App = () => {
 
   return (
     <SafeAreaView>
-      {user == null ? <LoginForm onLoginSuccess={setUser} /> : <Home user={user} />}
+      {user == null ? (
+        <LoginForm onLoginSuccess={setUser} />
+      ) : (
+        <Home user={user} />
+      )}
     </SafeAreaView>
   );
 };

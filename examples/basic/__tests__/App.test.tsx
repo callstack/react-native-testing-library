@@ -73,7 +73,9 @@ test('User will see errors for incorrect credentials', async () => {
   fireEvent.press(screen.getByText('Sign In'));
 
   // Hint: you can use custom Jest Native matcher to check text content.
-  expect(await screen.findByLabelText('Error')).toHaveTextContent('Incorrect username or password');
+  expect(await screen.findByLabelText('Error')).toHaveTextContent(
+    'Incorrect username or password'
+  );
 
   expect(screen.getByText('Sign in to Example App')).toBeTruthy();
   expect(screen.getByText('Username')).toBeTruthy();
@@ -94,7 +96,9 @@ test('User can sign in after incorrect attempt', async () => {
   fireEvent.changeText(screen.getByLabelText('Password'), 'qwerty123');
   fireEvent.press(screen.getByText('Sign In'));
 
-  expect(await screen.findByLabelText('Error')).toHaveTextContent('Incorrect username or password');
+  expect(await screen.findByLabelText('Error')).toHaveTextContent(
+    'Incorrect username or password'
+  );
 
   fireEvent.changeText(screen.getByLabelText('Password'), 'admin1');
   fireEvent.press(screen.getByText('Sign In'));
