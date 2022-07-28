@@ -21,8 +21,9 @@
     "@testing-library/jest-native": "^4.0.5",
     "@testing-library/react-native": "^11.0.0",
     "@types/react": "~17.0.21",
-    "@types/react-native": "~0.66.13",
-    "jest": "^28.1.3",
+    "@types/react-native": "~0.67.6",
+    "jest": "^28.0.0",
+    "react-test-renderer": "^17.0.2",
     "typescript": "~4.3.5"
   },
   "private": true
