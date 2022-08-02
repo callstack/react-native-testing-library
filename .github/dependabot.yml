@@ -3,19 +3,5 @@ updates:
 - package-ecosystem: npm
   directory: "/"
   schedule:
-    interval: monthly
-  open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: react-native
-    versions:
-    - 0.64.0-rc.3
-  - dependency-name: "@babel/preset-env"
-    versions:
-    - 7.13.8
-  - dependency-name: flow-bin
-    versions:
-    - 0.143.1
-    - 0.145.0
-  - dependency-name: "@types/react-native"
-    versions:
-    - 0.63.43
+    interval: weekly
+  open-pull-requests-limit: 5
