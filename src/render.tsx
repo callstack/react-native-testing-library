@@ -8,7 +8,7 @@ import debugDeep from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
 import { setRenderResult } from './screen';
 
-type Options = {
+export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => any;
 };
@@ -24,7 +24,7 @@ export type RenderResult = ReturnType<typeof render>;
  */
 export default function render<T>(
   component: React.ReactElement<T>,
-  { wrapper: Wrapper, createNodeMock }: Options = {}
+  { wrapper: Wrapper, createNodeMock }: RenderOptions = {}
 ) {
   const wrap = (innerElement: React.ReactElement) =>
     Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement;
