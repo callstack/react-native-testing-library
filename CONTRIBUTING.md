@@ -49,13 +49,11 @@ When you're sending a pull request:
 
 ### Publishing a release
 
-We use [release-it](https://github.com/webpro/release-it) to automate our release. If you have publish access to the NPM package, run the following from the main branch to publish a new release:
+If you have publish access to the NPM package, run the following from the main branch to publish a new release:
 
 ```sh
-yarn release
+yarn publish
 ```
-
-NOTE: You must have a `GITHUB_TOKEN` environment variable available. You can create a GitHub access token with the "repo" access [here](https://github.com/settings/tokens).
 
 ## Reporting issues
 
