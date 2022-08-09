@@ -12,7 +12,6 @@ const siteConfig = {
   favicon: 'img/owl.png',
 
   themeConfig: {
-    sidebarCollapsible: false,
     navbar: {
       title,
       logo: {
@@ -48,8 +47,7 @@ const siteConfig = {
             {
               key: 3,
               label: 'Stack Overflow',
-              href:
-                'http://stackoverflow.com/questions/tagged/react-native-testing-library',
+              href: 'http://stackoverflow.com/questions/tagged/react-native-testing-library',
             },
             {
               key: 4,
@@ -83,6 +81,7 @@ const siteConfig = {
       defaultLanguage: 'jsx',
     },
     algolia: {
+      appId: 'BH4D9OD16A',
       apiKey: 'cd9b8b73f97b64ed04570e41c507683f',
       indexName: 'react-native-testing-library',
     },
@@ -96,6 +95,7 @@ const siteConfig = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl: `${repoUrl}/blob/main`,
+          sidebarCollapsible: false,
         },
         blog: {
           showReadingTime: true,
