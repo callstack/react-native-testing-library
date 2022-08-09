@@ -35,7 +35,6 @@
     "@babel/preset-react": "^7.9.4",
     "@babel/preset-typescript": "^7.16.0",
     "@callstack/eslint-config": "^12.0.2",
-    "@release-it/conventional-changelog": "^2.0.0",
     "@testing-library/jest-native": "~4.0.2",
     "@types/jest": "^28.0.0",
     "@types/react": "^18.0.0",
@@ -53,7 +52,6 @@
     "react": "^18.0.0",
     "react-native": "~0.69.1",
     "react-test-renderer": "^18.0.0",
-    "release-it": "^14.0.3",
     "strip-ansi": "^6.0.0",
     "typescript": "^4.0.2"
   },
@@ -73,7 +71,6 @@
     "flow": "flow",
     "copy-flowtypes": "cp typings/index.flow.js build",
     "lint": "eslint src --cache",
-    "release": "release-it",
     "prepublish": "yarn build",
     "build:js": "babel src --out-dir build --extensions \".js,.ts,.jsx,.tsx\" --source-maps --ignore \"**/__tests__/**\"",
     "build:js:watch": "yarn build:js --watch",
