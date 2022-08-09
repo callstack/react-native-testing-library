@@ -36,17 +36,17 @@ const UNSAFE_queryByType = (
     }
   };
 
-const UNSAFE_queryAllByType = (
-  instance: ReactTestInstance
-): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) => (
-  type: React.ComponentType<any>
-) => {
-  try {
-    return UNSAFE_getAllByType(instance)(type);
-  } catch (error) {
-    return [];
-  }
-};
+const UNSAFE_queryAllByType =
+  (
+    instance: ReactTestInstance
+  ): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) =>
+  (type: React.ComponentType<any>) => {
+    try {
+      return UNSAFE_getAllByType(instance)(type);
+    } catch (error) {
+      return [];
+    }
+  };
 
 // Unsafe aliases
 export type UnsafeByTypeQueries = {

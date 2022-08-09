@@ -39,17 +39,17 @@ const UNSAFE_queryByProps = (
     }
   };
 
-const UNSAFE_queryAllByProps = (
-  instance: ReactTestInstance
-): ((props: {
-  [propName: string]: any;
-}) => Array<ReactTestInstance>) => (props: { [propName: string]: any }) => {
-  try {
-    return UNSAFE_getAllByProps(instance)(props);
-  } catch (error) {
-    return [];
-  }
-};
+const UNSAFE_queryAllByProps =
+  (
+    instance: ReactTestInstance
+  ): ((props: { [propName: string]: any }) => Array<ReactTestInstance>) =>
+  (props: { [propName: string]: any }) => {
+    try {
+      return UNSAFE_getAllByProps(instance)(props);
+    } catch (error) {
+      return [];
+    }
+  };
 
 // Unsafe aliases
 export type UnsafeByPropsQueries = {
