@@ -56,7 +56,9 @@ export const createQueryByError = (
   throw new ErrorWithStack(
     // generic refining of `unknown` is very hard, you cannot do `'toString' in error` or anything like that
     // Converting as any with extra safe optional chaining will do the job just as well
-    `Query: caught unknown error type: ${typeof error}, value: ${(error as any)?.toString?.()}`,
+    `Query: caught unknown error type: ${typeof error}, value: ${(
+      error as any
+    )?.toString?.()}`,
     callsite
   );
 };
