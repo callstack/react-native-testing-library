@@ -45,7 +45,7 @@
     "conventional-changelog-cli": "^2.0.11",
     "cp-cli": "^2.0.0",
     "dedent": "^0.7.0",
-    "del-cli": "^3.0.1",
+    "del-cli": "^5.0.0",
     "eslint": "^8.21.0",
     "flow-bin": "~0.170.0",
     "flow-copy-source": "^2.0.9",
