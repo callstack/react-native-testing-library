@@ -1,0 +1,52 @@
+name: Test Example Apps
+
+on: [workflow_dispatch]
+
+jobs:
+  test-basic:
+    name: Test Basic
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14.x
+          cache: 'yarn'
+
+      - name: Install and build
+        run: cd examples/basic && yarn install && yarn test
+
+  test-redux:
+    name: Test Redux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14.x
+          cache: 'yarn'
+
+      - name: Install and build
+        run: cd examples/redux && yarn install && yarn test
+
+  test-react-navigation:
+    name: Test React Navigation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14.x
+          cache: 'yarn'
+
+      - name: Install and build
+        run: cd examples/reactnavigation && yarn install && yarn test
