@@ -4,6 +4,9 @@ on: [workflow_dispatch]
 
 jobs:
   test-basic:
+    strategy:
+      matrix:
+        node: [14, 16, 18]
     name: Test Basic
     runs-on: ubuntu-latest
     steps:
@@ -13,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: ${{ matrix.node }}
           cache: 'yarn'
 
       - name: Install and build
@@ -21,6 +24,9 @@ jobs:
 
   test-redux:
     name: Test Redux
+    strategy:
+      matrix:
+        node: [14, 16, 18]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,7 +35,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: ${{ matrix.node }}
           cache: 'yarn'
 
       - name: Install and build
@@ -37,6 +43,9 @@ jobs:
 
   test-react-navigation:
     name: Test React Navigation
+    strategy:
+      matrix:
+        node: [14, 16, 18]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -45,7 +54,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: ${{ matrix.node }}
           cache: 'yarn'
 
       - name: Install and build
