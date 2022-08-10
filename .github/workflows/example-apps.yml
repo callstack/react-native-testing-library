@@ -7,9 +7,10 @@ jobs:
     strategy:
       matrix:
         node: [14, 16, 18]
-        example: ['basic', 'redux', 'reactnavigation']
-    name: Test Basic
+        example: [basic, redux, reactnavigation]
+    name: Test Example
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -21,42 +22,4 @@ jobs:
           cache: 'yarn'
 
       - name: Install and build
-        run: cd examples/basic && yarn install && yarn test
-
-  test-redux:
-    name: Test Redux
-    strategy:
-      matrix:
-        node: [14, 16, 18]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: 'yarn'
-
-      - name: Install and build
-        run: cd examples/redux && yarn install && yarn test
-
-  test-react-navigation:
-    name: Test React Navigation
-    strategy:
-      matrix:
-        node: [14, 16, 18]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: 'yarn'
-
-      - name: Install and build
-        run: cd examples/reactnavigation && yarn install && yarn test
+        run: cd examples/${{ matrix.example }} && yarn install && yarn test
