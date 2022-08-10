@@ -1,15 +1,13 @@
 name: Test Example Apps
 
-# on: [workflow_dispatch]
-on:
-  pull_request:
-    branches: ['**']
+on: [workflow_dispatch]
 
 jobs:
-  test-basic:
+  test-example:
     strategy:
       matrix:
         node: [14, 16, 18]
+        example: ['basic', 'redux', 'reactnavigation']
     name: Test Basic
     runs-on: ubuntu-latest
     steps:
