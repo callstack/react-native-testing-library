@@ -19,6 +19,7 @@ React Test Renderer usually has same major & minor version as React, as they are
 Related issues:
 - [#1061](https://github.com/callstack/react-native-testing-library/issues/1061)
 - [#938](https://github.com/callstack/react-native-testing-library/issues/938)
+- [#920](https://github.com/callstack/react-native-testing-library/issues/920)
 
 ## Example repository
 
