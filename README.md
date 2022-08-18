@@ -143,7 +143,7 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 
 ## Troubleshooting
 
-- [Understanding `act` function](https://callstack.github.io/react-native-testing-library/docs/understanding-act)
+- [Troubleshooting guide](https://callstack.github.io/react-native-testing-library/docs/troubleshooting)
 
 ## Related External Resources
 

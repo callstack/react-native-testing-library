@@ -9,6 +9,7 @@ module.exports = {
       'migration-v2',
       'how-should-i-query',
       'faq',
+      'troubleshooting',
       'eslint-plugin-testing-library',
       'understanding-act',
     ],
