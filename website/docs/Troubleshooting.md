@@ -36,6 +36,6 @@ When writing tests you may encounter warnings connected with `act()` function. T
 
 You can read more about `act()` function in our [understanding `act` function guide](https://callstack.github.io/react-native-testing-library/docs/understanding-act).
 
-Normally, you should not encounter sync `act()` warnings, but if that happens this  probably indicate an issue with your test and should be investigated.
+Normally, you should not encounter sync `act()` warnings, but if that happens this probably indicate an issue with your test and should be investigated.
 
 In case of async `act()` function this might happen more or less randomly, especially if your components contain async logic. So far this warning does not seem to affect test correctness.
