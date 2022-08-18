@@ -26,3 +26,16 @@ Related issues:
 We maintain an [example repository](https://github.com/callstack/react-native-testing-library/tree/main/examples/basic) that showcases a modern React Native Testing Library setup with TypeScript, Jest Native, etc.
 
 In case something does not work in your setup you can refer to this repository for recommended configuration.
+
+## Act warnings
+
+When writing tests you may encounter warnings connected with `act()` function. There are two kinds of these warnings:
+
+* sync `act()` warning - `Warning: An update to Component inside a test was not wrapped in act(...)`
+* async `act()` warning - `Warning: You called act(async () => ...) without await`
+
+You can read more about `act()` function in our [understanding `act` function guide](https://callstack.github.io/react-native-testing-library/docs/understanding-act).
+
+Normally, you should not encounter sync `act()` warnings, but if that happens this  probably indicate an issue with your test and should be investigated.
+
+In case of async `act()` function this might happen more or less randomly, especially if your components contain async logic. So far this warning does not seem to affect test correctness.
