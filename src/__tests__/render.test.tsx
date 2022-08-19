@@ -283,3 +283,9 @@ test('RenderAPI type', () => {
   render(<Banana />) as RenderAPI;
   expect(true).toBeTruthy();
 });
+
+test('should throw when rendering a string outside a text component', () => {
+  expect(() => render(<View>hello</View>)).toThrowError(
+    'Text strings must be rendered within a component.'
+  );
+});

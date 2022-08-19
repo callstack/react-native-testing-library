@@ -7,6 +7,7 @@ import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
 import { setRenderResult } from './screen';
+import { assertStringsWithinText } from './helpers/assertStringsWithinText';
 
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
@@ -36,6 +37,7 @@ export default function render<T>(
   );
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
+  assertStringsWithinText(instance);
   const unmount = () => {
     act(() => {
       renderer.unmount();
