@@ -1,12 +1,13 @@
 import TestRenderer from 'react-test-renderer';
 import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import * as React from 'react';
+import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
-import { setRenderResult } from './screen';
+import { setRenderResult, screen } from './screen';
 import { assertStringsWithinText } from './helpers/assertStringsWithinText';
 
 export type RenderOptions = {
@@ -24,12 +25,18 @@ export type RenderResult = ReturnType<typeof render>;
  * Renders test component deeply using react-test-renderer and exposes helpers
  * to assert on the output.
  */
-export default function render<T>(
+export function render<T>(
   component: React.ReactElement<T>,
-  { wrapper: Wrapper, createNodeMock }: RenderOptions = {}
+  Wrapper?: RenderOptions['wrapper'],
+  createNodeMock?: RenderOptions['createNodeMock'],
+  internalWrap: (innerElement: React.ReactElement) => React.ReactElement = (
+    element
+  ) => element
 ) {
-  const wrap = (innerElement: React.ReactElement) =>
-    Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement;
+  const wrap = (element: React.ReactElement) =>
+    Wrapper
+      ? internalWrap(<Wrapper>{element}</Wrapper>)
+      : internalWrap(element);
 
   const renderer = renderWithAct(
     wrap(component),
@@ -58,6 +65,28 @@ export default function render<T>(
 
   setRenderResult(result);
   return result;
+}
+
+export default function renderComponent<T>(
+  component: React.ReactElement<T>,
+  { wrapper: Wrapper, createNodeMock }: RenderOptions = {}
+) {
+  const assertStringsWithinTextOnUpdate: React.ProfilerProps['onRender'] = (
+    _,
+    phase
+  ) => {
+    if (phase === 'update') {
+      assertStringsWithinText(screen.container);
+    }
+  };
+
+  const wrap = (innerElement: React.ReactElement) => (
+    <Profiler id="renderProfiler" onRender={assertStringsWithinTextOnUpdate}>
+      {innerElement}
+    </Profiler>
+  );
+
+  return render(component, Wrapper, createNodeMock, wrap);
 }
 
 function renderWithAct(

@@ -289,3 +289,11 @@ test('should throw when rendering a string outside a text component', () => {
     'Text strings must be rendered within a component.'
   );
 });
+
+test('should throw an error when rerendering with text outside of Text component', () => {
+  const { rerender } = render(<View />);
+
+  expect(() => rerender(<View>hello</View>)).toThrowError(
+    'Text strings must be rendered within a component.'
+  );
+});
