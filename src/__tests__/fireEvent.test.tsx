@@ -517,6 +517,6 @@ test('should throw an error when strings are rendered outside Text', () => {
   const { getByText } = render(<ErrorComponent />);
 
   expect(() => fireEvent.press(getByText('Display text'))).toThrowError(
-    'Text strings must be rendered within a component.'
+    'Text strings must be rendered within a host Text component.'
   );
 });

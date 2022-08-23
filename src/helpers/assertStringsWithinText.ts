@@ -5,11 +5,13 @@ import { filterNodeByType } from './filterNodeByType';
 export const assertStringsWithinText = (instance: ReactTestInstance): void => {
   const nodesWithStringChild = instance.findAll(hasNodeStringChild);
   nodesWithStringChild.forEach((node) => {
-    const isTextComponent = filterNodeByType(node, 'Text');
+    const isHostTextComponent = filterNodeByType(node, 'Text');
     const isNativeComponent = typeof node.type === 'string';
 
-    if (!isTextComponent && isNativeComponent) {
-      throw new Error('Text strings must be rendered within a component.');
+    if (!isHostTextComponent && isNativeComponent) {
+      throw new Error(
+        'Text strings must be rendered within a host Text component.'
+      );
     }
   });
 };
