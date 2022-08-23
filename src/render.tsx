@@ -71,17 +71,14 @@ export default function renderComponent<T>(
   component: React.ReactElement<T>,
   { wrapper: Wrapper, createNodeMock }: RenderOptions = {}
 ) {
-  const assertStringsWithinTextOnUpdate: React.ProfilerProps['onRender'] = (
-    _,
-    phase
-  ) => {
+  const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
     if (phase === 'update') {
       assertStringsWithinText(screen.container);
     }
   };
 
   const wrap = (innerElement: React.ReactElement) => (
-    <Profiler id="renderProfiler" onRender={assertStringsWithinTextOnUpdate}>
+    <Profiler id="renderProfiler" onRender={handleRender}>
       {innerElement}
     </Profiler>
   );
