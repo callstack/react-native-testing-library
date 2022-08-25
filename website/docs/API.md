@@ -561,7 +561,7 @@ it('should increment count', () => {
   expect(result.current.count).toBe(0);
   act(() => {
     // Note that you should wrap the calls to functions your hook returns with `act` if they trigger an update of your hook's state to ensure pending useEffects are run before your next assertion.
-    result.increment();
+    result.current.increment();
   });
   expect(result.current.count).toBe(1);
 });
@@ -648,7 +648,7 @@ it('should increment count', () => {
   expect(result.current.count).toBe(1);
 
   act(() => {
-    result.increment();
+    result.current.increment();
   });
 
   expect(result.current.count).toBe(2);
