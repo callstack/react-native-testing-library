@@ -6,27 +6,27 @@ exports[`debug 1`] = `
     Is the banana fresh?
   </Text>
   <Text
-    testID=\\"bananaFresh\\"
+    testID="bananaFresh"
   >
     not fresh
   </Text>
   <TextInput
-    placeholder=\\"Add custom freshness\\"
-    testID=\\"bananaCustomFreshness\\"
-    value=\\"Custom Freshie\\"
+    placeholder="Add custom freshness"
+    testID="bananaCustomFreshness"
+    value="Custom Freshie"
   />
   <TextInput
-    defaultValue=\\"What did you inspect?\\"
-    placeholder=\\"Who inspected freshness?\\"
-    testID=\\"bananaChef\\"
-    value=\\"I inspected freshie\\"
+    defaultValue="What did you inspect?"
+    placeholder="Who inspected freshness?"
+    testID="bananaChef"
+    value="I inspected freshie"
   />
   <TextInput
-    defaultValue=\\"What banana?\\"
+    defaultValue="What banana?"
   />
   <TextInput
-    defaultValue=\\"hello\\"
-    value=\\"\\"
+    defaultValue="hello"
+    value=""
   />
   <View
     accessible={true}
@@ -41,7 +41,7 @@ exports[`debug 1`] = `
     onStartShouldSetResponder={[Function onStartShouldSetResponder]}
     style={
       Object {
-        \\"opacity\\": 1,
+        "opacity": 1,
       }
     }
   >
@@ -50,12 +50,12 @@ exports[`debug 1`] = `
     </Text>
   </View>
   <Text
-    testID=\\"duplicateText\\"
+    testID="duplicateText"
   >
     First Text
   </Text>
   <Text
-    testID=\\"duplicateText\\"
+    testID="duplicateText"
   >
     Second Text
   </Text>
@@ -71,27 +71,27 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     Is the banana fresh?
   </Text>
   <Text
-    testID=\\"bananaFresh\\"
+    testID="bananaFresh"
   >
     fresh
   </Text>
   <TextInput
-    placeholder=\\"Add custom freshness\\"
-    testID=\\"bananaCustomFreshness\\"
-    value=\\"Custom Freshie\\"
+    placeholder="Add custom freshness"
+    testID="bananaCustomFreshness"
+    value="Custom Freshie"
   />
   <TextInput
-    defaultValue=\\"What did you inspect?\\"
-    placeholder=\\"Who inspected freshness?\\"
-    testID=\\"bananaChef\\"
-    value=\\"I inspected freshie\\"
+    defaultValue="What did you inspect?"
+    placeholder="Who inspected freshness?"
+    testID="bananaChef"
+    value="I inspected freshie"
   />
   <TextInput
-    defaultValue=\\"What banana?\\"
+    defaultValue="What banana?"
   />
   <TextInput
-    defaultValue=\\"hello\\"
-    value=\\"\\"
+    defaultValue="hello"
+    value=""
   />
   <View
     accessible={true}
@@ -106,7 +106,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     onStartShouldSetResponder={[Function onStartShouldSetResponder]}
     style={
       Object {
-        \\"opacity\\": 1,
+        "opacity": 1,
       }
     }
   >
@@ -115,12 +115,12 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     </Text>
   </View>
   <Text
-    testID=\\"duplicateText\\"
+    testID="duplicateText"
   >
     First Text
   </Text>
   <Text
-    testID=\\"duplicateText\\"
+    testID="duplicateText"
   >
     Second Text
   </Text>
@@ -136,41 +136,41 @@ exports[`debug: shallow 1`] = `
     Is the banana fresh?
   </Text>
   <Text
-    testID=\\"bananaFresh\\"
+    testID="bananaFresh"
   >
     not fresh
   </Text>
   <TextInput
-    placeholder=\\"Add custom freshness\\"
-    testID=\\"bananaCustomFreshness\\"
-    value=\\"Custom Freshie\\"
+    placeholder="Add custom freshness"
+    testID="bananaCustomFreshness"
+    value="Custom Freshie"
   />
   <TextInput
-    defaultValue=\\"What did you inspect?\\"
-    placeholder=\\"Who inspected freshness?\\"
-    testID=\\"bananaChef\\"
-    value=\\"I inspected freshie\\"
+    defaultValue="What did you inspect?"
+    placeholder="Who inspected freshness?"
+    testID="bananaChef"
+    value="I inspected freshie"
   />
   <TextInput
-    defaultValue=\\"What banana?\\"
+    defaultValue="What banana?"
   />
   <TextInput
-    defaultValue=\\"hello\\"
-    value=\\"\\"
+    defaultValue="hello"
+    value=""
   />
   <MyButton
     onPress={[Function anonymous]}
-    type=\\"primary\\"
+    type="primary"
   >
     Change freshness!
   </MyButton>
   <Text
-    testID=\\"duplicateText\\"
+    testID="duplicateText"
   >
     First Text
   </Text>
   <Text
-    testID=\\"duplicateText\\"
+    testID="duplicateText"
   >
     Second Text
   </Text>
@@ -188,41 +188,41 @@ exports[`debug: shallow with message 1`] = `
     Is the banana fresh?
   </Text>
   <Text
-    testID=\\"bananaFresh\\"
+    testID="bananaFresh"
   >
     not fresh
   </Text>
   <TextInput
-    placeholder=\\"Add custom freshness\\"
-    testID=\\"bananaCustomFreshness\\"
-    value=\\"Custom Freshie\\"
+    placeholder="Add custom freshness"
+    testID="bananaCustomFreshness"
+    value="Custom Freshie"
   />
   <TextInput
-    defaultValue=\\"What did you inspect?\\"
-    placeholder=\\"Who inspected freshness?\\"
-    testID=\\"bananaChef\\"
-    value=\\"I inspected freshie\\"
+    defaultValue="What did you inspect?"
+    placeholder="Who inspected freshness?"
+    testID="bananaChef"
+    value="I inspected freshie"
   />
   <TextInput
-    defaultValue=\\"What banana?\\"
+    defaultValue="What banana?"
   />
   <TextInput
-    defaultValue=\\"hello\\"
-    value=\\"\\"
+    defaultValue="hello"
+    value=""
   />
   <MyButton
     onPress={[Function anonymous]}
-    type=\\"primary\\"
+    type="primary"
   >
     Change freshness!
   </MyButton>
   <Text
-    testID=\\"duplicateText\\"
+    testID="duplicateText"
   >
     First Text
   </Text>
   <Text
-    testID=\\"duplicateText\\"
+    testID="duplicateText"
   >
     Second Text
   </Text>
@@ -240,27 +240,27 @@ exports[`debug: with message 1`] = `
     Is the banana fresh?
   </Text>
   <Text
-    testID=\\"bananaFresh\\"
+    testID="bananaFresh"
   >
     not fresh
   </Text>
   <TextInput
-    placeholder=\\"Add custom freshness\\"
-    testID=\\"bananaCustomFreshness\\"
-    value=\\"Custom Freshie\\"
+    placeholder="Add custom freshness"
+    testID="bananaCustomFreshness"
+    value="Custom Freshie"
   />
   <TextInput
-    defaultValue=\\"What did you inspect?\\"
-    placeholder=\\"Who inspected freshness?\\"
-    testID=\\"bananaChef\\"
-    value=\\"I inspected freshie\\"
+    defaultValue="What did you inspect?"
+    placeholder="Who inspected freshness?"
+    testID="bananaChef"
+    value="I inspected freshie"
   />
   <TextInput
-    defaultValue=\\"What banana?\\"
+    defaultValue="What banana?"
   />
   <TextInput
-    defaultValue=\\"hello\\"
-    value=\\"\\"
+    defaultValue="hello"
+    value=""
   />
   <View
     accessible={true}
@@ -275,7 +275,7 @@ exports[`debug: with message 1`] = `
     onStartShouldSetResponder={[Function onStartShouldSetResponder]}
     style={
       Object {
-        \\"opacity\\": 1,
+        "opacity": 1,
       }
     }
   >
@@ -284,12 +284,12 @@ exports[`debug: with message 1`] = `
     </Text>
   </View>
   <Text
-    testID=\\"duplicateText\\"
+    testID="duplicateText"
   >
     First Text
   </Text>
   <Text
-    testID=\\"duplicateText\\"
+    testID="duplicateText"
   >
     Second Text
   </Text>
@@ -312,7 +312,7 @@ exports[`toJSON 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    Object {
+    {
       "opacity": 1,
     }
   }
