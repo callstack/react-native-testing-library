@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matches, TextMatch } from '../matches';
+import { findAll } from '../helpers/findAll';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -10,6 +11,7 @@ import type {
   QueryByQuery,
 } from './makeQueries';
 import { TextMatchOptions } from './text';
+import { AccessibilityOption } from './accessibilityOption';
 
 const getNodeByHintText = (
   node: ReactTestInstance,
@@ -24,13 +26,15 @@ const queryAllByHintText = (
   instance: ReactTestInstance
 ): ((
   hint: TextMatch,
-  queryOptions?: TextMatchOptions
+  queryOptions?: AccessibilityOption
 ) => Array<ReactTestInstance>) =>
   function queryAllByA11yHintFn(hint, queryOptions) {
-    return instance.findAll(
+    return findAll(
+      instance,
       (node) =>
         typeof node.type === 'string' &&
-        getNodeByHintText(node, hint, queryOptions)
+        getNodeByHintText(node, hint, queryOptions),
+      { hidden: queryOptions?.hidden }
     );
   };
 

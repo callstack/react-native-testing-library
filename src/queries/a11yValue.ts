@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matchObjectProp } from '../helpers/matchers/matchObjectProp';
+import { findAll } from '../helpers/findAll';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -9,6 +10,7 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
+import { AccessibilityOption } from './accessibilityOption';
 
 type A11yValue = {
   min?: number;
@@ -19,12 +21,17 @@ type A11yValue = {
 
 const queryAllByA11yValue = (
   instance: ReactTestInstance
-): ((value: A11yValue) => Array<ReactTestInstance>) =>
-  function queryAllByA11yValueFn(value) {
-    return instance.findAll(
+): ((
+  value: A11yValue,
+  queryOptions?: AccessibilityOption
+) => Array<ReactTestInstance>) =>
+  function queryAllByA11yValueFn(value, queryOptions) {
+    return findAll(
+      instance,
       (node) =>
         typeof node.type === 'string' &&
-        matchObjectProp(node.props.accessibilityValue, value)
+        matchObjectProp(node.props.accessibilityValue, value),
+      { hidden: queryOptions?.hidden }
     );
   };
 
@@ -40,19 +47,19 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByA11yValueQueries = {
-  getByA11yValue: GetByQuery<A11yValue>;
-  getAllByA11yValue: GetAllByQuery<A11yValue>;
-  queryByA11yValue: QueryByQuery<A11yValue>;
-  queryAllByA11yValue: QueryAllByQuery<A11yValue>;
-  findByA11yValue: FindByQuery<A11yValue>;
-  findAllByA11yValue: FindAllByQuery<A11yValue>;
+  getByA11yValue: GetByQuery<A11yValue, AccessibilityOption>;
+  getAllByA11yValue: GetAllByQuery<A11yValue, AccessibilityOption>;
+  queryByA11yValue: QueryByQuery<A11yValue, AccessibilityOption>;
+  queryAllByA11yValue: QueryAllByQuery<A11yValue, AccessibilityOption>;
+  findByA11yValue: FindByQuery<A11yValue, AccessibilityOption>;
+  findAllByA11yValue: FindAllByQuery<A11yValue, AccessibilityOption>;
 
-  getByAccessibilityValue: GetByQuery<A11yValue>;
-  getAllByAccessibilityValue: GetAllByQuery<A11yValue>;
-  queryByAccessibilityValue: QueryByQuery<A11yValue>;
-  queryAllByAccessibilityValue: QueryAllByQuery<A11yValue>;
-  findByAccessibilityValue: FindByQuery<A11yValue>;
-  findAllByAccessibilityValue: FindAllByQuery<A11yValue>;
+  getByAccessibilityValue: GetByQuery<A11yValue, AccessibilityOption>;
+  getAllByAccessibilityValue: GetAllByQuery<A11yValue, AccessibilityOption>;
+  queryByAccessibilityValue: QueryByQuery<A11yValue, AccessibilityOption>;
+  queryAllByAccessibilityValue: QueryAllByQuery<A11yValue, AccessibilityOption>;
+  findByAccessibilityValue: FindByQuery<A11yValue, AccessibilityOption>;
+  findAllByAccessibilityValue: FindAllByQuery<A11yValue, AccessibilityOption>;
 };
 
 export const bindByA11yValueQueries = (

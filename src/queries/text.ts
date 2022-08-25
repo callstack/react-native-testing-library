@@ -8,6 +8,7 @@ import {
 } from '../helpers/component-tree';
 import { matches, TextMatch } from '../matches';
 import type { NormalizerFn } from '../matches';
+import { findAll } from '../helpers/findAll';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -17,8 +18,9 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
+import { AccessibilityOption } from './accessibilityOption';
 
-export type TextMatchOptions = {
+export type TextMatchOptions = AccessibilityOption & {
   exact?: boolean;
   normalizer?: NormalizerFn;
 };
@@ -86,8 +88,12 @@ const queryAllByText = (
       return [];
     }
 
-    const results = baseInstance.findAll((node) =>
-      getNodeByText(node, text, options)
+    const results = findAll(
+      baseInstance,
+      (node) => getNodeByText(node, text, options),
+      {
+        hidden: options?.hidden,
+      }
     );
 
     return results;

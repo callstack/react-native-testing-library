@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matches, TextMatch } from '../matches';
+import { findAll } from '../helpers/findAll';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -27,11 +28,13 @@ const queryAllByTestId = (
   queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByTestIdFn(testId, queryOptions) {
-    const results = instance
-      .findAll((node) => getNodeByTestId(node, testId, queryOptions))
-      .filter((element) => typeof element.type === 'string');
+    const results = findAll(
+      instance,
+      (node) => getNodeByTestId(node, testId, queryOptions),
+      { hidden: queryOptions?.hidden }
+    );
 
-    return results;
+    return results.filter((element) => typeof element.type === 'string');
   };
 
 const getMultipleError = (testId: TextMatch) =>

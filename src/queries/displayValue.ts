@@ -2,6 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { TextInput } from 'react-native';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { matches, TextMatch } from '../matches';
+import { findAll } from '../helpers/findAll';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -34,8 +35,11 @@ const queryAllByDisplayValue = (
   queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
-    return instance.findAll((node) =>
-      getTextInputNodeByDisplayValue(node, displayValue, queryOptions)
+    return findAll(
+      instance,
+      (node) =>
+        getTextInputNodeByDisplayValue(node, displayValue, queryOptions),
+      { hidden: queryOptions?.hidden }
     );
   };
 

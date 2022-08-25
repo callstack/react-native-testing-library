@@ -5,6 +5,7 @@ import { matchAccessibilityState } from '../helpers/matchers/accessibilityState'
 import { matchStringProp } from '../helpers/matchers/matchStringProp';
 import type { TextMatch } from '../matches';
 import { getQueriesForElement } from '../within';
+import { findAll } from '../helpers/findAll';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -14,10 +15,12 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
+import { AccessibilityOption } from './accessibilityOption';
 
 type ByRoleOptions = {
   name?: TextMatch;
-} & AccessibilityState;
+} & AccessibilityState &
+  AccessibilityOption;
 
 const matchAccessibleNameIfNeeded = (
   node: ReactTestInstance,
@@ -42,14 +45,16 @@ const queryAllByRole = (
   instance: ReactTestInstance
 ): ((role: TextMatch, options?: ByRoleOptions) => Array<ReactTestInstance>) =>
   function queryAllByRoleFn(role, options) {
-    return instance.findAll(
+    return findAll(
+      instance,
       (node) =>
         // run the cheapest checks first, and early exit too avoid unneeded computations
 
         typeof node.type === 'string' &&
         matchStringProp(node.props.accessibilityRole, role) &&
         matchAccessibleStateIfNeeded(node, options) &&
-        matchAccessibleNameIfNeeded(node, options?.name)
+        matchAccessibleNameIfNeeded(node, options?.name),
+      { hidden: options?.hidden }
     );
   };
 
