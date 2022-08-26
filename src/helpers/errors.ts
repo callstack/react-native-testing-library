@@ -43,7 +43,7 @@ export const prepareErrorMessage = (
 };
 
 export const createQueryByError = (
-  error: NonNullable<unknown>,
+  error: unknown,
   callsite: Function
 ): null => {
   if (error instanceof Error) {
