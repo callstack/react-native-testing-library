@@ -81,8 +81,8 @@ const siteConfig = {
       defaultLanguage: 'jsx',
     },
     algolia: {
-      appId: 'BH4D9OD16A',
-      apiKey: 'cd9b8b73f97b64ed04570e41c507683f',
+      appId: '6CJ0BV6AVN',
+      apiKey: '1158b92b8bc56495ac18740944c0786f',
       indexName: 'react-native-testing-library',
     },
   },
