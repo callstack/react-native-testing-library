@@ -235,6 +235,25 @@ test('should not fire on non-editable TextInput', () => {
   expect(onChangeTextMock).not.toHaveBeenCalled();
 });
 
+test('should not fire on non-editable TextInput getting by testID', () => {
+  const testID = 'my-text-input';
+  const onChangeTextMock = jest.fn();
+  const NEW_TEXT = 'New text';
+
+  const { getByTestId } = render(
+    <View>
+      <TextInput
+        editable={false}
+        testID={testID}
+        onChangeText={onChangeTextMock}
+      />
+    </View>
+  );
+
+  fireEvent.changeText(getByTestId(testID), NEW_TEXT);
+  expect(onChangeTextMock).not.toHaveBeenCalled();
+});
+
 test('should not fire on non-editable TextInput with nested Text', () => {
   const placeholder = 'Test placeholder';
   const onChangeTextMock = jest.fn();
