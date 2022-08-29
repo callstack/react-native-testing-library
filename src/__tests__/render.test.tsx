@@ -372,3 +372,16 @@ test('it should throw if a number is rendered outside a text', () => {
     render(<View>0</View>, { validateRenderedStrings: true })
   ).toThrowError('Text strings must be rendered within a host Text component.');
 });
+
+const Trans = ({ i18nKey }: { i18nKey: string }) => <>{i18nKey}</>;
+
+// eslint-disable-next-line jest/no-disabled-tests
+test.skip('it should throw with components returning string value not rendered in Text', () => {
+  expect(() =>
+    render(
+      <Text>
+        <Trans i18nKey="hello" />
+      </Text>
+    )
+  ).toThrow();
+});
