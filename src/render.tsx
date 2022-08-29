@@ -21,18 +21,21 @@ type TestRendererOptions = {
 
 export type RenderResult = ReturnType<typeof render>;
 
+type RenderParams<T> = RenderOptions & {
+  component: React.ReactElement<T>;
+  internalWrap?: (innerElement: React.ReactElement) => React.ReactElement;
+};
+
 /**
  * Renders test component deeply using react-test-renderer and exposes helpers
  * to assert on the output.
  */
-export function render<T>(
-  component: React.ReactElement<T>,
-  Wrapper?: RenderOptions['wrapper'],
-  createNodeMock?: RenderOptions['createNodeMock'],
-  internalWrap: (innerElement: React.ReactElement) => React.ReactElement = (
-    element
-  ) => element
-) {
+export function render<T>({
+  component,
+  wrapper: Wrapper,
+  createNodeMock,
+  internalWrap = (element) => element,
+}: RenderParams<T>) {
   const wrap = (element: React.ReactElement) =>
     Wrapper
       ? internalWrap(<Wrapper>{element}</Wrapper>)
@@ -83,7 +86,12 @@ export default function renderComponent<T>(
     </Profiler>
   );
 
-  return render(component, Wrapper, createNodeMock, wrap);
+  return render({
+    component,
+    wrapper: Wrapper,
+    createNodeMock,
+    internalWrap: wrap,
+  });
 }
 
 function renderWithAct(

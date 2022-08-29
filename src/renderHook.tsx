@@ -44,8 +44,7 @@ export function renderHook<Result, Props>(
 
   const { rerender: baseRerender, unmount } = render(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
-    <TestComponent renderCallbackProps={initialProps} />,
-    wrapper
+    { component: <TestComponent renderCallbackProps={initialProps} />, wrapper }
   );
 
   function rerender(rerenderCallbackProps: Props) {
