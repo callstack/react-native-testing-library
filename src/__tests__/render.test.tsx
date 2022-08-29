@@ -285,13 +285,13 @@ test('RenderAPI type', () => {
 });
 
 test('should throw when rendering a string outside a text component', () => {
-  expect(() => render(<View>hello</View>)).toThrowError(
-    'Text strings must be rendered within a host Text component.'
-  );
+  expect(() =>
+    render(<View>hello</View>, { validateRenderedStrings: true })
+  ).toThrowError('Text strings must be rendered within a host Text component.');
 });
 
 test('should throw an error when rerendering with text outside of Text component', () => {
-  const { rerender } = render(<View />);
+  const { rerender } = render(<View />, { validateRenderedStrings: true });
 
   expect(() => rerender(<View>hello</View>)).toThrowError(
     'Text strings must be rendered within a host Text component.'
@@ -317,7 +317,9 @@ const ErrorComponent = () => {
 };
 
 test('should throw an error when strings are rendered outside Text', () => {
-  const { getByText } = render(<ErrorComponent />);
+  const { getByText } = render(<ErrorComponent />, {
+    validateRenderedStrings: true,
+  });
 
   expect(() => fireEvent.press(getByText('Display text'))).toThrowError(
     'Text strings must be rendered within a host Text component.'
@@ -329,7 +331,12 @@ test('it should not throw for texts nested in fragments', () => {
     render(
       <Text>
         <>hello</>
-      </Text>
+      </Text>,
+      { validateRenderedStrings: true }
     )
   ).not.toThrow();
+});
+
+test('it should not throw if option validateRenderedString is false', () => {
+  expect(() => render(<View>hello</View>)).not.toThrow();
 });

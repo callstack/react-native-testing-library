@@ -13,6 +13,7 @@ import { assertStringsWithinText } from './helpers/assertStringsWithinText';
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => any;
+  validateRenderedStrings?: boolean;
 };
 
 type TestRendererOptions = {
@@ -35,6 +36,7 @@ export function render<T>({
   wrapper: Wrapper,
   createNodeMock,
   internalWrap = (element) => element,
+  validateRenderedStrings = false,
 }: RenderParams<T>) {
   const wrap = (element: React.ReactElement) =>
     Wrapper
@@ -47,7 +49,11 @@ export function render<T>({
   );
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
-  assertStringsWithinText(instance);
+
+  if (validateRenderedStrings) {
+    assertStringsWithinText(instance);
+  }
+
   const unmount = () => {
     act(() => {
       renderer.unmount();
@@ -72,8 +78,16 @@ export function render<T>({
 
 export default function renderComponent<T>(
   component: React.ReactElement<T>,
-  { wrapper: Wrapper, createNodeMock }: RenderOptions = {}
+  {
+    wrapper: Wrapper,
+    createNodeMock,
+    validateRenderedStrings,
+  }: RenderOptions = {}
 ) {
+  if (!validateRenderedStrings) {
+    return render({ component, wrapper: Wrapper, createNodeMock });
+  }
+
   const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
     if (phase === 'update') {
       assertStringsWithinText(screen.container);
@@ -91,6 +105,7 @@ export default function renderComponent<T>(
     wrapper: Wrapper,
     createNodeMock,
     internalWrap: wrap,
+    validateRenderedStrings: true,
   });
 }
 
