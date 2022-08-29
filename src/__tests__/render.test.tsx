@@ -354,3 +354,21 @@ test(`it should throw
     )
   ).toThrowError('Text strings must be rendered within a host Text component.');
 });
+
+test(`it should throw 
+    - when a string is rendered within a fragment rendered outside a Text`, () => {
+  expect(() =>
+    render(
+      <View>
+        <>hello</>
+      </View>,
+      { validateRenderedStrings: true }
+    )
+  ).toThrowError('Text strings must be rendered within a host Text component.');
+});
+
+test('it should throw if a number is rendered outside a text', () => {
+  expect(() =>
+    render(<View>0</View>, { validateRenderedStrings: true })
+  ).toThrowError('Text strings must be rendered within a host Text component.');
+});
