@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -493,30 +492,4 @@ test('has only onMove', () => {
     touchHistory: { mostRecentTimeStamp: '2', touchBank: [] },
   });
   expect(handleDrag).toHaveBeenCalled();
-});
-
-const ErrorComponent = () => {
-  const [shouldDisplayText, setShouldDisplayText] = useState(false);
-
-  if (!shouldDisplayText) {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          setShouldDisplayText(true);
-        }}
-      >
-        <Text>Display text</Text>
-      </TouchableOpacity>
-    );
-  }
-
-  return <View>text rendered outside text component</View>;
-};
-
-test('should throw an error when strings are rendered outside Text', () => {
-  const { getByText } = render(<ErrorComponent />);
-
-  expect(() => fireEvent.press(getByText('Display text'))).toThrowError(
-    'Text strings must be rendered within a host Text component.'
-  );
 });
