@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { ReactTestInstance } from 'react-test-renderer';
 import { filterNodeByType } from './filterNodeByType';
 
@@ -18,13 +18,10 @@ export const assertStringsWithinText = (instance: ReactTestInstance): void => {
 
 const hasNodeStringChild = (node: ReactTestInstance) => {
   const children: (string | number | ReactElement)[] = node.props.children;
-  let nodeHasStringChild = false;
 
-  React.Children.forEach(children, (child) => {
-    if (typeof child === 'string') {
-      nodeHasStringChild = true;
-    }
-  });
+  if (Array.isArray(children)) {
+    return children.some((child) => typeof child === 'string');
+  }
 
-  return nodeHasStringChild;
+  return typeof children === 'string';
 };

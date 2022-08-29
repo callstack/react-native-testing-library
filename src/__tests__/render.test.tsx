@@ -340,3 +340,17 @@ test('it should not throw for texts nested in fragments', () => {
 test('it should not throw if option validateRenderedString is false', () => {
   expect(() => render(<View>hello</View>)).not.toThrow();
 });
+
+test(`it should throw 
+      - when one of the children is a text
+      - and the parent is not a Text component`, () => {
+  expect(() =>
+    render(
+      <View>
+        <Text>hello</Text>
+        hello
+      </View>,
+      { validateRenderedStrings: true }
+    )
+  ).toThrowError('Text strings must be rendered within a host Text component.');
+});
