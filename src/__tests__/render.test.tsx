@@ -323,3 +323,13 @@ test('should throw an error when strings are rendered outside Text', () => {
     'Text strings must be rendered within a host Text component.'
   );
 });
+
+test('it should not throw for texts nested in fragments', () => {
+  expect(() =>
+    render(
+      <Text>
+        <>hello</>
+      </Text>
+    )
+  ).not.toThrow();
+});
