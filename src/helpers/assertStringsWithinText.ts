@@ -8,9 +8,9 @@ export const assertStringsWithinText = (instance: ReactTestInstance): void => {
   );
   nodesWithStringChild.forEach((node) => {
     const isHostTextComponent = filterNodeByType(node, 'Text');
-    const isNativeComponent = typeof node.type === 'string';
+    const isHostComponent = typeof node.type === 'string';
 
-    if (!isHostTextComponent && isNativeComponent) {
+    if (!isHostTextComponent && isHostComponent) {
       throw new Error(
         'Text strings must be rendered within a host Text component.'
       );
