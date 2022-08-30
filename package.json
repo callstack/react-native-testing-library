@@ -36,7 +36,7 @@
     "@babel/preset-typescript": "^7.16.0",
     "@callstack/eslint-config": "^12.0.2",
     "@testing-library/jest-native": "~4.0.2",
-    "@types/jest": "^28.0.0",
+    "@types/jest": "^29.0.0",
     "@types/react": "^18.0.0",
     "@types/react-native": "^0.69.1",
     "@types/react-test-renderer": "^18.0.0",
