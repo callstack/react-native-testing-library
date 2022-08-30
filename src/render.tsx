@@ -51,7 +51,7 @@ export function render<T>({
   const instance = renderer.root;
 
   if (validateRenderedStrings) {
-    assertStringsWithinText(instance);
+    assertStringsWithinText(renderer.toJSON());
   }
 
   const unmount = () => {
@@ -90,7 +90,7 @@ export default function renderComponent<T>(
 
   const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
     if (phase === 'update') {
-      assertStringsWithinText(screen.container);
+      assertStringsWithinText(screen.toJSON());
     }
   };
 

@@ -375,13 +375,13 @@ test('it should throw if a number is rendered outside a text', () => {
 
 const Trans = ({ i18nKey }: { i18nKey: string }) => <>{i18nKey}</>;
 
-// eslint-disable-next-line jest/no-disabled-tests
-test.skip('it should throw with components returning string value not rendered in Text', () => {
+test('it should throw with components returning string value not rendered in Text', () => {
   expect(() =>
     render(
-      <Text>
+      <View>
         <Trans i18nKey="hello" />
-      </Text>
+      </View>,
+      { validateRenderedStrings: true }
     )
   ).toThrow();
 });
