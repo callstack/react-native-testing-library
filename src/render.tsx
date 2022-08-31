@@ -13,7 +13,7 @@ import { assertStringsWithinText } from './helpers/assertStringsWithinText';
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => any;
-  validateRenderedStrings?: boolean;
+  experimentalValidateStringsRenderedInText?: boolean;
 };
 
 type TestRendererOptions = {
@@ -36,7 +36,7 @@ export function render<T>({
   wrapper: Wrapper,
   createNodeMock,
   internalWrap = (element) => element,
-  validateRenderedStrings = false,
+  experimentalValidateStringsRenderedInText = false,
 }: RenderParams<T>) {
   const wrap = (element: React.ReactElement) =>
     Wrapper
@@ -50,7 +50,7 @@ export function render<T>({
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
 
-  if (validateRenderedStrings) {
+  if (experimentalValidateStringsRenderedInText) {
     assertStringsWithinText(renderer.toJSON());
   }
 
@@ -81,10 +81,10 @@ export default function renderComponent<T>(
   {
     wrapper: Wrapper,
     createNodeMock,
-    validateRenderedStrings,
+    experimentalValidateStringsRenderedInText,
   }: RenderOptions = {}
 ) {
-  if (!validateRenderedStrings) {
+  if (!experimentalValidateStringsRenderedInText) {
     return render({ component, wrapper: Wrapper, createNodeMock });
   }
 
@@ -105,7 +105,7 @@ export default function renderComponent<T>(
     wrapper: Wrapper,
     createNodeMock,
     internalWrap: wrap,
-    validateRenderedStrings: true,
+    experimentalValidateStringsRenderedInText: true,
   });
 }
 
