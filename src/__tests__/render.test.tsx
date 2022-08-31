@@ -9,6 +9,8 @@ import {
 import stripAnsi from 'strip-ansi';
 import { render, fireEvent, RenderAPI } from '..';
 
+const originalConsoleError = console.error;
+
 type ConsoleLogMock = jest.Mock<Array<string>>;
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
@@ -291,11 +293,23 @@ test('should throw when rendering a string outside a text component', () => {
 });
 
 test('should throw an error when rerendering with text outside of Text component', () => {
+  // eslint-disable-next-line no-console
+  console.error = (errorMessage: string) => {
+    if (
+      !errorMessage.includes(
+        'The above error occurred in the <Profiler> component'
+      )
+    ) {
+      originalConsoleError(errorMessage);
+    }
+  };
   const { rerender } = render(<View />, { validateRenderedStrings: true });
 
   expect(() => rerender(<View>hello</View>)).toThrowError(
     'Text strings must be rendered within a host Text component.'
   );
+  // eslint-disable-next-line no-console
+  console.error = originalConsoleError;
 });
 
 const ErrorComponent = () => {
@@ -317,6 +331,16 @@ const ErrorComponent = () => {
 };
 
 test('should throw an error when strings are rendered outside Text', () => {
+  // eslint-disable-next-line no-console
+  console.error = (errorMessage: string) => {
+    if (
+      !errorMessage.includes(
+        'The above error occurred in the <Profiler> component'
+      )
+    ) {
+      originalConsoleError(errorMessage);
+    }
+  };
   const { getByText } = render(<ErrorComponent />, {
     validateRenderedStrings: true,
   });
@@ -324,6 +348,8 @@ test('should throw an error when strings are rendered outside Text', () => {
   expect(() => fireEvent.press(getByText('Display text'))).toThrowError(
     'Text strings must be rendered within a host Text component.'
   );
+  // eslint-disable-next-line no-console
+  console.error = originalConsoleError;
 });
 
 test('it should not throw for texts nested in fragments', () => {
