@@ -68,6 +68,7 @@ type WaitForOptions = {
   interval?: number,
   onTimeout?: (error: mixed) => Error,
 };
+
 type WaitForFunction = <T = any>(
   expectation: () => T,
   options?: WaitForOptions
@@ -289,11 +290,6 @@ interface Thenable {
   then: (resolve: () => any, reject?: () => any) => any;
 }
 
-interface RenderOptions {
-  wrapper?: React.ComponentType<any>;
-  createNodeMock?: (element: React.Element<any>) => any;
-}
-
 type Debug = {
   (message?: string): void,
   shallow: (message?: string) => void,
@@ -307,15 +303,6 @@ type Queries = ByTextQueries &
   UnsafeByPropsQueries &
   A11yAPI;
 
-interface RenderAPI extends Queries {
-  update(nextElement: React.Element<any>): void;
-  rerender(nextElement: React.Element<any>): void;
-  unmount(nextElement?: React.Element<any>): void;
-  toJSON(): ReactTestRendererJSON[] | ReactTestRendererJSON | null;
-  debug: Debug;
-  container: ReactTestInstance;
-}
-
 type FireEventFunction = (
   element: ReactTestInstance,
   eventName: string,
@@ -328,24 +315,29 @@ type FireEventAPI = FireEventFunction & {
   scroll: (element: ReactTestInstance, ...data: Array<any>) => any,
 };
 
-type RenderHookResult<Result, Props> = {
-  rerender: (props: Props) => void,
-  result: { current: Result },
-  unmount: () => void,
-};
-
-type RenderHookOptions<Props> = {
-  initialProps?: Props,
-  wrapper?: React.ComponentType<any>,
-};
-
 declare module '@testing-library/react-native' {
+  declare interface RenderResult extends Queries {
+    update(nextElement: React.Element<any>): void;
+    rerender(nextElement: React.Element<any>): void;
+    unmount(nextElement?: React.Element<any>): void;
+    toJSON(): ReactTestRendererJSON[] | ReactTestRendererJSON | null;
+    debug: Debug;
+    container: ReactTestInstance;
+  }
+
+  declare type RenderAPI = RenderResult;
+
+  declare interface RenderOptions {
+    wrapper?: React.ComponentType<any>;
+    createNodeMock?: (element: React.Element<any>) => any;
+  }
+
   declare export var render: (
     component: React.Element<any>,
     options?: RenderOptions
-  ) => RenderAPI;
+  ) => RenderResult;
 
-  declare export var screen: RenderAPI;
+  declare export var screen: RenderResult;
 
   declare export var cleanup: () => void;
   declare export var fireEvent: FireEventAPI;
@@ -368,6 +360,17 @@ declare module '@testing-library/react-native' {
   declare export var getDefaultNormalizer: (
     normalizerConfig?: NormalizerConfig
   ) => NormalizerFn;
+
+  declare type RenderHookResult<Result, Props> = {
+    rerender: (props: Props) => void,
+    result: { current: Result },
+    unmount: () => void,
+  };
+
+  declare type RenderHookOptions<Props> = {
+    initialProps?: Props,
+    wrapper?: React.ComponentType<any>,
+  };
 
   declare type RenderHookFunction = <Result, Props>(
     renderCallback: (props: Props) => Result,
