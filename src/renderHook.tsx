@@ -2,11 +2,11 @@ import React from 'react';
 import type { ComponentType } from 'react';
 import render from './render';
 
-export interface RenderHookResult<Result, Props> {
+export type RenderHookResult<Result, Props> = {
   rerender: (props: Props) => void;
   result: { current: Result };
   unmount: () => void;
-}
+};
 
 export type RenderHookOptions<Props> = Props extends
   | object

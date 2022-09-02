@@ -12,6 +12,7 @@ export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => any;
 };
+
 type TestRendererOptions = {
   createNodeMock: (element: React.ReactElement) => any;
 };
