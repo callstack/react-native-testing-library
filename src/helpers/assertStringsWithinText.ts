@@ -19,11 +19,13 @@ const assertStringsWithinTextForNode = (node: ReactTestRendererNode) => {
   }
 
   if (node.type !== 'Text') {
-    if (node.children?.some((child) => typeof child === 'string')) {
-      throw new Error(
-        'Text strings must be rendered within a host Text component.'
-      );
-    }
+    node.children?.forEach((child) => {
+      if (typeof child === 'string') {
+        throw new Error(
+          `Text strings must be rendered within a host Text component. Text ${child} was rendered in a ${node.type}`
+        );
+      }
+    });
   }
 
   if (node.children) {

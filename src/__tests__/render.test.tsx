@@ -285,7 +285,9 @@ test('should throw when rendering a string outside a text component', () => {
     render(<View>hello</View>, {
       unstable_validateStringsRenderedInText: true,
     })
-  ).toThrowError('Text strings must be rendered within a host Text component.');
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Text strings must be rendered within a host Text component. Text hello was rendered in a View"`
+  );
 });
 
 const profilerErrorMessage =
@@ -302,8 +304,8 @@ test('should throw an error when rerendering with text outside of Text component
     unstable_validateStringsRenderedInText: true,
   });
 
-  expect(() => rerender(<View>hello</View>)).toThrowError(
-    'Text strings must be rendered within a host Text component.'
+  expect(() => rerender(<View>hello</View>)).toThrowErrorMatchingInlineSnapshot(
+    `"Text strings must be rendered within a host Text component. Text hello was rendered in a View"`
   );
   // eslint-disable-next-line no-console
   console.error = originalConsoleError;
@@ -338,8 +340,10 @@ test('should throw an error when strings are rendered outside Text', () => {
     unstable_validateStringsRenderedInText: true,
   });
 
-  expect(() => fireEvent.press(getByText('Display text'))).toThrowError(
-    'Text strings must be rendered within a host Text component.'
+  expect(() =>
+    fireEvent.press(getByText('Display text'))
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Text strings must be rendered within a host Text component. Text text rendered outside text component was rendered in a View"`
   );
   // eslint-disable-next-line no-console
   console.error = originalConsoleError;
@@ -371,7 +375,9 @@ test(`it should throw
       </View>,
       { unstable_validateStringsRenderedInText: true }
     )
-  ).toThrowError('Text strings must be rendered within a host Text component.');
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Text strings must be rendered within a host Text component. Text hello was rendered in a View"`
+  );
 });
 
 test(`it should throw 
@@ -383,13 +389,17 @@ test(`it should throw
       </View>,
       { unstable_validateStringsRenderedInText: true }
     )
-  ).toThrowError('Text strings must be rendered within a host Text component.');
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Text strings must be rendered within a host Text component. Text hello was rendered in a View"`
+  );
 });
 
 test('it should throw if a number is rendered outside a text', () => {
   expect(() =>
     render(<View>0</View>, { unstable_validateStringsRenderedInText: true })
-  ).toThrowError('Text strings must be rendered within a host Text component.');
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Text strings must be rendered within a host Text component. Text 0 was rendered in a View"`
+  );
 });
 
 const Trans = ({ i18nKey }: { i18nKey: string }) => <>{i18nKey}</>;
@@ -424,5 +434,7 @@ test('it should throw when rendering string in a View in a Text', () => {
       </Text>,
       { unstable_validateStringsRenderedInText: true }
     )
-  ).toThrowError('Text strings must be rendered within a host Text component.');
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Text strings must be rendered within a host Text component. Text hello was rendered in a View"`
+  );
 });
