@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  SafeAreaView,
-} from 'react-native';
+import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
 import stripAnsi from 'strip-ansi';
 import { render, fireEvent, RenderAPI } from '..';
 
@@ -23,9 +17,9 @@ const DEFAULT_INPUT_CUSTOMER = 'What banana?';
 class MyButton extends React.Component<any> {
   render() {
     return (
-      <TouchableOpacity onPress={this.props.onPress}>
+      <Pressable onPress={this.props.onPress}>
         <Text>{this.props.children}</Text>
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 }
@@ -321,13 +315,13 @@ const ErrorComponent = () => {
 
   if (!shouldDisplayText) {
     return (
-      <TouchableOpacity
+      <Pressable
         onPress={() => {
           setShouldDisplayText(true);
         }}
       >
         <Text>Display text</Text>
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 

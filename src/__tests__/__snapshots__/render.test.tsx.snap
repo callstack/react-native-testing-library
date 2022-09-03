@@ -32,18 +32,15 @@ exports[`debug 1`] = `
     accessible={true}
     collapsable={false}
     focusable={true}
+    onBlur={[Function onBlur]}
     onClick={[Function onClick]}
+    onFocus={[Function onFocus]}
     onResponderGrant={[Function onResponderGrant]}
     onResponderMove={[Function onResponderMove]}
     onResponderRelease={[Function onResponderRelease]}
     onResponderTerminate={[Function onResponderTerminate]}
     onResponderTerminationRequest={[Function onResponderTerminationRequest]}
     onStartShouldSetResponder={[Function onStartShouldSetResponder]}
-    style={
-      Object {
-        "opacity": 1,
-      }
-    }
   >
     <Text>
       Change freshness!
@@ -97,18 +94,15 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     accessible={true}
     collapsable={false}
     focusable={true}
+    onBlur={[Function onBlur]}
     onClick={[Function onClick]}
+    onFocus={[Function onFocus]}
     onResponderGrant={[Function onResponderGrant]}
     onResponderMove={[Function onResponderMove]}
     onResponderRelease={[Function onResponderRelease]}
     onResponderTerminate={[Function onResponderTerminate]}
     onResponderTerminationRequest={[Function onResponderTerminationRequest]}
     onStartShouldSetResponder={[Function onStartShouldSetResponder]}
-    style={
-      Object {
-        "opacity": 1,
-      }
-    }
   >
     <Text>
       Change freshness!
@@ -266,18 +260,15 @@ exports[`debug: with message 1`] = `
     accessible={true}
     collapsable={false}
     focusable={true}
+    onBlur={[Function onBlur]}
     onClick={[Function onClick]}
+    onFocus={[Function onFocus]}
     onResponderGrant={[Function onResponderGrant]}
     onResponderMove={[Function onResponderMove]}
     onResponderRelease={[Function onResponderRelease]}
     onResponderTerminate={[Function onResponderTerminate]}
     onResponderTerminationRequest={[Function onResponderTerminationRequest]}
     onStartShouldSetResponder={[Function onStartShouldSetResponder]}
-    style={
-      Object {
-        "opacity": 1,
-      }
-    }
   >
     <Text>
       Change freshness!
@@ -303,19 +294,16 @@ exports[`toJSON 1`] = `
 <View
   accessible={true}
   collapsable={false}
-  focusable={false}
+  focusable={true}
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
   onResponderTerminate={[Function]}
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
-  style={
-    {
-      "opacity": 1,
-    }
-  }
 >
   <Text>
     press me
