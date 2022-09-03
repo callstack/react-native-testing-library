@@ -415,3 +415,14 @@ test('it should throw with components returning string value not rendered in Tex
     )
   ).toThrow();
 });
+
+test('it should throw when rendering string in a View in a Text', () => {
+  expect(() =>
+    render(
+      <Text>
+        <View>hello</View>
+      </Text>,
+      { unstable_validateStringsRenderedInText: true }
+    )
+  ).toThrowError('Text strings must be rendered within a host Text component.');
+});

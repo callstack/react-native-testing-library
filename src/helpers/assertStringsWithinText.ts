@@ -24,9 +24,9 @@ const assertStringsWithinTextForNode = (node: ReactTestRendererNode) => {
         'Text strings must be rendered within a host Text component.'
       );
     }
+  }
 
-    if (node.children) {
-      node.children.forEach(assertStringsWithinText);
-    }
+  if (node.children) {
+    node.children.forEach(assertStringsWithinText);
   }
 };
