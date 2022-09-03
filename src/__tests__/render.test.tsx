@@ -288,14 +288,13 @@ test('should throw when rendering a string outside a text component', () => {
   ).toThrowError('Text strings must be rendered within a host Text component.');
 });
 
+const profilerErrorMessage =
+  'The above error occurred in the <Profiler> component';
+
 test('should throw an error when rerendering with text outside of Text component', () => {
   // eslint-disable-next-line no-console
   console.error = (errorMessage: string) => {
-    if (
-      !errorMessage.includes(
-        'The above error occurred in the <Profiler> component'
-      )
-    ) {
+    if (!errorMessage.includes(profilerErrorMessage)) {
       originalConsoleError(errorMessage);
     }
   };
@@ -331,11 +330,7 @@ const ErrorComponent = () => {
 test('should throw an error when strings are rendered outside Text', () => {
   // eslint-disable-next-line no-console
   console.error = (errorMessage: string) => {
-    if (
-      !errorMessage.includes(
-        'The above error occurred in the <Profiler> component'
-      )
-    ) {
+    if (!errorMessage.includes(profilerErrorMessage)) {
       originalConsoleError(errorMessage);
     }
   };
