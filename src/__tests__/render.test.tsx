@@ -405,6 +405,17 @@ test('it should throw with components returning string value not rendered in Tex
   ).toThrow();
 });
 
+test('it should not throw with components returning string value rendered in Text', () => {
+  expect(() =>
+    render(
+      <Text>
+        <Trans i18nKey="hello" />
+      </Text>,
+      { unstable_validateStringsRenderedInText: true }
+    )
+  ).not.toThrow();
+});
+
 test('it should throw when rendering string in a View in a Text', () => {
   expect(() =>
     render(
