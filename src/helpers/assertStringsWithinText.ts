@@ -1,28 +1,32 @@
 import { ReactTestRendererNode } from 'react-test-renderer';
 
 export const assertStringsWithinText = (
-  rendererJSON: ReactTestRendererNode | null | ReactTestRendererNode[]
+  rendererJSON: ReactTestRendererNode | Array<ReactTestRendererNode> | null
 ) => {
   if (!rendererJSON) return;
 
   if (Array.isArray(rendererJSON)) {
-    rendererJSON.forEach(assertStringsWithinText);
+    rendererJSON.forEach(assertStringsWithinTextForNode);
     return;
   }
 
-  if (typeof rendererJSON === 'string') {
+  return assertStringsWithinTextForNode(rendererJSON);
+};
+
+const assertStringsWithinTextForNode = (node: ReactTestRendererNode) => {
+  if (typeof node === 'string') {
     return;
   }
 
-  if (rendererJSON.type !== 'Text') {
-    if (rendererJSON.children?.some((child) => typeof child === 'string')) {
+  if (node.type !== 'Text') {
+    if (node.children?.some((child) => typeof child === 'string')) {
       throw new Error(
         'Text strings must be rendered within a host Text component.'
       );
     }
 
-    if (rendererJSON.children) {
-      rendererJSON.children.forEach(assertStringsWithinText);
+    if (node.children) {
+      node.children.forEach(assertStringsWithinText);
     }
   }
 };
