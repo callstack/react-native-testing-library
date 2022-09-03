@@ -22,37 +22,70 @@ type TestRendererOptions = {
 
 export type RenderResult = ReturnType<typeof render>;
 
-type RenderParams<T> = RenderOptions & {
-  component: React.ReactElement<T>;
-  internalWrap?: (innerElement: React.ReactElement) => React.ReactElement;
-};
-
 /**
  * Renders test component deeply using react-test-renderer and exposes helpers
  * to assert on the output.
  */
-export function render<T>({
-  component,
-  wrapper: Wrapper,
-  createNodeMock,
-  internalWrap = (element) => element,
-  unstable_validateStringsRenderedInText = false,
-}: RenderParams<T>) {
+export default function render<T>(
+  component: React.ReactElement<T>,
+  {
+    wrapper: Wrapper,
+    createNodeMock,
+    unstable_validateStringsRenderedInText,
+  }: RenderOptions = {}
+) {
+  if (unstable_validateStringsRenderedInText) {
+    return renderWithStringValidation(component, {
+      wrapper: Wrapper,
+      createNodeMock,
+    });
+  }
+
   const wrap = (element: React.ReactElement) =>
-    Wrapper
-      ? internalWrap(<Wrapper>{element}</Wrapper>)
-      : internalWrap(element);
+    Wrapper ? <Wrapper>{element}</Wrapper> : element;
 
   const renderer = renderWithAct(
     wrap(component),
     createNodeMock ? { createNodeMock } : undefined
   );
+
+  return enrichRenderResult(renderer, wrap);
+}
+
+function renderWithStringValidation<T>(
+  component: React.ReactElement<T>,
+  {
+    wrapper: Wrapper,
+    createNodeMock,
+  }: Omit<RenderOptions, 'unstable_validateStringsRenderedInText'> = {}
+) {
+  const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
+    if (phase === 'update') {
+      assertStringsWithinText(screen.toJSON());
+    }
+  };
+
+  const wrap = (innerElement: React.ReactElement) => (
+    <Profiler id="renderProfiler" onRender={handleRender}>
+      {Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement}
+    </Profiler>
+  );
+
+  const renderer = renderWithAct(
+    wrap(component),
+    createNodeMock ? { createNodeMock } : undefined
+  );
+  assertStringsWithinText(renderer.toJSON());
+
+  return enrichRenderResult(renderer, wrap);
+}
+
+function enrichRenderResult(
+  renderer: ReactTestRenderer,
+  wrap: (element: React.ReactElement) => JSX.Element
+) {
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
-
-  if (unstable_validateStringsRenderedInText) {
-    assertStringsWithinText(renderer.toJSON());
-  }
 
   const unmount = () => {
     act(() => {
@@ -74,39 +107,6 @@ export function render<T>({
 
   setRenderResult(result);
   return result;
-}
-
-export default function renderComponent<T>(
-  component: React.ReactElement<T>,
-  {
-    wrapper: Wrapper,
-    createNodeMock,
-    unstable_validateStringsRenderedInText,
-  }: RenderOptions = {}
-) {
-  if (!unstable_validateStringsRenderedInText) {
-    return render({ component, wrapper: Wrapper, createNodeMock });
-  }
-
-  const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
-    if (phase === 'update') {
-      assertStringsWithinText(screen.toJSON());
-    }
-  };
-
-  const wrap = (innerElement: React.ReactElement) => (
-    <Profiler id="renderProfiler" onRender={handleRender}>
-      {innerElement}
-    </Profiler>
-  );
-
-  return render({
-    component,
-    wrapper: Wrapper,
-    createNodeMock,
-    internalWrap: wrap,
-    unstable_validateStringsRenderedInText: true,
-  });
 }
 
 function renderWithAct(
