@@ -1,5 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import act from './act';
+import { filterNodeByType } from './helpers/filterNodeByType';
 
 type EventHandler = (...args: any) => unknown;
 
@@ -8,8 +9,15 @@ const isHostElement = (element?: ReactTestInstance) => {
 };
 
 const isTextInput = (element?: ReactTestInstance) => {
+  if (!element) {
+    return false;
+  }
+
   const { TextInput } = require('react-native');
-  return element?.type === TextInput;
+  return (
+    filterNodeByType(element, TextInput) ||
+    filterNodeByType(element, 'TextInput')
+  );
 };
 
 const isTouchResponder = (element?: ReactTestInstance) => {

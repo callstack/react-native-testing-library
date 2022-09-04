@@ -3,5 +3,5 @@ import * as React from 'react';
 
 export const filterNodeByType = (
   node: ReactTestInstance | React.ReactElement,
-  type: React.ElementType
+  type: React.ElementType | string
 ) => node.type === type;
