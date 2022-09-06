@@ -2,13 +2,17 @@ import React from 'react';
 import type { ComponentType } from 'react';
 import render from './render';
 
-interface RenderHookResult<Result, Props> {
+export type RenderHookResult<Result, Props> = {
   rerender: (props: Props) => void;
   result: { current: Result };
   unmount: () => void;
-}
+};
 
-type RenderHookOptions<Props> = Props extends object | string | number | boolean
+export type RenderHookOptions<Props> = Props extends
+  | object
+  | string
+  | number
+  | boolean
   ? {
       initialProps: Props;
       wrapper?: ComponentType<any>;
