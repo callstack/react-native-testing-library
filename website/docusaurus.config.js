@@ -82,8 +82,8 @@ const siteConfig = {
     },
     algolia: {
       appId: '6CJ0BV6AVN',
-      apiKey: '1158b92b8bc56495ac18740944c0786f',
-      indexName: 'react-native-testing-library',
+      apiKey: '198ecded5a7987b04767482a8d6fe602',
+      indexName: 'crawler_React Native Testing Library Docs',
     },
   },
 
