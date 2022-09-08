@@ -215,7 +215,6 @@ test('renders options.wrapper around node', () => {
   expect(getByTestId('wrapper')).toBeTruthy();
   expect(toJSON()).toMatchInlineSnapshot(`
     <RCTSafeAreaView
-      emulateUnlessSupported={true}
       testID="wrapper"
     >
       <View
@@ -242,7 +241,6 @@ test('renders options.wrapper around updated node', () => {
   expect(getByTestId('wrapper')).toBeTruthy();
   expect(toJSON()).toMatchInlineSnapshot(`
     <RCTSafeAreaView
-      emulateUnlessSupported={true}
       testID="wrapper"
     >
       <View
