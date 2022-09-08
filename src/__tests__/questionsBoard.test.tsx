@@ -55,7 +55,7 @@ test('form submits two answers', () => {
   fireEvent.changeText(answerInputs[1], 'a2');
   fireEvent.press(getByText('Submit'));
 
-  expect(mockFn).toBeCalledWith({
+  expect(mockFn).toHaveBeenCalledWith({
     '1': { q: 'q1', a: 'a1' },
     '2': { q: 'q2', a: 'a2' },
   });

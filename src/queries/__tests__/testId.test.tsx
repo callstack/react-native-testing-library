@@ -49,10 +49,10 @@ test('getByTestId returns only native elements', () => {
   expect(getAllByTestId('view')).toHaveLength(1);
   expect(getAllByTestId('button')).toHaveLength(1);
 
-  expect(() => getByTestId('myComponent')).toThrowError(
+  expect(() => getByTestId('myComponent')).toThrow(
     'Unable to find an element with testID: myComponent'
   );
-  expect(() => getAllByTestId('myComponent')).toThrowError(
+  expect(() => getAllByTestId('myComponent')).toThrow(
     'Unable to find an element with testID: myComponent'
   );
 });
