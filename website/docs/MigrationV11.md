@@ -41,7 +41,7 @@ should become
 findByText(/Text/, {}, { timeout: 1000 })
 ```
 
-## Triggering non-touch events on targes with `pointerEvents="box-none"` prop
+## Triggering non-touch events on targets with `pointerEvents="box-none"` prop
 
 Up to version 10, RNTL disables all events for a target with `pointerEvents="box-none"`. This behavior is counter to how React Native itself functions. 
 
