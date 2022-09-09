@@ -7,9 +7,16 @@ const isHostElement = (element?: ReactTestInstance) => {
   return typeof element?.type === 'string';
 };
 
+// Rendering TextInput results in having composite `TextInput` component with
+// child text input host component. Both will have the same `editable` and
+// `onChangeText` props.
 const isTextInput = (element?: ReactTestInstance) => {
   const { TextInput } = require('react-native');
-  return element?.type === TextInput;
+
+  const isExportedCompositeTextInput = element?.type === TextInput;
+  const isChildHostTextInput = element?.parent?.type === TextInput;
+
+  return isExportedCompositeTextInput || isChildHostTextInput;
 };
 
 const isTouchResponder = (element?: ReactTestInstance) => {
