@@ -235,7 +235,7 @@ test('should not fire on non-editable TextInput', () => {
   expect(onChangeTextMock).not.toHaveBeenCalled();
 });
 
-test('should not fire on non-editable TextInput getting by testID', () => {
+test('should not fire on non-editable host TextInput, () => {
   const testID = 'my-text-input';
   const onChangeTextMock = jest.fn();
   const NEW_TEXT = 'New text';
