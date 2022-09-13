@@ -30,6 +30,7 @@ jobs:
           key: dependencies-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - run: yarn setup:react:17
       - persist_to_workspace:
           root: .
           paths:
@@ -49,6 +50,13 @@ jobs:
           at: ~/react-native-testing-library
       - run: |
           yarn flow
+  test:react:17:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/react-native-testing-library
+      - run: |
+          yarn test:react:17
   tests:
     <<: *defaults
     steps:
@@ -89,6 +97,9 @@ workflows:
           requires:
             - install-dependencies
       - tests:
+          requires:
+            - install-dependencies
+      - test:react:17:
           requires:
             - install-dependencies
       - test-website:
