@@ -1,5 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import act from './act';
+import { filterNodeByType } from './helpers/filterNodeByType';
 
 type EventHandler = (...args: any) => unknown;
 
@@ -8,8 +9,21 @@ const isHostElement = (element?: ReactTestInstance) => {
 };
 
 const isTextInput = (element?: ReactTestInstance) => {
+  if (!element) {
+    return false;
+  }
+
   const { TextInput } = require('react-native');
-  return element?.type === TextInput;
+  // We have to test if the element type is either the TextInput component
+  // (which would if it is a composite component) or the string
+  // TextInput (which would be true if it is a host component)
+  // All queries but the one by testID return composite component and event
+  // if all queries returned host components, since fireEvent bubbles up
+  // it would trigger the parent prop without the composite component check
+  return (
+    filterNodeByType(element, TextInput) ||
+    filterNodeByType(element, 'TextInput')
+  );
 };
 
 const isTouchResponder = (element?: ReactTestInstance) => {
