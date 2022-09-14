@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+cp yarn.lock tmp.yarn.lock
+cp package.json tmp.package.json
+
+yarn add react@17.0.2 react-test-renderer@17.0.2 react-native@0.68.1 --ignore-scripts
+yarn test
+
+mv tmp.package.json package.json
+mv tmp.yarn.lock yarn.lock

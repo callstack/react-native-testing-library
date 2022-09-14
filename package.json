@@ -83,8 +83,7 @@
     "build:ts:watch": "yarn build:ts --watch --preserveWatchOutput",
     "build": "yarn clean && yarn build:js && yarn build:ts && yarn copy-flowtypes",
     "prepare": "yarn build",
-    "setup:react:17": "del react-17-tests/src react-17-tests/jest-preset  && cp -R src jestSetup.js jest-preset babel.config.js react-17-tests/ && cd react-17-tests && yarn",
-    "test:react:17": "cd react-17-tests && yarn test"
+    "test:react:17": "scripts/test_react_17"
   },
   "jest": {
     "preset": "./jest-preset",
@@ -93,8 +92,7 @@
     ],
     "testPathIgnorePatterns": [
       "timerUtils",
-      "examples/",
-      "react-17-tests"
+      "examples/"
     ],
     "testTimeout": 60000,
     "transformIgnorePatterns": [

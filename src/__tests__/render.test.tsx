@@ -205,7 +205,7 @@ test('debug changing component', () => {
 test('renders options.wrapper around node', () => {
   type WrapperComponentProps = { children: React.ReactNode };
   const WrapperComponent = ({ children }: WrapperComponentProps) => (
-    <SafeAreaView testID="wrapper">{children}</SafeAreaView>
+    <View testID="wrapper">{children}</View>
   );
 
   const { toJSON, getByTestId } = render(<View testID="inner" />, {
@@ -214,20 +214,20 @@ test('renders options.wrapper around node', () => {
 
   expect(getByTestId('wrapper')).toBeTruthy();
   expect(toJSON()).toMatchInlineSnapshot(`
-    <RCTSafeAreaView
+    <View
       testID="wrapper"
     >
       <View
         testID="inner"
       />
-    </RCTSafeAreaView>
+    </View>
   `);
 });
 
 test('renders options.wrapper around updated node', () => {
   type WrapperComponentProps = { children: React.ReactNode };
   const WrapperComponent = ({ children }: WrapperComponentProps) => (
-    <SafeAreaView testID="wrapper">{children}</SafeAreaView>
+    <View testID="wrapper">{children}</View>
   );
 
   const { toJSON, getByTestId, rerender } = render(<View testID="inner" />, {
@@ -240,7 +240,7 @@ test('renders options.wrapper around updated node', () => {
 
   expect(getByTestId('wrapper')).toBeTruthy();
   expect(toJSON()).toMatchInlineSnapshot(`
-    <RCTSafeAreaView
+    <View
       testID="wrapper"
     >
       <View
@@ -248,7 +248,7 @@ test('renders options.wrapper around updated node', () => {
         accessibilityLabel="test"
         testID="inner"
       />
-    </RCTSafeAreaView>
+    </View>
   `);
 });
 
