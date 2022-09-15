@@ -493,3 +493,53 @@ test('has only onMove', () => {
   });
   expect(handleDrag).toHaveBeenCalled();
 });
+
+// Those events ideally should be triggered through `fireEvent.scroll`, but they are handled at the
+// native level, so we need to support manually triggering them
+describe('native events', () => {
+  test('triggers onScrollBeginDrag', () => {
+    const onScrollBeginDragSpy = jest.fn();
+    const { getByTestId } = render(
+      <ScrollView testID="test-id" onScrollBeginDrag={onScrollBeginDragSpy} />
+    );
+
+    fireEvent(getByTestId('test-id'), 'onScrollBeginDrag');
+    expect(onScrollBeginDragSpy).toHaveBeenCalled();
+  });
+
+  test('triggers onScrollEndDrag', () => {
+    const onScrollEndDragSpy = jest.fn();
+    const { getByTestId } = render(
+      <ScrollView testID="test-id" onScrollEndDrag={onScrollEndDragSpy} />
+    );
+
+    fireEvent(getByTestId('test-id'), 'onScrollEndDrag');
+    expect(onScrollEndDragSpy).toHaveBeenCalled();
+  });
+
+  test('triggers onMomentumScrollBegin', () => {
+    const onMomentumScrollBeginSpy = jest.fn();
+    const { getByTestId } = render(
+      <ScrollView
+        testID="test-id"
+        onMomentumScrollBegin={onMomentumScrollBeginSpy}
+      />
+    );
+
+    fireEvent(getByTestId('test-id'), 'onMomentumScrollBegin');
+    expect(onMomentumScrollBeginSpy).toHaveBeenCalled();
+  });
+
+  test('triggers onMomentumScrollEnd', () => {
+    const onMomentumScrollEndSpy = jest.fn();
+    const { getByTestId } = render(
+      <ScrollView
+        testID="test-id"
+        onMomentumScrollEnd={onMomentumScrollEndSpy}
+      />
+    );
+
+    fireEvent(getByTestId('test-id'), 'onMomentumScrollEnd');
+    expect(onMomentumScrollEndSpy).toHaveBeenCalled();
+  });
+});
