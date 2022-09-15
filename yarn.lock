@@ -1134,9 +1134,9 @@
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
 "@callstack/eslint-config@^13.0.1":
-  version "13.0.1"
-  resolved "https://registry.yarnpkg.com/@callstack/eslint-config/-/eslint-config-13.0.1.tgz#746950c5f1c9513f5e3ac6c431f15fea93abcef0"
-  integrity sha512-EXgh+EV0HibSjjn3Om3ObM6qMRQhwRKQm/LGtWHA2G9i/Du99bw+8X8OAml1gDV+jS0cRh/pgzuphCDAJae0Pw==
+  version "13.0.2"
+  resolved "https://registry.yarnpkg.com/@callstack/eslint-config/-/eslint-config-13.0.2.tgz#741783f17a6395f3cb7aa2977a1fb56bdad059b5"
+  integrity sha512-EYd00hKeKZ6B5lBYz0nWyfVnYACRqdw6s/65sKoEcNP4fkrBIhxLyQbd2pNfg+QauuNqK7XRR3P3zVh7p5IimQ==
   dependencies:
     "@babel/core" "^7.16.0"
     "@babel/eslint-parser" "^7.16.3"
