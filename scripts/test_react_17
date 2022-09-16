@@ -1,10 +1,12 @@
-#!/bin/sh -e
+#!/usr/bin/env bash
 
-cp yarn.lock tmp.yarn.lock
-cp package.json tmp.package.json
+cp yarn.lock yarn.lock.backup
+cp package.json package.json.backup
 
-yarn add react@17.0.2 react-test-renderer@17.0.2 react-native@0.68.1 --ignore-scripts
+yarn add -D react@17.0.2 react-test-renderer@17.0.2 react-native@0.68.3 --ignore-scripts
 yarn test:ci
 
-mv tmp.package.json package.json
-mv tmp.yarn.lock yarn.lock
+mv package.json.backup package.json
+mv yarn.lock.backup yarn.lock
+
+yarn --ignore-scripts

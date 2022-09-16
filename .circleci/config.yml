@@ -49,13 +49,6 @@ jobs:
           at: ~/react-native-testing-library
       - run: |
           yarn flow
-  test:react:17:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/react-native-testing-library
-      - run: |
-          yarn test:react:17
   tests:
     <<: *defaults
     steps:
@@ -65,6 +58,13 @@ jobs:
       - store_artifacts:
           path: coverage
           destination: coverage
+  test:react:17:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/react-native-testing-library
+      - run: |
+          yarn test:ci:react:17
   test-website:
     <<: *defaults
     steps:
