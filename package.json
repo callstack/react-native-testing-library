@@ -72,6 +72,7 @@
     "clean": "del build",
     "test": "jest",
     "test:ci": "jest --maxWorkers=2",
+    "test:ci:react:17": "scripts/test_react_17",
     "typecheck": "tsc",
     "flow": "flow",
     "copy-flowtypes": "cp typings/index.flow.js build",
