@@ -29,6 +29,6 @@ const assertStringsWithinTextForNode = (node: ReactTestRendererNode) => {
   }
 
   if (node.children) {
-    node.children.forEach(assertStringsWithinText);
+    node.children.forEach(assertStringsWithinTextForNode);
   }
 };
