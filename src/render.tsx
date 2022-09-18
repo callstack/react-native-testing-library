@@ -49,7 +49,7 @@ export default function render<T>(
     createNodeMock ? { createNodeMock } : undefined
   );
 
-  return enrichRenderResult(renderer, wrap);
+  return buildRenderResult(renderer, wrap);
 }
 
 function renderWithStringValidation<T>(
@@ -77,10 +77,10 @@ function renderWithStringValidation<T>(
   );
   assertStringsWithinText(renderer.toJSON());
 
-  return enrichRenderResult(renderer, wrap);
+  return buildRenderResult(renderer, wrap);
 }
 
-function enrichRenderResult(
+function buildRenderResult(
   renderer: ReactTestRenderer,
   wrap: (element: React.ReactElement) => JSX.Element
 ) {
