@@ -22,7 +22,7 @@ const assertStringsWithinTextForNode = (node: ReactTestRendererNode) => {
     node.children?.forEach((child) => {
       if (typeof child === 'string') {
         throw new Error(
-          `Text strings must be rendered within a host Text component. Text ${child} was rendered in a ${node.type}`
+          `Invariant Violation: Text strings must be rendered within a <Text> component.\n\nDetected attempt to render "${child}" string within a <${node.type}> component.`
         );
       }
     });
