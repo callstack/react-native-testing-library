@@ -202,6 +202,11 @@ interface UnsafeByPropsQueries {
     | Array<ReactTestInstance>
     | [];
 }
+
+interface ByRoleOption {
+  name: string;
+}
+
 interface A11yAPI {
   // Label
   getByLabelText: (matcher: TextMatch) => GetReturn;
@@ -244,16 +249,24 @@ interface A11yAPI {
   ) => FindAllReturn;
 
   // Role
-  getByRole: (matcher: A11yRole | RegExp) => GetReturn;
-  getAllByRole: (matcher: A11yRole | RegExp) => GetAllReturn;
-  queryByRole: (matcher: A11yRole | RegExp) => QueryReturn;
-  queryAllByRole: (matcher: A11yRole | RegExp) => QueryAllReturn;
+  getByRole: (matcher: A11yRole | RegExp, role?: ByRoleOption) => GetReturn;
+  getAllByRole: (
+    matcher: A11yRole | RegExp,
+    role?: ByRoleOption
+  ) => GetAllReturn;
+  queryByRole: (matcher: A11yRole | RegExp, role?: ByRoleOption) => QueryReturn;
+  queryAllByRole: (
+    matcher: A11yRole | RegExp,
+    role?: ByRoleOption
+  ) => QueryAllReturn;
   findByRole: (
     matcher: A11yRole | RegExp,
+    role?: ByRoleOption,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByRole: (
     matcher: A11yRole | RegExp,
+    role?: ByRoleOption,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 
