@@ -65,9 +65,9 @@ function renderWithStringValidation<T>(
     }
   };
 
-  const wrap = (innerElement: React.ReactElement) => (
+  const wrap = (element: React.ReactElement) => (
     <Profiler id="renderProfiler" onRender={handleRender}>
-      {Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement}
+      {Wrapper ? <Wrapper>{element}</Wrapper> : element}
     </Profiler>
   );
 
