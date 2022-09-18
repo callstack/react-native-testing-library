@@ -8,7 +8,7 @@ import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
 import { setRenderResult, screen } from './screen';
-import { assertStringsWithinText } from './helpers/assertStringsWithinText';
+import { validateStringsRenderedWithinText } from './helpers/validateStringsRenderedWithinText';
 
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
@@ -61,7 +61,7 @@ function renderWithStringValidation<T>(
 ) {
   const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
     if (phase === 'update') {
-      assertStringsWithinText(screen.toJSON());
+      validateStringsRenderedWithinText(screen.toJSON());
     }
   };
 
@@ -75,7 +75,7 @@ function renderWithStringValidation<T>(
     wrap(component),
     createNodeMock ? { createNodeMock } : undefined
   );
-  assertStringsWithinText(renderer.toJSON());
+  validateStringsRenderedWithinText(renderer.toJSON());
 
   return buildRenderResult(renderer, wrap);
 }

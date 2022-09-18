@@ -1,19 +1,21 @@
 import { ReactTestRendererNode } from 'react-test-renderer';
 
-export const assertStringsWithinText = (
+export const validateStringsRenderedWithinText = (
   rendererJSON: ReactTestRendererNode | Array<ReactTestRendererNode> | null
 ) => {
   if (!rendererJSON) return;
 
   if (Array.isArray(rendererJSON)) {
-    rendererJSON.forEach(assertStringsWithinTextForNode);
+    rendererJSON.forEach(validateStringsRenderedWithinTextForNode);
     return;
   }
 
-  return assertStringsWithinTextForNode(rendererJSON);
+  return validateStringsRenderedWithinTextForNode(rendererJSON);
 };
 
-const assertStringsWithinTextForNode = (node: ReactTestRendererNode) => {
+const validateStringsRenderedWithinTextForNode = (
+  node: ReactTestRendererNode
+) => {
   if (typeof node === 'string') {
     return;
   }
@@ -29,6 +31,6 @@ const assertStringsWithinTextForNode = (node: ReactTestRendererNode) => {
   }
 
   if (node.children) {
-    node.children.forEach(assertStringsWithinTextForNode);
+    node.children.forEach(validateStringsRenderedWithinTextForNode);
   }
 };
