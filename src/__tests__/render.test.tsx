@@ -283,7 +283,7 @@ test('RenderAPI type', () => {
 test('should throw when rendering a string outside a text component', () => {
   expect(() =>
     render(<View>hello</View>, {
-      unstable_validateStringsRenderedInText: true,
+      unstable_validateStringsRenderedWithinText: true,
     })
   ).toThrowErrorMatchingSnapshot();
 });
@@ -299,7 +299,7 @@ test('should throw an error when rerendering with text outside of Text component
     }
   };
   const { rerender } = render(<View />, {
-    unstable_validateStringsRenderedInText: true,
+    unstable_validateStringsRenderedWithinText: true,
   });
 
   expect(() => rerender(<View>hello</View>)).toThrowErrorMatchingSnapshot();
@@ -334,7 +334,7 @@ test('should throw an error when strings are rendered outside Text', () => {
     }
   };
   const { getByText } = render(<ErrorComponent />, {
-    unstable_validateStringsRenderedInText: true,
+    unstable_validateStringsRenderedWithinText: true,
   });
 
   expect(() =>
@@ -351,7 +351,7 @@ test('it should not throw for texts nested in fragments', () => {
       <Text>
         <>hello</>
       </Text>,
-      { unstable_validateStringsRenderedInText: true }
+      { unstable_validateStringsRenderedWithinText: true }
     )
   ).not.toThrow();
 });
@@ -369,7 +369,7 @@ test(`it should throw
         <Text>hello</Text>
         hello
       </View>,
-      { unstable_validateStringsRenderedInText: true }
+      { unstable_validateStringsRenderedWithinText: true }
     )
   ).toThrowErrorMatchingSnapshot();
 });
@@ -381,14 +381,14 @@ test(`it should throw
       <View>
         <>hello</>
       </View>,
-      { unstable_validateStringsRenderedInText: true }
+      { unstable_validateStringsRenderedWithinText: true }
     )
   ).toThrowErrorMatchingSnapshot();
 });
 
 test('it should throw if a number is rendered outside a text', () => {
   expect(() =>
-    render(<View>0</View>, { unstable_validateStringsRenderedInText: true })
+    render(<View>0</View>, { unstable_validateStringsRenderedWithinText: true })
   ).toThrowErrorMatchingSnapshot(`
     "Invariant Violation: Text strings must be rendered within a <Text> component.
 
@@ -404,7 +404,7 @@ test('it should throw with components returning string value not rendered in Tex
       <View>
         <Trans i18nKey="hello" />
       </View>,
-      { unstable_validateStringsRenderedInText: true }
+      { unstable_validateStringsRenderedWithinText: true }
     )
   ).toThrow();
 });
@@ -415,7 +415,7 @@ test('it should not throw with components returning string value rendered in Tex
       <Text>
         <Trans i18nKey="hello" />
       </Text>,
-      { unstable_validateStringsRenderedInText: true }
+      { unstable_validateStringsRenderedWithinText: true }
     )
   ).not.toThrow();
 });
@@ -426,7 +426,7 @@ test('it should throw when rendering string in a View in a Text', () => {
       <Text>
         <View>hello</View>
       </Text>,
-      { unstable_validateStringsRenderedInText: true }
+      { unstable_validateStringsRenderedWithinText: true }
     )
   ).toThrowErrorMatchingSnapshot();
 });

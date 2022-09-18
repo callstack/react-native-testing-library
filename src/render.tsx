@@ -13,7 +13,7 @@ import { validateStringsRenderedWithinText } from './helpers/validateStringsRend
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => any;
-  unstable_validateStringsRenderedInText?: boolean;
+  unstable_validateStringsRenderedWithinText?: boolean;
 };
 
 type TestRendererOptions = {
@@ -31,10 +31,10 @@ export default function render<T>(
   {
     wrapper: Wrapper,
     createNodeMock,
-    unstable_validateStringsRenderedInText,
+    unstable_validateStringsRenderedWithinText,
   }: RenderOptions = {}
 ) {
-  if (unstable_validateStringsRenderedInText) {
+  if (unstable_validateStringsRenderedWithinText) {
     return renderWithStringValidation(component, {
       wrapper: Wrapper,
       createNodeMock,
@@ -57,7 +57,7 @@ function renderWithStringValidation<T>(
   {
     wrapper: Wrapper,
     createNodeMock,
-  }: Omit<RenderOptions, 'unstable_validateStringsRenderedInText'> = {}
+  }: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {}
 ) {
   const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
     if (phase === 'update') {
