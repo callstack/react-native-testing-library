@@ -290,55 +290,6 @@ exports[`debug: with message 1`] = `
 </View>"
 `;
 
-exports[`it should throw 
-      - when one of the children is a text
-      - and the parent is not a Text component 1`] = `
-"Invariant Violation: Text strings must be rendered within a <Text> component.
-
-Detected attempt to render "hello" string within a <View> component."
-`;
-
-exports[`it should throw 
-    - when a string is rendered within a fragment rendered outside a Text 1`] = `
-"Invariant Violation: Text strings must be rendered within a <Text> component.
-
-Detected attempt to render "hello" string within a <View> component."
-`;
-
-exports[`it should throw if a number is rendered outside a text: 
-    "Invariant Violation: Text strings must be rendered within a <Text> component.
-
-    Detected attempt to render "0" string within a <View> component."
-   1`] = `
-"Invariant Violation: Text strings must be rendered within a <Text> component.
-
-Detected attempt to render "0" string within a <View> component."
-`;
-
-exports[`it should throw when rendering string in a View in a Text 1`] = `
-"Invariant Violation: Text strings must be rendered within a <Text> component.
-
-Detected attempt to render "hello" string within a <View> component."
-`;
-
-exports[`should throw an error when rerendering with text outside of Text component 1`] = `
-"Invariant Violation: Text strings must be rendered within a <Text> component.
-
-Detected attempt to render "hello" string within a <View> component."
-`;
-
-exports[`should throw an error when strings are rendered outside Text 1`] = `
-"Invariant Violation: Text strings must be rendered within a <Text> component.
-
-Detected attempt to render "text rendered outside text component" string within a <View> component."
-`;
-
-exports[`should throw when rendering a string outside a text component 1`] = `
-"Invariant Violation: Text strings must be rendered within a <Text> component.
-
-Detected attempt to render "hello" string within a <View> component."
-`;
-
 exports[`toJSON 1`] = `
 <View
   accessible={true}

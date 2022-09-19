@@ -24,7 +24,7 @@ const validateStringsRenderedWithinTextForNode = (
     node.children?.forEach((child) => {
       if (typeof child === 'string') {
         throw new Error(
-          `Invariant Violation: Text strings must be rendered within a <Text> component.\n\nDetected attempt to render "${child}" string within a <${node.type}> component.`
+          `Invariant Violation: Text strings must be rendered within a <Text> component. Detected attempt to render "${child}" string within a <${node.type}> component.`
         );
       }
     });
