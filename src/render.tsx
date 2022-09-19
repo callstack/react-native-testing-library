@@ -1,16 +1,19 @@
 import TestRenderer from 'react-test-renderer';
 import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import * as React from 'react';
+import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
-import { setRenderResult } from './screen';
+import { setRenderResult, screen } from './screen';
+import { validateStringsRenderedWithinText } from './helpers/stringValidation';
 
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => any;
+  unstable_validateStringsRenderedWithinText?: boolean;
 };
 
 type TestRendererOptions = {
@@ -25,17 +28,65 @@ export type RenderResult = ReturnType<typeof render>;
  */
 export default function render<T>(
   component: React.ReactElement<T>,
-  { wrapper: Wrapper, createNodeMock }: RenderOptions = {}
+  {
+    wrapper: Wrapper,
+    createNodeMock,
+    unstable_validateStringsRenderedWithinText,
+  }: RenderOptions = {}
 ) {
-  const wrap = (innerElement: React.ReactElement) =>
-    Wrapper ? <Wrapper>{innerElement}</Wrapper> : innerElement;
+  if (unstable_validateStringsRenderedWithinText) {
+    return renderWithStringValidation(component, {
+      wrapper: Wrapper,
+      createNodeMock,
+    });
+  }
+
+  const wrap = (element: React.ReactElement) =>
+    Wrapper ? <Wrapper>{element}</Wrapper> : element;
 
   const renderer = renderWithAct(
     wrap(component),
     createNodeMock ? { createNodeMock } : undefined
   );
+
+  return buildRenderResult(renderer, wrap);
+}
+
+function renderWithStringValidation<T>(
+  component: React.ReactElement<T>,
+  {
+    wrapper: Wrapper,
+    createNodeMock,
+  }: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {}
+) {
+  const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
+    if (phase === 'update') {
+      validateStringsRenderedWithinText(screen.toJSON());
+    }
+  };
+
+  const wrap = (element: React.ReactElement) => (
+    <Profiler id="renderProfiler" onRender={handleRender}>
+      {Wrapper ? <Wrapper>{element}</Wrapper> : element}
+    </Profiler>
+  );
+
+  const renderer = renderWithAct(
+    wrap(component),
+    createNodeMock ? { createNodeMock } : undefined
+  );
+  validateStringsRenderedWithinText(renderer.toJSON());
+
+  return buildRenderResult(renderer, wrap);
+}
+
+function buildRenderResult(
+  renderer: ReactTestRenderer,
+  wrap: (element: React.ReactElement) => JSX.Element
+) {
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
+
   const unmount = () => {
     act(() => {
       renderer.unmount();
