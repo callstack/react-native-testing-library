@@ -100,12 +100,16 @@ This options allows you to wrap tested component, passed as the first option to 
 #### `createNodeMock` option
 
 ```ts
-createNodeMock: (element: React.Element<any>) => any,
+createNodeMock?: (element: React.Element<any>) => any,
 ```
 
-This options allows you to pass `createNodeMock` option to `ReactTestRenderer.create()` method in order to allow for custom mock refs. You can learn more about this options from [React Test Renderer documentation]([TestRenderer.create()](https://reactjs.org/docs/test-renderer.html#ideas)).
+This options allows you to pass `createNodeMock` option to `ReactTestRenderer.create()` method in order to allow for custom mock refs. You can learn more about this options from [React Test Renderer documentation](https://reactjs.org/docs/test-renderer.html#ideas).
 
 #### `unstable_validateStringsRenderedWithinText` option
+
+```ts
+unstable_validateStringsRenderedWithinText?: boolean;
+```
 
 This experimental options allows you to replicate React Native behavior of throwing `Invariant Violation: Text strings must be rendered within a <Text> component` error when you try to render `string` value under component different than `<Text>` component, e.g. under `<View>`. 
 
