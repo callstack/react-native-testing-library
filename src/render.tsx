@@ -8,7 +8,7 @@ import debugShallow from './helpers/debugShallow';
 import debugDeep from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
 import { setRenderResult, screen } from './screen';
-import { validateStringsRenderedWithinText } from './helpers/validateStringsRenderedWithinText';
+import { validateStringsRenderedWithinText } from './helpers/stringValidation';
 
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
