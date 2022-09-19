@@ -95,7 +95,7 @@ The behavior of `render` method can be customized by passing various options as 
 wrapper?: React.ComponentType<any>,
 ```
 
-This options allows you to wrap tested component, passed as the first option to the `render()` function, in additional wrapper component. This is most useful for creating reusable custom render functions for common data providers.
+This options allows you to wrap tested component, passed as the first option to the `render()` function, in additional wrapper component. This is most useful for creating reusable custom render functions for common React Context providers.
 
 #### `createNodeMock` option
 
