@@ -111,7 +111,7 @@ This options allows you to pass `createNodeMock` option to `ReactTestRenderer.cr
 unstable_validateStringsRenderedWithinText?: boolean;
 ```
 
-This experimental options allows you to replicate React Native behavior of throwing `Invariant Violation: Text strings must be rendered within a <Text> component` error when you try to render `string` value under component different than `<Text>` component, e.g. under `<View>`. 
+This **experimental** option allows you to replicate React Native behavior of throwing `Invariant Violation: Text strings must be rendered within a <Text> component` error when you try to render `string` value under components different than `<Text>`, e.g. under `<View>`. 
 
 This check is not enforced by React Test Renderer and hence by default React Native Testing Library also does not check this. That might result in runtime errors when running your code on a device, while the code works without errors in tests.
 
