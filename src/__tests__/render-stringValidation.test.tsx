@@ -6,7 +6,7 @@ import { render, fireEvent } from '..';
 const originalConsoleError = console.error;
 
 const VALIDATION_ERROR =
-  'Invariant Violation: Text strings must be rendered within a <Text> component.';
+  'Invariant Violation: Text strings must be rendered within a <Text> component';
 const PROFILER_ERROR = 'The above error occurred in the <Profiler> component';
 
 beforeEach(() => {
@@ -29,7 +29,7 @@ test('should throw when rendering a string outside a text component', () => {
       unstable_validateStringsRenderedWithinText: true,
     })
   ).toThrow(
-    `${VALIDATION_ERROR} Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
   );
 });
 
@@ -39,7 +39,7 @@ test('should throw an error when rerendering with text outside of Text component
   });
 
   expect(() => rerender(<View>hello</View>)).toThrow(
-    `${VALIDATION_ERROR} Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
   );
 });
 
@@ -63,7 +63,7 @@ test('should throw an error when strings are rendered outside Text', () => {
   });
 
   expect(() => fireEvent.press(getByText('Show text'))).toThrow(
-    `${VALIDATION_ERROR} Detected attempt to render "text rendered outside text component" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "text rendered outside text component" string within a <View> component.`
   );
 });
 
@@ -92,7 +92,7 @@ test(`should throw when one of the children is a text and the parent is not a Te
       { unstable_validateStringsRenderedWithinText: true }
     )
   ).toThrow(
-    `${VALIDATION_ERROR} Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
   );
 });
 
@@ -105,7 +105,7 @@ test(`should throw when a string is rendered within a fragment rendered outside 
       { unstable_validateStringsRenderedWithinText: true }
     )
   ).toThrow(
-    `${VALIDATION_ERROR} Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
   );
 });
 
@@ -113,7 +113,7 @@ test('should throw if a number is rendered outside a text', () => {
   expect(() =>
     render(<View>0</View>, { unstable_validateStringsRenderedWithinText: true })
   ).toThrow(
-    `${VALIDATION_ERROR} Detected attempt to render "0" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "0" string within a <View> component.`
   );
 });
 
@@ -128,7 +128,7 @@ test('should throw with components returning string value not rendered in Text',
       { unstable_validateStringsRenderedWithinText: true }
     )
   ).toThrow(
-    `${VALIDATION_ERROR} Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
   );
 });
 
@@ -152,6 +152,6 @@ test('should throw when rendering string in a View in a Text', () => {
       { unstable_validateStringsRenderedWithinText: true }
     )
   ).toThrow(
-    `${VALIDATION_ERROR} Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
   );
 });
