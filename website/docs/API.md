@@ -87,7 +87,7 @@ Using `screen` instead of destructuring `render` result is recommended approach.
 
 ### `render` options
 
-The behavior of `render` method can be customized by passing various options:
+The behavior of `render` method can be customized by passing various options as a second argument of `RenderOptions` type:
 
 #### `wrapper` option
 
