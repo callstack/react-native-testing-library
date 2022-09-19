@@ -44,7 +44,7 @@ function isSubtreeInaccessible(
   if (instance.props.importantForAccessibility === 'no-hide-descendants')
     return true;
 
-  const flatStyle = StyleSheet.flatten(instance.props.style);
+  const flatStyle = StyleSheet.flatten(instance.props.style) ?? {};
   if (flatStyle.display === 'none') return true;
   if (flatStyle.opacity === 0) return true;
 
