@@ -360,9 +360,7 @@ test('it should not throw if option validateRenderedString is false', () => {
   expect(() => render(<View>hello</View>)).not.toThrow();
 });
 
-test(`it should throw 
-      - when one of the children is a text
-      - and the parent is not a Text component`, () => {
+test(`it should throw when one of the children is a text and the parent is not a Text component`, () => {
   expect(() =>
     render(
       <View>
@@ -374,8 +372,7 @@ test(`it should throw
   ).toThrowErrorMatchingSnapshot();
 });
 
-test(`it should throw 
-    - when a string is rendered within a fragment rendered outside a Text`, () => {
+test(`it should throw when a string is rendered within a fragment rendered outside a Text`, () => {
   expect(() =>
     render(
       <View>
