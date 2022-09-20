@@ -41,6 +41,8 @@ title: API
   - [Examples](#examples)
     - [With `initialProps`](#with-initialprops)
     - [With `wrapper`](#with-wrapper)
+- [Accessibility](#accessibility)
+  - [`isInaccessible`](#isinaccessible)
 
 This page gathers public API of React Native Testing Library along with usage examples.
 
@@ -225,7 +227,11 @@ Failing to call `cleanup` when you've called `render` could result in a memory l
 ## `fireEvent`
 
 ```ts
-fireEvent(element: ReactTestInstance, eventName: string, ...data: Array<any>): void
+function fireEvent(
+  element: ReactTestInstance,
+  eventName: string,
+  ...data: Array<any>
+): void {}
 ```
 
 Fires native-like event with data.
@@ -485,8 +491,13 @@ If you receive warnings related to `act()` function consult our [Undestanding Ac
 Defined as:
 
 ```jsx
-function within(instance: ReactTestInstance): Queries
-function getQueriesForElement(instance: ReactTestInstance): Queries
+function within(
+  element: ReactTestInstance
+): Queries {}
+
+function getQueriesForElement(
+  element: ReactTestInstance
+): Queries {}
 ```
 
 `within` (also available as `getQueriesForElement` alias) performs [queries](./Queries.md) scoped to given element.
@@ -669,3 +680,23 @@ it('should use context value', () => {
   // ...
 });
 ```
+
+## Accessibility
+
+### `isInaccessible`
+
+```ts
+function isInaccessible(
+  element: ReactTestInstance | null
+): boolean {}
+```
+
+Checks if given element should be excluded from the accessiblity e.g. by screen readers. 
+
+Element is considered inaccessbile when one of the follwing applies:
+* element has `display: none` style
+* element has [`accessibilityElementsHidden`](https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios) prop set to `true` 
+* element has [`importantForAccessibility`](https://reactnative.dev/docs/accessibility#importantforaccessibility-android) prop set to `no` or `no-hide-descendants`
+* element is a sibling of view with [`accessibilityViewIsModal`](https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios) prop set to `true`
+* element has an inaccessbile ancestor element, with exception of being descendant of element with `importantForAccessibility` set to `no`.
+
