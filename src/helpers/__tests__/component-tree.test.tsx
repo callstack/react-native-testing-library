@@ -180,7 +180,7 @@ test('returns host siblings for host component', () => {
   ]);
 });
 
-test('returns host siblings for composie component', () => {
+test('returns host siblings for composite component', () => {
   const view = render(
     <View testID="grandparent">
       <View testID="parent">
