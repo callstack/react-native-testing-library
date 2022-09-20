@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, Pressable } from 'react-native';
 import { fireEvent, render, waitFor } from '..';
 
 class Banana extends React.Component<any> {
@@ -76,6 +76,38 @@ test('waits for element with custom interval', async () => {
   }
 
   expect(mockFn).toHaveBeenCalledTimes(2);
+});
+
+test('waits for async event with fireEvent', async () => {
+  const Comp = ({ onPress }: { onPress: () => void }) => {
+    const [state, setState] = React.useState(false);
+
+    React.useEffect(() => {
+      if (state) {
+        onPress();
+      }
+    }, [state, onPress]);
+
+    return (
+      <Pressable
+        onPress={async () => {
+          await Promise.resolve();
+          setState(true);
+        }}
+      >
+        <Text>Trigger</Text>
+      </Pressable>
+    );
+  };
+
+  const spy = jest.fn();
+  const { getByText } = render(<Comp onPress={spy} />);
+
+  fireEvent.press(getByText('Trigger'));
+
+  await waitFor(() => {
+    expect(spy).toHaveBeenCalled();
+  });
 });
 
 test.each([false, true])(
