@@ -1,27 +1,27 @@
 import { ReactTestInstance } from 'react-test-renderer';
 
 /**
- * Checks if the given instance is a host component.
- * @param node The node to check.
+ * Checks if the given element is a host element.
+ * @param element The element to check.
  */
-export function isHostComponent(node: ReactTestInstance): boolean {
-  return typeof node.type === 'string';
+export function isHostElement(element?: ReactTestInstance | null): boolean {
+  return typeof element?.type === 'string';
 }
 
 /**
- * Returns first host ancestor for given node.
- * @param node The node start traversing from.
+ * Returns first host ancestor for given element.
+ * @param element The element start traversing from.
  */
 export function getHostParent(
-  node: ReactTestInstance | null
+  element: ReactTestInstance | null
 ): ReactTestInstance | null {
-  if (node == null) {
+  if (element == null) {
     return null;
   }
 
-  let current = node.parent;
+  let current = element.parent;
   while (current) {
-    if (isHostComponent(current)) {
+    if (isHostElement(current)) {
       return current;
     }
 
@@ -32,24 +32,24 @@ export function getHostParent(
 }
 
 /**
- * Returns host children for given node.
- * @param node The node start traversing from.
+ * Returns host children for given element.
+ * @param element The element start traversing from.
  */
 export function getHostChildren(
-  node: ReactTestInstance | null
+  element: ReactTestInstance | null
 ): ReactTestInstance[] {
-  if (node == null) {
+  if (element == null) {
     return [];
   }
 
   const hostChildren: ReactTestInstance[] = [];
 
-  node.children.forEach((child) => {
+  element.children.forEach((child) => {
     if (typeof child !== 'object') {
       return;
     }
 
-    if (isHostComponent(child)) {
+    if (isHostElement(child)) {
       hostChildren.push(child);
     } else {
       hostChildren.push(...getHostChildren(child));
@@ -60,27 +60,29 @@ export function getHostChildren(
 }
 
 /**
- * Return the array of host nodes that represent the passed node.
+ * Return the array of host elements that represent the passed element.
  *
- * @param node The node start traversing from.
- * @returns If the passed node is a host node, it will return an array containing only that node,
- * if the passed node is a composite node, it will return an array containing its host children (zero, one or many).
+ * @param element The element start traversing from.
+ * @returns If the passed element is a host element, it will return an array containing only that element,
+ * if the passed element is a composite element, it will return an array containing its host children (zero, one or many).
  */
 export function getHostSelves(
-  node: ReactTestInstance | null
+  element: ReactTestInstance | null
 ): ReactTestInstance[] {
-  return typeof node?.type === 'string' ? [node] : getHostChildren(node);
+  return typeof element?.type === 'string'
+    ? [element]
+    : getHostChildren(element);
 }
 
 /**
- * Returns host siblings for given node.
- * @param node The node start traversing from.
+ * Returns host siblings for given element.
+ * @param element The element start traversing from.
  */
 export function getHostSiblings(
-  node: ReactTestInstance | null
+  element: ReactTestInstance | null
 ): ReactTestInstance[] {
-  const hostParent = getHostParent(node);
-  const hostSelves = getHostSelves(node);
+  const hostParent = getHostParent(element);
+  const hostSelves = getHostSelves(element);
   return getHostChildren(hostParent).filter(
     (sibling) => !hostSelves.includes(sibling)
   );
