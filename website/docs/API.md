@@ -6,6 +6,10 @@ title: API
 ### Table of contents:
 
 - [`render`](#render)
+  - [`render` options](#render-options)
+    - [`wrapper` option](#wrapper-option)
+    - [`createNodeMock` option](#createnodemock-option)
+    - [`unstable_validateStringsRenderedWithinText` option](#unstable_validatestringsrenderedwithintext-option)
   - [`...queries`](#queries)
     - [Example](#example)
   - [`update`](#update)
@@ -53,12 +57,7 @@ Defined as:
 ```jsx
 function render(
   component: React.Element<any>,
-  options?: {
-    /* A React Component that renders `component` as children */
-    wrapper?: React.ComponentType<any>,
-    /* You won't often use this, but it's helpful when testing refs */
-    createNodeMock: (element: React.Element<any>) => any,
-  }
+  options?: RenderOptions,
 ): RenderResult {}
 ```
 
@@ -85,6 +84,40 @@ Latest `render` result is kept in [`screen`](#screen) variable that can be impor
 
 Using `screen` instead of destructuring `render` result is recommended approach. See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
 :::
+
+### `render` options
+
+The behavior of `render` method can be customized by passing various options as a second argument of `RenderOptions` type:
+
+#### `wrapper` option
+
+```ts
+wrapper?: React.ComponentType<any>,
+```
+
+This options allows you to wrap tested component, passed as the first option to the `render()` function, in additional wrapper component. This is most useful for creating reusable custom render functions for common React Context providers.
+
+#### `createNodeMock` option
+
+```ts
+createNodeMock?: (element: React.Element<any>) => any,
+```
+
+This options allows you to pass `createNodeMock` option to `ReactTestRenderer.create()` method in order to allow for custom mock refs. You can learn more about this options from [React Test Renderer documentation](https://reactjs.org/docs/test-renderer.html#ideas).
+
+#### `unstable_validateStringsRenderedWithinText` option
+
+```ts
+unstable_validateStringsRenderedWithinText?: boolean;
+```
+
+:::note
+This options is experimental, in some cases it might not work as intended, and its behavior might change without observing [SemVer](https://semver.org/) requirements for breaking changes. 
+:::
+
+This **experimental** option allows you to replicate React Native behavior of throwing `Invariant Violation: Text strings must be rendered within a <Text> component` error when you try to render `string` value under components different than `<Text>`, e.g. under `<View>`. 
+
+This check is not enforced by React Test Renderer and hence by default React Native Testing Library also does not check this. That might result in runtime errors when running your code on a device, while the code works without errors in tests.
 
 ### `...queries`
 
