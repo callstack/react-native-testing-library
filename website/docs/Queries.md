@@ -191,7 +191,7 @@ const element = screen.getByRole('button');
 
 #### Options
 
-`name`: Finds an element with given `accessibilityRole` and an accessible name (equivalent to `ByText` or `queryByLabelText`).
+`name`: Finds an element with given `accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
 
 ### `ByA11yState`, `ByAccessibilityState`
 

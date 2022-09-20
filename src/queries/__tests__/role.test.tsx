@@ -79,8 +79,8 @@ test('getAllByRole, queryAllByRole, findAllByRole', async () => {
   );
 });
 
-describe('*ByRole with a name', () => {
-  test('Find an element that has the corresponding role and a children with the name', () => {
+describe('supports name option', () => {
+  test('returns an element that has the corresponding role and a children with the name', () => {
     const { getByRole } = render(
       <TouchableOpacity accessibilityRole="button" testID="target-button">
         <Text>Save</Text>
@@ -93,7 +93,21 @@ describe('*ByRole with a name', () => {
     );
   });
 
-  test('Find an element that has the corresponding role and a children with a matching accessibilityLabel', () => {
+  test('returns an element that has the corresponding role when several children include the name', () => {
+    const { getByRole } = render(
+      <TouchableOpacity accessibilityRole="button" testID="target-button">
+        <Text>Save</Text>
+        <Text>Save</Text>
+      </TouchableOpacity>
+    );
+
+    // assert on the testId to be sure that the returned element is the one with the accessibilityRole
+    expect(getByRole('button', { name: 'Save' }).props.testID).toBe(
+      'target-button'
+    );
+  });
+
+  test('returns an element that has the corresponding role and a children with a matching accessibilityLabel', () => {
     const { getByRole } = render(
       <TouchableOpacity accessibilityRole="button" testID="target-button">
         <Text accessibilityLabel="Save" />
@@ -106,7 +120,7 @@ describe('*ByRole with a name', () => {
     );
   });
 
-  test('Find an element that has the corresponding role and a matching accessibilityLabel', () => {
+  test('returns an element that has the corresponding role and a matching accessibilityLabel', () => {
     const { getByRole } = render(
       <TouchableOpacity
         accessibilityRole="button"
@@ -117,21 +131,6 @@ describe('*ByRole with a name', () => {
 
     // assert on the testId to be sure that the returned element is the one with the accessibilityRole
     expect(getByRole('button', { name: 'Save' }).props.testID).toBe(
-      'target-button'
-    );
-  });
-
-  test('Can find by name using a regex', () => {
-    const { getByRole } = render(
-      <TouchableOpacity
-        accessibilityRole="button"
-        testID="target-button"
-        accessibilityLabel="Save"
-      ></TouchableOpacity>
-    );
-
-    // assert on the testId to be sure that the returned element is the one with the accessibilityRole
-    expect(getByRole('button', { name: /Save/ }).props.testID).toBe(
       'target-button'
     );
   });

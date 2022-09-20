@@ -203,8 +203,8 @@ interface UnsafeByPropsQueries {
     | [];
 }
 
-interface ByRoleOption {
-  name: string;
+interface ByRoleOptions {
+  name?: string;
 }
 
 interface A11yAPI {
@@ -249,24 +249,27 @@ interface A11yAPI {
   ) => FindAllReturn;
 
   // Role
-  getByRole: (matcher: A11yRole | RegExp, role?: ByRoleOption) => GetReturn;
+  getByRole: (matcher: A11yRole | RegExp, role?: ByRoleOptions) => GetReturn;
   getAllByRole: (
     matcher: A11yRole | RegExp,
-    role?: ByRoleOption
+    role?: ByRoleOptions
   ) => GetAllReturn;
-  queryByRole: (matcher: A11yRole | RegExp, role?: ByRoleOption) => QueryReturn;
+  queryByRole: (
+    matcher: A11yRole | RegExp,
+    role?: ByRoleOptions
+  ) => QueryReturn;
   queryAllByRole: (
     matcher: A11yRole | RegExp,
-    role?: ByRoleOption
+    role?: ByRoleOptions
   ) => QueryAllReturn;
   findByRole: (
     matcher: A11yRole | RegExp,
-    role?: ByRoleOption,
+    role?: ByRoleOptions,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByRole: (
     matcher: A11yRole | RegExp,
-    role?: ByRoleOption,
+    role?: ByRoleOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 
