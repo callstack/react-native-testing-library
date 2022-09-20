@@ -1,17 +1,17 @@
 import { StyleSheet } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
-import { getHostChildren } from './component-tree';
+import { getHostSiblings } from './component-tree';
 
-export function isInaccessible(instance: ReactTestInstance | null): boolean {
-  if (instance == null) {
+export function isInaccessible(node: ReactTestInstance | null): boolean {
+  if (node == null) {
     return true;
   }
 
   // Android: importantForAccessibility
   // See: https://reactnative.dev/docs/accessibility#importantforaccessibility-android
-  if (instance.props.importantForAccessibility === 'no') return true;
+  if (node.props.importantForAccessibility === 'no') return true;
 
-  let current: ReactTestInstance | null = instance;
+  let current: ReactTestInstance | null = node;
   while (current) {
     if (isSubtreeInaccessible(current)) {
       return true;
@@ -23,33 +23,31 @@ export function isInaccessible(instance: ReactTestInstance | null): boolean {
   return false;
 }
 
-function isSubtreeInaccessible(
-  instance: ReactTestInstance | null | undefined
-): boolean {
-  if (instance == null) {
+function isSubtreeInaccessible(node: ReactTestInstance | null): boolean {
+  if (node == null) {
     return true;
   }
 
   // iOS: accessibilityElementsHidden
   // See: https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios
-  if (instance.props.accessibilityElementsHidden) {
+  if (node.props.accessibilityElementsHidden) {
     return true;
   }
 
   // Android: importantForAccessibility
   // See: https://reactnative.dev/docs/accessibility#importantforaccessibility-android
-  if (instance.props.importantForAccessibility === 'no-hide-descendants') {
+  if (node.props.importantForAccessibility === 'no-hide-descendants') {
     return true;
   }
 
-  // Note that `opacity: 0` is not threated as inassessible on iOS ()
-  const flatStyle = StyleSheet.flatten(instance.props.style) ?? {};
+  // Note that `opacity: 0` is not threated as inassessible on iOS
+  const flatStyle = StyleSheet.flatten(node.props.style) ?? {};
   if (flatStyle.display === 'none') return true;
 
   // iOS: accessibilityViewIsModal
   // See: https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios
-  const hostChildren = getHostChildren(instance);
-  if (hostChildren.some((child) => child.props.accessibilityViewIsModal)) {
+  const hostSiblings = getHostSiblings(node);
+  if (hostSiblings.some((sibling) => sibling.props.accessibilityViewIsModal)) {
     return true;
   }
 

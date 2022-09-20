@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, Pressable, Modal } from 'react-native';
-import { render, fireEvent, isInaccessible } from '../..';
-import { sleep } from '../../__tests__/timerUtils';
+import { View, Text, TextInput } from 'react-native';
+import { render, isInaccessible } from '../..';
 
 test('returns false for accessible elements', () => {
   expect(
@@ -19,27 +18,6 @@ test('returns false for accessible elements', () => {
       render(<TextInput testID="subject" />).getByTestId('subject')
     )
   ).toBe(false);
-});
-
-test('detects elements with importantForAccessibility="no" prop', () => {
-  const view = render(<View testID="subject" importantForAccessibility="no" />);
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
-});
-
-test('detects elements with importantForAccessibility="no-hide-descendants" prop', () => {
-  const view = render(
-    <View testID="subject" importantForAccessibility="no-hide-descendants" />
-  );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
-});
-
-test('detects nested elements with importantForAccessibility="no-hide-descendants" prop', () => {
-  const view = render(
-    <View importantForAccessibility="no-hide-descendants">
-      <View testID="subject" />
-    </View>
-  );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
 });
 
 test('detects elements with accessibilityElementsHidden prop', () => {
@@ -64,6 +42,27 @@ test('detects deeply nested elements with accessibilityElementsHidden prop', () 
           <View testID="subject" />
         </View>
       </View>
+    </View>
+  );
+  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+});
+
+test('detects elements with importantForAccessibility="no" prop', () => {
+  const view = render(<View testID="subject" importantForAccessibility="no" />);
+  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+});
+
+test('detects elements with importantForAccessibility="no-hide-descendants" prop', () => {
+  const view = render(
+    <View testID="subject" importantForAccessibility="no-hide-descendants" />
+  );
+  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+});
+
+test('detects nested elements with importantForAccessibility="no-hide-descendants" prop', () => {
+  const view = render(
+    <View importantForAccessibility="no-hide-descendants">
+      <View testID="subject" />
     </View>
   );
   expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
@@ -111,111 +110,61 @@ test('is not trigged by opacity = 0', () => {
   expect(isInaccessible(view.getByTestId('subject'))).toBe(false);
 });
 
-function ModalContainer() {
-  const [visible, setVisible] = React.useState(true);
-
-  return (
-    <Modal visible={visible}>
-      <Pressable onPress={() => setVisible(false)}>
-        <Text>Hide me</Text>
-      </Pressable>
+test('detects siblings of element with accessibilityViewIsModal prop', () => {
+  const view = render(
+    <View>
+      <View accessibilityViewIsModal />
       <View testID="subject" />
-    </Modal>
+    </View>
   );
-}
-
-test('detects elements in invisible modal', async () => {
-  const view = render(<ModalContainer />);
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(false);
-  expect(view.toJSON()).toMatchInlineSnapshot(`
-    <Modal
-      hardwareAccelerated={false}
-      visible={true}
-    >
-      <View
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onBlur={[Function]}
-        onClick={[Function]}
-        onFocus={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-      >
-        <Text>
-          Hide me
-        </Text>
-      </View>
-      <View
-        testID="subject"
-      />
-    </Modal>
-  `);
-
-  await sleep(1000);
-  fireEvent.press(view.getByText('Hide me'));
-
-  expect(view.toJSON()).toMatchInlineSnapshot(`
-    <Modal
-      hardwareAccelerated={false}
-      visible={false}
-    />
-  `);
-  expect(isInaccessible(view.queryByTestId('subject'))).toBe(true);
-
-  await sleep(1000);
-  expect(view.toJSON()).toMatchInlineSnapshot(`
-    <Modal
-      hardwareAccelerated={false}
-      visible={false}
-    />
-  `);
+  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
 });
 
-// test('detects siblings elements to visible modal', () => {
-//   const view = render(
-//     <View>
-//       <Modal visible>
-//         <Text>Modal</Text>
-//       </Modal>
-//       <View testID="subject" />
-//     </View>
-//   );
-//   expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
-// });
+test('detects deeply nested siblings of element with accessibilityViewIsModal prop', () => {
+  const view = render(
+    <View>
+      <View accessibilityViewIsModal />
+      <View>
+        <View>
+          <View testID="subject" />
+        </View>
+      </View>
+    </View>
+  );
+  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+});
 
-// test('detects descendants of siblings elements to visible modal', () => {
-//   const view = render(
-//     <View>
-//       <Modal visible>
-//         <Text>Modal</Text>
-//       </Modal>
-//       <View>
-//         <View testID="subject" />
-//       </View>
-//     </View>
-//   );
-//   expect(view.toJSON()).toMatchInlineSnapshot(`
-//     <View>
-//       <Modal
-//         hardwareAccelerated={false}
-//         visible={true}
-//       >
-//         <Text>
-//           Modal
-//         </Text>
-//       </Modal>
-//       <View>
-//         <View
-//           testID="subject"
-//         />
-//       </View>
-//     </View>
-//   `);
+test('is not triggered for element with accessibilityViewIsModal prop', () => {
+  const view = render(
+    <View>
+      <View accessibilityViewIsModal testID="subject" />
+    </View>
+  );
+  expect(isInaccessible(view.getByTestId('subject'))).toBe(false);
+});
 
-//   expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
-// });
+test('is not triggered for child of element with accessibilityViewIsModal prop', () => {
+  const view = render(
+    <View>
+      <View accessibilityViewIsModal>
+        <View testID="subject" />
+      </View>
+    </View>
+  );
+  expect(isInaccessible(view.getByTestId('subject'))).toBe(false);
+});
+
+test('is not triggered for descendent of element with accessibilityViewIsModal prop', () => {
+  const view = render(
+    <View>
+      <View accessibilityViewIsModal>
+        <View>
+          <View>
+            <View testID="subject" />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+  expect(isInaccessible(view.getByTestId('subject'))).toBe(false);
+});
