@@ -7,7 +7,7 @@ import {
   setImmediate,
   jestFakeTimersAreEnabled,
 } from './helpers/timers';
-import { checkReactVersionAtLeast } from './checkReactVersionAtLeast';
+import { checkReactVersionAtLeast } from './react-versions';
 
 const DEFAULT_TIMEOUT = 1000;
 const DEFAULT_INTERVAL = 50;
@@ -187,10 +187,6 @@ export default async function waitFor<T>(
   const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', waitFor);
   const optionsWithStackTrace = { stackTraceError, ...options };
 
-  if (!checkReactVersionAtLeast(16, 9)) {
-    return waitForInternal(expectation, optionsWithStackTrace);
-  }
-
   if (checkReactVersionAtLeast(18, 0)) {
     const previousActEnvironment = getIsReactActEnvironment();
     setReactActEnvironment(false);
@@ -200,6 +196,10 @@ export default async function waitFor<T>(
     } finally {
       setReactActEnvironment(previousActEnvironment);
     }
+  }
+
+  if (!checkReactVersionAtLeast(16, 9)) {
+    return waitForInternal(expectation, optionsWithStackTrace);
   }
 
   let result: T;

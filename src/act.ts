@@ -1,38 +1,27 @@
+// This file and the act() implementation is sourced from react-testing-library
+// https://github.com/testing-library/react-testing-library/blob/c80809a956b0b9f3289c4a6fa8b5e8cc72d6ef6d/src/act-compat.js
 import { act as reactTestRendererAct } from 'react-test-renderer';
-import { checkReactVersionAtLeast } from './checkReactVersionAtLeast';
+import { checkReactVersionAtLeast } from './react-versions';
 
 const actMock = (callback: () => void) => {
   callback();
 };
 
-type GlobalWithReactActEnvironment = {
-  IS_REACT_ACT_ENVIRONMENT?: boolean;
-} & typeof globalThis;
-function getGlobalThis(): GlobalWithReactActEnvironment {
-  // eslint-disable-next-line no-restricted-globals
-  if (typeof self !== 'undefined') {
-    // eslint-disable-next-line no-restricted-globals
-    return self as GlobalWithReactActEnvironment;
-  }
-  if (typeof window !== 'undefined') {
-    return window;
-  }
-  if (typeof global !== 'undefined') {
-    return global;
-  }
-
-  throw new Error('unable to locate global object');
+// See https://github.com/reactwg/react-18/discussions/102 for more context on global.IS_REACT_ACT_ENVIRONMENT
+declare global {
+  var IS_REACT_ACT_ENVIRONMENT: boolean | undefined;
 }
 
 function setIsReactActEnvironment(isReactActEnvironment: boolean | undefined) {
-  getGlobalThis().IS_REACT_ACT_ENVIRONMENT = isReactActEnvironment;
+  globalThis.IS_REACT_ACT_ENVIRONMENT = isReactActEnvironment;
 }
 
 function getIsReactActEnvironment() {
-  return getGlobalThis().IS_REACT_ACT_ENVIRONMENT;
+  return globalThis.IS_REACT_ACT_ENVIRONMENT;
 }
 
 type Act = typeof reactTestRendererAct;
+
 function withGlobalActEnvironment(actImplementation: Act) {
   return (callback: Parameters<Act>[0]) => {
     const previousActEnvironment = getIsReactActEnvironment();
@@ -47,8 +36,9 @@ function withGlobalActEnvironment(actImplementation: Act) {
         if (
           result !== null &&
           typeof result === 'object' &&
+          // @ts-expect-error this should be a promise or thenable
           // eslint-disable-next-line promise/prefer-await-to-then
-          typeof (result as any).then === 'function'
+          typeof result.then === 'function'
         ) {
           callbackNeedsToBeAwaited = true;
         }
@@ -87,12 +77,16 @@ function withGlobalActEnvironment(actImplementation: Act) {
     }
   };
 }
+const getAct = () => {
+  if (!reactTestRendererAct) {
+    return actMock;
+  }
 
-const act = reactTestRendererAct
-  ? checkReactVersionAtLeast(18, 0)
+  return checkReactVersionAtLeast(18, 0)
     ? withGlobalActEnvironment(reactTestRendererAct)
-    : reactTestRendererAct
-  : actMock;
+    : reactTestRendererAct;
+};
+const act = getAct();
 
 export default act;
 export {
