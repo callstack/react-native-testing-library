@@ -16,7 +16,10 @@ type ByRoleOptions = {
   name?: TextMatch;
 };
 
-const matchAccessibleName = (node: ReactTestInstance, name?: TextMatch) => {
+const matchAccessibleNameIfNeeded = (
+  node: ReactTestInstance,
+  name?: TextMatch
+) => {
   if (name == null) return true;
 
   const { queryAllByText, queryAllByLabelText } = getQueriesForElement(node);
@@ -33,7 +36,7 @@ const queryAllByRole = (
       (node) =>
         typeof node.type === 'string' &&
         matchStringProp(node.props.accessibilityRole, role) &&
-        matchAccessibleName(node, options?.name)
+        matchAccessibleNameIfNeeded(node, options?.name)
     );
   };
 
