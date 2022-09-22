@@ -101,6 +101,7 @@ const Comp = ({ onPress }: { onPress: () => void }) => {
     </Pressable>
   );
 };
+
 test('waits for async event with fireEvent', async () => {
   const spy = jest.fn();
   const { getByText } = render(<Comp onPress={spy} />);
