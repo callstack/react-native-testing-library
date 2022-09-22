@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { TextMatch } from '../matches';
 import { matchStringProp } from '../helpers/matchers/matchStringProp';
+import { TextMatch } from '../matches';
+import { getQueriesForElement } from '../within';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -11,14 +12,31 @@ import type {
   QueryByQuery,
 } from './makeQueries';
 
+type ByRoleOptions = {
+  name?: TextMatch;
+};
+
+const matchAccessibleNameIfNeeded = (
+  node: ReactTestInstance,
+  name?: TextMatch
+) => {
+  if (name == null) return true;
+
+  const { queryAllByText, queryAllByLabelText } = getQueriesForElement(node);
+  return (
+    queryAllByText(name).length > 0 || queryAllByLabelText(name).length > 0
+  );
+};
+
 const queryAllByRole = (
   instance: ReactTestInstance
-): ((role: TextMatch) => Array<ReactTestInstance>) =>
-  function queryAllByRoleFn(role) {
+): ((role: TextMatch, options?: ByRoleOptions) => Array<ReactTestInstance>) =>
+  function queryAllByRoleFn(role, options) {
     return instance.findAll(
       (node) =>
         typeof node.type === 'string' &&
-        matchStringProp(node.props.accessibilityRole, role)
+        matchStringProp(node.props.accessibilityRole, role) &&
+        matchAccessibleNameIfNeeded(node, options?.name)
     );
   };
 
@@ -34,12 +52,12 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByRoleQueries = {
-  getByRole: GetByQuery<TextMatch>;
-  getAllByRole: GetAllByQuery<TextMatch>;
-  queryByRole: QueryByQuery<TextMatch>;
-  queryAllByRole: QueryAllByQuery<TextMatch>;
-  findByRole: FindByQuery<TextMatch>;
-  findAllByRole: FindAllByQuery<TextMatch>;
+  getByRole: GetByQuery<TextMatch, ByRoleOptions>;
+  getAllByRole: GetAllByQuery<TextMatch, ByRoleOptions>;
+  queryByRole: QueryByQuery<TextMatch, ByRoleOptions>;
+  queryAllByRole: QueryAllByQuery<TextMatch, ByRoleOptions>;
+  findByRole: FindByQuery<TextMatch, ByRoleOptions>;
+  findAllByRole: FindAllByQuery<TextMatch, ByRoleOptions>;
 };
 
 export const bindByRoleQueries = (

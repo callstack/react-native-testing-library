@@ -189,6 +189,10 @@ render(<MyComponent />);
 const element = screen.getByRole('button');
 ```
 
+#### Options
+
+`name`: Finds an element with given `accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
+
 ### `ByA11yState`, `ByAccessibilityState`
 
 > getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState, findByA11yState, findAllByA11yState
@@ -305,7 +309,8 @@ To override normalization to remove some Unicode characters whilst keeping some 
 
 ```typescript
 screen.getByText(node, 'text', {
-  normalizer: (str) => getDefaultNormalizer({ trim: false })(str).replace(/[\u200E-\u200F]*/g, ''),
+  normalizer: (str) =>
+    getDefaultNormalizer({ trim: false })(str).replace(/[\u200E-\u200F]*/g, ''),
 });
 ```
 
