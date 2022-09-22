@@ -1,6 +1,5 @@
 /* globals jest */
-import * as React from 'react';
-import act from './act';
+import act, { setReactActEnvironment, getIsReactActEnvironment } from './act';
 import { ErrorWithStack, copyStackTrace } from './helpers/errors';
 import {
   setTimeout,
@@ -8,16 +7,10 @@ import {
   setImmediate,
   jestFakeTimersAreEnabled,
 } from './helpers/timers';
+import { checkReactVersionAtLeast } from './react-versions';
 
 const DEFAULT_TIMEOUT = 1000;
 const DEFAULT_INTERVAL = 50;
-
-function checkReactVersionAtLeast(major: number, minor: number): boolean {
-  if (React.version === undefined) return false;
-  const [actualMajor, actualMinor] = React.version.split('.').map(Number);
-
-  return actualMajor > major || (actualMajor === major && actualMinor >= minor);
-}
 
 export type WaitForOptions = {
   timeout?: number;
@@ -193,6 +186,17 @@ export default async function waitFor<T>(
   // Being able to display a useful stack trace requires generating it before doing anything async
   const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', waitFor);
   const optionsWithStackTrace = { stackTraceError, ...options };
+
+  if (checkReactVersionAtLeast(18, 0)) {
+    const previousActEnvironment = getIsReactActEnvironment();
+    setReactActEnvironment(false);
+
+    try {
+      return await waitForInternal(expectation, optionsWithStackTrace);
+    } finally {
+      setReactActEnvironment(previousActEnvironment);
+    }
+  }
 
   if (!checkReactVersionAtLeast(16, 9)) {
     return waitForInternal(expectation, optionsWithStackTrace);
