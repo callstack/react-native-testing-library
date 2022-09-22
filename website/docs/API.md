@@ -693,7 +693,7 @@ function isInaccessible(
 
 Checks if given element should be excluded from the accessiblity e.g. by screen readers. 
 
-Element is considered inaccessbile when one of the follwing applies:
+Element is considered inaccessible when one of the following applies:
 * element has `display: none` style
 * element has [`accessibilityElementsHidden`](https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios) prop set to `true` 
 * element has [`importantForAccessibility`](https://reactnative.dev/docs/accessibility#importantforaccessibility-android) prop set to `no` or `no-hide-descendants`
