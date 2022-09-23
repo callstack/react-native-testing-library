@@ -47,11 +47,6 @@ test('detects deeply nested elements with accessibilityElementsHidden prop', () 
   expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
 });
 
-test('detects elements with importantForAccessibility="no" prop', () => {
-  const view = render(<View testID="subject" importantForAccessibility="no" />);
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
-});
-
 test('detects elements with importantForAccessibility="no-hide-descendants" prop', () => {
   const view = render(
     <View testID="subject" importantForAccessibility="no-hide-descendants" />

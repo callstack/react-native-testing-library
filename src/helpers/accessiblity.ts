@@ -7,10 +7,6 @@ export function isInaccessible(element: ReactTestInstance | null): boolean {
     return true;
   }
 
-  // Android: importantForAccessibility
-  // See: https://reactnative.dev/docs/accessibility#importantforaccessibility-android
-  if (element.props.importantForAccessibility === 'no') return true;
-
   let current: ReactTestInstance | null = element;
   while (current) {
     if (isSubtreeInaccessible(current)) {
