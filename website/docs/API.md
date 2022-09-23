@@ -705,4 +705,4 @@ For the scope of this function, element is inaccessible when it, or any of its a
  * it has [`importantForAccessibility`](https://reactnative.dev/docs/accessibility#importantforaccessibility-android) prop set to `no-hide-descendants`
  * it has sibling host element with [`accessibilityViewIsModal`](https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios) prop set to `true`
  
-Specifying `accessible={false}` or `accessiblityRole="none"` props does not cause the element to be inaccessible.
+Specifying `accessible={false}`, `accessiblityRole="none"`, or `importantForAccessibility="no"` props does not cause the element to be inaccessible.
