@@ -45,6 +45,8 @@ title: API
   - [Examples](#examples)
     - [With `initialProps`](#with-initialprops)
     - [With `wrapper`](#with-wrapper)
+- [Accessibility](#accessibility)
+  - [`isInaccessible`](#isinaccessible)
 
 This page gathers public API of React Native Testing Library along with usage examples.
 
@@ -258,7 +260,11 @@ Failing to call `cleanup` when you've called `render` could result in a memory l
 ## `fireEvent`
 
 ```ts
-fireEvent(element: ReactTestInstance, eventName: string, ...data: Array<any>): void
+function fireEvent(
+  element: ReactTestInstance,
+  eventName: string,
+  ...data: Array<any>
+): void {}
 ```
 
 Fires native-like event with data.
@@ -518,8 +524,13 @@ If you receive warnings related to `act()` function consult our [Undestanding Ac
 Defined as:
 
 ```jsx
-function within(instance: ReactTestInstance): Queries
-function getQueriesForElement(instance: ReactTestInstance): Queries
+function within(
+  element: ReactTestInstance
+): Queries {}
+
+function getQueriesForElement(
+  element: ReactTestInstance
+): Queries {}
 ```
 
 `within` (also available as `getQueriesForElement` alias) performs [queries](./Queries.md) scoped to given element.
@@ -702,3 +713,29 @@ it('should use context value', () => {
   // ...
 });
 ```
+
+## Accessibility
+
+### `isInaccessible`
+
+```ts
+function isInaccessible(
+  element: ReactTestInstance | null
+): boolean {}
+```
+
+Checks if given element is hidden from assistive technology, e.g. screen readers. 
+
+:::note
+Like [`isInaccessible`](https://testing-library.com/docs/dom-testing-library/api-accessibility/#isinaccessible) function from [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro) this function considers both accessibility elements and presentational elements (regular `View`s) to be accessible, unless they are hidden in terms of host platform. 
+
+This covers only part of [ARIA notion of Accessiblity Tree](https://www.w3.org/TR/wai-aria-1.2/#tree_exclusion), as ARIA excludes both hidden and presentational elements from the Accessibility Tree.
+:::
+
+For the scope of this function, element is inaccessible when it, or any of its ancestors, meets any of the following conditions: 
+ * it has `display: none` style
+ * it has [`accessibilityElementsHidden`](https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios) prop set to `true` 
+ * it has [`importantForAccessibility`](https://reactnative.dev/docs/accessibility#importantforaccessibility-android) prop set to `no-hide-descendants`
+ * it has sibling host element with [`accessibilityViewIsModal`](https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios) prop set to `true`
+ 
+Specifying `accessible={false}`, `accessiblityRole="none"`, or `importantForAccessibility="no"` props does not cause the element to become inaccessible.

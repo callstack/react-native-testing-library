@@ -1,12 +1,9 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import act from './act';
+import { isHostElement } from './helpers/component-tree';
 import { filterNodeByType } from './helpers/filterNodeByType';
 
 type EventHandler = (...args: any) => unknown;
-
-const isHostElement = (element?: ReactTestInstance) => {
-  return typeof element?.type === 'string';
-};
 
 const isTextInput = (element?: ReactTestInstance) => {
   if (!element) {
