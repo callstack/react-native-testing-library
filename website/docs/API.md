@@ -691,12 +691,18 @@ function isInaccessible(
 ): boolean {}
 ```
 
-Checks if given element should be excluded from the accessiblity e.g. by screen readers. 
+Checks if given element is hidden from assistive technology, e.g. screen readers. 
 
-Element is considered inaccessible when one of the following applies:
-* element has `display: none` style
-* element has [`accessibilityElementsHidden`](https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios) prop set to `true` 
-* element has [`importantForAccessibility`](https://reactnative.dev/docs/accessibility#importantforaccessibility-android) prop set to `no` or `no-hide-descendants`
-* element is a sibling of view with [`accessibilityViewIsModal`](https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios) prop set to `true`
-* element has an inaccessbile ancestor element, with exception of being descendant of element with `importantForAccessibility` set to `no`.
+:::note
+Like [`isInaccessible`](https://testing-library.com/docs/dom-testing-library/api-accessibility/#isinaccessible) function from [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro) this function considers both accessibility elements and presentational elements (regular `View`s) to be accessible, unless they are hidden in terms of host platform. 
 
+This covers only part of [ARIA notion of Accessiblity Tree](https://www.w3.org/TR/wai-aria-1.2/#tree_exclusion), as ARIA excludes both hidden and presentational elements from the Accessibility Tree.
+:::
+
+For the scope of this function, element is inaccessible when it, or any of its ancestors, meets any of the following conditions: 
+ * it has `display: none` style
+ * it has [`accessibilityElementsHidden`](https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios) prop set to `true` 
+ * it has [`importantForAccessibility`](https://reactnative.dev/docs/accessibility#importantforaccessibility-android) prop set to `no-hide-descendants`
+ * it has sibling host element with [`accessibilityViewIsModal`](https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios) prop set to `true`
+ 
+Specifying `accessible={false}` or `accessiblityRole="none"` props does not cause the element to be inaccessible.
