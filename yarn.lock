@@ -1790,9 +1790,9 @@
     "@sinonjs/commons" "^1.7.0"
 
 "@testing-library/jest-native@~4.0.2":
-  version "4.0.12"
-  resolved "https://registry.yarnpkg.com/@testing-library/jest-native/-/jest-native-4.0.12.tgz#9669a2456bf8f7ac907fca879d157fd0f29e6cb8"
-  integrity sha512-SjH3mLpYPLt14F2av98172nbGHrOlThKWxbSQrc9ZOsgl8mlMvWkQnFEheQooiLpZwrkoi+P48+dDMU7VaRR3A==
+  version "4.0.13"
+  resolved "https://registry.yarnpkg.com/@testing-library/jest-native/-/jest-native-4.0.13.tgz#3d2a27ffac9f8126a4185e46a167b0cde4443336"
+  integrity sha512-BovApxYJRb0Z9TUZbFQhW2ZWC4KfymH1SQZ5FxcTHh7Zrzb6+vfWT1CyvGnb8JE6WEZGcuumzSXOMdSIVUjj5Q==
   dependencies:
     chalk "^4.1.2"
     jest-diff "^29.0.1"
