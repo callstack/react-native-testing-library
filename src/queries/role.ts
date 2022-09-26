@@ -1,3 +1,4 @@
+import { type AccessibilityState } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matchStringProp } from '../helpers/matchers/matchStringProp';
 import { TextMatch } from '../matches';
@@ -14,7 +15,7 @@ import type {
 
 type ByRoleOptions = {
   name?: TextMatch;
-};
+} & AccessibilityState;
 
 const matchAccessibleNameIfNeeded = (
   node: ReactTestInstance,
@@ -28,22 +29,73 @@ const matchAccessibleNameIfNeeded = (
   );
 };
 
+const accessibilityStates = [
+  'disabled',
+  'selected',
+  'checked',
+  'busy',
+  'expanded',
+] as const;
+
 const queryAllByRole = (
   instance: ReactTestInstance
 ): ((role: TextMatch, options?: ByRoleOptions) => Array<ReactTestInstance>) =>
   function queryAllByRoleFn(role, options) {
-    return instance.findAll(
-      (node) =>
+    return instance.findAll((node) => {
+      const matchRole =
         typeof node.type === 'string' &&
-        matchStringProp(node.props.accessibilityRole, role) &&
-        matchAccessibleNameIfNeeded(node, options?.name)
-    );
+        matchStringProp(node.props.accessibilityRole, role);
+
+      if (!matchRole) return false;
+
+      if (options?.name) {
+        if (!matchAccessibleNameIfNeeded(node, options.name)) {
+          return false;
+        }
+      }
+
+      return accessibilityStates.every((accessibilityState) => {
+        const queriedState = options?.[accessibilityState];
+
+        // test for true instead of `undefined`, because `{disabled: false} should match
+        // a button without a disable state`
+        if (queriedState === true) {
+          return (
+            queriedState === node.props.accessibilityState?.[accessibilityState]
+          );
+        } else {
+          return true;
+        }
+      });
+    });
   };
 
-const getMultipleError = (role: TextMatch) =>
-  `Found multiple elements with accessibilityRole: ${String(role)} `;
-const getMissingError = (role: TextMatch) =>
-  `Unable to find an element with accessibilityRole: ${String(role)}`;
+const computeErrorMessage = (role: TextMatch, options: ByRoleOptions = {}) => {
+  let errorMessage = `accessibilityRole: ${String(role)}`;
+
+  if (options.name) {
+    errorMessage += `, name: ${String(options.name)}`;
+  }
+
+  if (
+    accessibilityStates.some(
+      (accessibilityState) => typeof options[accessibilityState] !== 'undefined'
+    )
+  ) {
+    errorMessage += ', accessibilityStates:';
+    accessibilityStates.forEach((accessibilityState) => {
+      if (options[accessibilityState]) {
+        errorMessage += ` ${accessibilityState}:${options[accessibilityState]}`;
+      }
+    });
+  }
+
+  return errorMessage;
+};
+const getMultipleError = (role: TextMatch, options?: ByRoleOptions) =>
+  `Found multiple elements with ${computeErrorMessage(role, options)}`;
+const getMissingError = (role: TextMatch, options?: ByRoleOptions) =>
+  `Unable to find an element with ${computeErrorMessage(role, options)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByRole,
