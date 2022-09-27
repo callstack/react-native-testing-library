@@ -733,7 +733,7 @@ function configure(options: Partial<Config>)  {}
 
 #### `asyncUtilTimeout` option
 
-Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries.
+Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
 
 
 ### `resetToDefaults()`
