@@ -7,7 +7,7 @@ import {
   Button,
   TextInput,
 } from 'react-native';
-import { render, getDefaultNormalizer } from '../..';
+import { render, getDefaultNormalizer, within } from '../..';
 
 type MyButtonProps = {
   children: React.ReactNode;
@@ -453,4 +453,10 @@ test('getByText and queryByText work with tabs', () => {
   const { getByText, queryByText } = render(<Text>{textWithTabs}</Text>);
   expect(getByText(textWithTabs)).toBeTruthy();
   expect(queryByText(textWithTabs)).toBeTruthy();
+});
+
+test('getByText searches for text within itself', () => {
+  const { getByText } = render(<Text testID="subject">Hello</Text>);
+  const textNode = within(getByText('Hello'));
+  expect(textNode.getByText('Hello')).toBeTruthy();
 });

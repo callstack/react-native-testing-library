@@ -2,6 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
 import { createLibraryNotSupportedError } from '../helpers/errors';
 import { filterNodeByType } from '../helpers/filterNodeByType';
+import { isHostElement } from '../helpers/component-tree';
 import { matches, TextMatch } from '../matches';
 import type { NormalizerFn } from '../matches';
 import { makeQueries } from './makeQueries';
@@ -58,24 +59,42 @@ const getChildrenAsText = (
 const getNodeByText = (
   node: ReactTestInstance,
   text: TextMatch,
+  TextComponent: React.ComponentType,
   options: TextMatchOptions = {}
 ) => {
-  try {
-    const { Text } = require('react-native');
-    const isTextComponent = filterNodeByType(node, Text);
-    if (isTextComponent) {
-      const textChildren = getChildrenAsText(node.props.children, Text);
-      if (textChildren) {
-        const textToTest = textChildren.join('');
-        const { exact, normalizer } = options;
-        return matches(text, textToTest, normalizer, exact);
-      }
+  const isTextComponent = filterNodeByType(node, TextComponent);
+  if (isTextComponent) {
+    const textChildren = getChildrenAsText(node.props.children, TextComponent);
+    if (textChildren) {
+      const textToTest = textChildren.join('');
+      const { exact, normalizer } = options;
+      return matches(text, textToTest, normalizer, exact);
     }
-    return false;
-  } catch (error) {
-    throw createLibraryNotSupportedError(error);
   }
+  return false;
 };
+
+function getCompositeParent(
+  element: ReactTestInstance,
+  compositeType: React.ComponentType
+) {
+  if (!isHostElement(element)) return null;
+
+  let current = element.parent;
+  while (!isHostElement(current)) {
+    // We're at the top of the tree
+    if (!current) {
+      return null;
+    }
+
+    if (filterNodeByType(current, compositeType)) {
+      return current;
+    }
+    current = current.parent ?? null;
+  }
+
+  return null;
+}
 
 const queryAllByText = (
   instance: ReactTestInstance
@@ -84,11 +103,21 @@ const queryAllByText = (
   options?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByTextFn(text, options) {
-    const results = instance.findAll((node) =>
-      getNodeByText(node, text, options)
-    );
+    try {
+      const { Text } = require('react-native');
+      const rootInstance = isHostElement(instance)
+        ? getCompositeParent(instance, Text) ?? instance
+        : instance;
 
-    return results;
+      if (!rootInstance) return [];
+      const results = rootInstance.findAll((node) =>
+        getNodeByText(node, text, Text, options)
+      );
+
+      return results;
+    } catch (error) {
+      throw createLibraryNotSupportedError(error);
+    }
   };
 
 const getMultipleError = (text: TextMatch) =>

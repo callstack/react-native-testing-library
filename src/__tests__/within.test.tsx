@@ -94,3 +94,11 @@ test('within() exposes a11y queries', async () => {
 test('getQueriesForElement is alias to within', () => {
   expect(getQueriesForElement).toBe(within);
 });
+
+test('within allows searching for text within a composite component', () => {
+  const view = render(<Text testID="subject">Hello</Text>);
+  // view.getByTestId('subject') returns a composite component, contrary to most queries returning host component
+  // we want to be sure that this doesn't interfere with the way text is searched
+  const hostTextQueries = within(view.getByTestId('subject'));
+  expect(hostTextQueries.getByText('Hello')).toBeTruthy();
+});

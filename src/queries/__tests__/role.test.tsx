@@ -134,4 +134,43 @@ describe('supports name option', () => {
       'target-button'
     );
   });
+
+  test('returns an element when the direct child is text', () => {
+    const { getByRole } = render(
+      <Text accessibilityRole="header" testID="target-header">
+        About
+      </Text>
+    );
+
+    // assert on the testId to be sure that the returned element is the one with the accessibilityRole
+    expect(getByRole('header', { name: 'About' }).props.testID).toBe(
+      'target-header'
+    );
+  });
+
+  test('returns an element with nested Text as children', () => {
+    const { getByRole } = render(
+      <Text accessibilityRole="header" testID="parent">
+        <Text testID="child">About</Text>
+      </Text>
+    );
+
+    // assert on the testId to be sure that the returned element is the one with the accessibilityRole
+    expect(getByRole('header', { name: 'About' }).props.testID).toBe('parent');
+  });
+
+  test('returns a header with an accessibilityLabel', () => {
+    const { getByRole } = render(
+      <Text
+        accessibilityRole="header"
+        testID="target-header"
+        accessibilityLabel="About"
+      ></Text>
+    );
+
+    // assert on the testId to be sure that the returned element is the one with the accessibilityRole
+    expect(getByRole('header', { name: 'About' }).props.testID).toBe(
+      'target-header'
+    );
+  });
 });
