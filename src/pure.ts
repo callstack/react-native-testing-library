@@ -16,9 +16,11 @@ export type {
   RenderResult as RenderAPI,
 } from './render';
 export type { RenderHookOptions, RenderHookResult } from './renderHook';
+export type { Config } from './config';
 
 export { act };
 export { cleanup };
+export { configure, resetToDefault } from './config';
 export { fireEvent };
 export { render };
 export { waitFor };
