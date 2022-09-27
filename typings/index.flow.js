@@ -367,6 +367,13 @@ declare module '@testing-library/react-native' {
 
   declare export var waitForElementToBeRemoved: WaitForElementToBeRemovedFunction;
 
+  declare interface Config {
+    asyncUtilTimeout: number;
+  }
+
+  declare export var configure: (options: $Shape<Config>) => void;
+  declare export var resetToDefaults: () => void;
+
   declare export var act: (callback: () => void) => Thenable;
   declare export var within: (instance: ReactTestInstance) => Queries;
   declare export var getQueriesForElement: (

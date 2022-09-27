@@ -45,6 +45,10 @@ title: API
   - [Examples](#examples)
     - [With `initialProps`](#with-initialprops)
     - [With `wrapper`](#with-wrapper)
+- [Configuration](#configuration)
+  - [`configure`](#configure)
+    - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
+  - [`resetToDefaults()`](#resettodefaults)
 - [Accessibility](#accessibility)
   - [`isInaccessible`](#isinaccessible)
 
@@ -712,6 +716,30 @@ it('should use context value', () => {
   const { result } = renderHook(() => useHook(), { wrapper: Wrapper });
   // ...
 });
+```
+
+
+## Configuration
+
+### `configure`
+
+```ts
+type Config = {
+  asyncUtilTimeout: number;
+};
+
+function configure(options: Partial<Config>)  {}
+```
+
+#### `asyncUtilTimeout` option
+
+Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
+
+
+### `resetToDefaults()`
+
+```ts
+function resetToDefaults() {}
 ```
 
 ## Accessibility
