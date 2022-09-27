@@ -20,7 +20,7 @@ export type { Config } from './config';
 
 export { act };
 export { cleanup };
-export { configure, resetToDefault } from './config';
+export { configure, resetToDefaults } from './config';
 export { fireEvent };
 export { render };
 export { waitFor };
