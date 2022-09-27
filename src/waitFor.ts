@@ -1,5 +1,6 @@
 /* globals jest */
 import act, { setReactActEnvironment, getIsReactActEnvironment } from './act';
+import { getConfig } from './config';
 import { ErrorWithStack, copyStackTrace } from './helpers/errors';
 import {
   setTimeout,
@@ -9,7 +10,6 @@ import {
 } from './helpers/timers';
 import { checkReactVersionAtLeast } from './react-versions';
 
-const DEFAULT_TIMEOUT = 1000;
 const DEFAULT_INTERVAL = 50;
 
 export type WaitForOptions = {
@@ -22,7 +22,7 @@ export type WaitForOptions = {
 function waitForInternal<T>(
   expectation: () => T,
   {
-    timeout = DEFAULT_TIMEOUT,
+    timeout = getConfig().asyncUtilTimeout,
     interval = DEFAULT_INTERVAL,
     stackTraceError,
     onTimeout,
