@@ -40,10 +40,10 @@ test('jest-native matchers work correctly', () => {
   expect(getByText('Disabled Button')).toBeDisabled();
   expect(getByText('Enabled Button')).not.toBeDisabled();
 
-  expect(getByA11yHint('Empty Text')).toBeEmpty();
-  expect(getByA11yHint('Empty View')).toBeEmpty();
-  expect(getByA11yHint('Not Empty Text')).not.toBeEmpty();
-  expect(getByA11yHint('Not Empty View')).not.toBeEmpty();
+  expect(getByA11yHint('Empty Text')).toBeEmptyElement();
+  expect(getByA11yHint('Empty View')).toBeEmptyElement();
+  expect(getByA11yHint('Not Empty Text')).not.toBeEmptyElement();
+  expect(getByA11yHint('Not Empty View')).not.toBeEmptyElement();
 
   expect(getByA11yHint('Container View')).toContainElement(
     // $FlowFixMe - TODO: fix @testing-library/jest-native flow typings
