@@ -78,7 +78,7 @@ export function getHostSelf(
 
   if (hostSelves.length > 1) {
     throw new Error(
-      `Expected exactly one host element, but got ${hostSelves.length}.`
+      `Expected exactly one host element, but found ${hostSelves.length}.`
     );
   }
 

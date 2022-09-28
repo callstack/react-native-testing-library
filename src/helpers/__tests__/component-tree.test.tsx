@@ -4,9 +4,14 @@ import { render } from '../..';
 import {
   getHostChildren,
   getHostParent,
+  getHostSelf,
   getHostSelves,
   getHostSiblings,
 } from '../component-tree';
+
+function ZeroHostChildren() {
+  return <></>;
+}
 
 function MultipleHostChildren() {
   return (
@@ -89,6 +94,29 @@ test('returns host children for composite component', () => {
   ]);
 });
 
+test('returns host self for host components', () => {
+  const view = render(
+    <View testID="grandparent">
+      <View testID="parent">
+        <View testID="subject" />
+        <View testID="sibling" />
+      </View>
+    </View>
+  );
+
+  const hostSubject = view.getByTestId('subject');
+  expect(getHostSelf(hostSubject)).toEqual(hostSubject);
+
+  const hostSibling = view.getByTestId('sibling');
+  expect(getHostSelf(hostSibling)).toEqual(hostSibling);
+
+  const hostParent = view.getByTestId('parent');
+  expect(getHostSelf(hostParent)).toEqual(hostParent);
+
+  const hostGrandparent = view.getByTestId('grandparent');
+  expect(getHostSelf(hostGrandparent)).toEqual(hostGrandparent);
+});
+
 test('returns host selves for host components', () => {
   const view = render(
     <View testID="grandparent">
@@ -110,6 +138,51 @@ test('returns host selves for host components', () => {
 
   const hostGrandparent = view.getByTestId('grandparent');
   expect(getHostSelves(hostGrandparent)).toEqual([hostGrandparent]);
+});
+
+test('returns host self for React Native composite components', () => {
+  const view = render(
+    <View testID="parent">
+      <Text testID="text">Text</Text>
+      <TextInput
+        testID="textInput"
+        defaultValue="TextInputValue"
+        placeholder="TextInputPlaceholder"
+      />
+    </View>
+  );
+
+  const compositeText = view.getByText('Text');
+  const hostText = view.getByTestId('text');
+  expect(getHostSelf(compositeText)).toEqual(hostText);
+
+  const compositeTextInputByValue = view.getByDisplayValue('TextInputValue');
+  const compositeTextInputByPlaceholder = view.getByPlaceholderText(
+    'TextInputPlaceholder'
+  );
+  const hostTextInput = view.getByTestId('textInput');
+  expect(getHostSelf(compositeTextInputByValue)).toEqual(hostTextInput);
+  expect(getHostSelf(compositeTextInputByPlaceholder)).toEqual(hostTextInput);
+});
+
+test('throws on non-single host self element for custom composite components', () => {
+  const view = render(
+    <View testID="parent">
+      <ZeroHostChildren />
+      <MultipleHostChildren />
+    </View>
+  );
+
+  const zeroCompositeComponent = view.UNSAFE_getByType(ZeroHostChildren);
+  expect(() => getHostSelf(zeroCompositeComponent)).toThrow(
+    'Expected exactly one host element, but found none.'
+  );
+
+  const multipleCompositeComponent =
+    view.UNSAFE_getByType(MultipleHostChildren);
+  expect(() => getHostSelf(multipleCompositeComponent)).toThrow(
+    'Expected exactly one host element, but found 3.'
+  );
 });
 
 test('returns host selves for React Native composite components', () => {
@@ -142,16 +215,21 @@ test('returns host selves for React Native composite components', () => {
 test('returns host selves for custom composite components', () => {
   const view = render(
     <View testID="parent">
+      <ZeroHostChildren />
       <MultipleHostChildren />
       <View testID="sibling" />
     </View>
   );
 
-  const compositeComponent = view.UNSAFE_getByType(MultipleHostChildren);
+  const zeroCompositeComponent = view.UNSAFE_getByType(ZeroHostChildren);
+  expect(getHostSelves(zeroCompositeComponent)).toEqual([]);
+
+  const multipleCompositeComponent =
+    view.UNSAFE_getByType(MultipleHostChildren);
   const hostChild1 = view.getByTestId('child1');
   const hostChild2 = view.getByTestId('child2');
   const hostChild3 = view.getByTestId('child3');
-  expect(getHostSelves(compositeComponent)).toEqual([
+  expect(getHostSelves(multipleCompositeComponent)).toEqual([
     hostChild1,
     hostChild2,
     hostChild3,
