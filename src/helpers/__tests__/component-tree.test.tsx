@@ -6,6 +6,8 @@ import {
   getHostParent,
   getHostSelves,
   getHostSiblings,
+  getCompositeParentOfType,
+  isHostElement,
 } from '../component-tree';
 
 function MultipleHostChildren() {
@@ -199,4 +201,17 @@ test('returns host siblings for composite component', () => {
     view.getByTestId('subject'),
     view.getByTestId('siblingAfter'),
   ]);
+});
+
+test('getCompositeParentOfType', () => {
+  const view = render(<View testID="test"></View>);
+  const hostComponent = view.getByTestId('test');
+
+  const compositeComponent = getCompositeParentOfType(hostComponent, View);
+
+  // We get the corresponding composite component (same testID), but not the host
+  expect(hostComponent.props.testID).toBe(compositeComponent?.props.testID);
+
+  expect(hostComponent).not.toBe(compositeComponent);
+  expect(isHostElement(compositeComponent)).toBe(false);
 });

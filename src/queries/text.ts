@@ -2,7 +2,10 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
 import { createLibraryNotSupportedError } from '../helpers/errors';
 import { filterNodeByType } from '../helpers/filterNodeByType';
-import { isHostElement } from '../helpers/component-tree';
+import {
+  isHostElement,
+  getCompositeParentOfType,
+} from '../helpers/component-tree';
 import { matches, TextMatch } from '../matches';
 import type { NormalizerFn } from '../matches';
 import { makeQueries } from './makeQueries';
@@ -74,11 +77,12 @@ const getNodeByText = (
   return false;
 };
 
-function getCompositeParent(
+function isHostTextElement(
   element: ReactTestInstance,
-  compositeType: React.ComponentType
+  Text: React.ComponentType
 ) {
-  if (!isHostElement(element)) return null;
+  // Not a host element
+  if (typeof element.type !== 'string') return false;
 
   let current = element.parent;
   while (!isHostElement(current)) {
@@ -87,13 +91,13 @@ function getCompositeParent(
       return null;
     }
 
-    if (filterNodeByType(current, compositeType)) {
-      return current;
+    if (current.type === Text) {
+      return true;
     }
-    current = current.parent ?? null;
+    current = current.parent;
   }
 
-  return null;
+  return false;
 }
 
 const queryAllByText = (
@@ -105,12 +109,12 @@ const queryAllByText = (
   function queryAllByTextFn(text, options) {
     try {
       const { Text } = require('react-native');
-      const rootInstance = isHostElement(instance)
-        ? getCompositeParent(instance, Text) ?? instance
+      const baseInstance = isHostTextElement(instance, Text)
+        ? getCompositeParentOfType(instance, Text)
         : instance;
 
-      if (!rootInstance) return [];
-      const results = rootInstance.findAll((node) =>
+      if (!baseInstance) return [];
+      const results = baseInstance.findAll((node) =>
         getNodeByText(node, text, Text, options)
       );
 
