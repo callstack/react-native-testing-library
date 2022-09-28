@@ -10,9 +10,9 @@
     "@jridgewell/trace-mapping" "^0.3.0"
 
 "@babel/cli@^7.18.10":
-  version "7.18.10"
-  resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.18.10.tgz#4211adfc45ffa7d4f3cee6b60bb92e9fe68fe56a"
-  integrity sha512-dLvWH+ZDFAkd2jPBSghrsFBuXrREvFwjpDycXbmUoeochqKYe4zNSLEJYErpLg8dvxvZYe79/MkN461XCwpnGw==
+  version "7.19.3"
+  resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.19.3.tgz#55914ed388e658e0b924b3a95da1296267e278e2"
+  integrity sha512-643/TybmaCAe101m2tSVHi9UKpETXP9c/Ff4mD2tAwkdP6esKIfaauZFc67vGEM6r9fekbEGid+sZhbEnSe3dg==
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.8"
     commander "^4.0.1"
@@ -1573,15 +1573,7 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.11.tgz#771a1d8d744eeb71b6adb35808e1a6c7b9b8c8ec"
   integrity sha512-Fg32GrJo61m+VqYSdRSjRXMjQ06j8YIYfcTqndLYVAaHmroZHLJZCydsWBOTDqXS2v+mjxohBWEMfg97GXmYQg==
 
-"@jridgewell/trace-mapping@^0.3.0", "@jridgewell/trace-mapping@^0.3.12", "@jridgewell/trace-mapping@^0.3.9":
-  version "0.3.14"
-  resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.14.tgz#b231a081d8f66796e475ad588a1ef473112701ed"
-  integrity sha512-bJWEfQ9lPTvm3SneWwRFVLzrh6nhjwqw7TUFFBEMzwvg7t7PCDenf2lDwqo4NQXzdpgBXyFgDWnQA+2vkruksQ==
-  dependencies:
-    "@jridgewell/resolve-uri" "^3.0.3"
-    "@jridgewell/sourcemap-codec" "^1.4.10"
-
-"@jridgewell/trace-mapping@^0.3.15", "@jridgewell/trace-mapping@^0.3.8":
+"@jridgewell/trace-mapping@^0.3.0", "@jridgewell/trace-mapping@^0.3.12", "@jridgewell/trace-mapping@^0.3.15", "@jridgewell/trace-mapping@^0.3.8", "@jridgewell/trace-mapping@^0.3.9":
   version "0.3.15"
   resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.15.tgz#aba35c48a38d3fd84b37e66c9c0423f9744f9774"
   integrity sha512-oWZNOULl+UbhsgB51uuZzglikfIKSUBO/M9W2OfEjn7cmqoAiCgmv9lyACTUacZwBz0ITnJ2NqjU8Tx0DHL88g==
