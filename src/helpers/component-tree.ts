@@ -60,6 +60,32 @@ export function getHostChildren(
 }
 
 /**
+ * Return a single host element that represent the passed host or composite element.
+ *
+ * @param element The element start traversing from.
+ * @throws Error if the passed element is a composite element and has no host children or has more than one host child.
+ * @returns If the passed element is a host element, it will return itself, if the passed element is a composite
+ * element, it will return a single host descendant.
+ */
+export function getHostSelf(
+  element: ReactTestInstance | null
+): ReactTestInstance {
+  const hostSelves = getHostSelves(element);
+
+  if (hostSelves.length === 0) {
+    throw new Error(`Expected exactly one host element, but found none.`);
+  }
+
+  if (hostSelves.length > 1) {
+    throw new Error(
+      `Expected exactly one host element, but got ${hostSelves.length}.`
+    );
+  }
+
+  return hostSelves[0];
+}
+
+/**
  * Return the array of host elements that represent the passed element.
  *
  * @param element The element start traversing from.
