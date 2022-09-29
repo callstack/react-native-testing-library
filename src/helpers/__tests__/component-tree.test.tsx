@@ -210,8 +210,9 @@ test('getCompositeParentOfType', () => {
   const compositeComponent = getCompositeParentOfType(hostComponent, View);
 
   // We get the corresponding composite component (same testID), but not the host
-  expect(hostComponent.props.testID).toBe(compositeComponent?.props.testID);
+  expect(compositeComponent?.type).toBe(View);
+  expect(compositeComponent?.props.testID).toBe(hostComponent.props.testID);
 
-  expect(hostComponent).not.toBe(compositeComponent);
+  expect(compositeComponent).not.toBe(hostComponent);
   expect(isHostElement(compositeComponent)).toBe(false);
 });

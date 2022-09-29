@@ -460,3 +460,9 @@ test('getByText searches for text within itself', () => {
   const textNode = within(getByText('Hello'));
   expect(textNode.getByText('Hello')).toBeTruthy();
 });
+
+test('getByText searches for text within self host element', () => {
+  const { getByTestId } = render(<Text testID="subject">Hello</Text>);
+  const textNode = within(getByTestId('subject'));
+  expect(textNode.getByText('Hello')).toBeTruthy();
+});

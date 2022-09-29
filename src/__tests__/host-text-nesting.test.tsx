@@ -36,51 +36,6 @@ describe('nested text handling', () => {
     );
   });
 
-  test('pressable within text with label', () => {
-    const view = render(
-      <Text>
-        <Pressable
-          testID="pressable"
-          accessibilityRole="button"
-          accessibilityLabel="Save"
-        ></Pressable>
-      </Text>
-    );
-
-    expect(view.getByRole('button', { name: 'Save' }).props.testID).toBe(
-      'pressable'
-    );
-  });
-
-  test('pressable within text, with text child', () => {
-    const view = render(
-      <Text>
-        <Pressable testID="pressable" accessibilityRole="button">
-          <Text>Save</Text>
-        </Pressable>
-      </Text>
-    );
-
-    expect(view.getByRole('button', { name: 'Save' }).props.testID).toBe(
-      'pressable'
-    );
-  });
-
-  test('pressable within text, with multiple text children', () => {
-    const view = render(
-      <Text>
-        <Pressable testID="pressable" accessibilityRole="button">
-          <Text>Save</Text>
-          <Text>render</Text>
-        </Pressable>
-      </Text>
-    );
-
-    expect(view.getByRole('button', { name: 'Save' }).props.testID).toBe(
-      'pressable'
-    );
-  });
-
   test('pressable within View, with text child', () => {
     const view = render(
       <View>
@@ -104,24 +59,6 @@ describe('nested text handling', () => {
           </View>
         </Pressable>
       </View>
-    );
-
-    expect(view.getByRole('button', { name: 'Save' }).props.testID).toBe(
-      'pressable'
-    );
-  });
-
-  test('pressable within View within Text, with text child within view', () => {
-    const view = render(
-      <Text>
-        <View>
-          <Pressable testID="pressable" accessibilityRole="button">
-            <View>
-              <Text>Save</Text>
-            </View>
-          </Pressable>
-        </View>
-      </Text>
     );
 
     expect(view.getByRole('button', { name: 'Save' }).props.testID).toBe(
@@ -166,18 +103,6 @@ describe('nested text handling', () => {
       <View>
         <Text testID="text">Save</Text>
       </View>
-    );
-
-    expect(view.getByTestId('text').props.testID).toBe('text');
-  });
-
-  test('Text within view within text', () => {
-    const view = render(
-      <Text>
-        <View>
-          <Text testID="text">Save</Text>
-        </View>
-      </Text>
     );
 
     expect(view.getByTestId('text').props.testID).toBe('text');

@@ -136,31 +136,35 @@ describe('supports name option', () => {
   });
 
   test('returns an element when the direct child is text', () => {
-    const { getByRole } = render(
+    const { getByRole, getByTestId } = render(
       <Text accessibilityRole="header" testID="target-header">
         About
       </Text>
     );
 
     // assert on the testId to be sure that the returned element is the one with the accessibilityRole
+    expect(getByRole('header', { name: 'About' })).toBe(
+      getByTestId('target-header')
+    );
     expect(getByRole('header', { name: 'About' }).props.testID).toBe(
       'target-header'
     );
   });
 
   test('returns an element with nested Text as children', () => {
-    const { getByRole } = render(
+    const { getByRole, getByTestId } = render(
       <Text accessibilityRole="header" testID="parent">
         <Text testID="child">About</Text>
       </Text>
     );
 
     // assert on the testId to be sure that the returned element is the one with the accessibilityRole
+    expect(getByRole('header', { name: 'About' })).toBe(getByTestId('parent'));
     expect(getByRole('header', { name: 'About' }).props.testID).toBe('parent');
   });
 
   test('returns a header with an accessibilityLabel', () => {
-    const { getByRole } = render(
+    const { getByRole, getByTestId } = render(
       <Text
         accessibilityRole="header"
         testID="target-header"
@@ -169,6 +173,9 @@ describe('supports name option', () => {
     );
 
     // assert on the testId to be sure that the returned element is the one with the accessibilityRole
+    expect(getByRole('header', { name: 'About' })).toBe(
+      getByTestId('target-header')
+    );
     expect(getByRole('header', { name: 'About' }).props.testID).toBe(
       'target-header'
     );

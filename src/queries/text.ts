@@ -3,7 +3,7 @@ import * as React from 'react';
 import { createLibraryNotSupportedError } from '../helpers/errors';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import {
-  isHostElement,
+  isHostElementOfType,
   getCompositeParentOfType,
 } from '../helpers/component-tree';
 import { matches, TextMatch } from '../matches';
@@ -77,29 +77,6 @@ const getNodeByText = (
   return false;
 };
 
-function isHostTextElement(
-  element: ReactTestInstance,
-  Text: React.ComponentType
-) {
-  // Not a host element
-  if (typeof element.type !== 'string') return false;
-
-  let current = element.parent;
-  while (!isHostElement(current)) {
-    // We're at the top of the tree
-    if (!current) {
-      return null;
-    }
-
-    if (current.type === Text) {
-      return true;
-    }
-    current = current.parent;
-  }
-
-  return false;
-}
-
 const queryAllByText = (
   instance: ReactTestInstance
 ): ((
@@ -109,11 +86,14 @@ const queryAllByText = (
   function queryAllByTextFn(text, options) {
     try {
       const { Text } = require('react-native');
-      const baseInstance = isHostTextElement(instance, Text)
+      const baseInstance = isHostElementOfType(instance, Text)
         ? getCompositeParentOfType(instance, Text)
         : instance;
 
-      if (!baseInstance) return [];
+      if (!baseInstance) {
+        return [];
+      }
+
       const results = baseInstance.findAll((node) =>
         getNodeByText(node, text, Text, options)
       );

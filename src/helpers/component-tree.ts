@@ -103,8 +103,18 @@ export function getCompositeParentOfType(
     if (current.type === type) {
       return current;
     }
-    current = current.parent ?? null;
+    current = current.parent;
   }
 
   return null;
+}
+
+export function isHostElementOfType(
+  element: ReactTestInstance,
+  type: React.ComponentType
+) {
+  // Not a host element
+  if (!isHostElement(element)) return false;
+
+  return getCompositeParentOfType(element, type) !== null;
 }
