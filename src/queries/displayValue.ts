@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { createLibraryNotSupportedError } from '../helpers/errors';
 import { filterNodeByType } from '../helpers/filterNodeByType';
+import { importTextInputFromReactNative } from '../helpers/react-native-api';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type {
@@ -18,20 +18,14 @@ const getTextInputNodeByDisplayValue = (
   value: TextMatch,
   options: TextMatchOptions = {}
 ) => {
-  try {
-    const { TextInput } = require('react-native');
-    const { exact, normalizer } = options;
-    const nodeValue =
-      node.props.value !== undefined
-        ? node.props.value
-        : node.props.defaultValue;
-    return (
-      filterNodeByType(node, TextInput) &&
-      matches(value, nodeValue, normalizer, exact)
-    );
-  } catch (error) {
-    throw createLibraryNotSupportedError(error);
-  }
+  const TextInput = importTextInputFromReactNative();
+  const { exact, normalizer } = options;
+  const nodeValue =
+    node.props.value !== undefined ? node.props.value : node.props.defaultValue;
+  return (
+    filterNodeByType(node, TextInput) &&
+    matches(value, nodeValue, normalizer, exact)
+  );
 };
 
 const queryAllByDisplayValue = (

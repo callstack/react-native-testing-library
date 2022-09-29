@@ -109,7 +109,7 @@ export function getCompositeParentOfType(
   return null;
 }
 
-export function isHostElementOfType(
+export function isHostElementForType(
   element: ReactTestInstance,
   type: React.ComponentType
 ) {

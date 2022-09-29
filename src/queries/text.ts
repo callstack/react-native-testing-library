@@ -1,9 +1,9 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
-import { createLibraryNotSupportedError } from '../helpers/errors';
 import { filterNodeByType } from '../helpers/filterNodeByType';
+import { importTextFromReactNative } from '../helpers/react-native-api';
 import {
-  isHostElementOfType,
+  isHostElementForType,
   getCompositeParentOfType,
 } from '../helpers/component-tree';
 import { matches, TextMatch } from '../matches';
@@ -84,24 +84,20 @@ const queryAllByText = (
   options?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByTextFn(text, options) {
-    try {
-      const { Text } = require('react-native');
-      const baseInstance = isHostElementOfType(instance, Text)
-        ? getCompositeParentOfType(instance, Text)
-        : instance;
+    const Text = importTextFromReactNative();
+    const baseInstance = isHostElementForType(instance, Text)
+      ? getCompositeParentOfType(instance, Text)
+      : instance;
 
-      if (!baseInstance) {
-        return [];
-      }
-
-      const results = baseInstance.findAll((node) =>
-        getNodeByText(node, text, Text, options)
-      );
-
-      return results;
-    } catch (error) {
-      throw createLibraryNotSupportedError(error);
+    if (!baseInstance) {
+      return [];
     }
+
+    const results = baseInstance.findAll((node) =>
+      getNodeByText(node, text, Text, options)
+    );
+
+    return results;
   };
 
 const getMultipleError = (text: TextMatch) =>
