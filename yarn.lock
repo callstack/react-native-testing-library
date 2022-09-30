@@ -1734,15 +1734,15 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@testing-library/jest-native@~4.0.2":
-  version "4.0.13"
-  resolved "https://registry.yarnpkg.com/@testing-library/jest-native/-/jest-native-4.0.13.tgz#3d2a27ffac9f8126a4185e46a167b0cde4443336"
-  integrity sha512-BovApxYJRb0Z9TUZbFQhW2ZWC4KfymH1SQZ5FxcTHh7Zrzb6+vfWT1CyvGnb8JE6WEZGcuumzSXOMdSIVUjj5Q==
+"@testing-library/jest-native@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/jest-native/-/jest-native-5.0.0.tgz#0c63245578f3301b4e6a471a28ef569f397cb30f"
+  integrity sha512-OrO8Huf0/QBPgiyQCNfXEYgLOalss/TA74CR0X7PR7mrjtrWQiBPGnaSMPYsNT8JRYGCE4D9My0rChJ0rzXS2g==
   dependencies:
     chalk "^4.1.2"
     jest-diff "^29.0.1"
     jest-matcher-utils "^29.0.1"
-    pretty-format "^29.0.1"
+    pretty-format "^29.0.3"
     redent "^3.0.0"
 
 "@types/babel__core@^7.1.14":
@@ -6588,7 +6588,7 @@ pretty-format@^26.5.2, pretty-format@^26.6.2:
     ansi-styles "^4.0.0"
     react-is "^17.0.1"
 
-pretty-format@^29.0.0, pretty-format@^29.0.1, pretty-format@^29.0.3, pretty-format@^29.1.0:
+pretty-format@^29.0.0, pretty-format@^29.0.3, pretty-format@^29.1.0:
   version "29.1.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-29.1.0.tgz#ea3de2feed5b8d19c537a12fe478ddc8b45da6b8"
   integrity sha512-dZ21z0UjKVSiEkrPAt2nJnGfrtYMFBlNW4wTkJsIp9oB5A8SUQ8DuJ9EUgAvYyNfMeoGmKiDnpJvM489jkzdSQ==
