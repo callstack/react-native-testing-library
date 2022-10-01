@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import { TextInput } from 'react-native';
 import { filterNodeByType } from '../helpers/filterNodeByType';
-import { importTextInputFromReactNative } from '../helpers/react-native-api';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type {
@@ -18,7 +18,6 @@ const getTextInputNodeByDisplayValue = (
   value: TextMatch,
   options: TextMatchOptions = {}
 ) => {
-  const TextInput = importTextInputFromReactNative();
   const { exact, normalizer } = options;
   const nodeValue =
     node.props.value !== undefined ? node.props.value : node.props.defaultValue;

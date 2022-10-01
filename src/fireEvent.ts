@@ -1,7 +1,7 @@
 import { ReactTestInstance } from 'react-test-renderer';
+import { TextInput } from 'react-native';
 import act from './act';
 import { isHostElement } from './helpers/component-tree';
-import { importTextInputFromReactNative } from './helpers/react-native-api';
 import { filterNodeByType } from './helpers/filterNodeByType';
 
 type EventHandler = (...args: any) => unknown;
@@ -11,7 +11,6 @@ const isTextInput = (element?: ReactTestInstance) => {
     return false;
   }
 
-  const TextInput = importTextInputFromReactNative();
   // We have to test if the element type is either the TextInput component
   // (which would if it is a composite component) or the string
   // TextInput (which would be true if it is a host component)

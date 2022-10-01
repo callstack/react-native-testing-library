@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { importTextInputFromReactNative } from '../helpers/react-native-api';
+import { TextInput } from 'react-native';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
@@ -18,8 +18,6 @@ const getTextInputNodeByPlaceholderText = (
   placeholder: TextMatch,
   options: TextMatchOptions = {}
 ) => {
-  const TextInput = importTextInputFromReactNative();
-
   const { exact, normalizer } = options;
   return (
     filterNodeByType(node, TextInput) &&

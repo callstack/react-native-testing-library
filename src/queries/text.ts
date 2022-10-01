@@ -1,7 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import { Text } from 'react-native';
 import * as React from 'react';
 import { filterNodeByType } from '../helpers/filterNodeByType';
-import { importTextFromReactNative } from '../helpers/react-native-api';
 import {
   isHostElementForType,
   getCompositeParentOfType,
@@ -23,10 +23,7 @@ export type TextMatchOptions = {
   normalizer?: NormalizerFn;
 };
 
-const getChildrenAsText = (
-  children: React.ReactChild[],
-  TextComponent: React.ComponentType
-) => {
+const getChildrenAsText = (children: React.ReactChild[]) => {
   const textContent: string[] = [];
   React.Children.forEach(children, (child) => {
     if (typeof child === 'string') {
@@ -44,14 +41,12 @@ const getChildrenAsText = (
       // has no text. In such situations, react-test-renderer will traverse down
       // this tree in a separate call and run this query again. As a result, the
       // query will match the deepest text node that matches requested text.
-      if (filterNodeByType(child, TextComponent)) {
+      if (filterNodeByType(child, Text)) {
         return;
       }
 
       if (filterNodeByType(child, React.Fragment)) {
-        textContent.push(
-          ...getChildrenAsText(child.props.children, TextComponent)
-        );
+        textContent.push(...getChildrenAsText(child.props.children));
       }
     }
   });
@@ -62,12 +57,11 @@ const getChildrenAsText = (
 const getNodeByText = (
   node: ReactTestInstance,
   text: TextMatch,
-  TextComponent: React.ComponentType,
   options: TextMatchOptions = {}
 ) => {
-  const isTextComponent = filterNodeByType(node, TextComponent);
+  const isTextComponent = filterNodeByType(node, Text);
   if (isTextComponent) {
-    const textChildren = getChildrenAsText(node.props.children, TextComponent);
+    const textChildren = getChildrenAsText(node.props.children);
     if (textChildren) {
       const textToTest = textChildren.join('');
       const { exact, normalizer } = options;
@@ -84,7 +78,6 @@ const queryAllByText = (
   options?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByTextFn(text, options) {
-    const Text = importTextFromReactNative();
     const baseInstance = isHostElementForType(instance, Text)
       ? getCompositeParentOfType(instance, Text)
       : instance;
@@ -94,7 +87,7 @@ const queryAllByText = (
     }
 
     const results = baseInstance.findAll((node) =>
-      getNodeByText(node, text, Text, options)
+      getNodeByText(node, text, options)
     );
 
     return results;
