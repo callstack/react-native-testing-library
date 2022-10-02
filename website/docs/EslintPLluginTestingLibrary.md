@@ -22,7 +22,7 @@ To get the rule [consistent-data-testid](https://github.com/testing-library/esli
     2,
     {
       "testIdAttribute": ["testID"],
-     "testIdPattern": "^TestId(__[A-Z]*)?$"
+      "testIdPattern": "^TestId(__[A-Z]*)?$"
     }
   ]
 }
