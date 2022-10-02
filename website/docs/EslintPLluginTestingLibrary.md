@@ -6,7 +6,7 @@ title: ESLint Plugin Testing Library Compatibility
 
 Most of the rules of the [eslint-plugin-testing-library](https://github.com/testing-library/eslint-plugin-testing-library) are compatible with this library except the following:
 
-- [prefer-user-event](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/prefer-user-event.md): userEvent requires a dom environement so it is not compatible with this library
+- [prefer-user-event](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/prefer-user-event.md): userEvent requires a dom environment so it is not compatible with this library
 
 Also, some rules have become useless, unless maybe you're using an old version of the library:
 
