@@ -169,7 +169,7 @@ describe('supports name option', () => {
         accessibilityRole="header"
         testID="target-header"
         accessibilityLabel="About"
-      ></Text>
+      />
     );
 
     // assert on the testId to be sure that the returned element is the one with the accessibilityRole

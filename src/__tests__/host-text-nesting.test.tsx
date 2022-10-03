@@ -87,24 +87,4 @@ describe('nested text handling', () => {
 
     expect(view.getByText('Save').props.testID).toBe('text');
   });
-
-  test('View with text child', () => {
-    const view = render(
-      <View testID="view">
-        <Text>Save</Text>
-      </View>
-    );
-
-    expect(view.getByTestId('view').props.testID).toBe('view');
-  });
-
-  test('Text within view', () => {
-    const view = render(
-      <View>
-        <Text testID="text">Save</Text>
-      </View>
-    );
-
-    expect(view.getByTestId('text').props.testID).toBe('text');
-  });
 });
