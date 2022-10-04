@@ -1,7 +1,11 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import { Text } from 'react-native';
 import * as React from 'react';
-import { createLibraryNotSupportedError } from '../helpers/errors';
 import { filterNodeByType } from '../helpers/filterNodeByType';
+import {
+  isHostElementForType,
+  getCompositeParentOfType,
+} from '../helpers/component-tree';
 import { matches, TextMatch } from '../matches';
 import type { NormalizerFn } from '../matches';
 import { makeQueries } from './makeQueries';
@@ -19,10 +23,7 @@ export type TextMatchOptions = {
   normalizer?: NormalizerFn;
 };
 
-const getChildrenAsText = (
-  children: React.ReactChild[],
-  TextComponent: React.ComponentType
-) => {
+const getChildrenAsText = (children: React.ReactChild[]) => {
   const textContent: string[] = [];
   React.Children.forEach(children, (child) => {
     if (typeof child === 'string') {
@@ -40,14 +41,12 @@ const getChildrenAsText = (
       // has no text. In such situations, react-test-renderer will traverse down
       // this tree in a separate call and run this query again. As a result, the
       // query will match the deepest text node that matches requested text.
-      if (filterNodeByType(child, TextComponent)) {
+      if (filterNodeByType(child, Text)) {
         return;
       }
 
       if (filterNodeByType(child, React.Fragment)) {
-        textContent.push(
-          ...getChildrenAsText(child.props.children, TextComponent)
-        );
+        textContent.push(...getChildrenAsText(child.props.children));
       }
     }
   });
@@ -60,21 +59,16 @@ const getNodeByText = (
   text: TextMatch,
   options: TextMatchOptions = {}
 ) => {
-  try {
-    const { Text } = require('react-native');
-    const isTextComponent = filterNodeByType(node, Text);
-    if (isTextComponent) {
-      const textChildren = getChildrenAsText(node.props.children, Text);
-      if (textChildren) {
-        const textToTest = textChildren.join('');
-        const { exact, normalizer } = options;
-        return matches(text, textToTest, normalizer, exact);
-      }
+  const isTextComponent = filterNodeByType(node, Text);
+  if (isTextComponent) {
+    const textChildren = getChildrenAsText(node.props.children);
+    if (textChildren) {
+      const textToTest = textChildren.join('');
+      const { exact, normalizer } = options;
+      return matches(text, textToTest, normalizer, exact);
     }
-    return false;
-  } catch (error) {
-    throw createLibraryNotSupportedError(error);
   }
+  return false;
 };
 
 const queryAllByText = (
@@ -84,7 +78,15 @@ const queryAllByText = (
   options?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByTextFn(text, options) {
-    const results = instance.findAll((node) =>
+    const baseInstance = isHostElementForType(instance, Text)
+      ? getCompositeParentOfType(instance, Text)
+      : instance;
+
+    if (!baseInstance) {
+      return [];
+    }
+
+    const results = baseInstance.findAll((node) =>
       getNodeByText(node, text, options)
     );
 

@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { AccessibilityState } from 'react-native';
+import type { AccessibilityState } from 'react-native';
 import { matchObjectProp } from '../helpers/matchers/matchObjectProp';
 import { makeQueries } from './makeQueries';
 import type {

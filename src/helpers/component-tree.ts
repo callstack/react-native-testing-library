@@ -113,3 +113,37 @@ export function getHostSiblings(
     (sibling) => !hostSelves.includes(sibling)
   );
 }
+
+export function getCompositeParentOfType(
+  element: ReactTestInstance,
+  type: React.ComponentType
+) {
+  let current = element.parent;
+
+  while (!isHostElement(current)) {
+    // We're at the root of the tree
+    if (!current) {
+      return null;
+    }
+
+    if (current.type === type) {
+      return current;
+    }
+    current = current.parent;
+  }
+
+  return null;
+}
+
+/**
+ * Note: this function should be generally used for core React Native types like `View`, `Text`, `TextInput`, etc.
+ */
+export function isHostElementForType(
+  element: ReactTestInstance,
+  type: React.ComponentType
+) {
+  // Not a host element
+  if (!isHostElement(element)) return false;
+
+  return getCompositeParentOfType(element, type) !== null;
+}

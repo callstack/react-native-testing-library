@@ -1,4 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
+import { TextInput } from 'react-native';
 import act from './act';
 import { isHostElement } from './helpers/component-tree';
 import { filterNodeByType } from './helpers/filterNodeByType';
@@ -10,7 +11,6 @@ const isTextInput = (element?: ReactTestInstance) => {
     return false;
   }
 
-  const { TextInput } = require('react-native');
   // We have to test if the element type is either the TextInput component
   // (which would if it is a composite component) or the string
   // TextInput (which would be true if it is a host component)

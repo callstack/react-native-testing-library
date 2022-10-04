@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { createLibraryNotSupportedError } from '../helpers/errors';
+import { TextInput } from 'react-native';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
@@ -18,16 +18,11 @@ const getTextInputNodeByPlaceholderText = (
   placeholder: TextMatch,
   options: TextMatchOptions = {}
 ) => {
-  try {
-    const { TextInput } = require('react-native');
-    const { exact, normalizer } = options;
-    return (
-      filterNodeByType(node, TextInput) &&
-      matches(placeholder, node.props.placeholder, normalizer, exact)
-    );
-  } catch (error) {
-    throw createLibraryNotSupportedError(error);
-  }
+  const { exact, normalizer } = options;
+  return (
+    filterNodeByType(node, TextInput) &&
+    matches(placeholder, node.props.placeholder, normalizer, exact)
+  );
 };
 
 const queryAllByPlaceholderText = (
