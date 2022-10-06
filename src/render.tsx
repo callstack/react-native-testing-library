@@ -5,7 +5,7 @@ import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import debugShallow from './helpers/debugShallow';
-import debugDeep from './helpers/debugDeep';
+import debugDeep, { DebugOptions } from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
 import { setRenderResult, screen } from './screen';
 import { validateStringsRenderedWithinText } from './helpers/stringValidation';
@@ -135,7 +135,7 @@ function updateWithAct(
 }
 
 interface DebugFunction {
-  (message?: string): void;
+  (options?: string | DebugOptions): void;
   shallow: (message?: string) => void;
 }
 
@@ -143,10 +143,10 @@ function debug(
   instance: ReactTestInstance,
   renderer: ReactTestRenderer
 ): DebugFunction {
-  function debugImpl(message?: string) {
+  function debugImpl(options?: DebugOptions | string) {
     const json = renderer.toJSON();
     if (json) {
-      return debugDeep(json, message);
+      return debugDeep(json, options);
     }
   }
   debugImpl.shallow = (message?: string) => debugShallow(instance, message);

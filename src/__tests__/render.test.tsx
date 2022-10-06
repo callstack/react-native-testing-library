@@ -165,6 +165,7 @@ test('debug', () => {
   debug('my custom message');
   debug.shallow();
   debug.shallow('my other custom message');
+  debug({ message: 'another custom message' });
 
   // eslint-disable-next-line no-console
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
@@ -176,6 +177,9 @@ test('debug', () => {
   expect(stripAnsi(mockCalls[2][0])).toMatchSnapshot('shallow');
   expect(stripAnsi(mockCalls[3][0] + mockCalls[3][1])).toMatchSnapshot(
     'shallow with message'
+  );
+  expect(stripAnsi(mockCalls[4][0] + mockCalls[4][1])).toMatchSnapshot(
+    'another custom message'
   );
 });
 
@@ -194,6 +198,29 @@ test('debug changing component', () => {
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot(
     'bananaFresh button message should now be "fresh"'
   );
+});
+
+test('debug with filterProps option', () => {
+  jest.spyOn(console, 'log').mockImplementation((x) => x);
+
+  const { debug, getByText } = render(<Banana />);
+
+  debug({ filterProps: (propName) => propName === 'children' });
+  debug({ filterProps: (_propName, propValue) => propValue === 'bananaChef' });
+  debug({
+    filterProps: (_propName, _propValue, node) => node.type === 'TextInput',
+  });
+  debug({ filterProps: () => false });
+
+  // eslint-disable-next-line no-console
+  const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
+
+  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+  expect(stripAnsi(mockCalls[1][0])).toMatchSnapshot();
+  expect(stripAnsi(mockCalls[2][0])).toMatchSnapshot();
+  expect(stripAnsi(mockCalls[3][0])).toMatchSnapshot();
+
+  expect(getByText('Change freshness!')).toBeTruthy();
 });
 
 test('renders options.wrapper around node', () => {

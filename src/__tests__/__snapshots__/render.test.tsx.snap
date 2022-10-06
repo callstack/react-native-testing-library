@@ -124,6 +124,202 @@ exports[`debug changing component: bananaFresh button message should now be "fre
 </View>"
 `;
 
+exports[`debug with filterProps option 1`] = `
+"<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text>
+    not fresh
+  </Text>
+  <TextInput />
+  <TextInput />
+  <TextInput />
+  <TextInput />
+  <View>
+    <Text>
+      Change freshness!
+    </Text>
+  </View>
+  <Text>
+    First Text
+  </Text>
+  <Text>
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
+</View>"
+`;
+
+exports[`debug with filterProps option 2`] = `
+"<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text>
+    not fresh
+  </Text>
+  <TextInput />
+  <TextInput
+    testID="bananaChef"
+  />
+  <TextInput />
+  <TextInput />
+  <View>
+    <Text>
+      Change freshness!
+    </Text>
+  </View>
+  <Text>
+    First Text
+  </Text>
+  <Text>
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
+</View>"
+`;
+
+exports[`debug with filterProps option 3`] = `
+"<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text>
+    not fresh
+  </Text>
+  <TextInput
+    placeholder="Add custom freshness"
+    testID="bananaCustomFreshness"
+    value="Custom Freshie"
+  />
+  <TextInput
+    defaultValue="What did you inspect?"
+    placeholder="Who inspected freshness?"
+    testID="bananaChef"
+    value="I inspected freshie"
+  />
+  <TextInput
+    defaultValue="What banana?"
+  />
+  <TextInput
+    defaultValue="hello"
+    value=""
+  />
+  <View>
+    <Text>
+      Change freshness!
+    </Text>
+  </View>
+  <Text>
+    First Text
+  </Text>
+  <Text>
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
+</View>"
+`;
+
+exports[`debug with filterProps option 4`] = `
+"<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text>
+    not fresh
+  </Text>
+  <TextInput />
+  <TextInput />
+  <TextInput />
+  <TextInput />
+  <View>
+    <Text>
+      Change freshness!
+    </Text>
+  </View>
+  <Text>
+    First Text
+  </Text>
+  <Text>
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
+</View>"
+`;
+
+exports[`debug: another custom message 1`] = `
+"another custom message
+
+<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID="bananaFresh"
+  >
+    not fresh
+  </Text>
+  <TextInput
+    placeholder="Add custom freshness"
+    testID="bananaCustomFreshness"
+    value="Custom Freshie"
+  />
+  <TextInput
+    defaultValue="What did you inspect?"
+    placeholder="Who inspected freshness?"
+    testID="bananaChef"
+    value="I inspected freshie"
+  />
+  <TextInput
+    defaultValue="What banana?"
+  />
+  <TextInput
+    defaultValue="hello"
+    value=""
+  />
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function onBlur]}
+    onClick={[Function onClick]}
+    onFocus={[Function onFocus]}
+    onResponderGrant={[Function onResponderGrant]}
+    onResponderMove={[Function onResponderMove]}
+    onResponderRelease={[Function onResponderRelease]}
+    onResponderTerminate={[Function onResponderTerminate]}
+    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
+  >
+    <Text>
+      Change freshness!
+    </Text>
+  </View>
+  <Text
+    testID="duplicateText"
+  >
+    First Text
+  </Text>
+  <Text
+    testID="duplicateText"
+  >
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
+</View>"
+`;
+
 exports[`debug: shallow 1`] = `
 "<View>
   <Text>
