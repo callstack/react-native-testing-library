@@ -191,7 +191,7 @@ test('debug changing component', () => {
   // eslint-disable-next-line no-console
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
 
-  expect(stripAnsi(mockCalls[4][0])).toMatchSnapshot(
+  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot(
     'bananaFresh button message should now be "fresh"'
   );
 });
