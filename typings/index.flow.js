@@ -203,9 +203,10 @@ interface UnsafeByPropsQueries {
     | [];
 }
 
-interface ByRoleOptions {
-  name?: string;
-}
+type ByRoleOptions = {
+  ...A11yState,
+  name?: string,
+};
 
 interface A11yAPI {
   // Label
