@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Text,
+  View,
+  Pressable,
+  Button as RNButton,
+} from 'react-native';
 import { render } from '../..';
 
 const TEXT_LABEL = 'cool text';
@@ -244,6 +251,39 @@ describe('supports accessibility states', () => {
       );
 
       expect(queryByRole('button', { disabled: false })).toBe(null);
+    });
+
+    test('returns elements using the built-in disabled prop', () => {
+      const { debug, getByRole } = render(
+        <>
+          <Pressable disabled accessibilityRole="button">
+            <Text>Pressable</Text>
+          </Pressable>
+
+          <TouchableWithoutFeedback disabled accessibilityRole="button">
+            <View>
+              <Text>TouchableWithoutFeedback</Text>
+            </View>
+          </TouchableWithoutFeedback>
+          <RNButton disabled onPress={() => {}} title="RNButton" />
+        </>
+      );
+
+      expect(
+        getByRole('button', { name: 'Pressable', disabled: true })
+      ).toBeTruthy();
+
+      expect(
+        getByRole('button', {
+          name: 'TouchableWithoutFeedback',
+          disabled: true,
+        })
+      ).toBeTruthy();
+      debug();
+
+      expect(
+        getByRole('button', { name: 'RNButton', disabled: true })
+      ).toBeTruthy();
     });
   });
 
@@ -523,6 +563,28 @@ describe('supports accessibility states', () => {
 
       expect(queryByRole('button', { expanded: false })).toBe(null);
     });
+  });
+
+  test('ignores non queried accessibilityState', () => {
+    const { getByRole } = render(
+      <TouchableOpacity
+        accessibilityRole="button"
+        accessibilityState={{
+          disabled: true,
+          // set `selected`, but don't query it
+          selected: true,
+        }}
+      >
+        <Text>Save</Text>
+      </TouchableOpacity>
+    );
+
+    expect(
+      getByRole('button', {
+        name: 'Save',
+        disabled: true,
+      })
+    ).toBeTruthy();
   });
 
   test('matches an element combining all the options', () => {

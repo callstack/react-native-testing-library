@@ -42,31 +42,34 @@ const queryAllByRole = (
 ): ((role: TextMatch, options?: ByRoleOptions) => Array<ReactTestInstance>) =>
   function queryAllByRoleFn(role, options) {
     return instance.findAll((node) => {
+      // run the cheapest checks first, and early exit too avoid unneeded computations
       const matchRole =
         typeof node.type === 'string' &&
         matchStringProp(node.props.accessibilityRole, role);
 
       if (!matchRole) return false;
 
-      if (options?.name) {
-        if (!matchAccessibleNameIfNeeded(node, options.name)) {
-          return false;
+      const mismatchAccessibilityState = accessibilityStates.some(
+        (accessibilityState) => {
+          const queriedState = options?.[accessibilityState];
+
+          if (typeof queriedState !== 'undefined') {
+            return (
+              queriedState !==
+              // default to false because disabled:undefined is equivalent to disabled:false
+              (node.props.accessibilityState?.[accessibilityState] ?? false)
+            );
+          } else {
+            return false;
+          }
         }
+      );
+
+      if (mismatchAccessibilityState) {
+        return false;
       }
 
-      return accessibilityStates.every((accessibilityState) => {
-        const queriedState = options?.[accessibilityState];
-
-        if (typeof queriedState !== 'undefined') {
-          return (
-            queriedState ===
-            // default to false because disabled:undefined is equivalent to disabled:false
-            (node.props.accessibilityState?.[accessibilityState] ?? false)
-          );
-        } else {
-          return true;
-        }
-      });
+      return matchAccessibleNameIfNeeded(node, options?.name);
     });
   };
 
