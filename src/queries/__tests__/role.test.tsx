@@ -234,6 +234,17 @@ describe('supports accessibility states', () => {
 
       expect(getByRole('button', { disabled: false })).toBeTruthy();
     });
+
+    test('does not return disabled elements when querying for non disabled', () => {
+      const { queryByRole } = render(
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityState={{ disabled: true }}
+        ></TouchableOpacity>
+      );
+
+      expect(queryByRole('button', { disabled: false })).toBe(null);
+    });
   });
 
   describe('selected', () => {
@@ -287,6 +298,17 @@ describe('supports accessibility states', () => {
 
       expect(getByRole('tab', { selected: false })).toBeTruthy();
     });
+
+    test('does not return selected elements when querying for non selected', () => {
+      const { queryByRole } = render(
+        <TouchableOpacity
+          accessibilityRole="tab"
+          accessibilityState={{ selected: true }}
+        ></TouchableOpacity>
+      );
+
+      expect(queryByRole('tab', { selected: false })).toBe(null);
+    });
   });
 
   describe('checked', () => {
@@ -310,6 +332,17 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('checkbox', { checked: 'mixed' })).toBeTruthy();
+    });
+
+    it('does not return mixed checkboxes when querying for checked: true', () => {
+      const { queryByRole } = render(
+        <TouchableOpacity
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: 'mixed' }}
+        />
+      );
+
+      expect(queryByRole('checkbox', { checked: false })).toBe(null);
     });
 
     test('returns the correct element when only one matches all the requirements', () => {
@@ -350,6 +383,17 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('checkbox', { checked: false })).toBeTruthy();
+    });
+
+    test('does not return checked elements when querying for non checked', () => {
+      const { queryByRole } = render(
+        <TouchableOpacity
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: true }}
+        ></TouchableOpacity>
+      );
+
+      expect(queryByRole('checkbox', { checked: false })).toBe(null);
     });
   });
 
@@ -404,6 +448,17 @@ describe('supports accessibility states', () => {
 
       expect(getByRole('button', { busy: false })).toBeTruthy();
     });
+
+    test('does not return busy elements when querying for non busy', () => {
+      const { queryByRole } = render(
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityState={{ selected: true }}
+        ></TouchableOpacity>
+      );
+
+      expect(queryByRole('button', { selected: false })).toBe(null);
+    });
   });
 
   describe('expanded', () => {
@@ -456,6 +511,17 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('button', { expanded: false })).toBeTruthy();
+    });
+
+    test('does not return expanded elements when querying for non expanded', () => {
+      const { queryByRole } = render(
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityState={{ expanded: true }}
+        ></TouchableOpacity>
+      );
+
+      expect(queryByRole('button', { expanded: false })).toBe(null);
     });
   });
 

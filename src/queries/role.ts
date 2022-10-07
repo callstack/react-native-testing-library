@@ -57,11 +57,11 @@ const queryAllByRole = (
       return accessibilityStates.every((accessibilityState) => {
         const queriedState = options?.[accessibilityState];
 
-        // test for true instead of `undefined`, because `{disabled: false} should match
-        // a button without a disable state`
-        if (queriedState === true) {
+        if (typeof queriedState !== 'undefined') {
           return (
-            queriedState === node.props.accessibilityState?.[accessibilityState]
+            queriedState ===
+            // default to false because disabled:undefined is equivalent to disabled:false
+            (node.props.accessibilityState?.[accessibilityState] ?? false)
           );
         } else {
           return true;
