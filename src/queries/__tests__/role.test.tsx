@@ -15,11 +15,11 @@ const TEXT_LABEL = 'cool text';
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
 const getMultipleInstancesFoundMessage = (value: string) => {
-  return `Found multiple elements with accessibilityRole: ${value}`;
+  return `Found multiple elements with role: "${value}"`;
 };
 
 const getNoInstancesFoundMessage = (value: string) => {
-  return `Unable to find an element with accessibilityRole: ${value}`;
+  return `Unable to find an element with role: "${value}"`;
 };
 
 const Typography = ({ children, ...rest }: any) => {
@@ -621,7 +621,7 @@ describe('error messages', () => {
     const { getByRole } = render(<View />);
 
     expect(() => getByRole('button')).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with accessibilityRole: button"`
+      `"Unable to find an element with role: "button""`
     );
   });
 
@@ -631,7 +631,7 @@ describe('error messages', () => {
     expect(() =>
       getByRole('button', { name: 'Save' })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with accessibilityRole: button, name: Save"`
+      `"Unable to find an element with role: "button", name: "Save""`
     );
   });
 
@@ -641,7 +641,17 @@ describe('error messages', () => {
     expect(() =>
       getByRole('button', { name: 'Save', disabled: true })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with accessibilityRole: button, name: Save, accessibilityStates: disabled:true"`
+      `"Unable to find an element with role: "button", name: "Save", disabled state: true"`
+    );
+  });
+
+  test('gives a descriptive error message when querying with a role, a name and several accessibility state', () => {
+    const { getByRole } = render(<View />);
+
+    expect(() =>
+      getByRole('button', { name: 'Save', disabled: true, selected: true })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Unable to find an element with role: "button", name: "Save", disabled state: true, selected state: true"`
     );
   });
 
@@ -651,7 +661,7 @@ describe('error messages', () => {
     expect(() =>
       getByRole('button', { disabled: true })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with accessibilityRole: button, accessibilityStates: disabled:true"`
+      `"Unable to find an element with role: "button", disabled state: true"`
     );
   });
 });

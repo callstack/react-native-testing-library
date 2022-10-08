@@ -73,11 +73,11 @@ const queryAllByRole = (
     });
   };
 
-const computeErrorMessage = (role: TextMatch, options: ByRoleOptions = {}) => {
-  let errorMessage = `accessibilityRole: ${String(role)}`;
+const buildErrorMessage = (role: TextMatch, options: ByRoleOptions = {}) => {
+  const errors = [`role: "${String(role)}"`];
 
   if (options.name) {
-    errorMessage += `, name: ${String(options.name)}`;
+    errors.push(`name: "${String(options.name)}"`);
   }
 
   if (
@@ -85,20 +85,21 @@ const computeErrorMessage = (role: TextMatch, options: ByRoleOptions = {}) => {
       (accessibilityState) => typeof options[accessibilityState] !== 'undefined'
     )
   ) {
-    errorMessage += ', accessibilityStates:';
     accessibilityStates.forEach((accessibilityState) => {
       if (options[accessibilityState]) {
-        errorMessage += ` ${accessibilityState}:${options[accessibilityState]}`;
+        errors.push(
+          `${accessibilityState} state: ${options[accessibilityState]}`
+        );
       }
     });
   }
 
-  return errorMessage;
+  return errors.join(', ');
 };
 const getMultipleError = (role: TextMatch, options?: ByRoleOptions) =>
-  `Found multiple elements with ${computeErrorMessage(role, options)}`;
+  `Found multiple elements with ${buildErrorMessage(role, options)}`;
 const getMissingError = (role: TextMatch, options?: ByRoleOptions) =>
-  `Unable to find an element with ${computeErrorMessage(role, options)}`;
+  `Unable to find an element with ${buildErrorMessage(role, options)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByRole,
