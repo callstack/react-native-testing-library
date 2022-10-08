@@ -46,7 +46,7 @@ function isSubtreeInaccessible(element: ReactTestInstance | null): boolean {
     return true;
   }
 
-  // Note that `opacity: 0` is not threated as inassessible on iOS
+  // Note that `opacity: 0` is not treated as inaccessible on iOS
   const flatStyle = StyleSheet.flatten(element.props.style) ?? {};
   if (flatStyle.display === 'none') return true;
 
