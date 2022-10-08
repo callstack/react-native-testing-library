@@ -17,6 +17,8 @@ type ByRoleOptions = {
   name?: TextMatch;
 } & AccessibilityState;
 
+type AccessibilityStateField = keyof AccessibilityState;
+
 const matchAccessibleNameIfNeeded = (
   node: ReactTestInstance,
   name?: TextMatch
@@ -29,13 +31,42 @@ const matchAccessibleNameIfNeeded = (
   );
 };
 
-const accessibilityStates = [
+// disabled:undefined is equivalent to disabled:false, same for selected. busy not, but it makes
+// sense from a testing/voice-over perspective. checked and expanded do behave differently
+const implicityFalseState: AccessibilityStateField[] = [
+  'disabled',
+  'selected',
+  'busy',
+];
+
+const matchAccessibleStateIfNeeded = (
+  node: ReactTestInstance,
+  options?: ByRoleOptions
+) =>
+  accessibilityStates.every((accessibilityState) => {
+    const queriedState = options?.[accessibilityState];
+
+    if (typeof queriedState !== 'undefined') {
+      // Some accessibilityState properties have implicit value (when not set)
+      const defaultState = implicityFalseState.includes(accessibilityState)
+        ? false
+        : undefined;
+      return (
+        queriedState ===
+        (node.props.accessibilityState?.[accessibilityState] ?? defaultState)
+      );
+    } else {
+      return true;
+    }
+  });
+
+const accessibilityStates: AccessibilityStateField[] = [
   'disabled',
   'selected',
   'checked',
   'busy',
   'expanded',
-] as const;
+];
 
 const queryAllByRole = (
   instance: ReactTestInstance
@@ -49,23 +80,7 @@ const queryAllByRole = (
 
       if (!matchRole) return false;
 
-      const mismatchAccessibilityState = accessibilityStates.some(
-        (accessibilityState) => {
-          const queriedState = options?.[accessibilityState];
-
-          if (typeof queriedState !== 'undefined') {
-            return (
-              queriedState !==
-              // default to false because disabled:undefined is equivalent to disabled:false
-              (node.props.accessibilityState?.[accessibilityState] ?? false)
-            );
-          } else {
-            return false;
-          }
-        }
-      );
-
-      if (mismatchAccessibilityState) {
+      if (!matchAccessibleStateIfNeeded(node, options)) {
         return false;
       }
 

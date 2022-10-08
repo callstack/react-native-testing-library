@@ -254,7 +254,7 @@ describe('supports accessibility states', () => {
     });
 
     test('returns elements using the built-in disabled prop', () => {
-      const { debug, getByRole } = render(
+      const { getByRole } = render(
         <>
           <Pressable disabled accessibilityRole="button">
             <Text>Pressable</Text>
@@ -279,7 +279,6 @@ describe('supports accessibility states', () => {
           disabled: true,
         })
       ).toBeTruthy();
-      debug();
 
       expect(
         getByRole('button', { name: 'RNButton', disabled: true })
@@ -406,12 +405,12 @@ describe('supports accessibility states', () => {
       ).toBe('correct');
     });
 
-    test('returns an implicitly non checked element', () => {
-      const { getByRole } = render(
+    test('does not return return as non checked an element with checked: undefined', () => {
+      const { queryByRole } = render(
         <TouchableOpacity accessibilityRole="checkbox"></TouchableOpacity>
       );
 
-      expect(getByRole('checkbox', { checked: false })).toBeTruthy();
+      expect(queryByRole('checkbox', { checked: false })).toBe(null);
     });
 
     test('returns an explicitly non checked element', () => {
@@ -534,12 +533,12 @@ describe('supports accessibility states', () => {
       ).toBe('correct');
     });
 
-    test('returns an implicitly non expanded element', () => {
-      const { getByRole } = render(
+    test('does not return return as non expanded an element with expanded: undefined', () => {
+      const { queryByRole } = render(
         <TouchableOpacity accessibilityRole="button"></TouchableOpacity>
       );
 
-      expect(getByRole('button', { expanded: false })).toBeTruthy();
+      expect(queryByRole('button', { expanded: false })).toBe(null);
     });
 
     test('returns an explicitly non expanded element', () => {
