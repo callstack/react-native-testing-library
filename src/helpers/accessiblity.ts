@@ -2,6 +2,10 @@ import { AccessibilityState, StyleSheet } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings } from './component-tree';
 
+type IsAnaccessibleOptions = {
+  isSubtreeInaccessible: (element: ReactTestInstance | null) => boolean;
+};
+
 export type AccessibilityStateKey = keyof AccessibilityState;
 
 export const accessibilityStateKeys: AccessibilityStateKey[] = [
@@ -12,7 +16,14 @@ export const accessibilityStateKeys: AccessibilityStateKey[] = [
   'expanded',
 ];
 
-export function isInaccessible(element: ReactTestInstance | null): boolean {
+const defaultIsInaccessibleOptions = { isSubtreeInaccessible };
+
+export function isInaccessible(
+  element: ReactTestInstance | null,
+  {
+    isSubtreeInaccessible,
+  }: IsAnaccessibleOptions = defaultIsInaccessibleOptions
+): boolean {
   if (element == null) {
     return true;
   }
@@ -29,7 +40,9 @@ export function isInaccessible(element: ReactTestInstance | null): boolean {
   return false;
 }
 
-function isSubtreeInaccessible(element: ReactTestInstance | null): boolean {
+export function isSubtreeInaccessible(
+  element: ReactTestInstance | null
+): boolean {
   if (element == null) {
     return true;
   }
