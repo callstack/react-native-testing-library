@@ -192,7 +192,7 @@ describe('supports name option', () => {
 describe('supports accessibility states', () => {
   describe('disabled', () => {
     test('returns a disabled element when required', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity
           accessibilityRole="button"
           accessibilityState={{ disabled: true }}
@@ -200,6 +200,7 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('button', { disabled: true })).toBeTruthy();
+      expect(queryByRole('button', { disabled: false })).toBe(null);
     });
 
     test('returns the correct element when only one matches all the requirements', () => {
@@ -224,15 +225,16 @@ describe('supports accessibility states', () => {
     });
 
     test('returns an implicitly enabled element', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity accessibilityRole="button"></TouchableOpacity>
       );
 
       expect(getByRole('button', { disabled: false })).toBeTruthy();
+      expect(queryByRole('button', { disabled: true })).toBe(null);
     });
 
     test('returns an explicitly enabled element', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity
           accessibilityRole="button"
           accessibilityState={{ disabled: false }}
@@ -240,6 +242,7 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('button', { disabled: false })).toBeTruthy();
+      expect(queryByRole('button', { disabled: true })).toBe(null);
     });
 
     test('does not return disabled elements when querying for non disabled', () => {
@@ -288,7 +291,7 @@ describe('supports accessibility states', () => {
 
   describe('selected', () => {
     test('returns a selected element when required', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity
           accessibilityRole="tab"
           accessibilityState={{ selected: true }}
@@ -296,6 +299,7 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('tab', { selected: true })).toBeTruthy();
+      expect(queryByRole('tab', { selected: false })).toBe(null);
     });
 
     test('returns the correct element when only one matches all the requirements', () => {
@@ -320,15 +324,16 @@ describe('supports accessibility states', () => {
     });
 
     test('returns an implicitly non selected element', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity accessibilityRole="tab"></TouchableOpacity>
       );
 
       expect(getByRole('tab', { selected: false })).toBeTruthy();
+      expect(queryByRole('tab', { selected: true })).toBe(null);
     });
 
     test('returns an explicitly non selected element', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity
           accessibilityRole="tab"
           accessibilityState={{ selected: false }}
@@ -336,6 +341,7 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('tab', { selected: false })).toBeTruthy();
+      expect(queryByRole('tab', { selected: true })).toBe(null);
     });
 
     test('does not return selected elements when querying for non selected', () => {
@@ -352,7 +358,7 @@ describe('supports accessibility states', () => {
 
   describe('checked', () => {
     test('returns a checked element when required', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity
           accessibilityRole="checkbox"
           accessibilityState={{ checked: true }}
@@ -360,10 +366,12 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('checkbox', { checked: true })).toBeTruthy();
+      expect(queryByRole('checkbox', { checked: false })).toBe(null);
+      expect(queryByRole('checkbox', { checked: 'mixed' })).toBe(null);
     });
 
     it('returns `mixed` checkboxes', () => {
-      const { getByRole } = render(
+      const { queryByRole, getByRole } = render(
         <TouchableOpacity
           accessibilityRole="checkbox"
           accessibilityState={{ checked: 'mixed' }}
@@ -371,6 +379,8 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('checkbox', { checked: 'mixed' })).toBeTruthy();
+      expect(queryByRole('checkbox', { checked: true })).toBe(null);
+      expect(queryByRole('checkbox', { checked: false })).toBe(null);
     });
 
     it('does not return mixed checkboxes when querying for checked: true', () => {
@@ -414,7 +424,7 @@ describe('supports accessibility states', () => {
     });
 
     test('returns an explicitly non checked element', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity
           accessibilityRole="checkbox"
           accessibilityState={{ checked: false }}
@@ -422,6 +432,7 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('checkbox', { checked: false })).toBeTruthy();
+      expect(queryByRole('checkbox', { checked: true })).toBe(null);
     });
 
     test('does not return checked elements when querying for non checked', () => {
@@ -434,11 +445,22 @@ describe('supports accessibility states', () => {
 
       expect(queryByRole('checkbox', { checked: false })).toBe(null);
     });
+
+    test('does not return mixed elements when querying for non checked', () => {
+      const { queryByRole } = render(
+        <TouchableOpacity
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: 'mixed' }}
+        ></TouchableOpacity>
+      );
+
+      expect(queryByRole('checkbox', { checked: false })).toBe(null);
+    });
   });
 
   describe('busy', () => {
     test('returns a busy element when required', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity
           accessibilityRole="button"
           accessibilityState={{ busy: true }}
@@ -446,6 +468,7 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('button', { busy: true })).toBeTruthy();
+      expect(queryByRole('button', { busy: false })).toBe(null);
     });
 
     test('returns the correct element when only one matches all the requirements', () => {
@@ -470,15 +493,16 @@ describe('supports accessibility states', () => {
     });
 
     test('returns an implicitly non busy element', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity accessibilityRole="button"></TouchableOpacity>
       );
 
       expect(getByRole('button', { busy: false })).toBeTruthy();
+      expect(queryByRole('button', { busy: true })).toBe(null);
     });
 
     test('returns an explicitly non busy element', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity
           accessibilityRole="button"
           accessibilityState={{ busy: false }}
@@ -486,6 +510,7 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('button', { busy: false })).toBeTruthy();
+      expect(queryByRole('button', { busy: true })).toBe(null);
     });
 
     test('does not return busy elements when querying for non busy', () => {
@@ -502,7 +527,7 @@ describe('supports accessibility states', () => {
 
   describe('expanded', () => {
     test('returns a expanded element when required', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity
           accessibilityRole="button"
           accessibilityState={{ expanded: true }}
@@ -510,6 +535,7 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('button', { expanded: true })).toBeTruthy();
+      expect(queryByRole('button', { expanded: false })).toBe(null);
     });
 
     test('returns the correct element when only one matches all the requirements', () => {
@@ -542,7 +568,7 @@ describe('supports accessibility states', () => {
     });
 
     test('returns an explicitly non expanded element', () => {
-      const { getByRole } = render(
+      const { getByRole, queryByRole } = render(
         <TouchableOpacity
           accessibilityRole="button"
           accessibilityState={{ expanded: false }}
@@ -550,6 +576,7 @@ describe('supports accessibility states', () => {
       );
 
       expect(getByRole('button', { expanded: false })).toBeTruthy();
+      expect(queryByRole('button', { expanded: true })).toBe(null);
     });
 
     test('does not return expanded elements when querying for non expanded', () => {
@@ -565,7 +592,7 @@ describe('supports accessibility states', () => {
   });
 
   test('ignores non queried accessibilityState', () => {
-    const { getByRole } = render(
+    const { getByRole, queryByRole } = render(
       <TouchableOpacity
         accessibilityRole="button"
         accessibilityState={{
@@ -584,6 +611,12 @@ describe('supports accessibility states', () => {
         disabled: true,
       })
     ).toBeTruthy();
+    expect(
+      queryByRole('button', {
+        name: 'Save',
+        disabled: false,
+      })
+    ).toBe(null);
   });
 
   test('matches an element combining all the options', () => {
