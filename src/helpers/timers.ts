@@ -25,7 +25,8 @@ function getJestFakeTimersType(): FakeTimersTypes | null {
   // istanbul ignore if
   if (
     typeof jest === 'undefined' ||
-    typeof globalObj.setTimeout === 'undefined'
+    typeof globalObj.setTimeout === 'undefined' ||
+    process.env.RNTL_IGNORE_JEST_FAKE_TIMERS
   ) {
     return null;
   }
