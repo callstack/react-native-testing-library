@@ -349,8 +349,22 @@ interface Thenable {
   then: (resolve: () => any, reject?: () => any) => any;
 }
 
+type FilterNodeByTypeFunction = (
+  propName: string,
+  propValue: any,
+  node: ReactTestRendererJSON
+) => boolean;
+
+type FormatOptions = {
+  filterProps?: FilterNodeByTypeFunction,
+};
+
+type DebugOptions = {
+  message?: string,
+} & FormatOptions;
+
 type Debug = {
-  (message?: string): void,
+  (options?: string | DebugOptions): void,
   shallow: (message?: string) => void,
 };
 
