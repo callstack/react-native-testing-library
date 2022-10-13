@@ -63,6 +63,28 @@ const CustomEventComponentWithCustomName = ({
 //   ...data: Array<any>
 // )
 describe('fireEvent', () => {
+  test('QUESTION: is there a kind of event that takes multiple arguments?', () => {
+    const handlerMock = jest.fn();
+
+    const { getByText } = render(
+      <View>
+        <CustomEventComponent onCustomEvent={handlerMock} />
+      </View>
+    );
+
+    fireEvent(
+      getByText('Custom event component'),
+      'customEvent',
+      'some_argument_1',
+      'some_argument_2'
+    );
+
+    expect(handlerMock).toHaveBeenCalledWith(
+      'some_argument_1',
+      'some_argument_2'
+    );
+  });
+
   test('should invoke specified event', () => {
     const onPressMock = jest.fn();
     const { getByText } = render(

@@ -125,7 +125,7 @@ const invokeEvent = (
   const hardCodedEventObject = { someKey: 'value' };
   let defaultCallbackValues =
     eventName === 'changeText' ? [] : [hardCodedEventObject];
-  const handlerCallbackValues = data[0] ? [data[0]] : defaultCallbackValues;
+  const handlerCallbackValues = data.length > 0 ? data : defaultCallbackValues;
   // or maybe it's something like: if there are *any* data arguments, use them; otherwise pass the defaults
 
   const handler = findEventHandler(element, eventName, callsite);
