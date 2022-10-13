@@ -138,7 +138,7 @@ describe('fireEvent', () => {
 //   ...data: Array<any>
 // )
 describe('fireEvent.press', () => {
-  test.only('should pass along provided event data', () => {
+  test('should pass along provided event data', () => {
     const onPressMock = jest.fn();
     const text = 'Fireevent press';
     const eventData = {
@@ -156,7 +156,7 @@ describe('fireEvent.press', () => {
     expect(onPressMock).toHaveBeenCalledWith(eventData);
   });
 
-  test.only('should pass a synthetic event object by default', () => {
+  test('should pass a synthetic event object by default', () => {
     const onPressMock = jest.fn();
     const text = 'Fireevent press';
     const { getByText } = render(
@@ -174,7 +174,7 @@ describe('fireEvent.press', () => {
 //   ...data: Array<any>
 // )
 describe('fireEvent.scroll', () => {
-  test.only('should pass along provided event data', () => {
+  test('should pass along provided event data', () => {
     const onScrollMock = jest.fn();
     const eventData = {
       nativeEvent: {
@@ -194,7 +194,7 @@ describe('fireEvent.scroll', () => {
 
     expect(onScrollMock).toHaveBeenCalledWith(eventData);
   });
-  test.only('should pass a synthetic event object by default', () => {
+  test('should pass a synthetic event object by default', () => {
     const onScrollMock = jest.fn();
     const eventData = { someKey: 'value' };
 
@@ -216,7 +216,7 @@ describe('fireEvent.scroll', () => {
 // )
 // (first element of data should be the text. Does RN even pass an event object?)
 describe('fireEvent.changeText', () => {
-  test.only('should pass the provided text', () => {
+  test('should pass the provided text', () => {
     const onChangeTextMock = jest.fn();
     const CHANGE_TEXT = 'content';
 
@@ -237,7 +237,7 @@ describe('fireEvent.changeText', () => {
     expect(onChangeTextMock).toHaveBeenCalledWith(CHANGE_TEXT);
   });
 
-  test.only('what if no text is provided', () => {
+  test('what if no text is provided', () => {
     const onChangeTextMock = jest.fn();
 
     const { getByPlaceholderText } = render(
