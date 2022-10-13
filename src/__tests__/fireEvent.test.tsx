@@ -145,7 +145,7 @@ describe('fireEvent.press', () => {
     expect(onPressMock).toHaveBeenCalledWith(eventData);
   });
 
-  test('should pass a synthetic event object by default', () => {
+  test('should pass a generated event object by default', () => {
     const onPressMock = jest.fn();
     const text = 'Fireevent press';
     const { getByText } = render(
@@ -179,7 +179,7 @@ describe('fireEvent.scroll', () => {
 
     expect(onScrollMock).toHaveBeenCalledWith(eventData);
   });
-  test('should pass a synthetic event object by default', () => {
+  test('should pass a generated event object by default', () => {
     const onScrollMock = jest.fn();
     const eventData = { someKey: 'value' };
 
