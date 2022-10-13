@@ -55,13 +55,6 @@ const CustomEventComponentWithCustomName = ({
   <MyCustomButton handlePress={handlePress} text="Custom component" />
 );
 
-// https://callstack.github.io/react-native-testing-library/docs/api/#fireevent
-
-// function fireEvent(
-//   element: ReactTestInstance,
-//   eventName: string,
-//   ...data: Array<any>
-// )
 describe('fireEvent', () => {
   test('QUESTION: is there a kind of event that takes multiple arguments?', () => {
     const handlerMock = jest.fn();
@@ -133,10 +126,6 @@ describe('fireEvent', () => {
   });
 });
 
-// fireEvent.press: (
-//   element: ReactTestInstance,
-//   ...data: Array<any>
-// )
 describe('fireEvent.press', () => {
   test('should pass along provided event data', () => {
     const onPressMock = jest.fn();
@@ -169,10 +158,6 @@ describe('fireEvent.press', () => {
   });
 });
 
-// fireEvent.scroll: (
-//   element: ReactTestInstance,
-//   ...data: Array<any>
-// )
 describe('fireEvent.scroll', () => {
   test('should pass along provided event data', () => {
     const onScrollMock = jest.fn();
@@ -210,11 +195,6 @@ describe('fireEvent.scroll', () => {
   });
 });
 
-// fireEvent.changeText: (
-//   element: ReactTestInstance,
-//   ...data: Array<any>
-// )
-// (first element of data should be the text. Does RN even pass an event object?)
 describe('fireEvent.changeText', () => {
   test('should pass the provided text', () => {
     const onChangeTextMock = jest.fn();
