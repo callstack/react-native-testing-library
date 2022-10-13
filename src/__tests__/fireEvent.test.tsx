@@ -116,7 +116,7 @@ describe('fireEvent', () => {
 //   ...data: Array<any>
 // )
 describe('fireEvent.press', () => {
-  test('should pass along provided event data', () => {
+  test.only('should pass along provided event data', () => {
     const onPressMock = jest.fn();
     const text = 'Fireevent press';
     const eventData = {
@@ -151,25 +151,41 @@ describe('fireEvent.press', () => {
 //   element: ReactTestInstance,
 //   ...data: Array<any>
 // )
-test('fireEvent.scroll', () => {
-  const onScrollMock = jest.fn();
-  const eventData = {
-    nativeEvent: {
-      contentOffset: {
-        y: 200,
+describe('fireEvent.scroll', () => {
+  test.only('should pass along provided event data', () => {
+    const onScrollMock = jest.fn();
+    const eventData = {
+      nativeEvent: {
+        contentOffset: {
+          y: 200,
+        },
       },
-    },
-  };
+    };
 
-  const { getByText } = render(
-    <ScrollView onScroll={onScrollMock}>
-      <Text>XD</Text>
-    </ScrollView>
-  );
+    const { getByText } = render(
+      <ScrollView onScroll={onScrollMock}>
+        <Text>XD</Text>
+      </ScrollView>
+    );
 
-  fireEvent.scroll(getByText('XD'), eventData);
+    fireEvent.scroll(getByText('XD'), eventData);
 
-  expect(onScrollMock).toHaveBeenCalledWith(eventData);
+    expect(onScrollMock).toHaveBeenCalledWith(eventData);
+  });
+  test.only('should pass a synthetic event object by default', () => {
+    const onScrollMock = jest.fn();
+    const eventData = { someKey: 'value' };
+
+    const { getByText } = render(
+      <ScrollView onScroll={onScrollMock}>
+        <Text>XD</Text>
+      </ScrollView>
+    );
+
+    fireEvent.scroll(getByText('XD'));
+
+    expect(onScrollMock).toHaveBeenCalledWith(eventData);
+  });
 });
 
 // fireEvent.changeText: (
@@ -177,25 +193,44 @@ test('fireEvent.scroll', () => {
 //   ...data: Array<any>
 // )
 // (first element of data should be the text. Does RN even pass an event object?)
-test('fireEvent.changeText', () => {
-  const onChangeTextMock = jest.fn();
-  const CHANGE_TEXT = 'content';
+describe('fireEvent.changeText', () => {
+  test.only('should pass the provided text', () => {
+    const onChangeTextMock = jest.fn();
+    const CHANGE_TEXT = 'content';
 
-  const { getByPlaceholderText } = render(
-    <View>
-      <TextInput
-        placeholder="Customer placeholder"
-        onChangeText={onChangeTextMock}
-      />
-    </View>
-  );
+    const { getByPlaceholderText } = render(
+      <View>
+        <TextInput
+          placeholder="Customer placeholder"
+          onChangeText={onChangeTextMock}
+        />
+      </View>
+    );
 
-  fireEvent.changeText(
-    getByPlaceholderText('Customer placeholder'),
-    CHANGE_TEXT
-  );
+    fireEvent.changeText(
+      getByPlaceholderText('Customer placeholder'),
+      CHANGE_TEXT
+    );
 
-  expect(onChangeTextMock).toHaveBeenCalledWith(CHANGE_TEXT);
+    expect(onChangeTextMock).toHaveBeenCalledWith(CHANGE_TEXT);
+  });
+
+  test.only('what if no text is provided', () => {
+    const onChangeTextMock = jest.fn();
+
+    const { getByPlaceholderText } = render(
+      <View>
+        <TextInput
+          placeholder="Customer placeholder"
+          onChangeText={onChangeTextMock}
+        />
+      </View>
+    );
+
+    fireEvent.changeText(getByPlaceholderText('Customer placeholder'));
+
+    expect(onChangeTextMock).toHaveBeenCalledWith();
+  });
 });
 
 test('custom component with custom event name', () => {
