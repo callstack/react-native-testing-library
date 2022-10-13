@@ -55,6 +55,13 @@ const CustomEventComponentWithCustomName = ({
   <MyCustomButton handlePress={handlePress} text="Custom component" />
 );
 
+// https://callstack.github.io/react-native-testing-library/docs/api/#fireevent
+
+// function fireEvent(
+//   element: ReactTestInstance,
+//   eventName: string,
+//   ...data: Array<any>
+// )
 describe('fireEvent', () => {
   test('should invoke specified event', () => {
     const onPressMock = jest.fn();
@@ -104,24 +111,46 @@ describe('fireEvent', () => {
   });
 });
 
-test('fireEvent.press', () => {
-  const onPressMock = jest.fn();
-  const text = 'Fireevent press';
-  const eventData = {
-    nativeEvent: {
-      pageX: 20,
-      pageY: 30,
-    },
-  };
-  const { getByText } = render(
-    <OnPressComponent onPress={onPressMock} text={text} />
-  );
+// fireEvent.press: (
+//   element: ReactTestInstance,
+//   ...data: Array<any>
+// )
+describe('fireEvent.press', () => {
+  test('should pass along provided event data', () => {
+    const onPressMock = jest.fn();
+    const text = 'Fireevent press';
+    const eventData = {
+      nativeEvent: {
+        pageX: 20,
+        pageY: 30,
+      },
+    };
+    const { getByText } = render(
+      <OnPressComponent onPress={onPressMock} text={text} />
+    );
 
-  fireEvent.press(getByText(text), eventData);
+    fireEvent.press(getByText(text), eventData);
 
-  expect(onPressMock).toHaveBeenCalledWith(eventData);
+    expect(onPressMock).toHaveBeenCalledWith(eventData);
+  });
+
+  test.only('should pass a synthetic event object by default', () => {
+    const onPressMock = jest.fn();
+    const text = 'Fireevent press';
+    const { getByText } = render(
+      <OnPressComponent onPress={onPressMock} text={text} />
+    );
+
+    fireEvent.press(getByText(text));
+
+    expect(onPressMock).toHaveBeenCalledWith({ someKey: 'value' });
+  });
 });
 
+// fireEvent.scroll: (
+//   element: ReactTestInstance,
+//   ...data: Array<any>
+// )
 test('fireEvent.scroll', () => {
   const onScrollMock = jest.fn();
   const eventData = {
@@ -143,6 +172,11 @@ test('fireEvent.scroll', () => {
   expect(onScrollMock).toHaveBeenCalledWith(eventData);
 });
 
+// fireEvent.changeText: (
+//   element: ReactTestInstance,
+//   ...data: Array<any>
+// )
+// (first element of data should be the text. Does RN even pass an event object?)
 test('fireEvent.changeText', () => {
   const onChangeTextMock = jest.fn();
   const CHANGE_TEXT = 'content';

@@ -118,7 +118,7 @@ const invokeEvent = (
   let returnValue;
 
   act(() => {
-    returnValue = handler(...data);
+    returnValue = handler({ someKey: 'value' });
   });
 
   return returnValue;
