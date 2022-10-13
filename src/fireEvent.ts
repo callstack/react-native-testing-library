@@ -120,17 +120,13 @@ const invokeEvent = (
 ) => {
   // this is here for now:
   // if change text, use text, otherwise use hardcodedEventObject
-  let handlerCallbackValues: Array<any>;
-  if (eventName === 'changeText') {
-    const textEntered = data[0];
-    handlerCallbackValues = textEntered ? [textEntered] : [];
-  } else {
-    const hardCodedEventObject = { someKey: 'value' };
-    const customEventObject = data[0];
-    handlerCallbackValues = customEventObject
-      ? [customEventObject]
-      : [hardCodedEventObject];
-  }
+  // do we still care about other data values?
+  // understand other arguments to event handlers...
+  const hardCodedEventObject = { someKey: 'value' };
+  let defaultCallbackValues =
+    eventName === 'changeText' ? [] : [hardCodedEventObject];
+  const handlerCallbackValues = data[0] ? [data[0]] : defaultCallbackValues;
+  // or maybe it's something like: if there are *any* data arguments, use them; otherwise pass the defaults
 
   const handler = findEventHandler(element, eventName, callsite);
 
