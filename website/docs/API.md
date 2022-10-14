@@ -48,6 +48,7 @@ title: API
 - [Configuration](#configuration)
   - [`configure`](#configure)
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
+    - [`debugOptions` option](#debugoptions-option)
   - [`resetToDefaults()`](#resettodefaults)
   - [Environment variables](#environment-variables)
     - [`RNTL_SKIP_AUTO_CLEANUP`](#rntl_skip_auto_cleanup)
@@ -170,15 +171,24 @@ Usually you should not need to call `unmount` as it is done automatically if you
 ### `debug`
 
 ```ts
-debug(message?: string): void
+
+interface DebugOptions { 
+  message?: string;
+  filterProps?: FilterNodeByTypeFunction;
+}
+
+debug(options?: string | DebugOptions): void
 ```
 
-Pretty prints deeply rendered component passed to `render` with optional message on top.
+Pretty prints deeply rendered component passed to `render`. 
+
+You can provide a message that will be printed on top either by calling debug with a string or using the message property in debugOptions
 
 ```jsx
 render(<Component />);
 
 screen.debug('optional message');
+screen.debug({message: 'optional message'});
 ```
 
 logs optional message and colored JSX:
@@ -192,6 +202,16 @@ optional message
   <Text>Press me</Text>
 </View>
 ```
+
+You can use the filterProps option to filter the props that will be printed : 
+
+```jsx
+render(<View style={{backgroundColor: 'red'}}/>);
+
+debug({filterProps : (propName, propValue, node) => propName !== 'style'})
+```
+
+This will log the rendered JSX without style props
 
 #### `debug.shallow`
 
@@ -737,6 +757,9 @@ function configure(options: Partial<Config>)  {}
 
 Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
 
+#### `debugOptions` option
+
+Default debugOptions to be used when calling debug. These default options will be overridden by the ones you specify directly when calling debug
 
 ### `resetToDefaults()`
 
