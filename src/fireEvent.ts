@@ -103,42 +103,29 @@ const getEventHandler = (
   return undefined;
 };
 
-// should other built-in RN events use the hard coded event object?
-// should custom events for third-party components?
-// what about when there are other data arguments provided? should they override the hard coded event object? for press? changeText? scroll? etc.
-
-// what does react native do? ^
-// how does testing library handle ^
-
-// one scenario josh has more confidence about: when you have a component/element with an event handler configured, and that is an event that takes an event object (like press, unlike changeText), you should be able to pass a custom event object in your test, and that will be used in place of the test-library-provided event object
-
 const invokeEvent = (
   element: ReactTestInstance,
   eventName: string,
   callsite?: any,
   ...data: Array<any>
 ) => {
-  // this is here for now:
-  // if change text, use text, otherwise use hardcodedEventObject
-  // do we still care about other data values?
-  // understand other arguments to event handlers...
-  const hardCodedEventObject = { someKey: 'value' };
-  let defaultCallbackValues =
-    eventName === 'changeText' ? [] : [hardCodedEventObject];
-  const handlerCallbackValues = data.length > 0 ? data : defaultCallbackValues;
-  // or maybe it's something like: if there are *any* data arguments, use them; otherwise pass the defaults
-
   const handler = findEventHandler(element, eventName, callsite);
 
   if (!handler) {
     return;
   }
 
+  // this is just a placeholder and needs to be a more realistic object
+  const generatedEventObject = { someKey: 'value' };
+
+  let defaultCallbackValues =
+    eventName === 'changeText' ? [] : [generatedEventObject];
+  const handlerCallbackValues = data.length > 0 ? data : defaultCallbackValues;
+
   let returnValue;
 
   act(() => {
     returnValue = handler(...handlerCallbackValues);
-    //returnValue = handler(...data);
   });
 
   return returnValue;
