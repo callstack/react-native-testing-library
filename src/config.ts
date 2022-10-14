@@ -1,6 +1,9 @@
+import { DebugOptions } from './helpers/debugDeep';
+
 export type Config = {
   /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
+  debugOptions?: Partial<DebugOptions>;
 };
 
 const defaultConfig: Config = {

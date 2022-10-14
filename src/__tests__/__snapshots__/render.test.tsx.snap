@@ -124,6 +124,28 @@ exports[`debug changing component: bananaFresh button message should now be "fre
 </View>"
 `;
 
+exports[`debug should use debugOptions from config when no option is specified 1`] = `
+"<View>
+  <Text>
+    hello
+  </Text>
+</View>"
+`;
+
+exports[`debug should use given options over config debugOptions 1`] = `
+"<View
+  style={
+    Object {
+      "backgroundColor": "red",
+    }
+  }
+>
+  <Text>
+    hello
+  </Text>
+</View>"
+`;
+
 exports[`debug with all props filtered 1`] = `
 "<View>
   <Text>

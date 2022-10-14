@@ -9,6 +9,7 @@ import debugDeep, { DebugOptions } from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
 import { setRenderResult, screen } from './screen';
 import { validateStringsRenderedWithinText } from './helpers/stringValidation';
+import { getConfig } from './config';
 
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
@@ -144,9 +145,15 @@ function debug(
   renderer: ReactTestRenderer
 ): DebugFunction {
   function debugImpl(options?: DebugOptions | string) {
+    const { debugOptions: defaultDebugOptions } = getConfig();
     const json = renderer.toJSON();
     if (json) {
-      return debugDeep(json, options);
+      return debugDeep(
+        json,
+        typeof options === 'string'
+          ? { ...defaultDebugOptions, message: options }
+          : { ...defaultDebugOptions, ...options }
+      );
     }
   }
   debugImpl.shallow = (message?: string) => debugShallow(instance, message);

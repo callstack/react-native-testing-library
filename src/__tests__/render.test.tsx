@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
 import stripAnsi from 'strip-ansi';
-import { render, fireEvent, RenderAPI } from '..';
+import { render, fireEvent, RenderAPI, resetToDefaults, configure } from '..';
 
 type ConsoleLogMock = jest.Mock<Array<string>>;
 
@@ -11,6 +11,10 @@ const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
 const DEFAULT_INPUT_CUSTOMER = 'What banana?';
+
+beforeEach(() => {
+  resetToDefaults();
+});
 
 class MyButton extends React.Component<any> {
   render() {
@@ -260,6 +264,44 @@ test('debug with all props filtered', () => {
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
 
   expect(getByText('Change freshness!')).toBeTruthy();
+});
+
+test('debug should use debugOptions from config when no option is specified', () => {
+  jest.spyOn(console, 'log').mockImplementation((x) => x);
+
+  configure({ debugOptions: { filterProps: () => false } });
+
+  const { debug } = render(
+    <View style={{ backgroundColor: 'red' }}>
+      <Text>hello</Text>
+    </View>
+  );
+
+  debug();
+
+  // eslint-disable-next-line no-console
+  const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
+
+  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+});
+
+test('debug should use given options over config debugOptions', () => {
+  jest.spyOn(console, 'log').mockImplementation((x) => x);
+
+  configure({ debugOptions: { filterProps: () => false } });
+
+  const { debug } = render(
+    <View style={{ backgroundColor: 'red' }}>
+      <Text>hello</Text>
+    </View>
+  );
+
+  debug({ filterProps: () => true });
+
+  // eslint-disable-next-line no-console
+  const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
+
+  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
 });
 
 test('renders options.wrapper around node', () => {

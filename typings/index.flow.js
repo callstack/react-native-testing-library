@@ -427,6 +427,7 @@ declare module '@testing-library/react-native' {
 
   declare interface Config {
     asyncUtilTimeout: number;
+    debugOptions?: $Shape<DebugOptions>;
   }
 
   declare export var configure: (options: $Shape<Config>) => void;
