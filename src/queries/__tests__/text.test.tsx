@@ -466,3 +466,13 @@ test('getByText searches for text within self host element', () => {
   const textNode = within(getByTestId('subject'));
   expect(textNode.getByText('Hello')).toBeTruthy();
 });
+
+test('byText support hidden option', () => {
+  const { queryByText, getByText } = render(
+    <Text style={{ display: 'none' }}>I am inaccessible</Text>
+  );
+  expect(queryByText('I am inaccessible', { hidden: false })).toBeFalsy();
+  expect(() => getByText('I am inaccessible', { hidden: false })).toThrow();
+  expect(queryByText('I am inaccessible', { hidden: true })).toBeTruthy();
+  expect(getByText('I am inaccessible', { hidden: true })).toBeTruthy();
+});

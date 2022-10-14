@@ -58,3 +58,23 @@ test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
   expect(queryAllByPlaceholderText(/fresh/i)).toEqual(inputs);
   expect(queryAllByPlaceholderText('no placeholder')).toHaveLength(0);
 });
+
+test('byPlaceholderText queries support hidden option', () => {
+  const { queryByPlaceholderText, getByPlaceholderText } = render(
+    <TextInput
+      placeholder={PLACEHOLDER_CHEF}
+      value={INPUT_CHEF}
+      style={{ display: 'none' }}
+    />
+  );
+  expect(
+    queryByPlaceholderText(PLACEHOLDER_CHEF, { hidden: false })
+  ).toBeFalsy();
+  expect(() =>
+    getByPlaceholderText(PLACEHOLDER_CHEF, { hidden: false })
+  ).toThrow();
+  expect(
+    queryByPlaceholderText(PLACEHOLDER_CHEF, { hidden: true })
+  ).toBeTruthy();
+  expect(getByPlaceholderText(PLACEHOLDER_CHEF, { hidden: true })).toBeTruthy();
+});

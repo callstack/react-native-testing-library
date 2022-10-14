@@ -226,3 +226,20 @@ test('*ByA11yState on TouchableOpacity with "disabled" prop', () => {
   expect(view.getByA11yState({ disabled: true })).toBeTruthy();
   expect(view.queryByA11yState({ disabled: false })).toBeFalsy();
 });
+
+test('byA11yState queries support hidden option', () => {
+  const { queryByA11yState, getByA11yState } = render(
+    <TouchableOpacity
+      accessibilityState={{ expanded: false }}
+      style={{ display: 'none' }}
+    >
+      <Text>I am inaccessible</Text>
+    </TouchableOpacity>
+  );
+  expect(queryByA11yState({ expanded: false }, { hidden: false })).toBeFalsy();
+  expect(() =>
+    getByA11yState({ expanded: false }, { hidden: false })
+  ).toThrow();
+  expect(queryByA11yState({ expanded: false }, { hidden: true })).toBeTruthy();
+  expect(getByA11yState({ expanded: false }, { hidden: true })).toBeTruthy();
+});

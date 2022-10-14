@@ -92,3 +92,15 @@ test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
   );
   await expect(findAllByA11yValue({ max: 60 })).resolves.toHaveLength(2);
 });
+
+test('byA11yValue queries support hidden option', () => {
+  const { queryByA11yValue, getByA11yValue } = render(
+    <Text accessibilityValue={{ max: 10 }} style={{ display: 'none' }}>
+      I am inaccessible
+    </Text>
+  );
+  expect(queryByA11yValue({ max: 10 }, { hidden: false })).toBeFalsy();
+  expect(() => getByA11yValue({ max: 10 }, { hidden: false })).toThrow();
+  expect(queryByA11yValue({ max: 10 }, { hidden: true })).toBeTruthy();
+  expect(getByA11yValue({ max: 10 }, { hidden: true })).toBeTruthy();
+});

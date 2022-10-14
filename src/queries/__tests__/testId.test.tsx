@@ -132,3 +132,16 @@ test('findByTestId and findAllByTestId work asynchronously', async () => {
   await expect(findByTestId('aTestId')).resolves.toBeTruthy();
   await expect(findAllByTestId('aTestId')).resolves.toHaveLength(1);
 }, 20000);
+
+test('byTestId queries support hidden option', () => {
+  const { queryByTestId, getByTestId } = render(
+    <Text style={{ display: 'none' }} testID="im-inaccessible">
+      I am inaccessible
+    </Text>
+  );
+
+  expect(queryByTestId('im-inaccessible', { hidden: false })).toBeFalsy();
+  expect(() => getByTestId('im-inaccessible', { hidden: false })).toThrow();
+  expect(queryByTestId('im-inaccessible', { hidden: true })).toBeTruthy();
+  expect(getByTestId('im-inaccessible', { hidden: true })).toBeTruthy();
+});

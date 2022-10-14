@@ -143,3 +143,15 @@ describe('findBy options deprecations', () => {
     );
   }, 20000);
 });
+
+test('byLabelText queries support hidden option', () => {
+  const { queryByLabelText, getByLabelText } = render(
+    <Text accessibilityLabel="im-inaccessible" style={{ display: 'none' }}>
+      I am inaccessible
+    </Text>
+  );
+  expect(queryByLabelText('im-inaccessible', { hidden: false })).toBeFalsy();
+  expect(() => getByLabelText('im-inaccessible', { hidden: false })).toThrow();
+  expect(queryByLabelText('im-inaccessible', { hidden: true })).toBeTruthy();
+  expect(getByLabelText('im-inaccessible', { hidden: true })).toBeTruthy();
+});
