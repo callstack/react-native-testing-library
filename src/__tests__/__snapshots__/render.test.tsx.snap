@@ -124,7 +124,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
 </View>"
 `;
 
-exports[`debug with filterProps option 1`] = `
+exports[`debug with all props filtered 1`] = `
 "<View>
   <Text>
     Is the banana fresh?
@@ -153,7 +153,36 @@ exports[`debug with filterProps option 1`] = `
 </View>"
 `;
 
-exports[`debug with filterProps option 2`] = `
+exports[`debug with only children prop 1`] = `
+"<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text>
+    not fresh
+  </Text>
+  <TextInput />
+  <TextInput />
+  <TextInput />
+  <TextInput />
+  <View>
+    <Text>
+      Change freshness!
+    </Text>
+  </View>
+  <Text>
+    First Text
+  </Text>
+  <Text>
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
+</View>"
+`;
+
+exports[`debug with only prop whose value is bananaChef 1`] = `
 "<View>
   <Text>
     Is the banana fresh?
@@ -184,7 +213,7 @@ exports[`debug with filterProps option 2`] = `
 </View>"
 `;
 
-exports[`debug with filterProps option 3`] = `
+exports[`debug with only props from TextInput components 1`] = `
 "<View>
   <Text>
     Is the banana fresh?
@@ -210,35 +239,6 @@ exports[`debug with filterProps option 3`] = `
     defaultValue="hello"
     value=""
   />
-  <View>
-    <Text>
-      Change freshness!
-    </Text>
-  </View>
-  <Text>
-    First Text
-  </Text>
-  <Text>
-    Second Text
-  </Text>
-  <Text>
-    0
-  </Text>
-</View>"
-`;
-
-exports[`debug with filterProps option 4`] = `
-"<View>
-  <Text>
-    Is the banana fresh?
-  </Text>
-  <Text>
-    not fresh
-  </Text>
-  <TextInput />
-  <TextInput />
-  <TextInput />
-  <TextInput />
   <View>
     <Text>
       Change freshness!

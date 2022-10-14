@@ -200,25 +200,64 @@ test('debug changing component', () => {
   );
 });
 
-test('debug with filterProps option', () => {
+test('debug with only children prop', () => {
   jest.spyOn(console, 'log').mockImplementation((x) => x);
 
   const { debug, getByText } = render(<Banana />);
 
   debug({ filterProps: (propName) => propName === 'children' });
+
+  // eslint-disable-next-line no-console
+  const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
+
+  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+
+  expect(getByText('Change freshness!')).toBeTruthy();
+});
+
+test('debug with only prop whose value is bananaChef', () => {
+  jest.spyOn(console, 'log').mockImplementation((x) => x);
+
+  const { debug, getByText } = render(<Banana />);
+
   debug({ filterProps: (_propName, propValue) => propValue === 'bananaChef' });
+
+  // eslint-disable-next-line no-console
+  const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
+
+  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+
+  expect(getByText('Change freshness!')).toBeTruthy();
+});
+
+test('debug with only props from TextInput components', () => {
+  jest.spyOn(console, 'log').mockImplementation((x) => x);
+
+  const { debug, getByText } = render(<Banana />);
+
   debug({
     filterProps: (_propName, _propValue, node) => node.type === 'TextInput',
   });
+
+  // eslint-disable-next-line no-console
+  const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
+
+  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+
+  expect(getByText('Change freshness!')).toBeTruthy();
+});
+
+test('debug with all props filtered', () => {
+  jest.spyOn(console, 'log').mockImplementation((x) => x);
+
+  const { debug, getByText } = render(<Banana />);
+
   debug({ filterProps: () => false });
 
   // eslint-disable-next-line no-console
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
 
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
-  expect(stripAnsi(mockCalls[1][0])).toMatchSnapshot();
-  expect(stripAnsi(mockCalls[2][0])).toMatchSnapshot();
-  expect(stripAnsi(mockCalls[3][0])).toMatchSnapshot();
 
   expect(getByText('Change freshness!')).toBeTruthy();
 });
