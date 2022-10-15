@@ -10,6 +10,23 @@ import type {
   QueryByQuery,
 } from './makeQueries';
 
+export function matchAccessibilityState(
+  node: ReactTestInstance,
+  matcher: AccessibilityState
+) {
+  const stateProp = node.props.accessibilityState;
+
+  // busy, disabled & selected states default to false,
+  // while checked & expended states treat false and default as sepatate values
+  return (
+    matchState(stateProp?.busy ?? false, matcher.busy) &&
+    matchState(stateProp?.disabled ?? false, matcher.disabled) &&
+    matchState(stateProp?.selected ?? false, matcher.selected) &&
+    matchState(stateProp?.checked, matcher.checked) &&
+    matchState(stateProp?.expanded, matcher.expanded)
+  );
+}
+
 function matchState(value: unknown, matcher: unknown) {
   return matcher === undefined || value === matcher;
 }
@@ -19,17 +36,8 @@ const queryAllByA11yState = (
 ): ((matcher: AccessibilityState) => Array<ReactTestInstance>) =>
   function queryAllByA11yStateFn(matcher) {
     return instance.findAll((node) => {
-      const stateProp = node.props.accessibilityState;
-
-      // busy, disabled & selected states default to false,
-      // while checked & expended states treat false and default as sepatate values
       return (
-        typeof node.type === 'string' &&
-        matchState(stateProp?.busy ?? false, matcher.busy) &&
-        matchState(stateProp?.disabled ?? false, matcher.disabled) &&
-        matchState(stateProp?.selected ?? false, matcher.selected) &&
-        matchState(stateProp?.checked, matcher.checked) &&
-        matchState(stateProp?.expanded, matcher.expanded)
+        typeof node.type === 'string' && matchAccessibilityState(node, matcher)
       );
     });
   };
