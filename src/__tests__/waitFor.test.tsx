@@ -204,6 +204,37 @@ test.each([false, true])(
   }
 );
 
+const fibonaci = (n: number): number => {
+  if (n === 0 || n === 1) {
+    return 1;
+  }
+
+  return fibonaci(n - 1) + fibonaci(n - 2);
+};
+
+test.each([false, true])(
+  'it should not depend on real time when using fake timers (legacyFakeTimers = %s)',
+  async () => {
+    jest.useFakeTimers({ legacyFakeTimers: false });
+
+    const mockErrorFn = jest.fn(() => {
+      fibonaci(30);
+      throw new Error('test');
+    });
+
+    try {
+      await waitFor(() => mockErrorFn(), {
+        timeout: 200,
+        interval: 5,
+      });
+    } catch (error) {
+      // suppress
+    }
+
+    expect(mockErrorFn).toHaveBeenCalledTimes(41);
+  }
+);
+
 test.each([false, true])(
   'awaiting something that succeeds before timeout works with fake timers (legacyFakeTimers = %s)',
   async (legacyFakeTimers) => {
