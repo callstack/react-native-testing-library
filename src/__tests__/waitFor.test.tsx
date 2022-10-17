@@ -204,21 +204,25 @@ test.each([false, true])(
   }
 );
 
-const fibonaci = (n: number): number => {
-  if (n === 0 || n === 1) {
-    return 1;
+const blockThread = (timeToBlockThread: number, legacyFakeTimers: boolean) => {
+  jest.useRealTimers();
+  let end = Date.now() + timeToBlockThread;
+
+  while (Date.now() < end) {
+    // do nothing
   }
 
-  return fibonaci(n - 1) + fibonaci(n - 2);
+  jest.useFakeTimers({ legacyFakeTimers });
 };
 
-test.each([false, true])(
+test.each([true, false])(
   'it should not depend on real time when using fake timers (legacyFakeTimers = %s)',
-  async () => {
-    jest.useFakeTimers({ legacyFakeTimers: false });
+  async (legacyFakeTimers) => {
+    jest.useFakeTimers({ legacyFakeTimers });
 
     const mockErrorFn = jest.fn(() => {
-      fibonaci(30);
+      // Wait 10 seconds so that check time is longer than interval
+      blockThread(10, legacyFakeTimers);
       throw new Error('test');
     });
 
@@ -227,10 +231,13 @@ test.each([false, true])(
         timeout: 200,
         interval: 5,
       });
-    } catch (error) {
-      // suppress
+    } catch (e) {
+      // do nothing
     }
 
+    // Verify that even though time to perform check is longer than interval
+    // test won't timeout until number of checks * interval >= timeout
+    // ie fake timers have been advanced by timeout when waitfor rejects
     expect(mockErrorFn).toHaveBeenCalledTimes(41);
   }
 );
