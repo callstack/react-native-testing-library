@@ -346,6 +346,7 @@ declare module '@testing-library/react-native' {
   declare interface RenderOptions {
     wrapper?: React.ComponentType<any>;
     createNodeMock?: (element: React.Element<any>) => any;
+    unstable_validateStringsRenderedWithinText?: boolean;
   }
 
   declare export var render: (
