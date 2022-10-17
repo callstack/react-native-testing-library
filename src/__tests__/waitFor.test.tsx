@@ -221,15 +221,15 @@ test.each([true, false])(
     jest.useFakeTimers({ legacyFakeTimers });
 
     const mockErrorFn = jest.fn(() => {
-      // Wait 10 seconds so that check time is longer than interval
-      blockThread(10, legacyFakeTimers);
+      // Wait 5 seconds so that check time is longer than interval
+      blockThread(5, legacyFakeTimers);
       throw new Error('test');
     });
 
     try {
       await waitFor(() => mockErrorFn(), {
-        timeout: 200,
-        interval: 5,
+        timeout: 6,
+        interval: 2,
       });
     } catch (e) {
       // do nothing
@@ -238,7 +238,7 @@ test.each([true, false])(
     // Verify that even though time to perform check is longer than interval
     // test won't timeout until number of checks * interval >= timeout
     // ie fake timers have been advanced by timeout when waitfor rejects
-    expect(mockErrorFn).toHaveBeenCalledTimes(41);
+    expect(mockErrorFn).toHaveBeenCalledTimes(4);
   }
 );
 
