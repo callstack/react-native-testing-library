@@ -226,14 +226,13 @@ test.each([true, false])(
       throw new Error('test');
     });
 
-    try {
-      await waitFor(() => mockErrorFn(), {
-        timeout: 6,
-        interval: 2,
-      });
-    } catch (e) {
-      // do nothing
-    }
+    await expect(
+      async () =>
+        await waitFor(() => mockErrorFn(), {
+          timeout: 6,
+          interval: 2,
+        })
+    ).rejects.toThrow();
 
     // Verify that even though time to perform check is longer than interval
     // test won't timeout until number of checks * interval >= timeout
