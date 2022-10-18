@@ -21,6 +21,7 @@ title: Queries
   - [`ByLabelText`](#bylabeltext)
   - [`ByHintText`, `ByA11yHint`, `ByAccessibilityHint`](#byhinttext-bya11yhint-byaccessibilityhint)
   - [`ByRole`](#byrole)
+    - [Options](#options-1)
   - [`ByA11yState`, `ByAccessibilityState`](#bya11ystate-byaccessibilitystate)
   - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
 - [TextMatch](#textmatch)
@@ -90,6 +91,16 @@ Usually query first argument can be a **string** or a **regex**. Some queries ac
 
 > getByText, getAllByText, queryByText, queryAllByText, findByText, findAllByText
 
+```ts
+getByText(
+  text: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  }
+): ReactTestInstance;
+```
+
 Returns a `ReactTestInstance` with matching text – may be a string or regular expression.
 
 This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
@@ -105,6 +116,16 @@ const element = screen.getByText('banana');
 
 > getByPlaceholderText, getAllByPlaceholderText, queryByPlaceholderText, queryAllByPlaceholderText, findByPlaceholderText, findAllByPlaceholderText
 
+```ts
+getByPlaceholderText(
+  text: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  }
+): ReactTestInstance;
+```
+
 Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
 
 ```jsx
@@ -118,6 +139,16 @@ const element = screen.getByPlaceholderText('username');
 
 > getByDisplayValue, getAllByDisplayValue, queryByDisplayValue, queryAllByDisplayValue, findByDisplayValue, findAllByDisplayValue
 
+```ts
+getByDisplayValue(
+  value: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  }
+): ReactTestInstance;
+```
+
 Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
 
 ```jsx
@@ -130,6 +161,16 @@ const element = screen.getByDisplayValue('username');
 ### `ByTestId`
 
 > getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, findByTestId, findAllByTestId
+
+```ts
+getByTestId(
+  testId: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  }
+): ReactTestInstance;
+```
 
 Returns a `ReactTestInstance` with matching `testID` prop. `testID` – may be a string or a regular expression.
 
@@ -148,6 +189,12 @@ In the spirit of [the guiding principles](https://testing-library.com/docs/guidi
 
 > getByLabelText, getAllByLabelText, queryByLabelText, queryAllByLabelText, findByLabelText, findAllByLabelText
 
+```ts
+getByLabelText(
+  text: TextMatch
+): ReactTestInstance;
+```
+
 Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
 
 ```jsx
@@ -162,6 +209,12 @@ const element = screen.getByLabelText('my-label');
 > getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint, findByA11yHint, findAllByA11yHint
 > getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint, findByAccessibilityHint, findAllByAccessibilityHint
 > getByHintText, getAllByHintText, queryByHintText, queryAllByHintText, findByHintText, findAllByHintText
+
+```ts
+getByHintText(
+  hint: TextMatch
+): ReactTestInstance;
+```
 
 Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
 
@@ -179,6 +232,15 @@ Please consult [Apple guidelines on how `accessibilityHint` should be used](http
 ### `ByRole`
 
 > getByRole, getAllByRole, queryByRole, queryAllByRole, findByRole, findAllByRole
+
+```ts
+getByRole(
+  role: TextMatch,
+  option?: {
+    name?: TextMatch
+  }
+): ReactTestInstance;
+```
 
 Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
 
@@ -198,6 +260,18 @@ const element = screen.getByRole('button');
 > getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState, findByA11yState, findAllByA11yState
 > getByAccessibilityState, getAllByAccessibilityState, queryByAccessibilityState, queryAllByAccessibilityState, findByAccessibilityState, findAllByAccessibilityState
 
+```ts
+getByA11yState(
+  state: {
+    disabled?: boolean,
+    selected?: boolean,
+    checked?: boolean | 'mixed',
+    expanded?: boolean,
+    busy?: boolean,
+  }
+): ReactTestInstance;
+```
+
 Returns a `ReactTestInstance` with matching `accessibilityState` prop.
 
 ```jsx
@@ -212,6 +286,17 @@ const element = screen.getByA11yState({ disabled: true });
 > getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue, findByA11yValue, findAllByA11yValue
 > getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue, findByAccessibilityValue, findAllByAccessibilityValue
 
+```ts
+getByA11yValue(
+  value: {
+    min?: number;
+    max?: number;
+    now?: number;
+    text?: string;
+  }
+): ReactTestInstance;
+```
+
 Returns a `ReactTestInstance` with matching `accessibilityValue` prop.
 
 ```jsx
@@ -223,16 +308,11 @@ const element = screen.getByA11yValue({ min: 40 });
 
 ## TextMatch
 
-Most of the query APIs take a `TextMatch` as an argument, which means the argument can be either a _string_ or _regex_.
-
-```typescript
-type TextMatchOptions = {
-  exact?: boolean;
-  normalizer?: (textToNormalize: string) => string;
-  trim?: boolean;
-  collapseWhitespace?: boolean;
-};
+```ts
+type TextMatch = string | RegExp;
 ```
+
+Most of the query APIs take a `TextMatch` as an argument, which means the argument can be either a _string_ or _regex_.
 
 ### Examples
 
@@ -271,7 +351,14 @@ screen.getByText(/hello world/);
 
 ### Precision
 
-Queries that take a `TextMatch` also accept an object as the final argument that can contain options that affect the precision of string matching:
+```typescript
+type TextMatchOptions = {
+  exact?: boolean;
+  normalizer?: (text: string) => string;
+};
+```
+
+Queries that take a `TextMatch` also accept an object as the second argument that can contain options that affect the precision of string matching:
 
 - `exact`: Defaults to `true`; matches full strings, case-sensitive. When false, matches substrings and is not case-sensitive.
   - `exact` has no effect on regex argument.
