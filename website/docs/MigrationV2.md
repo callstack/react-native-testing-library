@@ -26,7 +26,7 @@ This change might break your code, if you tests are not isolated, i.e. you call 
   }
   ```
 
-- by setting `RTNL_SKIP_AUTO_CLEANUP` env variable to `true`. You can do this with `cross-evn` like this:
+- by setting `RNTL_SKIP_AUTO_CLEANUP` env variable to `true`. You can do this with `cross-evn` like this:
 
   ```sh
   cross-env RNTL_SKIP_AUTO_CLEANUP=true jest
