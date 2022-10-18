@@ -49,6 +49,9 @@ title: API
   - [`configure`](#configure)
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
   - [`resetToDefaults()`](#resettodefaults)
+  - [Environment variables](#environment-variables)
+    - [`RNTL_SKIP_AUTO_CLEANUP`](#rntl_skip_auto_cleanup)
+    - [`RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS`](#rntl_skip_auto_detect_fake_timers)
 - [Accessibility](#accessibility)
   - [`isInaccessible`](#isinaccessible)
 
@@ -730,7 +733,6 @@ type Config = {
 
 function configure(options: Partial<Config>)  {}
 ```
-
 #### `asyncUtilTimeout` option
 
 Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
@@ -740,6 +742,22 @@ Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementTo
 
 ```ts
 function resetToDefaults() {}
+```
+
+### Environment variables
+
+#### `RNTL_SKIP_AUTO_CLEANUP`
+Set to `true` to disable automatic `cleanup()` after each test. It works the same as importing `react-native-testing-library/dont-cleanup-after-each` or using `react-native-testing-library/pure`.
+
+```shell
+$ RNTL_SKIP_AUTO_CLEANUP=true jest
+```
+
+#### `RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS`
+Set to `true` to disable auto-detection of fake timers. This might be useful in rare cases when you want to use non-Jest fake timers. See [issue #886](https://github.com/callstack/react-native-testing-library/issues/886) for more details.
+
+```shell
+$ RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS=true jest
 ```
 
 ## Accessibility
