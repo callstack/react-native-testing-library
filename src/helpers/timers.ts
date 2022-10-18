@@ -26,7 +26,7 @@ function getJestFakeTimersType(): FakeTimersTypes | null {
   if (
     typeof jest === 'undefined' ||
     typeof globalObj.setTimeout === 'undefined' ||
-    process.env.SKIP_AUTO_FAKE_TIMERS_DETECTION
+    process.env.RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS
   ) {
     return null;
   }

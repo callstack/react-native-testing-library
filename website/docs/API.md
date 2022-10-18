@@ -730,6 +730,8 @@ type Config = {
 
 function configure(options: Partial<Config>)  {}
 ```
+### Environment variables
+* *RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS* (default: false): Useful in rare cases when you need to disable the auto-detection of fake timers (see #886).
 
 #### `asyncUtilTimeout` option
 
