@@ -221,7 +221,7 @@ test.each([true, false])(
     jest.useFakeTimers({ legacyFakeTimers });
 
     const mockErrorFn = jest.fn(() => {
-      // Wait 5 seconds so that check time is longer than interval
+      // Wait 5 ms so that check time is longer than interval
       blockThread(5, legacyFakeTimers);
       throw new Error('test');
     });
