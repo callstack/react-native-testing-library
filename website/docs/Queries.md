@@ -238,6 +238,11 @@ getByRole(
   role: TextMatch,
   option?: {
     name?: TextMatch
+    disabled?: boolean,
+    selected?: boolean,
+    checked?: boolean | 'mixed',
+    busy?: boolean,
+    expanded?: boolean,
   }
 ): ReactTestInstance;
 ```
