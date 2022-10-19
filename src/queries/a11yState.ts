@@ -10,25 +10,41 @@ import type {
   QueryByQuery,
 } from './makeQueries';
 
+/**
+ * Default accessibility state values based on experiments using accessibility
+ * inspector/screen reader on iOS and Android.
+ *
+ * @see https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State
+ */
+const defaultState: AccessibilityState = {
+  disabled: false,
+  selected: false,
+  checked: undefined,
+  busy: false,
+  expanded: undefined,
+};
+
 export function matchAccessibilityState(
   node: ReactTestInstance,
   matcher: AccessibilityState
 ) {
-  const stateProp = node.props.accessibilityState;
-
-  // busy, disabled & selected states default to false,
-  // while checked & expended states treat false and default as sepatate values
+  const state = node.props.accessibilityState;
   return (
-    matchState(stateProp?.busy ?? false, matcher.busy) &&
-    matchState(stateProp?.disabled ?? false, matcher.disabled) &&
-    matchState(stateProp?.selected ?? false, matcher.selected) &&
-    matchState(stateProp?.checked, matcher.checked) &&
-    matchState(stateProp?.expanded, matcher.expanded)
+    matchState(state, matcher, 'disabled') &&
+    matchState(state, matcher, 'selected') &&
+    matchState(state, matcher, 'checked') &&
+    matchState(state, matcher, 'busy') &&
+    matchState(state, matcher, 'expanded')
   );
 }
 
-function matchState(value: unknown, matcher: unknown) {
-  return matcher === undefined || value === matcher;
+function matchState(
+  value: AccessibilityState,
+  matcher: AccessibilityState,
+  key: keyof AccessibilityState
+) {
+  const valueWithDefault = value?.[key] ?? defaultState[key];
+  return matcher[key] === undefined || matcher[key] === valueWithDefault;
 }
 
 const queryAllByA11yState = (
