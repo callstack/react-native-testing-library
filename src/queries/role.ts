@@ -17,7 +17,7 @@ type ByRoleOptions = {
   name?: TextMatch;
 } & AccessibilityState;
 
-type AccessibilityStateField = keyof AccessibilityState;
+type AccessibilityStateKey = keyof AccessibilityState;
 
 const matchAccessibleNameIfNeeded = (
   node: ReactTestInstance,
@@ -33,7 +33,7 @@ const matchAccessibleNameIfNeeded = (
 
 // disabled:undefined is equivalent to disabled:false, same for selected. busy not, but it makes
 // sense from a testing/voice-over perspective. checked and expanded do behave differently
-const implicityFalseState: AccessibilityStateField[] = [
+const implicityFalseState: AccessibilityStateKey[] = [
   'disabled',
   'selected',
   'busy',
@@ -60,7 +60,7 @@ const matchAccessibleStateIfNeeded = (
     }
   });
 
-const accessibilityStates: AccessibilityStateField[] = [
+const accessibilityStates: AccessibilityStateKey[] = [
   'disabled',
   'selected',
   'checked',
@@ -72,20 +72,15 @@ const queryAllByRole = (
   instance: ReactTestInstance
 ): ((role: TextMatch, options?: ByRoleOptions) => Array<ReactTestInstance>) =>
   function queryAllByRoleFn(role, options) {
-    return instance.findAll((node) => {
-      // run the cheapest checks first, and early exit too avoid unneeded computations
-      const matchRole =
+    return instance.findAll(
+      (node) =>
+        // run the cheapest checks first, and early exit too avoid unneeded computations
+
         typeof node.type === 'string' &&
-        matchStringProp(node.props.accessibilityRole, role);
-
-      if (!matchRole) return false;
-
-      if (!matchAccessibleStateIfNeeded(node, options)) {
-        return false;
-      }
-
-      return matchAccessibleNameIfNeeded(node, options?.name);
-    });
+        matchStringProp(node.props.accessibilityRole, role) &&
+        matchAccessibleStateIfNeeded(node, options) &&
+        matchAccessibleNameIfNeeded(node, options?.name)
+    );
   };
 
 const buildErrorMessage = (role: TextMatch, options: ByRoleOptions = {}) => {
