@@ -230,7 +230,7 @@ test.each([true, false])(
 
     await expect(
       async () =>
-        await waitFor(() => mockErrorFn(), {
+        await waitFor(mockErrorFn, {
           timeout: WAIT_FOR_TIMEOUT,
           interval: WAIT_FOR_INTERVAL,
         })
@@ -238,7 +238,7 @@ test.each([true, false])(
 
     // Verify that even though time to perform check is longer than interval
     // test won't timeout until number of checks * interval >= timeout
-    // ie fake timers have been advanced by timeout when waitfor rejects
+    // i.e. fake timers have been advanced (at least?) by timeout when waitFor rejects
     expect(mockErrorFn).toHaveBeenCalledTimes(
       WAIT_FOR_TIMEOUT / WAIT_FOR_INTERVAL + 1
     );
