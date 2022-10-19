@@ -219,25 +219,29 @@ test.each([true, false])(
   'it should not depend on real time when using fake timers (legacyFakeTimers = %s)',
   async (legacyFakeTimers) => {
     jest.useFakeTimers({ legacyFakeTimers });
+    const WAIT_FOR_INTERVAL = 20;
+    const WAIT_FOR_TIMEOUT = WAIT_FOR_INTERVAL * 5;
 
     const mockErrorFn = jest.fn(() => {
-      // Wait 5 ms so that check time is longer than interval
-      blockThread(5, legacyFakeTimers);
+      // Wait 2 times interval so that check time is longer than interval
+      blockThread(WAIT_FOR_INTERVAL * 2, legacyFakeTimers);
       throw new Error('test');
     });
 
     await expect(
       async () =>
         await waitFor(() => mockErrorFn(), {
-          timeout: 6,
-          interval: 2,
+          timeout: WAIT_FOR_TIMEOUT,
+          interval: WAIT_FOR_INTERVAL,
         })
     ).rejects.toThrow();
 
     // Verify that even though time to perform check is longer than interval
     // test won't timeout until number of checks * interval >= timeout
     // ie fake timers have been advanced by timeout when waitfor rejects
-    expect(mockErrorFn).toHaveBeenCalledTimes(4);
+    expect(mockErrorFn).toHaveBeenCalledTimes(
+      WAIT_FOR_TIMEOUT / WAIT_FOR_INTERVAL + 1
+    );
   }
 );
 
