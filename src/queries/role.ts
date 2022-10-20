@@ -44,11 +44,7 @@ const matchAccessibleStateIfNeeded = (
   node: ReactTestInstance,
   options?: ByRoleOptions
 ) => {
-  if (!options) {
-    return true;
-  }
-
-  return matchAccessibilityState(node, options);
+  return options != null ? matchAccessibilityState(node, options) : true;
 };
 
 const queryAllByRole = (
