@@ -352,6 +352,7 @@ describe('supports TextMatch options', () => {
     expect(getByHintText('id', { exact: false })).toBeTruthy();
     expect(getAllByHintText('test', { exact: false })).toHaveLength(2);
   });
+
   test('getByHintText, getByHintText and exact = true', () => {
     const { queryByHintText, getAllByHintText } = render(
       <View>
