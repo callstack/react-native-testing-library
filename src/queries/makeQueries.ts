@@ -48,15 +48,15 @@ export type UnboundQueries<Predicate, Options> = {
 
 export function makeQueries<Predicate, Options>(
   queryAllByQuery: UnboundQuery<QueryAllByQuery<Predicate, Options>>,
-  getMissingError: (predicate: Predicate) => string,
-  getMultipleError: (predicate: Predicate) => string
+  getMissingError: (predicate: Predicate, options?: Options) => string,
+  getMultipleError: (predicate: Predicate, options?: Options) => string
 ): UnboundQueries<Predicate, Options> {
   function getAllByQuery(instance: ReactTestInstance) {
     return function getAllFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length === 0) {
-        throw new ErrorWithStack(getMissingError(predicate), getAllFn);
+        throw new ErrorWithStack(getMissingError(predicate, options), getAllFn);
       }
 
       return results;
@@ -68,7 +68,10 @@ export function makeQueries<Predicate, Options>(
       const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length > 1) {
-        throw new ErrorWithStack(getMultipleError(predicate), singleQueryFn);
+        throw new ErrorWithStack(
+          getMultipleError(predicate, options),
+          singleQueryFn
+        );
       }
 
       if (results.length === 0) {
@@ -84,11 +87,11 @@ export function makeQueries<Predicate, Options>(
       const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length > 1) {
-        throw new ErrorWithStack(getMultipleError(predicate), getFn);
+        throw new ErrorWithStack(getMultipleError(predicate, options), getFn);
       }
 
       if (results.length === 0) {
-        throw new ErrorWithStack(getMissingError(predicate), getFn);
+        throw new ErrorWithStack(getMissingError(predicate, options), getFn);
       }
 
       return results[0];
