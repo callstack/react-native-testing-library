@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import type { AccessibilityState } from 'react-native';
+import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -9,59 +10,35 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-
-/**
- * Default accessibility state values based on experiments using accessibility
- * inspector/screen reader on iOS and Android.
- *
- * @see https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State
- */
-const defaultState: AccessibilityState = {
-  disabled: false,
-  selected: false,
-  checked: undefined,
-  busy: false,
-  expanded: undefined,
-};
-
-export function matchAccessibilityState(
-  node: ReactTestInstance,
-  matcher: AccessibilityState
-) {
-  const state = node.props.accessibilityState;
-  return (
-    matchState(state, matcher, 'disabled') &&
-    matchState(state, matcher, 'selected') &&
-    matchState(state, matcher, 'checked') &&
-    matchState(state, matcher, 'busy') &&
-    matchState(state, matcher, 'expanded')
-  );
-}
-
-function matchState(
-  value: AccessibilityState,
-  matcher: AccessibilityState,
-  key: keyof AccessibilityState
-) {
-  const valueWithDefault = value?.[key] ?? defaultState[key];
-  return matcher[key] === undefined || matcher[key] === valueWithDefault;
-}
+import { accessibilityStateKeys } from '../helpers/accessiblity';
 
 const queryAllByA11yState = (
   instance: ReactTestInstance
 ): ((matcher: AccessibilityState) => Array<ReactTestInstance>) =>
   function queryAllByA11yStateFn(matcher) {
-    return instance.findAll((node) => {
-      return (
+    return instance.findAll(
+      (node) =>
         typeof node.type === 'string' && matchAccessibilityState(node, matcher)
-      );
-    });
+    );
   };
 
+const buildErrorMessage = (state: AccessibilityState = {}) => {
+  const errors: string[] = [];
+
+  accessibilityStateKeys.forEach((stateKey) => {
+    if (state[stateKey] !== undefined) {
+      errors.push(`${stateKey} state: ${state[stateKey]}`);
+    }
+  });
+
+  return errors.join(', ');
+};
+
 const getMultipleError = (state: AccessibilityState) =>
-  `Found multiple elements with accessibilityState: ${JSON.stringify(state)}`;
+  `Found multiple elements with ${buildErrorMessage(state)}`;
+
 const getMissingError = (state: AccessibilityState) =>
-  `Unable to find an element with accessibilityState: ${JSON.stringify(state)}`;
+  `Unable to find an element with ${buildErrorMessage(state)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByA11yState,

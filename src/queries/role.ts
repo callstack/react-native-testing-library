@@ -1,7 +1,9 @@
 import { type AccessibilityState } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
+import { accessibilityStateKeys } from '../helpers/accessiblity';
+import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
 import { matchStringProp } from '../helpers/matchers/matchStringProp';
-import { TextMatch } from '../matches';
+import type { TextMatch } from '../matches';
 import { getQueriesForElement } from '../within';
 import { makeQueries } from './makeQueries';
 import type {
@@ -12,21 +14,10 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { matchAccessibilityState } from './a11yState';
 
 type ByRoleOptions = {
   name?: TextMatch;
 } & AccessibilityState;
-
-type AccessibilityStateKey = keyof AccessibilityState;
-
-const accessibilityStateKeys: AccessibilityStateKey[] = [
-  'disabled',
-  'selected',
-  'checked',
-  'busy',
-  'expanded',
-];
 
 const matchAccessibleNameIfNeeded = (
   node: ReactTestInstance,
@@ -70,7 +61,7 @@ const buildErrorMessage = (role: TextMatch, options: ByRoleOptions = {}) => {
   }
 
   accessibilityStateKeys.forEach((stateKey) => {
-    if (options[stateKey]) {
+    if (options[stateKey] !== undefined) {
       errors.push(`${stateKey} state: ${options[stateKey]}`);
     }
   });
@@ -80,6 +71,7 @@ const buildErrorMessage = (role: TextMatch, options: ByRoleOptions = {}) => {
 
 const getMultipleError = (role: TextMatch, options?: ByRoleOptions) =>
   `Found multiple elements with ${buildErrorMessage(role, options)}`;
+
 const getMissingError = (role: TextMatch, options?: ByRoleOptions) =>
   `Unable to find an element with ${buildErrorMessage(role, options)}`;
 
