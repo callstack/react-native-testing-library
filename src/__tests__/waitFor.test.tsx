@@ -236,9 +236,9 @@ test.each([true, false])(
         })
     ).rejects.toThrow();
 
-    // Verify that even though time to perform check is longer than interval
-    // test won't timeout until number of checks * interval >= timeout
-    // i.e. fake timers have been advanced (at least?) by timeout when waitFor rejects
+    // Verify that the `waitFor` callback has been called the expected number of times
+    // (timeout / interval + 1), so it confirms that the real duration of callback did not
+    // cause the real clock timeout when running using fake timers.
     expect(mockErrorFn).toHaveBeenCalledTimes(
       WAIT_FOR_TIMEOUT / WAIT_FOR_INTERVAL + 1
     );
