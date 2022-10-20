@@ -12,12 +12,21 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
+import { matchAccessibilityState } from './a11yState';
 
 type ByRoleOptions = {
   name?: TextMatch;
 } & AccessibilityState;
 
 type AccessibilityStateKey = keyof AccessibilityState;
+
+const accessibilityStateKeys: AccessibilityStateKey[] = [
+  'disabled',
+  'selected',
+  'checked',
+  'busy',
+  'expanded',
+];
 
 const matchAccessibleNameIfNeeded = (
   node: ReactTestInstance,
@@ -31,42 +40,16 @@ const matchAccessibleNameIfNeeded = (
   );
 };
 
-// disabled:undefined is equivalent to disabled:false, same for selected. busy not, but it makes
-// sense from a testing/voice-over perspective. checked and expanded do behave differently
-const implicityFalseState: AccessibilityStateKey[] = [
-  'disabled',
-  'selected',
-  'busy',
-];
-
 const matchAccessibleStateIfNeeded = (
   node: ReactTestInstance,
   options?: ByRoleOptions
-) =>
-  accessibilityStates.every((accessibilityState) => {
-    const queriedState = options?.[accessibilityState];
+) => {
+  if (!options) {
+    return true;
+  }
 
-    if (typeof queriedState !== 'undefined') {
-      // Some accessibilityState properties have implicit value (when not set)
-      const defaultState = implicityFalseState.includes(accessibilityState)
-        ? false
-        : undefined;
-      return (
-        queriedState ===
-        (node.props.accessibilityState?.[accessibilityState] ?? defaultState)
-      );
-    } else {
-      return true;
-    }
-  });
-
-const accessibilityStates: AccessibilityStateKey[] = [
-  'disabled',
-  'selected',
-  'checked',
-  'busy',
-  'expanded',
-];
+  return matchAccessibilityState(node, options);
+};
 
 const queryAllByRole = (
   instance: ReactTestInstance
@@ -90,22 +73,15 @@ const buildErrorMessage = (role: TextMatch, options: ByRoleOptions = {}) => {
     errors.push(`name: "${String(options.name)}"`);
   }
 
-  if (
-    accessibilityStates.some(
-      (accessibilityState) => typeof options[accessibilityState] !== 'undefined'
-    )
-  ) {
-    accessibilityStates.forEach((accessibilityState) => {
-      if (options[accessibilityState]) {
-        errors.push(
-          `${accessibilityState} state: ${options[accessibilityState]}`
-        );
-      }
-    });
-  }
+  accessibilityStateKeys.forEach((stateKey) => {
+    if (options[stateKey]) {
+      errors.push(`${stateKey} state: ${options[stateKey]}`);
+    }
+  });
 
   return errors.join(', ');
 };
+
 const getMultipleError = (role: TextMatch, options?: ByRoleOptions) =>
   `Found multiple elements with ${buildErrorMessage(role, options)}`;
 const getMissingError = (role: TextMatch, options?: ByRoleOptions) =>
