@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import type { AccessibilityState } from 'react-native';
+import { accessibilityStateKeys } from '../helpers/accessiblity';
 import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
 import { makeQueries } from './makeQueries';
 import type {
@@ -10,7 +11,6 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { accessibilityStateKeys } from '../helpers/accessiblity';
 
 const queryAllByA11yState = (
   instance: ReactTestInstance
