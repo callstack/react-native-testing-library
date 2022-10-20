@@ -27,9 +27,11 @@ const queryAllByHintText = (
   queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByA11yHintFn(hint, queryOptions) {
-    return instance
-      .findAll((node) => getNodeByHintText(node, hint, queryOptions))
-      .filter((element) => typeof element.type === 'string');
+    return instance.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        getNodeByHintText(node, hint, queryOptions)
+    );
   };
 
 const getMultipleError = (hint: TextMatch) =>

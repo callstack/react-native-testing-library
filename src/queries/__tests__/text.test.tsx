@@ -342,6 +342,27 @@ describe('supports TextMatch options', () => {
     expect(getAllByTestId('test', { exact: false })).toHaveLength(2);
   });
 
+  test('getByHintText, getByHintText', () => {
+    const { getByHintText, getAllByHintText } = render(
+      <View>
+        <View accessibilityHint="test" />
+        <View accessibilityHint="tests id" />
+      </View>
+    );
+    expect(getByHintText('id', { exact: false })).toBeTruthy();
+    expect(getAllByHintText('test', { exact: false })).toHaveLength(2);
+  });
+  test('getByHintText, getByHintText and exact = true', () => {
+    const { queryByHintText, getAllByHintText } = render(
+      <View>
+        <View accessibilityHint="test" />
+        <View accessibilityHint="tests id" />
+      </View>
+    );
+    expect(queryByHintText('id', { exact: true })).toBeNull();
+    expect(getAllByHintText('test', { exact: true })).toHaveLength(1);
+  });
+
   test('with TextMatch option exact === false text search is NOT case sensitive', () => {
     const { getByText, getAllByText } = render(
       <View>
