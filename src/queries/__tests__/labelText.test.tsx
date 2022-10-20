@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { render } from '../..';
 
 const BUTTON_LABEL = 'cool button';
 const BUTTON_HINT = 'click this button';
 const TEXT_LABEL = 'cool text';
 const TEXT_HINT = 'static text';
+const INPUT_LABEL = 'cool input';
+const INPUT_LABELLED_BY = 'formLabel';
 // Little hack to make all the methods happy with type
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
@@ -38,6 +40,15 @@ const Section = () => (
       Title
     </Typography>
     <Button>{TEXT_LABEL}</Button>
+  </>
+);
+
+const FormInput = () => (
+  <>
+    <View nativeID={INPUT_LABELLED_BY}>
+      <Text>{INPUT_LABEL}</Text>
+    </View>
+    <TextInput accessibilityLabelledBy={INPUT_LABELLED_BY} />
   </>
 );
 
@@ -164,4 +175,13 @@ test('byLabelText queries support hidden option', () => {
   ).toThrowErrorMatchingInlineSnapshot(
     `"Unable to find an element with accessibilityLabel: hidden"`
   );
+});
+test('getByLabelText supports accessibilityLabelledBy', async () => {
+  const { getByLabelText, queryByLabelText } = render(<FormInput />);
+
+  expect(getByLabelText(INPUT_LABEL).props.accessibilityLabelledBy).toEqual(
+    INPUT_LABELLED_BY
+  );
+  const textInput = queryByLabelText(/input/g);
+  expect(textInput?.props.accessibilityLabelledBy).toEqual(INPUT_LABELLED_BY);
 });

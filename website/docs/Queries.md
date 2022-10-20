@@ -212,7 +212,10 @@ getByLabelText(
 ): ReactTestInstance;
 ```
 
-Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
+Returns a `ReactTestInstance` with matching label:
+
+- by matching `accessibilityLabel` prop
+- or by matching text content of text view referenced by `accessibilityLabelledBy` prop
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';

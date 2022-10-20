@@ -2,6 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { findAll } from '../helpers/findAll';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
 import { makeQueries } from './makeQueries';
+import { getNodeByText } from './text';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -17,10 +18,46 @@ type ByLabelTextOptions = CommonQueryOptions & TextMatchOptions;
 const getNodeByLabelText = (
   node: ReactTestInstance,
   text: TextMatch,
-  options: TextMatchOptions = {}
+  options: TextMatchOptions
 ) => {
   const { exact, normalizer } = options;
   return matches(text, node.props.accessibilityLabel, normalizer, exact);
+};
+
+const matchAccessibilityLabelledByText = (
+  rootInstance: ReactTestInstance,
+  nativeID: string | undefined,
+  text: TextMatch,
+  options: TextMatchOptions
+) => {
+  if (!nativeID) {
+    return false;
+  }
+
+  const { exact, normalizer } = options;
+
+  return rootInstance
+    .findAll((node) =>
+      matches(nativeID, node.props.nativeID, normalizer, exact)
+    )
+    .some((node) => node.findAll((n) => getNodeByText(n, text)).length > 0);
+};
+
+const matchAccessibilityLabel = (
+  rootInstance: ReactTestInstance,
+  node: ReactTestInstance,
+  text: TextMatch,
+  options: TextMatchOptions = {}
+) => {
+  return (
+    getNodeByLabelText(node, text, options) ||
+    matchAccessibilityLabelledByText(
+      rootInstance,
+      node.props.accessibilityLabelledBy,
+      text,
+      options
+    )
+  );
 };
 
 const queryAllByLabelText = (
@@ -34,7 +71,7 @@ const queryAllByLabelText = (
       instance,
       (node) =>
         typeof node.type === 'string' &&
-        getNodeByLabelText(node, text, queryOptions),
+        matchAccessibilityLabel(instance, node, text, queryOptions),
       queryOptions
     );
   };
