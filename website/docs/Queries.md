@@ -23,6 +23,8 @@ title: Queries
   - [`ByRole`](#byrole)
     - [Options](#options-1)
   - [`ByA11yState`, `ByAccessibilityState`](#bya11ystate-byaccessibilitystate)
+    - [Default state for: `disabled`, `selected`, and `busy` keys](#default-state-for-disabled-selected-and-busy-keys)
+    - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
   - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
 - [TextMatch](#textmatch)
   - [Examples](#examples)
@@ -295,6 +297,30 @@ import { render, screen } from '@testing-library/react-native';
 render(<Component />);
 const element = screen.getByA11yState({ disabled: true });
 ```
+
+:::note
+
+#### Default state for: `disabled`, `selected`, and `busy` keys
+
+Passing `false` matcher value will match both elements with explicit `false` state value and without explicit state value. 
+
+For instance, `getByA11yState({ disabled: false })` will match elements with following props:
+* `accessibilityState={{ disabled: false, ... }}`
+* no `disabled` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
+* no `accessibilityState` prop at all
+
+#### Default state for: `checked` and `expanded` keys
+Passing `false` matcher value will only match elements with explicit `false` state value.
+
+For instance, `getByA11yState({ checked: false })` will only match elements with:
+* `accessibilityState={{ checked: false, ... }}`
+
+but will not match elements with following props:
+* no `checked` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
+* no `accessibilityState` prop at all
+
+The difference in handling default values is made to reflect observed accessibility behaviour on iOS and Android platforms.
+:::
 
 ### `ByA11Value`, `ByAccessibilityValue`
 

@@ -1,6 +1,16 @@
-import { StyleSheet } from 'react-native';
+import { AccessibilityState, StyleSheet } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings } from './component-tree';
+
+export type AccessibilityStateKey = keyof AccessibilityState;
+
+export const accessibilityStateKeys: AccessibilityStateKey[] = [
+  'disabled',
+  'selected',
+  'checked',
+  'busy',
+  'expanded',
+];
 
 export function isInaccessible(element: ReactTestInstance | null): boolean {
   if (element == null) {

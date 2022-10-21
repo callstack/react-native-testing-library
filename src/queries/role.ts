@@ -1,7 +1,9 @@
 import { type AccessibilityState } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
+import { accessibilityStateKeys } from '../helpers/accessiblity';
+import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
 import { matchStringProp } from '../helpers/matchers/matchStringProp';
-import { TextMatch } from '../matches';
+import type { TextMatch } from '../matches';
 import { getQueriesForElement } from '../within';
 import { makeQueries } from './makeQueries';
 import type {
@@ -17,8 +19,6 @@ type ByRoleOptions = {
   name?: TextMatch;
 } & AccessibilityState;
 
-type AccessibilityStateKey = keyof AccessibilityState;
-
 const matchAccessibleNameIfNeeded = (
   node: ReactTestInstance,
   name?: TextMatch
@@ -31,42 +31,12 @@ const matchAccessibleNameIfNeeded = (
   );
 };
 
-// disabled:undefined is equivalent to disabled:false, same for selected. busy not, but it makes
-// sense from a testing/voice-over perspective. checked and expanded do behave differently
-const implicityFalseState: AccessibilityStateKey[] = [
-  'disabled',
-  'selected',
-  'busy',
-];
-
 const matchAccessibleStateIfNeeded = (
   node: ReactTestInstance,
   options?: ByRoleOptions
-) =>
-  accessibilityStates.every((accessibilityState) => {
-    const queriedState = options?.[accessibilityState];
-
-    if (typeof queriedState !== 'undefined') {
-      // Some accessibilityState properties have implicit value (when not set)
-      const defaultState = implicityFalseState.includes(accessibilityState)
-        ? false
-        : undefined;
-      return (
-        queriedState ===
-        (node.props.accessibilityState?.[accessibilityState] ?? defaultState)
-      );
-    } else {
-      return true;
-    }
-  });
-
-const accessibilityStates: AccessibilityStateKey[] = [
-  'disabled',
-  'selected',
-  'checked',
-  'busy',
-  'expanded',
-];
+) => {
+  return options != null ? matchAccessibilityState(node, options) : true;
+};
 
 const queryAllByRole = (
   instance: ReactTestInstance
@@ -90,24 +60,18 @@ const buildErrorMessage = (role: TextMatch, options: ByRoleOptions = {}) => {
     errors.push(`name: "${String(options.name)}"`);
   }
 
-  if (
-    accessibilityStates.some(
-      (accessibilityState) => typeof options[accessibilityState] !== 'undefined'
-    )
-  ) {
-    accessibilityStates.forEach((accessibilityState) => {
-      if (options[accessibilityState]) {
-        errors.push(
-          `${accessibilityState} state: ${options[accessibilityState]}`
-        );
-      }
-    });
-  }
+  accessibilityStateKeys.forEach((stateKey) => {
+    if (options[stateKey] !== undefined) {
+      errors.push(`${stateKey} state: ${options[stateKey]}`);
+    }
+  });
 
   return errors.join(', ');
 };
+
 const getMultipleError = (role: TextMatch, options?: ByRoleOptions) =>
   `Found multiple elements with ${buildErrorMessage(role, options)}`;
+
 const getMissingError = (role: TextMatch, options?: ByRoleOptions) =>
   `Unable to find an element with ${buildErrorMessage(role, options)}`;
 

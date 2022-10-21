@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import type { AccessibilityState } from 'react-native';
-import { matchObjectProp } from '../helpers/matchers/matchObjectProp';
+import { accessibilityStateKeys } from '../helpers/accessiblity';
+import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -13,19 +14,31 @@ import type {
 
 const queryAllByA11yState = (
   instance: ReactTestInstance
-): ((state: AccessibilityState) => Array<ReactTestInstance>) =>
-  function queryAllByA11yStateFn(state) {
+): ((matcher: AccessibilityState) => Array<ReactTestInstance>) =>
+  function queryAllByA11yStateFn(matcher) {
     return instance.findAll(
       (node) =>
-        typeof node.type === 'string' &&
-        matchObjectProp(node.props.accessibilityState, state)
+        typeof node.type === 'string' && matchAccessibilityState(node, matcher)
     );
   };
 
+const buildErrorMessage = (state: AccessibilityState = {}) => {
+  const errors: string[] = [];
+
+  accessibilityStateKeys.forEach((stateKey) => {
+    if (state[stateKey] !== undefined) {
+      errors.push(`${stateKey} state: ${state[stateKey]}`);
+    }
+  });
+
+  return errors.join(', ');
+};
+
 const getMultipleError = (state: AccessibilityState) =>
-  `Found multiple elements with accessibilityState: ${JSON.stringify(state)}`;
+  `Found multiple elements with ${buildErrorMessage(state)}`;
+
 const getMissingError = (state: AccessibilityState) =>
-  `Unable to find an element with accessibilityState: ${JSON.stringify(state)}`;
+  `Unable to find an element with ${buildErrorMessage(state)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByA11yState,
