@@ -41,7 +41,6 @@ Invoking `render()` functions results in creation of element tree. This is done 
 These tree elements are represented by `ReactTestInstance` type:
 
 ```jsx
-// Based on: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-test-renderer/index.d.ts
 interface ReactTestInstance {
   type: ElementType;
   props: { [propName: string]: any };
@@ -51,6 +50,8 @@ interface ReactTestInstance {
   // Other props and methods
 }
 ```
+
+Based on: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-test-renderer/index.d.ts
 
 ### Host and composite components
 
@@ -68,7 +69,7 @@ The part of the tree looks as follows:
 
 ```jsx
 * <View> (composite)
-	* <View> (host)
+  * <View> (host)
     * children prop passed in JSX
 ```
 
@@ -76,7 +77,7 @@ Similar relation exists between other composite and host pairs: e.g. `Text` , `T
 
 ```jsx
 * <Text> (composite)
-	* <Text> (host)
+  * <Text> (host)
     * string (or mixed) content
 ```
 
@@ -84,7 +85,7 @@ Not all React Native components are organised this way, e.g. when you use `Press
 
 ```jsx
 * <Pressable> (composite)
-	* <View accessible={true} {...}> (host)
+  * <View accessible={true} {...}> (host)
     * children prop passed in JSX
 ```
 
