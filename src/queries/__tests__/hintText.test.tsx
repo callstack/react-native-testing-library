@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import { render } from '../..';
 
 const BUTTON_HINT = 'click this button';
@@ -83,4 +83,26 @@ test('getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint', async () => {
   await expect(findAllByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
+});
+
+test('getByHintText, getByHintText', () => {
+  const { getByHintText, getAllByHintText } = render(
+    <View>
+      <View accessibilityHint="test" />
+      <View accessibilityHint="tests id" />
+    </View>
+  );
+  expect(getByHintText('id', { exact: false })).toBeTruthy();
+  expect(getAllByHintText('test', { exact: false })).toHaveLength(2);
+});
+
+test('getByHintText, getByHintText and exact = true', () => {
+  const { queryByHintText, getAllByHintText } = render(
+    <View>
+      <View accessibilityHint="test" />
+      <View accessibilityHint="tests id" />
+    </View>
+  );
+  expect(queryByHintText('id', { exact: true })).toBeNull();
+  expect(getAllByHintText('test', { exact: true })).toHaveLength(1);
 });
