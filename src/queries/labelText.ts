@@ -1,8 +1,8 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { findAll } from '../helpers/findAll';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
+import { matchTextContent } from '../helpers/matchers/matchTextContent';
 import { makeQueries } from './makeQueries';
-import { getNodeByText } from './text';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -40,7 +40,7 @@ const matchAccessibilityLabelledByText = (
     .findAll((node) =>
       matches(nativeID, node.props.nativeID, normalizer, exact)
     )
-    .some((node) => node.findAll((n) => getNodeByText(n, text)).length > 0);
+    .some((node) => node.findAll((n) => matchTextContent(n, text)).length > 0);
 };
 
 const matchAccessibilityLabel = (

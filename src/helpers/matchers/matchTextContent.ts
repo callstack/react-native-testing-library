@@ -6,6 +6,13 @@ import { filterNodeByType } from '../filterNodeByType';
 import { getTextContent } from '../getTextContent';
 import { getHostComponentNames } from '../host-component-names';
 
+/**
+ * Matches the given node's text content against string or regex matcher.
+ *
+ * @param node - Node which text content will be matched
+ * @param text - The string or regex to match.
+ * @returns - Whether the node's text content matches the given string or regex.
+ */
 export function matchTextContent(
   node: ReactTestInstance,
   text: TextMatch,
