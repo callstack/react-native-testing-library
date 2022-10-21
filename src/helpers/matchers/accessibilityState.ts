@@ -1,5 +1,6 @@
 import { AccessibilityState } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
+import { accessibilityStateKeys } from '../accessiblity';
 
 /**
  * Default accessibility state values based on experiments using accessibility
@@ -20,20 +21,16 @@ export function matchAccessibilityState(
   matcher: AccessibilityState
 ) {
   const state = node.props.accessibilityState;
-  return (
-    matchState(state, matcher, 'disabled') &&
-    matchState(state, matcher, 'selected') &&
-    matchState(state, matcher, 'checked') &&
-    matchState(state, matcher, 'busy') &&
-    matchState(state, matcher, 'expanded')
-  );
+  return accessibilityStateKeys.every((key) => matchState(state, matcher, key));
 }
 
 function matchState(
-  value: AccessibilityState,
+  state: AccessibilityState,
   matcher: AccessibilityState,
   key: keyof AccessibilityState
 ) {
-  const valueWithDefault = value?.[key] ?? defaultState[key];
-  return matcher[key] === undefined || matcher[key] === valueWithDefault;
+  return (
+    matcher[key] === undefined ||
+    matcher[key] === (state?.[key] ?? defaultState[key])
+  );
 }
