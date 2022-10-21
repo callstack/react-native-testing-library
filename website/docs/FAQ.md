@@ -6,7 +6,6 @@ title: FAQ
 <details>
   <summary>Can I test native features of React Native apps?</summary>
 
-<br />
 <p>Short answer: no.</p>
 
 React Native Testing Library does not provide a full React Native runtime since that would require running on physical device
@@ -15,6 +14,8 @@ or iOS simulator/Android emulator to provision the underlying OS and platform AP
 Instead of using React Native renderer, it simulates only the JavaScript part of its runtime by 
 using [React Test Renderer](https://reactjs.org/docs/test-renderer.html) while providing queries
 and `fireEvent` APIs that mimick certain behaviors from the real runtime.
+
+You can learn more about our testing environment [here](./TestingEnvironment.md).
 
 This approach has certain benefits and shortfalls. On the positive side:
 
@@ -34,8 +35,6 @@ For instance, [react-native's ScrollView](https://reactnative.dev/docs/scrollvie
 
 <details>
   <summary>Should I use/migrate to `screen` queries?</summary>
-
-<br />
 
 There is no need to migrate existing test code to use `screen`-bases queries. You can still use
 queries and other functions returned by `render`. In fact `screen` hold just that value, the latest `render` result.
