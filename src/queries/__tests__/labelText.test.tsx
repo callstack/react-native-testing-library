@@ -93,3 +93,24 @@ test('getAllByLabelText, queryAllByLabelText, findAllByLabelText', async () => {
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
 });
+
+test('getAllByLabelText, queryAllByLabelText, findAllByLabelText with exact as false', async () => {
+  const { getAllByLabelText, queryAllByLabelText, findAllByLabelText } = render(
+    <Section />
+  );
+
+  expect(getAllByLabelText(TEXT_LABEL, { exact: false })).toHaveLength(2);
+  expect(queryAllByLabelText(/cool/g, { exact: false })).toHaveLength(3);
+
+  expect(() => getAllByLabelText(NO_MATCHES_TEXT)).toThrow(
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+  );
+  expect(queryAllByLabelText(NO_MATCHES_TEXT, { exact: false })).toEqual([]);
+
+  await expect(
+    findAllByLabelText(TEXT_LABEL, { exact: false })
+  ).resolves.toHaveLength(2);
+  await expect(
+    findAllByLabelText(NO_MATCHES_TEXT, { exact: false })
+  ).rejects.toThrow(getNoInstancesFoundMessage(NO_MATCHES_TEXT));
+});
