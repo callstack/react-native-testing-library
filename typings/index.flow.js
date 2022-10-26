@@ -210,12 +210,26 @@ type ByRoleOptions = {
 
 interface A11yAPI {
   // Label
-  getByLabelText: (matcher: TextMatch) => GetReturn;
-  getAllByLabelText: (matcher: TextMatch) => GetAllReturn;
-  queryByLabelText: (matcher: TextMatch) => QueryReturn;
-  queryAllByLabelText: (matcher: TextMatch) => QueryAllReturn;
+  getByLabelText: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => GetReturn;
+  getAllByLabelText: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => GetAllReturn;
+  queryByLabelText: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => QueryReturn;
+  queryAllByLabelText: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => QueryAllReturn;
   findByLabelText: (
     matcher: TextMatch,
+    queryOptions?: TextMatchOptions,
+
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByLabelText: (
@@ -224,28 +238,56 @@ interface A11yAPI {
   ) => FindAllReturn;
 
   // Hint
-  getByA11yHint: (matcher: TextMatch) => GetReturn;
-  getByHintText: (matcher: TextMatch) => GetReturn;
-  getAllByA11yHint: (matcher: TextMatch) => GetAllReturn;
-  getAllByHintText: (matcher: TextMatch) => GetAllReturn;
-  queryByA11yHint: (matcher: TextMatch) => QueryReturn;
-  queryByHintText: (matcher: TextMatch) => QueryReturn;
-  queryAllByA11yHint: (matcher: TextMatch) => QueryAllReturn;
-  queryAllByHintText: (matcher: TextMatch) => QueryAllReturn;
+  getByA11yHint: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => GetReturn;
+  getByHintText: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => GetReturn;
+  getAllByA11yHint: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => GetAllReturn;
+  getAllByHintText: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => GetAllReturn;
+  queryByA11yHint: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => QueryReturn;
+  queryByHintText: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => QueryReturn;
+  queryAllByA11yHint: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => QueryAllReturn;
+  queryAllByHintText: (
+    matcher: TextMatch,
+    queryOptions?: TextMatchOptions
+  ) => QueryAllReturn;
   findByA11yHint: (
     matcher: TextMatch,
+    queryOptions?: TextMatchOptions,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findByHintText: (
     matcher: TextMatch,
+    queryOptions?: TextMatchOptions,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByA11yHint: (
     matcher: TextMatch,
+    queryOptions?: TextMatchOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
   findAllByHintText: (
     matcher: TextMatch,
+    queryOptions?: TextMatchOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 
