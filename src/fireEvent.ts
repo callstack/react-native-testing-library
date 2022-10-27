@@ -107,7 +107,7 @@ const invokeEvent = (
   element: ReactTestInstance,
   eventName: string,
   callsite?: any,
-  ...data: Array<any>
+  ...callBackValues: Array<any>
 ) => {
   const handler = findEventHandler(element, eventName, callsite);
 
@@ -115,17 +115,10 @@ const invokeEvent = (
     return;
   }
 
-  // this is just a placeholder and needs to be a more realistic object
-  const generatedEventObject = { someKey: 'value' };
-
-  let defaultCallbackValues =
-    eventName === 'changeText' ? [] : [generatedEventObject];
-  const handlerCallbackValues = data.length > 0 ? data : defaultCallbackValues;
-
   let returnValue;
 
   act(() => {
-    returnValue = handler(...handlerCallbackValues);
+    returnValue = handler(...callBackValues);
   });
 
   return returnValue;
@@ -134,23 +127,42 @@ const invokeEvent = (
 const toEventHandlerName = (eventName: string) =>
   `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 
-const pressHandler = (element: ReactTestInstance, ...data: Array<any>): void =>
-  invokeEvent(element, 'press', pressHandler, ...data);
 const changeTextHandler = (
   element: ReactTestInstance,
   ...data: Array<any>
-): void => invokeEvent(element, 'changeText', changeTextHandler, ...data);
-const scrollHandler = (element: ReactTestInstance, ...data: Array<any>): void =>
-  invokeEvent(element, 'scroll', scrollHandler, ...data);
+): void => {
+  invokeEvent(element, 'changeText', changeTextHandler, ...data);
+};
 
-const fireEvent = (
-  element: ReactTestInstance,
-  eventName: string,
-  ...data: Array<any>
-): void => invokeEvent(element, eventName, fireEvent, ...data);
+const generatedEventObject = (eventName: string) => {
+  // This should use the (as-yet nonexistent) event map to return a "real" object, just like
+  // https://github.com/testing-library/dom-testing-library/blob/29a17cb5f14b0f30f08a29172e35e55c3e8ba529/src/event-map.js#L0-L1
+  return { eventName: eventName };
+};
 
-fireEvent.press = pressHandler;
-fireEvent.changeText = changeTextHandler;
-fireEvent.scroll = scrollHandler;
+const addHandler = (eventName: string) => {
+  return (element: ReactTestInstance, ...data: Array<any>): void => {
+    const callBackValue =
+      data.length > 0 ? data : [generatedEventObject(eventName)];
+    invokeEvent(element, eventName, addHandler, ...callBackValue);
+  };
+};
+
+type FireEvent = {
+  (element: ReactTestInstance, eventName: string, ...data: Array<any>): void;
+  [key: string]: (element: ReactTestInstance, ...data: Array<any>) => void;
+};
+
+const fireEvent = <FireEvent>(
+  ((element: ReactTestInstance, eventName: string, ...data: Array<any>) =>
+    invokeEvent(element, eventName, fireEvent, ...data))
+);
+
+fireEvent['changeText'] = changeTextHandler;
+
+// map.keys.forEach ...
+['press', 'scroll'].forEach((eventName: string) => {
+  fireEvent[eventName] = addHandler(eventName);
+});
 
 export default fireEvent;

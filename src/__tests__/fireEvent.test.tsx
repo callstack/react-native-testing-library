@@ -89,6 +89,37 @@ describe('fireEvent', () => {
     expect(onPressMock).toHaveBeenCalled();
   });
 
+  test('should pass along provided event data', () => {
+    const onPressMock = jest.fn();
+    const text = 'Fireevent press';
+    const eventData = {
+      nativeEvent: {
+        pageX: 20,
+        pageY: 30,
+      },
+    };
+    const { getByText } = render(
+      <OnPressComponent onPress={onPressMock} text={text} />
+    );
+
+    fireEvent(getByText(text), 'press', eventData);
+
+    expect(onPressMock).toHaveBeenCalledWith(eventData);
+  });
+
+  test('should not pass a generated event object by default with the string syntax', () => {
+    const onPressMock = jest.fn();
+    const text = 'Fireevent press';
+    const { getByText } = render(
+      <OnPressComponent onPress={onPressMock} text={text} />
+    );
+
+    fireEvent(getByText(text), 'press');
+
+    expect(onPressMock).toHaveBeenCalled();
+    expect(onPressMock).not.toHaveBeenCalledWith({ eventName: 'press' });
+  });
+
   test('should invoke specified event on parent element', () => {
     const onPressMock = jest.fn();
     const text = 'New press text';
@@ -145,7 +176,7 @@ describe('fireEvent.press', () => {
     expect(onPressMock).toHaveBeenCalledWith(eventData);
   });
 
-  test('should pass a generated event object by default', () => {
+  test('should pass a generated event object by default with the function syntax', () => {
     const onPressMock = jest.fn();
     const text = 'Fireevent press';
     const { getByText } = render(
@@ -154,7 +185,7 @@ describe('fireEvent.press', () => {
 
     fireEvent.press(getByText(text));
 
-    expect(onPressMock).toHaveBeenCalledWith({ someKey: 'value' });
+    expect(onPressMock).toHaveBeenCalledWith({ eventName: 'press' });
   });
 });
 
@@ -181,7 +212,7 @@ describe('fireEvent.scroll', () => {
   });
   test('should pass a generated event object by default', () => {
     const onScrollMock = jest.fn();
-    const eventData = { someKey: 'value' };
+    const eventData = { eventName: 'scroll' };
 
     const { getByText } = render(
       <ScrollView onScroll={onScrollMock}>
