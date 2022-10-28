@@ -76,6 +76,7 @@ jobs:
       - run: |
           cd website && yarn install && yarn build
   run-coverage:
+    <<: *defaults
     steps:
       - codecov/upload:
           file: coverage
