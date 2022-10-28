@@ -2,7 +2,7 @@ import { AccessibilityState, StyleSheet } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings } from './component-tree';
 
-type IsAnaccessibleOptions = {
+type IsInaccessibleOptions = {
   isSubtreeInaccessible: (element: ReactTestInstance | null) => boolean;
 };
 
@@ -22,7 +22,7 @@ export function isInaccessible(
   element: ReactTestInstance | null,
   {
     isSubtreeInaccessible,
-  }: IsAnaccessibleOptions = defaultIsInaccessibleOptions
+  }: IsInaccessibleOptions = defaultIsInaccessibleOptions
 ): boolean {
   if (element == null) {
     return true;
