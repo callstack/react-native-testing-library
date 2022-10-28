@@ -75,7 +75,7 @@ jobs:
           at: ~/react-native-testing-library
       - run: |
           cd website && yarn install && yarn build
-  coverage:
+  run-coverage:
     steps:
       - codecov/upload:
           file: coverage
@@ -117,7 +117,7 @@ workflows:
           requires:
             - install-dependencies
           filters: *filter-only-main
-      - coverage:
+      - run-coverage:
           requires:
             - install-dependencies
             - tests
