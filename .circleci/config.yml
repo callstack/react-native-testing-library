@@ -86,6 +86,8 @@ jobs:
 
 workflows:
   version: 2
+  orbs:
+    codecov: codecov/codecov@1.0.2
   build-and-test:
     jobs:
       - install-dependencies
@@ -110,3 +112,5 @@ workflows:
           requires:
             - install-dependencies
           filters: *filter-only-main
+      - codecov/upload:
+          file: {{ coverage_report_filepath }}
