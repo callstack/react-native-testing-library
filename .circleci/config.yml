@@ -61,7 +61,7 @@ jobs:
       - store_artifacts:
           path: coverage
           destination: coverage
-  test:react:17:
+  test-react-17:
     <<: *defaults
     steps:
       - attach_workspace:
@@ -106,7 +106,7 @@ workflows:
       - tests:
           requires:
             - install-dependencies
-      - test:react:17:
+      - test-react-17:
           requires:
             - install-dependencies
       - test-website:
