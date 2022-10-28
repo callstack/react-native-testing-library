@@ -5,23 +5,23 @@ title: Testing Environment
 
 ## Testing Environment
 
-React Native Testing Library allows you to write integration and component tests for your React Native app or library. While the JSX code used in tests closely resembles your React Native app, the things are not quite simple as they might appear. In this document we will describe the key elements of our testing environment and highlight things to be aware when writing more advanced tests or diagnosing issues.
+React Native Testing Library allows you to write integration and component tests for your React Native app or library. While the JSX code used in tests closely resembles your React Native app, the things are not quite as simple as they might appear. In this document we will describe the key elements of our testing environment and highlight things to be aware of when writing more advanced tests or diagnosing issues.
 
 ### React renderers
 
-React allows you to write declarative code using JSX, write function or class components, or use hooks like `useState`. In order to output the results of your components it needs to work with a render. Every React app uses some type of renderer: React Native is a renderer for mobile apps, web apps use React DOM, and there are other more [specialised renderers](https://github.com/chentsulin/awesome-react-renderer) that can can e.g. render to console or HTML canvas.
+React allows you to write declarative code using JSX, write function or class components, or use hooks like `useState`. In order to output the results of your components it needs to work with a renderer. Every React app uses some type of renderer: React Native is a renderer for mobile apps, web apps use React DOM, and there are other more [specialised renderers](https://github.com/chentsulin/awesome-react-renderer) that can e.g. render to console or HTML canvas.
 
-When you run your tests in React Native Testing Library, somewhat contrary to what the name suggest, they are actually **not** using React Native render. This is because this renderer needs to be run on iOS or Android operating system, so it would need to run on device or simulator.
+When you run your tests in React Native Testing Library, somewhat contrary to what the name suggest, they are actually **not** using React Native renderer. This is because this renderer needs to be run on iOS or Android operating system, so it would need to run on device or simulator.
 
-### React Test Render
+### React Test Renderer
 
-Instead, RNTL uses React Test Renderer which is a specialised renderer that allows rending to pure JavaScript objects without access to mobile OS, and can run in Node.js environment using Jest (or other JavaScript test runners). 
+Instead, RNTL uses React Test Renderer which is a specialised renderer that allows rendering to pure JavaScript objects without access to mobile OS, and that can run in a Node.js environment using Jest (or any other JavaScript test runner). 
 
-Using React Test Renders has both pros and cons.
+Using React Test Renderer has pros and cons.
 
 Benefits:
 
-- tests can run on most CIs (linux, etc) and do not require mobile device or emulator
+- tests can run on most CIs (linux, etc) and do not require a mobile device or emulator
 - faster test execution
 - light runtime environment
 
@@ -36,11 +36,11 @@ It’s worth noting that React Testing Library (web one), works a bit different.
 
 ### Element tree
 
-Invoking `render()` functions results in creation of element tree. This is done internally by invoking `TestRendere.create()` method. The output tree represents your React Native component tree, each node of that tree is an “instance” of some React component (to be more precise: each node represents a React fiber, and only class components have instances, while function components store the hook state using fiber).
+Invoking `render()` function results in creation of an element tree. This is done internally by invoking `TestRenderer.create()` method. The output tree represents your React Native component tree, each node of that tree is an “instance” of some React component (to be more precise: each node represents a React fiber, and only class components have instances, while function components store the hook state using fiber).
 
 These tree elements are represented by `ReactTestInstance` type:
 
-```jsx
+```tsx
 interface ReactTestInstance {
   type: ElementType;
   props: { [propName: string]: any };
@@ -62,7 +62,7 @@ One of the most important aspects of the element tree is that it is composed of 
 
 That might sound a bit confusing at first, since we put React Native’s `View` in both categories. There are actually two `View` components: composite one and host one. The relation between them is as follows:
 
-- composite `View` is the type imported from `react-native` package. It’s a JavaScript component, which renderers host `View` as its only child in the element tree.
+- composite `View` is the type imported from `react-native` package. It’s a JavaScript component, which renders host `View` as its only child in the element tree.
 - host `View` , which you do not render directly. React Native takes the props you pass to the composite `View`, does some processing on them and passes them to host `View`.
 
 The part of the tree looks as follows:
@@ -94,7 +94,7 @@ Not all React Native components are organised this way, e.g. when you use `Press
 Any easy way to differentiate between host and composite elements is the `type` prop of `ReactTestInstance`:
 
 - for host components it’s always a string value representing component name, e.g. `"View"`
-- for composite components it’s function or class defining the component
+- for composite components it’s a function or class corresponding to the component
 
 You can use the following code to check if given element is a host one:
 
@@ -126,7 +126,7 @@ In the above example user defined components accepts both `onPress` and `style` 
 
 ### Tree navigation
 
-When navigating three using `parent` or `children` props of `ReactTestInstance` element, you will encounter both host and composite elements. You should be careful when navigating the element tree, as the tree structure for 3rd party components and change independently from your code and cause unexpected test failures.
+When navigating a tree of react elements using `parent` or `children` props of a `ReactTestInstance` element, you will encounter both host and composite elements. You should be careful when navigating the element tree, as the tree structure for 3rd party components and change independently from your code and cause unexpected test failures.
 
 If you want to find a host element for given element they you might use following code:
 
@@ -155,6 +155,6 @@ At this stage, there are some noteworthy exceptions:
 - `*ByDisplayValue` queries returns composite `TextInput` element
 - `*ByPlaceholderText` queries returns composite `TextInput` element
 
-This will change in the near future, as we make efforts for all queries to return host components. Meanwhile it should be a huge issue, as composite `Text` and `TextInput`generally pass their props down to host counterparts.
+This will change in the near future, as we make efforts for all queries to return host components. Meanwhile it shouldn't be a huge issue, as composite `Text` and `TextInput`generally pass their props down to host counterparts.
 
 Additionally, `UNSAFE_*ByType` and `UNSAFE_*ByProps` queries can return both host and composite components depending on used predicates. They are marked as unsafe precisely because testing composite components makes your test more fragile.
