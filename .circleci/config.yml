@@ -15,6 +15,9 @@ defaults: &defaults
     - image: cimg/node:current
   working_directory: ~/react-native-testing-library
 
+orbs:
+  codecov: codecov/codecov@1.0.2
+
 jobs:
   install-dependencies:
     <<: *defaults
@@ -72,6 +75,10 @@ jobs:
           at: ~/react-native-testing-library
       - run: |
           cd website && yarn install && yarn build
+  coverage:
+    steps:
+      - codecov/upload:
+          file: coverage
   deploy-website:
     <<: *defaults
     steps:
@@ -86,8 +93,6 @@ jobs:
 
 workflows:
   version: 2
-  orbs:
-    codecov: codecov/codecov@1.0.2
   build-and-test:
     jobs:
       - install-dependencies
@@ -112,5 +117,7 @@ workflows:
           requires:
             - install-dependencies
           filters: *filter-only-main
-      - codecov/upload:
-          file: coverage
+      - coverage:
+          requires:
+            - install-dependecies
+            - tests
