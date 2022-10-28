@@ -119,5 +119,5 @@ workflows:
           filters: *filter-only-main
       - coverage:
           requires:
-            - install-dependecies
+            - install-dependencies
             - tests
