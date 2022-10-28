@@ -71,7 +71,7 @@
   "scripts": {
     "clean": "del build",
     "test": "jest",
-    "test:ci": "jest --maxWorkers=2",
+    "test:ci": "jest --maxWorkers=2 --collectCoverage=true",
     "test:ci:react:17": "scripts/test_react_17",
     "typecheck": "tsc",
     "flow": "flow",
