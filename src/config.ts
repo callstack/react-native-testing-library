@@ -3,13 +3,15 @@ import { DebugOptions } from './helpers/debugDeep';
 export type Config = {
   /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
-
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
+  /** Default hidden value for all queries */
+  hidden: boolean;
 };
 
 const defaultConfig: Config = {
   asyncUtilTimeout: 1000,
+  hidden: true,
 };
 
 let config = {

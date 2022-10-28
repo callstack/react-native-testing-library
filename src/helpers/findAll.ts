@@ -1,4 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
+import { getConfig } from '../config';
 import { AccessibilityOption } from '../queries/accessibilityOption';
 import { isInaccessible, isSubtreeInaccessible } from './accessiblity';
 
@@ -9,9 +10,7 @@ export function findAll<Options extends AccessibilityOption>(
 ) {
   const results = instance.findAll(predicate);
 
-  //TODO: implement getConfig
-  const defaultHidden = true;
-  const hidden = options?.hidden ?? defaultHidden; // We will want to add `defaultHidden: boolean` option to `configure`
+  const hidden = options?.hidden ?? getConfig().hidden; // We will want to add `defaultHidden: boolean` option to `configure`
 
   if (hidden) {
     return results;
