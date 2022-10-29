@@ -62,7 +62,7 @@ jobs:
           path: coverage
           destination: coverage
       - codecov/upload:
-          file: coverage
+          file: coverage/coverage-final.json
   test-react-17:
     <<: *defaults
     steps:
@@ -81,7 +81,7 @@ jobs:
     <<: *defaults
     steps:
       - codecov/upload:
-          file: coverage
+          file: coverage/coverage-final.json
   deploy-website:
     <<: *defaults
     steps:
