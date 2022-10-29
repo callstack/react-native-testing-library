@@ -61,6 +61,8 @@ jobs:
       - store_artifacts:
           path: coverage
           destination: coverage
+      - codecov/upload:
+          file: coverage
   test-react-17:
     <<: *defaults
     steps:
