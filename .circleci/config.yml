@@ -61,8 +61,7 @@ jobs:
       - store_artifacts:
           path: coverage
           destination: coverage
-      - codecov/upload:
-          file: coverage/coverage-final.json
+      - codecov/upload
   test-react-17:
     <<: *defaults
     steps:
@@ -120,7 +119,3 @@ workflows:
           requires:
             - install-dependencies
           filters: *filter-only-main
-      - run-coverage:
-          requires:
-            - install-dependencies
-            - tests
