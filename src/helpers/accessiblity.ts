@@ -3,7 +3,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings } from './component-tree';
 
 type IsInaccessibleOptions = {
-  isSubtreeInaccessible: (element: ReactTestInstance | null) => boolean;
+  cache?: WeakMap<ReactTestInstance, boolean>;
 };
 
 export type AccessibilityStateKey = keyof AccessibilityState;
@@ -16,13 +16,9 @@ export const accessibilityStateKeys: AccessibilityStateKey[] = [
   'expanded',
 ];
 
-const defaultIsInaccessibleOptions = { isSubtreeInaccessible };
-
 export function isInaccessible(
   element: ReactTestInstance | null,
-  {
-    isSubtreeInaccessible,
-  }: IsInaccessibleOptions = defaultIsInaccessibleOptions
+  { cache }: IsInaccessibleOptions = { cache: undefined }
 ): boolean {
   if (element == null) {
     return true;
@@ -30,7 +26,14 @@ export function isInaccessible(
 
   let current: ReactTestInstance | null = element;
   while (current) {
-    if (isSubtreeInaccessible(current)) {
+    let isCurrentSubtreeInaccessible = cache?.get(current);
+
+    if (isCurrentSubtreeInaccessible === undefined) {
+      isCurrentSubtreeInaccessible = isSubtreeInaccessible(current);
+      cache?.set(current, isCurrentSubtreeInaccessible);
+    }
+
+    if (isCurrentSubtreeInaccessible) {
       return true;
     }
 

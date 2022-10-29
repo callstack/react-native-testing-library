@@ -1,7 +1,7 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { getConfig } from '../config';
 import { AccessibilityOption } from '../queries/accessibilityOption';
-import { isInaccessible, isSubtreeInaccessible } from './accessiblity';
+import { isInaccessible } from './accessiblity';
 
 export function findAll<Options extends AccessibilityOption>(
   instance: ReactTestInstance,
@@ -17,22 +17,11 @@ export function findAll<Options extends AccessibilityOption>(
   }
 
   const subtreeIsInaccessibleCache = new WeakMap<ReactTestInstance>();
-  function cachedIsSubtreeInaccessible(element: ReactTestInstance | null) {
-    if (element === null) {
-      return true;
-    }
-
-    if (!subtreeIsInaccessibleCache.has(element)) {
-      subtreeIsInaccessibleCache.set(element, isSubtreeInaccessible(element));
-    }
-
-    return subtreeIsInaccessibleCache.get(element);
-  }
 
   return results.filter(
     (result) =>
       !isInaccessible(result, {
-        isSubtreeInaccessible: cachedIsSubtreeInaccessible,
+        cache: subtreeIsInaccessibleCache,
       })
   );
 }
