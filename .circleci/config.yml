@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 aliases:
   - &filter-only-main
@@ -14,6 +14,9 @@ defaults: &defaults
   docker:
     - image: cimg/node:current
   working_directory: ~/react-native-testing-library
+
+orbs:
+  codecov: codecov/codecov@3.2.2
 
 jobs:
   install-dependencies:
@@ -58,7 +61,8 @@ jobs:
       - store_artifacts:
           path: coverage
           destination: coverage
-  test:react:17:
+      - codecov/upload
+  test-react-17:
     <<: *defaults
     steps:
       - attach_workspace:
@@ -72,6 +76,11 @@ jobs:
           at: ~/react-native-testing-library
       - run: |
           cd website && yarn install && yarn build
+  upload-code-coverage:
+    <<: *defaults
+    steps:
+      - codecov/upload:
+          file: coverage/coverage-final.json
   deploy-website:
     <<: *defaults
     steps:
@@ -98,7 +107,7 @@ workflows:
       - tests:
           requires:
             - install-dependencies
-      - test:react:17:
+      - test-react-17:
           requires:
             - install-dependencies
       - test-website:
@@ -106,6 +115,9 @@ workflows:
             - install-dependencies
           # docusuarus build is running when deploying website as well
           filters: *filter-ignore-main
+      - upload-code-coverage:
+          requires:
+             - tests
       - deploy-website:
           requires:
             - install-dependencies
