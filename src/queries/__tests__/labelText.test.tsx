@@ -102,7 +102,7 @@ test('getAllByLabelText, queryAllByLabelText, findAllByLabelText with exact as f
   expect(getAllByLabelText(TEXT_LABEL, { exact: false })).toHaveLength(2);
   expect(queryAllByLabelText(/cool/g, { exact: false })).toHaveLength(3);
 
-  expect(() => getAllByLabelText(NO_MATCHES_TEXT)).toThrow(
+  expect(() => getAllByLabelText(NO_MATCHES_TEXT, { exact: false })).toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
   expect(queryAllByLabelText(NO_MATCHES_TEXT, { exact: false })).toEqual([]);
