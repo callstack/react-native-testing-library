@@ -18,6 +18,8 @@ export function matches(
       ? normalizedText === normalizedMatcher
       : normalizedText.toLowerCase().includes(normalizedMatcher.toLowerCase());
   } else {
+    // Reset state for global regexes: https://stackoverflow.com/a/1520839/484499
+    matcher.lastIndex = 0;
     return matcher.test(normalizedText);
   }
 }

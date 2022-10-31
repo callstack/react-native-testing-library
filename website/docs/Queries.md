@@ -193,7 +193,11 @@ In the spirit of [the guiding principles](https://testing-library.com/docs/guidi
 
 ```ts
 getByLabelText(
-  text: TextMatch
+  text: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  }
 ): ReactTestInstance;
 ```
 
@@ -214,7 +218,11 @@ const element = screen.getByLabelText('my-label');
 
 ```ts
 getByHintText(
-  hint: TextMatch
+  hint: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  }
 ): ReactTestInstance;
 ```
 
