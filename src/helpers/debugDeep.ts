@@ -10,7 +10,7 @@ export type DebugOptions = {
  */
 export default function debugDeep(
   instance: ReactTestRendererJSON | ReactTestRendererJSON[],
-  options?: string | DebugOptions
+  options?: DebugOptions | string
 ) {
   const message = typeof options === 'string' ? options : options?.message;
 
