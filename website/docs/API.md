@@ -57,7 +57,7 @@ title: API
     - [`RNTL_SKIP_AUTO_CLEANUP`](#rntl_skip_auto_cleanup)
     - [`RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS`](#rntl_skip_auto_detect_fake_timers)
 - [Accessibility](#accessibility)
-  - [`isInaccessible`](#isinaccessible)
+  - [`isHiddenFromAccessibility`](#ishiddenfromaccessibility)
 
 This page gathers public API of React Native Testing Library along with usage examples.
 
@@ -825,16 +825,20 @@ $ RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS=true jest
 
 ## Accessibility
 
-### `isInaccessible`
+### `isHiddenFromAccessibility`
 
 ```ts
-function isInaccessible(element: ReactTestInstance | null): boolean {}
+function isHiddenFromAccessibility(
+  element: ReactTestInstance | null
+): boolean {}
 ```
 
-Checks if given element is hidden from assistive technology, e.g. screen readers.
+Also available as `isInaccessible()` alias for React Testing Library compatibility.
+
+Checks if given element is hidden from assistive technology, e.g. screen readers. 
 
 :::note
-Like [`isInaccessible`](https://testing-library.com/docs/dom-testing-library/api-accessibility/#isinaccessible) function from [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro) this function considers both accessibility elements and presentational elements (regular `View`s) to be accessible, unless they are hidden in terms of host platform.
+Like [`isInaccessible`](https://testing-library.com/docs/dom-testing-library/api-accessibility/#isinaccessible) function from DOM Testing Library this function considers both accessibility elements and presentational elements (regular `View`s) to be accessible, unless they are hidden in terms of host platform. 
 
 This covers only part of [ARIA notion of Accessiblity Tree](https://www.w3.org/TR/wai-aria-1.2/#tree_exclusion), as ARIA excludes both hidden and presentational elements from the Accessibility Tree.
 :::
