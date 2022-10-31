@@ -16,7 +16,7 @@ export const accessibilityStateKeys: AccessibilityStateKey[] = [
   'expanded',
 ];
 
-export function isInaccessible(
+export function isHiddenFromAccessibility(
   element: ReactTestInstance | null,
   { cache }: IsInaccessibleOptions = {}
 ): boolean {
@@ -43,9 +43,10 @@ export function isInaccessible(
   return false;
 }
 
-export function isSubtreeInaccessible(
-  element: ReactTestInstance | null
-): boolean {
+/** RTL-compatitibility alias for `isHiddenFromAccessibility` */
+export const isInaccessible = isHiddenFromAccessibility;
+
+function isSubtreeInaccessible(element: ReactTestInstance | null): boolean {
   if (element == null) {
     return true;
   }

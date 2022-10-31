@@ -8,7 +8,10 @@ import { within, getQueriesForElement } from './within';
 import { getDefaultNormalizer } from './matches';
 import { renderHook } from './renderHook';
 import { screen } from './screen';
-import { isInaccessible } from './helpers/accessiblity';
+export {
+  isHiddenFromAccessibility,
+  isInaccessible,
+} from './helpers/accessiblity';
 
 export type {
   RenderOptions,
@@ -29,4 +32,3 @@ export { within, getQueriesForElement };
 export { getDefaultNormalizer };
 export { renderHook };
 export { screen };
-export { isInaccessible };
