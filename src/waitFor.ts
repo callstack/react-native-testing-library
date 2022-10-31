@@ -38,7 +38,7 @@ function waitForInternal<T>(
     let finished = false;
     let promiseStatus = 'idle';
 
-    const overallTimeoutTimer = setTimeout(handleTimeout, timeout);
+    let overallTimeoutTimer: NodeJS.Timeout | null = null;
 
     const usingFakeTimers = jestFakeTimersAreEnabled();
 
@@ -64,6 +64,7 @@ function waitForInternal<T>(
 
         // when fake timers are used we want to simulate the interval time passing
         if (fakeTimeRemaining <= 0) {
+          handleTimeout();
           return;
         } else {
           fakeTimeRemaining -= interval;
@@ -90,6 +91,7 @@ function waitForInternal<T>(
         await new Promise((resolve) => setImmediate(resolve));
       }
     } else {
+      overallTimeoutTimer = setTimeout(handleTimeout, timeout);
       intervalId = setInterval(checkRealTimersCallback, interval);
       checkExpectation();
     }
@@ -98,7 +100,9 @@ function waitForInternal<T>(
       done: { type: 'result'; result: T } | { type: 'error'; error: unknown }
     ) {
       finished = true;
-      clearTimeout(overallTimeoutTimer);
+      if (overallTimeoutTimer) {
+        clearTimeout(overallTimeoutTimer);
+      }
 
       if (!usingFakeTimers) {
         clearInterval(intervalId);
