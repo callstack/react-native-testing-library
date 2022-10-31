@@ -76,7 +76,7 @@ jobs:
           at: ~/react-native-testing-library
       - run: |
           cd website && yarn install && yarn build
-  run-coverage:
+  upload-code-coverage:
     <<: *defaults
     steps:
       - codecov/upload:
@@ -115,6 +115,9 @@ workflows:
             - install-dependencies
           # docusuarus build is running when deploying website as well
           filters: *filter-ignore-main
+      - upload-code-coverage:
+          requires:
+             - tests
       - deploy-website:
           requires:
             - install-dependencies
