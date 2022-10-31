@@ -212,63 +212,63 @@ interface A11yAPI {
   // Label
   getByLabelText: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => GetReturn;
   getAllByLabelText: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => GetAllReturn;
   queryByLabelText: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => QueryReturn;
   queryAllByLabelText: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => QueryAllReturn;
   findByLabelText: (
     matcher: TextMatch,
     queryOptions?: TextMatchOptions,
-
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByLabelText: (
     matcher: TextMatch,
+    queryOptions?: TextMatchOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 
   // Hint
   getByA11yHint: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => GetReturn;
   getByHintText: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => GetReturn;
   getAllByA11yHint: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => GetAllReturn;
   getAllByHintText: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => GetAllReturn;
   queryByA11yHint: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => QueryReturn;
   queryByHintText: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => QueryReturn;
   queryAllByA11yHint: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => QueryAllReturn;
   queryAllByHintText: (
     matcher: TextMatch,
-    queryOptions?: TextMatchOptions
+    options?: TextMatchOptions
   ) => QueryAllReturn;
   findByA11yHint: (
     matcher: TextMatch,
@@ -295,24 +295,24 @@ interface A11yAPI {
   getByRole: (matcher: A11yRole | RegExp, role?: ByRoleOptions) => GetReturn;
   getAllByRole: (
     matcher: A11yRole | RegExp,
-    role?: ByRoleOptions
+    options?: ByRoleOptions
   ) => GetAllReturn;
   queryByRole: (
     matcher: A11yRole | RegExp,
-    role?: ByRoleOptions
+    options?: ByRoleOptions
   ) => QueryReturn;
   queryAllByRole: (
     matcher: A11yRole | RegExp,
-    role?: ByRoleOptions
+    options?: ByRoleOptions
   ) => QueryAllReturn;
   findByRole: (
     matcher: A11yRole | RegExp,
-    role?: ByRoleOptions,
+    queryOptions?: ByRoleOptions,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByRole: (
     matcher: A11yRole | RegExp,
-    role?: ByRoleOptions,
+    queryOptions?: ByRoleOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 
