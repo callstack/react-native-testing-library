@@ -12,7 +12,7 @@
 [![Version][version-badge]][package]
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
 [![Chat][chat-badge]][chat]
-![codecov](https://codecov.io/gh/callstack/react-native-testing-library/branch/main/graph/badge.svg?token=tYVSWro1IP)](https://codecov.io/gh/callstack/react-native-testing-library)
+[![codecov][codecov-badge]][codecov]
 [![Sponsored by Callstack][callstack-badge]][callstack]
 
 ## The problem
@@ -172,3 +172,5 @@ Supported and used by [Rally Health](https://www.rallyhealth.com/careers-home).
 [chat]: https://discord.gg/QbGezWe
 [callstack-badge]: https://callstack.com/images/callstack-badge.svg
 [callstack]: https://callstack.com/open-source/?utm_source=github.com&utm_medium=referral&utm_campaign=react-native-testing-library&utm_term=readme
+[codecov-badge]: https://codecov.io/gh/callstack/react-native-testing-library/branch/main/graph/badge.svg?token=tYVSWro1IP
+[codecov]: https://codecov.io/gh/callstack/react-native-testing-library
