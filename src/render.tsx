@@ -136,7 +136,7 @@ function updateWithAct(
 }
 
 interface DebugFunction {
-  (options?: string | DebugOptions): void;
+  (options?: DebugOptions | string): void;
   shallow: (message?: string) => void;
 }
 

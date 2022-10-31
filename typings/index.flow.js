@@ -349,14 +349,13 @@ interface Thenable {
   then: (resolve: () => any, reject?: () => any) => any;
 }
 
-type FilterNodeByTypeFunction = (
-  propName: string,
-  propValue: any,
+type MapPropsFunction = (
+  props: { [string]: mixed },
   node: ReactTestRendererJSON
-) => boolean;
+) => { [string]: mixed };
 
 type FormatOptions = {
-  filterProps?: FilterNodeByTypeFunction,
+  mapProps?: MapPropsFunction,
 };
 
 type DebugOptions = {
@@ -364,7 +363,7 @@ type DebugOptions = {
 } & FormatOptions;
 
 type Debug = {
-  (options?: string | DebugOptions): void,
+  (options?: DebugOptions | string): void,
   shallow: (message?: string) => void,
 };
 

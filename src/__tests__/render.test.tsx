@@ -209,7 +209,7 @@ test('debug with only children prop', () => {
 
   const { debug, getByText } = render(<Banana />);
 
-  debug({ filterProps: (propName) => propName === 'children' });
+  debug({ mapProps: ({ children }) => ({ children }) });
 
   // eslint-disable-next-line no-console
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
@@ -224,7 +224,17 @@ test('debug with only prop whose value is bananaChef', () => {
 
   const { debug, getByText } = render(<Banana />);
 
-  debug({ filterProps: (_propName, propValue) => propValue === 'bananaChef' });
+  debug({
+    mapProps: (props) => {
+      const filterProps: Record<string, unknown> = {};
+      Object.keys(props).forEach((key) => {
+        if (props[key] === 'bananaChef') {
+          filterProps[key] = props[key];
+        }
+      });
+      return filterProps;
+    },
+  });
 
   // eslint-disable-next-line no-console
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
@@ -240,7 +250,7 @@ test('debug with only props from TextInput components', () => {
   const { debug, getByText } = render(<Banana />);
 
   debug({
-    filterProps: (_propName, _propValue, node) => node.type === 'TextInput',
+    mapProps: (props, node) => (node.type === 'TextInput' ? props : {}),
   });
 
   // eslint-disable-next-line no-console
@@ -256,7 +266,7 @@ test('debug with all props filtered', () => {
 
   const { debug, getByText } = render(<Banana />);
 
-  debug({ filterProps: () => false });
+  debug({ mapProps: () => ({}) });
 
   // eslint-disable-next-line no-console
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
@@ -269,7 +279,7 @@ test('debug with all props filtered', () => {
 test('debug should use debugOptions from config when no option is specified', () => {
   jest.spyOn(console, 'log').mockImplementation((x) => x);
 
-  configure({ debugOptions: { filterProps: () => false } });
+  configure({ debugOptions: { mapProps: () => ({}) } });
 
   const { debug } = render(
     <View style={{ backgroundColor: 'red' }}>
@@ -288,7 +298,7 @@ test('debug should use debugOptions from config when no option is specified', ()
 test('debug should use given options over config debugOptions', () => {
   jest.spyOn(console, 'log').mockImplementation((x) => x);
 
-  configure({ debugOptions: { filterProps: () => false } });
+  configure({ debugOptions: { mapProps: () => ({}) } });
 
   const { debug } = render(
     <View style={{ backgroundColor: 'red' }}>
@@ -296,7 +306,7 @@ test('debug should use given options over config debugOptions', () => {
     </View>
   );
 
-  debug({ filterProps: () => true });
+  debug({ mapProps: (props) => props });
 
   // eslint-disable-next-line no-console
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;

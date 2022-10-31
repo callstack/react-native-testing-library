@@ -1,14 +1,13 @@
 import type { ReactTestRendererJSON } from 'react-test-renderer';
 import prettyFormat, { NewPlugin, plugins } from 'pretty-format';
 
-type FilterNodeByTypeFunction = (
-  propName: string,
-  propValue: unknown,
+type MapPropsFunction = (
+  props: Record<string, unknown>,
   node: ReactTestRendererJSON
-) => boolean;
+) => Record<string, unknown>;
 
 export type FormatOptions = {
-  filterProps?: FilterNodeByTypeFunction;
+  mapProps?: MapPropsFunction;
 };
 
 const format = (
@@ -16,22 +15,18 @@ const format = (
   options: FormatOptions = {}
 ) =>
   prettyFormat(input, {
-    plugins: [getCustomPlugin(options.filterProps)],
+    plugins: [getCustomPlugin(options.mapProps)],
     highlight: true,
   });
 
-const getCustomPlugin = (filterProps?: FilterNodeByTypeFunction): NewPlugin => {
+const getCustomPlugin = (mapProps?: MapPropsFunction): NewPlugin => {
   return {
     test: (val) =>
       plugins.ReactTestComponent.test(val) || plugins.ReactElement.test(val),
     serialize: (val, config, indentation, depth, refs, printer) => {
       if (plugins.ReactTestComponent.test(val)) {
-        if (filterProps && val.props) {
-          Object.keys(val.props).forEach((propName) => {
-            if (!filterProps(propName, val.props[propName], val)) {
-              delete val.props[propName];
-            }
-          });
+        if (mapProps && val.props) {
+          val.props = mapProps(val.props, val);
         }
         return plugins.ReactTestComponent.serialize(
           val,
