@@ -12,8 +12,8 @@
 [![Version][version-badge]][package]
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
 [![Chat][chat-badge]][chat]
+![codecov](https://codecov.io/gh/callstack/react-native-testing-library/branch/main/graph/badge.svg?token=tYVSWro1IP)](https://codecov.io/gh/callstack/react-native-testing-library)
 [![Sponsored by Callstack][callstack-badge]][callstack]
-[![codecov](https://codecov.io/gh/callstack/react-native-testing-library/branch/main/graph/badge.svg?token=tYVSWro1IP)](https://codecov.io/gh/callstack/react-native-testing-library)
 
 ## The problem
 
