@@ -147,13 +147,20 @@ function debug(
   function debugImpl(options?: DebugOptions | string) {
     const { debugOptions: defaultDebugOptions } = getConfig();
     const json = renderer.toJSON();
-    if (json) {
-      return debugDeep(
-        json,
-        typeof options === 'string'
-          ? { ...defaultDebugOptions, message: options }
-          : { ...defaultDebugOptions, ...options }
+    const debugOptions =
+      typeof options === 'string'
+        ? { ...defaultDebugOptions, message: options }
+        : { ...defaultDebugOptions, ...options };
+
+    if (typeof options === 'string') {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'Please use debug({message; "message"}) instead of debug("message")'
       );
+    }
+
+    if (json) {
+      return debugDeep(json, debugOptions);
     }
   }
   debugImpl.shallow = (message?: string) => debugShallow(instance, message);
