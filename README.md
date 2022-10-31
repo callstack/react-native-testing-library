@@ -12,8 +12,8 @@
 [![Version][version-badge]][package]
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
 [![Chat][chat-badge]][chat]
-[![Sponsored by Callstack][callstack-badge]][callstack]
 [![codecov][codecov-badge]][codecov]
+[![Sponsored by Callstack][callstack-badge]][callstack]
 
 ## The problem
 
