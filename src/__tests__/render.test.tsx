@@ -162,6 +162,15 @@ test('toJSON', () => {
 
 test('debug', () => {
   jest.spyOn(console, 'log').mockImplementation((x) => x);
+  // eslint-disable-next-line no-console
+  const originalConsoleWarn = console.warn;
+  jest.spyOn(console, 'warn').mockImplementation((x) => {
+    if (
+      x !== 'Please use debug({message; "message"}) instead of debug("message")'
+    ) {
+      originalConsoleWarn(x);
+    }
+  });
 
   const { debug } = render(<Banana />);
 
@@ -185,6 +194,9 @@ test('debug', () => {
   expect(stripAnsi(mockCalls[4][0] + mockCalls[4][1])).toMatchSnapshot(
     'another custom message'
   );
+
+  // eslint-disable-next-line no-console
+  console.warn = originalConsoleWarn;
 });
 
 test('debug changing component', () => {
