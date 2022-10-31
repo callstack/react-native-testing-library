@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { render } from '../..';
 
 const BUTTON_LABEL = 'cool button';
@@ -113,4 +113,33 @@ test('getAllByLabelText, queryAllByLabelText, findAllByLabelText with exact as f
   await expect(
     findAllByLabelText(NO_MATCHES_TEXT, { exact: false })
   ).rejects.toThrow(getNoInstancesFoundMessage(NO_MATCHES_TEXT));
+});
+
+describe('findBy options deprecations', () => {
+  let warnSpy: jest.SpyInstance;
+  beforeEach(() => {
+    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
+  test('findByText queries warn on deprecated use of WaitForOptions', async () => {
+    const options = { timeout: 10 };
+    // mock implementation to avoid warning in the test suite
+    const view = render(<View />);
+    await expect(
+      view.findByLabelText('Some Text', options)
+    ).rejects.toBeTruthy();
+
+    setTimeout(
+      () => view.rerender(<View accessibilityLabel="Some Text" />),
+      20
+    );
+    await expect(view.findByLabelText('Some Text')).resolves.toBeTruthy();
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Use of option "timeout"')
+    );
+  }, 20000);
 });
