@@ -3,6 +3,11 @@ id: testing-env
 title: Testing Environment
 ---
 
+:::info
+This document is intended for more advanced audience. You should be able to write integration or component tests without reading this.
+It is intended for people who want to better understand internals of our testing environment, e.g. in order to contribute to the codebase.
+:::
+
 ## Testing Environment
 
 React Native Testing Library allows you to write integration and component tests for your React Native app or library. While the JSX code used in tests closely resembles your React Native app, the things are not quite as simple as they might appear. In this document we will describe the key elements of our testing environment and highlight things to be aware of when writing more advanced tests or diagnosing issues.
@@ -122,28 +127,17 @@ function ForgotToPassPropsButton({ title, onPress, style }) {
 }
 ```
 
-In the above example user defined components accepts both `onPress` and `style` props but does not pass it (through `Pressable`) to host views, so these props will not affect the user interface.
+In the above example user defined components accepts both `onPress` and `style` props but does not pass it (through `Pressable`) to host views, so these props will not affect the user interface. Additionally, React Native and other libraries might pass some of the props under different names or transform their values between composite and host components.
 
 ### Tree navigation
 
+:::caution
+You should avoid navigating over element tree, as this makes your testing code fragile and may result in false positives. This section is more relevant for people how want to contribute to our codebase.
+:::
+
 When navigating a tree of react elements using `parent` or `children` props of a `ReactTestInstance` element, you will encounter both host and composite elements. You should be careful when navigating the element tree, as the tree structure for 3rd party components and change independently from your code and cause unexpected test failures.
 
-If you want to find a host element for given element they you might use following code:
-
-```jsx
-function getHostParent(element: ReactTestInstance) {
-  let current = element.parent;
-  while (current) {
-    if (isHostElement(current)) {
-      return current;
-    }
-
-    current = current.parent;
-  }
-
-  return null;
-}
-```
+Inside RNTL we have various tree navigation helpers: `getHostParent`, `getHostChildren`, etc. These are intentionally not exported as using them is not a recommended practice. 
 
 ### Queries
 

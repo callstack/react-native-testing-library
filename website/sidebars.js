@@ -5,10 +5,9 @@ module.exports = {
     Guides: [
       'troubleshooting',
       'how-should-i-query',
-      'testing-env',
       'eslint-plugin-testing-library',
-      'understanding-act',
     ],
+    Advanced: ['testing-env', 'understanding-act'],
     Migrations: [
       'migration-v11',
       'migration-v9',
