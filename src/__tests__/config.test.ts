@@ -10,10 +10,10 @@ test('getConfig() returns existing configuration', () => {
 
 test('configure() overrides existing config values', () => {
   configure({ asyncUtilTimeout: 5000 });
-  configure({ debugOptions: { message: 'debug message' } });
+  configure({ defaultDebugOptions: { message: 'debug message' } });
   expect(getConfig()).toEqual({
     asyncUtilTimeout: 5000,
-    debugOptions: { message: 'debug message' },
+    defaultDebugOptions: { message: 'debug message' },
   });
 });
 

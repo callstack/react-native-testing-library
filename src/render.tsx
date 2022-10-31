@@ -145,7 +145,7 @@ function debug(
   renderer: ReactTestRenderer
 ): DebugFunction {
   function debugImpl(options?: DebugOptions | string) {
-    const { debugOptions: defaultDebugOptions } = getConfig();
+    const { defaultDebugOptions } = getConfig();
     const json = renderer.toJSON();
     const debugOptions =
       typeof options === 'string'

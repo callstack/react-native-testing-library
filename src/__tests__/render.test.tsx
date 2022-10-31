@@ -279,7 +279,7 @@ test('debug with all props filtered', () => {
 test('debug should use debugOptions from config when no option is specified', () => {
   jest.spyOn(console, 'log').mockImplementation((x) => x);
 
-  configure({ debugOptions: { mapProps: () => ({}) } });
+  configure({ defaultDebugOptions: { mapProps: () => ({}) } });
 
   const { debug } = render(
     <View style={{ backgroundColor: 'red' }}>
@@ -298,7 +298,7 @@ test('debug should use debugOptions from config when no option is specified', ()
 test('debug should use given options over config debugOptions', () => {
   jest.spyOn(console, 'log').mockImplementation((x) => x);
 
-  configure({ debugOptions: { mapProps: () => ({}) } });
+  configure({ defaultDebugOptions: { mapProps: () => ({}) } });
 
   const { debug } = render(
     <View style={{ backgroundColor: 'red' }}>
