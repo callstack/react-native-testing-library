@@ -48,7 +48,7 @@ title: API
 - [Configuration](#configuration)
   - [`configure`](#configure)
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
-    - [`debugOptions` option](#debugoptions-option)
+    - [`defaultDebugOptions` option](#defaultdebugoptions-option)
   - [`resetToDefaults()`](#resettodefaults)
   - [Environment variables](#environment-variables)
     - [`RNTL_SKIP_AUTO_CLEANUP`](#rntl_skip_auto_cleanup)
@@ -174,21 +174,20 @@ Usually you should not need to call `unmount` as it is done automatically if you
 
 interface DebugOptions { 
   message?: string;
-  filterProps?: FilterNodeByTypeFunction;
+  mapProps?: MapPropsFunction;
 }
 
-debug(options?: string | DebugOptions): void
+debug(options?: DebugOptions | string): void
 ```
 
 Pretty prints deeply rendered component passed to `render`. 
 
-You can provide a message that will be printed on top either by calling debug with a string or using the message property in debugOptions
+You can provide a message that will be printed on top.
 
 ```jsx
 render(<Component />);
 
-screen.debug('optional message');
-screen.debug({message: 'optional message'});
+screen.debug({ message: 'optional message' });
 ```
 
 logs optional message and colored JSX:
@@ -203,15 +202,23 @@ optional message
 </View>
 ```
 
-You can use the filterProps option to filter the props that will be printed : 
+You can use the mapProps option to transform the props that will be printed : 
 
 ```jsx
 render(<View style={{backgroundColor: 'red'}}/>);
-
-debug({filterProps : (propName, propValue, node) => propName !== 'style'})
+debug({ mapProps : ({style, ...props}) => ({props}) })
 ```
 
-This will log the rendered JSX without style props
+This will log the rendered JSX without the `style` props. 
+
+This option can be used to target specfic props when debugging a query (for instance keeping only children prop when debugging a byText query) and you can also transform prop values so that they are more readable (e.g. flatten styles).
+
+The `children` prop cannot be filtered so the following will print all rendered components with all props but children filtered.
+
+```ts
+debug({ mapProps : props => ({}) })
+```
+
 
 #### `debug.shallow`
 
@@ -242,6 +249,24 @@ let screen: RenderResult;
 Hold the value of latest render call for easier access to query and other functions returned by [`render`](#render). 
 
 Its value is automatically cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test then it holds a special object that implements `RenderResult` but throws a helpful error on each property and method access.
+
+This can also be used to build test utils that would normally require to be in render scope, either in a test file or globally for your project. For instance in a test file where we fill a form in multiple tests: 
+
+```ts
+const typeEmail = (email: string) => {
+  fireEvent.changeText(screen.getPlaceholderText('email'), email)
+}
+
+// In test
+typeEmail('email@random.com')
+```
+
+You could also build debug utils for particular queries and have them available across the whole codebase : 
+
+```ts
+// Prints the rendered components with only the children prop
+const debugText = () => screen.debug({ mapProps : props =>({}) })
+```
 
 ## `cleanup`
 
@@ -757,9 +782,9 @@ function configure(options: Partial<Config>)  {}
 
 Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
 
-#### `debugOptions` option
+#### `defaultDebugOptions` option
 
-Default debugOptions to be used when calling debug. These default options will be overridden by the ones you specify directly when calling debug
+Default `debugOptions` to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`. Can be used namely to transform prop values for more readability or filter out props that have little value when debugging tests (e.g. svg's path prop).
 
 ### `resetToDefaults()`
 
