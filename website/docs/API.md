@@ -15,6 +15,8 @@ title: API
   - [`update`](#update)
   - [`unmount`](#unmount)
   - [`debug`](#debug)
+    - [`message option`](#message-option)
+    - [`mapProps option`](#mapprops-option)
     - [`debug.shallow`](#debugshallow)
   - [`toJSON`](#tojson)
   - [`container`](#container)
@@ -182,6 +184,8 @@ debug(options?: DebugOptions | string): void
 
 Pretty prints deeply rendered component passed to `render`. 
 
+#### `message option`
+
 You can provide a message that will be printed on top.
 
 ```jsx
@@ -202,23 +206,40 @@ optional message
 </View>
 ```
 
-You can use the mapProps option to transform the props that will be printed : 
+
+#### `mapProps option`
+
+You can use the `mapProps` option to transform the props that will be printed : 
 
 ```jsx
-render(<View style={{backgroundColor: 'red'}}/>);
-debug({ mapProps : ({style, ...props}) => ({props}) })
+render(<View style={{ backgroundColor: 'red' }}/>);
+debug({ mapProps : ({ style, ...props }) => ({ props }) })
 ```
 
 This will log the rendered JSX without the `style` props. 
 
-This option can be used to target specfic props when debugging a query (for instance keeping only children prop when debugging a byText query) and you can also transform prop values so that they are more readable (e.g. flatten styles).
+The `children` prop cannot be filtered out so the following will print all rendered components with all props but children filtered.
 
-The `children` prop cannot be filtered so the following will print all rendered components with all props but children filtered.
 
 ```ts
 debug({ mapProps : props => ({}) })
 ```
 
+This option can be used to target specific props when debugging a query (for instance keeping only `children` prop when debugging a `getByText` query).
+
+ You can also transform prop values so that they are more readable (e.g. flatten styles).
+
+ ```tsx
+import { StyleSheet } from 'react-native';
+
+debug({ mapProps : {({ style, ...props })} => ({ style : StyleSheet.flatten(style), ...props }) });
+ ```
+
+Or remove props that have little value when debugging tests, e.g. path prop for svgs
+
+```tsx 
+debug({ mapProps : ({ path, ...props }) => ({ ...props })});
+```
 
 #### `debug.shallow`
 
@@ -784,7 +805,7 @@ Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementTo
 
 #### `defaultDebugOptions` option
 
-Default `debugOptions` to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`. Can be used namely to transform prop values for more readability or filter out props that have little value when debugging tests (e.g. svg's path prop).
+Default [debug options](#message-option) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
 
 ### `resetToDefaults()`
 
