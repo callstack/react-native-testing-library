@@ -221,7 +221,7 @@ test('debug with only children prop', () => {
 
   const { debug, getByText } = render(<Banana />);
 
-  debug({ mapProps: ({ children }) => ({ children }) });
+  debug({ mapProps: () => ({}) });
 
   // eslint-disable-next-line no-console
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
@@ -264,21 +264,6 @@ test('debug with only props from TextInput components', () => {
   debug({
     mapProps: (props, node) => (node.type === 'TextInput' ? props : {}),
   });
-
-  // eslint-disable-next-line no-console
-  const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
-
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
-
-  expect(getByText('Change freshness!')).toBeTruthy();
-});
-
-test('debug with all props filtered', () => {
-  jest.spyOn(console, 'log').mockImplementation((x) => x);
-
-  const { debug, getByText } = render(<Banana />);
-
-  debug({ mapProps: () => ({}) });
 
   // eslint-disable-next-line no-console
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;

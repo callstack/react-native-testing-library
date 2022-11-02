@@ -146,35 +146,6 @@ exports[`debug should use given options over config debugOptions 1`] = `
 </View>"
 `;
 
-exports[`debug with all props filtered 1`] = `
-"<View>
-  <Text>
-    Is the banana fresh?
-  </Text>
-  <Text>
-    not fresh
-  </Text>
-  <TextInput />
-  <TextInput />
-  <TextInput />
-  <TextInput />
-  <View>
-    <Text>
-      Change freshness!
-    </Text>
-  </View>
-  <Text>
-    First Text
-  </Text>
-  <Text>
-    Second Text
-  </Text>
-  <Text>
-    0
-  </Text>
-</View>"
-`;
-
 exports[`debug with only children prop 1`] = `
 "<View>
   <Text>
