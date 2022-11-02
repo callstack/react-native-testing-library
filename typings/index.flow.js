@@ -210,10 +210,7 @@ type ByRoleOptions = {
 
 interface A11yAPI {
   // Label
-  getByLabelText: (
-    matcher: TextMatch,
-    options?: TextMatchOptions
-  ) => GetReturn;
+  getByLabelText: (matcher: TextMatch, options?: TextMatchOptions) => GetReturn;
   getAllByLabelText: (
     matcher: TextMatch,
     options?: TextMatchOptions
@@ -238,14 +235,8 @@ interface A11yAPI {
   ) => FindAllReturn;
 
   // Hint
-  getByA11yHint: (
-    matcher: TextMatch,
-    options?: TextMatchOptions
-  ) => GetReturn;
-  getByHintText: (
-    matcher: TextMatch,
-    options?: TextMatchOptions
-  ) => GetReturn;
+  getByA11yHint: (matcher: TextMatch, options?: TextMatchOptions) => GetReturn;
+  getByHintText: (matcher: TextMatch, options?: TextMatchOptions) => GetReturn;
   getAllByA11yHint: (
     matcher: TextMatch,
     options?: TextMatchOptions
@@ -354,13 +345,10 @@ type MapPropsFunction = (
   node: ReactTestRendererJSON
 ) => { [string]: mixed };
 
-type FormatOptions = {
-  mapProps?: MapPropsFunction,
-};
-
 type DebugOptions = {
   message?: string,
-} & FormatOptions;
+  mapProps?: MapPropsFunction,
+};
 
 type Debug = {
   (options?: DebugOptions | string): void,
@@ -426,7 +414,7 @@ declare module '@testing-library/react-native' {
 
   declare interface Config {
     asyncUtilTimeout: number;
-    debugOptions?: $Shape<DebugOptions>;
+    defaultDebugOptions?: $Shape<DebugOptions>;
   }
 
   declare export var configure: (options: $Shape<Config>) => void;
