@@ -146,7 +146,6 @@ function debug(
 ): DebugFunction {
   function debugImpl(options?: DebugOptions | string) {
     const { defaultDebugOptions } = getConfig();
-    const json = renderer.toJSON();
     const debugOptions =
       typeof options === 'string'
         ? { ...defaultDebugOptions, message: options }
@@ -158,6 +157,8 @@ function debug(
         'Using debug("message") is deprecated and will be removed in future release, please use debug({ message; "message" }) instead.'
       );
     }
+
+    const json = renderer.toJSON();
 
     if (json) {
       return debugDeep(json, debugOptions);

@@ -15,7 +15,7 @@ export default function debugDeep(
   const message = typeof options === 'string' ? options : options?.message;
 
   const formatOptions =
-    typeof options === 'object' ? { mapProps: options.mapProps } : undefined;
+    typeof options === 'object' ? { mapProps: options?.mapProps } : undefined;
 
   if (message) {
     // eslint-disable-next-line no-console
