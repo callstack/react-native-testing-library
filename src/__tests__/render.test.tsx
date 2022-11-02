@@ -219,7 +219,7 @@ test('debug changing component', () => {
 test('debug with only children prop', () => {
   jest.spyOn(console, 'log').mockImplementation((x) => x);
 
-  const { debug, getByText } = render(<Banana />);
+  const { debug } = render(<Banana />);
 
   debug({ mapProps: () => ({}) });
 
@@ -227,14 +227,12 @@ test('debug with only children prop', () => {
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
 
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
-
-  expect(getByText('Change freshness!')).toBeTruthy();
 });
 
 test('debug with only prop whose value is bananaChef', () => {
   jest.spyOn(console, 'log').mockImplementation((x) => x);
 
-  const { debug, getByText } = render(<Banana />);
+  const { debug } = render(<Banana />);
 
   debug({
     mapProps: (props) => {
@@ -252,14 +250,12 @@ test('debug with only prop whose value is bananaChef', () => {
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
 
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
-
-  expect(getByText('Change freshness!')).toBeTruthy();
 });
 
 test('debug with only props from TextInput components', () => {
   jest.spyOn(console, 'log').mockImplementation((x) => x);
 
-  const { debug, getByText } = render(<Banana />);
+  const { debug } = render(<Banana />);
 
   debug({
     mapProps: (props, node) => (node.type === 'TextInput' ? props : {}),
@@ -269,8 +265,6 @@ test('debug with only props from TextInput components', () => {
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
 
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
-
-  expect(getByText('Change freshness!')).toBeTruthy();
 });
 
 test('debug should use debugOptions from config when no option is specified', () => {
@@ -290,6 +284,14 @@ test('debug should use debugOptions from config when no option is specified', ()
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
 
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+});
+
+test('filtering out props through mapProps option should not modify component', () => {
+  const { debug, getByTestId } = render(<View testID="viewTestID" />);
+
+  debug({ mapProps: () => ({}) });
+
+  expect(getByTestId('viewTestID')).toBeTruthy();
 });
 
 test('debug should use given options over config debugOptions', () => {
