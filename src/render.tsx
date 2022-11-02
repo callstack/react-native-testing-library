@@ -155,7 +155,7 @@ function debug(
     if (typeof options === 'string') {
       // eslint-disable-next-line no-console
       console.warn(
-        'Please use debug({message; "message"}) instead of debug("message")'
+        'Using debug("message") is deprecated and will be removed in future release, please use debug({ message; "message" }) instead.'
       );
     }
 
