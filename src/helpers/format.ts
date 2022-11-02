@@ -15,30 +15,18 @@ const format = (
   options: FormatOptions = {}
 ) =>
   prettyFormat(input, {
-    plugins: [getCustomPlugin(options.mapProps)],
+    plugins: [getCustomPlugin(options.mapProps), plugins.ReactElement],
     highlight: true,
   });
 
 const getCustomPlugin = (mapProps?: MapPropsFunction): NewPlugin => {
   return {
-    test: (val) =>
-      plugins.ReactTestComponent.test(val) || plugins.ReactElement.test(val),
+    test: (val) => plugins.ReactTestComponent.test(val),
     serialize: (val, config, indentation, depth, refs, printer) => {
-      if (plugins.ReactTestComponent.test(val)) {
-        if (mapProps && val.props) {
-          val.props = mapProps(val.props, val);
-        }
-        return plugins.ReactTestComponent.serialize(
-          val,
-          config,
-          indentation,
-          depth,
-          refs,
-          printer
-        );
+      if (mapProps && val.props) {
+        val.props = mapProps(val.props, val);
       }
-
-      return plugins.ReactElement.serialize(
+      return plugins.ReactTestComponent.serialize(
         val,
         config,
         indentation,
