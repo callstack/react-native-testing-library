@@ -159,7 +159,6 @@ function debug(
     }
 
     const json = renderer.toJSON();
-
     if (json) {
       return debugDeep(json, debugOptions);
     }

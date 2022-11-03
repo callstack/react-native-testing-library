@@ -23,11 +23,12 @@ const getCustomPlugin = (mapProps?: MapPropsFunction): NewPlugin => {
   return {
     test: (val) => plugins.ReactTestComponent.test(val),
     serialize: (val, config, indentation, depth, refs, printer) => {
+      let newVal = val;
       if (mapProps && val.props) {
-        val.props = mapProps(val.props, val);
+        newVal = { ...val, props: mapProps(val.props, val) };
       }
       return plugins.ReactTestComponent.serialize(
-        val,
+        newVal,
         config,
         indentation,
         depth,
