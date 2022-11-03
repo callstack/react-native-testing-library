@@ -228,7 +228,7 @@ This option can be used to target specific props when debugging a query (for ins
 
  You can also transform prop values so that they are more readable (e.g. flatten styles).
 
- ```tsx
+ ```ts
 import { StyleSheet } from 'react-native';
 
 debug({ mapProps : {({ style, ...props })} => ({ style : StyleSheet.flatten(style), ...props }) });
@@ -236,7 +236,7 @@ debug({ mapProps : {({ style, ...props })} => ({ style : StyleSheet.flatten(styl
 
 Or remove props that have little value when debugging tests, e.g. path prop for svgs
 
-```tsx 
+```ts
 debug({ mapProps : ({ path, ...props }) => ({ ...props })});
 ```
 
@@ -547,7 +547,7 @@ If you receive warnings related to `act()` function consult our [Undestanding Ac
 
 Defined as:
 
-```jsx
+```ts
 function waitForElementToBeRemoved<T>(
   expectation: () => T,
   { timeout: number = 4500, interval: number = 50 }
