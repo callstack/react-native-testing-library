@@ -271,22 +271,11 @@ Hold the value of latest render call for easier access to query and other functi
 
 Its value is automatically cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test then it holds a special object that implements `RenderResult` but throws a helpful error on each property and method access.
 
-This can also be used to build test utils that would normally require to be in render scope, either in a test file or globally for your project. For instance in a test file where we fill a form in multiple tests: 
+This can also be used to build test utils that would normally require to be in render scope, either in a test file or globally for your project. For instance: 
 
 ```ts
-const typeEmail = (email: string) => {
-  fireEvent.changeText(screen.getPlaceholderText('email'), email)
-}
-
-// In test
-typeEmail('email@random.com')
-```
-
-You could also build debug utils for particular queries and have them available across the whole codebase : 
-
-```ts
-// Prints the rendered components with only the children prop
-const debugText = () => screen.debug({ mapProps : props =>({}) })
+// Prints the rendered components omitting all props except children.
+const debugText = () => screen.debug({ mapProps : props => ({}) })
 ```
 
 ## `cleanup`
