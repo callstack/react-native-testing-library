@@ -18,9 +18,9 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { AccessibilityOption } from './options';
+import { BaseOptions } from './options';
 
-export type TextMatchOptions = AccessibilityOption & {
+export type TextMatchOptions = BaseOptions & {
   exact?: boolean;
   normalizer?: NormalizerFn;
 };

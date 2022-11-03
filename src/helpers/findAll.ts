@@ -1,9 +1,9 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { getConfig } from '../config';
-import { AccessibilityOption } from '../queries/options';
+import { BaseOptions } from '../queries/options';
 import { isInaccessible } from './accessiblity';
 
-export function findAll<Options extends AccessibilityOption>(
+export function findAll<Options extends BaseOptions>(
   instance: ReactTestInstance,
   predicate: (node: ReactTestInstance) => boolean,
   options?: Options

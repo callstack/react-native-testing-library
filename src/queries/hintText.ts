@@ -11,7 +11,7 @@ import type {
   QueryByQuery,
 } from './makeQueries';
 import { TextMatchOptions } from './text';
-import { AccessibilityOption } from './options';
+import { BaseOptions } from './options';
 
 const getNodeByHintText = (
   node: ReactTestInstance,
@@ -26,7 +26,7 @@ const queryAllByHintText = (
   instance: ReactTestInstance
 ): ((
   hint: TextMatch,
-  queryOptions?: AccessibilityOption
+  queryOptions?: BaseOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByA11yHintFn(hint, queryOptions) {
     return findAll(

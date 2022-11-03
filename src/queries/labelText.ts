@@ -11,7 +11,7 @@ import type {
   QueryByQuery,
 } from './makeQueries';
 import { TextMatchOptions } from './text';
-import { AccessibilityOption } from './options';
+import { BaseOptions } from './options';
 
 const getNodeByLabelText = (
   node: ReactTestInstance,
@@ -26,7 +26,7 @@ const queryAllByLabelText = (
   instance: ReactTestInstance
 ): ((
   text: TextMatch,
-  queryOptions?: AccessibilityOption
+  queryOptions?: BaseOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByLabelTextFn(text, queryOptions) {
     return findAll(

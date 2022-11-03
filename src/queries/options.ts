@@ -1,1 +1,1 @@
-export type AccessibilityOption = { hidden?: boolean };
+export type BaseOptions = { hidden?: boolean };
