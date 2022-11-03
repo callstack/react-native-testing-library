@@ -3,10 +3,10 @@ import { getConfig } from '../config';
 import { BaseOptions } from '../queries/options';
 import { isInaccessible } from './accessiblity';
 
-export function findAll<Options extends BaseOptions>(
+export function findAll(
   instance: ReactTestInstance,
   predicate: (node: ReactTestInstance) => boolean,
-  options?: Options
+  options?: BaseOptions
 ) {
   const results = instance.findAll(predicate);
 
