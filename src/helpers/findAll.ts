@@ -16,12 +16,6 @@ export function findAll(
     return results;
   }
 
-  const subtreeIsInaccessibleCache = new WeakMap<ReactTestInstance>();
-
-  return results.filter(
-    (result) =>
-      !isInaccessible(result, {
-        cache: subtreeIsInaccessibleCache,
-      })
-  );
+  const cache = new WeakMap<ReactTestInstance>();
+  return results.filter((element) => !isInaccessible(element, { cache }));
 }
