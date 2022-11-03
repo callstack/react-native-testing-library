@@ -15,8 +15,8 @@ title: API
   - [`update`](#update)
   - [`unmount`](#unmount)
   - [`debug`](#debug)
-    - [`message option`](#message-option)
-    - [`mapProps option`](#mapprops-option)
+    - [`message` option](#message-option)
+    - [`mapProps` option](#mapprops-option)
     - [`debug.shallow`](#debugshallow)
   - [`toJSON`](#tojson)
   - [`container`](#container)
@@ -184,7 +184,7 @@ debug(options?: DebugOptions | string): void
 
 Pretty prints deeply rendered component passed to `render`. 
 
-#### `message option`
+#### `message` option
 
 You can provide a message that will be printed on top.
 
@@ -207,7 +207,7 @@ optional message
 ```
 
 
-#### `mapProps option`
+#### `mapProps` option
 
 You can use the `mapProps` option to transform the props that will be printed : 
 
