@@ -8,6 +8,7 @@ type QueryAllReturn = Array<ReactTestInstance> | [];
 type FindReturn = Promise<ReactTestInstance>;
 type FindAllReturn = Promise<ReactTestInstance[]>;
 
+type CommonQueryOptions = { hidden?: boolean };
 type TextMatch = string | RegExp;
 
 declare type NormalizerFn = (textToNormalize: string) => string;
@@ -15,7 +16,7 @@ declare type NormalizerConfig = {
   trim?: boolean,
   collapseWhitespace?: boolean,
 };
-declare type TextMatchOptions = {
+declare type TextMatchOptions = CommonQueryOptions & {
   exact?: boolean,
   normalizer?: NormalizerFn,
 };
@@ -209,7 +210,7 @@ interface UnsafeByPropsQueries {
     | [];
 }
 
-type ByRoleOptions = {
+type ByRoleOptions = CommonQueryOptions & {
   ...A11yState,
   name?: string,
 };
@@ -314,30 +315,58 @@ interface A11yAPI {
   ) => FindAllReturn;
 
   // State
-  getByA11yState: (matcher: A11yState) => GetReturn;
-  getAllByA11yState: (matcher: A11yState) => GetAllReturn;
-  queryByA11yState: (matcher: A11yState) => QueryReturn;
-  queryAllByA11yState: (matcher: A11yState) => QueryAllReturn;
+  getByA11yState: (
+    matcher: A11yState,
+    options?: CommonQueryOptions
+  ) => GetReturn;
+  getAllByA11yState: (
+    matcher: A11yState,
+    options?: CommonQueryOptions
+  ) => GetAllReturn;
+  queryByA11yState: (
+    matcher: A11yState,
+    options?: CommonQueryOptions
+  ) => QueryReturn;
+  queryAllByA11yState: (
+    matcher: A11yState,
+    options?: CommonQueryOptions
+  ) => QueryAllReturn;
   findByA11yState: (
     matcher: A11yState,
+    queryOptions?: CommonQueryOptions,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByA11yState: (
     matcher: A11yState,
+    queryOptions?: CommonQueryOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 
   // Value
-  getByA11yValue: (matcher: A11yValue) => GetReturn;
-  getAllByA11yValue: (matcher: A11yValue) => GetAllReturn;
-  queryByA11yValue: (matcher: A11yValue) => QueryReturn;
-  queryAllByA11yValue: (matcher: A11yValue) => QueryAllReturn;
+  getByA11yValue: (
+    matcher: A11yValue,
+    options?: CommonQueryOptions
+  ) => GetReturn;
+  getAllByA11yValue: (
+    matcher: A11yValue,
+    options?: CommonQueryOptions
+  ) => GetAllReturn;
+  queryByA11yValue: (
+    matcher: A11yValue,
+    options?: CommonQueryOptions
+  ) => QueryReturn;
+  queryAllByA11yValue: (
+    matcher: A11yValue,
+    options?: CommonQueryOptions
+  ) => QueryAllReturn;
   findByA11yValue: (
     matcher: A11yValue,
+    queryOptions?: CommonQueryOptions,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByA11yValue: (
     matcher: A11yValue,
+    queryOptions?: CommonQueryOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
 }
