@@ -17,10 +17,10 @@ import type {
 } from './makeQueries';
 import { BaseOptions } from './options';
 
-type ByRoleOptions = {
-  name?: TextMatch;
-} & AccessibilityState &
-  BaseOptions;
+type ByRoleOptions = AccessibilityState &
+  BaseOptions & {
+    name?: TextMatch;
+  };
 
 const matchAccessibleNameIfNeeded = (
   node: ReactTestInstance,
