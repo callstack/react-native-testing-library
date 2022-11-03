@@ -54,7 +54,7 @@ const queryAllByRole = (
         matchStringProp(node.props.accessibilityRole, role) &&
         matchAccessibleStateIfNeeded(node, options) &&
         matchAccessibleNameIfNeeded(node, options?.name),
-      { hidden: options?.hidden }
+      options
     );
   };
 

@@ -85,9 +85,7 @@ const queryAllByText = (
     const results = findAll(
       baseInstance,
       (node) => getNodeByText(node, text, options),
-      {
-        hidden: options?.hidden,
-      }
+      options
     );
 
     return results;

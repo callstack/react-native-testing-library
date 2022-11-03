@@ -31,7 +31,7 @@ const queryAllByA11yValue = (
       (node) =>
         typeof node.type === 'string' &&
         matchObjectProp(node.props.accessibilityValue, value),
-      { hidden: queryOptions?.hidden }
+      queryOptions
     );
   };
 

@@ -10,8 +10,7 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { TextMatchOptions } from './text';
-import { BaseOptions } from './options';
+import { TextMatchOptions } from './options';
 
 const getNodeByHintText = (
   node: ReactTestInstance,
@@ -26,7 +25,7 @@ const queryAllByHintText = (
   instance: ReactTestInstance
 ): ((
   hint: TextMatch,
-  queryOptions?: BaseOptions
+  queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByA11yHintFn(hint, queryOptions) {
     return findAll(
@@ -34,7 +33,7 @@ const queryAllByHintText = (
       (node) =>
         typeof node.type === 'string' &&
         getNodeByHintText(node, hint, queryOptions),
-      { hidden: queryOptions?.hidden }
+      queryOptions
     );
   };
 

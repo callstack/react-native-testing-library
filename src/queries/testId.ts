@@ -31,7 +31,7 @@ const queryAllByTestId = (
     const results = findAll(
       instance,
       (node) => getNodeByTestId(node, testId, queryOptions),
-      { hidden: queryOptions?.hidden }
+      queryOptions
     );
 
     return results.filter((element) => typeof element.type === 'string');

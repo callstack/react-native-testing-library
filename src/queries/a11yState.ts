@@ -25,7 +25,7 @@ const queryAllByA11yState = (
       instance,
       (node) =>
         typeof node.type === 'string' && matchAccessibilityState(node, matcher),
-      { hidden: queryOptions?.hidden }
+      queryOptions
     );
   };
 

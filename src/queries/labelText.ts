@@ -10,8 +10,7 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { TextMatchOptions } from './text';
-import { BaseOptions } from './options';
+import { TextMatchOptions } from './options';
 
 const getNodeByLabelText = (
   node: ReactTestInstance,
@@ -26,7 +25,7 @@ const queryAllByLabelText = (
   instance: ReactTestInstance
 ): ((
   text: TextMatch,
-  queryOptions?: BaseOptions
+  queryOptions?: TextMatchOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByLabelTextFn(text, queryOptions) {
     return findAll(
@@ -34,7 +33,7 @@ const queryAllByLabelText = (
       (node) =>
         typeof node.type === 'string' &&
         getNodeByLabelText(node, text, queryOptions),
-      { hidden: queryOptions?.hidden }
+      queryOptions
     );
   };
 

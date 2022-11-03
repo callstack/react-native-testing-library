@@ -39,7 +39,7 @@ const queryAllByDisplayValue = (
       instance,
       (node) =>
         getTextInputNodeByDisplayValue(node, displayValue, queryOptions),
-      { hidden: queryOptions?.hidden }
+      queryOptions
     );
   };
 
