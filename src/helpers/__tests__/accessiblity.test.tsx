@@ -22,7 +22,7 @@ test('returns false for accessible elements', () => {
   ).toBe(false);
 });
 
-test('returns true for hidden elements', () => {
+test('returns true for null elements', () => {
   expect(isHiddenFromAccessibility(null)).toBe(true);
 });
 

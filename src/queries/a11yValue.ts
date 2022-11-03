@@ -1,6 +1,10 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import { accessiblityValueKeys } from '../helpers/accessiblity';
 import { findAll } from '../helpers/findAll';
-import { matchObjectProp } from '../helpers/matchers/matchObjectProp';
+import {
+  AccessibilityValueMatcher,
+  matchAccessibilityValue,
+} from '../helpers/matchers/accessibilityValue';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -12,33 +16,38 @@ import type {
 } from './makeQueries';
 import { CommonQueryOptions } from './options';
 
-type A11yValue = {
-  min?: number;
-  max?: number;
-  now?: number;
-  text?: string;
-};
-
 const queryAllByA11yValue = (
   instance: ReactTestInstance
 ): ((
-  value: A11yValue,
+  value: AccessibilityValueMatcher,
   queryOptions?: CommonQueryOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByA11yValueFn(value, queryOptions) {
     return findAll(
       instance,
       (node) =>
-        typeof node.type === 'string' &&
-        matchObjectProp(node.props.accessibilityValue, value),
+        typeof node.type === 'string' && matchAccessibilityValue(node, value),
       queryOptions
     );
   };
 
-const getMultipleError = (value: A11yValue) =>
-  `Found multiple elements with accessibilityValue: ${JSON.stringify(value)} `;
-const getMissingError = (value: A11yValue) =>
-  `Unable to find an element with accessibilityValue: ${JSON.stringify(value)}`;
+const buildErrorMessage = (value: AccessibilityValueMatcher) => {
+  const errors: string[] = [];
+
+  accessiblityValueKeys.forEach((valueKey) => {
+    if (value[valueKey] !== undefined) {
+      errors.push(`${valueKey} value: ${value[valueKey]}`);
+    }
+  });
+
+  return errors.join(', ');
+};
+
+const getMultipleError = (value: AccessibilityValueMatcher) =>
+  `Found multiple elements with ${buildErrorMessage(value)}`;
+
+const getMissingError = (value: AccessibilityValueMatcher) =>
+  `Unable to find an element with ${buildErrorMessage(value)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByA11yValue,
@@ -47,19 +56,46 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByA11yValueQueries = {
-  getByA11yValue: GetByQuery<A11yValue, CommonQueryOptions>;
-  getAllByA11yValue: GetAllByQuery<A11yValue, CommonQueryOptions>;
-  queryByA11yValue: QueryByQuery<A11yValue, CommonQueryOptions>;
-  queryAllByA11yValue: QueryAllByQuery<A11yValue, CommonQueryOptions>;
-  findByA11yValue: FindByQuery<A11yValue, CommonQueryOptions>;
-  findAllByA11yValue: FindAllByQuery<A11yValue, CommonQueryOptions>;
+  getByA11yValue: GetByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
+  getAllByA11yValue: GetAllByQuery<
+    AccessibilityValueMatcher,
+    CommonQueryOptions
+  >;
+  queryByA11yValue: QueryByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
+  queryAllByA11yValue: QueryAllByQuery<
+    AccessibilityValueMatcher,
+    CommonQueryOptions
+  >;
+  findByA11yValue: FindByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
+  findAllByA11yValue: FindAllByQuery<
+    AccessibilityValueMatcher,
+    CommonQueryOptions
+  >;
 
-  getByAccessibilityValue: GetByQuery<A11yValue, CommonQueryOptions>;
-  getAllByAccessibilityValue: GetAllByQuery<A11yValue, CommonQueryOptions>;
-  queryByAccessibilityValue: QueryByQuery<A11yValue, CommonQueryOptions>;
-  queryAllByAccessibilityValue: QueryAllByQuery<A11yValue, CommonQueryOptions>;
-  findByAccessibilityValue: FindByQuery<A11yValue, CommonQueryOptions>;
-  findAllByAccessibilityValue: FindAllByQuery<A11yValue, CommonQueryOptions>;
+  getByAccessibilityValue: GetByQuery<
+    AccessibilityValueMatcher,
+    CommonQueryOptions
+  >;
+  getAllByAccessibilityValue: GetAllByQuery<
+    AccessibilityValueMatcher,
+    CommonQueryOptions
+  >;
+  queryByAccessibilityValue: QueryByQuery<
+    AccessibilityValueMatcher,
+    CommonQueryOptions
+  >;
+  queryAllByAccessibilityValue: QueryAllByQuery<
+    AccessibilityValueMatcher,
+    CommonQueryOptions
+  >;
+  findByAccessibilityValue: FindByQuery<
+    AccessibilityValueMatcher,
+    CommonQueryOptions
+  >;
+  findAllByAccessibilityValue: FindAllByQuery<
+    AccessibilityValueMatcher,
+    CommonQueryOptions
+  >;
 };
 
 export const bindByA11yValueQueries = (

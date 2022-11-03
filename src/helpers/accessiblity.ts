@@ -1,4 +1,8 @@
-import { AccessibilityState, StyleSheet } from 'react-native';
+import {
+  AccessibilityState,
+  AccessibilityValue,
+  StyleSheet,
+} from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings } from './component-tree';
 
@@ -6,14 +10,19 @@ type IsInaccessibleOptions = {
   cache?: WeakMap<ReactTestInstance, boolean>;
 };
 
-export type AccessibilityStateKey = keyof AccessibilityState;
-
-export const accessibilityStateKeys: AccessibilityStateKey[] = [
+export const accessibilityStateKeys: (keyof AccessibilityState)[] = [
   'disabled',
   'selected',
   'checked',
   'busy',
   'expanded',
+];
+
+export const accessiblityValueKeys: (keyof AccessibilityValue)[] = [
+  'min',
+  'max',
+  'now',
+  'text',
 ];
 
 export function isHiddenFromAccessibility(

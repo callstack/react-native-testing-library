@@ -64,7 +64,7 @@ declare type A11yValue = {
   min?: number,
   max?: number,
   now?: number,
-  text?: string,
+  text?: TextMatch,
 };
 
 type WaitForOptions = {
@@ -224,6 +224,7 @@ interface UnsafeByPropsQueries {
 type ByRoleOptions = CommonQueryOptions & {
   ...A11yState,
   name?: string,
+  value?: A11yValue,
 };
 
 type ByLabelTextOptions = CommonQueryOptions & TextMatchOptions;

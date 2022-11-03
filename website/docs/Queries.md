@@ -261,6 +261,12 @@ getByRole(
     checked?: boolean | 'mixed',
     busy?: boolean,
     expanded?: boolean,
+    value: {
+      min?: number;
+      max?: number;
+      now?: number;
+      text?: TextMatch;
+    },
     hidden?: boolean;
   }
 ): ReactTestInstance;
@@ -271,8 +277,14 @@ Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<MyComponent />);
+render(
+  <Pressable accessibilityRole="button" disabled>
+    <Text>Hello</Text>
+  </Pressable>
+);
 const element = screen.getByRole('button');
+const element2 = screen.getByRole('button', { name: "Hello" });
+const element3 = screen.getByRole('button', { name: "Hello", disabled: true });
 ```
 
 #### Options
@@ -288,6 +300,8 @@ const element = screen.getByRole('button');
 `busy`: You can filter elements by their busy state. The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
 
 `expanded`: You can filter elements by their expanded state. The possible values are `true` or `false`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
+
+`value`: Filter elements by their accessibility, available value entries include numeric `min`, `max` & `now`, as well as string or regex `text` key. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about this prop.
 
 ### `ByA11yState`, `ByAccessibilityState`
 
@@ -357,7 +371,7 @@ getByA11yValue(
     min?: number;
     max?: number;
     now?: number;
-    text?: string;
+    text?: TextMatch;
   },
   options?: {
     hidden?: boolean;
@@ -365,13 +379,16 @@ getByA11yValue(
 ): ReactTestInstance;
 ```
 
-Returns a `ReactTestInstance` with matching `accessibilityValue` prop.
+Returns a host element with matching `accessibilityValue` prop entries. Only entires provided to the query will be used to match elements. Element might have additional accessibility value entries and still be matched.
+
+When querying by `text` entry a stirng or regex might be used.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<Component />);
-const element = screen.getByA11yValue({ min: 40 });
+render(<View accessibilityValue={{ min: 0, max: 100, now: 25, text: '25%' }} />);
+const element = screen.getByA11yValue({ now: 25 });
+const element2 = screen.getByA11yValue({ text: /25/ });
 ```
 
 ## Common options
