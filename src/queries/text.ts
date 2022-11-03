@@ -7,7 +7,6 @@ import {
   getCompositeParentOfType,
 } from '../helpers/component-tree';
 import { matches, TextMatch } from '../matches';
-import type { NormalizerFn } from '../matches';
 import { findAll } from '../helpers/findAll';
 import { makeQueries } from './makeQueries';
 import type {
@@ -18,12 +17,7 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { BaseOptions } from './options';
-
-export type TextMatchOptions = BaseOptions & {
-  exact?: boolean;
-  normalizer?: NormalizerFn;
-};
+import { TextMatchOptions } from './options';
 
 const getChildrenAsText = (children: React.ReactChild[]) => {
   const textContent: string[] = [];

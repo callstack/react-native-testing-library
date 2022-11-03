@@ -10,7 +10,7 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import type { TextMatchOptions } from './text';
+import type { TextMatchOptions } from './options';
 
 const getNodeByTestId = (
   node: ReactTestInstance,
