@@ -173,7 +173,6 @@ Usually you should not need to call `unmount` as it is done automatically if you
 ### `debug`
 
 ```ts
-
 interface DebugOptions { 
   message?: string;
   mapProps?: MapPropsFunction;
@@ -795,7 +794,7 @@ Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementTo
 
 #### `defaultDebugOptions` option
 
-Default [debug options](#message-option) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
+Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
 
 ### `resetToDefaults()`
 
