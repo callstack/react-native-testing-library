@@ -1,6 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { getConfig } from '../config';
-import { AccessibilityOption } from '../queries/accessibilityOption';
+import { AccessibilityOption } from '../queries/options';
 import { isInaccessible } from './accessiblity';
 
 export function findAll<Options extends AccessibilityOption>(

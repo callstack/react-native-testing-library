@@ -11,7 +11,7 @@ import type {
   QueryByQuery,
 } from './makeQueries';
 import { TextMatchOptions } from './text';
-import { AccessibilityOption } from './accessibilityOption';
+import { AccessibilityOption } from './options';
 
 const getNodeByHintText = (
   node: ReactTestInstance,

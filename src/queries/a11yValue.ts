@@ -10,7 +10,7 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { AccessibilityOption } from './accessibilityOption';
+import { AccessibilityOption } from './options';
 
 type A11yValue = {
   min?: number;
