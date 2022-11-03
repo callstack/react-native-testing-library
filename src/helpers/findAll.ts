@@ -10,7 +10,7 @@ export function findAll(
 ) {
   const results = root.findAll(predicate);
 
-  const hidden = options?.hidden ?? getConfig().hidden; // We will want to add `defaultHidden: boolean` option to `configure`
+  const hidden = options?.hidden ?? getConfig().hidden;
 
   if (hidden) {
     return results;
