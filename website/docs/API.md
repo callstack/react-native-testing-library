@@ -189,7 +189,6 @@ You can provide a message that will be printed on top.
 
 ```jsx
 render(<Component />);
-
 screen.debug({ message: 'optional message' });
 ```
 
@@ -217,7 +216,7 @@ debug({ mapProps : ({ style, ...props }) => ({ props }) })
 
 This will log the rendered JSX without the `style` props. 
 
-The `children` prop cannot be filtered out so the following will print all rendered components with all props but children filtered.
+The `children` prop cannot be filtered out so the following will print all rendered components with all props but `children` filtered out.
 
 
 ```ts
