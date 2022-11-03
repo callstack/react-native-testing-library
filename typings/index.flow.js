@@ -210,10 +210,7 @@ type ByRoleOptions = {
 
 interface A11yAPI {
   // Label
-  getByLabelText: (
-    matcher: TextMatch,
-    options?: TextMatchOptions
-  ) => GetReturn;
+  getByLabelText: (matcher: TextMatch, options?: TextMatchOptions) => GetReturn;
   getAllByLabelText: (
     matcher: TextMatch,
     options?: TextMatchOptions
@@ -238,14 +235,8 @@ interface A11yAPI {
   ) => FindAllReturn;
 
   // Hint
-  getByA11yHint: (
-    matcher: TextMatch,
-    options?: TextMatchOptions
-  ) => GetReturn;
-  getByHintText: (
-    matcher: TextMatch,
-    options?: TextMatchOptions
-  ) => GetReturn;
+  getByA11yHint: (matcher: TextMatch, options?: TextMatchOptions) => GetReturn;
+  getByHintText: (matcher: TextMatch, options?: TextMatchOptions) => GetReturn;
   getAllByA11yHint: (
     matcher: TextMatch,
     options?: TextMatchOptions
@@ -349,8 +340,18 @@ interface Thenable {
   then: (resolve: () => any, reject?: () => any) => any;
 }
 
+type MapPropsFunction = (
+  props: { [string]: mixed },
+  node: ReactTestRendererJSON
+) => { [string]: mixed };
+
+type DebugOptions = {
+  message?: string,
+  mapProps?: MapPropsFunction,
+};
+
 type Debug = {
-  (message?: string): void,
+  (options?: DebugOptions | string): void,
   shallow: (message?: string) => void,
 };
 
@@ -413,6 +414,7 @@ declare module '@testing-library/react-native' {
 
   declare interface Config {
     asyncUtilTimeout: number;
+    defaultDebugOptions?: $Shape<DebugOptions>;
   }
 
   declare export var configure: (options: $Shape<Config>) => void;

@@ -1,9 +1,7 @@
+/* eslint-disable no-console */
 import * as React from 'react';
 import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
-import stripAnsi from 'strip-ansi';
-import { render, fireEvent, RenderAPI } from '..';
-
-type ConsoleLogMock = jest.Mock<Array<string>>;
+import { render, fireEvent, RenderAPI, resetToDefaults } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -11,6 +9,10 @@ const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
 const DEFAULT_INPUT_CUSTOMER = 'What banana?';
+
+beforeEach(() => {
+  resetToDefaults();
+});
 
 class MyButton extends React.Component<any> {
   render() {
@@ -154,46 +156,6 @@ test('toJSON', () => {
   const { toJSON } = render(<MyButton>press me</MyButton>);
 
   expect(toJSON()).toMatchSnapshot();
-});
-
-test('debug', () => {
-  jest.spyOn(console, 'log').mockImplementation((x) => x);
-
-  const { debug } = render(<Banana />);
-
-  debug();
-  debug('my custom message');
-  debug.shallow();
-  debug.shallow('my other custom message');
-
-  // eslint-disable-next-line no-console
-  const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
-
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
-  expect(stripAnsi(mockCalls[1][0] + mockCalls[1][1])).toMatchSnapshot(
-    'with message'
-  );
-  expect(stripAnsi(mockCalls[2][0])).toMatchSnapshot('shallow');
-  expect(stripAnsi(mockCalls[3][0] + mockCalls[3][1])).toMatchSnapshot(
-    'shallow with message'
-  );
-});
-
-test('debug changing component', () => {
-  jest.spyOn(console, 'log').mockImplementation((x) => x);
-
-  const { UNSAFE_getByProps, debug } = render(<Banana />);
-
-  fireEvent.press(UNSAFE_getByProps({ type: 'primary' }));
-
-  debug();
-
-  // eslint-disable-next-line no-console
-  const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
-
-  expect(stripAnsi(mockCalls[4][0])).toMatchSnapshot(
-    'bananaFresh button message should now be "fresh"'
-  );
 });
 
 test('renders options.wrapper around node', () => {

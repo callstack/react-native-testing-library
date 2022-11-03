@@ -15,6 +15,8 @@ title: API
   - [`update`](#update)
   - [`unmount`](#unmount)
   - [`debug`](#debug)
+    - [`message` option](#message-option)
+    - [`mapProps` option](#mapprops-option)
     - [`debug.shallow`](#debugshallow)
   - [`toJSON`](#tojson)
   - [`container`](#container)
@@ -48,6 +50,7 @@ title: API
 - [Configuration](#configuration)
   - [`configure`](#configure)
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
+    - [`defaultDebugOptions` option](#defaultdebugoptions-option)
   - [`resetToDefaults()`](#resettodefaults)
   - [Environment variables](#environment-variables)
     - [`RNTL_SKIP_AUTO_CLEANUP`](#rntl_skip_auto_cleanup)
@@ -170,15 +173,23 @@ Usually you should not need to call `unmount` as it is done automatically if you
 ### `debug`
 
 ```ts
-debug(message?: string): void
+interface DebugOptions { 
+  message?: string;
+  mapProps?: MapPropsFunction;
+}
+
+debug(options?: DebugOptions | string): void
 ```
 
-Pretty prints deeply rendered component passed to `render` with optional message on top.
+Pretty prints deeply rendered component passed to `render`. 
+
+#### `message` option
+
+You can provide a message that will be printed on top.
 
 ```jsx
 render(<Component />);
-
-screen.debug('optional message');
+screen.debug({ message: 'optional message' });
 ```
 
 logs optional message and colored JSX:
@@ -191,6 +202,41 @@ optional message
 >
   <Text>Press me</Text>
 </View>
+```
+
+
+#### `mapProps` option
+
+You can use the `mapProps` option to transform the props that will be printed : 
+
+```jsx
+render(<View style={{ backgroundColor: 'red' }}/>);
+debug({ mapProps : ({ style, ...props }) => ({ props }) })
+```
+
+This will log the rendered JSX without the `style` props. 
+
+The `children` prop cannot be filtered out so the following will print all rendered components with all props but `children` filtered out.
+
+
+```ts
+debug({ mapProps : props => ({}) })
+```
+
+This option can be used to target specific props when debugging a query (for instance keeping only `children` prop when debugging a `getByText` query).
+
+ You can also transform prop values so that they are more readable (e.g. flatten styles).
+
+ ```ts
+import { StyleSheet } from 'react-native';
+
+debug({ mapProps : {({ style, ...props })} => ({ style : StyleSheet.flatten(style), ...props }) });
+ ```
+
+Or remove props that have little value when debugging tests, e.g. path prop for svgs
+
+```ts
+debug({ mapProps : ({ path, ...props }) => ({ ...props })});
 ```
 
 #### `debug.shallow`
@@ -222,6 +268,13 @@ let screen: RenderResult;
 Hold the value of latest render call for easier access to query and other functions returned by [`render`](#render). 
 
 Its value is automatically cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test then it holds a special object that implements `RenderResult` but throws a helpful error on each property and method access.
+
+This can also be used to build test utils that would normally require to be in render scope, either in a test file or globally for your project. For instance: 
+
+```ts
+// Prints the rendered components omitting all props except children.
+const debugText = () => screen.debug({ mapProps : props => ({}) })
+```
 
 ## `cleanup`
 
@@ -493,7 +546,7 @@ If you receive warnings related to `act()` function consult our [Undestanding Ac
 
 Defined as:
 
-```jsx
+```ts
 function waitForElementToBeRemoved<T>(
   expectation: () => T,
   { timeout: number = 4500, interval: number = 50 }
@@ -729,6 +782,7 @@ it('should use context value', () => {
 ```ts
 type Config = {
   asyncUtilTimeout: number;
+  defaultDebugOptions: Partial<DebugOptions>
 };
 
 function configure(options: Partial<Config>)  {}
@@ -737,6 +791,9 @@ function configure(options: Partial<Config>)  {}
 
 Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
 
+#### `defaultDebugOptions` option
+
+Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
 
 ### `resetToDefaults()`
 

@@ -5,10 +5,11 @@ import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import debugShallow from './helpers/debugShallow';
-import debugDeep from './helpers/debugDeep';
+import debugDeep, { DebugOptions } from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
 import { setRenderResult, screen } from './screen';
 import { validateStringsRenderedWithinText } from './helpers/stringValidation';
+import { getConfig } from './config';
 
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
@@ -135,7 +136,7 @@ function updateWithAct(
 }
 
 interface DebugFunction {
-  (message?: string): void;
+  (options?: DebugOptions | string): void;
   shallow: (message?: string) => void;
 }
 
@@ -143,10 +144,23 @@ function debug(
   instance: ReactTestInstance,
   renderer: ReactTestRenderer
 ): DebugFunction {
-  function debugImpl(message?: string) {
+  function debugImpl(options?: DebugOptions | string) {
+    const { defaultDebugOptions } = getConfig();
+    const debugOptions =
+      typeof options === 'string'
+        ? { ...defaultDebugOptions, message: options }
+        : { ...defaultDebugOptions, ...options };
+
+    if (typeof options === 'string') {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'Using debug("message") is deprecated and will be removed in future release, please use debug({ message; "message" }) instead.'
+      );
+    }
+
     const json = renderer.toJSON();
     if (json) {
-      return debugDeep(json, message);
+      return debugDeep(json, debugOptions);
     }
   }
   debugImpl.shallow = (message?: string) => debugShallow(instance, message);
