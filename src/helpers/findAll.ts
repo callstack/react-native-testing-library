@@ -4,11 +4,11 @@ import { BaseOptions } from '../queries/options';
 import { isInaccessible } from './accessiblity';
 
 export function findAll(
-  instance: ReactTestInstance,
+  root: ReactTestInstance,
   predicate: (node: ReactTestInstance) => boolean,
   options?: BaseOptions
 ) {
-  const results = instance.findAll(predicate);
+  const results = root.findAll(predicate);
 
   const hidden = options?.hidden ?? getConfig().hidden; // We will want to add `defaultHidden: boolean` option to `configure`
 
