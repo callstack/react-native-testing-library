@@ -12,13 +12,13 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { BaseOptions } from './options';
+import { CommonQueryOptions } from './options';
 
 const queryAllByA11yState = (
   instance: ReactTestInstance
 ): ((
   matcher: AccessibilityState,
-  queryOptions?: BaseOptions
+  queryOptions?: CommonQueryOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByA11yStateFn(matcher, queryOptions) {
     return findAll(
@@ -54,22 +54,31 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByA11yStateQueries = {
-  getByA11yState: GetByQuery<AccessibilityState, BaseOptions>;
-  getAllByA11yState: GetAllByQuery<AccessibilityState, BaseOptions>;
-  queryByA11yState: QueryByQuery<AccessibilityState, BaseOptions>;
-  queryAllByA11yState: QueryAllByQuery<AccessibilityState, BaseOptions>;
-  findByA11yState: FindByQuery<AccessibilityState, BaseOptions>;
-  findAllByA11yState: FindAllByQuery<AccessibilityState, BaseOptions>;
+  getByA11yState: GetByQuery<AccessibilityState, CommonQueryOptions>;
+  getAllByA11yState: GetAllByQuery<AccessibilityState, CommonQueryOptions>;
+  queryByA11yState: QueryByQuery<AccessibilityState, CommonQueryOptions>;
+  queryAllByA11yState: QueryAllByQuery<AccessibilityState, CommonQueryOptions>;
+  findByA11yState: FindByQuery<AccessibilityState, CommonQueryOptions>;
+  findAllByA11yState: FindAllByQuery<AccessibilityState, CommonQueryOptions>;
 
-  getByAccessibilityState: GetByQuery<AccessibilityState, BaseOptions>;
-  getAllByAccessibilityState: GetAllByQuery<AccessibilityState, BaseOptions>;
-  queryByAccessibilityState: QueryByQuery<AccessibilityState, BaseOptions>;
+  getByAccessibilityState: GetByQuery<AccessibilityState, CommonQueryOptions>;
+  getAllByAccessibilityState: GetAllByQuery<
+    AccessibilityState,
+    CommonQueryOptions
+  >;
+  queryByAccessibilityState: QueryByQuery<
+    AccessibilityState,
+    CommonQueryOptions
+  >;
   queryAllByAccessibilityState: QueryAllByQuery<
     AccessibilityState,
-    BaseOptions
+    CommonQueryOptions
   >;
-  findByAccessibilityState: FindByQuery<AccessibilityState, BaseOptions>;
-  findAllByAccessibilityState: FindAllByQuery<AccessibilityState, BaseOptions>;
+  findByAccessibilityState: FindByQuery<AccessibilityState, CommonQueryOptions>;
+  findAllByAccessibilityState: FindAllByQuery<
+    AccessibilityState,
+    CommonQueryOptions
+  >;
 };
 
 export const bindByA11yStateQueries = (

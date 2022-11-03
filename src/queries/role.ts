@@ -15,10 +15,10 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { BaseOptions } from './options';
+import { CommonQueryOptions } from './options';
 
 type ByRoleOptions = AccessibilityState &
-  BaseOptions & {
+  CommonQueryOptions & {
     name?: TextMatch;
   };
 

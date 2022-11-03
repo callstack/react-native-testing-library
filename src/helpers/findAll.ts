@@ -1,12 +1,12 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { getConfig } from '../config';
-import { BaseOptions } from '../queries/options';
+import { CommonQueryOptions } from '../queries/options';
 import { isInaccessible } from './accessiblity';
 
 export function findAll(
   root: ReactTestInstance,
   predicate: (node: ReactTestInstance) => boolean,
-  options?: BaseOptions
+  options?: CommonQueryOptions
 ) {
   const results = root.findAll(predicate);
 

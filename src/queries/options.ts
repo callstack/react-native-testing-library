@@ -1,8 +1,8 @@
 import { NormalizerFn } from '../matches';
 
-export type BaseOptions = { hidden?: boolean };
+export type CommonQueryOptions = { hidden?: boolean };
 
-export type TextMatchOptions = BaseOptions & {
+export type TextMatchOptions = CommonQueryOptions & {
   exact?: boolean;
   normalizer?: NormalizerFn;
 };
