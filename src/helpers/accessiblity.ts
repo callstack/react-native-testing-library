@@ -18,7 +18,7 @@ export const accessibilityStateKeys: AccessibilityStateKey[] = [
 
 export function isInaccessible(
   element: ReactTestInstance | null,
-  { cache }: IsInaccessibleOptions = { cache: undefined }
+  { cache }: IsInaccessibleOptions = {}
 ): boolean {
   if (element == null) {
     return true;
