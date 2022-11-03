@@ -109,8 +109,14 @@ interface ByTestIdQueries {
     testID: TextMatch,
     options?: TextMatchOptions
   ) => Array<ReactTestInstance>;
-  queryByTestId: (testID: TextMatch) => ReactTestInstance | null;
-  queryAllByTestId: (testID: TextMatch) => Array<ReactTestInstance> | [];
+  queryByTestId: (
+    testID: TextMatch,
+    options?: TextMatchOptions
+  ) => ReactTestInstance | null;
+  queryAllByTestId: (
+    testID: TextMatch,
+    options?: TextMatchOptions
+  ) => Array<ReactTestInstance> | [];
   findByTestId: (
     testID: TextMatch,
     queryOptions?: TextMatchOptions,
