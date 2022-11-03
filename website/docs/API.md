@@ -784,6 +784,7 @@ it('should use context value', () => {
 ```ts
 type Config = {
   asyncUtilTimeout: number;
+  defaultDebugOptions: Partial<DebugOptions>
 };
 
 function configure(options: Partial<Config>)  {}
