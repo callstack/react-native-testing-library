@@ -51,6 +51,7 @@ title: API
   - [`configure`](#configure)
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
     - [`defaultDebugOptions` option](#defaultdebugoptions-option)
+    - [`hidden` option](#hidden-option)
   - [`resetToDefaults()`](#resettodefaults)
   - [Environment variables](#environment-variables)
     - [`RNTL_SKIP_AUTO_CLEANUP`](#rntl_skip_auto_cleanup)
@@ -782,7 +783,8 @@ it('should use context value', () => {
 ```ts
 type Config = {
   asyncUtilTimeout: number;
-  defaultDebugOptions: Partial<DebugOptions>
+  defaultDebugOptions: Partial<DebugOptions>;
+  hidden: boolean;
 };
 
 function configure(options: Partial<Config>)  {}
@@ -795,11 +797,16 @@ Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementTo
 
 Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
 
+#### `hidden` option
+
+Default [hidden option](Queries.md#hidden-option) to be used for all queries. This default option will be overridden by the one you specify directly when using your query (eg: `getByText("Hello world", { hidden: true })`).
+
 ### `resetToDefaults()`
 
 ```ts
 function resetToDefaults() {}
 ```
+
 
 ### Environment variables
 
