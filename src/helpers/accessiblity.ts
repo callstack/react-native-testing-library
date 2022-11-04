@@ -46,7 +46,9 @@ export function isHiddenFromAccessibility(
 /** RTL-compatitibility alias for `isHiddenFromAccessibility` */
 export const isInaccessible = isHiddenFromAccessibility;
 
-function isSubtreeInaccessible(element: ReactTestInstance | null): boolean {
+export function isSubtreeInaccessible(
+  element: ReactTestInstance | null
+): boolean {
   if (element == null) {
     return true;
   }
