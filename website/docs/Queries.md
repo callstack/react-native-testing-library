@@ -382,7 +382,7 @@ All queries have the `hidden` option which enables them to respect accessibility
 
 You can configure the default value with the [`configure` function](API.md#configure).
 
-An element is considered to be hidden from accessibility based on [`isInaccessible()`](./API.md#isinaccessible) function result.
+An element is considered to be hidden from accessibility based on [`isHiddenFromAccessibility()`](./API.md#ishiddenfromaccessibility) function.
 
 **Examples**
 
