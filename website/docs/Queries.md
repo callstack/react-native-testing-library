@@ -28,9 +28,8 @@ title: Queries
   - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
 - [Common query options](#common-query-options)
   - [`hidden` option](#hidden-option)
-    - [Examples](#examples)
 - [TextMatch](#textmatch)
-  - [Examples](#examples-1)
+  - [Examples](#examples)
   - [Precision](#precision)
   - [Normalization](#normalization)
     - [Normalization Examples](#normalization-examples)
@@ -368,11 +367,9 @@ You can configure the default value with the [`configure` function](API.md#confi
 
 An element is considered to be hidden from accessibility based on [`isInaccessible()`](./API.md#isinaccessible) function result.
 
-#### Examples
+**Examples**
 
-Given the following render: 
-
-```ts
+```tsx
 render(<Text style={{ display:"none" }}>I am inaccessible</Text>);
 
 // Ignore hidden elements
