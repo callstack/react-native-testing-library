@@ -26,8 +26,12 @@ title: Queries
     - [Default state for: `disabled`, `selected`, and `busy` keys](#default-state-for-disabled-selected-and-busy-keys)
     - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
   - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
-- [TextMatch](#textmatch)
+- [Hidden accessibility option](#hidden-accessibility-option)
   - [Examples](#examples)
+    - [`display: "none"`](#display-none)
+    - [`accessibilityElementsHidden`](#accessibilityelementshidden)
+- [TextMatch](#textmatch)
+  - [Examples](#examples-1)
   - [Precision](#precision)
   - [Normalization](#normalization)
     - [Normalization Examples](#normalization-examples)
@@ -87,7 +91,7 @@ type ReactTestInstance = {
 
 ### Options
 
-Usually query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#textmatch) for more info.
+Usually query first argument can be a **string** or a **regex**. All queries take at least the [`hidden`](#hidden-accessibility-option) option as an optionnal second argument and some queries accept more options which change string matching behaviour. See [TextMatch](#textmatch) for more info.
 
 ### `ByText`
 
@@ -354,6 +358,57 @@ import { render, screen } from '@testing-library/react-native';
 render(<Component />);
 const element = screen.getByA11yValue({ min: 40 });
 ```
+
+## Hidden accessibility option
+
+All queries have the `hidden` option which enables them to respect accessibility props on components when it is set to `false`. If you set `hidden` to `true`, elements that are normally excluded from the accessibility tree are considered for the query as well.  For now if no `hidden` option is defined, `hidden` is set to `true` by default in order to avoid breaking changes. In the near future, we plan to set it to `false` by default so that the default behavior of all queries is to respect accessibility.
+
+An element will be considered inaccessible when it checks one of the following: 
+- it has a style with `display: "none"`
+- it has the prop [`importantForAccessibility='no-hide-descendants'`](https://reactnative.dev/docs/accessibility#importantforaccessibility-android)
+- it has the prop [`accessibilityElementsHidden={true}`](https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios) 
+- one of its siblings has the prop [`accessibilityViewIsModal={true}`](https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios)
+- one of its parents is inaccessible due to one of the checks above
+
+You can find more documentation about accessibility in React Native [here](https://reactnative.dev/docs/accessibility).
+
+### Examples
+
+#### `display: "none"`
+Given the following render: 
+```ts
+render(<Text style={{display:"none"}}>I am inaccessible</Text>)
+```
+
+Will **find a match**:
+```ts
+screen.getByText("I am inaccessible", { hidden: true});
+screen.getByText("I am inaccessible");
+```
+
+Will **NOT find a match**:
+```ts
+screen.getByText("I am inaccessible", { hidden: false }); 
+```
+
+#### `accessibilityElementsHidden`
+
+Given the following render:
+```ts
+render(<View accessibilityElementsHidden><Text>I am inaccessible</Text></View>)
+```
+
+Will **find a match**:
+```ts
+screen.getByText("I am inaccessible", { hidden: true});
+screen.getByText("I am inaccessible");
+```
+
+Will **NOT find a match**:
+```ts
+screen.getByText("I am inaccessible", { hidden: false }); 
+```
+
 
 ## TextMatch
 
