@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
-import { render, isHiddenFromAccessibility } from '../..';
+import { render, isHiddenFromAccessibility, isInaccessible } from '../..';
 
 test('returns false for accessible elements', () => {
   expect(
@@ -164,4 +164,8 @@ test('is not triggered for descendent of element with accessibilityViewIsModal p
     </View>
   );
   expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(false);
+});
+
+test('has isInaccessible alias', () => {
+  expect(isInaccessible).toBe(isHiddenFromAccessibility);
 });
