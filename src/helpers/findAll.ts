@@ -13,7 +13,7 @@ export function findAll(
 ) {
   const results = root.findAll(predicate);
 
-  const hidden = options?.hidden ?? getConfig().hidden;
+  const hidden = options?.hidden ?? getConfig().defaultHidden;
 
   if (hidden) {
     return results;

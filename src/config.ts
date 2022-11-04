@@ -6,12 +6,12 @@ export type Config = {
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
   /** Default hidden value for all queries */
-  hidden: boolean;
+  defaultHidden: boolean;
 };
 
 const defaultConfig: Config = {
   asyncUtilTimeout: 1000,
-  hidden: true,
+  defaultHidden: true,
 };
 
 let config = {

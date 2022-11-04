@@ -14,7 +14,7 @@ test('configure() overrides existing config values', () => {
   expect(getConfig()).toEqual({
     asyncUtilTimeout: 5000,
     defaultDebugOptions: { message: 'debug message' },
-    hidden: true,
+    defaultHidden: true,
   });
 });
 
