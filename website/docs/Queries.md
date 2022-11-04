@@ -101,6 +101,7 @@ getByText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -126,6 +127,7 @@ getByPlaceholderText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -149,6 +151,7 @@ getByDisplayValue(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -172,6 +175,7 @@ getByTestId(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -199,6 +203,7 @@ getByLabelText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -224,6 +229,7 @@ getByHintText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -248,13 +254,14 @@ Please consult [Apple guidelines on how `accessibilityHint` should be used](http
 ```ts
 getByRole(
   role: TextMatch,
-  option?: {
+  options?: {
     name?: TextMatch
     disabled?: boolean,
     selected?: boolean,
     checked?: boolean | 'mixed',
     busy?: boolean,
     expanded?: boolean,
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -295,6 +302,9 @@ getByA11yState(
     checked?: boolean | 'mixed',
     expanded?: boolean,
     busy?: boolean,
+  },
+  options?: {
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -348,6 +358,9 @@ getByA11yValue(
     max?: number;
     now?: number;
     text?: string;
+  },
+  options?: {
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
