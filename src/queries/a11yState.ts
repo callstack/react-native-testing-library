@@ -1,8 +1,8 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { AccessibilityState } from 'react-native';
 import { accessibilityStateKeys } from '../helpers/accessiblity';
-import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
 import { findAll } from '../helpers/findAll';
+import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,

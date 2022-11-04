@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { matches, TextMatch } from '../matches';
 import { findAll } from '../helpers/findAll';
+import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -10,7 +10,9 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { TextMatchOptions } from './options';
+import { CommonQueryOptions, TextMatchOptions } from './options';
+
+type ByLabelTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const getNodeByLabelText = (
   node: ReactTestInstance,
@@ -25,7 +27,7 @@ const queryAllByLabelText = (
   instance: ReactTestInstance
 ): ((
   text: TextMatch,
-  queryOptions?: TextMatchOptions
+  queryOptions?: ByLabelTextOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByLabelTextFn(text, queryOptions) {
     return findAll(
@@ -49,12 +51,12 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByLabelTextQueries = {
-  getByLabelText: GetByQuery<TextMatch, TextMatchOptions>;
-  getAllByLabelText: GetAllByQuery<TextMatch, TextMatchOptions>;
-  queryByLabelText: QueryByQuery<TextMatch, TextMatchOptions>;
-  queryAllByLabelText: QueryAllByQuery<TextMatch, TextMatchOptions>;
-  findByLabelText: FindByQuery<TextMatch, TextMatchOptions>;
-  findAllByLabelText: FindAllByQuery<TextMatch, TextMatchOptions>;
+  getByLabelText: GetByQuery<TextMatch, ByLabelTextOptions>;
+  getAllByLabelText: GetAllByQuery<TextMatch, ByLabelTextOptions>;
+  queryByLabelText: QueryByQuery<TextMatch, ByLabelTextOptions>;
+  queryAllByLabelText: QueryAllByQuery<TextMatch, ByLabelTextOptions>;
+  findByLabelText: FindByQuery<TextMatch, ByLabelTextOptions>;
+  findAllByLabelText: FindAllByQuery<TextMatch, ByLabelTextOptions>;
 };
 
 export const bindByLabelTextQueries = (

@@ -60,21 +60,13 @@ test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
 });
 
 test('byPlaceholderText queries support hidden option', () => {
-  const { queryByPlaceholderText, getByPlaceholderText } = render(
-    <TextInput
-      placeholder={PLACEHOLDER_CHEF}
-      value={INPUT_CHEF}
-      style={{ display: 'none' }}
-    />
+  const { getByPlaceholderText, queryByPlaceholderText } = render(
+    <TextInput placeholder="hidden" style={{ display: 'none' }} />
   );
-  expect(
-    queryByPlaceholderText(PLACEHOLDER_CHEF, { hidden: false })
-  ).toBeFalsy();
-  expect(() =>
-    getByPlaceholderText(PLACEHOLDER_CHEF, { hidden: false })
-  ).toThrow();
-  expect(
-    queryByPlaceholderText(PLACEHOLDER_CHEF, { hidden: true })
-  ).toBeTruthy();
-  expect(getByPlaceholderText(PLACEHOLDER_CHEF, { hidden: true })).toBeTruthy();
+
+  expect(getByPlaceholderText('hidden')).toBeTruthy();
+  expect(getByPlaceholderText('hidden', { hidden: true })).toBeTruthy();
+
+  expect(queryByPlaceholderText('hidden', { hidden: false })).toBeFalsy();
+  expect(() => getByPlaceholderText('hidden', { hidden: false })).toThrow();
 });

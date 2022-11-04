@@ -26,7 +26,7 @@ title: Queries
     - [Default state for: `disabled`, `selected`, and `busy` keys](#default-state-for-disabled-selected-and-busy-keys)
     - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
   - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
-- [Common query options](#common-query-options)
+- [Common options](#common-options)
   - [`hidden` option](#hidden-option)
 - [TextMatch](#textmatch)
   - [Examples](#examples)
@@ -357,7 +357,7 @@ render(<Component />);
 const element = screen.getByA11yValue({ min: 40 });
 ```
 
-## Common query options
+## Common options
 
 ### `hidden` option
 
@@ -370,14 +370,14 @@ An element is considered to be hidden from accessibility based on [`isInaccessib
 **Examples**
 
 ```tsx
-render(<Text style={{ display:"none" }}>I am inaccessible</Text>);
+render(<Text style={{ display:"none" }}>I am hidden from accessibility</Text>);
 
 // Ignore hidden elements
-expect(screen.queryByText("I am inaccessible", { hidden: false })).toBeFalsy();
+expect(screen.queryByText("I am hidden from accessibility", { hidden: false })).toBeFalsy();
 
 // Match hidden elements
-expect(screen.getByText("I am inaccessible")).toBeTruthy(); // Defaults to hidden: true for now
-expect(screen.getByText("I am inaccessible", { hidden: true})).toBeTruthy();
+expect(screen.getByText("I am hidden from accessibility")).toBeTruthy(); // Defaults to hidden: true for now
+expect(screen.getByText("I am hidden from accessibility", { hidden: true})).toBeTruthy();
 ```
 
 ## TextMatch

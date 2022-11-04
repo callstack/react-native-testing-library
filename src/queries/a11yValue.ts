@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { matchObjectProp } from '../helpers/matchers/matchObjectProp';
 import { findAll } from '../helpers/findAll';
+import { matchObjectProp } from '../helpers/matchers/matchObjectProp';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,

@@ -468,11 +468,13 @@ test('getByText searches for text within self host element', () => {
 });
 
 test('byText support hidden option', () => {
-  const { queryByText, getByText } = render(
-    <Text style={{ display: 'none' }}>I am inaccessible</Text>
+  const { getByText, queryByText } = render(
+    <Text style={{ display: 'none' }}>Hidden from accessibility</Text>
   );
-  expect(queryByText('I am inaccessible', { hidden: false })).toBeFalsy();
-  expect(() => getByText('I am inaccessible', { hidden: false })).toThrow();
-  expect(queryByText('I am inaccessible', { hidden: true })).toBeTruthy();
-  expect(getByText('I am inaccessible', { hidden: true })).toBeTruthy();
+
+  expect(getByText(/hidden/i)).toBeTruthy();
+  expect(getByText(/hidden/i, { hidden: true })).toBeTruthy();
+
+  expect(queryByText(/hidden/i, { hidden: false })).toBeFalsy();
+  expect(() => getByText(/hidden/i, { hidden: false })).toThrow();
 });

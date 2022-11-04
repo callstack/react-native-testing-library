@@ -1,11 +1,11 @@
 import { type AccessibilityState } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import { accessibilityStateKeys } from '../helpers/accessiblity';
+import { findAll } from '../helpers/findAll';
 import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
 import { matchStringProp } from '../helpers/matchers/matchStringProp';
 import type { TextMatch } from '../matches';
 import { getQueriesForElement } from '../within';
-import { findAll } from '../helpers/findAll';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -17,8 +17,8 @@ import type {
 } from './makeQueries';
 import { CommonQueryOptions } from './options';
 
-type ByRoleOptions = AccessibilityState &
-  CommonQueryOptions & {
+type ByRoleOptions = CommonQueryOptions &
+  AccessibilityState & {
     name?: TextMatch;
   };
 

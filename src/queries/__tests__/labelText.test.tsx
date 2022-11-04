@@ -145,13 +145,15 @@ describe('findBy options deprecations', () => {
 });
 
 test('byLabelText queries support hidden option', () => {
-  const { queryByLabelText, getByLabelText } = render(
-    <Text accessibilityLabel="im-inaccessible" style={{ display: 'none' }}>
-      I am inaccessible
+  const { getByLabelText, queryByLabelText } = render(
+    <Text accessibilityLabel="hidden" style={{ display: 'none' }}>
+      Hidden from accessibility
     </Text>
   );
-  expect(queryByLabelText('im-inaccessible', { hidden: false })).toBeFalsy();
-  expect(() => getByLabelText('im-inaccessible', { hidden: false })).toThrow();
-  expect(queryByLabelText('im-inaccessible', { hidden: true })).toBeTruthy();
-  expect(getByLabelText('im-inaccessible', { hidden: true })).toBeTruthy();
+
+  expect(getByLabelText('hidden')).toBeTruthy();
+  expect(getByLabelText('hidden', { hidden: true })).toBeTruthy();
+
+  expect(queryByLabelText('hidden', { hidden: false })).toBeFalsy();
+  expect(() => getByLabelText('hidden', { hidden: false })).toThrow();
 });

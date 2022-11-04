@@ -134,14 +134,15 @@ test('findByTestId and findAllByTestId work asynchronously', async () => {
 }, 20000);
 
 test('byTestId queries support hidden option', () => {
-  const { queryByTestId, getByTestId } = render(
-    <Text style={{ display: 'none' }} testID="im-inaccessible">
-      I am inaccessible
+  const { getByTestId, queryByTestId } = render(
+    <Text style={{ display: 'none' }} testID="hidden">
+      Hidden from accessibility
     </Text>
   );
 
-  expect(queryByTestId('im-inaccessible', { hidden: false })).toBeFalsy();
-  expect(() => getByTestId('im-inaccessible', { hidden: false })).toThrow();
-  expect(queryByTestId('im-inaccessible', { hidden: true })).toBeTruthy();
-  expect(getByTestId('im-inaccessible', { hidden: true })).toBeTruthy();
+  expect(getByTestId('hidden')).toBeTruthy();
+  expect(getByTestId('hidden', { hidden: true })).toBeTruthy();
+
+  expect(queryByTestId('hidden', { hidden: false })).toBeFalsy();
+  expect(() => getByTestId('hidden', { hidden: false })).toThrow();
 });

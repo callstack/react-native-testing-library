@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { matches, TextMatch } from '../matches';
 import { findAll } from '../helpers/findAll';
+import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -10,7 +10,9 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { TextMatchOptions } from './options';
+import { CommonQueryOptions, TextMatchOptions } from './options';
+
+type ByHintTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const getNodeByHintText = (
   node: ReactTestInstance,
@@ -25,7 +27,7 @@ const queryAllByHintText = (
   instance: ReactTestInstance
 ): ((
   hint: TextMatch,
-  queryOptions?: TextMatchOptions
+  queryOptions?: ByHintTextOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByA11yHintFn(hint, queryOptions) {
     return findAll(
@@ -49,28 +51,28 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByHintTextQueries = {
-  getByHintText: GetByQuery<TextMatch, TextMatchOptions>;
-  getAllByHintText: GetAllByQuery<TextMatch, TextMatchOptions>;
-  queryByHintText: QueryByQuery<TextMatch, TextMatchOptions>;
-  queryAllByHintText: QueryAllByQuery<TextMatch, TextMatchOptions>;
-  findByHintText: FindByQuery<TextMatch, TextMatchOptions>;
-  findAllByHintText: FindAllByQuery<TextMatch, TextMatchOptions>;
+  getByHintText: GetByQuery<TextMatch, ByHintTextOptions>;
+  getAllByHintText: GetAllByQuery<TextMatch, ByHintTextOptions>;
+  queryByHintText: QueryByQuery<TextMatch, ByHintTextOptions>;
+  queryAllByHintText: QueryAllByQuery<TextMatch, ByHintTextOptions>;
+  findByHintText: FindByQuery<TextMatch, ByHintTextOptions>;
+  findAllByHintText: FindAllByQuery<TextMatch, ByHintTextOptions>;
 
   // a11yHint aliases
-  getByA11yHint: GetByQuery<TextMatch, TextMatchOptions>;
-  getAllByA11yHint: GetAllByQuery<TextMatch, TextMatchOptions>;
-  queryByA11yHint: QueryByQuery<TextMatch, TextMatchOptions>;
-  queryAllByA11yHint: QueryAllByQuery<TextMatch, TextMatchOptions>;
-  findByA11yHint: FindByQuery<TextMatch, TextMatchOptions>;
-  findAllByA11yHint: FindAllByQuery<TextMatch, TextMatchOptions>;
+  getByA11yHint: GetByQuery<TextMatch, ByHintTextOptions>;
+  getAllByA11yHint: GetAllByQuery<TextMatch, ByHintTextOptions>;
+  queryByA11yHint: QueryByQuery<TextMatch, ByHintTextOptions>;
+  queryAllByA11yHint: QueryAllByQuery<TextMatch, ByHintTextOptions>;
+  findByA11yHint: FindByQuery<TextMatch, ByHintTextOptions>;
+  findAllByA11yHint: FindAllByQuery<TextMatch, ByHintTextOptions>;
 
   // accessibilityHint aliases
-  getByAccessibilityHint: GetByQuery<TextMatch, TextMatchOptions>;
-  getAllByAccessibilityHint: GetAllByQuery<TextMatch, TextMatchOptions>;
-  queryByAccessibilityHint: QueryByQuery<TextMatch, TextMatchOptions>;
-  queryAllByAccessibilityHint: QueryAllByQuery<TextMatch, TextMatchOptions>;
-  findByAccessibilityHint: FindByQuery<TextMatch, TextMatchOptions>;
-  findAllByAccessibilityHint: FindAllByQuery<TextMatch, TextMatchOptions>;
+  getByAccessibilityHint: GetByQuery<TextMatch, ByHintTextOptions>;
+  getAllByAccessibilityHint: GetAllByQuery<TextMatch, ByHintTextOptions>;
+  queryByAccessibilityHint: QueryByQuery<TextMatch, ByHintTextOptions>;
+  queryAllByAccessibilityHint: QueryAllByQuery<TextMatch, ByHintTextOptions>;
+  findByAccessibilityHint: FindByQuery<TextMatch, ByHintTextOptions>;
+  findAllByAccessibilityHint: FindAllByQuery<TextMatch, ByHintTextOptions>;
 };
 
 export const bindByHintTextQueries = (

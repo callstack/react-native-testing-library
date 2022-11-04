@@ -101,15 +101,13 @@ test('findBy queries work asynchronously', async () => {
 }, 20000);
 
 test('byDisplayValue queries support hidden option', () => {
-  const { queryByDisplayValue, getByDisplayValue } = render(
-    <TextInput value="im-inaccessible" style={{ display: 'none' }}>
-      I am inaccessible
-    </TextInput>
+  const { getByDisplayValue, queryByDisplayValue } = render(
+    <TextInput value="hidden" style={{ display: 'none' }} />
   );
-  expect(queryByDisplayValue('im-inaccessible', { hidden: false })).toBeFalsy();
-  expect(() =>
-    getByDisplayValue('im-inaccessible', { hidden: false })
-  ).toThrow();
-  expect(queryByDisplayValue('im-inaccessible', { hidden: true })).toBeTruthy();
-  expect(getByDisplayValue('im-inaccessible', { hidden: true })).toBeTruthy();
+
+  expect(getByDisplayValue('hidden')).toBeTruthy();
+  expect(getByDisplayValue('hidden', { hidden: true })).toBeTruthy();
+
+  expect(queryByDisplayValue('hidden', { hidden: false })).toBeFalsy();
+  expect(() => getByDisplayValue('hidden', { hidden: false })).toThrow();
 });

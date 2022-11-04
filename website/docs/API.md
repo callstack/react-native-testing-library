@@ -50,8 +50,8 @@ title: API
 - [Configuration](#configuration)
   - [`configure`](#configure)
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
-    - [`defaultDebugOptions` option](#defaultdebugoptions-option)
     - [`defaultHidden` option](#defaulthidden-option)
+    - [`defaultDebugOptions` option](#defaultdebugoptions-option)
   - [`resetToDefaults()`](#resettodefaults)
   - [Environment variables](#environment-variables)
     - [`RNTL_SKIP_AUTO_CLEANUP`](#rntl_skip_auto_cleanup)
@@ -783,8 +783,8 @@ it('should use context value', () => {
 ```ts
 type Config = {
   asyncUtilTimeout: number;
-  defaultDebugOptions: Partial<DebugOptions>;
   defaultHidden: boolean;
+  defaultDebugOptions: Partial<DebugOptions>;
 };
 
 function configure(options: Partial<Config>)  {}
@@ -793,13 +793,13 @@ function configure(options: Partial<Config>)  {}
 
 Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
 
-#### `defaultDebugOptions` option
-
-Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
-
 #### `defaultHidden` option
 
 Default [hidden](Queries.md#hidden-option) query option for all queries. This default option will be overridden by the one you specify directly when using your query.
+
+#### `defaultDebugOptions` option
+
+Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
 
 ### `resetToDefaults()`
 

@@ -108,13 +108,15 @@ test('getByHintText, getByHintText and exact = true', () => {
 });
 
 test('byHintText queries support hidden option', () => {
-  const { queryByHintText, getByHintText } = render(
-    <Text accessibilityHint="im-inaccessible" style={{ display: 'none' }}>
-      I am inaccessible
+  const { getByHintText, queryByHintText } = render(
+    <Text accessibilityHint="hidden" style={{ display: 'none' }}>
+      Hidden from accessiblity
     </Text>
   );
-  expect(queryByHintText('im-inaccessible', { hidden: false })).toBeFalsy();
-  expect(() => getByHintText('im-inaccessible', { hidden: false })).toThrow();
-  expect(queryByHintText('im-inaccessible', { hidden: true })).toBeTruthy();
-  expect(getByHintText('im-inaccessible', { hidden: true })).toBeTruthy();
+
+  expect(getByHintText('hidden')).toBeTruthy();
+  expect(getByHintText('hidden', { hidden: true })).toBeTruthy();
+
+  expect(queryByHintText('hidden', { hidden: false })).toBeFalsy();
+  expect(() => getByHintText('hidden', { hidden: false })).toThrow();
 });
