@@ -3,10 +3,12 @@ import { DebugOptions } from './helpers/debugDeep';
 export type Config = {
   /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
-  /** Default options for `debug` helper. */
-  defaultDebugOptions?: Partial<DebugOptions>;
+  
   /** Default hidden value for all queries */
   defaultHidden: boolean;
+  
+  /** Default options for `debug` helper. */
+  defaultDebugOptions?: Partial<DebugOptions>;
 };
 
 const defaultConfig: Config = {
@@ -14,9 +16,7 @@ const defaultConfig: Config = {
   defaultHidden: true,
 };
 
-let config = {
-  ...defaultConfig,
-};
+let config = { ...defaultConfig };
 
 export function configure(options: Partial<Config>) {
   config = {
@@ -26,7 +26,7 @@ export function configure(options: Partial<Config>) {
 }
 
 export function resetToDefaults() {
-  config = defaultConfig;
+  config = { ...defaultConfig };
 }
 
 export function getConfig() {
