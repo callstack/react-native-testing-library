@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { render, isHiddenFromAccessibility, isInaccessible } from '../..';
-import { isSubtreeInaccessible } from '../accessiblity';
 
 test('returns false for accessible elements', () => {
   expect(
@@ -25,7 +24,6 @@ test('returns false for accessible elements', () => {
 
 test('returns true for hidden elements', () => {
   expect(isHiddenFromAccessibility(null)).toBe(true);
-  expect(isSubtreeInaccessible(null)).toBe(true);
 });
 
 test('detects elements with accessibilityElementsHidden prop', () => {
