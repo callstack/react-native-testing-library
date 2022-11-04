@@ -1,5 +1,6 @@
 export { default as act } from './act';
 export { default as cleanup } from './cleanup';
+export { configure, resetToDefaults } from './config';
 export { default as fireEvent } from './fireEvent';
 export { default as render } from './render';
 export { default as waitFor } from './waitFor';
