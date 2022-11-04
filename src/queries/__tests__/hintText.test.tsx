@@ -106,3 +106,17 @@ test('getByHintText, getByHintText and exact = true', () => {
   expect(queryByHintText('id', { exact: true })).toBeNull();
   expect(getAllByHintText('test', { exact: true })).toHaveLength(1);
 });
+
+test('byHintText queries support hidden option', () => {
+  const { getByHintText, queryByHintText } = render(
+    <Text accessibilityHint="hidden" style={{ display: 'none' }}>
+      Hidden from accessiblity
+    </Text>
+  );
+
+  expect(getByHintText('hidden')).toBeTruthy();
+  expect(getByHintText('hidden', { hidden: true })).toBeTruthy();
+
+  expect(queryByHintText('hidden', { hidden: false })).toBeFalsy();
+  expect(() => getByHintText('hidden', { hidden: false })).toThrow();
+});

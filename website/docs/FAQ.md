@@ -11,7 +11,7 @@ title: FAQ
 React Native Testing Library does not provide a full React Native runtime since that would require running on physical device
 or iOS simulator/Android emulator to provision the underlying OS and platform APIs.
 
-Instead of using React Native renderer, it simulates only the JavaScript part of its runtime by 
+Instead of using React Native renderer, it simulates only the JavaScript part of its runtime by
 using [React Test Renderer](https://reactjs.org/docs/test-renderer.html) while providing queries
 and `fireEvent` APIs that mimick certain behaviors from the real runtime.
 

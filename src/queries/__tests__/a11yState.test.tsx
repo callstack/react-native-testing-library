@@ -226,3 +226,22 @@ test('*ByA11yState on TouchableOpacity with "disabled" prop', () => {
   expect(view.getByA11yState({ disabled: true })).toBeTruthy();
   expect(view.queryByA11yState({ disabled: false })).toBeFalsy();
 });
+
+test('byA11yState queries support hidden option', () => {
+  const { getByA11yState, queryByA11yState } = render(
+    <Pressable
+      accessibilityState={{ expanded: false }}
+      style={{ display: 'none' }}
+    >
+      <Text>Hidden from accessibility</Text>
+    </Pressable>
+  );
+
+  expect(getByA11yState({ expanded: false })).toBeTruthy();
+  expect(getByA11yState({ expanded: false }, { hidden: true })).toBeTruthy();
+
+  expect(queryByA11yState({ expanded: false }, { hidden: false })).toBeFalsy();
+  expect(() =>
+    getByA11yState({ expanded: false }, { hidden: false })
+  ).toThrow();
+});

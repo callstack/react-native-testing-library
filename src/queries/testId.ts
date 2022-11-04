@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import { findAll } from '../helpers/findAll';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type {
@@ -9,7 +10,9 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import type { TextMatchOptions } from './text';
+import type { CommonQueryOptions, TextMatchOptions } from './options';
+
+type ByTestIdOptions = CommonQueryOptions & TextMatchOptions;
 
 const getNodeByTestId = (
   node: ReactTestInstance,
@@ -24,14 +27,16 @@ const queryAllByTestId = (
   instance: ReactTestInstance
 ): ((
   testId: TextMatch,
-  queryOptions?: TextMatchOptions
+  queryOptions?: ByTestIdOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByTestIdFn(testId, queryOptions) {
-    const results = instance
-      .findAll((node) => getNodeByTestId(node, testId, queryOptions))
-      .filter((element) => typeof element.type === 'string');
+    const results = findAll(
+      instance,
+      (node) => getNodeByTestId(node, testId, queryOptions),
+      queryOptions
+    );
 
-    return results;
+    return results.filter((element) => typeof element.type === 'string');
   };
 
 const getMultipleError = (testId: TextMatch) =>
@@ -46,12 +51,12 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByTestIdQueries = {
-  getByTestId: GetByQuery<TextMatch, TextMatchOptions>;
-  getAllByTestId: GetAllByQuery<TextMatch, TextMatchOptions>;
-  queryByTestId: QueryByQuery<TextMatch, TextMatchOptions>;
-  queryAllByTestId: QueryAllByQuery<TextMatch, TextMatchOptions>;
-  findByTestId: FindByQuery<TextMatch, TextMatchOptions>;
-  findAllByTestId: FindAllByQuery<TextMatch, TextMatchOptions>;
+  getByTestId: GetByQuery<TextMatch, ByTestIdOptions>;
+  getAllByTestId: GetAllByQuery<TextMatch, ByTestIdOptions>;
+  queryByTestId: QueryByQuery<TextMatch, ByTestIdOptions>;
+  queryAllByTestId: QueryAllByQuery<TextMatch, ByTestIdOptions>;
+  findByTestId: FindByQuery<TextMatch, ByTestIdOptions>;
+  findAllByTestId: FindAllByQuery<TextMatch, ByTestIdOptions>;
 };
 
 export const bindByTestIdQueries = (

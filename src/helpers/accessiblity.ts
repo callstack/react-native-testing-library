@@ -2,6 +2,10 @@ import { AccessibilityState, StyleSheet } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings } from './component-tree';
 
+type IsInaccessibleOptions = {
+  cache?: WeakMap<ReactTestInstance, boolean>;
+};
+
 export type AccessibilityStateKey = keyof AccessibilityState;
 
 export const accessibilityStateKeys: AccessibilityStateKey[] = [
@@ -12,14 +16,24 @@ export const accessibilityStateKeys: AccessibilityStateKey[] = [
   'expanded',
 ];
 
-export function isInaccessible(element: ReactTestInstance | null): boolean {
+export function isInaccessible(
+  element: ReactTestInstance | null,
+  { cache }: IsInaccessibleOptions = {}
+): boolean {
   if (element == null) {
     return true;
   }
 
   let current: ReactTestInstance | null = element;
   while (current) {
-    if (isSubtreeInaccessible(current)) {
+    let isCurrentSubtreeInaccessible = cache?.get(current);
+
+    if (isCurrentSubtreeInaccessible === undefined) {
+      isCurrentSubtreeInaccessible = isSubtreeInaccessible(current);
+      cache?.set(current, isCurrentSubtreeInaccessible);
+    }
+
+    if (isCurrentSubtreeInaccessible) {
       return true;
     }
 
@@ -29,7 +43,9 @@ export function isInaccessible(element: ReactTestInstance | null): boolean {
   return false;
 }
 
-function isSubtreeInaccessible(element: ReactTestInstance | null): boolean {
+export function isSubtreeInaccessible(
+  element: ReactTestInstance | null
+): boolean {
   if (element == null) {
     return true;
   }
@@ -46,7 +62,7 @@ function isSubtreeInaccessible(element: ReactTestInstance | null): boolean {
     return true;
   }
 
-  // Note that `opacity: 0` is not threated as inassessible on iOS
+  // Note that `opacity: 0` is not treated as inaccessible on iOS
   const flatStyle = StyleSheet.flatten(element.props.style) ?? {};
   if (flatStyle.display === 'none') return true;
 

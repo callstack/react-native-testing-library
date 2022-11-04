@@ -697,3 +697,17 @@ describe('error messages', () => {
     );
   });
 });
+
+test('byRole queries support hidden option', () => {
+  const { getByRole, queryByRole } = render(
+    <Pressable accessibilityRole="button" style={{ display: 'none' }}>
+      <Text>Hidden from accessibility</Text>
+    </Pressable>
+  );
+
+  expect(getByRole('button')).toBeTruthy();
+  expect(getByRole('button', { hidden: true })).toBeTruthy();
+
+  expect(queryByRole('button', { hidden: false })).toBeFalsy();
+  expect(() => getByRole('button', { hidden: false })).toThrow();
+});

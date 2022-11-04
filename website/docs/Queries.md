@@ -26,6 +26,8 @@ title: Queries
     - [Default state for: `disabled`, `selected`, and `busy` keys](#default-state-for-disabled-selected-and-busy-keys)
     - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
   - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
+- [Common options](#common-options)
+  - [`hidden` option](#hidden-option)
 - [TextMatch](#textmatch)
   - [Examples](#examples)
   - [Precision](#precision)
@@ -87,7 +89,7 @@ type ReactTestInstance = {
 
 ### Options
 
-Usually query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#textmatch) for more info.
+Usually query first argument can be a **string** or a **regex**. All queries take at least the [`hidden`](#hidden-option) option as an optionnal second argument and some queries accept more options which change string matching behaviour. See [TextMatch](#textmatch) for more info.
 
 ### `ByText`
 
@@ -99,6 +101,7 @@ getByText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -124,6 +127,7 @@ getByPlaceholderText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -147,6 +151,7 @@ getByDisplayValue(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -170,6 +175,7 @@ getByTestId(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -197,6 +203,7 @@ getByLabelText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -222,6 +229,7 @@ getByHintText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -246,13 +254,14 @@ Please consult [Apple guidelines on how `accessibilityHint` should be used](http
 ```ts
 getByRole(
   role: TextMatch,
-  option?: {
+  options?: {
     name?: TextMatch
     disabled?: boolean,
     selected?: boolean,
     checked?: boolean | 'mixed',
     busy?: boolean,
     expanded?: boolean,
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -293,6 +302,9 @@ getByA11yState(
     checked?: boolean | 'mixed',
     expanded?: boolean,
     busy?: boolean,
+  },
+  options?: {
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -310,22 +322,26 @@ const element = screen.getByA11yState({ disabled: true });
 
 #### Default state for: `disabled`, `selected`, and `busy` keys
 
-Passing `false` matcher value will match both elements with explicit `false` state value and without explicit state value. 
+Passing `false` matcher value will match both elements with explicit `false` state value and without explicit state value.
 
 For instance, `getByA11yState({ disabled: false })` will match elements with following props:
-* `accessibilityState={{ disabled: false, ... }}`
-* no `disabled` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
-* no `accessibilityState` prop at all
+
+- `accessibilityState={{ disabled: false, ... }}`
+- no `disabled` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
+- no `accessibilityState` prop at all
 
 #### Default state for: `checked` and `expanded` keys
+
 Passing `false` matcher value will only match elements with explicit `false` state value.
 
 For instance, `getByA11yState({ checked: false })` will only match elements with:
-* `accessibilityState={{ checked: false, ... }}`
+
+- `accessibilityState={{ checked: false, ... }}`
 
 but will not match elements with following props:
-* no `checked` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
-* no `accessibilityState` prop at all
+
+- no `checked` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
+- no `accessibilityState` prop at all
 
 The difference in handling default values is made to reflect observed accessibility behaviour on iOS and Android platforms.
 :::
@@ -342,6 +358,9 @@ getByA11yValue(
     max?: number;
     now?: number;
     text?: string;
+  },
+  options?: {
+    hidden?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -353,6 +372,33 @@ import { render, screen } from '@testing-library/react-native';
 
 render(<Component />);
 const element = screen.getByA11yValue({ min: 40 });
+```
+
+## Common options
+
+### `hidden` option
+
+All queries have the `hidden` option which enables them to respect accessibility props on components when it is set to `false`. If you set `hidden` to `true`, elements that are normally excluded from the accessibility tree are considered for the query as well. Currently `hidden` option is set `true` by default, which means that elements hidden from accessibility will be included by default. However, we plan to change the default value to `hidden: false` in the next major release.
+
+You can configure the default value with the [`configure` function](API.md#configure).
+
+An element is considered to be hidden from accessibility based on [`isInaccessible()`](./API.md#isinaccessible) function result.
+
+**Examples**
+
+```tsx
+render(<Text style={{ display: 'none' }}>I am hidden from accessibility</Text>);
+
+// Ignore hidden elements
+expect(
+  screen.queryByText('I am hidden from accessibility', { hidden: false })
+).toBeFalsy();
+
+// Match hidden elements
+expect(screen.getByText('I am hidden from accessibility')).toBeTruthy(); // Defaults to hidden: true for now
+expect(
+  screen.getByText('I am hidden from accessibility', { hidden: true })
+).toBeTruthy();
 ```
 
 ## TextMatch

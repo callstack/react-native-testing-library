@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import { findAll } from '../helpers/findAll';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
 import type {
@@ -9,7 +10,9 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { TextMatchOptions } from './text';
+import { CommonQueryOptions, TextMatchOptions } from './options';
+
+type ByLabelTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const getNodeByLabelText = (
   node: ReactTestInstance,
@@ -24,13 +27,15 @@ const queryAllByLabelText = (
   instance: ReactTestInstance
 ): ((
   text: TextMatch,
-  queryOptions?: TextMatchOptions
+  queryOptions?: ByLabelTextOptions
 ) => Array<ReactTestInstance>) =>
-  function queryAllByLabelTextFn(text, queryOptions?: TextMatchOptions) {
-    return instance.findAll(
+  function queryAllByLabelTextFn(text, queryOptions) {
+    return findAll(
+      instance,
       (node) =>
         typeof node.type === 'string' &&
-        getNodeByLabelText(node, text, queryOptions)
+        getNodeByLabelText(node, text, queryOptions),
+      queryOptions
     );
   };
 
@@ -46,12 +51,12 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByLabelTextQueries = {
-  getByLabelText: GetByQuery<TextMatch, TextMatchOptions>;
-  getAllByLabelText: GetAllByQuery<TextMatch, TextMatchOptions>;
-  queryByLabelText: QueryByQuery<TextMatch, TextMatchOptions>;
-  queryAllByLabelText: QueryAllByQuery<TextMatch, TextMatchOptions>;
-  findByLabelText: FindByQuery<TextMatch, TextMatchOptions>;
-  findAllByLabelText: FindAllByQuery<TextMatch, TextMatchOptions>;
+  getByLabelText: GetByQuery<TextMatch, ByLabelTextOptions>;
+  getAllByLabelText: GetAllByQuery<TextMatch, ByLabelTextOptions>;
+  queryByLabelText: QueryByQuery<TextMatch, ByLabelTextOptions>;
+  queryAllByLabelText: QueryAllByQuery<TextMatch, ByLabelTextOptions>;
+  findByLabelText: FindByQuery<TextMatch, ByLabelTextOptions>;
+  findAllByLabelText: FindAllByQuery<TextMatch, ByLabelTextOptions>;
 };
 
 export const bindByLabelTextQueries = (

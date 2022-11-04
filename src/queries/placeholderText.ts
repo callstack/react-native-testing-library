@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { TextInput } from 'react-native';
+import { findAll } from '../helpers/findAll';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { matches, TextMatch } from '../matches';
 import { makeQueries } from './makeQueries';
@@ -11,7 +12,9 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import type { TextMatchOptions } from './text';
+import type { CommonQueryOptions, TextMatchOptions } from './options';
+
+type ByPlaceholderTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const getTextInputNodeByPlaceholderText = (
   node: ReactTestInstance,
@@ -29,11 +32,14 @@ const queryAllByPlaceholderText = (
   instance: ReactTestInstance
 ): ((
   placeholder: TextMatch,
-  queryOptions?: TextMatchOptions
+  queryOptions?: ByPlaceholderTextOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
-    return instance.findAll((node) =>
-      getTextInputNodeByPlaceholderText(node, placeholder, queryOptions)
+    return findAll(
+      instance,
+      (node) =>
+        getTextInputNodeByPlaceholderText(node, placeholder, queryOptions),
+      queryOptions
     );
   };
 
@@ -49,12 +55,15 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByPlaceholderTextQueries = {
-  getByPlaceholderText: GetByQuery<TextMatch, TextMatchOptions>;
-  getAllByPlaceholderText: GetAllByQuery<TextMatch, TextMatchOptions>;
-  queryByPlaceholderText: QueryByQuery<TextMatch, TextMatchOptions>;
-  queryAllByPlaceholderText: QueryAllByQuery<TextMatch, TextMatchOptions>;
-  findByPlaceholderText: FindByQuery<TextMatch, TextMatchOptions>;
-  findAllByPlaceholderText: FindAllByQuery<TextMatch, TextMatchOptions>;
+  getByPlaceholderText: GetByQuery<TextMatch, ByPlaceholderTextOptions>;
+  getAllByPlaceholderText: GetAllByQuery<TextMatch, ByPlaceholderTextOptions>;
+  queryByPlaceholderText: QueryByQuery<TextMatch, ByPlaceholderTextOptions>;
+  queryAllByPlaceholderText: QueryAllByQuery<
+    TextMatch,
+    ByPlaceholderTextOptions
+  >;
+  findByPlaceholderText: FindByQuery<TextMatch, ByPlaceholderTextOptions>;
+  findAllByPlaceholderText: FindAllByQuery<TextMatch, ByPlaceholderTextOptions>;
 };
 
 export const bindByPlaceholderTextQueries = (
