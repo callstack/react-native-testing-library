@@ -312,22 +312,26 @@ const element = screen.getByA11yState({ disabled: true });
 
 #### Default state for: `disabled`, `selected`, and `busy` keys
 
-Passing `false` matcher value will match both elements with explicit `false` state value and without explicit state value. 
+Passing `false` matcher value will match both elements with explicit `false` state value and without explicit state value.
 
 For instance, `getByA11yState({ disabled: false })` will match elements with following props:
-* `accessibilityState={{ disabled: false, ... }}`
-* no `disabled` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
-* no `accessibilityState` prop at all
+
+- `accessibilityState={{ disabled: false, ... }}`
+- no `disabled` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
+- no `accessibilityState` prop at all
 
 #### Default state for: `checked` and `expanded` keys
+
 Passing `false` matcher value will only match elements with explicit `false` state value.
 
 For instance, `getByA11yState({ checked: false })` will only match elements with:
-* `accessibilityState={{ checked: false, ... }}`
+
+- `accessibilityState={{ checked: false, ... }}`
 
 but will not match elements with following props:
-* no `checked` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
-* no `accessibilityState` prop at all
+
+- no `checked` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
+- no `accessibilityState` prop at all
 
 The difference in handling default values is made to reflect observed accessibility behaviour on iOS and Android platforms.
 :::
@@ -361,7 +365,7 @@ const element = screen.getByA11yValue({ min: 40 });
 
 ### `hidden` option
 
-All queries have the `hidden` option which enables them to respect accessibility props on components when it is set to `false`. If you set `hidden` to `true`, elements that are normally excluded from the accessibility tree are considered for the query as well.  Currently `hidden` option is set `true` by default, which means that elements hidden from accessibility will be included by default. However, we plan to change the default value to `hidden: false` in the next major release.
+All queries have the `hidden` option which enables them to respect accessibility props on components when it is set to `false`. If you set `hidden` to `true`, elements that are normally excluded from the accessibility tree are considered for the query as well. Currently `hidden` option is set `true` by default, which means that elements hidden from accessibility will be included by default. However, we plan to change the default value to `hidden: false` in the next major release.
 
 You can configure the default value with the [`configure` function](API.md#configure).
 
@@ -370,14 +374,18 @@ An element is considered to be hidden from accessibility based on [`isInaccessib
 **Examples**
 
 ```tsx
-render(<Text style={{ display:"none" }}>I am hidden from accessibility</Text>);
+render(<Text style={{ display: 'none' }}>I am hidden from accessibility</Text>);
 
 // Ignore hidden elements
-expect(screen.queryByText("I am hidden from accessibility", { hidden: false })).toBeFalsy();
+expect(
+  screen.queryByText('I am hidden from accessibility', { hidden: false })
+).toBeFalsy();
 
 // Match hidden elements
-expect(screen.getByText("I am hidden from accessibility")).toBeTruthy(); // Defaults to hidden: true for now
-expect(screen.getByText("I am hidden from accessibility", { hidden: true})).toBeTruthy();
+expect(screen.getByText('I am hidden from accessibility')).toBeTruthy(); // Defaults to hidden: true for now
+expect(
+  screen.getByText('I am hidden from accessibility', { hidden: true })
+).toBeTruthy();
 ```
 
 ## TextMatch

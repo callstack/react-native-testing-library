@@ -70,7 +70,7 @@ Defined as:
 ```jsx
 function render(
   component: React.Element<any>,
-  options?: RenderOptions,
+  options?: RenderOptions
 ): RenderResult {}
 ```
 
@@ -93,7 +93,7 @@ test('should verify two questions', () => {
 The `render` method returns a `RenderResult` object having properties described below.
 
 :::info
-Latest `render` result is kept in [`screen`](#screen) variable that can be imported from `@testing-library/react-native` package. 
+Latest `render` result is kept in [`screen`](#screen) variable that can be imported from `@testing-library/react-native` package.
 
 Using `screen` instead of destructuring `render` result is recommended approach. See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
 :::
@@ -125,10 +125,10 @@ unstable_validateStringsRenderedWithinText?: boolean;
 ```
 
 :::note
-This options is experimental, in some cases it might not work as intended, and its behavior might change without observing [SemVer](https://semver.org/) requirements for breaking changes. 
+This options is experimental, in some cases it might not work as intended, and its behavior might change without observing [SemVer](https://semver.org/) requirements for breaking changes.
 :::
 
-This **experimental** option allows you to replicate React Native behavior of throwing `Invariant Violation: Text strings must be rendered within a <Text> component` error when you try to render `string` value under components different than `<Text>`, e.g. under `<View>`. 
+This **experimental** option allows you to replicate React Native behavior of throwing `Invariant Violation: Text strings must be rendered within a <Text> component` error when you try to render `string` value under components different than `<Text>`, e.g. under `<View>`.
 
 This check is not enforced by React Test Renderer and hence by default React Native Testing Library also does not check this. That might result in runtime errors when running your code on a device, while the code works without errors in tests.
 
@@ -174,7 +174,7 @@ Usually you should not need to call `unmount` as it is done automatically if you
 ### `debug`
 
 ```ts
-interface DebugOptions { 
+interface DebugOptions {
   message?: string;
   mapProps?: MapPropsFunction;
 }
@@ -182,7 +182,7 @@ interface DebugOptions {
 debug(options?: DebugOptions | string): void
 ```
 
-Pretty prints deeply rendered component passed to `render`. 
+Pretty prints deeply rendered component passed to `render`.
 
 #### `message` option
 
@@ -205,39 +205,37 @@ optional message
 </View>
 ```
 
-
 #### `mapProps` option
 
-You can use the `mapProps` option to transform the props that will be printed : 
+You can use the `mapProps` option to transform the props that will be printed :
 
 ```jsx
-render(<View style={{ backgroundColor: 'red' }}/>);
-debug({ mapProps : ({ style, ...props }) => ({ props }) })
+render(<View style={{ backgroundColor: 'red' }} />);
+debug({ mapProps: ({ style, ...props }) => ({ props }) });
 ```
 
-This will log the rendered JSX without the `style` props. 
+This will log the rendered JSX without the `style` props.
 
 The `children` prop cannot be filtered out so the following will print all rendered components with all props but `children` filtered out.
 
-
 ```ts
-debug({ mapProps : props => ({}) })
+debug({ mapProps: (props) => ({}) });
 ```
 
 This option can be used to target specific props when debugging a query (for instance keeping only `children` prop when debugging a `getByText` query).
 
- You can also transform prop values so that they are more readable (e.g. flatten styles).
+You can also transform prop values so that they are more readable (e.g. flatten styles).
 
- ```ts
+```ts
 import { StyleSheet } from 'react-native';
 
 debug({ mapProps : {({ style, ...props })} => ({ style : StyleSheet.flatten(style), ...props }) });
- ```
+```
 
 Or remove props that have little value when debugging tests, e.g. path prop for svgs
 
 ```ts
-debug({ mapProps : ({ path, ...props }) => ({ ...props })});
+debug({ mapProps: ({ path, ...props }) => ({ ...props }) });
 ```
 
 #### `debug.shallow`
@@ -266,15 +264,15 @@ A reference to the rendered root element.
 let screen: RenderResult;
 ```
 
-Hold the value of latest render call for easier access to query and other functions returned by [`render`](#render). 
+Hold the value of latest render call for easier access to query and other functions returned by [`render`](#render).
 
 Its value is automatically cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test then it holds a special object that implements `RenderResult` but throws a helpful error on each property and method access.
 
-This can also be used to build test utils that would normally require to be in render scope, either in a test file or globally for your project. For instance: 
+This can also be used to build test utils that would normally require to be in render scope, either in a test file or globally for your project. For instance:
 
 ```ts
 // Prints the rendered components omitting all props except children.
-const debugText = () => screen.debug({ mapProps : props => ({}) })
+const debugText = () => screen.debug({ mapProps: (props) => ({}) });
 ```
 
 ## `cleanup`
@@ -557,7 +555,11 @@ function waitForElementToBeRemoved<T>(
 Waits for non-deterministic periods of time until queried element is removed or times out. `waitForElementToBeRemoved` periodically calls `expectation` every `interval` milliseconds to determine whether the element has been removed or not.
 
 ```jsx
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react-native';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react-native';
 
 test('waiting for an Banana to be removed', async () => {
   render(<Banana />);
@@ -585,13 +587,9 @@ If you receive warnings related to `act()` function consult our [Undestanding Ac
 Defined as:
 
 ```jsx
-function within(
-  element: ReactTestInstance
-): Queries {}
+function within(element: ReactTestInstance): Queries {}
 
-function getQueriesForElement(
-  element: ReactTestInstance
-): Queries {}
+function getQueriesForElement(element: ReactTestInstance): Queries {}
 ```
 
 `within` (also available as `getQueriesForElement` alias) performs [queries](./Queries.md) scoped to given element.
@@ -775,7 +773,6 @@ it('should use context value', () => {
 });
 ```
 
-
 ## Configuration
 
 ### `configure`
@@ -787,8 +784,9 @@ type Config = {
   defaultDebugOptions: Partial<DebugOptions>;
 };
 
-function configure(options: Partial<Config>)  {}
+function configure(options: Partial<Config>) {}
 ```
+
 #### `asyncUtilTimeout` option
 
 Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
@@ -807,10 +805,10 @@ Default [debug options](#debug) to be used when calling `debug()`. These default
 function resetToDefaults() {}
 ```
 
-
 ### Environment variables
 
 #### `RNTL_SKIP_AUTO_CLEANUP`
+
 Set to `true` to disable automatic `cleanup()` after each test. It works the same as importing `react-native-testing-library/dont-cleanup-after-each` or using `react-native-testing-library/pure`.
 
 ```shell
@@ -818,6 +816,7 @@ $ RNTL_SKIP_AUTO_CLEANUP=true jest
 ```
 
 #### `RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS`
+
 Set to `true` to disable auto-detection of fake timers. This might be useful in rare cases when you want to use non-Jest fake timers. See [issue #886](https://github.com/callstack/react-native-testing-library/issues/886) for more details.
 
 ```shell
@@ -829,23 +828,22 @@ $ RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS=true jest
 ### `isInaccessible`
 
 ```ts
-function isInaccessible(
-  element: ReactTestInstance | null
-): boolean {}
+function isInaccessible(element: ReactTestInstance | null): boolean {}
 ```
 
-Checks if given element is hidden from assistive technology, e.g. screen readers. 
+Checks if given element is hidden from assistive technology, e.g. screen readers.
 
 :::note
-Like [`isInaccessible`](https://testing-library.com/docs/dom-testing-library/api-accessibility/#isinaccessible) function from [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro) this function considers both accessibility elements and presentational elements (regular `View`s) to be accessible, unless they are hidden in terms of host platform. 
+Like [`isInaccessible`](https://testing-library.com/docs/dom-testing-library/api-accessibility/#isinaccessible) function from [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro) this function considers both accessibility elements and presentational elements (regular `View`s) to be accessible, unless they are hidden in terms of host platform.
 
 This covers only part of [ARIA notion of Accessiblity Tree](https://www.w3.org/TR/wai-aria-1.2/#tree_exclusion), as ARIA excludes both hidden and presentational elements from the Accessibility Tree.
 :::
 
-For the scope of this function, element is inaccessible when it, or any of its ancestors, meets any of the following conditions: 
- * it has `display: none` style
- * it has [`accessibilityElementsHidden`](https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios) prop set to `true` 
- * it has [`importantForAccessibility`](https://reactnative.dev/docs/accessibility#importantforaccessibility-android) prop set to `no-hide-descendants`
- * it has sibling host element with [`accessibilityViewIsModal`](https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios) prop set to `true`
- 
+For the scope of this function, element is inaccessible when it, or any of its ancestors, meets any of the following conditions:
+
+- it has `display: none` style
+- it has [`accessibilityElementsHidden`](https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios) prop set to `true`
+- it has [`importantForAccessibility`](https://reactnative.dev/docs/accessibility#importantforaccessibility-android) prop set to `no-hide-descendants`
+- it has sibling host element with [`accessibilityViewIsModal`](https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios) prop set to `true`
+
 Specifying `accessible={false}`, `accessiblityRole="none"`, or `importantForAccessibility="no"` props does not cause the element to become inaccessible.

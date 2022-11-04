@@ -20,7 +20,7 @@ When you run your tests in React Native Testing Library, somewhat contrary to wh
 
 ### React Test Renderer
 
-Instead, RNTL uses React Test Renderer which is a specialised renderer that allows rendering to pure JavaScript objects without access to mobile OS, and that can run in a Node.js environment using Jest (or any other JavaScript test runner). 
+Instead, RNTL uses React Test Renderer which is a specialised renderer that allows rendering to pure JavaScript objects without access to mobile OS, and that can run in a Node.js environment using Jest (or any other JavaScript test runner).
 
 Using React Test Renderer has pros and cons.
 
@@ -137,7 +137,7 @@ You should avoid navigating over element tree, as this makes your testing code f
 
 When navigating a tree of react elements using `parent` or `children` props of a `ReactTestInstance` element, you will encounter both host and composite elements. You should be careful when navigating the element tree, as the tree structure for 3rd party components and change independently from your code and cause unexpected test failures.
 
-Inside RNTL we have various tree navigation helpers: `getHostParent`, `getHostChildren`, etc. These are intentionally not exported as using them is not a recommended practice. 
+Inside RNTL we have various tree navigation helpers: `getHostParent`, `getHostChildren`, etc. These are intentionally not exported as using them is not a recommended practice.
 
 ### Queries
 
