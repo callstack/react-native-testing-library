@@ -1,14 +1,19 @@
-import act from './act';
-import cleanup from './cleanup';
-import fireEvent from './fireEvent';
-import render from './render';
-import waitFor from './waitFor';
-import waitForElementToBeRemoved from './waitForElementToBeRemoved';
-import { within, getQueriesForElement } from './within';
-import { getDefaultNormalizer } from './matches';
-import { renderHook } from './renderHook';
-import { screen } from './screen';
-import { isInaccessible } from './helpers/accessiblity';
+export { default as act } from './act';
+export { default as cleanup } from './cleanup';
+export { default as fireEvent } from './fireEvent';
+export { default as render } from './render';
+export { default as waitFor } from './waitFor';
+export { default as waitForElementToBeRemoved } from './waitForElementToBeRemoved';
+export { within, getQueriesForElement } from './within';
+
+export { configure, resetToDefaults } from './config';
+export {
+  isHiddenFromAccessibility,
+  isInaccessible,
+} from './helpers/accessiblity';
+export { getDefaultNormalizer } from './matches';
+export { renderHook } from './renderHook';
+export { screen } from './screen';
 
 export type {
   RenderOptions,
@@ -17,16 +22,3 @@ export type {
 } from './render';
 export type { RenderHookOptions, RenderHookResult } from './renderHook';
 export type { Config } from './config';
-
-export { act };
-export { cleanup };
-export { configure, resetToDefaults } from './config';
-export { fireEvent };
-export { render };
-export { waitFor };
-export { waitForElementToBeRemoved };
-export { within, getQueriesForElement };
-export { getDefaultNormalizer };
-export { renderHook };
-export { screen };
-export { isInaccessible };

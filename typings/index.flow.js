@@ -472,12 +472,19 @@ declare module '@testing-library/react-native' {
   declare export var act: (callback: () => void) => Thenable;
   declare export var within: (instance: ReactTestInstance) => Queries;
   declare export var getQueriesForElement: (
-    instance: ReactTestInstance
+    element: ReactTestInstance
   ) => Queries;
 
   declare export var getDefaultNormalizer: (
     normalizerConfig?: NormalizerConfig
   ) => NormalizerFn;
+
+  declare export var isHiddenFromAccessibility: (
+    element: ReactTestInstance | null
+  ) => boolean;
+  declare export var isInaccessible: (
+    element: ReactTestInstance | null
+  ) => boolean;
 
   declare type RenderHookResult<Result, Props> = {
     rerender: (props: Props) => void,

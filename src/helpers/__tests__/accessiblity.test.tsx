@@ -1,28 +1,34 @@
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
-import { render, isInaccessible } from '../..';
+import { render, isHiddenFromAccessibility, isInaccessible } from '../..';
 
 test('returns false for accessible elements', () => {
   expect(
-    isInaccessible(render(<View testID="subject" />).getByTestId('subject'))
+    isHiddenFromAccessibility(
+      render(<View testID="subject" />).getByTestId('subject')
+    )
   ).toBe(false);
 
   expect(
-    isInaccessible(
+    isHiddenFromAccessibility(
       render(<Text testID="subject">Hello</Text>).getByTestId('subject')
     )
   ).toBe(false);
 
   expect(
-    isInaccessible(
+    isHiddenFromAccessibility(
       render(<TextInput testID="subject" />).getByTestId('subject')
     )
   ).toBe(false);
 });
 
+test('returns true for hidden elements', () => {
+  expect(isHiddenFromAccessibility(null)).toBe(true);
+});
+
 test('detects elements with accessibilityElementsHidden prop', () => {
   const view = render(<View testID="subject" accessibilityElementsHidden />);
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(true);
 });
 
 test('detects nested elements with accessibilityElementsHidden prop', () => {
@@ -31,7 +37,7 @@ test('detects nested elements with accessibilityElementsHidden prop', () => {
       <View testID="subject" />
     </View>
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(true);
 });
 
 test('detects deeply nested elements with accessibilityElementsHidden prop', () => {
@@ -44,14 +50,14 @@ test('detects deeply nested elements with accessibilityElementsHidden prop', () 
       </View>
     </View>
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(true);
 });
 
 test('detects elements with importantForAccessibility="no-hide-descendants" prop', () => {
   const view = render(
     <View testID="subject" importantForAccessibility="no-hide-descendants" />
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(true);
 });
 
 test('detects nested elements with importantForAccessibility="no-hide-descendants" prop', () => {
@@ -60,12 +66,12 @@ test('detects nested elements with importantForAccessibility="no-hide-descendant
       <View testID="subject" />
     </View>
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(true);
 });
 
 test('detects elements with display=none', () => {
   const view = render(<View testID="subject" style={{ display: 'none' }} />);
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(true);
 });
 
 test('detects nested elements with display=none', () => {
@@ -74,7 +80,7 @@ test('detects nested elements with display=none', () => {
       <View testID="subject" />
     </View>
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(true);
 });
 
 test('detects deeply nested elements with display=none', () => {
@@ -87,7 +93,7 @@ test('detects deeply nested elements with display=none', () => {
       </View>
     </View>
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(true);
 });
 
 test('detects elements with display=none with complex style', () => {
@@ -97,12 +103,12 @@ test('detects elements with display=none with complex style', () => {
       style={[{ display: 'flex' }, [{ display: 'flex' }], { display: 'none' }]}
     />
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(true);
 });
 
 test('is not trigged by opacity = 0', () => {
   const view = render(<View testID="subject" style={{ opacity: 0 }} />);
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(false);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(false);
 });
 
 test('detects siblings of element with accessibilityViewIsModal prop', () => {
@@ -112,7 +118,7 @@ test('detects siblings of element with accessibilityViewIsModal prop', () => {
       <View testID="subject" />
     </View>
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(true);
 });
 
 test('detects deeply nested siblings of element with accessibilityViewIsModal prop', () => {
@@ -126,7 +132,7 @@ test('detects deeply nested siblings of element with accessibilityViewIsModal pr
       </View>
     </View>
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(true);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(true);
 });
 
 test('is not triggered for element with accessibilityViewIsModal prop', () => {
@@ -135,7 +141,7 @@ test('is not triggered for element with accessibilityViewIsModal prop', () => {
       <View accessibilityViewIsModal testID="subject" />
     </View>
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(false);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(false);
 });
 
 test('is not triggered for child of element with accessibilityViewIsModal prop', () => {
@@ -146,7 +152,7 @@ test('is not triggered for child of element with accessibilityViewIsModal prop',
       </View>
     </View>
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(false);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(false);
 });
 
 test('is not triggered for descendent of element with accessibilityViewIsModal prop', () => {
@@ -161,5 +167,9 @@ test('is not triggered for descendent of element with accessibilityViewIsModal p
       </View>
     </View>
   );
-  expect(isInaccessible(view.getByTestId('subject'))).toBe(false);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(false);
+});
+
+test('has isInaccessible alias', () => {
+  expect(isInaccessible).toBe(isHiddenFromAccessibility);
 });

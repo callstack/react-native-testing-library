@@ -1,6 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { getConfig } from '../config';
-import { isInaccessible } from './accessiblity';
+import { isHiddenFromAccessibility } from './accessiblity';
 
 interface FindAllOptions {
   hidden?: boolean;
@@ -19,5 +19,7 @@ export function findAll(
   }
 
   const cache = new WeakMap<ReactTestInstance>();
-  return results.filter((element) => !isInaccessible(element, { cache }));
+  return results.filter(
+    (element) => !isHiddenFromAccessibility(element, { cache })
+  );
 }
