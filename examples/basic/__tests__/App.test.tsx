@@ -9,7 +9,7 @@ test('renders correctly', () => {
   // Idiom: no need to capture render output, as we will use `screen` for queries.
   render(<App />);
 
-  // Idiom: `getByXxx` is a predicate by itself, but we will use it with `expect().toBeTruthy()`
+  // Idiom: `getBy*` queries are predicates by themselves, but we will use it with `expect().toBeTruthy()`
   // to clarify our intent.
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
@@ -25,36 +25,34 @@ test('User can sign in successully with correct credentials', async () => {
   // Idiom: no need to capture render output, as we will use `screen` for queries.
   render(<App />);
 
-  // Idiom: `getByXxx` is a predicate by itself, but we will use it with `expect().toBeTruthy()` to
-  // clarify our intent.
+  // Idiom: `getBy*` queries are predicates by themselves, but we will use it with `expect().toBeTruthy()`
+  // to clarify our intent.
   // Note: `.toBeTruthy()` is the preferred matcher for checking that elements are present.
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
   ).toBeTruthy();
-  expect(screen.getByText('Username')).toBeTruthy();
-  expect(screen.getByText('Password')).toBeTruthy();
 
-  // Hint: we can use `getByLabelText` to find our text inputs in accessibility-friendly way.
+  // Hint: we can use `getByLabelText` to find our text inputs using their labels.
   fireEvent.changeText(screen.getByLabelText('Username'), 'admin');
   fireEvent.changeText(screen.getByLabelText('Password'), 'admin1');
 
-  // Hint: we can use `getByText` to find our button by its text.
+  // Hint: we can use `getByRole` to find our button with given text.
   fireEvent.press(screen.getByRole('button', { name: 'Sign In' }));
 
-  // Idiom: since pressing button triggers async operation we need to use `findBy` query to wait
+  // Idiom: since pressing button triggers async operation we need to use `findBy*` query to wait
   // for the action to complete.
-  // Hint: subsequent queries do not need to use `findBy`, because they are used after the async action
+  // Hint: subsequent queries do not need to use `findBy*`, because they are used after the async action
   // already finished
   expect(
     await screen.findByRole('header', { name: 'Welcome admin!' })
   ).toBeTruthy();
 
-  // Idiom: use `queryByXxx` with `expect().toBeFalsy()` to assess that element is not present.
+  // Idiom: use `queryBy*` with `expect().toBeFalsy()` to assess that element is not present.
   expect(
     screen.queryByRole('header', { name: 'Sign in to Example App' })
   ).toBeFalsy();
-  expect(screen.queryByText('Username')).toBeFalsy();
-  expect(screen.queryByText('Password')).toBeFalsy();
+  expect(screen.queryByLabelText('Username')).toBeFalsy();
+  expect(screen.queryByLabelText('Password')).toBeFalsy();
 });
 
 /**
@@ -64,7 +62,7 @@ test('User can sign in successully with correct credentials', async () => {
  * that is not directly reflected in the UI.
  *
  * For this reason prefer quries that correspond to things directly observable by the user like:
- * `getByText`, `getByLabelText`, `getByPlaceholderText, `getByDisplayValue`, `getByRole`, etc.
+ * `getByRole`, `getByText`, `getByLabelText`, `getByPlaceholderText, `getByDisplayValue`, etc.
  * over `getByTestId` which is not directly observable by the user.
  *
  * Note: that some times you will have to resort to `getByTestId`, but treat it as a last resort.
@@ -75,8 +73,6 @@ test('User will see errors for incorrect credentials', async () => {
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
   ).toBeTruthy();
-  expect(screen.getByText('Username')).toBeTruthy();
-  expect(screen.getByText('Password')).toBeTruthy();
 
   fireEvent.changeText(screen.getByLabelText('Username'), 'admin');
   fireEvent.changeText(screen.getByLabelText('Password'), 'qwerty123');
@@ -90,8 +86,8 @@ test('User will see errors for incorrect credentials', async () => {
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
   ).toBeTruthy();
-  expect(screen.getByText('Username')).toBeTruthy();
-  expect(screen.getByText('Password')).toBeTruthy();
+  expect(screen.getByLabelText('Username')).toBeTruthy();
+  expect(screen.getByLabelText('Password')).toBeTruthy();
 });
 
 /**
@@ -103,8 +99,6 @@ test('User can sign in after incorrect attempt', async () => {
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
   ).toBeTruthy();
-  expect(screen.getByText('Username')).toBeTruthy();
-  expect(screen.getByText('Password')).toBeTruthy();
 
   fireEvent.changeText(screen.getByLabelText('Username'), 'admin');
   fireEvent.changeText(screen.getByLabelText('Password'), 'qwerty123');
@@ -118,7 +112,9 @@ test('User can sign in after incorrect attempt', async () => {
   fireEvent.press(screen.getByRole('button', { name: 'Sign In' }));
 
   expect(await screen.findByText('Welcome admin!')).toBeTruthy();
-  expect(screen.queryByText('Sign in to Example App')).toBeFalsy();
-  expect(screen.queryByText('Username')).toBeFalsy();
-  expect(screen.queryByText('Password')).toBeFalsy();
+  expect(
+    screen.queryByRole('header', { name: 'Sign in to Example App' })
+  ).toBeFalsy();
+  expect(screen.queryByLabelText('Username')).toBeFalsy();
+  expect(screen.queryByLabelText('Password')).toBeFalsy();
 });
