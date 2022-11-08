@@ -6,8 +6,6 @@ const BUTTON_LABEL = 'cool button';
 const BUTTON_HINT = 'click this button';
 const TEXT_LABEL = 'cool text';
 const TEXT_HINT = 'static text';
-const INPUT_LABEL = 'cool input';
-const INPUT_LABELLED_BY = 'formLabel';
 // Little hack to make all the methods happy with type
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
@@ -40,15 +38,6 @@ const Section = () => (
       Title
     </Typography>
     <Button>{TEXT_LABEL}</Button>
-  </>
-);
-
-const FormInput = () => (
-  <>
-    <View nativeID={INPUT_LABELLED_BY}>
-      <Text>{INPUT_LABEL}</Text>
-    </View>
-    <TextInput accessibilityLabelledBy={INPUT_LABELLED_BY} />
   </>
 );
 
@@ -176,12 +165,28 @@ test('byLabelText queries support hidden option', () => {
     `"Unable to find an element with accessibilityLabel: hidden"`
   );
 });
-test('getByLabelText supports accessibilityLabelledBy', async () => {
-  const { getByLabelText, queryByLabelText } = render(<FormInput />);
 
-  expect(getByLabelText(INPUT_LABEL).props.accessibilityLabelledBy).toEqual(
-    INPUT_LABELLED_BY
+test('getByLabelText supports accessibilityLabelledBy', async () => {
+  const { getByLabelText, getByTestId } = render(
+    <>
+      <Text nativeID="label">Label for input</Text>
+      <TextInput testID="textInput" accessibilityLabelledBy="label" />
+    </>
   );
-  const textInput = queryByLabelText(/input/g);
-  expect(textInput?.props.accessibilityLabelledBy).toEqual(INPUT_LABELLED_BY);
+  expect(getByLabelText('Label for input')).toEqual(getByTestId('textInput'));
+  expect(getByLabelText(/input/)).toEqual(getByTestId('textInput'));
+});
+
+test('getByLabelText supports nested accessibilityLabelledBy', async () => {
+  const { getByLabelText, getByTestId } = render(
+    <>
+      <View nativeID="label">
+        <Text>Label for input</Text>
+      </View>
+      <TextInput testID="textInput" accessibilityLabelledBy="label" />
+    </>
+  );
+
+  expect(getByLabelText('Label for input')).toEqual(getByTestId('textInput'));
+  expect(getByLabelText(/input/)).toEqual(getByTestId('textInput'));
 });

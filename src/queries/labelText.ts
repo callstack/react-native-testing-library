@@ -38,7 +38,7 @@ const matchAccessibilityLabelledByText = (
 
   return rootInstance
     .findAll((node) =>
-      matches(nativeID, node.props.nativeID, normalizer, exact)
+      matches(nativeID, node.props?.nativeID, normalizer, exact)
     )
     .some((node) => node.findAll((n) => matchTextContent(n, text)).length > 0);
 };

@@ -20,7 +20,7 @@ const getNodeByTestId = (
   options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
-  return matches(testID, node.props.testID, normalizer, exact);
+  return matches(testID, node.props?.testID, normalizer, exact);
 };
 
 const queryAllByTestId = (
