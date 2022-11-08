@@ -11,7 +11,9 @@ test('renders correctly', () => {
 
   // Idiom: `getByXxx` is a predicate by itself, but we will use it with `expect().toBeTruthy()`
   // to clarify our intent.
-  expect(screen.getByText('Sign in to Example App')).toBeTruthy();
+  expect(
+    screen.getByRole('header', { name: 'Sign in to Example App' })
+  ).toBeTruthy();
 });
 
 /**
@@ -26,7 +28,9 @@ test('User can sign in successully with correct credentials', async () => {
   // Idiom: `getByXxx` is a predicate by itself, but we will use it with `expect().toBeTruthy()` to
   // clarify our intent.
   // Note: `.toBeTruthy()` is the preferred matcher for checking that elements are present.
-  expect(screen.getByText('Sign in to Example App')).toBeTruthy();
+  expect(
+    screen.getByRole('header', { name: 'Sign in to Example App' })
+  ).toBeTruthy();
   expect(screen.getByText('Username')).toBeTruthy();
   expect(screen.getByText('Password')).toBeTruthy();
 
@@ -35,16 +39,20 @@ test('User can sign in successully with correct credentials', async () => {
   fireEvent.changeText(screen.getByLabelText('Password'), 'admin1');
 
   // Hint: we can use `getByText` to find our button by its text.
-  fireEvent.press(screen.getByText('Sign In'));
+  fireEvent.press(screen.getByRole('button', { name: 'Sign In' }));
 
   // Idiom: since pressing button triggers async operation we need to use `findBy` query to wait
   // for the action to complete.
   // Hint: subsequent queries do not need to use `findBy`, because they are used after the async action
   // already finished
-  expect(await screen.findByText('Welcome admin!')).toBeTruthy();
+  expect(
+    await screen.findByRole('header', { name: 'Welcome admin!' })
+  ).toBeTruthy();
 
   // Idiom: use `queryByXxx` with `expect().toBeFalsy()` to assess that element is not present.
-  expect(screen.queryByText('Sign in to Example App')).toBeFalsy();
+  expect(
+    screen.queryByRole('header', { name: 'Sign in to Example App' })
+  ).toBeFalsy();
   expect(screen.queryByText('Username')).toBeFalsy();
   expect(screen.queryByText('Password')).toBeFalsy();
 });
@@ -64,20 +72,24 @@ test('User can sign in successully with correct credentials', async () => {
 test('User will see errors for incorrect credentials', async () => {
   render(<App />);
 
-  expect(screen.getByText('Sign in to Example App')).toBeTruthy();
+  expect(
+    screen.getByRole('header', { name: 'Sign in to Example App' })
+  ).toBeTruthy();
   expect(screen.getByText('Username')).toBeTruthy();
   expect(screen.getByText('Password')).toBeTruthy();
 
   fireEvent.changeText(screen.getByLabelText('Username'), 'admin');
   fireEvent.changeText(screen.getByLabelText('Password'), 'qwerty123');
-  fireEvent.press(screen.getByText('Sign In'));
+  fireEvent.press(screen.getByRole('button', { name: 'Sign In' }));
 
   // Hint: you can use custom Jest Native matcher to check text content.
-  expect(await screen.findByLabelText('Error')).toHaveTextContent(
+  expect(await screen.findByRole('alert')).toHaveTextContent(
     'Incorrect username or password'
   );
 
-  expect(screen.getByText('Sign in to Example App')).toBeTruthy();
+  expect(
+    screen.getByRole('header', { name: 'Sign in to Example App' })
+  ).toBeTruthy();
   expect(screen.getByText('Username')).toBeTruthy();
   expect(screen.getByText('Password')).toBeTruthy();
 });
@@ -88,20 +100,22 @@ test('User will see errors for incorrect credentials', async () => {
 test('User can sign in after incorrect attempt', async () => {
   render(<App />);
 
-  expect(screen.getByText('Sign in to Example App')).toBeTruthy();
+  expect(
+    screen.getByRole('header', { name: 'Sign in to Example App' })
+  ).toBeTruthy();
   expect(screen.getByText('Username')).toBeTruthy();
   expect(screen.getByText('Password')).toBeTruthy();
 
   fireEvent.changeText(screen.getByLabelText('Username'), 'admin');
   fireEvent.changeText(screen.getByLabelText('Password'), 'qwerty123');
-  fireEvent.press(screen.getByText('Sign In'));
+  fireEvent.press(screen.getByRole('button', { name: 'Sign In' }));
 
-  expect(await screen.findByLabelText('Error')).toHaveTextContent(
+  expect(await screen.findByRole('alert')).toHaveTextContent(
     'Incorrect username or password'
   );
 
   fireEvent.changeText(screen.getByLabelText('Password'), 'admin1');
-  fireEvent.press(screen.getByText('Sign In'));
+  fireEvent.press(screen.getByRole('button', { name: 'Sign In' }));
 
   expect(await screen.findByText('Welcome admin!')).toBeTruthy();
   expect(screen.queryByText('Sign in to Example App')).toBeFalsy();

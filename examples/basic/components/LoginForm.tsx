@@ -4,7 +4,7 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   ActivityIndicator,
 } from 'react-native';
 
@@ -34,7 +34,9 @@ export function LoginForm({ onLoginSuccess }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign in to Example App</Text>
+      <Text accessibilityRole="header" style={styles.title}>
+        Sign in to Example App
+      </Text>
 
       <Text style={styles.textLabel}>Username</Text>
       <TextInput
@@ -55,18 +57,23 @@ export function LoginForm({ onLoginSuccess }: Props) {
       />
 
       {error && (
-        <Text accessibilityLabel="Error" style={styles.validator}>
+        <Text accessibilityRole="alert" style={styles.validator}>
           {error}
         </Text>
       )}
 
-      <TouchableOpacity onPress={handleSignIn} style={styles.button}>
+      <Pressable
+        accessibilityRole="button"
+        disabled={isLoading}
+        onPress={handleSignIn}
+        style={styles.button}
+      >
         {isLoading ? (
           <ActivityIndicator color="white" />
         ) : (
           <Text style={styles.buttonText}>Sign In</Text>
         )}
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
