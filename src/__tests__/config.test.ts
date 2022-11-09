@@ -20,9 +20,17 @@ test('configure() overrides existing config values', () => {
 });
 
 test('resetToDefaults() resets config to defaults', () => {
-  configure({ asyncUtilTimeout: 5000 });
+  configure({
+    asyncUtilTimeout: 5000,
+    defaultIncludeHidden: false,
+    defaultHidden: false,
+  });
   expect(getConfig().asyncUtilTimeout).toEqual(5000);
+  expect(getConfig().defaultHidden).toEqual(false);
+  expect(getConfig().defaultIncludeHidden).toEqual(false);
 
   resetToDefaults();
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
+  expect(getConfig().defaultHidden).toEqual(true);
+  expect(getConfig().defaultIncludeHidden).toEqual(true);
 });
