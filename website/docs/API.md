@@ -50,6 +50,7 @@ title: API
 - [Configuration](#configuration)
   - [`configure`](#configure)
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
+    - [`defaultIncludeHidden` option](#defaultincludehidden-option)
     - [`defaultHidden` option](#defaulthidden-option)
     - [`defaultDebugOptions` option](#defaultdebugoptions-option)
   - [`resetToDefaults()`](#resettodefaults)
@@ -791,9 +792,13 @@ function configure(options: Partial<Config>) {}
 
 Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
 
+#### `defaultIncludeHidden` option
+
+Default [includeHidden](Queries.md#includehidden-option) query option for all queries. This default option will be overridden by the one you specify directly when using your query.
+
 #### `defaultHidden` option
 
-Default [hidden](Queries.md#hidden-option) query option for all queries. This default option will be overridden by the one you specify directly when using your query.
+This is just an alias to the `defaultIncludeHidden` option. It only exists to match react-testing-library naming used in the [configuration options](https://testing-library.com/docs/dom-testing-library/api-configuration/#defaulthidden). Prefer the use of `defaultIncludeHidden` if possible as `defaultIncludeHidden: true` is clearer than `defaultHidden: true`.
 
 #### `defaultDebugOptions` option
 
