@@ -142,7 +142,9 @@ test('byTestId queries support hidden option', () => {
 
   expect(getByTestId('hidden')).toBeTruthy();
   expect(getByTestId('hidden', { hidden: true })).toBeTruthy();
+  expect(getByTestId('hidden', { includeHidden: true })).toBeTruthy();
 
   expect(queryByTestId('hidden', { hidden: false })).toBeFalsy();
   expect(() => getByTestId('hidden', { hidden: false })).toThrow();
+  expect(() => getByTestId('hidden', { includeHidden: false })).toThrow();
 });

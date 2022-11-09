@@ -66,7 +66,14 @@ test('byPlaceholderText queries support hidden option', () => {
 
   expect(getByPlaceholderText('hidden')).toBeTruthy();
   expect(getByPlaceholderText('hidden', { hidden: true })).toBeTruthy();
+  expect(getByPlaceholderText('hidden', { includeHidden: true })).toBeTruthy();
 
   expect(queryByPlaceholderText('hidden', { hidden: false })).toBeFalsy();
   expect(() => getByPlaceholderText('hidden', { hidden: false })).toThrow();
+  expect(
+    queryByPlaceholderText('hidden', { includeHidden: false })
+  ).toBeFalsy();
+  expect(() =>
+    getByPlaceholderText('hidden', { includeHidden: false })
+  ).toThrow();
 });

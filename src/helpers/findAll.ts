@@ -4,6 +4,7 @@ import { isHiddenFromAccessibility } from './accessiblity';
 
 interface FindAllOptions {
   hidden?: boolean;
+  includeHidden?: boolean;
 }
 
 export function findAll(
@@ -12,8 +13,8 @@ export function findAll(
   options?: FindAllOptions
 ) {
   const results = root.findAll(predicate);
-
-  const hidden = options?.hidden ?? getConfig().defaultHidden;
+  const includeHiddenQueryOption = options?.includeHidden ?? options?.hidden;
+  const hidden = includeHiddenQueryOption ?? getConfig().defaultHidden;
   if (hidden) {
     return results;
   }

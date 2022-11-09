@@ -8,7 +8,7 @@ type QueryAllReturn = Array<ReactTestInstance> | [];
 type FindReturn = Promise<ReactTestInstance>;
 type FindAllReturn = Promise<ReactTestInstance[]>;
 
-type CommonQueryOptions = { hidden?: boolean };
+type CommonQueryOptions = { hidden?: boolean, includeHidden?: boolean };
 type TextMatch = string | RegExp;
 
 declare type NormalizerFn = (textToNormalize: string) => string;
