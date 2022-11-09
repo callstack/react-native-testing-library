@@ -463,6 +463,8 @@ declare module '@testing-library/react-native' {
 
   declare interface Config {
     asyncUtilTimeout: number;
+    defaultHidden: boolean;
+    defaultIncludeHidden: boolean;
     defaultDebugOptions?: $Shape<DebugOptions>;
   }
 

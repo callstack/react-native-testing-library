@@ -14,7 +14,10 @@ export function findAll(
 ) {
   const results = root.findAll(predicate);
   const includeHiddenQueryOption = options?.includeHidden ?? options?.hidden;
-  const hidden = includeHiddenQueryOption ?? getConfig().defaultHidden;
+  const defaultIncludeHidden =
+    getConfig()?.defaultIncludeHidden ?? getConfig()?.defaultHidden;
+
+  const hidden = includeHiddenQueryOption ?? defaultIncludeHidden;
   if (hidden) {
     return results;
   }
