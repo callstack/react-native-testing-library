@@ -1,5 +1,10 @@
 export type NormalizerFn = (textToNormalize: string) => string;
+
 export type TextMatch = string | RegExp;
+export type TextMatchOptions = {
+  exact?: boolean;
+  normalizer?: NormalizerFn;
+};
 
 export function matches(
   matcher: TextMatch,

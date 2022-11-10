@@ -45,7 +45,7 @@ test('React Native API assumption: nested <Text> renders single host element', (
       </Text>
     </Text>
   );
-  expect(getHostSelf(view.getByText('Hello'))).toBe(view.getByTestId('test'));
+  expect(getHostSelf(view.getByText(/Hello/))).toBe(view.getByTestId('test'));
   expect(getHostSelf(view.getByText('Before'))).toBe(
     view.getByTestId('before')
   );

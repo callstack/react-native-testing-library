@@ -4,16 +4,20 @@ import { isHiddenFromAccessibility } from './accessiblity';
 
 interface FindAllOptions {
   includeHiddenElements?: boolean;
+
   /** RTL-compatible alias to `includeHiddenElements` */
   hidden?: boolean;
+
+  /* Exclude any ancestors of deepest matched elements even if they match the predicate */
+  deepestOnly?: boolean;
 }
 
 export function findAll(
   root: ReactTestInstance,
-  predicate: (node: ReactTestInstance) => boolean,
+  predicate: (element: ReactTestInstance) => boolean,
   options?: FindAllOptions
 ) {
-  const results = root.findAll(predicate);
+  const results = findAllInternal(root, predicate, options);
 
   const includeHiddenElements =
     options?.includeHiddenElements ??
@@ -28,4 +32,36 @@ export function findAll(
   return results.filter(
     (element) => !isHiddenFromAccessibility(element, { cache })
   );
+}
+
+// Extracted from React Test Renderer
+// src: https://github.com/facebook/react/blob/8e2bde6f2751aa6335f3cef488c05c3ea08e074a/packages/react-test-renderer/src/ReactTestRenderer.js#L402
+function findAllInternal(
+  root: ReactTestInstance,
+  predicate: (element: ReactTestInstance) => boolean,
+  options?: FindAllOptions
+): Array<ReactTestInstance> {
+  const results: ReactTestInstance[] = [];
+
+  // Match descendants first but do not add them to results yet.
+  const matchingDescendants: ReactTestInstance[] = [];
+  root.children.forEach((child) => {
+    if (typeof child === 'string') {
+      return;
+    }
+    matchingDescendants.push(...findAllInternal(child, predicate, options));
+  });
+
+  if (
+    // Deepest only mode: add current element only if no descendants match
+    (!options?.deepestOnly || matchingDescendants.length === 0) &&
+    predicate(root)
+  ) {
+    results.push(root);
+  }
+
+  // Add matching descendants after element to preserve original tree walk order.
+  results.push(...matchingDescendants);
+
+  return results;
 }
