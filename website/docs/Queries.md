@@ -381,7 +381,7 @@ getByA11yValue(
 
 Returns a host element with matching `accessibilityValue` prop entries. Only entires provided to the query will be used to match elements. Element might have additional accessibility value entries and still be matched.
 
-When querying by `text` entry a stirng or regex might be used.
+When querying by `text` entry a string or regex might be used.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';

@@ -73,33 +73,33 @@ const queryAllByRole = (
     );
   };
 
-const buildErrorMessage = (role: TextMatch, options: ByRoleOptions = {}) => {
-  const errors = [`role: "${String(role)}"`];
+const formatQueryParams = (role: TextMatch, options: ByRoleOptions = {}) => {
+  const params = [`role: "${String(role)}"`];
 
   if (options.name) {
-    errors.push(`name: "${String(options.name)}"`);
+    params.push(`name: "${String(options.name)}"`);
   }
 
   accessibilityStateKeys.forEach((stateKey) => {
     if (options[stateKey] !== undefined) {
-      errors.push(`${stateKey} state: ${options[stateKey]}`);
+      params.push(`${stateKey} state: ${options[stateKey]}`);
     }
   });
 
   accessiblityValueKeys.forEach((valueKey) => {
     if (options?.value?.[valueKey] !== undefined) {
-      errors.push(`${valueKey} value: ${options?.value?.[valueKey]}`);
+      params.push(`${valueKey} value: ${options?.value?.[valueKey]}`);
     }
   });
 
-  return errors.join(', ');
+  return params.join(', ');
 };
 
 const getMultipleError = (role: TextMatch, options?: ByRoleOptions) =>
-  `Found multiple elements with ${buildErrorMessage(role, options)}`;
+  `Found multiple elements with ${formatQueryParams(role, options)}`;
 
 const getMissingError = (role: TextMatch, options?: ByRoleOptions) =>
-  `Unable to find an element with ${buildErrorMessage(role, options)}`;
+  `Unable to find an element with ${formatQueryParams(role, options)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByRole,

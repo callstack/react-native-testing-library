@@ -31,23 +31,23 @@ const queryAllByA11yValue = (
     );
   };
 
-const buildErrorMessage = (value: AccessibilityValueMatcher) => {
-  const errors: string[] = [];
+const formatQueryParams = (matcher: AccessibilityValueMatcher) => {
+  const params: string[] = [];
 
   accessiblityValueKeys.forEach((valueKey) => {
-    if (value[valueKey] !== undefined) {
-      errors.push(`${valueKey} value: ${value[valueKey]}`);
+    if (matcher[valueKey] !== undefined) {
+      params.push(`${valueKey} value: ${matcher[valueKey]}`);
     }
   });
 
-  return errors.join(', ');
+  return params.join(', ');
 };
 
-const getMultipleError = (value: AccessibilityValueMatcher) =>
-  `Found multiple elements with ${buildErrorMessage(value)}`;
+const getMultipleError = (matcher: AccessibilityValueMatcher) =>
+  `Found multiple elements with ${formatQueryParams(matcher)}`;
 
-const getMissingError = (value: AccessibilityValueMatcher) =>
-  `Unable to find an element with ${buildErrorMessage(value)}`;
+const getMissingError = (matcher: AccessibilityValueMatcher) =>
+  `Unable to find an element with ${formatQueryParams(matcher)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByA11yValue,
