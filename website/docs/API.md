@@ -50,8 +50,7 @@ title: API
 - [Configuration](#configuration)
   - [`configure`](#configure)
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
-    - [`defaultIncludeHiddenElements` option](#defaultincludehidden-option)
-    - [`defaultHidden` option](#defaulthidden-option)
+    - [`defaultIncludeHiddenElements` option](#defaultincludehiddenelements-option)
     - [`defaultDebugOptions` option](#defaultdebugoptions-option)
   - [`resetToDefaults()`](#resettodefaults)
   - [Environment variables](#environment-variables)
@@ -796,9 +795,7 @@ Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementTo
 
 Default [includeHiddenElements](Queries.md#includehidden-option) query option for all queries. This default option will be overridden by the one you specify directly when using your query.
 
-#### `defaultHidden` option
-
-This is just an alias to the `defaultIncludeHiddenElements` option. It only exists to match react-testing-library naming used in the [configuration options](https://testing-library.com/docs/dom-testing-library/api-configuration/#defaulthidden). Prefer the use of `defaultIncludeHiddenElements` if possible as `defaultIncludeHiddenElements: true` is clearer than `defaultHidden: true`.
+There is an alias to this option named `defaultHidden` that exists only for compatibility with [react-testing-library](https://testing-library.com/docs/dom-testing-library/api-configuration/#defaulthidden).
 
 #### `defaultDebugOptions` option
 

@@ -27,8 +27,7 @@ title: Queries
     - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
   - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
 - [Common options](#common-options)
-  - [`includeHiddenElements` option](#includehidden-option)
-  - [`hidden` option](#hidden-option)
+  - [`includeHiddenElements` option](#includehiddenelements-option)
 - [TextMatch](#textmatch)
   - [Examples](#examples)
   - [Precision](#precision)
@@ -385,6 +384,8 @@ You can configure the default value with the [`configure` function](API.md#confi
 
 An element is considered to be hidden from accessibility based on [`isHiddenFromAccessibility()`](./API.md#ishiddenfromaccessibility) function.
 
+There is an alias to this option named `hidden` that exists only for compatibility with [react-testing-library](https://testing-library.com/docs/dom-testing-library/api-configuration/#defaulthidden).
+
 **Examples**
 
 ```tsx
@@ -401,10 +402,6 @@ expect(
   screen.getByText('I am hidden from accessibility', { includeHiddenElements: true })
 ).toBeTruthy();
 ```
-
-### `hidden` option
-
-This is just an alias to the `includeHiddenElements` option. It only exists to match react-testing-library naming used in [byRole](https://testing-library.com/docs/queries/byrole/#hidden). Prefer the use of `includeHiddenElements` if possible as `includeHiddenElements: true` is clearer than `hidden: true`.
 
 ## TextMatch
 
