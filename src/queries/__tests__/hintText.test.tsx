@@ -115,11 +115,8 @@ test('byHintText queries support hidden option', () => {
   );
 
   expect(getByHintText('hidden')).toBeTruthy();
-  expect(getByHintText('hidden', { hidden: true })).toBeTruthy();
   expect(getByHintText('hidden', { includeHiddenElements: true })).toBeTruthy();
 
-  expect(queryByHintText('hidden', { hidden: false })).toBeFalsy();
-  expect(() => getByHintText('hidden', { hidden: false })).toThrow();
   expect(
     queryByHintText('hidden', { includeHiddenElements: false })
   ).toBeFalsy();

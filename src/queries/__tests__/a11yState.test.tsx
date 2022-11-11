@@ -238,15 +238,10 @@ test('byA11yState queries support hidden option', () => {
   );
 
   expect(getByA11yState({ expanded: false })).toBeTruthy();
-  expect(getByA11yState({ expanded: false }, { hidden: true })).toBeTruthy();
   expect(
     getByA11yState({ expanded: false }, { includeHiddenElements: true })
   ).toBeTruthy();
 
-  expect(queryByA11yState({ expanded: false }, { hidden: false })).toBeFalsy();
-  expect(() =>
-    getByA11yState({ expanded: false }, { hidden: false })
-  ).toThrow();
   expect(
     queryByA11yState({ expanded: false }, { includeHiddenElements: false })
   ).toBeFalsy();

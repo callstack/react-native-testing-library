@@ -706,10 +706,8 @@ test('byRole queries support hidden option', () => {
   );
 
   expect(getByRole('button')).toBeTruthy();
-  expect(getByRole('button', { hidden: true })).toBeTruthy();
   expect(getByRole('button', { includeHiddenElements: true })).toBeTruthy();
 
-  expect(queryByRole('button', { hidden: false })).toBeFalsy();
-  expect(() => getByRole('button', { hidden: false })).toThrow();
+  expect(queryByRole('button', { includeHiddenElements: false })).toBeFalsy();
   expect(() => getByRole('button', { includeHiddenElements: false })).toThrow();
 });
