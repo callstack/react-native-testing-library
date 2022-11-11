@@ -13,13 +13,13 @@ export function findAll(
   options?: FindAllOptions
 ) {
   const results = root.findAll(predicate);
-  const includeHiddenElementsQueryOption =
-    options?.includeHiddenElements ?? options?.hidden;
-  const defaultIncludeHiddenElements =
-    getConfig()?.defaultIncludeHiddenElements ?? getConfig()?.defaultHidden;
 
   const hidden =
-    includeHiddenElementsQueryOption ?? defaultIncludeHiddenElements;
+    options?.includeHiddenElements ??
+    options?.hidden ??
+    getConfig()?.defaultIncludeHiddenElements ??
+    getConfig()?.defaultHidden;
+
   if (hidden) {
     return results;
   }
