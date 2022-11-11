@@ -8,7 +8,10 @@ type QueryAllReturn = Array<ReactTestInstance> | [];
 type FindReturn = Promise<ReactTestInstance>;
 type FindAllReturn = Promise<ReactTestInstance[]>;
 
-type CommonQueryOptions = { hidden?: boolean, includeHidden?: boolean };
+type CommonQueryOptions = {
+  hidden?: boolean,
+  includeHiddenElements?: boolean,
+};
 type TextMatch = string | RegExp;
 
 declare type NormalizerFn = (textToNormalize: string) => string;
@@ -464,7 +467,7 @@ declare module '@testing-library/react-native' {
   declare interface Config {
     asyncUtilTimeout: number;
     defaultHidden: boolean;
-    defaultIncludeHidden: boolean;
+    defaultIncludeHiddenElements: boolean;
     defaultDebugOptions?: $Shape<DebugOptions>;
   }
 

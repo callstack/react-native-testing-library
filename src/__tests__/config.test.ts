@@ -15,22 +15,22 @@ test('configure() overrides existing config values', () => {
     asyncUtilTimeout: 5000,
     defaultDebugOptions: { message: 'debug message' },
     defaultHidden: true,
-    defaultIncludeHidden: true,
+    defaultIncludeHiddenElements: true,
   });
 });
 
 test('resetToDefaults() resets config to defaults', () => {
   configure({
     asyncUtilTimeout: 5000,
-    defaultIncludeHidden: false,
+    defaultIncludeHiddenElements: false,
     defaultHidden: false,
   });
   expect(getConfig().asyncUtilTimeout).toEqual(5000);
   expect(getConfig().defaultHidden).toEqual(false);
-  expect(getConfig().defaultIncludeHidden).toEqual(false);
+  expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
 
   resetToDefaults();
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
   expect(getConfig().defaultHidden).toEqual(true);
-  expect(getConfig().defaultIncludeHidden).toEqual(true);
+  expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
 });

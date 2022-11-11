@@ -474,10 +474,12 @@ test('byText support hidden option', () => {
 
   expect(getByText(/hidden/i)).toBeTruthy();
   expect(getByText(/hidden/i, { hidden: true })).toBeTruthy();
-  expect(getByText(/hidden/i, { includeHidden: true })).toBeTruthy();
+  expect(getByText(/hidden/i, { includeHiddenElements: true })).toBeTruthy();
 
   expect(queryByText(/hidden/i, { hidden: false })).toBeFalsy();
-  expect(queryByText(/hidden/i, { includeHidden: false })).toBeFalsy();
+  expect(queryByText(/hidden/i, { includeHiddenElements: false })).toBeFalsy();
   expect(() => getByText(/hidden/i, { hidden: false })).toThrow();
-  expect(() => getByText(/hidden/i, { includeHidden: false })).toThrow();
+  expect(() =>
+    getByText(/hidden/i, { includeHiddenElements: false })
+  ).toThrow();
 });

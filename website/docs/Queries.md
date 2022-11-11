@@ -27,7 +27,7 @@ title: Queries
     - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
   - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
 - [Common options](#common-options)
-  - [`includeHidden` option](#includehidden-option)
+  - [`includeHiddenElements` option](#includehidden-option)
   - [`hidden` option](#hidden-option)
 - [TextMatch](#textmatch)
   - [Examples](#examples)
@@ -377,9 +377,9 @@ const element = screen.getByA11yValue({ min: 40 });
 
 ## Common options
 
-### `includeHidden` option
+### `includeHiddenElements` option
 
-All queries have the `includeHidden` option which enables them to respect accessibility props on components when it is set to `false`. If you set `includeHidden` to `true`, elements that are normally excluded from the accessibility tree are considered for the query as well. Currently `includeHidden` option is set `true` by default, which means that elements includeHidden from accessibility will be included by default. However, we plan to change the default value to `includeHidden: false` in the next major release.
+All queries have the `includeHiddenElements` option which enables them to respect accessibility props on components when it is set to `false`. If you set `includeHiddenElements` to `true`, elements that are normally excluded from the accessibility tree are considered for the query as well. Currently `includeHiddenElements` option is set `true` by default, which means that elements includeHiddenElements from accessibility will be included by default. However, we plan to change the default value to `includeHiddenElements: false` in the next major release.
 
 You can configure the default value with the [`configure` function](API.md#configure).
 
@@ -392,19 +392,19 @@ render(<Text style={{ display: 'none' }}>I am hidden from accessibility</Text>);
 
 // Include hidden elements
 expect(
-  screen.queryByText('I am hidden from accessibility', { includeHidden: false })
+  screen.queryByText('I am hidden from accessibility', { includeHiddenElements: false })
 ).toBeFalsy();
 
 // Match hidden elements
-expect(screen.getByText('I am hidden from accessibility')).toBeTruthy(); // Defaults to includeHidden: true for now
+expect(screen.getByText('I am hidden from accessibility')).toBeTruthy(); // Defaults to includeHiddenElements: true for now
 expect(
-  screen.getByText('I am hidden from accessibility', { includeHidden: true })
+  screen.getByText('I am hidden from accessibility', { includeHiddenElements: true })
 ).toBeTruthy();
 ```
 
 ### `hidden` option
 
-This is just an alias to the `includeHidden` option. It only exists to match react-testing-library naming used in [byRole](https://testing-library.com/docs/queries/byrole/#hidden). Prefer the use of `includeHidden` if possible as `includeHidden: true` is clearer than `hidden: true`.
+This is just an alias to the `includeHiddenElements` option. It only exists to match react-testing-library naming used in [byRole](https://testing-library.com/docs/queries/byrole/#hidden). Prefer the use of `includeHiddenElements` if possible as `includeHiddenElements: true` is clearer than `hidden: true`.
 
 ## TextMatch
 

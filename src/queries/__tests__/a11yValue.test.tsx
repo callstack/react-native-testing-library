@@ -102,10 +102,16 @@ test('byA11yValue queries support hidden option', () => {
 
   expect(getByA11yValue({ max: 10 })).toBeTruthy();
   expect(getByA11yValue({ max: 10 }, { hidden: true })).toBeTruthy();
-  expect(getByA11yValue({ max: 10 }, { includeHidden: true })).toBeTruthy();
+  expect(
+    getByA11yValue({ max: 10 }, { includeHiddenElements: true })
+  ).toBeTruthy();
 
   expect(queryByA11yValue({ max: 10 }, { hidden: false })).toBeFalsy();
   expect(() => getByA11yValue({ max: 10 }, { hidden: false })).toThrow();
-  expect(queryByA11yValue({ max: 10 }, { includeHidden: false })).toBeFalsy();
-  expect(() => getByA11yValue({ max: 10 }, { includeHidden: false })).toThrow();
+  expect(
+    queryByA11yValue({ max: 10 }, { includeHiddenElements: false })
+  ).toBeFalsy();
+  expect(() =>
+    getByA11yValue({ max: 10 }, { includeHiddenElements: false })
+  ).toThrow();
 });

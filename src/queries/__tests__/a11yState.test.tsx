@@ -240,7 +240,7 @@ test('byA11yState queries support hidden option', () => {
   expect(getByA11yState({ expanded: false })).toBeTruthy();
   expect(getByA11yState({ expanded: false }, { hidden: true })).toBeTruthy();
   expect(
-    getByA11yState({ expanded: false }, { includeHidden: true })
+    getByA11yState({ expanded: false }, { includeHiddenElements: true })
   ).toBeTruthy();
 
   expect(queryByA11yState({ expanded: false }, { hidden: false })).toBeFalsy();
@@ -248,9 +248,9 @@ test('byA11yState queries support hidden option', () => {
     getByA11yState({ expanded: false }, { hidden: false })
   ).toThrow();
   expect(
-    queryByA11yState({ expanded: false }, { includeHidden: false })
+    queryByA11yState({ expanded: false }, { includeHiddenElements: false })
   ).toBeFalsy();
   expect(() =>
-    getByA11yState({ expanded: false }, { includeHidden: false })
+    getByA11yState({ expanded: false }, { includeHiddenElements: false })
   ).toThrow();
 });

@@ -4,12 +4,12 @@ export type Config = {
   /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
 
-  /** Default includeHidden value for all queries */
-  defaultIncludeHidden: boolean;
+  /** Default includeHiddenElements value for all queries */
+  defaultIncludeHiddenElements: boolean;
 
-  /** Default hidden value for all queries, alias to defaultIncludeHidden to respect react-testing-library API
-   * WARNING: if both defaultHidden and defaultIncludeHidden values are defined,
-   * then defaultIncludeHidden will take precedence
+  /** Default hidden value for all queries, alias to defaultIncludeHiddenElements to respect react-testing-library API
+   * WARNING: if both defaultHidden and defaultIncludeHiddenElements values are defined,
+   * then defaultIncludeHiddenElements will take precedence
    */
   defaultHidden: boolean;
 
@@ -20,7 +20,7 @@ export type Config = {
 const defaultConfig: Config = {
   asyncUtilTimeout: 1000,
   defaultHidden: true,
-  defaultIncludeHidden: true,
+  defaultIncludeHiddenElements: true,
 };
 
 let config = { ...defaultConfig };
