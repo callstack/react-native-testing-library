@@ -26,6 +26,20 @@ const defaultConfig: Config = {
 let config = { ...defaultConfig };
 
 export function configure(options: Partial<Config>) {
+  if (
+    options.defaultHidden !== undefined &&
+    options.defaultIncludeHiddenElements === undefined
+  ) {
+    options.defaultIncludeHiddenElements = options.defaultHidden;
+  }
+
+  if (
+    options.defaultIncludeHiddenElements !== undefined &&
+    options.defaultHidden === undefined
+  ) {
+    options.defaultHidden = options.defaultIncludeHiddenElements;
+  }
+
   config = {
     ...config,
     ...options,

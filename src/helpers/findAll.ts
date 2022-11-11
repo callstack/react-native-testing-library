@@ -17,8 +17,7 @@ export function findAll(
   const hidden =
     options?.includeHiddenElements ??
     options?.hidden ??
-    getConfig()?.defaultIncludeHiddenElements ??
-    getConfig()?.defaultHidden;
+    getConfig()?.defaultIncludeHiddenElements;
 
   if (hidden) {
     return results;

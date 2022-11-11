@@ -3,7 +3,7 @@ import React from 'react';
 
 import render from '../../render';
 import { screen } from '../../screen';
-import { configure } from '../../config';
+import { configure, getConfig } from '../../config';
 
 test('includeHiddenElements query option takes priority over hidden option and global config', () => {
   configure({ defaultHidden: true, defaultIncludeHiddenElements: true });
@@ -23,4 +23,20 @@ test('global config defaultIncludeElements option takes priority over defaultHid
   configure({ defaultHidden: false, defaultIncludeHiddenElements: true });
   render(<View testID="view" style={{ display: 'none' }} />);
   expect(screen.getByTestId('view')).toBeTruthy();
+});
+
+test('defaultHidden takes priority when it was set last', () => {
+  // also simulates the case when defaultIncludeHiddenElements is true by default in the config
+  configure({ defaultIncludeHiddenElements: true });
+  configure({ defaultHidden: false });
+  render(<View testID="view" style={{ display: 'none' }} />);
+  expect(screen.queryByTestId('view')).toBeFalsy();
+});
+
+test('defaultIncludeHiddenElements takes priority when it was set last', () => {
+  // also simulates the case when defaultHidden is true by default in the config
+  configure({ defaultHidden: true });
+  configure({ defaultIncludeHiddenElements: false });
+  render(<View testID="view" style={{ display: 'none' }} />);
+  expect(screen.queryByTestId('view')).toBeFalsy();
 });
