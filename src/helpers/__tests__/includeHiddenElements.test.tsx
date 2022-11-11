@@ -3,7 +3,7 @@ import React from 'react';
 
 import render from '../../render';
 import { screen } from '../../screen';
-import { configure, getConfig } from '../../config';
+import { configure } from '../../config';
 
 test('includeHiddenElements query option takes priority over hidden option and global config', () => {
   configure({ defaultHidden: true, defaultIncludeHiddenElements: true });
