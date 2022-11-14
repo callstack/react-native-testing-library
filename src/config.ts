@@ -7,42 +7,41 @@ export type Config = {
   /** Default includeHiddenElements value for all queries */
   defaultIncludeHiddenElements: boolean;
 
+  /** Default options for `debug` helper. */
+  defaultDebugOptions?: Partial<DebugOptions>;
+};
+
+export type ConfigAliasOptions = {
   /** Default hidden value for all queries, alias to defaultIncludeHiddenElements to respect react-testing-library API
    * WARNING: if both defaultHidden and defaultIncludeHiddenElements values are defined,
    * then defaultIncludeHiddenElements will take precedence
    */
   defaultHidden: boolean;
-
-  /** Default options for `debug` helper. */
-  defaultDebugOptions?: Partial<DebugOptions>;
 };
 
 const defaultConfig: Config = {
   asyncUtilTimeout: 1000,
-  defaultHidden: true,
   defaultIncludeHiddenElements: true,
 };
 
 let config = { ...defaultConfig };
 
-export function configure(options: Partial<Config>) {
-  if (
-    options.defaultHidden !== undefined &&
-    options.defaultIncludeHiddenElements === undefined
-  ) {
-    options.defaultIncludeHiddenElements = options.defaultHidden;
-  }
+export function configure(options: Partial<Config & ConfigAliasOptions>) {
+  const { defaultHidden, ...restOptions } = options;
 
-  if (
-    options.defaultIncludeHiddenElements !== undefined &&
-    options.defaultHidden === undefined
-  ) {
-    options.defaultHidden = options.defaultIncludeHiddenElements;
-  }
+  const defaultIncludeHiddenElements =
+    restOptions.defaultIncludeHiddenElements ??
+    defaultHidden ??
+    config.defaultIncludeHiddenElements;
+
+  const optionsToSet = {
+    ...restOptions,
+    defaultIncludeHiddenElements,
+  };
 
   config = {
     ...config,
-    ...options,
+    ...optionsToSet,
   };
 }
 
