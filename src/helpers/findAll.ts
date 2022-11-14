@@ -3,8 +3,9 @@ import { getConfig } from '../config';
 import { isHiddenFromAccessibility } from './accessiblity';
 
 interface FindAllOptions {
-  hidden?: boolean;
   includeHiddenElements?: boolean;
+  /** RTL-compatible alias to `includeHiddenElements` */
+  hidden?: boolean;
 }
 
 export function findAll(
