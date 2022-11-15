@@ -35,7 +35,7 @@ const queryAllByText = (
     const results = findAll(
       baseInstance,
       (node) => matchTextContent(node, text, options),
-      { ...options, deepestOnly: true }
+      { ...options, matchDeepestOnly: true }
     );
 
     return results;
