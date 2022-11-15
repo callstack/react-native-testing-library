@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text } from 'react-native';
 import render from '../../render';
-import { getTextContent } from '../textContent';
+import { getTextContent } from '../getTextContent';
 
 test('getTextContent with simple content', () => {
   const view = render(<Text>Hello world</Text>);
