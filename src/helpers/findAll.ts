@@ -3,13 +3,14 @@ import { getConfig } from '../config';
 import { isHiddenFromAccessibility } from './accessiblity';
 
 interface FindAllOptions {
+  /** Match elements hidden from accessibility */
   includeHiddenElements?: boolean;
 
   /** RTL-compatible alias to `includeHiddenElements` */
   hidden?: boolean;
 
   /* Exclude any ancestors of deepest matched elements even if they match the predicate */
-  deepestOnly?: boolean;
+  matchDeepestOnly?: boolean;
 }
 
 export function findAll(
@@ -53,8 +54,8 @@ function findAllInternal(
   });
 
   if (
-    // Deepest only mode: add current element only if no descendants match
-    (!options?.deepestOnly || matchingDescendants.length === 0) &&
+    // When matchDeepestOnly = true: add current element only if no descendants match
+    (!options?.matchDeepestOnly || matchingDescendants.length === 0) &&
     predicate(root)
   ) {
     results.push(root);
