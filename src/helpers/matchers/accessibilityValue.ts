@@ -14,7 +14,7 @@ export function matchAccessibilityValue(
   node: ReactTestInstance,
   matcher: AccessibilityValueMatcher
 ): boolean {
-  const value = (node.props.accessibilityValue ?? {}) as AccessibilityValue;
+  const value: AccessibilityValue = node.props.accessibilityValue ?? {};
   return (
     (matcher.min === undefined || matcher.min === value.min) &&
     (matcher.max === undefined || matcher.max === value.max) &&
