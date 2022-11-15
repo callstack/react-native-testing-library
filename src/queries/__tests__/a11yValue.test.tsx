@@ -110,5 +110,7 @@ test('byA11yValue queries support hidden option', () => {
   ).toBeFalsy();
   expect(() =>
     getByA11yValue({ max: 10 }, { includeHiddenElements: false })
-  ).toThrow();
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with accessibilityValue: {"max":10}"`
+  );
 });

@@ -74,5 +74,7 @@ test('byPlaceholderText queries support hidden option', () => {
   ).toBeFalsy();
   expect(() =>
     getByPlaceholderText('hidden', { includeHiddenElements: false })
-  ).toThrow();
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with placeholder: hidden"`
+  );
 });

@@ -1,12 +1,11 @@
 import { NormalizerFn } from '../matches';
 
-/**
- * hidden is an alias for includeHiddenElements that exists only to match react-testing-library API
- * if both hidden and includeHiddenElements values are defined, then includeHiddenElements will take precedence
- */
 export type CommonQueryOptions = {
-  hidden?: boolean;
+  /** Should query include elements hidden from accessibility. */
   includeHiddenElements?: boolean;
+
+  /** RTL-compatibile alias to `includeHiddenElements`. */
+  hidden?: boolean;
 };
 
 export type TextMatchOptions = {

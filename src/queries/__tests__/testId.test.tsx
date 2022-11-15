@@ -146,5 +146,7 @@ test('byTestId queries support hidden option', () => {
   expect(queryByTestId('hidden', { includeHiddenElements: false })).toBeFalsy();
   expect(() =>
     getByTestId('hidden', { includeHiddenElements: false })
-  ).toThrow();
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with testID: hidden"`
+  );
 });

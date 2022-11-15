@@ -247,5 +247,7 @@ test('byA11yState queries support hidden option', () => {
   ).toBeFalsy();
   expect(() =>
     getByA11yState({ expanded: false }, { includeHiddenElements: false })
-  ).toThrow();
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with expanded state: false"`
+  );
 });

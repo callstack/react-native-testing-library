@@ -10,7 +10,6 @@ type FindAllReturn = Promise<ReactTestInstance[]>;
 
 type CommonQueryOptions = {
   includeHiddenElements?: boolean,
-  /** Alias to `includeHiddenElements` for RTL compatibility */
   hidden?: boolean,
 };
 type TextMatch = string | RegExp;

@@ -122,5 +122,7 @@ test('byHintText queries support hidden option', () => {
   ).toBeFalsy();
   expect(() =>
     getByHintText('hidden', { includeHiddenElements: false })
-  ).toThrow();
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with accessibilityHint: hidden"`
+  );
 });

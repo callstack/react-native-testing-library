@@ -15,12 +15,12 @@ export function findAll(
 ) {
   const results = root.findAll(predicate);
 
-  const hidden =
+  const includeHiddenElements =
     options?.includeHiddenElements ??
     options?.hidden ??
     getConfig()?.defaultIncludeHiddenElements;
 
-  if (hidden) {
+  if (includeHiddenElements) {
     return results;
   }
 

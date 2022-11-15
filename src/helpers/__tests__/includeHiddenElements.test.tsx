@@ -1,9 +1,6 @@
-import { View } from 'react-native';
 import React from 'react';
-
-import render from '../../render';
-import { screen } from '../../screen';
-import { configure } from '../../config';
+import { View } from 'react-native';
+import { configure, render, screen } from '../..';
 
 test('includeHiddenElements query option takes priority over hidden option and global config', () => {
   configure({ defaultHidden: true, defaultIncludeHiddenElements: true });

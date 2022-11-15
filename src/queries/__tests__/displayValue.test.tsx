@@ -115,5 +115,7 @@ test('byDisplayValue queries support hidden option', () => {
   ).toBeFalsy();
   expect(() =>
     getByDisplayValue('hidden', { includeHiddenElements: false })
-  ).toThrow();
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with displayValue: hidden"`
+  );
 });

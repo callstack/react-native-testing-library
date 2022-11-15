@@ -161,5 +161,7 @@ test('byLabelText queries support hidden option', () => {
   ).toBeFalsy();
   expect(() =>
     getByLabelText('hidden', { includeHiddenElements: false })
-  ).toThrow();
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with accessibilityLabel: hidden"`
+  );
 });

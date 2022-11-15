@@ -4,7 +4,7 @@ export type Config = {
   /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
 
-  /** Default includeHiddenElements value for all queries */
+  /** Default value for `includeHiddenElements` query option. */
   defaultIncludeHiddenElements: boolean;
 
   /** Default options for `debug` helper. */
@@ -12,10 +12,7 @@ export type Config = {
 };
 
 export type ConfigAliasOptions = {
-  /** Default hidden value for all queries, alias to defaultIncludeHiddenElements to respect react-testing-library API
-   * WARNING: if both defaultHidden and defaultIncludeHiddenElements values are defined,
-   * then defaultIncludeHiddenElements will take precedence
-   */
+  /** RTL-compatibility alias to `defaultIncludeHiddenElements` */
   defaultHidden: boolean;
 };
 
@@ -34,14 +31,10 @@ export function configure(options: Partial<Config & ConfigAliasOptions>) {
     defaultHidden ??
     config.defaultIncludeHiddenElements;
 
-  const optionsToSet = {
-    ...restOptions,
-    defaultIncludeHiddenElements,
-  };
-
   config = {
     ...config,
-    ...optionsToSet,
+    ...restOptions,
+    defaultIncludeHiddenElements,
   };
 }
 

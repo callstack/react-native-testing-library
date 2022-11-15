@@ -709,5 +709,9 @@ test('byRole queries support hidden option', () => {
   expect(getByRole('button', { includeHiddenElements: true })).toBeTruthy();
 
   expect(queryByRole('button', { includeHiddenElements: false })).toBeFalsy();
-  expect(() => getByRole('button', { includeHiddenElements: false })).toThrow();
+  expect(() =>
+    getByRole('button', { includeHiddenElements: false })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with role: "button""`
+  );
 });

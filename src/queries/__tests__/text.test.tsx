@@ -478,5 +478,7 @@ test('byText support hidden option', () => {
   expect(queryByText(/hidden/i, { includeHiddenElements: false })).toBeFalsy();
   expect(() =>
     getByText(/hidden/i, { includeHiddenElements: false })
-  ).toThrow();
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with text: /hidden/i"`
+  );
 });

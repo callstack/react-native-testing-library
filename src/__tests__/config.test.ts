@@ -23,7 +23,6 @@ test('resetToDefaults() resets config to defaults', () => {
   configure({
     asyncUtilTimeout: 5000,
     defaultIncludeHiddenElements: false,
-    defaultHidden: false,
   });
   expect(getConfig().asyncUtilTimeout).toEqual(5000);
   expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
@@ -35,6 +34,7 @@ test('resetToDefaults() resets config to defaults', () => {
 
 test('configure handles alias option defaultHidden', () => {
   expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
+
   configure({ defaultHidden: false });
   expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
 });
