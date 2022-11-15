@@ -50,7 +50,7 @@ title: API
 - [Configuration](#configuration)
   - [`configure`](#configure)
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
-    - [`defaultHidden` option](#defaulthidden-option)
+    - [`defaultIncludeHiddenElements` option](#defaultincludehiddenelements-option)
     - [`defaultDebugOptions` option](#defaultdebugoptions-option)
   - [`resetToDefaults()`](#resettodefaults)
   - [Environment variables](#environment-variables)
@@ -791,9 +791,13 @@ function configure(options: Partial<Config>) {}
 
 Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
 
-#### `defaultHidden` option
+#### `defaultIncludeHiddenElements` option
 
-Default [hidden](Queries.md#hidden-option) query option for all queries. This default option will be overridden by the one you specify directly when using your query.
+Default value for [includeHiddenElements](Queries.md#includehidden-option) query option for all queries. Defaults to `true`, which means that queries will match [elements hidden from accessibility](#ishiddenfromaccessibility) by default.
+
+Currently this option is set to `true` which means that queries will also match hidden elements. This is done to avoid breaking changes. However, we plan to change the default behavior to exclude hidden elements in the next major release.
+
+This option is also available as `defaultHidden` alias for compatibility with [React Testing Library](https://testing-library.com/docs/dom-testing-library/api-configuration/#defaulthidden).
 
 #### `defaultDebugOptions` option
 

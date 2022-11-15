@@ -106,8 +106,16 @@ test('byDisplayValue queries support hidden option', () => {
   );
 
   expect(getByDisplayValue('hidden')).toBeTruthy();
-  expect(getByDisplayValue('hidden', { hidden: true })).toBeTruthy();
+  expect(
+    getByDisplayValue('hidden', { includeHiddenElements: true })
+  ).toBeTruthy();
 
-  expect(queryByDisplayValue('hidden', { hidden: false })).toBeFalsy();
-  expect(() => getByDisplayValue('hidden', { hidden: false })).toThrow();
+  expect(
+    queryByDisplayValue('hidden', { includeHiddenElements: false })
+  ).toBeFalsy();
+  expect(() =>
+    getByDisplayValue('hidden', { includeHiddenElements: false })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with displayValue: hidden"`
+  );
 });

@@ -4,24 +4,37 @@ export type Config = {
   /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
 
-  /** Default hidden value for all queries */
-  defaultHidden: boolean;
+  /** Default value for `includeHiddenElements` query option. */
+  defaultIncludeHiddenElements: boolean;
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
 };
 
+export type ConfigAliasOptions = {
+  /** RTL-compatibility alias to `defaultIncludeHiddenElements` */
+  defaultHidden: boolean;
+};
+
 const defaultConfig: Config = {
   asyncUtilTimeout: 1000,
-  defaultHidden: true,
+  defaultIncludeHiddenElements: true,
 };
 
 let config = { ...defaultConfig };
 
-export function configure(options: Partial<Config>) {
+export function configure(options: Partial<Config & ConfigAliasOptions>) {
+  const { defaultHidden, ...restOptions } = options;
+
+  const defaultIncludeHiddenElements =
+    restOptions.defaultIncludeHiddenElements ??
+    defaultHidden ??
+    config.defaultIncludeHiddenElements;
+
   config = {
     ...config,
-    ...options,
+    ...restOptions,
+    defaultIncludeHiddenElements,
   };
 }
 

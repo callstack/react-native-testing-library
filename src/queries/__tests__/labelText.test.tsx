@@ -152,8 +152,16 @@ test('byLabelText queries support hidden option', () => {
   );
 
   expect(getByLabelText('hidden')).toBeTruthy();
-  expect(getByLabelText('hidden', { hidden: true })).toBeTruthy();
+  expect(
+    getByLabelText('hidden', { includeHiddenElements: true })
+  ).toBeTruthy();
 
-  expect(queryByLabelText('hidden', { hidden: false })).toBeFalsy();
-  expect(() => getByLabelText('hidden', { hidden: false })).toThrow();
+  expect(
+    queryByLabelText('hidden', { includeHiddenElements: false })
+  ).toBeFalsy();
+  expect(() =>
+    getByLabelText('hidden', { includeHiddenElements: false })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with accessibilityLabel: hidden"`
+  );
 });

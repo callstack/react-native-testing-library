@@ -3,6 +3,8 @@ import { getConfig } from '../config';
 import { isHiddenFromAccessibility } from './accessiblity';
 
 interface FindAllOptions {
+  includeHiddenElements?: boolean;
+  /** RTL-compatible alias to `includeHiddenElements` */
   hidden?: boolean;
 }
 
@@ -13,8 +15,12 @@ export function findAll(
 ) {
   const results = root.findAll(predicate);
 
-  const hidden = options?.hidden ?? getConfig().defaultHidden;
-  if (hidden) {
+  const includeHiddenElements =
+    options?.includeHiddenElements ??
+    options?.hidden ??
+    getConfig()?.defaultIncludeHiddenElements;
+
+  if (includeHiddenElements) {
     return results;
   }
 

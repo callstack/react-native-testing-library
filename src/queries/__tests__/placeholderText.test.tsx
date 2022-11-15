@@ -65,8 +65,16 @@ test('byPlaceholderText queries support hidden option', () => {
   );
 
   expect(getByPlaceholderText('hidden')).toBeTruthy();
-  expect(getByPlaceholderText('hidden', { hidden: true })).toBeTruthy();
+  expect(
+    getByPlaceholderText('hidden', { includeHiddenElements: true })
+  ).toBeTruthy();
 
-  expect(queryByPlaceholderText('hidden', { hidden: false })).toBeFalsy();
-  expect(() => getByPlaceholderText('hidden', { hidden: false })).toThrow();
+  expect(
+    queryByPlaceholderText('hidden', { includeHiddenElements: false })
+  ).toBeFalsy();
+  expect(() =>
+    getByPlaceholderText('hidden', { includeHiddenElements: false })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with placeholder: hidden"`
+  );
 });

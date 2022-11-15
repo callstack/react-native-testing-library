@@ -45,6 +45,10 @@ describe('getHostParent()', () => {
     expect(getHostParent(hostGrandparent)).toBe(null);
   });
 
+  it('returns host parent for null', () => {
+    expect(getHostParent(null)).toBe(null);
+  });
+
   it('returns host parent for composite component', () => {
     const view = render(
       <View testID="parent">
@@ -65,7 +69,7 @@ describe('getHostChildren()', () => {
       <View testID="grandparent">
         <View testID="parent">
           <View testID="subject" />
-          <View testID="sibling" />
+          <Text testID="sibling">Hello</Text>
         </View>
       </View>
     );
@@ -74,6 +78,8 @@ describe('getHostChildren()', () => {
     expect(getHostChildren(hostSubject)).toEqual([]);
 
     const hostSibling = view.getByTestId('sibling');
+    expect(getHostChildren(hostSibling)).toEqual([]);
+
     const hostParent = view.getByTestId('parent');
     expect(getHostChildren(hostParent)).toEqual([hostSubject, hostSibling]);
 

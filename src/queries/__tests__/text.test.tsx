@@ -473,8 +473,12 @@ test('byText support hidden option', () => {
   );
 
   expect(getByText(/hidden/i)).toBeTruthy();
-  expect(getByText(/hidden/i, { hidden: true })).toBeTruthy();
+  expect(getByText(/hidden/i, { includeHiddenElements: true })).toBeTruthy();
 
-  expect(queryByText(/hidden/i, { hidden: false })).toBeFalsy();
-  expect(() => getByText(/hidden/i, { hidden: false })).toThrow();
+  expect(queryByText(/hidden/i, { includeHiddenElements: false })).toBeFalsy();
+  expect(() =>
+    getByText(/hidden/i, { includeHiddenElements: false })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with text: /hidden/i"`
+  );
 });

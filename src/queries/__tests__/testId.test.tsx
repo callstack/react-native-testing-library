@@ -141,8 +141,12 @@ test('byTestId queries support hidden option', () => {
   );
 
   expect(getByTestId('hidden')).toBeTruthy();
-  expect(getByTestId('hidden', { hidden: true })).toBeTruthy();
+  expect(getByTestId('hidden', { includeHiddenElements: true })).toBeTruthy();
 
-  expect(queryByTestId('hidden', { hidden: false })).toBeFalsy();
-  expect(() => getByTestId('hidden', { hidden: false })).toThrow();
+  expect(queryByTestId('hidden', { includeHiddenElements: false })).toBeFalsy();
+  expect(() =>
+    getByTestId('hidden', { includeHiddenElements: false })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with testID: hidden"`
+  );
 });
