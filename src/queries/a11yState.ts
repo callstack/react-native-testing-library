@@ -103,7 +103,7 @@ export const bindByA11yStateQueries = (
         findAllByA11yState,
       },
       'A11yState',
-      'Role(role, { disabled, selected, checked, busy, expanded })'
+      'Role(role, { disabled, selected, checked, busy, expanded }) query\nor expect(...).toHaveAccessibilityState(...) matcher'
     ),
 
     ...deprecateAllQueries(
@@ -116,7 +116,7 @@ export const bindByA11yStateQueries = (
         findAllByAccessibilityState: findAllByA11yState,
       },
       'AccessibilityState',
-      'Role(role, { disabled, selected, checked, busy, expanded })'
+      'Role(role, { disabled, selected, checked, busy, expanded }) query\nor expect(...).toHaveAccessibilityState(...) matcher'
     ),
   };
 };

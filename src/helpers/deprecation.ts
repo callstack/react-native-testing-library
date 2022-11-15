@@ -23,7 +23,7 @@ export function deprecateQuery<QueryFn extends (...args: any) => any>(
   const wrapper: QueryFn = (...args: any) => {
     // eslint-disable-next-line no-console
     console.warn(
-      `${queryName}(...) is deprecated. Please use ${recommendation} instead.`
+      `${queryName}(...) is deprecated.\n\nPlease use ${recommendation} instead.`
     );
 
     return queryFn(...args);
