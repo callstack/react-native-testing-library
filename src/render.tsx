@@ -132,6 +132,19 @@ function updateWithAct(
     act(() => {
       renderer.update(wrap(component));
     });
+
+    // Rebind queries and helper only when root instance changes.
+    // This will not affect render calls using `wrapper` or
+    // `unstable_validateStringsRenderedWithinText` options as they will create
+    // a wrapping root that does not change.
+    if (screen.container !== renderer.root) {
+      setRenderResult({
+        ...screen,
+        ...getQueriesForElement(renderer.root),
+        container: renderer.root,
+        debug: debug(renderer.root, renderer),
+      });
+    }
   };
 }
 

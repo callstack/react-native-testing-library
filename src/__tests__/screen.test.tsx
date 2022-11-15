@@ -23,12 +23,22 @@ test('screen holds last render result', () => {
   expect(screen.queryByText('Mt. Blanc')).toBeFalsy();
 });
 
-test('screen works with updating rerender', () => {
+test('screen works with rerender', () => {
   const result = render(<Text>Mt. Everest</Text>);
   expect(screen).toBe(result);
+  expect(screen.getByText('Mt. Everest')).toBeTruthy();
 
   screen.rerender(<Text>Śnieżka</Text>);
   expect(screen).toBe(result);
+  expect(screen.getByText('Śnieżka')).toBeTruthy();
+});
+
+test('screen works with re-mounting root', () => {
+  const result = render(<Text key="1">Mt. Everest</Text>);
+  expect(screen).toBe(result);
+  expect(screen.getByText('Mt. Everest')).toBeTruthy();
+
+  screen.rerender(<Text key="2">Śnieżka</Text>);
   expect(screen.getByText('Śnieżka')).toBeTruthy();
 });
 
