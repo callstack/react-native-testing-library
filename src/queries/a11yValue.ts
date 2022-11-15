@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { accessiblityValueKeys } from '../helpers/accessiblity';
+import { deprecateAllQueries } from '../helpers/deprecation';
 import { findAll } from '../helpers/findAll';
 import {
   AccessibilityValueMatcher,
@@ -109,18 +110,30 @@ export const bindByA11yValueQueries = (
   const findAllByA11yValue = findAllBy(instance);
 
   return {
-    getByA11yValue,
-    getAllByA11yValue,
-    queryByA11yValue,
-    queryAllByA11yValue,
-    findByA11yValue,
-    findAllByA11yValue,
+    ...deprecateAllQueries(
+      {
+        getByA11yValue,
+        getAllByA11yValue,
+        queryByA11yValue,
+        queryAllByA11yValue,
+        findByA11yValue,
+        findAllByA11yValue,
+      },
+      'A11yValue',
+      'Role(role, { value: ... })'
+    ),
 
-    getByAccessibilityValue: getByA11yValue,
-    getAllByAccessibilityValue: getAllByA11yValue,
-    queryByAccessibilityValue: queryByA11yValue,
-    queryAllByAccessibilityValue: queryAllByA11yValue,
-    findByAccessibilityValue: findByA11yValue,
-    findAllByAccessibilityValue: findAllByA11yValue,
+    ...deprecateAllQueries(
+      {
+        getByAccessibilityValue: getByA11yValue,
+        getAllByAccessibilityValue: getAllByA11yValue,
+        queryByAccessibilityValue: queryByA11yValue,
+        queryAllByAccessibilityValue: queryAllByA11yValue,
+        findByAccessibilityValue: findByA11yValue,
+        findAllByAccessibilityValue: findAllByA11yValue,
+      },
+      'AccessibilityValue',
+      'Role(role, { value: ... })'
+    ),
   };
 };

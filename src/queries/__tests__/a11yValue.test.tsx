@@ -1,6 +1,13 @@
+/* eslint-disable no-console */
 import * as React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { render } from '../..';
+
+type ConsoleLogMock = jest.Mock<typeof console.log>;
+
+beforeEach(() => {
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+});
 
 const TEXT_LABEL = 'cool text';
 
@@ -128,5 +135,75 @@ test('byA11yValue error messages', () => {
     getByA11yValue({ min: 1, max: 2, now: 3, text: /foo/i })
   ).toThrowErrorMatchingInlineSnapshot(
     `"Unable to find an element with min value: 1, max value: 2, now value: 3, text value: /foo/i"`
+  );
+});
+
+test('*ByA11yValue deprecation warnings', () => {
+  const mockCalls = (console.warn as ConsoleLogMock).mock.calls;
+  const view = render(<View accessibilityValue={{ min: 10 }} />);
+
+  view.getByA11yValue({ min: 10 });
+  expect(mockCalls[0][0]).toMatchInlineSnapshot(
+    `"getByA11yValue(...) is deprecated. Please use getByRole(role, { value: ... }) instead."`
+  );
+
+  view.getAllByA11yValue({ min: 10 });
+  expect(mockCalls[1][0]).toMatchInlineSnapshot(
+    `"getAllByA11yValue(...) is deprecated. Please use getAllByRole(role, { value: ... }) instead."`
+  );
+
+  view.queryByA11yValue({ min: 10 });
+  expect(mockCalls[2][0]).toMatchInlineSnapshot(
+    `"queryByA11yValue(...) is deprecated. Please use queryByRole(role, { value: ... }) instead."`
+  );
+
+  view.queryAllByA11yValue({ min: 10 });
+  expect(mockCalls[3][0]).toMatchInlineSnapshot(
+    `"queryAllByA11yValue(...) is deprecated. Please use queryAllByRole(role, { value: ... }) instead."`
+  );
+
+  view.findByA11yValue({ min: 10 });
+  expect(mockCalls[4][0]).toMatchInlineSnapshot(
+    `"findByA11yValue(...) is deprecated. Please use findByRole(role, { value: ... }) instead."`
+  );
+
+  view.findAllByA11yValue({ min: 10 });
+  expect(mockCalls[5][0]).toMatchInlineSnapshot(
+    `"findAllByA11yValue(...) is deprecated. Please use findAllByRole(role, { value: ... }) instead."`
+  );
+});
+
+test('*ByAccessibilityValue deprecation warnings', () => {
+  const mockCalls = (console.warn as ConsoleLogMock).mock.calls;
+  const view = render(<View accessibilityValue={{ min: 10 }} />);
+
+  view.getByAccessibilityValue({ min: 10 });
+  expect(mockCalls[0][0]).toMatchInlineSnapshot(
+    `"getByAccessibilityValue(...) is deprecated. Please use getByRole(role, { value: ... }) instead."`
+  );
+
+  view.getAllByAccessibilityValue({ min: 10 });
+  expect(mockCalls[1][0]).toMatchInlineSnapshot(
+    `"getAllByAccessibilityValue(...) is deprecated. Please use getAllByRole(role, { value: ... }) instead."`
+  );
+
+  view.queryByAccessibilityValue({ min: 10 });
+  expect(mockCalls[2][0]).toMatchInlineSnapshot(
+    `"queryByAccessibilityValue(...) is deprecated. Please use queryByRole(role, { value: ... }) instead."`
+  );
+
+  view.queryAllByAccessibilityValue({ min: 10 });
+  expect(mockCalls[3][0]).toMatchInlineSnapshot(
+    `"queryAllByAccessibilityValue(...) is deprecated. Please use queryAllByRole(role, { value: ... }) instead."`
+  );
+
+  view.findByAccessibilityValue({ min: 10 });
+  expect(mockCalls[4][0]).toMatchInlineSnapshot(
+    `"findByAccessibilityValue(...) is deprecated. Please use findByRole(role, { value: ... }) instead."`
+  );
+
+  view.findAllByAccessibilityValue({ min: 10 });
+  expect(mockCalls[5][0]).toMatchInlineSnapshot(
+    `"findAllByAccessibilityValue(...) is deprecated. Please use findAllByRole(role, { value: ... }) instead."`
   );
 });
