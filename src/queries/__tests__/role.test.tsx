@@ -696,6 +696,24 @@ describe('error messages', () => {
       `"Unable to find an element with role: "button", disabled state: true"`
     );
   });
+
+  test('gives a descriptive error message when querying with a role and an accessibility value', () => {
+    const { getByRole } = render(<View />);
+
+    expect(() =>
+      getByRole('adjustable', { value: { min: 1 } })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Unable to find an element with role: "adjustable", min value: 1"`
+    );
+
+    expect(() =>
+      getByRole('adjustable', {
+        value: { min: 1, max: 2, now: 1, text: /hello/ },
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Unable to find an element with role: "adjustable", min value: 1, max value: 2, now value: 1, text value: /hello/"`
+    );
+  });
 });
 
 test('byRole queries support hidden option', () => {

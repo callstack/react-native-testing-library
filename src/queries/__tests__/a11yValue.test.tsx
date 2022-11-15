@@ -1,16 +1,8 @@
 import * as React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { render } from '../..';
 
 const TEXT_LABEL = 'cool text';
-
-const getMultipleInstancesFoundMessage = (value: string) => {
-  return `Found multiple elements with accessibilityValue: ${value}`;
-};
-
-const getNoInstancesFoundMessage = (value: string) => {
-  return `Unable to find an element with accessibilityValue: ${value}`;
-};
 
 const Typography = ({ children, ...rest }: any) => {
   return <Text {...rest}>{children}</Text>;
@@ -46,15 +38,15 @@ test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
   });
 
   expect(() => getByA11yValue({ min: 50 })).toThrow(
-    getNoInstancesFoundMessage('{"min":50}')
+    'Unable to find an element with min value: 50'
   );
   expect(queryByA11yValue({ min: 50 })).toEqual(null);
 
   expect(() => getByA11yValue({ max: 60 })).toThrow(
-    getMultipleInstancesFoundMessage('{"max":60}')
+    'Found multiple elements with max value: 60'
   );
   expect(() => queryByA11yValue({ max: 60 })).toThrow(
-    getMultipleInstancesFoundMessage('{"max":60}')
+    'Found multiple elements with max value: 60'
   );
 
   const asyncElement = await findByA11yValue({ min: 40 });
@@ -63,10 +55,10 @@ test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
     max: 60,
   });
   await expect(findByA11yValue({ min: 50 })).rejects.toThrow(
-    getNoInstancesFoundMessage('{"min":50}')
+    'Unable to find an element with min value: 50'
   );
   await expect(findByA11yValue({ max: 60 })).rejects.toThrow(
-    getMultipleInstancesFoundMessage('{"max":60}')
+    'Found multiple elements with max value: 60'
   );
 });
 
@@ -79,7 +71,7 @@ test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
   expect(queryAllByA11yValue({ min: 40 })).toHaveLength(1);
 
   expect(() => getAllByA11yValue({ min: 50 })).toThrow(
-    getNoInstancesFoundMessage('{"min":50}')
+    'Unable to find an element with min value: 50'
   );
   expect(queryAllByA11yValue({ min: 50 })).toEqual([]);
 
@@ -88,7 +80,7 @@ test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
 
   await expect(findAllByA11yValue({ min: 40 })).resolves.toHaveLength(1);
   await expect(findAllByA11yValue({ min: 50 })).rejects.toThrow(
-    getNoInstancesFoundMessage('{"min":50}')
+    'Unable to find an element with min value: 50'
   );
   await expect(findAllByA11yValue({ max: 60 })).resolves.toHaveLength(2);
 });
@@ -111,6 +103,30 @@ test('byA11yValue queries support hidden option', () => {
   expect(() =>
     getByA11yValue({ max: 10 }, { includeHiddenElements: false })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with accessibilityValue: {"max":10}"`
+    `"Unable to find an element with max value: 10"`
+  );
+});
+
+test('byA11yValue error messages', () => {
+  const { getByA11yValue } = render(<View />);
+  expect(() =>
+    getByA11yValue({ min: 10, max: 10 })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with min value: 10, max value: 10"`
+  );
+  expect(() =>
+    getByA11yValue({ max: 20, now: 5 })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with max value: 20, now value: 5"`
+  );
+  expect(() =>
+    getByA11yValue({ min: 1, max: 2, now: 3 })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with min value: 1, max value: 2, now value: 3"`
+  );
+  expect(() =>
+    getByA11yValue({ min: 1, max: 2, now: 3, text: /foo/i })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with min value: 1, max value: 2, now value: 3, text value: /foo/i"`
   );
 });
