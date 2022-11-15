@@ -793,7 +793,7 @@ Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementTo
 
 #### `defaultIncludeHiddenElements` option
 
-Default value for [includeHiddenElements](Queries.md#includehidden-option) query option for all queries. Defaults to `true`, which means that queries will match [elements hidden from accessibility](#ishiddenfromaccessibility) by default.
+Default value for [includeHiddenElements](Queries.md#includehiddenelements-option) query option for all queries. Defaults to `true`, which means that queries will match [elements hidden from accessibility](#ishiddenfromaccessibility) by default.
 
 Currently this option is set to `true` which means that queries will also match hidden elements. This is done to avoid breaking changes. However, we plan to change the default behavior to exclude hidden elements in the next major release.
 
