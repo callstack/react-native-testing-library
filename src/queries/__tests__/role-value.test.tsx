@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { render } from '../..';
 
 describe('accessibility value', () => {
@@ -57,5 +57,45 @@ describe('accessibility value', () => {
     expect(queryByRole('adjustable', { value: { now: 15 } })).toBeFalsy();
     expect(queryByRole('adjustable', { value: { text: 'No' } })).toBeFalsy();
     expect(queryByRole('adjustable', { value: { text: /no/ } })).toBeFalsy();
+  });
+
+  test('matches using single value and other options', () => {
+    const { getByRole } = render(
+      <Text
+        accessibilityRole="adjustable"
+        accessibilityState={{ disabled: true }}
+        accessibilityValue={{ min: 10, max: 20, now: 12, text: 'Hello' }}
+      >
+        Hello
+      </Text>
+    );
+
+    expect(
+      getByRole('adjustable', { name: 'Hello', value: { min: 10 } })
+    ).toBeTruthy();
+    expect(
+      getByRole('adjustable', { disabled: true, value: { min: 10 } })
+    ).toBeTruthy();
+
+    expect(() =>
+      getByRole('adjustable', { name: 'Hello', value: { min: 5 } })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Unable to find an element with role: "adjustable", name: "Hello", min value: 5"`
+    );
+    expect(() =>
+      getByRole('adjustable', { name: 'World', value: { min: 10 } })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Unable to find an element with role: "adjustable", name: "World", min value: 10"`
+    );
+    expect(() =>
+      getByRole('adjustable', { name: 'Hello', value: { min: 5 } })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Unable to find an element with role: "adjustable", name: "Hello", min value: 5"`
+    );
+    expect(() =>
+      getByRole('adjustable', { selected: true, value: { min: 10 } })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Unable to find an element with role: "adjustable", selected state: true, min value: 10"`
+    );
   });
 });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { render } from '../..';
 
 const TEXT_LABEL = 'cool text';
@@ -103,6 +103,30 @@ test('byA11yValue queries support hidden option', () => {
   expect(() =>
     getByA11yValue({ max: 10 }, { includeHiddenElements: false })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with accessibilityValue: {"max":10}"`
+    `"Unable to find an element with max value: 10"`
+  );
+});
+
+test('byA11yValue error messages', () => {
+  const { getByA11yValue } = render(<View />);
+  expect(() =>
+    getByA11yValue({ min: 10, max: 10 })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with min value: 10, max value: 10"`
+  );
+  expect(() =>
+    getByA11yValue({ max: 20, now: 5 })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with max value: 20, now value: 5"`
+  );
+  expect(() =>
+    getByA11yValue({ min: 1, max: 2, now: 3 })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with min value: 1, max value: 2, now value: 3"`
+  );
+  expect(() =>
+    getByA11yValue({ min: 1, max: 2, now: 3, text: /foo/i })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with min value: 1, max value: 2, now value: 3, text value: /foo/i"`
   );
 });
