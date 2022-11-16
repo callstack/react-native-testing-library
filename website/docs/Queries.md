@@ -22,10 +22,10 @@ title: Queries
   - [`ByHintText`, `ByA11yHint`, `ByAccessibilityHint`](#byhinttext-bya11yhint-byaccessibilityhint)
   - [`ByRole`](#byrole)
     - [Options](#options-1)
-  - [`ByA11yState`, `ByAccessibilityState`](#bya11ystate-byaccessibilitystate)
+  - [`ByA11yState`, `ByAccessibilityState` (deprecated)](#bya11ystate-byaccessibilitystate-deprecated)
     - [Default state for: `disabled`, `selected`, and `busy` keys](#default-state-for-disabled-selected-and-busy-keys)
     - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
-  - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
+  - [`ByA11Value`, `ByAccessibilityValue` (deprecated)](#bya11value-byaccessibilityvalue-deprecated)
 - [Common options](#common-options)
   - [`includeHiddenElements` option](#includehiddenelements-option)
 - [TextMatch](#textmatch)
@@ -309,7 +309,11 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 
 `value`: Filter elements by their accessibility, available value entries include numeric `min`, `max` & `now`, as well as string or regex `text` key. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about this prop.
 
-### `ByA11yState`, `ByAccessibilityState`
+### `ByA11yState`, `ByAccessibilityState` (deprecated)
+
+:::caution
+This method has been marked deprecated, as similar functionallity can be better achieved using [`*ByRole`](#byrole) query with state options (`disabled`, `selected`, etc) or by using [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) Jest matcher.
+:::
 
 :::caution
 This query uses a predicate that is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
@@ -372,7 +376,11 @@ but will not match elements with following props:
 The difference in handling default values is made to reflect observed accessibility behaviour on iOS and Android platforms.
 :::
 
-### `ByA11Value`, `ByAccessibilityValue`
+### `ByA11Value`, `ByAccessibilityValue` (deprecated)
+
+:::caution
+This method has been marked deprecated, as similar functionallity can be better achieved using [`*ByRole`](#byrole) query with `value` option or by using [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) Jest matcher.
+:::
 
 :::caution
 This query uses a predicate that is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
