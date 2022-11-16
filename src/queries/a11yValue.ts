@@ -120,7 +120,7 @@ export const bindByA11yValueQueries = (
         findAllByA11yValue,
       },
       'A11yValue',
-      'Role(role, { value: ... })'
+      'Role(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher'
     ),
 
     ...deprecateAllQueries(
@@ -133,7 +133,7 @@ export const bindByA11yValueQueries = (
         findAllByAccessibilityValue: findAllByA11yValue,
       },
       'AccessibilityValue',
-      'Role(role, { value: ... })'
+      'Role(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher'
     ),
   };
 };

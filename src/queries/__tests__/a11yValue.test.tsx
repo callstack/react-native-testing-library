@@ -146,42 +146,42 @@ test('*ByA11yValue deprecation warnings', () => {
   expect(mockCalls[0][0]).toMatchInlineSnapshot(`
     "getByA11yValue(...) is deprecated.
 
-    Please use getByRole(role, { value: ... }) instead."
+    Please use getByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 
   view.getAllByA11yValue({ min: 10 });
   expect(mockCalls[1][0]).toMatchInlineSnapshot(`
     "getAllByA11yValue(...) is deprecated.
 
-    Please use getAllByRole(role, { value: ... }) instead."
+    Please use getAllByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 
   view.queryByA11yValue({ min: 10 });
   expect(mockCalls[2][0]).toMatchInlineSnapshot(`
     "queryByA11yValue(...) is deprecated.
 
-    Please use queryByRole(role, { value: ... }) instead."
+    Please use queryByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 
   view.queryAllByA11yValue({ min: 10 });
   expect(mockCalls[3][0]).toMatchInlineSnapshot(`
     "queryAllByA11yValue(...) is deprecated.
 
-    Please use queryAllByRole(role, { value: ... }) instead."
+    Please use queryAllByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 
   view.findByA11yValue({ min: 10 });
   expect(mockCalls[4][0]).toMatchInlineSnapshot(`
     "findByA11yValue(...) is deprecated.
 
-    Please use findByRole(role, { value: ... }) instead."
+    Please use findByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 
   view.findAllByA11yValue({ min: 10 });
   expect(mockCalls[5][0]).toMatchInlineSnapshot(`
     "findAllByA11yValue(...) is deprecated.
 
-    Please use findAllByRole(role, { value: ... }) instead."
+    Please use findAllByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 });
 
@@ -193,41 +193,41 @@ test('*ByAccessibilityValue deprecation warnings', () => {
   expect(mockCalls[0][0]).toMatchInlineSnapshot(`
     "getByAccessibilityValue(...) is deprecated.
 
-    Please use getByRole(role, { value: ... }) instead."
+    Please use getByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 
   view.getAllByAccessibilityValue({ min: 10 });
   expect(mockCalls[1][0]).toMatchInlineSnapshot(`
     "getAllByAccessibilityValue(...) is deprecated.
 
-    Please use getAllByRole(role, { value: ... }) instead."
+    Please use getAllByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 
   view.queryByAccessibilityValue({ min: 10 });
   expect(mockCalls[2][0]).toMatchInlineSnapshot(`
     "queryByAccessibilityValue(...) is deprecated.
 
-    Please use queryByRole(role, { value: ... }) instead."
+    Please use queryByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 
   view.queryAllByAccessibilityValue({ min: 10 });
   expect(mockCalls[3][0]).toMatchInlineSnapshot(`
     "queryAllByAccessibilityValue(...) is deprecated.
 
-    Please use queryAllByRole(role, { value: ... }) instead."
+    Please use queryAllByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 
   view.findByAccessibilityValue({ min: 10 });
   expect(mockCalls[4][0]).toMatchInlineSnapshot(`
     "findByAccessibilityValue(...) is deprecated.
 
-    Please use findByRole(role, { value: ... }) instead."
+    Please use findByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 
   view.findAllByAccessibilityValue({ min: 10 });
   expect(mockCalls[5][0]).toMatchInlineSnapshot(`
     "findAllByAccessibilityValue(...) is deprecated.
 
-    Please use findAllByRole(role, { value: ... }) instead."
+    Please use findAllByRole(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher instead."
   `);
 });
