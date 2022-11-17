@@ -21,4 +21,9 @@ test('clicking on one item takes you to the details screen', async () => {
 
   expect(screen.getByText('Showing details for 5')).toBeTruthy();
   expect(screen.getByText('the number you have chosen is 5')).toBeTruthy();
+
+  screen.debug();
+  expect(
+    screen.queryByText(/Item number/, { includeHiddenElements: false })
+  ).toBeFalsy();
 });
