@@ -215,7 +215,7 @@ test('queryByText not found', () => {
   ).toBeFalsy();
 });
 
-test('queryByText does not match nested text across multiple <Text> in <Text>', () => {
+test('*ByText matches text across multiple nested Text', () => {
   const { getByText } = render(
     <Text nativeID="1">
       Hello{' '}
@@ -237,7 +237,6 @@ test('queryByText with nested Text components return the closest Text', () => {
   );
 
   const { queryByText } = render(<NestedTexts />);
-
   expect(queryByText('My text', { exact: false })?.props.nativeID).toBe('2');
 });
 
