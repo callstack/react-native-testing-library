@@ -558,7 +558,7 @@ await waitFor(() => {
 ```
 
 :::note
-Not using fireEvent in `waitFor` be enforced with the rule [no-wait-for-side-effects](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-wait-for-side-effects.md).
+Not using fireEvent in `waitFor` can be enforced with the rule [no-wait-for-side-effects](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-wait-for-side-effects.md).
 :::
 
 ### waitFor with jest fake timers
@@ -571,7 +571,7 @@ The following snippet is a simplified version of what waitFor does when fake tim
 let fakeTimeRemaining = timeout;
 
 while(fakeTimeRemaining > 0) {
-  fakeTimeReamining = fakeTimeRemaining - interval;
+  fakeTimeRemaining = fakeTimeRemaining - interval;
   jest.advanceTimersByTime(interval);
   try {
     expectation();
