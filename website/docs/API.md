@@ -563,9 +563,7 @@ Not using fireEvent in `waitFor` can be enforced with the rule [no-wait-for-side
 
 ### waitFor with jest fake timers
 
-`waitFor` checks wether jest fake timers are enabled and adapts its behavior when it is the case. It will create a variable counting the time remaining which initially equals `timeout` and is decreased on each iteration by `interval`. When that variable is negative it will reject. Additionnaly, on each iteration it will call `jest.advanceTimersByTime(interval)`.
-
-The following snippet is a simplified version of what waitFor does when fake timers are enabled:
+`waitFor` checks wether jest fake timers are enabled and adapts its behavior when it is the case. The following snippet is a simplified version of how it behaves when fake timers are enabled :
 
 ```tsx
 let fakeTimeRemaining = timeout;
@@ -582,7 +580,7 @@ while(fakeTimeRemaining > 0) {
 // reject
 ```
 
-This allows to test code with timers by only using waitFor and without manually advancing timers through jest API.
+This implementation doesn't depend on real time and automatically advances fake timers.
 
 ```tsx
 // in component
