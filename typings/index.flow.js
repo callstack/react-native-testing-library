@@ -142,7 +142,9 @@ interface ByTestIdQueries {
   ) => FindAllReturn;
 }
 
-type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;
+type ByDisplayValueOptions = CommonQueryOptions &
+  TextMatchOptions &
+  LegacyQueryOptions;
 
 interface ByDisplayValueQueries {
   getByDisplayValue: (

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, TextInput } from 'react-native';
 
-import { render } from '../..';
+import { render, configure, resetToDefaults } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -9,6 +9,10 @@ const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
 const DEFAULT_INPUT_CUSTOMER = 'What banana?';
+
+beforeEach(() => {
+  resetToDefaults();
+});
 
 const Banana = () => (
   <View>
@@ -118,4 +122,30 @@ test('byDisplayValue queries support hidden option', () => {
   ).toThrowErrorMatchingInlineSnapshot(
     `"Unable to find an element with displayValue: hidden"`
   );
+});
+
+test('byDisplayValue should return composite component if useLegacyQueries option is true', () => {
+  configure({ useLegacyQueries: true });
+  const { getByDisplayValue } = render(<TextInput value="value" />);
+
+  expect(getByDisplayValue('value').type).toBe(TextInput);
+});
+
+test('byDisplayValue should return host component if useLegacyQueries option is false', () => {
+  const { getByDisplayValue } = render(<TextInput value="value" />);
+
+  expect(getByDisplayValue('value').type).toBe('TextInput');
+});
+
+test('byDisplayValue should return composite component if legacy option is true', () => {
+  const { getByDisplayValue } = render(<TextInput value="value" />);
+
+  expect(getByDisplayValue('value', { legacy: true }).type).toBe(TextInput);
+});
+
+test('byDisplayValue should return host component if legacy option is false', () => {
+  configure({ useLegacyQueries: true });
+  const { getByDisplayValue } = render(<TextInput value="value" />);
+
+  expect(getByDisplayValue('value', { legacy: false }).type).toBe('TextInput');
 });
