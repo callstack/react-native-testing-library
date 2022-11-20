@@ -1,12 +1,12 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { Text } from 'react-native';
-import {
-  isHostElementForType,
-  getCompositeParentOfType,
-} from '../helpers/component-tree';
 import { findAll } from '../helpers/findAll';
 import { matchTextContent } from '../helpers/matchers/matchTextContent';
 import { TextMatch, TextMatchOptions } from '../matches';
+import {
+  getCompositeParentOfType,
+  isHostElementForType,
+} from '../helpers/component-tree';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -16,29 +16,44 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { CommonQueryOptions } from './options';
+import {
+  CommonQueryOptions,
+  LegacyQueryOptions,
+  shouldReturnCompositeComponent,
+} from './options';
 
-type ByTextOptions = CommonQueryOptions & TextMatchOptions;
+type ByTextOptions = CommonQueryOptions & TextMatchOptions & LegacyQueryOptions;
 
 const queryAllByText = (
   instance: ReactTestInstance
 ): ((text: TextMatch, options?: ByTextOptions) => Array<ReactTestInstance>) =>
-  function queryAllByTextFn(text, options) {
-    const baseInstance = isHostElementForType(instance, Text)
-      ? getCompositeParentOfType(instance, Text)
-      : instance;
+  function queryAllByTextFn(text, options = {}) {
+    if (shouldReturnCompositeComponent(options)) {
+      const baseInstance = isHostElementForType(instance, Text)
+        ? getCompositeParentOfType(instance, Text)
+        : instance;
 
-    if (!baseInstance) {
-      return [];
+      if (!baseInstance) {
+        return [];
+      }
+
+      const results = findAll(
+        baseInstance,
+        (node) => matchTextContent(node, text, Text, options),
+        { ...options, matchDeepestOnly: true }
+      );
+
+      return results;
     }
 
-    const results = findAll(
-      baseInstance,
-      (node) => matchTextContent(node, text, options),
-      { ...options, matchDeepestOnly: true }
+    return findAll(
+      instance,
+      (node) => matchTextContent(node, text, 'Text', options),
+      {
+        ...options,
+        matchDeepestOnly: true,
+      }
     );
-
-    return results;
   };
 
 const getMultipleError = (text: TextMatch) =>

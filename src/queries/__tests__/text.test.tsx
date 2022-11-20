@@ -7,7 +7,17 @@ import {
   Button,
   TextInput,
 } from 'react-native';
-import { render, getDefaultNormalizer, within } from '../..';
+import {
+  configure,
+  render,
+  resetToDefaults,
+  getDefaultNormalizer,
+  within,
+} from '../..';
+
+beforeEach(() => {
+  resetToDefaults();
+});
 
 test('byText matches simple text', () => {
   const { getByText } = render(<Text testID="text">Hello World</Text>);
@@ -501,4 +511,30 @@ test('byText support hidden option', () => {
   ).toThrowErrorMatchingInlineSnapshot(
     `"Unable to find an element with text: /hidden/i"`
   );
+});
+
+test('byText should return composite component if useLegacyQueries option is true', () => {
+  configure({ useLegacyQueries: true });
+  const { getByText } = render(<Text>hello</Text>);
+
+  expect(getByText('hello').type).toBe(Text);
+});
+
+test('byText should return host component if useLegacyQueries option is false', () => {
+  const { getByText } = render(<Text>hello</Text>);
+
+  expect(getByText('hello').type).toBe('Text');
+});
+
+test('byText should return composite component if legacy option is true', () => {
+  const { getByText } = render(<Text>hello</Text>);
+
+  expect(getByText('hello', { legacy: true }).type).toBe(Text);
+});
+
+test('byText should return host component if legacy option is false', () => {
+  configure({ useLegacyQueries: true });
+  const { getByText } = render(<Text>hello</Text>);
+
+  expect(getByText('hello', { legacy: false }).type).toBe('Text');
 });

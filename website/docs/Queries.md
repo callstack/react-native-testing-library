@@ -106,6 +106,7 @@ getByText(
     exact?: boolean;
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
+    legacy?: boolean;
   }
 ): ReactTestInstance;
 ```

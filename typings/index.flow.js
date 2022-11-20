@@ -83,7 +83,7 @@ type WaitForFunction = <T = any>(
   options?: WaitForOptions
 ) => Promise<T>;
 
-type ByTextOptions = CommonQueryOptions & TextMatchOptions;
+type ByTextOptions = CommonQueryOptions & TextMatchOptions & LegacyQueryOptions;
 
 interface ByTextQueries {
   getByText: (text: TextMatch, options?: ByTextOptions) => ReactTestInstance;
