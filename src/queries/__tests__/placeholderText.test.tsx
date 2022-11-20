@@ -1,16 +1,12 @@
 import * as React from 'react';
 import { View, TextInput } from 'react-native';
-import { render, configure, resetToDefaults } from '../..';
+import { render, configure } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
-
-beforeEach(() => {
-  resetToDefaults();
-});
 
 const Banana = () => (
   <View>

@@ -5,10 +5,6 @@ import {
   configureInternal,
 } from '../config';
 
-beforeEach(() => {
-  resetToDefaults();
-});
-
 test('getConfig() returns existing configuration', () => {
   expect(getConfig().useBreakingChanges).toEqual(false);
   expect(getConfig().asyncUtilTimeout).toEqual(1000);

@@ -90,6 +90,7 @@
     "setupFiles": [
       "./jestSetup.js"
     ],
+    "setupFilesAfterEnv": ["./jestSetupFileAfterEnv.ts"],
     "testPathIgnorePatterns": [
       "timerUtils",
       "examples/"
