@@ -3,6 +3,12 @@ import { DebugOptions } from './helpers/debugDeep';
 /**
  * Global configuration options for React Native Testing Library.
  */
+
+export type HostComponentNames = {
+  text: string;
+  textInput: string;
+};
+
 export type Config = {
   /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
@@ -15,6 +21,9 @@ export type Config = {
 
   /** Option to return composite components */
   useLegacyQueries: boolean;
+
+  /** Host component names used for queries */
+  hostComponentNames: HostComponentNames;
 };
 
 export type ConfigAliasOptions = {
@@ -32,6 +41,7 @@ const defaultConfig: InternalConfig = {
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: true,
   useLegacyQueries: false,
+  hostComponentNames: { text: 'Text', textInput: 'TextInput' },
 };
 
 let config = { ...defaultConfig };

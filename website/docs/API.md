@@ -53,6 +53,7 @@ title: API
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
     - [`defaultIncludeHiddenElements` option](#defaultincludehiddenelements-option)
     - [`defaultDebugOptions` option](#defaultdebugoptions-option)
+    - [`hostComponentNames` option](#hostcomponentnames-option)
   - [`resetToDefaults()`](#resettodefaults)
   - [Environment variables](#environment-variables)
     - [`RNTL_SKIP_AUTO_CLEANUP`](#rntl_skip_auto_cleanup)
@@ -854,6 +855,7 @@ type Config = {
   asyncUtilTimeout: number;
   defaultHidden: boolean;
   defaultDebugOptions: Partial<DebugOptions>;
+  hostComponentNames: { text: string; textInput: string }
 };
 
 function configure(options: Partial<Config>) {}
@@ -879,6 +881,10 @@ Default [debug options](#debug) to be used when calling `debug()`. These default
 #### `useLegacyQueries` option
 
 `byText`, `byPlaceholderText` and `byDisplayValue` queries used to return composite elements (see the doc on [testing environment](./TestingEnvironment.md)) for more information on composite and host components) but they now return host components. This can break tests if you use the element returned by these queries, for instance the props may be slightly different. To keep the legacy behavior, set this option to true. 
+
+#### `hostComponentNames` option
+
+The internal names of `Text` and `TextInput` components used by `byText`, `byDisplayValue` and `byPlaceholderText` queries. This should only be changed if you're using a version of React Native that is not compatible with the version of @testing-library/react-native. If that's the case, then failed getBy queries should suggest the appropriate config to use.
 
 ### `resetToDefaults()`
 

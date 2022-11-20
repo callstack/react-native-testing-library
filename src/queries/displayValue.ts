@@ -3,6 +3,7 @@ import { TextInput } from 'react-native';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { findAll } from '../helpers/findAll';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
+import { getConfig } from '../config';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -32,7 +33,8 @@ const getTextInputNodeByDisplayValue = (
     node.props.value !== undefined ? node.props.value : node.props.defaultValue;
   const typeToMatch = shouldReturnCompositeComponent(options)
     ? TextInput
-    : 'TextInput';
+    : getConfig().hostComponentNames.textInput;
+
   return (
     filterNodeByType(node, typeToMatch) &&
     matches(value, nodeValue, normalizer, exact)

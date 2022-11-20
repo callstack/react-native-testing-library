@@ -2,6 +2,8 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
+import { getReactNativeHostComponentNames } from '../helpers/getReactNativeHostComponentNames';
+import { getConfig } from '../config';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
@@ -83,6 +85,26 @@ Example:
   return waitForOptions;
 }
 
+function getWrongHostComponentNamesError(): string {
+  const reactNativeHostComponentNames = getReactNativeHostComponentNames();
+  const configHostComponentNames = getConfig().hostComponentNames;
+  if (
+    reactNativeHostComponentNames.text !== configHostComponentNames.text ||
+    reactNativeHostComponentNames.textInput !==
+      configHostComponentNames.textInput
+  ) {
+    return `
+
+The wrong host component names are used. This can happen if you use a version of react native that is not compatible with your version of @testing-library/react-native
+
+To fix this, either upgrade to a version that supports your version of react native or add the following line in a setup file :
+
+configure({ hostComponentNames: { text: '${reactNativeHostComponentNames.text}', textInput: '${reactNativeHostComponentNames.textInput}' } });`;
+  }
+
+  return '';
+}
+
 export function makeQueries<Predicate, Options>(
   queryAllByQuery: UnboundQuery<QueryAllByQuery<Predicate, Options>>,
   getMissingError: (predicate: Predicate, options?: Options) => string,
@@ -128,7 +150,13 @@ export function makeQueries<Predicate, Options>(
       }
 
       if (results.length === 0) {
-        throw new ErrorWithStack(getMissingError(predicate, options), getFn);
+        throw new ErrorWithStack(
+          `${getMissingError(
+            predicate,
+            options
+          )}${getWrongHostComponentNamesError()}`,
+          getFn
+        );
       }
 
       return results[0];

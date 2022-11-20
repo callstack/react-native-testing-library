@@ -474,11 +474,17 @@ declare module '@testing-library/react-native' {
 
   declare export var waitForElementToBeRemoved: WaitForElementToBeRemovedFunction;
 
+  declare interface HostComponentNames {
+    text: string;
+    textInput: string;
+  }
+
   declare interface Config {
     asyncUtilTimeout: number;
     defaultIncludeHiddenElements: boolean;
     defaultDebugOptions?: $Shape<DebugOptions>;
     useLegacyQueries: boolean;
+    HostComponentNames: HostComponentNames;
   }
 
   declare interface ConfigAliasOptions {

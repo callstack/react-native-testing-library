@@ -7,6 +7,7 @@ import {
   getCompositeParentOfType,
   isHostElementForType,
 } from '../helpers/component-tree';
+import { getConfig } from '../config';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -48,7 +49,13 @@ const queryAllByText = (
 
     return findAll(
       instance,
-      (node) => matchTextContent(node, text, 'Text', options),
+      (node) =>
+        matchTextContent(
+          node,
+          text,
+          getConfig().hostComponentNames.text,
+          options
+        ),
       {
         ...options,
         matchDeepestOnly: true,

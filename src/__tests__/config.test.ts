@@ -20,6 +20,10 @@ test('configure() overrides existing config values', () => {
     defaultIncludeHiddenElements: true,
     useBreakingChanges: false,
     useLegacyQueries: false,
+    hostComponentNames: {
+      text: 'Text',
+      textInput: 'TextInput',
+    },
   });
 });
 
@@ -54,4 +58,19 @@ test('configure handles alias option defaultHidden', () => {
 
   configure({ defaultHidden: false });
   expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
+});
+
+test('configure handles hostComponentNames', () => {
+  expect(getConfig().hostComponentNames).toEqual({
+    text: 'Text',
+    textInput: 'TextInput',
+  });
+
+  configure({
+    hostComponentNames: { text: 'RCText', textInput: 'RCTextInput' },
+  });
+  expect(getConfig().hostComponentNames).toEqual({
+    text: 'RCText',
+    textInput: 'RCTextInput',
+  });
 });
