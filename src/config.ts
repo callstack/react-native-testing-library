@@ -12,6 +12,9 @@ export type Config = {
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
+
+  /** Option to return composite components */
+  useLegacyQueries: boolean;
 };
 
 export type ConfigAliasOptions = {
@@ -28,6 +31,7 @@ const defaultConfig: InternalConfig = {
   useBreakingChanges: false,
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: true,
+  useLegacyQueries: false,
 };
 
 let config = { ...defaultConfig };

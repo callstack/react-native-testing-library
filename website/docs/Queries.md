@@ -131,7 +131,8 @@ getByPlaceholderText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
-    includeHiddenElements?: boolean;
+    hidden?: boolean;
+    legacy?: boolean;
   }
 ): ReactTestInstance;
 ```

@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { View, TextInput } from 'react-native';
-import { render } from '../..';
+import { render, configure, resetToDefaults } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
+
+beforeEach(() => {
+  resetToDefaults();
+});
 
 const Banana = () => (
   <View>
@@ -76,5 +80,43 @@ test('byPlaceholderText queries support hidden option', () => {
     getByPlaceholderText('hidden', { includeHiddenElements: false })
   ).toThrowErrorMatchingInlineSnapshot(
     `"Unable to find an element with placeholder: hidden"`
+  );
+});
+
+test('byPlaceHolderText should return composite component if useLegacyQueries option is true', () => {
+  configure({ useLegacyQueries: true });
+  const { getByPlaceholderText } = render(
+    <TextInput placeholder="placeholder" />
+  );
+
+  expect(getByPlaceholderText('placeholder').type).toBe(TextInput);
+});
+
+test('byPlaceHolderText should return host component if useLegacyQueries option is false', () => {
+  const { getByPlaceholderText } = render(
+    <TextInput placeholder="placeholder" />
+  );
+
+  expect(getByPlaceholderText('placeholder').type).toBe('TextInput');
+});
+
+test('byPlaceHolderText should return composite component if legacy option is true', () => {
+  const { getByPlaceholderText } = render(
+    <TextInput placeholder="placeholder" />
+  );
+
+  expect(getByPlaceholderText('placeholder', { legacy: true }).type).toBe(
+    TextInput
+  );
+});
+
+test('byPlaceHolderText should return host component if legacy option is false', () => {
+  configure({ useLegacyQueries: true });
+  const { getByPlaceholderText } = render(
+    <TextInput placeholder="placeholder" />
+  );
+
+  expect(getByPlaceholderText('placeholder', { legacy: false }).type).toBe(
+    'TextInput'
   );
 });

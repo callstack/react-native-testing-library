@@ -12,6 +12,11 @@ type CommonQueryOptions = {
   includeHiddenElements?: boolean,
   hidden?: boolean,
 };
+
+type LegacyQueryOptions = {
+  legacy?: boolean,
+};
+
 type TextMatch = string | RegExp;
 
 declare type NormalizerFn = (textToNormalize: string) => string;
@@ -168,7 +173,9 @@ interface ByDisplayValueQueries {
   ) => FindAllReturn;
 }
 
-type ByPlaceholderTextOptions = CommonQueryOptions & TextMatchOptions;
+type ByPlaceholderTextOptions = CommonQueryOptions &
+  TextMatchOptions &
+  LegacyQueryOptions;
 
 interface ByPlaceholderTextQueries {
   getByPlaceholderText: (
@@ -469,6 +476,7 @@ declare module '@testing-library/react-native' {
     asyncUtilTimeout: number;
     defaultIncludeHiddenElements: boolean;
     defaultDebugOptions?: $Shape<DebugOptions>;
+    useLegacyQueries: boolean;
   }
 
   declare interface ConfigAliasOptions {

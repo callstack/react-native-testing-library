@@ -875,6 +875,11 @@ This option is also available as `defaultHidden` alias for compatibility with [R
 
 Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
 
+
+#### `useLegacyQueries` option
+
+`byText`, `byPlaceholderText` and `byDisplayValue` queries used to return composite elements (see the doc on [testing environment](./TestingEnvironment.md)) for more information on composite and host components) but they now return host components. This can break tests if you use the element returned by these queries, for instance the props may be slightly different. To keep the legacy behavior, set this option to true. 
+
 ### `resetToDefaults()`
 
 ```ts
