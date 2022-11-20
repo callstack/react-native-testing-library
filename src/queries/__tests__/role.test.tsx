@@ -733,3 +733,12 @@ test('byRole queries support hidden option', () => {
     `"Unable to find an element with role: "button""`
   );
 });
+
+test('takes accessible prop into account', () => {
+  const { queryByRole } = render(
+    <Pressable accessibilityRole="button" accessible={false}>
+      <Text>Action</Text>
+    </Pressable>
+  );
+  expect(queryByRole('button', { name: 'Action' })).toBeFalsy();
+});

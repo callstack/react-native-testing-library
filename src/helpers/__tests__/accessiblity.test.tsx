@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
+import { View, Text, TextInput, Pressable, Switch } from 'react-native';
 import { render, isHiddenFromAccessibility, isInaccessible } from '../..';
 import { isAccessibilityElement } from '../accessiblity';
 
@@ -199,6 +199,11 @@ describe('isAccessibilityElement', () => {
       const element = render(<Pressable testID="pressable" />).getByTestId(
         'pressable'
       );
+      expect(isAccessibilityElement(element)).toEqual(true);
+    });
+
+    test('returns true for Switch component', () => {
+      const element = render(<Switch testID="switch" />).getByTestId('switch');
       expect(isAccessibilityElement(element)).toEqual(true);
     });
 

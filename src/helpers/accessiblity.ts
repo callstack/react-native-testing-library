@@ -2,6 +2,7 @@ import {
   AccessibilityState,
   AccessibilityValue,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
 } from 'react-native';
@@ -97,6 +98,7 @@ export function isAccessibilityElement(
 
   return (
     isHostElementForType(element, Text) ||
-    isHostElementForType(element, TextInput)
+    isHostElementForType(element, TextInput) ||
+    isHostElementForType(element, Switch)
   );
 }
