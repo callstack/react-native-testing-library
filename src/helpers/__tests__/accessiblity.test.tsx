@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, Pressable } from 'react-native';
 import { render, isHiddenFromAccessibility, isInaccessible } from '../..';
+import { isAccessibilityElement } from '../accessiblity';
 
 describe('isHiddenFromAccessibility', () => {
   test('returns false for accessible elements', () => {
@@ -177,5 +178,55 @@ describe('isHiddenFromAccessibility', () => {
 
   test('has isInaccessible alias', () => {
     expect(isInaccessible).toBe(isHiddenFromAccessibility);
+  });
+});
+
+describe('isAccessibilityElement', () => {
+  describe('when accessible prop is not defined', () => {
+    test('returns true for Text component', () => {
+      const element = render(<Text testID="text">Hey</Text>).getByTestId(
+        'text'
+      );
+      expect(isAccessibilityElement(element)).toEqual(true);
+    });
+
+    test('returns true for TextInput component', () => {
+      const element = render(<TextInput testID="input" />).getByTestId('input');
+      expect(isAccessibilityElement(element)).toEqual(true);
+    });
+
+    test('returns true for Pressable component', () => {
+      const element = render(<Pressable testID="pressable" />).getByTestId(
+        'pressable'
+      );
+      expect(isAccessibilityElement(element)).toEqual(true);
+    });
+
+    test('returns false for View component', () => {
+      const element = render(<View testID="element" />).getByTestId('element');
+      expect(isAccessibilityElement(element)).toEqual(false);
+    });
+  });
+
+  describe('when accessible prop is defined', () => {
+    test('returns false when accessible prop is set to false', () => {
+      const element = render(
+        <TextInput accessible={false} testID="input">
+          Hey
+        </TextInput>
+      ).getByTestId('input');
+      expect(isAccessibilityElement(element)).toEqual(false);
+    });
+
+    test('returns true when accessible prop is set to true', () => {
+      const element = render(
+        <View accessible={true} testID="view" />
+      ).getByTestId('view');
+      expect(isAccessibilityElement(element)).toEqual(true);
+    });
+  });
+
+  test('returns false when given null', () => {
+    expect(isAccessibilityElement(null)).toEqual(false);
   });
 });

@@ -2,9 +2,11 @@ import {
   AccessibilityState,
   AccessibilityValue,
   StyleSheet,
+  Text,
+  TextInput,
 } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
-import { getHostSiblings } from './component-tree';
+import { getHostSiblings, isHostElementForType } from './component-tree';
 
 type IsInaccessibleOptions = {
   cache?: WeakMap<ReactTestInstance, boolean>;
@@ -80,4 +82,21 @@ function isSubtreeInaccessible(element: ReactTestInstance): boolean {
   }
 
   return false;
+}
+
+export function isAccessibilityElement(
+  element: ReactTestInstance | null
+): boolean {
+  if (element == null) {
+    return false;
+  }
+
+  if (element.props.accessible !== undefined) {
+    return element.props.accessible;
+  }
+
+  return (
+    isHostElementForType(element, Text) ||
+    isHostElementForType(element, TextInput)
+  );
 }
