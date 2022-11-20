@@ -63,7 +63,7 @@ const queryAllByRole = (
     return findAll(
       instance,
       (node) =>
-        // run the cheapest checks first, and early exit too avoid unneeded computations
+        // run the cheapest checks first, and early exit to avoid unneeded computations
         typeof node.type === 'string' &&
         matchStringProp(node.props.accessibilityRole, role) &&
         matchAccessibleStateIfNeeded(node, options) &&
