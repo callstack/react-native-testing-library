@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { screen, fireEvent } from '@testing-library/react-native';
 import { renderWithNavigation } from './test-utils';
-import AppNavigator from './AppNavigator';
+import AppNavigator from './StackNavigator';
 
 test('page contains the header and 10 items', async () => {
   renderWithNavigation(<AppNavigator />);
