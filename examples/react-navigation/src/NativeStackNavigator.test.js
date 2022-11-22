@@ -25,5 +25,6 @@ test('Pressing an item takes user to the details screen', async () => {
   ).toBeTruthy();
   expect(screen.getByText('The number you have chosen is 5.')).toBeTruthy();
 
+  // Home screen is still in the element tree but it is hidden from accessibility
   expect(screen.queryByRole('header', { name: 'Home screen' })).toBeFalsy();
 });
