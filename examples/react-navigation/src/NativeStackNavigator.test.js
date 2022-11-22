@@ -7,7 +7,7 @@ test('Home screen contains the header and list of items', async () => {
   renderWithNavigation(<NativeStackNavigator />);
 
   expect(screen.getByRole('header', { name: 'Home screen' })).toBeTruthy();
-  expect(screen.getAllByText(/Item/)).toHaveLength(10);
+  expect(screen.getAllByRole('button', { name: /Item/ })).toHaveLength(10);
 
   expect(
     screen.queryByRole('header', { name: /Details for item/i })
@@ -17,7 +17,7 @@ test('Home screen contains the header and list of items', async () => {
 test('Pressing an item takes user to the details screen', async () => {
   renderWithNavigation(<NativeStackNavigator />);
 
-  const item5 = screen.getByText('Item 5');
+  const item5 = screen.getByRole('button', { name: 'Item 5' });
   fireEvent(item5, 'press');
 
   expect(

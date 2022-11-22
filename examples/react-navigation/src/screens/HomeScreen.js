@@ -12,7 +12,11 @@ export default function HomeScreen({ navigation }) {
 
   const renderItem = ({ item }) => {
     return (
-      <Pressable onPress={() => handleItemPress(item)} style={styles.row}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => handleItemPress(item)}
+        style={styles.row}
+      >
         <Text>{item.title}</Text>
       </Pressable>
     );
