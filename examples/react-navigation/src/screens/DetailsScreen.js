@@ -1,13 +1,17 @@
 import * as React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 
-export default function DetailsScreen(props) {
-  const item = Number.parseInt(props.route.params, 10);
+export default function DetailsScreen({ route }) {
+  const item = route.params;
 
   return (
     <View>
-      <Text style={styles.header}>Showing details for {item}</Text>
-      <Text style={styles.body}>the number you have chosen is {item}</Text>
+      <Text accessibilityRole="header" style={styles.header}>
+        Details for {item.title}
+      </Text>
+      <Text style={styles.body}>
+        The number you have chosen is {item.value}.
+      </Text>
     </View>
   );
 }

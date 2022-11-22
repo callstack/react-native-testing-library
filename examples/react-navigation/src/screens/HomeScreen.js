@@ -1,34 +1,30 @@
 import * as React from 'react';
-import {
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { Text, View, FlatList, Pressable, StyleSheet } from 'react-native';
+
+const items = new Array(20).fill(null).map((_, idx) => ({
+  id: idx + 1,
+  title: `Item ${idx + 1}`,
+  value: idx + 1,
+}));
 
 export default function HomeScreen({ navigation }) {
-  const [items] = React.useState(
-    new Array(20).fill(null).map((_, idx) => idx + 1)
-  );
+  const handleItemPress = (item) => navigation.navigate('Details', item);
 
-  const onOpacityPress = (item) => navigation.navigate('Details', item);
+  const renderItem = ({ item }) => {
+    return (
+      <Pressable onPress={() => handleItemPress(item)} style={styles.row}>
+        <Text>{item.title}</Text>
+      </Pressable>
+    );
+  };
 
   return (
     <View>
-      <Text style={styles.header}>List of numbers from 1 to 20</Text>
-      <FlatList
-        keyExtractor={(_, idx) => `${idx}`}
-        data={items}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => onOpacityPress(item)}
-            style={styles.row}
-          >
-            <Text>Item number {item}</Text>
-          </TouchableOpacity>
-        )}
-      />
+      <Text accessibilityRole="header" style={styles.header}>
+        Home screen
+      </Text>
+
+      <FlatList data={items} renderItem={renderItem} />
     </View>
   );
 }
