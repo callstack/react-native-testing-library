@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Text, View, FlatList, Pressable, StyleSheet } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Pressable } from 'react-native';
 
-const items = new Array(20).fill(null).map((_, idx) => ({
-  id: idx + 1,
-  title: `Item ${idx + 1}`,
-  value: idx + 1,
+const mockData = new Array(20).fill(null).map((_, index) => ({
+  id: index + 1,
+  title: `Item ${index + 1}`,
+  value: index + 1,
 }));
 
 export default function HomeScreen({ navigation }) {
@@ -28,12 +28,10 @@ export default function HomeScreen({ navigation }) {
         Home screen
       </Text>
 
-      <FlatList data={items} renderItem={renderItem} />
+      <FlatList data={mockData} renderItem={renderItem} />
     </View>
   );
 }
-
-const divider = '#DDDDDD';
 
 const styles = StyleSheet.create({
   header: {
@@ -44,7 +42,7 @@ const styles = StyleSheet.create({
   row: {
     paddingVertical: 16,
     paddingHorizontal: 24,
-    borderBottomColor: divider,
+    borderBottomColor: '#DDDDDD',
     borderBottomWidth: 1,
   },
 });

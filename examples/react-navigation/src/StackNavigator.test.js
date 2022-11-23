@@ -3,7 +3,7 @@ import { screen, fireEvent } from '@testing-library/react-native';
 import { renderWithNavigation } from './test-utils';
 import StackNavigator from './StackNavigator';
 
-test('Home screen contains the header and list of items', async () => {
+test('Home screen contains the header and list of items', () => {
   renderWithNavigation(<StackNavigator />);
 
   expect(screen.getByRole('header', { name: 'Home screen' })).toBeTruthy();
@@ -14,11 +14,11 @@ test('Home screen contains the header and list of items', async () => {
   ).toBeFalsy();
 });
 
-test('Pressing an item takes user to the details screen', async () => {
+test('Pressing an item takes user to the details screen', () => {
   renderWithNavigation(<StackNavigator />);
 
   const item5 = screen.getByRole('button', { name: 'Item 5' });
-  fireEvent(item5, 'press');
+  fireEvent.press(item5);
 
   expect(
     screen.getByRole('header', { name: 'Details for Item 5' })
