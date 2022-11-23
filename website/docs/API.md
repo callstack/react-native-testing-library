@@ -547,7 +547,7 @@ waitFor(() => expect(1).toBe(2))
 You can enforce awaiting waitFor by using the [await-async-utils](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/await-async-utils.md) rule from [eslint-plugin-testing-library](https://github.com/testing-library/eslint-plugin-testing-library).
 :::
 
-Since `waitFor` is likely to run `expectation()` multiple times, it is highly recommended not to have any side effects in `waitFor`.
+Since `waitFor` is likely to run `expectation()` multiple times, it is [highly recommended not to have any side effects](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#performing-side-effects-in-waitfor) in `waitFor`.
 
 ```jsx
 await waitFor(() => {
@@ -560,6 +560,8 @@ await waitFor(() => {
 :::note
 Not using fireEvent in `waitFor` can be enforced with the rule [no-wait-for-side-effects](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-wait-for-side-effects.md).
 :::
+
+It is also recommended to have a [single expectation per waitFor](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#having-multiple-assertions-in-a-single-waitfor-callback) for more consistency and faster failing tests. If you want to make several assertions, then they should be in seperated `waitFor`, or maybe the second assertion won't even require a `waitFor`.
 
 ### waitFor with jest fake timers
 
