@@ -563,7 +563,7 @@ It is also recommended to have a [single expectation per waitFor](https://kentcd
 
 ### With jest fake timers
 
-`waitFor` checks wether jest fake timers are enabled and adapts its behavior when it is the case. The following snippet is a simplified version of how it behaves when fake timers are enabled :
+`waitFor` checks wether jest fake timers are enabled and adapts its behavior when it is the case. The following snippet is a simplified version of how it behaves when fake timers are enabled:
 
 ```tsx
 let fakeTimeRemaining = timeout;
