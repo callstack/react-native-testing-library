@@ -521,7 +521,7 @@ function waitFor<T>(
 ): Promise<T> {}
 ```
 
-Should be used when testing asynchronous code or code with timers. `waitFor` allows to wait for some expectation (e.g. the presence of an element on the screen). The `expectation` param is a callback that should throw until what you're waiting for has realized.
+Waits for a period of time for the `expectation` callback to pass. `waitFor` may run the callback a number of times until timeout is reached, as specified by the `timeout` and `interval` options. The callback must throw an error when the expectation is not met. Returning any value, including a falsy one, will be treated as meeting the expectation, and the callback result will be returned to the caller of `waitFor` function.
 
 ```tsx
 await waitFor(() => expect(mockFunction).toHaveBeenCalledWith()))
