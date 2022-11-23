@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { screen, fireEvent } from '@testing-library/react-native';
-import { renderWithNavigation } from './test-utils';
+import { renderNavigator } from './test-utils';
 import DrawerNavigator from './DrawerNavigator';
 
 test('Changing screens', () => {
-  renderWithNavigation(<DrawerNavigator />);
+  renderNavigator(<DrawerNavigator />);
 
   // Assert initial screen
   expect(screen.getByRole('header', { name: 'Home screen' })).toBeTruthy();

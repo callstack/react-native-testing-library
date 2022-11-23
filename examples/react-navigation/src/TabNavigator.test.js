@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { screen, fireEvent } from '@testing-library/react-native';
-import { renderWithNavigation } from './test-utils';
+import { renderNavigator } from './test-utils';
 import TabNavigator from './TabNavigator';
 
 test('Changing tabs', () => {
-  renderWithNavigation(<TabNavigator />);
+  renderNavigator(<TabNavigator />);
   expect(screen.getByRole('header', { name: 'Home screen' })).toBeTruthy();
 
   // Note: React Navigation uses `button` role for tab buttons as workaround.

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { screen, fireEvent } from '@testing-library/react-native';
-import { renderWithNavigation } from './test-utils';
+import { renderNavigator } from './test-utils';
 import NativeStackNavigator from './NativeStackNavigator';
 
 test('Home screen contains the header and list of items', () => {
-  renderWithNavigation(<NativeStackNavigator />);
+  renderNavigator(<NativeStackNavigator />);
 
   expect(screen.getByRole('header', { name: 'Home screen' })).toBeTruthy();
   expect(screen.getAllByRole('button', { name: /Item/ })).toHaveLength(10);
@@ -15,7 +15,7 @@ test('Home screen contains the header and list of items', () => {
 });
 
 test('Pressing an item takes user to the details screen', () => {
-  renderWithNavigation(<NativeStackNavigator />);
+  renderNavigator(<NativeStackNavigator />);
 
   const item5 = screen.getByRole('button', { name: 'Item 5' });
   fireEvent.press(item5);
