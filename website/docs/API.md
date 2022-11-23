@@ -523,10 +523,8 @@ function waitFor<T>(
 
 Should be used when testing asynchronous code or code with timers. `waitFor` allows to wait for some expectation (e.g. the presence of an element on the screen). The `expectation` param is a callback that should throw until what you're waiting for has realized.
 
-For instance, this is how we'd wait for an element to appear:
-
 ```tsx
-await waitFor(() => expect(screen.getByText('Banana ready').toBeTruthy()))
+await waitFor(() => expect(mockFunction).toHaveBeenCalledWith()))
 ```
 
 What `waitFor` does is executing `expectation()` at intervals of duration equal to the optional `interval` param (default is 50ms) until it doesn't throw anymore. It will throw if it reaches its timeout, defined by the optional `timeout` param (default is 1000ms). If `expectation()` does not throw then `waitFor` will resolve right away.
@@ -553,7 +551,7 @@ Since `waitFor` is likely to run `expectation()` multiple times, it is [highly r
 await waitFor(() => {
   // button will be pressed on each waitFor iteration
   fireEvent.press(screen.getByText('press me'))
-  expect(screen.getByText('pressed')).toBeTruthy()
+  expect(mockOnPress).toHaveBeenCalled()
 })
 ```
 
