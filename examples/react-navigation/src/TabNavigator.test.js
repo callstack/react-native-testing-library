@@ -8,7 +8,7 @@ test('Changing tabs', () => {
   expect(screen.getByRole('header', { name: 'Home screen' })).toBeTruthy();
 
   // Note: React Navigation uses `button` role for tab buttons as workaround.
-  // It should be actually be `tab` role.
+  // It should actually be `tab` role.
   const settingsTab = screen.getByRole('button', { name: 'Settings' });
   fireEvent.press(settingsTab);
 
