@@ -603,7 +603,7 @@ If you want to wait for a long period of time, it can result in a very long test
 
 #### With modern fake timers
 
-When using modern fake timers (the default for jest >= 27), `waitFor` will systematically timeout unless you use the [custom @testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset). 
+When using modern fake timers (the default for jest >= 27), `waitFor` won't work (it will always timeout even if `expectation()` doesn't throw) unless you use the [custom @testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset). 
 
 :::info
 In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
