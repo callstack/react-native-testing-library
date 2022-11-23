@@ -532,14 +532,14 @@ await waitFor(() => expect(screen.getByText('Banana ready').toBeTruthy()))
 What `waitFor` does is executing `expectation()` at intervals of duration equal to the optional `interval` param (default is 50ms) until it doesn't throw anymore. It will throw if it reaches its timeout, defined by the optional `timeout` param (default is 1000ms). If `expectation()` does not throw then `waitFor` will resolve right away.
 
 ```tsx
-// won't throw
+// ❌ won't throw because callback never throws
 await waitFor(() => false);
 ```
 
 `waitFor` only rejects when it reaches its timeout so if you don't await it it will never throw.
 
 ```jsx
-// won't throw
+// ❌ won't throw because waitFor is not awaited
 waitFor(() => expect(1).toBe(2))
 ```
 
