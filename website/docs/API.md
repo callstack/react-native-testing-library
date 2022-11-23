@@ -30,8 +30,8 @@ title: API
     - [On a `ScrollView`](#on-a-scrollview)
     - [On a `FlatList`](#on-a-flatlist)
 - [`waitFor`](#waitfor)
-    - [`waitFor with jest fake timers`](#waitfor-with-jest-fake-timers)
-      - [`waitFor with modern fake timers`](#waitfor-with-modern-fake-timers)
+    - [`With jest fake timers`](#with-jest-fake-timers)
+      - [`with modern fake timers`](#with-modern-fake-timers)
 - [`waitForElementToBeRemoved`](#waitforelementtoberemoved)
 - [`within`, `getQueriesForElement`](#within-getqueriesforelement)
 - [`query` APIs](#query-apis)
@@ -561,7 +561,7 @@ Not using fireEvent in `waitFor` can be enforced with the rule [no-wait-for-side
 
 It is also recommended to have a [single expectation per waitFor](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#having-multiple-assertions-in-a-single-waitfor-callback) for more consistency and faster failing tests. If you want to make several assertions, then they should be in seperated `waitFor`, or maybe the second assertion won't even require a `waitFor`.
 
-### waitFor with jest fake timers
+### With jest fake timers
 
 `waitFor` checks wether jest fake timers are enabled and adapts its behavior when it is the case. The following snippet is a simplified version of how it behaves when fake timers are enabled :
 
@@ -601,7 +601,7 @@ await waitFor(() => {
 If you want to wait for a long period of time, it can result in a very long test, especially when it is costly to run `expectation()`. In those cases, you can increase the `interval` as well so that you don't perform as many checks.
 :::
 
-#### waitFor with modern fake timers
+#### With modern fake timers
 
 When using modern fake timers (the default for jest >= 27), `waitFor` will systematically timeout unless you use the [custom @testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset). 
 
