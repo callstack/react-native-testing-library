@@ -1,7 +1,6 @@
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-undef, import/no-extraneous-dependencies */
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { render } from '@testing-library/react-native';
 
 /**
@@ -12,22 +11,15 @@ export function renderNavigator(ui) {
   return render(<NavigationContainer>{ui}</NavigationContainer>);
 }
 
-const Stack = createStackNavigator();
-
-/**
- * Render given screen *component* (not JSX element) inside a stack navigator
- * passing given params object as route params.
- * */
-export function renderScreenWithParams(component, params) {
-  return render(
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="TestScreen"
-          component={component}
-          initialParams={params}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+export function buildNavigationMock() {
+  return {
+    navigate: jest.fn(),
+    reset: jest.fn(),
+    goBack: jest.fn(),
+    dispatch: jest.fn(),
+    isFocused: jest.fn(() => true),
+    setParams: jest.fn(),
+    setOptions: jest.fn(),
+    addListener: jest.fn(),
+  };
 }
