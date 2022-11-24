@@ -549,7 +549,7 @@ Since `waitFor` is likely to run `expectation()` multiple times, it is [highly r
 
 ```jsx
 await waitFor(() => {
-  // button will be pressed on each waitFor iteration
+  // ❌ button will be pressed on each waitFor iteration
   fireEvent.press(screen.getByText('press me'))
   expect(mockOnPress).toHaveBeenCalled()
 })
