@@ -9,6 +9,9 @@ export type Config = {
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
+
+  /** Whether to allow RNTL to use latest and greatest improvements even if they are breaking changes. */
+  allowBreakingChanges: boolean;
 };
 
 export type ConfigAliasOptions = {
@@ -19,6 +22,7 @@ export type ConfigAliasOptions = {
 const defaultConfig: Config = {
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: true,
+  allowBreakingChanges: false,
 };
 
 let config = { ...defaultConfig };
