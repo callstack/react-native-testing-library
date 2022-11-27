@@ -86,7 +86,7 @@ const getAct = () => {
     ? withGlobalActEnvironment(reactTestRendererAct)
     : reactTestRendererAct;
 };
-const act = getAct();
+const act = getAct() as Act;
 
 export default act;
 export {
