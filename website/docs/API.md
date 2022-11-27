@@ -30,8 +30,7 @@ title: API
     - [On a `ScrollView`](#on-a-scrollview)
     - [On a `FlatList`](#on-a-flatlist)
 - [`waitFor`](#waitfor)
-    - [`With jest fake timers`](#with-jest-fake-timers)
-      - [`with modern fake timers`](#with-modern-fake-timers)
+    - [With jest fake timers](#with-jest-fake-timers)
 - [`waitForElementToBeRemoved`](#waitforelementtoberemoved)
 - [`within`, `getQueriesForElement`](#within-getqueriesforelement)
 - [`query` APIs](#query-apis)
@@ -527,17 +526,17 @@ Waits for a period of time for the `expectation` callback to pass. `waitFor` may
 await waitFor(() => expect(mockFunction).toHaveBeenCalledWith()))
 ```
 
-What `waitFor` does is executing `expectation()` at intervals of duration equal to the optional `interval` param (default is 50ms) until it doesn't throw anymore. It will throw if it reaches its timeout, defined by the optional `timeout` param (default is 1000ms). If `expectation()` does not throw then `waitFor` will resolve right away.
+`waitFor` function will be executing `expectation` callback every `interval` (default: every 50 ms) until `timeout` (default: 1000 ms) is reached. The repeated execution of callback is stopped as soon as it does not throw an error, in such case the value returned by the callback is returned to `waitFor` caller. Otherwise, when it reaches the timeout, the final error thrown by `expectation` will be re-thrown by `waitFor` to the calling code.
 
 ```tsx
-// ❌ won't throw because callback never throws
+// ❌ `waitFor` will return immediately because callback does not throw
 await waitFor(() => false);
 ```
 
-`waitFor` only rejects when it reaches its timeout so if you don't await it it will never throw.
+`waitFor` is an async function so you need to `await` the result to pause test execution.
 
 ```jsx
-// ❌ won't throw because waitFor is not awaited
+// ❌ missing `await`: `waitFor` will just return Promise that will be rejected when the timeout is reached
 waitFor(() => expect(1).toBe(2))
 ```
 
@@ -563,7 +562,11 @@ It is also recommended to have a [single expectation per waitFor](https://kentcd
 
 ### With jest fake timers
 
-`waitFor` checks wether jest fake timers are enabled and adapts its behavior when it is the case. The following snippet is a simplified version of how it behaves when fake timers are enabled:
+:::caution
+When using modern fake timers (the default for jest >= 27), `waitFor` won't work (it will always timeout even if `expectation()` doesn't throw) unless you use the custom [@testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset). 
+:::
+
+`waitFor` checks whether Jest fake timers are enabled and adapts its behavior in such case. The following snippet is a simplified version of how it behaves when fake timers are enabled:
 
 ```tsx
 let fakeTimeRemaining = timeout;
@@ -580,7 +583,7 @@ while(fakeTimeRemaining > 0) {
 // reject
 ```
 
-This implementation doesn't depend on real time and automatically advances fake timers.
+This implementation doesn't depend on real time and automatically advances fake timers so you can use `waitFor` when testing timeouts without using Jest fake timers'API to manually advance time.
 
 ```tsx
 // in component
@@ -596,14 +599,6 @@ await waitFor(() => {
   expect(someFunction).toHaveBeenCalledWith();
 }, 10000)
 ```
-
-:::note
-If you want to wait for a long period of time, it can result in a very long test, especially when it is costly to run `expectation()`. In those cases, you can increase the `interval` as well so that you don't perform as many checks.
-:::
-
-#### With modern fake timers
-
-When using modern fake timers (the default for jest >= 27), `waitFor` won't work (it will always timeout even if `expectation()` doesn't throw) unless you use the [custom @testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset). 
 
 :::info
 In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
