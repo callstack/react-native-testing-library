@@ -1,16 +1,12 @@
 import * as React from 'react';
 import { View, TextInput } from 'react-native';
-import { render, configure } from '../..';
+import { render } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
-
-beforeEach(() => {
-  configure({ useLegacyQueries: true });
-});
 
 const Banana = () => (
   <View>
@@ -83,11 +79,10 @@ test('byPlaceholderText queries support hidden option', () => {
   );
 });
 
-test('byPlaceHolderText should return composite component', () => {
-  configure({ useLegacyQueries: true });
+test('byPlaceHolderText should return host component', () => {
   const { getByPlaceholderText } = render(
     <TextInput placeholder="placeholder" />
   );
 
-  expect(getByPlaceholderText('placeholder').type).toBe(TextInput);
+  expect(getByPlaceholderText('placeholder').type).toBe('TextInput');
 });

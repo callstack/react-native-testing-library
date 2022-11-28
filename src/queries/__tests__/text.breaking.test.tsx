@@ -7,11 +7,7 @@ import {
   Button,
   TextInput,
 } from 'react-native';
-import { configure, render, getDefaultNormalizer, within } from '../..';
-
-beforeEach(() => {
-  configure({ useLegacyQueries: true });
-});
+import { render, getDefaultNormalizer, within } from '../..';
 
 test('byText matches simple text', () => {
   const { getByText } = render(<Text testID="text">Hello World</Text>);
@@ -507,8 +503,8 @@ test('byText support hidden option', () => {
   );
 });
 
-test('byText should return composite component', () => {
+test('byText should return host component', () => {
   const { getByText } = render(<Text>hello</Text>);
 
-  expect(getByText('hello').type).toBe(Text);
+  expect(getByText('hello').type).toBe('Text');
 });

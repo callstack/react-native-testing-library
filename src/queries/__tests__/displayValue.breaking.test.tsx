@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, TextInput } from 'react-native';
 
-import { render, configure } from '../..';
+import { render } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -9,8 +9,6 @@ const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
 const DEFAULT_INPUT_CUSTOMER = 'What banana?';
-
-beforeEach(() => configure({ useLegacyQueries: true }));
 
 const Banana = () => (
   <View>
@@ -122,8 +120,8 @@ test('byDisplayValue queries support hidden option', () => {
   );
 });
 
-test('byDisplayValue should return composite component', () => {
+test('byDisplayValue should return host component', () => {
   const { getByDisplayValue } = render(<TextInput value="value" />);
 
-  expect(getByDisplayValue('value').type).toBe(TextInput);
+  expect(getByDisplayValue('value').type).toBe('TextInput');
 });
