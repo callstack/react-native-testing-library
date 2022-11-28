@@ -36,7 +36,7 @@ const queryAllByText = (
 
       const results = findAll(
         baseInstance,
-        (node) => matchTextContent(node, text, Text, options),
+        (node) => matchTextContent({ node, text, typeToMatch: Text, options }),
         { ...options, matchDeepestOnly: true }
       );
 
@@ -46,12 +46,12 @@ const queryAllByText = (
     return findAll(
       instance,
       (node) =>
-        matchTextContent(
+        matchTextContent({
           node,
           text,
-          getConfig().hostComponentNames.text,
-          options
-        ),
+          typeToMatch: getConfig().hostComponentNames.text,
+          options,
+        }),
       {
         ...options,
         matchDeepestOnly: true,

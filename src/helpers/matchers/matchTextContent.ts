@@ -4,12 +4,19 @@ import { matches, TextMatch, TextMatchOptions } from '../../matches';
 import { filterNodeByType } from '../filterNodeByType';
 import { getTextContent } from '../getTextContent';
 
-export function matchTextContent(
-  node: ReactTestInstance,
-  text: TextMatch,
-  typeToMatch: ElementType | string,
-  options: TextMatchOptions = {}
-) {
+type MatchTextContentParams = {
+  node: ReactTestInstance;
+  text: TextMatch;
+  typeToMatch: ElementType | string;
+  options?: TextMatchOptions;
+};
+
+export function matchTextContent({
+  node,
+  text,
+  typeToMatch,
+  options = {},
+}: MatchTextContentParams) {
   if (!filterNodeByType(node, typeToMatch)) {
     return false;
   }
