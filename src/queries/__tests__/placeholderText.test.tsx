@@ -95,24 +95,3 @@ test('byPlaceHolderText should return host component if useLegacyQueries option 
 
   expect(getByPlaceholderText('placeholder').type).toBe('TextInput');
 });
-
-test('byPlaceHolderText should return composite component if legacy option is true', () => {
-  const { getByPlaceholderText } = render(
-    <TextInput placeholder="placeholder" />
-  );
-
-  expect(getByPlaceholderText('placeholder', { legacy: true }).type).toBe(
-    TextInput
-  );
-});
-
-test('byPlaceHolderText should return host component if legacy option is false', () => {
-  configure({ useLegacyQueries: true });
-  const { getByPlaceholderText } = render(
-    <TextInput placeholder="placeholder" />
-  );
-
-  expect(getByPlaceholderText('placeholder', { legacy: false }).type).toBe(
-    'TextInput'
-  );
-});

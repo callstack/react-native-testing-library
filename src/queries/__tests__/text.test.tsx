@@ -515,16 +515,3 @@ test('byText should return host component if useLegacyQueries option is false', 
 
   expect(getByText('hello').type).toBe('Text');
 });
-
-test('byText should return composite component if legacy option is true', () => {
-  const { getByText } = render(<Text>hello</Text>);
-
-  expect(getByText('hello', { legacy: true }).type).toBe(Text);
-});
-
-test('byText should return host component if legacy option is false', () => {
-  configure({ useLegacyQueries: true });
-  const { getByText } = render(<Text>hello</Text>);
-
-  expect(getByText('hello', { legacy: false }).type).toBe('Text');
-});

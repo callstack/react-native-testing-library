@@ -132,16 +132,3 @@ test('byDisplayValue should return host component if useLegacyQueries option is 
 
   expect(getByDisplayValue('value').type).toBe('TextInput');
 });
-
-test('byDisplayValue should return composite component if legacy option is true', () => {
-  const { getByDisplayValue } = render(<TextInput value="value" />);
-
-  expect(getByDisplayValue('value', { legacy: true }).type).toBe(TextInput);
-});
-
-test('byDisplayValue should return host component if legacy option is false', () => {
-  configure({ useLegacyQueries: true });
-  const { getByDisplayValue } = render(<TextInput value="value" />);
-
-  expect(getByDisplayValue('value', { legacy: false }).type).toBe('TextInput');
-});

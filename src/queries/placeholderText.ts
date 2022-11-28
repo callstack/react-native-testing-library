@@ -13,23 +13,17 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import {
-  CommonQueryOptions,
-  LegacyQueryOptions,
-  shouldReturnCompositeComponent,
-} from './options';
+import { CommonQueryOptions, shouldReturnCompositeComponent } from './options';
 
-type ByPlaceholderTextOptions = CommonQueryOptions &
-  TextMatchOptions &
-  LegacyQueryOptions;
+type ByPlaceholderTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const getTextInputNodeByPlaceholderText = (
   node: ReactTestInstance,
   placeholder: TextMatch,
-  options: TextMatchOptions & LegacyQueryOptions = {}
+  options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
-  const typeToMatch = shouldReturnCompositeComponent(options)
+  const typeToMatch = shouldReturnCompositeComponent()
     ? TextInput
     : getConfig().hostComponentNames.textInput;
 

@@ -13,10 +13,6 @@ type CommonQueryOptions = {
   hidden?: boolean,
 };
 
-type LegacyQueryOptions = {
-  legacy?: boolean,
-};
-
 type TextMatch = string | RegExp;
 
 declare type NormalizerFn = (textToNormalize: string) => string;
@@ -83,7 +79,7 @@ type WaitForFunction = <T = any>(
   options?: WaitForOptions
 ) => Promise<T>;
 
-type ByTextOptions = CommonQueryOptions & TextMatchOptions & LegacyQueryOptions;
+type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
 interface ByTextQueries {
   getByText: (text: TextMatch, options?: ByTextOptions) => ReactTestInstance;
@@ -142,9 +138,7 @@ interface ByTestIdQueries {
   ) => FindAllReturn;
 }
 
-type ByDisplayValueOptions = CommonQueryOptions &
-  TextMatchOptions &
-  LegacyQueryOptions;
+type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;
 
 interface ByDisplayValueQueries {
   getByDisplayValue: (
@@ -175,9 +169,7 @@ interface ByDisplayValueQueries {
   ) => FindAllReturn;
 }
 
-type ByPlaceholderTextOptions = CommonQueryOptions &
-  TextMatchOptions &
-  LegacyQueryOptions;
+type ByPlaceholderTextOptions = CommonQueryOptions & TextMatchOptions;
 
 interface ByPlaceholderTextQueries {
   getByPlaceholderText: (

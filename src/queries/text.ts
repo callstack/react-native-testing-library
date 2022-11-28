@@ -17,19 +17,15 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import {
-  CommonQueryOptions,
-  LegacyQueryOptions,
-  shouldReturnCompositeComponent,
-} from './options';
+import { CommonQueryOptions, shouldReturnCompositeComponent } from './options';
 
-type ByTextOptions = CommonQueryOptions & TextMatchOptions & LegacyQueryOptions;
+type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const queryAllByText = (
   instance: ReactTestInstance
 ): ((text: TextMatch, options?: ByTextOptions) => Array<ReactTestInstance>) =>
   function queryAllByTextFn(text, options = {}) {
-    if (shouldReturnCompositeComponent(options)) {
+    if (shouldReturnCompositeComponent()) {
       const baseInstance = isHostElementForType(instance, Text)
         ? getCompositeParentOfType(instance, Text)
         : instance;

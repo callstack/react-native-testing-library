@@ -13,25 +13,19 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import {
-  CommonQueryOptions,
-  LegacyQueryOptions,
-  shouldReturnCompositeComponent,
-} from './options';
+import { CommonQueryOptions, shouldReturnCompositeComponent } from './options';
 
-type ByDisplayValueOptions = CommonQueryOptions &
-  TextMatchOptions &
-  LegacyQueryOptions;
+type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;
 
 const getTextInputNodeByDisplayValue = (
   node: ReactTestInstance,
   value: TextMatch,
-  options: TextMatchOptions & LegacyQueryOptions = {}
+  options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
   const nodeValue =
     node.props.value !== undefined ? node.props.value : node.props.defaultValue;
-  const typeToMatch = shouldReturnCompositeComponent(options)
+  const typeToMatch = shouldReturnCompositeComponent()
     ? TextInput
     : getConfig().hostComponentNames.textInput;
 

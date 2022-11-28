@@ -14,14 +14,6 @@ export type TextMatchOptions = {
   normalizer?: NormalizerFn;
 };
 
-export type LegacyQueryOptions = {
-  legacy?: boolean;
-};
-
-export const shouldReturnCompositeComponent = (option: LegacyQueryOptions) => {
-  if (option.legacy === false) {
-    return false;
-  }
-
-  return option.legacy || getConfig().useLegacyQueries;
+export const shouldReturnCompositeComponent = () => {
+  return getConfig().useLegacyQueries;
 };
