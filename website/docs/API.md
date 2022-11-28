@@ -855,7 +855,7 @@ type Config = {
   asyncUtilTimeout: number;
   defaultHidden: boolean;
   defaultDebugOptions: Partial<DebugOptions>;
-  hostComponentNames: { text: string; textInput: string }
+  hostComponentNames: { text: string; textInput: string };
 };
 
 function configure(options: Partial<Config>) {}
@@ -876,11 +876,6 @@ This option is also available as `defaultHidden` alias for compatibility with [R
 #### `defaultDebugOptions` option
 
 Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
-
-
-#### `useLegacyQueries` option
-
-`byText`, `byPlaceholderText` and `byDisplayValue` queries used to return composite elements (see the doc on [testing environment](./TestingEnvironment.md)) for more information on composite and host components) but they now return host components. This can break tests if you use the element returned by these queries, for instance the props may be slightly different. To keep the legacy behavior, set this option to true. 
 
 #### `hostComponentNames` option
 
@@ -922,10 +917,10 @@ function isHiddenFromAccessibility(
 
 Also available as `isInaccessible()` alias for React Testing Library compatibility.
 
-Checks if given element is hidden from assistive technology, e.g. screen readers. 
+Checks if given element is hidden from assistive technology, e.g. screen readers.
 
 :::note
-Like [`isInaccessible`](https://testing-library.com/docs/dom-testing-library/api-accessibility/#isinaccessible) function from DOM Testing Library this function considers both accessibility elements and presentational elements (regular `View`s) to be accessible, unless they are hidden in terms of host platform. 
+Like [`isInaccessible`](https://testing-library.com/docs/dom-testing-library/api-accessibility/#isinaccessible) function from DOM Testing Library this function considers both accessibility elements and presentational elements (regular `View`s) to be accessible, unless they are hidden in terms of host platform.
 
 This covers only part of [ARIA notion of Accessiblity Tree](https://www.w3.org/TR/wai-aria-1.2/#tree_exclusion), as ARIA excludes both hidden and presentational elements from the Accessibility Tree.
 :::
