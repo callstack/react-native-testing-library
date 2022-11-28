@@ -86,6 +86,10 @@ Example:
 }
 
 function getWrongHostComponentNamesError(): string {
+  if (getConfig().useLegacyQueries) {
+    return '';
+  }
+
   const reactNativeHostComponentNames = getReactNativeHostComponentNames();
   const configHostComponentNames = getConfig().hostComponentNames;
   if (

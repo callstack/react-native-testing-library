@@ -40,7 +40,7 @@ const defaultConfig: InternalConfig = {
   useBreakingChanges: false,
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: true,
-  useLegacyQueries: false,
+  useLegacyQueries: true,
   hostComponentNames: { text: 'Text', textInput: 'TextInput' },
 };
 

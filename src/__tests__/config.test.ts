@@ -19,7 +19,7 @@ test('configure() overrides existing config values', () => {
     defaultDebugOptions: { message: 'debug message' },
     defaultIncludeHiddenElements: true,
     useBreakingChanges: false,
-    useLegacyQueries: false,
+    useLegacyQueries: true,
     hostComponentNames: {
       text: 'Text',
       textInput: 'TextInput',
@@ -31,16 +31,16 @@ test('resetToDefaults() resets config to defaults', () => {
   configure({
     asyncUtilTimeout: 5000,
     defaultIncludeHiddenElements: false,
-    useLegacyQueries: true,
+    useLegacyQueries: false,
   });
   expect(getConfig().asyncUtilTimeout).toEqual(5000);
   expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
-  expect(getConfig().useLegacyQueries).toBe(true);
+  expect(getConfig().useLegacyQueries).toBe(false);
 
   resetToDefaults();
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
   expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
-  expect(getConfig().useLegacyQueries).toBe(false);
+  expect(getConfig().useLegacyQueries).toBe(true);
 });
 
 test('resetToDefaults() resets internal config to defaults', () => {

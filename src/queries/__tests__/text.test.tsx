@@ -7,11 +7,7 @@ import {
   Button,
   TextInput,
 } from 'react-native';
-import { configure, render, getDefaultNormalizer, within } from '../..';
-
-beforeEach(() => {
-  configure({ useLegacyQueries: true });
-});
+import { render, getDefaultNormalizer, within } from '../..';
 
 test('byText matches simple text', () => {
   const { getByText } = render(<Text testID="text">Hello World</Text>);
