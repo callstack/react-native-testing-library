@@ -879,7 +879,7 @@ Default [debug options](#debug) to be used when calling `debug()`. These default
 
 #### `hostComponentNames` option
 
-The internal names of `Text` and `TextInput` components used by `byText`, `byDisplayValue` and `byPlaceholderText` queries. This should only be changed if you're using a version of React Native that is not compatible with the version of @testing-library/react-native. If that's the case, then failed getBy queries should suggest the appropriate config to use.
+The internal names of the components `Text` and `TextInput` used by `byText`, `byDisplayValue` and `byPlaceholderText` queries. This should only be changed if you're using a version of React Native that is not compatible with the version of @testing-library/react-native. If that's the case, then failed getBy and findBy queries should suggest the appropriate config to use.
 
 ### `resetToDefaults()`
 
