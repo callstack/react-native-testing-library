@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, TextInput } from 'react-native';
 import { render, screen, configure } from '../../pure';
 
@@ -116,5 +116,28 @@ describe('host component names', () => {
     expect(() => screen.getByText('hello')).toThrowErrorMatchingInlineSnapshot(
       `"Unable to find an element with text: hello"`
     );
+  });
+
+  it('should not update screen object when running detection', async () => {
+    const TestComponent = () => {
+      const [shouldDisplayHello, setShouldDisplayHello] = useState(false);
+
+      useEffect(() => {
+        setTimeout(() => {
+          setShouldDisplayHello(true);
+        }, 500);
+      }, []);
+
+      if (shouldDisplayHello) {
+        return <Text>hello</Text>;
+      }
+
+      return null;
+    };
+
+    render(<TestComponent />);
+
+    expect(await screen.findByText('hello')).toBeTruthy();
+    expect(screen.getByText('hello')).toBeTruthy();
   });
 });
