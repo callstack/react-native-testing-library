@@ -476,7 +476,7 @@ declare module '@testing-library/react-native' {
     defaultIncludeHiddenElements: boolean;
     defaultDebugOptions?: $Shape<DebugOptions>;
     useLegacyQueries: boolean;
-    HostComponentNames: HostComponentNames;
+    hostComponentNames: HostComponentNames;
   }
 
   declare interface ConfigAliasOptions {
