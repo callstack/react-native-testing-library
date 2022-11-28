@@ -2,51 +2,50 @@ import React, { useEffect, useState } from 'react';
 import { Text, TextInput } from 'react-native';
 import { render, screen, configure } from '../../pure';
 
-describe('host component names', () => {
-  test('byText queries should use text host name from config', () => {
-    render(<Text>hello</Text>);
+test('byText queries should use text host name from config', () => {
+  render(<Text>hello</Text>);
 
-    expect(screen.getByText('hello')).toBeTruthy();
+  expect(screen.getByText('hello')).toBeTruthy();
 
-    configure({
-      hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
-    });
-
-    expect(screen.queryByText('hello')).toBeFalsy();
+  configure({
+    hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
   });
 
-  test('byDisplayValue queries should use textInput host name from config', () => {
-    render(<TextInput value="email" />);
+  expect(screen.queryByText('hello')).toBeFalsy();
+});
 
-    expect(screen.getByDisplayValue('email')).toBeTruthy();
+test('byDisplayValue queries should use textInput host name from config', () => {
+  render(<TextInput value="email" />);
 
-    configure({
-      hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
-    });
+  expect(screen.getByDisplayValue('email')).toBeTruthy();
 
-    expect(screen.queryByDisplayValue('email')).toBeFalsy();
+  configure({
+    hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
   });
 
-  test('byPlaceholderText queries should use textInput host name from config', () => {
-    render(<TextInput placeholder="email" />);
+  expect(screen.queryByDisplayValue('email')).toBeFalsy();
+});
 
-    expect(screen.getByPlaceholderText('email')).toBeTruthy();
+test('byPlaceholderText queries should use textInput host name from config', () => {
+  render(<TextInput placeholder="email" />);
 
-    configure({
-      hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
-    });
+  expect(screen.getByPlaceholderText('email')).toBeTruthy();
 
-    expect(screen.queryByPlaceholderText('email')).toBeFalsy();
+  configure({
+    hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
   });
 
-  it('should suggest appropriated config when a getByText query fails and wrong component names are used', () => {
-    configure({
-      hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
-    });
+  expect(screen.queryByPlaceholderText('email')).toBeFalsy();
+});
 
-    render(<Text>hello</Text>);
+test('suggests appropriate config when a getByText query fails and wrong component names are used', () => {
+  configure({
+    hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
+  });
 
-    expect(() => screen.getByText('hello')).toThrowErrorMatchingInlineSnapshot(`
+  render(<Text>hello</Text>);
+
+  expect(() => screen.getByText('hello')).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: hello
 
       You configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
@@ -60,17 +59,17 @@ describe('host component names', () => {
         }
       });"
     `);
+});
+
+test('suggests appropriate config when a getByDisplayValue query fails and wrong component names are used', () => {
+  configure({
+    hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
   });
 
-  it('should suggest appropriated config when a getByDisplayValue query fails and wrong component names are used', () => {
-    configure({
-      hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
-    });
+  render(<TextInput value="value" />);
 
-    render(<TextInput value="value" />);
-
-    expect(() => screen.getByDisplayValue('value'))
-      .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getByDisplayValue('value'))
+    .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with displayValue: value
 
       You configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
@@ -84,17 +83,17 @@ describe('host component names', () => {
         }
       });"
     `);
+});
+
+test('suggests appropriate config when a getByPlaceholderText query fails and wrong component names are used', () => {
+  configure({
+    hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
   });
 
-  it('should suggest appropriated config when a getByPlaceholderText query fails and wrong component names are used', () => {
-    configure({
-      hostComponentNames: { text: 'wrongName', textInput: 'wrongName' },
-    });
+  render(<TextInput placeholder="placeholder" />);
 
-    render(<TextInput placeholder="placeholder" />);
-
-    expect(() => screen.getByPlaceholderText('placeholder'))
-      .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getByPlaceholderText('placeholder'))
+    .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with placeholder: placeholder
 
       You configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
@@ -108,36 +107,35 @@ describe('host component names', () => {
         }
       });"
     `);
-  });
+});
 
-  it('should not suggest to change config when a query fails but the correct component names are used', () => {
-    render(<Text>bonjour</Text>);
+test('does not suggest to change config when a query fails but the correct component names are used', () => {
+  render(<Text>bonjour</Text>);
 
-    expect(() => screen.getByText('hello')).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with text: hello"`
-    );
-  });
+  expect(() => screen.getByText('hello')).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with text: hello"`
+  );
+});
 
-  it('should not update screen object when running detection', async () => {
-    const TestComponent = () => {
-      const [shouldDisplayHello, setShouldDisplayHello] = useState(false);
+test('does not update screen object when running detection', async () => {
+  const TestComponent = () => {
+    const [shouldDisplayHello, setShouldDisplayHello] = useState(false);
 
-      useEffect(() => {
-        setTimeout(() => {
-          setShouldDisplayHello(true);
-        }, 500);
-      }, []);
+    useEffect(() => {
+      setTimeout(() => {
+        setShouldDisplayHello(true);
+      }, 500);
+    }, []);
 
-      if (shouldDisplayHello) {
-        return <Text>hello</Text>;
-      }
+    if (shouldDisplayHello) {
+      return <Text>hello</Text>;
+    }
 
-      return null;
-    };
+    return null;
+  };
 
-    render(<TestComponent />);
+  render(<TestComponent />);
 
-    expect(await screen.findByText('hello')).toBeTruthy();
-    expect(screen.getByText('hello')).toBeTruthy();
-  });
+  expect(await screen.findByText('hello')).toBeTruthy();
+  expect(screen.getByText('hello')).toBeTruthy();
 });
