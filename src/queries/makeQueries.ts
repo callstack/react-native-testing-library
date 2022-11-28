@@ -95,11 +95,16 @@ function getWrongHostComponentNamesError(): string {
   ) {
     return `
 
-The wrong host component names are used. This can happen if you use a version of react native that is not compatible with your version of @testing-library/react-native
+You configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
 
-To fix this, either upgrade to a version that supports your version of react native or add the following line in a setup file :
+To fix this add following line in a Jest setup file :
 
-configure({ hostComponentNames: { text: '${reactNativeHostComponentNames.text}', textInput: '${reactNativeHostComponentNames.textInput}' } });`;
+configure({ 
+  hostComponentNames: { 
+    text: '${reactNativeHostComponentNames.text}',
+    textInput: '${reactNativeHostComponentNames.textInput}',
+  }
+});`;
   }
 
   return '';
