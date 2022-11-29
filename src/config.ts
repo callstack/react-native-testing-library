@@ -20,12 +20,12 @@ export type ConfigAliasOptions = {
 };
 
 export type InternalConfig = Config & {
-  /** Whether to allow RNTL to use latest and greatest improvements even if they are breaking changes. */
-  allowBreakingChanges: boolean;
+  /** Whether to use breaking changes intended for next major version release. */
+  useBreakingChanges: boolean;
 };
 
 const defaultConfig: InternalConfig = {
-  allowBreakingChanges: false,
+  useBreakingChanges: false,
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: true,
 };
