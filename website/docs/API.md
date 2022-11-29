@@ -52,7 +52,6 @@ title: API
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
     - [`defaultIncludeHiddenElements` option](#defaultincludehiddenelements-option)
     - [`defaultDebugOptions` option](#defaultdebugoptions-option)
-    - [`allowBreakingChanges` option](#allowbreakingchanges-option)
   - [`resetToDefaults()`](#resettodefaults)
   - [Environment variables](#environment-variables)
     - [`RNTL_SKIP_AUTO_CLEANUP`](#rntl_skip_auto_cleanup)
@@ -783,7 +782,6 @@ type Config = {
   asyncUtilTimeout: number;
   defaultHidden: boolean;
   defaultDebugOptions: Partial<DebugOptions>;
-  allowBreakingChanges: boolean;
 };
 
 function configure(options: Partial<Config>) {}
@@ -805,9 +803,6 @@ This option is also available as `defaultHidden` alias for compatibility with [R
 
 Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
 
-#### `allowBreakingChanges` option
-
-By default RNTL is using SemVer practices that require a major version update in case of any breaking changes. If you set this option to `true` you will be allowed to use latest RNTL API that might contain breaking changes. These breaking changes are planned to become default in the next major release. APIs that would be affected by this option will have that documented.
 ### `resetToDefaults()`
 
 ```ts
