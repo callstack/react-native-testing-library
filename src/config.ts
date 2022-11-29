@@ -1,5 +1,8 @@
 import { DebugOptions } from './helpers/debugDeep';
 
+/**
+ * Global configuration options for React Native Testing Library.
+ */
 export type Config = {
   /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
@@ -9,9 +12,6 @@ export type Config = {
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
-
-  /** Whether to allow RNTL to use latest and greatest improvements even if they are breaking changes. */
-  allowBreakingChanges: boolean;
 };
 
 export type ConfigAliasOptions = {
@@ -19,14 +19,22 @@ export type ConfigAliasOptions = {
   defaultHidden: boolean;
 };
 
-const defaultConfig: Config = {
+export type InternalConfig = Config & {
+  /** Whether to allow RNTL to use latest and greatest improvements even if they are breaking changes. */
+  allowBreakingChanges: boolean;
+};
+
+const defaultConfig: InternalConfig = {
+  allowBreakingChanges: false,
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: true,
-  allowBreakingChanges: false,
 };
 
 let config = { ...defaultConfig };
 
+/**
+ * Configure global options for React Native Testing Library.
+ */
 export function configure(options: Partial<Config & ConfigAliasOptions>) {
   const { defaultHidden, ...restOptions } = options;
 
@@ -39,6 +47,13 @@ export function configure(options: Partial<Config & ConfigAliasOptions>) {
     ...config,
     ...restOptions,
     defaultIncludeHiddenElements,
+  };
+}
+
+export function configureInternal(option: Partial<InternalConfig>) {
+  config = {
+    ...config,
+    ...option,
   };
 }
 
