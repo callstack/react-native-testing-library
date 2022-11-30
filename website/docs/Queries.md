@@ -213,9 +213,8 @@ getByLabelText(
 ```
 
 Returns a `ReactTestInstance` with matching label:
-
-- by matching `accessibilityLabel` prop
-- or by matching text content of text view referenced by `accessibilityLabelledBy` prop
+- either by matching [`accessibilityLabel`](https://reactnative.dev/docs/accessibility#accessibilitylabel) prop
+- or by matching text content of view referenced by [`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';

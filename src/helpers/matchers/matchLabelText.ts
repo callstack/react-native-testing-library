@@ -1,47 +1,50 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { matches, TextMatch, TextMatchOptions } from '../../matches';
+import { findAll } from '../findAll';
 import { matchTextContent } from './matchTextContent';
 
 export function matchLabelText(
-  rootInstance: ReactTestInstance,
-  node: ReactTestInstance,
+  root: ReactTestInstance,
+  element: ReactTestInstance,
   text: TextMatch,
   options: TextMatchOptions = {}
 ) {
   return (
-    matchAccessibilityLabel(node, text, options) ||
+    matchAccessibilityLabel(element, text, options) ||
     matchAccessibilityLabelledBy(
-      rootInstance,
-      node.props.accessibilityLabelledBy,
+      root,
+      element.props.accessibilityLabelledBy,
       text,
       options
     )
   );
 }
 
-export function matchAccessibilityLabel(
-  node: ReactTestInstance,
+function matchAccessibilityLabel(
+  element: ReactTestInstance,
   text: TextMatch,
   options: TextMatchOptions
 ) {
   const { exact, normalizer } = options;
-  return matches(text, node.props.accessibilityLabel, normalizer, exact);
+  return matches(text, element.props.accessibilityLabel, normalizer, exact);
 }
 
-export function matchAccessibilityLabelledBy(
-  rootInstance: ReactTestInstance,
-  nativeID: string | undefined,
+function matchAccessibilityLabelledBy(
+  root: ReactTestInstance,
+  nativeId: string | undefined,
   text: TextMatch,
   options: TextMatchOptions
 ) {
-  if (!nativeID) {
+  if (!nativeId) {
     return false;
   }
 
-  const { exact, normalizer } = options;
-  return rootInstance
-    .findAll((node) =>
-      matches(nativeID, node.props?.nativeID, normalizer, exact)
-    )
-    .some((node) => matchTextContent(node, text));
+  return (
+    findAll(
+      root,
+      (element) =>
+        element.props?.nativeID === nativeId &&
+        matchTextContent(element, text, options)
+    ).length > 0
+  );
 }
