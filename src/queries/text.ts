@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { Text } from 'react-native';
 import { findAll } from '../helpers/findAll';
+import { filterNodeByType } from '../helpers/filterNodeByType';
 import { matchTextContent } from '../helpers/matchers/matchTextContent';
 import { TextMatch, TextMatchOptions } from '../matches';
 import {
@@ -18,6 +19,7 @@ import type {
   QueryByQuery,
 } from './makeQueries';
 import type { CommonQueryOptions } from './options';
+import { getHostComponentNames } from '../helpers/host-component-names';
 
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
@@ -47,10 +49,19 @@ const queryAllByText = (
     }
 
     // vNext version: returns host Text
-    return findAll(instance, (node) => matchTextContent(node, text, options), {
-      ...options,
-      matchDeepestOnly: true,
-    });
+    const textType = getConfig().useBreakingChanges
+      ? getHostComponentNames().text
+      : Text;
+
+    return findAll(
+      instance,
+      (node) => node.type === textType && matchTextContent(node, text, options),
+      {
+        ...options,
+        matchDeepestOnly: true,
+      }
+    );
+
   };
 
 const getMultipleError = (text: TextMatch) =>
