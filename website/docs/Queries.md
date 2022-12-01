@@ -101,7 +101,7 @@ getByText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
-    hidden?: boolean;
+    includeHiddenElements?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -127,7 +127,7 @@ getByPlaceholderText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
-    hidden?: boolean;
+    includeHiddenElements?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -151,7 +151,7 @@ getByDisplayValue(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
-    hidden?: boolean;
+    includeHiddenElements?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -175,7 +175,7 @@ getByTestId(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
-    hidden?: boolean;
+    includeHiddenElements?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -203,7 +203,7 @@ getByLabelText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
-    hidden?: boolean;
+    includeHiddenElements?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -229,7 +229,7 @@ getByHintText(
   options?: {
     exact?: boolean;
     normalizer?: (text: string) => string;
-    hidden?: boolean;
+    includeHiddenElements?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -267,7 +267,7 @@ getByRole(
       now?: number;
       text?: TextMatch;
     },
-    hidden?: boolean;
+    includeHiddenElements?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -318,7 +318,7 @@ getByA11yState(
     busy?: boolean,
   },
   options?: {
-    hidden?: boolean;
+    includeHiddenElements?: boolean;
   }
 ): ReactTestInstance;
 ```
@@ -374,7 +374,7 @@ getByA11yValue(
     text?: TextMatch;
   },
   options?: {
-    hidden?: boolean;
+    includeHiddenElements?: boolean;
   }
 ): ReactTestInstance;
 ```
