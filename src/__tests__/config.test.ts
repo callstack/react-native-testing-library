@@ -1,10 +1,16 @@
-import { getConfig, configure, resetToDefaults } from '../config';
+import {
+  getConfig,
+  configure,
+  resetToDefaults,
+  configureInternal,
+} from '../config';
 
 beforeEach(() => {
   resetToDefaults();
 });
 
 test('getConfig() returns existing configuration', () => {
+  expect(getConfig().useBreakingChanges).toEqual(false);
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
   expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
 });
@@ -16,6 +22,7 @@ test('configure() overrides existing config values', () => {
     asyncUtilTimeout: 5000,
     defaultDebugOptions: { message: 'debug message' },
     defaultIncludeHiddenElements: true,
+    useBreakingChanges: false,
   });
 });
 
@@ -30,6 +37,16 @@ test('resetToDefaults() resets config to defaults', () => {
   resetToDefaults();
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
   expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
+});
+
+test('resetToDefaults() resets internal config to defaults', () => {
+  configureInternal({
+    useBreakingChanges: true,
+  });
+  expect(getConfig().useBreakingChanges).toEqual(true);
+
+  resetToDefaults();
+  expect(getConfig().useBreakingChanges).toEqual(false);
 });
 
 test('configure handles alias option defaultHidden', () => {
