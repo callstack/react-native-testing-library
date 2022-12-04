@@ -19,9 +19,6 @@ export type Config = {
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
 
-  /** Option to return composite components */
-  useLegacyQueries: boolean;
-
   /** Host component names used for queries */
   hostComponentNames: HostComponentNames;
 };
@@ -40,7 +37,6 @@ const defaultConfig: InternalConfig = {
   useBreakingChanges: false,
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: true,
-  useLegacyQueries: true,
   hostComponentNames: { text: 'Text', textInput: 'TextInput' },
 };
 

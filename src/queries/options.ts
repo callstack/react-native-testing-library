@@ -15,5 +15,5 @@ export type TextMatchOptions = {
 };
 
 export const shouldReturnCompositeComponent = () => {
-  return getConfig().useLegacyQueries;
+  return !getConfig().useBreakingChanges;
 };

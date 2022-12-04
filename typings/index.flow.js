@@ -475,7 +475,6 @@ declare module '@testing-library/react-native' {
     asyncUtilTimeout: number;
     defaultIncludeHiddenElements: boolean;
     defaultDebugOptions?: $Shape<DebugOptions>;
-    useLegacyQueries: boolean;
     hostComponentNames: HostComponentNames;
   }
 

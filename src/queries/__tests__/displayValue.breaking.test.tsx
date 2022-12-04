@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { View, TextInput } from 'react-native';
 
-import { configure, render } from '../..';
+import { render } from '../..';
+import { configureInternal } from '../../config';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -10,7 +11,7 @@ const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
 const DEFAULT_INPUT_CUSTOMER = 'What banana?';
 
-beforeEach(() => configure({ useLegacyQueries: false }));
+beforeEach(() => configureInternal({ useBreakingChanges: true }));
 
 const Banana = () => (
   <View>

@@ -86,7 +86,7 @@ Example:
 }
 
 function getWrongHostComponentNamesError(): string {
-  if (getConfig().useLegacyQueries) {
+  if (!getConfig().useBreakingChanges) {
     return '';
   }
 

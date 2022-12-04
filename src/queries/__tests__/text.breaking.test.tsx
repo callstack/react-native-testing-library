@@ -7,10 +7,11 @@ import {
   Button,
   TextInput,
 } from 'react-native';
-import { configure, render, getDefaultNormalizer, within } from '../..';
+import { render, getDefaultNormalizer, within } from '../..';
+import { configureInternal } from '../../config';
 
 beforeEach(() => {
-  configure({ useLegacyQueries: false });
+  configureInternal({ useBreakingChanges: true });
 });
 
 test('byText matches simple text', () => {

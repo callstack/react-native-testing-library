@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput } from 'react-native';
+import { configureInternal } from '../../config';
 import { render, screen, configure } from '../../pure';
 
-beforeEach(() => configure({ useLegacyQueries: false }));
+beforeEach(() => configureInternal({ useBreakingChanges: true }));
 
 test('byText queries should use text host name from config', () => {
   render(<Text>hello</Text>);
