@@ -99,7 +99,7 @@ function getWrongHostComponentNamesError(): string {
   ) {
     return `
 
-You configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
+Your configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
 
 To fix this add following line in a Jest setup file :
 

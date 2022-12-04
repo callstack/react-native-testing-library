@@ -48,19 +48,19 @@ test('suggests appropriate config when a getByText query fails and wrong compone
   render(<Text>hello</Text>);
 
   expect(() => screen.getByText('hello')).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with text: hello
+    "Unable to find an element with text: hello
 
-      You configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
+    Your configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
 
-      To fix this add following line in a Jest setup file :
+    To fix this add following line in a Jest setup file :
 
-      configure({ 
-        hostComponentNames: { 
-          text: 'Text',
-          textInput: 'TextInput',
-        }
-      });"
-    `);
+    configure({ 
+      hostComponentNames: { 
+        text: 'Text',
+        textInput: 'TextInput',
+      }
+    });"
+  `);
 });
 
 test('suggests appropriate config when a getByDisplayValue query fails and wrong component names are used', () => {
@@ -72,19 +72,19 @@ test('suggests appropriate config when a getByDisplayValue query fails and wrong
 
   expect(() => screen.getByDisplayValue('value'))
     .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with displayValue: value
+    "Unable to find an element with displayValue: value
 
-      You configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
+    Your configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
 
-      To fix this add following line in a Jest setup file :
+    To fix this add following line in a Jest setup file :
 
-      configure({ 
-        hostComponentNames: { 
-          text: 'Text',
-          textInput: 'TextInput',
-        }
-      });"
-    `);
+    configure({ 
+      hostComponentNames: { 
+        text: 'Text',
+        textInput: 'TextInput',
+      }
+    });"
+  `);
 });
 
 test('suggests appropriate config when a getByPlaceholderText query fails and wrong component names are used', () => {
@@ -96,19 +96,19 @@ test('suggests appropriate config when a getByPlaceholderText query fails and wr
 
   expect(() => screen.getByPlaceholderText('placeholder'))
     .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with placeholder: placeholder
+    "Unable to find an element with placeholder: placeholder
 
-      You configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
+    Your configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
 
-      To fix this add following line in a Jest setup file :
+    To fix this add following line in a Jest setup file :
 
-      configure({ 
-        hostComponentNames: { 
-          text: 'Text',
-          textInput: 'TextInput',
-        }
-      });"
-    `);
+    configure({ 
+      hostComponentNames: { 
+        text: 'Text',
+        textInput: 'TextInput',
+      }
+    });"
+  `);
 });
 
 test('does not suggest to change config when a query fails but the correct component names are used', () => {
