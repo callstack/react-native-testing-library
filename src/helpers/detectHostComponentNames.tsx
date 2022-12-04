@@ -4,7 +4,7 @@ import TestRenderer from 'react-test-renderer';
 import { HostComponentNames } from '../config';
 import { getQueriesForElement } from '../within';
 
-export function getReactNativeHostComponentNames(): HostComponentNames {
+export function detectHostComponentNames(): HostComponentNames {
   const renderer = TestRenderer.create(
     <View>
       <Text testID="text">Hello</Text>

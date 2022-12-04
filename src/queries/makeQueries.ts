@@ -2,7 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
-import { getReactNativeHostComponentNames } from '../helpers/getReactNativeHostComponentNames';
+import { detectHostComponentNames } from '../helpers/detectHostComponentNames';
 import { getConfig } from '../config';
 
 export type GetByQuery<Predicate, Options = void> = (
@@ -90,7 +90,7 @@ function getWrongHostComponentNamesError(): string {
     return '';
   }
 
-  const reactNativeHostComponentNames = getReactNativeHostComponentNames();
+  const reactNativeHostComponentNames = detectHostComponentNames();
   const configHostComponentNames = getConfig().hostComponentNames;
   if (
     reactNativeHostComponentNames.text !== configHostComponentNames.text ||
