@@ -91,6 +91,10 @@ function getWrongHostComponentNamesError(): string {
   }
 
   const reactNativeHostComponentNames = detectHostComponentNames();
+  if (!reactNativeHostComponentNames.text) {
+    return '';
+  }
+
   const configHostComponentNames = getConfig().hostComponentNames;
   if (
     reactNativeHostComponentNames.text !== configHostComponentNames.text ||

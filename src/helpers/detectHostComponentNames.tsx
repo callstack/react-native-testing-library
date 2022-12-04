@@ -4,17 +4,33 @@ import TestRenderer from 'react-test-renderer';
 import { HostComponentNames } from '../config';
 import { getQueriesForElement } from '../within';
 
-export function detectHostComponentNames(): HostComponentNames {
-  const renderer = TestRenderer.create(
-    <View>
-      <Text testID="text">Hello</Text>
-      <TextInput testID="textInput" />
-    </View>
-  );
-  const { getByTestId } = getQueriesForElement(renderer.root);
+export function detectHostComponentNames():
+  | HostComponentNames
+  | { text: null; textInput: null } {
+  try {
+    const renderer = TestRenderer.create(
+      <View>
+        <Text testID="text">Hello</Text>
+        <TextInput testID="textInput" />
+      </View>
+    );
+    const { getByTestId } = getQueriesForElement(renderer.root);
 
-  return {
-    text: getByTestId('text').type as string,
-    textInput: getByTestId('textInput').type as string,
-  };
+    const textHostName = getByTestId('text').type;
+    const textInputHostName = getByTestId('textInput').type;
+
+    if (
+      typeof textHostName === 'string' &&
+      typeof textInputHostName === 'string'
+    ) {
+      return {
+        text: textHostName,
+        textInput: textInputHostName,
+      };
+    }
+
+    return { text: null, textInput: null };
+  } catch (error) {
+    return { text: null, textInput: null };
+  }
 }
