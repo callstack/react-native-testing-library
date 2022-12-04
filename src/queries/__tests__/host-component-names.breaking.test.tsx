@@ -121,6 +121,8 @@ test('does not suggest to change config when a query fails but the correct compo
 });
 
 test('does not update screen object when running detection', async () => {
+  jest.useFakeTimers();
+
   const TestComponent = () => {
     const [shouldDisplayHello, setShouldDisplayHello] = useState(false);
 
@@ -141,4 +143,6 @@ test('does not update screen object when running detection', async () => {
 
   expect(await screen.findByText('hello')).toBeTruthy();
   expect(screen.getByText('hello')).toBeTruthy();
+
+  jest.useRealTimers();
 });
