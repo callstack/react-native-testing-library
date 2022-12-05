@@ -120,7 +120,7 @@ test('byDisplayValue queries support hidden option', () => {
   );
 });
 
-test('byDisplayValue should return composite component', () => {
+test('byDisplayValue should return composite TextInput', () => {
   const { getByDisplayValue } = render(<TextInput value="value" />);
 
   expect(getByDisplayValue('value').type).toBe(TextInput);

@@ -2,7 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
-import { detectHostComponentNames } from '../helpers/detectHostComponentNames';
+import { detectHostComponentNames } from '../helpers/host-component-names';
 import { getConfig } from '../config';
 
 export type GetByQuery<Predicate, Options = void> = (

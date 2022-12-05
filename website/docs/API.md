@@ -879,7 +879,9 @@ Default [debug options](#debug) to be used when calling `debug()`. These default
 
 #### `hostComponentNames` option
 
-The internal names of the components `Text` and `TextInput` used by `byText`, `byDisplayValue` and `byPlaceholderText` queries. This should only be changed if you're using a version of React Native that is not compatible with the version of @testing-library/react-native. If that's the case, then failed getBy and findBy queries should suggest the appropriate config to use.
+Specifies the host component names RNTL expects React Native to use when rendering some built-in component types (e.g. `Text` and `TextInput`).
+
+You normally won't need to change this option. In the rare occasion when React Native would change the relevant host components names, RNTL will show you a warning suggesting proper values to use.
 
 ### `resetToDefaults()`
 

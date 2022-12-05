@@ -1,4 +1,3 @@
-import { getConfig } from '../config';
 import { NormalizerFn } from '../matches';
 
 export type CommonQueryOptions = {
@@ -12,8 +11,4 @@ export type CommonQueryOptions = {
 export type TextMatchOptions = {
   exact?: boolean;
   normalizer?: NormalizerFn;
-};
-
-export const shouldReturnCompositeComponent = () => {
-  return !getConfig().useBreakingChanges;
 };

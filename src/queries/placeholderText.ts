@@ -13,7 +13,7 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { CommonQueryOptions, shouldReturnCompositeComponent } from './options';
+import { CommonQueryOptions } from './options';
 
 type ByPlaceholderTextOptions = CommonQueryOptions & TextMatchOptions;
 
@@ -23,9 +23,10 @@ const getTextInputNodeByPlaceholderText = (
   options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
-  const typeToMatch = shouldReturnCompositeComponent()
-    ? TextInput
-    : getConfig().hostComponentNames.textInput;
+  const shouldReturnHostTextInput = getConfig().useBreakingChanges;
+  const typeToMatch = shouldReturnHostTextInput
+    ? getConfig().hostComponentNames.textInput
+    : TextInput;
 
   return (
     filterNodeByType(node, typeToMatch) &&

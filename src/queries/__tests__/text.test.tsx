@@ -503,7 +503,7 @@ test('byText support hidden option', () => {
   );
 });
 
-test('byText should return composite component', () => {
+test('byText should return composite Text', () => {
   const { getByText } = render(<Text>hello</Text>);
 
   expect(getByText('hello').type).toBe(Text);

@@ -13,7 +13,7 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { CommonQueryOptions, shouldReturnCompositeComponent } from './options';
+import { CommonQueryOptions } from './options';
 
 type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;
 
@@ -25,9 +25,10 @@ const getTextInputNodeByDisplayValue = (
   const { exact, normalizer } = options;
   const nodeValue =
     node.props.value !== undefined ? node.props.value : node.props.defaultValue;
-  const typeToMatch = shouldReturnCompositeComponent()
-    ? TextInput
-    : getConfig().hostComponentNames.textInput;
+  const shouldReturnHostTextInput = getConfig().useBreakingChanges;
+  const typeToMatch = shouldReturnHostTextInput
+    ? getConfig().hostComponentNames.textInput
+    : TextInput;
 
   return (
     filterNodeByType(node, typeToMatch) &&
