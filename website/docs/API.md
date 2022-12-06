@@ -30,6 +30,7 @@ title: API
     - [On a `ScrollView`](#on-a-scrollview)
     - [On a `FlatList`](#on-a-flatlist)
 - [`waitFor`](#waitfor)
+    - [Using jest fake timers](#using-jest-fake-timers)
 - [`waitForElementToBeRemoved`](#waitforelementtoberemoved)
 - [`within`, `getQueriesForElement`](#within-getqueriesforelement)
 - [`query` APIs](#query-apis)
@@ -515,20 +516,91 @@ Defined as:
 ```jsx
 function waitFor<T>(
   expectation: () => T,
-  { timeout: number = 4500, interval: number = 50 }
+  { timeout: number = 1000, interval: number = 50 }
 ): Promise<T> {}
 ```
 
-Waits for non-deterministic periods of time until your element appears or times out. `waitFor` periodically calls `expectation` every `interval` milliseconds to determine whether the element appeared or not.
+Waits for a period of time for the `expectation` callback to pass. `waitFor` may run the callback a number of times until timeout is reached, as specified by the `timeout` and `interval` options. The callback must throw an error when the expectation is not met. Returning any value, including a falsy one, will be treated as meeting the expectation, and the callback result will be returned to the caller of `waitFor` function.
+
+```tsx
+await waitFor(() => expect(mockFunction).toHaveBeenCalledWith()))
+```
+
+`waitFor` function will be executing `expectation` callback every `interval` (default: every 50 ms) until `timeout` (default: 1000 ms) is reached. The repeated execution of callback is stopped as soon as it does not throw an error, in such case the value returned by the callback is returned to `waitFor` caller. Otherwise, when it reaches the timeout, the final error thrown by `expectation` will be re-thrown by `waitFor` to the calling code.
+
+```tsx
+// ❌ `waitFor` will return immediately because callback does not throw
+await waitFor(() => false);
+```
+
+`waitFor` is an async function so you need to `await` the result to pause test execution.
 
 ```jsx
-import { render, screen, waitFor } from '@testing-library/react-native';
+// ❌ missing `await`: `waitFor` will just return Promise that will be rejected when the timeout is reached
+waitFor(() => expect(1).toBe(2))
+```
 
-test('waiting for an Banana to be ready', async () => {
-  render(<Banana />);
+:::note
+You can enforce awaiting `waitFor` by using the [await-async-utils](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/await-async-utils.md) rule from [eslint-plugin-testing-library](https://github.com/testing-library/eslint-plugin-testing-library).
+:::
 
-  await waitFor(() => screen.getByText('Banana ready'));
-});
+Since `waitFor` is likely to run `expectation` callback multiple times, it is highly recommended for it [not to perform any side effects](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#performing-side-effects-in-waitfor) in `waitFor`.
+
+```jsx
+await waitFor(() => {
+  // ❌ button will be pressed on each waitFor iteration
+  fireEvent.press(screen.getByText('press me'))
+  expect(mockOnPress).toHaveBeenCalled()
+})
+```
+
+:::note
+Avoiding side effects in `expectation` callback can be partially enforced with the [`no-wait-for-side-effects` rule](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-wait-for-side-effects.md).
+:::
+
+It is also recommended to have a [single assertion per each `waitFor`](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#having-multiple-assertions-in-a-single-waitfor-callback) for more consistency and faster failing tests. If you want to make several assertions, then they should be in seperate `waitFor` calls. In many cases you won't actually need to wrap the second assertion in `waitFor` since the first one will do the waiting required for asynchronous change to happen.
+
+### Using Jest fake timers
+
+:::caution
+When using modern fake timers (the default for `Jest` >= 27), `waitFor` won't work (it will always timeout even if `expectation()` doesn't throw) unless you use the custom [@testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset). 
+:::
+
+`waitFor` checks whether Jest fake timers are enabled and adapts its behavior in such case. The following snippet is a simplified version of how it behaves when fake timers are enabled:
+
+```tsx
+let fakeTimeRemaining = timeout;
+let lastError;
+
+while(fakeTimeRemaining > 0) {
+  fakeTimeRemaining = fakeTimeRemaining - interval;
+  jest.advanceTimersByTime(interval);
+  try {
+    // resolve
+    return expectation();
+  } catch (error) {
+    lastError = error;
+  }
+}
+
+// reject
+throw lastError
+```
+
+In the following example we test that a function is called after 10 seconds using fake timers. Since we're using fake timers, the test won't depend on real time passing and thus be much faster and more reliable. Also we don't have to advance fake timers through Jest fake timers API because `waitFor` already does this for us.  
+
+```tsx
+// in component
+setTimeout(() => {
+  someFunction();
+}, 10000)
+
+// in test
+jest.useFakeTimers();
+
+await waitFor(() => {
+  expect(someFunction).toHaveBeenCalledWith();
+}, 10000)
 ```
 
 :::info
