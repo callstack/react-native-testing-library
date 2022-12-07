@@ -7,7 +7,7 @@ jobs:
     strategy:
       matrix:
         node: [14, 16, 18]
-        example: [basic, redux, reactnavigation]
+        example: [basic, redux, react-navigation]
     name: Test Example
     runs-on: ubuntu-latest
     timeout-minutes: 10
