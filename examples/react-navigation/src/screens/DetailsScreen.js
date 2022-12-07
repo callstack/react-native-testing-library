@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
-export default function DetailsScreen({ route }) {
+export default function DetailsScreen({ navigation, route }) {
   const item = route.params;
+  return (
+    <DetailsScreenContent item={item} onGoBack={() => navigation.goBack()} />
+  );
+}
 
+export function DetailsScreenContent({ item, onGoBack }) {
   return (
     <View>
       <Text accessibilityRole="header" style={styles.header}>
@@ -14,16 +18,14 @@ export default function DetailsScreen({ route }) {
         The number you have chosen is {item.value}.
       </Text>
 
-      <BackButton />
+      <BackButton onPress={onGoBack} />
     </View>
   );
 }
 
-function BackButton() {
-  const navigation = useNavigation();
-
+function BackButton({ onPress }) {
   return (
-    <Pressable accessibilityRole="button" onPress={() => navigation.goBack()}>
+    <Pressable accessibilityRole="button" onPress={onPress}>
       <Text>Go Back</Text>
     </Pressable>
   );

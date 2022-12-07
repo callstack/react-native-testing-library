@@ -1,35 +1,18 @@
 import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react-native';
-import { useNavigation } from '@react-navigation/native';
-import { buildNavigationMock } from '../test-utils';
-import DetailsScreen from './DetailsScreen';
-
-jest.mock('@react-navigation/native', () => {
-  const originalModule = jest.requireActual('@react-navigation/native');
-
-  return {
-    ...originalModule,
-    useNavigation: jest.fn(),
-  };
-});
-
-let navigation;
-
-// Reset navigation before each test
-beforeEach(() => {
-  navigation = buildNavigationMock();
-  useNavigation.mockImplementation(() => navigation);
-});
+import { DetailsScreenContent } from './DetailsScreen';
 
 test('Details screen contains the header and content', () => {
-  const params = {
+  const item = {
     id: 100,
     title: 'Item 100',
     value: 100,
   };
 
+  const onGoBack = jest.fn();
+
   // Passing both navigation and route to the screen as props
-  render(<DetailsScreen navigation={navigation} route={{ params }} />);
+  render(<DetailsScreenContent item={item} onGoBack={onGoBack} />);
 
   expect(
     screen.getByRole('header', { name: 'Details for Item 100' })
@@ -38,5 +21,5 @@ test('Details screen contains the header and content', () => {
 
   // Note: Go Back button get navigation from `useNavigation` hook
   fireEvent.press(screen.getByRole('button', { name: 'Go Back' }));
-  expect(navigation.goBack).toHaveBeenCalledTimes(1);
+  expect(onGoBack).toHaveBeenCalledTimes(1);
 });
