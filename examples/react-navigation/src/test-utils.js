@@ -10,16 +10,3 @@ import { render } from '@testing-library/react-native';
 export function renderNavigator(ui) {
   return render(<NavigationContainer>{ui}</NavigationContainer>);
 }
-
-export function buildNavigationMock() {
-  return {
-    navigate: jest.fn(),
-    reset: jest.fn(),
-    goBack: jest.fn(),
-    dispatch: jest.fn(),
-    isFocused: jest.fn(() => true),
-    setParams: jest.fn(),
-    setOptions: jest.fn(),
-    addListener: jest.fn(),
-  };
-}
