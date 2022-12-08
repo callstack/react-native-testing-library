@@ -1,4 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import { isHostElement } from '../helpers/component-tree';
+import { findAll } from '../helpers/findAll';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -8,24 +10,25 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
+import { CommonQueryOptions } from './options';
 
 type PredicateFn = (instance: ReactTestInstance) => boolean;
-// Not used so far
-type PredicateQueryOptions = void;
+type ByPredicateQueryOptions = CommonQueryOptions;
 
-const queryAllByPredicate = (
-  instance: ReactTestInstance
-): ((
-  predicate: PredicateFn,
-  options?: PredicateQueryOptions
-) => Array<ReactTestInstance>) =>
-  function queryAllByTestIdFn(predicate) {
-    const results = instance.findAll(
-      (node) => typeof node.type === 'string' && predicate(node)
+function queryAllByPredicate(instance: ReactTestInstance) {
+  return function queryAllByPredicateFn(
+    predicate: PredicateFn,
+    options?: ByPredicateQueryOptions
+  ): Array<ReactTestInstance> {
+    const results = findAll(
+      instance,
+      (node) => isHostElement(node) && predicate(node),
+      options
     );
 
     return results;
   };
+}
 
 const getMultipleError = (predicate: PredicateFn) =>
   `Found multiple elements matching predicate: ${predicate}`;
@@ -40,12 +43,12 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByTestIdQueries = {
-  getByPredicate: GetByQuery<PredicateFn, PredicateQueryOptions>;
-  getAllByPredicate: GetAllByQuery<PredicateFn, PredicateQueryOptions>;
-  queryByPredicate: QueryByQuery<PredicateFn, PredicateQueryOptions>;
-  queryAllByPredicate: QueryAllByQuery<PredicateFn, PredicateQueryOptions>;
-  findByPredicate: FindByQuery<PredicateFn, PredicateQueryOptions>;
-  findAllByPredicate: FindAllByQuery<PredicateFn, PredicateQueryOptions>;
+  getByPredicate: GetByQuery<PredicateFn, ByPredicateQueryOptions>;
+  getAllByPredicate: GetAllByQuery<PredicateFn, ByPredicateQueryOptions>;
+  queryByPredicate: QueryByQuery<PredicateFn, ByPredicateQueryOptions>;
+  queryAllByPredicate: QueryAllByQuery<PredicateFn, ByPredicateQueryOptions>;
+  findByPredicate: FindByQuery<PredicateFn, ByPredicateQueryOptions>;
+  findAllByPredicate: FindAllByQuery<PredicateFn, ByPredicateQueryOptions>;
 };
 
 export const bindByPredicateQueries = (
