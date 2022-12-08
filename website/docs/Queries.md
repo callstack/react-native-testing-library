@@ -26,6 +26,7 @@ title: Queries
     - [Default state for: `disabled`, `selected`, and `busy` keys](#default-state-for-disabled-selected-and-busy-keys)
     - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
   - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
+  - [`ByPredicate`](#bypredicate)
 - [Common options](#common-options)
   - [`includeHiddenElements` option](#includehiddenelements-option)
 - [TextMatch](#textmatch)
@@ -390,6 +391,23 @@ render(<View accessibilityValue={{ min: 0, max: 100, now: 25, text: '25%' }} />)
 const element = screen.getByA11yValue({ now: 25 });
 const element2 = screen.getByA11yValue({ text: /25/ });
 ```
+
+### `ByPredicate`
+
+> getByPredicate, getAllByPredicate, queryByPredicate, queryAllByPredicate, findByPredicate, findAllByPredicate
+
+```ts
+getByPredicate(
+  predicate: (element: ReactTestInstance) => boolean,
+  options?: {
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
+Returns a host element matching a custom `predicate` function.
+
+This query type is an escape hatch and should be used with care. In most cases you using the standard queries like `getByRole` or `getByText` will lead to test more-resembling user perspective. Use this query with care in rare cases where more flexibility is needed.
 
 ## Common options
 
