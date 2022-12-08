@@ -389,6 +389,37 @@ interface A11yAPI {
   ) => FindAllReturn;
 }
 
+type ByPredicateOptions = CommonQueryOptions;
+
+interface ByPredicateQueries {
+  getByPredicate: (
+    placeholder: TextMatch,
+    options?: ByPredicateOptions
+  ) => ReactTestInstance;
+  getAllByPredicate: (
+    placeholder: TextMatch,
+    options?: ByPredicateOptions
+  ) => Array<ReactTestInstance>;
+  queryByPredicate: (
+    placeholder: TextMatch,
+    options?: ByPredicateOptions
+  ) => ReactTestInstance | null;
+  queryAllByPredicate: (
+    placeholder: TextMatch,
+    options?: ByPredicateOptions
+  ) => Array<ReactTestInstance> | [];
+  findByPredicate: (
+    placeholder: TextMatch,
+    queryOptions?: ByPredicateOptions,
+    waitForOptions?: WaitForOptions
+  ) => FindReturn;
+  findAllByPredicate: (
+    placeholder: TextMatch,
+    queryOptions?: ByPredicateOptions,
+    waitForOptions?: WaitForOptions
+  ) => FindAllReturn;
+}
+
 interface Thenable {
   then: (resolve: () => any, reject?: () => any) => any;
 }
@@ -412,6 +443,7 @@ type Queries = ByTextQueries &
   ByTestIdQueries &
   ByDisplayValueQueries &
   ByPlaceholderTextQueries &
+  ByPredicateQueries &
   UnsafeByTypeQueries &
   UnsafeByPropsQueries &
   A11yAPI;
