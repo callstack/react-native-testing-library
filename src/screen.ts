@@ -107,6 +107,12 @@ const defaultScreen: RenderResult = {
   queryAllByText: notImplemented,
   findByText: notImplemented,
   findAllByText: notImplemented,
+  getByPredicate: notImplemented,
+  getAllByPredicate: notImplemented,
+  queryByPredicate: notImplemented,
+  queryAllByPredicate: notImplemented,
+  findByPredicate: notImplemented,
+  findAllByPredicate: notImplemented,
 };
 
 export let screen: RenderResult = defaultScreen;
