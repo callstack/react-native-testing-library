@@ -11,6 +11,6 @@ There are two types of recommeded tests:
 
 ## Non-recommended tests
 
-There also exists another popular type of screen level tests, where users mock React Navigation objects like `navigation`, `route` and/or hooks like  `useNavigation`, etc. This type is not recommended by the React Navigation team as it leads to fragile tests that can lead to false positive and false negative result. While the recommended approach is arguable harder it should lead to more robust tests helping to properly identify potential issues in test. 
+There also exists another popular type of screen level tests, where users mock React Navigation objects like `navigation`, `route` and/or hooks like  `useNavigation`, etc. We don't recommend this way of testing. **Mocking internal parts of the libraries is effectively testing implementation details, which goes against the Testing Library's [Guiding Principles](https://testing-library.com/docs/guiding-principles/)**.
 
 > Note that this example applies `includeHiddenElements: false` by default, so all queries will ignore elements on the hidden screens, e.g. inactive tabs or screens present in stack navigators. This option is enabled in `jest-setup.js` file, using `defaultIncludeHiddenElements: false` option to `configure` function.
