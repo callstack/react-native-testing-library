@@ -1,5 +1,6 @@
-import { ElementType } from 'react';
+import { Text } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
+import { getConfig } from '../../config';
 import { matches, TextMatch, TextMatchOptions } from '../../matches';
 import { filterNodeByType } from '../filterNodeByType';
 import { getTextContent } from '../getTextContent';
@@ -7,16 +8,17 @@ import { getTextContent } from '../getTextContent';
 type MatchTextContentParams = {
   node: ReactTestInstance;
   text: TextMatch;
-  typeToMatch: ElementType | string;
   options?: TextMatchOptions;
 };
 
 export function matchTextContent({
   node,
   text,
-  typeToMatch,
   options = {},
 }: MatchTextContentParams) {
+  const typeToMatch = getConfig().useBreakingChanges
+    ? getConfig().hostComponentNames.text
+    : Text;
   if (!filterNodeByType(node, typeToMatch)) {
     return false;
   }
