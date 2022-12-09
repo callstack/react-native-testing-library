@@ -85,9 +85,9 @@ Example:
   return waitForOptions;
 }
 
-function getWrongHostComponentNamesError(): string {
+function formatIncorrectHostComponentNamesError(): string | null {
   if (!getConfig().useBreakingChanges) {
-    return '';
+    return null;
   }
 
   const reactNativeHostComponentNames = detectHostComponentNames();
@@ -164,10 +164,9 @@ export function makeQueries<Predicate, Options>(
 
       if (results.length === 0) {
         throw new ErrorWithStack(
-          `${getMissingError(
-            predicate,
-            options
-          )}${getWrongHostComponentNamesError()}`,
+          `${getMissingError(predicate, options)}${
+            formatIncorrectHostComponentNamesError() || ''
+          }`,
           getFn
         );
       }
