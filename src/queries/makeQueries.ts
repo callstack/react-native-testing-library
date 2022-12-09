@@ -91,6 +91,12 @@ function formatIncorrectHostComponentNamesError(): string | null {
   }
 
   const reactNativeHostComponentNames = detectHostComponentNames();
+  if (reactNativeHostComponentNames.errorMessage) {
+    return `
+    
+${reactNativeHostComponentNames.errorMessage}`;
+  }
+
   if (!reactNativeHostComponentNames.text) {
     return '';
   }
@@ -115,7 +121,7 @@ configure({
 });`;
   }
 
-  return '';
+  return null;
 }
 
 export function makeQueries<Predicate, Options>(

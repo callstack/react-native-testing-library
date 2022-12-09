@@ -4,9 +4,12 @@ import TestRenderer from 'react-test-renderer';
 import { HostComponentNames } from '../config';
 import { getQueriesForElement } from '../within';
 
+const defaultErrorMessage =
+  'There seems to be an issue with your configuration that prevents the library from working correctly. Please ensure that you have a version of react native compatible with the library';
+
 export function detectHostComponentNames():
-  | HostComponentNames
-  | { text: null; textInput: null } {
+  | (HostComponentNames & { errorMessage?: never })
+  | { errorMessage: string; text?: never; textInput?: never } {
   try {
     const renderer = TestRenderer.create(
       <View>
@@ -15,7 +18,6 @@ export function detectHostComponentNames():
       </View>
     );
     const { getByTestId } = getQueriesForElement(renderer.root);
-
     const textHostName = getByTestId('text').type;
     const textInputHostName = getByTestId('textInput').type;
 
@@ -29,8 +31,21 @@ export function detectHostComponentNames():
       };
     }
 
-    return { text: null, textInput: null };
+    return { errorMessage: defaultErrorMessage };
   } catch (error) {
-    return { text: null, textInput: null };
+    const errorMessage =
+      error && typeof error === 'object' && 'message' in error
+        ? // @ts-expect-error ts doesnt correctly narrow the type of error
+          error.message
+        : null;
+
+    return {
+      errorMessage: `Trying to detect host component names triggered the following error:
+    
+${errorMessage}
+    
+${defaultErrorMessage}
+`,
+    };
   }
 }
