@@ -389,32 +389,33 @@ interface A11yAPI {
   ) => FindAllReturn;
 }
 
+type PredicateFn = (node: ReactTestInstance) => boolean;
 type ByPredicateOptions = CommonQueryOptions;
 
 interface ByPredicateQueries {
   getByPredicate: (
-    placeholder: TextMatch,
+    predicate: PredicateFn,
     options?: ByPredicateOptions
   ) => ReactTestInstance;
   getAllByPredicate: (
-    placeholder: TextMatch,
+    predicate: PredicateFn,
     options?: ByPredicateOptions
   ) => Array<ReactTestInstance>;
   queryByPredicate: (
-    placeholder: TextMatch,
+    predicate: PredicateFn,
     options?: ByPredicateOptions
   ) => ReactTestInstance | null;
   queryAllByPredicate: (
-    placeholder: TextMatch,
+    predicate: PredicateFn,
     options?: ByPredicateOptions
   ) => Array<ReactTestInstance> | [];
   findByPredicate: (
-    placeholder: TextMatch,
+    predicate: PredicateFn,
     queryOptions?: ByPredicateOptions,
     waitForOptions?: WaitForOptions
   ) => FindReturn;
   findAllByPredicate: (
-    placeholder: TextMatch,
+    predicate: PredicateFn,
     queryOptions?: ByPredicateOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
