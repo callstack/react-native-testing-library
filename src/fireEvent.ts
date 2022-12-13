@@ -136,10 +136,16 @@ fireEvent.changeText = (element: ReactTestInstance, text: string): void =>
   invokeEvent(element, 'changeText', text);
 
 // Regular events:
-fireEvent.press = (element: ReactTestInstance, ...data: Array<any>): void =>
-  invokeEvent(element, 'press', ...data);
+fireEvent.press = (element: ReactTestInstance, event?: any): void =>
+  invokeEvent(element, 'press', event ?? buildReactEvent());
 
-fireEvent.scroll = (element: ReactTestInstance, ...data: Array<any>): void =>
-  invokeEvent(element, 'scroll', ...data);
+fireEvent.scroll = (element: ReactTestInstance, event?: any): void =>
+  invokeEvent(element, 'scroll', event ?? buildReactEvent());
+
+function buildReactEvent() {
+  return {
+    nativeEvent: {},
+  };
+}
 
 export default fireEvent;

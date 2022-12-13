@@ -107,19 +107,30 @@ describe('fireEvent', () => {
 test('fireEvent.press', () => {
   const onPressMock = jest.fn();
   const text = 'Fireevent press';
-  const eventData = {
+  const event = {
     nativeEvent: {
       pageX: 20,
       pageY: 30,
     },
   };
+
   const { getByText } = render(
     <OnPressComponent onPress={onPressMock} text={text} />
   );
 
-  fireEvent.press(getByText(text), eventData);
+  fireEvent.press(getByText(text), event);
+  expect(onPressMock).toHaveBeenCalledWith(event);
 
-  expect(onPressMock).toHaveBeenCalledWith(eventData);
+  fireEvent.press(getByText(text));
+  expect(onPressMock).toHaveBeenCalledTimes(2);
+});
+
+test('fireEvent.press with default event', () => {
+  const onPressMock = jest.fn();
+  const view = render(<Pressable testID="pressable" onPress={onPressMock} />);
+
+  fireEvent.press(view.getByTestId('pressable'));
+  expect(onPressMock).toHaveBeenCalledWith({ nativeEvent: {} });
 });
 
 test('fireEvent.scroll', () => {
@@ -542,4 +553,6 @@ describe('native events', () => {
     fireEvent(getByTestId('test-id'), 'onMomentumScrollEnd');
     expect(onMomentumScrollEndSpy).toHaveBeenCalled();
   });
+
+  test('.press passed proper event object', () => {});
 });
