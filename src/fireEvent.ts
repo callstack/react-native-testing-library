@@ -69,7 +69,6 @@ const isEventEnabled = (
 const findEventHandler = (
   element: ReactTestInstance,
   eventName: string,
-  callsite?: any,
   nearestTouchResponder?: ReactTestInstance
 ): EventHandler | null => {
   const touchResponder = isTouchResponder(element)
@@ -84,7 +83,7 @@ const findEventHandler = (
     return null;
   }
 
-  return findEventHandler(element.parent, eventName, callsite, touchResponder);
+  return findEventHandler(element.parent, eventName, touchResponder);
 };
 
 const getEventHandler = (
@@ -106,10 +105,9 @@ const getEventHandler = (
 const invokeEvent = (
   element: ReactTestInstance,
   eventName: string,
-  callsite?: any,
   ...data: Array<any>
 ) => {
-  const handler = findEventHandler(element, eventName, callsite);
+  const handler = findEventHandler(element, eventName);
 
   if (!handler) {
     return;
@@ -128,19 +126,19 @@ const toEventHandlerName = (eventName: string) =>
   `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 
 const pressHandler = (element: ReactTestInstance, ...data: Array<any>): void =>
-  invokeEvent(element, 'press', pressHandler, ...data);
+  invokeEvent(element, 'press', ...data);
 const changeTextHandler = (
   element: ReactTestInstance,
   ...data: Array<any>
-): void => invokeEvent(element, 'changeText', changeTextHandler, ...data);
+): void => invokeEvent(element, 'changeText', ...data);
 const scrollHandler = (element: ReactTestInstance, ...data: Array<any>): void =>
-  invokeEvent(element, 'scroll', scrollHandler, ...data);
+  invokeEvent(element, 'scroll', ...data);
 
 const fireEvent = (
   element: ReactTestInstance,
   eventName: string,
   ...data: Array<any>
-): void => invokeEvent(element, eventName, fireEvent, ...data);
+): void => invokeEvent(element, eventName, ...data);
 
 fireEvent.press = pressHandler;
 fireEvent.changeText = changeTextHandler;
