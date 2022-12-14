@@ -9,6 +9,7 @@ import {
   TextInput,
 } from 'react-native';
 import { render, fireEvent } from '..';
+import { defaultPressEvent, pressEvent } from '../helpers/create-event';
 
 type OnPressComponentProps = {
   onPress: () => void;
@@ -104,33 +105,33 @@ describe('fireEvent', () => {
   });
 });
 
-test('fireEvent.press', () => {
-  const onPressMock = jest.fn();
-  const text = 'Fireevent press';
-  const event = {
-    nativeEvent: {
-      pageX: 20,
-      pageY: 30,
-    },
-  };
-
-  const { getByText } = render(
-    <OnPressComponent onPress={onPressMock} text={text} />
-  );
-
-  fireEvent.press(getByText(text), event);
-  expect(onPressMock).toHaveBeenCalledWith(event);
-
-  fireEvent.press(getByText(text));
-  expect(onPressMock).toHaveBeenCalledTimes(2);
-});
-
 test('fireEvent.press with default event', () => {
   const onPressMock = jest.fn();
   const view = render(<Pressable testID="pressable" onPress={onPressMock} />);
 
   fireEvent.press(view.getByTestId('pressable'));
-  expect(onPressMock).toHaveBeenCalledWith({ nativeEvent: {} });
+  expect(onPressMock).toHaveBeenCalledWith({ nativeEvent: defaultPressEvent });
+});
+
+test('fireEvent.press with default event override', () => {
+  const onPressMock = jest.fn();
+  const view = render(<Pressable testID="pressable" onPress={onPressMock} />);
+
+  fireEvent.press(view.getByTestId('pressable'), { pageX: 10, pageY: 20 });
+  expect(onPressMock).toHaveBeenCalledWith({
+    nativeEvent: { ...defaultPressEvent, pageX: 10, pageY: 20 },
+  });
+});
+
+test('fireEvent.press with explicit event', () => {
+  const onPressMock = jest.fn();
+  const view = render(<Pressable testID="pressable" onPress={onPressMock} />);
+
+  const event = {
+    nativeEvent: { pageX: 20, pageY: 30 },
+  };
+  fireEvent.press(view.getByTestId('pressable'), event);
+  expect(onPressMock).toHaveBeenCalledWith(event);
 });
 
 test('fireEvent.scroll', () => {
@@ -553,6 +554,4 @@ describe('native events', () => {
     fireEvent(getByTestId('test-id'), 'onMomentumScrollEnd');
     expect(onMomentumScrollEndSpy).toHaveBeenCalled();
   });
-
-  test('.press passed proper event object', () => {});
 });

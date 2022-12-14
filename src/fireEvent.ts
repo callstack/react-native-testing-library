@@ -3,6 +3,7 @@ import { TextInput } from 'react-native';
 import act from './act';
 import { isHostElement } from './helpers/component-tree';
 import { filterNodeByType } from './helpers/filterNodeByType';
+import { createEvent } from './helpers/create-event';
 
 type EventHandler = (...args: any) => unknown;
 
@@ -108,7 +109,6 @@ const invokeEvent = (
   ...data: Array<any>
 ) => {
   const handler = findEventHandler(element, eventName);
-
   if (!handler) {
     return;
   }
@@ -125,27 +125,61 @@ const invokeEvent = (
 const toEventHandlerName = (eventName: string) =>
   `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 
+const getCoreEventName = (eventOrHandlerName: string) => {
+  if (
+    eventOrHandlerName.startsWith('on') &&
+    eventOrHandlerName[2] === eventOrHandlerName[2]?.toUpperCase()
+  ) {
+    const coreName = eventOrHandlerName.slice(2);
+    return coreName.charAt(0).toLowerCase() + coreName.slice(1);
+  }
+
+  return eventOrHandlerName;
+};
+
 const fireEvent = (
   element: ReactTestInstance,
   eventName: string,
-  ...data: Array<any>
+  ...data: any[]
 ): void => invokeEvent(element, eventName, ...data);
 
-// ChangeText is not a regular event, as the callback args is just the changed not, and not an Event object
-fireEvent.changeText = (element: ReactTestInstance, text: string): void =>
-  invokeEvent(element, 'changeText', text);
+function getEventData(eventName: string, ...data: any[]) {
+  // Legacy mode where user passes 2+ args
+  if (data.length > 1) {
+    return data;
+  }
+
+  // Legacy mode where user passes full event object
+  if (data[0]?.nativeEvent != null) {
+    return [data[0]];
+  }
+
+  // Mode where user passes optional event init data.
+  const name = getCoreEventName(eventName);
+  return [createEvent(name, data[0])];
+}
+
+function invokeEventWithDefaultData(
+  element: ReactTestInstance,
+  eventName: string,
+  ...data: any[]
+) {
+  const eventData = getEventData(eventName, ...data);
+  return invokeEvent(element, eventName, ...eventData);
+}
 
 // Regular events:
-fireEvent.press = (element: ReactTestInstance, event?: any): void =>
-  invokeEvent(element, 'press', event ?? buildReactEvent());
+fireEvent.press = (element: ReactTestInstance, ...data: any[]) => {
+  return invokeEventWithDefaultData(element, 'press', ...data);
+};
 
-fireEvent.scroll = (element: ReactTestInstance, event?: any): void =>
-  invokeEvent(element, 'scroll', event ?? buildReactEvent());
+fireEvent.scroll = (element: ReactTestInstance, ...data: any[]) => {
+  return invokeEventWithDefaultData(element, 'scroll', ...data);
+};
 
-function buildReactEvent() {
-  return {
-    nativeEvent: {},
-  };
-}
+// changeText is not a regular event, as the callback args is just the changed not, and not an Event object
+fireEvent.changeText = (element: ReactTestInstance, text: string) => {
+  return invokeEvent(element, 'changeText', text);
+};
 
 export default fireEvent;
