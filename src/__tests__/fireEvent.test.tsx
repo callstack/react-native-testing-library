@@ -9,7 +9,7 @@ import {
   TextInput,
 } from 'react-native';
 import { render, fireEvent } from '..';
-import { defaultPressEvent, pressEvent } from '../helpers/create-event';
+import { defaultPressEvent } from '../helpers/create-event';
 
 type OnPressComponentProps = {
   onPress: () => void;
