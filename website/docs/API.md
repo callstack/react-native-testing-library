@@ -672,10 +672,10 @@ Please note that additional `render` specific operations like `update`, `unmount
 
 ```jsx
 const detailsScreen = within(screen.getByA11yHint('Details Screen'));
-expect(detailsScreen.getByText('Some Text')).toBeTruthy();
-expect(detailsScreen.getByDisplayValue('Some Value')).toBeTruthy();
-expect(detailsScreen.queryByLabelText('Some Label')).toBeTruthy();
-await expect(detailsScreen.findByA11yHint('Some Label')).resolves.toBeTruthy();
+expect(detailsScreen.getByText('Some Text')).toBeOnTheScreen();
+expect(detailsScreen.getByDisplayValue('Some Value')).toBeOnTheScreen();
+expect(detailsScreen.queryByLabelText('Some Label')).toBeOnTheScreen();
+await expect(detailsScreen.findByA11yHint('Some Label')).resolves.toBeOnTheScreen();
 ```
 
 Use cases for scoped queries include:
@@ -692,7 +692,7 @@ import { render, screen } from '@testing-library/react-native';
 
 render(<Form />);
 const submitButton = screen.queryByText('submit');
-expect(submitButton).toBeNull(); // it doesn't exist
+expect(submitButton).not.toBeOnTheScreen(); // it doesn't exist
 ```
 
 ## `queryAll` APIs

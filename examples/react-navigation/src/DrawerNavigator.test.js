@@ -7,7 +7,7 @@ test('Changing screens', () => {
   renderNavigator(<DrawerNavigator />);
 
   // Assert initial screen
-  expect(screen.getByRole('header', { name: 'Home screen' })).toBeTruthy();
+  expect(screen.getByRole('header', { name: 'Home screen' })).toBeOnTheScreen();
 
   // Open drawer by pressing button
   const toggleButton = screen.getByText('Toggle drawer');
@@ -33,6 +33,10 @@ test('Changing screens', () => {
   ).toHaveAccessibilityState({ selected: true });
 
   // Assert visible screen
-  expect(screen.getByRole('header', { name: 'Settings screen' })).toBeTruthy();
-  expect(screen.queryByRole('header', { name: 'Home screen' })).toBeFalsy();
+  expect(
+    screen.getByRole('header', { name: 'Settings screen' })
+  ).toBeOnTheScreen();
+  expect(
+    screen.queryByRole('header', { name: 'Home screen' })
+  ).not.toBeOnTheScreen();
 });

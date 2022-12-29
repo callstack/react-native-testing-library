@@ -409,13 +409,13 @@ render(<Text style={{ display: 'none' }}>Hidden from accessibility</Text>);
 // Exclude hidden elements
 expect(
   screen.queryByText('Hidden from accessibility', { includeHiddenElements: false })
-).toBeFalsy();
+).not.toBeOnTheScreen();
 
 // Include hidden elements
-expect(screen.getByText('Hidden from accessibility')).toBeTruthy();
+expect(screen.getByText('Hidden from accessibility')).toBeOnTheScreen();
 expect(
   screen.getByText('Hidden from accessibility', { includeHiddenElements: true })
-).toBeTruthy();
+).toBeOnTheScreen();
 ```
 
 ## TextMatch

@@ -37,7 +37,7 @@ describe('AddTodo component test', () => {
     // There is a TextInput.
     // https://github.com/callstack/react-native-testing-library/blob/ae3d4af370487e1e8fedd8219f77225690aefc59/examples/redux/components/AddTodo.js#L24
     const input = screen.getByPlaceholderText(/repository/i);
-    expect(input).toBeTruthy();
+    expect(input).toBeOnTheScreen();
 
     const textToEnter = 'This is a random element';
     fireEvent.changeText(input, textToEnter);

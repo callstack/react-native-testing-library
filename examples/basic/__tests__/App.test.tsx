@@ -9,11 +9,11 @@ test('renders correctly', () => {
   // Idiom: no need to capture render output, as we will use `screen` for queries.
   render(<App />);
 
-  // Idiom: `getBy*` queries are predicates by themselves, but we will use it with `expect().toBeTruthy()`
+  // Idiom: `getBy*` queries are predicates by themselves, but we will use it with `expect().toBeOnTheScreen()`
   // to clarify our intent.
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
-  ).toBeTruthy();
+  ).toBeOnTheScreen();
 });
 
 /**
@@ -25,12 +25,11 @@ test('User can sign in successully with correct credentials', async () => {
   // Idiom: no need to capture render output, as we will use `screen` for queries.
   render(<App />);
 
-  // Idiom: `getBy*` queries are predicates by themselves, but we will use it with `expect().toBeTruthy()`
+  // Idiom: `getBy*` queries are predicates by themselves, but we will use it with `expect().toBeOnTheScreen()`
   // to clarify our intent.
-  // Note: `.toBeTruthy()` is the preferred matcher for checking that elements are present.
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
-  ).toBeTruthy();
+  ).toBeOnTheScreen();
 
   // Hint: we can use `getByLabelText` to find our text inputs using their labels.
   fireEvent.changeText(screen.getByLabelText('Username'), 'admin');
@@ -45,14 +44,14 @@ test('User can sign in successully with correct credentials', async () => {
   // already finished
   expect(
     await screen.findByRole('header', { name: 'Welcome admin!' })
-  ).toBeTruthy();
+  ).toBeOnTheScreen();
 
-  // Idiom: use `queryBy*` with `expect().toBeFalsy()` to assess that element is not present.
+  // Idiom: use `queryBy*` with `expect().not.toBeOnTheScreen()` to assess that element is not present.
   expect(
     screen.queryByRole('header', { name: 'Sign in to Example App' })
-  ).toBeFalsy();
-  expect(screen.queryByLabelText('Username')).toBeFalsy();
-  expect(screen.queryByLabelText('Password')).toBeFalsy();
+  ).not.toBeOnTheScreen();
+  expect(screen.queryByLabelText('Username')).not.toBeOnTheScreen();
+  expect(screen.queryByLabelText('Password')).not.toBeOnTheScreen();
 });
 
 /**
@@ -72,7 +71,7 @@ test('User will see errors for incorrect credentials', async () => {
 
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
-  ).toBeTruthy();
+  ).toBeOnTheScreen();
 
   fireEvent.changeText(screen.getByLabelText('Username'), 'admin');
   fireEvent.changeText(screen.getByLabelText('Password'), 'qwerty123');
@@ -85,9 +84,9 @@ test('User will see errors for incorrect credentials', async () => {
 
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
-  ).toBeTruthy();
-  expect(screen.getByLabelText('Username')).toBeTruthy();
-  expect(screen.getByLabelText('Password')).toBeTruthy();
+  ).toBeOnTheScreen();
+  expect(screen.getByLabelText('Username')).toBeOnTheScreen();
+  expect(screen.getByLabelText('Password')).toBeOnTheScreen();
 });
 
 /**
@@ -98,7 +97,7 @@ test('User can sign in after incorrect attempt', async () => {
 
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
-  ).toBeTruthy();
+  ).toBeOnTheScreen();
 
   fireEvent.changeText(screen.getByLabelText('Username'), 'admin');
   fireEvent.changeText(screen.getByLabelText('Password'), 'qwerty123');
@@ -111,10 +110,10 @@ test('User can sign in after incorrect attempt', async () => {
   fireEvent.changeText(screen.getByLabelText('Password'), 'admin1');
   fireEvent.press(screen.getByRole('button', { name: 'Sign In' }));
 
-  expect(await screen.findByText('Welcome admin!')).toBeTruthy();
+  expect(await screen.findByText('Welcome admin!')).toBeOnTheScreen();
   expect(
     screen.queryByRole('header', { name: 'Sign in to Example App' })
-  ).toBeFalsy();
-  expect(screen.queryByLabelText('Username')).toBeFalsy();
-  expect(screen.queryByLabelText('Password')).toBeFalsy();
+  ).not.toBeOnTheScreen();
+  expect(screen.queryByLabelText('Username')).not.toBeOnTheScreen();
+  expect(screen.queryByLabelText('Password')).not.toBeOnTheScreen();
 });
