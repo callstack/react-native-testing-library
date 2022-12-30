@@ -64,14 +64,18 @@ title: Queries
 
 ### findAllBy
 
-`findAllBy` queries return a promise which resolves to an array when any matching elements are found. The promise is rejected if no elements match after a default timeout of 4500ms.
+`findAllBy` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
 
 :::info
-In order to properly use `findBy` and `findAllBy` queries you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
+`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout`, `interval` and `onTimeout` properies which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
 :::
 
 :::info
-`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
+In cases when your `findBy` and `findAllBy` queries throw when not able to find matching elements it is useful to pass `onTimeout: { screen.debug(); }` callback using `waitForOptions` parameter.
+:::
+
+:::info
+In order to properly use `findBy` and `findAllBy` queries you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
 :::
 
 ## Queries
@@ -82,7 +86,7 @@ _Note: most methods like this one return a [`ReactTestInstance`](https://reactjs
 type ReactTestInstance = {
   type: string | Function;
   props: { [propName: string]: any };
-  parent: null | ReactTestInstance;
+  parent: ReactTestInstance | null;
   children: Array<ReactTestInstance | string>;
 };
 ```
