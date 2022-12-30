@@ -305,6 +305,12 @@ const element3 = screen.getByRole('button', { name: "Hello", disabled: true });
 
 ### `ByA11yState`, `ByAccessibilityState`
 
+:::caution
+This query uses a predicate that is typically to general to give meaningful results. Therefore, it's better to use one of following options:
+* use one of [`ByRole`](#byrole) queries with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
+* use [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) matcher to check the state of element found using some other query
+:::
+
 > getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState, findByA11yState, findAllByA11yState
 > getByAccessibilityState, getAllByAccessibilityState, queryByAccessibilityState, queryAllByAccessibilityState, findByAccessibilityState, findAllByAccessibilityState
 
@@ -361,6 +367,13 @@ The difference in handling default values is made to reflect observed accessibil
 :::
 
 ### `ByA11Value`, `ByAccessibilityValue`
+
+:::caution
+This query uses a predicate that is typically to general to give meaningful results. Therefore, it's better to use one of following options:
+* use one of [`ByRole`](#byrole) queries with `value` option
+* use [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) matcher to check the state of element found using some other query
+:::
+
 
 > getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue, findByA11yValue, findAllByA11yValue
 > getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue, findByAccessibilityValue, findAllByAccessibilityValue
