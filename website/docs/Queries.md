@@ -71,7 +71,7 @@ title: Queries
 :::
 
 :::info
-In cases when your `findBy` and `findAllBy` queries throw when not able to find matching elements it is useful to pass `onTimeout: { screen.debug(); }` callback using `waitForOptions` parameter.
+In cases when your `findBy` and `findAllBy` queries throw when not able to find matching elements it is useful to pass `onTimeout: () => { screen.debug(); }` callback using `waitForOptions` parameter.
 :::
 
 :::info
