@@ -369,7 +369,7 @@ The difference in handling default values is made to reflect observed accessibil
 ### `ByA11Value`, `ByAccessibilityValue`
 
 :::caution
-This query uses a predicate that is typically to general to give meaningful results. Therefore, it's better to use one of following options:
+This query uses a predicate that is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
 * use one of [`ByRole`](#byrole) queries with `value` option
 * use [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) matcher to check the state of element found using some other query
 :::
