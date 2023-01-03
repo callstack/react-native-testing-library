@@ -44,7 +44,7 @@ title: Queries
 
 ### getBy
 
-`getBy*` queries return the first matching node for a query, and throw an error if no elements match or if more than one match is found (use `getAllBy` instead).
+`getBy*` queries return the first matching node for a query, and throw an error if no elements match or if more than one match is found. If you need to find more than one element, then use `getAllBy`.
 
 ### getAllBy
 
@@ -56,22 +56,26 @@ title: Queries
 
 ### queryAllBy
 
-`queryAllBy*` queries return an array of all matching nodes for a query, and return an empty array (`[]`) if no elements match.
+`queryAllBy*` queries return an array of all matching nodes for a query, and return an empty array (`[]`) when no elements match.
 
 ### findBy
 
-`findBy` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 4500ms. If you need to find more than one element, then use `findAllBy`.
+`findBy` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element, then use `findAllBy`.
 
 ### findAllBy
 
-`findAllBy` queries return a promise which resolves to an array when any matching elements are found. The promise is rejected if no elements match after a default timeout of 4500ms.
+`findAllBy` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
 
 :::info
-In order to properly use `findBy` and `findAllBy` queries you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
+`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout`, `interval` and `onTimeout` properies which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
 :::
 
 :::info
-`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
+In cases when your `findBy` and `findAllBy` queries throw when not able to find matching elements it is useful to pass `onTimeout: () => { screen.debug(); }` callback using `waitForOptions` parameter.
+:::
+
+:::info
+In order to properly use `findBy` and `findAllBy` queries you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
 :::
 
 ## Queries
@@ -82,7 +86,7 @@ _Note: most methods like this one return a [`ReactTestInstance`](https://reactjs
 type ReactTestInstance = {
   type: string | Function;
   props: { [propName: string]: any };
-  parent: null | ReactTestInstance;
+  parent: ReactTestInstance | null;
   children: Array<ReactTestInstance | string>;
 };
 ```
