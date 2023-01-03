@@ -306,7 +306,7 @@ const element3 = screen.getByRole('button', { name: "Hello", disabled: true });
 ### `ByA11yState`, `ByAccessibilityState`
 
 :::caution
-This query uses a predicate that is typically to general too give meaningful results. Therefore, it's better to use one of the following options:
+This query uses a predicate that is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
 * use one of [`ByRole`](#byrole) queries with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
 * use [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) matcher to check the state of element found using some other query
 :::
