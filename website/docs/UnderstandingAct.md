@@ -57,7 +57,7 @@ test('render without act', () => {
 
   // Bind RNTL queries for root element.
   const view = within(renderer.root);
-  expect(view.getByText('Count 0')).toBeTruthy();
+  expect(view.getByText('Count 0')).toBeOnTheScreen();
 });
 ```
 
@@ -72,7 +72,7 @@ test('render with act', () => {
 
   // Bind RNTL queries for root element.
   const view = within(renderer!.root);
-  expect(view.getByText('Count 1')).toBeTruthy();
+  expect(view.getByText('Count 1')).toBeOnTheScreen();
 });
 ```
 
@@ -126,7 +126,7 @@ function TestAsyncComponent() {
 ```jsx
 test('render async natively', () => {
   const view = render(<TestAsyncComponent />);
-  expect(view.getByText('Count 0')).toBeTruthy();
+  expect(view.getByText('Count 0')).toBeOnTheScreen();
 });
 ```
 
@@ -157,7 +157,7 @@ test('render with fake timers', () => {
   act(() => {
     jest.runAllTimers();
   });
-  expect(view.getByText('Count 1')).toBeTruthy();
+  expect(view.getByText('Count 1')).toBeOnTheScreen();
 });
 ```
 
@@ -174,7 +174,7 @@ test('render with real timers - sleep', async () => {
     await sleep(100); // Wait a bit longer than setTimeout in `TestAsyncComponent`
   });
 
-  expect(view.getByText('Count 1')).toBeTruthy();
+  expect(view.getByText('Count 1')).toBeOnTheScreen();
 });
 ```
 
@@ -187,7 +187,7 @@ test('render with real timers - waitFor', async () => {
   const view = render(<TestAsyncComponent />);
 
   await waitFor(() => view.getByText('Count 1'));
-  expect(view.getByText('Count 1')).toBeTruthy();
+  expect(view.getByText('Count 1')).toBeOnTheScreen();
 });
 ```
 
@@ -199,7 +199,7 @@ The above code can be simplified using `findBy` query:
 test('render with real timers - findBy', async () => {
   const view = render(<TestAsyncComponent />);
 
-  expect(await view.findByText('Count 1')).toBeTruthy();
+  expect(await view.findByText('Count 1')).toBeOnTheScreen();
 });
 ```
 

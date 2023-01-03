@@ -6,12 +6,12 @@ import StackNavigator from './StackNavigator';
 test('Home screen contains the header and list of items', () => {
   renderNavigator(<StackNavigator />);
 
-  expect(screen.getByRole('header', { name: 'Home screen' })).toBeTruthy();
+  expect(screen.getByRole('header', { name: 'Home screen' })).toBeOnTheScreen();
   expect(screen.getAllByRole('button', { name: /Item/ })).toHaveLength(10);
 
   expect(
     screen.queryByRole('header', { name: /Details for item/i })
-  ).toBeFalsy();
+  ).not.toBeOnTheScreen();
 });
 
 test('Pressing an item takes user to the details screen', () => {
@@ -22,9 +22,13 @@ test('Pressing an item takes user to the details screen', () => {
 
   expect(
     screen.getByRole('header', { name: 'Details for Item 5' })
-  ).toBeTruthy();
-  expect(screen.getByText('The number you have chosen is 5.')).toBeTruthy();
+  ).toBeOnTheScreen();
+  expect(
+    screen.getByText('The number you have chosen is 5.')
+  ).toBeOnTheScreen();
 
   // Home screen is still in the element tree but it is hidden from accessibility
-  expect(screen.queryByRole('header', { name: 'Home screen' })).toBeFalsy();
+  expect(
+    screen.queryByRole('header', { name: 'Home screen' })
+  ).not.toBeOnTheScreen();
 });

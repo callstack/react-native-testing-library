@@ -16,8 +16,10 @@ test('Details screen contains the header and content', () => {
 
   expect(
     screen.getByRole('header', { name: 'Details for Item 100' })
-  ).toBeTruthy();
-  expect(screen.getByText('The number you have chosen is 100.')).toBeTruthy();
+  ).toBeOnTheScreen();
+  expect(
+    screen.getByText('The number you have chosen is 100.')
+  ).toBeOnTheScreen();
 
   // Note: Go Back button get navigation from `useNavigation` hook
   fireEvent.press(screen.getByRole('button', { name: 'Go Back' }));
