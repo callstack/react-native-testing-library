@@ -35,8 +35,7 @@ export function detectHostComponentNames():
   } catch (error) {
     const errorMessage =
       error && typeof error === 'object' && 'message' in error
-        ? // @ts-expect-error ts doesnt correctly narrow the type of error
-          error.message
+        ? error.message
         : null;
 
     return {
