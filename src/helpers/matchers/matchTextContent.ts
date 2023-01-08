@@ -17,7 +17,7 @@ export function matchTextContent({
   options = {},
 }: MatchTextContentParams) {
   const typeToMatch = getConfig().useBreakingChanges
-    ? getConfig().hostComponentNames.text
+    ? getConfig().hostComponentNames?.text || 'Text'
     : Text;
   if (!filterNodeByType(node, typeToMatch)) {
     return false;

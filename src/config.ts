@@ -18,9 +18,6 @@ export type Config = {
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
-
-  /** Host component names used for queries */
-  hostComponentNames: HostComponentNames;
 };
 
 export type ConfigAliasOptions = {
@@ -31,13 +28,15 @@ export type ConfigAliasOptions = {
 export type InternalConfig = Config & {
   /** Whether to use breaking changes intended for next major version release. */
   useBreakingChanges: boolean;
+
+  /** Host component names used for queries */
+  hostComponentNames?: HostComponentNames;
 };
 
 const defaultConfig: InternalConfig = {
   useBreakingChanges: false,
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: true,
-  hostComponentNames: { text: 'Text', textInput: 'TextInput' },
 };
 
 let config = { ...defaultConfig };

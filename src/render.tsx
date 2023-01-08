@@ -9,7 +9,8 @@ import debugDeep, { DebugOptions } from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
 import { setRenderResult, screen } from './screen';
 import { validateStringsRenderedWithinText } from './helpers/stringValidation';
-import { getConfig } from './config';
+import { configureInternal, getConfig } from './config';
+import { detectHostComponentNames } from './helpers/host-component-names';
 
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
@@ -40,6 +41,11 @@ export default function render<T>(
       wrapper: Wrapper,
       createNodeMock,
     });
+  }
+
+  if (!getConfig().hostComponentNames) {
+    const { text, textInput } = detectHostComponentNames();
+    configureInternal({ hostComponentNames: { text, textInput } });
   }
 
   const wrap = (element: React.ReactElement) =>

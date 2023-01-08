@@ -2,8 +2,6 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
-import { detectHostComponentNames } from '../helpers/host-component-names';
-import { getConfig } from '../config';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
@@ -85,45 +83,6 @@ Example:
   return waitForOptions;
 }
 
-function formatIncorrectHostComponentNamesError(): string | null {
-  if (!getConfig().useBreakingChanges) {
-    return null;
-  }
-
-  const reactNativeHostComponentNames = detectHostComponentNames();
-  if (reactNativeHostComponentNames.errorMessage) {
-    return `
-    
-${reactNativeHostComponentNames.errorMessage}`;
-  }
-
-  if (!reactNativeHostComponentNames.text) {
-    return '';
-  }
-
-  const configHostComponentNames = getConfig().hostComponentNames;
-  if (
-    reactNativeHostComponentNames.text !== configHostComponentNames.text ||
-    reactNativeHostComponentNames.textInput !==
-      configHostComponentNames.textInput
-  ) {
-    return `
-
-Your configuration contains invalid host component names. This can happen if you use a version of React Native that is not compatible with your version of @testing-library/react-native
-
-To fix this add following line in a Jest setup file :
-
-configure({ 
-  hostComponentNames: { 
-    text: '${reactNativeHostComponentNames.text}',
-    textInput: '${reactNativeHostComponentNames.textInput}',
-  }
-});`;
-  }
-
-  return null;
-}
-
 export function makeQueries<Predicate, Options>(
   queryAllByQuery: UnboundQuery<QueryAllByQuery<Predicate, Options>>,
   getMissingError: (predicate: Predicate, options?: Options) => string,
@@ -169,12 +128,7 @@ export function makeQueries<Predicate, Options>(
       }
 
       if (results.length === 0) {
-        throw new ErrorWithStack(
-          `${getMissingError(predicate, options)}${
-            formatIncorrectHostComponentNamesError() || ''
-          }`,
-          getFn
-        );
+        throw new ErrorWithStack(getMissingError(predicate, options), getFn);
       }
 
       return results[0];
@@ -197,7 +151,7 @@ export function makeQueries<Predicate, Options>(
   }
 
   function findByQuery(instance: ReactTestInstance) {
-    return function findFn(
+    return async function findFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
       waitForOptions: WaitForOptions = {}

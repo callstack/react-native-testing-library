@@ -53,7 +53,6 @@ title: API
     - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
     - [`defaultIncludeHiddenElements` option](#defaultincludehiddenelements-option)
     - [`defaultDebugOptions` option](#defaultdebugoptions-option)
-    - [`hostComponentNames` option](#hostcomponentnames-option)
   - [`resetToDefaults()`](#resettodefaults)
   - [Environment variables](#environment-variables)
     - [`RNTL_SKIP_AUTO_CLEANUP`](#rntl_skip_auto_cleanup)
@@ -855,7 +854,6 @@ type Config = {
   asyncUtilTimeout: number;
   defaultHidden: boolean;
   defaultDebugOptions: Partial<DebugOptions>;
-  hostComponentNames: { text: string; textInput: string };
 };
 
 function configure(options: Partial<Config>) {}
@@ -876,12 +874,6 @@ This option is also available as `defaultHidden` alias for compatibility with [R
 #### `defaultDebugOptions` option
 
 Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
-
-#### `hostComponentNames` option
-
-Specifies the host component names RNTL expects React Native to use when rendering some built-in component types (e.g. `Text` and `TextInput`).
-
-You normally won't need to change this option. In the rare occasion when React Native would change the relevant host components names, RNTL will show you a warning suggesting proper values to use.
 
 ### `resetToDefaults()`
 

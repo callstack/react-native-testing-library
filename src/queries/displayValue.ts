@@ -27,7 +27,7 @@ const getTextInputNodeByDisplayValue = (
     node.props.value !== undefined ? node.props.value : node.props.defaultValue;
   const shouldReturnHostTextInput = getConfig().useBreakingChanges;
   const typeToMatch = shouldReturnHostTextInput
-    ? getConfig().hostComponentNames.textInput
+    ? getConfig().hostComponentNames?.textInput || 'TextInput'
     : TextInput;
 
   return (

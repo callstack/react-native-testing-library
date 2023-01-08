@@ -4,12 +4,10 @@ import TestRenderer from 'react-test-renderer';
 import { HostComponentNames } from '../config';
 import { getQueriesForElement } from '../within';
 
-const defaultErrorMessage =
-  'There seems to be an issue with your configuration that prevents the library from working correctly. Please ensure that you have a version of react native compatible with the library';
+const defaultErrorMessage = `There seems to be an issue with your configuration that prevents the library from working correctly.
+Please ensure that you have a version of react native compatible with the library`;
 
-export function detectHostComponentNames():
-  | (HostComponentNames & { errorMessage?: never })
-  | { errorMessage: string; text?: never; textInput?: never } {
+export function detectHostComponentNames(): HostComponentNames {
   try {
     const renderer = TestRenderer.create(
       <View>
@@ -31,20 +29,18 @@ export function detectHostComponentNames():
       };
     }
 
-    return { errorMessage: defaultErrorMessage };
+    throw new Error(defaultErrorMessage);
   } catch (error) {
     const errorMessage =
       error && typeof error === 'object' && 'message' in error
         ? error.message
         : null;
 
-    return {
-      errorMessage: `Trying to detect host component names triggered the following error:
+    throw new Error(`Trying to detect host component names triggered the following error:
     
 ${errorMessage}
     
 ${defaultErrorMessage}
-`,
-    };
+`);
   }
 }
