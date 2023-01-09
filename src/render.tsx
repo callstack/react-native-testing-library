@@ -9,7 +9,7 @@ import debugDeep, { DebugOptions } from './helpers/debugDeep';
 import { getQueriesForElement } from './within';
 import { setRenderResult, screen } from './screen';
 import { validateStringsRenderedWithinText } from './helpers/stringValidation';
-import { configureInternal, getConfig } from './config';
+import { getConfig } from './config';
 import { detectHostComponentNames } from './helpers/host-component-names';
 
 export type RenderOptions = {
@@ -43,10 +43,7 @@ export default function render<T>(
     });
   }
 
-  if (!getConfig().hostComponentNames) {
-    const { text, textInput } = detectHostComponentNames();
-    configureInternal({ hostComponentNames: { text, textInput } });
-  }
+  detectHostComponentNames();
 
   const wrap = (element: React.ReactElement) =>
     Wrapper ? <Wrapper>{element}</Wrapper> : element;
