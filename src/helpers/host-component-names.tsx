@@ -7,7 +7,7 @@ import { getQueriesForElement } from '../within';
 const defaultErrorMessage = `There seems to be an issue with your configuration that prevents the library from working correctly.
 Please ensure that you have a version of react native compatible with the library`;
 
-export function detectHostComponentNames(): void {
+export function detectHostComponentNamesIfNeeded(): void {
   if (getConfig().hostComponentNames) {
     return;
   }

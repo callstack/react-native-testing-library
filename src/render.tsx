@@ -10,7 +10,7 @@ import { getQueriesForElement } from './within';
 import { setRenderResult, screen } from './screen';
 import { validateStringsRenderedWithinText } from './helpers/stringValidation';
 import { getConfig } from './config';
-import { detectHostComponentNames } from './helpers/host-component-names';
+import { detectHostComponentNamesIfNeeded } from './helpers/host-component-names';
 
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
@@ -43,7 +43,7 @@ export default function render<T>(
     });
   }
 
-  detectHostComponentNames();
+  detectHostComponentNamesIfNeeded();
 
   const wrap = (element: React.ReactElement) =>
     Wrapper ? <Wrapper>{element}</Wrapper> : element;
