@@ -26,6 +26,8 @@ const queryAllByText = (
 ): ((text: TextMatch, options?: ByTextOptions) => Array<ReactTestInstance>) =>
   function queryAllByTextFn(text, options = {}) {
     const shouldReturnHostText = getConfig().useBreakingChanges;
+
+    // Legacy version: return composite Text
     if (!shouldReturnHostText) {
       const baseInstance = isHostElementForType(instance, Text)
         ? getCompositeParentOfType(instance, Text)
@@ -44,6 +46,7 @@ const queryAllByText = (
       return results;
     }
 
+    // vNext version: returns host Text
     return findAll(
       instance,
       (node) =>
