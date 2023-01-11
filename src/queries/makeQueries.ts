@@ -151,7 +151,7 @@ export function makeQueries<Predicate, Options>(
   }
 
   function findByQuery(instance: ReactTestInstance) {
-    return async function findFn(
+    return function findFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
       waitForOptions: WaitForOptions = {}
