@@ -30,7 +30,7 @@ describe('detectHostComponentNamesIfNeeded', () => {
     });
   });
 
-  test('throw an error when autodetection throws', () => {
+  test('throw an error when autodetection fails', () => {
     mockCreate.mockReturnValue({
       root: { type: View, children: [], props: {} },
     });
