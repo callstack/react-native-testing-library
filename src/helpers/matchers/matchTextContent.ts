@@ -17,10 +17,10 @@ export function matchTextContent({
   text,
   options = {},
 }: MatchTextContentParams) {
-  const typeToMatch = getConfig().useBreakingChanges
+  const textType = getConfig().useBreakingChanges
     ? detectHostComponentNamesIfNeeded().text
     : Text;
-  if (!filterNodeByType(node, typeToMatch)) {
+  if (!filterNodeByType(node, textType)) {
     return false;
   }
 

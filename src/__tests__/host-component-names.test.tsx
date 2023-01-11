@@ -38,11 +38,11 @@ describe('detectHostComponentNamesIfNeeded', () => {
     expect(() => detectHostComponentNamesIfNeeded())
       .toThrowErrorMatchingInlineSnapshot(`
       "Trying to detect host component names triggered the following error:
-          
+
       Unable to find an element with testID: text
-          
-      There seems to be an issue with your configuration that prevents the library from working correctly.
-      Please ensure that you have a version of react native compatible with the library
+
+      There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
+      Please check if you are using compatible versions of React Native and React Native Testing Library.
       "
     `);
   });

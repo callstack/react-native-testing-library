@@ -25,12 +25,12 @@ const getTextInputNodeByPlaceholderText = (
 ) => {
   const { exact, normalizer } = options;
   const shouldReturnHostTextInput = getConfig().useBreakingChanges;
-  const typeToMatch = shouldReturnHostTextInput
+  const textInputType = shouldReturnHostTextInput
     ? detectHostComponentNamesIfNeeded().textInput
     : TextInput;
 
   return (
-    filterNodeByType(node, typeToMatch) &&
+    filterNodeByType(node, textInputType) &&
     matches(placeholder, node.props.placeholder, normalizer, exact)
   );
 };

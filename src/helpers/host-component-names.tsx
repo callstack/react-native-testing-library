@@ -4,8 +4,8 @@ import TestRenderer from 'react-test-renderer';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { getQueriesForElement } from '../within';
 
-const defaultErrorMessage = `There seems to be an issue with your configuration that prevents the library from working correctly.
-Please ensure that you have a version of react native compatible with the library`;
+const defaultErrorMessage = `There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
+Please check if you are using compatible versions of React Native and React Native Testing Library.`;
 
 export function detectHostComponentNamesIfNeeded(): HostComponentNames {
   const configHostComponentNames = getConfig().hostComponentNames;
@@ -48,11 +48,7 @@ export function detectHostComponentNamesIfNeeded(): HostComponentNames {
         ? error.message
         : null;
 
-    throw new Error(`Trying to detect host component names triggered the following error:
-    
-${errorMessage}
-    
-${defaultErrorMessage}
+    throw new Error(`Trying to detect host component names triggered the following error:\n\n${errorMessage}\n\n${defaultErrorMessage}
 `);
   }
 }
