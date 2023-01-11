@@ -4,7 +4,7 @@ import { DebugOptions } from './helpers/debugDeep';
  * Global configuration options for React Native Testing Library.
  */
 
-type HostComponentNames = {
+export type HostComponentNames = {
   text: string;
   textInput: string;
 };

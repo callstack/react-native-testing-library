@@ -1,15 +1,16 @@
 import React from 'react';
 import { Text, TextInput, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { configureInternal, getConfig } from '../config';
+import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { getQueriesForElement } from '../within';
 
 const defaultErrorMessage = `There seems to be an issue with your configuration that prevents the library from working correctly.
 Please ensure that you have a version of react native compatible with the library`;
 
-export function detectHostComponentNamesIfNeeded(): void {
-  if (getConfig().hostComponentNames) {
-    return;
+export function detectHostComponentNamesIfNeeded(): HostComponentNames {
+  const configHostComponentNames = getConfig().hostComponentNames;
+  if (configHostComponentNames) {
+    return configHostComponentNames;
   }
 
   try {
@@ -36,6 +37,11 @@ export function detectHostComponentNamesIfNeeded(): void {
         textInput: textInputHostName,
       },
     });
+
+    return {
+      text: textHostName,
+      textInput: textInputHostName,
+    };
   } catch (error) {
     const errorMessage =
       error && typeof error === 'object' && 'message' in error
