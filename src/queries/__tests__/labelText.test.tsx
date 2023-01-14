@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { render } from '../..';
 
 const BUTTON_LABEL = 'cool button';
@@ -173,8 +173,9 @@ test('getByLabelText supports accessibilityLabelledBy', async () => {
       <TextInput testID="textInput" accessibilityLabelledBy="label" />
     </>
   );
-  expect(getByLabelText('Label for input')).toEqual(getByTestId('textInput'));
-  expect(getByLabelText(/input/)).toEqual(getByTestId('textInput'));
+
+  expect(getByLabelText('Label for input')).toBe(getByTestId('textInput'));
+  expect(getByLabelText(/input/)).toBe(getByTestId('textInput'));
 });
 
 test('getByLabelText supports nested accessibilityLabelledBy', async () => {
@@ -187,6 +188,6 @@ test('getByLabelText supports nested accessibilityLabelledBy', async () => {
     </>
   );
 
-  expect(getByLabelText('Label for input')).toEqual(getByTestId('textInput'));
-  expect(getByLabelText(/input/)).toEqual(getByTestId('textInput'));
+  expect(getByLabelText('Label for input')).toBe(getByTestId('textInput'));
+  expect(getByLabelText(/input/)).toBe(getByTestId('textInput'));
 });
