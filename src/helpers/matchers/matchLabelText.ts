@@ -44,7 +44,7 @@ function matchAccessibilityLabelledBy(
       root,
       (node) =>
         typeof node.type === 'string' &&
-        node.props?.nativeID === nativeId &&
+        node.props.nativeID === nativeId &&
         matchTextContent(node, text, options)
     ).length > 0
   );

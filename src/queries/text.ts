@@ -61,7 +61,6 @@ const queryAllByText = (
         matchDeepestOnly: true,
       }
     );
-
   };
 
 const getMultipleError = (text: TextMatch) =>
