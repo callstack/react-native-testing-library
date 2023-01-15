@@ -24,7 +24,7 @@ export function getHostComponentNames(): HostComponentNames {
     const textHostName = getByTestId('text').type;
     const textInputHostName = getByTestId('textInput').type;
 
-    // this code path should not happen as getByTestId should always return a host element
+    // This code path should not happen as getByTestId always returns host elements.
     if (
       typeof textHostName !== 'string' ||
       typeof textInputHostName !== 'string'
@@ -36,10 +36,7 @@ export function getHostComponentNames(): HostComponentNames {
       text: textHostName,
       textInput: textInputHostName,
     };
-
-    configureInternal({
-      hostComponentNames,
-    });
+    configureInternal({ hostComponentNames });
     return hostComponentNames;
   } catch (error) {
     const errorMessage =

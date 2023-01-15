@@ -4,11 +4,6 @@ import { DebugOptions } from './helpers/debugDeep';
  * Global configuration options for React Native Testing Library.
  */
 
-export type HostComponentNames = {
-  text: string;
-  textInput: string;
-};
-
 export type Config = {
   /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
@@ -25,11 +20,16 @@ export type ConfigAliasOptions = {
   defaultHidden: boolean;
 };
 
+export type HostComponentNames = {
+  text: string;
+  textInput: string;
+};
+
 export type InternalConfig = Config & {
   /** Whether to use breaking changes intended for next major version release. */
   useBreakingChanges: boolean;
 
-  /** Host component names used for queries */
+  /** Names for key React Native host components. */
   hostComponentNames?: HostComponentNames;
 };
 
