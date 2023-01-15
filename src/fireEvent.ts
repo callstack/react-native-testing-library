@@ -3,7 +3,7 @@ import { TextInput } from 'react-native';
 import act from './act';
 import { isHostElement } from './helpers/component-tree';
 import { filterNodeByType } from './helpers/filterNodeByType';
-import { getConfig } from './config';
+import { getHostComponentNames } from './helpers/host-component-names';
 
 type EventHandler = (...args: any) => unknown;
 
@@ -19,10 +19,7 @@ const isTextInput = (element?: ReactTestInstance) => {
   // it would trigger the parent prop without the composite component check
   return (
     filterNodeByType(element, TextInput) ||
-    filterNodeByType(
-      element,
-      getConfig().hostComponentNames?.textInput || 'TextInput'
-    )
+    filterNodeByType(element, getHostComponentNames().textInput)
   );
 };
 
