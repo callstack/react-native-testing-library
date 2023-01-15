@@ -287,8 +287,8 @@ render(
   </Pressable>
 );
 const element = screen.getByRole('button');
-const element2 = screen.getByRole('button', { name: "Hello" });
-const element3 = screen.getByRole('button', { name: "Hello", disabled: true });
+const element2 = screen.getByRole('button', { name: 'Hello' });
+const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 ```
 
 #### Options
@@ -403,7 +403,9 @@ When querying by `text` entry a string or regex might be used.
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<View accessibilityValue={{ min: 0, max: 100, now: 25, text: '25%' }} />);
+render(
+  <View accessibilityValue={{ min: 0, max: 100, now: 25, text: '25%' }} />
+);
 const element = screen.getByA11yValue({ now: 25 });
 const element2 = screen.getByA11yValue({ text: /25/ });
 ```

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, TextInput } from 'react-native';
 
 import { render } from '../..';
+import { configureInternal } from '../../config';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -9,6 +10,8 @@ const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
 const DEFAULT_INPUT_CUSTOMER = 'What banana?';
+
+beforeEach(() => configureInternal({ useBreakingChanges: true }));
 
 const Banana = () => (
   <View>
@@ -50,10 +53,16 @@ test('getByDisplayValue, queryByDisplayValue', () => {
 
 test('getByDisplayValue, queryByDisplayValue get element by default value only when value is undefined', () => {
   const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
-  expect(() => getByDisplayValue(DEFAULT_INPUT_CHEF)).toThrow();
+  expect(() =>
+    getByDisplayValue(DEFAULT_INPUT_CHEF)
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with displayValue: What did you inspect?"`
+  );
   expect(queryByDisplayValue(DEFAULT_INPUT_CHEF)).toBeNull();
 
-  expect(() => getByDisplayValue('hello')).toThrow();
+  expect(() => getByDisplayValue('hello')).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with displayValue: hello"`
+  );
   expect(queryByDisplayValue('hello')).toBeNull();
 
   expect(getByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
@@ -120,8 +129,8 @@ test('byDisplayValue queries support hidden option', () => {
   );
 });
 
-test('byDisplayValue should return composite TextInput', () => {
+test('byDisplayValue should return host component', () => {
   const { getByDisplayValue } = render(<TextInput value="value" />);
 
-  expect(getByDisplayValue('value').type).toBe(TextInput);
+  expect(getByDisplayValue('value').type).toBe('TextInput');
 });

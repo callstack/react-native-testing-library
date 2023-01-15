@@ -12,6 +12,7 @@ type CommonQueryOptions = {
   includeHiddenElements?: boolean,
   hidden?: boolean,
 };
+
 type TextMatch = string | RegExp;
 
 declare type NormalizerFn = (textToNormalize: string) => string;

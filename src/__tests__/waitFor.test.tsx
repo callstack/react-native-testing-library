@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View, Pressable } from 'react-native';
-import { fireEvent, render, waitFor, configure, resetToDefaults } from '..';
+import { fireEvent, render, waitFor, configure } from '..';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {
@@ -18,10 +18,6 @@ class Banana extends React.Component<any> {
     );
   }
 }
-
-beforeEach(() => {
-  resetToDefaults();
-});
 
 class BananaContainer extends React.Component<{}, any> {
   state = { fresh: false };

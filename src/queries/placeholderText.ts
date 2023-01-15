@@ -1,8 +1,10 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { TextInput } from 'react-native';
 import { findAll } from '../helpers/findAll';
-import { filterNodeByType } from '../helpers/filterNodeByType';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
+import { getConfig } from '../config';
+import { filterNodeByType } from '../helpers/filterNodeByType';
+import { getHostComponentNames } from '../helpers/host-component-names';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -22,8 +24,13 @@ const getTextInputNodeByPlaceholderText = (
   options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
+  const shouldReturnHostTextInput = getConfig().useBreakingChanges;
+  const textInputType = shouldReturnHostTextInput
+    ? getHostComponentNames().textInput
+    : TextInput;
+
   return (
-    filterNodeByType(node, TextInput) &&
+    filterNodeByType(node, textInputType) &&
     matches(placeholder, node.props.placeholder, normalizer, exact)
   );
 };

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
-import { render, fireEvent, RenderAPI, resetToDefaults } from '..';
+import { render, fireEvent, RenderAPI } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -9,10 +9,6 @@ const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
 const DEFAULT_INPUT_CUSTOMER = 'What banana?';
-
-beforeEach(() => {
-  resetToDefaults();
-});
 
 class MyButton extends React.Component<any> {
   render() {

@@ -1,12 +1,13 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { Text } from 'react-native';
-import {
-  isHostElementForType,
-  getCompositeParentOfType,
-} from '../helpers/component-tree';
 import { findAll } from '../helpers/findAll';
 import { matchTextContent } from '../helpers/matchers/matchTextContent';
 import { TextMatch, TextMatchOptions } from '../matches';
+import {
+  getCompositeParentOfType,
+  isHostElementForType,
+} from '../helpers/component-tree';
+import { getConfig } from '../config';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -16,29 +17,40 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { CommonQueryOptions } from './options';
+import type { CommonQueryOptions } from './options';
 
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const queryAllByText = (
   instance: ReactTestInstance
 ): ((text: TextMatch, options?: ByTextOptions) => Array<ReactTestInstance>) =>
-  function queryAllByTextFn(text, options) {
-    const baseInstance = isHostElementForType(instance, Text)
-      ? getCompositeParentOfType(instance, Text)
-      : instance;
+  function queryAllByTextFn(text, options = {}) {
+    const shouldReturnHostText = getConfig().useBreakingChanges;
 
-    if (!baseInstance) {
-      return [];
+    // Legacy version: return composite Text
+    if (!shouldReturnHostText) {
+      const baseInstance = isHostElementForType(instance, Text)
+        ? getCompositeParentOfType(instance, Text)
+        : instance;
+
+      if (!baseInstance) {
+        return [];
+      }
+
+      const results = findAll(
+        baseInstance,
+        (node) => matchTextContent(node, text, options),
+        { ...options, matchDeepestOnly: true }
+      );
+
+      return results;
     }
 
-    const results = findAll(
-      baseInstance,
-      (node) => matchTextContent(node, text, options),
-      { ...options, matchDeepestOnly: true }
-    );
-
-    return results;
+    // vNext version: returns host Text
+    return findAll(instance, (node) => matchTextContent(node, text, options), {
+      ...options,
+      matchDeepestOnly: true,
+    });
   };
 
 const getMultipleError = (text: TextMatch) =>

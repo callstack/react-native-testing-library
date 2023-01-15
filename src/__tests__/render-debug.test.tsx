@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { View, Text, TextInput, Pressable } from 'react-native';
 import stripAnsi from 'strip-ansi';
-import { render, fireEvent, resetToDefaults, configure } from '..';
+import { render, fireEvent, configure } from '..';
 
 type ConsoleLogMock = jest.Mock<Array<string>>;
 
@@ -18,7 +18,6 @@ const ignoreWarnings = ['Using debug("message") is deprecated'];
 const realConsoleWarn = console.warn;
 
 beforeEach(() => {
-  resetToDefaults();
   jest.spyOn(console, 'log').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation((message) => {
     if (!ignoreWarnings.some((warning) => message.includes(warning))) {

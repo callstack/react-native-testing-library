@@ -3,6 +3,7 @@ import { TextInput } from 'react-native';
 import act from './act';
 import { isHostElement } from './helpers/component-tree';
 import { filterNodeByType } from './helpers/filterNodeByType';
+import { getHostComponentNames } from './helpers/host-component-names';
 
 type EventHandler = (...args: any) => unknown;
 
@@ -14,12 +15,11 @@ const isTextInput = (element?: ReactTestInstance) => {
   // We have to test if the element type is either the TextInput component
   // (which would if it is a composite component) or the string
   // TextInput (which would be true if it is a host component)
-  // All queries but the one by testID return composite component and event
-  // if all queries returned host components, since fireEvent bubbles up
+  // All queries return host components but since fireEvent bubbles up
   // it would trigger the parent prop without the composite component check
   return (
     filterNodeByType(element, TextInput) ||
-    filterNodeByType(element, 'TextInput')
+    filterNodeByType(element, getHostComponentNames().textInput)
   );
 };
 

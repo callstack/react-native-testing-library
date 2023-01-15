@@ -911,10 +911,10 @@ function isHiddenFromAccessibility(
 
 Also available as `isInaccessible()` alias for React Testing Library compatibility.
 
-Checks if given element is hidden from assistive technology, e.g. screen readers. 
+Checks if given element is hidden from assistive technology, e.g. screen readers.
 
 :::note
-Like [`isInaccessible`](https://testing-library.com/docs/dom-testing-library/api-accessibility/#isinaccessible) function from DOM Testing Library this function considers both accessibility elements and presentational elements (regular `View`s) to be accessible, unless they are hidden in terms of host platform. 
+Like [`isInaccessible`](https://testing-library.com/docs/dom-testing-library/api-accessibility/#isinaccessible) function from DOM Testing Library this function considers both accessibility elements and presentational elements (regular `View`s) to be accessible, unless they are hidden in terms of host platform.
 
 This covers only part of [ARIA notion of Accessiblity Tree](https://www.w3.org/TR/wai-aria-1.2/#tree_exclusion), as ARIA excludes both hidden and presentational elements from the Accessibility Tree.
 :::
