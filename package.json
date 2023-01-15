@@ -87,10 +87,7 @@
   },
   "jest": {
     "preset": "./jest-preset",
-    "setupFiles": [
-      "./jestSetup.js"
-    ],
-    "setupFilesAfterEnv": ["./jestSetupFileAfterEnv.ts"],
+    "setupFilesAfterEnv": ["./jest-setup.ts"],
     "testPathIgnorePatterns": [
       "timerUtils",
       "examples/"
