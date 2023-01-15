@@ -31,17 +31,15 @@ export function detectHostComponentNamesIfNeeded(): HostComponentNames {
       throw new Error(defaultErrorMessage);
     }
 
-    configureInternal({
-      hostComponentNames: {
-        text: textHostName,
-        textInput: textInputHostName,
-      },
-    });
-
-    return {
+    const hostComponentNames = {
       text: textHostName,
       textInput: textInputHostName,
     };
+
+    configureInternal({
+      hostComponentNames,
+    });
+    return hostComponentNames;
   } catch (error) {
     const errorMessage =
       error && typeof error === 'object' && 'message' in error
