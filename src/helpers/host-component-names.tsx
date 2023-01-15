@@ -7,7 +7,7 @@ import { getQueriesForElement } from '../within';
 const defaultErrorMessage = `There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
 Please check if you are using compatible versions of React Native and React Native Testing Library.`;
 
-export function detectHostComponentNamesIfNeeded(): HostComponentNames {
+export function getHostComponentNames(): HostComponentNames {
   const configHostComponentNames = getConfig().hostComponentNames;
   if (configHostComponentNames) {
     return configHostComponentNames;

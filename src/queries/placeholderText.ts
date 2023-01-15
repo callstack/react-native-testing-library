@@ -4,7 +4,7 @@ import { findAll } from '../helpers/findAll';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
 import { getConfig } from '../config';
 import { filterNodeByType } from '../helpers/filterNodeByType';
-import { detectHostComponentNamesIfNeeded } from '../helpers/host-component-names';
+import { getHostComponentNames } from '../helpers/host-component-names';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -26,7 +26,7 @@ const getTextInputNodeByPlaceholderText = (
   const { exact, normalizer } = options;
   const shouldReturnHostTextInput = getConfig().useBreakingChanges;
   const textInputType = shouldReturnHostTextInput
-    ? detectHostComponentNamesIfNeeded().textInput
+    ? getHostComponentNames().textInput
     : TextInput;
 
   return (

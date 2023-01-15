@@ -1,15 +1,15 @@
 import { View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { configureInternal, getConfig } from '../config';
-import { detectHostComponentNamesIfNeeded } from '../helpers/host-component-names';
+import { getHostComponentNames } from '../helpers/host-component-names';
 
 const mockCreate = jest.spyOn(TestRenderer, 'create') as jest.Mock;
 
-describe('detectHostComponentNamesIfNeeded', () => {
+describe('getHostComponentNames', () => {
   test('updates internal config with host component names when they are not defined', () => {
     expect(getConfig().hostComponentNames).toBeUndefined();
 
-    detectHostComponentNamesIfNeeded();
+    getHostComponentNames();
 
     expect(getConfig().hostComponentNames).toEqual({
       text: 'Text',
@@ -22,7 +22,7 @@ describe('detectHostComponentNamesIfNeeded', () => {
       hostComponentNames: { text: 'banana', textInput: 'banana' },
     });
 
-    detectHostComponentNamesIfNeeded();
+    getHostComponentNames();
 
     expect(getConfig().hostComponentNames).toEqual({
       text: 'banana',
@@ -35,8 +35,7 @@ describe('detectHostComponentNamesIfNeeded', () => {
       root: { type: View, children: [], props: {} },
     });
 
-    expect(() => detectHostComponentNamesIfNeeded())
-      .toThrowErrorMatchingInlineSnapshot(`
+    expect(() => getHostComponentNames()).toThrowErrorMatchingInlineSnapshot(`
       "Trying to detect host component names triggered the following error:
 
       Unable to find an element with testID: text
