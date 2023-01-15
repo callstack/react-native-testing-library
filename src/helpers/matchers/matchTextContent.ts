@@ -6,17 +6,11 @@ import { filterNodeByType } from '../filterNodeByType';
 import { getTextContent } from '../getTextContent';
 import { getHostComponentNames } from '../host-component-names';
 
-type MatchTextContentParams = {
-  node: ReactTestInstance;
-  text: TextMatch;
-  options?: TextMatchOptions;
-};
-
-export function matchTextContent({
-  node,
-  text,
-  options = {},
-}: MatchTextContentParams) {
+export function matchTextContent(
+  node: ReactTestInstance,
+  text: TextMatch,
+  options: TextMatchOptions = {}
+) {
   const textType = getConfig().useBreakingChanges
     ? getHostComponentNames().text
     : Text;

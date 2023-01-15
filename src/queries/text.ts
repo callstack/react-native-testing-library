@@ -39,7 +39,7 @@ const queryAllByText = (
 
       const results = findAll(
         baseInstance,
-        (node) => matchTextContent({ node, text, options }),
+        (node) => matchTextContent(node, text, options),
         { ...options, matchDeepestOnly: true }
       );
 
@@ -47,19 +47,10 @@ const queryAllByText = (
     }
 
     // vNext version: returns host Text
-    return findAll(
-      instance,
-      (node) =>
-        matchTextContent({
-          node,
-          text,
-          options,
-        }),
-      {
-        ...options,
-        matchDeepestOnly: true,
-      }
-    );
+    return findAll(instance, (node) => matchTextContent(node, text, options), {
+      ...options,
+      matchDeepestOnly: true,
+    });
   };
 
 const getMultipleError = (text: TextMatch) =>
