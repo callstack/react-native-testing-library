@@ -510,6 +510,5 @@ test('byText support hidden option', () => {
 
 test('byText should return host component', () => {
   const { getByText } = render(<Text>hello</Text>);
-
   expect(getByText('hello').type).toBe('Text');
 });

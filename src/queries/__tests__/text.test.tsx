@@ -8,6 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import { render, getDefaultNormalizer, within } from '../..';
+import { getConfig } from '../../config';
 
 test('byText matches simple text', () => {
   const { getByText } = render(<Text testID="text">Hello World</Text>);
@@ -504,7 +505,10 @@ test('byText support hidden option', () => {
 });
 
 test('byText should return composite Text', () => {
+  const textType = getConfig().useBreakingChanges
+    ? getHostComponentNames().text
+    : Text;
+  console.log('BB', getConfig().useBreakingChanges, textType);
   const { getByText } = render(<Text>hello</Text>);
-
   expect(getByText('hello').type).toBe(Text);
 });

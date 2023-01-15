@@ -1,14 +1,15 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { Text } from 'react-native';
-import { findAll } from '../helpers/findAll';
-import { filterNodeByType } from '../helpers/filterNodeByType';
-import { matchTextContent } from '../helpers/matchers/matchTextContent';
-import { TextMatch, TextMatchOptions } from '../matches';
+import { getConfig, resetToDefaults } from '../config';
 import {
   getCompositeParentOfType,
   isHostElementForType,
 } from '../helpers/component-tree';
-import { getConfig } from '../config';
+import { filterNodeByType } from '../helpers/filterNodeByType';
+import { findAll } from '../helpers/findAll';
+import { getHostComponentNames } from '../helpers/host-component-names';
+import { matchTextContent } from '../helpers/matchers/matchTextContent';
+import { TextMatch, TextMatchOptions } from '../matches';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -19,7 +20,10 @@ import type {
   QueryByQuery,
 } from './makeQueries';
 import type { CommonQueryOptions } from './options';
-import { getHostComponentNames } from '../helpers/host-component-names';
+
+beforeEach(() => {
+  resetToDefaults();
+});
 
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
@@ -41,7 +45,8 @@ const queryAllByText = (
 
       const results = findAll(
         baseInstance,
-        (node) => matchTextContent(node, text, options),
+        (node) =>
+          filterNodeByType(node, Text) && matchTextContent(node, text, options),
         { ...options, matchDeepestOnly: true }
       );
 
@@ -49,13 +54,11 @@ const queryAllByText = (
     }
 
     // vNext version: returns host Text
-    const textType = getConfig().useBreakingChanges
-      ? getHostComponentNames().text
-      : Text;
-
     return findAll(
       instance,
-      (node) => node.type === textType && matchTextContent(node, text, options),
+      (node) =>
+        filterNodeByType(node, getHostComponentNames().text) &&
+        matchTextContent(node, text, options),
       {
         ...options,
         matchDeepestOnly: true,
