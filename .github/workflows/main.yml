@@ -17,13 +17,22 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'npm'
+          cache: 'yarn'
 
   lint:
     needs: [install-cached-deps]
     runs-on: ubuntu-latest
     name: Lint
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
       - name: Lint
         run: yarn lint
 
@@ -32,6 +41,15 @@ jobs:
     runs-on: ubuntu-latest
     name: Typecheck
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
       - name: Typecheck
         run: yarn typecheck
 
@@ -40,13 +58,31 @@ jobs:
     runs-on: ubuntu-latest
     name: Test React 18
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
       - name: Test React 18
-        run: yarn test:CI
+        run: yarn test:ci
 
   test-react-17:
     needs: [install-cached-deps]
     runs-on: ubuntu-latest
     name: Test React 17
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
       - name: Test React 17
-        run: yarn test:CI
+        run: yarn test:ci:react:17
