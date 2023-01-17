@@ -739,11 +739,22 @@ test('byRole queries support hidden option', () => {
   );
 });
 
-test('takes accessible prop into account', () => {
-  const { queryByRole } = render(
-    <Pressable accessibilityRole="button" accessible={false}>
-      <Text>Action</Text>
-    </Pressable>
-  );
-  expect(queryByRole('button', { name: 'Action' })).toBeFalsy();
+describe('matches only accessible elements', () => {
+  test('takes explicit accessible prop into account', () => {
+    const { queryByRole } = render(
+      <Pressable accessibilityRole="button" accessible={false}>
+        <Text>Action</Text>
+      </Pressable>
+    );
+    expect(queryByRole('button', { name: 'Action' })).toBeFalsy();
+  });
+
+  test('takes implicit accessible value into account', () => {
+    const { queryByRole } = render(
+      <View accessibilityRole="menu">
+        <Text>Action</Text>
+      </View>
+    );
+    expect(queryByRole('menu', { name: 'Action' })).toBeFalsy();
+  });
 });
