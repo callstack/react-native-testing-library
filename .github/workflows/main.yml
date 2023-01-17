@@ -13,10 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup
-        env:
-          ENV_FILE: ${{ secrets.ENV_FILE }}
-        uses: ./.github/actions/setup
+      - name: Setup Node.js
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
 
   lint:
     needs: [install-cached-deps]
