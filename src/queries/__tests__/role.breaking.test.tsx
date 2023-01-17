@@ -8,6 +8,11 @@ import {
   Button as RNButton,
 } from 'react-native';
 import { render } from '../..';
+import { configureInternal } from '../../config';
+
+beforeEach(() => {
+  configureInternal({ useBreakingChanges: true });
+});
 
 const TEXT_LABEL = 'cool text';
 
@@ -734,11 +739,11 @@ test('byRole queries support hidden option', () => {
   );
 });
 
-test('does not take accessible prop into account', () => {
-  const { getByRole } = render(
+test('takes accessible prop into account', () => {
+  const { queryByRole } = render(
     <Pressable accessibilityRole="button" accessible={false}>
       <Text>Action</Text>
     </Pressable>
   );
-  expect(getByRole('button', { name: 'Action' })).toBeTruthy();
+  expect(queryByRole('button', { name: 'Action' })).toBeFalsy();
 });
