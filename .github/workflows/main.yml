@@ -72,6 +72,9 @@ jobs:
       - name: Test React 18
         run: yarn test:ci
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+
   test-react-17:
     needs: [install-cached-deps]
     runs-on: ubuntu-latest
@@ -99,6 +102,3 @@ jobs:
 
       - name: Build website
         run: yarn --cwd website build
-
-  - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2
