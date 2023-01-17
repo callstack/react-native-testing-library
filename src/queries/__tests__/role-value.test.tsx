@@ -6,6 +6,7 @@ describe('accessibility value', () => {
   test('matches using all value props', () => {
     const { getByRole, queryByRole } = render(
       <View
+        accessible
         accessibilityRole="adjustable"
         accessibilityValue={{ min: 0, max: 100, now: 50, text: '50%' }}
       />
@@ -41,6 +42,7 @@ describe('accessibility value', () => {
   test('matches using single value', () => {
     const { getByRole, queryByRole } = render(
       <View
+        accessible
         accessibilityRole="adjustable"
         accessibilityValue={{ min: 10, max: 20, now: 12, text: 'Hello' }}
       />
