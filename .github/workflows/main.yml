@@ -13,14 +13,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
-
-      - name: Yarn Install
-        run: yarn install
+      - name: Setup
+        uses: ./.github/actions/setup-node-deps
 
   lint:
     needs: [install-cached-deps]
@@ -30,11 +24,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-node-deps
 
       - name: Lint
         run: yarn lint
@@ -47,11 +38,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-node-deps
 
       - name: Typecheck
         run: yarn typecheck
@@ -64,11 +52,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-node-deps
 
       - name: Test React 18
         run: yarn test:ci
@@ -81,11 +66,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-node-deps
 
       - name: Test React 17
         run: yarn test:ci:react:17
