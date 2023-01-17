@@ -1,0 +1,51 @@
+name: Main
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ['**']
+
+jobs:
+  install-cached-deps:
+    runs-on: ubuntu-latest
+    name: Install and Cache dependencies
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        env:
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+        uses: ./.github/actions/setup
+
+  lint:
+    needs: [install-cached-deps]
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+      - name: Lint
+        run: yarn lint
+
+  typecheck:
+    needs: [install-cached-deps]
+    runs-on: ubuntu-latest
+    name: Typecheck
+    steps:
+      - name: Typecheck
+        run: yarn typecheck
+
+  test:
+    needs: [install-cached-deps]
+    runs-on: ubuntu-latest
+    name: Test React 18
+    steps:
+      - name: Test React 18
+        run: yarn test:CI
+
+  test-react-17:
+    needs: [install-cached-deps]
+    runs-on: ubuntu-latest
+    name: Test React 17
+    steps:
+      - name: Test React 17
+        run: yarn test:CI
