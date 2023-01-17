@@ -740,6 +740,15 @@ test('byRole queries support hidden option', () => {
 });
 
 describe('matches only accessible elements', () => {
+  test('matches elements with accessible={true}', () => {
+    const { queryByRole } = render(
+      <View accessibilityRole="menu" accessible={true}>
+        <Text>Action</Text>
+      </View>
+    );
+    expect(queryByRole('menu', { name: 'Action' })).toBeTruthy();
+  });
+
   test('ignores elements with accessible={false}', () => {
     const { queryByRole } = render(
       <Pressable accessibilityRole="button" accessible={false}>
