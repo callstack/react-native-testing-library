@@ -8,7 +8,7 @@ on:
 jobs:
   install-cached-deps:
     runs-on: ubuntu-latest
-    name: Install and Cache dependencies
+    name: Install and Cache deps
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -99,3 +99,6 @@ jobs:
 
       - name: Build website
         run: yarn --cwd website build
+
+  - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
