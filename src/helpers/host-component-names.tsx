@@ -29,7 +29,7 @@ export function getHostComponentNames(): HostComponentNames {
       typeof textHostName !== 'string' ||
       typeof textInputHostName !== 'string'
     ) {
-      throw new Error(defaultErrorMessage);
+      throw new Error('getByTestId returned non-host component');
     }
 
     const hostComponentNames = {
