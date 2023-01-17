@@ -19,6 +19,9 @@ jobs:
           node-version: 16
           cache: 'yarn'
 
+      - name: Yarn Install
+        run: yarn install
+
   lint:
     needs: [install-cached-deps]
     runs-on: ubuntu-latest
