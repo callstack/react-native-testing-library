@@ -6,7 +6,7 @@ on:
     branches: ['**']
 
 jobs:
-  install-cached-deps:
+  install-cache-deps:
     runs-on: ubuntu-latest
     name: Install and Cache deps
     steps:
@@ -17,7 +17,7 @@ jobs:
         uses: ./.github/actions/setup-deps
 
   lint:
-    needs: [install-cached-deps]
+    needs: [install-cache-deps]
     runs-on: ubuntu-latest
     name: Lint
     steps:
@@ -31,7 +31,7 @@ jobs:
         run: yarn lint
 
   typecheck:
-    needs: [install-cached-deps]
+    needs: [install-cache-deps]
     runs-on: ubuntu-latest
     name: Typecheck
     steps:
@@ -45,7 +45,7 @@ jobs:
         run: yarn typecheck
 
   flow:
-    needs: [install-cached-deps]
+    needs: [install-cache-deps]
     runs-on: ubuntu-latest
     name: Flow
     steps:
@@ -59,7 +59,7 @@ jobs:
         run: yarn flow
 
   test:
-    needs: [lint, typecheck]
+    needs: [install-cache-deps]
     runs-on: ubuntu-latest
     name: Test React 18
     steps:
@@ -76,7 +76,7 @@ jobs:
         uses: codecov/codecov-action@v2
 
   test-react-17:
-    needs: [lint, typecheck]
+    needs: [install-cache-deps]
     runs-on: ubuntu-latest
     name: Test React 17
     steps:
@@ -90,7 +90,6 @@ jobs:
         run: yarn test:ci:react:17
 
   test-website:
-    needs: [lint, typecheck]
     runs-on: ubuntu-latest
     name: Test Website
     steps:
