@@ -1,10 +1,9 @@
-name: Deploy Website to GitHub Pages
+name: Website
 
 on:
   push:
     branches:
       - main
-      - 'chore/gh-actions-docs'
 
 jobs:
   deploy:

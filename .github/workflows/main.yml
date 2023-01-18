@@ -76,7 +76,7 @@ jobs:
         uses: codecov/codecov-action@v2
 
   test-react-17:
-    needs: [test]
+    needs: [lint, typecheck]
     runs-on: ubuntu-latest
     name: Test React 17
     steps:

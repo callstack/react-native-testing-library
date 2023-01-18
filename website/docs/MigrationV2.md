@@ -124,5 +124,3 @@ function flushMicrotasksQueue() {
   return new Promise((resolve) => setImmediate(resolve));
 }
 ```
-
-1, 2, 3 MIC CHECK
