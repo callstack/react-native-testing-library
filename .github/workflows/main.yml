@@ -59,7 +59,7 @@ jobs:
         run: yarn flow
 
   test:
-    needs: [install-cached-deps]
+    needs: [lint, typecheck]
     runs-on: ubuntu-latest
     name: Test React 18
     steps:
@@ -76,7 +76,7 @@ jobs:
         uses: codecov/codecov-action@v2
 
   test-react-17:
-    needs: [install-cached-deps]
+    needs: [test]
     runs-on: ubuntu-latest
     name: Test React 17
     steps:
@@ -90,7 +90,7 @@ jobs:
         run: yarn test:ci:react:17
 
   test-website:
-    needs: [install-cached-deps]
+    needs: [lint, typecheck]
     runs-on: ubuntu-latest
     name: Test Website
     steps:
@@ -98,7 +98,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup Node.js and website deps
-        uses: ./.github/actions/setup--website-deps
+        uses: ./.github/actions/setup-website-deps
 
       - name: Build website
         run: yarn --cwd website build
