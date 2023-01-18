@@ -21,10 +21,6 @@ import type {
 } from './makeQueries';
 import type { CommonQueryOptions } from './options';
 
-beforeEach(() => {
-  resetToDefaults();
-});
-
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const queryAllByText = (
