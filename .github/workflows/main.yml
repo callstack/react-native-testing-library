@@ -1,0 +1,104 @@
+name: Main
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ['**']
+
+jobs:
+  install-cached-deps:
+    runs-on: ubuntu-latest
+    name: Install and Cache deps
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup-node-deps
+
+  lint:
+    needs: [install-cached-deps]
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-node-deps
+
+      - name: Lint
+        run: yarn lint
+
+  typecheck:
+    needs: [install-cached-deps]
+    runs-on: ubuntu-latest
+    name: Typecheck
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-node-deps
+
+      - name: Typecheck
+        run: yarn typecheck
+
+  flow:
+    needs: [install-cached-deps]
+    runs-on: ubuntu-latest
+    name: Flow
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-node-deps
+
+      - name: Flow
+        run: yarn flow
+
+  test:
+    needs: [install-cached-deps]
+    runs-on: ubuntu-latest
+    name: Test React 18
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-node-deps
+
+      - name: Test React 18
+        run: yarn test:ci
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+
+  test-react-17:
+    needs: [install-cached-deps]
+    runs-on: ubuntu-latest
+    name: Test React 17
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-node-deps
+
+      - name: Test React 17
+        run: yarn test:ci:react:17
+
+  test-website:
+    needs: [install-cached-deps]
+    runs-on: ubuntu-latest
+    name: Test Website
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-node-deps
+
+      - name: Build website
+        run: yarn --cwd website build
