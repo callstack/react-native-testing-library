@@ -1974,13 +1974,6 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
 
-"@types/react-native@~0.70.0":
-  version "0.70.8"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.70.8.tgz#3302a0f7eddcd3350448ca17a9e415d02b1efde6"
-  integrity sha512-jvs5QMOrlyi0ScfT5Brha2roDoOWtbIOadNkp0jsueVen5+pH4SQAYtzL6xu0+dIcx3J/5LtZ/JYby2C1/zUug==
-  dependencies:
-    "@types/react" "*"
-
 "@types/react-test-renderer@~18.0.0":
   version "18.0.0"
   resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-18.0.0.tgz#7b7f69ca98821ea5501b21ba24ea7b6139da2243"
@@ -1988,7 +1981,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@~18.0.18":
+"@types/react@*", "@types/react@~18.0.26":
   version "18.0.26"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.26.tgz#8ad59fc01fef8eaf5c74f4ea392621749f0b7917"
   integrity sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==

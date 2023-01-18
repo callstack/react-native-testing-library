@@ -29,6 +29,23 @@ exports[`debug 1`] = `
     value=""
   />
   <View
+    accessibilityState={
+      Object {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      Object {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
     accessible={true}
     collapsable={false}
     focusable={true}
@@ -91,6 +108,23 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     value=""
   />
   <View
+    accessibilityState={
+      Object {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      Object {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
     accessible={true}
     collapsable={false}
     focusable={true}
@@ -280,6 +314,23 @@ exports[`debug: another custom message 1`] = `
     value=""
   />
   <View
+    accessibilityState={
+      Object {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      Object {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
     accessible={true}
     collapsable={false}
     focusable={true}
@@ -446,6 +497,23 @@ exports[`debug: with message 1`] = `
     value=""
   />
   <View
+    accessibilityState={
+      Object {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      Object {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
     accessible={true}
     collapsable={false}
     focusable={true}
