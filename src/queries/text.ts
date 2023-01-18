@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { Text } from 'react-native';
-import { getConfig, resetToDefaults } from '../config';
+import { getConfig } from '../config';
 import {
   getCompositeParentOfType,
   isHostElementForType,
