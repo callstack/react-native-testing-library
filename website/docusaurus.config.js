@@ -10,6 +10,7 @@ const siteConfig = {
   projectName: 'react-native-testing-library',
   organizationName: 'callstack',
   favicon: 'img/owl.png',
+  trailingSlash: false,
 
   themeConfig: {
     navbar: {
