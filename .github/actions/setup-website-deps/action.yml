@@ -1,0 +1,22 @@
+name: Setup Website deps
+description: Setup Node.js and install website dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Cache website deps
+      id: yarn-cache-website
+      uses: actions/cache@v3
+      with:
+        path: ./website/node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles('./yarn.lock') }}-website
+
+    - name: Install website deps
+      if: steps.yarn-cache-website.outputs.cache-hit != 'true'
+      run: yarn --cwd website install --frozen-lockfile
+      shell: bash
