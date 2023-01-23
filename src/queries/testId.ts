@@ -30,13 +30,13 @@ const queryAllByTestId = (
   queryOptions?: ByTestIdOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByTestIdFn(testId, queryOptions) {
-    const results = findAll(
+    return findAll(
       instance,
-      (node) => getNodeByTestId(node, testId, queryOptions),
+      (node) =>
+        typeof node.type === 'string' &&
+        getNodeByTestId(node, testId, queryOptions),
       queryOptions
     );
-
-    return results.filter((element) => typeof element.type === 'string');
   };
 
 const getMultipleError = (testId: TextMatch) =>

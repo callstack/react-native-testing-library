@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { findAll } from '../helpers/findAll';
-import { matches, TextMatch, TextMatchOptions } from '../matches';
+import { TextMatch, TextMatchOptions } from '../matches';
+import { matchLabelText } from '../helpers/matchers/matchLabelText';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -14,30 +15,17 @@ import { CommonQueryOptions } from './options';
 
 type ByLabelTextOptions = CommonQueryOptions & TextMatchOptions;
 
-const getNodeByLabelText = (
-  node: ReactTestInstance,
-  text: TextMatch,
-  options: TextMatchOptions = {}
-) => {
-  const { exact, normalizer } = options;
-  return matches(text, node.props.accessibilityLabel, normalizer, exact);
-};
-
-const queryAllByLabelText = (
-  instance: ReactTestInstance
-): ((
-  text: TextMatch,
-  queryOptions?: ByLabelTextOptions
-) => Array<ReactTestInstance>) =>
-  function queryAllByLabelTextFn(text, queryOptions) {
+function queryAllByLabelText(instance: ReactTestInstance) {
+  return (text: TextMatch, queryOptions?: ByLabelTextOptions) => {
     return findAll(
       instance,
       (node) =>
         typeof node.type === 'string' &&
-        getNodeByLabelText(node, text, queryOptions),
+        matchLabelText(instance, node, text, queryOptions),
       queryOptions
     );
   };
+}
 
 const getMultipleError = (labelText: TextMatch) =>
   `Found multiple elements with accessibilityLabel: ${String(labelText)} `;

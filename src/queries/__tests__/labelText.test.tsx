@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { render } from '../..';
 
 const BUTTON_LABEL = 'cool button';
@@ -164,4 +164,32 @@ test('byLabelText queries support hidden option', () => {
   ).toThrowErrorMatchingInlineSnapshot(
     `"Unable to find an element with accessibilityLabel: hidden"`
   );
+});
+
+test('getByLabelText supports accessibilityLabelledBy', async () => {
+  const { getByLabelText, getByTestId } = render(
+    <>
+      <Text nativeID="label">Label for input</Text>
+      {/* @ts-expect-error: waiting for RN 0.71.2 to fix incorrectly omitted `accessibilityLabelledBy` typedef. */}
+      <TextInput testID="textInput" accessibilityLabelledBy="label" />
+    </>
+  );
+
+  expect(getByLabelText('Label for input')).toBe(getByTestId('textInput'));
+  expect(getByLabelText(/input/)).toBe(getByTestId('textInput'));
+});
+
+test('getByLabelText supports nested accessibilityLabelledBy', async () => {
+  const { getByLabelText, getByTestId } = render(
+    <>
+      <View nativeID="label">
+        <Text>Label for input</Text>
+      </View>
+      {/* @ts-expect-error: waiting for RN 0.71.2 to fix incorrectly omitted `accessibilityLabelledBy` typedef. */}
+      <TextInput testID="textInput" accessibilityLabelledBy="label" />
+    </>
+  );
+
+  expect(getByLabelText('Label for input')).toBe(getByTestId('textInput'));
+  expect(getByLabelText(/input/)).toBe(getByTestId('textInput'));
 });
