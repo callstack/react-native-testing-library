@@ -170,6 +170,7 @@ test('getByLabelText supports accessibilityLabelledBy', async () => {
   const { getByLabelText, getByTestId } = render(
     <>
       <Text nativeID="label">Label for input</Text>
+      {/* @ts-expect-error: waiting for RN 0.71.2 to fix incorrectly omitted `accessibilityLabelledBy` typedef. */}
       <TextInput testID="textInput" accessibilityLabelledBy="label" />
     </>
   );
@@ -184,6 +185,7 @@ test('getByLabelText supports nested accessibilityLabelledBy', async () => {
       <View nativeID="label">
         <Text>Label for input</Text>
       </View>
+      {/* @ts-expect-error: waiting for RN 0.71.2 to fix incorrectly omitted `accessibilityLabelledBy` typedef. */}
       <TextInput testID="textInput" accessibilityLabelledBy="label" />
     </>
   );
