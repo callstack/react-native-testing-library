@@ -3,9 +3,7 @@
 import { act as reactTestRendererAct } from 'react-test-renderer';
 import { checkReactVersionAtLeast } from './react-versions';
 
-const actMock = (callback: () => void) => {
-  callback();
-};
+type ReactAct = typeof reactTestRendererAct;
 
 // See https://github.com/reactwg/react-18/discussions/102 for more context on global.IS_REACT_ACT_ENVIRONMENT
 declare global {
@@ -20,10 +18,8 @@ function getIsReactActEnvironment() {
   return globalThis.IS_REACT_ACT_ENVIRONMENT;
 }
 
-type Act = typeof reactTestRendererAct;
-
-function withGlobalActEnvironment(actImplementation: Act) {
-  return (callback: Parameters<Act>[0]) => {
+function withGlobalActEnvironment(actImplementation: ReactAct) {
+  return (callback: Parameters<ReactAct>[0]) => {
     const previousActEnvironment = getIsReactActEnvironment();
     setIsReactActEnvironment(true);
 
@@ -44,6 +40,7 @@ function withGlobalActEnvironment(actImplementation: Act) {
         }
         return result;
       });
+
       if (callbackNeedsToBeAwaited) {
         const thenable = actResult;
         return {
@@ -77,6 +74,14 @@ function withGlobalActEnvironment(actImplementation: Act) {
     }
   };
 }
+
+type MockAct = (callback: () => void) => void;
+type Act = typeof reactTestRendererAct extends undefined ? MockAct : ReactAct;
+
+const actMock = (callback: () => void) => {
+  callback();
+};
+
 const getAct = () => {
   if (!reactTestRendererAct) {
     return actMock;
@@ -86,7 +91,8 @@ const getAct = () => {
     ? withGlobalActEnvironment(reactTestRendererAct)
     : reactTestRendererAct;
 };
-const act = getAct();
+
+const act = getAct() as Act;
 
 export default act;
 export {

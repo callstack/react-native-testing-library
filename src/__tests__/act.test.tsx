@@ -43,7 +43,7 @@ test('fireEvent should trigger useState', () => {
 });
 
 test('should act even if there is no act in react-test-renderer', () => {
-  // @ts-ignore
+  // @ts-expect-error
   ReactTestRenderer.act = undefined;
   const callback = jest.fn();
 
@@ -52,4 +52,14 @@ test('should act even if there is no act in react-test-renderer', () => {
   });
 
   expect(callback).toHaveBeenCalled();
+});
+
+test('should be able to not await act', async () => {
+  const result = act(() => {});
+  expect(result).toBe(undefined);
+});
+
+test('should be able to await act', async () => {
+  const result = await act(async () => {});
+  expect(result).toBe(undefined);
 });
