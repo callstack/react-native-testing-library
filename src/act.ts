@@ -75,13 +75,9 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
   };
 }
 
-const getAct = () => {
-  return checkReactVersionAtLeast(18, 0)
-    ? withGlobalActEnvironment(reactTestRendererAct)
-    : reactTestRendererAct;
-};
-
-const act = getAct() as ReactAct;
+const act: ReactAct = checkReactVersionAtLeast(18, 0)
+  ? (withGlobalActEnvironment(reactTestRendererAct) as ReactAct)
+  : reactTestRendererAct;
 
 export default act;
 export {
