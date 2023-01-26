@@ -56,7 +56,7 @@ test('should act even if there is no act in react-test-renderer', () => {
 
 test('should be able to not await act', async () => {
   const result = act(() => {});
-  expect(result).toBe(undefined);
+  expect(result).toHaveProperty('then');
 });
 
 test('should be able to await act', async () => {
