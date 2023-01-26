@@ -75,24 +75,13 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
   };
 }
 
-type MockAct = (callback: () => void) => void;
-type Act = typeof reactTestRendererAct extends undefined ? MockAct : ReactAct;
-
-const actMock = (callback: () => void) => {
-  callback();
-};
-
 const getAct = () => {
-  if (!reactTestRendererAct) {
-    return actMock;
-  }
-
   return checkReactVersionAtLeast(18, 0)
     ? withGlobalActEnvironment(reactTestRendererAct)
     : reactTestRendererAct;
 };
 
-const act = getAct() as Act;
+const act = getAct() as ReactAct;
 
 export default act;
 export {
