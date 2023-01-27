@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, Pressable } from 'react-native';
 import { render, screen, fireEvent, RenderAPI } from '..';
 import { configureInternal } from '../config';
 
