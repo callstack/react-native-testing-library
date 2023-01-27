@@ -265,42 +265,42 @@ test('*ByA11yState deprecation warnings', () => {
 
   view.getByA11yState({ disabled: true });
   expect(mockCalls[0][0]).toMatchInlineSnapshot(`
-    "getByA11yState(...) is deprecated.
+    "getByA11yState(...) is deprecated and will be removed in the future.
 
     Use getByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);
 
   view.getAllByA11yState({ disabled: true });
   expect(mockCalls[1][0]).toMatchInlineSnapshot(`
-    "getAllByA11yState(...) is deprecated.
+    "getAllByA11yState(...) is deprecated and will be removed in the future.
 
     Use getAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);
 
   view.queryByA11yState({ disabled: true });
   expect(mockCalls[2][0]).toMatchInlineSnapshot(`
-    "queryByA11yState(...) is deprecated.
+    "queryByA11yState(...) is deprecated and will be removed in the future.
 
     Use queryByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);
 
   view.queryAllByA11yState({ disabled: true });
   expect(mockCalls[3][0]).toMatchInlineSnapshot(`
-    "queryAllByA11yState(...) is deprecated.
+    "queryAllByA11yState(...) is deprecated and will be removed in the future.
 
     Use queryAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);
 
   view.findByA11yState({ disabled: true });
   expect(mockCalls[4][0]).toMatchInlineSnapshot(`
-    "findByA11yState(...) is deprecated.
+    "findByA11yState(...) is deprecated and will be removed in the future.
 
     Use findByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);
 
   view.findAllByA11yState({ disabled: true });
   expect(mockCalls[5][0]).toMatchInlineSnapshot(`
-    "findAllByA11yState(...) is deprecated.
+    "findAllByA11yState(...) is deprecated and will be removed in the future.
 
     Use findAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);
@@ -312,42 +312,42 @@ test('*ByAccessibilityState deprecation warnings', () => {
 
   view.getByAccessibilityState({ disabled: true });
   expect(mockCalls[0][0]).toMatchInlineSnapshot(`
-    "getByAccessibilityState(...) is deprecated.
+    "getByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use getByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);
 
   view.getAllByAccessibilityState({ disabled: true });
   expect(mockCalls[1][0]).toMatchInlineSnapshot(`
-    "getAllByAccessibilityState(...) is deprecated.
+    "getAllByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use getAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);
 
   view.queryByAccessibilityState({ disabled: true });
   expect(mockCalls[2][0]).toMatchInlineSnapshot(`
-    "queryByAccessibilityState(...) is deprecated.
+    "queryByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use queryByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);
 
   view.queryAllByAccessibilityState({ disabled: true });
   expect(mockCalls[3][0]).toMatchInlineSnapshot(`
-    "queryAllByAccessibilityState(...) is deprecated.
+    "queryAllByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use queryAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);
 
   view.findByAccessibilityState({ disabled: true });
   expect(mockCalls[4][0]).toMatchInlineSnapshot(`
-    "findByAccessibilityState(...) is deprecated.
+    "findByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use findByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);
 
   view.findAllByAccessibilityState({ disabled: true });
   expect(mockCalls[5][0]).toMatchInlineSnapshot(`
-    "findAllByAccessibilityState(...) is deprecated.
+    "findAllByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use findAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead."
   `);

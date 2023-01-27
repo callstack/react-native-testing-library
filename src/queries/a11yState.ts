@@ -1,7 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { AccessibilityState } from 'react-native';
 import { accessibilityStateKeys } from '../helpers/accessiblity';
-import { deprecateAllQueries } from '../helpers/deprecation';
+import { deprecateQueries } from '../helpers/deprecation';
 import { findAll } from '../helpers/findAll';
 import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
 import { makeQueries } from './makeQueries';
@@ -93,7 +93,7 @@ export const bindByA11yStateQueries = (
   const findAllByA11yState = findAllBy(instance);
 
   return {
-    ...deprecateAllQueries(
+    ...deprecateQueries(
       {
         getByA11yState,
         getAllByA11yState,

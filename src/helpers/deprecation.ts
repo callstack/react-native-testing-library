@@ -1,6 +1,6 @@
 import { getQueryPrefix } from './query-name';
 
-export function deprecateAllQueries<Queries extends Record<string, any>>(
+export function deprecateQueries<Queries extends Record<string, any>>(
   queriesObject: Queries,
   recommendation: string
 ): Queries {
@@ -14,7 +14,7 @@ export function deprecateAllQueries<Queries extends Record<string, any>>(
   return result;
 }
 
-export function deprecateQuery<QueryFn extends (...args: any) => any>(
+function deprecateQuery<QueryFn extends (...args: any) => any>(
   queryFn: QueryFn,
   queryName: string,
   recommendation: string
@@ -26,7 +26,7 @@ export function deprecateQuery<QueryFn extends (...args: any) => any>(
 
   // @ts-expect-error: generic typing is hard
   const wrapper: QueryFn = (...args: any) => {
-    const errorMessage = `${queryName}(...) is deprecated.\n\n${formattedRecommendation}`;
+    const errorMessage = `${queryName}(...) is deprecated and will be removed in the future.\n\n${formattedRecommendation}`;
     // eslint-disable-next-line no-console
     console.warn(errorMessage);
     return queryFn(...args);

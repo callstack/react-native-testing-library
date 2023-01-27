@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { accessiblityValueKeys } from '../helpers/accessiblity';
-import { deprecateAllQueries } from '../helpers/deprecation';
+import { deprecateQueries } from '../helpers/deprecation';
 import { findAll } from '../helpers/findAll';
 import {
   AccessibilityValueMatcher,
@@ -110,7 +110,7 @@ export const bindByA11yValueQueries = (
   const findAllByA11yValue = findAllBy(instance);
 
   return {
-    ...deprecateAllQueries(
+    ...deprecateQueries(
       {
         getByA11yValue,
         getAllByA11yValue,
