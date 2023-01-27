@@ -116,8 +116,6 @@ function buildRenderResult(
         return instance;
       }
 
-      // eslint-disable-next-line no-console
-      console.warn(`'container' property has been renamed to 'UNSAFE_root'`);
       throw new Error("'container' property has been renamed to 'UNSAFE_root'");
     },
   };

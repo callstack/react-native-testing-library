@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`toJSON 1`] = `
+exports[`toJSON renders host output 1`] = `
 <View
   accessibilityState={
     {

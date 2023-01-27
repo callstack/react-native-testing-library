@@ -148,7 +148,7 @@ test('unmount should handle cleanup functions', () => {
   expect(cleanup).toHaveBeenCalledTimes(1);
 });
 
-test('toJSON', () => {
+test('toJSON renders host output', () => {
   const { toJSON } = render(<MyButton>press me</MyButton>);
 
   expect(toJSON()).toMatchSnapshot();

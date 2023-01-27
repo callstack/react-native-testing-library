@@ -1,10 +1,10 @@
+/** This is a copy of regular tests with `useBreakingChanges` flag turned on. */
+
 /* eslint-disable no-console */
 import * as React from 'react';
 import { View, Text, TextInput, Pressable } from 'react-native';
 import { render, screen, fireEvent, RenderAPI } from '..';
 import { configureInternal } from '../config';
-
-type ConsoleLogMock = jest.Mock<typeof console.log>;
 
 beforeEach(() => {
   configureInternal({ useBreakingChanges: true });
@@ -155,9 +155,8 @@ test('unmount should handle cleanup functions', () => {
   expect(cleanup).toHaveBeenCalledTimes(1);
 });
 
-test('toJSON', () => {
+test('toJSON renders host output', () => {
   const { toJSON } = render(<MyButton>press me</MyButton>);
-
   expect(toJSON()).toMatchSnapshot();
 });
 
@@ -228,21 +227,12 @@ test('returns composite UNSAFE_root', () => {
 });
 
 test('container displays deprecation', () => {
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
-  const mockCalls = (console.warn as ConsoleLogMock).mock.calls;
   const view = render(<View testID="inner" />);
 
   expect(() => view.container).toThrowErrorMatchingInlineSnapshot(
     `"'container' property has been renamed to 'UNSAFE_root'"`
   );
-  expect(mockCalls[0][0]).toMatchInlineSnapshot(
-    `"'container' property has been renamed to 'UNSAFE_root'"`
-  );
-
   expect(() => screen.container).toThrowErrorMatchingInlineSnapshot(
-    `"'container' property has been renamed to 'UNSAFE_root'"`
-  );
-  expect(mockCalls[1][0]).toMatchInlineSnapshot(
     `"'container' property has been renamed to 'UNSAFE_root'"`
   );
 });
