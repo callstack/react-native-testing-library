@@ -312,9 +312,9 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 ### `ByA11yState`, `ByAccessibilityState` (deprecated)
 
 :::caution
-This method has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
+This method has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
 * [`*ByRole`](#byrole) query with relevant state options:  `disabled`, `selected`, `checked`, `expanded` and `busy`
-* [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) Jest matcher to check the state of element found using some other query.
+* [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) Jest matcher to check the state of element found using some other query
 :::
 
 > getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState, findByA11yState, findAllByA11yState
@@ -375,8 +375,8 @@ The difference in handling default values is made to reflect observed accessibil
 ### `ByA11Value`, `ByAccessibilityValue` (deprecated)
 
 :::caution
-This method has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
-* [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query.
+This method has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
+* [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
 * [`*ByRole`](#byrole) query with `value` option
 :::
 
