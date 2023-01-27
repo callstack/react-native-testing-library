@@ -1,4 +1,4 @@
-/** This is a copy of regular test with `useBreakingChanges` flag turned on. */
+/** This is a copy of regular tests with `useBreakingChanges` flag turned on. */
 
 import * as React from 'react';
 import { View, TextInput } from 'react-native';
