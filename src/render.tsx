@@ -10,6 +10,7 @@ import { getQueriesForElement } from './within';
 import { setRenderResult, screen } from './screen';
 import { validateStringsRenderedWithinText } from './helpers/stringValidation';
 import { getConfig } from './config';
+import { getHostChildren } from './helpers/component-tree';
 import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
 
 export type RenderOptions = {
@@ -103,10 +104,22 @@ function buildRenderResult(
     ...getQueriesForElement(instance),
     update,
     unmount,
-    container: instance,
     rerender: update, // alias for `update`
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
+    get root() {
+      return getHostChildren(instance)[0];
+    },
+    UNSAFE_root: instance,
+    get container() {
+      if (!getConfig().useBreakingChanges) {
+        return instance;
+      }
+
+      // eslint-disable-next-line no-console
+      console.warn(`'container' property has been renamed to 'UNSAFE_root'`);
+      throw new Error("'container' property has been renamed to 'UNSAFE_root'");
+    },
   };
 
   setRenderResult(result);

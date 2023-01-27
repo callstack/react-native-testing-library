@@ -19,7 +19,8 @@ title: API
     - [`mapProps` option](#mapprops-option)
     - [`debug.shallow`](#debugshallow)
   - [`toJSON`](#tojson)
-  - [`container`](#container)
+  - [`root`](#root)
+  - [`UNSAFE_root`](#unsafe_root)
 - [`screen`](#screen)
 - [`cleanup`](#cleanup)
 - [`fireEvent`](#fireevent)
@@ -251,13 +252,31 @@ toJSON(): ReactTestRendererJSON | null
 
 Get the rendered component JSON representation, e.g. for snapshot testing.
 
-### `container`
+### `root`
 
 ```ts
-container: ReactTestInstance;
+root: ReactTestInstance;
 ```
 
-A reference to the rendered root element.
+Returns the rendered root host element.
+
+This API is primarily useful in component tests, as it allows you to access root host view without using `ByTestId` queries or similar methods.
+
+### `UNSAFE_root`
+
+```ts
+UNSAFE_root: ReactTestInstance;
+```
+
+Returns the rendered root element.
+
+::caution
+This API typically will return a composite view which goes against recommended testing practices. This API is primarily available for legacy test suits that rely on such testing.
+::
+
+::note
+Previously this API has been named `container` for compatibility with React Testing Library. However, despite the same name, the actual behavior has been signficantly different, hence the name change to `UNSAFE_root`.
+::
 
 ## `screen`
 

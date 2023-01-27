@@ -1,7 +1,14 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
-import { render, fireEvent, RenderAPI } from '..';
+import { render, screen, fireEvent, RenderAPI } from '..';
+import { configureInternal } from '../config';
+
+type ConsoleLogMock = jest.Mock<typeof console.log>;
+
+beforeEach(() => {
+  configureInternal({ useBreakingChanges: true });
+});
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -220,31 +227,24 @@ test('returns UNSAFE_root', () => {
   expect(UNSAFE_root.props.testID).toBe('inner');
 });
 
-test('returns container', () => {
-  const { container } = render(<View testID="inner" />);
+test('container displays deprecation', () => {
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const mockCalls = (console.warn as ConsoleLogMock).mock.calls;
+  const view = render(<View testID="inner" />);
 
-  expect(container).toBeDefined();
-  // `View` composite component is returned. This behavior will break if we
-  // start returning only host components.
-  expect(container.type).toBe(View);
-  expect(container.props.testID).toBe('inner');
-});
-
-test('returns wrapper component as container', () => {
-  type WrapperComponentProps = { children: React.ReactNode };
-  const WrapperComponent = ({ children }: WrapperComponentProps) => (
-    <SafeAreaView testID="wrapper">{children}</SafeAreaView>
+  expect(() => view.container).toThrowErrorMatchingInlineSnapshot(
+    `"'container' property has been renamed to 'UNSAFE_root'"`
+  );
+  expect(mockCalls[0][0]).toMatchInlineSnapshot(
+    `"'container' property has been renamed to 'UNSAFE_root'"`
   );
 
-  const { container } = render(<View testID="inner" />, {
-    wrapper: WrapperComponent,
-  });
-
-  expect(container).toBeDefined();
-  // `WrapperComponent` composite component is returned with no testID passed to
-  // it. This behavior will break if we start returning only host components.
-  expect(container.type).toBe(WrapperComponent);
-  expect(container.props.testID).not.toBeDefined();
+  expect(() => screen.container).toThrowErrorMatchingInlineSnapshot(
+    `"'container' property has been renamed to 'UNSAFE_root'"`
+  );
+  expect(mockCalls[1][0]).toMatchInlineSnapshot(
+    `"'container' property has been renamed to 'UNSAFE_root'"`
+  );
 });
 
 test('RenderAPI type', () => {
