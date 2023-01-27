@@ -118,13 +118,6 @@ export const bindByA11yValueQueries = (
         queryAllByA11yValue,
         findByA11yValue,
         findAllByA11yValue,
-      },
-      'A11yValue',
-      'Role(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher'
-    ),
-
-    ...deprecateAllQueries(
-      {
         getByAccessibilityValue: getByA11yValue,
         getAllByAccessibilityValue: getAllByA11yValue,
         queryByAccessibilityValue: queryByA11yValue,
@@ -132,8 +125,7 @@ export const bindByA11yValueQueries = (
         findByAccessibilityValue: findByA11yValue,
         findAllByAccessibilityValue: findAllByA11yValue,
       },
-      'AccessibilityValue',
-      'Role(role, { value: ... }) query or expect(...).toHaveAccessibilityValue(...) matcher'
+      'Use expect(...).toHaveAccessibilityValue(...) matcher or {queryPrefix}ByRole(role, { value: ... }) query instead.'
     ),
   };
 };

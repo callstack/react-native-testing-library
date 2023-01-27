@@ -101,13 +101,6 @@ export const bindByA11yStateQueries = (
         queryAllByA11yState,
         findByA11yState,
         findAllByA11yState,
-      },
-      'A11yState',
-      'Role(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher'
-    ),
-
-    ...deprecateAllQueries(
-      {
         getByAccessibilityState: getByA11yState,
         getAllByAccessibilityState: getAllByA11yState,
         queryByAccessibilityState: queryByA11yState,
@@ -115,8 +108,7 @@ export const bindByA11yStateQueries = (
         findByAccessibilityState: findByA11yState,
         findAllByAccessibilityState: findAllByA11yState,
       },
-      'AccessibilityState',
-      'Role(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher'
+      'Use {queryPrefix}ByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher instead.'
     ),
   };
 };
