@@ -258,7 +258,7 @@ Get the rendered component JSON representation, e.g. for snapshot testing.
 root: ReactTestInstance;
 ```
 
-Returns the rendered root host element.
+Returns the rendered root [host element](testing-env#host-and-composite-components).
 
 This API is primarily useful in component tests, as it allows you to access root host view without using `ByTestId` queries or similar methods.
 
@@ -268,14 +268,14 @@ This API is primarily useful in component tests, as it allows you to access root
 UNSAFE_root: ReactTestInstance;
 ```
 
-Returns the rendered root element.
+Returns the rendered [composite root element](testing-env#host-and-composite-components).
 
 ::caution
 This API typically will return a composite view which goes against recommended testing practices. This API is primarily available for legacy test suits that rely on such testing.
 ::
 
 ::note
-Previously this API has been named `container` for compatibility with React Testing Library. However, despite the same name, the actual behavior has been signficantly different, hence the name change to `UNSAFE_root`.
+This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/api#container-1). However, despite the same name, the actual behavior has been signficantly different, hence the name change to `UNSAFE_root`.
 ::
 
 ## `screen`
