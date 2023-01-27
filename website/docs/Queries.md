@@ -312,13 +312,9 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 ### `ByA11yState`, `ByAccessibilityState` (deprecated)
 
 :::caution
-This method has been marked deprecated, as similar functionallity can be better achieved using [`*ByRole`](#byrole) query with state options (`disabled`, `selected`, etc) or by using [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) Jest matcher.
-:::
-
-:::caution
-This query uses a predicate that is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
-* use one of [`ByRole`](#byrole) queries with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
-* use [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) matcher to check the state of element found using some other query
+This method has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
+* [`*ByRole`](#byrole) query with relevant state options:  `disabled`, `selected`, `checked`, `expanded` and `busy`
+* [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) Jest matcher to check the state of element found using some other query.
 :::
 
 > getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState, findByA11yState, findAllByA11yState
@@ -379,15 +375,10 @@ The difference in handling default values is made to reflect observed accessibil
 ### `ByA11Value`, `ByAccessibilityValue` (deprecated)
 
 :::caution
-This method has been marked deprecated, as similar functionallity can be better achieved using [`*ByRole`](#byrole) query with `value` option or by using [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) Jest matcher.
+This method has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
+* [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query.
+* [`*ByRole`](#byrole) query with `value` option
 :::
-
-:::caution
-This query uses a predicate that is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
-* use one of [`ByRole`](#byrole) queries with `value` option
-* use [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) matcher to check the state of element found using some other query
-:::
-
 
 > getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue, findByA11yValue, findAllByA11yValue
 > getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue, findByAccessibilityValue, findAllByAccessibilityValue
