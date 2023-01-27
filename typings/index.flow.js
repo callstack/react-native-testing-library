@@ -436,6 +436,8 @@ declare module '@testing-library/react-native' {
     unmount(nextElement?: React.Element<any>): void;
     toJSON(): ReactTestRendererJSON[] | ReactTestRendererJSON | null;
     debug: Debug;
+    root: ReactTestInstance;
+    UNSAFE_root: ReactTestInstance;
     container: ReactTestInstance;
   }
 

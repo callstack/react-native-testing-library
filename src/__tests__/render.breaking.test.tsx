@@ -219,7 +219,7 @@ test('returns host root', () => {
   expect(root.props.testID).toBe('inner');
 });
 
-test('returns UNSAFE_root', () => {
+test('returns composite UNSAFE_root', () => {
   const { UNSAFE_root } = render(<View testID="inner" />);
 
   expect(UNSAFE_root).toBeDefined();
