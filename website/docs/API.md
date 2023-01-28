@@ -30,11 +30,11 @@ title: API
     - [On a `ScrollView`](#on-a-scrollview)
     - [On a `FlatList`](#on-a-flatlist)
 - [`waitFor`](#waitfor)
-    - [Using jest fake timers](#using-jest-fake-timers)
+  - [Using Jest fake timers](#using-jest-fake-timers)
 - [`waitForElementToBeRemoved`](#waitforelementtoberemoved)
 - [`within`, `getQueriesForElement`](#within-getqueriesforelement)
-- [`query` APIs](#query-apis)
-- [`queryAll` APIs](#queryall-apis)
+- [`queryBy*` APIs](#queryby-apis)
+- [`queryAll*` APIs](#queryall-apis)
 - [`act`](#act)
 - [`renderHook`](#renderhook)
   - [`callback`](#callback)
@@ -683,9 +683,9 @@ Use cases for scoped queries include:
 - queries scoped to a single item inside a FlatList containing many items
 - queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
 
-## `query` APIs
+## `queryBy*` APIs
 
-Each of the `getBy` APIs listed in the render section above have a complimentary `queryBy` API. The `getBy` APIs will throw errors if a proper node cannot be found. This is normally the desired effect. However, if you want to make an assertion that an element is not present in the hierarchy, then you can use the `queryBy` API instead:
+Each of the `getBy*` APIs listed in the render section above have a complimentary `queryBy*` API. The `getBy*` APIs will throw errors if a proper node cannot be found. This is normally the desired effect. However, if you want to make an assertion that an element is not present in the hierarchy, then you can use the `queryBy*` API instead:
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -695,9 +695,9 @@ const submitButton = screen.queryByText('submit');
 expect(submitButton).not.toBeOnTheScreen(); // it doesn't exist
 ```
 
-## `queryAll` APIs
+## `queryAll*` APIs
 
-Each of the query APIs have a corresponding `queryAll` version that always returns an array of matching nodes. `getAll` is the same but throws when the array has a length of 0.
+Each of the query APIs have a corresponding `queryAll*` version that always returns an array of matching nodes. `getAll*` is the same but throws when the array has a length of 0.
 
 ```jsx
 import { render } from '@testing-library/react-native';

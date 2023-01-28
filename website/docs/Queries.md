@@ -312,7 +312,7 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 ### `ByA11yState`, `ByAccessibilityState` (deprecated)
 
 :::caution
-This method has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
+This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
 * [`*ByRole`](#byrole) query with relevant state options:  `disabled`, `selected`, `checked`, `expanded` and `busy`
 * [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) Jest matcher to check the state of element found using some other query
 :::
@@ -375,7 +375,7 @@ The difference in handling default values is made to reflect observed accessibil
 ### `ByA11Value`, `ByAccessibilityValue` (deprecated)
 
 :::caution
-This method has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
+This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
 * [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
 * [`*ByRole`](#byrole) query with `value` option
 :::
@@ -551,7 +551,7 @@ The interface is the same as for other queries, but we won't provide full names 
 Returns a `ReactTestInstance` with matching a React component type.
 
 :::caution
-This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
 :::
 
 ### `UNSAFE_ByProps`
@@ -561,7 +561,7 @@ This method has been marked unsafe, since it requires knowledge about implementa
 Returns a `ReactTestInstance` with matching props object.
 
 :::caution
-This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
 :::
 
 </details>
