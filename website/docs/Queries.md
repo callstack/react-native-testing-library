@@ -22,10 +22,10 @@ title: Queries
   - [`ByHintText`, `ByA11yHint`, `ByAccessibilityHint`](#byhinttext-bya11yhint-byaccessibilityhint)
   - [`ByRole`](#byrole)
     - [Options](#options-1)
-  - [`ByA11yState`, `ByAccessibilityState`](#bya11ystate-byaccessibilitystate)
+  - [`ByA11yState`, `ByAccessibilityState` (deprecated)](#bya11ystate-byaccessibilitystate-deprecated)
     - [Default state for: `disabled`, `selected`, and `busy` keys](#default-state-for-disabled-selected-and-busy-keys)
     - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
-  - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
+  - [`ByA11Value`, `ByAccessibilityValue` (deprecated)](#bya11value-byaccessibilityvalue-deprecated)
 - [Common options](#common-options)
   - [`includeHiddenElements` option](#includehiddenelements-option)
 - [TextMatch](#textmatch)
@@ -309,12 +309,12 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 
 `value`: Filter elements by their accessibility, available value entries include numeric `min`, `max` & `now`, as well as string or regex `text` key. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about this prop.
 
-### `ByA11yState`, `ByAccessibilityState`
+### `ByA11yState`, `ByAccessibilityState` (deprecated)
 
 :::caution
-This query uses a predicate that is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
-* use one of [`ByRole`](#byrole) queries with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
-* use [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) matcher to check the state of element found using some other query
+This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
+* [`*ByRole`](#byrole) query with relevant state options:  `disabled`, `selected`, `checked`, `expanded` and `busy`
+* [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) Jest matcher to check the state of element found using some other query
 :::
 
 > getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState, findByA11yState, findAllByA11yState
@@ -372,14 +372,13 @@ but will not match elements with following props:
 The difference in handling default values is made to reflect observed accessibility behaviour on iOS and Android platforms.
 :::
 
-### `ByA11Value`, `ByAccessibilityValue`
+### `ByA11Value`, `ByAccessibilityValue` (deprecated)
 
 :::caution
-This query uses a predicate that is typically too general to give meaningful results. Therefore, it's better to use one of the following options:
-* use one of [`ByRole`](#byrole) queries with `value` option
-* use [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) matcher to check the state of element found using some other query
+This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
+* [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
+* [`*ByRole`](#byrole) query with `value` option
 :::
-
 
 > getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue, findByA11yValue, findAllByA11yValue
 > getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue, findByAccessibilityValue, findAllByAccessibilityValue
@@ -552,7 +551,7 @@ The interface is the same as for other queries, but we won't provide full names 
 Returns a `ReactTestInstance` with matching a React component type.
 
 :::caution
-This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
 :::
 
 ### `UNSAFE_ByProps`
@@ -562,7 +561,7 @@ This method has been marked unsafe, since it requires knowledge about implementa
 Returns a `ReactTestInstance` with matching props object.
 
 :::caution
-This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
 :::
 
 </details>

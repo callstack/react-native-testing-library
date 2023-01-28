@@ -1,6 +1,13 @@
+/* eslint-disable no-console */
 import * as React from 'react';
 import { View, Text, Pressable, TouchableOpacity } from 'react-native';
 import { render } from '../..';
+
+type ConsoleLogMock = jest.Mock<typeof console.log>;
+
+beforeEach(() => {
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+});
 
 const TEXT_LABEL = 'cool text';
 
@@ -250,4 +257,98 @@ test('byA11yState queries support hidden option', () => {
   ).toThrowErrorMatchingInlineSnapshot(
     `"Unable to find an element with expanded state: false"`
   );
+});
+
+test('*ByA11yState deprecation warnings', () => {
+  const mockCalls = (console.warn as ConsoleLogMock).mock.calls;
+  const view = render(<View accessibilityState={{ disabled: true }} />);
+
+  view.getByA11yState({ disabled: true });
+  expect(mockCalls[0][0]).toMatchInlineSnapshot(`
+    "getByA11yState(...) is deprecated and will be removed in the future.
+
+    Use getByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+
+  view.getAllByA11yState({ disabled: true });
+  expect(mockCalls[1][0]).toMatchInlineSnapshot(`
+    "getAllByA11yState(...) is deprecated and will be removed in the future.
+
+    Use getAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+
+  view.queryByA11yState({ disabled: true });
+  expect(mockCalls[2][0]).toMatchInlineSnapshot(`
+    "queryByA11yState(...) is deprecated and will be removed in the future.
+
+    Use queryByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+
+  view.queryAllByA11yState({ disabled: true });
+  expect(mockCalls[3][0]).toMatchInlineSnapshot(`
+    "queryAllByA11yState(...) is deprecated and will be removed in the future.
+
+    Use queryAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+
+  view.findByA11yState({ disabled: true });
+  expect(mockCalls[4][0]).toMatchInlineSnapshot(`
+    "findByA11yState(...) is deprecated and will be removed in the future.
+
+    Use findByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+
+  view.findAllByA11yState({ disabled: true });
+  expect(mockCalls[5][0]).toMatchInlineSnapshot(`
+    "findAllByA11yState(...) is deprecated and will be removed in the future.
+
+    Use findAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+});
+
+test('*ByAccessibilityState deprecation warnings', () => {
+  const mockCalls = (console.warn as ConsoleLogMock).mock.calls;
+  const view = render(<View accessibilityState={{ disabled: true }} />);
+
+  view.getByAccessibilityState({ disabled: true });
+  expect(mockCalls[0][0]).toMatchInlineSnapshot(`
+    "getByAccessibilityState(...) is deprecated and will be removed in the future.
+
+    Use getByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+
+  view.getAllByAccessibilityState({ disabled: true });
+  expect(mockCalls[1][0]).toMatchInlineSnapshot(`
+    "getAllByAccessibilityState(...) is deprecated and will be removed in the future.
+
+    Use getAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+
+  view.queryByAccessibilityState({ disabled: true });
+  expect(mockCalls[2][0]).toMatchInlineSnapshot(`
+    "queryByAccessibilityState(...) is deprecated and will be removed in the future.
+
+    Use queryByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+
+  view.queryAllByAccessibilityState({ disabled: true });
+  expect(mockCalls[3][0]).toMatchInlineSnapshot(`
+    "queryAllByAccessibilityState(...) is deprecated and will be removed in the future.
+
+    Use queryAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+
+  view.findByAccessibilityState({ disabled: true });
+  expect(mockCalls[4][0]).toMatchInlineSnapshot(`
+    "findByAccessibilityState(...) is deprecated and will be removed in the future.
+
+    Use findByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+
+  view.findAllByAccessibilityState({ disabled: true });
+  expect(mockCalls[5][0]).toMatchInlineSnapshot(`
+    "findAllByAccessibilityState(...) is deprecated and will be removed in the future.
+
+    Use findAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
 });

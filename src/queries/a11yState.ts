@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { AccessibilityState } from 'react-native';
 import { accessibilityStateKeys } from '../helpers/accessiblity';
+import { deprecateQueries } from '../helpers/deprecation';
 import { findAll } from '../helpers/findAll';
 import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
 import { makeQueries } from './makeQueries';
@@ -92,18 +93,22 @@ export const bindByA11yStateQueries = (
   const findAllByA11yState = findAllBy(instance);
 
   return {
-    getByA11yState,
-    getAllByA11yState,
-    queryByA11yState,
-    queryAllByA11yState,
-    findByA11yState,
-    findAllByA11yState,
-
-    getByAccessibilityState: getByA11yState,
-    getAllByAccessibilityState: getAllByA11yState,
-    queryByAccessibilityState: queryByA11yState,
-    queryAllByAccessibilityState: queryAllByA11yState,
-    findByAccessibilityState: findByA11yState,
-    findAllByAccessibilityState: findAllByA11yState,
+    ...deprecateQueries(
+      {
+        getByA11yState,
+        getAllByA11yState,
+        queryByA11yState,
+        queryAllByA11yState,
+        findByA11yState,
+        findAllByA11yState,
+        getByAccessibilityState: getByA11yState,
+        getAllByAccessibilityState: getAllByA11yState,
+        queryByAccessibilityState: queryByA11yState,
+        queryAllByAccessibilityState: queryAllByA11yState,
+        findByAccessibilityState: findByA11yState,
+        findAllByAccessibilityState: findAllByA11yState,
+      },
+      'Use {queryPrefix}ByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead.'
+    ),
   };
 };
