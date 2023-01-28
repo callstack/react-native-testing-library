@@ -229,12 +229,16 @@ test('returns composite UNSAFE_root', () => {
 test('container displays deprecation', () => {
   const view = render(<View testID="inner" />);
 
-  expect(() => view.container).toThrowErrorMatchingInlineSnapshot(
-    `"'container' property has been renamed to 'UNSAFE_root'"`
-  );
-  expect(() => screen.container).toThrowErrorMatchingInlineSnapshot(
-    `"'container' property has been renamed to 'UNSAFE_root'"`
-  );
+  expect(() => view.container).toThrowErrorMatchingInlineSnapshot(`
+    "'container' property has been renamed to 'UNSAFE_root'.
+
+    Consider using 'root' property which returns root host element."
+  `);
+  expect(() => screen.container).toThrowErrorMatchingInlineSnapshot(`
+    "'container' property has been renamed to 'UNSAFE_root'.
+
+    Consider using 'root' property which returns root host element."
+  `);
 });
 
 test('RenderAPI type', () => {

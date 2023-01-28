@@ -3,6 +3,12 @@ import * as React from 'react';
 import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
 import { render, fireEvent, RenderAPI } from '..';
 
+type ConsoleLogMock = jest.Mock<typeof console.log>;
+
+beforeEach(() => {
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+});
+
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
@@ -222,6 +228,13 @@ test('returns composite UNSAFE_root', () => {
 
 test('returns container', () => {
   const { container } = render(<View testID="inner" />);
+
+  const mockCalls = (console.warn as any as ConsoleLogMock).mock.calls;
+  expect(mockCalls[0][0]).toMatchInlineSnapshot(`
+    "'container' property is deprecated and has been renamed to 'UNSAFE_root'.
+
+    Consider using 'root' property which returns root host element."
+  `);
 
   expect(container).toBeDefined();
   // `View` composite component is returned. This behavior will break if we
