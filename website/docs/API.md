@@ -271,7 +271,7 @@ UNSAFE_root: ReactTestInstance;
 Returns the rendered [composite root element](testing-env#host-and-composite-components).
 
 :::caution
-This API typically will return a composite view which goes against recommended testing practices. This API is primarily available for legacy test suits that rely on such testing.
+This API typically will return a composite view which goes against recommended testing practices. This API is primarily available for legacy test suites that rely on such testing.
 :::
 
 :::note
