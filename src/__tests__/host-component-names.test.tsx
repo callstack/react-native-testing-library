@@ -1,8 +1,10 @@
+import React from 'react';
 import { View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { configureInternal, getConfig } from '../config';
 import { getHostComponentNames } from '../helpers/host-component-names';
 import * as within from '../within';
+import { act, render } from '..';
 
 const mockCreate = jest.spyOn(TestRenderer, 'create') as jest.Mock;
 const mockGetQueriesForElements = jest.spyOn(
@@ -33,6 +35,15 @@ describe('getHostComponentNames', () => {
       text: 'banana',
       textInput: 'banana',
     });
+  });
+
+  test('does not throw when wrapped in act after render has been called', () => {
+    render(<View />);
+    expect(() =>
+      act(() => {
+        getHostComponentNames();
+      })
+    ).not.toThrow();
   });
 
   test('throw an error when autodetection fails', () => {
