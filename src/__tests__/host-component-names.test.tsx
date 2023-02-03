@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { configureInternal, getConfig } from '../config';
