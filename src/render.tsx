@@ -10,6 +10,7 @@ import { getQueriesForElement } from './within';
 import { setRenderResult, screen } from './screen';
 import { validateStringsRenderedWithinText } from './helpers/stringValidation';
 import { getConfig } from './config';
+import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
 
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
@@ -35,6 +36,8 @@ export default function render<T>(
     unstable_validateStringsRenderedWithinText,
   }: RenderOptions = {}
 ) {
+  configureHostComponentNamesIfNeeded();
+
   if (unstable_validateStringsRenderedWithinText) {
     return renderWithStringValidation(component, {
       wrapper: Wrapper,
