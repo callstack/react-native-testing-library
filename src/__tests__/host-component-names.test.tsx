@@ -27,13 +27,16 @@ describe('getHostComponentNames', () => {
     });
   });
 
-  test('throws when names are missing in the internal config', () => {
-    expect(() => getHostComponentNames()).toThrowErrorMatchingInlineSnapshot(`
-      "Missing host component names.
+  test('detects host component names if not present in internal config', () => {
+    expect(getConfig().hostComponentNames).toBeUndefined();
 
-      There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
-      Please check if you are using compatible versions of React Native and React Native Testing Library."
-    `);
+    const hostComponentNames = getHostComponentNames();
+
+    expect(hostComponentNames).toEqual({
+      text: 'Text',
+      textInput: 'TextInput',
+    });
+    expect(getConfig().hostComponentNames).toBe(hostComponentNames);
   });
 
   // Repro test for case when user indirectly triggers `getHostComponentNames` calls from

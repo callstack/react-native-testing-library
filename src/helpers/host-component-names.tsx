@@ -3,16 +3,18 @@ import { Text, TextInput, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { getQueriesForElement } from '../within';
-const defaultErrorMessage = `There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
+
+const userConfigErrorMessage = `There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
 Please check if you are using compatible versions of React Native and React Native Testing Library.`;
 
 export function getHostComponentNames(): HostComponentNames {
-  const configHostComponentNames = getConfig().hostComponentNames;
-  if (!configHostComponentNames) {
-    throw new Error(`Missing host component names.\n\n${defaultErrorMessage}`);
+  let hostComponentNames = getConfig().hostComponentNames;
+  if (!hostComponentNames) {
+    hostComponentNames = detectHostComponentNames();
+    configureInternal({ hostComponentNames });
   }
 
-  return configHostComponentNames;
+  return hostComponentNames;
 }
 
 export function configureHostComponentNamesIfNeeded() {
@@ -57,7 +59,7 @@ function detectHostComponentNames(): HostComponentNames {
         : null;
 
     throw new Error(
-      `Trying to detect host component names triggered the following error:\n\n${errorMessage}\n\n${defaultErrorMessage}`
+      `Trying to detect host component names triggered the following error:\n\n${errorMessage}\n\n${userConfigErrorMessage}`
     );
   }
 }
