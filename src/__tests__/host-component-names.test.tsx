@@ -36,6 +36,10 @@ describe('getHostComponentNames', () => {
     `);
   });
 
+  // Repro test for case when user indirectly triggers `getHostComponentNames` calls from
+  // explicit `act` wrapper.
+  // See: https://github.com/callstack/react-native-testing-library/issues/1302
+  // and https://github.com/callstack/react-native-testing-library/issues/1305
   test('does not throw when wrapped in act after render has been called', () => {
     render(<View />);
     expect(() =>
