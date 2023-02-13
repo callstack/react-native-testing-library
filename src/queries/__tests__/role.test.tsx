@@ -8,11 +8,6 @@ import {
   Button as RNButton,
 } from 'react-native';
 import { render } from '../..';
-import { configureInternal } from '../../config';
-
-beforeEach(() => {
-  configureInternal({ useBreakingChanges: true });
-});
 
 const TEXT_LABEL = 'cool text';
 

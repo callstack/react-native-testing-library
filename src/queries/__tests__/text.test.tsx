@@ -8,11 +8,6 @@ import {
   TextInput,
 } from 'react-native';
 import { render, getDefaultNormalizer, within } from '../..';
-import { configureInternal } from '../../config';
-
-beforeEach(() => {
-  configureInternal({ useBreakingChanges: true });
-});
 
 test('byText matches simple text', () => {
   const { getByText } = render(<Text testID="text">Hello World</Text>);
