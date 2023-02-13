@@ -14,7 +14,6 @@ import {
 import { matchStringProp } from '../helpers/matchers/matchStringProp';
 import type { TextMatch } from '../matches';
 import { getQueriesForElement } from '../within';
-import { getConfig } from '../config';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,

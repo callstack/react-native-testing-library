@@ -1,10 +1,4 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { Text } from 'react-native';
-import { getConfig } from '../config';
-import {
-  getCompositeParentOfType,
-  isHostElementForType,
-} from '../helpers/component-tree';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { findAll } from '../helpers/findAll';
 import { getHostComponentNames } from '../helpers/host-component-names';

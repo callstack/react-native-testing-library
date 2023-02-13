@@ -1,8 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { TextInput } from 'react-native';
 import { findAll } from '../helpers/findAll';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
-import { getConfig } from '../config';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { getHostComponentNames } from '../helpers/host-component-names';
 import { makeQueries } from './makeQueries';
