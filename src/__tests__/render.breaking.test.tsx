@@ -1,12 +1,13 @@
+/** This is a copy of regular tests with `useBreakingChanges` flag turned on. */
+
 /* eslint-disable no-console */
 import * as React from 'react';
-import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
-import { render, fireEvent, RenderAPI } from '..';
-
-type ConsoleLogMock = jest.Mock<typeof console.log>;
+import { View, Text, TextInput, Pressable } from 'react-native';
+import { render, screen, fireEvent, RenderAPI } from '..';
+import { configureInternal } from '../config';
 
 beforeEach(() => {
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  configureInternal({ useBreakingChanges: true });
 });
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
@@ -156,7 +157,6 @@ test('unmount should handle cleanup functions', () => {
 
 test('toJSON renders host output', () => {
   const { toJSON } = render(<MyButton>press me</MyButton>);
-
   expect(toJSON()).toMatchSnapshot();
 });
 
@@ -226,38 +226,19 @@ test('returns composite UNSAFE_root', () => {
   expect(UNSAFE_root.props.testID).toBe('inner');
 });
 
-test('returns container', () => {
-  const { container } = render(<View testID="inner" />);
+test('container displays deprecation', () => {
+  const view = render(<View testID="inner" />);
 
-  const mockCalls = (console.warn as any as ConsoleLogMock).mock.calls;
-  expect(mockCalls[0][0]).toMatchInlineSnapshot(`
-    "'container' property is deprecated and has been renamed to 'UNSAFE_root'.
+  expect(() => view.container).toThrowErrorMatchingInlineSnapshot(`
+    "'container' property has been renamed to 'UNSAFE_root'.
 
     Consider using 'root' property which returns root host element."
   `);
+  expect(() => screen.container).toThrowErrorMatchingInlineSnapshot(`
+    "'container' property has been renamed to 'UNSAFE_root'.
 
-  expect(container).toBeDefined();
-  // `View` composite component is returned. This behavior will break if we
-  // start returning only host components.
-  expect(container.type).toBe(View);
-  expect(container.props.testID).toBe('inner');
-});
-
-test('returns wrapper component as container', () => {
-  type WrapperComponentProps = { children: React.ReactNode };
-  const WrapperComponent = ({ children }: WrapperComponentProps) => (
-    <SafeAreaView testID="wrapper">{children}</SafeAreaView>
-  );
-
-  const { container } = render(<View testID="inner" />, {
-    wrapper: WrapperComponent,
-  });
-
-  expect(container).toBeDefined();
-  // `WrapperComponent` composite component is returned with no testID passed to
-  // it. This behavior will break if we start returning only host components.
-  expect(container.type).toBe(WrapperComponent);
-  expect(container.props.testID).not.toBeDefined();
+    Consider using 'root' property which returns root host element."
+  `);
 });
 
 test('RenderAPI type', () => {

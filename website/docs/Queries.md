@@ -39,7 +39,7 @@ title: Queries
 
 ## Variants
 
-> `getBy` queries are shown by default in the [query documentation](#queries)
+> `getBy*` queries are shown by default in the [query documentation](#queries)
 > below.
 
 ### getBy
@@ -60,22 +60,22 @@ title: Queries
 
 ### findBy
 
-`findBy` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element, then use `findAllBy`.
+`findBy*` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element, then use `findAllBy*`.
 
 ### findAllBy
 
-`findAllBy` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
+`findAllBy*` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
 
 :::info
-`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout`, `interval` and `onTimeout` properies which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
+`findBy*` and `findAllBy*` queries accept optional `waitForOptions` object argument which can contain `timeout`, `interval` and `onTimeout` properies which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
 :::
 
 :::info
-In cases when your `findBy` and `findAllBy` queries throw when not able to find matching elements it is useful to pass `onTimeout: () => { screen.debug(); }` callback using `waitForOptions` parameter.
+In cases when your `findBy*` and `findAllBy*` queries throw when not able to find matching elements it is useful to pass `onTimeout: () => { screen.debug(); }` callback using `waitForOptions` parameter.
 :::
 
 :::info
-In order to properly use `findBy` and `findAllBy` queries you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
+In order to properly use `findBy*` and `findAllBy*` queries you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
 :::
 
 ## Queries

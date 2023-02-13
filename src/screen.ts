@@ -16,6 +16,12 @@ const defaultScreen: RenderResult = {
   get container(): ReactTestInstance {
     throw new Error(SCREEN_ERROR);
   },
+  get root(): ReactTestInstance {
+    throw new Error(SCREEN_ERROR);
+  },
+  get UNSAFE_root(): ReactTestInstance {
+    throw new Error(SCREEN_ERROR);
+  },
   debug: notImplementedDebug,
   update: notImplemented,
   unmount: notImplemented,
