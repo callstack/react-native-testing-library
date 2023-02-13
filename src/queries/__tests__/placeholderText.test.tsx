@@ -79,10 +79,10 @@ test('byPlaceholderText queries support hidden option', () => {
   );
 });
 
-test('byPlaceHolderText should return composite component', () => {
+test('byPlaceHolderText should return host component', () => {
   const { getByPlaceholderText } = render(
     <TextInput placeholder="placeholder" />
   );
 
-  expect(getByPlaceholderText('placeholder').type).toBe(TextInput);
+  expect(getByPlaceholderText('placeholder').type).toBe('TextInput');
 });

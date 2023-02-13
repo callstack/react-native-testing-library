@@ -8,6 +8,11 @@ import {
   TextInput,
 } from 'react-native';
 import { render, getDefaultNormalizer, within } from '../..';
+import { configureInternal } from '../../config';
+
+beforeEach(() => {
+  configureInternal({ useBreakingChanges: true });
+});
 
 test('byText matches simple text', () => {
   const { getByText } = render(<Text testID="text">Hello World</Text>);
@@ -503,7 +508,7 @@ test('byText support hidden option', () => {
   );
 });
 
-test('byText should return composite Text', () => {
+test('byText should return host component', () => {
   const { getByText } = render(<Text>hello</Text>);
-  expect(getByText('hello').type).toBe(Text);
+  expect(getByText('hello').type).toBe('Text');
 });

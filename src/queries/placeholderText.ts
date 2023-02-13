@@ -24,10 +24,7 @@ const getTextInputNodeByPlaceholderText = (
   options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
-  const shouldReturnHostTextInput = getConfig().useBreakingChanges;
-  const textInputType = shouldReturnHostTextInput
-    ? getHostComponentNames().textInput
-    : TextInput;
+  const textInputType = getHostComponentNames().textInput;
 
   return (
     filterNodeByType(node, textInputType) &&

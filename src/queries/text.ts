@@ -27,29 +27,6 @@ const queryAllByText = (
   instance: ReactTestInstance
 ): ((text: TextMatch, options?: ByTextOptions) => Array<ReactTestInstance>) =>
   function queryAllByTextFn(text, options = {}) {
-    const shouldReturnHostText = getConfig().useBreakingChanges;
-
-    // Legacy version: return composite Text
-    if (!shouldReturnHostText) {
-      const baseInstance = isHostElementForType(instance, Text)
-        ? getCompositeParentOfType(instance, Text)
-        : instance;
-
-      if (!baseInstance) {
-        return [];
-      }
-
-      const results = findAll(
-        baseInstance,
-        (node) =>
-          filterNodeByType(node, Text) && matchTextContent(node, text, options),
-        { ...options, matchDeepestOnly: true }
-      );
-
-      return results;
-    }
-
-    // vNext version: returns host Text
     return findAll(
       instance,
       (node) =>

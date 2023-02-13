@@ -62,15 +62,12 @@ const queryAllByRole = (
   instance: ReactTestInstance
 ): ((role: TextMatch, options?: ByRoleOptions) => Array<ReactTestInstance>) =>
   function queryAllByRoleFn(role, options) {
-    const shouldMatchOnlyAccessibilityElements = getConfig().useBreakingChanges;
-
     return findAll(
       instance,
       (node) =>
         // run the cheapest checks first, and early exit to avoid unneeded computations
         typeof node.type === 'string' &&
-        (!shouldMatchOnlyAccessibilityElements ||
-          isAccessibilityElement(node)) &&
+        isAccessibilityElement(node) &&
         matchStringProp(node.props.accessibilityRole, role) &&
         matchAccessibleStateIfNeeded(node, options) &&
         matchAccessibilityValueIfNeeded(node, options?.value) &&

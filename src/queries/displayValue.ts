@@ -26,10 +26,7 @@ const getTextInputNodeByDisplayValue = (
   const { exact, normalizer } = options;
   const nodeValue =
     node.props.value !== undefined ? node.props.value : node.props.defaultValue;
-  const shouldReturnHostTextInput = getConfig().useBreakingChanges;
-  const textInputType = shouldReturnHostTextInput
-    ? getHostComponentNames().textInput
-    : TextInput;
+  const textInputType = getHostComponentNames().textInput;
 
   return (
     filterNodeByType(node, textInputType) &&

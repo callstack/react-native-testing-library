@@ -112,15 +112,6 @@ function buildRenderResult(
     },
     UNSAFE_root: instance,
     get container() {
-      if (!getConfig().useBreakingChanges) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          "'container' property is deprecated and has been renamed to 'UNSAFE_root'.\n\n" +
-            "Consider using 'root' property which returns root host element."
-        );
-        return instance;
-      }
-
       throw new Error(
         "'container' property has been renamed to 'UNSAFE_root'.\n\n" +
           "Consider using 'root' property which returns root host element."
