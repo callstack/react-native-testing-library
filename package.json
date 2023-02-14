@@ -1,6 +1,6 @@
 {
   "name": "@testing-library/react-native",
-  "version": "11.5.4",
+  "version": "12.0.0-rc.0",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -10,6 +10,12 @@
   },
   "homepage": "https://callstack.github.io/react-native-testing-library",
   "author": "Michał Pierzchała <thymikee@gmail.com>",
+  "contributors": [
+    "Maciej Jastrzębski <mdjastrzebski@gmail.com> (https://github.com/mdjastrzebski)",
+    "Augustin Le Fèvre <augustin.le-fevre@klarna.com> (https://github.com/AugustinLF)",
+    "Pierre Zimmermann <pierrez@nam.tech> (https://github.com/pierrezimmermannbam)",
+    "MattAgn <matthieua@bam.tech> (https://github.com/MattAgn)"
+  ],
   "license": "MIT",
   "private": false,
   "keywords": [
