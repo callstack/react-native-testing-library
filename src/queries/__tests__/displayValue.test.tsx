@@ -111,11 +111,11 @@ test('byDisplayValue queries support hidden option', () => {
     <TextInput value="hidden" style={{ display: 'none' }} />
   );
 
-  expect(getByDisplayValue('hidden')).toBeTruthy();
   expect(
     getByDisplayValue('hidden', { includeHiddenElements: true })
   ).toBeTruthy();
 
+  expect(queryByDisplayValue('hidden')).toBeFalsy();
   expect(
     queryByDisplayValue('hidden', { includeHiddenElements: false })
   ).toBeFalsy();

@@ -723,9 +723,9 @@ test('byRole queries support hidden option', () => {
     </Pressable>
   );
 
-  expect(getByRole('button')).toBeTruthy();
   expect(getByRole('button', { includeHiddenElements: true })).toBeTruthy();
 
+  expect(queryByRole('button')).toBeFalsy();
   expect(queryByRole('button', { includeHiddenElements: false })).toBeFalsy();
   expect(() =>
     getByRole('button', { includeHiddenElements: false })
