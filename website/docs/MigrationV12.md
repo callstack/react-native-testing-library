@@ -47,7 +47,9 @@ Problematic cases may include: examining `type` property of `ReactTestInstance`,
 
 ## 3. `container` API has been renamed to `UNSAFE_root`.
 
-Try using `root` API as a self alternative. The difference between these two propertie is that `root` will always represent a host component, while `UNSAFE_root` will typically represent a composite component.
+Historically `container` was supposed to mimic the [RTL's container](https://testing-library.com/docs/react-testing-library/api/#container). However it turned out not so relevant in RNTL's environment, where we actually used it to return React Test Renderer's root instance.
+
+RNTL v12 introduces `root` API as an alternative that returns a root **host** element. The difference between `root` and `UNSAFE_root` properties is that that `root` will always represents a host element, while `UNSAFE_root` will typically represent a composite element.
 
 # All changes
 
