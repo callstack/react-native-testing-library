@@ -74,7 +74,7 @@ Then automatically add it to your jest tests by using `setupFilesAfterEnv` optio
 
 ### Custom Jest Preset
 
-> **important** if you use "modern" Fake Timers
+> **important** if you use "modern" Fake Timers and React Native < 0.71
 
 We generally advise to use the "react-native" preset when testing with this library. However, if you use ["modern" Fake Timers](https://jestjs.io/blog/2020/05/05/jest-26#new-fake-timers) (default since Jest 27), you'll need to apply our custom Jest preset or awaiting promises, like `waitFor`, will timeout.
 
