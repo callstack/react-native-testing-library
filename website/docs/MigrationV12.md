@@ -43,7 +43,7 @@ While following elements will not match:
 
 While potentially breaking, this should not cause issues in tests if you are using recommended queries and Jest Matchers from Jest Native package. 
 
-Problematic cases may include: examining `type` property of `ReactTestInstance`, referencing other nodes using `parent` or `children` props, etc.
+Problematic cases may include: directly checking some prop values (without using Jest Native matchers), referencing other nodes using `parent` or `children` props, examining `type` property of `ReactTestInstance`, etc.
 
 ## 3. `container` API has been renamed to `UNSAFE_root`.
 

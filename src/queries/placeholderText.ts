@@ -22,10 +22,9 @@ const getTextInputNodeByPlaceholderText = (
   options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
-  const textInputType = getHostComponentNames().textInput;
 
   return (
-    filterNodeByType(node, textInputType) &&
+    filterNodeByType(node, getHostComponentNames().textInput) &&
     matches(placeholder, node.props.placeholder, normalizer, exact)
   );
 };
