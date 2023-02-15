@@ -38,8 +38,8 @@ While following elements will not match:
 <Text accessible={false} role="button">Button</Text>
 ```
 
-## 2. `*ByText`, `*ByDisplayValue`, `*ByPlaceholderText` queries now return host components
-`*ByText`, `*ByDisplayValue`, `*ByPlaceholderText` queries now return host components, as all other queries.
+## 2. `*ByText`, `*ByDisplayValue`, `*ByPlaceholderText` queries now return host elements
+`*ByText`, `*ByDisplayValue`, `*ByPlaceholderText` queries now return [host elements](testing-env#host-and-composite-components), which is consistent with other queries.
 
 While potentially breaking, this should not cause issues in tests if you are using recommended queries and Jest Matchers from Jest Native package. 
 
