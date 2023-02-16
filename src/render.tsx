@@ -111,11 +111,7 @@ function buildRenderResult(
       return getHostChildren(instance)[0];
     },
     UNSAFE_root: instance,
-    get container() {
-      if (!getConfig().useBreakingChanges) {
-        return instance;
-      }
-
+    get container(): ReactTestInstance {
       throw new Error(
         "'container' property has been renamed to 'UNSAFE_root'.\n\n" +
           "Consider using 'root' property which returns root host element."
