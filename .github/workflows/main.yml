@@ -73,7 +73,7 @@ jobs:
         run: yarn test:ci
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
 
   test-react-17:
     needs: [install-cache-deps]
