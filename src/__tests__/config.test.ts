@@ -6,7 +6,6 @@ import {
 } from '../config';
 
 test('getConfig() returns existing configuration', () => {
-  expect(getConfig().useBreakingChanges).toEqual(false);
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
   expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
 });
@@ -18,7 +17,6 @@ test('configure() overrides existing config values', () => {
     asyncUtilTimeout: 5000,
     defaultDebugOptions: { message: 'debug message' },
     defaultIncludeHiddenElements: true,
-    useBreakingChanges: false,
   });
 });
 
@@ -37,12 +35,12 @@ test('resetToDefaults() resets config to defaults', () => {
 
 test('resetToDefaults() resets internal config to defaults', () => {
   configureInternal({
-    useBreakingChanges: true,
+    hostComponentNames: { text: 'A', textInput: 'A' },
   });
-  expect(getConfig().useBreakingChanges).toEqual(true);
+  expect(getConfig().hostComponentNames).toEqual({ text: 'A', textInput: 'A' });
 
   resetToDefaults();
-  expect(getConfig().useBreakingChanges).toEqual(false);
+  expect(getConfig().hostComponentNames).toBe(undefined);
 });
 
 test('configure handles alias option defaultHidden', () => {

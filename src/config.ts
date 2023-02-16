@@ -26,15 +26,11 @@ export type HostComponentNames = {
 };
 
 export type InternalConfig = Config & {
-  /** Whether to use breaking changes intended for next major version release. */
-  useBreakingChanges: boolean;
-
   /** Names for key React Native host components. */
   hostComponentNames?: HostComponentNames;
 };
 
 const defaultConfig: InternalConfig = {
-  useBreakingChanges: false,
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: true,
 };

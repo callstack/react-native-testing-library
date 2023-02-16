@@ -438,7 +438,6 @@ declare module '@testing-library/react-native' {
     debug: Debug;
     root: ReactTestInstance;
     UNSAFE_root: ReactTestInstance;
-    container: ReactTestInstance;
   }
 
   declare type RenderAPI = RenderResult;
