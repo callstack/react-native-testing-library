@@ -99,11 +99,11 @@ test('byA11yValue queries support hidden option', () => {
     </Text>
   );
 
-  expect(getByA11yValue({ max: 10 })).toBeTruthy();
   expect(
     getByA11yValue({ max: 10 }, { includeHiddenElements: true })
   ).toBeTruthy();
 
+  expect(queryByA11yValue({ max: 10 })).toBeFalsy();
   expect(
     queryByA11yValue({ max: 10 }, { includeHiddenElements: false })
   ).toBeFalsy();

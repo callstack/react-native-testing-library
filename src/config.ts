@@ -32,7 +32,7 @@ export type InternalConfig = Config & {
 
 const defaultConfig: InternalConfig = {
   asyncUtilTimeout: 1000,
-  defaultIncludeHiddenElements: true,
+  defaultIncludeHiddenElements: false,
 };
 
 let config = { ...defaultConfig };

@@ -140,9 +140,9 @@ test('byTestId queries support hidden option', () => {
     </Text>
   );
 
-  expect(getByTestId('hidden')).toBeTruthy();
   expect(getByTestId('hidden', { includeHiddenElements: true })).toBeTruthy();
 
+  expect(queryByTestId('hidden')).toBeFalsy();
   expect(queryByTestId('hidden', { includeHiddenElements: false })).toBeFalsy();
   expect(() =>
     getByTestId('hidden', { includeHiddenElements: false })

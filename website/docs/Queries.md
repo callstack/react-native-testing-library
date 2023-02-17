@@ -415,7 +415,7 @@ const element2 = screen.getByA11yValue({ text: /25/ });
 
 ### `includeHiddenElements` option
 
-All queries have the `includeHiddenElements` option which affects whether [elements hidden from accessibility](./API.md#ishiddenfromaccessibility) are matched by the query.
+All queries have the `includeHiddenElements` option which affects whether [elements hidden from accessibility](./API.md#ishiddenfromaccessibility) are matched by the query. By default queries will not match hidden elements, because the users of the app would not be able to see such elements.
 
 You can configure the default value with the [`configure` function](API.md#configure).
 

@@ -7,7 +7,12 @@ React Native Testing Library 12 introduces a handful of breaking changes compare
 
 # Breaking changes
 
-## 1. `*ByRole` queries now return only accessibility elements
+## 1. All queries exclude elements hidden from accessibility by default
+Elements that are hidden from accessiblity, e.g. elements on non-active screen when using React Navigation, now will not be matched by default by all queries. This is the effect of switching the default value for global config option `defaultIncludeHiddenElements`(api#defaultincludehiddenelements-option) to `false`.
+
+Previous behaviour of matching hidden elements can be enabled on query level using [includeHiddenElements](api-queries#includehiddenelements-option) query options or globally using `defaultIncludeHiddenElements`(api#defaultincludehiddenelements-option) configuration option.
+
+## 2. `*ByRole` queries now return only accessibility elements
 `*ByRole` queries now return only accessibility elements, either explicitly marked with `accessible` prop or implicit ones where this status is derrived from component type itself (e.g `Text`, `TextInput`, `Switch`, but not `View`).
 
 You may need to adjust relevant components under test to make sure they pass `isAccessibilityElement` check.
@@ -38,14 +43,14 @@ While following elements will not match:
 <Text accessible={false} role="button">Button</Text>
 ```
 
-## 2. `*ByText`, `*ByDisplayValue`, `*ByPlaceholderText` queries now return host elements
+## 3. `*ByText`, `*ByDisplayValue`, `*ByPlaceholderText` queries now return host elements
 `*ByText`, `*ByDisplayValue`, `*ByPlaceholderText` queries now return [host elements](testing-env#host-and-composite-components), which is consistent with other queries.
 
 While potentially breaking, this should not cause issues in tests if you are using recommended queries and Jest Matchers from Jest Native package. 
 
 Problematic cases may include: directly checking some prop values (without using Jest Native matchers), referencing other nodes using `parent` or `children` props, examining `type` property of `ReactTestInstance`, etc.
 
-## 3. `container` API has been renamed to `UNSAFE_root`.
+## 4. `container` API has been renamed to `UNSAFE_root`.
 
 Historically `container` was supposed to mimic the [RTL's container](https://testing-library.com/docs/react-testing-library/api/#container). However it turned out not so relevant in RNTL's environment, where we actually used it to return React Test Renderer's root instance.
 
