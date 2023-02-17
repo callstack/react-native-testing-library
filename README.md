@@ -72,11 +72,11 @@ Then automatically add it to your jest tests by using `setupFilesAfterEnv` optio
 }
 ```
 
-### Custom Jest Preset
+### Custom Jest Preset (React Native before 0.71)
 
-> **important** if you use "modern" Fake Timers
+We generally advise to use the "react-native" preset when testing with this library.
 
-We generally advise to use the "react-native" preset when testing with this library. However, if you use ["modern" Fake Timers](https://jestjs.io/blog/2020/05/05/jest-26#new-fake-timers) (default since Jest 27), you'll need to apply our custom Jest preset or awaiting promises, like `waitFor`, will timeout.
+However, if you use React Native version earlier than 0.71 with [modern Jest fake timers](https://jestjs.io/blog/2020/05/05/jest-26#new-fake-timers) (default since Jest 27), you'll need to apply this custom Jest preset or otherwise awaiting promises, like using `waitFor` or `findBy*`, queries will fail with timeout.
 
 This is a [known issue](https://github.com/facebook/react-native/issues/29303). It happens because React Native's Jest preset overrides native Promise. Our preset restores it to defaults, which is not a problem in most apps out there.
 

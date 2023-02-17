@@ -579,10 +579,10 @@ Avoiding side effects in `expectation` callback can be partially enforced with t
 
 It is also recommended to have a [single assertion per each `waitFor`](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#having-multiple-assertions-in-a-single-waitfor-callback) for more consistency and faster failing tests. If you want to make several assertions, then they should be in seperate `waitFor` calls. In many cases you won't actually need to wrap the second assertion in `waitFor` since the first one will do the waiting required for asynchronous change to happen.
 
-### Using Jest fake timers
+### Using a React Native version < 0.71 with Jest fake timers
 
 :::caution
-When using modern fake timers (the default for `Jest` >= 27), `waitFor` won't work (it will always timeout even if `expectation()` doesn't throw) unless you use the custom [@testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset). 
+When using a version of React Native < 0.71 and modern fake timers (the default for `Jest` >= 27), `waitFor` won't work (it will always timeout even if `expectation()` doesn't throw) unless you use the custom [@testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset). 
 :::
 
 `waitFor` checks whether Jest fake timers are enabled and adapts its behavior in such case. The following snippet is a simplified version of how it behaves when fake timers are enabled:
