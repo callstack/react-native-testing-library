@@ -72,7 +72,7 @@ Then automatically add it to your jest tests by using `setupFilesAfterEnv` optio
 }
 ```
 
-### Custom Jest Preset
+### Custom Jest Preset (React Native before 0.71)
 
 We generally advise to use the "react-native" preset when testing with this library.
 
