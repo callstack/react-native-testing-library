@@ -492,9 +492,9 @@ test('byText support hidden option', () => {
     <Text style={{ display: 'none' }}>Hidden from accessibility</Text>
   );
 
-  expect(getByText(/hidden/i)).toBeTruthy();
   expect(getByText(/hidden/i, { includeHiddenElements: true })).toBeTruthy();
 
+  expect(queryByText(/hidden/i)).toBeFalsy();
   expect(queryByText(/hidden/i, { includeHiddenElements: false })).toBeFalsy();
   expect(() =>
     getByText(/hidden/i, { includeHiddenElements: false })

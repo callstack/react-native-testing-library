@@ -151,11 +151,11 @@ test('byLabelText queries support hidden option', () => {
     </Text>
   );
 
-  expect(getByLabelText('hidden')).toBeTruthy();
   expect(
     getByLabelText('hidden', { includeHiddenElements: true })
   ).toBeTruthy();
 
+  expect(queryByLabelText('hidden')).toBeFalsy();
   expect(
     queryByLabelText('hidden', { includeHiddenElements: false })
   ).toBeFalsy();

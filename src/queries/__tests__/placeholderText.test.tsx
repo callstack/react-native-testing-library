@@ -64,11 +64,11 @@ test('byPlaceholderText queries support hidden option', () => {
     <TextInput placeholder="hidden" style={{ display: 'none' }} />
   );
 
-  expect(getByPlaceholderText('hidden')).toBeTruthy();
   expect(
     getByPlaceholderText('hidden', { includeHiddenElements: true })
   ).toBeTruthy();
 
+  expect(queryByPlaceholderText('hidden')).toBeFalsy();
   expect(
     queryByPlaceholderText('hidden', { includeHiddenElements: false })
   ).toBeFalsy();
