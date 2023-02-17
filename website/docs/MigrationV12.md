@@ -8,7 +8,7 @@ React Native Testing Library 12 introduces a handful of breaking changes compare
 # Breaking changes
 
 ## 1. All queries exclude elements hidden from accessibility by default
-Elements that are hidden from accessiblity, e.g. elements on non-active screen when using React Navigation, now will not be matched by default by all queries. This the effect of switch default value for global config option `defaultIncludeHiddenElements`(api#defaultincludehiddenelements-option) to `false`.
+Elements that are hidden from accessiblity, e.g. elements on non-active screen when using React Navigation, now will not be matched by default by all queries. This is the effect of switching the default value for global config option `defaultIncludeHiddenElements`(api#defaultincludehiddenelements-option) to `false`.
 
 Previous behaviour of matching hidden elements can be enabled on query level using [includeHiddenElements](api-queries#includehiddenelements-option) query options or globally using `defaultIncludeHiddenElements`(api#defaultincludehiddenelements-option) configuration option.
 
