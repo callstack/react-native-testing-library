@@ -884,7 +884,7 @@ Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementTo
 
 #### `defaultIncludeHiddenElements` option
 
-Default value for [includeHiddenElements](Queries.md#includehiddenelements-option) query option for all queries. Defaults to `false`, which means that queries will not match [elements hidden from accessibility](#ishiddenfromaccessibility) by default.
+Default value for [includeHiddenElements](Queries.md#includehiddenelements-option) query option for all queries. The default value is set to `false`, so all queries will not match [elements hidden from accessibility](#ishiddenfromaccessibility). This is because the users of the app would not be able to see such elements.
 
 This option is also available as `defaultHidden` alias for compatibility with [React Testing Library](https://testing-library.com/docs/dom-testing-library/api-configuration/#defaulthidden).
 
