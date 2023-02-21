@@ -5,6 +5,10 @@ title: Migration to 12.0
 
 React Native Testing Library 12 introduces a handful of breaking changes compared to 11.x versions. We believe they were necessary to improve the experience using the library and help the users [fall into the pit of success](https://blog.codinghorror.com/falling-into-the-pit-of-success/) when writing meaningful tests. You will find migration instructions for each and every change described below.
 
+:::note
+If you also use [@testing-library/jest-native](https://github.com/testing-library/jest-native) then you should upgrade it to version 5.4.2 or higher.
+:::
+
 # Breaking changes
 
 ## 1. All queries exclude elements hidden from accessibility by default
@@ -56,7 +60,7 @@ Historically `container` was supposed to mimic the [RTL's container](https://tes
 
 RNTL v12 introduces `root` API as an alternative that returns a root **host** element. The difference between `root` and `UNSAFE_root` properties is that that `root` will always represents a host element, while `UNSAFE_root` will typically represent a composite element.
 
-If you use `toBeOnTheScreen` matcher from [@testing-library/jest-native][https://github.com/testing-library/jest-native] your tests will fail because it uses the `container` api. To fix this, update `@testing-library/jest-native` to version 5.4.2.    
+If you use `toBeOnTheScreen` matcher from [@testing-library/jest-native](https://github.com/testing-library/jest-native) your tests will fail because it uses the `container` api. To fix this, update `@testing-library/jest-native` to version 5.4.2.    
 
 # Full Changelog
 https://github.com/callstack/react-native-testing-library/compare/v11.5.2...v11.5.2...v12.0.0-rc.0
