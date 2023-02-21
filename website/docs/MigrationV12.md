@@ -56,6 +56,8 @@ Historically `container` was supposed to mimic the [RTL's container](https://tes
 
 RNTL v12 introduces `root` API as an alternative that returns a root **host** element. The difference between `root` and `UNSAFE_root` properties is that that `root` will always represents a host element, while `UNSAFE_root` will typically represent a composite element.
 
+If you use `toBeOnTheScreen` matcher from [@testing-library/jest-native][https://github.com/testing-library/jest-native] your tests will fail because it uses the `container` api. To fix this, update `@testing-library/jest-native` to version 5.4.2.    
+
 # Full Changelog
 https://github.com/callstack/react-native-testing-library/compare/v11.5.2...v11.5.2...v12.0.0-rc.0
 
