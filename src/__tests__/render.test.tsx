@@ -238,3 +238,10 @@ test('RenderAPI type', () => {
   render(<Banana />) as RenderAPI;
   expect(true).toBeTruthy();
 });
+
+test('returned output can be spread using rest operator', () => {
+  // Next line should not throw
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { rerender, ...rest } = render(<View testID="inner" />);
+  expect(rest).toBeTruthy();
+});

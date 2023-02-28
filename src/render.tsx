@@ -111,13 +111,17 @@ function buildRenderResult(
       return getHostChildren(instance)[0];
     },
     UNSAFE_root: instance,
-    get container(): ReactTestInstance {
+  };
+
+  Object.defineProperty(result, 'container', {
+    enumerable: false,
+    get() {
       throw new Error(
         "'container' property has been renamed to 'UNSAFE_root'.\n\n" +
           "Consider using 'root' property which returns root host element."
       );
     },
-  };
+  });
 
   setRenderResult(result);
   return result;
