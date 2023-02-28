@@ -222,12 +222,12 @@ test('returns composite UNSAFE_root', () => {
 test('container displays deprecation', () => {
   const view = render(<View testID="inner" />);
 
-  expect(() => view.container).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => (view as any).container).toThrowErrorMatchingInlineSnapshot(`
     "'container' property has been renamed to 'UNSAFE_root'.
 
     Consider using 'root' property which returns root host element."
   `);
-  expect(() => screen.container).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => (screen as any).container).toThrowErrorMatchingInlineSnapshot(`
     "'container' property has been renamed to 'UNSAFE_root'.
 
     Consider using 'root' property which returns root host element."
