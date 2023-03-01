@@ -113,6 +113,8 @@ function buildRenderResult(
     UNSAFE_root: instance,
   };
 
+  // Add as non-enumerable property, so that it's safe to enumerate
+  // `render` result, e.g. using destructuring rest syntax.
   Object.defineProperty(result, 'container', {
     enumerable: false,
     get() {
