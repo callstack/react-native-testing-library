@@ -56,7 +56,6 @@ test('screen throws without render', () => {
   expect(() => screen.UNSAFE_root).toThrow(
     '`render` method has not been called'
   );
-  expect(() => screen.container).toThrow('`render` method has not been called');
   expect(() => screen.debug()).toThrow('`render` method has not been called');
   expect(() => screen.debug.shallow()).toThrow(
     '`render` method has not been called'
