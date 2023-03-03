@@ -1,9 +1,11 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { AccessibilityState } from 'react-native';
 import { accessibilityStateKeys } from '../helpers/accessiblity';
 import { deprecateQueries } from '../helpers/deprecation';
 import { findAll } from '../helpers/findAll';
-import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
+import {
+  AccessibilityStateMatcher,
+  matchAccessibilityState,
+} from '../helpers/matchers/accessibilityState';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -18,7 +20,7 @@ import { CommonQueryOptions } from './options';
 const queryAllByA11yState = (
   instance: ReactTestInstance
 ): ((
-  matcher: AccessibilityState,
+  matcher: AccessibilityStateMatcher,
   queryOptions?: CommonQueryOptions
 ) => Array<ReactTestInstance>) =>
   function queryAllByA11yStateFn(matcher, queryOptions) {
@@ -30,7 +32,7 @@ const queryAllByA11yState = (
     );
   };
 
-const buildErrorMessage = (state: AccessibilityState = {}) => {
+const buildErrorMessage = (state: AccessibilityStateMatcher = {}) => {
   const errors: string[] = [];
 
   accessibilityStateKeys.forEach((stateKey) => {
@@ -42,10 +44,10 @@ const buildErrorMessage = (state: AccessibilityState = {}) => {
   return errors.join(', ');
 };
 
-const getMultipleError = (state: AccessibilityState) =>
+const getMultipleError = (state: AccessibilityStateMatcher) =>
   `Found multiple elements with ${buildErrorMessage(state)}`;
 
-const getMissingError = (state: AccessibilityState) =>
+const getMissingError = (state: AccessibilityStateMatcher) =>
   `Unable to find an element with ${buildErrorMessage(state)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
@@ -55,29 +57,44 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByA11yStateQueries = {
-  getByA11yState: GetByQuery<AccessibilityState, CommonQueryOptions>;
-  getAllByA11yState: GetAllByQuery<AccessibilityState, CommonQueryOptions>;
-  queryByA11yState: QueryByQuery<AccessibilityState, CommonQueryOptions>;
-  queryAllByA11yState: QueryAllByQuery<AccessibilityState, CommonQueryOptions>;
-  findByA11yState: FindByQuery<AccessibilityState, CommonQueryOptions>;
-  findAllByA11yState: FindAllByQuery<AccessibilityState, CommonQueryOptions>;
+  getByA11yState: GetByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
+  getAllByA11yState: GetAllByQuery<
+    AccessibilityStateMatcher,
+    CommonQueryOptions
+  >;
+  queryByA11yState: QueryByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
+  queryAllByA11yState: QueryAllByQuery<
+    AccessibilityStateMatcher,
+    CommonQueryOptions
+  >;
+  findByA11yState: FindByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
+  findAllByA11yState: FindAllByQuery<
+    AccessibilityStateMatcher,
+    CommonQueryOptions
+  >;
 
-  getByAccessibilityState: GetByQuery<AccessibilityState, CommonQueryOptions>;
+  getByAccessibilityState: GetByQuery<
+    AccessibilityStateMatcher,
+    CommonQueryOptions
+  >;
   getAllByAccessibilityState: GetAllByQuery<
-    AccessibilityState,
+    AccessibilityStateMatcher,
     CommonQueryOptions
   >;
   queryByAccessibilityState: QueryByQuery<
-    AccessibilityState,
+    AccessibilityStateMatcher,
     CommonQueryOptions
   >;
   queryAllByAccessibilityState: QueryAllByQuery<
-    AccessibilityState,
+    AccessibilityStateMatcher,
     CommonQueryOptions
   >;
-  findByAccessibilityState: FindByQuery<AccessibilityState, CommonQueryOptions>;
+  findByAccessibilityState: FindByQuery<
+    AccessibilityStateMatcher,
+    CommonQueryOptions
+  >;
   findAllByAccessibilityState: FindAllByQuery<
-    AccessibilityState,
+    AccessibilityStateMatcher,
     CommonQueryOptions
   >;
 };
