@@ -1,4 +1,3 @@
-import type { AccessibilityState } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import {
   accessibilityStateKeys,
@@ -6,7 +5,10 @@ import {
   isAccessibilityElement,
 } from '../helpers/accessiblity';
 import { findAll } from '../helpers/findAll';
-import { matchAccessibilityState } from '../helpers/matchers/accessibilityState';
+import {
+  AccessibilityStateMatcher,
+  matchAccessibilityState,
+} from '../helpers/matchers/accessibilityState';
 import {
   AccessibilityValueMatcher,
   matchAccessibilityValue,
@@ -27,7 +29,7 @@ import type {
 import { CommonQueryOptions } from './options';
 
 type ByRoleOptions = CommonQueryOptions &
-  AccessibilityState & {
+  AccessibilityStateMatcher & {
     name?: TextMatch;
     value?: AccessibilityValueMatcher;
   };
