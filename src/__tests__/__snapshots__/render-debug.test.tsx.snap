@@ -393,7 +393,7 @@ exports[`debug: shallow 1`] = `
     value=""
   />
   <MyButton
-    onPress={[Function anonymous]}
+    onPress={[Function changeFresh]}
     type="primary"
   >
     Change freshness!
@@ -445,7 +445,7 @@ exports[`debug: shallow with message 1`] = `
     value=""
   />
   <MyButton
-    onPress={[Function anonymous]}
+    onPress={[Function changeFresh]}
     type="primary"
   >
     Change freshness!
