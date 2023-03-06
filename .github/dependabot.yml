@@ -3,5 +3,8 @@ updates:
 - package-ecosystem: npm
   directory: "/"
   schedule:
-    interval: daily
-  open-pull-requests-limit: 5
+    interval: weekly
+  open-pull-requests-limit: 3
+  ignore:
+    - dependency-name: "*"
+      update-types: ["version-update:semver-minor"]
