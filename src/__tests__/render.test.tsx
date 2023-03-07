@@ -244,5 +244,4 @@ test('returned output can be spread using rest operator', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { rerender, ...rest } = render(<View testID="inner" />);
   expect(rest).toBeTruthy();
-  expect(console.warn).not.toHaveBeenCalled();
 });

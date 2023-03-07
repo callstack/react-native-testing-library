@@ -43,7 +43,7 @@ While following elements will not match:
 // Explicit "accessible={false}" prop for View
 <View accessible={false} role="button" />
 
-// Explicit "accessible={false}" for Text,which is implicitly accessible element
+// Explicit "accessible={false}" for Text, which is implicitly accessible element
 <Text accessible={false} role="button">Button</Text>
 ```
 
