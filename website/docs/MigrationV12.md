@@ -38,7 +38,7 @@ While following elements will not match:
 
 ```ts
 // Missing "accessible" prop for View
-<View accessible={false} role="button" />
+<View role="button" />
 
 // Explicit "accessible={false}" prop for View
 <View accessible={false} role="button" />
