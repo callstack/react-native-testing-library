@@ -3,8 +3,6 @@ import * as React from 'react';
 import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
 import { render, fireEvent, RenderAPI } from '..';
 
-type ConsoleLogMock = jest.Mock<typeof console.log>;
-
 beforeEach(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
