@@ -5,7 +5,7 @@ import { getTextContent } from '../getTextContent';
 
 test('getTextContent with simple content', () => {
   const view = render(<Text>Hello world</Text>);
-  expect(getTextContent(view.container)).toBe('Hello world');
+  expect(getTextContent(view.root)).toBe('Hello world');
 });
 
 test('getTextContent with null element', () => {
@@ -18,7 +18,7 @@ test('getTextContent with single nested content', () => {
       <Text>Hello world</Text>
     </Text>
   );
-  expect(getTextContent(view.container)).toBe('Hello world');
+  expect(getTextContent(view.root)).toBe('Hello world');
 });
 
 test('getTextContent with multiple nested content', () => {
@@ -27,7 +27,7 @@ test('getTextContent with multiple nested content', () => {
       <Text>Hello</Text> <Text>world</Text>
     </Text>
   );
-  expect(getTextContent(view.container)).toBe('Hello world');
+  expect(getTextContent(view.root)).toBe('Hello world');
 });
 
 test('getTextContent with multiple number content', () => {
@@ -36,7 +36,7 @@ test('getTextContent with multiple number content', () => {
       <Text>Hello</Text> <Text>world</Text> <Text>{100}</Text>
     </Text>
   );
-  expect(getTextContent(view.container)).toBe('Hello world 100');
+  expect(getTextContent(view.root)).toBe('Hello world 100');
 });
 
 test('getTextContent with multiple boolean content', () => {
@@ -45,5 +45,5 @@ test('getTextContent with multiple boolean content', () => {
       <Text>Hello{false}</Text> <Text>{true}world</Text>
     </Text>
   );
-  expect(getTextContent(view.container)).toBe('Hello world');
+  expect(getTextContent(view.root)).toBe('Hello world');
 });

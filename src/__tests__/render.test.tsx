@@ -3,8 +3,6 @@ import * as React from 'react';
 import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
 import { render, fireEvent, RenderAPI } from '..';
 
-type ConsoleLogMock = jest.Mock<typeof console.log>;
-
 beforeEach(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
@@ -229,13 +227,6 @@ test('returns composite UNSAFE_root', () => {
 test('returns container', () => {
   const { container } = render(<View testID="inner" />);
 
-  const mockCalls = (console.warn as any as ConsoleLogMock).mock.calls;
-  expect(mockCalls[0][0]).toMatchInlineSnapshot(`
-    "'container' property is deprecated and has been renamed to 'UNSAFE_root'.
-
-    Consider using 'root' property which returns root host element."
-  `);
-
   expect(container).toBeDefined();
   // `View` composite component is returned. This behavior will break if we
   // start returning only host components.
@@ -263,4 +254,12 @@ test('returns wrapper component as container', () => {
 test('RenderAPI type', () => {
   render(<Banana />) as RenderAPI;
   expect(true).toBeTruthy();
+});
+
+test('returned output can be spread using rest operator', () => {
+  // Next line should not throw
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { rerender, ...rest } = render(<View testID="inner" />);
+  expect(rest).toBeTruthy();
+  expect(console.warn).not.toHaveBeenCalled();
 });
