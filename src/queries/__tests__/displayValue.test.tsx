@@ -50,10 +50,16 @@ test('getByDisplayValue, queryByDisplayValue', () => {
 
 test('getByDisplayValue, queryByDisplayValue get element by default value only when value is undefined', () => {
   const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
-  expect(() => getByDisplayValue(DEFAULT_INPUT_CHEF)).toThrow();
+  expect(() =>
+    getByDisplayValue(DEFAULT_INPUT_CHEF)
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with displayValue: What did you inspect?"`
+  );
   expect(queryByDisplayValue(DEFAULT_INPUT_CHEF)).toBeNull();
 
-  expect(() => getByDisplayValue('hello')).toThrow();
+  expect(() => getByDisplayValue('hello')).toThrowErrorMatchingInlineSnapshot(
+    `"Unable to find an element with displayValue: hello"`
+  );
   expect(queryByDisplayValue('hello')).toBeNull();
 
   expect(getByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
@@ -105,11 +111,11 @@ test('byDisplayValue queries support hidden option', () => {
     <TextInput value="hidden" style={{ display: 'none' }} />
   );
 
-  expect(getByDisplayValue('hidden')).toBeTruthy();
   expect(
     getByDisplayValue('hidden', { includeHiddenElements: true })
   ).toBeTruthy();
 
+  expect(queryByDisplayValue('hidden')).toBeFalsy();
   expect(
     queryByDisplayValue('hidden', { includeHiddenElements: false })
   ).toBeFalsy();
@@ -120,8 +126,8 @@ test('byDisplayValue queries support hidden option', () => {
   );
 });
 
-test('byDisplayValue should return composite TextInput', () => {
+test('byDisplayValue should return host component', () => {
   const { getByDisplayValue } = render(<TextInput value="value" />);
 
-  expect(getByDisplayValue('value').type).toBe(TextInput);
+  expect(getByDisplayValue('value').type).toBe('TextInput');
 });

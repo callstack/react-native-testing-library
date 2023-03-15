@@ -6,9 +6,8 @@ import {
 } from '../config';
 
 test('getConfig() returns existing configuration', () => {
-  expect(getConfig().useBreakingChanges).toEqual(false);
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
-  expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
+  expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
 });
 
 test('configure() overrides existing config values', () => {
@@ -17,37 +16,36 @@ test('configure() overrides existing config values', () => {
   expect(getConfig()).toEqual({
     asyncUtilTimeout: 5000,
     defaultDebugOptions: { message: 'debug message' },
-    defaultIncludeHiddenElements: true,
-    useBreakingChanges: false,
+    defaultIncludeHiddenElements: false,
   });
 });
 
 test('resetToDefaults() resets config to defaults', () => {
   configure({
     asyncUtilTimeout: 5000,
-    defaultIncludeHiddenElements: false,
+    defaultIncludeHiddenElements: true,
   });
   expect(getConfig().asyncUtilTimeout).toEqual(5000);
-  expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
+  expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
 
   resetToDefaults();
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
-  expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
+  expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
 });
 
 test('resetToDefaults() resets internal config to defaults', () => {
   configureInternal({
-    useBreakingChanges: true,
+    hostComponentNames: { text: 'A', textInput: 'A' },
   });
-  expect(getConfig().useBreakingChanges).toEqual(true);
+  expect(getConfig().hostComponentNames).toEqual({ text: 'A', textInput: 'A' });
 
   resetToDefaults();
-  expect(getConfig().useBreakingChanges).toEqual(false);
+  expect(getConfig().hostComponentNames).toBe(undefined);
 });
 
 test('configure handles alias option defaultHidden', () => {
-  expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
-
-  configure({ defaultHidden: false });
   expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
+
+  configure({ defaultHidden: true });
+  expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
 });

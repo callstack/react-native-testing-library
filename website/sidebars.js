@@ -9,6 +9,7 @@ module.exports = {
     ],
     Advanced: ['testing-env', 'understanding-act'],
     Migrations: [
+      'migration-v12',
       'migration-v11',
       'migration-v9',
       'migration-v7',

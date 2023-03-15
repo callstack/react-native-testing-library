@@ -16,7 +16,6 @@ import {
 import { matchStringProp } from '../helpers/matchers/matchStringProp';
 import type { TextMatch } from '../matches';
 import { getQueriesForElement } from '../within';
-import { getConfig } from '../config';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -64,15 +63,12 @@ const queryAllByRole = (
   instance: ReactTestInstance
 ): ((role: TextMatch, options?: ByRoleOptions) => Array<ReactTestInstance>) =>
   function queryAllByRoleFn(role, options) {
-    const shouldMatchOnlyAccessibilityElements = getConfig().useBreakingChanges;
-
     return findAll(
       instance,
       (node) =>
         // run the cheapest checks first, and early exit to avoid unneeded computations
         typeof node.type === 'string' &&
-        (!shouldMatchOnlyAccessibilityElements ||
-          isAccessibilityElement(node)) &&
+        isAccessibilityElement(node) &&
         matchStringProp(node.props.accessibilityRole, role) &&
         matchAccessibleStateIfNeeded(node, options) &&
         matchAccessibilityValueIfNeeded(node, options?.value) &&

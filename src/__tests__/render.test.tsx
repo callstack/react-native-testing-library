@@ -1,11 +1,7 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
-import { render, fireEvent, RenderAPI } from '..';
-
-beforeEach(() => {
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
-});
+import { View, Text, TextInput, Pressable } from 'react-native';
+import { render, screen, fireEvent, RenderAPI } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -154,7 +150,6 @@ test('unmount should handle cleanup functions', () => {
 
 test('toJSON renders host output', () => {
   const { toJSON } = render(<MyButton>press me</MyButton>);
-
   expect(toJSON()).toMatchSnapshot();
 });
 
@@ -224,31 +219,19 @@ test('returns composite UNSAFE_root', () => {
   expect(UNSAFE_root.props.testID).toBe('inner');
 });
 
-test('returns container', () => {
-  const { container } = render(<View testID="inner" />);
+test('container displays deprecation', () => {
+  const view = render(<View testID="inner" />);
 
-  expect(container).toBeDefined();
-  // `View` composite component is returned. This behavior will break if we
-  // start returning only host components.
-  expect(container.type).toBe(View);
-  expect(container.props.testID).toBe('inner');
-});
+  expect(() => (view as any).container).toThrowErrorMatchingInlineSnapshot(`
+    "'container' property has been renamed to 'UNSAFE_root'.
 
-test('returns wrapper component as container', () => {
-  type WrapperComponentProps = { children: React.ReactNode };
-  const WrapperComponent = ({ children }: WrapperComponentProps) => (
-    <SafeAreaView testID="wrapper">{children}</SafeAreaView>
-  );
+    Consider using 'root' property which returns root host element."
+  `);
+  expect(() => (screen as any).container).toThrowErrorMatchingInlineSnapshot(`
+    "'container' property has been renamed to 'UNSAFE_root'.
 
-  const { container } = render(<View testID="inner" />, {
-    wrapper: WrapperComponent,
-  });
-
-  expect(container).toBeDefined();
-  // `WrapperComponent` composite component is returned with no testID passed to
-  // it. This behavior will break if we start returning only host components.
-  expect(container.type).toBe(WrapperComponent);
-  expect(container.props.testID).not.toBeDefined();
+    Consider using 'root' property which returns root host element."
+  `);
 });
 
 test('RenderAPI type', () => {
@@ -261,5 +244,4 @@ test('returned output can be spread using rest operator', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { rerender, ...rest } = render(<View testID="inner" />);
   expect(rest).toBeTruthy();
-  expect(console.warn).not.toHaveBeenCalled();
 });

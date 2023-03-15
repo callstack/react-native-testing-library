@@ -723,9 +723,9 @@ test('byRole queries support hidden option', () => {
     </Pressable>
   );
 
-  expect(getByRole('button')).toBeTruthy();
   expect(getByRole('button', { includeHiddenElements: true })).toBeTruthy();
 
+  expect(queryByRole('button')).toBeFalsy();
   expect(queryByRole('button', { includeHiddenElements: false })).toBeFalsy();
   expect(() =>
     getByRole('button', { includeHiddenElements: false })
@@ -734,11 +734,31 @@ test('byRole queries support hidden option', () => {
   );
 });
 
-test('does not take accessible prop into account', () => {
-  const { getByRole } = render(
-    <Pressable accessibilityRole="button" accessible={false}>
-      <Text>Action</Text>
-    </Pressable>
-  );
-  expect(getByRole('button', { name: 'Action' })).toBeTruthy();
+describe('matches only accessible elements', () => {
+  test('matches elements with accessible={true}', () => {
+    const { queryByRole } = render(
+      <View accessibilityRole="menu" accessible={true}>
+        <Text>Action</Text>
+      </View>
+    );
+    expect(queryByRole('menu', { name: 'Action' })).toBeTruthy();
+  });
+
+  test('ignores elements with accessible={false}', () => {
+    const { queryByRole } = render(
+      <Pressable accessibilityRole="button" accessible={false}>
+        <Text>Action</Text>
+      </Pressable>
+    );
+    expect(queryByRole('button', { name: 'Action' })).toBeFalsy();
+  });
+
+  test('ignores elements with accessible={undefined} and that are implicitely not accessible', () => {
+    const { queryByRole } = render(
+      <View accessibilityRole="menu">
+        <Text>Action</Text>
+      </View>
+    );
+    expect(queryByRole('menu', { name: 'Action' })).toBeFalsy();
+  });
 });
