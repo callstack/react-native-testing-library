@@ -263,3 +263,52 @@ test.each([false, true])(
     expect(mockFn).toHaveBeenCalledTimes(3);
   }
 );
+
+test.each([false, true])(
+  'flushes scheduled updates before returning (fakeTimers = %s)',
+  async (fakeTimers) => {
+    if (fakeTimers) {
+      jest.useFakeTimers();
+    }
+
+    function Apple({ onPress }: { onPress: (color: string) => void }) {
+      const [color, setColor] = React.useState('green');
+      const [syncedColor, setSyncedColor] = React.useState(color);
+
+      // On mount, set the color to "red" in a promise microtask
+      React.useEffect(() => {
+        Promise.resolve('red').then((c) => setColor(c));
+      }, []);
+
+      // Sync the `color` state to `syncedColor` state, but with a delay caused by the effect
+      React.useEffect(() => {
+        setSyncedColor(color);
+      }, [color]);
+
+      return (
+        <View>
+          <Text>Apple</Text>
+          <Text>{color}</Text>
+          <Pressable onPress={() => onPress(syncedColor)}>
+            <Text>Trigger</Text>
+          </Pressable>
+        </View>
+      );
+    }
+
+    const spy = jest.fn<void, [string]>();
+    const { getByText } = render(<Apple onPress={spy} />);
+
+    // This `waitFor` will succeed on first check, because the "Apple" text is there
+    // since the initial mount.
+    await waitFor(() => getByText('Apple'));
+
+    // This `waitFor` will also succeed on first check, because the promise that sets the
+    // `color` state to "red" resolves right after the previous `await waitFor` statement.
+    await waitFor(() => getByText('red'));
+
+    // Check that the `onPress` callback is called with the already-updated value of `syncedColor`.
+    fireEvent.press(getByText('Trigger'));
+    expect(spy).toHaveBeenCalledWith('red');
+  }
+);

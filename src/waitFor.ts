@@ -196,7 +196,10 @@ export default async function waitFor<T>(
     setReactActEnvironment(false);
 
     try {
-      return await waitForInternal(expectation, optionsWithStackTrace);
+      const result = await waitForInternal(expectation, optionsWithStackTrace);
+      // drain the microtask queue before restoring the `act` environment
+      await new Promise((resolve) => setImmediate(resolve));
+      return result;
     } finally {
       setReactActEnvironment(previousActEnvironment);
     }
