@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, TextInput, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import type { ReactTestRenderer } from 'react-test-renderer';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { getQueriesForElement } from '../within';
 
@@ -29,12 +30,19 @@ export function configureHostComponentNamesIfNeeded() {
 
 function detectHostComponentNames(): HostComponentNames {
   try {
-    const renderer = TestRenderer.create(
-      <View>
-        <Text testID="text">Hello</Text>
-        <TextInput testID="textInput" />
-      </View>
-    );
+    const renderer = (() => {
+      let result: ReactTestRenderer;
+      TestRenderer.act(() => {
+        result = TestRenderer.create(
+          <View>
+            <Text testID="text">Hello</Text>
+            <TextInput testID="textInput" />
+          </View>
+        );
+      });
+      // @ts-ignore act is sync, so renderer is always initialised here
+      return result;
+    })();
 
     const { getByTestId } = getQueriesForElement(renderer.root);
     const textHostName = getByTestId('text').type;
