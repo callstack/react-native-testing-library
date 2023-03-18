@@ -277,6 +277,9 @@ test.each([false, true])(
 
       // On mount, set the color to "red" in a promise microtask
       React.useEffect(() => {
+        // we want to use a Promise, as async functions are not very ergonomic as effects,
+        // and we're sure we don't need a catch handler.
+        // eslint-disable-next-line , promise/prefer-await-to-then, promise/catch-or-return
         Promise.resolve('red').then((c) => setColor(c));
       }, []);
 
