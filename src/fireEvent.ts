@@ -55,7 +55,8 @@ const isEventEnabled = (
   touchResponder?: ReactTestInstance,
   eventName?: string
 ) => {
-  if (isTextInput(element)) return element?.props.editable !== false;
+  const isTextInputChangeTextEvent = isTextInput(element) && eventName === 'changeText'
+  if (isTextInputChangeTextEvent) return element?.props.editable !== false;
   if (!isPointerEventEnabled(element) && isTouchEvent(eventName)) return false;
 
   const touchStart = touchResponder?.props.onStartShouldSetResponder?.();

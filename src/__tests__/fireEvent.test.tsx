@@ -274,6 +274,52 @@ test('should not fire on non-editable TextInput with nested Text', () => {
   expect(onChangeTextMock).not.toHaveBeenCalled();
 });
 
+test('Should fire keyPress on non-editable TextInput', () => {
+  const placeholder = 'Test placeholder';
+  const onKeyPressMock = jest.fn();
+  const KEY_PRESS_EVENT = {
+    nativeEvent: {
+      key:'1',
+    }
+  };
+
+  const { getByPlaceholderText } = render(
+    <View>
+      <TextInput
+        editable={false}
+        placeholder={placeholder}
+        onKeyPress={onKeyPressMock}
+      />
+    </View>
+  );
+
+  fireEvent(getByPlaceholderText(placeholder), 'keyPress', KEY_PRESS_EVENT);
+  expect(onKeyPressMock).toHaveBeenCalled();
+});
+
+test('Should fire keyPress on editable TextInput', () => {
+  const placeholder = 'Test placeholder';
+  const onKeyPressMock = jest.fn();
+  const KEY_PRESS_EVENT = {
+    nativeEvent: {
+      key:'1',
+    }
+  };
+
+  const { getByPlaceholderText } = render(
+    <View>
+      <TextInput
+        editable={true}
+        placeholder={placeholder}
+        onKeyPress={onKeyPressMock}
+      />
+    </View>
+  );
+
+  fireEvent(getByPlaceholderText(placeholder), 'keyPress', KEY_PRESS_EVENT);
+  expect(onKeyPressMock).toHaveBeenCalled();
+});
+
 test('should not fire on none pointerEvents View', () => {
   const handlePress = jest.fn();
 
