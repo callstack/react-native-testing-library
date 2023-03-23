@@ -263,3 +263,56 @@ test.each([false, true])(
     expect(mockFn).toHaveBeenCalledTimes(3);
   }
 );
+
+test.each([
+  [false, false],
+  [true, false],
+  [true, true],
+])(
+  'flushes scheduled updates before returning (fakeTimers = %s, legacyFakeTimers = %s)',
+  async (fakeTimers, legacyFakeTimers) => {
+    if (fakeTimers) {
+      jest.useFakeTimers({ legacyFakeTimers });
+    }
+
+    function Apple({ onPress }: { onPress: (color: string) => void }) {
+      const [color, setColor] = React.useState('green');
+      const [syncedColor, setSyncedColor] = React.useState(color);
+
+      // On mount, set the color to "red" in a promise microtask
+      React.useEffect(() => {
+        // eslint-disable-next-line promise/prefer-await-to-then, promise/catch-or-return
+        Promise.resolve('red').then((c) => setColor(c));
+      }, []);
+
+      // Sync the `color` state to `syncedColor` state, but with a delay caused by the effect
+      React.useEffect(() => {
+        setSyncedColor(color);
+      }, [color]);
+
+      return (
+        <View testID="root">
+          <Text>{color}</Text>
+          <Pressable onPress={() => onPress(syncedColor)}>
+            <Text>Trigger</Text>
+          </Pressable>
+        </View>
+      );
+    }
+
+    const onPress = jest.fn();
+    const view = render(<Apple onPress={onPress} />);
+
+    // Required: this `waitFor` will succeed on first check, because the "root" view is there
+    // since the initial mount.
+    await waitFor(() => view.getByTestId('root'));
+
+    // This `waitFor` will also succeed on first check, because the promise that sets the
+    // `color` state to "red" resolves right after the previous `await waitFor` statement.
+    await waitFor(() => view.getByText('red'));
+
+    // Check that the `onPress` callback is called with the already-updated value of `syncedColor`.
+    fireEvent.press(view.getByText('Trigger'));
+    expect(onPress).toHaveBeenCalledWith('red');
+  }
+);
