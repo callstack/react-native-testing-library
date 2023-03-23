@@ -1,7 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import { Text, TextInput, View } from 'react-native';
-import TestRenderer from 'react-test-renderer';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
+import { renderWithAct } from '../render-act';
 import { getQueriesForElement } from '../within';
 
 const userConfigErrorMessage = `There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
@@ -29,13 +29,12 @@ export function configureHostComponentNamesIfNeeded() {
 
 function detectHostComponentNames(): HostComponentNames {
   try {
-    const renderer = TestRenderer.create(
+    const renderer = renderWithAct(
       <View>
         <Text testID="text">Hello</Text>
         <TextInput testID="textInput" />
       </View>
     );
-
     const { getByTestId } = getQueriesForElement(renderer.root);
     const textHostName = getByTestId('text').type;
     const textInputHostName = getByTestId('textInput').type;
