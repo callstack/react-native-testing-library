@@ -14,6 +14,6 @@ export function renderWithAct(
     renderer = TestRenderer.create(component, options);
   });
 
-  // @ts-ignore act is syncronous, so renderer is already initialised here
+  // @ts-ignore act is synchronous, so renderer is already initialised here
   return renderer;
 }
