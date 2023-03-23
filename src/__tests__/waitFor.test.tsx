@@ -264,11 +264,15 @@ test.each([false, true])(
   }
 );
 
-test.each([false, true])(
-  'flushes scheduled updates before returning (fakeTimers = %s)',
-  async (fakeTimers) => {
+test.each([
+  [false, false],
+  [true, false],
+  [true, true],
+])(
+  'flushes scheduled updates before returning (fakeTimers = %s, legacyFakeTimers = %s)',
+  async (fakeTimers, legacyFakeTimers) => {
     if (fakeTimers) {
-      jest.useFakeTimers();
+      jest.useFakeTimers({ legacyFakeTimers });
     }
 
     function Apple({ onPress }: { onPress: (color: string) => void }) {
@@ -289,8 +293,7 @@ test.each([false, true])(
       }, [color]);
 
       return (
-        <View>
-          <Text>Apple</Text>
+        <View testID="root">
           <Text>{color}</Text>
           <Pressable onPress={() => onPress(syncedColor)}>
             <Text>Trigger</Text>
@@ -299,19 +302,19 @@ test.each([false, true])(
       );
     }
 
-    const spy = jest.fn<void, [string]>();
-    const { getByText } = render(<Apple onPress={spy} />);
+    const onPress = jest.fn<void, [string]>();
+    const view = render(<Apple onPress={onPress} />);
 
-    // This `waitFor` will succeed on first check, because the "Apple" text is there
+    // Required: this `waitFor` will succeed on first check, because the "root" view is there
     // since the initial mount.
-    await waitFor(() => getByText('Apple'));
+    await waitFor(() => view.getByTestId('root'));
 
     // This `waitFor` will also succeed on first check, because the promise that sets the
     // `color` state to "red" resolves right after the previous `await waitFor` statement.
-    await waitFor(() => getByText('red'));
+    await waitFor(() => view.getByText('red'));
 
     // Check that the `onPress` callback is called with the already-updated value of `syncedColor`.
-    fireEvent.press(getByText('Trigger'));
-    expect(spy).toHaveBeenCalledWith('red');
+    fireEvent.press(view.getByText('Trigger'));
+    expect(onPress).toHaveBeenCalledWith('red');
   }
 );
