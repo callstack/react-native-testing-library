@@ -1,26 +1,22 @@
-import TestRenderer from 'react-test-renderer';
 import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import * as React from 'react';
 import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
-import debugShallow from './helpers/debugShallow';
-import debugDeep, { DebugOptions } from './helpers/debugDeep';
-import { getQueriesForElement } from './within';
-import { setRenderResult, screen } from './screen';
-import { validateStringsRenderedWithinText } from './helpers/stringValidation';
 import { getConfig } from './config';
 import { getHostChildren } from './helpers/component-tree';
+import debugDeep, { DebugOptions } from './helpers/debugDeep';
+import debugShallow from './helpers/debugShallow';
 import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
+import { validateStringsRenderedWithinText } from './helpers/stringValidation';
+import { renderWithAct } from './render-act';
+import { setRenderResult, screen } from './screen';
+import { getQueriesForElement } from './within';
 
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => any;
   unstable_validateStringsRenderedWithinText?: boolean;
-};
-
-type TestRendererOptions = {
-  createNodeMock: (element: React.ReactElement) => any;
 };
 
 export type RenderResult = ReturnType<typeof render>;
@@ -127,20 +123,6 @@ function buildRenderResult(
 
   setRenderResult(result);
   return result;
-}
-
-function renderWithAct(
-  component: React.ReactElement,
-  options?: TestRendererOptions
-): ReactTestRenderer {
-  let renderer: ReactTestRenderer;
-
-  act(() => {
-    renderer = TestRenderer.create(component, options);
-  });
-
-  // @ts-ignore act is sync, so renderer is always initialised here
-  return renderer;
 }
 
 function updateWithAct(
