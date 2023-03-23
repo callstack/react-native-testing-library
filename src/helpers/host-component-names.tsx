@@ -40,7 +40,8 @@ function detectHostComponentNames(): HostComponentNames {
           </View>
         );
       });
-      // @ts-ignore act is sync, so renderer is always initialised here
+
+      // @ts-ignore act is syncronous, so renderer will already be initialised here
       return result;
     })();
 
