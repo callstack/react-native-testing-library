@@ -6,7 +6,6 @@ import { ErrorWithStack, copyStackTrace } from './helpers/errors';
 import {
   setTimeout,
   clearTimeout,
-  setImmediate,
   jestFakeTimersAreEnabled,
 } from './helpers/timers';
 import { checkReactVersionAtLeast } from './react-versions';
@@ -89,7 +88,7 @@ function waitForInternal<T>(
         // of parallelization so we're fine.
         // https://stackoverflow.com/a/59243586/971592
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => setImmediate(resolve));
+        await flushMicroTasks();
       }
     } else {
       overallTimeoutTimer = setTimeout(handleTimeout, timeout);
