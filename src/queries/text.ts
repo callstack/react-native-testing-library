@@ -4,6 +4,8 @@ import { findAll } from '../helpers/findAll';
 import { getHostComponentNames } from '../helpers/host-component-names';
 import { matchTextContent } from '../helpers/matchers/matchTextContent';
 import { TextMatch, TextMatchOptions } from '../matches';
+import format from '../helpers/format';
+import { screen } from '../screen';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -37,7 +39,9 @@ const getMultipleError = (text: TextMatch) =>
   `Found multiple elements with text: ${String(text)}`;
 
 const getMissingError = (text: TextMatch) =>
-  `Unable to find an element with text: ${String(text)}`;
+  `Unable to find an element with text: ${String(text)}
+
+${format(screen.toJSON() || [], { mapProps: () => ({}) })}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByText,

@@ -496,11 +496,23 @@ test('byText support hidden option', () => {
 
   expect(queryByText(/hidden/i)).toBeFalsy();
   expect(queryByText(/hidden/i, { includeHiddenElements: false })).toBeFalsy();
-  expect(() =>
-    getByText(/hidden/i, { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with text: /hidden/i"`
+  expect(() => getByText(/hidden/i, { includeHiddenElements: false })).toThrow(
+    /Unable to find an element with text: \/hidden\/i/
   );
+});
+
+test('byText renders the React DOM without props on failure', async () => {
+  const { getByText } = render(
+    <Text accessibilityLabel="label">Some text</Text>
+  );
+
+  expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with text: /foo/
+
+    [36m<Text>[39m
+      [0mSome text[0m
+    [36m</Text>[39m"
+`);
 });
 
 test('byText should return host component', () => {
