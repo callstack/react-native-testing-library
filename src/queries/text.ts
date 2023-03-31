@@ -1,12 +1,12 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { findAll } from '../helpers/findAll';
+import format from '../helpers/format';
 import { getHostComponentNames } from '../helpers/host-component-names';
+import { mapVisibilityRelatedProps } from '../helpers/mapProps';
 import { matchTextContent } from '../helpers/matchers/matchTextContent';
 import { TextMatch, TextMatchOptions } from '../matches';
-import format from '../helpers/format';
 import { screen } from '../screen';
-import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -15,6 +15,7 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
+import { makeQueries } from './makeQueries';
 import type { CommonQueryOptions } from './options';
 
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;
@@ -41,7 +42,7 @@ const getMultipleError = (text: TextMatch) =>
 const getMissingError = (text: TextMatch) =>
   `Unable to find an element with text: ${String(text)}
 
-${format(screen.toJSON() || [], { mapProps: () => ({}) })}`;
+${format(screen.toJSON() || [], { mapProps: mapVisibilityRelatedProps })}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByText,

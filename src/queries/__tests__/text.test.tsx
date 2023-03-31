@@ -501,18 +501,111 @@ test('byText support hidden option', () => {
   );
 });
 
-test('byText renders the React DOM without props on failure', async () => {
-  const { getByText } = render(
-    <Text accessibilityLabel="label">Some text</Text>
-  );
+describe('byText error message', () => {
+  test('renders the React DOM with regular props stripped', async () => {
+    const { getByText } = render(
+      <Text accessibilityLabel="label">Some text</Text>
+    );
 
-  expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with text: /foo/
+    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
 
-    [36m<Text>[39m
-      [0mSome text[0m
-    [36m</Text>[39m"
-`);
+      [36m<Text>[39m
+        [0mSome text[0m
+      [36m</Text>[39m"
+    `);
+  });
+
+  test('does not strip accessibilityElementsHidden prop if true', () => {
+    const { getByText } = render(
+      <View accessibilityElementsHidden={false}>
+        <Text accessibilityElementsHidden>Some text</Text>
+      </View>
+    );
+
+    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      [36m<View>[39m
+        [36m<Text[39m
+          [33maccessibilityElementsHidden[39m=[32m{true}[39m
+        [36m>[39m
+          [0mSome text[0m
+        [36m</Text>[39m
+      [36m</View>[39m"
+    `);
+  });
+
+  test('does not strip accessibilityViewIsModal prop if true', () => {
+    const { getByText } = render(
+      <View accessibilityViewIsModal={false}>
+        <Text accessibilityViewIsModal>Some text</Text>
+      </View>
+    );
+
+    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      [36m<View>[39m
+        [36m<Text[39m
+          [33maccessibilityViewIsModal[39m=[32m{true}[39m
+        [36m>[39m
+          [0mSome text[0m
+        [36m</Text>[39m
+      [36m</View>[39m"
+    `);
+  });
+
+  test('does not strip importantForAccessibility prop if "no-hide-descendants"', () => {
+    const { getByText } = render(
+      <View importantForAccessibility="auto">
+        <Text importantForAccessibility="no-hide-descendants">Some text</Text>
+      </View>
+    );
+
+    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      [36m<View>[39m
+        [36m<Text[39m
+          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
+        [36m>[39m
+          [0mSome text[0m
+        [36m</Text>[39m
+      [36m</View>[39m"
+    `);
+  });
+
+  test('does not strip display: none from "style" prop, but does strip other styles', () => {
+    const { getByText } = render(
+      <View style={{ display: 'flex', position: 'absolute' }}>
+        <Text
+          style={[
+            { display: 'flex', position: 'relative' },
+            { display: 'none', flex: 1 },
+          ]}
+        >
+          Some text
+        </Text>
+      </View>
+    );
+
+    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      [36m<View>[39m
+        [36m<Text[39m
+          [33mstyle[39m=[32m{
+            Object {
+              "display": "none",
+            }
+          }[39m
+        [36m>[39m
+          [0mSome text[0m
+        [36m</Text>[39m
+      [36m</View>[39m"
+    `);
+  });
 });
 
 test('byText should return host component', () => {
