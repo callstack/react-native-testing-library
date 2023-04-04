@@ -17,7 +17,7 @@ Elements that are hidden from accessiblity, e.g. elements on non-active screen w
 Previous behaviour of matching hidden elements can be enabled on query level using [includeHiddenElements](api-queries#includehiddenelements-option) query options or globally using `defaultIncludeHiddenElements`(api#defaultincludehiddenelements-option) configuration option.
 
 ## 2. `*ByRole` queries now return only accessibility elements
-`*ByRole` queries now return only accessibility elements, either explicitly marked with `accessible` prop or implicit ones where this status is derrived from component type itself (e.g `Text`, `TextInput`, `Switch`, but not `View`).
+`*ByRole` queries now return only accessibility elements, either explicitly marked with `accessible` prop or implicit ones where this status is derived from component type itself (e.g `Text`, `TextInput`, `Switch`, but not `View`).
 
 You may need to adjust relevant components under test to make sure they pass `isAccessibilityElement` check.
 
