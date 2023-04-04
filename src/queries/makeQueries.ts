@@ -2,6 +2,9 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
+import format from '../helpers/format';
+import { screen } from '../screen';
+import { mapPropsForQueryError } from '../helpers/mapProps';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
@@ -72,8 +75,8 @@ function extractDeprecatedWaitForOptions(options?: WaitForOptions) {
     if (option) {
       // eslint-disable-next-line no-console
       console.warn(
-        `Use of option "${key}" in a findBy* query options (2nd parameter) is deprecated. Please pass this option in the waitForOptions (3rd parameter). 
-Example: 
+        `Use of option "${key}" in a findBy* query options (2nd parameter) is deprecated. Please pass this option in the waitForOptions (3rd parameter).
+Example:
 
   findByText(text, {}, { ${key}: ${option.toString()} })`
       );
@@ -81,6 +84,15 @@ Example:
   });
 
   return waitForOptions;
+}
+
+/**
+ * @returns formatted DOM with two newlines preceding
+ */
+function getFormattedDOM() {
+  return `
+
+${format(screen.toJSON() || [], { mapProps: mapPropsForQueryError })}`;
 }
 
 export function makeQueries<Predicate, Options>(
@@ -93,7 +105,10 @@ export function makeQueries<Predicate, Options>(
       const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length === 0) {
-        throw new ErrorWithStack(getMissingError(predicate, options), getAllFn);
+        throw new ErrorWithStack(
+          `${getMissingError(predicate, options)}${getFormattedDOM()}`,
+          getAllFn
+        );
       }
 
       return results;
@@ -128,7 +143,10 @@ export function makeQueries<Predicate, Options>(
       }
 
       if (results.length === 0) {
-        throw new ErrorWithStack(getMissingError(predicate, options), getFn);
+        throw new ErrorWithStack(
+          `${getMissingError(predicate, options)}${getFormattedDOM()}`,
+          getFn
+        );
       }
 
       return results[0];

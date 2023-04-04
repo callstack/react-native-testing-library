@@ -1,12 +1,9 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { findAll } from '../helpers/findAll';
-import format from '../helpers/format';
 import { getHostComponentNames } from '../helpers/host-component-names';
-import { mapVisibilityRelatedProps } from '../helpers/mapProps';
 import { matchTextContent } from '../helpers/matchers/matchTextContent';
 import { TextMatch, TextMatchOptions } from '../matches';
-import { screen } from '../screen';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -40,9 +37,7 @@ const getMultipleError = (text: TextMatch) =>
   `Found multiple elements with text: ${String(text)}`;
 
 const getMissingError = (text: TextMatch) =>
-  `Unable to find an element with text: ${String(text)}
-
-${format(screen.toJSON() || [], { mapProps: mapVisibilityRelatedProps })}`;
+  `Unable to find an element with text: ${String(text)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByText,

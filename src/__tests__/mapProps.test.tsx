@@ -1,5 +1,5 @@
 import { ReactTestRendererJSON } from 'react-test-renderer';
-import { mapVisibilityRelatedProps } from '../helpers/mapProps';
+import { mapPropsForQueryError } from '../helpers/mapProps';
 
 const node: ReactTestRendererJSON = {
   type: 'View',
@@ -7,9 +7,9 @@ const node: ReactTestRendererJSON = {
   children: null,
 };
 
-describe('mapVisibilityRelatedProps', () => {
+describe('mapPropsForQueryError', () => {
   test('preserves props that hide an element', () => {
-    const result = mapVisibilityRelatedProps(
+    const result = mapPropsForQueryError(
       {
         accessibilityElementsHidden: true,
         importantForAccessibility: 'no-hide-descendants',
@@ -18,24 +18,57 @@ describe('mapVisibilityRelatedProps', () => {
       node
     );
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       accessibilityElementsHidden: true,
       importantForAccessibility: 'no-hide-descendants',
       style: { display: 'none' },
     });
   });
 
-  test('does not preserve props that do not hide', () => {
-    const result = mapVisibilityRelatedProps(
+  test('removes undefined keys from accessibilityState', () => {
+    const result = mapPropsForQueryError(
       {
-        accessibilityElementsHidden: false,
-        importantForAccessibility: 'auto',
-        style: [{ flex: 1 }, { display: 'flex' }],
-        testID: 'my-component',
+        accessibilityState: { checked: undefined, selected: true },
       },
       node
     );
 
-    expect(result).toEqual({});
+    expect(result).toStrictEqual({
+      accessibilityState: { selected: true },
+    });
+  });
+
+  test('does not fail if accessibilityState is a string, passes through', () => {
+    const result = mapPropsForQueryError({ accessibilityState: 'foo' }, node);
+    expect(result).toStrictEqual({ accessibilityState: 'foo' });
+  });
+
+  test('does not fail if accessibilityState is an array, passes through', () => {
+    const result = mapPropsForQueryError({ accessibilityState: [1] }, node);
+    expect(result).toStrictEqual({ accessibilityState: [1] });
+  });
+
+  test('does not fail if accessibilityState is null, passes through', () => {
+    const result = mapPropsForQueryError({ accessibilityState: null }, node);
+    expect(result).toStrictEqual({ accessibilityState: null });
+  });
+
+  test('does not fail if accessibilityState is nested object, passes through', () => {
+    const accessibilityState = { 1: { 2: 3 }, 2: undefined };
+    const result = mapPropsForQueryError({ accessibilityState }, node);
+    expect(result).toStrictEqual({ accessibilityState: { 1: { 2: 3 } } });
+  });
+
+  test('does not preserve props that do not hide', () => {
+    const result = mapPropsForQueryError(
+      {
+        style: [{ flex: 1 }, { display: 'flex' }],
+        onPress: () => null,
+        key: 'foo',
+      },
+      node
+    );
+
+    expect(result).toStrictEqual({});
   });
 });

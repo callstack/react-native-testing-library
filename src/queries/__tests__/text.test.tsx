@@ -503,9 +503,7 @@ test('byText support hidden option', () => {
 
 describe('byText error message', () => {
   test('renders the React DOM with regular props stripped', async () => {
-    const { getByText } = render(
-      <Text accessibilityLabel="label">Some text</Text>
-    );
+    const { getByText } = render(<Text onPress={() => null}>Some text</Text>);
 
     expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
@@ -516,63 +514,66 @@ describe('byText error message', () => {
     `);
   });
 
-  test('does not strip accessibilityElementsHidden prop if true', () => {
+  test('passes through helpful props', async () => {
     const { getByText } = render(
-      <View accessibilityElementsHidden={false}>
-        <Text accessibilityElementsHidden>Some text</Text>
+      <View
+        accessibilityElementsHidden
+        accessibilityViewIsModal
+        importantForAccessibility="yes"
+        testID="TEST_ID"
+        nativeID="NATIVE_ID"
+        accessibilityLabel="LABEL"
+        accessibilityLabelledBy="LABELLED_BY"
+        accessibilityRole="summary"
+        accessibilityHint="HINT"
+        key="this is filtered"
+      >
+        <TextInput
+          placeholder="PLACEHOLDER"
+          value="VALUE"
+          defaultValue="DEFAULT_VALUE"
+        />
+        <Text>Some Text</Text>
       </View>
     );
 
     expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      [36m<View>[39m
-        [36m<Text[39m
-          [33maccessibilityElementsHidden[39m=[32m{true}[39m
-        [36m>[39m
-          [0mSome text[0m
+      [36m<View[39m
+        [33maccessibilityElementsHidden[39m=[32m{true}[39m
+        [33maccessibilityHint[39m=[32m"HINT"[39m
+        [33maccessibilityLabel[39m=[32m"LABEL"[39m
+        [33maccessibilityLabelledBy[39m=[32m"LABELLED_BY"[39m
+        [33maccessibilityRole[39m=[32m"summary"[39m
+        [33mimportantForAccessibility[39m=[32m"yes"[39m
+        [33mnativeID[39m=[32m"NATIVE_ID"[39m
+        [33mtestID[39m=[32m"TEST_ID"[39m
+      [36m>[39m
+        [36m<TextInput[39m
+          [33mdefaultValue[39m=[32m"DEFAULT_VALUE"[39m
+          [33mplaceholder[39m=[32m"PLACEHOLDER"[39m
+          [33mvalue[39m=[32m"VALUE"[39m
+        [36m/>[39m
+        [36m<Text>[39m
+          [0mSome Text[0m
         [36m</Text>[39m
       [36m</View>[39m"
     `);
   });
 
-  test('does not strip accessibilityViewIsModal prop if true', () => {
-    const { getByText } = render(
-      <View accessibilityViewIsModal={false}>
-        <Text accessibilityViewIsModal>Some text</Text>
-      </View>
+  test('works with findBy', async () => {
+    const { findByText } = render(
+      <View accessibilityViewIsModal key="this is filtered" />
     );
 
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+    await expect(() => findByText(/foo/)).rejects
+      .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      [36m<View>[39m
-        [36m<Text[39m
-          [33maccessibilityViewIsModal[39m=[32m{true}[39m
-        [36m>[39m
-          [0mSome text[0m
-        [36m</Text>[39m
-      [36m</View>[39m"
-    `);
-  });
-
-  test('does not strip importantForAccessibility prop if "no-hide-descendants"', () => {
-    const { getByText } = render(
-      <View importantForAccessibility="auto">
-        <Text importantForAccessibility="no-hide-descendants">Some text</Text>
-      </View>
-    );
-
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with text: /foo/
-
-      [36m<View>[39m
-        [36m<Text[39m
-          [33mimportantForAccessibility[39m=[32m"no-hide-descendants"[39m
-        [36m>[39m
-          [0mSome text[0m
-        [36m</Text>[39m
-      [36m</View>[39m"
+      [36m<View[39m
+        [33maccessibilityViewIsModal[39m=[32m{true}[39m
+      [36m/>[39m"
     `);
   });
 
@@ -603,6 +604,51 @@ describe('byText error message', () => {
         [36m>[39m
           [0mSome text[0m
         [36m</Text>[39m
+      [36m</View>[39m"
+    `);
+  });
+
+  test('strips undefined values from accessibilityState', () => {
+    const { getByText } = render(
+      <View accessibilityState={{ checked: true, busy: false }}>
+        <View accessibilityState={{ checked: undefined }} />
+      </View>
+    );
+
+    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      [36m<View[39m
+        [33maccessibilityState[39m=[32m{
+          Object {
+            "busy": false,
+            "checked": true,
+          }
+        }[39m
+      [36m>[39m
+        [36m<View />[39m
+      [36m</View>[39m"
+    `);
+  });
+
+  test('strips undefined values from accessibilityValue', () => {
+    const { getByText } = render(
+      <View accessibilityValue={{ min: 1 }}>
+        <View accessibilityState={{}} />
+      </View>
+    );
+
+    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      [36m<View[39m
+        [33maccessibilityValue[39m=[32m{
+          Object {
+            "min": 1,
+          }
+        }[39m
+      [36m>[39m
+        [36m<View />[39m
       [36m</View>[39m"
     `);
   });
