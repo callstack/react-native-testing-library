@@ -111,20 +111,20 @@ test('byA11yValue queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with max value: 10
 
-    [36m<Text[39m
-      [33maccessibilityValue[39m=[32m{
+    <Text
+      accessibilityValue={
         Object {
           "max": 10,
         }
-      }[39m
-      [33mstyle[39m=[32m{
+      }
+      style={
         Object {
           "display": "none",
         }
-      }[39m
-    [36m>[39m
-      [0mHidden from accessibility[0m
-    [36m</Text>[39m"
+      }
+    >
+      Hidden from accessibility
+    </Text>"
   `);
 });
 
@@ -134,25 +134,25 @@ test('byA11yValue error messages', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 10, max value: 10
 
-    [36m<View />[39m"
+    <View />"
   `);
   expect(() => getByA11yValue({ max: 20, now: 5 }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with max value: 20, now value: 5
 
-    [36m<View />[39m"
+    <View />"
   `);
   expect(() => getByA11yValue({ min: 1, max: 2, now: 3 }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1, max value: 2, now value: 3
 
-    [36m<View />[39m"
+    <View />"
   `);
   expect(() => getByA11yValue({ min: 1, max: 2, now: 3, text: /foo/i }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1, max value: 2, now value: 3, text value: /foo/i
 
-    [36m<View />[39m"
+    <View />"
   `);
 });
 
@@ -261,51 +261,51 @@ test('error message renders the React DOM, preserving only helpful props', async
   expect(() => getByA11yValue({ min: 1 })).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1
 
-    [36m<View[39m
-      [33maccessibilityValue[39m=[32m{
+    <View
+      accessibilityValue={
         Object {
           "min": 2,
         }
-      }[39m
-    [36m/>[39m"
+      }
+    />"
   `);
 
   expect(() => getAllByA11yValue({ min: 1 }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1
 
-    [36m<View[39m
-      [33maccessibilityValue[39m=[32m{
+    <View
+      accessibilityValue={
         Object {
           "min": 2,
         }
-      }[39m
-    [36m/>[39m"
+      }
+    />"
   `);
 
   await expect(() => findByA11yValue({ min: 1 })).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1
 
-    [36m<View[39m
-      [33maccessibilityValue[39m=[32m{
+    <View
+      accessibilityValue={
         Object {
           "min": 2,
         }
-      }[39m
-    [36m/>[39m"
+      }
+    />"
   `);
 
   await expect(() => findAllByA11yValue({ min: 1 })).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1
 
-    [36m<View[39m
-      [33maccessibilityValue[39m=[32m{
+    <View
+      accessibilityValue={
         Object {
           "min": 2,
         }
-      }[39m
-    [36m/>[39m"
+      }
+    />"
   `);
 });

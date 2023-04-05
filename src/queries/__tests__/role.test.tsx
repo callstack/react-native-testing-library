@@ -655,7 +655,7 @@ describe('error messages', () => {
     expect(() => getByRole('button')).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "button"
 
-      [36m<View />[39m"
+      <View />"
     `);
   });
 
@@ -666,7 +666,7 @@ describe('error messages', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "button", name: "Save"
 
-      [36m<View />[39m"
+      <View />"
     `);
   });
 
@@ -677,7 +677,7 @@ describe('error messages', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "button", name: "Save", disabled state: true
 
-      [36m<View />[39m"
+      <View />"
     `);
   });
 
@@ -689,7 +689,7 @@ describe('error messages', () => {
     ).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "button", name: "Save", disabled state: true, selected state: true
 
-      [36m<View />[39m"
+      <View />"
     `);
   });
 
@@ -700,7 +700,7 @@ describe('error messages', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "button", disabled state: true
 
-      [36m<View />[39m"
+      <View />"
     `);
   });
 
@@ -711,7 +711,7 @@ describe('error messages', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "adjustable", min value: 1
 
-      [36m<View />[39m"
+      <View />"
     `);
 
     expect(() =>
@@ -721,7 +721,7 @@ describe('error messages', () => {
     ).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "adjustable", min value: 1, max value: 2, now value: 1, text value: /hello/
 
-      [36m<View />[39m"
+      <View />"
     `);
   });
 });
@@ -741,18 +741,18 @@ test('byRole queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: "button"
 
-    [36m<View[39m
-      [33maccessibilityRole[39m=[32m"button"[39m
-      [33mstyle[39m=[32m{
+    <View
+      accessibilityRole="button"
+      style={
         Object {
           "display": "none",
         }
-      }[39m
-    [36m>[39m
-      [36m<Text>[39m
-        [0mHidden from accessibility[0m
-      [36m</Text>[39m
-    [36m</View>[39m"
+      }
+    >
+      <Text>
+        Hidden from accessibility
+      </Text>
+    </View>"
   `);
 });
 
@@ -793,34 +793,34 @@ test('error message renders the React DOM, preserving only helpful props', async
   expect(() => getByRole('link')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: "link"
 
-    [36m<View[39m
-      [33maccessibilityRole[39m=[32m"button"[39m
-    [36m/>[39m"
+    <View
+      accessibilityRole="button"
+    />"
   `);
 
   expect(() => getAllByRole('link')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: "link"
 
-    [36m<View[39m
-      [33maccessibilityRole[39m=[32m"button"[39m
-    [36m/>[39m"
+    <View
+      accessibilityRole="button"
+    />"
   `);
 
   await expect(() => findByRole('link')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: "link"
 
-    [36m<View[39m
-      [33maccessibilityRole[39m=[32m"button"[39m
-    [36m/>[39m"
+    <View
+      accessibilityRole="button"
+    />"
   `);
 
   await expect(() => findAllByRole('link')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: "link"
 
-    [36m<View[39m
-      [33maccessibilityRole[39m=[32m"button"[39m
-    [36m/>[39m"
+    <View
+      accessibilityRole="button"
+    />"
   `);
 });

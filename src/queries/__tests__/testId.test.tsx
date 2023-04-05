@@ -148,16 +148,16 @@ test('byTestId queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: hidden
 
-    [36m<Text[39m
-      [33mstyle[39m=[32m{
+    <Text
+      style={
         Object {
           "display": "none",
         }
-      }[39m
-      [33mtestID[39m=[32m"hidden"[39m
-    [36m>[39m
-      [0mHidden from accessibility[0m
-    [36m</Text>[39m"
+      }
+      testID="hidden"
+    >
+      Hidden from accessibility
+    </Text>"
   `);
 });
 
@@ -169,34 +169,34 @@ test('error message renders the React DOM, preserving only helpful props', async
   expect(() => getByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    [36m<View[39m
-      [33mtestID[39m=[32m"TEST_ID"[39m
-    [36m/>[39m"
+    <View
+      testID="TEST_ID"
+    />"
   `);
 
   expect(() => getAllByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    [36m<View[39m
-      [33mtestID[39m=[32m"TEST_ID"[39m
-    [36m/>[39m"
+    <View
+      testID="TEST_ID"
+    />"
   `);
 
   await expect(() => findByTestId('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    [36m<View[39m
-      [33mtestID[39m=[32m"TEST_ID"[39m
-    [36m/>[39m"
+    <View
+      testID="TEST_ID"
+    />"
   `);
 
   await expect(() => findAllByTestId('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    [36m<View[39m
-      [33mtestID[39m=[32m"TEST_ID"[39m
-    [36m/>[39m"
+    <View
+      testID="TEST_ID"
+    />"
   `);
 });

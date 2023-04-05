@@ -76,14 +76,14 @@ test('byPlaceholderText queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: hidden
 
-    [36m<TextInput[39m
-      [33mplaceholder[39m=[32m"hidden"[39m
-      [33mstyle[39m=[32m{
+    <TextInput
+      placeholder="hidden"
+      style={
         Object {
           "display": "none",
         }
-      }[39m
-    [36m/>[39m"
+      }
+    />"
   `);
 });
 
@@ -106,35 +106,35 @@ test('error message renders the React DOM, preserving only helpful props', async
   expect(() => getByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    [36m<TextInput[39m
-      [33mplaceholder[39m=[32m"PLACEHOLDER"[39m
-    [36m/>[39m"
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
   `);
 
   expect(() => getAllByPlaceholderText('FOO'))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    [36m<TextInput[39m
-      [33mplaceholder[39m=[32m"PLACEHOLDER"[39m
-    [36m/>[39m"
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
   `);
 
   await expect(() => findByPlaceholderText('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    [36m<TextInput[39m
-      [33mplaceholder[39m=[32m"PLACEHOLDER"[39m
-    [36m/>[39m"
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
   `);
 
   await expect(() => findAllByPlaceholderText('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    [36m<TextInput[39m
-      [33mplaceholder[39m=[32m"PLACEHOLDER"[39m
-    [36m/>[39m"
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
   `);
 });

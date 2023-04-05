@@ -257,22 +257,22 @@ test('byA11yState queries support hidden option', () => {
   ).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with expanded state: false
 
-    [36m<View[39m
-      [33maccessibilityState[39m=[32m{
+    <View
+      accessibilityState={
         Object {
           "expanded": false,
         }
-      }[39m
-      [33mstyle[39m=[32m{
+      }
+      style={
         Object {
           "display": "none",
         }
-      }[39m
-    [36m>[39m
-      [36m<Text>[39m
-        [0mHidden from accessibility[0m
-      [36m</Text>[39m
-    [36m</View>[39m"
+      }
+    >
+      <Text>
+        Hidden from accessibility
+      </Text>
+    </View>"
   `);
 });
 
@@ -384,61 +384,61 @@ test('error message renders the React DOM, preserving only helpful props', async
 
   expect(() => getByA11yState({ checked: true }))
     .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with checked state: true
+    "Unable to find an element with checked state: true
 
-      [36m<Text[39m
-        [33maccessibilityState[39m=[32m{
-          Object {
-            "checked": false,
-          }
-        }[39m
-      [36m>[39m
-        [0mSome text[0m
-      [36m</Text>[39m"
-    `);
+    <Text
+      accessibilityState={
+        Object {
+          "checked": false,
+        }
+      }
+    >
+      Some text
+    </Text>"
+  `);
 
   expect(() => getAllByA11yState({ checked: true }))
     .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with checked state: true
+    "Unable to find an element with checked state: true
 
-      [36m<Text[39m
-        [33maccessibilityState[39m=[32m{
-          Object {
-            "checked": false,
-          }
-        }[39m
-      [36m>[39m
-        [0mSome text[0m
-      [36m</Text>[39m"
-    `);
+    <Text
+      accessibilityState={
+        Object {
+          "checked": false,
+        }
+      }
+    >
+      Some text
+    </Text>"
+  `);
 
   await expect(() => findByA11yState({ checked: true })).rejects
     .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with checked state: true
+    "Unable to find an element with checked state: true
 
-      [36m<Text[39m
-        [33maccessibilityState[39m=[32m{
-          Object {
-            "checked": false,
-          }
-        }[39m
-      [36m>[39m
-        [0mSome text[0m
-      [36m</Text>[39m"
-    `);
+    <Text
+      accessibilityState={
+        Object {
+          "checked": false,
+        }
+      }
+    >
+      Some text
+    </Text>"
+  `);
 
   await expect(() => findAllByA11yState({ checked: true })).rejects
     .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with checked state: true
+    "Unable to find an element with checked state: true
 
-      [36m<Text[39m
-        [33maccessibilityState[39m=[32m{
-          Object {
-            "checked": false,
-          }
-        }[39m
-      [36m>[39m
-        [0mSome text[0m
-      [36m</Text>[39m"
-    `);
+    <Text
+      accessibilityState={
+        Object {
+          "checked": false,
+        }
+      }
+    >
+      Some text
+    </Text>"
+  `);
 });

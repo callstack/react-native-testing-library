@@ -508,9 +508,9 @@ describe('error messages', () => {
     expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      [36m<Text>[39m
-        [0mSome text[0m
-      [36m</Text>[39m"
+      <Text>
+        Some text
+      </Text>"
     `);
   });
 
@@ -540,26 +540,26 @@ describe('error messages', () => {
     expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      [36m<View[39m
-        [33maccessibilityElementsHidden[39m=[32m{true}[39m
-        [33maccessibilityHint[39m=[32m"HINT"[39m
-        [33maccessibilityLabel[39m=[32m"LABEL"[39m
-        [33maccessibilityLabelledBy[39m=[32m"LABELLED_BY"[39m
-        [33maccessibilityRole[39m=[32m"summary"[39m
-        [33maccessibilityViewIsModal[39m=[32m{true}[39m
-        [33mimportantForAccessibility[39m=[32m"yes"[39m
-        [33mnativeID[39m=[32m"NATIVE_ID"[39m
-        [33mtestID[39m=[32m"TEST_ID"[39m
-      [36m>[39m
-        [36m<TextInput[39m
-          [33mdefaultValue[39m=[32m"DEFAULT_VALUE"[39m
-          [33mplaceholder[39m=[32m"PLACEHOLDER"[39m
-          [33mvalue[39m=[32m"VALUE"[39m
-        [36m/>[39m
-        [36m<Text>[39m
-          [0mSome Text[0m
-        [36m</Text>[39m
-      [36m</View>[39m"
+      <View
+        accessibilityElementsHidden={true}
+        accessibilityHint="HINT"
+        accessibilityLabel="LABEL"
+        accessibilityLabelledBy="LABELLED_BY"
+        accessibilityRole="summary"
+        accessibilityViewIsModal={true}
+        importantForAccessibility="yes"
+        nativeID="NATIVE_ID"
+        testID="TEST_ID"
+      >
+        <TextInput
+          defaultValue="DEFAULT_VALUE"
+          placeholder="PLACEHOLDER"
+          value="VALUE"
+        />
+        <Text>
+          Some Text
+        </Text>
+      </View>"
     `);
   });
 
@@ -571,27 +571,27 @@ describe('error messages', () => {
     expect(() => getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      [36m<View[39m
-        [33maccessibilityViewIsModal[39m=[32m{true}[39m
-      [36m/>[39m"
+      <View
+        accessibilityViewIsModal={true}
+      />"
     `);
 
     await expect(() => findByText(/foo/)).rejects
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      [36m<View[39m
-        [33maccessibilityViewIsModal[39m=[32m{true}[39m
-      [36m/>[39m"
+      <View
+        accessibilityViewIsModal={true}
+      />"
     `);
 
     await expect(() => findAllByText(/foo/)).rejects
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      [36m<View[39m
-        [33maccessibilityViewIsModal[39m=[32m{true}[39m
-      [36m/>[39m"
+      <View
+        accessibilityViewIsModal={true}
+      />"
     `);
   });
 
@@ -658,17 +658,17 @@ describe('error messages', () => {
     expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      [36m<View>[39m
-        [36m<Text[39m
-          [33mstyle[39m=[32m{
+      <View>
+        <Text
+          style={
             Object {
               "display": "none",
             }
-          }[39m
-        [36m>[39m
-          [0mSome text[0m
-        [36m</Text>[39m
-      [36m</View>[39m"
+          }
+        >
+          Some text
+        </Text>
+      </View>"
     `);
   });
 
@@ -682,16 +682,16 @@ describe('error messages', () => {
     expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      [36m<View[39m
-        [33maccessibilityState[39m=[32m{
+      <View
+        accessibilityState={
           Object {
             "busy": false,
             "checked": true,
           }
-        }[39m
-      [36m>[39m
-        [36m<View />[39m
-      [36m</View>[39m"
+        }
+      >
+        <View />
+      </View>"
     `);
   });
 
@@ -705,15 +705,15 @@ describe('error messages', () => {
     expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      [36m<View[39m
-        [33maccessibilityValue[39m=[32m{
+      <View
+        accessibilityValue={
           Object {
             "min": 1,
           }
-        }[39m
-      [36m>[39m
-        [36m<View />[39m
-      [36m</View>[39m"
+        }
+      >
+        <View />
+      </View>"
     `);
   });
 });

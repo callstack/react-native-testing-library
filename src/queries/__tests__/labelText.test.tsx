@@ -163,16 +163,16 @@ test('byLabelText queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityLabel: hidden
 
-    [36m<Text[39m
-      [33maccessibilityLabel[39m=[32m"hidden"[39m
-      [33mstyle[39m=[32m{
+    <Text
+      accessibilityLabel="hidden"
+      style={
         Object {
           "display": "none",
         }
-      }[39m
-    [36m>[39m
-      [0mHidden from accessibility[0m
-    [36m</Text>[39m"
+      }
+    >
+      Hidden from accessibility
+    </Text>"
   `);
 });
 
@@ -213,34 +213,34 @@ test('error message renders the React DOM, preserving only helpful props', async
   expect(() => getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityLabel: FOO
 
-    [36m<View[39m
-      [33maccessibilityLabel[39m=[32m"LABEL"[39m
-    [36m/>[39m"
+    <View
+      accessibilityLabel="LABEL"
+    />"
   `);
 
   expect(() => getAllByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityLabel: FOO
 
-    [36m<View[39m
-      [33maccessibilityLabel[39m=[32m"LABEL"[39m
-    [36m/>[39m"
+    <View
+      accessibilityLabel="LABEL"
+    />"
   `);
 
   await expect(() => findByLabelText('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityLabel: FOO
 
-    [36m<View[39m
-      [33maccessibilityLabel[39m=[32m"LABEL"[39m
-    [36m/>[39m"
+    <View
+      accessibilityLabel="LABEL"
+    />"
   `);
 
   await expect(() => findAllByLabelText('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityLabel: FOO
 
-    [36m<View[39m
-      [33maccessibilityLabel[39m=[32m"LABEL"[39m
-    [36m/>[39m"
+    <View
+      accessibilityLabel="LABEL"
+    />"
   `);
 });

@@ -96,7 +96,10 @@ function formatErrorMessage(message: string, printElementTree: boolean) {
     return message;
   }
 
-  return `${message}\n\n${format(json, { mapProps: mapPropsForQueryError })}`;
+  return `${message}\n\n${format(json, {
+    highlight: false,
+    mapProps: mapPropsForQueryError,
+  })}`;
 }
 
 export function makeQueries<Predicate, Options>(

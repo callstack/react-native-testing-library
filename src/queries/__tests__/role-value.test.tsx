@@ -83,94 +83,94 @@ describe('accessibility value', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "adjustable", name: "Hello", min value: 5
 
-      [36m<Text[39m
-        [33maccessibilityRole[39m=[32m"adjustable"[39m
-        [33maccessibilityState[39m=[32m{
+      <Text
+        accessibilityRole="adjustable"
+        accessibilityState={
           Object {
             "disabled": true,
           }
-        }[39m
-        [33maccessibilityValue[39m=[32m{
+        }
+        accessibilityValue={
           Object {
             "max": 20,
             "min": 10,
             "now": 12,
             "text": "Hello",
           }
-        }[39m
-      [36m>[39m
-        [0mHello[0m
-      [36m</Text>[39m"
+        }
+      >
+        Hello
+      </Text>"
     `);
     expect(() => getByRole('adjustable', { name: 'World', value: { min: 10 } }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "adjustable", name: "World", min value: 10
 
-      [36m<Text[39m
-        [33maccessibilityRole[39m=[32m"adjustable"[39m
-        [33maccessibilityState[39m=[32m{
+      <Text
+        accessibilityRole="adjustable"
+        accessibilityState={
           Object {
             "disabled": true,
           }
-        }[39m
-        [33maccessibilityValue[39m=[32m{
+        }
+        accessibilityValue={
           Object {
             "max": 20,
             "min": 10,
             "now": 12,
             "text": "Hello",
           }
-        }[39m
-      [36m>[39m
-        [0mHello[0m
-      [36m</Text>[39m"
+        }
+      >
+        Hello
+      </Text>"
     `);
     expect(() => getByRole('adjustable', { name: 'Hello', value: { min: 5 } }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "adjustable", name: "Hello", min value: 5
 
-      [36m<Text[39m
-        [33maccessibilityRole[39m=[32m"adjustable"[39m
-        [33maccessibilityState[39m=[32m{
+      <Text
+        accessibilityRole="adjustable"
+        accessibilityState={
           Object {
             "disabled": true,
           }
-        }[39m
-        [33maccessibilityValue[39m=[32m{
+        }
+        accessibilityValue={
           Object {
             "max": 20,
             "min": 10,
             "now": 12,
             "text": "Hello",
           }
-        }[39m
-      [36m>[39m
-        [0mHello[0m
-      [36m</Text>[39m"
+        }
+      >
+        Hello
+      </Text>"
     `);
     expect(() =>
       getByRole('adjustable', { selected: true, value: { min: 10 } })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "adjustable", selected state: true, min value: 10
 
-      [36m<Text[39m
-        [33maccessibilityRole[39m=[32m"adjustable"[39m
-        [33maccessibilityState[39m=[32m{
+      <Text
+        accessibilityRole="adjustable"
+        accessibilityState={
           Object {
             "disabled": true,
           }
-        }[39m
-        [33maccessibilityValue[39m=[32m{
+        }
+        accessibilityValue={
           Object {
             "max": 20,
             "min": 10,
             "now": 12,
             "text": "Hello",
           }
-        }[39m
-      [36m>[39m
-        [0mHello[0m
-      [36m</Text>[39m"
+        }
+      >
+        Hello
+      </Text>"
     `);
   });
 });

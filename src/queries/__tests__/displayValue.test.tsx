@@ -54,52 +54,52 @@ test('getByDisplayValue, queryByDisplayValue get element by default value only w
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: What did you inspect?
 
-    [36m<View>[39m
-      [36m<TextInput[39m
-        [33mplaceholder[39m=[32m"Add custom freshness"[39m
-        [33mtestID[39m=[32m"bananaCustomFreshness"[39m
-        [33mvalue[39m=[32m"Custom Freshie"[39m
-      [36m/>[39m
-      [36m<TextInput[39m
-        [33mdefaultValue[39m=[32m"What did you inspect?"[39m
-        [33mplaceholder[39m=[32m"Who inspected freshness?"[39m
-        [33mtestID[39m=[32m"bananaChef"[39m
-        [33mvalue[39m=[32m"I inspected freshie"[39m
-      [36m/>[39m
-      [36m<TextInput[39m
-        [33mdefaultValue[39m=[32m"What banana?"[39m
-      [36m/>[39m
-      [36m<TextInput[39m
-        [33mdefaultValue[39m=[32m"hello"[39m
-        [33mvalue[39m=[32m""[39m
-      [36m/>[39m
-    [36m</View>[39m"
+    <View>
+      <TextInput
+        placeholder="Add custom freshness"
+        testID="bananaCustomFreshness"
+        value="Custom Freshie"
+      />
+      <TextInput
+        defaultValue="What did you inspect?"
+        placeholder="Who inspected freshness?"
+        testID="bananaChef"
+        value="I inspected freshie"
+      />
+      <TextInput
+        defaultValue="What banana?"
+      />
+      <TextInput
+        defaultValue="hello"
+        value=""
+      />
+    </View>"
   `);
   expect(queryByDisplayValue(DEFAULT_INPUT_CHEF)).toBeNull();
 
   expect(() => getByDisplayValue('hello')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: hello
 
-    [36m<View>[39m
-      [36m<TextInput[39m
-        [33mplaceholder[39m=[32m"Add custom freshness"[39m
-        [33mtestID[39m=[32m"bananaCustomFreshness"[39m
-        [33mvalue[39m=[32m"Custom Freshie"[39m
-      [36m/>[39m
-      [36m<TextInput[39m
-        [33mdefaultValue[39m=[32m"What did you inspect?"[39m
-        [33mplaceholder[39m=[32m"Who inspected freshness?"[39m
-        [33mtestID[39m=[32m"bananaChef"[39m
-        [33mvalue[39m=[32m"I inspected freshie"[39m
-      [36m/>[39m
-      [36m<TextInput[39m
-        [33mdefaultValue[39m=[32m"What banana?"[39m
-      [36m/>[39m
-      [36m<TextInput[39m
-        [33mdefaultValue[39m=[32m"hello"[39m
-        [33mvalue[39m=[32m""[39m
-      [36m/>[39m
-    [36m</View>[39m"
+    <View>
+      <TextInput
+        placeholder="Add custom freshness"
+        testID="bananaCustomFreshness"
+        value="Custom Freshie"
+      />
+      <TextInput
+        defaultValue="What did you inspect?"
+        placeholder="Who inspected freshness?"
+        testID="bananaChef"
+        value="I inspected freshie"
+      />
+      <TextInput
+        defaultValue="What banana?"
+      />
+      <TextInput
+        defaultValue="hello"
+        value=""
+      />
+    </View>"
   `);
   expect(queryByDisplayValue('hello')).toBeNull();
 
@@ -164,14 +164,14 @@ test('byDisplayValue queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: hidden
 
-    [36m<TextInput[39m
-      [33mstyle[39m=[32m{
+    <TextInput
+      style={
         Object {
           "display": "none",
         }
-      }[39m
-      [33mvalue[39m=[32m"hidden"[39m
-    [36m/>[39m"
+      }
+      value="hidden"
+    />"
   `);
 });
 
@@ -190,36 +190,36 @@ test('error message renders the React DOM, preserving only helpful props', async
   } = render(<TextInput value="1" key="3" />);
 
   expect(() => getByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with displayValue: 2
+    "Unable to find an element with displayValue: 2
 
-      [36m<TextInput[39m
-        [33mvalue[39m=[32m"1"[39m
-      [36m/>[39m"
-    `);
+    <TextInput
+      value="1"
+    />"
+  `);
 
   expect(() => getAllByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with displayValue: 2
+    "Unable to find an element with displayValue: 2
 
-      [36m<TextInput[39m
-        [33mvalue[39m=[32m"1"[39m
-      [36m/>[39m"
-    `);
+    <TextInput
+      value="1"
+    />"
+  `);
 
   await expect(() => findByDisplayValue('2')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with displayValue: 2
+    "Unable to find an element with displayValue: 2
 
-      [36m<TextInput[39m
-        [33mvalue[39m=[32m"1"[39m
-      [36m/>[39m"
-    `);
+    <TextInput
+      value="1"
+    />"
+  `);
 
   await expect(() => findAllByDisplayValue('2')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with displayValue: 2
+    "Unable to find an element with displayValue: 2
 
-      [36m<TextInput[39m
-        [33mvalue[39m=[32m"1"[39m
-      [36m/>[39m"
-    `);
+    <TextInput
+      value="1"
+    />"
+  `);
 });
