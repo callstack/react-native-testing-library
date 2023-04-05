@@ -4,7 +4,7 @@ import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
 import format from '../helpers/format';
 import { screen } from '../screen';
-import { mapPropsForQueryError } from '../helpers/mapProps';
+import { defaultMapProps } from '../helpers/format-default';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
@@ -97,7 +97,7 @@ function formatErrorMessage(message: string, printElementTree: boolean) {
   }
 
   return `${message}\n\n${format(json, {
-    mapProps: mapPropsForQueryError,
+    mapProps: defaultMapProps,
   })}`;
 }
 

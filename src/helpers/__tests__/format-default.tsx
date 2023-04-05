@@ -1,5 +1,5 @@
 import { ReactTestRendererJSON } from 'react-test-renderer';
-import { mapPropsForQueryError } from '../helpers/mapProps';
+import { defaultMapProps } from '../format-default';
 
 const node: ReactTestRendererJSON = {
   type: 'View',
@@ -24,13 +24,13 @@ describe('mapPropsForQueryError', () => {
       defaultValue: 'DEFAULT_VALUE',
     };
 
-    const result = mapPropsForQueryError(props, node);
+    const result = defaultMapProps(props, node);
 
     expect(result).toStrictEqual(props);
   });
 
   test('does not preserve less helpful props', () => {
-    const result = mapPropsForQueryError(
+    const result = defaultMapProps(
       {
         style: [{ flex: 1 }, { display: 'flex' }],
         onPress: () => null,
@@ -43,7 +43,7 @@ describe('mapPropsForQueryError', () => {
   });
 
   test('preserves "display: none" style but no other style', () => {
-    const result = mapPropsForQueryError(
+    const result = defaultMapProps(
       { style: [{ flex: 1 }, { display: 'none', flex: 2 }] },
       node
     );
@@ -54,7 +54,7 @@ describe('mapPropsForQueryError', () => {
   });
 
   test('removes undefined keys from accessibilityState', () => {
-    const result = mapPropsForQueryError(
+    const result = defaultMapProps(
       { accessibilityState: { checked: undefined, selected: false } },
       node
     );
@@ -65,7 +65,7 @@ describe('mapPropsForQueryError', () => {
   });
 
   test('removes accessibilityState if all keys are undefined', () => {
-    const result = mapPropsForQueryError(
+    const result = defaultMapProps(
       { accessibilityState: { checked: undefined, selected: undefined } },
       node
     );
@@ -74,28 +74,28 @@ describe('mapPropsForQueryError', () => {
   });
 
   test('does not fail if accessibilityState is a string, passes through', () => {
-    const result = mapPropsForQueryError({ accessibilityState: 'foo' }, node);
+    const result = defaultMapProps({ accessibilityState: 'foo' }, node);
     expect(result).toStrictEqual({ accessibilityState: 'foo' });
   });
 
   test('does not fail if accessibilityState is an array, passes through', () => {
-    const result = mapPropsForQueryError({ accessibilityState: [1] }, node);
+    const result = defaultMapProps({ accessibilityState: [1] }, node);
     expect(result).toStrictEqual({ accessibilityState: [1] });
   });
 
   test('does not fail if accessibilityState is null, passes through', () => {
-    const result = mapPropsForQueryError({ accessibilityState: null }, node);
+    const result = defaultMapProps({ accessibilityState: null }, node);
     expect(result).toStrictEqual({ accessibilityState: null });
   });
 
   test('does not fail if accessibilityState is nested object, passes through', () => {
     const accessibilityState = { 1: { 2: 3 }, 2: undefined };
-    const result = mapPropsForQueryError({ accessibilityState }, node);
+    const result = defaultMapProps({ accessibilityState }, node);
     expect(result).toStrictEqual({ accessibilityState: { 1: { 2: 3 } } });
   });
 
   test('removes undefined keys from accessibilityValue', () => {
-    const result = mapPropsForQueryError(
+    const result = defaultMapProps(
       { accessibilityValue: { min: 1, max: undefined } },
       node
     );
@@ -104,7 +104,7 @@ describe('mapPropsForQueryError', () => {
   });
 
   test('removes accessibilityValue if all keys are undefined', () => {
-    const result = mapPropsForQueryError(
+    const result = defaultMapProps(
       { accessibilityValue: { min: undefined } },
       node
     );

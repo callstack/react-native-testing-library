@@ -17,6 +17,31 @@ const propsToDisplay = [
   'title',
 ];
 
+/**
+ * Preserve props that are helpful in diagnosing test failures, while stripping rest
+ */
+export const defaultMapProps: MapPropsFunction = (props) => {
+  const accessibilityState = removeUndefinedKeys(props.accessibilityState);
+  const accessibilityValue = removeUndefinedKeys(props.accessibilityValue);
+
+  const styles = StyleSheet.flatten(props.style) as any;
+
+  // perform custom prop mappings
+  const result: Record<string, unknown> = {
+    ...(styles?.display === 'none' ? { style: { display: 'none' } } : {}),
+    ...(accessibilityState !== undefined ? { accessibilityState } : {}),
+    ...(accessibilityValue !== undefined ? { accessibilityValue } : {}),
+  };
+
+  propsToDisplay.forEach((propName) => {
+    if (propName in props) {
+      result[propName] = props[propName];
+    }
+  });
+
+  return result;
+};
+
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -40,28 +65,3 @@ function removeUndefinedKeys(prop: unknown) {
 
   return result;
 }
-
-/**
- * Preserve props that are helpful in diagnosing test failures, while stripping rest
- */
-export const mapPropsForQueryError: MapPropsFunction = (props) => {
-  const accessibilityState = removeUndefinedKeys(props.accessibilityState);
-  const accessibilityValue = removeUndefinedKeys(props.accessibilityValue);
-
-  const styles = StyleSheet.flatten(props.style) as any;
-
-  // perform custom prop mappings
-  const result: Record<string, unknown> = {
-    ...(styles?.display === 'none' ? { style: { display: 'none' } } : {}),
-    ...(accessibilityState !== undefined ? { accessibilityState } : {}),
-    ...(accessibilityValue !== undefined ? { accessibilityValue } : {}),
-  };
-
-  propsToDisplay.forEach((propName) => {
-    if (propName in props) {
-      result[propName] = props[propName];
-    }
-  });
-
-  return result;
-};
