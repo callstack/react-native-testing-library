@@ -36,20 +36,9 @@ function detectHostComponentNames(): HostComponentNames {
       </View>
     );
 
-    const textHostName = getByTestId(renderer.root, 'text').type;
-    const textInputHostName = getByTestId(renderer.root, 'textInput').type;
-
-    // This code path should not happen as getByTestId always returns host elements.
-    if (
-      typeof textHostName !== 'string' ||
-      typeof textInputHostName !== 'string'
-    ) {
-      throw new Error('getByTestId returned non-host component');
-    }
-
     return {
-      text: textHostName,
-      textInput: textInputHostName,
+      text: getByTestId(renderer.root, 'text').type as string,
+      textInput: getByTestId(renderer.root, 'textInput').type as string,
     };
   } catch (error) {
     const errorMessage =
