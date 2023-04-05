@@ -177,7 +177,10 @@ function waitForInternal<T>(
         }
       }
       if (typeof onTimeout === 'function') {
-        onTimeout(error);
+        const result = onTimeout(error);
+        if (result) {
+          error = result;
+        }
       }
       onDone({ type: 'error', error });
     }

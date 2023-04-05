@@ -7,7 +7,7 @@ import {
   Button,
   TextInput,
 } from 'react-native';
-import { render, getDefaultNormalizer, within } from '../..';
+import { render, getDefaultNormalizer, within, screen } from '../..';
 
 test('byText matches simple text', () => {
   const { getByText } = render(<Text testID="text">Hello World</Text>);
@@ -593,6 +593,52 @@ describe('error messages', () => {
         [33maccessibilityViewIsModal[39m=[32m{true}[39m
       [36m/>[39m"
     `);
+  });
+
+  test('only renders the DOM on last failure with findBy', async () => {
+    const { findByText } = render(
+      <View accessibilityViewIsModal key="this is filtered" />
+    );
+
+    jest.spyOn(screen, 'toJSON');
+
+    await expect(() => findByText(/foo/)).rejects.toThrow();
+
+    expect(screen.toJSON).toHaveBeenCalledTimes(1);
+  });
+
+  test('can still modify findBy error in custom onTimeout', async () => {
+    const { findByText } = render(
+      <View accessibilityViewIsModal key="this is filtered" />
+    );
+
+    jest.spyOn(screen, 'toJSON');
+    const onTimeout = jest.fn();
+
+    await expect(() =>
+      findByText(/foo/, undefined, {
+        onTimeout,
+      })
+    ).rejects.toThrow();
+
+    expect(screen.toJSON).toHaveBeenCalledTimes(1);
+    expect(onTimeout).toHaveBeenCalledTimes(1);
+  });
+
+  test('only renders the DOM on last failure with findAllBy', async () => {
+    const { findAllByText } = render(
+      <View accessibilityViewIsModal key="this is filtered" />
+    );
+
+    jest.spyOn(screen, 'toJSON');
+    const onTimeout = jest.fn();
+
+    await expect(() =>
+      findAllByText(/foo/, undefined, { onTimeout })
+    ).rejects.toThrow();
+
+    expect(screen.toJSON).toHaveBeenCalledTimes(1);
+    expect(onTimeout).toHaveBeenCalledTimes(1);
   });
 
   test('does not strip display: none from "style" prop, but does strip other styles', () => {

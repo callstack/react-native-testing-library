@@ -101,12 +101,21 @@ export function makeQueries<Predicate, Options>(
   getMultipleError: (predicate: Predicate, options?: Options) => string
 ): UnboundQueries<Predicate, Options> {
   function getAllByQuery(instance: ReactTestInstance) {
+    return getAllByQueryInternal(instance, { printDOM: true });
+  }
+
+  function getAllByQueryInternal(
+    instance: ReactTestInstance,
+    { printDOM = true } = {}
+  ) {
     return function getAllFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length === 0) {
         throw new ErrorWithStack(
-          `${getMissingError(predicate, options)}${getFormattedDOM()}`,
+          `${getMissingError(predicate, options)}${
+            printDOM ? getFormattedDOM() : '' // avoid formatting DOM if timeout not reached in findAllBy
+          }`,
           getAllFn
         );
       }
@@ -135,6 +144,13 @@ export function makeQueries<Predicate, Options>(
   }
 
   function getByQuery(instance: ReactTestInstance) {
+    return getByQueryInternal(instance, { printDOM: true });
+  }
+
+  function getByQueryInternal(
+    instance: ReactTestInstance,
+    { printDOM = true } = {}
+  ) {
     return function getFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
 
@@ -144,7 +160,9 @@ export function makeQueries<Predicate, Options>(
 
       if (results.length === 0) {
         throw new ErrorWithStack(
-          `${getMissingError(predicate, options)}${getFormattedDOM()}`,
+          `${getMissingError(predicate, options)}${
+            printDOM ? getFormattedDOM() : '' // avoid formatting DOM if timeout not reached in findBy
+          }`,
           getFn
         );
       }
@@ -161,10 +179,37 @@ export function makeQueries<Predicate, Options>(
     ) {
       const deprecatedWaitForOptions =
         extractDeprecatedWaitForOptions(queryOptions);
-      return waitFor(() => getAllByQuery(instance)(predicate, queryOptions), {
-        ...deprecatedWaitForOptions,
-        ...waitForOptions,
-      });
+
+      // append formatted DOM to final error
+      const onTimeout = (e: unknown) => {
+        const error = e as Error;
+        if (error?.message) {
+          error.message = `${error.message}${getFormattedDOM()}`;
+        }
+
+        if (waitForOptions.onTimeout) {
+          return waitForOptions.onTimeout(error);
+        }
+
+        if (deprecatedWaitForOptions?.onTimeout) {
+          return deprecatedWaitForOptions.onTimeout(error);
+        }
+
+        return error;
+      };
+
+      return waitFor(
+        () =>
+          getAllByQueryInternal(instance, { printDOM: false })(
+            predicate,
+            queryOptions
+          ),
+        {
+          ...deprecatedWaitForOptions,
+          ...waitForOptions,
+          onTimeout,
+        }
+      );
     };
   }
 
@@ -176,10 +221,37 @@ export function makeQueries<Predicate, Options>(
     ) {
       const deprecatedWaitForOptions =
         extractDeprecatedWaitForOptions(queryOptions);
-      return waitFor(() => getByQuery(instance)(predicate, queryOptions), {
-        ...deprecatedWaitForOptions,
-        ...waitForOptions,
-      });
+
+      // append formatted DOM to final error
+      const onTimeout = (e: unknown) => {
+        const error = e as Error;
+        if (error?.message) {
+          error.message = `${error.message}${getFormattedDOM()}`;
+        }
+
+        if (waitForOptions.onTimeout) {
+          return waitForOptions.onTimeout(error);
+        }
+
+        if (deprecatedWaitForOptions?.onTimeout) {
+          return deprecatedWaitForOptions.onTimeout(error);
+        }
+
+        return error;
+      };
+
+      return waitFor(
+        () =>
+          getByQueryInternal(instance, { printDOM: false })(
+            predicate,
+            queryOptions
+          ),
+        {
+          ...deprecatedWaitForOptions,
+          ...waitForOptions,
+          onTimeout,
+        }
+      );
     };
   }
 
