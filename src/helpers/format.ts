@@ -8,7 +8,6 @@ export type MapPropsFunction = (
 
 export type FormatOptions = {
   mapProps?: MapPropsFunction;
-  highlight?: boolean;
 };
 
 const format = (
@@ -17,7 +16,7 @@ const format = (
 ) =>
   prettyFormat(input, {
     plugins: [getCustomPlugin(options.mapProps), plugins.ReactElement],
-    highlight: options.highlight ?? true,
+    highlight: shouldHighlight(),
   });
 
 const getCustomPlugin = (mapProps?: MapPropsFunction): NewPlugin => {
@@ -39,5 +38,9 @@ const getCustomPlugin = (mapProps?: MapPropsFunction): NewPlugin => {
     },
   };
 };
+
+function shouldHighlight() {
+  return process?.env?.COLORS !== 'false';
+}
 
 export default format;

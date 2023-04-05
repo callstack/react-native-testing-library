@@ -97,7 +97,6 @@ function formatErrorMessage(message: string, printElementTree: boolean) {
   }
 
   return `${message}\n\n${format(json, {
-    highlight: false,
     mapProps: mapPropsForQueryError,
   })}`;
 }
