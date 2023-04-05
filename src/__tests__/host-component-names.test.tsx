@@ -79,15 +79,17 @@ describe('configureHostComponentNamesIfNeeded', () => {
   });
 
   test('throw an error when autodetection fails', () => {
+    const renderer = TestRenderer.create(<View />);
+
     mockCreate.mockReturnValue({
-      root: { type: View, children: [], props: {} },
+      root: renderer.root,
     });
 
     expect(() => configureHostComponentNamesIfNeeded())
       .toThrowErrorMatchingInlineSnapshot(`
       "Trying to detect host component names triggered the following error:
 
-      \`render\` method has not been called
+      Unable to find an element with testID: text
 
       There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
       Please check if you are using compatible versions of React Native and React Native Testing Library."
@@ -105,7 +107,7 @@ describe('configureHostComponentNamesIfNeeded', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Trying to detect host component names triggered the following error:
 
-      getByTestId returned non-host component
+      Unable to find an element with testID: text
 
       There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
       Please check if you are using compatible versions of React Native and React Native Testing Library."

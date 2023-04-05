@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { ReactTestInstance } from 'react-test-renderer';
 import { Text, TextInput, View } from 'react-native';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { renderWithAct } from '../render-act';
-import { getQueriesForElement } from '../within';
 
 const userConfigErrorMessage = `There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
 Please check if you are using compatible versions of React Native and React Native Testing Library.`;
@@ -35,9 +35,9 @@ function detectHostComponentNames(): HostComponentNames {
         <TextInput testID="textInput" />
       </View>
     );
-    const { getByTestId } = getQueriesForElement(renderer.root);
-    const textHostName = getByTestId('text').type;
-    const textInputHostName = getByTestId('textInput').type;
+
+    const textHostName = getByTestId(renderer.root, 'text').type;
+    const textInputHostName = getByTestId(renderer.root, 'textInput').type;
 
     // This code path should not happen as getByTestId always returns host elements.
     if (
@@ -61,4 +61,20 @@ function detectHostComponentNames(): HostComponentNames {
       `Trying to detect host component names triggered the following error:\n\n${errorMessage}\n\n${userConfigErrorMessage}`
     );
   }
+}
+
+function getByTestId(instance: ReactTestInstance, testID: string) {
+  const nodes = instance.findAll(
+    (node) => typeof node.type === 'string' && node.props.testID === testID
+  );
+
+  if (nodes.length === 0) {
+    throw new Error(`Unable to find an element with testID: ${testID}`);
+  }
+
+  if (nodes.length > 1) {
+    throw new Error(`Found multiple elements with testID: ${testID}`);
+  }
+
+  return nodes[0];
 }
