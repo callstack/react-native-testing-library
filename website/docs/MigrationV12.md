@@ -28,23 +28,23 @@ Following elements will match:
 
 ```ts
 // Explicit "accessible" prop for View
-<View accessible role="button" />
+<View accessible accessibilityRole="button" />
 
 // No need to "accessible" prop for Text, as it is implicitly accessible element.
-<Text role="button">Button</Text>
+<Text accessibilityRole="button">Button</Text>
 ```
 
 While following elements will not match:
 
 ```ts
 // Missing "accessible" prop for View
-<View role="button" />
+<View accessibilityRole="button" />
 
 // Explicit "accessible={false}" prop for View
-<View accessible={false} role="button" />
+<View accessible={false} accessibilityRole="button" />
 
 // Explicit "accessible={false}" for Text, which is implicitly accessible element
-<Text accessible={false} role="button">Button</Text>
+<Text accessible={false} accessibilityRole="button">Button</Text>
 ```
 
 ## 3. `*ByText`, `*ByDisplayValue`, `*ByPlaceholderText` queries now return host elements
