@@ -144,9 +144,59 @@ test('byTestId queries support hidden option', () => {
 
   expect(queryByTestId('hidden')).toBeFalsy();
   expect(queryByTestId('hidden', { includeHiddenElements: false })).toBeFalsy();
-  expect(() =>
-    getByTestId('hidden', { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with testID: hidden"`
+  expect(() => getByTestId('hidden', { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with testID: hidden
+
+    [36m<Text[39m
+      [33mstyle[39m=[32m{
+        Object {
+          "display": "none",
+        }
+      }[39m
+      [33mtestID[39m=[32m"hidden"[39m
+    [36m>[39m
+      [0mHidden from accessibility[0m
+    [36m</Text>[39m"
+  `);
+});
+
+test('error message renders the React DOM, preserving only helpful props', async () => {
+  const { getByTestId, getAllByTestId, findByTestId, findAllByTestId } = render(
+    <View testID="TEST_ID" key="3" />
   );
+
+  expect(() => getByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with testID: FOO
+
+    [36m<View[39m
+      [33mtestID[39m=[32m"TEST_ID"[39m
+    [36m/>[39m"
+  `);
+
+  expect(() => getAllByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with testID: FOO
+
+    [36m<View[39m
+      [33mtestID[39m=[32m"TEST_ID"[39m
+    [36m/>[39m"
+  `);
+
+  await expect(() => findByTestId('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with testID: FOO
+
+    [36m<View[39m
+      [33mtestID[39m=[32m"TEST_ID"[39m
+    [36m/>[39m"
+  `);
+
+  await expect(() => findAllByTestId('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with testID: FOO
+
+    [36m<View[39m
+      [33mtestID[39m=[32m"TEST_ID"[39m
+    [36m/>[39m"
+  `);
 });

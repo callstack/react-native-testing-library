@@ -254,9 +254,26 @@ test('byA11yState queries support hidden option', () => {
   ).toBeFalsy();
   expect(() =>
     getByA11yState({ expanded: false }, { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with expanded state: false"`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with expanded state: false
+
+    [36m<View[39m
+      [33maccessibilityState[39m=[32m{
+        Object {
+          "expanded": false,
+        }
+      }[39m
+      [33mstyle[39m=[32m{
+        Object {
+          "display": "none",
+        }
+      }[39m
+    [36m>[39m
+      [36m<Text>[39m
+        [0mHidden from accessibility[0m
+      [36m</Text>[39m
+    [36m</View>[39m"
+  `);
 });
 
 test('*ByA11yState deprecation warnings', () => {
@@ -351,4 +368,77 @@ test('*ByAccessibilityState deprecation warnings', () => {
 
     Use findAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
   `);
+});
+
+test('error message renders the React DOM, preserving only helpful props', async () => {
+  const {
+    getByA11yState,
+    getAllByA11yState,
+    findByA11yState,
+    findAllByA11yState,
+  } = render(
+    <Text accessibilityState={{ checked: false }} onPress={() => null}>
+      Some text
+    </Text>
+  );
+
+  expect(() => getByA11yState({ checked: true }))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with checked state: true
+
+      [36m<Text[39m
+        [33maccessibilityState[39m=[32m{
+          Object {
+            "checked": false,
+          }
+        }[39m
+      [36m>[39m
+        [0mSome text[0m
+      [36m</Text>[39m"
+    `);
+
+  expect(() => getAllByA11yState({ checked: true }))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with checked state: true
+
+      [36m<Text[39m
+        [33maccessibilityState[39m=[32m{
+          Object {
+            "checked": false,
+          }
+        }[39m
+      [36m>[39m
+        [0mSome text[0m
+      [36m</Text>[39m"
+    `);
+
+  await expect(() => findByA11yState({ checked: true })).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with checked state: true
+
+      [36m<Text[39m
+        [33maccessibilityState[39m=[32m{
+          Object {
+            "checked": false,
+          }
+        }[39m
+      [36m>[39m
+        [0mSome text[0m
+      [36m</Text>[39m"
+    `);
+
+  await expect(() => findAllByA11yState({ checked: true })).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with checked state: true
+
+      [36m<Text[39m
+        [33maccessibilityState[39m=[32m{
+          Object {
+            "checked": false,
+          }
+        }[39m
+      [36m>[39m
+        [0mSome text[0m
+      [36m</Text>[39m"
+    `);
 });

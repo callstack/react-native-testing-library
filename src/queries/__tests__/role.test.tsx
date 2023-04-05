@@ -652,29 +652,33 @@ describe('error messages', () => {
   test('gives a descriptive error message when querying with a role', () => {
     const { getByRole } = render(<View />);
 
-    expect(() => getByRole('button')).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "button""`
-    );
+    expect(() => getByRole('button')).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "button"
+
+      [36m<View />[39m"
+    `);
   });
 
   test('gives a descriptive error message when querying with a role and a name', () => {
     const { getByRole } = render(<View />);
 
-    expect(() =>
-      getByRole('button', { name: 'Save' })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "button", name: "Save""`
-    );
+    expect(() => getByRole('button', { name: 'Save' }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "button", name: "Save"
+
+      [36m<View />[39m"
+    `);
   });
 
   test('gives a descriptive error message when querying with a role, a name and accessibility state', () => {
     const { getByRole } = render(<View />);
 
-    expect(() =>
-      getByRole('button', { name: 'Save', disabled: true })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "button", name: "Save", disabled state: true"`
-    );
+    expect(() => getByRole('button', { name: 'Save', disabled: true }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "button", name: "Save", disabled state: true
+
+      [36m<View />[39m"
+    `);
   });
 
   test('gives a descriptive error message when querying with a role, a name and several accessibility state', () => {
@@ -682,37 +686,43 @@ describe('error messages', () => {
 
     expect(() =>
       getByRole('button', { name: 'Save', disabled: true, selected: true })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "button", name: "Save", disabled state: true, selected state: true"`
-    );
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "button", name: "Save", disabled state: true, selected state: true
+
+      [36m<View />[39m"
+    `);
   });
 
   test('gives a descriptive error message when querying with a role and an accessibility state', () => {
     const { getByRole } = render(<View />);
 
-    expect(() =>
-      getByRole('button', { disabled: true })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "button", disabled state: true"`
-    );
+    expect(() => getByRole('button', { disabled: true }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "button", disabled state: true
+
+      [36m<View />[39m"
+    `);
   });
 
   test('gives a descriptive error message when querying with a role and an accessibility value', () => {
     const { getByRole } = render(<View />);
 
-    expect(() =>
-      getByRole('adjustable', { value: { min: 1 } })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "adjustable", min value: 1"`
-    );
+    expect(() => getByRole('adjustable', { value: { min: 1 } }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "adjustable", min value: 1
+
+      [36m<View />[39m"
+    `);
 
     expect(() =>
       getByRole('adjustable', {
         value: { min: 1, max: 2, now: 1, text: /hello/ },
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "adjustable", min value: 1, max value: 2, now value: 1, text value: /hello/"`
-    );
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "adjustable", min value: 1, max value: 2, now value: 1, text value: /hello/
+
+      [36m<View />[39m"
+    `);
   });
 });
 
@@ -727,11 +737,23 @@ test('byRole queries support hidden option', () => {
 
   expect(queryByRole('button')).toBeFalsy();
   expect(queryByRole('button', { includeHiddenElements: false })).toBeFalsy();
-  expect(() =>
-    getByRole('button', { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with role: "button""`
-  );
+  expect(() => getByRole('button', { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with role: "button"
+
+    [36m<View[39m
+      [33maccessibilityRole[39m=[32m"button"[39m
+      [33mstyle[39m=[32m{
+        Object {
+          "display": "none",
+        }
+      }[39m
+    [36m>[39m
+      [36m<Text>[39m
+        [0mHidden from accessibility[0m
+      [36m</Text>[39m
+    [36m</View>[39m"
+  `);
 });
 
 describe('matches only accessible elements', () => {
@@ -761,4 +783,44 @@ describe('matches only accessible elements', () => {
     );
     expect(queryByRole('menu', { name: 'Action' })).toBeFalsy();
   });
+});
+
+test('error message renders the React DOM, preserving only helpful props', async () => {
+  const { getByRole, getAllByRole, findByRole, findAllByRole } = render(
+    <View accessibilityRole="button" key="3" />
+  );
+
+  expect(() => getByRole('link')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with role: "link"
+
+    [36m<View[39m
+      [33maccessibilityRole[39m=[32m"button"[39m
+    [36m/>[39m"
+  `);
+
+  expect(() => getAllByRole('link')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with role: "link"
+
+    [36m<View[39m
+      [33maccessibilityRole[39m=[32m"button"[39m
+    [36m/>[39m"
+  `);
+
+  await expect(() => findByRole('link')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with role: "link"
+
+    [36m<View[39m
+      [33maccessibilityRole[39m=[32m"button"[39m
+    [36m/>[39m"
+  `);
+
+  await expect(() => findAllByRole('link')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with role: "link"
+
+    [36m<View[39m
+      [33maccessibilityRole[39m=[32m"button"[39m
+    [36m/>[39m"
+  `);
 });

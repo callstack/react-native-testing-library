@@ -120,9 +120,58 @@ test('byHintText queries support hidden option', () => {
   expect(
     queryByHintText('hidden', { includeHiddenElements: false })
   ).toBeFalsy();
-  expect(() =>
-    getByHintText('hidden', { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with accessibilityHint: hidden"`
-  );
+  expect(() => getByHintText('hidden', { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: hidden
+
+    [36m<Text[39m
+      [33maccessibilityHint[39m=[32m"hidden"[39m
+      [33mstyle[39m=[32m{
+        Object {
+          "display": "none",
+        }
+      }[39m
+    [36m>[39m
+      [0mHidden from accessiblity[0m
+    [36m</Text>[39m"
+  `);
+});
+
+test('error message renders the React DOM, preserving only helpful props', async () => {
+  const { getByHintText, getAllByHintText, findByHintText, findAllByHintText } =
+    render(<TouchableOpacity accessibilityHint="HINT" key="3" />);
+
+  expect(() => getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with accessibilityHint: FOO
+
+      [36m<View[39m
+        [33maccessibilityHint[39m=[32m"HINT"[39m
+      [36m/>[39m"
+    `);
+
+  expect(() => getAllByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with accessibilityHint: FOO
+
+      [36m<View[39m
+        [33maccessibilityHint[39m=[32m"HINT"[39m
+      [36m/>[39m"
+    `);
+
+  await expect(() => findByHintText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with accessibilityHint: FOO
+
+      [36m<View[39m
+        [33maccessibilityHint[39m=[32m"HINT"[39m
+      [36m/>[39m"
+    `);
+
+  await expect(() => findAllByHintText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with accessibilityHint: FOO
+
+      [36m<View[39m
+        [33maccessibilityHint[39m=[32m"HINT"[39m
+      [36m/>[39m"
+    `);
 });

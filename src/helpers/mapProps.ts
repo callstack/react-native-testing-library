@@ -22,7 +22,7 @@ function isObject(
   return typeof thing === 'object' && !Array.isArray(thing) && thing !== null;
 }
 
-function removeEmptyKeys(prop: unknown) {
+function removeUndefinedKeys(prop: unknown) {
   if (isObject(prop)) {
     const object = Object.keys(prop).reduce((acc, propName) => {
       return {
@@ -31,7 +31,10 @@ function removeEmptyKeys(prop: unknown) {
       };
     }, {});
 
-    if (!Object.values(object).find((val) => val !== undefined)) {
+    const allValuesUndefined =
+      Object.values(object).findIndex((val) => val !== undefined) === -1;
+
+    if (allValuesUndefined) {
       return undefined;
     }
 
@@ -45,8 +48,8 @@ function removeEmptyKeys(prop: unknown) {
  * Preserve props that are helpful in diagnosing test failures, while stripping rest
  */
 export const mapPropsForQueryError: MapPropsFunction = (props) => {
-  const accessibilityState = removeEmptyKeys(props.accessibilityState);
-  const accessibilityValue = removeEmptyKeys(props.accessibilityValue);
+  const accessibilityState = removeUndefinedKeys(props.accessibilityState);
+  const accessibilityValue = removeUndefinedKeys(props.accessibilityValue);
 
   const styles = StyleSheet.flatten(props.style as any) ?? {};
 

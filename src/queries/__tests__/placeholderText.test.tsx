@@ -72,11 +72,19 @@ test('byPlaceholderText queries support hidden option', () => {
   expect(
     queryByPlaceholderText('hidden', { includeHiddenElements: false })
   ).toBeFalsy();
-  expect(() =>
-    getByPlaceholderText('hidden', { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with placeholder: hidden"`
-  );
+  expect(() => getByPlaceholderText('hidden', { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with placeholder: hidden
+
+    [36m<TextInput[39m
+      [33mplaceholder[39m=[32m"hidden"[39m
+      [33mstyle[39m=[32m{
+        Object {
+          "display": "none",
+        }
+      }[39m
+    [36m/>[39m"
+  `);
 });
 
 test('byPlaceHolderText should return host component', () => {
@@ -85,4 +93,48 @@ test('byPlaceHolderText should return host component', () => {
   );
 
   expect(getByPlaceholderText('placeholder').type).toBe('TextInput');
+});
+
+test('error message renders the React DOM, preserving only helpful props', async () => {
+  const {
+    getByPlaceholderText,
+    getAllByPlaceholderText,
+    findByPlaceholderText,
+    findAllByPlaceholderText,
+  } = render(<TextInput placeholder="PLACEHOLDER" key="3" />);
+
+  expect(() => getByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with placeholder: FOO
+
+    [36m<TextInput[39m
+      [33mplaceholder[39m=[32m"PLACEHOLDER"[39m
+    [36m/>[39m"
+  `);
+
+  expect(() => getAllByPlaceholderText('FOO'))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with placeholder: FOO
+
+    [36m<TextInput[39m
+      [33mplaceholder[39m=[32m"PLACEHOLDER"[39m
+    [36m/>[39m"
+  `);
+
+  await expect(() => findByPlaceholderText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with placeholder: FOO
+
+    [36m<TextInput[39m
+      [33mplaceholder[39m=[32m"PLACEHOLDER"[39m
+    [36m/>[39m"
+  `);
+
+  await expect(() => findAllByPlaceholderText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with placeholder: FOO
+
+    [36m<TextInput[39m
+      [33mplaceholder[39m=[32m"PLACEHOLDER"[39m
+    [36m/>[39m"
+  `);
 });

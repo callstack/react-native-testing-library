@@ -501,8 +501,8 @@ test('byText support hidden option', () => {
   );
 });
 
-describe('byText error message', () => {
-  test('renders the React DOM with regular props stripped', async () => {
+describe('error messages', () => {
+  test('renders the React DOM with less helpful props stripped', async () => {
     const { getByText } = render(<Text onPress={() => null}>Some text</Text>);
 
     expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
@@ -546,6 +546,7 @@ describe('byText error message', () => {
         [33maccessibilityLabel[39m=[32m"LABEL"[39m
         [33maccessibilityLabelledBy[39m=[32m"LABELLED_BY"[39m
         [33maccessibilityRole[39m=[32m"summary"[39m
+        [33maccessibilityViewIsModal[39m=[32m{true}[39m
         [33mimportantForAccessibility[39m=[32m"yes"[39m
         [33mnativeID[39m=[32m"NATIVE_ID"[39m
         [33mtestID[39m=[32m"TEST_ID"[39m
@@ -562,12 +563,29 @@ describe('byText error message', () => {
     `);
   });
 
-  test('works with findBy', async () => {
-    const { findByText } = render(
+  test('also filters props with getAllBy, findBy, findAllBy', async () => {
+    const { getAllByText, findByText, findAllByText } = render(
       <View accessibilityViewIsModal key="this is filtered" />
     );
 
+    expect(() => getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      [36m<View[39m
+        [33maccessibilityViewIsModal[39m=[32m{true}[39m
+      [36m/>[39m"
+    `);
+
     await expect(() => findByText(/foo/)).rejects
+      .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      [36m<View[39m
+        [33maccessibilityViewIsModal[39m=[32m{true}[39m
+      [36m/>[39m"
+    `);
+
+    await expect(() => findAllByText(/foo/)).rejects
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 

@@ -8,34 +8,69 @@ const node: ReactTestRendererJSON = {
 };
 
 describe('mapPropsForQueryError', () => {
-  test('preserves props that hide an element', () => {
+  test('preserves props that are helpful for debugging', () => {
+    const props = {
+      accessibilityElementsHidden: true,
+      accessibilityViewIsModal: true,
+      importantForAccessibility: 'yes',
+      testID: 'TEST_ID',
+      nativeID: 'NATIVE_ID',
+      accessibilityLabel: 'LABEL',
+      accessibilityLabelledBy: 'LABELLED_BY',
+      accessibilityRole: 'ROLE',
+      accessibilityHint: 'HINT',
+      placeholder: 'PLACEHOLDER',
+      value: 'VALUE',
+      defaultValue: 'DEFAULT_VALUE',
+    };
+
+    const result = mapPropsForQueryError(props, node);
+
+    expect(result).toStrictEqual(props);
+  });
+
+  test('does not preserve less helpful props', () => {
     const result = mapPropsForQueryError(
       {
-        accessibilityElementsHidden: true,
-        importantForAccessibility: 'no-hide-descendants',
-        style: [{ flex: 1 }, { borderWidth: 2, display: 'none' }],
+        style: [{ flex: 1 }, { display: 'flex' }],
+        onPress: () => null,
+        key: 'foo',
       },
       node
     );
 
+    expect(result).toStrictEqual({});
+  });
+
+  test('preserves "display: none" style but no other style', () => {
+    const result = mapPropsForQueryError(
+      { style: [{ flex: 1 }, { display: 'none', flex: 2 }] },
+      node
+    );
+
     expect(result).toStrictEqual({
-      accessibilityElementsHidden: true,
-      importantForAccessibility: 'no-hide-descendants',
       style: { display: 'none' },
     });
   });
 
   test('removes undefined keys from accessibilityState', () => {
     const result = mapPropsForQueryError(
-      {
-        accessibilityState: { checked: undefined, selected: true },
-      },
+      { accessibilityState: { checked: undefined, selected: false } },
       node
     );
 
     expect(result).toStrictEqual({
-      accessibilityState: { selected: true },
+      accessibilityState: { selected: false },
     });
+  });
+
+  test('removes accessibilityState if all keys are undefined', () => {
+    const result = mapPropsForQueryError(
+      { accessibilityState: { checked: undefined, selected: undefined } },
+      node
+    );
+
+    expect(result).toStrictEqual({});
   });
 
   test('does not fail if accessibilityState is a string, passes through', () => {
@@ -59,13 +94,18 @@ describe('mapPropsForQueryError', () => {
     expect(result).toStrictEqual({ accessibilityState: { 1: { 2: 3 } } });
   });
 
-  test('does not preserve props that do not hide', () => {
+  test('removes undefined keys from accessibilityValue', () => {
     const result = mapPropsForQueryError(
-      {
-        style: [{ flex: 1 }, { display: 'flex' }],
-        onPress: () => null,
-        key: 'foo',
-      },
+      { accessibilityValue: { min: 1, max: undefined } },
+      node
+    );
+
+    expect(result).toStrictEqual({ accessibilityValue: { min: 1 } });
+  });
+
+  test('removes accessibilityValue if all keys are undefined', () => {
+    const result = mapPropsForQueryError(
+      { accessibilityValue: { min: undefined } },
       node
     );
 
