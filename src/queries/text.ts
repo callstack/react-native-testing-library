@@ -4,6 +4,7 @@ import { findAll } from '../helpers/findAll';
 import { getHostComponentNames } from '../helpers/host-component-names';
 import { matchTextContent } from '../helpers/matchers/matchTextContent';
 import { TextMatch, TextMatchOptions } from '../matches';
+import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -12,7 +13,6 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
-import { makeQueries } from './makeQueries';
 import type { CommonQueryOptions } from './options';
 
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;
