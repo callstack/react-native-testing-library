@@ -86,13 +86,17 @@ Example:
   return waitForOptions;
 }
 
-/**
- * @returns formatted DOM with two newlines preceding
- */
-function getFormattedDOM() {
-  return `
+function formatErrorMessage(message: string, printElementTree: boolean) {
+  if (!printElementTree) {
+    return message;
+  }
 
-${format(screen.toJSON() || [], { mapProps: mapPropsForQueryError })}`;
+  const json = screen.toJSON();
+  if (!json) {
+    return message;
+  }
+
+  return `${message}\n\n${format(json, { mapProps: mapPropsForQueryError })}`;
 }
 
 export function makeQueries<Predicate, Options>(
@@ -100,22 +104,19 @@ export function makeQueries<Predicate, Options>(
   getMissingError: (predicate: Predicate, options?: Options) => string,
   getMultipleError: (predicate: Predicate, options?: Options) => string
 ): UnboundQueries<Predicate, Options> {
-  function getAllByQuery(instance: ReactTestInstance) {
-    return getAllByQueryInternal(instance, { printDOM: true });
-  }
-
-  function getAllByQueryInternal(
+  function getAllByQuery(
     instance: ReactTestInstance,
-    { printDOM = true } = {}
+    { printElementTree = true } = {}
   ) {
     return function getAllFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length === 0) {
         throw new ErrorWithStack(
-          `${getMissingError(predicate, options)}${
-            printDOM ? getFormattedDOM() : '' // avoid formatting DOM if timeout not reached in findAllBy
-          }`,
+          formatErrorMessage(
+            getMissingError(predicate, options),
+            printElementTree
+          ),
           getAllFn
         );
       }
@@ -124,13 +125,19 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function queryByQuery(instance: ReactTestInstance) {
+  function queryByQuery(
+    instance: ReactTestInstance,
+    { printElementTree = true } = {}
+  ) {
     return function singleQueryFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length > 1) {
         throw new ErrorWithStack(
-          getMultipleError(predicate, options),
+          formatErrorMessage(
+            getMultipleError(predicate, options),
+            printElementTree
+          ),
           singleQueryFn
         );
       }
@@ -143,13 +150,9 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function getByQuery(instance: ReactTestInstance) {
-    return getByQueryInternal(instance, { printDOM: true });
-  }
-
-  function getByQueryInternal(
+  function getByQuery(
     instance: ReactTestInstance,
-    { printDOM = true } = {}
+    { printElementTree = true } = {}
   ) {
     return function getFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
@@ -160,9 +163,10 @@ export function makeQueries<Predicate, Options>(
 
       if (results.length === 0) {
         throw new ErrorWithStack(
-          `${getMissingError(predicate, options)}${
-            printDOM ? getFormattedDOM() : '' // avoid formatting DOM if timeout not reached in findBy
-          }`,
+          formatErrorMessage(
+            getMissingError(predicate, options),
+            printElementTree
+          ),
           getFn
         );
       }
@@ -184,7 +188,7 @@ export function makeQueries<Predicate, Options>(
       const onTimeout = (e: unknown) => {
         const error = e as Error;
         if (error?.message) {
-          error.message = `${error.message}${getFormattedDOM()}`;
+          error.message = formatErrorMessage(error.message, true);
         }
 
         if (waitForOptions.onTimeout) {
@@ -200,7 +204,7 @@ export function makeQueries<Predicate, Options>(
 
       return waitFor(
         () =>
-          getAllByQueryInternal(instance, { printDOM: false })(
+          getAllByQuery(instance, { printElementTree: false })(
             predicate,
             queryOptions
           ),
@@ -226,7 +230,7 @@ export function makeQueries<Predicate, Options>(
       const onTimeout = (e: unknown) => {
         const error = e as Error;
         if (error?.message) {
-          error.message = `${error.message}${getFormattedDOM()}`;
+          error.message = formatErrorMessage(error.message, true);
         }
 
         if (waitForOptions.onTimeout) {
@@ -242,7 +246,7 @@ export function makeQueries<Predicate, Options>(
 
       return waitFor(
         () =>
-          getByQueryInternal(instance, { printDOM: false })(
+          getByQuery(instance, { printElementTree: false })(
             predicate,
             queryOptions
           ),
