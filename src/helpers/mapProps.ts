@@ -2,46 +2,43 @@ import { StyleSheet } from 'react-native';
 import { MapPropsFunction } from './format';
 
 const propsToDisplay = [
+  'testID',
+  'nativeID',
   'accessibilityElementsHidden',
   'accessibilityViewIsModal',
   'importantForAccessibility',
-  'testID',
-  'nativeID',
+  'accessibilityRole',
   'accessibilityLabel',
   'accessibilityLabelledBy',
-  'accessibilityRole',
   'accessibilityHint',
   'placeholder',
   'value',
   'defaultValue',
+  'title',
 ];
 
-function isObject(
-  thing: unknown
-): thing is Record<string | symbol | number, unknown> {
-  return typeof thing === 'object' && !Array.isArray(thing) && thing !== null;
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function removeUndefinedKeys(prop: unknown) {
-  if (isObject(prop)) {
-    const object = Object.keys(prop).reduce((acc, propName) => {
-      return {
-        ...acc,
-        ...(prop[propName] === undefined ? {} : { [propName]: prop[propName] }),
-      };
-    }, {});
-
-    const allValuesUndefined =
-      Object.values(object).findIndex((val) => val !== undefined) === -1;
-
-    if (allValuesUndefined) {
-      return undefined;
-    }
-
-    return object;
+  if (!isObject(prop)) {
+    return prop;
   }
 
-  return prop;
+  const result: Record<string, unknown> = {};
+  Object.keys(prop).forEach((propName) => {
+    if (prop[propName] !== undefined) {
+      result[propName] = prop[propName];
+    }
+  });
+
+  // If object does not have any props we will ignore it.
+  if (Object.keys(result).length === 0) {
+    return undefined;
+  }
+
+  return result;
 }
 
 /**
@@ -51,24 +48,20 @@ export const mapPropsForQueryError: MapPropsFunction = (props) => {
   const accessibilityState = removeUndefinedKeys(props.accessibilityState);
   const accessibilityValue = removeUndefinedKeys(props.accessibilityValue);
 
-  const styles = StyleSheet.flatten(props.style as any) ?? {};
+  const styles = StyleSheet.flatten(props.style) as any;
 
   // perform custom prop mappings
-  const mappedProps: Record<string, unknown> = {
-    ...(styles.display === 'none' ? { style: { display: 'none' } } : undefined),
-    ...(accessibilityState === undefined ? {} : { accessibilityState }),
-    ...(accessibilityValue === undefined ? {} : { accessibilityValue }),
+  const result: Record<string, unknown> = {
+    ...(styles?.display === 'none' ? { style: { display: 'none' } } : {}),
+    ...(accessibilityState !== undefined ? { accessibilityState } : {}),
+    ...(accessibilityValue !== undefined ? { accessibilityValue } : {}),
   };
 
-  // add props from propsToDisplay without mapping
-  return propsToDisplay.reduce((acc, propName) => {
+  propsToDisplay.forEach((propName) => {
     if (propName in props) {
-      return {
-        ...acc,
-        [propName]: props[propName],
-      };
+      result[propName] = props[propName];
     }
+  });
 
-    return acc;
-  }, mappedProps);
+  return result;
 };
