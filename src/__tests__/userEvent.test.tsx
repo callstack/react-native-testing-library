@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { render, screen, userEvent } from '../pure';
 
 jest.useFakeTimers();
@@ -78,6 +78,19 @@ describe('userEvent.press', () => {
     );
 
     userEvent.press(screen.getByTestId('pressable'));
+
+    expect(mockOnPress).toHaveBeenCalled();
+  });
+
+  test('crawls up in the tree to find an element that responds to touch events', () => {
+    const mockOnPress = jest.fn();
+
+    render(
+      <Pressable onPress={mockOnPress}>
+        <Text>press me</Text>
+      </Pressable>
+    );
+    userEvent.press(screen.getByText('press me'));
 
     expect(mockOnPress).toHaveBeenCalled();
   });
