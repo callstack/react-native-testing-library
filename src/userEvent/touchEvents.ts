@@ -1,5 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import act from '../act';
+import { isHostElementPointerEventEnabled } from '../helpers/isHostElementPointerEventEnabled';
 
 const defaultPressEvent = {
   persist: jest.fn(),
@@ -11,7 +12,10 @@ const defaultPressEvent = {
 
 export const press = (element: ReactTestInstance) => {
   act(() => {
-    if (element.props.onStartShouldSetResponder()) {
+    if (
+      isHostElementPointerEventEnabled(element) &&
+      element.props.onStartShouldSetResponder()
+    ) {
       element.props.onResponderGrant(defaultPressEvent);
       element.props.onResponderRelease(defaultPressEvent);
       jest.runOnlyPendingTimers();
