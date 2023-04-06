@@ -14,6 +14,7 @@ export {
 export { getDefaultNormalizer } from './matches';
 export { renderHook } from './renderHook';
 export { screen } from './screen';
+export { userEvent } from './userEvent/userEvent';
 
 export type {
   RenderOptions,
