@@ -94,4 +94,30 @@ describe('userEvent.press', () => {
 
     expect(mockOnPress).toHaveBeenCalled();
   });
+
+  test('calls onPressIn', () => {
+    const mockOnPressIn = jest.fn();
+
+    render(
+      <Pressable onPressIn={mockOnPressIn}>
+        <Text>press me</Text>
+      </Pressable>
+    );
+    userEvent.press(screen.getByText('press me'));
+
+    expect(mockOnPressIn).toHaveBeenCalled();
+  });
+
+  test('calls onPressOut', () => {
+    const mockOnPressOut = jest.fn();
+
+    render(
+      <Pressable onPressOut={mockOnPressOut}>
+        <Text>press me</Text>
+      </Pressable>
+    );
+    userEvent.press(screen.getByText('press me'));
+
+    expect(mockOnPressOut).toHaveBeenCalled();
+  });
 });
