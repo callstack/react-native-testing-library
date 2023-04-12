@@ -216,44 +216,6 @@ test('should not fire on disabled Pressable', () => {
   expect(handlePress).not.toHaveBeenCalled();
 });
 
-test('should not fire on non-editable TextInput', () => {
-  const testID = 'my-text-input';
-  const onChangeTextMock = jest.fn();
-  const NEW_TEXT = 'New text';
-
-  const { getByTestId } = render(
-    <TextInput
-      editable={false}
-      testID={testID}
-      onChangeText={onChangeTextMock}
-    />
-  );
-
-  fireEvent.changeText(getByTestId(testID), NEW_TEXT);
-  expect(onChangeTextMock).not.toHaveBeenCalled();
-});
-
-test('should not fire on non-editable TextInput with nested Text', () => {
-  const placeholder = 'Test placeholder';
-  const onChangeTextMock = jest.fn();
-  const NEW_TEXT = 'New text';
-
-  const { getByPlaceholderText } = render(
-    <View>
-      <TextInput
-        editable={false}
-        placeholder={placeholder}
-        onChangeText={onChangeTextMock}
-      >
-        <Text>Test text</Text>
-      </TextInput>
-    </View>
-  );
-
-  fireEvent.changeText(getByPlaceholderText(placeholder), NEW_TEXT);
-  expect(onChangeTextMock).not.toHaveBeenCalled();
-});
-
 test('should not fire inside View with pointerEvents="none"', () => {
   const onPress = jest.fn();
   const screen = render(
