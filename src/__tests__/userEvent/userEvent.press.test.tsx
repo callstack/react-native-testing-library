@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { render, screen, userEvent } from '../pure';
+import { render, screen, userEvent } from '../../pure';
 
 jest.useFakeTimers();
 
