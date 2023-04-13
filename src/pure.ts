@@ -23,3 +23,4 @@ export type {
 } from './render';
 export type { RenderHookOptions, RenderHookResult } from './renderHook';
 export type { Config } from './config';
+export type { PressOptions } from './userEvent/touchEvents';

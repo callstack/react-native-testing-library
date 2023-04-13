@@ -120,4 +120,69 @@ describe('userEvent.press', () => {
 
     expect(mockOnPressOut).toHaveBeenCalled();
   });
+
+  test('does not call onLongPress for pressDuration of 0', () => {
+    const mockOnLongPress = jest.fn();
+
+    render(
+      <Pressable onLongPress={mockOnLongPress}>
+        <Text>press me</Text>
+      </Pressable>
+    );
+    userEvent.press(screen.getByText('press me'));
+
+    expect(mockOnLongPress).not.toHaveBeenCalled();
+  });
+
+  test('calls onLongPress for a duration greater than default onLongPressDelay', () => {
+    const mockOnLongPress = jest.fn();
+
+    render(
+      <Pressable onLongPress={mockOnLongPress}>
+        <Text>press me</Text>
+      </Pressable>
+    );
+    userEvent.press(screen.getByText('press me'), { pressDuration: 500 });
+
+    expect(mockOnLongPress).toHaveBeenCalled();
+  });
+
+  test('calls onLongPress when duration is greater than specified onLongPressDelay', () => {
+    const mockOnLongPress = jest.fn();
+    const mockOnPress = jest.fn();
+
+    render(
+      <Pressable
+        delayLongPress={1000}
+        onLongPress={mockOnLongPress}
+        onPress={mockOnPress}
+      >
+        <Text>press me</Text>
+      </Pressable>
+    );
+    userEvent.press(screen.getByText('press me'), { pressDuration: 500 });
+
+    expect(mockOnLongPress).not.toHaveBeenCalled();
+    expect(mockOnPress).toHaveBeenCalledTimes(1);
+
+    userEvent.press(screen.getByText('press me'), { pressDuration: 1000 });
+
+    expect(mockOnLongPress).toHaveBeenCalled();
+    expect(mockOnPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('does not calls onPress when onLongPress is called', () => {
+    const mockOnLongPress = jest.fn();
+    const mockOnPress = jest.fn();
+
+    render(
+      <Pressable onLongPress={mockOnLongPress} onPress={mockOnPress}>
+        <Text>press me</Text>
+      </Pressable>
+    );
+    userEvent.press(screen.getByText('press me'), { pressDuration: 500 });
+
+    expect(mockOnLongPress).toHaveBeenCalled();
+    expect(mockOnPress).not.toHaveBeenCalled();
+  });
 });

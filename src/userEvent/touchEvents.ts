@@ -11,9 +11,16 @@ const defaultPressEvent = {
   currentTarget: { measure: jest.fn() },
 };
 
-export const press = (element: ReactTestInstance) => {
+export type PressOptions = {
+  pressDuration: number;
+};
+
+export const press = (
+  element: ReactTestInstance,
+  options: PressOptions = { pressDuration: 0 }
+) => {
   if (isEnabledTouchResponder(element)) {
-    triggerPressEvent(element);
+    triggerPressEvent(element, options);
     return;
   }
 
@@ -22,12 +29,16 @@ export const press = (element: ReactTestInstance) => {
     return;
   }
 
-  press(hostParentElement);
+  press(hostParentElement, options);
 };
 
-const triggerPressEvent = (element: ReactTestInstance) => {
+const triggerPressEvent = (
+  element: ReactTestInstance,
+  options: PressOptions = { pressDuration: 0 }
+) => {
   act(() => {
     element.props.onResponderGrant(defaultPressEvent);
+    jest.advanceTimersByTime(options.pressDuration);
     element.props.onResponderRelease(defaultPressEvent);
     jest.runOnlyPendingTimers();
   });
