@@ -785,7 +785,7 @@ describe('matches only accessible elements', () => {
   });
 });
 
-test('error message renders the React DOM, preserving only helpful props', async () => {
+test('error message renders the element tree, preserving only helpful props', async () => {
   const { getByRole, getAllByRole, findByRole, findAllByRole } = render(
     <View accessibilityRole="button" key="3" />
   );

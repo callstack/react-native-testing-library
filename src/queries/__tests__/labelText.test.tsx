@@ -202,7 +202,7 @@ test('getByLabelText supports nested accessibilityLabelledBy', async () => {
   expect(getByLabelText(/input/)).toBe(getByTestId('textInput'));
 });
 
-test('error message renders the React DOM, preserving only helpful props', async () => {
+test('error message renders the element tree, preserving only helpful props', async () => {
   const {
     getByLabelText,
     getAllByLabelText,

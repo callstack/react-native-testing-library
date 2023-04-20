@@ -370,7 +370,7 @@ test('*ByAccessibilityState deprecation warnings', () => {
   `);
 });
 
-test('error message renders the React DOM, preserving only helpful props', async () => {
+test('error message renders the element tree, preserving only helpful props', async () => {
   const {
     getByA11yState,
     getAllByA11yState,

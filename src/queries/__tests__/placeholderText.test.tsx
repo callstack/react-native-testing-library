@@ -95,7 +95,7 @@ test('byPlaceHolderText should return host component', () => {
   expect(getByPlaceholderText('placeholder').type).toBe('TextInput');
 });
 
-test('error message renders the React DOM, preserving only helpful props', async () => {
+test('error message renders the element tree, preserving only helpful props', async () => {
   const {
     getByPlaceholderText,
     getAllByPlaceholderText,

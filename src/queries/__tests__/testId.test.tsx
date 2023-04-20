@@ -161,7 +161,7 @@ test('byTestId queries support hidden option', () => {
   `);
 });
 
-test('error message renders the React DOM, preserving only helpful props', async () => {
+test('error message renders the element tree, preserving only helpful props', async () => {
   const { getByTestId, getAllByTestId, findByTestId, findAllByTestId } = render(
     <View testID="TEST_ID" key="3" />
   );

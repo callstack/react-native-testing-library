@@ -137,7 +137,7 @@ test('byHintText queries support hidden option', () => {
   `);
 });
 
-test('error message renders the React DOM, preserving only helpful props', async () => {
+test('error message renders the element tree, preserving only helpful props', async () => {
   const { getByHintText, getAllByHintText, findByHintText, findAllByHintText } =
     render(<TouchableOpacity accessibilityHint="HINT" key="3" />);
 

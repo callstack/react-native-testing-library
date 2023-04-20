@@ -181,7 +181,7 @@ test('byDisplayValue should return host component', () => {
   expect(getByDisplayValue('value').type).toBe('TextInput');
 });
 
-test('error message renders the React DOM, preserving only helpful props', async () => {
+test('error message renders the element tree, preserving only helpful props', async () => {
   const {
     getByDisplayValue,
     getAllByDisplayValue,
