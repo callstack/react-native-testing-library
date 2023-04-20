@@ -37,9 +37,15 @@ const triggerPressEvent = (
   options: PressOptions = { pressDuration: 0 }
 ) => {
   act(() => {
-    element.props.onResponderGrant(defaultPressEvent);
+    element.props.onResponderGrant({
+      ...defaultPressEvent,
+      dispatchConfig: { registrationName: 'onResponderGrant' },
+    });
     jest.advanceTimersByTime(options.pressDuration);
-    element.props.onResponderRelease(defaultPressEvent);
+    element.props.onResponderRelease({
+      ...defaultPressEvent,
+      dispatchConfig: { registrationName: 'onResponderRelease' },
+    });
     jest.runOnlyPendingTimers();
   });
 };

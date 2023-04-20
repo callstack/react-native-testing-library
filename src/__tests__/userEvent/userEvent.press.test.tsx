@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { render, screen, userEvent } from '../../pure';
 
 jest.useFakeTimers();
@@ -169,5 +169,18 @@ describe('userEvent.press', () => {
 
     expect(mockOnLongPress).toHaveBeenCalled();
     expect(mockOnPress).not.toHaveBeenCalled();
+  });
+
+  test('works on TouchableOpacity', () => {
+    const mockOnPress = jest.fn();
+
+    render(
+      <TouchableOpacity onPress={mockOnPress}>
+        <Text>press me</Text>
+      </TouchableOpacity>
+    );
+    userEvent.press(screen.getByText('press me'));
+
+    expect(mockOnPress).toHaveBeenCalled();
   });
 });
