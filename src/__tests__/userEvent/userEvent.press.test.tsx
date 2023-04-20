@@ -1,5 +1,11 @@
 import React from 'react';
-import { Pressable, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Pressable,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { render, screen, userEvent } from '../../pure';
 
 jest.useFakeTimers();
@@ -182,5 +188,61 @@ describe('userEvent.press', () => {
     userEvent.press(screen.getByText('press me'));
 
     expect(mockOnPress).toHaveBeenCalled();
+  });
+
+  test('works on TouchableHighlight', () => {
+    const mockOnPress = jest.fn();
+
+    render(
+      <TouchableHighlight onPress={mockOnPress}>
+        <Text>press me</Text>
+      </TouchableHighlight>
+    );
+    userEvent.press(screen.getByText('press me'));
+
+    expect(mockOnPress).toHaveBeenCalled();
+  });
+
+  test('works on Text', () => {
+    const mockOnPress = jest.fn();
+    const mockOnPressIn = jest.fn();
+    const mockOnPressOut = jest.fn();
+
+    render(
+      <Text
+        onPress={mockOnPress}
+        onPressIn={mockOnPressIn}
+        onPressOut={mockOnPressOut}
+      >
+        press me
+      </Text>
+    );
+    userEvent.press(screen.getByText('press me'));
+
+    expect(mockOnPress).toHaveBeenCalled();
+    expect(mockOnPressIn).toHaveBeenCalled();
+    expect(mockOnPressOut).toHaveBeenCalled();
+  });
+
+  test('doesnt trigger on disabled Text', () => {
+    const mockOnPress = jest.fn();
+    const mockOnPressIn = jest.fn();
+    const mockOnPressOut = jest.fn();
+
+    render(
+      <Text
+        onPress={mockOnPress}
+        onPressIn={mockOnPressIn}
+        onPressOut={mockOnPressOut}
+        disabled
+      >
+        press me
+      </Text>
+    );
+    userEvent.press(screen.getByText('press me'));
+
+    expect(mockOnPress).not.toHaveBeenCalled();
+    expect(mockOnPressIn).not.toHaveBeenCalled();
+    expect(mockOnPressOut).not.toHaveBeenCalled();
   });
 });
