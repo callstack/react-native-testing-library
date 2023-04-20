@@ -5,13 +5,24 @@ import { render, screen, userEvent } from '../../pure';
 jest.useFakeTimers();
 
 describe('userEvent.press', () => {
-  test('calls onPress prop of touchable', () => {
+  test('calls onPressIn, onPress and onPressOut prop of touchable', () => {
     const mockOnPress = jest.fn();
+    const mockOnPressIn = jest.fn();
+    const mockOnPressOut = jest.fn();
 
-    render(<Pressable onPress={mockOnPress} testID="pressable" />);
+    render(
+      <Pressable
+        onPress={mockOnPress}
+        onPressIn={mockOnPressIn}
+        onPressOut={mockOnPressOut}
+        testID="pressable"
+      />
+    );
     userEvent.press(screen.getByTestId('pressable'));
 
     expect(mockOnPress).toHaveBeenCalled();
+    expect(mockOnPressIn).toHaveBeenCalled();
+    expect(mockOnPressOut).toHaveBeenCalled();
   });
 
   test('does not call press when pressable is disabled', () => {
@@ -93,32 +104,6 @@ describe('userEvent.press', () => {
     userEvent.press(screen.getByText('press me'));
 
     expect(mockOnPress).toHaveBeenCalled();
-  });
-
-  test('calls onPressIn', () => {
-    const mockOnPressIn = jest.fn();
-
-    render(
-      <Pressable onPressIn={mockOnPressIn}>
-        <Text>press me</Text>
-      </Pressable>
-    );
-    userEvent.press(screen.getByText('press me'));
-
-    expect(mockOnPressIn).toHaveBeenCalled();
-  });
-
-  test('calls onPressOut', () => {
-    const mockOnPressOut = jest.fn();
-
-    render(
-      <Pressable onPressOut={mockOnPressOut}>
-        <Text>press me</Text>
-      </Pressable>
-    );
-    userEvent.press(screen.getByText('press me'));
-
-    expect(mockOnPressOut).toHaveBeenCalled();
   });
 
   test('does not call onLongPress for pressDuration of 0', () => {
