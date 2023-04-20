@@ -101,6 +101,16 @@ function formatErrorMessage(message: string, printElementTree: boolean) {
   })}`;
 }
 
+function appendElementTreeToError(error: Error) {
+  if (error?.message) {
+    const oldMessage = error.message;
+    error.message = formatErrorMessage(oldMessage, true);
+    error.stack = error.stack?.replace(oldMessage, error.message);
+  }
+
+  return error;
+}
+
 export function makeQueries<Predicate, Options>(
   queryAllByQuery: UnboundQuery<QueryAllByQuery<Predicate, Options>>,
   getMissingError: (predicate: Predicate, options?: Options) => string,
@@ -181,28 +191,13 @@ export function makeQueries<Predicate, Options>(
     return function findAllFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
-      waitForOptions: WaitForOptions = {}
+      {
+        onTimeout = (e: unknown) => appendElementTreeToError(e as Error),
+        ...waitForOptions
+      }: WaitForOptions = {}
     ) {
       const deprecatedWaitForOptions =
         extractDeprecatedWaitForOptions(queryOptions);
-
-      // append formatted DOM to final error
-      const onTimeout = (e: unknown) => {
-        const error = e as Error;
-        if (error?.message) {
-          error.message = formatErrorMessage(error.message, true);
-        }
-
-        if (waitForOptions.onTimeout) {
-          return waitForOptions.onTimeout(error);
-        }
-
-        if (deprecatedWaitForOptions?.onTimeout) {
-          return deprecatedWaitForOptions.onTimeout(error);
-        }
-
-        return error;
-      };
 
       return waitFor(
         () =>
@@ -223,28 +218,13 @@ export function makeQueries<Predicate, Options>(
     return function findFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
-      waitForOptions: WaitForOptions = {}
+      {
+        onTimeout = (e: unknown) => appendElementTreeToError(e as Error),
+        ...waitForOptions
+      }: WaitForOptions = {}
     ) {
       const deprecatedWaitForOptions =
         extractDeprecatedWaitForOptions(queryOptions);
-
-      // append formatted DOM to final error
-      const onTimeout = (e: unknown) => {
-        const error = e as Error;
-        if (error?.message) {
-          error.message = formatErrorMessage(error.message, true);
-        }
-
-        if (waitForOptions.onTimeout) {
-          return waitForOptions.onTimeout(error);
-        }
-
-        if (deprecatedWaitForOptions?.onTimeout) {
-          return deprecatedWaitForOptions.onTimeout(error);
-        }
-
-        return error;
-      };
 
       return waitFor(
         () =>

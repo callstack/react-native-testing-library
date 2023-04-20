@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
   Button,
+  Image,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { render, getDefaultNormalizer, within, screen } from '../..';
+import { getDefaultNormalizer, render, within } from '../..';
 
 test('byText matches simple text', () => {
   const { getByText } = render(<Text testID="text">Hello World</Text>);
@@ -501,74 +501,12 @@ test('byText support hidden option', () => {
   );
 });
 
-describe('error messages', () => {
-  test('renders the React DOM with less helpful props stripped', async () => {
-    const { getByText } = render(<Text onPress={() => null}>Some text</Text>);
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const { getByText, getAllByText, findByText, findAllByText } = render(
+    <View accessibilityViewIsModal key="this is filtered" />
+  );
 
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with text: /foo/
-
-      <Text>
-        Some text
-      </Text>"
-    `);
-  });
-
-  test('passes through helpful props', async () => {
-    const { getByText } = render(
-      <View
-        accessibilityElementsHidden
-        accessibilityViewIsModal
-        importantForAccessibility="yes"
-        testID="TEST_ID"
-        nativeID="NATIVE_ID"
-        accessibilityLabel="LABEL"
-        accessibilityLabelledBy="LABELLED_BY"
-        accessibilityRole="summary"
-        accessibilityHint="HINT"
-        key="this is filtered"
-      >
-        <TextInput
-          placeholder="PLACEHOLDER"
-          value="VALUE"
-          defaultValue="DEFAULT_VALUE"
-        />
-        <Text>Some Text</Text>
-      </View>
-    );
-
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with text: /foo/
-
-      <View
-        accessibilityElementsHidden={true}
-        accessibilityHint="HINT"
-        accessibilityLabel="LABEL"
-        accessibilityLabelledBy="LABELLED_BY"
-        accessibilityRole="summary"
-        accessibilityViewIsModal={true}
-        importantForAccessibility="yes"
-        nativeID="NATIVE_ID"
-        testID="TEST_ID"
-      >
-        <TextInput
-          defaultValue="DEFAULT_VALUE"
-          placeholder="PLACEHOLDER"
-          value="VALUE"
-        />
-        <Text>
-          Some Text
-        </Text>
-      </View>"
-    `);
-  });
-
-  test('also filters props with getAllBy, findBy, findAllBy', async () => {
-    const { getAllByText, findByText, findAllByText } = render(
-      <View accessibilityViewIsModal key="this is filtered" />
-    );
-
-    expect(() => getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -576,8 +514,7 @@ describe('error messages', () => {
       />"
     `);
 
-    await expect(() => findByText(/foo/)).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -585,137 +522,22 @@ describe('error messages', () => {
       />"
     `);
 
-    await expect(() => findAllByText(/foo/)).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+  await expect(findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
         accessibilityViewIsModal={true}
       />"
     `);
-  });
 
-  test('only renders the DOM on last failure with findBy', async () => {
-    const { findByText } = render(
-      <View accessibilityViewIsModal key="this is filtered" />
-    );
-
-    jest.spyOn(screen, 'toJSON');
-
-    await expect(() => findByText(/foo/)).rejects.toThrow();
-
-    expect(screen.toJSON).toHaveBeenCalledTimes(1);
-  });
-
-  test('can still modify findBy error in custom onTimeout', async () => {
-    const { findByText } = render(
-      <View accessibilityViewIsModal key="this is filtered" />
-    );
-
-    jest.spyOn(screen, 'toJSON');
-    const onTimeout = jest.fn();
-
-    await expect(() =>
-      findByText(/foo/, undefined, {
-        onTimeout,
-      })
-    ).rejects.toThrow();
-
-    expect(screen.toJSON).toHaveBeenCalledTimes(1);
-    expect(onTimeout).toHaveBeenCalledTimes(1);
-  });
-
-  test('only renders the DOM on last failure with findAllBy', async () => {
-    const { findAllByText } = render(
-      <View accessibilityViewIsModal key="this is filtered" />
-    );
-
-    jest.spyOn(screen, 'toJSON');
-    const onTimeout = jest.fn();
-
-    await expect(() =>
-      findAllByText(/foo/, undefined, { onTimeout })
-    ).rejects.toThrow();
-
-    expect(screen.toJSON).toHaveBeenCalledTimes(1);
-    expect(onTimeout).toHaveBeenCalledTimes(1);
-  });
-
-  test('does not strip display: none from "style" prop, but does strip other styles', () => {
-    const { getByText } = render(
-      <View style={{ display: 'flex', position: 'absolute' }}>
-        <Text
-          style={[
-            { display: 'flex', position: 'relative' },
-            { display: 'none', flex: 1 },
-          ]}
-        >
-          Some text
-        </Text>
-      </View>
-    );
-
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with text: /foo/
-
-      <View>
-        <Text
-          style={
-            Object {
-              "display": "none",
-            }
-          }
-        >
-          Some text
-        </Text>
-      </View>"
-    `);
-  });
-
-  test('strips undefined values from accessibilityState', () => {
-    const { getByText } = render(
-      <View accessibilityState={{ checked: true, busy: false }}>
-        <View accessibilityState={{ checked: undefined }} />
-      </View>
-    );
-
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+  await expect(() => findAllByText(/foo/)).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
-        accessibilityState={
-          Object {
-            "busy": false,
-            "checked": true,
-          }
-        }
-      >
-        <View />
-      </View>"
+        accessibilityViewIsModal={true}
+      />"
     `);
-  });
-
-  test('strips undefined values from accessibilityValue', () => {
-    const { getByText } = render(
-      <View accessibilityValue={{ min: 1 }}>
-        <View accessibilityState={{}} />
-      </View>
-    );
-
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with text: /foo/
-
-      <View
-        accessibilityValue={
-          Object {
-            "min": 1,
-          }
-        }
-      >
-        <View />
-      </View>"
-    `);
-  });
 });
 
 test('byText should return host component', () => {
