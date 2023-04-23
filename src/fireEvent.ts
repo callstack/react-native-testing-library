@@ -12,9 +12,8 @@ const isTextInput = (element?: ReactTestInstance) => {
     return false;
   }
 
-  // We have to test if the element type is either the TextInput component
-  // (which would if it is a composite component) or the string
-  // TextInput (which would be true if it is a host component)
+  // We have to test if the element type is either the `TextInput` component
+  // (for composite component) or the string "TextInput" (for host component)
   // All queries return host components but since fireEvent bubbles up
   // it would trigger the parent prop without the composite component check
   return (

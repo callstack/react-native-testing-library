@@ -142,17 +142,13 @@ describe('getHostSelf()', () => {
       </View>
     );
 
-    const compositeText = view.getByText('Text');
+    const compositeText = view.UNSAFE_getByType(Text);
     const hostText = view.getByTestId('text');
     expect(getHostSelf(compositeText)).toEqual(hostText);
 
-    const compositeTextInputByValue = view.getByDisplayValue('TextInputValue');
-    const compositeTextInputByPlaceholder = view.getByPlaceholderText(
-      'TextInputPlaceholder'
-    );
+    const compositeTextInput = view.UNSAFE_getByType(TextInput);
     const hostTextInput = view.getByTestId('textInput');
-    expect(getHostSelf(compositeTextInputByValue)).toEqual(hostTextInput);
-    expect(getHostSelf(compositeTextInputByPlaceholder)).toEqual(hostTextInput);
+    expect(getHostSelf(compositeTextInput)).toEqual(hostTextInput);
   });
 
   it('throws on non-single host children elements for custom composite components', () => {
