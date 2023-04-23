@@ -1,5 +1,11 @@
+import { TextInputEvents } from './Experiments/TextInputEvents';
+
 export type Experiment = (typeof experiments)[number];
 
 export const experiments = [
-  { key: 'editableTextInput', title: 'Editable TextInput' },
+  {
+    key: 'textInputEvents',
+    title: 'TextInput Events',
+    component: TextInputEvents,
+  },
 ];
