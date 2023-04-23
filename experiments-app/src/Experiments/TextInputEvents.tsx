@@ -9,7 +9,7 @@ const handleBlur = buildEventLogger('blur');
 const handleChange = buildEventLogger('change');
 
 export function TextInputEvents() {
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState('Regular TextInput');
 
   const handleChangeText = (value: string) => {
     setValue(value);
