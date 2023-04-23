@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, SafeAreaView, View, TextInput } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput } from 'react-native';
 import { buildEventLogger } from './helpers';
 
 const handlePressIn = buildEventLogger('pressIn');
@@ -9,7 +9,7 @@ const handleBlur = buildEventLogger('blur');
 const handleChange = buildEventLogger('change');
 
 export function TextInputEvents() {
-  const [value, setValue] = React.useState('Test');
+  const [value, setValue] = React.useState('');
 
   const handleChangeText = (value: string) => {
     setValue(value);
@@ -21,13 +21,13 @@ export function TextInputEvents() {
       <TextInput
         style={styles.textInput}
         value={value}
+        onChangeText={handleChangeText}
         editable={false}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleChange}
-        onChangeText={handleChangeText}
       />
     </SafeAreaView>
   );
