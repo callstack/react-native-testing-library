@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { render } from '..';
-import { getHostSelf } from '../helpers/component-tree';
 
 /**
  * Tests in this file are intended to give us an proactive warning that React Native behavior has
