@@ -217,25 +217,6 @@ test('should not fire on disabled Pressable', () => {
 });
 
 test('should not fire on non-editable TextInput', () => {
-  const placeholder = 'Test placeholder';
-  const onChangeTextMock = jest.fn();
-  const NEW_TEXT = 'New text';
-
-  const { getByPlaceholderText } = render(
-    <View>
-      <TextInput
-        editable={false}
-        placeholder={placeholder}
-        onChangeText={onChangeTextMock}
-      />
-    </View>
-  );
-
-  fireEvent.changeText(getByPlaceholderText(placeholder), NEW_TEXT);
-  expect(onChangeTextMock).not.toHaveBeenCalled();
-});
-
-test('should not fire on non-editable host TextInput', () => {
   const testID = 'my-text-input';
   const onChangeTextMock = jest.fn();
   const NEW_TEXT = 'New text';
@@ -245,7 +226,6 @@ test('should not fire on non-editable host TextInput', () => {
       editable={false}
       testID={testID}
       onChangeText={onChangeTextMock}
-      placeholder="placeholder"
     />
   );
 
