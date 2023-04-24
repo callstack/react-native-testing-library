@@ -22,7 +22,7 @@ export function TextInputEvents() {
       <TextInput
         style={styles.textInput}
         value={value}
-        editable={true}
+        editable={false}
         onChangeText={handleChangeText}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
