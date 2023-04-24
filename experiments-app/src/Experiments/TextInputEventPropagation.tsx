@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, SafeAreaView, TextInput } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Pressable } from 'react-native';
 import { buildEventLogger } from '../utils/helpers';
 
 const handlePressIn = buildEventLogger('pressIn');
@@ -9,7 +9,9 @@ const handleBlur = buildEventLogger('blur');
 const handleChange = buildEventLogger('change');
 const handleSubmitEditing = buildEventLogger('submitEditing');
 
-export function TextInputEvents() {
+const handlePressablePress = buildEventLogger('Pressable.press');
+
+export function TextInputEventPropagation() {
   const [value, setValue] = React.useState('');
 
   const handleChangeText = (value: string) => {
@@ -19,18 +21,20 @@ export function TextInputEvents() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.textInput}
-        value={value}
-        editable={true}
-        onChangeText={handleChangeText}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onChange={handleChange}
-        onSubmitEditing={handleSubmitEditing}
-      />
+      <Pressable onPress={handlePressablePress}>
+        <TextInput
+          style={styles.textInput}
+          value={value}
+          editable={true}
+          onChangeText={handleChangeText}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          onSubmitEditing={handleSubmitEditing}
+        />
+      </Pressable>
     </SafeAreaView>
   );
 }
