@@ -1,5 +1,5 @@
-import { TextInputEventPropagation } from './experiments/TextInputEventPropagation';
-import { TextInputEvents } from './experiments/TextInputEvents';
+import { TextInputEventPropagation } from './screens/TextInputEventPropagation';
+import { TextInputEvents } from './screens/TextInputEvents';
 
 export type Experiment = (typeof experiments)[number];
 
