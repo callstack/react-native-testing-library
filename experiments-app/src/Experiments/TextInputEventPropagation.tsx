@@ -25,7 +25,7 @@ export function TextInputEventPropagation() {
         <TextInput
           style={styles.textInput}
           value={value}
-          editable={false}
+          editable={true}
           onChangeText={handleChangeText}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
