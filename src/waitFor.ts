@@ -2,7 +2,11 @@
 import act, { setReactActEnvironment, getIsReactActEnvironment } from './act';
 import { getConfig } from './config';
 import { flushMicroTasks } from './flushMicroTasks';
-import { ErrorWithStack, copyStackTrace } from './helpers/errors';
+import {
+  ErrorWithStack,
+  copyStackTrace,
+  getErrorMessage,
+} from './helpers/errors';
 import {
   setTimeout,
   clearTimeout,
@@ -17,7 +21,7 @@ export type WaitForOptions = {
   timeout?: number;
   interval?: number;
   stackTraceError?: ErrorWithStack;
-  onTimeout?: (error: unknown) => Error;
+  onTimeout?: (error: Error) => Error;
 };
 
 function waitForInternal<T>(
@@ -164,9 +168,14 @@ function waitForInternal<T>(
     }
 
     function handleTimeout() {
-      let error;
+      let error: Error;
       if (lastError) {
-        error = lastError;
+        if (lastError instanceof Error) {
+          error = lastError;
+        } else {
+          error = new Error(String(lastError));
+        }
+
         if (stackTraceError) {
           copyStackTrace(error, stackTraceError);
         }

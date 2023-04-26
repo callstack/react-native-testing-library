@@ -101,14 +101,12 @@ function formatErrorMessage(message: string, printElementTree: boolean) {
   })}`;
 }
 
-function appendElementTreeToError(error: unknown) {
-  if (error instanceof Error) {
-    const oldMessage = error.message;
-    error.message = formatErrorMessage(oldMessage, true);
+function appendElementTreeToError(error: Error) {
+  const oldMessage = error.message;
+  error.message = formatErrorMessage(oldMessage, true);
 
-    // Required to make Jest print the element tree on error
-    error.stack = error.stack?.replace(oldMessage, error.message);
-  }
+  // Required to make Jest print the element tree on error
+  error.stack = error.stack?.replace(oldMessage, error.message);
 
   return error;
 }
@@ -190,7 +188,7 @@ export function makeQueries<Predicate, Options>(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
       {
-        onTimeout = (e: unknown) => appendElementTreeToError(e as Error),
+        onTimeout = (error) => appendElementTreeToError(error),
         ...waitForOptions
       }: WaitForOptions = {}
     ) {
@@ -217,7 +215,7 @@ export function makeQueries<Predicate, Options>(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
       {
-        onTimeout = (e: unknown) => appendElementTreeToError(e as Error),
+        onTimeout = (error) => appendElementTreeToError(error),
         ...waitForOptions
       }: WaitForOptions = {}
     ) {

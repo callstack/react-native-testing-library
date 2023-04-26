@@ -16,6 +16,14 @@ export const createLibraryNotSupportedError = (error: unknown): Error =>
     }`
   );
 
+export const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error) {
+    return error.message;
+  } else {
+    return String(error);
+  }
+};
+
 export const prepareErrorMessage = (
   // TS states that error caught in a catch close are of type `unknown`
   // most real cases will be `Error`, but better safe than sorry
