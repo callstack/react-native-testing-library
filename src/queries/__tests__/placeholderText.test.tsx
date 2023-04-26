@@ -79,7 +79,7 @@ test('byPlaceholderText queries support hidden option', () => {
     <TextInput
       placeholder="hidden"
       style={
-        Object {
+        {
           "display": "none",
         }
       }

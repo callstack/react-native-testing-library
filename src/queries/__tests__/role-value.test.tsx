@@ -86,12 +86,12 @@ describe('accessibility value', () => {
       <Text
         accessibilityRole="adjustable"
         accessibilityState={
-          Object {
+          {
             "disabled": true,
           }
         }
         accessibilityValue={
-          Object {
+          {
             "max": 20,
             "min": 10,
             "now": 12,
@@ -109,12 +109,12 @@ describe('accessibility value', () => {
       <Text
         accessibilityRole="adjustable"
         accessibilityState={
-          Object {
+          {
             "disabled": true,
           }
         }
         accessibilityValue={
-          Object {
+          {
             "max": 20,
             "min": 10,
             "now": 12,
@@ -132,12 +132,12 @@ describe('accessibility value', () => {
       <Text
         accessibilityRole="adjustable"
         accessibilityState={
-          Object {
+          {
             "disabled": true,
           }
         }
         accessibilityValue={
-          Object {
+          {
             "max": 20,
             "min": 10,
             "now": 12,
@@ -156,12 +156,12 @@ describe('accessibility value', () => {
       <Text
         accessibilityRole="adjustable"
         accessibilityState={
-          Object {
+          {
             "disabled": true,
           }
         }
         accessibilityValue={
-          Object {
+          {
             "max": 20,
             "min": 10,
             "now": 12,

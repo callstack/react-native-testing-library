@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 import { MapPropsFunction } from './format';
 
 const propsToDisplay = [
@@ -21,17 +21,22 @@ const propsToDisplay = [
  * Preserve props that are helpful in diagnosing test failures, while stripping rest
  */
 export const defaultMapProps: MapPropsFunction = (props) => {
+  const result: Record<string, unknown> = {};
+
+  const styles = StyleSheet.flatten(props.style as ViewStyle);
+  if (styles?.display === 'none') {
+    result.style = { display: 'none' };
+  }
+
   const accessibilityState = removeUndefinedKeys(props.accessibilityState);
+  if (accessibilityState !== undefined) {
+    result.accessibilityState = accessibilityState;
+  }
+
   const accessibilityValue = removeUndefinedKeys(props.accessibilityValue);
-
-  const styles = StyleSheet.flatten(props.style) as any;
-
-  // perform custom prop mappings
-  const result: Record<string, unknown> = {
-    ...(styles?.display === 'none' ? { style: { display: 'none' } } : {}),
-    ...(accessibilityState !== undefined ? { accessibilityState } : {}),
-    ...(accessibilityValue !== undefined ? { accessibilityValue } : {}),
-  };
+  if (accessibilityValue !== undefined) {
+    result.accessibilityValue = accessibilityValue;
+  }
 
   propsToDisplay.forEach((propName) => {
     if (propName in props) {
@@ -52,9 +57,9 @@ function removeUndefinedKeys(prop: unknown) {
   }
 
   const result: Record<string, unknown> = {};
-  Object.keys(prop).forEach((propName) => {
-    if (prop[propName] !== undefined) {
-      result[propName] = prop[propName];
+  Object.entries(prop).forEach(([key, value]) => {
+    if (value !== undefined) {
+      result[key] = value;
     }
   });
 

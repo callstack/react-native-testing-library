@@ -17,6 +17,7 @@ const format = (
   prettyFormat(input, {
     plugins: [getCustomPlugin(options.mapProps), plugins.ReactElement],
     highlight: shouldHighlight(),
+    printBasicPrototype: false,
   });
 
 const getCustomPlugin = (mapProps?: MapPropsFunction): NewPlugin => {

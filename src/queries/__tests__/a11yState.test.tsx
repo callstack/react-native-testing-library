@@ -259,12 +259,12 @@ test('byA11yState queries support hidden option', () => {
 
     <View
       accessibilityState={
-        Object {
+        {
           "expanded": false,
         }
       }
       style={
-        Object {
+        {
           "display": "none",
         }
       }
@@ -388,7 +388,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <Text
       accessibilityState={
-        Object {
+        {
           "checked": false,
         }
       }
@@ -403,7 +403,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <Text
       accessibilityState={
-        Object {
+        {
           "checked": false,
         }
       }
@@ -418,7 +418,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <Text
       accessibilityState={
-        Object {
+        {
           "checked": false,
         }
       }
@@ -433,7 +433,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <Text
       accessibilityState={
-        Object {
+        {
           "checked": false,
         }
       }

@@ -127,7 +127,7 @@ test('byHintText queries support hidden option', () => {
     <Text
       accessibilityHint="hidden"
       style={
-        Object {
+        {
           "display": "none",
         }
       }

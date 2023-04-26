@@ -166,7 +166,7 @@ test('byLabelText queries support hidden option', () => {
     <Text
       accessibilityLabel="hidden"
       style={
-        Object {
+        {
           "display": "none",
         }
       }

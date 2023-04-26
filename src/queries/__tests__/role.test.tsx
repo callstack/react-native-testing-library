@@ -744,7 +744,7 @@ test('byRole queries support hidden option', () => {
     <View
       accessibilityRole="button"
       style={
-        Object {
+        {
           "display": "none",
         }
       }

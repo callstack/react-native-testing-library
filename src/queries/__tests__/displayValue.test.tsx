@@ -166,7 +166,7 @@ test('byDisplayValue queries support hidden option', () => {
 
     <TextInput
       style={
-        Object {
+        {
           "display": "none",
         }
       }

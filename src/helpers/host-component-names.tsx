@@ -61,9 +61,5 @@ function getByTestId(instance: ReactTestInstance, testID: string) {
     throw new Error(`Unable to find an element with testID: ${testID}`);
   }
 
-  if (nodes.length > 1) {
-    throw new Error(`Found multiple elements with testID: ${testID}`);
-  }
-
   return nodes[0];
 }

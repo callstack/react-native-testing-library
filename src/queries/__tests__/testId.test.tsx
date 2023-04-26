@@ -150,7 +150,7 @@ test('byTestId queries support hidden option', () => {
 
     <Text
       style={
-        Object {
+        {
           "display": "none",
         }
       }

@@ -113,12 +113,12 @@ test('byA11yValue queries support hidden option', () => {
 
     <Text
       accessibilityValue={
-        Object {
+        {
           "max": 10,
         }
       }
       style={
-        Object {
+        {
           "display": "none",
         }
       }
@@ -263,7 +263,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityValue={
-        Object {
+        {
           "min": 2,
         }
       }
@@ -276,7 +276,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityValue={
-        Object {
+        {
           "min": 2,
         }
       }
@@ -289,7 +289,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityValue={
-        Object {
+        {
           "min": 2,
         }
       }
@@ -302,7 +302,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityValue={
-        Object {
+        {
           "min": 2,
         }
       }

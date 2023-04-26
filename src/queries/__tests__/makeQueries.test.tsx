@@ -199,7 +199,7 @@ describe('printing element tree', () => {
       <View>
         <Text
           style={
-            Object {
+            {
               "display": "none",
             }
           }
@@ -222,7 +222,7 @@ describe('printing element tree', () => {
 
       <View
         accessibilityState={
-          Object {
+          {
             "busy": false,
             "checked": true,
           }
@@ -245,7 +245,7 @@ describe('printing element tree', () => {
 
       <View
         accessibilityValue={
-          Object {
+          {
             "min": 1,
           }
         }
