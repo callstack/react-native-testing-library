@@ -2,11 +2,7 @@
 import act, { setReactActEnvironment, getIsReactActEnvironment } from './act';
 import { getConfig } from './config';
 import { flushMicroTasks } from './flushMicroTasks';
-import {
-  ErrorWithStack,
-  copyStackTrace,
-  getErrorMessage,
-} from './helpers/errors';
+import { ErrorWithStack, copyStackTrace } from './helpers/errors';
 import {
   setTimeout,
   clearTimeout,
