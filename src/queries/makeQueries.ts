@@ -101,11 +101,10 @@ function formatErrorMessage(message: string, printElementTree: boolean) {
   })}`;
 }
 
-function appendElementTreeToError(error: Error) {
-  if (error?.message) {
+function appendElementTreeToError(error: unknown) {
+  if (error instanceof Error) {
     const oldMessage = error.message;
     error.message = formatErrorMessage(oldMessage, true);
-    error.stack = error.stack?.replace(oldMessage, error.message);
   }
 
   return error;
@@ -124,13 +123,11 @@ export function makeQueries<Predicate, Options>(
       const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length === 0) {
-        throw new ErrorWithStack(
-          formatErrorMessage(
-            getMissingError(predicate, options),
-            printElementTree
-          ),
-          getAllFn
+        const errorMessage = formatErrorMessage(
+          getMissingError(predicate, options),
+          printElementTree
         );
+        throw new ErrorWithStack(errorMessage, getAllFn);
       }
 
       return results;
@@ -174,13 +171,11 @@ export function makeQueries<Predicate, Options>(
       }
 
       if (results.length === 0) {
-        throw new ErrorWithStack(
-          formatErrorMessage(
-            getMissingError(predicate, options),
-            printElementTree
-          ),
-          getFn
+        const errorMessage = formatErrorMessage(
+          getMissingError(predicate, options),
+          printElementTree
         );
+        throw new ErrorWithStack(errorMessage, getFn);
       }
 
       return results[0];
