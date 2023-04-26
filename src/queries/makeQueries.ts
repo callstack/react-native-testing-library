@@ -105,6 +105,9 @@ function appendElementTreeToError(error: unknown) {
   if (error instanceof Error) {
     const oldMessage = error.message;
     error.message = formatErrorMessage(oldMessage, true);
+
+    // Required to make Jest print the element tree on error
+    error.stack = error.stack?.replace(oldMessage, error.message);
   }
 
   return error;
