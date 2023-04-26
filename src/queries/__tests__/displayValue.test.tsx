@@ -182,14 +182,9 @@ test('byDisplayValue should return host component', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const {
-    getByDisplayValue,
-    getAllByDisplayValue,
-    findByDisplayValue,
-    findAllByDisplayValue,
-  } = render(<TextInput value="1" key="3" />);
+  const view = render(<TextInput value="1" key="3" />);
 
-  expect(() => getByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
     <TextInput
@@ -197,15 +192,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => getAllByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with displayValue: 2
-
-    <TextInput
-      value="1"
-    />"
-  `);
-
-  await expect(() => findByDisplayValue('2')).rejects
+  expect(() => view.getAllByDisplayValue('2'))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
@@ -214,7 +201,16 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(() => findAllByDisplayValue('2')).rejects
+  await expect(view.findByDisplayValue('2')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with displayValue: 2
+
+    <TextInput
+      value="1"
+    />"
+  `);
+
+  await expect(view.findAllByDisplayValue('2')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 

@@ -496,17 +496,26 @@ test('byText support hidden option', () => {
 
   expect(queryByText(/hidden/i)).toBeFalsy();
   expect(queryByText(/hidden/i, { includeHiddenElements: false })).toBeFalsy();
-  expect(() => getByText(/hidden/i, { includeHiddenElements: false })).toThrow(
-    /Unable to find an element with text: \/hidden\/i/
-  );
+  expect(() => getByText(/hidden/i, { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with text: /hidden/i
+
+    <Text
+      style={
+        {
+          "display": "none",
+        }
+      }
+    >
+      Hidden from accessibility
+    </Text>"
+  `);
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const { getByText, getAllByText, findByText, findAllByText } = render(
-    <View accessibilityViewIsModal key="this is filtered" />
-  );
+  const view = render(<View accessibilityViewIsModal key="this is filtered" />);
 
-  expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -514,7 +523,7 @@ test('error message renders the element tree, preserving only helpful props', as
       />"
     `);
 
-  expect(() => getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -522,7 +531,8 @@ test('error message renders the element tree, preserving only helpful props', as
       />"
     `);
 
-  await expect(findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(view.findByText(/foo/)).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -530,7 +540,7 @@ test('error message renders the element tree, preserving only helpful props', as
       />"
     `);
 
-  await expect(() => findAllByText(/foo/)).rejects
+  await expect(view.findAllByText(/foo/)).rejects
     .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 

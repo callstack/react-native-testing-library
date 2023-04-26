@@ -96,22 +96,9 @@ test('byPlaceHolderText should return host component', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const {
-    getByPlaceholderText,
-    getAllByPlaceholderText,
-    findByPlaceholderText,
-    findAllByPlaceholderText,
-  } = render(<TextInput placeholder="PLACEHOLDER" key="3" />);
+  const view = render(<TextInput placeholder="PLACEHOLDER" key="3" />);
 
-  expect(() => getByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with placeholder: FOO
-
-    <TextInput
-      placeholder="PLACEHOLDER"
-    />"
-  `);
-
-  expect(() => getAllByPlaceholderText('FOO'))
+  expect(() => view.getByPlaceholderText('FOO'))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
@@ -120,7 +107,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(() => findByPlaceholderText('FOO')).rejects
+  expect(() => view.getAllByPlaceholderText('FOO'))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
@@ -129,7 +116,16 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(() => findAllByPlaceholderText('FOO')).rejects
+  await expect(view.findByPlaceholderText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with placeholder: FOO
+
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
+  `);
+
+  await expect(view.findAllByPlaceholderText('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 

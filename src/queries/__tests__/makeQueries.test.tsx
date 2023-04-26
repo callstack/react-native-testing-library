@@ -64,12 +64,12 @@ describe('printing element tree', () => {
     `);
   });
 
-  test('prints tree and filters props with getAllBy, findBy, findAllBy', async () => {
-    const { getAllByText, findByText, findAllByText } = render(
+  test('prints tree and filters props with getBy, getAllBy, findBy, findAllBy', async () => {
+    const view = render(
       <View accessibilityViewIsModal key="this is filtered" />
     );
 
-    expect(() => getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+    expect(() => view.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -77,7 +77,7 @@ describe('printing element tree', () => {
       />"
     `);
 
-    await expect(findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
+    expect(() => view.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -85,7 +85,16 @@ describe('printing element tree', () => {
       />"
     `);
 
-    await expect(() => findAllByText(/foo/)).rejects
+    await expect(view.findByText(/foo/)).rejects
+      .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      <View
+        accessibilityViewIsModal={true}
+      />"
+    `);
+
+    await expect(view.findAllByText(/foo/)).rejects
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
@@ -95,38 +104,6 @@ describe('printing element tree', () => {
     `);
   });
 
-  // the stack is what actually gets printed to the console, so we need to
-  // ensure that the element tree is in the stack and not just in the message
-  test('when findBy fails, includes element tree in stack, not just message', async () => {
-    const { findByText } = render(<View />);
-
-    let error: Error = new Error();
-
-    try {
-      await findByText(/foo/);
-    } catch (e) {
-      error = e as Error;
-    } finally {
-      expect(error?.stack).toMatch(/<View/);
-    }
-  });
-
-  // the stack is what actually gets printed to the console, so we need to
-  // ensure that the element tree is in the stack and not just in the message
-  test('when findAllBy fails, includes element tree in stack, not just message', async () => {
-    const { findAllByText } = render(<View />);
-
-    let error: Error = new Error();
-
-    try {
-      await findAllByText(/foo/);
-    } catch (e) {
-      error = e as Error;
-    } finally {
-      expect(error?.stack).toMatch(/<View \/>/);
-    }
-  });
-
   test('only appends element tree on last failure with findBy', async () => {
     const { findByText } = render(
       <View accessibilityViewIsModal key="this is filtered" />
@@ -134,7 +111,7 @@ describe('printing element tree', () => {
 
     jest.spyOn(screen, 'toJSON');
 
-    await expect(() => findByText(/foo/)).rejects.toThrow();
+    await expect(findByText(/foo/)).rejects.toThrow();
 
     expect(screen.toJSON).toHaveBeenCalledTimes(1);
   });

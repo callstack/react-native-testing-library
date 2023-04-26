@@ -251,26 +251,11 @@ test('*ByAccessibilityValue deprecation warnings', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const {
-    getByA11yValue,
-    getAllByA11yValue,
-    findByA11yValue,
-    findAllByA11yValue,
-  } = render(<View accessibilityValue={{ min: 2 }} key="NOT_RELEVANT" />);
+  const view = render(
+    <View accessibilityValue={{ min: 2 }} key="NOT_RELEVANT" />
+  );
 
-  expect(() => getByA11yValue({ min: 1 })).toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with min value: 1
-
-    <View
-      accessibilityValue={
-        {
-          "min": 2,
-        }
-      }
-    />"
-  `);
-
-  expect(() => getAllByA11yValue({ min: 1 }))
+  expect(() => view.getByA11yValue({ min: 1 }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1
 
@@ -283,7 +268,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(() => findByA11yValue({ min: 1 })).rejects
+  expect(() => view.getAllByA11yValue({ min: 1 }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1
 
@@ -296,7 +281,20 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(() => findAllByA11yValue({ min: 1 })).rejects
+  await expect(view.findByA11yValue({ min: 1 })).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with min value: 1
+
+    <View
+      accessibilityValue={
+        {
+          "min": 2,
+        }
+      }
+    />"
+  `);
+
+  await expect(view.findAllByA11yValue({ min: 1 })).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1
 

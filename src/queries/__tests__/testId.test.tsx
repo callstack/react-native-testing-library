@@ -162,11 +162,9 @@ test('byTestId queries support hidden option', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const { getByTestId, getAllByTestId, findByTestId, findAllByTestId } = render(
-    <View testID="TEST_ID" key="3" />
-  );
+  const view = render(<View testID="TEST_ID" key="3" />);
 
-  expect(() => getByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
     <View
@@ -174,7 +172,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => getAllByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getAllByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
     <View
@@ -182,7 +180,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(() => findByTestId('FOO')).rejects
+  await expect(view.findByTestId('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
@@ -191,7 +189,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(() => findAllByTestId('FOO')).rejects
+  await expect(view.findAllByTestId('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 

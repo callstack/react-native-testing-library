@@ -786,11 +786,9 @@ describe('matches only accessible elements', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const { getByRole, getAllByRole, findByRole, findAllByRole } = render(
-    <View accessibilityRole="button" key="3" />
-  );
+  const view = render(<View accessibilityRole="button" key="3" />);
 
-  expect(() => getByRole('link')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getByRole('link')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: "link"
 
     <View
@@ -798,7 +796,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => getAllByRole('link')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getAllByRole('link')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: "link"
 
     <View
@@ -806,7 +804,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(() => findByRole('link')).rejects
+  await expect(view.findByRole('link')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: "link"
 
@@ -815,7 +813,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(() => findAllByRole('link')).rejects
+  await expect(view.findAllByRole('link')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: "link"
 

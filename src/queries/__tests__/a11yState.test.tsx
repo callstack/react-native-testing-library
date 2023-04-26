@@ -371,18 +371,13 @@ test('*ByAccessibilityState deprecation warnings', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const {
-    getByA11yState,
-    getAllByA11yState,
-    findByA11yState,
-    findAllByA11yState,
-  } = render(
+  const view = render(
     <Text accessibilityState={{ checked: false }} onPress={() => null}>
       Some text
     </Text>
   );
 
-  expect(() => getByA11yState({ checked: true }))
+  expect(() => view.getByA11yState({ checked: true }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with checked state: true
 
@@ -397,7 +392,7 @@ test('error message renders the element tree, preserving only helpful props', as
     </Text>"
   `);
 
-  expect(() => getAllByA11yState({ checked: true }))
+  expect(() => view.getAllByA11yState({ checked: true }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with checked state: true
 
@@ -412,7 +407,7 @@ test('error message renders the element tree, preserving only helpful props', as
     </Text>"
   `);
 
-  await expect(() => findByA11yState({ checked: true })).rejects
+  await expect(view.findByA11yState({ checked: true })).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with checked state: true
 
@@ -427,7 +422,7 @@ test('error message renders the element tree, preserving only helpful props', as
     </Text>"
   `);
 
-  await expect(() => findAllByA11yState({ checked: true })).rejects
+  await expect(view.findAllByA11yState({ checked: true })).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with checked state: true
 

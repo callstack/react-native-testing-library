@@ -203,14 +203,9 @@ test('getByLabelText supports nested accessibilityLabelledBy', async () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const {
-    getByLabelText,
-    getAllByLabelText,
-    findByLabelText,
-    findAllByLabelText,
-  } = render(<TouchableOpacity accessibilityLabel="LABEL" key="3" />);
+  const view = render(<TouchableOpacity accessibilityLabel="LABEL" key="3" />);
 
-  expect(() => getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityLabel: FOO
 
     <View
@@ -218,15 +213,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => getAllByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with accessibilityLabel: FOO
-
-    <View
-      accessibilityLabel="LABEL"
-    />"
-  `);
-
-  await expect(() => findByLabelText('FOO')).rejects
+  expect(() => view.getAllByLabelText('FOO'))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityLabel: FOO
 
@@ -235,7 +222,16 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(() => findAllByLabelText('FOO')).rejects
+  await expect(view.findByLabelText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityLabel: FOO
+
+    <View
+      accessibilityLabel="LABEL"
+    />"
+  `);
+
+  await expect(view.findAllByLabelText('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityLabel: FOO
 

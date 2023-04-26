@@ -138,10 +138,9 @@ test('byHintText queries support hidden option', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const { getByHintText, getAllByHintText, findByHintText, findAllByHintText } =
-    render(<TouchableOpacity accessibilityHint="HINT" key="3" />);
+  const view = render(<TouchableOpacity accessibilityHint="HINT" key="3" />);
 
-  expect(() => getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityHint: FOO
 
     <View
@@ -149,15 +148,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => getAllByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with accessibilityHint: FOO
-
-    <View
-      accessibilityHint="HINT"
-    />"
-  `);
-
-  await expect(() => findByHintText('FOO')).rejects
+  expect(() => view.getAllByHintText('FOO'))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityHint: FOO
 
@@ -166,7 +157,16 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(() => findAllByHintText('FOO')).rejects
+  await expect(view.findByHintText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: FOO
+
+    <View
+      accessibilityHint="HINT"
+    />"
+  `);
+
+  await expect(view.findAllByHintText('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityHint: FOO
 
