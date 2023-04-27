@@ -254,73 +254,68 @@ test('should not fire on non-editable TextInput with nested Text', () => {
   expect(onChangeTextMock).not.toHaveBeenCalled();
 });
 
-test('should not fire on none pointerEvents View', () => {
-  const handlePress = jest.fn();
-
+test('should not fire inside View with pointerEvents="none"', () => {
+  const onPress = jest.fn();
   const screen = render(
     <View pointerEvents="none">
-      <Pressable onPress={handlePress}>
+      <Pressable onPress={onPress}>
         <Text>Trigger</Text>
       </Pressable>
     </View>
   );
 
   fireEvent.press(screen.getByText('Trigger'));
-  expect(handlePress).not.toHaveBeenCalled();
+  expect(onPress).not.toHaveBeenCalled();
 });
 
-test('should not fire on box-only pointerEvents View', () => {
-  const handlePress = jest.fn();
-
+test('should not fire inside View with pointerEvents="box-only"', () => {
+  const onPress = jest.fn();
   const screen = render(
     <View pointerEvents="box-only">
-      <Pressable onPress={handlePress}>
+      <Pressable onPress={onPress}>
         <Text>Trigger</Text>
       </Pressable>
     </View>
   );
 
   fireEvent.press(screen.getByText('Trigger'));
-  expect(handlePress).not.toHaveBeenCalled();
+  expect(onPress).not.toHaveBeenCalled();
 });
 
-test('should fire on box-none pointerEvents View', () => {
-  const handlePress = jest.fn();
-
+test('should fire inside View with pointerEvents="box-none"', () => {
+  const onPress = jest.fn();
   const screen = render(
     <View pointerEvents="box-none">
-      <Pressable onPress={handlePress}>
+      <Pressable onPress={onPress}>
         <Text>Trigger</Text>
       </Pressable>
     </View>
   );
 
   fireEvent.press(screen.getByText('Trigger'));
-  expect(handlePress).toHaveBeenCalled();
+  expect(onPress).toHaveBeenCalled();
 });
 
-test('should fire on auto pointerEvents View', () => {
-  const handlePress = jest.fn();
-
+test('should fire inside View with pointerEvents="auto"', () => {
+  const onPress = jest.fn();
   const screen = render(
     <View pointerEvents="auto">
-      <Pressable onPress={handlePress}>
+      <Pressable onPress={onPress}>
         <Text>Trigger</Text>
       </Pressable>
     </View>
   );
 
   fireEvent.press(screen.getByText('Trigger'));
-  expect(handlePress).toHaveBeenCalled();
+  expect(onPress).toHaveBeenCalled();
 });
 
-test('should not fire on box-only pointerEvents View with nested elements', () => {
-  const handlePress = jest.fn();
-
+test('should not fire deeply inside View with pointerEvents="box-only"', () => {
+  const onPress = jest.fn();
   const screen = render(
     <View pointerEvents="box-only">
       <View>
-        <Pressable onPress={handlePress}>
+        <Pressable onPress={onPress}>
           <Text>Trigger</Text>
         </Pressable>
       </View>
@@ -328,41 +323,39 @@ test('should not fire on box-only pointerEvents View with nested elements', () =
   );
 
   fireEvent.press(screen.getByText('Trigger'));
-  expect(handlePress).not.toHaveBeenCalled();
+  expect(onPress).not.toHaveBeenCalled();
 });
 
-test('should fire non-pointer events on box-none pointerEvents View', () => {
-  const handleTouchStart = jest.fn();
-
+test('should fire non-pointer events inside View with pointerEvents="box-none"', () => {
+  const onTouchStart = jest.fn();
   const screen = render(
-    <View
-      pointerEvents="box-none"
-      onTouchStart={handleTouchStart}
-      testID="touch-start-view"
-    >
-      <Pressable onPress={() => {}}>
-        <Text>Trigger</Text>
-      </Pressable>
-    </View>
+    <View testID="view" pointerEvents="box-none" onTouchStart={onTouchStart} />
   );
 
-  fireEvent(screen.getByTestId('touch-start-view'), 'touchStart');
-  expect(handleTouchStart).toHaveBeenCalled();
+  fireEvent(screen.getByTestId('view'), 'touchStart');
+  expect(onTouchStart).toHaveBeenCalled();
 });
 
-test('should fire non-touch events on box-none pointerEvents View', () => {
-  const handleLayout = jest.fn();
-
+test('should fire non-touch events inside View with pointerEvents="box-none"', () => {
+  const onLayout = jest.fn();
   const screen = render(
-    <View pointerEvents="box-none" onLayout={handleLayout} testID="layout-view">
-      <Pressable onPress={() => {}}>
-        <Text>Trigger</Text>
-      </Pressable>
-    </View>
+    <View testID="view" pointerEvents="box-none" onLayout={onLayout} />
   );
 
-  fireEvent(screen.getByTestId('layout-view'), 'layout');
-  expect(handleLayout).toHaveBeenCalled();
+  fireEvent(screen.getByTestId('view'), 'layout');
+  expect(onLayout).toHaveBeenCalled();
+});
+
+// This test if pointerEvents="box-only" on composite `Pressable` is blocking
+// the 'press' event on host View rendered by pressable.
+test('should fire on Pressable with pointerEvents="box-only', () => {
+  const onPress = jest.fn();
+  const screen = render(
+    <Pressable testID="pressable" pointerEvents="box-only" onPress={onPress} />
+  );
+
+  fireEvent.press(screen.getByTestId('pressable'));
+  expect(onPress).toHaveBeenCalled();
 });
 
 test('should pass event up on disabled TouchableOpacity', () => {
