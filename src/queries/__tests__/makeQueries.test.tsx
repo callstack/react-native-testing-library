@@ -120,8 +120,7 @@ describe('printing element tree', () => {
     expect.assertions(3);
     const { findByText } = render(<View />);
 
-    const onTimeout = jest.fn((e: unknown) => {
-      const error = e as Error;
+    const onTimeout = jest.fn((error: Error) => {
       // does not include the element tree
       expect(error.message).not.toMatch(/View/);
       return error;
@@ -140,9 +139,7 @@ describe('printing element tree', () => {
     expect.assertions(3);
     const { findAllByText } = render(<View />);
 
-    const onTimeout = jest.fn((e: unknown) => {
-      const error = e as Error;
-      // does not include the element tree
+    const onTimeout = jest.fn((error: Error) => {
       expect(error.message).not.toMatch(/View/);
       return error;
     });
