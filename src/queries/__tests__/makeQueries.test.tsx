@@ -231,4 +231,13 @@ describe('printing element tree', () => {
       </View>"
     `);
   });
+
+  test('does not render element tree when toJSON() returns null', () => {
+    const view = render(<View />);
+
+    jest.spyOn(screen, 'toJSON').mockImplementation(() => null);
+    expect(() => view.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(
+      `"Unable to find an element with text: /foo/"`
+    );
+  });
 });
