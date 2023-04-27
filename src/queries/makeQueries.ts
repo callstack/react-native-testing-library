@@ -225,7 +225,6 @@ export function makeQueries<Predicate, Options>(
       }: WaitForOptions = {}
     ) {
       const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', findFn);
-      console.log('FindByQuery', stackTraceError.stack);
       const deprecatedWaitForOptions =
         extractDeprecatedWaitForOptions(queryOptions);
 
