@@ -3,6 +3,7 @@ import act from '../act';
 import { getHostParent } from '../helpers/component-tree';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { isHostElementPointerEventEnabled } from '../helpers/isHostElementPointerEventEnabled';
+import { getHostComponentNames } from '../helpers/host-component-names';
 
 const defaultPressEvent = {
   persist: jest.fn(),
@@ -20,10 +21,17 @@ export const press = (
   element: ReactTestInstance,
   options: PressOptions = { pressDuration: 0 }
 ) => {
-  // Text component is mocked in React Native preset so the mock
+  // Text and TextInput components are mocked in React Native preset so the mock
   // doesn't implement the pressability class
-  // Thus we need to call the onPress prop directly on the host component
-  if (filterNodeByType(element, 'Text') && !element.props.disabled) {
+  // Thus we need to call the props directly on the host component
+  const isEnabledHostText =
+    filterNodeByType(element, getHostComponentNames().text) &&
+    !element.props.disabled;
+  const isEnabledTextInput =
+    filterNodeByType(element, getHostComponentNames().textInput) &&
+    element.props.editable !== false;
+
+  if (isEnabledHostText || isEnabledTextInput) {
     const { onPressIn, onPress, onPressOut } = element.props;
     if (onPressIn) {
       onPressIn(defaultPressEvent);

@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Pressable,
   Text,
+  TextInput,
   TouchableHighlight,
   TouchableOpacity,
   View,
@@ -242,6 +243,41 @@ describe('userEvent.press', () => {
     userEvent.press(screen.getByText('press me'));
 
     expect(mockOnPress).not.toHaveBeenCalled();
+    expect(mockOnPressIn).not.toHaveBeenCalled();
+    expect(mockOnPressOut).not.toHaveBeenCalled();
+  });
+
+  test('works on TetInput', () => {
+    const mockOnPressIn = jest.fn();
+    const mockOnPressOut = jest.fn();
+
+    render(
+      <TextInput
+        placeholder="email"
+        onPressIn={mockOnPressIn}
+        onPressOut={mockOnPressOut}
+      />
+    );
+    userEvent.press(screen.getByPlaceholderText('email'));
+
+    expect(mockOnPressIn).toHaveBeenCalled();
+    expect(mockOnPressOut).toHaveBeenCalled();
+  });
+
+  test('does not call onPressIn and onPressOut on non editable TetInput', () => {
+    const mockOnPressIn = jest.fn();
+    const mockOnPressOut = jest.fn();
+
+    render(
+      <TextInput
+        placeholder="email"
+        editable={false}
+        onPressIn={mockOnPressIn}
+        onPressOut={mockOnPressOut}
+      />
+    );
+    userEvent.press(screen.getByPlaceholderText('email'));
+
     expect(mockOnPressIn).not.toHaveBeenCalled();
     expect(mockOnPressOut).not.toHaveBeenCalled();
   });
