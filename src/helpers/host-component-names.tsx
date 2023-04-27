@@ -65,3 +65,7 @@ function getByTestId(instance: ReactTestInstance, testID: string) {
 
   return nodes[0];
 }
+
+export function isHostTextInput(element?: ReactTestInstance) {
+  return element?.type === getHostComponentNames().textInput;
+}

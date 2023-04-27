@@ -1,1 +1,1 @@
-export { press, longPress } from './press';
+export { PressOptions, press, longPress } from './press';

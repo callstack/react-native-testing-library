@@ -1,1 +1,1 @@
-export { type } from './type';
+export { type, TypeOptions } from './type';
