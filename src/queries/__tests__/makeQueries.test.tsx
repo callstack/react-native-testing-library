@@ -116,41 +116,36 @@ describe('printing element tree', () => {
     expect(screen.toJSON).toHaveBeenCalledTimes(1);
   });
 
-  test('custom onTimeout with findBy receives error without element tree', async () => {
-    expect.assertions(3);
+  test('onTimeout with findBy receives error without element tree', async () => {
     const { findByText } = render(<View />);
 
-    const onTimeout = jest.fn((error: Error) => {
-      // does not include the element tree
-      expect(error.message).not.toMatch(/View/);
-      return error;
-    });
+    const onTimeout = jest.fn((_: Error) => new Error('Replacement error'));
 
     await expect(() =>
       findByText(/foo/, undefined, { onTimeout })
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with text: /foo/"`
-    );
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Replacement error"`);
 
     expect(onTimeout).toHaveBeenCalledTimes(1);
+    expect(onTimeout.mock.calls[0][0].message).not.toMatch(/View/);
+    expect(onTimeout.mock.calls[0][0].message).toMatchInlineSnapshot(
+      `"Unable to find an element with text: /foo/"`
+    );
   });
 
-  test('custom onTimeout with findAllBy receives error without element tree', async () => {
-    expect.assertions(3);
+  test('onTimeout with findAllBy receives error without element tree', async () => {
     const { findAllByText } = render(<View />);
 
-    const onTimeout = jest.fn((error: Error) => {
-      expect(error.message).not.toMatch(/View/);
-      return error;
-    });
+    const onTimeout = jest.fn((_: Error) => new Error('Replacement error'));
 
     await expect(() =>
       findAllByText(/foo/, undefined, { onTimeout })
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with text: /foo/"`
-    );
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Replacement error"`);
 
     expect(onTimeout).toHaveBeenCalledTimes(1);
+    expect(onTimeout.mock.calls[0][0].message).not.toMatch(/View/);
+    expect(onTimeout.mock.calls[0][0].message).toMatchInlineSnapshot(
+      `"Unable to find an element with text: /foo/"`
+    );
   });
 
   test('does not strip display: none from "style" prop, but does strip other styles', () => {
