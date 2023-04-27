@@ -17,10 +17,10 @@ export type PressOptions = {
   pressDuration: number;
 };
 
-export const press = (
+export const press = async (
   element: ReactTestInstance,
   options: PressOptions = { pressDuration: 0 }
-) => {
+): Promise<void> => {
   // Text and TextInput components are mocked in React Native preset so the mock
   // doesn't implement the pressability class
   // Thus we need to call the props directly on the host component

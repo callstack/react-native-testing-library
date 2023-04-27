@@ -12,7 +12,7 @@ import { render, screen, userEvent } from '../../pure';
 jest.useFakeTimers();
 
 describe('userEvent.press', () => {
-  test('calls onPressIn, onPress and onPressOut prop of touchable', () => {
+  test('calls onPressIn, onPress and onPressOut prop of touchable', async () => {
     const mockOnPress = jest.fn();
     const mockOnPressIn = jest.fn();
     const mockOnPressOut = jest.fn();
@@ -25,23 +25,23 @@ describe('userEvent.press', () => {
         testID="pressable"
       />
     );
-    userEvent.press(screen.getByTestId('pressable'));
+    await userEvent.press(screen.getByTestId('pressable'));
 
     expect(mockOnPress).toHaveBeenCalled();
     expect(mockOnPressIn).toHaveBeenCalled();
     expect(mockOnPressOut).toHaveBeenCalled();
   });
 
-  test('does not call press when pressable is disabled', () => {
+  test('does not call press when pressable is disabled', async () => {
     const mockOnPress = jest.fn();
 
     render(<Pressable disabled onPress={mockOnPress} testID="pressable" />);
-    userEvent.press(screen.getByTestId('pressable'));
+    await userEvent.press(screen.getByTestId('pressable'));
 
     expect(mockOnPress).not.toHaveBeenCalled();
   });
 
-  test('does not call press when pointer events is none', () => {
+  test('does not call press when pointer events is none', async () => {
     const mockOnPress = jest.fn();
 
     render(
@@ -51,12 +51,12 @@ describe('userEvent.press', () => {
         testID="pressable"
       />
     );
-    userEvent.press(screen.getByTestId('pressable'));
+    await userEvent.press(screen.getByTestId('pressable'));
 
     expect(mockOnPress).not.toHaveBeenCalled();
   });
 
-  test('does not call press when pointer events is box-none', () => {
+  test('does not call press when pointer events is box-none', async () => {
     const mockOnPress = jest.fn();
 
     render(
@@ -66,12 +66,12 @@ describe('userEvent.press', () => {
         testID="pressable"
       />
     );
-    userEvent.press(screen.getByTestId('pressable'));
+    await userEvent.press(screen.getByTestId('pressable'));
 
     expect(mockOnPress).not.toHaveBeenCalled();
   });
 
-  test('does not call press when parent has pointer events box-only', () => {
+  test('does not call press when parent has pointer events box-only', async () => {
     const mockOnPress = jest.fn();
 
     render(
@@ -79,12 +79,12 @@ describe('userEvent.press', () => {
         <Pressable onPress={mockOnPress} testID="pressable" />
       </View>
     );
-    userEvent.press(screen.getByTestId('pressable'));
+    await userEvent.press(screen.getByTestId('pressable'));
 
     expect(mockOnPress).not.toHaveBeenCalled();
   });
 
-  test('calls press when pressable has pointer events box-only', () => {
+  test('calls press when pressable has pointer events box-only', async () => {
     const mockOnPress = jest.fn();
 
     render(
@@ -95,12 +95,12 @@ describe('userEvent.press', () => {
       />
     );
 
-    userEvent.press(screen.getByTestId('pressable'));
+    await userEvent.press(screen.getByTestId('pressable'));
 
     expect(mockOnPress).toHaveBeenCalled();
   });
 
-  test('crawls up in the tree to find an element that responds to touch events', () => {
+  test('crawls up in the tree to find an element that responds to touch events', async () => {
     const mockOnPress = jest.fn();
 
     render(
@@ -108,12 +108,12 @@ describe('userEvent.press', () => {
         <Text>press me</Text>
       </Pressable>
     );
-    userEvent.press(screen.getByText('press me'));
+    await userEvent.press(screen.getByText('press me'));
 
     expect(mockOnPress).toHaveBeenCalled();
   });
 
-  test('does not call onLongPress for pressDuration of 0', () => {
+  test('does not call onLongPress for pressDuration of 0', async () => {
     const mockOnLongPress = jest.fn();
 
     render(
@@ -121,12 +121,12 @@ describe('userEvent.press', () => {
         <Text>press me</Text>
       </Pressable>
     );
-    userEvent.press(screen.getByText('press me'));
+    await userEvent.press(screen.getByText('press me'));
 
     expect(mockOnLongPress).not.toHaveBeenCalled();
   });
 
-  test('calls onLongPress for a duration greater than default onLongPressDelay', () => {
+  test('calls onLongPress for a duration greater than default onLongPressDelay', async () => {
     const mockOnLongPress = jest.fn();
 
     render(
@@ -134,12 +134,12 @@ describe('userEvent.press', () => {
         <Text>press me</Text>
       </Pressable>
     );
-    userEvent.press(screen.getByText('press me'), { pressDuration: 500 });
+    await userEvent.press(screen.getByText('press me'), { pressDuration: 500 });
 
     expect(mockOnLongPress).toHaveBeenCalled();
   });
 
-  test('calls onLongPress when duration is greater than specified onLongPressDelay', () => {
+  test('calls onLongPress when duration is greater than specified onLongPressDelay', async () => {
     const mockOnLongPress = jest.fn();
     const mockOnPress = jest.fn();
 
@@ -152,18 +152,20 @@ describe('userEvent.press', () => {
         <Text>press me</Text>
       </Pressable>
     );
-    userEvent.press(screen.getByText('press me'), { pressDuration: 500 });
+    await userEvent.press(screen.getByText('press me'), { pressDuration: 500 });
 
     expect(mockOnLongPress).not.toHaveBeenCalled();
     expect(mockOnPress).toHaveBeenCalledTimes(1);
 
-    userEvent.press(screen.getByText('press me'), { pressDuration: 1000 });
+    await userEvent.press(screen.getByText('press me'), {
+      pressDuration: 1000,
+    });
 
     expect(mockOnLongPress).toHaveBeenCalled();
     expect(mockOnPress).toHaveBeenCalledTimes(1);
   });
 
-  test('does not calls onPress when onLongPress is called', () => {
+  test('does not calls onPress when onLongPress is called', async () => {
     const mockOnLongPress = jest.fn();
     const mockOnPress = jest.fn();
 
@@ -172,13 +174,13 @@ describe('userEvent.press', () => {
         <Text>press me</Text>
       </Pressable>
     );
-    userEvent.press(screen.getByText('press me'), { pressDuration: 500 });
+    await userEvent.press(screen.getByText('press me'), { pressDuration: 500 });
 
     expect(mockOnLongPress).toHaveBeenCalled();
     expect(mockOnPress).not.toHaveBeenCalled();
   });
 
-  test('works on TouchableOpacity', () => {
+  test('works on TouchableOpacity', async () => {
     const mockOnPress = jest.fn();
 
     render(
@@ -186,12 +188,12 @@ describe('userEvent.press', () => {
         <Text>press me</Text>
       </TouchableOpacity>
     );
-    userEvent.press(screen.getByText('press me'));
+    await userEvent.press(screen.getByText('press me'));
 
     expect(mockOnPress).toHaveBeenCalled();
   });
 
-  test('works on TouchableHighlight', () => {
+  test('works on TouchableHighlight', async () => {
     const mockOnPress = jest.fn();
 
     render(
@@ -199,12 +201,12 @@ describe('userEvent.press', () => {
         <Text>press me</Text>
       </TouchableHighlight>
     );
-    userEvent.press(screen.getByText('press me'));
+    await userEvent.press(screen.getByText('press me'));
 
     expect(mockOnPress).toHaveBeenCalled();
   });
 
-  test('works on Text', () => {
+  test('works on Text', async () => {
     const mockOnPress = jest.fn();
     const mockOnPressIn = jest.fn();
     const mockOnPressOut = jest.fn();
@@ -218,14 +220,14 @@ describe('userEvent.press', () => {
         press me
       </Text>
     );
-    userEvent.press(screen.getByText('press me'));
+    await userEvent.press(screen.getByText('press me'));
 
     expect(mockOnPress).toHaveBeenCalled();
     expect(mockOnPressIn).toHaveBeenCalled();
     expect(mockOnPressOut).toHaveBeenCalled();
   });
 
-  test('doesnt trigger on disabled Text', () => {
+  test('doesnt trigger on disabled Text', async () => {
     const mockOnPress = jest.fn();
     const mockOnPressIn = jest.fn();
     const mockOnPressOut = jest.fn();
@@ -240,14 +242,14 @@ describe('userEvent.press', () => {
         press me
       </Text>
     );
-    userEvent.press(screen.getByText('press me'));
+    await userEvent.press(screen.getByText('press me'));
 
     expect(mockOnPress).not.toHaveBeenCalled();
     expect(mockOnPressIn).not.toHaveBeenCalled();
     expect(mockOnPressOut).not.toHaveBeenCalled();
   });
 
-  test('works on TetInput', () => {
+  test('works on TetInput', async () => {
     const mockOnPressIn = jest.fn();
     const mockOnPressOut = jest.fn();
 
@@ -258,13 +260,13 @@ describe('userEvent.press', () => {
         onPressOut={mockOnPressOut}
       />
     );
-    userEvent.press(screen.getByPlaceholderText('email'));
+    await userEvent.press(screen.getByPlaceholderText('email'));
 
     expect(mockOnPressIn).toHaveBeenCalled();
     expect(mockOnPressOut).toHaveBeenCalled();
   });
 
-  test('does not call onPressIn and onPressOut on non editable TetInput', () => {
+  test('does not call onPressIn and onPressOut on non editable TetInput', async () => {
     const mockOnPressIn = jest.fn();
     const mockOnPressOut = jest.fn();
 
@@ -276,7 +278,7 @@ describe('userEvent.press', () => {
         onPressOut={mockOnPressOut}
       />
     );
-    userEvent.press(screen.getByPlaceholderText('email'));
+    await userEvent.press(screen.getByPlaceholderText('email'));
 
     expect(mockOnPressIn).not.toHaveBeenCalled();
     expect(mockOnPressOut).not.toHaveBeenCalled();
