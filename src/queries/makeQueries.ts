@@ -2,6 +2,9 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import waitFor from '../waitFor';
 import type { WaitForOptions } from '../waitFor';
+import format from '../helpers/format';
+import { screen } from '../screen';
+import { defaultMapProps } from '../helpers/format-default';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
@@ -72,8 +75,8 @@ function extractDeprecatedWaitForOptions(options?: WaitForOptions) {
     if (option) {
       // eslint-disable-next-line no-console
       console.warn(
-        `Use of option "${key}" in a findBy* query options (2nd parameter) is deprecated. Please pass this option in the waitForOptions (3rd parameter). 
-Example: 
+        `Use of option "${key}" in a findBy* query options (2nd parameter) is deprecated. Please pass this option in the waitForOptions (3rd parameter).
+Example:
 
   findByText(text, {}, { ${key}: ${option.toString()} })`
       );
@@ -83,30 +86,68 @@ Example:
   return waitForOptions;
 }
 
+function formatErrorMessage(message: string, printElementTree: boolean) {
+  if (!printElementTree) {
+    return message;
+  }
+
+  const json = screen.toJSON();
+  if (!json) {
+    return message;
+  }
+
+  return `${message}\n\n${format(json, {
+    mapProps: defaultMapProps,
+  })}`;
+}
+
+function appendElementTreeToError(error: Error) {
+  const oldMessage = error.message;
+  error.message = formatErrorMessage(oldMessage, true);
+
+  // Required to make Jest print the element tree on error
+  error.stack = error.stack?.replace(oldMessage, error.message);
+
+  return error;
+}
+
 export function makeQueries<Predicate, Options>(
   queryAllByQuery: UnboundQuery<QueryAllByQuery<Predicate, Options>>,
   getMissingError: (predicate: Predicate, options?: Options) => string,
   getMultipleError: (predicate: Predicate, options?: Options) => string
 ): UnboundQueries<Predicate, Options> {
-  function getAllByQuery(instance: ReactTestInstance) {
+  function getAllByQuery(
+    instance: ReactTestInstance,
+    { printElementTree = true } = {}
+  ) {
     return function getAllFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length === 0) {
-        throw new ErrorWithStack(getMissingError(predicate, options), getAllFn);
+        const errorMessage = formatErrorMessage(
+          getMissingError(predicate, options),
+          printElementTree
+        );
+        throw new ErrorWithStack(errorMessage, getAllFn);
       }
 
       return results;
     };
   }
 
-  function queryByQuery(instance: ReactTestInstance) {
+  function queryByQuery(
+    instance: ReactTestInstance,
+    { printElementTree = true } = {}
+  ) {
     return function singleQueryFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
 
       if (results.length > 1) {
         throw new ErrorWithStack(
-          getMultipleError(predicate, options),
+          formatErrorMessage(
+            getMultipleError(predicate, options),
+            printElementTree
+          ),
           singleQueryFn
         );
       }
@@ -119,7 +160,10 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function getByQuery(instance: ReactTestInstance) {
+  function getByQuery(
+    instance: ReactTestInstance,
+    { printElementTree = true } = {}
+  ) {
     return function getFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
 
@@ -128,7 +172,11 @@ export function makeQueries<Predicate, Options>(
       }
 
       if (results.length === 0) {
-        throw new ErrorWithStack(getMissingError(predicate, options), getFn);
+        const errorMessage = formatErrorMessage(
+          getMissingError(predicate, options),
+          printElementTree
+        );
+        throw new ErrorWithStack(errorMessage, getFn);
       }
 
       return results[0];
@@ -139,14 +187,26 @@ export function makeQueries<Predicate, Options>(
     return function findAllFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
-      waitForOptions: WaitForOptions = {}
+      {
+        onTimeout = (error) => appendElementTreeToError(error),
+        ...waitForOptions
+      }: WaitForOptions = {}
     ) {
       const deprecatedWaitForOptions =
         extractDeprecatedWaitForOptions(queryOptions);
-      return waitFor(() => getAllByQuery(instance)(predicate, queryOptions), {
-        ...deprecatedWaitForOptions,
-        ...waitForOptions,
-      });
+
+      return waitFor(
+        () =>
+          getAllByQuery(instance, { printElementTree: false })(
+            predicate,
+            queryOptions
+          ),
+        {
+          ...deprecatedWaitForOptions,
+          ...waitForOptions,
+          onTimeout,
+        }
+      );
     };
   }
 
@@ -154,14 +214,26 @@ export function makeQueries<Predicate, Options>(
     return function findFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
-      waitForOptions: WaitForOptions = {}
+      {
+        onTimeout = (error) => appendElementTreeToError(error),
+        ...waitForOptions
+      }: WaitForOptions = {}
     ) {
       const deprecatedWaitForOptions =
         extractDeprecatedWaitForOptions(queryOptions);
-      return waitFor(() => getByQuery(instance)(predicate, queryOptions), {
-        ...deprecatedWaitForOptions,
-        ...waitForOptions,
-      });
+
+      return waitFor(
+        () =>
+          getByQuery(instance, { printElementTree: false })(
+            predicate,
+            queryOptions
+          ),
+        {
+          ...deprecatedWaitForOptions,
+          ...waitForOptions,
+          onTimeout,
+        }
+      );
     };
   }
 

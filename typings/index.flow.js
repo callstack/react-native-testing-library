@@ -71,7 +71,7 @@ declare type A11yValue = {
 type WaitForOptions = {
   timeout?: number,
   interval?: number,
-  onTimeout?: (error: mixed) => Error,
+  onTimeout?: (error: Error) => Error,
 };
 
 type WaitForFunction = <T = any>(

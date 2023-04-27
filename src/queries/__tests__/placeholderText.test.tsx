@@ -72,11 +72,19 @@ test('byPlaceholderText queries support hidden option', () => {
   expect(
     queryByPlaceholderText('hidden', { includeHiddenElements: false })
   ).toBeFalsy();
-  expect(() =>
-    getByPlaceholderText('hidden', { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with placeholder: hidden"`
-  );
+  expect(() => getByPlaceholderText('hidden', { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with placeholder: hidden
+
+    <TextInput
+      placeholder="hidden"
+      style={
+        {
+          "display": "none",
+        }
+      }
+    />"
+  `);
 });
 
 test('byPlaceHolderText should return host component', () => {
@@ -85,4 +93,44 @@ test('byPlaceHolderText should return host component', () => {
   );
 
   expect(getByPlaceholderText('placeholder').type).toBe('TextInput');
+});
+
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const view = render(<TextInput placeholder="PLACEHOLDER" key="3" />);
+
+  expect(() => view.getByPlaceholderText('FOO'))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with placeholder: FOO
+
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
+  `);
+
+  expect(() => view.getAllByPlaceholderText('FOO'))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with placeholder: FOO
+
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
+  `);
+
+  await expect(view.findByPlaceholderText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with placeholder: FOO
+
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
+  `);
+
+  await expect(view.findAllByPlaceholderText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with placeholder: FOO
+
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
+  `);
 });

@@ -316,3 +316,12 @@ test.each([
     expect(onPress).toHaveBeenCalledWith('red');
   }
 );
+
+test('waitFor throws if expectation is not a function', async () => {
+  await expect(
+    // @ts-expect-error intentionally passing non-function
+    waitFor('not a function')
+  ).rejects.toThrowErrorMatchingInlineSnapshot(
+    `"Received \`expectation\` arg must be a function"`
+  );
+});

@@ -107,35 +107,53 @@ test('byA11yValue queries support hidden option', () => {
   expect(
     queryByA11yValue({ max: 10 }, { includeHiddenElements: false })
   ).toBeFalsy();
-  expect(() =>
-    getByA11yValue({ max: 10 }, { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with max value: 10"`
-  );
+  expect(() => getByA11yValue({ max: 10 }, { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with max value: 10
+
+    <Text
+      accessibilityValue={
+        {
+          "max": 10,
+        }
+      }
+      style={
+        {
+          "display": "none",
+        }
+      }
+    >
+      Hidden from accessibility
+    </Text>"
+  `);
 });
 
 test('byA11yValue error messages', () => {
   const { getByA11yValue } = render(<View />);
-  expect(() =>
-    getByA11yValue({ min: 10, max: 10 })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with min value: 10, max value: 10"`
-  );
-  expect(() =>
-    getByA11yValue({ max: 20, now: 5 })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with max value: 20, now value: 5"`
-  );
-  expect(() =>
-    getByA11yValue({ min: 1, max: 2, now: 3 })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with min value: 1, max value: 2, now value: 3"`
-  );
-  expect(() =>
-    getByA11yValue({ min: 1, max: 2, now: 3, text: /foo/i })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with min value: 1, max value: 2, now value: 3, text value: /foo/i"`
-  );
+  expect(() => getByA11yValue({ min: 10, max: 10 }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with min value: 10, max value: 10
+
+    <View />"
+  `);
+  expect(() => getByA11yValue({ max: 20, now: 5 }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with max value: 20, now value: 5
+
+    <View />"
+  `);
+  expect(() => getByA11yValue({ min: 1, max: 2, now: 3 }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with min value: 1, max value: 2, now value: 3
+
+    <View />"
+  `);
+  expect(() => getByA11yValue({ min: 1, max: 2, now: 3, text: /foo/i }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with min value: 1, max value: 2, now value: 3, text value: /foo/i
+
+    <View />"
+  `);
 });
 
 test('*ByA11yValue deprecation warnings', () => {
@@ -229,5 +247,63 @@ test('*ByAccessibilityValue deprecation warnings', () => {
     "findAllByAccessibilityValue(...) is deprecated and will be removed in the future.
 
     Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or findAllByRole(role, { value: ... }) query instead."
+  `);
+});
+
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const view = render(
+    <View accessibilityValue={{ min: 2 }} key="NOT_RELEVANT" />
+  );
+
+  expect(() => view.getByA11yValue({ min: 1 }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with min value: 1
+
+    <View
+      accessibilityValue={
+        {
+          "min": 2,
+        }
+      }
+    />"
+  `);
+
+  expect(() => view.getAllByA11yValue({ min: 1 }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with min value: 1
+
+    <View
+      accessibilityValue={
+        {
+          "min": 2,
+        }
+      }
+    />"
+  `);
+
+  await expect(view.findByA11yValue({ min: 1 })).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with min value: 1
+
+    <View
+      accessibilityValue={
+        {
+          "min": 2,
+        }
+      }
+    />"
+  `);
+
+  await expect(view.findAllByA11yValue({ min: 1 })).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with min value: 1
+
+    <View
+      accessibilityValue={
+        {
+          "min": 2,
+        }
+      }
+    />"
   `);
 });

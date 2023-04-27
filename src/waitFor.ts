@@ -17,7 +17,7 @@ export type WaitForOptions = {
   timeout?: number;
   interval?: number;
   stackTraceError?: ErrorWithStack;
-  onTimeout?: (error: unknown) => Error;
+  onTimeout?: (error: Error) => Error;
 };
 
 function waitForInternal<T>(
@@ -164,9 +164,14 @@ function waitForInternal<T>(
     }
 
     function handleTimeout() {
-      let error;
+      let error: Error;
       if (lastError) {
-        error = lastError;
+        if (lastError instanceof Error) {
+          error = lastError;
+        } else {
+          error = new Error(String(lastError));
+        }
+
         if (stackTraceError) {
           copyStackTrace(error, stackTraceError);
         }
@@ -177,7 +182,10 @@ function waitForInternal<T>(
         }
       }
       if (typeof onTimeout === 'function') {
-        onTimeout(error);
+        const result = onTimeout(error);
+        if (result) {
+          error = result;
+        }
       }
       onDone({ type: 'error', error });
     }

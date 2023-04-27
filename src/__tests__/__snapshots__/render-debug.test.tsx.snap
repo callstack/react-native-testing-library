@@ -30,7 +30,7 @@ exports[`debug 1`] = `
   />
   <View
     accessibilityState={
-      Object {
+      {
         "busy": undefined,
         "checked": undefined,
         "disabled": undefined,
@@ -39,7 +39,7 @@ exports[`debug 1`] = `
       }
     }
     accessibilityValue={
-      Object {
+      {
         "max": undefined,
         "min": undefined,
         "now": undefined,
@@ -109,7 +109,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
   />
   <View
     accessibilityState={
-      Object {
+      {
         "busy": undefined,
         "checked": undefined,
         "disabled": undefined,
@@ -118,7 +118,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
       }
     }
     accessibilityValue={
-      Object {
+      {
         "max": undefined,
         "min": undefined,
         "now": undefined,
@@ -169,7 +169,7 @@ exports[`debug should use debugOptions from config when no option is specified 1
 exports[`debug should use given options over config debugOptions 1`] = `
 "<View
   style={
-    Object {
+    {
       "backgroundColor": "red",
     }
   }
@@ -315,7 +315,7 @@ exports[`debug: another custom message 1`] = `
   />
   <View
     accessibilityState={
-      Object {
+      {
         "busy": undefined,
         "checked": undefined,
         "disabled": undefined,
@@ -324,7 +324,7 @@ exports[`debug: another custom message 1`] = `
       }
     }
     accessibilityValue={
-      Object {
+      {
         "max": undefined,
         "min": undefined,
         "now": undefined,
@@ -498,7 +498,7 @@ exports[`debug: with message 1`] = `
   />
   <View
     accessibilityState={
-      Object {
+      {
         "busy": undefined,
         "checked": undefined,
         "disabled": undefined,
@@ -507,7 +507,7 @@ exports[`debug: with message 1`] = `
       }
     }
     accessibilityValue={
-      Object {
+      {
         "max": undefined,
         "min": undefined,
         "now": undefined,

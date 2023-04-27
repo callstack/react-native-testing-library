@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TextInput } from 'react-native';
+import { TextInput, View } from 'react-native';
 
 import { render } from '../..';
 
@@ -50,16 +50,57 @@ test('getByDisplayValue, queryByDisplayValue', () => {
 
 test('getByDisplayValue, queryByDisplayValue get element by default value only when value is undefined', () => {
   const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
-  expect(() =>
-    getByDisplayValue(DEFAULT_INPUT_CHEF)
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with displayValue: What did you inspect?"`
-  );
+  expect(() => getByDisplayValue(DEFAULT_INPUT_CHEF))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with displayValue: What did you inspect?
+
+    <View>
+      <TextInput
+        placeholder="Add custom freshness"
+        testID="bananaCustomFreshness"
+        value="Custom Freshie"
+      />
+      <TextInput
+        defaultValue="What did you inspect?"
+        placeholder="Who inspected freshness?"
+        testID="bananaChef"
+        value="I inspected freshie"
+      />
+      <TextInput
+        defaultValue="What banana?"
+      />
+      <TextInput
+        defaultValue="hello"
+        value=""
+      />
+    </View>"
+  `);
   expect(queryByDisplayValue(DEFAULT_INPUT_CHEF)).toBeNull();
 
-  expect(() => getByDisplayValue('hello')).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with displayValue: hello"`
-  );
+  expect(() => getByDisplayValue('hello')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with displayValue: hello
+
+    <View>
+      <TextInput
+        placeholder="Add custom freshness"
+        testID="bananaCustomFreshness"
+        value="Custom Freshie"
+      />
+      <TextInput
+        defaultValue="What did you inspect?"
+        placeholder="Who inspected freshness?"
+        testID="bananaChef"
+        value="I inspected freshie"
+      />
+      <TextInput
+        defaultValue="What banana?"
+      />
+      <TextInput
+        defaultValue="hello"
+        value=""
+      />
+    </View>"
+  `);
   expect(queryByDisplayValue('hello')).toBeNull();
 
   expect(getByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
@@ -119,15 +160,62 @@ test('byDisplayValue queries support hidden option', () => {
   expect(
     queryByDisplayValue('hidden', { includeHiddenElements: false })
   ).toBeFalsy();
-  expect(() =>
-    getByDisplayValue('hidden', { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with displayValue: hidden"`
-  );
+  expect(() => getByDisplayValue('hidden', { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with displayValue: hidden
+
+    <TextInput
+      style={
+        {
+          "display": "none",
+        }
+      }
+      value="hidden"
+    />"
+  `);
 });
 
 test('byDisplayValue should return host component', () => {
   const { getByDisplayValue } = render(<TextInput value="value" />);
 
   expect(getByDisplayValue('value').type).toBe('TextInput');
+});
+
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const view = render(<TextInput value="1" key="3" />);
+
+  expect(() => view.getByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with displayValue: 2
+
+    <TextInput
+      value="1"
+    />"
+  `);
+
+  expect(() => view.getAllByDisplayValue('2'))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with displayValue: 2
+
+    <TextInput
+      value="1"
+    />"
+  `);
+
+  await expect(view.findByDisplayValue('2')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with displayValue: 2
+
+    <TextInput
+      value="1"
+    />"
+  `);
+
+  await expect(view.findAllByDisplayValue('2')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with displayValue: 2
+
+    <TextInput
+      value="1"
+    />"
+  `);
 });

@@ -159,11 +159,21 @@ test('byLabelText queries support hidden option', () => {
   expect(
     queryByLabelText('hidden', { includeHiddenElements: false })
   ).toBeFalsy();
-  expect(() =>
-    getByLabelText('hidden', { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with accessibilityLabel: hidden"`
-  );
+  expect(() => getByLabelText('hidden', { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityLabel: hidden
+
+    <Text
+      accessibilityLabel="hidden"
+      style={
+        {
+          "display": "none",
+        }
+      }
+    >
+      Hidden from accessibility
+    </Text>"
+  `);
 });
 
 test('getByLabelText supports accessibilityLabelledBy', async () => {
@@ -190,4 +200,43 @@ test('getByLabelText supports nested accessibilityLabelledBy', async () => {
 
   expect(getByLabelText('Label for input')).toBe(getByTestId('textInput'));
   expect(getByLabelText(/input/)).toBe(getByTestId('textInput'));
+});
+
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const view = render(<TouchableOpacity accessibilityLabel="LABEL" key="3" />);
+
+  expect(() => view.getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityLabel: FOO
+
+    <View
+      accessibilityLabel="LABEL"
+    />"
+  `);
+
+  expect(() => view.getAllByLabelText('FOO'))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityLabel: FOO
+
+    <View
+      accessibilityLabel="LABEL"
+    />"
+  `);
+
+  await expect(view.findByLabelText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityLabel: FOO
+
+    <View
+      accessibilityLabel="LABEL"
+    />"
+  `);
+
+  await expect(view.findAllByLabelText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityLabel: FOO
+
+    <View
+      accessibilityLabel="LABEL"
+    />"
+  `);
 });

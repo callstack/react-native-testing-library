@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
   Button,
+  Image,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { render, getDefaultNormalizer, within } from '../..';
+import { getDefaultNormalizer, render, within } from '../..';
 
 test('byText matches simple text', () => {
   const { getByText } = render(<Text testID="text">Hello World</Text>);
@@ -496,11 +496,58 @@ test('byText support hidden option', () => {
 
   expect(queryByText(/hidden/i)).toBeFalsy();
   expect(queryByText(/hidden/i, { includeHiddenElements: false })).toBeFalsy();
-  expect(() =>
-    getByText(/hidden/i, { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with text: /hidden/i"`
-  );
+  expect(() => getByText(/hidden/i, { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with text: /hidden/i
+
+    <Text
+      style={
+        {
+          "display": "none",
+        }
+      }
+    >
+      Hidden from accessibility
+    </Text>"
+  `);
+});
+
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const view = render(<View accessibilityViewIsModal key="this is filtered" />);
+
+  expect(() => view.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      <View
+        accessibilityViewIsModal={true}
+      />"
+    `);
+
+  expect(() => view.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      <View
+        accessibilityViewIsModal={true}
+      />"
+    `);
+
+  await expect(view.findByText(/foo/)).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      <View
+        accessibilityViewIsModal={true}
+      />"
+    `);
+
+  await expect(view.findAllByText(/foo/)).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      <View
+        accessibilityViewIsModal={true}
+      />"
+    `);
 });
 
 test('byText should return host component', () => {

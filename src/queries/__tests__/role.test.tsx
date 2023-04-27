@@ -652,29 +652,33 @@ describe('error messages', () => {
   test('gives a descriptive error message when querying with a role', () => {
     const { getByRole } = render(<View />);
 
-    expect(() => getByRole('button')).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "button""`
-    );
+    expect(() => getByRole('button')).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "button"
+
+      <View />"
+    `);
   });
 
   test('gives a descriptive error message when querying with a role and a name', () => {
     const { getByRole } = render(<View />);
 
-    expect(() =>
-      getByRole('button', { name: 'Save' })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "button", name: "Save""`
-    );
+    expect(() => getByRole('button', { name: 'Save' }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "button", name: "Save"
+
+      <View />"
+    `);
   });
 
   test('gives a descriptive error message when querying with a role, a name and accessibility state', () => {
     const { getByRole } = render(<View />);
 
-    expect(() =>
-      getByRole('button', { name: 'Save', disabled: true })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "button", name: "Save", disabled state: true"`
-    );
+    expect(() => getByRole('button', { name: 'Save', disabled: true }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "button", name: "Save", disabled state: true
+
+      <View />"
+    `);
   });
 
   test('gives a descriptive error message when querying with a role, a name and several accessibility state', () => {
@@ -682,37 +686,43 @@ describe('error messages', () => {
 
     expect(() =>
       getByRole('button', { name: 'Save', disabled: true, selected: true })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "button", name: "Save", disabled state: true, selected state: true"`
-    );
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "button", name: "Save", disabled state: true, selected state: true
+
+      <View />"
+    `);
   });
 
   test('gives a descriptive error message when querying with a role and an accessibility state', () => {
     const { getByRole } = render(<View />);
 
-    expect(() =>
-      getByRole('button', { disabled: true })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "button", disabled state: true"`
-    );
+    expect(() => getByRole('button', { disabled: true }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "button", disabled state: true
+
+      <View />"
+    `);
   });
 
   test('gives a descriptive error message when querying with a role and an accessibility value', () => {
     const { getByRole } = render(<View />);
 
-    expect(() =>
-      getByRole('adjustable', { value: { min: 1 } })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "adjustable", min value: 1"`
-    );
+    expect(() => getByRole('adjustable', { value: { min: 1 } }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "adjustable", min value: 1
+
+      <View />"
+    `);
 
     expect(() =>
       getByRole('adjustable', {
         value: { min: 1, max: 2, now: 1, text: /hello/ },
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with role: "adjustable", min value: 1, max value: 2, now value: 1, text value: /hello/"`
-    );
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with role: "adjustable", min value: 1, max value: 2, now value: 1, text value: /hello/
+
+      <View />"
+    `);
   });
 });
 
@@ -727,11 +737,23 @@ test('byRole queries support hidden option', () => {
 
   expect(queryByRole('button')).toBeFalsy();
   expect(queryByRole('button', { includeHiddenElements: false })).toBeFalsy();
-  expect(() =>
-    getByRole('button', { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with role: "button""`
-  );
+  expect(() => getByRole('button', { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with role: "button"
+
+    <View
+      accessibilityRole="button"
+      style={
+        {
+          "display": "none",
+        }
+      }
+    >
+      <Text>
+        Hidden from accessibility
+      </Text>
+    </View>"
+  `);
 });
 
 describe('matches only accessible elements', () => {
@@ -761,4 +783,42 @@ describe('matches only accessible elements', () => {
     );
     expect(queryByRole('menu', { name: 'Action' })).toBeFalsy();
   });
+});
+
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const view = render(<View accessibilityRole="button" key="3" />);
+
+  expect(() => view.getByRole('link')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with role: "link"
+
+    <View
+      accessibilityRole="button"
+    />"
+  `);
+
+  expect(() => view.getAllByRole('link')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with role: "link"
+
+    <View
+      accessibilityRole="button"
+    />"
+  `);
+
+  await expect(view.findByRole('link')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with role: "link"
+
+    <View
+      accessibilityRole="button"
+    />"
+  `);
+
+  await expect(view.findAllByRole('link')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with role: "link"
+
+    <View
+      accessibilityRole="button"
+    />"
+  `);
 });

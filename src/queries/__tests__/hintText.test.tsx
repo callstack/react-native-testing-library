@@ -120,9 +120,58 @@ test('byHintText queries support hidden option', () => {
   expect(
     queryByHintText('hidden', { includeHiddenElements: false })
   ).toBeFalsy();
-  expect(() =>
-    getByHintText('hidden', { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with accessibilityHint: hidden"`
-  );
+  expect(() => getByHintText('hidden', { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: hidden
+
+    <Text
+      accessibilityHint="hidden"
+      style={
+        {
+          "display": "none",
+        }
+      }
+    >
+      Hidden from accessiblity
+    </Text>"
+  `);
+});
+
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const view = render(<TouchableOpacity accessibilityHint="HINT" key="3" />);
+
+  expect(() => view.getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: FOO
+
+    <View
+      accessibilityHint="HINT"
+    />"
+  `);
+
+  expect(() => view.getAllByHintText('FOO'))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: FOO
+
+    <View
+      accessibilityHint="HINT"
+    />"
+  `);
+
+  await expect(view.findByHintText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: FOO
+
+    <View
+      accessibilityHint="HINT"
+    />"
+  `);
+
+  await expect(view.findAllByHintText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: FOO
+
+    <View
+      accessibilityHint="HINT"
+    />"
+  `);
 });

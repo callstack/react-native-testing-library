@@ -6,14 +6,13 @@ import {
   getHostComponentNames,
   configureHostComponentNamesIfNeeded,
 } from '../helpers/host-component-names';
-import * as within from '../within';
 import { act, render } from '..';
 
 const mockCreate = jest.spyOn(TestRenderer, 'create') as jest.Mock;
-const mockGetQueriesForElements = jest.spyOn(
-  within,
-  'getQueriesForElement'
-) as jest.Mock;
+
+beforeEach(() => {
+  mockCreate.mockReset();
+});
 
 describe('getHostComponentNames', () => {
   test('returns host component names from internal config', () => {
@@ -79,8 +78,10 @@ describe('configureHostComponentNamesIfNeeded', () => {
   });
 
   test('throw an error when autodetection fails', () => {
+    const renderer = TestRenderer.create(<View />);
+
     mockCreate.mockReturnValue({
-      root: { type: View, children: [], props: {} },
+      root: renderer.root,
     });
 
     expect(() => configureHostComponentNamesIfNeeded())
@@ -88,24 +89,6 @@ describe('configureHostComponentNamesIfNeeded', () => {
       "Trying to detect host component names triggered the following error:
 
       Unable to find an element with testID: text
-
-      There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
-      Please check if you are using compatible versions of React Native and React Native Testing Library."
-    `);
-  });
-
-  test('throw an error when autodetection fails due to getByTestId returning non-host component', () => {
-    mockGetQueriesForElements.mockReturnValue({
-      getByTestId: () => {
-        return { type: View };
-      },
-    });
-
-    expect(() => configureHostComponentNamesIfNeeded())
-      .toThrowErrorMatchingInlineSnapshot(`
-      "Trying to detect host component names triggered the following error:
-
-      getByTestId returned non-host component
 
       There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
       Please check if you are using compatible versions of React Native and React Native Testing Library."

@@ -254,9 +254,26 @@ test('byA11yState queries support hidden option', () => {
   ).toBeFalsy();
   expect(() =>
     getByA11yState({ expanded: false }, { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Unable to find an element with expanded state: false"`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with expanded state: false
+
+    <View
+      accessibilityState={
+        {
+          "expanded": false,
+        }
+      }
+      style={
+        {
+          "display": "none",
+        }
+      }
+    >
+      <Text>
+        Hidden from accessibility
+      </Text>
+    </View>"
+  `);
 });
 
 test('*ByA11yState deprecation warnings', () => {
@@ -350,5 +367,73 @@ test('*ByAccessibilityState deprecation warnings', () => {
     "findAllByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use findAllByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead."
+  `);
+});
+
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const view = render(
+    <Text accessibilityState={{ checked: false }} onPress={() => null}>
+      Some text
+    </Text>
+  );
+
+  expect(() => view.getByA11yState({ checked: true }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with checked state: true
+
+    <Text
+      accessibilityState={
+        {
+          "checked": false,
+        }
+      }
+    >
+      Some text
+    </Text>"
+  `);
+
+  expect(() => view.getAllByA11yState({ checked: true }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with checked state: true
+
+    <Text
+      accessibilityState={
+        {
+          "checked": false,
+        }
+      }
+    >
+      Some text
+    </Text>"
+  `);
+
+  await expect(view.findByA11yState({ checked: true })).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with checked state: true
+
+    <Text
+      accessibilityState={
+        {
+          "checked": false,
+        }
+      }
+    >
+      Some text
+    </Text>"
+  `);
+
+  await expect(view.findAllByA11yState({ checked: true })).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with checked state: true
+
+    <Text
+      accessibilityState={
+        {
+          "checked": false,
+        }
+      }
+    >
+      Some text
+    </Text>"
   `);
 });
