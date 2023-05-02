@@ -140,7 +140,8 @@ module.exports = {
   setupFiles: ['./node_modules/react-native-gesture-handler/jestSetup.js'],
   transformIgnorePatterns: [
     'node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation)',
-    // In case you are using pnpm as package manager, use this:
+
+    // For pnpm you need to use inlcude `(?!(?:.pnpm/)?` part like this:
     // 'node_modules/(?!(?:.pnpm/)?((jest-)?@?react-native|@react-native-community|@react-navigation))',
   ],
 };
