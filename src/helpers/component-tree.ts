@@ -113,24 +113,3 @@ export function getHostSiblings(
     (sibling) => !hostSelves.includes(sibling)
   );
 }
-
-export function getCompositeParentOfType(
-  element: ReactTestInstance,
-  type: React.ComponentType
-) {
-  let current = element.parent;
-
-  while (!isHostElement(current)) {
-    // We're at the root of the tree
-    if (!current) {
-      return null;
-    }
-
-    if (current.type === type) {
-      return current;
-    }
-    current = current.parent;
-  }
-
-  return null;
-}

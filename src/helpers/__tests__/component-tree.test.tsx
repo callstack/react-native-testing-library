@@ -7,7 +7,6 @@ import {
   getHostSelf,
   getHostSelves,
   getHostSiblings,
-  getCompositeParentOfType,
 } from '../component-tree';
 
 function ZeroHostChildren() {
@@ -291,30 +290,4 @@ describe('getHostSiblings()', () => {
       view.getByTestId('siblingAfter'),
     ]);
   });
-});
-
-test('getCompositeParentOfType', () => {
-  const root = render(
-    <View testID="view">
-      <Text testID="text" />
-    </View>
-  );
-  const hostView = root.getByTestId('view');
-  const hostText = root.getByTestId('text');
-
-  const compositeView = getCompositeParentOfType(hostView, View);
-  // We get the corresponding composite component (same testID), but not the host
-  expect(compositeView?.type).toBe(View);
-  expect(compositeView?.props.testID).toBe('view');
-  const compositeText = getCompositeParentOfType(hostText, Text);
-  expect(compositeText?.type).toBe(Text);
-  expect(compositeText?.props.testID).toBe('text');
-
-  // Checks parent type
-  expect(getCompositeParentOfType(hostText, View)).toBeNull();
-  expect(getCompositeParentOfType(hostView, Text)).toBeNull();
-
-  // Ignores itself, stops if ancestor is host
-  expect(getCompositeParentOfType(compositeText!, Text)).toBeNull();
-  expect(getCompositeParentOfType(compositeView!, View)).toBeNull();
 });
