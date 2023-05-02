@@ -7,7 +7,7 @@ import { getHostComponentNames } from './helpers/host-component-names';
 
 type EventHandler = (...args: any) => unknown;
 
-function isTextInput(element?: ReactTestInstance) {
+function isTextInput(element: ReactTestInstance) {
   if (!element) {
     return false;
   }
@@ -22,10 +22,12 @@ function isTextInput(element?: ReactTestInstance) {
   );
 }
 
-function isTouchResponder(element?: ReactTestInstance) {
-  if (!isHostElement(element)) return false;
+function isTouchResponder(element: ReactTestInstance) {
+  if (!isHostElement(element)) {
+    return false;
+  }
 
-  return !!element?.props.onStartShouldSetResponder || isTextInput(element);
+  return !!element.props.onStartShouldSetResponder || isTextInput(element);
 }
 
 function isPointerEventEnabled(
