@@ -55,16 +55,17 @@ function isTouchEvent(eventName?: string) {
 
 function isEventEnabled(
   element: ReactTestInstance,
-  touchResponder?: ReactTestInstance,
-  eventName?: string
+  eventName: string,
+  nearestTouchResponder?: ReactTestInstance
 ) {
   if (isTextInput(element)) return element?.props.editable !== false;
   if (!isPointerEventEnabled(element) && isTouchEvent(eventName)) return false;
 
-  const touchStart = touchResponder?.props.onStartShouldSetResponder?.();
-  const touchMove = touchResponder?.props.onMoveShouldSetResponder?.();
-
-  if (touchStart || touchMove) return true;
+  const touchStart = nearestTouchResponder?.props.onStartShouldSetResponder?.();
+  const touchMove = nearestTouchResponder?.props.onMoveShouldSetResponder?.();
+  if (touchStart || touchMove) {
+    return true;
+  }
 
   return touchStart === undefined && touchMove === undefined;
 }
@@ -79,7 +80,7 @@ function findEventHandler(
     : nearestTouchResponder;
 
   const handler = getEventHandler(element, eventName);
-  if (handler && isEventEnabled(element, touchResponder, eventName))
+  if (handler && isEventEnabled(element, eventName, touchResponder))
     return handler;
 
   if (element.parent === null || element.parent.parent === null) {
@@ -109,7 +110,7 @@ function getEventHandlerName(eventName: string) {
 function fireEvent(
   element: ReactTestInstance,
   eventName: string,
-  ...data: Array<any>
+  ...data: unknown[]
 ) {
   const handler = findEventHandler(element, eventName);
   if (!handler) {
@@ -124,15 +125,13 @@ function fireEvent(
   return returnValue;
 }
 
-fireEvent.press = (element: ReactTestInstance, ...data: Array<any>): void =>
+fireEvent.press = (element: ReactTestInstance, ...data: unknown[]) =>
   fireEvent(element, 'press', ...data);
 
-fireEvent.changeText = (
-  element: ReactTestInstance,
-  ...data: Array<any>
-): void => fireEvent(element, 'changeText', ...data);
+fireEvent.changeText = (element: ReactTestInstance, ...data: unknown[]) =>
+  fireEvent(element, 'changeText', ...data);
 
-fireEvent.scroll = (element: ReactTestInstance, ...data: Array<any>): void =>
+fireEvent.scroll = (element: ReactTestInstance, ...data: unknown[]) =>
   fireEvent(element, 'scroll', ...data);
 
 export default fireEvent;
