@@ -93,7 +93,7 @@ const getEventHandler = (
   element: ReactTestInstance,
   eventName: string
 ): EventHandler | undefined => {
-  const eventHandlerName = toEventHandlerName(eventName);
+  const eventHandlerName = getEventHandlerName(eventName);
   if (typeof element.props[eventHandlerName] === 'function') {
     return element.props[eventHandlerName];
   }
@@ -105,19 +105,20 @@ const getEventHandler = (
   return undefined;
 };
 
-const invokeEvent = (
+const getEventHandlerName = (eventName: string) =>
+  `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
+
+const fireEvent = (
   element: ReactTestInstance,
   eventName: string,
   ...data: Array<any>
 ) => {
   const handler = findEventHandler(element, eventName);
-
   if (!handler) {
     return;
   }
 
   let returnValue;
-
   act(() => {
     returnValue = handler(...data);
   });
@@ -125,26 +126,15 @@ const invokeEvent = (
   return returnValue;
 };
 
-const toEventHandlerName = (eventName: string) =>
-  `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
+fireEvent.press = (element: ReactTestInstance, ...data: Array<any>): void =>
+  fireEvent(element, 'press', ...data);
 
-const pressHandler = (element: ReactTestInstance, ...data: Array<any>): void =>
-  invokeEvent(element, 'press', ...data);
-const changeTextHandler = (
+fireEvent.changeText = (
   element: ReactTestInstance,
   ...data: Array<any>
-): void => invokeEvent(element, 'changeText', ...data);
-const scrollHandler = (element: ReactTestInstance, ...data: Array<any>): void =>
-  invokeEvent(element, 'scroll', ...data);
+): void => fireEvent(element, 'changeText', ...data);
 
-const fireEvent = (
-  element: ReactTestInstance,
-  eventName: string,
-  ...data: Array<any>
-): void => invokeEvent(element, eventName, ...data);
-
-fireEvent.press = pressHandler;
-fireEvent.changeText = changeTextHandler;
-fireEvent.scroll = scrollHandler;
+fireEvent.scroll = (element: ReactTestInstance, ...data: Array<any>): void =>
+  fireEvent(element, 'scroll', ...data);
 
 export default fireEvent;
