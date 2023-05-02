@@ -5,7 +5,7 @@ import { getHostParent, isHostElement } from './helpers/component-tree';
 import { filterNodeByType } from './helpers/filterNodeByType';
 import { getHostComponentNames } from './helpers/host-component-names';
 
-type EventHandler = (...args: any) => unknown;
+type EventHandler = (...args: unknown[]) => unknown;
 
 function isTextInput(element: ReactTestInstance) {
   // We have to test if the element type is either the `TextInput` component
