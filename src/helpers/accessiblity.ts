@@ -2,12 +2,10 @@ import {
   AccessibilityState,
   AccessibilityValue,
   StyleSheet,
-  Switch,
-  Text,
-  TextInput,
 } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
-import { getHostSiblings, isHostElementForType } from './component-tree';
+import { getConfig } from '../config';
+import { getHostSiblings } from './component-tree';
 
 type IsInaccessibleOptions = {
   cache?: WeakMap<ReactTestInstance, boolean>;
@@ -101,9 +99,11 @@ export function isAccessibilityElement(
     return element.props.accessible;
   }
 
+  const hostComponentNames = getConfig().hostComponentNames;
+
   return (
-    isHostElementForType(element, Text) ||
-    isHostElementForType(element, TextInput) ||
-    isHostElementForType(element, Switch)
+    element?.type === hostComponentNames?.text ||
+    element?.type === hostComponentNames?.textInput ||
+    element?.type === hostComponentNames?.switch
   );
 }

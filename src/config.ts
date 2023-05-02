@@ -23,6 +23,7 @@ export type ConfigAliasOptions = {
 export type HostComponentNames = {
   text: string;
   textInput: string;
+  switch: string;
 };
 
 export type InternalConfig = Config & {
