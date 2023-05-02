@@ -7,7 +7,7 @@ import { getHostComponentNames } from './helpers/host-component-names';
 
 type EventHandler = (...args: any) => unknown;
 
-const isTextInput = (element?: ReactTestInstance) => {
+function isTextInput(element?: ReactTestInstance) {
   if (!element) {
     return false;
   }
@@ -20,18 +20,18 @@ const isTextInput = (element?: ReactTestInstance) => {
     filterNodeByType(element, TextInput) ||
     filterNodeByType(element, getHostComponentNames().textInput)
   );
-};
+}
 
-const isTouchResponder = (element?: ReactTestInstance) => {
+function isTouchResponder(element?: ReactTestInstance) {
   if (!isHostElement(element)) return false;
 
   return !!element?.props.onStartShouldSetResponder || isTextInput(element);
-};
+}
 
-const isPointerEventEnabled = (
+function isPointerEventEnabled(
   element: ReactTestInstance,
   isParent?: boolean
-): boolean => {
+): boolean {
   const pointerEvents = element.props.pointerEvents;
   if (pointerEvents === 'none') {
     return false;
@@ -47,17 +47,17 @@ const isPointerEventEnabled = (
   }
 
   return isPointerEventEnabled(parent, true);
-};
+}
 
-const isTouchEvent = (eventName?: string) => {
+function isTouchEvent(eventName?: string) {
   return eventName === 'press';
-};
+}
 
-const isEventEnabled = (
+function isEventEnabled(
   element: ReactTestInstance,
   touchResponder?: ReactTestInstance,
   eventName?: string
-) => {
+) {
   if (isTextInput(element)) return element?.props.editable !== false;
   if (!isPointerEventEnabled(element) && isTouchEvent(eventName)) return false;
 
@@ -67,13 +67,13 @@ const isEventEnabled = (
   if (touchStart || touchMove) return true;
 
   return touchStart === undefined && touchMove === undefined;
-};
+}
 
-const findEventHandler = (
+function findEventHandler(
   element: ReactTestInstance,
   eventName: string,
   nearestTouchResponder?: ReactTestInstance
-): EventHandler | null => {
+): EventHandler | null {
   const touchResponder = isTouchResponder(element)
     ? element
     : nearestTouchResponder;
@@ -87,12 +87,9 @@ const findEventHandler = (
   }
 
   return findEventHandler(element.parent, eventName, touchResponder);
-};
+}
 
-const getEventHandler = (
-  element: ReactTestInstance,
-  eventName: string
-): EventHandler | undefined => {
+function getEventHandler(element: ReactTestInstance, eventName: string) {
   const eventHandlerName = getEventHandlerName(eventName);
   if (typeof element.props[eventHandlerName] === 'function') {
     return element.props[eventHandlerName];
@@ -103,16 +100,17 @@ const getEventHandler = (
   }
 
   return undefined;
-};
+}
 
-const getEventHandlerName = (eventName: string) =>
-  `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
+function getEventHandlerName(eventName: string) {
+  return `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
+}
 
-const fireEvent = (
+function fireEvent(
   element: ReactTestInstance,
   eventName: string,
   ...data: Array<any>
-) => {
+) {
   const handler = findEventHandler(element, eventName);
   if (!handler) {
     return;
@@ -124,7 +122,7 @@ const fireEvent = (
   });
 
   return returnValue;
-};
+}
 
 fireEvent.press = (element: ReactTestInstance, ...data: Array<any>): void =>
   fireEvent(element, 'press', ...data);
