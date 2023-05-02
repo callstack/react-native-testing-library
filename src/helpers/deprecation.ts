@@ -34,3 +34,20 @@ function deprecateQuery<QueryFn extends (...args: any) => any>(
 
   return wrapper;
 }
+
+const warned: { [functionName: string]: boolean } = {};
+
+// istambul ignore next: Occasionally used
+export function printDeprecationWarning(functionName: string) {
+  if (warned[functionName]) {
+    return;
+  }
+
+  // eslint-disable-next-line no-console
+  console.warn(`
+  Deprecation Warning:
+  Use of ${functionName} is not recommended and will be deleted in future versions of @testing-library/react-native.
+  `);
+
+  warned[functionName] = true;
+}
