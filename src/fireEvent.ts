@@ -1,7 +1,7 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { TextInput } from 'react-native';
 import act from './act';
-import { isHostElement } from './helpers/component-tree';
+import { getHostParent, isHostElement } from './helpers/component-tree';
 import { filterNodeByType } from './helpers/filterNodeByType';
 import { getHostComponentNames } from './helpers/host-component-names';
 
@@ -29,20 +29,24 @@ const isTouchResponder = (element?: ReactTestInstance) => {
 };
 
 const isPointerEventEnabled = (
-  element?: ReactTestInstance,
+  element: ReactTestInstance,
   isParent?: boolean
 ): boolean => {
-  const parentCondition = isParent
-    ? element?.props.pointerEvents === 'box-only'
-    : element?.props.pointerEvents === 'box-none';
-
-  if (element?.props.pointerEvents === 'none' || parentCondition) {
+  const pointerEvents = element.props.pointerEvents;
+  if (pointerEvents === 'none') {
     return false;
   }
 
-  if (!element?.parent) return true;
+  if (isParent ? pointerEvents === 'box-only' : pointerEvents === 'box-none') {
+    return false;
+  }
 
-  return isPointerEventEnabled(element.parent, true);
+  const parent = getHostParent(element);
+  if (!parent) {
+    return true;
+  }
+
+  return isPointerEventEnabled(parent, true);
 };
 
 const isTouchEvent = (eventName?: string) => {
@@ -50,7 +54,7 @@ const isTouchEvent = (eventName?: string) => {
 };
 
 const isEventEnabled = (
-  element?: ReactTestInstance,
+  element: ReactTestInstance,
   touchResponder?: ReactTestInstance,
   eventName?: string
 ) => {
