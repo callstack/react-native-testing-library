@@ -64,8 +64,13 @@ function isEventEnabled(
   eventName: string,
   nearestTouchResponder?: ReactTestInstance
 ) {
-  if (isTextInput(element)) return element?.props.editable !== false;
-  if (!isPointerEventEnabled(element) && isTouchEvent(eventName)) return false;
+  if (isTextInput(element)) {
+    return element.props.editable !== false;
+  }
+
+  if (isTouchEvent(eventName) && !isPointerEventEnabled(element)) {
+    return false;
+  }
 
   const touchStart = nearestTouchResponder?.props.onStartShouldSetResponder?.();
   const touchMove = nearestTouchResponder?.props.onMoveShouldSetResponder?.();
