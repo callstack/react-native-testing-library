@@ -49,8 +49,12 @@ function isPointerEventEnabled(
   return isPointerEventEnabled(parent, true);
 }
 
-function isTouchEvent(eventName?: string) {
-  return eventName === 'press';
+// Due to accepting both `press` and `onPress` for event names, we need to
+// cover both forms.
+const touchEventNames = ['press', 'onPress'];
+
+function isTouchEvent(eventName: string) {
+  return touchEventNames.includes(eventName);
 }
 
 function isEventEnabled(
