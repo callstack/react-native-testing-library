@@ -4,7 +4,6 @@ import { render } from '../..';
 import {
   getHostChildren,
   getHostParent,
-  getHostSelf,
   getHostSelves,
   getHostSiblings,
 } from '../component-tree';
@@ -101,72 +100,6 @@ describe('getHostChildren()', () => {
       view.getByTestId('subject'),
       view.getByTestId('sibling'),
     ]);
-  });
-});
-
-describe('getHostSelf()', () => {
-  it('returns passed element for host components', () => {
-    const view = render(
-      <View testID="grandparent">
-        <View testID="parent">
-          <View testID="subject" />
-          <View testID="sibling" />
-        </View>
-      </View>
-    );
-
-    const hostSubject = view.getByTestId('subject');
-    expect(getHostSelf(hostSubject)).toEqual(hostSubject);
-
-    const hostSibling = view.getByTestId('sibling');
-    expect(getHostSelf(hostSibling)).toEqual(hostSibling);
-
-    const hostParent = view.getByTestId('parent');
-    expect(getHostSelf(hostParent)).toEqual(hostParent);
-
-    const hostGrandparent = view.getByTestId('grandparent');
-    expect(getHostSelf(hostGrandparent)).toEqual(hostGrandparent);
-  });
-
-  it('returns single host child for React Native composite components', () => {
-    const view = render(
-      <View testID="parent">
-        <Text testID="text">Text</Text>
-        <TextInput
-          testID="textInput"
-          defaultValue="TextInputValue"
-          placeholder="TextInputPlaceholder"
-        />
-      </View>
-    );
-
-    const compositeText = view.UNSAFE_getByType(Text);
-    const hostText = view.getByTestId('text');
-    expect(getHostSelf(compositeText)).toEqual(hostText);
-
-    const compositeTextInput = view.UNSAFE_getByType(TextInput);
-    const hostTextInput = view.getByTestId('textInput');
-    expect(getHostSelf(compositeTextInput)).toEqual(hostTextInput);
-  });
-
-  it('throws on non-single host children elements for custom composite components', () => {
-    const view = render(
-      <View testID="parent">
-        <ZeroHostChildren />
-        <MultipleHostChildren />
-      </View>
-    );
-
-    const zeroCompositeComponent = view.UNSAFE_getByType(ZeroHostChildren);
-    expect(() => getHostSelf(zeroCompositeComponent)).toThrow(
-      'Expected exactly one host element, but found none.'
-    );
-
-    const multipleCompositeComponent =
-      view.UNSAFE_getByType(MultipleHostChildren);
-    expect(() => getHostSelf(multipleCompositeComponent)).toThrow(
-      'Expected exactly one host element, but found 3.'
-    );
   });
 });
 
