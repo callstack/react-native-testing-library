@@ -8,10 +8,6 @@ import { getHostComponentNames } from './helpers/host-component-names';
 type EventHandler = (...args: any) => unknown;
 
 function isTextInput(element: ReactTestInstance) {
-  if (!element) {
-    return false;
-  }
-
   // We have to test if the element type is either the `TextInput` component
   // (for composite component) or the string "TextInput" (for host component)
   // All queries return host components but since fireEvent bubbles up
