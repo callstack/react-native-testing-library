@@ -134,16 +134,3 @@ export function getCompositeParentOfType(
 
   return null;
 }
-
-/**
- * Note: this function should be generally used for core React Native types like `View`, `Text`, `TextInput`, etc.
- */
-export function isHostElementForType(
-  element: ReactTestInstance,
-  type: React.ComponentType
-) {
-  // Not a host element
-  if (!isHostElement(element)) return false;
-
-  return getCompositeParentOfType(element, type) !== null;
-}

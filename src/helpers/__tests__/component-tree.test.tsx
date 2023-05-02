@@ -8,7 +8,6 @@ import {
   getHostSelves,
   getHostSiblings,
   getCompositeParentOfType,
-  isHostElementForType,
 } from '../component-tree';
 
 function ZeroHostChildren() {
@@ -318,13 +317,4 @@ test('getCompositeParentOfType', () => {
   // Ignores itself, stops if ancestor is host
   expect(getCompositeParentOfType(compositeText!, Text)).toBeNull();
   expect(getCompositeParentOfType(compositeView!, View)).toBeNull();
-});
-
-test('isHostElementForType', () => {
-  const view = render(<View testID="test" />);
-  const hostComponent = view.getByTestId('test');
-  const compositeComponent = getCompositeParentOfType(hostComponent, View);
-  expect(isHostElementForType(hostComponent, View)).toBe(true);
-  expect(isHostElementForType(hostComponent, Text)).toBe(false);
-  expect(isHostElementForType(compositeComponent!, View)).toBe(false);
 });
