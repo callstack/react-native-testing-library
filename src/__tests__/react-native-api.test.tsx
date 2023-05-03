@@ -72,6 +72,7 @@ test('React Native API assumption: <TextInput> renders single host element', () 
       placeholder="Placeholder"
     />
   );
+
   expect(view.toJSON()).toMatchInlineSnapshot(`
     <TextInput
       defaultValue="default"
@@ -82,11 +83,29 @@ test('React Native API assumption: <TextInput> renders single host element', () 
   `);
 });
 
+test('React Native API assumption: <TextInput> with nested Text renders single host element', () => {
+  const view = render(
+    <TextInput testID="test" placeholder="Placeholder">
+      <Text>Hello</Text>
+    </TextInput>
+  );
+
+  expect(view.toJSON()).toMatchInlineSnapshot(`
+    <TextInput
+      placeholder="Placeholder"
+      testID="test"
+    >
+      <Text>
+        Hello
+      </Text>
+    </TextInput>
+  `);
+});
+
 test('React Native API assumption: <Switch> renders single host element', () => {
   const view = render(
     <Switch testID="test" value={true} onChange={jest.fn()} />
   );
-  expect(view.getByTestId('test')).toBe(view.getByTestId('test'));
 
   expect(view.toJSON()).toMatchInlineSnapshot(`
     <RCTSwitch
