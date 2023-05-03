@@ -265,6 +265,7 @@ test('should not fire inside View with pointerEvents="none"', () => {
   );
 
   fireEvent.press(screen.getByText('Trigger'));
+  fireEvent(screen.getByText('Trigger'), 'onPress');
   expect(onPress).not.toHaveBeenCalled();
 });
 
@@ -279,6 +280,7 @@ test('should not fire inside View with pointerEvents="box-only"', () => {
   );
 
   fireEvent.press(screen.getByText('Trigger'));
+  fireEvent(screen.getByText('Trigger'), 'onPress');
   expect(onPress).not.toHaveBeenCalled();
 });
 
@@ -293,7 +295,8 @@ test('should fire inside View with pointerEvents="box-none"', () => {
   );
 
   fireEvent.press(screen.getByText('Trigger'));
-  expect(onPress).toHaveBeenCalled();
+  fireEvent(screen.getByText('Trigger'), 'onPress');
+  expect(onPress).toHaveBeenCalledTimes(2);
 });
 
 test('should fire inside View with pointerEvents="auto"', () => {
@@ -307,7 +310,8 @@ test('should fire inside View with pointerEvents="auto"', () => {
   );
 
   fireEvent.press(screen.getByText('Trigger'));
-  expect(onPress).toHaveBeenCalled();
+  fireEvent(screen.getByText('Trigger'), 'onPress');
+  expect(onPress).toHaveBeenCalledTimes(2);
 });
 
 test('should not fire deeply inside View with pointerEvents="box-only"', () => {
@@ -323,6 +327,7 @@ test('should not fire deeply inside View with pointerEvents="box-only"', () => {
   );
 
   fireEvent.press(screen.getByText('Trigger'));
+  fireEvent(screen.getByText('Trigger'), 'onPress');
   expect(onPress).not.toHaveBeenCalled();
 });
 
