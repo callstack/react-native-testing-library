@@ -35,9 +35,13 @@ test('resetToDefaults() resets config to defaults', () => {
 
 test('resetToDefaults() resets internal config to defaults', () => {
   configureInternal({
-    hostComponentNames: { text: 'A', textInput: 'A' },
+    hostComponentNames: { text: 'A', textInput: 'A', switch: 'A' },
   });
-  expect(getConfig().hostComponentNames).toEqual({ text: 'A', textInput: 'A' });
+  expect(getConfig().hostComponentNames).toEqual({
+    text: 'A',
+    textInput: 'A',
+    switch: 'A',
+  });
 
   resetToDefaults();
   expect(getConfig().hostComponentNames).toBe(undefined);

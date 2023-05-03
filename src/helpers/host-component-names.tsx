@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ReactTestInstance } from 'react-test-renderer';
-import { Text, TextInput, View } from 'react-native';
+import { Switch, Text, TextInput, View } from 'react-native';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { renderWithAct } from '../render-act';
 
@@ -33,12 +33,14 @@ function detectHostComponentNames(): HostComponentNames {
       <View>
         <Text testID="text">Hello</Text>
         <TextInput testID="textInput" />
+        <Switch testID="switch" />
       </View>
     );
 
     return {
       text: getByTestId(renderer.root, 'text').type as string,
       textInput: getByTestId(renderer.root, 'textInput').type as string,
+      switch: getByTestId(renderer.root, 'switch').type as string,
     };
   } catch (error) {
     const errorMessage =

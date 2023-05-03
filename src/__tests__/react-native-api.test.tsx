@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, Switch } from 'react-native';
 import { render } from '..';
 
 /**
@@ -19,7 +19,6 @@ test('React Native API assumption: <View> renders single host element', () => {
 
 test('React Native API assumption: <Text> renders single host element', () => {
   const view = render(<Text testID="test">Hello</Text>);
-  expect(view.getByText('Hello')).toBe(view.getByTestId('test'));
 
   expect(view.toJSON()).toMatchInlineSnapshot(`
     <Text
@@ -39,11 +38,6 @@ test('React Native API assumption: nested <Text> renders single host element', (
         <Text testID="deeplyNested">Deeply nested</Text>
       </Text>
     </Text>
-  );
-  expect(view.getByText(/Hello/)).toBe(view.getByTestId('test'));
-  expect(view.getByText('Before')).toBe(view.getByTestId('before'));
-  expect(view.getByText('Deeply nested')).toBe(
-    view.getByTestId('deeplyNested')
   );
 
   expect(view.toJSON()).toMatchInlineSnapshot(`
@@ -78,9 +72,6 @@ test('React Native API assumption: <TextInput> renders single host element', () 
       placeholder="Placeholder"
     />
   );
-  expect(view.getByPlaceholderText('Placeholder')).toBe(
-    view.getByTestId('test')
-  );
 
   expect(view.toJSON()).toMatchInlineSnapshot(`
     <TextInput
@@ -88,6 +79,48 @@ test('React Native API assumption: <TextInput> renders single host element', () 
       placeholder="Placeholder"
       testID="test"
       value="currentValue"
+    />
+  `);
+});
+
+test('React Native API assumption: <TextInput> with nested Text renders single host element', () => {
+  const view = render(
+    <TextInput testID="test" placeholder="Placeholder">
+      <Text>Hello</Text>
+    </TextInput>
+  );
+
+  expect(view.toJSON()).toMatchInlineSnapshot(`
+    <TextInput
+      placeholder="Placeholder"
+      testID="test"
+    >
+      <Text>
+        Hello
+      </Text>
+    </TextInput>
+  `);
+});
+
+test('React Native API assumption: <Switch> renders single host element', () => {
+  const view = render(
+    <Switch testID="test" value={true} onChange={jest.fn()} />
+  );
+
+  expect(view.toJSON()).toMatchInlineSnapshot(`
+    <RCTSwitch
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "height": 31,
+          "width": 51,
+        }
+      }
+      testID="test"
+      value={true}
     />
   `);
 });

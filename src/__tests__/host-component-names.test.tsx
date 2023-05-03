@@ -17,12 +17,17 @@ beforeEach(() => {
 describe('getHostComponentNames', () => {
   test('returns host component names from internal config', () => {
     configureInternal({
-      hostComponentNames: { text: 'banana', textInput: 'banana' },
+      hostComponentNames: {
+        text: 'banana',
+        textInput: 'banana',
+        switch: 'banana',
+      },
     });
 
     expect(getHostComponentNames()).toEqual({
       text: 'banana',
       textInput: 'banana',
+      switch: 'banana',
     });
   });
 
@@ -34,6 +39,7 @@ describe('getHostComponentNames', () => {
     expect(hostComponentNames).toEqual({
       text: 'Text',
       textInput: 'TextInput',
+      switch: 'RCTSwitch',
     });
     expect(getConfig().hostComponentNames).toBe(hostComponentNames);
   });
@@ -61,12 +67,17 @@ describe('configureHostComponentNamesIfNeeded', () => {
     expect(getConfig().hostComponentNames).toEqual({
       text: 'Text',
       textInput: 'TextInput',
+      switch: 'RCTSwitch',
     });
   });
 
   test('does not update internal config when host component names are already configured', () => {
     configureInternal({
-      hostComponentNames: { text: 'banana', textInput: 'banana' },
+      hostComponentNames: {
+        text: 'banana',
+        textInput: 'banana',
+        switch: 'banana',
+      },
     });
 
     configureHostComponentNamesIfNeeded();
@@ -74,6 +85,7 @@ describe('configureHostComponentNamesIfNeeded', () => {
     expect(getConfig().hostComponentNames).toEqual({
       text: 'banana',
       textInput: 'banana',
+      switch: 'banana',
     });
   });
 

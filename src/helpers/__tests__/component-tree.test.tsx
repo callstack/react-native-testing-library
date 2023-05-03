@@ -4,11 +4,8 @@ import { render } from '../..';
 import {
   getHostChildren,
   getHostParent,
-  getHostSelf,
   getHostSelves,
   getHostSiblings,
-  getCompositeParentOfType,
-  isHostElementForType,
 } from '../component-tree';
 
 function ZeroHostChildren() {
@@ -103,72 +100,6 @@ describe('getHostChildren()', () => {
       view.getByTestId('subject'),
       view.getByTestId('sibling'),
     ]);
-  });
-});
-
-describe('getHostSelf()', () => {
-  it('returns passed element for host components', () => {
-    const view = render(
-      <View testID="grandparent">
-        <View testID="parent">
-          <View testID="subject" />
-          <View testID="sibling" />
-        </View>
-      </View>
-    );
-
-    const hostSubject = view.getByTestId('subject');
-    expect(getHostSelf(hostSubject)).toEqual(hostSubject);
-
-    const hostSibling = view.getByTestId('sibling');
-    expect(getHostSelf(hostSibling)).toEqual(hostSibling);
-
-    const hostParent = view.getByTestId('parent');
-    expect(getHostSelf(hostParent)).toEqual(hostParent);
-
-    const hostGrandparent = view.getByTestId('grandparent');
-    expect(getHostSelf(hostGrandparent)).toEqual(hostGrandparent);
-  });
-
-  it('returns single host child for React Native composite components', () => {
-    const view = render(
-      <View testID="parent">
-        <Text testID="text">Text</Text>
-        <TextInput
-          testID="textInput"
-          defaultValue="TextInputValue"
-          placeholder="TextInputPlaceholder"
-        />
-      </View>
-    );
-
-    const compositeText = view.UNSAFE_getByType(Text);
-    const hostText = view.getByTestId('text');
-    expect(getHostSelf(compositeText)).toEqual(hostText);
-
-    const compositeTextInput = view.UNSAFE_getByType(TextInput);
-    const hostTextInput = view.getByTestId('textInput');
-    expect(getHostSelf(compositeTextInput)).toEqual(hostTextInput);
-  });
-
-  it('throws on non-single host children elements for custom composite components', () => {
-    const view = render(
-      <View testID="parent">
-        <ZeroHostChildren />
-        <MultipleHostChildren />
-      </View>
-    );
-
-    const zeroCompositeComponent = view.UNSAFE_getByType(ZeroHostChildren);
-    expect(() => getHostSelf(zeroCompositeComponent)).toThrow(
-      'Expected exactly one host element, but found none.'
-    );
-
-    const multipleCompositeComponent =
-      view.UNSAFE_getByType(MultipleHostChildren);
-    expect(() => getHostSelf(multipleCompositeComponent)).toThrow(
-      'Expected exactly one host element, but found 3.'
-    );
   });
 });
 
@@ -292,39 +223,4 @@ describe('getHostSiblings()', () => {
       view.getByTestId('siblingAfter'),
     ]);
   });
-});
-
-test('getCompositeParentOfType', () => {
-  const root = render(
-    <View testID="view">
-      <Text testID="text" />
-    </View>
-  );
-  const hostView = root.getByTestId('view');
-  const hostText = root.getByTestId('text');
-
-  const compositeView = getCompositeParentOfType(hostView, View);
-  // We get the corresponding composite component (same testID), but not the host
-  expect(compositeView?.type).toBe(View);
-  expect(compositeView?.props.testID).toBe('view');
-  const compositeText = getCompositeParentOfType(hostText, Text);
-  expect(compositeText?.type).toBe(Text);
-  expect(compositeText?.props.testID).toBe('text');
-
-  // Checks parent type
-  expect(getCompositeParentOfType(hostText, View)).toBeNull();
-  expect(getCompositeParentOfType(hostView, Text)).toBeNull();
-
-  // Ignores itself, stops if ancestor is host
-  expect(getCompositeParentOfType(compositeText!, Text)).toBeNull();
-  expect(getCompositeParentOfType(compositeView!, View)).toBeNull();
-});
-
-test('isHostElementForType', () => {
-  const view = render(<View testID="test" />);
-  const hostComponent = view.getByTestId('test');
-  const compositeComponent = getCompositeParentOfType(hostComponent, View);
-  expect(isHostElementForType(hostComponent, View)).toBe(true);
-  expect(isHostElementForType(hostComponent, Text)).toBe(false);
-  expect(isHostElementForType(compositeComponent!, View)).toBe(false);
 });
