@@ -72,6 +72,22 @@ test('should fire only non-touch-related events on non-editable TextInput with n
   expect(onLayout).toHaveBeenCalledWith(layoutEvent);
 });
 
+/**
+ * Historically there were problems with custom TextInput wrappers, as they
+ * could creat a hierarchy of three or more text input views with very similar
+ * event props.
+ *
+ * Typical hierarchy would be:
+ * - User composite TextInput
+ * - UI library composite TextInput
+ * - RN composite TextInput
+ * - RN host TextInput
+ *
+ * Previous implementation of fireEvent only checked `editable` prop for
+ * RN TextInputs, both host & composite but did not check on the UI library or
+ * user composite TextInput level, hence invoking the event handlers that
+ * should be blocked by `editable={false}` prop.
+ */
 test('should fire only non-touch-related events on non-editable wrapped TextInput', () => {
   const onFocus = jest.fn();
   const onChangeText = jest.fn();
@@ -101,6 +117,9 @@ test('should fire only non-touch-related events on non-editable wrapped TextInpu
   expect(onLayout).toHaveBeenCalledWith(layoutEvent);
 });
 
+/**
+ * Ditto testing for even deeper hierarchy of TextInput wrappers.
+ */
 test('should fire only non-touch-related events on non-editable double wrapped TextInput', () => {
   const onFocus = jest.fn();
   const onChangeText = jest.fn();
