@@ -23,7 +23,9 @@ function isTouchResponder(element: ReactTestInstance) {
     return false;
   }
 
-  return !!element.props.onStartShouldSetResponder || isTextInput(element);
+  return (
+    Boolean(element.props.onStartShouldSetResponder) || isTextInput(element)
+  );
 }
 
 function isPointerEventEnabled(
