@@ -49,7 +49,7 @@ function isTouchEvent(eventName: string) {
 }
 
 // Experimentally checked which events are called on non-editable TextInput
-const textInputEventsNotAffectedByEditableProp = [
+const textInputEventsIgnoringEditableProp = [
   'contentSizeChange',
   'layout',
   'scroll',
@@ -63,7 +63,7 @@ function isEventEnabled(
   if (isHostTextInput(nearestTouchResponder)) {
     return (
       nearestTouchResponder?.props.editable !== false ||
-      textInputEventsNotAffectedByEditableProp.includes(eventName)
+      textInputEventsIgnoringEditableProp.includes(eventName)
     );
   }
 
