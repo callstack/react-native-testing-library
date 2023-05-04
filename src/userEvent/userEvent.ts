@@ -1,5 +1,6 @@
-import { press } from './touchEvents';
+import { press, longPress } from './touchEvents';
 
 export const userEvent = {
   press,
+  longPress,
 };

@@ -128,66 +128,6 @@ describe('userEvent.press using real timers', () => {
     expect(mockOnLongPress).not.toHaveBeenCalled();
   });
 
-  test('calls onLongPress for a duration greater than default onLongPressDelay', async () => {
-    const mockOnLongPress = jest.fn();
-
-    render(
-      <Pressable onLongPress={mockOnLongPress}>
-        <Text>press me</Text>
-      </Pressable>
-    );
-    await userEvent.press(screen.getByText('press me'), {
-      pressDuration: 500,
-    });
-
-    expect(mockOnLongPress).toHaveBeenCalled();
-  });
-
-  test('calls onLongPress when duration is greater than specified onLongPressDelay', async () => {
-    const mockOnLongPress = jest.fn();
-    const mockOnPress = jest.fn();
-
-    render(
-      <Pressable
-        delayLongPress={1000}
-        onLongPress={mockOnLongPress}
-        onPress={mockOnPress}
-      >
-        <Text>press me</Text>
-      </Pressable>
-    );
-    await userEvent.press(screen.getByText('press me'), {
-      pressDuration: 500,
-    });
-
-    expect(mockOnLongPress).not.toHaveBeenCalled();
-    expect(mockOnPress).toHaveBeenCalledTimes(1);
-
-    await userEvent.press(screen.getByText('press me'), {
-      pressDuration: 1000,
-    });
-
-    expect(mockOnLongPress).toHaveBeenCalled();
-    expect(mockOnPress).toHaveBeenCalledTimes(1);
-  });
-
-  test('does not calls onPress when onLongPress is called', async () => {
-    const mockOnLongPress = jest.fn();
-    const mockOnPress = jest.fn();
-
-    render(
-      <Pressable onLongPress={mockOnLongPress} onPress={mockOnPress}>
-        <Text>press me</Text>
-      </Pressable>
-    );
-    await userEvent.press(screen.getByText('press me'), {
-      pressDuration: 500,
-    });
-
-    expect(mockOnLongPress).toHaveBeenCalled();
-    expect(mockOnPress).not.toHaveBeenCalled();
-  });
-
   test('works on TouchableOpacity', async () => {
     const mockOnPress = jest.fn();
 
