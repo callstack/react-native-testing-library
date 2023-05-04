@@ -74,8 +74,8 @@ test('should fire only non-touch-related events on non-editable TextInput with n
 
 /**
  * Historically there were problems with custom TextInput wrappers, as they
- * could creat a hierarchy of three or more text input views with very similar
- * event props.
+ * could creat a hierarchy of three or more composite text input views with
+ * very similar event props.
  *
  * Typical hierarchy would be:
  * - User composite TextInput
