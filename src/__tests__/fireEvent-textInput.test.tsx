@@ -62,13 +62,17 @@ test('should fire only non-touch-related events on non-editable TextInput with n
 
   const subject = view.getByText('Nested Text');
   fireEvent(subject, 'focus');
+  fireEvent(subject, 'onFocus');
   fireEvent.changeText(subject, 'Text');
   fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
+  fireEvent(subject, 'onSubmitEditing', { nativeEvent: { text: 'Text' } });
   fireEvent(subject, 'layout', layoutEvent);
+  fireEvent(subject, 'onLayout', layoutEvent);
 
   expect(onFocus).not.toHaveBeenCalled();
   expect(onChangeText).not.toHaveBeenCalled();
   expect(onSubmitEditing).not.toHaveBeenCalled();
+  expect(onLayout).toHaveBeenCalledTimes(2);
   expect(onLayout).toHaveBeenCalledWith(layoutEvent);
 });
 

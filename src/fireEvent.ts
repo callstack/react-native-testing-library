@@ -58,7 +58,6 @@ const textInputEventsIgnoringEditableProp = new Set([
   'contentSizeChange',
   'onContentSizeChange',
   'layout',
-  'layout',
   'onLayout',
   'scroll',
   'onScroll',
