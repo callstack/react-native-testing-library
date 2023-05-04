@@ -40,20 +40,29 @@ function isPointerEventEnabled(
   return isPointerEventEnabled(parent, true);
 }
 
-// Due to accepting both `press` and `onPress` for event names, we need to
-// cover both forms.
-const touchEventNames = ['press', 'onPress'];
+/**
+ * List of events affected by `pointerEvents` prop.
+ *
+ * Note: `fireEvent` is accepting both `press` and `onPress` for event names,
+ * so we need cover both forms.
+ */
+const eventsAffectedByPointerEventsProp = new Set(['press', 'onPress']);
 
-function isTouchEvent(eventName: string) {
-  return touchEventNames.includes(eventName);
-}
-
-// Experimentally checked which events are called on non-editable TextInput
-const textInputEventsIgnoringEditableProp = [
+/**
+ * List of `TextInput` events not affected by `editable` prop.
+ *
+ * Note: `fireEvent` is accepting both `press` and `onPress` for event names,
+ * so we need cover both forms.
+ */
+const textInputEventsIgnoringEditableProp = new Set([
   'contentSizeChange',
+  'onContentSizeChange',
   'layout',
+  'layout',
+  'onLayout',
   'scroll',
-];
+  'onScroll',
+]);
 
 function isEventEnabled(
   element: ReactTestInstance,
@@ -63,11 +72,14 @@ function isEventEnabled(
   if (isHostTextInput(nearestTouchResponder)) {
     return (
       nearestTouchResponder?.props.editable !== false ||
-      textInputEventsIgnoringEditableProp.includes(eventName)
+      textInputEventsIgnoringEditableProp.has(eventName)
     );
   }
 
-  if (isTouchEvent(eventName) && !isPointerEventEnabled(element)) {
+  if (
+    eventsAffectedByPointerEventsProp.has(eventName) &&
+    !isPointerEventEnabled(element)
+  ) {
     return false;
   }
 
