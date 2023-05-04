@@ -1,22 +1,13 @@
 import { ReactTestInstance } from 'react-test-renderer';
-import { TextInput } from 'react-native';
 import act from './act';
 import { getHostParent, isHostElement } from './helpers/component-tree';
-import { filterNodeByType } from './helpers/filterNodeByType';
 import { getHostComponentNames } from './helpers/host-component-names';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
-function isTextInput(element: ReactTestInstance) {
-  // We have to test if the element type is either the `TextInput` component
-  // (for composite component) or the string "TextInput" (for host component)
-  // All queries return host components but since fireEvent bubbles up
-  // it would trigger the parent prop without the composite component check.
-  return (
-    filterNodeByType(element, TextInput) ||
-    filterNodeByType(element, getHostComponentNames().textInput)
-  );
-}
+const isHostTextInput = (element?: ReactTestInstance) => {
+  return element?.type === getHostComponentNames().textInput;
+};
 
 function isTouchResponder(element: ReactTestInstance) {
   if (!isHostElement(element)) {
@@ -24,7 +15,7 @@ function isTouchResponder(element: ReactTestInstance) {
   }
 
   return (
-    Boolean(element.props.onStartShouldSetResponder) || isTextInput(element)
+    Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element)
   );
 }
 
@@ -57,13 +48,23 @@ function isTouchEvent(eventName: string) {
   return touchEventNames.includes(eventName);
 }
 
+// Experimentally checked which events are called on non-editable TextInput
+const textInputEventsIgnoringEditableProp = [
+  'contentSizeChange',
+  'layout',
+  'scroll',
+];
+
 function isEventEnabled(
   element: ReactTestInstance,
   eventName: string,
   nearestTouchResponder?: ReactTestInstance
 ) {
-  if (isTextInput(element)) {
-    return element.props.editable !== false;
+  if (isHostTextInput(nearestTouchResponder)) {
+    return (
+      nearestTouchResponder?.props.editable !== false ||
+      textInputEventsIgnoringEditableProp.includes(eventName)
+    );
   }
 
   if (isTouchEvent(eventName) && !isPointerEventEnabled(element)) {
