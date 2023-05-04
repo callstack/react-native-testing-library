@@ -6,6 +6,7 @@ import { isHostElementPointerEventEnabled } from '../helpers/isHostElementPointe
 import { getHostComponentNames } from '../helpers/host-component-names';
 import { jestFakeTimersAreEnabled } from '../helpers/timers';
 import { DEFAULT_MIN_PRESS_DURATION } from './constants';
+import { warnAboutRealTimers } from './utils/warnAboutRealTimers';
 
 const defaultPressEvent = {
   persist: jest.fn(),
@@ -72,6 +73,9 @@ const triggerPressEvent = async (
   options: PressOptions = { pressDuration: 0 }
 ) => {
   const areFakeTimersEnabled = jestFakeTimersAreEnabled();
+  if (!areFakeTimersEnabled) {
+    warnAboutRealTimers();
+  }
 
   await act(async () => {
     element.props.onResponderGrant({

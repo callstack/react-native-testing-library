@@ -8,6 +8,11 @@ import {
   View,
 } from 'react-native';
 import { render, screen, userEvent } from '../../pure';
+import * as WarnAboutRealTimers from '../../userEvent/utils/warnAboutRealTimers';
+
+const mockWarnAboutRealTimers = jest
+  .spyOn(WarnAboutRealTimers, 'warnAboutRealTimers')
+  .mockImplementation();
 
 describe('userEvent.press using real timers', () => {
   beforeEach(() => {
@@ -230,5 +235,13 @@ describe('userEvent.press using real timers', () => {
 
     expect(mockOnPressIn).not.toHaveBeenCalled();
     expect(mockOnPressOut).not.toHaveBeenCalled();
+  });
+
+  test('warns about using real timers with userEvent', async () => {
+    render(<Pressable testID="pressable" />);
+
+    await userEvent.press(screen.getByTestId('pressable'));
+
+    expect(mockWarnAboutRealTimers).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,6 +1,11 @@
 import React from 'react';
 import { Pressable, Text } from 'react-native';
 import { render, screen, userEvent } from '../../pure';
+import * as WarnAboutRealTimers from '../../userEvent/utils/warnAboutRealTimers';
+
+const mockWarnAboutRealTimers = jest
+  .spyOn(WarnAboutRealTimers, 'warnAboutRealTimers')
+  .mockImplementation();
 
 describe('userEvent.longPress with fake timers', () => {
   beforeEach(() => {
@@ -59,5 +64,13 @@ describe('userEvent.longPress with fake timers', () => {
 
     expect(mockOnLongPress).toHaveBeenCalled();
     expect(mockOnPress).not.toHaveBeenCalled();
+  });
+
+  test('warns about using real timers with userEvent', async () => {
+    render(<Pressable testID="pressable" />);
+
+    await userEvent.longPress(screen.getByTestId('pressable'));
+
+    expect(mockWarnAboutRealTimers).toHaveBeenCalledTimes(1);
   });
 });
