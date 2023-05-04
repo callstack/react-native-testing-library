@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import { render, screen, userEvent } from '../../pure';
 
-describe('userEvent.press with fake timers', () => {
+describe('userEvent.press using real timers', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    jest.useRealTimers();
   });
 
   test('calls onPressIn, onPress and onPressOut prop of touchable', async () => {

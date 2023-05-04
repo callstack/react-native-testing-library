@@ -4,6 +4,8 @@ import { getHostParent } from '../helpers/component-tree';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { isHostElementPointerEventEnabled } from '../helpers/isHostElementPointerEventEnabled';
 import { getHostComponentNames } from '../helpers/host-component-names';
+import { jestFakeTimersAreEnabled } from '../helpers/timers';
+import { DEFAULT_MIN_PRESS_DURATION } from './constants';
 
 const defaultPressEvent = {
   persist: jest.fn(),
@@ -45,7 +47,7 @@ export const press = async (
   }
 
   if (isEnabledTouchResponder(element)) {
-    triggerPressEvent(element, options);
+    await triggerPressEvent(element, options);
     return;
   }
 
@@ -54,24 +56,37 @@ export const press = async (
     return;
   }
 
-  press(hostParentElement, options);
+  await press(hostParentElement, options);
 };
 
-const triggerPressEvent = (
+const triggerPressEvent = async (
   element: ReactTestInstance,
   options: PressOptions = { pressDuration: 0 }
 ) => {
-  act(() => {
+  const areFakeTimersEnabled = jestFakeTimersAreEnabled();
+
+  await act(async () => {
     element.props.onResponderGrant({
       ...defaultPressEvent,
       dispatchConfig: { registrationName: 'onResponderGrant' },
     });
-    jest.advanceTimersByTime(options.pressDuration);
+
+    if (areFakeTimersEnabled) {
+      jest.advanceTimersByTime(options.pressDuration);
+    } else {
+      await wait(options.pressDuration);
+    }
+
     element.props.onResponderRelease({
       ...defaultPressEvent,
       dispatchConfig: { registrationName: 'onResponderRelease' },
     });
-    jest.runOnlyPendingTimers();
+
+    if (areFakeTimersEnabled) {
+      jest.runOnlyPendingTimers();
+    } else {
+      await wait(DEFAULT_MIN_PRESS_DURATION);
+    }
   });
 };
 
@@ -81,4 +96,8 @@ const isEnabledTouchResponder = (element: ReactTestInstance) => {
     element.props.onStartShouldSetResponder &&
     element.props.onStartShouldSetResponder()
   );
+};
+
+const wait = async (durationInMs: number) => {
+  await new Promise((resolve) => setTimeout(resolve, durationInMs));
 };
