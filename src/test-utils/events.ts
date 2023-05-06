@@ -3,9 +3,9 @@ interface EventEntry {
   payload: any;
 }
 
-export function createEventToolkit() {
+export function createEventLogger() {
   const events: EventEntry[] = [];
-  const handleEvent = (name: string) => {
+  const logEvent = (name: string) => {
     return (event: unknown) => {
       const eventEntry: EventEntry = {
         name,
@@ -16,5 +16,5 @@ export function createEventToolkit() {
     };
   };
 
-  return { events, handleEvent };
+  return { events, logEvent };
 }

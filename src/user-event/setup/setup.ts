@@ -76,6 +76,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
     config,
   } as UserEventInstance;
 
+  // We need to bind these functions, as they access the config through 'this.config'.
   const api = {
     press: press.bind(instance),
     type: type.bind(instance),

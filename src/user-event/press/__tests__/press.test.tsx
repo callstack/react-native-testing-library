@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text } from 'react-native';
-import { createEventToolkit } from '../../../test-utils/events';
+import { createEventLogger } from '../../../test-utils';
 import { render } from '../../..';
 import { userEvent } from '../..';
 
@@ -13,17 +13,17 @@ describe('user.press()', () => {
     // Required for touch events which contain timestamp
     jest.spyOn(Date, 'now').mockReturnValue(100100100100);
 
-    const { events, handleEvent } = createEventToolkit();
+    const { events, logEvent } = createEventLogger();
+    const user = userEvent.setup();
     const screen = render(
       <Text
         testID="view"
-        onPress={handleEvent('press')}
-        onPressIn={handleEvent('pressIn')}
-        onPressOut={handleEvent('pressOut')}
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
       />
     );
 
-    const user = userEvent.setup();
     await user.press(screen.getByTestId('view'));
 
     const eventNames = events.map((event) => event.name);
