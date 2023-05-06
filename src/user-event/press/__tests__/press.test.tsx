@@ -30,4 +30,26 @@ describe('user.press()', () => {
     expect(eventNames).toEqual(['pressIn', 'press', 'pressOut']);
     expect(events).toMatchSnapshot();
   });
+
+  it.each(['modern', 'legacy'])('works with fake %s timers', async (type) => {
+    jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
+    // Required for touch events which contain timestamp
+    jest.spyOn(Date, 'now').mockReturnValue(100100100100);
+
+    const { events, logEvent } = createEventLogger();
+    const user = userEvent.setup();
+    const screen = render(
+      <Text
+        testID="view"
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+      />
+    );
+
+    await user.press(screen.getByTestId('view'));
+
+    const eventNames = events.map((event) => event.name);
+    expect(eventNames).toEqual(['pressIn', 'press', 'pressOut']);
+  });
 });
