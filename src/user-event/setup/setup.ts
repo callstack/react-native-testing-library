@@ -1,4 +1,7 @@
+import { ReactTestInstance } from 'react-test-renderer';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
+import { press } from '../press';
+import { type } from '../type';
 
 export interface UserEventSetupOptions {
   /**
@@ -64,6 +67,8 @@ function createConfig(options?: UserEventSetupOptions): UserEventConfig {
 
 export interface UserEventInstance {
   config: UserEventConfig;
+  press: (element: ReactTestInstance) => Promise<void>;
+  type: (element: ReactTestInstance, text: string) => Promise<void>;
 }
 
 function createInstance(config: UserEventConfig): UserEventInstance {
@@ -72,7 +77,8 @@ function createInstance(config: UserEventConfig): UserEventInstance {
   } as UserEventInstance;
 
   const api = {
-    // TODO: bind methods to the instance, e.g. type: type.bind(instance),
+    press: press.bind(instance),
+    type: type.bind(instance),
   };
 
   Object.assign(instance, api);

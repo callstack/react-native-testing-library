@@ -11,7 +11,7 @@ type EventHandler = (event: unknown) => void;
  * @param eventName name of the event
  * @param event event payload
  */
-export function dispatchEvent(
+export function dispatchHostEvent(
   element: ReactTestInstance,
   eventName: string,
   event: unknown
