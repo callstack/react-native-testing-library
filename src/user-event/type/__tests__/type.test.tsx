@@ -5,17 +5,42 @@ import { render } from '../../..';
 import { userEvent } from '../..';
 
 describe('user.type()', () => {
-  it('should dispatches required events', async () => {
+  it('dispatches required events', async () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
     const screen = render(
-      <TextInput testID="input" onChangeText={logEvent('changeText')} />
+      <TextInput
+        testID="input"
+        onChangeText={logEvent('changeText')}
+        onFocus={logEvent('focus')}
+        onBlur={logEvent('blur')}
+      />
     );
 
     await user.type(screen.getByTestId('input'), 'Hello World!');
 
     const eventNames = events.map((event) => event.name);
-    expect(eventNames).toEqual(['changeText']);
+    expect(eventNames).toEqual(['focus', 'changeText', 'blur']);
     expect(events).toMatchSnapshot();
+  });
+
+  it.each(['modern', 'legacy'])('works with fake %s timers', async (type) => {
+    jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
+
+    const { events, logEvent } = createEventLogger();
+    const user = userEvent.setup();
+    const screen = render(
+      <TextInput
+        testID="input"
+        onChangeText={logEvent('changeText')}
+        onFocus={logEvent('focus')}
+        onBlur={logEvent('blur')}
+      />
+    );
+
+    await user.type(screen.getByTestId('input'), 'Hello World!');
+
+    const eventNames = events.map((event) => event.name);
+    expect(eventNames).toEqual(['focus', 'changeText', 'blur']);
   });
 });

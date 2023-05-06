@@ -9,7 +9,7 @@ beforeEach(() => {
 });
 
 describe('user.press()', () => {
-  it('should dispatches required events on Text', async () => {
+  it('dispatches required events on Text', async () => {
     // Required for touch events which contain timestamp
     jest.spyOn(Date, 'now').mockReturnValue(100100100100);
 
