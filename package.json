@@ -29,7 +29,8 @@
     "jest-preset/",
     "typings/index.flow.js",
     "pure.js",
-    "dont-cleanup-after-each.js"
+    "dont-cleanup-after-each.js",
+    "!**/test-utils"
   ],
   "devDependencies": {
     "@babel/cli": "^7.19.3",
