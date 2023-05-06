@@ -7,6 +7,7 @@ export async function type(
   element: ReactTestInstance,
   text: string
 ) {
+  // TODO provide real implementation
   await wait(this.config);
   dispatchHostEvent(element, 'changeText', text);
 }

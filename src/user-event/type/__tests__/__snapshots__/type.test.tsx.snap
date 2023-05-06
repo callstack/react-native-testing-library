@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`user.type() should dispatches required events 1`] = `
+[
+  {
+    "name": "changeText",
+    "payload": "Hello World!",
+  },
+]
+`;
