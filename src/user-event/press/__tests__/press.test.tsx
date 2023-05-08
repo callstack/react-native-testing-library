@@ -10,9 +10,6 @@ beforeEach(() => {
 
 describe('user.press()', () => {
   it('dispatches required events on Text', async () => {
-    // Required for touch events which contain timestamp
-    jest.spyOn(Date, 'now').mockReturnValue(100100100100);
-
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
     const screen = render(
@@ -33,8 +30,6 @@ describe('user.press()', () => {
 
   it.each(['modern', 'legacy'])('works with fake %s timers', async (type) => {
     jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
-    // Required for touch events which contain timestamp
-    jest.spyOn(Date, 'now').mockReturnValue(100100100100);
 
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();

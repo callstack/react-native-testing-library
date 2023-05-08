@@ -14,7 +14,7 @@ export const CommonEventBuilder = {
         pageX: 0,
         pageY: 0,
         target: 0,
-        timestamp: Date.now(),
+        timestamp: 0,
         touches: [],
       },
     };
