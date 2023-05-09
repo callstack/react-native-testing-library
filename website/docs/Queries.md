@@ -25,7 +25,7 @@ title: Queries
   - [`ByA11yState`, `ByAccessibilityState` (deprecated)](#bya11ystate-byaccessibilitystate-deprecated)
     - [Default state for: `disabled`, `selected`, and `busy` keys](#default-state-for-disabled-selected-and-busy-keys)
     - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
-  - [`ByA11yValue`, `ByAccessibilityValue`](#bya11yvalue-byaccessibilityvalue)
+  - [`ByA11yValue`, `ByAccessibilityValue` (deprecated)](#bya11yvalue-byaccessibilityvalue-deprecated)
 - [Common options](#common-options)
   - [`includeHiddenElements` option](#includehiddenelements-option)
 - [TextMatch](#textmatch)
