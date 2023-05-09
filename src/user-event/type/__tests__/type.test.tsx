@@ -24,6 +24,23 @@ describe('user.type()', () => {
     expect(events).toMatchSnapshot();
   });
 
+  it('supports direct access', async () => {
+    const { events, logEvent } = createEventLogger();
+    const screen = render(
+      <TextInput
+        testID="input"
+        onChangeText={logEvent('changeText')}
+        onFocus={logEvent('focus')}
+        onBlur={logEvent('blur')}
+      />
+    );
+
+    await userEvent.type(screen.getByTestId('input'), 'Hello World!');
+
+    const eventNames = events.map((event) => event.name);
+    expect(eventNames).toEqual(['focus', 'changeText', 'blur']);
+  });
+
   it.each(['modern', 'legacy'])('works with fake %s timers', async (type) => {
     jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
 
