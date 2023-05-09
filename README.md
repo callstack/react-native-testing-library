@@ -12,9 +12,11 @@
 ![Version][version-badge]
 ![codecov][codecov-badge]
 ![Build](https://github.com/callstack/react-native-testing-library/actions/workflows/main.yml/badge.svg)
+[![downloads](https://img.shields.io/npm/dm/@testing-library/react-native.svg?style=flat-square)](http://www.npmtrends.com/@testing-library/react-native)
 ![PRs Welcome][prs-welcome-badge]
 [![Chat][chat-badge]][chat]
 ![Sponsored by Callstack][callstack-badge]
+[![Star on GitHub](https://img.shields.io/github/stars/callstack/react-native-testing-library.svg?style=social)](https://github.com/callstack/react-native-testing-library/stargazers)
 
 ## The problem
 
