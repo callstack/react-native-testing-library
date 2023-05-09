@@ -25,7 +25,7 @@ title: Queries
   - [`ByA11yState`, `ByAccessibilityState` (deprecated)](#bya11ystate-byaccessibilitystate-deprecated)
     - [Default state for: `disabled`, `selected`, and `busy` keys](#default-state-for-disabled-selected-and-busy-keys)
     - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
-  - [`ByA11Value`, `ByAccessibilityValue` (deprecated)](#bya11value-byaccessibilityvalue-deprecated)
+  - [`ByA11yValue`, `ByAccessibilityValue` (deprecated)](#bya11yvalue-byaccessibilityvalue-deprecated)
 - [Common options](#common-options)
   - [`includeHiddenElements` option](#includehiddenelements-option)
 - [TextMatch](#textmatch)
@@ -372,7 +372,7 @@ but will not match elements with following props:
 The difference in handling default values is made to reflect observed accessibility behaviour on iOS and Android platforms.
 :::
 
-### `ByA11Value`, `ByAccessibilityValue` (deprecated)
+### `ByA11yValue`, `ByAccessibilityValue` (deprecated)
 
 :::caution
 This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
