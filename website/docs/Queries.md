@@ -22,7 +22,7 @@ title: Queries
   - [`ByHintText`, `ByA11yHint`, `ByAccessibilityHint`](#byhinttext-bya11yhint-byaccessibilityhint)
   - [`ByRole`](#byrole)
   - [`ByA11yState`, `ByAccessibilityState`](#bya11ystate-byaccessibilitystate)
-  - [`ByA11Value`, `ByAccessibilityValue`](#bya11value-byaccessibilityvalue)
+  - [`ByA11yValue`, `ByAccessibilityValue`](#bya11yvalue-byaccessibilityvalue)
 - [TextMatch](#textmatch)
   - [Examples](#examples)
   - [Precision](#precision)
@@ -207,7 +207,7 @@ render(<Component />);
 const element = screen.getByA11yState({ disabled: true });
 ```
 
-### `ByA11Value`, `ByAccessibilityValue`
+### `ByA11yValue`, `ByAccessibilityValue`
 
 > getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue, findByA11yValue, findAllByA11yValue
 > getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue, findByAccessibilityValue, findAllByAccessibilityValue
