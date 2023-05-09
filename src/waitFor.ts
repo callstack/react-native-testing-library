@@ -1,6 +1,7 @@
 /* globals jest */
 import act, { setReactActEnvironment, getIsReactActEnvironment } from './act';
 import { getConfig } from './config';
+import { flushMicroTasks } from './flushMicroTasks';
 import { ErrorWithStack, copyStackTrace } from './helpers/errors';
 import {
   setTimeout,
@@ -16,7 +17,7 @@ export type WaitForOptions = {
   timeout?: number;
   interval?: number;
   stackTraceError?: ErrorWithStack;
-  onTimeout?: (error: unknown) => Error;
+  onTimeout?: (error: Error) => Error;
 };
 
 function waitForInternal<T>(
@@ -38,7 +39,7 @@ function waitForInternal<T>(
     let finished = false;
     let promiseStatus = 'idle';
 
-    const overallTimeoutTimer = setTimeout(handleTimeout, timeout);
+    let overallTimeoutTimer: NodeJS.Timeout | null = null;
 
     const usingFakeTimers = jestFakeTimersAreEnabled();
 
@@ -64,6 +65,7 @@ function waitForInternal<T>(
 
         // when fake timers are used we want to simulate the interval time passing
         if (fakeTimeRemaining <= 0) {
+          handleTimeout();
           return;
         } else {
           fakeTimeRemaining -= interval;
@@ -90,6 +92,7 @@ function waitForInternal<T>(
         await new Promise((resolve) => setImmediate(resolve));
       }
     } else {
+      overallTimeoutTimer = setTimeout(handleTimeout, timeout);
       intervalId = setInterval(checkRealTimersCallback, interval);
       checkExpectation();
     }
@@ -98,7 +101,9 @@ function waitForInternal<T>(
       done: { type: 'result'; result: T } | { type: 'error'; error: unknown }
     ) {
       finished = true;
-      clearTimeout(overallTimeoutTimer);
+      if (overallTimeoutTimer) {
+        clearTimeout(overallTimeoutTimer);
+      }
 
       if (!usingFakeTimers) {
         clearInterval(intervalId);
@@ -159,9 +164,14 @@ function waitForInternal<T>(
     }
 
     function handleTimeout() {
-      let error;
+      let error: Error;
       if (lastError) {
-        error = lastError;
+        if (lastError instanceof Error) {
+          error = lastError;
+        } else {
+          error = new Error(String(lastError));
+        }
+
         if (stackTraceError) {
           copyStackTrace(error, stackTraceError);
         }
@@ -172,7 +182,10 @@ function waitForInternal<T>(
         }
       }
       if (typeof onTimeout === 'function') {
-        onTimeout(error);
+        const result = onTimeout(error);
+        if (result) {
+          error = result;
+        }
       }
       onDone({ type: 'error', error });
     }
@@ -192,7 +205,10 @@ export default async function waitFor<T>(
     setReactActEnvironment(false);
 
     try {
-      return await waitForInternal(expectation, optionsWithStackTrace);
+      const result = await waitForInternal(expectation, optionsWithStackTrace);
+      // Flush the microtask queue before restoring the `act` environment
+      await flushMicroTasks();
+      return result;
     } finally {
       setReactActEnvironment(previousActEnvironment);
     }

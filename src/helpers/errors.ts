@@ -9,13 +9,6 @@ export class ErrorWithStack extends Error {
   }
 }
 
-export const createLibraryNotSupportedError = (error: unknown): Error =>
-  new Error(
-    `Currently the only supported library to search by text is "react-native".\n\n${
-      error instanceof Error ? error.message : ''
-    }`
-  );
-
 export const prepareErrorMessage = (
   // TS states that error caught in a catch close are of type `unknown`
   // most real cases will be `Error`, but better safe than sorry
@@ -70,39 +63,4 @@ export function copyStackTrace(target: unknown, stackTraceSource: Error) {
       target.message
     );
   }
-}
-
-const warned: { [functionName: string]: boolean } = {};
-
-export function printDeprecationWarning(functionName: string) {
-  if (warned[functionName]) {
-    return;
-  }
-
-  // eslint-disable-next-line no-console
-  console.warn(`
-  Deprecation Warning:
-  Use of ${functionName} is not recommended and will be deleted in future versions of @testing-library/react-native.
-  `);
-
-  warned[functionName] = true;
-}
-
-export function throwRemovedFunctionError(
-  functionName: string,
-  docsRef: string
-) {
-  throw new Error(
-    `"${functionName}" has been removed.\n\nPlease consult: https://callstack.github.io/react-native-testing-library/docs/${docsRef}`
-  );
-}
-
-export function throwRenamedFunctionError(
-  functionName: string,
-  newFunctionName: string
-) {
-  throw new ErrorWithStack(
-    `The "${functionName}" function has been renamed to "${newFunctionName}". Please replace all occurrences.`,
-    throwRenamedFunctionError
-  );
 }

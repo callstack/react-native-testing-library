@@ -4,7 +4,7 @@ import { ReactTestInstance } from 'react-test-renderer';
  * Checks if the given element is a host element.
  * @param element The element to check.
  */
-export function isHostElement(element?: ReactTestInstance | null): boolean {
+export function isHostElement(element?: ReactTestInstance | null) {
   return typeof element?.type === 'string';
 }
 
@@ -60,32 +60,6 @@ export function getHostChildren(
 }
 
 /**
- * Return a single host element that represent the passed host or composite element.
- *
- * @param element The element start traversing from.
- * @throws Error if the passed element is a composite element and has no host children or has more than one host child.
- * @returns If the passed element is a host element, it will return itself, if the passed element is a composite
- * element, it will return a single host descendant.
- */
-export function getHostSelf(
-  element: ReactTestInstance | null
-): ReactTestInstance {
-  const hostSelves = getHostSelves(element);
-
-  if (hostSelves.length === 0) {
-    throw new Error(`Expected exactly one host element, but found none.`);
-  }
-
-  if (hostSelves.length > 1) {
-    throw new Error(
-      `Expected exactly one host element, but found ${hostSelves.length}.`
-    );
-  }
-
-  return hostSelves[0];
-}
-
-/**
  * Return the array of host elements that represent the passed element.
  *
  * @param element The element start traversing from.
@@ -112,38 +86,4 @@ export function getHostSiblings(
   return getHostChildren(hostParent).filter(
     (sibling) => !hostSelves.includes(sibling)
   );
-}
-
-export function getCompositeParentOfType(
-  element: ReactTestInstance,
-  type: React.ComponentType
-) {
-  let current = element.parent;
-
-  while (!isHostElement(current)) {
-    // We're at the root of the tree
-    if (!current) {
-      return null;
-    }
-
-    if (current.type === type) {
-      return current;
-    }
-    current = current.parent;
-  }
-
-  return null;
-}
-
-/**
- * Note: this function should be generally used for core React Native types like `View`, `Text`, `TextInput`, etc.
- */
-export function isHostElementForType(
-  element: ReactTestInstance,
-  type: React.ComponentType
-) {
-  // Not a host element
-  if (!isHostElement(element)) return false;
-
-  return getCompositeParentOfType(element, type) !== null;
 }

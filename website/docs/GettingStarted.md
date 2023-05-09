@@ -91,8 +91,8 @@ test('form submits two answers', () => {
   fireEvent.press(screen.getByText('Submit'));
 
   expect(mockFn).toBeCalledWith({
-    '1': { q: 'q1', a: 'a1' },
-    '2': { q: 'q2', a: 'a2' },
+    1: { q: 'q1', a: 'a1' },
+    2: { q: 'q2', a: 'a2' },
   });
 });
 ```

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import { render } from '../..';
 
 const BUTTON_HINT = 'click this button';
@@ -83,4 +83,95 @@ test('getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint', async () => {
   await expect(findAllByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
+});
+
+test('getByHintText, getByHintText', () => {
+  const { getByHintText, getAllByHintText } = render(
+    <View>
+      <View accessibilityHint="test" />
+      <View accessibilityHint="tests id" />
+    </View>
+  );
+  expect(getByHintText('id', { exact: false })).toBeTruthy();
+  expect(getAllByHintText('test', { exact: false })).toHaveLength(2);
+});
+
+test('getByHintText, getByHintText and exact = true', () => {
+  const { queryByHintText, getAllByHintText } = render(
+    <View>
+      <View accessibilityHint="test" />
+      <View accessibilityHint="tests id" />
+    </View>
+  );
+  expect(queryByHintText('id', { exact: true })).toBeNull();
+  expect(getAllByHintText('test', { exact: true })).toHaveLength(1);
+});
+
+test('byHintText queries support hidden option', () => {
+  const { getByHintText, queryByHintText } = render(
+    <Text accessibilityHint="hidden" style={{ display: 'none' }}>
+      Hidden from accessiblity
+    </Text>
+  );
+
+  expect(getByHintText('hidden', { includeHiddenElements: true })).toBeTruthy();
+
+  expect(queryByHintText('hidden')).toBeFalsy();
+  expect(
+    queryByHintText('hidden', { includeHiddenElements: false })
+  ).toBeFalsy();
+  expect(() => getByHintText('hidden', { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: hidden
+
+    <Text
+      accessibilityHint="hidden"
+      style={
+        {
+          "display": "none",
+        }
+      }
+    >
+      Hidden from accessiblity
+    </Text>"
+  `);
+});
+
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const view = render(<TouchableOpacity accessibilityHint="HINT" key="3" />);
+
+  expect(() => view.getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: FOO
+
+    <View
+      accessibilityHint="HINT"
+    />"
+  `);
+
+  expect(() => view.getAllByHintText('FOO'))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: FOO
+
+    <View
+      accessibilityHint="HINT"
+    />"
+  `);
+
+  await expect(view.findByHintText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: FOO
+
+    <View
+      accessibilityHint="HINT"
+    />"
+  `);
+
+  await expect(view.findAllByHintText('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with accessibilityHint: FOO
+
+    <View
+      accessibilityHint="HINT"
+    />"
+  `);
 });

@@ -140,6 +140,9 @@ module.exports = {
   setupFiles: ['./node_modules/react-native-gesture-handler/jestSetup.js'],
   transformIgnorePatterns: [
     'node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation)',
+
+    // For pnpm you need to use inlcude `(?!(?:.pnpm/)?` part like this:
+    // 'node_modules/(?!(?:.pnpm/)?((jest-)?@?react-native|@react-native-community|@react-navigation))',
   ],
 };
 ```
@@ -182,7 +185,7 @@ describe('Testing react navigation', () => {
     const header = await screen.findByText('List of numbers from 1 to 20');
     const items = await screen.findAllByText(/Item number/);
 
-    expect(header).toBeTruthy();
+    expect(header).toBeOnTheScreen();
     expect(items.length).toBe(10);
   });
 
@@ -200,8 +203,8 @@ describe('Testing react navigation', () => {
     const newHeader = await screen.findByText('Showing details for 5');
     const newBody = await screen.findByText('the number you have chosen is 5');
 
-    expect(newHeader).toBeTruthy();
-    expect(newBody).toBeTruthy();
+    expect(newHeader).toBeOnTheScreen();
+    expect(newBody).toBeOnTheScreen();
   });
 });
 ```
@@ -329,7 +332,7 @@ describe('Testing react navigation', () => {
     render(component);
     const button = await screen.findByText('Go to notifications');
 
-    expect(button).toBeTruthy();
+    expect(button).toBeOnTheScreen();
   });
 
   test('clicking on the button takes you to the notifications screen', async () => {
@@ -343,12 +346,12 @@ describe('Testing react navigation', () => {
     const oldScreen = screen.queryByText('Welcome!');
     const button = await screen.findByText('Go to notifications');
 
-    expect(oldScreen).toBeTruthy();
+    expect(oldScreen).toBeOnTheScreen();
 
     fireEvent(button, 'press');
     const newScreen = await screen.findByText('This is the notifications screen');
 
-    expect(newScreen).toBeTruthy();
+    expect(newScreen).toBeOnTheScreen();
   });
 });
 ```

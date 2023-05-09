@@ -1,15 +1,49 @@
-import { StyleSheet } from 'react-native';
+import {
+  AccessibilityState,
+  AccessibilityValue,
+  StyleSheet,
+} from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
+import { getConfig } from '../config';
 import { getHostSiblings } from './component-tree';
 
-export function isInaccessible(element: ReactTestInstance | null): boolean {
+type IsInaccessibleOptions = {
+  cache?: WeakMap<ReactTestInstance, boolean>;
+};
+
+export const accessibilityStateKeys: (keyof AccessibilityState)[] = [
+  'disabled',
+  'selected',
+  'checked',
+  'busy',
+  'expanded',
+];
+
+export const accessiblityValueKeys: (keyof AccessibilityValue)[] = [
+  'min',
+  'max',
+  'now',
+  'text',
+];
+
+export function isHiddenFromAccessibility(
+  element: ReactTestInstance | null,
+  { cache }: IsInaccessibleOptions = {}
+): boolean {
   if (element == null) {
     return true;
   }
 
   let current: ReactTestInstance | null = element;
   while (current) {
-    if (isSubtreeInaccessible(current)) {
+    let isCurrentSubtreeInaccessible = cache?.get(current);
+
+    if (isCurrentSubtreeInaccessible === undefined) {
+      isCurrentSubtreeInaccessible = isSubtreeInaccessible(current);
+      cache?.set(current, isCurrentSubtreeInaccessible);
+    }
+
+    if (isCurrentSubtreeInaccessible) {
       return true;
     }
 
@@ -19,9 +53,13 @@ export function isInaccessible(element: ReactTestInstance | null): boolean {
   return false;
 }
 
-function isSubtreeInaccessible(element: ReactTestInstance | null): boolean {
-  if (element == null) {
-    return true;
+/** RTL-compatitibility alias for `isHiddenFromAccessibility` */
+export const isInaccessible = isHiddenFromAccessibility;
+
+function isSubtreeInaccessible(element: ReactTestInstance): boolean {
+  // Null props can happen for React.Fragments
+  if (element.props == null) {
+    return false;
   }
 
   // iOS: accessibilityElementsHidden
@@ -36,7 +74,7 @@ function isSubtreeInaccessible(element: ReactTestInstance | null): boolean {
     return true;
   }
 
-  // Note that `opacity: 0` is not threated as inassessible on iOS
+  // Note that `opacity: 0` is not treated as inaccessible on iOS
   const flatStyle = StyleSheet.flatten(element.props.style) ?? {};
   if (flatStyle.display === 'none') return true;
 
@@ -48,4 +86,24 @@ function isSubtreeInaccessible(element: ReactTestInstance | null): boolean {
   }
 
   return false;
+}
+
+export function isAccessibilityElement(
+  element: ReactTestInstance | null
+): boolean {
+  if (element == null) {
+    return false;
+  }
+
+  if (element.props.accessible !== undefined) {
+    return element.props.accessible;
+  }
+
+  const hostComponentNames = getConfig().hostComponentNames;
+
+  return (
+    element?.type === hostComponentNames?.text ||
+    element?.type === hostComponentNames?.textInput ||
+    element?.type === hostComponentNames?.switch
+  );
 }

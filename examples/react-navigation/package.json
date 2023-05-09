@@ -1,0 +1,31 @@
+{
+  "name": "react-navigation-example",
+  "description": "Testing React Navigation with RNTL",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.4.1",
+    "@react-navigation/drawer": "^6.5.1",
+    "@react-navigation/native": "^6.0.14",
+    "@react-navigation/native-stack": "^6.9.2",
+    "@react-navigation/stack": "^6.3.5",
+    "react": "^18.1.0",
+    "react-native": "^0.70.6",
+    "react-native-gesture-handler": "^2.8.0",
+    "react-native-reanimated": "^2.13.0",
+    "react-native-safe-area-context": "^4.4.1",
+    "react-native-screens": "^3.18.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@testing-library/jest-native": "^5.4.0",
+    "@testing-library/react-native": "^11.5.0",
+    "babel-jest": "^29.3.1",
+    "jest": "^29.3.0",
+    "metro-react-native-babel-preset": "^0.72.3",
+    "react-test-renderer": "^18.1.0"
+  }
+}

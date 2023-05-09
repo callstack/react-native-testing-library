@@ -8,6 +8,7 @@ This guide describes common issues found by users when integrating React Native 
 ## Matching React Native, React & React Test Renderer versions
 
 Check that you have matching versions of core dependencies:
+
 - React Native
 - React
 - React Test Renderer
@@ -19,6 +20,7 @@ React Test Renderer usually has same major & minor version as React, as they are
 Related issues: [#1061](https://github.com/callstack/react-native-testing-library/issues/1061), [#938](https://github.com/callstack/react-native-testing-library/issues/938), [#920](https://github.com/callstack/react-native-testing-library/issues/920)
 
 Errors that might indicate that you are facing this issue:
+
 - `TypeError: Cannot read property 'current' of undefined` when calling `render()`
 - `TypeError: Cannot read property 'isBatchingLegacy' of undefined` when calling `render()`
 
@@ -32,8 +34,8 @@ In case something does not work in your setup you can refer to this repository f
 
 When writing tests you may encounter warnings connected with `act()` function. There are two kinds of these warnings:
 
-* sync `act()` warning - `Warning: An update to Component inside a test was not wrapped in act(...)`
-* async `act()` warning - `Warning: You called act(async () => ...) without await`
+- sync `act()` warning - `Warning: An update to Component inside a test was not wrapped in act(...)`
+- async `act()` warning - `Warning: You called act(async () => ...) without await`
 
 You can read more about `act()` function in our [understanding `act` function guide](https://callstack.github.io/react-native-testing-library/docs/understanding-act).
 

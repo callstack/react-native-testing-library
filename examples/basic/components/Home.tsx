@@ -8,7 +8,9 @@ type Props = {
 export function Home({ user }: Props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome {user}!</Text>
+      <Text accessibilityRole="header" style={styles.title}>
+        Welcome {user}!
+      </Text>
     </View>
   );
 }

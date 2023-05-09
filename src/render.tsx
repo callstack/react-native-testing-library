@@ -1,23 +1,22 @@
-import TestRenderer from 'react-test-renderer';
 import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import * as React from 'react';
 import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
+import { getConfig } from './config';
+import { getHostChildren } from './helpers/component-tree';
+import debugDeep, { DebugOptions } from './helpers/debugDeep';
 import debugShallow from './helpers/debugShallow';
-import debugDeep from './helpers/debugDeep';
-import { getQueriesForElement } from './within';
-import { setRenderResult, screen } from './screen';
+import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
 import { validateStringsRenderedWithinText } from './helpers/stringValidation';
+import { renderWithAct } from './render-act';
+import { setRenderResult, screen } from './screen';
+import { getQueriesForElement } from './within';
 
 export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => any;
   unstable_validateStringsRenderedWithinText?: boolean;
-};
-
-type TestRendererOptions = {
-  createNodeMock: (element: React.ReactElement) => any;
 };
 
 export type RenderResult = ReturnType<typeof render>;
@@ -34,6 +33,8 @@ export default function render<T>(
     unstable_validateStringsRenderedWithinText,
   }: RenderOptions = {}
 ) {
+  configureHostComponentNamesIfNeeded();
+
   if (unstable_validateStringsRenderedWithinText) {
     return renderWithStringValidation(component, {
       wrapper: Wrapper,
@@ -99,28 +100,29 @@ function buildRenderResult(
     ...getQueriesForElement(instance),
     update,
     unmount,
-    container: instance,
     rerender: update, // alias for `update`
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
+    get root() {
+      return getHostChildren(instance)[0];
+    },
+    UNSAFE_root: instance,
   };
+
+  // Add as non-enumerable property, so that it's safe to enumerate
+  // `render` result, e.g. using destructuring rest syntax.
+  Object.defineProperty(result, 'container', {
+    enumerable: false,
+    get() {
+      throw new Error(
+        "'container' property has been renamed to 'UNSAFE_root'.\n\n" +
+          "Consider using 'root' property which returns root host element."
+      );
+    },
+  });
 
   setRenderResult(result);
   return result;
-}
-
-function renderWithAct(
-  component: React.ReactElement,
-  options?: TestRendererOptions
-): ReactTestRenderer {
-  let renderer: ReactTestRenderer;
-
-  act(() => {
-    renderer = TestRenderer.create(component, options);
-  });
-
-  // @ts-ignore act is sync, so renderer is always initialised here
-  return renderer;
 }
 
 function updateWithAct(
@@ -135,7 +137,7 @@ function updateWithAct(
 }
 
 interface DebugFunction {
-  (message?: string): void;
+  (options?: DebugOptions | string): void;
   shallow: (message?: string) => void;
 }
 
@@ -143,10 +145,23 @@ function debug(
   instance: ReactTestInstance,
   renderer: ReactTestRenderer
 ): DebugFunction {
-  function debugImpl(message?: string) {
+  function debugImpl(options?: DebugOptions | string) {
+    const { defaultDebugOptions } = getConfig();
+    const debugOptions =
+      typeof options === 'string'
+        ? { ...defaultDebugOptions, message: options }
+        : { ...defaultDebugOptions, ...options };
+
+    if (typeof options === 'string') {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'Using debug("message") is deprecated and will be removed in future release, please use debug({ message; "message" }) instead.'
+      );
+    }
+
     const json = renderer.toJSON();
     if (json) {
-      return debugDeep(json, message);
+      return debugDeep(json, debugOptions);
     }
   }
   debugImpl.shallow = (message?: string) => debugShallow(instance, message);

@@ -1,6 +1,6 @@
 {
   "name": "@testing-library/react-native",
-  "version": "11.2.0",
+  "version": "12.1.2",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -10,6 +10,12 @@
   },
   "homepage": "https://callstack.github.io/react-native-testing-library",
   "author": "Michał Pierzchała <thymikee@gmail.com>",
+  "contributors": [
+    "Maciej Jastrzębski <mdjastrzebski@gmail.com> (https://github.com/mdjastrzebski)",
+    "Augustin Le Fèvre <augustin.le-fevre@klarna.com> (https://github.com/AugustinLF)",
+    "Pierre Zimmermann <pierrez@nam.tech> (https://github.com/pierrezimmermannbam)",
+    "MattAgn <matthieua@bam.tech> (https://github.com/MattAgn)"
+  ],
   "license": "MIT",
   "private": false,
   "keywords": [
@@ -26,42 +32,41 @@
     "dont-cleanup-after-each.js"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.18.10",
-    "@babel/core": "^7.19.1",
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.2",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-transform-flow-strip-types": "^7.19.0",
-    "@babel/preset-env": "^7.19.1",
+    "@babel/preset-env": "^7.20.2",
     "@babel/preset-flow": "^7.18.6",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@callstack/eslint-config": "^13.0.1",
-    "@testing-library/jest-native": "^5.0.0",
-    "@types/jest": "^29.0.2",
-    "@types/react": "~18.0.18",
-    "@types/react-native": "~0.70.0",
+    "@testing-library/jest-native": "^5.4.0",
+    "@types/jest": "^29.2.3",
+    "@types/react": "~18.0.26",
     "@types/react-test-renderer": "~18.0.0",
-    "babel-jest": "^29.0.3",
+    "babel-jest": "^29.4.0",
     "conventional-changelog-cli": "^2.2.2",
     "dedent": "^0.7.0",
     "del-cli": "^5.0.0",
     "eslint": "^8.21.0",
     "flow-bin": "~0.170.0",
     "flow-copy-source": "^2.0.9",
-    "jest": "^29.0.3",
-    "react": "18.1.0",
-    "react-native": "0.70.2",
-    "react-test-renderer": "18.1.0",
+    "jest": "^29.4.0",
+    "react": "18.2.0",
+    "react-native": "0.71.4",
+    "react-test-renderer": "18.2.0",
     "strip-ansi": "^6.0.0",
-    "typescript": "^4.0.2"
+    "typescript": "^5.0.2"
   },
   "dependencies": {
-    "pretty-format": "^29.0.3"
+    "pretty-format": "^29.0.0"
   },
   "peerDependencies": {
     "jest": ">=28.0.0",
-    "react": ">=16.0.0",
+    "react": ">=16.8.0",
     "react-native": ">=0.59",
-    "react-test-renderer": ">=16.0.0"
+    "react-test-renderer": ">=16.8.0"
   },
   "peerDependenciesMeta": {
     "jest": {
@@ -71,7 +76,7 @@
   "scripts": {
     "clean": "del build",
     "test": "jest",
-    "test:ci": "jest --maxWorkers=2",
+    "test:ci": "jest --maxWorkers=2 --collectCoverage=true --coverage-provider=v8",
     "test:ci:react:17": "scripts/test_react_17",
     "typecheck": "tsc",
     "flow": "flow",
@@ -87,8 +92,8 @@
   },
   "jest": {
     "preset": "./jest-preset",
-    "setupFiles": [
-      "./jestSetup.js"
+    "setupFilesAfterEnv": [
+      "./jest-setup.ts"
     ],
     "testPathIgnorePatterns": [
       "timerUtils",
@@ -97,6 +102,7 @@
     "testTimeout": 60000,
     "transformIgnorePatterns": [
       "/node_modules/(?!(@react-native|react-native)/).*/"
-    ]
+    ],
+    "clearMocks": true
   }
 }

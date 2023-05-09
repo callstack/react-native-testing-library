@@ -1,9 +1,7 @@
+/* eslint-disable no-console */
 import * as React from 'react';
-import { View, Text, TextInput, Pressable, SafeAreaView } from 'react-native';
-import stripAnsi from 'strip-ansi';
-import { render, fireEvent, RenderAPI } from '..';
-
-type ConsoleLogMock = jest.Mock<Array<string>>;
+import { View, Text, TextInput, Pressable } from 'react-native';
+import { render, screen, fireEvent, RenderAPI } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -150,50 +148,9 @@ test('unmount should handle cleanup functions', () => {
   expect(cleanup).toHaveBeenCalledTimes(1);
 });
 
-test('toJSON', () => {
+test('toJSON renders host output', () => {
   const { toJSON } = render(<MyButton>press me</MyButton>);
-
   expect(toJSON()).toMatchSnapshot();
-});
-
-test('debug', () => {
-  jest.spyOn(console, 'log').mockImplementation((x) => x);
-
-  const { debug } = render(<Banana />);
-
-  debug();
-  debug('my custom message');
-  debug.shallow();
-  debug.shallow('my other custom message');
-
-  // eslint-disable-next-line no-console
-  const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
-
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
-  expect(stripAnsi(mockCalls[1][0] + mockCalls[1][1])).toMatchSnapshot(
-    'with message'
-  );
-  expect(stripAnsi(mockCalls[2][0])).toMatchSnapshot('shallow');
-  expect(stripAnsi(mockCalls[3][0] + mockCalls[3][1])).toMatchSnapshot(
-    'shallow with message'
-  );
-});
-
-test('debug changing component', () => {
-  jest.spyOn(console, 'log').mockImplementation((x) => x);
-
-  const { UNSAFE_getByProps, debug } = render(<Banana />);
-
-  fireEvent.press(UNSAFE_getByProps({ type: 'primary' }));
-
-  debug();
-
-  // eslint-disable-next-line no-console
-  const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
-
-  expect(stripAnsi(mockCalls[4][0])).toMatchSnapshot(
-    'bananaFresh button message should now be "fresh"'
-  );
 });
 
 test('renders options.wrapper around node', () => {
@@ -246,34 +203,45 @@ test('renders options.wrapper around updated node', () => {
   `);
 });
 
-test('returns container', () => {
-  const { container } = render(<View testID="inner" />);
+test('returns host root', () => {
+  const { root } = render(<View testID="inner" />);
 
-  expect(container).toBeDefined();
-  // `View` composite component is returned. This behavior will break if we
-  // start returning only host components.
-  expect(container.type).toBe(View);
-  expect(container.props.testID).toBe('inner');
+  expect(root).toBeDefined();
+  expect(root.type).toBe('View');
+  expect(root.props.testID).toBe('inner');
 });
 
-test('returns wrapped component as container', () => {
-  type WrapperComponentProps = { children: React.ReactNode };
-  const WrapperComponent = ({ children }: WrapperComponentProps) => (
-    <SafeAreaView testID="wrapper">{children}</SafeAreaView>
-  );
+test('returns composite UNSAFE_root', () => {
+  const { UNSAFE_root } = render(<View testID="inner" />);
 
-  const { container } = render(<View testID="inner" />, {
-    wrapper: WrapperComponent,
-  });
+  expect(UNSAFE_root).toBeDefined();
+  expect(UNSAFE_root.type).toBe(View);
+  expect(UNSAFE_root.props.testID).toBe('inner');
+});
 
-  expect(container).toBeDefined();
-  // `WrapperComponent` composite component is returned with no testID passed to
-  // it. This behavior will break if we start returning only host components.
-  expect(container.type).toBe(WrapperComponent);
-  expect(container.props.testID).not.toBeDefined();
+test('container displays deprecation', () => {
+  const view = render(<View testID="inner" />);
+
+  expect(() => (view as any).container).toThrowErrorMatchingInlineSnapshot(`
+    "'container' property has been renamed to 'UNSAFE_root'.
+
+    Consider using 'root' property which returns root host element."
+  `);
+  expect(() => (screen as any).container).toThrowErrorMatchingInlineSnapshot(`
+    "'container' property has been renamed to 'UNSAFE_root'.
+
+    Consider using 'root' property which returns root host element."
+  `);
 });
 
 test('RenderAPI type', () => {
   render(<Banana />) as RenderAPI;
   expect(true).toBeTruthy();
+});
+
+test('returned output can be spread using rest operator', () => {
+  // Next line should not throw
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { rerender, ...rest } = render(<View testID="inner" />);
+  expect(rest).toBeTruthy();
 });

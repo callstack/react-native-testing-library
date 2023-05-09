@@ -21,8 +21,13 @@ title: Queries
   - [`ByLabelText`](#bylabeltext)
   - [`ByHintText`, `ByA11yHint`, `ByAccessibilityHint`](#byhinttext-bya11yhint-byaccessibilityhint)
   - [`ByRole`](#byrole)
-  - [`ByA11yState`, `ByAccessibilityState`](#bya11ystate-byaccessibilitystate)
+    - [Options](#options-1)
+  - [`ByA11yState`, `ByAccessibilityState` (deprecated)](#bya11ystate-byaccessibilitystate-deprecated)
+    - [Default state for: `disabled`, `selected`, and `busy` keys](#default-state-for-disabled-selected-and-busy-keys)
+    - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
   - [`ByA11yValue`, `ByAccessibilityValue`](#bya11yvalue-byaccessibilityvalue)
+- [Common options](#common-options)
+  - [`includeHiddenElements` option](#includehiddenelements-option)
 - [TextMatch](#textmatch)
   - [Examples](#examples)
   - [Precision](#precision)
@@ -34,12 +39,12 @@ title: Queries
 
 ## Variants
 
-> `getBy` queries are shown by default in the [query documentation](#queries)
+> `getBy*` queries are shown by default in the [query documentation](#queries)
 > below.
 
 ### getBy
 
-`getBy*` queries return the first matching node for a query, and throw an error if no elements match or if more than one match is found (use `getAllBy` instead).
+`getBy*` queries return the first matching node for a query, and throw an error if no elements match or if more than one match is found. If you need to find more than one element, then use `getAllBy`.
 
 ### getAllBy
 
@@ -51,22 +56,26 @@ title: Queries
 
 ### queryAllBy
 
-`queryAllBy*` queries return an array of all matching nodes for a query, and return an empty array (`[]`) if no elements match.
+`queryAllBy*` queries return an array of all matching nodes for a query, and return an empty array (`[]`) when no elements match.
 
 ### findBy
 
-`findBy` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 4500ms. If you need to find more than one element, then use `findAllBy`.
+`findBy*` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element, then use `findAllBy*`.
 
 ### findAllBy
 
-`findAllBy` queries return a promise which resolves to an array when any matching elements are found. The promise is rejected if no elements match after a default timeout of 4500ms.
+`findAllBy*` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
 
 :::info
-In order to properly use `findBy` and `findAllBy` queries you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
+`findBy*` and `findAllBy*` queries accept optional `waitForOptions` object argument which can contain `timeout`, `interval` and `onTimeout` properies which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
 :::
 
 :::info
-`findBy` and `findAllBy` queries accept optional `waitForOptions` object argument which can contain `timeout` and `interval` properies which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
+In cases when your `findBy*` and `findAllBy*` queries throw when not able to find matching elements it is useful to pass `onTimeout: () => { screen.debug(); }` callback using `waitForOptions` parameter.
+:::
+
+:::info
+In order to properly use `findBy*` and `findAllBy*` queries you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
 :::
 
 ## Queries
@@ -77,18 +86,29 @@ _Note: most methods like this one return a [`ReactTestInstance`](https://reactjs
 type ReactTestInstance = {
   type: string | Function;
   props: { [propName: string]: any };
-  parent: null | ReactTestInstance;
+  parent: ReactTestInstance | null;
   children: Array<ReactTestInstance | string>;
 };
 ```
 
 ### Options
 
-Usually query first argument can be a **string** or a **regex**. Some queries accept optional argument which change string matching behaviour. See [TextMatch](#textmatch) for more info.
+Usually query first argument can be a **string** or a **regex**. All queries take at least the [`hidden`](#hidden-option) option as an optionnal second argument and some queries accept more options which change string matching behaviour. See [TextMatch](#textmatch) for more info.
 
 ### `ByText`
 
 > getByText, getAllByText, queryByText, queryAllByText, findByText, findAllByText
+
+```ts
+getByText(
+  text: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
 
 Returns a `ReactTestInstance` with matching text – may be a string or regular expression.
 
@@ -105,6 +125,17 @@ const element = screen.getByText('banana');
 
 > getByPlaceholderText, getAllByPlaceholderText, queryByPlaceholderText, queryAllByPlaceholderText, findByPlaceholderText, findAllByPlaceholderText
 
+```ts
+getByPlaceholderText(
+  text: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
 Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
 
 ```jsx
@@ -118,6 +149,17 @@ const element = screen.getByPlaceholderText('username');
 
 > getByDisplayValue, getAllByDisplayValue, queryByDisplayValue, queryAllByDisplayValue, findByDisplayValue, findAllByDisplayValue
 
+```ts
+getByDisplayValue(
+  value: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
 Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
 
 ```jsx
@@ -130,6 +172,17 @@ const element = screen.getByDisplayValue('username');
 ### `ByTestId`
 
 > getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, findByTestId, findAllByTestId
+
+```ts
+getByTestId(
+  testId: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
 
 Returns a `ReactTestInstance` with matching `testID` prop. `testID` – may be a string or a regular expression.
 
@@ -148,7 +201,20 @@ In the spirit of [the guiding principles](https://testing-library.com/docs/guidi
 
 > getByLabelText, getAllByLabelText, queryByLabelText, queryAllByLabelText, findByLabelText, findAllByLabelText
 
-Returns a `ReactTestInstance` with matching `accessibilityLabel` prop.
+```ts
+getByLabelText(
+  text: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` with matching label:
+- either by matching [`accessibilityLabel`](https://reactnative.dev/docs/accessibility#accessibilitylabel) prop
+- or by matching text content of view referenced by [`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -162,6 +228,17 @@ const element = screen.getByLabelText('my-label');
 > getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint, findByA11yHint, findAllByA11yHint
 > getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint, findByAccessibilityHint, findAllByAccessibilityHint
 > getByHintText, getAllByHintText, queryByHintText, queryAllByHintText, findByHintText, findAllByHintText
+
+```ts
+getByHintText(
+  hint: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
 
 Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
 
@@ -180,23 +257,83 @@ Please consult [Apple guidelines on how `accessibilityHint` should be used](http
 
 > getByRole, getAllByRole, queryByRole, queryAllByRole, findByRole, findAllByRole
 
+```ts
+getByRole(
+  role: TextMatch,
+  options?: {
+    name?: TextMatch
+    disabled?: boolean,
+    selected?: boolean,
+    checked?: boolean | 'mixed',
+    busy?: boolean,
+    expanded?: boolean,
+    value: {
+      min?: number;
+      max?: number;
+      now?: number;
+      text?: TextMatch;
+    },
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
 Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<MyComponent />);
+render(
+  <Pressable accessibilityRole="button" disabled>
+    <Text>Hello</Text>
+  </Pressable>
+);
 const element = screen.getByRole('button');
+const element2 = screen.getByRole('button', { name: 'Hello' });
+const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 ```
 
 #### Options
 
 `name`: Finds an element with given `accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
 
-### `ByA11yState`, `ByAccessibilityState`
+`disabled`: You can filter elements by their disabled state. The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
+
+`selected`: You can filter elements by their selected state. The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
+
+`checked`: You can filter elements by their checked state. The possible values are `true`, `false`, or `"mixed"`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
+
+`busy`: You can filter elements by their busy state. The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
+
+`expanded`: You can filter elements by their expanded state. The possible values are `true` or `false`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
+
+`value`: Filter elements by their accessibility, available value entries include numeric `min`, `max` & `now`, as well as string or regex `text` key. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about this prop.
+
+### `ByA11yState`, `ByAccessibilityState` (deprecated)
+
+:::caution
+This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
+* [`*ByRole`](#byrole) query with relevant state options:  `disabled`, `selected`, `checked`, `expanded` and `busy`
+* [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) Jest matcher to check the state of element found using some other query
+:::
 
 > getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState, findByA11yState, findAllByA11yState
 > getByAccessibilityState, getAllByAccessibilityState, queryByAccessibilityState, queryAllByAccessibilityState, findByAccessibilityState, findAllByAccessibilityState
+
+```ts
+getByA11yState(
+  state: {
+    disabled?: boolean,
+    selected?: boolean,
+    checked?: boolean | 'mixed',
+    expanded?: boolean,
+    busy?: boolean,
+  },
+  options?: {
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
 
 Returns a `ReactTestInstance` with matching `accessibilityState` prop.
 
@@ -207,32 +344,107 @@ render(<Component />);
 const element = screen.getByA11yState({ disabled: true });
 ```
 
-### `ByA11yValue`, `ByAccessibilityValue`
+:::note
+
+#### Default state for: `disabled`, `selected`, and `busy` keys
+
+Passing `false` matcher value will match both elements with explicit `false` state value and without explicit state value.
+
+For instance, `getByA11yState({ disabled: false })` will match elements with following props:
+
+- `accessibilityState={{ disabled: false, ... }}`
+- no `disabled` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
+- no `accessibilityState` prop at all
+
+#### Default state for: `checked` and `expanded` keys
+
+Passing `false` matcher value will only match elements with explicit `false` state value.
+
+For instance, `getByA11yState({ checked: false })` will only match elements with:
+
+- `accessibilityState={{ checked: false, ... }}`
+
+but will not match elements with following props:
+
+- no `checked` key under `accessibilityState` prop, e.g. `accessibilityState={{}}`
+- no `accessibilityState` prop at all
+
+The difference in handling default values is made to reflect observed accessibility behaviour on iOS and Android platforms.
+:::
+
+### `ByA11yValue`, `ByAccessibilityValue` (deprecated)
+
+:::caution
+This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
+* [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
+* [`*ByRole`](#byrole) query with `value` option
+:::
 
 > getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue, findByA11yValue, findAllByA11yValue
 > getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue, findByAccessibilityValue, findAllByAccessibilityValue
 
-Returns a `ReactTestInstance` with matching `accessibilityValue` prop.
+```ts
+getByA11yValue(
+  value: {
+    min?: number;
+    max?: number;
+    now?: number;
+    text?: TextMatch;
+  },
+  options?: {
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
+Returns a host element with matching `accessibilityValue` prop entries. Only entires provided to the query will be used to match elements. Element might have additional accessibility value entries and still be matched.
+
+When querying by `text` entry a string or regex might be used.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<Component />);
-const element = screen.getByA11yValue({ min: 40 });
+render(
+  <View accessibilityValue={{ min: 0, max: 100, now: 25, text: '25%' }} />
+);
+const element = screen.getByA11yValue({ now: 25 });
+const element2 = screen.getByA11yValue({ text: /25/ });
+```
+
+## Common options
+
+### `includeHiddenElements` option
+
+All queries have the `includeHiddenElements` option which affects whether [elements hidden from accessibility](./API.md#ishiddenfromaccessibility) are matched by the query. By default queries will not match hidden elements, because the users of the app would not be able to see such elements.
+
+You can configure the default value with the [`configure` function](API.md#configure).
+
+This option is also available as `hidden` alias for compatibility with [React Testing Library](https://testing-library.com/docs/queries/byrole#hidden).
+
+**Examples**
+
+```tsx
+render(<Text style={{ display: 'none' }}>Hidden from accessibility</Text>);
+
+// Exclude hidden elements
+expect(
+  screen.queryByText('Hidden from accessibility', { includeHiddenElements: false })
+).not.toBeOnTheScreen();
+
+// Include hidden elements
+expect(screen.getByText('Hidden from accessibility')).toBeOnTheScreen();
+expect(
+  screen.getByText('Hidden from accessibility', { includeHiddenElements: true })
+).toBeOnTheScreen();
 ```
 
 ## TextMatch
 
-Most of the query APIs take a `TextMatch` as an argument, which means the argument can be either a _string_ or _regex_.
-
-```typescript
-type TextMatchOptions = {
-  exact?: boolean;
-  normalizer?: (textToNormalize: string) => string;
-  trim?: boolean;
-  collapseWhitespace?: boolean;
-};
+```ts
+type TextMatch = string | RegExp;
 ```
+
+Most of the query APIs take a `TextMatch` as an argument, which means the argument can be either a _string_ or _regex_.
 
 ### Examples
 
@@ -271,7 +483,14 @@ screen.getByText(/hello world/);
 
 ### Precision
 
-Queries that take a `TextMatch` also accept an object as the final argument that can contain options that affect the precision of string matching:
+```typescript
+type TextMatchOptions = {
+  exact?: boolean;
+  normalizer?: (text: string) => string;
+};
+```
+
+Queries that take a `TextMatch` also accept an object as the second argument that can contain options that affect the precision of string matching:
 
 - `exact`: Defaults to `true`; matches full strings, case-sensitive. When false, matches substrings and is not case-sensitive.
   - `exact` has no effect on regex argument.
@@ -332,7 +551,7 @@ The interface is the same as for other queries, but we won't provide full names 
 Returns a `ReactTestInstance` with matching a React component type.
 
 :::caution
-This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
 :::
 
 ### `UNSAFE_ByProps`
@@ -342,7 +561,7 @@ This method has been marked unsafe, since it requires knowledge about implementa
 Returns a `ReactTestInstance` with matching props object.
 
 :::caution
-This method has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
 :::
 
 </details>

@@ -1,6 +1,20 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import {
+  accessibilityStateKeys,
+  accessiblityValueKeys,
+  isAccessibilityElement,
+} from '../helpers/accessiblity';
+import { findAll } from '../helpers/findAll';
+import {
+  AccessibilityStateMatcher,
+  matchAccessibilityState,
+} from '../helpers/matchers/accessibilityState';
+import {
+  AccessibilityValueMatcher,
+  matchAccessibilityValue,
+} from '../helpers/matchers/accessibilityValue';
 import { matchStringProp } from '../helpers/matchers/matchStringProp';
-import { TextMatch } from '../matches';
+import type { TextMatch } from '../matches';
 import { getQueriesForElement } from '../within';
 import { makeQueries } from './makeQueries';
 import type {
@@ -11,10 +25,13 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './makeQueries';
+import { CommonQueryOptions } from './options';
 
-type ByRoleOptions = {
-  name?: TextMatch;
-};
+type ByRoleOptions = CommonQueryOptions &
+  AccessibilityStateMatcher & {
+    name?: TextMatch;
+    value?: AccessibilityValueMatcher;
+  };
 
 const matchAccessibleNameIfNeeded = (
   node: ReactTestInstance,
@@ -28,22 +45,65 @@ const matchAccessibleNameIfNeeded = (
   );
 };
 
+const matchAccessibleStateIfNeeded = (
+  node: ReactTestInstance,
+  options?: ByRoleOptions
+) => {
+  return options != null ? matchAccessibilityState(node, options) : true;
+};
+
+const matchAccessibilityValueIfNeeded = (
+  node: ReactTestInstance,
+  value?: AccessibilityValueMatcher
+) => {
+  return value != null ? matchAccessibilityValue(node, value) : true;
+};
+
 const queryAllByRole = (
   instance: ReactTestInstance
 ): ((role: TextMatch, options?: ByRoleOptions) => Array<ReactTestInstance>) =>
   function queryAllByRoleFn(role, options) {
-    return instance.findAll(
+    return findAll(
+      instance,
       (node) =>
+        // run the cheapest checks first, and early exit to avoid unneeded computations
         typeof node.type === 'string' &&
+        isAccessibilityElement(node) &&
         matchStringProp(node.props.accessibilityRole, role) &&
-        matchAccessibleNameIfNeeded(node, options?.name)
+        matchAccessibleStateIfNeeded(node, options) &&
+        matchAccessibilityValueIfNeeded(node, options?.value) &&
+        matchAccessibleNameIfNeeded(node, options?.name),
+      options
     );
   };
 
-const getMultipleError = (role: TextMatch) =>
-  `Found multiple elements with accessibilityRole: ${String(role)} `;
-const getMissingError = (role: TextMatch) =>
-  `Unable to find an element with accessibilityRole: ${String(role)}`;
+const formatQueryParams = (role: TextMatch, options: ByRoleOptions = {}) => {
+  const params = [`role: "${String(role)}"`];
+
+  if (options.name) {
+    params.push(`name: "${String(options.name)}"`);
+  }
+
+  accessibilityStateKeys.forEach((stateKey) => {
+    if (options[stateKey] !== undefined) {
+      params.push(`${stateKey} state: ${options[stateKey]}`);
+    }
+  });
+
+  accessiblityValueKeys.forEach((valueKey) => {
+    if (options?.value?.[valueKey] !== undefined) {
+      params.push(`${valueKey} value: ${options?.value?.[valueKey]}`);
+    }
+  });
+
+  return params.join(', ');
+};
+
+const getMultipleError = (role: TextMatch, options?: ByRoleOptions) =>
+  `Found multiple elements with ${formatQueryParams(role, options)}`;
+
+const getMissingError = (role: TextMatch, options?: ByRoleOptions) =>
+  `Unable to find an element with ${formatQueryParams(role, options)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByRole,

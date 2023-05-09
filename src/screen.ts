@@ -13,7 +13,10 @@ const notImplementedDebug = () => {
 notImplementedDebug.shallow = notImplemented;
 
 const defaultScreen: RenderResult = {
-  get container(): ReactTestInstance {
+  get root(): ReactTestInstance {
+    throw new Error(SCREEN_ERROR);
+  },
+  get UNSAFE_root(): ReactTestInstance {
     throw new Error(SCREEN_ERROR);
   },
   debug: notImplementedDebug,

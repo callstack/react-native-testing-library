@@ -1,17 +1,19 @@
 module.exports = {
   docs: {
-    Introduction: ['getting-started'],
+    Introduction: ['getting-started', 'faq'],
     'API Reference': ['api', 'api-queries'],
     Guides: [
+      'troubleshooting',
+      'how-should-i-query',
+      'eslint-plugin-testing-library',
+    ],
+    Advanced: ['testing-env', 'understanding-act'],
+    Migrations: [
+      'migration-v12',
       'migration-v11',
       'migration-v9',
       'migration-v7',
       'migration-v2',
-      'how-should-i-query',
-      'faq',
-      'troubleshooting',
-      'eslint-plugin-testing-library',
-      'understanding-act',
     ],
     Examples: ['react-navigation', 'redux-integration'],
   },

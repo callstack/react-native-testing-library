@@ -10,6 +10,7 @@ const siteConfig = {
   projectName: 'react-native-testing-library',
   organizationName: 'callstack',
   favicon: 'img/owl.png',
+  trailingSlash: false,
 
   themeConfig: {
     navbar: {
@@ -94,7 +95,7 @@ const siteConfig = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: `${repoUrl}/blob/main`,
+          editUrl: `${repoUrl}/blob/main/website`,
           sidebarCollapsible: false,
         },
         blog: {

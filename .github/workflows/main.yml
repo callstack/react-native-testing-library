@@ -1,0 +1,103 @@
+name: Main
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ['**']
+
+jobs:
+  install-cache-deps:
+    runs-on: ubuntu-latest
+    name: Install and Cache deps
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup-deps
+
+  lint:
+    needs: [install-cache-deps]
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps
+
+      - name: Lint
+        run: yarn lint
+
+  typecheck:
+    needs: [install-cache-deps]
+    runs-on: ubuntu-latest
+    name: Typecheck
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps
+
+      - name: Typecheck
+        run: yarn typecheck
+
+  flow:
+    needs: [install-cache-deps]
+    runs-on: ubuntu-latest
+    name: Flow
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps
+
+      - name: Flow
+        run: yarn flow
+
+  test:
+    needs: [install-cache-deps]
+    runs-on: ubuntu-latest
+    name: Test React 18
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps
+
+      - name: Test React 18
+        run: yarn test:ci
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+
+  test-react-17:
+    needs: [install-cache-deps]
+    runs-on: ubuntu-latest
+    name: Test React 17
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps
+
+      - name: Test React 17
+        run: yarn test:ci:react:17
+
+  test-website:
+    runs-on: ubuntu-latest
+    name: Test Website
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and website deps
+        uses: ./.github/actions/setup-website-deps
+
+      - name: Build website
+        run: yarn --cwd website build

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Text } from 'react-native';
-import ReactTestRenderer from 'react-test-renderer';
 import act from '../act';
 import render from '../render';
 import fireEvent from '../fireEvent';
@@ -42,14 +41,12 @@ test('fireEvent should trigger useState', () => {
   expect(counter.props.children).toEqual('Total count: 1');
 });
 
-test('should act even if there is no act in react-test-renderer', () => {
-  // @ts-ignore
-  ReactTestRenderer.act = undefined;
-  const callback = jest.fn();
+test('should be able to not await act', async () => {
+  const result = act(() => {});
+  expect(result).toHaveProperty('then');
+});
 
-  act(() => {
-    callback();
-  });
-
-  expect(callback).toHaveBeenCalled();
+test('should be able to await act', async () => {
+  const result = await act(async () => {});
+  expect(result).toBe(undefined);
 });

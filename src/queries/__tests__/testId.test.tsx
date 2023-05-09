@@ -132,3 +132,69 @@ test('findByTestId and findAllByTestId work asynchronously', async () => {
   await expect(findByTestId('aTestId')).resolves.toBeTruthy();
   await expect(findAllByTestId('aTestId')).resolves.toHaveLength(1);
 }, 20000);
+
+test('byTestId queries support hidden option', () => {
+  const { getByTestId, queryByTestId } = render(
+    <Text style={{ display: 'none' }} testID="hidden">
+      Hidden from accessibility
+    </Text>
+  );
+
+  expect(getByTestId('hidden', { includeHiddenElements: true })).toBeTruthy();
+
+  expect(queryByTestId('hidden')).toBeFalsy();
+  expect(queryByTestId('hidden', { includeHiddenElements: false })).toBeFalsy();
+  expect(() => getByTestId('hidden', { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with testID: hidden
+
+    <Text
+      style={
+        {
+          "display": "none",
+        }
+      }
+      testID="hidden"
+    >
+      Hidden from accessibility
+    </Text>"
+  `);
+});
+
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const view = render(<View testID="TEST_ID" key="3" />);
+
+  expect(() => view.getByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with testID: FOO
+
+    <View
+      testID="TEST_ID"
+    />"
+  `);
+
+  expect(() => view.getAllByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with testID: FOO
+
+    <View
+      testID="TEST_ID"
+    />"
+  `);
+
+  await expect(view.findByTestId('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with testID: FOO
+
+    <View
+      testID="TEST_ID"
+    />"
+  `);
+
+  await expect(view.findAllByTestId('FOO')).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with testID: FOO
+
+    <View
+      testID="TEST_ID"
+    />"
+  `);
+});

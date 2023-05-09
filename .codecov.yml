@@ -1,0 +1,9 @@
+coverage:
+  precision: 2
+  round: down
+  range: 70...100
+
+comment:
+  behavior: new
+  require_changes: false
+  require_base: no

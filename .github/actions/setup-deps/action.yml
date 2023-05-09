@@ -1,0 +1,22 @@
+name: Setup deps
+description: Setup Node.js and install dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Cache deps
+      id: yarn-cache
+      uses: actions/cache@v3
+      with:
+        path: ./node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles('./yarn.lock') }}
+
+    - name: Install deps
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
+      run: yarn install --frozen-lockfile
+      shell: bash

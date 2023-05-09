@@ -1,13 +1,36 @@
 import * as React from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
   Button,
+  Image,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { render, getDefaultNormalizer, within } from '../..';
+import { getDefaultNormalizer, render, within } from '../..';
+
+test('byText matches simple text', () => {
+  const { getByText } = render(<Text testID="text">Hello World</Text>);
+  expect(getByText('Hello World').props.testID).toBe('text');
+});
+
+test('byText matches inner nested text', () => {
+  const { getByText } = render(
+    <Text testID="outer">
+      <Text testID="inner">Hello World</Text>
+    </Text>
+  );
+  expect(getByText('Hello World').props.testID).toBe('inner');
+});
+
+test('byText matches accross multiple texts', () => {
+  const { getByText } = render(
+    <Text testID="outer">
+      <Text testID="inner-1">Hello</Text> <Text testID="inner-2">World</Text>
+    </Text>
+  );
+  expect(getByText('Hello World').props.testID).toBe('outer');
+});
 
 type MyButtonProps = {
   children: React.ReactNode;
@@ -192,8 +215,8 @@ test('queryByText not found', () => {
   ).toBeFalsy();
 });
 
-test('queryByText does not match nested text across multiple <Text> in <Text>', () => {
-  const { queryByText } = render(
+test('*ByText matches text across multiple nested Text', () => {
+  const { getByText } = render(
     <Text nativeID="1">
       Hello{' '}
       <Text nativeID="2">
@@ -203,7 +226,7 @@ test('queryByText does not match nested text across multiple <Text> in <Text>', 
     </Text>
   );
 
-  expect(queryByText('Hello World!')).toBe(null);
+  expect(getByText('Hello World!')).toBeTruthy();
 });
 
 test('queryByText with nested Text components return the closest Text', () => {
@@ -214,7 +237,6 @@ test('queryByText with nested Text components return the closest Text', () => {
   );
 
   const { queryByText } = render(<NestedTexts />);
-
   expect(queryByText('My text', { exact: false })?.props.nativeID).toBe('2');
 });
 
@@ -241,8 +263,8 @@ test('queryByText nested deep <CustomText> in <Text>', () => {
       <Text>
         <CustomText>Hello</CustomText> <CustomText>World!</CustomText>
       </Text>
-    ).queryByText('Hello World!')
-  ).toBe(null);
+    ).getByText('Hello World!')
+  ).toBeTruthy();
 });
 
 test('queryByText with nested Text components: not-exact text match returns the most deeply nested common component', () => {
@@ -365,7 +387,6 @@ describe('Supports normalization', () => {
       <View>
         <Text>{`  Text     and
 
-
         whitespace`}</Text>
       </View>
     );
@@ -375,7 +396,6 @@ describe('Supports normalization', () => {
 
   test('trim and collapseWhitespace is customizable by getDefaultNormalizer param', () => {
     const testTextWithWhitespace = `  Text     and
-
 
         whitespace`;
     const { getByText } = render(
@@ -465,4 +485,72 @@ test('getByText searches for text within self host element', () => {
   const { getByTestId } = render(<Text testID="subject">Hello</Text>);
   const textNode = within(getByTestId('subject'));
   expect(textNode.getByText('Hello')).toBeTruthy();
+});
+
+test('byText support hidden option', () => {
+  const { getByText, queryByText } = render(
+    <Text style={{ display: 'none' }}>Hidden from accessibility</Text>
+  );
+
+  expect(getByText(/hidden/i, { includeHiddenElements: true })).toBeTruthy();
+
+  expect(queryByText(/hidden/i)).toBeFalsy();
+  expect(queryByText(/hidden/i, { includeHiddenElements: false })).toBeFalsy();
+  expect(() => getByText(/hidden/i, { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Unable to find an element with text: /hidden/i
+
+    <Text
+      style={
+        {
+          "display": "none",
+        }
+      }
+    >
+      Hidden from accessibility
+    </Text>"
+  `);
+});
+
+test('error message renders the element tree, preserving only helpful props', async () => {
+  const view = render(<View accessibilityViewIsModal key="this is filtered" />);
+
+  expect(() => view.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      <View
+        accessibilityViewIsModal={true}
+      />"
+    `);
+
+  expect(() => view.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      <View
+        accessibilityViewIsModal={true}
+      />"
+    `);
+
+  await expect(view.findByText(/foo/)).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      <View
+        accessibilityViewIsModal={true}
+      />"
+    `);
+
+  await expect(view.findAllByText(/foo/)).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with text: /foo/
+
+      <View
+        accessibilityViewIsModal={true}
+      />"
+    `);
+});
+
+test('byText should return host component', () => {
+  const { getByText } = render(<Text>hello</Text>);
+  expect(getByText('hello').type).toBe('Text');
 });

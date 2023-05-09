@@ -9,10 +9,14 @@
   <p>Simple and complete React Native testing utilities that encourage good testing practices.</P>
 </div>
 
-[![Version][version-badge]][package]
-[![PRs Welcome][prs-welcome-badge]][prs-welcome]
+![Version][version-badge]
+![codecov][codecov-badge]
+![Build](https://github.com/callstack/react-native-testing-library/actions/workflows/main.yml/badge.svg)
+[![downloads](https://img.shields.io/npm/dm/@testing-library/react-native.svg?style=flat-square)](http://www.npmtrends.com/@testing-library/react-native)
+![PRs Welcome][prs-welcome-badge]
 [![Chat][chat-badge]][chat]
-[![Sponsored by Callstack][callstack-badge]][callstack]
+![Sponsored by Callstack][callstack-badge]
+[![Star on GitHub](https://img.shields.io/github/stars/callstack/react-native-testing-library.svg?style=social)](https://github.com/callstack/react-native-testing-library/stargazers)
 
 ## The problem
 
@@ -71,11 +75,11 @@ Then automatically add it to your jest tests by using `setupFilesAfterEnv` optio
 }
 ```
 
-### Custom Jest Preset
+### Custom Jest Preset (React Native before 0.71)
 
-> **important** if you use "modern" Fake Timers
+We generally advise to use the "react-native" preset when testing with this library.
 
-We generally advise to use the "react-native" preset when testing with this library. However, if you use ["modern" Fake Timers](https://jestjs.io/blog/2020/05/05/jest-26#new-fake-timers) (default since Jest 27), you'll need to apply our custom Jest preset or awaiting promises, like `waitFor`, will timeout.
+However, if you use React Native version earlier than 0.71 with [modern Jest fake timers](https://jestjs.io/blog/2020/05/05/jest-26#new-fake-timers) (default since Jest 27), you'll need to apply this custom Jest preset or otherwise awaiting promises, like using `waitFor` or `findBy*`, queries will fail with timeout.
 
 This is a [known issue](https://github.com/facebook/react-native/issues/29303). It happens because React Native's Jest preset overrides native Promise. Our preset restores it to defaults, which is not a problem in most apps out there.
 
@@ -116,8 +120,8 @@ test('form submits two answers', () => {
   fireEvent.press(screen.getByText('Submit'));
 
   expect(mockFn).toBeCalledWith({
-    '1': { q: 'q1', a: 'a1' },
-    '2': { q: 'q2', a: 'a2' },
+    1: { q: 'q1', a: 'a1' },
+    2: { q: 'q2', a: 'a2' },
   });
 });
 ```
@@ -136,6 +140,7 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 
 ## Migration Guides
 
+- [Migration to 12.0](https://callstack.github.io/react-native-testing-library/docs/migration-v12)
 - [Migration to 11.0](https://callstack.github.io/react-native-testing-library/docs/migration-v11)
 - [Migration to 9.0](https://callstack.github.io/react-native-testing-library/docs/migration-v9)
 - [Migration to 7.0](https://callstack.github.io/react-native-testing-library/docs/migration-v7)
@@ -171,3 +176,5 @@ Supported and used by [Rally Health](https://www.rallyhealth.com/careers-home).
 [chat]: https://discord.gg/QbGezWe
 [callstack-badge]: https://callstack.com/images/callstack-badge.svg
 [callstack]: https://callstack.com/open-source/?utm_source=github.com&utm_medium=referral&utm_campaign=react-native-testing-library&utm_term=readme
+[codecov-badge]: https://codecov.io/gh/callstack/react-native-testing-library/branch/main/graph/badge.svg?token=tYVSWro1IP
+[codecov]: https://codecov.io/gh/callstack/react-native-testing-library
