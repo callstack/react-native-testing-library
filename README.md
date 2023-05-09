@@ -9,11 +9,12 @@
   <p>Simple and complete React Native testing utilities that encourage good testing practices.</P>
 </div>
 
-[![Version][version-badge]][package]
-[![PRs Welcome][prs-welcome-badge]][prs-welcome]
+![Version][version-badge]
+![codecov][codecov-badge]
+![Build](https://github.com/callstack/react-native-testing-library/actions/workflows/main.yml/badge.svg)
+![PRs Welcome][prs-welcome-badge]
 [![Chat][chat-badge]][chat]
-[![codecov][codecov-badge]][codecov]
-[![Sponsored by Callstack][callstack-badge]][callstack]
+![Sponsored by Callstack][callstack-badge]
 
 ## The problem
 
