@@ -9,7 +9,7 @@ const isHostTextInput = (element?: ReactTestInstance) => {
   return element?.type === getHostComponentNames().textInput;
 };
 
-function isTouchResponder(element: ReactTestInstance) {
+export function isTouchResponder(element: ReactTestInstance) {
   if (!isHostElement(element)) {
     return false;
   }
@@ -19,7 +19,7 @@ function isTouchResponder(element: ReactTestInstance) {
   );
 }
 
-function isPointerEventEnabled(
+export function isPointerEventEnabled(
   element: ReactTestInstance,
   isParent?: boolean
 ): boolean {
@@ -63,7 +63,7 @@ const textInputEventsIgnoringEditableProp = new Set([
   'onScroll',
 ]);
 
-function isEventEnabled(
+export function isEventEnabled(
   element: ReactTestInstance,
   eventName: string,
   nearestTouchResponder?: ReactTestInstance

@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`user.press() dispatches required events on Text 1`] = `
+[
+  {
+    "name": "pressIn",
+    "payload": {
+      "nativeEvent": {
+        "changedTouches": [],
+        "identifier": 0,
+        "locationX": 0,
+        "locationY": 0,
+        "pageX": 0,
+        "pageY": 0,
+        "target": 0,
+        "timestamp": 0,
+        "touches": [],
+      },
+    },
+  },
+  {
+    "name": "press",
+    "payload": {
+      "nativeEvent": {
+        "changedTouches": [],
+        "identifier": 0,
+        "locationX": 0,
+        "locationY": 0,
+        "pageX": 0,
+        "pageY": 0,
+        "target": 0,
+        "timestamp": 0,
+        "touches": [],
+      },
+    },
+  },
+  {
+    "name": "pressOut",
+    "payload": {
+      "nativeEvent": {
+        "changedTouches": [],
+        "identifier": 0,
+        "locationX": 0,
+        "locationY": 0,
+        "pageX": 0,
+        "pageY": 0,
+        "target": 0,
+        "timestamp": 0,
+        "touches": [],
+      },
+    },
+  },
+]
+`;

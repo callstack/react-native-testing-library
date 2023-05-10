@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`user.type() dispatches required events 1`] = `
+[
+  {
+    "name": "focus",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "Hello World!",
+  },
+  {
+    "name": "blur",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+]
+`;
