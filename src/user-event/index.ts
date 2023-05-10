@@ -3,6 +3,8 @@ import { setup } from './setup';
 import { PressOptions } from './press';
 import { TypeOptions } from './type';
 
+export { UserEventConfig } from './setup';
+
 export const userEvent = {
   setup,
 
