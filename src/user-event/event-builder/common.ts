@@ -45,4 +45,14 @@ export const CommonEventBuilder = {
       },
     };
   },
+
+  press: () => {
+    return {
+      persist: jest.fn(),
+      nativeEvent: {
+        timestamp: new Date().getTime(),
+      },
+      currentTarget: { measure: jest.fn() },
+    };
+  },
 };

@@ -1,7 +1,7 @@
 import { UserEventConfig } from '../setup';
 
-export function wait(config: UserEventConfig) {
-  const delay = config.delay;
+export function wait(config: UserEventConfig, durationInMs?: number) {
+  const delay = durationInMs ?? config.delay;
   if (typeof delay !== 'number') {
     return;
   }
