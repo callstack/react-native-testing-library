@@ -94,11 +94,7 @@ const triggerPressEvent = async (
       dispatchConfig: { registrationName: 'onResponderRelease' },
     });
 
-    if (areFakeTimersEnabled) {
-      jest.runOnlyPendingTimers();
-    } else {
-      await wait(config, DEFAULT_MIN_PRESS_DURATION);
-    }
+    await wait(config, DEFAULT_MIN_PRESS_DURATION);
   });
 };
 
