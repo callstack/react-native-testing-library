@@ -15,6 +15,21 @@ export type PressOptions = {
   pressDuration: number;
 };
 
+export async function press(
+  this: UserEventInstance,
+  element: ReactTestInstance
+): Promise<void> {
+  await basePress(this.config, element);
+}
+
+export async function longPress(
+  this: UserEventInstance,
+  element: ReactTestInstance,
+  options: PressOptions = { pressDuration: 500 }
+): Promise<void> {
+  await basePress(this.config, element, options);
+}
+
 const basePress = async (
   config: UserEventInstance['config'],
   element: ReactTestInstance,
@@ -55,21 +70,6 @@ const basePress = async (
 
   await basePress(config, hostParentElement, options);
 };
-
-export async function press(
-  this: UserEventInstance,
-  element: ReactTestInstance
-): Promise<void> {
-  await basePress(this.config, element);
-}
-
-export async function longPress(
-  this: UserEventInstance,
-  element: ReactTestInstance,
-  options: PressOptions = { pressDuration: 500 }
-): Promise<void> {
-  await basePress(this.config, element, options);
-}
 
 const triggerPressEvent = async (
   config: UserEventInstance['config'],
