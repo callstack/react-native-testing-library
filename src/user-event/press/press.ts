@@ -5,7 +5,7 @@ import { wait } from '../utils';
 import act from '../../act';
 import { getHostParent } from '../../helpers/component-tree';
 import { filterNodeByType } from '../../helpers/filterNodeByType';
-import { isHostElementPointerEventEnabled } from '../../helpers/isHostElementPointerEventEnabled';
+import { isPointerEventEnabled } from '../../helpers/isPointerEventEnabled';
 import { getHostComponentNames } from '../../helpers/host-component-names';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { DEFAULT_MIN_PRESS_DURATION } from './constants';
@@ -104,7 +104,7 @@ const triggerPressEvent = async (
 
 const isEnabledTouchResponder = (element: ReactTestInstance) => {
   return (
-    isHostElementPointerEventEnabled(element) &&
+    isPointerEventEnabled(element) &&
     element.props.onStartShouldSetResponder &&
     element.props.onStartShouldSetResponder()
   );
