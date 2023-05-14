@@ -47,6 +47,7 @@ const basePress = async (
 
   if (isEnabledHostText || isEnabledTextInput) {
     const { onPressIn, onPress, onPressOut } = element.props;
+    await wait(config);
     if (onPressIn) {
       onPressIn(EventBuilder.Common.press());
     }
@@ -80,6 +81,8 @@ const triggerPressEvent = async (
   if (!areFakeTimersEnabled) {
     warnAboutRealTimers();
   }
+
+  await wait(config);
 
   await act(async () => {
     element.props.onResponderGrant({
