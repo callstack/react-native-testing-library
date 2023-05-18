@@ -98,7 +98,9 @@ const triggerPressEvent = async (
       dispatchConfig: { registrationName: 'onResponderRelease' },
     });
 
-    await wait(config, DEFAULT_MIN_PRESS_DURATION);
+    if (DEFAULT_MIN_PRESS_DURATION - options.pressDuration > 0) {
+      await wait(config, DEFAULT_MIN_PRESS_DURATION - options.pressDuration);
+    }
   });
 };
 
