@@ -54,8 +54,11 @@ const basePress = async (
     if (onPress) {
       onPress(EventBuilder.Common.press());
     }
+    await wait(config, options.pressDuration);
     if (onPressOut) {
-      await wait(config, DEFAULT_MIN_PRESS_DURATION);
+      if (DEFAULT_MIN_PRESS_DURATION - options.pressDuration > 0) {
+        await wait(config, DEFAULT_MIN_PRESS_DURATION - options.pressDuration);
+      }
       onPressOut(EventBuilder.Common.press());
     }
   }
