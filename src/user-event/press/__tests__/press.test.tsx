@@ -211,6 +211,25 @@ describe('userEvent.press with fake timers', () => {
     expect(events).toEqual([]);
   });
 
+  test('doesnt trigger on Text with disabled pointer events', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    render(
+      <View pointerEvents="box-only">
+        <Text
+          onPress={logEvent('press')}
+          onPressIn={logEvent('pressIn')}
+          onPressOut={logEvent('pressOut')}
+        >
+          press me
+        </Text>
+      </View>
+    );
+    await userEvent.press(screen.getByText('press me'));
+
+    expect(events).toEqual([]);
+  });
+
   test('works on TetInput', async () => {
     const { events, logEvent } = createEventLogger();
 
@@ -233,6 +252,21 @@ describe('userEvent.press with fake timers', () => {
       <TextInput
         placeholder="email"
         editable={false}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+      />
+    );
+    await userEvent.press(screen.getByPlaceholderText('email'));
+    expect(events).toEqual([]);
+  });
+
+  test('does not call onPressIn and onPressOut on TetInput with pointer events disabled', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    render(
+      <TextInput
+        placeholder="email"
+        pointerEvents="box-none"
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
       />

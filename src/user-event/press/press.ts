@@ -40,9 +40,11 @@ const basePress = async (
   // Thus we need to call the props directly on the host component
   const isEnabledHostText =
     filterNodeByType(element, getHostComponentNames().text) &&
+    isPointerEventEnabled(element) &&
     !element.props.disabled;
   const isEnabledTextInput =
     filterNodeByType(element, getHostComponentNames().textInput) &&
+    isPointerEventEnabled(element) &&
     element.props.editable !== false;
 
   if (isEnabledHostText || isEnabledTextInput) {
