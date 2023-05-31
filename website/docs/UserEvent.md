@@ -63,4 +63,4 @@ const user = userEvent.setup();
 await user.longPress(element);
 ```
 
-Simulates a press of long duration. In React Native the `onLongPress` prop is called if the press duration is at least 500ms which is the default duration for this helper. Other than the press duration this will behave exactly as `press`. The duration is customizable through the options. This should be useful if you use the `delayLongPress` prop. When using real timers this will take 500ms so it is highly recommended to use that API with fake timers to prevent test taking a long time to run. 
+Simulates a long press user interaction. In React Native the `longPress` event is emitted when the press duration exceeds long press threshold (by default 500 ms). In other aspects this actions behaves similar to regular `press` action, e.g. by emitting `pressIn` and `pressOut` events. The press duration is customisable through the options. This should be useful if you use the `delayLongPress` prop. When using real timers this will take 500 ms so it is highly recommended to use that API with fake timers to prevent test taking a long time to run. 
