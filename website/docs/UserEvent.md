@@ -33,7 +33,7 @@ Creates User Event instances which can be used to trigger events.
 ## `press()`
 
 ```ts
-type(
+press(
   element: ReactTestInstance,
 ): Promise<void>
 ```
@@ -42,7 +42,7 @@ Example
 ```ts
 const user = userEvent.setup();
 
-await user.press(touchable);
+await user.press(element);
 ```
 
 This helper simulates a press on any pressable element, e.g. Pressable, Text or TextInput. Unlike fireEvent.press which is a simpler API that will only call the onPress prop, this simumlates the entire press event in a more realistic way by reproducing what really happens when a user presses a pressable component. This means for instance for onPressIn and onPressOut props will also be invoked.  
@@ -50,7 +50,7 @@ This helper simulates a press on any pressable element, e.g. Pressable, Text or 
 ## `longPress()`
 
 ```ts
-type(
+longPress(
   element: ReactTestInstance,
   options: { pressDuration: number } = { pressDuration: 500 }
 ): Promise<void>
@@ -60,7 +60,7 @@ Example
 ```ts
 const user = userEvent.setup();
 
-await user.longPress(touchable);
+await user.longPress(element);
 ```
 
 Simulates a press of long duration. In React Native the `onLongPress` prop is called if the press duration is at least 500ms which is the default duration for this helper. Other than the press duration this will behave exactly as `press`. The duration is customizable through the options. This should be useful if you use the `delayLongPress` prop. When using real timers this will take 500ms so it is highly recommended to use that API with fake timers to prevent test taking a long time to run. 
