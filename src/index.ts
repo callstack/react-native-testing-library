@@ -1,5 +1,5 @@
 import { cleanup } from './pure';
-import { flushMicroTasksLegacy } from './flushMicroTasks';
+import { flushMicroTasksLegacy } from './flush-micro-tasks';
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
 
 if (typeof process === 'undefined' || !process.env?.RNTL_SKIP_AUTO_CLEANUP) {

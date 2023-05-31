@@ -1,7 +1,7 @@
 /* globals jest */
 import act, { setReactActEnvironment, getIsReactActEnvironment } from './act';
 import { getConfig } from './config';
-import { flushMicroTasks, flushMicroTasksLegacy } from './flushMicroTasks';
+import { flushMicroTasks, flushMicroTasksLegacy } from './flush-micro-tasks';
 import { ErrorWithStack, copyStackTrace } from './helpers/errors';
 import {
   setTimeout,
