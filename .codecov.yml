@@ -4,6 +4,6 @@ coverage:
   range: 70...100
 
 comment:
-  behavior: new
+  behavior: default
   require_changes: false
   require_base: no
