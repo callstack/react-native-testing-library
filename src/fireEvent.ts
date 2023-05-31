@@ -2,7 +2,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import act from './act';
 import { isHostElement } from './helpers/component-tree';
 import { getHostComponentNames } from './helpers/host-component-names';
-import { isPointerEventEnabled } from './helpers/isPointerEventEnabled';
+import { isPointerEventEnabled } from './helpers/pointer-events';
 
 type EventHandler = (...args: unknown[]) => unknown;
 

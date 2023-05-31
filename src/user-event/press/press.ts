@@ -5,7 +5,7 @@ import { wait } from '../utils';
 import act from '../../act';
 import { getHostParent } from '../../helpers/component-tree';
 import { filterNodeByType } from '../../helpers/filterNodeByType';
-import { isPointerEventEnabled } from '../../helpers/isPointerEventEnabled';
+import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { getHostComponentNames } from '../../helpers/host-component-names';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { DEFAULT_MIN_PRESS_DURATION } from './constants';
