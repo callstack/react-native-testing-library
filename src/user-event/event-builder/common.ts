@@ -50,7 +50,7 @@ export const CommonEventBuilder = {
     return {
       persist: jest.fn(),
       nativeEvent: {
-        timestamp: new Date().getTime(),
+        timestamp: Date.now(),
       },
       currentTarget: { measure: jest.fn() },
     };
