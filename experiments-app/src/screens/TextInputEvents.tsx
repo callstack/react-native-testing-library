@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, SafeAreaView, TextInput } from 'react-native';
-import { buildEventLogger } from '../utils/helpers';
+import { buildEventLogger, logEvent } from '../utils/helpers';
 
 const handlePressIn = buildEventLogger('pressIn');
 const handlePressOut = buildEventLogger('pressOut');
@@ -19,7 +19,7 @@ export function TextInputEvents() {
 
   const handleChangeText = (value: string) => {
     setValue(value);
-    console.log(`Event: changeText`, value);
+    logEvent('changeText', value);
   };
 
   return (
