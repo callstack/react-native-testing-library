@@ -12,7 +12,7 @@ import { DEFAULT_MIN_PRESS_DURATION } from './constants';
 import { warnAboutRealTimers } from './utils/warnAboutRealTimers';
 
 export type PressOptions = {
-  pressDuration: number;
+  duration: number;
 };
 
 export async function press(
@@ -25,7 +25,7 @@ export async function press(
 export async function longPress(
   this: UserEventInstance,
   element: ReactTestInstance,
-  options: PressOptions = { pressDuration: 500 }
+  options: PressOptions = { duration: 500 }
 ): Promise<void> {
   await basePress(this.config, element, options);
 }
@@ -33,7 +33,7 @@ export async function longPress(
 const basePress = async (
   config: UserEventInstance['config'],
   element: ReactTestInstance,
-  options: PressOptions = { pressDuration: 0 }
+  options: PressOptions = { duration: 0 }
 ): Promise<void> => {
   // Text and TextInput components are mocked in React Native preset so the mock
   // doesn't implement the pressability class
@@ -56,10 +56,10 @@ const basePress = async (
     if (onPress) {
       onPress(EventBuilder.Common.press());
     }
-    await wait(config, options.pressDuration);
+    await wait(config, options.duration);
     if (onPressOut) {
-      if (DEFAULT_MIN_PRESS_DURATION - options.pressDuration > 0) {
-        await wait(config, DEFAULT_MIN_PRESS_DURATION - options.pressDuration);
+      if (DEFAULT_MIN_PRESS_DURATION - options.duration > 0) {
+        await wait(config, DEFAULT_MIN_PRESS_DURATION - options.duration);
       }
       onPressOut(EventBuilder.Common.press());
     }
@@ -81,7 +81,7 @@ const basePress = async (
 const triggerPressEvent = async (
   config: UserEventInstance['config'],
   element: ReactTestInstance,
-  options: PressOptions = { pressDuration: 0 }
+  options: PressOptions = { duration: 0 }
 ) => {
   const areFakeTimersEnabled = jestFakeTimersAreEnabled();
   if (!areFakeTimersEnabled) {
@@ -96,15 +96,15 @@ const triggerPressEvent = async (
       dispatchConfig: { registrationName: 'onResponderGrant' },
     });
 
-    await wait(config, options.pressDuration);
+    await wait(config, options.duration);
 
     element.props.onResponderRelease({
       ...EventBuilder.Common.press(),
       dispatchConfig: { registrationName: 'onResponderRelease' },
     });
 
-    if (DEFAULT_MIN_PRESS_DURATION - options.pressDuration > 0) {
-      await wait(config, DEFAULT_MIN_PRESS_DURATION - options.pressDuration);
+    if (DEFAULT_MIN_PRESS_DURATION - options.duration > 0) {
+      await wait(config, DEFAULT_MIN_PRESS_DURATION - options.duration);
     }
   });
 };

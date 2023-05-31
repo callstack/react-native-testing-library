@@ -142,7 +142,7 @@ describe('userEvent.press with real timers', () => {
     expect(mockOnPress).toHaveBeenCalled();
   });
 
-  test('does not call onLongPress for pressDuration of 0', async () => {
+  test('does not call onLongPress', async () => {
     const mockOnLongPress = jest.fn();
 
     render(

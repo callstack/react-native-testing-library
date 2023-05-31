@@ -52,7 +52,7 @@ This helper simulates a press on any pressable element, e.g. `Pressable`, `Touch
 ```ts
 longPress(
   element: ReactTestInstance,
-  options: { pressDuration: number } = { pressDuration: 500 }
+  options: { duration: number } = { duration: 500 }
 ): Promise<void>
 ```
 

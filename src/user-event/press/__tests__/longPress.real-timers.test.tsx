@@ -47,7 +47,7 @@ describe('userEvent.longPress with real timers', () => {
     expect(mockOnPress).toHaveBeenCalledTimes(1);
 
     await user.longPress(screen.getByText('press me'), {
-      pressDuration: 1000,
+      duration: 1000,
     });
 
     expect(mockOnLongPress).toHaveBeenCalled();
