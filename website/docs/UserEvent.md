@@ -45,7 +45,7 @@ const user = userEvent.setup();
 await user.press(element);
 ```
 
-This helper simulates a press on any pressable element, e.g. Pressable, Text or TextInput. Unlike fireEvent.press which is a simpler API that will only call the onPress prop, this simumlates the entire press event in a more realistic way by reproducing what really happens when a user presses a pressable component. This means for instance for onPressIn and onPressOut props will also be invoked.  
+This helper simulates a press on any pressable element, e.g. `Pressable`, `TouchableOpacity`, `Text`, `TextInput`, etc. Unlike `fireEvent.press()` which is a simpler API that will only call the `onPress` prop, this simulates the entire press event in a more realistic way by reproducing what really happens when a user presses an interface view. This will trigger additional events like `pressIn` and `pressOut`. 
 
 ## `longPress()`
 
