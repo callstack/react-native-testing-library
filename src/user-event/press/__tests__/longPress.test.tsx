@@ -29,6 +29,29 @@ describe('userEvent.longPress with fake timers', () => {
 
     render(
       <Pressable
+        delayLongPress={800}
+        onLongPress={mockOnLongPress}
+        onPress={mockOnPress}
+      >
+        <Text>press me</Text>
+      </Pressable>
+    );
+
+    await user.longPress(screen.getByText('press me'), {
+      duration: 1000,
+    });
+
+    expect(mockOnLongPress).toHaveBeenCalled();
+    expect(mockOnPress).not.toHaveBeenCalled();
+  });
+
+  test('does not calls onLongPress when duration is lesser than specified onLongPressDelay', async () => {
+    const mockOnLongPress = jest.fn();
+    const mockOnPress = jest.fn();
+    const user = userEvent.setup();
+
+    render(
+      <Pressable
         delayLongPress={1000}
         onLongPress={mockOnLongPress}
         onPress={mockOnPress}
@@ -39,13 +62,6 @@ describe('userEvent.longPress with fake timers', () => {
     await user.longPress(screen.getByText('press me'));
 
     expect(mockOnLongPress).not.toHaveBeenCalled();
-    expect(mockOnPress).toHaveBeenCalledTimes(1);
-
-    await user.longPress(screen.getByText('press me'), {
-      duration: 1000,
-    });
-
-    expect(mockOnLongPress).toHaveBeenCalled();
     expect(mockOnPress).toHaveBeenCalledTimes(1);
   });
 
