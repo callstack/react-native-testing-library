@@ -1,7 +1,7 @@
 /* globals jest */
 import act, { setReactActEnvironment, getIsReactActEnvironment } from './act';
 import { getConfig } from './config';
-import { flushMicroTasks } from './flushMicroTasks';
+import { flushMicroTasks, flushMicroTasksLegacy } from './flushMicroTasks';
 import { ErrorWithStack, copyStackTrace } from './helpers/errors';
 import {
   setTimeout,
@@ -206,7 +206,7 @@ export default async function waitFor<T>(
     try {
       const result = await waitForInternal(expectation, optionsWithStackTrace);
       // Flush the microtask queue before restoring the `act` environment
-      await flushMicroTasks();
+      await flushMicroTasksLegacy();
       return result;
     } finally {
       setReactActEnvironment(previousActEnvironment);
