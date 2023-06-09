@@ -1,12 +1,11 @@
 /* globals jest */
 import act, { setReactActEnvironment, getIsReactActEnvironment } from './act';
 import { getConfig } from './config';
-import { flushMicroTasks } from './flushMicroTasks';
+import { flushMicroTasks, flushMicroTasksLegacy } from './flush-micro-tasks';
 import { ErrorWithStack, copyStackTrace } from './helpers/errors';
 import {
   setTimeout,
   clearTimeout,
-  setImmediate,
   jestFakeTimersAreEnabled,
 } from './helpers/timers';
 import { checkReactVersionAtLeast } from './react-versions';
@@ -89,7 +88,7 @@ function waitForInternal<T>(
         // of parallelization so we're fine.
         // https://stackoverflow.com/a/59243586/971592
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => setImmediate(resolve));
+        await flushMicroTasks();
       }
     } else {
       overallTimeoutTimer = setTimeout(handleTimeout, timeout);
@@ -207,7 +206,7 @@ export default async function waitFor<T>(
     try {
       const result = await waitForInternal(expectation, optionsWithStackTrace);
       // Flush the microtask queue before restoring the `act` environment
-      await flushMicroTasks();
+      await flushMicroTasksLegacy();
       return result;
     } finally {
       setReactActEnvironment(previousActEnvironment);
