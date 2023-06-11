@@ -8,6 +8,6 @@ test('logs a warning about usign real timers with user event', () => {
   expect(mockConsoleWarn.mock.calls[0][0]).toMatchInlineSnapshot(`
     "It is not recommended to use userEvent without using fake timers
     Some events involve duration so your tests may take a long time to run.
-    For instance calling userEvent.longPress with real timers will take 500ms"
+    For instance calling userEvent.longPress with real timers will take 500 ms"
   `);
 });
