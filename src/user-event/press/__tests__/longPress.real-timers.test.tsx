@@ -27,7 +27,7 @@ describe('userEvent.longPress with real timers', () => {
     expect(mockOnLongPress).toHaveBeenCalled();
   });
 
-  test('calls onLongPress when duration is greater than specified longPressDelay', async () => {
+  test('calls onLongPress when duration is greater than specified delayLongPress', async () => {
     const mockOnLongPress = jest.fn();
     const mockOnPress = jest.fn();
     const user = userEvent.setup();
@@ -50,7 +50,7 @@ describe('userEvent.longPress with real timers', () => {
     expect(mockOnPress).not.toHaveBeenCalled();
   });
 
-  test('does not calls onLongPress when duration is lesser than specified longPressDelay', async () => {
+  test('does not calls onLongPress when duration is lesser than specified delayLongPress', async () => {
     const mockOnLongPress = jest.fn();
     const mockOnPress = jest.fn();
     const user = userEvent.setup();
