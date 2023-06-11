@@ -2,24 +2,73 @@ import React from 'react';
 import { Pressable, Text } from 'react-native';
 import { render, screen } from '../../../pure';
 import { userEvent } from '../..';
+import { createEventLogger } from '../../../test-utils';
 
 describe('userEvent.longPress with fake timers', () => {
   beforeEach(() => {
     jest.useFakeTimers();
+    jest.setSystemTime(0);
   });
 
   test('calls onLongPress if the delayLongPress is the default one', async () => {
-    const mockOnLongPress = jest.fn();
+    const { logEvent, events } = createEventLogger();
     const user = userEvent.setup();
 
     render(
-      <Pressable onLongPress={mockOnLongPress}>
+      <Pressable onLongPress={logEvent('longPress')}>
         <Text>press me</Text>
       </Pressable>
     );
     await user.longPress(screen.getByText('press me'));
 
-    expect(mockOnLongPress).toHaveBeenCalled();
+    expect(events).toMatchInlineSnapshot(`
+      [
+        {
+          "name": "longPress",
+          "payload": {
+            "currentTarget": {
+              "measure": [MockFunction] {
+                "calls": [
+                  [
+                    [Function],
+                  ],
+                  [
+                    [Function],
+                  ],
+                ],
+                "results": [
+                  {
+                    "type": "return",
+                    "value": undefined,
+                  },
+                  {
+                    "type": "return",
+                    "value": undefined,
+                  },
+                ],
+              },
+            },
+            "dispatchConfig": {
+              "registrationName": "onResponderGrant",
+            },
+            "nativeEvent": {
+              "timestamp": 500,
+            },
+            "persist": [MockFunction] {
+              "calls": [
+                [],
+              ],
+              "results": [
+                {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+          },
+        },
+      ]
+    `);
   });
 
   test('calls onLongPress when duration is greater than specified onLongPressDelay', async () => {

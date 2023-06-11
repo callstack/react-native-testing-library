@@ -14,6 +14,7 @@ import { userEvent } from '../..';
 describe('userEvent.press with fake timers', () => {
   beforeEach(() => {
     jest.useFakeTimers();
+    jest.setSystemTime(0);
   });
 
   test('calls onPressIn, onPress and onPressOut prop of touchable', async () => {
@@ -30,7 +31,104 @@ describe('userEvent.press with fake timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    expect(getEventsName(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    expect(events).toMatchInlineSnapshot(`
+      [
+        {
+          "name": "pressIn",
+          "payload": {
+            "currentTarget": {
+              "measure": [MockFunction] {
+                "calls": [
+                  [
+                    [Function],
+                  ],
+                  [
+                    [Function],
+                  ],
+                ],
+                "results": [
+                  {
+                    "type": "return",
+                    "value": undefined,
+                  },
+                  {
+                    "type": "return",
+                    "value": undefined,
+                  },
+                ],
+              },
+            },
+            "dispatchConfig": {
+              "registrationName": "onResponderGrant",
+            },
+            "nativeEvent": {
+              "timestamp": 0,
+            },
+            "persist": [MockFunction] {
+              "calls": [
+                [],
+              ],
+              "results": [
+                {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+          },
+        },
+        {
+          "name": "press",
+          "payload": {
+            "currentTarget": {
+              "measure": [MockFunction],
+            },
+            "dispatchConfig": {
+              "registrationName": "onResponderRelease",
+            },
+            "nativeEvent": {
+              "timestamp": 0,
+            },
+            "persist": [MockFunction] {
+              "calls": [
+                [],
+              ],
+              "results": [
+                {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+          },
+        },
+        {
+          "name": "pressOut",
+          "payload": {
+            "currentTarget": {
+              "measure": [MockFunction],
+            },
+            "dispatchConfig": {
+              "registrationName": "onResponderRelease",
+            },
+            "nativeEvent": {
+              "timestamp": 0,
+            },
+            "persist": [MockFunction] {
+              "calls": [
+                [],
+              ],
+              "results": [
+                {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
+          },
+        },
+      ]
+    `);
   });
 
   test('does not trigger event when pressable is disabled', async () => {
