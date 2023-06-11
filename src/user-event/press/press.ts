@@ -51,17 +51,17 @@ const basePress = async (
     const { onPressIn, onPress, onPressOut } = element.props;
     await wait(config);
     if (onPressIn) {
-      onPressIn(EventBuilder.Common.press());
+      onPressIn(EventBuilder.Common.touch());
     }
     if (onPress) {
-      onPress(EventBuilder.Common.press());
+      onPress(EventBuilder.Common.touch());
     }
     await wait(config, options.duration);
     if (onPressOut) {
       if (DEFAULT_MIN_PRESS_DURATION - options.duration > 0) {
         await wait(config, DEFAULT_MIN_PRESS_DURATION - options.duration);
       }
-      onPressOut(EventBuilder.Common.press());
+      onPressOut(EventBuilder.Common.touch());
     }
   }
 
@@ -92,14 +92,14 @@ const triggerPressEvent = async (
 
   await act(async () => {
     element.props.onResponderGrant({
-      ...EventBuilder.Common.press(),
+      ...EventBuilder.Common.touch(),
       dispatchConfig: { registrationName: 'onResponderGrant' },
     });
 
     await wait(config, options.duration);
 
     element.props.onResponderRelease({
-      ...EventBuilder.Common.press(),
+      ...EventBuilder.Common.touch(),
       dispatchConfig: { registrationName: 'onResponderRelease' },
     });
 

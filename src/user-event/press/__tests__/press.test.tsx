@@ -62,7 +62,15 @@ describe('userEvent.press with fake timers', () => {
               "registrationName": "onResponderGrant",
             },
             "nativeEvent": {
+              "changedTouches": [],
+              "identifier": 0,
+              "locationX": 0,
+              "locationY": 0,
+              "pageX": 0,
+              "pageY": 0,
+              "target": 0,
               "timestamp": 0,
+              "touches": [],
             },
             "persist": [MockFunction] {
               "calls": [
@@ -87,7 +95,15 @@ describe('userEvent.press with fake timers', () => {
               "registrationName": "onResponderRelease",
             },
             "nativeEvent": {
+              "changedTouches": [],
+              "identifier": 0,
+              "locationX": 0,
+              "locationY": 0,
+              "pageX": 0,
+              "pageY": 0,
+              "target": 0,
               "timestamp": 0,
+              "touches": [],
             },
             "persist": [MockFunction] {
               "calls": [
@@ -112,7 +128,15 @@ describe('userEvent.press with fake timers', () => {
               "registrationName": "onResponderRelease",
             },
             "nativeEvent": {
+              "changedTouches": [],
+              "identifier": 0,
+              "locationX": 0,
+              "locationY": 0,
+              "pageX": 0,
+              "pageY": 0,
+              "target": 0,
               "timestamp": 0,
+              "touches": [],
             },
             "persist": [MockFunction] {
               "calls": [

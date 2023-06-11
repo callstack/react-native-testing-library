@@ -52,7 +52,15 @@ describe('userEvent.longPress with fake timers', () => {
               "registrationName": "onResponderGrant",
             },
             "nativeEvent": {
+              "changedTouches": [],
+              "identifier": 0,
+              "locationX": 0,
+              "locationY": 0,
+              "pageX": 0,
+              "pageY": 0,
+              "target": 0,
               "timestamp": 500,
+              "touches": [],
             },
             "persist": [MockFunction] {
               "calls": [
