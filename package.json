@@ -47,7 +47,6 @@
     "@types/react": "~18.0.26",
     "@types/react-test-renderer": "~18.0.0",
     "babel-jest": "^29.4.0",
-    "conventional-changelog-cli": "^2.2.2",
     "dedent": "^0.7.0",
     "del-cli": "^5.0.0",
     "eslint": "^8.21.0",
