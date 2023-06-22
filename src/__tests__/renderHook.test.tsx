@@ -80,7 +80,7 @@ test('props type is infered correctly when initial props is defined', () => {
   expect(result.current).toBe(6);
 });
 
-test('props type is infered correctly when initial props is explicitly undefined', () => {
+test('props type is inferred correctly when initial props is explicitly undefined', () => {
   const { result, rerender } = renderHook(
     (num: number | undefined) => useMyHook(num),
     {
