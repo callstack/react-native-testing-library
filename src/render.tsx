@@ -17,6 +17,7 @@ export type RenderOptions = {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => any;
   unstable_validateStringsRenderedWithinText?: boolean;
+  skipHostComponentNamesConfiguration?: boolean;
 };
 
 export type RenderResult = ReturnType<typeof render>;
@@ -31,9 +32,12 @@ export default function render<T>(
     wrapper: Wrapper,
     createNodeMock,
     unstable_validateStringsRenderedWithinText,
+    skipHostComponentNamesConfiguration = false,
   }: RenderOptions = {}
 ) {
-  configureHostComponentNamesIfNeeded();
+  if (skipHostComponentNamesConfiguration === false) {
+    configureHostComponentNamesIfNeeded();
+  }
 
   if (unstable_validateStringsRenderedWithinText) {
     return renderWithStringValidation(component, {
