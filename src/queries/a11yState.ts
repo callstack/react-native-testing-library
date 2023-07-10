@@ -19,15 +19,11 @@ import { CommonQueryOptions } from './options';
 
 const queryAllByA11yState = (
   instance: ReactTestInstance
-): ((
-  matcher: AccessibilityStateMatcher,
-  queryOptions?: CommonQueryOptions
-) => Array<ReactTestInstance>) =>
+): QueryAllByQuery<AccessibilityStateMatcher, CommonQueryOptions> =>
   function queryAllByA11yStateFn(matcher, queryOptions) {
     return findAll(
       instance,
-      (node) =>
-        typeof node.type === 'string' && matchAccessibilityState(node, matcher),
+      (node) => matchAccessibilityState(node, matcher),
       queryOptions
     );
   };

@@ -1,10 +1,14 @@
 import { ReactTestInstance } from 'react-test-renderer';
 
+export type HostReactTestInstance = ReactTestInstance & { type: string };
+
 /**
  * Checks if the given element is a host element.
  * @param element The element to check.
  */
-export function isHostElement(element?: ReactTestInstance | null) {
+export function isHostElement(
+  element?: ReactTestInstance | null
+): element is HostReactTestInstance {
   return typeof element?.type === 'string';
 }
 

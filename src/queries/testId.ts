@@ -25,16 +25,11 @@ const getNodeByTestId = (
 
 const queryAllByTestId = (
   instance: ReactTestInstance
-): ((
-  testId: TextMatch,
-  queryOptions?: ByTestIdOptions
-) => Array<ReactTestInstance>) =>
+): QueryAllByQuery<TextMatch, ByTestIdOptions> =>
   function queryAllByTestIdFn(testId, queryOptions) {
     return findAll(
       instance,
-      (node) =>
-        typeof node.type === 'string' &&
-        getNodeByTestId(node, testId, queryOptions),
+      (node) => getNodeByTestId(node, testId, queryOptions),
       queryOptions
     );
   };

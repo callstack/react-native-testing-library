@@ -19,7 +19,7 @@ type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const queryAllByText = (
   instance: ReactTestInstance
-): ((text: TextMatch, options?: ByTextOptions) => Array<ReactTestInstance>) =>
+): QueryAllByQuery<TextMatch, ByTextOptions> =>
   function queryAllByTextFn(text, options = {}) {
     return findAll(
       instance,

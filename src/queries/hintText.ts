@@ -25,16 +25,11 @@ const getNodeByHintText = (
 
 const queryAllByHintText = (
   instance: ReactTestInstance
-): ((
-  hint: TextMatch,
-  queryOptions?: ByHintTextOptions
-) => Array<ReactTestInstance>) =>
+): QueryAllByQuery<TextMatch, ByHintTextOptions> =>
   function queryAllByA11yHintFn(hint, queryOptions) {
     return findAll(
       instance,
-      (node) =>
-        typeof node.type === 'string' &&
-        getNodeByHintText(node, hint, queryOptions),
+      (node) => getNodeByHintText(node, hint, queryOptions),
       queryOptions
     );
   };

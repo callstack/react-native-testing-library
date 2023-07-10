@@ -19,9 +19,7 @@ function queryAllByLabelText(instance: ReactTestInstance) {
   return (text: TextMatch, queryOptions?: ByLabelTextOptions) => {
     return findAll(
       instance,
-      (node) =>
-        typeof node.type === 'string' &&
-        matchLabelText(instance, node, text, queryOptions),
+      (node) => matchLabelText(instance, node, text, queryOptions),
       queryOptions
     );
   };

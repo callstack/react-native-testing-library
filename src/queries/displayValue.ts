@@ -33,10 +33,7 @@ const getTextInputNodeByDisplayValue = (
 
 const queryAllByDisplayValue = (
   instance: ReactTestInstance
-): ((
-  displayValue: TextMatch,
-  queryOptions?: ByDisplayValueOptions
-) => Array<ReactTestInstance>) =>
+): QueryAllByQuery<TextMatch, ByDisplayValueOptions> =>
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
     return findAll(
       instance,

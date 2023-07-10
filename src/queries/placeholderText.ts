@@ -31,10 +31,7 @@ const getTextInputNodeByPlaceholderText = (
 
 const queryAllByPlaceholderText = (
   instance: ReactTestInstance
-): ((
-  placeholder: TextMatch,
-  queryOptions?: ByPlaceholderTextOptions
-) => Array<ReactTestInstance>) =>
+): QueryAllByQuery<TextMatch, ByPlaceholderTextOptions> =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
     return findAll(
       instance,
