@@ -136,7 +136,7 @@ function updateWithAct(
   };
 }
 
-interface DebugFunction {
+export interface DebugFunction {
   (options?: DebugOptions | string): void;
   shallow: (message?: string) => void;
 }
