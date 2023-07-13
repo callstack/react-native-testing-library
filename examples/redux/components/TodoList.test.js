@@ -19,7 +19,7 @@ test('it should execute with a store with 4 elements', () => {
   expect(todoElems).toHaveLength(4);
 });
 
-test('should execute with 2 elements and end up with 1 after delete', () => {
+test('should display 4 elements and end up with 3 after delete', () => {
   renderWithRedux(<TodoList />, { initialState });
 
   const todoElems = screen.getAllByText(/something/i);
