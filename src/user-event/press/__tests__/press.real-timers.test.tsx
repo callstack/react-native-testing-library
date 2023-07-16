@@ -30,6 +30,7 @@ describe('userEvent.press with real timers', () => {
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
         testID="pressable"
       />
     );
@@ -48,6 +49,7 @@ describe('userEvent.press with real timers', () => {
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
         testID="pressable"
       />
     );
@@ -65,6 +67,7 @@ describe('userEvent.press with real timers', () => {
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
         testID="pressable"
         pointerEvents="none"
       />
@@ -83,6 +86,7 @@ describe('userEvent.press with real timers', () => {
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
         testID="pressable"
         pointerEvents="box-none"
       />
@@ -102,6 +106,7 @@ describe('userEvent.press with real timers', () => {
           onPress={logEvent('press')}
           onPressIn={logEvent('pressIn')}
           onPressOut={logEvent('pressOut')}
+          onLongPress={logEvent('longPress')}
           testID="pressable"
         />
       </View>
@@ -120,6 +125,7 @@ describe('userEvent.press with real timers', () => {
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
         testID="pressable"
         pointerEvents="box-only"
       />
@@ -189,6 +195,7 @@ describe('userEvent.press with real timers', () => {
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
       >
         press me
       </Text>
@@ -206,6 +213,7 @@ describe('userEvent.press with real timers', () => {
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
         disabled
       >
         press me
@@ -225,6 +233,7 @@ describe('userEvent.press with real timers', () => {
           onPress={logEvent('press')}
           onPressIn={logEvent('pressIn')}
           onPressOut={logEvent('pressOut')}
+          onLongPress={logEvent('longPress')}
         >
           press me
         </Text>
