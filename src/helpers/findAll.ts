@@ -56,10 +56,10 @@ function findAllInternal(
   });
 
   if (
-    isHostElement(root) &&
-    predicate(root) &&
     // When matchDeepestOnly = true: add current element only if no descendants match
-    (!options?.matchDeepestOnly || matchingDescendants.length === 0)
+    (!options?.matchDeepestOnly || matchingDescendants.length === 0) &&
+    isHostElement(root) &&
+    predicate(root)
   ) {
     results.push(root);
   }
