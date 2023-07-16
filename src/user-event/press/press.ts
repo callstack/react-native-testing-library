@@ -90,8 +90,7 @@ const triggerPressEvent = async (
 const isEnabledTouchResponder = (element: ReactTestInstance) => {
   return (
     isPointerEventEnabled(element) &&
-    element.props.onStartShouldSetResponder &&
-    element.props.onStartShouldSetResponder()
+    element.props.onStartShouldSetResponder?.()
   );
 };
 
