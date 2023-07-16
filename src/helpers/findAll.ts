@@ -19,7 +19,7 @@ export function findAll(
   root: ReactTestInstance,
   predicate: (element: ReactTestInstance) => boolean,
   options?: FindAllOptions
-): Array<HostReactTestInstance> {
+): HostReactTestInstance[] {
   const results = findAllInternal(root, predicate, options);
 
   const includeHiddenElements =
@@ -43,7 +43,7 @@ function findAllInternal(
   root: ReactTestInstance,
   predicate: (element: ReactTestInstance) => boolean,
   options?: FindAllOptions
-): Array<HostReactTestInstance> {
+): HostReactTestInstance[] {
   const results: HostReactTestInstance[] = [];
 
   // Match descendants first but do not add them to results yet.
