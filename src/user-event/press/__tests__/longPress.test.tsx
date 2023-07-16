@@ -59,7 +59,7 @@ describe('userEvent.longPress with fake timers', () => {
               "pageX": 0,
               "pageY": 0,
               "target": 0,
-              "timestamp": 500,
+              "timestamp": 0,
               "touches": [],
             },
             "persist": [MockFunction] {

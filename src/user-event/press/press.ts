@@ -41,7 +41,8 @@ const basePress = async (
   const isEnabledHostText =
     filterNodeByType(element, getHostComponentNames().text) &&
     isPointerEventEnabled(element) &&
-    !element.props.disabled;
+    !element.props.disabled &&
+    element.props.onPress;
   const isEnabledTextInput =
     filterNodeByType(element, getHostComponentNames().textInput) &&
     isPointerEventEnabled(element) &&
@@ -63,6 +64,7 @@ const basePress = async (
       }
       onPressOut(EventBuilder.Common.touch());
     }
+    return;
   }
 
   if (isEnabledTouchResponder(element)) {
