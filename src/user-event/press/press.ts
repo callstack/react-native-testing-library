@@ -38,32 +38,8 @@ const basePress = async (
   // Text and TextInput components are mocked in React Native preset so the mock
   // doesn't implement the pressability class
   // Thus we need to call the props directly on the host component
-  const isEnabledHostText =
-    filterNodeByType(element, getHostComponentNames().text) &&
-    isPointerEventEnabled(element) &&
-    !element.props.disabled &&
-    element.props.onPress;
-  const isEnabledTextInput =
-    filterNodeByType(element, getHostComponentNames().textInput) &&
-    isPointerEventEnabled(element) &&
-    element.props.editable !== false;
-
-  if (isEnabledHostText || isEnabledTextInput) {
-    const { onPressIn, onPress, onPressOut } = element.props;
-    await wait(config);
-    if (onPressIn) {
-      onPressIn(EventBuilder.Common.touch());
-    }
-    if (onPress) {
-      onPress(EventBuilder.Common.touch());
-    }
-    await wait(config, options.duration);
-    if (onPressOut) {
-      if (DEFAULT_MIN_PRESS_DURATION - options.duration > 0) {
-        await wait(config, DEFAULT_MIN_PRESS_DURATION - options.duration);
-      }
-      onPressOut(EventBuilder.Common.touch());
-    }
+  if (isEnabledHostText(element) || isEnabledTextInput(element)) {
+    await triggerMockPressEvent(config, element, options);
     return;
   }
 
@@ -117,4 +93,43 @@ const isEnabledTouchResponder = (element: ReactTestInstance) => {
     element.props.onStartShouldSetResponder &&
     element.props.onStartShouldSetResponder()
   );
+};
+
+const isEnabledHostText = (element: ReactTestInstance) => {
+  return (
+    filterNodeByType(element, getHostComponentNames().text) &&
+    isPointerEventEnabled(element) &&
+    !element.props.disabled &&
+    element.props.onPress
+  );
+};
+
+const isEnabledTextInput = (element: ReactTestInstance) => {
+  return (
+    filterNodeByType(element, getHostComponentNames().textInput) &&
+    isPointerEventEnabled(element) &&
+    element.props.editable !== false
+  );
+};
+
+const triggerMockPressEvent = async (
+  config: UserEventInstance['config'],
+  element: ReactTestInstance,
+  options: PressOptions = { duration: 0 }
+) => {
+  const { onPressIn, onPress, onPressOut } = element.props;
+  await wait(config);
+  if (onPressIn) {
+    onPressIn(EventBuilder.Common.touch());
+  }
+  if (onPress) {
+    onPress(EventBuilder.Common.touch());
+  }
+  await wait(config, options.duration);
+  if (onPressOut) {
+    if (DEFAULT_MIN_PRESS_DURATION - options.duration > 0) {
+      await wait(config, DEFAULT_MIN_PRESS_DURATION - options.duration);
+    }
+    onPressOut(EventBuilder.Common.touch());
+  }
 };
