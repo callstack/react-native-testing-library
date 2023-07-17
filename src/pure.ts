@@ -19,6 +19,7 @@ export type {
   RenderOptions,
   RenderResult,
   RenderResult as RenderAPI,
+  DebugFunction,
 } from './render';
 export type { RenderHookOptions, RenderHookResult } from './renderHook';
 export type { Config } from './config';
