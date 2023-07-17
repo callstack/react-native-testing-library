@@ -10,11 +10,13 @@ import {
 import { createEventLogger, getEventsName } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
+import * as WarnAboutRealTimers from '../utils/warnAboutRealTimers';
 
-describe('userEvent.press with fake timers', () => {
+describe('userEvent.press with real timers', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(0);
+    jest.useRealTimers();
+    jest.restoreAllMocks();
+    jest.spyOn(WarnAboutRealTimers, 'warnAboutRealTimers').mockImplementation();
   });
 
   test('calls onPressIn, onPress and onPressOut prop of touchable', async () => {
@@ -32,128 +34,7 @@ describe('userEvent.press with fake timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    expect(events).toMatchInlineSnapshot(`
-      [
-        {
-          "name": "pressIn",
-          "payload": {
-            "currentTarget": {
-              "measure": [MockFunction] {
-                "calls": [
-                  [
-                    [Function],
-                  ],
-                  [
-                    [Function],
-                  ],
-                ],
-                "results": [
-                  {
-                    "type": "return",
-                    "value": undefined,
-                  },
-                  {
-                    "type": "return",
-                    "value": undefined,
-                  },
-                ],
-              },
-            },
-            "dispatchConfig": {
-              "registrationName": "onResponderGrant",
-            },
-            "nativeEvent": {
-              "changedTouches": [],
-              "identifier": 0,
-              "locationX": 0,
-              "locationY": 0,
-              "pageX": 0,
-              "pageY": 0,
-              "target": 0,
-              "timestamp": 0,
-              "touches": [],
-            },
-            "persist": [MockFunction] {
-              "calls": [
-                [],
-              ],
-              "results": [
-                {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-          },
-        },
-        {
-          "name": "press",
-          "payload": {
-            "currentTarget": {
-              "measure": [MockFunction],
-            },
-            "dispatchConfig": {
-              "registrationName": "onResponderRelease",
-            },
-            "nativeEvent": {
-              "changedTouches": [],
-              "identifier": 0,
-              "locationX": 0,
-              "locationY": 0,
-              "pageX": 0,
-              "pageY": 0,
-              "target": 0,
-              "timestamp": 0,
-              "touches": [],
-            },
-            "persist": [MockFunction] {
-              "calls": [
-                [],
-              ],
-              "results": [
-                {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-          },
-        },
-        {
-          "name": "pressOut",
-          "payload": {
-            "currentTarget": {
-              "measure": [MockFunction],
-            },
-            "dispatchConfig": {
-              "registrationName": "onResponderRelease",
-            },
-            "nativeEvent": {
-              "changedTouches": [],
-              "identifier": 0,
-              "locationX": 0,
-              "locationY": 0,
-              "pageX": 0,
-              "pageY": 0,
-              "target": 0,
-              "timestamp": 0,
-              "touches": [],
-            },
-            "persist": [MockFunction] {
-              "calls": [
-                [],
-              ],
-              "results": [
-                {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-          },
-        },
-      ]
-    `);
+    expect(getEventsName(events)).toEqual(['pressIn', 'press', 'pressOut']);
   });
 
   test('does not trigger event when pressable is disabled', async () => {
@@ -419,4 +300,19 @@ describe('userEvent.press with fake timers', () => {
 
     expect(mockOnPress).toHaveBeenCalled();
   });
+});
+
+test('warns about using real timers with userEvent', async () => {
+  jest.restoreAllMocks();
+  const mockConsoleWarn = jest.spyOn(console, 'warn').mockImplementation();
+
+  render(<Pressable testID="pressable" />);
+
+  await userEvent.press(screen.getByTestId('pressable'));
+
+  expect(mockConsoleWarn.mock.calls[0][0]).toMatchInlineSnapshot(`
+    "It is recommended to use userEvent with fake timers
+    Some events involve duration so your tests may take a long time to run.
+    For instance calling userEvent.longPress with real timers will take 500 ms."
+  `);
 });

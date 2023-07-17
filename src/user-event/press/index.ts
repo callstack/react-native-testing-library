@@ -1,1 +1,1 @@
-export { press } from './press';
+export { press, longPress } from './press';

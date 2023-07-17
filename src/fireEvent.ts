@@ -1,7 +1,8 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import act from './act';
-import { getHostParent, isHostElement } from './helpers/component-tree';
+import { isHostElement } from './helpers/component-tree';
 import { getHostComponentNames } from './helpers/host-component-names';
+import { isPointerEventEnabled } from './helpers/pointer-events';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
@@ -17,27 +18,6 @@ export function isTouchResponder(element: ReactTestInstance) {
   return (
     Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element)
   );
-}
-
-export function isPointerEventEnabled(
-  element: ReactTestInstance,
-  isParent?: boolean
-): boolean {
-  const pointerEvents = element.props.pointerEvents;
-  if (pointerEvents === 'none') {
-    return false;
-  }
-
-  if (isParent ? pointerEvents === 'box-only' : pointerEvents === 'box-none') {
-    return false;
-  }
-
-  const parent = getHostParent(element);
-  if (!parent) {
-    return true;
-  }
-
-  return isPointerEventEnabled(parent, true);
 }
 
 /**

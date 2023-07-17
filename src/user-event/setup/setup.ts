@@ -1,7 +1,8 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
-import { press } from '../press';
+import { press, longPress } from '../press';
 import { type } from '../type';
+import { PressOptions } from '../press/press';
 
 export interface UserEventSetupOptions {
   /**
@@ -68,6 +69,10 @@ function createConfig(options?: UserEventSetupOptions): UserEventConfig {
 export interface UserEventInstance {
   config: UserEventConfig;
   press: (element: ReactTestInstance) => Promise<void>;
+  longPress: (
+    element: ReactTestInstance,
+    options?: PressOptions
+  ) => Promise<void>;
   type: (element: ReactTestInstance, text: string) => Promise<void>;
 }
 
@@ -79,6 +84,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
   // We need to bind these functions, as they access the config through 'this.config'.
   const api = {
     press: press.bind(instance),
+    longPress: longPress.bind(instance),
     type: type.bind(instance),
   };
 
