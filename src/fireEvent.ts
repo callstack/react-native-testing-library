@@ -1,4 +1,10 @@
 import { ReactTestInstance } from 'react-test-renderer';
+import {
+  ViewProps,
+  TextProps,
+  ScrollViewProps,
+  PressableProps,
+} from 'react-native';
 import act from './act';
 import { isHostElement } from './helpers/component-tree';
 import { getHostComponentNames } from './helpers/host-component-names';
@@ -108,9 +114,24 @@ function getEventHandlerName(eventName: string) {
   return `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 }
 
+// Allows any string but will provide autocomplete for type T
+type StringWithAutoComplete<T> = T | (string & Record<never, never>);
+
+// String union type of keys of T that start with on, stripped from on
+type OnKeys<T> = keyof {
+  [K in keyof T as K extends `on${infer Rest}` ? Rest : never]: T[K];
+};
+
+type EventName = StringWithAutoComplete<
+  | OnKeys<ViewProps>
+  | OnKeys<TextProps>
+  | OnKeys<ScrollViewProps>
+  | OnKeys<PressableProps>
+>;
+
 function fireEvent(
   element: ReactTestInstance,
-  eventName: string,
+  eventName: EventName,
   ...data: unknown[]
 ) {
   const handler = findEventHandler(element, eventName);
