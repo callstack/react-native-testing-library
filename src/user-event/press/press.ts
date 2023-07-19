@@ -1,9 +1,11 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import act from '../../act';
 import { getHostParent } from '../../helpers/component-tree';
-import { filterNodeByType } from '../../helpers/filterNodeByType';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
-import { getHostComponentNames } from '../../helpers/host-component-names';
+import {
+  isHostText,
+  isHostTextInput,
+} from '../../helpers/host-component-names';
 import { EventBuilder } from '../event-builder';
 import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait, warnAboutRealTimersIfNeeded } from '../utils';
@@ -96,7 +98,7 @@ const isEnabledTouchResponder = (element: ReactTestInstance) => {
 
 const isPressableText = (element: ReactTestInstance) => {
   return (
-    filterNodeByType(element, getHostComponentNames().text) &&
+    isHostText(element) &&
     isPointerEventEnabled(element) &&
     !element.props.disabled &&
     element.props.onPress
@@ -105,7 +107,7 @@ const isPressableText = (element: ReactTestInstance) => {
 
 const isEnabledTextInput = (element: ReactTestInstance) => {
   return (
-    filterNodeByType(element, getHostComponentNames().textInput) &&
+    isHostTextInput(element) &&
     isPointerEventEnabled(element) &&
     element.props.editable !== false
   );

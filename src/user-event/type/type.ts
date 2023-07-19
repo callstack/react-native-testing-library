@@ -1,5 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
-import { getHostComponentNames } from '../../helpers/host-component-names';
+import { isHostTextInput } from '../../helpers/host-component-names';
 import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
@@ -24,7 +24,7 @@ export async function type(
   text: string,
   options?: TypeOptions
 ): Promise<void> {
-  if (element.type !== getHostComponentNames().textInput) {
+  if (!isHostTextInput(element)) {
     throw new ErrorWithStack(
       `type() works only with host "TextInput" elements. Passed element has type "${element.type}".`,
       type
