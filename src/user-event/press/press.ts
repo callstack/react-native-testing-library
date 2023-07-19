@@ -1,7 +1,7 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { EventBuilder } from '../event-builder';
-import { UserEventInstance } from '../setup';
-import { wait } from '../utils';
+import { UserEventConfig, UserEventInstance } from '../setup';
+import { dispatchEvent, wait } from '../utils';
 import act from '../../act';
 import { getHostParent } from '../../helpers/component-tree';
 import { filterNodeByType } from '../../helpers/filterNodeByType';
@@ -39,12 +39,12 @@ const basePress = async (
   // doesn't implement the pressability class
   // Thus we need to call the props directly on the host component
   if (isEnabledHostText(element) || isEnabledTextInput(element)) {
-    await triggerMockPressEvent(config, element, options);
+    await dispatchBasicPressEventSequence(config, element, options);
     return;
   }
 
   if (isEnabledTouchResponder(element)) {
-    await triggerPressEvent(config, element, options);
+    await dispatchPressablePressEventSequence(config, element, options);
     return;
   }
 
@@ -56,8 +56,8 @@ const basePress = async (
   await basePress(config, hostParentElement, options);
 };
 
-const triggerPressEvent = async (
-  config: UserEventInstance['config'],
+const dispatchPressablePressEventSequence = async (
+  config: UserEventConfig,
   element: ReactTestInstance,
   options: PressOptions = { duration: 0 }
 ) => {
@@ -69,17 +69,19 @@ const triggerPressEvent = async (
   await wait(config);
 
   await act(async () => {
-    element.props.onResponderGrant({
-      ...EventBuilder.Common.touch(),
-      dispatchConfig: { registrationName: 'onResponderGrant' },
-    });
+    dispatchEvent(
+      element,
+      'responderGrant',
+      EventBuilder.Common.responderGrant()
+    );
 
     await wait(config, options.duration);
 
-    element.props.onResponderRelease({
-      ...EventBuilder.Common.touch(),
-      dispatchConfig: { registrationName: 'onResponderRelease' },
-    });
+    dispatchEvent(
+      element,
+      'responderRelease',
+      EventBuilder.Common.responderRelease()
+    );
 
     if (DEFAULT_MIN_PRESS_DURATION - options.duration > 0) {
       await wait(config, DEFAULT_MIN_PRESS_DURATION - options.duration);
@@ -111,24 +113,20 @@ const isEnabledTextInput = (element: ReactTestInstance) => {
   );
 };
 
-const triggerMockPressEvent = async (
+/**
+ * Dispatches a basic press event sequence on non-Pressable component,
+ * e.g. Text or TextInput.
+ */
+async function dispatchBasicPressEventSequence(
   config: UserEventInstance['config'],
   element: ReactTestInstance,
   options: PressOptions = { duration: 0 }
-) => {
-  const { onPressIn, onPress, onPressOut } = element.props;
+) {
   await wait(config);
-  if (onPressIn) {
-    onPressIn(EventBuilder.Common.touch());
-  }
-  if (onPress) {
-    onPress(EventBuilder.Common.touch());
-  }
+  dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
+
+  dispatchEvent(element, 'press', EventBuilder.Common.touch());
+
   await wait(config, options.duration);
-  if (onPressOut) {
-    if (DEFAULT_MIN_PRESS_DURATION - options.duration > 0) {
-      await wait(config, DEFAULT_MIN_PRESS_DURATION - options.duration);
-    }
-    onPressOut(EventBuilder.Common.touch());
-  }
-};
+  dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
+}
