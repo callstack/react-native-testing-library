@@ -8,16 +8,10 @@ export type RenderHookResult<Result, Props> = {
   unmount: () => void;
 };
 
-export type RenderHookOptions<Props> = Props extends
-  | object
-  | string
-  | number
-  | boolean
-  ? {
-      initialProps: Props;
-      wrapper?: ComponentType<any>;
-    }
-  : { wrapper?: ComponentType<any>; initialProps?: never } | undefined;
+export type RenderHookOptions<Props> = {
+  initialProps?: Props;
+  wrapper?: ComponentType<any>;
+};
 
 export function renderHook<Result, Props>(
   renderCallback: (props: Props) => Result,
