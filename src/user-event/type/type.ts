@@ -2,9 +2,10 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { getHostComponentNames } from '../../helpers/host-component-names';
 import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
+import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { UserEventInstance } from '../setup';
 import {
-  dispatchOwnHostEvent,
+  dispatchEvent,
   wait,
   getTextRange,
   getTextContentSize,
@@ -25,22 +26,27 @@ export async function type(
 ): Promise<void> {
   if (element.type !== getHostComponentNames().textInput) {
     throw new ErrorWithStack(
-      `type() works only with "TextInput" elements. Passed element has type "${element.type}".`,
+      `type() works only with host "TextInput" elements. Passed element has type "${element.type}".`,
       type
     );
+  }
+
+  // Skip events if the element is disabled
+  if (element.props.editable === false || !isPointerEventEnabled(element)) {
+    return;
   }
 
   const keys = parseKeys(text);
 
   if (!options?.skipPress) {
-    dispatchOwnHostEvent(element, 'pressIn', EventBuilder.Common.touch());
+    dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
   }
 
-  dispatchOwnHostEvent(element, 'focus', EventBuilder.Common.focus());
+  dispatchEvent(element, 'focus', EventBuilder.Common.focus());
 
   if (!options?.skipPress) {
     await wait(this.config);
-    dispatchOwnHostEvent(element, 'pressOut', EventBuilder.Common.touch());
+    dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
   }
 
   let currentText = element.props.value ?? element.props.defaultValue ?? '';
@@ -57,20 +63,20 @@ export async function type(
   await wait(this.config);
 
   if (options?.submitEditing) {
-    dispatchOwnHostEvent(
+    dispatchEvent(
       element,
       'submitEditing',
       EventBuilder.TextInput.submitEditing(finalText)
     );
   }
 
-  dispatchOwnHostEvent(
+  dispatchEvent(
     element,
     'endEditing',
     EventBuilder.TextInput.endEditing(finalText)
   );
 
-  dispatchOwnHostEvent(element, 'blur', EventBuilder.Common.blur());
+  dispatchEvent(element, 'blur', EventBuilder.Common.blur());
 }
 
 async function emitTypingEvents(
@@ -81,38 +87,34 @@ async function emitTypingEvents(
 ) {
   const isMultiline = element.props.multiline === true;
 
-  dispatchOwnHostEvent(
-    element,
-    'keyPress',
-    EventBuilder.TextInput.keyPress(key)
-  );
+  dispatchEvent(element, 'keyPress', EventBuilder.TextInput.keyPress(key));
 
+  // According to the docs only multiline TextInput emits textInput event
+  // @see: https://github.com/facebook/react-native/blob/42a2898617da1d7a98ef574a5b9e500681c8f738/packages/react-native/Libraries/Components/TextInput/TextInput.d.ts#L754
   if (isMultiline) {
-    dispatchOwnHostEvent(
+    dispatchEvent(
       element,
       'textInput',
       EventBuilder.TextInput.textInput(currentText, previousText)
     );
   }
 
-  dispatchOwnHostEvent(
-    element,
-    'change',
-    EventBuilder.TextInput.change(currentText)
-  );
+  dispatchEvent(element, 'change', EventBuilder.TextInput.change(currentText));
 
-  dispatchOwnHostEvent(element, 'changeText', currentText);
+  dispatchEvent(element, 'changeText', currentText);
 
   const selectionRange = getTextRange(currentText);
-  dispatchOwnHostEvent(
+  dispatchEvent(
     element,
     'selectionChange',
     EventBuilder.TextInput.selectionChange(selectionRange)
   );
 
+  // According to the docs only multiline TextInput emits contentSizeChange event
+  // @see: https://reactnative.dev/docs/textinput#oncontentsizechange
   if (isMultiline) {
     const contentSize = getTextContentSize(currentText);
-    dispatchOwnHostEvent(
+    dispatchEvent(
       element,
       'contentSizeChange',
       EventBuilder.TextInput.contentSizeChange(contentSize)
