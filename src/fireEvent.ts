@@ -119,7 +119,9 @@ type StringWithAutoComplete<T> = T | (string & Record<never, never>);
 
 // String union type of keys of T that start with on, stripped from on
 type OnKeys<T> = keyof {
-  [K in keyof T as K extends `on${infer Rest}` ? Rest : never]: T[K];
+  [K in keyof T as K extends `on${infer Rest}`
+    ? Uncapitalize<Rest>
+    : never]: T[K];
 };
 
 type EventName = StringWithAutoComplete<
