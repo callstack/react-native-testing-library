@@ -9,10 +9,18 @@ title: User Event
   - [Options](#options)
 - [`press()`](#press)
 - [`longPress()`](#longpress)
+  - [Options](#options-1)
 - [`type()`](#type)
-  - [Options:](#options-1)
+  - [Options](#options-2)
   - [Sequence of events](#sequence-of-events)
 
+:::caution
+User Event API is in beta stage.
+
+This means that we intend for the public API signatures to remain stable,
+but we might introduce breaking behavioural changes, e.g. concerning ordering or timing of emitted events, without a major version update. Hopefully, well written
+test code should not rely on such specific details.
+:::
 
 ## `userEvent.setup`
 
@@ -68,6 +76,9 @@ await user.longPress(element);
 
 Simulates a long press user interaction. In React Native the `longPress` event is emitted when the press duration exceeds long press threshold (by default 500 ms). In other aspects this actions behaves similar to regular `press` action, e.g. by emitting `pressIn` and `pressOut` events. The press duration is customisable through the options. This should be useful if you use the `delayLongPress` prop. When using real timers this will take 500 ms so it is highly recommended to use that API with fake timers to prevent test taking a long time to run. 
 
+### Options
+- `duration` - duration of the press in miliseconds. Default value is 500 ms.
+
 ## `type()`
 
 ```ts
@@ -90,7 +101,7 @@ This helper simulates user focusing on `TextInput` element, typing `text` one ch
 
 This function supports only host `TextInput` elements. Passing other element type will result in throwing error.
 
-### Options:
+### Options
  - `skipPress` - if true, `pressIn` and `pressOut` events will not be triggered.
  - `submitEditing` - if true, `submitEditing` event will be triggered after typing the text.
 
@@ -122,3 +133,4 @@ Leaving the element:
 - `blur`
 
 The `submitEditing` event is skipped by default. It can sent by setting `submitEditing: true` option.
+
