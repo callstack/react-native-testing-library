@@ -2,9 +2,9 @@ import { ReactTestInstance } from 'react-test-renderer';
 import {
   ViewProps,
   TextProps,
-  ScrollViewProps,
+  TextInputProps,
   PressableProps,
-  TextInput,
+  ScrollViewProps,
 } from 'react-native';
 import act from './act';
 import { isHostElement } from './helpers/component-tree';
@@ -128,9 +128,9 @@ type OnKeys<T> = keyof {
 type EventName = StringWithAutoComplete<
   | OnKeys<ViewProps>
   | OnKeys<TextProps>
-  | OnKeys<ScrollViewProps>
+  | OnKeys<TextInputProps>
   | OnKeys<PressableProps>
-  | OnKeys<TextInput>
+  | OnKeys<ScrollViewProps>
 >;
 
 function fireEvent(
