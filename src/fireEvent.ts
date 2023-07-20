@@ -4,6 +4,7 @@ import {
   TextProps,
   ScrollViewProps,
   PressableProps,
+  TextInput,
 } from 'react-native';
 import act from './act';
 import { isHostElement } from './helpers/component-tree';
@@ -129,6 +130,7 @@ type EventName = StringWithAutoComplete<
   | OnKeys<TextProps>
   | OnKeys<ScrollViewProps>
   | OnKeys<PressableProps>
+  | OnKeys<TextInput>
 >;
 
 function fireEvent(
