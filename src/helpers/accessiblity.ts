@@ -4,7 +4,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
-import { getConfig } from '../config';
 import { getHostSiblings } from './component-tree';
 import { getHostComponentNames } from './host-component-names';
 
