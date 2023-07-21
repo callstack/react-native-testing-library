@@ -13,12 +13,11 @@ import { renderWithAct } from './render-act';
 import { setRenderResult, screen } from './screen';
 import { getQueriesForElement } from './within';
 
-export type RenderOptions = {
+export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => any;
   unstable_validateStringsRenderedWithinText?: boolean;
-  skipHostComponentNamesConfiguration?: boolean;
-};
+}
 
 export type RenderResult = ReturnType<typeof render>;
 
@@ -28,14 +27,28 @@ export type RenderResult = ReturnType<typeof render>;
  */
 export default function render<T>(
   component: React.ReactElement<T>,
+  options: RenderOptions = {}
+) {
+  return renderInternal(component, {
+    ...options,
+    detectHostComponentNames: true,
+  });
+}
+
+export interface RenderInternalOptions extends RenderOptions {
+  detectHostComponentNames?: boolean;
+}
+
+export function renderInternal<T>(
+  component: React.ReactElement<T>,
   {
     wrapper: Wrapper,
     createNodeMock,
     unstable_validateStringsRenderedWithinText,
-    skipHostComponentNamesConfiguration = false,
-  }: RenderOptions = {}
+    detectHostComponentNames = false,
+  }: RenderInternalOptions = {}
 ) {
-  if (skipHostComponentNamesConfiguration === false) {
+  if (detectHostComponentNames) {
     configureHostComponentNamesIfNeeded();
   }
 
