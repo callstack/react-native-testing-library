@@ -1,5 +1,7 @@
 # RNTL example app for React Navigation
 
+**Note: this example is stale and might not function correctly.**
+
 This example shows how to write integration tests using React Navigation without mocking it. Presented approach has been consulted with and influenced by React Navigation team.
 
 ## Recommended tests
