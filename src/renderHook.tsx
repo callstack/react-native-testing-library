@@ -1,6 +1,6 @@
 import React from 'react';
 import type { ComponentType } from 'react';
-import render from './render';
+import { renderInternal } from './render';
 
 export type RenderHookResult<Result, Props> = {
   rerender: (props: Props) => void;
@@ -36,10 +36,13 @@ export function renderHook<Result, Props>(
     return null;
   }
 
-  const { rerender: baseRerender, unmount } = render(
+  const { rerender: baseRerender, unmount } = renderInternal(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
     <TestComponent renderCallbackProps={initialProps} />,
-    { wrapper, skipHostComponentNamesConfiguration: true }
+    {
+      wrapper,
+      detectHostComponentNames: false,
+    }
   );
 
   function rerender(rerenderCallbackProps: Props) {
