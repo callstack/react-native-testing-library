@@ -22,17 +22,14 @@ export interface RenderOptions {
 export type RenderResult = ReturnType<typeof render>;
 
 /**
- * Renders test component deeply using react-test-renderer and exposes helpers
+ * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
 export default function render<T>(
   component: React.ReactElement<T>,
   options: RenderOptions = {}
 ) {
-  return renderInternal(component, {
-    ...options,
-    detectHostComponentNames: true,
-  });
+  return renderInternal(component, options);
 }
 
 export interface RenderInternalOptions extends RenderOptions {
@@ -45,7 +42,7 @@ export function renderInternal<T>(
     wrapper: Wrapper,
     createNodeMock,
     unstable_validateStringsRenderedWithinText,
-    detectHostComponentNames = false,
+    detectHostComponentNames = true,
   }: RenderInternalOptions = {}
 ) {
   if (detectHostComponentNames) {
