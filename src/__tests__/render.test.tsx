@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { View, Text, TextInput, Pressable } from 'react-native';
+import { getConfig, resetToDefaults } from '../config';
 import { render, screen, fireEvent, RenderAPI } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
@@ -242,6 +243,14 @@ test('RenderAPI type', () => {
 test('returned output can be spread using rest operator', () => {
   // Next line should not throw
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { rerender, ...rest } = render(<View testID="inner" />);
+  const { rerender, ...rest } = render(<View testID="test" />);
   expect(rest).toBeTruthy();
+});
+
+test('render calls detects host component names', () => {
+  resetToDefaults();
+  expect(getConfig().hostComponentNames).toBeUndefined();
+
+  render(<View testID="test" />);
+  expect(getConfig().hostComponentNames).not.toBeUndefined();
 });

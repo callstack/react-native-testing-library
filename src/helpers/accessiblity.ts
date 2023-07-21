@@ -6,6 +6,7 @@ import {
 import { ReactTestInstance } from 'react-test-renderer';
 import { getConfig } from '../config';
 import { getHostSiblings } from './component-tree';
+import { getHostComponentNames } from './host-component-names';
 
 type IsInaccessibleOptions = {
   cache?: WeakMap<ReactTestInstance, boolean>;
@@ -99,8 +100,7 @@ export function isAccessibilityElement(
     return element.props.accessible;
   }
 
-  const hostComponentNames = getConfig().hostComponentNames;
-
+  const hostComponentNames = getHostComponentNames();
   return (
     element?.type === hostComponentNames?.text ||
     element?.type === hostComponentNames?.textInput ||
