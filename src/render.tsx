@@ -13,27 +13,41 @@ import { renderWithAct } from './render-act';
 import { setRenderResult, screen } from './screen';
 import { getQueriesForElement } from './within';
 
-export type RenderOptions = {
+export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => any;
   unstable_validateStringsRenderedWithinText?: boolean;
-};
+}
 
 export type RenderResult = ReturnType<typeof render>;
 
 /**
- * Renders test component deeply using react-test-renderer and exposes helpers
+ * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
 export default function render<T>(
+  component: React.ReactElement<T>,
+  options: RenderOptions = {}
+) {
+  return renderInternal(component, options);
+}
+
+export interface RenderInternalOptions extends RenderOptions {
+  detectHostComponentNames?: boolean;
+}
+
+export function renderInternal<T>(
   component: React.ReactElement<T>,
   {
     wrapper: Wrapper,
     createNodeMock,
     unstable_validateStringsRenderedWithinText,
-  }: RenderOptions = {}
+    detectHostComponentNames = true,
+  }: RenderInternalOptions = {}
 ) {
-  configureHostComponentNamesIfNeeded();
+  if (detectHostComponentNames) {
+    configureHostComponentNamesIfNeeded();
+  }
 
   if (unstable_validateStringsRenderedWithinText) {
     return renderWithStringValidation(component, {
