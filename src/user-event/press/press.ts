@@ -19,7 +19,7 @@ export async function press(
   this: UserEventInstance,
   element: ReactTestInstance
 ): Promise<void> {
-  await basePress(this.config, element);
+  await basePress(this.config, element, 'press');
 }
 
 export async function longPress(
@@ -27,19 +27,24 @@ export async function longPress(
   element: ReactTestInstance,
   options: PressOptions = { duration: 500 }
 ): Promise<void> {
-  await basePress(this.config, element, options);
+  await basePress(this.config, element, 'longPress', options);
 }
+
+type PressType = 'press' | 'longPress';
 
 const basePress = async (
   config: UserEventConfig,
   element: ReactTestInstance,
+  type: PressType,
   options: PressOptions = { duration: 0 }
 ): Promise<void> => {
-  // Text and TextInput components are mocked in React Native preset so the mock
-  // doesn't implement the pressability class
-  // Thus we need to call the props directly on the host component
-  if (isPressableText(element) || isEnabledTextInput(element)) {
-    await emitBasicPressEvents(config, element, options);
+  if (isPressableText(element)) {
+    await emitTextPressEvents(config, element, type, options);
+    return;
+  }
+
+  if (isEnabledTextInput(element)) {
+    await emitTextInputPressEvents(config, element, options);
     return;
   }
 
@@ -53,7 +58,7 @@ const basePress = async (
     return;
   }
 
-  await basePress(config, hostParentElement, options);
+  await basePress(config, hostParentElement, type, options);
 };
 
 const emitPressablePressEvents = async (
@@ -97,11 +102,18 @@ const isEnabledTouchResponder = (element: ReactTestInstance) => {
 };
 
 const isPressableText = (element: ReactTestInstance) => {
+  const hasPressEventHandler = Boolean(
+    element.props.onPress ||
+      element.props.onLongPress ||
+      element.props.onPressIn ||
+      element.props.onPressOut
+  );
+
   return (
     isHostText(element) &&
     isPointerEventEnabled(element) &&
     !element.props.disabled &&
-    element.props.onPress
+    hasPressEventHandler
   );
 };
 
@@ -114,19 +126,36 @@ const isEnabledTextInput = (element: ReactTestInstance) => {
 };
 
 /**
- * Dispatches a basic press event sequence on non-Pressable component,
- * e.g. Text or TextInput.
+ * Dispatches a press event sequence for Text.
  */
-async function emitBasicPressEvents(
+async function emitTextPressEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
-  options: PressOptions = { duration: 0 }
+  type: PressType,
+  options?: PressOptions
 ) {
   await wait(config);
   dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
 
-  dispatchEvent(element, 'press', EventBuilder.Common.touch());
+  dispatchEvent(element, type, EventBuilder.Common.touch());
 
-  await wait(config, options.duration);
+  await wait(config, options?.duration);
+  dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
+}
+
+/**
+ * Dispatches a press event sequence for TextInput.
+ */
+async function emitTextInputPressEvents(
+  config: UserEventConfig,
+  element: ReactTestInstance,
+  options?: PressOptions
+) {
+  await wait(config);
+  dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
+
+  // Note: TextInput does not have `onPress`/`onLongPress` props.
+
+  await wait(config, options?.duration);
   dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
 }
