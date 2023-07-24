@@ -64,7 +64,7 @@ const basePress = async (
 const emitPressablePressEvents = async (
   config: UserEventConfig,
   element: ReactTestInstance,
-  options: PressOptions = { duration: 0 }
+  options: PressOptions
 ) => {
   warnAboutRealTimersIfNeeded();
 
@@ -132,14 +132,14 @@ async function emitTextPressEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
   type: PressType,
-  options?: PressOptions
+  options: PressOptions
 ) {
   await wait(config);
   dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
 
   dispatchEvent(element, type, EventBuilder.Common.touch());
 
-  await wait(config, options?.duration);
+  await wait(config, options.duration);
   dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
 }
 
@@ -149,13 +149,13 @@ async function emitTextPressEvents(
 async function emitTextInputPressEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
-  options?: PressOptions
+  options: PressOptions
 ) {
   await wait(config);
   dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
 
   // Note: TextInput does not have `onPress`/`onLongPress` props.
 
-  await wait(config, options?.duration);
+  await wait(config, options.duration);
   dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
 }
