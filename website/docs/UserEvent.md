@@ -105,7 +105,7 @@ Entering the element:
 - `focus`
 - `pressOut` (optional)
 
-The `pressIn` and `pressOut` events are send by default, but can be skipped by passing `skipPress: true` option.
+The `pressIn` and `pressOut` events are sent by default, but can be skipped by passing `skipPress: true` option.
 
 Typing (for each character):
 - `keyPress`
@@ -121,4 +121,4 @@ Leaving the element:
 - `endEditing`
 - `blur`
 
-The `submitEditing` event is skipped by default. It can be send by setting `submitEditing: true` option.
+The `submitEditing` event is skipped by default. It can sent by setting `submitEditing: true` option.
