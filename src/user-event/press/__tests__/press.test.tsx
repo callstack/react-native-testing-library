@@ -304,7 +304,7 @@ describe('userEvent.press with fake timers', () => {
     expect(mockOnPress).toHaveBeenCalled();
   });
 
-  test('works on Text', async () => {
+  test('press works on Text', async () => {
     const { events, logEvent } = createEventLogger();
 
     render(
@@ -317,9 +317,27 @@ describe('userEvent.press with fake timers', () => {
         press me
       </Text>
     );
-    await userEvent.press(screen.getByText('press me'));
 
+    await userEvent.press(screen.getByText('press me'));
     expect(getEventsName(events)).toEqual(['pressIn', 'press', 'pressOut']);
+  });
+
+  test('longPress works Text', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    render(
+      <Text
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
+      >
+        press me
+      </Text>
+    );
+
+    await userEvent.longPress(screen.getByText('press me'));
+    expect(getEventsName(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
   });
 
   test('doesnt trigger on disabled Text', async () => {
@@ -361,7 +379,7 @@ describe('userEvent.press with fake timers', () => {
     expect(events).toEqual([]);
   });
 
-  test('works on TetInput', async () => {
+  test('press works on TextInput', async () => {
     const { events, logEvent } = createEventLogger();
 
     render(
@@ -371,12 +389,27 @@ describe('userEvent.press with fake timers', () => {
         onPressOut={logEvent('pressOut')}
       />
     );
-    await userEvent.press(screen.getByPlaceholderText('email'));
 
+    await userEvent.press(screen.getByPlaceholderText('email'));
     expect(getEventsName(events)).toEqual(['pressIn', 'pressOut']);
   });
 
-  test('does not call onPressIn and onPressOut on non editable TetInput', async () => {
+  test('longPress works on TextInput', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    render(
+      <TextInput
+        placeholder="email"
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+      />
+    );
+
+    await userEvent.longPress(screen.getByPlaceholderText('email'));
+    expect(getEventsName(events)).toEqual(['pressIn', 'pressOut']);
+  });
+
+  test('does not call onPressIn and onPressOut on non editable TextInput', async () => {
     const { events, logEvent } = createEventLogger();
 
     render(
@@ -387,11 +420,12 @@ describe('userEvent.press with fake timers', () => {
         onPressOut={logEvent('pressOut')}
       />
     );
+
     await userEvent.press(screen.getByPlaceholderText('email'));
     expect(events).toEqual([]);
   });
 
-  test('does not call onPressIn and onPressOut on TetInput with pointer events disabled', async () => {
+  test('does not call onPressIn and onPressOut on TextInput with pointer events disabled', async () => {
     const { events, logEvent } = createEventLogger();
 
     render(
@@ -402,6 +436,7 @@ describe('userEvent.press with fake timers', () => {
         onPressOut={logEvent('pressOut')}
       />
     );
+
     await userEvent.press(screen.getByPlaceholderText('email'));
     expect(events).toEqual([]);
   });
