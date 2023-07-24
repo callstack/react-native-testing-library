@@ -1,0 +1,339 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
+[
+  {
+    "name": "pressIn",
+    "payload": {
+      "currentTarget": {
+        "measure": [MockFunction],
+      },
+      "nativeEvent": {
+        "changedTouches": [],
+        "identifier": 0,
+        "locationX": 0,
+        "locationY": 0,
+        "pageX": 0,
+        "pageY": 0,
+        "target": 0,
+        "timestamp": 100100100100,
+        "touches": [],
+      },
+      "persist": [MockFunction],
+    },
+  },
+  {
+    "name": "focus",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+  {
+    "name": "pressOut",
+    "payload": {
+      "currentTarget": {
+        "measure": [MockFunction],
+      },
+      "nativeEvent": {
+        "changedTouches": [],
+        "identifier": 0,
+        "locationX": 0,
+        "locationY": 0,
+        "pageX": 0,
+        "pageY": 0,
+        "target": 0,
+        "timestamp": 100100100100,
+        "touches": [],
+      },
+      "persist": [MockFunction],
+    },
+  },
+  {
+    "name": "keyPress",
+    "payload": {
+      "nativeEvent": {
+        "key": "W",
+      },
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "W",
+      },
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "W",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 1,
+          "start": 1,
+        },
+      },
+    },
+  },
+  {
+    "name": "keyPress",
+    "payload": {
+      "nativeEvent": {
+        "key": "o",
+      },
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "Wo",
+      },
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "Wo",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 2,
+          "start": 2,
+        },
+      },
+    },
+  },
+  {
+    "name": "keyPress",
+    "payload": {
+      "nativeEvent": {
+        "key": "w",
+      },
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "Wow",
+      },
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "Wow",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
+      },
+    },
+  },
+  {
+    "name": "endEditing",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+        "text": "Wow",
+      },
+    },
+  },
+  {
+    "name": "blur",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+]
+`;
+
+exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC", value: "XXX" 1`] = `
+[
+  {
+    "name": "pressIn",
+    "payload": {
+      "currentTarget": {
+        "measure": [MockFunction],
+      },
+      "nativeEvent": {
+        "changedTouches": [],
+        "identifier": 0,
+        "locationX": 0,
+        "locationY": 0,
+        "pageX": 0,
+        "pageY": 0,
+        "target": 0,
+        "timestamp": 100100100100,
+        "touches": [],
+      },
+      "persist": [MockFunction],
+    },
+  },
+  {
+    "name": "focus",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+  {
+    "name": "pressOut",
+    "payload": {
+      "currentTarget": {
+        "measure": [MockFunction],
+      },
+      "nativeEvent": {
+        "changedTouches": [],
+        "identifier": 0,
+        "locationX": 0,
+        "locationY": 0,
+        "pageX": 0,
+        "pageY": 0,
+        "target": 0,
+        "timestamp": 100100100100,
+        "touches": [],
+      },
+      "persist": [MockFunction],
+    },
+  },
+  {
+    "name": "keyPress",
+    "payload": {
+      "nativeEvent": {
+        "key": "A",
+      },
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "XXXA",
+      },
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "XXXA",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 4,
+          "start": 4,
+        },
+      },
+    },
+  },
+  {
+    "name": "keyPress",
+    "payload": {
+      "nativeEvent": {
+        "key": "B",
+      },
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "XXXB",
+      },
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "XXXB",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 4,
+          "start": 4,
+        },
+      },
+    },
+  },
+  {
+    "name": "keyPress",
+    "payload": {
+      "nativeEvent": {
+        "key": "C",
+      },
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "XXXC",
+      },
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "XXXC",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 4,
+          "start": 4,
+        },
+      },
+    },
+  },
+  {
+    "name": "endEditing",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+        "text": "XXX",
+      },
+    },
+  },
+  {
+    "name": "blur",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+]
+`;

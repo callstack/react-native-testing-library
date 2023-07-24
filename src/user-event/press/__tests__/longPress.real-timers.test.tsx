@@ -2,13 +2,15 @@ import React from 'react';
 import { Pressable, Text } from 'react-native';
 import { render, screen } from '../../../pure';
 import { userEvent } from '../..';
-import * as WarnAboutRealTimers from '../utils/warnAboutRealTimers';
+import * as WarnAboutRealTimers from '../../utils/warn-about-real-timers';
 
 describe('userEvent.longPress with real timers', () => {
   beforeEach(() => {
     jest.useRealTimers();
     jest.restoreAllMocks();
-    jest.spyOn(WarnAboutRealTimers, 'warnAboutRealTimers').mockImplementation();
+    jest
+      .spyOn(WarnAboutRealTimers, 'warnAboutRealTimersIfNeeded')
+      .mockImplementation();
   });
 
   test('calls onLongPress if the delayLongPress is the default one', async () => {

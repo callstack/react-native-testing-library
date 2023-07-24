@@ -10,13 +10,15 @@ import {
 import { createEventLogger, getEventsName } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
-import * as WarnAboutRealTimers from '../utils/warnAboutRealTimers';
+import * as WarnAboutRealTimers from '../../utils/warn-about-real-timers';
 
 describe('userEvent.press with real timers', () => {
   beforeEach(() => {
     jest.useRealTimers();
     jest.restoreAllMocks();
-    jest.spyOn(WarnAboutRealTimers, 'warnAboutRealTimers').mockImplementation();
+    jest
+      .spyOn(WarnAboutRealTimers, 'warnAboutRealTimersIfNeeded')
+      .mockImplementation();
   });
 
   test('calls onPressIn, onPress and onPressOut prop of touchable', async () => {

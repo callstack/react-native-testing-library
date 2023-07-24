@@ -37,7 +37,7 @@ function deprecateQuery<QueryFn extends (...args: any) => any>(
 
 const warned: { [functionName: string]: boolean } = {};
 
-// istambul ignore next: Occasionally used
+/* istanbul ignore next: occasionally used */
 export function printDeprecationWarning(functionName: string) {
   if (warned[functionName]) {
     return;

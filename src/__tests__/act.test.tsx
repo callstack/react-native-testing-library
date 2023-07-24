@@ -50,3 +50,7 @@ test('should be able to await act', async () => {
   const result = await act(async () => {});
   expect(result).toBe(undefined);
 });
+
+test('should be able to await act when promise rejects', async () => {
+  await expect(act(async () => Promise.reject('error'))).rejects.toBe('error');
+});

@@ -7,7 +7,12 @@ const handlePressOut = buildEventLogger('pressOut');
 const handleFocus = buildEventLogger('focus');
 const handleBlur = buildEventLogger('blur');
 const handleChange = buildEventLogger('change');
+const handleEndEditing = buildEventLogger('endEditing');
 const handleSubmitEditing = buildEventLogger('submitEditing');
+const handleKeyPress = buildEventLogger('keyPress');
+const handleTextInput = buildEventLogger('textInput');
+const handleSelectionChange = buildEventLogger('selectionChange');
+const handleContentSizeChange = buildEventLogger('contentSizeChange');
 
 export function TextInputEvents() {
   const [value, setValue] = React.useState('');
@@ -29,7 +34,12 @@ export function TextInputEvents() {
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleChange}
+        onEndEditing={handleEndEditing}
         onSubmitEditing={handleSubmitEditing}
+        onKeyPress={handleKeyPress}
+        onTextInput={handleTextInput}
+        onSelectionChange={handleSelectionChange}
+        onContentSizeChange={handleContentSizeChange}
       />
     </SafeAreaView>
   );
