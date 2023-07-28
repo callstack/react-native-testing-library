@@ -1,5 +1,8 @@
 import { ReactTestInstance } from 'react-test-renderer';
 
+/**
+ * ReactTestInstance referring to host element.
+ */
 export type HostReactTestInstance = ReactTestInstance & { type: string };
 
 /**
@@ -18,7 +21,7 @@ export function isHostElement(
  */
 export function getHostParent(
   element: ReactTestInstance | null
-): ReactTestInstance | null {
+): HostReactTestInstance | null {
   if (element == null) {
     return null;
   }
@@ -41,12 +44,12 @@ export function getHostParent(
  */
 export function getHostChildren(
   element: ReactTestInstance | null
-): ReactTestInstance[] {
+): HostReactTestInstance[] {
   if (element == null) {
     return [];
   }
 
-  const hostChildren: ReactTestInstance[] = [];
+  const hostChildren: HostReactTestInstance[] = [];
 
   element.children.forEach((child) => {
     if (typeof child !== 'object') {
@@ -72,10 +75,8 @@ export function getHostChildren(
  */
 export function getHostSelves(
   element: ReactTestInstance | null
-): ReactTestInstance[] {
-  return typeof element?.type === 'string'
-    ? [element]
-    : getHostChildren(element);
+): HostReactTestInstance[] {
+  return isHostElement(element) ? [element] : getHostChildren(element);
 }
 
 /**
@@ -84,7 +85,7 @@ export function getHostSelves(
  */
 export function getHostSiblings(
   element: ReactTestInstance | null
-): ReactTestInstance[] {
+): HostReactTestInstance[] {
   const hostParent = getHostParent(element);
   const hostSelves = getHostSelves(element);
   return getHostChildren(hostParent).filter(

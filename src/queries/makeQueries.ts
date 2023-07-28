@@ -5,41 +5,40 @@ import type { WaitForOptions } from '../waitFor';
 import format from '../helpers/format';
 import { screen } from '../screen';
 import { defaultMapProps } from '../helpers/format-default';
-import type { HostReactTestInstance } from '../helpers/component-tree';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options
-) => HostReactTestInstance;
+) => ReactTestInstance;
 
 export type GetAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options
-) => HostReactTestInstance[];
+) => ReactTestInstance[];
 
 export type QueryByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options
-) => HostReactTestInstance | null;
+) => ReactTestInstance | null;
 
 export type QueryAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options
-) => HostReactTestInstance[];
+) => ReactTestInstance[];
 
 export type FindByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   // Remove `& WaitForOptions` when all queries have been migrated to support 2nd arg query options.
   options?: Options & WaitForOptions,
   waitForOptions?: WaitForOptions
-) => Promise<HostReactTestInstance>;
+) => Promise<ReactTestInstance>;
 
 export type FindAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   // Remove `& WaitForOptions` when all queries have been migrated to support 2nd arg query options.
   options?: Options & WaitForOptions,
   waitForOptions?: WaitForOptions
-) => Promise<HostReactTestInstance[]>;
+) => Promise<ReactTestInstance[]>;
 
 type UnboundQuery<Query> = (instance: ReactTestInstance) => Query;
 

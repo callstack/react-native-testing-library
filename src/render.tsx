@@ -117,7 +117,7 @@ function buildRenderResult(
     rerender: update, // alias for `update`
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
-    get root() {
+    get root(): ReactTestInstance {
       return getHostChildren(instance)[0];
     },
     UNSAFE_root: instance,
