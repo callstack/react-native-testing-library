@@ -7,20 +7,13 @@ title: API
 
 - [`render`](#render)
   - [`render` options](#render-options)
-    - [`wrapper` option](#wrapper-option)
-    - [`createNodeMock` option](#createnodemock-option)
-    - [`unstable_validateStringsRenderedWithinText` option](#unstable_validatestringsrenderedwithintext-option)
   - [`...queries`](#queries)
-    - [Example](#example)
   - [`update`](#update)
   - [`unmount`](#unmount)
   - [`debug`](#debug)
-    - [`message` option](#message-option)
-    - [`mapProps` option](#mapprops-option)
-    - [`debug.shallow`](#debugshallow)
   - [`toJSON`](#tojson)
   - [`root`](#root)
-  - [`UNSAFE_root`](#unsafe_root)
+  - [`UNSAFE_root`](#unsaferoot)
 - [`screen`](#screen)
 - [`cleanup`](#cleanup)
 - [`fireEvent`](#fireevent)
@@ -28,10 +21,8 @@ title: API
   - [`fireEvent.press`](#fireeventpress)
   - [`fireEvent.changeText`](#fireeventchangetext)
   - [`fireEvent.scroll`](#fireeventscroll)
-    - [On a `ScrollView`](#on-a-scrollview)
-    - [On a `FlatList`](#on-a-flatlist)
 - [`waitFor`](#waitfor)
-  - [Using Jest fake timers](#using-jest-fake-timers)
+  - [Using a React Native version \< 0.71 with Jest fake timers](#using-a-react-native-version--071-with-jest-fake-timers)
 - [`waitForElementToBeRemoved`](#waitforelementtoberemoved)
 - [`within`, `getQueriesForElement`](#within-getqueriesforelement)
 - [`queryBy*` APIs](#queryby-apis)
@@ -40,24 +31,12 @@ title: API
 - [`renderHook`](#renderhook)
   - [`callback`](#callback)
   - [`options` (Optional)](#options-optional)
-    - [`initialProps`](#initialprops)
-    - [`wrapper`](#wrapper)
   - [`RenderHookResult` object](#renderhookresult-object)
-    - [`result`](#result)
-    - [`rerender`](#rerender)
-    - [`unmount`](#unmount-1)
   - [Examples](#examples)
-    - [With `initialProps`](#with-initialprops)
-    - [With `wrapper`](#with-wrapper)
 - [Configuration](#configuration)
   - [`configure`](#configure)
-    - [`asyncUtilTimeout` option](#asyncutiltimeout-option)
-    - [`defaultIncludeHiddenElements` option](#defaultincludehiddenelements-option)
-    - [`defaultDebugOptions` option](#defaultdebugoptions-option)
   - [`resetToDefaults()`](#resettodefaults)
   - [Environment variables](#environment-variables)
-    - [`RNTL_SKIP_AUTO_CLEANUP`](#rntl_skip_auto_cleanup)
-    - [`RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS`](#rntl_skip_auto_detect_fake_timers)
 - [Accessibility](#accessibility)
   - [`isHiddenFromAccessibility`](#ishiddenfromaccessibility)
 
@@ -346,9 +325,16 @@ function fireEvent(
 ): void {}
 ```
 
-Fires native-like event with data.
+:::note
+For common events like `press` or `type` it's recommended to use [User Event API](UserEvent.md) as it offers 
+much more realistic event simulation by emitting a sequence of events with proper event objects that mimic React Native runtime behavior.
 
-Invokes a given event handler (whether native or custom) on the element, bubbling to the root of the rendered tree.
+Use `fireEvent()` for cases not supported by User Event and for triggering event handlers on composite components.
+::
+
+`fireEvent` API allows you to trigger all kind of event handlers on both host and composite components. It will try to invoke a single event handler traversing the component tree bottom-up from passed element and trying to find enabled event handler named `onXxx` when `xxx` is the name of the event passed.
+
+Unlike User Event, this API does not automatically pass event object to event handler, this is responsibility of the user to construct such object.
 
 ```jsx
 import { render, screen, fireEvent } from '@testing-library/react-native';
@@ -402,6 +388,10 @@ Convenience methods for common events like: `press`, `changeText`, `scroll`.
 fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void
 ```
 
+:::note
+It is recommended to use the [User Event API](UserEvent.md#press) instead as it offers more realistic simulation of press interaction, including pressable support.
+::
+
 Invokes `press` event handler on the element or parent element in the tree.
 
 ```jsx
@@ -433,6 +423,10 @@ expect(onPressMock).toHaveBeenCalledWith(eventData);
 ```
 fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void
 ```
+
+:::note
+It is recommended to use the [User Event API](UserEvent.md#type) instead as it offers more realistic simulation of text change interaction.
+::
 
 Invokes `changeText` event handler on the element or parent element in the tree.
 
