@@ -327,10 +327,10 @@ function fireEvent(
 
 :::note
 For common events like `press` or `type` it's recommended to use [User Event API](UserEvent.md) as it offers 
-much more realistic event simulation by emitting a sequence of events with proper event objects that mimic React Native runtime behavior.
+more realistic event simulation by emitting a sequence of events with proper event objects that mimic React Native runtime behavior.
 
-Use `fireEvent()` for cases not supported by User Event and for triggering event handlers on composite components.
-::
+Use Fire Event for cases not supported by User Event and for triggering event handlers on composite components.
+:::
 
 `fireEvent` API allows you to trigger all kind of event handlers on both host and composite components. It will try to invoke a single event handler traversing the component tree bottom-up from passed element and trying to find enabled event handler named `onXxx` when `xxx` is the name of the event passed.
 
@@ -389,8 +389,8 @@ fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void
 ```
 
 :::note
-It is recommended to use the [User Event API](UserEvent.md#press) instead as it offers more realistic simulation of press interaction, including pressable support.
-::
+It is recommended to use the User Event [`press()`](UserEvent.md#press) helper instead as it offers more realistic simulation of press interaction, including pressable support.
+:::
 
 Invokes `press` event handler on the element or parent element in the tree.
 
@@ -425,8 +425,8 @@ fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void
 ```
 
 :::note
-It is recommended to use the [User Event API](UserEvent.md#type) instead as it offers more realistic simulation of text change interaction.
-::
+It is recommended to use the User Event [`type()`](UserEvent.md#type) helper instead as it offers more realistic simulation of text change interaction, including key-by-key typing, element focus, and other editing events.
+:::
 
 Invokes `changeText` event handler on the element or parent element in the tree.
 
