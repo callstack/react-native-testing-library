@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
+import {
+  render,
+  screen,
+  fireEvent,
+  userEvent,
+} from '@testing-library/react-native';
 import App from '../App';
 
 /**
@@ -22,6 +27,9 @@ test('renders correctly', () => {
  * his point of view.
  */
 test('User can sign in successully with correct credentials', async () => {
+  // Setup User Event instance for realistic simulation of user interaction.
+  const user = userEvent.setup();
+
   // Idiom: no need to capture render output, as we will use `screen` for queries.
   render(<App />);
 
@@ -32,11 +40,11 @@ test('User can sign in successully with correct credentials', async () => {
   ).toBeOnTheScreen();
 
   // Hint: we can use `getByLabelText` to find our text inputs using their labels.
-  fireEvent.changeText(screen.getByLabelText('Username'), 'admin');
-  fireEvent.changeText(screen.getByLabelText('Password'), 'admin1');
+  await user.type(screen.getByLabelText('Username'), 'admin');
+  await user.type(screen.getByLabelText('Password'), 'admin1');
 
   // Hint: we can use `getByRole` to find our button with given text.
-  fireEvent.press(screen.getByRole('button', { name: 'Sign In' }));
+  await user.press(screen.getByRole('button', { name: 'Sign In' }));
 
   // Idiom: since pressing button triggers async operation we need to use `findBy*` query to wait
   // for the action to complete.
@@ -67,15 +75,16 @@ test('User can sign in successully with correct credentials', async () => {
  * Note: that some times you will have to resort to `getByTestId`, but treat it as a last resort.
  */
 test('User will see errors for incorrect credentials', async () => {
+  const user = userEvent.setup();
   render(<App />);
 
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
   ).toBeOnTheScreen();
 
-  fireEvent.changeText(screen.getByLabelText('Username'), 'admin');
-  fireEvent.changeText(screen.getByLabelText('Password'), 'qwerty123');
-  fireEvent.press(screen.getByRole('button', { name: 'Sign In' }));
+  await user.type(screen.getByLabelText('Username'), 'admin');
+  await user.type(screen.getByLabelText('Password'), 'qwerty123');
+  await user.press(screen.getByRole('button', { name: 'Sign In' }));
 
   // Hint: you can use custom Jest Native matcher to check text content.
   expect(await screen.findByRole('alert')).toHaveTextContent(
@@ -93,22 +102,29 @@ test('User will see errors for incorrect credentials', async () => {
  * Do not be afraid to write longer test scenarios, with repeating act and assert statements.
  */
 test('User can sign in after incorrect attempt', async () => {
+  const user = userEvent.setup();
   render(<App />);
 
   expect(
     screen.getByRole('header', { name: 'Sign in to Example App' })
   ).toBeOnTheScreen();
 
-  fireEvent.changeText(screen.getByLabelText('Username'), 'admin');
-  fireEvent.changeText(screen.getByLabelText('Password'), 'qwerty123');
-  fireEvent.press(screen.getByRole('button', { name: 'Sign In' }));
+  const usernameInput = screen.getByLabelText('Username');
+  const passwordInput = screen.getByLabelText('Password');
+
+  await user.type(usernameInput, 'admin');
+  await user.type(passwordInput, 'qwerty123');
+  await user.press(screen.getByRole('button', { name: 'Sign In' }));
 
   expect(await screen.findByRole('alert')).toHaveTextContent(
     'Incorrect username or password'
   );
 
-  fireEvent.changeText(screen.getByLabelText('Password'), 'admin1');
-  fireEvent.press(screen.getByRole('button', { name: 'Sign In' }));
+  // Workaround for clearing TextInput, clear() function will be added soon.
+  fireEvent.changeText(passwordInput, '');
+
+  await user.type(passwordInput, 'admin1');
+  await user.press(screen.getByRole('button', { name: 'Sign In' }));
 
   expect(await screen.findByText('Welcome admin!')).toBeOnTheScreen();
   expect(
