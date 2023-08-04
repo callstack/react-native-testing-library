@@ -7,6 +7,8 @@ import {
 } from '@testing-library/react-native';
 import App from '../App';
 
+jest.useFakeTimers();
+
 /**
  * A good place to start is having a tests that your component renders correctly.
  */
