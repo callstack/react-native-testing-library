@@ -4,7 +4,7 @@ import { findAll } from '../helpers/findAll';
 import { getHostComponentNames } from '../helpers/host-component-names';
 import { matchTextContent } from '../helpers/matchers/matchTextContent';
 import { TextMatch, TextMatchOptions } from '../matches';
-import { makeQueries } from './makeQueries';
+import { InternalQueryAllByQuery, makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -19,7 +19,7 @@ type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const queryAllByText = (
   instance: ReactTestInstance
-): QueryAllByQuery<TextMatch, ByTextOptions> =>
+): InternalQueryAllByQuery<TextMatch, ByTextOptions> =>
   function queryAllByTextFn(text, options = {}) {
     return findAll(
       instance,

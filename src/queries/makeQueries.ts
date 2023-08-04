@@ -5,6 +5,7 @@ import type { WaitForOptions } from '../waitFor';
 import format from '../helpers/format';
 import { screen } from '../screen';
 import { defaultMapProps } from '../helpers/format-default';
+import { HostReactTestInstance } from '../helpers/component-tree';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
@@ -25,6 +26,11 @@ export type QueryAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options
 ) => ReactTestInstance[];
+
+export type InternalQueryAllByQuery<Predicate, Options = void> = (
+  predicate: Predicate,
+  options?: Options
+) => HostReactTestInstance[];
 
 export type FindByQuery<Predicate, Options = void> = (
   predicate: Predicate,
@@ -112,7 +118,7 @@ function appendElementTreeToError(error: Error) {
 }
 
 export function makeQueries<Predicate, Options>(
-  queryAllByQuery: UnboundQuery<QueryAllByQuery<Predicate, Options>>,
+  queryAllByQuery: UnboundQuery<InternalQueryAllByQuery<Predicate, Options>>,
   getMissingError: (predicate: Predicate, options?: Options) => string,
   getMultipleError: (predicate: Predicate, options?: Options) => string
 ): UnboundQueries<Predicate, Options> {

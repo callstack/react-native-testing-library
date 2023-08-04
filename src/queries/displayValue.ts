@@ -3,7 +3,7 @@ import { filterNodeByType } from '../helpers/filterNodeByType';
 import { findAll } from '../helpers/findAll';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
 import { getHostComponentNames } from '../helpers/host-component-names';
-import { makeQueries } from './makeQueries';
+import { InternalQueryAllByQuery, makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -33,7 +33,7 @@ const getTextInputNodeByDisplayValue = (
 
 const queryAllByDisplayValue = (
   instance: ReactTestInstance
-): QueryAllByQuery<TextMatch, ByDisplayValueOptions> =>
+): InternalQueryAllByQuery<TextMatch, ByDisplayValueOptions> =>
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
     return findAll(
       instance,
