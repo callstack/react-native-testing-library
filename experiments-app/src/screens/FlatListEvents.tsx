@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -18,52 +18,17 @@ type ItemProps = {
   item: ItemData;
 };
 
-const DATA: ItemData[] = [
-  {
-    id: '0',
-    title: 'First Item',
-  },
-  {
-    id: '1',
-    title: 'Second Item',
-  },
-  {
-    id: '2',
-    title: 'Third Item',
-  },
-  {
-    id: '3',
-    title: 'Fourth Item',
-  },
-  {
-    id: '4',
-    title: 'Fifth Item',
-  },
-  {
-    id: '5',
-    title: 'Sixth Item',
-  },
-  {
-    id: '6',
-    title: 'Seventh Item',
-  },
-  {
-    id: '7',
-    title: 'Eighth Item',
-  },
-  {
-    id: '8',
-    title: 'Ninth Item',
-  },
-  {
-    id: '9',
-    title: 'Tenth Item',
-  },
-  {
-    id: '10',
-    title: 'Eleventh Item',
-  },
-];
+const itemsAmount = 20; // Change this value to shrink/extend scroll length
+
+const DATA: ItemData[] = [];
+
+for (let i = 1; i <= itemsAmount; i++) {
+  const item = {
+    id: `${i}`,
+    title: `Item ${i}`,
+  };
+  DATA.push(item);
+}
 
 const Item = ({ item }: ItemProps) => (
   <View style={[styles.item]}>
