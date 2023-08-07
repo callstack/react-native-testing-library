@@ -44,6 +44,10 @@ const handleOnScrollEndDrag = buildEventLogger('onScrollEndDrag');
 const handleOnScrollToTop = buildEventLogger('onScrollToTop');
 
 export function FlatListEvents() {
+  const handleOnContentSizeChange = (w: number, h: number) => {
+    console.log(`Event: contentSizeChange`, w, h);
+  };
+
   const renderItem = ({ item }: { item: ItemData }) => {
     return <Item item={item} />;
   };
@@ -54,6 +58,7 @@ export function FlatListEvents() {
         data={DATA}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        onContentSizeChange={handleOnContentSizeChange}
         onMomentumScrollBegin={handleOnMomentumScrollBegin}
         onMomentumScrollEnd={handleOnMomentumScrollEnd}
         onScroll={handleOnScroll}

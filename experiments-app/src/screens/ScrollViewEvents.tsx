@@ -16,10 +16,15 @@ const handleOnScrollEndDrag = buildEventLogger('onScrollEndDrag');
 const handleOnScrollToTop = buildEventLogger('onScrollToTop');
 
 export function ScrollViewEvents() {
+  const handleOnContentSizeChange = (w: number, h: number) => {
+    console.log(`Event: contentSizeChange`, w, h);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
         style={styles.scrollView}
+        onContentSizeChange={handleOnContentSizeChange}
         onMomentumScrollBegin={handleOnMomentumScrollBegin}
         onMomentumScrollEnd={handleOnMomentumScrollEnd}
         onScroll={handleOnScroll}
