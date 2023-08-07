@@ -50,7 +50,7 @@ export function FlatListEvents() {
 
   const handleOnEndReached = (info: { distanceFromEnd: number }) => {
     console.log(`Event: endReached`, info.distanceFromEnd);
-  }
+  };
 
   const renderItem = ({ item }: { item: ItemData }) => {
     return <Item item={item} />;
