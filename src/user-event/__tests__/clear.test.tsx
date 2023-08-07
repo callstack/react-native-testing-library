@@ -5,7 +5,6 @@ import { render, userEvent } from '../..';
 
 beforeEach(() => {
   jest.useRealTimers();
-  jest.clearAllMocks();
 });
 
 function renderTextInputWithToolkit(props: TextInputProps = {}) {

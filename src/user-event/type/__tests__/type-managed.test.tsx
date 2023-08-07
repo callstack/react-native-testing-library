@@ -6,7 +6,6 @@ import { userEvent } from '../..';
 
 beforeEach(() => {
   jest.useRealTimers();
-  jest.clearAllMocks();
 });
 
 interface ManagedTextInputProps {
