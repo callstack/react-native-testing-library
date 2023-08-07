@@ -2,6 +2,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { PressOptions, press, longPress } from '../press';
 import { TypeOptions, type } from '../type';
+import { clear } from '../clear';
 
 export interface UserEventSetupOptions {
   /**
@@ -84,7 +85,7 @@ export interface UserEventInstance {
   ) => Promise<void>;
 
   /**
-   * Simulate user pressing on given `TextInput` element and typing given text.
+   * Simulate user pressing on a given `TextInput` element and typing given text.
    *
    * This method will trigger the events for each character of the text:
    * `keyPress`, `change`, `changeText`, `endEditing`, etc.
@@ -92,7 +93,7 @@ export interface UserEventInstance {
    * It will also trigger events connected with entering and leaving the text
    * input.
    *
-   * The exact events sent depend on the props of TextInput (`editable`,
+   * The exact events sent depend on the props of the TextInput (`editable`,
    * `multiline`, value, defaultValue, etc) and passed options.
    *
    * @param element TextInput element to type on
@@ -108,6 +109,19 @@ export interface UserEventInstance {
     text: string,
     options?: TypeOptions
   ) => Promise<void>;
+
+  /**
+   * Simulate user clearing the text of a given `TextInput` element.
+   *
+   * This method will simulate:
+   * 1. entering TextInput
+   * 2. selecting all text
+   * 3. pressing backspace to delete all text
+   * 4. leaving TextInput
+   *
+   * @param element TextInput element to clear
+   */
+  clear: (element: ReactTestInstance) => Promise<void>;
 }
 
 function createInstance(config: UserEventConfig): UserEventInstance {
@@ -120,6 +134,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
     press: press.bind(instance),
     longPress: longPress.bind(instance),
     type: type.bind(instance),
+    clear: clear.bind(instance),
   };
 
   Object.assign(instance, api);

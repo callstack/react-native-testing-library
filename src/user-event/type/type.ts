@@ -3,13 +3,8 @@ import { isHostTextInput } from '../../helpers/host-component-names';
 import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
-import { UserEventInstance } from '../setup';
-import {
-  dispatchEvent,
-  wait,
-  getTextRange,
-  getTextContentSize,
-} from '../utils';
+import { UserEventConfig, UserEventInstance } from '../setup';
+import { dispatchEvent, wait, getTextContentSize } from '../utils';
 
 import { parseKeys } from './parseKeys';
 
@@ -54,12 +49,16 @@ export async function type(
     const previousText = element.props.value ?? currentText;
     currentText = applyKey(previousText, key);
 
-    await wait(this.config);
-    emitTypingEvents(element, key, currentText, previousText);
+    await emitTypingEvents(
+      this.config,
+      element,
+      key,
+      currentText,
+      previousText
+    );
   }
 
   const finalText = element.props.value ?? currentText;
-
   await wait(this.config);
 
   if (options?.submitEditing) {
@@ -79,7 +78,8 @@ export async function type(
   dispatchEvent(element, 'blur', EventBuilder.Common.blur());
 }
 
-async function emitTypingEvents(
+export async function emitTypingEvents(
+  config: UserEventConfig,
   element: ReactTestInstance,
   key: string,
   currentText: string,
@@ -87,6 +87,7 @@ async function emitTypingEvents(
 ) {
   const isMultiline = element.props.multiline === true;
 
+  await wait(config);
   dispatchEvent(element, 'keyPress', EventBuilder.TextInput.keyPress(key));
 
   // According to the docs only multiline TextInput emits textInput event
@@ -100,10 +101,12 @@ async function emitTypingEvents(
   }
 
   dispatchEvent(element, 'change', EventBuilder.TextInput.change(currentText));
-
   dispatchEvent(element, 'changeText', currentText);
 
-  const selectionRange = getTextRange(currentText);
+  const selectionRange = {
+    start: currentText.length,
+    end: currentText.length,
+  };
   dispatchEvent(
     element,
     'selectionChange',

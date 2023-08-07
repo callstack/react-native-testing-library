@@ -14,4 +14,5 @@ export const userEvent = {
     setup().longPress(element, options),
   type: (element: ReactTestInstance, text: string, options?: TypeOptions) =>
     setup().type(element, text, options),
+  clear: (element: ReactTestInstance) => setup().clear(element),
 };
