@@ -1,54 +1,30 @@
 import * as React from 'react';
-import {
-  FlatList,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { buildEventLogger } from '../utils/helpers';
 
-type ItemData = {
+interface ItemData {
   id: string;
   title: string;
-};
-
-type ItemProps = {
-  item: ItemData;
-};
-
-const itemsAmount = 20; // Change this value to shrink/extend scroll length
-
-const DATA: ItemData[] = [];
-
-for (let i = 1; i <= itemsAmount; i++) {
-  const item = {
-    id: `${i}`,
-    title: `Item ${i}`,
-  };
-  DATA.push(item);
 }
 
-const Item = ({ item }: ItemProps) => (
-  <View style={[styles.item]}>
-    <Text style={[styles.title]}>{item.title}</Text>
-  </View>
-);
+const data: ItemData[] = [...new Array(25)].map((_, index) => ({
+  id: `${index + 1}`,
+  title: `Item ${index + 1}`,
+}));
 
-const handleOnMomentumScrollBegin = buildEventLogger('onMomentumScrollBegin');
-const handleOnMomentumScrollEnd = buildEventLogger('onMomentumScrollEnd');
-const handleOnScroll = buildEventLogger('onScroll');
-const handleOnScrollBeginDrag = buildEventLogger('onScrollBeginDrag');
-const handleOnScrollEndDrag = buildEventLogger('onScrollEndDrag');
-const handleOnScrollToTop = buildEventLogger('onScrollToTop');
+const handleMomentumScrollBegin = buildEventLogger('momentumScrollBegin');
+const handleMomentumScrollEnd = buildEventLogger('momentumScrollEnd');
+const handleScroll = buildEventLogger('scroll');
+const handleScrollBeginDrag = buildEventLogger('scrollBeginDrag');
+const handleScrollEndDrag = buildEventLogger('scrollEndDrag');
+const handleScrollToTop = buildEventLogger('scrollToTop');
 
 export function FlatListEvents() {
-  const handleOnContentSizeChange = (w: number, h: number) => {
+  const handleContentSizeChange = (w: number, h: number) => {
     console.log(`Event: contentSizeChange`, w, h);
   };
 
-  const handleOnEndReached = (info: { distanceFromEnd: number }) => {
+  const handleEndReached = (info: { distanceFromEnd: number }) => {
     console.log(`Event: endReached`, info.distanceFromEnd);
   };
 
@@ -57,36 +33,40 @@ export function FlatListEvents() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        onContentSizeChange={handleOnContentSizeChange}
-        onMomentumScrollBegin={handleOnMomentumScrollBegin}
-        onMomentumScrollEnd={handleOnMomentumScrollEnd}
-        onScroll={handleOnScroll}
-        onScrollBeginDrag={handleOnScrollBeginDrag}
-        onScrollEndDrag={handleOnScrollEndDrag}
-        onScrollToTop={handleOnScrollToTop}
-        onEndReached={handleOnEndReached}
-      />
-    </SafeAreaView>
+    <FlatList
+      contentInsetAdjustmentBehavior="scrollableAxes"
+      scrollEventThrottle={150}
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id}
+      onContentSizeChange={handleContentSizeChange}
+      onMomentumScrollBegin={handleMomentumScrollBegin}
+      onMomentumScrollEnd={handleMomentumScrollEnd}
+      onScroll={handleScroll}
+      onScrollBeginDrag={handleScrollBeginDrag}
+      onScrollEndDrag={handleScrollEndDrag}
+      onScrollToTop={handleScrollToTop}
+      onEndReached={handleEndReached}
+    />
   );
 }
 
+interface ItemProps {
+  item: ItemData;
+}
+
+const Item = ({ item }: ItemProps) => (
+  <View style={styles.item}>
+    <Text style={styles.title}>{item.title}</Text>
+  </View>
+);
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
   item: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    backgroundColor: 'pink',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
   },
   title: {
-    fontSize: 32,
+    fontSize: 20,
   },
 });

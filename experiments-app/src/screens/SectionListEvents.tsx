@@ -1,15 +1,13 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  SectionList,
-  StatusBar,
-} from 'react-native';
+import { StyleSheet, Text, View, SectionList } from 'react-native';
 import { buildEventLogger } from '../utils/helpers';
 
-const DATA = [
+interface SectionData {
+  title: string;
+  data: string[];
+}
+
+const sections: SectionData[] = [
   {
     title: 'Main dishes',
     data: [
@@ -44,63 +42,65 @@ const DATA = [
   },
 ];
 
-const handleOnMomentumScrollBegin = buildEventLogger('onMomentumScrollBegin');
-const handleOnMomentumScrollEnd = buildEventLogger('onMomentumScrollEnd');
-const handleOnScroll = buildEventLogger('onScroll');
-const handleOnScrollBeginDrag = buildEventLogger('onScrollBeginDrag');
-const handleOnScrollEndDrag = buildEventLogger('onScrollEndDrag');
-const handleOnScrollToTop = buildEventLogger('onScrollToTop');
+const handleMomentumScrollBegin = buildEventLogger('momentumScrollBegin');
+const handleMomentumScrollEnd = buildEventLogger('momentumScrollEnd');
+const handleScroll = buildEventLogger('scroll');
+const handleScrollBeginDrag = buildEventLogger('scrollBeginDrag');
+const handleScrollEndDrag = buildEventLogger('scrollEndDrag');
+const handleScrollToTop = buildEventLogger('scrollToTop');
 
 export function SectionListEvents() {
-  const handleOnContentSizeChange = (w: number, h: number) => {
+  const handleContentSizeChange = (w: number, h: number) => {
     console.log(`Event: contentSizeChange`, w, h);
   };
 
-  const handleOnEndReached = (info: { distanceFromEnd: number }) => {
-    console.log(`Event: endReached`, info.distanceFromEnd);
+  const handleEndReached = (info: { distanceFromEnd: number }) => {
+    console.log(`Event: endReached`, info);
   };
 
+  const renderSectionHeader = ({ section }: { section: SectionData }) => (
+    <Text style={styles.header}>{section.title}</Text>
+  );
+
+  const renderItem = ({ item }: { item: string }) => (
+    <View style={styles.item}>
+      <Text style={styles.title}>{item}</Text>
+    </View>
+  );
+
   return (
-    <SafeAreaView style={styles.container}>
-      <SectionList
-        sections={DATA}
-        keyExtractor={(item, index) => item + index}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.title}>{item}</Text>
-          </View>
-        )}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.header}>{title}</Text>
-        )}
-        onContentSizeChange={handleOnContentSizeChange}
-        onMomentumScrollBegin={handleOnMomentumScrollBegin}
-        onMomentumScrollEnd={handleOnMomentumScrollEnd}
-        onScroll={handleOnScroll}
-        onScrollBeginDrag={handleOnScrollBeginDrag}
-        onScrollEndDrag={handleOnScrollEndDrag}
-        onScrollToTop={handleOnScrollToTop}
-        onEndReached={handleOnEndReached}
-      />
-    </SafeAreaView>
+    <SectionList
+      contentInsetAdjustmentBehavior="scrollableAxes"
+      scrollEventThrottle={150}
+      sections={sections}
+      keyExtractor={(item, index) => item + index}
+      renderSectionHeader={renderSectionHeader}
+      renderItem={renderItem}
+      onContentSizeChange={handleContentSizeChange}
+      onMomentumScrollBegin={handleMomentumScrollBegin}
+      onMomentumScrollEnd={handleMomentumScrollEnd}
+      onScroll={handleScroll}
+      onScrollBeginDrag={handleScrollBeginDrag}
+      onScrollEndDrag={handleScrollEndDrag}
+      onScrollToTop={handleScrollToTop}
+      onEndReached={handleEndReached}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-    marginHorizontal: 16,
+  header: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: 'white',
+    fontSize: 24,
   },
   item: {
-    backgroundColor: 'pink',
-    padding: 20,
-    marginVertical: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
   },
-  header: {
-    fontSize: 32,
-  },
+
   title: {
-    fontSize: 24,
+    fontSize: 20,
   },
 });
