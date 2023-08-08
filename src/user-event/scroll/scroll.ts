@@ -6,6 +6,7 @@ import { ContentOffset } from '../event-builder/scroll';
 
 export interface ScrollOptions {
   offset: ContentOffset;
+  steps?: number;
 }
 
 export async function scroll(
@@ -13,14 +14,24 @@ export async function scroll(
   element: ReactTestInstance,
   options: ScrollOptions
 ): Promise<void> {
-  await emitScrollEvents(element, options.offset);
+  await emitScrollEvents(element, options.offset, options.steps);
 }
 
 async function emitScrollEvents(
   element: ReactTestInstance,
-  offset: ContentOffset
+  offset: ContentOffset,
+  steps: number = 3
 ) {
   dispatchEvent(element, 'scrollBeginDrag', EventBuilder.Scroll.scroll());
-  dispatchEvent(element, 'scroll', EventBuilder.Scroll.scroll(offset));
+
+  const dividedOffset: ContentOffset = {
+    x: (offset.x || 0) / steps,
+    y: (offset.y || 0) / steps,
+  };
+
+  [...new Array(steps)].forEach(() => {
+    dispatchEvent(element, 'scroll', EventBuilder.Scroll.scroll(dividedOffset));
+  });
+
   dispatchEvent(element, 'scrollEndDrag', EventBuilder.Scroll.scroll(offset));
 }

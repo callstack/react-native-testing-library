@@ -72,7 +72,65 @@ describe('userEvent.scroll with fake timers', () => {
             },
             "contentOffset": {
               "x": 0,
-              "y": 90,
+              "y": 30,
+            },
+            "contentSize": {
+              "height": 0,
+              "width": 0,
+            },
+            "layoutMeasurement": {
+              "height": 0,
+              "width": 0,
+            },
+            "responderIgnoreScroll": true,
+            "target": 0,
+            "velocity": {
+              "x": 0,
+              "y": 0,
+            },
+          },
+        },
+        {
+          "name": "scroll",
+          "payload": {
+            "contentInset": {
+              "bottom": 0,
+              "left": 0,
+              "right": 0,
+              "top": 0,
+            },
+            "contentOffset": {
+              "x": 0,
+              "y": 30,
+            },
+            "contentSize": {
+              "height": 0,
+              "width": 0,
+            },
+            "layoutMeasurement": {
+              "height": 0,
+              "width": 0,
+            },
+            "responderIgnoreScroll": true,
+            "target": 0,
+            "velocity": {
+              "x": 0,
+              "y": 0,
+            },
+          },
+        },
+        {
+          "name": "scroll",
+          "payload": {
+            "contentInset": {
+              "bottom": 0,
+              "left": 0,
+              "right": 0,
+              "top": 0,
+            },
+            "contentOffset": {
+              "x": 0,
+              "y": 30,
             },
             "contentSize": {
               "height": 0,
