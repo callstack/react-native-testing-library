@@ -11,7 +11,11 @@ export async function scroll(
 }
 
 async function emitScrollEvents(element: ReactTestInstance) {
-  dispatchEvent(element, 'scrollBeginDrag', EventBuilder.Common.touch());
-  dispatchEvent(element, 'scroll', EventBuilder.Common.touch());
-  dispatchEvent(element, 'scrollEndDrag', EventBuilder.Common.touch());
+  dispatchEvent(element, 'scrollBeginDrag', EventBuilder.Scroll.scroll());
+  dispatchEvent(element, 'scroll', EventBuilder.Scroll.scroll({ x: 0, y: 90 }));
+  dispatchEvent(
+    element,
+    'scrollEndDrag',
+    EventBuilder.Scroll.scroll({ x: 0, y: 90 })
+  );
 }
