@@ -28,6 +28,7 @@ function ListItem({ item }: ListItemProps) {
   const navigation = useNavigation();
 
   const handlePress = () => {
+    // @ts-expect-error missing navigation typing
     navigation.navigate(item.key);
   };
 
