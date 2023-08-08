@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { buildEventLogger } from '../utils/helpers';
+import { customEventLogger, nativeEventLogger } from '../utils/helpers';
 
 interface ItemData {
   id: string;
@@ -12,41 +12,26 @@ const data: ItemData[] = [...new Array(25)].map((_, index) => ({
   title: `Item ${index + 1}`,
 }));
 
-const handleMomentumScrollBegin = buildEventLogger('momentumScrollBegin');
-const handleMomentumScrollEnd = buildEventLogger('momentumScrollEnd');
-const handleScroll = buildEventLogger('scroll');
-const handleScrollBeginDrag = buildEventLogger('scrollBeginDrag');
-const handleScrollEndDrag = buildEventLogger('scrollEndDrag');
-const handleScrollToTop = buildEventLogger('scrollToTop');
-
 export function FlatListEvents() {
-  const handleContentSizeChange = (w: number, h: number) => {
-    console.log(`Event: contentSizeChange`, w, h);
-  };
-
-  const handleEndReached = (info: { distanceFromEnd: number }) => {
-    console.log(`Event: endReached`, info.distanceFromEnd);
-  };
-
   const renderItem = ({ item }: { item: ItemData }) => {
     return <Item item={item} />;
   };
 
   return (
     <FlatList
-      contentInsetAdjustmentBehavior="scrollableAxes"
-      scrollEventThrottle={150}
       data={data}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
-      onContentSizeChange={handleContentSizeChange}
-      onMomentumScrollBegin={handleMomentumScrollBegin}
-      onMomentumScrollEnd={handleMomentumScrollEnd}
-      onScroll={handleScroll}
-      onScrollBeginDrag={handleScrollBeginDrag}
-      onScrollEndDrag={handleScrollEndDrag}
-      onScrollToTop={handleScrollToTop}
-      onEndReached={handleEndReached}
+      contentInsetAdjustmentBehavior="scrollableAxes"
+      scrollEventThrottle={150}
+      onScroll={nativeEventLogger('scroll')}
+      onScrollBeginDrag={nativeEventLogger('scrollBeginDrag')}
+      onScrollEndDrag={nativeEventLogger('scrollEndDrag')}
+      onMomentumScrollBegin={nativeEventLogger('momentumScrollBegin')}
+      onMomentumScrollEnd={nativeEventLogger('momentumScrollEnd')}
+      onScrollToTop={nativeEventLogger('scrollToTop')}
+      onEndReached={customEventLogger('endReached')}
+      onContentSizeChange={customEventLogger('contentSizeChange')}
     />
   );
 }

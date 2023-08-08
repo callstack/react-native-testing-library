@@ -1,30 +1,19 @@
 import * as React from 'react';
 import { StyleSheet, Text, ScrollView } from 'react-native';
-import { buildEventLogger } from '../utils/helpers';
-
-const handleMomentumScrollBegin = buildEventLogger('momentumScrollBegin');
-const handleMomentumScrollEnd = buildEventLogger('momentumScrollEnd');
-const handleScroll = buildEventLogger('scroll');
-const handleScrollBeginDrag = buildEventLogger('scrollBeginDrag');
-const handleScrollEndDrag = buildEventLogger('scrollEndDrag');
-const handleScrollToTop = buildEventLogger('scrollToTop');
+import { customEventLogger, nativeEventLogger } from '../utils/helpers';
 
 export function ScrollViewEvents() {
-  const handleContentSizeChange = (w: number, h: number) => {
-    console.log(`Event: contentSizeChange`, w, h);
-  };
-
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="scrollableAxes"
       scrollEventThrottle={150}
-      onContentSizeChange={handleContentSizeChange}
-      onMomentumScrollBegin={handleMomentumScrollBegin}
-      onMomentumScrollEnd={handleMomentumScrollEnd}
-      onScroll={handleScroll}
-      onScrollBeginDrag={handleScrollBeginDrag}
-      onScrollEndDrag={handleScrollEndDrag}
-      onScrollToTop={handleScrollToTop}
+      onScroll={nativeEventLogger('scroll')}
+      onScrollBeginDrag={nativeEventLogger('scrollBeginDrag')}
+      onScrollEndDrag={nativeEventLogger('scrollEndDrag')}
+      onMomentumScrollBegin={nativeEventLogger('momentumScrollBegin')}
+      onMomentumScrollEnd={nativeEventLogger('momentumScrollEnd')}
+      onScrollToTop={nativeEventLogger('scrollToTop')}
+      onContentSizeChange={customEventLogger('contentSizeChange')}
     >
       <Text style={styles.text}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
