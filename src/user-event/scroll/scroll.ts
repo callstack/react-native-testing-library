@@ -22,15 +22,32 @@ async function emitScrollEvents(
   offset: ContentOffset,
   steps: number = 3
 ) {
-  dispatchEvent(element, 'scrollBeginDrag', EventBuilder.Scroll.scroll());
+  let x = 0;
+  let y = 0;
 
-  const dividedOffset: ContentOffset = {
-    x: (offset.x || 0) / steps,
-    y: (offset.y || 0) / steps,
-  };
+  dispatchEvent(
+    element,
+    'scrollBeginDrag',
+    EventBuilder.Scroll.scroll({
+      x: x,
+      y: y,
+    })
+  );
+
+  const offsetStepX = (offset.x || 0) / (steps + 1);
+  const offsetStepY = (offset.y || 0) / (steps + 1);
 
   [...new Array(steps)].forEach(() => {
-    dispatchEvent(element, 'scroll', EventBuilder.Scroll.scroll(dividedOffset));
+    x = x + offsetStepX;
+    y = y + offsetStepY;
+    dispatchEvent(
+      element,
+      'scroll',
+      EventBuilder.Scroll.scroll({
+        x: x,
+        y: y,
+      })
+    );
   });
 
   dispatchEvent(element, 'scrollEndDrag', EventBuilder.Scroll.scroll(offset));

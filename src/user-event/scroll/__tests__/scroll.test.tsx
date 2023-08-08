@@ -27,7 +27,7 @@ describe('userEvent.scroll with fake timers', () => {
     );
 
     await user.scroll(screen.getByTestId('scrollable'), {
-      offset: { x: 0, y: 90 },
+      offset: { x: 0, y: 120 },
     });
 
     expect(events).toMatchInlineSnapshot(`
@@ -101,7 +101,7 @@ describe('userEvent.scroll with fake timers', () => {
             },
             "contentOffset": {
               "x": 0,
-              "y": 30,
+              "y": 60,
             },
             "contentSize": {
               "height": 0,
@@ -130,7 +130,7 @@ describe('userEvent.scroll with fake timers', () => {
             },
             "contentOffset": {
               "x": 0,
-              "y": 30,
+              "y": 90,
             },
             "contentSize": {
               "height": 0,
@@ -159,7 +159,7 @@ describe('userEvent.scroll with fake timers', () => {
             },
             "contentOffset": {
               "x": 0,
-              "y": 90,
+              "y": 120,
             },
             "contentSize": {
               "height": 0,
