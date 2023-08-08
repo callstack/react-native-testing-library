@@ -8,27 +8,27 @@ export type Experiment = (typeof experiments)[number];
 
 export const experiments = [
   {
-    key: 'textInputEvents',
+    key: 'TextInputEvents',
     title: 'TextInput Events',
     component: TextInputEvents,
   },
   {
-    key: 'textInputEventPropagation',
+    key: 'TextInputEventPropagation',
     title: 'TextInput Event Propagation',
     component: TextInputEventPropagation,
   },
   {
-    key: 'scrollViewEvents',
+    key: 'ScrollViewEvents',
     title: 'ScrollView Events',
     component: ScrollViewEvents,
   },
   {
-    key: 'flatListEvents',
+    key: 'FlatListEvents',
     title: 'FlatList Events',
     component: FlatListEvents,
   },
   {
-    key: 'sectionListEvents',
+    key: 'SectionListEvents',
     title: 'SectionList Events',
     component: SectionListEvents,
   },

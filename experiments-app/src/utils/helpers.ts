@@ -1,13 +1,18 @@
 import { NativeSyntheticEvent } from 'react-native/types';
 
-export function buildEventLogger(name: string) {
+export function nativeEventLogger(name: string) {
   return (event: NativeSyntheticEvent<unknown>) => {
-    const payload = event?.nativeEvent ?? event;
-    logEvent(name, payload);
+    logEvent(name, event?.nativeEvent);
   };
 }
 
-export function logEvent(name: string, payload: unknown) {
+export function customEventLogger(name: string) {
+  return (...args: unknown[]) => {
+    logEvent(name, ...args);
+  };
+}
+
+export function logEvent(name: string, ...args: unknown[]) {
   // eslint-disable-next-line no-console
-  console.log(`Event: ${name}`, payload);
+  console.log(`Event: ${name}`, ...args);
 }

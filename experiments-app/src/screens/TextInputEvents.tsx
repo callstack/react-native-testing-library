@@ -1,18 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, SafeAreaView, TextInput } from 'react-native';
-import { buildEventLogger, logEvent } from '../utils/helpers';
-
-const handlePressIn = buildEventLogger('pressIn');
-const handlePressOut = buildEventLogger('pressOut');
-const handleFocus = buildEventLogger('focus');
-const handleBlur = buildEventLogger('blur');
-const handleChange = buildEventLogger('change');
-const handleEndEditing = buildEventLogger('endEditing');
-const handleSubmitEditing = buildEventLogger('submitEditing');
-const handleKeyPress = buildEventLogger('keyPress');
-const handleTextInput = buildEventLogger('textInput');
-const handleSelectionChange = buildEventLogger('selectionChange');
-const handleContentSizeChange = buildEventLogger('contentSizeChange');
+import { nativeEventLogger, logEvent } from '../utils/helpers';
 
 export function TextInputEvents() {
   const [value, setValue] = React.useState('');
@@ -29,17 +17,17 @@ export function TextInputEvents() {
         value={value}
         editable={true}
         onChangeText={handleChangeText}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onChange={handleChange}
-        onEndEditing={handleEndEditing}
-        onSubmitEditing={handleSubmitEditing}
-        onKeyPress={handleKeyPress}
-        onTextInput={handleTextInput}
-        onSelectionChange={handleSelectionChange}
-        onContentSizeChange={handleContentSizeChange}
+        onChange={nativeEventLogger('change')}
+        onKeyPress={nativeEventLogger('keyPress')}
+        onEndEditing={nativeEventLogger('endEditing')}
+        onSubmitEditing={nativeEventLogger('submitEditing')}
+        onTextInput={nativeEventLogger('textInput')}
+        onSelectionChange={nativeEventLogger('selectionChange')}
+        onContentSizeChange={nativeEventLogger('contentSizeChange')}
+        onFocus={nativeEventLogger('focus')}
+        onBlur={nativeEventLogger('blur')}
+        onPressIn={nativeEventLogger('pressIn')}
+        onPressOut={nativeEventLogger('pressOut')}
       />
     </SafeAreaView>
   );
