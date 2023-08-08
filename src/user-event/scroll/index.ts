@@ -1,1 +1,1 @@
-export { scroll } from './scroll';
+export { scroll, ScrollOptions } from './scroll';

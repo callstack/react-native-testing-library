@@ -2,7 +2,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { clear } from '../clear';
 import { PressOptions, press, longPress } from '../press';
-import { scroll } from '../scroll';
+import { ScrollOptions, scroll } from '../scroll';
 import { TypeOptions, type } from '../type';
 
 export interface UserEventSetupOptions {
@@ -130,7 +130,7 @@ export interface UserEventInstance {
    * @param element ScrollView element
    * @returns
    */
-  scroll: (element: ReactTestInstance) => Promise<void>;
+  scroll: (element: ReactTestInstance, options: ScrollOptions) => Promise<void>;
 }
 
 function createInstance(config: UserEventConfig): UserEventInstance {
