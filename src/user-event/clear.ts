@@ -1,10 +1,14 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
-import { isPointerEventEnabled } from '../helpers/pointer-events';
 import { EventBuilder } from './event-builder';
 import { UserEventInstance } from './setup';
-import { dispatchEvent, wait } from './utils';
+import {
+  dispatchEvent,
+  wait,
+  isEditableTextInput,
+  isFocusableTextInput,
+} from './utils';
 import { emitTypingEvents } from './type/type';
 
 export async function clear(
@@ -18,9 +22,18 @@ export async function clear(
     );
   }
 
-  // Skip events if the element is disabled
-  if (element.props.editable === false || !isPointerEventEnabled(element)) {
-    return;
+  if (!isEditableTextInput(element)) {
+    throw new ErrorWithStack(
+      `clear() works only on editable "TextInput" elements.`,
+      clear
+    );
+  }
+
+  if (!isFocusableTextInput(element)) {
+    throw new ErrorWithStack(
+      `clear() works only on focusable "TextInput" elements.`,
+      clear
+    );
   }
 
   // 1. Enter element

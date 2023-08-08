@@ -29,21 +29,23 @@ function renderTextInputWithToolkit(props: TextInputProps = {}) {
     />
   );
 
+  const textInput = screen.getByTestId('input');
+
   return {
-    ...screen,
     events,
+    textInput,
   };
 }
 
 describe('clear()', () => {
   it('supports basic case', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
-    const { events, ...queries } = renderTextInputWithToolkit({
+    const { textInput, events } = renderTextInputWithToolkit({
       value: 'Hello!',
     });
 
     const user = userEvent.setup();
-    await user.clear(queries.getByTestId('input'));
+    await user.clear(textInput);
 
     const eventNames = events.map((e) => e.name);
     expect(eventNames).toEqual([
@@ -62,12 +64,12 @@ describe('clear()', () => {
 
   it.each(['modern', 'legacy'])('works with %s fake timers', async (type) => {
     jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
-    const { events, ...queries } = renderTextInputWithToolkit({
+    const { textInput, events } = renderTextInputWithToolkit({
       value: 'Hello!',
     });
 
     const user = userEvent.setup();
-    await user.clear(queries.getByTestId('input'));
+    await user.clear(textInput);
 
     const eventNames = events.map((e) => e.name);
     expect(eventNames).toEqual([
@@ -83,12 +85,12 @@ describe('clear()', () => {
   });
 
   it('supports defaultValue prop', async () => {
-    const { events, ...queries } = renderTextInputWithToolkit({
+    const { textInput, events } = renderTextInputWithToolkit({
       defaultValue: 'Hello Default!',
     });
 
     const user = userEvent.setup();
-    await user.clear(queries.getByTestId('input'));
+    await user.clear(textInput);
 
     const eventNames = events.map((e) => e.name);
     expect(eventNames).toEqual([
@@ -106,26 +108,45 @@ describe('clear()', () => {
   });
 
   it('does respect editable prop', async () => {
-    const { events, ...queries } = renderTextInputWithToolkit({
+    const { textInput } = renderTextInputWithToolkit({
       value: 'Hello!',
       editable: false,
     });
 
     const user = userEvent.setup();
-    await user.clear(queries.getByTestId('input'));
+    await expect(
+      user.clear(textInput)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"clear() works only on editable "TextInput" elements."`
+    );
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([]);
+    expect(textInput.props.value).toBe('Hello!');
+  });
+
+  it('does respect pointer-events prop', async () => {
+    const { textInput } = renderTextInputWithToolkit({
+      value: 'Hello!',
+      pointerEvents: 'none',
+    });
+
+    const user = userEvent.setup();
+    await expect(
+      user.clear(textInput)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"clear() works only on focusable "TextInput" elements."`
+    );
+
+    expect(textInput.props.value).toBe('Hello!');
   });
 
   it('supports multiline', async () => {
-    const { events, ...queries } = renderTextInputWithToolkit({
+    const { textInput, events } = renderTextInputWithToolkit({
       value: 'Hello World!\nHow are you?',
       multiline: true,
     });
 
     const user = userEvent.setup();
-    await user.clear(queries.getByTestId('input'));
+    await user.clear(textInput);
 
     const eventNames = events.map((e) => e.name);
     expect(eventNames).toEqual([
