@@ -117,7 +117,7 @@ describe('clear()', () => {
     await expect(
       user.clear(textInput)
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"clear() works only on editable "TextInput" elements."`
+      `"clear() only supports editable elements."`
     );
 
     expect(textInput.props.value).toBe('Hello!');
@@ -133,7 +133,7 @@ describe('clear()', () => {
     await expect(
       user.clear(textInput)
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"clear() works only on focusable "TextInput" elements."`
+      `"clear() cannot focus on given element due to "pointerEvents" prop."`
     );
 
     expect(textInput.props.value).toBe('Hello!');
@@ -193,7 +193,7 @@ describe('clear()', () => {
     await expect(
       user.clear(screen.getByTestId('input'))
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"clear() works only with host "TextInput" elements. Passed element has type "View"."`
+      `"clear() only supports host "TextInput" elements. Passed element has type: "View"."`
     );
   });
 

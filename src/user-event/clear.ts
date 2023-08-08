@@ -1,14 +1,10 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
+import { isPointerEventEnabled } from '../helpers/pointer-events';
 import { EventBuilder } from './event-builder';
 import { UserEventInstance } from './setup';
-import {
-  dispatchEvent,
-  wait,
-  isEditableTextInput,
-  isFocusableTextInput,
-} from './utils';
+import { dispatchEvent, wait, isEditableTextInput } from './utils';
 import { emitTypingEvents } from './type/type';
 
 export async function clear(
@@ -17,21 +13,18 @@ export async function clear(
 ): Promise<void> {
   if (!isHostTextInput(element)) {
     throw new ErrorWithStack(
-      `clear() works only with host "TextInput" elements. Passed element has type "${element.type}".`,
+      `clear() only supports host "TextInput" elements. Passed element has type: "${element.type}".`,
       clear
     );
   }
 
   if (!isEditableTextInput(element)) {
-    throw new ErrorWithStack(
-      `clear() works only on editable "TextInput" elements.`,
-      clear
-    );
+    throw new ErrorWithStack('clear() only supports editable elements.', clear);
   }
 
-  if (!isFocusableTextInput(element)) {
+  if (!isPointerEventEnabled(element)) {
     throw new ErrorWithStack(
-      `clear() works only on focusable "TextInput" elements.`,
+      'clear() cannot focus on given element due to "pointerEvents" prop.',
       clear
     );
   }
