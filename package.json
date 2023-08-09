@@ -97,7 +97,9 @@
     ],
     "testPathIgnorePatterns": [
       "timerUtils",
-      "examples/"
+      "examples/",
+      "experiments-app/",
+      "experiments-rtl/"
     ],
     "testTimeout": 60000,
     "transformIgnorePatterns": [
