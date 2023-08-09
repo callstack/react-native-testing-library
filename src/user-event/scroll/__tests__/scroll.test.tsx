@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native';
 import { createEventLogger } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
+import { ScrollOptions } from '../scroll';
 
 describe('userEvent.scroll with fake timers', () => {
   beforeEach(() => {
@@ -438,5 +439,21 @@ describe('userEvent.scroll with fake timers', () => {
         },
       ]
     `);
+  });
+
+  test('scroll is accessible directly in userEvent', async () => {
+    const mockOnScroll = jest.fn();
+
+    render(<ScrollView onScroll={mockOnScroll} testID="scrollable" />);
+
+    const options: ScrollOptions = {
+      offset: {
+        y: 90,
+      },
+    };
+
+    await userEvent.scroll(screen.getByTestId('scrollable'), options);
+
+    expect(mockOnScroll).toHaveBeenCalled();
   });
 });
