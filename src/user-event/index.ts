@@ -18,4 +18,5 @@ export const userEvent = {
   clear: (element: ReactTestInstance) => setup().clear(element),
   scroll: (element: ReactTestInstance, options: ScrollOptions) =>
     setup().scroll(element, options),
+  scrollToTop: (element: ReactTestInstance) => setup().scrollToTop(element),
 };

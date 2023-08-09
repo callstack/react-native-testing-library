@@ -2,7 +2,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { clear } from '../clear';
 import { PressOptions, press, longPress } from '../press';
-import { ScrollOptions, scroll } from '../scroll';
+import { ScrollOptions, scroll, scrollToTop } from '../scroll';
 import { TypeOptions, type } from '../type';
 
 export interface UserEventSetupOptions {
@@ -131,6 +131,7 @@ export interface UserEventInstance {
    * @returns
    */
   scroll: (element: ReactTestInstance, options: ScrollOptions) => Promise<void>;
+  scrollToTop: (element: ReactTestInstance) => Promise<void>;
 }
 
 function createInstance(config: UserEventConfig): UserEventInstance {
@@ -145,6 +146,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
     type: type.bind(instance),
     clear: clear.bind(instance),
     scroll: scroll.bind(instance),
+    scrollToTop: scrollToTop.bind(instance),
   };
 
   Object.assign(instance, api);

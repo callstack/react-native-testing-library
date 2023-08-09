@@ -32,6 +32,17 @@ export async function scroll(
   }
 }
 
+export async function scrollToTop(element: ReactTestInstance): Promise<void> {
+  dispatchEvent(
+    element,
+    'scrollToTop',
+    EventBuilder.Scroll.scroll({
+      x: 0,
+      y: 0,
+    })
+  );
+}
+
 async function emitScrollEvents(
   element: ReactTestInstance,
   offset: ContentOffset,
