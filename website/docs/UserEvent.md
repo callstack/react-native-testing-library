@@ -14,6 +14,8 @@ title: User Event
 - [`type()`](#type)
   - [Options](#options-2)
   - [Sequence of events](#sequence-of-events)
+- [`clear()`](#clear)
+  - [Sequence of events](#sequence-of-events-1)
 
 :::caution
 User Event API is in beta stage.
@@ -108,6 +110,10 @@ This helper simulates user focusing on `TextInput` element, typing `text` one ch
 
 This function supports only host `TextInput` elements. Passing other element type will result in throwing error.
 
+:::note
+This function will add text to the text already present in the text input (as specified by `value` or `defaultValue` props). In order to replace existing text, use [`clear()`](#clear) helper first.
+:::
+
 ### Options
  - `skipPress` - if true, `pressIn` and `pressOut` events will not be triggered.
  - `submitEditing` - if true, `submitEditing` event will be triggered after typing the text.
@@ -141,3 +147,45 @@ The `textInput` event is sent only for mutliline text inputs.
 
 The `submitEditing` event is skipped by default. It can sent by setting `submitEditing: true` option.
 
+## `clear()`
+
+```ts
+clear(
+  element: ReactTestInstance,
+}
+```
+
+Example
+```ts
+const user = userEvent.setup();
+await user.clear(textInput);
+```
+
+This helper simulates user clearing content of `TextInput` element.
+
+This function supports only host `TextInput` elements. Passing other element type will result in throwing error.
+
+### Sequence of events
+
+The sequence of events depends on `multiline` prop, as well as passed options.
+
+Events will not be emitted if `editable` prop is set to `false`.
+
+**Entering the element**:
+- `focus`
+
+**Selecting all content**:
+- `selectionChange`
+
+**Pressing backspace**:
+- `keyPress`
+- `textInput` (optional)
+- `change`
+- `changeText`
+- `selectionChange`
+
+The `textInput` event is sent only for mutliline text inputs.
+
+**Leaving the element**:
+- `endEditing`
+- `blur`

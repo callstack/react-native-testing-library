@@ -1,0 +1,269 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`clear() supports basic case: value: "Hello! 1`] = `
+[
+  {
+    "name": "focus",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 6,
+          "start": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "keyPress",
+    "payload": {
+      "nativeEvent": {
+        "key": "Backspace",
+      },
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "",
+      },
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 0,
+          "start": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "endEditing",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+        "text": "",
+      },
+    },
+  },
+  {
+    "name": "blur",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+]
+`;
+
+exports[`clear() supports defaultValue prop: defaultValue: "Hello Default!" 1`] = `
+[
+  {
+    "name": "focus",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 14,
+          "start": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "keyPress",
+    "payload": {
+      "nativeEvent": {
+        "key": "Backspace",
+      },
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "",
+      },
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 0,
+          "start": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "endEditing",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+        "text": "",
+      },
+    },
+  },
+  {
+    "name": "blur",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+]
+`;
+
+exports[`clear() supports multiline: value: "Hello World!
+How are you?" multiline: true, 1`] = `
+[
+  {
+    "name": "focus",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 25,
+          "start": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "keyPress",
+    "payload": {
+      "nativeEvent": {
+        "key": "Backspace",
+      },
+    },
+  },
+  {
+    "name": "textInput",
+    "payload": {
+      "nativeEvent": {
+        "previousText": "Hello World!
+How are you?",
+        "range": {
+          "end": 0,
+          "start": 0,
+        },
+        "target": 0,
+        "text": "",
+      },
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "",
+      },
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "nativeEvent": {
+        "selection": {
+          "end": 0,
+          "start": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "contentSizeChange",
+    "payload": {
+      "nativeEvent": {
+        "contentSize": {
+          "height": 16,
+          "width": 0,
+        },
+        "target": 0,
+      },
+    },
+  },
+  {
+    "name": "endEditing",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+        "text": "",
+      },
+    },
+  },
+  {
+    "name": "blur",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+      },
+    },
+  },
+]
+`;
+
+exports[`clear() works when not all events have handlers 1`] = `
+[
+  {
+    "name": "changeText",
+    "payload": "",
+  },
+  {
+    "name": "endEditing",
+    "payload": {
+      "nativeEvent": {
+        "target": 0,
+        "text": "",
+      },
+    },
+  },
+]
+`;

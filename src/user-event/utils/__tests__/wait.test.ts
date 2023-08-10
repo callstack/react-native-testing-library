@@ -2,7 +2,6 @@ import { wait } from '../wait';
 
 beforeEach(() => {
   jest.useRealTimers();
-  jest.clearAllMocks();
 });
 
 describe('wait()', () => {
