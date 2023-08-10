@@ -18,15 +18,8 @@ export async function clear(
     );
   }
 
-  if (!isEditableTextInput(element)) {
-    throw new ErrorWithStack('clear() only supports editable elements.', clear);
-  }
-
-  if (!isPointerEventEnabled(element)) {
-    throw new ErrorWithStack(
-      'clear() cannot focus on given element due to "pointerEvents" prop.',
-      clear
-    );
+  if (!isEditableTextInput(element) || !isPointerEventEnabled(element)) {
+    return;
   }
 
   // 1. Enter element

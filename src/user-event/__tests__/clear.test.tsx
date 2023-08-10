@@ -114,11 +114,7 @@ describe('clear()', () => {
     });
 
     const user = userEvent.setup();
-    await expect(
-      user.clear(textInput)
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"clear() only supports editable elements."`
-    );
+    user.clear(textInput);
 
     expect(textInput.props.value).toBe('Hello!');
   });
@@ -130,11 +126,7 @@ describe('clear()', () => {
     });
 
     const user = userEvent.setup();
-    await expect(
-      user.clear(textInput)
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"clear() cannot focus on given element due to "pointerEvents" prop."`
-    );
+    user.clear(textInput);
 
     expect(textInput.props.value).toBe('Hello!');
   });
