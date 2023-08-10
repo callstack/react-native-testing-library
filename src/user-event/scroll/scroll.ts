@@ -23,16 +23,14 @@ export interface ScrollState {
 const scrollStateForElement = new WeakMap<ReactTestInstance, ScrollState>();
 
 export function getElementScrollState(element: ReactTestInstance): ScrollState {
-  // @ts-expect-error
-  return scrollStateForElement[element] ?? { x: 0, y: 0 };
+  return scrollStateForElement.get(element) ?? { x: 0, y: 0 };
 }
 
 export function setElementScrollState(
   element: ReactTestInstance,
   scrollState: ScrollState
 ) {
-  // @ts-expect-error
-  scrollStateForElement[element] = scrollState;
+  scrollStateForElement.set(element, scrollState);
 }
 
 export async function scroll(
