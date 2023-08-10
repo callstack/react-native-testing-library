@@ -14,17 +14,14 @@ title: Queries
   - [findAllBy](#findallby)
 - [Queries](#queries)
   - [Options](#options)
+  - [`ByRole`](#byrole)
   - [`ByText`](#bytext)
   - [`ByPlaceholderText`](#byplaceholdertext)
   - [`ByDisplayValue`](#bydisplayvalue)
   - [`ByTestId`](#bytestid)
   - [`ByLabelText`](#bylabeltext)
   - [`ByHintText`, `ByA11yHint`, `ByAccessibilityHint`](#byhinttext-bya11yhint-byaccessibilityhint)
-  - [`ByRole`](#byrole)
-    - [Options](#options-1)
   - [`ByA11yState`, `ByAccessibilityState` (deprecated)](#bya11ystate-byaccessibilitystate-deprecated)
-    - [Default state for: `disabled`, `selected`, and `busy` keys](#default-state-for-disabled-selected-and-busy-keys)
-    - [Default state for: `checked` and `expanded` keys](#default-state-for-checked-and-expanded-keys)
   - [`ByA11yValue`, `ByAccessibilityValue` (deprecated)](#bya11yvalue-byaccessibilityvalue-deprecated)
 - [Common options](#common-options)
   - [`includeHiddenElements` option](#includehiddenelements-option)
@@ -32,7 +29,6 @@ title: Queries
   - [Examples](#examples)
   - [Precision](#precision)
   - [Normalization](#normalization)
-    - [Normalization Examples](#normalization-examples)
 - [Unit testing helpers](#unit-testing-helpers)
   - [`UNSAFE_ByType`](#unsafe_bytype)
   - [`UNSAFE_ByProps`](#unsafe_byprops)
@@ -94,6 +90,69 @@ type ReactTestInstance = {
 ### Options
 
 Usually query first argument can be a **string** or a **regex**. All queries take at least the [`hidden`](#hidden-option) option as an optionnal second argument and some queries accept more options which change string matching behaviour. See [TextMatch](#textmatch) for more info.
+
+### `ByRole`
+
+> getByRole, getAllByRole, queryByRole, queryAllByRole, findByRole, findAllByRole
+
+```ts
+getByRole(
+  role: TextMatch,
+  options?: {
+    name?: TextMatch
+    disabled?: boolean,
+    selected?: boolean,
+    checked?: boolean | 'mixed',
+    busy?: boolean,
+    expanded?: boolean,
+    value: {
+      min?: number;
+      max?: number;
+      now?: number;
+      text?: TextMatch;
+    },
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
+
+:::info
+In order for `*ByRole` queries to match an element it needs to be considered an accessibility element:
+1. `Text`, `TextInput` and `Switch` host elements are these by default.
+2. `View` host elements need an explicit [`accessible`](https://reactnative.dev/docs/accessibility#accessible) prop set to `true`
+3. Some React Native composite components like `Pressable` & `TouchableOpacity` render host `View` element with `accessible` prop already set.
+:::
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(
+  <Pressable accessibilityRole="button" disabled>
+    <Text>Hello</Text>
+  </Pressable>
+);
+const element = screen.getByRole('button');
+const element2 = screen.getByRole('button', { name: 'Hello' });
+const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
+```
+
+#### Options
+
+`name`: Finds an element with given `accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
+
+`disabled`: You can filter elements by their disabled state. The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
+
+`selected`: You can filter elements by their selected state. The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
+
+`checked`: You can filter elements by their checked state. The possible values are `true`, `false`, or `"mixed"`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
+
+`busy`: You can filter elements by their busy state. The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
+
+`expanded`: You can filter elements by their expanded state. The possible values are `true` or `false`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
+
+`value`: Filter elements by their accessibility, available value entries include numeric `min`, `max` & `now`, as well as string or regex `text` key. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about this prop.
 
 ### `ByText`
 
@@ -253,61 +312,7 @@ const element = screen.getByHintText('Plays a song');
 Please consult [Apple guidelines on how `accessibilityHint` should be used](https://developer.apple.com/documentation/objectivec/nsobject/1615093-accessibilityhint).
 :::
 
-### `ByRole`
 
-> getByRole, getAllByRole, queryByRole, queryAllByRole, findByRole, findAllByRole
-
-```ts
-getByRole(
-  role: TextMatch,
-  options?: {
-    name?: TextMatch
-    disabled?: boolean,
-    selected?: boolean,
-    checked?: boolean | 'mixed',
-    busy?: boolean,
-    expanded?: boolean,
-    value: {
-      min?: number;
-      max?: number;
-      now?: number;
-      text?: TextMatch;
-    },
-    includeHiddenElements?: boolean;
-  }
-): ReactTestInstance;
-```
-
-Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
-
-```jsx
-import { render, screen } from '@testing-library/react-native';
-
-render(
-  <Pressable accessibilityRole="button" disabled>
-    <Text>Hello</Text>
-  </Pressable>
-);
-const element = screen.getByRole('button');
-const element2 = screen.getByRole('button', { name: 'Hello' });
-const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
-```
-
-#### Options
-
-`name`: Finds an element with given `accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
-
-`disabled`: You can filter elements by their disabled state. The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
-
-`selected`: You can filter elements by their selected state. The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
-
-`checked`: You can filter elements by their checked state. The possible values are `true`, `false`, or `"mixed"`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
-
-`busy`: You can filter elements by their busy state. The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
-
-`expanded`: You can filter elements by their expanded state. The possible values are `true` or `false`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
-
-`value`: Filter elements by their accessibility, available value entries include numeric `min`, `max` & `now`, as well as string or regex `text` key. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about this prop.
 
 ### `ByA11yState`, `ByAccessibilityState` (deprecated)
 
