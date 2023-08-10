@@ -1,6 +1,8 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { UserEventInstance } from '../setup';
 import { EventBuilder } from '../event-builder';
+import { ErrorWithStack } from '../../helpers/errors';
+import { isHostScrollView } from '../../helpers/host-component-names';
 import { dispatchEvent } from '../utils';
 import { ContentOffset } from '../event-builder/scroll';
 
@@ -38,6 +40,13 @@ export async function scroll(
   element: ReactTestInstance,
   options: ScrollOptions
 ): Promise<void> {
+  if (!isHostScrollView(element)) {
+    throw new ErrorWithStack(
+      `scroll() works only with host "ScrollView" elements. Passed element has type "${element.type}".`,
+      scroll
+    );
+  }
+
   const scrollState = getElementScrollState(element);
 
   const { offset, callbacksNumber, momentum } = options;
@@ -52,6 +61,13 @@ export async function scroll(
 }
 
 export async function scrollToTop(element: ReactTestInstance): Promise<void> {
+  if (!isHostScrollView(element)) {
+    throw new ErrorWithStack(
+      `scroll() works only with host "ScrollView" elements. Passed element has type "${element.type}".`,
+      scroll
+    );
+  }
+
   dispatchEvent(
     element,
     'scrollToTop',

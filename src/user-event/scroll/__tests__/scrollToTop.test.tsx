@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { createEventLogger } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
@@ -61,6 +61,17 @@ describe('userEvent.scroll with fake timers', () => {
         },
       ]
     `);
+  });
+
+  it('does NOT work on View', async () => {
+    const screen = render(<View testID="view" />);
+
+    const user = userEvent.setup();
+    await expect(
+      user.scrollToTop(screen.getByTestId('view'))
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"scroll() works only with host "ScrollView" elements. Passed element has type "View"."`
+    );
   });
 
   test('scrollToTop is accessible directly in userEvent', async () => {

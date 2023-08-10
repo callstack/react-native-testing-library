@@ -24,6 +24,7 @@ export type HostComponentNames = {
   text: string;
   textInput: string;
   switch: string;
+  scrollView: string;
   modal: string;
 };
 

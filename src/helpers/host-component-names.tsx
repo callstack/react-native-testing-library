@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ReactTestInstance } from 'react-test-renderer';
-import { Modal, Switch, Text, TextInput, View } from 'react-native';
+import { Modal, ScrollView, Switch, Text, TextInput, View } from 'react-native';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { renderWithAct } from '../render-act';
 import { HostTestInstance } from './component-tree';
@@ -35,6 +35,7 @@ function detectHostComponentNames(): HostComponentNames {
         <Text testID="text">Hello</Text>
         <TextInput testID="textInput" />
         <Switch testID="switch" />
+        <ScrollView testID="scrollView" />
         <Modal testID="modal" />
       </View>
     );
@@ -43,6 +44,7 @@ function detectHostComponentNames(): HostComponentNames {
       text: getByTestId(renderer.root, 'text').type as string,
       textInput: getByTestId(renderer.root, 'textInput').type as string,
       switch: getByTestId(renderer.root, 'switch').type as string,
+      scrollView: getByTestId(renderer.root, 'scrollView').type as string,
       modal: getByTestId(renderer.root, 'modal').type as string,
     };
   } catch (error) {
@@ -87,6 +89,10 @@ export function isHostTextInput(
   element?: ReactTestInstance | null
 ): element is HostTestInstance {
   return element?.type === getHostComponentNames().textInput;
+}
+
+export function isHostScrollView(element?: ReactTestInstance) {
+  return element?.type === getHostComponentNames().scrollView;
 }
 
 /**
