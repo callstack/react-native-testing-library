@@ -3,6 +3,7 @@ import { setup } from './setup';
 import { PressOptions } from './press';
 import { TypeOptions } from './type';
 import { ScrollOptions } from './scroll';
+import { ScrollToTopOptions } from './scroll/scroll';
 
 export { UserEventConfig } from './setup';
 
@@ -18,5 +19,6 @@ export const userEvent = {
   clear: (element: ReactTestInstance) => setup().clear(element),
   scroll: (element: ReactTestInstance, options: ScrollOptions) =>
     setup().scroll(element, options),
-  scrollToTop: (element: ReactTestInstance) => setup().scrollToTop(element),
+  scrollToTop: (element: ReactTestInstance, options?: ScrollToTopOptions) =>
+    setup().scrollToTop(element, options),
 };

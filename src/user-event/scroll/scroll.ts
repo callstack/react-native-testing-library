@@ -12,6 +12,10 @@ export interface ScrollOptions {
   momentum?: Momentum;
 }
 
+export interface ScrollToTopOptions {
+  callbacksNumber?: number;
+}
+
 export interface Momentum {
   value: number;
   callbacksNumber?: number;
@@ -60,13 +64,29 @@ export async function scroll(
   );
 }
 
-export async function scrollToTop(element: ReactTestInstance): Promise<void> {
+export async function scrollToTop(
+  element: ReactTestInstance,
+  options?: ScrollToTopOptions
+): Promise<void> {
   if (!isHostScrollView(element)) {
     throw new ErrorWithStack(
       `scroll() works only with host "ScrollView" elements. Passed element has type "${element.type}".`,
       scroll
     );
   }
+
+  const { x, y } = getElementScrollState(element);
+
+  if (x === 0 && y === 0) {
+    throw new ErrorWithStack(
+      `scrollToTop() does NOT trigger if content offset is already x:0, y:0.`,
+      scroll
+    );
+  }
+
+  const callbacksNumber = options?.callbacksNumber || 0;
+
+  emitIntermediateEvents(element, x, y, { x: 0, y: 0 }, callbacksNumber);
 
   dispatchEvent(
     element,
