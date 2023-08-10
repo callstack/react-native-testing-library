@@ -6,13 +6,33 @@ import { ContentOffset } from '../event-builder/scroll';
 
 export interface ScrollOptions {
   offset: ContentOffset;
-  steps?: number;
-  momentumScroll?: MomentumScroll;
+  callbacksNumber?: number;
+  momentum?: Momentum;
 }
 
-export interface MomentumScroll {
+export interface Momentum {
   value: number;
-  steps?: number;
+  callbacksNumber?: number;
+}
+
+export interface ScrollState {
+  x: number;
+  y: number;
+}
+
+const scrollStateForElement = new WeakMap<ReactTestInstance, ScrollState>();
+
+export function getElementScrollState(element: ReactTestInstance): ScrollState {
+  // @ts-expect-error
+  return scrollStateForElement[element] ?? { x: 0, y: 0 };
+}
+
+export function setElementScrollState(
+  element: ReactTestInstance,
+  scrollState: ScrollState
+) {
+  // @ts-expect-error
+  scrollStateForElement[element] = scrollState;
 }
 
 export async function scroll(
@@ -20,16 +40,17 @@ export async function scroll(
   element: ReactTestInstance,
   options: ScrollOptions
 ): Promise<void> {
-  await emitScrollEvents(element, options.offset, options.steps);
+  const scrollState = getElementScrollState(element);
 
-  if (options.momentumScroll) {
-    await emitMomentumEvents(
-      element,
-      options.offset,
-      options.momentumScroll.value,
-      options.momentumScroll.steps || 0
-    );
-  }
+  const { offset, callbacksNumber, momentum } = options;
+
+  await emitScrollEvents(
+    element,
+    scrollState,
+    offset,
+    callbacksNumber,
+    momentum
+  );
 }
 
 export async function scrollToTop(element: ReactTestInstance): Promise<void> {
@@ -41,48 +62,45 @@ export async function scrollToTop(element: ReactTestInstance): Promise<void> {
       y: 0,
     })
   );
+
+  setElementScrollState(element, { x: 0, y: 0 });
 }
 
 async function emitScrollEvents(
   element: ReactTestInstance,
+  scrollState: ScrollState,
   offset: ContentOffset,
-  steps: number = 3
+  callbacksNumber: number = 3,
+  momentum?: Momentum
 ): Promise<void> {
-  let x = 0;
-  let y = 0;
-
   dispatchEvent(
     element,
     'scrollBeginDrag',
     EventBuilder.Scroll.scroll({
-      x: x,
-      y: y,
+      x: scrollState.x,
+      y: scrollState.y,
     })
   );
 
-  await emitIntermediateEvents(element, x, y, offset, steps);
+  await emitIntermediateEvents(
+    element,
+    scrollState.x,
+    scrollState.y,
+    offset,
+    callbacksNumber
+  );
 
   dispatchEvent(element, 'scrollEndDrag', EventBuilder.Scroll.scroll(offset));
-}
 
-async function emitMomentumEvents(
-  element: ReactTestInstance,
-  offset: ContentOffset,
-  value: number,
-  steps: number
-): Promise<void> {
-  let x = offset.x || 0;
-  let y = offset.y || 0;
-
-  const momentumOffset: ContentOffset = {
-    x: offset.x ? value : 0,
-    y: offset.y ? value : 0,
+  const actualScrollState: ScrollState = {
+    x: offset.x || scrollState.x,
+    y: offset.y || scrollState.y,
   };
 
-  const targetOffset: ContentOffset = {
-    x: offset.x ? offset.x + value : 0,
-    y: offset.y ? offset.y + value : 0,
-  };
+  if (!momentum) {
+    setElementScrollState(element, actualScrollState);
+    return;
+  }
 
   dispatchEvent(
     element,
@@ -90,13 +108,31 @@ async function emitMomentumEvents(
     EventBuilder.Scroll.scroll(offset)
   );
 
-  await emitIntermediateEvents(element, x, y, momentumOffset, steps);
+  const momentumOffset: ContentOffset = {
+    x: offset.x ? offset.x + momentum.value : 0,
+    y: offset.y ? offset.y + momentum.value : 0,
+  };
+
+  const momentumCallbacksNumber = momentum.callbacksNumber || 0;
+
+  await emitIntermediateEvents(
+    element,
+    actualScrollState.x,
+    actualScrollState.y,
+    momentumOffset,
+    momentumCallbacksNumber
+  );
 
   dispatchEvent(
     element,
     'momentumScrollEnd',
-    EventBuilder.Scroll.scroll(targetOffset)
+    EventBuilder.Scroll.scroll(momentumOffset)
   );
+
+  setElementScrollState(element, {
+    x: momentumOffset.x || scrollState.x,
+    y: momentumOffset.y || scrollState.y,
+  });
 }
 
 async function emitIntermediateEvents(
@@ -104,14 +140,24 @@ async function emitIntermediateEvents(
   x: number,
   y: number,
   offset: ContentOffset,
-  steps: number
+  callbacksNumber: number
 ): Promise<void> {
-  const offsetStepX = (offset.x || 0) / (steps + 1);
-  const offsetStepY = (offset.y || 0) / (steps + 1);
+  const offsetDifference: ScrollState = {
+    x: (x - (offset.x || 0)) * -1,
+    y: (y - (offset.y || 0)) * -1,
+  };
 
-  [...new Array(steps)].forEach(() => {
-    x = x + offsetStepX;
-    y = y + offsetStepY;
+  // Number of jumps must be greater than total amount of 'onScroll' callbacks so that the 'scrollEndDrag' callback will set the final offset value
+  const jumps = callbacksNumber + 1;
+
+  const offsetStep = {
+    x: offsetDifference.x / jumps,
+    y: offsetDifference.y / jumps,
+  };
+
+  [...new Array(callbacksNumber)].forEach(() => {
+    x = x + offsetStep.x;
+    y = y + offsetStep.y;
     dispatchEvent(
       element,
       'scroll',
