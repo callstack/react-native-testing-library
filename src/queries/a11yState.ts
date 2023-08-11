@@ -6,7 +6,7 @@ import {
   AccessibilityStateMatcher,
   matchAccessibilityState,
 } from '../helpers/matchers/accessibilityState';
-import { InternalQueryAllByQuery, makeQueries } from './makeQueries';
+import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -19,7 +19,7 @@ import { CommonQueryOptions } from './options';
 
 const queryAllByA11yState = (
   instance: ReactTestInstance
-): InternalQueryAllByQuery<AccessibilityStateMatcher, CommonQueryOptions> =>
+): QueryAllByQuery<AccessibilityStateMatcher, CommonQueryOptions> =>
   function queryAllByA11yStateFn(matcher, queryOptions) {
     return findAll(
       instance,

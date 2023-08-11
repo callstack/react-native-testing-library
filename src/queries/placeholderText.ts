@@ -3,7 +3,7 @@ import { findAll } from '../helpers/findAll';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
 import { filterNodeByType } from '../helpers/filterNodeByType';
 import { getHostComponentNames } from '../helpers/host-component-names';
-import { InternalQueryAllByQuery, makeQueries } from './makeQueries';
+import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -31,7 +31,7 @@ const getTextInputNodeByPlaceholderText = (
 
 const queryAllByPlaceholderText = (
   instance: ReactTestInstance
-): InternalQueryAllByQuery<TextMatch, ByPlaceholderTextOptions> =>
+): QueryAllByQuery<TextMatch, ByPlaceholderTextOptions> =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
     return findAll(
       instance,

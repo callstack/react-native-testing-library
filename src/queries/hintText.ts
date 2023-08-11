@@ -1,7 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { findAll } from '../helpers/findAll';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
-import { InternalQueryAllByQuery, makeQueries } from './makeQueries';
+import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -25,7 +25,7 @@ const getNodeByHintText = (
 
 const queryAllByHintText = (
   instance: ReactTestInstance
-): InternalQueryAllByQuery<TextMatch, ByHintTextOptions> =>
+): QueryAllByQuery<TextMatch, ByHintTextOptions> =>
   function queryAllByA11yHintFn(hint, queryOptions) {
     return findAll(
       instance,

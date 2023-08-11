@@ -16,7 +16,7 @@ import {
 import { matchStringProp } from '../helpers/matchers/matchStringProp';
 import type { TextMatch } from '../matches';
 import { getQueriesForElement } from '../within';
-import { InternalQueryAllByQuery, makeQueries } from './makeQueries';
+import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -61,7 +61,7 @@ const matchAccessibilityValueIfNeeded = (
 
 const queryAllByRole = (
   instance: ReactTestInstance
-): InternalQueryAllByQuery<TextMatch, ByRoleOptions> =>
+): QueryAllByQuery<TextMatch, ByRoleOptions> =>
   function queryAllByRoleFn(role, options) {
     return findAll(
       instance,

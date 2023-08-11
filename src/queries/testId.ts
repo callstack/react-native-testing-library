@@ -1,7 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { findAll } from '../helpers/findAll';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
-import { InternalQueryAllByQuery, makeQueries } from './makeQueries';
+import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -25,7 +25,7 @@ const getNodeByTestId = (
 
 const queryAllByTestId = (
   instance: ReactTestInstance
-): InternalQueryAllByQuery<TextMatch, ByTestIdOptions> =>
+): QueryAllByQuery<TextMatch, ByTestIdOptions> =>
   function queryAllByTestIdFn(testId, queryOptions) {
     return findAll(
       instance,
