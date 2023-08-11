@@ -1,7 +1,7 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { getConfig } from '../config';
 import { isHiddenFromAccessibility } from './accessiblity';
-import { HostReactTestInstance, isHostElement } from './component-tree';
+import { HostTestInstance, isHostElement } from './component-tree';
 
 interface FindAllOptions {
   /** Match elements hidden from accessibility */
@@ -18,7 +18,7 @@ export function findAll(
   root: ReactTestInstance,
   predicate: (element: ReactTestInstance) => boolean,
   options?: FindAllOptions
-): HostReactTestInstance[] {
+): HostTestInstance[] {
   const results = findAllInternal(root, predicate, options);
 
   const includeHiddenElements =
@@ -42,11 +42,11 @@ function findAllInternal(
   root: ReactTestInstance,
   predicate: (element: ReactTestInstance) => boolean,
   options?: FindAllOptions
-): HostReactTestInstance[] {
-  const results: HostReactTestInstance[] = [];
+): HostTestInstance[] {
+  const results: HostTestInstance[] = [];
 
   // Match descendants first but do not add them to results yet.
-  const matchingDescendants: HostReactTestInstance[] = [];
+  const matchingDescendants: HostTestInstance[] = [];
   root.children.forEach((child) => {
     if (typeof child === 'string') {
       return;
