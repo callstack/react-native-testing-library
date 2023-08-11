@@ -14,27 +14,22 @@ import type { CommonQueryOptions } from './options';
 
 type ByTestIdOptions = CommonQueryOptions & TextMatchOptions;
 
-const getNodeByTestId = (
+const matchTestId = (
   node: ReactTestInstance,
-  testID: TextMatch,
+  testId: TextMatch,
   options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
-  return matches(testID, node.props.testID, normalizer, exact);
+  return matches(testId, node.props.testID, normalizer, exact);
 };
 
 const queryAllByTestId = (
   instance: ReactTestInstance
-): ((
-  testId: TextMatch,
-  queryOptions?: ByTestIdOptions
-) => Array<ReactTestInstance>) =>
+): QueryAllByQuery<TextMatch, ByTestIdOptions> =>
   function queryAllByTestIdFn(testId, queryOptions) {
     return findAll(
       instance,
-      (node) =>
-        typeof node.type === 'string' &&
-        getNodeByTestId(node, testId, queryOptions),
+      (node) => matchTestId(node, testId, queryOptions),
       queryOptions
     );
   };

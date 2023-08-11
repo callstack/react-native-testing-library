@@ -1,10 +1,17 @@
 import { ReactTestInstance } from 'react-test-renderer';
 
 /**
+ * ReactTestInstance referring to host element.
+ */
+export type HostTestInstance = ReactTestInstance & { type: string };
+
+/**
  * Checks if the given element is a host element.
  * @param element The element to check.
  */
-export function isHostElement(element?: ReactTestInstance | null) {
+export function isHostElement(
+  element?: ReactTestInstance | null
+): element is HostTestInstance {
   return typeof element?.type === 'string';
 }
 
@@ -14,7 +21,7 @@ export function isHostElement(element?: ReactTestInstance | null) {
  */
 export function getHostParent(
   element: ReactTestInstance | null
-): ReactTestInstance | null {
+): HostTestInstance | null {
   if (element == null) {
     return null;
   }
@@ -37,12 +44,12 @@ export function getHostParent(
  */
 export function getHostChildren(
   element: ReactTestInstance | null
-): ReactTestInstance[] {
+): HostTestInstance[] {
   if (element == null) {
     return [];
   }
 
-  const hostChildren: ReactTestInstance[] = [];
+  const hostChildren: HostTestInstance[] = [];
 
   element.children.forEach((child) => {
     if (typeof child !== 'object') {
@@ -68,10 +75,8 @@ export function getHostChildren(
  */
 export function getHostSelves(
   element: ReactTestInstance | null
-): ReactTestInstance[] {
-  return typeof element?.type === 'string'
-    ? [element]
-    : getHostChildren(element);
+): HostTestInstance[] {
+  return isHostElement(element) ? [element] : getHostChildren(element);
 }
 
 /**
@@ -80,7 +85,7 @@ export function getHostSelves(
  */
 export function getHostSiblings(
   element: ReactTestInstance | null
-): ReactTestInstance[] {
+): HostTestInstance[] {
   const hostParent = getHostParent(element);
   const hostSelves = getHostSelves(element);
   return getHostChildren(hostParent).filter(

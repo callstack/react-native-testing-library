@@ -1,8 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { filterNodeByType } from '../helpers/filterNodeByType';
 import { findAll } from '../helpers/findAll';
+import { isHostTextInput } from '../helpers/host-component-names';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
-import { getHostComponentNames } from '../helpers/host-component-names';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -16,32 +15,26 @@ import type { CommonQueryOptions } from './options';
 
 type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;
 
-const getTextInputNodeByDisplayValue = (
+const matchDisplayValue = (
   node: ReactTestInstance,
   value: TextMatch,
   options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
-  const nodeValue =
-    node.props.value !== undefined ? node.props.value : node.props.defaultValue;
+  const nodeValue = node.props.value ?? node.props.defaultValue;
 
-  return (
-    filterNodeByType(node, getHostComponentNames().textInput) &&
-    matches(value, nodeValue, normalizer, exact)
-  );
+  return matches(value, nodeValue, normalizer, exact);
 };
 
 const queryAllByDisplayValue = (
   instance: ReactTestInstance
-): ((
-  displayValue: TextMatch,
-  queryOptions?: ByDisplayValueOptions
-) => Array<ReactTestInstance>) =>
+): QueryAllByQuery<TextMatch, ByDisplayValueOptions> =>
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
     return findAll(
       instance,
       (node) =>
-        getTextInputNodeByDisplayValue(node, displayValue, queryOptions),
+        isHostTextInput(node) &&
+        matchDisplayValue(node, displayValue, queryOptions),
       queryOptions
     );
   };

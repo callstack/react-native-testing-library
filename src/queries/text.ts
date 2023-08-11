@@ -1,7 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { filterNodeByType } from '../helpers/filterNodeByType';
 import { findAll } from '../helpers/findAll';
-import { getHostComponentNames } from '../helpers/host-component-names';
+import { isHostText } from '../helpers/host-component-names';
 import { matchTextContent } from '../helpers/matchers/matchTextContent';
 import { TextMatch, TextMatchOptions } from '../matches';
 import { makeQueries } from './makeQueries';
@@ -19,13 +18,11 @@ type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const queryAllByText = (
   instance: ReactTestInstance
-): ((text: TextMatch, options?: ByTextOptions) => Array<ReactTestInstance>) =>
+): QueryAllByQuery<TextMatch, ByTextOptions> =>
   function queryAllByTextFn(text, options = {}) {
     return findAll(
       instance,
-      (node) =>
-        filterNodeByType(node, getHostComponentNames().text) &&
-        matchTextContent(node, text, options),
+      (node) => isHostText(node) && matchTextContent(node, text, options),
       {
         ...options,
         matchDeepestOnly: true,

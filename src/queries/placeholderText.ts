@@ -1,8 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { findAll } from '../helpers/findAll';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
-import { filterNodeByType } from '../helpers/filterNodeByType';
-import { getHostComponentNames } from '../helpers/host-component-names';
+import { isHostTextInput } from '../helpers/host-component-names';
 import { makeQueries } from './makeQueries';
 import type {
   FindAllByQuery,
@@ -16,30 +15,24 @@ import type { CommonQueryOptions } from './options';
 
 type ByPlaceholderTextOptions = CommonQueryOptions & TextMatchOptions;
 
-const getTextInputNodeByPlaceholderText = (
+const matchPlaceholderText = (
   node: ReactTestInstance,
   placeholder: TextMatch,
   options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
-
-  return (
-    filterNodeByType(node, getHostComponentNames().textInput) &&
-    matches(placeholder, node.props.placeholder, normalizer, exact)
-  );
+  return matches(placeholder, node.props.placeholder, normalizer, exact);
 };
 
 const queryAllByPlaceholderText = (
   instance: ReactTestInstance
-): ((
-  placeholder: TextMatch,
-  queryOptions?: ByPlaceholderTextOptions
-) => Array<ReactTestInstance>) =>
+): QueryAllByQuery<TextMatch, ByPlaceholderTextOptions> =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
     return findAll(
       instance,
       (node) =>
-        getTextInputNodeByPlaceholderText(node, placeholder, queryOptions),
+        isHostTextInput(node) &&
+        matchPlaceholderText(node, placeholder, queryOptions),
       queryOptions
     );
   };

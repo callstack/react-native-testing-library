@@ -3,6 +3,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { Switch, Text, TextInput, View } from 'react-native';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { renderWithAct } from '../render-act';
+import { HostTestInstance } from './component-tree';
 
 const userConfigErrorMessage = `There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
 Please check if you are using compatible versions of React Native and React Native Testing Library.`;
@@ -66,10 +67,22 @@ function getByTestId(instance: ReactTestInstance, testID: string) {
   return nodes[0];
 }
 
-export function isHostText(element?: ReactTestInstance) {
+/**
+ * Checks if the given element is a host Text.
+ * @param element The element to check.
+ */
+export function isHostText(
+  element?: ReactTestInstance | null
+): element is HostTestInstance {
   return element?.type === getHostComponentNames().text;
 }
 
-export function isHostTextInput(element?: ReactTestInstance) {
+/**
+ * Checks if the given element is a host TextInput.
+ * @param element The element to check.
+ */
+export function isHostTextInput(
+  element?: ReactTestInstance | null
+): element is HostTestInstance {
   return element?.type === getHostComponentNames().textInput;
 }
