@@ -7,9 +7,9 @@ import {
   ScrollViewProps,
 } from 'react-native';
 import act from './act';
-import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isHostElement } from './helpers/component-tree';
 import { isHostTextInput } from './helpers/host-component-names';
+import { isPointerEventEnabled } from './helpers/pointer-events';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
