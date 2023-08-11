@@ -86,13 +86,3 @@ export function isHostTextInput(
 ): element is HostTestInstance {
   return element?.type === getHostComponentNames().textInput;
 }
-
-/**
- * Checks if the given element is a host Switch.
- * @param element The element to check.
- */
-export function isHostSwitch(
-  element?: ReactTestInstance | null
-): element is HostTestInstance {
-  return element?.type === getHostComponentNames().switch;
-}
