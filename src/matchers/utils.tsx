@@ -7,8 +7,9 @@ import {
 } from 'jest-matcher-utils';
 import prettyFormat, { plugins } from 'pretty-format';
 import redent from 'redent';
+import { isHostElement } from '../helpers/component-tree';
 
-class ReactElementTypeError extends Error {
+class HostElementTypeError extends Error {
   constructor(
     received: unknown,
     matcherFn: jest.CustomMatcher,
@@ -20,6 +21,7 @@ class ReactElementTypeError extends Error {
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, matcherFn);
     }
+
     let withType = '';
     try {
       withType = printWithType('Received', received, printReceived);
@@ -35,7 +37,7 @@ class ReactElementTypeError extends Error {
         ''
       ),
       '',
-      `${RECEIVED_COLOR('received')} value must be a React Element.`,
+      `${RECEIVED_COLOR('received')} value must be a host element.`,
       withType,
     ].join('\n');
   }
@@ -66,17 +68,12 @@ export function printElement(element: ReactTestInstance | null) {
   );
 }
 
-export function checkReactElement(
+export function checkHostElement(
   element: ReactTestInstance | null | undefined,
   matcherFn: jest.CustomMatcher,
   context: jest.MatcherContext
 ): asserts element is ReactTestInstance {
-  if (!element) {
-    throw new ReactElementTypeError(element, matcherFn, context);
-  }
-
-  // @ts-expect-error internal _fiber property of ReactTestInstance
-  if (!element._fiber && !VALID_ELEMENTS.includes(element.type.toString())) {
-    throw new ReactElementTypeError(element, matcherFn, context);
+  if (!isHostElement(element)) {
+    throw new HostElementTypeError(element, matcherFn, context);
   }
 }

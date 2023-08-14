@@ -1,20 +1,21 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
-import { checkReactElement, printElement } from './utils';
+import { screen } from '../screen';
+import { checkHostElement, printElement } from './utils';
 
 export function toBeOnTheScreen(
   this: jest.MatcherContext,
   element: ReactTestInstance
 ) {
-  if (element !== null) {
-    checkReactElement(element, toBeOnTheScreen, this);
+  if (element !== null || !this.isNot) {
+    checkHostElement(element, toBeOnTheScreen, this);
   }
 
   const pass =
-    element === null ? false : getScreenRoot() === getRootElement(element);
+    element === null ? false : screen.UNSAFE_root === getRootElement(element);
 
   const errorFound = () => {
-    return `expected element tree not to contain element but found:\n${printElement(
+    return `expected element tree not to contain element, but found\n${printElement(
       element
     )}`;
   };
@@ -45,21 +46,4 @@ function getRootElement(element: ReactTestInstance) {
     root = root.parent;
   }
   return root;
-}
-
-function getScreenRoot() {
-  try {
-    // eslint-disable-next-line import/no-extraneous-dependencies
-    const { screen } = require('@testing-library/react-native');
-    if (!screen) {
-      throw new Error('screen is undefined');
-    }
-
-    return screen.UNSAFE_root ?? screen.container;
-  } catch (error) {
-    throw new Error(
-      'Could not import `screen` object from @testing-library/react-native.\n\n' +
-        'Using toBeOnTheScreen() matcher requires @testing-library/react-native v10.1.0 or later to be added to your devDependencies.'
-    );
-  }
 }

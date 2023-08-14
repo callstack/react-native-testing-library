@@ -21,7 +21,7 @@ test('toBeOnTheScreen() on attached element', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeOnTheScreen()
 
-    expected element tree not to contain element but found:
+    expected element tree not to contain element, but found
       <View
         testID="test"
       />"
@@ -47,9 +47,10 @@ test('toBeOnTheScreen() on null element', () => {
   expect(null).not.toBeOnTheScreen();
   expect(() => expect(null).toBeOnTheScreen())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeOnTheScreen()
+    "expect(received).toBeOnTheScreen()
 
-    element could not be found in the element tree"
+    received value must be a host element.
+    Received has value: null"
   `);
 });
 
