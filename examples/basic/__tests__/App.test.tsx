@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  render,
-  screen,
-  fireEvent,
-  userEvent,
-} from '@testing-library/react-native';
+import { render, screen, userEvent } from '@testing-library/react-native';
 import App from '../App';
 
 jest.useFakeTimers();
@@ -122,8 +117,8 @@ test('User can sign in after incorrect attempt', async () => {
     'Incorrect username or password'
   );
 
-  // Workaround for clearing TextInput, clear() function will be added soon.
-  fireEvent.changeText(passwordInput, '');
+  // Clear password field
+  await user.clear(passwordInput);
 
   await user.type(passwordInput, 'admin1');
   await user.press(screen.getByRole('button', { name: 'Sign In' }));
