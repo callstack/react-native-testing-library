@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
+import { getRootElement } from '../helpers/component-tree';
 import { screen } from '../screen';
 import { checkHostElement, printElement } from './utils';
 
@@ -38,12 +39,4 @@ export function toBeOnTheScreen(
       ].join('\n');
     },
   };
-}
-
-function getRootElement(element: ReactTestInstance) {
-  let root = element;
-  while (root.parent) {
-    root = root.parent;
-  }
-  return root;
 }
