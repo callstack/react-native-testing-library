@@ -99,7 +99,7 @@ export function getHostSiblings(
  * @param element The element start traversing from.
  * @returns The root element of the tree (host or composite).
  */
-export function getRootElement(element: ReactTestInstance | null) {
+export function getUnsafeRootElement(element: ReactTestInstance | null) {
   if (element == null) {
     return null;
   }
