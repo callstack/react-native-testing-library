@@ -6,6 +6,7 @@ import {
   getHostParent,
   getHostSelves,
   getHostSiblings,
+  getRootElement,
 } from '../component-tree';
 
 function ZeroHostChildren() {
@@ -222,5 +223,22 @@ describe('getHostSiblings()', () => {
       view.getByTestId('subject'),
       view.getByTestId('siblingAfter'),
     ]);
+  });
+});
+
+describe('getRootElement()', () => {
+  it('returns UNSAFE_root for mounted view', () => {
+    const screen = render(
+      <View>
+        <View testID="view" />
+      </View>
+    );
+
+    const view = screen.getByTestId('view');
+    expect(getRootElement(view)).toEqual(screen.UNSAFE_root);
+  });
+
+  it('returns null for null', () => {
+    expect(getRootElement(null)).toEqual(null);
   });
 });
