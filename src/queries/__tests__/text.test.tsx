@@ -516,38 +516,38 @@ test('error message renders the element tree, preserving only helpful props', as
   const view = render(<View accessibilityViewIsModal key="this is filtered" />);
 
   expect(() => view.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with text: /foo/
+    "Unable to find an element with text: /foo/
 
-      <View
-        accessibilityViewIsModal={true}
-      />"
-    `);
+    <View
+      accessibilityViewIsModal={true}
+    />"
+  `);
 
   expect(() => view.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with text: /foo/
+    "Unable to find an element with text: /foo/
 
-      <View
-        accessibilityViewIsModal={true}
-      />"
-    `);
+    <View
+      accessibilityViewIsModal={true}
+    />"
+  `);
 
   await expect(view.findByText(/foo/)).rejects
     .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with text: /foo/
+    "Unable to find an element with text: /foo/
 
-      <View
-        accessibilityViewIsModal={true}
-      />"
-    `);
+    <View
+      accessibilityViewIsModal={true}
+    />"
+  `);
 
   await expect(view.findAllByText(/foo/)).rejects
     .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with text: /foo/
+    "Unable to find an element with text: /foo/
 
-      <View
-        accessibilityViewIsModal={true}
-      />"
-    `);
+    <View
+      accessibilityViewIsModal={true}
+    />"
+  `);
 });
 
 test('byText should return host component', () => {

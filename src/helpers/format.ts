@@ -16,7 +16,7 @@ const format = (
 ) =>
   prettyFormat(input, {
     plugins: [getCustomPlugin(options.mapProps), plugins.ReactElement],
-    highlight: shouldHighlight(),
+    highlight: true,
     printBasicPrototype: false,
   });
 
@@ -39,9 +39,5 @@ const getCustomPlugin = (mapProps?: MapPropsFunction): NewPlugin => {
     },
   };
 };
-
-function shouldHighlight() {
-  return process?.env?.COLORS !== 'false';
-}
 
 export default format;

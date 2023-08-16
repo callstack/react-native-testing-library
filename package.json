@@ -41,6 +41,7 @@
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@callstack/eslint-config": "^13.0.1",
+    "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@testing-library/jest-native": "^5.4.0",
     "@types/jest": "^29.2.3",
     "@types/react": "^18.2.15",
@@ -88,22 +89,5 @@
     "build:ts:watch": "yarn build:ts --watch --preserveWatchOutput",
     "build": "yarn clean && yarn build:js && yarn build:ts && yarn copy-flowtypes",
     "prepare": "yarn build"
-  },
-  "jest": {
-    "preset": "./jest-preset",
-    "setupFilesAfterEnv": [
-      "./jest-setup.ts"
-    ],
-    "testPathIgnorePatterns": [
-      "timerUtils",
-      "examples/",
-      "experiments-app/",
-      "experiments-rtl/"
-    ],
-    "testTimeout": 60000,
-    "transformIgnorePatterns": [
-      "/node_modules/(?!(@react-native|react-native)/).*/"
-    ],
-    "clearMocks": true
   }
 }
