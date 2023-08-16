@@ -2,7 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import { getRootElement } from '../helpers/component-tree';
 import { screen } from '../screen';
-import { checkHostElement, printElement } from './utils';
+import { checkHostElement, formatElement } from './utils';
 
 export function toBeOnTheScreen(
   this: jest.MatcherContext,
@@ -16,7 +16,7 @@ export function toBeOnTheScreen(
     element === null ? false : screen.UNSAFE_root === getRootElement(element);
 
   const errorFound = () => {
-    return `expected element tree not to contain element, but found\n${printElement(
+    return `expected element tree not to contain element, but found\n${formatElement(
       element
     )}`;
   };

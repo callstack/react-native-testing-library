@@ -25,11 +25,11 @@ class HostElementTypeError extends Error {
     let withType = '';
     try {
       withType = printWithType('Received', received, printReceived);
+      /* istanbul ignore next */
     } catch (e) {
       // Deliberately empty.
     }
 
-    /* istanbul ignore next */
     this.message = [
       matcherHint(
         `${context.isNot ? '.not' : ''}.${matcherFn.name}`,
@@ -43,7 +43,29 @@ class HostElementTypeError extends Error {
   }
 }
 
-export function printElement(element: ReactTestInstance | null) {
+/**
+ * Throws HostElementTypeError if passed element is not a host element.
+ *
+ * @param element ReactTestInstance to check.
+ * @param matcherFn Matcher function calling the check used for formatting error.
+ * @param context Jest matcher context used for formatting error.
+ */
+export function checkHostElement(
+  element: ReactTestInstance | null | undefined,
+  matcherFn: jest.CustomMatcher,
+  context: jest.MatcherContext
+): asserts element is ReactTestInstance {
+  if (!isHostElement(element)) {
+    throw new HostElementTypeError(element, matcherFn, context);
+  }
+}
+
+/***
+ * Format given element as a pretty-printed string.
+ *
+ * @param element Element to format.
+ */
+export function formatElement(element: ReactTestInstance | null) {
   if (element == null) {
     return 'null';
   }
@@ -66,14 +88,4 @@ export function printElement(element: ReactTestInstance | null) {
     ),
     2
   );
-}
-
-export function checkHostElement(
-  element: ReactTestInstance | null | undefined,
-  matcherFn: jest.CustomMatcher,
-  context: jest.MatcherContext
-): asserts element is ReactTestInstance {
-  if (!isHostElement(element)) {
-    throw new HostElementTypeError(element, matcherFn, context);
-  }
 }
