@@ -37,7 +37,7 @@ describe('userEvent.scroll with fake timers', () => {
       />
     );
 
-    await user.scroll(screen.getByTestId('scrollable'), {
+    await user.scrollTo(screen.getByTestId('scrollable'), {
       offset: { x: 0, y: 20 },
       callbacksNumber: 1,
     });
@@ -262,7 +262,7 @@ describe('userEvent.scroll with fake timers', () => {
     await expect(
       user.scrollToTop(screen.getByTestId('view'))
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"scroll() works only with host "ScrollView" elements. Passed element has type "View"."`
+      `"scrollToTop() works only with host "ScrollView" elements. Passed element has type "View"."`
     );
   });
 
@@ -273,7 +273,7 @@ describe('userEvent.scroll with fake timers', () => {
       <ScrollView onScrollToTop={mockOnScrollToTop} testID="scrollable" />
     );
 
-    await userEvent.scroll(screen.getByTestId('scrollable'), {
+    await userEvent.scrollTo(screen.getByTestId('scrollable'), {
       offset: { x: 0, y: 20 },
       callbacksNumber: 1,
     });

@@ -6,7 +6,7 @@ import { clear } from '../clear';
 import {
   ScrollOptions,
   ScrollToTopOptions,
-  scroll,
+  scrollTo,
   scrollToTop,
 } from '../scroll';
 
@@ -135,7 +135,11 @@ export interface UserEventInstance {
    * @param element ScrollView element
    * @returns
    */
-  scroll: (element: ReactTestInstance, options: ScrollOptions) => Promise<void>;
+  scrollTo: (
+    element: ReactTestInstance,
+    options: ScrollOptions
+  ) => Promise<void>;
+
   scrollToTop: (
     element: ReactTestInstance,
     options?: ScrollToTopOptions
@@ -153,7 +157,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
     longPress: longPress.bind(instance),
     type: type.bind(instance),
     clear: clear.bind(instance),
-    scroll: scroll.bind(instance),
+    scrollTo: scrollTo.bind(instance),
     scrollToTop: scrollToTop.bind(instance),
   };
 

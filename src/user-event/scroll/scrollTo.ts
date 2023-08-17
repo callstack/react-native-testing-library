@@ -6,7 +6,7 @@ import { isHostScrollView } from '../../helpers/host-component-names';
 import { dispatchEvent } from '../utils';
 import { ContentOffset } from '../event-builder/scroll';
 
-export interface ScrollOptions {
+export interface ScrollToOptions {
   offset: ContentOffset;
   callbacksNumber?: number;
   momentum?: Momentum;
@@ -39,15 +39,15 @@ export function setElementScrollState(
   scrollStateForElement.set(element, scrollState);
 }
 
-export async function scroll(
+export async function scrollTo(
   this: UserEventInstance,
   element: ReactTestInstance,
-  options: ScrollOptions
+  options: ScrollToOptions
 ): Promise<void> {
   if (!isHostScrollView(element)) {
     throw new ErrorWithStack(
-      `scroll() works only with host "ScrollView" elements. Passed element has type "${element.type}".`,
-      scroll
+      `scrollTo() works only with host "ScrollView" elements. Passed element has type "${element.type}".`,
+      scrollTo
     );
   }
 
@@ -70,8 +70,8 @@ export async function scrollToTop(
 ): Promise<void> {
   if (!isHostScrollView(element)) {
     throw new ErrorWithStack(
-      `scroll() works only with host "ScrollView" elements. Passed element has type "${element.type}".`,
-      scroll
+      `scrollToTop() works only with host "ScrollView" elements. Passed element has type "${element.type}".`,
+      scrollTo
     );
   }
 
@@ -80,7 +80,7 @@ export async function scrollToTop(
   if (x === 0 && y === 0) {
     throw new ErrorWithStack(
       `scrollToTop() does NOT trigger if content offset is already x:0, y:0.`,
-      scroll
+      scrollTo
     );
   }
 

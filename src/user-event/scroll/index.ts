@@ -1,6 +1,6 @@
 export {
-  ScrollOptions,
+  ScrollToOptions as ScrollOptions,
   ScrollToTopOptions,
-  scroll,
+  scrollTo,
   scrollToTop,
-} from './scroll';
+} from './scrollTo';
