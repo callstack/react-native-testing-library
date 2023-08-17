@@ -26,8 +26,8 @@ function renderScrollViewWithToolkit(props: ScrollViewProps = {}) {
   };
 }
 
-describe('scrollTo', () => {
-  it('supports basic case', async () => {
+describe('scrollTo()', () => {
+  it('supports vertical drag scroll', async () => {
     const { events, ...queries } = renderScrollViewWithToolkit();
 
     const user = userEvent.setup();
@@ -40,9 +40,56 @@ describe('scrollTo', () => {
     ]);
     expect(eventNames).toEqual([
       ['scrollBeginDrag', 0, 0],
-      ['scroll', 25, 0],
-      ['scroll', 50, 0],
-      ['scroll', 75, 0],
+      ['scroll', 20, 0],
+      ['scroll', 40, 0],
+      ['scroll', 60, 0],
+      ['scroll', 80, 0],
+      ['scrollEndDrag', 100, 0],
+    ]);
+
+    expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
+  });
+
+  it('supports horizontal drag scroll', async () => {
+    const { events, ...queries } = renderScrollViewWithToolkit();
+
+    const user = userEvent.setup();
+    await user.scrollTo(queries.getByTestId('scrollView'), { x: 100 });
+
+    const eventNames = events.map((e) => [
+      e.name,
+      e.payload.contentOffset.y,
+      e.payload.contentOffset.x,
+    ]);
+    expect(eventNames).toEqual([
+      ['scrollBeginDrag', 0, 0],
+      ['scroll', 0, 20],
+      ['scroll', 0, 40],
+      ['scroll', 0, 60],
+      ['scroll', 0, 80],
+      ['scrollEndDrag', 0, 100],
+    ]);
+
+    expect(events).toMatchSnapshot('scrollTo({ x: 100 })');
+  });
+
+  it('supports drag scroll with explicit steps', async () => {
+    const { events, ...queries } = renderScrollViewWithToolkit();
+
+    const user = userEvent.setup();
+    await user.scrollTo(queries.getByTestId('scrollView'), {
+      y: [0, 33, 67, 100],
+    });
+
+    const eventNames = events.map((e) => [
+      e.name,
+      e.payload.contentOffset.y,
+      e.payload.contentOffset.x,
+    ]);
+    expect(eventNames).toEqual([
+      ['scrollBeginDrag', 0, 0],
+      ['scroll', 33, 0],
+      ['scroll', 67, 0],
       ['scrollEndDrag', 100, 0],
     ]);
 
@@ -95,7 +142,7 @@ describe('userEvent.scroll with fake timers', () => {
 
     await user.scrollTo(screen.getByTestId('scrollable'), {
       y: 120,
-      momentum: { value: 30, callbacksNumber: 1 },
+      momentum: { value: 30 },
     });
 
     expect(events).toMatchSnapshot('scrollTo({ y: 120, momentum: 30 })');
@@ -117,14 +164,9 @@ describe('userEvent.scroll with fake timers', () => {
       />
     );
 
-    await user.scrollTo(screen.getByTestId('scrollable'), {
-      y: 120,
-      callbacksNumber: 1,
-    });
+    await user.scrollTo(screen.getByTestId('scrollable'), { y: 120 });
 
-    await user.scrollTo(screen.getByTestId('scrollable'), {
-      y: 20,
-    });
+    await user.scrollTo(screen.getByTestId('scrollable'), { y: 20 });
 
     expect(events).toMatchSnapshot(
       'scrollTo({ y: 120 }) + scrollTo({ y: 20 })'

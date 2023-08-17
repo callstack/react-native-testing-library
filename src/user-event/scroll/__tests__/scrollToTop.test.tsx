@@ -37,14 +37,8 @@ describe('userEvent.scroll with fake timers', () => {
       />
     );
 
-    await user.scrollTo(screen.getByTestId('scrollable'), {
-      y: 20,
-      callbacksNumber: 1,
-    });
-
-    await user.scrollToTop(screen.getByTestId('scrollable'), {
-      callbacksNumber: 3,
-    });
+    await user.scrollTo(screen.getByTestId('scrollable'), { y: 20 });
+    await user.scrollToTop(screen.getByTestId('scrollable'));
 
     expect(events).toMatchSnapshot('scrollTo({ y: 20 }) + scrollToTop()');
   });
@@ -67,11 +61,7 @@ describe('userEvent.scroll with fake timers', () => {
       <ScrollView onScrollToTop={mockOnScrollToTop} testID="scrollable" />
     );
 
-    await userEvent.scrollTo(screen.getByTestId('scrollable'), {
-      y: 20,
-      callbacksNumber: 1,
-    });
-
+    await userEvent.scrollTo(screen.getByTestId('scrollable'), { y: 20 });
     await userEvent.scrollToTop(screen.getByTestId('scrollable'));
     expect(mockOnScrollToTop).toHaveBeenCalled();
   });

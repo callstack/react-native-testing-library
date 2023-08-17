@@ -42,7 +42,94 @@ exports[`userEvent.scroll with fake timers calls events: scrollTo({ y: 20 }) + s
       },
       "contentOffset": {
         "x": 0,
-        "y": 10,
+        "y": 4,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 8,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 12,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 16,
       },
       "contentSize": {
         "height": 0,
@@ -90,7 +177,7 @@ exports[`userEvent.scroll with fake timers calls events: scrollTo({ y: 20 }) + s
     },
   },
   {
-    "name": "scroll",
+    "name": "scrollBeginDrag",
     "payload": {
       "contentInset": {
         "bottom": 0,
@@ -100,7 +187,7 @@ exports[`userEvent.scroll with fake timers calls events: scrollTo({ y: 20 }) + s
       },
       "contentOffset": {
         "x": 0,
-        "y": 15,
+        "y": 20,
       },
       "contentSize": {
         "height": 0,
@@ -129,7 +216,7 @@ exports[`userEvent.scroll with fake timers calls events: scrollTo({ y: 20 }) + s
       },
       "contentOffset": {
         "x": 0,
-        "y": 10,
+        "y": 16,
       },
       "contentSize": {
         "height": 0,
@@ -158,7 +245,94 @@ exports[`userEvent.scroll with fake timers calls events: scrollTo({ y: 20 }) + s
       },
       "contentOffset": {
         "x": 0,
-        "y": 5,
+        "y": 12,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 8,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 4,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scrollEndDrag",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 0,
       },
       "contentSize": {
         "height": 0,
