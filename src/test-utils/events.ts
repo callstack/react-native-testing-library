@@ -1,4 +1,4 @@
-interface EventEntry {
+export interface EventEntry {
   name: string;
   payload: any;
 }

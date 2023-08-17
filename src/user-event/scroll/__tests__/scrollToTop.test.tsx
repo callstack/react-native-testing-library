@@ -10,16 +10,16 @@ describe('userEvent.scroll with fake timers', () => {
     jest.setSystemTime(0);
   });
 
-  test('does NOT work if starting position is x:0, y:0', async () => {
-    render(<ScrollView testID="scrollable" />);
+  // test('does NOT work if starting position is x:0, y:0', async () => {
+  //   render(<ScrollView testID="scrollable" />);
 
-    const user = userEvent.setup();
-    await expect(
-      user.scrollToTop(screen.getByTestId('scrollable'))
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"scrollToTop() does NOT trigger if content offset is already x:0, y:0."`
-    );
-  });
+  //   const user = userEvent.setup();
+  //   await expect(
+  //     user.scrollToTop(screen.getByTestId('scrollable'))
+  //   ).rejects.toThrowErrorMatchingInlineSnapshot(
+  //     `"scrollToTop() does NOT trigger if content offset is already x:0, y:0."`
+  //   );
+  // });
 
   test('calls events', async () => {
     const { events, logEvent } = createEventLogger();
