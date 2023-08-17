@@ -38,7 +38,7 @@ describe('userEvent.scroll with fake timers', () => {
     );
 
     await user.scrollTo(screen.getByTestId('scrollable'), {
-      offset: { x: 0, y: 20 },
+      y: 20,
       callbacksNumber: 1,
     });
 
@@ -46,213 +46,7 @@ describe('userEvent.scroll with fake timers', () => {
       callbacksNumber: 3,
     });
 
-    expect(events).toMatchInlineSnapshot(`
-      [
-        {
-          "name": "scrollBeginDrag",
-          "payload": {
-            "contentInset": {
-              "bottom": 0,
-              "left": 0,
-              "right": 0,
-              "top": 0,
-            },
-            "contentOffset": {
-              "x": 0,
-              "y": 0,
-            },
-            "contentSize": {
-              "height": 0,
-              "width": 0,
-            },
-            "layoutMeasurement": {
-              "height": 0,
-              "width": 0,
-            },
-            "responderIgnoreScroll": true,
-            "target": 0,
-            "velocity": {
-              "x": 0,
-              "y": 0,
-            },
-          },
-        },
-        {
-          "name": "scroll",
-          "payload": {
-            "contentInset": {
-              "bottom": 0,
-              "left": 0,
-              "right": 0,
-              "top": 0,
-            },
-            "contentOffset": {
-              "x": 0,
-              "y": 10,
-            },
-            "contentSize": {
-              "height": 0,
-              "width": 0,
-            },
-            "layoutMeasurement": {
-              "height": 0,
-              "width": 0,
-            },
-            "responderIgnoreScroll": true,
-            "target": 0,
-            "velocity": {
-              "x": 0,
-              "y": 0,
-            },
-          },
-        },
-        {
-          "name": "scrollEndDrag",
-          "payload": {
-            "contentInset": {
-              "bottom": 0,
-              "left": 0,
-              "right": 0,
-              "top": 0,
-            },
-            "contentOffset": {
-              "x": 0,
-              "y": 20,
-            },
-            "contentSize": {
-              "height": 0,
-              "width": 0,
-            },
-            "layoutMeasurement": {
-              "height": 0,
-              "width": 0,
-            },
-            "responderIgnoreScroll": true,
-            "target": 0,
-            "velocity": {
-              "x": 0,
-              "y": 0,
-            },
-          },
-        },
-        {
-          "name": "scroll",
-          "payload": {
-            "contentInset": {
-              "bottom": 0,
-              "left": 0,
-              "right": 0,
-              "top": 0,
-            },
-            "contentOffset": {
-              "x": 0,
-              "y": 15,
-            },
-            "contentSize": {
-              "height": 0,
-              "width": 0,
-            },
-            "layoutMeasurement": {
-              "height": 0,
-              "width": 0,
-            },
-            "responderIgnoreScroll": true,
-            "target": 0,
-            "velocity": {
-              "x": 0,
-              "y": 0,
-            },
-          },
-        },
-        {
-          "name": "scroll",
-          "payload": {
-            "contentInset": {
-              "bottom": 0,
-              "left": 0,
-              "right": 0,
-              "top": 0,
-            },
-            "contentOffset": {
-              "x": 0,
-              "y": 10,
-            },
-            "contentSize": {
-              "height": 0,
-              "width": 0,
-            },
-            "layoutMeasurement": {
-              "height": 0,
-              "width": 0,
-            },
-            "responderIgnoreScroll": true,
-            "target": 0,
-            "velocity": {
-              "x": 0,
-              "y": 0,
-            },
-          },
-        },
-        {
-          "name": "scroll",
-          "payload": {
-            "contentInset": {
-              "bottom": 0,
-              "left": 0,
-              "right": 0,
-              "top": 0,
-            },
-            "contentOffset": {
-              "x": 0,
-              "y": 5,
-            },
-            "contentSize": {
-              "height": 0,
-              "width": 0,
-            },
-            "layoutMeasurement": {
-              "height": 0,
-              "width": 0,
-            },
-            "responderIgnoreScroll": true,
-            "target": 0,
-            "velocity": {
-              "x": 0,
-              "y": 0,
-            },
-          },
-        },
-        {
-          "name": "scrollToTop",
-          "payload": {
-            "contentInset": {
-              "bottom": 0,
-              "left": 0,
-              "right": 0,
-              "top": 0,
-            },
-            "contentOffset": {
-              "x": 0,
-              "y": 0,
-            },
-            "contentSize": {
-              "height": 0,
-              "width": 0,
-            },
-            "layoutMeasurement": {
-              "height": 0,
-              "width": 0,
-            },
-            "responderIgnoreScroll": true,
-            "target": 0,
-            "velocity": {
-              "x": 0,
-              "y": 0,
-            },
-          },
-        },
-      ]
-    `);
+    expect(events).toMatchSnapshot('scrollTo({ y: 20 }) + scrollToTop()');
   });
 
   it('does NOT work on View', async () => {
@@ -274,12 +68,11 @@ describe('userEvent.scroll with fake timers', () => {
     );
 
     await userEvent.scrollTo(screen.getByTestId('scrollable'), {
-      offset: { x: 0, y: 20 },
+      y: 20,
       callbacksNumber: 1,
     });
 
     await userEvent.scrollToTop(screen.getByTestId('scrollable'));
-
     expect(mockOnScrollToTop).toHaveBeenCalled();
   });
 });

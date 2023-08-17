@@ -7,7 +7,8 @@ import { dispatchEvent } from '../utils';
 import { ContentOffset } from '../event-builder/scroll';
 
 export interface ScrollToOptions {
-  offset: ContentOffset;
+  y?: number;
+  x?: number;
   callbacksNumber?: number;
   momentum?: Momentum;
 }
@@ -53,12 +54,12 @@ export async function scrollTo(
 
   const scrollState = getElementScrollState(element);
 
-  const { offset, callbacksNumber, momentum } = options;
+  const { y, x, callbacksNumber, momentum } = options;
 
   await emitScrollEvents(
     element,
     scrollState,
-    offset,
+    { y: y ?? 0, x: x ?? 0 },
     callbacksNumber,
     momentum
   );

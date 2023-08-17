@@ -1,0 +1,209 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`userEvent.scroll with fake timers calls events: scrollTo({ y: 20 }) + scrollToTop() 1`] = `
+[
+  {
+    "name": "scrollBeginDrag",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 0,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 10,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scrollEndDrag",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 20,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 15,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 10,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 5,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+  {
+    "name": "scrollToTop",
+    "payload": {
+      "contentInset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+      },
+      "contentOffset": {
+        "x": 0,
+        "y": 0,
+      },
+      "contentSize": {
+        "height": 0,
+        "width": 0,
+      },
+      "layoutMeasurement": {
+        "height": 0,
+        "width": 0,
+      },
+      "responderIgnoreScroll": true,
+      "target": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0,
+      },
+    },
+  },
+]
+`;
