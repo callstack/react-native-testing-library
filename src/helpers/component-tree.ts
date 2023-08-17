@@ -92,3 +92,22 @@ export function getHostSiblings(
     (sibling) => !hostSelves.includes(sibling)
   );
 }
+
+/**
+ * Returns the unsafe root element of the tree (probably composite).
+ *
+ * @param element The element start traversing from.
+ * @returns The root element of the tree (host or composite).
+ */
+export function getUnsafeRootElement(element: ReactTestInstance | null) {
+  if (element == null) {
+    return null;
+  }
+
+  let current = element;
+  while (current.parent) {
+    current = current.parent;
+  }
+
+  return current;
+}
