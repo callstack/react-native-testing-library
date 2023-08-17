@@ -7,9 +7,19 @@ import { dispatchEvent } from '../utils';
 import { ContentOffset } from '../event-builder/scroll';
 import { generateScrollSteps } from './utils';
 
-export interface ScrollToOptions {
-  y?: number | number[];
-  x?: number | number[];
+export type ScrollToOptions =
+  | VerticalScrollToOptions
+  | HorizontalScrollToOptions;
+
+interface VerticalScrollToOptions {
+  y: number | number[];
+  x?: never;
+  momentum?: Momentum;
+}
+
+interface HorizontalScrollToOptions {
+  y?: never;
+  x: number | number[];
   momentum?: Momentum;
 }
 
