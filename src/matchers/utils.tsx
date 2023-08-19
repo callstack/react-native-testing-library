@@ -1,9 +1,11 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import {
+  EXPECTED_COLOR,
   RECEIVED_COLOR,
   matcherHint,
   printWithType,
   printReceived,
+  stringify,
 } from 'jest-matcher-utils';
 import prettyFormat, { plugins } from 'pretty-format';
 import redent from 'redent';
@@ -88,4 +90,26 @@ export function formatElement(element: ReactTestInstance | null) {
     ),
     2
   );
+}
+
+export function formatMessage(
+  matcher: string,
+  expectedLabel: string,
+  expectedValue: string | RegExp,
+  receivedLabel: string,
+  receivedValue: string | null
+) {
+  return [
+    `${matcher}\n`,
+    `${expectedLabel}:\n${EXPECTED_COLOR(
+      redent(formatValue(expectedValue), 2)
+    )}`,
+    `${receivedLabel}:\n${RECEIVED_COLOR(
+      redent(formatValue(receivedValue), 2)
+    )}`,
+  ].join('\n');
+}
+
+function formatValue(value: unknown) {
+  return typeof value === 'string' ? value : stringify(value);
 }
