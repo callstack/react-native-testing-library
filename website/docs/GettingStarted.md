@@ -41,7 +41,7 @@ In order to properly use helpers for async tests (`findBy` queries and `waitFor`
 
 ### Additional Jest matchers
 
-In order to use additional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
+In order to use additional React Native-specific Jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
 
 #### Using `yarn`
 
