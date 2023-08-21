@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`toBeVisible() throws an error when expectation is not matched 1`] = `
+"expect(element).not.toBeVisible()
+
+Received element is visible:
+  <View
+    testID="test"
+  />"
+`;
+
+exports[`toBeVisible() throws an error when expectation is not matched 2`] = `
+"expect(element).toBeVisible()
+
+Received element is not visible:
+  <View
+    style={
+      {
+        "opacity": 0,
+      }
+    }
+    testID="test"
+  />"
+`;
