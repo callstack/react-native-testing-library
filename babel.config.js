@@ -12,7 +12,6 @@ module.exports = {
       },
     ],
   ],
-  plugins: ['@babel/plugin-proposal-class-properties'],
   env: {
     test: {
       // https://github.com/react-native-community/upgrade-support/issues/152
