@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { View, Text, TextInput, Pressable, FlatList } from 'react-native';
+import { View, Text, TextInput, Pressable } from 'react-native';
 import { getConfig, resetToDefaults } from '../config';
 import { render, screen, fireEvent, RenderAPI } from '..';
 
@@ -253,16 +253,4 @@ test('render calls detects host component names', () => {
 
   render(<View testID="test" />);
   expect(getConfig().hostComponentNames).not.toBeUndefined();
-});
-
-test('render FlatList', () => {
-  const screen = render(
-    <FlatList
-      testID="flatList"
-      data={[1, 2, 3]}
-      renderItem={({ item }) => <Text>{item}</Text>}
-    />
-  );
-
-  expect(screen.getByTestId('flatList')).toBeTruthy();
 });

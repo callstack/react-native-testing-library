@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { View, Text, TextInput, Switch } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Switch,
+  ScrollView,
+  FlatList,
+} from 'react-native';
 import { render } from '..';
 
 /**
@@ -122,5 +129,83 @@ test('React Native API assumption: <Switch> renders single host element', () => 
       testID="test"
       value={true}
     />
+  `);
+});
+
+test('ScrollView renders correctly', () => {
+  const screen = render(
+    <ScrollView testID="scrollView">
+      <View testID="view" />
+    </ScrollView>
+  );
+
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
+    <RCTScrollView
+      testID="scrollView"
+    >
+      <View>
+        <View
+          testID="view"
+        />
+      </View>
+    </RCTScrollView>
+  `);
+});
+
+test('FlatList renders correctly', () => {
+  const screen = render(
+    <FlatList
+      testID="flatList"
+      data={[1, 2]}
+      renderItem={({ item }) => <Text>{item}</Text>}
+    />
+  );
+
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
+    <RCTScrollView
+      data={
+        [
+          1,
+          2,
+        ]
+      }
+      getItem={[Function]}
+      getItemCount={[Function]}
+      keyExtractor={[Function]}
+      onContentSizeChange={[Function]}
+      onLayout={[Function]}
+      onMomentumScrollBegin={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      scrollEventThrottle={50}
+      stickyHeaderIndices={[]}
+      testID="flatList"
+      viewabilityConfigCallbackPairs={[]}
+    >
+      <View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <Text>
+            1
+          </Text>
+        </View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <Text>
+            2
+          </Text>
+        </View>
+      </View>
+    </RCTScrollView>
   `);
 });
