@@ -1,7 +1,7 @@
 import { ReactTestInstance } from 'react-test-renderer';
-import { matcherHint, printReceived } from 'jest-matcher-utils';
+import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import { getHostChildren } from '../helpers/component-tree';
-import { checkHostElement } from './utils';
+import { checkHostElement, formatElementArray } from './utils';
 
 export function toBeEmptyElement(
   this: jest.MatcherContext,
@@ -9,10 +9,10 @@ export function toBeEmptyElement(
 ) {
   checkHostElement(element, toBeEmptyElement, this);
 
-  const pass = getHostChildren(element).length === 0;
+  const hostChildren = getHostChildren(element);
 
   return {
-    pass,
+    pass: hostChildren.length === 0,
     message: () => {
       return [
         matcherHint(
@@ -22,7 +22,7 @@ export function toBeEmptyElement(
         ),
         '',
         'Received:',
-        `  ${printReceived(element.children)}`,
+        `${RECEIVED_COLOR(formatElementArray(hostChildren))}`,
       ].join('\n');
     },
   };
