@@ -1,8 +1,6 @@
-import { TextMatch, TextMatchOptions } from '../matches';
-
 export interface JestNativeMatchers<R> {
   toBeOnTheScreen(): R;
-  toHaveTextContent(text: TextMatch, options?: TextMatchOptions): R;
+  toBeEmptyElement(): R;
 }
 
 // Implicit Jest global `expect`.

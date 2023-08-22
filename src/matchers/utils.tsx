@@ -69,7 +69,7 @@ export function checkHostElement(
  */
 export function formatElement(element: ReactTestInstance | null) {
   if (element == null) {
-    return 'null';
+    return '  null';
   }
 
   return redent(
@@ -90,6 +90,14 @@ export function formatElement(element: ReactTestInstance | null) {
     ),
     2
   );
+}
+
+export function formatElementArray(elements: ReactTestInstance[]) {
+  if (elements.length === 0) {
+    return '  (no elements)';
+  }
+
+  return redent(elements.map(formatElement).join('\n'), 2);
 }
 
 export function formatMessage(

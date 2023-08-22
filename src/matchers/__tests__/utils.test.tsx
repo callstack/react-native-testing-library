@@ -8,7 +8,7 @@ function fakeMatcher() {
 }
 
 test('formatElement', () => {
-  expect(formatElement(null)).toMatchInlineSnapshot(`"null"`);
+  expect(formatElement(null)).toMatchInlineSnapshot(`"  null"`);
 });
 
 test('checkHostElement allows host element', () => {
