@@ -6,6 +6,7 @@ export interface JestNativeMatchers<R> {
   toBeVisible(): R;
   toHaveDisplayValue(expectedValue: TextMatch, options?: TextMatchOptions): R;
   toHaveTextContent(expectedText: TextMatch, options?: TextMatchOptions): R;
+  toBeDisabled(): R;
 }
 
 // Implicit Jest global `expect`.

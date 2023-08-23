@@ -121,3 +121,8 @@ export function formatMessage(
 function formatValue(value: unknown) {
   return typeof value === 'string' ? value : stringify(value);
 }
+
+export function getType({ type }: ReactTestInstance) {
+  // @ts-expect-error: ReactTestInstance contains too loose typing
+  return type.displayName || type.name || type;
+}
