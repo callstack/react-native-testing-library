@@ -2,6 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import { StyleSheet } from 'react-native';
 import { getHostParent } from '../helpers/component-tree';
+import { isHostModal } from '../helpers/host-component-names';
 import { checkHostElement, formatElement } from './utils';
 
 function isVisibleForStyles(element: ReactTestInstance) {
@@ -19,7 +20,7 @@ function isVisibleForAccessibility(element: ReactTestInstance) {
 }
 
 function isModalVisible(element: ReactTestInstance) {
-  return element.type.toString() !== 'Modal' || element.props.visible !== false;
+  return !isHostModal(element) || element.props.visible !== false;
 }
 
 function isElementVisible(element: ReactTestInstance): boolean {
