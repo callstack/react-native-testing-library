@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { findAll } from '../helpers/findAll';
 import { isHostTextInput } from '../helpers/host-component-names';
+import { getTextInputValue } from '../helpers/text-input';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
 import { makeQueries } from './makeQueries';
 import type {
@@ -17,13 +18,12 @@ type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;
 
 const matchDisplayValue = (
   node: ReactTestInstance,
-  value: TextMatch,
+  expectedValue: TextMatch,
   options: TextMatchOptions = {}
 ) => {
   const { exact, normalizer } = options;
-  const nodeValue = node.props.value ?? node.props.defaultValue;
-
-  return matches(value, nodeValue, normalizer, exact);
+  const nodeValue = getTextInputValue(node);
+  return matches(expectedValue, nodeValue, normalizer, exact);
 };
 
 const queryAllByDisplayValue = (
