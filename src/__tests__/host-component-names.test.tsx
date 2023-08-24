@@ -21,6 +21,7 @@ describe('getHostComponentNames', () => {
         text: 'banana',
         textInput: 'banana',
         switch: 'banana',
+        modal: 'banana',
       },
     });
 
@@ -28,6 +29,7 @@ describe('getHostComponentNames', () => {
       text: 'banana',
       textInput: 'banana',
       switch: 'banana',
+      modal: 'banana',
     });
   });
 
@@ -40,6 +42,7 @@ describe('getHostComponentNames', () => {
       text: 'Text',
       textInput: 'TextInput',
       switch: 'RCTSwitch',
+      modal: 'Modal',
     });
     expect(getConfig().hostComponentNames).toBe(hostComponentNames);
   });
@@ -68,6 +71,7 @@ describe('configureHostComponentNamesIfNeeded', () => {
       text: 'Text',
       textInput: 'TextInput',
       switch: 'RCTSwitch',
+      modal: 'Modal',
     });
   });
 
@@ -77,6 +81,7 @@ describe('configureHostComponentNamesIfNeeded', () => {
         text: 'banana',
         textInput: 'banana',
         switch: 'banana',
+        modal: 'banana',
       },
     });
 
@@ -86,6 +91,7 @@ describe('configureHostComponentNamesIfNeeded', () => {
       text: 'banana',
       textInput: 'banana',
       switch: 'banana',
+      modal: 'banana',
     });
   });
 
