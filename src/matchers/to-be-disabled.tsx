@@ -1,35 +1,16 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { checkHostElement, formatMessage, getType } from './utils';
-
-// Elements that support 'disabled'
-const DISABLE_TYPES = [
-  'Button',
-  'Slider',
-  'Switch',
-  'Text',
-  'TouchableHighlight',
-  'TouchableOpacity',
-  'TouchableWithoutFeedback',
-  'TouchableNativeFeedback',
-  'View',
-  'TextInput',
-  'Pressable',
-];
+import { isHostTextInput } from '../helpers/host-component-names';
+import { checkHostElement, formatMessage } from './utils';
 
 function isElementDisabled(element: ReactTestInstance) {
-  if (getType(element) === 'TextInput' && element?.props?.editable === false) {
+  if (isHostTextInput(element) && element?.props?.editable === false) {
     return true;
   }
 
-  if (!DISABLE_TYPES.includes(getType(element))) {
-    return false;
-  }
-
   return (
-    !!element?.props?.disabled ||
-    !!element?.props?.accessibilityState?.disabled ||
-    !!element?.props?.accessibilityStates?.includes('disabled')
+    !!element?.props?.['aria-disabled'] ||
+    !!element?.props?.accessibilityState?.disabled
   );
 }
 
@@ -60,8 +41,8 @@ export function toBeDisabled(
             ''
           ),
           '',
+          '',
           `Received element ${is} disabled:`,
-          printElement(element),
           null
         ),
       ].join('\n');
@@ -82,10 +63,13 @@ export function toBeEnabled(
     message: () => {
       const is = isEnabled ? 'is' : 'is not';
       return [
-        matcherHint(`${this.isNot ? '.not' : ''}.toBeEnabled`, 'element', ''),
-        '',
-        `Received element ${is} enabled:`,
-        printElement(element),
+        formatMessage(
+          matcherHint(`${this.isNot ? '.not' : ''}.toBeEnabled`, 'element', ''),
+          '',
+          '',
+          `Received element ${is} enabled:`,
+          null
+        ),
       ].join('\n');
     },
   };

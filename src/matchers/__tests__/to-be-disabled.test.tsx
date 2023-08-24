@@ -13,14 +13,19 @@ import { render } from '../..';
 import '../extend-expect';
 
 const ALLOWED_COMPONENTS = {
-  View,
-  TextInput,
   TouchableHighlight,
   TouchableOpacity,
   TouchableWithoutFeedback,
   TouchableNativeFeedback,
   Pressable,
 };
+
+const ARIA_COMPONENTS = {
+  View,
+  TextInput,
+};
+
+const ALL_COMPONENTS = { ...ALLOWED_COMPONENTS, ...ARIA_COMPONENTS };
 
 describe('.toBeDisabled', () => {
   Object.entries(ALLOWED_COMPONENTS).forEach(([name, Component]) => {
@@ -37,7 +42,20 @@ describe('.toBeDisabled', () => {
     });
   });
 
-  Object.entries(ALLOWED_COMPONENTS).forEach(([name, Component]) => {
+  Object.entries(ARIA_COMPONENTS).forEach(([name, Component]) => {
+    test(`handle aria-disabled prop for element ${name}`, () => {
+      const { queryByTestId } = render(
+        <Component aria-disabled testID={name}>
+          <TextInput />
+        </Component>
+      );
+
+      expect(queryByTestId(name)).toBeDisabled();
+      expect(() => expect(queryByTestId(name)).not.toBeDisabled()).toThrow();
+    });
+  });
+
+  Object.entries(ALL_COMPONENTS).forEach(([name, Component]) => {
     test(`handle disabled in accessibilityState for element ${name}`, () => {
       const { queryByTestId } = render(
         //@ts-expect-error JSX element type 'Component' does not have any construct or call signatures.ts(2604)
@@ -76,7 +94,7 @@ describe('.toBeDisabled', () => {
 });
 
 describe('.toBeEnabled', () => {
-  Object.entries(ALLOWED_COMPONENTS).forEach(([name, Component]) => {
+  Object.entries(ALL_COMPONENTS).forEach(([name, Component]) => {
     test(`handle disabled prop for element ${name} when undefined`, () => {
       const { queryByTestId } = render(
         //@ts-expect-error JSX element type 'Component' does not have any construct or call signatures.ts(2604)
@@ -90,7 +108,7 @@ describe('.toBeEnabled', () => {
     });
   });
 
-  Object.entries(ALLOWED_COMPONENTS).forEach(([name, Component]) => {
+  Object.entries(ALL_COMPONENTS).forEach(([name, Component]) => {
     test(`handle disabled in accessibilityState for element ${name} when false`, () => {
       const { queryByTestId } = render(
         //@ts-expect-error JSX element type 'Component' does not have any construct or call signatures.ts(2604)
