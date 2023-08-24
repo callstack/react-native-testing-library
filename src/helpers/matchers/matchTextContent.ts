@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matches, TextMatch, TextMatchOptions } from '../../matches';
-import { getTextContent } from '../getTextContent';
+import { getTextContent } from '../text-content';
 
 /**
  * Matches the given node's text content against string or regex matcher.
