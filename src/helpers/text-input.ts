@@ -4,7 +4,7 @@ import { isHostTextInput } from './host-component-names';
 export function isTextInputEditable(element: ReactTestInstance) {
   if (!isHostTextInput(element)) {
     throw new Error(
-      'Element is not a "TextInput", but it has type "${element.type}".'
+      `Element is not a "TextInput", but it has type "${element.type}".`
     );
   }
 
@@ -14,7 +14,7 @@ export function isTextInputEditable(element: ReactTestInstance) {
 export function getTextInputValue(element: ReactTestInstance) {
   if (!isHostTextInput(element)) {
     throw new Error(
-      'Element is not a "TextInput", but it has type "${element.type}".'
+      `Element is not a "TextInput", but it has type "${element.type}".`
     );
   }
 
