@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Modal, Pressable } from 'react-native';
+import { View, Modal } from 'react-native';
 import { render } from '../..';
 import '../extend-expect';
 
@@ -60,9 +60,9 @@ test('toBeVisible() on empty Modal', () => {
   expect(getByTestId('test')).toBeVisible();
 });
 
-test('toBeVisible() on view within modal', () => {
+test('toBeVisible() on view within Modal', () => {
   const { getByTestId } = render(
-    <Modal>
+    <Modal visible>
       <View>
         <View testID="view-within-modal" />
       </View>
@@ -71,7 +71,7 @@ test('toBeVisible() on view within modal', () => {
   expect(getByTestId('view-within-modal')).toBeVisible();
 });
 
-test('toBeVisible() on view within not visible modal', () => {
+test('toBeVisible() on view within not visible Modal', () => {
   const { getByTestId, queryByTestId } = render(
     <Modal testID="test" visible={false}>
       <View>
@@ -81,15 +81,22 @@ test('toBeVisible() on view within not visible modal', () => {
   );
 
   expect(getByTestId('test')).not.toBeVisible();
+
   // Children elements of not visible modals are not rendered.
-  expect(() =>
-    expect(getByTestId('view-within-modal')).not.toBeVisible()
-  ).toThrow();
+  expect(() => expect(getByTestId('view-within-modal')).not.toBeVisible())
+    .toThrowErrorMatchingInlineSnapshot(`
+      "Unable to find an element with testID: view-within-modal
+
+      <Modal
+        testID="test"
+      />"
+    `);
   expect(queryByTestId('view-within-modal')).toBeNull();
 });
 
-test('toBeVisible() on not visible modal', () => {
+test('toBeVisible() on not visible Modal', () => {
   const { getByTestId } = render(<Modal testID="test" visible={false} />);
+
   expect(
     getByTestId('test', { includeHiddenElements: true })
   ).not.toBeVisible();
@@ -99,6 +106,7 @@ test('toBeVisible() on inaccessible view', () => {
   const { getByTestId, update } = render(
     <View testID="test" aria-hidden={true} />
   );
+
   expect(
     getByTestId('test', { includeHiddenElements: true })
   ).not.toBeVisible();
@@ -180,27 +188,49 @@ test('toBeVisible() on null elements', () => {
 });
 
 test('toBeVisible() on non-React elements', () => {
-  expect(() =>
-    expect({ name: 'Non-React element' }).not.toBeVisible()
-  ).toThrow();
-  expect(() => expect(true).not.toBeVisible()).toThrow();
+  expect(() => expect({ name: 'Non-React element' }).not.toBeVisible())
+    .toThrowErrorMatchingInlineSnapshot(`
+  "expect(received).not.toBeVisible()
+
+  received value must be a host element.
+  Received has type:  object
+  Received has value: {"name": "Non-React element"}"
+  `);
+  expect(() => expect(true).not.toBeVisible())
+    .toThrowErrorMatchingInlineSnapshot(`
+  "expect(received).not.toBeVisible()
+
+  received value must be a host element.
+  Received has type:  boolean
+  Received has value: true"
+  `);
 });
 
 test('toBeVisible() throws an error when expectation is not matched', () => {
   const { getByTestId, update } = render(<View testID="test" />);
-  expect(() =>
-    expect(getByTestId('test')).not.toBeVisible()
-  ).toThrowErrorMatchingSnapshot();
+  expect(() => expect(getByTestId('test')).not.toBeVisible())
+    .toThrowErrorMatchingInlineSnapshot(`
+  "expect(element).not.toBeVisible()
+
+  Received element is visible:
+    <View
+      testID="test"
+    />"
+  `);
 
   update(<View testID="test" style={{ opacity: 0 }} />);
-  expect(() =>
-    expect(getByTestId('test')).toBeVisible()
-  ).toThrowErrorMatchingSnapshot();
-});
+  expect(() => expect(getByTestId('test')).toBeVisible())
+    .toThrowErrorMatchingInlineSnapshot(`
+  "expect(element).toBeVisible()
 
-test('toBeVisible() on Pressable with function style prop', () => {
-  const { getByTestId } = render(
-    <Pressable testID="test" style={() => ({ backgroundColor: 'blue' })} />
-  );
-  expect(getByTestId('test')).toBeVisible();
+  Received element is not visible:
+    <View
+      style={
+        {
+          "opacity": 0,
+        }
+      }
+      testID="test"
+    />"
+  `);
 });

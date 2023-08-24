@@ -5,7 +5,7 @@ import { getHostParent } from '../helpers/component-tree';
 import { checkHostElement, formatElement } from './utils';
 
 function isVisibleForStyles(element: ReactTestInstance) {
-  const style = element.props.style || {};
+  const style = element.props.style ?? {};
   const { display, opacity } = StyleSheet.flatten(style);
   return display !== 'none' && opacity !== 0;
 }
