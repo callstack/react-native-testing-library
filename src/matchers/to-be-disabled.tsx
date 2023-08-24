@@ -16,6 +16,7 @@ const DISABLE_TYPES = [
   'TextInput',
   'Pressable',
 ];
+
 function isElementDisabled(element: ReactTestInstance) {
   if (getType(element) === 'TextInput' && element?.props?.editable === false) {
     return true;
@@ -43,9 +44,7 @@ export function toBeDisabled(
   this: jest.MatcherContext,
   element: ReactTestInstance
 ) {
-  if (element !== null || !this.isNot) {
-    checkHostElement(element, toBeDisabled, this);
-  }
+  checkHostElement(element, toBeDisabled, this);
 
   const isDisabled = isElementDisabled(element) || isAncestorDisabled(element);
 
@@ -65,6 +64,28 @@ export function toBeDisabled(
           printElement(element),
           null
         ),
+      ].join('\n');
+    },
+  };
+}
+
+export function toBeEnabled(
+  this: jest.MatcherContext,
+  element: ReactTestInstance
+) {
+  checkHostElement(element, toBeEnabled, this);
+
+  const isEnabled = !isElementDisabled(element) && !isAncestorDisabled(element);
+
+  return {
+    pass: isEnabled,
+    message: () => {
+      const is = isEnabled ? 'is' : 'is not';
+      return [
+        matcherHint(`${this.isNot ? '.not' : ''}.toBeEnabled`, 'element', ''),
+        '',
+        `Received element ${is} enabled:`,
+        printElement(element),
       ].join('\n');
     },
   };
