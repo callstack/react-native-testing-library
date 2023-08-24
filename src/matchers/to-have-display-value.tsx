@@ -2,6 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { ErrorWithStack } from '../helpers/errors';
+import { getTextInputValue } from '../helpers/text-input';
 import { TextMatch, TextMatchOptions, matches } from '../matches';
 import { checkHostElement, formatMessage } from './utils';
 
@@ -20,10 +21,15 @@ export function toHaveDisplayValue(
     );
   }
 
-  const value = element.props.value ?? element.props.defaultValue;
+  const receivedValue = getTextInputValue(element);
 
   return {
-    pass: matches(expectedValue, value, options?.normalizer, options?.exact),
+    pass: matches(
+      expectedValue,
+      receivedValue,
+      options?.normalizer,
+      options?.exact
+    ),
     message: () => {
       return [
         formatMessage(
@@ -35,7 +41,7 @@ export function toHaveDisplayValue(
           `Expected element ${this.isNot ? 'not to' : 'to'} have display value`,
           expectedValue,
           'Received',
-          value
+          receivedValue
         ),
       ].join('\n');
     },

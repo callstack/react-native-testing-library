@@ -10,6 +10,7 @@ import act from './act';
 import { isHostElement } from './helpers/component-tree';
 import { isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
+import { isTextInputEditable } from './helpers/text-input';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
@@ -53,7 +54,7 @@ export function isEventEnabled(
 ) {
   if (isHostTextInput(nearestTouchResponder)) {
     return (
-      nearestTouchResponder?.props.editable !== false ||
+      isTextInputEditable(nearestTouchResponder) ||
       textInputEventsIgnoringEditableProp.has(eventName)
     );
   }

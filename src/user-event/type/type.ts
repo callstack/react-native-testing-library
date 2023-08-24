@@ -2,10 +2,10 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
+import { isTextInputEditable } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait, getTextContentSize } from '../utils';
-
 import { parseKeys } from './parseKeys';
 
 export interface TypeOptions {
@@ -27,7 +27,7 @@ export async function type(
   }
 
   // Skip events if the element is disabled
-  if (element.props.editable === false || !isPointerEventEnabled(element)) {
+  if (!isTextInputEditable(element) || !isPointerEventEnabled(element)) {
     return;
   }
 

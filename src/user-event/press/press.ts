@@ -1,16 +1,15 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import act from '../../act';
 import { getHostParent } from '../../helpers/component-tree';
+import { isTextInputEditable } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
-import { isHostText } from '../../helpers/host-component-names';
+import {
+  isHostText,
+  isHostTextInput,
+} from '../../helpers/host-component-names';
 import { EventBuilder } from '../event-builder';
 import { UserEventConfig, UserEventInstance } from '../setup';
-import {
-  dispatchEvent,
-  isEditableTextInput,
-  wait,
-  warnAboutRealTimersIfNeeded,
-} from '../utils';
+import { dispatchEvent, wait, warnAboutRealTimersIfNeeded } from '../utils';
 import { DEFAULT_MIN_PRESS_DURATION } from './constants';
 
 export interface PressOptions {
@@ -53,7 +52,11 @@ const basePress = async (
     return;
   }
 
-  if (isEditableTextInput(element) && isPointerEventEnabled(element)) {
+  if (
+    isHostTextInput(element) &&
+    isTextInputEditable(element) &&
+    isPointerEventEnabled(element)
+  ) {
     await emitTextInputPressEvents(config, element, options);
     return;
   }
