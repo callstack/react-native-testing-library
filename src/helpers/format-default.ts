@@ -15,6 +15,20 @@ const propsToDisplay = [
   'value',
   'defaultValue',
   'title',
+  'aria-hidden',
+  'aria-modal',
+  'aria-label',
+  'aria-labelledby',
+  'aria-hint',
+  'aria-busy',
+  'aria-checked',
+  'aria-disabled',
+  'aria-expanded',
+  'aria-selected',
+  'aria-valuemax',
+  'aria-valuemin',
+  'aria-valuenow',
+  'aria-valuetext',
 ];
 
 /**

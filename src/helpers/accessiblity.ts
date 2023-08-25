@@ -110,3 +110,62 @@ export function isAccessibilityElement(
     element?.type === hostComponentNames?.switch
   );
 }
+
+/**
+ * Returns true if element is disabled. By default elements are not disabled.
+ * @param element - element to check
+ * @returns - true if element is disabled.
+ */
+export function isElementDisabled(element: ReactTestInstance): boolean {
+  return (
+    element.props['aria-disabled'] ??
+    element.props.accessibilityState.disabled ??
+    false
+  );
+}
+
+/**
+ * Returns true if element is selected. By default elements are not selected.
+ * @param element - element to check
+ * @returns - true if element is selected.
+ */
+export function isElementSelected(element: ReactTestInstance): boolean {
+  return (
+    element.props['aria-selected'] ??
+    element.props.accessibilityState.selected ??
+    false
+  );
+}
+
+/**
+ * Returns element checked state. By default elements do not have checked state.
+ * @param element - element to check
+ * @returns - true if element is checked, false if explicitly unchecked, 'mixed' if partially checked, undefined if not checked.
+ */
+export function getElementCheckedState(
+  element: ReactTestInstance
+): boolean | 'mixed' {
+  return (
+    element.props['aria-checked'] ?? element.props.accessibilityState.checked
+  );
+}
+
+/**
+ * Returns element busy state. By default elements do not have busy state.
+ * @param element - element to check
+ * @returns - true if element is checked, false if explicitly unchecked, undefined if not checked.
+ */
+export function isElementBusy(element: ReactTestInstance) {
+  return element.props['aria-busy'] ?? element.props.accessibilityState.busy;
+}
+
+/**
+ * Returns element busy state. By default elements do not have busy state.
+ * @param element - element to check
+ * @returns - true if element is checked, false if explicitly unchecked, undefined if not checked.
+ */
+export function isElementExpanded(element: ReactTestInstance) {
+  return (
+    element.props['aria-expanded'] ?? element.props.accessibilityState.expanded
+  );
+}

@@ -1,6 +1,11 @@
-import { AccessibilityState } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
-import { accessibilityStateKeys } from '../accessiblity';
+import {
+  getElementCheckedState,
+  isElementBusy,
+  isElementDisabled,
+  isElementExpanded,
+  isElementSelected,
+} from '../accessiblity';
 
 // This type is the same as AccessibilityState from `react-native` package
 // It is re-declared here due to issues with migration from `@types/react-native` to
@@ -14,35 +19,19 @@ export interface AccessibilityStateMatcher {
   expanded?: boolean;
 }
 
-/**
- * Default accessibility state values based on experiments using accessibility
- * inspector/screen reader on iOS and Android.
- *
- * @see https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State
- */
-const defaultState: AccessibilityState = {
-  disabled: false,
-  selected: false,
-  checked: undefined,
-  busy: false,
-  expanded: undefined,
-};
-
 export function matchAccessibilityState(
   node: ReactTestInstance,
   matcher: AccessibilityStateMatcher
 ) {
-  const state = node.props.accessibilityState;
-  return accessibilityStateKeys.every((key) => matchState(state, matcher, key));
+  return (
+    matchState(matcher.disabled, isElementDisabled(node)) &&
+    matchState(matcher.selected, isElementSelected(node)) &&
+    matchState(matcher.checked, getElementCheckedState(node)) &&
+    matchState(matcher.busy, isElementBusy(node)) &&
+    matchState(matcher.expanded, isElementExpanded(node))
+  );
 }
 
-function matchState(
-  state: AccessibilityState,
-  matcher: AccessibilityStateMatcher,
-  key: keyof AccessibilityState
-) {
-  return (
-    matcher[key] === undefined ||
-    matcher[key] === (state?.[key] ?? defaultState[key])
-  );
+function matchState(expectedState?: unknown, receivedState?: unknown) {
+  return expectedState === undefined || expectedState === receivedState;
 }
