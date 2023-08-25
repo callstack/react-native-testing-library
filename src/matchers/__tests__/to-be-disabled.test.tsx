@@ -69,6 +69,23 @@ describe('.toBeDisabled', () => {
     });
   });
 
+  Object.entries(ALL_COMPONENTS).forEach(([name, Component]) => {
+    test(`handle when parent element is disabled for element ${name}`, () => {
+      const { queryByTestId } = render(
+        <View aria-disabled={true}>
+          <View>
+            {/* @ts-expect-error JSX element type 'Component' does not have any construct or call signatures.ts(2604) */}
+            <Component testID={name}>
+              <TextInput />
+            </Component>
+          </View>
+        </View>
+      );
+
+      expect(queryByTestId(name)).toBeDisabled();
+    });
+  });
+
   test('handle editable prop for TextInput', () => {
     const { getByTestId, getByPlaceholderText } = render(
       <View>
