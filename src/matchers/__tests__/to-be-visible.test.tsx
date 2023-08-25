@@ -163,10 +163,9 @@ test('toBeVisible() on view within not visible Modal', () => {
   expect(screen.getByTestId('test')).not.toBeVisible();
 
   // Children elements of not visible modals are not rendered.
-  expect(screen.getByTestId('test')).not.toBeVisible();
-  expect(() =>
-    expect(screen.getByTestId('view-within-modal')).not.toBeVisible()
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(screen.queryByTestId('view-within-modal')).not.toBeVisible();
+  expect(() => expect(screen.getByTestId('view-within-modal')).toBeVisible())
+    .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with testID: view-within-modal
 
       <Modal
