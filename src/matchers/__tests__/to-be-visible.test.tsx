@@ -1,78 +1,152 @@
 import * as React from 'react';
 import { View, Modal } from 'react-native';
-import { render } from '../..';
+import { render, screen } from '../..';
 import '../extend-expect';
 
 test('toBeVisible() on empty view', () => {
-  const { getByTestId } = render(<View testID="test" />);
-  expect(getByTestId('test')).toBeVisible();
+  render(<View testID="view" />);
+
+  const view = screen.getByTestId('view');
+  expect(view).toBeVisible();
+  expect(() => expect(view).not.toBeVisible())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toBeVisible()
+
+    Received element is visible:
+      <View
+        testID="view"
+      />"
+  `);
 });
 
 test('toBeVisible() on view with opacity', () => {
-  const { getByTestId } = render(
-    <View testID="test" style={{ opacity: 0.2 }} />
-  );
-  expect(getByTestId('test')).toBeVisible();
+  render(<View testID="view" style={{ opacity: 0.2 }} />);
+
+  const view = screen.getByTestId('view');
+  expect(view).toBeVisible();
+  expect(() => expect(view).not.toBeVisible())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toBeVisible()
+
+    Received element is visible:
+      <View
+        style={
+          {
+            "opacity": 0.2,
+          }
+        }
+        testID="view"
+      />"
+  `);
 });
 
 test('toBeVisible() on view with 0 opacity', () => {
-  const { getByTestId } = render(<View testID="test" style={{ opacity: 0 }} />);
-  expect(getByTestId('test')).not.toBeVisible();
+  render(<View testID="view" style={{ opacity: 0 }} />);
+
+  const view = screen.getByTestId('view');
+  expect(view).not.toBeVisible();
+  expect(() => expect(view).toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeVisible()
+
+    Received element is not visible:
+      <View
+        style={
+          {
+            "opacity": 0,
+          }
+        }
+        testID="view"
+      />"
+  `);
 });
 
 test('toBeVisible() on view with display "none"', () => {
-  const { getByTestId } = render(
-    <View testID="test" style={{ display: 'none' }} />
-  );
-  expect(
-    getByTestId('test', { includeHiddenElements: true })
-  ).not.toBeVisible();
+  render(<View testID="view" style={{ display: 'none' }} />);
+
+  const view = screen.getByTestId('view', { includeHiddenElements: true });
+  expect(view).not.toBeVisible();
+  expect(() => expect(view).toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeVisible()
+
+    Received element is not visible:
+      <View
+        style={
+          {
+            "display": "none",
+          }
+        }
+        testID="view"
+      />"
+  `);
 });
 
 test('toBeVisible() on ancestor view with 0 opacity', () => {
-  const { getByTestId } = render(
+  render(
     <View style={{ opacity: 0 }}>
       <View>
-        <View testID="test" />
+        <View testID="view" />
       </View>
     </View>
   );
-  expect(
-    getByTestId('test', { includeHiddenElements: true })
-  ).not.toBeVisible();
+
+  const view = screen.getByTestId('view');
+  expect(view).not.toBeVisible();
+  expect(() => expect(view).toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeVisible()
+
+    Received element is not visible:
+      <View
+        testID="view"
+      />"
+  `);
 });
 
 test('toBeVisible() on ancestor view with display "none"', () => {
-  const { getByTestId } = render(
+  render(
     <View style={{ display: 'none' }}>
       <View>
-        <View testID="test" />
+        <View testID="view" />
       </View>
     </View>
   );
-  expect(
-    getByTestId('test', { includeHiddenElements: true })
-  ).not.toBeVisible();
+
+  const view = screen.getByTestId('view', { includeHiddenElements: true });
+  expect(view).not.toBeVisible();
+  expect(() => expect(view).toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeVisible()
+
+    Received element is not visible:
+      <View
+        testID="view"
+      />"
+  `);
 });
 
 test('toBeVisible() on empty Modal', () => {
-  const { getByTestId } = render(<Modal testID="test" />);
-  expect(getByTestId('test')).toBeVisible();
+  render(<Modal testID="modal" />);
+
+  const modal = screen.getByTestId('modal');
+  expect(modal).toBeVisible();
+  expect(() =>
+    expect(modal).not.toBeVisible()
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"expect(...).not.oBeVisible is not a function"`
+  );
 });
 
 test('toBeVisible() on view within Modal', () => {
-  const { getByTestId } = render(
+  render(
     <Modal visible>
       <View>
         <View testID="view-within-modal" />
       </View>
     </Modal>
   );
-  expect(getByTestId('view-within-modal')).toBeVisible();
+  expect(screen.getByTestId('view-within-modal')).toBeVisible();
 });
 
 test('toBeVisible() on view within not visible Modal', () => {
-  const { getByTestId, queryByTestId } = render(
+  render(
     <Modal testID="test" visible={false}>
       <View>
         <View testID="view-within-modal" />
@@ -80,68 +154,62 @@ test('toBeVisible() on view within not visible Modal', () => {
     </Modal>
   );
 
-  expect(getByTestId('test')).not.toBeVisible();
+  expect(screen.getByTestId('test')).not.toBeVisible();
 
   // Children elements of not visible modals are not rendered.
-  expect(() => expect(getByTestId('view-within-modal')).not.toBeVisible())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(screen.getByTestId('test')).not.toBeVisible();
+  expect(() =>
+    expect(screen.getByTestId('view-within-modal')).not.toBeVisible()
+  ).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with testID: view-within-modal
 
       <Modal
         testID="test"
       />"
     `);
-  expect(queryByTestId('view-within-modal')).toBeNull();
 });
 
 test('toBeVisible() on not visible Modal', () => {
-  const { getByTestId } = render(<Modal testID="test" visible={false} />);
+  render(<Modal testID="test" visible={false} />);
 
-  expect(
-    getByTestId('test', { includeHiddenElements: true })
-  ).not.toBeVisible();
+  expect(screen.getByTestId('test')).not.toBeVisible();
 });
 
 test('toBeVisible() on inaccessible view', () => {
-  const { getByTestId, update } = render(
-    <View testID="test" aria-hidden={true} />
-  );
+  render(<View testID="test" aria-hidden />);
 
-  expect(
-    getByTestId('test', { includeHiddenElements: true })
-  ).not.toBeVisible();
+  const test = screen.getByTestId('test', { includeHiddenElements: true });
+  expect(test).not.toBeVisible();
 
-  update(<View testID="test" />);
-  expect(getByTestId('test')).toBeVisible();
+  screen.update(<View testID="test" />);
+  expect(test).toBeVisible();
 });
 
 test('toBeVisible() on view within inaccessible view', () => {
-  const { getByTestId } = render(
-    <View aria-hidden={true}>
+  render(
+    <View aria-hidden>
       <View>
         <View testID="test" />
       </View>
     </View>
   );
   expect(
-    getByTestId('test', { includeHiddenElements: true })
+    screen.getByTestId('test', { includeHiddenElements: true })
   ).not.toBeVisible();
 });
 
 test('toBeVisible() on inaccessible view (iOS)', () => {
-  const { getByTestId, update } = render(
-    <View testID="test" accessibilityElementsHidden />
-  );
-  expect(
-    getByTestId('test', { includeHiddenElements: true })
-  ).not.toBeVisible();
+  render(<View testID="test" accessibilityElementsHidden />);
 
-  update(<View testID="test" accessibilityElementsHidden={false} />);
-  expect(getByTestId('test')).toBeVisible();
+  const test = screen.getByTestId('test', { includeHiddenElements: true });
+  expect(test).not.toBeVisible();
+
+  screen.update(<View testID="test" accessibilityElementsHidden={false} />);
+  expect(test).toBeVisible();
 });
 
 test('toBeVisible() on view within inaccessible view (iOS)', () => {
-  const { getByTestId } = render(
+  render(
     <View accessibilityElementsHidden>
       <View>
         <View testID="test" />
@@ -149,24 +217,24 @@ test('toBeVisible() on view within inaccessible view (iOS)', () => {
     </View>
   );
   expect(
-    getByTestId('test', { includeHiddenElements: true })
+    screen.getByTestId('test', { includeHiddenElements: true })
   ).not.toBeVisible();
 });
 
 test('toBeVisible() on inaccessible view (Android)', () => {
-  const { getByTestId, update } = render(
+  render(
     <View testID="test" importantForAccessibility="no-hide-descendants" />
   );
-  expect(
-    getByTestId('test', { includeHiddenElements: true })
-  ).not.toBeVisible();
 
-  update(<View testID="test" importantForAccessibility="auto" />);
-  expect(getByTestId('test')).toBeVisible();
+  const test = screen.getByTestId('test', { includeHiddenElements: true });
+  expect(test).not.toBeVisible();
+
+  screen.update(<View testID="test" importantForAccessibility="auto" />);
+  expect(test).toBeVisible();
 });
 
 test('toBeVisible() on view within inaccessible view (Android)', () => {
-  const { getByTestId } = render(
+  render(
     <View importantForAccessibility="no-hide-descendants">
       <View>
         <View testID="test" />
@@ -174,11 +242,12 @@ test('toBeVisible() on view within inaccessible view (Android)', () => {
     </View>
   );
   expect(
-    getByTestId('test', { includeHiddenElements: true })
+    screen.getByTestId('test', { includeHiddenElements: true })
   ).not.toBeVisible();
 });
 
 test('toBeVisible() on null elements', () => {
+  expect(null).not.toBeVisible();
   expect(() => expect(null).toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
       "expect(received).toBeVisible()
 
@@ -190,47 +259,19 @@ test('toBeVisible() on null elements', () => {
 test('toBeVisible() on non-React elements', () => {
   expect(() => expect({ name: 'Non-React element' }).not.toBeVisible())
     .toThrowErrorMatchingInlineSnapshot(`
-  "expect(received).not.toBeVisible()
+      "expect(received).not.toBeVisible()
 
-  received value must be a host element.
-  Received has type:  object
-  Received has value: {"name": "Non-React element"}"
-  `);
+      received value must be a host element.
+      Received has type:  object
+      Received has value: {"name": "Non-React element"}"
+    `);
+
   expect(() => expect(true).not.toBeVisible())
     .toThrowErrorMatchingInlineSnapshot(`
-  "expect(received).not.toBeVisible()
+      "expect(received).not.toBeVisible()
 
-  received value must be a host element.
-  Received has type:  boolean
-  Received has value: true"
-  `);
-});
-
-test('toBeVisible() throws an error when expectation is not matched', () => {
-  const { getByTestId, update } = render(<View testID="test" />);
-  expect(() => expect(getByTestId('test')).not.toBeVisible())
-    .toThrowErrorMatchingInlineSnapshot(`
-  "expect(element).not.toBeVisible()
-
-  Received element is visible:
-    <View
-      testID="test"
-    />"
-  `);
-
-  update(<View testID="test" style={{ opacity: 0 }} />);
-  expect(() => expect(getByTestId('test')).toBeVisible())
-    .toThrowErrorMatchingInlineSnapshot(`
-  "expect(element).toBeVisible()
-
-  Received element is not visible:
-    <View
-      style={
-        {
-          "opacity": 0,
-        }
-      }
-      testID="test"
-    />"
-  `);
+      received value must be a host element.
+      Received has type:  boolean
+      Received has value: true"
+    `);
 });
