@@ -127,11 +127,17 @@ test('toBeVisible() on empty Modal', () => {
 
   const modal = screen.getByTestId('modal');
   expect(modal).toBeVisible();
-  expect(() =>
-    expect(modal).not.toBeVisible()
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"expect(...).not.oBeVisible is not a function"`
-  );
+  expect(() => expect(modal).not.toBeVisible())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toBeVisible()
+
+    Received element is visible:
+      <Modal
+        hardwareAccelerated={false}
+        testID="modal"
+        visible={true}
+      />"
+  `);
 });
 
 test('toBeVisible() on view within Modal', () => {
