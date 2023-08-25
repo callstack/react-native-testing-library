@@ -42,6 +42,8 @@ function isElementVisible(
     return false;
   }
 
+  // Note: this seems to be a bug in React Native.
+  // PR with fix: https://github.com/facebook/react-native/pull/39157
   if (isHostModal(element) && element.props.visible === false) {
     return false;
   }
