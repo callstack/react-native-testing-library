@@ -1,44 +1,10 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import { StyleSheet } from 'react-native';
+import { isHiddenFromAccessibility } from '../helpers/accessiblity';
 import { getHostParent } from '../helpers/component-tree';
 import { isHostModal } from '../helpers/host-component-names';
 import { checkHostElement, formatElement } from './utils';
-
-function isVisibleForStyles(element: ReactTestInstance) {
-  const style = element.props.style ?? {};
-  const { display, opacity } = StyleSheet.flatten(style);
-  return display !== 'none' && opacity !== 0;
-}
-
-function isVisibleForAccessibility(element: ReactTestInstance) {
-  return (
-    !element.props.accessibilityElementsHidden &&
-    element.props.importantForAccessibility !== 'no-hide-descendants' &&
-    !element.props['aria-hidden']
-  );
-}
-
-function isModalVisible(element: ReactTestInstance) {
-  return !isHostModal(element) || element.props.visible !== false;
-}
-
-function isElementVisible(element: ReactTestInstance): boolean {
-  let current: ReactTestInstance | null = element;
-  while (current) {
-    if (
-      !isVisibleForStyles(current) ||
-      !isVisibleForAccessibility(current) ||
-      !isModalVisible(current)
-    ) {
-      return false;
-    }
-
-    current = getHostParent(current);
-  }
-
-  return true;
-}
 
 export function toBeVisible(
   this: jest.MatcherContext,
@@ -48,12 +14,10 @@ export function toBeVisible(
     checkHostElement(element, toBeVisible, this);
   }
 
-  const isVisible = isElementVisible(element);
-
   return {
-    pass: isVisible,
+    pass: isElementVisible(element),
     message: () => {
-      const is = isVisible ? 'is' : 'is not';
+      const is = this.isNot ? 'is' : 'is not';
       return [
         matcherHint(`${this.isNot ? '.not' : ''}.toBeVisible`, 'element', ''),
         '',
@@ -62,4 +26,36 @@ export function toBeVisible(
       ].join('\n');
     },
   };
+}
+
+function isElementVisible(
+  element: ReactTestInstance,
+  accessibilityCache?: WeakMap<ReactTestInstance, boolean>
+): boolean {
+  // Use cache to speed up repeated searches by `isHiddenFromAccessibility`.
+  const cache = accessibilityCache ?? new WeakMap<ReactTestInstance, boolean>();
+  if (isHiddenFromAccessibility(element, { cache })) {
+    return false;
+  }
+
+  if (isHiddenForStyles(element)) {
+    return false;
+  }
+
+  if (isHostModal(element) && element.props.visible === false) {
+    return false;
+  }
+
+  const hostParent = getHostParent(element);
+  if (hostParent === null) {
+    return true;
+  }
+
+  return isElementVisible(hostParent, cache);
+}
+
+function isHiddenForStyles(element: ReactTestInstance) {
+  const style = element.props.style ?? {};
+  const { display, opacity } = StyleSheet.flatten(style);
+  return display === 'none' || opacity === 0;
 }

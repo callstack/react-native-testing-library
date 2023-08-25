@@ -41,6 +41,32 @@ describe('isHiddenFromAccessibility', () => {
     expect(isHiddenFromAccessibility(null)).toBe(true);
   });
 
+  test('detects elements with aria-hidden prop', () => {
+    const view = render(<View testID="subject" aria-hidden />);
+    expect(
+      isHiddenFromAccessibility(
+        view.getByTestId('subject', {
+          includeHiddenElements: true,
+        })
+      )
+    ).toBe(true);
+  });
+
+  test('detects nested elements with aria-hidden prop', () => {
+    const view = render(
+      <View aria-hidden>
+        <View testID="subject" />
+      </View>
+    );
+    expect(
+      isHiddenFromAccessibility(
+        view.getByTestId('subject', {
+          includeHiddenElements: true,
+        })
+      )
+    ).toBe(true);
+  });
+
   test('detects elements with accessibilityElementsHidden prop', () => {
     const view = render(<View testID="subject" accessibilityElementsHidden />);
     expect(
