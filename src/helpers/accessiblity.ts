@@ -62,6 +62,10 @@ function isSubtreeInaccessible(element: ReactTestInstance): boolean {
     return false;
   }
 
+  if (element.props['aria-hidden']) {
+    return true;
+  }
+
   // iOS: accessibilityElementsHidden
   // See: https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios
   if (element.props.accessibilityElementsHidden) {
