@@ -30,8 +30,8 @@ title: Queries
   - [Precision](#precision)
   - [Normalization](#normalization)
 - [Unit testing helpers](#unit-testing-helpers)
-  - [`UNSAFE_ByType`](#unsafebytype)
-  - [`UNSAFE_ByProps`](#unsafebyprops)
+  - [`UNSAFE_ByType`](#unsafe_bytype)
+  - [`UNSAFE_ByProps`](#unsafe_byprops)
 
 ## Variants
 
