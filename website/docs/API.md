@@ -933,6 +933,7 @@ This covers only part of [ARIA notion of Accessiblity Tree](https://www.w3.org/T
 For the scope of this function, element is inaccessible when it, or any of its ancestors, meets any of the following conditions:
 
 - it has `display: none` style
+- it has [`aria-hidden`](https://reactnative.dev/docs/accessibility#aria-hidden) prop set to `true`
 - it has [`accessibilityElementsHidden`](https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios) prop set to `true`
 - it has [`importantForAccessibility`](https://reactnative.dev/docs/accessibility#importantforaccessibility-android) prop set to `no-hide-descendants`
 - it has sibling host element with [`accessibilityViewIsModal`](https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios) prop set to `true`

@@ -10,6 +10,7 @@ const node: ReactTestRendererJSON = {
 describe('mapPropsForQueryError', () => {
   test('preserves props that are helpful for debugging', () => {
     const props = {
+      'aria-hidden': true,
       accessibilityElementsHidden: true,
       accessibilityViewIsModal: true,
       importantForAccessibility: 'yes',
@@ -25,7 +26,6 @@ describe('mapPropsForQueryError', () => {
     };
 
     const result = defaultMapProps(props, node);
-
     expect(result).toStrictEqual(props);
   });
 

@@ -11,6 +11,7 @@ const propsToDisplay = [
   'accessibilityLabel',
   'accessibilityLabelledBy',
   'accessibilityHint',
+  'aria-hidden',
   'placeholder',
   'value',
   'defaultValue',
