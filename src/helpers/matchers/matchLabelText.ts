@@ -1,20 +1,24 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { matches, TextMatch, TextMatchOptions } from '../../matches';
+import {
+  getAccessibilityLabel,
+  getAccessibilityLabelledBy,
+} from '../accessiblity';
 import { findAll } from '../findAll';
 import { matchTextContent } from './matchTextContent';
 
 export function matchLabelText(
   root: ReactTestInstance,
   element: ReactTestInstance,
-  text: TextMatch,
+  expectedText: TextMatch,
   options: TextMatchOptions = {}
 ) {
   return (
-    matchAccessibilityLabel(element, text, options) ||
+    matchAccessibilityLabel(element, expectedText, options) ||
     matchAccessibilityLabelledBy(
       root,
-      element.props.accessibilityLabelledBy,
-      text,
+      getAccessibilityLabelledBy(element),
+      expectedText,
       options
     )
   );
@@ -22,11 +26,15 @@ export function matchLabelText(
 
 function matchAccessibilityLabel(
   element: ReactTestInstance,
-  text: TextMatch,
+  extpectedLabel: TextMatch,
   options: TextMatchOptions
 ) {
-  const { exact, normalizer } = options;
-  return matches(text, element.props.accessibilityLabel, normalizer, exact);
+  return matches(
+    extpectedLabel,
+    getAccessibilityLabel(element),
+    options.normalizer,
+    options.exact
+  );
 }
 
 function matchAccessibilityLabelledBy(

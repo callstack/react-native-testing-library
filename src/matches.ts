@@ -8,7 +8,7 @@ export type TextMatchOptions = {
 
 export function matches(
   matcher: TextMatch,
-  text: string,
+  text: string | undefined,
   normalizer: NormalizerFn = getDefaultNormalizer(),
   exact: boolean = true
 ): boolean {

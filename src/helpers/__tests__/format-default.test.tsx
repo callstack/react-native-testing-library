@@ -20,6 +20,8 @@ describe('mapPropsForQueryError', () => {
       accessibilityLabelledBy: 'LABELLED_BY',
       accessibilityRole: 'ROLE',
       accessibilityHint: 'HINT',
+      'aria-label': 'ARIA_LABEL',
+      'aria-labelledby': 'ARIA_LABELLED_BY',
       placeholder: 'PLACEHOLDER',
       value: 'VALUE',
       defaultValue: 'DEFAULT_VALUE',

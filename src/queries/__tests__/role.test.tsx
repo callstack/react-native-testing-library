@@ -166,6 +166,34 @@ describe('supports name option', () => {
     );
   });
 
+  test('returns an element that has the corresponding role and a children with a matching aria-label', () => {
+    const { getByRole } = render(
+      <TouchableOpacity accessibilityRole="button" testID="target-button">
+        <Text aria-label="Save" />
+      </TouchableOpacity>
+    );
+
+    // assert on the testId to be sure that the returned element is the one with the accessibilityRole
+    expect(getByRole('button', { name: 'Save' }).props.testID).toBe(
+      'target-button'
+    );
+  });
+
+  test('returns an element that has the corresponding role and a matching aria-label', () => {
+    const { getByRole } = render(
+      <TouchableOpacity
+        accessibilityRole="button"
+        testID="target-button"
+        aria-label="Save"
+      ></TouchableOpacity>
+    );
+
+    // assert on the testId to be sure that the returned element is the one with the accessibilityRole
+    expect(getByRole('button', { name: 'Save' }).props.testID).toBe(
+      'target-button'
+    );
+  });
+
   test('returns an element when the direct child is text', () => {
     const { getByRole, getByTestId } = render(
       <Text accessibilityRole="header" testID="target-header">

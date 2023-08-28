@@ -26,9 +26,13 @@ function queryAllByLabelText(instance: ReactTestInstance) {
 }
 
 const getMultipleError = (labelText: TextMatch) =>
-  `Found multiple elements with accessibilityLabel: ${String(labelText)} `;
+  `Found multiple elements with aria-label or accessibilityLabel: ${String(
+    labelText
+  )} `;
 const getMissingError = (labelText: TextMatch) =>
-  `Unable to find an element with accessibilityLabel: ${String(labelText)}`;
+  `Unable to find an element with aria-label or accessibilityLabel: ${String(
+    labelText
+  )}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByLabelText,

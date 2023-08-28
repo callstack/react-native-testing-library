@@ -18,17 +18,19 @@ describe('printing element tree', () => {
   test('prints helpful props but not others', async () => {
     const { getByText } = render(
       <View
-        aria-hidden
-        accessibilityElementsHidden
-        accessibilityViewIsModal
-        importantForAccessibility="yes"
+        key="this is filtered"
         testID="TEST_ID"
         nativeID="NATIVE_ID"
+        accessibilityElementsHidden
         accessibilityLabel="LABEL"
         accessibilityLabelledBy="LABELLED_BY"
-        accessibilityRole="summary"
         accessibilityHint="HINT"
-        key="this is filtered"
+        accessibilityRole="summary"
+        accessibilityViewIsModal
+        aria-hidden
+        aria-label="ARIA_LABEL"
+        aria-labelledby="ARIA_LABELLED_BY"
+        importantForAccessibility="yes"
       >
         <TextInput
           placeholder="PLACEHOLDER"
@@ -50,6 +52,8 @@ describe('printing element tree', () => {
         accessibilityRole="summary"
         accessibilityViewIsModal={true}
         aria-hidden={true}
+        aria-label="ARIA_LABEL"
+        aria-labelledby="ARIA_LABELLED_BY"
         importantForAccessibility="yes"
         nativeID="NATIVE_ID"
         testID="TEST_ID"

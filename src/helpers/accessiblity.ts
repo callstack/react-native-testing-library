@@ -115,3 +115,17 @@ export function isAccessibilityElement(
 export function getAccessibilityRole(element: ReactTestInstance) {
   return element.props.role ?? element.props.accessibilityRole;
 }
+
+export function getAccessibilityLabel(
+  element: ReactTestInstance
+): string | undefined {
+  return element.props['aria-label'] ?? element.props.accessibilityLabel;
+}
+
+export function getAccessibilityLabelledBy(
+  element: ReactTestInstance
+): string | undefined {
+  return (
+    element.props['aria-labelledby'] ?? element.props.accessibilityLabelledBy
+  );
+}
