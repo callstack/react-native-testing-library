@@ -111,3 +111,7 @@ export function isAccessibilityElement(
     element?.type === hostComponentNames?.switch
   );
 }
+
+export function getAccessibilityRole(element: ReactTestInstance) {
+  return element.props.role ?? element.props.accessibilityRole;
+}
