@@ -12,7 +12,7 @@ import {
 import { render } from '../..';
 import '../extend-expect';
 
-const ALLOWED_COMPONENTS = {
+const DISABLED_PROP_COMPONENTS = {
   TouchableHighlight,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -20,15 +20,18 @@ const ALLOWED_COMPONENTS = {
   Pressable,
 };
 
-const ARIA_COMPONENTS = {
+const ARIA_DISABLED_PROP_COMPONENTS = {
   View,
   TextInput,
 };
 
-const ALL_COMPONENTS = { ...ALLOWED_COMPONENTS, ...ARIA_COMPONENTS };
+const ALL_COMPONENTS = {
+  ...DISABLED_PROP_COMPONENTS,
+  ...ARIA_DISABLED_PROP_COMPONENTS,
+};
 
 describe('.toBeDisabled', () => {
-  Object.entries(ALLOWED_COMPONENTS).forEach(([name, Component]) => {
+  Object.entries(DISABLED_PROP_COMPONENTS).forEach(([name, Component]) => {
     test(`handle disabled prop for element ${name}`, () => {
       const { queryByTestId } = render(
         //@ts-expect-error JSX element type 'Component' does not have any construct or call signatures.ts(2604)
@@ -42,7 +45,7 @@ describe('.toBeDisabled', () => {
     });
   });
 
-  Object.entries(ARIA_COMPONENTS).forEach(([name, Component]) => {
+  Object.entries(ARIA_DISABLED_PROP_COMPONENTS).forEach(([name, Component]) => {
     test(`handle aria-disabled prop for element ${name}`, () => {
       const { queryByTestId } = render(
         <Component aria-disabled testID={name}>
