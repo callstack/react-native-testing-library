@@ -10,11 +10,11 @@ const TEXT_HINT = 'static text';
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
 const getMultipleInstancesFoundMessage = (value: string) => {
-  return `Found multiple elements with aria-label or accessibilityLabel: ${value}`;
+  return `Found multiple elements with accessibility label: ${value}`;
 };
 
 const getNoInstancesFoundMessage = (value: string) => {
-  return `Unable to find an element with aria-label or accessibilityLabel: ${value}`;
+  return `Unable to find an element with accessibility label: ${value}`;
 };
 
 const Typography = ({ children, ...rest }: any) => {
@@ -161,7 +161,7 @@ test('byLabelText queries support hidden option', () => {
   ).toBeFalsy();
   expect(() => getByLabelText('hidden', { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with aria-label or accessibilityLabel: hidden
+    "Unable to find an element with accessibility label: hidden
 
     <Text
       accessibilityLabel="hidden"
@@ -258,7 +258,7 @@ test('error message renders the element tree, preserving only helpful props', as
   const view = render(<TouchableOpacity accessibilityLabel="LABEL" key="3" />);
 
   expect(() => view.getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with aria-label or accessibilityLabel: FOO
+    "Unable to find an element with accessibility label: FOO
 
     <View
       accessibilityLabel="LABEL"
@@ -267,7 +267,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
   expect(() => view.getAllByLabelText('FOO'))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with aria-label or accessibilityLabel: FOO
+    "Unable to find an element with accessibility label: FOO
 
     <View
       accessibilityLabel="LABEL"
@@ -276,7 +276,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
   await expect(view.findByLabelText('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with aria-label or accessibilityLabel: FOO
+    "Unable to find an element with accessibility label: FOO
 
     <View
       accessibilityLabel="LABEL"
@@ -285,7 +285,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
   await expect(view.findAllByLabelText('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with aria-label or accessibilityLabel: FOO
+    "Unable to find an element with accessibility label: FOO
 
     <View
       accessibilityLabel="LABEL"
