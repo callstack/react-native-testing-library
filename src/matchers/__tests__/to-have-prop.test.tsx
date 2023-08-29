@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button, Text, View } from 'react-native';
-import { render } from '../..';
+import { render, screen } from '../..';
 import '../extend-expect';
 
 test('.toHaveProp', () => {
-  const { queryByTestId } = render(
+  render(
     <View style={null} testID="view">
       <Text allowFontScaling={false} testID="text" ellipsizeMode="head">
         text
@@ -13,31 +13,67 @@ test('.toHaveProp', () => {
     </View>
   );
 
-  expect(queryByTestId('button')).toHaveProp('accessibilityState', {
+  const text = screen.getByTestId('text');
+  const button = screen.getByTestId('button');
+  const view = screen.getByTestId('view');
+
+  expect(button).toHaveProp('accessibilityState', {
     disabled: true,
   });
-  expect(queryByTestId('text')).toHaveProp('ellipsizeMode', 'head');
-  expect(queryByTestId('text')).toHaveProp('allowFontScaling', false);
+  expect(text).toHaveProp('ellipsizeMode', 'head');
+  expect(text).toHaveProp('allowFontScaling', false);
 
-  expect(queryByTestId('button')).not.toHaveProp('accessibilityStates');
-  expect(queryByTestId('button')).not.toHaveProp('ellipsizeMode', undefined);
-  expect(queryByTestId('button')).not.toHaveProp('allowFontScaling', false);
-  expect(queryByTestId('text')).not.toHaveProp('style');
+  expect(button).not.toHaveProp('accessibilityStates');
+  expect(button).not.toHaveProp('ellipsizeMode', undefined);
+  expect(button).not.toHaveProp('allowFontScaling', false);
+  expect(text).not.toHaveProp('style');
 
   // title is no longer findable as it is a React child
-  expect(() =>
-    expect(queryByTestId('button')).toHaveProp('title', 'ok')
-  ).toThrow();
-  expect(() =>
-    expect(queryByTestId('button')).toHaveProp('disabled')
-  ).toThrow();
-  expect(() =>
-    expect(queryByTestId('text')).not.toHaveProp('allowFontScaling', false)
-  ).toThrow();
-  expect(() => expect(queryByTestId('text')).toHaveProp('style')).toThrow();
-  expect(() =>
-    expect(queryByTestId('text')).toHaveProp('allowFontScaling', 'wrongValue')
-  ).toThrow();
+  expect(() => expect(button).toHaveProp('title', 'ok'))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toHaveProp("title", "ok") // Element should have prop title with value "ok"
 
-  expect(queryByTestId('view')).toHaveProp('style', null);
+    Expected the element to have prop:
+      title="ok"
+    Received:
+      null"
+  `);
+  expect(() => expect(button).toHaveProp('disabled'))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toHaveProp("disabled") // Element should have prop disabled
+
+    Expected the element to have prop:
+      disabled
+    Received:
+      null"
+  `);
+  expect(() => expect(text).not.toHaveProp('allowFontScaling', false))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toHaveProp("allowFontScaling", false) // Element should have prop allowFontScaling with value false
+
+    Expected the element not to have prop:
+      allowFontScaling=false
+    Received:
+      allowFontScaling=false"
+  `);
+  expect(() => expect(text).toHaveProp('style'))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toHaveProp("style") // Element should have prop style
+
+    Expected the element to have prop:
+      style
+    Received:
+      null"
+  `);
+  expect(() => expect(text).toHaveProp('allowFontScaling', 'wrongValue'))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toHaveProp("allowFontScaling", "wrongValue") // Element should have prop allowFontScaling with value "wrongValue"
+
+    Expected the element to have prop:
+      allowFontScaling="wrongValue"
+    Received:
+      allowFontScaling=false"
+  `);
+
+  expect(view).toHaveProp('style', null);
 });
