@@ -129,3 +129,34 @@ export function getAccessibilityLabelledBy(
     element.props['aria-labelledby'] ?? element.props.accessibilityLabelledBy
   );
 }
+
+export function getAccessibilityState(element: ReactTestInstance) {
+  const {
+    accessibilityState,
+    'aria-busy': ariaBusy,
+    'aria-checked': ariaChecked,
+    'aria-disabled': ariaDisabled,
+    'aria-expanded': ariaExpanded,
+    'aria-selected': ariaSelected,
+  } = element.props;
+
+  const hasAnyAccessibilityStateProps =
+    accessibilityState != null ||
+    ariaBusy != null ||
+    ariaChecked != null ||
+    ariaDisabled != null ||
+    ariaExpanded != null ||
+    ariaSelected != null;
+
+  if (!hasAnyAccessibilityStateProps) {
+    return undefined;
+  }
+
+  return {
+    busy: ariaBusy ?? accessibilityState?.busy,
+    checked: ariaChecked ?? accessibilityState?.checked,
+    disabled: ariaDisabled ?? accessibilityState?.disabled,
+    expanded: ariaExpanded ?? accessibilityState?.expanded,
+    selected: ariaSelected ?? accessibilityState?.selected,
+  };
+}
