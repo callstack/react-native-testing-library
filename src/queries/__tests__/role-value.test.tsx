@@ -173,4 +173,46 @@ describe('accessibility value', () => {
       </Text>"
     `);
   });
+
+  test('supports "aria-valuemax" prop', () => {
+    const screen = render(<View accessible role="slider" aria-valuemax={10} />);
+    expect(screen.getByRole('slider', { value: { max: 10 } })).toBeTruthy();
+  });
+
+  test('supports "aria-valuemin" prop', () => {
+    const screen = render(<View accessible role="slider" aria-valuemin={20} />);
+    expect(screen.getByRole('slider', { value: { min: 20 } })).toBeTruthy();
+  });
+
+  test('supports "aria-valuenow" prop', () => {
+    const screen = render(<View accessible role="slider" aria-valuenow={30} />);
+    expect(screen.getByRole('slider', { value: { now: 30 } })).toBeTruthy();
+  });
+
+  test('supports "aria-valuetext" prop', () => {
+    const screen = render(
+      <View accessible role="slider" aria-valuetext="Hello World" />
+    );
+    expect(
+      screen.getByRole('slider', { value: { text: 'Hello World' } })
+    ).toBeTruthy();
+    expect(
+      screen.getByRole('slider', { value: { text: /hello/i } })
+    ).toBeTruthy();
+  });
+
+  test('supports multiple aria-value* props', () => {
+    const screen = render(
+      <View
+        accessible
+        role="slider"
+        aria-valuenow={50}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      />
+    );
+    expect(
+      screen.getByRole('slider', { value: { now: 50, min: 0, max: 100 } })
+    ).toBeTruthy();
+  });
 });

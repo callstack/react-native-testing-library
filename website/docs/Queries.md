@@ -121,7 +121,7 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 
 `expanded`: You can filter elements by their expanded state (coming either from `aria-expanded` prop or `accessbilityState.expanded` prop). The possible values are `true` or `false`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
 
-`value`: Filter elements by their accessibility, available value entries include numeric `min`, `max` & `now`, as well as string or regex `text` key. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about this prop.
+`value`: Filter elements by their accessibility value, based on either `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` or accessibilityValue props. Accessiblity value conceptually consist of numeric `min`, `max` and `now` values, as well as string `text` value. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about the accessibility value.
 
 ### `ByText`
 
@@ -371,7 +371,7 @@ getByA11yValue(
 ): ReactTestInstance;
 ```
 
-Returns a host element with matching `accessibilityValue` prop entries. Only entires provided to the query will be used to match elements. Element might have additional accessibility value entries and still be matched.
+Returns a host element with matching accessibility value based on `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` & `accessibilityValue` props. Only value entires provided to the query will be used to match elements. Element might have additional accessibility value entries and still be matched.
 
 When querying by `text` entry a string or regex might be used.
 
