@@ -42,7 +42,8 @@ export function toBePartiallyChecked(
         `only accessibility element with accessibilityRole="checkbox" or accessibilityRole="radio" can be used with .toBePartiallyChecked()`,
     };
   }
-  const checkedState = element.props?.accessiblityState?.checked;
+
+  const checkedState = element.props?.accessibilityState?.checked;
   const pass = checkedState === 'mixed';
 
   return {
