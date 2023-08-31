@@ -132,6 +132,150 @@ test('React Native API assumption: <Switch> renders single host element', () => 
   `);
 });
 
+test('React Native API assumption: aria-* props render on host View', () => {
+  const view = render(
+    <View
+      testID="test"
+      aria-busy
+      aria-checked
+      aria-disabled
+      aria-expanded
+      aria-hidden
+      aria-label="Label"
+      aria-labelledby="LabelledBy"
+      aria-live="polite"
+      aria-modal
+      aria-pressed
+      aria-readonly
+      aria-required
+      aria-selected
+      aria-valuemax={10}
+      aria-valuemin={0}
+      aria-valuenow={5}
+      aria-valuetext="ValueText"
+    />
+  );
+
+  expect(view.toJSON()).toMatchInlineSnapshot(`
+    <View
+      aria-busy={true}
+      aria-checked={true}
+      aria-disabled={true}
+      aria-expanded={true}
+      aria-hidden={true}
+      aria-label="Label"
+      aria-labelledby="LabelledBy"
+      aria-live="polite"
+      aria-modal={true}
+      aria-pressed={true}
+      aria-readonly={true}
+      aria-required={true}
+      aria-selected={true}
+      aria-valuemax={10}
+      aria-valuemin={0}
+      aria-valuenow={5}
+      aria-valuetext="ValueText"
+      testID="test"
+    />
+  `);
+});
+
+test('React Native API assumption: aria-* props render on host Text', () => {
+  const view = render(
+    <Text
+      testID="test"
+      aria-busy
+      aria-checked
+      aria-disabled
+      aria-expanded
+      aria-hidden
+      aria-label="Label"
+      aria-labelledby="LabelledBy"
+      aria-live="polite"
+      aria-modal
+      aria-pressed
+      aria-readonly
+      aria-required
+      aria-selected
+      aria-valuemax={10}
+      aria-valuemin={0}
+      aria-valuenow={5}
+      aria-valuetext="ValueText"
+    />
+  );
+
+  expect(view.toJSON()).toMatchInlineSnapshot(`
+    <Text
+      aria-busy={true}
+      aria-checked={true}
+      aria-disabled={true}
+      aria-expanded={true}
+      aria-hidden={true}
+      aria-label="Label"
+      aria-labelledby="LabelledBy"
+      aria-live="polite"
+      aria-modal={true}
+      aria-pressed={true}
+      aria-readonly={true}
+      aria-required={true}
+      aria-selected={true}
+      aria-valuemax={10}
+      aria-valuemin={0}
+      aria-valuenow={5}
+      aria-valuetext="ValueText"
+      testID="test"
+    />
+  `);
+});
+
+test('React Native API assumption: aria-* props render on host TextInput', () => {
+  const view = render(
+    <TextInput
+      testID="test"
+      aria-busy
+      aria-checked
+      aria-disabled
+      aria-expanded
+      aria-hidden
+      aria-label="Label"
+      aria-labelledby="LabelledBy"
+      aria-live="polite"
+      aria-modal
+      aria-pressed
+      aria-readonly
+      aria-required
+      aria-selected
+      aria-valuemax={10}
+      aria-valuemin={0}
+      aria-valuenow={5}
+      aria-valuetext="ValueText"
+    />
+  );
+
+  expect(view.toJSON()).toMatchInlineSnapshot(`
+    <TextInput
+      aria-busy={true}
+      aria-checked={true}
+      aria-disabled={true}
+      aria-expanded={true}
+      aria-hidden={true}
+      aria-label="Label"
+      aria-labelledby="LabelledBy"
+      aria-live="polite"
+      aria-modal={true}
+      aria-pressed={true}
+      aria-readonly={true}
+      aria-required={true}
+      aria-selected={true}
+      aria-valuemax={10}
+      aria-valuemin={0}
+      aria-valuenow={5}
+      aria-valuetext="ValueText"
+      testID="test"
+    />
+  `);
+});
+
 test('ScrollView renders correctly', () => {
   const screen = render(
     <ScrollView testID="scrollView">
