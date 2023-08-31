@@ -2,20 +2,9 @@
 id: user-event
 title: User Event
 ---
+import TOCInline from '@theme/TOCInline';
 
-### Table of contents
-
-- [Comparison with Fire Event API](#comparison-with-fire-event-api)
-- [`setup()`](#setup)
-  - [Options](#options)
-- [`press()`](#press)
-- [`longPress()`](#longpress)
-  - [Options](#options-1)
-- [`type()`](#type)
-  - [Options](#options-2)
-  - [Sequence of events](#sequence-of-events)
-- [`clear()`](#clear)
-  - [Sequence of events](#sequence-of-events-1)
+<TOCInline toc={toc} />
 
 :::caution
 User Event API is in beta stage.
@@ -47,7 +36,7 @@ const user = userEvent.setup();
 
 Creates an User Event object instance which can be used to trigger events.
 
-### Options
+### Options {#setup-options}
 - `delay` - controls the default delay between subsequent events, e.g. keystrokes.
 - `advanceTimers` - time advancement utility function that should be used for fake timers. The default setup handles both real timers and Jest fake timers.
 
@@ -85,7 +74,7 @@ await user.longPress(element);
 
 Simulates a long press user interaction. In React Native the `longPress` event is emitted when the press duration exceeds long press threshold (by default 500 ms). In other aspects this actions behaves similar to regular `press` action, e.g. by emitting `pressIn` and `pressOut` events. The press duration is customisable through the options. This should be useful if you use the `delayLongPress` prop. When using real timers this will take 500 ms so it is highly recommended to use that API with fake timers to prevent test taking a long time to run. 
 
-### Options
+### Options {#longpress-options}
 - `duration` - duration of the press in miliseconds. Default value is 500 ms.
 
 ## `type()`
@@ -114,7 +103,7 @@ This function supports only host `TextInput` elements. Passing other element typ
 This function will add text to the text already present in the text input (as specified by `value` or `defaultValue` props). In order to replace existing text, use [`clear()`](#clear) helper first.
 :::
 
-### Options
+### Options {#type-options}
  - `skipPress` - if true, `pressIn` and `pressOut` events will not be triggered.
  - `submitEditing` - if true, `submitEditing` event will be triggered after typing the text.
 

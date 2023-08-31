@@ -2,8 +2,11 @@
 id: migration-v9
 title: Migration to 9.0
 ---
+import TOCInline from '@theme/TOCInline';
 
 Version 7.0 brought React Native Testing Library into the `@testing-library` family. Since it has been implemented independently from its web counterpart – the React Testing Library – there are some differences in the API and behavior. Version 9.0 solves several of these problems.
+
+<TOCInline toc={toc} />
 
 ## Support for text match options a.k.a string precision API
 

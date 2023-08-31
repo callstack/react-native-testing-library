@@ -2,6 +2,7 @@
 id: migration-v7
 title: Migration to 7.0
 ---
+import TOCInline from '@theme/TOCInline';
 
 :::caution
 We renamed the `react-native-testing-library` npm package to `@testing-library/react-native`, officially joining the "Testing Library" family 🎉.
@@ -9,14 +10,13 @@ We renamed the `react-native-testing-library` npm package to `@testing-library/r
 
 As the version 7.0 involves merging two libraries together, there are two variants for migration guide, dependent on library you used previously:
 
-- [Guide for `react-native-testing-library` users](#guide-for-react-native-testing-library-users)
-- [Guide for `@testing-library/react-native` users](#guide-for-testing-libraryreact-native-users)
+<TOCInline toc={toc} />
 
-# Guide for `react-native-testing-library` users
+## Guide for `react-native-testing-library` users
 
 This guide describes steps necessary to migrate from React Native Testing Library `v2.x` or `v6.0` to `v7.0`.
 
-## Renaming the library
+### Renaming the library
 
 1. Install `@testing-library/react-native`.
 1. Uninstall `react-native-testing-library`.
@@ -26,7 +26,7 @@ You may have noticed a strange v2 to v7 upgrade, skipping versions 3, 4, 5 and 6
 
 For branding purposes we keep the "React Native Testing Library" name, similar to "React Testing Library". Only the npm published package is changing. The code repository also stays the same under Callstack governance.
 
-## New aliases
+### New aliases
 
 To improve compatibility with React Testing Library, and ease the migration for `@testing-library/react-native` users using version below v7, we've introduced new aliases to our accessibility queries:
 
@@ -36,7 +36,7 @@ To improve compatibility with React Testing Library, and ease the migration for 
 
 We like the new names and consider removing the aliases in future releases.
 
-## Renaming `ByPlaceholder` queries
+### Renaming `ByPlaceholder` queries
 
 To improve compatibility with React Testing Library, and to ease the migration for `@testing-library/react-native` users using version below v7, we've renamed following queries:
 
@@ -44,31 +44,31 @@ To improve compatibility with React Testing Library, and to ease the migration f
 
 Please replace all occurrences of these queries in your codebase.
 
-## `fireEvent` support for disabled components
+### `fireEvent` support for disabled components
 
 To improve compatibility with the real React Native environment `fireEvent` now performs checks whether the component is "disabled" before firing an event on it. It uses the Responder system to establish should the event fire, which resembles the actual React Native runtime closer than we used to.
 
 If your code contained any workarounds for preventing events firing on disabled events, you should now be able to remove them.
 
-# Guide for `@testing-library/react-native` users
+## Guide for `@testing-library/react-native` users
 
 This guide describes steps necessary to migrate from `@testing-library/react-native` from `v6.0` to `v7.0`. Although the name stays the same, this is a different library, sourced at [Callstack GitHub repository](https://github.com/callstack/react-native-testing-library). We made sure the upgrade path is as easy for you as possible.
 
-## Renaming "wait" helpers
+### Renaming "wait" helpers
 
 The `wait` and `waitForElement` helpers are replaced by `waitFor`. Please rename all occurrences of these in your codebase.
 
-## Changes to `ByTestId` queries
+### Changes to `ByTestId` queries
 
 The `ByTestId` queries don't accept RegExps. Please use strings instead. We're happy to accept PRs adding this functionality :).
 
-## No `ByTitle` queries
+### No `ByTitle` queries
 
 Our library doesn't implement `ByTitle` queries, which are targetting components with `title` prop, specifically `Button` and `RefreshControl`. If your tests only use `ByTitle` to target `Button` components, you can replace them with `ByText` queries, since React Native renders `Text` under the hood.
 
 If you need to query `RefreshControl` component and can't figure out other way around it, you can use e.g. `UNSAFE_getByProps({title})` query.
 
-## No custom Jest configuration
+### No custom Jest configuration
 
 Use the official React Native preset for Jest:
 
@@ -83,7 +83,7 @@ Use the official React Native preset for Jest:
 
 We're told this also speeds up your tests startup on cold cache. Using official preset has another benefit – the library is compatible with any version of React Native without introducing breaking changes.
 
-## Cleanup is included by default
+### Cleanup is included by default
 
 Cleaning up (unmounting) components after each test is included by default in the same manner as in React Testing Library. Please remove this setup file from Jest config:
 
@@ -97,15 +97,15 @@ Cleaning up (unmounting) components after each test is included by default in th
 
 You can opt-out of this behavior by running tests with `RNTL_SKIP_AUTO_CLEANUP=true` flag or importing from `@testing-library/react-native/pure`. We encourage you to keep the default though.
 
-## No [NativeTestInstance](https://www.native-testing-library.com/docs/api-test-instance) abstraction
+### No [NativeTestInstance](https://www.native-testing-library.com/docs/api-test-instance) abstraction
 
 We don't provide any abstraction over `ReactTestInstance` returned by queries, but allow to use it directly to access queried component's `props` or `type` for that example.
 
-## No `container` nor `baseElement` returned from `render`
+### No `container` nor `baseElement` returned from `render`
 
 There's no `container` returned from the `render` function. If you must, use `react-test-renderer` directly, although we advise against doing so. We also don't implement `baseElement` because of that, since there's no `document.documentElement` nor `container`.
 
-## Firing events changes
+### Firing events changes
 
 There are slight differences in how `fireEvent` works in both libraries:
 
