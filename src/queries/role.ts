@@ -2,6 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import {
   accessibilityStateKeys,
   accessiblityValueKeys,
+  getAccessibilityRole,
   isAccessibilityElement,
 } from '../helpers/accessiblity';
 import { findAll } from '../helpers/findAll';
@@ -68,7 +69,7 @@ const queryAllByRole = (
       (node) =>
         // run the cheapest checks first, and early exit to avoid unneeded computations
         isAccessibilityElement(node) &&
-        matchStringProp(node.props.accessibilityRole, role) &&
+        matchStringProp(getAccessibilityRole(node), role) &&
         matchAccessibleStateIfNeeded(node, options) &&
         matchAccessibilityValueIfNeeded(node, options?.value) &&
         matchAccessibleNameIfNeeded(node, options?.name),

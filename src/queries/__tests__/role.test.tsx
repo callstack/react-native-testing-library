@@ -86,6 +86,30 @@ test('getAllByRole, queryAllByRole, findAllByRole', async () => {
   );
 });
 
+test('supports role prop', () => {
+  const screen = render(
+    <>
+      <View accessible role="checkbox" />
+      <View accessible role="radio" />
+      <View accessible role="switch" />
+      <View accessible role="tab" />
+      <Text role="alert" />
+      <Text role="heading" />
+      <Text role="searchbox" />
+      <Pressable role="button" />
+    </>
+  );
+
+  expect(screen.getByRole('checkbox')).toBeTruthy();
+  expect(screen.getByRole('radio')).toBeTruthy();
+  expect(screen.getByRole('switch')).toBeTruthy();
+  expect(screen.getByRole('tab')).toBeTruthy();
+  expect(screen.getByRole('alert')).toBeTruthy();
+  expect(screen.getByRole('heading')).toBeTruthy();
+  expect(screen.getByRole('searchbox')).toBeTruthy();
+  expect(screen.getByRole('button')).toBeTruthy();
+});
+
 describe('supports name option', () => {
   test('returns an element that has the corresponding role and a children with the name', () => {
     const { getByRole } = render(

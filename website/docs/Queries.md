@@ -30,8 +30,8 @@ title: Queries
   - [Precision](#precision)
   - [Normalization](#normalization)
 - [Unit testing helpers](#unit-testing-helpers)
-  - [`UNSAFE_ByType`](#unsafe_bytype)
-  - [`UNSAFE_ByProps`](#unsafe_byprops)
+  - [`UNSAFE_ByType`](#unsafebytype)
+  - [`UNSAFE_ByProps`](#unsafebyprops)
 
 ## Variants
 
@@ -116,7 +116,7 @@ getByRole(
 ): ReactTestInstance;
 ```
 
-Returns a `ReactTestInstance` with matching `accessibilityRole` prop.
+Returns a `ReactTestInstance` with matching `role` or `accessibilityRole` prop.
 
 :::info
 In order for `*ByRole` queries to match an element it needs to be considered an accessibility element:
@@ -140,7 +140,7 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 
 #### Options
 
-`name`: Finds an element with given `accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
+`name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
 
 `disabled`: You can filter elements by their disabled state. The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
 
