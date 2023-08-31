@@ -18,6 +18,7 @@ describe('printing element tree', () => {
   test('prints helpful props but not others', async () => {
     const { getByText } = render(
       <View
+        aria-hidden
         accessibilityElementsHidden
         accessibilityViewIsModal
         importantForAccessibility="yes"
@@ -48,6 +49,7 @@ describe('printing element tree', () => {
         accessibilityLabelledBy="LABELLED_BY"
         accessibilityRole="summary"
         accessibilityViewIsModal={true}
+        aria-hidden={true}
         importantForAccessibility="yes"
         nativeID="NATIVE_ID"
         testID="TEST_ID"

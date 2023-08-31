@@ -62,6 +62,7 @@ function isSubtreeInaccessible(element: ReactTestInstance): boolean {
     return false;
   }
 
+  // See: https://reactnative.dev/docs/accessibility#aria-hidden
   if (element.props['aria-hidden']) {
     return true;
   }
