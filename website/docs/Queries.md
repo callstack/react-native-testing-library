@@ -107,7 +107,7 @@ const element2 = screen.getByRole('button', { name: 'Hello' });
 const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 ```
 
-#### Options
+#### Options {#byrole-options}
 
 `name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
 

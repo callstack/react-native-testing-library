@@ -43,7 +43,7 @@ Latest `render` result is kept in [`screen`](#screen) variable that can be impor
 Using `screen` instead of destructuring `render` result is recommended approach. See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
 :::
 
-### Options
+### Options {#render-options}
 
 The behavior of `render` method can be customized by passing various options as a second argument of `RenderOptions` type:
 
