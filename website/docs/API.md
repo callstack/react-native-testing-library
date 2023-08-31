@@ -77,7 +77,7 @@ This **experimental** option allows you to replicate React Native behavior of th
 
 This check is not enforced by React Test Renderer and hence by default React Native Testing Library also does not check this. That might result in runtime errors when running your code on a device, while the code works without errors in tests.
 
-### `...queries` functions
+### `...queries`
 
 The most important feature of `render` is providing a set of helpful queries that allow you to find certain elements in the view hierarchy.
 
@@ -91,7 +91,7 @@ import { render } from '@testing-library/react-native';
 const { getByText, queryByA11yState } = render(<Component />);
 ```
 
-### `update` function
+### `update`
 
 _Also available under `rerender` alias_
 
@@ -104,7 +104,7 @@ Re-render the in-memory tree with a new root element. This simulates a React upd
 
 [Example code](https://github.com/callstack/react-native-testing-library/blob/f96d782d26dd4815dbfd01de6ef7a647efd1f693/src/__tests__/act.test.js#L31-L37)
 
-### `unmount` function
+### `unmount`
 
 ```ts
 unmount(): void
@@ -116,7 +116,7 @@ Unmount the in-memory tree, triggering the appropriate lifecycle events.
 Usually you should not need to call `unmount` as it is done automatically if your test runner supports `afterEach` hook (like Jest, mocha, Jasmine).
 :::
 
-### `debug` function
+### `debug`
 
 ```ts
 interface DebugOptions {
@@ -187,7 +187,7 @@ debug({ mapProps: ({ path, ...props }) => ({ ...props }) });
 
 Pretty prints shallowly rendered component passed to `render` with optional message on top.
 
-### `toJSON` function
+### `toJSON`
 
 ```ts
 toJSON(): ReactTestRendererJSON | null
@@ -195,7 +195,7 @@ toJSON(): ReactTestRendererJSON | null
 
 Get the rendered component JSON representation, e.g. for snapshot testing.
 
-### `root` element
+### `root`
 
 ```ts
 root: ReactTestInstance;
@@ -205,7 +205,7 @@ Returns the rendered root [host element](testing-env#host-and-composite-componen
 
 This API is primarily useful in component tests, as it allows you to access root host view without using `*ByTestId` queries or similar methods.
 
-### `UNSAFE_root` element
+### `UNSAFE_root`
 
 ```ts
 UNSAFE_root: ReactTestInstance;
@@ -221,7 +221,7 @@ This API typically will return a composite view which goes against recommended t
 This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/api#container-1). However, despite the same name, the actual behavior has been signficantly different, hence the name change to `UNSAFE_root`.
 :::
 
-## `screen` object
+## `screen` API
 
 ```ts
 let screen: RenderResult;
