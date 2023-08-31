@@ -437,3 +437,125 @@ test('error message renders the element tree, preserving only helpful props', as
     </Text>"
   `);
 });
+
+describe('aria-disabled prop', () => {
+  test('supports aria-disabled={true} prop', () => {
+    const screen = render(<View accessible aria-disabled={true} />);
+    expect(screen.getByAccessibilityState({ disabled: true })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ disabled: false })).toBeNull();
+  });
+
+  test('supports aria-disabled={false} prop', () => {
+    const screen = render(<View accessible aria-disabled={false} />);
+    expect(screen.getByAccessibilityState({ disabled: false })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ disabled: true })).toBeNull();
+  });
+
+  test('supports default aria-disabled prop', () => {
+    const screen = render(<View accessible />);
+    expect(screen.getByAccessibilityState({ disabled: false })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ disabled: true })).toBeNull();
+  });
+});
+
+describe('aria-selected prop', () => {
+  test('supports aria-selected={true} prop', () => {
+    const screen = render(<View accessible aria-selected={true} />);
+    expect(screen.getByAccessibilityState({ selected: true })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ selected: false })).toBeNull();
+  });
+
+  test('supports aria-selected={false} prop', () => {
+    const screen = render(<View accessible aria-selected={false} />);
+    expect(screen.getByAccessibilityState({ selected: false })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ selected: true })).toBeNull();
+  });
+
+  test('supports default aria-selected prop', () => {
+    const screen = render(<View accessible />);
+    expect(screen.getByAccessibilityState({ selected: false })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ selected: true })).toBeNull();
+  });
+});
+
+describe('aria-checked prop', () => {
+  test('supports aria-checked={true} prop', () => {
+    const screen = render(
+      <View accessible accessibilityRole="button" aria-checked={true} />
+    );
+    expect(screen.getByAccessibilityState({ checked: true })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
+    expect(screen.queryByAccessibilityState({ checked: 'mixed' })).toBeNull();
+  });
+
+  test('supports aria-checked={false} prop', () => {
+    const screen = render(
+      <View accessible accessibilityRole="button" aria-checked={false} />
+    );
+    expect(screen.getByAccessibilityState({ checked: false })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
+    expect(screen.queryByAccessibilityState({ checked: 'mixed' })).toBeNull();
+  });
+
+  test('supports aria-checked="mixed prop', () => {
+    const screen = render(
+      <View accessible accessibilityRole="button" aria-checked="mixed" />
+    );
+    expect(screen.getByAccessibilityState({ checked: 'mixed' })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
+    expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
+  });
+
+  test('supports default aria-selected prop', () => {
+    const screen = render(<View accessible accessibilityRole="button" />);
+    expect(screen.getByAccessibilityState({})).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
+    expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
+    expect(screen.queryByAccessibilityState({ checked: 'mixed' })).toBeNull();
+  });
+});
+
+describe('aria-busy prop', () => {
+  test('supports aria-busy={true} prop', () => {
+    const screen = render(<View accessible aria-busy={true} />);
+    expect(screen.getByAccessibilityState({ busy: true })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ busy: false })).toBeNull();
+  });
+
+  test('supports aria-busy={false} prop', () => {
+    const screen = render(<View accessible aria-busy={false} />);
+    expect(screen.getByAccessibilityState({ busy: false })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ busy: true })).toBeNull();
+  });
+
+  test('supports default aria-busy prop', () => {
+    const screen = render(<View accessible />);
+    expect(screen.getByAccessibilityState({ busy: false })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ busy: true })).toBeNull();
+  });
+});
+
+describe('aria-expanded prop', () => {
+  test('supports aria-expanded={true} prop', () => {
+    const screen = render(
+      <View accessible accessibilityRole="button" aria-expanded={true} />
+    );
+    expect(screen.getByAccessibilityState({ expanded: true })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ expanded: false })).toBeNull();
+  });
+
+  test('supports aria-expanded={false} prop', () => {
+    const screen = render(
+      <View accessible accessibilityRole="button" aria-expanded={false} />
+    );
+    expect(screen.getByAccessibilityState({ expanded: false })).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ expanded: true })).toBeNull();
+  });
+
+  test('supports default aria-expanded prop', () => {
+    const screen = render(<View accessible accessibilityRole="button" />);
+    expect(screen.getByAccessibilityState({})).toBeTruthy();
+    expect(screen.queryByAccessibilityState({ expanded: true })).toBeNull();
+    expect(screen.queryByAccessibilityState({ expanded: false })).toBeNull();
+  });
+});

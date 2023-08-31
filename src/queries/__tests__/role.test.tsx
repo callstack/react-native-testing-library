@@ -339,6 +339,28 @@ describe('supports accessibility states', () => {
         getByRole('button', { name: 'RNButton', disabled: true })
       ).toBeTruthy();
     });
+
+    test('supports aria-disabled={true} prop', () => {
+      const screen = render(
+        <View accessible accessibilityRole="button" aria-disabled={true} />
+      );
+      expect(screen.getByRole('button', { disabled: true })).toBeTruthy();
+      expect(screen.queryByRole('button', { disabled: false })).toBeNull();
+    });
+
+    test('supports aria-disabled={false} prop', () => {
+      const screen = render(
+        <View accessible accessibilityRole="button" aria-disabled={false} />
+      );
+      expect(screen.getByRole('button', { disabled: false })).toBeTruthy();
+      expect(screen.queryByRole('button', { disabled: true })).toBeNull();
+    });
+
+    test('supports default aria-disabled prop', () => {
+      const screen = render(<View accessible accessibilityRole="button" />);
+      expect(screen.getByRole('button', { disabled: false })).toBeTruthy();
+      expect(screen.queryByRole('button', { disabled: true })).toBeNull();
+    });
   });
 
   describe('selected', () => {
@@ -405,6 +427,28 @@ describe('supports accessibility states', () => {
       );
 
       expect(queryByRole('tab', { selected: false })).toBe(null);
+    });
+
+    test('supports aria-selected={true} prop', () => {
+      const screen = render(
+        <View accessible accessibilityRole="button" aria-selected={true} />
+      );
+      expect(screen.getByRole('button', { selected: true })).toBeTruthy();
+      expect(screen.queryByRole('button', { selected: false })).toBeNull();
+    });
+
+    test('supports aria-selected={false} prop', () => {
+      const screen = render(
+        <View accessible accessibilityRole="button" aria-selected={false} />
+      );
+      expect(screen.getByRole('button', { selected: false })).toBeTruthy();
+      expect(screen.queryByRole('button', { selected: true })).toBeNull();
+    });
+
+    test('supports default aria-selected prop', () => {
+      const screen = render(<View accessible accessibilityRole="button" />);
+      expect(screen.getByRole('button', { selected: false })).toBeTruthy();
+      expect(screen.queryByRole('button', { selected: true })).toBeNull();
     });
   });
 
@@ -508,6 +552,41 @@ describe('supports accessibility states', () => {
 
       expect(queryByRole('checkbox', { checked: false })).toBe(null);
     });
+
+    test('supports aria-checked={true} prop', () => {
+      const screen = render(
+        <View accessible accessibilityRole="button" aria-checked={true} />
+      );
+      expect(screen.getByRole('button', { checked: true })).toBeTruthy();
+      expect(screen.queryByRole('button', { checked: false })).toBeNull();
+      expect(screen.queryByRole('button', { checked: 'mixed' })).toBeNull();
+    });
+
+    test('supports aria-checked={false} prop', () => {
+      const screen = render(
+        <View accessible accessibilityRole="button" aria-checked={false} />
+      );
+      expect(screen.getByRole('button', { checked: false })).toBeTruthy();
+      expect(screen.queryByRole('button', { checked: true })).toBeNull();
+      expect(screen.queryByRole('button', { checked: 'mixed' })).toBeNull();
+    });
+
+    test('supports aria-checked="mixed prop', () => {
+      const screen = render(
+        <View accessible accessibilityRole="button" aria-checked="mixed" />
+      );
+      expect(screen.getByRole('button', { checked: 'mixed' })).toBeTruthy();
+      expect(screen.queryByRole('button', { checked: true })).toBeNull();
+      expect(screen.queryByRole('button', { checked: false })).toBeNull();
+    });
+
+    test('supports default aria-selected prop', () => {
+      const screen = render(<View accessible accessibilityRole="button" />);
+      expect(screen.getByRole('button')).toBeTruthy();
+      expect(screen.queryByRole('button', { checked: true })).toBeNull();
+      expect(screen.queryByRole('button', { checked: false })).toBeNull();
+      expect(screen.queryByRole('button', { checked: 'mixed' })).toBeNull();
+    });
   });
 
   describe('busy', () => {
@@ -575,6 +654,28 @@ describe('supports accessibility states', () => {
 
       expect(queryByRole('button', { selected: false })).toBe(null);
     });
+
+    test('supports aria-busy={true} prop', () => {
+      const screen = render(
+        <View accessible accessibilityRole="button" aria-busy={true} />
+      );
+      expect(screen.getByRole('button', { busy: true })).toBeTruthy();
+      expect(screen.queryByRole('button', { busy: false })).toBeNull();
+    });
+
+    test('supports aria-busy={false} prop', () => {
+      const screen = render(
+        <View accessible accessibilityRole="button" aria-busy={false} />
+      );
+      expect(screen.getByRole('button', { busy: false })).toBeTruthy();
+      expect(screen.queryByRole('button', { busy: true })).toBeNull();
+    });
+
+    test('supports default aria-busy prop', () => {
+      const screen = render(<View accessible accessibilityRole="button" />);
+      expect(screen.getByRole('button', { busy: false })).toBeTruthy();
+      expect(screen.queryByRole('button', { busy: true })).toBeNull();
+    });
   });
 
   describe('expanded', () => {
@@ -640,6 +741,29 @@ describe('supports accessibility states', () => {
       );
 
       expect(queryByRole('button', { expanded: false })).toBe(null);
+    });
+
+    test('supports aria-expanded={true} prop', () => {
+      const screen = render(
+        <View accessible accessibilityRole="button" aria-expanded={true} />
+      );
+      expect(screen.getByRole('button', { expanded: true })).toBeTruthy();
+      expect(screen.queryByRole('button', { expanded: false })).toBeNull();
+    });
+
+    test('supports aria-expanded={false} prop', () => {
+      const screen = render(
+        <View accessible accessibilityRole="button" aria-expanded={false} />
+      );
+      expect(screen.getByRole('button', { expanded: false })).toBeTruthy();
+      expect(screen.queryByRole('button', { expanded: true })).toBeNull();
+    });
+
+    test('supports default aria-expanded prop', () => {
+      const screen = render(<View accessible accessibilityRole="button" />);
+      expect(screen.getByRole('button')).toBeTruthy();
+      expect(screen.queryByRole('button', { expanded: true })).toBeNull();
+      expect(screen.queryByRole('button', { expanded: false })).toBeNull();
     });
   });
 

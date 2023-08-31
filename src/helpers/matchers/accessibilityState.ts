@@ -1,6 +1,6 @@
 import { AccessibilityState } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
-import { accessibilityStateKeys } from '../accessiblity';
+import { accessibilityStateKeys, getAccessibilityState } from '../accessiblity';
 
 // This type is the same as AccessibilityState from `react-native` package
 // It is re-declared here due to issues with migration from `@types/react-native` to
@@ -32,13 +32,13 @@ export function matchAccessibilityState(
   node: ReactTestInstance,
   matcher: AccessibilityStateMatcher
 ) {
-  const state = node.props.accessibilityState;
-  return accessibilityStateKeys.every((key) => matchState(state, matcher, key));
+  const state = getAccessibilityState(node);
+  return accessibilityStateKeys.every((key) => matchState(matcher, state, key));
 }
 
 function matchState(
-  state: AccessibilityState,
   matcher: AccessibilityStateMatcher,
+  state: AccessibilityState | undefined,
   key: keyof AccessibilityState
 ) {
   return (

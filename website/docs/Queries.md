@@ -30,8 +30,8 @@ title: Queries
   - [Precision](#precision)
   - [Normalization](#normalization)
 - [Unit testing helpers](#unit-testing-helpers)
-  - [`UNSAFE_ByType`](#unsafe_bytype)
-  - [`UNSAFE_ByProps`](#unsafe_byprops)
+  - [`UNSAFE_ByType`](#unsafebytype)
+  - [`UNSAFE_ByProps`](#unsafebyprops)
 
 ## Variants
 
@@ -142,15 +142,15 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 
 `name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
 
-`disabled`: You can filter elements by their disabled state. The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
+`disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessbilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
 
-`selected`: You can filter elements by their selected state. The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
+`selected`: You can filter elements by their selected state (coming either from `aria-selected` prop or `accessbilityState.selected` prop). The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
 
-`checked`: You can filter elements by their checked state. The possible values are `true`, `false`, or `"mixed"`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
+`checked`: You can filter elements by their checked state (coming either from `aria-checked` prop or `accessbilityState.checked` prop). The possible values are `true`, `false`, or `"mixed"`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
 
-`busy`: You can filter elements by their busy state. The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
+`busy`: You can filter elements by their busy state (coming either from `aria-busy` prop or `accessbilityState.busy` prop). The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
 
-`expanded`: You can filter elements by their expanded state. The possible values are `true` or `false`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
+`expanded`: You can filter elements by their expanded state (coming either from `aria-expanded` prop or `accessbilityState.expanded` prop). The possible values are `true` or `false`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
 
 `value`: Filter elements by their accessibility, available value entries include numeric `min`, `max` & `now`, as well as string or regex `text` key. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about this prop.
 
@@ -331,8 +331,8 @@ getByA11yState(
     disabled?: boolean,
     selected?: boolean,
     checked?: boolean | 'mixed',
-    expanded?: boolean,
     busy?: boolean,
+    expanded?: boolean,
   },
   options?: {
     includeHiddenElements?: boolean;
@@ -340,7 +340,7 @@ getByA11yState(
 ): ReactTestInstance;
 ```
 
-Returns a `ReactTestInstance` with matching `accessibilityState` prop.
+Returns a `ReactTestInstance` with matching `accessibilityState` prop or ARIA state props: `aria-disabled`, `aria-selected`, `aria-checked`,  `aria-busy`, and `aria-expanded`.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
