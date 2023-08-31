@@ -35,9 +35,11 @@ export function toBeChecked(
   };
 }
 
-const VALID_ROLES = new Set(['checkbox', 'radio']);
-
 function hasValidAccessibilityRole(element: ReactTestInstance) {
+  if (!isAccessibilityElement(element)) {
+    return false;
+  }
+
   const role = getAccessibilityRole(element);
-  return isAccessibilityElement(element) && VALID_ROLES.has(role);
+  return role === 'checkbox' || role === 'radio';
 }

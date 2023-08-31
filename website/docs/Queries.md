@@ -121,7 +121,7 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 
 `expanded`: You can filter elements by their expanded state (coming either from `aria-expanded` prop or `accessbilityState.expanded` prop). The possible values are `true` or `false`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
 
-`value`: Filter elements by their accessibility value, based on either `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` or accessibilityValue props. Accessiblity value conceptually consist of numeric `min`, `max` and `now` values, as well as string `text` value. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about the accessibility value.
+`value`: Filter elements by their accessibility value, based on either `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` or `accessibilityValue` props. Accessiblity value conceptually consists of numeric `min`, `max` and `now` entries, as well as string `text` entry. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about the accessibility value concept.
 
 ### `ByText`
 

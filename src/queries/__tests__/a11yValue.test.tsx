@@ -308,23 +308,23 @@ test('error message renders the element tree, preserving only helpful props', as
   `);
 });
 
-describe('getByAccessibilityValue "aria-value*" props', () => {
-  test('supports aria-valuemax', () => {
+describe('getByAccessibilityValue supports "aria-*" props', () => {
+  test('supports "aria-valuemax"', () => {
     const screen = render(<View aria-valuemax={10} />);
     expect(screen.getByAccessibilityValue({ max: 10 })).toBeTruthy();
   });
 
-  test('supports aria-valuemin', () => {
+  test('supports "aria-valuemin"', () => {
     const screen = render(<View aria-valuemin={20} />);
     expect(screen.getByAccessibilityValue({ min: 20 })).toBeTruthy();
   });
 
-  test('supports aria-valuenow', () => {
+  test('supports "aria-valuenow"', () => {
     const screen = render(<View aria-valuenow={30} />);
     expect(screen.getByAccessibilityValue({ now: 30 })).toBeTruthy();
   });
 
-  test('supports aria-valuetext', () => {
+  test('supports "aria-valuetext"', () => {
     const screen = render(<View aria-valuetext="Hello World" />);
     expect(
       screen.getByAccessibilityValue({ text: 'Hello World' })
@@ -332,7 +332,7 @@ describe('getByAccessibilityValue "aria-value*" props', () => {
     expect(screen.getByAccessibilityValue({ text: /hello/i })).toBeTruthy();
   });
 
-  test('supports multiple aria-value* props', () => {
+  test('supports multiple "aria-value*" props', () => {
     const screen = render(
       <View aria-valuenow={50} aria-valuemin={0} aria-valuemax={100} />
     );
