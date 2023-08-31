@@ -10,11 +10,11 @@ const TEXT_HINT = 'static text';
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
 const getMultipleInstancesFoundMessage = (value: string) => {
-  return `Found multiple elements with accessibilityLabel: ${value}`;
+  return `Found multiple elements with accessibility label: ${value}`;
 };
 
 const getNoInstancesFoundMessage = (value: string) => {
-  return `Unable to find an element with accessibilityLabel: ${value}`;
+  return `Unable to find an element with accessibility label: ${value}`;
 };
 
 const Typography = ({ children, ...rest }: any) => {
@@ -161,7 +161,7 @@ test('byLabelText queries support hidden option', () => {
   ).toBeFalsy();
   expect(() => getByLabelText('hidden', { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with accessibilityLabel: hidden
+    "Unable to find an element with accessibility label: hidden
 
     <Text
       accessibilityLabel="hidden"
@@ -174,6 +174,24 @@ test('byLabelText queries support hidden option', () => {
       Hidden from accessibility
     </Text>"
   `);
+});
+
+test('getByLabelText supports aria-label', async () => {
+  const screen = render(
+    <>
+      <View testID="view" aria-label="view-label" />
+      <Text testID="text" aria-label="text-label">
+        Text
+      </Text>
+      <TextInput testID="text-input" aria-label="text-input-label" />
+    </>
+  );
+
+  expect(screen.getByLabelText('view-label')).toBe(screen.getByTestId('view'));
+  expect(screen.getByLabelText('text-label')).toBe(screen.getByTestId('text'));
+  expect(screen.getByLabelText('text-input-label')).toBe(
+    screen.getByTestId('text-input')
+  );
 });
 
 test('getByLabelText supports accessibilityLabelledBy', async () => {
@@ -202,11 +220,45 @@ test('getByLabelText supports nested accessibilityLabelledBy', async () => {
   expect(getByLabelText(/input/)).toBe(getByTestId('textInput'));
 });
 
+test('getByLabelText supports aria-labelledby', async () => {
+  const screen = render(
+    <>
+      <Text nativeID="label">Text Label</Text>
+      <TextInput testID="text-input" aria-labelledby="label" />
+    </>
+  );
+
+  expect(screen.getByLabelText('Text Label')).toBe(
+    screen.getByTestId('text-input')
+  );
+  expect(screen.getByLabelText(/text label/i)).toBe(
+    screen.getByTestId('text-input')
+  );
+});
+
+test('getByLabelText supports nested aria-labelledby', async () => {
+  const screen = render(
+    <>
+      <View nativeID="label">
+        <Text>Nested Text Label</Text>
+      </View>
+      <TextInput testID="text-input" aria-labelledby="label" />
+    </>
+  );
+
+  expect(screen.getByLabelText('Nested Text Label')).toBe(
+    screen.getByTestId('text-input')
+  );
+  expect(screen.getByLabelText(/nested text label/i)).toBe(
+    screen.getByTestId('text-input')
+  );
+});
+
 test('error message renders the element tree, preserving only helpful props', async () => {
   const view = render(<TouchableOpacity accessibilityLabel="LABEL" key="3" />);
 
   expect(() => view.getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with accessibilityLabel: FOO
+    "Unable to find an element with accessibility label: FOO
 
     <View
       accessibilityLabel="LABEL"
@@ -215,7 +267,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
   expect(() => view.getAllByLabelText('FOO'))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with accessibilityLabel: FOO
+    "Unable to find an element with accessibility label: FOO
 
     <View
       accessibilityLabel="LABEL"
@@ -224,7 +276,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
   await expect(view.findByLabelText('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with accessibilityLabel: FOO
+    "Unable to find an element with accessibility label: FOO
 
     <View
       accessibilityLabel="LABEL"
@@ -233,7 +285,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
   await expect(view.findAllByLabelText('FOO')).rejects
     .toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with accessibilityLabel: FOO
+    "Unable to find an element with accessibility label: FOO
 
     <View
       accessibilityLabel="LABEL"

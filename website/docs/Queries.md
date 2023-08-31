@@ -30,8 +30,8 @@ title: Queries
   - [Precision](#precision)
   - [Normalization](#normalization)
 - [Unit testing helpers](#unit-testing-helpers)
-  - [`UNSAFE_ByType`](#unsafebytype)
-  - [`UNSAFE_ByProps`](#unsafebyprops)
+  - [`UNSAFE_ByType`](#unsafe_bytype)
+  - [`UNSAFE_ByProps`](#unsafe_byprops)
 
 ## Variants
 
@@ -272,8 +272,8 @@ getByLabelText(
 ```
 
 Returns a `ReactTestInstance` with matching label:
-- either by matching [`accessibilityLabel`](https://reactnative.dev/docs/accessibility#accessibilitylabel) prop
-- or by matching text content of view referenced by [`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
+- either by matching [`aria-label`](https://reactnative.dev/docs/accessibility#aria-label)/[`accessibilityLabel`](https://reactnative.dev/docs/accessibility#accessibilitylabel) prop
+- or by matching text content of view referenced by [`aria-labelledby`](https://reactnative.dev/docs/accessibility#aria-labelledby-android)/[`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';

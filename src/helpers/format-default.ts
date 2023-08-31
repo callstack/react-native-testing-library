@@ -2,21 +2,23 @@ import { StyleSheet, ViewStyle } from 'react-native';
 import { MapPropsFunction } from './format';
 
 const propsToDisplay = [
-  'testID',
-  'nativeID',
   'accessibilityElementsHidden',
-  'accessibilityViewIsModal',
-  'importantForAccessibility',
-  'accessibilityRole',
+  'accessibilityHint',
   'accessibilityLabel',
   'accessibilityLabelledBy',
-  'accessibilityHint',
-  'role',
+  'accessibilityRole',
+  'accessibilityViewIsModal',
   'aria-hidden',
-  'placeholder',
-  'value',
+  'aria-label',
+  'aria-labelledby',
   'defaultValue',
+  'importantForAccessibility',
+  'nativeID',
+  'placeholder',
+  'role',
+  'testID',
   'title',
+  'value',
 ];
 
 /**
