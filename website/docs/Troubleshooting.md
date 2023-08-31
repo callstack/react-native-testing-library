@@ -2,8 +2,11 @@
 id: troubleshooting
 title: Troubleshooting
 ---
+import TOCInline from '@theme/TOCInline';
 
-This guide describes common issues found by users when integrating React Native Test Library to their projects.
+This guide describes common issues found by users when integrating React Native Test Library to their projects:
+
+<TOCInline toc={toc} />
 
 ## Matching React Native, React & React Test Renderer versions
 

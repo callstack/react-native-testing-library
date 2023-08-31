@@ -24,6 +24,10 @@ const siteConfig = {
         { href: repoUrl, label: 'GitHub', position: 'right' },
       ],
     },
+    tableOfContents: {
+      minHeadingLevel: 2,
+      maxHeadingLevel: 3,
+    },
     footer: {
       style: 'dark',
       links: [

@@ -3,6 +3,10 @@ id: react-navigation
 title: React Navigation
 ---
 
+:::caution
+This examples has not been updated for a long time and not showcase current recommended testing practices. We plan to update this document soon.
+:::
+
 This section deals with integrating `@testing-library/react-native` with `react-navigation`, using Jest.
 
 ## Stack Navigator

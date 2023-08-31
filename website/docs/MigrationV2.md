@@ -5,6 +5,10 @@ title: Migration to 2.0
 
 This guide describes steps necessary to migrate from React Native Testing Library `v1.x` to `v2.0`.
 
+import TOCInline from '@theme/TOCInline';
+
+<TOCInline toc={toc} />
+
 ## Dropping Node 8
 
 Node 8 reached its EOL more than 5 months ago, so it's about time to target the library to Node 10. If you used lower version, you'll have to upgrade to v10, but we recommend using the latest LTS version.

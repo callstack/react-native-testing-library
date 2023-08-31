@@ -2,20 +2,9 @@
 id: user-event
 title: User Event
 ---
+import TOCInline from '@theme/TOCInline';
 
-### Table of contents
-
-- [Comparison with Fire Event API](#comparison-with-fire-event-api)
-- [`setup()`](#setup)
-  - [Options](#options)
-- [`press()`](#press)
-- [`longPress()`](#longpress)
-  - [Options](#options-1)
-- [`type()`](#type)
-  - [Options](#options-2)
-  - [Sequence of events](#sequence-of-events)
-- [`clear()`](#clear)
-  - [Sequence of events](#sequence-of-events-1)
+<TOCInline toc={toc} />
 
 :::caution
 User Event API is in beta stage.

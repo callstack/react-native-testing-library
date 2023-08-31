@@ -2,47 +2,11 @@
 id: api
 title: API
 ---
+import TOCInline from '@theme/TOCInline';
 
-### Table of contents:
+<TOCInline toc={toc} />
 
-- [`render`](#render)
-  - [`render` options](#render-options)
-  - [`...queries`](#queries)
-  - [`update`](#update)
-  - [`unmount`](#unmount)
-  - [`debug`](#debug)
-  - [`toJSON`](#tojson)
-  - [`root`](#root)
-  - [`UNSAFE_root`](#unsaferoot)
-- [`screen`](#screen)
-- [`cleanup`](#cleanup)
-- [`fireEvent`](#fireevent)
-- [`fireEvent[eventName]`](#fireeventeventname)
-  - [`fireEvent.press`](#fireeventpress)
-  - [`fireEvent.changeText`](#fireeventchangetext)
-  - [`fireEvent.scroll`](#fireeventscroll)
-- [`waitFor`](#waitfor)
-  - [Using a React Native version \< 0.71 with Jest fake timers](#using-a-react-native-version--071-with-jest-fake-timers)
-- [`waitForElementToBeRemoved`](#waitforelementtoberemoved)
-- [`within`, `getQueriesForElement`](#within-getqueriesforelement)
-- [`queryBy*` APIs](#queryby-apis)
-- [`queryAll*` APIs](#queryall-apis)
-- [`act`](#act)
-- [`renderHook`](#renderhook)
-  - [`callback`](#callback)
-  - [`options` (Optional)](#options-optional)
-  - [`RenderHookResult` object](#renderhookresult-object)
-  - [Examples](#examples)
-- [Configuration](#configuration)
-  - [`configure`](#configure)
-  - [`resetToDefaults()`](#resettodefaults)
-  - [Environment variables](#environment-variables)
-- [Accessibility](#accessibility)
-  - [`isHiddenFromAccessibility`](#ishiddenfromaccessibility)
-
-This page gathers public API of React Native Testing Library along with usage examples.
-
-## `render`
+## `render` API
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/render.test.tsx)
 
@@ -79,7 +43,7 @@ Latest `render` result is kept in [`screen`](#screen) variable that can be impor
 Using `screen` instead of destructuring `render` result is recommended approach. See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
 :::
 
-### `render` options
+### Options
 
 The behavior of `render` method can be customized by passing various options as a second argument of `RenderOptions` type:
 
@@ -113,7 +77,7 @@ This **experimental** option allows you to replicate React Native behavior of th
 
 This check is not enforced by React Test Renderer and hence by default React Native Testing Library also does not check this. That might result in runtime errors when running your code on a device, while the code works without errors in tests.
 
-### `...queries`
+### `...queries` functions
 
 The most important feature of `render` is providing a set of helpful queries that allow you to find certain elements in the view hierarchy.
 
@@ -127,7 +91,7 @@ import { render } from '@testing-library/react-native';
 const { getByText, queryByA11yState } = render(<Component />);
 ```
 
-### `update`
+### `update` function
 
 _Also available under `rerender` alias_
 
@@ -140,7 +104,7 @@ Re-render the in-memory tree with a new root element. This simulates a React upd
 
 [Example code](https://github.com/callstack/react-native-testing-library/blob/f96d782d26dd4815dbfd01de6ef7a647efd1f693/src/__tests__/act.test.js#L31-L37)
 
-### `unmount`
+### `unmount` function
 
 ```ts
 unmount(): void
@@ -152,7 +116,7 @@ Unmount the in-memory tree, triggering the appropriate lifecycle events.
 Usually you should not need to call `unmount` as it is done automatically if your test runner supports `afterEach` hook (like Jest, mocha, Jasmine).
 :::
 
-### `debug`
+### `debug` function
 
 ```ts
 interface DebugOptions {
@@ -223,7 +187,7 @@ debug({ mapProps: ({ path, ...props }) => ({ ...props }) });
 
 Pretty prints shallowly rendered component passed to `render` with optional message on top.
 
-### `toJSON`
+### `toJSON` function
 
 ```ts
 toJSON(): ReactTestRendererJSON | null
@@ -231,7 +195,7 @@ toJSON(): ReactTestRendererJSON | null
 
 Get the rendered component JSON representation, e.g. for snapshot testing.
 
-### `root`
+### `root` element
 
 ```ts
 root: ReactTestInstance;
@@ -241,7 +205,7 @@ Returns the rendered root [host element](testing-env#host-and-composite-componen
 
 This API is primarily useful in component tests, as it allows you to access root host view without using `*ByTestId` queries or similar methods.
 
-### `UNSAFE_root`
+### `UNSAFE_root` element
 
 ```ts
 UNSAFE_root: ReactTestInstance;
@@ -257,7 +221,7 @@ This API typically will return a composite view which goes against recommended t
 This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/api#container-1). However, despite the same name, the actual behavior has been signficantly different, hence the name change to `UNSAFE_root`.
 :::
 
-## `screen`
+## `screen` object
 
 ```ts
 let screen: RenderResult;
@@ -274,48 +238,7 @@ This can also be used to build test utils that would normally require to be in r
 const debugText = () => screen.debug({ mapProps: (props) => ({}) });
 ```
 
-## `cleanup`
-
-```ts
-const cleanup: () => void;
-```
-
-Unmounts React trees that were mounted with `render` and clears `screen` variable that holds latest `render` output.
-
-:::info
-Please note that this is done automatically if the testing framework you're using supports the `afterEach` global (like mocha, Jest, and Jasmine). If not, you will need to do manual cleanups after each test.
-:::
-
-For example, if you're using the `jest` testing framework, then you would need to use the `afterEach` hook like so:
-
-```jsx
-import { cleanup, render } from '@testing-library/react-native/pure';
-import { View } from 'react-native';
-
-afterEach(cleanup);
-
-it('renders a view', () => {
-  render(<View />);
-  // ...
-});
-```
-
-The `afterEach(cleanup)` call also works in `describe` blocks:
-
-```jsx
-describe('when logged in', () => {
-  afterEach(cleanup);
-
-  it('renders the user', () => {
-    render(<SiteHeader />);
-    // ...
-  });
-});
-```
-
-Failing to call `cleanup` when you've called `render` could result in a memory leak and tests which are not "idempotent" (which can lead to difficult to debug errors in your tests).
-
-## `fireEvent`
+## `fireEvent` API
 
 ```ts
 function fireEvent(
@@ -374,13 +297,7 @@ render(
 fireEvent(screen.getByPlaceholderText('my placeholder'), 'blur');
 ```
 
-## `fireEvent[eventName]`
-
-```ts
-fireEvent[eventName](element: ReactTestInstance, ...data: Array<any>): void
-```
-
-Convenience methods for common events like: `press`, `changeText`, `scroll`.
+FireEvent exposes convenience methods for common events like: `press`, `changeText`, `scroll`.
 
 ### `fireEvent.press`
 
@@ -520,7 +437,9 @@ expect(onEndReached).toHaveBeenCalled();
 If you're noticing that components are not being found on a list, even after mocking a scroll event, try changing the [`initialNumToRender`](https://reactnative.dev/docs/flatlist#initialnumtorender) that you have set. If you aren't comfortable changing the code to accept this prop from the unit test, try using an e2e test that might better suit what use case you're attempting to replicate.
 :::
 
-## `waitFor`
+## Helper functions
+
+### `waitFor`
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitFor.test.tsx)
 
@@ -573,7 +492,7 @@ Avoiding side effects in `expectation` callback can be partially enforced with t
 
 It is also recommended to have a [single assertion per each `waitFor`](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#having-multiple-assertions-in-a-single-waitfor-callback) for more consistency and faster failing tests. If you want to make several assertions, then they should be in seperate `waitFor` calls. In many cases you won't actually need to wrap the second assertion in `waitFor` since the first one will do the waiting required for asynchronous change to happen.
 
-### Using a React Native version < 0.71 with Jest fake timers
+#### Using a React Native version < 0.71 with Jest fake timers
 
 :::caution
 When using a version of React Native < 0.71 and modern fake timers (the default for `Jest` >= 27), `waitFor` won't work (it will always timeout even if `expectation()` doesn't throw) unless you use the custom [@testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset). 
@@ -624,7 +543,7 @@ In order to properly use `waitFor` you need at least React >=16.9.0 (featuring a
 If you receive warnings related to `act()` function consult our [Undestanding Act](./UnderstandingAct.md) function document.
 :::
 
-## `waitForElementToBeRemoved`
+### `waitForElementToBeRemoved`
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitForElementToBeRemoved.test.tsx)
 
@@ -665,7 +584,7 @@ In order to properly use `waitForElementToBeRemoved` you need at least React >=1
 If you receive warnings related to `act()` function consult our [Undestanding Act](./UnderstandingAct.md) function document.
 :::
 
-## `within`, `getQueriesForElement`
+### `within`, `getQueriesForElement`
 
 - [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/within.test.tsx)
 
@@ -696,37 +615,55 @@ Use cases for scoped queries include:
 - queries scoped to a single item inside a FlatList containing many items
 - queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
 
-## `queryBy*` APIs
 
-Each of the `getBy*` APIs listed in the render section above have a complimentary `queryBy*` API. The `getBy*` APIs will throw errors if a proper node cannot be found. This is normally the desired effect. However, if you want to make an assertion that an element is not present in the hierarchy, then you can use the `queryBy*` API instead:
-
-```jsx
-import { render, screen } from '@testing-library/react-native';
-
-render(<Form />);
-const submitButton = screen.queryByText('submit');
-expect(submitButton).not.toBeOnTheScreen(); // it doesn't exist
-```
-
-## `queryAll*` APIs
-
-Each of the query APIs have a corresponding `queryAll*` version that always returns an array of matching nodes. `getAll*` is the same but throws when the array has a length of 0.
-
-```jsx
-import { render } from '@testing-library/react-native';
-
-render(<Forms />);
-const submitButtons = screen.queryAllByText('submit');
-expect(submitButtons).toHaveLength(3); // expect 3 elements
-```
-
-## `act`
+### `act`
 
 Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/main/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
 
 Consult our [Undestanding Act function](./UnderstandingAct.md) document for more understanding of its intricacies.
 
-## `renderHook`
+### `cleanup`
+
+```ts
+const cleanup: () => void;
+```
+
+Unmounts React trees that were mounted with `render` and clears `screen` variable that holds latest `render` output.
+
+:::info
+Please note that this is done automatically if the testing framework you're using supports the `afterEach` global (like mocha, Jest, and Jasmine). If not, you will need to do manual cleanups after each test.
+:::
+
+For example, if you're using the `jest` testing framework, then you would need to use the `afterEach` hook like so:
+
+```jsx
+import { cleanup, render } from '@testing-library/react-native/pure';
+import { View } from 'react-native';
+
+afterEach(cleanup);
+
+it('renders a view', () => {
+  render(<View />);
+  // ...
+});
+```
+
+The `afterEach(cleanup)` call also works in `describe` blocks:
+
+```jsx
+describe('when logged in', () => {
+  afterEach(cleanup);
+
+  it('renders the user', () => {
+    render(<SiteHeader />);
+    // ...
+  });
+});
+```
+
+Failing to call `cleanup` when you've called `render` could result in a memory leak and tests which are not "idempotent" (which can lead to difficult to debug errors in your tests).
+
+## `renderHook` API
 
 Defined as:
 
@@ -767,13 +704,11 @@ export const useCount = () => {
 
 The `renderHook` function accepts the following arguments:
 
-### `callback`
-
-The function that is called each `render` of the test component. This function should call one or more hooks for testing.
+Callback is a function that is called each `render` of the test component. This function should call one or more hooks for testing.
 
 The `props` passed into the callback will be the `initialProps` provided in the `options` to `renderHook`, unless new props are provided by a subsequent `rerender` call.
 
-### `options` (Optional)
+### `options`
 
 A `RenderHookOptions<Props>` object to modify the execution of the `callback` function, containing the following properties:
 
@@ -785,7 +720,7 @@ The initial values to pass as `props` to the `callback` function of `renderHook`
 
 A React component to wrap the test component in when rendering. This is usually used to add context providers from `React.createContext` for the hook to access with `useContext`.
 
-### `RenderHookResult` object
+### `RenderHookResult`
 
 ```ts
 interface RenderHookResult<Result, Props> {
@@ -797,15 +732,15 @@ interface RenderHookResult<Result, Props> {
 
 The `renderHook` function returns an object that has the following properties:
 
-#### `result`
+### `result`
 
 The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`. The `Result` type is determined by the type passed to or inferred by the `renderHook` call.
 
-#### `rerender`
+### `rerender`
 
 A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
 
-#### `unmount`
+### `unmount`
 
 A function to unmount the test component. This is commonly used to trigger cleanup effects for `useEffect` hooks.
 

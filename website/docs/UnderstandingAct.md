@@ -2,10 +2,13 @@
 id: understanding-act
 title: Understanding Act function
 ---
+import TOCInline from '@theme/TOCInline';
 
 When writing RNTL tests one of the things that confuses developers the most are cryptic [`act()`](https://reactjs.org/docs/testing-recipes.html#act) function errors logged into console. In this article I will try to build an understanding of the purpose and behaviour of `act()` so you can build your tests with more confidence.
 
-## The act warnings
+<TOCInline toc={toc} />
+
+## `act` warnings
 
 Let’s start with typical `act()` warnings logged to console. There are two kinds of these issues, let’s call the first one the "sync `act()`" warning:
 
@@ -28,7 +31,7 @@ testing behaviour, interleaving multiple act calls and mixing their scopes. You 
 - await act(async () => ...);
 ```
 
-## Synchronous act
+## Synchronous `act`
 
 ### Responsibility
 
@@ -100,7 +103,7 @@ As of React version of 18.1.0, the `act` implementation is defined in the [React
 
 RNTL exports `act` for convenience of the users as defined in the [act.ts source file](https://github.com/callstack/react-native-testing-library/blob/main/src/act.ts). That file refers to [ReactTestRenderer.js source](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react-test-renderer/src/ReactTestRenderer.js#L52) file from React Test Renderer package, which finally leads to React act implementation in ReactAct.js (already mentioned above).
 
-## Asynchronous act
+## Asynchronous `act`
 
 So far we have seen synchronous version of `act` which runs its callback immediately. This can deal with things like synchronous effects or mocks using already resolved promises. However, not all component code is synchronous. Frequently our components or mocks contain some asynchronous behaviours like `setTimeout` calls or network calls. Starting from React 16.9, `act` can also be called in asynchronous mode. In such case `act` implementation checks that the passed callback returns [object resembling promise](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react/src/ReactAct.js#L60).
 

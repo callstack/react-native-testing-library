@@ -2,63 +2,36 @@
 id: api-queries
 title: Queries
 ---
+import TOCInline from '@theme/TOCInline';
 
-### Table of contents:
+<TOCInline toc={toc} />
 
-- [Variants](#variants)
-  - [getBy](#getby)
-  - [getAllBy](#getallby)
-  - [queryBy](#queryby)
-  - [queryAllBy](#queryallby)
-  - [findBy](#findby)
-  - [findAllBy](#findallby)
-- [Queries](#queries)
-  - [Options](#options)
-  - [`ByRole`](#byrole)
-  - [`ByText`](#bytext)
-  - [`ByPlaceholderText`](#byplaceholdertext)
-  - [`ByDisplayValue`](#bydisplayvalue)
-  - [`ByTestId`](#bytestid)
-  - [`ByLabelText`](#bylabeltext)
-  - [`ByHintText`, `ByA11yHint`, `ByAccessibilityHint`](#byhinttext-bya11yhint-byaccessibilityhint)
-  - [`ByA11yState`, `ByAccessibilityState` (deprecated)](#bya11ystate-byaccessibilitystate-deprecated)
-  - [`ByA11yValue`, `ByAccessibilityValue` (deprecated)](#bya11yvalue-byaccessibilityvalue-deprecated)
-- [Common options](#common-options)
-  - [`includeHiddenElements` option](#includehiddenelements-option)
-- [TextMatch](#textmatch)
-  - [Examples](#examples)
-  - [Precision](#precision)
-  - [Normalization](#normalization)
-- [Unit testing helpers](#unit-testing-helpers)
-  - [`UNSAFE_ByType`](#unsafebytype)
-  - [`UNSAFE_ByProps`](#unsafebyprops)
-
-## Variants
+## Query Variants
 
 > `getBy*` queries are shown by default in the [query documentation](#queries)
 > below.
 
-### getBy
+### `getBy*` queries
 
 `getBy*` queries return the first matching node for a query, and throw an error if no elements match or if more than one match is found. If you need to find more than one element, then use `getAllBy`.
 
-### getAllBy
+### `getAllBy*` queries
 
 `getAllBy*` queries return an array of all matching nodes for a query, and throw an error if no elements match.
 
-### queryBy
+### `queryBy*` queries
 
 `queryBy*` queries return the first matching node for a query, and return `null` if no elements match. This is useful for asserting an element that is not present. This throws if more than one match is found (use `queryAllBy` instead).
 
-### queryAllBy
+### `queryAllBy*` queries
 
 `queryAllBy*` queries return an array of all matching nodes for a query, and return an empty array (`[]`) when no elements match.
 
-### findBy
+### `findBy*` queries
 
 `findBy*` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element, then use `findAllBy*`.
 
-### findAllBy
+### `findAllBy*` queries
 
 `findAllBy*` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
 
@@ -74,7 +47,7 @@ In cases when your `findBy*` and `findAllBy*` queries throw when not able to fin
 In order to properly use `findBy*` and `findAllBy*` queries you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
 :::
 
-## Queries
+## Query Predicates
 
 _Note: most methods like this one return a [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance) with following properties that you may be interested in:_
 
@@ -86,10 +59,6 @@ type ReactTestInstance = {
   children: Array<ReactTestInstance | string>;
 };
 ```
-
-### Options
-
-Usually query first argument can be a **string** or a **regex**. All queries take at least the [`hidden`](#hidden-option) option as an optionnal second argument and some queries accept more options which change string matching behaviour. See [TextMatch](#textmatch) for more info.
 
 ### `ByRole`
 
@@ -416,9 +385,11 @@ const element = screen.getByA11yValue({ now: 25 });
 const element2 = screen.getByA11yValue({ text: /25/ });
 ```
 
-## Common options
+### Common options
 
-### `includeHiddenElements` option
+Usually query first argument can be a **string** or a **regex**. All queries take at least the [`hidden`](#hidden-option) option as an optionnal second argument and some queries accept more options which change string matching behaviour. See [TextMatch](#textmatch) for more info.
+
+#### `includeHiddenElements` option
 
 All queries have the `includeHiddenElements` option which affects whether [elements hidden from accessibility](./API.md#ishiddenfromaccessibility) are matched by the query. By default queries will not match hidden elements, because the users of the app would not be able to see such elements.
 
@@ -443,7 +414,7 @@ expect(
 ).toBeOnTheScreen();
 ```
 
-## TextMatch
+## TextMatch type
 
 ```ts
 type TextMatch = string | RegExp;
@@ -538,7 +509,7 @@ screen.getByText(node, 'text', {
 });
 ```
 
-## Unit testing helpers
+## Legacy unit testing helpers
 
 > Use sparingly and responsibly, escape hatches here
 

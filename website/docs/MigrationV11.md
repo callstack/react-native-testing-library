@@ -2,16 +2,19 @@
 id: migration-v11
 title: Migration to 11.0
 ---
+import TOCInline from '@theme/TOCInline';
 
 Migration to React Native Testing Library version 11 from version 9.x or 10.x should be a relatively easy task due small amount of breaking changes.
 
+<TOCInline toc={toc} />
+
 # Breaking changes
 
-## Update to Jest 28 if you use fake timers
+### Update to Jest 28 if you use fake timers
 
 If you use fake timers in any of your tests you should update your Jest dependencies to version 28. This is due to the fact that [`jest.useFakeTimers()` config structure](https://jestjs.io/docs/jest-object#jestusefaketimersfaketimersconfig) has changed.
 
-## Refactor legacy `waitForOptions` position
+### Refactor legacy `waitForOptions` position
 
 In version 9 we introducted query `options` parameters for each query type. This affected all `findBy` and `findAllBy` queries because their signatures changed e.g. from:
 
@@ -41,13 +44,13 @@ should become
 findByText(/Text/, {}, { timeout: 1000 })
 ```
 
-## Triggering non-touch events on targets with `pointerEvents="box-none"` prop
+### Triggering non-touch events on targets with `pointerEvents="box-none"` prop
 
 Up to version 10, RNTL disables all events for a target with `pointerEvents="box-none"`. This behavior is counter to how React Native itself functions. 
 
 From version 11, RNTL continues to disable `press` event for these targets but allows triggering other events, e.g. `layout`.
 
-# All changes
+## All changes
 
 * chore(breaking): update Jest to 28 by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1008
 * refactor(breaking): remove legacy wait for options support by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1018
@@ -59,6 +62,6 @@ From version 11, RNTL continues to disable `press` event for these targets but a
 * chore: Organise a11y queries by predicate by @MattAgn in https://github.com/callstack/react-native-testing-library/pull/977
 * chore: reenable skipped byText tests by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1017
 
-# Full Changelog
+## Full Changelog
 https://github.com/callstack/react-native-testing-library/compare/v10.1.1...v11.0.0
 
