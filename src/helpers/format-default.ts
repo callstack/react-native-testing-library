@@ -15,6 +15,7 @@ const propsToDisplay = [
   'aria-hidden',
   'aria-label',
   'aria-labelledby',
+  'aria-modal',
   'aria-selected',
   'defaultValue',
   'importantForAccessibility',

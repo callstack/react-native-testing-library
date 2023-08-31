@@ -27,10 +27,21 @@ describe('printing element tree', () => {
         accessibilityHint="HINT"
         accessibilityRole="summary"
         accessibilityViewIsModal
+        aria-busy={false}
+        aria-checked="mixed"
+        aria-disabled={false}
+        aria-expanded={false}
         aria-hidden
         aria-label="ARIA_LABEL"
         aria-labelledby="ARIA_LABELLED_BY"
+        aria-modal
+        aria-selected={false}
+        aria-valuemin={10}
+        aria-valuemax={30}
+        aria-valuenow={20}
+        aria-valuetext="Hello Value"
         importantForAccessibility="yes"
+        role="summary"
       >
         <TextInput
           placeholder="PLACEHOLDER"
@@ -51,11 +62,18 @@ describe('printing element tree', () => {
         accessibilityLabelledBy="LABELLED_BY"
         accessibilityRole="summary"
         accessibilityViewIsModal={true}
+        aria-busy={false}
+        aria-checked="mixed"
+        aria-disabled={false}
+        aria-expanded={false}
         aria-hidden={true}
         aria-label="ARIA_LABEL"
         aria-labelledby="ARIA_LABELLED_BY"
+        aria-modal={true}
+        aria-selected={false}
         importantForAccessibility="yes"
         nativeID="NATIVE_ID"
+        role="summary"
         testID="TEST_ID"
       >
         <TextInput

@@ -10,7 +10,6 @@ const node: ReactTestRendererJSON = {
 describe('mapPropsForQueryError', () => {
   test('preserves props that are helpful for debugging', () => {
     const props = {
-      'aria-hidden': true,
       accessibilityElementsHidden: true,
       accessibilityViewIsModal: true,
       importantForAccessibility: 'yes',
@@ -24,8 +23,10 @@ describe('mapPropsForQueryError', () => {
       'aria-checked': 'ARIA-CHECKED',
       'aria-disabled': 'ARIA-DISABLED',
       'aria-expanded': 'ARIA-EXPANDED',
+      'aria-hidden': true,
       'aria-label': 'ARIA_LABEL',
       'aria-labelledby': 'ARIA_LABELLED_BY',
+      'aria-modal': true,
       'aria-selected': 'ARIA-SELECTED',
       placeholder: 'PLACEHOLDER',
       value: 'VALUE',
