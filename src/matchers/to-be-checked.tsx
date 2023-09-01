@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import { isAccessibilityElement } from '../helpers/accessiblity';
+import { ErrorWithStack } from '../helpers/errors';
 import { formatElement } from './utils';
 
 export function toBeChecked(
@@ -8,12 +9,12 @@ export function toBeChecked(
   element: ReactTestInstance
 ) {
   if (!isValidAccessibilityRole(element)) {
-    return {
-      pass: false,
-      message: () =>
-        `only accessibility element with accessibilityRole="checkbox" or accessibilityRole="radio" can be used with .toBeChecked()`,
-    };
+    throw new ErrorWithStack(
+      `toBeChecked() works only on accessibility element with accessibilityRole="checkbox" or accessibilityRole="radio".`,
+      toBeChecked
+    );
   }
+
   const checkedState = element.props?.accessibilityState?.checked;
   const pass = checkedState === true;
 
@@ -36,11 +37,10 @@ export function toBePartiallyChecked(
   element: ReactTestInstance
 ) {
   if (!isValidAccessibilityRole(element)) {
-    return {
-      pass: false,
-      message: () =>
-        `only accessibility element with accessibilityRole="checkbox" or accessibilityRole="radio" can be used with .toBePartiallyChecked()`,
-    };
+    throw new ErrorWithStack(
+      `toBePartiallyChecked() works only on accessibility element with accessibilityRole="checkbox" or accessibilityRole="radio".`,
+      toBePartiallyChecked
+    );
   }
 
   const checkedState = element.props?.accessibilityState?.checked;
