@@ -171,7 +171,13 @@ describe('printing element tree', () => {
     expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <View>
+      <View
+        style={
+          {
+            "display": "flex",
+          }
+        }
+      >
         <Text
           style={
             {

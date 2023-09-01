@@ -133,9 +133,7 @@ test('toBeVisible() on empty Modal', () => {
 
     Received element is visible:
       <Modal
-        hardwareAccelerated={false}
         testID="modal"
-        visible={true}
       />"
   `);
 });

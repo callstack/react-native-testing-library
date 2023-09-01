@@ -10,6 +10,7 @@ import {
 import prettyFormat, { plugins } from 'pretty-format';
 import redent from 'redent';
 import { isHostElement } from '../helpers/component-tree';
+import { defaultMapProps } from '../helpers/format-default';
 
 class HostElementTypeError extends Error {
   constructor(
@@ -72,6 +73,10 @@ export function formatElement(element: ReactTestInstance | null) {
     return '  null';
   }
 
+  const { children, ...props } = element.props;
+  const childrenToDisplay =
+    typeof children === 'string' ? [children] : undefined;
+
   return redent(
     prettyFormat(
       {
@@ -79,7 +84,8 @@ export function formatElement(element: ReactTestInstance | null) {
         // a ReactTestRendererJSON instance, so it is formatted as JSX.
         $$typeof: Symbol.for('react.test.json'),
         type: element.type,
-        props: element.props,
+        props: defaultMapProps(props),
+        children: childrenToDisplay,
       },
       {
         plugins: [plugins.ReactTestComponent, plugins.ReactElement],

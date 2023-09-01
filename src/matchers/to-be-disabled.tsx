@@ -1,25 +1,9 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import { isHostTextInput } from '../helpers/host-component-names';
-import { checkHostElement, formatMessage } from './utils';
-
-function isElementDisabled(element: ReactTestInstance) {
-  if (isHostTextInput(element) && element?.props?.editable === false) {
-    return true;
-  }
-
-  return (
-    !!element?.props?.['aria-disabled'] ||
-    !!element?.props?.accessibilityState?.disabled
-  );
-}
-
-function isAncestorDisabled(element: ReactTestInstance): boolean {
-  const parent = element.parent;
-  return (
-    parent != null && (isElementDisabled(element) || isAncestorDisabled(parent))
-  );
-}
+import { isTextInputEditable } from '../helpers/text-input';
+import { getHostParent } from '../helpers/component-tree';
+import { checkHostElement, formatElement } from './utils';
 
 export function toBeDisabled(
   this: jest.MatcherContext,
@@ -34,17 +18,10 @@ export function toBeDisabled(
     message: () => {
       const is = isDisabled ? 'is' : 'is not';
       return [
-        formatMessage(
-          matcherHint(
-            `${this.isNot ? '.not' : ''}.toBeDisabled`,
-            'element',
-            ''
-          ),
-          '',
-          '',
-          `Received element ${is} disabled:`,
-          null
-        ),
+        matcherHint(`${this.isNot ? '.not' : ''}.toBeDisabled`, 'element', ''),
+        '',
+        `Received element ${is} disabled:`,
+        formatElement(element),
       ].join('\n');
     },
   };
@@ -63,14 +40,29 @@ export function toBeEnabled(
     message: () => {
       const is = isEnabled ? 'is' : 'is not';
       return [
-        formatMessage(
-          matcherHint(`${this.isNot ? '.not' : ''}.toBeEnabled`, 'element', ''),
-          '',
-          '',
-          `Received element ${is} enabled:`,
-          null
-        ),
+        matcherHint(`${this.isNot ? '.not' : ''}.toBeEnabled`, 'element', ''),
+        '',
+        `Received element ${is} enabled:`,
+        formatElement(element),
       ].join('\n');
     },
   };
+}
+
+function isElementDisabled(element: ReactTestInstance) {
+  if (isHostTextInput(element) && !isTextInputEditable(element)) {
+    return true;
+  }
+
+  const { accessibilityState, 'aria-disabled': ariaDisabled } = element.props;
+  return ariaDisabled ?? accessibilityState?.disabled ?? false;
+}
+
+function isAncestorDisabled(element: ReactTestInstance): boolean {
+  const parent = getHostParent(element);
+  if (parent == null) {
+    return false;
+  }
+
+  return isElementDisabled(parent) || isAncestorDisabled(parent);
 }

@@ -7,6 +7,7 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Text,
   View,
 } from 'react-native';
 import { render } from '../..';
@@ -30,7 +31,72 @@ const ALL_COMPONENTS = {
   ...ARIA_DISABLED_PROP_COMPONENTS,
 };
 
-describe('.toBeDisabled', () => {
+test('toBeDisabled/toBeEnabled works with disabled Pressable', () => {
+  const screen = render(
+    <Pressable disabled testID="subject">
+      <Text>Button</Text>
+    </Pressable>
+  );
+
+  const pressable = screen.getByTestId('subject');
+  expect(pressable).toBeDisabled();
+  expect(pressable).not.toBeEnabled();
+
+  const title = screen.getByText('Button');
+  expect(title).toBeDisabled();
+  expect(title).not.toBeEnabled();
+
+  expect(() => expect(pressable).toBeEnabled())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeEnabled()
+
+    Received element is not enabled:
+      <View
+        accessibilityState={
+          {
+            "disabled": true,
+          }
+        }
+        testID="subject"
+      />"
+  `);
+
+  expect(() => expect(pressable).not.toBeDisabled())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toBeDisabled()
+
+    Received element is disabled:
+      <View
+        accessibilityState={
+          {
+            "disabled": true,
+          }
+        }
+        testID="subject"
+      />"
+  `);
+
+  expect(() => expect(title).toBeEnabled()).toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeEnabled()
+
+    Received element is not enabled:
+      <Text>
+        Button
+      </Text>"
+  `);
+
+  expect(() => expect(title).not.toBeDisabled())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toBeDisabled()
+
+    Received element is disabled:
+      <Text>
+        Button
+      </Text>"
+  `);
+});
+
+describe('toBeDisabled()', () => {
   Object.entries(DISABLED_PROP_COMPONENTS).forEach(([name, Component]) => {
     test(`handle disabled prop for element ${name}`, () => {
       const { queryByTestId } = render(

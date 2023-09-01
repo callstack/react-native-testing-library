@@ -1,5 +1,4 @@
 import { StyleSheet, ViewStyle } from 'react-native';
-import { MapPropsFunction } from './format';
 
 const propsToDisplay = [
   'accessibilityElementsHidden',
@@ -26,15 +25,20 @@ const propsToDisplay = [
   'value',
 ];
 
+const stylePropsToDisplay = ['display', 'opacity'] as const;
+
 /**
  * Preserve props that are helpful in diagnosing test failures, while stripping rest
  */
-export const defaultMapProps: MapPropsFunction = (props) => {
+export function defaultMapProps(
+  props: Record<string, unknown>
+): Record<string, unknown> {
   const result: Record<string, unknown> = {};
 
   const styles = StyleSheet.flatten(props.style as ViewStyle);
-  if (styles?.display === 'none') {
-    result.style = { display: 'none' };
+  const styleToDisplay = extractStyle(styles);
+  if (styleToDisplay !== undefined) {
+    result.style = styleToDisplay;
   }
 
   const accessibilityState = removeUndefinedKeys(props.accessibilityState);
@@ -54,7 +58,7 @@ export const defaultMapProps: MapPropsFunction = (props) => {
   });
 
   return result;
-};
+}
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -65,17 +69,32 @@ function removeUndefinedKeys(prop: unknown) {
     return prop;
   }
 
+  let hasKeys = false;
   const result: Record<string, unknown> = {};
   Object.entries(prop).forEach(([key, value]) => {
     if (value !== undefined) {
       result[key] = value;
+      hasKeys = true;
     }
   });
 
-  // If object does not have any props we will ignore it.
-  if (Object.keys(result).length === 0) {
+  return hasKeys ? result : undefined;
+}
+
+function extractStyle(style: ViewStyle | undefined) {
+  if (style == null) {
     return undefined;
   }
 
-  return result;
+  const result: Record<string, unknown> = {};
+  let hasAnyStyle = false;
+
+  stylePropsToDisplay.forEach((styleProp) => {
+    if (styleProp in style) {
+      result[styleProp] = style[styleProp];
+      hasAnyStyle = true;
+    }
+  });
+
+  return hasAnyStyle ? result : undefined;
 }
