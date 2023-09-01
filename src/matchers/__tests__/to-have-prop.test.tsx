@@ -1,79 +1,87 @@
 import React from 'react';
-import { Button, Text, View } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import { render, screen } from '../..';
 import '../extend-expect';
 
-test('.toHaveProp', () => {
+test('.toHaveProp basic case', () => {
   render(
-    <View style={null} testID="view">
-      <Text allowFontScaling={false} testID="text" ellipsizeMode="head">
-        text
-      </Text>
-      <Button disabled testID="button" title="ok" />
+    <View testID="view" style={null}>
+      <Text ellipsizeMode="head">Hello</Text>
+      <TextInput testID="input" textAlign="right" />
     </View>
   );
 
-  const text = screen.getByTestId('text');
-  const button = screen.getByTestId('button');
+  const view = screen.getByTestId('view');
+  expect(view).toHaveProp('style');
+  expect(view).toHaveProp('style', null);
+  expect(view).not.toHaveProp('ellipsizeMode');
+
+  const text = screen.getByText('Hello');
+  expect(text).toHaveProp('ellipsizeMode');
+  expect(text).toHaveProp('ellipsizeMode', 'head');
+  expect(text).not.toHaveProp('style');
+  expect(text).not.toHaveProp('ellipsizeMode', 'tail');
+
+  const input = screen.getByTestId('input');
+  expect(input).toHaveProp('textAlign');
+  expect(input).toHaveProp('textAlign', 'right');
+  expect(input).not.toHaveProp('textAlign', 'left');
+  expect(input).not.toHaveProp('editable');
+  expect(input).not.toHaveProp('editable', false);
+});
+
+test('.toHaveProp error messages', () => {
+  render(<View testID="view" collapsable={false} />);
+
   const view = screen.getByTestId('view');
 
-  expect(button).toHaveProp('accessibilityState', {
-    disabled: true,
-  });
-  expect(text).toHaveProp('ellipsizeMode', 'head');
-  expect(text).toHaveProp('allowFontScaling', false);
-
-  expect(button).not.toHaveProp('accessibilityStates');
-  expect(button).not.toHaveProp('ellipsizeMode', undefined);
-  expect(button).not.toHaveProp('allowFontScaling', false);
-  expect(text).not.toHaveProp('style');
-
-  // title is no longer findable as it is a React child
-  expect(() => expect(button).toHaveProp('title', 'ok'))
+  expect(() => expect(view).toHaveProp('accessible'))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveProp("title", "ok")
+    "expect(element).toHaveProp("accessible")
 
     Expected element to have prop:
-      title="ok"
+      accessible
     Received:
       undefined"
   `);
-  expect(() => expect(button).toHaveProp('disabled'))
+
+  expect(() => expect(view).toHaveProp('accessible', true))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveProp("disabled")
+    "expect(element).toHaveProp("accessible", true)
 
     Expected element to have prop:
-      disabled
+      accessible={true}
     Received:
       undefined"
   `);
-  expect(() => expect(text).not.toHaveProp('allowFontScaling', false))
+
+  expect(() => expect(view).not.toHaveProp('collapsable'))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toHaveProp("allowFontScaling", false)
+    "expect(element).not.toHaveProp("collapsable")
 
     Expected element not to have prop:
-      allowFontScaling=false
+      collapsable
     Received:
-      allowFontScaling=false"
+      collapsable={false}"
   `);
-  expect(() => expect(text).toHaveProp('style'))
+
+  expect(() => expect(view).toHaveProp('collapsable', true))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveProp("style")
+    "expect(element).toHaveProp("collapsable", true)
 
     Expected element to have prop:
-      style
+      collapsable={true}
     Received:
-      undefined"
+      collapsable={false}"
   `);
-  expect(() => expect(text).toHaveProp('allowFontScaling', 'wrongValue'))
+
+  expect(() => expect(view).not.toHaveProp('collapsable', false))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveProp("allowFontScaling", "wrongValue")
+    "expect(element).not.toHaveProp("collapsable", false)
 
-    Expected element to have prop:
-      allowFontScaling="wrongValue"
+    Expected element not to have prop:
+      collapsable={false}
     Received:
-      allowFontScaling=false"
+      collapsable={false}"
   `);
-
-  expect(view).toHaveProp('style', null);
 });

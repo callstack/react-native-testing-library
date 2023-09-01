@@ -44,5 +44,13 @@ export function toHaveProp(
 }
 
 function formatProp(name: string, value: unknown) {
-  return value === undefined ? name : `${name}=${stringify(value)}`;
+  if (value === undefined) {
+    return name;
+  }
+
+  if (typeof value === 'string') {
+    return `${name}="${value}"`;
+  }
+
+  return `${name}={${stringify(value)}}`;
 }
