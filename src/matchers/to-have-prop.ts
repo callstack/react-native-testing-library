@@ -10,34 +10,34 @@ export function toHaveProp(
 ) {
   checkHostElement(element, toHaveProp, this);
 
+  const isExpectedValueDefined = expectedValue !== undefined;
   const hasProp = name in element.props;
-  const value = element.props[name];
+  const receivedValue = element.props[name];
 
-  const pass =
-    expectedValue !== undefined
-      ? hasProp && this.equals(expectedValue, value)
-      : hasProp;
+  const pass = isExpectedValueDefined
+    ? hasProp && this.equals(expectedValue, receivedValue)
+    : hasProp;
 
   return {
     pass,
     message: () => {
       const to = this.isNot ? 'not to' : 'to';
+      const matcher = matcherHint(
+        `${this.isNot ? '.not' : ''}.toHaveProp`,
+        'element',
+        printExpected(name),
+        {
+          secondArgument: isExpectedValueDefined
+            ? printExpected(expectedValue)
+            : undefined,
+        }
+      );
       return formatMessage(
-        matcherHint(
-          `${this.isNot ? '.not' : ''}.toHaveProp`,
-          'element',
-          printExpected(name),
-          {
-            secondArgument:
-              expectedValue !== undefined
-                ? printExpected(expectedValue)
-                : undefined,
-          }
-        ),
+        matcher,
         `Expected element ${to} have prop`,
         formatProp(name, expectedValue),
         'Received',
-        hasProp ? formatProp(name, value) : undefined
+        hasProp ? formatProp(name, receivedValue) : undefined
       );
     },
   };

@@ -33,7 +33,7 @@ test('.toHaveProp', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toHaveProp("title", "ok")
 
-    Expected the element to have prop:
+    Expected element to have prop:
       title="ok"
     Received:
       undefined"
@@ -42,7 +42,7 @@ test('.toHaveProp', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toHaveProp("disabled")
 
-    Expected the element to have prop:
+    Expected element to have prop:
       disabled
     Received:
       undefined"
@@ -51,7 +51,7 @@ test('.toHaveProp', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toHaveProp("allowFontScaling", false)
 
-    Expected the element not to have prop:
+    Expected element not to have prop:
       allowFontScaling=false
     Received:
       allowFontScaling=false"
@@ -60,7 +60,7 @@ test('.toHaveProp', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toHaveProp("style")
 
-    Expected the element to have prop:
+    Expected element to have prop:
       style
     Received:
       undefined"
@@ -69,7 +69,7 @@ test('.toHaveProp', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toHaveProp("allowFontScaling", "wrongValue")
 
-    Expected the element to have prop:
+    Expected element to have prop:
       allowFontScaling="wrongValue"
     Received:
       allowFontScaling=false"
