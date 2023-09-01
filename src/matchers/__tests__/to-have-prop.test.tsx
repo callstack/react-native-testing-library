@@ -31,25 +31,25 @@ test('.toHaveProp', () => {
   // title is no longer findable as it is a React child
   expect(() => expect(button).toHaveProp('title', 'ok'))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveProp("title", "ok") // Element should have prop title with value "ok"
+    "expect(element).toHaveProp("title", "ok")
 
     Expected the element to have prop:
       title="ok"
     Received:
-      null"
+      undefined"
   `);
   expect(() => expect(button).toHaveProp('disabled'))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveProp("disabled") // Element should have prop disabled
+    "expect(element).toHaveProp("disabled")
 
     Expected the element to have prop:
       disabled
     Received:
-      null"
+      undefined"
   `);
   expect(() => expect(text).not.toHaveProp('allowFontScaling', false))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toHaveProp("allowFontScaling", false) // Element should have prop allowFontScaling with value false
+    "expect(element).not.toHaveProp("allowFontScaling", false)
 
     Expected the element not to have prop:
       allowFontScaling=false
@@ -58,16 +58,16 @@ test('.toHaveProp', () => {
   `);
   expect(() => expect(text).toHaveProp('style'))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveProp("style") // Element should have prop style
+    "expect(element).toHaveProp("style")
 
     Expected the element to have prop:
       style
     Received:
-      null"
+      undefined"
   `);
   expect(() => expect(text).toHaveProp('allowFontScaling', 'wrongValue'))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveProp("allowFontScaling", "wrongValue") // Element should have prop allowFontScaling with value "wrongValue"
+    "expect(element).toHaveProp("allowFontScaling", "wrongValue")
 
     Expected the element to have prop:
       allowFontScaling="wrongValue"

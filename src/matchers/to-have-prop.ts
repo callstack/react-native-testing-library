@@ -2,16 +2,6 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, stringify, printExpected } from 'jest-matcher-utils';
 import { checkHostElement, formatMessage } from './utils';
 
-function printAttribute(name: string, value: unknown) {
-  return value === undefined ? name : `${name}=${stringify(value)}`;
-}
-
-function getPropComment(name: string, value: unknown) {
-  return value === undefined
-    ? `Element should have prop ${name}`
-    : `Element should have prop ${name} with value ${stringify(value)}`;
-}
-
 export function toHaveProp(
   this: jest.MatcherContext,
   element: ReactTestInstance,
@@ -20,35 +10,39 @@ export function toHaveProp(
 ) {
   checkHostElement(element, toHaveProp, this);
 
-  const propValue = element.props[name];
-
-  const isDefined = expectedValue !== undefined;
   const hasProp = name in element.props;
+  const value = element.props[name];
+
+  const pass =
+    expectedValue !== undefined
+      ? hasProp && this.equals(expectedValue, value)
+      : hasProp;
 
   return {
-    pass: isDefined
-      ? hasProp && this.equals(propValue, expectedValue)
-      : hasProp,
+    pass,
     message: () => {
       const to = this.isNot ? 'not to' : 'to';
-
-      const receivedProp = hasProp ? printAttribute(name, propValue) : null;
-      const matcher = matcherHint(
-        `${this.isNot ? '.not' : ''}.toHaveProp`,
-        'element',
-        printExpected(name),
-        {
-          secondArgument: isDefined ? printExpected(expectedValue) : undefined,
-          comment: getPropComment(name, expectedValue),
-        }
-      );
       return formatMessage(
-        matcher,
-        `Expected the element ${to} have prop`,
-        printAttribute(name, expectedValue),
+        matcherHint(
+          `${this.isNot ? '.not' : ''}.toHaveProp`,
+          'element',
+          printExpected(name),
+          {
+            secondArgument:
+              expectedValue !== undefined
+                ? printExpected(expectedValue)
+                : undefined,
+          }
+        ),
+        `Expected element ${to} have prop`,
+        formatProp(name, expectedValue),
         'Received',
-        receivedProp
+        hasProp ? formatProp(name, value) : undefined
       );
     },
   };
+}
+
+function formatProp(name: string, value: unknown) {
+  return value === undefined ? name : `${name}=${stringify(value)}`;
 }

@@ -111,7 +111,7 @@ export function formatMessage(
   expectedLabel: string,
   expectedValue: string | RegExp,
   receivedLabel: string,
-  receivedValue: string | null
+  receivedValue: string | null | undefined
 ) {
   return [
     `${matcher}\n`,
