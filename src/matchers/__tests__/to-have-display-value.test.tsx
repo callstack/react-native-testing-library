@@ -3,7 +3,7 @@ import { TextInput, View } from 'react-native';
 import { render, screen } from '../..';
 import '../extend-expect';
 
-test('example test', () => {
+test('toHaveDisplayValue() example test', () => {
   render(<TextInput testID="text-input" value="test" />);
 
   const textInput = screen.getByTestId('text-input');
