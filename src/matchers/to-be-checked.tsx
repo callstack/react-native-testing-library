@@ -1,27 +1,30 @@
+import { AccessibilityState } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { isAccessibilityElement } from '../helpers/accessiblity';
+import {
+  getAccessibilityRole,
+  isAccessibilityElement,
+} from '../helpers/accessiblity';
 import { ErrorWithStack } from '../helpers/errors';
-import { formatElement } from './utils';
+import { checkHostElement, formatElement } from './utils';
 
 export function toBeChecked(
   this: jest.MatcherContext,
   element: ReactTestInstance
 ) {
-  if (!isValidAccessibilityRole(element)) {
+  checkHostElement(element, toBeChecked, this);
+
+  if (!hasValidAccessibilityRole(element)) {
     throw new ErrorWithStack(
-      `toBeChecked() works only on accessibility element with accessibilityRole="checkbox" or accessibilityRole="radio".`,
+      `toBeChecked() works only on accessibility element with accessibility role of "checkbox" or "radio".`,
       toBeChecked
     );
   }
 
-  const checkedState = element.props?.accessibilityState?.checked;
-  const pass = checkedState === true;
-
   return {
-    pass,
+    pass: getCheckedState(element) === true,
     message: () => {
-      const is = pass ? 'is' : 'is not';
+      const is = this.isNot ? 'is' : 'is not';
       return [
         matcherHint(`${this.isNot ? '.not' : ''}.toBeChecked`, 'element', ''),
         '',
@@ -36,20 +39,19 @@ export function toBePartiallyChecked(
   this: jest.MatcherContext,
   element: ReactTestInstance
 ) {
-  if (!isValidAccessibilityRole(element)) {
+  checkHostElement(element, toBePartiallyChecked, this);
+
+  if (!hasValidAccessibilityRole(element)) {
     throw new ErrorWithStack(
-      `toBePartiallyChecked() works only on accessibility element with accessibilityRole="checkbox" or accessibilityRole="radio".`,
+      `toBePartiallyChecked() works only on accessibility element with accessibility role of "checkbox" or "radio".`,
       toBePartiallyChecked
     );
   }
 
-  const checkedState = element.props?.accessibilityState?.checked;
-  const pass = checkedState === 'mixed';
-
   return {
-    pass,
+    pass: getCheckedState(element) === 'mixed',
     message: () => {
-      const is = pass ? 'is' : 'is not';
+      const is = this.isNot ? 'is' : 'is not';
       return [
         matcherHint(
           `${this.isNot ? '.not' : ''}.toBePartiallyChecked`,
@@ -64,9 +66,16 @@ export function toBePartiallyChecked(
   };
 }
 
-const isValidAccessibilityRole = (element: ReactTestInstance) => {
-  const role = element.props?.accessibilityRole;
-  return (
-    isAccessibilityElement(element) && (role === 'checkbox' || role === 'radio')
-  );
-};
+const VALID_ROLES = new Set(['checkbox', 'radio']);
+
+function hasValidAccessibilityRole(element: ReactTestInstance) {
+  const role = getAccessibilityRole(element);
+  return isAccessibilityElement(element) && VALID_ROLES.has(role);
+}
+
+function getCheckedState(
+  element: ReactTestInstance
+): AccessibilityState['checked'] {
+  const { accessibilityState, 'aria-checked': ariaChecked } = element.props;
+  return ariaChecked ?? accessibilityState.checked;
+}
