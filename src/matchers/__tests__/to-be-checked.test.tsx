@@ -62,3 +62,15 @@ test('toBeCheck() with radio role', () => {
     expect(partiallyCheckedView).not.toBePartiallyChecked()
   ).toThrow();
 });
+
+test('throws error with invalid accessibility', () => {
+  render(<ViewWithRole role="adjustable" />);
+
+  const checkedView = screen.getByTestId('adjustable-checked');
+  const unCheckedView = screen.getByTestId('adjustable-unchecked');
+  const partiallyCheckedView = screen.getByTestId('adjustable-mixChecked');
+
+  expect(() => expect(checkedView).toBeChecked()).toThrow();
+  expect(() => expect(unCheckedView).not.toBeChecked()).toThrow();
+  expect(() => expect(partiallyCheckedView).toBePartiallyChecked()).toThrow();
+});
