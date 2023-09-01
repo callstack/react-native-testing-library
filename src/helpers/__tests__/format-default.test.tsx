@@ -39,13 +39,13 @@ describe('mapPropsForQueryError', () => {
     expect(result).toStrictEqual({});
   });
 
-  test('preserves "display" and "opacity" styles but no other style', () => {
+  test('preserves "display: none" and "opacity: 0" styles but no other style', () => {
     const result = defaultMapProps({
-      style: [{ flex: 1 }, { display: 'none', flex: 2 }, { opacity: 0.5 }],
+      style: [{ flex: 1 }, { display: 'none', flex: 2 }, { opacity: 0 }],
     });
 
     expect(result).toStrictEqual({
-      style: { display: 'none', opacity: 0.5 },
+      style: { display: 'none', opacity: 0 },
     });
   });
 
