@@ -1,6 +1,7 @@
 import { StyleSheet, ViewStyle } from 'react-native';
 
 const propsToDisplay = [
+  'accessible',
   'accessibilityElementsHidden',
   'accessibilityHint',
   'accessibilityLabel',
@@ -23,9 +24,7 @@ const propsToDisplay = [
   'testID',
   'title',
   'value',
-];
-
-const stylePropsToDisplay = ['display', 'opacity'] as const;
+] as const;
 
 /**
  * Preserve props that are helpful in diagnosing test failures, while stripping rest
@@ -87,14 +86,14 @@ function extractStyle(style: ViewStyle | undefined) {
   }
 
   const result: Record<string, unknown> = {};
-  let hasAnyStyle = false;
+  if (style.display === 'none') {
+    result.display = 'none';
+  }
 
-  stylePropsToDisplay.forEach((styleProp) => {
-    if (styleProp in style) {
-      result[styleProp] = style[styleProp];
-      hasAnyStyle = true;
-    }
-  });
+  if (style.opacity === 0) {
+    result.opacity = 0;
+  }
 
-  return hasAnyStyle ? result : undefined;
+  const hasAnyKeys = Object.keys(result).length > 0;
+  return hasAnyKeys ? result : undefined;
 }

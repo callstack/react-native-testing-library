@@ -259,6 +259,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityLabel="LABEL"
+      accessible={true}
     />"
   `);
 
@@ -268,6 +269,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityLabel="LABEL"
+      accessible={true}
     />"
   `);
 
@@ -277,6 +279,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityLabel="LABEL"
+      accessible={true}
     />"
   `);
 
@@ -286,6 +289,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityLabel="LABEL"
+      accessible={true}
     />"
   `);
 });

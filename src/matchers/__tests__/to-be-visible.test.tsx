@@ -30,11 +30,6 @@ test('toBeVisible() on view with opacity', () => {
 
     Received element is visible:
       <View
-        style={
-          {
-            "opacity": 0.2,
-          }
-        }
         testID="view"
       />"
   `);

@@ -57,6 +57,7 @@ test('toBeDisabled/toBeEnabled works with disabled Pressable', () => {
             "disabled": true,
           }
         }
+        accessible={true}
         testID="subject"
       />"
   `);
@@ -72,6 +73,7 @@ test('toBeDisabled/toBeEnabled works with disabled Pressable', () => {
             "disabled": true,
           }
         }
+        accessible={true}
         testID="subject"
       />"
   `);

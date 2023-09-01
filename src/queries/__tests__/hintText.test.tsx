@@ -145,6 +145,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityHint="HINT"
+      accessible={true}
     />"
   `);
 
@@ -154,6 +155,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityHint="HINT"
+      accessible={true}
     />"
   `);
 
@@ -163,6 +165,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityHint="HINT"
+      accessible={true}
     />"
   `);
 
@@ -172,6 +175,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityHint="HINT"
+      accessible={true}
     />"
   `);
 });
