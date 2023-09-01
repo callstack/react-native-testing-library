@@ -3,7 +3,7 @@ import { View, Text, TextInput } from 'react-native';
 import { render, screen } from '../..';
 import '../extend-expect';
 
-test('.toHaveProp basic case', () => {
+test('toHaveProp() basic case', () => {
   render(
     <View testID="view" style={null}>
       <Text ellipsizeMode="head">Hello</Text>
@@ -30,7 +30,7 @@ test('.toHaveProp basic case', () => {
   expect(input).not.toHaveProp('editable', false);
 });
 
-test('.toHaveProp error messages', () => {
+test('toHaveProp() error messages', () => {
   render(<View testID="view" collapsable={false} />);
 
   const view = screen.getByTestId('view');

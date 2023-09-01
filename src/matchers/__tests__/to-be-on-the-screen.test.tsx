@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { render, screen } from '../..';
 import '../extend-expect';
 
-test('example test', () => {
+test('toBeOnTheScreen() example test', () => {
   render(
     <View>
       <View testID="child" />

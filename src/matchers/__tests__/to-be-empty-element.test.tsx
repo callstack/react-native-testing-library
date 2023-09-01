@@ -9,7 +9,7 @@ function DoNotRenderChildren({ children }: { children: React.ReactNode }) {
   return null;
 }
 
-test('toBeEmptyElement()', () => {
+test('toBeEmptyElement() base case', () => {
   render(
     <View testID="not-empty">
       <View testID="empty" />
