@@ -5,6 +5,7 @@ import { toBeEmptyElement } from './to-be-empty-element';
 import { toBeVisible } from './to-be-visible';
 import { toHaveDisplayValue } from './to-have-display-value';
 import { toHaveTextContent } from './to-have-text-content';
+import { toBeDisabled, toBeEnabled } from './to-be-disabled';
 
 expect.extend({
   toBeOnTheScreen,
@@ -12,4 +13,6 @@ expect.extend({
   toBeVisible,
   toHaveDisplayValue,
   toHaveTextContent,
+  toBeDisabled,
+  toBeEnabled,
 });

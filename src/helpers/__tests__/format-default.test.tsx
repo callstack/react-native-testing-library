@@ -1,11 +1,4 @@
-import { ReactTestRendererJSON } from 'react-test-renderer';
 import { defaultMapProps } from '../format-default';
-
-const node: ReactTestRendererJSON = {
-  type: 'View',
-  props: {},
-  children: null,
-};
 
 describe('mapPropsForQueryError', () => {
   test('preserves props that are helpful for debugging', () => {
@@ -32,39 +25,34 @@ describe('mapPropsForQueryError', () => {
       defaultValue: 'DEFAULT_VALUE',
     };
 
-    const result = defaultMapProps(props, node);
+    const result = defaultMapProps(props);
     expect(result).toStrictEqual(props);
   });
 
   test('does not preserve less helpful props', () => {
-    const result = defaultMapProps(
-      {
-        style: [{ flex: 1 }, { display: 'flex' }],
-        onPress: () => null,
-        key: 'foo',
-      },
-      node
-    );
+    const result = defaultMapProps({
+      style: [{ flex: 1 }, { flexDirection: 'row' }],
+      onPress: () => null,
+      key: 'foo',
+    });
 
     expect(result).toStrictEqual({});
   });
 
-  test('preserves "display: none" style but no other style', () => {
-    const result = defaultMapProps(
-      { style: [{ flex: 1 }, { display: 'none', flex: 2 }] },
-      node
-    );
+  test('preserves "display: none" and "opacity: 0" styles but no other style', () => {
+    const result = defaultMapProps({
+      style: [{ flex: 1 }, { display: 'none', flex: 2 }, { opacity: 0 }],
+    });
 
     expect(result).toStrictEqual({
-      style: { display: 'none' },
+      style: { display: 'none', opacity: 0 },
     });
   });
 
   test('removes undefined keys from accessibilityState', () => {
-    const result = defaultMapProps(
-      { accessibilityState: { checked: undefined, selected: false } },
-      node
-    );
+    const result = defaultMapProps({
+      accessibilityState: { checked: undefined, selected: false },
+    });
 
     expect(result).toStrictEqual({
       accessibilityState: { selected: false },
@@ -72,49 +60,44 @@ describe('mapPropsForQueryError', () => {
   });
 
   test('removes accessibilityState if all keys are undefined', () => {
-    const result = defaultMapProps(
-      { accessibilityState: { checked: undefined, selected: undefined } },
-      node
-    );
+    const result = defaultMapProps({
+      accessibilityState: { checked: undefined, selected: undefined },
+    });
 
     expect(result).toStrictEqual({});
   });
 
   test('does not fail if accessibilityState is a string, passes through', () => {
-    const result = defaultMapProps({ accessibilityState: 'foo' }, node);
+    const result = defaultMapProps({ accessibilityState: 'foo' });
     expect(result).toStrictEqual({ accessibilityState: 'foo' });
   });
 
   test('does not fail if accessibilityState is an array, passes through', () => {
-    const result = defaultMapProps({ accessibilityState: [1] }, node);
+    const result = defaultMapProps({ accessibilityState: [1] });
     expect(result).toStrictEqual({ accessibilityState: [1] });
   });
 
   test('does not fail if accessibilityState is null, passes through', () => {
-    const result = defaultMapProps({ accessibilityState: null }, node);
+    const result = defaultMapProps({ accessibilityState: null });
     expect(result).toStrictEqual({ accessibilityState: null });
   });
 
   test('does not fail if accessibilityState is nested object, passes through', () => {
     const accessibilityState = { 1: { 2: 3 }, 2: undefined };
-    const result = defaultMapProps({ accessibilityState }, node);
+    const result = defaultMapProps({ accessibilityState });
     expect(result).toStrictEqual({ accessibilityState: { 1: { 2: 3 } } });
   });
 
   test('removes undefined keys from accessibilityValue', () => {
-    const result = defaultMapProps(
-      { accessibilityValue: { min: 1, max: undefined } },
-      node
-    );
+    const result = defaultMapProps({
+      accessibilityValue: { min: 1, max: undefined },
+    });
 
     expect(result).toStrictEqual({ accessibilityValue: { min: 1 } });
   });
 
   test('removes accessibilityValue if all keys are undefined', () => {
-    const result = defaultMapProps(
-      { accessibilityValue: { min: undefined } },
-      node
-    );
+    const result = defaultMapProps({ accessibilityValue: { min: undefined } });
 
     expect(result).toStrictEqual({});
   });

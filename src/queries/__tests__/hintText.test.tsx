@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { render } from '../..';
 
 const BUTTON_HINT = 'click this button';
@@ -20,9 +20,9 @@ const Typography = ({ children, ...rest }: any) => {
 };
 
 const Button = ({ children }: { children: React.ReactNode }) => (
-  <TouchableOpacity accessibilityHint={BUTTON_HINT}>
+  <Pressable accessibilityHint={BUTTON_HINT}>
     <Typography accessibilityHint={TEXT_HINT}>{children}</Typography>
-  </TouchableOpacity>
+  </Pressable>
 );
 
 const Section = () => (
@@ -138,13 +138,14 @@ test('byHintText queries support hidden option', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const view = render(<TouchableOpacity accessibilityHint="HINT" key="3" />);
+  const view = render(<Pressable accessibilityHint="HINT" key="3" />);
 
   expect(() => view.getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityHint: FOO
 
     <View
       accessibilityHint="HINT"
+      accessible={true}
     />"
   `);
 
@@ -154,6 +155,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityHint="HINT"
+      accessible={true}
     />"
   `);
 
@@ -163,6 +165,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityHint="HINT"
+      accessible={true}
     />"
   `);
 
@@ -172,6 +175,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityHint="HINT"
+      accessible={true}
     />"
   `);
 });

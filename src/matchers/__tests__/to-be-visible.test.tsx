@@ -30,11 +30,6 @@ test('toBeVisible() on view with opacity', () => {
 
     Received element is visible:
       <View
-        style={
-          {
-            "opacity": 0.2,
-          }
-        }
         testID="view"
       />"
   `);
@@ -133,9 +128,7 @@ test('toBeVisible() on empty Modal', () => {
 
     Received element is visible:
       <Modal
-        hardwareAccelerated={false}
         testID="modal"
-        visible={true}
       />"
   `);
 });

@@ -263,6 +263,7 @@ test('byA11yState queries support hidden option', () => {
           "expanded": false,
         }
       }
+      accessible={true}
       style={
         {
           "display": "none",

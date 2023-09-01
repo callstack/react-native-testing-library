@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Pressable } from 'react-native';
 import { render } from '../..';
 
 const BUTTON_LABEL = 'cool button';
@@ -22,14 +22,11 @@ const Typography = ({ children, ...rest }: any) => {
 };
 
 const Button = ({ children }: { children: React.ReactNode }) => (
-  <TouchableOpacity
-    accessibilityHint={BUTTON_HINT}
-    accessibilityLabel={BUTTON_LABEL}
-  >
+  <Pressable accessibilityHint={BUTTON_HINT} accessibilityLabel={BUTTON_LABEL}>
     <Typography accessibilityHint={TEXT_HINT} accessibilityLabel={TEXT_LABEL}>
       {children}
     </Typography>
-  </TouchableOpacity>
+  </Pressable>
 );
 
 const Section = () => (
@@ -255,13 +252,14 @@ test('getByLabelText supports nested aria-labelledby', async () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const view = render(<TouchableOpacity accessibilityLabel="LABEL" key="3" />);
+  const view = render(<Pressable accessibilityLabel="LABEL" key="3" />);
 
   expect(() => view.getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
     <View
       accessibilityLabel="LABEL"
+      accessible={true}
     />"
   `);
 
@@ -271,6 +269,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityLabel="LABEL"
+      accessible={true}
     />"
   `);
 
@@ -280,6 +279,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityLabel="LABEL"
+      accessible={true}
     />"
   `);
 
@@ -289,6 +289,7 @@ test('error message renders the element tree, preserving only helpful props', as
 
     <View
       accessibilityLabel="LABEL"
+      accessible={true}
     />"
   `);
 });
