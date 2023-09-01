@@ -16,7 +16,7 @@ export function toBeChecked(
 
   if (!hasValidAccessibilityRole(element)) {
     throw new ErrorWithStack(
-      `toBeChecked() works only on accessibility element with accessibility role of "checkbox" or "radio".`,
+      `toBeChecked() works only on accessibility element with role of "checkbox" or "radio".`,
       toBeChecked
     );
   }
@@ -43,7 +43,7 @@ export function toBePartiallyChecked(
 
   if (!hasValidAccessibilityRole(element)) {
     throw new ErrorWithStack(
-      `toBePartiallyChecked() works only on accessibility element with accessibility role of "checkbox" or "radio".`,
+      `toBePartiallyChecked() works only on accessibility element with role of "checkbox" or "radio".`,
       toBePartiallyChecked
     );
   }
