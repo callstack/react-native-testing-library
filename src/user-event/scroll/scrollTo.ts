@@ -48,7 +48,7 @@ export async function scrollTo(
   setElementScrollOffset(element, finalPosition);
 }
 
-export function emitDragScrollEvents(
+function emitDragScrollEvents(
   element: ReactTestInstance,
   scrollSteps: ContentOffset[]
 ) {
