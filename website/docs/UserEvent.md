@@ -178,3 +178,55 @@ The `textInput` event is sent only for mutliline text inputs.
 **Leaving the element**:
 - `endEditing`
 - `blur`
+
+## `scroll()`
+
+```ts
+type(
+  element: ReactTestInstance,
+  options?: {
+    y?: number | number[],
+    x?: number | number[],
+    momentumY?: number | number[],
+    momentumX?: number | number[],
+  }
+```
+
+Example
+```ts
+const user = userEvent.setup();
+await user.scrollTo(scrollView, { y: 100, momentumY: 200 });
+```
+
+This helper simulates user scrolling a host `ScrollView` element. 
+
+This function supports only host `ScrollView` elements, which includes `FlatList` as it renders to a host `ScrolLView` element. Passing other element types will result in error.
+
+Scroll interaction should match host `ScrollView` direction. For vertical scroll view (`horizontal={false}`) you should pass only `y` (or `momentumY`) options, for horizontal scroll view (`horizontal={true}`) you should pass only `x` (or `momentumX`) options.
+
+Each scroll interaction consists of mandatory drag scroll part which simulates user dragging the scroll view with his finger (`y` or `x` option). This may optinally be followed by momentum scroll movement which simulates the inertial movement of scroll view content after user lifts his finger up (`momentumY` or `momentumX` options).
+
+### Options {#type-options}
+ - `y` - either a target vertical drag scroll offset (`number`) or list of vertical drag scroll steps (`number[]`)
+ - `x` - either a target horizontal drag scroll offset (`number`) or list of horizontal drag scroll steps (`number[]`)
+ - `momentumY` - either a target vertical momentum scroll offset (`number`) or list of vertical momentum scroll steps (`number[]`)
+ - `momentumX` - either a target horizontal momentum scroll position (`number`) or list of horizontal momentum scroll steps (`number[]`)
+
+When passing single `number` value, User Event will generate a number of intermediate scroll steps. You should not rely on exact values of these scrolls steps as they might be change in the future version.
+
+In case you want to test exact scroll steps use `number[]` option variant. First item will be used as intial scroll position, last item will be final position, and all other items between will be considered intermediate scroll steps.
+
+### Sequence of events
+
+The sequence of events depends whether scroll includes optional momentum scroll component.
+
+**Drag scroll**:
+- `scrollBeginDrag`
+- `scroll` (multiple times)
+- `scrollEndDrag`
+
+**Momentum scroll (optional)**:
+- `momentumScrollBegin`
+- `scroll` (multiple events)
+- `momentumScrollEnd`
+
