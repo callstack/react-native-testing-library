@@ -173,7 +173,7 @@ exports[`scrollTo() supports horizontal drag scroll: scrollTo({ x: 100 }) 1`] = 
           "top": 0,
         },
         "contentOffset": {
-          "x": 20,
+          "x": 25,
           "y": 0,
         },
         "contentSize": {
@@ -204,7 +204,7 @@ exports[`scrollTo() supports horizontal drag scroll: scrollTo({ x: 100 }) 1`] = 
           "top": 0,
         },
         "contentOffset": {
-          "x": 40,
+          "x": 50,
           "y": 0,
         },
         "contentSize": {
@@ -235,38 +235,7 @@ exports[`scrollTo() supports horizontal drag scroll: scrollTo({ x: 100 }) 1`] = 
           "top": 0,
         },
         "contentOffset": {
-          "x": 60,
-          "y": 0,
-        },
-        "contentSize": {
-          "height": 0,
-          "width": 0,
-        },
-        "layoutMeasurement": {
-          "height": 0,
-          "width": 0,
-        },
-        "responderIgnoreScroll": true,
-        "target": 0,
-        "velocity": {
-          "x": 0,
-          "y": 0,
-        },
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "nativeEvent": {
-        "contentInset": {
-          "bottom": 0,
-          "left": 0,
-          "right": 0,
-          "top": 0,
-        },
-        "contentOffset": {
-          "x": 80,
+          "x": 75,
           "y": 0,
         },
         "contentSize": {
@@ -365,7 +334,7 @@ exports[`scrollTo() supports vertical drag scroll: scrollTo({ y: 100 }) 1`] = `
         },
         "contentOffset": {
           "x": 0,
-          "y": 20,
+          "y": 25,
         },
         "contentSize": {
           "height": 0,
@@ -396,7 +365,7 @@ exports[`scrollTo() supports vertical drag scroll: scrollTo({ y: 100 }) 1`] = `
         },
         "contentOffset": {
           "x": 0,
-          "y": 40,
+          "y": 50,
         },
         "contentSize": {
           "height": 0,
@@ -427,38 +396,7 @@ exports[`scrollTo() supports vertical drag scroll: scrollTo({ y: 100 }) 1`] = `
         },
         "contentOffset": {
           "x": 0,
-          "y": 60,
-        },
-        "contentSize": {
-          "height": 0,
-          "width": 0,
-        },
-        "layoutMeasurement": {
-          "height": 0,
-          "width": 0,
-        },
-        "responderIgnoreScroll": true,
-        "target": 0,
-        "velocity": {
-          "x": 0,
-          "y": 0,
-        },
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "nativeEvent": {
-        "contentInset": {
-          "bottom": 0,
-          "left": 0,
-          "right": 0,
-          "top": 0,
-        },
-        "contentOffset": {
-          "x": 0,
-          "y": 80,
+          "y": 75,
         },
         "contentSize": {
           "height": 0,
@@ -490,6 +428,352 @@ exports[`scrollTo() supports vertical drag scroll: scrollTo({ y: 100 }) 1`] = `
         "contentOffset": {
           "x": 0,
           "y": 100,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`scrollTo() supports vertical momentum scroll: scrollTo({ y: 100 }) 1`] = `
+[
+  {
+    "name": "scrollBeginDrag",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 25,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 50,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 75,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "scrollEndDrag",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 100,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "momentumScrollBegin",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 100,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 105,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 110,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 115,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 120,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      },
+    },
+  },
+  {
+    "name": "momentumScrollEnd",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 120,
         },
         "contentSize": {
           "height": 0,
@@ -556,7 +840,7 @@ exports[`userEvent.scroll with fake timers calls events with momentum: scrollTo(
         },
         "contentOffset": {
           "x": 0,
-          "y": 24,
+          "y": 30,
         },
         "contentSize": {
           "height": 0,
@@ -587,7 +871,7 @@ exports[`userEvent.scroll with fake timers calls events with momentum: scrollTo(
         },
         "contentOffset": {
           "x": 0,
-          "y": 48,
+          "y": 60,
         },
         "contentSize": {
           "height": 0,
@@ -618,38 +902,7 @@ exports[`userEvent.scroll with fake timers calls events with momentum: scrollTo(
         },
         "contentOffset": {
           "x": 0,
-          "y": 72,
-        },
-        "contentSize": {
-          "height": 0,
-          "width": 0,
-        },
-        "layoutMeasurement": {
-          "height": 0,
-          "width": 0,
-        },
-        "responderIgnoreScroll": true,
-        "target": 0,
-        "velocity": {
-          "x": 0,
-          "y": 0,
-        },
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "nativeEvent": {
-        "contentInset": {
-          "bottom": 0,
-          "left": 0,
-          "right": 0,
-          "top": 0,
-        },
-        "contentOffset": {
-          "x": 0,
-          "y": 96,
+          "y": 90,
         },
         "contentSize": {
           "height": 0,
@@ -742,7 +995,7 @@ exports[`userEvent.scroll with fake timers calls events with momentum: scrollTo(
         },
         "contentOffset": {
           "x": 0,
-          "y": 102,
+          "y": 97.5,
         },
         "contentSize": {
           "height": 0,
@@ -773,7 +1026,7 @@ exports[`userEvent.scroll with fake timers calls events with momentum: scrollTo(
         },
         "contentOffset": {
           "x": 0,
-          "y": 84,
+          "y": 75,
         },
         "contentSize": {
           "height": 0,
@@ -804,38 +1057,7 @@ exports[`userEvent.scroll with fake timers calls events with momentum: scrollTo(
         },
         "contentOffset": {
           "x": 0,
-          "y": 66,
-        },
-        "contentSize": {
-          "height": 0,
-          "width": 0,
-        },
-        "layoutMeasurement": {
-          "height": 0,
-          "width": 0,
-        },
-        "responderIgnoreScroll": true,
-        "target": 0,
-        "velocity": {
-          "x": 0,
-          "y": 0,
-        },
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "nativeEvent": {
-        "contentInset": {
-          "bottom": 0,
-          "left": 0,
-          "right": 0,
-          "top": 0,
-        },
-        "contentOffset": {
-          "x": 0,
-          "y": 48,
+          "y": 52.5,
         },
         "contentSize": {
           "height": 0,
@@ -964,7 +1186,7 @@ exports[`userEvent.scroll with fake timers calls events: scrollTo({ y: 120 }) 1`
         },
         "contentOffset": {
           "x": 0,
-          "y": 24,
+          "y": 30,
         },
         "contentSize": {
           "height": 0,
@@ -995,7 +1217,7 @@ exports[`userEvent.scroll with fake timers calls events: scrollTo({ y: 120 }) 1`
         },
         "contentOffset": {
           "x": 0,
-          "y": 48,
+          "y": 60,
         },
         "contentSize": {
           "height": 0,
@@ -1026,38 +1248,7 @@ exports[`userEvent.scroll with fake timers calls events: scrollTo({ y: 120 }) 1`
         },
         "contentOffset": {
           "x": 0,
-          "y": 72,
-        },
-        "contentSize": {
-          "height": 0,
-          "width": 0,
-        },
-        "layoutMeasurement": {
-          "height": 0,
-          "width": 0,
-        },
-        "responderIgnoreScroll": true,
-        "target": 0,
-        "velocity": {
-          "x": 0,
-          "y": 0,
-        },
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "nativeEvent": {
-        "contentInset": {
-          "bottom": 0,
-          "left": 0,
-          "right": 0,
-          "top": 0,
-        },
-        "contentOffset": {
-          "x": 0,
-          "y": 96,
+          "y": 90,
         },
         "contentSize": {
           "height": 0,
@@ -1155,7 +1346,7 @@ exports[`userEvent.scroll with fake timers scrollTo is accessible directly in us
         },
         "contentOffset": {
           "x": 0,
-          "y": 20,
+          "y": 25,
         },
         "contentSize": {
           "height": 0,
@@ -1186,7 +1377,7 @@ exports[`userEvent.scroll with fake timers scrollTo is accessible directly in us
         },
         "contentOffset": {
           "x": 0,
-          "y": 40,
+          "y": 50,
         },
         "contentSize": {
           "height": 0,
@@ -1217,38 +1408,7 @@ exports[`userEvent.scroll with fake timers scrollTo is accessible directly in us
         },
         "contentOffset": {
           "x": 0,
-          "y": 60,
-        },
-        "contentSize": {
-          "height": 0,
-          "width": 0,
-        },
-        "layoutMeasurement": {
-          "height": 0,
-          "width": 0,
-        },
-        "responderIgnoreScroll": true,
-        "target": 0,
-        "velocity": {
-          "x": 0,
-          "y": 0,
-        },
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "nativeEvent": {
-        "contentInset": {
-          "bottom": 0,
-          "left": 0,
-          "right": 0,
-          "top": 0,
-        },
-        "contentOffset": {
-          "x": 0,
-          "y": 80,
+          "y": 75,
         },
         "contentSize": {
           "height": 0,
@@ -1346,7 +1506,7 @@ exports[`userEvent.scroll with fake timers scrolling the same element twice star
         },
         "contentOffset": {
           "x": 0,
-          "y": 24,
+          "y": 30,
         },
         "contentSize": {
           "height": 0,
@@ -1377,7 +1537,7 @@ exports[`userEvent.scroll with fake timers scrolling the same element twice star
         },
         "contentOffset": {
           "x": 0,
-          "y": 48,
+          "y": 60,
         },
         "contentSize": {
           "height": 0,
@@ -1408,38 +1568,7 @@ exports[`userEvent.scroll with fake timers scrolling the same element twice star
         },
         "contentOffset": {
           "x": 0,
-          "y": 72,
-        },
-        "contentSize": {
-          "height": 0,
-          "width": 0,
-        },
-        "layoutMeasurement": {
-          "height": 0,
-          "width": 0,
-        },
-        "responderIgnoreScroll": true,
-        "target": 0,
-        "velocity": {
-          "x": 0,
-          "y": 0,
-        },
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "nativeEvent": {
-        "contentInset": {
-          "bottom": 0,
-          "left": 0,
-          "right": 0,
-          "top": 0,
-        },
-        "contentOffset": {
-          "x": 0,
-          "y": 96,
+          "y": 90,
         },
         "contentSize": {
           "height": 0,
@@ -1532,7 +1661,7 @@ exports[`userEvent.scroll with fake timers scrolling the same element twice star
         },
         "contentOffset": {
           "x": 0,
-          "y": 100,
+          "y": 95,
         },
         "contentSize": {
           "height": 0,
@@ -1563,7 +1692,7 @@ exports[`userEvent.scroll with fake timers scrolling the same element twice star
         },
         "contentOffset": {
           "x": 0,
-          "y": 80,
+          "y": 70,
         },
         "contentSize": {
           "height": 0,
@@ -1594,38 +1723,7 @@ exports[`userEvent.scroll with fake timers scrolling the same element twice star
         },
         "contentOffset": {
           "x": 0,
-          "y": 60,
-        },
-        "contentSize": {
-          "height": 0,
-          "width": 0,
-        },
-        "layoutMeasurement": {
-          "height": 0,
-          "width": 0,
-        },
-        "responderIgnoreScroll": true,
-        "target": 0,
-        "velocity": {
-          "x": 0,
-          "y": 0,
-        },
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "nativeEvent": {
-        "contentInset": {
-          "bottom": 0,
-          "left": 0,
-          "right": 0,
-          "top": 0,
-        },
-        "contentOffset": {
-          "x": 0,
-          "y": 40,
+          "y": 45,
         },
         "contentSize": {
           "height": 0,

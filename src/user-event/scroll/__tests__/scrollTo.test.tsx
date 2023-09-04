@@ -39,10 +39,9 @@ describe('scrollTo()', () => {
     await user.scrollTo(screen.getByTestId('scrollView'), { y: 100 });
     expect(mapEventsToShortForm(events)).toEqual([
       ['scrollBeginDrag', 0, 0],
-      ['scroll', 20, 0],
-      ['scroll', 40, 0],
-      ['scroll', 60, 0],
-      ['scroll', 80, 0],
+      ['scroll', 25, 0],
+      ['scroll', 50, 0],
+      ['scroll', 75, 0],
       ['scrollEndDrag', 100, 0],
     ]);
     expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
@@ -55,13 +54,36 @@ describe('scrollTo()', () => {
     await user.scrollTo(screen.getByTestId('scrollView'), { x: 100 });
     expect(mapEventsToShortForm(events)).toEqual([
       ['scrollBeginDrag', 0, 0],
-      ['scroll', 0, 20],
-      ['scroll', 0, 40],
-      ['scroll', 0, 60],
-      ['scroll', 0, 80],
+      ['scroll', 0, 25],
+      ['scroll', 0, 50],
+      ['scroll', 0, 75],
       ['scrollEndDrag', 0, 100],
     ]);
     expect(events).toMatchSnapshot('scrollTo({ x: 100 })');
+  });
+
+  it('supports vertical momentum scroll', async () => {
+    const { events } = renderScrollViewWithToolkit();
+    const user = userEvent.setup();
+
+    await user.scrollTo(screen.getByTestId('scrollView'), {
+      y: 100,
+      momentumY: 120,
+    });
+    expect(mapEventsToShortForm(events)).toEqual([
+      ['scrollBeginDrag', 0, 0],
+      ['scroll', 25, 0],
+      ['scroll', 50, 0],
+      ['scroll', 75, 0],
+      ['scrollEndDrag', 100, 0],
+      ['momentumScrollBegin', 100, 0],
+      ['scroll', 105, 0],
+      ['scroll', 110, 0],
+      ['scroll', 115, 0],
+      ['scroll', 120, 0],
+      ['momentumScrollEnd', 120, 0],
+    ]);
+    expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
   });
 
   it('supports drag scroll with explicit steps', async () => {
@@ -136,10 +158,9 @@ describe('userEvent.scroll with fake timers', () => {
     await userEvent.scrollTo(screen.getByTestId('scrollView'), { y: 100 });
     expect(mapEventsToShortForm(events)).toEqual([
       ['scrollBeginDrag', 0, 0],
-      ['scroll', 20, 0],
-      ['scroll', 40, 0],
-      ['scroll', 60, 0],
-      ['scroll', 80, 0],
+      ['scroll', 25, 0],
+      ['scroll', 50, 0],
+      ['scroll', 75, 0],
       ['scrollEndDrag', 100, 0],
     ]);
 

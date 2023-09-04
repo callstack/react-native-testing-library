@@ -14,9 +14,9 @@ export function createVerticalScrollSteps(
     return targetY.map((y) => ({ y, x: initialOffset.x }));
   }
 
-  return generateScrollValues(
-    initialOffset.y,
+  return interpolateLinearSteps(
     targetY,
+    initialOffset.y,
     DEFAULT_STEPS_COUNT
   ).map((y) => ({ y, x: initialOffset.x }));
 }
@@ -33,9 +33,9 @@ export function createHorizontalScrollSteps(
     return targetX.map((x) => ({ x, y: initialOffset.y }));
   }
 
-  return generateScrollValues(
-    initialOffset.x,
+  return interpolateLinearSteps(
     targetX,
+    initialOffset.x,
     DEFAULT_STEPS_COUNT
   ).map((x) => ({ x, y: initialOffset.y }));
 }
@@ -47,20 +47,21 @@ export function createHorizontalScrollSteps(
  * @param count
  * @returns
  */
-export function generateScrollValues(
-  from: number,
-  to: number,
-  count: number
+export function interpolateLinearSteps(
+  end: number,
+  start: number,
+  steps: number
 ): number[] {
-  if (from === to) {
+  if (end === start) {
     return [];
   }
 
-  const step = (to - from) / count;
-  const stepsArray = [];
-  for (let i = 0; i <= count; i++) {
-    stepsArray.push(from + step * i);
+  const delta = (end - start) / (steps - 1);
+
+  const result = [];
+  for (let i = 0; i < steps; i++) {
+    result.push(start + delta * i);
   }
 
-  return stepsArray;
+  return result;
 }
