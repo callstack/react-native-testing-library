@@ -15,16 +15,18 @@ export interface ContentOffset {
 export const ScrollEventBuilder = {
   scroll: (offset: ContentOffset = { x: 0, y: 0 }) => {
     return {
-      contentInset: { bottom: 0, left: 0, right: 0, top: 0 },
-      contentOffset: { x: offset.x, y: offset.y },
-      contentSize: { height: 0, width: 0 },
-      layoutMeasurement: {
-        height: 0,
-        width: 0,
+      nativeEvent: {
+        contentInset: { bottom: 0, left: 0, right: 0, top: 0 },
+        contentOffset: { x: offset.x, y: offset.y },
+        contentSize: { height: 0, width: 0 },
+        layoutMeasurement: {
+          height: 0,
+          width: 0,
+        },
+        responderIgnoreScroll: true,
+        target: 0,
+        velocity: { x: 0, y: 0 },
       },
-      responderIgnoreScroll: true,
-      target: 0,
-      velocity: { x: 0, y: 0 },
     };
   },
 };

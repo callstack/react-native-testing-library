@@ -5,116 +5,124 @@ exports[`scrollTo() supports drag scroll with explicit steps: scrollTo({ y: 100 
   {
     "name": "scrollBeginDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 0,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 33,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 33,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentOffset": {
-        "x": 0,
-        "y": 67,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 67,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scrollEndDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 100,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 100,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
@@ -126,174 +134,186 @@ exports[`scrollTo() supports horizontal drag scroll: scrollTo({ x: 100 }) 1`] = 
   {
     "name": "scrollBeginDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 0,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 20,
-        "y": 0,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 40,
-        "y": 0,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 60,
-        "y": 0,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 20,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 40,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentOffset": {
-        "x": 80,
-        "y": 0,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 60,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 80,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scrollEndDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 100,
-        "y": 0,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 100,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
@@ -305,174 +325,186 @@ exports[`scrollTo() supports vertical drag scroll: scrollTo({ y: 100 }) 1`] = `
   {
     "name": "scrollBeginDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 0,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 20,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 40,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 60,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 20,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 40,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentOffset": {
-        "x": 0,
-        "y": 80,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 60,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 80,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scrollEndDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 100,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 100,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
@@ -484,377 +516,403 @@ exports[`userEvent.scroll with fake timers calls events with momentum: scrollTo(
   {
     "name": "scrollBeginDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 0,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 24,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 48,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 72,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 24,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 48,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentOffset": {
-        "x": 0,
-        "y": 96,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 72,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 96,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scrollEndDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 120,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 120,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "momentumScrollBegin",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 120,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 102,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 120,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 84,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 66,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 102,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 48,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 84,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 66,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentOffset": {
-        "x": 0,
-        "y": 30,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 48,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 30,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "momentumScrollEnd",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 30,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 30,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
@@ -866,174 +924,186 @@ exports[`userEvent.scroll with fake timers calls events: scrollTo({ y: 120 }) 1`
   {
     "name": "scrollBeginDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 0,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 24,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 48,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 72,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 24,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 48,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentOffset": {
-        "x": 0,
-        "y": 96,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 72,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 96,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scrollEndDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 120,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 120,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
@@ -1045,174 +1115,186 @@ exports[`userEvent.scroll with fake timers scrollTo is accessible directly in us
   {
     "name": "scrollBeginDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 0,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 20,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 40,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 60,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 20,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 40,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentOffset": {
-        "x": 0,
-        "y": 80,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 60,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 80,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scrollEndDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 100,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 100,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
@@ -1224,348 +1306,372 @@ exports[`userEvent.scroll with fake timers scrolling the same element twice star
   {
     "name": "scrollBeginDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 0,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 24,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 48,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 72,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 24,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 48,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentOffset": {
-        "x": 0,
-        "y": 96,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 72,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 96,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scrollEndDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 120,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 120,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scrollBeginDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 120,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 100,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 120,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 80,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
-      },
-    },
-  },
-  {
-    "name": "scroll",
-    "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 60,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 100,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scroll",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 80,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentOffset": {
-        "x": 0,
-        "y": 40,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 60,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+    },
+  },
+  {
+    "name": "scroll",
+    "payload": {
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 40,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },
   {
     "name": "scrollEndDrag",
     "payload": {
-      "contentInset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      },
-      "contentOffset": {
-        "x": 0,
-        "y": 20,
-      },
-      "contentSize": {
-        "height": 0,
-        "width": 0,
-      },
-      "layoutMeasurement": {
-        "height": 0,
-        "width": 0,
-      },
-      "responderIgnoreScroll": true,
-      "target": 0,
-      "velocity": {
-        "x": 0,
-        "y": 0,
+      "nativeEvent": {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 20,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
       },
     },
   },

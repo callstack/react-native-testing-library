@@ -7,8 +7,8 @@ import { userEvent } from '../..';
 function mapEventsToShortForm(events: EventEntry[]) {
   return events.map((e) => [
     e.name,
-    e.payload.contentOffset.y,
-    e.payload.contentOffset.x,
+    e.payload.nativeEvent.contentOffset.y,
+    e.payload.nativeEvent.contentOffset.x,
   ]);
 }
 
