@@ -2,35 +2,42 @@ import { ContentOffset } from '../event-builder/scroll';
 
 const DEFAULT_STEPS_COUNT = 5;
 
-export function generateScrollSteps(
-  targetOffset: { x?: number | number[]; y?: number | number[] },
+export function createVerticalScrollSteps(
+  targetY: number | number[] | undefined,
   initialOffset: ContentOffset
 ): ContentOffset[] {
-  if (Array.isArray(targetOffset.y)) {
-    return targetOffset.y.map((y) => ({ y, x: initialOffset.x }));
+  if (targetY == null) {
+    return [];
   }
 
-  if (targetOffset.y != null) {
-    return generateScrollValues(
-      initialOffset.y,
-      targetOffset.y,
-      DEFAULT_STEPS_COUNT
-    ).map((y) => ({ y, x: initialOffset.x }));
+  if (Array.isArray(targetY)) {
+    return targetY.map((y) => ({ y, x: initialOffset.x }));
   }
 
-  if (Array.isArray(targetOffset.x)) {
-    return targetOffset.x.map((x) => ({ x, y: initialOffset.y }));
+  return generateScrollValues(
+    initialOffset.y,
+    targetY,
+    DEFAULT_STEPS_COUNT
+  ).map((y) => ({ y, x: initialOffset.x }));
+}
+
+export function createHorizontalScrollSteps(
+  targetX: number | number[] | undefined,
+  initialOffset: ContentOffset
+): ContentOffset[] {
+  if (targetX == null) {
+    return [];
   }
 
-  if (targetOffset.x != null) {
-    return generateScrollValues(
-      initialOffset.x,
-      targetOffset.x,
-      DEFAULT_STEPS_COUNT
-    ).map((x) => ({ x, y: initialOffset.y }));
+  if (Array.isArray(targetX)) {
+    return targetX.map((x) => ({ x, y: initialOffset.y }));
   }
 
-  return [];
+  return generateScrollValues(
+    initialOffset.x,
+    targetX,
+    DEFAULT_STEPS_COUNT
+  ).map((x) => ({ x, y: initialOffset.y }));
 }
 
 /**

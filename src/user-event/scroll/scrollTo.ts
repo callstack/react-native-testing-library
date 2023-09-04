@@ -5,15 +5,25 @@ import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { dispatchEvent } from '../utils';
 import { ContentOffset } from '../event-builder/scroll';
-import { generateScrollSteps } from './utils';
+import {
+  createHorizontalScrollSteps,
+  createVerticalScrollSteps,
+} from './utils';
 import { getElementScrollOffset, setElementScrollOffset } from './state';
 
-export interface ScrollToOptions {
-  y?: number | number[];
-  x?: number | number[];
+export interface VerticalScrollToOptions {
+  y: number | number[];
   momentumY?: number | number[];
+}
+
+export interface HorizontalScrollToOptions {
+  x: number | number[];
   momentumX?: number | number[];
 }
+
+export type ScrollToOptions =
+  | VerticalScrollToOptions
+  | HorizontalScrollToOptions;
 
 export async function scrollTo(
   this: UserEventInstance,
@@ -29,23 +39,41 @@ export async function scrollTo(
 
   const initialPosition = getElementScrollOffset(element);
 
-  const dragTargetPosition = { y: options.y, x: options.x };
-  const dragSteps = generateScrollSteps(dragTargetPosition, initialPosition);
+  // Vertical scroll
+  if ('y' in options) {
+    const dragSteps = createVerticalScrollSteps(options.y, initialPosition);
+    emitDragScrollEvents(element, dragSteps);
 
-  emitDragScrollEvents(element, dragSteps);
+    const momentumStart = dragSteps.at(-1) ?? initialPosition;
+    const momentumSteps = createVerticalScrollSteps(
+      options.momentumY,
+      momentumStart
+    );
+    emitMomentumScrollEvents(element, momentumSteps);
 
-  const momentumTargetPosition = { y: options.momentumY, x: options.momentumX };
-  const momentumSteps = generateScrollSteps(
-    momentumTargetPosition,
-    dragSteps.at(-1) ?? initialPosition
-  );
+    const finalPosition =
+      momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
+    setElementScrollOffset(element, finalPosition);
+    return;
+  }
 
-  emitMomentumScrollEvents(element, momentumSteps);
+  // Horizontal
+  if ('x' in options) {
+    const dragSteps = createHorizontalScrollSteps(options.x, initialPosition);
+    emitDragScrollEvents(element, dragSteps);
 
-  const finalPosition =
-    momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
+    const momentumStart = dragSteps.at(-1) ?? initialPosition;
+    const momentumSteps = createHorizontalScrollSteps(
+      options.momentumX,
+      momentumStart
+    );
+    emitMomentumScrollEvents(element, momentumSteps);
 
-  setElementScrollOffset(element, finalPosition);
+    const finalPosition =
+      momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
+    setElementScrollOffset(element, finalPosition);
+    return;
+  }
 }
 
 function emitDragScrollEvents(
@@ -62,7 +90,10 @@ function emitDragScrollEvents(
     EventBuilder.Scroll.scroll(scrollSteps[0])
   );
 
-  for (let i = 1; i < scrollSteps.length - 1; i++) {
+  // Note: experimentally, in case of drag scroll the last scroll step
+  // will not trigger `scroll` event.
+  // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
+  for (let i = 1; i < scrollSteps.length - 1; i += 1) {
     dispatchEvent(
       element,
       'scroll',
@@ -88,7 +119,10 @@ function emitMomentumScrollEvents(
     EventBuilder.Scroll.scroll(scrollSteps[0])
   );
 
-  for (let i = 1; i < scrollSteps.length - 1; i++) {
+  // Note: experimentally, in case of momentum scroll the last scroll step
+  // will trigger `scroll` event.
+  // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
+  for (let i = 1; i < scrollSteps.length; i += 1) {
     dispatchEvent(
       element,
       'scroll',
