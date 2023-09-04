@@ -160,3 +160,10 @@ export function getAccessibilityState(element: ReactTestInstance) {
     selected: ariaSelected ?? accessibilityState?.selected,
   };
 }
+
+export function getAccessibilityCheckedState(
+  element: ReactTestInstance
+): AccessibilityState['checked'] {
+  const { accessibilityState, 'aria-checked': ariaChecked } = element.props;
+  return ariaChecked ?? accessibilityState?.checked;
+}
