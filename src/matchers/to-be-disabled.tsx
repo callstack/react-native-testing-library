@@ -16,7 +16,7 @@ export function toBeDisabled(
   return {
     pass: isDisabled,
     message: () => {
-      const is = isDisabled ? 'is' : 'is not';
+      const is = this.isNot ? 'is' : 'is not';
       return [
         matcherHint(`${this.isNot ? '.not' : ''}.toBeDisabled`, 'element', ''),
         '',
@@ -38,7 +38,7 @@ export function toBeEnabled(
   return {
     pass: isEnabled,
     message: () => {
-      const is = isEnabled ? 'is' : 'is not';
+      const is = this.isNot ? 'is' : 'is not';
       return [
         matcherHint(`${this.isNot ? '.not' : ''}.toBeEnabled`, 'element', ''),
         '',
