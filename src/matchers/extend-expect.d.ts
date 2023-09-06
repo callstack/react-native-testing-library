@@ -12,6 +12,7 @@ export interface JestNativeMatchers<R> {
   toBeVisible(): R;
   toHaveDisplayValue(expectedValue: TextMatch, options?: TextMatchOptions): R;
   toHaveProp(name: string, expectedValue?: unknown): R;
+  toHaveStyle(style: StyleProp<Style>): R;
   toHaveTextContent(expectedText: TextMatch, options?: TextMatchOptions): R;
 }
 
