@@ -112,7 +112,9 @@ export function isAccessibilityElement(
   );
 }
 
-export function getAccessibilityRole(element: ReactTestInstance) {
+export function getAccessibilityRole(
+  element: ReactTestInstance
+): string | undefined {
   return element.props.role ?? element.props.accessibilityRole;
 }
 
@@ -134,7 +136,9 @@ export function getAccessibilityLabelledBy(
   );
 }
 
-export function getAccessibilityState(element: ReactTestInstance) {
+export function getAccessibilityState(
+  element: ReactTestInstance
+): AccessibilityState | undefined {
   const {
     accessibilityState,
     'aria-busy': ariaBusy,
@@ -170,4 +174,34 @@ export function getAccessibilityCheckedState(
 ): AccessibilityState['checked'] {
   const { accessibilityState, 'aria-checked': ariaChecked } = element.props;
   return ariaChecked ?? accessibilityState?.checked;
+}
+
+export function getAccessibilityValue(
+  element: ReactTestInstance
+): AccessibilityValue | undefined {
+  const {
+    accessibilityValue,
+    'aria-valuemax': ariaValueMax,
+    'aria-valuemin': ariaValueMin,
+    'aria-valuenow': ariaValueNow,
+    'aria-valuetext': ariaValueText,
+  } = element.props;
+
+  const hasAnyAccessibilityValueProps =
+    accessibilityValue != null ||
+    ariaValueMax != null ||
+    ariaValueMin != null ||
+    ariaValueNow != null ||
+    ariaValueText != null;
+
+  if (!hasAnyAccessibilityValueProps) {
+    return undefined;
+  }
+
+  return {
+    max: ariaValueMax ?? accessibilityValue?.max,
+    min: ariaValueMin ?? accessibilityValue?.min,
+    now: ariaValueNow ?? accessibilityValue?.now,
+    text: ariaValueText ?? accessibilityValue?.text,
+  };
 }
