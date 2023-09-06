@@ -1,3 +1,4 @@
+import { AccessibilityScreen } from './screens/Accessibility';
 import { TextInputEventPropagation } from './screens/TextInputEventPropagation';
 import { TextInputEvents } from './screens/TextInputEvents';
 import { ScrollViewEvents } from './screens/ScrollViewEvents';
@@ -7,6 +8,11 @@ import { SectionListEvents } from './screens/SectionListEvents';
 export type Experiment = (typeof experiments)[number];
 
 export const experiments = [
+  {
+    key: 'Accessibility',
+    title: 'Accessibility',
+    component: AccessibilityScreen,
+  },
   {
     key: 'TextInputEvents',
     title: 'TextInput Events',
