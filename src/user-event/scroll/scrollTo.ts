@@ -12,13 +12,13 @@ import {
 import { getElementScrollOffset, setElementScrollOffset } from './state';
 
 export interface VerticalScrollToOptions {
-  y: number | number[];
-  momentumY?: number | number[];
+  y: number;
+  momentumY?: number;
 }
 
 export interface HorizontalScrollToOptions {
-  x: number | number[];
-  momentumX?: number | number[];
+  x: number;
+  momentumX?: number;
 }
 
 export type ScrollToOptions =

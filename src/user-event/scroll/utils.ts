@@ -3,15 +3,11 @@ import { ContentOffset } from '../event-builder/scroll';
 const DEFAULT_STEPS_COUNT = 5;
 
 export function createVerticalScrollSteps(
-  targetY: number | number[] | undefined,
-  initialOffset: ContentOffset
+  targetY: number | undefined,
+  initialOffset: ContentOffset,
 ): ContentOffset[] {
   if (targetY == null) {
     return [];
-  }
-
-  if (Array.isArray(targetY)) {
-    return targetY.map((y) => ({ y, x: initialOffset.x }));
   }
 
   return interpolateLinearSteps(
@@ -22,15 +18,11 @@ export function createVerticalScrollSteps(
 }
 
 export function createHorizontalScrollSteps(
-  targetX: number | number[] | undefined,
-  initialOffset: ContentOffset
+  targetX: number | undefined,
+  initialOffset: ContentOffset,
 ): ContentOffset[] {
   if (targetX == null) {
     return [];
-  }
-
-  if (Array.isArray(targetX)) {
-    return targetX.map((x) => ({ x, y: initialOffset.y }));
   }
 
   return interpolateLinearSteps(

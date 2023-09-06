@@ -85,22 +85,6 @@ describe('scrollTo()', () => {
     ]);
     expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
   });
-
-  it('supports drag scroll with explicit steps', async () => {
-    const { events } = renderScrollViewWithToolkit();
-    const user = userEvent.setup();
-
-    await user.scrollTo(screen.getByTestId('scrollView'), {
-      y: [0, 33, 67, 100],
-    });
-    expect(mapEventsToShortForm(events)).toEqual([
-      ['scrollBeginDrag', 0, 0],
-      ['scroll', 33, 0],
-      ['scroll', 67, 0],
-      ['scrollEndDrag', 100, 0],
-    ]);
-    expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
-  });
 });
 
 describe('userEvent.scroll with fake timers', () => {
