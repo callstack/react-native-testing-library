@@ -176,3 +176,12 @@ test('throws error for invalid role', () => {
     `"toBeChecked() works only on accessibility elements with "checkbox" or "radio" role."`
   );
 });
+
+test('throws error for non-accessibility element', () => {
+  render(<View testID="test" />);
+
+  const view = screen.getByTestId('test');
+  expect(() => expect(view).toBeChecked()).toThrowErrorMatchingInlineSnapshot(
+    `"toBeChecked() works only on accessibility elements with "checkbox" or "radio" role."`
+  );
+});
