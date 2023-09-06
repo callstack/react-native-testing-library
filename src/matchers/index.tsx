@@ -7,3 +7,4 @@ export { toBeVisible } from './to-be-visible';
 export { toHaveDisplayValue } from './to-have-display-value';
 export { toHaveProp } from './to-have-prop';
 export { toHaveTextContent } from './to-have-text-content';
+export { toBeSelected } from './to-be-selected';

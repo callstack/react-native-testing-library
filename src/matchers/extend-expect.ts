@@ -9,6 +9,7 @@ import { toBeVisible } from './to-be-visible';
 import { toHaveDisplayValue } from './to-have-display-value';
 import { toHaveProp } from './to-have-prop';
 import { toHaveTextContent } from './to-have-text-content';
+import { toBeSelected } from './to-be-selected';
 
 expect.extend({
   toBeOnTheScreen,
@@ -21,4 +22,5 @@ expect.extend({
   toHaveDisplayValue,
   toHaveProp,
   toHaveTextContent,
+  toBeSelected,
 });

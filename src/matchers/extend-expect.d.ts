@@ -11,6 +11,7 @@ export interface JestNativeMatchers<R> {
   toHaveDisplayValue(expectedValue: TextMatch, options?: TextMatchOptions): R;
   toHaveProp(name: string, expectedValue?: unknown): R;
   toHaveTextContent(expectedText: TextMatch, options?: TextMatchOptions): R;
+  toBeSelected(): R;
 }
 
 // Implicit Jest global `expect`.
