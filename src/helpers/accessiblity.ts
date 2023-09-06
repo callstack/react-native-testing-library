@@ -83,10 +83,10 @@ function isSubtreeInaccessible(element: ReactTestInstance): boolean {
   const flatStyle = StyleSheet.flatten(element.props.style) ?? {};
   if (flatStyle.display === 'none') return true;
 
-  // iOS: accessibilityViewIsModal
+  // iOS: accessibilityViewIsModal or aria-modal
   // See: https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios
   const hostSiblings = getHostSiblings(element);
-  if (hostSiblings.some((sibling) => sibling.props.accessibilityViewIsModal)) {
+  if (hostSiblings.some((sibling) => getAccessibilityViewIsModal(sibling))) {
     return true;
   }
 
@@ -114,6 +114,10 @@ export function isAccessibilityElement(
 
 export function getAccessibilityRole(element: ReactTestInstance) {
   return element.props.role ?? element.props.accessibilityRole;
+}
+
+export function getAccessibilityViewIsModal(element: ReactTestInstance) {
+  return element.props['aria-modal'] ?? element.props.accessibilityViewIsModal;
 }
 
 export function getAccessibilityLabel(

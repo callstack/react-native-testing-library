@@ -245,69 +245,60 @@ describe('isHiddenFromAccessibility', () => {
     );
     expect(
       isHiddenFromAccessibility(
-        view.getByTestId('subject', {
-          includeHiddenElements: true,
-        })
+        view.getByTestId('subject', { includeHiddenElements: true })
+      )
+    ).toBe(true);
+  });
+
+  test('detects siblings of element with "aria-modal" prop', () => {
+    const view = render(
+      <View>
+        <View aria-modal />
+        <View testID="subject" />
+      </View>
+    );
+    expect(
+      isHiddenFromAccessibility(
+        view.getByTestId('subject', { includeHiddenElements: true })
       )
     ).toBe(true);
   });
 
   test('is not triggered for element with accessibilityViewIsModal prop', () => {
-    const view = render(
-      <View>
-        <View accessibilityViewIsModal testID="subject" />
-      </View>
-    );
-    expect(
-      isHiddenFromAccessibility(
-        view.getByTestId('subject', {
-          includeHiddenElements: true,
-        })
-      )
-    ).toBe(false);
+    const view = render(<View accessibilityViewIsModal testID="subject" />);
+    expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(false);
   });
 
   test('is not triggered for child of element with accessibilityViewIsModal prop', () => {
     const view = render(
-      <View>
-        <View accessibilityViewIsModal>
-          <View testID="subject" />
-        </View>
+      <View accessibilityViewIsModal>
+        <View testID="subject" />
       </View>
     );
-    expect(
-      isHiddenFromAccessibility(
-        view.getByTestId('subject', {
-          includeHiddenElements: true,
-        })
-      )
-    ).toBe(false);
+    expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(false);
   });
 
   test('is not triggered for descendent of element with accessibilityViewIsModal prop', () => {
     const view = render(
-      <View>
-        <View accessibilityViewIsModal>
+      <View accessibilityViewIsModal>
+        <View>
           <View>
-            <View>
-              <View testID="subject" />
-            </View>
+            <View testID="subject" />
           </View>
         </View>
       </View>
     );
-    expect(
-      isHiddenFromAccessibility(
-        view.getByTestId('subject', {
-          includeHiddenElements: true,
-        })
-      )
-    ).toBe(false);
+    expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(false);
   });
 
   test('has isInaccessible alias', () => {
     expect(isInaccessible).toBe(isHiddenFromAccessibility);
   });
+});
+
+test('is not triggered for element with "aria-modal" prop', () => {
+  const view = render(<View aria-modal testID="subject" />);
+  expect(isHiddenFromAccessibility(view.getByTestId('subject'))).toBe(false);
 });
 
 describe('isAccessibilityElement', () => {
