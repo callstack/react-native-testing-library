@@ -1,4 +1,3 @@
-import React from 'react';
 import { Text, TextInput, TextInputProps } from 'react-native';
 import { render, fireEvent } from '..';
 

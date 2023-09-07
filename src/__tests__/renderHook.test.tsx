@@ -1,12 +1,18 @@
-import React, { ReactNode } from 'react';
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import TestRenderer from 'react-test-renderer';
 import { renderHook } from '../pure';
 
 test('gives comitted result', () => {
   const { result } = renderHook(() => {
-    const [state, setState] = React.useState(1);
+    const [state, setState] = useState(1);
 
-    React.useEffect(() => {
+    useEffect(() => {
       setState(2);
     }, []);
 
@@ -19,8 +25,8 @@ test('gives comitted result', () => {
 test('allows rerendering', () => {
   const { result, rerender } = renderHook(
     (props: { branch: 'left' | 'right' }) => {
-      const [left, setLeft] = React.useState('left');
-      const [right, setRight] = React.useState('right');
+      const [left, setLeft] = useState('left');
+      const [right, setRight] = useState('right');
 
       // eslint-disable-next-line jest/no-if
       switch (props.branch) {
@@ -46,13 +52,13 @@ test('allows rerendering', () => {
 });
 
 test('allows wrapper components', async () => {
-  const Context = React.createContext('default');
+  const Context = createContext('default');
   function Wrapper({ children }: { children: ReactNode }) {
     return <Context.Provider value="provided">{children}</Context.Provider>;
   }
   const { result } = renderHook(
     () => {
-      return React.useContext(Context);
+      return useContext(Context);
     },
     {
       wrapper: Wrapper,
@@ -106,7 +112,7 @@ test('does render only once', () => {
   jest.spyOn(TestRenderer, 'create');
 
   renderHook(() => {
-    const [state, setState] = React.useState(1);
+    const [state, setState] = useState(1);
     return [state, setState];
   });
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Pressable, Text } from 'react-native';
 import { render, screen } from '../../../pure';
 import { userEvent } from '../..';
