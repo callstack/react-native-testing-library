@@ -41,8 +41,12 @@ test('toBeBusy() error cases with accessibilityState', () => {
 
     Received element is busy:
       <View
-        accessible
-        accessibilityState={{ busy: true }}
+        accessibilityState={
+          {
+            "busy": true,
+          }
+        }
+        accessible={true}
         testID="busy"
       />"
   `);
@@ -53,8 +57,12 @@ test('toBeBusy() error cases with accessibilityState', () => {
 
     Received element is not busy:
       <View
-        accessible
-        accessibilityState={{ busy: false }}
+        accessibilityState={
+          {
+            "busy": false,
+          }
+        }
+        accessible={true}
         testID="not-busy"
       />"
   `);
