@@ -1,4 +1,8 @@
+import React, { useEffect, useState } from 'react';
+import { Text } from 'react-native';
 import { wait } from '../wait';
+import render from '../../../render';
+import { screen } from '../../../screen';
 
 beforeEach(() => {
   jest.useRealTimers();
@@ -59,4 +63,29 @@ describe('wait()', () => {
       expect(advanceTimers).not.toHaveBeenCalled();
     }
   );
+
+  it('is wrapped by act', async () => {
+    jest.useFakeTimers();
+    const TestComponent = () => {
+      const [isVisible, setIsVisible] = useState(false);
+
+      useEffect(() => {
+        setTimeout(() => {
+          setIsVisible(true);
+        }, 100);
+      }, []);
+
+      if (isVisible) {
+        return <Text>Visible</Text>;
+      }
+
+      return null;
+    };
+
+    render(<TestComponent />);
+
+    await wait({ delay: 100, advanceTimers: jest.advanceTimersByTime });
+
+    expect(screen.getByText('Visible')).toBeTruthy();
+  });
 });
