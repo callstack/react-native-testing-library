@@ -202,19 +202,17 @@ This helper simulates user scrolling a host `ScrollView` element.
 
 This function supports only host `ScrollView` elements, passing other element types will result in error. Note that `FlatList` is accepted as it renders to a host `ScrolLView` element, however in the current iteration we focus on base `ScrollView` only.
 
-Scroll interaction should match host `ScrollView` direction. For vertical scroll view (`horizontal={false}`) you should pass only `y` (or `momentumY`) options, for horizontal scroll view (`horizontal={true}`) you should pass only `x` (or `momentumX`) options.
+Scroll interaction should match `ScrollView` element direction. For vertical scroll view (default or explicit `horizontal={false}`) you should pass only `y` (and optionally also `momentumY`) option, for horizontal scroll view (`horizontal={true}`) you should pass only `x` (and optionally  `momentumX`) option.
 
-Each scroll interaction consists of mandatory drag scroll part which simulates user dragging the scroll view with his finger (`y` or `x` option). This may optinally be followed by momentum scroll movement which simulates the inertial movement of scroll view content after user lifts his finger up (`momentumY` or `momentumX` options).
+Each scroll interaction consists of required drag scroll part which simulates user dragging the scroll view with his finger (`y` or `x` option). This may optionally be followed by momentum scroll movement which simulates the inertial movement of scroll view content after user lifts his finger up (`momentumY` or `momentumX` options).
 
 ### Options {#type-options}
- - `y` - either a target vertical drag scroll offset (`number`) or list of vertical drag scroll steps (`number[]`)
- - `x` - either a target horizontal drag scroll offset (`number`) or list of horizontal drag scroll steps (`number[]`)
- - `momentumY` - either a target vertical momentum scroll offset (`number`) or list of vertical momentum scroll steps (`number[]`)
- - `momentumX` - either a target horizontal momentum scroll position (`number`) or list of horizontal momentum scroll steps (`number[]`)
+ - `y` - target vertical drag scroll offset
+ - `x` - target horizontal drag scroll offset
+ - `momentumY` - target vertical momentum scroll offset
+ - `momentumX` - target horizontal momentum scroll position 
 
-When passing single `number` value, User Event will generate a number of intermediate scroll steps. You should not rely on exact values of these scrolls steps as they might be change in the future version.
-
-In case you want to test exact scroll steps use `number[]` option variant. First item will be used as intial scroll position, last item will be final position, and all other items between will be considered intermediate scroll steps.
+User Event will generate a number of intermediate scroll steps to simulate user scroll interaction. You should not rely on exact number or values of these scrolls steps as they might be change in the future version.
 
 ### Sequence of events
 
