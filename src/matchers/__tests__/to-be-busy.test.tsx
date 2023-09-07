@@ -1,0 +1,61 @@
+import React from 'react';
+import { View } from 'react-native';
+import { render } from '../..';
+import '../extend-expect';
+
+test('toBeBusy() basic case with accessibilityState', () => {
+  const screen = render(
+    <View>
+      <View testID="busy" accessible accessibilityState={{ busy: true }} />
+      <View testID="not-busy" accessible accessibilityState={{ busy: false }} />
+    </View>
+  );
+
+  expect(screen.getByTestId('busy')).toBeBusy();
+  expect(screen.getByTestId('not-busy')).not.toBeBusy();
+});
+
+test('toBeBusy() basic case with aria-busy', () => {
+  const screen = render(
+    <View>
+      <View testID="busy" aria-busy />
+      <View testID="not-busy" aria-busy={false} />
+    </View>
+  );
+
+  expect(screen.getByTestId('busy')).toBeBusy();
+  expect(screen.getByTestId('not-busy')).not.toBeBusy();
+});
+
+test('toBeBusy() error cases with accessibilityState', () => {
+  const screen = render(
+    <View>
+      <View testID="busy" accessible accessibilityState={{ busy: true }} />
+      <View testID="not-busy" accessible accessibilityState={{ busy: false }} />
+    </View>
+  );
+
+  expect(() => expect(screen.getByTestId('busy')).not.toBeBusy())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toBeBusy()
+
+    Received element is busy:
+      <View
+        accessible
+        accessibilityState={{ busy: true }}
+        testID="busy"
+      />"
+  `);
+
+  expect(() => expect(screen.getByTestId('not-busy')).toBeBusy())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeBusy()
+
+    Received element is not busy:
+      <View
+        accessible
+        accessibilityState={{ busy: false }}
+        testID="not-busy"
+      />"
+  `);
+});
