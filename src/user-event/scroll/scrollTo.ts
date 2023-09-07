@@ -8,6 +8,8 @@ import { ContentOffset } from '../event-builder/scroll';
 import {
   createHorizontalScrollSteps,
   createVerticalScrollSteps,
+  inertialInterpolator,
+  linearInterpolator,
 } from './utils';
 import { getElementScrollOffset, setElementScrollOffset } from './state';
 
@@ -41,13 +43,18 @@ export async function scrollTo(
 
   // Vertical scroll
   if ('y' in options) {
-    const dragSteps = createVerticalScrollSteps(options.y, initialPosition);
+    const dragSteps = createVerticalScrollSteps(
+      options.y,
+      initialPosition,
+      linearInterpolator
+    );
     emitDragScrollEvents(element, dragSteps);
 
     const momentumStart = dragSteps.at(-1) ?? initialPosition;
     const momentumSteps = createVerticalScrollSteps(
       options.momentumY,
-      momentumStart
+      momentumStart,
+      inertialInterpolator
     );
     emitMomentumScrollEvents(element, momentumSteps);
 
@@ -59,13 +66,18 @@ export async function scrollTo(
 
   // Horizontal
   if ('x' in options) {
-    const dragSteps = createHorizontalScrollSteps(options.x, initialPosition);
+    const dragSteps = createHorizontalScrollSteps(
+      options.x,
+      initialPosition,
+      linearInterpolator
+    );
     emitDragScrollEvents(element, dragSteps);
 
     const momentumStart = dragSteps.at(-1) ?? initialPosition;
     const momentumSteps = createHorizontalScrollSteps(
       options.momentumX,
-      momentumStart
+      momentumStart,
+      inertialInterpolator
     );
     emitMomentumScrollEvents(element, momentumSteps);
 

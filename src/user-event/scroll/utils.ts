@@ -2,34 +2,34 @@ import { ContentOffset } from '../event-builder/scroll';
 
 const DEFAULT_STEPS_COUNT = 5;
 
+type InterpolatorFn = (end: number, start: number, steps: number) => number[];
+
 export function createVerticalScrollSteps(
   targetY: number | undefined,
   initialOffset: ContentOffset,
+  interpolator: InterpolatorFn
 ): ContentOffset[] {
   if (targetY == null) {
     return [];
   }
 
-  return interpolateLinearSteps(
-    targetY,
-    initialOffset.y,
-    DEFAULT_STEPS_COUNT
-  ).map((y) => ({ y, x: initialOffset.x }));
+  return interpolator(targetY, initialOffset.y, DEFAULT_STEPS_COUNT).map(
+    (y) => ({ y, x: initialOffset.x })
+  );
 }
 
 export function createHorizontalScrollSteps(
   targetX: number | undefined,
   initialOffset: ContentOffset,
+  interpolator: InterpolatorFn
 ): ContentOffset[] {
   if (targetX == null) {
     return [];
   }
 
-  return interpolateLinearSteps(
-    targetX,
-    initialOffset.x,
-    DEFAULT_STEPS_COUNT
-  ).map((x) => ({ x, y: initialOffset.y }));
+  return interpolator(targetX, initialOffset.x, DEFAULT_STEPS_COUNT).map(
+    (x) => ({ x, y: initialOffset.y })
+  );
 }
 
 /**
@@ -39,21 +39,53 @@ export function createHorizontalScrollSteps(
  * @param count
  * @returns
  */
-export function interpolateLinearSteps(
+export function linearInterpolator(
   end: number,
   start: number,
   steps: number
 ): number[] {
   if (end === start) {
-    return [];
+    return [end];
   }
 
   const delta = (end - start) / (steps - 1);
 
   const result = [];
-  for (let i = 0; i < steps; i++) {
+  for (let i = 0; i < steps; i += 1) {
     result.push(start + delta * i);
   }
 
   return result;
+}
+
+export function inertialInterpolator(
+  end: number,
+  start: number,
+  steps: number
+): number[] {
+  if (end === start) {
+    return [end];
+  }
+
+  const result = [];
+  let factor = 1;
+  for (let i = 0; i < steps - 1; i += 1) {
+    result.push(lerp(end, start, factor));
+    factor /= 2;
+  }
+
+  result.push(end);
+
+  return result;
+}
+
+/**
+ * Linear interpolation function
+ * @param v0
+ * @param v1
+ * @param t
+ * @returns
+ */
+export function lerp(v0: number, v1: number, t: number) {
+  return v0 + t * (v1 - v0);
 }
