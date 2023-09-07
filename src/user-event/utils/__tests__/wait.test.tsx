@@ -65,6 +65,7 @@ describe('wait()', () => {
   );
 
   it('is wrapped by act', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error');
     jest.useFakeTimers();
     const TestComponent = () => {
       const [isVisible, setIsVisible] = useState(false);
@@ -87,5 +88,6 @@ describe('wait()', () => {
     await wait({ delay: 100, advanceTimers: jest.advanceTimersByTime });
 
     expect(screen.getByText('Visible')).toBeTruthy();
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 });
