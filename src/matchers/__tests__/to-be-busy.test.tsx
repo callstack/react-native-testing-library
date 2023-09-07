@@ -1,10 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
-import { render } from '../..';
+import { render, screen } from '../..';
 import '../extend-expect';
 
 test('toBeBusy() basic case with accessibilityState', () => {
-  const screen = render(
+  render(
     <View>
       <View testID="busy" accessible accessibilityState={{ busy: true }} />
       <View testID="not-busy" accessible accessibilityState={{ busy: false }} />
@@ -16,7 +16,7 @@ test('toBeBusy() basic case with accessibilityState', () => {
 });
 
 test('toBeBusy() basic case with aria-busy', () => {
-  const screen = render(
+  render(
     <View>
       <View testID="busy" aria-busy />
       <View testID="not-busy" aria-busy={false} />
@@ -28,7 +28,7 @@ test('toBeBusy() basic case with aria-busy', () => {
 });
 
 test('toBeBusy() error cases with accessibilityState', () => {
-  const screen = render(
+  render(
     <View>
       <View testID="busy" accessible accessibilityState={{ busy: true }} />
       <View testID="not-busy" accessible accessibilityState={{ busy: false }} />
