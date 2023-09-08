@@ -7,6 +7,7 @@ export interface JestNativeMatchers<R> {
   toBeEmptyElement(): R;
   toBeEnabled(): R;
   toBePartiallyChecked(): R;
+  toBeSelected(): R;
   toBeVisible(): R;
   toHaveDisplayValue(expectedValue: TextMatch, options?: TextMatchOptions): R;
   toHaveProp(name: string, expectedValue?: unknown): R;
