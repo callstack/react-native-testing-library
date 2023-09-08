@@ -5,26 +5,58 @@ import '../extend-expect';
 
 test('.toBeSelected() basic case', () => {
   render(
-    <View>
+    <>
       <View testID="selected" accessibilityState={{ selected: true }} />
+      <View testID="selected-aria" aria-selected />
       <View testID="not-selected" accessibilityState={{ selected: false }} />
-      <View testID="no-accessibilityState" />
-    </View>
+      <View testID="not-selected-aria" aria-selected={false} />
+      <View testID="default" />
+    </>
   );
 
   expect(screen.getByTestId('selected')).toBeSelected();
+  expect(screen.getByTestId('selected-aria')).toBeSelected();
   expect(screen.getByTestId('not-selected')).not.toBeSelected();
-  expect(screen.getByTestId('no-accessibilityState')).not.toBeSelected();
+  expect(screen.getByTestId('not-selected-aria')).not.toBeSelected();
+  expect(screen.getByTestId('default')).not.toBeSelected();
 });
 
 test('.toBeSelected() error messages', () => {
   render(
-    <View>
+    <>
       <View testID="selected" accessibilityState={{ selected: true }} />
+      <View testID="selected-aria" aria-selected />
       <View testID="not-selected" accessibilityState={{ selected: false }} />
-      <View testID="no-accessibilityState" />
-    </View>
+      <View testID="not-selected-aria" aria-selected={false} />
+      <View testID="default" />
+    </>
   );
+
+  expect(() => expect(screen.getByTestId('selected')).not.toBeSelected())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toBeSelected()
+
+    Received element is selected
+      <View
+        accessibilityState={
+          {
+            "selected": true,
+          }
+        }
+        testID="selected"
+      />"
+  `);
+
+  expect(() => expect(screen.getByTestId('selected-aria')).not.toBeSelected())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toBeSelected()
+
+    Received element is selected
+      <View
+        aria-selected={true}
+        testID="selected-aria"
+      />"
+  `);
 
   expect(() => expect(screen.getByTestId('not-selected')).toBeSelected())
     .toThrowErrorMatchingInlineSnapshot(`
@@ -40,28 +72,25 @@ test('.toBeSelected() error messages', () => {
         testID="not-selected"
       />"
   `);
-  expect(() => expect(screen.getByTestId('selected')).not.toBeSelected())
-    .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeSelected()
 
-    Received element is selected
-      <View
-        accessibilityState={
-          {
-            "selected": true,
-          }
-        }
-        testID="selected"
-      />"
-  `);
-  expect(() =>
-    expect(screen.getByTestId('no-accessibilityState')).toBeSelected()
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(screen.getByTestId('not-selected-aria')).toBeSelected())
+    .toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBeSelected()
 
     Received element is not selected
       <View
-        testID="no-accessibilityState"
+        aria-selected={false}
+        testID="not-selected-aria"
+      />"
+  `);
+
+  expect(() => expect(screen.getByTestId('default')).toBeSelected())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeSelected()
+
+    Received element is not selected
+      <View
+        testID="default"
       />"
   `);
 });
