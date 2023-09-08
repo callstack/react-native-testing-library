@@ -169,6 +169,13 @@ export function getAccessibilityState(
   };
 }
 
+export function getAccessibilityBusyState(
+  element: ReactTestInstance
+): NonNullable<AccessibilityState['busy']> {
+  const { accessibilityState, 'aria-busy': ariaBusy } = element.props;
+  return ariaBusy ?? accessibilityState?.busy ?? false;
+}
+
 export function getAccessibilityCheckedState(
   element: ReactTestInstance
 ): AccessibilityState['checked'] {
