@@ -6,11 +6,11 @@ import '../extend-expect';
 test('toBeBusy() basic case', () => {
   render(
     <>
-      <View testID="busy" accessibilityState={{ busy: true }} />
-      <View testID="busy-aria" aria-busy />
-      <View testID="not-busy" accessibilityState={{ busy: false }} />
-      <View testID="not-busy-aria" aria-busy={false} />
-      <View testID="default" />
+      <View testID="busy" accessible accessibilityState={{ busy: true }} />
+      <View testID="busy-aria" accessible aria-busy />
+      <View testID="not-busy" accessible accessibilityState={{ busy: false }} />
+      <View testID="not-busy-aria" accessible aria-busy={false} />
+      <View testID="default" accessible />
     </>
   );
 
@@ -24,11 +24,11 @@ test('toBeBusy() basic case', () => {
 test('toBeBusy() error messages', () => {
   render(
     <>
-      <View testID="busy" accessibilityState={{ busy: true }} />
-      <View testID="busy-aria" aria-busy />
-      <View testID="not-busy" accessibilityState={{ busy: false }} />
-      <View testID="not-busy-aria" aria-busy={false} />
-      <View testID="default" />
+      <View testID="busy" accessible accessibilityState={{ busy: true }} />
+      <View testID="busy-aria" accessible aria-busy />
+      <View testID="not-busy" accessible accessibilityState={{ busy: false }} />
+      <View testID="not-busy-aria" accessible aria-busy={false} />
+      <View testID="default" accessible />
     </>
   );
 
@@ -43,6 +43,7 @@ test('toBeBusy() error messages', () => {
             "busy": true,
           }
         }
+        accessible={true}
         testID="busy"
       />"
   `);
@@ -53,6 +54,7 @@ test('toBeBusy() error messages', () => {
 
     Received element is busy:
       <View
+        accessible={true}
         aria-busy={true}
         testID="busy-aria"
       />"
@@ -69,6 +71,7 @@ test('toBeBusy() error messages', () => {
             "busy": false,
           }
         }
+        accessible={true}
         testID="not-busy"
       />"
   `);
@@ -79,6 +82,7 @@ test('toBeBusy() error messages', () => {
 
     Received element is not busy:
       <View
+        accessible={true}
         aria-busy={false}
         testID="not-busy-aria"
       />"
@@ -90,7 +94,37 @@ test('toBeBusy() error messages', () => {
 
     Received element is not busy:
       <View
+        accessible={true}
         testID="default"
       />"
   `);
+});
+
+test('toBeBusy() requires accessibility elements', () => {
+  render(
+    <>
+      <View testID="busy-aria" aria-busy />
+      <View testID="not-busy-aria" aria-busy={false} />
+      <View testID="default" />
+    </>
+  );
+
+  expect(() => expect(screen.getByTestId('busy-aria')).toBeBusy())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeBusy()
+
+    Received element is not busy:
+      <View
+        aria-busy={true}
+        testID="busy-aria"
+      />"
+  `);
+
+  expect(() =>
+    expect(screen.getByTestId('not-busy-aria')).not.toBeBusy()
+  ).toThrowErrorMatchingInlineSnapshot();
+
+  expect(() =>
+    expect(screen.getByTestId('default')).not.toBeBusy()
+  ).toThrowErrorMatchingInlineSnapshot();
 });

@@ -1,6 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { getAccessibilityBusyState } from '../helpers/accessiblity';
+import { isElementBusy } from '../helpers/accessiblity';
 import { checkHostElement, formatElement } from './utils';
 
 export function toBeBusy(
@@ -10,7 +10,7 @@ export function toBeBusy(
   checkHostElement(element, toBeBusy, this);
 
   return {
-    pass: getAccessibilityBusyState(element),
+    pass: isElementBusy(element),
     message: () => {
       const matcher = matcherHint(
         `${this.isNot ? '.not' : ''}.toBeBusy`,
