@@ -176,6 +176,13 @@ export function getAccessibilityCheckedState(
   return ariaChecked ?? accessibilityState?.checked;
 }
 
+export function getAccessibilitySelectedState(
+  element: ReactTestInstance
+): NonNullable<AccessibilityState['selected']> {
+  const { accessibilityState, 'aria-selected': ariaSelected } = element.props;
+  return ariaSelected ?? accessibilityState?.selected ?? false;
+}
+
 export function getAccessibilityValue(
   element: ReactTestInstance
 ): AccessibilityValue | undefined {

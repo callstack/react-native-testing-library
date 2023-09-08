@@ -30,9 +30,7 @@ test('.toBeSelected() error messages', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBeSelected()
 
-    Expected the element to have accessibility state selected:
-
-    Received element is not selected:
+    Received element is not selected
       <View
         accessibilityState={
           {
@@ -46,9 +44,7 @@ test('.toBeSelected() error messages', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeSelected()
 
-    Expected the element not to have accessibility state selected:
-
-    Received element is selected:
+    Received element is selected
       <View
         accessibilityState={
           {
@@ -63,9 +59,7 @@ test('.toBeSelected() error messages', () => {
   ).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBeSelected()
 
-    Expected the element to have accessibility state selected:
-
-    Received element is not selected:
+    Received element is not selected
       <View
         testID="no-accessibilityState"
       />"

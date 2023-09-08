@@ -1,7 +1,7 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { getAccessibilityState } from '../helpers/accessiblity';
-import { checkHostElement, formatElement, formatMessage } from './utils';
+import { getAccessibilitySelectedState } from '../helpers/accessiblity';
+import { checkHostElement, formatElement } from './utils';
 
 export function toBeSelected(
   this: jest.MatcherContext,
@@ -10,23 +10,15 @@ export function toBeSelected(
   checkHostElement(element, toBeSelected, this);
 
   return {
-    pass: getAccessibilityState(element)?.selected === true,
+    pass: getAccessibilitySelectedState(element),
     message: () => {
       const is = this.isNot ? 'is' : 'is not';
-      const matcher = matcherHint(
-        `${this.isNot ? '.not' : ''}.toBeSelected`,
-        'element',
-        ''
-      );
-      return formatMessage(
-        matcher,
-        `Expected the element ${
-          this.isNot ? 'not to' : 'to'
-        } have accessibility state selected`,
+      return [
+        matcherHint(`${this.isNot ? '.not' : ''}.toBeSelected`, 'element', ''),
         '',
         `Received element ${is} selected`,
-        formatElement(element)
-      );
+        formatElement(element),
+      ].join('\n');
     },
   };
 }
