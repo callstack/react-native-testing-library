@@ -6,6 +6,10 @@ import TOCInline from '@theme/TOCInline';
 
 <TOCInline toc={toc} />
 
+:::note
+Requires `@testing-library/react-native` version 12.2.0.
+:::
+
 :::caution
 User Event API is in beta stage.
 
