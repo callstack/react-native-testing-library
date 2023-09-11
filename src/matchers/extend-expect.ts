@@ -15,6 +15,7 @@ import { toHaveDisplayValue } from './to-have-display-value';
 import { toHaveProp } from './to-have-prop';
 import { toHaveStyle } from './to-have-style';
 import { toHaveTextContent } from './to-have-text-content';
+import { toHaveAccessibilityValue } from './to-have-accessibility-value';
 
 expect.extend({
   toBeOnTheScreen,
@@ -33,4 +34,5 @@ expect.extend({
   toHaveProp,
   toHaveStyle,
   toHaveTextContent,
+  toHaveAccessibilityValue,
 });

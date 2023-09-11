@@ -1,6 +1,7 @@
 import type { StyleProp } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import type { TextMatch, TextMatchOptions } from '../matches';
+import type { AccessibilityValueMatcher } from '../helpers/matchers/accessibilityValue';
 import type { Style } from './to-have-style';
 
 export interface JestNativeMatchers<R> {
@@ -20,6 +21,7 @@ export interface JestNativeMatchers<R> {
   toHaveProp(name: string, expectedValue?: unknown): R;
   toHaveStyle(style: StyleProp<Style>): R;
   toHaveTextContent(expectedText: TextMatch, options?: TextMatchOptions): R;
+  toHaveAccessibilityValue(expectedValue: AccessibilityValueMatcher): R;
 }
 
 // Implicit Jest global `expect`.
