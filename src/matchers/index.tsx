@@ -10,3 +10,4 @@ export { toHaveProp } from './to-have-prop';
 export { toHaveStyle } from './to-have-style';
 export { toHaveTextContent } from './to-have-text-content';
 export { toBeSelected } from './to-be-selected';
+export { toContainElement } from './to-contain-element';

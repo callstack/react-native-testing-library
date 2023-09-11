@@ -1,4 +1,5 @@
 import type { StyleProp } from 'react-native';
+import { ReactTestInstance } from 'react-test-renderer';
 import type { TextMatch, TextMatchOptions } from '../matches';
 import type { Style } from './to-have-style';
 
@@ -12,6 +13,7 @@ export interface JestNativeMatchers<R> {
   toBePartiallyChecked(): R;
   toBeSelected(): R;
   toBeVisible(): R;
+  toContainElement(element: ReactTestInstance | null): R;
   toHaveDisplayValue(expectedValue: TextMatch, options?: TextMatchOptions): R;
   toHaveProp(name: string, expectedValue?: unknown): R;
   toHaveStyle(style: StyleProp<Style>): R;
