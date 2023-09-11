@@ -12,8 +12,6 @@ import redent from 'redent';
 import { isHostElement } from '../helpers/component-tree';
 import { defaultMapProps } from '../helpers/format-default';
 
-const { ReactTestComponent, ReactElement } = plugins;
-
 class HostElementTypeError extends Error {
   constructor(
     received: unknown,
@@ -128,29 +126,4 @@ export function formatMessage(
 
 function formatValue(value: unknown) {
   return typeof value === 'string' ? value : stringify(value);
-}
-
-export function printElement(element: ReactTestInstance | null) {
-  if (element == null) {
-    return 'null';
-  }
-
-  return redent(
-    prettyFormat(
-      {
-        // This prop is needed persuade the prettyFormat that the element is
-        // a ReactTestRendererJSON instance, so it is formatted as JSX.
-        $$typeof: Symbol.for('react.test.json'),
-        type: element.type,
-        props: element.props,
-      },
-      {
-        plugins: [ReactTestComponent, ReactElement],
-        printFunctionName: false,
-        printBasicPrototype: false,
-        highlight: true,
-      }
-    ),
-    2
-  );
 }

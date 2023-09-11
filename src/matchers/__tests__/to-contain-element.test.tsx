@@ -20,11 +20,6 @@ test('toContainElement() on parent view', () => {
     "expect(element).not.toContainElement(element)
 
       <View
-        children={
-          <View
-            testID="child"
-          />
-        }
         testID="parent"
       /> 
 
