@@ -11,14 +11,10 @@ export function toContainElement(
     checkHostElement(element, toContainElement, this);
   }
 
-  let matches = [];
+  let matches: ReactTestInstance[] = [];
 
   if (element) {
-    matches = container.findAll((node) => {
-      return (
-        node.type === element.type && this.equals(node.props, element.props)
-      );
-    });
+    matches = container.findAll((node) => node === element);
   }
 
   return {
