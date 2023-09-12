@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { render, screen } from '../..';
 import '../extend-expect';
 
-test('toContainElement() on parent view', () => {
+test('toContainElement() supports basic case', () => {
   render(
     <View testID="parent">
       <View testID="child" />
