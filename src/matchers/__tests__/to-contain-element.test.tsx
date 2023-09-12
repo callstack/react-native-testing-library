@@ -84,6 +84,20 @@ test('toContainElement() passing null', () => {
   `);
 });
 
+test('toContainElement() on null elements', () => {
+  render(<View testID="view" />);
+
+  const view = screen.getByTestId('view');
+
+  expect(() => expect(null).toContainElement(view))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "expect(received).toContainElement()
+
+      received value must be a host element.
+      Received has value: null"
+    `);
+});
+
 test('toContainElement() on non-React elements', () => {
   render(<View testID="view" />);
 
