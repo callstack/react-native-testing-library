@@ -1,4 +1,6 @@
+import type { StyleProp } from 'react-native';
 import type { TextMatch, TextMatchOptions } from '../matches';
+import type { Style } from './to-have-style';
 
 export interface JestNativeMatchers<R> {
   toBeOnTheScreen(): R;

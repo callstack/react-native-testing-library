@@ -1,15 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { render } from '../..';
 import '../extend-expect';
 
-test('handles positive test cases', () => {
-  const styles = StyleSheet.create({
-    container: { borderBottomColor: 'white' },
-  });
-  const { getByTestId } = render(
+const styles = StyleSheet.create({
+  container: { borderBottomColor: 'white' },
+});
+
+test('toHaveStyle() handles basic cases', () => {
+  const screen = render(
     <View
-      testID="container"
+      testID="view"
       style={[
         {
           backgroundColor: 'blue',
@@ -20,92 +21,155 @@ test('handles positive test cases', () => {
         [[{ width: '50%' }]],
         styles.container,
       ]}
-    >
-      <Text>Hello World</Text>
-    </View>
+    />
   );
 
-  const container = getByTestId('container');
+  const view = screen.getByTestId('view');
+  expect(view).toHaveStyle({ backgroundColor: 'blue' });
+  expect(view).toHaveStyle({ height: '100%' });
+  expect(view).toHaveStyle({ backgroundColor: 'blue', height: '100%' });
+  expect(view).toHaveStyle([{ backgroundColor: 'blue' }, { height: '100%' }]);
 
-  expect(container).toHaveStyle({ backgroundColor: 'blue', height: '100%' });
-  expect(container).toHaveStyle([
-    { backgroundColor: 'blue' },
-    { height: '100%' },
-  ]);
-  expect(container).toHaveStyle({ backgroundColor: 'blue' });
-  expect(container).toHaveStyle({ height: '100%' });
-  expect(container).toHaveStyle({ borderBottomColor: 'white' });
-  expect(container).toHaveStyle({ width: '50%' });
-  expect(container).toHaveStyle([[{ width: '50%' }]]);
-  expect(container).toHaveStyle({
+  expect(view).toHaveStyle({ borderBottomColor: 'white' });
+  expect(view).toHaveStyle({ width: '50%' });
+  expect(view).toHaveStyle([[{ width: '50%' }]]);
+  expect(view).toHaveStyle({
     transform: [{ scale: 2 }, { rotate: '45deg' }],
+  });
+
+  expect(view).not.toHaveStyle({ backgroundColor: 'red' });
+  expect(view).not.toHaveStyle({ height: '50%' });
+  expect(view).not.toHaveStyle({ backgroundColor: 'blue', height: '50%' });
+  expect(view).not.toHaveStyle([
+    { backgroundColor: 'blue' },
+    { height: '50%' },
+  ]);
+  expect(view).not.toHaveStyle({
+    transform: [{ scale: 2 }],
+  });
+  expect(view).not.toHaveStyle({
+    transform: [{ rotate: '45deg' }, { scale: 2 }],
   });
 });
 
-test('handles negative test cases', () => {
-  const { getByTestId } = render(
+test('toHaveStyle error messages', () => {
+  const screen = render(
     <View
-      testID="container"
+      testID="view"
       style={{
         backgroundColor: 'blue',
         borderBottomColor: 'black',
         height: '100%',
         transform: [{ scale: 2 }, { rotate: '45deg' }],
       }}
-    >
-      <Text>Hello World</Text>
-    </View>
+    />
   );
 
-  const container = getByTestId('container');
+  const view = screen.getByTestId('view');
+  expect(() => expect(view).toHaveStyle({ backgroundColor: 'red' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toHaveStyle()
+
+    - Expected
+    + Received
+
+    - backgroundColor: red;
+    + backgroundColor: blue;"
+  `);
+
   expect(() =>
-    expect(container).toHaveStyle({
+    expect(view).toHaveStyle({
       backgroundColor: 'blue',
       transform: [{ scale: 1 }],
     })
-  ).toThrowErrorMatchingSnapshot();
-  expect(container).not.toHaveStyle({ fontWeight: 'bold' });
-  expect(container).not.toHaveStyle({ color: 'black' });
-  expect(container).not.toHaveStyle({
-    transform: [{ rotate: '45deg' }, { scale: 2 }],
-  });
-  expect(container).not.toHaveStyle({ transform: [{ rotate: '45deg' }] });
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toHaveStyle()
+
+    - Expected
+    + Received
+
+      backgroundColor: blue;
+      transform: [
+        {
+    -     "scale": 1
+    +     "scale": 2
+    +   },
+    +   {
+    +     "rotate": "45deg"
+        }
+      ];"
+  `);
+
+  expect(() => expect(view).not.toHaveStyle({ backgroundColor: 'blue' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toHaveStyle()
+
+    Expected element not to have style:
+      backgroundColor: blue;
+    Received:
+      backgroundColor: blue;"
+  `);
+
+  expect(() => expect(view).toHaveStyle({ fontWeight: 'bold' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toHaveStyle()
+
+    - Expected
+    + Received
+
+    - fontWeight: bold;"
+  `);
+
+  expect(() => expect(view).not.toHaveStyle({ backgroundColor: 'blue' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toHaveStyle()
+
+    Expected element not to have style:
+      backgroundColor: blue;
+    Received:
+      backgroundColor: blue;"
+  `);
 });
 
-test('handles when the style prop is undefined', () => {
-  const { getByTestId } = render(
-    <View testID="container">
-      <Text>Hello World</Text>
-    </View>
-  );
+test('toHaveStyle() supports missing "style" prop', () => {
+  const screen = render(<View testID="view" />);
 
-  const container = getByTestId('container');
-
-  expect(container).not.toHaveStyle({ fontWeight: 'bold' });
+  const view = screen.getByTestId('view');
+  expect(view).not.toHaveStyle({ fontWeight: 'bold' });
 });
 
-test('handles transform when transform undefined', () => {
-  const { getByTestId } = render(
+test('toHaveStyle() supports undefined "transform" style', () => {
+  const screen = render(
     <View
-      testID="container"
+      testID="view"
       style={{
         backgroundColor: 'blue',
         transform: undefined,
       }}
-    >
-      <Text>Hello World</Text>
-    </View>
+    />
   );
 
-  const container = getByTestId('container');
-  expect(() =>
-    expect(container).toHaveStyle({ transform: [{ scale: 1 }] })
-  ).toThrowErrorMatchingSnapshot();
+  const view = screen.getByTestId('view');
+  expect(() => expect(view).toHaveStyle({ transform: [{ scale: 1 }] }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toHaveStyle()
+
+    - Expected
+    + Received
+
+    - transform: [
+    -   {
+    -     "scale": 1
+    -   }
+    - ];
+    + transform: undefined;"
+  `);
 });
 
-test('handles Pressable with function style prop', () => {
-  const { getByTestId } = render(
-    <Pressable testID="test" style={() => ({ backgroundColor: 'blue' })} />
+test('toHaveStyle() supports Pressable with function "style" prop', () => {
+  const screen = render(
+    <Pressable testID="view" style={() => ({ backgroundColor: 'blue' })} />
   );
-  expect(getByTestId('test')).toHaveStyle({ backgroundColor: 'blue' });
+
+  expect(screen.getByTestId('view')).toHaveStyle({ backgroundColor: 'blue' });
 });
