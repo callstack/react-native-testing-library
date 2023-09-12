@@ -32,6 +32,28 @@ test('toContainElement() on parent view', () => {
   `);
 });
 
+test('toContainElement() passing null', () => {
+  render(<View testID="view" />);
+
+  const view = screen.getByTestId('view');
+
+  expect(view).not.toContainElement(null);
+
+  expect(() => expect(view).toContainElement(null))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toContainElement(element)
+
+      <View
+        testID="view"
+      /> 
+
+    does not contain:
+
+       null
+            "
+  `);
+});
+
 test('toContainElement() on non-React elements', () => {
   render(<View testID="view" />);
 
