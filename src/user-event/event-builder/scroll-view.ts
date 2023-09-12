@@ -12,7 +12,7 @@ export interface ContentOffset {
   y: number;
 }
 
-export const ScrollEventBuilder = {
+export const ScrollViewEventBuilder = {
   scroll: (offset: ContentOffset = { x: 0, y: 0 }) => {
     return {
       nativeEvent: {

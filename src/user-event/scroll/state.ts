@@ -1,5 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
-import { ContentOffset } from '../event-builder/scroll';
+import { ContentOffset } from '../event-builder/scroll-view';
 
 const scrollOffsetForElement = new WeakMap<ReactTestInstance, ContentOffset>();
 

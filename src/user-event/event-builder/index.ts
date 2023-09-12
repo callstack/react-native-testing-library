@@ -1,9 +1,9 @@
 import { CommonEventBuilder } from './common';
-import { ScrollEventBuilder } from './scroll';
+import { ScrollViewEventBuilder } from './scroll-view';
 import { TextInputEventBuilder } from './text-input';
 
 export const EventBuilder = {
   Common: CommonEventBuilder,
-  Scroll: ScrollEventBuilder,
+  ScrollView: ScrollViewEventBuilder,
   TextInput: TextInputEventBuilder,
 };

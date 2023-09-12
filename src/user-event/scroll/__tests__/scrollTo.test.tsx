@@ -90,7 +90,6 @@ describe('scrollTo()', () => {
 describe('userEvent.scroll with fake timers', () => {
   beforeEach(() => {
     jest.useFakeTimers();
-    jest.setSystemTime(0);
   });
 
   test('calls events', async () => {
