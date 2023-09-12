@@ -25,11 +25,7 @@ export function createScrollSteps(
 }
 
 /**
- * Generates scroll intermediate values.
- * @param from
- * @param to
- * @param count
- * @returns
+ * Generate linear scroll values (with equal steps).
  */
 export function linearInterpolator(
   end: number,
@@ -50,6 +46,9 @@ export function linearInterpolator(
   return result;
 }
 
+/**
+ * Generate inertial scroll values (exponentially slowing down).
+ */
 export function inertialInterpolator(
   end: number,
   start: number,
