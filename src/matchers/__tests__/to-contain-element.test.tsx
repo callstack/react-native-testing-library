@@ -32,6 +32,36 @@ test('toContainElement() supports basic case', () => {
   `);
 });
 
+test('toContainElement() supports negative case', () => {
+  render(
+    <>
+      <View testID="view1" />
+      <View testID="view2" />
+    </>
+  );
+
+  const view1 = screen.getByTestId('view1');
+  const view2 = screen.getByTestId('view2');
+
+  expect(view1).not.toContainElement(view2);
+
+  expect(() => expect(view1).toContainElement(view2))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toContainElement(element)
+
+      <View
+        testID="view1"
+      /> 
+
+    does not contain:
+
+       <View
+        testID="view2"
+      />
+            "
+  `);
+});
+
 test('toContainElement() passing null', () => {
   render(<View testID="view" />);
 
