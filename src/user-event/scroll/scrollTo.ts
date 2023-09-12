@@ -1,8 +1,10 @@
 import { ReactTestInstance } from 'react-test-renderer';
+import { stringify } from 'jest-matcher-utils';
 import { UserEventInstance } from '../setup';
 import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
+import { pick } from '../../helpers/object';
 import { dispatchEvent } from '../utils';
 import { ContentOffset } from '../event-builder/scroll';
 import {
@@ -135,22 +137,26 @@ function ensureScrollViewDirection(
   element: ReactTestInstance,
   options: ScrollToOptions
 ) {
-  const isHorizontalScrollView = element.props.horizontal === true;
+  const isVerticalScrollView = element.props.horizontal !== true;
 
-  const hasVerticalScrollOptions =
-    options.y != null || options.momentumY != null;
-  if (isHorizontalScrollView && hasVerticalScrollOptions) {
+  const hasHorizontalScrollOptions =
+    options.x !== undefined || options.momentumX !== undefined;
+  if (isVerticalScrollView && hasHorizontalScrollOptions) {
     throw new ErrorWithStack(
-      `scrollTo() does not support vertical scrolling of horizontal "ScrollView" element.`,
+      `scrollTo() expected vertical scroll options: "y", "momentumY" for vertical "ScrollView" element, but received ${stringify(
+        pick(options, ['x', 'momentumX'])
+      )}`,
       scrollTo
     );
   }
 
-  const hasHorizontalScrollOptions =
-    options.x != null || options.momentumX != null;
-  if (!isHorizontalScrollView && hasHorizontalScrollOptions) {
+  const hasVerticalScrollOptions =
+    options.y !== undefined || options.momentumY !== undefined;
+  if (!isVerticalScrollView && hasVerticalScrollOptions) {
     throw new ErrorWithStack(
-      `scrollTo() does not support horizontal scrolling of vertical "ScrollView" element.`,
+      `scrollTo() expected horizontal scroll options: "x", "momentumX" for horizontal "ScrollView" element, but received ${stringify(
+        pick(options, ['y', 'momentumY'])
+      )}`,
       scrollTo
     );
   }

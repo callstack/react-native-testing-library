@@ -158,7 +158,7 @@ describe('userEvent.scroll with fake timers', () => {
     await expect(() =>
       user.scrollTo(screen.getByTestId('scrollView'), { x: 100 })
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"scrollTo() does not support horizontal scrolling of vertical "ScrollView" element."`
+      `"scrollTo() expected vertical scroll options: "y", "momentumY" for vertical "ScrollView" element, but received {"x": 100}"`
     );
   });
 
@@ -169,7 +169,7 @@ describe('userEvent.scroll with fake timers', () => {
     await expect(() =>
       user.scrollTo(screen.getByTestId('scrollView'), { y: 100 })
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"scrollTo() does not support vertical scrolling of horizontal "ScrollView" element."`
+      `"scrollTo() expected horizontal scroll options: "x", "momentumX" for horizontal "ScrollView" element, but received {"y": 100}"`
     );
   });
 
