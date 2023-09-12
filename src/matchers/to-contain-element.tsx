@@ -1,5 +1,8 @@
 import { ReactTestInstance } from 'react-test-renderer';
-import { matcherHint, RECEIVED_COLOR as receivedColor } from 'jest-matcher-utils';
+import {
+  matcherHint,
+  RECEIVED_COLOR as receivedColor,
+} from 'jest-matcher-utils';
 import { checkHostElement, formatElement } from './utils';
 
 export function toContainElement(
@@ -8,7 +11,7 @@ export function toContainElement(
   element: ReactTestInstance | null
 ) {
   if (element !== null || !this.isNot) {
-    checkHostElement(element, toContainElement, this);
+    checkHostElement(container, toContainElement, this);
   }
 
   let matches: ReactTestInstance[] = [];

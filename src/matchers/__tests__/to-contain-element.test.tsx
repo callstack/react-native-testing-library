@@ -31,3 +31,27 @@ test('toContainElement() on parent view', () => {
             "
   `);
 });
+
+test('toContainElement() on non-React elements', () => {
+  render(<View testID="view" />);
+
+  const view = screen.getByTestId('view');
+
+  expect(() => expect({ name: 'Non-React element' }).not.toContainElement(view))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(received).not.toContainElement()
+
+    received value must be a host element.
+    Received has type:  object
+    Received has value: {"name": "Non-React element"}"
+  `);
+
+  expect(() => expect(true).not.toContainElement(view))
+    .toThrowErrorMatchingInlineSnapshot(`
+      "expect(received).not.toContainElement()
+
+      received value must be a host element.
+      Received has type:  boolean
+      Received has value: true"
+    `);
+});
