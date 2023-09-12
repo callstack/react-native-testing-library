@@ -4,32 +4,24 @@ const DEFAULT_STEPS_COUNT = 5;
 
 type InterpolatorFn = (end: number, start: number, steps: number) => number[];
 
-export function createVerticalScrollSteps(
-  targetY: number | undefined,
+export function createScrollSteps(
+  target: Partial<ContentOffset>,
   initialOffset: ContentOffset,
   interpolator: InterpolatorFn
 ): ContentOffset[] {
-  if (targetY == null) {
-    return [];
+  if (target.y != null) {
+    return interpolator(target.y, initialOffset.y, DEFAULT_STEPS_COUNT).map(
+      (y) => ({ y, x: initialOffset.x })
+    );
   }
 
-  return interpolator(targetY, initialOffset.y, DEFAULT_STEPS_COUNT).map(
-    (y) => ({ y, x: initialOffset.x })
-  );
-}
-
-export function createHorizontalScrollSteps(
-  targetX: number | undefined,
-  initialOffset: ContentOffset,
-  interpolator: InterpolatorFn
-): ContentOffset[] {
-  if (targetX == null) {
-    return [];
+  if (target.x != null) {
+    return interpolator(target.x, initialOffset.x, DEFAULT_STEPS_COUNT).map(
+      (x) => ({ x, y: initialOffset.y })
+    );
   }
 
-  return interpolator(targetX, initialOffset.x, DEFAULT_STEPS_COUNT).map(
-    (x) => ({ x, y: initialOffset.y })
-  );
+  return [];
 }
 
 /**
@@ -75,7 +67,6 @@ export function inertialInterpolator(
   }
 
   result.push(end);
-
   return result;
 }
 

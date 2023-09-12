@@ -6,8 +6,7 @@ import { isHostScrollView } from '../../helpers/host-component-names';
 import { dispatchEvent } from '../utils';
 import { ContentOffset } from '../event-builder/scroll';
 import {
-  createHorizontalScrollSteps,
-  createVerticalScrollSteps,
+  createScrollSteps,
   inertialInterpolator,
   linearInterpolator,
 } from './utils';
@@ -16,11 +15,19 @@ import { getElementScrollOffset, setElementScrollOffset } from './state';
 export interface VerticalScrollToOptions {
   y: number;
   momentumY?: number;
+
+  // Vertical scroll should not contain horizontal scroll part.
+  x?: never;
+  momentumX?: never;
 }
 
 export interface HorizontalScrollToOptions {
   x: number;
   momentumX?: number;
+
+  // Horizontal scroll should not contain vertical scroll part.
+  y?: never;
+  momentumY?: never;
 }
 
 export type ScrollToOptions =
@@ -40,52 +47,24 @@ export async function scrollTo(
   }
 
   const initialPosition = getElementScrollOffset(element);
+  const dragSteps = createScrollSteps(
+    { y: options.y, x: options.x },
+    initialPosition,
+    linearInterpolator
+  );
+  emitDragScrollEvents(element, dragSteps);
 
-  // Vertical scroll
-  if ('y' in options) {
-    const dragSteps = createVerticalScrollSteps(
-      options.y,
-      initialPosition,
-      linearInterpolator
-    );
-    emitDragScrollEvents(element, dragSteps);
+  const momentumStart = dragSteps.at(-1) ?? initialPosition;
+  const momentumSteps = createScrollSteps(
+    { y: options.momentumY, x: options.momentumX },
+    momentumStart,
+    inertialInterpolator
+  );
+  emitMomentumScrollEvents(element, momentumSteps);
 
-    const momentumStart = dragSteps.at(-1) ?? initialPosition;
-    const momentumSteps = createVerticalScrollSteps(
-      options.momentumY,
-      momentumStart,
-      inertialInterpolator
-    );
-    emitMomentumScrollEvents(element, momentumSteps);
-
-    const finalPosition =
-      momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
-    setElementScrollOffset(element, finalPosition);
-    return;
-  }
-
-  // Horizontal
-  if ('x' in options) {
-    const dragSteps = createHorizontalScrollSteps(
-      options.x,
-      initialPosition,
-      linearInterpolator
-    );
-    emitDragScrollEvents(element, dragSteps);
-
-    const momentumStart = dragSteps.at(-1) ?? initialPosition;
-    const momentumSteps = createHorizontalScrollSteps(
-      options.momentumX,
-      momentumStart,
-      inertialInterpolator
-    );
-    emitMomentumScrollEvents(element, momentumSteps);
-
-    const finalPosition =
-      momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
-    setElementScrollOffset(element, finalPosition);
-    return;
-  }
+  const finalPosition =
+    momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
+  setElementScrollOffset(element, finalPosition);
 }
 
 function emitDragScrollEvents(
