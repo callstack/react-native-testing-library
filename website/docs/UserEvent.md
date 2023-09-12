@@ -185,10 +185,10 @@ The `textInput` event is sent only for mutliline text inputs.
 type(
   element: ReactTestInstance,
   options?: {
-    y?: number | number[],
-    x?: number | number[],
-    momentumY?: number | number[],
-    momentumX?: number | number[],
+    y?: number,
+    x?: number,
+    momentumY?: number,
+    momentumX?: number,
   }
 ```
 
