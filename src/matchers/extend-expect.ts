@@ -10,6 +10,7 @@ import { toBeSelected } from './to-be-selected';
 import { toBeVisible } from './to-be-visible';
 import { toHaveDisplayValue } from './to-have-display-value';
 import { toHaveProp } from './to-have-prop';
+import { toHaveStyle } from './to-have-style';
 import { toHaveTextContent } from './to-have-text-content';
 
 expect.extend({
@@ -24,5 +25,6 @@ expect.extend({
   toBeVisible,
   toHaveDisplayValue,
   toHaveProp,
+  toHaveStyle,
   toHaveTextContent,
 });

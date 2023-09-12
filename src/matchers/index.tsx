@@ -7,5 +7,6 @@ export { toBePartiallyChecked } from './to-be-partially-checked';
 export { toBeVisible } from './to-be-visible';
 export { toHaveDisplayValue } from './to-have-display-value';
 export { toHaveProp } from './to-have-prop';
+export { toHaveStyle } from './to-have-style';
 export { toHaveTextContent } from './to-have-text-content';
 export { toBeSelected } from './to-be-selected';

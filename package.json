@@ -82,6 +82,7 @@
     "flow": "flow",
     "copy-flowtypes": "cp typings/index.flow.js build",
     "lint": "eslint src --cache",
+    "validate": "yarn lint && yarn typecheck && yarn test",
     "prepublish": "yarn build",
     "build:js": "babel src --out-dir build --extensions \".js,.ts,.jsx,.tsx\" --source-maps --ignore \"**/__tests__/**\"",
     "build:js:watch": "yarn build:js --watch",
