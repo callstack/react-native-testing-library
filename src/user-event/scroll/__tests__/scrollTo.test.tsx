@@ -150,4 +150,66 @@ describe('userEvent.scroll with fake timers', () => {
 
     expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
   });
+
+  it('supports validates vertical scroll direction', async () => {
+    renderScrollViewWithToolkit();
+    const user = userEvent.setup();
+
+    await expect(() =>
+      user.scrollTo(screen.getByTestId('scrollView'), { x: 100 })
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"scrollTo() does not support horizontal scrolling of vertical "ScrollView" element."`
+    );
+  });
+
+  it('supports validates horizontal scroll direction', async () => {
+    renderScrollViewWithToolkit({ horizontal: true });
+    const user = userEvent.setup();
+
+    await expect(() =>
+      user.scrollTo(screen.getByTestId('scrollView'), { y: 100 })
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"scrollTo() does not support vertical scrolling of horizontal "ScrollView" element."`
+    );
+  });
+
+  it('generates single drag step if already at target offset', async () => {
+    const { events } = renderScrollViewWithToolkit();
+    const user = userEvent.setup();
+
+    await user.scrollTo(screen.getByTestId('scrollView'), { y: 0 });
+    expect(mapEventsToShortForm(events)).toEqual([
+      ['scrollBeginDrag', 0, 0],
+      ['scrollEndDrag', 0, 0],
+    ]);
+  });
+
+  it('generates single momentum step if already at target offset', async () => {
+    const { events } = renderScrollViewWithToolkit();
+    const user = userEvent.setup();
+
+    await user.scrollTo(screen.getByTestId('scrollView'), {
+      y: 100,
+      momentumY: 100,
+    });
+    expect(mapEventsToShortForm(events)).toEqual([
+      ['scrollBeginDrag', 0, 0],
+      ['scroll', 25, 0],
+      ['scroll', 50, 0],
+      ['scroll', 75, 0],
+      ['scrollEndDrag', 100, 0],
+      ['momentumScrollBegin', 100, 0],
+      ['scroll', 100, 0],
+      ['momentumScrollEnd', 100, 0],
+    ]);
+  });
+
+  it('generates no steps for scroll without offset', async () => {
+    const { events } = renderScrollViewWithToolkit();
+    const user = userEvent.setup();
+
+    // @ts-expect-error intentionally omitting required options
+    await user.scrollTo(screen.getByTestId('scrollView'), {});
+    expect(mapEventsToShortForm(events)).toEqual([]);
+  });
 });

@@ -33,14 +33,12 @@ export function linearInterpolator(
   steps: number
 ): number[] {
   if (end === start) {
-    return [end];
+    return [end, start];
   }
-
-  const delta = (end - start) / (steps - 1);
 
   const result = [];
   for (let i = 0; i < steps; i += 1) {
-    result.push(start + delta * i);
+    result.push(lerp(start, end, i / (steps - 1)));
   }
 
   return result;
@@ -55,7 +53,7 @@ export function inertialInterpolator(
   steps: number
 ): number[] {
   if (end === start) {
-    return [end];
+    return [end, start];
   }
 
   const result = [];
@@ -71,10 +69,10 @@ export function inertialInterpolator(
 
 /**
  * Linear interpolation function
- * @param v0
- * @param v1
- * @param t
- * @returns
+ * @param v0 initial value (when t = 0)
+ * @param v1 final value (when t = 1)
+ * @param t interpolation factor form 0 to 1
+ * @returns interpolated value between v0 and v1
  */
 export function lerp(v0: number, v1: number, t: number) {
   return v0 + t * (v1 - v0);
