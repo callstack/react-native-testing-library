@@ -31,6 +31,10 @@ function renderScrollViewWithToolkit(props: ScrollViewProps = {}) {
   return { events };
 }
 
+beforeEach(() => {
+  jest.useRealTimers();
+});
+
 describe('scrollTo()', () => {
   it('supports vertical drag scroll', async () => {
     const { events } = renderScrollViewWithToolkit();
@@ -85,60 +89,13 @@ describe('scrollTo()', () => {
     ]);
     expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
   });
-});
 
-describe('userEvent.scroll with fake timers', () => {
-  beforeEach(() => {
+  test('works with fake timers', async () => {
     jest.useFakeTimers();
-  });
-
-  test('calls events', async () => {
     const { events } = renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
-    await user.scrollTo(screen.getByTestId('scrollView'), { y: 120 });
-    expect(events).toMatchSnapshot('scrollTo({ y: 120 })');
-  });
-
-  test('calls events with momentum', async () => {
-    const { events } = renderScrollViewWithToolkit();
-    const user = userEvent.setup();
-
-    await user.scrollTo(screen.getByTestId('scrollView'), {
-      y: 120,
-      momentumY: 30,
-    });
-
-    expect(events).toMatchSnapshot('scrollTo({ y: 120, momentum: 30 })');
-  });
-
-  test('scrolling the same element twice starts from remembered value (top to bottom/bottom to top)', async () => {
-    const { events } = renderScrollViewWithToolkit();
-    const user = userEvent.setup();
-
-    await user.scrollTo(screen.getByTestId('scrollView'), { y: 120 });
-    await user.scrollTo(screen.getByTestId('scrollView'), { y: 20 });
-
-    expect(events).toMatchSnapshot(
-      'scrollTo({ y: 120 }) + scrollTo({ y: 20 })'
-    );
-  });
-
-  it('does NOT work on View', async () => {
-    const screen = render(<View testID="view" />);
-    const user = userEvent.setup();
-
-    await expect(
-      user.scrollTo(screen.getByTestId('view'), { y: 20 })
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"scrollTo() works only with host "ScrollView" elements. Passed element has type "View"."`
-    );
-  });
-
-  test('scrollTo is accessible directly in userEvent', async () => {
-    const { events } = renderScrollViewWithToolkit();
-
-    await userEvent.scrollTo(screen.getByTestId('scrollView'), { y: 100 });
+    await user.scrollTo(screen.getByTestId('scrollView'), { y: 100 });
     expect(mapEventsToShortForm(events)).toEqual([
       ['scrollBeginDrag', 0, 0],
       ['scroll', 25, 0],
@@ -150,7 +107,31 @@ describe('userEvent.scroll with fake timers', () => {
     expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
   });
 
-  it('supports validates vertical scroll direction', async () => {
+  test('remembers previous scroll position', async () => {
+    const { events } = renderScrollViewWithToolkit();
+    const user = userEvent.setup();
+
+    await user.scrollTo(screen.getByTestId('scrollView'), { y: 100 });
+    await user.scrollTo(screen.getByTestId('scrollView'), { y: 200 });
+    expect(mapEventsToShortForm(events)).toEqual([
+      ['scrollBeginDrag', 0, 0],
+      ['scroll', 25, 0],
+      ['scroll', 50, 0],
+      ['scroll', 75, 0],
+      ['scrollEndDrag', 100, 0],
+      ['scrollBeginDrag', 100, 0],
+      ['scroll', 125, 0],
+      ['scroll', 150, 0],
+      ['scroll', 175, 0],
+      ['scrollEndDrag', 200, 0],
+    ]);
+
+    expect(events).toMatchSnapshot(
+      'scrollTo({ y: 100 }) + scrollTo({ y: 200 })'
+    );
+  });
+
+  it('validates vertical scroll direction', async () => {
     renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
@@ -161,7 +142,7 @@ describe('userEvent.scroll with fake timers', () => {
     );
   });
 
-  it('supports validates horizontal scroll direction', async () => {
+  it('validates horizontal scroll direction', async () => {
     renderScrollViewWithToolkit({ horizontal: true });
     const user = userEvent.setup();
 
@@ -210,5 +191,31 @@ describe('userEvent.scroll with fake timers', () => {
     // @ts-expect-error intentionally omitting required options
     await user.scrollTo(screen.getByTestId('scrollView'), {});
     expect(mapEventsToShortForm(events)).toEqual([]);
+  });
+
+  it('does NOT work on View', async () => {
+    const screen = render(<View testID="view" />);
+    const user = userEvent.setup();
+
+    await expect(
+      user.scrollTo(screen.getByTestId('view'), { y: 20 })
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"scrollTo() works only with host "ScrollView" elements. Passed element has type "View"."`
+    );
+  });
+
+  test('is accessible directly in userEvent', async () => {
+    const { events } = renderScrollViewWithToolkit();
+
+    await userEvent.scrollTo(screen.getByTestId('scrollView'), { y: 100 });
+    expect(mapEventsToShortForm(events)).toEqual([
+      ['scrollBeginDrag', 0, 0],
+      ['scroll', 25, 0],
+      ['scroll', 50, 0],
+      ['scroll', 75, 0],
+      ['scrollEndDrag', 100, 0],
+    ]);
+
+    expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
   });
 });
