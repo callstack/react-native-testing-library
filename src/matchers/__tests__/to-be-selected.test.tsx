@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { render, screen } from '../..';
 import '../extend-expect';
 
-test('.toBeSelected() basic case', () => {
+test('toBeSelected() basic case', () => {
   render(
     <>
       <View testID="selected" accessibilityState={{ selected: true }} />
@@ -21,7 +21,7 @@ test('.toBeSelected() basic case', () => {
   expect(screen.getByTestId('default')).not.toBeSelected();
 });
 
-test('.toBeSelected() error messages', () => {
+test('toBeSelected() error messages', () => {
   render(
     <>
       <View testID="selected" accessibilityState={{ selected: true }} />

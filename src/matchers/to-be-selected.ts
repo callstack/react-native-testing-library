@@ -1,6 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { getAccessibilitySelectedState } from '../helpers/accessiblity';
+import { isElementSelected } from '../helpers/accessiblity';
 import { checkHostElement, formatElement } from './utils';
 
 export function toBeSelected(
@@ -10,7 +10,7 @@ export function toBeSelected(
   checkHostElement(element, toBeSelected, this);
 
   return {
-    pass: getAccessibilitySelectedState(element),
+    pass: isElementSelected(element),
     message: () => {
       const is = this.isNot ? 'is' : 'is not';
       return [

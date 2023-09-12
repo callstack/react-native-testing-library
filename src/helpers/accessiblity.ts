@@ -176,13 +176,6 @@ export function getAccessibilityCheckedState(
   return ariaChecked ?? accessibilityState?.checked;
 }
 
-export function getAccessibilitySelectedState(
-  element: ReactTestInstance
-): NonNullable<AccessibilityState['selected']> {
-  const { accessibilityState, 'aria-selected': ariaSelected } = element.props;
-  return ariaSelected ?? accessibilityState?.selected ?? false;
-}
-
 export function getAccessibilityValue(
   element: ReactTestInstance
 ): AccessibilityValue | undefined {
@@ -211,4 +204,18 @@ export function getAccessibilityValue(
     now: ariaValueNow ?? accessibilityValue?.now,
     text: ariaValueText ?? accessibilityValue?.text,
   };
+}
+
+export function isElementBusy(
+  element: ReactTestInstance
+): NonNullable<AccessibilityState['busy']> {
+  const { accessibilityState, 'aria-busy': ariaBusy } = element.props;
+  return ariaBusy ?? accessibilityState?.busy ?? false;
+}
+
+export function isElementSelected(
+  element: ReactTestInstance
+): NonNullable<AccessibilityState['selected']> {
+  const { accessibilityState, 'aria-selected': ariaSelected } = element.props;
+  return ariaSelected ?? accessibilityState?.selected ?? false;
 }

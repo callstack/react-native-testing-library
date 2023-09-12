@@ -4,6 +4,7 @@ export interface JestNativeMatchers<R> {
   toBeOnTheScreen(): R;
   toBeChecked(): R;
   toBeDisabled(): R;
+  toBeBusy(): R;
   toBeEmptyElement(): R;
   toBeEnabled(): R;
   toBePartiallyChecked(): R;
