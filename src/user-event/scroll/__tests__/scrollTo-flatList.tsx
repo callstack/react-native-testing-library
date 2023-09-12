@@ -55,7 +55,7 @@ describe('scrollTo() with FlatList', () => {
   });
 
   it('supports horizontal drag scroll', async () => {
-    const { events } = renderFlatListWithToolkit();
+    const { events } = renderFlatListWithToolkit({ horizontal: true });
     const user = userEvent.setup();
 
     await user.scrollTo(screen.getByTestId('flatList'), { x: 100 });

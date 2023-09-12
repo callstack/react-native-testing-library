@@ -46,6 +46,8 @@ export async function scrollTo(
     );
   }
 
+  ensureScrollViewDirection(element, options);
+
   const initialPosition = getElementScrollOffset(element);
   const dragSteps = createScrollSteps(
     { y: options.y, x: options.x },
@@ -127,4 +129,29 @@ function emitMomentumScrollEvents(
     'momentumScrollEnd',
     EventBuilder.Scroll.scroll(lastStep)
   );
+}
+
+function ensureScrollViewDirection(
+  element: ReactTestInstance,
+  options: ScrollToOptions
+) {
+  const isHorizontalScrollView = element.props.horizontal === true;
+
+  const hasVerticalScrollOptions =
+    options.y != null || options.momentumY != null;
+  if (isHorizontalScrollView && hasVerticalScrollOptions) {
+    throw new ErrorWithStack(
+      `scrollTo() does not support vertical scrolling of horizontal "ScrollView" element.`,
+      scrollTo
+    );
+  }
+
+  const hasHorizontalScrollOptions =
+    options.x != null || options.momentumX != null;
+  if (!isHorizontalScrollView && hasHorizontalScrollOptions) {
+    throw new ErrorWithStack(
+      `scrollTo() does not support horizontal scrolling of vertical "ScrollView" element.`,
+      scrollTo
+    );
+  }
 }

@@ -48,7 +48,7 @@ describe('scrollTo()', () => {
   });
 
   it('supports horizontal drag scroll', async () => {
-    const { events } = renderScrollViewWithToolkit();
+    const { events } = renderScrollViewWithToolkit({ horizontal: true });
     const user = userEvent.setup();
 
     await user.scrollTo(screen.getByTestId('scrollView'), { x: 100 });
