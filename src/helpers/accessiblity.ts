@@ -216,10 +216,6 @@ export function getAccessibilityValue(
 export function isElementBusy(
   element: ReactTestInstance
 ): NonNullable<AccessibilityState['busy']> {
-  if (!isAccessibilityElement(element)) {
-    return false;
-  }
-
   const { accessibilityState, 'aria-busy': ariaBusy } = element.props;
   return ariaBusy ?? accessibilityState?.busy ?? false;
 }
