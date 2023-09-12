@@ -91,7 +91,13 @@ export function isHostTextInput(
   return element?.type === getHostComponentNames().textInput;
 }
 
-export function isHostScrollView(element?: ReactTestInstance) {
+/**
+ * Checks if the given element is a host ScrollView.
+ * @param element The element to check.
+ */
+export function isHostScrollView(
+  element?: ReactTestInstance | null
+): element is HostTestInstance {
   return element?.type === getHostComponentNames().scrollView;
 }
 
