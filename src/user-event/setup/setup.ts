@@ -3,6 +3,7 @@ import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { PressOptions, press, longPress } from '../press';
 import { TypeOptions, type } from '../type';
 import { clear } from '../clear';
+import { ScrollToOptions, scrollTo } from '../scroll';
 
 export interface UserEventSetupOptions {
   /**
@@ -122,6 +123,17 @@ export interface UserEventInstance {
    * @param element TextInput element to clear
    */
   clear: (element: ReactTestInstance) => Promise<void>;
+
+  /**
+   * Simlate user scorlling a ScrollView element.
+   *
+   * @param element ScrollView element
+   * @returns
+   */
+  scrollTo: (
+    element: ReactTestInstance,
+    options: ScrollToOptions
+  ) => Promise<void>;
 }
 
 function createInstance(config: UserEventConfig): UserEventInstance {
@@ -135,6 +147,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
     longPress: longPress.bind(instance),
     type: type.bind(instance),
     clear: clear.bind(instance),
+    scrollTo: scrollTo.bind(instance),
   };
 
   Object.assign(instance, api);
