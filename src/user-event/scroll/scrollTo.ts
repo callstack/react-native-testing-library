@@ -100,7 +100,7 @@ async function emitDragScrollEvents(
   }
 
   await wait(config);
-  const lastStep = scrollSteps[scrollSteps.length - 1];
+  const lastStep = scrollSteps.at(-1);
   dispatchEvent(
     element,
     'scrollEndDrag',
@@ -137,7 +137,7 @@ async function emitMomentumScrollEvents(
   }
 
   await wait(config);
-  const lastStep = scrollSteps[scrollSteps.length - 1];
+  const lastStep = scrollSteps.at(-1);
   dispatchEvent(
     element,
     'momentumScrollEnd',
@@ -155,7 +155,7 @@ function ensureScrollViewDirection(
     options.x !== undefined || options.momentumX !== undefined;
   if (isVerticalScrollView && hasHorizontalScrollOptions) {
     throw new ErrorWithStack(
-      `scrollTo() expected vertical scroll options: "y", "momentumY" for vertical "ScrollView" element, but received ${stringify(
+      `scrollTo() expected only vertical scroll options: "y" and "momentumY" for vertical "ScrollView" element but received ${stringify(
         pick(options, ['x', 'momentumX'])
       )}`,
       scrollTo
@@ -166,7 +166,7 @@ function ensureScrollViewDirection(
     options.y !== undefined || options.momentumY !== undefined;
   if (!isVerticalScrollView && hasVerticalScrollOptions) {
     throw new ErrorWithStack(
-      `scrollTo() expected horizontal scroll options: "x", "momentumX" for horizontal "ScrollView" element, but received ${stringify(
+      `scrollTo() expected only horizontal scroll options: "x" and "momentumX" for horizontal "ScrollView" element but received ${stringify(
         pick(options, ['y', 'momentumY'])
       )}`,
       scrollTo

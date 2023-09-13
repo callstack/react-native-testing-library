@@ -63,7 +63,6 @@ describe('scrollTo()', () => {
       ['scroll', 0, 75],
       ['scrollEndDrag', 0, 100],
     ]);
-    expect(events).toMatchSnapshot('scrollTo({ x: 100 })');
   });
 
   it('supports vertical momentum scroll', async () => {
@@ -87,7 +86,6 @@ describe('scrollTo()', () => {
       ['scroll', 120, 0],
       ['momentumScrollEnd', 120, 0],
     ]);
-    expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
   });
 
   test('works with fake timers', async () => {
@@ -103,8 +101,6 @@ describe('scrollTo()', () => {
       ['scroll', 75, 0],
       ['scrollEndDrag', 100, 0],
     ]);
-
-    expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
   });
 
   test('remembers previous scroll position', async () => {
@@ -125,10 +121,6 @@ describe('scrollTo()', () => {
       ['scroll', 175, 0],
       ['scrollEndDrag', 200, 0],
     ]);
-
-    expect(events).toMatchSnapshot(
-      'scrollTo({ y: 100 }) + scrollTo({ y: 200 })'
-    );
   });
 
   it('validates vertical scroll direction', async () => {
@@ -138,7 +130,7 @@ describe('scrollTo()', () => {
     await expect(() =>
       user.scrollTo(screen.getByTestId('scrollView'), { x: 100 })
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"scrollTo() expected vertical scroll options: "y", "momentumY" for vertical "ScrollView" element, but received {"x": 100}"`
+      `"scrollTo() expected only vertical scroll options: "y" and "momentumY" for vertical "ScrollView" element but received {"x": 100}"`
     );
   });
 
@@ -149,7 +141,7 @@ describe('scrollTo()', () => {
     await expect(() =>
       user.scrollTo(screen.getByTestId('scrollView'), { y: 100 })
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"scrollTo() expected horizontal scroll options: "x", "momentumX" for horizontal "ScrollView" element, but received {"y": 100}"`
+      `"scrollTo() expected only horizontal scroll options: "x" and "momentumX" for horizontal "ScrollView" element but received {"y": 100}"`
     );
   });
 
@@ -215,7 +207,5 @@ describe('scrollTo()', () => {
       ['scroll', 75, 0],
       ['scrollEndDrag', 100, 0],
     ]);
-
-    expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
   });
 });

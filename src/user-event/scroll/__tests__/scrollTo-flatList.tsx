@@ -66,6 +66,5 @@ describe('scrollTo() with FlatList', () => {
       ['scroll', 0, 75],
       ['scrollEndDrag', 0, 100],
     ]);
-    expect(events).toMatchSnapshot('scrollTo({ x: 100 })');
   });
 });

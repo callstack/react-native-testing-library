@@ -8,16 +8,16 @@
  * Scroll position of a scrollable element.
  */
 export interface ContentOffset {
-  x: number;
   y: number;
+  x: number;
 }
 
 export const ScrollViewEventBuilder = {
-  scroll: (offset: ContentOffset = { x: 0, y: 0 }) => {
+  scroll: (offset: ContentOffset = { y: 0, x: 0 }) => {
     return {
       nativeEvent: {
         contentInset: { bottom: 0, left: 0, right: 0, top: 0 },
-        contentOffset: { x: offset.x, y: offset.y },
+        contentOffset: { y: offset.y, x: offset.x },
         contentSize: { height: 0, width: 0 },
         layoutMeasurement: {
           height: 0,
@@ -25,7 +25,7 @@ export const ScrollViewEventBuilder = {
         },
         responderIgnoreScroll: true,
         target: 0,
-        velocity: { x: 0, y: 0 },
+        velocity: { y: 0, x: 0 },
       },
     };
   },
