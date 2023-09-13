@@ -5,6 +5,7 @@ import { toBeChecked } from './to-be-checked';
 import { toBeDisabled, toBeEnabled } from './to-be-disabled';
 import { toBeBusy } from './to-be-busy';
 import { toBeEmptyElement } from './to-be-empty-element';
+import { toBeExpanded } from './to-be-expanded';
 import { toBePartiallyChecked } from './to-be-partially-checked';
 import { toBeSelected } from './to-be-selected';
 import { toBeVisible } from './to-be-visible';
@@ -21,6 +22,7 @@ expect.extend({
   toBeBusy,
   toBeEmptyElement,
   toBeEnabled,
+  toBeExpanded,
   toBePartiallyChecked,
   toBeSelected,
   toBeVisible,

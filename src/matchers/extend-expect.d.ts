@@ -10,6 +10,7 @@ export interface JestNativeMatchers<R> {
   toBeBusy(): R;
   toBeEmptyElement(): R;
   toBeEnabled(): R;
+  toBeExpanded(): R;
   toBePartiallyChecked(): R;
   toBeSelected(): R;
   toBeVisible(): R;

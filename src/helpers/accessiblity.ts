@@ -219,3 +219,10 @@ export function isElementSelected(
   const { accessibilityState, 'aria-selected': ariaSelected } = element.props;
   return ariaSelected ?? accessibilityState?.selected ?? false;
 }
+
+export function isElementExpanded(
+  element: ReactTestInstance
+): NonNullable<AccessibilityState['expanded']> {
+  const { accessibilityState, 'aria-expanded': ariaExpanded } = element.props;
+  return ariaExpanded ?? accessibilityState?.expanded ?? false;
+}
