@@ -6,7 +6,7 @@ jobs:
   test-example:
     strategy:
       matrix:
-        node: [14, 16, 18]
+        node: [18, 20]
         example: [basic, redux, react-navigation]
     name: Test Example
     runs-on: ubuntu-latest
