@@ -13,7 +13,7 @@ This means that we plan to keep the public API signatures to remain stable, but 
 :::
 
 :::note
-User Event interactions require v12.2.0.
+User Event interactions require RNTL v12.2.0.
 :::
 
 
@@ -184,10 +184,14 @@ The `textInput` event is sent only for mutliline text inputs.
 - `endEditing`
 - `blur`
 
-## `scroll()`
+## `scrollTo()`
+
+:::note
+`scrollTo` interaction requires RNTL v12.4.0.
+:::
 
 ```ts
-type(
+scrollTo(
   element: ReactTestInstance,
   options: {
     y: number,
