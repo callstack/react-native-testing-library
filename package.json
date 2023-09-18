@@ -43,7 +43,7 @@
     "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.2.21",
-    "@types/react-test-renderer": "^18.0.0",
+    "@types/react-test-renderer": "18.0.0",
     "babel-jest": "^29.7.0",
     "dedent": "^1.1.0",
     "del-cli": "^5.0.0",
