@@ -13,7 +13,7 @@ This means that we plan to keep the public API signatures to remain stable, but 
 :::
 
 :::note
-User Event interactions require RNTL v12.2.0.
+User Event interactions require RNTL v12.2.0 or later.
 :::
 
 
@@ -187,7 +187,7 @@ The `textInput` event is sent only for mutliline text inputs.
 ## `scrollTo()`
 
 :::note
-`scrollTo` interaction requires RNTL v12.4.0.
+`scrollTo` interaction has been introduced in RNTL v12.4.0.
 :::
 
 ```ts
