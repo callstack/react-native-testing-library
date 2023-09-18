@@ -8,12 +8,6 @@ import {
 } from '../helpers/host-component-names';
 import { act, render } from '..';
 
-const mockCreate = jest.spyOn(TestRenderer, 'create') as jest.Mock;
-
-beforeEach(() => {
-  mockCreate.mockReset();
-});
-
 describe('getHostComponentNames', () => {
   test('returns host component names from internal config', () => {
     configureInternal({
@@ -102,6 +96,7 @@ describe('configureHostComponentNamesIfNeeded', () => {
   });
 
   test('throw an error when autodetection fails', () => {
+    const mockCreate = jest.spyOn(TestRenderer, 'create') as jest.Mock;
     const renderer = TestRenderer.create(<View />);
 
     mockCreate.mockReturnValue({
@@ -117,5 +112,7 @@ describe('configureHostComponentNamesIfNeeded', () => {
       There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
       Please check if you are using compatible versions of React Native and React Native Testing Library."
     `);
+
+    mockCreate.mockReset();
   });
 });
