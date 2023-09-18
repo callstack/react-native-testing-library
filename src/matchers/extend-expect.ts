@@ -2,6 +2,7 @@
 
 import { toBeOnTheScreen } from './to-be-on-the-screen';
 import { toBeChecked } from './to-be-checked';
+import { toBeCollapsed } from './to-be-collapsed';
 import { toBeDisabled, toBeEnabled } from './to-be-disabled';
 import { toBeBusy } from './to-be-busy';
 import { toBeEmptyElement } from './to-be-empty-element';
@@ -18,6 +19,7 @@ import { toHaveTextContent } from './to-have-text-content';
 expect.extend({
   toBeOnTheScreen,
   toBeChecked,
+  toBeCollapsed,
   toBeDisabled,
   toBeBusy,
   toBeEmptyElement,

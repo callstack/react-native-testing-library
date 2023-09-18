@@ -1,5 +1,6 @@
 export { toBeBusy } from './to-be-busy';
 export { toBeChecked } from './to-be-checked';
+export { toBeCollapsed } from './to-be-collapsed';
 export { toBeDisabled, toBeEnabled } from './to-be-disabled';
 export { toBeEmptyElement } from './to-be-empty-element';
 export { toBeExpanded } from './to-be-expanded';
