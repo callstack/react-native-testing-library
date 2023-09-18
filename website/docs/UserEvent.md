@@ -6,15 +6,16 @@ import TOCInline from '@theme/TOCInline';
 
 <TOCInline toc={toc} />
 
-:::note
-Requires `@testing-library/react-native` version 12.2.0.
-:::
-
 :::caution
 User Event API is in beta stage.
 
 This means that we plan to keep the public API signatures to remain stable, but we might introduce breaking behavioural changes, e.g. changing the ordering or timing of emitted events, without a major version update. Hopefully, well written code should not rely on such specific details.
 :::
+
+:::note
+User Event interactions require v12.2.0.
+:::
+
 
 ## Comparison with Fire Event API
 
