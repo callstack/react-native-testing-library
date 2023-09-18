@@ -12,6 +12,11 @@ User Event API is in beta stage.
 This means that we plan to keep the public API signatures to remain stable, but we might introduce breaking behavioural changes, e.g. changing the ordering or timing of emitted events, without a major version update. Hopefully, well written code should not rely on such specific details.
 :::
 
+:::note
+User Event interactions require RNTL v12.2.0 or later.
+:::
+
+
 ## Comparison with Fire Event API
 
 Fire Event is our original event simulation API. It offers ability to invoke **any event handler** declared on **either host or composite elements**. If the element does not have `onEventName` event handler for passed `eventName` event, or the element is disabled, Fire Event will traverse up the component tree, looking for event handler on both host and composite elements along the way. By default it will **not pass any event data**, but the user might provide it in the last argument.
@@ -179,10 +184,14 @@ The `textInput` event is sent only for mutliline text inputs.
 - `endEditing`
 - `blur`
 
-## `scroll()`
+## `scrollTo()`
+
+:::note
+`scrollTo` interaction has been introduced in RNTL v12.4.0.
+:::
 
 ```ts
-type(
+scrollTo(
   element: ReactTestInstance,
   options: {
     y: number,
