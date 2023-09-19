@@ -17,7 +17,7 @@ test('toContainElement() supports basic case', () => {
 
   expect(() => expect(parent).not.toContainElement(child))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toContainElement(element)
+    "expect(container).not.toContainElement(element)
 
       <View
         testID="parent"
@@ -44,10 +44,11 @@ test('toContainElement() supports negative case', () => {
   const view2 = screen.getByTestId('view2');
 
   expect(view1).not.toContainElement(view2);
+  expect(view2).not.toContainElement(view1);
 
   expect(() => expect(view1).toContainElement(view2))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toContainElement(element)
+    "expect(container).toContainElement(element)
 
       <View
         testID="view1"
@@ -62,7 +63,21 @@ test('toContainElement() supports negative case', () => {
   `);
 });
 
-test('toContainElement() passing null', () => {
+test('toContainElement() handles null container', () => {
+  render(<View testID="view" />);
+
+  const view = screen.getByTestId('view');
+
+  expect(() => expect(null).toContainElement(view))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(received).toContainElement()
+
+    received value must be a host element.
+    Received has value: null"
+  `);
+});
+
+test('toContainElement() handles null element', () => {
   render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
@@ -71,7 +86,7 @@ test('toContainElement() passing null', () => {
 
   expect(() => expect(view).toContainElement(null))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toContainElement(element)
+    "expect(container).toContainElement(element)
 
       <View
         testID="view"
@@ -84,32 +99,18 @@ test('toContainElement() passing null', () => {
   `);
 });
 
-test('toContainElement() on null elements', () => {
+test('toContainElement() handles non-element container', () => {
   render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
 
-  expect(() => expect(null).toContainElement(view))
-    .toThrowErrorMatchingInlineSnapshot(`
-      "expect(received).toContainElement()
-
-      received value must be a host element.
-      Received has value: null"
-    `);
-});
-
-test('toContainElement() on non-React elements', () => {
-  render(<View testID="view" />);
-
-  const view = screen.getByTestId('view');
-
-  expect(() => expect({ name: 'Non-React element' }).not.toContainElement(view))
+  expect(() => expect({ name: 'non-element' }).not.toContainElement(view))
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(received).not.toContainElement()
 
     received value must be a host element.
     Received has type:  object
-    Received has value: {"name": "Non-React element"}"
+    Received has value: {"name": "non-element"}"
   `);
 
   expect(() => expect(true).not.toContainElement(view))
@@ -122,30 +123,19 @@ test('toContainElement() on non-React elements', () => {
     `);
 });
 
-test('toContainElement() passing non-React element', () => {
+test('toContainElement() handles non-element element', () => {
   render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
 
   expect(() =>
     // @ts-expect-error
-    expect(view).not.toContainElement(true)
+    expect(view).not.toContainElement({ name: 'non-element' })
   ).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).not.toContainElement()
 
     received value must be a host element.
-    Received has type:  boolean
-    Received has value: true"
-  `);
-});
-
-test('toContainElement() passing null on non-React element', () => {
-  expect(() => expect(true).not.toContainElement(null))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "expect(received).not.toContainElement()
-
-    received value must be a host element.
-    Received has type:  boolean
-    Received has value: true"
+    Received has type:  object
+    Received has value: {"name": "non-element"}"
   `);
 });

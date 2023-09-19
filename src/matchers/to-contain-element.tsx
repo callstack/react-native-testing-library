@@ -1,8 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
-import {
-  matcherHint,
-  RECEIVED_COLOR as receivedColor,
-} from 'jest-matcher-utils';
+import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import { checkHostElement, formatElement } from './utils';
 
 export function toContainElement(
@@ -17,22 +14,21 @@ export function toContainElement(
   }
 
   let matches: ReactTestInstance[] = [];
-
   if (element) {
     matches = container.findAll((node) => node === element);
   }
 
   return {
-    pass: Boolean(matches.length),
+    pass: matches.length > 0,
     message: () => {
       return [
         matcherHint(
           `${this.isNot ? '.not' : ''}.toContainElement`,
-          'element',
+          'container',
           'element'
         ),
         '',
-        receivedColor(`${formatElement(container)} ${
+        RECEIVED_COLOR(`${formatElement(container)} ${
           this.isNot ? '\n\ncontains:\n\n' : '\n\ndoes not contain:\n\n'
         } ${formatElement(element)}
         `),
