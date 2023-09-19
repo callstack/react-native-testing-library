@@ -1,5 +1,5 @@
 import type { StyleProp } from 'react-native';
-import { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance } from 'react-test-renderer';
 import type { TextMatch, TextMatchOptions } from '../matches';
 import type { Style } from './to-have-style';
 
