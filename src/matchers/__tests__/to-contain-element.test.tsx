@@ -121,3 +121,31 @@ test('toContainElement() on non-React elements', () => {
       Received has value: true"
     `);
 });
+
+test('toContainElement() passing non-React element', () => {
+  render(<View testID="view" />);
+
+  const view = screen.getByTestId('view');
+
+  expect(() =>
+    // @ts-expect-error
+    expect(view).not.toContainElement(true)
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "expect(received).not.toContainElement()
+
+    received value must be a host element.
+    Received has type:  boolean
+    Received has value: true"
+  `);
+});
+
+test('toContainElement() passing null on non-React element', () => {
+  expect(() => expect(true).not.toContainElement(null))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(received).not.toContainElement()
+
+    received value must be a host element.
+    Received has type:  boolean
+    Received has value: true"
+  `);
+});

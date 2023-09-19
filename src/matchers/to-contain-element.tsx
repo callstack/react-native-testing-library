@@ -10,8 +10,10 @@ export function toContainElement(
   container: ReactTestInstance,
   element: ReactTestInstance | null
 ) {
-  if (element !== null || !this.isNot) {
-    checkHostElement(container, toContainElement, this);
+  checkHostElement(container, toContainElement, this);
+
+  if (element !== null) {
+    checkHostElement(element, toContainElement, this);
   }
 
   let matches: ReactTestInstance[] = [];
