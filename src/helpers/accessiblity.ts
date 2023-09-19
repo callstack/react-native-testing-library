@@ -231,9 +231,5 @@ export function isElementCollapsed(
   element: ReactTestInstance
 ): NonNullable<AccessibilityState['expanded']> {
   const { accessibilityState, 'aria-expanded': ariaExpanded } = element.props;
-  return ariaExpanded !== undefined
-    ? !ariaExpanded
-    : accessibilityState !== undefined
-    ? !accessibilityState.expanded
-    : false;
+  return (ariaExpanded ?? accessibilityState?.expanded) === false;
 }
