@@ -7,7 +7,6 @@ import TOCInline from '@theme/TOCInline';
 This guide describes common issues found by users when integrating React Native Test Library to their projects:
 
 <TOCInline toc={toc} />
-
 ## Matching React Native, React & React Test Renderer versions
 
 Check that you have matching versions of core dependencies:
@@ -32,6 +31,45 @@ Errors that might indicate that you are facing this issue:
 We maintain an [example repository](https://github.com/callstack/react-native-testing-library/tree/main/examples/basic) that showcases a modern React Native Testing Library setup with TypeScript, Jest Native, etc.
 
 In case something does not work in your setup you can refer to this repository for recommended configuration.
+
+## Undefined component error
+
+> Warning: React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: undefined.
+
+This frequently happens when you mock a complex module incorrectly, e.g.:
+
+```ts
+jest.mock('@react-navigation/native', () => {
+  return {
+    useNavigation: jest.fn(),
+  };
+})
+```
+
+The above mock will mock `useNavigation` hook as intended, but at the same time all other exports from `@react-navigation/native` package are now `undefined`. If you want to use `NavigationContainer` component from the same package it will be `undefined` and result in the error above.
+
+In order to mock only a part of given package you should re-export all other exports using `jest.requireActual` helper:
+
+```ts
+jest.mock('@react-navigation/native', () => {
+  return {
+    ...jest.requireActual('@react-navigation/native'),
+    useNavigation: jest.fn(),
+  };
+})
+```
+
+That way the mock will re-export all of the `@react-navigation/native` members and overwrite only the `useNavigation` hook.
+
+Alternatively, you can use `jest.spyOn` to mock package exports selectively.
+
+### Mocking React Native
+
+In case of mocking `react-native` package you should not mock the whole package at once, as this approach has issues with `jest.requireActual` call. In this case it is recommended to mock particular library paths inside the package, e.g.:
+
+```ts
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+```
 
 ## Act warnings
 
