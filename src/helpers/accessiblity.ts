@@ -213,6 +213,20 @@ export function isElementBusy(
   return ariaBusy ?? accessibilityState?.busy ?? false;
 }
 
+export function isElementCollapsed(
+  element: ReactTestInstance
+): NonNullable<AccessibilityState['expanded']> {
+  const { accessibilityState, 'aria-expanded': ariaExpanded } = element.props;
+  return (ariaExpanded ?? accessibilityState?.expanded) === false;
+}
+
+export function isElementExpanded(
+  element: ReactTestInstance
+): NonNullable<AccessibilityState['expanded']> {
+  const { accessibilityState, 'aria-expanded': ariaExpanded } = element.props;
+  return ariaExpanded ?? accessibilityState?.expanded ?? false;
+}
+
 export function isElementSelected(
   element: ReactTestInstance
 ): NonNullable<AccessibilityState['selected']> {

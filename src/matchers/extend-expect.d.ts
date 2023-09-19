@@ -6,10 +6,12 @@ import type { Style } from './to-have-style';
 export interface JestNativeMatchers<R> {
   toBeOnTheScreen(): R;
   toBeChecked(): R;
+  toBeCollapsed(): R;
   toBeDisabled(): R;
   toBeBusy(): R;
   toBeEmptyElement(): R;
   toBeEnabled(): R;
+  toBeExpanded(): R;
   toBePartiallyChecked(): R;
   toBeSelected(): R;
   toBeVisible(): R;
