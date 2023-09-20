@@ -7,9 +7,9 @@ import TOCInline from '@theme/TOCInline';
 
 <TOCInline toc={toc} />
 
-# Element Existence
+## Element Existence
 
-## `toBeOnTheScreen()`
+### `toBeOnTheScreen()`
 
 ```ts
 expect(element).toBeOnTheScreen()
@@ -21,9 +21,9 @@ This allows you to assert whether element is in the element tree or not.
 This matchers requires element to be attached to the element tree. This might be useful if your holding a reference to an element and the element gets unmounted during the test.
 :::
 
-# Element State
+## Element State
 
-## `toHaveTextContent()`
+### `toHaveTextContent()`
 
 ```ts
 expect(element).toHaveTextContent(text: TextMatch, options?: TextMatchOptions)
@@ -33,7 +33,7 @@ This allows you to assert whether the given element has a text content or not. I
 
 When `text` parameter is `undefined` it will only check for existence of text content, and when `text` is defined it will check if the actual text content matches passed value.
 
-## `toHaveDisplayValue()`
+### `toHaveDisplayValue()`
 
 ```ts
 expect(element).toHaveDisplayValue(value: TextMatch, options?: TextMatchOptions)
@@ -41,7 +41,7 @@ expect(element).toHaveDisplayValue(value: TextMatch, options?: TextMatchOptions)
 
 This allows you to assert whether the given `TextInput` element has specified display value. It accepts either `string` or `RegExp` matchers, as well as `TextMatchOptions`.
 
-## `toHaveAccessibleValue()`
+### `toHaveAccessibleValue()`
 
 ```ts
 expect(element).toHaveAccessibleValue(...)
@@ -49,7 +49,7 @@ expect(element).toHaveAccessibleValue(...)
 
 This allows you to assert whether the given element has specified accessible value.
 
-## `toBeEnabled()` / `toBeDisabled`
+### `toBeEnabled()` / `toBeDisabled`
 
 ```ts
 expect(element).toBeEnabled()
@@ -63,7 +63,7 @@ This matchers are direct negation of each other, and both are probivided to avoi
 :::
 
 
-## `toBeSelected()`
+### `toBeSelected()`
 
 ```ts
 expect(element).toBeSelected()
@@ -72,7 +72,7 @@ expect(element).toBeSelected()
 This allows you to assert whether the given element is selected from user's perspective. It relies on accessibility selected state as set by `aria-selected` or `accessibilityState.selected` props.
 
 
-## `toBeChecked()` / `toBePartiallyChecked()`
+### `toBeChecked()` / `toBePartiallyChecked()`
 
 ```ts
 expect(element).toBeChecked()
@@ -86,7 +86,7 @@ These allows you to assert whether the given element is checked or partially che
 * `toBePartiallyChecked()` matchers works only on elements with `checkbox` role.
 :::
 
-## `toBeExpanded()` /  `toBeCollapsed()`
+### `toBeExpanded()` /  `toBeCollapsed()`
 
 ```ts
 expect(element).toBeExpanded()
@@ -100,7 +100,7 @@ This matchers are direct negation of each other for expandable elements (element
 :::
 
 
-## `toBeBusy()`
+### `toBeBusy()`
 
 ```ts
 expect(element).toBeBusy()
@@ -108,9 +108,9 @@ expect(element).toBeBusy()
 
 This allows you to assert whether the given element is busy from user's perspective. It relies on accessibility selected state as set by `aria-busy` or `accessibilityState.busy` props.
 
-# Element Styles
+## Element Styles
 
-## `toBeVisible()`
+### `toBeVisible()`
 
 ```ts
 expect(element).toBeVisible()
@@ -120,7 +120,7 @@ This allows you to assert whether the given element is visible from user's persp
 
 The element is considered invisibile when it or any of its ancestors has `display: none` or `opacity: 0` styles, as well as when it's hidden from accessbility.
 
-## `toHaveStyle()`
+### `toHaveStyle()`
 
 ```ts
 expect(element).toHaveStyle(style: StyleProp<Style>)
@@ -129,9 +129,9 @@ expect(element).toHaveStyle(style: StyleProp<Style>)
 This allows you to assert whether the given element has given styles. 
 
 
-# Other
+## Other
 
-## `toBeEmptyElement()`
+### `toBeEmptyElement()`
 
 ```ts
 expect(element).toBeEmptyElement()
@@ -140,7 +140,7 @@ expect(element).toBeEmptyElement()
 This allows you to assert whether the given element does not have any host child elements nor text content.
 
 
-## `toContainElement()`
+### `toContainElement()`
 
 ```ts
 expect(container).toContainElement(element: ReactTestInstance | null)
@@ -148,7 +148,7 @@ expect(container).toContainElement(element: ReactTestInstance | null)
 
 This allows you to assert whether the given container element does contain another host element.
 
-## `toHaveProp()`
+### `toHaveProp()`
 
 ```ts
 expect(element).toHaveProp(name: string, value?: unknown)
