@@ -78,7 +78,7 @@
     "clean": "del build",
     "test": "jest",
     "test:ci": "jest --maxWorkers=2 --collectCoverage=true --coverage-provider=v8",
-    "test:ci:react:17": "scripts/test_react_17",
+    "test:react-17": "scripts/test_react_17",
     "typecheck": "tsc",
     "flow": "flow",
     "copy-flowtypes": "cp typings/index.flow.js build",
