@@ -3,6 +3,10 @@ id: jest-matchers
 title: Jest Matchers
 ---
 
+import TOCInline from '@theme/TOCInline';
+
+<TOCInline toc={toc} />
+
 # Element Existence
 
 ## `toBeOnTheScreen()`
