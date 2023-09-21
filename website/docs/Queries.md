@@ -184,7 +184,7 @@ getByDisplayValue(
     exact?: boolean;
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
-  }
+  },
 ): ReactTestInstance;
 ```
 
@@ -208,7 +208,7 @@ getByTestId(
     exact?: boolean;
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
-  }
+  },
 ): ReactTestInstance;
 ```
 
@@ -236,7 +236,7 @@ getByLabelText(
     exact?: boolean;
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
-  }
+  },
 ): ReactTestInstance;
 ```
 
@@ -264,7 +264,7 @@ getByHintText(
     exact?: boolean;
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
-  }
+  },
 ): ReactTestInstance;
 ```
 
@@ -305,7 +305,7 @@ getByA11yState(
   },
   options?: {
     includeHiddenElements?: boolean;
-  }
+  },
 ): ReactTestInstance;
 ```
 
@@ -367,7 +367,7 @@ getByA11yValue(
   },
   options?: {
     includeHiddenElements?: boolean;
-  }
+  },
 ): ReactTestInstance;
 ```
 
@@ -457,7 +457,8 @@ screen.getByText('Goodbye World');
 screen.getByText(/hello world/);
 ```
 
-### Precision
+### Options {#text-match-options}
+#### Precision
 
 ```typescript
 type TextMatchOptions = {
@@ -475,7 +476,7 @@ Queries that take a `TextMatch` also accept an object as the second argument tha
 
 `exact` option defaults to `true` but if you want to search for a text slice or make text matching case-insensitive you can override it. That being said we advise you to use regex in more complex scenarios.
 
-### Normalization
+#### Normalization
 
 Before running any matching logic against text, it is automatically normalized. By default, normalization consists of trimming whitespace from the start and end of text, and collapsing multiple adjacent whitespace characters into a single space.
 
@@ -490,7 +491,7 @@ Specifying a value for `normalizer` replaces the built-in normalization, but you
 - `trim`: Defaults to `true`. Trims leading and trailing whitespace.
 - `collapseWhitespace`: Defaults to `true`. Collapses inner whitespace (newlines, tabs repeated spaces) into a single space.
 
-#### Normalization Examples
+##### Normalization Examples
 
 To perform a match against text without trimming:
 

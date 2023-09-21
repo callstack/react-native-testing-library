@@ -15,39 +15,83 @@ import TOCInline from '@theme/TOCInline';
 expect(element).toBeOnTheScreen()
 ```
 
-This allows you to assert whether element is in the element tree or not.
+This allows you to assert whether element is attached to the element tree or not. If you hold a reference to an element and it gets unmounted during the test it will no longer pass this assertion.
 
-:::note
-This matchers requires element to be attached to the element tree. This might be useful if your holding a reference to an element and the element gets unmounted during the test.
-:::
-
-## Element State
+## Element Content
 
 ### `toHaveTextContent()`
 
 ```ts
-expect(element).toHaveTextContent(text: TextMatch, options?: TextMatchOptions)
+expect(element).toHaveTextContent(t
+  text: string | RegExp,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  },
+)
 ```
 
-This allows you to assert whether the given element has a text content or not. It accepts either `string` or `RegExp` matchers, as well as `TextMatchOptions`.
+This allows you to assert whether the given element has a text content or not. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
 
 When `text` parameter is `undefined` it will only check for existence of text content, and when `text` is defined it will check if the actual text content matches passed value.
+
+### `toContainElement()`
+
+```ts
+expect(container).toContainElement(
+  element: ReactTestInstance | null,
+)
+```
+
+This allows you to assert whether the given container element does contain another host element.
+
+### `toBeEmptyElement()`
+
+```ts
+expect(element).toBeEmptyElement()
+```
+
+This allows you to assert whether the given element does not have any host child elements nor text content.
+
+
+
+
+
+## Element State
 
 ### `toHaveDisplayValue()`
 
 ```ts
-expect(element).toHaveDisplayValue(value: TextMatch, options?: TextMatchOptions)
+expect(element).toHaveDisplayValue(
+  value: string | RegExp,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  },
+)
 ```
 
-This allows you to assert whether the given `TextInput` element has specified display value. It accepts either `string` or `RegExp` matchers, as well as `TextMatchOptions`.
+This allows you to assert whether the given `TextInput` element has specified display value. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
 
 ### `toHaveAccessibleValue()`
 
 ```ts
-expect(element).toHaveAccessibleValue(...)
+expect(element).toHaveAccessibleValue(
+  value: {
+    min?: number;
+    max?: number;
+    now?: number;
+    text?: string | RegExp;
+  },
+)
 ```
 
 This allows you to assert whether the given element has specified accessible value.
+
+This matcher will assert accessibility value based on `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` and `accessibilityValue` props. Only defined value entires will be used in the assertion,  the element might have additional accessibility value entries and still be matched.
+
+When querying by `text` entry a string or `RegExp` might be used.
+
 
 ### `toBeEnabled()` / `toBeDisabled`
 
@@ -59,7 +103,7 @@ expect(element).toBeDisabled()
 These allows you to assert whether the given element is enabled or disabled from user's perspective. It relies on accessibility disabled state as set by `aria-disabled` or `accessibilityState.disabled` props. It will considers given element disabled when it or any of its ancestors is disabled.
 
 :::note
-This matchers are direct negation of each other, and both are probivided to avoid double negations in your assertions.
+This matchers are negation of each other, and both are probivided to avoid double negations in your assertions.
 :::
 
 
@@ -96,7 +140,7 @@ expect(element).toBeCollapsed()
 These allows you to assert whether the given element is expanded or collapsed from user's perspective. It relies on accessibility disabled state as set by `aria-expanded` or `accessibilityState.expanded` props.
 
 :::note
-This matchers are direct negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both with fail for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
+This matchers are negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both won't pass for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
 :::
 
 
@@ -123,35 +167,40 @@ The element is considered invisibile when it or any of its ancestors has `displa
 ### `toHaveStyle()`
 
 ```ts
-expect(element).toHaveStyle(style: StyleProp<Style>)
+expect(element).toHaveStyle(
+  style: StyleProp<Style>,
+)
 ```
 
 This allows you to assert whether the given element has given styles. 
 
-
 ## Other
 
-### `toBeEmptyElement()`
+### `toHaveAccessibleName()`
 
 ```ts
-expect(element).toBeEmptyElement()
+expect(element).toHaveAccessibleName(
+  name?: string | RegExp,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  },
+)
 ```
 
-This allows you to assert whether the given element does not have any host child elements nor text content.
+This allows you to assert whether the given element has specified accessible name. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
 
+Accessible name will be computed based on `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, `accessibilityLabel` props, in the absence of these props, element text content will be used.
 
-### `toContainElement()`
-
-```ts
-expect(container).toContainElement(element: ReactTestInstance | null)
-```
-
-This allows you to assert whether the given container element does contain another host element.
+When `name` parameter is `undefined` it will only check if element has any accessible name.
 
 ### `toHaveProp()`
 
 ```ts
-expect(element).toHaveProp(name: string, value?: unknown)
+expect(element).toHaveProp(
+  name: string,
+  value?: unknown,
+)
 ```
 
 This allows you to assert whether the given element has a given prop. When `value` parameter is `undefined` it will only check for existence of prop, and when `value` is defined it will check if the actual value matches passed value.
