@@ -3,9 +3,13 @@ id: jest-matchers
 title: Jest Matchers
 ---
 
+:::note
+Built-in Jest matchers require RNTL v12.4.0 or later.
+:::
+
 This guide describes built-in Jest matchers, we recommend using these matchers as they provide more readable tests, better accessibility support and better developer experience.
 
-If you are already using legacy Jest Native matchers we have a [migration guide](MigrationJestMatchers.md) for moving to the built-in matchers.
+If you are already using legacy Jest Native matchers we have a [migration guide](migration-jest-native) for moving to the built-in matchers.
 
 import TOCInline from '@theme/TOCInline';
 

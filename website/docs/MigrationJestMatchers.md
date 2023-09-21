@@ -3,7 +3,7 @@ id: migration-jest-native
 title: Migration from Jest Native matchers
 ---
 
-This guide describes steps necessary to migrate from [legacy Jest Native matchers](https://github.com/testing-library/jest-native) `v5` to [built-in Jest matchers](JestMatchers.md). 
+This guide describes steps necessary to migrate from [legacy Jest Native matchers](https://github.com/testing-library/jest-native) `v5` to [built-in Jest matchers](jest-matchers). 
 
 import TOCInline from '@theme/TOCInline';
 
@@ -45,32 +45,32 @@ expect(element).legacy_toHaveAccessibilityState({ busy: true });
 ### Matchers not requiring changes
 
 Following matchers should work the same:
-* [`toBeEmptyElement()`](JestMatchers.md#tobeemptyelement)
-* [`toBeEnabled()` / `toBeDisabled()`](JestMatchers.md#tobeenabled)
-* [`toBeOnTheScreen()`](JestMatchers.md#tobeonthescreen)
-* [`toBeVisible()`](JestMatchers.md#tobevisible)
-* [`toContainElement()`](JestMatchers.md#tocontainelement)
-* [`toHaveDisplayValue()`](JestMatchers.md#tohavedisplayvalue)
-* [`toHaveProp()`](JestMatchers.md#tohaveprop)
-* [`toHaveStyle()`](JestMatchers.md#tohavestyle)
-* [`toHaveTextContent()`](JestMatchers.md#tohavetextcontent)
+* [`toBeEmptyElement()`](jest-matchers#tobeemptyelement)
+* [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled)
+* [`toBeOnTheScreen()`](jest-matchers#tobeonthescreen)
+* [`toBeVisible()`](jest-matchers#tobevisible)
+* [`toContainElement()`](jest-matchers#tocontainelement)
+* [`toHaveDisplayValue()`](jest-matchers#tohavedisplayvalue)
+* [`toHaveProp()`](jest-matchers#tohaveprop)
+* [`toHaveStyle()`](jest-matchers#tohavestyle)
+* [`toHaveTextContent()`](jest-matchers#tohavetextcontent)
   
 ### Renamed matchers
 
-`toHaveAccessibilityValue()` matcher has been renamed to [`toHaveAccessibleValue()`](JestMatchers.md#tohaveaccessiblevalue) but otherwise should work the same.
+`toHaveAccessibilityValue()` matcher has been renamed to [`toHaveAccessibleValue()`](jest-matchers#tohaveaccessiblevalue) but otherwise should work the same.
 
 ### Removed matchers
 
 `toHaveAccessibilityState()` matcher has been replaced by following matchers:
-* enabled state: [`toBeEnabled()` / `toBeDisabled()`](JestMatchers.md#tobeenabled)
-* checked state: [`toBeChecked()` / `toBePartiallyChecked()`](JestMatchers.md#tobechecked)
-* selected state: [`toBeSelected()`](JestMatchers.md#tobeselected)
-* expanded state: [`toBeExpanded()` / `toBeCollapsed()`](JestMatchers.md#tobeexpanded)
-* busy state: [`toBeBusy()`](JestMatchers.md#tobebusy)
+* enabled state: [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled)
+* checked state: [`toBeChecked()` / `toBePartiallyChecked()`](jest-matchers#tobechecked)
+* selected state: [`toBeSelected()`](jest-matchers#tobeselected)
+* expanded state: [`toBeExpanded()` / `toBeCollapsed()`](jest-matchers#tobeexpanded)
+* busy state: [`toBeBusy()`](jest-matchers#tobebusy)
 
 The new matchers support both `accessbililityState` and `aria-*` props.
 
 You should be aware of following changes:
-* [`toBeEnabled()` / `toBeDisabled()`](JestMatchers.md#tobeenabled) matchers also check the disabled state for element ancestors and not only the element itself
-* [`toBeChecked()`](JestMatchers.md#tobechecked) matcher supports only elements with `checkbox` or `radio` role
-* [`toBePartiallyChecked()`](JestMatchers.md#tobechecked) matchers supports only elements with `checkbox` role
+* [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled) matchers also check the disabled state for element ancestors and not only the element itself
+* [`toBeChecked()`](jest-matchers#tobechecked) matcher supports only elements with `checkbox` or `radio` role
+* [`toBePartiallyChecked()`](jest-matchers#tobechecked) matchers supports only elements with `checkbox` role
