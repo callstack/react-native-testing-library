@@ -8,6 +8,9 @@ export type Config = {
   /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
 
+  /** Default interval, in ms, for `waitFor` and `findBy*` queries. */
+  asyncUtilInterval: number;
+
   /** Default value for `includeHiddenElements` query option. */
   defaultIncludeHiddenElements: boolean;
 
@@ -35,6 +38,7 @@ export type InternalConfig = Config & {
 
 const defaultConfig: InternalConfig = {
   asyncUtilTimeout: 1000,
+  asyncUtilInterval: 50,
   defaultIncludeHiddenElements: false,
 };
 

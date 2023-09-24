@@ -7,14 +7,17 @@ import {
 
 test('getConfig() returns existing configuration', () => {
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
+  expect(getConfig().asyncUtilInterval).toEqual(50);
   expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
 });
 
 test('configure() overrides existing config values', () => {
   configure({ asyncUtilTimeout: 5000 });
   configure({ defaultDebugOptions: { message: 'debug message' } });
+  configure({ asyncUtilInterval: 10 });
   expect(getConfig()).toEqual({
     asyncUtilTimeout: 5000,
+    asyncUtilInterval: 10,
     defaultDebugOptions: { message: 'debug message' },
     defaultIncludeHiddenElements: false,
   });
@@ -23,13 +26,16 @@ test('configure() overrides existing config values', () => {
 test('resetToDefaults() resets config to defaults', () => {
   configure({
     asyncUtilTimeout: 5000,
+    asyncUtilInterval: 10,
     defaultIncludeHiddenElements: true,
   });
   expect(getConfig().asyncUtilTimeout).toEqual(5000);
+  expect(getConfig().asyncUtilInterval).toEqual(10);
   expect(getConfig().defaultIncludeHiddenElements).toEqual(true);
 
   resetToDefaults();
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
+  expect(getConfig().asyncUtilInterval).toEqual(50);
   expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
 });
 

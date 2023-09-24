@@ -10,8 +10,6 @@ import {
 } from './helpers/timers';
 import { checkReactVersionAtLeast } from './react-versions';
 
-const DEFAULT_INTERVAL = 50;
-
 export type WaitForOptions = {
   timeout?: number;
   interval?: number;
@@ -23,7 +21,7 @@ function waitForInternal<T>(
   expectation: () => T,
   {
     timeout = getConfig().asyncUtilTimeout,
-    interval = DEFAULT_INTERVAL,
+    interval = getConfig().asyncUtilInterval,
     stackTraceError,
     onTimeout,
   }: WaitForOptions

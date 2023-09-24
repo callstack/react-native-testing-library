@@ -104,6 +104,52 @@ test('waits for element with custom interval', async () => {
   expect(mockFn).toHaveBeenCalledTimes(2);
 });
 
+test('waitFor interval defaults to asyncUtilInterval default value', async () => {
+  const mockFn = jest.fn(() => {
+    throw Error('test');
+  });
+
+  try {
+    await waitFor(() => mockFn(), { timeout: 100 });
+  } catch (e) {
+    // suppress
+  }
+
+  expect(mockFn).toHaveBeenCalledTimes(2); // Default interval is set to 50ms
+});
+
+test('waitFor interval defaults to asyncUtilInterval config option', async () => {
+  configure({ asyncUtilInterval: 10 });
+
+  const mockFn = jest.fn(() => {
+    throw Error('test');
+  });
+
+  try {
+    await waitFor(() => mockFn(), { timeout: 100 });
+  } catch (e) {
+    // suppress
+  }
+
+  expect(mockFn).toHaveBeenCalledTimes(10);
+});
+
+test('waitFor interval option takes precendence over asyncUtilInterval config option', async () => {
+  configure({ asyncUtilInterval: 10 });
+
+  const mockFn = jest.fn(() => {
+    throw Error('test');
+  });
+
+  try {
+    await waitFor(() => mockFn(), { timeout: 100, interval: 20 });
+  } catch (e) {
+    // suppress
+  }
+
+  expect(mockFn).toHaveBeenCalledTimes(5);
+});
+
 // this component is convoluted on purpose. It is not a good react pattern, but it is valid
 // react code that will run differently between different react versions (17 and 18), so we need
 // explicit tests for it

@@ -552,7 +552,7 @@ Defined as:
 ```ts
 function waitForElementToBeRemoved<T>(
   expectation: () => T,
-  { timeout: number = 4500, interval: number = 50 }
+  { timeout: number = 1000, interval: number = 50 }
 ): Promise<T> {}
 ```
 
@@ -800,6 +800,7 @@ it('should use context value', () => {
 ```ts
 type Config = {
   asyncUtilTimeout: number;
+  asyncUtilInterval: number;
   defaultHidden: boolean;
   defaultDebugOptions: Partial<DebugOptions>;
 };
@@ -810,6 +811,10 @@ function configure(options: Partial<Config>) {}
 #### `asyncUtilTimeout` option
 
 Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
+
+#### `asyncUtilInterval` option
+
+Default interval, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 50 ms.
 
 #### `defaultIncludeHiddenElements` option
 
