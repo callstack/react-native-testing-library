@@ -4,6 +4,8 @@ import { PressOptions, press, longPress } from '../press';
 import { TypeOptions, type } from '../type';
 import { clear } from '../clear';
 import { ScrollToOptions, scrollTo } from '../scroll';
+import { wait } from '../utils';
+import { asyncWrapper } from '../utils/asyncWrapper';
 
 export interface UserEventSetupOptions {
   /**
@@ -143,13 +145,33 @@ function createInstance(config: UserEventConfig): UserEventInstance {
 
   // We need to bind these functions, as they access the config through 'this.config'.
   const api = {
-    press: press.bind(instance),
-    longPress: longPress.bind(instance),
-    type: type.bind(instance),
-    clear: clear.bind(instance),
-    scrollTo: scrollTo.bind(instance),
+    press: wrapAndBindImpl(instance, press),
+    longPress: wrapAndBindImpl(instance, longPress),
+    type: wrapAndBindImpl(instance, type),
+    clear: wrapAndBindImpl(instance, clear),
+    scrollTo: wrapAndBindImpl(instance, scrollTo),
   };
 
   Object.assign(instance, api);
   return instance;
+}
+
+// This implementation is sourced from testing-library/user-event
+// https://github.com/testing-library/user-event/blob/7a305dee9ab833d6f338d567fc2e862b4838b76a/src/setup/setup.ts#L121
+function wrapAndBindImpl<Impl extends (...args: any) => Promise<any>>(
+  instance: UserEventInstance,
+  impl: Impl
+): Impl {
+  const method = ((...args: any[]) => {
+    return asyncWrapper(() =>
+      // eslint-disable-next-line promise/prefer-await-to-then
+      impl.apply(instance, args).then(async (ret) => {
+        await wait(instance.config);
+        return ret;
+      })
+    );
+  }) as Impl;
+
+  Object.defineProperty(method, 'name', { get: () => impl.name });
+  return method;
 }
