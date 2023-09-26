@@ -26,6 +26,7 @@ export const asyncWrapper = async <T>(
 
   let result: T;
 
+  // Wrapping with act for react version 16.9 to 17.x
   await act(async () => {
     result = await callback();
   });
