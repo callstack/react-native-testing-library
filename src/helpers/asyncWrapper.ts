@@ -1,7 +1,7 @@
 import { act } from 'react-test-renderer';
-import { getIsReactActEnvironment, setReactActEnvironment } from '../../act';
-import { flushMicroTasksLegacy } from '../../flush-micro-tasks';
-import { checkReactVersionAtLeast } from '../../react-versions';
+import { getIsReactActEnvironment, setReactActEnvironment } from '../act';
+import { flushMicroTasksLegacy } from '../flush-micro-tasks';
+import { checkReactVersionAtLeast } from '../react-versions';
 
 export const asyncWrapper = async <T>(
   callback: () => Promise<T>

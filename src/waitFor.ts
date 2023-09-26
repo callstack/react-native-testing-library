@@ -7,7 +7,7 @@ import {
   clearTimeout,
   jestFakeTimersAreEnabled,
 } from './helpers/timers';
-import { asyncWrapper } from './user-event/utils/asyncWrapper';
+import { asyncWrapper } from './helpers/asyncWrapper';
 
 const DEFAULT_INTERVAL = 50;
 

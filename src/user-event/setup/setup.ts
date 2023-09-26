@@ -5,7 +5,7 @@ import { TypeOptions, type } from '../type';
 import { clear } from '../clear';
 import { ScrollToOptions, scrollTo } from '../scroll';
 import { wait } from '../utils';
-import { asyncWrapper } from '../utils/asyncWrapper';
+import { asyncWrapper } from '../../helpers/asyncWrapper';
 
 export interface UserEventSetupOptions {
   /**
