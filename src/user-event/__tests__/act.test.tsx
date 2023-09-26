@@ -5,6 +5,9 @@ import { userEvent } from '..';
 import { screen } from '../../screen';
 
 test('user event disables act environmennt', async () => {
+  // In this There is state update during a wait when typing
+  // Since wait is not wrapped by act there would be a warning
+  // if act environment was not disabled
   const consoleErrorSpy = jest.spyOn(console, 'error');
   jest.useFakeTimers();
   const TestComponent = () => {
