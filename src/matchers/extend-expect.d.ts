@@ -22,6 +22,7 @@ export interface JestNativeMatchers<R> {
   toHaveProp(name: string, expectedValue?: unknown): R;
   toHaveStyle(style: StyleProp<Style>): R;
   toHaveTextContent(expectedText: TextMatch, options?: TextMatchOptions): R;
+  toHaveAccessibleName(expectedName?: TextMatch, options?: TextMatchOptions): R;
 }
 
 // Implicit Jest global `expect`.
