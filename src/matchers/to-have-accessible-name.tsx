@@ -1,33 +1,22 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { matchAccessibleName } from '../helpers/matchers/accessibilityName';
-import {
-  getAccessibilityLabel,
-  getAccessibilityLabelledBy,
-} from '../helpers/accessiblity';
-import { TextMatch, TextMatchOptions } from '../matches';
-import { getTextContent } from '../helpers/text-content';
-import { getUnsafeRootElement } from '../helpers/component-tree';
+import { TextMatch, TextMatchOptions, matches } from '../matches';
+import { getAccessibleName } from '../helpers/accessiblity';
 import { checkHostElement, formatMessage } from './utils';
 
-export function getAccessibleName(
-  element: ReactTestInstance
-): string | undefined {
-  const labelTextFromLabel = getAccessibilityLabel(element);
-  const labelTextFromLabelledBy = getAccessibilityLabelledBy(element);
-  const rootElement = getUnsafeRootElement(element);
+export function matchAccessibleName(
+  node: ReactTestInstance,
+  expectedName?: TextMatch,
+  normalizer?: TextMatchOptions['normalizer'],
+  exact?: TextMatchOptions['exact']
+): boolean {
+  const accessibleName = getAccessibleName(node);
 
-  const labelledByElement = labelTextFromLabelledBy
-    ? rootElement?.findByProps({
-        nativeID: labelTextFromLabelledBy,
-      })
-    : undefined;
+  if (expectedName) {
+    return matches(expectedName, accessibleName, normalizer, exact);
+  }
 
-  const nameFromLabel = labelTextFromLabelledBy
-    ? labelledByElement && getTextContent(labelledByElement)
-    : labelTextFromLabel;
-
-  return nameFromLabel || getTextContent(element) || undefined;
+  return !!accessibleName;
 }
 
 export function toHaveAccessibleName(
