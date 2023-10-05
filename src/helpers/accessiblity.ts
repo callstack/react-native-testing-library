@@ -4,7 +4,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
-import { getHostSiblings, getHostParent } from './component-tree';
+import { getHostSiblings } from './component-tree';
 import { getHostComponentNames } from './host-component-names';
 
 type IsInaccessibleOptions = {
@@ -232,35 +232,4 @@ export function isElementSelected(
 ): NonNullable<AccessibilityState['selected']> {
   const { accessibilityState, 'aria-selected': ariaSelected } = element.props;
   return ariaSelected ?? accessibilityState?.selected ?? false;
-}
-
-export function getAccessibleName(
-  element: ReactTestInstance
-): string | undefined {
-  const labelTextFromLabel = getAccessibilityLabel(element);
-  const labelTextFromLabelledBy = getAccessibilityLabelledBy(element);
-
-  if (labelTextFromLabelledBy) {
-    const parentElement = getHostParent(element);
-
-    if (parentElement) {
-      const labelElement = parentElement.findByProps({
-        nativeID: labelTextFromLabelledBy,
-      });
-
-      if (labelElement) {
-        // Extract and return the text content of the label element
-        const label = labelElement.props.children;
-        return label;
-      }
-    }
-  }
-
-  if (labelTextFromLabel) {
-    return labelTextFromLabel;
-  }
-
-  const ownText = element?.children?.join(' ');
-
-  return ownText || undefined;
 }

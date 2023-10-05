@@ -18,11 +18,11 @@ export interface JestNativeMatchers<R> {
   toBeVisible(): R;
   toContainElement(element: ReactTestInstance | null): R;
   toHaveAccessibilityValue(expectedValue: AccessibilityValueMatcher): R;
+  toHaveAccessibleName(expectedName?: TextMatch, options?: TextMatchOptions): R;
   toHaveDisplayValue(expectedValue: TextMatch, options?: TextMatchOptions): R;
   toHaveProp(name: string, expectedValue?: unknown): R;
   toHaveStyle(style: StyleProp<Style>): R;
   toHaveTextContent(expectedText: TextMatch, options?: TextMatchOptions): R;
-  toHaveAccessibleName(expectedName?: TextMatch, options?: TextMatchOptions): R;
 }
 
 // Implicit Jest global `expect`.

@@ -1,5 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
-import { getAccessibleName } from '../accessiblity';
+import { getAccessibleName } from '../../matchers/to-have-accessible-name';
 import { TextMatchOptions, matches, TextMatch } from '../../matches';
 
 export function matchAccessibleName(
