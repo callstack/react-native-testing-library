@@ -39,7 +39,7 @@
     "@babel/preset-flow": "^7.22.15",
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.22.15",
-    "@callstack/eslint-config": "^13.0.1",
+    "@callstack/eslint-config": "^14.0.0",
     "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.2.21",
