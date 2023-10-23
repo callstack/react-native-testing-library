@@ -26,7 +26,9 @@ export async function wrapAsync<Result>(
     }
   }
 
+  /* istanbul ignore else */
   if (!checkReactVersionAtLeast(16, 9)) {
+    /* istanbul ignore next */
     return callback();
   }
 
