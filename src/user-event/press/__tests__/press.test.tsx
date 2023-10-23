@@ -454,4 +454,32 @@ describe('userEvent.press with fake timers', () => {
 
     expect(mockOnPress).toHaveBeenCalled();
   });
+
+  test('disables act environmennt', async () => {
+    // In this test there is state update during await when typing
+    // Since wait is not wrapped by act there would be a warning
+    // if act environment was not disabled.
+    const consoleErrorSpy = jest.spyOn(console, 'error');
+    jest.useFakeTimers();
+
+    const TestComponent = () => {
+      const [showText, setShowText] = React.useState(false);
+
+      React.useEffect(() => {
+        setTimeout(() => setShowText(true), 100);
+      }, []);
+
+      return (
+        <>
+          <Pressable testID="pressable" />
+          {showText && <Text />}
+        </>
+      );
+    };
+
+    render(<TestComponent />);
+    await userEvent.press(screen.getByTestId('pressable'));
+
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+  });
 });
