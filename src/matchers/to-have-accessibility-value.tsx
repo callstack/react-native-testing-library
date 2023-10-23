@@ -14,7 +14,7 @@ export function toHaveAccessibilityValue(
 ) {
   checkHostElement(element, toHaveAccessibilityValue, this);
 
-  const value = getAccessibilityValue(element);
+  const receivedValue = getAccessibilityValue(element);
 
   return {
     pass: matchAccessibilityValue(element, expectedValue),
@@ -31,7 +31,7 @@ export function toHaveAccessibilityValue(
         } have accessibility value`,
         stringify(expectedValue),
         'Received element with accessibility value',
-        stringify(value)
+        stringify(receivedValue)
       );
     },
   };
