@@ -1,14 +1,13 @@
 /* globals jest */
-import act, { setReactActEnvironment, getIsReactActEnvironment } from './act';
 import { getConfig } from './config';
-import { flushMicroTasks, flushMicroTasksLegacy } from './flush-micro-tasks';
+import { flushMicroTasks } from './flush-micro-tasks';
 import { ErrorWithStack, copyStackTrace } from './helpers/errors';
 import {
   setTimeout,
   clearTimeout,
   jestFakeTimersAreEnabled,
 } from './helpers/timers';
-import { checkReactVersionAtLeast } from './react-versions';
+import { wrapAsync } from './helpers/wrap-async';
 
 const DEFAULT_INTERVAL = 50;
 
@@ -199,30 +198,5 @@ export default async function waitFor<T>(
   const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', waitFor);
   const optionsWithStackTrace = { stackTraceError, ...options };
 
-  if (checkReactVersionAtLeast(18, 0)) {
-    const previousActEnvironment = getIsReactActEnvironment();
-    setReactActEnvironment(false);
-
-    try {
-      const result = await waitForInternal(expectation, optionsWithStackTrace);
-      // Flush the microtask queue before restoring the `act` environment
-      await flushMicroTasksLegacy();
-      return result;
-    } finally {
-      setReactActEnvironment(previousActEnvironment);
-    }
-  }
-
-  if (!checkReactVersionAtLeast(16, 9)) {
-    return waitForInternal(expectation, optionsWithStackTrace);
-  }
-
-  let result: T;
-
-  await act(async () => {
-    result = await waitForInternal(expectation, optionsWithStackTrace);
-  });
-
-  // Either we have result or `waitFor` threw error
-  return result!;
+  return wrapAsync(() => waitForInternal(expectation, optionsWithStackTrace));
 }

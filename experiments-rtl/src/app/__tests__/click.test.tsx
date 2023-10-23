@@ -1,8 +1,8 @@
-import * as React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import * as React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-test("userEvent.click()", async () => {
+test('userEvent.click()', async () => {
   const handleClick = jest.fn();
 
   render(
@@ -11,12 +11,12 @@ test("userEvent.click()", async () => {
     </button>
   );
 
-  const button = screen.getByText("Click");
+  const button = screen.getByText('Click');
   await userEvent.click(button);
   expect(handleClick).toHaveBeenCalledTimes(1);
 });
 
-test("fireEvent.click()", () => {
+test('fireEvent.click()', () => {
   const handleClick = jest.fn();
 
   render(
@@ -25,7 +25,7 @@ test("fireEvent.click()", () => {
     </button>
   );
 
-  const button = screen.getByText("Click");
+  const button = screen.getByText('Click');
   fireEvent.click(button);
   expect(handleClick).toHaveBeenCalledTimes(1);
 });

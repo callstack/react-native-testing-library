@@ -1,9 +1,11 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
-import { PressOptions, press, longPress } from '../press';
-import { TypeOptions, type } from '../type';
+import { wrapAsync } from '../../helpers/wrap-async';
 import { clear } from '../clear';
+import { PressOptions, press, longPress } from '../press';
 import { ScrollToOptions, scrollTo } from '../scroll';
+import { TypeOptions, type } from '../type';
+import { wait } from '../utils';
 
 export interface UserEventSetupOptions {
   /**
@@ -141,15 +143,42 @@ function createInstance(config: UserEventConfig): UserEventInstance {
     config,
   } as UserEventInstance;
 
-  // We need to bind these functions, as they access the config through 'this.config'.
+  // Bind interactions to given User Event instance.
   const api = {
-    press: press.bind(instance),
-    longPress: longPress.bind(instance),
-    type: type.bind(instance),
-    clear: clear.bind(instance),
-    scrollTo: scrollTo.bind(instance),
+    press: wrapAndBindImpl(instance, press),
+    longPress: wrapAndBindImpl(instance, longPress),
+    type: wrapAndBindImpl(instance, type),
+    clear: wrapAndBindImpl(instance, clear),
+    scrollTo: wrapAndBindImpl(instance, scrollTo),
   };
 
   Object.assign(instance, api);
   return instance;
+}
+
+/**
+ * Wraps user interaction with `wrapAsync` (temporarily disable `act` environment while
+ * calling & resolving the async callback, then flush the microtask queue)
+ *
+ * This implementation is sourced from `testing-library/user-event`
+ * @see https://github.com/testing-library/user-event/blob/7a305dee9ab833d6f338d567fc2e862b4838b76a/src/setup/setup.ts#L121
+ */
+function wrapAndBindImpl<
+  Args extends any[],
+  Impl extends (this: UserEventInstance, ...args: Args) => Promise<unknown>
+>(instance: UserEventInstance, impl: Impl) {
+  function method(...args: Args) {
+    return wrapAsync(() =>
+      // eslint-disable-next-line promise/prefer-await-to-then
+      impl.apply(instance, args).then(async (result) => {
+        await wait(instance.config);
+        return result;
+      })
+    );
+  }
+
+  // Copy implementation name to the returned function
+  Object.defineProperty(method, 'name', { get: () => impl.name });
+
+  return method as Impl;
 }
