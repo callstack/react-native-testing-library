@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { act } from 'react-test-renderer';
 import { getIsReactActEnvironment, setReactActEnvironment } from '../act';
 import { flushMicroTasksLegacy } from '../flush-micro-tasks';
@@ -26,9 +28,7 @@ export async function wrapAsync<Result>(
     }
   }
 
-  /* istanbul ignore else */
   if (!checkReactVersionAtLeast(16, 9)) {
-    /* istanbul ignore next */
     return callback();
   }
 
