@@ -9,7 +9,7 @@ import { checkReactVersionAtLeast } from '../react-versions';
  * @param callback Async callback to run
  * @returns Result of the callback
  */
-export async function asyncWrapper<Result>(
+export async function wrapAsync<Result>(
   callback: () => Promise<Result>
 ): Promise<Result> {
   if (checkReactVersionAtLeast(18, 0)) {

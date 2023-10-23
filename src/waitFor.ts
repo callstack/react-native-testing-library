@@ -7,7 +7,7 @@ import {
   clearTimeout,
   jestFakeTimersAreEnabled,
 } from './helpers/timers';
-import { asyncWrapper } from './helpers/asyncWrapper';
+import { wrapAsync } from './helpers/wrap-async';
 
 const DEFAULT_INTERVAL = 50;
 
@@ -198,7 +198,5 @@ export default async function waitFor<T>(
   const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', waitFor);
   const optionsWithStackTrace = { stackTraceError, ...options };
 
-  return asyncWrapper(() =>
-    waitForInternal(expectation, optionsWithStackTrace)
-  );
+  return wrapAsync(() => waitForInternal(expectation, optionsWithStackTrace));
 }
