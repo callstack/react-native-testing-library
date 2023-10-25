@@ -5,6 +5,7 @@ import {
   AccessibilityValueMatcher,
   matchAccessibilityValue,
 } from '../helpers/matchers/accessibilityValue';
+import { removeUndefinedKeys } from '../helpers/object';
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveAccessibilityValue(
@@ -31,7 +32,7 @@ export function toHaveAccessibilityValue(
         } have accessibility value`,
         stringify(expectedValue),
         'Received element with accessibility value',
-        stringify(receivedValue)
+        stringify(removeUndefinedKeys(receivedValue))
       );
     },
   };

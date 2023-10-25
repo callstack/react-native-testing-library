@@ -3,147 +3,164 @@ import { View } from 'react-native';
 import { render, screen } from '../..';
 import '../extend-expect';
 
-function renderViewsWithAccessibilityValue() {
-  return render(
-    <>
-      <View testID="min" accessibilityValue={{ min: 0 }} />
-      <View testID="max" accessibilityValue={{ max: 100 }} />
-      <View testID="now" accessibilityValue={{ now: 65 }} />
-      <View testID="min-max" accessibilityValue={{ min: 0, max: 100 }} />
-      <View
-        testID="min-max-now"
-        accessibilityValue={{ min: 0, max: 100, now: 65 }}
-      />
-      <View
-        testID="min-max-now-text"
-        accessibilityValue={{ text: 'test', min: 0, max: 100, now: 65 }}
-      />
-      <View
-        testID="text"
-        accessibilityValue={{ text: 'accessibility value' }}
-      />
-    </>
-  );
-}
-
-test('toHaveAccessibilityValue() on matching accessibility value', () => {
-  renderViewsWithAccessibilityValue();
-
-  const min = screen.getByTestId('min');
-  const max = screen.getByTestId('max');
-  const now = screen.getByTestId('now');
-  const text = screen.getByTestId('text');
-  const minMax = screen.getByTestId('min-max');
-  const minMaxNow = screen.getByTestId('min-max-now');
-  const minMaxNowText = screen.getByTestId('min-max-now-text');
-
-  expect(min).toHaveAccessibilityValue({ min: 0 });
-  expect(max).toHaveAccessibilityValue({ max: 100 });
-  expect(now).toHaveAccessibilityValue({ now: 65 });
-  expect(minMax).toHaveAccessibilityValue({ min: 0, max: 100 });
-  expect(minMaxNowText).toHaveAccessibilityValue({
-    min: 0,
-    max: 100,
-    now: 65,
-    text: 'test',
-  });
-  expect(minMaxNow).toHaveAccessibilityValue({ min: 0, max: 100, now: 65 });
-  expect(text).toHaveAccessibilityValue({ text: 'accessibility value' });
-  expect(text).toHaveAccessibilityValue({ text: /accessibility/i });
-
-  expect(() => expect(min).not.toHaveAccessibilityValue({ min: 0 }))
-    .toThrowErrorMatchingInlineSnapshot(`
-  "expect(element).not.toHaveAccessibilityValue({"min": 0})
-
-  Expected the element not to have accessibility value:
-    {"min": 0}
-  Received element with accessibility value:
-    {"max": undefined, "min": 0, "now": undefined, "text": undefined}"
-  `);
-
-  expect(() => expect(text).toHaveAccessibilityValue({ text: 'value' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-  "expect(element).toHaveAccessibilityValue({"text": "value"})
-
-  Expected the element to have accessibility value:
-    {"text": "value"}
-  Received element with accessibility value:
-    {"max": undefined, "min": undefined, "now": undefined, "text": "accessibility value"}"
-  `);
-
-  expect(() => expect(text).toHaveAccessibilityValue({ text: /test/i }))
-    .toThrowErrorMatchingInlineSnapshot(`
-  "expect(element).toHaveAccessibilityValue({"text": /test/i})
-
-  Expected the element to have accessibility value:
-    {"text": /test/i}
-  Received element with accessibility value:
-    {"max": undefined, "min": undefined, "now": undefined, "text": "accessibility value"}"
-  `);
-});
-
-test('toHaveAccessibilityValue() on non-matching accessibility value', () => {
-  renderViewsWithAccessibilityValue();
-
-  const min = screen.getByTestId('min');
-  const max = screen.getByTestId('max');
-  const now = screen.getByTestId('now');
-  const text = screen.getByTestId('text');
-  const minMax = screen.getByTestId('min-max');
-  const minMaxNow = screen.getByTestId('min-max-now');
-  const minMaxNowText = screen.getByTestId('min-max-now-text');
-
-  expect(min).not.toHaveAccessibilityValue({ min: 100 });
-  expect(max).not.toHaveAccessibilityValue({ max: 0 });
-  expect(now).not.toHaveAccessibilityValue({ now: 0 });
-  expect(text).not.toHaveAccessibilityValue({ text: 'accessibility' });
-  expect(minMax).not.toHaveAccessibilityValue({ min: 100, max: 0 });
-  expect(minMaxNow).not.toHaveAccessibilityValue({ min: 100, max: 0, now: 0 });
-  expect(minMaxNowText).not.toHaveAccessibilityValue({
-    min: 100,
-    max: 0,
-    now: 0,
-    text: 'accessibility',
+describe('toHaveAccessibilityValue', () => {
+  it('supports "accessibilityValue.min"', () => {
+    render(<View accessibilityValue={{ min: 0 }} />);
+    expect(screen.root).toHaveAccessibilityValue({ min: 0 });
+    expect(screen.root).not.toHaveAccessibilityValue({ min: 1 });
   });
 
-  expect(() => expect(min).toHaveAccessibilityValue({ min: 100 }))
-    .toThrowErrorMatchingInlineSnapshot(`
-  "expect(element).toHaveAccessibilityValue({"min": 100})
+  it('supports "accessibilityValue.max"', () => {
+    render(<View accessibilityValue={{ max: 100 }} />);
+    expect(screen.root).toHaveAccessibilityValue({ max: 100 });
+    expect(screen.root).not.toHaveAccessibilityValue({ max: 99 });
+  });
 
-  Expected the element to have accessibility value:
-    {"min": 100}
-  Received element with accessibility value:
-    {"max": undefined, "min": 0, "now": undefined, "text": undefined}"
-  `);
-});
+  it('supports "accessibilityValue.now"', () => {
+    render(<View accessibilityValue={{ now: 33 }} />);
+    expect(screen.root).toHaveAccessibilityValue({ now: 33 });
+    expect(screen.root).not.toHaveAccessibilityValue({ now: 34 });
+  });
 
-test('toHaveAccessibilityValue() when no accessibilityValue prop is provided', () => {
-  render(<View testID="view" />);
+  it('supports "accessibilityValue.text"', () => {
+    render(<View testID="view" accessibilityValue={{ text: 'Hello' }} />);
+    expect(screen.root).toHaveAccessibilityValue({ text: 'Hello' });
+    expect(screen.root).toHaveAccessibilityValue({ text: /He/ });
+    expect(screen.root).not.toHaveAccessibilityValue({ text: 'Hi' });
+    expect(screen.root).not.toHaveAccessibilityValue({ text: /Hi/ });
+  });
 
-  const view = screen.getByTestId('view');
+  it('supports "aria-valuemin"', () => {
+    render(<View testID="view" aria-valuemin={0} />);
+    expect(screen.root).toHaveAccessibilityValue({ min: 0 });
+    expect(screen.root).not.toHaveAccessibilityValue({ min: 1 });
+  });
 
-  expect(() => expect(view).toHaveAccessibilityValue({ min: 0 }))
-    .toThrowErrorMatchingInlineSnapshot(`
-  "expect(element).toHaveAccessibilityValue({"min": 0})
+  it('supports "aria-valuemax"', () => {
+    render(<View testID="view" aria-valuemax={100} />);
+    expect(screen.root).toHaveAccessibilityValue({ max: 100 });
+    expect(screen.root).not.toHaveAccessibilityValue({ max: 99 });
+  });
 
-  Expected the element to have accessibility value:
-    {"min": 0}
-  Received element with accessibility value:
-    undefined"
-  `);
-});
+  it('supports "aria-valuenow"', () => {
+    render(<View testID="view" aria-valuenow={33} />);
+    expect(screen.root).toHaveAccessibilityValue({ now: 33 });
+    expect(screen.root).not.toHaveAccessibilityValue({ now: 34 });
+  });
 
-test('toHaveAccessibilityValue() on partially matching accessibility value', () => {
-  renderViewsWithAccessibilityValue();
+  it('supports "aria-valuetext"', () => {
+    render(<View testID="view" aria-valuetext="Hello" />);
+    expect(screen.root).toHaveAccessibilityValue({ text: 'Hello' });
+    expect(screen.root).toHaveAccessibilityValue({ text: /He/ });
+    expect(screen.root).not.toHaveAccessibilityValue({ text: 'Hi' });
+    expect(screen.root).not.toHaveAccessibilityValue({ text: /Hi/ });
+  });
 
-  const minMax = screen.getByTestId('min-max');
-  const minMaxNow = screen.getByTestId('min-max-now');
-  const minMaxNowText = screen.getByTestId('min-max-now-text');
+  it('supports multi-argument matching', () => {
+    render(
+      <View accessibilityValue={{ min: 1, max: 10, now: 5, text: '5/10' }} />
+    );
 
-  expect(minMax).toHaveAccessibilityValue({ min: 0 });
-  expect(minMax).toHaveAccessibilityValue({ max: 100 });
-  expect(minMaxNow).toHaveAccessibilityValue({ now: 65 });
-  expect(minMaxNow).toHaveAccessibilityValue({ min: 0, max: 100 });
-  expect(minMaxNowText).toHaveAccessibilityValue({ text: 'test' });
-  expect(minMaxNowText).toHaveAccessibilityValue({ text: /te/i });
+    expect(screen.root).toHaveAccessibilityValue({ now: 5 });
+    expect(screen.root).toHaveAccessibilityValue({ now: 5, min: 1 });
+    expect(screen.root).toHaveAccessibilityValue({ now: 5, max: 10 });
+    expect(screen.root).toHaveAccessibilityValue({ now: 5, min: 1, max: 10 });
+    expect(screen.root).toHaveAccessibilityValue({ text: '5/10' });
+    expect(screen.root).toHaveAccessibilityValue({ now: 5, text: '5/10' });
+    expect(screen.root).toHaveAccessibilityValue({
+      now: 5,
+      min: 1,
+      max: 10,
+      text: '5/10',
+    });
+
+    expect(screen.root).not.toHaveAccessibilityValue({ now: 6 });
+    expect(screen.root).not.toHaveAccessibilityValue({ now: 5, min: 0 });
+    expect(screen.root).not.toHaveAccessibilityValue({ now: 5, max: 9 });
+    expect(screen.root).not.toHaveAccessibilityValue({
+      now: 5,
+      min: 1,
+      max: 10,
+      text: '5 of 10',
+    });
+  });
+
+  it('gives precedence to ARIA values', () => {
+    render(
+      <View
+        testID="view"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={33}
+        aria-valuetext="Hello"
+        accessibilityValue={{ min: 10, max: 90, now: 30, text: 'Hi' }}
+      />
+    );
+
+    expect(screen.root).toHaveAccessibilityValue({ min: 0 });
+    expect(screen.root).toHaveAccessibilityValue({ max: 100 });
+    expect(screen.root).toHaveAccessibilityValue({ now: 33 });
+    expect(screen.root).toHaveAccessibilityValue({ text: 'Hello' });
+
+    expect(screen.root).not.toHaveAccessibilityValue({ min: 10 });
+    expect(screen.root).not.toHaveAccessibilityValue({ max: 90 });
+    expect(screen.root).not.toHaveAccessibilityValue({ now: 30 });
+    expect(screen.root).not.toHaveAccessibilityValue({ text: 'Hi' });
+  });
+
+  it('shows errors in expected format', () => {
+    render(
+      <View
+        testID="view"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={33}
+        aria-valuetext="Hello"
+      />
+    );
+
+    expect(() => expect(screen.root).toHaveAccessibilityValue({ min: 10 }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "expect(element).toHaveAccessibilityValue({"min": 10})
+
+      Expected the element to have accessibility value:
+        {"min": 10}
+      Received element with accessibility value:
+        {"max": 100, "min": 0, "now": 33, "text": "Hello"}"
+    `);
+
+    expect(() => expect(screen.root).not.toHaveAccessibilityValue({ min: 0 }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "expect(element).not.toHaveAccessibilityValue({"min": 0})
+
+      Expected the element not to have accessibility value:
+        {"min": 0}
+      Received element with accessibility value:
+        {"max": 100, "min": 0, "now": 33, "text": "Hello"}"
+    `);
+  });
+
+  it('shows errors in expected format with partial value', () => {
+    render(<View testID="view" aria-valuenow={33} aria-valuetext="Hello" />);
+
+    expect(() => expect(screen.root).toHaveAccessibilityValue({ min: 30 }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "expect(element).toHaveAccessibilityValue({"min": 30})
+
+      Expected the element to have accessibility value:
+        {"min": 30}
+      Received element with accessibility value:
+        {"now": 33, "text": "Hello"}"
+    `);
+
+    expect(() => expect(screen.root).not.toHaveAccessibilityValue({ now: 33 }))
+      .toThrowErrorMatchingInlineSnapshot(`
+      "expect(element).not.toHaveAccessibilityValue({"now": 33})
+
+      Expected the element not to have accessibility value:
+        {"now": 33}
+      Received element with accessibility value:
+        {"now": 33, "text": "Hello"}"
+    `);
+  });
 });
