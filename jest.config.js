@@ -2,7 +2,7 @@ module.exports = {
   preset: './jest-preset',
   setupFilesAfterEnv: ['./jest-setup.ts'],
   testPathIgnorePatterns: [
-    'timerUtils',
+    'timer-utils',
     'examples/',
     'experiments-app/',
     'experiments-rtl/',
