@@ -4,7 +4,7 @@ import {
   getAccessibilityLabel,
   getAccessibilityLabelledBy,
 } from '../accessiblity';
-import { findAll } from '../findAll';
+import { findAll } from '../find-all';
 import { matchTextContent } from './match-text-content';
 
 export function matchLabelText(

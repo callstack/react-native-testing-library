@@ -1,4 +1,4 @@
-import { parseKeys } from '../parseKeys';
+import { parseKeys } from '../parse-keys';
 
 test('parseKeys', () => {
   expect(parseKeys('')).toEqual([]);

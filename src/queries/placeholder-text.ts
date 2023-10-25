@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { findAll } from '../helpers/findAll';
+import { findAll } from '../helpers/find-all';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { makeQueries } from './make-queries';

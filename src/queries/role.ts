@@ -5,7 +5,7 @@ import {
   getAccessibilityRole,
   isAccessibilityElement,
 } from '../helpers/accessiblity';
-import { findAll } from '../helpers/findAll';
+import { findAll } from '../helpers/find-all';
 import {
   AccessibilityStateMatcher,
   matchAccessibilityState,

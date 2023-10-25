@@ -1,7 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { accessibilityStateKeys } from '../helpers/accessiblity';
 import { deprecateQueries } from '../helpers/deprecation';
-import { findAll } from '../helpers/findAll';
+import { findAll } from '../helpers/find-all';
 import {
   AccessibilityStateMatcher,
   matchAccessibilityState,
