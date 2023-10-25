@@ -10,7 +10,7 @@ export function pick<T extends {}>(object: T, keys: (keyof T)[]): Partial<T> {
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
 export function removeUndefinedKeys(prop: unknown) {
