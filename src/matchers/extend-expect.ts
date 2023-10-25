@@ -11,6 +11,7 @@ import { toBePartiallyChecked } from './to-be-partially-checked';
 import { toBeSelected } from './to-be-selected';
 import { toBeVisible } from './to-be-visible';
 import { toContainElement } from './to-contain-element';
+import { toHaveAccessibilityValue } from './to-have-accessibility-value';
 import { toHaveDisplayValue } from './to-have-display-value';
 import { toHaveProp } from './to-have-prop';
 import { toHaveStyle } from './to-have-style';
@@ -29,6 +30,7 @@ expect.extend({
   toBeSelected,
   toBeVisible,
   toContainElement,
+  toHaveAccessibilityValue,
   toHaveDisplayValue,
   toHaveProp,
   toHaveStyle,

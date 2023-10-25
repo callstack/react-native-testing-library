@@ -1,4 +1,5 @@
 import { StyleSheet, ViewStyle } from 'react-native';
+import { removeUndefinedKeys } from './object';
 
 const propsToDisplay = [
   'accessible',
@@ -62,27 +63,6 @@ export function defaultMapProps(
   });
 
   return result;
-}
-
-function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function removeUndefinedKeys(prop: unknown) {
-  if (!isObject(prop)) {
-    return prop;
-  }
-
-  let hasKeys = false;
-  const result: Record<string, unknown> = {};
-  Object.entries(prop).forEach(([key, value]) => {
-    if (value !== undefined) {
-      result[key] = value;
-      hasKeys = true;
-    }
-  });
-
-  return hasKeys ? result : undefined;
 }
 
 function extractStyle(style: ViewStyle | undefined) {

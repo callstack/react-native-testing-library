@@ -1,6 +1,7 @@
 import type { StyleProp } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import type { TextMatch, TextMatchOptions } from '../matches';
+import type { AccessibilityValueMatcher } from '../helpers/matchers/accessibilityValue';
 import type { Style } from './to-have-style';
 
 export interface JestNativeMatchers<R> {
@@ -16,6 +17,7 @@ export interface JestNativeMatchers<R> {
   toBeSelected(): R;
   toBeVisible(): R;
   toContainElement(element: ReactTestInstance | null): R;
+  toHaveAccessibilityValue(expectedValue: AccessibilityValueMatcher): R;
   toHaveDisplayValue(expectedValue: TextMatch, options?: TextMatchOptions): R;
   toHaveProp(name: string, expectedValue?: unknown): R;
   toHaveStyle(style: StyleProp<Style>): R;
