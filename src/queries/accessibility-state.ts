@@ -1,12 +1,12 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { accessibilityStateKeys } from '../helpers/accessiblity';
 import { deprecateQueries } from '../helpers/deprecation';
-import { findAll } from '../helpers/findAll';
+import { findAll } from '../helpers/find-all';
 import {
   AccessibilityStateMatcher,
   matchAccessibilityState,
-} from '../helpers/matchers/accessibilityState';
-import { makeQueries } from './makeQueries';
+} from '../helpers/matchers/match-accessibility-state';
+import { makeQueries } from './make-queries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -14,7 +14,7 @@ import type {
   GetByQuery,
   QueryAllByQuery,
   QueryByQuery,
-} from './makeQueries';
+} from './make-queries';
 import { CommonQueryOptions } from './options';
 
 const queryAllByA11yState = (

@@ -1,4 +1,4 @@
-import { matchArrayProp } from '../matchArrayProp';
+import { matchArrayProp } from '../match-array-prop';
 
 test('returns true given 2 identical prop and matcher', () => {
   expect(matchArrayProp(['banana'], ['banana'])).toEqual(true);

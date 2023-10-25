@@ -1,4 +1,4 @@
-import { matchStringProp } from '../matchStringProp';
+import { matchStringProp } from '../match-string-prop';
 
 test.each`
   prop         | matcher     | expectedResult

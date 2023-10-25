@@ -1,7 +1,7 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { getAccessibilityValue } from '../accessiblity';
 import { TextMatch } from '../../matches';
-import { matchStringProp } from './matchStringProp';
+import { matchStringProp } from './match-string-prop';
 
 export interface AccessibilityValueMatcher {
   min?: number;

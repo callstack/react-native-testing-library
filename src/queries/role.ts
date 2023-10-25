@@ -5,19 +5,19 @@ import {
   getAccessibilityRole,
   isAccessibilityElement,
 } from '../helpers/accessiblity';
-import { findAll } from '../helpers/findAll';
+import { findAll } from '../helpers/find-all';
 import {
   AccessibilityStateMatcher,
   matchAccessibilityState,
-} from '../helpers/matchers/accessibilityState';
+} from '../helpers/matchers/match-accessibility-state';
 import {
   AccessibilityValueMatcher,
   matchAccessibilityValue,
-} from '../helpers/matchers/accessibilityValue';
-import { matchStringProp } from '../helpers/matchers/matchStringProp';
+} from '../helpers/matchers/match-accessibility-value';
+import { matchStringProp } from '../helpers/matchers/match-string-prop';
 import type { TextMatch } from '../matches';
 import { getQueriesForElement } from '../within';
-import { makeQueries } from './makeQueries';
+import { makeQueries } from './make-queries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -25,7 +25,7 @@ import type {
   GetByQuery,
   QueryAllByQuery,
   QueryByQuery,
-} from './makeQueries';
+} from './make-queries';
 import { CommonQueryOptions } from './options';
 
 type ByRoleOptions = CommonQueryOptions &

@@ -1,9 +1,9 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { findAll } from '../helpers/findAll';
+import { findAll } from '../helpers/find-all';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { getTextInputValue } from '../helpers/text-input';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
-import { makeQueries } from './makeQueries';
+import { makeQueries } from './make-queries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -11,7 +11,7 @@ import type {
   GetByQuery,
   QueryAllByQuery,
   QueryByQuery,
-} from './makeQueries';
+} from './make-queries';
 import type { CommonQueryOptions } from './options';
 
 type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;

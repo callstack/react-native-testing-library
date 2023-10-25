@@ -1,7 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { findAll } from '../helpers/findAll';
+import { findAll } from '../helpers/find-all';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
-import { makeQueries } from './makeQueries';
+import { makeQueries } from './make-queries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -9,7 +9,7 @@ import type {
   GetByQuery,
   QueryAllByQuery,
   QueryByQuery,
-} from './makeQueries';
+} from './make-queries';
 import type { CommonQueryOptions } from './options';
 
 type ByTestIdOptions = CommonQueryOptions & TextMatchOptions;

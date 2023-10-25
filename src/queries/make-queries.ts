@@ -1,7 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
-import waitFor from '../waitFor';
-import type { WaitForOptions } from '../waitFor';
+import waitFor from '../wait-for';
+import type { WaitForOptions } from '../wait-for';
 import format from '../helpers/format';
 import { screen } from '../screen';
 import { defaultMapProps } from '../helpers/format-default';

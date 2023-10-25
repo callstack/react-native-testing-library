@@ -1,4 +1,4 @@
-import { DebugOptions } from './helpers/debugDeep';
+import { DebugOptions } from './helpers/debug-deep';
 
 /**
  * Global configuration options for React Native Testing Library.

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text } from 'react-native';
 import act from '../act';
 import render from '../render';
-import fireEvent from '../fireEvent';
+import fireEvent from '../fire-event';
 
 type UseEffectProps = { callback(): void };
 const UseEffect = ({ callback }: UseEffectProps) => {

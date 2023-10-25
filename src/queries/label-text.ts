@@ -1,8 +1,8 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { findAll } from '../helpers/findAll';
+import { findAll } from '../helpers/find-all';
 import { TextMatch, TextMatchOptions } from '../matches';
-import { matchLabelText } from '../helpers/matchers/matchLabelText';
-import { makeQueries } from './makeQueries';
+import { matchLabelText } from '../helpers/matchers/match-label-text';
+import { makeQueries } from './make-queries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -10,7 +10,7 @@ import type {
   GetByQuery,
   QueryAllByQuery,
   QueryByQuery,
-} from './makeQueries';
+} from './make-queries';
 import { CommonQueryOptions } from './options';
 
 type ByLabelTextOptions = CommonQueryOptions & TextMatchOptions;

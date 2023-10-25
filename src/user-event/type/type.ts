@@ -6,7 +6,7 @@ import { isTextInputEditable } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait, getTextContentSize } from '../utils';
-import { parseKeys } from './parseKeys';
+import { parseKeys } from './parse-keys';
 
 export interface TypeOptions {
   skipPress?: boolean;
