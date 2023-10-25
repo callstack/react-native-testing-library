@@ -5,7 +5,7 @@ import {
   getAccessibilityLabelledBy,
 } from '../accessiblity';
 import { findAll } from '../findAll';
-import { matchTextContent } from './matchTextContent';
+import { matchTextContent } from './match-text-content';
 
 export function matchLabelText(
   root: ReactTestInstance,

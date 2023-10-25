@@ -1,4 +1,4 @@
-import { matchObjectProp } from '../matchObjectProp';
+import { matchObjectProp } from '../match-object-prop';
 
 test('returns true given 2 identical objects', () => {
   expect(matchObjectProp({ fruit: 'banana' }, { fruit: 'banana' })).toEqual(

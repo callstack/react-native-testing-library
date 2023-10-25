@@ -4,7 +4,7 @@ import { getAccessibilityValue } from '../helpers/accessiblity';
 import {
   AccessibilityValueMatcher,
   matchAccessibilityValue,
-} from '../helpers/matchers/accessibilityValue';
+} from '../helpers/matchers/match-accessibility-value';
 import { removeUndefinedKeys } from '../helpers/object';
 import { checkHostElement, formatMessage } from './utils';
 
