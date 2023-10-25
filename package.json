@@ -29,6 +29,7 @@
     "jest-preset/",
     "typings/index.flow.js",
     "pure.js",
+    "pure.d.ts",
     "dont-cleanup-after-each.js"
   ],
   "devDependencies": {
