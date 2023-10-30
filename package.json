@@ -17,7 +17,6 @@
     "MattAgn <matthieua@bam.tech> (https://github.com/MattAgn)"
   ],
   "license": "MIT",
-  "private": false,
   "keywords": [
     "react-native",
     "react",
@@ -92,5 +91,6 @@
     "build:ts:watch": "yarn build:ts --watch --preserveWatchOutput",
     "build": "yarn clean && yarn build:js && yarn build:ts && yarn copy-flowtypes",
     "prepare": "yarn build"
-  }
+  },
+  "packageManager": "yarn@4.0.1"
 }
