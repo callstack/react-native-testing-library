@@ -1,3 +1,4 @@
+# General Node.js
 node_modules
 coverage
 *.log
@@ -5,10 +6,6 @@ coverage
 build
 .idea
 .DS_Store
-
-# Ignore lock files in examples for now
-examples/**/yarn.lock
-.docusaurus
 
 # Yarn 4.x
 .pnp.*
@@ -18,3 +15,8 @@ examples/**/yarn.lock
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Ignore lock files in examples for now
+examples/**/yarn.lock
+.docusaurus
+

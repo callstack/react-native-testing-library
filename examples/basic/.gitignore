@@ -1,3 +1,4 @@
+# General Node.js
 node_modules/
 .expo/
 dist/
@@ -10,9 +11,6 @@ npm-debug.*
 *.orig.*
 web-build/
 
-# macOS
-.DS_Store
-
 # Yarn 4.x
 .pnp.*
 .yarn/*
@@ -21,3 +19,7 @@ web-build/
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# macOS
+.DS_Store
+
