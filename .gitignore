@@ -9,3 +9,12 @@ build
 # Ignore lock files in examples for now
 examples/**/yarn.lock
 .docusaurus
+
+# Yarn 4.x
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

@@ -12,3 +12,12 @@ web-build/
 
 # macOS
 .DS_Store
+
+# Yarn 4.x
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
