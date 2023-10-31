@@ -238,19 +238,19 @@ export function isElementSelected(
 export function getAccessibleName(
   element: ReactTestInstance
 ): string | undefined {
-  const labelTextFromLabel = getAccessibilityLabel(element);
-  const labelTextFromLabelledBy = getAccessibilityLabelledBy(element);
-  const rootElement = getUnsafeRootElement(element);
+  const label = getAccessibilityLabel(element);
+  if (label) {
+    return label;
+  }
 
-  const labelledByElement = labelTextFromLabelledBy
-    ? rootElement?.findByProps({
-        nativeID: labelTextFromLabelledBy,
-      })
-    : undefined;
+  const labelElementId = getAccessibilityLabelledBy(element);
+  if (labelElementId) {
+    const rootElement = getUnsafeRootElement(element);
+    const labelElement = rootElement?.findByProps({ nativeID: labelElementId });
+    if (labelElement) {
+      return getTextContent(labelElement);
+    }
+  }
 
-  const nameFromLabel = labelTextFromLabelledBy
-    ? labelledByElement && getTextContent(labelledByElement)
-    : labelTextFromLabel;
-
-  return nameFromLabel || getTextContent(element) || undefined;
+  return getTextContent(element);
 }

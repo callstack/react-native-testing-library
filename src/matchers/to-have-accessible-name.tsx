@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { matcherHint } from 'jest-matcher-utils';
+import { matcherHint, stringify } from 'jest-matcher-utils';
 import { TextMatch, TextMatchOptions, matches } from '../matches';
 import { getAccessibleName } from '../helpers/accessiblity';
 import { checkHostElement, formatMessage } from './utils';
@@ -28,14 +28,25 @@ export function toHaveAccessibleName(
   checkHostElement(element, toHaveAccessibleName, this);
 
   const receivedName = getAccessibleName(element);
+  const missingExpectedValue = arguments.length === 1;
+
+  let pass = false;
+  if (missingExpectedValue) {
+    pass = receivedName !== '';
+  } else {
+    pass =
+      expectedName != null
+        ? matches(
+            expectedName,
+            receivedName,
+            options?.normalizer,
+            options?.exact
+          )
+        : false;
+  }
 
   return {
-    pass: matchAccessibleName(
-      element,
-      expectedName,
-      options?.normalizer,
-      options?.exact
-    ),
+    pass,
     message: () => {
       return [
         formatMessage(
@@ -47,7 +58,7 @@ export function toHaveAccessibleName(
           `Expected element ${
             this.isNot ? 'not to' : 'to'
           } have accessible name`,
-          `${expectedName ? expectedName : ''}`,
+          expectedName,
           'Received',
           receivedName
         ),

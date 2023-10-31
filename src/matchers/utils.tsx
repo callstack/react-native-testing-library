@@ -109,7 +109,7 @@ export function formatElementArray(elements: ReactTestInstance[]) {
 export function formatMessage(
   matcher: string,
   expectedLabel: string,
-  expectedValue: string | RegExp,
+  expectedValue: string | RegExp | null | undefined,
   receivedLabel: string,
   receivedValue: string | null | undefined
 ) {

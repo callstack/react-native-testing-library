@@ -50,13 +50,13 @@ test('toHaveAccessibleName() on view with that does not have the expected access
   const element = screen.getByTestId('wrong-label');
   expect(() => expect(element).toHaveAccessibleName('Not the label'))
     .toThrowErrorMatchingInlineSnapshot(`
-  "expect(element).toHaveAccessibleName()
+    "expect(element).toHaveAccessibleName()
 
-  Expected element to have accessible name:
-    Not the label
-  Received:
-    The actual label"
-`);
+    Expected element to have accessible name:
+      Not the label
+    Received:
+      The actual label"
+  `);
 });
 
 test('toHaveAccessibleName() on view that doesnt have accessible name defined', () => {
@@ -68,9 +68,9 @@ test('toHaveAccessibleName() on view that doesnt have accessible name defined', 
     "expect(element).toHaveAccessibleName()
 
     Expected element to have accessible name:
-
+      undefined
     Received:
-      undefined"
+    "
   `);
 });
 
@@ -189,30 +189,30 @@ test('toHaveAccessibleName() on view with ariaLabelledBy prop', async () => {
   expect(element).toHaveAccessibleName('Aria LabelledBy');
 });
 
-test('not.toHaveAccessibleName() on view with ariaLabelledBy prop', async () => {
+test('not.toHaveAccessibleName() on view with "aria-labelledby" prop', async () => {
   render(
     <View>
-      <Text nativeID="formLabel">Aria LabelledBy</Text>
-      <TextInput testID="aria-labelledby" aria-labelledby="formLabel" />
+      <Text nativeID="label">Aria Labelled By</Text>
+      <TextInput testID="aria-labelledby" aria-labelledby="label" />
     </View>
   );
 
   const element = screen.getByTestId('aria-labelledby');
-  expect(element).not.toHaveAccessibleName('Not Aria LabelledBy');
+  expect(element).not.toHaveAccessibleName('Not Aria Labelled By');
 });
 
-test('getByLabelText supports nested aria-labelledby', async () => {
+test('getByLabelText supports nested "aria-labelledby" prop', async () => {
   render(
     <>
       <View nativeID="label">
-        <Text>Nested Aria LabelledBy</Text>
+        <Text>Nested Aria Labelled By</Text>
       </View>
       <TextInput testID="text-input" aria-labelledby="label" />
     </>
   );
 
   const element = screen.getByTestId('text-input');
-  expect(element).toHaveAccessibleName('Nested Aria LabelledBy');
+  expect(element).toHaveAccessibleName('Nested Aria Labelled By');
 });
 
 test('not.toHaveAccessibleName() on view with nested aria-labelledby', async () => {
