@@ -111,7 +111,7 @@ expect(element).toBeDisabled()
 These allows you to assert whether the given element is enabled or disabled from user's perspective. It relies on accessibility disabled state as set by `aria-disabled` or `accessibilityState.disabled` props. It will considers given element disabled when it or any of its ancestors is disabled.
 
 :::note
-This matchers are negation of each other, and both are probivided to avoid double negations in your assertions.
+This matchers are negation of each other, and both are provided to avoid double negations in your assertions.
 :::
 
 
