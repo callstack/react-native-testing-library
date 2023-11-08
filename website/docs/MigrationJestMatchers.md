@@ -3,7 +3,7 @@ id: migration-jest-native
 title: Migration from Jest Native matchers
 ---
 
-This guide describes steps necessary to migrate from [legacy Jest Native matchers](https://github.com/testing-library/jest-native) `v5` to [built-in Jest matchers](jest-matchers). 
+This guide describes steps necessary to migrate from [legacy Jest Native matchers v5](https://github.com/testing-library/jest-native) to [built-in Jest matchers](jest-matchers). 
 
 import TOCInline from '@theme/TOCInline';
 
@@ -50,15 +50,12 @@ Following matchers should work the same:
 * [`toBeOnTheScreen()`](jest-matchers#tobeonthescreen)
 * [`toBeVisible()`](jest-matchers#tobevisible)
 * [`toContainElement()`](jest-matchers#tocontainelement)
+* [`toHaveAccessibilityValue()`](jest-matchers#tohaveaccessibilityvalue)
 * [`toHaveDisplayValue()`](jest-matchers#tohavedisplayvalue)
 * [`toHaveProp()`](jest-matchers#tohaveprop)
 * [`toHaveStyle()`](jest-matchers#tohavestyle)
 * [`toHaveTextContent()`](jest-matchers#tohavetextcontent)
   
-### Renamed matchers
-
-`toHaveAccessibilityValue()` matcher has been renamed to [`toHaveAccessibleValue()`](jest-matchers#tohaveaccessiblevalue) but otherwise should work the same.
-
 ### Removed matchers
 
 `toHaveAccessibilityState()` matcher has been replaced by following matchers:
@@ -69,6 +66,13 @@ Following matchers should work the same:
 * busy state: [`toBeBusy()`](jest-matchers#tobebusy)
 
 The new matchers support both `accessbililityState` and `aria-*` props.
+
+### Added matchers
+
+Following new matchers have been added:
+* [`toHaveAccessibleName()`](jest-matchers#tohaveaccessiblename)
+
+### Noteworthy details
 
 You should be aware of following changes:
 * [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled) matchers also check the disabled state for element ancestors and not only the element itself

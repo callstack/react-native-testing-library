@@ -81,10 +81,10 @@ expect(element).toHaveDisplayValue(
 
 This allows you to assert whether the given `TextInput` element has specified display value. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
 
-### `toHaveAccessibleValue()`
+### `toHaveAccessibilityValue()`
 
 ```ts
-expect(element).toHaveAccessibleValue(
+expect(element).toHaveAccessibilityValue(
   value: {
     min?: number;
     max?: number;
