@@ -3,7 +3,7 @@ id: migration-jest-native
 title: Migration from Jest Native matchers
 ---
 
-This guide describes steps necessary to migrate from [legacy Jest Native matchers v5](https://github.com/testing-library/jest-native) to [built-in Jest matchers](jest-matchers). 
+This guide describes the steps necessary to migrate from [legacy Jest Native matchers v5](https://github.com/testing-library/jest-native) to [built-in Jest matchers](jest-matchers). 
 
 import TOCInline from '@theme/TOCInline';
 
