@@ -4,17 +4,17 @@ import { render, screen } from '../..';
 import '../extend-expect';
 
 test('toHaveAccessibleName() handles view with "accessibilityLabel" prop', () => {
-  render(<View testID="view" accessibilityLabel="Test Label" />);
+  render(<View testID="view" accessibilityLabel="Test label" />);
   const element = screen.getByTestId('view');
-  expect(element).toHaveAccessibleName('Test Label');
-  expect(element).not.toHaveAccessibleName('Other Label');
+  expect(element).toHaveAccessibleName('Test label');
+  expect(element).not.toHaveAccessibleName('Other label');
 });
 
 test('toHaveAccessibleName() handles view with "aria-label" prop', () => {
-  render(<View testID="view" aria-label="Aria Test Label" />);
+  render(<View testID="view" aria-label="Test label" />);
   const element = screen.getByTestId('view');
-  expect(element).toHaveAccessibleName('Aria Test Label');
-  expect(element).not.toHaveAccessibleName('Other Aria Label');
+  expect(element).toHaveAccessibleName('Test label');
+  expect(element).not.toHaveAccessibleName('Other label');
 });
 
 test('toHaveAccessibleName() handles view with "accessibilityLabelledBy" prop', async () => {
@@ -80,7 +80,7 @@ test('toHaveAccessibleName() handles view with implicit accessible name', () => 
 });
 
 test('toHaveAccessibleName() supports calling without expected name', () => {
-  render(<View testID="view" accessibilityLabel="Test Label" />);
+  render(<View testID="view" accessibilityLabel="Test label" />);
   const element = screen.getByTestId('view');
 
   expect(element).toHaveAccessibleName();
@@ -91,7 +91,7 @@ test('toHaveAccessibleName() supports calling without expected name', () => {
     Expected element not to have accessible name:
       undefined
     Received:
-      Test Label"
+      Test label"
   `);
 });
 
