@@ -30,7 +30,7 @@ This allows you to assert whether element is attached to the element tree or not
 ### `toHaveTextContent()`
 
 ```ts
-expect(element).toHaveTextContent(t
+expect(element).toHaveTextContent(
   text: string | RegExp,
   options?: {
     exact?: boolean;
