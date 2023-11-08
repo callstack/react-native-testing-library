@@ -1,23 +1,8 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { matcherHint, stringify } from 'jest-matcher-utils';
-import { TextMatch, TextMatchOptions, matches } from '../matches';
+import { matcherHint } from 'jest-matcher-utils';
 import { getAccessibleName } from '../helpers/accessiblity';
+import { TextMatch, TextMatchOptions, matches } from '../matches';
 import { checkHostElement, formatMessage } from './utils';
-
-export function matchAccessibleName(
-  node: ReactTestInstance,
-  expectedName?: TextMatch,
-  normalizer?: TextMatchOptions['normalizer'],
-  exact?: TextMatchOptions['exact']
-): boolean {
-  const accessibleName = getAccessibleName(node);
-
-  if (expectedName) {
-    return matches(expectedName, accessibleName, normalizer, exact);
-  }
-
-  return !!accessibleName;
-}
 
 export function toHaveAccessibleName(
   this: jest.MatcherContext,
