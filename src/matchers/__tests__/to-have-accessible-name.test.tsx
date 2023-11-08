@@ -3,66 +3,103 @@ import { View, Text, TextInput } from 'react-native';
 import { render, screen } from '../..';
 import '../extend-expect';
 
-test('toHaveAccessibleName() on view with accessibilityLabel prop', () => {
-  render(<View testID="accessibility-label" accessibilityLabel="Test Label" />);
-  const element = screen.getByTestId('accessibility-label');
+test('toHaveAccessibleName() handles view with "accessibilityLabel" prop', () => {
+  render(<View testID="view" accessibilityLabel="Test Label" />);
+  const element = screen.getByTestId('view');
   expect(element).toHaveAccessibleName('Test Label');
+  expect(element).not.toHaveAccessibleName('Other Label');
 });
 
-test('not.toHaveAccessibleName() on view with accessibilityLabel prop', () => {
-  render(<View testID="accessibility-label" accessibilityLabel="Test Label" />);
-  const element = screen.getByTestId('accessibility-label');
-  expect(element).not.toHaveAccessibleName('Not Test Label');
-});
-
-test('toHaveAccessibleName() on view with aria-label prop', () => {
-  render(<View testID="aria-label" aria-label="Aria Test Label" />);
-  const element = screen.getByTestId('aria-label');
+test('toHaveAccessibleName() handles view with "aria-label" prop', () => {
+  render(<View testID="view" aria-label="Aria Test Label" />);
+  const element = screen.getByTestId('view');
   expect(element).toHaveAccessibleName('Aria Test Label');
+  expect(element).not.toHaveAccessibleName('Other Aria Label');
 });
 
-test('not.toHaveAccessibleName() on view with aria-label prop', () => {
-  render(<View testID="aria-label" aria-label="Aria Test Label" />);
-  const element = screen.getByTestId('aria-label');
-  expect(element).not.toHaveAccessibleName('Not Aria Test Label');
+test('toHaveAccessibleName() handles view with "accessibilityLabelledBy" prop', async () => {
+  render(
+    <View>
+      <Text nativeID="label">External label</Text>
+      <TextInput testID="input" accessibilityLabelledBy="label" />
+    </View>
+  );
+
+  const element = screen.getByTestId('input');
+  expect(element).toHaveAccessibleName('External label');
+  expect(element).not.toHaveAccessibleName('Other label');
 });
 
-test('toHaveAccessibleName() on view with accessibilityLabel prop with no expectedName', () => {
-  render(<View testID="no-expectName-label" accessibilityLabel="Test Label" />);
-  const element = screen.getByTestId('no-expectName-label');
-  expect(element).toHaveAccessibleName();
+test('toHaveAccessibleName() handles nested "accessibilityLabelledBy"', async () => {
+  render(
+    <>
+      <View nativeID="label">
+        <Text>External label</Text>
+      </View>
+      <TextInput testID="input" accessibilityLabelledBy="label" />
+    </>
+  );
+
+  const element = screen.getByTestId('input');
+  expect(element).toHaveAccessibleName('External label');
+  expect(element).not.toHaveAccessibleName('Other label');
 });
 
-test('toHaveAccessibleName() on view with no accessibility props', () => {
-  render(<Text testID="accessibility-label">Text</Text>);
-  const element = screen.getByTestId('accessibility-label');
+test('toHaveAccessibleName() handles view with nested "accessibilityLabelledBy" with no text', async () => {
+  render(
+    <>
+      <View nativeID="label">
+        <View />
+      </View>
+      <TextInput testID="text-input" accessibilityLabelledBy="label" />
+    </>
+  );
+
+  const element = screen.getByTestId('text-input');
+  expect(element).not.toHaveAccessibleName();
+});
+
+test('toHaveAccessibleName() handles view with "aria-labelledby" prop', async () => {
+  render(
+    <View>
+      <Text nativeID="label">External label</Text>
+      <TextInput testID="input" aria-labelledby="label" />
+    </View>
+  );
+
+  const element = screen.getByTestId('input');
+  expect(element).toHaveAccessibleName('External label');
+  expect(element).not.toHaveAccessibleName('Other label');
+});
+
+test('toHaveAccessibleName() handles view with implicit accessible name', () => {
+  render(<Text testID="view">Text</Text>);
+  const element = screen.getByTestId('view');
   expect(element).toHaveAccessibleName('Text');
+  expect(element).not.toHaveAccessibleName('Other text');
 });
 
-test('not.toHaveAccessibleName() on view with no accessibility props', () => {
-  render(<Text testID="accessibility-label">Text</Text>);
-  const element = screen.getByTestId('accessibility-label');
-  expect(element).not.toHaveAccessibleName('Not the expected Text');
-});
+test('toHaveAccessibleName() supports calling without expected name', () => {
+  render(<View testID="view" accessibilityLabel="Test Label" />);
+  const element = screen.getByTestId('view');
 
-test('toHaveAccessibleName() on view with that does not have the expected accessible name', () => {
-  render(<View testID="wrong-label" accessibilityLabel="The actual label" />);
-  const element = screen.getByTestId('wrong-label');
-  expect(() => expect(element).toHaveAccessibleName('Not the label'))
+  expect(element).toHaveAccessibleName();
+  expect(() => expect(element).not.toHaveAccessibleName())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveAccessibleName()
+    "expect(element).not.toHaveAccessibleName()
 
-    Expected element to have accessible name:
-      Not the label
+    Expected element not to have accessible name:
+      undefined
     Received:
-      The actual label"
+      Test Label"
   `);
 });
 
-test('toHaveAccessibleName() on view that doesnt have accessible name defined', () => {
-  render(<View testID="no-accessibile-name" />);
-  const element = screen.getByTestId('no-accessibile-name');
+test('toHaveAccessibleName() handles a view without name when called without expected name', () => {
+  render(<View testID="view" />);
+  const element = screen.getByTestId('view');
 
+  expect(element).not.toHaveAccessibleName();
   expect(() => expect(element).toHaveAccessibleName())
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toHaveAccessibleName()
@@ -74,15 +111,9 @@ test('toHaveAccessibleName() on view that doesnt have accessible name defined', 
   `);
 });
 
-test('not.toHaveAccessibleName() on view that doesnt have accessible name defined', () => {
-  render(<View testID="no-accessibile-name" />);
-  const element = screen.getByTestId('no-accessibile-name');
-
-  expect(element).not.toHaveAccessibleName();
-});
-
-it('toHaveAccessibleName() on a non-host element', () => {
+it('toHaveAccessibleName() rejects non-host element', () => {
   const nonElement = 'This is not a ReactTestInstance';
+
   expect(() => expect(nonElement).toHaveAccessibleName())
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(received).toHaveAccessibleName()
@@ -91,10 +122,7 @@ it('toHaveAccessibleName() on a non-host element', () => {
     Received has type:  string
     Received has value: "This is not a ReactTestInstance""
   `);
-});
 
-it('not.toHaveAccessibleName() on a non-host element', () => {
-  const nonElement = 'This is not a ReactTestInstance';
   expect(() => expect(nonElement).not.toHaveAccessibleName())
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(received).not.toHaveAccessibleName()
@@ -103,142 +131,4 @@ it('not.toHaveAccessibleName() on a non-host element', () => {
     Received has type:  string
     Received has value: "This is not a ReactTestInstance""
   `);
-});
-
-test('toHaveAccessibleName() on view with accessibilityLabelledBy prop', async () => {
-  render(
-    <View>
-      <Text nativeID="formLabel">Accessibility LabelledBy</Text>
-      <TextInput
-        testID="accessibility-labelledby"
-        accessibilityLabelledBy="formLabel"
-      />
-    </View>
-  );
-
-  const element = screen.getByTestId('accessibility-labelledby');
-  expect(element).toHaveAccessibleName('Accessibility LabelledBy');
-});
-
-test('not.toHaveAccessibleName() on view with accessibilityLabelledBy prop', async () => {
-  render(
-    <View>
-      <Text nativeID="formLabel">Accessibility LabelledBy</Text>
-      <TextInput
-        testID="accessibility-labelledby"
-        accessibilityLabelledBy="formLabel"
-      />
-    </View>
-  );
-
-  const element = screen.getByTestId('accessibility-labelledby');
-  expect(element).not.toHaveAccessibleName('Not Accessibility LabelledBy');
-});
-
-test('getByLabelText supports nested accessibilityLabelledBy', async () => {
-  render(
-    <>
-      <View nativeID="label">
-        <Text>Nested Accessibility LabelledBy</Text>
-      </View>
-      <TextInput testID="text-input" accessibilityLabelledBy="label" />
-    </>
-  );
-
-  const element = screen.getByTestId('text-input');
-  expect(element).toHaveAccessibleName('Nested Accessibility LabelledBy');
-});
-
-test('not.toHaveAccessibleName() on view with nested accessibilityLabelledBy', async () => {
-  render(
-    <>
-      <View nativeID="label">
-        <Text>Nested Aria LabelledBy</Text>
-      </View>
-      <TextInput testID="text-input" accessibilityLabelledBy="label" />
-    </>
-  );
-
-  const element = screen.getByTestId('text-input');
-  expect(element).not.toHaveAccessibleName('Not Nested Aria LabelledBy');
-});
-
-test('not.toHaveAccessibleName() on view with nested accessibilityLabelledBy with no text', async () => {
-  render(
-    <>
-      <View nativeID="label">
-        <View />
-      </View>
-      <TextInput testID="text-input" accessibilityLabelledBy="label" />
-    </>
-  );
-
-  const element = screen.getByTestId('text-input');
-  expect(element).not.toHaveAccessibleName();
-});
-
-test('toHaveAccessibleName() on view with ariaLabelledBy prop', async () => {
-  render(
-    <View>
-      <Text nativeID="formLabel">Aria LabelledBy</Text>
-      <TextInput testID="aria-labelledby" aria-labelledby="formLabel" />
-    </View>
-  );
-
-  const element = screen.getByTestId('aria-labelledby');
-  expect(element).toHaveAccessibleName('Aria LabelledBy');
-});
-
-test('not.toHaveAccessibleName() on view with "aria-labelledby" prop', async () => {
-  render(
-    <View>
-      <Text nativeID="label">Aria Labelled By</Text>
-      <TextInput testID="aria-labelledby" aria-labelledby="label" />
-    </View>
-  );
-
-  const element = screen.getByTestId('aria-labelledby');
-  expect(element).not.toHaveAccessibleName('Not Aria Labelled By');
-});
-
-test('getByLabelText supports nested "aria-labelledby" prop', async () => {
-  render(
-    <>
-      <View nativeID="label">
-        <Text>Nested Aria Labelled By</Text>
-      </View>
-      <TextInput testID="text-input" aria-labelledby="label" />
-    </>
-  );
-
-  const element = screen.getByTestId('text-input');
-  expect(element).toHaveAccessibleName('Nested Aria Labelled By');
-});
-
-test('not.toHaveAccessibleName() on view with nested aria-labelledby', async () => {
-  render(
-    <>
-      <View nativeID="label">
-        <Text>Nested Aria LabelledBy</Text>
-      </View>
-      <TextInput testID="text-input" aria-labelledby="label" />
-    </>
-  );
-
-  const element = screen.getByTestId('text-input');
-  expect(element).not.toHaveAccessibleName('Not Nested Aria LabelledBy');
-});
-
-test('not.toHaveAccessibleName() on view with nested aria-labelledby with no text', async () => {
-  render(
-    <>
-      <View nativeID="label">
-        <View />
-      </View>
-      <TextInput testID="text-input" aria-labelledby="label" />
-    </>
-  );
-
-  const element = screen.getByTestId('text-input');
-  expect(element).not.toHaveAccessibleName();
 });
