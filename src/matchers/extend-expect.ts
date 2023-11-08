@@ -12,6 +12,7 @@ import { toBeSelected } from './to-be-selected';
 import { toBeVisible } from './to-be-visible';
 import { toContainElement } from './to-contain-element';
 import { toHaveAccessibilityValue } from './to-have-accessibility-value';
+import { toHaveAccessibleName } from './to-have-accessible-name';
 import { toHaveDisplayValue } from './to-have-display-value';
 import { toHaveProp } from './to-have-prop';
 import { toHaveStyle } from './to-have-style';
@@ -31,6 +32,7 @@ expect.extend({
   toBeVisible,
   toContainElement,
   toHaveAccessibilityValue,
+  toHaveAccessibleName,
   toHaveDisplayValue,
   toHaveProp,
   toHaveStyle,

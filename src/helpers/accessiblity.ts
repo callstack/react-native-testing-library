@@ -4,7 +4,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
-import { getHostSiblings } from './component-tree';
+import { getTextContent } from './text-content';
+import { getHostSiblings, getUnsafeRootElement } from './component-tree';
 import { getHostComponentNames } from './host-component-names';
 
 type IsInaccessibleOptions = {
@@ -232,4 +233,24 @@ export function isElementSelected(
 ): NonNullable<AccessibilityState['selected']> {
   const { accessibilityState, 'aria-selected': ariaSelected } = element.props;
   return ariaSelected ?? accessibilityState?.selected ?? false;
+}
+
+export function getAccessibleName(
+  element: ReactTestInstance
+): string | undefined {
+  const label = getAccessibilityLabel(element);
+  if (label) {
+    return label;
+  }
+
+  const labelElementId = getAccessibilityLabelledBy(element);
+  if (labelElementId) {
+    const rootElement = getUnsafeRootElement(element);
+    const labelElement = rootElement?.findByProps({ nativeID: labelElementId });
+    if (labelElement) {
+      return getTextContent(labelElement);
+    }
+  }
+
+  return getTextContent(element);
 }

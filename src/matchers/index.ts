@@ -10,6 +10,7 @@ export { toBeSelected } from './to-be-selected';
 export { toBeVisible } from './to-be-visible';
 export { toContainElement } from './to-contain-element';
 export { toHaveAccessibilityValue } from './to-have-accessibility-value';
+export { toHaveAccessibleName } from './to-have-accessible-name';
 export { toHaveDisplayValue } from './to-have-display-value';
 export { toHaveProp } from './to-have-prop';
 export { toHaveStyle } from './to-have-style';
