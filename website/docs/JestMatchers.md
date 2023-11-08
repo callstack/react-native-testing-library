@@ -214,5 +214,5 @@ expect(element).toHaveProp(
 This allows you to assert whether the given element has a given prop. When `value` parameter is `undefined` it will only check for existence of prop, and when `value` is defined it will check if the actual value matches passed value.
 
 :::note
-This matchers should be treated as escape hatch to be used when all other matchers are not suitable.
+This matcher should be treated as an escape hatch to be used when all other matchers are not suitable.
 :::
