@@ -135,7 +135,7 @@ These allows you to assert whether the given element is checked or partially che
 
 :::note
 * `toBeChecked()` matcher works only on elements with `checkbox` or `radio` role.
-* `toBePartiallyChecked()` matchers works only on elements with `checkbox` role.
+* `toBePartiallyChecked()` matcher works only on elements with `checkbox` role.
 :::
 
 ### `toBeExpanded()` /  `toBeCollapsed()` {#tobeexpanded}
