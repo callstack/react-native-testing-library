@@ -23,7 +23,7 @@ import '@testing-library/react-native/extend-expect';
 
 ### Gradual migration
 
-You can use the built-in matchers alongside with legacy Jest Native matchers by chaning their import in your `jest-setup.ts` file:
+You can use the built-in matchers alongside with legacy Jest Native matchers by changing their import in your `jest-setup.ts` file:
 
 ```ts
 // Replace this:
@@ -56,7 +56,7 @@ Following matchers should work the same:
 * [`toHaveStyle()`](jest-matchers#tohavestyle)
 * [`toHaveTextContent()`](jest-matchers#tohavetextcontent)
   
-### Removed matchers
+### Replaced matchers
 
 `toHaveAccessibilityState()` matcher has been replaced by following matchers:
 * enabled state: [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled)
@@ -69,8 +69,7 @@ The new matchers support both `accessbililityState` and `aria-*` props.
 
 ### Added matchers
 
-Following new matchers have been added:
-* [`toHaveAccessibleName()`](jest-matchers#tohaveaccessiblename)
+New [`toHaveAccessibleName()`](jest-matchers#tohaveaccessiblename) has been added.
 
 ### Noteworthy details
 
