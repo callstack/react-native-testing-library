@@ -170,7 +170,7 @@ expect(element).toBeVisible()
 
 This allows you to assert whether the given element is visible from user's perspective. 
 
-The element is considered invisibile when it or any of its ancestors has `display: none` or `opacity: 0` styles, as well as when it's hidden from accessbility.
+The element is considered invisible when itself or any of its ancestors has `display: none` or `opacity: 0` styles, as well as when it's hidden from accessbility.
 
 ### `toHaveStyle()`
 
