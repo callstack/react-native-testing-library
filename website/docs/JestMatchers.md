@@ -148,7 +148,7 @@ expect(element).toBeCollapsed()
 These allows you to assert whether the given element is expanded or collapsed from user's perspective. It relies on accessibility disabled state as set by `aria-expanded` or `accessibilityState.expanded` props.
 
 :::note
-This matchers are negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both won't pass for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
+These matchers are negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both won't pass for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
 :::
 
 
