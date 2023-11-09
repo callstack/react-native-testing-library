@@ -20,7 +20,7 @@
 
 ## The problem
 
-You want to write maintainable tests for your React Native components. As a part of this goal, you want your tests to avoid including implementation details of your components and rather focus on making your tests give you the confidence for which they are intended. As part of this, you want your testbase to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don't break your tests and slow you and your team down.
+You want to write maintainable tests for your React Native components. As a part of this goal, you want your tests to avoid including implementation details of your components and rather focus on making your tests give you the confidence for which they are intended. As part of this, you want your tests to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don't break your tests and slow you and your team down.
 
 ## This solution
 
@@ -50,7 +50,7 @@ This library has a `peerDependencies` listing for `react-test-renderer`. Make su
 
 ### Additional Jest matchers
 
-In order to use additional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
+To use additional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
 
 #### Using `yarn`
 
@@ -64,7 +64,7 @@ yarn add --dev @testing-library/jest-native
 npm install --save-dev @testing-library/jest-native
 ```
 
-Then automatically add it to your jest tests by using `setupFilesAfterEnv` option in your Jest configuration (it's usually located either in `package.json` under `"jest"` key or in a `jest.config.json` file):
+Then automatically add it to your jest tests by using the `setupFilesAfterEnv` option in your Jest configuration (it's usually located either in `package.json` under the `"jest"` key or in a `jest.config.json` file):
 
 ```json
 {
@@ -75,9 +75,9 @@ Then automatically add it to your jest tests by using `setupFilesAfterEnv` optio
 
 ### Custom Jest Preset (React Native before 0.71)
 
-We generally advise to use the "react-native" preset when testing with this library.
+We generally advise using the "react-native" preset when testing with this library.
 
-However, if you use React Native version earlier than 0.71 with [modern Jest fake timers](https://jestjs.io/blog/2020/05/05/jest-26#new-fake-timers) (default since Jest 27), you'll need to apply this custom Jest preset or otherwise awaiting promises, like using `waitFor` or `findBy*`, queries will fail with timeout.
+However, if you use React Native version earlier than 0.71 with [modern Jest fake timers](https://jestjs.io/blog/2020/05/05/jest-26#new-fake-timers) (default since Jest 27), you'll need to apply this custom Jest preset or otherwise awaiting promises, like using `waitFor` or `findBy*`, queries will fail with a timeout.
 
 This is a [known issue](https://github.com/facebook/react-native/issues/29303). It happens because React Native's Jest preset overrides native Promise. Our preset restores it to defaults, which is not a problem in most apps out there.
 
@@ -130,11 +130,11 @@ You can find the source of `QuestionsBoard` component and this example [here](ht
 
 The [public API](https://callstack.github.io/react-native-testing-library/docs/api) of `@testing-library/react-native` is focused around these essential methods:
 
-- [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – deeply renders given React element and returns helpers to query the output components.
+- [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – deeply renders the given React element and returns helpers to query the output components.
 - [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/api#fireevent) - invokes named event handler on the element.
-- [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/api#waitfor) - waits for non-deterministic periods of time until queried element is added or times out.
-- [`waitForElementToBeRemoved`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelementtoberemoved) - waits for non-deterministic periods of time until queried element is removed or times out.
-- [`within`](https://callstack.github.io/react-native-testing-library/docs/api#within) - creates a queries object scoped for given element.
+- [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/api#waitfor) - waits for non-deterministic periods of time until the queried element is added or times out.
+- [`waitForElementToBeRemoved`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelementtoberemoved) - waits for non-deterministic periods of time until the queried element is removed or times out.
+- [`within`](https://callstack.github.io/react-native-testing-library/docs/api#within) - creates a queries object scoped for a given element.
 
 ## Migration Guides
 
@@ -150,7 +150,7 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 
 ## Related External Resources
 
-- [Real world extensive examples repo](https://github.com/vanGalilea/react-native-testing)
+- [Real-world extensive examples repo](https://github.com/vanGalilea/react-native-testing)
 - [Where and how to start testing 🧪 your react-native app ⚛️ and how to keep on testin’](https://blog.usejournal.com/where-and-how-to-start-testing-your-react-native-app-%EF%B8%8F-and-how-to-keep-on-testin-ec3464fb9b41)
 - [Intro to React Native Testing Library & Jest Native](https://youtu.be/CpTQb0XWlRc)
 

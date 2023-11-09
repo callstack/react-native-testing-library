@@ -7,7 +7,7 @@ title: Jest Matchers
 Built-in Jest matchers require RNTL v12.4.0 or later.
 :::
 
-This guide describes built-in Jest matchers, we recommend using these matchers as they provide more readable tests, better accessibility support and better developer experience.
+This guide describes built-in Jest matchers, we recommend using these matchers as they provide more readable tests, better accessibility support, and a better developer experience.
 
 If you are already using legacy Jest Native matchers we have a [migration guide](migration-jest-native) for moving to the built-in matchers.
 
@@ -23,7 +23,7 @@ import TOCInline from '@theme/TOCInline';
 expect(element).toBeOnTheScreen()
 ```
 
-This allows you to assert whether element is attached to the element tree or not. If you hold a reference to an element and it gets unmounted during the test it will no longer pass this assertion.
+This allows you to assert whether an element is attached to the element tree or not. If you hold a reference to an element and it gets unmounted during the test it will no longer pass this assertion.
 
 ## Element Content
 
@@ -39,9 +39,9 @@ expect(element).toHaveTextContent(
 )
 ```
 
-This allows you to assert whether the given element has a text content or not. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
+This allows you to assert whether the given element has text content or not. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
 
-When `text` parameter is `undefined` it will only check for existence of text content, and when `text` is defined it will check if the actual text content matches passed value.
+When the `text` parameter is `undefined` it will only check for the existence of text content, and when `text` is defined it will check if the actual text content matches the passed value.
 
 ### `toContainElement()`
 
@@ -59,7 +59,7 @@ This allows you to assert whether the given container element does contain anoth
 expect(element).toBeEmptyElement()
 ```
 
-This allows you to assert whether the given element does not have any host child elements nor text content.
+This allows you to assert whether the given element does not have any host child elements or text content.
 
 
 
@@ -79,7 +79,7 @@ expect(element).toHaveDisplayValue(
 )
 ```
 
-This allows you to assert whether the given `TextInput` element has specified display value. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
+This allows you to assert whether the given `TextInput` element has a specified display value. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
 
 ### `toHaveAccessibilityValue()`
 
@@ -94,9 +94,9 @@ expect(element).toHaveAccessibilityValue(
 )
 ```
 
-This allows you to assert whether the given element has specified accessible value.
+This allows you to assert whether the given element has a specified accessible value.
 
-This matcher will assert accessibility value based on `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` and `accessibilityValue` props. Only defined value entires will be used in the assertion,  the element might have additional accessibility value entries and still be matched.
+This matcher will assert accessibility value based on `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` and `accessibilityValue` props. Only defined value entries will be used in the assertion,  the element might have additional accessibility value entries and still be matched.
 
 When querying by `text` entry a string or `RegExp` might be used.
 
@@ -108,10 +108,10 @@ expect(element).toBeEnabled()
 expect(element).toBeDisabled()
 ```
 
-These allows you to assert whether the given element is enabled or disabled from user's perspective. It relies on accessibility disabled state as set by `aria-disabled` or `accessibilityState.disabled` props. It will considers given element disabled when it or any of its ancestors is disabled.
+These allow you to assert whether the given element is enabled or disabled from the user's perspective. It relies on the accessibility disabled state as set by `aria-disabled` or `accessibilityState.disabled` props. It will consider a given element disabled when it or any of its ancestors is disabled.
 
 :::note
-This matchers are negation of each other, and both are provided to avoid double negations in your assertions.
+These matchers are the negation of each other, and both are provided to avoid double negations in your assertions.
 :::
 
 
@@ -121,7 +121,7 @@ This matchers are negation of each other, and both are provided to avoid double 
 expect(element).toBeSelected()
 ```
 
-This allows you to assert whether the given element is selected from user's perspective. It relies on accessibility selected state as set by `aria-selected` or `accessibilityState.selected` props.
+This allows you to assert whether the given element is selected from the user's perspective. It relies on the accessibility selected state as set by `aria-selected` or `accessibilityState.selected` props.
 
 
 ### `toBeChecked()` / `toBePartiallyChecked()` {#tobechecked}
@@ -131,11 +131,11 @@ expect(element).toBeChecked()
 expect(element).toBePartiallyChecked()
 ```
 
-These allows you to assert whether the given element is checked or partially checked from user's perspective. It relies on accessibility checked state as set by `aria-checked` or `accessibilityState.checked` props.
+These allow you to assert whether the given element is checked or partially checked from the user's perspective. It relies on the accessibility checked state as set by `aria-checked` or `accessibilityState.checked` props.
 
 :::note
-* `toBeChecked()` matcher works only on elements with `checkbox` or `radio` role.
-* `toBePartiallyChecked()` matcher works only on elements with `checkbox` role.
+* `toBeChecked()` matcher works only on elements with the `checkbox` or `radio` role.
+* `toBePartiallyChecked()` matcher works only on elements with the `checkbox` role.
 :::
 
 ### `toBeExpanded()` /  `toBeCollapsed()` {#tobeexpanded}
@@ -145,10 +145,10 @@ expect(element).toBeExpanded()
 expect(element).toBeCollapsed()
 ```
 
-These allows you to assert whether the given element is expanded or collapsed from user's perspective. It relies on accessibility disabled state as set by `aria-expanded` or `accessibilityState.expanded` props.
+These allows you to assert whether the given element is expanded or collapsed from the user's perspective. It relies on the accessibility disabled state as set by `aria-expanded` or `accessibilityState.expanded` props.
 
 :::note
-These matchers are negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both won't pass for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
+These matchers are the negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both won't pass for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
 :::
 
 
@@ -158,7 +158,7 @@ These matchers are negation of each other for expandable elements (elements with
 expect(element).toBeBusy()
 ```
 
-This allows you to assert whether the given element is busy from user's perspective. It relies on accessibility selected state as set by `aria-busy` or `accessibilityState.busy` props.
+This allows you to assert whether the given element is busy from the user's perspective. It relies on the accessibility selected state as set by `aria-busy` or `accessibilityState.busy` props.
 
 ## Element Styles
 
@@ -168,9 +168,9 @@ This allows you to assert whether the given element is busy from user's perspect
 expect(element).toBeVisible()
 ```
 
-This allows you to assert whether the given element is visible from user's perspective. 
+This allows you to assert whether the given element is visible from the user's perspective. 
 
-The element is considered invisible when itself or any of its ancestors has `display: none` or `opacity: 0` styles, as well as when it's hidden from accessbility.
+The element is considered invisible when itself or any of its ancestors has `display: none` or `opacity: 0` styles, as well as when it's hidden from accessibility.
 
 ### `toHaveStyle()`
 
@@ -196,11 +196,11 @@ expect(element).toHaveAccessibleName(
 )
 ```
 
-This allows you to assert whether the given element has specified accessible name. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
+This allows you to assert whether the given element has a specified accessible name. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
 
-Accessible name will be computed based on `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, `accessibilityLabel` props, in the absence of these props, element text content will be used.
+The accessible name will be computed based on `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props, in the absence of these props, the element text content will be used.
 
-When `name` parameter is `undefined` it will only check if element has any accessible name.
+When the `name` parameter is `undefined` it will only check if the element has any accessible name.
 
 ### `toHaveProp()`
 
@@ -211,7 +211,7 @@ expect(element).toHaveProp(
 )
 ```
 
-This allows you to assert whether the given element has a given prop. When `value` parameter is `undefined` it will only check for existence of prop, and when `value` is defined it will check if the actual value matches passed value.
+This allows you to assert whether the given element has a given prop. When the `value` parameter is `undefined` it will only check for existence of the prop, and when `value` is defined it will check if the actual value matches passed value.
 
 :::note
 This matcher should be treated as an escape hatch to be used when all other matchers are not suitable.

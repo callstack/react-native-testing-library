@@ -11,11 +11,11 @@ import TOCInline from '@theme/TOCInline';
 
 ## General notes
 
-All of built-in Jest matchers provided by React Native Testing Library are supporting only host elements. This should not be an issue, as all RNTL v12 queries already return only host elements. When this guide states that given matcher should work the same it assumes behavior only only host elements. If you need to assert status of composite elements use Jest Native matchers in [legacy mode](#gradual-migration).
+All of the built-in Jest matchers provided by the React Native Testing Library support only host elements. This should not be an issue, as all RNTL v12 queries already return only host elements. When this guide states that a given matcher should work the same it assumes behavior only host elements. If you need to assert the status of composite elements use Jest Native matchers in [legacy mode](#gradual-migration).
 
 ## Usage 
 
-You can use the built-in matchers by adding following line to your `jest-setup.ts` file:
+You can use the built-in matchers by adding the following line to your `jest-setup.ts` file:
 
 ```ts
 import '@testing-library/react-native/extend-expect';
@@ -23,7 +23,7 @@ import '@testing-library/react-native/extend-expect';
 
 ### Gradual migration
 
-You can use the built-in matchers alongside with legacy Jest Native matchers by changing their import in your `jest-setup.ts` file:
+You can use the built-in matchers alongside legacy Jest Native matchers by changing their import in your `jest-setup.ts` file:
 
 ```ts
 // Replace this:
@@ -34,7 +34,7 @@ import '@testing-library/react-native/extend-expect';
 import '@testing-library/jest-native/legacy-extend-expect';
 ```
 
-In such case legacy matchers will be available using `legacy_` prefix, e.g.:
+In this case legacy matchers will be available using the `legacy_` prefix, e.g.:
 
 ```ts
 expect(element).legacy_toHaveAccessibilityState({ busy: true });
@@ -44,7 +44,7 @@ expect(element).legacy_toHaveAccessibilityState({ busy: true });
 
 ### Matchers not requiring changes
 
-Following matchers should work the same:
+The following matchers should work the same:
 * [`toBeEmptyElement()`](jest-matchers#tobeemptyelement)
 * [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled)
 * [`toBeOnTheScreen()`](jest-matchers#tobeonthescreen)
@@ -58,14 +58,14 @@ Following matchers should work the same:
   
 ### Replaced matchers
 
-`toHaveAccessibilityState()` matcher has been replaced by following matchers:
+The `toHaveAccessibilityState()` matcher has been replaced by the following matchers:
 * enabled state: [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled)
 * checked state: [`toBeChecked()` / `toBePartiallyChecked()`](jest-matchers#tobechecked)
 * selected state: [`toBeSelected()`](jest-matchers#tobeselected)
 * expanded state: [`toBeExpanded()` / `toBeCollapsed()`](jest-matchers#tobeexpanded)
 * busy state: [`toBeBusy()`](jest-matchers#tobebusy)
 
-The new matchers support both `accessbililityState` and `aria-*` props.
+The new matchers support both `accessibilityState` and `aria-*` props.
 
 ### Added matchers
 
@@ -73,7 +73,7 @@ New [`toHaveAccessibleName()`](jest-matchers#tohaveaccessiblename) has been adde
 
 ### Noteworthy details
 
-You should be aware of following changes:
-* [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled) matchers also check the disabled state for element ancestors and not only the element itself
-* [`toBeChecked()`](jest-matchers#tobechecked) matcher supports only elements with `checkbox` or `radio` role
+You should be aware of the following details:
+* [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled) matchers also check the disabled state for element ancestors and not only the element itself. This is the same as in legacy Jest Native Matchers but differs from the removed `toHaveAccessibilityState()` matcher.
+* [`toBeChecked()`](jest-matchers#tobechecked) matcher supports only elements with a `checkbox` or `radio` role
 * [`toBePartiallyChecked()`](jest-matchers#tobechecked) matcher supports only elements with `checkbox` role
