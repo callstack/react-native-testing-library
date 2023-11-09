@@ -39,9 +39,7 @@ expect(element).toHaveTextContent(
 )
 ```
 
-This allows you to assert whether the given element has text content or not. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
-
-When the `text` parameter is `undefined` it will only check for the existence of text content, and when `text` is defined it will check if the actual text content matches the passed value.
+This allows you to assert whether the given element has the given text content or not. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
 
 ### `toContainElement()`
 

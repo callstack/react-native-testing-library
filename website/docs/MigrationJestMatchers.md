@@ -74,6 +74,6 @@ New [`toHaveAccessibleName()`](jest-matchers#tohaveaccessiblename) has been adde
 ### Noteworthy details
 
 You should be aware of the following details:
-* [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled) matchers also check the disabled state for element ancestors and not only the element itself. This is the same as in legacy Jest Native Matchers but differs from the removed `toHaveAccessibilityState()` matcher.
+* [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled) matchers also check the disabled state for the element's ancestors and not only the element itself. This is the same as in legacy Jest Native matchers of the same name but differs from the removed `toHaveAccessibilityState()` matcher.
 * [`toBeChecked()`](jest-matchers#tobechecked) matcher supports only elements with a `checkbox` or `radio` role
 * [`toBePartiallyChecked()`](jest-matchers#tobechecked) matcher supports only elements with `checkbox` role
