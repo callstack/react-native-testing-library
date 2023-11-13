@@ -7,14 +7,16 @@ runs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version-file: .nvmrc
 
     - name: Cache website deps
       id: yarn-cache-website
       uses: actions/cache@v3
       with:
-        path: ./website/node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('./yarn.lock') }}-website
+        path: |
+          ./website/node_modules
+          ./website/yarn/install-state.gz
+        key: website-${{ runner.os }}-yarn-${{ hashFiles('./website/yarn.lock') }}
 
     - name: Install website deps
       if: steps.yarn-cache-website.outputs.cache-hit != 'true'
