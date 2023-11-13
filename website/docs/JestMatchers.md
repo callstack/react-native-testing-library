@@ -21,7 +21,7 @@ You can use the built-in matchers by adding the following line to your `jest-set
 import '@testing-library/react-native/extend-expect';
 ```
 
-Alternatively, you can add above script to your Jest configuration file (usually located either in a `jest.config.json` file or in `package.json` under the `"jest"` key):
+Alternatively, you can add above script to your Jest configuration (usually located either in the `jest.config.js` file or in the `package.json` file under the `"jest"` key):
 
 ```json
 {
@@ -39,7 +39,7 @@ If you are already using legacy Jest Native matchers we have a [migration guide]
 ### `toBeOnTheScreen()`
 
 ```ts
-expect(element).toBeOnTheScreen()
+expect(element).toBeOnTheScreen();
 ```
 
 This allows you to assert whether an element is attached to the element tree or not. If you hold a reference to an element and it gets unmounted during the test it will no longer pass this assertion.
@@ -73,7 +73,7 @@ This allows you to assert whether the given container element does contain anoth
 ### `toBeEmptyElement()`
 
 ```ts
-expect(element).toBeEmptyElement()
+expect(element).toBeEmptyElement();
 ```
 
 This allows you to assert whether the given element does not have any host child elements or text content.
@@ -109,16 +109,15 @@ expect(element).toHaveAccessibilityValue(
 
 This allows you to assert whether the given element has a specified accessible value.
 
-This matcher will assert accessibility value based on `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` and `accessibilityValue` props. Only defined value entries will be used in the assertion,  the element might have additional accessibility value entries and still be matched.
+This matcher will assert accessibility value based on `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` and `accessibilityValue` props. Only defined value entries will be used in the assertion, the element might have additional accessibility value entries and still be matched.
 
 When querying by `text` entry a string or `RegExp` might be used.
-
 
 ### `toBeEnabled()` / `toBeDisabled` {#tobeenabled}
 
 ```ts
-expect(element).toBeEnabled()
-expect(element).toBeDisabled()
+expect(element).toBeEnabled();
+expect(element).toBeDisabled();
 ```
 
 These allow you to assert whether the given element is enabled or disabled from the user's perspective. It relies on the accessibility disabled state as set by `aria-disabled` or `accessibilityState.disabled` props. It will consider a given element disabled when it or any of its ancestors is disabled.
@@ -127,35 +126,34 @@ These allow you to assert whether the given element is enabled or disabled from 
 These matchers are the negation of each other, and both are provided to avoid double negations in your assertions.
 :::
 
-
 ### `toBeSelected()`
 
 ```ts
-expect(element).toBeSelected()
+expect(element).toBeSelected();
 ```
 
 This allows you to assert whether the given element is selected from the user's perspective. It relies on the accessibility selected state as set by `aria-selected` or `accessibilityState.selected` props.
 
-
 ### `toBeChecked()` / `toBePartiallyChecked()` {#tobechecked}
 
 ```ts
-expect(element).toBeChecked()
-expect(element).toBePartiallyChecked()
+expect(element).toBeChecked();
+expect(element).toBePartiallyChecked();
 ```
 
 These allow you to assert whether the given element is checked or partially checked from the user's perspective. It relies on the accessibility checked state as set by `aria-checked` or `accessibilityState.checked` props.
 
 :::note
-* `toBeChecked()` matcher works only on elements with the `checkbox` or `radio` role.
-* `toBePartiallyChecked()` matcher works only on elements with the `checkbox` role.
-:::
 
-### `toBeExpanded()` /  `toBeCollapsed()` {#tobeexpanded}
+- `toBeChecked()` matcher works only on elements with the `checkbox` or `radio` role.
+- `toBePartiallyChecked()` matcher works only on elements with the `checkbox` role.
+  :::
+
+### `toBeExpanded()` / `toBeCollapsed()` {#tobeexpanded}
 
 ```ts
-expect(element).toBeExpanded()
-expect(element).toBeCollapsed()
+expect(element).toBeExpanded();
+expect(element).toBeCollapsed();
 ```
 
 These allows you to assert whether the given element is expanded or collapsed from the user's perspective. It relies on the accessibility disabled state as set by `aria-expanded` or `accessibilityState.expanded` props.
@@ -164,11 +162,10 @@ These allows you to assert whether the given element is expanded or collapsed fr
 These matchers are the negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both won't pass for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
 :::
 
-
 ### `toBeBusy()`
 
 ```ts
-expect(element).toBeBusy()
+expect(element).toBeBusy();
 ```
 
 This allows you to assert whether the given element is busy from the user's perspective. It relies on the accessibility selected state as set by `aria-busy` or `accessibilityState.busy` props.
@@ -178,10 +175,10 @@ This allows you to assert whether the given element is busy from the user's pers
 ### `toBeVisible()`
 
 ```ts
-expect(element).toBeVisible()
+expect(element).toBeVisible();
 ```
 
-This allows you to assert whether the given element is visible from the user's perspective. 
+This allows you to assert whether the given element is visible from the user's perspective.
 
 The element is considered invisible when itself or any of its ancestors has `display: none` or `opacity: 0` styles, as well as when it's hidden from accessibility.
 
@@ -193,7 +190,7 @@ expect(element).toHaveStyle(
 )
 ```
 
-This allows you to assert whether the given element has given styles. 
+This allows you to assert whether the given element has given styles.
 
 ## Other matchers
 
