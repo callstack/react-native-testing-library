@@ -3,7 +3,7 @@ import { Text, TextInput, View } from 'react-native';
 import { render, screen } from '../..';
 
 describe('printing element tree', () => {
-  test('includes element tree on error with less-helpful props stripped', async () => {
+  test('includes element tree on error with less-helpful props stripped', () => {
     const { getByText } = render(<Text onPress={() => null}>Some text</Text>);
 
     expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
@@ -15,7 +15,7 @@ describe('printing element tree', () => {
     `);
   });
 
-  test('prints helpful props but not others', async () => {
+  test('prints helpful props but not others', () => {
     const { getByText } = render(
       <View
         key="this is filtered"

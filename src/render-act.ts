@@ -10,7 +10,8 @@ export function renderWithAct(
 ): ReactTestRenderer {
   let renderer: ReactTestRenderer;
 
-  TestRenderer.act(() => {
+  // This will be called synchronously.
+  void TestRenderer.act(() => {
     renderer = TestRenderer.create(component, options);
   });
 

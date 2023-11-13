@@ -114,7 +114,7 @@ describe('clear()', () => {
     });
 
     const user = userEvent.setup();
-    user.clear(textInput);
+    await user.clear(textInput);
 
     expect(textInput.props.value).toBe('Hello!');
   });
@@ -126,7 +126,7 @@ describe('clear()', () => {
     });
 
     const user = userEvent.setup();
-    user.clear(textInput);
+    await user.clear(textInput);
 
     expect(textInput.props.value).toBe('Hello!');
   });

@@ -233,7 +233,7 @@ test('getByLabelText supports aria-labelledby', () => {
   );
 });
 
-test('getByLabelText supports nested aria-labelledby', async () => {
+test('getByLabelText supports nested aria-labelledby', () => {
   const screen = render(
     <>
       <View nativeID="label">

@@ -25,7 +25,7 @@ export default async function waitForElementToBeRemoved<T>(
     );
   }
 
-  return waitFor(() => {
+  return await waitFor(() => {
     let result;
     try {
       result = expectation();

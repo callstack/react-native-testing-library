@@ -165,7 +165,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
  */
 function wrapAndBindImpl<
   Args extends any[],
-  Impl extends (this: UserEventInstance, ...args: Args) => Promise<unknown>
+  Impl extends (this: UserEventInstance, ...args: Args) => Promise<unknown>,
 >(instance: UserEventInstance, impl: Impl) {
   function method(...args: Args) {
     return wrapAsync(() =>
