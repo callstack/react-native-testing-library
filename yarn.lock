@@ -1691,7 +1691,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@callstack/eslint-config@npm:^14.0.0":
+"@callstack/eslint-config@npm:^14.1.0":
   version: 14.1.0
   resolution: "@callstack/eslint-config@npm:14.1.0"
   dependencies:
@@ -2563,7 +2563,7 @@ __metadata:
     "@babel/preset-flow": "npm:^7.22.15"
     "@babel/preset-react": "npm:^7.22.15"
     "@babel/preset-typescript": "npm:^7.22.15"
-    "@callstack/eslint-config": "npm:^14.0.0"
+    "@callstack/eslint-config": "npm:^14.1.0"
     "@relmify/jest-serializer-strip-ansi": "npm:^1.0.2"
     "@types/jest": "npm:^29.5.5"
     "@types/react": "npm:^18.2.21"
