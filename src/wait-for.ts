@@ -190,7 +190,7 @@ function waitForInternal<T>(
   });
 }
 
-export default async function waitFor<T>(
+export default function waitFor<T>(
   expectation: () => T,
   options?: WaitForOptions
 ): Promise<T> {

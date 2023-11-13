@@ -18,7 +18,8 @@ export function dispatchEvent(
     return;
   }
 
-  act(() => {
+  // This will be called synchronously.
+  void act(() => {
     handler(event);
   });
 }

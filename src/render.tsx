@@ -103,7 +103,7 @@ function buildRenderResult(
   const instance = renderer.root;
 
   const unmount = () => {
-    act(() => {
+    void act(() => {
       renderer.unmount();
     });
   };
@@ -144,7 +144,7 @@ function updateWithAct(
   wrap: (innerElement: React.ReactElement) => React.ReactElement
 ) {
   return function (component: React.ReactElement) {
-    act(() => {
+    void act(() => {
       renderer.update(wrap(component));
     });
   };

@@ -156,7 +156,7 @@ test('byA11yValue error messages', () => {
   `);
 });
 
-test('*ByA11yValue deprecation warnings', () => {
+test('*ByA11yValue deprecation warnings', async () => {
   const mockCalls = (console.warn as ConsoleLogMock).mock.calls;
   const view = render(<View accessibilityValue={{ min: 10 }} />);
 
@@ -188,14 +188,14 @@ test('*ByA11yValue deprecation warnings', () => {
     Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or queryAllByRole(role, { value: ... }) query instead."
   `);
 
-  view.findByA11yValue({ min: 10 });
+  await view.findByA11yValue({ min: 10 });
   expect(mockCalls[4][0]).toMatchInlineSnapshot(`
     "findByA11yValue(...) is deprecated and will be removed in the future.
 
     Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or findByRole(role, { value: ... }) query instead."
   `);
 
-  view.findAllByA11yValue({ min: 10 });
+  await view.findAllByA11yValue({ min: 10 });
   expect(mockCalls[5][0]).toMatchInlineSnapshot(`
     "findAllByA11yValue(...) is deprecated and will be removed in the future.
 
@@ -203,7 +203,7 @@ test('*ByA11yValue deprecation warnings', () => {
   `);
 });
 
-test('*ByAccessibilityValue deprecation warnings', () => {
+test('*ByAccessibilityValue deprecation warnings', async () => {
   const mockCalls = (console.warn as ConsoleLogMock).mock.calls;
   const view = render(<View accessibilityValue={{ min: 10 }} />);
 
@@ -235,14 +235,14 @@ test('*ByAccessibilityValue deprecation warnings', () => {
     Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or queryAllByRole(role, { value: ... }) query instead."
   `);
 
-  view.findByAccessibilityValue({ min: 10 });
+  await view.findByAccessibilityValue({ min: 10 });
   expect(mockCalls[4][0]).toMatchInlineSnapshot(`
     "findByAccessibilityValue(...) is deprecated and will be removed in the future.
 
     Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or findByRole(role, { value: ... }) query instead."
   `);
 
-  view.findAllByAccessibilityValue({ min: 10 });
+  await view.findAllByAccessibilityValue({ min: 10 });
   expect(mockCalls[5][0]).toMatchInlineSnapshot(`
     "findAllByAccessibilityValue(...) is deprecated and will be removed in the future.
 
