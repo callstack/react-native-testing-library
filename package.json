@@ -26,10 +26,12 @@
   "files": [
     "build/",
     "jest-preset/",
-    "typings/index.flow.js",
+    "extend-expect.js",
+    "extend-expect.d.ts",
     "pure.js",
     "pure.d.ts",
-    "dont-cleanup-after-each.js"
+    "dont-cleanup-after-each.js",
+    "typings/index.flow.js"
   ],
   "devDependencies": {
     "@babel/cli": "^7.22.15",
