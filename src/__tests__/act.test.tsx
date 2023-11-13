@@ -41,7 +41,7 @@ test('fireEvent should trigger useState', () => {
   expect(counter.props.children).toEqual('Total count: 1');
 });
 
-test('should be able to not await act', async () => {
+test('should be able to not await act', () => {
   const result = act(() => {});
   expect(result).toHaveProperty('then');
 });
@@ -52,5 +52,5 @@ test('should be able to await act', async () => {
 });
 
 test('should be able to await act when promise rejects', async () => {
-  await expect(act(async () => Promise.reject('error'))).rejects.toBe('error');
+  await expect(act(() => Promise.reject('error'))).rejects.toBe('error');
 });

@@ -45,7 +45,7 @@ test('allows rerendering', () => {
   expect(result.current).toEqual(['right', expect.any(Function)]);
 });
 
-test('allows wrapper components', async () => {
+test('allows wrapper components', () => {
   const Context = React.createContext('default');
   function Wrapper({ children }: { children: ReactNode }) {
     return <Context.Provider value="provided">{children}</Context.Provider>;
