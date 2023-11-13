@@ -40,27 +40,10 @@ In order to properly use helpers for async tests (`findBy` queries and `waitFor`
 
 ### Additional Jest matchers
 
-In order to use additional React Native-specific Jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
+In order to use additional React Native-specific Jest matchers add the following line to your `jest-setup.ts` file:
 
-#### Using `yarn`
-
-```sh
-yarn add --dev @testing-library/jest-native
-```
-
-#### Using `npm`
-
-```sh
-npm install --save-dev @testing-library/jest-native
-```
-
-Then automatically add it to your jest tests by using `setupFilesAfterEnv` option in your Jest configuration (it's usually located either in `package.json` under `"jest"` key or in a `jest.config.js` file):
-
-```json
-{
-  "preset": "react-native",
-  "setupFilesAfterEnv": ["@testing-library/jest-native/extend-expect"]
-}
+```ts
+import '@testing-library/react-native/extend-expect';
 ```
 
 ### Flow

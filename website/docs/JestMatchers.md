@@ -7,15 +7,34 @@ title: Jest Matchers
 Built-in Jest matchers require RNTL v12.4.0 or later.
 :::
 
-This guide describes built-in Jest matchers, we recommend using these matchers as they provide more readable tests, better accessibility support, and a better developer experience.
-
-If you are already using legacy Jest Native matchers we have a [migration guide](migration-jest-native) for moving to the built-in matchers.
+This guide describes built-in Jest matchers, we recommend using these matchers as they provide readable tests, accessibility support, and a better developer experience.
 
 import TOCInline from '@theme/TOCInline';
 
 <TOCInline toc={toc} />
 
-## Element Existence
+## Setup
+
+You can use the built-in matchers by adding the following line to your `jest-setup.ts` file:
+
+```ts
+import '@testing-library/react-native/extend-expect';
+```
+
+Alternatively, you can add above script to your Jest configuration file (usually located either in a `jest.config.json` file or in `package.json` under the `"jest"` key):
+
+```json
+{
+  "preset": "react-native",
+  "setupFilesAfterEnv": ["@testing-library/react-native/extend-expect"]
+}
+```
+
+## Migration from legacy Jest Native matchers.
+
+If you are already using legacy Jest Native matchers we have a [migration guide](migration-jest-native) for moving to the built-in matchers.
+
+## Checking element existence
 
 ### `toBeOnTheScreen()`
 
@@ -59,11 +78,7 @@ expect(element).toBeEmptyElement()
 
 This allows you to assert whether the given element does not have any host child elements or text content.
 
-
-
-
-
-## Element State
+## Checking element state
 
 ### `toHaveDisplayValue()`
 
@@ -158,7 +173,7 @@ expect(element).toBeBusy()
 
 This allows you to assert whether the given element is busy from the user's perspective. It relies on the accessibility selected state as set by `aria-busy` or `accessibilityState.busy` props.
 
-## Element Styles
+## Checking element style
 
 ### `toBeVisible()`
 
@@ -180,7 +195,7 @@ expect(element).toHaveStyle(
 
 This allows you to assert whether the given element has given styles. 
 
-## Other
+## Other matchers
 
 ### `toHaveAccessibleName()`
 

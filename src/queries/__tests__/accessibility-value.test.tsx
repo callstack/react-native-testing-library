@@ -164,42 +164,42 @@ test('*ByA11yValue deprecation warnings', async () => {
   expect(mockCalls[0][0]).toMatchInlineSnapshot(`
     "getByA11yValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or getByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or getByRole(role, { value: ... }) query instead."
   `);
 
   view.getAllByA11yValue({ min: 10 });
   expect(mockCalls[1][0]).toMatchInlineSnapshot(`
     "getAllByA11yValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or getAllByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or getAllByRole(role, { value: ... }) query instead."
   `);
 
   view.queryByA11yValue({ min: 10 });
   expect(mockCalls[2][0]).toMatchInlineSnapshot(`
     "queryByA11yValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or queryByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or queryByRole(role, { value: ... }) query instead."
   `);
 
   view.queryAllByA11yValue({ min: 10 });
   expect(mockCalls[3][0]).toMatchInlineSnapshot(`
     "queryAllByA11yValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or queryAllByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or queryAllByRole(role, { value: ... }) query instead."
   `);
 
   await view.findByA11yValue({ min: 10 });
   expect(mockCalls[4][0]).toMatchInlineSnapshot(`
     "findByA11yValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or findByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or findByRole(role, { value: ... }) query instead."
   `);
 
   await view.findAllByA11yValue({ min: 10 });
   expect(mockCalls[5][0]).toMatchInlineSnapshot(`
     "findAllByA11yValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or findAllByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or findAllByRole(role, { value: ... }) query instead."
   `);
 });
 
@@ -211,42 +211,42 @@ test('*ByAccessibilityValue deprecation warnings', async () => {
   expect(mockCalls[0][0]).toMatchInlineSnapshot(`
     "getByAccessibilityValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or getByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or getByRole(role, { value: ... }) query instead."
   `);
 
   view.getAllByAccessibilityValue({ min: 10 });
   expect(mockCalls[1][0]).toMatchInlineSnapshot(`
     "getAllByAccessibilityValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or getAllByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or getAllByRole(role, { value: ... }) query instead."
   `);
 
   view.queryByAccessibilityValue({ min: 10 });
   expect(mockCalls[2][0]).toMatchInlineSnapshot(`
     "queryByAccessibilityValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or queryByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or queryByRole(role, { value: ... }) query instead."
   `);
 
   view.queryAllByAccessibilityValue({ min: 10 });
   expect(mockCalls[3][0]).toMatchInlineSnapshot(`
     "queryAllByAccessibilityValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or queryAllByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or queryAllByRole(role, { value: ... }) query instead."
   `);
 
   await view.findByAccessibilityValue({ min: 10 });
   expect(mockCalls[4][0]).toMatchInlineSnapshot(`
     "findByAccessibilityValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or findByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or findByRole(role, { value: ... }) query instead."
   `);
 
   await view.findAllByAccessibilityValue({ min: 10 });
   expect(mockCalls[5][0]).toMatchInlineSnapshot(`
     "findAllByAccessibilityValue(...) is deprecated and will be removed in the future.
 
-    Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or findAllByRole(role, { value: ... }) query instead."
+    Use toHaveAccessibilityValue(...) built-in Jest matcher or findAllByRole(role, { value: ... }) query instead."
   `);
 });
 

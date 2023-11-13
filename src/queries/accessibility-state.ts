@@ -121,7 +121,7 @@ export const bindByA11yStateQueries = (
         findByAccessibilityState: findByA11yState,
         findAllByAccessibilityState: findAllByA11yState,
       },
-      'Use {queryPrefix}ByRole(role, { disabled, selected, checked, busy, expanded }) query or expect(...).toHaveAccessibilityState(...) matcher from "@testing-library/jest-native" package instead.'
+      'Use {queryPrefix}ByRole(role, { disabled, selected, checked, busy, expanded }) query or built-in Jest matchers: toBeDisabled(), toBeSelected(), toBeChecked(), toBeBusy(), and toBeExpanded() instead.'
     ),
   };
 };

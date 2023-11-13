@@ -121,7 +121,7 @@ export const bindByA11yValueQueries = (
         findByAccessibilityValue: findByA11yValue,
         findAllByAccessibilityValue: findAllByA11yValue,
       },
-      'Use expect(...).toHaveAccessibilityValue(...) matcher from "@testing-library/jest-native" package or {queryPrefix}ByRole(role, { value: ... }) query instead.'
+      'Use toHaveAccessibilityValue(...) built-in Jest matcher or {queryPrefix}ByRole(role, { value: ... }) query instead.'
     ),
   };
 };
