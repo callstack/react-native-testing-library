@@ -1778,7 +1778,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react-native@npm:^12.2.3":
+"@testing-library/react-native@npm:^12.3.3":
   version: 12.3.3
   resolution: "@testing-library/react-native@npm:12.3.3"
   dependencies:
@@ -5896,7 +5896,7 @@ __metadata:
   resolution: "redux-example@workspace:."
   dependencies:
     "@babel/core": "npm:^7.9.0"
-    "@testing-library/react-native": "npm:^12.2.3"
+    "@testing-library/react-native": "npm:^12.3.3"
     "@types/jest": "npm:^29.0.0"
     jest: "npm:^29.0.0"
     metro-react-native-babel-preset: "npm:~0.72.0"
