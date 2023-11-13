@@ -28,7 +28,7 @@ Errors that might indicate that you are facing this issue:
 
 ## Example repository
 
-We maintain an [example repository](https://github.com/callstack/react-native-testing-library/tree/main/examples/basic) that showcases a modern React Native Testing Library setup with TypeScript, Jest Native, etc.
+We maintain an [example repository](https://github.com/callstack/react-native-testing-library/tree/main/examples/basic) that showcases a modern React Native Testing Library setup with TypeScript, etc.
 
 In case something does not work in your setup you can refer to this repository for recommended configuration.
 
