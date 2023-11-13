@@ -17,7 +17,7 @@ test('toHaveAccessibleName() handles view with "aria-label" prop', () => {
   expect(element).not.toHaveAccessibleName('Other label');
 });
 
-test('toHaveAccessibleName() handles view with "accessibilityLabelledBy" prop', async () => {
+test('toHaveAccessibleName() handles view with "accessibilityLabelledBy" prop', () => {
   render(
     <View>
       <Text nativeID="label">External label</Text>
@@ -30,7 +30,7 @@ test('toHaveAccessibleName() handles view with "accessibilityLabelledBy" prop', 
   expect(element).not.toHaveAccessibleName('Other label');
 });
 
-test('toHaveAccessibleName() handles nested "accessibilityLabelledBy"', async () => {
+test('toHaveAccessibleName() handles nested "accessibilityLabelledBy"', () => {
   render(
     <>
       <View nativeID="label">
@@ -45,7 +45,7 @@ test('toHaveAccessibleName() handles nested "accessibilityLabelledBy"', async ()
   expect(element).not.toHaveAccessibleName('Other label');
 });
 
-test('toHaveAccessibleName() handles view with nested "accessibilityLabelledBy" with no text', async () => {
+test('toHaveAccessibleName() handles view with nested "accessibilityLabelledBy" with no text', () => {
   render(
     <>
       <View nativeID="label">
@@ -59,7 +59,7 @@ test('toHaveAccessibleName() handles view with nested "accessibilityLabelledBy" 
   expect(element).not.toHaveAccessibleName();
 });
 
-test('toHaveAccessibleName() handles view with "aria-labelledby" prop', async () => {
+test('toHaveAccessibleName() handles view with "aria-labelledby" prop', () => {
   render(
     <View>
       <Text nativeID="label">External label</Text>

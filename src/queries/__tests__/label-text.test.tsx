@@ -173,7 +173,7 @@ test('byLabelText queries support hidden option', () => {
   `);
 });
 
-test('getByLabelText supports aria-label', async () => {
+test('getByLabelText supports aria-label', () => {
   const screen = render(
     <>
       <View testID="view" aria-label="view-label" />
@@ -191,7 +191,7 @@ test('getByLabelText supports aria-label', async () => {
   );
 });
 
-test('getByLabelText supports accessibilityLabelledBy', async () => {
+test('getByLabelText supports accessibilityLabelledBy', () => {
   const { getByLabelText, getByTestId } = render(
     <>
       <Text nativeID="label">Label for input</Text>
@@ -203,7 +203,7 @@ test('getByLabelText supports accessibilityLabelledBy', async () => {
   expect(getByLabelText(/input/)).toBe(getByTestId('textInput'));
 });
 
-test('getByLabelText supports nested accessibilityLabelledBy', async () => {
+test('getByLabelText supports nested accessibilityLabelledBy', () => {
   const { getByLabelText, getByTestId } = render(
     <>
       <View nativeID="label">
@@ -217,7 +217,7 @@ test('getByLabelText supports nested accessibilityLabelledBy', async () => {
   expect(getByLabelText(/input/)).toBe(getByTestId('textInput'));
 });
 
-test('getByLabelText supports aria-labelledby', async () => {
+test('getByLabelText supports aria-labelledby', () => {
   const screen = render(
     <>
       <Text nativeID="label">Text Label</Text>

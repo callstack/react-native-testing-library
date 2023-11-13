@@ -142,7 +142,7 @@ function fireEvent(
   }
 
   let returnValue;
-  act(() => {
+  void act(() => {
     returnValue = handler(...data);
   });
 

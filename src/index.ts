@@ -2,7 +2,7 @@ import { cleanup } from './pure';
 import { flushMicroTasksLegacy } from './flush-micro-tasks';
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
 
-if (typeof process === 'undefined' || !process.env?.RNTL_SKIP_AUTO_CLEANUP) {
+if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
   // If we're running in a test runner that supports afterEach
   // then we'll automatically run cleanup afterEach test
   // this ensures that tests run in isolation from each other
