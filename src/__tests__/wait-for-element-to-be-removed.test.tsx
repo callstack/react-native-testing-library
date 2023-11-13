@@ -5,7 +5,7 @@ import { render, fireEvent, waitForElementToBeRemoved } from '..';
 const TestSetup = ({ shouldUseDelay = true }) => {
   const [isAdded, setIsAdded] = useState(true);
 
-  const removeElement = async () => {
+  const removeElement = () => {
     if (shouldUseDelay) {
       setTimeout(() => setIsAdded(false), 300);
     } else {

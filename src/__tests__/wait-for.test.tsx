@@ -281,7 +281,7 @@ test.each([
 
       // On mount, set the color to "red" in a promise microtask
       React.useEffect(() => {
-        // eslint-disable-next-line promise/prefer-await-to-then, promise/catch-or-return
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises, promise/catch-or-return, promise/prefer-await-to-then
         Promise.resolve('red').then((c) => setColor(c));
       }, []);
 

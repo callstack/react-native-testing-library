@@ -88,6 +88,7 @@ function findEventHandler(
   if (handler && isEventEnabled(element, eventName, touchResponder))
     return handler;
 
+  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
   if (element.parent === null || element.parent.parent === null) {
     return null;
   }
