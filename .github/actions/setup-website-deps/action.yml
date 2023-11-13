@@ -13,8 +13,10 @@ runs:
       id: yarn-cache-website
       uses: actions/cache@v3
       with:
-        path: ./website/node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('./yarn.lock') }}-website
+        path: |
+          ./website/node_modules
+          ./website/yarn/install-state.gz
+        key: website-${{ runner.os }}-yarn-${{ hashFiles('./website/yarn.lock') }}
 
     - name: Install website deps
       if: steps.yarn-cache-website.outputs.cache-hit != 'true'
