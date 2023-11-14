@@ -50,7 +50,7 @@ This library has a `peerDependencies` listing for `react-test-renderer`. Make su
 
 ### Additional Jest matchers
 
-You can use the built-in Jest matchers by adding the following line to your `jest-setup.ts` file:
+You can use the built-in Jest matchers by adding the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
 
 ```ts
 import '@testing-library/react-native/extend-expect';

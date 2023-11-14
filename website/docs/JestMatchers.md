@@ -15,7 +15,7 @@ import TOCInline from '@theme/TOCInline';
 
 ## Setup
 
-You can use the built-in matchers by adding the following line to your `jest-setup.ts` file:
+You can use the built-in matchers by adding the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
 
 ```ts
 import '@testing-library/react-native/extend-expect';
