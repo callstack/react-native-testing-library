@@ -2408,9 +2408,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react-native@npm:^12.2.3":
-  version: 12.3.3
-  resolution: "@testing-library/react-native@npm:12.3.3"
+"@testing-library/react-native@npm:^12.4.0":
+  version: 12.4.0
+  resolution: "@testing-library/react-native@npm:12.4.0"
   dependencies:
     jest-matcher-utils: "npm:^29.7.0"
     pretty-format: "npm:^29.7.0"
@@ -2423,7 +2423,7 @@ __metadata:
   peerDependenciesMeta:
     jest:
       optional: true
-  checksum: 2fb17bcbb21b9b1e73505b5e2afb803e0ad14e619b2e4f5149101074a79a4eddf693e7544172c4136c0b2e8f8ca16ae63a9fd26c7be17011bc9d81e2343a6df7
+  checksum: 92cf2919cfec7a9b23f74cac0e259cdae1ff3d2375c36e23c21de89a35691ffef0485d6be43cd8dfaae35b7b03cec9b2b42636275593f55e82540cd3a702c627
   languageName: node
   linkType: hard
 
@@ -6669,7 +6669,7 @@ __metadata:
     "@react-navigation/native": "npm:^6.0.14"
     "@react-navigation/native-stack": "npm:^6.9.2"
     "@react-navigation/stack": "npm:^6.3.5"
-    "@testing-library/react-native": "npm:^12.2.3"
+    "@testing-library/react-native": "npm:^12.4.0"
     babel-jest: "npm:^29.3.1"
     jest: "npm:^29.3.0"
     metro-react-native-babel-preset: "npm:^0.72.3"
