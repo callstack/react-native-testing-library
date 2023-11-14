@@ -14,23 +14,15 @@ test('Changing screens', () => {
   fireEvent.press(toggleButton);
 
   // Assert drawer state
-  expect(screen.getByRole('button', { name: 'Home' })).toHaveAccessibilityState(
-    { selected: true }
-  );
-  expect(
-    screen.getByRole('button', { name: 'Settings' })
-  ).toHaveAccessibilityState({ selected: false });
+  expect(screen.getByRole('button', { name: 'Home' })).toBeSelected();
+  expect(screen.getByRole('button', { name: 'Settings' })).not.toBeSelected();
 
   // Press drawer item
   fireEvent.press(screen.getByRole('button', { name: 'Settings' }));
 
   // Assert drawer state after action
-  expect(screen.getByRole('button', { name: 'Home' })).toHaveAccessibilityState(
-    { selected: false }
-  );
-  expect(
-    screen.getByRole('button', { name: 'Settings' })
-  ).toHaveAccessibilityState({ selected: true });
+  expect(screen.getByRole('button', { name: 'Home' })).not.toBeSelected();
+  expect(screen.getByRole('button', { name: 'Settings' })).toBeSelected();
 
   // Assert visible screen
   expect(

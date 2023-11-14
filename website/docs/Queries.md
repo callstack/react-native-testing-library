@@ -288,7 +288,12 @@ Please consult [Apple guidelines on how `accessibilityHint` should be used](http
 :::caution
 This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
 * [`*ByRole`](#byrole) query with relevant state options:  `disabled`, `selected`, `checked`, `expanded` and `busy`
-* [`toHaveAccessibilityState()`](https://github.com/testing-library/jest-native#tohaveaccessibilitystate) Jest matcher to check the state of element found using some other query
+* use built-in Jest matchers to check the state of element found using some other query:
+  * enabled state: [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled)
+  * checked state: [`toBeChecked()` / `toBePartiallyChecked()`](jest-matchers#tobechecked)
+  * selected state: [`toBeSelected()`](jest-matchers#tobeselected)
+  * expanded state: [`toBeExpanded()` / `toBeCollapsed()`](jest-matchers#tobeexpanded)
+  * busy state: [`toBeBusy()`](jest-matchers#tobebusy)
 :::
 
 > getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState, findByA11yState, findAllByA11yState
@@ -350,7 +355,7 @@ The difference in handling default values is made to reflect observed accessibil
 
 :::caution
 This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
-* [`toHaveAccessibilityValue()`](https://github.com/testing-library/jest-native#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
+* [`toHaveAccessibilityValue()`](jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
 * [`*ByRole`](#byrole) query with `value` option
 :::
 

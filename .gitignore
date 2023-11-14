@@ -16,6 +16,5 @@ build
 !.yarn/sdks
 !.yarn/versions
 
-# Ignore lock files in examples for now
-examples/**/yarn.lock
+# Docusaurus
 .docusaurus

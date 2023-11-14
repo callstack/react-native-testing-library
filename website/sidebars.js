@@ -1,7 +1,7 @@
 module.exports = {
   docs: {
     Introduction: ['getting-started', 'faq'],
-    'API Reference': ['api', 'api-queries', 'user-event'],
+    'API Reference': ['api', 'api-queries', 'jest-matchers', 'user-event'],
     Guides: [
       'troubleshooting',
       'how-should-i-query',
@@ -9,6 +9,7 @@ module.exports = {
     ],
     Advanced: ['testing-env', 'understanding-act'],
     Migrations: [
+      'migration-jest-native',
       'migration-v12',
       'migration-v11',
       'migration-v9',

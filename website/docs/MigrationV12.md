@@ -5,6 +5,11 @@ title: Migration to 12.0
 import TOCInline from '@theme/TOCInline';
 
 :::note
+From v12.4:
+
+If you are already using legacy Jest Native matchers we have a [migration guide](migration-jest-native) for moving to the built-in matchers.
+
+Before v12.4:
 If you use [Jest Native matchers](https://github.com/testing-library/jest-native), which we recommend, then you should upgrade it to version 5.4.2 or higher.
 :::
 

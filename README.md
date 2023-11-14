@@ -50,27 +50,10 @@ This library has a `peerDependencies` listing for `react-test-renderer`. Make su
 
 ### Additional Jest matchers
 
-To use additional React Native-specific jest matchers from [@testing-library/jest-native](https://github.com/testing-library/jest-native) package add it to your project:
+You can use the built-in Jest matchers by adding the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
 
-#### Using `yarn`
-
-```sh
-yarn add --dev @testing-library/jest-native
-```
-
-#### Using `npm`
-
-```sh
-npm install --save-dev @testing-library/jest-native
-```
-
-Then automatically add it to your jest tests by using the `setupFilesAfterEnv` option in your Jest configuration (it's usually located either in `package.json` under the `"jest"` key or in a `jest.config.json` file):
-
-```json
-{
-  "preset": "react-native",
-  "setupFilesAfterEnv": ["@testing-library/jest-native/extend-expect"]
-}
+```ts
+import '@testing-library/react-native/extend-expect';
 ```
 
 ### Custom Jest Preset (React Native before 0.71)

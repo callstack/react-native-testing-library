@@ -301,7 +301,7 @@ Create your `jest.config.js` file (or place the following properties in your `pa
 ```js
 module.exports = {
   preset: 'react-native',
-  setupFiles: ['./jest-setup.js'],
+  setupFilesAfterEnv: ['./jest-setup.js'],
   transformIgnorePatterns: [
     'node_modules/(?!(jest-)?react-native|@react-native-community|@react-navigation)',
   ],
@@ -353,7 +353,9 @@ describe('Testing react navigation', () => {
     expect(oldScreen).toBeOnTheScreen();
 
     fireEvent(button, 'press');
-    const newScreen = await screen.findByText('This is the notifications screen');
+    const newScreen = await screen.findByText(
+      'This is the notifications screen'
+    );
 
     expect(newScreen).toBeOnTheScreen();
   });

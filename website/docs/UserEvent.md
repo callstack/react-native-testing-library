@@ -2,9 +2,6 @@
 id: user-event
 title: User Event
 ---
-import TOCInline from '@theme/TOCInline';
-
-<TOCInline toc={toc} />
 
 :::caution
 User Event API is in beta stage.
@@ -16,6 +13,9 @@ This means that we plan to keep the public API signatures to remain stable, but 
 User Event interactions require RNTL v12.2.0 or later.
 :::
 
+import TOCInline from '@theme/TOCInline';
+
+<TOCInline toc={toc} />
 
 ## Comparison with Fire Event API
 
@@ -35,6 +35,7 @@ userEvent.setup(options?: {
 ```
 
 Example
+
 ```ts
 const user = userEvent.setup();
 ```
@@ -42,9 +43,9 @@ const user = userEvent.setup();
 Creates an User Event object instance which can be used to trigger events.
 
 ### Options {#setup-options}
+
 - `delay` - controls the default delay between subsequent events, e.g. keystrokes.
 - `advanceTimers` - time advancement utility function that should be used for fake timers. The default setup handles both real timers and Jest fake timers.
-
 
 ## `press()`
 
@@ -55,12 +56,13 @@ press(
 ```
 
 Example
+
 ```ts
 const user = userEvent.setup();
 await user.press(element);
 ```
 
-This helper simulates a press on any pressable element, e.g. `Pressable`, `TouchableOpacity`, `Text`, `TextInput`, etc. Unlike `fireEvent.press()` which is a simpler API that will only call the `onPress` prop, this function simulates the entire press interaction in a more realistic way by reproducing event sequence emitted by React Native runtime. This helper will trigger additional events like `pressIn` and `pressOut`. 
+This helper simulates a press on any pressable element, e.g. `Pressable`, `TouchableOpacity`, `Text`, `TextInput`, etc. Unlike `fireEvent.press()` which is a simpler API that will only call the `onPress` prop, this function simulates the entire press interaction in a more realistic way by reproducing event sequence emitted by React Native runtime. This helper will trigger additional events like `pressIn` and `pressOut`.
 
 ## `longPress()`
 
@@ -72,14 +74,16 @@ longPress(
 ```
 
 Example
+
 ```ts
 const user = userEvent.setup();
 await user.longPress(element);
 ```
 
-Simulates a long press user interaction. In React Native the `longPress` event is emitted when the press duration exceeds long press threshold (by default 500 ms). In other aspects this actions behaves similar to regular `press` action, e.g. by emitting `pressIn` and `pressOut` events. The press duration is customisable through the options. This should be useful if you use the `delayLongPress` prop. When using real timers this will take 500 ms so it is highly recommended to use that API with fake timers to prevent test taking a long time to run. 
+Simulates a long press user interaction. In React Native the `longPress` event is emitted when the press duration exceeds long press threshold (by default 500 ms). In other aspects this actions behaves similar to regular `press` action, e.g. by emitting `pressIn` and `pressOut` events. The press duration is customisable through the options. This should be useful if you use the `delayLongPress` prop. When using real timers this will take 500 ms so it is highly recommended to use that API with fake timers to prevent test taking a long time to run.
 
 ### Options {#longpress-options}
+
 - `duration` - duration of the press in miliseconds. Default value is 500 ms.
 
 ## `type()`
@@ -95,9 +99,10 @@ type(
 ```
 
 Example
+
 ```ts
 const user = userEvent.setup();
-await user.type(textInput, "Hello world!");
+await user.type(textInput, 'Hello world!');
 ```
 
 This helper simulates user focusing on `TextInput` element, typing `text` one character at a time, and leaving the element.
@@ -109,8 +114,9 @@ This function will add text to the text already present in the text input (as sp
 :::
 
 ### Options {#type-options}
- - `skipPress` - if true, `pressIn` and `pressOut` events will not be triggered.
- - `submitEditing` - if true, `submitEditing` event will be triggered after typing the text.
+
+- `skipPress` - if true, `pressIn` and `pressOut` events will not be triggered.
+- `submitEditing` - if true, `submitEditing` event will be triggered after typing the text.
 
 ### Sequence of events
 
@@ -119,6 +125,7 @@ The sequence of events depends on `multiline` prop, as well as passed options.
 Events will not be emitted if `editable` prop is set to `false`.
 
 **Entering the element**:
+
 - `pressIn` (optional)
 - `focus`
 - `pressOut` (optional)
@@ -126,6 +133,7 @@ Events will not be emitted if `editable` prop is set to `false`.
 The `pressIn` and `pressOut` events are sent by default, but can be skipped by passing `skipPress: true` option.
 
 **Typing (for each character)**:
+
 - `keyPress`
 - `textInput` (optional)
 - `change`
@@ -135,6 +143,7 @@ The `pressIn` and `pressOut` events are sent by default, but can be skipped by p
 The `textInput` event is sent only for mutliline text inputs.
 
 **Leaving the element**:
+
 - `submitEditing` (optional)
 - `endEditing`
 - `blur`
@@ -150,6 +159,7 @@ clear(
 ```
 
 Example
+
 ```ts
 const user = userEvent.setup();
 await user.clear(textInput);
@@ -166,12 +176,15 @@ The sequence of events depends on `multiline` prop, as well as passed options.
 Events will not be emitted if `editable` prop is set to `false`.
 
 **Entering the element**:
+
 - `focus`
 
 **Selecting all content**:
+
 - `selectionChange`
 
 **Pressing backspace**:
+
 - `keyPress`
 - `textInput` (optional)
 - `change`
@@ -181,6 +194,7 @@ Events will not be emitted if `editable` prop is set to `false`.
 The `textInput` event is sent only for mutliline text inputs.
 
 **Leaving the element**:
+
 - `endEditing`
 - `blur`
 
@@ -203,24 +217,26 @@ scrollTo(
 ```
 
 Example
+
 ```ts
 const user = userEvent.setup();
 await user.scrollTo(scrollView, { y: 100, momentumY: 200 });
 ```
 
-This helper simulates user scrolling a host `ScrollView` element. 
+This helper simulates user scrolling a host `ScrollView` element.
 
 This function supports only host `ScrollView` elements, passing other element types will result in error. Note that `FlatList` is accepted as it renders to a host `ScrolLView` element, however in the current iteration we focus only on base `ScrollView` only features.
 
-Scroll interaction should match `ScrollView` element direction. For vertical scroll view (default or explicit `horizontal={false}`) you should pass only `y` (and optionally also `momentumY`) option, for horizontal scroll view (`horizontal={true}`) you should pass only `x` (and optionally  `momentumX`) option.
+Scroll interaction should match `ScrollView` element direction. For vertical scroll view (default or explicit `horizontal={false}`) you should pass only `y` (and optionally also `momentumY`) option, for horizontal scroll view (`horizontal={true}`) you should pass only `x` (and optionally `momentumX`) option.
 
 Each scroll interaction consists of a mandatory drag scroll part which simulates user dragging the scroll view with his finger (`y` or `x` option). This may optionally be followed by a momentum scroll movement which simulates the inertial movement of scroll view content after the user lifts his finger up (`momentumY` or `momentumX` options).
 
 ### Options {#type-options}
- - `y` - target vertical drag scroll position
- - `x` - target horizontal drag scroll position
- - `momentumY` - target vertical momentum scroll position
- - `momentumX` - target horizontal momentum scroll position 
+
+- `y` - target vertical drag scroll position
+- `x` - target horizontal drag scroll position
+- `momentumY` - target vertical momentum scroll position
+- `momentumX` - target horizontal momentum scroll position
 
 User Event will generate a number of intermediate scroll steps to simulate user scroll interaction. You should not rely on exact number or values of these scrolls steps as they might be change in the future version.
 
@@ -231,12 +247,13 @@ This function will remember where the last scroll ended, so subsequent scroll in
 The sequence of events depends whether scroll includes optional momentum scroll component.
 
 **Drag scroll**:
+
 - `scrollBeginDrag`
 - `scroll` (multiple times)
 - `scrollEndDrag`
 
 **Momentum scroll (optional)**:
+
 - `momentumScrollBegin`
 - `scroll` (multiple events)
 - `momentumScrollEnd`
-
