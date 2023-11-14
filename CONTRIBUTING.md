@@ -51,15 +51,16 @@ When you're sending a pull request:
 
 If you have publish access to the NPM package, perform following steps:
 
-1. Update package version in `package.json` file.
-2. Commit changed file.
+1. Update package version to `X.Y.Z` in `package.json` file.
+2. Commit changed file as `vX.Y.Z`.
 3. Tag branch with `vX.Y.Z` tag.
 4. Run the following from the main branch to publish a new release:
+
 ```sh
 yarn npm publish --access public
 ```
-5. Push changes & tag to `origin`.
 
+5. Push changes & tag to `origin`.
 
 ## Reporting issues
 
