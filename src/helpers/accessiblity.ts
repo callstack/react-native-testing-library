@@ -5,11 +5,7 @@ import {
 } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings, getUnsafeRootElement } from './component-tree';
-import {
-  getHostComponentNames,
-  isHostText,
-  isHostTextInput,
-} from './host-component-names';
+import { getHostComponentNames, isHostText } from './host-component-names';
 import { getTextContent } from './text-content';
 
 type IsInaccessibleOptions = {
@@ -143,10 +139,6 @@ export function getAccessibilityRole(element: ReactTestInstance) {
 
   if (isHostText(element)) {
     return 'text';
-  }
-
-  if (isHostTextInput(element)) {
-    return 'textbox';
   }
 
   return 'none';
