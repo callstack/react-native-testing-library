@@ -120,11 +120,6 @@ export function isAccessibilityElement(
  * If explicit role is not available, it would try to return default element
  * role:
  * - `text` for `Text` elements
- * - `textbox`* for `TextInput` elements.
- *
- * Note: `textbox` is not an official React Native role, you cannot set it
- * explicitly on an element. However, it is an ARIA role that better characterizes
- * TextInput elements than the default `none` role.
  *
  * In all other cases this functions returns `none`.
  *
