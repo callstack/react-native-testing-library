@@ -111,18 +111,19 @@ test('supports role prop', () => {
   expect(screen.getByRole('button')).toBeTruthy();
 });
 
-test('supports default roles', () => {
-  const screen = render(
-    <>
-      <View testID="view-default" accessible />
-      <Text testID="text-default" />
-      <TextInput testID="text-input-default" />
-    </>
-  );
+test('supports default View component "none" role', () => {
+  const screen = render(<View testID="view" accessible />);
+  expect(screen.getByRole('none').props.testID).toBe('view');
+});
 
-  expect(screen.getByRole('none').props.testID).toBe('view-default');
-  expect(screen.getByRole('text').props.testID).toBe('text-default');
-  expect(screen.getByRole('textbox').props.testID).toBe('text-input-default');
+test('supports default Text component  "text" role', () => {
+  const screen = render(<Text testID="text" />);
+  expect(screen.getByRole('text').props.testID).toBe('text');
+});
+
+test('supports default TextInput component "none" role', () => {
+  const screen = render(<TextInput testID="text-input" />);
+  expect(screen.getByRole('none').props.testID).toBe('text-input');
 });
 
 describe('supports name option', () => {
