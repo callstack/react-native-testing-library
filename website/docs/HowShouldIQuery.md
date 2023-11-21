@@ -19,7 +19,7 @@ For this query, `get` is the query variant, and `ByRole` is the predicate.
 
 ### Query variant
 
-The query variant describes the return type of the query and is also an implicit assertion on the number of matching elements.
+The query variants describe the expected number (and timing) of matching elements, so differ in their return type.
 
 | Variant    | Assertion                     | Return type                                | Is Async? |
 | ---------- | ----------------------------- | ------------------------------------------ | --------- |
@@ -29,6 +29,8 @@ The query variant describes the return type of the query and is also an implicit
 | `queryAll` | No assertion                  | `Array<ReactTestInstance>`                 | No        |
 | `find`     | Exactly one matching element  | `Promise<ReactTestInstance>`               | Yes       |
 | `findAll`  | At least one matching element | `Promise<Array<ReactTestInstance>>`        | Yes       |
+
+Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
 
 #### Idiomatic query variants
 
