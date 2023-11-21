@@ -3,7 +3,44 @@ id: how-should-i-query
 title: How Should I Query?
 ---
 
-## Priority
+React Native Testing Library provides various query types, allowing flexibility in finding views appropriate for your tests. At the same time, the number of queries might be confusing. This guide aims to help you pick the correct queries for your test scenarios.
+
+## Query parts
+
+Each query is composed of two parts: variant and predicate, which are separated by the `By` word in the middle of the query.
+
+Consider the following query:
+
+```ts
+getByRole();
+```
+
+For this query, `get` is the query variant, and `ByRole` is the predicate.
+
+### Query variant
+
+The query variant describes the return type of the query and is also an implicit assumption on the number of matching elements.
+
+| Variant | Return type | Assertion | Is Async? |
+| `get` | `ReactTestInstance` | Exactly one matching element | No |
+| `getAll` | `Array<ReactTestInstance>` | At least one matching element | No |
+| `query` | `ReactTestInstance \| null` | Zero or one matching element | No |
+| `query` | `Array<ReactTestInstance>` | No assertion | No |
+| `find` | `Promise<ReactTestInstance>` | Exactly one matching element | Yes |
+| `findAll` | `Promise<Array<ReactTestInstance>>` | At least one matching element | Yes |
+
+Here are general guidelines for picking idiomatic query variants:
+
+1. Use `get` in the most common case when you expect a _single matching element_. Use other queries only in more specific cases.
+2. Use `find` for an element not yet in the element tree, but you expect it to be there as a _result of some asynchronous action_.
+3. Use `getAll` (and `findAll` for async) if you expect _more than one matching element_.
+4. Use `query` variant only when element _should not exist_, in order to pass it to e.g. `not.toBeOnTheScreen()` matcher.
+
+Do not use `queryAll` as it does not provide any assertions on the number of matched elements.
+
+Using idiomatic query variants helps better express your test's intent and expectations about the number of matching elements. Using other query variants might work but could make it harder to reason about the test.
+
+### Query Predicate
 
 Based on the [Guiding Principles](https://testing-library.com/docs/guiding-principles), your test should resemble how users interact with your code (component, page, etc.) as much as possible. With this in mind, we recommend this order of priority:
 
