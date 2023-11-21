@@ -49,15 +49,15 @@ Do not use `queryAllBy*` as it provides no assertions on the number of matching 
 
 The query predicate describes how you decide whether to match the given element.
 
-| Predicate                                               | Supported elements                                    | Inspected props                                                                             |
-| ------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| [`*ByRole`](api-queries#by-role)                        | all host elements                                     | `role`, `accessibilityRole`,<br /> optional: accessible name, accessibility state and value |
-| [`*ByLabelText`](api-queries#by-label-text)             | all host elements                                     | `aria-label`, `aria-labelledby`,<br /> `accessibilityLabel`, `accessibilityLabelledBy`      |
-| [`*ByDisplayValue`](api-queries#by-display-value)       | [`TextInput`](https://reactnative.dev/docs/textinput) | `value`, `defaultValue`                                                                     |
-| [`*ByPlaceholderText`](api-queries#by-placeholder-text) | [`TextInput`](https://reactnative.dev/docs/textinput) | `placeholder`                                                                               |
-| [`*ByText`](api-queries#by-text)                        | [`Text`](https://reactnative.dev/docs/text)           | `children` (text content)                                                                   |
-| [`*ByHintText`](api-queries#by-hint-text)               | all host elements                                     | `accessibilityHint`                                                                         |
-| [`*ByTestId`](api-queries#by-test-id)                   | all host elements                                     | `testID`                                                                                    |
+| Predicate                                               | Supported elements | Inspected props                                                                             |
+| ------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------- |
+| [`*ByRole`](api-queries#by-role)                        | all host elements  | `role`, `accessibilityRole`,<br /> optional: accessible name, accessibility state and value |
+| [`*ByLabelText`](api-queries#by-label-text)             | all host elements  | `aria-label`, `aria-labelledby`,<br /> `accessibilityLabel`, `accessibilityLabelledBy`      |
+| [`*ByDisplayValue`](api-queries#by-display-value)       | `TextInput`        | `value`, `defaultValue`                                                                     |
+| [`*ByPlaceholderText`](api-queries#by-placeholder-text) | `TextInput`        | `placeholder`                                                                               |
+| [`*ByText`](api-queries#by-text)                        | `Text`             | `children` (text content)                                                                   |
+| [`*ByHintText`](api-queries#by-hint-text)               | all host elements  | `accessibilityHint`                                                                         |
+| [`*ByTestId`](api-queries#by-test-id)                   | all host elements  | `testID`                                                                                    |
 
 ### Idiomatic query predicates
 
@@ -120,7 +120,7 @@ These option types can frequently be better expressed by using the corresponding
 
 ### 2. Text input queries {#text-input-queries}
 
-Querying `TextInput` elements presents a unique challenge as there is no role for `TextInput` elements. There is a `searchbox`/`search` role, which can be assigned to `TextInput`, but it should be only used in the context of search inputs, leaving other text inputs without a role to query with.
+Querying [`TextInput`](https://reactnative.dev/docs/textinput) elements presents a unique challenge as there is no separate role for `TextInput` elements. There is a `searchbox`/`search` role, which can be assigned to `TextInput`, but it should be only used in the context of search inputs, leaving other text inputs without a role to query with.
 
 Therefore, you can use the following queries to find relevant text inputs:
 
@@ -134,9 +134,9 @@ These queries reflect the apps' user experience, both visual and through assisti
 
 These queries include:
 
-- [`*ByText`](api-queries#by-text) - will match the text content of the element
-- [`*ByLabelText`](api-queries#by-label-text) - will match the accessibility label of the element
-- [`*ByHintText`](api-queries#by-hint-text) - will match the accessibility hint of the element
+- [`*ByText`](api-queries#by-text) - will match the text content of the element. This query will match only `Text` elements.
+- [`*ByLabelText`](api-queries#by-label-text) - will match the accessibility label of the element. This query will match any host elements.
+- [`*ByHintText`](api-queries#by-hint-text) - will match the accessibility hint of the element. This query will match any host elements.
 
 ### 4. Test ID query {#test-id-query}
 
