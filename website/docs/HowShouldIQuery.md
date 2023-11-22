@@ -5,7 +5,7 @@ title: How Should I Query?
 
 React Native Testing Library provides various query types, allowing great flexibility in finding views appropriate for your tests. At the same time, the number of queries might be confusing. This guide aims to help you pick the correct queries for your test scenarios.
 
-# Query parts
+## Query parts
 
 Each query is composed of two parts: variant and predicate, which are separated by the `by` word in the middle of the query.
 
@@ -41,9 +41,9 @@ Here are general guidelines for picking idiomatic query variants:
 1. Use `getBy*` in the most common case when you expect a **single matching element**. Use other queries only in more specific cases.
 2. Use `findBy*` when an element is not yet in the element tree, but you expect it to be there as a **result of some asynchronous action**.
 3. Use `getAllBy*` (and `findAllBy*` for async) if you expect **more than one matching element**, e.g. in a list.
-4. Use `queryBy*` variant only when element **should not exist** to use it together with e.g. [`not.toBeOnTheScreen()`](jest-matchers#tobeonthescreen) matcher.
+4. Use `queryBy*` only when element **should not exist** to use it together with e.g. [`not.toBeOnTheScreen()`](jest-matchers#tobeonthescreen) matcher.
 
-Do not use `queryAllBy*` as it provides no assertions on the number of matching elements.
+Avoid using `queryAllBy*` in regular tests, as it provides no assertions on the number of matching elements. You may still find it useful when building reusable custom testing tools.
 
 ## Query predicate
 
@@ -95,12 +95,11 @@ Frequently, you will want to add the [`name`](api-queries#by-role-options) optio
 
 Here are a couple of examples:
 
-- button Start : `getByRole("button", { name: "Start" })`
+- start button: `getByRole("button", { name: "Start" })`
 - silent mode switch: `getByRole("switch", { name: "Silent Mode" })`
-- whole menu: `getByRole("menu", { name: "Editing Menu" })`
-- particular menu item: `getByRole("menuitem", { name: "Undo" })`
-- error messages: `getByRole("alert", { name: /Not logged in/ })`
 - screen header: `getByRole("header", { name: "Settings" })`
+- undo menu item: `getByRole("menuitem", { name: "Undo" })`
+- error messages: `getByRole("alert", { name: /Not logged in/ })`
 
 #### Other options {#by-role-query-other-options}
 
@@ -125,8 +124,8 @@ Querying [`TextInput`](https://reactnative.dev/docs/textinput) elements presents
 Therefore, you can use the following queries to find relevant text inputs:
 
 1. [`*ByLabelText`](api-queries#by-label-text) - will match the accessibility label of the element. This query will match any host elements, including `TextInput` elements.
-2. [`*ByDisplayValue`](api-queries#by-display-value) - will the value of `TextInput` element. This query will match only `TextInput` elements.
-3. [`*ByPlaceholderText`](api-queries#by-placeholder-text) - will match the placeholder of `TextInput` element. This query will match only `TextInput` elements.
+2. [`*ByPlaceholderText`](api-queries#by-placeholder-text) - will match the placeholder of `TextInput` element. This query will match only `TextInput` elements.
+3. [`*ByDisplayValue`](api-queries#by-display-value) - will the current (or default) value of `TextInput` element. This query will match only `TextInput` elements.
 
 ### 3. Other accessible queries {#other-accessible-queries}
 
@@ -135,8 +134,8 @@ These queries reflect the apps' user experience, both visual and through assisti
 These queries include:
 
 - [`*ByText`](api-queries#by-text) - will match the text content of the element. This query will match only `Text` elements.
-- [`*ByLabelText`](api-queries#by-label-text) - will match the accessibility label of the element. This query will match any host elements.
-- [`*ByHintText`](api-queries#by-hint-text) - will match the accessibility hint of the element. This query will match any host elements.
+- [`*ByLabelText`](api-queries#by-label-text) - will match the accessibility label of the element.
+- [`*ByHintText`](api-queries#by-hint-text) - will match the accessibility hint of the element.
 
 ### 4. Test ID query {#test-id-query}
 
