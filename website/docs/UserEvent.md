@@ -3,12 +3,6 @@ id: user-event
 title: User Event
 ---
 
-:::caution
-User Event API is in beta stage.
-
-This means that we plan to keep the public API signatures to remain stable, but we might introduce breaking behavioural changes, e.g. changing the ordering or timing of emitted events, without a major version update. Hopefully, well written code should not rely on such specific details.
-:::
-
 :::note
 User Event interactions require RNTL v12.2.0 or later.
 :::
