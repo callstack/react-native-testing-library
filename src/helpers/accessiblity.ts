@@ -4,9 +4,9 @@ import {
   StyleSheet,
 } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
-import { getTextContent } from './text-content';
 import { getHostSiblings, getUnsafeRootElement } from './component-tree';
-import { getHostComponentNames } from './host-component-names';
+import { getHostComponentNames, isHostText } from './host-component-names';
+import { getTextContent } from './text-content';
 
 type IsInaccessibleOptions = {
   cache?: WeakMap<ReactTestInstance, boolean>;
@@ -113,10 +113,30 @@ export function isAccessibilityElement(
   );
 }
 
-export function getAccessibilityRole(
-  element: ReactTestInstance
-): string | undefined {
-  return element.props.role ?? element.props.accessibilityRole;
+/**
+ * Returns the accessibility role for given element. It will return explicit
+ * role from either `role` or `accessibilityRole` props if set.
+ *
+ * If explicit role is not available, it would try to return default element
+ * role:
+ * - `text` for `Text` elements
+ *
+ * In all other cases this functions returns `none`.
+ *
+ * @param element
+ * @returns
+ */
+export function getAccessibilityRole(element: ReactTestInstance) {
+  const explicitRole = element.props.role ?? element.props.accessibilityRole;
+  if (explicitRole) {
+    return explicitRole;
+  }
+
+  if (isHostText(element)) {
+    return 'text';
+  }
+
+  return 'none';
 }
 
 export function getAccessibilityViewIsModal(element: ReactTestInstance) {

@@ -3,6 +3,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Text,
+  TextInput,
   View,
   Pressable,
   Button as RNButton,
@@ -108,6 +109,21 @@ test('supports role prop', () => {
   expect(screen.getByRole('heading')).toBeTruthy();
   expect(screen.getByRole('searchbox')).toBeTruthy();
   expect(screen.getByRole('button')).toBeTruthy();
+});
+
+test('supports default View component "none" role', () => {
+  const screen = render(<View testID="view" accessible />);
+  expect(screen.getByRole('none').props.testID).toBe('view');
+});
+
+test('supports default Text component  "text" role', () => {
+  const screen = render(<Text testID="text" />);
+  expect(screen.getByRole('text').props.testID).toBe('text');
+});
+
+test('supports default TextInput component "none" role', () => {
+  const screen = render(<TextInput testID="text-input" />);
+  expect(screen.getByRole('none').props.testID).toBe('text-input');
 });
 
 describe('supports name option', () => {
