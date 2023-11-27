@@ -3,9 +3,9 @@ module.exports = {
     Introduction: ['getting-started', 'faq'],
     'API Reference': ['api', 'api-queries', 'jest-matchers', 'user-event'],
     Guides: [
-      'troubleshooting',
       'how-should-i-query',
       'eslint-plugin-testing-library',
+      'troubleshooting',
     ],
     Advanced: ['testing-env', 'understanding-act'],
     Migrations: [

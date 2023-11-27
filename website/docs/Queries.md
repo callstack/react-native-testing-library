@@ -2,6 +2,7 @@
 id: api-queries
 title: Queries
 ---
+
 import TOCInline from '@theme/TOCInline';
 
 <TOCInline toc={toc} />
@@ -11,27 +12,27 @@ import TOCInline from '@theme/TOCInline';
 > `getBy*` queries are shown by default in the [query documentation](#queries)
 > below.
 
-### `getBy*` queries
+### `getBy*` queries {#get-by}
 
 `getBy*` queries return the first matching node for a query, and throw an error if no elements match or if more than one match is found. If you need to find more than one element, then use `getAllBy`.
 
-### `getAllBy*` queries
+### `getAllBy*` queries {#get-all-by}
 
 `getAllBy*` queries return an array of all matching nodes for a query, and throw an error if no elements match.
 
-### `queryBy*` queries
+### `queryBy*` queries {#query-by}
 
 `queryBy*` queries return the first matching node for a query, and return `null` if no elements match. This is useful for asserting an element that is not present. This throws if more than one match is found (use `queryAllBy` instead).
 
-### `queryAllBy*` queries
+### `queryAllBy*` queries {#query-all-by}
 
 `queryAllBy*` queries return an array of all matching nodes for a query, and return an empty array (`[]`) when no elements match.
 
-### `findBy*` queries
+### `findBy*` queries {#find-by}
 
 `findBy*` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element, then use `findAllBy*`.
 
-### `findAllBy*` queries
+### `findAllBy*` queries {#find-all-by}
 
 `findAllBy*` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
 
@@ -60,7 +61,7 @@ type ReactTestInstance = {
 };
 ```
 
-### `ByRole`
+### `ByRole` {#by-role}
 
 > getByRole, getAllByRole, queryByRole, queryAllByRole, findByRole, findAllByRole
 
@@ -89,9 +90,11 @@ Returns a `ReactTestInstance` with matching `role` or `accessibilityRole` prop.
 
 :::info
 In order for `*ByRole` queries to match an element it needs to be considered an accessibility element:
+
 1. `Text`, `TextInput` and `Switch` host elements are these by default.
 2. `View` host elements need an explicit [`accessible`](https://reactnative.dev/docs/accessibility#accessible) prop set to `true`
 3. Some React Native composite components like `Pressable` & `TouchableOpacity` render host `View` element with `accessible` prop already set.
+
 :::
 
 ```jsx
@@ -107,23 +110,41 @@ const element2 = screen.getByRole('button', { name: 'Hello' });
 const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 ```
 
-#### Options {#byrole-options}
+#### Options {#by-role-options}
 
-`name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
+- `name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (= accessability label or text content).
 
-`disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessbilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
+- `disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessbilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
 
-`selected`: You can filter elements by their selected state (coming either from `aria-selected` prop or `accessbilityState.selected` prop). The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
+  - This option can alternatively be expressed using the [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled) Jest matchers.
 
-`checked`: You can filter elements by their checked state (coming either from `aria-checked` prop or `accessbilityState.checked` prop). The possible values are `true`, `false`, or `"mixed"`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
+- `selected`: You can filter elements by their selected state (coming either from `aria-selected` prop or `accessbilityState.selected` prop). The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
 
-`busy`: You can filter elements by their busy state (coming either from `aria-busy` prop or `accessbilityState.busy` prop). The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
+  - This option can alternatively be expressed using the [`toBeSelected()`](jest-matchers#tobeselected) Jest matcher.
 
-`expanded`: You can filter elements by their expanded state (coming either from `aria-expanded` prop or `accessbilityState.expanded` prop). The possible values are `true` or `false`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
+* `checked`: You can filter elements by their checked state (coming either from `aria-checked` prop or `accessbilityState.checked` prop). The possible values are `true`, `false`, or `"mixed"`.
 
-`value`: Filter elements by their accessibility value, based on either `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` or `accessibilityValue` props. Accessiblity value conceptually consists of numeric `min`, `max` and `now` entries, as well as string `text` entry. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about the accessibility value concept.
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
+  - This option can alternatively be expressed using the [`toBeChecked()` / `toBePartiallyChecked()`](jest-matchers#tobechecked) Jest matchers.
 
-### `ByText`
+* `busy`: You can filter elements by their busy state (coming either from `aria-busy` prop or `accessbilityState.busy` prop). The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
+
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
+  - This option can alternatively be expressed using the [`toBeBusy()`](jest-matchers#tobebusy) Jest matcher.
+
+* `expanded`: You can filter elements by their expanded state (coming either from `aria-expanded` prop or `accessbilityState.expanded` prop). The possible values are `true` or `false`.
+
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
+  - This option can alternatively be expressed using the [`toBeExpanded()` / `toBeCollapsed()`](jest-matchers#tobeexpanded) Jest matchers.
+
+* `value`: Filter elements by their accessibility value, based on either `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` or `accessibilityValue` props. Accessiblity value conceptually consists of numeric `min`, `max` and `now` entries, as well as string `text` entry.
+
+  - See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about the accessibility value concept.
+  - This option can alternatively be expressed using the [`toHaveAccessibilityValue()`](jest-matchers#tohaveaccessibilityvalue) Jest matcher.
+
+### `ByText` {#by-text}
 
 > getByText, getAllByText, queryByText, queryAllByText, findByText, findAllByText
 
@@ -149,7 +170,7 @@ render(<MyComponent />);
 const element = screen.getByText('banana');
 ```
 
-### `ByPlaceholderText`
+### `ByPlaceholderText` {#by-placeholder-text}
 
 > getByPlaceholderText, getAllByPlaceholderText, queryByPlaceholderText, queryAllByPlaceholderText, findByPlaceholderText, findAllByPlaceholderText
 
@@ -173,7 +194,7 @@ render(<MyComponent />);
 const element = screen.getByPlaceholderText('username');
 ```
 
-### `ByDisplayValue`
+### `ByDisplayValue` {#by-display-value}
 
 > getByDisplayValue, getAllByDisplayValue, queryByDisplayValue, queryAllByDisplayValue, findByDisplayValue, findAllByDisplayValue
 
@@ -197,7 +218,7 @@ render(<MyComponent />);
 const element = screen.getByDisplayValue('username');
 ```
 
-### `ByTestId`
+### `ByTestId` {#by-test-id}
 
 > getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, findByTestId, findAllByTestId
 
@@ -225,7 +246,7 @@ const element = screen.getByTestId('unique-id');
 In the spirit of [the guiding principles](https://testing-library.com/docs/guiding-principles), it is recommended to use this only after the other queries don't work for your use case. Using `testID` attributes do not resemble how your software is used and should be avoided if possible. However, they are particularly useful for end-to-end testing on real devices, e.g. using Detox and it's an encouraged technique to use there. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
 :::
 
-### `ByLabelText`
+### `ByLabelText` {#by-label-text}
 
 > getByLabelText, getAllByLabelText, queryByLabelText, queryAllByLabelText, findByLabelText, findAllByLabelText
 
@@ -241,6 +262,7 @@ getByLabelText(
 ```
 
 Returns a `ReactTestInstance` with matching label:
+
 - either by matching [`aria-label`](https://reactnative.dev/docs/accessibility#aria-label)/[`accessibilityLabel`](https://reactnative.dev/docs/accessibility#accessibilitylabel) prop
 - or by matching text content of view referenced by [`aria-labelledby`](https://reactnative.dev/docs/accessibility#aria-labelledby-android)/[`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
 
@@ -251,7 +273,7 @@ render(<MyComponent />);
 const element = screen.getByLabelText('my-label');
 ```
 
-### `ByHintText`, `ByA11yHint`, `ByAccessibilityHint`
+### `ByHintText`, `ByA11yHint`, `ByAccessibilityHint` {#by-hint-text}
 
 > getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint, findByA11yHint, findAllByA11yHint
 > getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint, findByAccessibilityHint, findAllByAccessibilityHint
@@ -281,19 +303,19 @@ const element = screen.getByHintText('Plays a song');
 Please consult [Apple guidelines on how `accessibilityHint` should be used](https://developer.apple.com/documentation/objectivec/nsobject/1615093-accessibilityhint).
 :::
 
-
-
-### `ByA11yState`, `ByAccessibilityState` (deprecated)
+### `ByA11yState`, `ByAccessibilityState` (deprecated) {#by-accessibility-state}
 
 :::caution
 This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
-* [`*ByRole`](#byrole) query with relevant state options:  `disabled`, `selected`, `checked`, `expanded` and `busy`
-* use built-in Jest matchers to check the state of element found using some other query:
-  * enabled state: [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled)
-  * checked state: [`toBeChecked()` / `toBePartiallyChecked()`](jest-matchers#tobechecked)
-  * selected state: [`toBeSelected()`](jest-matchers#tobeselected)
-  * expanded state: [`toBeExpanded()` / `toBeCollapsed()`](jest-matchers#tobeexpanded)
-  * busy state: [`toBeBusy()`](jest-matchers#tobebusy)
+
+- [`*ByRole`](#by-role) query with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
+- use built-in Jest matchers to check the state of element found using some other query:
+  - enabled state: [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled)
+  - checked state: [`toBeChecked()` / `toBePartiallyChecked()`](jest-matchers#tobechecked)
+  - selected state: [`toBeSelected()`](jest-matchers#tobeselected)
+  - expanded state: [`toBeExpanded()` / `toBeCollapsed()`](jest-matchers#tobeexpanded)
+  - busy state: [`toBeBusy()`](jest-matchers#tobebusy)
+
 :::
 
 > getByA11yState, getAllByA11yState, queryByA11yState, queryAllByA11yState, findByA11yState, findAllByA11yState
@@ -314,7 +336,7 @@ getByA11yState(
 ): ReactTestInstance;
 ```
 
-Returns a `ReactTestInstance` with matching `accessibilityState` prop or ARIA state props: `aria-disabled`, `aria-selected`, `aria-checked`,  `aria-busy`, and `aria-expanded`.
+Returns a `ReactTestInstance` with matching `accessibilityState` prop or ARIA state props: `aria-disabled`, `aria-selected`, `aria-checked`, `aria-busy`, and `aria-expanded`.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -351,13 +373,14 @@ but will not match elements with following props:
 The difference in handling default values is made to reflect observed accessibility behaviour on iOS and Android platforms.
 :::
 
-### `ByA11yValue`, `ByAccessibilityValue` (deprecated)
+### `ByA11yValue`, `ByAccessibilityValue` (deprecated) {#by-accessibility-value}
 
 :::caution
 This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
-* [`toHaveAccessibilityValue()`](jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
-* [`*ByRole`](#byrole) query with `value` option
-:::
+
+- [`toHaveAccessibilityValue()`](jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
+- [`*ByRole`](#by-role) query with `value` option
+  :::
 
 > getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue, findByA11yValue, findAllByA11yValue
 > getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue, findByAccessibilityValue, findAllByAccessibilityValue
@@ -409,7 +432,9 @@ render(<Text style={{ display: 'none' }}>Hidden from accessibility</Text>);
 
 // Exclude hidden elements
 expect(
-  screen.queryByText('Hidden from accessibility', { includeHiddenElements: false })
+  screen.queryByText('Hidden from accessibility', {
+    includeHiddenElements: false,
+  })
 ).not.toBeOnTheScreen();
 
 // Include hidden elements
@@ -463,6 +488,7 @@ screen.getByText(/hello world/);
 ```
 
 ### Options {#text-match-options}
+
 #### Precision
 
 ```typescript
