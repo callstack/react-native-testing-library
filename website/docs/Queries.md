@@ -112,7 +112,7 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 
 #### Options {#by-role-options}
 
-- `name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
+- `name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (= accessability label or text content).
 
 - `disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessbilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
 
