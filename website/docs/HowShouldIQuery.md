@@ -63,7 +63,7 @@ The query predicate describes how you decide whether to match the given element.
 
 Choosing the proper query predicate helps better express the test's intent and make the tests resemble how users interact with your code (components, screens, etc.) as much as possible following our [Guiding Principles](https://testing-library.com/docs/guiding-principles). Additionally, most predicates promote the usage of proper accessibility props, which add a semantic layer on top of an element tree composed primarily of [`View`](https://reactnative.dev/docs/view) elements.
 
-It is recommended to use queries in the following order of priority:
+It is recommended to use query predicates in the following order of priority:
 
 ### 1. By Role query {#by-role-query}
 
