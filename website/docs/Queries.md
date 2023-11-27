@@ -112,19 +112,37 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 
 #### Options {#by-role-options}
 
-`name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
+- `name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (equivalent to `byText` or `byLabelText` query).
 
-`disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessbilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
+- `disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessbilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
 
-`selected`: You can filter elements by their selected state (coming either from `aria-selected` prop or `accessbilityState.selected` prop). The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
+  - This option can alternatively be expressed using the [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled) Jest matchers.
 
-`checked`: You can filter elements by their checked state (coming either from `aria-checked` prop or `accessbilityState.checked` prop). The possible values are `true`, `false`, or `"mixed"`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
+- `selected`: You can filter elements by their selected state (coming either from `aria-selected` prop or `accessbilityState.selected` prop). The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
 
-`busy`: You can filter elements by their busy state (coming either from `aria-busy` prop or `accessbilityState.busy` prop). The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details). See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
+  - This option can alternatively be expressed using the [`toBeSelected()`](jest-matchers#tobeselected) Jest matcher.
 
-`expanded`: You can filter elements by their expanded state (coming either from `aria-expanded` prop or `accessbilityState.expanded` prop). The possible values are `true` or `false`. See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
+* `checked`: You can filter elements by their checked state (coming either from `aria-checked` prop or `accessbilityState.checked` prop). The possible values are `true`, `false`, or `"mixed"`.
 
-`value`: Filter elements by their accessibility value, based on either `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` or `accessibilityValue` props. Accessiblity value conceptually consists of numeric `min`, `max` and `now` entries, as well as string `text` entry. See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about the accessibility value concept.
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
+  - This option can alternatively be expressed using the [`toBeChecked()` / `toBePartiallyChecked()`](jest-matchers#tobechecked) Jest matchers.
+
+* `busy`: You can filter elements by their busy state (coming either from `aria-busy` prop or `accessbilityState.busy` prop). The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
+
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
+  - This option can alternatively be expressed using the [`toBeBusy()`](jest-matchers#tobebusy) Jest matcher.
+
+* `expanded`: You can filter elements by their expanded state (coming either from `aria-expanded` prop or `accessbilityState.expanded` prop). The possible values are `true` or `false`.
+
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
+  - This option can alternatively be expressed using the [`toBeExpanded()` / `toBeCollapsed()`](jest-matchers#tobeexpanded) Jest matchers.
+
+* `value`: Filter elements by their accessibility value, based on either `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` or `accessibilityValue` props. Accessiblity value conceptually consists of numeric `min`, `max` and `now` entries, as well as string `text` entry.
+
+  - See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about the accessibility value concept.
+  - This option can alternatively be expressed using the [`toHaveAccessibilityValue()`](jest-matchers#tohaveaccessibilityvalue) Jest matcher.
 
 ### `ByText` {#by-text}
 

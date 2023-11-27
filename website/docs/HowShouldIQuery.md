@@ -34,7 +34,7 @@ Queries work as implicit assertions on the number of matching elements and will 
 
 ### Idiomatic query variants
 
-Using idiomatic query variants helps better express your test's intent and expectations about the number of matching elements. Using other query variants might work but could make it harder to reason about the test.
+Idiomatic query variants clarify test intent and the expected number of matching elements. They will also throw helpful errors if assertions fail to help diagnose the issues.
 
 Here are general guidelines for picking idiomatic query variants:
 
@@ -61,9 +61,9 @@ The query predicate describes how you decide whether to match the given element.
 
 ### Idiomatic query predicates
 
-Choosing the proper query predicate helps better express the test's intent and make the tests resemble how users interact with your code (components, screens, etc.) as much as possible following our [Guiding Principles](https://testing-library.com/docs/guiding-principles).
+Choosing the proper query predicate helps better express the test's intent and make the tests resemble how users interact with your code (components, screens, etc.) as much as possible following our [Guiding Principles](https://testing-library.com/docs/guiding-principles). Additionally, most predicates promote the usage of proper accessibility props, which add a semantic layer on top of an element tree composed primarily of [`View`](https://reactnative.dev/docs/view) elements.
 
-Additionally, most predicates promote the usage of proper accessibility props, which add a semantic layer on top of an element tree composed primarily of [`View`](https://reactnative.dev/docs/view) elements.
+It is recommended to use queries in the following order of priority:
 
 ### 1. By Role query {#by-role-query}
 
@@ -100,22 +100,6 @@ Here are a couple of examples:
 - screen header: `getByRole("header", { name: "Settings" })`
 - undo menu item: `getByRole("menuitem", { name: "Undo" })`
 - error messages: `getByRole("alert", { name: /Not logged in/ })`
-
-#### Other options {#by-role-query-other-options}
-
-Other useful [options](api-queries#by-role-options) include:
-
-- accessibility states like: `disabled`, `selected`, `checked`, `busy`, `expanded`
-- accessibility value: `value: { now, min, max, text }`
-
-These option types can frequently be better expressed by using the corresponding Jest matchers:
-
-- [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled)
-- [`toBeSelected()`](jest-matchers#tobeselected)
-- [`toBeChecked()` / `toBePartiallyChecked()`](jest-matchers#tobechecked)
-- [`toBeExpanded()` / `toBeCollapsed()`](jest-matchers#tobeexpanded)
-- [`toBeBusy()`](jest-matchers#tobebusy)
-- [`toHaveAccessibilityValue()`](jest-matchers#tohaveaccessibilityvalue)
 
 ### 2. Text input queries {#text-input-queries}
 
