@@ -3,9 +3,37 @@ id: api-queries
 title: Queries
 ---
 
-import TOCInline from '@theme/TOCInline';
+Queries are one of the main building blocks for the React Native Testing Library. They enable you to find relevant elements in the element tree, which represents the your application's user interface when running under tests.
 
-<TOCInline toc={toc} />
+## Accessing queries
+
+All queries described below are accessible in two main ways: through the `screen` object or by capturing the `render` function call result.
+
+### Using `screen` object
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+test('accessing queries using "screen" object', () => {
+  render(...);
+  screen.getByRole("button", { name: "Start" });
+})
+```
+
+The modern and recommended way of accessing queries is to use the `screen` object exported by the '@testing-library/react-native' package. This object will contain methods of all available queries bound to the most recently rendered UI.
+
+### Using `render` result
+
+```ts
+import { render } from '@testing-library/react-native';
+
+test('accessing queries using "render" result', () => {
+  const { getByRole } = render(...);
+  getByRole("button", { name: "Start" });
+})
+```
+
+The classic way is to capture query functions, as they are returned from the `render` function call. This provides access to the same functions as in the case of the `screen` object.
 
 ## Query Variants
 
