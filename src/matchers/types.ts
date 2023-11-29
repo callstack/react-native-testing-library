@@ -5,7 +5,11 @@ import { TextMatch, TextMatchOptions } from '../matches';
 import { Style } from './to-have-style';
 
 export interface JestNativeMatchers<R> {
+  /**
+   * Assert whether an element is present in the element tree or not.
+   */
   toBeOnTheScreen(): R;
+
   toBeChecked(): R;
   toBeCollapsed(): R;
   toBeDisabled(): R;
