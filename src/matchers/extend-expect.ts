@@ -1,5 +1,3 @@
-/// <reference path="./extend-expect.d.ts" />
-
 import { toBeOnTheScreen } from './to-be-on-the-screen';
 import { toBeChecked } from './to-be-checked';
 import { toBeCollapsed } from './to-be-collapsed';
@@ -17,6 +15,8 @@ import { toHaveDisplayValue } from './to-have-display-value';
 import { toHaveProp } from './to-have-prop';
 import { toHaveStyle } from './to-have-style';
 import { toHaveTextContent } from './to-have-text-content';
+
+export type * from './types';
 
 expect.extend({
   toBeOnTheScreen,

@@ -1,5 +1,8 @@
 import type { StyleProp } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
+import { AccessibilityValueMatcher } from '../helpers/matchers/match-accessibility-value';
+import { TextMatch, TextMatchOptions } from '../matches';
+import { Style } from './to-have-style';
 
 export interface JestNativeMatchers<R> {
   toBeOnTheScreen(): R;
@@ -31,26 +34,8 @@ declare global {
 }
 
 // Explicit `@jest/globals` `expect` matchers.
+// @ts-ignore
 declare module '@jest/expect' {
   interface Matchers<R extends void | Promise<void>>
     extends JestNativeMatchers<R> {}
 }
-
-// Used types
-
-export type Style = ViewStyle | TextStyle | ImageStyle;
-
-export interface AccessibilityValueMatcher {
-  min?: number;
-  max?: number;
-  now?: number;
-  text?: TextMatch;
-}
-
-export type TextMatch = string | RegExp;
-export type TextMatchOptions = {
-  exact?: boolean;
-  normalizer?: NormalizerFn;
-};
-
-export type NormalizerFn = (textToNormalize: string) => string;
