@@ -84,6 +84,7 @@ describe('userEvent.press with fake timers', () => {
                 },
               ],
             },
+            "target": {},
           },
         },
         {
@@ -117,6 +118,7 @@ describe('userEvent.press with fake timers', () => {
                 },
               ],
             },
+            "target": {},
           },
         },
         {
@@ -150,6 +152,7 @@ describe('userEvent.press with fake timers', () => {
                 },
               ],
             },
+            "target": {},
           },
         },
       ]

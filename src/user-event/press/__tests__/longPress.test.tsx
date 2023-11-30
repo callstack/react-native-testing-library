@@ -76,6 +76,7 @@ describe('userEvent.longPress with fake timers', () => {
                 },
               ],
             },
+            "target": {},
           },
         },
       ]

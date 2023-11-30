@@ -5,6 +5,7 @@ exports[`scrollTo() supports vertical drag scroll: scrollTo({ y: 100 }) 1`] = `
   {
     "name": "scrollBeginDrag",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "contentInset": {
           "bottom": 0,
@@ -31,11 +32,13 @@ exports[`scrollTo() supports vertical drag scroll: scrollTo({ y: 100 }) 1`] = `
           "y": 0,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "scroll",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "contentInset": {
           "bottom": 0,
@@ -62,11 +65,13 @@ exports[`scrollTo() supports vertical drag scroll: scrollTo({ y: 100 }) 1`] = `
           "y": 0,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "scroll",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "contentInset": {
           "bottom": 0,
@@ -93,11 +98,13 @@ exports[`scrollTo() supports vertical drag scroll: scrollTo({ y: 100 }) 1`] = `
           "y": 0,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "scroll",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "contentInset": {
           "bottom": 0,
@@ -124,11 +131,13 @@ exports[`scrollTo() supports vertical drag scroll: scrollTo({ y: 100 }) 1`] = `
           "y": 0,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "scrollEndDrag",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "contentInset": {
           "bottom": 0,
@@ -155,6 +164,7 @@ exports[`scrollTo() supports vertical drag scroll: scrollTo({ y: 100 }) 1`] = `
           "y": 0,
         },
       },
+      "target": {},
     },
   },
 ]

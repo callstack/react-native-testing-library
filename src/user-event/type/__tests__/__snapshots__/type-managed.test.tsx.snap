@@ -20,14 +20,17 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "focus",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
   {
@@ -48,24 +51,29 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "W",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "W",
       },
+      "target": {},
     },
   },
   {
@@ -75,30 +83,36 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 1,
           "start": 1,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "o",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "Wo",
       },
+      "target": {},
     },
   },
   {
@@ -108,30 +122,36 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 2,
           "start": 2,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "w",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "Wow",
       },
+      "target": {},
     },
   },
   {
@@ -141,29 +161,35 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 3,
           "start": 3,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "endEditing",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
         "text": "Wow",
       },
+      "target": {},
     },
   },
   {
     "name": "blur",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
 ]
@@ -189,14 +215,17 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "focus",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
   {
@@ -217,24 +246,29 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "A",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "XXXA",
       },
+      "target": {},
     },
   },
   {
@@ -244,30 +278,36 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 4,
           "start": 4,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "B",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "XXXB",
       },
+      "target": {},
     },
   },
   {
@@ -277,30 +317,36 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 4,
           "start": 4,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "C",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "XXXC",
       },
+      "target": {},
     },
   },
   {
@@ -310,29 +356,35 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 4,
           "start": 4,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "endEditing",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
         "text": "XXX",
       },
+      "target": {},
     },
   },
   {
     "name": "blur",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
 ]

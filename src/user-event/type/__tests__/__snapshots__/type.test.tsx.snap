@@ -20,14 +20,17 @@ exports[`type() supports backspace: input: "{Backspace}a", defaultValue: "xxx" 1
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "focus",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
   {
@@ -48,24 +51,29 @@ exports[`type() supports backspace: input: "{Backspace}a", defaultValue: "xxx" 1
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "Backspace",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "xx",
       },
+      "target": {},
     },
   },
   {
@@ -75,30 +83,36 @@ exports[`type() supports backspace: input: "{Backspace}a", defaultValue: "xxx" 1
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 2,
           "start": 2,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "a",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "xxa",
       },
+      "target": {},
     },
   },
   {
@@ -108,29 +122,35 @@ exports[`type() supports backspace: input: "{Backspace}a", defaultValue: "xxx" 1
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 3,
           "start": 3,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "endEditing",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
         "text": "xxa",
       },
+      "target": {},
     },
   },
   {
     "name": "blur",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
 ]
@@ -156,14 +176,17 @@ exports[`type() supports basic case: input: "abc" 1`] = `
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "focus",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
   {
@@ -184,24 +207,29 @@ exports[`type() supports basic case: input: "abc" 1`] = `
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "a",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "a",
       },
+      "target": {},
     },
   },
   {
@@ -211,30 +239,36 @@ exports[`type() supports basic case: input: "abc" 1`] = `
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 1,
           "start": 1,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "b",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "ab",
       },
+      "target": {},
     },
   },
   {
@@ -244,30 +278,36 @@ exports[`type() supports basic case: input: "abc" 1`] = `
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 2,
           "start": 2,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "c",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "abc",
       },
+      "target": {},
     },
   },
   {
@@ -277,29 +317,35 @@ exports[`type() supports basic case: input: "abc" 1`] = `
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 3,
           "start": 3,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "endEditing",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
         "text": "abc",
       },
+      "target": {},
     },
   },
   {
     "name": "blur",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
 ]
@@ -325,14 +371,17 @@ exports[`type() supports defaultValue prop: input: "ab", defaultValue: "xxx" 1`]
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "focus",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
   {
@@ -353,24 +402,29 @@ exports[`type() supports defaultValue prop: input: "ab", defaultValue: "xxx" 1`]
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "a",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "xxxa",
       },
+      "target": {},
     },
   },
   {
@@ -380,30 +434,36 @@ exports[`type() supports defaultValue prop: input: "ab", defaultValue: "xxx" 1`]
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 4,
           "start": 4,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "b",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "xxxab",
       },
+      "target": {},
     },
   },
   {
@@ -413,29 +473,35 @@ exports[`type() supports defaultValue prop: input: "ab", defaultValue: "xxx" 1`]
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 5,
           "start": 5,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "endEditing",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
         "text": "xxxab",
       },
+      "target": {},
     },
   },
   {
     "name": "blur",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
 ]
@@ -461,14 +527,17 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "focus",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
   {
@@ -489,19 +558,23 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
         "touches": [],
       },
       "persist": [MockFunction],
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "Enter",
       },
+      "target": {},
     },
   },
   {
     "name": "textInput",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "previousText": "",
         "range": {
@@ -512,17 +585,20 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
         "text": "
 ",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "
 ",
       },
+      "target": {},
     },
   },
   {
@@ -533,17 +609,20 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 1,
           "start": 1,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "contentSizeChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "contentSize": {
           "height": 32,
@@ -551,19 +630,23 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
         },
         "target": 0,
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "Enter",
       },
+      "target": {},
     },
   },
   {
     "name": "textInput",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "previousText": "
 ",
@@ -576,11 +659,13 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
 
 ",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
@@ -588,6 +673,7 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
 
 ",
       },
+      "target": {},
     },
   },
   {
@@ -599,17 +685,20 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 2,
           "start": 2,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "contentSizeChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "contentSize": {
           "height": 48,
@@ -617,25 +706,30 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
         },
         "target": 0,
       },
+      "target": {},
     },
   },
   {
     "name": "endEditing",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
         "text": "
 
 ",
       },
+      "target": {},
     },
   },
   {
     "name": "blur",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
 ]
@@ -658,10 +752,12 @@ exports[`type() works when not all events have handlers: input: "abc" 1`] = `
   {
     "name": "endEditing",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
         "text": "abc",
       },
+      "target": {},
     },
   },
 ]
