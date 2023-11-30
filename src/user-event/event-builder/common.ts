@@ -5,8 +5,6 @@
  */
 function touch() {
   return {
-    persist: jest.fn(),
-    currentTarget: { measure: jest.fn() },
     nativeEvent: {
       changedTouches: [],
       identifier: 0,
@@ -18,6 +16,9 @@ function touch() {
       timestamp: Date.now(),
       touches: [],
     },
+    persist: jest.fn(),
+    currentTarget: { measure: jest.fn() },
+    target: {},
   };
 }
 
@@ -48,6 +49,8 @@ export const CommonEventBuilder = {
       nativeEvent: {
         target: 0,
       },
+      currentTarget: {},
+      target: {},
     };
   },
 
@@ -61,6 +64,8 @@ export const CommonEventBuilder = {
       nativeEvent: {
         target: 0,
       },
+      currentTarget: {},
+      target: {},
     };
   },
 };
