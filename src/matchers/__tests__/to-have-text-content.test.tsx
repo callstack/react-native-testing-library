@@ -1,5 +1,3 @@
-/// <reference path="../extend-expect.d.ts" />
-
 import * as React from 'react';
 import { View, Text } from 'react-native';
 import { render, screen } from '../..';
