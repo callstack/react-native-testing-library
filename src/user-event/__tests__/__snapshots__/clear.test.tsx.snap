@@ -5,38 +5,46 @@ exports[`clear() supports basic case: value: "Hello! 1`] = `
   {
     "name": "focus",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 6,
           "start": 0,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "Backspace",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "",
       },
+      "target": {},
     },
   },
   {
@@ -46,29 +54,35 @@ exports[`clear() supports basic case: value: "Hello! 1`] = `
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 0,
           "start": 0,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "endEditing",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
         "text": "",
       },
+      "target": {},
     },
   },
   {
     "name": "blur",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
 ]
@@ -79,38 +93,46 @@ exports[`clear() supports defaultValue prop: defaultValue: "Hello Default!" 1`] 
   {
     "name": "focus",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 14,
           "start": 0,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "Backspace",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "",
       },
+      "target": {},
     },
   },
   {
@@ -120,29 +142,35 @@ exports[`clear() supports defaultValue prop: defaultValue: "Hello Default!" 1`] 
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 0,
           "start": 0,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "endEditing",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
         "text": "",
       },
+      "target": {},
     },
   },
   {
     "name": "blur",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
 ]
@@ -154,33 +182,40 @@ How are you?" multiline: true, 1`] = `
   {
     "name": "focus",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 25,
           "start": 0,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "keyPress",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "key": "Backspace",
       },
+      "target": {},
     },
   },
   {
     "name": "textInput",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "previousText": "Hello World!
 How are you?",
@@ -191,16 +226,19 @@ How are you?",
         "target": 0,
         "text": "",
       },
+      "target": {},
     },
   },
   {
     "name": "change",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "eventCount": 0,
         "target": 0,
         "text": "",
       },
+      "target": {},
     },
   },
   {
@@ -210,17 +248,20 @@ How are you?",
   {
     "name": "selectionChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "selection": {
           "end": 0,
           "start": 0,
         },
       },
+      "target": {},
     },
   },
   {
     "name": "contentSizeChange",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "contentSize": {
           "height": 16,
@@ -228,23 +269,28 @@ How are you?",
         },
         "target": 0,
       },
+      "target": {},
     },
   },
   {
     "name": "endEditing",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
         "text": "",
       },
+      "target": {},
     },
   },
   {
     "name": "blur",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
       },
+      "target": {},
     },
   },
 ]
@@ -259,10 +305,12 @@ exports[`clear() works when not all events have handlers 1`] = `
   {
     "name": "endEditing",
     "payload": {
+      "currentTarget": {},
       "nativeEvent": {
         "target": 0,
         "text": "",
       },
+      "target": {},
     },
   },
 ]

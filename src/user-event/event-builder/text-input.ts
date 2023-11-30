@@ -10,6 +10,8 @@ export const TextInputEventBuilder = {
   change: (text: string) => {
     return {
       nativeEvent: { text, target: 0, eventCount: 0 },
+      currentTarget: {},
+      target: {},
     };
   },
 
@@ -21,6 +23,8 @@ export const TextInputEventBuilder = {
   keyPress: (key: string) => {
     return {
       nativeEvent: { key },
+      currentTarget: {},
+      target: {},
     };
   },
 
@@ -32,6 +36,8 @@ export const TextInputEventBuilder = {
   submitEditing: (text: string) => {
     return {
       nativeEvent: { text, target: 0 },
+      currentTarget: {},
+      target: {},
     };
   },
 
@@ -43,6 +49,8 @@ export const TextInputEventBuilder = {
   endEditing: (text: string) => {
     return {
       nativeEvent: { text, target: 0 },
+      currentTarget: {},
+      target: {},
     };
   },
 
@@ -54,6 +62,8 @@ export const TextInputEventBuilder = {
   selectionChange: ({ start, end }: TextRange) => {
     return {
       nativeEvent: { selection: { start, end } },
+      currentTarget: {},
+      target: {},
     };
   },
 
@@ -70,6 +80,8 @@ export const TextInputEventBuilder = {
         range: { start: text.length, end: text.length },
         target: 0,
       },
+      currentTarget: {},
+      target: {},
     };
   },
 
@@ -81,6 +93,8 @@ export const TextInputEventBuilder = {
   contentSizeChange: ({ width, height }: ContentSize) => {
     return {
       nativeEvent: { contentSize: { width, height }, target: 0 },
+      currentTarget: {},
+      target: {},
     };
   },
 };

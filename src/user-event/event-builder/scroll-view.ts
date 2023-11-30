@@ -27,6 +27,8 @@ export const ScrollViewEventBuilder = {
         target: 0,
         velocity: { y: 0, x: 0 },
       },
+      currentTarget: {},
+      target: {},
     };
   },
 };
