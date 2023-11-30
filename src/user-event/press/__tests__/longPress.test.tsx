@@ -24,63 +24,7 @@ describe('userEvent.longPress with fake timers', () => {
     );
     await user.longPress(screen.getByText('press me'));
 
-    expect(events).toMatchInlineSnapshot(`
-      [
-        {
-          "name": "longPress",
-          "payload": {
-            "currentTarget": {
-              "measure": [MockFunction] {
-                "calls": [
-                  [
-                    [Function],
-                  ],
-                  [
-                    [Function],
-                  ],
-                ],
-                "results": [
-                  {
-                    "type": "return",
-                    "value": undefined,
-                  },
-                  {
-                    "type": "return",
-                    "value": undefined,
-                  },
-                ],
-              },
-            },
-            "dispatchConfig": {
-              "registrationName": "onResponderGrant",
-            },
-            "nativeEvent": {
-              "changedTouches": [],
-              "identifier": 0,
-              "locationX": 0,
-              "locationY": 0,
-              "pageX": 0,
-              "pageY": 0,
-              "target": 0,
-              "timestamp": 0,
-              "touches": [],
-            },
-            "persist": [MockFunction] {
-              "calls": [
-                [],
-              ],
-              "results": [
-                {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "target": {},
-          },
-        },
-      ]
-    `);
+    expect(events).toMatchSnapshot();
   });
 
   test('calls onLongPress when duration is greater than specified delayLongPress', async () => {

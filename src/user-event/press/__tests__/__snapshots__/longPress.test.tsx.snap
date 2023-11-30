@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`userEvent.longPress with fake timers calls onLongPress if the delayLongPress is the default one 1`] = `
+[
+  {
+    "name": "longPress",
+    "payload": {
+      "currentTarget": {
+        "measure": [MockFunction] {
+          "calls": [
+            [
+              [Function],
+            ],
+            [
+              [Function],
+            ],
+          ],
+          "results": [
+            {
+              "type": "return",
+              "value": undefined,
+            },
+            {
+              "type": "return",
+              "value": undefined,
+            },
+          ],
+        },
+      },
+      "dispatchConfig": {
+        "registrationName": "onResponderGrant",
+      },
+      "nativeEvent": {
+        "changedTouches": [],
+        "identifier": 0,
+        "locationX": 0,
+        "locationY": 0,
+        "pageX": 0,
+        "pageY": 0,
+        "target": 0,
+        "timestamp": 0,
+        "touches": [],
+      },
+      "persist": [MockFunction] {
+        "calls": [
+          [],
+        ],
+        "results": [
+          {
+            "type": "return",
+            "value": undefined,
+          },
+        ],
+      },
+      "target": {},
+    },
+  },
+]
+`;
