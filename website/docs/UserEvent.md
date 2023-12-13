@@ -204,9 +204,13 @@ scrollTo(
   options: {
     y: number,
     momentumY?: number,
+    contentSize?: { width: number, height: number },
+    layoutMeasurement?: { width: number, height: number },
   } | {
     x: number,
     momentumX?: number,
+    contentSize?: { width: number, height: number },
+    layoutMeasurement?: { width: number, height: number },
   }
 ```
 
@@ -220,6 +224,8 @@ await user.scrollTo(scrollView, { y: 100, momentumY: 200 });
 This helper simulates user scrolling a host `ScrollView` element.
 
 This function supports only host `ScrollView` elements, passing other element types will result in error. Note that `FlatList` is accepted as it renders to a host `ScrolLView` element, however in the current iteration we focus only on base `ScrollView` only features.
+
+If you want to simulate scrolling a `FlatList` or any other `VirtualizedList`, you should also pass `contentSize` and `layoutMeasurement` options, to run underlying logic that updates the currently visible window.
 
 Scroll interaction should match `ScrollView` element direction. For vertical scroll view (default or explicit `horizontal={false}`) you should pass only `y` (and optionally also `momentumY`) option, for horizontal scroll view (`horizontal={true}`) you should pass only `x` (and optionally `momentumX`) option.
 
