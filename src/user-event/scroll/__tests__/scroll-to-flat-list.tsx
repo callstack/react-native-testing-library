@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { FlatList, ScrollViewProps, Text } from 'react-native';
+import { FlatList, ScrollViewProps, Text, View } from 'react-native';
 import { EventEntry, createEventLogger } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
+import '../../../matchers/extend-expect';
 
 const data = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 
@@ -67,4 +68,47 @@ describe('scrollTo() with FlatList', () => {
       ['scrollEndDrag', 0, 100],
     ]);
   });
+});
+
+const DATA = new Array(100).fill(0).map((_, i) => `Item ${i}`);
+
+function Scrollable() {
+  return (
+    <View style={{ flex: 1 }}>
+      <FlatList
+        testID="flat-list"
+        data={DATA}
+        renderItem={(x) => <Item title={x.item} />}
+        initialNumToRender={10}
+        updateCellsBatchingPeriod={0}
+      />
+    </View>
+  );
+}
+
+function Item({ title }: { title: string }) {
+  return (
+    <View>
+      <Text>{title}</Text>
+    </View>
+  );
+}
+
+test('scrollTo with contentSize and layoutMeasurement update FlatList content', async () => {
+  render(<Scrollable />);
+  const user = userEvent.setup();
+
+  expect(screen.getByText('Item 0')).toBeOnTheScreen();
+  expect(screen.getByText('Item 7')).toBeOnTheScreen();
+  expect(screen.queryByText('Item 15')).not.toBeOnTheScreen();
+
+  await user.scrollTo(screen.getByTestId('flat-list'), {
+    y: 300,
+    contentSize: { width: 240, height: 480 },
+    layoutMeasurement: { width: 240, height: 480 },
+  });
+
+  expect(screen.getByText('Item 0')).toBeOnTheScreen();
+  expect(screen.getByText('Item 7')).toBeOnTheScreen();
+  expect(screen.getByText('Item 15')).toBeOnTheScreen();
 });

@@ -5,9 +5,8 @@ import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';
-import { dispatchEvent, wait } from '../utils';
 import { ContentOffset } from '../event-builder/scroll-view';
-import fireEvent from '../../fire-event';
+import { dispatchEvent, wait } from '../utils';
 import {
   createScrollSteps,
   inertialInterpolator,
@@ -20,7 +19,6 @@ interface CommonScrollToOptions {
     height: number;
     width: number;
   };
-
   layoutMeasurement?: {
     height: number;
     width: number;
@@ -90,7 +88,7 @@ function emitContentSizeChangeEvent(
   element: ReactTestInstance,
   options: ScrollToOptions
 ) {
-  fireEvent(
+  dispatchEvent(
     element,
     'contentSizeChange',
     options.contentSize?.width ?? 0,
