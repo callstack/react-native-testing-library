@@ -61,7 +61,12 @@ export async function scrollTo(
 
   ensureScrollViewDirection(element, options);
 
-  emitContentSizeChangeEvent(element, options);
+  dispatchEvent(
+    element,
+    'contentSizeChange',
+    options.contentSize?.width ?? 0,
+    options.contentSize?.height ?? 0
+  );
 
   const initialPosition = getElementScrollOffset(element);
   const dragSteps = createScrollSteps(
@@ -82,18 +87,6 @@ export async function scrollTo(
   const finalPosition =
     momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
   setElementScrollOffset(element, finalPosition);
-}
-
-function emitContentSizeChangeEvent(
-  element: ReactTestInstance,
-  options: ScrollToOptions
-) {
-  dispatchEvent(
-    element,
-    'contentSizeChange',
-    options.contentSize?.width ?? 0,
-    options.contentSize?.height ?? 0
-  );
 }
 
 async function emitDragScrollEvents(

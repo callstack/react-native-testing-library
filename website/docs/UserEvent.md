@@ -223,24 +223,26 @@ await user.scrollTo(scrollView, { y: 100, momentumY: 200 });
 
 This helper simulates user scrolling a host `ScrollView` element.
 
-This function supports only host `ScrollView` elements, passing other element types will result in error. Note that `FlatList` is accepted as it renders to a host `ScrolLView` element, however in the current iteration we focus only on base `ScrollView` only features.
-
-If you want to simulate scrolling a `FlatList` or any other `VirtualizedList`, you should also pass `contentSize` and `layoutMeasurement` options, to run underlying logic that updates the currently visible window.
+This function supports only host `ScrollView` elements, passing other element types will result in error. Note that `FlatList` is accepted as it renders to a host `ScrolLView` element.
 
 Scroll interaction should match `ScrollView` element direction. For vertical scroll view (default or explicit `horizontal={false}`) you should pass only `y` (and optionally also `momentumY`) option, for horizontal scroll view (`horizontal={true}`) you should pass only `x` (and optionally `momentumX`) option.
 
 Each scroll interaction consists of a mandatory drag scroll part which simulates user dragging the scroll view with his finger (`y` or `x` option). This may optionally be followed by a momentum scroll movement which simulates the inertial movement of scroll view content after the user lifts his finger up (`momentumY` or `momentumX` options).
 
-### Options {#type-options}
+### Options {#scroll-to-options}
 
 - `y` - target vertical drag scroll position
 - `x` - target horizontal drag scroll position
 - `momentumY` - target vertical momentum scroll position
 - `momentumX` - target horizontal momentum scroll position
+- `contentSize` - passed to `ScrollView` events and enabling `FlatList` updates
+- `layoutMeasurement` - passed to `ScrollView` events and enabling `FlatList` updates
 
 User Event will generate a number of intermediate scroll steps to simulate user scroll interaction. You should not rely on exact number or values of these scrolls steps as they might be change in the future version.
 
-This function will remember where the last scroll ended, so subsequent scroll interaction will starts from that positition. The initial scroll position will be assumed to be `{ y: 0, x: 0 }`.
+This function will remember where the last scroll ended, so subsequent scroll interaction will starts from that position. The initial scroll position will be assumed to be `{ y: 0, x: 0 }`.
+
+In order to simulate a `FlatList` (and other controls based on `VirtualizedList`) scrolling, you should pass `contentSize` and `layoutMeasurement` options, which enable the underlying logic to update the currently visible window.
 
 ### Sequence of events
 

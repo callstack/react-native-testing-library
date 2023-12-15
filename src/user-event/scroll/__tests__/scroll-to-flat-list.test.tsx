@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { FlatList, ScrollViewProps, Text, View } from 'react-native';
-import { EventEntry, createEventLogger } from '../../../test-utils';
 import { render, screen } from '../../..';
-import { userEvent } from '../..';
 import '../../../matchers/extend-expect';
+import { EventEntry, createEventLogger } from '../../../test-utils';
+import { userEvent } from '../..';
 
 const data = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 
