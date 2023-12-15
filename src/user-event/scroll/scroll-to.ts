@@ -5,8 +5,8 @@ import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';
-import { dispatchEvent, wait } from '../utils';
 import { ContentOffset } from '../event-builder/scroll-view';
+import { dispatchEvent, wait } from '../utils';
 import {
   createScrollSteps,
   inertialInterpolator,
@@ -14,7 +14,18 @@ import {
 } from './utils';
 import { getElementScrollOffset, setElementScrollOffset } from './state';
 
-export interface VerticalScrollToOptions {
+interface CommonScrollToOptions {
+  contentSize?: {
+    height: number;
+    width: number;
+  };
+  layoutMeasurement?: {
+    height: number;
+    width: number;
+  };
+}
+
+export interface VerticalScrollToOptions extends CommonScrollToOptions {
   y: number;
   momentumY?: number;
 
@@ -23,7 +34,7 @@ export interface VerticalScrollToOptions {
   momentumX?: never;
 }
 
-export interface HorizontalScrollToOptions {
+export interface HorizontalScrollToOptions extends CommonScrollToOptions {
   x: number;
   momentumX?: number;
 
@@ -50,13 +61,20 @@ export async function scrollTo(
 
   ensureScrollViewDirection(element, options);
 
+  dispatchEvent(
+    element,
+    'contentSizeChange',
+    options.contentSize?.width ?? 0,
+    options.contentSize?.height ?? 0
+  );
+
   const initialPosition = getElementScrollOffset(element);
   const dragSteps = createScrollSteps(
     { y: options.y, x: options.x },
     initialPosition,
     linearInterpolator
   );
-  await emitDragScrollEvents(this.config, element, dragSteps);
+  await emitDragScrollEvents(this.config, element, dragSteps, options);
 
   const momentumStart = dragSteps.at(-1) ?? initialPosition;
   const momentumSteps = createScrollSteps(
@@ -64,7 +82,7 @@ export async function scrollTo(
     momentumStart,
     inertialInterpolator
   );
-  await emitMomentumScrollEvents(this.config, element, momentumSteps);
+  await emitMomentumScrollEvents(this.config, element, momentumSteps, options);
 
   const finalPosition =
     momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
@@ -74,7 +92,8 @@ export async function scrollTo(
 async function emitDragScrollEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
-  scrollSteps: ContentOffset[]
+  scrollSteps: ContentOffset[],
+  scrollOptions: ScrollToOptions
 ) {
   if (scrollSteps.length === 0) {
     return;
@@ -84,7 +103,7 @@ async function emitDragScrollEvents(
   dispatchEvent(
     element,
     'scrollBeginDrag',
-    EventBuilder.ScrollView.scroll(scrollSteps[0])
+    EventBuilder.ScrollView.scroll(scrollSteps[0], scrollOptions)
   );
 
   // Note: experimentally, in case of drag scroll the last scroll step
@@ -95,7 +114,7 @@ async function emitDragScrollEvents(
     dispatchEvent(
       element,
       'scroll',
-      EventBuilder.ScrollView.scroll(scrollSteps[i])
+      EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions)
     );
   }
 
@@ -104,14 +123,15 @@ async function emitDragScrollEvents(
   dispatchEvent(
     element,
     'scrollEndDrag',
-    EventBuilder.ScrollView.scroll(lastStep)
+    EventBuilder.ScrollView.scroll(lastStep, scrollOptions)
   );
 }
 
 async function emitMomentumScrollEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
-  scrollSteps: ContentOffset[]
+  scrollSteps: ContentOffset[],
+  scrollOptions: ScrollToOptions
 ) {
   if (scrollSteps.length === 0) {
     return;
@@ -121,7 +141,7 @@ async function emitMomentumScrollEvents(
   dispatchEvent(
     element,
     'momentumScrollBegin',
-    EventBuilder.ScrollView.scroll(scrollSteps[0])
+    EventBuilder.ScrollView.scroll(scrollSteps[0], scrollOptions)
   );
 
   // Note: experimentally, in case of momentum scroll the last scroll step
@@ -132,7 +152,7 @@ async function emitMomentumScrollEvents(
     dispatchEvent(
       element,
       'scroll',
-      EventBuilder.ScrollView.scroll(scrollSteps[i])
+      EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions)
     );
   }
 
@@ -141,7 +161,7 @@ async function emitMomentumScrollEvents(
   dispatchEvent(
     element,
     'momentumScrollEnd',
-    EventBuilder.ScrollView.scroll(lastStep)
+    EventBuilder.ScrollView.scroll(lastStep, scrollOptions)
   );
 }
 

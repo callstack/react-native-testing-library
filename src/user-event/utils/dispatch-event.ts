@@ -6,12 +6,12 @@ import act from '../../act';
  *
  * @param element element trigger event on
  * @param eventName name of the event
- * @param event event payload
+ * @param event event payload(s)
  */
 export function dispatchEvent(
   element: ReactTestInstance,
   eventName: string,
-  event: unknown
+  ...event: unknown[]
 ) {
   const handler = getEventHandler(element, eventName);
   if (!handler) {
@@ -20,7 +20,7 @@ export function dispatchEvent(
 
   // This will be called synchronously.
   void act(() => {
-    handler(event);
+    handler(...event);
   });
 }
 
