@@ -242,7 +242,7 @@ User Event will generate a number of intermediate scroll steps to simulate user 
 
 This function will remember where the last scroll ended, so subsequent scroll interaction will starts from that position. The initial scroll position will be assumed to be `{ y: 0, x: 0 }`.
 
-In order to simulate a `FlatList` (and other controls based on `VirtualizedList`) scrolling, you should pass `contentSize` and `layoutMeasurement` options, which enable the underlying logic to update the currently visible window.
+In order to simulate a `FlatList` (and other controls based on `VirtualizedList`) scrolling, you should pass the `contentSize` and `layoutMeasurement` options, which enable the underlying logic to update the currently visible window.
 
 ### Sequence of events
 
