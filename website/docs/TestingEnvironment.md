@@ -3,8 +3,6 @@ id: testing-env
 title: Testing Environment
 ---
 
-import TOCInline from '@theme/TOCInline';
-
 :::info
 This document is intended for a more advanced audience who want to understand the internals of our testing environment better, e.g., to contribute to the codebase. You should be able to write integration or component tests without reading this.
 :::
