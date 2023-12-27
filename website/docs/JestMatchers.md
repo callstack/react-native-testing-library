@@ -144,10 +144,9 @@ expect(element).toBePartiallyChecked();
 These allow you to assert whether the given element is checked or partially checked from the user's perspective. It relies on the accessibility checked state as set by `aria-checked` or `accessibilityState.checked` props.
 
 :::note
-
 - `toBeChecked()` matcher works only on elements with the `checkbox` or `radio` role.
 - `toBePartiallyChecked()` matcher works only on elements with the `checkbox` role.
-  :::
+:::
 
 ### `toBeExpanded()` / `toBeCollapsed()` {#tobeexpanded}
 
