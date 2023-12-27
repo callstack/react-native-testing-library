@@ -70,6 +70,8 @@ export interface JestNativeMatchers<R> {
   /**
    * Assert whether a host element is busy based on accessibility props.
    *
+   * This matcher will check ancestor elements for their disabled state as well.
+   *
    * @see
    * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobebusy)
    *
@@ -99,7 +101,7 @@ export interface JestNativeMatchers<R> {
   /**
    * Assert whether a host element is enabled based on accessibility props.
    *
-   * This matcher will check ancestor elements for their enabled state as well.
+   * This matcher will check ancestor elements for their disabled state as well.
    *
    * @see
    * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobeenabled)
