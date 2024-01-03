@@ -47,18 +47,10 @@ Create your two screens which we will transition to and from them. The homescree
 
 ```jsx
 import * as React from 'react';
-import {
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 
 export default function HomeScreen({ navigation }) {
-  const [items] = React.useState(
-    new Array(20).fill(null).map((_, idx) => idx + 1)
-  );
+  const [items] = React.useState(new Array(20).fill(null).map((_, idx) => idx + 1));
 
   const onOpacityPress = (item) => navigation.navigate('Details', item);
 
@@ -69,10 +61,7 @@ export default function HomeScreen({ navigation }) {
         keyExtractor={(_, idx) => `${idx}`}
         data={items}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => onOpacityPress(item)}
-            style={styles.row}
-          >
+          <TouchableOpacity onPress={() => onOpacityPress(item)} style={styles.row}>
             <Text>Item number {item}</Text>
           </TouchableOpacity>
         )}
@@ -251,10 +240,7 @@ function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Welcome!</Text>
-      <Button
-        onPress={() => navigation.navigate('Notifications')}
-        title="Go to notifications"
-      />
+      <Button onPress={() => navigation.navigate('Notifications')} title="Go to notifications" />
     </View>
   );
 }
@@ -353,9 +339,7 @@ describe('Testing react navigation', () => {
     expect(oldScreen).toBeOnTheScreen();
 
     fireEvent(button, 'press');
-    const newScreen = await screen.findByText(
-      'This is the notifications screen'
-    );
+    const newScreen = await screen.findByText('This is the notifications screen');
 
     expect(newScreen).toBeOnTheScreen();
   });

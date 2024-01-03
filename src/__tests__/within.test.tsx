@@ -18,9 +18,7 @@ test('within() exposes basic queries', async () => {
 
   expect(rootQueries.getAllByText('Same Text')).toHaveLength(2);
   expect(rootQueries.getAllByDisplayValue('Same Value')).toHaveLength(2);
-  expect(rootQueries.getAllByPlaceholderText('Same Placeholder')).toHaveLength(
-    2
-  );
+  expect(rootQueries.getAllByPlaceholderText('Same Placeholder')).toHaveLength(2);
 
   const firstQueries = within(rootQueries.getByA11yHint('first'));
   expect(firstQueries.getAllByText('Same Text')).toHaveLength(1);
@@ -29,12 +27,8 @@ test('within() exposes basic queries', async () => {
   expect(firstQueries.queryByText('Same Text')).toBeTruthy();
   expect(firstQueries.getByDisplayValue('Same Value')).toBeTruthy();
   expect(firstQueries.getByPlaceholderText('Same Placeholder')).toBeTruthy();
-  await expect(
-    firstQueries.findByDisplayValue('Same Value')
-  ).resolves.toBeTruthy();
-  await expect(
-    firstQueries.findAllByPlaceholderText('Same Placeholder')
-  ).resolves.toHaveLength(1);
+  await expect(firstQueries.findByDisplayValue('Same Value')).resolves.toBeTruthy();
+  await expect(firstQueries.findAllByPlaceholderText('Same Placeholder')).resolves.toHaveLength(1);
 
   const secondQueries = within(rootQueries.getByA11yHint('second'));
   expect(secondQueries.getAllByText('Same Text')).toHaveLength(1);
@@ -73,9 +67,7 @@ test('within() exposes a11y queries', async () => {
   expect(firstQueries.getByA11yHint('Same Hint')).toBeTruthy();
   expect(firstQueries.queryByLabelText('Same Label')).toBeTruthy();
   expect(firstQueries.queryByA11yHint('Same Hint')).toBeTruthy();
-  await expect(
-    firstQueries.findByLabelText('Same Label')
-  ).resolves.toBeTruthy();
+  await expect(firstQueries.findByLabelText('Same Label')).resolves.toBeTruthy();
   await expect(firstQueries.findByA11yHint('Same Hint')).resolves.toBeTruthy();
 
   const secondQueries = within(rootQueries.getByA11yHint('second'));
@@ -83,12 +75,8 @@ test('within() exposes a11y queries', async () => {
   expect(secondQueries.getAllByA11yHint('Same Hint')).toHaveLength(1);
   expect(secondQueries.queryAllByLabelText('Same Label')).toHaveLength(1);
   expect(secondQueries.queryAllByA11yHint('Same Hint')).toHaveLength(1);
-  await expect(
-    secondQueries.findAllByLabelText('Same Label')
-  ).resolves.toHaveLength(1);
-  await expect(
-    secondQueries.findAllByA11yHint('Same Hint')
-  ).resolves.toHaveLength(1);
+  await expect(secondQueries.findAllByLabelText('Same Label')).resolves.toHaveLength(1);
+  await expect(secondQueries.findAllByA11yHint('Same Hint')).resolves.toHaveLength(1);
 });
 
 test('getQueriesForElement is alias to within', () => {

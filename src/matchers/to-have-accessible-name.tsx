@@ -21,12 +21,7 @@ export function toHaveAccessibleName(
   } else {
     pass =
       expectedName != null
-        ? matches(
-            expectedName,
-            receivedName,
-            options?.normalizer,
-            options?.exact
-          )
+        ? matches(expectedName, receivedName, options?.normalizer, options?.exact)
         : false;
   }
 
@@ -35,14 +30,8 @@ export function toHaveAccessibleName(
     message: () => {
       return [
         formatMessage(
-          matcherHint(
-            `${this.isNot ? '.not' : ''}.toHaveAccessibleName`,
-            'element',
-            ''
-          ),
-          `Expected element ${
-            this.isNot ? 'not to' : 'to'
-          } have accessible name`,
+          matcherHint(`${this.isNot ? '.not' : ''}.toHaveAccessibleName`, 'element', ''),
+          `Expected element ${this.isNot ? 'not to' : 'to'} have accessible name`,
           expectedName,
           'Received',
           receivedName

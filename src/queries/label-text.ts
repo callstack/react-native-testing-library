@@ -45,9 +45,7 @@ export type ByLabelTextQueries = {
   findAllByLabelText: FindAllByQuery<TextMatch, ByLabelTextOptions>;
 };
 
-export const bindByLabelTextQueries = (
-  instance: ReactTestInstance
-): ByLabelTextQueries => ({
+export const bindByLabelTextQueries = (instance: ReactTestInstance): ByLabelTextQueries => ({
   getByLabelText: getBy(instance),
   getAllByLabelText: getAllBy(instance),
   queryByLabelText: queryBy(instance),

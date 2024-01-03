@@ -5,9 +5,9 @@ import ShallowRenderer from 'react-test-renderer/shallow'; // eslint-disable-lin
 /**
  * Renders test component shallowly using react-test-renderer/shallow
  */
-export function shallowInternal(
-  instance: ReactTestInstance | React.ReactElement<any>
-): { output: any } {
+export function shallowInternal(instance: ReactTestInstance | React.ReactElement<any>): {
+  output: any;
+} {
   const renderer = new (ShallowRenderer as any)();
 
   renderer.render(React.createElement(instance.type, instance.props));

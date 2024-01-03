@@ -27,11 +27,7 @@ const queryAllByTestId = (
   instance: ReactTestInstance
 ): QueryAllByQuery<TextMatch, ByTestIdOptions> =>
   function queryAllByTestIdFn(testId, queryOptions) {
-    return findAll(
-      instance,
-      (node) => matchTestId(node, testId, queryOptions),
-      queryOptions
-    );
+    return findAll(instance, (node) => matchTestId(node, testId, queryOptions), queryOptions);
   };
 
 const getMultipleError = (testId: TextMatch) =>
@@ -54,9 +50,7 @@ export type ByTestIdQueries = {
   findAllByTestId: FindAllByQuery<TextMatch, ByTestIdOptions>;
 };
 
-export const bindByTestIdQueries = (
-  instance: ReactTestInstance
-): ByTestIdQueries => ({
+export const bindByTestIdQueries = (instance: ReactTestInstance): ByTestIdQueries => ({
   getByTestId: getBy(instance),
   getAllByTestId: getAllBy(instance),
   queryByTestId: queryBy(instance),

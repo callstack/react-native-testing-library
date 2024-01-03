@@ -10,11 +10,7 @@ export default function Feature(props) {
     <div className={classnames('col col--4', styles.feature)}>
       {imgUrl && (
         <div className="text--center">
-          <img
-            className={styles['feature-image']}
-            src={imgUrl}
-            alt={props.title}
-          />
+          <img className={styles['feature-image']} src={imgUrl} alt={props.title} />
         </div>
       )}
 

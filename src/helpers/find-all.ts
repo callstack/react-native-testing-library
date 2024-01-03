@@ -22,18 +22,14 @@ export function findAll(
   const results = findAllInternal(root, predicate, options);
 
   const includeHiddenElements =
-    options?.includeHiddenElements ??
-    options?.hidden ??
-    getConfig()?.defaultIncludeHiddenElements;
+    options?.includeHiddenElements ?? options?.hidden ?? getConfig()?.defaultIncludeHiddenElements;
 
   if (includeHiddenElements) {
     return results;
   }
 
   const cache = new WeakMap<ReactTestInstance>();
-  return results.filter(
-    (element) => !isHiddenFromAccessibility(element, { cache })
-  );
+  return results.filter((element) => !isHiddenFromAccessibility(element, { cache }));
 }
 
 // Extracted from React Test Renderer

@@ -30,9 +30,7 @@ test('allows rerendering', () => {
           return [right, setRight];
 
         default:
-          throw new Error(
-            'No Props passed. This is a bug in the implementation'
-          );
+          throw new Error('No Props passed. This is a bug in the implementation');
       }
     },
     { initialProps: { branch: 'left' } }
@@ -67,12 +65,9 @@ const useMyHook = (param: number | undefined) => {
 };
 
 test('props type is infered correctly when initial props is defined', () => {
-  const { result, rerender } = renderHook(
-    (num: number | undefined) => useMyHook(num),
-    {
-      initialProps: 5,
-    }
-  );
+  const { result, rerender } = renderHook((num: number | undefined) => useMyHook(num), {
+    initialProps: 5,
+  });
 
   expect(result.current).toBe(5);
 
@@ -82,12 +77,9 @@ test('props type is infered correctly when initial props is defined', () => {
 });
 
 test('props type is inferred correctly when initial props is explicitly undefined', () => {
-  const { result, rerender } = renderHook(
-    (num: number | undefined) => useMyHook(num),
-    {
-      initialProps: undefined,
-    }
-  );
+  const { result, rerender } = renderHook((num: number | undefined) => useMyHook(num), {
+    initialProps: undefined,
+  });
 
   expect(result.current).toBeUndefined();
 

@@ -22,14 +22,12 @@ export default function Home() {
       },
       {
         title: 'Reliable',
-        description:
-          'Promotes testing public APIs and avoiding implementation details',
+        description: 'Promotes testing public APIs and avoiding implementation details',
         imgUrl: 'img/hit.png',
       },
       {
         title: 'Community Driven',
-        description:
-          'Supported by React Native community and its core contributors',
+        description: 'Supported by React Native community and its core contributors',
         imgUrl: 'img/locomotive.png',
       },
     ];
@@ -48,10 +46,7 @@ export default function Home() {
     <Layout title={`${siteConfig.title}`} description={siteConfig.tagline}>
       <main>
         <div className={classnames(styles.container__inner)}>
-          <img
-            src={`${siteConfig.baseUrl}img/owl.png`}
-            className={styles.logo}
-          />
+          <img src={`${siteConfig.baseUrl}img/owl.png`} className={styles.logo} />
           <h1 className={styles.title}>{siteConfig.title}</h1>
           <p className={styles.subtitle}>{siteConfig.tagline}</p>
           <a
@@ -62,9 +57,7 @@ export default function Home() {
             Get Started
           </a>
 
-          <div
-            className={classnames('container', styles['features-container'])}
-          >
+          <div className={classnames('container', styles['features-container'])}>
             {renderFeatures()}
           </div>
           <div>
@@ -72,8 +65,7 @@ export default function Home() {
             <a href="https://callstack.com/careers/?utm_campaign=Senior_RN&utm_source=github&utm_medium=readme">
               Join the team
             </a>{' '}
-            who does amazing stuff for clients and drives React Native Open
-            Source! 🔥
+            who does amazing stuff for clients and drives React Native Open Source! 🔥
           </div>
         </div>
       </main>

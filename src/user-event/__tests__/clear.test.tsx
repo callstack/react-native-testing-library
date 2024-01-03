@@ -154,9 +154,7 @@ describe('clear()', () => {
       'blur',
     ]);
 
-    expect(events).toMatchSnapshot(
-      'value: "Hello World!\nHow are you?" multiline: true,'
-    );
+    expect(events).toMatchSnapshot('value: "Hello World!\nHow are you?" multiline: true,');
   });
 
   it('works when not all events have handlers', async () => {

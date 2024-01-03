@@ -10,27 +10,11 @@ interface SectionData {
 const sections: SectionData[] = [
   {
     title: 'Main dishes',
-    data: [
-      'Pizza',
-      'Burger',
-      'Risotto',
-      'Pasta',
-      'Fish',
-      'Chicken',
-      'Beef',
-      'Dumplings',
-    ],
+    data: ['Pizza', 'Burger', 'Risotto', 'Pasta', 'Fish', 'Chicken', 'Beef', 'Dumplings'],
   },
   {
     title: 'Sides',
-    data: [
-      'French Fries',
-      'Onion Rings',
-      'Fried Shrimps',
-      'Potatoes',
-      'Salad',
-      'Garlic Bread',
-    ],
+    data: ['French Fries', 'Onion Rings', 'Fried Shrimps', 'Potatoes', 'Salad', 'Garlic Bread'],
   },
   {
     title: 'Drinks',

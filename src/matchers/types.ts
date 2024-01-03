@@ -288,6 +288,5 @@ declare global {
 // Explicit `@jest/globals` `expect` matchers.
 // @ts-ignore
 declare module '@jest/expect' {
-  interface Matchers<R extends void | Promise<void>>
-    extends JestNativeMatchers<R> {}
+  interface Matchers<R extends void | Promise<void>> extends JestNativeMatchers<R> {}
 }

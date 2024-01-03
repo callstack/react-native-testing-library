@@ -8,10 +8,7 @@ import {
 import { ErrorWithStack } from '../helpers/errors';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBePartiallyChecked(
-  this: jest.MatcherContext,
-  element: ReactTestInstance
-) {
+export function toBePartiallyChecked(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBePartiallyChecked, this);
 
   if (!hasValidAccessibilityRole(element)) {
@@ -26,11 +23,7 @@ export function toBePartiallyChecked(
     message: () => {
       const is = this.isNot ? 'is' : 'is not';
       return [
-        matcherHint(
-          `${this.isNot ? '.not' : ''}.toBePartiallyChecked`,
-          'element',
-          ''
-        ),
+        matcherHint(`${this.isNot ? '.not' : ''}.toBePartiallyChecked`, 'element', ''),
         '',
         `Received element ${is} partially checked:`,
         formatElement(element),

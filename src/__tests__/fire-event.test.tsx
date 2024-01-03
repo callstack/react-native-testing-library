@@ -58,9 +58,7 @@ const CustomEventComponentWithCustomName = ({
 describe('fireEvent', () => {
   test('should invoke specified event', () => {
     const onPressMock = jest.fn();
-    const { getByText } = render(
-      <OnPressComponent onPress={onPressMock} text="Press me" />
-    );
+    const { getByText } = render(<OnPressComponent onPress={onPressMock} text="Press me" />);
 
     fireEvent(getByText('Press me'), 'press');
 
@@ -70,9 +68,7 @@ describe('fireEvent', () => {
   test('should invoke specified event on parent element', () => {
     const onPressMock = jest.fn();
     const text = 'New press text';
-    const { getByText } = render(
-      <OnPressComponent onPress={onPressMock} text={text} />
-    );
+    const { getByText } = render(<OnPressComponent onPress={onPressMock} text={text} />);
 
     fireEvent(getByText(text), 'press');
     expect(onPressMock).toHaveBeenCalled();
@@ -113,9 +109,7 @@ test('fireEvent.press', () => {
       pageY: 30,
     },
   };
-  const { getByText } = render(
-    <OnPressComponent onPress={onPressMock} text={text} />
-  );
+  const { getByText } = render(<OnPressComponent onPress={onPressMock} text={text} />);
 
   fireEvent.press(getByText(text), eventData);
 
@@ -149,17 +143,11 @@ test('fireEvent.changeText', () => {
 
   const { getByPlaceholderText } = render(
     <View>
-      <TextInput
-        placeholder="Customer placeholder"
-        onChangeText={onChangeTextMock}
-      />
+      <TextInput placeholder="Customer placeholder" onChangeText={onChangeTextMock} />
     </View>
   );
 
-  fireEvent.changeText(
-    getByPlaceholderText('Customer placeholder'),
-    CHANGE_TEXT
-  );
+  fireEvent.changeText(getByPlaceholderText('Customer placeholder'), CHANGE_TEXT);
 
   expect(onChangeTextMock).toHaveBeenCalledWith(CHANGE_TEXT);
 });
@@ -167,9 +155,7 @@ test('fireEvent.changeText', () => {
 test('custom component with custom event name', () => {
   const handlePress = jest.fn();
 
-  const { getByText } = render(
-    <CustomEventComponentWithCustomName handlePress={handlePress} />
-  );
+  const { getByText } = render(<CustomEventComponentWithCustomName handlePress={handlePress} />);
 
   fireEvent(getByText('Custom component'), 'handlePress');
 
@@ -179,9 +165,7 @@ test('custom component with custom event name', () => {
 test('event with multiple handler parameters', () => {
   const handlePress = jest.fn();
 
-  const { getByText } = render(
-    <CustomEventComponentWithCustomName handlePress={handlePress} />
-  );
+  const { getByText } = render(<CustomEventComponentWithCustomName handlePress={handlePress} />);
 
   fireEvent(getByText('Custom component'), 'handlePress', 'param1', 'param2');
 
@@ -305,9 +289,7 @@ test('should fire non-pointer events inside View with pointerEvents="box-none"',
 
 test('should fire non-touch events inside View with pointerEvents="box-none"', () => {
   const onLayout = jest.fn();
-  const screen = render(
-    <View testID="view" pointerEvents="box-none" onLayout={onLayout} />
-  );
+  const screen = render(<View testID="view" pointerEvents="box-none" onLayout={onLayout} />);
 
   fireEvent(screen.getByTestId('view'), 'layout');
   expect(onLayout).toHaveBeenCalled();
@@ -371,9 +353,7 @@ const TestComponent = ({ onPress }: TestComponentProps) => {
 
 test('is not fooled by non-native disabled prop', () => {
   const handlePress = jest.fn();
-  const screen = render(
-    <TestComponent onPress={handlePress} disabled={true} />
-  );
+  const screen = render(<TestComponent onPress={handlePress} disabled={true} />);
 
   fireEvent.press(screen.getByText('Trigger Test'));
   expect(handlePress).toHaveBeenCalledTimes(1);
@@ -383,10 +363,7 @@ type TestChildTouchableComponentProps = {
   onPress: () => void;
   someProp: boolean;
 };
-function TestChildTouchableComponent({
-  onPress,
-  someProp,
-}: TestChildTouchableComponentProps) {
+function TestChildTouchableComponent({ onPress, someProp }: TestChildTouchableComponentProps) {
   return (
     <View>
       <TouchableOpacity onPress={onPress} disabled={someProp}>
@@ -460,10 +437,7 @@ describe('native events', () => {
   test('triggers onMomentumScrollBegin', () => {
     const onMomentumScrollBeginSpy = jest.fn();
     const { getByTestId } = render(
-      <ScrollView
-        testID="test-id"
-        onMomentumScrollBegin={onMomentumScrollBeginSpy}
-      />
+      <ScrollView testID="test-id" onMomentumScrollBegin={onMomentumScrollBeginSpy} />
     );
 
     fireEvent(getByTestId('test-id'), 'onMomentumScrollBegin');
@@ -473,10 +447,7 @@ describe('native events', () => {
   test('triggers onMomentumScrollEnd', () => {
     const onMomentumScrollEndSpy = jest.fn();
     const { getByTestId } = render(
-      <ScrollView
-        testID="test-id"
-        onMomentumScrollEnd={onMomentumScrollEndSpy}
-      />
+      <ScrollView testID="test-id" onMomentumScrollEnd={onMomentumScrollEndSpy} />
     );
 
     fireEvent(getByTestId('test-id'), 'onMomentumScrollEnd');

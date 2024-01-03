@@ -25,10 +25,6 @@ test('Changing screens', () => {
   expect(screen.getByRole('button', { name: 'Settings' })).toBeSelected();
 
   // Assert visible screen
-  expect(
-    screen.getByRole('header', { name: 'Settings screen' })
-  ).toBeOnTheScreen();
-  expect(
-    screen.queryByRole('header', { name: 'Home screen' })
-  ).not.toBeOnTheScreen();
+  expect(screen.getByRole('header', { name: 'Settings screen' })).toBeOnTheScreen();
+  expect(screen.queryByRole('header', { name: 'Home screen' })).not.toBeOnTheScreen();
 });

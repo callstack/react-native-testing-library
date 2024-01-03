@@ -10,15 +10,17 @@ export function createScrollSteps(
   interpolator: InterpolatorFn
 ): ContentOffset[] {
   if (target.y != null) {
-    return interpolator(target.y, initialOffset.y, DEFAULT_STEPS_COUNT).map(
-      (y) => ({ y, x: initialOffset.x })
-    );
+    return interpolator(target.y, initialOffset.y, DEFAULT_STEPS_COUNT).map((y) => ({
+      y,
+      x: initialOffset.x,
+    }));
   }
 
   if (target.x != null) {
-    return interpolator(target.x, initialOffset.x, DEFAULT_STEPS_COUNT).map(
-      (x) => ({ x, y: initialOffset.y })
-    );
+    return interpolator(target.x, initialOffset.x, DEFAULT_STEPS_COUNT).map((x) => ({
+      x,
+      y: initialOffset.y,
+    }));
   }
 
   return [];
@@ -27,11 +29,7 @@ export function createScrollSteps(
 /**
  * Generate linear scroll values (with equal steps).
  */
-export function linearInterpolator(
-  end: number,
-  start: number,
-  steps: number
-): number[] {
+export function linearInterpolator(end: number, start: number, steps: number): number[] {
   if (end === start) {
     return [end, start];
   }
@@ -47,11 +45,7 @@ export function linearInterpolator(
 /**
  * Generate inertial scroll values (exponentially slowing down).
  */
-export function inertialInterpolator(
-  end: number,
-  start: number,
-  steps: number
-): number[] {
+export function inertialInterpolator(end: number, start: number, steps: number): number[] {
   if (end === start) {
     return [end, start];
   }

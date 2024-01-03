@@ -15,10 +15,7 @@ describe('userEvent.longPress with fake timers', () => {
     const user = userEvent.setup();
 
     render(
-      <Pressable
-        onPress={logEvent('press')}
-        onLongPress={logEvent('longPress')}
-      >
+      <Pressable onPress={logEvent('press')} onLongPress={logEvent('longPress')}>
         <Text>press me</Text>
       </Pressable>
     );
@@ -33,11 +30,7 @@ describe('userEvent.longPress with fake timers', () => {
     const user = userEvent.setup();
 
     render(
-      <Pressable
-        delayLongPress={800}
-        onLongPress={mockOnLongPress}
-        onPress={mockOnPress}
-      >
+      <Pressable delayLongPress={800} onLongPress={mockOnLongPress} onPress={mockOnPress}>
         <Text>press me</Text>
       </Pressable>
     );
@@ -56,11 +49,7 @@ describe('userEvent.longPress with fake timers', () => {
     const user = userEvent.setup();
 
     render(
-      <Pressable
-        delayLongPress={1000}
-        onLongPress={mockOnLongPress}
-        onPress={mockOnPress}
-      >
+      <Pressable delayLongPress={1000} onLongPress={mockOnLongPress} onPress={mockOnPress}>
         <Text>press me</Text>
       </Pressable>
     );

@@ -11,9 +11,7 @@ import { checkReactVersionAtLeast } from '../react-versions';
  * @param callback Async callback to run
  * @returns Result of the callback
  */
-export async function wrapAsync<Result>(
-  callback: () => Promise<Result>
-): Promise<Result> {
+export async function wrapAsync<Result>(callback: () => Promise<Result>): Promise<Result> {
   if (checkReactVersionAtLeast(18, 0)) {
     const previousActEnvironment = getIsReactActEnvironment();
     setReactActEnvironment(false);

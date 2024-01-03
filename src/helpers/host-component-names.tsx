@@ -49,9 +49,7 @@ function detectHostComponentNames(): HostComponentNames {
     };
   } catch (error) {
     const errorMessage =
-      error && typeof error === 'object' && 'message' in error
-        ? error.message
-        : null;
+      error && typeof error === 'object' && 'message' in error ? error.message : null;
 
     throw new Error(
       `Trying to detect host component names triggered the following error:\n\n${errorMessage}\n\n${userConfigErrorMessage}`
@@ -75,9 +73,7 @@ function getByTestId(instance: ReactTestInstance, testID: string) {
  * Checks if the given element is a host Text.
  * @param element The element to check.
  */
-export function isHostText(
-  element?: ReactTestInstance | null
-): element is HostTestInstance {
+export function isHostText(element?: ReactTestInstance | null): element is HostTestInstance {
   return element?.type === getHostComponentNames().text;
 }
 
@@ -85,9 +81,7 @@ export function isHostText(
  * Checks if the given element is a host TextInput.
  * @param element The element to check.
  */
-export function isHostTextInput(
-  element?: ReactTestInstance | null
-): element is HostTestInstance {
+export function isHostTextInput(element?: ReactTestInstance | null): element is HostTestInstance {
   return element?.type === getHostComponentNames().textInput;
 }
 
@@ -95,9 +89,7 @@ export function isHostTextInput(
  * Checks if the given element is a host ScrollView.
  * @param element The element to check.
  */
-export function isHostScrollView(
-  element?: ReactTestInstance | null
-): element is HostTestInstance {
+export function isHostScrollView(element?: ReactTestInstance | null): element is HostTestInstance {
   return element?.type === getHostComponentNames().scrollView;
 }
 
@@ -105,8 +97,6 @@ export function isHostScrollView(
  * Checks if the given element is a host Modal.
  * @param element The element to check.
  */
-export function isHostModal(
-  element?: ReactTestInstance | null
-): element is HostTestInstance {
+export function isHostModal(element?: ReactTestInstance | null): element is HostTestInstance {
   return element?.type === getHostComponentNames().modal;
 }

@@ -19,10 +19,7 @@ export const prepareErrorMessage = (
   let errorMessage: string;
   if (error instanceof Error) {
     // Strip info about custom predicate
-    errorMessage = error.message.replace(
-      / matching custom predicate[^]*/gm,
-      ''
-    );
+    errorMessage = error.message.replace(/ matching custom predicate[^]*/gm, '');
   } else if (error && typeof error === 'object') {
     errorMessage = error.toString();
   } else {
@@ -35,10 +32,7 @@ export const prepareErrorMessage = (
   return errorMessage;
 };
 
-export const createQueryByError = (
-  error: unknown,
-  callsite: Function
-): null => {
+export const createQueryByError = (error: unknown, callsite: Function): null => {
   if (error instanceof Error) {
     if (error.message.includes('No instances found')) {
       return null;
@@ -49,18 +43,13 @@ export const createQueryByError = (
   throw new ErrorWithStack(
     // generic refining of `unknown` is very hard, you cannot do `'toString' in error` or anything like that
     // Converting as any with extra safe optional chaining will do the job just as well
-    `Query: caught unknown error type: ${typeof error}, value: ${(
-      error as any
-    )?.toString?.()}`,
+    `Query: caught unknown error type: ${typeof error}, value: ${(error as any)?.toString?.()}`,
     callsite
   );
 };
 
 export function copyStackTrace(target: unknown, stackTraceSource: Error) {
   if (target instanceof Error && stackTraceSource.stack) {
-    target.stack = stackTraceSource.stack.replace(
-      stackTraceSource.message,
-      target.message
-    );
+    target.stack = stackTraceSource.stack.replace(stackTraceSource.message, target.message);
   }
 }

@@ -2,6 +2,7 @@
 id: migration-v11
 title: Migration to 11.0
 ---
+
 import TOCInline from '@theme/TOCInline';
 
 Migration to React Native Testing Library version 11 from version 9.x or 10.x should be a relatively easy task due small amount of breaking changes.
@@ -23,7 +24,7 @@ function findByText(text: TextMatch, waitForOptions?: WaitForOptions)
 function findAllByText(text: TextMatch, waitForOptions?: WaitForOptions)
 ```
 
-to 
+to
 
 ```ts
 function findByText(text: TextMatch, options?: TextMatchOptions, waitForOptions?: WaitForOptions)
@@ -35,33 +36,33 @@ In order to facilitate transition, in version 9 and 10, we provided a temporary 
 This change is easy to implement:
 
 ```ts
-findByText(/Text/, { timeout: 1000 })
+findByText(/Text/, { timeout: 1000 });
 ```
 
 should become
 
 ```ts
-findByText(/Text/, {}, { timeout: 1000 })
+findByText(/Text/, {}, { timeout: 1000 });
 ```
 
 ### Triggering non-touch events on targets with `pointerEvents="box-none"` prop
 
-Up to version 10, RNTL disables all events for a target with `pointerEvents="box-none"`. This behavior is counter to how React Native itself functions. 
+Up to version 10, RNTL disables all events for a target with `pointerEvents="box-none"`. This behavior is counter to how React Native itself functions.
 
 From version 11, RNTL continues to disable `press` event for these targets but allows triggering other events, e.g. `layout`.
 
 ## All changes
 
-* chore(breaking): update Jest to 28 by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1008
-* refactor(breaking): remove legacy wait for options support by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1018
-* refactor(breaking): remove `byA11yStates` queries by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1015
-* chore: update react-native to 0.69.1 by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1010
-* chore: update deps @types for react/react-native by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1013
-* feat: Trigger non-touch events on box-none targets by @dcalhoun in https://github.com/callstack/react-native-testing-library/pull/906
-* docs: create document describing act function and related errors by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/969
-* chore: Organise a11y queries by predicate by @MattAgn in https://github.com/callstack/react-native-testing-library/pull/977
-* chore: reenable skipped byText tests by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1017
+- chore(breaking): update Jest to 28 by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1008
+- refactor(breaking): remove legacy wait for options support by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1018
+- refactor(breaking): remove `byA11yStates` queries by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1015
+- chore: update react-native to 0.69.1 by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1010
+- chore: update deps @types for react/react-native by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1013
+- feat: Trigger non-touch events on box-none targets by @dcalhoun in https://github.com/callstack/react-native-testing-library/pull/906
+- docs: create document describing act function and related errors by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/969
+- chore: Organise a11y queries by predicate by @MattAgn in https://github.com/callstack/react-native-testing-library/pull/977
+- chore: reenable skipped byText tests by @mdjastrzebski in https://github.com/callstack/react-native-testing-library/pull/1017
 
 ## Full Changelog
-https://github.com/callstack/react-native-testing-library/compare/v10.1.1...v11.0.0
 
+https://github.com/callstack/react-native-testing-library/compare/v10.1.1...v11.0.0

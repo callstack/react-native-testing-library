@@ -6,10 +6,7 @@ import { getHostParent } from '../helpers/component-tree';
 import { isHostModal } from '../helpers/host-component-names';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeVisible(
-  this: jest.MatcherContext,
-  element: ReactTestInstance
-) {
+export function toBeVisible(this: jest.MatcherContext, element: ReactTestInstance) {
   if (element !== null || !this.isNot) {
     checkHostElement(element, toBeVisible, this);
   }

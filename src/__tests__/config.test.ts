@@ -1,9 +1,4 @@
-import {
-  getConfig,
-  configure,
-  resetToDefaults,
-  configureInternal,
-} from '../config';
+import { getConfig, configure, resetToDefaults, configureInternal } from '../config';
 
 test('getConfig() returns existing configuration', () => {
   expect(getConfig().asyncUtilTimeout).toEqual(1000);

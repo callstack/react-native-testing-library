@@ -27,9 +27,7 @@ export function toHaveProp(
         'element',
         printExpected(name),
         {
-          secondArgument: isExpectedValueDefined
-            ? printExpected(expectedValue)
-            : undefined,
+          secondArgument: isExpectedValueDefined ? printExpected(expectedValue) : undefined,
         }
       );
       return formatMessage(

@@ -84,11 +84,7 @@ describe('type() for managed TextInput', () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
     const { events, logEvent } = createEventLogger();
     const screen = render(
-      <ManagedTextInput
-        initialValue="XXX"
-        logEvent={logEvent}
-        valueTransformer={() => 'XXX'}
-      />
+      <ManagedTextInput initialValue="XXX" logEvent={logEvent} valueTransformer={() => 'XXX'} />
     );
 
     const user = userEvent.setup();

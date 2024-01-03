@@ -12,9 +12,7 @@ export function TodoList(props) {
     <FlatList
       data={props.todos}
       keyExtractor={(todo) => todo.id.toString()}
-      renderItem={({ item }) => (
-        <TodoElem todo={item} onDelete={onDeleteTodo} />
-      )}
+      renderItem={({ item }) => <TodoElem todo={item} onDelete={onDeleteTodo} />}
     />
   );
 }
@@ -23,7 +21,6 @@ const mapStateToProps = (state) => ({
   todos: state.todos,
 });
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ removeTodo }, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ removeTodo }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoList);

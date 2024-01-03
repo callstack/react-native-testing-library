@@ -28,9 +28,7 @@ class BananaContainer extends React.Component<{}, any> {
   };
 
   render() {
-    return (
-      <Banana onChangeFresh={this.onChangeFresh} fresh={this.state.fresh} />
-    );
+    return <Banana onChangeFresh={this.onChangeFresh} fresh={this.state.fresh} />;
   }
 }
 
@@ -55,9 +53,7 @@ test('waits for element until timeout is met', async () => {
 
   fireEvent.press(getByText('Change freshness!'));
 
-  await expect(
-    waitFor(() => getByText('Fresh'), { timeout: 100 })
-  ).rejects.toThrow();
+  await expect(waitFor(() => getByText('Fresh'), { timeout: 100 })).rejects.toThrow();
 
   // Async action ends after 300ms and we only waited 100ms, so we need to wait
   // for the remaining async actions to finish
@@ -81,9 +77,7 @@ test('waitFor timeout option takes precendence over `asyncWaitTimeout` config op
   const { getByText } = render(<BananaContainer />);
 
   fireEvent.press(getByText('Change freshness!'));
-  await expect(
-    waitFor(() => getByText('Fresh'), { timeout: 100 })
-  ).rejects.toThrow();
+  await expect(waitFor(() => getByText('Fresh'), { timeout: 100 })).rejects.toThrow();
 
   // Async action ends after 300ms and we only waited 100ms, so we need to wait
   // for the remaining async actions to finish
@@ -235,9 +229,7 @@ test.each([true, false])(
     // Verify that the `waitFor` callback has been called the expected number of times
     // (timeout / interval + 1), so it confirms that the real duration of callback did not
     // cause the real clock timeout when running using fake timers.
-    expect(mockErrorFn).toHaveBeenCalledTimes(
-      WAIT_FOR_TIMEOUT / WAIT_FOR_INTERVAL + 1
-    );
+    expect(mockErrorFn).toHaveBeenCalledTimes(WAIT_FOR_TIMEOUT / WAIT_FOR_INTERVAL + 1);
   }
 );
 
@@ -321,7 +313,5 @@ test('waitFor throws if expectation is not a function', async () => {
   await expect(
     // @ts-expect-error intentionally passing non-function
     waitFor('not a function')
-  ).rejects.toThrowErrorMatchingInlineSnapshot(
-    `"Received \`expectation\` arg must be a function"`
-  );
+  ).rejects.toThrowErrorMatchingInlineSnapshot(`"Received \`expectation\` arg must be a function"`);
 });

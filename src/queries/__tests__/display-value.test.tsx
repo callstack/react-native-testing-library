@@ -50,8 +50,7 @@ test('getByDisplayValue, queryByDisplayValue', () => {
 
 test('getByDisplayValue, queryByDisplayValue get element by default value only when value is undefined', () => {
   const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
-  expect(() => getByDisplayValue(DEFAULT_INPUT_CHEF))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => getByDisplayValue(DEFAULT_INPUT_CHEF)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: What did you inspect?
 
     <View>
@@ -122,16 +121,10 @@ test('getAllByDisplayValue, queryAllByDisplayValue', () => {
 
 test('findBy queries work asynchronously', async () => {
   const options = { timeout: 10 }; // Short timeout so that this test runs quickly
-  const { rerender, findByDisplayValue, findAllByDisplayValue } = render(
-    <View />
-  );
+  const { rerender, findByDisplayValue, findAllByDisplayValue } = render(<View />);
 
-  await expect(
-    findByDisplayValue('Display Value', {}, options)
-  ).rejects.toBeTruthy();
-  await expect(
-    findAllByDisplayValue('Display Value', {}, options)
-  ).rejects.toBeTruthy();
+  await expect(findByDisplayValue('Display Value', {}, options)).rejects.toBeTruthy();
+  await expect(findAllByDisplayValue('Display Value', {}, options)).rejects.toBeTruthy();
 
   setTimeout(
     () =>
@@ -152,14 +145,10 @@ test('byDisplayValue queries support hidden option', () => {
     <TextInput value="hidden" style={{ display: 'none' }} />
   );
 
-  expect(
-    getByDisplayValue('hidden', { includeHiddenElements: true })
-  ).toBeTruthy();
+  expect(getByDisplayValue('hidden', { includeHiddenElements: true })).toBeTruthy();
 
   expect(queryByDisplayValue('hidden')).toBeFalsy();
-  expect(
-    queryByDisplayValue('hidden', { includeHiddenElements: false })
-  ).toBeFalsy();
+  expect(queryByDisplayValue('hidden', { includeHiddenElements: false })).toBeFalsy();
   expect(() => getByDisplayValue('hidden', { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: hidden
@@ -192,8 +181,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => view.getAllByDisplayValue('2'))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getAllByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
     <TextInput
@@ -201,8 +189,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findByDisplayValue('2')).rejects
-    .toThrowErrorMatchingInlineSnapshot(`
+  await expect(view.findByDisplayValue('2')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
     <TextInput
@@ -210,8 +197,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findAllByDisplayValue('2')).rejects
-    .toThrowErrorMatchingInlineSnapshot(`
+  await expect(view.findAllByDisplayValue('2')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
     <TextInput

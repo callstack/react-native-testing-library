@@ -5,10 +5,7 @@ import { isTextInputEditable } from '../helpers/text-input';
 import { getHostParent } from '../helpers/component-tree';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeDisabled(
-  this: jest.MatcherContext,
-  element: ReactTestInstance
-) {
+export function toBeDisabled(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeDisabled, this);
 
   const isDisabled = isElementDisabled(element) || isAncestorDisabled(element);
@@ -27,10 +24,7 @@ export function toBeDisabled(
   };
 }
 
-export function toBeEnabled(
-  this: jest.MatcherContext,
-  element: ReactTestInstance
-) {
+export function toBeEnabled(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeEnabled, this);
 
   const isEnabled = !isElementDisabled(element) && !isAncestorDisabled(element);

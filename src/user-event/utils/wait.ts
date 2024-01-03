@@ -7,9 +7,7 @@ export function wait(config: UserEventConfig, durationInMs?: number) {
   }
 
   return Promise.all([
-    new Promise<void>((resolve) =>
-      globalThis.setTimeout(() => resolve(), delay)
-    ),
+    new Promise<void>((resolve) => globalThis.setTimeout(() => resolve(), delay)),
     config.advanceTimers(delay),
   ]);
 }

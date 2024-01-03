@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, View, Text, TextInput, Pressable, ActivityIndicator } from 'react-native';
 
 type Props = {
   onLoginSuccess: (user: string) => void;
@@ -84,10 +77,7 @@ export function LoginForm({ onLoginSuccess }: Props) {
  * @param password The password to authenticate.
  * @returns username if the username and password are correct, null otherwise.
  */
-async function authUser(
-  username: string,
-  password: string
-): Promise<string | null> {
+async function authUser(username: string, password: string): Promise<string | null> {
   return new Promise((resolve) =>
     setTimeout(() => {
       const hasValidCredentials = username === 'admin' && password === 'admin1';

@@ -44,8 +44,7 @@ test('toBePartiallyCheck() with checkbox role', () => {
   expect(unchecked).not.toBePartiallyChecked();
   expect(defaultView).not.toBePartiallyChecked();
 
-  expect(() => expect(mixed).not.toBePartiallyChecked())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(mixed).not.toBePartiallyChecked()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBePartiallyChecked()
 
     Received element is partially checked:
@@ -61,8 +60,7 @@ test('toBePartiallyCheck() with checkbox role', () => {
       />"
   `);
 
-  expect(() => expect(checked).toBePartiallyChecked())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(checked).toBePartiallyChecked()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBePartiallyChecked()
 
     Received element is not partially checked:
@@ -77,8 +75,7 @@ test('toBePartiallyCheck() with checkbox role', () => {
         testID="checkbox-checked"
       />"
   `);
-  expect(() => expect(defaultView).toBePartiallyChecked())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(defaultView).toBePartiallyChecked()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBePartiallyChecked()
 
     Received element is not partially checked:
@@ -96,14 +93,10 @@ test('toBeCheck() with radio role', () => {
   const checked = screen.getByTestId('radio-checked');
   const mixed = screen.getByTestId('radio-mixed');
 
-  expect(() =>
-    expect(checked).toBePartiallyChecked()
-  ).toThrowErrorMatchingInlineSnapshot(
+  expect(() => expect(checked).toBePartiallyChecked()).toThrowErrorMatchingInlineSnapshot(
     `"toBePartiallyChecked() works only on accessibility elements with "checkbox" role."`
   );
-  expect(() =>
-    expect(mixed).toBePartiallyChecked()
-  ).toThrowErrorMatchingInlineSnapshot(
+  expect(() => expect(mixed).toBePartiallyChecked()).toThrowErrorMatchingInlineSnapshot(
     `"toBePartiallyChecked() works only on accessibility elements with "checkbox" role."`
   );
 });

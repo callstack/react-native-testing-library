@@ -24,20 +24,11 @@ export function toHaveDisplayValue(
   const receivedValue = getTextInputValue(element);
 
   return {
-    pass: matches(
-      expectedValue,
-      receivedValue,
-      options?.normalizer,
-      options?.exact
-    ),
+    pass: matches(expectedValue, receivedValue, options?.normalizer, options?.exact),
     message: () => {
       return [
         formatMessage(
-          matcherHint(
-            `${this.isNot ? '.not' : ''}.toHaveDisplayValue`,
-            'element',
-            ''
-          ),
+          matcherHint(`${this.isNot ? '.not' : ''}.toHaveDisplayValue`, 'element', ''),
           `Expected element ${this.isNot ? 'not to' : 'to'} have display value`,
           expectedValue,
           'Received',

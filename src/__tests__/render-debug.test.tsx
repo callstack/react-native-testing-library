@@ -68,9 +68,7 @@ class Banana extends React.Component<any, { fresh: boolean }> {
     return (
       <View>
         <Text>Is the banana fresh?</Text>
-        <Text testID="bananaFresh">
-          {this.state.fresh ? 'fresh' : 'not fresh'}
-        </Text>
+        <Text testID="bananaFresh">{this.state.fresh ? 'fresh' : 'not fresh'}</Text>
         <TextInput
           testID="bananaCustomFreshness"
           placeholder={PLACEHOLDER_FRESHNESS}
@@ -106,16 +104,10 @@ test('debug', () => {
 
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
-  expect(stripAnsi(mockCalls[1][0] + mockCalls[1][1])).toMatchSnapshot(
-    'with message'
-  );
+  expect(stripAnsi(mockCalls[1][0] + mockCalls[1][1])).toMatchSnapshot('with message');
   expect(stripAnsi(mockCalls[2][0])).toMatchSnapshot('shallow');
-  expect(stripAnsi(mockCalls[3][0] + mockCalls[3][1])).toMatchSnapshot(
-    'shallow with message'
-  );
-  expect(stripAnsi(mockCalls[4][0] + mockCalls[4][1])).toMatchSnapshot(
-    'another custom message'
-  );
+  expect(stripAnsi(mockCalls[3][0] + mockCalls[3][1])).toMatchSnapshot('shallow with message');
+  expect(stripAnsi(mockCalls[4][0] + mockCalls[4][1])).toMatchSnapshot('another custom message');
 
   const mockWarnCalls = (console.warn as any as ConsoleLogMock).mock.calls;
   expect(mockWarnCalls[0]).toEqual([

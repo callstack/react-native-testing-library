@@ -162,9 +162,7 @@ describe('type()', () => {
       'blur',
     ]);
 
-    expect(events).toMatchSnapshot(
-      'input: "{Backspace}a", defaultValue: "xxx"'
-    );
+    expect(events).toMatchSnapshot('input: "{Backspace}a", defaultValue: "xxx"');
   });
 
   it('supports multiline', async () => {
@@ -265,12 +263,7 @@ describe('type()', () => {
     await user.type(screen.getByTestId('input'), 'abc');
 
     const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
-      'changeText',
-      'changeText',
-      'changeText',
-      'endEditing',
-    ]);
+    expect(eventNames).toEqual(['changeText', 'changeText', 'changeText', 'endEditing']);
 
     expect(events).toMatchSnapshot('input: "abc"');
   });
@@ -326,12 +319,6 @@ describe('type()', () => {
     await userEvent.type(screen.getByTestId('input'), 'abc');
 
     const eventNames = events.map((event) => event.name);
-    expect(eventNames).toEqual([
-      'focus',
-      'changeText',
-      'changeText',
-      'changeText',
-      'blur',
-    ]);
+    expect(eventNames).toEqual(['focus', 'changeText', 'changeText', 'changeText', 'blur']);
   });
 });

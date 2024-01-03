@@ -5,9 +5,7 @@ import { configure, render, screen } from '../..';
 test('includeHiddenElements query option takes priority over hidden option and global config', () => {
   configure({ defaultHidden: true, defaultIncludeHiddenElements: true });
   render(<View testID="view" style={{ display: 'none' }} />);
-  expect(
-    screen.queryByTestId('view', { includeHiddenElements: false, hidden: true })
-  ).toBeFalsy();
+  expect(screen.queryByTestId('view', { includeHiddenElements: false, hidden: true })).toBeFalsy();
 });
 
 test('hidden option takes priority over global config when includeHiddenElements is not defined', () => {

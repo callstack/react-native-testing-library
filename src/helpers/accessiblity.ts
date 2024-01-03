@@ -1,8 +1,4 @@
-import {
-  AccessibilityState,
-  AccessibilityValue,
-  StyleSheet,
-} from 'react-native';
+import { AccessibilityState, AccessibilityValue, StyleSheet } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings, getUnsafeRootElement } from './component-tree';
 import { getHostComponentNames, isHostText } from './host-component-names';
@@ -20,12 +16,7 @@ export const accessibilityStateKeys: (keyof AccessibilityState)[] = [
   'expanded',
 ];
 
-export const accessiblityValueKeys: (keyof AccessibilityValue)[] = [
-  'min',
-  'max',
-  'now',
-  'text',
-];
+export const accessiblityValueKeys: (keyof AccessibilityValue)[] = ['min', 'max', 'now', 'text'];
 
 export function isHiddenFromAccessibility(
   element: ReactTestInstance | null,
@@ -94,9 +85,7 @@ function isSubtreeInaccessible(element: ReactTestInstance): boolean {
   return false;
 }
 
-export function isAccessibilityElement(
-  element: ReactTestInstance | null
-): boolean {
+export function isAccessibilityElement(element: ReactTestInstance | null): boolean {
   if (element == null) {
     return false;
   }
@@ -143,23 +132,15 @@ export function getAccessibilityViewIsModal(element: ReactTestInstance) {
   return element.props['aria-modal'] ?? element.props.accessibilityViewIsModal;
 }
 
-export function getAccessibilityLabel(
-  element: ReactTestInstance
-): string | undefined {
+export function getAccessibilityLabel(element: ReactTestInstance): string | undefined {
   return element.props['aria-label'] ?? element.props.accessibilityLabel;
 }
 
-export function getAccessibilityLabelledBy(
-  element: ReactTestInstance
-): string | undefined {
-  return (
-    element.props['aria-labelledby'] ?? element.props.accessibilityLabelledBy
-  );
+export function getAccessibilityLabelledBy(element: ReactTestInstance): string | undefined {
+  return element.props['aria-labelledby'] ?? element.props.accessibilityLabelledBy;
 }
 
-export function getAccessibilityState(
-  element: ReactTestInstance
-): AccessibilityState | undefined {
+export function getAccessibilityState(element: ReactTestInstance): AccessibilityState | undefined {
   const {
     accessibilityState,
     'aria-busy': ariaBusy,
@@ -197,9 +178,7 @@ export function getAccessibilityCheckedState(
   return ariaChecked ?? accessibilityState?.checked;
 }
 
-export function getAccessibilityValue(
-  element: ReactTestInstance
-): AccessibilityValue | undefined {
+export function getAccessibilityValue(element: ReactTestInstance): AccessibilityValue | undefined {
   const {
     accessibilityValue,
     'aria-valuemax': ariaValueMax,
@@ -227,9 +206,7 @@ export function getAccessibilityValue(
   };
 }
 
-export function isElementBusy(
-  element: ReactTestInstance
-): NonNullable<AccessibilityState['busy']> {
+export function isElementBusy(element: ReactTestInstance): NonNullable<AccessibilityState['busy']> {
   const { accessibilityState, 'aria-busy': ariaBusy } = element.props;
   return ariaBusy ?? accessibilityState?.busy ?? false;
 }
@@ -255,9 +232,7 @@ export function isElementSelected(
   return ariaSelected ?? accessibilityState?.selected ?? false;
 }
 
-export function getAccessibleName(
-  element: ReactTestInstance
-): string | undefined {
+export function getAccessibleName(element: ReactTestInstance): string | undefined {
   const label = getAccessibilityLabel(element);
   if (label) {
     return label;

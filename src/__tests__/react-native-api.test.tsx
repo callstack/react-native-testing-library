@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Switch,
-  ScrollView,
-  FlatList,
-} from 'react-native';
+import { View, Text, TextInput, Switch, ScrollView, FlatList } from 'react-native';
 import { render } from '..';
 
 /**
@@ -110,9 +103,7 @@ test('React Native API assumption: <TextInput> with nested Text renders single h
 });
 
 test('React Native API assumption: <Switch> renders single host element', () => {
-  const view = render(
-    <Switch testID="test" value={true} onChange={jest.fn()} />
-  );
+  const view = render(<Switch testID="test" value={true} onChange={jest.fn()} />);
 
   expect(view.toJSON()).toMatchInlineSnapshot(`
     <RCTSwitch
@@ -298,11 +289,7 @@ test('ScrollView renders correctly', () => {
 
 test('FlatList renders correctly', () => {
   const screen = render(
-    <FlatList
-      testID="flatList"
-      data={[1, 2]}
-      renderItem={({ item }) => <Text>{item}</Text>}
-    />
+    <FlatList testID="flatList" data={[1, 2]} renderItem={({ item }) => <Text>{item}</Text>} />
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`

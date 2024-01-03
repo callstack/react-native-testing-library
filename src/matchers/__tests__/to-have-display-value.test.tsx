@@ -48,9 +48,7 @@ test("toHaveDisplayValue() on non-'TextInput' elements", () => {
   render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
-  expect(() =>
-    expect(view).toHaveDisplayValue('test')
-  ).toThrowErrorMatchingInlineSnapshot(
+  expect(() => expect(view).toHaveDisplayValue('test')).toThrowErrorMatchingInlineSnapshot(
     `"toHaveDisplayValue() works only with host "TextInput" elements. Passed element has type "View"."`
   );
 });
@@ -78,9 +76,7 @@ test('toHaveDisplayValue() uses defaultValue', () => {
 });
 
 test('toHaveDisplayValue() prioritizes value over defaultValue', () => {
-  render(
-    <TextInput testID="text-input" value="value" defaultValue="default" />
-  );
+  render(<TextInput testID="text-input" value="value" defaultValue="default" />);
 
   const textInput = screen.getByTestId('text-input');
   expect(textInput).toHaveDisplayValue('value');

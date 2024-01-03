@@ -8,9 +8,7 @@ describe('userEvent.longPress with real timers', () => {
   beforeEach(() => {
     jest.useRealTimers();
     jest.restoreAllMocks();
-    jest
-      .spyOn(WarnAboutRealTimers, 'warnAboutRealTimersIfNeeded')
-      .mockImplementation();
+    jest.spyOn(WarnAboutRealTimers, 'warnAboutRealTimersIfNeeded').mockImplementation();
   });
 
   test('calls onLongPress if the delayLongPress is the default one', async () => {
@@ -33,11 +31,7 @@ describe('userEvent.longPress with real timers', () => {
     const user = userEvent.setup();
 
     render(
-      <Pressable
-        delayLongPress={800}
-        onLongPress={mockOnLongPress}
-        onPress={mockOnPress}
-      >
+      <Pressable delayLongPress={800} onLongPress={mockOnLongPress} onPress={mockOnPress}>
         <Text>press me</Text>
       </Pressable>
     );
@@ -56,11 +50,7 @@ describe('userEvent.longPress with real timers', () => {
     const user = userEvent.setup();
 
     render(
-      <Pressable
-        delayLongPress={1000}
-        onLongPress={mockOnLongPress}
-        onPress={mockOnPress}
-      >
+      <Pressable delayLongPress={1000} onLongPress={mockOnLongPress} onPress={mockOnPress}>
         <Text>press me</Text>
       </Pressable>
     );

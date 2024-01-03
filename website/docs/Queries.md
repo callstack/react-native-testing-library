@@ -406,9 +406,7 @@ When querying by `text` entry a string or regex might be used.
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(
-  <View accessibilityValue={{ min: 0, max: 100, now: 25, text: '25%' }} />
-);
+render(<View accessibilityValue={{ min: 0, max: 100, now: 25, text: '25%' }} />);
 const element = screen.getByA11yValue({ now: 25 });
 const element2 = screen.getByA11yValue({ text: /25/ });
 ```
@@ -536,8 +534,7 @@ To override normalization to remove some Unicode characters whilst keeping some 
 
 ```typescript
 screen.getByText(node, 'text', {
-  normalizer: (str) =>
-    getDefaultNormalizer({ trim: false })(str).replace(/[\u200E-\u200F]*/g, ''),
+  normalizer: (str) => getDefaultNormalizer({ trim: false })(str).replace(/[\u200E-\u200F]*/g, ''),
 });
 ```
 

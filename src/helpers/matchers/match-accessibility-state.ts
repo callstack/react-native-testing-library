@@ -41,8 +41,5 @@ function matchState(
   state: AccessibilityState | undefined,
   key: keyof AccessibilityState
 ) {
-  return (
-    matcher[key] === undefined ||
-    matcher[key] === (state?.[key] ?? defaultState[key])
-  );
+  return matcher[key] === undefined || matcher[key] === (state?.[key] ?? defaultState[key]);
 }

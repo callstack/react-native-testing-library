@@ -73,9 +73,8 @@ test('toBeCollapsed() error messages', () => {
       />"
   `);
 
-  expect(() =>
-    expect(screen.getByTestId('not-expanded-aria')).not.toBeCollapsed()
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(screen.getByTestId('not-expanded-aria')).not.toBeCollapsed())
+    .toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeCollapsed()
 
     Received element is collapsed:

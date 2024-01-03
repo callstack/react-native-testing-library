@@ -3,9 +3,7 @@ import { StyleSheet, View, Text, Pressable } from 'react-native';
 
 export default function DetailsScreen({ navigation, route }) {
   const item = route.params;
-  return (
-    <DetailsScreenContent item={item} onGoBack={() => navigation.goBack()} />
-  );
+  return <DetailsScreenContent item={item} onGoBack={() => navigation.goBack()} />;
 }
 
 export function DetailsScreenContent({ item, onGoBack }) {
@@ -14,9 +12,7 @@ export function DetailsScreenContent({ item, onGoBack }) {
       <Text accessibilityRole="header" style={styles.header}>
         Details for {item.title}
       </Text>
-      <Text style={styles.body}>
-        The number you have chosen is {item.value}.
-      </Text>
+      <Text style={styles.body}>The number you have chosen is {item.value}.</Text>
 
       <BackButton onPress={onGoBack} />
     </View>

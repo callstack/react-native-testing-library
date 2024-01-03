@@ -16,11 +16,7 @@ const Banana = () => (
       placeholder={PLACEHOLDER_FRESHNESS}
       value={INPUT_FRESHNESS}
     />
-    <TextInput
-      testID="bananaChef"
-      placeholder={PLACEHOLDER_CHEF}
-      value={INPUT_CHEF}
-    />
+    <TextInput testID="bananaChef" placeholder={PLACEHOLDER_CHEF} value={INPUT_CHEF} />
     <Text testID="duplicateText">First Text</Text>
     <Text testID="duplicateText">Second Text</Text>
   </View>
@@ -180,8 +176,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findByTestId('FOO')).rejects
-    .toThrowErrorMatchingInlineSnapshot(`
+  await expect(view.findByTestId('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
     <View
@@ -189,8 +184,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findAllByTestId('FOO')).rejects
-    .toThrowErrorMatchingInlineSnapshot(`
+  await expect(view.findAllByTestId('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
     <View

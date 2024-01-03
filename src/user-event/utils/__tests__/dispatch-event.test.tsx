@@ -34,8 +34,6 @@ describe('dispatchEvent', () => {
       </Text>
     );
 
-    expect(() =>
-      dispatchEvent(screen.getByTestId('text'), 'press', TOUCH_EVENT)
-    ).not.toThrow();
+    expect(() => dispatchEvent(screen.getByTestId('text'), 'press', TOUCH_EVENT)).not.toThrow();
   });
 });

@@ -49,8 +49,7 @@ test('toHaveTextContent() negative test cases', () => {
 
   const text = screen.getByTestId('text');
   expect(text).not.toHaveTextContent(/Hello React/);
-  expect(() => expect(text).toHaveTextContent(/Hello React/))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(text).toHaveTextContent(/Hello React/)).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toHaveTextContent()
 
     Expected element to have text content:
@@ -72,8 +71,7 @@ test('toHaveTextContent() negative test cases', () => {
 });
 
 test('toHaveTextContent() on null element', () => {
-  expect(() => expect(null).toHaveTextContent('Hello World'))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(null).toHaveTextContent('Hello World')).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).toHaveTextContent()
 
     received value must be a host element.

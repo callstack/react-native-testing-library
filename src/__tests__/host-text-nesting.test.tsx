@@ -31,9 +31,7 @@ describe('nested text handling', () => {
       </Text>
     );
 
-    expect(view.getByRole('header', { name: 'About' }).props.testID).toBe(
-      'child'
-    );
+    expect(view.getByRole('header', { name: 'About' }).props.testID).toBe('child');
   });
 
   test('pressable within View, with text child', () => {
@@ -45,9 +43,7 @@ describe('nested text handling', () => {
       </View>
     );
 
-    expect(view.getByRole('button', { name: 'Save' }).props.testID).toBe(
-      'pressable'
-    );
+    expect(view.getByRole('button', { name: 'Save' }).props.testID).toBe('pressable');
   });
 
   test('pressable within View, with text child within view', () => {
@@ -61,9 +57,7 @@ describe('nested text handling', () => {
       </View>
     );
 
-    expect(view.getByRole('button', { name: 'Save' }).props.testID).toBe(
-      'pressable'
-    );
+    expect(view.getByRole('button', { name: 'Save' }).props.testID).toBe('pressable');
   });
 
   test('Text within pressable', () => {

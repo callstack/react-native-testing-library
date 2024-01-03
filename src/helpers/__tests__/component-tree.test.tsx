@@ -145,15 +145,11 @@ describe('getHostSelves()', () => {
     expect(getHostSelves(compositeText)).toEqual([hostText]);
 
     const compositeTextInputByValue = view.getByDisplayValue('TextInputValue');
-    const compositeTextInputByPlaceholder = view.getByPlaceholderText(
-      'TextInputPlaceholder'
-    );
+    const compositeTextInputByPlaceholder = view.getByPlaceholderText('TextInputPlaceholder');
 
     const hostTextInput = view.getByTestId('textInput');
     expect(getHostSelves(compositeTextInputByValue)).toEqual([hostTextInput]);
-    expect(getHostSelves(compositeTextInputByPlaceholder)).toEqual([
-      hostTextInput,
-    ]);
+    expect(getHostSelves(compositeTextInputByPlaceholder)).toEqual([hostTextInput]);
   });
 
   test('returns host children for custom composite components', () => {
@@ -168,16 +164,11 @@ describe('getHostSelves()', () => {
     const zeroCompositeComponent = view.UNSAFE_getByType(ZeroHostChildren);
     expect(getHostSelves(zeroCompositeComponent)).toEqual([]);
 
-    const multipleCompositeComponent =
-      view.UNSAFE_getByType(MultipleHostChildren);
+    const multipleCompositeComponent = view.UNSAFE_getByType(MultipleHostChildren);
     const hostChild1 = view.getByTestId('child1');
     const hostChild2 = view.getByTestId('child2');
     const hostChild3 = view.getByTestId('child3');
-    expect(getHostSelves(multipleCompositeComponent)).toEqual([
-      hostChild1,
-      hostChild2,
-      hostChild3,
-    ]);
+    expect(getHostSelves(multipleCompositeComponent)).toEqual([hostChild1, hostChild2, hostChild3]);
   });
 });
 

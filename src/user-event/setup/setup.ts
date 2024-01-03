@@ -82,10 +82,7 @@ export interface UserEventInstance {
   config: UserEventConfig;
 
   press: (element: ReactTestInstance) => Promise<void>;
-  longPress: (
-    element: ReactTestInstance,
-    options?: PressOptions
-  ) => Promise<void>;
+  longPress: (element: ReactTestInstance, options?: PressOptions) => Promise<void>;
 
   /**
    * Simulate user pressing on a given `TextInput` element and typing given text.
@@ -107,11 +104,7 @@ export interface UserEventInstance {
    * - `submitEditing` - if true, `submitEditing` event will be triggered after
    * typing the text.
    */
-  type: (
-    element: ReactTestInstance,
-    text: string,
-    options?: TypeOptions
-  ) => Promise<void>;
+  type: (element: ReactTestInstance, text: string, options?: TypeOptions) => Promise<void>;
 
   /**
    * Simulate user clearing the text of a given `TextInput` element.
@@ -132,10 +125,7 @@ export interface UserEventInstance {
    * @param element ScrollView element
    * @returns
    */
-  scrollTo: (
-    element: ReactTestInstance,
-    options: ScrollToOptions
-  ) => Promise<void>;
+  scrollTo: (element: ReactTestInstance, options: ScrollToOptions) => Promise<void>;
 }
 
 function createInstance(config: UserEventConfig): UserEventInstance {

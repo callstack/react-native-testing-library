@@ -74,27 +74,15 @@ type WaitForOptions = {
   onTimeout?: (error: Error) => Error,
 };
 
-type WaitForFunction = <T = any>(
-  expectation: () => T,
-  options?: WaitForOptions
-) => Promise<T>;
+type WaitForFunction = <T = any>(expectation: () => T, options?: WaitForOptions) => Promise<T>;
 
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
 interface ByTextQueries {
   getByText: (text: TextMatch, options?: ByTextOptions) => ReactTestInstance;
-  getAllByText: (
-    text: TextMatch,
-    options?: ByTextOptions
-  ) => Array<ReactTestInstance>;
-  queryByText: (
-    name: TextMatch,
-    options?: ByTextOptions
-  ) => ReactTestInstance | null;
-  queryAllByText: (
-    text: TextMatch,
-    options?: ByTextOptions
-  ) => Array<ReactTestInstance> | [];
+  getAllByText: (text: TextMatch, options?: ByTextOptions) => Array<ReactTestInstance>;
+  queryByText: (name: TextMatch, options?: ByTextOptions) => ReactTestInstance | null;
+  queryAllByText: (text: TextMatch, options?: ByTextOptions) => Array<ReactTestInstance> | [];
   findByText: (
     text: TextMatch,
     queryOptions?: ByTextOptions,
@@ -110,22 +98,10 @@ interface ByTextQueries {
 type ByTestIdOptions = CommonQueryOptions & TextMatchOptions;
 
 interface ByTestIdQueries {
-  getByTestId: (
-    testID: TextMatch,
-    options?: ByTestIdOptions
-  ) => ReactTestInstance;
-  getAllByTestId: (
-    testID: TextMatch,
-    options?: ByTestIdOptions
-  ) => Array<ReactTestInstance>;
-  queryByTestId: (
-    testID: TextMatch,
-    options?: ByTestIdOptions
-  ) => ReactTestInstance | null;
-  queryAllByTestId: (
-    testID: TextMatch,
-    options?: ByTestIdOptions
-  ) => Array<ReactTestInstance> | [];
+  getByTestId: (testID: TextMatch, options?: ByTestIdOptions) => ReactTestInstance;
+  getAllByTestId: (testID: TextMatch, options?: ByTestIdOptions) => Array<ReactTestInstance>;
+  queryByTestId: (testID: TextMatch, options?: ByTestIdOptions) => ReactTestInstance | null;
+  queryAllByTestId: (testID: TextMatch, options?: ByTestIdOptions) => Array<ReactTestInstance> | [];
   findByTestId: (
     testID: TextMatch,
     queryOptions?: ByTestIdOptions,
@@ -141,10 +117,7 @@ interface ByTestIdQueries {
 type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;
 
 interface ByDisplayValueQueries {
-  getByDisplayValue: (
-    value: TextMatch,
-    options?: ByDisplayValueOptions
-  ) => ReactTestInstance;
+  getByDisplayValue: (value: TextMatch, options?: ByDisplayValueOptions) => ReactTestInstance;
   getAllByDisplayValue: (
     value: TextMatch,
     options?: ByDisplayValueOptions
@@ -202,24 +175,16 @@ interface ByPlaceholderTextQueries {
 
 interface UnsafeByTypeQueries {
   UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
-  UNSAFE_getAllByType: <P>(
-    type: React.ComponentType<P>
-  ) => Array<ReactTestInstance>;
-  UNSAFE_queryByType: <P>(
-    type: React.ComponentType<P>
-  ) => ReactTestInstance | null;
-  UNSAFE_queryAllByType: <P>(
-    type: React.ComponentType<P>
-  ) => Array<ReactTestInstance> | [];
+  UNSAFE_getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
+  UNSAFE_queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
+  UNSAFE_queryAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance> | [];
 }
 
 interface UnsafeByPropsQueries {
   UNSAFE_getByProps: (props: { [string]: any }) => ReactTestInstance;
   UNSAFE_getAllByProps: (props: { [string]: any }) => Array<ReactTestInstance>;
   UNSAFE_queryByProps: (props: { [string]: any }) => ReactTestInstance | null;
-  UNSAFE_queryAllByProps: (props: { [string]: any }) =>
-    | Array<ReactTestInstance>
-    | [];
+  UNSAFE_queryAllByProps: (props: { [string]: any }) => Array<ReactTestInstance> | [];
 }
 
 type ByRoleOptions = CommonQueryOptions & {
@@ -233,22 +198,10 @@ type ByHintTextOptions = CommonQueryOptions & TextMatchOptions;
 
 interface A11yAPI {
   // Label
-  getByLabelText: (
-    matcher: TextMatch,
-    options?: ByLabelTextOptions
-  ) => GetReturn;
-  getAllByLabelText: (
-    matcher: TextMatch,
-    options?: ByLabelTextOptions
-  ) => GetAllReturn;
-  queryByLabelText: (
-    matcher: TextMatch,
-    options?: ByLabelTextOptions
-  ) => QueryReturn;
-  queryAllByLabelText: (
-    matcher: TextMatch,
-    options?: ByLabelTextOptions
-  ) => QueryAllReturn;
+  getByLabelText: (matcher: TextMatch, options?: ByLabelTextOptions) => GetReturn;
+  getAllByLabelText: (matcher: TextMatch, options?: ByLabelTextOptions) => GetAllReturn;
+  queryByLabelText: (matcher: TextMatch, options?: ByLabelTextOptions) => QueryReturn;
+  queryAllByLabelText: (matcher: TextMatch, options?: ByLabelTextOptions) => QueryAllReturn;
   findByLabelText: (
     matcher: TextMatch,
     queryOptions?: ByLabelTextOptions,
@@ -263,30 +216,12 @@ interface A11yAPI {
   // Hint
   getByA11yHint: (matcher: TextMatch, options?: ByHintTextOptions) => GetReturn;
   getByHintText: (matcher: TextMatch, options?: ByHintTextOptions) => GetReturn;
-  getAllByA11yHint: (
-    matcher: TextMatch,
-    options?: ByHintTextOptions
-  ) => GetAllReturn;
-  getAllByHintText: (
-    matcher: TextMatch,
-    options?: ByHintTextOptions
-  ) => GetAllReturn;
-  queryByA11yHint: (
-    matcher: TextMatch,
-    options?: ByHintTextOptions
-  ) => QueryReturn;
-  queryByHintText: (
-    matcher: TextMatch,
-    options?: ByHintTextOptions
-  ) => QueryReturn;
-  queryAllByA11yHint: (
-    matcher: TextMatch,
-    options?: ByHintTextOptions
-  ) => QueryAllReturn;
-  queryAllByHintText: (
-    matcher: TextMatch,
-    options?: ByHintTextOptions
-  ) => QueryAllReturn;
+  getAllByA11yHint: (matcher: TextMatch, options?: ByHintTextOptions) => GetAllReturn;
+  getAllByHintText: (matcher: TextMatch, options?: ByHintTextOptions) => GetAllReturn;
+  queryByA11yHint: (matcher: TextMatch, options?: ByHintTextOptions) => QueryReturn;
+  queryByHintText: (matcher: TextMatch, options?: ByHintTextOptions) => QueryReturn;
+  queryAllByA11yHint: (matcher: TextMatch, options?: ByHintTextOptions) => QueryAllReturn;
+  queryAllByHintText: (matcher: TextMatch, options?: ByHintTextOptions) => QueryAllReturn;
   findByA11yHint: (
     matcher: TextMatch,
     queryOptions?: ByHintTextOptions,
@@ -310,18 +245,9 @@ interface A11yAPI {
 
   // Role
   getByRole: (matcher: A11yRole | RegExp, role?: ByRoleOptions) => GetReturn;
-  getAllByRole: (
-    matcher: A11yRole | RegExp,
-    options?: ByRoleOptions
-  ) => GetAllReturn;
-  queryByRole: (
-    matcher: A11yRole | RegExp,
-    options?: ByRoleOptions
-  ) => QueryReturn;
-  queryAllByRole: (
-    matcher: A11yRole | RegExp,
-    options?: ByRoleOptions
-  ) => QueryAllReturn;
+  getAllByRole: (matcher: A11yRole | RegExp, options?: ByRoleOptions) => GetAllReturn;
+  queryByRole: (matcher: A11yRole | RegExp, options?: ByRoleOptions) => QueryReturn;
+  queryAllByRole: (matcher: A11yRole | RegExp, options?: ByRoleOptions) => QueryAllReturn;
   findByRole: (
     matcher: A11yRole | RegExp,
     queryOptions?: ByRoleOptions,
@@ -334,22 +260,10 @@ interface A11yAPI {
   ) => FindAllReturn;
 
   // State
-  getByA11yState: (
-    matcher: A11yState,
-    options?: CommonQueryOptions
-  ) => GetReturn;
-  getAllByA11yState: (
-    matcher: A11yState,
-    options?: CommonQueryOptions
-  ) => GetAllReturn;
-  queryByA11yState: (
-    matcher: A11yState,
-    options?: CommonQueryOptions
-  ) => QueryReturn;
-  queryAllByA11yState: (
-    matcher: A11yState,
-    options?: CommonQueryOptions
-  ) => QueryAllReturn;
+  getByA11yState: (matcher: A11yState, options?: CommonQueryOptions) => GetReturn;
+  getAllByA11yState: (matcher: A11yState, options?: CommonQueryOptions) => GetAllReturn;
+  queryByA11yState: (matcher: A11yState, options?: CommonQueryOptions) => QueryReturn;
+  queryAllByA11yState: (matcher: A11yState, options?: CommonQueryOptions) => QueryAllReturn;
   findByA11yState: (
     matcher: A11yState,
     queryOptions?: CommonQueryOptions,
@@ -362,22 +276,10 @@ interface A11yAPI {
   ) => FindAllReturn;
 
   // Value
-  getByA11yValue: (
-    matcher: A11yValue,
-    options?: CommonQueryOptions
-  ) => GetReturn;
-  getAllByA11yValue: (
-    matcher: A11yValue,
-    options?: CommonQueryOptions
-  ) => GetAllReturn;
-  queryByA11yValue: (
-    matcher: A11yValue,
-    options?: CommonQueryOptions
-  ) => QueryReturn;
-  queryAllByA11yValue: (
-    matcher: A11yValue,
-    options?: CommonQueryOptions
-  ) => QueryAllReturn;
+  getByA11yValue: (matcher: A11yValue, options?: CommonQueryOptions) => GetReturn;
+  getAllByA11yValue: (matcher: A11yValue, options?: CommonQueryOptions) => GetAllReturn;
+  queryByA11yValue: (matcher: A11yValue, options?: CommonQueryOptions) => QueryReturn;
+  queryAllByA11yValue: (matcher: A11yValue, options?: CommonQueryOptions) => QueryAllReturn;
   findByA11yValue: (
     matcher: A11yValue,
     queryOptions?: CommonQueryOptions,
@@ -478,27 +380,17 @@ declare module '@testing-library/react-native' {
     defaultHidden: boolean;
   }
 
-  declare export var configure: (
-    options: $Shape<Config & ConfigAliasOptions>
-  ) => void;
+  declare export var configure: (options: $Shape<Config & ConfigAliasOptions>) => void;
   declare export var resetToDefaults: () => void;
 
   declare export var act: (callback: () => void) => Thenable;
   declare export var within: (instance: ReactTestInstance) => Queries;
-  declare export var getQueriesForElement: (
-    element: ReactTestInstance
-  ) => Queries;
+  declare export var getQueriesForElement: (element: ReactTestInstance) => Queries;
 
-  declare export var getDefaultNormalizer: (
-    normalizerConfig?: NormalizerConfig
-  ) => NormalizerFn;
+  declare export var getDefaultNormalizer: (normalizerConfig?: NormalizerConfig) => NormalizerFn;
 
-  declare export var isHiddenFromAccessibility: (
-    element: ReactTestInstance | null
-  ) => boolean;
-  declare export var isInaccessible: (
-    element: ReactTestInstance | null
-  ) => boolean;
+  declare export var isHiddenFromAccessibility: (element: ReactTestInstance | null) => boolean;
+  declare export var isInaccessible: (element: ReactTestInstance | null) => boolean;
 
   declare type RenderHookResult<Result, Props> = {
     rerender: (props: Props) => void,

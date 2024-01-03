@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  Switch,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, TextInput, Pressable, Switch, TouchableOpacity } from 'react-native';
 import { render, isHiddenFromAccessibility, isInaccessible } from '../..';
 import { isAccessibilityElement } from '../accessiblity';
 
@@ -113,9 +106,7 @@ describe('isHiddenFromAccessibility', () => {
   });
 
   test('detects elements with importantForAccessibility="no-hide-descendants" prop', () => {
-    const view = render(
-      <View testID="subject" importantForAccessibility="no-hide-descendants" />
-    );
+    const view = render(<View testID="subject" importantForAccessibility="no-hide-descendants" />);
     expect(
       isHiddenFromAccessibility(
         view.getByTestId('subject', {
@@ -189,11 +180,7 @@ describe('isHiddenFromAccessibility', () => {
     const view = render(
       <View
         testID="subject"
-        style={[
-          { display: 'flex' },
-          [{ display: 'flex' }],
-          { display: 'none' },
-        ]}
+        style={[{ display: 'flex' }, [{ display: 'flex' }], { display: 'none' }]}
       />
     );
     expect(
@@ -244,9 +231,7 @@ describe('isHiddenFromAccessibility', () => {
       </View>
     );
     expect(
-      isHiddenFromAccessibility(
-        view.getByTestId('subject', { includeHiddenElements: true })
-      )
+      isHiddenFromAccessibility(view.getByTestId('subject', { includeHiddenElements: true }))
     ).toBe(true);
   });
 
@@ -258,9 +243,7 @@ describe('isHiddenFromAccessibility', () => {
       </View>
     );
     expect(
-      isHiddenFromAccessibility(
-        view.getByTestId('subject', { includeHiddenElements: true })
-      )
+      isHiddenFromAccessibility(view.getByTestId('subject', { includeHiddenElements: true }))
     ).toBe(true);
   });
 

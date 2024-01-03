@@ -19,11 +19,7 @@ export function toHaveTextContent(
     message: () => {
       return [
         formatMessage(
-          matcherHint(
-            `${this.isNot ? '.not' : ''}.toHaveTextContent`,
-            'element',
-            ''
-          ),
+          matcherHint(`${this.isNot ? '.not' : ''}.toHaveTextContent`, 'element', ''),
           `Expected element ${this.isNot ? 'not to' : 'to'} have text content`,
           expectedText,
           'Received',

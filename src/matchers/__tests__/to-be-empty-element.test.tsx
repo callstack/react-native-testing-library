@@ -18,8 +18,7 @@ test('toBeEmptyElement() base case', () => {
 
   const empty = screen.getByTestId('empty');
   expect(empty).toBeEmptyElement();
-  expect(() => expect(empty).not.toBeEmptyElement())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(empty).not.toBeEmptyElement()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeEmptyElement()
 
     Received:
@@ -28,8 +27,7 @@ test('toBeEmptyElement() base case', () => {
 
   const notEmpty = screen.getByTestId('not-empty');
   expect(notEmpty).not.toBeEmptyElement();
-  expect(() => expect(notEmpty).toBeEmptyElement())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(notEmpty).toBeEmptyElement()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBeEmptyElement()
 
     Received:
@@ -50,8 +48,7 @@ test('toBeEmptyElement() ignores composite-only children', () => {
 
   const view = screen.getByTestId('view');
   expect(view).toBeEmptyElement();
-  expect(() => expect(view).not.toBeEmptyElement())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(view).not.toBeEmptyElement()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeEmptyElement()
 
     Received:

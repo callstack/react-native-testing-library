@@ -9,9 +9,7 @@ export type HostTestInstance = ReactTestInstance & { type: string };
  * Checks if the given element is a host element.
  * @param element The element to check.
  */
-export function isHostElement(
-  element?: ReactTestInstance | null
-): element is HostTestInstance {
+export function isHostElement(element?: ReactTestInstance | null): element is HostTestInstance {
   return typeof element?.type === 'string';
 }
 
@@ -19,9 +17,7 @@ export function isHostElement(
  * Returns first host ancestor for given element.
  * @param element The element start traversing from.
  */
-export function getHostParent(
-  element: ReactTestInstance | null
-): HostTestInstance | null {
+export function getHostParent(element: ReactTestInstance | null): HostTestInstance | null {
   if (element == null) {
     return null;
   }
@@ -42,9 +38,7 @@ export function getHostParent(
  * Returns host children for given element.
  * @param element The element start traversing from.
  */
-export function getHostChildren(
-  element: ReactTestInstance | null
-): HostTestInstance[] {
+export function getHostChildren(element: ReactTestInstance | null): HostTestInstance[] {
   if (element == null) {
     return [];
   }
@@ -73,9 +67,7 @@ export function getHostChildren(
  * @returns If the passed element is a host element, it will return an array containing only that element,
  * if the passed element is a composite element, it will return an array containing its host children (zero, one or many).
  */
-export function getHostSelves(
-  element: ReactTestInstance | null
-): HostTestInstance[] {
+export function getHostSelves(element: ReactTestInstance | null): HostTestInstance[] {
   return isHostElement(element) ? [element] : getHostChildren(element);
 }
 
@@ -83,14 +75,10 @@ export function getHostSelves(
  * Returns host siblings for given element.
  * @param element The element start traversing from.
  */
-export function getHostSiblings(
-  element: ReactTestInstance | null
-): HostTestInstance[] {
+export function getHostSiblings(element: ReactTestInstance | null): HostTestInstance[] {
   const hostParent = getHostParent(element);
   const hostSelves = getHostSelves(element);
-  return getHostChildren(hostParent).filter(
-    (sibling) => !hostSelves.includes(sibling)
-  );
+  return getHostChildren(hostParent).filter((sibling) => !hostSelves.includes(sibling));
 }
 
 /**

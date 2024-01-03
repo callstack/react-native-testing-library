@@ -17,9 +17,7 @@ const Typography = ({ children, ...rest }: any) => {
 
 const Button = ({ children }: { children: React.ReactNode }) => (
   <TouchableOpacity>
-    <Typography accessibilityState={{ expanded: false, selected: true }}>
-      {children}
-    </Typography>
+    <Typography accessibilityState={{ expanded: false, selected: true }}>{children}</Typography>
   </TouchableOpacity>
 );
 
@@ -31,17 +29,13 @@ const Section = () => (
 );
 
 test('getByA11yState, queryByA11yState, findByA11yState', async () => {
-  const { getByA11yState, queryByA11yState, findByA11yState } = render(
-    <Section />
-  );
+  const { getByA11yState, queryByA11yState, findByA11yState } = render(<Section />);
 
   expect(getByA11yState({ selected: true }).props.accessibilityState).toEqual({
     selected: true,
     expanded: false,
   });
-  expect(
-    queryByA11yState({ selected: true })?.props.accessibilityState
-  ).toEqual({
+  expect(queryByA11yState({ selected: true })?.props.accessibilityState).toEqual({
     selected: true,
     expanded: false,
   });
@@ -72,9 +66,7 @@ test('getByA11yState, queryByA11yState, findByA11yState', async () => {
 });
 
 test('getAllByA11yState, queryAllByA11yState, findAllByA11yState', async () => {
-  const { getAllByA11yState, queryAllByA11yState, findAllByA11yState } = render(
-    <Section />
-  );
+  const { getAllByA11yState, queryAllByA11yState, findAllByA11yState } = render(<Section />);
 
   expect(getAllByA11yState({ selected: true })).toHaveLength(1);
   expect(queryAllByA11yState({ selected: true })).toHaveLength(1);
@@ -91,9 +83,7 @@ test('getAllByA11yState, queryAllByA11yState, findAllByA11yState', async () => {
   await expect(findAllByA11yState({ disabled: true })).rejects.toThrow(
     'Unable to find an element with disabled state: true'
   );
-  await expect(findAllByA11yState({ expanded: false })).resolves.toHaveLength(
-    2
-  );
+  await expect(findAllByA11yState({ expanded: false })).resolves.toHaveLength(2);
 });
 
 describe('checked state matching', () => {
@@ -236,25 +226,17 @@ test('*ByA11yState on TouchableOpacity with "disabled" prop', () => {
 
 test('byA11yState queries support hidden option', () => {
   const { getByA11yState, queryByA11yState } = render(
-    <Pressable
-      accessibilityState={{ expanded: false }}
-      style={{ display: 'none' }}
-    >
+    <Pressable accessibilityState={{ expanded: false }} style={{ display: 'none' }}>
       <Text>Hidden from accessibility</Text>
     </Pressable>
   );
 
-  expect(
-    getByA11yState({ expanded: false }, { includeHiddenElements: true })
-  ).toBeTruthy();
+  expect(getByA11yState({ expanded: false }, { includeHiddenElements: true })).toBeTruthy();
 
   expect(queryByA11yState({ expanded: false })).toBeFalsy();
-  expect(
-    queryByA11yState({ expanded: false }, { includeHiddenElements: false })
-  ).toBeFalsy();
-  expect(() =>
-    getByA11yState({ expanded: false }, { includeHiddenElements: false })
-  ).toThrowErrorMatchingInlineSnapshot(`
+  expect(queryByA11yState({ expanded: false }, { includeHiddenElements: false })).toBeFalsy();
+  expect(() => getByA11yState({ expanded: false }, { includeHiddenElements: false }))
+    .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with expanded state: false
 
     <View
@@ -378,8 +360,7 @@ test('error message renders the element tree, preserving only helpful props', as
     </Text>
   );
 
-  expect(() => view.getByA11yState({ checked: true }))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getByA11yState({ checked: true })).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with checked state: true
 
     <Text
@@ -393,8 +374,7 @@ test('error message renders the element tree, preserving only helpful props', as
     </Text>"
   `);
 
-  expect(() => view.getAllByA11yState({ checked: true }))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getAllByA11yState({ checked: true })).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with checked state: true
 
     <Text
@@ -408,8 +388,7 @@ test('error message renders the element tree, preserving only helpful props', as
     </Text>"
   `);
 
-  await expect(view.findByA11yState({ checked: true })).rejects
-    .toThrowErrorMatchingInlineSnapshot(`
+  await expect(view.findByA11yState({ checked: true })).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with checked state: true
 
     <Text
@@ -481,27 +460,21 @@ describe('aria-selected prop', () => {
 
 describe('aria-checked prop', () => {
   test('supports aria-checked={true} prop', () => {
-    const screen = render(
-      <View accessible accessibilityRole="button" aria-checked={true} />
-    );
+    const screen = render(<View accessible accessibilityRole="button" aria-checked={true} />);
     expect(screen.getByAccessibilityState({ checked: true })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: 'mixed' })).toBeNull();
   });
 
   test('supports aria-checked={false} prop', () => {
-    const screen = render(
-      <View accessible accessibilityRole="button" aria-checked={false} />
-    );
+    const screen = render(<View accessible accessibilityRole="button" aria-checked={false} />);
     expect(screen.getByAccessibilityState({ checked: false })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: 'mixed' })).toBeNull();
   });
 
   test('supports aria-checked="mixed prop', () => {
-    const screen = render(
-      <View accessible accessibilityRole="button" aria-checked="mixed" />
-    );
+    const screen = render(<View accessible accessibilityRole="button" aria-checked="mixed" />);
     expect(screen.getByAccessibilityState({ checked: 'mixed' })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
@@ -538,17 +511,13 @@ describe('aria-busy prop', () => {
 
 describe('aria-expanded prop', () => {
   test('supports aria-expanded={true} prop', () => {
-    const screen = render(
-      <View accessible accessibilityRole="button" aria-expanded={true} />
-    );
+    const screen = render(<View accessible accessibilityRole="button" aria-expanded={true} />);
     expect(screen.getByAccessibilityState({ expanded: true })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ expanded: false })).toBeNull();
   });
 
   test('supports aria-expanded={false} prop', () => {
-    const screen = render(
-      <View accessible accessibilityRole="button" aria-expanded={false} />
-    );
+    const screen = render(<View accessible accessibilityRole="button" aria-expanded={false} />);
     expect(screen.getByAccessibilityState({ expanded: false })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ expanded: true })).toBeNull();
   });

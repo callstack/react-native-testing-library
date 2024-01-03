@@ -27,9 +27,7 @@ export function toHaveAccessibilityValue(
       );
       return formatMessage(
         matcher,
-        `Expected the element ${
-          this.isNot ? 'not to' : 'to'
-        } have accessibility value`,
+        `Expected the element ${this.isNot ? 'not to' : 'to'} have accessibility value`,
         stringify(expectedValue),
         'Received element with accessibility value',
         stringify(removeUndefinedKeys(receivedValue))

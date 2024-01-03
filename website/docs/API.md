@@ -518,11 +518,7 @@ function waitForElementToBeRemoved<T>(
 Waits for non-deterministic periods of time until queried element is removed or times out. `waitForElementToBeRemoved` periodically calls `expectation` every `interval` milliseconds to determine whether the element has been removed or not.
 
 ```jsx
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react-native';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react-native';
 
 test('waiting for an Banana to be removed', async () => {
   render(<Banana />);
@@ -566,9 +562,7 @@ const detailsScreen = within(screen.getByA11yHint('Details Screen'));
 expect(detailsScreen.getByText('Some Text')).toBeOnTheScreen();
 expect(detailsScreen.getByDisplayValue('Some Value')).toBeOnTheScreen();
 expect(detailsScreen.queryByLabelText('Some Label')).toBeOnTheScreen();
-await expect(
-  detailsScreen.findByA11yHint('Some Label')
-).resolves.toBeOnTheScreen();
+await expect(detailsScreen.findByA11yHint('Some Label')).resolves.toBeOnTheScreen();
 ```
 
 Use cases for scoped queries include:
@@ -723,10 +717,9 @@ const useCount = (initialCount: number) => {
 };
 
 it('should increment count', () => {
-  const { result, rerender } = renderHook(
-    (initialCount: number) => useCount(initialCount),
-    { initialProps: 1 }
-  );
+  const { result, rerender } = renderHook((initialCount: number) => useCount(initialCount), {
+    initialProps: 1,
+  });
 
   expect(result.current.count).toBe(1);
 

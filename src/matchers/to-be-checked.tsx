@@ -8,10 +8,7 @@ import {
 import { ErrorWithStack } from '../helpers/errors';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeChecked(
-  this: jest.MatcherContext,
-  element: ReactTestInstance
-) {
+export function toBeChecked(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeChecked, this);
 
   if (!hasValidAccessibilityRole(element)) {

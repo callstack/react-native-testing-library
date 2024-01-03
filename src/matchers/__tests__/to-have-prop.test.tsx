@@ -35,8 +35,7 @@ test('toHaveProp() error messages', () => {
 
   const view = screen.getByTestId('view');
 
-  expect(() => expect(view).toHaveProp('accessible'))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(view).toHaveProp('accessible')).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toHaveProp("accessible")
 
     Expected element to have prop:
@@ -45,8 +44,7 @@ test('toHaveProp() error messages', () => {
       undefined"
   `);
 
-  expect(() => expect(view).toHaveProp('accessible', true))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(view).toHaveProp('accessible', true)).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toHaveProp("accessible", true)
 
     Expected element to have prop:
@@ -55,8 +53,7 @@ test('toHaveProp() error messages', () => {
       undefined"
   `);
 
-  expect(() => expect(view).not.toHaveProp('collapsable'))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(view).not.toHaveProp('collapsable')).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toHaveProp("collapsable")
 
     Expected element not to have prop:
@@ -65,8 +62,7 @@ test('toHaveProp() error messages', () => {
       collapsable={false}"
   `);
 
-  expect(() => expect(view).toHaveProp('collapsable', true))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(view).toHaveProp('collapsable', true)).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toHaveProp("collapsable", true)
 
     Expected element to have prop:

@@ -1,8 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 
-export function getTextContent(
-  element: ReactTestInstance | string | null
-): string {
+export function getTextContent(element: ReactTestInstance | string | null): string {
   if (!element) {
     return '';
   }

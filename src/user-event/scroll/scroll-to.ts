@@ -7,11 +7,7 @@ import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';
 import { ContentOffset } from '../event-builder/scroll-view';
 import { dispatchEvent, wait } from '../utils';
-import {
-  createScrollSteps,
-  inertialInterpolator,
-  linearInterpolator,
-} from './utils';
+import { createScrollSteps, inertialInterpolator, linearInterpolator } from './utils';
 import { getElementScrollOffset, setElementScrollOffset } from './state';
 
 interface CommonScrollToOptions {
@@ -43,9 +39,7 @@ export interface HorizontalScrollToOptions extends CommonScrollToOptions {
   momentumY?: never;
 }
 
-export type ScrollToOptions =
-  | VerticalScrollToOptions
-  | HorizontalScrollToOptions;
+export type ScrollToOptions = VerticalScrollToOptions | HorizontalScrollToOptions;
 
 export async function scrollTo(
   this: UserEventInstance,
@@ -84,8 +78,7 @@ export async function scrollTo(
   );
   await emitMomentumScrollEvents(this.config, element, momentumSteps, options);
 
-  const finalPosition =
-    momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
+  const finalPosition = momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
   setElementScrollOffset(element, finalPosition);
 }
 
@@ -111,20 +104,12 @@ async function emitDragScrollEvents(
   // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
   for (let i = 1; i < scrollSteps.length - 1; i += 1) {
     await wait(config);
-    dispatchEvent(
-      element,
-      'scroll',
-      EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions)
-    );
+    dispatchEvent(element, 'scroll', EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions));
   }
 
   await wait(config);
   const lastStep = scrollSteps.at(-1);
-  dispatchEvent(
-    element,
-    'scrollEndDrag',
-    EventBuilder.ScrollView.scroll(lastStep, scrollOptions)
-  );
+  dispatchEvent(element, 'scrollEndDrag', EventBuilder.ScrollView.scroll(lastStep, scrollOptions));
 }
 
 async function emitMomentumScrollEvents(
@@ -149,11 +134,7 @@ async function emitMomentumScrollEvents(
   // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
   for (let i = 1; i < scrollSteps.length; i += 1) {
     await wait(config);
-    dispatchEvent(
-      element,
-      'scroll',
-      EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions)
-    );
+    dispatchEvent(element, 'scroll', EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions));
   }
 
   await wait(config);
@@ -165,14 +146,10 @@ async function emitMomentumScrollEvents(
   );
 }
 
-function ensureScrollViewDirection(
-  element: ReactTestInstance,
-  options: ScrollToOptions
-) {
+function ensureScrollViewDirection(element: ReactTestInstance, options: ScrollToOptions) {
   const isVerticalScrollView = element.props.horizontal !== true;
 
-  const hasHorizontalScrollOptions =
-    options.x !== undefined || options.momentumX !== undefined;
+  const hasHorizontalScrollOptions = options.x !== undefined || options.momentumX !== undefined;
   if (isVerticalScrollView && hasHorizontalScrollOptions) {
     throw new ErrorWithStack(
       `scrollTo() expected only vertical scroll options: "y" and "momentumY" for vertical "ScrollView" element but received ${stringify(
@@ -182,8 +159,7 @@ function ensureScrollViewDirection(
     );
   }
 
-  const hasVerticalScrollOptions =
-    options.y !== undefined || options.momentumY !== undefined;
+  const hasVerticalScrollOptions = options.y !== undefined || options.momentumY !== undefined;
   if (!isVerticalScrollView && hasVerticalScrollOptions) {
     throw new ErrorWithStack(
       `scrollTo() expected only horizontal scroll options: "x" and "momentumX" for horizontal "ScrollView" element but received ${stringify(

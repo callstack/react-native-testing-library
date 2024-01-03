@@ -11,11 +11,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="main"
-          component={MainScreen}
-          options={{ title: 'Experiments' }}
-        />
+        <Stack.Screen name="main" component={MainScreen} options={{ title: 'Experiments' }} />
         {experiments.map((exp) => (
           <Stack.Screen
             key={exp.key}
