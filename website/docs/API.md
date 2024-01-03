@@ -2,6 +2,7 @@
 id: api
 title: API
 ---
+
 import TOCInline from '@theme/TOCInline';
 
 <TOCInline toc={toc} />
@@ -249,7 +250,7 @@ function fireEvent(
 ```
 
 :::note
-For common events like `press` or `type` it's recommended to use [User Event API](UserEvent.md) as it offers 
+For common events like `press` or `type` it's recommended to use [User Event API](UserEvent.md) as it offers
 more realistic event simulation by emitting a sequence of events with proper event objects that mimic React Native runtime behavior.
 
 Use Fire Event for cases not supported by User Event and for triggering event handlers on composite components.
@@ -395,48 +396,6 @@ render(
 fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 ```
 
-#### On a `FlatList`
-
-```jsx
-import { FlatList, View } from 'react-native';
-import { render, screen, fireEvent } from '@testing-library/react-native';
-
-const onEndReached = jest.fn();
-render(
-  <FlatList
-    data={Array.from({ length: 10 }, (_, key) => ({ key: `${key}` }))}
-    renderItem={() => <View style={{ height: 500, width: 100 }} />}
-    onEndReached={onEndReached}
-    onEndReachedThreshold={0.2}
-    testID="flat-list"
-  />
-);
-const eventData = {
-  nativeEvent: {
-    contentOffset: {
-      y: 500,
-    },
-    contentSize: {
-      // Dimensions of the scrollable content
-      height: 500,
-      width: 100,
-    },
-    layoutMeasurement: {
-      // Dimensions of the device
-      height: 100,
-      width: 100,
-    },
-  },
-};
-
-fireEvent.scroll(screen.getByTestId('flat-list'), eventData);
-expect(onEndReached).toHaveBeenCalled();
-```
-
-:::note
-If you're noticing that components are not being found on a list, even after mocking a scroll event, try changing the [`initialNumToRender`](https://reactnative.dev/docs/flatlist#initialnumtorender) that you have set. If you aren't comfortable changing the code to accept this prop from the unit test, try using an e2e test that might better suit what use case you're attempting to replicate.
-:::
-
 ## Helper functions
 
 ### `waitFor`
@@ -469,7 +428,7 @@ await waitFor(() => false);
 
 ```jsx
 // ❌ missing `await`: `waitFor` will just return Promise that will be rejected when the timeout is reached
-waitFor(() => expect(1).toBe(2))
+waitFor(() => expect(1).toBe(2));
 ```
 
 :::note
@@ -481,9 +440,9 @@ Since `waitFor` is likely to run `expectation` callback multiple times, it is hi
 ```jsx
 await waitFor(() => {
   // ❌ button will be pressed on each waitFor iteration
-  fireEvent.press(screen.getByText('press me'))
-  expect(mockOnPress).toHaveBeenCalled()
-})
+  fireEvent.press(screen.getByText('press me'));
+  expect(mockOnPress).toHaveBeenCalled();
+});
 ```
 
 :::note
@@ -495,7 +454,7 @@ It is also recommended to have a [single assertion per each `waitFor`](https://k
 #### Using a React Native version < 0.71 with Jest fake timers
 
 :::caution
-When using a version of React Native < 0.71 and modern fake timers (the default for `Jest` >= 27), `waitFor` won't work (it will always timeout even if `expectation()` doesn't throw) unless you use the custom [@testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset). 
+When using a version of React Native < 0.71 and modern fake timers (the default for `Jest` >= 27), `waitFor` won't work (it will always timeout even if `expectation()` doesn't throw) unless you use the custom [@testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset).
 :::
 
 `waitFor` checks whether Jest fake timers are enabled and adapts its behavior in such case. The following snippet is a simplified version of how it behaves when fake timers are enabled:
@@ -504,7 +463,7 @@ When using a version of React Native < 0.71 and modern fake timers (the default 
 let fakeTimeRemaining = timeout;
 let lastError;
 
-while(fakeTimeRemaining > 0) {
+while (fakeTimeRemaining > 0) {
   fakeTimeRemaining = fakeTimeRemaining - interval;
   jest.advanceTimersByTime(interval);
   try {
@@ -516,23 +475,23 @@ while(fakeTimeRemaining > 0) {
 }
 
 // reject
-throw lastError
+throw lastError;
 ```
 
-In the following example we test that a function is called after 10 seconds using fake timers. Since we're using fake timers, the test won't depend on real time passing and thus be much faster and more reliable. Also we don't have to advance fake timers through Jest fake timers API because `waitFor` already does this for us.  
+In the following example we test that a function is called after 10 seconds using fake timers. Since we're using fake timers, the test won't depend on real time passing and thus be much faster and more reliable. Also we don't have to advance fake timers through Jest fake timers API because `waitFor` already does this for us.
 
 ```tsx
 // in component
 setTimeout(() => {
   someFunction();
-}, 10000)
+}, 10000);
 
 // in test
 jest.useFakeTimers();
 
 await waitFor(() => {
   expect(someFunction).toHaveBeenCalledWith();
-}, 10000)
+}, 10000);
 ```
 
 :::info
@@ -607,14 +566,15 @@ const detailsScreen = within(screen.getByA11yHint('Details Screen'));
 expect(detailsScreen.getByText('Some Text')).toBeOnTheScreen();
 expect(detailsScreen.getByDisplayValue('Some Value')).toBeOnTheScreen();
 expect(detailsScreen.queryByLabelText('Some Label')).toBeOnTheScreen();
-await expect(detailsScreen.findByA11yHint('Some Label')).resolves.toBeOnTheScreen();
+await expect(
+  detailsScreen.findByA11yHint('Some Label')
+).resolves.toBeOnTheScreen();
 ```
 
 Use cases for scoped queries include:
 
 - queries scoped to a single item inside a FlatList containing many items
 - queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
-
 
 ### `act`
 
