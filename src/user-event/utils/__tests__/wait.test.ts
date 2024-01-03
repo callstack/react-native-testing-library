@@ -16,23 +16,17 @@ describe('wait()', () => {
     expect(advanceTimers).toHaveBeenCalledWith(20);
   });
 
-  it.each(['modern', 'legacy'])(
-    'wait works with %s fake timers',
-    async (type) => {
-      jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
-      jest.spyOn(globalThis, 'setTimeout');
-      const advanceTimers = jest.fn((n) => jest.advanceTimersByTime(n));
-      await wait({ delay: 100, advanceTimers });
+  it.each(['modern', 'legacy'])('wait works with %s fake timers', async (type) => {
+    jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
+    jest.spyOn(globalThis, 'setTimeout');
+    const advanceTimers = jest.fn((n) => jest.advanceTimersByTime(n));
+    await wait({ delay: 100, advanceTimers });
 
-      expect(globalThis.setTimeout).toHaveBeenCalledTimes(1);
-      expect(globalThis.setTimeout).toHaveBeenCalledWith(
-        expect.anything(),
-        100
-      );
-      expect(advanceTimers).toHaveBeenCalledTimes(1);
-      expect(advanceTimers).toHaveBeenCalledWith(100);
-    }
-  );
+    expect(globalThis.setTimeout).toHaveBeenCalledTimes(1);
+    expect(globalThis.setTimeout).toHaveBeenCalledWith(expect.anything(), 100);
+    expect(advanceTimers).toHaveBeenCalledTimes(1);
+    expect(advanceTimers).toHaveBeenCalledWith(100);
+  });
 
   it('wait with null delay does not wait with real timers', async () => {
     jest.spyOn(globalThis, 'setTimeout');

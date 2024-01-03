@@ -35,9 +35,7 @@ const propsToDisplay = [
 /**
  * Preserve props that are helpful in diagnosing test failures, while stripping rest
  */
-export function defaultMapProps(
-  props: Record<string, unknown>
-): Record<string, unknown> {
+export function defaultMapProps(props: Record<string, unknown>): Record<string, unknown> {
   const result: Record<string, unknown> = {};
 
   const styles = StyleSheet.flatten(props.style as ViewStyle);

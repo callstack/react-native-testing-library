@@ -43,11 +43,7 @@ describe('printing element tree', () => {
         importantForAccessibility="yes"
         role="summary"
       >
-        <TextInput
-          placeholder="PLACEHOLDER"
-          value="VALUE"
-          defaultValue="DEFAULT_VALUE"
-        />
+        <TextInput placeholder="PLACEHOLDER" value="VALUE" defaultValue="DEFAULT_VALUE" />
         <Text>Some Text</Text>
       </View>
     );
@@ -93,9 +89,7 @@ describe('printing element tree', () => {
   });
 
   test('prints tree and filters props with getBy, getAllBy, findBy, findAllBy', async () => {
-    const view = render(
-      <View accessibilityViewIsModal key="this is filtered" />
-    );
+    const view = render(<View accessibilityViewIsModal key="this is filtered" />);
 
     expect(() => view.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
@@ -113,8 +107,7 @@ describe('printing element tree', () => {
       />"
     `);
 
-    await expect(view.findByText(/foo/)).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+    await expect(view.findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -122,8 +115,7 @@ describe('printing element tree', () => {
       />"
     `);
 
-    await expect(view.findAllByText(/foo/)).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+    await expect(view.findAllByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -133,9 +125,7 @@ describe('printing element tree', () => {
   });
 
   test('only appends element tree on last failure with findBy', async () => {
-    const { findByText } = render(
-      <View accessibilityViewIsModal key="this is filtered" />
-    );
+    const { findByText } = render(<View accessibilityViewIsModal key="this is filtered" />);
 
     jest.spyOn(screen, 'toJSON');
 

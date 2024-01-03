@@ -102,8 +102,7 @@ test('toBeDisabled()/toBeEnabled() supports Pressable with "disabled" prop', () 
   expect(title).toBeDisabled();
   expect(title).not.toBeEnabled();
 
-  expect(() => expect(pressable).toBeEnabled())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(pressable).toBeEnabled()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBeEnabled()
 
     Received element is not enabled:
@@ -118,8 +117,7 @@ test('toBeDisabled()/toBeEnabled() supports Pressable with "disabled" prop', () 
       />"
   `);
 
-  expect(() => expect(pressable).not.toBeDisabled())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(pressable).not.toBeDisabled()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeDisabled()
 
     Received element is disabled:
@@ -143,8 +141,7 @@ test('toBeDisabled()/toBeEnabled() supports Pressable with "disabled" prop', () 
       </Text>"
   `);
 
-  expect(() => expect(title).not.toBeDisabled())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(title).not.toBeDisabled()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeDisabled()
 
     Received element is disabled:
@@ -160,30 +157,27 @@ test.each([
   ['TouchableHighlight', TouchableHighlight],
   ['TouchableWithoutFeedback', TouchableWithoutFeedback],
   ['TouchableNativeFeedback', TouchableNativeFeedback],
-] as const)(
-  'toBeDisabled()/toBeEnabled() supports %s with "disabled" prop',
-  (_, Component) => {
-    const screen = render(
-      // @ts-expect-error disabled prop is not available on all Touchables
-      <Component disabled testID="subject">
-        <Text>Button</Text>
-      </Component>
-    );
+] as const)('toBeDisabled()/toBeEnabled() supports %s with "disabled" prop', (_, Component) => {
+  const screen = render(
+    // @ts-expect-error disabled prop is not available on all Touchables
+    <Component disabled testID="subject">
+      <Text>Button</Text>
+    </Component>
+  );
 
-    const touchable = screen.getByTestId('subject');
-    expect(touchable).toBeDisabled();
-    expect(touchable).not.toBeEnabled();
+  const touchable = screen.getByTestId('subject');
+  expect(touchable).toBeDisabled();
+  expect(touchable).not.toBeEnabled();
 
-    const title = screen.getByText('Button');
-    expect(title).toBeDisabled();
-    expect(title).not.toBeEnabled();
+  const title = screen.getByText('Button');
+  expect(title).toBeDisabled();
+  expect(title).not.toBeEnabled();
 
-    expect(() => expect(touchable).toBeEnabled()).toThrow();
-    expect(() => expect(touchable).not.toBeDisabled()).toThrow();
-    expect(() => expect(title).toBeEnabled()).toThrow();
-    expect(() => expect(title).not.toBeDisabled()).toThrow();
-  }
-);
+  expect(() => expect(touchable).toBeEnabled()).toThrow();
+  expect(() => expect(touchable).not.toBeDisabled()).toThrow();
+  expect(() => expect(title).toBeEnabled()).toThrow();
+  expect(() => expect(title).not.toBeDisabled()).toThrow();
+});
 
 test.each([
   ['View', View],

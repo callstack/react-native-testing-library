@@ -67,7 +67,6 @@ const mapStateToProps = ({ todos }) => ({
   todoLength: todos.length,
 });
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ addTodo }, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ addTodo }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddTodo);

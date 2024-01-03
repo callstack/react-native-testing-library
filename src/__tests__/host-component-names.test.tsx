@@ -103,8 +103,7 @@ describe('configureHostComponentNamesIfNeeded', () => {
       root: renderer.root,
     });
 
-    expect(() => configureHostComponentNamesIfNeeded())
-      .toThrowErrorMatchingInlineSnapshot(`
+    expect(() => configureHostComponentNamesIfNeeded()).toThrowErrorMatchingInlineSnapshot(`
       "Trying to detect host component names triggered the following error:
 
       Unable to find an element with testID: text

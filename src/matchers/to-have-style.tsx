@@ -1,11 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import {
-  ImageStyle,
-  StyleProp,
-  StyleSheet,
-  TextStyle,
-  ViewStyle,
-} from 'react-native';
+import { ImageStyle, StyleProp, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 import { matcherHint, diff } from 'jest-matcher-utils';
 import { checkHostElement, formatMessage } from './utils';
 
@@ -23,19 +17,13 @@ export function toHaveStyle(
   const expected = (StyleSheet.flatten(style) as StyleLike) ?? {};
   const received = (StyleSheet.flatten(element.props.style) as StyleLike) ?? {};
 
-  const pass = Object.keys(expected).every((key) =>
-    this.equals(expected[key], received[key])
-  );
+  const pass = Object.keys(expected).every((key) => this.equals(expected[key], received[key]));
 
   return {
     pass,
     message: () => {
       const to = this.isNot ? 'not to' : 'to';
-      const matcher = matcherHint(
-        `${this.isNot ? '.not' : ''}.toHaveStyle`,
-        'element',
-        ''
-      );
+      const matcher = matcherHint(`${this.isNot ? '.not' : ''}.toHaveStyle`, 'element', '');
 
       if (pass) {
         return formatMessage(

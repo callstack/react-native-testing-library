@@ -21,11 +21,7 @@ const queryAllByA11yState = (
   instance: ReactTestInstance
 ): QueryAllByQuery<AccessibilityStateMatcher, CommonQueryOptions> =>
   function queryAllByA11yStateFn(matcher, queryOptions) {
-    return findAll(
-      instance,
-      (node) => matchAccessibilityState(node, matcher),
-      queryOptions
-    );
+    return findAll(instance, (node) => matchAccessibilityState(node, matcher), queryOptions);
   };
 
 const buildErrorMessage = (state: AccessibilityStateMatcher = {}) => {
@@ -54,50 +50,21 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 
 export type ByA11yStateQueries = {
   getByA11yState: GetByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
-  getAllByA11yState: GetAllByQuery<
-    AccessibilityStateMatcher,
-    CommonQueryOptions
-  >;
+  getAllByA11yState: GetAllByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
   queryByA11yState: QueryByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
-  queryAllByA11yState: QueryAllByQuery<
-    AccessibilityStateMatcher,
-    CommonQueryOptions
-  >;
+  queryAllByA11yState: QueryAllByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
   findByA11yState: FindByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
-  findAllByA11yState: FindAllByQuery<
-    AccessibilityStateMatcher,
-    CommonQueryOptions
-  >;
+  findAllByA11yState: FindAllByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
 
-  getByAccessibilityState: GetByQuery<
-    AccessibilityStateMatcher,
-    CommonQueryOptions
-  >;
-  getAllByAccessibilityState: GetAllByQuery<
-    AccessibilityStateMatcher,
-    CommonQueryOptions
-  >;
-  queryByAccessibilityState: QueryByQuery<
-    AccessibilityStateMatcher,
-    CommonQueryOptions
-  >;
-  queryAllByAccessibilityState: QueryAllByQuery<
-    AccessibilityStateMatcher,
-    CommonQueryOptions
-  >;
-  findByAccessibilityState: FindByQuery<
-    AccessibilityStateMatcher,
-    CommonQueryOptions
-  >;
-  findAllByAccessibilityState: FindAllByQuery<
-    AccessibilityStateMatcher,
-    CommonQueryOptions
-  >;
+  getByAccessibilityState: GetByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
+  getAllByAccessibilityState: GetAllByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
+  queryByAccessibilityState: QueryByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
+  queryAllByAccessibilityState: QueryAllByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
+  findByAccessibilityState: FindByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
+  findAllByAccessibilityState: FindAllByQuery<AccessibilityStateMatcher, CommonQueryOptions>;
 };
 
-export const bindByA11yStateQueries = (
-  instance: ReactTestInstance
-): ByA11yStateQueries => {
+export const bindByA11yStateQueries = (instance: ReactTestInstance): ByA11yStateQueries => {
   const getByA11yState = getBy(instance);
   const getAllByA11yState = getAllBy(instance);
   const queryByA11yState = queryBy(instance);

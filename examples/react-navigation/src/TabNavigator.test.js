@@ -12,10 +12,6 @@ test('Changing tabs', () => {
   const settingsTab = screen.getByRole('button', { name: 'Settings' });
   fireEvent.press(settingsTab);
 
-  expect(
-    screen.getByRole('header', { name: 'Settings screen' })
-  ).toBeOnTheScreen();
-  expect(
-    screen.queryByRole('header', { name: 'Home screen' })
-  ).not.toBeOnTheScreen();
+  expect(screen.getByRole('header', { name: 'Settings screen' })).toBeOnTheScreen();
+  expect(screen.queryByRole('header', { name: 'Home screen' })).not.toBeOnTheScreen();
 });

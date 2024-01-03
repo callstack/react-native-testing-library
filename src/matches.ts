@@ -41,9 +41,7 @@ export function getDefaultNormalizer({
   return (text: string) => {
     let normalizedText = text;
     normalizedText = trim ? normalizedText.trim() : normalizedText;
-    normalizedText = collapseWhitespace
-      ? normalizedText.replace(/\s+/g, ' ')
-      : normalizedText;
+    normalizedText = collapseWhitespace ? normalizedText.replace(/\s+/g, ' ') : normalizedText;
     return normalizedText;
   };
 }

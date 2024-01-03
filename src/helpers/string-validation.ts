@@ -13,9 +13,7 @@ export const validateStringsRenderedWithinText = (
   return validateStringsRenderedWithinTextForNode(rendererJSON);
 };
 
-const validateStringsRenderedWithinTextForNode = (
-  node: ReactTestRendererNode
-) => {
+const validateStringsRenderedWithinTextForNode = (node: ReactTestRendererNode) => {
   if (typeof node === 'string') {
     return;
   }

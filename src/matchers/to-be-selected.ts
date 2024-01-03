@@ -3,10 +3,7 @@ import { matcherHint } from 'jest-matcher-utils';
 import { isElementSelected } from '../helpers/accessiblity';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeSelected(
-  this: jest.MatcherContext,
-  element: ReactTestInstance
-) {
+export function toBeSelected(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeSelected, this);
 
   return {

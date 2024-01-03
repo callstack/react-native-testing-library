@@ -22,8 +22,7 @@ test('toBeOnTheScreen() on attached element', () => {
 
   const element = screen.getByTestId('test');
   expect(element).toBeOnTheScreen();
-  expect(() => expect(element).not.toBeOnTheScreen())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(element).not.toBeOnTheScreen()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeOnTheScreen()
 
     expected element tree not to contain element, but found
@@ -52,8 +51,7 @@ test('toBeOnTheScreen() on detached element', () => {
 
   expect(element).toBeTruthy();
   expect(element).not.toBeOnTheScreen();
-  expect(() => expect(element).toBeOnTheScreen())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(element).toBeOnTheScreen()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBeOnTheScreen()
 
     element could not be found in the element tree"
@@ -62,8 +60,7 @@ test('toBeOnTheScreen() on detached element', () => {
 
 test('toBeOnTheScreen() on null element', () => {
   expect(null).not.toBeOnTheScreen();
-  expect(() => expect(null).toBeOnTheScreen())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(null).toBeOnTheScreen()).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).toBeOnTheScreen()
 
     received value must be a host element.

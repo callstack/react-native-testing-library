@@ -30,9 +30,7 @@ const queryAllByPlaceholderText = (
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
     return findAll(
       instance,
-      (node) =>
-        isHostTextInput(node) &&
-        matchPlaceholderText(node, placeholder, queryOptions),
+      (node) => isHostTextInput(node) && matchPlaceholderText(node, placeholder, queryOptions),
       queryOptions
     );
   };
@@ -52,10 +50,7 @@ export type ByPlaceholderTextQueries = {
   getByPlaceholderText: GetByQuery<TextMatch, ByPlaceholderTextOptions>;
   getAllByPlaceholderText: GetAllByQuery<TextMatch, ByPlaceholderTextOptions>;
   queryByPlaceholderText: QueryByQuery<TextMatch, ByPlaceholderTextOptions>;
-  queryAllByPlaceholderText: QueryAllByQuery<
-    TextMatch,
-    ByPlaceholderTextOptions
-  >;
+  queryAllByPlaceholderText: QueryAllByQuery<TextMatch, ByPlaceholderTextOptions>;
   findByPlaceholderText: FindByQuery<TextMatch, ByPlaceholderTextOptions>;
   findAllByPlaceholderText: FindAllByQuery<TextMatch, ByPlaceholderTextOptions>;
 };

@@ -7,10 +7,7 @@ export { default as waitForElementToBeRemoved } from './wait-for-element-to-be-r
 export { within, getQueriesForElement } from './within';
 
 export { configure, resetToDefaults } from './config';
-export {
-  isHiddenFromAccessibility,
-  isInaccessible,
-} from './helpers/accessiblity';
+export { isHiddenFromAccessibility, isInaccessible } from './helpers/accessiblity';
 export { getDefaultNormalizer } from './matches';
 export { renderHook } from './render-hook';
 export { screen } from './screen';

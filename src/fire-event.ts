@@ -19,9 +19,7 @@ export function isTouchResponder(element: ReactTestInstance) {
     return false;
   }
 
-  return (
-    Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element)
-  );
+  return Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element);
 }
 
 /**
@@ -59,10 +57,7 @@ export function isEventEnabled(
     );
   }
 
-  if (
-    eventsAffectedByPointerEventsProp.has(eventName) &&
-    !isPointerEventEnabled(element)
-  ) {
+  if (eventsAffectedByPointerEventsProp.has(eventName) && !isPointerEventEnabled(element)) {
     return false;
   }
 
@@ -80,13 +75,10 @@ function findEventHandler(
   eventName: string,
   nearestTouchResponder?: ReactTestInstance
 ): EventHandler | null {
-  const touchResponder = isTouchResponder(element)
-    ? element
-    : nearestTouchResponder;
+  const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
   const handler = getEventHandler(element, eventName);
-  if (handler && isEventEnabled(element, eventName, touchResponder))
-    return handler;
+  if (handler && isEventEnabled(element, eventName, touchResponder)) return handler;
 
   // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
   if (element.parent === null || element.parent.parent === null) {
@@ -118,9 +110,7 @@ type StringWithAutoComplete<T> = T | (string & Record<never, never>);
 
 // String union type of keys of T that start with on, stripped from on
 type OnKeys<T> = keyof {
-  [K in keyof T as K extends `on${infer Rest}`
-    ? Uncapitalize<Rest>
-    : never]: T[K];
+  [K in keyof T as K extends `on${infer Rest}` ? Uncapitalize<Rest> : never]: T[K];
 };
 
 type EventName = StringWithAutoComplete<
@@ -131,11 +121,7 @@ type EventName = StringWithAutoComplete<
   | OnKeys<ScrollViewProps>
 >;
 
-function fireEvent(
-  element: ReactTestInstance,
-  eventName: EventName,
-  ...data: unknown[]
-) {
+function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {
   const handler = findEventHandler(element, eventName);
   if (!handler) {
     return;

@@ -84,8 +84,7 @@ test('toHaveAccessibleName() supports calling without expected name', () => {
   const element = screen.getByTestId('view');
 
   expect(element).toHaveAccessibleName();
-  expect(() => expect(element).not.toHaveAccessibleName())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(element).not.toHaveAccessibleName()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toHaveAccessibleName()
 
     Expected element not to have accessible name:
@@ -100,8 +99,7 @@ test('toHaveAccessibleName() handles a view without name when called without exp
   const element = screen.getByTestId('view');
 
   expect(element).not.toHaveAccessibleName();
-  expect(() => expect(element).toHaveAccessibleName())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(element).toHaveAccessibleName()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toHaveAccessibleName()
 
     Expected element to have accessible name:
@@ -114,8 +112,7 @@ test('toHaveAccessibleName() handles a view without name when called without exp
 it('toHaveAccessibleName() rejects non-host element', () => {
   const nonElement = 'This is not a ReactTestInstance';
 
-  expect(() => expect(nonElement).toHaveAccessibleName())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(nonElement).toHaveAccessibleName()).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).toHaveAccessibleName()
 
     received value must be a host element.
@@ -123,8 +120,7 @@ it('toHaveAccessibleName() rejects non-host element', () => {
     Received has value: "This is not a ReactTestInstance""
   `);
 
-  expect(() => expect(nonElement).not.toHaveAccessibleName())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(nonElement).not.toHaveAccessibleName()).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).not.toHaveAccessibleName()
 
     received value must be a host element.

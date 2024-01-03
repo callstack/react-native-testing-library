@@ -49,31 +49,17 @@ export async function type(
     const previousText = element.props.value ?? currentText;
     currentText = applyKey(previousText, key);
 
-    await emitTypingEvents(
-      this.config,
-      element,
-      key,
-      currentText,
-      previousText
-    );
+    await emitTypingEvents(this.config, element, key, currentText, previousText);
   }
 
   const finalText = element.props.value ?? currentText;
   await wait(this.config);
 
   if (options?.submitEditing) {
-    dispatchEvent(
-      element,
-      'submitEditing',
-      EventBuilder.TextInput.submitEditing(finalText)
-    );
+    dispatchEvent(element, 'submitEditing', EventBuilder.TextInput.submitEditing(finalText));
   }
 
-  dispatchEvent(
-    element,
-    'endEditing',
-    EventBuilder.TextInput.endEditing(finalText)
-  );
+  dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(finalText));
 
   dispatchEvent(element, 'blur', EventBuilder.Common.blur());
 }
@@ -107,11 +93,7 @@ export async function emitTypingEvents(
     start: currentText.length,
     end: currentText.length,
   };
-  dispatchEvent(
-    element,
-    'selectionChange',
-    EventBuilder.TextInput.selectionChange(selectionRange)
-  );
+  dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(selectionRange));
 
   // According to the docs only multiline TextInput emits contentSizeChange event
   // @see: https://reactnative.dev/docs/textinput#oncontentsizechange

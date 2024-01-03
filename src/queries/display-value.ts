@@ -32,9 +32,7 @@ const queryAllByDisplayValue = (
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
     return findAll(
       instance,
-      (node) =>
-        isHostTextInput(node) &&
-        matchDisplayValue(node, displayValue, queryOptions),
+      (node) => isHostTextInput(node) && matchDisplayValue(node, displayValue, queryOptions),
       queryOptions
     );
   };
@@ -59,9 +57,7 @@ export type ByDisplayValueQueries = {
   findAllByDisplayValue: FindAllByQuery<TextMatch, ByDisplayValueOptions>;
 };
 
-export const bindByDisplayValueQueries = (
-  instance: ReactTestInstance
-): ByDisplayValueQueries => ({
+export const bindByDisplayValueQueries = (instance: ReactTestInstance): ByDisplayValueQueries => ({
   getByDisplayValue: getBy(instance),
   getAllByDisplayValue: getAllBy(instance),
   queryByDisplayValue: queryBy(instance),

@@ -13,11 +13,7 @@ import { isHostElement } from '../helpers/component-tree';
 import { defaultMapProps } from '../helpers/format-default';
 
 class HostElementTypeError extends Error {
-  constructor(
-    received: unknown,
-    matcherFn: jest.CustomMatcher,
-    context: jest.MatcherContext
-  ) {
+  constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {
     super();
 
     /* istanbul ignore next */
@@ -34,11 +30,7 @@ class HostElementTypeError extends Error {
     }
 
     this.message = [
-      matcherHint(
-        `${context.isNot ? '.not' : ''}.${matcherFn.name}`,
-        'received',
-        ''
-      ),
+      matcherHint(`${context.isNot ? '.not' : ''}.${matcherFn.name}`, 'received', ''),
       '',
       `${RECEIVED_COLOR('received')} value must be a host element.`,
       withType,
@@ -74,8 +66,7 @@ export function formatElement(element: ReactTestInstance | null) {
   }
 
   const { children, ...props } = element.props;
-  const childrenToDisplay =
-    typeof children === 'string' ? [children] : undefined;
+  const childrenToDisplay = typeof children === 'string' ? [children] : undefined;
 
   return redent(
     prettyFormat(
@@ -115,12 +106,8 @@ export function formatMessage(
 ) {
   return [
     `${matcher}\n`,
-    `${expectedLabel}:\n${EXPECTED_COLOR(
-      redent(formatValue(expectedValue), 2)
-    )}`,
-    `${receivedLabel}:\n${RECEIVED_COLOR(
-      redent(formatValue(receivedValue), 2)
-    )}`,
+    `${expectedLabel}:\n${EXPECTED_COLOR(redent(formatValue(expectedValue), 2))}`,
+    `${receivedLabel}:\n${RECEIVED_COLOR(redent(formatValue(receivedValue), 2))}`,
   ].join('\n');
 }
 

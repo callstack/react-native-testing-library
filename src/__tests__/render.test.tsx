@@ -49,9 +49,7 @@ class Banana extends React.Component<any, { fresh: boolean }> {
     return (
       <View>
         <Text>Is the banana fresh?</Text>
-        <Text testID="bananaFresh">
-          {this.state.fresh ? 'fresh' : 'not fresh'}
-        </Text>
+        <Text testID="bananaFresh">{this.state.fresh ? 'fresh' : 'not fresh'}</Text>
         <TextInput
           testID="bananaCustomFreshness"
           placeholder={PLACEHOLDER_FRESHNESS}
@@ -95,9 +93,7 @@ test('UNSAFE_getByProps, UNSAFE_queryByProps', () => {
   const primaryType = UNSAFE_getByProps({ type: 'primary' });
 
   expect(primaryType.props.children).toBe('Change freshness!');
-  expect(() => UNSAFE_getByProps({ type: 'inexistent' })).toThrow(
-    'No instances found'
-  );
+  expect(() => UNSAFE_getByProps({ type: 'inexistent' })).toThrow('No instances found');
 
   expect(UNSAFE_queryByProps({ type: 'primary' })).toBe(primaryType);
   expect(UNSAFE_queryByProps({ type: 'inexistent' })).toBeNull();
@@ -108,9 +104,7 @@ test('UNSAFE_getAllByProp, UNSAFE_queryAllByProps', () => {
   const primaryTypes = UNSAFE_getAllByProps({ type: 'primary' });
 
   expect(primaryTypes).toHaveLength(1);
-  expect(() => UNSAFE_getAllByProps({ type: 'inexistent' })).toThrow(
-    'No instances found'
-  );
+  expect(() => UNSAFE_getAllByProps({ type: 'inexistent' })).toThrow('No instances found');
 
   expect(UNSAFE_queryAllByProps({ type: 'primary' })).toEqual(primaryTypes);
   expect(UNSAFE_queryAllByProps({ type: 'inexistent' })).toHaveLength(0);
@@ -186,9 +180,7 @@ test('renders options.wrapper around updated node', () => {
     wrapper: WrapperComponent,
   });
 
-  rerender(
-    <View testID="inner" accessibilityLabel="test" accessibilityHint="test" />
-  );
+  rerender(<View testID="inner" accessibilityLabel="test" accessibilityHint="test" />);
 
   expect(getByTestId('wrapper')).toBeTruthy();
   expect(toJSON()).toMatchInlineSnapshot(`

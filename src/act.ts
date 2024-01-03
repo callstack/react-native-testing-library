@@ -44,10 +44,7 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
       if (callbackNeedsToBeAwaited) {
         const thenable = actResult;
         return {
-          then: (
-            resolve: (value: never) => never,
-            reject: (value: never) => never
-          ) => {
+          then: (resolve: (value: never) => never, reject: (value: never) => never) => {
             // eslint-disable-next-line
             thenable.then(
               // eslint-disable-next-line promise/always-return
@@ -80,7 +77,4 @@ const act: ReactAct = checkReactVersionAtLeast(18, 0)
   : reactTestRendererAct;
 
 export default act;
-export {
-  setIsReactActEnvironment as setReactActEnvironment,
-  getIsReactActEnvironment,
-};
+export { setIsReactActEnvironment as setReactActEnvironment, getIsReactActEnvironment };

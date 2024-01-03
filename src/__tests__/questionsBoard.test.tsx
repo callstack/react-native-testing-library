@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  ScrollView,
-  TextInput,
-} from 'react-native';
+import { View, TouchableOpacity, Text, ScrollView, TextInput } from 'react-native';
 import { render, fireEvent } from '..';
 
 type QuestionsBoardProps = {

@@ -7,7 +7,6 @@ title: Redux Integration
 This examples has not been updated for a long time and not showcase current recommended testing practices. We plan to update this document soon.
 :::
 
-
 This section deals with testing RN applications developed with Redux. We will be developing a simple TODO application capable of adding and removing an item. Once included, the timestamp is included.
 
 ## Setting up

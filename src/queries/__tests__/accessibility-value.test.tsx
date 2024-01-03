@@ -17,9 +17,7 @@ const Typography = ({ children, ...rest }: any) => {
 
 const Button = ({ children }: { children: React.ReactNode }) => (
   <TouchableOpacity>
-    <Typography accessibilityValue={{ min: 40, max: 60 }}>
-      {children}
-    </Typography>
+    <Typography accessibilityValue={{ min: 40, max: 60 }}>{children}</Typography>
   </TouchableOpacity>
 );
 
@@ -31,9 +29,7 @@ const Section = () => (
 );
 
 test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
-  const { getByA11yValue, queryByA11yValue, findByA11yValue } = render(
-    <Section />
-  );
+  const { getByA11yValue, queryByA11yValue, findByA11yValue } = render(<Section />);
 
   expect(getByA11yValue({ min: 40 }).props.accessibilityValue).toEqual({
     min: 40,
@@ -44,17 +40,11 @@ test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
     max: 60,
   });
 
-  expect(() => getByA11yValue({ min: 50 })).toThrow(
-    'Unable to find an element with min value: 50'
-  );
+  expect(() => getByA11yValue({ min: 50 })).toThrow('Unable to find an element with min value: 50');
   expect(queryByA11yValue({ min: 50 })).toEqual(null);
 
-  expect(() => getByA11yValue({ max: 60 })).toThrow(
-    'Found multiple elements with max value: 60'
-  );
-  expect(() => queryByA11yValue({ max: 60 })).toThrow(
-    'Found multiple elements with max value: 60'
-  );
+  expect(() => getByA11yValue({ max: 60 })).toThrow('Found multiple elements with max value: 60');
+  expect(() => queryByA11yValue({ max: 60 })).toThrow('Found multiple elements with max value: 60');
 
   const asyncElement = await findByA11yValue({ min: 40 });
   expect(asyncElement.props.accessibilityValue).toEqual({
@@ -70,9 +60,7 @@ test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
 });
 
 test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
-  const { getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue } = render(
-    <Section />
-  );
+  const { getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue } = render(<Section />);
 
   expect(getAllByA11yValue({ min: 40 })).toHaveLength(1);
   expect(queryAllByA11yValue({ min: 40 })).toHaveLength(1);
@@ -99,14 +87,10 @@ test('byA11yValue queries support hidden option', () => {
     </Text>
   );
 
-  expect(
-    getByA11yValue({ max: 10 }, { includeHiddenElements: true })
-  ).toBeTruthy();
+  expect(getByA11yValue({ max: 10 }, { includeHiddenElements: true })).toBeTruthy();
 
   expect(queryByA11yValue({ max: 10 })).toBeFalsy();
-  expect(
-    queryByA11yValue({ max: 10 }, { includeHiddenElements: false })
-  ).toBeFalsy();
+  expect(queryByA11yValue({ max: 10 }, { includeHiddenElements: false })).toBeFalsy();
   expect(() => getByA11yValue({ max: 10 }, { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with max value: 10
@@ -130,20 +114,17 @@ test('byA11yValue queries support hidden option', () => {
 
 test('byA11yValue error messages', () => {
   const { getByA11yValue } = render(<View />);
-  expect(() => getByA11yValue({ min: 10, max: 10 }))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => getByA11yValue({ min: 10, max: 10 })).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 10, max value: 10
 
     <View />"
   `);
-  expect(() => getByA11yValue({ max: 20, now: 5 }))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => getByA11yValue({ max: 20, now: 5 })).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with max value: 20, now value: 5
 
     <View />"
   `);
-  expect(() => getByA11yValue({ min: 1, max: 2, now: 3 }))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => getByA11yValue({ min: 1, max: 2, now: 3 })).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1, max value: 2, now value: 3
 
     <View />"
@@ -251,12 +232,9 @@ test('*ByAccessibilityValue deprecation warnings', async () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const view = render(
-    <View accessibilityValue={{ min: 2 }} key="NOT_RELEVANT" />
-  );
+  const view = render(<View accessibilityValue={{ min: 2 }} key="NOT_RELEVANT" />);
 
-  expect(() => view.getByA11yValue({ min: 1 }))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getByA11yValue({ min: 1 })).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1
 
     <View
@@ -268,8 +246,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => view.getAllByA11yValue({ min: 1 }))
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => view.getAllByA11yValue({ min: 1 })).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1
 
     <View
@@ -281,8 +258,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findByA11yValue({ min: 1 })).rejects
-    .toThrowErrorMatchingInlineSnapshot(`
+  await expect(view.findByA11yValue({ min: 1 })).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1
 
     <View
@@ -294,8 +270,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findAllByA11yValue({ min: 1 })).rejects
-    .toThrowErrorMatchingInlineSnapshot(`
+  await expect(view.findAllByA11yValue({ min: 1 })).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with min value: 1
 
     <View
@@ -326,18 +301,12 @@ describe('getByAccessibilityValue supports "aria-*" props', () => {
 
   test('supports "aria-valuetext"', () => {
     const screen = render(<View aria-valuetext="Hello World" />);
-    expect(
-      screen.getByAccessibilityValue({ text: 'Hello World' })
-    ).toBeTruthy();
+    expect(screen.getByAccessibilityValue({ text: 'Hello World' })).toBeTruthy();
     expect(screen.getByAccessibilityValue({ text: /hello/i })).toBeTruthy();
   });
 
   test('supports multiple "aria-value*" props', () => {
-    const screen = render(
-      <View aria-valuenow={50} aria-valuemin={0} aria-valuemax={100} />
-    );
-    expect(
-      screen.getByAccessibilityValue({ now: 50, min: 0, max: 100 })
-    ).toBeTruthy();
+    const screen = render(<View aria-valuenow={50} aria-valuemin={0} aria-valuemax={100} />);
+    expect(screen.getByAccessibilityValue({ now: 50, min: 0, max: 100 })).toBeTruthy();
   });
 });

@@ -2,6 +2,7 @@
 id: migration-v7
 title: Migration to 7.0
 ---
+
 import TOCInline from '@theme/TOCInline';
 
 :::caution

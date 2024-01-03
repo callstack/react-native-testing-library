@@ -72,12 +72,8 @@ describe('accessibility value', () => {
       </Text>
     );
 
-    expect(
-      getByRole('adjustable', { name: 'Hello', value: { min: 10 } })
-    ).toBeTruthy();
-    expect(
-      getByRole('adjustable', { disabled: true, value: { min: 10 } })
-    ).toBeTruthy();
+    expect(getByRole('adjustable', { name: 'Hello', value: { min: 10 } })).toBeTruthy();
+    expect(getByRole('adjustable', { disabled: true, value: { min: 10 } })).toBeTruthy();
 
     expect(() => getByRole('adjustable', { name: 'Hello', value: { min: 5 } }))
       .toThrowErrorMatchingInlineSnapshot(`
@@ -148,9 +144,8 @@ describe('accessibility value', () => {
         Hello
       </Text>"
     `);
-    expect(() =>
-      getByRole('adjustable', { selected: true, value: { min: 10 } })
-    ).toThrowErrorMatchingInlineSnapshot(`
+    expect(() => getByRole('adjustable', { selected: true, value: { min: 10 } }))
+      .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: "adjustable", selected state: true, min value: 10
 
       <Text
@@ -193,35 +188,17 @@ describe('accessibility value', () => {
   });
 
   test('supports "aria-valuetext" prop', () => {
-    const screen = render(
-      <View accessible role="slider" aria-valuetext="Hello World" />
-    );
-    expect(
-      screen.getByRole('slider', { value: { text: 'Hello World' } })
-    ).toBeTruthy();
-    expect(
-      screen.getByRole('slider', { value: { text: /hello/i } })
-    ).toBeTruthy();
-    expect(
-      screen.queryByRole('slider', { value: { text: 'Hello' } })
-    ).toBeNull();
-    expect(
-      screen.queryByRole('slider', { value: { text: /salut/i } })
-    ).toBeNull();
+    const screen = render(<View accessible role="slider" aria-valuetext="Hello World" />);
+    expect(screen.getByRole('slider', { value: { text: 'Hello World' } })).toBeTruthy();
+    expect(screen.getByRole('slider', { value: { text: /hello/i } })).toBeTruthy();
+    expect(screen.queryByRole('slider', { value: { text: 'Hello' } })).toBeNull();
+    expect(screen.queryByRole('slider', { value: { text: /salut/i } })).toBeNull();
   });
 
   test('supports multiple "aria-value*" props', () => {
     const screen = render(
-      <View
-        accessible
-        role="slider"
-        aria-valuenow={50}
-        aria-valuemin={0}
-        aria-valuemax={100}
-      />
+      <View accessible role="slider" aria-valuenow={50} aria-valuemin={0} aria-valuemax={100} />
     );
-    expect(
-      screen.getByRole('slider', { value: { now: 50, min: 0, max: 100 } })
-    ).toBeTruthy();
+    expect(screen.getByRole('slider', { value: { now: 50, min: 0, max: 100 } })).toBeTruthy();
   });
 });

@@ -16,9 +16,7 @@ describe('userEvent.press with real timers', () => {
   beforeEach(() => {
     jest.useRealTimers();
     jest.restoreAllMocks();
-    jest
-      .spyOn(WarnAboutRealTimers, 'warnAboutRealTimersIfNeeded')
-      .mockImplementation();
+    jest.spyOn(WarnAboutRealTimers, 'warnAboutRealTimersIfNeeded').mockImplementation();
   });
 
   test('calls onPressIn, onPress and onPressOut prop of touchable', async () => {

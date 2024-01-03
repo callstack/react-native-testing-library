@@ -22,11 +22,7 @@ export function renderHook<Result, Props>(
 
   const result: React.MutableRefObject<Result | null> = React.createRef();
 
-  function TestComponent({
-    renderCallbackProps,
-  }: {
-    renderCallbackProps: Props;
-  }) {
+  function TestComponent({ renderCallbackProps }: { renderCallbackProps: Props }) {
     const renderResult = renderCallback(renderCallbackProps);
 
     React.useEffect(() => {
@@ -46,9 +42,7 @@ export function renderHook<Result, Props>(
   );
 
   function rerender(rerenderCallbackProps: Props) {
-    return baseRerender(
-      <TestComponent renderCallbackProps={rerenderCallbackProps} />
-    );
+    return baseRerender(<TestComponent renderCallbackProps={rerenderCallbackProps} />);
   }
 
   // @ts-expect-error result is ill typed because ref is initialized to null

@@ -8,8 +8,7 @@ test('toBeVisible() on empty view', () => {
 
   const view = screen.getByTestId('view');
   expect(view).toBeVisible();
-  expect(() => expect(view).not.toBeVisible())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(view).not.toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeVisible()
 
     Received element is visible:
@@ -24,8 +23,7 @@ test('toBeVisible() on view with opacity', () => {
 
   const view = screen.getByTestId('view');
   expect(view).toBeVisible();
-  expect(() => expect(view).not.toBeVisible())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(view).not.toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeVisible()
 
     Received element is visible:
@@ -122,8 +120,7 @@ test('toBeVisible() on empty Modal', () => {
 
   const modal = screen.getByTestId('modal');
   expect(modal).toBeVisible();
-  expect(() => expect(modal).not.toBeVisible())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(modal).not.toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeVisible()
 
     Received element is visible:
@@ -191,9 +188,7 @@ test('toBeVisible() on view within inaccessible view', () => {
       </View>
     </View>
   );
-  expect(
-    screen.getByTestId('test', { includeHiddenElements: true })
-  ).not.toBeVisible();
+  expect(screen.getByTestId('test', { includeHiddenElements: true })).not.toBeVisible();
 });
 
 test('toBeVisible() on inaccessible view (iOS)', () => {
@@ -214,15 +209,11 @@ test('toBeVisible() on view within inaccessible view (iOS)', () => {
       </View>
     </View>
   );
-  expect(
-    screen.getByTestId('test', { includeHiddenElements: true })
-  ).not.toBeVisible();
+  expect(screen.getByTestId('test', { includeHiddenElements: true })).not.toBeVisible();
 });
 
 test('toBeVisible() on inaccessible view (Android)', () => {
-  render(
-    <View testID="test" importantForAccessibility="no-hide-descendants" />
-  );
+  render(<View testID="test" importantForAccessibility="no-hide-descendants" />);
 
   const test = screen.getByTestId('test', { includeHiddenElements: true });
   expect(test).not.toBeVisible();
@@ -239,9 +230,7 @@ test('toBeVisible() on view within inaccessible view (Android)', () => {
       </View>
     </View>
   );
-  expect(
-    screen.getByTestId('test', { includeHiddenElements: true })
-  ).not.toBeVisible();
+  expect(screen.getByTestId('test', { includeHiddenElements: true })).not.toBeVisible();
 });
 
 test('toBeVisible() on null elements', () => {
@@ -264,8 +253,7 @@ test('toBeVisible() on non-React elements', () => {
       Received has value: {"name": "Non-React element"}"
     `);
 
-  expect(() => expect(true).not.toBeVisible())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(true).not.toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
       "expect(received).not.toBeVisible()
 
       received value must be a host element.

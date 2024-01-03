@@ -8,10 +8,7 @@ import { UserEventInstance } from './setup';
 import { dispatchEvent, wait } from './utils';
 import { emitTypingEvents } from './type/type';
 
-export async function clear(
-  this: UserEventInstance,
-  element: ReactTestInstance
-): Promise<void> {
+export async function clear(this: UserEventInstance, element: ReactTestInstance): Promise<void> {
   if (!isHostTextInput(element)) {
     throw new ErrorWithStack(
       `clear() only supports host "TextInput" elements. Passed element has type: "${element.type}".`,
@@ -32,29 +29,15 @@ export async function clear(
     start: 0,
     end: previousText.length,
   };
-  dispatchEvent(
-    element,
-    'selectionChange',
-    EventBuilder.TextInput.selectionChange(selectionRange)
-  );
+  dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(selectionRange));
 
   // 3. Press backspace
   const finalText = '';
-  await emitTypingEvents(
-    this.config,
-    element,
-    'Backspace',
-    finalText,
-    previousText
-  );
+  await emitTypingEvents(this.config, element, 'Backspace', finalText, previousText);
 
   // 4. Exit element
   await wait(this.config);
-  dispatchEvent(
-    element,
-    'endEditing',
-    EventBuilder.TextInput.endEditing(finalText)
-  );
+  dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(finalText));
 
   dispatchEvent(element, 'blur', EventBuilder.Common.blur());
 }

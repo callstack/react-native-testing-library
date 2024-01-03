@@ -37,9 +37,7 @@ const UNSAFE_queryByType = (
   };
 
 const UNSAFE_queryAllByType =
-  (
-    instance: ReactTestInstance
-  ): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) =>
+  (instance: ReactTestInstance): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) =>
   (type: React.ComponentType<any>) => {
     try {
       return UNSAFE_getAllByType(instance)(type);
@@ -51,21 +49,13 @@ const UNSAFE_queryAllByType =
 // Unsafe aliases
 export type UnsafeByTypeQueries = {
   UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
-  UNSAFE_getAllByType: <P>(
-    type: React.ComponentType<P>
-  ) => Array<ReactTestInstance>;
-  UNSAFE_queryByType: <P>(
-    type: React.ComponentType<P>
-  ) => ReactTestInstance | null;
-  UNSAFE_queryAllByType: <P>(
-    type: React.ComponentType<P>
-  ) => Array<ReactTestInstance>;
+  UNSAFE_getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
+  UNSAFE_queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
+  UNSAFE_queryAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
 };
 
 // TODO: migrate to makeQueries pattern
-export const bindUnsafeByTypeQueries = (
-  instance: ReactTestInstance
-): UnsafeByTypeQueries => ({
+export const bindUnsafeByTypeQueries = (instance: ReactTestInstance): UnsafeByTypeQueries => ({
   UNSAFE_getByType: UNSAFE_getByType(instance),
   UNSAFE_getAllByType: UNSAFE_getAllByType(instance),
   UNSAFE_queryByType: UNSAFE_queryByType(instance),

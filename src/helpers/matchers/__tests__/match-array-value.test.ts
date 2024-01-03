@@ -2,21 +2,15 @@ import { matchArrayProp } from '../match-array-prop';
 
 test('returns true given 2 identical prop and matcher', () => {
   expect(matchArrayProp(['banana'], ['banana'])).toEqual(true);
-  expect(matchArrayProp(['banana', 'apple'], ['banana', 'apple'])).toEqual(
-    true
-  );
+  expect(matchArrayProp(['banana', 'apple'], ['banana', 'apple'])).toEqual(true);
 });
 
 test('returns true when the prop contains all the values of the matcher', () => {
-  expect(
-    matchArrayProp(['banana', 'apple', 'orange'], ['banana', 'orange'])
-  ).toEqual(true);
+  expect(matchArrayProp(['banana', 'apple', 'orange'], ['banana', 'orange'])).toEqual(true);
 });
 
 test('returns false when the prop does not contain all the values of the matcher', () => {
-  expect(
-    matchArrayProp(['banana', 'apple', 'orange'], ['banana', 'pear'])
-  ).toEqual(false);
+  expect(matchArrayProp(['banana', 'apple', 'orange'], ['banana', 'pear'])).toEqual(false);
 });
 
 test('returns false when prop is undefined', () => {
@@ -28,7 +22,5 @@ test('returns false when the matcher is an empty list', () => {
 });
 
 test('returns false given 2 different prop and matchers', () => {
-  expect(matchArrayProp(['banana', 'apple'], ['banana', 'orange'])).toEqual(
-    false
-  );
+  expect(matchArrayProp(['banana', 'apple'], ['banana', 'orange'])).toEqual(false);
 });

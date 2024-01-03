@@ -21,11 +21,7 @@ const queryAllByA11yValue = (
   instance: ReactTestInstance
 ): QueryAllByQuery<AccessibilityValueMatcher, CommonQueryOptions> =>
   function queryAllByA11yValueFn(value, queryOptions) {
-    return findAll(
-      instance,
-      (node) => matchAccessibilityValue(node, value),
-      queryOptions
-    );
+    return findAll(instance, (node) => matchAccessibilityValue(node, value), queryOptions);
   };
 
 const formatQueryParams = (matcher: AccessibilityValueMatcher) => {
@@ -54,50 +50,21 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 
 export type ByA11yValueQueries = {
   getByA11yValue: GetByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
-  getAllByA11yValue: GetAllByQuery<
-    AccessibilityValueMatcher,
-    CommonQueryOptions
-  >;
+  getAllByA11yValue: GetAllByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
   queryByA11yValue: QueryByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
-  queryAllByA11yValue: QueryAllByQuery<
-    AccessibilityValueMatcher,
-    CommonQueryOptions
-  >;
+  queryAllByA11yValue: QueryAllByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
   findByA11yValue: FindByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
-  findAllByA11yValue: FindAllByQuery<
-    AccessibilityValueMatcher,
-    CommonQueryOptions
-  >;
+  findAllByA11yValue: FindAllByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
 
-  getByAccessibilityValue: GetByQuery<
-    AccessibilityValueMatcher,
-    CommonQueryOptions
-  >;
-  getAllByAccessibilityValue: GetAllByQuery<
-    AccessibilityValueMatcher,
-    CommonQueryOptions
-  >;
-  queryByAccessibilityValue: QueryByQuery<
-    AccessibilityValueMatcher,
-    CommonQueryOptions
-  >;
-  queryAllByAccessibilityValue: QueryAllByQuery<
-    AccessibilityValueMatcher,
-    CommonQueryOptions
-  >;
-  findByAccessibilityValue: FindByQuery<
-    AccessibilityValueMatcher,
-    CommonQueryOptions
-  >;
-  findAllByAccessibilityValue: FindAllByQuery<
-    AccessibilityValueMatcher,
-    CommonQueryOptions
-  >;
+  getByAccessibilityValue: GetByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
+  getAllByAccessibilityValue: GetAllByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
+  queryByAccessibilityValue: QueryByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
+  queryAllByAccessibilityValue: QueryAllByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
+  findByAccessibilityValue: FindByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
+  findAllByAccessibilityValue: FindAllByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
 };
 
-export const bindByA11yValueQueries = (
-  instance: ReactTestInstance
-): ByA11yValueQueries => {
+export const bindByA11yValueQueries = (instance: ReactTestInstance): ByA11yValueQueries => {
   const getByA11yValue = getBy(instance);
   const getAllByA11yValue = getAllBy(instance);
   const queryByA11yValue = queryBy(instance);

@@ -34,22 +34,14 @@ type ByRoleOptions = CommonQueryOptions &
     value?: AccessibilityValueMatcher;
   };
 
-const matchAccessibleNameIfNeeded = (
-  node: ReactTestInstance,
-  name?: TextMatch
-) => {
+const matchAccessibleNameIfNeeded = (node: ReactTestInstance, name?: TextMatch) => {
   if (name == null) return true;
 
   const { queryAllByText, queryAllByLabelText } = getQueriesForElement(node);
-  return (
-    queryAllByText(name).length > 0 || queryAllByLabelText(name).length > 0
-  );
+  return queryAllByText(name).length > 0 || queryAllByLabelText(name).length > 0;
 };
 
-const matchAccessibleStateIfNeeded = (
-  node: ReactTestInstance,
-  options?: ByRoleOptions
-) => {
+const matchAccessibleStateIfNeeded = (node: ReactTestInstance, options?: ByRoleOptions) => {
   return options != null ? matchAccessibilityState(node, options) : true;
 };
 
@@ -60,9 +52,7 @@ const matchAccessibilityValueIfNeeded = (
   return value != null ? matchAccessibilityValue(node, value) : true;
 };
 
-const queryAllByRole = (
-  instance: ReactTestInstance
-): QueryAllByQuery<TextMatch, ByRoleOptions> =>
+const queryAllByRole = (instance: ReactTestInstance): QueryAllByQuery<TextMatch, ByRoleOptions> =>
   function queryAllByRoleFn(role, options) {
     return findAll(
       instance,
@@ -120,9 +110,7 @@ export type ByRoleQueries = {
   findAllByRole: FindAllByQuery<TextMatch, ByRoleOptions>;
 };
 
-export const bindByRoleQueries = (
-  instance: ReactTestInstance
-): ByRoleQueries => ({
+export const bindByRoleQueries = (instance: ReactTestInstance): ByRoleQueries => ({
   getByRole: getBy(instance),
   getAllByRole: getAllBy(instance),
   queryByRole: queryBy(instance),

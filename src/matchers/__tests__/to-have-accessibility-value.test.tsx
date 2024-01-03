@@ -57,9 +57,7 @@ describe('toHaveAccessibilityValue', () => {
   });
 
   it('supports multi-argument matching', () => {
-    render(
-      <View accessibilityValue={{ min: 1, max: 10, now: 5, text: '5/10' }} />
-    );
+    render(<View accessibilityValue={{ min: 1, max: 10, now: 5, text: '5/10' }} />);
 
     expect(screen.root).toHaveAccessibilityValue({ now: 5 });
     expect(screen.root).toHaveAccessibilityValue({ now: 5, min: 1 });

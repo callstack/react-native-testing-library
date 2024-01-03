@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  Button,
-  Image,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Button, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getDefaultNormalizer, render, within } from '../..';
 
 test('byText matches simple text', () => {
@@ -68,17 +61,13 @@ test('getByText, queryByText', () => {
   const sameButton = getByText('not fresh');
 
   expect(sameButton.props.children).toBe('not fresh');
-  expect(() => getByText('InExistent')).toThrow(
-    'Unable to find an element with text: InExistent'
-  );
+  expect(() => getByText('InExistent')).toThrow('Unable to find an element with text: InExistent');
 
   const zeroText = getByText('0');
 
   expect(queryByText(/change/i)).toBe(button);
   expect(queryByText('InExistent')).toBeNull();
-  expect(() => queryByText(/fresh/)).toThrow(
-    'Found multiple elements with text: /fresh/'
-  );
+  expect(() => queryByText(/fresh/)).toThrow('Found multiple elements with text: /fresh/');
   expect(queryByText('0')).toBe(zeroText);
 });
 
@@ -99,11 +88,7 @@ test('getByText, queryByText with children as Array', () => {
   const { getByText } = render(<BananaStore />);
 
   const threeBananaBunch = getByText('There are 3 bananas in the bunch');
-  expect(threeBananaBunch.props.children).toEqual([
-    'There are ',
-    3,
-    ' bananas in the bunch',
-  ]);
+  expect(threeBananaBunch.props.children).toEqual(['There are ', 3, ' bananas in the bunch']);
 });
 
 test('getAllByText, queryAllByText', () => {
@@ -284,9 +269,7 @@ test('queryByText with nested Text components: not-exact text match returns the 
   );
 
   expect(queryByTextFirstCase('My text')).toBe(null);
-  expect(
-    queryByTextSecondCase('My text', { exact: false })?.props.nativeID
-  ).toBe('2');
+  expect(queryByTextSecondCase('My text', { exact: false })?.props.nativeID).toBe('2');
 });
 
 test('queryAllByText does not match several times the same text', () => {
@@ -317,11 +300,7 @@ describe('supports TextMatch options', () => {
     const { getByText, getAllByText } = render(
       <View>
         <Text testID="text">Text and details</Text>
-        <Button
-          testID="button"
-          title="Button and a detail"
-          onPress={jest.fn()}
-        />
+        <Button testID="button" title="Button and a detail" onPress={jest.fn()} />
       </View>
     );
 
@@ -368,11 +347,7 @@ describe('supports TextMatch options', () => {
     const { getByText, getAllByText } = render(
       <View>
         <Text testID="text">Text and details</Text>
-        <Button
-          testID="button"
-          title="Button and a DeTAil"
-          onPress={jest.fn()}
-        />
+        <Button testID="button" title="Button and a DeTAil" onPress={jest.fn()} />
       </View>
     );
 
@@ -416,8 +391,7 @@ describe('Supports normalization', () => {
 
   test('normalizer function is customisable', () => {
     const testText = 'A TO REMOVE text';
-    const normalizerFn = (textToNormalize: string) =>
-      textToNormalize.replace('TO REMOVE ', '');
+    const normalizerFn = (textToNormalize: string) => textToNormalize.replace('TO REMOVE ', '');
     const { getByText } = render(
       <View>
         <Text>{testText}</Text>
@@ -531,8 +505,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findByText(/foo/)).rejects
-    .toThrowErrorMatchingInlineSnapshot(`
+  await expect(view.findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
     <View
@@ -540,8 +513,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findAllByText(/foo/)).rejects
-    .toThrowErrorMatchingInlineSnapshot(`
+  await expect(view.findAllByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
     <View

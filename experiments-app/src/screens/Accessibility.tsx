@@ -32,26 +32,14 @@ export function AccessibilityScreen() {
       </Text>
 
       <TextInput style={styles.textInput} value="<TextInput />" />
-      <TextInput
-        editable={false}
-        style={styles.textInput}
-        value="<TextInput editable={false} />"
-      />
+      <TextInput editable={false} style={styles.textInput} value="<TextInput editable={false} />" />
       <TextInput
         accessibilityRole="search"
         style={styles.textInput}
         value="<TextInput accessibilityRole='search' />"
       />
-      <TextInput
-        role="searchbox"
-        style={styles.textInput}
-        value="<TextInput role='search' />"
-      />
-      <TextInput
-        role="none"
-        style={styles.textInput}
-        value="<TextInput role='none' />"
-      />
+      <TextInput role="searchbox" style={styles.textInput} value="<TextInput role='search' />" />
+      <TextInput role="none" style={styles.textInput} value="<TextInput role='none' />" />
       <TextInput
         accessible={false}
         style={styles.textInput}

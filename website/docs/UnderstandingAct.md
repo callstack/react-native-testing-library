@@ -2,6 +2,7 @@
 id: understanding-act
 title: Understanding Act function
 ---
+
 import TOCInline from '@theme/TOCInline';
 
 When writing RNTL tests one of the things that confuses developers the most are cryptic [`act()`](https://reactjs.org/docs/testing-recipes.html#act) function errors logged into console. In this article I will try to build an understanding of the purpose and behaviour of `act()` so you can build your tests with more confidence.

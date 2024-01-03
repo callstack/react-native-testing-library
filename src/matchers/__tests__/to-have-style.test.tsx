@@ -40,10 +40,7 @@ test('toHaveStyle() handles basic cases', () => {
   expect(view).not.toHaveStyle({ backgroundColor: 'red' });
   expect(view).not.toHaveStyle({ height: '50%' });
   expect(view).not.toHaveStyle({ backgroundColor: 'blue', height: '50%' });
-  expect(view).not.toHaveStyle([
-    { backgroundColor: 'blue' },
-    { height: '50%' },
-  ]);
+  expect(view).not.toHaveStyle([{ backgroundColor: 'blue' }, { height: '50%' }]);
   expect(view).not.toHaveStyle({
     transform: [{ scale: 2 }],
   });
@@ -167,9 +164,7 @@ test('toHaveStyle() supports undefined "transform" style', () => {
 });
 
 test('toHaveStyle() supports Pressable with function "style" prop', () => {
-  const screen = render(
-    <Pressable testID="view" style={() => ({ backgroundColor: 'blue' })} />
-  );
+  const screen = render(<Pressable testID="view" style={() => ({ backgroundColor: 'blue' })} />);
 
   expect(screen.getByTestId('view')).toHaveStyle({ backgroundColor: 'blue' });
 });

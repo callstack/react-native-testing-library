@@ -2,6 +2,7 @@
 id: troubleshooting
 title: Troubleshooting
 ---
+
 import TOCInline from '@theme/TOCInline';
 
 This guide describes common issues found by users when integrating React Native Test Library to their projects:
@@ -43,7 +44,7 @@ jest.mock('@react-navigation/native', () => {
   return {
     useNavigation: jest.fn(),
   };
-})
+});
 ```
 
 The above mock will mock `useNavigation` hook as intended, but at the same time all other exports from `@react-navigation/native` package are now `undefined`. If you want to use `NavigationContainer` component from the same package it will be `undefined` and result in the error above.
@@ -56,7 +57,7 @@ jest.mock('@react-navigation/native', () => {
     ...jest.requireActual('@react-navigation/native'),
     useNavigation: jest.fn(),
   };
-})
+});
 ```
 
 That way the mock will re-export all of the `@react-navigation/native` members and overwrite only the `useNavigation` hook.

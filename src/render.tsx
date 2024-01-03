@@ -25,10 +25,7 @@ export type RenderResult = ReturnType<typeof render>;
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export default function render<T>(
-  component: React.ReactElement<T>,
-  options: RenderOptions = {}
-) {
+export default function render<T>(component: React.ReactElement<T>, options: RenderOptions = {}) {
   return renderInternal(component, options);
 }
 
@@ -56,13 +53,9 @@ export function renderInternal<T>(
     });
   }
 
-  const wrap = (element: React.ReactElement) =>
-    Wrapper ? <Wrapper>{element}</Wrapper> : element;
+  const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
 
-  const renderer = renderWithAct(
-    wrap(component),
-    createNodeMock ? { createNodeMock } : undefined
-  );
+  const renderer = renderWithAct(wrap(component), createNodeMock ? { createNodeMock } : undefined);
 
   return buildRenderResult(renderer, wrap);
 }
@@ -86,10 +79,7 @@ function renderWithStringValidation<T>(
     </Profiler>
   );
 
-  const renderer = renderWithAct(
-    wrap(component),
-    createNodeMock ? { createNodeMock } : undefined
-  );
+  const renderer = renderWithAct(wrap(component), createNodeMock ? { createNodeMock } : undefined);
   validateStringsRenderedWithinText(renderer.toJSON());
 
   return buildRenderResult(renderer, wrap);
@@ -155,10 +145,7 @@ export interface DebugFunction {
   shallow: (message?: string) => void;
 }
 
-function debug(
-  instance: ReactTestInstance,
-  renderer: ReactTestRenderer
-): DebugFunction {
+function debug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugFunction {
   function debugImpl(options?: DebugOptions | string) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions =

@@ -2,11 +2,7 @@
 import { getConfig } from './config';
 import { flushMicroTasks } from './flush-micro-tasks';
 import { ErrorWithStack, copyStackTrace } from './helpers/errors';
-import {
-  setTimeout,
-  clearTimeout,
-  jestFakeTimersAreEnabled,
-} from './helpers/timers';
+import { setTimeout, clearTimeout, jestFakeTimersAreEnabled } from './helpers/timers';
 import { wrapAsync } from './helpers/wrap-async';
 
 const DEFAULT_INTERVAL = 50;
@@ -95,9 +91,7 @@ function waitForInternal<T>(
       checkExpectation();
     }
 
-    function onDone(
-      done: { type: 'result'; result: T } | { type: 'error'; error: unknown }
-    ) {
+    function onDone(done: { type: 'result'; result: T } | { type: 'error'; error: unknown }) {
       finished = true;
       if (overallTimeoutTimer) {
         clearTimeout(overallTimeoutTimer);
@@ -190,10 +184,7 @@ function waitForInternal<T>(
   });
 }
 
-export default function waitFor<T>(
-  expectation: () => T,
-  options?: WaitForOptions
-): Promise<T> {
+export default function waitFor<T>(expectation: () => T, options?: WaitForOptions): Promise<T> {
   // Being able to display a useful stack trace requires generating it before doing anything async
   const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', waitFor);
   const optionsWithStackTrace = { stackTraceError, ...options };

@@ -22,11 +22,7 @@ export function toContainElement(
     pass: matches.length > 0,
     message: () => {
       return [
-        matcherHint(
-          `${this.isNot ? '.not' : ''}.toContainElement`,
-          'container',
-          'element'
-        ),
+        matcherHint(`${this.isNot ? '.not' : ''}.toContainElement`, 'container', 'element'),
         '',
         RECEIVED_COLOR(`${formatElement(container)} ${
           this.isNot ? '\n\ncontains:\n\n' : '\n\ndoes not contain:\n\n'

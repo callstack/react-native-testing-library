@@ -2,10 +2,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { getHostParent } from '../../helpers/component-tree';
 import { isTextInputEditable } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
-import {
-  isHostText,
-  isHostTextInput,
-} from '../../helpers/host-component-names';
+import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
 import { EventBuilder } from '../event-builder';
 import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait, warnAboutRealTimersIfNeeded } from '../utils';
@@ -15,10 +12,7 @@ export interface PressOptions {
   duration?: number;
 }
 
-export async function press(
-  this: UserEventInstance,
-  element: ReactTestInstance
-): Promise<void> {
+export async function press(this: UserEventInstance, element: ReactTestInstance): Promise<void> {
   await basePress(this.config, element, {
     type: 'press',
     duration: 0,
@@ -51,11 +45,7 @@ const basePress = async (
     return;
   }
 
-  if (
-    isHostTextInput(element) &&
-    isTextInputEditable(element) &&
-    isPointerEventEnabled(element)
-  ) {
+  if (isHostTextInput(element) && isTextInputEditable(element) && isPointerEventEnabled(element)) {
     await emitTextInputPressEvents(config, element, options);
     return;
   }
@@ -82,19 +72,11 @@ const emitPressablePressEvents = async (
 
   await wait(config);
 
-  dispatchEvent(
-    element,
-    'responderGrant',
-    EventBuilder.Common.responderGrant()
-  );
+  dispatchEvent(element, 'responderGrant', EventBuilder.Common.responderGrant());
 
   await wait(config, options.duration);
 
-  dispatchEvent(
-    element,
-    'responderRelease',
-    EventBuilder.Common.responderRelease()
-  );
+  dispatchEvent(element, 'responderRelease', EventBuilder.Common.responderRelease());
 
   // React Native will wait for minimal delay of DEFAULT_MIN_PRESS_DURATION
   // before emitting the `pressOut` event. We need to wait here, so that
@@ -105,10 +87,7 @@ const emitPressablePressEvents = async (
 };
 
 const isEnabledTouchResponder = (element: ReactTestInstance) => {
-  return (
-    isPointerEventEnabled(element) &&
-    element.props.onStartShouldSetResponder?.()
-  );
+  return isPointerEventEnabled(element) && element.props.onStartShouldSetResponder?.();
 };
 
 const isPressableText = (element: ReactTestInstance) => {

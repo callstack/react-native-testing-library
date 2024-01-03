@@ -54,21 +54,13 @@ const UNSAFE_queryAllByProps =
 // Unsafe aliases
 export type UnsafeByPropsQueries = {
   UNSAFE_getByProps: (props: { [key: string]: any }) => ReactTestInstance;
-  UNSAFE_getAllByProps: (props: {
-    [key: string]: any;
-  }) => Array<ReactTestInstance>;
-  UNSAFE_queryByProps: (props: {
-    [key: string]: any;
-  }) => ReactTestInstance | null;
-  UNSAFE_queryAllByProps: (props: {
-    [key: string]: any;
-  }) => Array<ReactTestInstance>;
+  UNSAFE_getAllByProps: (props: { [key: string]: any }) => Array<ReactTestInstance>;
+  UNSAFE_queryByProps: (props: { [key: string]: any }) => ReactTestInstance | null;
+  UNSAFE_queryAllByProps: (props: { [key: string]: any }) => Array<ReactTestInstance>;
 };
 
 // TODO: migrate to makeQueries pattern
-export const bindUnsafeByPropsQueries = (
-  instance: ReactTestInstance
-): UnsafeByPropsQueries => ({
+export const bindUnsafeByPropsQueries = (instance: ReactTestInstance): UnsafeByPropsQueries => ({
   UNSAFE_getByProps: UNSAFE_getByProps(instance),
   UNSAFE_getAllByProps: UNSAFE_getAllByProps(instance),
   UNSAFE_queryByProps: UNSAFE_queryByProps(instance),

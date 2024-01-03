@@ -8,11 +8,7 @@ import act from '../../act';
  * @param eventName name of the event
  * @param event event payload(s)
  */
-export function dispatchEvent(
-  element: ReactTestInstance,
-  eventName: string,
-  ...event: unknown[]
-) {
+export function dispatchEvent(element: ReactTestInstance, eventName: string, ...event: unknown[]) {
   const handler = getEventHandler(element, eventName);
   if (!handler) {
     return;

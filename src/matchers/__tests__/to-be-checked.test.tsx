@@ -43,8 +43,7 @@ test('toBeCheck() with checkbox role', () => {
   expect(mixed).not.toBeChecked();
   expect(defaultView).not.toBeChecked();
 
-  expect(() => expect(checked).not.toBeChecked())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(checked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeChecked()
 
     Received element is checked:
@@ -59,8 +58,7 @@ test('toBeCheck() with checkbox role', () => {
         testID="checkbox-checked"
       />"
   `);
-  expect(() => expect(unchecked).toBeChecked())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(unchecked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBeChecked()
 
     Received element is not checked:
@@ -90,8 +88,7 @@ test('toBeCheck() with checkbox role', () => {
         testID="checkbox-mixed"
       />"
   `);
-  expect(() => expect(defaultView).toBeChecked())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(defaultView).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBeChecked()
 
     Received element is not checked:
@@ -114,8 +111,7 @@ test('toBeCheck() with radio role', () => {
   expect(unchecked).not.toBeChecked();
   expect(defaultView).not.toBeChecked();
 
-  expect(() => expect(checked).not.toBeChecked())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(checked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toBeChecked()
 
     Received element is checked:
@@ -130,8 +126,7 @@ test('toBeCheck() with radio role', () => {
         testID="radio-checked"
       />"
   `);
-  expect(() => expect(unchecked).toBeChecked())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(unchecked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBeChecked()
 
     Received element is not checked:
@@ -146,8 +141,7 @@ test('toBeCheck() with radio role', () => {
         testID="radio-unchecked"
       />"
   `);
-  expect(() => expect(defaultView).toBeChecked())
-    .toThrowErrorMatchingInlineSnapshot(`
+  expect(() => expect(defaultView).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toBeChecked()
 
     Received element is not checked:
@@ -165,14 +159,10 @@ test('throws error for invalid role', () => {
   const checked = screen.getByTestId('adjustable-checked');
   const unchecked = screen.getByTestId('adjustable-unchecked');
 
-  expect(() =>
-    expect(checked).toBeChecked()
-  ).toThrowErrorMatchingInlineSnapshot(
+  expect(() => expect(checked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(
     `"toBeChecked() works only on accessibility elements with "checkbox" or "radio" role."`
   );
-  expect(() =>
-    expect(unchecked).not.toBeChecked()
-  ).toThrowErrorMatchingInlineSnapshot(
+  expect(() => expect(unchecked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(
     `"toBeChecked() works only on accessibility elements with "checkbox" or "radio" role."`
   );
 });
