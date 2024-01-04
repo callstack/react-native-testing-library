@@ -396,11 +396,16 @@ render(
 fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 ```
 
+:::note
+Prefer using [`user.scrollTo`](./UserEvent.md#scrollto) over `fireEvent.scroll` for `FlatList`, `SectionList` and `ScrollView` components.
+User Event provides a more reliable and realistic event simulation that is suitable for React Native.
+:::
+
 ## Helper functions
 
 ### `waitFor`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitFor.test.tsx)
+- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/wait-for.test.tsx)
 
 Defined as:
 
@@ -414,7 +419,7 @@ function waitFor<T>(
 Waits for a period of time for the `expectation` callback to pass. `waitFor` may run the callback a number of times until timeout is reached, as specified by the `timeout` and `interval` options. The callback must throw an error when the expectation is not met. Returning any value, including a falsy one, will be treated as meeting the expectation, and the callback result will be returned to the caller of `waitFor` function.
 
 ```tsx
-await waitFor(() => expect(mockFunction).toHaveBeenCalledWith()))
+await waitFor(() => expect(mockFunction).toHaveBeenCalledWith())
 ```
 
 `waitFor` function will be executing `expectation` callback every `interval` (default: every 50 ms) until `timeout` (default: 1000 ms) is reached. The repeated execution of callback is stopped as soon as it does not throw an error, in such case the value returned by the callback is returned to `waitFor` caller. Otherwise, when it reaches the timeout, the final error thrown by `expectation` will be re-thrown by `waitFor` to the calling code.
@@ -504,7 +509,7 @@ If you receive warnings related to `act()` function consult our [Undestanding Ac
 
 ### `waitForElementToBeRemoved`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/waitForElementToBeRemoved.test.tsx)
+- [`Example code`]https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/wait-for-element-to-be-removed.test.tsx)
 
 Defined as:
 
