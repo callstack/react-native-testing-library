@@ -81,8 +81,8 @@ const siteConfig = {
     },
     image: 'img/owl.png',
     prism: {
-      theme: require('prism-react-renderer/themes/github'),
-      darkTheme: require('prism-react-renderer/themes/dracula'),
+      theme: require('prism-react-renderer').themes.github,
+      darkTheme: require('prism-react-renderer').themes.dracula,
       defaultLanguage: 'jsx',
     },
     algolia: {
