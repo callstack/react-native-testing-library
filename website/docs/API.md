@@ -397,8 +397,9 @@ fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 ```
 
 :::note
-Prefer using [`user.scrollTo`](./UserEvent.md#scrollto) over `fireEvent.scroll` for `FlatList`, `SectionList` and `ScrollView` components.
-User Event provides a more reliable and realistic event simulation that is suitable for React Native.
+
+Prefer using [`user.scrollTo`](./UserEvent.md#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
+
 :::
 
 ## Helper functions
