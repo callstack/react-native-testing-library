@@ -81,3 +81,5 @@ test('form submits two answers', () => {
 ```
 
 You can find the source of the `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/questionsBoard.test.tsx).
+
+If you want to learn from more examples on how to write tests with code, how to set up `Jest` config for RNTL, how to do `mocking` with RNTL, common errors in Jest config, and much more, then check out this [**guide**](https://github.com/anisurrahman072/React-Native-Advanced-Guide/blob/master/Testing/RNTL-Component-Testing-ultimate-guide.md).
