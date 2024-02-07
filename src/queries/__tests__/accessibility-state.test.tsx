@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { View, Text, Pressable, TouchableOpacity } from 'react-native';
-import { render } from '../..';
+import { render, screen } from '../..';
 
 type ConsoleLogMock = jest.Mock<typeof console.log>;
 
@@ -29,213 +29,215 @@ const Section = () => (
 );
 
 test('getByA11yState, queryByA11yState, findByA11yState', async () => {
-  const { getByA11yState, queryByA11yState, findByA11yState } = render(<Section />);
+  render(<Section />);
 
-  expect(getByA11yState({ selected: true }).props.accessibilityState).toEqual({
+  expect(screen.getByA11yState({ selected: true }).props.accessibilityState).toEqual({
     selected: true,
     expanded: false,
   });
-  expect(queryByA11yState({ selected: true })?.props.accessibilityState).toEqual({
+  expect(screen.queryByA11yState({ selected: true })?.props.accessibilityState).toEqual({
     selected: true,
     expanded: false,
   });
 
-  expect(() => getByA11yState({ disabled: true })).toThrow(
+  expect(() => screen.getByA11yState({ disabled: true })).toThrow(
     'Unable to find an element with disabled state: true'
   );
-  expect(queryByA11yState({ disabled: true })).toEqual(null);
+  expect(screen.queryByA11yState({ disabled: true })).toEqual(null);
 
-  expect(() => getByA11yState({ expanded: false })).toThrow(
+  expect(() => screen.getByA11yState({ expanded: false })).toThrow(
     'Found multiple elements with expanded state: false'
   );
-  expect(() => queryByA11yState({ expanded: false })).toThrow(
+  expect(() => screen.queryByA11yState({ expanded: false })).toThrow(
     'Found multiple elements with expanded state: false'
   );
 
-  const asyncButton = await findByA11yState({ selected: true });
+  const asyncButton = await screen.findByA11yState({ selected: true });
   expect(asyncButton.props.accessibilityState).toEqual({
     selected: true,
     expanded: false,
   });
-  await expect(findByA11yState({ disabled: true })).rejects.toThrow(
+  await expect(screen.findByA11yState({ disabled: true })).rejects.toThrow(
     'Unable to find an element with disabled state: true'
   );
-  await expect(findByA11yState({ expanded: false })).rejects.toThrow(
+  await expect(screen.findByA11yState({ expanded: false })).rejects.toThrow(
     'Found multiple elements with expanded state: false'
   );
 });
 
 test('getAllByA11yState, queryAllByA11yState, findAllByA11yState', async () => {
-  const { getAllByA11yState, queryAllByA11yState, findAllByA11yState } = render(<Section />);
+  render(<Section />);
 
-  expect(getAllByA11yState({ selected: true })).toHaveLength(1);
-  expect(queryAllByA11yState({ selected: true })).toHaveLength(1);
+  expect(screen.getAllByA11yState({ selected: true })).toHaveLength(1);
+  expect(screen.queryAllByA11yState({ selected: true })).toHaveLength(1);
 
-  expect(() => getAllByA11yState({ disabled: true })).toThrow(
+  expect(() => screen.getAllByA11yState({ disabled: true })).toThrow(
     'Unable to find an element with disabled state: true'
   );
-  expect(queryAllByA11yState({ disabled: true })).toEqual([]);
+  expect(screen.queryAllByA11yState({ disabled: true })).toEqual([]);
 
-  expect(getAllByA11yState({ expanded: false })).toHaveLength(2);
-  expect(queryAllByA11yState({ expanded: false })).toHaveLength(2);
+  expect(screen.getAllByA11yState({ expanded: false })).toHaveLength(2);
+  expect(screen.queryAllByA11yState({ expanded: false })).toHaveLength(2);
 
-  await expect(findAllByA11yState({ selected: true })).resolves.toHaveLength(1);
-  await expect(findAllByA11yState({ disabled: true })).rejects.toThrow(
+  await expect(screen.findAllByA11yState({ selected: true })).resolves.toHaveLength(1);
+  await expect(screen.findAllByA11yState({ disabled: true })).rejects.toThrow(
     'Unable to find an element with disabled state: true'
   );
-  await expect(findAllByA11yState({ expanded: false })).resolves.toHaveLength(2);
+  await expect(screen.findAllByA11yState({ expanded: false })).resolves.toHaveLength(2);
 });
 
 describe('checked state matching', () => {
   it('handles true', () => {
-    const view = render(<View accessibilityState={{ checked: true }} />);
+    render(<View accessibilityState={{ checked: true }} />);
 
-    expect(view.getByA11yState({ checked: true })).toBeTruthy();
-    expect(view.queryByA11yState({ checked: 'mixed' })).toBeFalsy();
-    expect(view.queryByA11yState({ checked: false })).toBeFalsy();
+    expect(screen.getByA11yState({ checked: true })).toBeTruthy();
+    expect(screen.queryByA11yState({ checked: 'mixed' })).toBeFalsy();
+    expect(screen.queryByA11yState({ checked: false })).toBeFalsy();
   });
 
   it('handles mixed', () => {
-    const view = render(<View accessibilityState={{ checked: 'mixed' }} />);
+    render(<View accessibilityState={{ checked: 'mixed' }} />);
 
-    expect(view.getByA11yState({ checked: 'mixed' })).toBeTruthy();
-    expect(view.queryByA11yState({ checked: true })).toBeFalsy();
-    expect(view.queryByA11yState({ checked: false })).toBeFalsy();
+    expect(screen.getByA11yState({ checked: 'mixed' })).toBeTruthy();
+    expect(screen.queryByA11yState({ checked: true })).toBeFalsy();
+    expect(screen.queryByA11yState({ checked: false })).toBeFalsy();
   });
 
   it('handles false', () => {
-    const view = render(<View accessibilityState={{ checked: false }} />);
+    render(<View accessibilityState={{ checked: false }} />);
 
-    expect(view.getByA11yState({ checked: false })).toBeTruthy();
-    expect(view.queryByA11yState({ checked: true })).toBeFalsy();
-    expect(view.queryByA11yState({ checked: 'mixed' })).toBeFalsy();
+    expect(screen.getByA11yState({ checked: false })).toBeTruthy();
+    expect(screen.queryByA11yState({ checked: true })).toBeFalsy();
+    expect(screen.queryByA11yState({ checked: 'mixed' })).toBeFalsy();
   });
 
   it('handles  default', () => {
-    const view = render(<View accessibilityState={{}} />);
+    render(<View accessibilityState={{}} />);
 
-    expect(view.queryByA11yState({ checked: false })).toBeFalsy();
-    expect(view.queryByA11yState({ checked: true })).toBeFalsy();
-    expect(view.queryByA11yState({ checked: 'mixed' })).toBeFalsy();
+    expect(screen.queryByA11yState({ checked: false })).toBeFalsy();
+    expect(screen.queryByA11yState({ checked: true })).toBeFalsy();
+    expect(screen.queryByA11yState({ checked: 'mixed' })).toBeFalsy();
   });
 });
 
 describe('expanded state matching', () => {
   it('handles true', () => {
-    const view = render(<View accessibilityState={{ expanded: true }} />);
+    render(<View accessibilityState={{ expanded: true }} />);
 
-    expect(view.getByA11yState({ expanded: true })).toBeTruthy();
-    expect(view.queryByA11yState({ expanded: false })).toBeFalsy();
+    expect(screen.getByA11yState({ expanded: true })).toBeTruthy();
+    expect(screen.queryByA11yState({ expanded: false })).toBeFalsy();
   });
 
   it('handles false', () => {
-    const view = render(<View accessibilityState={{ expanded: false }} />);
+    render(<View accessibilityState={{ expanded: false }} />);
 
-    expect(view.getByA11yState({ expanded: false })).toBeTruthy();
-    expect(view.queryByA11yState({ expanded: true })).toBeFalsy();
+    expect(screen.getByA11yState({ expanded: false })).toBeTruthy();
+    expect(screen.queryByA11yState({ expanded: true })).toBeFalsy();
   });
 
   it('handles  default', () => {
-    const view = render(<View accessibilityState={{}} />);
+    render(<View accessibilityState={{}} />);
 
-    expect(view.queryByA11yState({ expanded: false })).toBeFalsy();
-    expect(view.queryByA11yState({ expanded: true })).toBeFalsy();
+    expect(screen.queryByA11yState({ expanded: false })).toBeFalsy();
+    expect(screen.queryByA11yState({ expanded: true })).toBeFalsy();
   });
 });
 
 describe('disabled state matching', () => {
   it('handles true', () => {
-    const view = render(<View accessibilityState={{ disabled: true }} />);
+    render(<View accessibilityState={{ disabled: true }} />);
 
-    expect(view.getByA11yState({ disabled: true })).toBeTruthy();
-    expect(view.queryByA11yState({ disabled: false })).toBeFalsy();
+    expect(screen.getByA11yState({ disabled: true })).toBeTruthy();
+    expect(screen.queryByA11yState({ disabled: false })).toBeFalsy();
   });
 
   it('handles false', () => {
-    const view = render(<View accessibilityState={{ disabled: false }} />);
+    render(<View accessibilityState={{ disabled: false }} />);
 
-    expect(view.getByA11yState({ disabled: false })).toBeTruthy();
-    expect(view.queryByA11yState({ disabled: true })).toBeFalsy();
+    expect(screen.getByA11yState({ disabled: false })).toBeTruthy();
+    expect(screen.queryByA11yState({ disabled: true })).toBeFalsy();
   });
 
   it('handles  default', () => {
-    const view = render(<View accessibilityState={{}} />);
+    render(<View accessibilityState={{}} />);
 
-    expect(view.getByA11yState({ disabled: false })).toBeTruthy();
-    expect(view.queryByA11yState({ disabled: true })).toBeFalsy();
+    expect(screen.getByA11yState({ disabled: false })).toBeTruthy();
+    expect(screen.queryByA11yState({ disabled: true })).toBeFalsy();
   });
 });
 
 describe('busy state matching', () => {
   it('handles true', () => {
-    const view = render(<View accessibilityState={{ busy: true }} />);
+    render(<View accessibilityState={{ busy: true }} />);
 
-    expect(view.getByA11yState({ busy: true })).toBeTruthy();
-    expect(view.queryByA11yState({ busy: false })).toBeFalsy();
+    expect(screen.getByA11yState({ busy: true })).toBeTruthy();
+    expect(screen.queryByA11yState({ busy: false })).toBeFalsy();
   });
 
   it('handles false', () => {
-    const view = render(<View accessibilityState={{ busy: false }} />);
+    render(<View accessibilityState={{ busy: false }} />);
 
-    expect(view.getByA11yState({ busy: false })).toBeTruthy();
-    expect(view.queryByA11yState({ busy: true })).toBeFalsy();
+    expect(screen.getByA11yState({ busy: false })).toBeTruthy();
+    expect(screen.queryByA11yState({ busy: true })).toBeFalsy();
   });
 
   it('handles  default', () => {
-    const view = render(<View accessibilityState={{}} />);
+    render(<View accessibilityState={{}} />);
 
-    expect(view.getByA11yState({ busy: false })).toBeTruthy();
-    expect(view.queryByA11yState({ busy: true })).toBeFalsy();
+    expect(screen.getByA11yState({ busy: false })).toBeTruthy();
+    expect(screen.queryByA11yState({ busy: true })).toBeFalsy();
   });
 });
 
 describe('selected state matching', () => {
   it('handles true', () => {
-    const view = render(<View accessibilityState={{ selected: true }} />);
+    render(<View accessibilityState={{ selected: true }} />);
 
-    expect(view.getByA11yState({ selected: true })).toBeTruthy();
-    expect(view.queryByA11yState({ selected: false })).toBeFalsy();
+    expect(screen.getByA11yState({ selected: true })).toBeTruthy();
+    expect(screen.queryByA11yState({ selected: false })).toBeFalsy();
   });
 
   it('handles false', () => {
-    const view = render(<View accessibilityState={{ selected: false }} />);
+    render(<View accessibilityState={{ selected: false }} />);
 
-    expect(view.getByA11yState({ selected: false })).toBeTruthy();
-    expect(view.queryByA11yState({ selected: true })).toBeFalsy();
+    expect(screen.getByA11yState({ selected: false })).toBeTruthy();
+    expect(screen.queryByA11yState({ selected: true })).toBeFalsy();
   });
 
   it('handles  default', () => {
-    const view = render(<View accessibilityState={{}} />);
+    render(<View accessibilityState={{}} />);
 
-    expect(view.getByA11yState({ selected: false })).toBeTruthy();
-    expect(view.queryByA11yState({ selected: true })).toBeFalsy();
+    expect(screen.getByA11yState({ selected: false })).toBeTruthy();
+    expect(screen.queryByA11yState({ selected: true })).toBeFalsy();
   });
 });
 
 test('*ByA11yState on Pressable with "disabled" prop', () => {
-  const view = render(<Pressable disabled />);
-  expect(view.getByA11yState({ disabled: true })).toBeTruthy();
-  expect(view.queryByA11yState({ disabled: false })).toBeFalsy();
+  render(<Pressable disabled />);
+  expect(screen.getByA11yState({ disabled: true })).toBeTruthy();
+  expect(screen.queryByA11yState({ disabled: false })).toBeFalsy();
 });
 
 test('*ByA11yState on TouchableOpacity with "disabled" prop', () => {
-  const view = render(<TouchableOpacity disabled />);
-  expect(view.getByA11yState({ disabled: true })).toBeTruthy();
-  expect(view.queryByA11yState({ disabled: false })).toBeFalsy();
+  render(<TouchableOpacity disabled />);
+  expect(screen.getByA11yState({ disabled: true })).toBeTruthy();
+  expect(screen.queryByA11yState({ disabled: false })).toBeFalsy();
 });
 
 test('byA11yState queries support hidden option', () => {
-  const { getByA11yState, queryByA11yState } = render(
+  render(
     <Pressable accessibilityState={{ expanded: false }} style={{ display: 'none' }}>
       <Text>Hidden from accessibility</Text>
     </Pressable>
   );
 
-  expect(getByA11yState({ expanded: false }, { includeHiddenElements: true })).toBeTruthy();
+  expect(screen.getByA11yState({ expanded: false }, { includeHiddenElements: true })).toBeTruthy();
 
-  expect(queryByA11yState({ expanded: false })).toBeFalsy();
-  expect(queryByA11yState({ expanded: false }, { includeHiddenElements: false })).toBeFalsy();
-  expect(() => getByA11yState({ expanded: false }, { includeHiddenElements: false }))
+  expect(screen.queryByA11yState({ expanded: false })).toBeFalsy();
+  expect(
+    screen.queryByA11yState({ expanded: false }, { includeHiddenElements: false })
+  ).toBeFalsy();
+  expect(() => screen.getByA11yState({ expanded: false }, { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with expanded state: false
 
@@ -261,44 +263,44 @@ test('byA11yState queries support hidden option', () => {
 
 test('*ByA11yState deprecation warnings', async () => {
   const mockCalls = (console.warn as ConsoleLogMock).mock.calls;
-  const view = render(<View accessibilityState={{ disabled: true }} />);
+  render(<View accessibilityState={{ disabled: true }} />);
 
-  view.getByA11yState({ disabled: true });
+  screen.getByA11yState({ disabled: true });
   expect(mockCalls[0][0]).toMatchInlineSnapshot(`
     "getByA11yState(...) is deprecated and will be removed in the future.
 
     Use getByRole(role, { disabled, selected, checked, busy, expanded }) query or built-in Jest matchers: toBeDisabled(), toBeSelected(), toBeChecked(), toBeBusy(), and toBeExpanded() instead."
   `);
 
-  view.getAllByA11yState({ disabled: true });
+  screen.getAllByA11yState({ disabled: true });
   expect(mockCalls[1][0]).toMatchInlineSnapshot(`
     "getAllByA11yState(...) is deprecated and will be removed in the future.
 
     Use getAllByRole(role, { disabled, selected, checked, busy, expanded }) query or built-in Jest matchers: toBeDisabled(), toBeSelected(), toBeChecked(), toBeBusy(), and toBeExpanded() instead."
   `);
 
-  view.queryByA11yState({ disabled: true });
+  screen.queryByA11yState({ disabled: true });
   expect(mockCalls[2][0]).toMatchInlineSnapshot(`
     "queryByA11yState(...) is deprecated and will be removed in the future.
 
     Use queryByRole(role, { disabled, selected, checked, busy, expanded }) query or built-in Jest matchers: toBeDisabled(), toBeSelected(), toBeChecked(), toBeBusy(), and toBeExpanded() instead."
   `);
 
-  view.queryAllByA11yState({ disabled: true });
+  screen.queryAllByA11yState({ disabled: true });
   expect(mockCalls[3][0]).toMatchInlineSnapshot(`
     "queryAllByA11yState(...) is deprecated and will be removed in the future.
 
     Use queryAllByRole(role, { disabled, selected, checked, busy, expanded }) query or built-in Jest matchers: toBeDisabled(), toBeSelected(), toBeChecked(), toBeBusy(), and toBeExpanded() instead."
   `);
 
-  await view.findByA11yState({ disabled: true });
+  await screen.findByA11yState({ disabled: true });
   expect(mockCalls[4][0]).toMatchInlineSnapshot(`
     "findByA11yState(...) is deprecated and will be removed in the future.
 
     Use findByRole(role, { disabled, selected, checked, busy, expanded }) query or built-in Jest matchers: toBeDisabled(), toBeSelected(), toBeChecked(), toBeBusy(), and toBeExpanded() instead."
   `);
 
-  await view.findAllByA11yState({ disabled: true });
+  await screen.findAllByA11yState({ disabled: true });
   expect(mockCalls[5][0]).toMatchInlineSnapshot(`
     "findAllByA11yState(...) is deprecated and will be removed in the future.
 
@@ -308,44 +310,44 @@ test('*ByA11yState deprecation warnings', async () => {
 
 test('*ByAccessibilityState deprecation warnings', async () => {
   const mockCalls = (console.warn as ConsoleLogMock).mock.calls;
-  const view = render(<View accessibilityState={{ disabled: true }} />);
+  render(<View accessibilityState={{ disabled: true }} />);
 
-  view.getByAccessibilityState({ disabled: true });
+  screen.getByAccessibilityState({ disabled: true });
   expect(mockCalls[0][0]).toMatchInlineSnapshot(`
     "getByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use getByRole(role, { disabled, selected, checked, busy, expanded }) query or built-in Jest matchers: toBeDisabled(), toBeSelected(), toBeChecked(), toBeBusy(), and toBeExpanded() instead."
   `);
 
-  view.getAllByAccessibilityState({ disabled: true });
+  screen.getAllByAccessibilityState({ disabled: true });
   expect(mockCalls[1][0]).toMatchInlineSnapshot(`
     "getAllByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use getAllByRole(role, { disabled, selected, checked, busy, expanded }) query or built-in Jest matchers: toBeDisabled(), toBeSelected(), toBeChecked(), toBeBusy(), and toBeExpanded() instead."
   `);
 
-  view.queryByAccessibilityState({ disabled: true });
+  screen.queryByAccessibilityState({ disabled: true });
   expect(mockCalls[2][0]).toMatchInlineSnapshot(`
     "queryByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use queryByRole(role, { disabled, selected, checked, busy, expanded }) query or built-in Jest matchers: toBeDisabled(), toBeSelected(), toBeChecked(), toBeBusy(), and toBeExpanded() instead."
   `);
 
-  view.queryAllByAccessibilityState({ disabled: true });
+  screen.queryAllByAccessibilityState({ disabled: true });
   expect(mockCalls[3][0]).toMatchInlineSnapshot(`
     "queryAllByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use queryAllByRole(role, { disabled, selected, checked, busy, expanded }) query or built-in Jest matchers: toBeDisabled(), toBeSelected(), toBeChecked(), toBeBusy(), and toBeExpanded() instead."
   `);
 
-  await view.findByAccessibilityState({ disabled: true });
+  await screen.findByAccessibilityState({ disabled: true });
   expect(mockCalls[4][0]).toMatchInlineSnapshot(`
     "findByAccessibilityState(...) is deprecated and will be removed in the future.
 
     Use findByRole(role, { disabled, selected, checked, busy, expanded }) query or built-in Jest matchers: toBeDisabled(), toBeSelected(), toBeChecked(), toBeBusy(), and toBeExpanded() instead."
   `);
 
-  await view.findAllByAccessibilityState({ disabled: true });
+  await screen.findAllByAccessibilityState({ disabled: true });
   expect(mockCalls[5][0]).toMatchInlineSnapshot(`
     "findAllByAccessibilityState(...) is deprecated and will be removed in the future.
 
@@ -354,13 +356,13 @@ test('*ByAccessibilityState deprecation warnings', async () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const view = render(
+  render(
     <Text accessibilityState={{ checked: false }} onPress={() => null}>
       Some text
     </Text>
   );
 
-  expect(() => view.getByA11yState({ checked: true })).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getByA11yState({ checked: true })).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with checked state: true
 
     <Text
@@ -374,7 +376,7 @@ test('error message renders the element tree, preserving only helpful props', as
     </Text>"
   `);
 
-  expect(() => view.getAllByA11yState({ checked: true })).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getAllByA11yState({ checked: true })).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with checked state: true
 
     <Text
@@ -388,7 +390,8 @@ test('error message renders the element tree, preserving only helpful props', as
     </Text>"
   `);
 
-  await expect(view.findByA11yState({ checked: true })).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(screen.findByA11yState({ checked: true })).rejects
+    .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with checked state: true
 
     <Text
@@ -402,7 +405,7 @@ test('error message renders the element tree, preserving only helpful props', as
     </Text>"
   `);
 
-  await expect(view.findAllByA11yState({ checked: true })).rejects
+  await expect(screen.findAllByA11yState({ checked: true })).rejects
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with checked state: true
 
@@ -420,19 +423,19 @@ test('error message renders the element tree, preserving only helpful props', as
 
 describe('aria-disabled prop', () => {
   test('supports aria-disabled={true} prop', () => {
-    const screen = render(<View accessible aria-disabled={true} />);
+    render(<View accessible aria-disabled={true} />);
     expect(screen.getByAccessibilityState({ disabled: true })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ disabled: false })).toBeNull();
   });
 
   test('supports aria-disabled={false} prop', () => {
-    const screen = render(<View accessible aria-disabled={false} />);
+    render(<View accessible aria-disabled={false} />);
     expect(screen.getByAccessibilityState({ disabled: false })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ disabled: true })).toBeNull();
   });
 
   test('supports default aria-disabled prop', () => {
-    const screen = render(<View accessible />);
+    render(<View accessible />);
     expect(screen.getByAccessibilityState({ disabled: false })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ disabled: true })).toBeNull();
   });
@@ -440,19 +443,19 @@ describe('aria-disabled prop', () => {
 
 describe('aria-selected prop', () => {
   test('supports aria-selected={true} prop', () => {
-    const screen = render(<View accessible aria-selected={true} />);
+    render(<View accessible aria-selected={true} />);
     expect(screen.getByAccessibilityState({ selected: true })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ selected: false })).toBeNull();
   });
 
   test('supports aria-selected={false} prop', () => {
-    const screen = render(<View accessible aria-selected={false} />);
+    render(<View accessible aria-selected={false} />);
     expect(screen.getByAccessibilityState({ selected: false })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ selected: true })).toBeNull();
   });
 
   test('supports default aria-selected prop', () => {
-    const screen = render(<View accessible />);
+    render(<View accessible />);
     expect(screen.getByAccessibilityState({ selected: false })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ selected: true })).toBeNull();
   });
@@ -460,28 +463,28 @@ describe('aria-selected prop', () => {
 
 describe('aria-checked prop', () => {
   test('supports aria-checked={true} prop', () => {
-    const screen = render(<View accessible accessibilityRole="button" aria-checked={true} />);
+    render(<View accessible accessibilityRole="button" aria-checked={true} />);
     expect(screen.getByAccessibilityState({ checked: true })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: 'mixed' })).toBeNull();
   });
 
   test('supports aria-checked={false} prop', () => {
-    const screen = render(<View accessible accessibilityRole="button" aria-checked={false} />);
+    render(<View accessible accessibilityRole="button" aria-checked={false} />);
     expect(screen.getByAccessibilityState({ checked: false })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: 'mixed' })).toBeNull();
   });
 
   test('supports aria-checked="mixed prop', () => {
-    const screen = render(<View accessible accessibilityRole="button" aria-checked="mixed" />);
+    render(<View accessible accessibilityRole="button" aria-checked="mixed" />);
     expect(screen.getByAccessibilityState({ checked: 'mixed' })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
   });
 
   test('supports default aria-selected prop', () => {
-    const screen = render(<View accessible accessibilityRole="button" />);
+    render(<View accessible accessibilityRole="button" />);
     expect(screen.getByAccessibilityState({})).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
@@ -491,19 +494,19 @@ describe('aria-checked prop', () => {
 
 describe('aria-busy prop', () => {
   test('supports aria-busy={true} prop', () => {
-    const screen = render(<View accessible aria-busy={true} />);
+    render(<View accessible aria-busy={true} />);
     expect(screen.getByAccessibilityState({ busy: true })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ busy: false })).toBeNull();
   });
 
   test('supports aria-busy={false} prop', () => {
-    const screen = render(<View accessible aria-busy={false} />);
+    render(<View accessible aria-busy={false} />);
     expect(screen.getByAccessibilityState({ busy: false })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ busy: true })).toBeNull();
   });
 
   test('supports default aria-busy prop', () => {
-    const screen = render(<View accessible />);
+    render(<View accessible />);
     expect(screen.getByAccessibilityState({ busy: false })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ busy: true })).toBeNull();
   });
@@ -511,19 +514,20 @@ describe('aria-busy prop', () => {
 
 describe('aria-expanded prop', () => {
   test('supports aria-expanded={true} prop', () => {
-    const screen = render(<View accessible accessibilityRole="button" aria-expanded={true} />);
+    render(<View accessible accessibilityRole="button" aria-expanded={true} />);
     expect(screen.getByAccessibilityState({ expanded: true })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ expanded: false })).toBeNull();
   });
 
   test('supports aria-expanded={false} prop', () => {
-    const screen = render(<View accessible accessibilityRole="button" aria-expanded={false} />);
+    render(<View accessible accessibilityRole="button" aria-expanded={false} />);
     expect(screen.getByAccessibilityState({ expanded: false })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ expanded: true })).toBeNull();
   });
 
   test('supports default aria-expanded prop', () => {
-    const screen = render(<View accessible accessibilityRole="button" />);
+    render(<View accessible accessibilityRole="button" />);
+    render(<View accessible accessibilityRole="button" />);
     expect(screen.getByAccessibilityState({})).toBeTruthy();
     expect(screen.queryByAccessibilityState({ expanded: true })).toBeNull();
     expect(screen.queryByAccessibilityState({ expanded: false })).toBeNull();

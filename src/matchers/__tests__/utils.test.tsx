@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { render } from '../..';
-import { formatElement, checkHostElement } from '../utils';
+import { render, screen } from '../..';
+import { checkHostElement, formatElement } from '../utils';
 
 function fakeMatcher() {
   // Do nothing.
@@ -12,7 +12,7 @@ test('formatElement', () => {
 });
 
 test('checkHostElement allows host element', () => {
-  const screen = render(<View testID="view" />);
+  render(<View testID="view" />);
 
   expect(() => {
     // @ts-expect-error
@@ -21,7 +21,7 @@ test('checkHostElement allows host element', () => {
 });
 
 test('checkHostElement allows rejects composite element', () => {
-  const screen = render(<View testID="view" />);
+  render(<View testID="view" />);
 
   expect(() => {
     // @ts-expect-error

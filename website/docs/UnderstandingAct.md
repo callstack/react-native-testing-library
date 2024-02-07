@@ -128,9 +128,11 @@ function TestAsyncComponent() {
 ```
 
 ```jsx
+import { render, screen } from '@testing-library/react-native';
+
 test('render async natively', () => {
-  const view = render(<TestAsyncComponent />);
-  expect(view.getByText('Count 0')).toBeOnTheScreen();
+  render(<TestAsyncComponent />);
+  expect(screen.getByText('Count 0')).toBeOnTheScreen();
 });
 ```
 
@@ -156,12 +158,12 @@ First solution is to use Jest's fake timers inside out tests:
 ```jsx
 test('render with fake timers', () => {
   jest.useFakeTimers();
-  const view = render(<TestAsyncComponent />);
+  render(<TestAsyncComponent />);
 
   act(() => {
     jest.runAllTimers();
   });
-  expect(view.getByText('Count 1')).toBeOnTheScreen();
+  expect(screen.getByText('Count 1')).toBeOnTheScreen();
 });
 ```
 
@@ -173,12 +175,12 @@ If we wanted to stick with real timers then things get a bit more complex. Letâ€
 
 ```jsx
 test('render with real timers - sleep', async () => {
-  const view = render(<TestAsyncComponent />);
+  render(<TestAsyncComponent />);
   await act(async () => {
     await sleep(100); // Wait a bit longer than setTimeout in `TestAsyncComponent`
   });
 
-  expect(view.getByText('Count 1')).toBeOnTheScreen();
+  expect(screen.getByText('Count 1')).toBeOnTheScreen();
 });
 ```
 
@@ -188,10 +190,10 @@ Letâ€™s try more elegant solution using `waitFor` that will wait for our desired
 
 ```jsx
 test('render with real timers - waitFor', async () => {
-  const view = render(<TestAsyncComponent />);
+  render(<TestAsyncComponent />);
 
-  await waitFor(() => view.getByText('Count 1'));
-  expect(view.getByText('Count 1')).toBeOnTheScreen();
+  await waitFor(() => screen.getByText('Count 1'));
+  expect(screen.getByText('Count 1')).toBeOnTheScreen();
 });
 ```
 
@@ -201,9 +203,9 @@ The above code can be simplified using `findBy` query:
 
 ```jsx
 test('render with real timers - findBy', async () => {
-  const view = render(<TestAsyncComponent />);
+  render(<TestAsyncComponent />);
 
-  expect(await view.findByText('Count 1')).toBeOnTheScreen();
+  expect(await screen.findByText('Count 1')).toBeOnTheScreen();
 });
 ```
 

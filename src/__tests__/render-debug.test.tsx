@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
 import stripAnsi from 'strip-ansi';
-import { render, fireEvent, configure } from '..';
+import { configure, fireEvent, render, screen } from '..';
 
 type ConsoleLogMock = jest.Mock<Array<string>>;
 
@@ -30,14 +30,17 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
-class MyButton extends React.Component<any> {
-  render() {
-    return (
-      <Pressable onPress={this.props.onPress}>
-        <Text>{this.props.children}</Text>
-      </Pressable>
-    );
-  }
+interface MyButtonProps {
+  onPress: () => void;
+  children: string;
+}
+
+function MyButton(props: MyButtonProps) {
+  return (
+    <Pressable onPress={props.onPress}>
+      <Text>{props.children}</Text>
+    </Pressable>
+  );
 }
 
 class Banana extends React.Component<any, { fresh: boolean }> {
@@ -82,9 +85,7 @@ class Banana extends React.Component<any, { fresh: boolean }> {
         />
         <TextInput defaultValue={DEFAULT_INPUT_CUSTOMER} />
         <TextInput defaultValue={'hello'} value="" />
-        <MyButton onPress={this.changeFresh} type="primary">
-          Change freshness!
-        </MyButton>
+        <MyButton onPress={this.changeFresh}>Change freshness!</MyButton>
         <Text testID="duplicateText">First Text</Text>
         <Text testID="duplicateText">Second Text</Text>
         <Text>{test}</Text>
@@ -94,13 +95,13 @@ class Banana extends React.Component<any, { fresh: boolean }> {
 }
 
 test('debug', () => {
-  const { debug } = render(<Banana />);
+  render(<Banana />);
 
-  debug();
-  debug('my custom message');
-  debug.shallow();
-  debug.shallow('my other custom message');
-  debug({ message: 'another custom message' });
+  screen.debug();
+  screen.debug('my custom message');
+  screen.debug.shallow();
+  screen.debug.shallow('my other custom message');
+  screen.debug({ message: 'another custom message' });
 
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
@@ -116,10 +117,10 @@ test('debug', () => {
 });
 
 test('debug changing component', () => {
-  const { UNSAFE_getByProps, debug } = render(<Banana />);
-  fireEvent.press(UNSAFE_getByProps({ type: 'primary' }));
+  render(<Banana />);
+  fireEvent.press(screen.UNSAFE_getByProps({ type: 'primary' }));
 
-  debug();
+  screen.debug();
 
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot(
@@ -128,16 +129,16 @@ test('debug changing component', () => {
 });
 
 test('debug with only children prop', () => {
-  const { debug } = render(<Banana />);
-  debug({ mapProps: () => ({}) });
+  render(<Banana />);
+  screen.debug({ mapProps: () => ({}) });
 
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
 });
 
 test('debug with only prop whose value is bananaChef', () => {
-  const { debug } = render(<Banana />);
-  debug({
+  render(<Banana />);
+  screen.debug({
     mapProps: (props) => {
       const filterProps: Record<string, unknown> = {};
       Object.keys(props).forEach((key) => {
@@ -154,8 +155,8 @@ test('debug with only prop whose value is bananaChef', () => {
 });
 
 test('debug with only props from TextInput components', () => {
-  const { debug } = render(<Banana />);
-  debug({
+  render(<Banana />);
+  screen.debug({
     mapProps: (props, node) => (node.type === 'TextInput' ? props : {}),
   });
 
@@ -166,33 +167,33 @@ test('debug with only props from TextInput components', () => {
 test('debug should use debugOptions from config when no option is specified', () => {
   configure({ defaultDebugOptions: { mapProps: () => ({}) } });
 
-  const { debug } = render(
+  render(
     <View style={{ backgroundColor: 'red' }}>
       <Text>hello</Text>
     </View>
   );
-  debug();
+  screen.debug();
 
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
 });
 
 test('filtering out props through mapProps option should not modify component', () => {
-  const { debug, getByTestId } = render(<View testID="viewTestID" />);
-  debug({ mapProps: () => ({}) });
+  render(<View testID="viewTestID" />);
+  screen.debug({ mapProps: () => ({}) });
 
-  expect(getByTestId('viewTestID')).toBeTruthy();
+  expect(screen.getByTestId('viewTestID')).toBeTruthy();
 });
 
 test('debug should use given options over config debugOptions', () => {
   configure({ defaultDebugOptions: { mapProps: () => ({}) } });
 
-  const { debug } = render(
+  render(
     <View style={{ backgroundColor: 'red' }}>
       <Text>hello</Text>
     </View>
   );
-  debug({ mapProps: (props) => props });
+  screen.debug({ mapProps: (props) => props });
 
   const mockCalls = (console.log as any as ConsoleLogMock).mock.calls;
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();

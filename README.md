@@ -88,21 +88,29 @@ flow-typed install react-test-renderer
 import { render, screen, fireEvent } from '@testing-library/react-native';
 import { QuestionsBoard } from '../QuestionsBoard';
 
-test('form submits two answers', () => {
-  const allQuestions = ['q1', 'q2'];
-  const mockFn = jest.fn();
+// It is recommended to use userEvent with fake timers
+// Some events involve duration so your tests may take a long time to run.
+jest.useFakeTimers();
 
-  render(<QuestionsBoard questions={allQuestions} onSubmit={mockFn} />);
+test('form submits two answers', async () => {
+  const questions = ['q1', 'q2'];
+  const onSubmit = jest.fn();
+
+  const user = userEvent.setup();
+  render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
 
   const answerInputs = screen.getAllByLabelText('answer input');
 
-  fireEvent.changeText(answerInputs[0], 'a1');
-  fireEvent.changeText(answerInputs[1], 'a2');
-  fireEvent.press(screen.getByText('Submit'));
+  // simulates the user focusing on TextInput and typing text one char at a time
+  await user.type(answerInputs[0], 'a1');
+  await user.type(answerInputs[1], 'a2');
 
-  expect(mockFn).toBeCalledWith({
-    1: { q: 'q1', a: 'a1' },
-    2: { q: 'q2', a: 'a2' },
+  // simulates the user pressing on any pressable element
+  await user.press(screen.getByRole('button', { name: 'Submit' }));
+
+  expect(onSubmit).toHaveBeenCalledWith({
+    '1': { q: 'q1', a: 'a1' },
+    '2': { q: 'q2', a: 'a2' },
   });
 });
 ```

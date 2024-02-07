@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text, TextInput, Pressable } from 'react-native';
-import { render } from '../..';
+import { render, screen } from '../..';
 
 const BUTTON_LABEL = 'cool button';
 const BUTTON_HINT = 'click this button';
@@ -39,61 +39,65 @@ const Section = () => (
 );
 
 test('getByLabelText, queryByLabelText, findByLabelText', async () => {
-  const { getByLabelText, queryByLabelText, findByLabelText } = render(<Section />);
+  render(<Section />);
 
-  expect(getByLabelText(BUTTON_LABEL).props.accessibilityLabel).toEqual(BUTTON_LABEL);
-  const button = queryByLabelText(/button/g);
+  expect(screen.getByLabelText(BUTTON_LABEL).props.accessibilityLabel).toEqual(BUTTON_LABEL);
+  const button = screen.queryByLabelText(/button/g);
   expect(button?.props.accessibilityLabel).toEqual(BUTTON_LABEL);
 
-  expect(() => getByLabelText(NO_MATCHES_TEXT)).toThrow(
+  expect(() => screen.getByLabelText(NO_MATCHES_TEXT)).toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
-  expect(queryByLabelText(NO_MATCHES_TEXT)).toBeNull();
+  expect(screen.queryByLabelText(NO_MATCHES_TEXT)).toBeNull();
 
-  expect(() => getByLabelText(TEXT_LABEL)).toThrow(getMultipleInstancesFoundMessage(TEXT_LABEL));
-  expect(() => queryByLabelText(TEXT_LABEL)).toThrow(getMultipleInstancesFoundMessage(TEXT_LABEL));
+  expect(() => screen.getByLabelText(TEXT_LABEL)).toThrow(
+    getMultipleInstancesFoundMessage(TEXT_LABEL)
+  );
+  expect(() => screen.queryByLabelText(TEXT_LABEL)).toThrow(
+    getMultipleInstancesFoundMessage(TEXT_LABEL)
+  );
 
-  const asyncButton = await findByLabelText(BUTTON_LABEL);
+  const asyncButton = await screen.findByLabelText(BUTTON_LABEL);
   expect(asyncButton.props.accessibilityLabel).toEqual(BUTTON_LABEL);
-  await expect(findByLabelText(NO_MATCHES_TEXT)).rejects.toThrow(
+  await expect(screen.findByLabelText(NO_MATCHES_TEXT)).rejects.toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
 
-  await expect(findByLabelText(TEXT_LABEL)).rejects.toThrow(
+  await expect(screen.findByLabelText(TEXT_LABEL)).rejects.toThrow(
     getMultipleInstancesFoundMessage(TEXT_LABEL)
   );
 });
 
 test('getAllByLabelText, queryAllByLabelText, findAllByLabelText', async () => {
-  const { getAllByLabelText, queryAllByLabelText, findAllByLabelText } = render(<Section />);
+  render(<Section />);
 
-  expect(getAllByLabelText(TEXT_LABEL)).toHaveLength(2);
-  expect(queryAllByLabelText(/cool/g)).toHaveLength(3);
+  expect(screen.getAllByLabelText(TEXT_LABEL)).toHaveLength(2);
+  expect(screen.queryAllByLabelText(/cool/g)).toHaveLength(3);
 
-  expect(() => getAllByLabelText(NO_MATCHES_TEXT)).toThrow(
+  expect(() => screen.getAllByLabelText(NO_MATCHES_TEXT)).toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
-  expect(queryAllByLabelText(NO_MATCHES_TEXT)).toEqual([]);
+  expect(screen.queryAllByLabelText(NO_MATCHES_TEXT)).toEqual([]);
 
-  await expect(findAllByLabelText(TEXT_LABEL)).resolves.toHaveLength(2);
-  await expect(findAllByLabelText(NO_MATCHES_TEXT)).rejects.toThrow(
+  await expect(screen.findAllByLabelText(TEXT_LABEL)).resolves.toHaveLength(2);
+  await expect(screen.findAllByLabelText(NO_MATCHES_TEXT)).rejects.toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
 });
 
 test('getAllByLabelText, queryAllByLabelText, findAllByLabelText with exact as false', async () => {
-  const { getAllByLabelText, queryAllByLabelText, findAllByLabelText } = render(<Section />);
+  render(<Section />);
 
-  expect(getAllByLabelText(TEXT_LABEL, { exact: false })).toHaveLength(2);
-  expect(queryAllByLabelText(/cool/g, { exact: false })).toHaveLength(3);
+  expect(screen.getAllByLabelText(TEXT_LABEL, { exact: false })).toHaveLength(2);
+  expect(screen.queryAllByLabelText(/cool/g, { exact: false })).toHaveLength(3);
 
-  expect(() => getAllByLabelText(NO_MATCHES_TEXT, { exact: false })).toThrow(
+  expect(() => screen.getAllByLabelText(NO_MATCHES_TEXT, { exact: false })).toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
-  expect(queryAllByLabelText(NO_MATCHES_TEXT, { exact: false })).toEqual([]);
+  expect(screen.queryAllByLabelText(NO_MATCHES_TEXT, { exact: false })).toEqual([]);
 
-  await expect(findAllByLabelText(TEXT_LABEL, { exact: false })).resolves.toHaveLength(2);
-  await expect(findAllByLabelText(NO_MATCHES_TEXT, { exact: false })).rejects.toThrow(
+  await expect(screen.findAllByLabelText(TEXT_LABEL, { exact: false })).resolves.toHaveLength(2);
+  await expect(screen.findAllByLabelText(NO_MATCHES_TEXT, { exact: false })).rejects.toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
 });
@@ -110,28 +114,28 @@ describe('findBy options deprecations', () => {
   test('findByText queries warn on deprecated use of WaitForOptions', async () => {
     const options = { timeout: 10 };
     // mock implementation to avoid warning in the test suite
-    const view = render(<View />);
-    await expect(view.findByLabelText('Some Text', options)).rejects.toBeTruthy();
+    render(<View />);
+    await expect(screen.findByLabelText('Some Text', options)).rejects.toBeTruthy();
 
-    setTimeout(() => view.rerender(<View accessibilityLabel="Some Text" />), 20);
-    await expect(view.findByLabelText('Some Text')).resolves.toBeTruthy();
+    setTimeout(() => screen.rerender(<View accessibilityLabel="Some Text" />), 20);
+    await expect(screen.findByLabelText('Some Text')).resolves.toBeTruthy();
 
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Use of option "timeout"'));
   }, 20000);
 });
 
 test('byLabelText queries support hidden option', () => {
-  const { getByLabelText, queryByLabelText } = render(
+  render(
     <Text accessibilityLabel="hidden" style={{ display: 'none' }}>
       Hidden from accessibility
     </Text>
   );
 
-  expect(getByLabelText('hidden', { includeHiddenElements: true })).toBeTruthy();
+  expect(screen.getByLabelText('hidden', { includeHiddenElements: true })).toBeTruthy();
 
-  expect(queryByLabelText('hidden')).toBeFalsy();
-  expect(queryByLabelText('hidden', { includeHiddenElements: false })).toBeFalsy();
-  expect(() => getByLabelText('hidden', { includeHiddenElements: false }))
+  expect(screen.queryByLabelText('hidden')).toBeFalsy();
+  expect(screen.queryByLabelText('hidden', { includeHiddenElements: false })).toBeFalsy();
+  expect(() => screen.getByLabelText('hidden', { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: hidden
 
@@ -149,7 +153,7 @@ test('byLabelText queries support hidden option', () => {
 });
 
 test('getByLabelText supports aria-label', () => {
-  const screen = render(
+  render(
     <>
       <View testID="view" aria-label="view-label" />
       <Text testID="text" aria-label="text-label">
@@ -165,19 +169,19 @@ test('getByLabelText supports aria-label', () => {
 });
 
 test('getByLabelText supports accessibilityLabelledBy', () => {
-  const { getByLabelText, getByTestId } = render(
+  render(
     <>
       <Text nativeID="label">Label for input</Text>
       <TextInput testID="textInput" accessibilityLabelledBy="label" />
     </>
   );
 
-  expect(getByLabelText('Label for input')).toBe(getByTestId('textInput'));
-  expect(getByLabelText(/input/)).toBe(getByTestId('textInput'));
+  expect(screen.getByLabelText('Label for input')).toBe(screen.getByTestId('textInput'));
+  expect(screen.getByLabelText(/input/)).toBe(screen.getByTestId('textInput'));
 });
 
 test('getByLabelText supports nested accessibilityLabelledBy', () => {
-  const { getByLabelText, getByTestId } = render(
+  render(
     <>
       <View nativeID="label">
         <Text>Label for input</Text>
@@ -186,12 +190,12 @@ test('getByLabelText supports nested accessibilityLabelledBy', () => {
     </>
   );
 
-  expect(getByLabelText('Label for input')).toBe(getByTestId('textInput'));
-  expect(getByLabelText(/input/)).toBe(getByTestId('textInput'));
+  expect(screen.getByLabelText('Label for input')).toBe(screen.getByTestId('textInput'));
+  expect(screen.getByLabelText(/input/)).toBe(screen.getByTestId('textInput'));
 });
 
 test('getByLabelText supports aria-labelledby', () => {
-  const screen = render(
+  render(
     <>
       <Text nativeID="label">Text Label</Text>
       <TextInput testID="text-input" aria-labelledby="label" />
@@ -203,7 +207,7 @@ test('getByLabelText supports aria-labelledby', () => {
 });
 
 test('getByLabelText supports nested aria-labelledby', () => {
-  const screen = render(
+  render(
     <>
       <View nativeID="label">
         <Text>Nested Text Label</Text>
@@ -217,9 +221,9 @@ test('getByLabelText supports nested aria-labelledby', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const view = render(<Pressable accessibilityLabel="LABEL" key="3" />);
+  render(<Pressable accessibilityLabel="LABEL" key="3" />);
 
-  expect(() => view.getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
     <View
@@ -228,7 +232,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => view.getAllByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getAllByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
     <View
@@ -237,7 +241,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findByLabelText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(screen.findByLabelText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
     <View
@@ -246,7 +250,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findAllByLabelText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(screen.findAllByLabelText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
     <View

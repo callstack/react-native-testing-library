@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { render, fireEvent } from '..';
+import { render, fireEvent, screen } from '..';
 
 // eslint-disable-next-line no-console
 const originalConsoleError = console.error;
@@ -34,11 +34,11 @@ test('should throw when rendering a string outside a text component', () => {
 });
 
 test('should throw an error when rerendering with text outside of Text component', () => {
-  const { rerender } = render(<View />, {
+  render(<View />, {
     unstable_validateStringsRenderedWithinText: true,
   });
 
-  expect(() => rerender(<View>hello</View>)).toThrow(
+  expect(() => screen.rerender(<View>hello</View>)).toThrow(
     `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
   );
 });
@@ -58,11 +58,11 @@ const InvalidTextAfterPress = () => {
 };
 
 test('should throw an error when strings are rendered outside Text', () => {
-  const { getByText } = render(<InvalidTextAfterPress />, {
+  render(<InvalidTextAfterPress />, {
     unstable_validateStringsRenderedWithinText: true,
   });
 
-  expect(() => fireEvent.press(getByText('Show text'))).toThrow(
+  expect(() => fireEvent.press(screen.getByText('Show text'))).toThrow(
     `${VALIDATION_ERROR}. Detected attempt to render "text rendered outside text component" string within a <View> component.`
   );
 });

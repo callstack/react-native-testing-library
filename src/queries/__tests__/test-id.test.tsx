@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
-import { render } from '../..';
+import { Button, Text, TextInput, View } from 'react-native';
+import { render, screen } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -25,7 +25,7 @@ const Banana = () => (
 const MyComponent = (_props: { testID?: string }) => <Text>My Component</Text>;
 
 test('getByTestId returns only native elements', () => {
-  const { getByTestId, getAllByTestId } = render(
+  render(
     <View>
       <Text testID="text">Text</Text>
       <TextInput testID="textInput" />
@@ -35,26 +35,26 @@ test('getByTestId returns only native elements', () => {
     </View>
   );
 
-  expect(getByTestId('text')).toBeTruthy();
-  expect(getByTestId('textInput')).toBeTruthy();
-  expect(getByTestId('view')).toBeTruthy();
-  expect(getByTestId('button')).toBeTruthy();
+  expect(screen.getByTestId('text')).toBeTruthy();
+  expect(screen.getByTestId('textInput')).toBeTruthy();
+  expect(screen.getByTestId('view')).toBeTruthy();
+  expect(screen.getByTestId('button')).toBeTruthy();
 
-  expect(getAllByTestId('text')).toHaveLength(1);
-  expect(getAllByTestId('textInput')).toHaveLength(1);
-  expect(getAllByTestId('view')).toHaveLength(1);
-  expect(getAllByTestId('button')).toHaveLength(1);
+  expect(screen.getAllByTestId('text')).toHaveLength(1);
+  expect(screen.getAllByTestId('textInput')).toHaveLength(1);
+  expect(screen.getAllByTestId('view')).toHaveLength(1);
+  expect(screen.getAllByTestId('button')).toHaveLength(1);
 
-  expect(() => getByTestId('myComponent')).toThrow(
+  expect(() => screen.getByTestId('myComponent')).toThrow(
     'Unable to find an element with testID: myComponent'
   );
-  expect(() => getAllByTestId('myComponent')).toThrow(
+  expect(() => screen.getAllByTestId('myComponent')).toThrow(
     'Unable to find an element with testID: myComponent'
   );
 });
 
 test('supports a regex matcher', () => {
-  const { getByTestId, getAllByTestId } = render(
+  render(
     <View>
       <Text testID="text">Text</Text>
       <TextInput testID="textInput" />
@@ -64,58 +64,58 @@ test('supports a regex matcher', () => {
     </View>
   );
 
-  expect(getByTestId(/view/)).toBeTruthy();
-  expect(getAllByTestId(/text/)).toHaveLength(2);
+  expect(screen.getByTestId(/view/)).toBeTruthy();
+  expect(screen.getAllByTestId(/text/)).toHaveLength(2);
 });
 
 test('getByTestId, queryByTestId', () => {
-  const { getByTestId, queryByTestId } = render(<Banana />);
-  const component = getByTestId('bananaFresh');
+  render(<Banana />);
+  const component = screen.getByTestId('bananaFresh');
 
   expect(component.props.children).toBe('not fresh');
-  expect(() => getByTestId('InExistent')).toThrow(
+  expect(() => screen.getByTestId('InExistent')).toThrow(
     'Unable to find an element with testID: InExistent'
   );
 
-  expect(getByTestId('bananaFresh')).toBe(component);
-  expect(queryByTestId('InExistent')).toBeNull();
+  expect(screen.getByTestId('bananaFresh')).toBe(component);
+  expect(screen.queryByTestId('InExistent')).toBeNull();
 
-  expect(() => getByTestId('duplicateText')).toThrow(
+  expect(() => screen.getByTestId('duplicateText')).toThrow(
     'Found multiple elements with testID: duplicateText'
   );
-  expect(() => queryByTestId('duplicateText')).toThrow(
+  expect(() => screen.queryByTestId('duplicateText')).toThrow(
     'Found multiple elements with testID: duplicateText'
   );
 });
 
 test('getAllByTestId, queryAllByTestId', () => {
-  const { getAllByTestId, queryAllByTestId } = render(<Banana />);
-  const textElements = getAllByTestId('duplicateText');
+  render(<Banana />);
+  const textElements = screen.getAllByTestId('duplicateText');
 
   expect(textElements.length).toBe(2);
   expect(textElements[0].props.children).toBe('First Text');
   expect(textElements[1].props.children).toBe('Second Text');
-  expect(() => getAllByTestId('nonExistentTestId')).toThrow(
+  expect(() => screen.getAllByTestId('nonExistentTestId')).toThrow(
     'Unable to find an element with testID: nonExistentTestId'
   );
 
-  const queriedTextElements = queryAllByTestId('duplicateText');
+  const queriedTextElements = screen.queryAllByTestId('duplicateText');
 
   expect(queriedTextElements.length).toBe(2);
   expect(queriedTextElements[0]).toBe(textElements[0]);
   expect(queriedTextElements[1]).toBe(textElements[1]);
-  expect(queryAllByTestId('nonExistentTestId')).toHaveLength(0);
+  expect(screen.queryAllByTestId('nonExistentTestId')).toHaveLength(0);
 });
 
 test('findByTestId and findAllByTestId work asynchronously', async () => {
   const options = { timeout: 10 }; // Short timeout so that this test runs quickly
-  const { rerender, findByTestId, findAllByTestId } = render(<View />);
-  await expect(findByTestId('aTestId', {}, options)).rejects.toBeTruthy();
-  await expect(findAllByTestId('aTestId', {}, options)).rejects.toBeTruthy();
+  render(<View />);
+  await expect(screen.findByTestId('aTestId', {}, options)).rejects.toBeTruthy();
+  await expect(screen.findAllByTestId('aTestId', {}, options)).rejects.toBeTruthy();
 
   setTimeout(
     () =>
-      rerender(
+      screen.rerender(
         <View testID="aTestId">
           <Text>Some Text</Text>
           <TextInput placeholder="Placeholder Text" />
@@ -125,22 +125,22 @@ test('findByTestId and findAllByTestId work asynchronously', async () => {
     20
   );
 
-  await expect(findByTestId('aTestId')).resolves.toBeTruthy();
-  await expect(findAllByTestId('aTestId')).resolves.toHaveLength(1);
+  await expect(screen.findByTestId('aTestId')).resolves.toBeTruthy();
+  await expect(screen.findAllByTestId('aTestId')).resolves.toHaveLength(1);
 }, 20000);
 
 test('byTestId queries support hidden option', () => {
-  const { getByTestId, queryByTestId } = render(
+  render(
     <Text style={{ display: 'none' }} testID="hidden">
       Hidden from accessibility
     </Text>
   );
 
-  expect(getByTestId('hidden', { includeHiddenElements: true })).toBeTruthy();
+  expect(screen.getByTestId('hidden', { includeHiddenElements: true })).toBeTruthy();
 
-  expect(queryByTestId('hidden')).toBeFalsy();
-  expect(queryByTestId('hidden', { includeHiddenElements: false })).toBeFalsy();
-  expect(() => getByTestId('hidden', { includeHiddenElements: false }))
+  expect(screen.queryByTestId('hidden')).toBeFalsy();
+  expect(screen.queryByTestId('hidden', { includeHiddenElements: false })).toBeFalsy();
+  expect(() => screen.getByTestId('hidden', { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: hidden
 
@@ -158,9 +158,9 @@ test('byTestId queries support hidden option', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const view = render(<View testID="TEST_ID" key="3" />);
+  render(<View testID="TEST_ID" key="3" />);
 
-  expect(() => view.getByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
     <View
@@ -168,7 +168,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => view.getAllByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getAllByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
     <View
@@ -176,7 +176,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findByTestId('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(screen.findByTestId('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
     <View
@@ -184,7 +184,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findAllByTestId('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(screen.findAllByTestId('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
     <View

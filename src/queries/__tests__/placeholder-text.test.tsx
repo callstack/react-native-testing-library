@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { View, TextInput } from 'react-native';
-import { render } from '../..';
+import { TextInput, View } from 'react-native';
+import { render, screen } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -25,48 +25,46 @@ const Banana = () => (
 );
 
 test('getByPlaceholderText, queryByPlaceholderText', () => {
-  const { getByPlaceholderText, queryByPlaceholderText } = render(<Banana />);
-  const input = getByPlaceholderText(/custom/i);
+  render(<Banana />);
+  const input = screen.getByPlaceholderText(/custom/i);
 
   expect(input.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
 
-  const sameInput = getByPlaceholderText(PLACEHOLDER_FRESHNESS);
+  const sameInput = screen.getByPlaceholderText(PLACEHOLDER_FRESHNESS);
 
   expect(sameInput.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
-  expect(() => getByPlaceholderText('no placeholder')).toThrow(
+  expect(() => screen.getByPlaceholderText('no placeholder')).toThrow(
     'Unable to find an element with placeholder: no placeholder'
   );
 
-  expect(queryByPlaceholderText(/add/i)).toBe(input);
-  expect(queryByPlaceholderText('no placeholder')).toBeNull();
-  expect(() => queryByPlaceholderText(/fresh/)).toThrow(
+  expect(screen.queryByPlaceholderText(/add/i)).toBe(input);
+  expect(screen.queryByPlaceholderText('no placeholder')).toBeNull();
+  expect(() => screen.queryByPlaceholderText(/fresh/)).toThrow(
     'Found multiple elements with placeholder: /fresh/ '
   );
 });
 
 test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
-  const { getAllByPlaceholderText, queryAllByPlaceholderText } = render(<Banana />);
-  const inputs = getAllByPlaceholderText(/fresh/i);
+  render(<Banana />);
+  const inputs = screen.getAllByPlaceholderText(/fresh/i);
 
   expect(inputs).toHaveLength(2);
-  expect(() => getAllByPlaceholderText('no placeholder')).toThrow(
+  expect(() => screen.getAllByPlaceholderText('no placeholder')).toThrow(
     'Unable to find an element with placeholder: no placeholder'
   );
 
-  expect(queryAllByPlaceholderText(/fresh/i)).toEqual(inputs);
-  expect(queryAllByPlaceholderText('no placeholder')).toHaveLength(0);
+  expect(screen.queryAllByPlaceholderText(/fresh/i)).toEqual(inputs);
+  expect(screen.queryAllByPlaceholderText('no placeholder')).toHaveLength(0);
 });
 
 test('byPlaceholderText queries support hidden option', () => {
-  const { getByPlaceholderText, queryByPlaceholderText } = render(
-    <TextInput placeholder="hidden" style={{ display: 'none' }} />
-  );
+  render(<TextInput placeholder="hidden" style={{ display: 'none' }} />);
 
-  expect(getByPlaceholderText('hidden', { includeHiddenElements: true })).toBeTruthy();
+  expect(screen.getByPlaceholderText('hidden', { includeHiddenElements: true })).toBeTruthy();
 
-  expect(queryByPlaceholderText('hidden')).toBeFalsy();
-  expect(queryByPlaceholderText('hidden', { includeHiddenElements: false })).toBeFalsy();
-  expect(() => getByPlaceholderText('hidden', { includeHiddenElements: false }))
+  expect(screen.queryByPlaceholderText('hidden')).toBeFalsy();
+  expect(screen.queryByPlaceholderText('hidden', { includeHiddenElements: false })).toBeFalsy();
+  expect(() => screen.getByPlaceholderText('hidden', { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: hidden
 
@@ -82,15 +80,15 @@ test('byPlaceholderText queries support hidden option', () => {
 });
 
 test('byPlaceHolderText should return host component', () => {
-  const { getByPlaceholderText } = render(<TextInput placeholder="placeholder" />);
+  render(<TextInput placeholder="placeholder" />);
 
-  expect(getByPlaceholderText('placeholder').type).toBe('TextInput');
+  expect(screen.getByPlaceholderText('placeholder').type).toBe('TextInput');
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const view = render(<TextInput placeholder="PLACEHOLDER" key="3" />);
+  render(<TextInput placeholder="PLACEHOLDER" key="3" />);
 
-  expect(() => view.getByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
     <TextInput
@@ -98,7 +96,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => view.getAllByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getAllByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
     <TextInput
@@ -106,7 +104,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findByPlaceholderText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(screen.findByPlaceholderText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
     <TextInput
@@ -114,7 +112,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findAllByPlaceholderText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(screen.findAllByPlaceholderText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
     <TextInput

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { View, TextInput, TextInputProps } from 'react-native';
-import { createEventLogger } from '../../test-utils/events';
-import { render, userEvent } from '../..';
+import { TextInput, TextInputProps, View } from 'react-native';
+import { createEventLogger } from '../../test-utils';
+import { render, userEvent, screen } from '../..';
 
 beforeEach(() => {
   jest.useRealTimers();
@@ -10,7 +10,7 @@ beforeEach(() => {
 function renderTextInputWithToolkit(props: TextInputProps = {}) {
   const { events, logEvent } = createEventLogger();
 
-  const screen = render(
+  render(
     <TextInput
       testID="input"
       onFocus={logEvent('focus')}
@@ -159,7 +159,7 @@ describe('clear()', () => {
 
   it('works when not all events have handlers', async () => {
     const { events, logEvent } = createEventLogger();
-    const screen = render(
+    render(
       <TextInput
         testID="input"
         onChangeText={logEvent('changeText')}
@@ -177,7 +177,7 @@ describe('clear()', () => {
   });
 
   it('does NOT work on View', async () => {
-    const screen = render(<View testID="input" />);
+    render(<View testID="input" />);
 
     const user = userEvent.setup();
     await expect(
@@ -192,7 +192,7 @@ describe('clear()', () => {
 
   it('does NOT bubble up', async () => {
     const parentHandler = jest.fn();
-    const screen = render(
+    render(
       <AnyView
         onChangeText={parentHandler}
         onChange={parentHandler}

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { View, TextInput, TextInputProps } from 'react-native';
-import { createEventLogger } from '../../../test-utils/events';
-import { render } from '../../..';
+import { TextInput, TextInputProps, View } from 'react-native';
+import { createEventLogger } from '../../../test-utils';
+import { render, screen } from '../../..';
 import { userEvent } from '../..';
 
 beforeEach(() => {
@@ -11,7 +11,7 @@ beforeEach(() => {
 function renderTextInputWithToolkit(props: TextInputProps = {}) {
   const { events, logEvent } = createEventLogger();
 
-  const screen = render(
+  render(
     <TextInput
       testID="input"
       onFocus={logEvent('focus')}
@@ -251,7 +251,7 @@ describe('type()', () => {
 
   it('works when not all events have handlers', async () => {
     const { events, logEvent } = createEventLogger();
-    const screen = render(
+    render(
       <TextInput
         testID="input"
         onChangeText={logEvent('changeText')}
@@ -269,7 +269,7 @@ describe('type()', () => {
   });
 
   it('does NOT work on View', async () => {
-    const screen = render(<View testID="input" />);
+    render(<View testID="input" />);
 
     const user = userEvent.setup();
     await expect(
@@ -284,7 +284,7 @@ describe('type()', () => {
 
   it('does NOT bubble up', async () => {
     const parentHandler = jest.fn();
-    const screen = render(
+    render(
       <AnyView
         onChangeText={parentHandler}
         onChange={parentHandler}
@@ -307,7 +307,7 @@ describe('type()', () => {
 
   it('supports direct access', async () => {
     const { events, logEvent } = createEventLogger();
-    const screen = render(
+    render(
       <TextInput
         testID="input"
         onChangeText={logEvent('changeText')}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextInput, View } from 'react-native';
 
-import { render } from '../..';
+import { render, screen } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -29,28 +29,28 @@ const Banana = () => (
 );
 
 test('getByDisplayValue, queryByDisplayValue', () => {
-  const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
-  const input = getByDisplayValue(/custom/i);
+  render(<Banana />);
+  const input = screen.getByDisplayValue(/custom/i);
 
   expect(input.props.value).toBe(INPUT_FRESHNESS);
 
-  const sameInput = getByDisplayValue(INPUT_FRESHNESS);
+  const sameInput = screen.getByDisplayValue(INPUT_FRESHNESS);
 
   expect(sameInput.props.value).toBe(INPUT_FRESHNESS);
-  expect(() => getByDisplayValue('no value')).toThrow(
+  expect(() => screen.getByDisplayValue('no value')).toThrow(
     'Unable to find an element with displayValue: no value'
   );
 
-  expect(queryByDisplayValue(/custom/i)).toBe(input);
-  expect(queryByDisplayValue('no value')).toBeNull();
-  expect(() => queryByDisplayValue(/fresh/i)).toThrow(
+  expect(screen.queryByDisplayValue(/custom/i)).toBe(input);
+  expect(screen.queryByDisplayValue('no value')).toBeNull();
+  expect(() => screen.queryByDisplayValue(/fresh/i)).toThrow(
     'Found multiple elements with display value: /fresh/i'
   );
 });
 
 test('getByDisplayValue, queryByDisplayValue get element by default value only when value is undefined', () => {
-  const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
-  expect(() => getByDisplayValue(DEFAULT_INPUT_CHEF)).toThrowErrorMatchingInlineSnapshot(`
+  render(<Banana />);
+  expect(() => screen.getByDisplayValue(DEFAULT_INPUT_CHEF)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: What did you inspect?
 
     <View>
@@ -74,9 +74,9 @@ test('getByDisplayValue, queryByDisplayValue get element by default value only w
       />
     </View>"
   `);
-  expect(queryByDisplayValue(DEFAULT_INPUT_CHEF)).toBeNull();
+  expect(screen.queryByDisplayValue(DEFAULT_INPUT_CHEF)).toBeNull();
 
-  expect(() => getByDisplayValue('hello')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getByDisplayValue('hello')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: hello
 
     <View>
@@ -100,35 +100,35 @@ test('getByDisplayValue, queryByDisplayValue get element by default value only w
       />
     </View>"
   `);
-  expect(queryByDisplayValue('hello')).toBeNull();
+  expect(screen.queryByDisplayValue('hello')).toBeNull();
 
-  expect(getByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
-  expect(queryByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
+  expect(screen.getByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
+  expect(screen.queryByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
 });
 
 test('getAllByDisplayValue, queryAllByDisplayValue', () => {
-  const { getAllByDisplayValue, queryAllByDisplayValue } = render(<Banana />);
-  const inputs = getAllByDisplayValue(/fresh/i);
+  render(<Banana />);
+  const inputs = screen.getAllByDisplayValue(/fresh/i);
 
   expect(inputs).toHaveLength(2);
-  expect(() => getAllByDisplayValue('no value')).toThrow(
+  expect(() => screen.getAllByDisplayValue('no value')).toThrow(
     'Unable to find an element with displayValue: no value'
   );
 
-  expect(queryAllByDisplayValue(/fresh/i)).toEqual(inputs);
-  expect(queryAllByDisplayValue('no value')).toHaveLength(0);
+  expect(screen.queryAllByDisplayValue(/fresh/i)).toEqual(inputs);
+  expect(screen.queryAllByDisplayValue('no value')).toHaveLength(0);
 });
 
 test('findBy queries work asynchronously', async () => {
   const options = { timeout: 10 }; // Short timeout so that this test runs quickly
-  const { rerender, findByDisplayValue, findAllByDisplayValue } = render(<View />);
+  render(<View />);
 
-  await expect(findByDisplayValue('Display Value', {}, options)).rejects.toBeTruthy();
-  await expect(findAllByDisplayValue('Display Value', {}, options)).rejects.toBeTruthy();
+  await expect(screen.findByDisplayValue('Display Value', {}, options)).rejects.toBeTruthy();
+  await expect(screen.findAllByDisplayValue('Display Value', {}, options)).rejects.toBeTruthy();
 
   setTimeout(
     () =>
-      rerender(
+      screen.rerender(
         <View>
           <TextInput value="Display Value" />
         </View>
@@ -136,20 +136,18 @@ test('findBy queries work asynchronously', async () => {
     20
   );
 
-  await expect(findByDisplayValue('Display Value')).resolves.toBeTruthy();
-  await expect(findAllByDisplayValue('Display Value')).resolves.toHaveLength(1);
+  await expect(screen.findByDisplayValue('Display Value')).resolves.toBeTruthy();
+  await expect(screen.findAllByDisplayValue('Display Value')).resolves.toHaveLength(1);
 }, 20000);
 
 test('byDisplayValue queries support hidden option', () => {
-  const { getByDisplayValue, queryByDisplayValue } = render(
-    <TextInput value="hidden" style={{ display: 'none' }} />
-  );
+  render(<TextInput value="hidden" style={{ display: 'none' }} />);
 
-  expect(getByDisplayValue('hidden', { includeHiddenElements: true })).toBeTruthy();
+  expect(screen.getByDisplayValue('hidden', { includeHiddenElements: true })).toBeTruthy();
 
-  expect(queryByDisplayValue('hidden')).toBeFalsy();
-  expect(queryByDisplayValue('hidden', { includeHiddenElements: false })).toBeFalsy();
-  expect(() => getByDisplayValue('hidden', { includeHiddenElements: false }))
+  expect(screen.queryByDisplayValue('hidden')).toBeFalsy();
+  expect(screen.queryByDisplayValue('hidden', { includeHiddenElements: false })).toBeFalsy();
+  expect(() => screen.getByDisplayValue('hidden', { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: hidden
 
@@ -165,15 +163,15 @@ test('byDisplayValue queries support hidden option', () => {
 });
 
 test('byDisplayValue should return host component', () => {
-  const { getByDisplayValue } = render(<TextInput value="value" />);
+  render(<TextInput value="value" />);
 
-  expect(getByDisplayValue('value').type).toBe('TextInput');
+  expect(screen.getByDisplayValue('value').type).toBe('TextInput');
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const view = render(<TextInput value="1" key="3" />);
+  render(<TextInput value="1" key="3" />);
 
-  expect(() => view.getByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
     <TextInput
@@ -181,7 +179,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => view.getAllByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getAllByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
     <TextInput
@@ -189,7 +187,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findByDisplayValue('2')).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(screen.findByDisplayValue('2')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
     <TextInput
@@ -197,7 +195,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findAllByDisplayValue('2')).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(screen.findAllByDisplayValue('2')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
     <TextInput

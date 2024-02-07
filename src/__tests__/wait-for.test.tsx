@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View, Pressable } from 'react-native';
-import { fireEvent, render, waitFor, configure } from '..';
+import { fireEvent, render, waitFor, configure, screen } from '..';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {
@@ -37,51 +37,51 @@ afterEach(() => {
 });
 
 test('waits for element until it stops throwing', async () => {
-  const { getByText, queryByText } = render(<BananaContainer />);
+  render(<BananaContainer />);
 
-  fireEvent.press(getByText('Change freshness!'));
+  fireEvent.press(screen.getByText('Change freshness!'));
 
-  expect(queryByText('Fresh')).toBeNull();
+  expect(screen.queryByText('Fresh')).toBeNull();
 
-  const freshBananaText = await waitFor(() => getByText('Fresh'));
+  const freshBananaText = await waitFor(() => screen.getByText('Fresh'));
 
   expect(freshBananaText.props.children).toBe('Fresh');
 });
 
 test('waits for element until timeout is met', async () => {
-  const { getByText } = render(<BananaContainer />);
+  render(<BananaContainer />);
 
-  fireEvent.press(getByText('Change freshness!'));
+  fireEvent.press(screen.getByText('Change freshness!'));
 
-  await expect(waitFor(() => getByText('Fresh'), { timeout: 100 })).rejects.toThrow();
+  await expect(waitFor(() => screen.getByText('Fresh'), { timeout: 100 })).rejects.toThrow();
 
   // Async action ends after 300ms and we only waited 100ms, so we need to wait
   // for the remaining async actions to finish
-  await waitFor(() => getByText('Fresh'));
+  await waitFor(() => screen.getByText('Fresh'));
 });
 
 test('waitFor defaults to asyncWaitTimeout config option', async () => {
   configure({ asyncUtilTimeout: 100 });
-  const { getByText } = render(<BananaContainer />);
+  render(<BananaContainer />);
 
-  fireEvent.press(getByText('Change freshness!'));
-  await expect(waitFor(() => getByText('Fresh'))).rejects.toThrow();
+  fireEvent.press(screen.getByText('Change freshness!'));
+  await expect(waitFor(() => screen.getByText('Fresh'))).rejects.toThrow();
 
   // Async action ends after 300ms and we only waited 100ms, so we need to wait
   // for the remaining async actions to finish
-  await waitFor(() => getByText('Fresh'), { timeout: 1000 });
+  await waitFor(() => screen.getByText('Fresh'), { timeout: 1000 });
 });
 
 test('waitFor timeout option takes precendence over `asyncWaitTimeout` config option', async () => {
   configure({ asyncUtilTimeout: 2000 });
-  const { getByText } = render(<BananaContainer />);
+  render(<BananaContainer />);
 
-  fireEvent.press(getByText('Change freshness!'));
-  await expect(waitFor(() => getByText('Fresh'), { timeout: 100 })).rejects.toThrow();
+  fireEvent.press(screen.getByText('Change freshness!'));
+  await expect(waitFor(() => screen.getByText('Fresh'), { timeout: 100 })).rejects.toThrow();
 
   // Async action ends after 300ms and we only waited 100ms, so we need to wait
   // for the remaining async actions to finish
-  await waitFor(() => getByText('Fresh'));
+  await waitFor(() => screen.getByText('Fresh'));
 });
 
 test('waits for element with custom interval', async () => {
@@ -124,9 +124,9 @@ const Comp = ({ onPress }: { onPress: () => void }) => {
 
 test('waits for async event with fireEvent', async () => {
   const spy = jest.fn();
-  const { getByText } = render(<Comp onPress={spy} />);
+  render(<Comp onPress={spy} />);
 
-  fireEvent.press(getByText('Trigger'));
+  fireEvent.press(screen.getByText('Trigger'));
 
   await waitFor(() => {
     expect(spy).toHaveBeenCalled();
@@ -137,13 +137,13 @@ test.each([false, true])(
   'waits for element until it stops throwing using fake timers (legacyFakeTimers = %s)',
   async (legacyFakeTimers) => {
     jest.useFakeTimers({ legacyFakeTimers });
-    const { getByText, queryByText } = render(<BananaContainer />);
+    render(<BananaContainer />);
 
-    fireEvent.press(getByText('Change freshness!'));
-    expect(queryByText('Fresh')).toBeNull();
+    fireEvent.press(screen.getByText('Change freshness!'));
+    expect(screen.queryByText('Fresh')).toBeNull();
 
     jest.advanceTimersByTime(300);
-    const freshBananaText = await waitFor(() => getByText('Fresh'));
+    const freshBananaText = await waitFor(() => screen.getByText('Fresh'));
 
     expect(freshBananaText.props.children).toBe('Fresh');
   }
@@ -293,18 +293,18 @@ test.each([
     }
 
     const onPress = jest.fn();
-    const view = render(<Apple onPress={onPress} />);
+    render(<Apple onPress={onPress} />);
 
     // Required: this `waitFor` will succeed on first check, because the "root" view is there
     // since the initial mount.
-    await waitFor(() => view.getByTestId('root'));
+    await waitFor(() => screen.getByTestId('root'));
 
     // This `waitFor` will also succeed on first check, because the promise that sets the
     // `color` state to "red" resolves right after the previous `await waitFor` statement.
-    await waitFor(() => view.getByText('red'));
+    await waitFor(() => screen.getByText('red'));
 
     // Check that the `onPress` callback is called with the already-updated value of `syncedColor`.
-    fireEvent.press(view.getByText('Trigger'));
+    fireEvent.press(screen.getByText('Trigger'));
     expect(onPress).toHaveBeenCalledWith('red');
   }
 );

@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Text, ScrollView, TextInput } from 'react-native';
-import { render, fireEvent } from '..';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { render, screen, userEvent } from '..';
 
 type QuestionsBoardProps = {
   questions: string[];
   onSubmit: (obj: {}) => void;
 };
+
+jest.useFakeTimers();
+
 function QuestionsBoard({ questions, onSubmit }: QuestionsBoardProps) {
   const [data, setData] = React.useState({});
 
@@ -28,28 +31,30 @@ function QuestionsBoard({ questions, onSubmit }: QuestionsBoardProps) {
           </View>
         );
       })}
-      <TouchableOpacity onPress={() => onSubmit(data)}>
+      <Pressable accessibilityRole={'button'} onPress={() => onSubmit(data)}>
         <Text>Submit</Text>
-      </TouchableOpacity>
+      </Pressable>
     </ScrollView>
   );
 }
 
-test('form submits two answers', () => {
-  const allQuestions = ['q1', 'q2'];
-  const mockFn = jest.fn();
+test('form submits two answers', async () => {
+  const questions = ['q1', 'q2'];
+  const onSubmit = jest.fn();
 
-  const { getAllByLabelText, getByText } = render(
-    <QuestionsBoard questions={allQuestions} onSubmit={mockFn} />
-  );
+  const user = userEvent.setup();
+  render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
 
-  const answerInputs = getAllByLabelText('answer input');
+  const answerInputs = screen.getAllByLabelText('answer input');
 
-  fireEvent.changeText(answerInputs[0], 'a1');
-  fireEvent.changeText(answerInputs[1], 'a2');
-  fireEvent.press(getByText('Submit'));
+  // simulates the user focusing on TextInput and typing text one char at a time
+  await user.type(answerInputs[0], 'a1');
+  await user.type(answerInputs[1], 'a2');
 
-  expect(mockFn).toHaveBeenCalledWith({
+  // simulates the user pressing on any pressable element
+  await user.press(screen.getByRole('button', { name: 'Submit' }));
+
+  expect(onSubmit).toHaveBeenCalledWith({
     '1': { q: 'q1', a: 'a1' },
     '2': { q: 'q2', a: 'a2' },
   });

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextInput } from 'react-native';
-import { createEventLogger } from '../../../test-utils/events';
-import { render } from '../../..';
+import { createEventLogger } from '../../../test-utils';
+import { render, screen } from '../../..';
 import { userEvent } from '../..';
 
 beforeEach(() => {
@@ -51,7 +51,7 @@ describe('type() for managed TextInput', () => {
   it('supports basic case', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
     const { events, logEvent } = createEventLogger();
-    const screen = render(<ManagedTextInput logEvent={logEvent} />);
+    render(<ManagedTextInput logEvent={logEvent} />);
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'Wow');
@@ -83,7 +83,7 @@ describe('type() for managed TextInput', () => {
   test('supports rejecting TextInput', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
     const { events, logEvent } = createEventLogger();
-    const screen = render(
+    render(
       <ManagedTextInput initialValue="XXX" logEvent={logEvent} valueTransformer={() => 'XXX'} />
     );
 

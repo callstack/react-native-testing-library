@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { render, fireEvent, waitForElementToBeRemoved } from '..';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '..';
 
 const TestSetup = ({ shouldUseDelay = true }) => {
   const [isAdded, setIsAdded] = useState(true);
@@ -29,7 +29,7 @@ afterEach(() => {
 });
 
 test('waits when using getBy query', async () => {
-  const screen = render(<TestSetup />);
+  render(<TestSetup />);
 
   fireEvent.press(screen.getByText('Remove Element'));
   const element = screen.getByText('Observed Element');
@@ -41,7 +41,7 @@ test('waits when using getBy query', async () => {
 });
 
 test('waits when using getAllBy query', async () => {
-  const screen = render(<TestSetup />);
+  render(<TestSetup />);
 
   fireEvent.press(screen.getByText('Remove Element'));
   const elements = screen.getAllByText('Observed Element');
@@ -53,7 +53,7 @@ test('waits when using getAllBy query', async () => {
 });
 
 test('waits when using queryBy query', async () => {
-  const screen = render(<TestSetup />);
+  render(<TestSetup />);
 
   fireEvent.press(screen.getByText('Remove Element'));
   const element = screen.getByText('Observed Element');
@@ -65,7 +65,7 @@ test('waits when using queryBy query', async () => {
 });
 
 test('waits when using queryAllBy query', async () => {
-  const screen = render(<TestSetup />);
+  render(<TestSetup />);
 
   fireEvent.press(screen.getByText('Remove Element'));
   const elements = screen.getAllByText('Observed Element');
@@ -77,7 +77,7 @@ test('waits when using queryAllBy query', async () => {
 });
 
 test('checks if elements exist at start', async () => {
-  const screen = render(<TestSetup shouldUseDelay={false} />);
+  render(<TestSetup shouldUseDelay={false} />);
 
   fireEvent.press(screen.getByText('Remove Element'));
   expect(screen.queryByText('Observed Element')).toBeNull();
@@ -90,7 +90,7 @@ test('checks if elements exist at start', async () => {
 });
 
 test('waits until timeout', async () => {
-  const screen = render(<TestSetup />);
+  render(<TestSetup />);
 
   fireEvent.press(screen.getByText('Remove Element'));
   expect(screen.getByText('Observed Element')).toBeTruthy();

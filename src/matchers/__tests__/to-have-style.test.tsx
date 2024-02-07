@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
-import { render } from '../..';
+import { render, screen } from '../..';
 import '../extend-expect';
 
 const styles = StyleSheet.create({
@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
 });
 
 test('toHaveStyle() handles basic cases', () => {
-  const screen = render(
+  render(
     <View
       testID="view"
       style={[
@@ -50,7 +50,7 @@ test('toHaveStyle() handles basic cases', () => {
 });
 
 test('toHaveStyle error messages', () => {
-  const screen = render(
+  render(
     <View
       testID="view"
       style={{
@@ -129,14 +129,14 @@ test('toHaveStyle error messages', () => {
 });
 
 test('toHaveStyle() supports missing "style" prop', () => {
-  const screen = render(<View testID="view" />);
+  render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
   expect(view).not.toHaveStyle({ fontWeight: 'bold' });
 });
 
 test('toHaveStyle() supports undefined "transform" style', () => {
-  const screen = render(
+  render(
     <View
       testID="view"
       style={{
@@ -164,7 +164,7 @@ test('toHaveStyle() supports undefined "transform" style', () => {
 });
 
 test('toHaveStyle() supports Pressable with function "style" prop', () => {
-  const screen = render(<Pressable testID="view" style={() => ({ backgroundColor: 'blue' })} />);
+  render(<Pressable testID="view" style={() => ({ backgroundColor: 'blue' })} />);
 
   expect(screen.getByTestId('view')).toHaveStyle({ backgroundColor: 'blue' });
 });
