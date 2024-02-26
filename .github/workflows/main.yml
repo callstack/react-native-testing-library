@@ -11,7 +11,7 @@ jobs:
     name: Install and Cache deps
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup
         uses: ./.github/actions/setup-deps
@@ -22,7 +22,7 @@ jobs:
     name: Lint
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
@@ -36,7 +36,7 @@ jobs:
     name: Typecheck
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
@@ -50,7 +50,7 @@ jobs:
     name: Flow
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
@@ -64,7 +64,7 @@ jobs:
     name: Test
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
@@ -73,14 +73,14 @@ jobs:
         run: yarn test:ci
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
 
   test-website:
     runs-on: ubuntu-latest
     name: Test Website
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js and website deps
         uses: ./.github/actions/setup-website-deps
