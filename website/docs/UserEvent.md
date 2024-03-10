@@ -219,7 +219,7 @@ await user.scrollTo(scrollView, { y: 100, momentumY: 200 });
 
 This helper simulates the user scrolling a host `ScrollView` element.
 
-This function supports only host `ScrollView` elements, passing other element types will result in an error. Note that `FlatList` is accepted as it renders to a host `ScrolLView` element.
+This function supports only host `ScrollView` elements, passing other element types will result in an error. Note that `FlatList` is accepted as it renders to a host `ScrollView` element.
 
 Scroll interaction should match the `ScrollView` element direction:
 
