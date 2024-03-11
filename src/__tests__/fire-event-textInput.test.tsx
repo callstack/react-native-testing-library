@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TextInput, TextInputProps } from 'react-native';
-import { render, fireEvent } from '..';
+import { render, fireEvent, screen } from '..';
 
 function WrappedTextInput(props: TextInputProps) {
   return <TextInput {...props} />;
@@ -18,7 +18,7 @@ test('should fire only non-touch-related events on non-editable TextInput', () =
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  const view = render(
+  render(
     <TextInput
       editable={false}
       testID="subject"
@@ -29,7 +29,7 @@ test('should fire only non-touch-related events on non-editable TextInput', () =
     />
   );
 
-  const subject = view.getByTestId('subject');
+  const subject = screen.getByTestId('subject');
   fireEvent(subject, 'focus');
   fireEvent.changeText(subject, 'Text');
   fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
@@ -47,7 +47,7 @@ test('should fire only non-touch-related events on non-editable TextInput with n
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  const view = render(
+  render(
     <TextInput
       editable={false}
       testID="subject"
@@ -60,7 +60,7 @@ test('should fire only non-touch-related events on non-editable TextInput with n
     </TextInput>
   );
 
-  const subject = view.getByText('Nested Text');
+  const subject = screen.getByText('Nested Text');
   fireEvent(subject, 'focus');
   fireEvent(subject, 'onFocus');
   fireEvent.changeText(subject, 'Text');
@@ -98,7 +98,7 @@ test('should fire only non-touch-related events on non-editable wrapped TextInpu
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  const view = render(
+  render(
     <WrappedTextInput
       editable={false}
       testID="subject"
@@ -109,7 +109,7 @@ test('should fire only non-touch-related events on non-editable wrapped TextInpu
     />
   );
 
-  const subject = view.getByTestId('subject');
+  const subject = screen.getByTestId('subject');
   fireEvent(subject, 'focus');
   fireEvent.changeText(subject, 'Text');
   fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
@@ -130,7 +130,7 @@ test('should fire only non-touch-related events on non-editable double wrapped T
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  const view = render(
+  render(
     <DoubleWrappedTextInput
       editable={false}
       testID="subject"
@@ -141,7 +141,7 @@ test('should fire only non-touch-related events on non-editable double wrapped T
     />
   );
 
-  const subject = view.getByTestId('subject');
+  const subject = screen.getByTestId('subject');
   fireEvent(subject, 'focus');
   fireEvent.changeText(subject, 'Text');
   fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });

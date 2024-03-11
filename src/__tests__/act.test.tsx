@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Text } from 'react-native';
-import act from '../act';
-import render from '../render';
-import fireEvent from '../fire-event';
+import { act, fireEvent, render, screen } from '../';
 
 type UseEffectProps = { callback(): void };
 const UseEffect = ({ callback }: UseEffectProps) => {
@@ -26,15 +24,15 @@ test('render should trigger useEffect', () => {
 
 test('update should trigger useEffect', () => {
   const effectCallback = jest.fn();
-  const { update } = render(<UseEffect callback={effectCallback} />);
-  update(<UseEffect callback={effectCallback} />);
+  render(<UseEffect callback={effectCallback} />);
+  screen.update(<UseEffect callback={effectCallback} />);
 
   expect(effectCallback).toHaveBeenCalledTimes(2);
 });
 
 test('fireEvent should trigger useState', () => {
-  const { getByText } = render(<Counter />);
-  const counter = getByText(/Total count/i);
+  render(<Counter />);
+  const counter = screen.getByText(/Total count/i);
 
   expect(counter.props.children).toEqual('Total count: 0');
   fireEvent.press(counter);

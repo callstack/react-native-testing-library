@@ -4,9 +4,9 @@ import { render, screen } from '../..';
 
 describe('printing element tree', () => {
   test('includes element tree on error with less-helpful props stripped', () => {
-    const { getByText } = render(<Text onPress={() => null}>Some text</Text>);
+    render(<Text onPress={() => null}>Some text</Text>);
 
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+    expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <Text>
@@ -16,7 +16,7 @@ describe('printing element tree', () => {
   });
 
   test('prints helpful props but not others', () => {
-    const { getByText } = render(
+    render(
       <View
         key="this is filtered"
         testID="TEST_ID"
@@ -48,7 +48,7 @@ describe('printing element tree', () => {
       </View>
     );
 
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+    expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -89,9 +89,9 @@ describe('printing element tree', () => {
   });
 
   test('prints tree and filters props with getBy, getAllBy, findBy, findAllBy', async () => {
-    const view = render(<View accessibilityViewIsModal key="this is filtered" />);
+    render(<View accessibilityViewIsModal key="this is filtered" />);
 
-    expect(() => view.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+    expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -99,7 +99,7 @@ describe('printing element tree', () => {
       />"
     `);
 
-    expect(() => view.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+    expect(() => screen.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -107,7 +107,7 @@ describe('printing element tree', () => {
       />"
     `);
 
-    await expect(view.findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
+    await expect(screen.findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -115,7 +115,7 @@ describe('printing element tree', () => {
       />"
     `);
 
-    await expect(view.findAllByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
+    await expect(screen.findAllByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -125,22 +125,22 @@ describe('printing element tree', () => {
   });
 
   test('only appends element tree on last failure with findBy', async () => {
-    const { findByText } = render(<View accessibilityViewIsModal key="this is filtered" />);
+    render(<View accessibilityViewIsModal key="this is filtered" />);
 
     jest.spyOn(screen, 'toJSON');
 
-    await expect(findByText(/foo/)).rejects.toThrow();
+    await expect(screen.findByText(/foo/)).rejects.toThrow();
 
     expect(screen.toJSON).toHaveBeenCalledTimes(1);
   });
 
   test('onTimeout with findBy receives error without element tree', async () => {
-    const { findByText } = render(<View />);
+    render(<View />);
 
     const onTimeout = jest.fn((_: Error) => new Error('Replacement error'));
 
     await expect(() =>
-      findByText(/foo/, undefined, { onTimeout })
+      screen.findByText(/foo/, undefined, { onTimeout })
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Replacement error"`);
 
     expect(onTimeout).toHaveBeenCalledTimes(1);
@@ -151,12 +151,12 @@ describe('printing element tree', () => {
   });
 
   test('onTimeout with findAllBy receives error without element tree', async () => {
-    const { findAllByText } = render(<View />);
+    render(<View />);
 
     const onTimeout = jest.fn((_: Error) => new Error('Replacement error'));
 
     await expect(() =>
-      findAllByText(/foo/, undefined, { onTimeout })
+      screen.findAllByText(/foo/, undefined, { onTimeout })
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Replacement error"`);
 
     expect(onTimeout).toHaveBeenCalledTimes(1);
@@ -167,7 +167,7 @@ describe('printing element tree', () => {
   });
 
   test('does not strip display: none from "style" prop, but does strip other styles', () => {
-    const { getByText } = render(
+    render(
       <View style={{ display: 'flex', position: 'absolute' }}>
         <Text
           style={[
@@ -180,7 +180,7 @@ describe('printing element tree', () => {
       </View>
     );
 
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+    expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View>
@@ -198,13 +198,13 @@ describe('printing element tree', () => {
   });
 
   test('strips undefined values from accessibilityState', () => {
-    const { getByText } = render(
+    render(
       <View accessibilityState={{ checked: true, busy: false }}>
         <View accessibilityState={{ checked: undefined }} />
       </View>
     );
 
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+    expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -221,13 +221,13 @@ describe('printing element tree', () => {
   });
 
   test('strips undefined values from accessibilityValue', () => {
-    const { getByText } = render(
+    render(
       <View accessibilityValue={{ min: 1 }}>
         <View accessibilityState={{}} />
       </View>
     );
 
-    expect(() => getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
+    expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
       <View
@@ -243,10 +243,10 @@ describe('printing element tree', () => {
   });
 
   test('does not render element tree when toJSON() returns null', () => {
-    const view = render(<View />);
+    render(<View />);
 
     jest.spyOn(screen, 'toJSON').mockImplementation(() => null);
-    expect(() => view.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(
+    expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(
       `"Unable to find an element with text: /foo/"`
     );
   });

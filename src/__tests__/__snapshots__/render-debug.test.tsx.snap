@@ -58,6 +58,7 @@ exports[`debug 1`] = `
     onResponderTerminate={[Function onResponderTerminate]}
     onResponderTerminationRequest={[Function onResponderTerminationRequest]}
     onStartShouldSetResponder={[Function onStartShouldSetResponder]}
+    role="button"
   >
     <Text>
       Change freshness!
@@ -137,6 +138,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     onResponderTerminate={[Function onResponderTerminate]}
     onResponderTerminationRequest={[Function onResponderTerminationRequest]}
     onStartShouldSetResponder={[Function onStartShouldSetResponder]}
+    role="button"
   >
     <Text>
       Change freshness!
@@ -343,6 +345,7 @@ exports[`debug: another custom message 1`] = `
     onResponderTerminate={[Function onResponderTerminate]}
     onResponderTerminationRequest={[Function onResponderTerminationRequest]}
     onStartShouldSetResponder={[Function onStartShouldSetResponder]}
+    role="button"
   >
     <Text>
       Change freshness!
@@ -394,7 +397,6 @@ exports[`debug: shallow 1`] = `
   />
   <MyButton
     onPress={[Function changeFresh]}
-    type="primary"
   >
     Change freshness!
   </MyButton>
@@ -446,7 +448,6 @@ exports[`debug: shallow with message 1`] = `
   />
   <MyButton
     onPress={[Function changeFresh]}
-    type="primary"
   >
     Change freshness!
   </MyButton>
@@ -526,6 +527,7 @@ exports[`debug: with message 1`] = `
     onResponderTerminate={[Function onResponderTerminate]}
     onResponderTerminationRequest={[Function onResponderTerminationRequest]}
     onStartShouldSetResponder={[Function onStartShouldSetResponder]}
+    role="button"
   >
     <Text>
       Change freshness!

@@ -186,7 +186,7 @@ describe('scrollTo()', () => {
   });
 
   it('does NOT work on View', async () => {
-    const screen = render(<View testID="view" />);
+    render(<View testID="view" />);
     const user = userEvent.setup();
 
     await expect(

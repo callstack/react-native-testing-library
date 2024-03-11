@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
 import { getConfig, resetToDefaults } from '../config';
-import { render, screen, fireEvent, RenderAPI } from '..';
+import { fireEvent, render, RenderAPI, screen } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -75,57 +75,57 @@ class Banana extends React.Component<any, { fresh: boolean }> {
 }
 
 test('UNSAFE_getAllByType, UNSAFE_queryAllByType', () => {
-  const { UNSAFE_getAllByType, UNSAFE_queryAllByType } = render(<Banana />);
-  const [text, status, button] = UNSAFE_getAllByType(Text);
+  render(<Banana />);
+  const [text, status, button] = screen.UNSAFE_getAllByType(Text);
   const InExistent = () => null;
 
   expect(text.props.children).toBe('Is the banana fresh?');
   expect(status.props.children).toBe('not fresh');
   expect(button.props.children).toBe('Change freshness!');
-  expect(() => UNSAFE_getAllByType(InExistent)).toThrow('No instances found');
+  expect(() => screen.UNSAFE_getAllByType(InExistent)).toThrow('No instances found');
 
-  expect(UNSAFE_queryAllByType(Text)[1]).toBe(status);
-  expect(UNSAFE_queryAllByType(InExistent)).toHaveLength(0);
+  expect(screen.UNSAFE_queryAllByType(Text)[1]).toBe(status);
+  expect(screen.UNSAFE_queryAllByType(InExistent)).toHaveLength(0);
 });
 
 test('UNSAFE_getByProps, UNSAFE_queryByProps', () => {
-  const { UNSAFE_getByProps, UNSAFE_queryByProps } = render(<Banana />);
-  const primaryType = UNSAFE_getByProps({ type: 'primary' });
+  render(<Banana />);
+  const primaryType = screen.UNSAFE_getByProps({ type: 'primary' });
 
   expect(primaryType.props.children).toBe('Change freshness!');
-  expect(() => UNSAFE_getByProps({ type: 'inexistent' })).toThrow('No instances found');
+  expect(() => screen.UNSAFE_getByProps({ type: 'inexistent' })).toThrow('No instances found');
 
-  expect(UNSAFE_queryByProps({ type: 'primary' })).toBe(primaryType);
-  expect(UNSAFE_queryByProps({ type: 'inexistent' })).toBeNull();
+  expect(screen.UNSAFE_queryByProps({ type: 'primary' })).toBe(primaryType);
+  expect(screen.UNSAFE_queryByProps({ type: 'inexistent' })).toBeNull();
 });
 
 test('UNSAFE_getAllByProp, UNSAFE_queryAllByProps', () => {
-  const { UNSAFE_getAllByProps, UNSAFE_queryAllByProps } = render(<Banana />);
-  const primaryTypes = UNSAFE_getAllByProps({ type: 'primary' });
+  render(<Banana />);
+  const primaryTypes = screen.UNSAFE_getAllByProps({ type: 'primary' });
 
   expect(primaryTypes).toHaveLength(1);
-  expect(() => UNSAFE_getAllByProps({ type: 'inexistent' })).toThrow('No instances found');
+  expect(() => screen.UNSAFE_getAllByProps({ type: 'inexistent' })).toThrow('No instances found');
 
-  expect(UNSAFE_queryAllByProps({ type: 'primary' })).toEqual(primaryTypes);
-  expect(UNSAFE_queryAllByProps({ type: 'inexistent' })).toHaveLength(0);
+  expect(screen.UNSAFE_queryAllByProps({ type: 'primary' })).toEqual(primaryTypes);
+  expect(screen.UNSAFE_queryAllByProps({ type: 'inexistent' })).toHaveLength(0);
 });
 
 test('update', () => {
   const fn = jest.fn();
-  const { getByText, update, rerender } = render(<Banana onUpdate={fn} />);
+  render(<Banana onUpdate={fn} />);
 
-  fireEvent.press(getByText('Change freshness!'));
+  fireEvent.press(screen.getByText('Change freshness!'));
 
-  update(<Banana onUpdate={fn} />);
-  rerender(<Banana onUpdate={fn} />);
+  screen.update(<Banana onUpdate={fn} />);
+  screen.rerender(<Banana onUpdate={fn} />);
 
   expect(fn).toHaveBeenCalledTimes(3);
 });
 
 test('unmount', () => {
   const fn = jest.fn();
-  const { unmount } = render(<Banana onUnmount={fn} />);
-  unmount();
+  render(<Banana onUnmount={fn} />);
+  screen.unmount();
   expect(fn).toHaveBeenCalled();
 });
 
@@ -136,16 +136,16 @@ test('unmount should handle cleanup functions', () => {
     return null;
   };
 
-  const { unmount } = render(<Component />);
+  render(<Component />);
 
-  unmount();
+  screen.unmount();
 
   expect(cleanup).toHaveBeenCalledTimes(1);
 });
 
 test('toJSON renders host output', () => {
-  const { toJSON } = render(<MyButton>press me</MyButton>);
-  expect(toJSON()).toMatchSnapshot();
+  render(<MyButton>press me</MyButton>);
+  expect(screen.toJSON()).toMatchSnapshot();
 });
 
 test('renders options.wrapper around node', () => {
@@ -154,12 +154,12 @@ test('renders options.wrapper around node', () => {
     <View testID="wrapper">{children}</View>
   );
 
-  const { toJSON, getByTestId } = render(<View testID="inner" />, {
+  render(<View testID="inner" />, {
     wrapper: WrapperComponent,
   });
 
-  expect(getByTestId('wrapper')).toBeTruthy();
-  expect(toJSON()).toMatchInlineSnapshot(`
+  expect(screen.getByTestId('wrapper')).toBeTruthy();
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
     <View
       testID="wrapper"
     >
@@ -176,14 +176,14 @@ test('renders options.wrapper around updated node', () => {
     <View testID="wrapper">{children}</View>
   );
 
-  const { toJSON, getByTestId, rerender } = render(<View testID="inner" />, {
+  render(<View testID="inner" />, {
     wrapper: WrapperComponent,
   });
 
-  rerender(<View testID="inner" accessibilityLabel="test" accessibilityHint="test" />);
+  screen.rerender(<View testID="inner" accessibilityLabel="test" accessibilityHint="test" />);
 
-  expect(getByTestId('wrapper')).toBeTruthy();
-  expect(toJSON()).toMatchInlineSnapshot(`
+  expect(screen.getByTestId('wrapper')).toBeTruthy();
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
     <View
       testID="wrapper"
     >
@@ -197,29 +197,24 @@ test('renders options.wrapper around updated node', () => {
 });
 
 test('returns host root', () => {
-  const { root } = render(<View testID="inner" />);
+  render(<View testID="inner" />);
 
-  expect(root).toBeDefined();
-  expect(root.type).toBe('View');
-  expect(root.props.testID).toBe('inner');
+  expect(screen.root).toBeDefined();
+  expect(screen.root.type).toBe('View');
+  expect(screen.root.props.testID).toBe('inner');
 });
 
 test('returns composite UNSAFE_root', () => {
-  const { UNSAFE_root } = render(<View testID="inner" />);
+  render(<View testID="inner" />);
 
-  expect(UNSAFE_root).toBeDefined();
-  expect(UNSAFE_root.type).toBe(View);
-  expect(UNSAFE_root.props.testID).toBe('inner');
+  expect(screen.UNSAFE_root).toBeDefined();
+  expect(screen.UNSAFE_root.type).toBe(View);
+  expect(screen.UNSAFE_root.props.testID).toBe('inner');
 });
 
 test('container displays deprecation', () => {
-  const view = render(<View testID="inner" />);
+  render(<View testID="inner" />);
 
-  expect(() => (view as any).container).toThrowErrorMatchingInlineSnapshot(`
-    "'container' property has been renamed to 'UNSAFE_root'.
-
-    Consider using 'root' property which returns root host element."
-  `);
   expect(() => (screen as any).container).toThrowErrorMatchingInlineSnapshot(`
     "'container' property has been renamed to 'UNSAFE_root'.
 

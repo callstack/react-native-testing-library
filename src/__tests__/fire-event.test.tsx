@@ -1,14 +1,14 @@
 import * as React from 'react';
 import {
-  View,
-  TouchableOpacity,
   PanResponder,
   Pressable,
-  Text,
   ScrollView,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { render, fireEvent } from '..';
+import { fireEvent, render, screen } from '..';
 
 type OnPressComponentProps = {
   onPress: () => void;
@@ -58,9 +58,9 @@ const CustomEventComponentWithCustomName = ({
 describe('fireEvent', () => {
   test('should invoke specified event', () => {
     const onPressMock = jest.fn();
-    const { getByText } = render(<OnPressComponent onPress={onPressMock} text="Press me" />);
+    render(<OnPressComponent onPress={onPressMock} text="Press me" />);
 
-    fireEvent(getByText('Press me'), 'press');
+    fireEvent(screen.getByText('Press me'), 'press');
 
     expect(onPressMock).toHaveBeenCalled();
   });
@@ -68,19 +68,19 @@ describe('fireEvent', () => {
   test('should invoke specified event on parent element', () => {
     const onPressMock = jest.fn();
     const text = 'New press text';
-    const { getByText } = render(<OnPressComponent onPress={onPressMock} text={text} />);
+    render(<OnPressComponent onPress={onPressMock} text={text} />);
 
-    fireEvent(getByText(text), 'press');
+    fireEvent(screen.getByText(text), 'press');
     expect(onPressMock).toHaveBeenCalled();
   });
 
   test('should not fire if the press handler is not passed to children', () => {
     const onPressMock = jest.fn();
-    const { getByText } = render(
+    render(
       // TODO: this functionality is buggy, i.e. it will fail if we wrap this component with a View.
       <WithoutEventComponent onPress={onPressMock} />
     );
-    fireEvent(getByText('Without event'), 'press');
+    fireEvent(screen.getByText('Without event'), 'press');
     expect(onPressMock).not.toHaveBeenCalled();
   });
 
@@ -88,13 +88,13 @@ describe('fireEvent', () => {
     const handlerMock = jest.fn();
     const EVENT_DATA = 'event data';
 
-    const { getByText } = render(
+    render(
       <View>
         <CustomEventComponent onCustomEvent={handlerMock} />
       </View>
     );
 
-    fireEvent(getByText('Custom event component'), 'customEvent', EVENT_DATA);
+    fireEvent(screen.getByText('Custom event component'), 'customEvent', EVENT_DATA);
 
     expect(handlerMock).toHaveBeenCalledWith(EVENT_DATA);
   });
@@ -109,9 +109,9 @@ test('fireEvent.press', () => {
       pageY: 30,
     },
   };
-  const { getByText } = render(<OnPressComponent onPress={onPressMock} text={text} />);
+  render(<OnPressComponent onPress={onPressMock} text={text} />);
 
-  fireEvent.press(getByText(text), eventData);
+  fireEvent.press(screen.getByText(text), eventData);
 
   expect(onPressMock).toHaveBeenCalledWith(eventData);
 });
@@ -126,13 +126,13 @@ test('fireEvent.scroll', () => {
     },
   };
 
-  const { getByText } = render(
+  render(
     <ScrollView onScroll={onScrollMock}>
       <Text>XD</Text>
     </ScrollView>
   );
 
-  fireEvent.scroll(getByText('XD'), eventData);
+  fireEvent.scroll(screen.getByText('XD'), eventData);
 
   expect(onScrollMock).toHaveBeenCalledWith(eventData);
 });
@@ -141,13 +141,13 @@ test('fireEvent.changeText', () => {
   const onChangeTextMock = jest.fn();
   const CHANGE_TEXT = 'content';
 
-  const { getByPlaceholderText } = render(
+  render(
     <View>
       <TextInput placeholder="Customer placeholder" onChangeText={onChangeTextMock} />
     </View>
   );
 
-  fireEvent.changeText(getByPlaceholderText('Customer placeholder'), CHANGE_TEXT);
+  fireEvent.changeText(screen.getByPlaceholderText('Customer placeholder'), CHANGE_TEXT);
 
   expect(onChangeTextMock).toHaveBeenCalledWith(CHANGE_TEXT);
 });
@@ -155,9 +155,9 @@ test('fireEvent.changeText', () => {
 test('custom component with custom event name', () => {
   const handlePress = jest.fn();
 
-  const { getByText } = render(<CustomEventComponentWithCustomName handlePress={handlePress} />);
+  render(<CustomEventComponentWithCustomName handlePress={handlePress} />);
 
-  fireEvent(getByText('Custom component'), 'handlePress');
+  fireEvent(screen.getByText('Custom component'), 'handlePress');
 
   expect(handlePress).toHaveBeenCalled();
 });
@@ -165,16 +165,16 @@ test('custom component with custom event name', () => {
 test('event with multiple handler parameters', () => {
   const handlePress = jest.fn();
 
-  const { getByText } = render(<CustomEventComponentWithCustomName handlePress={handlePress} />);
+  render(<CustomEventComponentWithCustomName handlePress={handlePress} />);
 
-  fireEvent(getByText('Custom component'), 'handlePress', 'param1', 'param2');
+  fireEvent(screen.getByText('Custom component'), 'handlePress', 'param1', 'param2');
 
   expect(handlePress).toHaveBeenCalledWith('param1', 'param2');
 });
 
 test('should not fire on disabled TouchableOpacity', () => {
   const handlePress = jest.fn();
-  const screen = render(
+  render(
     <View>
       <TouchableOpacity onPress={handlePress} disabled={true}>
         <Text>Trigger</Text>
@@ -188,7 +188,7 @@ test('should not fire on disabled TouchableOpacity', () => {
 
 test('should not fire on disabled Pressable', () => {
   const handlePress = jest.fn();
-  const screen = render(
+  render(
     <View>
       <Pressable onPress={handlePress} disabled={true}>
         <Text>Trigger</Text>
@@ -202,7 +202,7 @@ test('should not fire on disabled Pressable', () => {
 
 test('should not fire inside View with pointerEvents="none"', () => {
   const onPress = jest.fn();
-  const screen = render(
+  render(
     <View pointerEvents="none">
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -217,7 +217,7 @@ test('should not fire inside View with pointerEvents="none"', () => {
 
 test('should not fire inside View with pointerEvents="box-only"', () => {
   const onPress = jest.fn();
-  const screen = render(
+  render(
     <View pointerEvents="box-only">
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -232,7 +232,7 @@ test('should not fire inside View with pointerEvents="box-only"', () => {
 
 test('should fire inside View with pointerEvents="box-none"', () => {
   const onPress = jest.fn();
-  const screen = render(
+  render(
     <View pointerEvents="box-none">
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -247,7 +247,7 @@ test('should fire inside View with pointerEvents="box-none"', () => {
 
 test('should fire inside View with pointerEvents="auto"', () => {
   const onPress = jest.fn();
-  const screen = render(
+  render(
     <View pointerEvents="auto">
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -262,7 +262,7 @@ test('should fire inside View with pointerEvents="auto"', () => {
 
 test('should not fire deeply inside View with pointerEvents="box-only"', () => {
   const onPress = jest.fn();
-  const screen = render(
+  render(
     <View pointerEvents="box-only">
       <View>
         <Pressable onPress={onPress}>
@@ -279,9 +279,7 @@ test('should not fire deeply inside View with pointerEvents="box-only"', () => {
 
 test('should fire non-pointer events inside View with pointerEvents="box-none"', () => {
   const onTouchStart = jest.fn();
-  const screen = render(
-    <View testID="view" pointerEvents="box-none" onTouchStart={onTouchStart} />
-  );
+  render(<View testID="view" pointerEvents="box-none" onTouchStart={onTouchStart} />);
 
   fireEvent(screen.getByTestId('view'), 'touchStart');
   expect(onTouchStart).toHaveBeenCalled();
@@ -289,7 +287,7 @@ test('should fire non-pointer events inside View with pointerEvents="box-none"',
 
 test('should fire non-touch events inside View with pointerEvents="box-none"', () => {
   const onLayout = jest.fn();
-  const screen = render(<View testID="view" pointerEvents="box-none" onLayout={onLayout} />);
+  render(<View testID="view" pointerEvents="box-none" onLayout={onLayout} />);
 
   fireEvent(screen.getByTestId('view'), 'layout');
   expect(onLayout).toHaveBeenCalled();
@@ -299,9 +297,7 @@ test('should fire non-touch events inside View with pointerEvents="box-none"', (
 // the 'press' event on host View rendered by pressable.
 test('should fire on Pressable with pointerEvents="box-only', () => {
   const onPress = jest.fn();
-  const screen = render(
-    <Pressable testID="pressable" pointerEvents="box-only" onPress={onPress} />
-  );
+  render(<Pressable testID="pressable" pointerEvents="box-only" onPress={onPress} />);
 
   fireEvent.press(screen.getByTestId('pressable'));
   expect(onPress).toHaveBeenCalled();
@@ -310,7 +306,7 @@ test('should fire on Pressable with pointerEvents="box-only', () => {
 test('should pass event up on disabled TouchableOpacity', () => {
   const handleInnerPress = jest.fn();
   const handleOuterPress = jest.fn();
-  const screen = render(
+  render(
     <TouchableOpacity onPress={handleOuterPress}>
       <TouchableOpacity onPress={handleInnerPress} disabled={true}>
         <Text>Inner Trigger</Text>
@@ -326,7 +322,7 @@ test('should pass event up on disabled TouchableOpacity', () => {
 test('should pass event up on disabled Pressable', () => {
   const handleInnerPress = jest.fn();
   const handleOuterPress = jest.fn();
-  const screen = render(
+  render(
     <Pressable onPress={handleOuterPress}>
       <Pressable onPress={handleInnerPress} disabled={true}>
         <Text>Inner Trigger</Text>
@@ -353,7 +349,7 @@ const TestComponent = ({ onPress }: TestComponentProps) => {
 
 test('is not fooled by non-native disabled prop', () => {
   const handlePress = jest.fn();
-  const screen = render(<TestComponent onPress={handlePress} disabled={true} />);
+  render(<TestComponent onPress={handlePress} disabled={true} />);
 
   fireEvent.press(screen.getByText('Trigger Test'));
   expect(handlePress).toHaveBeenCalledTimes(1);
@@ -363,6 +359,7 @@ type TestChildTouchableComponentProps = {
   onPress: () => void;
   someProp: boolean;
 };
+
 function TestChildTouchableComponent({ onPress, someProp }: TestChildTouchableComponentProps) {
   return (
     <View>
@@ -376,7 +373,7 @@ function TestChildTouchableComponent({ onPress, someProp }: TestChildTouchableCo
 test('is not fooled by non-responder wrapping host elements', () => {
   const handlePress = jest.fn();
 
-  const screen = render(
+  render(
     <View>
       <TestChildTouchableComponent onPress={handlePress} someProp={true} />
     </View>
@@ -387,6 +384,7 @@ test('is not fooled by non-responder wrapping host elements', () => {
 });
 
 type TestDraggableComponentProps = { onDrag: () => void };
+
 function TestDraggableComponent({ onDrag }: TestDraggableComponentProps) {
   const responderHandlers = PanResponder.create({
     onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
@@ -403,7 +401,7 @@ function TestDraggableComponent({ onDrag }: TestDraggableComponentProps) {
 test('has only onMove', () => {
   const handleDrag = jest.fn();
 
-  const screen = render(<TestDraggableComponent onDrag={handleDrag} />);
+  render(<TestDraggableComponent onDrag={handleDrag} />);
 
   fireEvent(screen.getByText('Trigger'), 'responderMove', {
     touchHistory: { mostRecentTimeStamp: '2', touchBank: [] },
@@ -416,41 +414,33 @@ test('has only onMove', () => {
 describe('native events', () => {
   test('triggers onScrollBeginDrag', () => {
     const onScrollBeginDragSpy = jest.fn();
-    const { getByTestId } = render(
-      <ScrollView testID="test-id" onScrollBeginDrag={onScrollBeginDragSpy} />
-    );
+    render(<ScrollView testID="test-id" onScrollBeginDrag={onScrollBeginDragSpy} />);
 
-    fireEvent(getByTestId('test-id'), 'onScrollBeginDrag');
+    fireEvent(screen.getByTestId('test-id'), 'onScrollBeginDrag');
     expect(onScrollBeginDragSpy).toHaveBeenCalled();
   });
 
   test('triggers onScrollEndDrag', () => {
     const onScrollEndDragSpy = jest.fn();
-    const { getByTestId } = render(
-      <ScrollView testID="test-id" onScrollEndDrag={onScrollEndDragSpy} />
-    );
+    render(<ScrollView testID="test-id" onScrollEndDrag={onScrollEndDragSpy} />);
 
-    fireEvent(getByTestId('test-id'), 'onScrollEndDrag');
+    fireEvent(screen.getByTestId('test-id'), 'onScrollEndDrag');
     expect(onScrollEndDragSpy).toHaveBeenCalled();
   });
 
   test('triggers onMomentumScrollBegin', () => {
     const onMomentumScrollBeginSpy = jest.fn();
-    const { getByTestId } = render(
-      <ScrollView testID="test-id" onMomentumScrollBegin={onMomentumScrollBeginSpy} />
-    );
+    render(<ScrollView testID="test-id" onMomentumScrollBegin={onMomentumScrollBeginSpy} />);
 
-    fireEvent(getByTestId('test-id'), 'onMomentumScrollBegin');
+    fireEvent(screen.getByTestId('test-id'), 'onMomentumScrollBegin');
     expect(onMomentumScrollBeginSpy).toHaveBeenCalled();
   });
 
   test('triggers onMomentumScrollEnd', () => {
     const onMomentumScrollEndSpy = jest.fn();
-    const { getByTestId } = render(
-      <ScrollView testID="test-id" onMomentumScrollEnd={onMomentumScrollEndSpy} />
-    );
+    render(<ScrollView testID="test-id" onMomentumScrollEnd={onMomentumScrollEndSpy} />);
 
-    fireEvent(getByTestId('test-id'), 'onMomentumScrollEnd');
+    fireEvent(screen.getByTestId('test-id'), 'onMomentumScrollEnd');
     expect(onMomentumScrollEndSpy).toHaveBeenCalled();
   });
 });

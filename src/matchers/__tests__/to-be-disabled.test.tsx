@@ -10,11 +10,11 @@ import {
   Text,
   View,
 } from 'react-native';
-import { render } from '../..';
+import { render, screen } from '../..';
 import '../extend-expect';
 
 test('toBeDisabled()/toBeEnabled() supports basic case', () => {
-  const screen = render(
+  render(
     <View>
       <View testID="disabled-parent" aria-disabled>
         <View>
@@ -88,7 +88,7 @@ test('toBeDisabled()/toBeEnabled() supports basic case', () => {
 });
 
 test('toBeDisabled()/toBeEnabled() supports Pressable with "disabled" prop', () => {
-  const screen = render(
+  render(
     <Pressable disabled testID="subject">
       <Text>Button</Text>
     </Pressable>
@@ -158,7 +158,7 @@ test.each([
   ['TouchableWithoutFeedback', TouchableWithoutFeedback],
   ['TouchableNativeFeedback', TouchableNativeFeedback],
 ] as const)('toBeDisabled()/toBeEnabled() supports %s with "disabled" prop', (_, Component) => {
-  const screen = render(
+  render(
     // @ts-expect-error disabled prop is not available on all Touchables
     <Component disabled testID="subject">
       <Text>Button</Text>
@@ -190,7 +190,7 @@ test.each([
 ] as const)(
   'toBeDisabled()/toBeEnabled() supports %s with "aria-disabled" prop',
   (_, Component) => {
-    const screen = render(
+    render(
       // @ts-expect-error too generic for typescript
       <Component testID="subject" aria-disabled>
         <Text>Hello</Text>
@@ -217,7 +217,7 @@ test.each([
 ] as const)(
   'toBeDisabled()/toBeEnabled() supports %s with "accessibilityState.disabled" prop',
   (_, Component) => {
-    const screen = render(
+    render(
       // @ts-expect-error disabled prop is not available on all Touchables
       <Component testID="subject" accessibilityState={{ disabled: true }}>
         <Text>Hello</Text>
@@ -233,7 +233,7 @@ test.each([
 );
 
 test('toBeDisabled()/toBeEnabled() supports "editable" prop on TextInput', () => {
-  const screen = render(
+  render(
     <View>
       <TextInput testID="enabled-by-default" />
       <TextInput testID="enabled" editable />
@@ -251,7 +251,7 @@ test('toBeDisabled()/toBeEnabled() supports "editable" prop on TextInput', () =>
 });
 
 test('toBeDisabled()/toBeEnabled() supports "disabled" prop on Button', () => {
-  const screen = render(
+  render(
     <View>
       <Button testID="enabled" title="enabled" />
       <Button testID="disabled" title="disabled" disabled />

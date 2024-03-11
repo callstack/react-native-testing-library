@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { render } from '../..';
+import { render, screen } from '../..';
 
 const BUTTON_HINT = 'click this button';
 const TEXT_HINT = 'static text';
@@ -33,80 +33,86 @@ const Section = () => (
 );
 
 test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
-  const { getByA11yHint, queryByA11yHint, findByA11yHint } = render(<Section />);
+  render(<Section />);
 
-  expect(getByA11yHint(BUTTON_HINT).props.accessibilityHint).toEqual(BUTTON_HINT);
-  const button = queryByA11yHint(BUTTON_HINT);
+  expect(screen.getByA11yHint(BUTTON_HINT).props.accessibilityHint).toEqual(BUTTON_HINT);
+  const button = screen.queryByA11yHint(BUTTON_HINT);
   expect(button?.props.accessibilityHint).toEqual(BUTTON_HINT);
 
-  expect(() => getByA11yHint(NO_MATCHES_TEXT)).toThrow(getNoInstancesFoundMessage(NO_MATCHES_TEXT));
-  expect(queryByA11yHint(NO_MATCHES_TEXT)).toBeNull();
+  expect(() => screen.getByA11yHint(NO_MATCHES_TEXT)).toThrow(
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+  );
+  expect(screen.queryByA11yHint(NO_MATCHES_TEXT)).toBeNull();
 
-  expect(() => getByA11yHint(TEXT_HINT)).toThrow(getMultipleInstancesFoundMessage(TEXT_HINT));
-  expect(() => queryByA11yHint(TEXT_HINT)).toThrow(getMultipleInstancesFoundMessage(TEXT_HINT));
+  expect(() => screen.getByA11yHint(TEXT_HINT)).toThrow(
+    getMultipleInstancesFoundMessage(TEXT_HINT)
+  );
+  expect(() => screen.queryByA11yHint(TEXT_HINT)).toThrow(
+    getMultipleInstancesFoundMessage(TEXT_HINT)
+  );
 
-  const asyncButton = await findByA11yHint(BUTTON_HINT);
+  const asyncButton = await screen.findByA11yHint(BUTTON_HINT);
   expect(asyncButton.props.accessibilityHint).toEqual(BUTTON_HINT);
-  await expect(findByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
+  await expect(screen.findByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
 
-  await expect(findByA11yHint(TEXT_HINT)).rejects.toThrow(
+  await expect(screen.findByA11yHint(TEXT_HINT)).rejects.toThrow(
     getMultipleInstancesFoundMessage(TEXT_HINT)
   );
 });
 
 test('getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint', async () => {
-  const { getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint } = render(<Section />);
+  render(<Section />);
 
-  expect(getAllByA11yHint(TEXT_HINT)).toHaveLength(2);
-  expect(queryAllByA11yHint(TEXT_HINT)).toHaveLength(2);
+  expect(screen.getAllByA11yHint(TEXT_HINT)).toHaveLength(2);
+  expect(screen.queryAllByA11yHint(TEXT_HINT)).toHaveLength(2);
 
-  expect(() => getAllByA11yHint(NO_MATCHES_TEXT)).toThrow(
+  expect(() => screen.getAllByA11yHint(NO_MATCHES_TEXT)).toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
-  expect(queryAllByA11yHint(NO_MATCHES_TEXT)).toEqual([]);
+  expect(screen.queryAllByA11yHint(NO_MATCHES_TEXT)).toEqual([]);
 
-  await expect(findAllByA11yHint(TEXT_HINT)).resolves.toHaveLength(2);
-  await expect(findAllByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
+  await expect(screen.findAllByA11yHint(TEXT_HINT)).resolves.toHaveLength(2);
+  await expect(screen.findAllByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT)
   );
 });
 
 test('getByHintText, getByHintText', () => {
-  const { getByHintText, getAllByHintText } = render(
+  render(
     <View>
       <View accessibilityHint="test" />
       <View accessibilityHint="tests id" />
     </View>
   );
-  expect(getByHintText('id', { exact: false })).toBeTruthy();
-  expect(getAllByHintText('test', { exact: false })).toHaveLength(2);
+  expect(screen.getByHintText('id', { exact: false })).toBeTruthy();
+  expect(screen.getAllByHintText('test', { exact: false })).toHaveLength(2);
 });
 
 test('getByHintText, getByHintText and exact = true', () => {
-  const { queryByHintText, getAllByHintText } = render(
+  render(
     <View>
       <View accessibilityHint="test" />
       <View accessibilityHint="tests id" />
     </View>
   );
-  expect(queryByHintText('id', { exact: true })).toBeNull();
-  expect(getAllByHintText('test', { exact: true })).toHaveLength(1);
+  expect(screen.queryByHintText('id', { exact: true })).toBeNull();
+  expect(screen.getAllByHintText('test', { exact: true })).toHaveLength(1);
 });
 
 test('byHintText queries support hidden option', () => {
-  const { getByHintText, queryByHintText } = render(
+  render(
     <Text accessibilityHint="hidden" style={{ display: 'none' }}>
       Hidden from accessiblity
     </Text>
   );
 
-  expect(getByHintText('hidden', { includeHiddenElements: true })).toBeTruthy();
+  expect(screen.getByHintText('hidden', { includeHiddenElements: true })).toBeTruthy();
 
-  expect(queryByHintText('hidden')).toBeFalsy();
-  expect(queryByHintText('hidden', { includeHiddenElements: false })).toBeFalsy();
-  expect(() => getByHintText('hidden', { includeHiddenElements: false }))
+  expect(screen.queryByHintText('hidden')).toBeFalsy();
+  expect(screen.queryByHintText('hidden', { includeHiddenElements: false })).toBeFalsy();
+  expect(() => screen.getByHintText('hidden', { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityHint: hidden
 
@@ -124,9 +130,9 @@ test('byHintText queries support hidden option', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  const view = render(<Pressable accessibilityHint="HINT" key="3" />);
+  render(<Pressable accessibilityHint="HINT" key="3" />);
 
-  expect(() => view.getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityHint: FOO
 
     <View
@@ -135,7 +141,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  expect(() => view.getAllByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
+  expect(() => screen.getAllByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityHint: FOO
 
     <View
@@ -144,7 +150,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(screen.findByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityHint: FOO
 
     <View
@@ -153,7 +159,7 @@ test('error message renders the element tree, preserving only helpful props', as
     />"
   `);
 
-  await expect(view.findAllByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
+  await expect(screen.findAllByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibilityHint: FOO
 
     <View

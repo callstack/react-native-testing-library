@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, Pressable, View } from 'react-native';
-import { render, within } from '../pure';
+import { render, within, screen } from '../pure';
 
 /**
  * Our queries interact differently with composite and host elements, and some specific cases require us
@@ -12,18 +12,18 @@ import { render, within } from '../pure';
  */
 describe('nested text handling', () => {
   test('within same node', () => {
-    const view = render(<Text testID="subject">Hello</Text>);
-    expect(within(view.getByTestId('subject')).getByText('Hello')).toBeTruthy();
+    render(<Text testID="subject">Hello</Text>);
+    expect(within(screen.getByTestId('subject')).getByText('Hello')).toBeTruthy();
   });
 
   test('role with direct text children', () => {
-    const view = render(<Text accessibilityRole="header">About</Text>);
+    render(<Text accessibilityRole="header">About</Text>);
 
-    expect(view.getByRole('header', { name: 'About' })).toBeTruthy();
+    expect(screen.getByRole('header', { name: 'About' })).toBeTruthy();
   });
 
   test('nested text with child with role', () => {
-    const view = render(
+    render(
       <Text>
         <Text testID="child" accessibilityRole="header">
           About
@@ -31,11 +31,11 @@ describe('nested text handling', () => {
       </Text>
     );
 
-    expect(view.getByRole('header', { name: 'About' }).props.testID).toBe('child');
+    expect(screen.getByRole('header', { name: 'About' }).props.testID).toBe('child');
   });
 
   test('pressable within View, with text child', () => {
-    const view = render(
+    render(
       <View>
         <Pressable testID="pressable" accessibilityRole="button">
           <Text>Save</Text>
@@ -43,11 +43,11 @@ describe('nested text handling', () => {
       </View>
     );
 
-    expect(view.getByRole('button', { name: 'Save' }).props.testID).toBe('pressable');
+    expect(screen.getByRole('button', { name: 'Save' }).props.testID).toBe('pressable');
   });
 
   test('pressable within View, with text child within view', () => {
-    const view = render(
+    render(
       <View>
         <Pressable testID="pressable" accessibilityRole="button">
           <View>
@@ -57,21 +57,21 @@ describe('nested text handling', () => {
       </View>
     );
 
-    expect(view.getByRole('button', { name: 'Save' }).props.testID).toBe('pressable');
+    expect(screen.getByRole('button', { name: 'Save' }).props.testID).toBe('pressable');
   });
 
   test('Text within pressable', () => {
-    const view = render(
+    render(
       <Pressable testID="pressable" accessibilityRole="button">
         <Text testID="text">Save</Text>
       </Pressable>
     );
 
-    expect(view.getByText('Save').props.testID).toBe('text');
+    expect(screen.getByText('Save').props.testID).toBe('text');
   });
 
   test('Text within view within pressable', () => {
-    const view = render(
+    render(
       <Pressable testID="pressable" accessibilityRole="button">
         <View>
           <Text testID="text">Save</Text>
@@ -79,6 +79,6 @@ describe('nested text handling', () => {
       </Pressable>
     );
 
-    expect(view.getByText('Save').props.testID).toBe('text');
+    expect(screen.getByText('Save').props.testID).toBe('text');
   });
 });

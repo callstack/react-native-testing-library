@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { View, Text, TextInput, Switch, ScrollView, FlatList } from 'react-native';
-import { render } from '..';
+import { FlatList, ScrollView, Switch, Text, TextInput, View } from 'react-native';
+import { render, screen } from '..';
 
 /**
  * Tests in this file are intended to give us an proactive warning that React Native behavior has
@@ -8,9 +8,9 @@ import { render } from '..';
  */
 
 test('React Native API assumption: <View> renders single host element', () => {
-  const view = render(<View testID="test" />);
+  render(<View testID="test" />);
 
-  expect(view.toJSON()).toMatchInlineSnapshot(`
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
     <View
       testID="test"
     />
@@ -18,9 +18,9 @@ test('React Native API assumption: <View> renders single host element', () => {
 });
 
 test('React Native API assumption: <Text> renders single host element', () => {
-  const view = render(<Text testID="test">Hello</Text>);
+  render(<Text testID="test">Hello</Text>);
 
-  expect(view.toJSON()).toMatchInlineSnapshot(`
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
     <Text
       testID="test"
     >
@@ -30,7 +30,7 @@ test('React Native API assumption: <Text> renders single host element', () => {
 });
 
 test('React Native API assumption: nested <Text> renders single host element', () => {
-  const view = render(
+  render(
     <Text testID="test">
       <Text testID="before">Before</Text>
       Hello
@@ -40,7 +40,7 @@ test('React Native API assumption: nested <Text> renders single host element', (
     </Text>
   );
 
-  expect(view.toJSON()).toMatchInlineSnapshot(`
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
     <Text
       testID="test"
     >
@@ -64,7 +64,7 @@ test('React Native API assumption: nested <Text> renders single host element', (
 });
 
 test('React Native API assumption: <TextInput> renders single host element', () => {
-  const view = render(
+  render(
     <TextInput
       testID="test"
       defaultValue="default"
@@ -73,7 +73,7 @@ test('React Native API assumption: <TextInput> renders single host element', () 
     />
   );
 
-  expect(view.toJSON()).toMatchInlineSnapshot(`
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
     <TextInput
       defaultValue="default"
       placeholder="Placeholder"
@@ -84,13 +84,13 @@ test('React Native API assumption: <TextInput> renders single host element', () 
 });
 
 test('React Native API assumption: <TextInput> with nested Text renders single host element', () => {
-  const view = render(
+  render(
     <TextInput testID="test" placeholder="Placeholder">
       <Text>Hello</Text>
     </TextInput>
   );
 
-  expect(view.toJSON()).toMatchInlineSnapshot(`
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
     <TextInput
       placeholder="Placeholder"
       testID="test"
@@ -103,9 +103,9 @@ test('React Native API assumption: <TextInput> with nested Text renders single h
 });
 
 test('React Native API assumption: <Switch> renders single host element', () => {
-  const view = render(<Switch testID="test" value={true} onChange={jest.fn()} />);
+  render(<Switch testID="test" value={true} onChange={jest.fn()} />);
 
-  expect(view.toJSON()).toMatchInlineSnapshot(`
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
     <RCTSwitch
       accessibilityRole="switch"
       onChange={[Function]}
@@ -124,7 +124,7 @@ test('React Native API assumption: <Switch> renders single host element', () => 
 });
 
 test('React Native API assumption: aria-* props render on host View', () => {
-  const view = render(
+  render(
     <View
       testID="test"
       aria-busy
@@ -147,7 +147,7 @@ test('React Native API assumption: aria-* props render on host View', () => {
     />
   );
 
-  expect(view.toJSON()).toMatchInlineSnapshot(`
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
     <View
       aria-busy={true}
       aria-checked={true}
@@ -172,7 +172,7 @@ test('React Native API assumption: aria-* props render on host View', () => {
 });
 
 test('React Native API assumption: aria-* props render on host Text', () => {
-  const view = render(
+  render(
     <Text
       testID="test"
       aria-busy
@@ -195,7 +195,7 @@ test('React Native API assumption: aria-* props render on host Text', () => {
     />
   );
 
-  expect(view.toJSON()).toMatchInlineSnapshot(`
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
     <Text
       aria-busy={true}
       aria-checked={true}
@@ -220,7 +220,7 @@ test('React Native API assumption: aria-* props render on host Text', () => {
 });
 
 test('React Native API assumption: aria-* props render on host TextInput', () => {
-  const view = render(
+  render(
     <TextInput
       testID="test"
       aria-busy
@@ -243,7 +243,7 @@ test('React Native API assumption: aria-* props render on host TextInput', () =>
     />
   );
 
-  expect(view.toJSON()).toMatchInlineSnapshot(`
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
     <TextInput
       aria-busy={true}
       aria-checked={true}
@@ -268,7 +268,7 @@ test('React Native API assumption: aria-* props render on host TextInput', () =>
 });
 
 test('ScrollView renders correctly', () => {
-  const screen = render(
+  render(
     <ScrollView testID="scrollView">
       <View testID="view" />
     </ScrollView>
@@ -288,7 +288,7 @@ test('ScrollView renders correctly', () => {
 });
 
 test('FlatList renders correctly', () => {
-  const screen = render(
+  render(
     <FlatList testID="flatList" data={[1, 2]} renderItem={({ item }) => <Text>{item}</Text>} />
   );
 
