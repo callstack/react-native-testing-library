@@ -3090,7 +3090,6 @@ __metadata:
     eslint-plugin-flowtype: "npm:^8.0.3"
     eslint-plugin-prettier: "npm:^4.2.1"
     flow-bin: "npm:~0.170.0"
-    flow-copy-source: "npm:^2.0.9"
     jest: "npm:^29.7.0"
     jest-matcher-utils: "npm:^29.7.0"
     prettier: "npm:^2.8.8"
@@ -4482,7 +4481,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:^3.0.0, chokidar@npm:^3.4.0":
+"chokidar@npm:^3.4.0":
   version: 3.5.3
   resolution: "chokidar@npm:3.5.3"
   dependencies:
@@ -6447,21 +6446,6 @@ __metadata:
   bin:
     flow: cli.js
   checksum: cdb54136cc334915ef788350f9b6c87024ddda2b676a70497fa38da05b373171d61f27f23796e625cdc3f96019dc05be9aadd629332335e8b1a9d40ba21605bd
-  languageName: node
-  linkType: hard
-
-"flow-copy-source@npm:^2.0.9":
-  version: 2.0.9
-  resolution: "flow-copy-source@npm:2.0.9"
-  dependencies:
-    chokidar: "npm:^3.0.0"
-    fs-extra: "npm:^8.1.0"
-    glob: "npm:^7.0.0"
-    kefir: "npm:^3.7.3"
-    yargs: "npm:^15.0.1"
-  bin:
-    flow-copy-source: ./bin/flow-copy-source.js
-  checksum: 942c1d9dbe1cfc651a166f1da6b72df046e08ff7983af2eb7c5777fb787bff44fd2c2f211200387b85b372497a19af6039a5c6ea8446e9776d51e96068b6c539
   languageName: node
   linkType: hard
 
@@ -8665,13 +8649,6 @@ __metadata:
     object.assign: "npm:^4.1.4"
     object.values: "npm:^1.1.6"
   checksum: a32679e9cb55469cb6d8bbc863f7d631b2c98b7fc7bf172629261751a6e7bc8da6ae374ddb74d5fbd8b06cf0eb4572287b259813d92b36e384024ed35e4c13e1
-  languageName: node
-  linkType: hard
-
-"kefir@npm:^3.7.3":
-  version: 3.8.8
-  resolution: "kefir@npm:3.8.8"
-  checksum: af69ee726c11f57c828de4ccb2cbd40bd592f823d90d3f5d494e293925a59d9a243975aeb9058171a8cd2ca680f0ffb6c3a0446333bbad6f525e89c1838ff9c6
   languageName: node
   linkType: hard
 
@@ -12824,7 +12801,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:^15.0.1, yargs@npm:^15.1.0":
+"yargs@npm:^15.1.0":
   version: 15.4.1
   resolution: "yargs@npm:15.4.1"
   dependencies:
