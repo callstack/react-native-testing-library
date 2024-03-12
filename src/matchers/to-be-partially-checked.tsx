@@ -14,7 +14,7 @@ export function toBePartiallyChecked(this: jest.MatcherContext, element: ReactTe
   if (!hasValidAccessibilityRole(element)) {
     throw new ErrorWithStack(
       'toBePartiallyChecked() works only on accessibility elements with "checkbox" role.',
-      toBePartiallyChecked
+      toBePartiallyChecked,
     );
   }
 

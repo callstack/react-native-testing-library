@@ -28,7 +28,7 @@ describe('nested text handling', () => {
         <Text testID="child" accessibilityRole="header">
           About
         </Text>
-      </Text>
+      </Text>,
     );
 
     expect(screen.getByRole('header', { name: 'About' }).props.testID).toBe('child');
@@ -40,7 +40,7 @@ describe('nested text handling', () => {
         <Pressable testID="pressable" accessibilityRole="button">
           <Text>Save</Text>
         </Pressable>
-      </View>
+      </View>,
     );
 
     expect(screen.getByRole('button', { name: 'Save' }).props.testID).toBe('pressable');
@@ -54,7 +54,7 @@ describe('nested text handling', () => {
             <Text>Save</Text>
           </View>
         </Pressable>
-      </View>
+      </View>,
     );
 
     expect(screen.getByRole('button', { name: 'Save' }).props.testID).toBe('pressable');
@@ -64,7 +64,7 @@ describe('nested text handling', () => {
     render(
       <Pressable testID="pressable" accessibilityRole="button">
         <Text testID="text">Save</Text>
-      </Pressable>
+      </Pressable>,
     );
 
     expect(screen.getByText('Save').props.testID).toBe('text');
@@ -76,7 +76,7 @@ describe('nested text handling', () => {
         <View>
           <Text testID="text">Save</Text>
         </View>
-      </Pressable>
+      </Pressable>,
     );
 
     expect(screen.getByText('Save').props.testID).toBe('text');

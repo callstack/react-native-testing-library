@@ -17,14 +17,14 @@ type ByTestIdOptions = CommonQueryOptions & TextMatchOptions;
 const matchTestId = (
   node: ReactTestInstance,
   testId: TextMatch,
-  options: TextMatchOptions = {}
+  options: TextMatchOptions = {},
 ) => {
   const { exact, normalizer } = options;
   return matches(testId, node.props.testID, normalizer, exact);
 };
 
 const queryAllByTestId = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): QueryAllByQuery<TextMatch, ByTestIdOptions> =>
   function queryAllByTestIdFn(testId, queryOptions) {
     return findAll(instance, (node) => matchTestId(node, testId, queryOptions), queryOptions);
@@ -38,7 +38,7 @@ const getMissingError = (testId: TextMatch) =>
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByTestId,
   getMissingError,
-  getMultipleError
+  getMultipleError,
 );
 
 export type ByTestIdQueries = {

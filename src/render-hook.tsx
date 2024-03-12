@@ -15,7 +15,7 @@ export type RenderHookOptions<Props> = {
 
 export function renderHook<Result, Props>(
   renderCallback: (props: Props) => Result,
-  options?: RenderHookOptions<Props>
+  options?: RenderHookOptions<Props>,
 ): RenderHookResult<Result, Props> {
   const initialProps = options?.initialProps;
   const wrapper = options?.wrapper;
@@ -38,7 +38,7 @@ export function renderHook<Result, Props>(
     {
       wrapper,
       detectHostComponentNames: false,
-    }
+    },
   );
 
   function rerender(rerenderCallbackProps: Props) {

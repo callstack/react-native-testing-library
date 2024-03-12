@@ -7,7 +7,7 @@ test('toContainElement() supports basic case', () => {
   render(
     <View testID="parent">
       <View testID="child" />
-    </View>
+    </View>,
   );
 
   const parent = screen.getByTestId('parent');
@@ -36,7 +36,7 @@ test('toContainElement() supports negative case', () => {
     <>
       <View testID="view1" />
       <View testID="view2" />
-    </>
+    </>,
   );
 
   const view1 = screen.getByTestId('view1');
@@ -125,7 +125,7 @@ test('toContainElement() handles non-element element', () => {
 
   expect(() =>
     // @ts-expect-error
-    expect(view).not.toContainElement({ name: 'non-element' })
+    expect(view).not.toContainElement({ name: 'non-element' }),
   ).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).not.toContainElement()
 

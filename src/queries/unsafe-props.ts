@@ -4,7 +4,7 @@ import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
 import { createQueryByError } from '../helpers/errors';
 
 const UNSAFE_getByProps = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): ((props: { [propName: string]: any }) => ReactTestInstance) =>
   function getByPropsFn(props: { [propName: string]: any }) {
     try {
@@ -15,21 +15,21 @@ const UNSAFE_getByProps = (
   };
 
 const UNSAFE_getAllByProps = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): ((props: { [propName: string]: any }) => Array<ReactTestInstance>) =>
   function getAllByPropsFn(props: { [propName: string]: any }) {
     const results = instance.findAllByProps(props);
     if (results.length === 0) {
       throw new ErrorWithStack(
         `No instances found with props:\n${prettyFormat(props)}`,
-        getAllByPropsFn
+        getAllByPropsFn,
       );
     }
     return results;
   };
 
 const UNSAFE_queryByProps = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): ((props: { [propName: string]: any }) => ReactTestInstance | null) =>
   function queryByPropsFn(props: { [propName: string]: any }) {
     try {
@@ -41,7 +41,7 @@ const UNSAFE_queryByProps = (
 
 const UNSAFE_queryAllByProps =
   (
-    instance: ReactTestInstance
+    instance: ReactTestInstance,
   ): ((props: { [propName: string]: any }) => Array<ReactTestInstance>) =>
   (props: { [propName: string]: any }) => {
     try {

@@ -7,7 +7,7 @@ test('toBeOnTheScreen() example test', () => {
   render(
     <View>
       <View testID="child" />
-    </View>
+    </View>,
   );
 
   const child = screen.getByTestId('child');

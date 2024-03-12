@@ -146,7 +146,7 @@ test.each([false, true])(
     const freshBananaText = await waitFor(() => screen.getByText('Fresh'));
 
     expect(freshBananaText.props.children).toBe('Fresh');
-  }
+  },
 );
 
 test.each([false, true])(
@@ -165,7 +165,7 @@ test.each([false, true])(
     }
 
     expect(mockFn).toHaveBeenCalledTimes(3);
-  }
+  },
 );
 
 test.each([false, true])(
@@ -191,7 +191,7 @@ test.each([false, true])(
 
     expect(mockErrorFn).toHaveBeenCalledTimes(3);
     expect(mockHandleFn).toHaveBeenCalledTimes(1);
-  }
+  },
 );
 
 const blockThread = (timeToBlockThread: number, legacyFakeTimers: boolean) => {
@@ -223,14 +223,14 @@ test.each([true, false])(
         await waitFor(mockErrorFn, {
           timeout: WAIT_FOR_TIMEOUT,
           interval: WAIT_FOR_INTERVAL,
-        })
+        }),
     ).rejects.toThrow();
 
     // Verify that the `waitFor` callback has been called the expected number of times
     // (timeout / interval + 1), so it confirms that the real duration of callback did not
     // cause the real clock timeout when running using fake timers.
     expect(mockErrorFn).toHaveBeenCalledTimes(WAIT_FOR_TIMEOUT / WAIT_FOR_INTERVAL + 1);
-  }
+  },
 );
 
 test.each([false, true])(
@@ -253,7 +253,7 @@ test.each([false, true])(
     }
 
     expect(mockFn).toHaveBeenCalledTimes(3);
-  }
+  },
 );
 
 test.each([
@@ -306,12 +306,12 @@ test.each([
     // Check that the `onPress` callback is called with the already-updated value of `syncedColor`.
     fireEvent.press(screen.getByText('Trigger'));
     expect(onPress).toHaveBeenCalledWith('red');
-  }
+  },
 );
 
 test('waitFor throws if expectation is not a function', async () => {
   await expect(
     // @ts-expect-error intentionally passing non-function
-    waitFor('not a function')
+    waitFor('not a function'),
   ).rejects.toThrowErrorMatchingInlineSnapshot(`"Received \`expectation\` arg must be a function"`);
 });

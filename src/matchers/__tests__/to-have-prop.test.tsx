@@ -8,7 +8,7 @@ test('toHaveProp() basic case', () => {
     <View testID="view" style={null}>
       <Text ellipsizeMode="head">Hello</Text>
       <TextInput testID="input" textAlign="right" />
-    </View>
+    </View>,
   );
 
   const view = screen.getByTestId('view');

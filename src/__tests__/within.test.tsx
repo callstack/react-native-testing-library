@@ -13,7 +13,7 @@ test('within() exposes basic queries', async () => {
         <Text>Same Text</Text>
         <TextInput value="Same Value" placeholder="Same Placeholder" />
       </View>
-    </View>
+    </View>,
   );
 
   expect(rootQueries.getAllByText('Same Text')).toHaveLength(2);
@@ -56,7 +56,7 @@ test('within() exposes a11y queries', async () => {
           accessibilityHint="Same Hint"
         />
       </View>
-    </View>
+    </View>,
   );
 
   expect(rootQueries.getAllByLabelText('Same Label')).toHaveLength(2);

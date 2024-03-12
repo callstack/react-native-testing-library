@@ -19,7 +19,7 @@ type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;
 const matchDisplayValue = (
   node: ReactTestInstance,
   expectedValue: TextMatch,
-  options: TextMatchOptions = {}
+  options: TextMatchOptions = {},
 ) => {
   const { exact, normalizer } = options;
   const nodeValue = getTextInputValue(node);
@@ -27,13 +27,13 @@ const matchDisplayValue = (
 };
 
 const queryAllByDisplayValue = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): QueryAllByQuery<TextMatch, ByDisplayValueOptions> =>
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
     return findAll(
       instance,
       (node) => isHostTextInput(node) && matchDisplayValue(node, displayValue, queryOptions),
-      queryOptions
+      queryOptions,
     );
   };
 
@@ -45,7 +45,7 @@ const getMissingError = (displayValue: TextMatch) =>
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByDisplayValue,
   getMissingError,
-  getMultipleError
+  getMultipleError,
 );
 
 export type ByDisplayValueQueries = {

@@ -92,7 +92,7 @@ describe('toHaveAccessibilityValue', () => {
         aria-valuenow={33}
         aria-valuetext="Hello"
         accessibilityValue={{ min: 10, max: 90, now: 30, text: 'Hi' }}
-      />
+      />,
     );
 
     expect(screen.root).toHaveAccessibilityValue({ min: 0 });
@@ -114,7 +114,7 @@ describe('toHaveAccessibilityValue', () => {
         aria-valuemax={100}
         aria-valuenow={33}
         aria-valuetext="Hello"
-      />
+      />,
     );
 
     expect(() => expect(screen.root).toHaveAccessibilityValue({ min: 10 }))

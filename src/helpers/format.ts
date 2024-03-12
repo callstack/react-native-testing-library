@@ -3,7 +3,7 @@ import prettyFormat, { NewPlugin, plugins } from 'pretty-format';
 
 export type MapPropsFunction = (
   props: Record<string, unknown>,
-  node: ReactTestRendererJSON
+  node: ReactTestRendererJSON,
 ) => Record<string, unknown>;
 
 export type FormatOptions = {
@@ -12,7 +12,7 @@ export type FormatOptions = {
 
 const format = (
   input: ReactTestRendererJSON | ReactTestRendererJSON[],
-  options: FormatOptions = {}
+  options: FormatOptions = {},
 ) =>
   prettyFormat(input, {
     plugins: [getCustomPlugin(options.mapProps), plugins.ReactElement],
@@ -34,7 +34,7 @@ const getCustomPlugin = (mapProps?: MapPropsFunction): NewPlugin => {
         indentation,
         depth,
         refs,
-        printer
+        printer,
       );
     },
   };

@@ -33,7 +33,7 @@ test('allows rerendering', () => {
           throw new Error('No Props passed. This is a bug in the implementation');
       }
     },
-    { initialProps: { branch: 'left' } }
+    { initialProps: { branch: 'left' } },
   );
 
   expect(result.current).toEqual(['left', expect.any(Function)]);
@@ -54,7 +54,7 @@ test('allows wrapper components', () => {
     },
     {
       wrapper: Wrapper,
-    }
+    },
   );
 
   expect(result.current).toEqual('provided');

@@ -3,7 +3,7 @@ import { matchObjectProp } from '../match-object-prop';
 test('returns true given 2 identical objects', () => {
   expect(matchObjectProp({ fruit: 'banana' }, { fruit: 'banana' })).toEqual(true);
   expect(
-    matchObjectProp({ fruit: 'banana', isRipe: true }, { fruit: 'banana', isRipe: true })
+    matchObjectProp({ fruit: 'banana', isRipe: true }, { fruit: 'banana', isRipe: true }),
   ).toEqual(true);
 });
 
@@ -20,6 +20,6 @@ test('returns false given 2 different non empty objects', () => {
   expect(matchObjectProp({ fruit: 'banana' }, { fruits: 'banana' })).toEqual(false);
   expect(matchObjectProp({ fruit: 'banana' }, { fruit: 'orange' })).toEqual(false);
   expect(
-    matchObjectProp({ fruit: 'banana', isRipe: true }, { fruit: 'banana', ripe: true })
+    matchObjectProp({ fruit: 'banana', isRipe: true }, { fruit: 'banana', ripe: true }),
   ).toEqual(false);
 });

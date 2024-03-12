@@ -17,14 +17,14 @@ type ByHintTextOptions = CommonQueryOptions & TextMatchOptions;
 const getNodeByHintText = (
   node: ReactTestInstance,
   text: TextMatch,
-  options: TextMatchOptions = {}
+  options: TextMatchOptions = {},
 ) => {
   const { exact, normalizer } = options;
   return matches(text, node.props.accessibilityHint, normalizer, exact);
 };
 
 const queryAllByHintText = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): QueryAllByQuery<TextMatch, ByHintTextOptions> =>
   function queryAllByA11yHintFn(hint, queryOptions) {
     return findAll(instance, (node) => getNodeByHintText(node, hint, queryOptions), queryOptions);
@@ -38,7 +38,7 @@ const getMissingError = (hint: TextMatch) =>
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByHintText,
   getMissingError,
-  getMultipleError
+  getMultipleError,
 );
 
 export type ByHintTextQueries = {

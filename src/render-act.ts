@@ -3,7 +3,7 @@ import type { ReactTestRenderer, TestRendererOptions } from 'react-test-renderer
 
 export function renderWithAct(
   component: React.ReactElement,
-  options?: TestRendererOptions
+  options?: TestRendererOptions,
 ): ReactTestRenderer {
   let renderer: ReactTestRenderer;
 

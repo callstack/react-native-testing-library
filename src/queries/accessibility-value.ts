@@ -18,7 +18,7 @@ import type {
 import { CommonQueryOptions } from './options';
 
 const queryAllByA11yValue = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): QueryAllByQuery<AccessibilityValueMatcher, CommonQueryOptions> =>
   function queryAllByA11yValueFn(value, queryOptions) {
     return findAll(instance, (node) => matchAccessibilityValue(node, value), queryOptions);
@@ -45,7 +45,7 @@ const getMissingError = (matcher: AccessibilityValueMatcher) =>
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByA11yValue,
   getMissingError,
-  getMultipleError
+  getMultipleError,
 );
 
 export type ByA11yValueQueries = {
@@ -88,7 +88,7 @@ export const bindByA11yValueQueries = (instance: ReactTestInstance): ByA11yValue
         findByAccessibilityValue: findByA11yValue,
         findAllByAccessibilityValue: findAllByA11yValue,
       },
-      'Use toHaveAccessibilityValue(...) built-in Jest matcher or {queryPrefix}ByRole(role, { value: ... }) query instead.'
+      'Use toHaveAccessibilityValue(...) built-in Jest matcher or {queryPrefix}ByRole(role, { value: ... }) query instead.',
     ),
   };
 };

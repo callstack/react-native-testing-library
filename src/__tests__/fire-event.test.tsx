@@ -78,7 +78,7 @@ describe('fireEvent', () => {
     const onPressMock = jest.fn();
     render(
       // TODO: this functionality is buggy, i.e. it will fail if we wrap this component with a View.
-      <WithoutEventComponent onPress={onPressMock} />
+      <WithoutEventComponent onPress={onPressMock} />,
     );
     fireEvent(screen.getByText('Without event'), 'press');
     expect(onPressMock).not.toHaveBeenCalled();
@@ -91,7 +91,7 @@ describe('fireEvent', () => {
     render(
       <View>
         <CustomEventComponent onCustomEvent={handlerMock} />
-      </View>
+      </View>,
     );
 
     fireEvent(screen.getByText('Custom event component'), 'customEvent', EVENT_DATA);
@@ -129,7 +129,7 @@ test('fireEvent.scroll', () => {
   render(
     <ScrollView onScroll={onScrollMock}>
       <Text>XD</Text>
-    </ScrollView>
+    </ScrollView>,
   );
 
   fireEvent.scroll(screen.getByText('XD'), eventData);
@@ -144,7 +144,7 @@ test('fireEvent.changeText', () => {
   render(
     <View>
       <TextInput placeholder="Customer placeholder" onChangeText={onChangeTextMock} />
-    </View>
+    </View>,
   );
 
   fireEvent.changeText(screen.getByPlaceholderText('Customer placeholder'), CHANGE_TEXT);
@@ -179,7 +179,7 @@ test('should not fire on disabled TouchableOpacity', () => {
       <TouchableOpacity onPress={handlePress} disabled={true}>
         <Text>Trigger</Text>
       </TouchableOpacity>
-    </View>
+    </View>,
   );
 
   fireEvent.press(screen.getByText('Trigger'));
@@ -193,7 +193,7 @@ test('should not fire on disabled Pressable', () => {
       <Pressable onPress={handlePress} disabled={true}>
         <Text>Trigger</Text>
       </Pressable>
-    </View>
+    </View>,
   );
 
   fireEvent.press(screen.getByText('Trigger'));
@@ -207,7 +207,7 @@ test('should not fire inside View with pointerEvents="none"', () => {
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
       </Pressable>
-    </View>
+    </View>,
   );
 
   fireEvent.press(screen.getByText('Trigger'));
@@ -222,7 +222,7 @@ test('should not fire inside View with pointerEvents="box-only"', () => {
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
       </Pressable>
-    </View>
+    </View>,
   );
 
   fireEvent.press(screen.getByText('Trigger'));
@@ -237,7 +237,7 @@ test('should fire inside View with pointerEvents="box-none"', () => {
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
       </Pressable>
-    </View>
+    </View>,
   );
 
   fireEvent.press(screen.getByText('Trigger'));
@@ -252,7 +252,7 @@ test('should fire inside View with pointerEvents="auto"', () => {
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
       </Pressable>
-    </View>
+    </View>,
   );
 
   fireEvent.press(screen.getByText('Trigger'));
@@ -269,7 +269,7 @@ test('should not fire deeply inside View with pointerEvents="box-only"', () => {
           <Text>Trigger</Text>
         </Pressable>
       </View>
-    </View>
+    </View>,
   );
 
   fireEvent.press(screen.getByText('Trigger'));
@@ -311,7 +311,7 @@ test('should pass event up on disabled TouchableOpacity', () => {
       <TouchableOpacity onPress={handleInnerPress} disabled={true}>
         <Text>Inner Trigger</Text>
       </TouchableOpacity>
-    </TouchableOpacity>
+    </TouchableOpacity>,
   );
 
   fireEvent.press(screen.getByText('Inner Trigger'));
@@ -327,7 +327,7 @@ test('should pass event up on disabled Pressable', () => {
       <Pressable onPress={handleInnerPress} disabled={true}>
         <Text>Inner Trigger</Text>
       </Pressable>
-    </Pressable>
+    </Pressable>,
   );
 
   fireEvent.press(screen.getByText('Inner Trigger'));
@@ -376,7 +376,7 @@ test('is not fooled by non-responder wrapping host elements', () => {
   render(
     <View>
       <TestChildTouchableComponent onPress={handlePress} someProp={true} />
-    </View>
+    </View>,
   );
 
   fireEvent.press(screen.getByText('Trigger'));

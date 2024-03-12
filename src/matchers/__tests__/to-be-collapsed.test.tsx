@@ -11,7 +11,7 @@ test('toBeCollapsed() basic case', () => {
       <View testID="not-expanded" accessibilityState={{ expanded: false }} />
       <View testID="not-expanded-aria" aria-expanded={false} />
       <View testID="default" />
-    </>
+    </>,
   );
 
   expect(screen.getByTestId('expanded')).not.toBeCollapsed();
@@ -29,7 +29,7 @@ test('toBeCollapsed() error messages', () => {
       <View testID="not-expanded" accessibilityState={{ expanded: false }} />
       <View testID="not-expanded-aria" aria-expanded={false} />
       <View testID="default" />
-    </>
+    </>,
   );
 
   expect(() => expect(screen.getByTestId('expanded')).toBeCollapsed())

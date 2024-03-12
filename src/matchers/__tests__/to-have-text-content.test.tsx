@@ -7,7 +7,7 @@ test('toHaveTextContent() example test', () => {
   render(
     <View testID="view">
       <Text>Hello</Text> <Text>World</Text>
-    </View>
+    </View>,
   );
 
   const view = screen.getByTestId('view');
@@ -37,7 +37,7 @@ test('toHaveTextContent() handles nested text', () => {
   render(
     <Text testID="text">
       Hello <Text>React</Text>
-    </Text>
+    </Text>,
   );
 
   const text = screen.getByTestId('text');

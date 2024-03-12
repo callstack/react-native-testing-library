@@ -20,7 +20,7 @@ function queryAllByLabelText(instance: ReactTestInstance) {
     return findAll(
       instance,
       (node) => matchLabelText(instance, node, text, queryOptions),
-      queryOptions
+      queryOptions,
     );
   };
 }
@@ -33,7 +33,7 @@ const getMissingError = (labelText: TextMatch) =>
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByLabelText,
   getMissingError,
-  getMultipleError
+  getMultipleError,
 );
 
 export type ByLabelTextQueries = {

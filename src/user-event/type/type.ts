@@ -17,12 +17,12 @@ export async function type(
   this: UserEventInstance,
   element: ReactTestInstance,
   text: string,
-  options?: TypeOptions
+  options?: TypeOptions,
 ): Promise<void> {
   if (!isHostTextInput(element)) {
     throw new ErrorWithStack(
       `type() works only with host "TextInput" elements. Passed element has type "${element.type}".`,
-      type
+      type,
     );
   }
 
@@ -69,7 +69,7 @@ export async function emitTypingEvents(
   element: ReactTestInstance,
   key: string,
   currentText: string,
-  previousText: string
+  previousText: string,
 ) {
   const isMultiline = element.props.multiline === true;
 
@@ -82,7 +82,7 @@ export async function emitTypingEvents(
     dispatchEvent(
       element,
       'textInput',
-      EventBuilder.TextInput.textInput(currentText, previousText)
+      EventBuilder.TextInput.textInput(currentText, previousText),
     );
   }
 
@@ -102,7 +102,7 @@ export async function emitTypingEvents(
     dispatchEvent(
       element,
       'contentSizeChange',
-      EventBuilder.TextInput.contentSizeChange(contentSize)
+      EventBuilder.TextInput.contentSizeChange(contentSize),
     );
   }
 }

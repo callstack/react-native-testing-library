@@ -17,7 +17,7 @@ interface FindAllOptions {
 export function findAll(
   root: ReactTestInstance,
   predicate: (element: ReactTestInstance) => boolean,
-  options?: FindAllOptions
+  options?: FindAllOptions,
 ): HostTestInstance[] {
   const results = findAllInternal(root, predicate, options);
 
@@ -37,7 +37,7 @@ export function findAll(
 function findAllInternal(
   root: ReactTestInstance,
   predicate: (element: ReactTestInstance) => boolean,
-  options?: FindAllOptions
+  options?: FindAllOptions,
 ): HostTestInstance[] {
   const results: HostTestInstance[] = [];
 

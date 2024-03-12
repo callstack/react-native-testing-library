@@ -82,7 +82,7 @@ async function authUser(username: string, password: string): Promise<string | nu
     setTimeout(() => {
       const hasValidCredentials = username === 'admin' && password === 'admin1';
       resolve(hasValidCredentials ? username : null);
-    }, 250)
+    }, 250),
   );
 }
 

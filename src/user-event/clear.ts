@@ -12,7 +12,7 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
   if (!isHostTextInput(element)) {
     throw new ErrorWithStack(
       `clear() only supports host "TextInput" elements. Passed element has type: "${element.type}".`,
-      clear
+      clear,
     );
   }
 

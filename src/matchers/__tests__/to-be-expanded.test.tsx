@@ -11,7 +11,7 @@ test('toBeExpanded() basic case', () => {
       <View testID="not-expanded" accessibilityState={{ expanded: false }} />
       <View testID="not-expanded-aria" aria-expanded={false} />
       <View testID="default" />
-    </>
+    </>,
   );
 
   expect(screen.getByTestId('expanded')).toBeExpanded();
@@ -29,7 +29,7 @@ test('toBeExpanded() error messages', () => {
       <View testID="not-expanded" accessibilityState={{ expanded: false }} />
       <View testID="not-expanded-aria" aria-expanded={false} />
       <View testID="default" />
-    </>
+    </>,
   );
 
   expect(() => expect(screen.getByTestId('expanded')).not.toBeExpanded())

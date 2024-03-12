@@ -20,7 +20,7 @@ export const accessiblityValueKeys: (keyof AccessibilityValue)[] = ['min', 'max'
 
 export function isHiddenFromAccessibility(
   element: ReactTestInstance | null,
-  { cache }: IsInaccessibleOptions = {}
+  { cache }: IsInaccessibleOptions = {},
 ): boolean {
   if (element == null) {
     return true;
@@ -172,7 +172,7 @@ export function getAccessibilityState(element: ReactTestInstance): Accessibility
 }
 
 export function getAccessibilityCheckedState(
-  element: ReactTestInstance
+  element: ReactTestInstance,
 ): AccessibilityState['checked'] {
   const { accessibilityState, 'aria-checked': ariaChecked } = element.props;
   return ariaChecked ?? accessibilityState?.checked;
@@ -212,21 +212,21 @@ export function isElementBusy(element: ReactTestInstance): NonNullable<Accessibi
 }
 
 export function isElementCollapsed(
-  element: ReactTestInstance
+  element: ReactTestInstance,
 ): NonNullable<AccessibilityState['expanded']> {
   const { accessibilityState, 'aria-expanded': ariaExpanded } = element.props;
   return (ariaExpanded ?? accessibilityState?.expanded) === false;
 }
 
 export function isElementExpanded(
-  element: ReactTestInstance
+  element: ReactTestInstance,
 ): NonNullable<AccessibilityState['expanded']> {
   const { accessibilityState, 'aria-expanded': ariaExpanded } = element.props;
   return ariaExpanded ?? accessibilityState?.expanded ?? false;
 }
 
 export function isElementSelected(
-  element: ReactTestInstance
+  element: ReactTestInstance,
 ): NonNullable<AccessibilityState['selected']> {
   const { accessibilityState, 'aria-selected': ariaSelected } = element.props;
   return ariaSelected ?? accessibilityState?.selected ?? false;

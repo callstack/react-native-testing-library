@@ -26,7 +26,7 @@ test('should fire only non-touch-related events on non-editable TextInput', () =
       onChangeText={onChangeText}
       onSubmitEditing={onSubmitEditing}
       onLayout={onLayout}
-    />
+    />,
   );
 
   const subject = screen.getByTestId('subject');
@@ -57,7 +57,7 @@ test('should fire only non-touch-related events on non-editable TextInput with n
       onLayout={onLayout}
     >
       <Text>Nested Text</Text>
-    </TextInput>
+    </TextInput>,
   );
 
   const subject = screen.getByText('Nested Text');
@@ -106,7 +106,7 @@ test('should fire only non-touch-related events on non-editable wrapped TextInpu
       onChangeText={onChangeText}
       onSubmitEditing={onSubmitEditing}
       onLayout={onLayout}
-    />
+    />,
   );
 
   const subject = screen.getByTestId('subject');
@@ -138,7 +138,7 @@ test('should fire only non-touch-related events on non-editable double wrapped T
       onChangeText={onChangeText}
       onSubmitEditing={onSubmitEditing}
       onLayout={onLayout}
-    />
+    />,
   );
 
   const subject = screen.getByTestId('subject');

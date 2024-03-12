@@ -40,25 +40,25 @@ test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
   expect(button?.props.accessibilityHint).toEqual(BUTTON_HINT);
 
   expect(() => screen.getByA11yHint(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT),
   );
   expect(screen.queryByA11yHint(NO_MATCHES_TEXT)).toBeNull();
 
   expect(() => screen.getByA11yHint(TEXT_HINT)).toThrow(
-    getMultipleInstancesFoundMessage(TEXT_HINT)
+    getMultipleInstancesFoundMessage(TEXT_HINT),
   );
   expect(() => screen.queryByA11yHint(TEXT_HINT)).toThrow(
-    getMultipleInstancesFoundMessage(TEXT_HINT)
+    getMultipleInstancesFoundMessage(TEXT_HINT),
   );
 
   const asyncButton = await screen.findByA11yHint(BUTTON_HINT);
   expect(asyncButton.props.accessibilityHint).toEqual(BUTTON_HINT);
   await expect(screen.findByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT),
   );
 
   await expect(screen.findByA11yHint(TEXT_HINT)).rejects.toThrow(
-    getMultipleInstancesFoundMessage(TEXT_HINT)
+    getMultipleInstancesFoundMessage(TEXT_HINT),
   );
 });
 
@@ -69,13 +69,13 @@ test('getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint', async () => {
   expect(screen.queryAllByA11yHint(TEXT_HINT)).toHaveLength(2);
 
   expect(() => screen.getAllByA11yHint(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT),
   );
   expect(screen.queryAllByA11yHint(NO_MATCHES_TEXT)).toEqual([]);
 
   await expect(screen.findAllByA11yHint(TEXT_HINT)).resolves.toHaveLength(2);
   await expect(screen.findAllByA11yHint(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT),
   );
 });
 
@@ -84,7 +84,7 @@ test('getByHintText, getByHintText', () => {
     <View>
       <View accessibilityHint="test" />
       <View accessibilityHint="tests id" />
-    </View>
+    </View>,
   );
   expect(screen.getByHintText('id', { exact: false })).toBeTruthy();
   expect(screen.getAllByHintText('test', { exact: false })).toHaveLength(2);
@@ -95,7 +95,7 @@ test('getByHintText, getByHintText and exact = true', () => {
     <View>
       <View accessibilityHint="test" />
       <View accessibilityHint="tests id" />
-    </View>
+    </View>,
   );
   expect(screen.queryByHintText('id', { exact: true })).toBeNull();
   expect(screen.getAllByHintText('test', { exact: true })).toHaveLength(1);
@@ -105,7 +105,7 @@ test('byHintText queries support hidden option', () => {
   render(
     <Text accessibilityHint="hidden" style={{ display: 'none' }}>
       Hidden from accessiblity
-    </Text>
+    </Text>,
   );
 
   expect(screen.getByHintText('hidden', { includeHiddenElements: true })).toBeTruthy();

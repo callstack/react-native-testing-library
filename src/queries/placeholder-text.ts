@@ -18,20 +18,20 @@ type ByPlaceholderTextOptions = CommonQueryOptions & TextMatchOptions;
 const matchPlaceholderText = (
   node: ReactTestInstance,
   placeholder: TextMatch,
-  options: TextMatchOptions = {}
+  options: TextMatchOptions = {},
 ) => {
   const { exact, normalizer } = options;
   return matches(placeholder, node.props.placeholder, normalizer, exact);
 };
 
 const queryAllByPlaceholderText = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): QueryAllByQuery<TextMatch, ByPlaceholderTextOptions> =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
     return findAll(
       instance,
       (node) => isHostTextInput(node) && matchPlaceholderText(node, placeholder, queryOptions),
-      queryOptions
+      queryOptions,
     );
   };
 
@@ -43,7 +43,7 @@ const getMissingError = (placeholder: TextMatch) =>
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByPlaceholderText,
   getMissingError,
-  getMultipleError
+  getMultipleError,
 );
 
 export type ByPlaceholderTextQueries = {
@@ -56,7 +56,7 @@ export type ByPlaceholderTextQueries = {
 };
 
 export const bindByPlaceholderTextQueries = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): ByPlaceholderTextQueries => ({
   getByPlaceholderText: getBy(instance),
   getAllByPlaceholderText: getAllBy(instance),

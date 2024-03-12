@@ -22,6 +22,6 @@ test('adds a new todo to redux store when submitting form', () => {
         text: textToEnter,
         date: expect.any(Date),
       }),
-    ])
+    ]),
   );
 });

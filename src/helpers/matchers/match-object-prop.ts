@@ -12,7 +12,7 @@
  */
 export function matchObjectProp<T extends Record<string, unknown>>(
   prop: T | undefined,
-  matcher: T
+  matcher: T,
 ): boolean {
   if (!prop || Object.keys(matcher).length === 0) {
     return false;

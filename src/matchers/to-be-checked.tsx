@@ -14,7 +14,7 @@ export function toBeChecked(this: jest.MatcherContext, element: ReactTestInstanc
   if (!hasValidAccessibilityRole(element)) {
     throw new ErrorWithStack(
       `toBeChecked() works only on accessibility elements with "checkbox" or "radio" role.`,
-      toBeChecked
+      toBeChecked,
     );
   }
 

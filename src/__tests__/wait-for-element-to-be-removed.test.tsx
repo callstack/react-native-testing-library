@@ -83,9 +83,9 @@ test('checks if elements exist at start', async () => {
   expect(screen.queryByText('Observed Element')).toBeNull();
 
   await expect(
-    waitForElementToBeRemoved(() => screen.queryByText('Observed Element'))
+    waitForElementToBeRemoved(() => screen.queryByText('Observed Element')),
   ).rejects.toThrow(
-    'The element(s) given to waitForElementToBeRemoved are already removed. waitForElementToBeRemoved requires that the element(s) exist(s) before waiting for removal.'
+    'The element(s) given to waitForElementToBeRemoved are already removed. waitForElementToBeRemoved requires that the element(s) exist(s) before waiting for removal.',
   );
 });
 
@@ -98,7 +98,7 @@ test('waits until timeout', async () => {
   await expect(
     waitForElementToBeRemoved(() => screen.getByText('Observed Element'), {
       timeout: 100,
-    })
+    }),
   ).rejects.toThrow('Timed out in waitForElementToBeRemoved.');
 
   // Async action ends after 300ms and we only waited 100ms, so we need to wait for the remaining
@@ -139,5 +139,5 @@ test.each([false, true])(
 
     // waitForElementToBeRemoved runs an initial call of the expectation
     expect(mockFn).toHaveBeenCalledTimes(4);
-  }
+  },
 );

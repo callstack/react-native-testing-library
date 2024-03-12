@@ -44,12 +44,12 @@ export type ScrollToOptions = VerticalScrollToOptions | HorizontalScrollToOption
 export async function scrollTo(
   this: UserEventInstance,
   element: ReactTestInstance,
-  options: ScrollToOptions
+  options: ScrollToOptions,
 ): Promise<void> {
   if (!isHostScrollView(element)) {
     throw new ErrorWithStack(
       `scrollTo() works only with host "ScrollView" elements. Passed element has type "${element.type}".`,
-      scrollTo
+      scrollTo,
     );
   }
 
@@ -59,14 +59,14 @@ export async function scrollTo(
     element,
     'contentSizeChange',
     options.contentSize?.width ?? 0,
-    options.contentSize?.height ?? 0
+    options.contentSize?.height ?? 0,
   );
 
   const initialPosition = getElementScrollOffset(element);
   const dragSteps = createScrollSteps(
     { y: options.y, x: options.x },
     initialPosition,
-    linearInterpolator
+    linearInterpolator,
   );
   await emitDragScrollEvents(this.config, element, dragSteps, options);
 
@@ -74,7 +74,7 @@ export async function scrollTo(
   const momentumSteps = createScrollSteps(
     { y: options.momentumY, x: options.momentumX },
     momentumStart,
-    inertialInterpolator
+    inertialInterpolator,
   );
   await emitMomentumScrollEvents(this.config, element, momentumSteps, options);
 
@@ -86,7 +86,7 @@ async function emitDragScrollEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
   scrollSteps: ContentOffset[],
-  scrollOptions: ScrollToOptions
+  scrollOptions: ScrollToOptions,
 ) {
   if (scrollSteps.length === 0) {
     return;
@@ -96,7 +96,7 @@ async function emitDragScrollEvents(
   dispatchEvent(
     element,
     'scrollBeginDrag',
-    EventBuilder.ScrollView.scroll(scrollSteps[0], scrollOptions)
+    EventBuilder.ScrollView.scroll(scrollSteps[0], scrollOptions),
   );
 
   // Note: experimentally, in case of drag scroll the last scroll step
@@ -116,7 +116,7 @@ async function emitMomentumScrollEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
   scrollSteps: ContentOffset[],
-  scrollOptions: ScrollToOptions
+  scrollOptions: ScrollToOptions,
 ) {
   if (scrollSteps.length === 0) {
     return;
@@ -126,7 +126,7 @@ async function emitMomentumScrollEvents(
   dispatchEvent(
     element,
     'momentumScrollBegin',
-    EventBuilder.ScrollView.scroll(scrollSteps[0], scrollOptions)
+    EventBuilder.ScrollView.scroll(scrollSteps[0], scrollOptions),
   );
 
   // Note: experimentally, in case of momentum scroll the last scroll step
@@ -142,7 +142,7 @@ async function emitMomentumScrollEvents(
   dispatchEvent(
     element,
     'momentumScrollEnd',
-    EventBuilder.ScrollView.scroll(lastStep, scrollOptions)
+    EventBuilder.ScrollView.scroll(lastStep, scrollOptions),
   );
 }
 
@@ -153,9 +153,9 @@ function ensureScrollViewDirection(element: ReactTestInstance, options: ScrollTo
   if (isVerticalScrollView && hasHorizontalScrollOptions) {
     throw new ErrorWithStack(
       `scrollTo() expected only vertical scroll options: "y" and "momentumY" for vertical "ScrollView" element but received ${stringify(
-        pick(options, ['x', 'momentumX'])
+        pick(options, ['x', 'momentumX']),
       )}`,
-      scrollTo
+      scrollTo,
     );
   }
 
@@ -163,9 +163,9 @@ function ensureScrollViewDirection(element: ReactTestInstance, options: ScrollTo
   if (!isVerticalScrollView && hasVerticalScrollOptions) {
     throw new ErrorWithStack(
       `scrollTo() expected only horizontal scroll options: "x" and "momentumX" for horizontal "ScrollView" element but received ${stringify(
-        pick(options, ['y', 'momentumY'])
+        pick(options, ['y', 'momentumY']),
       )}`,
-      scrollTo
+      scrollTo,
     );
   }
 }

@@ -55,7 +55,7 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
               (error) => {
                 setIsReactActEnvironment(previousActEnvironment);
                 reject(error);
-              }
+              },
             );
           },
         };

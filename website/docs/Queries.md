@@ -103,7 +103,7 @@ import { render, screen } from '@testing-library/react-native';
 render(
   <Pressable accessibilityRole="button" disabled>
     <Text>Hello</Text>
-  </Pressable>
+  </Pressable>,
 );
 const element = screen.getByRole('button');
 const element2 = screen.getByRole('button', { name: 'Hello' });
@@ -432,13 +432,13 @@ render(<Text style={{ display: 'none' }}>Hidden from accessibility</Text>);
 expect(
   screen.queryByText('Hidden from accessibility', {
     includeHiddenElements: false,
-  })
+  }),
 ).not.toBeOnTheScreen();
 
 // Include hidden elements
 expect(screen.getByText('Hidden from accessibility')).toBeOnTheScreen();
 expect(
-  screen.getByText('Hidden from accessibility', { includeHiddenElements: true })
+  screen.getByText('Hidden from accessibility', { includeHiddenElements: true }),
 ).toBeOnTheScreen();
 ```
 

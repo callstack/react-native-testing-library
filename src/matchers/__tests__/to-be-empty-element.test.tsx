@@ -13,7 +13,7 @@ test('toBeEmptyElement() base case', () => {
   render(
     <View testID="not-empty">
       <View testID="empty" />
-    </View>
+    </View>,
   );
 
   const empty = screen.getByTestId('empty');
@@ -43,7 +43,7 @@ test('toBeEmptyElement() ignores composite-only children', () => {
       <DoNotRenderChildren>
         <View testID="not-rendered" />
       </DoNotRenderChildren>
-    </View>
+    </View>,
   );
 
   const view = screen.getByTestId('view');

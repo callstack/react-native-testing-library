@@ -41,15 +41,15 @@ test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
   });
 
   expect(() => screen.getByA11yValue({ min: 50 })).toThrow(
-    'Unable to find an element with min value: 50'
+    'Unable to find an element with min value: 50',
   );
   expect(screen.queryByA11yValue({ min: 50 })).toEqual(null);
 
   expect(() => screen.getByA11yValue({ max: 60 })).toThrow(
-    'Found multiple elements with max value: 60'
+    'Found multiple elements with max value: 60',
   );
   expect(() => screen.queryByA11yValue({ max: 60 })).toThrow(
-    'Found multiple elements with max value: 60'
+    'Found multiple elements with max value: 60',
   );
 
   const asyncElement = await screen.findByA11yValue({ min: 40 });
@@ -58,10 +58,10 @@ test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
     max: 60,
   });
   await expect(screen.findByA11yValue({ min: 50 })).rejects.toThrow(
-    'Unable to find an element with min value: 50'
+    'Unable to find an element with min value: 50',
   );
   await expect(screen.findByA11yValue({ max: 60 })).rejects.toThrow(
-    'Found multiple elements with max value: 60'
+    'Found multiple elements with max value: 60',
   );
 });
 
@@ -72,7 +72,7 @@ test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
   expect(screen.queryAllByA11yValue({ min: 40 })).toHaveLength(1);
 
   expect(() => screen.getAllByA11yValue({ min: 50 })).toThrow(
-    'Unable to find an element with min value: 50'
+    'Unable to find an element with min value: 50',
   );
   expect(screen.queryAllByA11yValue({ min: 50 })).toEqual([]);
 
@@ -81,7 +81,7 @@ test('getAllByA11yValue, queryAllByA11yValue, findAllByA11yValue', async () => {
 
   await expect(screen.findAllByA11yValue({ min: 40 })).resolves.toHaveLength(1);
   await expect(screen.findAllByA11yValue({ min: 50 })).rejects.toThrow(
-    'Unable to find an element with min value: 50'
+    'Unable to find an element with min value: 50',
   );
   await expect(screen.findAllByA11yValue({ max: 60 })).resolves.toHaveLength(2);
 });
@@ -90,7 +90,7 @@ test('byA11yValue queries support hidden option', () => {
   render(
     <Text accessibilityValue={{ max: 10 }} style={{ display: 'none' }}>
       Hidden from accessibility
-    </Text>
+    </Text>,
   );
 
   expect(screen.getByA11yValue({ max: 10 }, { includeHiddenElements: true })).toBeTruthy();

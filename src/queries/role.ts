@@ -47,7 +47,7 @@ const matchAccessibleStateIfNeeded = (node: ReactTestInstance, options?: ByRoleO
 
 const matchAccessibilityValueIfNeeded = (
   node: ReactTestInstance,
-  value?: AccessibilityValueMatcher
+  value?: AccessibilityValueMatcher,
 ) => {
   return value != null ? matchAccessibilityValue(node, value) : true;
 };
@@ -63,7 +63,7 @@ const queryAllByRole = (instance: ReactTestInstance): QueryAllByQuery<TextMatch,
         matchAccessibleStateIfNeeded(node, options) &&
         matchAccessibilityValueIfNeeded(node, options?.value) &&
         matchAccessibleNameIfNeeded(node, options?.name),
-      options
+      options,
     );
   };
 
@@ -98,7 +98,7 @@ const getMissingError = (role: TextMatch, options?: ByRoleOptions) =>
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByRole,
   getMissingError,
-  getMultipleError
+  getMultipleError,
 );
 
 export type ByRoleQueries = {

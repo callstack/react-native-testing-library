@@ -79,7 +79,7 @@ test('toBeVisible() on ancestor view with 0 opacity', () => {
       <View>
         <View testID="view" />
       </View>
-    </View>
+    </View>,
   );
 
   const view = screen.getByTestId('view');
@@ -100,7 +100,7 @@ test('toBeVisible() on ancestor view with display "none"', () => {
       <View>
         <View testID="view" />
       </View>
-    </View>
+    </View>,
   );
 
   const view = screen.getByTestId('view', { includeHiddenElements: true });
@@ -136,7 +136,7 @@ test('toBeVisible() on view within Modal', () => {
       <View>
         <View testID="view-within-modal" />
       </View>
-    </Modal>
+    </Modal>,
   );
   expect(screen.getByTestId('view-within-modal')).toBeVisible();
 });
@@ -147,7 +147,7 @@ test('toBeVisible() on not visible Modal', () => {
       <View>
         <View testID="view-within-modal" />
       </View>
-    </Modal>
+    </Modal>,
   );
 
   expect(screen.queryByTestId('modal')).not.toBeVisible();
@@ -179,7 +179,7 @@ test('toBeVisible() on view within inaccessible view', () => {
       <View>
         <View testID="test" />
       </View>
-    </View>
+    </View>,
   );
   expect(screen.getByTestId('test', { includeHiddenElements: true })).not.toBeVisible();
 });
@@ -200,7 +200,7 @@ test('toBeVisible() on view within inaccessible view (iOS)', () => {
       <View>
         <View testID="test" />
       </View>
-    </View>
+    </View>,
   );
   expect(screen.getByTestId('test', { includeHiddenElements: true })).not.toBeVisible();
 });
@@ -221,7 +221,7 @@ test('toBeVisible() on view within inaccessible view (Android)', () => {
       <View>
         <View testID="test" />
       </View>
-    </View>
+    </View>,
   );
   expect(screen.getByTestId('test', { includeHiddenElements: true })).not.toBeVisible();
 });

@@ -58,7 +58,7 @@ describe('AddTodo component test', () => {
           text: textToEnter,
           date: expect.any(Date),
         }),
-      ])
+      ]),
     );
   });
 });

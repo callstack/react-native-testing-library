@@ -10,14 +10,14 @@ export function toHaveDisplayValue(
   this: jest.MatcherContext,
   element: ReactTestInstance,
   expectedValue: TextMatch,
-  options?: TextMatchOptions
+  options?: TextMatchOptions,
 ) {
   checkHostElement(element, toHaveDisplayValue, this);
 
   if (!isHostTextInput(element)) {
     throw new ErrorWithStack(
       `toHaveDisplayValue() works only with host "TextInput" elements. Passed element has type "${element.type}".`,
-      toHaveDisplayValue
+      toHaveDisplayValue,
     );
   }
 
@@ -32,7 +32,7 @@ export function toHaveDisplayValue(
           `Expected element ${this.isNot ? 'not to' : 'to'} have display value`,
           expectedValue,
           'Received',
-          receivedValue
+          receivedValue,
         ),
       ].join('\n');
     },

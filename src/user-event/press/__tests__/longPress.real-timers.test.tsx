@@ -18,7 +18,7 @@ describe('userEvent.longPress with real timers', () => {
     render(
       <Pressable onLongPress={mockOnLongPress}>
         <Text>press me</Text>
-      </Pressable>
+      </Pressable>,
     );
     await user.longPress(screen.getByText('press me'));
 
@@ -33,7 +33,7 @@ describe('userEvent.longPress with real timers', () => {
     render(
       <Pressable delayLongPress={800} onLongPress={mockOnLongPress} onPress={mockOnPress}>
         <Text>press me</Text>
-      </Pressable>
+      </Pressable>,
     );
 
     await user.longPress(screen.getByText('press me'), {
@@ -52,7 +52,7 @@ describe('userEvent.longPress with real timers', () => {
     render(
       <Pressable delayLongPress={1000} onLongPress={mockOnLongPress} onPress={mockOnPress}>
         <Text>press me</Text>
-      </Pressable>
+      </Pressable>,
     );
     await user.longPress(screen.getByText('press me'));
 
@@ -68,7 +68,7 @@ describe('userEvent.longPress with real timers', () => {
     render(
       <Pressable onLongPress={mockOnLongPress} onPress={mockOnPress}>
         <Text>press me</Text>
-      </Pressable>
+      </Pressable>,
     );
     await user.longPress(screen.getByText('press me'));
 
@@ -82,7 +82,7 @@ describe('userEvent.longPress with real timers', () => {
     render(
       <Pressable onLongPress={mockOnLongPress}>
         <Text>press me</Text>
-      </Pressable>
+      </Pressable>,
     );
 
     await userEvent.longPress(screen.getByText('press me'));

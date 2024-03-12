@@ -31,7 +31,7 @@ const getMissingError = (text: TextMatch) => `Unable to find an element with tex
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByText,
   getMissingError,
-  getMultipleError
+  getMultipleError,
 );
 
 export type ByTextQueries = {

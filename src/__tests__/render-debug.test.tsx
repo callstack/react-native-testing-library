@@ -122,7 +122,7 @@ test('debug changing component', () => {
 
   const mockCalls = jest.mocked(console.log).mock.calls;
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot(
-    'bananaFresh button message should now be "fresh"'
+    'bananaFresh button message should now be "fresh"',
   );
 });
 
@@ -168,7 +168,7 @@ test('debug should use debugOptions from config when no option is specified', ()
   render(
     <View style={{ backgroundColor: 'red' }}>
       <Text>hello</Text>
-    </View>
+    </View>,
   );
   screen.debug();
 
@@ -189,7 +189,7 @@ test('debug should use given options over config debugOptions', () => {
   render(
     <View style={{ backgroundColor: 'red' }}>
       <Text>hello</Text>
-    </View>
+    </View>,
   );
   screen.debug({ mapProps: (props) => props });
 

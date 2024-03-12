@@ -48,7 +48,7 @@ const textInputEventsIgnoringEditableProp = new Set([
 export function isEventEnabled(
   element: ReactTestInstance,
   eventName: string,
-  nearestTouchResponder?: ReactTestInstance
+  nearestTouchResponder?: ReactTestInstance,
 ) {
   if (isHostTextInput(nearestTouchResponder)) {
     return (
@@ -73,7 +73,7 @@ export function isEventEnabled(
 function findEventHandler(
   element: ReactTestInstance,
   eventName: string,
-  nearestTouchResponder?: ReactTestInstance
+  nearestTouchResponder?: ReactTestInstance,
 ): EventHandler | null {
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 

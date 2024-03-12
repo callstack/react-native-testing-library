@@ -45,7 +45,7 @@ describe('printing element tree', () => {
       >
         <TextInput placeholder="PLACEHOLDER" value="VALUE" defaultValue="DEFAULT_VALUE" />
         <Text>Some Text</Text>
-      </View>
+      </View>,
     );
 
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
@@ -140,13 +140,13 @@ describe('printing element tree', () => {
     const onTimeout = jest.fn((_: Error) => new Error('Replacement error'));
 
     await expect(() =>
-      screen.findByText(/foo/, undefined, { onTimeout })
+      screen.findByText(/foo/, undefined, { onTimeout }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Replacement error"`);
 
     expect(onTimeout).toHaveBeenCalledTimes(1);
     expect(onTimeout.mock.calls[0][0].message).not.toMatch(/View/);
     expect(onTimeout.mock.calls[0][0].message).toMatchInlineSnapshot(
-      `"Unable to find an element with text: /foo/"`
+      `"Unable to find an element with text: /foo/"`,
     );
   });
 
@@ -156,13 +156,13 @@ describe('printing element tree', () => {
     const onTimeout = jest.fn((_: Error) => new Error('Replacement error'));
 
     await expect(() =>
-      screen.findAllByText(/foo/, undefined, { onTimeout })
+      screen.findAllByText(/foo/, undefined, { onTimeout }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Replacement error"`);
 
     expect(onTimeout).toHaveBeenCalledTimes(1);
     expect(onTimeout.mock.calls[0][0].message).not.toMatch(/View/);
     expect(onTimeout.mock.calls[0][0].message).toMatchInlineSnapshot(
-      `"Unable to find an element with text: /foo/"`
+      `"Unable to find an element with text: /foo/"`,
     );
   });
 
@@ -177,7 +177,7 @@ describe('printing element tree', () => {
         >
           Some text
         </Text>
-      </View>
+      </View>,
     );
 
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
@@ -201,7 +201,7 @@ describe('printing element tree', () => {
     render(
       <View accessibilityState={{ checked: true, busy: false }}>
         <View accessibilityState={{ checked: undefined }} />
-      </View>
+      </View>,
     );
 
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
@@ -224,7 +224,7 @@ describe('printing element tree', () => {
     render(
       <View accessibilityValue={{ min: 1 }}>
         <View accessibilityState={{}} />
-      </View>
+      </View>,
     );
 
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
@@ -247,7 +247,7 @@ describe('printing element tree', () => {
 
     jest.spyOn(screen, 'toJSON').mockImplementation(() => null);
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find an element with text: /foo/"`
+      `"Unable to find an element with text: /foo/"`,
     );
   });
 });

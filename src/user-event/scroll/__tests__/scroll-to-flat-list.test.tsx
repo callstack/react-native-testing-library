@@ -33,7 +33,7 @@ function renderFlatListWithToolkit(props: ScrollViewProps = {}) {
       data={data}
       renderItem={({ item }) => renderItem(item)}
       {...props}
-    />
+    />,
   );
 
   return { events };

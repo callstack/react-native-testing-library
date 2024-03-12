@@ -53,7 +53,7 @@ describe('getHostComponentNames', () => {
     expect(() =>
       act(() => {
         getHostComponentNames();
-      })
+      }),
     ).not.toThrow();
   });
 });

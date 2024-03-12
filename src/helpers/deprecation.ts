@@ -2,7 +2,7 @@ import { getQueryPrefix } from './query-name';
 
 export function deprecateQueries<Queries extends Record<string, any>>(
   queriesObject: Queries,
-  recommendation: string
+  recommendation: string,
 ): Queries {
   const result = {} as Queries;
   Object.keys(queriesObject).forEach((queryName) => {
@@ -17,11 +17,11 @@ export function deprecateQueries<Queries extends Record<string, any>>(
 function deprecateQuery<QueryFn extends (...args: any) => any>(
   queryFn: QueryFn,
   queryName: string,
-  recommendation: string
+  recommendation: string,
 ): QueryFn {
   const formattedRecommendation = recommendation.replace(
     /{queryPrefix}/g,
-    getQueryPrefix(queryName)
+    getQueryPrefix(queryName),
   );
 
   // @ts-expect-error: generic typing is hard

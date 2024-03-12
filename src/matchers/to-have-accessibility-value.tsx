@@ -11,7 +11,7 @@ import { checkHostElement, formatMessage } from './utils';
 export function toHaveAccessibilityValue(
   this: jest.MatcherContext,
   element: ReactTestInstance,
-  expectedValue: AccessibilityValueMatcher
+  expectedValue: AccessibilityValueMatcher,
 ) {
   checkHostElement(element, toHaveAccessibilityValue, this);
 
@@ -23,14 +23,14 @@ export function toHaveAccessibilityValue(
       const matcher = matcherHint(
         `${this.isNot ? '.not' : ''}.toHaveAccessibilityValue`,
         'element',
-        stringify(expectedValue)
+        stringify(expectedValue),
       );
       return formatMessage(
         matcher,
         `Expected the element ${this.isNot ? 'not to' : 'to'} have accessibility value`,
         stringify(expectedValue),
         'Received element with accessibility value',
-        stringify(removeUndefinedKeys(receivedValue))
+        stringify(removeUndefinedKeys(receivedValue)),
       );
     },
   };

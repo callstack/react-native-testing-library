@@ -11,5 +11,5 @@ test.each`
   'returns $expectedResult given prop $prop and matcher $matcher',
   ({ prop, matcher, expectedResult }) => {
     expect(matchStringProp(prop, matcher)).toEqual(expectedResult);
-  }
+  },
 );

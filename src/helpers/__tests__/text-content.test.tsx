@@ -16,7 +16,7 @@ test('getTextContent with single nested content', () => {
   render(
     <Text>
       <Text>Hello world</Text>
-    </Text>
+    </Text>,
   );
   expect(getTextContent(screen.root)).toBe('Hello world');
 });
@@ -25,7 +25,7 @@ test('getTextContent with multiple nested content', () => {
   render(
     <Text>
       <Text>Hello</Text> <Text>world</Text>
-    </Text>
+    </Text>,
   );
   expect(getTextContent(screen.root)).toBe('Hello world');
 });
@@ -34,7 +34,7 @@ test('getTextContent with multiple number content', () => {
   render(
     <Text>
       <Text>Hello</Text> <Text>world</Text> <Text>{100}</Text>
-    </Text>
+    </Text>,
   );
   expect(getTextContent(screen.root)).toBe('Hello world 100');
 });
@@ -43,7 +43,7 @@ test('getTextContent with multiple boolean content', () => {
   render(
     <Text>
       <Text>Hello{false}</Text> <Text>{true}world</Text>
-    </Text>
+    </Text>,
   );
   expect(getTextContent(screen.root)).toBe('Hello world');
 });

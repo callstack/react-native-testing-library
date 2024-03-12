@@ -32,7 +32,7 @@ test('getByTestId returns only native elements', () => {
       <View testID="view" />
       <Button testID="button" title="Button" onPress={jest.fn()} />
       <MyComponent testID="myComponent" />
-    </View>
+    </View>,
   );
 
   expect(screen.getByTestId('text')).toBeTruthy();
@@ -46,10 +46,10 @@ test('getByTestId returns only native elements', () => {
   expect(screen.getAllByTestId('button')).toHaveLength(1);
 
   expect(() => screen.getByTestId('myComponent')).toThrow(
-    'Unable to find an element with testID: myComponent'
+    'Unable to find an element with testID: myComponent',
   );
   expect(() => screen.getAllByTestId('myComponent')).toThrow(
-    'Unable to find an element with testID: myComponent'
+    'Unable to find an element with testID: myComponent',
   );
 });
 
@@ -61,7 +61,7 @@ test('supports a regex matcher', () => {
       <View testID="view" />
       <Button testID="button" title="Button" onPress={jest.fn()} />
       <MyComponent testID="myComponent" />
-    </View>
+    </View>,
   );
 
   expect(screen.getByTestId(/view/)).toBeTruthy();
@@ -74,17 +74,17 @@ test('getByTestId, queryByTestId', () => {
 
   expect(component.props.children).toBe('not fresh');
   expect(() => screen.getByTestId('InExistent')).toThrow(
-    'Unable to find an element with testID: InExistent'
+    'Unable to find an element with testID: InExistent',
   );
 
   expect(screen.getByTestId('bananaFresh')).toBe(component);
   expect(screen.queryByTestId('InExistent')).toBeNull();
 
   expect(() => screen.getByTestId('duplicateText')).toThrow(
-    'Found multiple elements with testID: duplicateText'
+    'Found multiple elements with testID: duplicateText',
   );
   expect(() => screen.queryByTestId('duplicateText')).toThrow(
-    'Found multiple elements with testID: duplicateText'
+    'Found multiple elements with testID: duplicateText',
   );
 });
 
@@ -96,7 +96,7 @@ test('getAllByTestId, queryAllByTestId', () => {
   expect(textElements[0].props.children).toBe('First Text');
   expect(textElements[1].props.children).toBe('Second Text');
   expect(() => screen.getAllByTestId('nonExistentTestId')).toThrow(
-    'Unable to find an element with testID: nonExistentTestId'
+    'Unable to find an element with testID: nonExistentTestId',
   );
 
   const queriedTextElements = screen.queryAllByTestId('duplicateText');
@@ -120,9 +120,9 @@ test('findByTestId and findAllByTestId work asynchronously', async () => {
           <Text>Some Text</Text>
           <TextInput placeholder="Placeholder Text" />
           <TextInput value="Display Value" />
-        </View>
+        </View>,
       ),
-    20
+    20,
   );
 
   await expect(screen.findByTestId('aTestId')).resolves.toBeTruthy();
@@ -133,7 +133,7 @@ test('byTestId queries support hidden option', () => {
   render(
     <Text style={{ display: 'none' }} testID="hidden">
       Hidden from accessibility
-    </Text>
+    </Text>,
   );
 
   expect(screen.getByTestId('hidden', { includeHiddenElements: true })).toBeTruthy();

@@ -20,7 +20,7 @@ describe('dispatchEvent', () => {
     render(
       <Text onPress={onPressParent}>
         <Text testID="text" />
-      </Text>
+      </Text>,
     );
 
     dispatchEvent(screen.getByTestId('text'), 'press', TOUCH_EVENT);
@@ -31,7 +31,7 @@ describe('dispatchEvent', () => {
     render(
       <Text>
         <Text testID="text" />
-      </Text>
+      </Text>,
     );
 
     expect(() => dispatchEvent(screen.getByTestId('text'), 'press', TOUCH_EVENT)).not.toThrow();

@@ -26,7 +26,7 @@ function renderTextInputWithToolkit(props: TextInputProps = {}) {
       onEndEditing={logEvent('endEditing')}
       onContentSizeChange={logEvent('contentSizeChange')}
       {...props}
-    />
+    />,
   );
 
   const textInput = screen.getByTestId('input');
@@ -164,7 +164,7 @@ describe('clear()', () => {
         testID="input"
         onChangeText={logEvent('changeText')}
         onEndEditing={logEvent('endEditing')}
-      />
+      />,
     );
 
     const user = userEvent.setup();
@@ -181,9 +181,9 @@ describe('clear()', () => {
 
     const user = userEvent.setup();
     await expect(
-      user.clear(screen.getByTestId('input'))
+      user.clear(screen.getByTestId('input')),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"clear() only supports host "TextInput" elements. Passed element has type: "View"."`
+      `"clear() only supports host "TextInput" elements. Passed element has type: "View"."`,
     );
   });
 
@@ -205,7 +205,7 @@ describe('clear()', () => {
         onPressOut={parentHandler}
       >
         <TextInput testID="input" />
-      </AnyView>
+      </AnyView>,
     );
 
     const user = userEvent.setup();

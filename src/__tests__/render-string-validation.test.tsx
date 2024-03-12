@@ -27,9 +27,9 @@ test('should throw when rendering a string outside a text component', () => {
   expect(() =>
     render(<View>hello</View>, {
       unstable_validateStringsRenderedWithinText: true,
-    })
+    }),
   ).toThrow(
-    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`,
   );
 });
 
@@ -39,7 +39,7 @@ test('should throw an error when rerendering with text outside of Text component
   });
 
   expect(() => screen.rerender(<View>hello</View>)).toThrow(
-    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`,
   );
 });
 
@@ -63,7 +63,7 @@ test('should throw an error when strings are rendered outside Text', () => {
   });
 
   expect(() => fireEvent.press(screen.getByText('Show text'))).toThrow(
-    `${VALIDATION_ERROR}. Detected attempt to render "text rendered outside text component" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "text rendered outside text component" string within a <View> component.`,
   );
 });
 
@@ -73,8 +73,8 @@ test('should not throw for texts nested in fragments', () => {
       <Text>
         <>hello</>
       </Text>,
-      { unstable_validateStringsRenderedWithinText: true }
-    )
+      { unstable_validateStringsRenderedWithinText: true },
+    ),
   ).not.toThrow();
 });
 
@@ -89,10 +89,10 @@ test(`should throw when one of the children is a text and the parent is not a Te
         <Text>hello</Text>
         hello
       </View>,
-      { unstable_validateStringsRenderedWithinText: true }
-    )
+      { unstable_validateStringsRenderedWithinText: true },
+    ),
   ).toThrow(
-    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`,
   );
 });
 
@@ -102,18 +102,18 @@ test(`should throw when a string is rendered within a fragment rendered outside 
       <View>
         <>hello</>
       </View>,
-      { unstable_validateStringsRenderedWithinText: true }
-    )
+      { unstable_validateStringsRenderedWithinText: true },
+    ),
   ).toThrow(
-    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`,
   );
 });
 
 test('should throw if a number is rendered outside a text', () => {
   expect(() =>
-    render(<View>0</View>, { unstable_validateStringsRenderedWithinText: true })
+    render(<View>0</View>, { unstable_validateStringsRenderedWithinText: true }),
   ).toThrow(
-    `${VALIDATION_ERROR}. Detected attempt to render "0" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "0" string within a <View> component.`,
   );
 });
 
@@ -125,10 +125,10 @@ test('should throw with components returning string value not rendered in Text',
       <View>
         <Trans i18nKey="hello" />
       </View>,
-      { unstable_validateStringsRenderedWithinText: true }
-    )
+      { unstable_validateStringsRenderedWithinText: true },
+    ),
   ).toThrow(
-    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`,
   );
 });
 
@@ -138,8 +138,8 @@ test('should not throw with components returning string value rendered in Text',
       <Text>
         <Trans i18nKey="hello" />
       </Text>,
-      { unstable_validateStringsRenderedWithinText: true }
-    )
+      { unstable_validateStringsRenderedWithinText: true },
+    ),
   ).not.toThrow();
 });
 
@@ -149,9 +149,9 @@ test('should throw when rendering string in a View in a Text', () => {
       <Text>
         <View>hello</View>
       </Text>,
-      { unstable_validateStringsRenderedWithinText: true }
-    )
+      { unstable_validateStringsRenderedWithinText: true },
+    ),
   ).toThrow(
-    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`
+    `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`,
   );
 });
