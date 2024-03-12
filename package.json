@@ -69,11 +69,11 @@
     }
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.4",
-    "@babel/core": "^7.23.3",
+    "@babel/cli": "^7.23.9",
+    "@babel/core": "^7.24.0",
     "@babel/plugin-transform-flow-strip-types": "^7.23.3",
-    "@babel/preset-env": "^7.23.3",
-    "@babel/preset-flow": "^7.23.3",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-flow": "^7.24.0",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@callstack/eslint-config": "^14.1.0",
@@ -83,7 +83,6 @@
     "@types/react": "^18.2.38",
     "@types/react-test-renderer": "^18.0.7",
     "babel-jest": "^29.7.0",
-    "dedent": "^1.5.1",
     "del-cli": "^5.1.0",
     "eslint": "^8.54.0",
     "eslint-plugin-flowtype": "^8.0.3",
