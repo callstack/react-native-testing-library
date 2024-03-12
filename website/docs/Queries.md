@@ -3,52 +3,135 @@ id: api-queries
 title: Queries
 ---
 
-import TOCInline from '@theme/TOCInline';
+Queries are one of the main building blocks for the React Native Testing Library. They enable you to find relevant elements in the element tree, which represents the your application's user interface when running under tests.
 
-<TOCInline toc={toc} />
+## Accessing queries
 
-## Query Variants
+All queries described below are accessible in two main ways: through the `screen` object or by capturing the `render` function call result.
 
-> `getBy*` queries are shown by default in the [query documentation](#queries)
-> below.
+### Using `screen` object
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+test('accessing queries using "screen" object', () => {
+  render(...);
+
+  screen.getByRole("button", { name: "Start" });
+})
+```
+
+The modern and recommended way of accessing queries is to use the `screen` object exported by the `@testing-library/react-native` package. This object will contain methods of all available queries bound to the most recently rendered UI.
+
+### Using `render` result
+
+```ts
+import { render } from '@testing-library/react-native';
+
+test('accessing queries using "render" result', () => {
+  const { getByRole } = render(...);
+  getByRole("button", { name: "Start" });
+})
+```
+
+The classic way is to capture query functions, as they are returned from the `render` function call. This provides access to the same functions as in the case of the `screen` object.
+
+## Query parts
+
+Each query is composed of two parts: variant and predicate, which are separated by the `by` word in the middle of the name.
+
+Consider the following query:
+
+```
+getByRole()
+```
+
+For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
+
+## Query variant
+
+The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
+
+| Variant                                   | Assertion                     | Return type                                | Is Async? |
+| ----------------------------------------- | ----------------------------- | ------------------------------------------ | --------- |
+| [`getBy*`](api-queries#get-by)            | Exactly one matching element  | `ReactTestInstance`                        | No        |
+| [`getAllBy*`](api-queries#get-all-by)     | At least one matching element | `Array<ReactTestInstance>`                 | No        |
+| [`queryBy*`](api-queries#query-by)        | Zero or one matching element  | <code>ReactTestInstance &#124; null</code> | No        |
+| [`queryAllBy*`](api-queries#query-all-by) | No assertion                  | `Array<ReactTestInstance>`                 | No        |
+| [`findBy*`](api-queries#find-by)          | Exactly one matching element  | `Promise<ReactTestInstance>`               | Yes       |
+| [`findAllBy*`](api-queries#find-all-by)   | At least one matching element | `Promise<Array<ReactTestInstance>>`        | Yes       |
+
+Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
 
 ### `getBy*` queries {#get-by}
 
-`getBy*` queries return the first matching node for a query, and throw an error if no elements match or if more than one match is found. If you need to find more than one element, then use `getAllBy`.
+```ts
+getByX(...): ReactTestInstance
+```
+
+`getBy*` queries return the single matching element for a query, and throw an error if no elements match or if more than one match is found. If you need to find more than one element, then use `getAllBy`.
 
 ### `getAllBy*` queries {#get-all-by}
 
-`getAllBy*` queries return an array of all matching nodes for a query, and throw an error if no elements match.
+```ts
+getAllByX(...): ReactTestInstance[]
+```
+
+`getAllBy*` queries return an array of all matching elements for a query and throw an error if no elements match.
 
 ### `queryBy*` queries {#query-by}
+
+```ts
+queryByX(...): ReactTestInstance | null
+```
 
 `queryBy*` queries return the first matching node for a query, and return `null` if no elements match. This is useful for asserting an element that is not present. This throws if more than one match is found (use `queryAllBy` instead).
 
 ### `queryAllBy*` queries {#query-all-by}
 
-`queryAllBy*` queries return an array of all matching nodes for a query, and return an empty array (`[]`) when no elements match.
+```ts
+queryAllByX(...): ReactTestInstance[]
+```
+
+`queryAllBy*` queries return an array of all matching nodes for a query and return an empty array (`[]`) when no elements match.
 
 ### `findBy*` queries {#find-by}
 
-`findBy*` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element, then use `findAllBy*`.
+```ts
+findByX(
+  ...,
+  waitForOptions?: {
+    timeout?: number,
+    interval?: number,
+  },
+): Promise<ReactTestInstance>
+```
+
+`findBy*` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element use `findAllBy*` queries.
 
 ### `findAllBy*` queries {#find-all-by}
+
+```ts
+findAllByX(
+  ...,
+  waitForOptions?: {
+    timeout?: number,
+    interval?: number,
+  },
+): Promise<ReactTestInstance[]>
+```
 
 `findAllBy*` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
 
 :::info
-`findBy*` and `findAllBy*` queries accept optional `waitForOptions` object argument which can contain `timeout`, `interval` and `onTimeout` properies which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
+`findBy*` and `findAllBy*` queries accept optional `waitForOptions` object arguments, which can contain `timeout`, `interval` and `onTimeout` properties which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
 :::
 
 :::info
-In cases when your `findBy*` and `findAllBy*` queries throw when not able to find matching elements it is useful to pass `onTimeout: () => { screen.debug(); }` callback using `waitForOptions` parameter.
+In cases when your `findBy*` and `findAllBy*` queries throw when unable to find matching elements, it is helpful to pass `onTimeout: () => { screen.debug(); }` callback using the `waitForOptions` parameter.
 :::
 
-:::info
-In order to properly use `findBy*` and `findAllBy*` queries you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
-:::
-
-## Query Predicates
+## Query predicates
 
 _Note: most methods like this one return a [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance) with following properties that you may be interested in:_
 
@@ -61,7 +144,7 @@ type ReactTestInstance = {
 };
 ```
 
-### `ByRole` {#by-role}
+### `*ByRole` {#by-role}
 
 > getByRole, getAllByRole, queryByRole, queryAllByRole, findByRole, findAllByRole
 
@@ -144,109 +227,7 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
   - See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about the accessibility value concept.
   - This option can alternatively be expressed using the [`toHaveAccessibilityValue()`](jest-matchers#tohaveaccessibilityvalue) Jest matcher.
 
-### `ByText` {#by-text}
-
-> getByText, getAllByText, queryByText, queryAllByText, findByText, findAllByText
-
-```ts
-getByText(
-  text: TextMatch,
-  options?: {
-    exact?: boolean;
-    normalizer?: (text: string) => string;
-    includeHiddenElements?: boolean;
-  }
-): ReactTestInstance;
-```
-
-Returns a `ReactTestInstance` with matching text – may be a string or regular expression.
-
-This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
-
-```jsx
-import { render, screen } from '@testing-library/react-native';
-
-render(<MyComponent />);
-const element = screen.getByText('banana');
-```
-
-### `ByPlaceholderText` {#by-placeholder-text}
-
-> getByPlaceholderText, getAllByPlaceholderText, queryByPlaceholderText, queryAllByPlaceholderText, findByPlaceholderText, findAllByPlaceholderText
-
-```ts
-getByPlaceholderText(
-  text: TextMatch,
-  options?: {
-    exact?: boolean;
-    normalizer?: (text: string) => string;
-    includeHiddenElements?: boolean;
-  }
-): ReactTestInstance;
-```
-
-Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
-
-```jsx
-import { render, screen } from '@testing-library/react-native';
-
-render(<MyComponent />);
-const element = screen.getByPlaceholderText('username');
-```
-
-### `ByDisplayValue` {#by-display-value}
-
-> getByDisplayValue, getAllByDisplayValue, queryByDisplayValue, queryAllByDisplayValue, findByDisplayValue, findAllByDisplayValue
-
-```ts
-getByDisplayValue(
-  value: TextMatch,
-  options?: {
-    exact?: boolean;
-    normalizer?: (text: string) => string;
-    includeHiddenElements?: boolean;
-  },
-): ReactTestInstance;
-```
-
-Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
-
-```jsx
-import { render, screen } from '@testing-library/react-native';
-
-render(<MyComponent />);
-const element = screen.getByDisplayValue('username');
-```
-
-### `ByTestId` {#by-test-id}
-
-> getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, findByTestId, findAllByTestId
-
-```ts
-getByTestId(
-  testId: TextMatch,
-  options?: {
-    exact?: boolean;
-    normalizer?: (text: string) => string;
-    includeHiddenElements?: boolean;
-  },
-): ReactTestInstance;
-```
-
-Returns a `ReactTestInstance` with matching `testID` prop. `testID` – may be a string or a regular expression.
-
-```jsx
-import { render, screen } from '@testing-library/react-native';
-
-render(<MyComponent />);
-const element = screen.getByTestId('unique-id');
-```
-
-:::info
-In the spirit of [the guiding principles](https://testing-library.com/docs/guiding-principles), it is recommended to use this only after the other queries don't work for your use case. Using `testID` attributes do not resemble how your software is used and should be avoided if possible. However, they are particularly useful for end-to-end testing on real devices, e.g. using Detox and it's an encouraged technique to use there. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
-:::
-
-### `ByLabelText` {#by-label-text}
+### `*ByLabelText` {#by-label-text}
 
 > getByLabelText, getAllByLabelText, queryByLabelText, queryAllByLabelText, findByLabelText, findAllByLabelText
 
@@ -273,7 +254,81 @@ render(<MyComponent />);
 const element = screen.getByLabelText('my-label');
 ```
 
-### `ByHintText`, `ByA11yHint`, `ByAccessibilityHint` {#by-hint-text}
+### `*ByPlaceholderText` {#by-placeholder-text}
+
+> getByPlaceholderText, getAllByPlaceholderText, queryByPlaceholderText, queryAllByPlaceholderText, findByPlaceholderText, findAllByPlaceholderText
+
+```ts
+getByPlaceholderText(
+  text: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(<MyComponent />);
+const element = screen.getByPlaceholderText('username');
+```
+
+### `*ByDisplayValue` {#by-display-value}
+
+> getByDisplayValue, getAllByDisplayValue, queryByDisplayValue, queryAllByDisplayValue, findByDisplayValue, findAllByDisplayValue
+
+```ts
+getByDisplayValue(
+  value: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  },
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(<MyComponent />);
+const element = screen.getByDisplayValue('username');
+```
+
+### `*ByText` {#by-text}
+
+> getByText, getAllByText, queryByText, queryAllByText, findByText, findAllByText
+
+```ts
+getByText(
+  text: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` with matching text – may be a string or regular expression.
+
+This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(<MyComponent />);
+const element = screen.getByText('banana');
+```
+
+### `*ByHintText` {#by-hint-text}
 
 > getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint, findByA11yHint, findAllByA11yHint
 > getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint, findByAccessibilityHint, findAllByAccessibilityHint
@@ -303,7 +358,35 @@ const element = screen.getByHintText('Plays a song');
 Please consult [Apple guidelines on how `accessibilityHint` should be used](https://developer.apple.com/documentation/objectivec/nsobject/1615093-accessibilityhint).
 :::
 
-### `ByA11yState`, `ByAccessibilityState` (deprecated) {#by-accessibility-state}
+### `*ByTestId` {#by-test-id}
+
+> getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, findByTestId, findAllByTestId
+
+```ts
+getByTestId(
+  testId: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  },
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` with matching `testID` prop. `testID` – may be a string or a regular expression.
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(<MyComponent />);
+const element = screen.getByTestId('unique-id');
+```
+
+:::info
+In the spirit of [the guiding principles](https://testing-library.com/docs/guiding-principles), it is recommended to use this only after the other queries don't work for your use case. Using `testID` attributes do not resemble how your software is used and should be avoided if possible. However, they are particularly useful for end-to-end testing on real devices, e.g. using Detox and it's an encouraged technique to use there. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
+:::
+
+### `*ByA11yState`, `ByAccessibilityState` (deprecated) {#by-accessibility-state}
 
 :::caution
 This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
@@ -373,14 +456,15 @@ but will not match elements with following props:
 The difference in handling default values is made to reflect observed accessibility behaviour on iOS and Android platforms.
 :::
 
-### `ByA11yValue`, `ByAccessibilityValue` (deprecated) {#by-accessibility-value}
+### `*ByA11yValue`, `*ByAccessibilityValue` (deprecated) {#by-accessibility-value}
 
 :::caution
 This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
 
 - [`toHaveAccessibilityValue()`](jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
 - [`*ByRole`](#by-role) query with `value` option
-  :::
+
+:::
 
 > getByA11yValue, getAllByA11yValue, queryByA11yValue, queryAllByA11yValue, findByA11yValue, findAllByA11yValue
 > getByAccessibilityValue, getAllByAccessibilityValue, queryByAccessibilityValue, queryAllByAccessibilityValue, findByAccessibilityValue, findAllByAccessibilityValue
@@ -540,12 +624,7 @@ screen.getByText(node, 'text', {
 
 ## Legacy unit testing helpers
 
-> Use sparingly and responsibly, escape hatches here
-
-`render` from `@testing-library/react-native` exposes additional queries that **should not be used in component integration testing**, but some users (like component library creators) interested in unit testing some components may find helpful.
-
-<details>
-  <summary>Queries helpful in unit testing</summary>
+`render` from `@testing-library/react-native` exposes additional queries that **should not be used in integration or component testing**, but some users (like component library creators) interested in unit testing some components may find helpful.
 
 The interface is the same as for other queries, but we won't provide full names so that they're harder to find by search engines.
 
@@ -568,5 +647,3 @@ Returns a `ReactTestInstance` with matching props object.
 :::caution
 This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
 :::
-
-</details>
