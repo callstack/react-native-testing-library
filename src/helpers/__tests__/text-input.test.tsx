@@ -8,7 +8,7 @@ test('getTextInputValue() throws error when invoked on non-text input', () => {
 
   const view = screen.getByTestId('view');
   expect(() => getTextInputValue(view)).toThrowErrorMatchingInlineSnapshot(
-    `"Element is not a "TextInput", but it has type "View"."`
+    `"Element is not a "TextInput", but it has type "View"."`,
   );
 });
 
@@ -17,6 +17,6 @@ test('isTextInputEditable() throws error when invoked on non-text input', () => 
 
   const view = screen.getByTestId('view');
   expect(() => isTextInputEditable(view)).toThrowErrorMatchingInlineSnapshot(
-    `"Element is not a "TextInput", but it has type "View"."`
+    `"Element is not a "TextInput", but it has type "View"."`,
   );
 });

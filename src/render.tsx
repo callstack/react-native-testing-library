@@ -40,7 +40,7 @@ export function renderInternal<T>(
     createNodeMock,
     unstable_validateStringsRenderedWithinText,
     detectHostComponentNames = true,
-  }: RenderInternalOptions = {}
+  }: RenderInternalOptions = {},
 ) {
   if (detectHostComponentNames) {
     configureHostComponentNamesIfNeeded();
@@ -65,7 +65,7 @@ function renderWithStringValidation<T>(
   {
     wrapper: Wrapper,
     createNodeMock,
-  }: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {}
+  }: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
 ) {
   const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
     if (phase === 'update') {
@@ -87,7 +87,7 @@ function renderWithStringValidation<T>(
 
 function buildRenderResult(
   renderer: ReactTestRenderer,
-  wrap: (element: React.ReactElement) => JSX.Element
+  wrap: (element: React.ReactElement) => JSX.Element,
 ) {
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
@@ -120,7 +120,7 @@ function buildRenderResult(
     get() {
       throw new Error(
         "'container' property has been renamed to 'UNSAFE_root'.\n\n" +
-          "Consider using 'root' property which returns root host element."
+          "Consider using 'root' property which returns root host element.",
       );
     },
   });
@@ -131,7 +131,7 @@ function buildRenderResult(
 
 function updateWithAct(
   renderer: ReactTestRenderer,
-  wrap: (innerElement: React.ReactElement) => React.ReactElement
+  wrap: (innerElement: React.ReactElement) => React.ReactElement,
 ) {
   return function (component: React.ReactElement) {
     void act(() => {
@@ -156,7 +156,7 @@ function debug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugF
     if (typeof options === 'string') {
       // eslint-disable-next-line no-console
       console.warn(
-        'Using debug("message") is deprecated and will be removed in future release, please use debug({ message; "message" }) instead.'
+        'Using debug("message") is deprecated and will be removed in future release, please use debug({ message; "message" }) instead.',
       );
     }
 

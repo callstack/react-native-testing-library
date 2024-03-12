@@ -31,7 +31,7 @@ describe('getHostParent()', () => {
           <View testID="subject" />
           <View testID="sibling" />
         </View>
-      </View>
+      </View>,
     );
 
     const hostParent = getHostParent(screen.getByTestId('subject'));
@@ -52,7 +52,7 @@ describe('getHostParent()', () => {
       <View testID="parent">
         <MultipleHostChildren />
         <View testID="subject" />
-      </View>
+      </View>,
     );
 
     const compositeComponent = screen.UNSAFE_getByType(MultipleHostChildren);
@@ -69,7 +69,7 @@ describe('getHostChildren()', () => {
           <View testID="subject" />
           <Text testID="sibling">Hello</Text>
         </View>
-      </View>
+      </View>,
     );
 
     const hostSubject = screen.getByTestId('subject');
@@ -91,7 +91,7 @@ describe('getHostChildren()', () => {
         <MultipleHostChildren />
         <View testID="subject" />
         <View testID="sibling" />
-      </View>
+      </View>,
     );
 
     expect(getHostChildren(screen.getByTestId('parent'))).toEqual([
@@ -112,7 +112,7 @@ describe('getHostSelves()', () => {
           <View testID="subject" />
           <View testID="sibling" />
         </View>
-      </View>
+      </View>,
     );
 
     const hostSubject = screen.getByTestId('subject');
@@ -137,7 +137,7 @@ describe('getHostSelves()', () => {
           defaultValue="TextInputValue"
           placeholder="TextInputPlaceholder"
         />
-      </View>
+      </View>,
     );
 
     const compositeText = screen.getByText('Text');
@@ -158,7 +158,7 @@ describe('getHostSelves()', () => {
         <ZeroHostChildren />
         <MultipleHostChildren />
         <View testID="sibling" />
-      </View>
+      </View>,
     );
 
     const zeroCompositeComponent = screen.UNSAFE_getByType(ZeroHostChildren);
@@ -182,7 +182,7 @@ describe('getHostSiblings()', () => {
           <View testID="siblingAfter" />
           <MultipleHostChildren />
         </View>
-      </View>
+      </View>,
     );
 
     const hostSiblings = getHostSiblings(screen.getByTestId('subject'));
@@ -204,7 +204,7 @@ describe('getHostSiblings()', () => {
           <View testID="siblingAfter" />
           <MultipleHostChildren />
         </View>
-      </View>
+      </View>,
     );
 
     const compositeComponent = screen.UNSAFE_getByType(MultipleHostChildren);
@@ -222,7 +222,7 @@ describe('getUnsafeRootElement()', () => {
     render(
       <View>
         <View testID="view" />
-      </View>
+      </View>,
     );
 
     const view = screen.getByTestId('view');

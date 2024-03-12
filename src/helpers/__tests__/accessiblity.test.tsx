@@ -9,24 +9,24 @@ describe('isHiddenFromAccessibility', () => {
       isHiddenFromAccessibility(
         render(<View testID="subject" />).getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(false);
 
     expect(
       isHiddenFromAccessibility(
         render(<Text testID="subject">Hello</Text>).getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(false);
 
     expect(
       isHiddenFromAccessibility(
         render(<TextInput testID="subject" />).getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(false);
   });
 
@@ -40,8 +40,8 @@ describe('isHiddenFromAccessibility', () => {
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -49,14 +49,14 @@ describe('isHiddenFromAccessibility', () => {
     render(
       <View aria-hidden>
         <View testID="subject" />
-      </View>
+      </View>,
     );
     expect(
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -66,8 +66,8 @@ describe('isHiddenFromAccessibility', () => {
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -75,14 +75,14 @@ describe('isHiddenFromAccessibility', () => {
     render(
       <View accessibilityElementsHidden>
         <View testID="subject" />
-      </View>
+      </View>,
     );
     expect(
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -94,14 +94,14 @@ describe('isHiddenFromAccessibility', () => {
             <View testID="subject" />
           </View>
         </View>
-      </View>
+      </View>,
     );
     expect(
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -111,8 +111,8 @@ describe('isHiddenFromAccessibility', () => {
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -120,14 +120,14 @@ describe('isHiddenFromAccessibility', () => {
     render(
       <View importantForAccessibility="no-hide-descendants">
         <View testID="subject" />
-      </View>
+      </View>,
     );
     expect(
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -137,8 +137,8 @@ describe('isHiddenFromAccessibility', () => {
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -146,14 +146,14 @@ describe('isHiddenFromAccessibility', () => {
     render(
       <View style={{ display: 'none' }}>
         <View testID="subject" />
-      </View>
+      </View>,
     );
     expect(
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -165,14 +165,14 @@ describe('isHiddenFromAccessibility', () => {
             <View testID="subject" />
           </View>
         </View>
-      </View>
+      </View>,
     );
     expect(
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -181,14 +181,14 @@ describe('isHiddenFromAccessibility', () => {
       <View
         testID="subject"
         style={[{ display: 'flex' }, [{ display: 'flex' }], { display: 'none' }]}
-      />
+      />,
     );
     expect(
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -198,8 +198,8 @@ describe('isHiddenFromAccessibility', () => {
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(false);
   });
 
@@ -208,14 +208,14 @@ describe('isHiddenFromAccessibility', () => {
       <View>
         <View accessibilityViewIsModal />
         <View testID="subject" />
-      </View>
+      </View>,
     );
     expect(
       isHiddenFromAccessibility(
         screen.getByTestId('subject', {
           includeHiddenElements: true,
-        })
-      )
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -228,10 +228,10 @@ describe('isHiddenFromAccessibility', () => {
             <View testID="subject" />
           </View>
         </View>
-      </View>
+      </View>,
     );
     expect(
-      isHiddenFromAccessibility(screen.getByTestId('subject', { includeHiddenElements: true }))
+      isHiddenFromAccessibility(screen.getByTestId('subject', { includeHiddenElements: true })),
     ).toBe(true);
   });
 
@@ -240,10 +240,10 @@ describe('isHiddenFromAccessibility', () => {
       <View>
         <View aria-modal />
         <View testID="subject" />
-      </View>
+      </View>,
     );
     expect(
-      isHiddenFromAccessibility(screen.getByTestId('subject', { includeHiddenElements: true }))
+      isHiddenFromAccessibility(screen.getByTestId('subject', { includeHiddenElements: true })),
     ).toBe(true);
   });
 
@@ -256,7 +256,7 @@ describe('isHiddenFromAccessibility', () => {
     render(
       <View accessibilityViewIsModal>
         <View testID="subject" />
-      </View>
+      </View>,
     );
     expect(isHiddenFromAccessibility(screen.getByTestId('subject'))).toBe(false);
   });
@@ -269,7 +269,7 @@ describe('isHiddenFromAccessibility', () => {
             <View testID="subject" />
           </View>
         </View>
-      </View>
+      </View>,
     );
     expect(isHiddenFromAccessibility(screen.getByTestId('subject'))).toBe(false);
   });
@@ -291,7 +291,7 @@ describe('isAccessibilityElement', () => {
         <View testID="default" />
         <View testID="true" accessible />
         <View testID="false" accessible={false} />
-      </View>
+      </View>,
     );
     expect(isAccessibilityElement(screen.getByTestId('default'))).toBeFalsy();
     expect(isAccessibilityElement(screen.getByTestId('true'))).toBeTruthy();
@@ -304,7 +304,7 @@ describe('isAccessibilityElement', () => {
         <TextInput testID="default" />
         <TextInput testID="true" accessible />
         <TextInput testID="false" accessible={false} />
-      </View>
+      </View>,
     );
     expect(isAccessibilityElement(screen.getByTestId('default'))).toBeTruthy();
     expect(isAccessibilityElement(screen.getByTestId('true'))).toBeTruthy();
@@ -321,7 +321,7 @@ describe('isAccessibilityElement', () => {
         <Text testID="false" accessible={false}>
           False
         </Text>
-      </View>
+      </View>,
     );
     expect(isAccessibilityElement(screen.getByTestId('default'))).toBeTruthy();
     expect(isAccessibilityElement(screen.getByTestId('true'))).toBeTruthy();
@@ -334,7 +334,7 @@ describe('isAccessibilityElement', () => {
         <Switch testID="default" />
         <Switch testID="true" accessible />
         <Switch testID="false" accessible={false} />
-      </View>
+      </View>,
     );
     expect(isAccessibilityElement(screen.getByTestId('default'))).toBeTruthy();
     expect(isAccessibilityElement(screen.getByTestId('true'))).toBeTruthy();
@@ -347,7 +347,7 @@ describe('isAccessibilityElement', () => {
         <Pressable testID="default" />
         <Pressable testID="true" accessible />
         <Pressable testID="false" accessible={false} />
-      </View>
+      </View>,
     );
     expect(isAccessibilityElement(screen.getByTestId('default'))).toBeTruthy();
     expect(isAccessibilityElement(screen.getByTestId('true'))).toBeTruthy();
@@ -360,7 +360,7 @@ describe('isAccessibilityElement', () => {
         <TouchableOpacity testID="default" />
         <TouchableOpacity testID="true" accessible />
         <TouchableOpacity testID="false" accessible={false} />
-      </View>
+      </View>,
     );
     expect(isAccessibilityElement(screen.getByTestId('default'))).toBeTruthy();
     expect(isAccessibilityElement(screen.getByTestId('true'))).toBeTruthy();

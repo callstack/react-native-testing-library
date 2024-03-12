@@ -8,7 +8,7 @@ export function matchLabelText(
   root: ReactTestInstance,
   element: ReactTestInstance,
   expectedText: TextMatch,
-  options: TextMatchOptions = {}
+  options: TextMatchOptions = {},
 ) {
   return (
     matchAccessibilityLabel(element, expectedText, options) ||
@@ -19,7 +19,7 @@ export function matchLabelText(
 function matchAccessibilityLabel(
   element: ReactTestInstance,
   extpectedLabel: TextMatch,
-  options: TextMatchOptions
+  options: TextMatchOptions,
 ) {
   return matches(extpectedLabel, getAccessibilityLabel(element), options.normalizer, options.exact);
 }
@@ -28,7 +28,7 @@ function matchAccessibilityLabelledBy(
   root: ReactTestInstance,
   nativeId: string | undefined,
   text: TextMatch,
-  options: TextMatchOptions
+  options: TextMatchOptions,
 ) {
   if (!nativeId) {
     return false;
@@ -37,7 +37,7 @@ function matchAccessibilityLabelledBy(
   return (
     findAll(
       root,
-      (node) => node.props.nativeID === nativeId && matchTextContent(node, text, options)
+      (node) => node.props.nativeID === nativeId && matchTextContent(node, text, options),
     ).length > 0
   );
 }

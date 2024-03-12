@@ -36,7 +36,7 @@ test('screen works with nested re-mounting rerender', () => {
   const result = render(
     <View>
       <Text>Mt. Everest</Text>
-    </View>
+    </View>,
   );
   expect(screen).toBe(result);
 
@@ -45,7 +45,7 @@ test('screen works with nested re-mounting rerender', () => {
       <View>
         <Text>Śnieżka</Text>
       </View>
-    </View>
+    </View>,
   );
   expect(screen).toBe(result);
   expect(screen.getByText('Śnieżka')).toBeTruthy();

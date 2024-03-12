@@ -27,7 +27,7 @@ function renderTextInputWithToolkit(props: TextInputProps = {}) {
       onEndEditing={logEvent('endEditing')}
       onContentSizeChange={logEvent('contentSizeChange')}
       {...props}
-    />
+    />,
   );
 
   return {
@@ -256,7 +256,7 @@ describe('type()', () => {
         testID="input"
         onChangeText={logEvent('changeText')}
         onEndEditing={logEvent('endEditing')}
-      />
+      />,
     );
 
     const user = userEvent.setup();
@@ -273,9 +273,9 @@ describe('type()', () => {
 
     const user = userEvent.setup();
     await expect(
-      user.type(screen.getByTestId('input'), 'abc')
+      user.type(screen.getByTestId('input'), 'abc'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"type() works only with host "TextInput" elements. Passed element has type "View"."`
+      `"type() works only with host "TextInput" elements. Passed element has type "View"."`,
     );
   });
 
@@ -297,7 +297,7 @@ describe('type()', () => {
         onPressOut={parentHandler}
       >
         <TextInput testID="input" />
-      </AnyView>
+      </AnyView>,
     );
 
     const user = userEvent.setup();
@@ -313,7 +313,7 @@ describe('type()', () => {
         onChangeText={logEvent('changeText')}
         onFocus={logEvent('focus')}
         onBlur={logEvent('blur')}
-      />
+      />,
     );
 
     await userEvent.type(screen.getByTestId('input'), 'abc');

@@ -11,7 +11,7 @@ test('toBeBusy() basic case', () => {
       <View testID="not-busy" accessibilityState={{ busy: false }} />
       <View testID="not-busy-aria" aria-busy={false} />
       <View testID="default" />
-    </>
+    </>,
   );
 
   expect(screen.getByTestId('busy')).toBeBusy();
@@ -29,7 +29,7 @@ test('toBeBusy() error messages', () => {
       <View testID="not-busy" accessibilityState={{ busy: false }} />
       <View testID="not-busy-aria" aria-busy={false} />
       <View testID="default" />
-    </>
+    </>,
   );
 
   expect(() => expect(screen.getByTestId('busy')).not.toBeBusy())

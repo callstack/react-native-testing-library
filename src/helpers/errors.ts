@@ -14,7 +14,7 @@ export const prepareErrorMessage = (
   // most real cases will be `Error`, but better safe than sorry
   error: unknown,
   name?: string,
-  value?: unknown
+  value?: unknown,
 ): string => {
   let errorMessage: string;
   if (error instanceof Error) {
@@ -44,7 +44,7 @@ export const createQueryByError = (error: unknown, callsite: Function): null => 
     // generic refining of `unknown` is very hard, you cannot do `'toString' in error` or anything like that
     // Converting as any with extra safe optional chaining will do the job just as well
     `Query: caught unknown error type: ${typeof error}, value: ${(error as any)?.toString?.()}`,
-    callsite
+    callsite,
   );
 };
 

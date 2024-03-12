@@ -7,7 +7,7 @@
  */
 export function matchArrayProp(
   prop: Array<string> | undefined,
-  matcher: string | Array<string>
+  matcher: string | Array<string>,
 ): boolean {
   if (!prop || matcher.length === 0) {
     return false;

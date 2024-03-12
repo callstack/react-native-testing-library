@@ -5,7 +5,7 @@ import { checkHostElement, formatElement } from './utils';
 export function toContainElement(
   this: jest.MatcherContext,
   container: ReactTestInstance,
-  element: ReactTestInstance | null
+  element: ReactTestInstance | null,
 ) {
   checkHostElement(container, toContainElement, this);
 

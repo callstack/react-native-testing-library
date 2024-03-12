@@ -268,7 +268,7 @@ test('fire changeText event', () => {
   render(
     // MyComponent renders TextInput which has a placeholder 'Enter details'
     // and with `onChangeText` bound to handleChangeText
-    <MyComponent handleChangeText={onEventMock} />
+    <MyComponent handleChangeText={onEventMock} />,
   );
 
   fireEvent(screen.getByPlaceholderText('change'), 'onChangeText', 'ab');
@@ -291,7 +291,7 @@ const onBlurMock = jest.fn();
 render(
   <View>
     <TextInput placeholder="my placeholder" onBlur={onBlurMock} />
-  </View>
+  </View>,
 );
 
 // you can omit the `on` prefix
@@ -329,7 +329,7 @@ render(
     <TouchableOpacity onPress={onPressMock}>
       <Text>Press me</Text>
     </TouchableOpacity>
-  </View>
+  </View>,
 );
 
 fireEvent.press(screen.getByText('Press me'), eventData);
@@ -358,7 +358,7 @@ const CHANGE_TEXT = 'content';
 render(
   <View>
     <TextInput placeholder="Enter data" onChangeText={onChangeTextMock} />
-  </View>
+  </View>,
 );
 
 fireEvent.changeText(screen.getByPlaceholderText('Enter data'), CHANGE_TEXT);
@@ -390,7 +390,7 @@ const eventData = {
 render(
   <ScrollView onScroll={onScrollMock}>
     <Text>XD</Text>
-  </ScrollView>
+  </ScrollView>,
 );
 
 fireEvent.scroll(screen.getByText('scroll-view'), eventData);
@@ -413,14 +413,14 @@ Defined as:
 ```jsx
 function waitFor<T>(
   expectation: () => T,
-  { timeout: number = 1000, interval: number = 50 }
+  { timeout: number = 1000, interval: number = 50 },
 ): Promise<T> {}
 ```
 
 Waits for a period of time for the `expectation` callback to pass. `waitFor` may run the callback a number of times until timeout is reached, as specified by the `timeout` and `interval` options. The callback must throw an error when the expectation is not met. Returning any value, including a falsy one, will be treated as meeting the expectation, and the callback result will be returned to the caller of `waitFor` function.
 
 ```tsx
-await waitFor(() => expect(mockFunction).toHaveBeenCalledWith())
+await waitFor(() => expect(mockFunction).toHaveBeenCalledWith());
 ```
 
 `waitFor` function will be executing `expectation` callback every `interval` (default: every 50 ms) until `timeout` (default: 1000 ms) is reached. The repeated execution of callback is stopped as soon as it does not throw an error, in such case the value returned by the callback is returned to `waitFor` caller. Otherwise, when it reaches the timeout, the final error thrown by `expectation` will be re-thrown by `waitFor` to the calling code.
@@ -517,7 +517,7 @@ Defined as:
 ```ts
 function waitForElementToBeRemoved<T>(
   expectation: () => T,
-  { timeout: number = 4500, interval: number = 50 }
+  { timeout: number = 4500, interval: number = 50 },
 ): Promise<T> {}
 ```
 
@@ -630,7 +630,7 @@ Defined as:
 ```ts
 function renderHook<Result, Props>(
   callback: (props?: Props) => Result,
-  options?: RenderHookOptions<Props>
+  options?: RenderHookOptions<Props>,
 ): RenderHookResult<Result, Props>;
 ```
 

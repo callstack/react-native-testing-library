@@ -7,7 +7,7 @@ type InterpolatorFn = (end: number, start: number, steps: number) => number[];
 export function createScrollSteps(
   target: Partial<ContentOffset>,
   initialOffset: ContentOffset,
-  interpolator: InterpolatorFn
+  interpolator: InterpolatorFn,
 ): ContentOffset[] {
   if (target.y != null) {
     return interpolator(target.y, initialOffset.y, DEFAULT_STEPS_COUNT).map((y) => ({

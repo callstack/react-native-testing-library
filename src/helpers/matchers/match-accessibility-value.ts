@@ -12,7 +12,7 @@ export interface AccessibilityValueMatcher {
 
 export function matchAccessibilityValue(
   node: ReactTestInstance,
-  matcher: AccessibilityValueMatcher
+  matcher: AccessibilityValueMatcher,
 ): boolean {
   const value = getAccessibilityValue(node);
   return (

@@ -37,7 +37,7 @@ function detectHostComponentNames(): HostComponentNames {
         <Switch testID="switch" />
         <ScrollView testID="scrollView" />
         <Modal testID="modal" />
-      </View>
+      </View>,
     );
 
     return {
@@ -52,14 +52,14 @@ function detectHostComponentNames(): HostComponentNames {
       error && typeof error === 'object' && 'message' in error ? error.message : null;
 
     throw new Error(
-      `Trying to detect host component names triggered the following error:\n\n${errorMessage}\n\n${userConfigErrorMessage}`
+      `Trying to detect host component names triggered the following error:\n\n${errorMessage}\n\n${userConfigErrorMessage}`,
     );
   }
 }
 
 function getByTestId(instance: ReactTestInstance, testID: string) {
   const nodes = instance.findAll(
-    (node) => typeof node.type === 'string' && node.props.testID === testID
+    (node) => typeof node.type === 'string' && node.props.testID === testID,
   );
 
   if (nodes.length === 0) {

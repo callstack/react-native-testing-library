@@ -4,7 +4,7 @@ import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
 import { createQueryByError } from '../helpers/errors';
 
 const UNSAFE_getByType = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): ((type: React.ComponentType<any>) => ReactTestInstance) =>
   function getByTypeFn(type: React.ComponentType<any>) {
     try {
@@ -15,7 +15,7 @@ const UNSAFE_getByType = (
   };
 
 const UNSAFE_getAllByType = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) =>
   function getAllByTypeFn(type: React.ComponentType<any>) {
     const results = instance.findAllByType(type);
@@ -26,7 +26,7 @@ const UNSAFE_getAllByType = (
   };
 
 const UNSAFE_queryByType = (
-  instance: ReactTestInstance
+  instance: ReactTestInstance,
 ): ((type: React.ComponentType<any>) => ReactTestInstance | null) =>
   function queryByTypeFn(type: React.ComponentType<any>) {
     try {

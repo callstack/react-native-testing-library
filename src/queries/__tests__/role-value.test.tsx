@@ -9,33 +9,33 @@ describe('accessibility value', () => {
         accessible
         accessibilityRole="adjustable"
         accessibilityValue={{ min: 0, max: 100, now: 50, text: '50%' }}
-      />
+      />,
     );
 
     expect(
       screen.getByRole('adjustable', {
         value: { min: 0, max: 100, now: 50, text: '50%' },
-      })
+      }),
     ).toBeTruthy();
     expect(
       screen.queryByRole('adjustable', {
         value: { min: 1, max: 100, now: 50, text: '50%' },
-      })
+      }),
     ).toBeFalsy();
     expect(
       screen.queryByRole('adjustable', {
         value: { min: 0, max: 99, now: 50, text: '50%' },
-      })
+      }),
     ).toBeFalsy();
     expect(
       screen.queryByRole('adjustable', {
         value: { min: 0, max: 100, now: 45, text: '50%' },
-      })
+      }),
     ).toBeFalsy();
     expect(
       screen.queryByRole('adjustable', {
         value: { min: 0, max: 100, now: 50, text: '55%' },
-      })
+      }),
     ).toBeFalsy();
   });
 
@@ -45,7 +45,7 @@ describe('accessibility value', () => {
         accessible
         accessibilityRole="adjustable"
         accessibilityValue={{ min: 10, max: 20, now: 12, text: 'Hello' }}
-      />
+      />,
     );
 
     expect(screen.getByRole('adjustable', { value: { min: 10 } })).toBeTruthy();
@@ -69,7 +69,7 @@ describe('accessibility value', () => {
         accessibilityValue={{ min: 10, max: 20, now: 12, text: 'Hello' }}
       >
         Hello
-      </Text>
+      </Text>,
     );
 
     expect(screen.getByRole('adjustable', { name: 'Hello', value: { min: 10 } })).toBeTruthy();
@@ -197,7 +197,7 @@ describe('accessibility value', () => {
 
   test('supports multiple "aria-value*" props', () => {
     render(
-      <View accessible role="slider" aria-valuenow={50} aria-valuemin={0} aria-valuemax={100} />
+      <View accessible role="slider" aria-valuenow={50} aria-valuemin={0} aria-valuemax={100} />,
     );
     expect(screen.getByRole('slider', { value: { now: 50, min: 0, max: 100 } })).toBeTruthy();
   });

@@ -8,7 +8,7 @@ export function toHaveAccessibleName(
   this: jest.MatcherContext,
   element: ReactTestInstance,
   expectedName?: TextMatch,
-  options?: TextMatchOptions
+  options?: TextMatchOptions,
 ) {
   checkHostElement(element, toHaveAccessibleName, this);
 
@@ -34,7 +34,7 @@ export function toHaveAccessibleName(
           `Expected element ${this.isNot ? 'not to' : 'to'} have accessible name`,
           expectedName,
           'Received',
-          receivedName
+          receivedName,
         ),
       ].join('\n');
     },

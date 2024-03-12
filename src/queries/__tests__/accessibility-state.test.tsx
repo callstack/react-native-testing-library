@@ -41,15 +41,15 @@ test('getByA11yState, queryByA11yState, findByA11yState', async () => {
   });
 
   expect(() => screen.getByA11yState({ disabled: true })).toThrow(
-    'Unable to find an element with disabled state: true'
+    'Unable to find an element with disabled state: true',
   );
   expect(screen.queryByA11yState({ disabled: true })).toEqual(null);
 
   expect(() => screen.getByA11yState({ expanded: false })).toThrow(
-    'Found multiple elements with expanded state: false'
+    'Found multiple elements with expanded state: false',
   );
   expect(() => screen.queryByA11yState({ expanded: false })).toThrow(
-    'Found multiple elements with expanded state: false'
+    'Found multiple elements with expanded state: false',
   );
 
   const asyncButton = await screen.findByA11yState({ selected: true });
@@ -58,10 +58,10 @@ test('getByA11yState, queryByA11yState, findByA11yState', async () => {
     expanded: false,
   });
   await expect(screen.findByA11yState({ disabled: true })).rejects.toThrow(
-    'Unable to find an element with disabled state: true'
+    'Unable to find an element with disabled state: true',
   );
   await expect(screen.findByA11yState({ expanded: false })).rejects.toThrow(
-    'Found multiple elements with expanded state: false'
+    'Found multiple elements with expanded state: false',
   );
 });
 
@@ -72,7 +72,7 @@ test('getAllByA11yState, queryAllByA11yState, findAllByA11yState', async () => {
   expect(screen.queryAllByA11yState({ selected: true })).toHaveLength(1);
 
   expect(() => screen.getAllByA11yState({ disabled: true })).toThrow(
-    'Unable to find an element with disabled state: true'
+    'Unable to find an element with disabled state: true',
   );
   expect(screen.queryAllByA11yState({ disabled: true })).toEqual([]);
 
@@ -81,7 +81,7 @@ test('getAllByA11yState, queryAllByA11yState, findAllByA11yState', async () => {
 
   await expect(screen.findAllByA11yState({ selected: true })).resolves.toHaveLength(1);
   await expect(screen.findAllByA11yState({ disabled: true })).rejects.toThrow(
-    'Unable to find an element with disabled state: true'
+    'Unable to find an element with disabled state: true',
   );
   await expect(screen.findAllByA11yState({ expanded: false })).resolves.toHaveLength(2);
 });
@@ -228,14 +228,14 @@ test('byA11yState queries support hidden option', () => {
   render(
     <Pressable accessibilityState={{ expanded: false }} style={{ display: 'none' }}>
       <Text>Hidden from accessibility</Text>
-    </Pressable>
+    </Pressable>,
   );
 
   expect(screen.getByA11yState({ expanded: false }, { includeHiddenElements: true })).toBeTruthy();
 
   expect(screen.queryByA11yState({ expanded: false })).toBeFalsy();
   expect(
-    screen.queryByA11yState({ expanded: false }, { includeHiddenElements: false })
+    screen.queryByA11yState({ expanded: false }, { includeHiddenElements: false }),
   ).toBeFalsy();
   expect(() => screen.getByA11yState({ expanded: false }, { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
@@ -359,7 +359,7 @@ test('error message renders the element tree, preserving only helpful props', as
   render(
     <Text accessibilityState={{ checked: false }} onPress={() => null}>
       Some text
-    </Text>
+    </Text>,
   );
 
   expect(() => screen.getByA11yState({ checked: true })).toThrowErrorMatchingInlineSnapshot(`

@@ -44,7 +44,7 @@ We renamed `waitForElement` function to `waitFor` for consistency with React Tes
 export default function waitForElement<T>(
   expectation: () => T,
   timeout?: number,
-  interval?: number
+  interval?: number,
 ): Promise<T> {}
 ```
 
@@ -56,7 +56,7 @@ export default function waitFor<T>(
   options: {
     timeout?: number,
     interval?: number,
-  }
+  },
 ): Promise<T> {}
 ```
 

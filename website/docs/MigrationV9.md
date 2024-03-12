@@ -44,7 +44,7 @@ In v1.14 we've introduced a feature allowing to match text when it's spread acro
 const { getByText } = render(
   <Text>
     Hello <Text>world</Text>
-  </Text>
+  </Text>,
 );
 getByText('Hello world'); // matches
 ```

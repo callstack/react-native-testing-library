@@ -20,8 +20,8 @@ If you use fake timers in any of your tests you should update your Jest dependen
 In version 9 we introducted query `options` parameters for each query type. This affected all `findBy` and `findAllBy` queries because their signatures changed e.g. from:
 
 ```ts
-function findByText(text: TextMatch, waitForOptions?: WaitForOptions)
-function findAllByText(text: TextMatch, waitForOptions?: WaitForOptions)
+function findByText(text: TextMatch, waitForOptions?: WaitForOptions);
+function findAllByText(text: TextMatch, waitForOptions?: WaitForOptions);
 ```
 
 to

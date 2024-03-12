@@ -25,7 +25,7 @@ function renderScrollViewWithToolkit(props: ScrollViewProps = {}) {
       onMomentumScrollEnd={logEvent('momentumScrollEnd')}
       onScrollToTop={logEvent('scrollToTop')}
       {...props}
-    />
+    />,
   );
 
   return { events };
@@ -128,9 +128,9 @@ describe('scrollTo()', () => {
     const user = userEvent.setup();
 
     await expect(() =>
-      user.scrollTo(screen.getByTestId('scrollView'), { x: 100 })
+      user.scrollTo(screen.getByTestId('scrollView'), { x: 100 }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"scrollTo() expected only vertical scroll options: "y" and "momentumY" for vertical "ScrollView" element but received {"x": 100}"`
+      `"scrollTo() expected only vertical scroll options: "y" and "momentumY" for vertical "ScrollView" element but received {"x": 100}"`,
     );
   });
 
@@ -139,9 +139,9 @@ describe('scrollTo()', () => {
     const user = userEvent.setup();
 
     await expect(() =>
-      user.scrollTo(screen.getByTestId('scrollView'), { y: 100 })
+      user.scrollTo(screen.getByTestId('scrollView'), { y: 100 }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"scrollTo() expected only horizontal scroll options: "x" and "momentumX" for horizontal "ScrollView" element but received {"y": 100}"`
+      `"scrollTo() expected only horizontal scroll options: "x" and "momentumX" for horizontal "ScrollView" element but received {"y": 100}"`,
     );
   });
 
@@ -190,9 +190,9 @@ describe('scrollTo()', () => {
     const user = userEvent.setup();
 
     await expect(
-      user.scrollTo(screen.getByTestId('view'), { y: 20 })
+      user.scrollTo(screen.getByTestId('view'), { y: 20 }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"scrollTo() works only with host "ScrollView" elements. Passed element has type "View"."`
+      `"scrollTo() works only with host "ScrollView" elements. Passed element has type "View"."`,
     );
   });
 

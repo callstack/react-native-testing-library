@@ -37,7 +37,7 @@ test('React Native API assumption: nested <Text> renders single host element', (
       <Text testID="after">
         <Text testID="deeplyNested">Deeply nested</Text>
       </Text>
-    </Text>
+    </Text>,
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
@@ -70,7 +70,7 @@ test('React Native API assumption: <TextInput> renders single host element', () 
       defaultValue="default"
       value="currentValue"
       placeholder="Placeholder"
-    />
+    />,
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
@@ -87,7 +87,7 @@ test('React Native API assumption: <TextInput> with nested Text renders single h
   render(
     <TextInput testID="test" placeholder="Placeholder">
       <Text>Hello</Text>
-    </TextInput>
+    </TextInput>,
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
@@ -144,7 +144,7 @@ test('React Native API assumption: aria-* props render on host View', () => {
       aria-valuemin={0}
       aria-valuenow={5}
       aria-valuetext="ValueText"
-    />
+    />,
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
@@ -192,7 +192,7 @@ test('React Native API assumption: aria-* props render on host Text', () => {
       aria-valuemin={0}
       aria-valuenow={5}
       aria-valuetext="ValueText"
-    />
+    />,
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
@@ -240,7 +240,7 @@ test('React Native API assumption: aria-* props render on host TextInput', () =>
       aria-valuemin={0}
       aria-valuenow={5}
       aria-valuetext="ValueText"
-    />
+    />,
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
@@ -271,7 +271,7 @@ test('ScrollView renders correctly', () => {
   render(
     <ScrollView testID="scrollView">
       <View testID="view" />
-    </ScrollView>
+    </ScrollView>,
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
@@ -289,7 +289,7 @@ test('ScrollView renders correctly', () => {
 
 test('FlatList renders correctly', () => {
   render(
-    <FlatList testID="flatList" data={[1, 2]} renderItem={({ item }) => <Text>{item}</Text>} />
+    <FlatList testID="flatList" data={[1, 2]} renderItem={({ item }) => <Text>{item}</Text>} />,
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
@@ -312,7 +312,7 @@ test('FlatList renders correctly', () => {
       onScrollEndDrag={[Function]}
       removeClippedSubviews={false}
       renderItem={[Function]}
-      scrollEventThrottle={50}
+      scrollEventThrottle={0.0001}
       stickyHeaderIndices={[]}
       testID="flatList"
       viewabilityConfigCallbackPairs={[]}

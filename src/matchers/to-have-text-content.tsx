@@ -8,7 +8,7 @@ export function toHaveTextContent(
   this: jest.MatcherContext,
   element: ReactTestInstance,
   expectedText: TextMatch,
-  options?: TextMatchOptions
+  options?: TextMatchOptions,
 ) {
   checkHostElement(element, toHaveTextContent, this);
 
@@ -23,7 +23,7 @@ export function toHaveTextContent(
           `Expected element ${this.isNot ? 'not to' : 'to'} have text content`,
           expectedText,
           'Received',
-          text
+          text,
         ),
       ].join('\n');
     },

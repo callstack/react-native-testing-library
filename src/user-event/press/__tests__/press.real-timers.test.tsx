@@ -30,7 +30,7 @@ describe('userEvent.press with real timers', () => {
         onPressOut={logEvent('pressOut')}
         onLongPress={logEvent('longPress')}
         testID="pressable"
-      />
+      />,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -49,7 +49,7 @@ describe('userEvent.press with real timers', () => {
         onPressOut={logEvent('pressOut')}
         onLongPress={logEvent('longPress')}
         testID="pressable"
-      />
+      />,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -68,7 +68,7 @@ describe('userEvent.press with real timers', () => {
         onLongPress={logEvent('longPress')}
         testID="pressable"
         pointerEvents="none"
-      />
+      />,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -87,7 +87,7 @@ describe('userEvent.press with real timers', () => {
         onLongPress={logEvent('longPress')}
         testID="pressable"
         pointerEvents="box-none"
-      />
+      />,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -107,7 +107,7 @@ describe('userEvent.press with real timers', () => {
           onLongPress={logEvent('longPress')}
           testID="pressable"
         />
-      </View>
+      </View>,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -126,7 +126,7 @@ describe('userEvent.press with real timers', () => {
         onLongPress={logEvent('longPress')}
         testID="pressable"
         pointerEvents="box-only"
-      />
+      />,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -139,7 +139,7 @@ describe('userEvent.press with real timers', () => {
     render(
       <Pressable onPress={mockOnPress}>
         <Text>press me</Text>
-      </Pressable>
+      </Pressable>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -152,7 +152,7 @@ describe('userEvent.press with real timers', () => {
     render(
       <Pressable onLongPress={mockOnLongPress}>
         <Text>press me</Text>
-      </Pressable>
+      </Pressable>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -165,7 +165,7 @@ describe('userEvent.press with real timers', () => {
     render(
       <TouchableOpacity onPress={mockOnPress}>
         <Text>press me</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -178,7 +178,7 @@ describe('userEvent.press with real timers', () => {
     render(
       <TouchableHighlight onPress={mockOnPress}>
         <Text>press me</Text>
-      </TouchableHighlight>
+      </TouchableHighlight>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -196,7 +196,7 @@ describe('userEvent.press with real timers', () => {
         onLongPress={logEvent('longPress')}
       >
         press me
-      </Text>
+      </Text>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -215,7 +215,7 @@ describe('userEvent.press with real timers', () => {
         disabled
       >
         press me
-      </Text>
+      </Text>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -235,7 +235,7 @@ describe('userEvent.press with real timers', () => {
         >
           press me
         </Text>
-      </View>
+      </View>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -250,7 +250,7 @@ describe('userEvent.press with real timers', () => {
         placeholder="email"
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
-      />
+      />,
     );
     await userEvent.press(screen.getByPlaceholderText('email'));
 
@@ -266,7 +266,7 @@ describe('userEvent.press with real timers', () => {
         editable={false}
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
-      />
+      />,
     );
     await userEvent.press(screen.getByPlaceholderText('email'));
     expect(events).toEqual([]);
@@ -281,7 +281,7 @@ describe('userEvent.press with real timers', () => {
         pointerEvents="box-none"
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
-      />
+      />,
     );
     await userEvent.press(screen.getByPlaceholderText('email'));
     expect(events).toEqual([]);
@@ -293,7 +293,7 @@ describe('userEvent.press with real timers', () => {
     render(
       <Pressable onPress={mockOnPress}>
         <Text>press me</Text>
-      </Pressable>
+      </Pressable>,
     );
 
     await userEvent.press(screen.getByText('press me'));

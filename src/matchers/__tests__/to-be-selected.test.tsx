@@ -11,7 +11,7 @@ test('toBeSelected() basic case', () => {
       <View testID="not-selected" accessibilityState={{ selected: false }} />
       <View testID="not-selected-aria" aria-selected={false} />
       <View testID="default" />
-    </>
+    </>,
   );
 
   expect(screen.getByTestId('selected')).toBeSelected();
@@ -29,7 +29,7 @@ test('toBeSelected() error messages', () => {
       <View testID="not-selected" accessibilityState={{ selected: false }} />
       <View testID="not-selected-aria" aria-selected={false} />
       <View testID="default" />
-    </>
+    </>,
   );
 
   expect(() => expect(screen.getByTestId('selected')).not.toBeSelected())

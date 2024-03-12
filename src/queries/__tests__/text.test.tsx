@@ -11,7 +11,7 @@ test('byText matches inner nested text', () => {
   render(
     <Text testID="outer">
       <Text testID="inner">Hello World</Text>
-    </Text>
+    </Text>,
   );
   expect(screen.getByText('Hello World').props.testID).toBe('inner');
 });
@@ -20,7 +20,7 @@ test('byText matches accross multiple texts', () => {
   render(
     <Text testID="outer">
       <Text testID="inner-1">Hello</Text> <Text testID="inner-2">World</Text>
-    </Text>
+    </Text>,
   );
   expect(screen.getByText('Hello World').props.testID).toBe('outer');
 });
@@ -62,7 +62,7 @@ test('getByText, queryByText', () => {
 
   expect(sameButton.props.children).toBe('not fresh');
   expect(() => screen.getByText('InExistent')).toThrow(
-    'Unable to find an element with text: InExistent'
+    'Unable to find an element with text: InExistent',
   );
 
   const zeroText = screen.getByText('0');
@@ -99,7 +99,7 @@ test('getAllByText, queryAllByText', () => {
 
   expect(buttons).toHaveLength(3);
   expect(() => screen.getAllByText('InExistent')).toThrow(
-    'Unable to find an element with text: InExistent'
+    'Unable to find an element with text: InExistent',
   );
 
   expect(screen.queryAllByText(/fresh/i)).toEqual(buttons);
@@ -117,9 +117,9 @@ test('findByText queries work asynchronously', async () => {
       screen.rerender(
         <View>
           <Text>Some Text</Text>
-        </View>
+        </View>,
       ),
-    20
+    20,
   );
 
   await expect(screen.findByText('Some Text')).resolves.toBeTruthy();
@@ -135,8 +135,8 @@ test('getByText works properly with custom text component', () => {
     render(
       <Text>
         <BoldText>Hello</BoldText>
-      </Text>
-    ).getByText('Hello')
+      </Text>,
+    ).getByText('Hello'),
   ).toBeTruthy();
 });
 
@@ -153,8 +153,8 @@ test('getByText works properly with custom text container', () => {
     render(
       <MyText>
         <BoldText>Hello</BoldText>
-      </MyText>
-    ).getByText('Hello')
+      </MyText>,
+    ).getByText('Hello'),
   ).toBeTruthy();
 });
 
@@ -164,8 +164,8 @@ test('queryByText nested <Image> in <Text> at start', () => {
       <Text>
         <Image source={{}} />
         Hello
-      </Text>
-    ).queryByText('Hello')
+      </Text>,
+    ).queryByText('Hello'),
   ).toBeTruthy();
 });
 
@@ -175,8 +175,8 @@ test('queryByText nested <Image> in <Text> at end', () => {
       <Text>
         Hello
         <Image source={{}} />
-      </Text>
-    ).queryByText('Hello')
+      </Text>,
+    ).queryByText('Hello'),
   ).toBeTruthy();
 });
 
@@ -187,8 +187,8 @@ test('queryByText nested <Image> in <Text> in middle', () => {
         Hello
         <Image source={{}} />
         World
-      </Text>
-    ).queryByText('HelloWorld')
+      </Text>,
+    ).queryByText('HelloWorld'),
   ).toBeTruthy();
 });
 
@@ -198,8 +198,8 @@ test('queryByText not found', () => {
       <Text>
         Hello
         <Image source={{}} />
-      </Text>
-    ).queryByText('SomethingElse')
+      </Text>,
+    ).queryByText('SomethingElse'),
   ).toBeFalsy();
 });
 
@@ -211,7 +211,7 @@ test('*ByText matches text across multiple nested Text', () => {
         World
         <Text>!{true}</Text>
       </Text>
-    </Text>
+    </Text>,
   );
 
   expect(screen.getByText('Hello World!')).toBeTruthy();
@@ -250,8 +250,8 @@ test('queryByText nested deep <CustomText> in <Text>', () => {
     render(
       <Text>
         <CustomText>Hello</CustomText> <CustomText>World!</CustomText>
-      </Text>
-    ).getByText('Hello World!')
+      </Text>,
+    ).getByText('Hello World!'),
   ).toBeTruthy();
 });
 
@@ -261,14 +261,14 @@ test('queryByText with nested Text components: not-exact text match returns the 
       bob
       <Text nativeID="2">My </Text>
       <Text nativeID="3">text</Text>
-    </Text>
+    </Text>,
   );
 
   render(
     <Text nativeID="1">
       bob
       <Text nativeID="2">My text for test</Text>
-    </Text>
+    </Text>,
   );
 
   expect(screen.queryByText('My text')).toBe(null);
@@ -280,7 +280,7 @@ test('queryAllByText does not match several times the same text', () => {
     <Text nativeID="1">
       Start
       <Text nativeID="2">This is a long text</Text>
-    </Text>
+    </Text>,
   ).queryAllByText('long text', { exact: false });
   expect(allMatched.length).toBe(1);
   expect(allMatched[0].props.nativeID).toBe('2');
@@ -292,7 +292,7 @@ test('queryAllByText matches all the matching nodes', () => {
       Start
       <Text nativeID="2">This is a long text</Text>
       <Text nativeID="3">This is another long text</Text>
-    </Text>
+    </Text>,
   ).queryAllByText('long text', { exact: false });
   expect(allMatched.length).toBe(2);
   expect(allMatched.map((node) => node.props.nativeID)).toEqual(['2', '3']);
@@ -304,7 +304,7 @@ describe('supports TextMatch options', () => {
       <View>
         <Text testID="text">Text and details</Text>
         <Button testID="button" title="Button and a detail" onPress={jest.fn()} />
-      </View>
+      </View>,
     );
 
     expect(screen.getByText('details', { exact: false })).toBeTruthy();
@@ -316,7 +316,7 @@ describe('supports TextMatch options', () => {
       <View>
         <TextInput placeholder={'Placeholder with details'} />
         <TextInput placeholder={'Placeholder with a DETAIL'} />
-      </View>
+      </View>,
     );
 
     expect(screen.getByPlaceholderText('details', { exact: false })).toBeTruthy();
@@ -328,7 +328,7 @@ describe('supports TextMatch options', () => {
       <View>
         <TextInput value={'Value with details'} />
         <TextInput value={'Value with a detail'} />
-      </View>
+      </View>,
     );
 
     expect(screen.getByDisplayValue('details', { exact: false })).toBeTruthy();
@@ -340,7 +340,7 @@ describe('supports TextMatch options', () => {
       <View>
         <View testID="test" />
         <View testID="tests id" />
-      </View>
+      </View>,
     );
     expect(screen.getByTestId('id', { exact: false })).toBeTruthy();
     expect(screen.getAllByTestId('test', { exact: false })).toHaveLength(2);
@@ -351,7 +351,7 @@ describe('supports TextMatch options', () => {
       <View>
         <Text testID="text">Text and details</Text>
         <Button testID="button" title="Button and a DeTAil" onPress={jest.fn()} />
-      </View>
+      </View>,
     );
 
     expect(screen.getByText('DeTaIlS', { exact: false })).toBeTruthy();
@@ -366,7 +366,7 @@ describe('Supports normalization', () => {
         <Text>{`  Text     and
 
         whitespace`}</Text>
-      </View>
+      </View>,
     );
 
     expect(screen.getByText('Text and whitespace')).toBeTruthy();
@@ -379,7 +379,7 @@ describe('Supports normalization', () => {
     render(
       <View>
         <Text>{testTextWithWhitespace}</Text>
-      </View>
+      </View>,
     );
 
     expect(
@@ -388,7 +388,7 @@ describe('Supports normalization', () => {
           trim: false,
           collapseWhitespace: false,
         }),
-      })
+      }),
     ).toBeTruthy();
   });
 
@@ -398,7 +398,7 @@ describe('Supports normalization', () => {
     render(
       <View>
         <Text>{testText}</Text>
-      </View>
+      </View>,
     );
 
     expect(screen.getByText('A text', { normalizer: normalizerFn })).toBeTruthy();
@@ -409,7 +409,7 @@ test('getByText and queryByText work properly with text nested in React.Fragment
   render(
     <Text>
       <>Hello</>
-    </Text>
+    </Text>,
   );
   expect(screen.getByText('Hello')).toBeTruthy();
   expect(screen.queryByText('Hello')).not.toBeNull();
@@ -419,7 +419,7 @@ test('getByText and queryByText work properly with text partially nested in Reac
   render(
     <Text>
       He<>llo</>
-    </Text>
+    </Text>,
   );
   expect(screen.getByText('Hello')).toBeTruthy();
   expect(screen.queryByText('Hello')).not.toBeNull();
@@ -432,7 +432,7 @@ test('getByText and queryByText work properly with multiple nested fragments', (
       <>
         l<>l</>o
       </>
-    </Text>
+    </Text>,
   );
   expect(screen.getByText('Hello')).toBeTruthy();
   expect(screen.queryByText('Hello')).not.toBeNull();

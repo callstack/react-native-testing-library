@@ -26,7 +26,7 @@ function renderViewsWithRole(role: AccessibilityRole) {
         accessibilityState={{ checked: 'mixed' }}
       />
       <View testID={`${role}-default`} accessible accessibilityRole={role} />
-    </>
+    </>,
   );
 }
 
@@ -94,9 +94,9 @@ test('toBeCheck() with radio role', () => {
   const mixed = screen.getByTestId('radio-mixed');
 
   expect(() => expect(checked).toBePartiallyChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBePartiallyChecked() works only on accessibility elements with "checkbox" role."`
+    `"toBePartiallyChecked() works only on accessibility elements with "checkbox" role."`,
   );
   expect(() => expect(mixed).toBePartiallyChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBePartiallyChecked() works only on accessibility elements with "checkbox" role."`
+    `"toBePartiallyChecked() works only on accessibility elements with "checkbox" role."`,
   );
 });

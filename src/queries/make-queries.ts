@@ -8,36 +8,36 @@ import { defaultMapProps } from '../helpers/format-default';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
-  options?: Options
+  options?: Options,
 ) => ReactTestInstance;
 
 export type GetAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
-  options?: Options
+  options?: Options,
 ) => ReactTestInstance[];
 
 export type QueryByQuery<Predicate, Options = void> = (
   predicate: Predicate,
-  options?: Options
+  options?: Options,
 ) => ReactTestInstance | null;
 
 export type QueryAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
-  options?: Options
+  options?: Options,
 ) => ReactTestInstance[];
 
 export type FindByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   // Remove `& WaitForOptions` when all queries have been migrated to support 2nd arg query options.
   options?: Options & WaitForOptions,
-  waitForOptions?: WaitForOptions
+  waitForOptions?: WaitForOptions,
 ) => Promise<ReactTestInstance>;
 
 export type FindAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   // Remove `& WaitForOptions` when all queries have been migrated to support 2nd arg query options.
   options?: Options & WaitForOptions,
-  waitForOptions?: WaitForOptions
+  waitForOptions?: WaitForOptions,
 ) => Promise<ReactTestInstance[]>;
 
 type UnboundQuery<Query> = (instance: ReactTestInstance) => Query;
@@ -74,7 +74,7 @@ function extractDeprecatedWaitForOptions(options?: WaitForOptions) {
         `Use of option "${key}" in a findBy* query options (2nd parameter) is deprecated. Please pass this option in the waitForOptions (3rd parameter).
 Example:
 
-  findByText(text, {}, { ${key}: ${option.toString()} })`
+  findByText(text, {}, { ${key}: ${option.toString()} })`,
       );
     }
   });
@@ -110,7 +110,7 @@ function appendElementTreeToError(error: Error) {
 export function makeQueries<Predicate, Options>(
   queryAllByQuery: UnboundQuery<QueryAllByQuery<Predicate, Options>>,
   getMissingError: (predicate: Predicate, options?: Options) => string,
-  getMultipleError: (predicate: Predicate, options?: Options) => string
+  getMultipleError: (predicate: Predicate, options?: Options) => string,
 ): UnboundQueries<Predicate, Options> {
   function getAllByQuery(instance: ReactTestInstance, { printElementTree = true } = {}) {
     return function getAllFn(predicate: Predicate, options?: Options) {
@@ -119,7 +119,7 @@ export function makeQueries<Predicate, Options>(
       if (results.length === 0) {
         const errorMessage = formatErrorMessage(
           getMissingError(predicate, options),
-          printElementTree
+          printElementTree,
         );
         throw new ErrorWithStack(errorMessage, getAllFn);
       }
@@ -135,7 +135,7 @@ export function makeQueries<Predicate, Options>(
       if (results.length > 1) {
         throw new ErrorWithStack(
           formatErrorMessage(getMultipleError(predicate, options), printElementTree),
-          singleQueryFn
+          singleQueryFn,
         );
       }
 
@@ -158,7 +158,7 @@ export function makeQueries<Predicate, Options>(
       if (results.length === 0) {
         const errorMessage = formatErrorMessage(
           getMissingError(predicate, options),
-          printElementTree
+          printElementTree,
         );
         throw new ErrorWithStack(errorMessage, getFn);
       }
@@ -174,7 +174,7 @@ export function makeQueries<Predicate, Options>(
       {
         onTimeout = (error) => appendElementTreeToError(error),
         ...waitForOptions
-      }: WaitForOptions = {}
+      }: WaitForOptions = {},
     ) {
       const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', findAllFn);
       const deprecatedWaitForOptions = extractDeprecatedWaitForOptions(queryOptions);
@@ -186,7 +186,7 @@ export function makeQueries<Predicate, Options>(
           ...waitForOptions,
           stackTraceError,
           onTimeout,
-        }
+        },
       );
     };
   }
@@ -198,7 +198,7 @@ export function makeQueries<Predicate, Options>(
       {
         onTimeout = (error) => appendElementTreeToError(error),
         ...waitForOptions
-      }: WaitForOptions = {}
+      }: WaitForOptions = {},
     ) {
       const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', findFn);
       const deprecatedWaitForOptions = extractDeprecatedWaitForOptions(queryOptions);
@@ -210,7 +210,7 @@ export function makeQueries<Predicate, Options>(
           ...waitForOptions,
           stackTraceError,
           onTimeout,
-        }
+        },
       );
     };
   }

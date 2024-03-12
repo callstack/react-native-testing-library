@@ -10,7 +10,7 @@ export function matches(
   matcher: TextMatch,
   text: string | undefined,
   normalizer: NormalizerFn = getDefaultNormalizer(),
-  exact: boolean = true
+  exact: boolean = true,
 ): boolean {
   if (typeof text !== 'string') {
     return false;

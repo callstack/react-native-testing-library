@@ -30,7 +30,7 @@ const defaultState: AccessibilityState = {
 
 export function matchAccessibilityState(
   node: ReactTestInstance,
-  matcher: AccessibilityStateMatcher
+  matcher: AccessibilityStateMatcher,
 ) {
   const state = getAccessibilityState(node);
   return accessibilityStateKeys.every((key) => matchState(matcher, state, key));
@@ -39,7 +39,7 @@ export function matchAccessibilityState(
 function matchState(
   matcher: AccessibilityStateMatcher,
   state: AccessibilityState | undefined,
-  key: keyof AccessibilityState
+  key: keyof AccessibilityState,
 ) {
   return matcher[key] === undefined || matcher[key] === (state?.[key] ?? defaultState[key]);
 }

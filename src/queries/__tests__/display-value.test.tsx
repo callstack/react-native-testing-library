@@ -38,13 +38,13 @@ test('getByDisplayValue, queryByDisplayValue', () => {
 
   expect(sameInput.props.value).toBe(INPUT_FRESHNESS);
   expect(() => screen.getByDisplayValue('no value')).toThrow(
-    'Unable to find an element with displayValue: no value'
+    'Unable to find an element with displayValue: no value',
   );
 
   expect(screen.queryByDisplayValue(/custom/i)).toBe(input);
   expect(screen.queryByDisplayValue('no value')).toBeNull();
   expect(() => screen.queryByDisplayValue(/fresh/i)).toThrow(
-    'Found multiple elements with display value: /fresh/i'
+    'Found multiple elements with display value: /fresh/i',
   );
 });
 
@@ -112,7 +112,7 @@ test('getAllByDisplayValue, queryAllByDisplayValue', () => {
 
   expect(inputs).toHaveLength(2);
   expect(() => screen.getAllByDisplayValue('no value')).toThrow(
-    'Unable to find an element with displayValue: no value'
+    'Unable to find an element with displayValue: no value',
   );
 
   expect(screen.queryAllByDisplayValue(/fresh/i)).toEqual(inputs);
@@ -131,9 +131,9 @@ test('findBy queries work asynchronously', async () => {
       screen.rerender(
         <View>
           <TextInput value="Display Value" />
-        </View>
+        </View>,
       ),
-    20
+    20,
   );
 
   await expect(screen.findByDisplayValue('Display Value')).resolves.toBeTruthy();

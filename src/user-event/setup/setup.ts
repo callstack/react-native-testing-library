@@ -163,7 +163,7 @@ function wrapAndBindImpl<
       impl.apply(instance, args).then(async (result) => {
         await wait(instance.config);
         return result;
-      })
+      }),
     );
   }
 

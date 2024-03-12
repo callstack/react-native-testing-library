@@ -8,12 +8,12 @@ function isRemoved<T>(result: T): boolean {
 
 export default async function waitForElementToBeRemoved<T>(
   expectation: () => T,
-  options?: WaitForOptions
+  options?: WaitForOptions,
 ): Promise<T> {
   // Created here so we get a nice stacktrace
   const timeoutError = new ErrorWithStack(
     'Timed out in waitForElementToBeRemoved.',
-    waitForElementToBeRemoved
+    waitForElementToBeRemoved,
   );
 
   // Elements have to be present initally and then removed.
@@ -21,7 +21,7 @@ export default async function waitForElementToBeRemoved<T>(
   if (isRemoved(initialElements)) {
     throw new ErrorWithStack(
       'The element(s) given to waitForElementToBeRemoved are already removed. waitForElementToBeRemoved requires that the element(s) exist(s) before waiting for removal.',
-      waitForElementToBeRemoved
+      waitForElementToBeRemoved,
     );
   }
 

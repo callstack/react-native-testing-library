@@ -22,7 +22,7 @@ test('toHaveAccessibleName() handles view with "accessibilityLabelledBy" prop', 
     <View>
       <Text nativeID="label">External label</Text>
       <TextInput testID="input" accessibilityLabelledBy="label" />
-    </View>
+    </View>,
   );
 
   const element = screen.getByTestId('input');
@@ -37,7 +37,7 @@ test('toHaveAccessibleName() handles nested "accessibilityLabelledBy"', () => {
         <Text>External label</Text>
       </View>
       <TextInput testID="input" accessibilityLabelledBy="label" />
-    </>
+    </>,
   );
 
   const element = screen.getByTestId('input');
@@ -52,7 +52,7 @@ test('toHaveAccessibleName() handles view with nested "accessibilityLabelledBy" 
         <View />
       </View>
       <TextInput testID="text-input" accessibilityLabelledBy="label" />
-    </>
+    </>,
   );
 
   const element = screen.getByTestId('text-input');
@@ -64,7 +64,7 @@ test('toHaveAccessibleName() handles view with "aria-labelledby" prop', () => {
     <View>
       <Text nativeID="label">External label</Text>
       <TextInput testID="input" aria-labelledby="label" />
-    </View>
+    </View>,
   );
 
   const element = screen.getByTestId('input');

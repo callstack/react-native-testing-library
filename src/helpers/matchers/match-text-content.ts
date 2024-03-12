@@ -12,7 +12,7 @@ import { getTextContent } from '../text-content';
 export function matchTextContent(
   node: ReactTestInstance,
   text: TextMatch,
-  options: TextMatchOptions = {}
+  options: TextMatchOptions = {},
 ) {
   const textContent = getTextContent(node);
   const { exact, normalizer } = options;

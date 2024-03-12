@@ -26,7 +26,7 @@ function renderViewsWithRole(role: AccessibilityRole) {
         accessibilityState={{ checked: 'mixed' }}
       />
       <View testID={`${role}-default`} accessible accessibilityRole={role} />
-    </>
+    </>,
   );
 }
 
@@ -160,10 +160,10 @@ test('throws error for invalid role', () => {
   const unchecked = screen.getByTestId('adjustable-unchecked');
 
   expect(() => expect(checked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on accessibility elements with "checkbox" or "radio" role."`
+    `"toBeChecked() works only on accessibility elements with "checkbox" or "radio" role."`,
   );
   expect(() => expect(unchecked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on accessibility elements with "checkbox" or "radio" role."`
+    `"toBeChecked() works only on accessibility elements with "checkbox" or "radio" role."`,
   );
 });
 
@@ -172,6 +172,6 @@ test('throws error for non-accessibility element', () => {
 
   const view = screen.getByTestId('test');
   expect(() => expect(view).toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on accessibility elements with "checkbox" or "radio" role."`
+    `"toBeChecked() works only on accessibility elements with "checkbox" or "radio" role."`,
   );
 });

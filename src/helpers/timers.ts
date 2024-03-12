@@ -83,7 +83,7 @@ function bindTimeFunctions(): BindTimeFunctions {
 }
 
 const { clearTimeoutFn, setImmediateFn, setTimeoutFn } = runWithRealTimers(
-  bindTimeFunctions
+  bindTimeFunctions,
 ) as BindTimeFunctions;
 
 export {

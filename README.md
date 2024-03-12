@@ -109,8 +109,8 @@ test('form submits two answers', async () => {
   await user.press(screen.getByRole('button', { name: 'Submit' }));
 
   expect(onSubmit).toHaveBeenCalledWith({
-    '1': { q: 'q1', a: 'a1' },
-    '2': { q: 'q2', a: 'a2' },
+    1: { q: 'q1', a: 'a1' },
+    2: { q: 'q2', a: 'a2' },
   });
 });
 ```
@@ -142,7 +142,6 @@ The [public API](https://callstack.github.io/react-native-testing-library/docs/a
 ## Community Resources
 
 Check out our list of [Community Resources about RNTL](https://callstack.github.io/react-native-testing-library/docs/community-resources).
-
 
 ## Made with ❤️ at Callstack
 

@@ -46,25 +46,25 @@ test('getByLabelText, queryByLabelText, findByLabelText', async () => {
   expect(button?.props.accessibilityLabel).toEqual(BUTTON_LABEL);
 
   expect(() => screen.getByLabelText(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT),
   );
   expect(screen.queryByLabelText(NO_MATCHES_TEXT)).toBeNull();
 
   expect(() => screen.getByLabelText(TEXT_LABEL)).toThrow(
-    getMultipleInstancesFoundMessage(TEXT_LABEL)
+    getMultipleInstancesFoundMessage(TEXT_LABEL),
   );
   expect(() => screen.queryByLabelText(TEXT_LABEL)).toThrow(
-    getMultipleInstancesFoundMessage(TEXT_LABEL)
+    getMultipleInstancesFoundMessage(TEXT_LABEL),
   );
 
   const asyncButton = await screen.findByLabelText(BUTTON_LABEL);
   expect(asyncButton.props.accessibilityLabel).toEqual(BUTTON_LABEL);
   await expect(screen.findByLabelText(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT),
   );
 
   await expect(screen.findByLabelText(TEXT_LABEL)).rejects.toThrow(
-    getMultipleInstancesFoundMessage(TEXT_LABEL)
+    getMultipleInstancesFoundMessage(TEXT_LABEL),
   );
 });
 
@@ -75,13 +75,13 @@ test('getAllByLabelText, queryAllByLabelText, findAllByLabelText', async () => {
   expect(screen.queryAllByLabelText(/cool/g)).toHaveLength(3);
 
   expect(() => screen.getAllByLabelText(NO_MATCHES_TEXT)).toThrow(
-    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT),
   );
   expect(screen.queryAllByLabelText(NO_MATCHES_TEXT)).toEqual([]);
 
   await expect(screen.findAllByLabelText(TEXT_LABEL)).resolves.toHaveLength(2);
   await expect(screen.findAllByLabelText(NO_MATCHES_TEXT)).rejects.toThrow(
-    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT),
   );
 });
 
@@ -92,13 +92,13 @@ test('getAllByLabelText, queryAllByLabelText, findAllByLabelText with exact as f
   expect(screen.queryAllByLabelText(/cool/g, { exact: false })).toHaveLength(3);
 
   expect(() => screen.getAllByLabelText(NO_MATCHES_TEXT, { exact: false })).toThrow(
-    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT),
   );
   expect(screen.queryAllByLabelText(NO_MATCHES_TEXT, { exact: false })).toEqual([]);
 
   await expect(screen.findAllByLabelText(TEXT_LABEL, { exact: false })).resolves.toHaveLength(2);
   await expect(screen.findAllByLabelText(NO_MATCHES_TEXT, { exact: false })).rejects.toThrow(
-    getNoInstancesFoundMessage(NO_MATCHES_TEXT)
+    getNoInstancesFoundMessage(NO_MATCHES_TEXT),
   );
 });
 
@@ -128,7 +128,7 @@ test('byLabelText queries support hidden option', () => {
   render(
     <Text accessibilityLabel="hidden" style={{ display: 'none' }}>
       Hidden from accessibility
-    </Text>
+    </Text>,
   );
 
   expect(screen.getByLabelText('hidden', { includeHiddenElements: true })).toBeTruthy();
@@ -160,7 +160,7 @@ test('getByLabelText supports aria-label', () => {
         Text
       </Text>
       <TextInput testID="text-input" aria-label="text-input-label" />
-    </>
+    </>,
   );
 
   expect(screen.getByLabelText('view-label')).toBe(screen.getByTestId('view'));
@@ -173,7 +173,7 @@ test('getByLabelText supports accessibilityLabelledBy', () => {
     <>
       <Text nativeID="label">Label for input</Text>
       <TextInput testID="textInput" accessibilityLabelledBy="label" />
-    </>
+    </>,
   );
 
   expect(screen.getByLabelText('Label for input')).toBe(screen.getByTestId('textInput'));
@@ -187,7 +187,7 @@ test('getByLabelText supports nested accessibilityLabelledBy', () => {
         <Text>Label for input</Text>
       </View>
       <TextInput testID="textInput" accessibilityLabelledBy="label" />
-    </>
+    </>,
   );
 
   expect(screen.getByLabelText('Label for input')).toBe(screen.getByTestId('textInput'));
@@ -199,7 +199,7 @@ test('getByLabelText supports aria-labelledby', () => {
     <>
       <Text nativeID="label">Text Label</Text>
       <TextInput testID="text-input" aria-labelledby="label" />
-    </>
+    </>,
   );
 
   expect(screen.getByLabelText('Text Label')).toBe(screen.getByTestId('text-input'));
@@ -213,7 +213,7 @@ test('getByLabelText supports nested aria-labelledby', () => {
         <Text>Nested Text Label</Text>
       </View>
       <TextInput testID="text-input" aria-labelledby="label" />
-    </>
+    </>,
   );
 
   expect(screen.getByLabelText('Nested Text Label')).toBe(screen.getByTestId('text-input'));

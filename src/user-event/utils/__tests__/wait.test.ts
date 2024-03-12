@@ -51,6 +51,6 @@ describe('wait()', () => {
 
       expect(globalThis.setTimeout).not.toHaveBeenCalled();
       expect(advanceTimers).not.toHaveBeenCalled();
-    }
+    },
   );
 });

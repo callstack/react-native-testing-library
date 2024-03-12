@@ -49,7 +49,7 @@ test("toHaveDisplayValue() on non-'TextInput' elements", () => {
 
   const view = screen.getByTestId('view');
   expect(() => expect(view).toHaveDisplayValue('test')).toThrowErrorMatchingInlineSnapshot(
-    `"toHaveDisplayValue() works only with host "TextInput" elements. Passed element has type "View"."`
+    `"toHaveDisplayValue() works only with host "TextInput" elements. Passed element has type "View"."`,
   );
 });
 

@@ -10,7 +10,7 @@ type StyleLike = Record<string, unknown>;
 export function toHaveStyle(
   this: jest.MatcherContext,
   element: ReactTestInstance,
-  style: StyleProp<Style>
+  style: StyleProp<Style>,
 ) {
   checkHostElement(element, toHaveStyle, this);
 
@@ -31,7 +31,7 @@ export function toHaveStyle(
           `Expected element ${to} have style`,
           formatStyles(expected),
           'Received',
-          formatStyles(pickReceivedStyles(expected, received))
+          formatStyles(pickReceivedStyles(expected, received)),
         );
       } else {
         return [matcher, '', expectedDiff(expected, received)].join('\n');
@@ -68,7 +68,7 @@ function formatStyles(style: StyleLike) {
     .map((prop) =>
       Array.isArray(style[prop])
         ? `${prop}: ${JSON.stringify(style[prop], null, 2)};`
-        : `${prop}: ${style[prop]};`
+        : `${prop}: ${style[prop]};`,
     )
     .join('\n');
 }

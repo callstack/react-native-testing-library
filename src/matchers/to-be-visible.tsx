@@ -27,7 +27,7 @@ export function toBeVisible(this: jest.MatcherContext, element: ReactTestInstanc
 
 function isElementVisible(
   element: ReactTestInstance,
-  accessibilityCache?: WeakMap<ReactTestInstance, boolean>
+  accessibilityCache?: WeakMap<ReactTestInstance, boolean>,
 ): boolean {
   // Use cache to speed up repeated searches by `isHiddenFromAccessibility`.
   const cache = accessibilityCache ?? new WeakMap<ReactTestInstance, boolean>();

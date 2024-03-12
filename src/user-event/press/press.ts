@@ -22,7 +22,7 @@ export async function press(this: UserEventInstance, element: ReactTestInstance)
 export async function longPress(
   this: UserEventInstance,
   element: ReactTestInstance,
-  options?: PressOptions
+  options?: PressOptions,
 ): Promise<void> {
   await basePress(this.config, element, {
     type: 'longPress',
@@ -38,7 +38,7 @@ interface BasePressOptions {
 const basePress = async (
   config: UserEventConfig,
   element: ReactTestInstance,
-  options: BasePressOptions
+  options: BasePressOptions,
 ): Promise<void> => {
   if (isPressableText(element)) {
     await emitTextPressEvents(config, element, options);
@@ -66,7 +66,7 @@ const basePress = async (
 const emitPressablePressEvents = async (
   config: UserEventConfig,
   element: ReactTestInstance,
-  options: BasePressOptions
+  options: BasePressOptions,
 ) => {
   warnAboutRealTimersIfNeeded();
 
@@ -95,7 +95,7 @@ const isPressableText = (element: ReactTestInstance) => {
     element.props.onPress ||
       element.props.onLongPress ||
       element.props.onPressIn ||
-      element.props.onPressOut
+      element.props.onPressOut,
   );
 
   return (
@@ -112,7 +112,7 @@ const isPressableText = (element: ReactTestInstance) => {
 async function emitTextPressEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
-  options: BasePressOptions
+  options: BasePressOptions,
 ) {
   await wait(config);
   dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
@@ -130,7 +130,7 @@ async function emitTextPressEvents(
 async function emitTextInputPressEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
-  options: BasePressOptions
+  options: BasePressOptions,
 ) {
   await wait(config);
   dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());

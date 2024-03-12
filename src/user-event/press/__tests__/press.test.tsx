@@ -28,7 +28,7 @@ describe('userEvent.press with fake timers', () => {
         onPressOut={logEvent('pressOut')}
         onLongPress={logEvent('longPress')}
         testID="pressable"
-      />
+      />,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -47,7 +47,7 @@ describe('userEvent.press with fake timers', () => {
         onPressOut={logEvent('pressOut')}
         onLongPress={logEvent('longPress')}
         testID="pressable"
-      />
+      />,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -66,7 +66,7 @@ describe('userEvent.press with fake timers', () => {
         onLongPress={logEvent('longPress')}
         testID="pressable"
         pointerEvents="none"
-      />
+      />,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -85,7 +85,7 @@ describe('userEvent.press with fake timers', () => {
         onLongPress={logEvent('longPress')}
         testID="pressable"
         pointerEvents="box-none"
-      />
+      />,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -105,7 +105,7 @@ describe('userEvent.press with fake timers', () => {
           onLongPress={logEvent('longPress')}
           testID="pressable"
         />
-      </View>
+      </View>,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -124,7 +124,7 @@ describe('userEvent.press with fake timers', () => {
         onLongPress={logEvent('longPress')}
         testID="pressable"
         pointerEvents="box-only"
-      />
+      />,
     );
     await user.press(screen.getByTestId('pressable'));
 
@@ -137,7 +137,7 @@ describe('userEvent.press with fake timers', () => {
     render(
       <Pressable onPress={mockOnPress}>
         <Text>press me</Text>
-      </Pressable>
+      </Pressable>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -150,7 +150,7 @@ describe('userEvent.press with fake timers', () => {
     render(
       <Pressable onLongPress={mockOnLongPress}>
         <Text>press me</Text>
-      </Pressable>
+      </Pressable>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -163,7 +163,7 @@ describe('userEvent.press with fake timers', () => {
     render(
       <TouchableOpacity onPress={mockOnPress}>
         <Text>press me</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -176,7 +176,7 @@ describe('userEvent.press with fake timers', () => {
     render(
       <TouchableHighlight onPress={mockOnPress}>
         <Text>press me</Text>
-      </TouchableHighlight>
+      </TouchableHighlight>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -194,7 +194,7 @@ describe('userEvent.press with fake timers', () => {
         onLongPress={logEvent('longPress')}
       >
         press me
-      </Text>
+      </Text>,
     );
 
     await userEvent.press(screen.getByText('press me'));
@@ -212,7 +212,7 @@ describe('userEvent.press with fake timers', () => {
         onLongPress={logEvent('longPress')}
       >
         press me
-      </Text>
+      </Text>,
     );
 
     await userEvent.longPress(screen.getByText('press me'));
@@ -231,7 +231,7 @@ describe('userEvent.press with fake timers', () => {
         disabled
       >
         press me
-      </Text>
+      </Text>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -251,7 +251,7 @@ describe('userEvent.press with fake timers', () => {
         >
           press me
         </Text>
-      </View>
+      </View>,
     );
     await userEvent.press(screen.getByText('press me'));
 
@@ -266,7 +266,7 @@ describe('userEvent.press with fake timers', () => {
         placeholder="email"
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
-      />
+      />,
     );
 
     await userEvent.press(screen.getByPlaceholderText('email'));
@@ -281,7 +281,7 @@ describe('userEvent.press with fake timers', () => {
         placeholder="email"
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
-      />
+      />,
     );
 
     await userEvent.longPress(screen.getByPlaceholderText('email'));
@@ -297,7 +297,7 @@ describe('userEvent.press with fake timers', () => {
         editable={false}
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
-      />
+      />,
     );
 
     await userEvent.press(screen.getByPlaceholderText('email'));
@@ -313,7 +313,7 @@ describe('userEvent.press with fake timers', () => {
         pointerEvents="box-none"
         onPressIn={logEvent('pressIn')}
         onPressOut={logEvent('pressOut')}
-      />
+      />,
     );
 
     await userEvent.press(screen.getByPlaceholderText('email'));
@@ -326,7 +326,7 @@ describe('userEvent.press with fake timers', () => {
     render(
       <Pressable onPress={mockOnPress}>
         <Text>press me</Text>
-      </Pressable>
+      </Pressable>,
     );
 
     await userEvent.press(screen.getByText('press me'));

@@ -21,7 +21,7 @@ function waitForInternal<T>(
     interval = DEFAULT_INTERVAL,
     stackTraceError,
     onTimeout,
-  }: WaitForOptions
+  }: WaitForOptions,
 ): Promise<T> {
   if (typeof expectation !== 'function') {
     throw new TypeError('Received `expectation` arg must be a function');
@@ -48,7 +48,7 @@ function waitForInternal<T>(
       while (!finished) {
         if (!jestFakeTimersAreEnabled()) {
           const error = new Error(
-            `Changed from using fake timers to real timers while using waitFor. This is not allowed and will result in very strange behavior. Please ensure you're awaiting all async things your test is doing before changing to real timers. For more info, please go to https://github.com/testing-library/dom-testing-library/issues/830`
+            `Changed from using fake timers to real timers while using waitFor. This is not allowed and will result in very strange behavior. Please ensure you're awaiting all async things your test is doing before changing to real timers. For more info, please go to https://github.com/testing-library/dom-testing-library/issues/830`,
           );
           if (stackTraceError) {
             copyStackTrace(error, stackTraceError);
@@ -111,7 +111,7 @@ function waitForInternal<T>(
     function checkRealTimersCallback() {
       if (jestFakeTimersAreEnabled()) {
         const error = new Error(
-          `Changed from using real timers to fake timers while using waitFor. This is not allowed and will result in very strange behavior. Please ensure you're awaiting all async things your test is doing before changing to fake timers. For more info, please go to https://github.com/testing-library/dom-testing-library/issues/830`
+          `Changed from using real timers to fake timers while using waitFor. This is not allowed and will result in very strange behavior. Please ensure you're awaiting all async things your test is doing before changing to fake timers. For more info, please go to https://github.com/testing-library/dom-testing-library/issues/830`,
         );
         if (stackTraceError) {
           copyStackTrace(error, stackTraceError);
@@ -143,7 +143,7 @@ function waitForInternal<T>(
               promiseStatus = 'rejected';
               lastError = rejectedValue;
               return;
-            }
+            },
           );
         } else {
           onDone({ type: 'result', result: result });

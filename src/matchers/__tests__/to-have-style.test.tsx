@@ -21,7 +21,7 @@ test('toHaveStyle() handles basic cases', () => {
         [[{ width: '50%' }]],
         styles.container,
       ]}
-    />
+    />,
   );
 
   const view = screen.getByTestId('view');
@@ -59,7 +59,7 @@ test('toHaveStyle error messages', () => {
         height: '100%',
         transform: [{ scale: 2 }, { rotate: '45deg' }],
       }}
-    />
+    />,
   );
 
   const view = screen.getByTestId('view');
@@ -78,7 +78,7 @@ test('toHaveStyle error messages', () => {
     expect(view).toHaveStyle({
       backgroundColor: 'blue',
       transform: [{ scale: 1 }],
-    })
+    }),
   ).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).toHaveStyle()
 
@@ -143,7 +143,7 @@ test('toHaveStyle() supports undefined "transform" style', () => {
         backgroundColor: 'blue',
         transform: undefined,
       }}
-    />
+    />,
   );
 
   const view = screen.getByTestId('view');

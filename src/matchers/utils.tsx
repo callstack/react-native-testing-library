@@ -48,7 +48,7 @@ class HostElementTypeError extends Error {
 export function checkHostElement(
   element: ReactTestInstance | null | undefined,
   matcherFn: jest.CustomMatcher,
-  context: jest.MatcherContext
+  context: jest.MatcherContext,
 ): asserts element is ReactTestInstance {
   if (!isHostElement(element)) {
     throw new HostElementTypeError(element, matcherFn, context);
@@ -83,9 +83,9 @@ export function formatElement(element: ReactTestInstance | null) {
         printFunctionName: false,
         printBasicPrototype: false,
         highlight: true,
-      }
+      },
     ),
-    2
+    2,
   );
 }
 
@@ -102,7 +102,7 @@ export function formatMessage(
   expectedLabel: string,
   expectedValue: string | RegExp | null | undefined,
   receivedLabel: string,
-  receivedValue: string | null | undefined
+  receivedValue: string | null | undefined,
 ) {
   return [
     `${matcher}\n`,

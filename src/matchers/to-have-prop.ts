@@ -6,7 +6,7 @@ export function toHaveProp(
   this: jest.MatcherContext,
   element: ReactTestInstance,
   name: string,
-  expectedValue: unknown
+  expectedValue: unknown,
 ) {
   checkHostElement(element, toHaveProp, this);
 
@@ -28,14 +28,14 @@ export function toHaveProp(
         printExpected(name),
         {
           secondArgument: isExpectedValueDefined ? printExpected(expectedValue) : undefined,
-        }
+        },
       );
       return formatMessage(
         matcher,
         `Expected element ${to} have prop`,
         formatProp(name, expectedValue),
         'Received',
-        hasProp ? formatProp(name, receivedValue) : undefined
+        hasProp ? formatProp(name, receivedValue) : undefined,
       );
     },
   };
