@@ -6,7 +6,7 @@ exports[`type() supports backspace: input: "{Backspace}a", defaultValue: "xxx" 1
     "name": "pressIn",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -19,7 +19,7 @@ exports[`type() supports backspace: input: "{Backspace}a", defaultValue: "xxx" 1
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },
@@ -37,7 +37,7 @@ exports[`type() supports backspace: input: "{Backspace}a", defaultValue: "xxx" 1
     "name": "pressOut",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -50,7 +50,7 @@ exports[`type() supports backspace: input: "{Backspace}a", defaultValue: "xxx" 1
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },
@@ -162,7 +162,7 @@ exports[`type() supports basic case: input: "abc" 1`] = `
     "name": "pressIn",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -175,7 +175,7 @@ exports[`type() supports basic case: input: "abc" 1`] = `
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },
@@ -193,7 +193,7 @@ exports[`type() supports basic case: input: "abc" 1`] = `
     "name": "pressOut",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -206,7 +206,7 @@ exports[`type() supports basic case: input: "abc" 1`] = `
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },
@@ -357,7 +357,7 @@ exports[`type() supports defaultValue prop: input: "ab", defaultValue: "xxx" 1`]
     "name": "pressIn",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -370,7 +370,7 @@ exports[`type() supports defaultValue prop: input: "ab", defaultValue: "xxx" 1`]
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },
@@ -388,7 +388,7 @@ exports[`type() supports defaultValue prop: input: "ab", defaultValue: "xxx" 1`]
     "name": "pressOut",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -401,7 +401,7 @@ exports[`type() supports defaultValue prop: input: "ab", defaultValue: "xxx" 1`]
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },
@@ -513,7 +513,7 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
     "name": "pressIn",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -526,7 +526,7 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },
@@ -544,7 +544,7 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
     "name": "pressOut",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -557,7 +557,7 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },

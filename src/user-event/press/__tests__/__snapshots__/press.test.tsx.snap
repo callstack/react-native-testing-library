@@ -6,26 +6,7 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
     "name": "pressIn",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction] {
-          "calls": [
-            [
-              [Function],
-            ],
-            [
-              [Function],
-            ],
-          ],
-          "results": [
-            {
-              "type": "return",
-              "value": undefined,
-            },
-            {
-              "type": "return",
-              "value": undefined,
-            },
-          ],
-        },
+        "measure": [Function],
       },
       "dispatchConfig": {
         "registrationName": "onResponderGrant",
@@ -41,17 +22,7 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
         "timestamp": 0,
         "touches": [],
       },
-      "persist": [MockFunction] {
-        "calls": [
-          [],
-        ],
-        "results": [
-          {
-            "type": "return",
-            "value": undefined,
-          },
-        ],
-      },
+      "persist": [Function],
       "target": {},
     },
   },
@@ -59,7 +30,7 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
     "name": "press",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "dispatchConfig": {
         "registrationName": "onResponderRelease",
@@ -75,17 +46,7 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
         "timestamp": 0,
         "touches": [],
       },
-      "persist": [MockFunction] {
-        "calls": [
-          [],
-        ],
-        "results": [
-          {
-            "type": "return",
-            "value": undefined,
-          },
-        ],
-      },
+      "persist": [Function],
       "target": {},
     },
   },
@@ -93,7 +54,7 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
     "name": "pressOut",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "dispatchConfig": {
         "registrationName": "onResponderRelease",
@@ -109,17 +70,7 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
         "timestamp": 0,
         "touches": [],
       },
-      "persist": [MockFunction] {
-        "calls": [
-          [],
-        ],
-        "results": [
-          {
-            "type": "return",
-            "value": undefined,
-          },
-        ],
-      },
+      "persist": [Function],
       "target": {},
     },
   },
