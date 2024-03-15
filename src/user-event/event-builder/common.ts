@@ -16,8 +16,8 @@ function touch() {
       timestamp: Date.now(),
       touches: [],
     },
-    persist: noop,
-    currentTarget: { measure: noop },
+    persist: () => {},
+    currentTarget: { measure: () => {} },
     target: {},
   };
 }
@@ -69,7 +69,3 @@ export const CommonEventBuilder = {
     };
   },
 };
-
-function noop(): void {
-  // do nothing
-}
