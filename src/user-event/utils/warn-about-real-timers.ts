@@ -1,6 +1,10 @@
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 
 export const warnAboutRealTimersIfNeeded = () => {
+  if (process.env.RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS) {
+    return;
+  }
+
   const areFakeTimersEnabled = jestFakeTimersAreEnabled();
   if (areFakeTimersEnabled) {
     return;

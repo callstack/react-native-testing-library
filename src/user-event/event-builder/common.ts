@@ -16,8 +16,8 @@ function touch() {
       timestamp: Date.now(),
       touches: [],
     },
-    persist: jest.fn(),
-    currentTarget: { measure: jest.fn() },
+    persist: () => {},
+    currentTarget: { measure: () => {} },
     target: {},
   };
 }

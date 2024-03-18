@@ -6,26 +6,7 @@ exports[`userEvent.longPress with fake timers calls onLongPress if the delayLong
     "name": "longPress",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction] {
-          "calls": [
-            [
-              [Function],
-            ],
-            [
-              [Function],
-            ],
-          ],
-          "results": [
-            {
-              "type": "return",
-              "value": undefined,
-            },
-            {
-              "type": "return",
-              "value": undefined,
-            },
-          ],
-        },
+        "measure": [Function],
       },
       "dispatchConfig": {
         "registrationName": "onResponderGrant",
@@ -41,17 +22,7 @@ exports[`userEvent.longPress with fake timers calls onLongPress if the delayLong
         "timestamp": 0,
         "touches": [],
       },
-      "persist": [MockFunction] {
-        "calls": [
-          [],
-        ],
-        "results": [
-          {
-            "type": "return",
-            "value": undefined,
-          },
-        ],
-      },
+      "persist": [Function],
       "target": {},
     },
   },

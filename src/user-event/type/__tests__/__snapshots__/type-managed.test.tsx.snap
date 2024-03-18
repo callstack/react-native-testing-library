@@ -6,7 +6,7 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
     "name": "pressIn",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -19,7 +19,7 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },
@@ -37,7 +37,7 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
     "name": "pressOut",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -50,7 +50,7 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },
@@ -201,7 +201,7 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
     "name": "pressIn",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -214,7 +214,7 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },
@@ -232,7 +232,7 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
     "name": "pressOut",
     "payload": {
       "currentTarget": {
-        "measure": [MockFunction],
+        "measure": [Function],
       },
       "nativeEvent": {
         "changedTouches": [],
@@ -245,7 +245,7 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [MockFunction],
+      "persist": [Function],
       "target": {},
     },
   },
