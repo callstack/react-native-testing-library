@@ -12,7 +12,12 @@ const notImplementedDebug = () => {
 };
 notImplementedDebug.shallow = notImplemented;
 
-const defaultScreen: RenderResult = {
+interface Screen extends RenderResult {
+  isAttached: boolean;
+}
+
+const defaultScreen: Screen = {
+  isAttached: false,
   get root(): ReactTestInstance {
     throw new Error(SCREEN_ERROR);
   },
@@ -112,10 +117,13 @@ const defaultScreen: RenderResult = {
   findAllByText: notImplemented,
 };
 
-export let screen: RenderResult = defaultScreen;
+export let screen: Screen = defaultScreen;
 
-export function setRenderResult(output: RenderResult) {
-  screen = output;
+export function setRenderResult(renderResult: RenderResult) {
+  screen = {
+    ...renderResult,
+    isAttached: true,
+  };
 }
 
 export function clearRenderResult() {

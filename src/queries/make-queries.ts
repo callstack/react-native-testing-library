@@ -87,6 +87,10 @@ function formatErrorMessage(message: string, printElementTree: boolean) {
     return message;
   }
 
+  if (!screen.isAttached) {
+    return `${message}\n\nScreen is no longer attached.`;
+  }
+
   const json = screen.toJSON();
   if (!json) {
     return message;
