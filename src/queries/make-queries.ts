@@ -87,8 +87,8 @@ function formatErrorMessage(message: string, printElementTree: boolean) {
     return message;
   }
 
-  if (!screen.isAttached) {
-    return `${message}\n\nScreen is no longer attached.`;
+  if (screen.isDetached) {
+    return `${message}\n\nScreen is no longer attached. Check your test for "findBy*" or "waitFor" calls that have not been awaited.`;
   }
 
   const json = screen.toJSON();

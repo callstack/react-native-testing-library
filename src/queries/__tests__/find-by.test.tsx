@@ -14,6 +14,6 @@ test('findByTestId detects screen being detached', async () => {
   await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: not-exists
 
-    Screen is no longer attached."
+    Screen is no longer attached. Check your test for "findBy*" or "waitFor" calls that have not been awaited."
   `);
 });

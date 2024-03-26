@@ -13,11 +13,11 @@ const notImplementedDebug = () => {
 notImplementedDebug.shallow = notImplemented;
 
 interface Screen extends RenderResult {
-  isAttached: boolean;
+  isDetached?: boolean;
 }
 
 const defaultScreen: Screen = {
-  isAttached: false,
+  isDetached: true,
   get root(): ReactTestInstance {
     throw new Error(SCREEN_ERROR);
   },
@@ -120,10 +120,7 @@ const defaultScreen: Screen = {
 export let screen: Screen = defaultScreen;
 
 export function setRenderResult(renderResult: RenderResult) {
-  screen = {
-    ...renderResult,
-    isAttached: true,
-  };
+  screen = renderResult;
 }
 
 export function clearRenderResult() {
