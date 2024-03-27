@@ -3,6 +3,9 @@ id: getting-started
 title: Getting Started
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 ## The problem
 
 You want to write maintainable tests for your React Native components. As a part of this goal, you want your tests to avoid including implementation details of your components and focus on making your tests give you the confidence they are intended. As part of this, you want your tests to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don't break your tests and slow you and your team down.
@@ -21,38 +24,54 @@ You can find the source of the `QuestionsBoard` component and this example [here
 
 Open a Terminal in your project's folder and run:
 
-#### Using `yarn`
-
-```sh
-yarn add --dev @testing-library/react-native
-```
-
-#### Using `npm`
-
+<Tabs groupId="package-manager">
+<TabItem value="npm" label="npm">
 ```sh
 npm install --save-dev @testing-library/react-native
 ```
+</TabItem>
+<TabItem value="yarn" label="yarn">
+```sh
+yarn add --dev @testing-library/react-native
+```
+</TabItem>
+</Tabs>
 
 This library has a peer dependency for `react-test-renderer` package. Make sure that your `react-test-renderer` version matches exactly your `react` version.
 
-:::info
-To properly use helpers for async tests (`findBy` queries and `waitFor`), you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
-:::
+### Jest matchers
 
-### Additional Jest matchers
-
-To use additional React Native-specific Jest matchers, add the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
+To set up React Native-specific Jest matchers, add the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
 
 ```ts
 import '@testing-library/react-native/extend-expect';
 ```
 
-### Flow
+### ESLint plugin
 
-Note for [Flow](https://flow.org) users – you'll also need to install typings for `react-test-renderer`:
+We recommend setting up [`eslint-plugin-testing-library`](https://github.com/testing-library/eslint-plugin-testing-library) package to help you avoid common Testing Library mistakes and bad practices.
 
+Install the plugin (assuming you already have `eslint` installed & configured):
+
+<Tabs groupId="package-manager">
+<TabItem value="npm" label="npm">
 ```sh
-flow-typed install react-test-renderer
+npm install --save-dev eslint-plugin-testing-library
+```
+</TabItem>
+<TabItem value="yarn" label="yarn">
+```sh
+yarn add --dev eslint-plugin-testing-library
+```
+</TabItem>
+</Tabs>
+
+Then, add relevant entry to your ESLint config (e.g., `.eslintrc.js`). We recommend extending the `react` plugin:
+
+```js
+module.exports = {
+  extends: ['plugin:testing-library/react'],
+};
 ```
 
 ## Example
