@@ -1,5 +1,5 @@
 ---
-id: eslint-plugin-testing-library
+id: eslint-plugin
 title: ESLint Plugin Testing Library Compatibility
 ---
 
