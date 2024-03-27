@@ -44,7 +44,7 @@ test('getByRole, queryByRole, findByRole', async () => {
   render(<Section />);
 
   expect(screen.getByRole('button').props.accessibilityRole).toEqual('button');
-  const button = screen.queryByRole(/button/g);
+  const button = screen.queryByRole(/button/);
   expect(button?.props.accessibilityRole).toEqual('button');
 
   expect(() => screen.getByRole(NO_MATCHES_TEXT)).toThrow(
@@ -68,7 +68,7 @@ test('getAllByRole, queryAllByRole, findAllByRole', async () => {
   render(<Section />);
 
   expect(screen.getAllByRole('link')).toHaveLength(2);
-  expect(screen.queryAllByRole(/ink/g)).toHaveLength(2);
+  expect(screen.queryAllByRole(/ink/)).toHaveLength(2);
 
   expect(() => screen.getAllByRole(NO_MATCHES_TEXT)).toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT),

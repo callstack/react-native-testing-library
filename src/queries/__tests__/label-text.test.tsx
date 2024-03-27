@@ -42,7 +42,7 @@ test('getByLabelText, queryByLabelText, findByLabelText', async () => {
   render(<Section />);
 
   expect(screen.getByLabelText(BUTTON_LABEL).props.accessibilityLabel).toEqual(BUTTON_LABEL);
-  const button = screen.queryByLabelText(/button/g);
+  const button = screen.queryByLabelText(/button/);
   expect(button?.props.accessibilityLabel).toEqual(BUTTON_LABEL);
 
   expect(() => screen.getByLabelText(NO_MATCHES_TEXT)).toThrow(
@@ -72,7 +72,7 @@ test('getAllByLabelText, queryAllByLabelText, findAllByLabelText', async () => {
   render(<Section />);
 
   expect(screen.getAllByLabelText(TEXT_LABEL)).toHaveLength(2);
-  expect(screen.queryAllByLabelText(/cool/g)).toHaveLength(3);
+  expect(screen.queryAllByLabelText(/cool/)).toHaveLength(3);
 
   expect(() => screen.getAllByLabelText(NO_MATCHES_TEXT)).toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT),
@@ -89,7 +89,7 @@ test('getAllByLabelText, queryAllByLabelText, findAllByLabelText with exact as f
   render(<Section />);
 
   expect(screen.getAllByLabelText(TEXT_LABEL, { exact: false })).toHaveLength(2);
-  expect(screen.queryAllByLabelText(/cool/g, { exact: false })).toHaveLength(3);
+  expect(screen.queryAllByLabelText(/cool/, { exact: false })).toHaveLength(3);
 
   expect(() => screen.getAllByLabelText(NO_MATCHES_TEXT, { exact: false })).toThrow(
     getNoInstancesFoundMessage(NO_MATCHES_TEXT),
