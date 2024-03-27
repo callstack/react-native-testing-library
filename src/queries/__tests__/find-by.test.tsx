@@ -14,6 +14,9 @@ test('findByTestId detects screen being detached', async () => {
   await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: not-exists
 
-    Screen is no longer attached. Check your test for "findBy*" or "waitFor" calls that have not been awaited."
+    Screen is no longer attached. Check your test for "findBy*" or "waitFor" calls that have not been awaited.
+
+    We recommend enabling Testing Library ESLint plugin to catch these issues at build time:
+    https://callstack.github.io/react-native-testing-library/docs/eslint-plugin-testing-library"
   `);
 });
