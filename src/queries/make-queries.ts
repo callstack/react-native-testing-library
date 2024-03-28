@@ -88,7 +88,7 @@ function formatErrorMessage(message: string, printElementTree: boolean) {
   }
 
   if (screen.isDetached) {
-    return `${message}\n\nScreen is no longer attached. Check your test for "findBy*" or "waitFor" calls that have not been awaited.\n\nWe recommend enabling Testing Library ESLint plugin to catch these issues at build time:\nhttps://callstack.github.io/react-native-testing-library/docs/eslint-plugin-testing-library`;
+    return `${message}\n\nScreen is no longer attached. Check your test for "findBy*" or "waitFor" calls that have not been awaited.\n\nWe recommend enabling "eslint-plugin-testing-library" to catch these issues at build time:\nhttps://callstack.github.io/react-native-testing-library/docs/getting-started#eslint-plugin`;
   }
 
   const json = screen.toJSON();
