@@ -2,7 +2,7 @@ module.exports = {
   docs: {
     Introduction: ['getting-started'],
     'API Reference': ['api', 'api-queries', 'user-event', 'jest-matchers'],
-    Guides: ['how-should-i-query', 'troubleshooting', 'faq', 'eslint-plugin-testing-library'],
+    Guides: ['how-should-i-query', 'troubleshooting', 'faq'],
     Advanced: ['testing-env', 'understanding-act'],
     Community: ['community-resources'],
     Migrations: [
