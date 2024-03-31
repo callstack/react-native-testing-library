@@ -70,7 +70,13 @@ Then, add relevant entry to your ESLint config (e.g., `.eslintrc.js`). We recomm
 
 ```js
 module.exports = {
-  extends: ['plugin:testing-library/react'],
+  overrides: [
+    {
+      // Test files only
+      files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+      extends: ['plugin:testing-library/react']
+    }
+  ]
 };
 ```
 
