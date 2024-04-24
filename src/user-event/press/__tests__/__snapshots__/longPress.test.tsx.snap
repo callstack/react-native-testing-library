@@ -23,6 +23,8 @@ exports[`userEvent.longPress with fake timers calls onLongPress if the delayLong
         "touches": [],
       },
       "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
       "target": {},
     },
   },
