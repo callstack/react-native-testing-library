@@ -1,3 +1,5 @@
+import { baseSyntheticEvent } from './base';
+
 /**
  * Scroll position of a scrollable element.
  */
@@ -28,6 +30,7 @@ export type ScrollEventOptions = {
 export const ScrollViewEventBuilder = {
   scroll: (offset: ContentOffset = { y: 0, x: 0 }, options?: ScrollEventOptions) => {
     return {
+      ...baseSyntheticEvent(),
       nativeEvent: {
         contentInset: { bottom: 0, left: 0, right: 0, top: 0 },
         contentOffset: { y: offset.y, x: offset.x },
@@ -43,8 +46,6 @@ export const ScrollViewEventBuilder = {
         target: 0,
         velocity: { y: 0, x: 0 },
       },
-      currentTarget: {},
-      target: {},
     };
   },
 };
