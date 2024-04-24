@@ -10,6 +10,8 @@ export function baseSyntheticEvent(): Partial<BaseSyntheticEvent<{}, unknown, un
     stopPropagation: () => {},
     isPropagationStopped: () => false,
     persist: () => {},
+    // @ts-expect-error: `isPersistent` is not a standard prop, but it's used in RN runtime. See: https://react.dev/reference/react-dom/components/common#react-event-object-methods
+    isPersistent: () => false,
     timeStamp: 0,
   };
 }

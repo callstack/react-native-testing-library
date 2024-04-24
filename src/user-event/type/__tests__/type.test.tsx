@@ -242,7 +242,7 @@ describe('type()', () => {
     ]);
 
     expect(events[7].name).toBe('submitEditing');
-    expect(events[7].payload).toEqual({
+    expect(events[7].payload).toMatchObject({
       nativeEvent: { text: 'a', target: 0 },
       currentTarget: {},
       target: {},
