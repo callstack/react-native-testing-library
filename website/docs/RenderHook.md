@@ -10,7 +10,7 @@ function renderHook<Result, Props>(
 ): RenderHookResult<Result, Props>;
 ```
 
-Renders a test component that will call the provided `callback`, including any hooks it calls, every time it renders. Returns [`RenderHookResult`](#renderhookresult-object) object, which you can interact with.
+Renders a test component that will call the provided `callback`, including any hooks it calls, every time it renders. Returns [`RenderHookResult`](#renderhookresult) object, which you can interact with.
 
 ```ts
 import { renderHook } from '@testing-library/react-native';
@@ -44,19 +44,19 @@ Callback is a function that is called each `render` of the test component. This 
 
 The `props` passed into the callback will be the `initialProps` provided in the `options` to `renderHook`, unless new props are provided by a subsequent `rerender` call.
 
-### `options`
+## `options`
 
 A `RenderHookOptions<Props>` object to modify the execution of the `callback` function, containing the following properties:
 
-#### `initialProps`
+### `initialProps`
 
 The initial values to pass as `props` to the `callback` function of `renderHook`. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
 
-#### `wrapper`
+### `wrapper`
 
 A React component to wrap the test component in when rendering. This is usually used to add context providers from `React.createContext` for the hook to access with `useContext`.
 
-### `RenderHookResult`
+## `RenderHookResult`
 
 ```ts
 interface RenderHookResult<Result, Props> {
@@ -80,11 +80,11 @@ A function to rerender the test component, causing any hooks to be recalculated.
 
 A function to unmount the test component. This is commonly used to trigger cleanup effects for `useEffect` hooks.
 
-### Examples
+## Examples
 
 Here we present some extra examples of using `renderHook` API.
 
-#### With `initialProps`
+### With `initialProps`
 
 ```ts
 const useCount = (initialCount: number) => {
@@ -115,7 +115,7 @@ it('should increment count', () => {
 });
 ```
 
-#### With `wrapper`
+### With `wrapper`
 
 ```tsx
 it('should use context value', () => {

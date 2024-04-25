@@ -11,11 +11,7 @@ The `findBy*` queries are used to find elements that are not instantly available
 
 ### `waitFor`
 
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/wait-for.test.tsx)
-
-Defined as:
-
-```jsx
+```tsx
 function waitFor<T>(
   expectation: () => T,
   { timeout: number = 1000, interval: number = 50 },
@@ -114,10 +110,6 @@ If you receive warnings related to `act()` function consult our [Undestanding Ac
 :::
 
 ### `waitForElementToBeRemoved`
-
-- [`Example code`]https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/wait-for-element-to-be-removed.test.tsx)
-
-Defined as:
 
 ```ts
 function waitForElementToBeRemoved<T>(
@@ -235,10 +227,6 @@ Specifying `accessible={false}`, `accessiblityRole="none"`, or `importantForAcce
 ## Other helpers
 
 ### `within`, `getQueriesForElement`
-
-- [`Example code`](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/within.test.tsx)
-
-Defined as:
 
 ```jsx
 function within(element: ReactTestInstance): Queries {}

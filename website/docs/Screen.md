@@ -17,7 +17,7 @@ let screen: {
 
 The `screen` object offers a recommended way to access queries and utilities for the currently rendered UI.
 
-This object is assigned after the `render` call and cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test, then it holds a special object and throws a helpful error on each property and method access.
+This object is assigned after the `render` call and cleared after each test by calling [`cleanup`](other#cleanup). If no `render` call has been made in a given test, then it holds a special object and throws a helpful error on each property and method access.
 
 ### `...queries`
 
