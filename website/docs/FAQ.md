@@ -28,7 +28,7 @@ On the negative side:
 - you cannot test native features
 - it might not perfectly simulate certain JavaScript features, but we are working on it
 
-The [User Event interactions](user-event) solve some of the simulation issues, as they offer more realistic event handling than the basic [Fire Event API](api#fireevent-api).
+The [User Event interactions](user-event) solve some of the simulation issues, as they offer more realistic event handling than the basic [Fire Event API](fire-event).
 
 ### Should I use/migrate to `screen` queries?
 
@@ -39,4 +39,4 @@ For new code, you are encouraged to use `screen` as there are some good reasons 
 
 ### Should I use/migrate to User Event interactions?
 
-We encourage you to migrate existing tests to use the [User Event interactions](user-event), which offer more realistic event handling than the basic [Fire Event API](api#fireevent-api). Hence, it will provide more confidence in the quality of your code.
+We encourage you to migrate existing tests to use the [User Event interactions](user-event), which offer more realistic event handling than the basic [Fire Event API](fire-event). Hence, it will provide more confidence in the quality of your code.

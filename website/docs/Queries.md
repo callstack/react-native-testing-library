@@ -1,6 +1,6 @@
 ---
-id: api-queries
-title: Queries
+id: queries
+title: Queries API
 ---
 
 Queries are one of the main building blocks for the React Native Testing Library. They enable you to find relevant elements in the element tree, which represents the your application's user interface when running under tests.
@@ -52,14 +52,14 @@ For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
 
 The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
 
-| Variant                                   | Assertion                     | Return type                                | Is Async? |
-| ----------------------------------------- | ----------------------------- | ------------------------------------------ | --------- |
-| [`getBy*`](api-queries#get-by)            | Exactly one matching element  | `ReactTestInstance`                        | No        |
-| [`getAllBy*`](api-queries#get-all-by)     | At least one matching element | `Array<ReactTestInstance>`                 | No        |
-| [`queryBy*`](api-queries#query-by)        | Zero or one matching element  | <code>ReactTestInstance &#124; null</code> | No        |
-| [`queryAllBy*`](api-queries#query-all-by) | No assertion                  | `Array<ReactTestInstance>`                 | No        |
-| [`findBy*`](api-queries#find-by)          | Exactly one matching element  | `Promise<ReactTestInstance>`               | Yes       |
-| [`findAllBy*`](api-queries#find-all-by)   | At least one matching element | `Promise<Array<ReactTestInstance>>`        | Yes       |
+| Variant                               | Assertion                     | Return type                                | Is Async? |
+| ------------------------------------- | ----------------------------- | ------------------------------------------ | --------- |
+| [`getBy*`](queries#get-by)            | Exactly one matching element  | `ReactTestInstance`                        | No        |
+| [`getAllBy*`](queries#get-all-by)     | At least one matching element | `Array<ReactTestInstance>`                 | No        |
+| [`queryBy*`](queries#query-by)        | Zero or one matching element  | <code>ReactTestInstance &#124; null</code> | No        |
+| [`queryAllBy*`](queries#query-all-by) | No assertion                  | `Array<ReactTestInstance>`                 | No        |
+| [`findBy*`](queries#find-by)          | Exactly one matching element  | `Promise<ReactTestInstance>`               | Yes       |
+| [`findAllBy*`](queries#find-all-by)   | At least one matching element | `Promise<Array<ReactTestInstance>>`        | Yes       |
 
 Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
 
@@ -124,7 +124,7 @@ findAllByX(
 `findAllBy*` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
 
 :::info
-`findBy*` and `findAllBy*` queries accept optional `waitForOptions` object arguments, which can contain `timeout`, `interval` and `onTimeout` properties which have the same meaning as respective options for [`waitFor`](api#waitfor) function.
+`findBy*` and `findAllBy*` queries accept optional `waitForOptions` object arguments, which can contain `timeout`, `interval` and `onTimeout` properties which have the same meaning as respective options for [`waitFor`](other#waitfor) function.
 :::
 
 :::info
@@ -501,9 +501,9 @@ Usually query first argument can be a **string** or a **regex**. All queries tak
 
 #### `includeHiddenElements` option
 
-All queries have the `includeHiddenElements` option which affects whether [elements hidden from accessibility](./API.md#ishiddenfromaccessibility) are matched by the query. By default queries will not match hidden elements, because the users of the app would not be able to see such elements.
+All queries have the `includeHiddenElements` option which affects whether [elements hidden from accessibility](other#ishiddenfromaccessibility) are matched by the query. By default queries will not match hidden elements, because the users of the app would not be able to see such elements.
 
-You can configure the default value with the [`configure` function](API.md#configure).
+You can configure the default value with the [`configure` function](other#configure).
 
 This option is also available as `hidden` alias for compatibility with [React Testing Library](https://testing-library.com/docs/queries/byrole#hidden).
 

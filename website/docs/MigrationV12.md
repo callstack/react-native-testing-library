@@ -24,7 +24,7 @@ React Native Testing Library 12 introduces a handful of breaking changes compare
 
 Elements that are hidden from accessiblity, e.g. elements on non-active screen when using React Navigation, now will not be matched by default by all queries. This is the effect of switching the default value for global config option `defaultIncludeHiddenElements`(api#defaultincludehiddenelements-option) to `false`.
 
-Previous behaviour of matching hidden elements can be enabled on query level using [includeHiddenElements](api-queries#includehiddenelements-option) query options or globally using `defaultIncludeHiddenElements`(api#defaultincludehiddenelements-option) configuration option.
+Previous behaviour of matching hidden elements can be enabled on query level using [includeHiddenElements](queries#includehiddenelements-option) query options or globally using `defaultIncludeHiddenElements`(api#defaultincludehiddenelements-option) configuration option.
 
 ### 2. `*ByRole` queries now return only accessibility elements
 
@@ -69,7 +69,7 @@ Problematic cases may include: directly checking some prop values (without using
 
 ### 4. `container` API has been renamed to `UNSAFE_root`.
 
-Historically `container` was supposed to mimic the [RTL's container](https://testing-library.com/docs/react-testing-library/api/#container). However it turned out not so relevant in RNTL's environment, where we actually used it to return React Test Renderer's root instance.
+Historically `container` was supposed to mimic the [RTL's container](https://testing-library.com/docs/react-testing-library/screen#container). However it turned out not so relevant in RNTL's environment, where we actually used it to return React Test Renderer's root instance.
 
 RNTL v12 introduces `root` API as an alternative that returns a root **host** element. The difference between `root` and `UNSAFE_root` properties is that that `root` will always represents a host element, while `UNSAFE_root` will typically represent a composite element.
 

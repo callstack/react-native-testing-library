@@ -119,13 +119,16 @@ You can find the source of `QuestionsBoard` component and this example [here](ht
 
 ## API / Usage
 
-The [public API](https://callstack.github.io/react-native-testing-library/docs/api) of `@testing-library/react-native` is focused around these essential methods:
+The public API of `@testing-library/react-native` is focused around these essential APIs:
 
-- [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – deeply renders the given React element and returns helpers to query the output components.
-- [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/api#fireevent) - invokes named event handler on the element.
-- [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/api#waitfor) - waits for non-deterministic periods of time until the queried element is added or times out.
-- [`waitForElementToBeRemoved`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelementtoberemoved) - waits for non-deterministic periods of time until the queried element is removed or times out.
-- [`within`](https://callstack.github.io/react-native-testing-library/docs/api#within) - creates a queries object scoped for a given element.
+- [`render`](https://callstack.github.io/react-native-testing-library/docs/render) – renders the given React element
+- [`screen`](https://callstack.github.io/react-native-testing-library/docs/screen) – queries for looking up rendered elements, as well as some useful helpers.
+- [`userEvent`](https://callstack.github.io/react-native-testing-library/docs/user-event) - realistic simulation of user interaction with elements like buttons and text inputs.
+- [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/fire-event) - general purpose event simulation.
+- [Jest matchers](https://callstack.github.io/react-native-testing-library/docs/jest-matchers) - validate assumptions about your components.
+- [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/other#waitfor) - waits for non-deterministic periods of time until the queried element is added or times out.
+- [`waitForElementToBeRemoved`](https://callstack.github.io/react-native-testing-library/docs/other#waitforelementtoberemoved) - waits for non-deterministic periods of time until the queried element is removed or times out.
+- [`within`](https://callstack.github.io/react-native-testing-library/docs/other#within) - creates a queries object scoped for a given element.
 
 ## Migration Guides
 

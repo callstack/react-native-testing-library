@@ -46,12 +46,8 @@ test('form submits two answers', async () => {
   render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
 
   const answerInputs = screen.getAllByLabelText('answer input');
-
-  // simulates the user focusing on TextInput and typing text one char at a time
   await user.type(answerInputs[0], 'a1');
   await user.type(answerInputs[1], 'a2');
-
-  // simulates the user pressing on any pressable element
   await user.press(screen.getByRole('button', { name: 'Submit' }));
 
   expect(onSubmit).toHaveBeenCalledWith({

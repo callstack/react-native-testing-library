@@ -1,7 +1,16 @@
 module.exports = {
   docs: {
     Introduction: ['getting-started'],
-    'API Reference': ['api', 'api-queries', 'user-event', 'jest-matchers'],
+    'API Reference': [
+      'render',
+      'screen',
+      'queries',
+      'user-event',
+      'fire-event',
+      'jest-matchers',
+      'render-hook',
+      'other',
+    ],
     Guides: ['how-should-i-query', 'troubleshooting', 'faq'],
     Advanced: ['testing-env', 'understanding-act'],
     Community: ['community-resources'],
