@@ -83,24 +83,24 @@ module.exports = {
 ## Example
 
 ```jsx
-import { render, screen, fireEvent } from '@testing-library/react-native';
+import { render, screen, userEvent } from '@testing-library/react-native';
 import { QuestionsBoard } from '../QuestionsBoard';
 
-test('form submits two answers', () => {
-  const allQuestions = ['q1', 'q2'];
-  const mockFn = jest.fn();
+test('form submits two answers', async () => {
+  const questions = ['q1', 'q2'];
+  const onSubmit = jest.fn();
 
-  render(<QuestionsBoard questions={allQuestions} onSubmit={mockFn} />);
+  const user = userEvent.setup();
+  render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
 
   const answerInputs = screen.getAllByLabelText('answer input');
+  await user.type(answerInputs[0], 'a1');
+  await user.type(answerInputs[1], 'a2');
+  await user.press(screen.getByRole('button', { name: 'Submit' }));
 
-  fireEvent.changeText(answerInputs[0], 'a1');
-  fireEvent.changeText(answerInputs[1], 'a2');
-  fireEvent.press(screen.getByText('Submit'));
-
-  expect(mockFn).toBeCalledWith({
-    1: { q: 'q1', a: 'a1' },
-    2: { q: 'q2', a: 'a2' },
+  expect(onSubmit).toHaveBeenCalledWith({
+    '1': { q: 'q1', a: 'a1' },
+    '2': { q: 'q2', a: 'a2' },
   });
 });
 ```
