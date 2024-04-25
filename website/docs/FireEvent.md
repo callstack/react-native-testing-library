@@ -18,7 +18,7 @@ more realistic event simulation by emitting a sequence of events with proper eve
 Use Fire Event for cases not supported by User Event and for triggering event handlers on composite components.
 :::
 
-`fireEvent` API allows you to trigger all kind of event handlers on both host and composite components. It will try to invoke a single event handler traversing the component tree bottom-up from passed element and trying to find enabled event handler named `onXxx` when `xxx` is the name of the event passed.
+The `fireEvent` API allows you to trigger all kinds of event handlers on both host and composite components. It will try to invoke a single event handler traversing the component tree bottom-up from passed element and trying to find enabled event handler named `onXxx` when `xxx` is the name of the event passed.
 
 Unlike User Event, this API does not automatically pass event object to event handler, this is responsibility of the user to construct such object.
 

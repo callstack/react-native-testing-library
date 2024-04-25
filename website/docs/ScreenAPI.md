@@ -15,9 +15,9 @@ let screen: {
 };
 ```
 
-The `screen` object offers recommended way to access queries and utilties for currently rendered UI.
+The `screen` object offers a recommended way to access queries and utilities for the currently rendered UI.
 
-This object is assigned after `render` call and it's cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test then it holds a special object throws a helpful error on each property and method access.
+This object is assigned after the `render` call and cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test, then it holds a special object and throws a helpful error on each property and method access.
 
 ### `...queries`
 
@@ -105,9 +105,9 @@ This will log the rendered JSX without the `style` props.
 
 The `children` prop cannot be filtered out so the following will print all rendered components with all props but `children` filtered out.
 
-This option can be used to target specific props when debugging a query (for instance keeping only `children` prop when debugging a `getByText` query).
+This option can be used to target specific props when debugging a query (for instance, keeping only the `children` prop when debugging a `getByText` query).
 
-You can also transform prop values so that they are more readable (e.g. flatten styles).
+You can also transform prop values so that they are more readable (e.g., flatten styles).
 
 ```ts
 import { StyleSheet } from 'react-native';
@@ -137,12 +137,12 @@ const root: ReactTestInstance;
 
 Returns the rendered root [host element](testing-env#host-and-composite-components).
 
-This API is primarily useful in component tests, as it allows you to access root host view without using `*ByTestId` queries or similar methods.
+This API is primarily useful for component tests, as it allows you to access root host view without using `*ByTestId` queries or similar methods.
 
 ### `UNSAFE_root`
 
 :::caution
-This API typically will return a composite view which goes against recommended testing practices. This API is primarily available for legacy test suites that rely on such testing.
+This API typically will return a composite view, which goes against recommended testing practices. This API is primarily available for legacy test suites that rely on such testing.
 :::
 
 ```ts
@@ -152,6 +152,6 @@ const UNSAFE_root: ReactTestInstance;
 Returns the rendered [composite root element](testing-env#host-and-composite-components).
 
 :::note
-This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/api#container-1). However, despite the same name, the actual behavior has been signficantly different, hence the name change to `UNSAFE_root`.
+This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/api#container-1). However, despite the same name, the actual behavior has been significantly different; hence, we decided to change the name to `UNSAFE_root`.
 :::
 
