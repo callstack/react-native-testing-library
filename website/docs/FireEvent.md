@@ -62,7 +62,7 @@ fireEvent(screen.getByPlaceholderText('my placeholder'), 'blur');
 
 FireEvent exposes convenience methods for common events like: `press`, `changeText`, `scroll`.
 
-### `fireEvent.press`
+### `fireEvent.press` {#press}
 
 ```
 fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void
@@ -98,7 +98,7 @@ fireEvent.press(screen.getByText('Press me'), eventData);
 expect(onPressMock).toHaveBeenCalledWith(eventData);
 ```
 
-### `fireEvent.changeText`
+### `fireEvent.changeText` {#change-text}
 
 ```
 fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void
@@ -126,7 +126,7 @@ render(
 fireEvent.changeText(screen.getByPlaceholderText('Enter data'), CHANGE_TEXT);
 ```
 
-### `fireEvent.scroll`
+### `fireEvent.scroll` {#scroll}
 
 ```
 fireEvent.scroll: (element: ReactTestInstance, ...data: Array<any>) => void

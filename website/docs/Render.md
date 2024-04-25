@@ -1,5 +1,5 @@
 ---
-id: render-api
+id: render
 title: Render API
 ---
 

@@ -1,5 +1,5 @@
 ---
-id: other-apis
+id: other
 title: Other APIs
 ---
 
@@ -7,7 +7,7 @@ title: Other APIs
 
 ### `findBy*` queries
 
-The `findBy*` queries are used to find elements that are not instantly available but will be added as a result of some asynchronous action. Learn more details [here](api-queries#find-by).
+The `findBy*` queries are used to find elements that are not instantly available but will be added as a result of some asynchronous action. Learn more details [here](queries#find-by).
 
 ### `waitFor`
 

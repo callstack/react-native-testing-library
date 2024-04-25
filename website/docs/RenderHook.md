@@ -1,5 +1,5 @@
 ---
-id: render-hook-api
+id: render-hook
 title: Render Hook API
 ---
 

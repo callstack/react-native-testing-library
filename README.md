@@ -119,13 +119,14 @@ You can find the source of `QuestionsBoard` component and this example [here](ht
 
 ## API / Usage
 
-The [public API](https://callstack.github.io/react-native-testing-library/docs/api) of `@testing-library/react-native` is focused around these essential methods:
+The public API of `@testing-library/react-native` is focused around these essential APIs:
 
-- [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – deeply renders the given React element and returns helpers to query the output components.
-- [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/api#fireevent) - invokes named event handler on the element.
-- [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/api#waitfor) - waits for non-deterministic periods of time until the queried element is added or times out.
-- [`waitForElementToBeRemoved`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelementtoberemoved) - waits for non-deterministic periods of time until the queried element is removed or times out.
-- [`within`](https://callstack.github.io/react-native-testing-library/docs/api#within) - creates a queries object scoped for a given element.
+- [`render`](https://callstack.github.io/react-native-testing-library/docs/render) – deeply renders the given React element and returns helpers to query the output components.
+- [`userEvent`](https://callstack.github.io/react-native-testing-library/docs/user-event) - simulates user interaction with elements like buttons and text inputs.
+- [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/fire-event) - invokes named event handler on the element.
+- [`waitFor`](https://callstack.github.io/react-native-testing-library/docs/other#waitfor) - waits for non-deterministic periods of time until the queried element is added or times out.
+- [`waitForElementToBeRemoved`](https://callstack.github.io/react-native-testing-library/docs/other#waitforelementtoberemoved) - waits for non-deterministic periods of time until the queried element is removed or times out.
+- [`within`](https://callstack.github.io/react-native-testing-library/docs/other#within) - creates a queries object scoped for a given element.
 
 ## Migration Guides
 

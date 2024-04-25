@@ -1,5 +1,5 @@
 ---
-id: screen-api
+id: screen
 title: Screen API
 ---
 
@@ -152,6 +152,6 @@ const UNSAFE_root: ReactTestInstance;
 Returns the rendered [composite root element](testing-env#host-and-composite-components).
 
 :::note
-This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/api#container-1). However, despite the same name, the actual behavior has been significantly different; hence, we decided to change the name to `UNSAFE_root`.
+This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/other#container-1). However, despite the same name, the actual behavior has been significantly different; hence, we decided to change the name to `UNSAFE_root`.
 :::
 
