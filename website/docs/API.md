@@ -28,9 +28,7 @@ import { QuestionsBoard } from '../QuestionsBoard';
 
 test('should verify two questions', () => {
   render(<QuestionsBoard {...props} />);
-  const allQuestions = screen.queryAllByRole('header');
-
-  expect(allQuestions).toHaveLength(2);
+  expect(screen.queryAllByRole('header')).toHaveLength(2);
 });
 ```
 
@@ -78,37 +76,57 @@ This **experimental** option allows you to replicate React Native behavior of th
 
 This check is not enforced by React Test Renderer and hence by default React Native Testing Library also does not check this. That might result in runtime errors when running your code on a device, while the code works without errors in tests.
 
+### Result {#render-result}
+
+The `render` function returns the same queries and utilities as offered by the `screen` object. We recommended using `screen` object as more developer-friendly way.
+
+## `screen` API
+
+```ts
+let screen: {
+  ...queries;
+  rerender(element: React.Element<unknown>): void;
+  unmount(): void;
+  debug(options?: DebugOptions): void
+  toJSON(): ReactTestRendererJSON | null;
+  root: ReactTestInstance;
+  UNSAFE_root: ReactTestInstance;
+};
+```
+
+The `screen` object offers recommended way to access queries and utilties for currently rendered UI.
+
+This object is assigned after `render` call and it's cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test then it holds a special object throws a helpful error on each property and method access.
+
 ### `...queries`
 
-The most important feature of `render` is providing a set of helpful queries that allow you to find certain elements in the view hierarchy.
+The most important feature of `screen` is providing a set of helpful queries that allow you to find certain elements in the view hierarchy.
 
 See [Queries](./Queries.md) for a complete list.
 
 #### Example
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-const { getByText, queryByA11yState } = render(<Component />);
+render(<MyComponent />);
+const buttonStart = screen.getByRole('button', { name: 'start' })
 ```
 
-### `update`
+### `rerender`
 
-_Also available under `rerender` alias_
+_Also available under `update` alias_
 
 ```ts
-update(element: React.Element<any>): void
-rerender(element: React.Element<any>): void
+function rerender(element: React.Element<unknown>): void
 ```
 
-Re-render the in-memory tree with a new root element. This simulates a React update at the root. If the new element has the same type and key as the previous element, the tree will be updated; otherwise, it will re-mount a new tree. This is useful when testing for `componentDidUpdate` behavior, by passing updated props to the component.
-
-[Example code](https://github.com/callstack/react-native-testing-library/blob/f96d782d26dd4815dbfd01de6ef7a647efd1f693/src/__tests__/act.test.js#L31-L37)
+Re-render the in-memory tree with a new root element. This simulates a React update render at the root. If the new element has the same type (and `key`) as the previous element, the tree will be updated; otherwise, it will re-mount a new tree, in both cases triggering the appropriate lifecycle events.
 
 ### `unmount`
 
 ```ts
-unmount(): void
+function unmount(): void
 ```
 
 Unmount the in-memory tree, triggering the appropriate lifecycle events.
@@ -120,17 +138,15 @@ Usually you should not need to call `unmount` as it is done automatically if you
 ### `debug`
 
 ```ts
-interface DebugOptions {
+function debug(options?: {
   message?: string;
   mapProps?: MapPropsFunction;
-}
-
-debug(options?: DebugOptions | string): void
+}): void
 ```
 
 Pretty prints deeply rendered component passed to `render`.
 
-#### `message` option
+#### `message` option {#debug-message-option}
 
 You can provide a message that will be printed on top.
 
@@ -151,22 +167,22 @@ optional message
 </View>
 ```
 
-#### `mapProps` option
+#### `mapProps` option {#debug-map-props-option}
+
+```ts
+function debug({ mapProps: (props) => ({}) });
+```
 
 You can use the `mapProps` option to transform the props that will be printed :
 
 ```jsx
 render(<View style={{ backgroundColor: 'red' }} />);
-debug({ mapProps: ({ style, ...props }) => ({ props }) });
+screen.debug({ mapProps: ({ style, ...props }) => ({ props }) });
 ```
 
 This will log the rendered JSX without the `style` props.
 
 The `children` prop cannot be filtered out so the following will print all rendered components with all props but `children` filtered out.
-
-```ts
-debug({ mapProps: (props) => ({}) });
-```
 
 This option can be used to target specific props when debugging a query (for instance keeping only `children` prop when debugging a `getByText` query).
 
@@ -175,23 +191,19 @@ You can also transform prop values so that they are more readable (e.g. flatten 
 ```ts
 import { StyleSheet } from 'react-native';
 
-debug({ mapProps : {({ style, ...props })} => ({ style : StyleSheet.flatten(style), ...props }) });
+screen.debug({ mapProps : {({ style, ...props })} => ({ style : StyleSheet.flatten(style), ...props }) });
 ```
 
 Or remove props that have little value when debugging tests, e.g. path prop for svgs
 
 ```ts
-debug({ mapProps: ({ path, ...props }) => ({ ...props }) });
+screen.debug({ mapProps: ({ path, ...props }) => ({ ...props }) });
 ```
-
-#### `debug.shallow`
-
-Pretty prints shallowly rendered component passed to `render` with optional message on top.
 
 ### `toJSON`
 
 ```ts
-toJSON(): ReactTestRendererJSON | null
+function toJSON(): ReactTestRendererJSON | null
 ```
 
 Get the rendered component JSON representation, e.g. for snapshot testing.
@@ -199,7 +211,7 @@ Get the rendered component JSON representation, e.g. for snapshot testing.
 ### `root`
 
 ```ts
-root: ReactTestInstance;
+const root: ReactTestInstance;
 ```
 
 Returns the rendered root [host element](testing-env#host-and-composite-components).
@@ -208,36 +220,19 @@ This API is primarily useful in component tests, as it allows you to access root
 
 ### `UNSAFE_root`
 
-```ts
-UNSAFE_root: ReactTestInstance;
-```
-
-Returns the rendered [composite root element](testing-env#host-and-composite-components).
-
 :::caution
 This API typically will return a composite view which goes against recommended testing practices. This API is primarily available for legacy test suites that rely on such testing.
 :::
 
+```ts
+const UNSAFE_root: ReactTestInstance;
+```
+
+Returns the rendered [composite root element](testing-env#host-and-composite-components).
+
 :::note
 This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/api#container-1). However, despite the same name, the actual behavior has been signficantly different, hence the name change to `UNSAFE_root`.
 :::
-
-## `screen` API
-
-```ts
-let screen: RenderResult;
-```
-
-Hold the value of latest render call for easier access to query and other functions returned by [`render`](#render).
-
-Its value is automatically cleared after each test by calling [`cleanup`](#cleanup). If no `render` call has been made in a given test then it holds a special object that implements `RenderResult` but throws a helpful error on each property and method access.
-
-This can also be used to build test utils that would normally require to be in render scope, either in a test file or globally for your project. For instance:
-
-```ts
-// Prints the rendered components omitting all props except children.
-const debugText = () => screen.debug({ mapProps: (props) => ({}) });
-```
 
 ## `fireEvent` API
 
