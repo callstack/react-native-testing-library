@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   View,
+  Button,
 } from 'react-native';
 import { createEventLogger, getEventsName } from '../../../test-utils';
 import { render, screen } from '../../..';
@@ -199,6 +200,15 @@ describe('userEvent.press with fake timers', () => {
 
     await userEvent.press(screen.getByText('press me'));
     expect(getEventsName(events)).toEqual(['pressIn', 'press', 'pressOut']);
+  });
+
+  test('press works on Button', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    render(<Button title="press me" onPress={logEvent('press')} />);
+
+    await userEvent.press(screen.getByText('press me'));
+    expect(getEventsName(events)).toEqual(['press']);
   });
 
   test('longPress works Text', async () => {
