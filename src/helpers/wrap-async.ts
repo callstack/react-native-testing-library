@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 
-import { act } from 'react-test-renderer';
-import { getIsReactActEnvironment, setReactActEnvironment } from '../act';
+import act, { getIsReactActEnvironment, setReactActEnvironment } from '../act';
 import { flushMicroTasksLegacy } from '../flush-micro-tasks';
 import { checkReactVersionAtLeast } from '../react-versions';
 
