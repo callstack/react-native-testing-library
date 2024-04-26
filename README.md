@@ -154,7 +154,7 @@ Like the project? ⚛️ [Join the team](https://callstack.com/careers/?utm_camp
 
 ---
 
-Supported and used by [Rally Health](https://www.rallyhealth.com/careers-home).
+Supported and used by [Rally Health](https://www.rallyhealth.com/careers).
 
 <!-- badges -->
 
