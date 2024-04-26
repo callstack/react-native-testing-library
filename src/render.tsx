@@ -15,7 +15,7 @@ import { getQueriesForElement } from './within';
 
 export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
-  createNodeMock?: (element: React.ReactElement) => any;
+  createNodeMock?: (element: React.ReactElement) => unknown;
   unstable_validateStringsRenderedWithinText?: boolean;
 }
 
@@ -35,13 +35,15 @@ export interface RenderInternalOptions extends RenderOptions {
 
 export function renderInternal<T>(
   component: React.ReactElement<T>,
-  {
-    wrapper: Wrapper,
-    createNodeMock,
-    unstable_validateStringsRenderedWithinText,
-    detectHostComponentNames = true,
-  }: RenderInternalOptions = {},
+  options?: RenderInternalOptions,
 ) {
+  const {
+    wrapper: Wrapper,
+    detectHostComponentNames = true,
+    unstable_validateStringsRenderedWithinText,
+    ...testRendererOptions
+  } = options || {};
+
   if (detectHostComponentNames) {
     configureHostComponentNamesIfNeeded();
   }
@@ -49,24 +51,21 @@ export function renderInternal<T>(
   if (unstable_validateStringsRenderedWithinText) {
     return renderWithStringValidation(component, {
       wrapper: Wrapper,
-      createNodeMock,
+      ...testRendererOptions,
     });
   }
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-
-  const renderer = renderWithAct(wrap(component), createNodeMock ? { createNodeMock } : undefined);
-
+  const renderer = renderWithAct(wrap(component), testRendererOptions);
   return buildRenderResult(renderer, wrap);
 }
 
 function renderWithStringValidation<T>(
   component: React.ReactElement<T>,
-  {
-    wrapper: Wrapper,
-    createNodeMock,
-  }: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
+  options: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
 ) {
+  const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
+
   const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
     if (phase === 'update') {
       validateStringsRenderedWithinText(screen.toJSON());
@@ -79,7 +78,7 @@ function renderWithStringValidation<T>(
     </Profiler>
   );
 
-  const renderer = renderWithAct(wrap(component), createNodeMock ? { createNodeMock } : undefined);
+  const renderer = renderWithAct(wrap(component), testRendererOptions);
   validateStringsRenderedWithinText(renderer.toJSON());
 
   return buildRenderResult(renderer, wrap);

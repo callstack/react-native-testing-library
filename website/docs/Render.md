@@ -38,7 +38,7 @@ This option allows you to wrap the tested component, passed as the first option 
 #### `createNodeMock` option
 
 ```ts
-createNodeMock?: (element: React.Element<any>) => any,
+createNodeMock?: (element: React.Element) => unknown,
 ```
 
 This option allows you to pass `createNodeMock` option to `ReactTestRenderer.create()` method in order to allow for custom mock refs. You can learn more about this option from [React Test Renderer documentation](https://reactjs.org/docs/test-renderer.html#ideas).

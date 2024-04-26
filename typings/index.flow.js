@@ -348,6 +348,9 @@ declare module '@testing-library/react-native' {
     wrapper?: React.ComponentType<any>;
     createNodeMock?: (element: React.Element<any>) => any;
     unstable_validateStringsRenderedWithinText?: boolean;
+    unstable_isConcurrent?: boolean;
+    unstable_strictMode?: boolean;
+    unstable_concurrentUpdatesByDefault?: boolean;
   }
 
   declare export var render: (
