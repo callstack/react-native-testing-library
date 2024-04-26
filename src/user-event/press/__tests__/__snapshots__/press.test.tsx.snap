@@ -11,6 +11,9 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
       "dispatchConfig": {
         "registrationName": "onResponderGrant",
       },
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -23,7 +26,10 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
         "touches": [],
       },
       "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
       "target": {},
+      "timeStamp": 0,
     },
   },
   {
@@ -35,6 +41,9 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
       "dispatchConfig": {
         "registrationName": "onResponderRelease",
       },
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -47,7 +56,10 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
         "touches": [],
       },
       "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
       "target": {},
+      "timeStamp": 0,
     },
   },
   {
@@ -59,6 +71,9 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
       "dispatchConfig": {
         "registrationName": "onResponderRelease",
       },
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -71,7 +86,10 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
         "touches": [],
       },
       "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
       "target": {},
+      "timeStamp": 0,
     },
   },
 ]

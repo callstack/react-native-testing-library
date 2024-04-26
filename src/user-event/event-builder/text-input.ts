@@ -1,5 +1,6 @@
 import { ContentSize } from '../utils/content-size';
 import { TextRange } from '../utils/text-range';
+import { baseSyntheticEvent } from './base';
 
 export const TextInputEventBuilder = {
   /**
@@ -9,9 +10,8 @@ export const TextInputEventBuilder = {
    */
   change: (text: string) => {
     return {
+      ...baseSyntheticEvent(),
       nativeEvent: { text, target: 0, eventCount: 0 },
-      currentTarget: {},
-      target: {},
     };
   },
 
@@ -22,9 +22,8 @@ export const TextInputEventBuilder = {
    */
   keyPress: (key: string) => {
     return {
+      ...baseSyntheticEvent(),
       nativeEvent: { key },
-      currentTarget: {},
-      target: {},
     };
   },
 
@@ -35,9 +34,8 @@ export const TextInputEventBuilder = {
    */
   submitEditing: (text: string) => {
     return {
+      ...baseSyntheticEvent(),
       nativeEvent: { text, target: 0 },
-      currentTarget: {},
-      target: {},
     };
   },
 
@@ -48,9 +46,8 @@ export const TextInputEventBuilder = {
    */
   endEditing: (text: string) => {
     return {
+      ...baseSyntheticEvent(),
       nativeEvent: { text, target: 0 },
-      currentTarget: {},
-      target: {},
     };
   },
 
@@ -61,9 +58,8 @@ export const TextInputEventBuilder = {
    */
   selectionChange: ({ start, end }: TextRange) => {
     return {
+      ...baseSyntheticEvent(),
       nativeEvent: { selection: { start, end } },
-      currentTarget: {},
-      target: {},
     };
   },
 
@@ -74,14 +70,13 @@ export const TextInputEventBuilder = {
    */
   textInput: (text: string, previousText: string) => {
     return {
+      ...baseSyntheticEvent(),
       nativeEvent: {
         text,
         previousText,
         range: { start: text.length, end: text.length },
         target: 0,
       },
-      currentTarget: {},
-      target: {},
     };
   },
 
@@ -92,9 +87,8 @@ export const TextInputEventBuilder = {
    */
   contentSizeChange: ({ width, height }: ContentSize) => {
     return {
+      ...baseSyntheticEvent(),
       nativeEvent: { contentSize: { width, height }, target: 0 },
-      currentTarget: {},
-      target: {},
     };
   },
 };

@@ -11,6 +11,9 @@ exports[`userEvent.longPress with fake timers calls onLongPress if the delayLong
       "dispatchConfig": {
         "registrationName": "onResponderGrant",
       },
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -23,7 +26,10 @@ exports[`userEvent.longPress with fake timers calls onLongPress if the delayLong
         "touches": [],
       },
       "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
       "target": {},
+      "timeStamp": 0,
     },
   },
 ]

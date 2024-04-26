@@ -6,6 +6,9 @@ exports[`scrollTo() with FlatList supports vertical drag scroll: scrollTo({ y: 1
     "name": "scrollBeginDrag",
     "payload": {
       "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
       "nativeEvent": {
         "contentInset": {
           "bottom": 0,
@@ -32,13 +35,20 @@ exports[`scrollTo() with FlatList supports vertical drag scroll: scrollTo({ y: 1
           "y": 0,
         },
       },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
       "target": {},
+      "timeStamp": 0,
     },
   },
   {
     "name": "scroll",
     "payload": {
       "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
       "nativeEvent": {
         "contentInset": {
           "bottom": 0,
@@ -65,13 +75,20 @@ exports[`scrollTo() with FlatList supports vertical drag scroll: scrollTo({ y: 1
           "y": 0,
         },
       },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
       "target": {},
+      "timeStamp": 0,
     },
   },
   {
     "name": "scroll",
     "payload": {
       "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
       "nativeEvent": {
         "contentInset": {
           "bottom": 0,
@@ -98,13 +115,20 @@ exports[`scrollTo() with FlatList supports vertical drag scroll: scrollTo({ y: 1
           "y": 0,
         },
       },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
       "target": {},
+      "timeStamp": 0,
     },
   },
   {
     "name": "scroll",
     "payload": {
       "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
       "nativeEvent": {
         "contentInset": {
           "bottom": 0,
@@ -131,13 +155,20 @@ exports[`scrollTo() with FlatList supports vertical drag scroll: scrollTo({ y: 1
           "y": 0,
         },
       },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
       "target": {},
+      "timeStamp": 0,
     },
   },
   {
     "name": "scrollEndDrag",
     "payload": {
       "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
       "nativeEvent": {
         "contentInset": {
           "bottom": 0,
@@ -164,7 +195,11 @@ exports[`scrollTo() with FlatList supports vertical drag scroll: scrollTo({ y: 1
           "y": 0,
         },
       },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
       "target": {},
+      "timeStamp": 0,
     },
   },
 ]

@@ -1,3 +1,5 @@
+import { baseSyntheticEvent } from './base';
+
 /**
  * Experimental values:
  * - iOS: `{"changedTouches": [[Circular]], "identifier": 1, "locationX": 253, "locationY": 30.333328247070312, "pageX": 273, "pageY": 141.3333282470703, "target": 75, "timestamp": 875928682.0450834, "touches": [[Circular]]}`
@@ -5,6 +7,7 @@
  */
 function touch() {
   return {
+    ...baseSyntheticEvent(),
     nativeEvent: {
       changedTouches: [],
       identifier: 0,
@@ -16,9 +19,7 @@ function touch() {
       timestamp: Date.now(),
       touches: [],
     },
-    persist: () => {},
     currentTarget: { measure: () => {} },
-    target: {},
   };
 }
 
@@ -46,11 +47,10 @@ export const CommonEventBuilder = {
    */
   focus: () => {
     return {
+      ...baseSyntheticEvent(),
       nativeEvent: {
         target: 0,
       },
-      currentTarget: {},
-      target: {},
     };
   },
 
@@ -61,11 +61,10 @@ export const CommonEventBuilder = {
    */
   blur: () => {
     return {
+      ...baseSyntheticEvent(),
       nativeEvent: {
         target: 0,
       },
-      currentTarget: {},
-      target: {},
     };
   },
 };

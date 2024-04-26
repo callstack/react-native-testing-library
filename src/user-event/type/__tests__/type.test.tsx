@@ -242,7 +242,7 @@ describe('type()', () => {
     ]);
 
     expect(events[7].name).toBe('submitEditing');
-    expect(events[7].payload).toEqual({
+    expect(events[7].payload).toMatchObject({
       nativeEvent: { text: 'a', target: 0 },
       currentTarget: {},
       target: {},
@@ -320,5 +320,22 @@ describe('type()', () => {
 
     const eventNames = events.map((event) => event.name);
     expect(eventNames).toEqual(['focus', 'changeText', 'changeText', 'changeText', 'blur']);
+  });
+
+  // See: https://github.com/callstack/react-native-testing-library/issues/1588
+  it('can call "persist()" on "onKeyPress" event handler', async () => {
+    const handleKeyPress = jest.fn();
+    render(
+      <TextInput
+        testID="input"
+        onKeyPress={(e) => {
+          e.persist();
+          handleKeyPress();
+        }}
+      />,
+    );
+
+    await userEvent.type(screen.getByTestId('input'), 'abc');
+    expect(handleKeyPress).toHaveBeenCalledTimes(3);
   });
 });
