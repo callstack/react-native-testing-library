@@ -203,7 +203,7 @@ describe('userEvent.press with real timers', () => {
     expect(getEventsName(events)).toEqual(['pressIn', 'press', 'pressOut']);
   });
 
-  test('doesnt trigger on disabled Text', async () => {
+  test('does not trigger on disabled Text', async () => {
     const { events, logEvent } = createEventLogger();
 
     render(
@@ -222,7 +222,7 @@ describe('userEvent.press with real timers', () => {
     expect(events).toEqual([]);
   });
 
-  test('doesnt trigger on Text with disabled pointer events', async () => {
+  test('does not trigger on Text with disabled pointer events', async () => {
     const { events, logEvent } = createEventLogger();
 
     render(

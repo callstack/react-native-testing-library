@@ -1,4 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
+import act from '../../act';
 import { getHostParent } from '../../helpers/component-tree';
 import { isTextInputEditable } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
@@ -82,7 +83,9 @@ const emitPressablePressEvents = async (
   // before emitting the `pressOut` event. We need to wait here, so that
   // `press()` function does not return before that.
   if (DEFAULT_MIN_PRESS_DURATION - options.duration > 0) {
-    await wait(config, DEFAULT_MIN_PRESS_DURATION - options.duration);
+    await act(async () => {
+      await wait(config, DEFAULT_MIN_PRESS_DURATION - options.duration);
+    });
   }
 };
 

@@ -1,5 +1,6 @@
 import TestRenderer from 'react-test-renderer';
 import type { ReactTestRenderer, TestRendererOptions } from 'react-test-renderer';
+import act from './act';
 
 export function renderWithAct(
   component: React.ReactElement,
@@ -8,7 +9,7 @@ export function renderWithAct(
   let renderer: ReactTestRenderer;
 
   // This will be called synchronously.
-  void TestRenderer.act(() => {
+  void act(() => {
     renderer = TestRenderer.create(component, options);
   });
 

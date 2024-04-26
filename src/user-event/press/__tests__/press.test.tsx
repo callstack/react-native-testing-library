@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   View,
+  Button,
 } from 'react-native';
 import { createEventLogger, getEventsName } from '../../../test-utils';
 import { render, screen } from '../../..';
@@ -201,6 +202,15 @@ describe('userEvent.press with fake timers', () => {
     expect(getEventsName(events)).toEqual(['pressIn', 'press', 'pressOut']);
   });
 
+  test('press works on Button', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    render(<Button title="press me" onPress={logEvent('press')} />);
+
+    await userEvent.press(screen.getByText('press me'));
+    expect(getEventsName(events)).toEqual(['press']);
+  });
+
   test('longPress works Text', async () => {
     const { events, logEvent } = createEventLogger();
 
@@ -219,7 +229,7 @@ describe('userEvent.press with fake timers', () => {
     expect(getEventsName(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
   });
 
-  test('doesnt trigger on disabled Text', async () => {
+  test('does not trigger on disabled Text', async () => {
     const { events, logEvent } = createEventLogger();
 
     render(
@@ -238,7 +248,7 @@ describe('userEvent.press with fake timers', () => {
     expect(events).toEqual([]);
   });
 
-  test('doesnt trigger on Text with disabled pointer events', async () => {
+  test('does not trigger on Text with disabled pointer events', async () => {
     const { events, logEvent } = createEventLogger();
 
     render(
