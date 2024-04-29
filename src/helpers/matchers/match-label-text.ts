@@ -1,6 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { matches, TextMatch, TextMatchOptions } from '../../matches';
-import { getAccessibilityLabel, getAccessibilityLabelledBy } from '../accessiblity';
+import { getAccessibilityLabel, getAccessibilityLabelledBy } from '../accessibility';
 import { findAll } from '../find-all';
 import { matchTextContent } from './match-text-content';
 

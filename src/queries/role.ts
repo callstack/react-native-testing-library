@@ -1,10 +1,11 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import type { AccessibilityRole, Role } from 'react-native';
 import {
   accessibilityStateKeys,
-  accessiblityValueKeys,
+  accessibilityValueKeys,
   getAccessibilityRole,
   isAccessibilityElement,
-} from '../helpers/accessiblity';
+} from '../helpers/accessibility';
 import { findAll } from '../helpers/find-all';
 import {
   AccessibilityStateMatcher,
@@ -16,6 +17,7 @@ import {
 } from '../helpers/matchers/match-accessibility-value';
 import { matchStringProp } from '../helpers/matchers/match-string-prop';
 import type { TextMatch } from '../matches';
+import { StringWithAutocomplete } from '../types';
 import { getQueriesForElement } from '../within';
 import { makeQueries } from './make-queries';
 import type {
@@ -28,7 +30,9 @@ import type {
 } from './make-queries';
 import { CommonQueryOptions } from './options';
 
-type ByRoleOptions = CommonQueryOptions &
+export type ByRoleMatcher = StringWithAutocomplete<AccessibilityRole | Role> | RegExp;
+
+export type ByRoleOptions = CommonQueryOptions &
   AccessibilityStateMatcher & {
     name?: TextMatch;
     value?: AccessibilityValueMatcher;
@@ -52,7 +56,9 @@ const matchAccessibilityValueIfNeeded = (
   return value != null ? matchAccessibilityValue(node, value) : true;
 };
 
-const queryAllByRole = (instance: ReactTestInstance): QueryAllByQuery<TextMatch, ByRoleOptions> =>
+const queryAllByRole = (
+  instance: ReactTestInstance,
+): QueryAllByQuery<ByRoleMatcher, ByRoleOptions> =>
   function queryAllByRoleFn(role, options) {
     return findAll(
       instance,
@@ -80,7 +86,7 @@ const formatQueryParams = (role: TextMatch, options: ByRoleOptions = {}) => {
     }
   });
 
-  accessiblityValueKeys.forEach((valueKey) => {
+  accessibilityValueKeys.forEach((valueKey) => {
     if (options?.value?.[valueKey] !== undefined) {
       params.push(`${valueKey} value: ${options?.value?.[valueKey]}`);
     }
@@ -102,12 +108,12 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByRoleQueries = {
-  getByRole: GetByQuery<TextMatch, ByRoleOptions>;
-  getAllByRole: GetAllByQuery<TextMatch, ByRoleOptions>;
-  queryByRole: QueryByQuery<TextMatch, ByRoleOptions>;
-  queryAllByRole: QueryAllByQuery<TextMatch, ByRoleOptions>;
-  findByRole: FindByQuery<TextMatch, ByRoleOptions>;
-  findAllByRole: FindAllByQuery<TextMatch, ByRoleOptions>;
+  getByRole: GetByQuery<ByRoleMatcher, ByRoleOptions>;
+  getAllByRole: GetAllByQuery<ByRoleMatcher, ByRoleOptions>;
+  queryByRole: QueryByQuery<ByRoleMatcher, ByRoleOptions>;
+  queryAllByRole: QueryAllByQuery<ByRoleMatcher, ByRoleOptions>;
+  findByRole: FindByQuery<ByRoleMatcher, ByRoleOptions>;
+  findAllByRole: FindAllByQuery<ByRoleMatcher, ByRoleOptions>;
 };
 
 export const bindByRoleQueries = (instance: ReactTestInstance): ByRoleQueries => ({

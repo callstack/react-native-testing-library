@@ -16,7 +16,7 @@ export const accessibilityStateKeys: (keyof AccessibilityState)[] = [
   'expanded',
 ];
 
-export const accessiblityValueKeys: (keyof AccessibilityValue)[] = ['min', 'max', 'now', 'text'];
+export const accessibilityValueKeys: (keyof AccessibilityValue)[] = ['min', 'max', 'now', 'text'];
 
 export function isHiddenFromAccessibility(
   element: ReactTestInstance | null,

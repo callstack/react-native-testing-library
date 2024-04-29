@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, stringify } from 'jest-matcher-utils';
-import { getAccessibilityValue } from '../helpers/accessiblity';
+import { getAccessibilityValue } from '../helpers/accessibility';
 import {
   AccessibilityValueMatcher,
   matchAccessibilityValue,

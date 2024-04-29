@@ -11,6 +11,7 @@ import { isHostElement } from './helpers/component-tree';
 import { isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isTextInputEditable } from './helpers/text-input';
+import { StringWithAutocomplete } from './types';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
@@ -105,20 +106,17 @@ function getEventHandlerName(eventName: string) {
   return `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 }
 
-// Allows any string but will provide autocomplete for type T
-type StringWithAutoComplete<T> = T | (string & Record<never, never>);
-
-// String union type of keys of T that start with on, stripped from on
-type OnKeys<T> = keyof {
+// String union type of keys of T that start with on, stripped of 'on'
+type EventNameExtractor<T> = keyof {
   [K in keyof T as K extends `on${infer Rest}` ? Uncapitalize<Rest> : never]: T[K];
 };
 
-type EventName = StringWithAutoComplete<
-  | OnKeys<ViewProps>
-  | OnKeys<TextProps>
-  | OnKeys<TextInputProps>
-  | OnKeys<PressableProps>
-  | OnKeys<ScrollViewProps>
+type EventName = StringWithAutocomplete<
+  | EventNameExtractor<ViewProps>
+  | EventNameExtractor<TextProps>
+  | EventNameExtractor<TextInputProps>
+  | EventNameExtractor<PressableProps>
+  | EventNameExtractor<ScrollViewProps>
 >;
 
 function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {

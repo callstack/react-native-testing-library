@@ -4,7 +4,7 @@ import {
   getAccessibilityCheckedState,
   getAccessibilityRole,
   isAccessibilityElement,
-} from '../helpers/accessiblity';
+} from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
 import { checkHostElement, formatElement } from './utils';
 
