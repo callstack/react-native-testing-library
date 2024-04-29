@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+import type { AccessibilityRole, Role } from 'react-native';
 import {
   accessibilityStateKeys,
   accessiblityValueKeys,
@@ -28,6 +29,10 @@ import type {
 } from './make-queries';
 import { CommonQueryOptions } from './options';
 
+// TS autocomplete trick
+// Ref: https://github.com/microsoft/TypeScript/issues/29729#issuecomment-567871939
+export type RoleMatcher = AccessibilityRole | Role | (string & {}) | RegExp;
+
 type ByRoleOptions = CommonQueryOptions &
   AccessibilityStateMatcher & {
     name?: TextMatch;
@@ -52,7 +57,7 @@ const matchAccessibilityValueIfNeeded = (
   return value != null ? matchAccessibilityValue(node, value) : true;
 };
 
-const queryAllByRole = (instance: ReactTestInstance): QueryAllByQuery<TextMatch, ByRoleOptions> =>
+const queryAllByRole = (instance: ReactTestInstance): QueryAllByQuery<RoleMatcher, ByRoleOptions> =>
   function queryAllByRoleFn(role, options) {
     return findAll(
       instance,
@@ -102,12 +107,12 @@ const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
 );
 
 export type ByRoleQueries = {
-  getByRole: GetByQuery<TextMatch, ByRoleOptions>;
-  getAllByRole: GetAllByQuery<TextMatch, ByRoleOptions>;
-  queryByRole: QueryByQuery<TextMatch, ByRoleOptions>;
-  queryAllByRole: QueryAllByQuery<TextMatch, ByRoleOptions>;
-  findByRole: FindByQuery<TextMatch, ByRoleOptions>;
-  findAllByRole: FindAllByQuery<TextMatch, ByRoleOptions>;
+  getByRole: GetByQuery<RoleMatcher, ByRoleOptions>;
+  getAllByRole: GetAllByQuery<RoleMatcher, ByRoleOptions>;
+  queryByRole: QueryByQuery<RoleMatcher, ByRoleOptions>;
+  queryAllByRole: QueryAllByQuery<RoleMatcher, ByRoleOptions>;
+  findByRole: FindByQuery<RoleMatcher, ByRoleOptions>;
+  findAllByRole: FindAllByQuery<RoleMatcher, ByRoleOptions>;
 };
 
 export const bindByRoleQueries = (instance: ReactTestInstance): ByRoleQueries => ({

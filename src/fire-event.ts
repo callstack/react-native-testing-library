@@ -105,21 +105,20 @@ function getEventHandlerName(eventName: string) {
   return `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 }
 
-// Allows any string but will provide autocomplete for type T
-type StringWithAutoComplete<T> = T | (string & Record<never, never>);
-
-// String union type of keys of T that start with on, stripped from on
+// String union type of keys of T that start with on, stripped of 'on'
 type OnKeys<T> = keyof {
   [K in keyof T as K extends `on${infer Rest}` ? Uncapitalize<Rest> : never]: T[K];
 };
 
-type EventName = StringWithAutoComplete<
+// TS autocomplete trick
+// Ref: https://github.com/microsoft/TypeScript/issues/29729#issuecomment-567871939
+type EventName =
   | OnKeys<ViewProps>
   | OnKeys<TextProps>
   | OnKeys<TextInputProps>
   | OnKeys<PressableProps>
   | OnKeys<ScrollViewProps>
->;
+  | (string & {});
 
 function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {
   const handler = findEventHandler(element, eventName);
