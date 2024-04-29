@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { accessiblityValueKeys } from '../helpers/accessiblity';
+import { accessibilityValueKeys } from '../helpers/accessibility';
 import { deprecateQueries } from '../helpers/deprecation';
 import { findAll } from '../helpers/find-all';
 import {
@@ -27,7 +27,7 @@ const queryAllByA11yValue = (
 const formatQueryParams = (matcher: AccessibilityValueMatcher) => {
   const params: string[] = [];
 
-  accessiblityValueKeys.forEach((valueKey) => {
+  accessibilityValueKeys.forEach((valueKey) => {
     if (matcher[valueKey] !== undefined) {
       params.push(`${valueKey} value: ${matcher[valueKey]}`);
     }

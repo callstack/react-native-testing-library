@@ -1,6 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { isElementSelected } from '../helpers/accessiblity';
+import { isElementSelected } from '../helpers/accessibility';
 import { checkHostElement, formatElement } from './utils';
 
 export function toBeSelected(this: jest.MatcherContext, element: ReactTestInstance) {

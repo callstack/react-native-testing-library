@@ -1,6 +1,6 @@
 import { AccessibilityState } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
-import { accessibilityStateKeys, getAccessibilityState } from '../accessiblity';
+import { accessibilityStateKeys, getAccessibilityState } from '../accessibility';
 
 // This type is the same as AccessibilityState from `react-native` package
 // It is re-declared here due to issues with migration from `@types/react-native` to

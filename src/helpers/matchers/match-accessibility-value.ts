@@ -1,5 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
-import { getAccessibilityValue } from '../accessiblity';
+import { getAccessibilityValue } from '../accessibility';
 import { TextMatch } from '../../matches';
 import { matchStringProp } from './match-string-prop';
 

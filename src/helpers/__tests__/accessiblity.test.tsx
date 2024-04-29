@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, Pressable, Switch, TouchableOpacity } from 'react-native';
 import { render, isHiddenFromAccessibility, isInaccessible, screen } from '../..';
-import { isAccessibilityElement } from '../accessiblity';
+import { isAccessibilityElement } from '../accessibility';
 
 describe('isHiddenFromAccessibility', () => {
   test('returns false for accessible elements', () => {

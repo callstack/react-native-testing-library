@@ -1,6 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { isElementBusy } from '../helpers/accessiblity';
+import { isElementBusy } from '../helpers/accessibility';
 import { checkHostElement, formatElement } from './utils';
 
 export function toBeBusy(this: jest.MatcherContext, element: ReactTestInstance) {
