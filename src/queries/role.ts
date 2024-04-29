@@ -17,6 +17,7 @@ import {
 } from '../helpers/matchers/match-accessibility-value';
 import { matchStringProp } from '../helpers/matchers/match-string-prop';
 import type { TextMatch } from '../matches';
+import { StringWithAutocomplete } from '../types';
 import { getQueriesForElement } from '../within';
 import { makeQueries } from './make-queries';
 import type {
@@ -29,11 +30,9 @@ import type {
 } from './make-queries';
 import { CommonQueryOptions } from './options';
 
-// TS autocomplete trick
-// Ref: https://github.com/microsoft/TypeScript/issues/29729#issuecomment-567871939
-export type RoleMatcher = AccessibilityRole | Role | (string & {}) | RegExp;
+export type RoleMatcher = StringWithAutocomplete<AccessibilityRole | Role> | RegExp;
 
-type ByRoleOptions = CommonQueryOptions &
+export type ByRoleOptions = CommonQueryOptions &
   AccessibilityStateMatcher & {
     name?: TextMatch;
     value?: AccessibilityValueMatcher;

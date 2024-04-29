@@ -11,6 +11,7 @@ import { isHostElement } from './helpers/component-tree';
 import { isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isTextInputEditable } from './helpers/text-input';
+import { StringWithAutocomplete } from './types';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
@@ -106,19 +107,17 @@ function getEventHandlerName(eventName: string) {
 }
 
 // String union type of keys of T that start with on, stripped of 'on'
-type OnKeys<T> = keyof {
+type EventNameExtractor<T> = keyof {
   [K in keyof T as K extends `on${infer Rest}` ? Uncapitalize<Rest> : never]: T[K];
 };
 
-// TS autocomplete trick
-// Ref: https://github.com/microsoft/TypeScript/issues/29729#issuecomment-567871939
-type EventName =
-  | OnKeys<ViewProps>
-  | OnKeys<TextProps>
-  | OnKeys<TextInputProps>
-  | OnKeys<PressableProps>
-  | OnKeys<ScrollViewProps>
-  | (string & {});
+type EventName = StringWithAutocomplete<
+  | EventNameExtractor<ViewProps>
+  | EventNameExtractor<TextProps>
+  | EventNameExtractor<TextInputProps>
+  | EventNameExtractor<PressableProps>
+  | EventNameExtractor<ScrollViewProps>
+>;
 
 function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {
   const handler = findEventHandler(element, eventName);
