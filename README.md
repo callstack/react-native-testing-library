@@ -123,11 +123,11 @@ React Native Testing Library consists of following APIs:
 
 - [`render` function](https://callstack.github.io/react-native-testing-library/docs/render) - render your UI components for testing purposes
 - [`screen` object](https://callstack.github.io/react-native-testing-library/docs/screen) - access rendered UI:
-  - [Queries](https://callstack.github.io/react-native-testing-library/docs/screen#queries) - find rendered components by various predicates: role, text, test ids, etc
+  - [Queries](https://callstack.github.io/react-native-testing-library/docs/queries) - find rendered components by various predicates: role, text, test ids, etc
   - Lifecycle methods: [`rerender`](https://callstack.github.io/react-native-testing-library/docs/screen#rerender), [`unmount`](https://callstack.github.io/react-native-testing-library/docs/screen#unmount)
   - Helpers: [`debug`](https://callstack.github.io/react-native-testing-library/docs/screen#debug), [`toJSON`](https://callstack.github.io/react-native-testing-library/docs/screen#tojson), [`root`](https://callstack.github.io/react-native-testing-library/docs/screen#root)
 - [Jest matchers](https://callstack.github.io/react-native-testing-library/docs/jest-matchers) - validate assumptions about your UI
-- [User Event](https://callstack.github.io/react-native-testing-library/docs/user-event) - simulate common user interactions like [`press`](user-event#press) or [`type`](user-event#type) in a realistic way
+- [User Event](https://callstack.github.io/react-native-testing-library/docs/user-event) - simulate common user interactions like [`press`]([user-event](https://callstack.github.io/react-native-testing-library/docs/user-event)#press) or [`type`]([user-event](https://callstack.github.io/react-native-testing-library/docs/user-event)#type) in a realistic way
 - [Fire Event](https://callstack.github.io/react-native-testing-library/docs/fire-event) - simulate any component event in a simplified way
 - [Other APIs](https://callstack.github.io/react-native-testing-library/docs/other):
   - [Async utils](https://callstack.github.io/react-native-testing-library/docs/other#async-utilities): `findBy*` queries, `waitFor`, `waitForElementToBeRemoved`
@@ -138,10 +138,6 @@ React Native Testing Library consists of following APIs:
 ## Migration Guides
 
 - [Migration to 12.0](https://callstack.github.io/react-native-testing-library/docs/migration-v12)
-- [Migration to 11.0](https://callstack.github.io/react-native-testing-library/docs/migration-v11)
-- [Migration to 9.0](https://callstack.github.io/react-native-testing-library/docs/migration-v9)
-- [Migration to 7.0](https://callstack.github.io/react-native-testing-library/docs/migration-v7)
-- [Migration to 2.0](https://callstack.github.io/react-native-testing-library/docs/migration-v2)
 
 ## Troubleshooting
 
