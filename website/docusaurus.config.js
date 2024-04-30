@@ -42,7 +42,7 @@ const siteConfig = {
             {
               key: 2,
               label: 'API',
-              to: 'docs/render',
+              to: 'docs/api',
             },
           ],
         },
