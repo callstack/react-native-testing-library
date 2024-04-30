@@ -199,9 +199,7 @@ $ RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS=true jest
 ### `isHiddenFromAccessibility`
 
 ```ts
-function isHiddenFromAccessibility(
-  element: ReactTestInstance | null
-): boolean {}
+function isHiddenFromAccessibility(element: ReactTestInstance | null): boolean {}
 ```
 
 Also available as `isInaccessible()` alias for React Testing Library compatibility.
@@ -226,7 +224,7 @@ Specifying `accessible={false}`, `accessiblityRole="none"`, or `importantForAcce
 
 ## Other helpers
 
-### `within`, `getQueriesForElement`
+### `within`, `getQueriesForElement` {#within}
 
 ```jsx
 function within(element: ReactTestInstance): Queries {}

@@ -1,6 +1,6 @@
 ---
 id: screen
-title: Screen API
+title: Screen object
 ---
 
 ```ts
@@ -31,7 +31,7 @@ See [Queries](./Queries.md) for a complete list.
 import { render, screen } from '@testing-library/react-native';
 
 render(<MyComponent />);
-const buttonStart = screen.getByRole('button', { name: 'start' })
+const buttonStart = screen.getByRole('button', { name: 'start' });
 ```
 
 ### `rerender`
@@ -154,4 +154,3 @@ Returns the rendered [composite root element](testing-env#host-and-composite-com
 :::note
 This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/other#container-1). However, despite the same name, the actual behavior has been significantly different; hence, we decided to change the name to `UNSAFE_root`.
 :::
-

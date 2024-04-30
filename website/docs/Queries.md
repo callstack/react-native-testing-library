@@ -1,6 +1,6 @@
 ---
 id: queries
-title: Queries API
+title: Queries
 ---
 
 Queries are one of the main building blocks for the React Native Testing Library. They enable you to find relevant elements in the element tree, which represents the your application's user interface when running under tests.

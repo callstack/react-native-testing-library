@@ -1,6 +1,6 @@
 ---
 id: render
-title: Render API
+title: Render function
 ---
 
 ```jsx

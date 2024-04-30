@@ -2,6 +2,7 @@ module.exports = {
   docs: {
     Introduction: ['getting-started'],
     'API Reference': [
+      'api',
       'render',
       'screen',
       'queries',

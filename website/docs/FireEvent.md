@@ -7,8 +7,8 @@ title: Fire Event
 function fireEvent(
   element: ReactTestInstance,
   eventName: string,
-  ...data: Array<any>
-): void
+  ...data: unknown[],
+): void;
 ```
 
 :::note
@@ -163,4 +163,3 @@ fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 Prefer using [`user.scrollTo`](./UserEvent.md#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
 
 :::
-

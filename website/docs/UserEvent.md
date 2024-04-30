@@ -1,6 +1,6 @@
 ---
 id: user-event
-title: User Event
+title: User Event interactions
 ---
 
 :::note
