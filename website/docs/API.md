@@ -1,6 +1,6 @@
 ---
 id: api
-title: API Overview
+title: Overview
 ---
 
 React Native Testing Library consists of following APIs:
