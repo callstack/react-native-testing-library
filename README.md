@@ -129,6 +129,7 @@ React Native Testing Library consists of following APIs:
 - [Jest matchers](https://callstack.github.io/react-native-testing-library/docs/jest-matchers) - validate assumptions about your UI
 - [User Event](https://callstack.github.io/react-native-testing-library/docs/user-event) - simulate common user interactions like [`press`](https://callstack.github.io/react-native-testing-library/docs/user-event#press) or [`type`](https://callstack.github.io/react-native-testing-library/docs/user-event#type) in a realistic way
 - [Fire Event](https://callstack.github.io/react-native-testing-library/docs/fire-event) - simulate any component event in a simplified way
+- [`renderHook` function](https://callstack.github.io/react-native-testing-library/docs/render-hook) - render hooks for testing purposes
 - [Other APIs](https://callstack.github.io/react-native-testing-library/docs/other):
   - [Async utils](https://callstack.github.io/react-native-testing-library/docs/other#async-utilities): `findBy*` queries, `waitFor`, `waitForElementToBeRemoved`
   - [Configuration](https://callstack.github.io/react-native-testing-library/docs/other#configuration): `configure`, `resetToDefaults`
