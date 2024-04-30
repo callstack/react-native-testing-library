@@ -127,7 +127,7 @@ React Native Testing Library consists of following APIs:
   - Lifecycle methods: [`rerender`](https://callstack.github.io/react-native-testing-library/docs/screen#rerender), [`unmount`](https://callstack.github.io/react-native-testing-library/docs/screen#unmount)
   - Helpers: [`debug`](https://callstack.github.io/react-native-testing-library/docs/screen#debug), [`toJSON`](https://callstack.github.io/react-native-testing-library/docs/screen#tojson), [`root`](https://callstack.github.io/react-native-testing-library/docs/screen#root)
 - [Jest matchers](https://callstack.github.io/react-native-testing-library/docs/jest-matchers) - validate assumptions about your UI
-- [User Event](https://callstack.github.io/react-native-testing-library/docs/user-event) - simulate common user interactions like [`press`]([user-event](https://callstack.github.io/react-native-testing-library/docs/user-event)#press) or [`type`]([user-event](https://callstack.github.io/react-native-testing-library/docs/user-event)#type) in a realistic way
+- [User Event](https://callstack.github.io/react-native-testing-library/docs/user-event) - simulate common user interactions like [`press`](https://callstack.github.io/react-native-testing-library/docs/user-event#press) or [`type`](https://callstack.github.io/react-native-testing-library/docs/user-event#type) in a realistic way
 - [Fire Event](https://callstack.github.io/react-native-testing-library/docs/fire-event) - simulate any component event in a simplified way
 - [Other APIs](https://callstack.github.io/react-native-testing-library/docs/other):
   - [Async utils](https://callstack.github.io/react-native-testing-library/docs/other#async-utilities): `findBy*` queries, `waitFor`, `waitForElementToBeRemoved`
