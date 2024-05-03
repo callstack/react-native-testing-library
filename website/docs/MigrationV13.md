@@ -56,6 +56,12 @@ const view = screen.getBy*(...); // Find the element using any query: *ByRole, *
 expect(view).toHaveAccessibilityValue({ now: 50, min: 0, max: 50 }); // Assert its accessibility value
 ```
 
+# Other changes
+
+## Updated `flushMicroTasks` internal method
+
+This should not break any tests.
+
 ## Full Changelog
 
 https://github.com/callstack/react-native-testing-library/compare/v12.5.0...v13.0.0
