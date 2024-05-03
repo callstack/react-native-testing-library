@@ -1,5 +1,5 @@
 import { cleanup } from './pure';
-import { flushMicroTasksLegacy } from './flush-micro-tasks';
+import { flushMicroTasks } from './flush-micro-tasks';
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
 
 if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
@@ -11,7 +11,7 @@ if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
   if (typeof afterEach === 'function') {
     // eslint-disable-next-line no-undef
     afterEach(async () => {
-      await flushMicroTasksLegacy();
+      await flushMicroTasks();
       cleanup();
     });
   }
