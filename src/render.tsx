@@ -5,8 +5,7 @@ import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import { getHostChildren } from './helpers/component-tree';
-import debugDeep, { DebugOptions } from './helpers/debug-deep';
-import debugShallow from './helpers/debug-shallow';
+import { debug, DebugOptions } from './helpers/debug';
 import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
 import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
@@ -105,7 +104,7 @@ function buildRenderResult(
     unmount,
     rerender: update, // alias for `update`
     toJSON: renderer.toJSON,
-    debug: debug(instance, renderer),
+    debug: makeDebug(instance, renderer),
     get root(): ReactTestInstance {
       return getHostChildren(instance)[0];
     },
@@ -139,12 +138,9 @@ function updateWithAct(
   };
 }
 
-export interface DebugFunction {
-  (options?: DebugOptions | string): void;
-  shallow: (message?: string) => void;
-}
+export type DebugFunction = (options?: DebugOptions | string) => void;
 
-function debug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugFunction {
+function makeDebug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugFunction {
   function debugImpl(options?: DebugOptions | string) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions =
@@ -155,15 +151,14 @@ function debug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugF
     if (typeof options === 'string') {
       // eslint-disable-next-line no-console
       console.warn(
-        'Using debug("message") is deprecated and will be removed in future release, please use debug({ message; "message" }) instead.',
+        'Using debug("message") is deprecated and will be removed in future release, please use debug({ message: "message" }) instead.',
       );
     }
 
     const json = renderer.toJSON();
     if (json) {
-      return debugDeep(json, debugOptions);
+      return debug(json, debugOptions);
     }
   }
-  debugImpl.shallow = (message?: string) => debugShallow(instance, message);
   return debugImpl;
 }

@@ -1,5 +1,3 @@
-## @@ -0,0 +1,20 @@
-
 id: migration-v13
 title: Migration to 13.0
 
@@ -62,11 +60,15 @@ const view = screen.getBy*(...); // Find the element using any query: *ByRole, *
 expect(view).toHaveAccessibilityValue({ now: 50, min: 0, max: 50 }); // Assert its accessibility value
 ```
 
+## Removed `debug.shallow`
+
+For a time being we didn't support shallow rendering. Now we are removing the last remains of it: `debug.shallow()`. If you are interested in shallow rendering see [here](migration-v2#removed-global-shallow-function).
+
 # Other changes
 
 ## Updated `flushMicroTasks` internal method
 
-This should not break any tests.
+# This should not break any tests.
 
 ## Full Changelog
 
