@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 import act, { getIsReactActEnvironment, setReactActEnvironment } from '../act';
-import { flushMicroTasksLegacy } from '../flush-micro-tasks';
+import { flushMicroTasks } from '../flush-micro-tasks';
 import { checkReactVersionAtLeast } from '../react-versions';
 
 /**
@@ -18,7 +18,7 @@ export async function wrapAsync<Result>(callback: () => Promise<Result>): Promis
     try {
       const result = await callback();
       // Flush the microtask queue before restoring the `act` environment
-      await flushMicroTasksLegacy();
+      await flushMicroTasks();
       return result;
     } finally {
       setReactActEnvironment(previousActEnvironment);
