@@ -1,8 +1,7 @@
 /* istanbul ignore file */
 
-import act, { getIsReactActEnvironment, setReactActEnvironment } from '../act';
+import { getIsReactActEnvironment, setReactActEnvironment } from '../act';
 import { flushMicroTasks } from '../flush-micro-tasks';
-import { checkReactVersionAtLeast } from '../react-versions';
 
 /**
  * Run given async callback with temporarily disabled `act` environment and flushes microtasks queue.
