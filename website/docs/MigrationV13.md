@@ -68,7 +68,7 @@ For a time being we didn't support shallow rendering. Now we are removing the la
 
 ## Updated `flushMicroTasks` internal method
 
-# This should not break any tests.
+This should not break any tests.
 
 ## Full Changelog
 
