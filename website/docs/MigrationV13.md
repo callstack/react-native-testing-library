@@ -13,6 +13,12 @@ Migration to React Native Testing Library version 13 from version 12.x.
 
 # Breaking changes
 
+## Supported React and React Native versions
+
+This version supports only React 19 and corresponding React Native versions. If you use React 18 or 19, please use latest of v12 versions.
+
+[Note: at the moment there is no React Native for React 19, and React 19 is still in beta, so we use React 18.3 for the time being].
+
 ## Removed deprecated \*ByAccessibilityState queries
 
 This deprecated query has been removed as is typically too general to give meaningful results. Use one of the following options:

@@ -1,7 +1,6 @@
 // This file and the act() implementation is sourced from react-testing-library
 // https://github.com/testing-library/react-testing-library/blob/c80809a956b0b9f3289c4a6fa8b5e8cc72d6ef6d/src/act-compat.js
 import { act as reactTestRendererAct } from 'react-test-renderer';
-import { checkReactVersionAtLeast } from './react-versions';
 
 type ReactAct = typeof reactTestRendererAct;
 
@@ -72,9 +71,7 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
   };
 }
 
-const act: ReactAct = checkReactVersionAtLeast(18, 0)
-  ? (withGlobalActEnvironment(reactTestRendererAct) as ReactAct)
-  : reactTestRendererAct;
+const act = withGlobalActEnvironment(reactTestRendererAct) as ReactAct;
 
 export default act;
 export { setIsReactActEnvironment as setReactActEnvironment, getIsReactActEnvironment };
