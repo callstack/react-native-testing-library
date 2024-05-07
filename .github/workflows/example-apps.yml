@@ -6,8 +6,8 @@ jobs:
   test-example:
     strategy:
       matrix:
-        node: [18, 20]
-        example: [basic, redux, react-navigation]
+        node: [18, 20, 22]
+        example: [basic, react-navigation]
     name: Test Example
     runs-on: ubuntu-latest
     timeout-minutes: 10
