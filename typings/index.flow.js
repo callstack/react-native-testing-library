@@ -276,7 +276,6 @@ type DebugOptions = {
 
 type Debug = {
   (options?: DebugOptions | string): void,
-  shallow: (message?: string) => void,
 };
 
 type Queries = ByTextQueries &
