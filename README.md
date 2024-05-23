@@ -6,17 +6,15 @@
     alt="owl"
     src="https://raw.githubusercontent.com/callstack/react-native-testing-library/main/website/static/img/owl.png"
   />
-  <p>Simple and complete React Native testing utilities that encourage good testing practices.</P>
+  <p>Developer-friendly and complete React Native testing utilities that encourage good testing practices.</P>
 </div>
 
-![Version][version-badge]
-![codecov][codecov-badge]
-![Build](https://github.com/callstack/react-native-testing-library/actions/workflows/main.yml/badge.svg)
-[![downloads](https://img.shields.io/npm/dm/@testing-library/react-native.svg?style=flat-square)](http://www.npmtrends.com/@testing-library/react-native)
-![PRs Welcome][prs-welcome-badge]
-[![Chat][chat-badge]][chat]
-![Sponsored by Callstack][callstack-badge]
-[![Star on GitHub](https://img.shields.io/github/stars/callstack/react-native-testing-library.svg?style=social)](https://github.com/callstack/react-native-testing-library/stargazers)
+[![Version][version-badge]][package]
+[![Build Status][build-badge]][build]
+[![Code Coverage][coverage-badge]][coverage]
+[![Downloads][downloads-badge]][downloads]
+[![MIT License][license-badge]][license]
+[![Sponsored by Callstack][callstack-badge]][callstack]
 
 ## The problem
 
@@ -24,7 +22,7 @@ You want to write maintainable tests for your React Native components. As a part
 
 ## This solution
 
-The React Native Testing Library (RNTL) is a lightweight solution for testing React Native components. It provides light utility functions on top of `react-test-renderer`, in a way that encourages better testing practices. Its primary guiding principle is:
+The React Native Testing Library (RNTL) is a comprehensive solution for testing React Native components. It provides React Native runtime simulation on top of `react-test-renderer`, in a way that encourages better testing practices. Its primary guiding principle is:
 
 > The more your tests resemble the way your software is used, the more confidence they can give you.
 
@@ -34,19 +32,15 @@ This project is inspired by [React Testing Library](https://github.com/testing-l
 
 Open a Terminal in your project's folder and run:
 
-#### Using `yarn`
-
 ```sh
+# Yarn install:
 yarn add --dev @testing-library/react-native
-```
 
-#### Using `npm`
-
-```sh
+# NPM install
 npm install --save-dev @testing-library/react-native
 ```
 
-This library has a `peerDependencies` listing for `react-test-renderer`. Make sure that your `react-test-renderer` version matches exactly the `react` version.
+This library has a `peerDependencies` listing for `react-test-renderer`. Make sure that your `react-test-renderer` version matches exactly the `react` version, avoid using `^` in version number.
 
 ### Additional Jest matchers
 
@@ -54,32 +48,6 @@ You can use the built-in Jest matchers by adding the following line to your `jes
 
 ```ts
 import '@testing-library/react-native/extend-expect';
-```
-
-### Custom Jest Preset (React Native before 0.71)
-
-We generally advise using the "react-native" preset when testing with this library.
-
-However, if you use React Native version earlier than 0.71 with [modern Jest fake timers](https://jestjs.io/blog/2020/05/05/jest-26#new-fake-timers) (default since Jest 27), you'll need to apply this custom Jest preset or otherwise awaiting promises, like using `waitFor` or `findBy*`, queries will fail with a timeout.
-
-This is a [known issue](https://github.com/facebook/react-native/issues/29303). It happens because React Native's Jest preset overrides native Promise. Our preset restores it to defaults, which is not a problem in most apps out there.
-
-Here's how you apply a custom preset in your Jest config:
-
-```json
-{
-  "preset": "@testing-library/react-native"
-}
-```
-
-If this doesn't work for you, please fall back to using "legacy" fake timers.
-
-### Flow
-
-Note for [Flow](https://flow.org) users – you'll also need to install typings for `react-test-renderer`:
-
-```sh
-flow-typed install react-test-renderer
 ```
 
 ## Example
@@ -162,11 +130,13 @@ Supported and used by [Rally Health](https://www.rallyhealth.com/careers).
 
 [version-badge]: https://img.shields.io/npm/v/@testing-library/react-native.svg?style=flat-square
 [package]: https://www.npmjs.com/package/@testing-library/react-native
-[prs-welcome-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
-[prs-welcome]: http://makeapullrequest.com
-[chat-badge]: https://img.shields.io/discord/426714625279524876.svg?style=flat-square&colorB=758ED3
-[chat]: https://discord.gg/QbGezWe
+[build-badge]: https://github.com/callstack/react-native-testing-library/actions/workflows/main.yml/badge.svg
+[build]: https://github.com/callstack/react-native-testing-library/actions/workflows/main.yml
+[coverage-badge]: https://img.shields.io/codecov/c/github/callstack/react-native-testing-library.svg
+[coverage]: https://codecov.io/github/callstack/react-native-testing-library
+[downloads-badge]: https://img.shields.io/npm/dm/@testing-library/react-native.svg?style=flat-square
+[downloads]: http://www.npmtrends.com/@testing-library/react-native
+[license-badge]: https://img.shields.io/npm/l/@testing-library/react-native.svg
+[license]: https://opensource.org/licenses/MIT
 [callstack-badge]: https://callstack.com/images/callstack-badge.svg
 [callstack]: https://callstack.com/open-source/?utm_source=github.com&utm_medium=referral&utm_campaign=react-native-testing-library&utm_term=readme
-[codecov-badge]: https://codecov.io/gh/callstack/react-native-testing-library/branch/main/graph/badge.svg?token=tYVSWro1IP
-[codecov]: https://codecov.io/gh/callstack/react-native-testing-library
