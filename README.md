@@ -130,8 +130,8 @@ Supported and used by [Rally Health](https://www.rallyhealth.com/careers).
 
 [version-badge]: https://img.shields.io/npm/v/@testing-library/react-native.svg?style=flat-square
 [package]: https://www.npmjs.com/package/@testing-library/react-native
-[build-badge]: https://github.com/callstack/react-native-testing-library/actions/workflows/main.yml/badge.svg
-[build]: https://github.com/callstack/react-native-testing-library/actions/workflows/main.yml
+[build-badge]: https://github.com/callstack/react-native-testing-library/actions/workflows/ci.yml/badge.svg
+[build]: https://github.com/callstack/react-native-testing-library/actions/workflows/ci.yml
 [coverage-badge]: https://img.shields.io/codecov/c/github/callstack/react-native-testing-library.svg
 [coverage]: https://codecov.io/github/callstack/react-native-testing-library
 [downloads-badge]: https://img.shields.io/npm/dm/@testing-library/react-native.svg?style=flat-square
