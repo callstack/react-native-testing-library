@@ -11,7 +11,7 @@ hero:
       link: /docs/getting-started
     - theme: alt
       text: Learn more
-      link: /docs/about
+      link: /docs/intro
 features:
   - title: Maintainable
     details: Write maintainable tests for your React Native apps.

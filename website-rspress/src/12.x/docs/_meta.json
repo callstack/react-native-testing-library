@@ -1,8 +1,8 @@
 [
   {
     "type": "file",
-    "name": "about",
-    "label": "About Re.Pack"
+    "name": "intro",
+    "label": "Introduction"
   },
   {
     "type": "file",
