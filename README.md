@@ -6,7 +6,7 @@
     alt="owl"
     src="https://raw.githubusercontent.com/callstack/react-native-testing-library/main/website/static/img/owl.png"
   />
-  <p>Simple and complete React Native testing utilities that encourage good testing practices.</P>
+  <p>Developer-friendly and complete React Native testing utilities that encourage good testing practices.</P>
 </div>
 
 [![Version][version-badge]][package]
