@@ -9,9 +9,8 @@
     "url": "https://www.github.com/callstack/react-native-testing-library.git"
   },
   "homepage": "https://callstack.github.io/react-native-testing-library",
-  "author": "Michał Pierzchała <thymikee@gmail.com>",
+  "author": "Michał Pierzchała <thymikee@gmail.com> (https://github.com/thymikee), Maciej Jastrzębski <mdjastrzebski@gmail.com> (https://github.com/mdjastrzebski)",
   "contributors": [
-    "Maciej Jastrzębski <mdjastrzebski@gmail.com> (https://github.com/mdjastrzebski)",
     "Augustin Le Fèvre <augustin.le-fevre@klarna.com> (https://github.com/AugustinLF)",
     "Pierre Zimmermann <pierrez@nam.tech> (https://github.com/pierrezimmermannbam)",
     "MattAgn <matthieua@bam.tech> (https://github.com/MattAgn)"
