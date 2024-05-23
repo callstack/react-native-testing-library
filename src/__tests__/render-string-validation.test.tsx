@@ -155,3 +155,49 @@ test('should throw when rendering string in a View in a Text', () => {
     `${VALIDATION_ERROR}. Detected attempt to render "hello" string within a <View> component.`,
   );
 });
+
+const UseEffectComponent = () => {
+  const [showText, setShowText] = React.useState(false);
+
+  React.useEffect(() => {
+    setShowText(true);
+  }, []);
+
+  if (!showText) {
+    return <Text>Text is hidden</Text>;
+  }
+
+  return (
+    <View>
+      <Text>Text is visible</Text>
+    </View>
+  );
+};
+
+test('should render immediate setState in useEffect properly', async () => {
+  render(<UseEffectComponent />, { unstable_validateStringsRenderedWithinText: true });
+
+  expect(await screen.findByText('Text is visible')).toBeTruthy();
+});
+
+const InvalidUseEffectComponent = () => {
+  const [showText, setShowText] = React.useState(false);
+
+  React.useEffect(() => {
+    setShowText(true);
+  }, []);
+
+  if (!showText) {
+    return <Text>Text is hidden</Text>;
+  }
+
+  return <View>Text is visible</View>;
+};
+
+test('should throw properly for immediate setState in useEffect', () => {
+  expect(() =>
+    render(<InvalidUseEffectComponent />, { unstable_validateStringsRenderedWithinText: true }),
+  ).toThrow(
+    `${VALIDATION_ERROR}. Detected attempt to render "Text is visible" string within a <View> component.`,
+  );
+});

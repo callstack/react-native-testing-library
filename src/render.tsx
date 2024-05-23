@@ -10,7 +10,7 @@ import debugShallow from './helpers/debug-shallow';
 import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
 import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
-import { setRenderResult, screen } from './screen';
+import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
 export interface RenderOptions {
@@ -64,11 +64,12 @@ function renderWithStringValidation<T>(
   component: React.ReactElement<T>,
   options: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
 ) {
+  let renderer: ReactTestRenderer;
   const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
 
-  const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
-    if (phase === 'update') {
-      validateStringsRenderedWithinText(screen.toJSON());
+  const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
+    if (renderer && phase === 'update') {
+      validateStringsRenderedWithinText(renderer.toJSON());
     }
   };
 
@@ -78,7 +79,8 @@ function renderWithStringValidation<T>(
     </Profiler>
   );
 
-  const renderer = renderWithAct(wrap(component), testRendererOptions);
+  renderer = renderWithAct(wrap(component), testRendererOptions);
+
   validateStringsRenderedWithinText(renderer.toJSON());
 
   return buildRenderResult(renderer, wrap);
