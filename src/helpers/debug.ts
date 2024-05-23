@@ -8,7 +8,7 @@ export type DebugOptions = {
 /**
  * Log pretty-printed deep test component instance
  */
-export default function debugDeep(
+export function debug(
   instance: ReactTestRendererJSON | ReactTestRendererJSON[],
   options?: DebugOptions | string,
 ) {

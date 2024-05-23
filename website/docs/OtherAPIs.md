@@ -101,10 +101,6 @@ await waitFor(() => {
 }, 10000);
 ```
 
-:::info
-In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
-:::
-
 :::note
 If you receive warnings related to `act()` function consult our [Undestanding Act](./UnderstandingAct.md) function document.
 :::
