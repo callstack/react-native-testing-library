@@ -67,7 +67,7 @@ function renderWithStringValidation<T>(
   let renderer: ReactTestRenderer;
   const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
 
-  const handleRender: React.ProfilerProps['onRender'] = (_, phase) => {
+  const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
     if (renderer && phase === 'update') {
       validateStringsRenderedWithinText(renderer.toJSON());
     }
