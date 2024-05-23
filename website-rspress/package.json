@@ -5,9 +5,7 @@
   "scripts": {
     "start": "rspress dev",
     "export": "rspress build",
-    "preview": "rspress preview",
-    "diff:v3-v4:cjs": "git diff @callstack/repack@3.0.0:templates/webpack.config.cjs HEAD:templates/webpack.config.cjs > src/public/diffs/repack_v3-v4_cjs.diff",
-    "diff:v3-v4:mjs": "git diff @callstack/repack@3.0.0:templates/webpack.config.mjs HEAD:templates/webpack.config.mjs > src/public/diffs/repack_v3-v4_mjs.diff"
+    "preview": "rspress preview"
   },
   "dependencies": {
     "rsbuild-plugin-open-graph": "^1.0.0",

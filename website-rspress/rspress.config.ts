@@ -6,21 +6,19 @@ import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
 
 export default defineConfig({
   root: path.join(__dirname, 'src'),
-  title: 'Re.Pack',
-  description: 'A toolkit to build your React Native application with Webpack.',
-  icon: '/img/favicon.ico',
-  logo: {
-    light: '/img/logo_light.svg',
-    dark: '/img/logo_dark.svg',
-  },
+  title: 'React Native Testing Library',
+  description: 'Helps you to write better tests with less effort.',
+  icon: '/img/owl.png',
+  logo: '/img/owl.png',
+  logoText: 'React Native Testing Library',
   outDir: 'build',
   markdown: {
     checkDeadLinks: true,
     codeHighlighter: 'prism',
   },
   multiVersion: {
-    default: '4.x',
-    versions: ['2.x', '3.x', '4.x'],
+    default: '12.x',
+    versions: ['12.x'],
   },
   route: {
     cleanUrls: true,
@@ -39,17 +37,7 @@ export default defineConfig({
       {
         icon: 'github',
         mode: 'link',
-        content: 'https://github.com/callstack/repack',
-      },
-      {
-        icon: 'X',
-        mode: 'link',
-        content: 'https://x.com/repack_rn',
-      },
-      {
-        icon: 'discord',
-        mode: 'link',
-        content: 'https://discord.gg/TWDBep3nXV',
+        content: 'https://github.com/callstack/react-native-testing-library',
       },
     ],
   },
@@ -57,16 +45,11 @@ export default defineConfig({
   builderConfig: {
     plugins: [
       pluginOpenGraph({
-        title: 'Re.Pack',
+        title: 'React Native Testing Library',
         type: 'website',
-        url: 'https://re-pack.dev',
+        url: 'https://callstack.github.io/react-native-testing-library/',
         image: 'https://re-pack.dev/img/og-image.png',
-        description:
-          'A toolkit to build your React Native application with Webpack.',
-        twitter: {
-          site: '@repack_rn',
-          card: 'summary_large_image',
-        },
+        description: 'Helps you to write better tests with less effort.',
       }),
     ],
     tools: {
