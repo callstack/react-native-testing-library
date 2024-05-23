@@ -1,161 +1,92 @@
-import { PackageManagerTabs, Steps } from 'rspress/theme';
+import { PackageManagerTabs } from 'rspress/theme';
 
 # Getting Started
 
-## Pre-requisites
+## The problem
 
-If you're already familiar with JavaScript, React Native and Webpack, then you'll be able to get moving quickly! Otherwise, it's highly recommended to get yourself familiar with these topic and then come back here:
+You want to write maintainable tests for your React Native components. As a part of this goal, you want your tests to avoid including implementation details of your components and focus on making your tests give you the confidence they are intended. As part of this, you want your tests to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don't break your tests and slow you and your team down.
 
-- [React Native documentation](https://reactnative.dev/)
-- [Webpack concepts](https://webpack.js.org/concepts/)
+## This solution
 
-## Minimum requirements
+The React Native Testing Library (RNTL) is a lightweight solution for testing React Native components. It provides light utility functions on top of React Test Renderer, in a way that encourages better testing practices. Its primary guiding principle is:
 
-- Node.js >= 18.0.0
-- React Native >= 0.72.0
+> The more your tests resemble how your software is used, the more confidence they can give you.
 
-:::tip
-The information on this page might not always be up-to-date. Official support is provided for the latest version of React Native and its 2 previous versions, [similar to how React Native is supported](https://github.com/reactwg/react-native-releases). If you're using older version of React Native, you can still try using Re.Pack, but you might need to adjust the configuration to make it work.
-:::
+This project is inspired by [React Testing Library](https://github.com/testing-library/react-testing-library). It is tested to work with Jest, but it should work with other test runners as well.
 
-## Note on Expo
-
-Officially, Re.Pack doesn't support Expo. It might be possible to use Re.Pack in Expo projects, but it would require more work and setup. We welcome anyone who would like to contribute and bring Expo support to Re.Pack.
-
-## Examples
-
-If you get stuck or you want to explore beforehand, you can use the examples of React Native applications using Re.Pack here: https://github.com/callstack/repack-examples.
+You can find the source of the `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/questionsBoard.test.tsx).
 
 ## Installation
 
-To create a new React Native project with Re.Pack or adapt an existing one:
+Open a Terminal in your project's folder and run:
 
-{/* prettier-ignore-start */}
+<PackageManagerTabs
+  command={{
+    yarn: 'yarn add -D @testing-library/react-native',
+    npm: 'npm install -D @testing-library/react-native',
+  }}
+/>
 
-<Steps>
-  ### [Optional] Initialize a new project using React Native Community CLI 
-  ```bash 
-  npx react-native init AwesomeProject --skip-install 
-  ``` 
-  ### Go to your React Native project root directory
-   ```bash 
-  cd AwesomeProject
-  ```
-  ### Convert the project to use Re.Pack
-  ```bash 
-  npx @callstack/repack-init
-  ```
-</Steps>
+This library has a peer dependency for `react-test-renderer` package. Make sure that your `react-test-renderer` version matches exactly your `react` version.
 
-{/* prettier-ignore-end */}
+### Jest matchers
 
-In case your project structure differs from the default template, you can follow the manual installation steps [down below](#manual-installation).
+To set up React Native-specific Jest matchers, add the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
 
-:::details
-By default, `@callstack/repack-init` will create `webpack.config.mjs` file in the root directory of your project.
-If you want to use `.cjs` format, you can pass `--cjs` flag to the command.
-You can read more about these formats [down below](#3-webpack-config).
-:::
+```ts
+import '@testing-library/react-native/extend-expect';
+```
 
-## Usage
+### ESLint plugin
 
-After completing [Installation](#installation) you should be able to use Re.Pack's development server and bundle your application.
+We recommend setting up [`eslint-plugin-testing-library`](https://github.com/testing-library/eslint-plugin-testing-library) package to help you avoid common Testing Library mistakes and bad practices.
 
-Keep in mind that, you might need to adjust [Webpack config](./configuration/webpack-config) to your project in order for the application to work correctly. It's impossible for us to know what your project looks like and uses, so it's recommended to read through the Webpack config's code and comments and make sure you understand what's going on there.
+Install the plugin (assuming you already have `eslint` installed & configured):
 
-### Running development server
+<PackageManagerTabs
+  command={{
+    yarn: 'yarn add -D eslint-plugin-testing-library',
+    npm: 'npm install -D eslint-plugin-testing-library',
+  }}
+/>
 
-When developing your application, you want to run Re.Pack's development server to compile your source code with Webpack.
+Then, add relevant entry to your ESLint config (e.g., `.eslintrc.js`). We recommend extending the `react` plugin:
 
-The recommended way is to use React Native Community CLI and run:
-
-<PackageManagerTabs command="run react-native start" />
-
-or
-
-<PackageManagerTabs command="run react-native webpack-start" />
-
-### Bundling the app
-
-When building the release version of your application via XCode, Gradle CLI or Android Studio, as long as you followed [Configure XCode](#4-configure-xcode) and [Configure Android](#5-configure-android), it should use Re.Pack to bundle your application.
-
-If you want to create bundle (development or production), **the recommended way is to use React Native Community CLI and run**:
-
-<PackageManagerTabs command="run react-native bundle" />
-
-or
-
-<PackageManagerTabs command="run react-native webpack-bundle" />
-
-## Manual installation
-
-If the [automatic installation](#installation) didn't work for any reason, or your project structure differs from the default React Native template, you can follow these manual installation steps:
-
-### 1. Dependencies
-
-Install required dependencies in your project:
-
-<PackageManagerTabs command="install -D webpack terser-webpack-plugin babel-loader @callstack/repack" />
-
-This will install latest versions of Webpack, Re.Pack and dependencies used in Webpack config: `terser-webpack-plugin` for minification and `babel-loader` for transpiling the code.
-
-If you already have Webpack or Re.Pack installed, you might want to check the [compatibility table](#compatibility-with-webpack) to ensure all dependencies are ok.
-
-Once the dependencies are installed, you need to tell React Native Community CLI to add Re.Pack's commands.
-
-### 2. Commands
-
-Add the following content to `react-native.config.js` (or create it if it doesn't exist):
-
-```js title="react-native.config.js"
+```js title=.eslintrc.js
 module.exports = {
-  commands: require('@callstack/repack/commands'),
+  overrides: [
+    {
+      // Test files only
+      files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+      extends: ['plugin:testing-library/react'],
+    },
+  ],
 };
 ```
 
-This will allow you to use Re.Pack when running `react-native start` and `react-native bundle` commands.
+## Example
 
-### 3. Webpack config
+```jsx
+import { render, screen, userEvent } from '@testing-library/react-native';
+import { QuestionsBoard } from '../QuestionsBoard';
 
-Create file `webpack.config.mjs` in the root directory of your project and paste the content from our [Webpack config template](https://github.com/callstack/repack/blob/main/templates/webpack.config.mjs).
+test('form submits two answers', async () => {
+  const questions = ['q1', 'q2'];
+  const onSubmit = jest.fn();
 
-:::info
+  const user = userEvent.setup();
+  render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
 
-We recommend to use ESM version of Webpack config with the `.mjs` extension. However, Re.Pack also supports ESM under `.js` and CJS variant under `.js` and `.cjs` extensions. Check our [templates](https://github.com/callstack/repack/blob/main/templates/) for CJS and ESM variants as well as the documentation on [Webpack config](./configuration/webpack-config) to see the list of all available Webpack config location and extensions.
+  const answerInputs = screen.getAllByLabelText('answer input');
+  await user.type(answerInputs[0], 'a1');
+  await user.type(answerInputs[1], 'a2');
+  await user.press(screen.getByRole('button', { name: 'Submit' }));
 
-:::
-
-### 4. Configure XCode
-
-When building release version of your application XCode project will still use Metro to bundle the application, so you need to adjust build settings to make XCode use Re.Pack instead.
-
-Open your application's Xcode project/workspace and:
-
-1. Click on the project in **_Project navigator_** panel on the left
-2. Go to **_Build Phases_** tab
-3. Expand **_Bundle React Native code and images_** phase
-4. Add `export BUNDLE_COMMAND=webpack-bundle` to the phase
-
-After the change, the content of this phase should look similar to:
-
-```bash title="Bundle React Native code and images" {4}
-set -e
-
-WITH_ENVIRONMENT="../node_modules/react-native/scripts/xcode/with-environment.sh"
-export BUNDLE_COMMAND=webpack-bundle
-REACT_NATIVE_XCODE="../node_modules/react-native/scripts/react-native-xcode.sh"
-
-/bin/sh -c "$WITH_ENVIRONMENT $REACT_NATIVE_XCODE"
+  expect(onSubmit).toHaveBeenCalledWith({
+    1: { q: 'q1', a: 'a1' },
+    2: { q: 'q2', a: 'a2' },
+  });
+});
 ```
 
-### 5. Configure Android
-
-When building release version of your application Gradle will still use Metro to bundle the application, so you need to adjust build settings to make Gradle use Re.Pack instead.
-
-Open your application's Gradle project, usually located at `android/app/build.gradle` and add the following:
-
-```groovy title="android/app/build.gradle" {2}
-react {
-    bundleCommand = "webpack-bundle"
-}
-```
+You can find the source of the `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/questionsBoard.test.tsx).
