@@ -1,0 +1,32 @@
+[
+  {
+    "type": "file",
+    "name": "index",
+    "label": "Table of contents"
+  },
+  {
+    "type": "dir",
+    "name": "enums",
+    "label": "Enums"
+  },
+  {
+    "type": "dir",
+    "name": "functions",
+    "label": "Functions"
+  },
+  {
+    "type": "dir",
+    "name": "interfaces",
+    "label": "Interfaces"
+  },
+  {
+    "type": "dir",
+    "name": "modules",
+    "label": "Modules"
+  },
+  {
+    "type": "dir",
+    "name": "types",
+    "label": "Types"
+  }
+]

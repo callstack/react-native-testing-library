@@ -1,0 +1,77 @@
+import { PackageManagerTabs } from "@theme";
+
+# Lazy Compilation
+
+:::caution
+
+Lazy compilation is an experimental feature of webpack, therefore it is considered experimental in Re.Pack as well.
+
+If you encounter an issue while using lazy compilation, it's advisable to disable it temporarily before reporting the problem to ensure it's not the underlying cause.
+
+:::
+
+If you are using [Code splitting](/docs/code-splitting/usage)
+and have async chunks in your app, imported like this:
+
+```js
+const myChunk = await import("./myChunk.js");
+```
+
+You might benefit from using lazy compilation in development.
+It will cause all dynamic imports in your app to be compiled only when necessary, reducing the time of your initial app startup.
+
+:::danger
+
+Lazy compilation is supported only for dynamic imports. While webpack has an option to also compile entrypoints on demand, this will not work in React Native environment, and will result in your app's bundle compiling with errors.
+
+:::
+
+:::caution
+
+Prefetching chunks with `ScriptManager` with lazy compilation might result in confusing behaviour. When fetched via `ScriptManager.shared.prefetchScript`, the chunk will be downloaded, but it will not have the desired contents inside. Only upon evaluation of that chunk, the compilation will be triggered and the result will be sent to your client.
+
+:::
+
+## Usage
+
+First, install the `react-native-event-source` package to your `devDependencies`:
+
+<PackageManagerTabs command="install -D react-native-event-source" />
+
+:::info
+
+`react-native-event-source` is a polyfill for `EventSource`
+which is used by webpack to communicate with the development server.
+It is required for lazy compilation to work.
+:::
+
+Then, add the following to your `webpack.config` file:
+
+```js
+/* ... */
+
+export default (env) => {
+  /* ... */
+
+  return {
+    /* ... */
+
+    module: {
+      experiments: [
+        lazyCompilation: devServer && {
+            imports: true,
+            entries: false,
+        }
+      ],
+    },
+
+    /* ... */
+  };
+};
+```
+
+:::tip
+
+You can read more about Webpack's lazy compilation feature here: https://webpack.js.org/configuration/experiments/#experimentslazycompilation
+
+:::

@@ -1,0 +1,23 @@
+[
+  {
+    "type": "section-header",
+    "label": "API"
+  },
+  {
+    "type": "file",
+    "name": "about",
+    "label": "About"
+  },
+  {
+    "type": "dir",
+    "name": "node",
+    "label": "Node",
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "react-native",
+    "label": "React Native",
+    "collapsed": true
+  }
+]

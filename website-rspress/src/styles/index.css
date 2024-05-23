@@ -1,0 +1,243 @@
+:root {
+  --rp-nav-height: 60px !important;
+  --rp-sidebar-width: 320px !important;
+  --rp-aside-width: 268px !important;
+}
+
+:root {
+  --rp-c-bg: #ffffff !important;
+  --rp-c-bg-soft: #f6f6f7 !important;
+  --rp-c-bg-mute: #ececec !important;
+
+  --rp-c-divider: rgba(60, 60, 60, 0.29) !important;
+  --rp-c-divider-light: rgba(60, 60, 60, 0.12) !important;
+
+  --rp-c-text-1: rgb(50, 50, 50) !important;
+  --rp-c-text-2: rgba(50, 50, 50, 0.8) !important;
+  --rp-c-text-3: rgba(50, 50, 50, 0.6) !important;
+  --rp-c-text-4: rgba(50, 50, 50, 0.4) !important;
+
+  --rp-c-text-code: var(--rp-c-brand-dark) !important;
+
+  --rp-c-brand: #9b6dff !important;
+  --rp-c-brand-light: #b89dff !important;
+  --rp-c-brand-lighter: #d4c8ff !important;
+  --rp-c-brand-dark: #7f58cc !important;
+  --rp-c-brand-darker: #604399 !important;
+  --rp-c-brand-tint: rgba(155, 109, 255, 0.1) !important;
+
+  --rp-c-gray: #8e8e8e !important;
+  --rp-c-gray-light-1: #aeaeae !important;
+  --rp-c-gray-light-2: #c7c7c7 !important;
+  --rp-c-gray-light-3: #d1d1d1 !important;
+  --rp-c-gray-light-4: #e5e5e5 !important;
+  --rp-c-gray-light-5: #f2f2f2 !important;
+
+  --rp-c-dark: #000000 !important;
+  --rp-c-dark-light-1: #2f2f2f !important;
+  --rp-c-dark-light-2: #3a3a3a !important;
+  --rp-c-dark-light-3: #4a4a4a !important;
+  --rp-c-dark-light-4: #5c5c5c !important;
+  --rp-c-dark-light-5: #6b6b6b !important;
+
+  --rp-radius: 1rem !important;
+  --rp-radius-small: 0.5rem !important;
+  --rp-radius-large: 1.5rem !important;
+}
+
+.dark {
+  --rp-c-bg: #161618 !important;
+  --rp-c-bg-soft: #1b1b1f !important;
+  --rp-c-bg-mute: #65758529 !important;
+
+  --rp-c-divider-light: #65758529 !important;
+
+  --rp-c-text-1: #dde1e6 !important;
+  --rp-c-text-2: #b2b8bf !important;
+  --rp-c-text-3: #878c92 !important;
+  --rp-c-text-4: #5c6166 !important;
+
+  /* Will be used in overview page */
+  --rp-c-text-code: var(--rp-c-brand-light) !important;
+}
+
+/* Code blocks */
+:root {
+  --rp-code-block-bg: var(--rp-c-bg-soft);
+  --rp-code-title-bg: var(--rp-c-bg-mute);
+}
+
+.dark {
+  --rp-code-block-bg: var(--rp-c-bg-soft);
+  --rp-code-title-bg: var(--rp-c-bg-mute);
+}
+
+/* MD Containers */
+:root {
+  --rp-container-details-border: rgba(128, 128, 128, 1) !important;
+  --rp-container-details-text: #666666 !important;
+  --rp-container-details-bg: rgba(128, 128, 128, 0.1) !important;
+  --rp-container-details-code-bg: rgba(128, 128, 128, 0.15) !important;
+
+  --rp-container-info-border: var(--rp-c-brand) !important;
+  --rp-container-info-text: var(--rp-c-brand-dark) !important;
+  --rp-container-info-bg: rgba(155, 109, 255, 0.1) !important;
+  --rp-container-info-code-bg: rgba(155, 109, 255, 0.15) !important;
+
+  --rp-container-warning-border: rgba(255, 197, 23, 1) !important;
+  --rp-container-warning-text: #ad850e !important;
+  --rp-container-warning-bg: rgba(255, 197, 23, 0.1) !important;
+  --rp-container-warning-code-bg: rgba(255, 197, 23, 0.15) !important;
+
+  --rp-container-danger-border: rgba(237, 60, 80, 1) !important;
+  --rp-container-danger-text: #ab2131 !important;
+  --rp-container-danger-bg: rgba(237, 60, 80, 0.1) !important;
+  --rp-container-danger-code-bg: rgba(237, 60, 80, 0.15) !important;
+}
+
+.dark {
+  --rp-container-details-text: var(--rp-text-1) !important;
+  --rp-container-info-text: var(--rp-text-1) !important;
+  --rp-container-warning-text: var(--rp-text-1) !important;
+  --rp-container-danger-text: var(--rp-text-1) !important;
+}
+
+/* Home Page */
+:root {
+  --rp-home-feature-bg: var(--rp-c-bg-soft) !important;
+  --rp-home-feature-hover-bg: var(--rp-c-bg-mute) !important;
+}
+
+.dark {
+  --rp-home-feature-bg: var(--rp-c-bg-mute) !important;
+  --rp-home-feature-hover-bg: var(--rp-c-bg-soft) !important;
+}
+
+/* Nav header */
+.rspress-nav {
+  background-color: var(--rp-c-bg-soft) !important;
+  border-bottom: 1px solid var(--rp-c-divider-light) !important;
+}
+
+/* Sidebar item vertical line */
+.rspress-sidebar-group::before {
+  content: none;
+}
+
+/* Sidebar section items */
+.rspress-sidebar-group > div > a > div {
+  background-color: transparent !important;
+  font-size: 14px !important;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+
+  &:hover {
+    color: var(--rp-c-brand) !important;
+  }
+
+  &::before {
+    content: none;
+  }
+}
+
+/* Deeply nested section items */
+.rspress-sidebar-group > div > section > div {
+  background-color: transparent !important;
+
+  & > h2 {
+    font-size: 14px !important;
+  }
+
+  &:hover {
+    color: var(--rp-c-brand) !important;
+  }
+}
+
+.rspress-sidebar {
+  border-right: 1px solid var(--rp-c-divider-light) !important;
+  margin-right: 12px !important;
+
+  & > div {
+    padding-right: 0 !important;
+  }
+}
+
+/* Sidebar section headers */
+.rspress-scrollbar > nav > section > div:first-child {
+  background-color: transparent !important;
+
+  &:hover {
+    color: var(--rp-c-brand) !important;
+  }
+}
+
+.rspress-scrollbar > nav > a > div:first-child {
+  background-color: transparent !important;
+
+  &::before {
+    content: none;
+  }
+
+  &:hover {
+    color: var(--rp-c-brand) !important;
+  }
+}
+
+/* Sidebar section headers */
+.rspress-sidebar-section-header > span {
+  font-size: 15px !important;
+  font-weight: 700;
+}
+
+/* Table of Contents */
+#aside-container {
+  border-left: 1px solid var(--rp-c-divider-light) !important;
+  padding-left: 1rem;
+}
+
+.home-hero-name-img {
+  width: 100%;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+div:has(> p.rspress-home-hero-text) {
+  align-items: stretch;
+}
+
+a:has(> span.home-hero-primary-action) {
+  background: var(--rp-c-brand) !important;
+}
+
+/* Home background gradient */
+*:not([id='search-container']) > div[class^='mask'] {
+  display: block !important;
+  background-image: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--rp-c-brand) 0deg,
+    180deg,
+    var(--rp-c-brand-darker) 1turn
+  );
+}
+
+p.rspress-home-hero-text {
+  font-size: 1.35rem;
+}
+
+@media (min-width: 370px) {
+  p.rspress-home-hero-text {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 640px) {
+  p.rspress-home-hero-text {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  p.rspress-home-hero-text {
+    font-size: 3rem;
+  }
+}

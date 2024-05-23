@@ -1,0 +1,98 @@
+import { CodeBlock } from '@theme';
+import webpackDiff from '../../../public/diffs/repack_v2-v3.diff?raw';
+
+# Re.Pack 2.x to 3.x
+
+This guide shows how to upgrade from `@callstack/repack@2.x` to `@callstack/repack@3.x`.
+
+:::info
+
+If you're upgrading from version `1.x`, we recommended you start with fresh Webpack config from our templates and reapply any changes you've added in the old config to the new one.
+
+:::
+
+## Dependencies
+
+First, you need to update dependencies in your project's `package.json`:
+
+```bash
+yarn add --dev @callstack/repack@^3.0.0
+# or
+npm install --save-dev @callstack/repack@^3.0.0
+```
+
+:::tip
+
+It's also recommended to update Webpack to the latest version. In case of any trouble, take a look at [Compatibility with Webpack table](../getting-started#compatibility-with-webpack).
+
+:::
+
+## Webpack config
+
+Every project is different and we have no way of knowing what your Webpack config looks like, so we cannot
+pin point every possible change you might need to do. Instead we provide a diff of our
+[Webpack config template](https://github.com/callstack/repack/blob/v3/templates/webpack.config.cjs),
+which you can use as a base to figure out what you need to change.
+
+:::info
+
+The diff uses CJS template (`webpack.config.cjs`), since ESM was not supported in Re.Pack `2.x`,
+so the diff between 2 CJS templates will easier to read.
+
+:::
+
+Below is the diff of `template/webpack.config.js` between Re.Pack 2.x and 3.x:
+
+<CodeBlock language="diff">{webpackDiff}</CodeBlock>
+
+:::tip
+
+After applying these changes to your Webpack config, try bundling your application or running it.
+
+:::
+
+If you have build errors try adjusting Webpack config based on what the errors are saying. After addressing build errors, you should be able to run the application.
+
+:::caution
+
+If you are facing runtime errors or crashes, please open an issue!
+
+:::
+
+## ChunkManager
+
+We renamed ChunkManager to ScriptManager, changing its underlying logic. You can find details [here](https://github.com/callstack/repack/blob/v3/packages/repack/CHANGELOG.md#300-next0). To migrate you'll need to:
+
+- replace `ChunkManager.configure(...)` with `ScriptManager.shared.addResolver(async (scriptId, caller)=> {...})`
+- take function passe to `resolveRemoteChunks` config option in `ChunkManager` and use it in `ScriptManager.shared.addResolver(...)`
+- rename `chunkId` and `parentChunkId`to `scriptId` and `caller`- adjust naming convention in your project to avoid mistakes in the future
+- replace `ChunkManager.loadChunk` with `ScriptManager.loadScript`
+
+:::tip
+
+To adjust `resolve` implementation you might also use exposed utlities from `Script`:
+
+- `Script.getDevSeverURL(scriptId)`
+- `Script.getRemoteURL(url)`
+- `Script.getFileSystemURL(scriptId)`
+
+See examples [here](https://github.com/callstack/repack-examples/blob/main/module-federation/host/index.tsx)
+
+:::
+
+:::tip
+
+To migrate from V2 where Module Federtion was implemented please keep in mind that `Fedrated` utilities have set of helpers to work with Module Federation
+
+- `Federated.createURLResolver({containers: Record<string,string>})` - resolver to be used in `ScriptManager.shared.addResolver`
+- `Federated.importModule` - handle loading dynamic containers
+
+See examples [here](https://github.com/callstack/repack-examples/blob/main/module-federation/host/index.tsx) and [here](https://github.com/callstack/repack-examples/blob/main/module-federation/host/App.tsx)
+
+:::
+
+:::tip
+
+Read more about support of Module Federation out of the box [here](../module-federation.md)
+
+:::

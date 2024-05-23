@@ -1,0 +1,16 @@
+[
+  {
+    "text": "Docs",
+    "link": "/docs/getting-started",
+    "activeMatch": "^/2.x/docs/"
+  },
+  {
+    "text": "API",
+    "link": "/api/about",
+    "activeMatch": "^/2.x/api/"
+  },
+  {
+    "text": "Examples",
+    "link": "https://github.com/callstack/repack-examples"
+  }
+]

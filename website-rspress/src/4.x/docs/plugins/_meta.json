@@ -1,0 +1,17 @@
+[
+  {
+    "type": "file",
+    "name": "index",
+    "label": "Overview"
+  },
+  {
+    "type": "file",
+    "name": "code-signing",
+    "label": "CodeSigningPlugin"
+  },
+  {
+    "type": "file",
+    "name": "chunks-to-hermes",
+    "label": "ChunksToHermesBytecodePlugin"
+  }
+]

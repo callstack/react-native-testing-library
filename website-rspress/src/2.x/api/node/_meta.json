@@ -1,0 +1,32 @@
+[
+  {
+    "type": "file",
+    "name": "index",
+    "label": "Table of Contents"
+  },
+  {
+    "type": "dir",
+    "name": "classes",
+    "label": "Classes"
+  },
+  {
+    "type": "dir",
+    "name": "functions",
+    "label": "Functions"
+  },
+  {
+    "type": "dir",
+    "name": "interfaces",
+    "label": "Interfaces"
+  },
+  {
+    "type": "dir",
+    "name": "types",
+    "label": "Types"
+  },
+  {
+    "type": "dir",
+    "name": "variables",
+    "label": "Variables"
+  }
+]
