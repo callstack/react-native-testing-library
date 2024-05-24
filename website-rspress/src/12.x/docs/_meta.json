@@ -11,7 +11,12 @@
   },
   {
     "type": "dir",
-    "name": "migration-guides",
+    "name": "api",
+    "label": "API"
+  },
+  {
+    "type": "dir",
+    "name": "migration",
     "label": "Migration Guides",
     "collapsed": true
   },

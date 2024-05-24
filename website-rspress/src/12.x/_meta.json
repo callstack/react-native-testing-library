@@ -5,11 +5,6 @@
     "activeMatch": "^/docs/"
   },
   {
-    "text": "API",
-    "link": "/api/about",
-    "activeMatch": "^/api/"
-  },
-  {
     "text": "Examples",
     "link": "https://github.com/callstack/react-native-testing-library/tree/main/examples"
   }
