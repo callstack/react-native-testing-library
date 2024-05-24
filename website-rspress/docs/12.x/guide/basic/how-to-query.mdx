@@ -18,14 +18,14 @@ For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
 
 The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
 
-| Variant                               | Assertion                     | Return type                                | Is Async? |
-| ------------------------------------- | ----------------------------- | ------------------------------------------ | --------- |
-| [`getBy*`](queries#get-by)            | Exactly one matching element  | `ReactTestInstance`                        | No        |
-| [`getAllBy*`](queries#get-all-by)     | At least one matching element | `Array<ReactTestInstance>`                 | No        |
-| [`queryBy*`](queries#query-by)        | Zero or one matching element  | <code>ReactTestInstance &#124; null</code> | No        |
-| [`queryAllBy*`](queries#query-all-by) | No assertion                  | `Array<ReactTestInstance>`                 | No        |
-| [`findBy*`](queries#find-by)          | Exactly one matching element  | `Promise<ReactTestInstance>`               | Yes       |
-| [`findAllBy*`](queries#find-all-by)   | At least one matching element | `Promise<Array<ReactTestInstance>>`        | Yes       |
+| Variant                                        | Assertion                     | Return type                                | Is Async? |
+| ---------------------------------------------- | ----------------------------- | ------------------------------------------ | --------- |
+| [`getBy*`](api/core/queries#get-by)            | Exactly one matching element  | `ReactTestInstance`                        | No        |
+| [`getAllBy*`](api/core/queries#get-all-by)     | At least one matching element | `Array<ReactTestInstance>`                 | No        |
+| [`queryBy*`](api/core/queries#query-by)        | Zero or one matching element  | <code>ReactTestInstance &#124; null</code> | No        |
+| [`queryAllBy*`](api/core/queries#query-all-by) | No assertion                  | `Array<ReactTestInstance>`                 | No        |
+| [`findBy*`](api/core/queries#find-by)          | Exactly one matching element  | `Promise<ReactTestInstance>`               | Yes       |
+| [`findAllBy*`](api/core/queries#find-all-by)   | At least one matching element | `Promise<Array<ReactTestInstance>>`        | Yes       |
 
 Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
 
@@ -38,7 +38,7 @@ Here are general guidelines for picking idiomatic query variants:
 1. Use `getBy*` in the most common case when you expect a **single matching element**. Use other queries only in more specific cases.
 2. Use `findBy*` when an element is not yet in the element tree, but you expect it to be there as a **result of some asynchronous action**.
 3. Use `getAllBy*` (and `findAllBy*` for async) if you expect **more than one matching element**, e.g. in a list.
-4. Use `queryBy*` only when element **should not exist** to use it together with e.g. [`not.toBeOnTheScreen()`](jest-matchers#tobeonthescreen) matcher.
+4. Use `queryBy*` only when element **should not exist** to use it together with e.g. [`not.toBeOnTheScreen()`](api/jest-matchers#tobeonthescreen) matcher.
 
 Avoid using `queryAllBy*` in regular tests, as it provides no assertions on the number of matching elements. You may still find it useful when building reusable custom testing tools.
 
@@ -46,15 +46,15 @@ Avoid using `queryAllBy*` in regular tests, as it provides no assertions on the 
 
 The query predicate describes how you decide whether to match the given element.
 
-| Predicate                                           | Supported elements | Inspected props                                                                             |
-| --------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------- |
-| [`*ByRole`](queries#by-role)                        | all host elements  | `role`, `accessibilityRole`,<br /> optional: accessible name, accessibility state and value |
-| [`*ByLabelText`](queries#by-label-text)             | all host elements  | `aria-label`, `aria-labelledby`,<br /> `accessibilityLabel`, `accessibilityLabelledBy`      |
-| [`*ByDisplayValue`](queries#by-display-value)       | `TextInput`        | `value`, `defaultValue`                                                                     |
-| [`*ByPlaceholderText`](queries#by-placeholder-text) | `TextInput`        | `placeholder`                                                                               |
-| [`*ByText`](queries#by-text)                        | `Text`             | `children` (text content)                                                                   |
-| [`*ByHintText`](queries#by-hint-text)               | all host elements  | `accessibilityHint`                                                                         |
-| [`*ByTestId`](queries#by-test-id)                   | all host elements  | `testID`                                                                                    |
+| Predicate                                                    | Supported elements | Inspected props                                                                             |
+| ------------------------------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------- |
+| [`*ByRole`](api/core/queries#by-role)                        | all host elements  | `role`, `accessibilityRole`,<br /> optional: accessible name, accessibility state and value |
+| [`*ByLabelText`](api/core/queries#by-label-text)             | all host elements  | `aria-label`, `aria-labelledby`,<br /> `accessibilityLabel`, `accessibilityLabelledBy`      |
+| [`*ByDisplayValue`](api/core/queries#by-display-value)       | `TextInput`        | `value`, `defaultValue`                                                                     |
+| [`*ByPlaceholderText`](api/core/queries#by-placeholder-text) | `TextInput`        | `placeholder`                                                                               |
+| [`*ByText`](api/core/queries#by-text)                        | `Text`             | `children` (text content)                                                                   |
+| [`*ByHintText`](api/core/queries#by-hint-text)               | all host elements  | `accessibilityHint`                                                                         |
+| [`*ByTestId`](api/core/queries#by-test-id)                   | all host elements  | `testID`                                                                                    |
 
 ### Idiomatic query predicates
 
@@ -64,7 +64,7 @@ It is recommended to use query predicates in the following order of priority:
 
 ### 1. By Role query {#by-role-query}
 
-The first and most versatile predicate is [`*ByRole`](queries#by-role), which starts with the semantic role of the element and can be further narrowed down with additional options. React Native has two role systems, the web/ARIA-compatible one based on [`role`](https://reactnative.dev/docs/accessibility#role) prop and the traditional one based on [`accessibilityRole`](https://reactnative.dev/docs/accessibility#accessibilityrole) prop, you can use either of these.
+The first and most versatile predicate is [`*ByRole`](api/core/queries#by-role), which starts with the semantic role of the element and can be further narrowed down with additional options. React Native has two role systems, the web/ARIA-compatible one based on [`role`](https://reactnative.dev/docs/accessibility#role) prop and the traditional one based on [`accessibilityRole`](https://reactnative.dev/docs/accessibility#accessibilityrole) prop, you can use either of these.
 
 In most cases, you need to set accessibility roles explicitly (or your component library can set some of them for you). These roles allow assistive technologies (like screen readers) and testing code to understand your view hierarchy better.
 
@@ -88,7 +88,7 @@ Some frequently used roles include:
 
 #### Name option {#by-role-query-name-option}
 
-Frequently, you will want to add the [`name`](queries#by-role-options) option, which will match both the element's role and its accessible name (= element's accessibility label or text content).
+Frequently, you will want to add the [`name`](api/core/queries#by-role-options) option, which will match both the element's role and its accessible name (= element's accessibility label or text content).
 
 Here are a couple of examples:
 
@@ -104,9 +104,9 @@ Querying [`TextInput`](https://reactnative.dev/docs/textinput) elements presents
 
 Therefore, you can use the following queries to find relevant text inputs:
 
-1. [`*ByLabelText`](queries#by-label-text) - will match the accessibility label of the element. This query will match any host elements, including `TextInput` elements.
-2. [`*ByPlaceholderText`](queries#by-placeholder-text) - will match the placeholder of `TextInput` element. This query will match only `TextInput` elements.
-3. [`*ByDisplayValue`](queries#by-display-value) - will the current (or default) value of `TextInput` element. This query will match only `TextInput` elements.
+1. [`*ByLabelText`](api/core/queries#by-label-text) - will match the accessibility label of the element. This query will match any host elements, including `TextInput` elements.
+2. [`*ByPlaceholderText`](api/core/queries#by-placeholder-text) - will match the placeholder of `TextInput` element. This query will match only `TextInput` elements.
+3. [`*ByDisplayValue`](api/core/queries#by-display-value) - will the current (or default) value of `TextInput` element. This query will match only `TextInput` elements.
 
 ### 3. Other accessible queries {#other-accessible-queries}
 
@@ -114,12 +114,12 @@ These queries reflect the apps' user experience, both visual and through assisti
 
 These queries include:
 
-- [`*ByText`](queries#by-text) - will match the text content of the element. This query will match only `Text` elements.
-- [`*ByLabelText`](queries#by-label-text) - will match the accessibility label of the element.
-- [`*ByHintText`](queries#by-hint-text) - will match the accessibility hint of the element.
+- [`*ByText`](api/core/queries#by-text) - will match the text content of the element. This query will match only `Text` elements.
+- [`*ByLabelText`](api/core/queries#by-label-text) - will match the accessibility label of the element.
+- [`*ByHintText`](api/core/queries#by-hint-text) - will match the accessibility hint of the element.
 
 ### 4. Test ID query {#test-id-query}
 
-As a final predicate, you can use the `testID` prop to find relevant views. Using the [`*ByTestId`](queries#by-test-id) predicate offers the most flexibility, but at the same time, it does not represent the user experience, as users are not aware of test IDs.
+As a final predicate, you can use the `testID` prop to find relevant views. Using the [`*ByTestId`](api/core/queries#by-test-id) predicate offers the most flexibility, but at the same time, it does not represent the user experience, as users are not aware of test IDs.
 
 Note that using test IDs is a widespread technique in end-to-end testing due to various issues with querying views through other means **in its specific context**. Nevertheless, we still encourage you to use recommended RNTL queries as it will make your integration and component test more reliable and resilient.

@@ -53,7 +53,7 @@ expect(element).toHaveTextContent(
 )
 ```
 
-This allows you to assert whether the given element has the given text content or not. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
+This allows you to assert whether the given element has the given text content or not. It accepts either `string` or `RegExp` matchers, as well as [text match options](api/core/queries#text-match-options) of `exact` and `normalizer`.
 
 ### `toContainElement()`
 
@@ -87,7 +87,7 @@ expect(element).toHaveDisplayValue(
 )
 ```
 
-This allows you to assert whether the given `TextInput` element has a specified display value. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
+This allows you to assert whether the given `TextInput` element has a specified display value. It accepts either `string` or `RegExp` matchers, as well as [text match options](api/core/queries#text-match-options) of `exact` and `normalizer`.
 
 ### `toHaveAccessibilityValue()`
 
@@ -201,7 +201,7 @@ expect(element).toHaveAccessibleName(
 )
 ```
 
-This allows you to assert whether the given element has a specified accessible name. It accepts either `string` or `RegExp` matchers, as well as [text match options](Queries.md#text-match-options) of `exact` and `normalizer`.
+This allows you to assert whether the given element has a specified accessible name. It accepts either `string` or `RegExp` matchers, as well as [text match options](api/core/queries#text-match-options) of `exact` and `normalizer`.
 
 The accessible name will be computed based on `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props, in the absence of these props, the element text content will be used.
 

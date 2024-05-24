@@ -14,13 +14,13 @@ let screen: {
 
 The `screen` object offers a recommended way to access queries and utilities for the currently rendered UI.
 
-This object is assigned after the `render` call and cleared after each test by calling [`cleanup`](other#cleanup). If no `render` call has been made in a given test, then it holds a special object and throws a helpful error on each property and method access.
+This object is assigned after the `render` call and cleared after each test by calling [`cleanup`](api/misc/other#cleanup). If no `render` call has been made in a given test, then it holds a special object and throws a helpful error on each property and method access.
 
 ### `...queries`
 
 The most important feature of `screen` is providing a set of helpful queries that allow you to find certain elements in the view hierarchy.
 
-See [Queries](./Queries.md) for a complete list.
+See [Queries](api/core/queries) for a complete list.
 
 #### Example
 
@@ -129,7 +129,7 @@ Get the rendered component JSON representation, e.g. for snapshot testing.
 const root: ReactTestInstance;
 ```
 
-Returns the rendered root [host element](testing-env#host-and-composite-components).
+Returns the rendered root [host element](guide/advanced/testing-env#host-and-composite-components).
 
 This API is primarily useful for component tests, as it allows you to access root host view without using `*ByTestId` queries or similar methods.
 
@@ -143,7 +143,7 @@ This API typically will return a composite view, which goes against recommended 
 const UNSAFE_root: ReactTestInstance;
 ```
 
-Returns the rendered [composite root element](testing-env#host-and-composite-components).
+Returns the rendered [composite root element](guide/advanced/testing-env#host-and-composite-components).
 
 :::note
 This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/other#container-1). However, despite the same name, the actual behavior has been significantly different; hence, we decided to change the name to `UNSAFE_root`.

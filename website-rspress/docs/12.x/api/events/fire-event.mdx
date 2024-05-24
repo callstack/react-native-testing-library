@@ -5,7 +5,7 @@ function fireEvent(element: ReactTestInstance, eventName: string, ...data: unkno
 ```
 
 :::note
-For common events like `press` or `type` it's recommended to use [User Event API](UserEvent.md) as it offers
+For common events like `press` or `type` it's recommended to use [User Event API](api/events/user-event) as it offers
 more realistic event simulation by emitting a sequence of events with proper event objects that mimic React Native runtime behavior.
 
 Use Fire Event for cases not supported by User Event and for triggering event handlers on composite components.
@@ -62,7 +62,7 @@ fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void
 ```
 
 :::note
-It is recommended to use the User Event [`press()`](UserEvent.md#press) helper instead as it offers more realistic simulation of press interaction, including pressable support.
+It is recommended to use the User Event [`press()`](api/events/user-event#press) helper instead as it offers more realistic simulation of press interaction, including pressable support.
 :::
 
 Invokes `press` event handler on the element or parent element in the tree.
@@ -98,7 +98,7 @@ fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void
 ```
 
 :::note
-It is recommended to use the User Event [`type()`](UserEvent.md#type) helper instead as it offers more realistic simulation of text change interaction, including key-by-key typing, element focus, and other editing events.
+It is recommended to use the User Event [`type()`](api/events/user-event#type) helper instead as it offers more realistic simulation of text change interaction, including key-by-key typing, element focus, and other editing events.
 :::
 
 Invokes `changeText` event handler on the element or parent element in the tree.
@@ -153,6 +153,6 @@ fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 
 :::note
 
-Prefer using [`user.scrollTo`](./UserEvent.md#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
+Prefer using [`user.scrollTo`](api/events/user-event#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
 
 :::
