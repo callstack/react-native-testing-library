@@ -4,7 +4,7 @@
     height="80"
     width="80"
     alt="owl"
-    src="https://raw.githubusercontent.com/callstack/react-native-testing-library/main/website/static/img/owl.png"
+    src="https://raw.githubusercontent.com/callstack/react-native-testing-library/main/website/docs/public/img/owl.png"
   />
   <p>Developer-friendly and complete React Native testing utilities that encourage good testing practices.</P>
 </div>
@@ -92,7 +92,7 @@ React Native Testing Library consists of following APIs:
 - [`render` function](https://callstack.github.io/react-native-testing-library/docs/api/render) - render your UI components for testing purposes
 - [`screen` object](https://callstack.github.io/react-native-testing-library/docs/api/screen) - access rendered UI:
   - [Queries](https://callstack.github.io/react-native-testing-library/docs/api/queries) - find rendered components by various predicates: role, text, test ids, etc
-  - Lifecycle methods: [`rerender`](https://callstack.github.io/react-native-testing-library/docs/api/screen#rerender), [`unmount`](https://callstack.github.io/react-native-testing-library/docs/screen#unmount)
+  - Lifecycle methods: [`rerender`](https://callstack.github.io/react-native-testing-library/docs/api/screen#rerender), [`unmount`](https://callstack.github.io/react-native-testing-library/docs/api/screen#unmount)
   - Helpers: [`debug`](https://callstack.github.io/react-native-testing-library/docs/api/screen#debug), [`toJSON`](https://callstack.github.io/react-native-testing-library/docs/api/screen#tojson), [`root`](https://callstack.github.io/react-native-testing-library/docs/api/screen#root)
 - [Jest matchers](https://callstack.github.io/react-native-testing-library/docs/api/jest-matchers) - validate assumptions about your UI
 - [User Event](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event) - simulate common user interactions like [`press`](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event#press) or [`type`](https://callstack.github.io/react-native-testing-library/docs/user-event#type) in a realistic way
