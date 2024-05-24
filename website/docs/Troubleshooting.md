@@ -68,7 +68,7 @@ Alternatively, you can use `jest.spyOn` to mock package exports selectively.
 
 In case of mocking `react-native` package you should not mock the whole package at once, as this approach has issues with `jest.requireActual` call. In this case it is recommended to mock particular library paths inside the package, e.g.:
 
-```ts
+```ts title=jest-setup.ts
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
 ```
 

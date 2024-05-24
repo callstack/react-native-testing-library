@@ -6,7 +6,7 @@ Version 7.0 brought React Native Testing Library into the `@testing-library` fam
 
 This is a backward compatible change.
 
-When querying text, it is now possible to pass a [`TextMatch`](https://callstack.github.io/react-native-testing-library/docs/queries/#textmatch) to most text based queries, which lets you configure how `@testing-library/react-native` should match your text. For instance, passing `exact: false` will allow matching substrings and will ignore case:
+When querying text, it is now possible to pass a [`TextMatch`](api/core/queries#textmatch) to most text based queries, which lets you configure how `@testing-library/react-native` should match your text. For instance, passing `exact: false` will allow matching substrings and will ignore case:
 
 ```jsx
 const { getByText } = render(<Text>Hello World</Text>);
@@ -37,7 +37,7 @@ In v1.14 we've introduced a feature allowing to match text when it's spread acro
 const { getByText } = render(
   <Text>
     Hello <Text>world</Text>
-  </Text>,
+  </Text>
 );
 getByText('Hello world'); // matches
 ```

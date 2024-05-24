@@ -5,14 +5,9 @@
     "label": "Getting started"
   },
   {
-    "type": "custom-link",
-    "link": "/api",
-    "label": "API reference"
-  },
-  {
     "type": "dir",
-    "name": "basic",
-    "label": "Basic Guides"
+    "name": "fundamentals",
+    "label": "Fundamentals"
   },
   {
     "type": "dir",

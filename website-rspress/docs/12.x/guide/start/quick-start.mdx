@@ -19,7 +19,7 @@ This library has a peer dependency for `react-test-renderer` package. Make sure 
 
 To set up React Native-specific Jest matchers, add the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
 
-```ts
+```ts title=jest-setup.ts
 import '@testing-library/react-native/extend-expect';
 ```
 
