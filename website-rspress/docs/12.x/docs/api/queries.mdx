@@ -51,12 +51,12 @@ The query variants describe the expected number (and timing) of matching element
 
 | Variant                                        | Assertion                     | Return type                                | Is Async? |
 | ---------------------------------------------- | ----------------------------- | ------------------------------------------ | --------- |
-| [`getBy*`](api/core/queries#get-by)            | Exactly one matching element  | `ReactTestInstance`                        | No        |
-| [`getAllBy*`](api/core/queries#get-all-by)     | At least one matching element | `Array<ReactTestInstance>`                 | No        |
-| [`queryBy*`](api/core/queries#query-by)        | Zero or one matching element  | <code>ReactTestInstance &#124; null</code> | No        |
-| [`queryAllBy*`](api/core/queries#query-all-by) | No assertion                  | `Array<ReactTestInstance>`                 | No        |
-| [`findBy*`](api/core/queries#find-by)          | Exactly one matching element  | `Promise<ReactTestInstance>`               | Yes       |
-| [`findAllBy*`](api/core/queries#find-all-by)   | At least one matching element | `Promise<Array<ReactTestInstance>>`        | Yes       |
+| [`getBy*`](docs/api/queries#get-by)            | Exactly one matching element  | `ReactTestInstance`                        | No        |
+| [`getAllBy*`](docs/api/queries#get-all-by)     | At least one matching element | `Array<ReactTestInstance>`                 | No        |
+| [`queryBy*`](docs/api/queries#query-by)        | Zero or one matching element  | <code>ReactTestInstance &#124; null</code> | No        |
+| [`queryAllBy*`](docs/api/queries#query-all-by) | No assertion                  | `Array<ReactTestInstance>`                 | No        |
+| [`findBy*`](docs/api/queries#find-by)          | Exactly one matching element  | `Promise<ReactTestInstance>`               | Yes       |
+| [`findAllBy*`](docs/api/queries#find-all-by)   | At least one matching element | `Promise<Array<ReactTestInstance>>`        | Yes       |
 
 Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
 
@@ -121,7 +121,7 @@ findAllByX(
 `findAllBy*` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
 
 :::info
-`findBy*` and `findAllBy*` queries accept optional `waitForOptions` object arguments, which can contain `timeout`, `interval` and `onTimeout` properties which have the same meaning as respective options for [`waitFor`](api/misc/async#waitfor) function.
+`findBy*` and `findAllBy*` queries accept optional `waitForOptions` object arguments, which can contain `timeout`, `interval` and `onTimeout` properties which have the same meaning as respective options for [`waitFor`](docs/api/misc/async#waitfor) function.
 :::
 
 :::info
@@ -197,32 +197,32 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 - `disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessbilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
 
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
-  - This option can alternatively be expressed using the [`toBeEnabled()` / `toBeDisabled()`](api/jest-matchers#tobeenabled) Jest matchers.
+  - This option can alternatively be expressed using the [`toBeEnabled()` / `toBeDisabled()`](docs/api/jest-matchers#tobeenabled) Jest matchers.
 
 - `selected`: You can filter elements by their selected state (coming either from `aria-selected` prop or `accessbilityState.selected` prop). The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
 
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
-  - This option can alternatively be expressed using the [`toBeSelected()`](api/jest-matchers#tobeselected) Jest matcher.
+  - This option can alternatively be expressed using the [`toBeSelected()`](docs/api/jest-matchers#tobeselected) Jest matcher.
 
 * `checked`: You can filter elements by their checked state (coming either from `aria-checked` prop or `accessbilityState.checked` prop). The possible values are `true`, `false`, or `"mixed"`.
 
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
-  - This option can alternatively be expressed using the [`toBeChecked()` / `toBePartiallyChecked()`](api/jest-matchers#tobechecked) Jest matchers.
+  - This option can alternatively be expressed using the [`toBeChecked()` / `toBePartiallyChecked()`](docs/api/jest-matchers#tobechecked) Jest matchers.
 
 * `busy`: You can filter elements by their busy state (coming either from `aria-busy` prop or `accessbilityState.busy` prop). The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
 
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
-  - This option can alternatively be expressed using the [`toBeBusy()`](api/jest-matchers#tobebusy) Jest matcher.
+  - This option can alternatively be expressed using the [`toBeBusy()`](docs/api/jest-matchers#tobebusy) Jest matcher.
 
 * `expanded`: You can filter elements by their expanded state (coming either from `aria-expanded` prop or `accessbilityState.expanded` prop). The possible values are `true` or `false`.
 
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
-  - This option can alternatively be expressed using the [`toBeExpanded()` / `toBeCollapsed()`](api/jest-matchers#tobeexpanded) Jest matchers.
+  - This option can alternatively be expressed using the [`toBeExpanded()` / `toBeCollapsed()`](docs/api/jest-matchers#tobeexpanded) Jest matchers.
 
 * `value`: Filter elements by their accessibility value, based on either `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` or `accessibilityValue` props. Accessiblity value conceptually consists of numeric `min`, `max` and `now` entries, as well as string `text` entry.
 
   - See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about the accessibility value concept.
-  - This option can alternatively be expressed using the [`toHaveAccessibilityValue()`](api/jest-matchers#tohaveaccessibilityvalue) Jest matcher.
+  - This option can alternatively be expressed using the [`toHaveAccessibilityValue()`](docs/api/jest-matchers#tohaveaccessibilityvalue) Jest matcher.
 
 ### `*ByLabelText` {#by-label-text}
 
@@ -390,11 +390,11 @@ This query has been marked deprecated, as is typically too general to give meani
 
 - [`*ByRole`](#by-role) query with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
 - use built-in Jest matchers to check the state of element found using some other query:
-  - enabled state: [`toBeEnabled()` / `toBeDisabled()`](api/jest-matchers#tobeenabled)
-  - checked state: [`toBeChecked()` / `toBePartiallyChecked()`](api/jest-matchers#tobechecked)
-  - selected state: [`toBeSelected()`](api/jest-matchers#tobeselected)
-  - expanded state: [`toBeExpanded()` / `toBeCollapsed()`](api/jest-matchers#tobeexpanded)
-  - busy state: [`toBeBusy()`](api/jest-matchers#tobebusy)
+  - enabled state: [`toBeEnabled()` / `toBeDisabled()`](docs/api/jest-matchers#tobeenabled)
+  - checked state: [`toBeChecked()` / `toBePartiallyChecked()`](docs/api/jest-matchers#tobechecked)
+  - selected state: [`toBeSelected()`](docs/api/jest-matchers#tobeselected)
+  - expanded state: [`toBeExpanded()` / `toBeCollapsed()`](docs/api/jest-matchers#tobeexpanded)
+  - busy state: [`toBeBusy()`](docs/api/jest-matchers#tobebusy)
 
 :::
 
@@ -458,7 +458,7 @@ The difference in handling default values is made to reflect observed accessibil
 :::caution
 This query has been marked deprecated, as is typically too general to give meaningful results. Therefore, it's better to use one of following options:
 
-- [`toHaveAccessibilityValue()`](api/jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
+- [`toHaveAccessibilityValue()`](docs/api/jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
 - [`*ByRole`](#by-role) query with `value` option
 
 :::
@@ -498,9 +498,9 @@ Usually query first argument can be a **string** or a **regex**. All queries tak
 
 #### `includeHiddenElements` option
 
-All queries have the `includeHiddenElements` option which affects whether [elements hidden from accessibility](api/misc/accessibility#ishiddenfromaccessibility) are matched by the query. By default queries will not match hidden elements, because the users of the app would not be able to see such elements.
+All queries have the `includeHiddenElements` option which affects whether [elements hidden from accessibility](docs/api/misc/accessibility#ishiddenfromaccessibility) are matched by the query. By default queries will not match hidden elements, because the users of the app would not be able to see such elements.
 
-You can configure the default value with the [`configure` function](api/misc/config#configure).
+You can configure the default value with the [`configure` function](docs/api/misc/config#configure).
 
 This option is also available as `hidden` alias for compatibility with [React Testing Library](https://testing-library.com/docs/queries/byrole#hidden).
 

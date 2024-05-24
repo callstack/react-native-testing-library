@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: <span className="home-hero-primary-action">Quick Start</span>
-      link: /guide/start/quick-start
+      link: /docs/start/quick-start
     - theme: alt
       text: Explore API
       link: /api

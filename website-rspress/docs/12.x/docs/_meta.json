@@ -4,10 +4,11 @@
     "name": "start",
     "label": "Getting started"
   },
+  { "type": "dir", "name": "api", "label": "API reference" },
   {
     "type": "dir",
-    "name": "fundamentals",
-    "label": "Fundamentals"
+    "name": "guides",
+    "label": "Guides"
   },
   {
     "type": "dir",
@@ -19,6 +20,5 @@
     "name": "migration",
     "label": "Migration Guides",
     "collapsed": true
-  },
-  "community-resources"
+  }
 ]

@@ -9,9 +9,9 @@ or iOS simulator/Android emulator to provision the underlying OS and platform AP
 
 Instead of using React Native renderer, it simulates only the JavaScript part of its runtime
 using [React Test Renderer](https://reactjs.org/docs/test-renderer.html) while providing queries
-and event APIs ([User Event](api/events/user-event), [Fire Event](api/events/fire-event)) that mimicking certain behaviors from the actual runtime.
+and event APIs ([User Event](docs/api/events/user-event), [Fire Event](docs/api/events/fire-event)) that mimicking certain behaviors from the actual runtime.
 
-You can learn more about our testing environment [here](guide/advanced/testing-env).
+You can learn more about our testing environment [here](docs/advanced/testing-env).
 
 This approach has specific benefits and shortfalls. On the positive side:
 
@@ -25,7 +25,7 @@ On the negative side:
 - you cannot test native features
 - it might not perfectly simulate certain JavaScript features, but we are working on it
 
-The [User Event interactions](api/events/user-event) solve some of the simulation issues, as they offer more realistic event handling than the basic [Fire Event API](api/events/fire-event).
+The [User Event interactions](docs/api/events/user-event) solve some of the simulation issues, as they offer more realistic event handling than the basic [Fire Event API](docs/api/events/fire-event).
 
 ## Should I use/migrate to `screen` queries?
 
@@ -36,4 +36,4 @@ For new code, you are encouraged to use `screen` as there are some good reasons 
 
 ## Should I use/migrate to User Event interactions?
 
-We encourage you to migrate existing tests to use the [User Event interactions](api/events/user-event), which offer more realistic event handling than the basic [Fire Event API](api/events/fire-event). Hence, it will provide more confidence in the quality of your code.
+We encourage you to migrate existing tests to use the [User Event interactions](docs/api/events/user-event), which offer more realistic event handling than the basic [Fire Event API](docs/api/events/fire-event). Hence, it will provide more confidence in the quality of your code.
