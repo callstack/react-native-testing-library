@@ -49,7 +49,6 @@ export default defineConfig({
         title: 'React Native Testing Library',
         type: 'website',
         url: 'https://callstack.github.io/react-native-testing-library/',
-        image: 'https://re-pack.dev/img/og-image.png',
         description: 'Helps you to write better tests with less effort.',
       }),
     ],

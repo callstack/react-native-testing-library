@@ -11,7 +11,7 @@ hero:
       link: /docs/start/quick-start
     - theme: alt
       text: Explore API
-      link: /api
+      link: /docs/api
 features:
   - title: Maintainable
     details: Write maintainable tests for your React Native apps.
