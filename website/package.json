@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "rspress dev",
-    "export": "rspress build",
+    "build": "rspress build",
     "preview": "rspress preview"
   },
   "dependencies": {
