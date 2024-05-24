@@ -1,0 +1,7 @@
+[
+  "overview",
+  { "type": "dir", "name": "core", "label": "Core APIs" },
+  { "type": "dir", "name": "events", "label": "Triggering events" },
+  "jest-matchers",
+  { "type": "dir", "name": "misc", "label": "Miscellaneous" }
+]

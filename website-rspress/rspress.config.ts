@@ -5,7 +5,7 @@ import vercelAnalytics from 'rspress-plugin-vercel-analytics';
 import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
 
 export default defineConfig({
-  root: path.join(__dirname, 'src'),
+  root: path.join(__dirname, 'docs'),
   title: 'React Native Testing Library',
   description: 'Helps you to write better tests with less effort.',
   icon: '/img/owl.png',
@@ -41,7 +41,7 @@ export default defineConfig({
       },
     ],
   },
-  globalStyles: path.join(__dirname, 'src/styles/index.css'),
+  globalStyles: path.join(__dirname, 'docs/styles/index.css'),
   builderConfig: {
     plugins: [
       pluginOpenGraph({

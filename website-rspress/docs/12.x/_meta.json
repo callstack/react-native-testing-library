@@ -1,0 +1,16 @@
+[
+  {
+    "text": "Guide",
+    "link": "/guide/getting-started/intro",
+    "activeMatch": "^/guide/"
+  },
+  {
+    "text": "API",
+    "link": "/api",
+    "activeMatch": "^/api/"
+  },
+  {
+    "text": "Examples",
+    "link": "https://github.com/callstack/react-native-testing-library/tree/main/examples"
+  }
+]

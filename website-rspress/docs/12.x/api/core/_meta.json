@@ -1,0 +1,5 @@
+[
+  { "type": "file", "name": "render", "label": "Render function" },
+  { "type": "file", "name": "screen", "label": "Screen object" },
+  "queries"
+]

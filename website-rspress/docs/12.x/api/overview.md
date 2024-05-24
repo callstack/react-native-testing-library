@@ -1,3 +1,6 @@
+---
+uri: /api
+---
 # API Overview
 
 React Native Testing Library consists of following APIs:
@@ -8,7 +11,7 @@ React Native Testing Library consists of following APIs:
   - Lifecycle methods: [`rerender`](screen#rerender), [`unmount`](screen#unmount)
   - Helpers: [`debug`](screen#debug), [`toJSON`](screen#tojson), [`root`](screen#root)
 - [Jest matchers](jest-matchers) - validate assumptions about your UI
-- [User Event](user-event) - simulate common user interactions like [`press`](user-event#press) or [`type`](user-event#type) in a realistic way
+- [User Event](api/events/user-event) - simulate common user interactions like [`press`](api/events/user-event#press) or [`type`](api/events/user-event#type) in a realistic way
 - [Fire Event](fire-event) - simulate any component event in a simplified way
 - [`renderHook` function](render-hook) - render hooks for testing purposes
 - [Other APIs](other):

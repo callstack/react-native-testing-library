@@ -1,0 +1,29 @@
+[
+  {
+    "type": "dir",
+    "name": "getting-started",
+    "label": "Getting started"
+  },
+  {
+    "type": "custom-link",
+    "link": "/api",
+    "label": "API reference"
+  },
+  {
+    "type": "dir",
+    "name": "basic",
+    "label": "Basic Guides"
+  },
+  {
+    "type": "dir",
+    "name": "advanced",
+    "label": "Advanced Guides"
+  },
+  {
+    "type": "dir",
+    "name": "migration",
+    "label": "Migration Guides",
+    "collapsed": true
+  },
+  "community-resources"
+]

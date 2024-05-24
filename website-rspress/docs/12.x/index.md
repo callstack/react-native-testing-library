@@ -7,11 +7,11 @@ hero:
   tagline: Helps you to write better tests with less effort.
   actions:
     - theme: brand
-      text: <span className="home-hero-primary-action">Get started</span>
-      link: /docs/getting-started
+      text: <span className="home-hero-primary-action">Quick Start</span>
+      link: /guide/getting-started/quick-start
     - theme: alt
-      text: Learn more
-      link: /docs/intro
+      text: API Reference
+      link: /api
 features:
   - title: Maintainable
     details: Write maintainable tests for your React Native apps.
