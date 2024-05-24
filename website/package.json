@@ -1,40 +1,21 @@
 {
-  "name": "react-native-testing-library-website",
-  "version": "0.0.0",
+  "name": "website",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "docusaurus start",
-    "build": "docusaurus build",
-    "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy"
+    "start": "rspress dev",
+    "build": "rspress build",
+    "preview": "rspress preview"
   },
   "dependencies": {
-    "@docusaurus/core": "3.3.2",
-    "@docusaurus/preset-classic": "3.3.2",
-    "@mdx-js/react": "^3.0.1",
-    "classnames": "^2.5.1",
-    "prism-react-renderer": "^2.3.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "rsbuild-plugin-open-graph": "^1.0.0",
+    "rspress": "1.20.1",
+    "rspress-plugin-font-open-sans": "^1.0.0",
+    "rspress-plugin-vercel-analytics": "^0.3.0"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.3.2",
-    "@docusaurus/types": "3.3.2"
-  },
-  "engines": {
-    "node": ">=18.0"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "packageManager": "yarn@4.2.1"
+    "@types/node": "^18",
+    "@types/react": "^18.2.64",
+    "typescript": "^5.2.2"
+  }
 }
