@@ -9,13 +9,13 @@
   },
   "dependencies": {
     "rsbuild-plugin-open-graph": "^1.0.0",
-    "rspress": "1.20.1",
+    "rspress": "1.21.1",
     "rspress-plugin-font-open-sans": "^1.0.0",
     "rspress-plugin-vercel-analytics": "^0.3.0"
   },
   "devDependencies": {
-    "@types/node": "^18",
-    "@types/react": "^18.2.64",
-    "typescript": "^5.2.2"
+    "@types/node": "^20.12.12",
+    "@types/react": "^18.3.3",
+    "typescript": "^5.4.5"
   }
 }
