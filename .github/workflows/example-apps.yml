@@ -10,7 +10,7 @@ jobs:
   test-example:
     strategy:
       matrix:
-        example: [basic]
+        example: [basic, cookbook]
 
     name: Test Example
     runs-on: ubuntu-latest
