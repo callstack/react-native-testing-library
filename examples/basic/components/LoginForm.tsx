@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TextInput, Pressable, ActivityIndicator } from 'react-native';
+import { theme } from '../theme';
 
 type Props = {
   onLoginSuccess: (user: string) => void;
@@ -77,7 +78,7 @@ export function LoginForm({ onLoginSuccess }: Props) {
  * @param password The password to authenticate.
  * @returns username if the username and password are correct, null otherwise.
  */
-async function authUser(username: string, password: string): Promise<string | null> {
+function authUser(username: string, password: string): Promise<string | null> {
   return new Promise((resolve) =>
     setTimeout(() => {
       const hasValidCredentials = username === 'admin' && password === 'admin1';
@@ -98,17 +99,17 @@ const styles = StyleSheet.create({
   },
   textLabel: {
     fontSize: 16,
-    color: '#444',
+    color: theme.colors.label,
   },
   textInput: {
     fontSize: 20,
     padding: 8,
     marginVertical: 8,
-    borderColor: 'black',
+    borderColor: theme.colors.text,
     borderWidth: 1,
   },
   button: {
-    backgroundColor: '#3256a8',
+    backgroundColor: theme.colors.button,
     padding: 16,
     alignItems: 'center',
     justifyContent: 'center',
@@ -118,10 +119,10 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     fontWeight: '600',
-    color: 'white',
+    color: theme.colors.buttonText,
   },
   validator: {
-    color: 'red',
+    color: theme.colors.validator,
     fontSize: 18,
     marginTop: 8,
   },
