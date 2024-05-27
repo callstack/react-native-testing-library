@@ -1,3 +1,3 @@
 # Introduction
 
-This cookbook is intended to showcase various recipes for using RNTL.
+This cookbook is intended to showcase various best practices for using React Native Testing Library.
