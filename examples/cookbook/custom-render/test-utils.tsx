@@ -4,7 +4,7 @@ import { User, UserProvider } from './providers/user-provider';
 import { Theme, ThemeProvider } from './providers/theme-provider';
 
 interface RenderWithProvidersProps {
-  user?: User;
+  user?: User | null;
   theme?: Theme;
 }
 
