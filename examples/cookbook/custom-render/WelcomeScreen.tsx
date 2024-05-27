@@ -9,7 +9,7 @@ export function WelcomeScreen() {
 
   return (
     <View>
-      <Text>{user ? `User: ${user.name}` : 'Not logged in.'}</Text>
+      <Text>Hello {user ? user.name : 'Stranger'}</Text>
       <Text>Theme: {theme}</Text>
     </View>
   );
