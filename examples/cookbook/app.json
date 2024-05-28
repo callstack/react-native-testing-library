@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "RNTL Example Basic",
-    "slug": "rntl-example-basic",
+    "name": "RNTL Cookbook App",
+    "slug": "rntl-cookbook",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
