@@ -1,5 +1,15 @@
 [
   {
+    "text": "Docs",
+    "link": "/docs/start/intro",
+    "activeMatch": "^/docs/"
+  },
+  {
+    "text": "Cookbook",
+    "link": "/cookbook/",
+    "activeMatch": "^/cookbook/"
+  },
+  {
     "text": "Examples",
     "link": "https://github.com/callstack/react-native-testing-library/tree/main/examples"
   }
