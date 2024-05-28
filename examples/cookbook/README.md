@@ -1,11 +1,8 @@
-# Basic RNTL setup
+# RNTL Cookbook
 
-This example is shows a basic modern React Native Testing Library setup in a template Expo app.
+This example app gathers recipes from the [RNTL Cookbook](https://callstack.github.io/react-native-testing-library/cookbook).
 
-The app and related tests written in TypeScript, and it uses recommended practices like:
+Each recipe described in the Cookbook should have a corresponding code example in this repo.
 
-- testing large pieces of application instead of small components
-- using `screen`-based queries
-- using recommended query types, e.g. `*ByText`, `*ByLabelText`, `*ByPlaceholderText` over `byTestId`
-
-You also use this repository as a reference when having issues in your RNTL configuration, as it contains the recommended Jest setup.
+Note:
+Since examples will showcase usage of different dependencies, the dependencies in `package.json` fill will grow much larger that in an normal React Native. This is fine 🐶☕️🔥.
