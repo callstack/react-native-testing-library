@@ -83,7 +83,7 @@
     "@types/react-test-renderer": "^18.0.7",
     "babel-jest": "^29.7.0",
     "del-cli": "^5.1.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.4.0",
     "eslint-plugin-flowtype": "^8.0.3",
     "eslint-plugin-prettier": "^4.2.1",
     "flow-bin": "~0.170.0",
