@@ -2,7 +2,11 @@
 
 ## Summary
 
-In the context of testing within development, it's important to understand when to use asynchronous tests. Generally, these are necessary when there is some asynchronous event happening in the tested component or hook, or when using UserEvent testing utilities which are asynchronous by nature.
+Typically, you would write synchronous tests. However, there are cases when using asynchronous (async) tests might be necessary or beneficial. The two most common scenarios are:
+1. **Testing Code with asynchronous operations**: When your code relies on operations that are asynchronous, such as network calls, async tests are essential. Even though you should mock these network calls, the mock should act similarly to real async behavior.
+2. **UserEvent API:** Using the UserEvent API in your tests creates more realistic event handling. These interactions introduce delays (typically event-loop ticks with 0 ms delays), requiring async tests to handle the timing correctly.
+
+By using async tests when needed, you ensure your tests are reliable and simulate real-world conditions accurately.
 
 ### Example
 
@@ -34,29 +38,64 @@ test('User can sign in with correct credentials', async () => {
 
 ## Async utilities
 
-There are several asynchronous utilities you might use in such tests. 
+There are several asynchronous utilities you might use in your tests. 
 
 ### `findBy*` queries
-One common utility is the `findBy*` queries. These are useful when you need to wait for a matching element to appear and can be summed up as a `getBy*` query within a `waitFor` function. These are widely used due to their efficacy in handling asynchronous elements. They accept the same predicates as `getBy*` queries and have a multiple elements variant called `findAllBy*`. Additionally, custom timeout and check intervals can be specified if needed, as shown below:
+The most common utility are the `findBy*` queries. These are useful when you need to wait for a matching element to appear. They can be though of as a `getBy*` query used within a `waitFor` helper.
 
-```javascript
-await screen.findByText('Hello', {}, { timeout: 1000, interval: 50 });
+They accept the same predicates as `getBy*` queries like `findByRole`, `findByTest`, etc. They also have a multiple elements variant called `findAllBy*`.
+
+```typescript
+function findByRole: (
+  role: TextMatch,
+  queryOptions?: {
+    // Query specific options
+  }
+  waitForOptions?: {
+    timeout?: number;
+    interval?: number;
+    // ..
+  }
+): Promise<ReactTestInstance>;
 ```
 
-### `waitFor` function
-The `waitFor` function is another option, serving as a lower-level utility in more advanced cases. It accepts an expectation to be validated and repeats the check every defined interval until it no longer throws an error. The default interval is 50 milliseconds, and checks continue until a timeout is reached. The global default timeout can be set using the configure option:
+Each query has a default `timeout` value of 1000 ms and `interval` of 50 ms. Custom timeout and check intervals can be specified if needed, as shown below:
 
-```javascript
+```typescript
+await screen.findByRole('button'), { name: 'Start' }, { timeout: 1000, interval: 50 });
+```
+
+Alternatively a default global `timeout` value can be set using `configure()` function:
+```typescript
 configure({ asyncUtilTimeout: timeout });
 ```
 
-This default timeout is 1000 milliseconds.
+### `waitFor` function
+
+The `waitFor` function is another option, serving as a lower-level utility in more advanced cases. 
+
+It accepts an `expectation` to be validated and repeats the check every defined interval until it no longer throws an error. The default interval is 50 ms, and checks continue until a timeout is reached.
+
+It accepts the same `timeout` and `interval` option as `findBy*` queries. 
+
+```typescript
+await waitFor(() => getByText('Hello World'));
+```
+
+If you want to use it with `getBy*` queries, use the `findBy*` queries instead, as they essentially do the same, but offer better error reporting, etc.
+
 
 ### `waitForElementToBeRemoved` function
-A specialized function, waitForElementToBeRemoved, is used to verify that a matching element was present but has since been removed. This function is, in a way, the negation of `waitFor` as it expects the initial expectation to be true, only to turn invalid (throwing an error) on subsequent runs. It operates using the same timeout and interval parameters.
+
+A specialized function, `waitForElementToBeRemoved`, is used to verify that a matching element was present but has since been removed. This function is, in a way, the negation of `waitFor` as it expects the initial expectation to be true, only to turn invalid (throwing an error) on subsequent runs. It operates using the same `timeout` and `interval` parameters.
+
+```typescript
+await waitForElementToBeRemoved(() => getByText('Hello World'));
+```
 
 ## Fake Timers
-Regarding timers, asynchronous tests can take longer to execute due to the delays introduced by asynchronous operations. To mitigate this, fake timers can be used. These are particularly useful when delays are mere waits, such as the 130 milliseconds wait introduced by the UserEvent press() event due to React Native internals. Fake timers allow for fast-forwarding through these wait periods.
+
+Regarding timers, asynchronous tests can take longer to execute due to the delays introduced by asynchronous operations. To mitigate this, fake timers can be used. These are particularly useful when delays are mere waits, such as the 130 milliseconds wait introduced by the UserEvent `press()` event due to React Native runtime behavior. Fake timers allow for fast-forwarding through these wait periods.
 
 Here are the basics of using fake timers:
 - Enable fake timers with: `jest.useFakeTimers();`
@@ -67,4 +106,4 @@ Here are the basics of using fake timers:
 
 Be cautious when running all timers to completion as it might create an infinite loop if these timers schedule follow-up timers. In such cases, it's safer to use `jest.runOnlyPendingTimers()` to avoid ending up in an infinite loop of scheduled tasks.
 
-These practices and utilities ensure that asynchronous actions in your tests are handled correctly and efficiently, enabling you to simulate real-world interaction scenarios while keeping test execution times as short as possible. By understanding and appropriately applying these tools, you can create robust and reliable tests for applications that rely on asynchronous operations.
+Note: you do not need to advance timers by hand when using User Event, it's automatically.
