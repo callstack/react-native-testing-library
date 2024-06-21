@@ -9,8 +9,8 @@ The `findBy*` queries are used to find elements that are not instantly available
 ```tsx
 function waitFor<T>(
   expectation: () => T,
-  { timeout: number = 1000, interval: number = 50 }
-): Promise<T> {}
+  options?: { timeout: number; interval: number }
+): Promise<T>;
 ```
 
 Waits for a period of time for the `expectation` callback to pass. `waitFor` may run the callback a number of times until timeout is reached, as specified by the `timeout` and `interval` options. The callback must throw an error when the expectation is not met. Returning any value, including a falsy one, will be treated as meeting the expectation, and the callback result will be returned to the caller of `waitFor` function.
@@ -109,8 +109,8 @@ If you receive warnings related to `act()` function consult our [Undestanding Ac
 ```ts
 function waitForElementToBeRemoved<T>(
   expectation: () => T,
-  { timeout: number = 4500, interval: number = 50 }
-): Promise<T> {}
+  options?: { timeout: number; interval: number }
+): Promise<T>;
 ```
 
 Waits for non-deterministic periods of time until queried element is removed or times out. `waitForElementToBeRemoved` periodically calls `expectation` every `interval` milliseconds to determine whether the element has been removed or not.
