@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
-import { atom, useAtom } from 'jotai';
+import { atom, createStore, useAtom } from 'jotai';
 
 export type TodoItem = {
   id: string;
@@ -41,3 +41,11 @@ export function TodoList() {
     </View>
   );
 }
+
+// Available for use outside react components
+export const store = createStore();
+export const getTodos = (): TodoItem[] => store.get(todosAtom);
+export const addTodo = (newTodo: TodoItem) => {
+  const todos = getTodos();
+  store.set(todosAtom, [...todos, newTodo]);
+};

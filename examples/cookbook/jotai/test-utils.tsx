@@ -1,36 +1,15 @@
 import * as React from 'react';
-import {Suspense} from 'react';
 import {render} from '@testing-library/react-native';
-import {ActivityIndicator} from "react-native";
 import {useHydrateAtoms} from "jotai/utils";
-import {IHydrateAtomsProps, InitialValue, InitialValues, IRenderWithAtomsOptions} from "./types";
-import {Provider} from "jotai";
+import {IHydrateAtomsProps, InitialValues, IRenderWithAtomsOptions} from "./types";
 
-const HydrateAtoms = <T, >({initialValues, children}: IHydrateAtomsProps<T>) => {
+function HydrateAtomsWrapper<T>({
+                                initialValues,
+                                children,
+                              }: IHydrateAtomsProps<T>) {
   useHydrateAtoms(initialValues as unknown as InitialValues);
   return children;
-};
-
-export default function JotaiTestProvider<T>({
-                                               initialValues,
-                                               children,
-                                             }: IHydrateAtomsProps<T>) {
-  return (
-    <Provider>
-      <Suspense fallback={<ActivityIndicator/>}>
-        <HydrateAtoms initialValues={initialValues}>{children}</HydrateAtoms>
-      </Suspense>
-    </Provider>
-  );
 }
-
-const getWrapper =
-  <T, >(initialValues: Array<InitialValue<T>>) =>
-    ({children}: { children: React.JSX.Element }) => (
-      <JotaiTestProvider initialValues={initialValues}>
-        {children}
-      </JotaiTestProvider>
-    );
 
 /**
  * Renders a React component with Jotai atoms for testing purposes.
@@ -46,7 +25,11 @@ export const renderWithAtoms = <T, >(
 ) => {
   const {initialValues} = options;
   return render(component, {
-    wrapper: getWrapper(initialValues),
+    wrapper: ({children}: { children: React.JSX.Element }) => (
+      <HydrateAtomsWrapper initialValues={initialValues}>
+        {children}
+      </HydrateAtomsWrapper>
+    ),
     ...options,
   });
 };

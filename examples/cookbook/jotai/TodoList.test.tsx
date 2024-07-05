@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen, userEvent } from '@testing-library/react-native';
-import { TodoItem, TodoList, todosAtom } from './TodoList';
+import { addTodo, getTodos, store, TodoItem, TodoList, todosAtom } from './TodoList';
 import { renderWithAtoms } from './test-utils';
 
 jest.useFakeTimers();
@@ -27,4 +27,17 @@ test('renders a to do list with 1 items initially, and adds a new item', async (
 
   expect(screen.getByText(/buy almond milk/i)).toBeOnTheScreen();
   expect(screen.getAllByLabelText('todo-item')).toHaveLength(2);
+});
+
+test("[outside react's scope]start with 1 initial todo and adds a new todo item", () => {
+  // Set the initial to do items in the store
+  store.set(todosAtom, INITIAL_TODOS);
+
+  expect(getTodos()).toEqual(INITIAL_TODOS);
+  const NEW_TODO = { id: '2', text: 'Buy almond milk' };
+  addTodo({
+    id: '2',
+    text: 'Buy almond milk',
+  });
+  expect(getTodos()).toEqual([...INITIAL_TODOS, NEW_TODO]);
 });
