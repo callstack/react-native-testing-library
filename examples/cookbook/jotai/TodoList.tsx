@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
-import { atom, createStore, useAtom } from 'jotai';
-
-export type TodoItem = {
-  id: string;
-  text: string;
-};
-
-export const todosAtom = atom<TodoItem[]>([]);
+import { useAtom } from 'jotai';
+import { generateRandomId } from './utils';
+import { todosAtom } from './state';
+import { TodoItem } from './types';
 
 export function TodoList() {
   const [todos, setTodos] = useAtom(todosAtom);
@@ -16,7 +12,7 @@ export function TodoList() {
     setTodos((prev) => [
       ...prev,
       {
-        id: Math.random().toString(36).slice(2, 11),
+        id: generateRandomId(),
         text: 'Buy almond milk',
       },
     ]);
@@ -30,7 +26,7 @@ export function TodoList() {
       <FlatList
         data={todos}
         renderItem={({ item }: { item: TodoItem }) => (
-          <Text key={item.id} accessibilityLabel={'todo-item'}>
+          <Text key={item.id} testID={'todo-item'}>
             {item.text}
           </Text>
         )}
@@ -41,11 +37,3 @@ export function TodoList() {
     </View>
   );
 }
-
-// Available for use outside react components
-export const store = createStore();
-export const getTodos = (): TodoItem[] => store.get(todosAtom);
-export const addTodo = (newTodo: TodoItem) => {
-  const todos = getTodos();
-  store.set(todosAtom, [...todos, newTodo]);
-};

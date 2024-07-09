@@ -1,21 +1,25 @@
-import * as React from 'react';
+import { PropsWithChildren } from 'react';
 
 import { PrimitiveAtom } from 'jotai/vanilla/atom';
-import { useHydrateAtoms } from 'jotai/utils';
-import { RenderOptions as RntlRenderOptions } from '@testing-library/react-native';
+import { RenderOptions } from '@testing-library/react-native';
 
+//  We define WithInitialValue, InitialValue and InitialValuesProps types
+//  to help us define the initial values type props that we will pass to the
+//  renderWithAtoms function and the HydrateAtomsWrapper component.
 type WithInitialValue<Value> = {
   init: Value;
 };
-type UseHydrateAtomsParams = Parameters<typeof useHydrateAtoms>;
-export type InitialValues = UseHydrateAtomsParams[0];
 export type InitialValue<Value> = [PrimitiveAtom<Value> & WithInitialValue<Value>, Value];
 
-export interface IRenderWithAtomsOptions<T> extends RntlRenderOptions {
+export interface InitialValuesProps<T> {
   initialValues: Array<InitialValue<T>>;
 }
 
-export interface IHydrateAtomsProps<T> {
-  initialValues: Array<InitialValue<T>>;
-  children: React.JSX.Element;
-}
+export type HydrateAtomsWrapperProps<T> = PropsWithChildren<InitialValuesProps<T>>;
+
+export interface RenderWithAtomsOptions<T> extends InitialValuesProps<T>, RenderOptions {}
+
+export type TodoItem = {
+  id: string;
+  text: string;
+};

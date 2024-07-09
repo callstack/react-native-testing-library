@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { render, screen, userEvent } from '@testing-library/react-native';
-import { addTodo, getTodos, store, TodoItem, TodoList, todosAtom } from './TodoList';
 import { renderWithAtoms } from './test-utils';
+import { TodoList } from './TodoList';
+import { addTodo, getTodos, store, todosAtom } from './state';
+import { TodoItem } from './types';
 
 jest.useFakeTimers();
 test('renders an empty to do list', () => {
@@ -19,14 +21,14 @@ test('renders a to do list with 1 items initially, and adds a new item', async (
     ],
   });
   expect(screen.getByText(/buy bread/i)).toBeOnTheScreen();
-  expect(screen.getAllByLabelText('todo-item')).toHaveLength(1);
+  expect(screen.getAllByTestId('todo-item')).toHaveLength(1);
 
   const user = userEvent.setup();
   const addTodoButton = screen.getByRole('button', { name: /add a random to-do/i });
   await user.press(addTodoButton);
 
   expect(screen.getByText(/buy almond milk/i)).toBeOnTheScreen();
-  expect(screen.getAllByLabelText('todo-item')).toHaveLength(2);
+  expect(screen.getAllByTestId('todo-item')).toHaveLength(2);
 });
 
 test("[outside react's scope]start with 1 initial todo and adds a new todo item", () => {
