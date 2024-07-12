@@ -7,47 +7,52 @@ renders and solve issues like extra re-renders and the need for memoization. It 
 state management to complex enterprise applications, offering utilities and extensions to enhance
 the developer experience.
 
-## To Do List Example
+## Task List Example
 
-Let's assume we have a simple to-do list component that uses Jotai for state management. The
-component has a list of to-dos and a button to add a new to-do to the list.
+Let's assume we have a simple task list component that uses Jotai for state management. The
+component has a list of tasks, a text input for typing new task name and a button to add a new task to the list.
 
-```tsx title=TodoList.tsx
+```tsx title=TaskList.tsx
 import * as React from 'react';
-import { FlatList, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
 import { useAtom } from 'jotai';
-import { generateRandomId } from './utils';
-import { todosAtom } from './state';
-import { TodoItem } from './types';
+import { nanoid } from 'nanoid';
+import { newTaskTitleAtom, tasksAtom } from './state';
 
-export function TodoList() {
-  const [todos, setTodos] = useAtom(todosAtom);
+export function TaskList() {
+  const [tasks, setTasks] = useAtom(tasksAtom);
+  const [newTaskTitle, setNewTaskTitle] = useAtom(newTaskTitleAtom);
 
-  const handleAddTodo = () =>
-    setTodos((prev) => [
-      ...prev,
+  const handleAddTask = () => {
+    setTasks((tasks) => [
+      ...tasks,
       {
-        id: generateRandomId(),
-        text: 'Buy almond milk',
+        id: nanoid(),
+        title: newTaskTitle,
       },
     ]);
-
-  if (!todos.length) {
-    return <Text>No todos, start by adding one...</Text>;
-  }
+    setNewTaskTitle('');
+  };
 
   return (
     <View>
-      <FlatList
-        data={todos}
-        renderItem={({ item }: { item: TodoItem }) => (
-          <Text key={item.id} testID={'todo-item'}>
-            {item.text}
-          </Text>
-        )}
+      {tasks.map((task) => (
+        <Text key={task.id} testID="task-item">
+          {task.title}
+        </Text>
+      ))}
+
+      {!tasks.length ? <Text>No tasks, start by adding one...</Text> : null}
+
+      <TextInput
+        accessibilityLabel="New Task"
+        placeholder="New Task..."
+        value={newTaskTitle}
+        onChangeText={(text) => setNewTaskTitle(text)}
       />
-      <Pressable accessibilityRole="button" onPress={handleAddTodo}>
-        <Text>Add a random to-do</Text>
+
+      <Pressable accessibilityRole="button" onPress={handleAddTask}>
+        <Text>Add Task</Text>
       </Pressable>
     </View>
   );
@@ -56,26 +61,29 @@ export function TodoList() {
 
 ## Starting with a Simple Test
 
-We can test our TodoList component using React Native Testing Library's (RNTL) regular `render`
-function. Although it is sufficient to test the empty state of the TodoList component, it is not
-enough to test the component with initial todos present in the list.
+We can test our `TaskList` component using React Native Testing Library's (RNTL) regular `render`
+function. Although it is sufficient to test the empty state of the `TaskList` component, it is not
+enough to test the component with initial tasks present in the list.
 
-```tsx title=TodoList.test.tsx
+```tsx title=TaskList.test.tsx
 import * as React from 'react';
-import {render, screen, userEvent} from '@testing-library/react-native';
-import {TodoItem, TodoList, todosAtom} from './TodoList';
-import {renderWithAtoms} from './test-utils';
+import { render, screen, userEvent } from '@testing-library/react-native';
+import { renderWithAtoms } from './test-utils';
+import { TaskList } from './TaskList';
+import { newTaskTitleAtom, tasksAtom } from './state';
+import { Task } from './types';
 
 jest.useFakeTimers();
-test('renders an empty to do list', () => {
-  render(<TodoList/>);
-  expect(screen.getByText(/no todos, start by adding one/i)).toBeOnTheScreen();
+
+test('renders an empty task list', () => {
+  render(<TaskList />);
+  expect(screen.getByText(/no tasks, start by adding one/i)).toBeOnTheScreen();
 });
 ```
 
 ## Custom Render Function to populate Jotai Atoms with Initial Values
 
-To test the TodoList component with initial todos, we need to be able to populate the todosAtom with
+To test the `TaskList` component with initial tasks, we need to be able to populate the `tasksAtom` with
 initial values. We can create a custom render function that uses Jotai's `useHydrateAtoms` hook to
 hydrate the atoms with initial values. This function will accept the initial atoms and their
 corresponding values as an argument.
@@ -83,136 +91,128 @@ corresponding values as an argument.
 ```tsx title=test-utils.tsx
 import * as React from 'react';
 import { render } from '@testing-library/react-native';
-import { useHydrateAtoms } from "jotai/utils";
-import { HydrateAtomsWrapperProps, RenderWithAtomsOptions } from "./types";
+import { useHydrateAtoms } from 'jotai/utils';
+import { PrimitiveAtom } from 'jotai/vanilla/atom';
 
-/**
- * A wrapper component that hydrates Jotai atoms with initial values.
- *
- * @template T - The type of the initial values for the atoms.
- * @param initialValues - The initial values for the Jotai atoms.
- * @param children - The child components to render.
- * @returns The rendered children.
+// Jotai types are not well exported, so we will make our life easier by using `any`.
+export type AtomInitialValueTuple<T> = [PrimitiveAtom<T>, T];
 
- */
-function HydrateAtomsWrapper<T>({
-  initialValues,
-  children,
-}: HydrateAtomsWrapperProps<T>) {
-  useHydrateAtoms(initialValues);
-  return children;
+export interface RenderWithAtomsOptions {
+  initialValues: AtomInitialValueTuple<any>[];
 }
 
 /**
  * Renders a React component with Jotai atoms for testing purposes.
  *
- * @template T - The type of the initial values for the atoms.
  * @param component - The React component to render.
  * @param options - The render options including the initial atom values.
  * @returns The render result from `@testing-library/react-native`.
  */
-export const renderWithAtoms = <T, >(
+export const renderWithAtoms = <T,>(
   component: React.ReactElement,
-  options: RenderWithAtomsOptions<T>,
+  options: RenderWithAtomsOptions,
 ) => {
-  const {initialValues, ...rest} = options;
-
-  const ui = <HydrateAtomsWrapper initialValues={initialValues}>
-    {component}
-  </HydrateAtomsWrapper>;
-
-  return render(ui, {...rest});
+  return render(
+    <HydrateAtomsWrapper initialValues={options.initialValues}>{component}</HydrateAtomsWrapper>,
+  );
 };
+
+export type HydrateAtomsWrapperProps = React.PropsWithChildren<{
+  initialValues: AtomInitialValueTuple<unknown>[];
+}>;
+
+/**
+ * A wrapper component that hydrates Jotai atoms with initial values.
+ *
+ * @param initialValues - The initial values for the Jotai atoms.
+ * @param children - The child components to render.
+ * @returns The rendered children.
+
+ */
+function HydrateAtomsWrapper({ initialValues, children }: HydrateAtomsWrapperProps) {
+  useHydrateAtoms(initialValues);
+  return children;
+}
 ```
 
-## Testing the TodoList Component with Initial Todos
+## Testing the `TaskList` Component with initial tasks
 
-We can now use the renderWithAtoms function to render the TodoList component with initial todos. The
-initialValues object will contain the todosAtom and its initial value. We can then test the
-component to ensure that the initial todos are rendered correctly.
+We can now use the `renderWithAtoms` function to render the `TaskList` component with initial tasks. The
+`initialValues` property will contain the `tasksAtom`, `newTaskTitleAtom` and their initial values. We can then test the component to ensure that the initial tasks are rendered correctly.
 
 :::info
 In our test, we populated only one atom and its initial value, but you can add other Jotai atoms and their corresponding values to the initialValues array as needed.
 :::
 
-```tsx title=TodoList.test.tsx
-import * as React from 'react';
-import { screen, userEvent } from '@testing-library/react-native';
-import { renderWithAtoms } from './test-utils';
-import { TodoList } from './TodoList';
-import { todosAtom } from './state';
-import { TodoItem } from './types';
-
-jest.useFakeTimers();
-test('renders an empty to do list', () => {
-  render(<TodoList />);
-  expect(screen.getByText(/no todos, start by adding one/i)).toBeOnTheScreen();
-});
-
-const INITIAL_TODOS: TodoItem[] = [{ id: '1', text: 'Buy bread' }];
+```tsx title=TaskList.test.tsx
+const INITIAL_TASKS: Task[] = [{ id: '1', title: 'Buy bread' }];
 
 test('renders a to do list with 1 items initially, and adds a new item', async () => {
-  renderWithAtoms<TodoItem[]>(<TodoList />, {
+  renderWithAtoms(<TaskList />, {
     initialValues: [
-      [todosAtom, INITIAL_TODOS],
-      // optional: add any other Jotai atoms and their corresponding initial values
+      [tasksAtom, INITIAL_TASKS],
+      [newTaskTitleAtom, ''],
     ],
   });
+
   expect(screen.getByText(/buy bread/i)).toBeOnTheScreen();
-  expect(screen.getAllByTestId('todo-item')).toHaveLength(1);
+  expect(screen.getAllByTestId('task-item')).toHaveLength(1);
 
   const user = userEvent.setup();
-  const addTodoButton = screen.getByRole('button', { name: /add a random to-do/i });
-  await user.press(addTodoButton);
+  await user.type(screen.getByPlaceholderText(/new task/i), 'Buy almond milk');
+  await user.press(screen.getByRole('button', { name: /add task/i }));
 
   expect(screen.getByText(/buy almond milk/i)).toBeOnTheScreen();
-  expect(screen.getAllByTestId('todo-item')).toHaveLength(2);
+  expect(screen.getAllByTestId('task-item')).toHaveLength(2);
 });
 ```
 
-## Get To dos and Add Todo Outside React Components Example
+## Modifying atom outside of React components
 
 In several cases, you might need to change an atom's state outside a React component. In our case,
-we have a set of functions to get todos and set todos, which change the state of the todo list atom.
+we have a set of functions to get tasks and set tasks, which change the state of the task list atom.
 
 ```tsx title=state.ts
 import { atom, createStore } from 'jotai';
-import { TodoItem } from './types';
+import { Task } from './types';
 
-export const todosAtom = atom<TodoItem[]>([]);
+export const tasksAtom = atom<Task[]>([]);
+export const newTaskTitleAtom = atom('');
 
-// Available for use outside react components
+// Available for use outside React components
 export const store = createStore();
-export const getTodos = (): TodoItem[] => store.get(todosAtom);
-export const addTodo = (newTodo: TodoItem) => {
-  const todos = getTodos();
-  store.set(todosAtom, [...todos, newTodo]);
-};
+
+// Selectors
+export function getAllTasks(): Task[] {
+  return store.get(tasksAtom);
+}
+
+// Actions
+export function addTask(task: Task) {
+  store.set(tasksAtom, [...getAllTasks(), task]);
+}
 ```
 
-## Testing the Get To dos and Add Todo Functions
+## Testing atom outside of React components
 
-You can test the `getTodos` and `addTodo` functions outside the React component's scope by setting
+You can test the `getAllTasks` and `addTask` functions outside the React component's scope by setting
 the initial to-do items in the store and then checking if the functions work as expected.
 No special setup is required to test these functions, as `store.set` is available by default by
 Jotai.
 
-```tsx title=TodoList.test.tsx
-import {addTodo, getTodos, store, todosAtom} from './state';
+```tsx title=TaskList.test.tsx
+import { addTask, getAllTasks, store, tasksAtom } from './state';
 
 //...
 
-test("[outside react's scope] start with 1 initial todo and adds a new todo item", () => {
+test('modify store outside of React component', () => {
   // Set the initial to do items in the store
-  store.set(todosAtom, INITIAL_TODOS);
+  store.set(tasksAtom, INITIAL_TASKS);
+  expect(getAllTasks()).toEqual(INITIAL_TASKS);
 
-  expect(getTodos()).toEqual(INITIAL_TODOS);
-  const NEW_TODO = {id: '2', text: 'Buy almond milk'};
-  addTodo({
-    id: '2',
-    text: 'Buy almond milk',
-  });
-  expect(getTodos()).toEqual([...INITIAL_TODOS, NEW_TODO]);
+  const NEW_TASK = { id: '2', title: 'Buy almond milk' };
+  addTask(NEW_TASK);
+  expect(getAllTasks()).toEqual([...INITIAL_TASKS, NEW_TASK]);
 });
 ```
 

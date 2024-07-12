@@ -9793,6 +9793,7 @@ __metadata:
     expo-status-bar: "npm:~1.11.1"
     jest: "npm:^29.7.0"
     jotai: "npm:^2.8.4"
+    nanoid: "npm:^3.3.7"
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
     react-native: "npm:0.73.2"

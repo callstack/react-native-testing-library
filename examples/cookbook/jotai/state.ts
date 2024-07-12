@@ -1,12 +1,18 @@
 import { atom, createStore } from 'jotai';
-import { TodoItem } from './types';
+import { Task } from './types';
 
-export const todosAtom = atom<TodoItem[]>([]);
+export const tasksAtom = atom<Task[]>([]);
+export const newTaskTitleAtom = atom('');
 
-// Available for use outside react components
+// Available for use outside React components
 export const store = createStore();
-export const getTodos = (): TodoItem[] => store.get(todosAtom);
-export const addTodo = (newTodo: TodoItem) => {
-  const todos = getTodos();
-  store.set(todosAtom, [...todos, newTodo]);
-};
+
+// Selectors
+export function getAllTasks(): Task[] {
+  return store.get(tasksAtom);
+}
+
+// Actions
+export function addTask(task: Task) {
+  store.set(tasksAtom, [...getAllTasks(), task]);
+}
