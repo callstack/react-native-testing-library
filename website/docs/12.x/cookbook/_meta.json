@@ -1,1 +1,13 @@
-["index", { "type": "dir", "name": "basics", "label": "Basic Recipes" }]
+[
+  "index",
+  {
+    "type": "dir",
+    "name": "basics",
+    "label": "Basic Recipes"
+  },
+  {
+    "type": "dir",
+    "name": "state-management",
+    "label": "State Management Recipes"
+  }
+]
