@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useCallback, useEffect} from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -7,7 +7,7 @@ import theme from '../theme';
 
 void SplashScreen.preventAutoHideAsync();
 
-const WelcomeScreen = () => {
+export default function Home() {
   const router = useRouter();
   const [loaded, error] = useFonts({
     'OpenSans-Bold': require('../assets/fonts/OpenSans-Bold.ttf'),
@@ -23,11 +23,11 @@ const WelcomeScreen = () => {
   if (!loaded && !error) {
     return null;
   }
-  const renderItem = ({ item }) => (
+  const renderItem = useCallback(({ item }: {item: Recipe}) => (
     <Pressable style={styles.pressable} onPress={() => router.push(item.path)}>
       <Text style={styles.pressableText}>{item.title}</Text>
     </Pressable>
-  );
+  ),[]);
 
   return (
     <View style={styles.container}>
@@ -41,14 +41,14 @@ const WelcomeScreen = () => {
         <Text style={styles.title}>Testing Library</Text>
         <Text style={styles.subTitle}>Cookbook App</Text>
       </View>
-      <FlatList
+      <FlatList<Recipe>
         data={recipes}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -94,10 +94,12 @@ const styles = StyleSheet.create({
   },
 });
 
-// Sample recipe data (replace with your actual data)
-const recipes = [
+type Recipe = {
+  id: number;
+  title: string;
+  path: string;
+};
+const recipes: Recipe[] = [
   { id: 2, title: 'Welcome Screen with Custom Render', path: 'custom-render/' },
   { id: 1, title: 'Task List with Jotai', path: 'jotai/' },
 ];
-
-export default WelcomeScreen;
