@@ -145,6 +145,7 @@ In our test, we populated only one atom and its initial value, but you can add o
 :::
 
 ```tsx title=jotai/index.test.tsx
+=======
 const INITIAL_TASKS: Task[] = [{ id: '1', title: 'Buy bread' }];
 
 test('renders a to do list with 1 items initially, and adds a new item', async () => {
