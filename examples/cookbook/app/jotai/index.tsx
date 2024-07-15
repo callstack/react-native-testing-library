@@ -1,10 +1,11 @@
+import 'react-native-get-random-values';
+import { nanoid } from 'nanoid';
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { useAtom } from 'jotai';
-import { nanoid } from 'nanoid';
 import { newTaskTitleAtom, tasksAtom } from './state';
 
-export function TaskList() {
+export default function TaskList() {
   const [tasks, setTasks] = useAtom(tasksAtom);
   const [newTaskTitle, setNewTaskTitle] = useAtom(newTaskTitleAtom);
 
@@ -20,7 +21,7 @@ export function TaskList() {
   };
 
   return (
-    <View>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       {tasks.map((task) => (
         <Text key={task.id} testID="task-item">
           {task.title}

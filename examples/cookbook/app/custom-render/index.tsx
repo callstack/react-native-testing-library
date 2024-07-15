@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { useUser } from './providers/user-provider';
 import { useTheme } from './providers/theme-provider';
 
-export function WelcomeScreen() {
+export default function WelcomeScreen() {
   const theme = useTheme();
   const user = useUser();
 
   return (
-    <View>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Hello {user ? user.name : 'Stranger'}</Text>
       <Text>Theme: {theme}</Text>
     </View>
