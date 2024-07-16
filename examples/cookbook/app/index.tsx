@@ -1,4 +1,3 @@
-/* eslint-disable react-native-a11y/has-valid-accessibility-ignores-invert-colors */
 import React from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -35,7 +34,6 @@ export default function Home() {
   );
 }
 
-/* eslint-disable react-native/no-color-literals */
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,3 +1,8 @@
 {
-  "extends": "@callstack"
+  "extends": "@callstack",
+  "rules": {
+    "react-native-a11y/has-valid-accessibility-ignores-invert-colors": "off",
+    "react-native/no-color-literals": "off",
+    "react-native-a11y/has-valid-accessibility-descriptors": "off",
+  }
 }
