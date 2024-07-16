@@ -26,7 +26,7 @@ export function renderWithProviders<T>(
 }
 ```
 
-```tsx title=WelcomeScreen.test.tsx
+```tsx title=custom-render/index.test.tsx
 import { screen } from '@testing-library/react-native';
 import { renderWithProviders } from '../test-utils';
 // ...

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render } from '@testing-library/react-native';
-import { User, UserProvider } from './providers/user-provider';
-import { Theme, ThemeProvider } from './providers/theme-provider';
+import { User, UserProvider } from '../../../app/custom-render/providers/user-provider';
+import { Theme, ThemeProvider } from '../../../app/custom-render/providers/theme-provider';
 
 interface RenderWithProvidersProps {
   user?: User | null;

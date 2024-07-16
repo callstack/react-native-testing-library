@@ -12,7 +12,7 @@ the developer experience.
 Let's assume we have a simple task list component that uses Jotai for state management. The
 component has a list of tasks, a text input for typing new task name and a button to add a new task to the list.
 
-```tsx title=TaskList.tsx
+```tsx title=jotai/index.test.tsx
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { useAtom } from 'jotai';
@@ -65,7 +65,7 @@ We can test our `TaskList` component using React Native Testing Library's (RNTL)
 function. Although it is sufficient to test the empty state of the `TaskList` component, it is not
 enough to test the component with initial tasks present in the list.
 
-```tsx title=TaskList.test.tsx
+```tsx title=jotai/index.test.tsx
 import * as React from 'react';
 import { render, screen, userEvent } from '@testing-library/react-native';
 import { renderWithAtoms } from './test-utils';
@@ -144,7 +144,8 @@ We can now use the `renderWithAtoms` function to render the `TaskList` component
 In our test, we populated only one atom and its initial value, but you can add other Jotai atoms and their corresponding values to the initialValues array as needed.
 :::
 
-```tsx title=TaskList.test.tsx
+```tsx title=jotai/index.test.tsx
+=======
 const INITIAL_TASKS: Task[] = [{ id: '1', title: 'Buy bread' }];
 
 test('renders a to do list with 1 items initially, and adds a new item', async () => {
@@ -200,7 +201,7 @@ the initial to-do items in the store and then checking if the functions work as 
 No special setup is required to test these functions, as `store.set` is available by default by
 Jotai.
 
-```tsx title=TaskList.test.tsx
+```tsx title=jotai/index.test.tsx
 import { addTask, getAllTasks, store, tasksAtom } from './state';
 
 //...
