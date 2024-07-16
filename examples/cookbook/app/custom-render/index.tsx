@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Slot } from 'expo-router';
 import { UserProvider } from './providers/user-provider';
 import { ThemeProvider } from './providers/theme-provider';
+import WelcomeScreen from './WelcomeScreen';
 
-export default function CustomRenderLayout() {
+export default function Example() {
   return (
     <UserProvider.Provider value={null}>
       <ThemeProvider.Provider value={'light'}>
-        <Slot />
+        <WelcomeScreen />
       </ThemeProvider.Provider>
     </UserProvider.Provider>
   );
