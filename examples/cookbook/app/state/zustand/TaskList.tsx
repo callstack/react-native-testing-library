@@ -6,12 +6,14 @@ import { useTasksStore } from './state';
 export default function TaskList() {
   const tasks = useTasksStore((state) => state.tasks);
   const addTask = useTasksStore((state) => state.addTask);
+
   const [newTaskTitle, setNewTaskTitle] = React.useState('');
 
   const handleAddTask = () => {
     addTask({
       id: generateId(),
       title: newTaskTitle,
+      completed: false,
     });
     setNewTaskTitle('');
   };

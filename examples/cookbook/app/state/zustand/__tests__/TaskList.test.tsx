@@ -1,23 +1,23 @@
 import * as React from 'react';
-import { render, screen, userEvent } from '@testing-library/react-native';
+import { screen, userEvent } from '@testing-library/react-native';
 import TaskList from '../TaskList';
-import { addTask, getAllTasks, newTaskTitleAtom, store, tasksAtom } from '../state';
+import { renderWithState } from '../test-utils';
+import { Task } from '../types';
 
 jest.useFakeTimers();
 
 test('renders an empty task list', () => {
-  render(<TaskList />);
+  renderWithState(<TaskList />);
   expect(screen.getByText(/no tasks, start by adding one/i)).toBeOnTheScreen();
 });
 
-const INITIAL_TASKS: Task[] = [{ id: '1', title: 'Buy bread' }];
+const INITIAL_TASKS: Task[] = [{ id: '1', title: 'Buy bread', completed: false }];
 
 test('renders a to do list with 1 items initially, and adds a new item', async () => {
-  renderWithAtoms(<TaskList />, {
-    initialValues: [
-      [tasksAtom, INITIAL_TASKS],
-      [newTaskTitleAtom, ''],
-    ],
+  renderWithState(<TaskList />, {
+    initialState: {
+      tasks: INITIAL_TASKS,
+    },
   });
 
   expect(screen.getByText(/buy bread/i)).toBeOnTheScreen();
@@ -29,14 +29,4 @@ test('renders a to do list with 1 items initially, and adds a new item', async (
 
   expect(screen.getByText(/buy almond milk/i)).toBeOnTheScreen();
   expect(screen.getAllByTestId('task-item')).toHaveLength(2);
-});
-
-test('modify store outside of components', () => {
-  // Set the initial to do items in the store
-  store.set(tasksAtom, INITIAL_TASKS);
-  expect(getAllTasks()).toEqual(INITIAL_TASKS);
-
-  const NEW_TASK = { id: '2', title: 'Buy almond milk' };
-  addTask(NEW_TASK);
-  expect(getAllTasks()).toEqual([...INITIAL_TASKS, NEW_TASK]);
 });
