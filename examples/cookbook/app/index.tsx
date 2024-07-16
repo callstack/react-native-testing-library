@@ -1,29 +1,11 @@
 /* eslint-disable react-native-a11y/has-valid-accessibility-ignores-invert-colors */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
 import theme from '../theme';
-
-void SplashScreen.preventAutoHideAsync();
 
 export default function Home() {
   const router = useRouter();
-  const [loaded, error] = useFonts({
-    'OpenSans-Bold': require('../assets/fonts/OpenSans-Bold.ttf'),
-    'OpenSans-Regular': require('../assets/fonts/OpenSans-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded || error) {
-      void SplashScreen.hideAsync();
-    }
-  }, [loaded, error]);
-
-  if (!loaded && !error) {
-    return null;
-  }
 
   const renderItem = ({ item }: { item: Recipe }) => (
     <Pressable role="listitem" style={styles.pressable} onPress={() => router.push(item.path)}>
@@ -68,12 +50,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontFamily: 'OpenSans-Bold',
     color: theme.colors.black,
   },
   subTitle: {
     fontSize: 14,
-    fontFamily: 'OpenSans-Regular',
     color: theme.colors.gray,
   },
   banner: {
@@ -93,7 +73,6 @@ const styles = StyleSheet.create({
   pressableText: {
     color: '#fff',
     fontSize: 14,
-    fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
   },
 });
