@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { screen } from '@testing-library/react-native';
 import { renderWithProviders } from './test-utils';
-import { WelcomeScreen } from './WelcomeScreen';
+import WelcomeScreen from "../../../app/custom-render";
 
 test('renders WelcomeScreen in light theme', () => {
   renderWithProviders(<WelcomeScreen />, { theme: 'light' });
