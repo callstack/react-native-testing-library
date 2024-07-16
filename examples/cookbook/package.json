@@ -16,6 +16,7 @@
     "expo-font": "~11.10.3",
     "expo-linking": "~6.2.2",
     "expo-router": "~3.4.10",
+    "expo-splash-screen": "~0.26.5",
     "expo-status-bar": "~1.11.1",
     "jotai": "^2.8.4",
     "nanoid": "^3.3.7",

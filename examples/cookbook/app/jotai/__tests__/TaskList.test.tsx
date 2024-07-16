@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { render, screen, userEvent } from '@testing-library/react-native';
-import TaskList from '../../../app/jotai';
+import { TaskList } from '../TaskList';
+import { Task } from '../types';
+import { addTask, getAllTasks, newTaskTitleAtom, store, tasksAtom } from '../state';
 import { renderWithAtoms } from './test-utils';
-import { Task } from '../../../app/jotai/types';
-import { addTask, getAllTasks, newTaskTitleAtom, store, tasksAtom } from '../../../app/jotai/state';
 
 jest.useFakeTimers();
 

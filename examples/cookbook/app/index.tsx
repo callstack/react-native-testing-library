@@ -1,8 +1,9 @@
-import React, {useCallback, useEffect} from 'react';
+/* eslint-disable react-native-a11y/has-valid-accessibility-ignores-invert-colors */
+import React, { useEffect } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useFonts } from 'expo-font';
 import theme from '../theme';
 
 void SplashScreen.preventAutoHideAsync();
@@ -23,11 +24,12 @@ export default function Home() {
   if (!loaded && !error) {
     return null;
   }
-  const renderItem = useCallback(({ item }: {item: Recipe}) => (
-    <Pressable style={styles.pressable} onPress={() => router.push(item.path)}>
+
+  const renderItem = ({ item }: { item: Recipe }) => (
+    <Pressable role="listitem" style={styles.pressable} onPress={() => router.push(item.path)}>
       <Text style={styles.pressableText}>{item.title}</Text>
     </Pressable>
-  ),[]);
+  );
 
   return (
     <View style={styles.container}>
@@ -41,6 +43,7 @@ export default function Home() {
         <Text style={styles.title}>Testing Library</Text>
         <Text style={styles.subTitle}>Cookbook App</Text>
       </View>
+
       <FlatList<Recipe>
         data={recipes}
         renderItem={renderItem}
@@ -50,6 +53,7 @@ export default function Home() {
   );
 }
 
+/* eslint-disable react-native/no-color-literals */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -99,6 +103,7 @@ type Recipe = {
   title: string;
   path: string;
 };
+
 const recipes: Recipe[] = [
   { id: 2, title: 'Welcome Screen with Custom Render', path: 'custom-render/' },
   { id: 1, title: 'Task List with Jotai', path: 'jotai/' },

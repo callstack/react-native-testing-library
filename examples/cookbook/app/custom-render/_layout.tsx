@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Slot } from 'expo-router';
 import { UserProvider } from './providers/user-provider';
 import { ThemeProvider } from './providers/theme-provider';

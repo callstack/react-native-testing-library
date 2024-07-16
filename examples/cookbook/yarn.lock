@@ -10319,6 +10319,7 @@ __metadata:
     expo-font: "npm:~11.10.3"
     expo-linking: "npm:~6.2.2"
     expo-router: "npm:~3.4.10"
+    expo-splash-screen: "npm:~0.26.5"
     expo-status-bar: "npm:~1.11.1"
     jest: "npm:^29.7.0"
     jotai: "npm:^2.8.4"

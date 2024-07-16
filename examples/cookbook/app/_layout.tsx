@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Stack } from 'expo-router';
 import theme from '../theme';
 
