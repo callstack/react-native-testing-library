@@ -10316,7 +10316,6 @@ __metadata:
     eslint: "npm:^8.57.0"
     expo: "npm:^50.0.4"
     expo-constants: "npm:~15.4.6"
-    expo-font: "npm:~11.10.3"
     expo-linking: "npm:~6.2.2"
     expo-router: "npm:~3.4.10"
     expo-splash-screen: "npm:~0.26.5"
