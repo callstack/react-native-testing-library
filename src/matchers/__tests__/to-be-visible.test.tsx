@@ -254,3 +254,12 @@ test('toBeVisible() on non-React elements', () => {
       Received has value: true"
     `);
 });
+
+test('toBeVisible() does not throw on invalid style', () => {
+  // @ts-expect-error: intentionally passing invalid style to
+  // trigger StyleSheet.flatten() returning undefined.
+  render(<View testID="view" style={0} />);
+
+  const view = screen.getByTestId('view');
+  expect(view).toBeVisible();
+});
