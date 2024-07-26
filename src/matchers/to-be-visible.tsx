@@ -54,7 +54,6 @@ function isElementVisible(
 }
 
 function isHiddenForStyles(element: ReactTestInstance) {
-  const style = element.props.style ?? {};
-  const { display, opacity } = StyleSheet.flatten(style);
-  return display === 'none' || opacity === 0;
+  const flatStyle = StyleSheet.flatten(element.props.style);
+  return flatStyle?.display === 'none' || flatStyle?.opacity === 0;
 }
