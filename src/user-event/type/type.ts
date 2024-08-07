@@ -49,7 +49,9 @@ export async function type(
     const previousText = element.props.value ?? currentText;
     currentText = applyKey(previousText, key);
 
-    await emitTypingEvents(this.config, element, key, currentText, previousText);
+    if (element.props.maxLength === undefined || currentText.length <= element.props.maxLength) {
+      await emitTypingEvents(this.config, element, key, currentText, previousText);
+    }
   }
 
   const finalText = element.props.value ?? currentText;

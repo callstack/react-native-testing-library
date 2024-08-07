@@ -338,4 +338,36 @@ describe('type()', () => {
     await userEvent.type(screen.getByTestId('input'), 'abc');
     expect(handleKeyPress).toHaveBeenCalledTimes(3);
   });
+
+  it('does respect maxLength prop', async () => {
+    const { events, ...queries } = renderTextInputWithToolkit({
+      maxLength: 2,
+    });
+
+    const user = userEvent.setup();
+    await user.type(queries.getByTestId('input'), 'abc');
+
+    const eventNames = events.map((e) => e.name);
+    expect(eventNames).toEqual([
+      'pressIn',
+      'focus',
+      'pressOut',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'endEditing',
+      'blur',
+    ]);
+
+    const lastChangeTestEvent = events.filter((e) => e.name === 'changeText').pop();
+    expect(lastChangeTestEvent).toMatchObject({
+      name: 'changeText',
+      payload: 'ab',
+    });
+  });
 });
