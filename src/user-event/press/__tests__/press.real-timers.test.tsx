@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { createEventLogger, getEventsName } from '../../../test-utils';
+import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
 import * as WarnAboutRealTimers from '../../utils/warn-about-real-timers';
@@ -34,7 +34,7 @@ describe('userEvent.press with real timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    expect(getEventsName(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
   });
 
   test('does not trigger event when pressable is disabled', async () => {
@@ -130,7 +130,7 @@ describe('userEvent.press with real timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    expect(getEventsName(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
   });
 
   test('crawls up in the tree to find an element that responds to touch events', async () => {
@@ -200,7 +200,7 @@ describe('userEvent.press with real timers', () => {
     );
     await userEvent.press(screen.getByText('press me'));
 
-    expect(getEventsName(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
   });
 
   test('does not trigger on disabled Text', async () => {
@@ -254,7 +254,7 @@ describe('userEvent.press with real timers', () => {
     );
     await userEvent.press(screen.getByPlaceholderText('email'));
 
-    expect(getEventsName(events)).toEqual(['pressIn', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut']);
   });
 
   test('does not call onPressIn and onPressOut on non editable TetInput', async () => {

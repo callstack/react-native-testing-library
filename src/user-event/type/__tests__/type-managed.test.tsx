@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TextInput } from 'react-native';
-import { createEventLogger } from '../../../test-utils';
+import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
 
@@ -56,8 +56,7 @@ describe('type() for managed TextInput', () => {
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'Wow');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -90,8 +89,7 @@ describe('type() for managed TextInput', () => {
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'ABC');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',

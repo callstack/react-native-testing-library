@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TextInput, TextInputProps, View } from 'react-native';
-import { createEventLogger } from '../../../test-utils';
+import { createEventLogger, getEventsNames, lastEventPayload } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
 
@@ -31,7 +31,6 @@ function renderTextInputWithToolkit(props: TextInputProps = {}) {
   );
 
   return {
-    ...screen,
     events,
   };
 }
@@ -39,13 +38,12 @@ function renderTextInputWithToolkit(props: TextInputProps = {}) {
 describe('type()', () => {
   it('supports basic case', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
-    const { events, ...queries } = renderTextInputWithToolkit();
+    const { events } = renderTextInputWithToolkit();
 
     const user = userEvent.setup();
-    await user.type(queries.getByTestId('input'), 'abc');
+    await user.type(screen.getByTestId('input'), 'abc');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -70,13 +68,12 @@ describe('type()', () => {
 
   it.each(['modern', 'legacy'])('works with %s fake timers', async (type) => {
     jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
-    const { events, ...queries } = renderTextInputWithToolkit();
+    const { events } = renderTextInputWithToolkit();
 
     const user = userEvent.setup();
-    await user.type(queries.getByTestId('input'), 'abc');
+    await user.type(screen.getByTestId('input'), 'abc');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -98,15 +95,14 @@ describe('type()', () => {
   });
 
   it('supports defaultValue prop', async () => {
-    const { events, ...queries } = renderTextInputWithToolkit({
+    const { events } = renderTextInputWithToolkit({
       defaultValue: 'xxx',
     });
 
     const user = userEvent.setup();
-    await user.type(queries.getByTestId('input'), 'ab');
+    await user.type(screen.getByTestId('input'), 'ab');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -126,27 +122,25 @@ describe('type()', () => {
   });
 
   it('does respect editable prop', async () => {
-    const { events, ...queries } = renderTextInputWithToolkit({
+    const { events } = renderTextInputWithToolkit({
       editable: false,
     });
 
     const user = userEvent.setup();
-    await user.type(queries.getByTestId('input'), 'ab');
+    await user.type(screen.getByTestId('input'), 'ab');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([]);
+    expect(getEventsNames(events)).toEqual([]);
   });
 
   it('supports backspace', async () => {
-    const { events, ...queries } = renderTextInputWithToolkit({
+    const { events } = renderTextInputWithToolkit({
       defaultValue: 'xxx',
     });
 
     const user = userEvent.setup();
-    await user.type(queries.getByTestId('input'), '{Backspace}a');
+    await user.type(screen.getByTestId('input'), '{Backspace}a');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -166,15 +160,14 @@ describe('type()', () => {
   });
 
   it('supports multiline', async () => {
-    const { events, ...queries } = renderTextInputWithToolkit({
+    const { events } = renderTextInputWithToolkit({
       multiline: true,
     });
 
     const user = userEvent.setup();
-    await user.type(queries.getByTestId('input'), '{Enter}\n');
+    await user.type(screen.getByTestId('input'), '{Enter}\n');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -198,14 +191,14 @@ describe('type()', () => {
   });
 
   test('skips press events when `skipPress: true`', async () => {
-    const { events, ...queries } = renderTextInputWithToolkit();
+    const { events } = renderTextInputWithToolkit();
 
     const user = userEvent.setup();
-    await user.type(queries.getByTestId('input'), 'a', {
+    await user.type(screen.getByTestId('input'), 'a', {
       skipPress: true,
     });
 
-    const eventNames = events.map((e) => e.name);
+    const eventNames = getEventsNames(events);
     expect(eventNames).not.toContainEqual('pressIn');
     expect(eventNames).not.toContainEqual('pressOut');
     expect(eventNames).toEqual([
@@ -217,18 +210,21 @@ describe('type()', () => {
       'endEditing',
       'blur',
     ]);
+
+    expect(lastEventPayload(events, 'endEditing')).toMatchObject({
+      nativeEvent: { text: 'a', target: 0 },
+    });
   });
 
   it('triggers submit event with `submitEditing: true`', async () => {
-    const { events, ...queries } = renderTextInputWithToolkit();
+    const { events } = renderTextInputWithToolkit();
 
     const user = userEvent.setup();
-    await user.type(queries.getByTestId('input'), 'a', {
+    await user.type(screen.getByTestId('input'), 'a', {
       submitEditing: true,
     });
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -241,8 +237,7 @@ describe('type()', () => {
       'blur',
     ]);
 
-    expect(events[7].name).toBe('submitEditing');
-    expect(events[7].payload).toMatchObject({
+    expect(lastEventPayload(events, 'submitEditing')).toMatchObject({
       nativeEvent: { text: 'a', target: 0 },
       currentTarget: {},
       target: {},
@@ -262,8 +257,12 @@ describe('type()', () => {
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abc');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual(['changeText', 'changeText', 'changeText', 'endEditing']);
+    expect(getEventsNames(events)).toEqual([
+      'changeText',
+      'changeText',
+      'changeText',
+      'endEditing',
+    ]);
 
     expect(events).toMatchSnapshot('input: "abc"');
   });
@@ -318,8 +317,13 @@ describe('type()', () => {
 
     await userEvent.type(screen.getByTestId('input'), 'abc');
 
-    const eventNames = events.map((event) => event.name);
-    expect(eventNames).toEqual(['focus', 'changeText', 'changeText', 'changeText', 'blur']);
+    expect(getEventsNames(events)).toEqual([
+      'focus',
+      'changeText',
+      'changeText',
+      'changeText',
+      'blur',
+    ]);
   });
 
   // See: https://github.com/callstack/react-native-testing-library/issues/1588
@@ -337,5 +341,38 @@ describe('type()', () => {
 
     await userEvent.type(screen.getByTestId('input'), 'abc');
     expect(handleKeyPress).toHaveBeenCalledTimes(3);
+  });
+
+  it('respects the "maxLength" prop', async () => {
+    const { events } = renderTextInputWithToolkit({ maxLength: 2 });
+
+    const user = userEvent.setup();
+    await user.type(screen.getByTestId('input'), 'abcd');
+
+    expect(getEventsNames(events)).toEqual([
+      'pressIn',
+      'focus',
+      'pressOut',
+      'keyPress', // a
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress', // b
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress', // c
+      'keyPress', // d
+      'endEditing',
+      'blur',
+    ]);
+
+    expect(lastEventPayload(events, 'changeText')).toBe('ab');
+    expect(lastEventPayload(events, 'endEditing')).toMatchObject({
+      nativeEvent: {
+        target: 0,
+        text: 'ab',
+      },
+    });
   });
 });
