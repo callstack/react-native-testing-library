@@ -48,11 +48,8 @@ export async function type(
   for (const key of keys) {
     const previousText = element.props.value ?? currentText;
     const proposedText = applyKey(previousText, key);
-    let isAccepted = false;
-    if (isTextChangeAllowed(element, proposedText)) {
-      currentText = proposedText;
-      isAccepted = true;
-    }
+    const isAccepted = isTextChangeAccepted(element, proposedText);
+    currentText = isAccepted ? proposedText : previousText;
 
     await emitTypingEvents(element, {
       config: this.config,
@@ -138,7 +135,7 @@ function applyKey(text: string, key: string) {
   return text + key;
 }
 
-function isTextChangeAllowed(element: ReactTestInstance, text: string) {
+function isTextChangeAccepted(element: ReactTestInstance, text: string) {
   const maxLength = element.props.maxLength;
   return maxLength === undefined || text.length <= maxLength;
 }

@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { TextInput, TextInputProps, View } from 'react-native';
-import {
-  createEventLogger,
-  getEventsNames,
-  lastEvent,
-  lastEventPayload,
-} from '../../../test-utils';
+import { createEventLogger, getEventsNames, lastEventPayload } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
 
