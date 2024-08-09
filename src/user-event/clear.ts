@@ -31,9 +31,15 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
   };
   dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(selectionRange));
 
-  // 3. Press backspace
+  // 3. Press backspace with selected text
   const finalText = '';
-  await emitTypingEvents(this.config, element, 'Backspace', finalText, previousText);
+  await emitTypingEvents(element, {
+    config: this.config,
+    key: 'Backspace',
+    text: finalText,
+    previousText,
+    isAccepted: true,
+  });
 
   // 4. Exit element
   await wait(this.config);

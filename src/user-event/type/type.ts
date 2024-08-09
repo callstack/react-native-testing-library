@@ -47,11 +47,20 @@ export async function type(
   let currentText = element.props.value ?? element.props.defaultValue ?? '';
   for (const key of keys) {
     const previousText = element.props.value ?? currentText;
-    currentText = applyKey(previousText, key);
-
-    if (element.props.maxLength === undefined || currentText.length <= element.props.maxLength) {
-      await emitTypingEvents(this.config, element, key, currentText, previousText);
+    const proposedText = applyKey(previousText, key);
+    let isAccepted = false;
+    if (isTextChangeAllowed(element, proposedText)) {
+      currentText = proposedText;
+      isAccepted = true;
     }
+
+    await emitTypingEvents(element, {
+      config: this.config,
+      key,
+      text: currentText,
+      previousText,
+      isAccepted,
+    });
   }
 
   const finalText = element.props.value ?? currentText;
@@ -66,41 +75,49 @@ export async function type(
   dispatchEvent(element, 'blur', EventBuilder.Common.blur());
 }
 
+type EmitTypingEventsContext = {
+  config: UserEventConfig;
+  key: string;
+  text: string;
+  previousText: string;
+  isAccepted?: boolean;
+};
+
 export async function emitTypingEvents(
-  config: UserEventConfig,
   element: ReactTestInstance,
-  key: string,
-  currentText: string,
-  previousText: string,
+  { config, key, text, previousText, isAccepted }: EmitTypingEventsContext,
 ) {
   const isMultiline = element.props.multiline === true;
 
   await wait(config);
   dispatchEvent(element, 'keyPress', EventBuilder.TextInput.keyPress(key));
 
+  // Platform difference (based on experiments):
+  // - iOS and RN Web: TextInput emits only `keyPress` event when max length has been reached
+  // - Android: TextInputs does not emit any events
+  if (isAccepted === false) {
+    return;
+  }
+
   // According to the docs only multiline TextInput emits textInput event
   // @see: https://github.com/facebook/react-native/blob/42a2898617da1d7a98ef574a5b9e500681c8f738/packages/react-native/Libraries/Components/TextInput/TextInput.d.ts#L754
   if (isMultiline) {
-    dispatchEvent(
-      element,
-      'textInput',
-      EventBuilder.TextInput.textInput(currentText, previousText),
-    );
+    dispatchEvent(element, 'textInput', EventBuilder.TextInput.textInput(text, previousText));
   }
 
-  dispatchEvent(element, 'change', EventBuilder.TextInput.change(currentText));
-  dispatchEvent(element, 'changeText', currentText);
+  dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
+  dispatchEvent(element, 'changeText', text);
 
   const selectionRange = {
-    start: currentText.length,
-    end: currentText.length,
+    start: text.length,
+    end: text.length,
   };
   dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(selectionRange));
 
   // According to the docs only multiline TextInput emits contentSizeChange event
   // @see: https://reactnative.dev/docs/textinput#oncontentsizechange
   if (isMultiline) {
-    const contentSize = getTextContentSize(currentText);
+    const contentSize = getTextContentSize(text);
     dispatchEvent(
       element,
       'contentSizeChange',
@@ -119,4 +136,9 @@ function applyKey(text: string, key: string) {
   }
 
   return text + key;
+}
+
+function isTextChangeAllowed(element: ReactTestInstance, text: string) {
+  const maxLength = element.props.maxLength;
+  return maxLength === undefined || text.length <= maxLength;
 }
