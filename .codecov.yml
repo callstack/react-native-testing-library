@@ -2,8 +2,12 @@ coverage:
   precision: 2
   round: down
   range: 70...100
+  status:
+    project:
+      default:
+        threshold: 0.5%  # Allowable coverage drop in percentage points
 
 comment:
   behavior: default
   require_changes: false
-  require_base: no
+  require_base: false
