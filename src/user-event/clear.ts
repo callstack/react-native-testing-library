@@ -38,7 +38,6 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
     key: 'Backspace',
     text: finalText,
     previousText,
-    isAccepted: true,
   });
 
   // 4. Exit element
