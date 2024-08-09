@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TextInput, TextInputProps, View } from 'react-native';
-import { createEventLogger } from '../../test-utils';
+import { createEventLogger, getEventsNames } from '../../test-utils';
 import { render, userEvent, screen } from '../..';
 
 beforeEach(() => {
@@ -47,8 +47,7 @@ describe('clear()', () => {
     const user = userEvent.setup();
     await user.clear(textInput);
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'focus',
       'selectionChange',
       'keyPress',
@@ -71,8 +70,7 @@ describe('clear()', () => {
     const user = userEvent.setup();
     await user.clear(textInput);
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'focus',
       'selectionChange',
       'keyPress',
@@ -92,8 +90,7 @@ describe('clear()', () => {
     const user = userEvent.setup();
     await user.clear(textInput);
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'focus',
       'selectionChange',
       'keyPress',
@@ -140,8 +137,7 @@ describe('clear()', () => {
     const user = userEvent.setup();
     await user.clear(textInput);
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'focus',
       'selectionChange',
       'keyPress',
@@ -170,8 +166,7 @@ describe('clear()', () => {
     const user = userEvent.setup();
     await user.clear(screen.getByTestId('input'));
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual(['changeText', 'endEditing']);
+    expect(getEventsNames(events)).toEqual(['changeText', 'endEditing']);
 
     expect(events).toMatchSnapshot();
   });

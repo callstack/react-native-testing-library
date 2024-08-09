@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { TextInput, TextInputProps, View } from 'react-native';
-import { createEventLogger, EventEntry } from '../../../test-utils';
+import {
+  createEventLogger,
+  getEventsNames,
+  lastEvent,
+  lastEventPayload,
+} from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
 
@@ -43,8 +48,7 @@ describe('type()', () => {
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abc');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -74,8 +78,7 @@ describe('type()', () => {
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abc');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -104,8 +107,7 @@ describe('type()', () => {
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'ab');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -132,8 +134,7 @@ describe('type()', () => {
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'ab');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([]);
+    expect(getEventsNames(events)).toEqual([]);
   });
 
   it('supports backspace', async () => {
@@ -144,8 +145,7 @@ describe('type()', () => {
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), '{Backspace}a');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -172,8 +172,7 @@ describe('type()', () => {
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), '{Enter}\n');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -204,7 +203,7 @@ describe('type()', () => {
       skipPress: true,
     });
 
-    const eventNames = events.map((e) => e.name);
+    const eventNames = getEventsNames(events);
     expect(eventNames).not.toContainEqual('pressIn');
     expect(eventNames).not.toContainEqual('pressOut');
     expect(eventNames).toEqual([
@@ -217,7 +216,7 @@ describe('type()', () => {
       'blur',
     ]);
 
-    expect(lastEvent(events, 'endEditing')?.payload).toMatchObject({
+    expect(lastEventPayload(events, 'endEditing')).toMatchObject({
       nativeEvent: { text: 'a', target: 0 },
     });
   });
@@ -230,8 +229,7 @@ describe('type()', () => {
       submitEditing: true,
     });
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -244,7 +242,7 @@ describe('type()', () => {
       'blur',
     ]);
 
-    expect(lastEvent(events, 'submitEditing')?.payload).toMatchObject({
+    expect(lastEventPayload(events, 'submitEditing')).toMatchObject({
       nativeEvent: { text: 'a', target: 0 },
       currentTarget: {},
       target: {},
@@ -264,8 +262,12 @@ describe('type()', () => {
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abc');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual(['changeText', 'changeText', 'changeText', 'endEditing']);
+    expect(getEventsNames(events)).toEqual([
+      'changeText',
+      'changeText',
+      'changeText',
+      'endEditing',
+    ]);
 
     expect(events).toMatchSnapshot('input: "abc"');
   });
@@ -320,8 +322,13 @@ describe('type()', () => {
 
     await userEvent.type(screen.getByTestId('input'), 'abc');
 
-    const eventNames = events.map((event) => event.name);
-    expect(eventNames).toEqual(['focus', 'changeText', 'changeText', 'changeText', 'blur']);
+    expect(getEventsNames(events)).toEqual([
+      'focus',
+      'changeText',
+      'changeText',
+      'changeText',
+      'blur',
+    ]);
   });
 
   // See: https://github.com/callstack/react-native-testing-library/issues/1588
@@ -347,8 +354,7 @@ describe('type()', () => {
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abcd');
 
-    const eventNames = events.map((e) => e.name);
-    expect(eventNames).toEqual([
+    expect(getEventsNames(events)).toEqual([
       'pressIn',
       'focus',
       'pressOut',
@@ -366,14 +372,12 @@ describe('type()', () => {
       'blur',
     ]);
 
-    expect(lastEvent(events, 'changeText')?.payload).toBe('ab');
-    expect(lastEvent(events, 'endEditing')?.payload.nativeEvent).toMatchObject({
-      target: 0,
-      text: 'ab',
+    expect(lastEventPayload(events, 'changeText')).toBe('ab');
+    expect(lastEventPayload(events, 'endEditing')).toMatchObject({
+      nativeEvent: {
+        target: 0,
+        text: 'ab',
+      },
     });
   });
 });
-
-function lastEvent(events: EventEntry[], name: string) {
-  return events.filter((e) => e.name === name).pop();
-}

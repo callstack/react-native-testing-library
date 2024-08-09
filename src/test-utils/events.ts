@@ -19,6 +19,10 @@ export function createEventLogger() {
   return { events, logEvent };
 }
 
-export function getEventsName(events: EventEntry[]) {
+export function getEventsNames(events: EventEntry[]) {
   return events.map((event) => event.name);
+}
+
+export function lastEventPayload(events: EventEntry[], name: string) {
+  return events.filter((e) => e.name === name).pop()?.payload;
 }
