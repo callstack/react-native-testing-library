@@ -11,19 +11,19 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "expo": "^50.0.4",
-    "expo-status-bar": "~1.11.1",
+    "expo": "^51.0.26",
+    "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.73.2",
+    "react-native": "0.74.5",
     "react-native-web": "~0.19.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@testing-library/react-native": "^12.4.0",
+    "@babel/core": "^7.24.0",
+    "@testing-library/react-native": "^12.5.2",
     "@types/eslint": "^8.56.10",
     "@types/jest": "^29.5.12",
-    "@types/react": "~18.2.45",
+    "@types/react": "~18.2.79",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
     "react-test-renderer": "18.2.0",
