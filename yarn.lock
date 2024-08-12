@@ -2931,9 +2931,9 @@ __metadata:
     typescript: "npm:^5.5.4"
   peerDependencies:
     jest: ">=28.0.0"
-    react: ">=18.2.0"
-    react-native: ">=0.73"
-    react-test-renderer: ">=18.2.0"
+    react: ">=18.3.0"
+    react-native: ">=0.75"
+    react-test-renderer: ">=18.3.0"
   peerDependenciesMeta:
     jest:
       optional: true

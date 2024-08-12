@@ -1,13 +1,6 @@
-id: migration-v13
-title: Migration to 13.0
-
----
-
-import TOCInline from '@theme/TOCInline';
+# Migration to 13.0
 
 Migration to React Native Testing Library version 13 from version 12.x.
-
-<TOCInline toc={toc} />
 
 # Breaking changes
 
@@ -23,11 +16,11 @@ This deprecated query has been removed as is typically too general to give meani
 
 - [`*ByRole`](#by-role) query with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
 - use built-in Jest matchers to check the state of element found using some other query:
-  - enabled state: [`toBeEnabled()` / `toBeDisabled()`](jest-matchers#tobeenabled)
-  - checked state: [`toBeChecked()` / `toBePartiallyChecked()`](jest-matchers#tobechecked)
-  - selected state: [`toBeSelected()`](jest-matchers#tobeselected)
-  - expanded state: [`toBeExpanded()` / `toBeCollapsed()`](jest-matchers#tobeexpanded)
-  - busy state: [`toBeBusy()`](jest-matchers#tobebusy)
+  - enabled state: [`toBeEnabled()` / `toBeDisabled()`](docs/api/jest-matchers#tobeenabled)
+  - checked state: [`toBeChecked()` / `toBePartiallyChecked()`](docs/api/jest-matchers#tobechecked)
+  - selected state: [`toBeSelected()`](docs/api/jest-matchers#tobeselected)
+  - expanded state: [`toBeExpanded()` / `toBeCollapsed()`](docs/api/jest-matchers#tobeexpanded)
+  - busy state: [`toBeBusy()`](docs/api/jest-matchers#tobebusy)
 
 ```ts
 // Replace this
@@ -45,7 +38,7 @@ expect(view).toBeDisabled(); // Assert its accessibility state
 
 This deprecated query has been removed as is typically too general to give meaningful results. Use one of the following options:
 
-- [`toHaveAccessibilityValue()`](jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
+- [`toHaveAccessibilityValue()`](docs/api/jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
 - [`*ByRole`](#by-role) query with `value` option
 
 ```ts
@@ -62,7 +55,7 @@ expect(view).toHaveAccessibilityValue({ now: 50, min: 0, max: 50 }); // Assert i
 
 ## Removed `debug.shallow`
 
-For a time being we didn't support shallow rendering. Now we are removing the last remains of it: `debug.shallow()`. If you are interested in shallow rendering see [here](migration-v2#removed-global-shallow-function).
+For a time being we didn't support shallow rendering. Now we are removing the last remains of it: `debug.shallow()`. If you are interested in shallow rendering see [here](docs/migration/previous/v2#removed-global-shallow-function).
 
 # Other changes
 
@@ -72,4 +65,4 @@ This should not break any tests.
 
 ## Full Changelog
 
-https://github.com/callstack/react-native-testing-library/compare/v12.5.0...v13.0.0
+https://github.com/callstack/react-native-testing-library/compare/v12.5.2...v13.0.0
