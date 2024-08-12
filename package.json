@@ -68,19 +68,19 @@
     }
   },
   "devDependencies": {
-    "@babel/cli": "^7.24.5",
-    "@babel/core": "^7.24.5",
-    "@babel/plugin-transform-flow-strip-types": "^7.24.1",
-    "@babel/preset-env": "^7.24.5",
-    "@babel/preset-flow": "^7.24.1",
-    "@babel/preset-react": "^7.24.1",
-    "@babel/preset-typescript": "^7.24.1",
-    "@callstack/eslint-config": "^14.1.1",
+    "@babel/cli": "^7.24.8",
+    "@babel/core": "^7.25.2",
+    "@babel/plugin-transform-flow-strip-types": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/preset-flow": "^7.24.7",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
+    "@callstack/eslint-config": "^14.2.0",
     "@release-it/conventional-changelog": "^8.0.1",
     "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@types/jest": "^29.5.12",
-    "@types/react": "^18.2.65",
-    "@types/react-test-renderer": "^18.0.7",
+    "@types/react": "^18.3.3",
+    "@types/react-test-renderer": "^18.3.0",
     "babel-jest": "^29.7.0",
     "del-cli": "^5.1.0",
     "eslint": "^8.57.0",
@@ -89,15 +89,15 @@
     "flow-bin": "~0.170.0",
     "jest": "^29.7.0",
     "prettier": "^2.8.8",
-    "react": "18.2.0",
-    "react-native": "0.74.1",
-    "react-test-renderer": "18.2.0",
-    "release-it": "^17.2.1",
+    "react": "18.3.1",
+    "react-native": "0.75.0-rc.7",
+    "react-test-renderer": "18.3.1",
+    "release-it": "^17.6.0",
     "strip-ansi": "^6.0.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.4"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
-  "packageManager": "yarn@4.2.1"
+  "packageManager": "yarn@4.4.0"
 }
