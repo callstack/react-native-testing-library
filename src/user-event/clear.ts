@@ -32,15 +32,15 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
   dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(selectionRange));
 
   // 3. Press backspace with selected text
-  const textAfterClear = '';
+  const emptyText = '';
   await emitTypingEvents(element, {
     config: this.config,
     key: 'Backspace',
-    text: textAfterClear,
+    text: emptyText,
   });
 
   // 4. Exit element
   await wait(this.config);
-  dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(textAfterClear));
+  dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(emptyText));
   dispatchEvent(element, 'blur', EventBuilder.Common.blur());
 }
