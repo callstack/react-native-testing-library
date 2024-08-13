@@ -844,30 +844,6 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
     },
   },
   {
-    "name": "textInput",
-    "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
-      "nativeEvent": {
-        "previousText": "",
-        "range": {
-          "end": 1,
-          "start": 1,
-        },
-        "target": 0,
-        "text": "
-",
-      },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
-    },
-  },
-  {
     "name": "change",
     "payload": {
       "currentTarget": {},
@@ -942,32 +918,6 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "key": "Enter",
-      },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
-    },
-  },
-  {
-    "name": "textInput",
-    "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
-      "nativeEvent": {
-        "previousText": "
-",
-        "range": {
-          "end": 2,
-          "start": 2,
-        },
-        "target": 0,
-        "text": "
-
-",
       },
       "persist": [Function],
       "preventDefault": [Function],
