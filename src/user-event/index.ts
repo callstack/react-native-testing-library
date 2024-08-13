@@ -16,6 +16,7 @@ export const userEvent = {
   type: (element: ReactTestInstance, text: string, options?: TypeOptions) =>
     setup().type(element, text, options),
   clear: (element: ReactTestInstance) => setup().clear(element),
+  paste: (element: ReactTestInstance, text: string) => setup().paste(element, text),
   scrollTo: (element: ReactTestInstance, options: ScrollToOptions) =>
     setup().scrollTo(element, options),
 };

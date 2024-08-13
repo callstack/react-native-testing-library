@@ -2,6 +2,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { wrapAsync } from '../../helpers/wrap-async';
 import { clear } from '../clear';
+import { paste } from '../paste';
 import { PressOptions, press, longPress } from '../press';
 import { ScrollToOptions, scrollTo } from '../scroll';
 import { TypeOptions, type } from '../type';
@@ -139,6 +140,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
     longPress: wrapAndBindImpl(instance, longPress),
     type: wrapAndBindImpl(instance, type),
     clear: wrapAndBindImpl(instance, clear),
+    paste: wrapAndBindImpl(instance, paste),
     scrollTo: wrapAndBindImpl(instance, scrollTo),
   };
 
