@@ -124,12 +124,10 @@ The `pressIn` and `pressOut` events are sent by default but can be skipped by pa
 **Typing (for each character)**:
 
 - `keyPress`
-- `textInput` (optional)
 - `change`
 - `changeText`
 - `selectionChange`
-
-The `textInput` event is sent only for multiline text inputs.
+- `contentSizeChange` (only multiline)
 
 **Leaving the element**:
 
@@ -144,7 +142,7 @@ The `submitEditing` event is skipped by default. It can sent by setting the `sub
 ```ts
 clear(
   element: ReactTestInstance,
-}
+)
 ```
 
 Example
@@ -160,8 +158,6 @@ This function supports only host `TextInput` elements. Passing other element typ
 
 ### Sequence of events
 
-The sequence of events depends on the `multiline` prop and passed options.
-
 Events will not be emitted if the `editable` prop is set to `false`.
 
 **Entering the element**:
@@ -175,12 +171,52 @@ Events will not be emitted if the `editable` prop is set to `false`.
 **Pressing backspace**:
 
 - `keyPress`
-- `textInput` (optional)
 - `change`
 - `changeText`
 - `selectionChange`
 
-The `textInput` event is sent only for multiline text inputs.
+**Leaving the element**:
+
+- `endEditing`
+- `blur`
+
+## `paste()`
+
+```ts
+paste(
+  element: ReactTestInstance,
+  text: string,
+)
+```
+
+Example
+
+```ts
+const user = userEvent.setup();
+await user.paste(textInput, 'Text to paste');
+```
+
+This helper simulates the user pasting given text to a `TextInput` element.
+
+This function supports only host `TextInput` elements. Passing other element types will result in throwing an error.
+
+### Sequence of events
+
+Events will not be emitted if the `editable` prop is set to `false`.
+
+**Entering the element**:
+
+- `focus`
+
+**Selecting all content**:
+
+- `selectionChange`
+
+**Pasting the text**:
+
+- `change`
+- `changeText`
+- `selectionChange`
 
 **Leaving the element**:
 
