@@ -332,30 +332,6 @@ How are you?" multiline: true, 1`] = `
     },
   },
   {
-    "name": "textInput",
-    "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
-      "nativeEvent": {
-        "previousText": "Hello World!
-How are you?",
-        "range": {
-          "end": 0,
-          "start": 0,
-        },
-        "target": 0,
-        "text": "",
-      },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
-    },
-  },
-  {
     "name": "change",
     "payload": {
       "currentTarget": {},

@@ -38,8 +38,6 @@ function ManagedTextInput({
       onPressOut={logEvent('pressOut')}
       onChange={logEvent('change')}
       onKeyPress={logEvent('keyPress')}
-      /** @ts-expect-error property typedef removed in RN 0.75 */
-      onTextInput={logEvent('textInput')}
       onSelectionChange={logEvent('selectionChange')}
       onSubmitEditing={logEvent('submitEditing')}
       onEndEditing={logEvent('endEditing')}

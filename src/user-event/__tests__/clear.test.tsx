@@ -20,8 +20,6 @@ function renderTextInputWithToolkit(props: TextInputProps = {}) {
       onChange={logEvent('change')}
       onChangeText={logEvent('changeText')}
       onKeyPress={logEvent('keyPress')}
-      /** @ts-expect-error property typedef removed in RN 0.75 */
-      onTextInput={logEvent('textInput')}
       onSelectionChange={logEvent('selectionChange')}
       onSubmitEditing={logEvent('submitEditing')}
       onEndEditing={logEvent('endEditing')}
@@ -142,7 +140,6 @@ describe('clear()', () => {
       'focus',
       'selectionChange',
       'keyPress',
-      'textInput',
       'change',
       'changeText',
       'selectionChange',
