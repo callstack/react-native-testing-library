@@ -1,0 +1,530 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`paste() paste on empty text input 1`] = `
+[
+  {
+    "name": "focus",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "selection": {
+          "end": 0,
+          "start": 0,
+        },
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "Hi!",
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "Hi!",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "endEditing",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+        "text": "Hi!",
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "blur",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+]
+`;
+
+exports[`paste() paste on filled text input 1`] = `
+[
+  {
+    "name": "focus",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "selection": {
+          "end": 6,
+          "start": 0,
+        },
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "Hi!",
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "Hi!",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "endEditing",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+        "text": "Hi!",
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "blur",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+]
+`;
+
+exports[`paste() supports defaultValue prop: defaultValue: "Hello Default!" 1`] = `
+[
+  {
+    "name": "focus",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "selection": {
+          "end": 14,
+          "start": 0,
+        },
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "Hi!",
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "Hi!",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "endEditing",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+        "text": "Hi!",
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "blur",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+]
+`;
+
+exports[`paste() supports multiline: value: "Hello World!
+How are you?" multiline: true, 1`] = `
+[
+  {
+    "name": "focus",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "selection": {
+          "end": 25,
+          "start": 0,
+        },
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "change",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "eventCount": 0,
+        "target": 0,
+        "text": "Hi!",
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "changeText",
+    "payload": "Hi!",
+  },
+  {
+    "name": "selectionChange",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "contentSizeChange",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "contentSize": {
+          "height": 16,
+          "width": 15,
+        },
+        "target": 0,
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "endEditing",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+        "text": "Hi!",
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "blur",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+]
+`;
+
+exports[`paste() works when not all events have handlers 1`] = `
+[
+  {
+    "name": "changeText",
+    "payload": "Hi!",
+  },
+  {
+    "name": "endEditing",
+    "payload": {
+      "currentTarget": {},
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "target": 0,
+        "text": "Hi!",
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+]
+`;

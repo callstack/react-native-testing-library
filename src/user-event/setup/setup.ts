@@ -121,6 +121,19 @@ export interface UserEventInstance {
   clear: (element: ReactTestInstance) => Promise<void>;
 
   /**
+   * Simulate user pasting the text to a given `TextInput` element.
+   *
+   * This method will simulate:
+   * 1. entering TextInput
+   * 2. selecting all text
+   * 3. paste the text
+   * 4. leaving TextInput
+   *
+   * @param element TextInput element to paste to
+   */
+  paste: (element: ReactTestInstance, text: string) => Promise<void>;
+
+  /**
    * Simlate user scorlling a ScrollView element.
    *
    * @param element ScrollView element
