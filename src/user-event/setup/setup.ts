@@ -2,6 +2,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { wrapAsync } from '../../helpers/wrap-async';
 import { clear } from '../clear';
+import { paste } from '../paste';
 import { PressOptions, press, longPress } from '../press';
 import { ScrollToOptions, scrollTo } from '../scroll';
 import { TypeOptions, type } from '../type';
@@ -120,6 +121,19 @@ export interface UserEventInstance {
   clear: (element: ReactTestInstance) => Promise<void>;
 
   /**
+   * Simulate user pasting the text to a given `TextInput` element.
+   *
+   * This method will simulate:
+   * 1. entering TextInput
+   * 2. selecting all text
+   * 3. paste the text
+   * 4. leaving TextInput
+   *
+   * @param element TextInput element to paste to
+   */
+  paste: (element: ReactTestInstance, text: string) => Promise<void>;
+
+  /**
    * Simlate user scorlling a ScrollView element.
    *
    * @param element ScrollView element
@@ -139,6 +153,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
     longPress: wrapAndBindImpl(instance, longPress),
     type: wrapAndBindImpl(instance, type),
     clear: wrapAndBindImpl(instance, clear),
+    paste: wrapAndBindImpl(instance, paste),
     scrollTo: wrapAndBindImpl(instance, scrollTo),
   };
 
