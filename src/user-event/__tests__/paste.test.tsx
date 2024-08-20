@@ -36,20 +36,17 @@ function renderTextInputWithToolkit(props: TextInputProps = {}) {
   };
 }
 
-describe('clear()', () => {
-  it('supports basic case', async () => {
+describe('paste()', () => {
+  it('paste on empty text input', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
-    const { textInput, events } = renderTextInputWithToolkit({
-      value: 'Hello!',
-    });
+    const { textInput, events } = renderTextInputWithToolkit();
 
     const user = userEvent.setup();
-    await user.clear(textInput);
+    await user.paste(textInput, 'Hi!');
 
     expect(getEventsNames(events)).toEqual([
       'focus',
       'selectionChange',
-      'keyPress',
       'change',
       'changeText',
       'selectionChange',
@@ -57,7 +54,29 @@ describe('clear()', () => {
       'blur',
     ]);
 
-    expect(events).toMatchSnapshot('value: "Hello!');
+    expect(events).toMatchSnapshot();
+  });
+
+  it('paste on filled text input', async () => {
+    jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
+    const { textInput, events } = renderTextInputWithToolkit({
+      value: 'Hello!',
+    });
+
+    const user = userEvent.setup();
+    await user.paste(textInput, 'Hi!');
+
+    expect(getEventsNames(events)).toEqual([
+      'focus',
+      'selectionChange',
+      'change',
+      'changeText',
+      'selectionChange',
+      'endEditing',
+      'blur',
+    ]);
+
+    expect(events).toMatchSnapshot();
   });
 
   it.each(['modern', 'legacy'])('works with %s fake timers', async (type) => {
@@ -67,12 +86,11 @@ describe('clear()', () => {
     });
 
     const user = userEvent.setup();
-    await user.clear(textInput);
+    await user.paste(textInput, 'Hi!');
 
     expect(getEventsNames(events)).toEqual([
       'focus',
       'selectionChange',
-      'keyPress',
       'change',
       'changeText',
       'selectionChange',
@@ -87,12 +105,11 @@ describe('clear()', () => {
     });
 
     const user = userEvent.setup();
-    await user.clear(textInput);
+    await user.paste(textInput, 'Hi!');
 
     expect(getEventsNames(events)).toEqual([
       'focus',
       'selectionChange',
-      'keyPress',
       'change',
       'changeText',
       'selectionChange',
@@ -110,7 +127,7 @@ describe('clear()', () => {
     });
 
     const user = userEvent.setup();
-    await user.clear(textInput);
+    await user.paste(textInput, 'Hi!');
 
     expect(textInput.props.value).toBe('Hello!');
   });
@@ -122,7 +139,7 @@ describe('clear()', () => {
     });
 
     const user = userEvent.setup();
-    await user.clear(textInput);
+    await user.paste(textInput, 'Hi!');
 
     expect(textInput.props.value).toBe('Hello!');
   });
@@ -134,12 +151,11 @@ describe('clear()', () => {
     });
 
     const user = userEvent.setup();
-    await user.clear(textInput);
+    await user.paste(textInput, 'Hi!');
 
     expect(getEventsNames(events)).toEqual([
       'focus',
       'selectionChange',
-      'keyPress',
       'change',
       'changeText',
       'selectionChange',
@@ -162,7 +178,7 @@ describe('clear()', () => {
     );
 
     const user = userEvent.setup();
-    await user.clear(screen.getByTestId('input'));
+    await user.paste(screen.getByTestId('input'), 'Hi!');
 
     expect(getEventsNames(events)).toEqual(['changeText', 'endEditing']);
 
@@ -174,9 +190,9 @@ describe('clear()', () => {
 
     const user = userEvent.setup();
     await expect(
-      user.clear(screen.getByTestId('input')),
+      user.paste(screen.getByTestId('input'), 'Hi!'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"clear() only supports host "TextInput" elements. Passed element has type: "View"."`,
+      `"paste() only supports host "TextInput" elements. Passed element has type: "View"."`,
     );
   });
 
@@ -202,7 +218,7 @@ describe('clear()', () => {
     );
 
     const user = userEvent.setup();
-    await user.clear(screen.getByTestId('input'));
+    await user.paste(screen.getByTestId('input'), 'Hi!');
     expect(parentHandler).not.toHaveBeenCalled();
   });
 });

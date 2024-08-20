@@ -8,7 +8,7 @@ import {
   View,
   Button,
 } from 'react-native';
-import { createEventLogger, getEventsName } from '../../../test-utils';
+import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
 
@@ -129,7 +129,7 @@ describe('userEvent.press with fake timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    expect(getEventsName(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
   });
 
   test('crawls up in the tree to find an element that responds to touch events', async () => {
@@ -199,7 +199,7 @@ describe('userEvent.press with fake timers', () => {
     );
 
     await userEvent.press(screen.getByText('press me'));
-    expect(getEventsName(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
   });
 
   test('press works on Button', async () => {
@@ -208,7 +208,7 @@ describe('userEvent.press with fake timers', () => {
     render(<Button title="press me" onPress={logEvent('press')} />);
 
     await userEvent.press(screen.getByText('press me'));
-    expect(getEventsName(events)).toEqual(['press']);
+    expect(getEventsNames(events)).toEqual(['press']);
   });
 
   test('longPress works Text', async () => {
@@ -226,7 +226,7 @@ describe('userEvent.press with fake timers', () => {
     );
 
     await userEvent.longPress(screen.getByText('press me'));
-    expect(getEventsName(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
   });
 
   test('does not trigger on disabled Text', async () => {
@@ -280,7 +280,7 @@ describe('userEvent.press with fake timers', () => {
     );
 
     await userEvent.press(screen.getByPlaceholderText('email'));
-    expect(getEventsName(events)).toEqual(['pressIn', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut']);
   });
 
   test('longPress works on TextInput', async () => {
@@ -295,7 +295,7 @@ describe('userEvent.press with fake timers', () => {
     );
 
     await userEvent.longPress(screen.getByPlaceholderText('email'));
-    expect(getEventsName(events)).toEqual(['pressIn', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut']);
   });
 
   test('does not call onPressIn and onPressOut on non editable TextInput', async () => {
