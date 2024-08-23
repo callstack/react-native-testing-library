@@ -13,7 +13,7 @@ The `render` function is the entry point for writing React Native Testing Librar
 import { render } from '@testing-library/react-native';
 
 test('basic test', () => {
-  render(<MyApp />);
+  const screen = render(<MyApp />);
   expect(screen.getAllByRole('button', { name: 'start' })).toBeOnTheScreen();
 });
 ```
