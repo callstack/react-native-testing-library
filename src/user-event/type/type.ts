@@ -1,5 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { isHostTextInput } from '../../helpers/host-component-names';
+import { nativeState } from '../../native-state';
 import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isTextInputEditable } from '../../helpers/text-input';
@@ -96,6 +97,7 @@ export async function emitTypingEvents(
 
   dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
   dispatchEvent(element, 'changeText', text);
+  nativeState?.elementValues.set(element, text);
 
   const selectionRange = {
     start: text.length,

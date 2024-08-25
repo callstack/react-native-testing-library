@@ -12,6 +12,7 @@ import { isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isTextInputEditable } from './helpers/text-input';
 import { StringWithAutocomplete } from './types';
+import { nativeState } from './native-state';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
@@ -120,6 +121,10 @@ type EventName = StringWithAutocomplete<
 >;
 
 function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {
+  if (eventName === 'changeText' && isHostTextInput(element) && typeof data[0] === 'string') {
+    nativeState?.elementValues.set(element, data[0]);
+  }
+
   const handler = findEventHandler(element, eventName);
   if (!handler) {
     return;

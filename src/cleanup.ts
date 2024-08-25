@@ -1,11 +1,14 @@
-import * as React from 'react';
+import { clearNativeState } from './native-state';
 import { clearRenderResult } from './screen';
 
-type CleanUpFunction = (nextElement?: React.ReactElement<any>) => void;
-let cleanupQueue = new Set<CleanUpFunction>();
+type CleanUpFunction = () => void;
+
+const cleanupQueue = new Set<CleanUpFunction>();
 
 export default function cleanup() {
+  clearNativeState();
   clearRenderResult();
+
   cleanupQueue.forEach((fn) => fn());
   cleanupQueue.clear();
 }

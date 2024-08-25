@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import { fireEvent, render, screen } from '..';
+import '../matchers/extend-expect';
 
 type OnPressComponentProps = {
   onPress: () => void;
@@ -442,5 +443,15 @@ describe('native events', () => {
 
     fireEvent(screen.getByTestId('test-id'), 'onMomentumScrollEnd');
     expect(onMomentumScrollEndSpy).toHaveBeenCalled();
+  });
+
+  it('sets native state value for unmanaged text inputs', () => {
+    render(<TextInput testID="input" />);
+
+    const input = screen.getByTestId('input');
+    expect(input).toHaveDisplayValue('');
+
+    fireEvent.changeText(input, 'abc');
+    expect(input).toHaveDisplayValue('abc');
   });
 });
