@@ -14,4 +14,5 @@ export type User = {
     medium: string;
     thumbnail: string;
   };
+  cell: string;
 };

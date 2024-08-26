@@ -5,7 +5,7 @@ import { User } from '../types';
 
 export default ({ users }: { users: User[] }) => {
   const renderItem: ListRenderItem<User> = useCallback(
-    ({ item: { name, email, picture }, index }) => {
+    ({ item: { name, email, picture, cell }, index }) => {
       const { title, first, last } = name;
       const backgroundColor = index % 2 === 0 ? '#f9f9f9' : '#fff';
       return (
@@ -16,6 +16,7 @@ export default ({ users }: { users: User[] }) => {
               Name: {title} {first} {last}
             </Text>
             <Text>Email: {email}</Text>
+            <Text>Mobile: {cell}</Text>
           </View>
         </View>
       );

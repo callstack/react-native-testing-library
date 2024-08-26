@@ -1,8 +1,11 @@
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react-native';
 import React from 'react';
-import UsersHome from '../UsersHome';
+import PhoneBook from '../PhoneBook';
 import { User } from '../types';
 
+// Ensure that the global fetch function is mocked in your setup file
+// before running the tests. This will ensure that the tests don't
+// make any actual network requests that you haven't mocked.
 beforeAll(() => {
   jest.spyOn(global, 'fetch').mockImplementation(
     jest.fn(() => {
@@ -15,16 +18,34 @@ afterAll(() => {
   (global.fetch as jest.Mock).mockRestore();
 });
 
-describe('UsersListFetch', () => {
-  it('fetches users successfully and renders in list', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValueOnce({
+describe('PhoneBook', () => {
+  let originalFetch: typeof global.fetch;
+  beforeAll(() => {
+    originalFetch = global.fetch;
+    global.fetch = jest.fn().mockResolvedValueOnce({
       json: jest.fn().mockResolvedValueOnce(DATA),
-    } as unknown as Response);
-    render(<UsersHome />);
+    });
+    //TODO: mock axios
+  });
+
+  afterAll(() => {
+    global.fetch = originalFetch;
+  });
+
+  it('fetches contacts successfully and renders in list', async () => {
+    render(<PhoneBook />);
 
     await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
     expect(await screen.findByText('Name: Mrs Ida Kristensen')).toBeOnTheScreen();
     expect(await screen.findByText('Email: ida.kristensen@example.com')).toBeOnTheScreen();
+    expect(await screen.findAllByText(/name/i)).toHaveLength(3);
+  });
+
+  it('fetches favorites successfully and renders in list', async () => {
+    render(<PhoneBook />);
+
+    await waitForElementToBeRemoved(() => screen.getByText(/figuring out your favorites/i));
+    expect(await screen.findByText(/my favorites/i)).toBeOnTheScreen();
     expect(await screen.findAllByText(/name/i)).toHaveLength(3);
   });
 });
@@ -47,6 +68,7 @@ const DATA: { results: User[] } = {
         medium: 'https://randomuser.me/api/portraits/med/women/26.jpg',
         thumbnail: 'https://randomuser.me/api/portraits/thumb/women/26.jpg',
       },
+      cell: '123-4567-890',
     },
     {
       name: {
@@ -64,6 +86,7 @@ const DATA: { results: User[] } = {
         medium: 'https://randomuser.me/api/portraits/med/men/53.jpg',
         thumbnail: 'https://randomuser.me/api/portraits/thumb/men/53.jpg',
       },
+      cell: '123-4567-890',
     },
     {
       name: {
@@ -81,6 +104,7 @@ const DATA: { results: User[] } = {
         medium: 'https://randomuser.me/api/portraits/med/men/17.jpg',
         thumbnail: 'https://randomuser.me/api/portraits/thumb/men/17.jpg',
       },
+      cell: '123-4567-890',
     },
   ],
 };
