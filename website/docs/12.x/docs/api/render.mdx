@@ -10,7 +10,7 @@ function render(
 The `render` function is the entry point for writing React Native Testing Library tests. It deeply renders the given React element and returns helpers to query the output components' structure.
 
 ```jsx
-import { render } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
 test('basic test', () => {
   render(<MyApp />);
