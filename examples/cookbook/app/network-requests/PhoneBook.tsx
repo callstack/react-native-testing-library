@@ -5,6 +5,7 @@ import ContactsList from './components/ContactsList';
 import FavoritesList from './components/FavoritesList';
 import getAllContacts from './api/getAllContacts';
 import getAllFavorites from './api/getAllFavorites';
+import { isAxiosError } from 'axios';
 
 export default () => {
   const [usersData, setUsersData] = useState<User[]>([]);
@@ -25,7 +26,8 @@ export default () => {
       try {
         await Promise.all([_getAllContacts(), _getAllFavorites()]);
       } catch (e) {
-        const message = 'message' in e ? e.message : 'Something went wrong';
+        const isKnownError = e instanceof Error || isAxiosError(e);
+        const message = isKnownError ? e.message : 'Something went wrong';
         setError(message);
       }
     };
