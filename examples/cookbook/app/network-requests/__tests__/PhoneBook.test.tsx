@@ -15,7 +15,7 @@ describe('PhoneBook', () => {
     (axios.get as jest.Mock).mockResolvedValue({ data: DATA });
     render(<PhoneBook />);
 
-    // await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
+    await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
     expect(await screen.findByText('Name: Mrs Ida Kristensen')).toBeOnTheScreen();
     expect(await screen.findByText('Email: ida.kristensen@example.com')).toBeOnTheScreen();
     expect(await screen.findAllByText(/name/i)).toHaveLength(3);

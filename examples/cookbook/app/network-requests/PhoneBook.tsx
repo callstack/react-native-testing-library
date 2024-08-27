@@ -15,6 +15,9 @@ export default () => {
     const _getAllContacts = async () => {
       const _data = await getAllContacts();
       setUsersData(_data);
+      console.log({
+        _data,
+      })
     };
     const _getAllFavorites = async () => {
       const _data = await getAllFavorites();
@@ -25,13 +28,16 @@ export default () => {
       try {
         await Promise.all([_getAllContacts(), _getAllFavorites()]);
       } catch (e) {
-        const message = e instanceof Error ? e.message : JSON.stringify(e);
+        const message = e instanceof Error ? e.message : 'Something went wrong';
         setError(message);
       }
     };
 
     void run();
   }, []);
+  console.log({
+    usersData
+  })
 
   if (error) {
     return <Text>An error occurred: {error}</Text>;
