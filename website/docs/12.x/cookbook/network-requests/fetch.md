@@ -199,7 +199,7 @@ See MDN's [docs](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Usin
 ...
 it('fails to fetch contacts and renders error message', async () => {
   // mock the fetch function to be not ok which will throw an error
-  (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
+  (global.fetch as jest.Mock).mockResolvedValueOnce({
     ok: false,
   });
   render(<PhoneBook/>);

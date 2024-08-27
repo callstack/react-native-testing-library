@@ -8,7 +8,7 @@ jest.mock('axios');
 
 describe('PhoneBook', () => {
   it('fetches contacts successfully and renders in list', async () => {
-    (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: jest.fn().mockResolvedValueOnce(DATA),
     });
@@ -22,7 +22,7 @@ describe('PhoneBook', () => {
   });
 
   it('fails to fetch contacts and renders error message', async () => {
-    (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
     });
     (axios.get as jest.Mock).mockResolvedValue({ data: DATA });
@@ -33,7 +33,7 @@ describe('PhoneBook', () => {
   });
 
   it('fetches favorites successfully and renders all users avatars', async () => {
-    (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: jest.fn().mockResolvedValueOnce(DATA),
     });
@@ -46,7 +46,7 @@ describe('PhoneBook', () => {
   });
 
   it('fails to fetch favorites and renders error message', async () => {
-    (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: jest.fn().mockResolvedValueOnce(DATA),
     });

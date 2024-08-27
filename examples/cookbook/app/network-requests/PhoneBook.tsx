@@ -25,7 +25,8 @@ export default () => {
       try {
         await Promise.all([_getAllContacts(), _getAllFavorites()]);
       } catch (e) {
-        setError(e.message);
+        const message = e instanceof Error ? e.message : JSON.stringify(e);
+        setError(message);
       }
     };
 
