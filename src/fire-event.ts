@@ -121,9 +121,7 @@ type EventName = StringWithAutocomplete<
 >;
 
 function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {
-  if (eventName === 'changeText' && isHostTextInput(element) && typeof data[0] === 'string') {
-    nativeState?.elementValues.set(element, data[0]);
-  }
+  setNativeStateIfNeeded(element, eventName, data[0]);
 
   const handler = findEventHandler(element, eventName);
   if (!handler) {
@@ -148,3 +146,14 @@ fireEvent.scroll = (element: ReactTestInstance, ...data: unknown[]) =>
   fireEvent(element, 'scroll', ...data);
 
 export default fireEvent;
+
+function setNativeStateIfNeeded(element: ReactTestInstance, eventName: string, value: unknown) {
+  if (
+    eventName === 'changeText' &&
+    typeof value === 'string' &&
+    isHostTextInput(element) &&
+    isTextInputEditable(element)
+  ) {
+    nativeState?.elementValues.set(element, value);
+  }
+}

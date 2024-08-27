@@ -95,9 +95,9 @@ export async function emitTypingEvents(
     return;
   }
 
+  nativeState?.elementValues.set(element, text);
   dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
   dispatchEvent(element, 'changeText', text);
-  nativeState?.elementValues.set(element, text);
 
   const selectionRange = {
     start: text.length,

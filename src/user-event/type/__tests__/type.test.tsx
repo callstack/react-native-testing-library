@@ -374,7 +374,7 @@ describe('type()', () => {
     });
   });
 
-  it('supports value of unmanaged text inputs', async () => {
+  it('sets native state value for unmanaged text inputs', async () => {
     render(<TextInput testID="input" />);
 
     const user = userEvent.setup();
