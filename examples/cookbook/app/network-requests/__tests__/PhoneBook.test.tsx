@@ -1,18 +1,17 @@
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react-native';
 import React from 'react';
+import axios from 'axios';
 import PhoneBook from '../PhoneBook';
 import { User } from '../types';
-import axios from 'axios';
 
 jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('PhoneBook', () => {
   it('fetches contacts successfully and renders in list', async () => {
     (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
       json: jest.fn().mockResolvedValueOnce(DATA),
     });
-    (mockedAxios.get as jest.Mock).mockResolvedValue({ data: DATA });
+    (axios.get as jest.Mock).mockResolvedValue({ data: DATA });
     render(<PhoneBook />);
 
     await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
@@ -21,16 +20,27 @@ describe('PhoneBook', () => {
     expect(await screen.findAllByText(/name/i)).toHaveLength(3);
   });
 
-  it('fetches favorites successfully and renders in list', async () => {
+  it('fetches favorites successfully and renders all users avatars', async () => {
     (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
       json: jest.fn().mockResolvedValueOnce(DATA),
     });
-    (mockedAxios.get as jest.Mock).mockResolvedValue({ data: DATA });
+    (axios.get as jest.Mock).mockResolvedValue({ data: DATA });
     render(<PhoneBook />);
 
     await waitForElementToBeRemoved(() => screen.getByText(/figuring out your favorites/i));
     expect(await screen.findByText(/my favorites/i)).toBeOnTheScreen();
     expect(await screen.findAllByLabelText('favorite-contact-avatar')).toHaveLength(3);
+  });
+
+  it('fails to fetch favorites and renders error message', async () => {
+    (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValueOnce(DATA),
+    });
+    (axios.get as jest.Mock).mockRejectedValueOnce({ message: 'Error fetching favorites' });
+    render(<PhoneBook />);
+
+    await waitForElementToBeRemoved(() => screen.getByText(/figuring out your favorites/i));
+    expect(await screen.findByText(/error fetching favorites/i)).toBeOnTheScreen();
   });
 });
 

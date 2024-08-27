@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Text } from 'react-native';
 import { User } from './types';
 import ContactsList from './components/ContactsList';
 import FavoritesList from './components/FavoritesList';
@@ -8,6 +9,8 @@ import getAllFavorites from './api/getAllFavorites';
 export default () => {
   const [usersData, setUsersData] = useState<User[]>([]);
   const [favoritesData, setFavoritesData] = useState<User[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const _getAllContacts = async () => {
       const _data = await getAllContacts();
@@ -19,11 +22,19 @@ export default () => {
     };
 
     const run = async () => {
-      await Promise.all([_getAllContacts(), _getAllFavorites()]);
+      try {
+        await Promise.all([_getAllContacts(), _getAllFavorites()]);
+      } catch (e) {
+        setError(e.message);
+      }
     };
 
     void run();
   }, []);
+
+  if (error) {
+    return <Text>An error occurred: {error}</Text>;
+  }
 
   return (
     <>

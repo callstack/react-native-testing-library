@@ -7,6 +7,11 @@
   },
   {
     "type": "dir",
+    "name": "network-requests",
+    "label": "Network Requests Recipes"
+  },
+  {
+    "type": "dir",
     "name": "state-management",
     "label": "State Management Recipes"
   }
