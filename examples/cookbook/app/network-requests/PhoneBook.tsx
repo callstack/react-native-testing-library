@@ -49,4 +49,4 @@ const isErrorWithMessage = (
   e: unknown,
 ): e is {
   message: string;
-} => typeof e === 'object' && e !== null && 'foo' in e;
+} => typeof e === 'object' && e !== null && 'message' in e;
