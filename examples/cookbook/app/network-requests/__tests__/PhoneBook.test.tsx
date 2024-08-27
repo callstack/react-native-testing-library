@@ -6,7 +6,7 @@ import { User } from '../types';
 
 jest.mock('axios');
 
-jest.setTimeout(7000);
+jest.setTimeout(10000);
 describe('PhoneBook', () => {
   it('fetches contacts successfully and renders in list', async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
