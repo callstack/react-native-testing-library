@@ -33,7 +33,7 @@ export default () => {
     void run();
   }, []);
 
-  console.log({ usersData, favoritesData, error, time: new Date().toISOString() });
+  console.log({ 'usersData.length': usersData.length, time: new Date().toISOString() });
 
   if (error) {
     return <Text>An error occurred: {error}</Text>;
