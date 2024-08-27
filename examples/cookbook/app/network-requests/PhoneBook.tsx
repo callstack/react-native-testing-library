@@ -25,15 +25,13 @@ export default () => {
       try {
         await Promise.all([_getAllContacts(), _getAllFavorites()]);
       } catch (e) {
-        const message = e instanceof Error ? e.message : 'Something went wrong';
+        const message = 'message' in e ? e.message : 'Something went wrong';
         setError(message);
       }
     };
 
     void run();
   }, []);
-
-  console.log({ 'usersData.length': usersData.length, time: new Date().toISOString() });
 
   if (error) {
     return <Text>An error occurred: {error}</Text>;
