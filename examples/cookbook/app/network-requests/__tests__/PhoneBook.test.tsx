@@ -2,37 +2,17 @@ import { render, screen, waitForElementToBeRemoved } from '@testing-library/reac
 import React from 'react';
 import PhoneBook from '../PhoneBook';
 import { User } from '../types';
+import axios from 'axios';
 
-// Ensure that the global fetch function is mocked in your setup file
-// before running the tests. This will ensure that the tests don't
-// make any actual network requests that you haven't mocked.
-beforeAll(() => {
-  jest.spyOn(global, 'fetch').mockImplementation(
-    jest.fn(() => {
-      throw Error('Only Chuck Norris is allowed to make API requests when testing ;)');
-    }),
-  );
-});
-
-afterAll(() => {
-  (global.fetch as jest.Mock).mockRestore();
-});
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('PhoneBook', () => {
-  let originalFetch: typeof global.fetch;
-  beforeAll(() => {
-    originalFetch = global.fetch;
-    global.fetch = jest.fn().mockResolvedValueOnce({
+  it('fetches contacts successfully and renders in list', async () => {
+    (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
       json: jest.fn().mockResolvedValueOnce(DATA),
     });
-    //TODO: mock axios
-  });
-
-  afterAll(() => {
-    global.fetch = originalFetch;
-  });
-
-  it('fetches contacts successfully and renders in list', async () => {
+    (mockedAxios.get as jest.Mock).mockResolvedValue({ data: DATA });
     render(<PhoneBook />);
 
     await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
@@ -42,11 +22,15 @@ describe('PhoneBook', () => {
   });
 
   it('fetches favorites successfully and renders in list', async () => {
+    (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValueOnce(DATA),
+    });
+    (mockedAxios.get as jest.Mock).mockResolvedValue({ data: DATA });
     render(<PhoneBook />);
 
     await waitForElementToBeRemoved(() => screen.getByText(/figuring out your favorites/i));
     expect(await screen.findByText(/my favorites/i)).toBeOnTheScreen();
-    expect(await screen.findAllByText(/name/i)).toHaveLength(3);
+    expect(await screen.findAllByLabelText('favorite-contact-avatar')).toHaveLength(3);
   });
 });
 

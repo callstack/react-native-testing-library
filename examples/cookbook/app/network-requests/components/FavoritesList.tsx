@@ -7,7 +7,11 @@ export default ({ users }: { users: User[] }) => {
   const renderItem: ListRenderItem<User> = useCallback(({ item: { picture } }) => {
     return (
       <View style={styles.userContainer}>
-        <Image source={{ uri: picture.thumbnail }} style={styles.userImage} />
+        <Image
+          source={{ uri: picture.thumbnail }}
+          style={styles.userImage}
+          accessibilityLabel={'favorite-contact-avatar'}
+        />
       </View>
     );
   }, []);
