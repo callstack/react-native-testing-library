@@ -15,9 +15,6 @@ export default () => {
     const _getAllContacts = async () => {
       const _data = await getAllContacts();
       setUsersData(_data);
-      console.log({
-        _data,
-      })
     };
     const _getAllFavorites = async () => {
       const _data = await getAllFavorites();
@@ -35,9 +32,8 @@ export default () => {
 
     void run();
   }, []);
-  console.log({
-    usersData
-  })
+
+  console.log({ usersData, favoritesData, error, time: new Date().toISOString() });
 
   if (error) {
     return <Text>An error occurred: {error}</Text>;
