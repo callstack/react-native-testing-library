@@ -7,8 +7,7 @@ simple and clean API for making requests. In this guide, we will show you how to
 and guard your test suits from unwanted and unmocked API requests.
 
 :::info
-To simulate a real-world scenario, we will use
-the [Random User Generator API](https://randomuser.me/)
+To simulate a real-world scenario, we will use the [Random User Generator API](https://randomuser.me/)
 that provides random user data.
 :::
 
