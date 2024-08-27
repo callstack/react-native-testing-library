@@ -8,8 +8,7 @@ In this guide, we will show you how to mock Axios requests and guard your test s
 and unmocked API requests.
 
 :::info
-To simulate a real-world scenario, we will use
-the [Random User Generator API](https://randomuser.me/) that provides random user data.
+To simulate a real-world scenario, we will use the [Random User Generator API](https://randomuser.me/) that provides random user data.
 :::
 
 ## Phonebook Example
@@ -19,7 +18,7 @@ In our case, we have a list of favorite contacts that we want to display in our 
 
 This is how the root of the application looks like:
 
-```tsx title=network-requests/axios/Phonebook.tsx
+```tsx title=network-requests/Phonebook.tsx
 import React, {useEffect, useState} from 'react';
 import {User} from './types';
 import FavoritesList from './components/FavoritesList';
@@ -54,7 +53,7 @@ export default () => {
 
 We fetch the contacts from the server using the `getAllFavorites` function that utilizes Axios.
 
-```tsx title=network-requests/axios/api/getAllFavorites.ts
+```tsx title=network-requests/api/getAllFavorites.ts
 import axios from 'axios';
 import {User} from '../types';
 
@@ -68,7 +67,7 @@ export default async (): Promise<User[]> => {
 Our `FavoritesList` component is a simple component that displays the list of favorite contacts and
 their avatars.
 
-```tsx title=network-requests/axios/components/FavoritesList.tsx
+```tsx title=network-requests/components/FavoritesList.tsx
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback} from 'react';
 import type {ListRenderItem} from '@react-native/virtualized-lists';
@@ -116,10 +115,13 @@ const styles =
 ## Start testing with a simple test
 In our test we will make sure we mock the `axios.get` function to return the data we want.
 In this specific case, we will return a list of 3 users.
+
+::info
 By using `mockResolvedValueOnce` we gain more grip and prevent the mock from resolving the data
 multiple times, which might lead to unexpected behavior.
+:::
 
-```tsx title=network-requests/axios/Phonebook.test.tsx
+```tsx title=network-requests/Phonebook.test.tsx
 import {render, waitForElementToBeRemoved} from '@testing-library/react-native';
 import React from 'react';
 import PhoneBook from '../PhoneBook';
@@ -179,7 +181,7 @@ handling the error correctly.
 It is good to note that Axios throws auto. an error when the response status code is not in the range of 2xx.
 :::
 
-```tsx title=network-requests/axios/Phonebook.test.tsx
+```tsx title=network-requests/Phonebook.test.tsx
 ...
 it('fails to fetch favorites and renders error message', async () => {
   // Mock the axios.get function to throw an error

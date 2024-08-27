@@ -9,6 +9,7 @@ jest.mock('axios');
 describe('PhoneBook', () => {
   it('fetches contacts successfully and renders in list', async () => {
     (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
+      ok: true,
       json: jest.fn().mockResolvedValueOnce(DATA),
     });
     (axios.get as jest.Mock).mockResolvedValue({ data: DATA });
@@ -20,8 +21,20 @@ describe('PhoneBook', () => {
     expect(await screen.findAllByText(/name/i)).toHaveLength(3);
   });
 
+  it('fails to fetch contacts and renders error message', async () => {
+    (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
+      ok: false,
+    });
+    (axios.get as jest.Mock).mockResolvedValue({ data: DATA });
+    render(<PhoneBook />);
+
+    await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
+    expect(await screen.findByText(/error fetching contacts/i)).toBeOnTheScreen();
+  });
+
   it('fetches favorites successfully and renders all users avatars', async () => {
     (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
+      ok: true,
       json: jest.fn().mockResolvedValueOnce(DATA),
     });
     (axios.get as jest.Mock).mockResolvedValue({ data: DATA });
@@ -34,6 +47,7 @@ describe('PhoneBook', () => {
 
   it('fails to fetch favorites and renders error message', async () => {
     (global.fetch as jest.SpyInstance).mockResolvedValueOnce({
+      ok: true,
       json: jest.fn().mockResolvedValueOnce(DATA),
     });
     (axios.get as jest.Mock).mockRejectedValueOnce({ message: 'Error fetching favorites' });

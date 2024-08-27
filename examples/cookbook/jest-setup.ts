@@ -16,5 +16,6 @@ beforeAll(() => {
   // see examples/cookbook/__mocks__/axios.ts
 });
 afterAll(() => {
+  // restore the original fetch function
   (global.fetch as jest.Mock).mockRestore();
 });
