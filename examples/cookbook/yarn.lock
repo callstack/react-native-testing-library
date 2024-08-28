@@ -6937,13 +6937,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-slow-test-reporter@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "jest-slow-test-reporter@npm:1.0.0"
-  checksum: 10c0/e613596602b0bfa9c1dea651d54cbeaa203136287c8e5949264ffab630dc16548bcbe799087c8212fe72a08f48b3737e596cbea5c1a3caf068517f3be5dcc051
-  languageName: node
-  linkType: hard
-
 "jest-snapshot@npm:^29.7.0":
   version: 29.7.0
   resolution: "jest-snapshot@npm:29.7.0"
@@ -9559,7 +9552,6 @@ __metadata:
     expo-splash-screen: "npm:~0.27.5"
     expo-status-bar: "npm:~1.12.1"
     jest: "npm:^29.7.0"
-    jest-slow-test-reporter: "npm:^1.0.0"
     jotai: "npm:^2.8.4"
     nanoid: "npm:^3.3.7"
     react: "npm:18.2.0"
