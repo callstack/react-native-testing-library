@@ -6,7 +6,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest",
+    "test": "jest --maxWorkers=2",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
