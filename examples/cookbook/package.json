@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "axios": "^1.7.5",
     "expo": "^51.0.26",
     "expo-constants": "~16.0.2",
     "expo-linking": "~6.3.1",

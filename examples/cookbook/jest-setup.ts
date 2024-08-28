@@ -5,3 +5,17 @@ import '@testing-library/react-native/extend-expect';
 
 // Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+
+// Guard against API requests made during testing
+beforeAll(() => {
+  // the global fetch function:
+  jest.spyOn(global, 'fetch').mockImplementation(()=> {
+    throw Error("Please ensure you mock 'fetch' Only Chuck Norris is allowed to make API requests when testing ;)");
+  });
+  // with Axios:
+  // see examples/cookbook/__mocks__/axios.ts
+});
+afterAll(() => {
+  // restore the original fetch function
+  (global.fetch as jest.Mock).mockRestore();
+});
