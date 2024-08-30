@@ -5,6 +5,7 @@ const chuckNorrisError = () => {
 };
 
 export default {
+  ...jest.requireActual('axios'),
   get: jest.fn(chuckNorrisError),
   post: jest.fn(chuckNorrisError),
   put: jest.fn(chuckNorrisError),

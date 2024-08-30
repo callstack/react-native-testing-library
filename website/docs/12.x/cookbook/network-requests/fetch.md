@@ -127,22 +127,40 @@ As the `fetch` api is available globally, we can mock it by using `jest.spyOn` s
 `global` object.
 
 :::info
-By using `mockResolvedValueOnce` we gain more grip and prevent the mock from resolving the data
-multiple times, which might lead to unexpected behavior.
+To prevent unexpected behavior, we ensure the following:
+- Prevent the mock from resolving data multiple times by using `mockResolvedValueOnce`.
+- Ensure the URL matches the base URL of the API by using a custom function `ensureUrlMatchesBaseUrl`.
+
 :::
+
 
 ```tsx title=network-requests/Phonebook.test.tsx
 import {render, waitForElementToBeRemoved} from '@testing-library/react-native';
 import React from 'react';
 import PhoneBook from '../PhoneBook';
 import {User} from '../types';
+import {MismatchedUrlError} from './test-utils';
+
+const ensureUrlMatchesBaseUrl = (url: string) => {
+  if (!url.includes('https://randomuser.me/api')) throw new MismatchedUrlError(url);
+};
+
+export const mockFetchWithSuccessResponse = () => {
+  (global.fetch as jest.Mock).mockImplementationOnce((url) => {
+    // Ensure the URL matches the base URL of the API
+    ensureUrlMatchesBaseUrl(url);
+
+    return Promise.resolve({
+      ok: true,
+      json: jest.fn().mockResolvedValueOnce(DATA),
+    });
+  });
+};
 
 describe('PhoneBook', () => {
   it('fetches contacts successfully and renders in list', async () => {
     // mock the fetch function to return the data we want
-    jest.spyOn(global, 'fetch').mockResolvedValueOnce({
-      json: jest.fn().mockResolvedValueOnce(DATA),
-    });
+    mockFetchWithSuccessResponse();
     render(<PhoneBook/>);
 
     // Wait for the loader to disappear
@@ -196,11 +214,20 @@ See MDN's [docs](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Usin
 
 ```tsx title=network-requests/Phonebook.test.tsx
 ...
+
+export const mockFetchWithFailureResponse = () => {
+  (global.fetch as jest.Mock).mockImplementationOnce((url) => {
+    ensureUrlMatchesBaseUrl(url);
+
+    return Promise.resolve({
+      ok: false,
+    });
+  });
+};
+
 it('fails to fetch contacts and renders error message', async () => {
   // mock the fetch function to be not ok which will throw an error
-  (global.fetch as jest.Mock).mockResolvedValueOnce({
-    ok: false,
-  });
+  mockFetchWithFailureResponse();
   render(<PhoneBook/>);
 
   // Wait for the loader to disappear
@@ -236,6 +263,12 @@ afterAll(() => {
 Testing a component that makes network requests with `fetch` is straightforward. By mocking the fetch
 requests, we can control the data that is returned and test how our application behaves in different
 scenarios, such as when the request is successful or when it fails.
-There are many ways to mock `fetch` requests, and the method you choose will depend on your specific
+There are many ways to mock `fetch` requests, and the method you choose will always depend on your specific
 use case. In this guide, we showed you how to mock `fetch` requests using Jest's `jest.spyOn` function
 and how to guard against unwanted API requests throughout your test suite.
+
+## Further Reading and Alternatives
+
+Explore more powerful tools for mocking network requests in your React Native application:
+- [Fetch Mock](https://www.wheresrhys.co.uk/fetch-mock/): A popular library for mocking fetch calls with an extensive API, making it easy to simulate various scenarios.
+- [MSW (Mock Service Worker)](https://mswjs.io/): Great for spinning up a local test server that intercepts network requests at the network level, providing end-to-end testing capabilities.

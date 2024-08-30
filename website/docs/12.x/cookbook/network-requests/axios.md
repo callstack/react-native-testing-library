@@ -116,9 +116,11 @@ const styles =
 In our test we will make sure we mock the `axios.get` function to return the data we want.
 In this specific case, we will return a list of 3 users.
 
-::info
-By using `mockResolvedValueOnce` we gain more grip and prevent the mock from resolving the data
-multiple times, which might lead to unexpected behavior.
+:::info
+To prevent unexpected behavior, we ensure the following:
+- Prevent the mock from resolving data multiple times by using `mockResolvedValueOnce`.
+- Ensure the URL matches the base URL of the API by using a custom function `ensureUrlMatchesBaseUrl`.
+
 :::
 
 ```tsx title=network-requests/Phonebook.test.tsx
@@ -127,13 +129,25 @@ import React from 'react';
 import PhoneBook from '../PhoneBook';
 import {User} from '../types';
 import axios from 'axios';
+import {MismatchedUrlError} from './test-utils';
 
-jest.mock('axios');
+const ensureUrlMatchesBaseUrl = (url: string) => {
+  if (!url.includes('https://randomuser.me/api')) throw new MismatchedUrlError(url);
+};
+
+export const mockAxiosGetWithSuccessResponse = () => {
+  (axios.get as jest.Mock).mockImplementationOnce((url) => {
+    // Ensure the URL matches the base URL of the API
+    ensureUrlMatchesBaseUrl(url);
+
+    return Promise.resolve({ data: DATA });
+  });
+};
 
 describe('PhoneBook', () => {
   it('fetches favorites successfully and renders all users avatars', async () => {
     // Mock the axios.get function to return the data we want
-    (axios.get as jest.Mock).mockResolvedValueOnce({data: DATA});
+    mockAxiosGetWithSuccessResponse();
     render(<PhoneBook/>);
 
     // Wait for the loader to disappear
@@ -183,9 +197,18 @@ It is good to note that Axios throws auto. an error when the response status cod
 
 ```tsx title=network-requests/Phonebook.test.tsx
 ...
+
+export const mockAxiosGetWithFailureResponse = () => {
+  (axios.get as jest.Mock).mockImplementationOnce((url) => {
+    ensureUrlMatchesBaseUrl(url);
+
+    return Promise.reject({ message: 'Error fetching favorites' });
+  });
+};
+
 it('fails to fetch favorites and renders error message', async () => {
   // Mock the axios.get function to throw an error
-  (axios.get as jest.Mock).mockRejectedValueOnce({ message: 'Error fetching favorites' });
+  mockAxiosGetWithFailureResponse();
   render(<PhoneBook />);
 
   // Wait for the loader to disappear
@@ -225,3 +248,9 @@ scenarios, such as when the request is successful or when it fails.
 There are many ways to mock Axios requests, and the method you choose will depend on your specific
 use case. In this guide, we showed you how to mock Axios requests using Jest's `jest.mock` function
 and how to guard against unwanted API requests throughout your test suite.
+
+## Further Reading and Alternatives
+
+Explore more powerful tools for mocking network requests in your React Native application:
+- [Axios Mock Adapter](https://github.com/ctimmerm/axios-mock-adapter): A popular library for mocking Axios calls with an extensive API, making it easy to simulate various scenarios.
+- [MSW (Mock Service Worker)](https://mswjs.io/): Great for spinning up a local test server that intercepts network requests at the network level, providing end-to-end testing capabilities.
