@@ -477,14 +477,14 @@ describe('aria-checked prop', () => {
   });
 
   test('supports aria-checked="mixed" prop', () => {
-    render(<View accessible accessibilityRole="checkbox" aria-checked="mixed" />);
+    render(<View accessible role="checkbox" aria-checked="mixed" />);
     expect(screen.getByAccessibilityState({ checked: 'mixed' })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
   });
 
   test('supports default aria-checked prop', () => {
-    render(<View accessible accessibilityRole="checkbox" />);
+    render(<View accessible role="checkbox" />);
     expect(screen.getByAccessibilityState({})).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
