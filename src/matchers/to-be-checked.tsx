@@ -19,7 +19,7 @@ export function toBeChecked(this: jest.MatcherContext, element: ReactTestInstanc
   }
 
   return {
-    pass: getAccessibilityCheckedState(element) === true,
+    pass: computeAriaChecked(element) === true,
     message: () => {
       const is = this.isNot ? 'is' : 'is not';
       return [
@@ -37,6 +37,6 @@ function hasValidAccessibilityRole(element: ReactTestInstance) {
     return false;
   }
 
-  const role = getAccessibilityRole(element);
+  const role = getRole(element);
   return role === 'checkbox' || role === 'radio';
 }

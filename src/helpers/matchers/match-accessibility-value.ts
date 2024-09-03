@@ -1,5 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
-import { getAccessibilityValue } from '../accessibility';
+import { computeAriaValue } from '../accessibility';
 import { TextMatch } from '../../matches';
 import { matchStringProp } from './match-string-prop';
 
@@ -14,7 +14,7 @@ export function matchAccessibilityValue(
   node: ReactTestInstance,
   matcher: AccessibilityValueMatcher,
 ): boolean {
-  const value = getAccessibilityValue(node);
+  const value = computeAriaValue(node);
   return (
     (matcher.min === undefined || matcher.min === value?.min) &&
     (matcher.max === undefined || matcher.max === value?.max) &&

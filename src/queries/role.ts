@@ -3,7 +3,7 @@ import type { AccessibilityRole, Role } from 'react-native';
 import {
   accessibilityStateKeys,
   accessibilityValueKeys,
-  getAccessibilityRole,
+  getRole,
   isAccessibilityElement,
 } from '../helpers/accessibility';
 import { findAll } from '../helpers/find-all';
@@ -65,7 +65,7 @@ const queryAllByRole = (
       (node) =>
         // run the cheapest checks first, and early exit to avoid unneeded computations
         isAccessibilityElement(node) &&
-        matchStringProp(getAccessibilityRole(node), role) &&
+        matchStringProp(getRole(node), role) &&
         matchAccessibleStateIfNeeded(node, options) &&
         matchAccessibilityValueIfNeeded(node, options?.value) &&
         matchAccessibleNameIfNeeded(node, options?.name),
