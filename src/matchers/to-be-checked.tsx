@@ -1,10 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import {
-  getAccessibilityCheckedState,
-  getAccessibilityRole,
-  isAccessibilityElement,
-} from '../helpers/accessibility';
+import { computeAriaChecked, getRole, isAccessibilityElement } from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
 import { checkHostElement, formatElement } from './utils';
 

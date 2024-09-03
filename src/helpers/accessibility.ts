@@ -7,12 +7,7 @@ import {
 } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings, getUnsafeRootElement } from './component-tree';
-import {
-  getHostComponentNames,
-  isHostSwitch,
-  isHostText,
-  isHostTextInput,
-} from './host-component-names';
+import { getHostComponentNames, isHostText, isHostTextInput } from './host-component-names';
 import { getTextContent } from './text-content';
 import { isTextInputEditable } from './text-input';
 
@@ -159,10 +154,6 @@ export function computeAriaBusy({ props }: ReactTestInstance): boolean {
 
 // See: https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State#checked-state
 export function computeAriaChecked(element: ReactTestInstance): AccessibilityState['checked'] {
-  if (isHostSwitch(element)) {
-    return element.props.value;
-  }
-
   const role = getRole(element);
   if (role !== 'checkbox' && role !== 'radio') {
     return undefined;
