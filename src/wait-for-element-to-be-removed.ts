@@ -29,7 +29,7 @@ export default async function waitForElementToBeRemoved<T>(
     let result;
     try {
       result = expectation();
-    } catch (error) {
+    } catch {
       return initialElements;
     }
 
