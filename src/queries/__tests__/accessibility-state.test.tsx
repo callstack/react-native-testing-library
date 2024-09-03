@@ -88,7 +88,7 @@ test('getAllByA11yState, queryAllByA11yState, findAllByA11yState', async () => {
 
 describe('checked state matching', () => {
   it('handles true', () => {
-    render(<View accessibilityState={{ checked: true }} />);
+    render(<View role="checkbox" accessibilityState={{ checked: true }} />);
 
     expect(screen.getByA11yState({ checked: true })).toBeTruthy();
     expect(screen.queryByA11yState({ checked: 'mixed' })).toBeFalsy();
@@ -96,7 +96,7 @@ describe('checked state matching', () => {
   });
 
   it('handles mixed', () => {
-    render(<View accessibilityState={{ checked: 'mixed' }} />);
+    render(<View role="checkbox" accessibilityState={{ checked: 'mixed' }} />);
 
     expect(screen.getByA11yState({ checked: 'mixed' })).toBeTruthy();
     expect(screen.queryByA11yState({ checked: true })).toBeFalsy();
@@ -104,15 +104,15 @@ describe('checked state matching', () => {
   });
 
   it('handles false', () => {
-    render(<View accessibilityState={{ checked: false }} />);
+    render(<View role="checkbox" accessibilityState={{ checked: false }} />);
 
     expect(screen.getByA11yState({ checked: false })).toBeTruthy();
     expect(screen.queryByA11yState({ checked: true })).toBeFalsy();
     expect(screen.queryByA11yState({ checked: 'mixed' })).toBeFalsy();
   });
 
-  it('handles  default', () => {
-    render(<View accessibilityState={{}} />);
+  it('handles default', () => {
+    render(<View role="checkbox" accessibilityState={{}} />);
 
     expect(screen.queryByA11yState({ checked: false })).toBeFalsy();
     expect(screen.queryByA11yState({ checked: true })).toBeFalsy();
@@ -135,7 +135,7 @@ describe('expanded state matching', () => {
     expect(screen.queryByA11yState({ expanded: true })).toBeFalsy();
   });
 
-  it('handles  default', () => {
+  it('handles default', () => {
     render(<View accessibilityState={{}} />);
 
     expect(screen.queryByA11yState({ expanded: false })).toBeFalsy();
@@ -158,7 +158,7 @@ describe('disabled state matching', () => {
     expect(screen.queryByA11yState({ disabled: true })).toBeFalsy();
   });
 
-  it('handles  default', () => {
+  it('handles default', () => {
     render(<View accessibilityState={{}} />);
 
     expect(screen.getByA11yState({ disabled: false })).toBeTruthy();
@@ -181,7 +181,7 @@ describe('busy state matching', () => {
     expect(screen.queryByA11yState({ busy: true })).toBeFalsy();
   });
 
-  it('handles  default', () => {
+  it('handles default', () => {
     render(<View accessibilityState={{}} />);
 
     expect(screen.getByA11yState({ busy: false })).toBeTruthy();
@@ -204,7 +204,7 @@ describe('selected state matching', () => {
     expect(screen.queryByA11yState({ selected: true })).toBeFalsy();
   });
 
-  it('handles  default', () => {
+  it('handles default', () => {
     render(<View accessibilityState={{}} />);
 
     expect(screen.getByA11yState({ selected: false })).toBeTruthy();
@@ -463,28 +463,28 @@ describe('aria-selected prop', () => {
 
 describe('aria-checked prop', () => {
   test('supports aria-checked={true} prop', () => {
-    render(<View accessible accessibilityRole="button" aria-checked={true} />);
+    render(<View accessible role="checkbox" aria-checked={true} />);
     expect(screen.getByAccessibilityState({ checked: true })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: 'mixed' })).toBeNull();
   });
 
   test('supports aria-checked={false} prop', () => {
-    render(<View accessible accessibilityRole="button" aria-checked={false} />);
+    render(<View accessible role="checkbox" aria-checked={false} />);
     expect(screen.getByAccessibilityState({ checked: false })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: 'mixed' })).toBeNull();
   });
 
-  test('supports aria-checked="mixed prop', () => {
-    render(<View accessible accessibilityRole="button" aria-checked="mixed" />);
+  test('supports aria-checked="mixed" prop', () => {
+    render(<View accessible accessibilityRole="checkbox" aria-checked="mixed" />);
     expect(screen.getByAccessibilityState({ checked: 'mixed' })).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();
   });
 
-  test('supports default aria-selected prop', () => {
-    render(<View accessible accessibilityRole="button" />);
+  test('supports default aria-checked prop', () => {
+    render(<View accessible accessibilityRole="checkbox" />);
     expect(screen.getByAccessibilityState({})).toBeTruthy();
     expect(screen.queryByAccessibilityState({ checked: true })).toBeNull();
     expect(screen.queryByAccessibilityState({ checked: false })).toBeNull();

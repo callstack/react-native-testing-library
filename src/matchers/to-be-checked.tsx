@@ -1,10 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import {
-  getAccessibilityCheckedState,
-  getAccessibilityRole,
-  isAccessibilityElement,
-} from '../helpers/accessibility';
+import { computeAriaChecked, getRole, isAccessibilityElement } from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
 import { checkHostElement, formatElement } from './utils';
 
@@ -19,7 +15,7 @@ export function toBeChecked(this: jest.MatcherContext, element: ReactTestInstanc
   }
 
   return {
-    pass: getAccessibilityCheckedState(element) === true,
+    pass: computeAriaChecked(element) === true,
     message: () => {
       const is = this.isNot ? 'is' : 'is not';
       return [
@@ -37,6 +33,6 @@ function hasValidAccessibilityRole(element: ReactTestInstance) {
     return false;
   }
 
-  const role = getAccessibilityRole(element);
+  const role = getRole(element);
   return role === 'checkbox' || role === 'radio';
 }

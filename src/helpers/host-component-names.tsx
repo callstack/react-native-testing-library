@@ -70,7 +70,7 @@ function getByTestId(instance: ReactTestInstance, testID: string) {
 }
 
 /**
- * Checks if the given element is a host Text.
+ * Checks if the given element is a host Text element.
  * @param element The element to check.
  */
 export function isHostText(element?: ReactTestInstance | null): element is HostTestInstance {
@@ -78,7 +78,7 @@ export function isHostText(element?: ReactTestInstance | null): element is HostT
 }
 
 /**
- * Checks if the given element is a host TextInput.
+ * Checks if the given element is a host TextInput element.
  * @param element The element to check.
  */
 export function isHostTextInput(element?: ReactTestInstance | null): element is HostTestInstance {
@@ -86,7 +86,15 @@ export function isHostTextInput(element?: ReactTestInstance | null): element is 
 }
 
 /**
- * Checks if the given element is a host ScrollView.
+ * Checks if the given element is a host Switch element.
+ * @param element The element to check.
+ */
+export function isHostSwitch(element?: ReactTestInstance | null): element is HostTestInstance {
+  return element?.type === getHostComponentNames().switch;
+}
+
+/**
+ * Checks if the given element is a host ScrollView element.
  * @param element The element to check.
  */
 export function isHostScrollView(element?: ReactTestInstance | null): element is HostTestInstance {
@@ -94,7 +102,7 @@ export function isHostScrollView(element?: ReactTestInstance | null): element is
 }
 
 /**
- * Checks if the given element is a host Modal.
+ * Checks if the given element is a host Modal element.
  * @param element The element to check.
  */
 export function isHostModal(element?: ReactTestInstance | null): element is HostTestInstance {
