@@ -79,7 +79,7 @@ test('toBeCheck() with Switch', () => {
   `);
 });
 
-test('toBeCheck() with checkbox role', () => {
+test('toBeCheck() with "checkbox" role', () => {
   renderViewsWithRole('checkbox');
 
   const checked = screen.getByTestId('checkbox-checked');
@@ -149,7 +149,7 @@ test('toBeCheck() with checkbox role', () => {
   `);
 });
 
-test('toBeCheck() with radio role', () => {
+test('toBeCheck() with "radio" role', () => {
   renderViewsWithRole('radio');
 
   const checked = screen.getByTestId('radio-checked');
@@ -202,6 +202,59 @@ test('toBeCheck() with radio role', () => {
   `);
 });
 
+test('toBeCheck() with "switch" role', () => {
+  renderViewsWithRole('switch');
+
+  const checked = screen.getByTestId('switch-checked');
+  const unchecked = screen.getByTestId('switch-unchecked');
+  const defaultView = screen.getByTestId('switch-default');
+
+  expect(checked).toBeChecked();
+  expect(unchecked).not.toBeChecked();
+  expect(defaultView).not.toBeChecked();
+
+  expect(() => expect(checked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).not.toBeChecked()
+
+    Received element is checked:
+      <View
+        accessibilityRole="switch"
+        accessibilityState={
+          {
+            "checked": true,
+          }
+        }
+        accessible={true}
+        testID="switch-checked"
+      />"
+  `);
+  expect(() => expect(unchecked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeChecked()
+
+    Received element is not checked:
+      <View
+        accessibilityRole="switch"
+        accessibilityState={
+          {
+            "checked": false,
+          }
+        }
+        accessible={true}
+        testID="switch-unchecked"
+      />"
+  `);
+  expect(() => expect(defaultView).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeChecked()
+
+    Received element is not checked:
+      <View
+        accessibilityRole="switch"
+        accessible={true}
+        testID="switch-default"
+      />"
+  `);
+});
+
 test('throws error for invalid role', () => {
   renderViewsWithRole('adjustable');
 
@@ -209,10 +262,10 @@ test('throws error for invalid role', () => {
   const unchecked = screen.getByTestId('adjustable-unchecked');
 
   expect(() => expect(checked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on "Switch" elements or accessibility elements with "checkbox" or "radio" role."`,
+    `"toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role."`,
   );
   expect(() => expect(unchecked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on "Switch" elements or accessibility elements with "checkbox" or "radio" role."`,
+    `"toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role."`,
   );
 });
 
@@ -221,6 +274,6 @@ test('throws error for non-accessibility element', () => {
 
   const view = screen.getByTestId('test');
   expect(() => expect(view).toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on "Switch" elements or accessibility elements with "checkbox" or "radio" role."`,
+    `"toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role."`,
   );
 });

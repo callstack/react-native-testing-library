@@ -159,16 +159,17 @@ export function computeAriaBusy({ props }: ReactTestInstance): boolean {
 
 // See: https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State#checked-state
 export function computeAriaChecked(element: ReactTestInstance): AccessibilityState['checked'] {
+  const { props } = element;
+
   if (isHostSwitch(element)) {
-    return element.props.value;
+    return props.value;
   }
 
   const role = getRole(element);
-  if (role !== 'checkbox' && role !== 'radio') {
+  if (!rolesSupportingCheckedState[role]) {
     return undefined;
   }
 
-  const props = element.props;
   return props['aria-checked'] ?? props.accessibilityState?.checked;
 }
 
@@ -226,3 +227,11 @@ export function computeAccessibleName(element: ReactTestInstance): string | unde
 
   return getTextContent(element);
 }
+
+type RoleSupportMap = Partial<Record<Role | AccessibilityRole, true>>;
+
+export const rolesSupportingCheckedState: RoleSupportMap = {
+  checkbox: true,
+  radio: true,
+  switch: true,
+};
