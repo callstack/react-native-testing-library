@@ -91,7 +91,7 @@ test('waits for element with custom interval', async () => {
 
   try {
     await waitFor(() => mockFn(), { timeout: 400, interval: 200 });
-  } catch (e) {
+  } catch {
     // suppress
   }
 
@@ -160,7 +160,7 @@ test.each([false, true])(
 
     try {
       await waitFor(() => mockFn(), { timeout: 400, interval: 200 });
-    } catch (error) {
+    } catch {
       // suppress
     }
 
@@ -185,7 +185,7 @@ test.each([false, true])(
         interval: 200,
         onTimeout: mockHandleFn,
       });
-    } catch (error) {
+    } catch {
       // suppress
     }
 
@@ -248,7 +248,7 @@ test.each([false, true])(
 
     try {
       await waitFor(() => mockFn(), { timeout: 400, interval: 200 });
-    } catch (error) {
+    } catch {
       // suppress
     }
 
