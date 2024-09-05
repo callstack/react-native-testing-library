@@ -1,5 +1,6 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { isHostTextInput } from '../../helpers/host-component-names';
+import { nativeState } from '../../native-state';
 import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isTextInputEditable } from '../../helpers/text-input';
@@ -55,7 +56,6 @@ export async function type(
       config: this.config,
       key,
       text: currentText,
-      previousText,
       isAccepted,
     });
   }
@@ -76,13 +76,12 @@ type EmitTypingEventsContext = {
   config: UserEventConfig;
   key: string;
   text: string;
-  previousText: string;
   isAccepted?: boolean;
 };
 
 export async function emitTypingEvents(
   element: ReactTestInstance,
-  { config, key, text, previousText, isAccepted }: EmitTypingEventsContext,
+  { config, key, text, isAccepted }: EmitTypingEventsContext,
 ) {
   const isMultiline = element.props.multiline === true;
 
@@ -96,12 +95,7 @@ export async function emitTypingEvents(
     return;
   }
 
-  // According to the docs only multiline TextInput emits textInput event
-  // @see: https://github.com/facebook/react-native/blob/42a2898617da1d7a98ef574a5b9e500681c8f738/packages/react-native/Libraries/Components/TextInput/TextInput.d.ts#L754
-  if (isMultiline) {
-    dispatchEvent(element, 'textInput', EventBuilder.TextInput.textInput(text, previousText));
-  }
-
+  nativeState?.elementValues.set(element, text);
   dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
   dispatchEvent(element, 'changeText', text);
 

@@ -1,6 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { getAccessibleName } from '../helpers/accessibility';
+import { computeAccessibleName } from '../helpers/accessibility';
 import { TextMatch, TextMatchOptions, matches } from '../matches';
 import { checkHostElement, formatMessage } from './utils';
 
@@ -12,7 +12,7 @@ export function toHaveAccessibleName(
 ) {
   checkHostElement(element, toHaveAccessibleName, this);
 
-  const receivedName = getAccessibleName(element);
+  const receivedName = computeAccessibleName(element);
   const missingExpectedValue = arguments.length === 1;
 
   let pass = false;

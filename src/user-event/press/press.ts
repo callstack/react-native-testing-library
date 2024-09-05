@@ -6,7 +6,7 @@ import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
 import { EventBuilder } from '../event-builder';
 import { UserEventConfig, UserEventInstance } from '../setup';
-import { dispatchEvent, wait, warnAboutRealTimersIfNeeded } from '../utils';
+import { dispatchEvent, wait } from '../utils';
 import { DEFAULT_MIN_PRESS_DURATION } from './constants';
 
 export interface PressOptions {
@@ -69,8 +69,6 @@ const emitPressablePressEvents = async (
   element: ReactTestInstance,
   options: BasePressOptions,
 ) => {
-  warnAboutRealTimersIfNeeded();
-
   await wait(config);
 
   dispatchEvent(element, 'responderGrant', EventBuilder.Common.responderGrant());

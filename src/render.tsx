@@ -11,6 +11,7 @@ import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
+import { initNativeState } from './native-state';
 
 export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
@@ -126,6 +127,8 @@ function buildRenderResult(
   });
 
   setRenderResult(result);
+  initNativeState();
+
   return result;
 }
 

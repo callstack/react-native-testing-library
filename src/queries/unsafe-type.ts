@@ -41,7 +41,7 @@ const UNSAFE_queryAllByType =
   (type: React.ComponentType<any>) => {
     try {
       return UNSAFE_getAllByType(instance)(type);
-    } catch (error) {
+    } catch {
       return [];
     }
   };

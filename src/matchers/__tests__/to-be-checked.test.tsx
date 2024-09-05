@@ -5,7 +5,7 @@ import { screen } from '../../screen';
 import '../extend-expect';
 
 function renderViewsWithRole(role: AccessibilityRole) {
-  return render(
+  render(
     <>
       <View
         testID={`${role}-checked`}

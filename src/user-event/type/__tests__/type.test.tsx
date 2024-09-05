@@ -3,6 +3,7 @@ import { TextInput, TextInputProps, View } from 'react-native';
 import { createEventLogger, getEventsNames, lastEventPayload } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
+import '../../../matchers/extend-expect';
 
 beforeEach(() => {
   jest.useRealTimers();
@@ -21,8 +22,6 @@ function renderTextInputWithToolkit(props: TextInputProps = {}) {
       onChange={logEvent('change')}
       onChangeText={logEvent('changeText')}
       onKeyPress={logEvent('keyPress')}
-      /** @ts-expect-error property typedef removed in RN 0.75 */
-      onTextInput={logEvent('textInput')}
       onSelectionChange={logEvent('selectionChange')}
       onSubmitEditing={logEvent('submitEditing')}
       onEndEditing={logEvent('endEditing')}
@@ -173,13 +172,11 @@ describe('type()', () => {
       'focus',
       'pressOut',
       'keyPress',
-      'textInput',
       'change',
       'changeText',
       'selectionChange',
       'contentSizeChange',
       'keyPress',
-      'textInput',
       'change',
       'changeText',
       'selectionChange',
@@ -375,5 +372,16 @@ describe('type()', () => {
         text: 'ab',
       },
     });
+  });
+
+  it('sets native state value for unmanaged text inputs', async () => {
+    render(<TextInput testID="input" />);
+
+    const user = userEvent.setup();
+    const input = screen.getByTestId('input');
+    expect(input).toHaveDisplayValue('');
+
+    await user.type(input, 'abc');
+    expect(input).toHaveDisplayValue('abc');
   });
 });

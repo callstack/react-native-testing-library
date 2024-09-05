@@ -1,14 +1,13 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { isHostTextInput } from '../helpers/host-component-names';
-import { isTextInputEditable } from '../helpers/text-input';
+import { computeAriaDisabled } from '../helpers/accessibility';
 import { getHostParent } from '../helpers/component-tree';
 import { checkHostElement, formatElement } from './utils';
 
 export function toBeDisabled(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeDisabled, this);
 
-  const isDisabled = isElementDisabled(element) || isAncestorDisabled(element);
+  const isDisabled = computeAriaDisabled(element) || isAncestorDisabled(element);
 
   return {
     pass: isDisabled,
@@ -27,7 +26,7 @@ export function toBeDisabled(this: jest.MatcherContext, element: ReactTestInstan
 export function toBeEnabled(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeEnabled, this);
 
-  const isEnabled = !isElementDisabled(element) && !isAncestorDisabled(element);
+  const isEnabled = !computeAriaDisabled(element) && !isAncestorDisabled(element);
 
   return {
     pass: isEnabled,
@@ -43,20 +42,11 @@ export function toBeEnabled(this: jest.MatcherContext, element: ReactTestInstanc
   };
 }
 
-function isElementDisabled(element: ReactTestInstance) {
-  if (isHostTextInput(element) && !isTextInputEditable(element)) {
-    return true;
-  }
-
-  const { accessibilityState, 'aria-disabled': ariaDisabled } = element.props;
-  return ariaDisabled ?? accessibilityState?.disabled ?? false;
-}
-
 function isAncestorDisabled(element: ReactTestInstance): boolean {
   const parent = getHostParent(element);
   if (parent == null) {
     return false;
   }
 
-  return isElementDisabled(parent) || isAncestorDisabled(parent);
+  return computeAriaDisabled(parent) || isAncestorDisabled(parent);
 }

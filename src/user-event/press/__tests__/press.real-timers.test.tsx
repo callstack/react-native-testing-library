@@ -10,13 +10,11 @@ import {
 import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { render, screen } from '../../..';
 import { userEvent } from '../..';
-import * as WarnAboutRealTimers from '../../utils/warn-about-real-timers';
 
 describe('userEvent.press with real timers', () => {
   beforeEach(() => {
     jest.useRealTimers();
     jest.restoreAllMocks();
-    jest.spyOn(WarnAboutRealTimers, 'warnAboutRealTimersIfNeeded').mockImplementation();
   });
 
   test('calls onPressIn, onPress and onPressOut prop of touchable', async () => {
@@ -300,19 +298,4 @@ describe('userEvent.press with real timers', () => {
 
     expect(mockOnPress).toHaveBeenCalled();
   });
-});
-
-test('warns about using real timers with userEvent', async () => {
-  jest.restoreAllMocks();
-  const mockConsoleWarn = jest.spyOn(console, 'warn').mockImplementation();
-
-  render(<Pressable testID="pressable" />);
-
-  await userEvent.press(screen.getByTestId('pressable'));
-
-  expect(mockConsoleWarn.mock.calls[0][0]).toMatchInlineSnapshot(`
-    "It is recommended to use userEvent with fake timers
-    Some events involve duration so your tests may take a long time to run.
-    For instance calling userEvent.longPress with real timers will take 500 ms."
-  `);
 });
