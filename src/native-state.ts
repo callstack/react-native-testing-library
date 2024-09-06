@@ -11,15 +11,7 @@ export type NativeState = {
   contentOffsetForElement: WeakMap<ReactTestInstance, Point>;
 };
 
-export let nativeState: NativeState | null = null;
-
-export function initNativeState(): void {
-  nativeState = {
-    valueForElement: new WeakMap(),
-    contentOffsetForElement: new WeakMap(),
-  };
-}
-
-export function clearNativeState(): void {
-  nativeState = null;
-}
+export let nativeState: NativeState = {
+  valueForElement: new WeakMap(),
+  contentOffsetForElement: new WeakMap(),
+};

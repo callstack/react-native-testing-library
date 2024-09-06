@@ -103,7 +103,7 @@ describe('scrollTo()', () => {
     ]);
   });
 
-  test('remembers previous scroll position', async () => {
+  test('remembers previous scroll offset', async () => {
     const { events } = renderScrollViewWithToolkit();
     const user = userEvent.setup();
 

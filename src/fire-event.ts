@@ -154,6 +154,6 @@ function setNativeStateIfNeeded(element: ReactTestInstance, eventName: string, v
     isHostTextInput(element) &&
     isTextInputEditable(element)
   ) {
-    nativeState?.valueForElement.set(element, value);
+    nativeState.valueForElement.set(element, value);
   }
 }
