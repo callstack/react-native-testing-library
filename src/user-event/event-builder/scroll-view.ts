@@ -1,12 +1,5 @@
+import { ContentOffset } from '../../types';
 import { baseSyntheticEvent } from './base';
-
-/**
- * Scroll position of a scrollable element.
- */
-export interface ContentOffset {
-  y: number;
-  x: number;
-}
 
 /**
  * Other options for constructing a scroll event.

@@ -5,10 +5,10 @@ import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';
-import { ContentOffset } from '../event-builder/scroll-view';
+import { nativeState } from '../../native-state';
+import { ContentOffset } from '../../types';
 import { dispatchEvent, wait } from '../utils';
 import { createScrollSteps, inertialInterpolator, linearInterpolator } from './utils';
-import { getElementScrollOffset, setElementScrollOffset } from './state';
 
 interface CommonScrollToOptions {
   contentSize?: {
@@ -62,7 +62,7 @@ export async function scrollTo(
     options.contentSize?.height ?? 0,
   );
 
-  const initialPosition = getElementScrollOffset(element);
+  const initialPosition = nativeState?.scrollPositions.get(element) ?? { x: 0, y: 0 };
   const dragSteps = createScrollSteps(
     { y: options.y, x: options.x },
     initialPosition,
@@ -79,7 +79,7 @@ export async function scrollTo(
   await emitMomentumScrollEvents(this.config, element, momentumSteps, options);
 
   const finalPosition = momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
-  setElementScrollOffset(element, finalPosition);
+  nativeState?.scrollPositions.set(element, finalPosition);
 }
 
 async function emitDragScrollEvents(

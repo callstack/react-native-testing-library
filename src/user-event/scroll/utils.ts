@@ -1,4 +1,4 @@
-import { ContentOffset } from '../event-builder/scroll-view';
+import { ContentOffset } from '../../types';
 
 const DEFAULT_STEPS_COUNT = 5;
 
