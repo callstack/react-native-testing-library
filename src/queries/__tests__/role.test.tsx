@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  Switch,
 } from 'react-native';
 import { render, screen } from '../..';
 
@@ -426,7 +427,7 @@ describe('supports accessibility states', () => {
       expect(screen.queryByRole('checkbox', { checked: 'mixed' })).toBe(null);
     });
 
-    it('returns `mixed` checkboxes', () => {
+    test('returns `mixed` checkboxes', () => {
       render(
         <TouchableOpacity accessibilityRole="checkbox" accessibilityState={{ checked: 'mixed' }} />,
       );
@@ -506,6 +507,14 @@ describe('supports accessibility states', () => {
       );
 
       expect(screen.queryByRole('checkbox', { checked: false })).toBe(null);
+    });
+
+    test('supports "Switch" component', () => {
+      render(<Switch value={true} />);
+
+      expect(screen.getByRole('switch', { checked: true })).toBeTruthy();
+      expect(screen.queryByRole('switch', { checked: false })).toBe(null);
+      expect(screen.queryByRole('switch', { checked: 'mixed' })).toBe(null);
     });
 
     test('supports aria-checked={true} prop', () => {
