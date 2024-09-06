@@ -1,4 +1,4 @@
-import { ContentSize } from '../utils/content-size';
+import { Size } from '../../types';
 import { TextRange } from '../utils/text-range';
 import { baseSyntheticEvent } from './base';
 
@@ -68,7 +68,7 @@ export const TextInputEventBuilder = {
    * - iOS: `{"contentSize": {"height": 21.666666666666668, "width": 11.666666666666666}, "target": 75}`
    * - Android: `{"contentSize": {"height": 61.45454406738281, "width": 352.7272644042969}, "target": 53}`
    */
-  contentSizeChange: ({ width, height }: ContentSize) => {
+  contentSizeChange: ({ width, height }: Size) => {
     return {
       ...baseSyntheticEvent(),
       nativeEvent: { contentSize: { width, height }, target: 0 },

@@ -1,4 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
+import { Point } from './types';
 
 /**
  * Simulated native state for unmanaged controls.
@@ -6,14 +7,16 @@ import { ReactTestInstance } from 'react-test-renderer';
  * Values from `value` props (managed controls) should take precedence over these values.
  */
 export type NativeState = {
-  elementValues: WeakMap<ReactTestInstance, string>;
+  valueForElement: WeakMap<ReactTestInstance, string>;
+  contentOffsetForElement: WeakMap<ReactTestInstance, Point>;
 };
 
 export let nativeState: NativeState | null = null;
 
 export function initNativeState(): void {
   nativeState = {
-    elementValues: new WeakMap(),
+    valueForElement: new WeakMap(),
+    contentOffsetForElement: new WeakMap(),
   };
 }
 

@@ -33,7 +33,7 @@ export async function paste(
   dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(rangeToClear));
 
   // 3. Paste the text
-  nativeState?.elementValues.set(element, text);
+  nativeState?.valueForElement.set(element, text);
   dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
   dispatchEvent(element, 'changeText', text);
 
