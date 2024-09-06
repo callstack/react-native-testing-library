@@ -6,19 +6,13 @@ import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';
 import { nativeState } from '../../native-state';
-import { ContentOffset } from '../../types';
+import { Point, Size } from '../../types';
 import { dispatchEvent, wait } from '../utils';
 import { createScrollSteps, inertialInterpolator, linearInterpolator } from './utils';
 
 interface CommonScrollToOptions {
-  contentSize?: {
-    height: number;
-    width: number;
-  };
-  layoutMeasurement?: {
-    height: number;
-    width: number;
-  };
+  contentSize?: Size;
+  layoutMeasurement?: Size;
 }
 
 export interface VerticalScrollToOptions extends CommonScrollToOptions {
@@ -85,7 +79,7 @@ export async function scrollTo(
 async function emitDragScrollEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
-  scrollSteps: ContentOffset[],
+  scrollSteps: Point[],
   scrollOptions: ScrollToOptions,
 ) {
   if (scrollSteps.length === 0) {
@@ -115,7 +109,7 @@ async function emitDragScrollEvents(
 async function emitMomentumScrollEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
-  scrollSteps: ContentOffset[],
+  scrollSteps: Point[],
   scrollOptions: ScrollToOptions,
 ) {
   if (scrollSteps.length === 0) {

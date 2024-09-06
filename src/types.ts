@@ -1,9 +1,17 @@
 /**
- * Scroll position of a scrollable element.
+ * Location of an element.
  */
-export interface ContentOffset {
+export interface Point {
   y: number;
   x: number;
+}
+
+/**
+ * Size of an element.
+ */
+export interface Size {
+  height: number;
+  width: number;
 }
 
 // TS autocomplete trick

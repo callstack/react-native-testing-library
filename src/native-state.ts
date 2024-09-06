@@ -1,5 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
-import { ContentOffset } from './types';
+import { Point } from './types';
 
 /**
  * Simulated native state for unmanaged controls.
@@ -8,7 +8,7 @@ import { ContentOffset } from './types';
  */
 export type NativeState = {
   elementValues: WeakMap<ReactTestInstance, string>;
-  scrollPositions: WeakMap<ReactTestInstance, ContentOffset>;
+  scrollPositions: WeakMap<ReactTestInstance, Point>;
 };
 
 export let nativeState: NativeState | null = null;
