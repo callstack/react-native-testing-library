@@ -56,7 +56,7 @@ export async function scrollTo(
     options.contentSize?.height ?? 0,
   );
 
-  const initialPosition = nativeState?.scrollPositions.get(element) ?? { x: 0, y: 0 };
+  const initialPosition = nativeState?.contentOffsetForElement.get(element) ?? { x: 0, y: 0 };
   const dragSteps = createScrollSteps(
     { y: options.y, x: options.x },
     initialPosition,
@@ -73,7 +73,7 @@ export async function scrollTo(
   await emitMomentumScrollEvents(this.config, element, momentumSteps, options);
 
   const finalPosition = momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
-  nativeState?.scrollPositions.set(element, finalPosition);
+  nativeState?.contentOffsetForElement.set(element, finalPosition);
 }
 
 async function emitDragScrollEvents(
