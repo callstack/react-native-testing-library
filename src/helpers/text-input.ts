@@ -17,7 +17,7 @@ export function getTextInputValue(element: ReactTestInstance) {
 
   return (
     element.props.value ??
-    nativeState?.valueForElement.get(element) ??
+    nativeState.valueForElement.get(element) ??
     element.props.defaultValue ??
     ''
   );

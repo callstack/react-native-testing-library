@@ -95,7 +95,7 @@ export async function emitTypingEvents(
     return;
   }
 
-  nativeState?.valueForElement.set(element, text);
+  nativeState.valueForElement.set(element, text);
   dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
   dispatchEvent(element, 'changeText', text);
 

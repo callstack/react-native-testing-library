@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ScrollView, ScrollViewProps, View } from 'react-native';
 import { EventEntry, createEventLogger } from '../../../test-utils';
-import { render, screen } from '../../..';
+import { fireEvent, render, screen } from '../../..';
 import { userEvent } from '../..';
 
 function mapEventsToShortForm(events: EventEntry[]) {
@@ -103,7 +103,7 @@ describe('scrollTo()', () => {
     ]);
   });
 
-  test('remembers previous scroll position', async () => {
+  test('remembers previous scroll offset', async () => {
     const { events } = renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
@@ -115,6 +115,24 @@ describe('scrollTo()', () => {
       ['scroll', 50, 0],
       ['scroll', 75, 0],
       ['scrollEndDrag', 100, 0],
+      ['scrollBeginDrag', 100, 0],
+      ['scroll', 125, 0],
+      ['scroll', 150, 0],
+      ['scroll', 175, 0],
+      ['scrollEndDrag', 200, 0],
+    ]);
+  });
+
+  test('remembers previous scroll offset from "fireEvent.scroll"', async () => {
+    const { events } = renderScrollViewWithToolkit();
+    const user = userEvent.setup();
+
+    fireEvent.scroll(screen.getByTestId('scrollView'), {
+      nativeEvent: { contentOffset: { y: 100 } },
+    });
+    await user.scrollTo(screen.getByTestId('scrollView'), { y: 200 });
+    expect(mapEventsToShortForm(events)).toEqual([
+      ['scroll', 100, undefined],
       ['scrollBeginDrag', 100, 0],
       ['scroll', 125, 0],
       ['scroll', 150, 0],

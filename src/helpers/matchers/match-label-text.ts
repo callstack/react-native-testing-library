@@ -18,10 +18,10 @@ export function matchLabelText(
 
 function matchAccessibilityLabel(
   element: ReactTestInstance,
-  extpectedLabel: TextMatch,
+  expectedLabel: TextMatch,
   options: TextMatchOptions,
 ) {
-  return matches(extpectedLabel, computeAriaLabel(element), options.normalizer, options.exact);
+  return matches(expectedLabel, computeAriaLabel(element), options.normalizer, options.exact);
 }
 
 function matchAccessibilityLabelledBy(
