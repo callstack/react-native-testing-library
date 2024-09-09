@@ -8,10 +8,10 @@ import {
 } from 'react-native';
 import act from './act';
 import { isHostElement } from './helpers/component-tree';
-import { isHostTextInput } from './helpers/host-component-names';
+import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isTextInputEditable } from './helpers/text-input';
-import { StringWithAutocomplete } from './types';
+import { Point, StringWithAutocomplete } from './types';
 import { nativeState } from './native-state';
 
 type EventHandler = (...args: unknown[]) => unknown;
@@ -147,6 +147,14 @@ fireEvent.scroll = (element: ReactTestInstance, ...data: unknown[]) =>
 
 export default fireEvent;
 
+const scrollEventNames = new Set([
+  'scroll',
+  'scrollBeginDrag',
+  'scrollEndDrag',
+  'momentumScrollBegin',
+  'momentumScrollEnd',
+]);
+
 function setNativeStateIfNeeded(element: ReactTestInstance, eventName: string, value: unknown) {
   if (
     eventName === 'changeText' &&
@@ -156,4 +164,30 @@ function setNativeStateIfNeeded(element: ReactTestInstance, eventName: string, v
   ) {
     nativeState.valueForElement.set(element, value);
   }
+
+  if (scrollEventNames.has(eventName) && isHostScrollView(element)) {
+    const contentOffset = tryGetContentOffset(value);
+    if (contentOffset) {
+      nativeState.contentOffsetForElement.set(element, contentOffset);
+    }
+  }
+}
+
+function tryGetContentOffset(value: unknown): Point | null {
+  try {
+    // @ts-expect-error: try to extract contentOffset from the event value
+    const contentOffset = value?.nativeEvent?.contentOffset;
+    const x = contentOffset?.x;
+    const y = contentOffset?.y;
+    if (typeof x === 'number' || typeof y === 'number') {
+      return {
+        x: Number.isFinite(x) ? x : 0,
+        y: Number.isFinite(y) ? y : 0,
+      };
+    }
+  } catch {
+    // Do nothing
+  }
+
+  return null;
 }
