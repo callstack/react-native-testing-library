@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { renderHook } from '../pure';
 
-test('gives comitted result', () => {
+test('gives committed result', () => {
   const { result } = renderHook(() => {
     const [state, setState] = React.useState(1);
 
@@ -22,13 +22,11 @@ test('allows rerendering', () => {
       const [left, setLeft] = React.useState('left');
       const [right, setRight] = React.useState('right');
 
-      // eslint-disable-next-line jest/no-if
       switch (props.branch) {
         case 'left':
           return [left, setLeft];
         case 'right':
           return [right, setRight];
-
         default:
           throw new Error('No Props passed. This is a bug in the implementation');
       }
@@ -64,7 +62,7 @@ const useMyHook = (param: number | undefined) => {
   return param;
 };
 
-test('props type is infered correctly when initial props is defined', () => {
+test('props type is inferred correctly when initial props is defined', () => {
   const { result, rerender } = renderHook((num: number | undefined) => useMyHook(num), {
     initialProps: 5,
   });

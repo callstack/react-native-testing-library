@@ -1,6 +1,6 @@
 {
   "name": "@testing-library/react-native",
-  "version": "12.6.0",
+  "version": "12.6.1",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -70,7 +70,7 @@
     "@babel/preset-flow": "^7.24.7",
     "@babel/preset-react": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
-    "@callstack/eslint-config": "^14.2.0",
+    "@callstack/eslint-config": "^15.0.0",
     "@release-it/conventional-changelog": "^8.0.1",
     "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@types/jest": "^29.5.12",

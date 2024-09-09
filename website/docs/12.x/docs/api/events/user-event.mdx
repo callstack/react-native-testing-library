@@ -53,7 +53,9 @@ await user.press(element);
 
 This helper simulates a press on any pressable element, e.g. `Pressable`, `TouchableOpacity`, `Text`, `TextInput`, etc. Unlike `fireEvent.press()`, a more straightforward API that will only call the `onPress` prop, this function simulates the entire press interaction in a more realistic way by reproducing the event sequence emitted by React Native runtime. This helper will trigger additional events like `pressIn` and `pressOut`.
 
-## `longPress()` \{#long-press}
+This event will take a minimum of 130 ms to run due to the internal React Native logic. Consider using fake timers to speed up test execution for tests involving `press` and `longPress` interactions.
+
+## `longPress()`
 
 ```ts
 longPress(
@@ -69,7 +71,9 @@ const user = userEvent.setup();
 await user.longPress(element);
 ```
 
-Simulates a long press user interaction. In React Native, the `longPress` event is emitted when the press duration exceeds the long press threshold (by default, 500 ms). In other aspects, this action behaves similarly to regular `press` action, e.g., by emitting `pressIn` and `pressOut` events. The press duration is customizable through the options. This should be useful if you use the `delayLongPress` prop. When using real timers, this will take 500 ms, so it is highly recommended to use that API with fake timers to prevent the test from taking a long time to run.
+Simulates a long press user interaction. In React Native, the `longPress` event is emitted when the press duration exceeds the long press threshold (by default, 500 ms). In other aspects, this action behaves similarly to regular `press` action, e.g., by emitting `pressIn` and `pressOut` events. The press duration is customizable through the options. This should be useful if you use the `delayLongPress` prop.
+
+This event will, by default, take 500 ms to run. Due to internal React Native logic, it will take at least 130 ms regardless of the duration option passed. Consider using fake timers to speed up test execution for tests involving `press` and `longPress` interactions.
 
 ### Options {#longpress-options}
 
@@ -107,7 +111,7 @@ This function will add text to the text already present in the text input (as sp
 - `skipPress` - if true, `pressIn` and `pressOut` events will not be triggered.
 - `submitEditing` - if true, `submitEditing` event will be triggered after typing the text.
 
-### Sequence of events
+### Sequence of events {#type-sequence}
 
 The sequence of events depends on the `multiline` prop and the passed options.
 
@@ -156,7 +160,7 @@ This helper simulates the user clearing the content of a `TextInput` element.
 
 This function supports only host `TextInput` elements. Passing other element types will result in throwing an error.
 
-### Sequence of events
+### Sequence of events {#clear-sequence}
 
 Events will not be emitted if the `editable` prop is set to `false`.
 
@@ -200,7 +204,7 @@ This helper simulates the user pasting given text to a `TextInput` element.
 
 This function supports only host `TextInput` elements. Passing other element types will result in throwing an error.
 
-### Sequence of events
+### Sequence of events {#paste-sequence}
 
 Events will not be emitted if the `editable` prop is set to `false`.
 
@@ -278,7 +282,7 @@ This function will remember where the last scroll ended, so subsequent scroll in
 
 To simulate a `FlatList` (and other controls based on `VirtualizedList`) scrolling, you should pass the `contentSize` and `layoutMeasurement` options, which enable the underlying logic to update the currently visible window.
 
-### Sequence of events
+### Sequence of events {#scroll-sequence}
 
 The sequence of events depends on whether the scroll includes an optional momentum scroll component.
 

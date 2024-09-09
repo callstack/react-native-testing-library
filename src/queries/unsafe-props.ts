@@ -46,7 +46,7 @@ const UNSAFE_queryAllByProps =
   (props: { [propName: string]: any }) => {
     try {
       return UNSAFE_getAllByProps(instance)(props);
-    } catch (error) {
+    } catch {
       return [];
     }
   };

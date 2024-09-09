@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  Switch,
 } from 'react-native';
 import { render, screen } from '../..';
 
@@ -426,7 +427,7 @@ describe('supports accessibility states', () => {
       expect(screen.queryByRole('checkbox', { checked: 'mixed' })).toBe(null);
     });
 
-    it('returns `mixed` checkboxes', () => {
+    test('returns `mixed` checkboxes', () => {
       render(
         <TouchableOpacity accessibilityRole="checkbox" accessibilityState={{ checked: 'mixed' }} />,
       );
@@ -508,33 +509,41 @@ describe('supports accessibility states', () => {
       expect(screen.queryByRole('checkbox', { checked: false })).toBe(null);
     });
 
+    test('supports "Switch" component', () => {
+      render(<Switch value={true} />);
+
+      expect(screen.getByRole('switch', { checked: true })).toBeTruthy();
+      expect(screen.queryByRole('switch', { checked: false })).toBe(null);
+      expect(screen.queryByRole('switch', { checked: 'mixed' })).toBe(null);
+    });
+
     test('supports aria-checked={true} prop', () => {
-      render(<View accessible accessibilityRole="button" aria-checked={true} />);
-      expect(screen.getByRole('button', { checked: true })).toBeTruthy();
-      expect(screen.queryByRole('button', { checked: false })).toBeNull();
-      expect(screen.queryByRole('button', { checked: 'mixed' })).toBeNull();
+      render(<View accessible role="checkbox" aria-checked={true} />);
+      expect(screen.getByRole('checkbox', { checked: true })).toBeTruthy();
+      expect(screen.queryByRole('checkbox', { checked: false })).toBeNull();
+      expect(screen.queryByRole('checkbox', { checked: 'mixed' })).toBeNull();
     });
 
     test('supports aria-checked={false} prop', () => {
-      render(<View accessible accessibilityRole="button" aria-checked={false} />);
-      expect(screen.getByRole('button', { checked: false })).toBeTruthy();
-      expect(screen.queryByRole('button', { checked: true })).toBeNull();
-      expect(screen.queryByRole('button', { checked: 'mixed' })).toBeNull();
+      render(<View accessible role="checkbox" aria-checked={false} />);
+      expect(screen.getByRole('checkbox', { checked: false })).toBeTruthy();
+      expect(screen.queryByRole('checkbox', { checked: true })).toBeNull();
+      expect(screen.queryByRole('checkbox', { checked: 'mixed' })).toBeNull();
     });
 
-    test('supports aria-checked="mixed prop', () => {
-      render(<View accessible accessibilityRole="button" aria-checked="mixed" />);
-      expect(screen.getByRole('button', { checked: 'mixed' })).toBeTruthy();
-      expect(screen.queryByRole('button', { checked: true })).toBeNull();
-      expect(screen.queryByRole('button', { checked: false })).toBeNull();
+    test('supports aria-checked="mixed" prop', () => {
+      render(<View accessible role="checkbox" aria-checked="mixed" />);
+      expect(screen.getByRole('checkbox', { checked: 'mixed' })).toBeTruthy();
+      expect(screen.queryByRole('checkbox', { checked: true })).toBeNull();
+      expect(screen.queryByRole('checkbox', { checked: false })).toBeNull();
     });
 
     test('supports default aria-selected prop', () => {
-      render(<View accessible accessibilityRole="button" />);
-      expect(screen.getByRole('button')).toBeTruthy();
-      expect(screen.queryByRole('button', { checked: true })).toBeNull();
-      expect(screen.queryByRole('button', { checked: false })).toBeNull();
-      expect(screen.queryByRole('button', { checked: 'mixed' })).toBeNull();
+      render(<View accessible role="checkbox" />);
+      expect(screen.getByRole('checkbox')).toBeTruthy();
+      expect(screen.queryByRole('checkbox', { checked: true })).toBeNull();
+      expect(screen.queryByRole('checkbox', { checked: false })).toBeNull();
+      expect(screen.queryByRole('checkbox', { checked: 'mixed' })).toBeNull();
     });
   });
 
@@ -728,7 +737,7 @@ describe('supports accessibility states', () => {
   test('matches an element combining all the options', () => {
     render(
       <TouchableOpacity
-        accessibilityRole="button"
+        accessibilityRole="checkbox"
         accessibilityState={{
           disabled: true,
           selected: true,
@@ -742,7 +751,7 @@ describe('supports accessibility states', () => {
     );
 
     expect(
-      screen.getByRole('button', {
+      screen.getByRole('checkbox', {
         name: 'Save',
         disabled: true,
         selected: true,

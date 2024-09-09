@@ -1,4 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
+import { nativeState } from '../native-state';
 import { isHostTextInput } from './host-component-names';
 
 export function isTextInputEditable(element: ReactTestInstance) {
@@ -14,5 +15,10 @@ export function getTextInputValue(element: ReactTestInstance) {
     throw new Error(`Element is not a "TextInput", but it has type "${element.type}".`);
   }
 
-  return element.props.value ?? element.props.defaultValue;
+  return (
+    element.props.value ??
+    nativeState?.valueForElement.get(element) ??
+    element.props.defaultValue ??
+    ''
+  );
 }

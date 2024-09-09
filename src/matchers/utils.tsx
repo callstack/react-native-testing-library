@@ -25,7 +25,7 @@ class HostElementTypeError extends Error {
     try {
       withType = printWithType('Received', received, printReceived);
       /* istanbul ignore next */
-    } catch (e) {
+    } catch {
       // Deliberately empty.
     }
 

@@ -3,6 +3,7 @@ import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { isPointerEventEnabled } from '../helpers/pointer-events';
 import { isTextInputEditable } from '../helpers/text-input';
+import { nativeState } from '../native-state';
 import { EventBuilder } from './event-builder';
 import { UserEventInstance } from './setup';
 import { dispatchEvent, getTextContentSize, wait } from './utils';
@@ -32,6 +33,7 @@ export async function paste(
   dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(rangeToClear));
 
   // 3. Paste the text
+  nativeState?.valueForElement.set(element, text);
   dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
   dispatchEvent(element, 'changeText', text);
 

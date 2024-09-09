@@ -12,6 +12,7 @@ import { isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isTextInputEditable } from './helpers/text-input';
 import { StringWithAutocomplete } from './types';
+import { nativeState } from './native-state';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
@@ -120,6 +121,8 @@ type EventName = StringWithAutocomplete<
 >;
 
 function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {
+  setNativeStateIfNeeded(element, eventName, data[0]);
+
   const handler = findEventHandler(element, eventName);
   if (!handler) {
     return;
@@ -143,3 +146,14 @@ fireEvent.scroll = (element: ReactTestInstance, ...data: unknown[]) =>
   fireEvent(element, 'scroll', ...data);
 
 export default fireEvent;
+
+function setNativeStateIfNeeded(element: ReactTestInstance, eventName: string, value: unknown) {
+  if (
+    eventName === 'changeText' &&
+    typeof value === 'string' &&
+    isHostTextInput(element) &&
+    isTextInputEditable(element)
+  ) {
+    nativeState?.valueForElement.set(element, value);
+  }
+}

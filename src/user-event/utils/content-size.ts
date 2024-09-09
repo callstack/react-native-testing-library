@@ -1,7 +1,4 @@
-export interface ContentSize {
-  width: number;
-  height: number;
-}
+import { Size } from '../../types';
 
 /**
  * Simple function for getting mock the size of given text.
@@ -13,8 +10,7 @@ export interface ContentSize {
  * @param text text to be measure
  * @returns width and height of the text
  */
-
-export function getTextContentSize(text: string): ContentSize {
+export function getTextContentSize(text: string): Size {
   const lines = text.split('\n');
   const maxLineLength = Math.max(...lines.map((line) => line.length));
 

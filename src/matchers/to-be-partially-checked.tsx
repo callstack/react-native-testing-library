@@ -1,10 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import {
-  getAccessibilityCheckedState,
-  getAccessibilityRole,
-  isAccessibilityElement,
-} from '../helpers/accessibility';
+import { computeAriaChecked, getRole, isAccessibilityElement } from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
 import { checkHostElement, formatElement } from './utils';
 
@@ -19,7 +15,7 @@ export function toBePartiallyChecked(this: jest.MatcherContext, element: ReactTe
   }
 
   return {
-    pass: getAccessibilityCheckedState(element) === 'mixed',
+    pass: computeAriaChecked(element) === 'mixed',
     message: () => {
       const is = this.isNot ? 'is' : 'is not';
       return [
@@ -33,6 +29,6 @@ export function toBePartiallyChecked(this: jest.MatcherContext, element: ReactTe
 }
 
 function hasValidAccessibilityRole(element: ReactTestInstance) {
-  const role = getAccessibilityRole(element);
+  const role = getRole(element);
   return isAccessibilityElement(element) && role === 'checkbox';
 }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { TextInput, TextInputProps, View } from 'react-native';
 import { createEventLogger, getEventsNames } from '../../test-utils';
 import { render, userEvent, screen } from '../..';
+import '../../matchers/extend-expect';
 
 beforeEach(() => {
   jest.useRealTimers();
@@ -220,5 +221,16 @@ describe('paste()', () => {
     const user = userEvent.setup();
     await user.paste(screen.getByTestId('input'), 'Hi!');
     expect(parentHandler).not.toHaveBeenCalled();
+  });
+
+  it('sets native state value for unmanaged text inputs', async () => {
+    render(<TextInput testID="input" />);
+
+    const user = userEvent.setup();
+    const input = screen.getByTestId('input');
+    expect(input).toHaveDisplayValue('');
+
+    await user.paste(input, 'abc');
+    expect(input).toHaveDisplayValue('abc');
   });
 });

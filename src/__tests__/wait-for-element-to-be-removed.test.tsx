@@ -114,7 +114,7 @@ test('waits with custom interval', async () => {
       timeout: 600,
       interval: 200,
     });
-  } catch (e) {
+  } catch {
     // Suppress expected error
   }
 
@@ -133,7 +133,7 @@ test.each([false, true])(
         timeout: 400,
         interval: 200,
       });
-    } catch (e) {
+    } catch {
       // Suppress expected error
     }
 
