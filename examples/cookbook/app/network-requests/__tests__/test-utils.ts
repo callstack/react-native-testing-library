@@ -1,58 +1,52 @@
 import { User } from '../types';
-import axios from 'axios';
+import {http, HttpResponse} from "msw";
+import {setupServer} from "msw/node";
 
-class MismatchedUrlError extends Error {
-  constructor(url: string) {
-    super(`The URL: ${url} does not match the API's base URL.`);
-  }
-}
+const handlers = [
+  http.get('https://randomuser.me/api/*', () => {
+    return HttpResponse.json(DATA);
+  }),
+];
 
-/**
- * Ensures that the URL matches the base URL of the API.
- * @param url
- * @throws {MismatchedUrlError}
- */
-const ensureUrlMatchesBaseUrl = (url: string) => {
-  if (!url.includes('https://randomuser.me/api')) throw new MismatchedUrlError(url);
+export const server = setupServer(...handlers);
+
+export const mockServerFailureForGetAllContacts = () => {
+  server.use(
+    http.get('https://randomuser.me/api/', ({ request }) => {
+      // Construct a URL instance out of the intercepted request.
+      const url = new URL(request.url);
+      // Read the "results" URL query parameter using the "URLSearchParams" API.
+      const resultsLength = url.searchParams.get('results');
+      // Simulate a server error for the get all contacts request.
+      // We check if the "results" query parameter is set to "25"
+      // to know it's the correct request to mock, in our case get all contacts.
+      if (resultsLength === '25') {
+        return new HttpResponse(null, { status: 500 });
+      }
+
+      return HttpResponse.json(DATA);
+    }),
+  );
 };
 
-export const mockFetchWithSuccessResponse = () => {
-  (global.fetch as jest.Mock).mockImplementationOnce((url) => {
-    ensureUrlMatchesBaseUrl(url);
+export const mockServerFailureForGetAllFavorites = () => {
+  server.use(
+    http.get('https://randomuser.me/api/', ({ request }) => {
+      // Construct a URL instance out of the intercepted request.
+      const url = new URL(request.url);
+      // Read the "results" URL query parameter using the "URLSearchParams" API.
+      const resultsLength = url.searchParams.get('results');
+      // Simulate a server error for the get all favorites request.
+      // We check if the "results" query parameter is set to "10"
+      // to know it's the correct request to mock, in our case get all favorites.
+      if (resultsLength === '10') {
+        return new HttpResponse(null, { status: 500 });
+      }
 
-    return Promise.resolve({
-      ok: true,
-      json: jest.fn().mockResolvedValueOnce(DATA),
-    });
-  });
+      return HttpResponse.json(DATA);
+    }),
+  );
 };
-
-export const mockFetchWithFailureResponse = () => {
-  (global.fetch as jest.Mock).mockImplementationOnce((url) => {
-    ensureUrlMatchesBaseUrl(url);
-
-    return Promise.resolve({
-      ok: false,
-    });
-  });
-};
-
-export const mockAxiosGetWithSuccessResponse = () => {
-  (axios.get as jest.Mock).mockImplementationOnce((url) => {
-    ensureUrlMatchesBaseUrl(url);
-
-    return Promise.resolve({ data: DATA });
-  });
-};
-
-export const mockAxiosGetWithFailureResponse = () => {
-  (axios.get as jest.Mock).mockImplementationOnce((url) => {
-    ensureUrlMatchesBaseUrl(url);
-
-    return Promise.reject({ message: 'Error fetching favorites' });
-  });
-};
-
 export const DATA: { results: User[] } = {
   results: [
     {
