@@ -7,8 +7,8 @@
   },
   {
     "type": "dir",
-    "name": "network-requests",
-    "label": "Network Requests Recipes"
+    "name": "advanced",
+    "label": "Advanced Recipes"
   },
   {
     "type": "dir",

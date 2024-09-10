@@ -6,8 +6,6 @@ import {
   mockServerFailureForGetAllFavorites,
 } from './test-utils';
 
-jest.setTimeout(10000);
-
 describe('PhoneBook', () => {
   it('fetches all contacts and favorites successfully and renders lists in sections correctly', async () => {
     render(<PhoneBook />);
