@@ -26,6 +26,7 @@ export type HostComponentNames = {
   switch: string;
   scrollView: string;
   modal: string;
+  image: string;
 };
 
 export type InternalConfig = Config & {

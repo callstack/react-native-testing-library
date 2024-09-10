@@ -115,6 +115,12 @@ const defaultScreen: Screen = {
   queryAllByText: notImplemented,
   findByText: notImplemented,
   findAllByText: notImplemented,
+  getByAltText: notImplemented,
+  getAllByAltText: notImplemented,
+  queryByAltText: notImplemented,
+  queryAllByAltText: notImplemented,
+  findByAltText: notImplemented,
+  findAllByAltText: notImplemented,
 };
 
 export let screen: Screen = defaultScreen;

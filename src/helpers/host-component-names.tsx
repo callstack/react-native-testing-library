@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ReactTestInstance } from 'react-test-renderer';
-import { Modal, ScrollView, Switch, Text, TextInput, View } from 'react-native';
+import { Modal, ScrollView, Switch, Image, Text, TextInput, View } from 'react-native';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { renderWithAct } from '../render-act';
 import { HostTestInstance } from './component-tree';
@@ -37,6 +37,7 @@ function detectHostComponentNames(): HostComponentNames {
         <Switch testID="switch" />
         <ScrollView testID="scrollView" />
         <Modal testID="modal" />
+        <Image testID="image" />
       </View>,
     );
 
@@ -46,6 +47,7 @@ function detectHostComponentNames(): HostComponentNames {
       switch: getByTestId(renderer.root, 'switch').type as string,
       scrollView: getByTestId(renderer.root, 'scrollView').type as string,
       modal: getByTestId(renderer.root, 'modal').type as string,
+      image: getByTestId(renderer.root, 'image').type as string,
     };
   } catch (error) {
     const errorMessage =
@@ -107,4 +109,12 @@ export function isHostScrollView(element?: ReactTestInstance | null): element is
  */
 export function isHostModal(element?: ReactTestInstance | null): element is HostTestInstance {
   return element?.type === getHostComponentNames().modal;
+}
+
+/**
+ * Checks if the given element is a host Image element.
+ * @param element The element to check.
+ */
+export function isHostImage(element?: ReactTestInstance | null): element is HostTestInstance {
+  return element?.type === getHostComponentNames().image;
 }

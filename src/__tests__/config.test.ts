@@ -36,6 +36,7 @@ test('resetToDefaults() resets internal config to defaults', () => {
       switch: 'A',
       scrollView: 'A',
       modal: 'A',
+      image: 'A',
     },
   });
   expect(getConfig().hostComponentNames).toEqual({
@@ -44,6 +45,7 @@ test('resetToDefaults() resets internal config to defaults', () => {
     switch: 'A',
     scrollView: 'A',
     modal: 'A',
+    image: 'A',
   });
 
   resetToDefaults();

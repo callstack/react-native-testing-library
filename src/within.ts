@@ -8,6 +8,7 @@ import { bindByHintTextQueries } from './queries/hint-text';
 import { bindByRoleQueries } from './queries/role';
 import { bindByA11yStateQueries } from './queries/accessibility-state';
 import { bindByA11yValueQueries } from './queries/accessibility-value';
+import { bindByAltTextQueries } from './queries/alt-text';
 import { bindUnsafeByTypeQueries } from './queries/unsafe-type';
 import { bindUnsafeByPropsQueries } from './queries/unsafe-props';
 
@@ -22,6 +23,7 @@ export function within(instance: ReactTestInstance) {
     ...bindByRoleQueries(instance),
     ...bindByA11yStateQueries(instance),
     ...bindByA11yValueQueries(instance),
+    ...bindByAltTextQueries(instance),
     ...bindUnsafeByTypeQueries(instance),
     ...bindUnsafeByPropsQueries(instance),
   };
