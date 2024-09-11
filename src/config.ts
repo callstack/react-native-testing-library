@@ -23,6 +23,7 @@ export type ConfigAliasOptions = {
 export type HostComponentNames = {
   text: string;
   textInput: string;
+  image: string;
   switch: string;
   scrollView: string;
   modal: string;

@@ -14,6 +14,7 @@ describe('getHostComponentNames', () => {
       hostComponentNames: {
         text: 'banana',
         textInput: 'banana',
+        image: 'banana',
         switch: 'banana',
         scrollView: 'banana',
         modal: 'banana',
@@ -23,6 +24,7 @@ describe('getHostComponentNames', () => {
     expect(getHostComponentNames()).toEqual({
       text: 'banana',
       textInput: 'banana',
+      image: 'banana',
       switch: 'banana',
       scrollView: 'banana',
       modal: 'banana',
@@ -37,6 +39,7 @@ describe('getHostComponentNames', () => {
     expect(hostComponentNames).toEqual({
       text: 'Text',
       textInput: 'TextInput',
+      image: 'Image',
       switch: 'RCTSwitch',
       scrollView: 'RCTScrollView',
       modal: 'Modal',
@@ -67,6 +70,7 @@ describe('configureHostComponentNamesIfNeeded', () => {
     expect(getConfig().hostComponentNames).toEqual({
       text: 'Text',
       textInput: 'TextInput',
+      image: 'Image',
       switch: 'RCTSwitch',
       scrollView: 'RCTScrollView',
       modal: 'Modal',
@@ -78,6 +82,7 @@ describe('configureHostComponentNamesIfNeeded', () => {
       hostComponentNames: {
         text: 'banana',
         textInput: 'banana',
+        image: 'banana',
         switch: 'banana',
         scrollView: 'banana',
         modal: 'banana',
@@ -89,13 +94,14 @@ describe('configureHostComponentNamesIfNeeded', () => {
     expect(getConfig().hostComponentNames).toEqual({
       text: 'banana',
       textInput: 'banana',
+      image: 'banana',
       switch: 'banana',
       scrollView: 'banana',
       modal: 'banana',
     });
   });
 
-  test('throw an error when autodetection fails', () => {
+  test('throw an error when auto-detection fails', () => {
     const mockCreate = jest.spyOn(TestRenderer, 'create') as jest.Mock;
     const renderer = TestRenderer.create(<View />);
 
