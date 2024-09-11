@@ -9,6 +9,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings, getUnsafeRootElement } from './component-tree';
 import {
   getHostComponentNames,
+  isHostImage,
   isHostSwitch,
   isHostText,
   isHostTextInput,
@@ -145,6 +146,10 @@ export function computeAriaModal(element: ReactTestInstance): boolean | undefine
 }
 
 export function computeAriaLabel(element: ReactTestInstance): string | undefined {
+  if (isHostImage(element) && element.props.alt) {
+    return element.props.alt;
+  }
+
   return element.props['aria-label'] ?? element.props.accessibilityLabel;
 }
 

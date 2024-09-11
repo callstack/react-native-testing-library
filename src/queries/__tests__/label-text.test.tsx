@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
+import { View, Text, TextInput, Image, Pressable } from 'react-native';
 import { render, screen } from '../..';
 
 const BUTTON_LABEL = 'cool button';
@@ -218,6 +218,18 @@ test('getByLabelText supports nested aria-labelledby', () => {
 
   expect(screen.getByLabelText('Nested Text Label')).toBe(screen.getByTestId('text-input'));
   expect(screen.getByLabelText(/nested text label/i)).toBe(screen.getByTestId('text-input'));
+});
+
+test('getByLabelText supports "Image"" with "alt" prop', () => {
+  render(
+    <>
+      <Image alt="Image Label" testID="image" />
+    </>,
+  );
+
+  const expectedElement = screen.getByTestId('image');
+  expect(screen.getByLabelText('Image Label')).toBe(expectedElement);
+  expect(screen.getByLabelText(/image label/i)).toBe(expectedElement);
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
