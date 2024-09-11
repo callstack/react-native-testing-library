@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, Image } from 'react-native';
 import { render, screen } from '../..';
 import '../extend-expect';
 
@@ -72,17 +72,26 @@ test('toHaveAccessibleName() handles view with "aria-labelledby" prop', () => {
   expect(element).not.toHaveAccessibleName('Other label');
 });
 
-test('toHaveAccessibleName() handles view with implicit accessible name', () => {
+test('toHaveAccessibleName() handles Text with text content', () => {
   render(<Text testID="view">Text</Text>);
+
   const element = screen.getByTestId('view');
   expect(element).toHaveAccessibleName('Text');
   expect(element).not.toHaveAccessibleName('Other text');
 });
 
+test('toHaveAccessibleName() handles Image with "alt" prop', () => {
+  render(<Image testID="image" alt="Test image" />);
+
+  const element = screen.getByTestId('image');
+  expect(element).toHaveAccessibleName('Test image');
+  expect(element).not.toHaveAccessibleName('Other text');
+});
+
 test('toHaveAccessibleName() supports calling without expected name', () => {
   render(<View testID="view" accessibilityLabel="Test label" />);
-  const element = screen.getByTestId('view');
 
+  const element = screen.getByTestId('view');
   expect(element).toHaveAccessibleName();
   expect(() => expect(element).not.toHaveAccessibleName()).toThrowErrorMatchingInlineSnapshot(`
     "expect(element).not.toHaveAccessibleName()
