@@ -9,6 +9,7 @@ const propsToDisplay = [
   'accessibilityLabelledBy',
   'accessibilityRole',
   'accessibilityViewIsModal',
+  'alt',
   'aria-busy',
   'aria-checked',
   'aria-disabled',

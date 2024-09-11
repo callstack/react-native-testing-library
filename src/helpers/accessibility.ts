@@ -103,6 +103,10 @@ export function isAccessibilityElement(element: ReactTestInstance | null): boole
     return false;
   }
 
+  if (isHostImage(element) && element.props.alt) {
+    return true;
+  }
+
   if (element.props.accessible !== undefined) {
     return element.props.accessible;
   }
@@ -131,14 +135,26 @@ export function isAccessibilityElement(element: ReactTestInstance | null): boole
 export function getRole(element: ReactTestInstance): Role | AccessibilityRole {
   const explicitRole = element.props.role ?? element.props.accessibilityRole;
   if (explicitRole) {
-    return explicitRole;
+    return normalizeRole(explicitRole);
   }
 
   if (isHostText(element)) {
     return 'text';
   }
 
+  if (isHostImage(element) && element.props.alt) {
+    return 'img';
+  }
+
   return 'none';
+}
+
+export function normalizeRole(role: string): Role | AccessibilityRole {
+  if (role === 'image') {
+    return 'img';
+  }
+
+  return role as Role | AccessibilityRole;
 }
 
 export function computeAriaModal(element: ReactTestInstance): boolean | undefined {

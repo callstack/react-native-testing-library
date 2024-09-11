@@ -5,6 +5,7 @@ import {
   accessibilityValueKeys,
   getRole,
   isAccessibilityElement,
+  normalizeRole,
 } from '../helpers/accessibility';
 import { findAll } from '../helpers/find-all';
 import {
@@ -38,6 +39,10 @@ export type ByRoleOptions = CommonQueryOptions &
     value?: AccessibilityValueMatcher;
   };
 
+const matchRole = (node: ReactTestInstance, role: ByRoleMatcher) => {
+  return matchStringProp(getRole(node), role);
+};
+
 const matchAccessibleNameIfNeeded = (node: ReactTestInstance, name?: TextMatch) => {
   if (name == null) return true;
 
@@ -60,12 +65,13 @@ const queryAllByRole = (
   instance: ReactTestInstance,
 ): QueryAllByQuery<ByRoleMatcher, ByRoleOptions> =>
   function queryAllByRoleFn(role, options) {
+    const normalizedRole = typeof role === 'string' ? normalizeRole(role) : role;
     return findAll(
       instance,
       (node) =>
         // run the cheapest checks first, and early exit to avoid unneeded computations
         isAccessibilityElement(node) &&
-        matchStringProp(getRole(node), role) &&
+        matchRole(node, normalizedRole) &&
         matchAccessibleStateIfNeeded(node, options) &&
         matchAccessibilityValueIfNeeded(node, options?.value) &&
         matchAccessibleNameIfNeeded(node, options?.name),
@@ -74,10 +80,10 @@ const queryAllByRole = (
   };
 
 const formatQueryParams = (role: TextMatch, options: ByRoleOptions = {}) => {
-  const params = [`role: "${String(role)}"`];
+  const params = [`role: ${String(role)}`];
 
   if (options.name) {
-    params.push(`name: "${String(options.name)}"`);
+    params.push(`name: ${String(options.name)}`);
   }
 
   accessibilityStateKeys.forEach((stateKey) => {
