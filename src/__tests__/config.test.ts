@@ -33,6 +33,7 @@ test('resetToDefaults() resets internal config to defaults', () => {
     hostComponentNames: {
       text: 'A',
       textInput: 'A',
+      image: 'A',
       switch: 'A',
       scrollView: 'A',
       modal: 'A',
@@ -41,6 +42,7 @@ test('resetToDefaults() resets internal config to defaults', () => {
   expect(getConfig().hostComponentNames).toEqual({
     text: 'A',
     textInput: 'A',
+    image: 'A',
     switch: 'A',
     scrollView: 'A',
     modal: 'A',
