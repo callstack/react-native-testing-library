@@ -227,12 +227,22 @@ describe('supports name option', () => {
   });
 
   test('supports host Image element with "alt" prop', () => {
-    render(<Image alt="An elephant" testID="image" />);
+    render(
+      <>
+        <Image testID="image1" role="img" alt="an elephant" />
+        <Image testID="image2" accessibilityRole="image" alt="a tiger" />
+      </>,
+    );
 
-    const expectedElement = screen.getByTestId('image');
-    expect(screen.getByRole('img', { name: 'An elephant' })).toBe(expectedElement);
-    expect(screen.getByRole('image', { name: 'An elephant' })).toBe(expectedElement);
-    expect(screen.getByRole(/img/, { name: 'An elephant' })).toBe(expectedElement);
+    const expectedElement1 = screen.getByTestId('image1');
+    expect(screen.getByRole('img', { name: 'an elephant' })).toBe(expectedElement1);
+    expect(screen.getByRole('image', { name: 'an elephant' })).toBe(expectedElement1);
+    expect(screen.getByRole(/img/, { name: /elephant/ })).toBe(expectedElement1);
+
+    const expectedElement2 = screen.getByTestId('image2');
+    expect(screen.getByRole('img', { name: 'a tiger' })).toBe(expectedElement2);
+    expect(screen.getByRole('image', { name: 'a tiger' })).toBe(expectedElement2);
+    expect(screen.getByRole(/img/, { name: /tiger/ })).toBe(expectedElement2);
   });
 });
 

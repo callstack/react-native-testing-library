@@ -143,9 +143,8 @@ export function getRole(element: ReactTestInstance): Role | AccessibilityRole {
     return 'text';
   }
 
-  if (isHostImage(element) && element.props.alt) {
-    return 'img';
-  }
+  // Note: host Image elements report "image" role in screen reader only on Android, but not on iOS.
+  // It's better to require explicit role for Image elements.
 
   return 'none';
 }
