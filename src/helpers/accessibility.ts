@@ -103,7 +103,8 @@ export function isAccessibilityElement(element: ReactTestInstance | null): boole
     return false;
   }
 
-  if (isHostImage(element) && element.props.alt) {
+  // https://github.com/facebook/react-native/blob/8dabed60f456e76a9e53273b601446f34de41fb5/packages/react-native/Libraries/Image/Image.ios.js#L172
+  if (isHostImage(element) && element.props.alt !== undefined) {
     return true;
   }
 
@@ -162,11 +163,17 @@ export function computeAriaModal(element: ReactTestInstance): boolean | undefine
 }
 
 export function computeAriaLabel(element: ReactTestInstance): string | undefined {
+  const explicitLabel = element.props['aria-label'] ?? element.props.accessibilityLabel;
+  if (explicitLabel) {
+    return explicitLabel;
+  }
+
+  //https://github.com/facebook/react-native/blob/8dabed60f456e76a9e53273b601446f34de41fb5/packages/react-native/Libraries/Image/Image.ios.js#L173
   if (isHostImage(element) && element.props.alt) {
     return element.props.alt;
   }
 
-  return element.props['aria-label'] ?? element.props.accessibilityLabel;
+  return undefined;
 }
 
 export function computeAriaLabelledBy(element: ReactTestInstance): string | undefined {
