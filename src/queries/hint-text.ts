@@ -31,9 +31,9 @@ const queryAllByHintText = (
   };
 
 const getMultipleError = (hint: TextMatch) =>
-  `Found multiple elements with accessibilityHint: ${String(hint)} `;
+  `Found multiple elements with accessibility hint: ${String(hint)} `;
 const getMissingError = (hint: TextMatch) =>
-  `Unable to find an element with accessibilityHint: ${String(hint)}`;
+  `Unable to find an element with accessibility hint: ${String(hint)}`;
 
 const { getBy, getAllBy, queryBy, queryAllBy, findBy, findAllBy } = makeQueries(
   queryAllByHintText,

@@ -9,6 +9,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings, getUnsafeRootElement } from './component-tree';
 import {
   getHostComponentNames,
+  isHostImage,
   isHostSwitch,
   isHostText,
   isHostTextInput,
@@ -102,6 +103,11 @@ export function isAccessibilityElement(element: ReactTestInstance | null): boole
     return false;
   }
 
+  // https://github.com/facebook/react-native/blob/8dabed60f456e76a9e53273b601446f34de41fb5/packages/react-native/Libraries/Image/Image.ios.js#L172
+  if (isHostImage(element) && element.props.alt !== undefined) {
+    return true;
+  }
+
   if (element.props.accessible !== undefined) {
     return element.props.accessible;
   }
@@ -130,14 +136,32 @@ export function isAccessibilityElement(element: ReactTestInstance | null): boole
 export function getRole(element: ReactTestInstance): Role | AccessibilityRole {
   const explicitRole = element.props.role ?? element.props.accessibilityRole;
   if (explicitRole) {
-    return explicitRole;
+    return normalizeRole(explicitRole);
   }
 
   if (isHostText(element)) {
     return 'text';
   }
 
+  // Note: host Image elements report "image" role in screen reader only on Android, but not on iOS.
+  // It's better to require explicit role for Image elements.
+
   return 'none';
+}
+
+/**
+ * There are some duplications between (ARIA) `Role` and `AccessibilityRole` types.
+ * Resolve them by using ARIA `Role` type where possible.
+ *
+ * @param role Role to normalize
+ * @returns Normalized role
+ */
+export function normalizeRole(role: string): Role | AccessibilityRole {
+  if (role === 'image') {
+    return 'img';
+  }
+
+  return role as Role | AccessibilityRole;
 }
 
 export function computeAriaModal(element: ReactTestInstance): boolean | undefined {
@@ -145,7 +169,17 @@ export function computeAriaModal(element: ReactTestInstance): boolean | undefine
 }
 
 export function computeAriaLabel(element: ReactTestInstance): string | undefined {
-  return element.props['aria-label'] ?? element.props.accessibilityLabel;
+  const explicitLabel = element.props['aria-label'] ?? element.props.accessibilityLabel;
+  if (explicitLabel) {
+    return explicitLabel;
+  }
+
+  //https://github.com/facebook/react-native/blob/8dabed60f456e76a9e53273b601446f34de41fb5/packages/react-native/Libraries/Image/Image.ios.js#L173
+  if (isHostImage(element) && element.props.alt) {
+    return element.props.alt;
+  }
+
+  return undefined;
 }
 
 export function computeAriaLabelledBy(element: ReactTestInstance): string | undefined {
