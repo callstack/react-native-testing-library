@@ -39,10 +39,6 @@ export type ByRoleOptions = CommonQueryOptions &
     value?: AccessibilityValueMatcher;
   };
 
-const matchRole = (node: ReactTestInstance, role: ByRoleMatcher) => {
-  return matchStringProp(getRole(node), role);
-};
-
 const matchAccessibleNameIfNeeded = (node: ReactTestInstance, name?: TextMatch) => {
   if (name == null) return true;
 
@@ -71,7 +67,7 @@ const queryAllByRole = (
       (node) =>
         // run the cheapest checks first, and early exit to avoid unneeded computations
         isAccessibilityElement(node) &&
-        matchRole(node, normalizedRole) &&
+        matchStringProp(getRole(node), normalizedRole) &&
         matchAccessibleStateIfNeeded(node, options) &&
         matchAccessibilityValueIfNeeded(node, options?.value) &&
         matchAccessibleNameIfNeeded(node, options?.name),
