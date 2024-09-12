@@ -149,6 +149,13 @@ export function getRole(element: ReactTestInstance): Role | AccessibilityRole {
   return 'none';
 }
 
+/**
+ * There are some duplications between (ARIA) `Role` and `AccessibilityRole` types.
+ * Resolve them by using ARIA `Role` type where possible.
+ *
+ * @param role Role to normalize
+ * @returns Normalized role
+ */
 export function normalizeRole(role: string): Role | AccessibilityRole {
   if (role === 'image') {
     return 'img';
