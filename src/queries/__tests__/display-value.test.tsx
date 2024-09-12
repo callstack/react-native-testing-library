@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TextInput, View } from 'react-native';
-import { render, screen } from '../..';
+import { fireEvent, render, screen } from '../..';
 import '../../matchers/extend-expect';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
@@ -201,4 +201,14 @@ test('error message renders the element tree, preserving only helpful props', as
       value="1"
     />"
   `);
+});
+
+test('supports unmanaged TextInput element', () => {
+  render(<TextInput testID="input" />);
+
+  const input = screen.getByDisplayValue('');
+  expect(input).toHaveDisplayValue('');
+
+  fireEvent.changeText(input, 'Hello!');
+  expect(input).toHaveDisplayValue('Hello!');
 });
