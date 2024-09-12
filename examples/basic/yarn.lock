@@ -2463,9 +2463,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react-native@npm:^12.5.2":
-  version: 12.5.3
-  resolution: "@testing-library/react-native@npm:12.5.3"
+"@testing-library/react-native@npm:^12.7.1":
+  version: 12.7.1
+  resolution: "@testing-library/react-native@npm:12.7.1"
   dependencies:
     jest-matcher-utils: "npm:^29.7.0"
     pretty-format: "npm:^29.7.0"
@@ -2478,7 +2478,7 @@ __metadata:
   peerDependenciesMeta:
     jest:
       optional: true
-  checksum: 10c0/6e404bfee5677dfa54405f30e91a24fccb50cc6cf98d0e296ae4ebccb71641a1a1dcefc2ffaa9c3c05eacf2b39c99431f6099ed0227696de4ec914768aa70279
+  checksum: 10c0/caaa4bdf97834b307b72af05c447ce40a2ba2ff40b464050bc29535caadf81981ea2873668445e633fdb3d13efccb136ef0932d6d9f4736bc6f7f98be98088d4
   languageName: node
   linkType: hard
 
@@ -8923,7 +8923,7 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@babel/core": "npm:^7.24.0"
-    "@testing-library/react-native": "npm:^12.5.2"
+    "@testing-library/react-native": "npm:^12.7.1"
     "@types/eslint": "npm:^8.56.10"
     "@types/jest": "npm:^29.5.12"
     "@types/react": "npm:~18.2.79"
