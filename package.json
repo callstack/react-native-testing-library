@@ -1,6 +1,6 @@
 {
   "name": "@testing-library/react-native",
-  "version": "12.6.1",
+  "version": "12.7.1",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -33,8 +33,7 @@
     "build:js": "babel src --out-dir build --extensions \".js,.ts,.jsx,.tsx\" --source-maps --ignore \"**/__tests__/**\"",
     "build:ts": "tsc --build tsconfig.release.json",
     "build": "yarn clean && yarn build:js && yarn build:ts && yarn copy-flowtypes",
-    "prepublish": "yarn build",
-    "publish": "release-it"
+    "publish": "yarn build && release-it"
   },
   "files": [
     "build/",

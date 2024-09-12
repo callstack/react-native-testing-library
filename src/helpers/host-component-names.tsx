@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ReactTestInstance } from 'react-test-renderer';
-import { Modal, ScrollView, Switch, Text, TextInput, View } from 'react-native';
+import { Image, Modal, ScrollView, Switch, Text, TextInput, View } from 'react-native';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { renderWithAct } from '../render-act';
 import { HostTestInstance } from './component-tree';
@@ -34,6 +34,7 @@ function detectHostComponentNames(): HostComponentNames {
       <View>
         <Text testID="text">Hello</Text>
         <TextInput testID="textInput" />
+        <Image testID="image" />
         <Switch testID="switch" />
         <ScrollView testID="scrollView" />
         <Modal testID="modal" />
@@ -43,6 +44,7 @@ function detectHostComponentNames(): HostComponentNames {
     return {
       text: getByTestId(renderer.root, 'text').type as string,
       textInput: getByTestId(renderer.root, 'textInput').type as string,
+      image: getByTestId(renderer.root, 'image').type as string,
       switch: getByTestId(renderer.root, 'switch').type as string,
       scrollView: getByTestId(renderer.root, 'scrollView').type as string,
       modal: getByTestId(renderer.root, 'modal').type as string,
@@ -83,6 +85,14 @@ export function isHostText(element?: ReactTestInstance | null): element is HostT
  */
 export function isHostTextInput(element?: ReactTestInstance | null): element is HostTestInstance {
   return element?.type === getHostComponentNames().textInput;
+}
+
+/**
+ * Checks if the given element is a host Image element.
+ * @param element The element to check.
+ */
+export function isHostImage(element?: ReactTestInstance | null): element is HostTestInstance {
+  return element?.type === getHostComponentNames().image;
 }
 
 /**

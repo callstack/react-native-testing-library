@@ -1,14 +1,14 @@
-import { ContentOffset } from '../event-builder/scroll-view';
+import { Point } from '../../types';
 
 const DEFAULT_STEPS_COUNT = 5;
 
 type InterpolatorFn = (end: number, start: number, steps: number) => number[];
 
 export function createScrollSteps(
-  target: Partial<ContentOffset>,
-  initialOffset: ContentOffset,
+  target: Partial<Point>,
+  initialOffset: Point,
   interpolator: InterpolatorFn,
-): ContentOffset[] {
+): Point[] {
   if (target.y != null) {
     return interpolator(target.y, initialOffset.y, DEFAULT_STEPS_COUNT).map((y) => ({
       y,

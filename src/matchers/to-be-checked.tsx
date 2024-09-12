@@ -1,15 +1,21 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { computeAriaChecked, getRole, isAccessibilityElement } from '../helpers/accessibility';
+import {
+  computeAriaChecked,
+  getRole,
+  isAccessibilityElement,
+  rolesSupportingCheckedState,
+} from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
+import { isHostSwitch } from '../helpers/host-component-names';
 import { checkHostElement, formatElement } from './utils';
 
 export function toBeChecked(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeChecked, this);
 
-  if (!hasValidAccessibilityRole(element)) {
+  if (!isHostSwitch(element) && !isSupportedAccessibilityElement(element)) {
     throw new ErrorWithStack(
-      `toBeChecked() works only on accessibility elements with "checkbox" or "radio" role.`,
+      `toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role.`,
       toBeChecked,
     );
   }
@@ -28,11 +34,11 @@ export function toBeChecked(this: jest.MatcherContext, element: ReactTestInstanc
   };
 }
 
-function hasValidAccessibilityRole(element: ReactTestInstance) {
+function isSupportedAccessibilityElement(element: ReactTestInstance) {
   if (!isAccessibilityElement(element)) {
     return false;
   }
 
   const role = getRole(element);
-  return role === 'checkbox' || role === 'radio';
+  return rolesSupportingCheckedState[role];
 }

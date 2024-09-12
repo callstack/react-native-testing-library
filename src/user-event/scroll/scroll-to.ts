@@ -5,20 +5,14 @@ import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';
-import { ContentOffset } from '../event-builder/scroll-view';
+import { nativeState } from '../../native-state';
+import { Point, Size } from '../../types';
 import { dispatchEvent, wait } from '../utils';
 import { createScrollSteps, inertialInterpolator, linearInterpolator } from './utils';
-import { getElementScrollOffset, setElementScrollOffset } from './state';
 
 interface CommonScrollToOptions {
-  contentSize?: {
-    height: number;
-    width: number;
-  };
-  layoutMeasurement?: {
-    height: number;
-    width: number;
-  };
+  contentSize?: Size;
+  layoutMeasurement?: Size;
 }
 
 export interface VerticalScrollToOptions extends CommonScrollToOptions {
@@ -62,15 +56,15 @@ export async function scrollTo(
     options.contentSize?.height ?? 0,
   );
 
-  const initialPosition = getElementScrollOffset(element);
+  const initialOffset = nativeState.contentOffsetForElement.get(element) ?? { x: 0, y: 0 };
   const dragSteps = createScrollSteps(
     { y: options.y, x: options.x },
-    initialPosition,
+    initialOffset,
     linearInterpolator,
   );
   await emitDragScrollEvents(this.config, element, dragSteps, options);
 
-  const momentumStart = dragSteps.at(-1) ?? initialPosition;
+  const momentumStart = dragSteps.at(-1) ?? initialOffset;
   const momentumSteps = createScrollSteps(
     { y: options.momentumY, x: options.momentumX },
     momentumStart,
@@ -78,14 +72,14 @@ export async function scrollTo(
   );
   await emitMomentumScrollEvents(this.config, element, momentumSteps, options);
 
-  const finalPosition = momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialPosition;
-  setElementScrollOffset(element, finalPosition);
+  const finalOffset = momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialOffset;
+  nativeState.contentOffsetForElement.set(element, finalOffset);
 }
 
 async function emitDragScrollEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
-  scrollSteps: ContentOffset[],
+  scrollSteps: Point[],
   scrollOptions: ScrollToOptions,
 ) {
   if (scrollSteps.length === 0) {
@@ -115,7 +109,7 @@ async function emitDragScrollEvents(
 async function emitMomentumScrollEvents(
   config: UserEventConfig,
   element: ReactTestInstance,
-  scrollSteps: ContentOffset[],
+  scrollSteps: Point[],
   scrollOptions: ScrollToOptions,
 ) {
   if (scrollSteps.length === 0) {

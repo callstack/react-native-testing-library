@@ -4,9 +4,11 @@ import {
   Pressable,
   Text,
   TextInput,
+  Image,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  Switch,
 } from 'react-native';
 import { render, screen } from '../..';
 
@@ -16,11 +18,11 @@ const TEXT_LABEL = 'cool text';
 const NO_MATCHES_TEXT: any = 'not-existent-element';
 
 const getMultipleInstancesFoundMessage = (value: string) => {
-  return `Found multiple elements with role: "${value}"`;
+  return `Found multiple elements with role: ${value}`;
 };
 
 const getNoInstancesFoundMessage = (value: string) => {
-  return `Unable to find an element with role: "${value}"`;
+  return `Unable to find an element with role: ${value}`;
 };
 
 const Typography = ({ children, ...rest }: any) => {
@@ -222,6 +224,25 @@ describe('supports name option', () => {
     // assert on the testId to be sure that the returned element is the one with the accessibilityRole
     expect(screen.getByRole('header', { name: 'About' })).toBe(screen.getByTestId('target-header'));
     expect(screen.getByRole('header', { name: 'About' }).props.testID).toBe('target-header');
+  });
+
+  test('supports host Image element with "alt" prop', () => {
+    render(
+      <>
+        <Image testID="image1" role="img" alt="an elephant" />
+        <Image testID="image2" accessibilityRole="image" alt="a tiger" />
+      </>,
+    );
+
+    const expectedElement1 = screen.getByTestId('image1');
+    expect(screen.getByRole('img', { name: 'an elephant' })).toBe(expectedElement1);
+    expect(screen.getByRole('image', { name: 'an elephant' })).toBe(expectedElement1);
+    expect(screen.getByRole(/img/, { name: /elephant/ })).toBe(expectedElement1);
+
+    const expectedElement2 = screen.getByTestId('image2');
+    expect(screen.getByRole('img', { name: 'a tiger' })).toBe(expectedElement2);
+    expect(screen.getByRole('image', { name: 'a tiger' })).toBe(expectedElement2);
+    expect(screen.getByRole(/img/, { name: /tiger/ })).toBe(expectedElement2);
   });
 });
 
@@ -426,7 +447,7 @@ describe('supports accessibility states', () => {
       expect(screen.queryByRole('checkbox', { checked: 'mixed' })).toBe(null);
     });
 
-    it('returns `mixed` checkboxes', () => {
+    test('returns `mixed` checkboxes', () => {
       render(
         <TouchableOpacity accessibilityRole="checkbox" accessibilityState={{ checked: 'mixed' }} />,
       );
@@ -506,6 +527,14 @@ describe('supports accessibility states', () => {
       );
 
       expect(screen.queryByRole('checkbox', { checked: false })).toBe(null);
+    });
+
+    test('supports "Switch" component', () => {
+      render(<Switch value={true} />);
+
+      expect(screen.getByRole('switch', { checked: true })).toBeTruthy();
+      expect(screen.queryByRole('switch', { checked: false })).toBe(null);
+      expect(screen.queryByRole('switch', { checked: 'mixed' })).toBe(null);
     });
 
     test('supports aria-checked={true} prop', () => {
@@ -759,7 +788,7 @@ describe('error messages', () => {
     render(<View />);
 
     expect(() => screen.getByRole('button')).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with role: "button"
+      "Unable to find an element with role: button
 
       <View />"
     `);
@@ -769,7 +798,7 @@ describe('error messages', () => {
     render(<View />);
 
     expect(() => screen.getByRole('button', { name: 'Save' })).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with role: "button", name: "Save"
+      "Unable to find an element with role: button, name: Save
 
       <View />"
     `);
@@ -780,7 +809,7 @@ describe('error messages', () => {
 
     expect(() => screen.getByRole('button', { name: 'Save', disabled: true }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with role: "button", name: "Save", disabled state: true
+      "Unable to find an element with role: button, name: Save, disabled state: true
 
       <View />"
     `);
@@ -791,7 +820,7 @@ describe('error messages', () => {
 
     expect(() => screen.getByRole('button', { name: 'Save', disabled: true, selected: true }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with role: "button", name: "Save", disabled state: true, selected state: true
+      "Unable to find an element with role: button, name: Save, disabled state: true, selected state: true
 
       <View />"
     `);
@@ -802,7 +831,7 @@ describe('error messages', () => {
 
     expect(() => screen.getByRole('button', { disabled: true }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with role: "button", disabled state: true
+      "Unable to find an element with role: button, disabled state: true
 
       <View />"
     `);
@@ -813,7 +842,7 @@ describe('error messages', () => {
 
     expect(() => screen.getByRole('adjustable', { value: { min: 1 } }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with role: "adjustable", min value: 1
+      "Unable to find an element with role: adjustable, min value: 1
 
       <View />"
     `);
@@ -823,7 +852,7 @@ describe('error messages', () => {
         value: { min: 1, max: 2, now: 1, text: /hello/ },
       }),
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Unable to find an element with role: "adjustable", min value: 1, max value: 2, now value: 1, text value: /hello/
+      "Unable to find an element with role: adjustable, min value: 1, max value: 2, now value: 1, text value: /hello/
 
       <View />"
     `);
@@ -843,7 +872,7 @@ test('byRole queries support hidden option', () => {
   expect(screen.queryByRole('button', { includeHiddenElements: false })).toBeFalsy();
   expect(() => screen.getByRole('button', { includeHiddenElements: false }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with role: "button"
+    "Unable to find an element with role: button
 
     <View
       accessibilityRole="button"
@@ -880,7 +909,7 @@ describe('matches only accessible elements', () => {
     expect(screen.queryByRole('button', { name: 'Action' })).toBeFalsy();
   });
 
-  test('ignores elements with accessible={undefined} and that are implicitely not accessible', () => {
+  test('ignores elements with accessible={undefined} and that are implicitly not accessible', () => {
     render(
       <View accessibilityRole="menu">
         <Text>Action</Text>
@@ -894,7 +923,7 @@ test('error message renders the element tree, preserving only helpful props', as
   render(<View accessibilityRole="button" key="3" />);
 
   expect(() => screen.getByRole('link')).toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with role: "link"
+    "Unable to find an element with role: link
 
     <View
       accessibilityRole="button"
@@ -902,7 +931,7 @@ test('error message renders the element tree, preserving only helpful props', as
   `);
 
   expect(() => screen.getAllByRole('link')).toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with role: "link"
+    "Unable to find an element with role: link
 
     <View
       accessibilityRole="button"
@@ -910,7 +939,7 @@ test('error message renders the element tree, preserving only helpful props', as
   `);
 
   await expect(screen.findByRole('link')).rejects.toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with role: "link"
+    "Unable to find an element with role: link
 
     <View
       accessibilityRole="button"
@@ -918,7 +947,7 @@ test('error message renders the element tree, preserving only helpful props', as
   `);
 
   await expect(screen.findAllByRole('link')).rejects.toThrowErrorMatchingInlineSnapshot(`
-    "Unable to find an element with role: "link"
+    "Unable to find an element with role: link
 
     <View
       accessibilityRole="button"
