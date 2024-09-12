@@ -173,10 +173,10 @@ function setNativeStateIfNeeded(element: ReactTestInstance, eventName: string, v
   }
 }
 
-function tryGetContentOffset(value: unknown): Point | null {
+function tryGetContentOffset(event: unknown): Point | null {
   try {
     // @ts-expect-error: try to extract contentOffset from the event value
-    const contentOffset = value?.nativeEvent?.contentOffset;
+    const contentOffset = event?.nativeEvent?.contentOffset;
     const x = contentOffset?.x;
     const y = contentOffset?.y;
     if (typeof x === 'number' || typeof y === 'number') {
