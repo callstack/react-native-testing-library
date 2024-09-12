@@ -130,7 +130,7 @@ describe('paste()', () => {
     const user = userEvent.setup();
     await user.paste(textInput, 'Hi!');
 
-    expect(textInput.props.value).toBe('Hello!');
+    expect(textInput).toHaveDisplayValue('Hello!');
   });
 
   it('does respect pointer-events prop', async () => {
@@ -142,7 +142,7 @@ describe('paste()', () => {
     const user = userEvent.setup();
     await user.paste(textInput, 'Hi!');
 
-    expect(textInput.props.value).toBe('Hello!');
+    expect(textInput).toHaveDisplayValue('Hello!');
   });
 
   it('supports multiline', async () => {

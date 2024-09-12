@@ -95,7 +95,7 @@ export interface UserEventInstance {
    * input.
    *
    * The exact events sent depend on the props of the TextInput (`editable`,
-   * `multiline`, value, defaultValue, etc) and passed options.
+   * `multiline`, etc) and passed options.
    *
    * @param element TextInput element to type on
    * @param text Text to type

@@ -113,7 +113,7 @@ describe('clear()', () => {
     const user = userEvent.setup();
     await user.clear(textInput);
 
-    expect(textInput.props.value).toBe('Hello!');
+    expect(textInput).toHaveDisplayValue('Hello!');
   });
 
   it('does respect pointer-events prop', async () => {
@@ -125,7 +125,7 @@ describe('clear()', () => {
     const user = userEvent.setup();
     await user.clear(textInput);
 
-    expect(textInput.props.value).toBe('Hello!');
+    expect(textInput).toHaveDisplayValue('Hello!');
   });
 
   it('supports multiline', async () => {

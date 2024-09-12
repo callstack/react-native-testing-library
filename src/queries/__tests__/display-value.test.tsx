@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextInput, View } from 'react-native';
-
-import { render, screen } from '../..';
+import { fireEvent, render, screen } from '../..';
+import '../../matchers/extend-expect';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -30,13 +30,12 @@ const Banana = () => (
 
 test('getByDisplayValue, queryByDisplayValue', () => {
   render(<Banana />);
-  const input = screen.getByDisplayValue(/custom/i);
 
-  expect(input.props.value).toBe(INPUT_FRESHNESS);
+  const input = screen.getByDisplayValue(/custom/i);
+  expect(input).toHaveDisplayValue(INPUT_FRESHNESS);
 
   const sameInput = screen.getByDisplayValue(INPUT_FRESHNESS);
-
-  expect(sameInput.props.value).toBe(INPUT_FRESHNESS);
+  expect(sameInput).toHaveDisplayValue(INPUT_FRESHNESS);
   expect(() => screen.getByDisplayValue('no value')).toThrow(
     'Unable to find an element with displayValue: no value',
   );
@@ -202,4 +201,14 @@ test('error message renders the element tree, preserving only helpful props', as
       value="1"
     />"
   `);
+});
+
+test('supports unmanaged TextInput element', () => {
+  render(<TextInput testID="input" />);
+
+  const input = screen.getByDisplayValue('');
+  expect(input).toHaveDisplayValue('');
+
+  fireEvent.changeText(input, 'Hello!');
+  expect(input).toHaveDisplayValue('Hello!');
 });
