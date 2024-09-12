@@ -1,7 +1,7 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
-import { isTextInputEditable } from '../helpers/text-input';
+import { getTextInputValue, isTextInputEditable } from '../helpers/text-input';
 import { isPointerEventEnabled } from '../helpers/pointer-events';
 import { EventBuilder } from './event-builder';
 import { UserEventInstance } from './setup';
@@ -24,7 +24,7 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
   dispatchEvent(element, 'focus', EventBuilder.Common.focus());
 
   // 2. Select all
-  const textToClear = element.props.value ?? element.props.defaultValue ?? '';
+  const textToClear = getTextInputValue(element);
   const selectionRange = {
     start: 0,
     end: textToClear.length,

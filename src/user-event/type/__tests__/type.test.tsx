@@ -374,14 +374,17 @@ describe('type()', () => {
     });
   });
 
-  it('sets native state value for unmanaged text inputs', async () => {
+  it('unmanaged text inputs preserve their native state', async () => {
     render(<TextInput testID="input" />);
 
     const user = userEvent.setup();
     const input = screen.getByTestId('input');
     expect(input).toHaveDisplayValue('');
 
-    await user.type(input, 'abc');
-    expect(input).toHaveDisplayValue('abc');
+    await user.type(input, 'Hello');
+    expect(input).toHaveDisplayValue('Hello');
+
+    await user.type(input, ' World');
+    expect(input).toHaveDisplayValue('Hello World');
   });
 });

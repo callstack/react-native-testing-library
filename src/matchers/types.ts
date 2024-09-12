@@ -218,7 +218,7 @@ export interface JestNativeMatchers<R> {
   toHaveAccessibleName(expectedName?: TextMatch, options?: TextMatchOptions): R;
 
   /**
-   * Assert whether a host `TextInput` element has a given display value based on `value` and `defaultValue` props.
+   * Assert whether a host `TextInput` element has a given display value based on `value`, unmanaged native state, and `defaultValue` props.
    *
    * @see
    * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tohavedisplayvalue)

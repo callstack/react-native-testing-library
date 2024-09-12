@@ -3,7 +3,7 @@ import { isHostTextInput } from '../../helpers/host-component-names';
 import { nativeState } from '../../native-state';
 import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
-import { isTextInputEditable } from '../../helpers/text-input';
+import { getTextInputValue, isTextInputEditable } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait, getTextContentSize } from '../utils';
@@ -45,7 +45,7 @@ export async function type(
     dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
   }
 
-  let currentText = element.props.value ?? element.props.defaultValue ?? '';
+  let currentText = getTextInputValue(element);
   for (const key of keys) {
     const previousText = element.props.value ?? currentText;
     const proposedText = applyKey(previousText, key);

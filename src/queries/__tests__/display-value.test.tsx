@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextInput, View } from 'react-native';
-
 import { render, screen } from '../..';
+import '../../matchers/extend-expect';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -32,11 +32,11 @@ test('getByDisplayValue, queryByDisplayValue', () => {
   render(<Banana />);
   const input = screen.getByDisplayValue(/custom/i);
 
-  expect(input.props.value).toBe(INPUT_FRESHNESS);
+  expect(input).toHaveDisplayValue(INPUT_FRESHNESS);
 
   const sameInput = screen.getByDisplayValue(INPUT_FRESHNESS);
 
-  expect(sameInput.props.value).toBe(INPUT_FRESHNESS);
+  expect(sameInput).toHaveDisplayValue(INPUT_FRESHNESS);
   expect(() => screen.getByDisplayValue('no value')).toThrow(
     'Unable to find an element with displayValue: no value',
   );

@@ -2,7 +2,7 @@ import { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { isPointerEventEnabled } from '../helpers/pointer-events';
-import { isTextInputEditable } from '../helpers/text-input';
+import { getTextInputValue, isTextInputEditable } from '../helpers/text-input';
 import { nativeState } from '../native-state';
 import { EventBuilder } from './event-builder';
 import { UserEventInstance } from './setup';
@@ -28,7 +28,7 @@ export async function paste(
   dispatchEvent(element, 'focus', EventBuilder.Common.focus());
 
   // 2. Select all
-  const textToClear = element.props.value ?? element.props.defaultValue ?? '';
+  const textToClear = getTextInputValue(element);
   const rangeToClear = { start: 0, end: textToClear.length };
   dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(rangeToClear));
 
