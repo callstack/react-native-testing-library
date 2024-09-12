@@ -47,7 +47,7 @@ export async function type(
 
   let currentText = getTextInputValue(element);
   for (const key of keys) {
-    const previousText = element.props.value ?? currentText;
+    const previousText = getTextInputValue(element);
     const proposedText = applyKey(previousText, key);
     const isAccepted = isTextChangeAccepted(element, proposedText);
     currentText = isAccepted ? proposedText : previousText;
@@ -60,7 +60,7 @@ export async function type(
     });
   }
 
-  const finalText = element.props.value ?? currentText;
+  const finalText = getTextInputValue(element);
   await wait(this.config);
 
   if (options?.submitEditing) {

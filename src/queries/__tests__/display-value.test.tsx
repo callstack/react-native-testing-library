@@ -30,12 +30,11 @@ const Banana = () => (
 
 test('getByDisplayValue, queryByDisplayValue', () => {
   render(<Banana />);
-  const input = screen.getByDisplayValue(/custom/i);
 
+  const input = screen.getByDisplayValue(/custom/i);
   expect(input).toHaveDisplayValue(INPUT_FRESHNESS);
 
   const sameInput = screen.getByDisplayValue(INPUT_FRESHNESS);
-
   expect(sameInput).toHaveDisplayValue(INPUT_FRESHNESS);
   expect(() => screen.getByDisplayValue('no value')).toThrow(
     'Unable to find an element with displayValue: no value',
