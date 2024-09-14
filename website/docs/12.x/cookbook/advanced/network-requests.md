@@ -293,8 +293,9 @@ As we are dealing with network requests, and things can go wrong, we should also
 the API request fails. In this case, we would like to test how our application behaves when the API request fails.
 
 :::info
-It is good to note that Axios throws auto. an error when the response status code is not in the
-range of 2xx.
+The nature of the network can be highly dynamic, which makes it challenging to describe it completely in a fixed list of request handlers.
+MSW provides us the means to override any particular network behavior using the designated `.use()` API.
+More info can be found in [MSW's Network behavior overrides documentation](https://mswjs.io/docs/best-practices/network-behavior-overrides)
 :::
 
 ```tsx title=network-requests/Phonebook.test.tsx
@@ -337,24 +338,26 @@ describe('PhoneBook', () => {
 ## Global guarding against unwanted API requests
 
 As mistakes may happen, we might forget to mock an API request in one of our tests in the future.
-To prevent we make unwanted API requests, and alert the developer when it happens, we can globally
-mock the `axios` module in our test suite.
+To prevent we make unwanted API requests, and alert the developer when it happens, we can choose to
+move MSW's server management from `PhoneBook.test.tsx` to Jest's setup file via [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array).
 
-```tsx title=__mocks__/axios.ts
-const chuckNorrisError = () => {
-  throw Error(
-    "Please ensure you mock 'Axios' - Only Chuck Norris is allowed to make API requests when testing ;)",
-  );
-};
+```tsx title=examples/cookbook/jest-setup.ts
+// Enable API mocking via Mock Service Worker (MSW)
+beforeAll(() => server.listen());
+// Reset any runtime request handlers we may add during the tests
+afterEach(() => server.resetHandlers());
+// Disable API mocking after the tests are done
+afterAll(() => server.close());
 
-export default {
-  // Mock all the methods to throw an error
-  get: jest.fn(chuckNorrisError),
-  post: jest.fn(chuckNorrisError),
-  put: jest.fn(chuckNorrisError),
-  delete: jest.fn(chuckNorrisError),
-  request: jest.fn(chuckNorrisError),
-};
+// ... rest of your setup file
+```
+
+This setup will ensure you have the MSW server running before any test suite starts and stops it after all tests are done.
+Which will result in a warning in the console if you forget to mock an API request in your test suite.
+
+```bash
+[MSW] Warning: intercepted a request without a matching request handler:
+ • GET https://randomuser.me/api/?results=25?results=25
 ```
 
 ## Conclusion
