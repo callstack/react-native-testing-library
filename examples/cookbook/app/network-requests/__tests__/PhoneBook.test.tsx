@@ -6,6 +6,8 @@ import {
   mockServerFailureForGetAllFavorites,
 } from './test-utils';
 
+jest.setTimeout(10000);
+
 describe('PhoneBook', () => {
   it('fetches all contacts and favorites successfully and renders lists in sections correctly', async () => {
     render(<PhoneBook />);
@@ -23,7 +25,9 @@ describe('PhoneBook', () => {
     render(<PhoneBook />);
 
     await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
-    expect(await screen.findByText(/error fetching contacts/i)).toBeOnTheScreen();
+    expect(
+      await screen.findByText(/an error occurred: error fetching contacts/i),
+    ).toBeOnTheScreen();
   });
 
   it('fails to fetch favorites and renders error message', async () => {

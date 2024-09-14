@@ -11,8 +11,7 @@ In this guide, we will show you how to mock network requests and guard your test
 and unmocked/unhandled network requests
 
 :::info
-To simulate a real-world scenario, we will use
-the [Random User Generator API](https://randomuser.me/) that provides random user data.
+To simulate a real-world scenario, we will use the [Random User Generator API](https://randomuser.me/) that provides random user data.
 :::
 
 ## Phonebook Example
@@ -87,7 +86,7 @@ export default async (): Promise<User[]> => {
 };
 ```
 
-We do the same for fetching the favorites, but this time limiting the results to 10.
+We have similar function for fetching the favorites, but this time limiting the results to 10.
 
 ```tsx title=network-requests/api/getAllFavorites.ts
 import { User } from '../types';
@@ -202,53 +201,60 @@ const styles = ...
 
 ## Start testing with a simple test
 
-In our test we would like to test if the `PhoneBook` component renders the `FavoritesList`
+In our initial test we would like to test if the `PhoneBook` component renders the `FavoritesList`
 and `ContactsList` components correctly.
-We will mock the network requests and their responses to ensure that the component behaves as
-expected. We will use [MSW (Mock Service Worker)](https://mswjs.io/docs/getting-started) to mock the network requests.
+We will need to mock the network requests and their corresponding responses to ensure that the component behaves as
+expected. To mock the network requests we will use [MSW (Mock Service Worker)](https://mswjs.io/docs/getting-started).
 
-```tsx title=network-requests/Phonebook.test.tsx
+:::note
+We recommend using the Mock Service Worker (MSW) library to declaratively mock API communication in your tests instead of stubbing `fetch`, or relying on third-party adapters.
+:::
 
 :::info
-We recommend using the Mock Service Worker (MSW) library to declaratively mock API communication in
- your tests instead of stubbing `fetch, or relying on third-party adapters.
+You can install MSW by running `npm install msw --save-dev` or `yarn add msw --dev`.
+More info regarding installation can be found in [MSW's getting started guide](https://mswjs.io/docs/getting-started#step-1-install).
 
+Please make sure you're also aware of [MSW's setup guide](https://mswjs.io/docs/integrations/react-native).
+Please be minded that the MSW's setup guide is potentially incomplete and might contain discrepancies/missing pieces.
 :::
 
 ```tsx title=network-requests/Phonebook.test.tsx
-import {render, waitForElementToBeRemoved} from '@testing-library/react-native';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react-native';
 import React from 'react';
 import PhoneBook from '../PhoneBook';
-import {User} from '../types';
-import axios from 'axios';
-import {MismatchedUrlError} from './test-utils';
+import { User } from '../types';
+import {http, HttpResponse} from "msw";
+import {setupServer} from "msw/node";
 
-const ensureUrlMatchesBaseUrl = (url: string) => {
-  if (!url.includes('https://randomuser.me/api')) throw new MismatchedUrlError(url);
-};
+// Define request handlers and response resolvers for random user API.
+// By default, we always return the happy path response.
+const handlers = [
+  http.get('https://randomuser.me/api/*', () => {
+    return HttpResponse.json(DATA);
+  }),
+];
 
-export const mockAxiosGetWithSuccessResponse = () => {
-  (axios.get as jest.Mock).mockImplementationOnce((url) => {
-    // Ensure the URL matches the base URL of the API
-    ensureUrlMatchesBaseUrl(url);
+// Setup a request interception server with the given request handlers.
+const server = setupServer(...handlers);
 
-    return Promise.resolve({ data: DATA });
-  });
-};
+// Enable API mocking via Mock Service Worker (MSW)
+beforeAll(() => server.listen());
+// Reset any runtime request handlers we may add during the tests
+afterEach(() => server.resetHandlers());
+// Disable API mocking after the tests are done
+afterAll(() => server.close());
 
 describe('PhoneBook', () => {
-  it('fetches favorites successfully and renders all users avatars', async () => {
-    // Mock the axios.get function to return the data we want
-    mockAxiosGetWithSuccessResponse();
-    render(<PhoneBook/>);
+  it('fetches all contacts and favorites successfully and renders lists in sections correctly', async () => {
+    render(<PhoneBook />);
 
-    // Wait for the loader to disappear
-    await waitForElementToBeRemoved(() => screen.getByText(/figuring out your favorites/i));
+    await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
+    expect(await screen.findByText('Name: Mrs Ida Kristensen')).toBeOnTheScreen();
+    expect(await screen.findByText('Email: ida.kristensen@example.com')).toBeOnTheScreen();
+    expect(await screen.findAllByText(/name/i)).toHaveLength(3);
     expect(await screen.findByText(/my favorites/i)).toBeOnTheScreen();
-    // All the avatars should be rendered
     expect(await screen.findAllByLabelText('favorite-contact-avatar')).toHaveLength(3);
   });
-});
 
 const DATA: { results: User[] } = {
   results: [
@@ -271,21 +277,22 @@ const DATA: { results: User[] } = {
       cell: '123-4567-890',
     },
     // For brevity, we have omitted the rest of the users, you can still find them in
-    // examples/cookbook/app/advanced/__tests__/PhoneBook.test.tsx
+    // examples/cookbook/app/network-requests/__tests__/test-utils.ts
     ...
   ],
 };
-
 ```
+
+:::info
+More info regarding how to describe the network using request handlers, intercepting a request and handling its response can be found in the [MSW's documentation](https://mswjs.io/docs/getting-started#step-2-describe).
+:::
 
 ## Testing error handling
 
-As we are dealing with network requests, we should also test how our application behaves when the
-API
-request fails. We can mock the `axios.get` function to throw an error and test if our application is
-handling the error correctly.
+As we are dealing with network requests, and things can go wrong, we should also cover the case when
+the API request fails. In this case, we would like to test how our application behaves when the API request fails.
 
-:::note
+:::info
 It is good to note that Axios throws auto. an error when the response status code is not in the
 range of 2xx.
 :::
@@ -293,24 +300,38 @@ range of 2xx.
 ```tsx title=network-requests/Phonebook.test.tsx
 ...
 
-export const mockAxiosGetWithFailureResponse = () => {
-  (axios.get as jest.Mock).mockImplementationOnce((url) => {
-    ensureUrlMatchesBaseUrl(url);
-
-    return Promise.reject({ message: 'Error fetching favorites' });
-  });
+const mockServerFailureForGetAllContacts = () => {
+  server.use(
+    http.get('https://randomuser.me/api/', ({ request }) => {
+      // Construct a URL instance out of the intercepted request.
+      const url = new URL(request.url);
+      // Read the "results" URL query parameter using the "URLSearchParams" API.
+      const resultsLength = url.searchParams.get('results');
+      // Simulate a server error for the get all contacts request.
+      // We check if the "results" query parameter is set to "25"
+      // to know it's the correct request to mock, in our case get all contacts.
+      if (resultsLength === '25') {
+        return new HttpResponse(null, { status: 500 });
+      }
+      // Return the default response for all other requests that match URL and verb. (in our case get favorites)
+      return HttpResponse.json(DATA);
+    }),
+  );
 };
 
-it('fails to fetch favorites and renders error message', async () => {
-  // Mock the axios.get function to throw an error
-  mockAxiosGetWithFailureResponse();
-  render(<PhoneBook />);
+describe('PhoneBook', () => {
+...
+  it('fails to fetch all contacts and renders error message', async () => {
+    mockServerFailureForGetAllContacts();
+    render(<PhoneBook />);
 
-  // Wait for the loader to disappear
-  await waitForElementToBeRemoved(() => screen.getByText(/figuring out your favorites/i));
-  // Error message should be displayed
-  expect(await screen.findByText(/error fetching favorites/i)).toBeOnTheScreen();
+    await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
+    expect(
+      await screen.findByText(/an error occurred: error fetching contacts/i),
+    ).toBeOnTheScreen();
+  });
 });
+
 ````
 
 ## Global guarding against unwanted API requests
