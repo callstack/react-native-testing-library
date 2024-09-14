@@ -2875,6 +2875,7 @@ __metadata:
     "@relmify/jest-serializer-strip-ansi": "npm:^1.0.2"
     "@types/jest": "npm:^29.5.12"
     "@types/react": "npm:^18.3.3"
+    "@types/react-reconciler": "npm:^0"
     "@types/react-test-renderer": "npm:^18.3.0"
     babel-jest: "npm:^29.7.0"
     del-cli: "npm:^5.1.0"
@@ -2888,6 +2889,7 @@ __metadata:
     pretty-format: "npm:^29.7.0"
     react: "npm:18.3.1"
     react-native: "npm:0.75.1"
+    react-reconciler: "npm:0.29.2"
     react-test-renderer: "npm:18.3.1"
     redent: "npm:^3.0.0"
     release-it: "npm:^17.6.0"
@@ -3046,6 +3048,15 @@ __metadata:
   version: 15.7.12
   resolution: "@types/prop-types@npm:15.7.12"
   checksum: 10c0/1babcc7db6a1177779f8fde0ccc78d64d459906e6ef69a4ed4dd6339c920c2e05b074ee5a92120fe4e9d9f1a01c952f843ebd550bee2332fc2ef81d1706878f8
+  languageName: node
+  linkType: hard
+
+"@types/react-reconciler@npm:^0":
+  version: 0.28.8
+  resolution: "@types/react-reconciler@npm:0.28.8"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/ca95cffcdf58591679c6c87dcc6f2c50cef9c6b2772d089ec0c695567656f34a30a0f2592f391d99b0e877f94afd67347082c55eb1dc5cb8000e23c8efc0fafc
   languageName: node
   linkType: hard
 
@@ -10079,6 +10090,18 @@ __metadata:
   bin:
     react-native: cli.js
   checksum: 10c0/a24da7fac2999a6229b24d222861d846ed6fc7eff9cada6281e8e845796a8f8409e46835191e55aa2653386df8f2e4e77fe16471c20c94f5ec796ca28b9f64f5
+  languageName: node
+  linkType: hard
+
+"react-reconciler@npm:0.29.2":
+  version: 0.29.2
+  resolution: "react-reconciler@npm:0.29.2"
+  dependencies:
+    loose-envify: "npm:^1.1.0"
+    scheduler: "npm:^0.23.2"
+  peerDependencies:
+    react: ^18.3.1
+  checksum: 10c0/94f48ddc348a974256cf13c859f5a94efdb0cd72e04c51b1a4d5c72a8b960ccd35df2196057ee6a4cbcb26145e12b01e3f9ba3b183fddb901414db36a07cbf43
   languageName: node
   linkType: hard
 

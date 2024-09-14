@@ -48,6 +48,7 @@
   "dependencies": {
     "jest-matcher-utils": "^29.7.0",
     "pretty-format": "^29.7.0",
+    "react-reconciler": "0.29.2",
     "redent": "^3.0.0"
   },
   "peerDependencies": {
@@ -74,6 +75,7 @@
     "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.3.3",
+    "@types/react-reconciler": "^0",
     "@types/react-test-renderer": "^18.3.0",
     "babel-jest": "^29.7.0",
     "del-cli": "^5.1.0",
