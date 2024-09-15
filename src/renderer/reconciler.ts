@@ -3,7 +3,6 @@ import { DefaultEventPriority } from 'react-reconciler/constants';
 
 export type Type = string;
 export type Props = object;
-export type HostContext = object;
 export type OpaqueHandle = Fiber;
 export type PublicInstance = unknown | TextInstance;
 export type SuspenseInstance = unknown;
@@ -11,7 +10,7 @@ export type UpdatePayload = unknown;
 
 export type Container = {
   tag: 'CONTAINER';
-  children: Array<Instance | TextInstance | SuspenseInstance>; // Added SuspenseInstance
+  children: Array<Instance | TextInstance>; // Added SuspenseInstance
   createNodeMock: Function;
 };
 
@@ -19,9 +18,9 @@ export type Instance = {
   tag: 'INSTANCE';
   type: string;
   props: object;
-  isHidden: boolean;
-  children: Array<Instance | TextInstance | SuspenseInstance>;
+  children: Array<Instance | TextInstance>;
   rootContainer: Container;
+  isHidden: boolean;
   internalHandle: OpaqueHandle;
 };
 
@@ -29,6 +28,10 @@ export type TextInstance = {
   tag: 'TEXT';
   text: string;
   isHidden: boolean;
+};
+
+type HostContext = {
+  isInsideText: boolean;
 };
 
 const NO_CONTEXT = {};
@@ -98,6 +101,10 @@ const hostConfig = {
     _hostContext: HostContext,
     internalHandle: OpaqueHandle,
   ): Instance {
+    console.log('createInstance', type, props);
+    console.log('- RootContainer:', rootContainer);
+    console.log('- HostContext:', _hostContext);
+    console.log('- InternalHandle:', internalHandle);
     return {
       tag: 'INSTANCE',
       type,
@@ -115,9 +122,13 @@ const hostConfig = {
   createTextInstance(
     text: string,
     _rootContainer: Container,
-    _hostContext: HostContext,
+    hostContext: HostContext,
     _internalHandle: OpaqueHandle,
   ): TextInstance {
+    if (!hostContext.isInsideText) {
+      throw new Error(`Text string "${text}" must be rendered inside <Text> component`);
+    }
+
     return {
       tag: 'TEXT',
       text,
@@ -193,7 +204,7 @@ const hostConfig = {
    * This method happens **in the render phase**. Do not mutate the tree from it.
    */
   getRootHostContext(_rootContainer: Container): HostContext | null {
-    return NO_CONTEXT;
+    return { isInsideText: false };
   },
 
   /**
@@ -206,11 +217,18 @@ const hostConfig = {
    * This method happens **in the render phase**. Do not mutate the tree from it.
    */
   getChildHostContext(
-    _parentHostContext: HostContext,
-    _type: Type,
+    parentHostContext: HostContext,
+    type: Type,
     _rootContainer: Container,
   ): HostContext {
-    return NO_CONTEXT;
+    const previousIsInsideText = parentHostContext.isInsideText;
+    const isInsideText = type === 'Text';
+
+    if (previousIsInsideText === isInsideText) {
+      return parentHostContext;
+    }
+
+    return { isInsideText };
   },
 
   /**
