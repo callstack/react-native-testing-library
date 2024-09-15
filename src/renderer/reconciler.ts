@@ -2,7 +2,7 @@ import createReconciler, { Fiber } from 'react-reconciler';
 import { DefaultEventPriority } from 'react-reconciler/constants';
 
 export type Type = string;
-export type Props = object;
+export type Props = Record<string, unknown>;
 export type OpaqueHandle = Fiber;
 export type PublicInstance = unknown | TextInstance;
 export type SuspenseInstance = unknown;
@@ -17,7 +17,7 @@ export type Container = {
 export type Instance = {
   tag: 'INSTANCE';
   type: string;
-  props: object;
+  props: Props;
   children: Array<Instance | TextInstance>;
   rootContainer: Container;
   isHidden: boolean;
@@ -426,7 +426,7 @@ const hostConfig = {
   insertBefore(
     parentInstance: Instance,
     child: Instance | TextInstance,
-    beforeChild: Instance | TextInstance | SuspenseInstance,
+    beforeChild: Instance | TextInstance,
   ): void {
     const index = parentInstance.children.indexOf(child);
     if (index !== -1) {
@@ -443,7 +443,7 @@ const hostConfig = {
   insertInContainerBefore(
     container: Container,
     child: Instance | TextInstance,
-    beforeChild: Instance | TextInstance | SuspenseInstance,
+    beforeChild: Instance | TextInstance,
   ): void {
     const index = container.children.indexOf(child);
     if (index !== -1) {
@@ -459,7 +459,7 @@ const hostConfig = {
    *
    * React will only call it for the top-level node that is being removed. It is expected that garbage collection would take care of the whole subtree. You are not expected to traverse the child tree in it.
    */
-  removeChild(parentInstance: Instance, child: Instance | TextInstance | SuspenseInstance): void {
+  removeChild(parentInstance: Instance, child: Instance | TextInstance): void {
     const index = parentInstance.children.indexOf(child);
     parentInstance.children.splice(index, 1);
   },
@@ -467,10 +467,7 @@ const hostConfig = {
   /**
    * Same as `removeChild`, but for when a node is detached from the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different type than the rest of the tree.
    */
-  removeChildFromContainer(
-    container: Container,
-    child: Instance | TextInstance | SuspenseInstance,
-  ): void {
+  removeChildFromContainer(container: Container, child: Instance | TextInstance): void {
     const index = container.children.indexOf(child);
     container.children.splice(index, 1);
   },

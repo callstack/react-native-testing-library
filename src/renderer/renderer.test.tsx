@@ -18,6 +18,62 @@ test('throws when rendering string inside View', () => {
   );
 });
 
+test('implements update()', () => {
+  const result = render(<View testID="view" />);
+  expect(result.toJSON()).toMatchInlineSnapshot(`
+    <View
+      testID="view"
+    />
+  `);
+
+  result.update(
+    <View testID="view">
+      <Text>Hello</Text>
+    </View>,
+  );
+  expect(result.toJSON()).toMatchInlineSnapshot(`
+    <View
+      testID="view"
+    >
+      <Text>
+        Hello
+      </Text>
+    </View>
+  `);
+});
+
+test('implements unmount()', () => {
+  const result = render(<View testID="view" />);
+  expect(result.toJSON()).toMatchInlineSnapshot(`
+    <View
+      testID="view"
+    />
+  `);
+
+  result.unmount();
+  expect(result.toJSON()).toBeNull();
+});
+
+test('implements get root()', () => {
+  const result = render(<View testID="view" />);
+  expect(result.root).toMatchInlineSnapshot(`
+    HostElement {
+      "children": [
+        HostElement {
+          "children": [],
+          "props": {
+            "children": undefined,
+            "testID": "view",
+          },
+          "type": "View",
+        },
+      ],
+      "props": {},
+      "type": "ROOT",
+    }
+  `);
+});
+
 test('implements toJSON()', () => {
   const result = render(
     <View testID="view">
