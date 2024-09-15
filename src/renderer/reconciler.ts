@@ -1,4 +1,4 @@
-import Reconciler, { Fiber } from 'react-reconciler';
+import createReconciler, { Fiber } from 'react-reconciler';
 import { DefaultEventPriority } from 'react-reconciler/constants';
 
 export type Type = string;
@@ -557,4 +557,4 @@ const hostConfig = {
   supportsHydration: false,
 };
 
-export const TestRenderer = Reconciler(hostConfig);
+export const TestReconciler = createReconciler(hostConfig);
