@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Text, TextInput, View } from 'react-native';
-import { configure, render, screen } from '../..';
+import { render, screen } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -23,10 +23,6 @@ const Banana = () => (
 );
 
 const MyComponent = (_props: { testID?: string }) => <Text>My Component</Text>;
-
-beforeEach(() => {
-  configure({ renderer: 'internal' });
-});
 
 test('getByTestId returns only native elements', () => {
   render(

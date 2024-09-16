@@ -10,12 +10,8 @@ import {
   Text,
   View,
 } from 'react-native';
-import { configure, render, screen } from '../..';
+import { render, screen } from '../..';
 import '../extend-expect';
-
-// beforeEach(() => {
-//   configure({ renderer: 'internal' });
-// });
 
 test('toBeDisabled()/toBeEnabled() supports basic case', () => {
   render(

@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { configure, render, screen } from '../..';
+import { render, screen } from '../..';
 import '../extend-expect';
-
-beforeEach(() => {
-  configure({ renderer: 'internal' });
-});
 
 test('toBeBusy() basic case', () => {
   render(

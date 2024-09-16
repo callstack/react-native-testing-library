@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { configure, render, screen } from '../..';
+import { render, screen } from '../..';
 import '../extend-expect';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -8,10 +8,6 @@ function DoNotRenderChildren({ children }: { children: React.ReactNode }) {
   // Intentionally do not render children.
   return null;
 }
-
-beforeEach(() => {
-  configure({ renderer: 'internal' });
-});
 
 test('toBeEmptyElement() base case', () => {
   render(

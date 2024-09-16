@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { Button, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { configure, getDefaultNormalizer, render, screen, within } from '../..';
-
-beforeEach(() => {
-  configure({ renderer: 'internal' });
-});
+import { getDefaultNormalizer, render, screen, within } from '../..';
 
 test('byText matches simple text', () => {
   render(<Text testID="text">Hello World</Text>);
@@ -20,7 +16,7 @@ test('byText matches inner nested text', () => {
   expect(screen.getByText('Hello World').props.testID).toBe('inner');
 });
 
-test('byText matches accross multiple texts', () => {
+test('byText matches across multiple texts', () => {
   render(
     <Text testID="outer">
       <Text testID="inner-1">Hello</Text> <Text testID="inner-2">World</Text>

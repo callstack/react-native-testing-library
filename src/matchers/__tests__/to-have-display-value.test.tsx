@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { TextInput, View } from 'react-native';
-import { configure, render, screen } from '../..';
+import { render, screen } from '../..';
 import '../extend-expect';
-
-beforeEach(() => {
-  configure({ renderer: 'internal' });
-});
 
 test('toHaveDisplayValue() example test', () => {
   render(<TextInput testID="text-input" value="test" />);

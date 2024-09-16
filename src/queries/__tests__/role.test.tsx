@@ -10,7 +10,7 @@ import {
   View,
   Switch,
 } from 'react-native';
-import { configure, render, screen } from '../..';
+import { render, screen } from '../..';
 
 const TEXT_LABEL = 'cool text';
 
@@ -41,10 +41,6 @@ const Section = () => (
     <Button>{TEXT_LABEL}</Button>
   </>
 );
-
-beforeEach(() => {
-  configure({ renderer: 'internal' });
-});
 
 test('getByRole, queryByRole, findByRole', async () => {
   render(<Section />);

@@ -1,17 +1,13 @@
 import * as React from 'react';
 import { View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { configure, configureInternal, getConfig } from '../config';
+import { configureInternal, getConfig } from '../config';
 import {
   getHostComponentNames,
   configureHostComponentNamesIfNeeded,
 } from '../helpers/host-component-names';
 import { act, render } from '..';
 import * as internalRenderer from '../renderer/renderer';
-
-beforeEach(() => {
-  configure({ renderer: 'internal' });
-});
 
 describe('getHostComponentNames', () => {
   test('returns host component names from internal config', () => {

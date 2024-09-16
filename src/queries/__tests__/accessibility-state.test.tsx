@@ -1,12 +1,11 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { View, Text, Pressable, TouchableOpacity } from 'react-native';
-import { configure, render, screen } from '../..';
+import { render, screen } from '../..';
 
 type ConsoleLogMock = jest.Mock<typeof console.log>;
 
 beforeEach(() => {
-  configure({ renderer: 'internal' });
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 

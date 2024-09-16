@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { TextInput, View } from 'react-native';
-import { configure, fireEvent, render, screen } from '../..';
+import { fireEvent, render, screen } from '../..';
 import '../../matchers/extend-expect';
-
-beforeEach(() => {
-  configure({ renderer: 'internal' });
-});
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';

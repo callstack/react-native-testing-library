@@ -8,12 +8,8 @@ import {
   View,
 } from 'react-native';
 import { createEventLogger, getEventsNames } from '../../../test-utils';
-import { configure, render, screen } from '../../..';
+import { render, screen } from '../../..';
 import { userEvent } from '../..';
-
-// beforeEach(() => {
-//   configure({ renderer: 'internal' });
-// });
 
 describe('userEvent.press with real timers', () => {
   beforeEach(() => {

@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { configure, render } from '..';
-
-beforeEach(() => {
-  configure({ renderer: 'internal' });
-});
+import { render } from '..';
 
 let isMounted = false;
 

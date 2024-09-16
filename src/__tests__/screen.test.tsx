@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
-import { configure, render, screen } from '..';
-
-beforeEach(() => {
-  configure({ renderer: 'internal' });
-});
+import { render, screen } from '..';
 
 test('screen has the same queries as render result', () => {
   const result = render(<Text>Mt. Everest</Text>);
