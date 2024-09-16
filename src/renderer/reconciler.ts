@@ -11,6 +11,7 @@ export type UpdatePayload = unknown;
 export type Container = {
   tag: 'CONTAINER';
   children: Array<Instance | TextInstance>; // Added SuspenseInstance
+  parent: null;
   createNodeMock: Function;
 };
 
@@ -19,6 +20,7 @@ export type Instance = {
   type: string;
   props: Props;
   children: Array<Instance | TextInstance>;
+  parent: Container | Instance | null;
   rootContainer: Container;
   isHidden: boolean;
   internalHandle: OpaqueHandle;
@@ -27,10 +29,13 @@ export type Instance = {
 export type TextInstance = {
   tag: 'TEXT';
   text: string;
+  parent: Container | Instance | null;
   isHidden: boolean;
 };
 
 type HostContext = {
+  instance: Container | Instance;
+  parentInstance: Container | Instance | null;
   isInsideText: boolean;
 };
 
@@ -101,7 +106,7 @@ const hostConfig = {
     _hostContext: HostContext,
     internalHandle: OpaqueHandle,
   ): Instance {
-    // console.log('createInstance', type, props);
+    console.log('🔷 createInstance', type, props);
     // console.log('- RootContainer:', rootContainer);
     // console.log('- HostContext:', _hostContext);
     // console.log('- InternalHandle:', internalHandle);
@@ -111,6 +116,7 @@ const hostConfig = {
       props,
       isHidden: false,
       children: [],
+      parent: null,
       rootContainer,
       internalHandle,
     };
@@ -132,6 +138,7 @@ const hostConfig = {
     return {
       tag: 'TEXT',
       text,
+      parent: null,
       isHidden: false,
     };
   },
@@ -155,12 +162,14 @@ const hostConfig = {
    * If you don't want to do anything here, you should return `false`.
    */
   finalizeInitialChildren(
-    _instance: Instance,
-    _type: Type,
-    _props: Props,
+    instance: Instance,
+    type: Type,
+    props: Props,
     _rootContainer: Container,
     _hostContext: HostContext,
   ): boolean {
+    // console.log('🔷 finalizeInitialChildren', type, props);
+    // console.log('🔷 - instance:', instance);
     return false;
   },
 
@@ -172,13 +181,15 @@ const hostConfig = {
    * See the meaning of `rootContainer` and `hostContext` in the `createInstance` documentation.
    */
   prepareUpdate(
-    _instance: Instance,
-    _type: Type,
-    _oldProps: Props,
-    _newProps: Props,
+    instance: Instance,
+    type: Type,
+    oldProps: Props,
+    newProps: Props,
     _rootContainer: Container,
     _hostContext: HostContext,
   ): UpdatePayload | null {
+    // console.log('🔷 prepareUpdate', type, newProps, oldProps);
+    // console.log('🔷 - instance:', instance);
     return UPDATE_SIGNAL;
   },
 
@@ -191,8 +202,9 @@ const hostConfig = {
    *
    * This method happens **in the render phase**. Do not mutate the tree from it.
    */
-  shouldSetTextContent(_type: Type, _props: Props): boolean {
+  shouldSetTextContent(type: Type, props: Props): boolean {
     // TODO: what should RN do here?
+    //console.log('🔷 shouldSetTextContent', type, props);
     return false;
   },
 
@@ -203,8 +215,8 @@ const hostConfig = {
    *
    * This method happens **in the render phase**. Do not mutate the tree from it.
    */
-  getRootHostContext(_rootContainer: Container): HostContext | null {
-    return { isInsideText: false };
+  getRootHostContext(rootContainer: Container): HostContext | null {
+    return { isInsideText: false, instance: rootContainer, parentInstance: null };
   },
 
   /**
@@ -228,7 +240,11 @@ const hostConfig = {
       return parentHostContext;
     }
 
-    return { isInsideText };
+    return {
+      isInsideText,
+      parentInstance: parentHostContext.instance,
+      instance: parentHostContext.instance,
+    };
   },
 
   /**
@@ -239,6 +255,7 @@ const hostConfig = {
   getPublicInstance(instance: Instance | TextInstance): PublicInstance {
     switch (instance.tag) {
       case 'INSTANCE': {
+        //console.log('🔷 getPublicInstance', instance);
         const createNodeMock = instance.rootContainer.createNodeMock;
         const mockNode = createNodeMock({
           type: instance.type,
@@ -385,92 +402,36 @@ const hostConfig = {
    *
    * Although this method currently runs in the commit phase, you still should not mutate any other nodes in it. If you need to do some additional work when a node is definitely connected to the visible tree, look at `commitMount`.
    */
-  appendChild(parentInstance: Instance, child: Instance | TextInstance): void {
-    if (__DEV__) {
-      if (!Array.isArray(parentInstance.children)) {
-        // eslint-disable-next-line no-console
-        console.error(
-          'An invalid container has been provided. ' +
-            'This may indicate that another renderer is being used in addition to the test renderer. ' +
-            '(For example, ReactDOM.createPortal inside of a ReactTestRenderer tree.) ' +
-            'This is not supported.',
-        );
-      }
-    }
-
-    const index = parentInstance.children.indexOf(child);
-    if (index !== -1) {
-      parentInstance.children.splice(index, 1);
-    }
-
-    parentInstance.children.push(child);
-  },
+  appendChild,
 
   /**
    * Same as `appendChild`, but for when a node is attached to the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different type than the rest of the tree.
    */
-  appendChildToContainer(container: Container, child: Instance | TextInstance): void {
-    const index = container.children.indexOf(child);
-    if (index !== -1) {
-      container.children.splice(index, 1);
-    }
-
-    container.children.push(child);
-  },
+  appendChildToContainer: appendChild,
 
   /**
    * This method should mutate the `parentInstance` and place the `child` before `beforeChild` in the list of its children. For example, in the DOM this would translate to a `parentInstance.insertBefore(child, beforeChild)` call.
    *
    * Note that React uses this method both for insertions and for reordering nodes. Similar to DOM, it is expected that you can call `insertBefore` to reposition an existing child. Do not mutate any other parts of the tree from it.
    */
-  insertBefore(
-    parentInstance: Instance,
-    child: Instance | TextInstance,
-    beforeChild: Instance | TextInstance,
-  ): void {
-    const index = parentInstance.children.indexOf(child);
-    if (index !== -1) {
-      parentInstance.children.splice(index, 1);
-    }
-
-    const beforeIndex = parentInstance.children.indexOf(beforeChild);
-    parentInstance.children.splice(beforeIndex, 0, child);
-  },
+  insertBefore,
 
   /**
    * Same as `insertBefore`, but for when a node is attached to the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different type than the rest of the tree.
    */
-  insertInContainerBefore(
-    container: Container,
-    child: Instance | TextInstance,
-    beforeChild: Instance | TextInstance,
-  ): void {
-    const index = container.children.indexOf(child);
-    if (index !== -1) {
-      container.children.splice(index, 1);
-    }
-
-    const beforeIndex = container.children.indexOf(beforeChild);
-    container.children.splice(beforeIndex, 0, child);
-  },
+  insertInContainerBefore: insertBefore,
 
   /**
    * This method should mutate the `parentInstance` to remove the `child` from the list of its children.
    *
    * React will only call it for the top-level node that is being removed. It is expected that garbage collection would take care of the whole subtree. You are not expected to traverse the child tree in it.
    */
-  removeChild(parentInstance: Instance, child: Instance | TextInstance): void {
-    const index = parentInstance.children.indexOf(child);
-    parentInstance.children.splice(index, 1);
-  },
+  removeChild,
 
   /**
    * Same as `removeChild`, but for when a node is detached from the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different type than the rest of the tree.
    */
-  removeChildFromContainer(container: Container, child: Instance | TextInstance): void {
-    const index = container.children.indexOf(child);
-    container.children.splice(index, 1);
-  },
+  removeChildFromContainer: removeChild,
 
   /**
    * If you returned `true` from `shouldSetTextContent` for the previous props, but returned `false` from `shouldSetTextContent` for the next props, React will call this method so that you can clear the text content you were managing manually. For example, in the DOM you could set `node.textContent = ''`.
@@ -501,12 +462,9 @@ const hostConfig = {
    *
    * If you never return `true` from `finalizeInitialChildren`, you can leave it empty.
    */
-  commitMount(
-    _instance: Instance,
-    _type: Type,
-    _props: Props,
-    _internalHandle: OpaqueHandle,
-  ): void {
+  commitMount(instance: Instance, type: Type, props: Props, _internalHandle: OpaqueHandle): void {
+    console.log('🔷 commitMount', type, props);
+    console.log('🔷 - instance:', instance);
     // noop
   },
 
@@ -521,10 +479,13 @@ const hostConfig = {
     type: Type,
     _prevProps: Props,
     nextProps: Props,
-    _internalHandle: OpaqueHandle,
+    internalHandle: OpaqueHandle,
   ): void {
+    // console.log('🔷 commitMount', type, nextProps, _prevProps);
+    // console.log('🔷 - instance:', instance);
     instance.type = type;
     instance.props = nextProps;
+    instance.internalHandle = internalHandle;
   },
 
   /**
@@ -559,6 +520,9 @@ const hostConfig = {
    * This method should mutate the `container` root node and remove all children from it.
    */
   clearContainer(container: Container): void {
+    container.children.forEach((child) => {
+      child.parent = null;
+    });
     container.children.splice(0);
   },
 
@@ -573,3 +537,61 @@ const hostConfig = {
 };
 
 export const TestReconciler = createReconciler(hostConfig);
+
+/**
+ * This method should mutate the `parentInstance` and add the child to its list of children. For example, in the DOM this would translate to a `parentInstance.appendChild(child)` call.
+ *
+ * Although this method currently runs in the commit phase, you still should not mutate any other nodes in it. If you need to do some additional work when a node is definitely connected to the visible tree, look at `commitMount`.
+ */
+function appendChild(parentInstance: Container | Instance, child: Instance | TextInstance): void {
+  if (__DEV__) {
+    if (!Array.isArray(parentInstance.children)) {
+      // eslint-disable-next-line no-console
+      console.error(
+        'An invalid container has been provided. ' +
+          'This may indicate that another renderer is being used in addition to the test renderer. ' +
+          '(For example, ReactDOM.createPortal inside of a ReactTestRenderer tree.) ' +
+          'This is not supported.',
+      );
+    }
+  }
+
+  const index = parentInstance.children.indexOf(child);
+  if (index !== -1) {
+    parentInstance.children.splice(index, 1);
+  }
+
+  child.parent = parentInstance;
+  parentInstance.children.push(child);
+}
+
+/**
+ * This method should mutate the `parentInstance` and place the `child` before `beforeChild` in the list of its children. For example, in the DOM this would translate to a `parentInstance.insertBefore(child, beforeChild)` call.
+ *
+ * Note that React uses this method both for insertions and for reordering nodes. Similar to DOM, it is expected that you can call `insertBefore` to reposition an existing child. Do not mutate any other parts of the tree from it.
+ */
+function insertBefore(
+  parentInstance: Container | Instance,
+  child: Instance | TextInstance,
+  beforeChild: Instance | TextInstance,
+): void {
+  const index = parentInstance.children.indexOf(child);
+  if (index !== -1) {
+    parentInstance.children.splice(index, 1);
+  }
+
+  child.parent = parentInstance;
+  const beforeIndex = parentInstance.children.indexOf(beforeChild);
+  parentInstance.children.splice(beforeIndex, 0, child);
+}
+
+/**
+ * This method should mutate the `parentInstance` to remove the `child` from the list of its children.
+ *
+ * React will only call it for the top-level node that is being removed. It is expected that garbage collection would take care of the whole subtree. You are not expected to traverse the child tree in it.
+ */
+function removeChild(parentInstance: Container | Instance, child: Instance | TextInstance): void {
+  const index = parentInstance.children.indexOf(child);
+  parentInstance.children.splice(index, 1);
+  child.parent = null;
+}

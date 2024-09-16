@@ -9,8 +9,12 @@ import {
   Button,
 } from 'react-native';
 import { createEventLogger, getEventsNames } from '../../../test-utils';
-import { render, screen } from '../../..';
+import { configure, render, screen } from '../../..';
 import { userEvent } from '../..';
+
+// beforeEach(() => {
+//   configure({ renderer: 'internal' });
+// });
 
 describe('userEvent.press with fake timers', () => {
   beforeEach(() => {

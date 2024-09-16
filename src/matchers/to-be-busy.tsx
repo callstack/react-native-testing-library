@@ -6,6 +6,9 @@ import { checkHostElement, formatElement } from './utils';
 export function toBeBusy(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeBusy, this);
 
+  console.log('🔴 toBeBusy', element.type, element.props);
+  console.log('🔴 - computeAriaBusy', computeAriaBusy(element));
+
   return {
     pass: computeAriaBusy(element),
     message: () => {

@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { render, screen } from '../..';
+import { configure, render, screen } from '../..';
 import '../extend-expect';
 
-test('toBeBusy() basic case', () => {
+beforeEach(() => {
+  configure({ renderer: 'internal' });
+});
+
+test.only('toBeBusy() basic case', () => {
   render(
     <>
       <View testID="busy" accessibilityState={{ busy: true }} />

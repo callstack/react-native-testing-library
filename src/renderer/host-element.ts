@@ -17,18 +17,34 @@ export class HostElement {
   }
 
   get type(): string {
-    return 'type' in this.instance ? this.instance.type : 'ROOT';
+    return this.instance.tag === 'INSTANCE' ? this.instance.type : 'CONTAINER';
   }
 
   get props(): HostElementProps {
-    return 'props' in this.instance ? this.instance.props : {};
+    return this.instance.tag === 'INSTANCE' ? this.instance.props : {};
   }
 
   get children(): HostNode[] {
-    console.log('AAAA', this.instance.children);
     const result = this.instance.children.map((child) => HostElement.fromInstance(child));
-    console.log('BBBB', result);
     return result;
+  }
+
+  get parent(): HostElement | null {
+    const parentInstance = this.instance.parent;
+    if (parentInstance == null) {
+      return null;
+    }
+
+    if (parentInstance.tag === 'CONTAINER') {
+      return HostElement.fromContainer(parentInstance);
+    }
+
+    if (parentInstance.tag === 'INSTANCE') {
+      return HostElement.fromInstance(parentInstance) as HostElement;
+    }
+
+    // @ts-expect-error
+    throw new Error(`Unexpected node type in HostElement.parent: ${this.parentInstance.tag}`);
   }
 
   get $$typeof(): Symbol {

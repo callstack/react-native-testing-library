@@ -93,7 +93,8 @@ function buildRenderResult(
   wrap: (element: React.ReactElement) => JSX.Element,
 ) {
   const update = updateWithAct(renderer, wrap);
-  const instance = renderer.root;
+  // @ts-expect-error
+  const instance = renderer.container ?? renderer.root;
 
   const unmount = () => {
     void act(() => {

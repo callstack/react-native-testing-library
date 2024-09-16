@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TextInput, View } from 'react-native';
-import { render, screen } from '../..';
+import { configure, render, screen } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -23,6 +23,10 @@ const Banana = () => (
     />
   </View>
 );
+
+beforeEach(() => {
+  configure({ renderer: 'internal' });
+});
 
 test('getByPlaceholderText, queryByPlaceholderText', () => {
   render(<Banana />);

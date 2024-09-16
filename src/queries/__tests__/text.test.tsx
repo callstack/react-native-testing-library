@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { Button, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { getDefaultNormalizer, render, screen, within } from '../..';
+import { configure, getDefaultNormalizer, render, screen, within } from '../..';
+
+beforeEach(() => {
+  configure({ renderer: 'internal' });
+});
 
 test('byText matches simple text', () => {
   render(<Text testID="text">Hello World</Text>);

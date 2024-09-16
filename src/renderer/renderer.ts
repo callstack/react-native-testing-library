@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 import { Container, TestReconciler } from './reconciler';
-import { JsonNode, renderToJson } from './render-to-json';
+import { JsonNode, renderChildrenToJson, renderToJson } from './render-to-json';
 import { HostElement, HostNode } from './host-element';
 
 export type RenderResult = {
@@ -15,6 +15,7 @@ export function render(element: ReactElement): RenderResult {
   let container: Container | null = {
     tag: 'CONTAINER',
     children: [],
+    parent: null,
     createNodeMock: () => null,
   };
 
@@ -25,9 +26,9 @@ export function render(element: ReactElement): RenderResult {
     false, // isStrictMode
     null, // concurrentUpdatesByDefaultOverride
     'id', // identifierPrefix
-    (error) => {
+    (_error) => {
       // eslint-disable-next-line no-console
-      console.log('Recoverable Error', error);
+      console.log('Recoverable Error', _error);
     }, // onRecoverableError
     null, // transitionCallbacks
   );
@@ -89,21 +90,7 @@ export function render(element: ReactElement): RenderResult {
       return renderToJson(container.children[1]);
     }
 
-    let renderedChildren = null;
-    if (container.children?.length) {
-      for (let i = 0; i < container.children.length; i++) {
-        const renderedChild = renderToJson(container.children[i]);
-        if (renderedChild !== null) {
-          if (renderedChildren === null) {
-            renderedChildren = [renderedChild];
-          } else {
-            renderedChildren.push(renderedChild);
-          }
-        }
-      }
-    }
-
-    return renderedChildren;
+    return renderChildrenToJson(container.children);
   };
 
   const result = {

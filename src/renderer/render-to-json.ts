@@ -70,7 +70,7 @@ export function renderToJson(instance: Container | Instance | TextInstance): Jso
       }
 
       const result = {
-        type: 'ROOT',
+        type: 'CONTAINER',
         props: {},
         children: renderedChildren,
         $$typeof: Symbol.for('react.test.json'),
@@ -86,4 +86,22 @@ export function renderToJson(instance: Container | Instance | TextInstance): Jso
       // @ts-expect-error
       throw new Error(`Unexpected node type in toJSON: ${inst.tag}`);
   }
+}
+
+export function renderChildrenToJson(children: Array<Instance | TextInstance> | null) {
+  let result = null;
+  if (children?.length) {
+    for (let i = 0; i < children.length; i++) {
+      const renderedChild = renderToJson(children[i]);
+      if (renderedChild !== null) {
+        if (result === null) {
+          result = [renderedChild];
+        } else {
+          result.push(renderedChild);
+        }
+      }
+    }
+  }
+
+  return result;
 }

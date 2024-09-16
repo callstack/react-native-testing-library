@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { View, Text, Pressable, TouchableOpacity } from 'react-native';
-import { render, screen } from '../..';
+import { configure, render, screen } from '../..';
 
 type ConsoleLogMock = jest.Mock<typeof console.log>;
 
 beforeEach(() => {
+  configure({ renderer: 'internal' });
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
@@ -148,6 +149,10 @@ describe('disabled state matching', () => {
     render(<View accessibilityState={{ disabled: true }} />);
 
     expect(screen.getByA11yState({ disabled: true })).toBeTruthy();
+    expect(screen.queryByA11yState({ disabled: true })).toBeTruthy();
+
+    const x = screen.queryByA11yState({ disabled: false });
+    expect(x).toMatchInlineSnapshot(`null`);
     expect(screen.queryByA11yState({ disabled: false })).toBeFalsy();
   });
 

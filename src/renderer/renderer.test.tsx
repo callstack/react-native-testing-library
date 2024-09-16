@@ -17,6 +17,8 @@ test('renders Text', () => {
 });
 
 test('throws when rendering string outside of Text', () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+
   expect(() => render(<View>Hello</View>)).toThrowErrorMatchingInlineSnapshot(
     `"Text string "Hello" must be rendered inside <Text> component"`,
   );
@@ -28,6 +30,8 @@ test('throws when rendering string outside of Text', () => {
   expect(() => render(<>Hello</>)).toThrowErrorMatchingInlineSnapshot(
     `"Text string "Hello" must be rendered inside <Text> component"`,
   );
+
+  jest.restoreAllMocks();
 });
 
 test('implements update()', () => {

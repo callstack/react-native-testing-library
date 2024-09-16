@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { render, screen } from '../..';
+import { configure, render, screen } from '../..';
 
 type ConsoleLogMock = jest.Mock<typeof console.log>;
 
 beforeEach(() => {
+  configure({ renderer: 'internal' });
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
@@ -30,6 +31,64 @@ const Section = () => (
 
 test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
   render(<Section />);
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
+    [
+      <Text
+        accessibilityValue={
+          {
+            "max": 60,
+          }
+        }
+      >
+        Title
+      </Text>,
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={false}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "opacity": 1,
+          }
+        }
+      >
+        <Text
+          accessibilityValue={
+            {
+              "max": 60,
+              "min": 40,
+            }
+          }
+        >
+          cool text
+        </Text>
+      </View>,
+    ]
+  `);
 
   expect(screen.getByA11yValue({ min: 40 }).props.accessibilityValue).toEqual({
     min: 40,

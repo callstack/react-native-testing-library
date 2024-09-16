@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { render } from '..';
+import { configure, render } from '..';
+
+beforeEach(() => {
+  configure({ renderer: 'internal' });
+});
 
 let isMounted = false;
 
@@ -26,14 +30,14 @@ afterEach(() => {
 
 // This just verifies that by importing RNTL in an environment which supports afterEach (like jest)
 // we'll get automatic cleanup between tests.
-test('component is mounted, but not umounted before test ends', () => {
+test('component is mounted, but not unmounted before test ends', () => {
   const fn = jest.fn();
   render(<Test onUnmount={fn} />);
   expect(isMounted).toEqual(true);
   expect(fn).not.toHaveBeenCalled();
 });
 
-test('component is automatically umounted after first test ends', () => {
+test('component is automatically unmounted after first test ends', () => {
   expect(isMounted).toEqual(false);
 });
 

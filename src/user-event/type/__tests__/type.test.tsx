@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { TextInput, TextInputProps, View } from 'react-native';
 import { createEventLogger, getEventsNames, lastEventPayload } from '../../../test-utils';
-import { render, screen } from '../../..';
+import { configure, render, screen } from '../../..';
 import { userEvent } from '../..';
 import '../../../matchers/extend-expect';
 
 beforeEach(() => {
+  configure({ renderer: 'internal' });
   jest.useRealTimers();
 });
 

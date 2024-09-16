@@ -10,7 +10,7 @@ export type HostTestInstance = ReactTestInstance & { type: string };
  * @param element The element to check.
  */
 export function isHostElement(element?: ReactTestInstance | null): element is HostTestInstance {
-  return typeof element?.type === 'string';
+  return typeof element?.type === 'string' && element.type !== 'CONTAINER';
 }
 
 /**
