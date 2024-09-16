@@ -284,3 +284,173 @@ exports[`debug with only props from TextInput components 1`] = `
   </Text>
 </View>"
 `;
+
+exports[`debug: another custom message 1`] = `
+"another custom message
+
+<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID="bananaFresh"
+  >
+    not fresh
+  </Text>
+  <TextInput
+    placeholder="Add custom freshness"
+    testID="bananaCustomFreshness"
+    value="Custom Freshie"
+  />
+  <TextInput
+    defaultValue="What did you inspect?"
+    placeholder="Who inspected freshness?"
+    testID="bananaChef"
+    value="I inspected freshie"
+  />
+  <TextInput
+    defaultValue="What banana?"
+  />
+  <TextInput
+    defaultValue="hello"
+    value=""
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function onBlur]}
+    onClick={[Function onClick]}
+    onFocus={[Function onFocus]}
+    onResponderGrant={[Function onResponderGrant]}
+    onResponderMove={[Function onResponderMove]}
+    onResponderRelease={[Function onResponderRelease]}
+    onResponderTerminate={[Function onResponderTerminate]}
+    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
+    role="button"
+  >
+    <Text>
+      Change freshness!
+    </Text>
+  </View>
+  <Text
+    testID="duplicateText"
+  >
+    First Text
+  </Text>
+  <Text
+    testID="duplicateText"
+  >
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
+</View>"
+`;
+
+exports[`debug: shallow 1`] = `
+"another custom message
+
+"
+`;
+
+exports[`debug: with message 1`] = `
+"my custom message
+
+<View>
+  <Text>
+    Is the banana fresh?
+  </Text>
+  <Text
+    testID="bananaFresh"
+  >
+    not fresh
+  </Text>
+  <TextInput
+    placeholder="Add custom freshness"
+    testID="bananaCustomFreshness"
+    value="Custom Freshie"
+  />
+  <TextInput
+    defaultValue="What did you inspect?"
+    placeholder="Who inspected freshness?"
+    testID="bananaChef"
+    value="I inspected freshie"
+  />
+  <TextInput
+    defaultValue="What banana?"
+  />
+  <TextInput
+    defaultValue="hello"
+    value=""
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function onBlur]}
+    onClick={[Function onClick]}
+    onFocus={[Function onFocus]}
+    onResponderGrant={[Function onResponderGrant]}
+    onResponderMove={[Function onResponderMove]}
+    onResponderRelease={[Function onResponderRelease]}
+    onResponderTerminate={[Function onResponderTerminate]}
+    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
+    role="button"
+  >
+    <Text>
+      Change freshness!
+    </Text>
+  </View>
+  <Text
+    testID="duplicateText"
+  >
+    First Text
+  </Text>
+  <Text
+    testID="duplicateText"
+  >
+    Second Text
+  </Text>
+  <Text>
+    0
+  </Text>
+</View>"
+`;

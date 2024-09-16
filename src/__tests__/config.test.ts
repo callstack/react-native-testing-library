@@ -1,5 +1,9 @@
 import { getConfig, configure, resetToDefaults, configureInternal } from '../config';
 
+beforeEach(() => {
+  resetToDefaults();
+});
+
 test('getConfig() returns existing configuration', () => {
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
   expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
