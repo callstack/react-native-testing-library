@@ -6,7 +6,8 @@ import '../extend-expect';
 test('toHaveTextContent() example test', () => {
   render(
     <View testID="view">
-      <Text>Hello</Text> <Text>World</Text>
+      <Text>Hello</Text>
+      <Text> World</Text>
     </View>,
   );
 
