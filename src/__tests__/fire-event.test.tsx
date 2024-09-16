@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { fireEvent, render, screen } from '..';
+import { act, fireEvent, render, screen } from '..';
 import '../matchers/extend-expect';
 
 type OnPressComponentProps = {
@@ -103,7 +103,7 @@ describe('fireEvent', () => {
 
 test('fireEvent.press', () => {
   const onPressMock = jest.fn();
-  const text = 'Fireevent press';
+  const text = 'FireEvent press';
   const eventData = {
     nativeEvent: {
       pageX: 20,

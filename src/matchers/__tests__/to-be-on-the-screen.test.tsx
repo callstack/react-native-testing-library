@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
-import { render, screen } from '../..';
+import { configure, render, screen } from '../..';
 import '../extend-expect';
+
+beforeEach(() => {
+  configure({ renderer: 'internal' });
+});
 
 test('toBeOnTheScreen() example test', () => {
   render(

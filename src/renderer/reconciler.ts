@@ -34,8 +34,6 @@ export type TextInstance = {
 };
 
 type HostContext = {
-  instance: Container | Instance;
-  parentInstance: Container | Instance | null;
   isInsideText: boolean;
 };
 
@@ -143,14 +141,7 @@ const hostConfig = {
     };
   },
 
-  appendInitialChild(parentInstance: Instance, child: Instance | TextInstance): void {
-    const index = parentInstance.children.indexOf(child);
-    if (index !== -1) {
-      parentInstance.children.splice(index, 1);
-    }
-
-    parentInstance.children.push(child);
-  },
+  appendInitialChild: appendChild,
 
   /**
    * In this method, you can perform some final mutations on the `instance`. Unlike with `createInstance`, by the time `finalizeInitialChildren` is called, all the initial children have already been added to the `instance`, but the instance itself has not yet been connected to the tree on the screen.
@@ -216,7 +207,7 @@ const hostConfig = {
    * This method happens **in the render phase**. Do not mutate the tree from it.
    */
   getRootHostContext(rootContainer: Container): HostContext | null {
-    return { isInsideText: false, instance: rootContainer, parentInstance: null };
+    return { isInsideText: false };
   },
 
   /**
@@ -240,11 +231,7 @@ const hostConfig = {
       return parentHostContext;
     }
 
-    return {
-      isInsideText,
-      parentInstance: parentHostContext.instance,
-      instance: parentHostContext.instance,
-    };
+    return { isInsideText };
   },
 
   /**
@@ -402,7 +389,7 @@ const hostConfig = {
    *
    * Although this method currently runs in the commit phase, you still should not mutate any other nodes in it. If you need to do some additional work when a node is definitely connected to the visible tree, look at `commitMount`.
    */
-  appendChild,
+  appendChild: appendChild,
 
   /**
    * Same as `appendChild`, but for when a node is attached to the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different type than the rest of the tree.
@@ -414,7 +401,7 @@ const hostConfig = {
    *
    * Note that React uses this method both for insertions and for reordering nodes. Similar to DOM, it is expected that you can call `insertBefore` to reposition an existing child. Do not mutate any other parts of the tree from it.
    */
-  insertBefore,
+  insertBefore: insertBefore,
 
   /**
    * Same as `insertBefore`, but for when a node is attached to the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different type than the rest of the tree.
@@ -426,7 +413,7 @@ const hostConfig = {
    *
    * React will only call it for the top-level node that is being removed. It is expected that garbage collection would take care of the whole subtree. You are not expected to traverse the child tree in it.
    */
-  removeChild,
+  removeChild: removeChild,
 
   /**
    * Same as `removeChild`, but for when a node is detached from the root container. This is useful if attaching to the root has a slightly different implementation, or if the root container nodes are of a different type than the rest of the tree.
@@ -523,6 +510,7 @@ const hostConfig = {
     container.children.forEach((child) => {
       child.parent = null;
     });
+
     container.children.splice(0);
   },
 

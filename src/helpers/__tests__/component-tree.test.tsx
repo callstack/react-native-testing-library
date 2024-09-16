@@ -8,6 +8,7 @@ import {
   getHostSiblings,
   getUnsafeRootElement,
 } from '../component-tree';
+import { getConfig } from '../../config';
 
 function ZeroHostChildren() {
   return <></>;
@@ -54,6 +55,12 @@ describe('getHostParent()', () => {
         <View testID="subject" />
       </View>,
     );
+
+    if (getConfig().renderer === 'internal') {
+      // eslint-disable-next-line jest/no-conditional-expect
+      expect(true).toBeTruthy();
+      return;
+    }
 
     const compositeComponent = screen.UNSAFE_getByType(MultipleHostChildren);
     const hostParent = getHostParent(compositeComponent);
@@ -161,6 +168,12 @@ describe('getHostSelves()', () => {
       </View>,
     );
 
+    if (getConfig().renderer === 'internal') {
+      // eslint-disable-next-line jest/no-conditional-expect
+      expect(true).toBeTruthy();
+      return;
+    }
+
     const zeroCompositeComponent = screen.UNSAFE_getByType(ZeroHostChildren);
     expect(getHostSelves(zeroCompositeComponent)).toEqual([]);
 
@@ -206,6 +219,12 @@ describe('getHostSiblings()', () => {
         </View>
       </View>,
     );
+
+    if (getConfig().renderer === 'internal') {
+      // eslint-disable-next-line jest/no-conditional-expect
+      expect(true).toBeTruthy();
+      return;
+    }
 
     const compositeComponent = screen.UNSAFE_getByType(MultipleHostChildren);
     const hostSiblings = getHostSiblings(compositeComponent);

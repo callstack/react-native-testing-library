@@ -7,7 +7,7 @@ beforeEach(() => {
   configure({ renderer: 'internal' });
 });
 
-test.only('toBeBusy() basic case', () => {
+test('toBeBusy() basic case', () => {
   render(
     <>
       <View testID="busy" accessibilityState={{ busy: true }} />
