@@ -21,7 +21,13 @@ export class HostElement {
   }
 
   get props(): HostElementProps {
-    return this.instance.tag === 'INSTANCE' ? this.instance.props : {};
+    if (this.instance.tag === 'CONTAINER') {
+      return {};
+    }
+
+    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // const { children, ...restProps } = this.instance.props;
+    return this.instance.props;
   }
 
   get children(): HostNode[] {
