@@ -101,10 +101,10 @@ const hostConfig = {
     _hostContext: HostContext,
     internalHandle: OpaqueHandle,
   ): Instance {
-    console.log('createInstance', type, props);
-    console.log('- RootContainer:', rootContainer);
-    console.log('- HostContext:', _hostContext);
-    console.log('- InternalHandle:', internalHandle);
+    // console.log('createInstance', type, props);
+    // console.log('- RootContainer:', rootContainer);
+    // console.log('- HostContext:', _hostContext);
+    // console.log('- InternalHandle:', internalHandle);
     return {
       tag: 'INSTANCE',
       type,

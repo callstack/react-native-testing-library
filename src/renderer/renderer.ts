@@ -33,7 +33,7 @@ export function render(element: ReactElement): RenderResult {
 
   TestReconciler.updateContainer(element, rootFiber, null, () => {
     // eslint-disable-next-line no-console
-    console.log('Rendered', container?.children);
+    //console.log('Rendered', container?.children);
   });
 
   //     update(newElement: React$Element<any>) {
@@ -50,7 +50,7 @@ export function render(element: ReactElement): RenderResult {
 
     TestReconciler.updateContainer(element, rootFiber, null, () => {
       // eslint-disable-next-line no-console
-      console.log('Updated', container?.children);
+      //console.log('Updated', container?.children);
     });
   };
 
@@ -61,7 +61,7 @@ export function render(element: ReactElement): RenderResult {
 
     TestReconciler.updateContainer(null, rootFiber, null, () => {
       // eslint-disable-next-line no-console
-      console.log('Unmounted', container?.children);
+      //console.log('Unmounted', container?.children);
     });
 
     container = null;

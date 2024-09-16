@@ -13,10 +13,12 @@ import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
+export type Renderer = 'react-test-renderer' | 'internal';
 export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => unknown;
   unstable_validateStringsRenderedWithinText?: boolean;
+  renderer?: Renderer;
 }
 
 export type RenderResult = ReturnType<typeof render>;
@@ -41,7 +43,7 @@ export function renderInternal<T>(
     wrapper: Wrapper,
     detectHostComponentNames = true,
     unstable_validateStringsRenderedWithinText,
-    ...testRendererOptions
+    ...restOptions
   } = options || {};
 
   if (detectHostComponentNames) {
@@ -51,12 +53,12 @@ export function renderInternal<T>(
   if (unstable_validateStringsRenderedWithinText) {
     return renderWithStringValidation(component, {
       wrapper: Wrapper,
-      ...testRendererOptions,
+      ...restOptions,
     });
   }
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-  const renderer = renderWithAct(wrap(component), testRendererOptions);
+  const renderer = renderWithAct(wrap(component), restOptions);
   return buildRenderResult(renderer, wrap);
 }
 
