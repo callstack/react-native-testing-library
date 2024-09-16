@@ -10,14 +10,29 @@ type FindOptions = {
 const instanceToHostElementMap = new WeakMap<Container | Instance, HostElement>();
 
 export class HostElement {
-  public type: string;
-  public props: HostElementProps;
-  public children: HostNode[];
+  private instance: Instance | Container;
 
-  constructor(type: string, props: HostElementProps, children: HostNode[]) {
-    this.type = type;
-    this.props = props;
-    this.children = children;
+  constructor(instance: Instance | Container) {
+    this.instance = instance;
+  }
+
+  get type(): string {
+    return 'type' in this.instance ? this.instance.type : 'ROOT';
+  }
+
+  get props(): HostElementProps {
+    return 'props' in this.instance ? this.instance.props : {};
+  }
+
+  get children(): HostNode[] {
+    console.log('AAAA', this.instance.children);
+    const result = this.instance.children.map((child) => HostElement.fromInstance(child));
+    console.log('BBBB', result);
+    return result;
+  }
+
+  get $$typeof(): Symbol {
+    return Symbol.for('react.test.json');
   }
 
   static fromContainer(container: Container): HostElement {
@@ -26,12 +41,7 @@ export class HostElement {
       return hostElement;
     }
 
-    const result = new HostElement(
-      'ROOT',
-      {},
-      container.children.map((child) => HostElement.fromInstance(child)),
-    );
-
+    const result = new HostElement(container);
     instanceToHostElementMap.set(container, result);
     return result;
   }
@@ -47,19 +57,14 @@ export class HostElement {
           return hostElement;
         }
 
-        const result = new HostElement(
-          instance.type,
-          instance.props,
-          instance.children.map((child) => HostElement.fromInstance(child)),
-        );
-
+        const result = new HostElement(instance);
         instanceToHostElementMap.set(instance, result);
         return result;
       }
 
       default:
         // @ts-expect-error
-        throw new Error(`Unexpected node type in toJSON: ${instance.tag}`);
+        throw new Error(`Unexpected node type in HostElement.fromInstance: ${instance.tag}`);
     }
   }
 

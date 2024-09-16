@@ -1,12 +1,13 @@
 import { ReactElement } from 'react';
 import { Container, TestReconciler } from './reconciler';
 import { JsonNode, renderToJson } from './render-to-json';
-import { HostElement } from './host-element';
+import { HostElement, HostNode } from './host-element';
 
 export type RenderResult = {
   update: (element: ReactElement) => void;
   unmount: () => void;
-  root: HostElement | null;
+  container: HostElement | null;
+  root: HostNode | null;
   toJSON: () => JsonNode | JsonNode[] | null;
 };
 
@@ -17,7 +18,7 @@ export function render(element: ReactElement): RenderResult {
     createNodeMock: () => null,
   };
 
-  let rootFiber = TestReconciler.createContainer(
+  let containerFiber = TestReconciler.createContainer(
     container,
     0, // 0 = LegacyRoot, 1 = ConcurrentRoot
     null, // no hydration callback
@@ -31,7 +32,7 @@ export function render(element: ReactElement): RenderResult {
     null, // transitionCallbacks
   );
 
-  TestReconciler.updateContainer(element, rootFiber, null, () => {
+  TestReconciler.updateContainer(element, containerFiber, null, () => {
     // eslint-disable-next-line no-console
     //console.log('Rendered', container?.children);
   });
@@ -44,32 +45,32 @@ export function render(element: ReactElement): RenderResult {
   //     },
 
   const update = (element: ReactElement) => {
-    if (rootFiber == null || container == null) {
+    if (containerFiber == null || container == null) {
       return;
     }
 
-    TestReconciler.updateContainer(element, rootFiber, null, () => {
+    TestReconciler.updateContainer(element, containerFiber, null, () => {
       // eslint-disable-next-line no-console
       //console.log('Updated', container?.children);
     });
   };
 
   const unmount = () => {
-    if (rootFiber == null || container == null) {
+    if (containerFiber == null || container == null) {
       return;
     }
 
-    TestReconciler.updateContainer(null, rootFiber, null, () => {
+    TestReconciler.updateContainer(null, containerFiber, null, () => {
       // eslint-disable-next-line no-console
       //console.log('Unmounted', container?.children);
     });
 
     container = null;
-    rootFiber = null;
+    containerFiber = null;
   };
 
   const toJSON = () => {
-    if (rootFiber == null || container == null || container.children.length === 0) {
+    if (containerFiber == null || container == null || container.children.length === 0) {
       return null;
     }
 
@@ -109,12 +110,24 @@ export function render(element: ReactElement): RenderResult {
     update,
     unmount,
     toJSON,
-    get root(): HostElement {
-      if (rootFiber == null || container == null) {
-        throw new Error("Can't access .root on unmounted test renderer");
+    get container(): HostElement {
+      if (containerFiber == null || container == null) {
+        throw new Error("Can't access .container on unmounted test renderer");
       }
 
       return HostElement.fromContainer(container);
+    },
+
+    get root(): HostNode {
+      if (containerFiber == null || container == null) {
+        throw new Error("Can't access .root on unmounted test renderer");
+      }
+
+      if (container.children.length === 0) {
+        throw new Error("Can't access .root on unmounted test renderer");
+      }
+
+      return HostElement.fromInstance(container.children[0]);
     },
   };
 
