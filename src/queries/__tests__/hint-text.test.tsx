@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { configure, render, screen } from '../..';
+import { render, screen } from '../..';
 
 const BUTTON_HINT = 'click this button';
 const TEXT_HINT = 'static text';

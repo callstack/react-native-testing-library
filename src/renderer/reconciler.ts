@@ -104,7 +104,7 @@ const hostConfig = {
     _hostContext: HostContext,
     internalHandle: OpaqueHandle,
   ): Instance {
-    console.log('🔷 createInstance', type, props);
+    //console.log('🔷 createInstance', type, props);
     // console.log('- RootContainer:', rootContainer);
     // console.log('- HostContext:', _hostContext);
     // console.log('- InternalHandle:', internalHandle);
@@ -153,9 +153,9 @@ const hostConfig = {
    * If you don't want to do anything here, you should return `false`.
    */
   finalizeInitialChildren(
-    instance: Instance,
-    type: Type,
-    props: Props,
+    _instance: Instance,
+    _type: Type,
+    _props: Props,
     _rootContainer: Container,
     _hostContext: HostContext,
   ): boolean {
@@ -172,10 +172,10 @@ const hostConfig = {
    * See the meaning of `rootContainer` and `hostContext` in the `createInstance` documentation.
    */
   prepareUpdate(
-    instance: Instance,
-    type: Type,
-    oldProps: Props,
-    newProps: Props,
+    _instance: Instance,
+    _type: Type,
+    _oldProps: Props,
+    _newProps: Props,
     _rootContainer: Container,
     _hostContext: HostContext,
   ): UpdatePayload | null {
@@ -193,7 +193,7 @@ const hostConfig = {
    *
    * This method happens **in the render phase**. Do not mutate the tree from it.
    */
-  shouldSetTextContent(type: Type, props: Props): boolean {
+  shouldSetTextContent(_type: Type, _props: Props): boolean {
     // TODO: what should RN do here?
     //console.log('🔷 shouldSetTextContent', type, props);
     return false;
@@ -206,7 +206,7 @@ const hostConfig = {
    *
    * This method happens **in the render phase**. Do not mutate the tree from it.
    */
-  getRootHostContext(rootContainer: Container): HostContext | null {
+  getRootHostContext(_rootContainer: Container): HostContext | null {
     return { isInsideText: false };
   },
 
@@ -449,9 +449,14 @@ const hostConfig = {
    *
    * If you never return `true` from `finalizeInitialChildren`, you can leave it empty.
    */
-  commitMount(instance: Instance, type: Type, props: Props, _internalHandle: OpaqueHandle): void {
-    console.log('🔷 commitMount', type, props);
-    console.log('🔷 - instance:', instance);
+  commitMount(
+    _instance: Instance,
+    _type: Type,
+    _props: Props,
+    _internalHandle: OpaqueHandle,
+  ): void {
+    // console.log('🔷 commitMount', type, props);
+    // console.log('🔷 - instance:', instance);
     // noop
   },
 

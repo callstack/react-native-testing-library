@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { act, fireEvent, render, screen } from '..';
+import { fireEvent, render, screen } from '..';
 import '../matchers/extend-expect';
 
 type OnPressComponentProps = {

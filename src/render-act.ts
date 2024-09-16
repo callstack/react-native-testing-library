@@ -16,7 +16,7 @@ export function renderWithAct(
   // This will be called synchronously.
   void act(() => {
     if (rendererOption == 'internal') {
-      console.log(`💠 Test "${expect.getState().currentTestName}": using internal renderer`);
+      // @ts-expect-error
       renderer = render(component) as ReactTestRenderer;
     } else {
       // @ts-expect-error TestRenderer.create is not typed correctly
