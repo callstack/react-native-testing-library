@@ -255,6 +255,7 @@ describe('PhoneBook', () => {
     expect(await screen.findByText(/my favorites/i)).toBeOnTheScreen();
     expect(await screen.findAllByLabelText('favorite-contact-avatar')).toHaveLength(3);
   });
+});
 
 const DATA: { results: User[] } = {
   results: [
@@ -337,8 +338,8 @@ describe('PhoneBook', () => {
 
 ## Global guarding against unwanted API requests
 
-As mistakes may happen, we might forget to mock an API request in one of our tests in the future.
-To prevent we make unwanted API requests, and alert the developer when it happens, we can choose to
+As mistakes may happen, we might forget to mock a network request in one of our tests in the future.
+To prevent us from happening, and alert when a certain network request is left unhandled, you may choose to
 move MSW's server management from `PhoneBook.test.tsx` to Jest's setup file via [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array).
 
 ```tsx title=examples/cookbook/jest-setup.ts
@@ -362,18 +363,18 @@ Which will result in a warning in the console if you forget to mock an API reque
 
 ## Conclusion
 
-Testing a component that makes network requests with Axios is straightforward. By mocking the Axios
-requests, we can control the data that is returned and test how our application behaves in different
+Testing a component that makes network requests in combination with MSW takes some initial preparation to configure and describe the overridden networks.
+We can achieve that by using MSW's request handlers and intercepting APIs.
+
+Once up and running we gain full grip over the network requests, their responses, statuses.
+Doing so is crucial to be able to test how our application behaves in different
 scenarios, such as when the request is successful or when it fails.
-There are many ways to mock Axios requests, and the method you choose will depend on your specific
-use case. In this guide, we showed you how to mock Axios requests using Jest's `jest.mock` function
-and how to guard against unwanted API requests throughout your test suite.
+
+When global configuration is in place, MSW's will also warn us when an unhandled network requests has occurred throughout a test suite.
 
 ## Further Reading and Alternatives
 
-Explore more powerful tools for mocking network requests in your React Native application:
+Explore more advanced scenarios for mocking network requests with MSW:
 
-- [Axios Mock Adapter](https://github.com/ctimmerm/axios-mock-adapter): A popular library for
-  mocking Axios calls with an extensive API, making it easy to simulate various scenarios.
-- [MSW (Mock Service Worker)](https://mswjs.io/): Great for spinning up a local test server that
-  intercepts network requests at the network level, providing end-to-end testing capabilities.
+- MSW's Basics - [Intercepting requests](https://mswjs.io/docs/basics/intercepting-requests) and/or [Mocking responses](https://mswjs.io/docs/basics/mocking-responses)
+- MSW's Network behavior - how to describe [REST](https://mswjs.io/docs/network-behavior/rest) and/or [GraphQL](https://mswjs.io/docs/network-behavior/graphql) APIs
