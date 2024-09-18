@@ -82,6 +82,7 @@ type Recipe = {
 };
 
 const recipes: Recipe[] = [
-  { id: 2, title: 'Welcome Screen with Custom Render', path: 'custom-render/' },
-  { id: 1, title: 'Task List with Jotai', path: 'jotai/' },
+  { id: 1, title: 'Welcome Screen with Custom Render', path: 'custom-render/' },
+  { id: 2, title: 'Task List with Jotai', path: 'state-management/jotai/' },
+  { id: 3, title: 'Phone book with\na Variety of Net. Req. Methods', path: 'advanced/' },
 ];
