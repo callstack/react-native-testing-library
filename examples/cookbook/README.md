@@ -22,7 +22,7 @@ file will grow much larger that in a normal React Native. This is fine 🐶☕�
 We invite all developers, from beginners to experts, to contribute your own recipes! If you have a clever solution, best practice, or useful tip, we encourage you to:
 
 1. Submit a Pull Request with your recipe.
-2. Join the conversation on GitHub [here]([url](https://github.com/callstack/react-native-testing-library/issues/1624)) to discuss ideas, ask questions, or provide feedback.
+2. Join the conversation on GitHub [here](https://github.com/callstack/react-native-testing-library/issues/1624) to discuss ideas, ask questions, or provide feedback.
 
 ## Screenshots From the App
 | Home Screen | Phonebook with Net. Req. Example |
