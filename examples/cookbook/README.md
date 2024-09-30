@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="banner" src="./assets/readme-banner.png" />
+  <img alt="banner" src="assets/readme/banner.png" />
 </p>
 
 # React Native Testing Library Cookbook App
@@ -25,6 +25,6 @@ We invite all developers, from beginners to experts, to contribute your own reci
 2. Join the conversation on GitHub [here](https://github.com/callstack/react-native-testing-library/issues/1624) to discuss ideas, ask questions, or provide feedback.
 
 ## Screenshots From the App
-| Home Screen | Phonebook with Net. Req. Example |
-| ------ | ----- |
-| ![simulator_screenshot_103EC79C-D922-49C0-90CC-CED23AEE5373](https://github.com/user-attachments/assets/5260ccd5-123a-445f-916d-53f71ae59aca) | ![simulator_screenshot_E72AE63D-1E8D-42BB-A083-DC46736E607A](https://github.com/user-attachments/assets/692f8c96-72aa-48c1-8b26-fde1f6efc8b6) |
+| Home Screen                                           | Phonebook with Net. Req. Example                                |
+|-------------------------------------------------------|-----------------------------------------------------------------|
+| ![home-screenshot](assets/readme/home-screenshot.png) | ![phonebook-screenshot](assets/readme/phonebook-screenshot.png) |
