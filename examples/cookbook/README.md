@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="banner" src="https://github.com/user-attachments/assets/9f34e38a-32a1-422a-a906-9428036fcd85">
+  <img alt="banner" src="./assets/readme-banner.png" />
 </p>
 
 # React Native Testing Library Cookbook App
