@@ -103,7 +103,7 @@ describe('fireEvent', () => {
 
 test('fireEvent.press', () => {
   const onPressMock = jest.fn();
-  const text = 'Fireevent press';
+  const text = 'FireEvent press';
   const eventData = {
     nativeEvent: {
       pageX: 20,

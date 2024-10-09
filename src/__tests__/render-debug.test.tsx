@@ -1,8 +1,10 @@
+/* eslint-disable jest/no-conditional-expect */
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import stripAnsi from 'strip-ansi';
 import { configure, fireEvent, render, screen } from '..';
+import { getConfig } from '../config';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -97,16 +99,23 @@ test('debug', () => {
 
   screen.debug();
   screen.debug('my custom message');
-  screen.debug.shallow();
-  screen.debug.shallow('my other custom message');
+  if (getConfig().renderer !== 'internal') {
+    screen.debug.shallow();
+    screen.debug.shallow('my other custom message');
+  }
+
   screen.debug({ message: 'another custom message' });
 
   const mockCalls = jest.mocked(console.log).mock.calls;
   expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
   expect(stripAnsi(mockCalls[1][0] + mockCalls[1][1])).toMatchSnapshot('with message');
-  expect(stripAnsi(mockCalls[2][0])).toMatchSnapshot('shallow');
-  expect(stripAnsi(mockCalls[3][0] + mockCalls[3][1])).toMatchSnapshot('shallow with message');
-  expect(stripAnsi(mockCalls[4][0] + mockCalls[4][1])).toMatchSnapshot('another custom message');
+  if (getConfig().renderer !== 'internal') {
+    expect(stripAnsi(mockCalls[2][0])).toMatchSnapshot('shallow');
+    expect(stripAnsi(mockCalls[3][0] + mockCalls[3][1])).toMatchSnapshot('shallow with message');
+    expect(stripAnsi(mockCalls[4][0] + mockCalls[4][1])).toMatchSnapshot('another custom message');
+  } else {
+    expect(stripAnsi(mockCalls[2][0] + mockCalls[2][1])).toMatchSnapshot('another custom message');
+  }
 
   const mockWarnCalls = jest.mocked(console.warn).mock.calls;
   expect(mockWarnCalls[0]).toEqual([

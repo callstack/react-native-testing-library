@@ -16,7 +16,7 @@ test('byText matches inner nested text', () => {
   expect(screen.getByText('Hello World').props.testID).toBe('inner');
 });
 
-test('byText matches accross multiple texts', () => {
+test('byText matches across multiple texts', () => {
   render(
     <Text testID="outer">
       <Text testID="inner-1">Hello</Text> <Text testID="inner-2">World</Text>

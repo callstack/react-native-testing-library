@@ -7,6 +7,7 @@ import {
   configureHostComponentNamesIfNeeded,
 } from '../helpers/host-component-names';
 import { act, render } from '..';
+import * as internalRenderer from '../renderer/renderer';
 
 describe('getHostComponentNames', () => {
   test('returns host component names from internal config', () => {
@@ -102,12 +103,22 @@ describe('configureHostComponentNamesIfNeeded', () => {
   });
 
   test('throw an error when auto-detection fails', () => {
-    const mockCreate = jest.spyOn(TestRenderer, 'create') as jest.Mock;
-    const renderer = TestRenderer.create(<View />);
+    let mockRender: jest.SpyInstance;
+    if (getConfig().renderer === 'internal') {
+      const result = internalRenderer.render(<View />);
 
-    mockCreate.mockReturnValue({
-      root: renderer.root,
-    });
+      mockRender = jest.spyOn(internalRenderer, 'render') as jest.Mock;
+      mockRender.mockReturnValue({
+        root: result.root,
+      });
+    } else {
+      const renderer = TestRenderer.create(<View />);
+
+      mockRender = jest.spyOn(TestRenderer, 'create') as jest.Mock;
+      mockRender.mockReturnValue({
+        root: renderer.root,
+      });
+    }
 
     expect(() => configureHostComponentNamesIfNeeded()).toThrowErrorMatchingInlineSnapshot(`
       "Trying to detect host component names triggered the following error:
@@ -118,6 +129,6 @@ describe('configureHostComponentNamesIfNeeded', () => {
       Please check if you are using compatible versions of React Native and React Native Testing Library."
     `);
 
-    mockCreate.mockReset();
+    mockRender.mockReset();
   });
 });

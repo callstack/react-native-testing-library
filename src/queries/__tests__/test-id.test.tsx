@@ -32,6 +32,7 @@ test('getByTestId returns only native elements', () => {
       <View testID="view" />
       <Button testID="button" title="Button" onPress={jest.fn()} />
       <MyComponent testID="myComponent" />
+      <View testID="includes-hyphen" />
     </View>,
   );
 
@@ -39,6 +40,7 @@ test('getByTestId returns only native elements', () => {
   expect(screen.getByTestId('textInput')).toBeTruthy();
   expect(screen.getByTestId('view')).toBeTruthy();
   expect(screen.getByTestId('button')).toBeTruthy();
+  expect(screen.getByTestId('includes-hyphen')).toBeTruthy();
 
   expect(screen.getAllByTestId('text')).toHaveLength(1);
   expect(screen.getAllByTestId('textInput')).toHaveLength(1);

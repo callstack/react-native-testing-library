@@ -10,7 +10,8 @@ export type HostTestInstance = ReactTestInstance & { type: string };
  * @param element The element to check.
  */
 export function isHostElement(element?: ReactTestInstance | null): element is HostTestInstance {
-  return typeof element?.type === 'string';
+  // @ts-expect-error element.type has incorrectly narrowed type.
+  return typeof element?.type === 'string' && element.type !== 'CONTAINER';
 }
 
 /**

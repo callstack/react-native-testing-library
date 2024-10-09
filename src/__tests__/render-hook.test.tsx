@@ -1,6 +1,9 @@
+/* eslint-disable jest/no-conditional-expect */
 import React, { ReactNode } from 'react';
 import TestRenderer from 'react-test-renderer';
+import * as internalRenderer from '../renderer/renderer';
 import { renderHook } from '../pure';
+import { getConfig } from '../config';
 
 test('gives committed result', () => {
   const { result } = renderHook(() => {
@@ -93,12 +96,20 @@ test('props type is inferred correctly when initial props is explicitly undefine
  * we check the count of renders using React Test Renderers.
  */
 test('does render only once', () => {
-  jest.spyOn(TestRenderer, 'create');
+  if (getConfig().renderer === 'internal') {
+    jest.spyOn(internalRenderer, 'render');
+  } else {
+    jest.spyOn(TestRenderer, 'create');
+  }
 
   renderHook(() => {
     const [state, setState] = React.useState(1);
     return [state, setState];
   });
 
-  expect(TestRenderer.create).toHaveBeenCalledTimes(1);
+  if (getConfig().renderer === 'internal') {
+    expect(internalRenderer.render).toHaveBeenCalledTimes(1);
+  } else {
+    expect(TestRenderer.create).toHaveBeenCalledTimes(1);
+  }
 });
