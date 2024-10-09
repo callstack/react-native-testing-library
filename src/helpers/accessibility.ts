@@ -169,6 +169,15 @@ export function computeAriaModal(element: ReactTestInstance): boolean | undefine
 }
 
 export function computeAriaLabel(element: ReactTestInstance): string | undefined {
+  const labelElementId = element.props['aria-labelledby'] ?? element.props.accessibilityLabelledBy;
+  if (labelElementId) {
+    const rootElement = getUnsafeRootElement(element);
+    const labelElement = rootElement?.findByProps({ nativeID: labelElementId });
+    if (labelElement) {
+      return getTextContent(labelElement);
+    }
+  }
+
   const explicitLabel = element.props['aria-label'] ?? element.props.accessibilityLabel;
   if (explicitLabel) {
     return explicitLabel;
@@ -180,10 +189,6 @@ export function computeAriaLabel(element: ReactTestInstance): string | undefined
   }
 
   return undefined;
-}
-
-export function computeAriaLabelledBy(element: ReactTestInstance): string | undefined {
-  return element.props['aria-labelledby'] ?? element.props.accessibilityLabelledBy;
 }
 
 // See: https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State#busy-state
@@ -245,21 +250,7 @@ export function computeAriaValue(element: ReactTestInstance): AccessibilityValue
 }
 
 export function computeAccessibleName(element: ReactTestInstance): string | undefined {
-  const label = computeAriaLabel(element);
-  if (label) {
-    return label;
-  }
-
-  const labelElementId = computeAriaLabelledBy(element);
-  if (labelElementId) {
-    const rootElement = getUnsafeRootElement(element);
-    const labelElement = rootElement?.findByProps({ nativeID: labelElementId });
-    if (labelElement) {
-      return getTextContent(labelElement);
-    }
-  }
-
-  return getTextContent(element);
+  return computeAriaLabel(element) ?? getTextContent(element);
 }
 
 type RoleSupportMap = Partial<Record<Role | AccessibilityRole, true>>;
