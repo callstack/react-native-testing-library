@@ -13,6 +13,7 @@ import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isTextInputEditable } from './helpers/text-input';
 import { Point, StringWithAutocomplete } from './types';
 import { nativeState } from './native-state';
+import { EventBuilder } from './user-event/event-builder';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
@@ -30,7 +31,15 @@ export function isTouchResponder(element: ReactTestInstance) {
  * Note: `fireEvent` is accepting both `press` and `onPress` for event names,
  * so we need cover both forms.
  */
-const eventsAffectedByPointerEventsProp = new Set(['press', 'onPress']);
+const eventsAffectedByPointerEventsProp = new Set([
+  'press',
+  'onPress',
+  'responderGrant',
+  'responderRelease',
+  'longPress',
+  'pressIn',
+  'pressOut',
+]);
 
 /**
  * List of `TextInput` events not affected by `editable` prop.
@@ -80,7 +89,9 @@ function findEventHandler(
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
   const handler = getEventHandler(element, eventName);
-  if (handler && isEventEnabled(element, eventName, touchResponder)) return handler;
+  if (handler && isEventEnabled(element, eventName, touchResponder)) {
+    return handler;
+  }
 
   // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
   if (element.parent === null || element.parent.parent === null) {
@@ -136,8 +147,36 @@ function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: un
   return returnValue;
 }
 
-fireEvent.press = (element: ReactTestInstance, ...data: unknown[]) =>
+fireEvent.press = (element: ReactTestInstance, ...data: unknown[]) => {
+  const nativeData =
+    data.length === 1 &&
+    typeof data[0] === 'object' &&
+    data[0] !== null &&
+    'nativeEvent' in data[0] &&
+    typeof data[0].nativeEvent === 'object'
+      ? data[0].nativeEvent
+      : null;
+
+  let responderGrantEvent = EventBuilder.Common.responderGrant();
+  if (nativeData) {
+    responderGrantEvent.nativeEvent = {
+      ...responderGrantEvent.nativeEvent,
+      ...nativeData,
+    };
+  }
+  fireEvent(element, 'responderGrant', responderGrantEvent);
+
   fireEvent(element, 'press', ...data);
+
+  let responderReleaseEvent = EventBuilder.Common.responderRelease();
+  if (nativeData) {
+    responderReleaseEvent.nativeEvent = {
+      ...responderReleaseEvent.nativeEvent,
+      ...nativeData,
+    };
+  }
+  fireEvent(element, 'responderRelease', responderReleaseEvent);
+};
 
 fireEvent.changeText = (element: ReactTestInstance, ...data: unknown[]) =>
   fireEvent(element, 'changeText', ...data);
