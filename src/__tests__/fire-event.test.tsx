@@ -30,31 +30,34 @@ const WithoutEventComponent = (_props: WithoutEventComponentProps) => (
   </View>
 );
 
-type CustomEventComponentProps = {
-  onCustomEvent: () => void;
-};
-const CustomEventComponent = ({ onCustomEvent }: CustomEventComponentProps) => (
-  <TouchableOpacity onPress={onCustomEvent}>
-    <Text>Custom event component</Text>
-  </TouchableOpacity>
-);
+// type CustomEventComponentProps = {
+//   onCustomEvent: () => void;
+// };
 
-type MyCustomButtonProps = {
-  handlePress: () => void;
-  text: string;
-};
-const MyCustomButton = ({ handlePress, text }: MyCustomButtonProps) => (
-  <OnPressComponent onPress={handlePress} text={text} />
-);
+// const CustomEventComponent = ({ onCustomEvent }: CustomEventComponentProps) => (
+//   <TouchableOpacity onPress={onCustomEvent}>
+//     <Text>Custom event component</Text>
+//   </TouchableOpacity>
+// );
 
-type CustomEventComponentWithCustomNameProps = {
-  handlePress: () => void;
-};
-const CustomEventComponentWithCustomName = ({
-  handlePress,
-}: CustomEventComponentWithCustomNameProps) => (
-  <MyCustomButton handlePress={handlePress} text="Custom component" />
-);
+// type MyCustomButtonProps = {
+//   handlePress: () => void;
+//   text: string;
+// };
+
+// const MyCustomButton = ({ handlePress, text }: MyCustomButtonProps) => (
+//   <OnPressComponent onPress={handlePress} text={text} />
+// );
+
+// type CustomEventComponentWithCustomNameProps = {
+//   handlePress: () => void;
+// };
+
+// const CustomEventComponentWithCustomName = ({
+//   handlePress,
+// }: CustomEventComponentWithCustomNameProps) => (
+//   <MyCustomButton handlePress={handlePress} text="Custom component" />
+// );
 
 describe('fireEvent', () => {
   test('should invoke specified event', () => {

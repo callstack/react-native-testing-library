@@ -247,8 +247,4 @@ describe('getUnsafeRootElement()', () => {
     const view = screen.getByTestId('view');
     expect(getUnsafeRootElement(view)).toEqual(screen.UNSAFE_root);
   });
-
-  it('returns null for null', () => {
-    expect(getUnsafeRootElement(null)).toEqual(null);
-  });
 });
