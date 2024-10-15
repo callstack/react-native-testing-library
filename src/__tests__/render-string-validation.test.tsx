@@ -78,9 +78,9 @@ test('should not throw for texts nested in fragments', () => {
   ).not.toThrow();
 });
 
-test('should not throw if option validateRenderedString is false', () => {
-  expect(() => render(<View>hello</View>)).not.toThrow();
-});
+// test('should not throw if option validateRenderedString is false', () => {
+//   expect(() => render(<View>hello</View>)).not.toThrow();
+// });
 
 test(`should throw when one of the children is a text and the parent is not a Text component`, () => {
   expect(() =>

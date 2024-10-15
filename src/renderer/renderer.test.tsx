@@ -20,15 +20,15 @@ test('throws when rendering string outside of Text', () => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
 
   expect(() => render(<View>Hello</View>)).toThrowErrorMatchingInlineSnapshot(
-    `"Text string "Hello" must be rendered inside <Text> component"`,
+    `"Invariant Violation: Text strings must be rendered within a <Text> component. Detected attempt to render "Hello" string within a <View> component."`,
   );
 
   expect(() => render(<Passthrough>Hello</Passthrough>)).toThrowErrorMatchingInlineSnapshot(
-    `"Text string "Hello" must be rendered inside <Text> component"`,
+    `"Invariant Violation: Text strings must be rendered within a <Text> component. Detected attempt to render "Hello" string within a <ROOT> component."`,
   );
 
   expect(() => render(<>Hello</>)).toThrowErrorMatchingInlineSnapshot(
-    `"Text string "Hello" must be rendered inside <Text> component"`,
+    `"Invariant Violation: Text strings must be rendered within a <Text> component. Detected attempt to render "Hello" string within a <ROOT> component."`,
   );
 
   jest.restoreAllMocks();

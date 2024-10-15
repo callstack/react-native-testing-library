@@ -34,6 +34,7 @@ export type TextInstance = {
 };
 
 type HostContext = {
+  elementType: string;
   isInsideText: boolean;
 };
 
@@ -130,7 +131,9 @@ const hostConfig = {
     _internalHandle: OpaqueHandle,
   ): TextInstance {
     if (!hostContext.isInsideText) {
-      throw new Error(`Text string "${text}" must be rendered inside <Text> component`);
+      throw new Error(
+        `Invariant Violation: Text strings must be rendered within a <Text> component. Detected attempt to render "${text}" string within a <${hostContext.elementType}> component.`,
+      );
     }
 
     return {
@@ -207,7 +210,7 @@ const hostConfig = {
    * This method happens **in the render phase**. Do not mutate the tree from it.
    */
   getRootHostContext(_rootContainer: Container): HostContext | null {
-    return { isInsideText: false };
+    return { elementType: 'ROOT', isInsideText: false };
   },
 
   /**
@@ -224,14 +227,8 @@ const hostConfig = {
     type: Type,
     _rootContainer: Container,
   ): HostContext {
-    const previousIsInsideText = parentHostContext.isInsideText;
     const isInsideText = type === 'Text';
-
-    if (previousIsInsideText === isInsideText) {
-      return parentHostContext;
-    }
-
-    return { isInsideText };
+    return { elementType: type, isInsideText };
   },
 
   /**

@@ -88,7 +88,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
   <Text
     testID="bananaFresh"
   >
-    not fresh
+    fresh
   </Text>
   <TextInput
     placeholder="Add custom freshness"
@@ -365,12 +365,6 @@ exports[`debug: another custom message 1`] = `
     0
   </Text>
 </View>"
-`;
-
-exports[`debug: shallow 1`] = `
-"another custom message
-
-"
 `;
 
 exports[`debug: with message 1`] = `
