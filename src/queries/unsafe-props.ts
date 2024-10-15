@@ -2,13 +2,27 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import prettyFormat from 'pretty-format';
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
 import { createQueryByError } from '../helpers/errors';
+import { findAllByProps } from '../helpers/find-all';
 
 const UNSAFE_getByProps = (
   instance: ReactTestInstance,
 ): ((props: { [propName: string]: any }) => ReactTestInstance) =>
   function getByPropsFn(props: { [propName: string]: any }) {
     try {
-      return instance.findByProps(props);
+      const results = findAllByProps(instance, props);
+      if (results.length === 0) {
+        throw new ErrorWithStack(
+          `No instances found with props:\n${prettyFormat(props)}`,
+          getByPropsFn,
+        );
+      }
+      if (results.length > 1) {
+        throw new ErrorWithStack(
+          `Found multiple instances with props:\n${prettyFormat(props)}`,
+          getByPropsFn,
+        );
+      }
+      return results[0];
     } catch (error) {
       throw new ErrorWithStack(prepareErrorMessage(error), getByPropsFn);
     }
@@ -18,7 +32,7 @@ const UNSAFE_getAllByProps = (
   instance: ReactTestInstance,
 ): ((props: { [propName: string]: any }) => Array<ReactTestInstance>) =>
   function getAllByPropsFn(props: { [propName: string]: any }) {
-    const results = instance.findAllByProps(props);
+    const results = findAllByProps(instance, props);
     if (results.length === 0) {
       throw new ErrorWithStack(
         `No instances found with props:\n${prettyFormat(props)}`,

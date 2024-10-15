@@ -16,6 +16,7 @@ import {
 } from './host-component-names';
 import { getTextContent } from './text-content';
 import { isTextInputEditable } from './text-input';
+import { findAllByProps } from './find-all';
 
 type IsInaccessibleOptions = {
   cache?: WeakMap<ReactTestInstance, boolean>;
@@ -253,9 +254,9 @@ export function computeAccessibleName(element: ReactTestInstance): string | unde
   const labelElementId = computeAriaLabelledBy(element);
   if (labelElementId) {
     const rootElement = getUnsafeRootElement(element);
-    const labelElement = rootElement?.findByProps({ nativeID: labelElementId });
-    if (labelElement) {
-      return getTextContent(labelElement);
+    const labelElement = findAllByProps(rootElement, { nativeID: labelElementId });
+    if (labelElement.length > 0) {
+      return getTextContent(labelElement[0]);
     }
   }
 

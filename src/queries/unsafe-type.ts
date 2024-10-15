@@ -1,26 +1,30 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import * as React from 'react';
-import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
+import { ErrorWithStack } from '../helpers/errors';
 import { createQueryByError } from '../helpers/errors';
+import { findAll } from '../helpers/find-all';
 
 const UNSAFE_getByType = (
   instance: ReactTestInstance,
 ): ((type: React.ComponentType<any>) => ReactTestInstance) =>
   function getByTypeFn(type: React.ComponentType<any>) {
-    try {
-      return instance.findByType(type);
-    } catch (error) {
-      throw new ErrorWithStack(prepareErrorMessage(error), getByTypeFn);
+    const results = findAllByType(instance, type);
+    if (results.length === 0) {
+      throw new ErrorWithStack(`No instances found with type:\n${type}`, getByTypeFn);
     }
+    if (results.length > 1) {
+      throw new ErrorWithStack(`Found multiple instances with type:\n${type}`, getByTypeFn);
+    }
+    return results[0];
   };
 
 const UNSAFE_getAllByType = (
   instance: ReactTestInstance,
 ): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) =>
   function getAllByTypeFn(type: React.ComponentType<any>) {
-    const results = instance.findAllByType(type);
+    const results = findAllByType(instance, type);
     if (results.length === 0) {
-      throw new ErrorWithStack('No instances found', getAllByTypeFn);
+      throw new ErrorWithStack(`No instances found with type:\n${type}`, getAllByTypeFn);
     }
     return results;
   };
@@ -61,3 +65,7 @@ export const bindUnsafeByTypeQueries = (instance: ReactTestInstance): UnsafeByTy
   UNSAFE_queryByType: UNSAFE_queryByType(instance),
   UNSAFE_queryAllByType: UNSAFE_queryAllByType(instance),
 });
+
+function findAllByType(instance: ReactTestInstance, type: React.ComponentType<any>) {
+  return findAll(instance, (element) => element.type === type);
+}

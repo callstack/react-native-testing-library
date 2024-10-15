@@ -67,3 +67,20 @@ function findAllInternal(
 
   return results;
 }
+
+export function findAllByProps(
+  root: ReactTestInstance,
+  props: { [propName: string]: any },
+  options?: FindAllOptions,
+): HostTestInstance[] {
+  return findAll(root, (element) => matchProps(element, props), options);
+}
+
+function matchProps(element: ReactTestInstance, props: { [propName: string]: any }): boolean {
+  for (const key in props) {
+    if (props[key] !== element.props[key]) {
+      return false;
+    }
+  }
+  return true;
+}
