@@ -10,7 +10,7 @@ import prettyFormat, { plugins } from 'pretty-format';
 import redent from 'redent';
 import { isHostElement } from '../helpers/component-tree';
 import { defaultMapProps } from '../helpers/format-default';
-import { HostElement } from '../renderer/host-element';
+import { HostElement, HostNode } from '../renderer/host-element';
 
 class HostElementTypeError extends Error {
   constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {
@@ -60,9 +60,13 @@ export function checkHostElement(
  *
  * @param element Element to format.
  */
-export function formatElement(element: HostElement | null) {
+export function formatElement(element: HostNode | null) {
   if (element == null) {
     return '  null';
+  }
+
+  if (typeof element === 'string') {
+    return element;
   }
 
   const { children, ...props } = element.props;
@@ -89,7 +93,7 @@ export function formatElement(element: HostElement | null) {
   );
 }
 
-export function formatElementArray(elements: HostElement[]) {
+export function formatElementArray(elements: HostNode[]) {
   if (elements.length === 0) {
     return '  (no elements)';
   }
