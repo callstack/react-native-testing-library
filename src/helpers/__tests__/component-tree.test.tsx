@@ -8,11 +8,6 @@ import {
   getHostSiblings,
   getUnsafeRootElement,
 } from '../component-tree';
-import { getConfig } from '../../config';
-
-function ZeroHostChildren() {
-  return <></>;
-}
 
 function MultipleHostChildren() {
   return (
@@ -56,15 +51,8 @@ describe('getHostParent()', () => {
       </View>,
     );
 
-    if (getConfig().renderer === 'internal') {
-      // eslint-disable-next-line jest/no-conditional-expect
-      expect(true).toBeTruthy();
-      return;
-    }
-
-    const compositeComponent = screen.UNSAFE_getByType(MultipleHostChildren);
-    const hostParent = getHostParent(compositeComponent);
-    expect(hostParent).toBe(screen.getByTestId('parent'));
+    // eslint-disable-next-line jest/no-conditional-expect
+    expect(true).toBeTruthy();
   });
 });
 
@@ -158,31 +146,6 @@ describe('getHostSelves()', () => {
     expect(getHostSelves(compositeTextInputByValue)).toEqual([hostTextInput]);
     expect(getHostSelves(compositeTextInputByPlaceholder)).toEqual([hostTextInput]);
   });
-
-  test('returns host children for custom composite components', () => {
-    render(
-      <View testID="parent">
-        <ZeroHostChildren />
-        <MultipleHostChildren />
-        <View testID="sibling" />
-      </View>,
-    );
-
-    if (getConfig().renderer === 'internal') {
-      // eslint-disable-next-line jest/no-conditional-expect
-      expect(true).toBeTruthy();
-      return;
-    }
-
-    const zeroCompositeComponent = screen.UNSAFE_getByType(ZeroHostChildren);
-    expect(getHostSelves(zeroCompositeComponent)).toEqual([]);
-
-    const multipleCompositeComponent = screen.UNSAFE_getByType(MultipleHostChildren);
-    const hostChild1 = screen.getByTestId('child1');
-    const hostChild2 = screen.getByTestId('child2');
-    const hostChild3 = screen.getByTestId('child3');
-    expect(getHostSelves(multipleCompositeComponent)).toEqual([hostChild1, hostChild2, hostChild3]);
-  });
 });
 
 describe('getHostSiblings()', () => {
@@ -205,33 +168,6 @@ describe('getHostSiblings()', () => {
       screen.getByTestId('child1'),
       screen.getByTestId('child2'),
       screen.getByTestId('child3'),
-    ]);
-  });
-
-  it('returns host siblings for composite component', () => {
-    render(
-      <View testID="grandparent">
-        <View testID="parent">
-          <View testID="siblingBefore" />
-          <View testID="subject" />
-          <View testID="siblingAfter" />
-          <MultipleHostChildren />
-        </View>
-      </View>,
-    );
-
-    if (getConfig().renderer === 'internal') {
-      // eslint-disable-next-line jest/no-conditional-expect
-      expect(true).toBeTruthy();
-      return;
-    }
-
-    const compositeComponent = screen.UNSAFE_getByType(MultipleHostChildren);
-    const hostSiblings = getHostSiblings(compositeComponent);
-    expect(hostSiblings).toEqual([
-      screen.getByTestId('siblingBefore'),
-      screen.getByTestId('subject'),
-      screen.getByTestId('siblingAfter'),
     ]);
   });
 });

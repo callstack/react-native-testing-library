@@ -96,20 +96,12 @@ test('props type is inferred correctly when initial props is explicitly undefine
  * we check the count of renders using React Test Renderers.
  */
 test('does render only once', () => {
-  if (getConfig().renderer === 'internal') {
-    jest.spyOn(internalRenderer, 'render');
-  } else {
-    jest.spyOn(TestRenderer, 'create');
-  }
+  jest.spyOn(internalRenderer, 'render');
 
   renderHook(() => {
     const [state, setState] = React.useState(1);
     return [state, setState];
   });
 
-  if (getConfig().renderer === 'internal') {
-    expect(internalRenderer.render).toHaveBeenCalledTimes(1);
-  } else {
-    expect(TestRenderer.create).toHaveBeenCalledTimes(1);
-  }
+  expect(internalRenderer.render).toHaveBeenCalledTimes(1);
 });

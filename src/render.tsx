@@ -13,12 +13,10 @@ import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
-export type Renderer = 'react-test-renderer' | 'internal';
 export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => unknown;
   unstable_validateStringsRenderedWithinText?: boolean;
-  renderer?: Renderer;
 }
 
 export type RenderResult = ReturnType<typeof render>;

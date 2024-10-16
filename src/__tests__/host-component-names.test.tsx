@@ -104,21 +104,12 @@ describe('configureHostComponentNamesIfNeeded', () => {
 
   test('throw an error when auto-detection fails', () => {
     let mockRender: jest.SpyInstance;
-    if (getConfig().renderer === 'internal') {
-      const result = internalRenderer.render(<View />);
+    const result = internalRenderer.render(<View />);
 
-      mockRender = jest.spyOn(internalRenderer, 'render') as jest.Mock;
-      mockRender.mockReturnValue({
-        root: result.root,
-      });
-    } else {
-      const renderer = TestRenderer.create(<View />);
-
-      mockRender = jest.spyOn(TestRenderer, 'create') as jest.Mock;
-      mockRender.mockReturnValue({
-        root: renderer.root,
-      });
-    }
+    mockRender = jest.spyOn(internalRenderer, 'render') as jest.Mock;
+    mockRender.mockReturnValue({
+      root: result.root,
+    });
 
     expect(() => configureHostComponentNamesIfNeeded()).toThrowErrorMatchingInlineSnapshot(`
       "Trying to detect host component names triggered the following error:
