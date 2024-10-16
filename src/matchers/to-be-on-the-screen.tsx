@@ -1,10 +1,10 @@
-import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import { getUnsafeRootElement } from '../helpers/component-tree';
+import { HostElement } from '../renderer/host-element';
 import { screen } from '../screen';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeOnTheScreen(this: jest.MatcherContext, element: ReactTestInstance) {
+export function toBeOnTheScreen(this: jest.MatcherContext, element: HostElement) {
   if (element !== null || !this.isNot) {
     checkHostElement(element, toBeOnTheScreen, this);
   }

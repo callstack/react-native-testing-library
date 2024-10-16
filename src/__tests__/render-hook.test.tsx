@@ -1,9 +1,7 @@
 /* eslint-disable jest/no-conditional-expect */
 import React, { ReactNode } from 'react';
-import TestRenderer from 'react-test-renderer';
 import * as internalRenderer from '../renderer/renderer';
 import { renderHook } from '../pure';
-import { getConfig } from '../config';
 
 test('gives committed result', () => {
   const { result } = renderHook(() => {

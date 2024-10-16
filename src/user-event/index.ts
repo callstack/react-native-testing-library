@@ -1,4 +1,4 @@
-import { ReactTestInstance } from 'react-test-renderer';
+import { HostElement } from '../renderer/host-element';
 import { setup } from './setup';
 import { PressOptions } from './press';
 import { TypeOptions } from './type';
@@ -10,13 +10,11 @@ export const userEvent = {
   setup,
 
   // Direct access for User Event v13 compatibility
-  press: (element: ReactTestInstance) => setup().press(element),
-  longPress: (element: ReactTestInstance, options?: PressOptions) =>
-    setup().longPress(element, options),
-  type: (element: ReactTestInstance, text: string, options?: TypeOptions) =>
+  press: (element: HostElement) => setup().press(element),
+  longPress: (element: HostElement, options?: PressOptions) => setup().longPress(element, options),
+  type: (element: HostElement, text: string, options?: TypeOptions) =>
     setup().type(element, text, options),
-  clear: (element: ReactTestInstance) => setup().clear(element),
-  paste: (element: ReactTestInstance, text: string) => setup().paste(element, text),
-  scrollTo: (element: ReactTestInstance, options: ScrollToOptions) =>
-    setup().scrollTo(element, options),
+  clear: (element: HostElement) => setup().clear(element),
+  paste: (element: HostElement, text: string) => setup().paste(element, text),
+  scrollTo: (element: HostElement, options: ScrollToOptions) => setup().scrollTo(element, options),
 };

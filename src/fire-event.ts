@@ -1,4 +1,3 @@
-import { ReactTestInstance } from 'react-test-renderer';
 import {
   ViewProps,
   TextProps,
@@ -13,11 +12,12 @@ import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isTextInputEditable } from './helpers/text-input';
 import { Point, StringWithAutocomplete } from './types';
 import { nativeState } from './native-state';
+import { HostElement } from './renderer/host-element';
 import { EventBuilder } from './user-event/event-builder';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
-export function isTouchResponder(element: ReactTestInstance) {
+export function isTouchResponder(element: HostElement) {
   if (!isHostElement(element)) {
     return false;
   }
@@ -57,9 +57,9 @@ const textInputEventsIgnoringEditableProp = new Set([
 ]);
 
 export function isEventEnabled(
-  element: ReactTestInstance,
+  element: HostElement,
   eventName: string,
-  nearestTouchResponder?: ReactTestInstance,
+  nearestTouchResponder?: HostElement,
 ) {
   if (isHostTextInput(nearestTouchResponder)) {
     return (
@@ -82,9 +82,9 @@ export function isEventEnabled(
 }
 
 function findEventHandler(
-  element: ReactTestInstance,
+  element: HostElement,
   eventName: string,
-  nearestTouchResponder?: ReactTestInstance,
+  nearestTouchResponder?: HostElement,
 ): EventHandler | null {
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
@@ -101,7 +101,7 @@ function findEventHandler(
   return findEventHandler(element.parent, eventName, touchResponder);
 }
 
-function getEventHandler(element: ReactTestInstance, eventName: string) {
+function getEventHandler(element: HostElement, eventName: string) {
   const eventHandlerName = getEventHandlerName(eventName);
   if (typeof element.props[eventHandlerName] === 'function') {
     return element.props[eventHandlerName];
@@ -131,7 +131,7 @@ type EventName = StringWithAutocomplete<
   | EventNameExtractor<ScrollViewProps>
 >;
 
-function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {
+function fireEvent(element: HostElement, eventName: EventName, ...data: unknown[]) {
   setNativeStateIfNeeded(element, eventName, data[0]);
 
   const handler = findEventHandler(element, eventName);
@@ -147,7 +147,7 @@ function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: un
   return returnValue;
 }
 
-fireEvent.press = (element: ReactTestInstance, ...data: unknown[]) => {
+fireEvent.press = (element: HostElement, ...data: unknown[]) => {
   const nativeData =
     data.length === 1 &&
     typeof data[0] === 'object' &&
@@ -178,10 +178,10 @@ fireEvent.press = (element: ReactTestInstance, ...data: unknown[]) => {
   fireEvent(element, 'responderRelease', responderReleaseEvent);
 };
 
-fireEvent.changeText = (element: ReactTestInstance, ...data: unknown[]) =>
+fireEvent.changeText = (element: HostElement, ...data: unknown[]) =>
   fireEvent(element, 'changeText', ...data);
 
-fireEvent.scroll = (element: ReactTestInstance, ...data: unknown[]) =>
+fireEvent.scroll = (element: HostElement, ...data: unknown[]) =>
   fireEvent(element, 'scroll', ...data);
 
 export default fireEvent;
@@ -194,7 +194,7 @@ const scrollEventNames = new Set([
   'momentumScrollEnd',
 ]);
 
-function setNativeStateIfNeeded(element: ReactTestInstance, eventName: string, value: unknown) {
+function setNativeStateIfNeeded(element: HostElement, eventName: string, value: unknown) {
   if (
     eventName === 'changeText' &&
     typeof value === 'string' &&

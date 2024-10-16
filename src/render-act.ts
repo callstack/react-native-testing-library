@@ -1,19 +1,16 @@
-import type { ReactTestRenderer } from 'react-test-renderer';
 import act from './act';
-import { render } from './renderer/renderer';
+import { render, RenderResult } from './renderer/renderer';
 import { RenderOptions } from './render';
-import { getConfig } from './config';
 
 export function renderWithAct(
   component: React.ReactElement,
   _options?: RenderOptions,
-): ReactTestRenderer {
-  let renderer: ReactTestRenderer;
+): RenderResult {
+  let renderer: RenderResult;
 
   // This will be called synchronously.
   void act(() => {
-    // @ts-expect-error
-    renderer = render(component) as ReactTestRenderer;
+    renderer = render(component);
   });
 
   // @ts-ignore act is synchronous, so renderer is already initialized here

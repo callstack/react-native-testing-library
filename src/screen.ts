@@ -1,4 +1,4 @@
-import { ReactTestInstance } from 'react-test-renderer';
+import { HostElement } from './renderer/host-element';
 import { RenderResult } from './render';
 
 const SCREEN_ERROR = '`render` method has not been called';
@@ -18,10 +18,10 @@ interface Screen extends RenderResult {
 
 const defaultScreen: Screen = {
   isDetached: true,
-  get root(): ReactTestInstance {
+  get root(): HostElement {
     throw new Error(SCREEN_ERROR);
   },
-  get UNSAFE_root(): ReactTestInstance {
+  get UNSAFE_root(): HostElement {
     throw new Error(SCREEN_ERROR);
   },
   debug: notImplementedDebug,

@@ -1,4 +1,4 @@
-import { ReactTestInstance } from 'react-test-renderer';
+import { HostElement } from '../../renderer/host-element';
 import act from '../../act';
 
 /**
@@ -8,7 +8,7 @@ import act from '../../act';
  * @param eventName name of the event
  * @param event event payload(s)
  */
-export function dispatchEvent(element: ReactTestInstance, eventName: string, ...event: unknown[]) {
+export function dispatchEvent(element: HostElement, eventName: string, ...event: unknown[]) {
   const handler = getEventHandler(element, eventName);
   if (!handler) {
     return;
@@ -20,7 +20,7 @@ export function dispatchEvent(element: ReactTestInstance, eventName: string, ...
   });
 }
 
-function getEventHandler(element: ReactTestInstance, eventName: string) {
+function getEventHandler(element: HostElement, eventName: string) {
   const handleName = getEventHandlerName(eventName);
   const handle = element.props[handleName] as unknown;
   if (typeof handle !== 'function') {

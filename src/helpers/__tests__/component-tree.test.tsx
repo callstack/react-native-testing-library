@@ -36,7 +36,7 @@ describe('getHostParent()', () => {
     const hostGrandparent = getHostParent(hostParent);
     expect(hostGrandparent).toBe(screen.getByTestId('grandparent'));
 
-    expect(getHostParent(hostGrandparent)).toBe(null);
+    expect(getHostParent(hostGrandparent)).toBe(screen.UNSAFE_root);
   });
 
   it('returns host parent for null', () => {

@@ -1,7 +1,7 @@
-import { ReactTestInstance } from 'react-test-renderer';
 import { getConfig } from '../config';
+import { HostElement } from '../renderer/host-element';
 import { isHiddenFromAccessibility } from './accessibility';
-import { HostTestInstance, isHostElement } from './component-tree';
+import { isHostElement } from './component-tree';
 
 interface FindAllOptions {
   /** Match elements hidden from accessibility */
@@ -15,10 +15,10 @@ interface FindAllOptions {
 }
 
 export function findAll(
-  root: ReactTestInstance,
-  predicate: (element: ReactTestInstance) => boolean,
+  root: HostElement,
+  predicate: (element: HostElement) => boolean,
   options?: FindAllOptions,
-): HostTestInstance[] {
+): HostElement[] {
   const results = findAllInternal(root, predicate, options);
 
   const includeHiddenElements =
@@ -28,24 +28,24 @@ export function findAll(
     return results;
   }
 
-  const cache = new WeakMap<ReactTestInstance>();
+  const cache = new WeakMap<HostElement>();
   return results.filter((element) => !isHiddenFromAccessibility(element, { cache }));
 }
 
 // Extracted from React Test Renderer
 // src: https://github.com/facebook/react/blob/8e2bde6f2751aa6335f3cef488c05c3ea08e074a/packages/react-test-renderer/src/ReactTestRenderer.js#L402
 function findAllInternal(
-  node: ReactTestInstance,
-  predicate: (element: ReactTestInstance) => boolean,
+  node: HostElement,
+  predicate: (element: HostElement) => boolean,
   options?: FindAllOptions,
   indent: string = '',
-): HostTestInstance[] {
-  const results: HostTestInstance[] = [];
+): HostElement[] {
+  const results: HostElement[] = [];
 
   //console.log(`${indent} 🟢 findAllInternal`, node.type, node.props);
 
   // Match descendants first but do not add them to results yet.
-  const matchingDescendants: HostTestInstance[] = [];
+  const matchingDescendants: HostElement[] = [];
   node.children.forEach((child) => {
     if (typeof child === 'string') {
       return;
@@ -69,14 +69,14 @@ function findAllInternal(
 }
 
 export function findAllByProps(
-  root: ReactTestInstance,
+  root: HostElement,
   props: { [propName: string]: any },
   options?: FindAllOptions,
-): HostTestInstance[] {
+): HostElement[] {
   return findAll(root, (element) => matchProps(element, props), options);
 }
 
-function matchProps(element: ReactTestInstance, props: { [propName: string]: any }): boolean {
+function matchProps(element: HostElement, props: { [propName: string]: any }): boolean {
   for (const key in props) {
     if (props[key] !== element.props[key]) {
       return false;

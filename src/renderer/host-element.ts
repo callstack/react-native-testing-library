@@ -1,7 +1,7 @@
 import { Container, Instance, TextInstance } from './reconciler';
 
 export type HostNode = HostElement | string;
-export type HostElementProps = Record<string, unknown>;
+export type HostElementProps = Record<string, any>;
 
 type FindOptions = {
   deep?: boolean;

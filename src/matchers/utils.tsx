@@ -1,4 +1,3 @@
-import { ReactTestInstance } from 'react-test-renderer';
 import {
   EXPECTED_COLOR,
   RECEIVED_COLOR,
@@ -11,6 +10,7 @@ import prettyFormat, { plugins } from 'pretty-format';
 import redent from 'redent';
 import { isHostElement } from '../helpers/component-tree';
 import { defaultMapProps } from '../helpers/format-default';
+import { HostElement } from '../renderer/host-element';
 
 class HostElementTypeError extends Error {
   constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {
@@ -41,15 +41,15 @@ class HostElementTypeError extends Error {
 /**
  * Throws HostElementTypeError if passed element is not a host element.
  *
- * @param element ReactTestInstance to check.
+ * @param element HostElement to check.
  * @param matcherFn Matcher function calling the check used for formatting error.
  * @param context Jest matcher context used for formatting error.
  */
 export function checkHostElement(
-  element: ReactTestInstance | null | undefined,
+  element: HostElement | null | undefined,
   matcherFn: jest.CustomMatcher,
   context: jest.MatcherContext,
-): asserts element is ReactTestInstance {
+): asserts element is HostElement {
   if (!isHostElement(element)) {
     throw new HostElementTypeError(element, matcherFn, context);
   }
@@ -60,7 +60,7 @@ export function checkHostElement(
  *
  * @param element Element to format.
  */
-export function formatElement(element: ReactTestInstance | null) {
+export function formatElement(element: HostElement | null) {
   if (element == null) {
     return '  null';
   }
@@ -89,7 +89,7 @@ export function formatElement(element: ReactTestInstance | null) {
   );
 }
 
-export function formatElementArray(elements: ReactTestInstance[]) {
+export function formatElementArray(elements: HostElement[]) {
   if (elements.length === 0) {
     return '  (no elements)';
   }

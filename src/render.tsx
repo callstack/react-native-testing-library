@@ -1,4 +1,3 @@
-import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import * as React from 'react';
 import { Profiler } from 'react';
 import act from './act';
@@ -9,6 +8,8 @@ import debugDeep, { DebugOptions } from './helpers/debug-deep';
 import debugShallow from './helpers/debug-shallow';
 import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
 import { validateStringsRenderedWithinText } from './helpers/string-validation';
+import { HostElement } from './renderer/host-element';
+import { RenderResult as RendererResult } from './renderer/renderer';
 import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
@@ -64,7 +65,7 @@ function renderWithStringValidation<T>(
   component: React.ReactElement<T>,
   options: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
 ) {
-  let renderer: ReactTestRenderer;
+  let renderer: RendererResult;
   const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
 
   const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
@@ -87,11 +88,10 @@ function renderWithStringValidation<T>(
 }
 
 function buildRenderResult(
-  renderer: ReactTestRenderer,
+  renderer: RendererResult,
   wrap: (element: React.ReactElement) => JSX.Element,
 ) {
   const update = updateWithAct(renderer, wrap);
-  // @ts-expect-error
   const instance = renderer.container ?? renderer.root;
 
   const unmount = () => {
@@ -109,7 +109,7 @@ function buildRenderResult(
     rerender: update, // alias for `update`
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
-    get root(): ReactTestInstance {
+    get root(): HostElement {
       return getHostChildren(instance)[0];
     },
     UNSAFE_root: instance,
@@ -133,7 +133,7 @@ function buildRenderResult(
 }
 
 function updateWithAct(
-  renderer: ReactTestRenderer,
+  renderer: RendererResult,
   wrap: (innerElement: React.ReactElement) => React.ReactElement,
 ) {
   return function (component: React.ReactElement) {
@@ -148,7 +148,7 @@ export interface DebugFunction {
   shallow: (message?: string) => void;
 }
 
-function debug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugFunction {
+function debug(instance: HostElement, renderer: RendererResult): DebugFunction {
   function debugImpl(options?: DebugOptions | string) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions =

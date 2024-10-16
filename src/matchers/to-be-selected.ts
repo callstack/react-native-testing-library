@@ -1,9 +1,9 @@
-import { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import { computeAriaSelected } from '../helpers/accessibility';
+import { HostElement } from '../renderer/host-element';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeSelected(this: jest.MatcherContext, element: ReactTestInstance) {
+export function toBeSelected(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeSelected, this);
 
   return {

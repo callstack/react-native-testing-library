@@ -1,6 +1,6 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import { HostElement } from '../renderer/host-element';
 
-export function getTextContent(element: ReactTestInstance | string | null): string {
+export function getTextContent(element: HostElement | string | null): string {
   if (!element) {
     return '';
   }

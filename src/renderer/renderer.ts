@@ -6,8 +6,8 @@ import { HostElement, HostNode } from './host-element';
 export type RenderResult = {
   update: (element: ReactElement) => void;
   unmount: () => void;
-  container: HostElement | null;
-  root: HostNode | null;
+  container: HostElement;
+  root: HostNode;
   toJSON: () => JsonNode | JsonNode[] | null;
 };
 
