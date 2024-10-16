@@ -11,7 +11,6 @@ import redent from 'redent';
 import { isValidElement } from '../helpers/component-tree';
 import { defaultMapProps } from '../helpers/format-default';
 import { HostElement, HostNode } from '../renderer/host-element';
-import { getTextContent } from '../helpers/text-content';
 
 class HostElementTypeError extends Error {
   constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {
@@ -70,10 +69,8 @@ export function formatElement(element: HostNode | null) {
     return element;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { children, ...props } = element.props;
-  const childrenToDisplay = typeof children === 'string' ? [children] : undefined;
-
-  const textContent = getTextContent(element);
 
   return redent(
     prettyFormat(
@@ -83,6 +80,7 @@ export function formatElement(element: HostNode | null) {
         $$typeof: Symbol.for('react.test.json'),
         type: element.type,
         props: defaultMapProps(props),
+        // TODO: Recursively format children
         children: element.children.filter((child) => typeof child === 'string'),
       },
       {

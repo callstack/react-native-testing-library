@@ -3,7 +3,6 @@ import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import debugDeep, { DebugOptions } from './helpers/debug-deep';
-import debugShallow from './helpers/debug-shallow';
 import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
 import { HostElement } from './renderer/host-element';
 import { RenderResult as RendererResult } from './renderer/renderer';
@@ -66,7 +65,7 @@ function buildRenderResult(
     unmount,
     rerender: update, // alias for `update`
     toJSON: renderer.toJSON,
-    debug: debug(instance, renderer),
+    debug: debug(renderer),
     get root(): HostElement {
       return renderer.root;
     },
@@ -88,12 +87,9 @@ function updateWithAct(
   };
 }
 
-export interface DebugFunction {
-  (options?: DebugOptions | string): void;
-  shallow: (message?: string) => void;
-}
+export type DebugFunction = (options?: DebugOptions | string) => void;
 
-function debug(instance: HostElement, renderer: RendererResult): DebugFunction {
+function debug(renderer: RendererResult): DebugFunction {
   function debugImpl(options?: DebugOptions | string) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions =
@@ -113,6 +109,6 @@ function debug(instance: HostElement, renderer: RendererResult): DebugFunction {
       return debugDeep(json, debugOptions);
     }
   }
-  debugImpl.shallow = (message?: string) => debugShallow(instance, message);
+
   return debugImpl;
 }

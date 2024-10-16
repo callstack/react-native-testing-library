@@ -12,7 +12,9 @@ function getGlobalThis() {
     return globalThis;
   }
   /* istanbul ignore next */
+  // eslint-disable-next-line no-restricted-globals
   if (typeof self !== 'undefined') {
+    // eslint-disable-next-line no-restricted-globals
     return self;
   }
   /* istanbul ignore next */
