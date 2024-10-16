@@ -9,7 +9,7 @@ export function toBeOnTheScreen(this: jest.MatcherContext, element: HostElement)
     checkHostElement(element, toBeOnTheScreen, this);
   }
 
-  const pass = element === null ? false : screen.UNSAFE_root === getRootElement(element);
+  const pass = element === null ? false : screen.container === getRootElement(element);
 
   const errorFound = () => {
     return `expected element tree not to contain element, but found\n${formatElement(element)}`;

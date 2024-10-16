@@ -204,22 +204,12 @@ test('returns host root', () => {
   expect(screen.root.props.testID).toBe('inner');
 });
 
-// test('returns composite UNSAFE_root', () => {
-//   render(<View testID="inner" />);
-
-//   expect(screen.UNSAFE_root).toBeDefined();
-//   expect(screen.UNSAFE_root.type).toBe(View);
-//   expect(screen.UNSAFE_root.props.testID).toBe('inner');
-// });
-
-test('container displays deprecation', () => {
+test('returns container', () => {
   render(<View testID="inner" />);
 
-  expect(() => (screen as any).container).toThrowErrorMatchingInlineSnapshot(`
-    "'container' property has been renamed to 'UNSAFE_root'.
-
-    Consider using 'root' property which returns root host element."
-  `);
+  expect(screen.container).toBeDefined();
+  expect(screen.container.type).toBe('CONTAINER');
+  expect(screen.container.props).toEqual({});
 });
 
 test('RenderAPI type', () => {

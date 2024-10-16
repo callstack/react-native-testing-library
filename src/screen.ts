@@ -21,7 +21,7 @@ const defaultScreen: Screen = {
   get root(): HostElement {
     throw new Error(SCREEN_ERROR);
   },
-  get UNSAFE_root(): HostElement {
+  get container(): HostElement {
     throw new Error(SCREEN_ERROR);
   },
   debug: notImplementedDebug,
