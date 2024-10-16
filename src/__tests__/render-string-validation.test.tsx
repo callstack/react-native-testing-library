@@ -7,7 +7,7 @@ const originalConsoleError = console.error;
 
 const VALIDATION_ERROR =
   'Invariant Violation: Text strings must be rendered within a <Text> component';
-const PROFILER_ERROR = 'The above error occurred in the <Profiler> component';
+const PROFILER_ERROR = 'The above error occurred in the <Text> component';
 
 beforeEach(() => {
   // eslint-disable-next-line no-console
