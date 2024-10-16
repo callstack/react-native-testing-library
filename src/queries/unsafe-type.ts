@@ -1,13 +1,10 @@
-import * as React from 'react';
 import { ErrorWithStack } from '../helpers/errors';
 import { createQueryByError } from '../helpers/errors';
 import { findAll } from '../helpers/find-all';
 import { HostElement } from '../renderer/host-element';
 
-const UNSAFE_getByType = (
-  instance: HostElement,
-): ((type: React.ComponentType<any>) => HostElement) =>
-  function getByTypeFn(type: React.ComponentType<any>) {
+const UNSAFE_getByType = (instance: HostElement): ((type: string) => HostElement) =>
+  function getByTypeFn(type: string) {
     const results = findAllByType(instance, type);
     if (results.length === 0) {
       throw new ErrorWithStack(`No instances found with type:\n${type}`, getByTypeFn);
@@ -18,10 +15,8 @@ const UNSAFE_getByType = (
     return results[0];
   };
 
-const UNSAFE_getAllByType = (
-  instance: HostElement,
-): ((type: React.ComponentType<any>) => Array<HostElement>) =>
-  function getAllByTypeFn(type: React.ComponentType<any>) {
+const UNSAFE_getAllByType = (instance: HostElement): ((type: string) => Array<HostElement>) =>
+  function getAllByTypeFn(type: string) {
     const results = findAllByType(instance, type);
     if (results.length === 0) {
       throw new ErrorWithStack(`No instances found with type:\n${type}`, getAllByTypeFn);
@@ -29,10 +24,8 @@ const UNSAFE_getAllByType = (
     return results;
   };
 
-const UNSAFE_queryByType = (
-  instance: HostElement,
-): ((type: React.ComponentType<any>) => HostElement | null) =>
-  function queryByTypeFn(type: React.ComponentType<any>) {
+const UNSAFE_queryByType = (instance: HostElement): ((type: string) => HostElement | null) =>
+  function queryByTypeFn(type: string) {
     try {
       return UNSAFE_getByType(instance)(type);
     } catch (error) {
@@ -41,8 +34,8 @@ const UNSAFE_queryByType = (
   };
 
 const UNSAFE_queryAllByType =
-  (instance: HostElement): ((type: React.ComponentType<any>) => Array<HostElement>) =>
-  (type: React.ComponentType<any>) => {
+  (instance: HostElement): ((type: string) => Array<HostElement>) =>
+  (type: string) => {
     try {
       return UNSAFE_getAllByType(instance)(type);
     } catch {
@@ -52,10 +45,10 @@ const UNSAFE_queryAllByType =
 
 // Unsafe aliases
 export type UnsafeByTypeQueries = {
-  UNSAFE_getByType: <P>(type: React.ComponentType<P>) => HostElement;
-  UNSAFE_getAllByType: <P>(type: React.ComponentType<P>) => Array<HostElement>;
-  UNSAFE_queryByType: <P>(type: React.ComponentType<P>) => HostElement | null;
-  UNSAFE_queryAllByType: <P>(type: React.ComponentType<P>) => Array<HostElement>;
+  UNSAFE_getByType: (type: string) => HostElement;
+  UNSAFE_getAllByType: (type: string) => Array<HostElement>;
+  UNSAFE_queryByType: (type: string) => HostElement | null;
+  UNSAFE_queryAllByType: (type: string) => Array<HostElement>;
 };
 
 // TODO: migrate to makeQueries pattern
@@ -66,7 +59,6 @@ export const bindUnsafeByTypeQueries = (instance: HostElement): UnsafeByTypeQuer
   UNSAFE_queryAllByType: UNSAFE_queryAllByType(instance),
 });
 
-function findAllByType(instance: HostElement, type: React.ComponentType<any>) {
-  // @ts-expect-error: React.ComponentType<any> is not compatible with string
+function findAllByType(instance: HostElement, type: string) {
   return findAll(instance, (element) => element.type === type);
 }
