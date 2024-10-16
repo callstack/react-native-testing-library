@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import debugDeep, { DebugOptions } from './helpers/debug-deep';
 import debugShallow from './helpers/debug-shallow';
 import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
-import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { HostElement } from './renderer/host-element';
 import { RenderResult as RendererResult } from './renderer/renderer';
 import { renderWithAct } from './render-act';
@@ -16,7 +14,6 @@ import { getQueriesForElement } from './within';
 export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => unknown;
-  unstable_validateStringsRenderedWithinText?: boolean;
 }
 
 export type RenderResult = ReturnType<typeof render>;
@@ -37,52 +34,14 @@ export function renderInternal<T>(
   component: React.ReactElement<T>,
   options?: RenderInternalOptions,
 ) {
-  const {
-    wrapper: Wrapper,
-    detectHostComponentNames = true,
-    unstable_validateStringsRenderedWithinText,
-    ...restOptions
-  } = options || {};
+  const { wrapper: Wrapper, detectHostComponentNames = true, ...restOptions } = options || {};
 
   if (detectHostComponentNames) {
     configureHostComponentNamesIfNeeded();
   }
 
-  if (unstable_validateStringsRenderedWithinText) {
-    return renderWithStringValidation(component, {
-      wrapper: Wrapper,
-      ...restOptions,
-    });
-  }
-
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
   const renderer = renderWithAct(wrap(component), restOptions);
-  return buildRenderResult(renderer, wrap);
-}
-
-function renderWithStringValidation<T>(
-  component: React.ReactElement<T>,
-  options: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
-) {
-  let renderer: RendererResult;
-  const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
-
-  const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
-    if (renderer && phase === 'update') {
-      validateStringsRenderedWithinText(renderer.toJSON());
-    }
-  };
-
-  const wrap = (element: React.ReactElement) => (
-    <Profiler id="renderProfiler" onRender={handleRender}>
-      {Wrapper ? <Wrapper>{element}</Wrapper> : element}
-    </Profiler>
-  );
-
-  renderer = renderWithAct(wrap(component), testRendererOptions);
-
-  validateStringsRenderedWithinText(renderer.toJSON());
-
   return buildRenderResult(renderer, wrap);
 }
 
