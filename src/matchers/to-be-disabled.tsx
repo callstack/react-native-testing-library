@@ -1,6 +1,5 @@
 import { matcherHint } from 'jest-matcher-utils';
 import { computeAriaDisabled } from '../helpers/accessibility';
-import { getHostParent } from '../helpers/component-tree';
 import { HostElement } from '../renderer/host-element';
 import { checkHostElement, formatElement } from './utils';
 
@@ -43,7 +42,7 @@ export function toBeEnabled(this: jest.MatcherContext, element: HostElement) {
 }
 
 function isAncestorDisabled(element: HostElement): boolean {
-  const parent = getHostParent(element);
+  const parent = element.parent;
   if (parent == null) {
     return false;
   }

@@ -1,7 +1,6 @@
 import { matcherHint } from 'jest-matcher-utils';
 import { StyleSheet } from 'react-native';
 import { isHiddenFromAccessibility } from '../helpers/accessibility';
-import { getHostParent } from '../helpers/component-tree';
 import { isHostModal } from '../helpers/host-component-names';
 import { HostElement } from '../renderer/host-element';
 import { checkHostElement, formatElement } from './utils';
@@ -45,7 +44,7 @@ function isElementVisible(
     return false;
   }
 
-  const hostParent = getHostParent(element);
+  const hostParent = element.parent;
   if (hostParent === null) {
     return true;
   }

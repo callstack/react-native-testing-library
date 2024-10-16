@@ -3,7 +3,6 @@ import { Text, TextInput, View } from 'react-native';
 import { render, screen } from '../..';
 import {
   getHostChildren,
-  getHostParent,
   getHostSelves,
   getHostSiblings,
   getUnsafeRootElement,
@@ -18,43 +17,6 @@ function MultipleHostChildren() {
     </>
   );
 }
-
-describe('getHostParent()', () => {
-  it('returns host parent for host component', () => {
-    render(
-      <View testID="grandparent">
-        <View testID="parent">
-          <View testID="subject" />
-          <View testID="sibling" />
-        </View>
-      </View>,
-    );
-
-    const hostParent = getHostParent(screen.getByTestId('subject'));
-    expect(hostParent).toBe(screen.getByTestId('parent'));
-
-    const hostGrandparent = getHostParent(hostParent);
-    expect(hostGrandparent).toBe(screen.getByTestId('grandparent'));
-
-    expect(getHostParent(hostGrandparent)).toBe(screen.UNSAFE_root);
-  });
-
-  it('returns host parent for null', () => {
-    expect(getHostParent(null)).toBe(null);
-  });
-
-  it('returns host parent for composite component', () => {
-    render(
-      <View testID="parent">
-        <MultipleHostChildren />
-        <View testID="subject" />
-      </View>,
-    );
-
-    // eslint-disable-next-line jest/no-conditional-expect
-    expect(true).toBeTruthy();
-  });
-});
 
 describe('getHostChildren()', () => {
   it('returns host children for host component', () => {

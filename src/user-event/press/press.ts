@@ -1,5 +1,4 @@
 import act from '../../act';
-import { getHostParent } from '../../helpers/component-tree';
 import { isTextInputEditable } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
@@ -56,7 +55,7 @@ const basePress = async (
     return;
   }
 
-  const hostParentElement = getHostParent(element);
+  const hostParentElement = element.parent;
   if (!hostParentElement) {
     return;
   }

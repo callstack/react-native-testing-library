@@ -9,18 +9,6 @@ export function isHostElement(element?: HostElement | null): element is HostElem
 }
 
 /**
- * Returns first host ancestor for given element.
- * @param element The element start traversing from.
- */
-export function getHostParent(element: HostElement | null): HostElement | null {
-  if (element == null) {
-    return null;
-  }
-
-  return element.parent;
-}
-
-/**
  * Returns host children for given element.
  * @param element The element start traversing from.
  */
@@ -62,7 +50,7 @@ export function getHostSelves(element: HostElement | null): HostElement[] {
  * @param element The element start traversing from.
  */
 export function getHostSiblings(element: HostElement | null): HostElement[] {
-  const hostParent = getHostParent(element);
+  const hostParent = element?.parent ?? null;
   const hostSelves = getHostSelves(element);
   return getHostChildren(hostParent).filter((sibling) => !hostSelves.includes(sibling));
 }

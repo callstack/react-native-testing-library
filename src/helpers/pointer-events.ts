@@ -1,5 +1,4 @@
 import { HostElement } from '../renderer/host-element';
-import { getHostParent } from './component-tree';
 
 /**
  * pointerEvents controls whether the View can be the target of touch events.
@@ -17,7 +16,7 @@ export const isPointerEventEnabled = (element: HostElement, isParent?: boolean):
     return false;
   }
 
-  const hostParent = getHostParent(element);
+  const hostParent = element.parent;
   if (!hostParent) return true;
 
   return isPointerEventEnabled(hostParent, true);
