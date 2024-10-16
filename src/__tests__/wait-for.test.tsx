@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View, Pressable } from 'react-native';
-import { fireEvent, render, waitFor, configure, screen } from '..';
+import { fireEvent, render, waitFor, configure, screen, act } from '..';
 import '../matchers/extend-expect';
 
 class Banana extends React.Component<any> {
@@ -143,7 +143,9 @@ test.each([false, true])(
     fireEvent.press(screen.getByText('Change freshness!'));
     expect(screen.queryByText('Fresh')).toBeNull();
 
-    jest.advanceTimersByTime(300);
+    act(() => {
+      jest.advanceTimersByTime(300);
+    });
     const freshBananaText = await waitFor(() => screen.getByText('Fresh'));
 
     expect(freshBananaText).toHaveTextContent('Fresh');
