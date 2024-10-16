@@ -1,9 +1,31 @@
+import * as React from 'react';
 // This file and the act() implementation is sourced from react-testing-library
 // https://github.com/testing-library/react-testing-library/blob/c80809a956b0b9f3289c4a6fa8b5e8cc72d6ef6d/src/act-compat.js
-import { act as reactTestRendererAct } from 'react-test-renderer';
-import { checkReactVersionAtLeast } from './react-versions';
 
-type ReactAct = typeof reactTestRendererAct;
+type ReactAct = typeof React.act;
+
+const reactAct = React.act;
+
+function getGlobalThis() {
+  /* istanbul ignore else */
+  if (typeof globalThis !== 'undefined') {
+    return globalThis;
+  }
+  /* istanbul ignore next */
+  if (typeof self !== 'undefined') {
+    return self;
+  }
+  /* istanbul ignore next */
+  if (typeof window !== 'undefined') {
+    return window;
+  }
+  /* istanbul ignore next */
+  if (typeof global !== 'undefined') {
+    return global;
+  }
+  /* istanbul ignore next */
+  throw new Error('unable to locate global object');
+}
 
 // See https://github.com/reactwg/react-18/discussions/102 for more context on global.IS_REACT_ACT_ENVIRONMENT
 declare global {
@@ -11,31 +33,24 @@ declare global {
 }
 
 function setIsReactActEnvironment(isReactActEnvironment: boolean | undefined) {
-  globalThis.IS_REACT_ACT_ENVIRONMENT = isReactActEnvironment;
+  getGlobalThis().IS_REACT_ACT_ENVIRONMENT = isReactActEnvironment;
 }
 
 function getIsReactActEnvironment() {
-  return globalThis.IS_REACT_ACT_ENVIRONMENT;
+  return getGlobalThis().IS_REACT_ACT_ENVIRONMENT;
 }
 
 function withGlobalActEnvironment(actImplementation: ReactAct) {
   return (callback: Parameters<ReactAct>[0]) => {
     const previousActEnvironment = getIsReactActEnvironment();
     setIsReactActEnvironment(true);
-
-    // this code is riddled with eslint disabling comments because this doesn't use real promises but eslint thinks we do
     try {
       // The return value of `act` is always a thenable.
       let callbackNeedsToBeAwaited = false;
       const actResult = actImplementation(() => {
         const result = callback();
-        if (
-          result !== null &&
-          typeof result === 'object' &&
-          // @ts-expect-error this should be a promise or thenable
-          // eslint-disable-next-line promise/prefer-await-to-then
-          typeof result.then === 'function'
-        ) {
+        // @ts-expect-error result is not typed
+        if (result !== null && typeof result === 'object' && typeof result.then === 'function') {
           callbackNeedsToBeAwaited = true;
         }
         return result;
@@ -44,8 +59,8 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
       if (callbackNeedsToBeAwaited) {
         const thenable = actResult;
         return {
-          then: (resolve: (value: never) => never, reject: (value: never) => never) => {
-            // eslint-disable-next-line
+          then: (resolve: (value: unknown) => void, reject: (error: unknown) => void) => {
+            // eslint-disable-next-line promise/catch-or-return, promise/prefer-await-to-then
             thenable.then(
               // eslint-disable-next-line promise/always-return
               (returnValue) => {
@@ -72,9 +87,7 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
   };
 }
 
-const act: ReactAct = checkReactVersionAtLeast(18, 0)
-  ? (withGlobalActEnvironment(reactTestRendererAct) as ReactAct)
-  : reactTestRendererAct;
+const act: ReactAct = withGlobalActEnvironment(reactAct) as ReactAct;
 
 export default act;
 export { setIsReactActEnvironment as setReactActEnvironment, getIsReactActEnvironment };
