@@ -82,7 +82,7 @@ export function isHostText(element?: HostElement | null) {
  * Checks if the given element is a host TextInput element.
  * @param element The element to check.
  */
-export function isHostTextInput(element?: HostElement | null): element is HostElement {
+export function isHostTextInput(element?: HostElement | null) {
   return element?.type === getHostComponentNames().textInput;
 }
 
@@ -90,7 +90,7 @@ export function isHostTextInput(element?: HostElement | null): element is HostEl
  * Checks if the given element is a host Image element.
  * @param element The element to check.
  */
-export function isHostImage(element?: HostElement | null): element is HostElement {
+export function isHostImage(element?: HostElement | null) {
   return element?.type === getHostComponentNames().image;
 }
 
@@ -98,7 +98,7 @@ export function isHostImage(element?: HostElement | null): element is HostElemen
  * Checks if the given element is a host Switch element.
  * @param element The element to check.
  */
-export function isHostSwitch(element?: HostElement | null): element is HostElement {
+export function isHostSwitch(element?: HostElement | null) {
   return element?.type === getHostComponentNames().switch;
 }
 
@@ -106,7 +106,7 @@ export function isHostSwitch(element?: HostElement | null): element is HostEleme
  * Checks if the given element is a host ScrollView element.
  * @param element The element to check.
  */
-export function isHostScrollView(element?: HostElement | null): element is HostElement {
+export function isHostScrollView(element?: HostElement | null) {
   return element?.type === getHostComponentNames().scrollView;
 }
 
@@ -114,6 +114,6 @@ export function isHostScrollView(element?: HostElement | null): element is HostE
  * Checks if the given element is a host Modal element.
  * @param element The element to check.
  */
-export function isHostModal(element?: HostElement | null): element is HostElement {
+export function isHostModal(element?: HostElement | null) {
   return element?.type === getHostComponentNames().modal;
 }

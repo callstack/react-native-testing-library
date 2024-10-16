@@ -3,7 +3,6 @@ import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
-import { getHostChildren } from './helpers/component-tree';
 import debugDeep, { DebugOptions } from './helpers/debug-deep';
 import debugShallow from './helpers/debug-shallow';
 import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
@@ -110,7 +109,7 @@ function buildRenderResult(
     toJSON: renderer.toJSON,
     debug: debug(instance, renderer),
     get root(): HostElement {
-      return getHostChildren(instance)[0];
+      return renderer.root;
     },
     UNSAFE_root: instance,
   };

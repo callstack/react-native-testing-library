@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import stripAnsi from 'strip-ansi';
 import { configure, fireEvent, render, screen } from '..';
-import { getConfig } from '../config';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';

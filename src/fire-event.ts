@@ -63,7 +63,7 @@ export function isEventEnabled(
 ) {
   if (isHostTextInput(nearestTouchResponder)) {
     return (
-      isTextInputEditable(nearestTouchResponder) ||
+      isTextInputEditable(nearestTouchResponder!) ||
       textInputEventsIgnoringEditableProp.has(eventName)
     );
   }

@@ -67,5 +67,6 @@ export const bindUnsafeByTypeQueries = (instance: HostElement): UnsafeByTypeQuer
 });
 
 function findAllByType(instance: HostElement, type: React.ComponentType<any>) {
+  // @ts-expect-error: React.ComponentType<any> is not compatible with string
   return findAll(instance, (element) => element.type === type);
 }

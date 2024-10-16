@@ -1,13 +1,13 @@
 import { ReactElement } from 'react';
 import { Container, TestReconciler } from './reconciler';
 import { JsonNode, renderChildrenToJson, renderToJson } from './render-to-json';
-import { HostElement, HostNode } from './host-element';
+import { HostElement } from './host-element';
 
 export type RenderResult = {
   update: (element: ReactElement) => void;
   unmount: () => void;
   container: HostElement;
-  root: HostNode;
+  root: HostElement;
   toJSON: () => JsonNode | JsonNode[] | null;
 };
 
@@ -105,7 +105,7 @@ export function render(element: ReactElement): RenderResult {
       return HostElement.fromContainer(container);
     },
 
-    get root(): HostNode {
+    get root(): HostElement {
       if (containerFiber == null || container == null) {
         throw new Error("Can't access .root on unmounted test renderer");
       }
@@ -114,7 +114,12 @@ export function render(element: ReactElement): RenderResult {
         throw new Error("Can't access .root on unmounted test renderer");
       }
 
-      return HostElement.fromInstance(container.children[0]);
+      const root = HostElement.fromInstance(container.children[0]);
+      if (typeof root === 'string') {
+        throw new Error('Cannot render string as root element');
+      }
+
+      return root;
     },
   };
 

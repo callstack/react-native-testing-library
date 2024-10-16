@@ -1,5 +1,4 @@
 import type { DebugOptions } from './helpers/debug-deep';
-import type { Renderer } from './render';
 
 /**
  * Global configuration options for React Native Testing Library.
@@ -14,9 +13,6 @@ export type Config = {
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
-
-  /** Renderer to use for rendering components. */
-  renderer?: Renderer;
 };
 
 export type ConfigAliasOptions = {

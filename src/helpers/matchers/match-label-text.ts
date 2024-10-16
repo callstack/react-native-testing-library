@@ -1,4 +1,5 @@
 import { matches, TextMatch, TextMatchOptions } from '../../matches';
+import { HostElement } from '../../renderer/host-element';
 import { computeAriaLabel, computeAriaLabelledBy } from '../accessibility';
 import { findAll } from '../find-all';
 import { matchTextContent } from './match-text-content';

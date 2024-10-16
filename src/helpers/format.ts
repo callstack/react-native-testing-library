@@ -1,9 +1,9 @@
 import prettyFormat, { NewPlugin, plugins } from 'pretty-format';
-import { JsonNode } from '../renderer/render-to-json';
+import { JsonInstance, JsonNode } from '../renderer/render-to-json';
 
 export type MapPropsFunction = (
   props: Record<string, unknown>,
-  node: JsonNode,
+  node: JsonInstance,
 ) => Record<string, unknown>;
 
 export type FormatOptions = {
