@@ -26,34 +26,18 @@ export function render(element: ReactElement): RenderResult {
     false, // isStrictMode
     null, // concurrentUpdatesByDefaultOverride
     'id', // identifierPrefix
-    (_error) => {
-      // eslint-disable-next-line no-console
-      console.log('Recoverable Error', _error);
-    }, // onRecoverableError
+    (_error) => {}, // onRecoverableError
     null, // transitionCallbacks
   );
 
-  TestReconciler.updateContainer(element, containerFiber, null, () => {
-    // eslint-disable-next-line no-console
-    //console.log('Rendered', container?.children);
-  });
-
-  //     update(newElement: React$Element<any>) {
-  //       if (root == null || root.current == null) {
-  //         return;
-  //       }
-  //       ReactReconciler.updateContainer(newElement, root, null, null);
-  //     },
+  TestReconciler.updateContainer(element, containerFiber, null, null);
 
   const update = (element: ReactElement) => {
     if (containerFiber == null || container == null) {
       return;
     }
 
-    TestReconciler.updateContainer(element, containerFiber, null, () => {
-      // eslint-disable-next-line no-console
-      //console.log('Updated', container?.children);
-    });
+    TestReconciler.updateContainer(element, containerFiber, null, null);
   };
 
   const unmount = () => {
@@ -61,10 +45,7 @@ export function render(element: ReactElement): RenderResult {
       return;
     }
 
-    TestReconciler.updateContainer(null, containerFiber, null, () => {
-      // eslint-disable-next-line no-console
-      //console.log('Unmounted', container?.children);
-    });
+    TestReconciler.updateContainer(null, containerFiber, null, null);
 
     container = null;
     containerFiber = null;
@@ -79,14 +60,16 @@ export function render(element: ReactElement): RenderResult {
       return renderToJson(container.children[0]);
     }
 
+    // Taken from React Test Renderer
     // TODO: When could that happen?
     if (
       container.children.length === 2 &&
       container.children[0].isHidden === true &&
       container.children[1].isHidden === false
     ) {
-      // Omit timed out children from output entirely, including the fact that we
-      // temporarily wrap fallback and timed out children in an array.
+      // Taken from React Test Renderer
+      // > Omit timed out children from output entirely, including the fact that we
+      // > temporarily wrap fallback and timed out children in an array.
       return renderToJson(container.children[1]);
     }
 

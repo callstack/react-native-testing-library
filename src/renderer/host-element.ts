@@ -25,9 +25,9 @@ export class HostElement {
       return {};
     }
 
-    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // const { children, ...restProps } = this.instance.props;
-    return this.instance.props;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { children, ...restProps } = this.instance.props;
+    return restProps;
   }
 
   get children(): HostNode[] {

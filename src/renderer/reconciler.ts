@@ -105,10 +105,6 @@ const hostConfig = {
     _hostContext: HostContext,
     internalHandle: OpaqueHandle,
   ): Instance {
-    //console.log('🔷 createInstance', type, props);
-    // console.log('- RootContainer:', rootContainer);
-    // console.log('- HostContext:', _hostContext);
-    // console.log('- InternalHandle:', internalHandle);
     return {
       tag: 'INSTANCE',
       type,
@@ -162,8 +158,6 @@ const hostConfig = {
     _rootContainer: Container,
     _hostContext: HostContext,
   ): boolean {
-    // console.log('🔷 finalizeInitialChildren', type, props);
-    // console.log('🔷 - instance:', instance);
     return false;
   },
 
@@ -182,8 +176,6 @@ const hostConfig = {
     _rootContainer: Container,
     _hostContext: HostContext,
   ): UpdatePayload | null {
-    // console.log('🔷 prepareUpdate', type, newProps, oldProps);
-    // console.log('🔷 - instance:', instance);
     return UPDATE_SIGNAL;
   },
 
@@ -198,7 +190,6 @@ const hostConfig = {
    */
   shouldSetTextContent(_type: Type, _props: Props): boolean {
     // TODO: what should RN do here?
-    //console.log('🔷 shouldSetTextContent', type, props);
     return false;
   },
 
@@ -452,8 +443,6 @@ const hostConfig = {
     _props: Props,
     _internalHandle: OpaqueHandle,
   ): void {
-    // console.log('🔷 commitMount', type, props);
-    // console.log('🔷 - instance:', instance);
     // noop
   },
 
@@ -470,8 +459,6 @@ const hostConfig = {
     nextProps: Props,
     internalHandle: OpaqueHandle,
   ): void {
-    // console.log('🔷 commitMount', type, nextProps, _prevProps);
-    // console.log('🔷 - instance:', instance);
     instance.type = type;
     instance.props = nextProps;
     instance.internalHandle = internalHandle;

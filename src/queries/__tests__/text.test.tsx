@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Button, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getDefaultNormalizer, render, screen, within } from '../..';
+import '../../matchers/extend-expect';
 
 test('byText matches simple text', () => {
   render(<Text testID="text">Hello World</Text>);
@@ -56,11 +57,11 @@ test('getByText, queryByText', () => {
   render(<Banana />);
   const button = screen.getByText(/change/i);
 
-  expect(button.props.children).toBe('Change freshness!');
+  expect(button).toHaveTextContent('Change freshness!');
 
   const sameButton = screen.getByText('not fresh');
 
-  expect(sameButton.props.children).toBe('not fresh');
+  expect(sameButton).toHaveTextContent('not fresh');
   expect(() => screen.getByText('InExistent')).toThrow(
     'Unable to find an element with text: InExistent',
   );
@@ -90,7 +91,7 @@ test('getByText, screen.queryByText with children as Array', () => {
   render(<BananaStore />);
 
   const threeBananaBunch = screen.getByText('There are 3 bananas in the bunch');
-  expect(threeBananaBunch.props.children).toEqual(['There are ', 3, ' bananas in the bunch']);
+  expect(threeBananaBunch).toHaveTextContent('There are 3 bananas in the bunch');
 });
 
 test('getAllByText, queryAllByText', () => {
