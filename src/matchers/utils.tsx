@@ -8,7 +8,7 @@ import {
 } from 'jest-matcher-utils';
 import prettyFormat, { plugins } from 'pretty-format';
 import redent from 'redent';
-import { isHostElement } from '../helpers/component-tree';
+import { isValidElement } from '../helpers/component-tree';
 import { defaultMapProps } from '../helpers/format-default';
 import { HostElement, HostNode } from '../renderer/host-element';
 
@@ -50,7 +50,7 @@ export function checkHostElement(
   matcherFn: jest.CustomMatcher,
   context: jest.MatcherContext,
 ): asserts element is HostElement {
-  if (!isHostElement(element)) {
+  if (!isValidElement(element)) {
     throw new HostElementTypeError(element, matcherFn, context);
   }
 }

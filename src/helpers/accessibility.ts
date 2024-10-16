@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { HostElement } from '../renderer/host-element';
-import { getHostSiblings, getUnsafeRootElement } from './component-tree';
+import { getHostSiblings, getRootElement } from './component-tree';
 import {
   getHostComponentNames,
   isHostImage,
@@ -253,7 +253,7 @@ export function computeAccessibleName(element: HostElement): string | undefined 
 
   const labelElementId = computeAriaLabelledBy(element);
   if (labelElementId) {
-    const rootElement = getUnsafeRootElement(element);
+    const rootElement = getRootElement(element);
     const labelElement = findAllByProps(rootElement, { nativeID: labelElementId });
     if (labelElement.length > 0) {
       return getTextContent(labelElement[0]);

@@ -6,7 +6,7 @@ import {
   ScrollViewProps,
 } from 'react-native';
 import act from './act';
-import { isHostElement } from './helpers/component-tree';
+import { isValidElement } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isTextInputEditable } from './helpers/text-input';
@@ -18,7 +18,7 @@ import { EventBuilder } from './user-event/event-builder';
 type EventHandler = (...args: unknown[]) => unknown;
 
 export function isTouchResponder(element: HostElement) {
-  if (!isHostElement(element)) {
+  if (!isValidElement(element)) {
     return false;
   }
 

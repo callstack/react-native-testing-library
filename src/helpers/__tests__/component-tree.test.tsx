@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { render, screen } from '../..';
-import { getHostSiblings, getUnsafeRootElement } from '../component-tree';
+import { getHostSiblings, getRootElement } from '../component-tree';
 
 function MultipleHostChildren() {
   return (
@@ -46,6 +46,6 @@ describe('getUnsafeRootElement()', () => {
     );
 
     const view = screen.getByTestId('view');
-    expect(getUnsafeRootElement(view)).toEqual(screen.UNSAFE_root);
+    expect(getRootElement(view)).toEqual(screen.UNSAFE_root);
   });
 });
