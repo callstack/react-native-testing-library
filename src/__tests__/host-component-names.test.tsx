@@ -6,7 +6,7 @@ import {
   configureHostComponentNamesIfNeeded,
 } from '../helpers/host-component-names';
 import { act, render } from '..';
-import * as internalRenderer from '../renderer/renderer';
+import * as rendererModule from '../renderer/renderer';
 
 describe('getHostComponentNames', () => {
   test('returns host component names from internal config', () => {
@@ -102,13 +102,14 @@ describe('configureHostComponentNamesIfNeeded', () => {
   });
 
   test('throw an error when auto-detection fails', () => {
-    let mockRender: jest.SpyInstance;
-    const result = internalRenderer.render(<View />);
+    const renderer = rendererModule.createRenderer();
+    renderer.render(<View />);
 
-    mockRender = jest.spyOn(internalRenderer, 'render') as jest.Mock;
-    mockRender.mockReturnValue({
-      root: result.root,
-    });
+    const mockCreateRenderer = jest
+      .spyOn(rendererModule, 'createRenderer')
+      .mockReturnValue(renderer);
+    // @ts-expect-error
+    jest.spyOn(renderer, 'render').mockReturnValue(renderer.root);
 
     expect(() => configureHostComponentNamesIfNeeded()).toThrowErrorMatchingInlineSnapshot(`
       "Trying to detect host component names triggered the following error:
@@ -119,6 +120,6 @@ describe('configureHostComponentNamesIfNeeded', () => {
       Please check if you are using compatible versions of React Native and React Native Testing Library."
     `);
 
-    mockRender.mockReset();
+    mockCreateRenderer.mockReset();
   });
 });

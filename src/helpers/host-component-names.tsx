@@ -3,6 +3,8 @@ import { Image, Modal, ScrollView, Switch, Text, TextInput, View } from 'react-n
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { HostElement } from '../renderer/host-element';
 import { renderWithAct } from '../render-act';
+import { createRenderer } from '../renderer/renderer';
+import act from '../act';
 
 const userConfigErrorMessage = `There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
 Please check if you are using compatible versions of React Native and React Native Testing Library.`;
@@ -29,17 +31,19 @@ export function configureHostComponentNamesIfNeeded() {
 
 function detectHostComponentNames(): HostComponentNames {
   try {
-    const renderer = renderWithAct(
-      <View>
-        <Text testID="text">Hello</Text>
-        <TextInput testID="textInput" />
-        <Image testID="image" />
-        <Switch testID="switch" />
-        <ScrollView testID="scrollView" />
-        <Modal testID="modal" />
-      </View>,
-    );
-
+    const renderer = createRenderer();
+    act(() => {
+      renderer.render(
+        <View>
+          <Text testID="text">Hello</Text>
+          <TextInput testID="textInput" />
+          <Image testID="image" />
+          <Switch testID="switch" />
+          <ScrollView testID="scrollView" />
+          <Modal testID="modal" />
+        </View>,
+      );
+    });
     return {
       text: getByTestId(renderer.root, 'text').type as string,
       textInput: getByTestId(renderer.root, 'textInput').type as string,

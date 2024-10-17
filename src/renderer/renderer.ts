@@ -3,25 +3,30 @@ import { Container, TestReconciler } from './reconciler';
 import { JsonNode, renderChildrenToJson, renderToJson } from './render-to-json';
 import { HostElement } from './host-element';
 
-export type RenderResult = {
-  update: (element: ReactElement) => void;
+export type RendererOptions = {
+  isConcurrent?: boolean;
+  createNodeMock?: (element: ReactElement) => unknown;
+};
+
+export type Renderer = {
+  render: (element: ReactElement) => void;
   unmount: () => void;
-  container: HostElement;
   root: HostElement;
+  container: HostElement;
   toJSON: () => JsonNode | JsonNode[] | null;
 };
 
-export function render(element: ReactElement): RenderResult {
+export function createRenderer(options?: RendererOptions): Renderer {
   let container: Container | null = {
     tag: 'CONTAINER',
     children: [],
     parent: null,
-    createNodeMock: () => null,
+    createNodeMock: options?.createNodeMock ?? (() => null),
   };
 
   let containerFiber = TestReconciler.createContainer(
     container,
-    0, // 0 = LegacyRoot, 1 = ConcurrentRoot
+    options?.isConcurrent ? 1 : 0, // 0 = LegacyRoot, 1 = ConcurrentRoot
     null, // no hydration callback
     false, // isStrictMode
     null, // concurrentUpdatesByDefaultOverride
@@ -30,13 +35,7 @@ export function render(element: ReactElement): RenderResult {
     null, // transitionCallbacks
   );
 
-  TestReconciler.updateContainer(element, containerFiber, null, null);
-
-  const update = (element: ReactElement) => {
-    if (containerFiber == null || container == null) {
-      return;
-    }
-
+  const render = (element: ReactElement) => {
     TestReconciler.updateContainer(element, containerFiber, null, null);
   };
 
@@ -76,24 +75,12 @@ export function render(element: ReactElement): RenderResult {
     return renderChildrenToJson(container.children);
   };
 
-  const result = {
-    update,
+  return {
+    render,
     unmount,
     toJSON,
-    get container(): HostElement {
-      if (containerFiber == null || container == null) {
-        throw new Error("Can't access .container on unmounted test renderer");
-      }
-
-      return HostElement.fromContainer(container);
-    },
-
     get root(): HostElement {
-      if (containerFiber == null || container == null) {
-        throw new Error("Can't access .root on unmounted test renderer");
-      }
-
-      if (container.children.length === 0) {
+      if (containerFiber == null || container == null || container.children.length === 0) {
         throw new Error("Can't access .root on unmounted test renderer");
       }
 
@@ -104,7 +91,13 @@ export function render(element: ReactElement): RenderResult {
 
       return root;
     },
-  };
 
-  return result;
+    get container(): HostElement {
+      if (containerFiber == null || container == null) {
+        throw new Error("Can't access .container on unmounted test renderer");
+      }
+
+      return HostElement.fromContainer(container);
+    },
+  };
 }
