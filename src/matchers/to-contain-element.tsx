@@ -1,5 +1,6 @@
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import { HostElement } from '../renderer/host-element';
+import { findAll } from '../helpers/find-all';
 import { checkHostElement, formatElement } from './utils';
 
 export function toContainElement(
@@ -15,7 +16,7 @@ export function toContainElement(
 
   let matches: HostElement[] = [];
   if (element) {
-    matches = container.findAll((node) => node === element);
+    matches = findAll(container, (node) => node === element);
   }
 
   return {

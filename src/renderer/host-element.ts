@@ -3,10 +3,6 @@ import { Container, Instance, TextInstance } from './reconciler';
 export type HostNode = HostElement | string;
 export type HostElementProps = Record<string, any>;
 
-type FindOptions = {
-  deep?: boolean;
-};
-
 const instanceToHostElementMap = new WeakMap<Container | Instance, HostElement>();
 
 export class HostElement {
@@ -89,34 +85,4 @@ export class HostElement {
         throw new Error(`Unexpected node type in HostElement.fromInstance: ${instance.tag}`);
     }
   }
-
-  findAll(predicate: (element: HostElement) => boolean, options?: FindOptions): HostElement[] {
-    return findAll(this, predicate, options);
-  }
-}
-
-function findAll(
-  root: HostElement,
-  predicate: (element: HostElement) => boolean,
-  options?: FindOptions,
-): HostElement[] {
-  const deep = options?.deep ?? true;
-  const results = [];
-
-  if (predicate(root)) {
-    results.push(root);
-    if (!deep) {
-      return results;
-    }
-  }
-
-  root.children.forEach((child) => {
-    if (typeof child === 'string') {
-      return;
-    }
-
-    results.push(...findAll(child, predicate, options));
-  });
-
-  return results;
 }

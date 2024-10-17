@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Image, Modal, ScrollView, Switch, Text, TextInput, View } from 'react-native';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import { HostElement } from '../renderer/host-element';
-import { renderWithAct } from '../render-act';
 import { createRenderer } from '../renderer/renderer';
 import act from '../act';
+import { findAll } from './find-all';
 
 const userConfigErrorMessage = `There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
 Please check if you are using compatible versions of React Native and React Native Testing Library.`;
@@ -62,8 +62,9 @@ function detectHostComponentNames(): HostComponentNames {
   }
 }
 
-function getByTestId(instance: HostElement, testID: string) {
-  const nodes = instance.findAll(
+function getByTestId(element: HostElement, testID: string) {
+  const nodes = findAll(
+    element,
     (node) => typeof node.type === 'string' && node.props.testID === testID,
   );
 
