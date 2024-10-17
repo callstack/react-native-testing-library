@@ -1,22 +1,18 @@
-import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
 import * as React from 'react';
-import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
-import { getHostChildren } from './helpers/component-tree';
 import debugDeep, { DebugOptions } from './helpers/debug-deep';
-import debugShallow from './helpers/debug-shallow';
 import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
-import { validateStringsRenderedWithinText } from './helpers/string-validation';
-import { renderWithAct } from './render-act';
+import { HostElement } from './renderer/host-element';
+import { createRenderer, Renderer } from './renderer/renderer';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
 export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => unknown;
-  unstable_validateStringsRenderedWithinText?: boolean;
+  isConcurrent?: boolean;
 }
 
 export type RenderResult = ReturnType<typeof render>;
@@ -37,61 +33,30 @@ export function renderInternal<T>(
   component: React.ReactElement<T>,
   options?: RenderInternalOptions,
 ) {
-  const {
-    wrapper: Wrapper,
-    detectHostComponentNames = true,
-    unstable_validateStringsRenderedWithinText,
-    ...testRendererOptions
-  } = options || {};
+  const { wrapper: Wrapper, detectHostComponentNames = true, ...restOptions } = options || {};
 
   if (detectHostComponentNames) {
     configureHostComponentNamesIfNeeded();
   }
 
-  if (unstable_validateStringsRenderedWithinText) {
-    return renderWithStringValidation(component, {
-      wrapper: Wrapper,
-      ...testRendererOptions,
-    });
-  }
-
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-  const renderer = renderWithAct(wrap(component), testRendererOptions);
+
+  const renderer = createRenderer(restOptions);
+  void act(() => {
+    renderer.render(wrap(component));
+  });
+
   return buildRenderResult(renderer, wrap);
 }
 
-function renderWithStringValidation<T>(
-  component: React.ReactElement<T>,
-  options: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
-) {
-  let renderer: ReactTestRenderer;
-  const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
+function buildRenderResult(renderer: Renderer, wrap: (element: React.ReactElement) => JSX.Element) {
+  const instance = renderer.container ?? renderer.root;
 
-  const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
-    if (renderer && phase === 'update') {
-      validateStringsRenderedWithinText(renderer.toJSON());
-    }
+  const update = (element: React.ReactElement) => {
+    void act(() => {
+      renderer.render(wrap(element));
+    });
   };
-
-  const wrap = (element: React.ReactElement) => (
-    <Profiler id="renderProfiler" onRender={handleRender}>
-      {Wrapper ? <Wrapper>{element}</Wrapper> : element}
-    </Profiler>
-  );
-
-  renderer = renderWithAct(wrap(component), testRendererOptions);
-
-  validateStringsRenderedWithinText(renderer.toJSON());
-
-  return buildRenderResult(renderer, wrap);
-}
-
-function buildRenderResult(
-  renderer: ReactTestRenderer,
-  wrap: (element: React.ReactElement) => JSX.Element,
-) {
-  const update = updateWithAct(renderer, wrap);
-  const instance = renderer.root;
 
   const unmount = () => {
     void act(() => {
@@ -107,47 +72,20 @@ function buildRenderResult(
     unmount,
     rerender: update, // alias for `update`
     toJSON: renderer.toJSON,
-    debug: debug(instance, renderer),
-    get root(): ReactTestInstance {
-      return getHostChildren(instance)[0];
+    debug: debug(renderer),
+    get root(): HostElement {
+      return renderer.root;
     },
-    UNSAFE_root: instance,
+    container: instance,
   };
 
-  // Add as non-enumerable property, so that it's safe to enumerate
-  // `render` result, e.g. using destructuring rest syntax.
-  Object.defineProperty(result, 'container', {
-    enumerable: false,
-    get() {
-      throw new Error(
-        "'container' property has been renamed to 'UNSAFE_root'.\n\n" +
-          "Consider using 'root' property which returns root host element.",
-      );
-    },
-  });
-
   setRenderResult(result);
-
   return result;
 }
 
-function updateWithAct(
-  renderer: ReactTestRenderer,
-  wrap: (innerElement: React.ReactElement) => React.ReactElement,
-) {
-  return function (component: React.ReactElement) {
-    void act(() => {
-      renderer.update(wrap(component));
-    });
-  };
-}
+export type DebugFunction = (options?: DebugOptions | string) => void;
 
-export interface DebugFunction {
-  (options?: DebugOptions | string): void;
-  shallow: (message?: string) => void;
-}
-
-function debug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugFunction {
+function debug(renderer: Renderer): DebugFunction {
   function debugImpl(options?: DebugOptions | string) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions =
@@ -167,6 +105,6 @@ function debug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugF
       return debugDeep(json, debugOptions);
     }
   }
-  debugImpl.shallow = (message?: string) => debugShallow(instance, message);
+
   return debugImpl;
 }

@@ -31,3 +31,4 @@ if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
 }
 
 export * from './pure';
+export { HostElement } from './renderer/host-element';

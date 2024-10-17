@@ -148,6 +148,10 @@ describe('disabled state matching', () => {
     render(<View accessibilityState={{ disabled: true }} />);
 
     expect(screen.getByA11yState({ disabled: true })).toBeTruthy();
+    expect(screen.queryByA11yState({ disabled: true })).toBeTruthy();
+
+    const x = screen.queryByA11yState({ disabled: false });
+    expect(x).toMatchInlineSnapshot(`null`);
     expect(screen.queryByA11yState({ disabled: false })).toBeFalsy();
   });
 

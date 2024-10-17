@@ -30,38 +30,12 @@ const WithoutEventComponent = (_props: WithoutEventComponentProps) => (
   </View>
 );
 
-type CustomEventComponentProps = {
-  onCustomEvent: () => void;
-};
-const CustomEventComponent = ({ onCustomEvent }: CustomEventComponentProps) => (
-  <TouchableOpacity onPress={onCustomEvent}>
-    <Text>Custom event component</Text>
-  </TouchableOpacity>
-);
-
-type MyCustomButtonProps = {
-  handlePress: () => void;
-  text: string;
-};
-const MyCustomButton = ({ handlePress, text }: MyCustomButtonProps) => (
-  <OnPressComponent onPress={handlePress} text={text} />
-);
-
-type CustomEventComponentWithCustomNameProps = {
-  handlePress: () => void;
-};
-const CustomEventComponentWithCustomName = ({
-  handlePress,
-}: CustomEventComponentWithCustomNameProps) => (
-  <MyCustomButton handlePress={handlePress} text="Custom component" />
-);
-
 describe('fireEvent', () => {
   test('should invoke specified event', () => {
     const onPressMock = jest.fn();
     render(<OnPressComponent onPress={onPressMock} text="Press me" />);
 
-    fireEvent(screen.getByText('Press me'), 'press');
+    fireEvent.press(screen.getByText('Press me'));
 
     expect(onPressMock).toHaveBeenCalled();
   });
@@ -71,7 +45,7 @@ describe('fireEvent', () => {
     const text = 'New press text';
     render(<OnPressComponent onPress={onPressMock} text={text} />);
 
-    fireEvent(screen.getByText(text), 'press');
+    fireEvent.press(screen.getByText(text));
     expect(onPressMock).toHaveBeenCalled();
   });
 
@@ -84,26 +58,11 @@ describe('fireEvent', () => {
     fireEvent(screen.getByText('Without event'), 'press');
     expect(onPressMock).not.toHaveBeenCalled();
   });
-
-  test('should invoke event with custom name', () => {
-    const handlerMock = jest.fn();
-    const EVENT_DATA = 'event data';
-
-    render(
-      <View>
-        <CustomEventComponent onCustomEvent={handlerMock} />
-      </View>,
-    );
-
-    fireEvent(screen.getByText('Custom event component'), 'customEvent', EVENT_DATA);
-
-    expect(handlerMock).toHaveBeenCalledWith(EVENT_DATA);
-  });
 });
 
 test('fireEvent.press', () => {
   const onPressMock = jest.fn();
-  const text = 'Fireevent press';
+  const text = 'FireEvent press';
   const eventData = {
     nativeEvent: {
       pageX: 20,
@@ -114,7 +73,8 @@ test('fireEvent.press', () => {
 
   fireEvent.press(screen.getByText(text), eventData);
 
-  expect(onPressMock).toHaveBeenCalledWith(eventData);
+  expect(onPressMock).toHaveBeenCalledTimes(1);
+  expect(onPressMock.mock.calls[0][0].nativeEvent).toMatchObject(eventData.nativeEvent);
 });
 
 test('fireEvent.scroll', () => {
@@ -160,26 +120,6 @@ it('sets native state value for unmanaged text inputs', () => {
 
   fireEvent.changeText(input, 'abc');
   expect(input).toHaveDisplayValue('abc');
-});
-
-test('custom component with custom event name', () => {
-  const handlePress = jest.fn();
-
-  render(<CustomEventComponentWithCustomName handlePress={handlePress} />);
-
-  fireEvent(screen.getByText('Custom component'), 'handlePress');
-
-  expect(handlePress).toHaveBeenCalled();
-});
-
-test('event with multiple handler parameters', () => {
-  const handlePress = jest.fn();
-
-  render(<CustomEventComponentWithCustomName handlePress={handlePress} />);
-
-  fireEvent(screen.getByText('Custom component'), 'handlePress', 'param1', 'param2');
-
-  expect(handlePress).toHaveBeenCalledWith('param1', 'param2');
 });
 
 test('should not fire on disabled TouchableOpacity', () => {
@@ -251,8 +191,7 @@ test('should fire inside View with pointerEvents="box-none"', () => {
   );
 
   fireEvent.press(screen.getByText('Trigger'));
-  fireEvent(screen.getByText('Trigger'), 'onPress');
-  expect(onPress).toHaveBeenCalledTimes(2);
+  expect(onPress).toHaveBeenCalledTimes(1);
 });
 
 test('should fire inside View with pointerEvents="auto"', () => {
@@ -266,8 +205,7 @@ test('should fire inside View with pointerEvents="auto"', () => {
   );
 
   fireEvent.press(screen.getByText('Trigger'));
-  fireEvent(screen.getByText('Trigger'), 'onPress');
-  expect(onPress).toHaveBeenCalledTimes(2);
+  expect(onPress).toHaveBeenCalledTimes(1);
 });
 
 test('should not fire deeply inside View with pointerEvents="box-only"', () => {

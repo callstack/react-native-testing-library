@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { ReactTestInstance } from 'react-test-renderer';
 import { Image, Modal, ScrollView, Switch, Text, TextInput, View } from 'react-native';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
-import { renderWithAct } from '../render-act';
-import { HostTestInstance } from './component-tree';
+import { HostElement } from '../renderer/host-element';
+import { createRenderer } from '../renderer/renderer';
+import act from '../act';
+import { findAll } from './find-all';
 
 const userConfigErrorMessage = `There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
 Please check if you are using compatible versions of React Native and React Native Testing Library.`;
@@ -30,17 +31,19 @@ export function configureHostComponentNamesIfNeeded() {
 
 function detectHostComponentNames(): HostComponentNames {
   try {
-    const renderer = renderWithAct(
-      <View>
-        <Text testID="text">Hello</Text>
-        <TextInput testID="textInput" />
-        <Image testID="image" />
-        <Switch testID="switch" />
-        <ScrollView testID="scrollView" />
-        <Modal testID="modal" />
-      </View>,
-    );
-
+    const renderer = createRenderer();
+    act(() => {
+      renderer.render(
+        <View>
+          <Text testID="text">Hello</Text>
+          <TextInput testID="textInput" />
+          <Image testID="image" />
+          <Switch testID="switch" />
+          <ScrollView testID="scrollView" />
+          <Modal testID="modal" />
+        </View>,
+      );
+    });
     return {
       text: getByTestId(renderer.root, 'text').type as string,
       textInput: getByTestId(renderer.root, 'textInput').type as string,
@@ -59,8 +62,9 @@ function detectHostComponentNames(): HostComponentNames {
   }
 }
 
-function getByTestId(instance: ReactTestInstance, testID: string) {
-  const nodes = instance.findAll(
+function getByTestId(element: HostElement, testID: string) {
+  const nodes = findAll(
+    element,
     (node) => typeof node.type === 'string' && node.props.testID === testID,
   );
 
@@ -75,7 +79,7 @@ function getByTestId(instance: ReactTestInstance, testID: string) {
  * Checks if the given element is a host Text element.
  * @param element The element to check.
  */
-export function isHostText(element?: ReactTestInstance | null): element is HostTestInstance {
+export function isHostText(element?: HostElement | null) {
   return element?.type === getHostComponentNames().text;
 }
 
@@ -83,7 +87,7 @@ export function isHostText(element?: ReactTestInstance | null): element is HostT
  * Checks if the given element is a host TextInput element.
  * @param element The element to check.
  */
-export function isHostTextInput(element?: ReactTestInstance | null): element is HostTestInstance {
+export function isHostTextInput(element?: HostElement | null) {
   return element?.type === getHostComponentNames().textInput;
 }
 
@@ -91,7 +95,7 @@ export function isHostTextInput(element?: ReactTestInstance | null): element is 
  * Checks if the given element is a host Image element.
  * @param element The element to check.
  */
-export function isHostImage(element?: ReactTestInstance | null): element is HostTestInstance {
+export function isHostImage(element?: HostElement | null) {
   return element?.type === getHostComponentNames().image;
 }
 
@@ -99,7 +103,7 @@ export function isHostImage(element?: ReactTestInstance | null): element is Host
  * Checks if the given element is a host Switch element.
  * @param element The element to check.
  */
-export function isHostSwitch(element?: ReactTestInstance | null): element is HostTestInstance {
+export function isHostSwitch(element?: HostElement | null) {
   return element?.type === getHostComponentNames().switch;
 }
 
@@ -107,7 +111,7 @@ export function isHostSwitch(element?: ReactTestInstance | null): element is Hos
  * Checks if the given element is a host ScrollView element.
  * @param element The element to check.
  */
-export function isHostScrollView(element?: ReactTestInstance | null): element is HostTestInstance {
+export function isHostScrollView(element?: HostElement | null) {
   return element?.type === getHostComponentNames().scrollView;
 }
 
@@ -115,6 +119,6 @@ export function isHostScrollView(element?: ReactTestInstance | null): element is
  * Checks if the given element is a host Modal element.
  * @param element The element to check.
  */
-export function isHostModal(element?: ReactTestInstance | null): element is HostTestInstance {
+export function isHostModal(element?: HostElement | null) {
   return element?.type === getHostComponentNames().modal;
 }
