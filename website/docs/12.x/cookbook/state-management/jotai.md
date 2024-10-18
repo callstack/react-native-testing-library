@@ -12,7 +12,7 @@ the developer experience.
 Let's assume we have a simple task list component that uses Jotai for state management. The
 component has a list of tasks, a text input for typing new task name and a button to add a new task to the list.
 
-```tsx title=jotai/index.test.tsx
+```tsx title=state-management/jotai/TaskList.tsx
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { useAtom } from 'jotai';
@@ -65,7 +65,7 @@ We can test our `TaskList` component using React Native Testing Library's (RNTL)
 function. Although it is sufficient to test the empty state of the `TaskList` component, it is not
 enough to test the component with initial tasks present in the list.
 
-```tsx title=jotai/index.test.tsx
+```tsx title=status-management/jotai/__tests__/TaskList.test.tsx
 import * as React from 'react';
 import { render, screen, userEvent } from '@testing-library/react-native';
 import { renderWithAtoms } from './test-utils';
@@ -88,7 +88,7 @@ initial values. We can create a custom render function that uses Jotai's `useHyd
 hydrate the atoms with initial values. This function will accept the initial atoms and their
 corresponding values as an argument.
 
-```tsx title=test-utils.tsx
+```tsx title=status-management/jotai/test-utils.tsx
 import * as React from 'react';
 import { render } from '@testing-library/react-native';
 import { useHydrateAtoms } from 'jotai/utils';
@@ -144,7 +144,7 @@ We can now use the `renderWithAtoms` function to render the `TaskList` component
 In our test, we populated only one atom and its initial value, but you can add other Jotai atoms and their corresponding values to the initialValues array as needed.
 :::
 
-```tsx title=jotai/index.test.tsx
+```tsx title=status-management/jotai/__tests__/TaskList.test.tsx
 =======
 const INITIAL_TASKS: Task[] = [{ id: '1', title: 'Buy bread' }];
 
@@ -173,7 +173,7 @@ test('renders a to do list with 1 items initially, and adds a new item', async (
 In several cases, you might need to change an atom's state outside a React component. In our case,
 we have a set of functions to get tasks and set tasks, which change the state of the task list atom.
 
-```tsx title=state.ts
+```tsx title=state-management/jotai/state.ts
 import { atom, createStore } from 'jotai';
 import { Task } from './types';
 
@@ -201,7 +201,7 @@ the initial to-do items in the store and then checking if the functions work as 
 No special setup is required to test these functions, as `store.set` is available by default by
 Jotai.
 
-```tsx title=jotai/index.test.tsx
+```tsx title=state-management/jotai/__tests__/TaskList.test.tsx
 import { addTask, getAllTasks, store, tasksAtom } from './state';
 
 //...

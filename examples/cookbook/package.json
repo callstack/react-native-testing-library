@@ -11,10 +11,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "expo": "^51.0.26",
+    "expo": "~51.0.31",
     "expo-constants": "~16.0.2",
     "expo-linking": "~6.3.1",
-    "expo-router": "~3.5.21",
+    "expo-router": "~3.5.23",
     "expo-splash-screen": "~0.27.5",
     "expo-status-bar": "~1.12.1",
     "jotai": "^2.8.4",
@@ -29,14 +29,15 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@expo/metro-runtime": "~3.2.1",
-    "@testing-library/react-native": "^12.7.1",
+    "@expo/metro-runtime": "~3.2.3",
+    "@testing-library/react-native": "^12.7.2",
     "@types/eslint": "^8.56.10",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.45",
     "@types/react-native-get-random-values": "^1",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
+    "msw": "^2.4.4",
     "react-test-renderer": "18.2.0",
     "typescript": "~5.3.3"
   },
