@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
-import { createRenderer } from './renderer';
+import { createRenderer } from '../renderer';
 
 function Passthrough({ children }: { children: React.ReactNode }) {
   return children;
