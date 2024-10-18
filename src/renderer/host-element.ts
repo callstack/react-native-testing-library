@@ -1,4 +1,6 @@
+import { CONTAINER_TYPE } from './contants';
 import { Container, Instance, TextInstance } from './reconciler';
+import { JsonNode, renderToJson } from './render-to-json';
 
 export type HostNode = HostElement | string;
 export type HostElementProps = Record<string, any>;
@@ -13,7 +15,7 @@ export class HostElement {
   }
 
   get type(): string {
-    return this.instance.tag === 'INSTANCE' ? this.instance.type : 'CONTAINER';
+    return this.instance.tag === 'INSTANCE' ? this.instance.type : CONTAINER_TYPE;
   }
 
   get props(): HostElementProps {
@@ -51,6 +53,10 @@ export class HostElement {
 
   get $$typeof(): Symbol {
     return Symbol.for('react.test.json');
+  }
+
+  toJSON(): JsonNode | null {
+    return renderToJson(this.instance);
   }
 
   static fromContainer(container: Container): HostElement {

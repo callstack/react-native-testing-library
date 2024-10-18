@@ -1,3 +1,4 @@
+import { CONTAINER_TYPE } from '../renderer/contants';
 import { HostElement } from '../renderer/host-element';
 
 /**
@@ -5,7 +6,7 @@ import { HostElement } from '../renderer/host-element';
  * @param element The element to check.
  */
 export function isValidElement(element?: HostElement | null): element is HostElement {
-  return typeof element?.type === 'string' && element.type !== 'CONTAINER';
+  return typeof element?.type === 'string' && element.type !== CONTAINER_TYPE;
 }
 
 /**

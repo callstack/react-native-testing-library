@@ -1,3 +1,4 @@
+import { CONTAINER_TYPE } from './contants';
 import { Container, Instance, TextInstance } from './reconciler';
 
 export type JsonNode = JsonInstance | string;
@@ -70,7 +71,7 @@ export function renderToJson(instance: Container | Instance | TextInstance): Jso
       }
 
       const result = {
-        type: 'CONTAINER',
+        type: CONTAINER_TYPE,
         props: {},
         children: renderedChildren,
         $$typeof: Symbol.for('react.test.json'),

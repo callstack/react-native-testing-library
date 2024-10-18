@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
-import { getConfig, resetToDefaults } from '../config';
-import { fireEvent, render, RenderAPI, screen } from '..';
+import { getConfig } from '../config';
+import { CONTAINER_TYPE } from '../renderer/contants';
+import { fireEvent, render, type RenderAPI, screen, resetToDefaults } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -172,7 +173,7 @@ test('returns container', () => {
   render(<View testID="inner" />);
 
   expect(screen.container).toBeDefined();
-  expect(screen.container.type).toBe('CONTAINER');
+  expect(screen.container.type).toBe(CONTAINER_TYPE);
   expect(screen.container.props).toEqual({});
 });
 

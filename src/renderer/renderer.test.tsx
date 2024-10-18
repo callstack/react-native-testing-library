@@ -6,6 +6,10 @@ function Passthrough({ children }: { children: React.ReactNode }) {
   return children;
 }
 
+function RendersNull() {
+  return null;
+}
+
 test('renders View', () => {
   const renderer = createRenderer();
   renderer.render(<View />);
@@ -80,6 +84,15 @@ test('returns container view', () => {
       />
     </CONTAINER>
   `);
+});
+
+test('returns null when rendering indirectly null', () => {
+  const renderer = createRenderer();
+  renderer.render(<RendersNull />);
+
+  expect(renderer.container).toMatchInlineSnapshot(`<CONTAINER />`);
+  expect(renderer.root).toBeNull();
+  expect(renderer.toJSON()).toBeNull();
 });
 
 test('throws when rendering string outside of Text', () => {
