@@ -21,18 +21,15 @@ export type RenderResult = ReturnType<typeof render>;
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export default function render<T>(component: React.ReactElement<T>, options: RenderOptions = {}) {
-  return renderInternal(component, options);
+export default function render<T>(element: React.ReactElement<T>, options: RenderOptions = {}) {
+  return renderInternal(element, options);
 }
 
 export interface RenderInternalOptions extends RenderOptions {
   detectHostComponentNames?: boolean;
 }
 
-export function renderInternal<T>(
-  component: React.ReactElement<T>,
-  options?: RenderInternalOptions,
-) {
+export function renderInternal<T>(element: React.ReactElement<T>, options?: RenderInternalOptions) {
   const { wrapper: Wrapper, detectHostComponentNames = true, ...restOptions } = options || {};
 
   if (detectHostComponentNames) {
@@ -43,15 +40,13 @@ export function renderInternal<T>(
 
   const renderer = createRenderer(restOptions);
   void act(() => {
-    renderer.render(wrap(component));
+    renderer.render(wrap(element));
   });
 
   return buildRenderResult(renderer, wrap);
 }
 
 function buildRenderResult(renderer: Renderer, wrap: (element: React.ReactElement) => JSX.Element) {
-  const instance = renderer.container ?? renderer.root;
-
   const update = (element: React.ReactElement) => {
     void act(() => {
       renderer.render(wrap(element));
@@ -67,16 +62,16 @@ function buildRenderResult(renderer: Renderer, wrap: (element: React.ReactElemen
   addToCleanupQueue(unmount);
 
   const result = {
-    ...getQueriesForElement(instance),
+    ...getQueriesForElement(renderer.container),
     update,
     unmount,
     rerender: update, // alias for `update`
     toJSON: renderer.toJSON,
     debug: debug(renderer),
+    container: renderer.container,
     get root(): HostElement {
       return renderer.root;
     },
-    container: instance,
   };
 
   setRenderResult(result);
