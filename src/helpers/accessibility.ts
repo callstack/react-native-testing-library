@@ -5,8 +5,9 @@ import {
   Role,
   StyleSheet,
 } from 'react-native';
-import { ReactTestInstance } from 'react-test-renderer';
-import { getHostSiblings, getUnsafeRootElement } from './component-tree';
+import type { ReactTestInstance } from 'react-test-renderer';
+import { getHostSiblings, getUnsafeRootElement, isHostElement } from './component-tree';
+import { findAll } from './find-all';
 import { isHostImage, isHostSwitch, isHostText, isHostTextInput } from './host-component-names';
 import { getTextContent } from './text-content';
 import { isTextInputEditable } from './text-input';
@@ -161,9 +162,13 @@ export function computeAriaLabel(element: ReactTestInstance): string | undefined
   const labelElementId = element.props['aria-labelledby'] ?? element.props.accessibilityLabelledBy;
   if (labelElementId) {
     const rootElement = getUnsafeRootElement(element);
-    const labelElement = rootElement?.findByProps({ nativeID: labelElementId });
-    if (labelElement) {
-      return getTextContent(labelElement);
+    const labelElement = findAll(
+      rootElement,
+      (node) => isHostElement(node) && node.props.nativeID === labelElementId,
+      { includeHiddenElements: true },
+    );
+    if (labelElement.length > 0) {
+      return getTextContent(labelElement[0]);
     }
   }
 
