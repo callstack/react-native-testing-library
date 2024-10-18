@@ -1,8 +1,8 @@
-import { ReactTestInstance } from 'react-test-renderer';
 import { nativeState } from '../native-state';
+import { HostElement } from '../renderer/host-element';
 import { isHostTextInput } from './host-component-names';
 
-export function isTextInputEditable(element: ReactTestInstance) {
+export function isTextInputEditable(element: HostElement) {
   if (!isHostTextInput(element)) {
     throw new Error(`Element is not a "TextInput", but it has type "${element.type}".`);
   }
@@ -10,7 +10,7 @@ export function isTextInputEditable(element: ReactTestInstance) {
   return element.props.editable !== false;
 }
 
-export function getTextInputValue(element: ReactTestInstance) {
+export function getTextInputValue(element: HostElement) {
   if (!isHostTextInput(element)) {
     throw new Error(`Element is not a "TextInput", but it has type "${element.type}".`);
   }

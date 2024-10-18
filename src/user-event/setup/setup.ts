@@ -1,6 +1,6 @@
-import { ReactTestInstance } from 'react-test-renderer';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { wrapAsync } from '../../helpers/wrap-async';
+import { HostElement } from '../../renderer/host-element';
 import { clear } from '../clear';
 import { paste } from '../paste';
 import { PressOptions, press, longPress } from '../press';
@@ -82,8 +82,8 @@ function createConfig(options?: UserEventSetupOptions): UserEventConfig {
 export interface UserEventInstance {
   config: UserEventConfig;
 
-  press: (element: ReactTestInstance) => Promise<void>;
-  longPress: (element: ReactTestInstance, options?: PressOptions) => Promise<void>;
+  press: (element: HostElement) => Promise<void>;
+  longPress: (element: HostElement, options?: PressOptions) => Promise<void>;
 
   /**
    * Simulate user pressing on a given `TextInput` element and typing given text.
@@ -105,7 +105,7 @@ export interface UserEventInstance {
    * - `submitEditing` - if true, `submitEditing` event will be triggered after
    * typing the text.
    */
-  type: (element: ReactTestInstance, text: string, options?: TypeOptions) => Promise<void>;
+  type: (element: HostElement, text: string, options?: TypeOptions) => Promise<void>;
 
   /**
    * Simulate user clearing the text of a given `TextInput` element.
@@ -118,7 +118,7 @@ export interface UserEventInstance {
    *
    * @param element TextInput element to clear
    */
-  clear: (element: ReactTestInstance) => Promise<void>;
+  clear: (element: HostElement) => Promise<void>;
 
   /**
    * Simulate user pasting the text to a given `TextInput` element.
@@ -131,7 +131,7 @@ export interface UserEventInstance {
    *
    * @param element TextInput element to paste to
    */
-  paste: (element: ReactTestInstance, text: string) => Promise<void>;
+  paste: (element: HostElement, text: string) => Promise<void>;
 
   /**
    * Simlate user scorlling a ScrollView element.
@@ -139,7 +139,7 @@ export interface UserEventInstance {
    * @param element ScrollView element
    * @returns
    */
-  scrollTo: (element: ReactTestInstance, options: ScrollToOptions) => Promise<void>;
+  scrollTo: (element: HostElement, options: ScrollToOptions) => Promise<void>;
 }
 
 function createInstance(config: UserEventConfig): UserEventInstance {

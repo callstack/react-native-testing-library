@@ -1,16 +1,16 @@
-import { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { isPointerEventEnabled } from '../helpers/pointer-events';
 import { getTextInputValue, isTextInputEditable } from '../helpers/text-input';
 import { nativeState } from '../native-state';
+import { HostElement } from '../renderer/host-element';
 import { EventBuilder } from './event-builder';
 import { UserEventInstance } from './setup';
 import { dispatchEvent, getTextContentSize, wait } from './utils';
 
 export async function paste(
   this: UserEventInstance,
-  element: ReactTestInstance,
+  element: HostElement,
   text: string,
 ): Promise<void> {
   if (!isHostTextInput(element)) {

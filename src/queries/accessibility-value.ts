@@ -1,4 +1,3 @@
-import type { ReactTestInstance } from 'react-test-renderer';
 import { accessibilityValueKeys } from '../helpers/accessibility';
 import { deprecateQueries } from '../helpers/deprecation';
 import { findAll } from '../helpers/find-all';
@@ -6,6 +5,7 @@ import {
   AccessibilityValueMatcher,
   matchAccessibilityValue,
 } from '../helpers/matchers/match-accessibility-value';
+import { HostElement } from '../renderer/host-element';
 import { makeQueries } from './make-queries';
 import type {
   FindAllByQuery,
@@ -18,7 +18,7 @@ import type {
 import { CommonQueryOptions } from './options';
 
 const queryAllByA11yValue = (
-  instance: ReactTestInstance,
+  instance: HostElement,
 ): QueryAllByQuery<AccessibilityValueMatcher, CommonQueryOptions> =>
   function queryAllByA11yValueFn(value, queryOptions) {
     return findAll(instance, (node) => matchAccessibilityValue(node, value), queryOptions);
@@ -64,7 +64,7 @@ export type ByA11yValueQueries = {
   findAllByAccessibilityValue: FindAllByQuery<AccessibilityValueMatcher, CommonQueryOptions>;
 };
 
-export const bindByA11yValueQueries = (instance: ReactTestInstance): ByA11yValueQueries => {
+export const bindByA11yValueQueries = (instance: HostElement): ByA11yValueQueries => {
   const getByA11yValue = getBy(instance);
   const getAllByA11yValue = getAllBy(instance);
   const queryByA11yValue = queryBy(instance);

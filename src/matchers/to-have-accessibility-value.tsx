@@ -1,4 +1,3 @@
-import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, stringify } from 'jest-matcher-utils';
 import { computeAriaValue } from '../helpers/accessibility';
 import {
@@ -6,11 +5,12 @@ import {
   matchAccessibilityValue,
 } from '../helpers/matchers/match-accessibility-value';
 import { removeUndefinedKeys } from '../helpers/object';
+import { HostElement } from '../renderer/host-element';
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveAccessibilityValue(
   this: jest.MatcherContext,
-  element: ReactTestInstance,
+  element: HostElement,
   expectedValue: AccessibilityValueMatcher,
 ) {
   checkHostElement(element, toHaveAccessibilityValue, this);

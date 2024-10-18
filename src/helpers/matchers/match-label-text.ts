@@ -1,12 +1,12 @@
-import { ReactTestInstance } from 'react-test-renderer';
 import { matches, TextMatch, TextMatchOptions } from '../../matches';
+import { HostElement } from '../../renderer/host-element';
 import { computeAriaLabel, computeAriaLabelledBy } from '../accessibility';
 import { findAll } from '../find-all';
 import { matchTextContent } from './match-text-content';
 
 export function matchLabelText(
-  root: ReactTestInstance,
-  element: ReactTestInstance,
+  root: HostElement,
+  element: HostElement,
   expectedText: TextMatch,
   options: TextMatchOptions = {},
 ) {
@@ -17,7 +17,7 @@ export function matchLabelText(
 }
 
 function matchAccessibilityLabel(
-  element: ReactTestInstance,
+  element: HostElement,
   expectedLabel: TextMatch,
   options: TextMatchOptions,
 ) {
@@ -25,7 +25,7 @@ function matchAccessibilityLabel(
 }
 
 function matchAccessibilityLabelledBy(
-  root: ReactTestInstance,
+  root: HostElement,
   nativeId: string | undefined,
   text: TextMatch,
   options: TextMatchOptions,
