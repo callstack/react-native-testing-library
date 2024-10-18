@@ -11,8 +11,8 @@ export type RendererOptions = {
 export type Renderer = {
   render: (element: ReactElement) => void;
   unmount: () => void;
-  root: HostElement;
   container: HostElement;
+  root: HostElement | null;
   toJSON: () => JsonNode | JsonNode[] | null;
 };
 
@@ -79,9 +79,13 @@ export function createRenderer(options?: RendererOptions): Renderer {
     render,
     unmount,
     toJSON,
-    get root(): HostElement {
-      if (containerFiber == null || container == null || container.children.length === 0) {
+    get root(): HostElement | null {
+      if (containerFiber == null || container == null) {
         throw new Error("Can't access .root on unmounted test renderer");
+      }
+
+      if (container.children.length === 0) {
+        return null;
       }
 
       const root = HostElement.fromInstance(container.children[0]);

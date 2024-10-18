@@ -18,7 +18,7 @@ interface Screen extends RenderResult {
 
 const defaultScreen: Screen = {
   isDetached: true,
-  get root(): HostElement {
+  get root(): HostElement | null {
     throw new Error(SCREEN_ERROR);
   },
   get container(): HostElement {

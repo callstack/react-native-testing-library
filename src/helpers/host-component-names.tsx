@@ -45,12 +45,12 @@ function detectHostComponentNames(): HostComponentNames {
       );
     });
     return {
-      text: getByTestId(renderer.root, 'text').type as string,
-      textInput: getByTestId(renderer.root, 'textInput').type as string,
-      image: getByTestId(renderer.root, 'image').type as string,
-      switch: getByTestId(renderer.root, 'switch').type as string,
-      scrollView: getByTestId(renderer.root, 'scrollView').type as string,
-      modal: getByTestId(renderer.root, 'modal').type as string,
+      text: getByTestId(renderer.container, 'text').type as string,
+      textInput: getByTestId(renderer.container, 'textInput').type as string,
+      image: getByTestId(renderer.container, 'image').type as string,
+      switch: getByTestId(renderer.container, 'switch').type as string,
+      scrollView: getByTestId(renderer.container, 'scrollView').type as string,
+      modal: getByTestId(renderer.container, 'modal').type as string,
     };
   } catch (error) {
     const errorMessage =

@@ -164,8 +164,8 @@ test('returns host root', () => {
   render(<View testID="inner" />);
 
   expect(screen.root).toBeDefined();
-  expect(screen.root.type).toBe('View');
-  expect(screen.root.props.testID).toBe('inner');
+  expect(screen.root?.type).toBe('View');
+  expect(screen.root?.props.testID).toBe('inner');
 });
 
 test('returns container', () => {

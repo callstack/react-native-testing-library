@@ -69,7 +69,7 @@ function buildRenderResult(renderer: Renderer, wrap: (element: React.ReactElemen
     toJSON: renderer.toJSON,
     debug: debug(renderer),
     container: renderer.container,
-    get root(): HostElement {
+    get root(): HostElement | null {
       return renderer.root;
     },
   };
