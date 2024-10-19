@@ -10,7 +10,6 @@ const notImplemented = () => {
 const notImplementedDebug = () => {
   throw new Error(SCREEN_ERROR);
 };
-notImplementedDebug.shallow = notImplemented;
 
 interface Screen extends RenderResult {
   isDetached?: boolean;

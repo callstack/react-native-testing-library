@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import TestRenderer from 'react-test-renderer';
+import TestRenderer, { ReactTestRenderer } from 'react-test-renderer';
 import { configureInternal, getConfig } from '../config';
 import {
   getHostComponentNames,
@@ -103,10 +103,13 @@ describe('configureHostComponentNamesIfNeeded', () => {
 
   test('throw an error when auto-detection fails', () => {
     const mockCreate = jest.spyOn(TestRenderer, 'create') as jest.Mock;
-    const renderer = TestRenderer.create(<View />);
+    let renderer: ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(<View />);
+    });
 
     mockCreate.mockReturnValue({
-      root: renderer.root,
+      root: renderer!.root,
     });
 
     expect(() => configureHostComponentNamesIfNeeded()).toThrowErrorMatchingInlineSnapshot(`
