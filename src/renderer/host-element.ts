@@ -29,7 +29,9 @@ export class HostElement {
   }
 
   get children(): HostNode[] {
-    const result = this.instance.children.map((child) => HostElement.fromInstance(child));
+    const result = this.instance.children
+      .filter((child) => !child.isHidden)
+      .map((child) => HostElement.fromInstance(child));
     return result;
   }
 
