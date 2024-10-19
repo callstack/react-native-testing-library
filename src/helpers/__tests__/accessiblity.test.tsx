@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, Pressable, Switch, TouchableOpacity } from 'react-native';
 import { render, isHiddenFromAccessibility, isInaccessible, screen } from '../..';
-import { isAccessibilityElement } from '../accessibility';
+import { computeAriaLabel, isAccessibilityElement } from '../accessibility';
 
 describe('isHiddenFromAccessibility', () => {
   test('returns false for accessible elements', () => {
@@ -369,5 +369,41 @@ describe('isAccessibilityElement', () => {
 
   test('returns false when given null', () => {
     expect(isAccessibilityElement(null)).toEqual(false);
+  });
+});
+
+describe('computeAriaLabel', () => {
+  test('supports basic usage', () => {
+    render(
+      <View>
+        <View testID="label" aria-label="Internal Label" />
+        <View testID="label-by-id" aria-labelledby="external-label" />
+        <View nativeID="external-label">
+          <Text>External Text</Text>
+        </View>
+        <View testID="no-label" />
+        <View testID="text-content">
+          <Text>Text Content</Text>
+        </View>
+      </View>,
+    );
+
+    expect(computeAriaLabel(screen.getByTestId('label'))).toEqual('Internal Label');
+    expect(computeAriaLabel(screen.getByTestId('label-by-id'))).toEqual('External Text');
+    expect(computeAriaLabel(screen.getByTestId('no-label'))).toBeUndefined();
+    expect(computeAriaLabel(screen.getByTestId('text-content'))).toBeUndefined();
+  });
+
+  test('label priority', () => {
+    render(
+      <View>
+        <View testID="subject" aria-label="Internal Label" aria-labelledby="external-content" />
+        <View nativeID="external-content">
+          <Text>External Label</Text>
+        </View>
+      </View>,
+    );
+
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('External Label');
   });
 });
