@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Text, TextInput, View } from 'react-native';
 import { render, screen } from '../..';
+import '../../matchers/extend-expect';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -32,6 +33,7 @@ test('getByTestId returns only native elements', () => {
       <View testID="view" />
       <Button testID="button" title="Button" onPress={jest.fn()} />
       <MyComponent testID="myComponent" />
+      <View testID="includes-hyphen" />
     </View>,
   );
 
@@ -39,6 +41,7 @@ test('getByTestId returns only native elements', () => {
   expect(screen.getByTestId('textInput')).toBeTruthy();
   expect(screen.getByTestId('view')).toBeTruthy();
   expect(screen.getByTestId('button')).toBeTruthy();
+  expect(screen.getByTestId('includes-hyphen')).toBeTruthy();
 
   expect(screen.getAllByTestId('text')).toHaveLength(1);
   expect(screen.getAllByTestId('textInput')).toHaveLength(1);
@@ -72,7 +75,7 @@ test('getByTestId, queryByTestId', () => {
   render(<Banana />);
   const component = screen.getByTestId('bananaFresh');
 
-  expect(component.props.children).toBe('not fresh');
+  expect(component).toHaveTextContent('not fresh');
   expect(() => screen.getByTestId('InExistent')).toThrow(
     'Unable to find an element with testID: InExistent',
   );
@@ -93,8 +96,8 @@ test('getAllByTestId, queryAllByTestId', () => {
   const textElements = screen.getAllByTestId('duplicateText');
 
   expect(textElements.length).toBe(2);
-  expect(textElements[0].props.children).toBe('First Text');
-  expect(textElements[1].props.children).toBe('Second Text');
+  expect(textElements[0]).toHaveTextContent('First Text');
+  expect(textElements[1]).toHaveTextContent('Second Text');
   expect(() => screen.getAllByTestId('nonExistentTestId')).toThrow(
     'Unable to find an element with testID: nonExistentTestId',
   );

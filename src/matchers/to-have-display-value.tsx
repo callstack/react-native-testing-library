@@ -1,14 +1,14 @@
-import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { ErrorWithStack } from '../helpers/errors';
 import { getTextInputValue } from '../helpers/text-input';
+import { HostElement } from '../renderer/host-element';
 import { TextMatch, TextMatchOptions, matches } from '../matches';
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveDisplayValue(
   this: jest.MatcherContext,
-  element: ReactTestInstance,
+  element: HostElement,
   expectedValue: TextMatch,
   options?: TextMatchOptions,
 ) {

@@ -5,8 +5,8 @@ import {
   Role,
   StyleSheet,
 } from 'react-native';
-import { ReactTestInstance } from 'react-test-renderer';
-import { getHostSiblings, getUnsafeRootElement } from './component-tree';
+import { HostElement } from '../renderer/host-element';
+import { getHostSiblings, getRootElement } from './component-tree';
 import {
   getHostComponentNames,
   isHostImage,
@@ -16,9 +16,10 @@ import {
 } from './host-component-names';
 import { getTextContent } from './text-content';
 import { isTextInputEditable } from './text-input';
+import { findAllByProps } from './find-all';
 
 type IsInaccessibleOptions = {
-  cache?: WeakMap<ReactTestInstance, boolean>;
+  cache?: WeakMap<HostElement, boolean>;
 };
 
 export const accessibilityStateKeys: (keyof AccessibilityState)[] = [
@@ -32,14 +33,14 @@ export const accessibilityStateKeys: (keyof AccessibilityState)[] = [
 export const accessibilityValueKeys: (keyof AccessibilityValue)[] = ['min', 'max', 'now', 'text'];
 
 export function isHiddenFromAccessibility(
-  element: ReactTestInstance | null,
+  element: HostElement | null,
   { cache }: IsInaccessibleOptions = {},
 ): boolean {
   if (element == null) {
     return true;
   }
 
-  let current: ReactTestInstance | null = element;
+  let current: HostElement | null = element;
   while (current) {
     let isCurrentSubtreeInaccessible = cache?.get(current);
 
@@ -61,7 +62,7 @@ export function isHiddenFromAccessibility(
 /** RTL-compatibility alias for `isHiddenFromAccessibility` */
 export const isInaccessible = isHiddenFromAccessibility;
 
-function isSubtreeInaccessible(element: ReactTestInstance): boolean {
+function isSubtreeInaccessible(element: HostElement): boolean {
   // Null props can happen for React.Fragments
   if (element.props == null) {
     return false;
@@ -98,7 +99,7 @@ function isSubtreeInaccessible(element: ReactTestInstance): boolean {
   return false;
 }
 
-export function isAccessibilityElement(element: ReactTestInstance | null): boolean {
+export function isAccessibilityElement(element: HostElement | null): boolean {
   if (element == null) {
     return false;
   }
@@ -133,7 +134,7 @@ export function isAccessibilityElement(element: ReactTestInstance | null): boole
  * @param element
  * @returns
  */
-export function getRole(element: ReactTestInstance): Role | AccessibilityRole {
+export function getRole(element: HostElement): Role | AccessibilityRole {
   const explicitRole = element.props.role ?? element.props.accessibilityRole;
   if (explicitRole) {
     return normalizeRole(explicitRole);
@@ -164,11 +165,11 @@ export function normalizeRole(role: string): Role | AccessibilityRole {
   return role as Role | AccessibilityRole;
 }
 
-export function computeAriaModal(element: ReactTestInstance): boolean | undefined {
+export function computeAriaModal(element: HostElement): boolean | undefined {
   return element.props['aria-modal'] ?? element.props.accessibilityViewIsModal;
 }
 
-export function computeAriaLabel(element: ReactTestInstance): string | undefined {
+export function computeAriaLabel(element: HostElement): string | undefined {
   const explicitLabel = element.props['aria-label'] ?? element.props.accessibilityLabel;
   if (explicitLabel) {
     return explicitLabel;
@@ -182,17 +183,17 @@ export function computeAriaLabel(element: ReactTestInstance): string | undefined
   return undefined;
 }
 
-export function computeAriaLabelledBy(element: ReactTestInstance): string | undefined {
+export function computeAriaLabelledBy(element: HostElement): string | undefined {
   return element.props['aria-labelledby'] ?? element.props.accessibilityLabelledBy;
 }
 
 // See: https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State#busy-state
-export function computeAriaBusy({ props }: ReactTestInstance): boolean {
+export function computeAriaBusy({ props }: HostElement): boolean {
   return props['aria-busy'] ?? props.accessibilityState?.busy ?? false;
 }
 
 // See: https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State#checked-state
-export function computeAriaChecked(element: ReactTestInstance): AccessibilityState['checked'] {
+export function computeAriaChecked(element: HostElement): AccessibilityState['checked'] {
   const { props } = element;
 
   if (isHostSwitch(element)) {
@@ -208,7 +209,7 @@ export function computeAriaChecked(element: ReactTestInstance): AccessibilitySta
 }
 
 // See: https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State#disabled-state
-export function computeAriaDisabled(element: ReactTestInstance): boolean {
+export function computeAriaDisabled(element: HostElement): boolean {
   if (isHostTextInput(element) && !isTextInputEditable(element)) {
     return true;
   }
@@ -218,16 +219,16 @@ export function computeAriaDisabled(element: ReactTestInstance): boolean {
 }
 
 // See: https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State#expanded-state
-export function computeAriaExpanded({ props }: ReactTestInstance): boolean | undefined {
+export function computeAriaExpanded({ props }: HostElement): boolean | undefined {
   return props['aria-expanded'] ?? props.accessibilityState?.expanded;
 }
 
 // See: https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State#selected-state
-export function computeAriaSelected({ props }: ReactTestInstance): boolean {
+export function computeAriaSelected({ props }: HostElement): boolean {
   return props['aria-selected'] ?? props.accessibilityState?.selected ?? false;
 }
 
-export function computeAriaValue(element: ReactTestInstance): AccessibilityValue {
+export function computeAriaValue(element: HostElement): AccessibilityValue {
   const {
     accessibilityValue,
     'aria-valuemax': ariaValueMax,
@@ -244,7 +245,7 @@ export function computeAriaValue(element: ReactTestInstance): AccessibilityValue
   };
 }
 
-export function computeAccessibleName(element: ReactTestInstance): string | undefined {
+export function computeAccessibleName(element: HostElement): string | undefined {
   const label = computeAriaLabel(element);
   if (label) {
     return label;
@@ -252,10 +253,10 @@ export function computeAccessibleName(element: ReactTestInstance): string | unde
 
   const labelElementId = computeAriaLabelledBy(element);
   if (labelElementId) {
-    const rootElement = getUnsafeRootElement(element);
-    const labelElement = rootElement?.findByProps({ nativeID: labelElementId });
-    if (labelElement) {
-      return getTextContent(labelElement);
+    const rootElement = getRootElement(element);
+    const labelElement = findAllByProps(rootElement, { nativeID: labelElementId });
+    if (labelElement.length > 0) {
+      return getTextContent(labelElement[0]);
     }
   }
 

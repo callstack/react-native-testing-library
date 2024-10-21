@@ -1,8 +1,8 @@
-import type { ReactTestInstance } from 'react-test-renderer';
 import { findAll } from '../helpers/find-all';
 import { isHostText } from '../helpers/host-component-names';
 import { matchTextContent } from '../helpers/matchers/match-text-content';
 import { TextMatch, TextMatchOptions } from '../matches';
+import { HostElement } from '../renderer/host-element';
 import { makeQueries } from './make-queries';
 import type {
   FindAllByQuery,
@@ -16,7 +16,7 @@ import type { CommonQueryOptions } from './options';
 
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
-const queryAllByText = (instance: ReactTestInstance): QueryAllByQuery<TextMatch, ByTextOptions> =>
+const queryAllByText = (instance: HostElement): QueryAllByQuery<TextMatch, ByTextOptions> =>
   function queryAllByTextFn(text, options = {}) {
     return findAll(instance, (node) => isHostText(node) && matchTextContent(node, text, options), {
       ...options,
@@ -43,7 +43,7 @@ export type ByTextQueries = {
   findAllByText: FindAllByQuery<TextMatch, ByTextOptions>;
 };
 
-export const bindByTextQueries = (instance: ReactTestInstance): ByTextQueries => ({
+export const bindByTextQueries = (instance: HostElement): ByTextQueries => ({
   getByText: getBy(instance),
   getAllByText: getAllBy(instance),
   queryByText: queryBy(instance),

@@ -55,10 +55,10 @@ declare type A11yRole =
 
 declare type A11yState = {|
   disabled?: boolean,
-  selected?: boolean,
-  checked?: boolean | 'mixed',
-  busy?: boolean,
-  expanded?: boolean,
+    selected ?: boolean,
+    checked ?: boolean | 'mixed',
+    busy ?: boolean,
+    expanded ?: boolean,
 |};
 
 declare type A11yValue = {
@@ -347,7 +347,6 @@ declare module '@testing-library/react-native' {
   declare interface RenderOptions {
     wrapper?: React.ComponentType<any>;
     createNodeMock?: (element: React.Element<any>) => any;
-    unstable_validateStringsRenderedWithinText?: boolean;
     unstable_isConcurrent?: boolean;
     unstable_strictMode?: boolean;
     unstable_concurrentUpdatesByDefault?: boolean;

@@ -25,7 +25,7 @@ test('checkHostElement allows rejects composite element', () => {
 
   expect(() => {
     // @ts-expect-error
-    checkHostElement(screen.UNSAFE_root, fakeMatcher, {});
+    checkHostElement(screen.container, fakeMatcher, {});
   }).toThrow(/value must be a host element./);
 });
 
