@@ -34,16 +34,14 @@ export type TextInstance = {
 };
 
 type HostContext = {
-  elementType: string;
+  type: string;
   isInsideText: boolean;
 };
 
-const NO_CONTEXT = {};
 const UPDATE_SIGNAL = {};
 const nodeToInstanceMap = new WeakMap<object, Instance>();
 
 if (__DEV__) {
-  Object.freeze(NO_CONTEXT);
   Object.freeze(UPDATE_SIGNAL);
 }
 
@@ -140,7 +138,7 @@ const hostConfig = {
   ): TextInstance {
     if (!hostContext.isInsideText) {
       throw new Error(
-        `Invariant Violation: Text strings must be rendered within a <Text> component. Detected attempt to render "${text}" string within a <${hostContext.elementType}> component.`,
+        `Invariant Violation: Text strings must be rendered within a <Text> component. Detected attempt to render "${text}" string within a <${hostContext.type}> component.`,
       );
     }
 
@@ -216,7 +214,6 @@ const hostConfig = {
    * This method happens **in the render phase**. Do not mutate the tree from it.
    */
   shouldSetTextContent(_type: Type, _props: Props): boolean {
-    // TODO: what should RN do here?
     return false;
   },
 
@@ -228,7 +225,7 @@ const hostConfig = {
    * This method happens **in the render phase**. Do not mutate the tree from it.
    */
   getRootHostContext(_rootContainer: Container): HostContext | null {
-    return { elementType: 'ROOT', isInsideText: false };
+    return { type: 'ROOT', isInsideText: false };
   },
 
   /**
@@ -251,7 +248,7 @@ const hostConfig = {
     _rootContainer: Container,
   ): HostContext {
     const isInsideText = type === 'Text';
-    return { elementType: type, isInsideText };
+    return { type: type, isInsideText };
   },
 
   /**
@@ -263,7 +260,6 @@ const hostConfig = {
   getPublicInstance(instance: Instance | TextInstance): PublicInstance {
     switch (instance.tag) {
       case 'INSTANCE': {
-        //console.log('🔷 getPublicInstance', instance);
         const createNodeMock = instance.rootContainer.createNodeMock;
         const mockNode = createNodeMock({
           type: instance.type,
@@ -332,7 +328,6 @@ const hostConfig = {
   /**
    * Optional. You can proxy this to `queueMicrotask` or its equivalent in your environment.
    */
-  // TODO: what should RN do here?
   scheduleMicrotask: queueMicrotask,
 
   /**
@@ -345,7 +340,6 @@ const hostConfig = {
   /**
    * Whether the renderer shouldn't trigger missing `act()` warnings
    */
-  // TODO: what should RN do here?
   warnsIfNotActing: true,
 
   /**
@@ -393,7 +387,7 @@ const hostConfig = {
     const instance = nodeToInstanceMap.get(node);
     if (instance !== undefined) {
       // TODO: why not just return the instance?
-      return instance.internalHandle;
+      return instance;
     }
 
     return null;
@@ -411,8 +405,8 @@ const hostConfig = {
     nodeToInstanceMap.set(scopeInstance, instance);
   },
 
-  getInstanceFromScope(scopeInstance: any): null | Instance {
-    return nodeToInstanceMap.get(scopeInstance) || null;
+  getInstanceFromScope(scopeInstance: any): Instance | null {
+    return nodeToInstanceMap.get(scopeInstance) ?? null;
   },
 
   detachDeletedInstance(_node: Instance): void {
@@ -482,7 +476,7 @@ const hostConfig = {
    *
    * Here, `textInstance` is a node created by `createTextInstance`.
    */
-  commitTextUpdate(textInstance: TextInstance, oldText: string, newText: string): void {
+  commitTextUpdate(textInstance: TextInstance, _oldText: string, newText: string): void {
     textInstance.text = newText;
   },
 
@@ -583,7 +577,8 @@ const hostConfig = {
   // of creating it from scratch. For example, the DOM renderer uses this to attach to an HTML markup.
   //
   // To support hydration, you need to declare `supportsHydration: true` and then implement the methods in
-  // the "Hydration" section [listed in this file](https://github.com/facebook/react/blob/master/packages/react-reconciler/src/forks/ReactFiberHostConfig.custom.js). File an issue if you need help.
+  // the "Hydration" section [listed in this file](https://github.com/facebook/react/blob/master/packages/react-reconciler/src/forks/ReactFiberHostConfig.custom.js).
+  // File an issue if you need help.
   // -------------------
   supportsHydration: false,
 };
@@ -599,18 +594,6 @@ export const TestReconciler = createReconciler(hostConfig);
  * look at `commitMount`.
  */
 function appendChild(parentInstance: Container | Instance, child: Instance | TextInstance): void {
-  if (__DEV__) {
-    if (!Array.isArray(parentInstance.children)) {
-      // eslint-disable-next-line no-console
-      console.error(
-        'An invalid container has been provided. ' +
-          'This may indicate that another renderer is being used in addition to the test renderer. ' +
-          '(For example, ReactDOM.createPortal inside of a ReactTestRenderer tree.) ' +
-          'This is not supported.',
-      );
-    }
-  }
-
   const index = parentInstance.children.indexOf(child);
   if (index !== -1) {
     parentInstance.children.splice(index, 1);
