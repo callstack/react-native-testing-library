@@ -61,9 +61,9 @@ export function renderInternal<T>(
   } = options || {};
 
   const testRendererOptions: TestRendererOptions = {
+    ...rest,
     // @ts-expect-error incomplete typing on RTR package
     unstable_isConcurrent: concurrentRoot ?? getConfig().concurrentRoot,
-    ...rest,
   };
 
   if (detectHostComponentNames) {
