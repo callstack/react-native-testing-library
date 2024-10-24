@@ -38,8 +38,8 @@
   "files": [
     "build/",
     "jest-preset/",
-    "extend-expect.js",
-    "extend-expect.d.ts",
+    "matchers.js",
+    "matchers.d.ts",
     "pure.js",
     "pure.d.ts",
     "dont-cleanup-after-each.js",

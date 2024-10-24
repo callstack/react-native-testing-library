@@ -1,6 +1,7 @@
 import { cleanup } from './pure';
 import { flushMicroTasks } from './flush-micro-tasks';
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
+import './matchers/extend-expect';
 
 if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
   // If we're running in a test runner that supports afterEach
