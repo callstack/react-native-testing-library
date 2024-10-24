@@ -6,7 +6,6 @@ import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import { getHostChildren } from './helpers/component-tree';
 import debugDeep, { DebugOptions } from './helpers/debug-deep';
-import debugShallow from './helpers/debug-shallow';
 import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
 import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
@@ -142,10 +141,7 @@ function updateWithAct(
   };
 }
 
-export interface DebugFunction {
-  (options?: DebugOptions | string): void;
-  shallow: (message?: string) => void;
-}
+export type DebugFunction = (options?: DebugOptions | string) => void;
 
 function debug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugFunction {
   function debugImpl(options?: DebugOptions | string) {
@@ -167,6 +163,5 @@ function debug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugF
       return debugDeep(json, debugOptions);
     }
   }
-  debugImpl.shallow = (message?: string) => debugShallow(instance, message);
   return debugImpl;
 }

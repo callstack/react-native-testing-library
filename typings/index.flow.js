@@ -55,10 +55,10 @@ declare type A11yRole =
 
 declare type A11yState = {|
   disabled?: boolean,
-  selected?: boolean,
-  checked?: boolean | 'mixed',
-  busy?: boolean,
-  expanded?: boolean,
+    selected ?: boolean,
+    checked ?: boolean | 'mixed',
+    busy ?: boolean,
+    expanded ?: boolean,
 |};
 
 declare type A11yValue = {
@@ -308,7 +308,6 @@ type DebugOptions = {
 
 type Debug = {
   (options?: DebugOptions | string): void,
-  shallow: (message?: string) => void,
 };
 
 type Queries = ByTextQueries &
