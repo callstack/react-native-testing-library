@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, Text, TextInput, Image } from 'react-native';
 import { render, screen } from '../..';
-import '../extend-expect';
 
 test('toHaveAccessibleName() handles view with "accessibilityLabel" prop', () => {
   render(<View testID="view" accessibilityLabel="Test label" />);

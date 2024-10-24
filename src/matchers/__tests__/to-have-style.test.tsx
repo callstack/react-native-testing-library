@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { render, screen } from '../..';
-import '../extend-expect';
 
 const styles = StyleSheet.create({
   container: { borderBottomColor: 'white' },

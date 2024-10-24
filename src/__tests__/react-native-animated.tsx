@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Animated, ViewStyle } from 'react-native';
 import { act, render, screen } from '..';
-import '../matchers/extend-expect';
 
 type AnimatedViewProps = {
   fadeInDuration?: number;
