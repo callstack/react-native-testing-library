@@ -56,13 +56,11 @@ jobs:
         uses: ./.github/actions/setup-deps
 
       - name: Test
-        run: yarn test:ci
+        run: yarn test:ci:coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
 
-      - name: Test in concurrent mode
-        run: CONCURRENT_MODE=1 yarn test:ci
 
   test-concurrent:
     needs: [install-cache-deps]
