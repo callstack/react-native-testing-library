@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
 import { render, screen } from '../..';
-import '../extend-expect';
 
 test('toBeOnTheScreen() example test', () => {
   render(

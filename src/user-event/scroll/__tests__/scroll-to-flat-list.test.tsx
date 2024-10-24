@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { FlatList, ScrollViewProps, Text, View } from 'react-native';
 import { render, screen } from '../../..';
-import '../../../matchers/extend-expect';
 import { EventEntry, createEventLogger } from '../../../test-utils';
 import { userEvent } from '../..';
 

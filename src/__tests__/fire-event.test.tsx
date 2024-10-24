@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import { fireEvent, render, screen } from '..';
-import '../matchers/extend-expect';
 
 type OnPressComponentProps = {
   onPress: () => void;
