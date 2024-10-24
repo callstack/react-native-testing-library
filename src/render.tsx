@@ -28,7 +28,7 @@ export interface RenderOptions {
    * Set to `true` to enable concurrent rendering.
    * Otherwise `render` will default to legacy synchronous rendering.
    */
-  concurrentRendering?: boolean | undefined;
+  concurrentRoot?: boolean | undefined;
 
   createNodeMock?: (element: React.ReactElement) => unknown;
   unstable_validateStringsRenderedWithinText?: boolean;
@@ -54,7 +54,7 @@ export function renderInternal<T>(
 ) {
   const {
     wrapper: Wrapper,
-    concurrentRendering: concurrent,
+    concurrentRoot,
     detectHostComponentNames = true,
     unstable_validateStringsRenderedWithinText,
     ...rest
@@ -62,7 +62,7 @@ export function renderInternal<T>(
 
   const testRendererOptions: TestRendererOptions = {
     // @ts-expect-error incomplete typing on RTR package
-    unstable_isConcurrent: concurrent ?? getConfig().concurrentRendering,
+    unstable_isConcurrent: concurrentRoot ?? getConfig().concurrentRoot,
     ...rest,
   };
 

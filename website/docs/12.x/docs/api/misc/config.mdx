@@ -7,7 +7,7 @@ type Config = {
   asyncUtilTimeout: number;
   defaultHidden: boolean;
   defaultDebugOptions: Partial<DebugOptions>;
-  concurrentRendering: boolean;
+  concurrentRoot: boolean;
 };
 
 function configure(options: Partial<Config>) {}
@@ -27,7 +27,7 @@ This option is also available as `defaultHidden` alias for compatibility with [R
 
 Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
 
-### `concurrentRendering` option
+### `concurrentRoot` option
 
 Set to `true` to enable concurrent rendering used in the React Native New Architecture. Otherwise `render` will default to legacy synchronous rendering.
 

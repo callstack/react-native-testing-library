@@ -243,11 +243,11 @@ test('render calls detects host component names', () => {
 });
 
 test('supports legacy rendering', () => {
-  render(<View testID="test" />, { concurrentRendering: false });
+  render(<View testID="test" />, { concurrentRoot: false });
   expect(screen.root).toBeDefined();
 });
 
 test('supports concurrent rendering', () => {
-  render(<View testID="test" />, { concurrentRendering: true });
+  render(<View testID="test" />, { concurrentRoot: true });
   expect(screen.root).toBeDefined();
 });
