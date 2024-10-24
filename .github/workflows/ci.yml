@@ -74,7 +74,7 @@ jobs:
         uses: ./.github/actions/setup-deps
 
       - name: Test in concurrent mode
-        run: CONCURRENT_MODE=1 yarn test:ci
+        run: CONCURRENT_MODE=1 yarn test:ci:coverage
 
   test-website:
     runs-on: ubuntu-latest
