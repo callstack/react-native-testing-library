@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View, Modal } from 'react-native';
 import { render, screen } from '../..';
-import '../extend-expect';
 
 test('toBeVisible() on empty view', () => {
   render(<View testID="view" />);

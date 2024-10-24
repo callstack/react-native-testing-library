@@ -2,7 +2,6 @@ import * as React from 'react';
 import { TextInput, TextInputProps, View } from 'react-native';
 import { createEventLogger, getEventsNames } from '../../test-utils';
 import { render, userEvent, screen } from '../..';
-import '../../matchers/extend-expect';
 
 beforeEach(() => {
   jest.useRealTimers();
@@ -130,7 +129,7 @@ describe('paste()', () => {
     const user = userEvent.setup();
     await user.paste(textInput, 'Hi!');
 
-    expect(textInput.props.value).toBe('Hello!');
+    expect(textInput).toHaveDisplayValue('Hello!');
   });
 
   it('does respect pointer-events prop', async () => {
@@ -142,7 +141,7 @@ describe('paste()', () => {
     const user = userEvent.setup();
     await user.paste(textInput, 'Hi!');
 
-    expect(textInput.props.value).toBe('Hello!');
+    expect(textInput).toHaveDisplayValue('Hello!');
   });
 
   it('supports multiline', async () => {

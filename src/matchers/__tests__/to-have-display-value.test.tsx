@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { TextInput, View } from 'react-native';
 import { render, screen } from '../..';
-import '../extend-expect';
 
 test('toHaveDisplayValue() example test', () => {
   render(<TextInput testID="text-input" value="test" />);
