@@ -53,7 +53,7 @@ import '@testing-library/react-native/extend-expect';
 ## Example
 
 ```jsx
-import { render, screen, fireEvent } from '@testing-library/react-native';
+import { render, screen, userEvent } from '@testing-library/react-native';
 import { QuestionsBoard } from '../QuestionsBoard';
 
 // It is recommended to use userEvent with fake timers
@@ -108,7 +108,6 @@ React Native Testing Library consists of following APIs:
 
 - [Migration to 12.0](https://callstack.github.io/react-native-testing-library/docs/migration/v12)
 - [Migration to built-in Jest Matchers](https://callstack.github.io/react-native-testing-library/docs/migration/jest-matchers)
-
 
 ## Troubleshooting
 
