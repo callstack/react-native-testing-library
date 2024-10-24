@@ -3,5 +3,5 @@ import './src/matchers/extend-expect';
 
 beforeEach(() => {
   resetToDefaults();
-  configure({ legacyRoot: false });
+  configure({ concurrentRendering: false });
 });
