@@ -13,6 +13,13 @@ export type Config = {
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
+
+  /**
+   * Only works if used with React 18.
+   * Set to `true` if you want to force synchronous rendering.
+   * Otherwise `render` will default to concurrent React if available.
+   */
+  legacyRoot: boolean;
 };
 
 export type ConfigAliasOptions = {
@@ -37,6 +44,7 @@ export type InternalConfig = Config & {
 const defaultConfig: InternalConfig = {
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: false,
+  legacyRoot: true,
 };
 
 let config = { ...defaultConfig };
