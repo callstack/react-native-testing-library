@@ -25,7 +25,7 @@
   "scripts": {
     "clean": "del build",
     "test": "jest",
-    "test:ci:": "jest --maxWorkers=2",
+    "test:ci": "jest --maxWorkers=2",
     "test:ci:coverage": "jest --maxWorkers=2 --collectCoverage=true --coverage-provider=v8",
     "typecheck": "tsc",
     "copy-flowtypes": "cp typings/index.flow.js build",
