@@ -2,14 +2,20 @@ import { PackageManagerTabs } from 'rspress/theme';
 
 # Quick Start
 
+:::warning
+
+This guide is for version 13.x of React Native Testing Library which is currently in alpha!
+
+:::
+
 ## Installation
 
 Open a Terminal in your project's folder and run:
 
 <PackageManagerTabs
   command={{
-    yarn: 'yarn add -D @testing-library/react-native',
-    npm: 'npm install -D @testing-library/react-native',
+    yarn: 'yarn add -D @testing-library/react-native@alpha',
+    npm: 'npm install -D @testing-library/react-native@alpha',
   }}
 />
 
@@ -17,11 +23,7 @@ This library has a peer dependency for `react-test-renderer` package. Make sure 
 
 ### Jest matchers
 
-To set up React Native-specific Jest matchers, add the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
-
-```ts title=jest-setup.ts
-import '@testing-library/react-native/extend-expect';
-```
+RNTL v13 automatically extends Jest with React Native-specific matchers. The only thing you need to do is to import anything from `@testing-library/react-native` which you already need to do to access the `render` function.
 
 ### ESLint plugin
 
