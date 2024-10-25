@@ -1,4 +1,8 @@
-import type { ReactTestInstance, ReactTestRenderer } from 'react-test-renderer';
+import type {
+  ReactTestInstance,
+  ReactTestRenderer,
+  TestRendererOptions,
+} from 'react-test-renderer';
 import * as React from 'react';
 import { Profiler } from 'react';
 import act from './act';
@@ -14,7 +18,18 @@ import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
 export interface RenderOptions {
+  /**
+   * Pass a React Component as the wrapper option to have it rendered around the inner element. This is most useful for creating
+   *  reusable custom render functions for common data providers.
+   */
   wrapper?: React.ComponentType<any>;
+
+  /**
+   * Set to `true` to enable concurrent rendering.
+   * Otherwise `render` will default to legacy synchronous rendering.
+   */
+  concurrentRoot?: boolean | undefined;
+
   createNodeMock?: (element: React.ReactElement) => unknown;
   unstable_validateStringsRenderedWithinText?: boolean;
 }
@@ -39,10 +54,17 @@ export function renderInternal<T>(
 ) {
   const {
     wrapper: Wrapper,
+    concurrentRoot,
     detectHostComponentNames = true,
     unstable_validateStringsRenderedWithinText,
-    ...testRendererOptions
+    ...rest
   } = options || {};
+
+  const testRendererOptions: TestRendererOptions = {
+    ...rest,
+    // @ts-expect-error incomplete typing on RTR package
+    unstable_isConcurrent: concurrentRoot ?? getConfig().concurrentRoot,
+  };
 
   if (detectHostComponentNames) {
     configureHostComponentNamesIfNeeded();
