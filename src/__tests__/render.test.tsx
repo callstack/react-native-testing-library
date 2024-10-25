@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
-import { getConfig, resetToDefaults } from '../config';
+import { configure, getConfig, resetToDefaults } from '../config';
 import { fireEvent, render, RenderAPI, screen } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
@@ -247,7 +247,16 @@ test('supports legacy rendering', () => {
   expect(screen.root).toBeDefined();
 });
 
-test('supports concurrent rendering', () => {
+// Enable concurrent rendering globally
+configure({ concurrentRoot: true });
+
+test('globally enable concurrent rendering', () => {
+  render(<View testID="test" />);
+  expect(screen.root).toBeOnTheScreen();
+});
+
+// Enable concurrent rendering locally
+test('locally enable concurrent rendering', () => {
   render(<View testID="test" />, { concurrentRoot: true });
-  expect(screen.root).toBeDefined();
+  expect(screen.root).toBeOnTheScreen();
 });
