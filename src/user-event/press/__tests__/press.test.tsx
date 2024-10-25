@@ -199,7 +199,7 @@ describe('userEvent.press with fake timers', () => {
     );
 
     await userEvent.press(screen.getByText('press me'));
-    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
   test('press works on Button', async () => {

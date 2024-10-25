@@ -198,7 +198,7 @@ describe('userEvent.press with real timers', () => {
     );
     await userEvent.press(screen.getByText('press me'));
 
-    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
   test('does not trigger on disabled Text', async () => {
@@ -240,7 +240,7 @@ describe('userEvent.press with real timers', () => {
     expect(events).toEqual([]);
   });
 
-  test('works on TetInput', async () => {
+  test('works on TextInput', async () => {
     const { events, logEvent } = createEventLogger();
 
     render(
@@ -255,7 +255,7 @@ describe('userEvent.press with real timers', () => {
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut']);
   });
 
-  test('does not call onPressIn and onPressOut on non editable TetInput', async () => {
+  test('does not call onPressIn and onPressOut on non editable TextInput', async () => {
     const { events, logEvent } = createEventLogger();
 
     render(
@@ -270,7 +270,7 @@ describe('userEvent.press with real timers', () => {
     expect(events).toEqual([]);
   });
 
-  test('does not call onPressIn and onPressOut on TetInput with pointer events disabled', async () => {
+  test('does not call onPressIn and onPressOut on TextInput with pointer events disabled', async () => {
     const { events, logEvent } = createEventLogger();
 
     render(
