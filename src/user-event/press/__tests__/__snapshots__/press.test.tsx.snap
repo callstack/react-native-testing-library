@@ -33,36 +33,6 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
     },
   },
   {
-    "name": "press",
-    "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "dispatchConfig": {
-        "registrationName": "onResponderRelease",
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
-      "nativeEvent": {
-        "changedTouches": [],
-        "identifier": 0,
-        "locationX": 0,
-        "locationY": 0,
-        "pageX": 0,
-        "pageY": 0,
-        "target": 0,
-        "timestamp": 0,
-        "touches": [],
-      },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
-    },
-  },
-  {
     "name": "pressOut",
     "payload": {
       "currentTarget": {
@@ -82,7 +52,37 @@ exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOu
         "pageX": 0,
         "pageY": 0,
         "target": 0,
-        "timestamp": 0,
+        "timestamp": 130,
+        "touches": [],
+      },
+      "persist": [Function],
+      "preventDefault": [Function],
+      "stopPropagation": [Function],
+      "target": {},
+      "timeStamp": 0,
+    },
+  },
+  {
+    "name": "press",
+    "payload": {
+      "currentTarget": {
+        "measure": [Function],
+      },
+      "dispatchConfig": {
+        "registrationName": "onResponderRelease",
+      },
+      "isDefaultPrevented": [Function],
+      "isPersistent": [Function],
+      "isPropagationStopped": [Function],
+      "nativeEvent": {
+        "changedTouches": [],
+        "identifier": 0,
+        "locationX": 0,
+        "locationY": 0,
+        "pageX": 0,
+        "pageY": 0,
+        "target": 0,
+        "timestamp": 130,
         "touches": [],
       },
       "persist": [Function],

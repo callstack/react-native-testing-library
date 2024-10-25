@@ -1,5 +1,4 @@
 import { ReactTestInstance } from 'react-test-renderer';
-import act from '../../act';
 import { getHostParent } from '../../helpers/component-tree';
 import { isTextInputEditable } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
@@ -7,7 +6,10 @@ import { isHostText, isHostTextInput } from '../../helpers/host-component-names'
 import { EventBuilder } from '../event-builder';
 import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait } from '../utils';
-import { DEFAULT_MIN_PRESS_DURATION } from './constants';
+
+// These are constants defined in the React Native repo
+export const DEFAULT_MIN_PRESS_DURATION = 130;
+export const DEFAULT_LONG_PRESS_DELAY_MS = 500;
 
 export interface PressOptions {
   duration?: number;
@@ -27,7 +29,7 @@ export async function longPress(
 ): Promise<void> {
   await basePress(this.config, element, {
     type: 'longPress',
-    duration: options?.duration ?? 500,
+    duration: options?.duration ?? DEFAULT_LONG_PRESS_DELAY_MS,
   });
 }
 
@@ -73,18 +75,14 @@ const emitPressablePressEvents = async (
 
   dispatchEvent(element, 'responderGrant', EventBuilder.Common.responderGrant());
 
-  await wait(config, options.duration);
+  // We apply minimum press duration here to ensure that `press` events are emitted after `pressOut`.
+  // Otherwise, pressables would emit them in the reverse order, which in reality happens only for
+  // very short presses (< 130ms) and contradicts the React Native docs.
+  // See: https://reactnative.dev/docs/pressable#onpress
+  let duration = Math.max(options.duration, DEFAULT_MIN_PRESS_DURATION);
+  await wait(config, duration);
 
   dispatchEvent(element, 'responderRelease', EventBuilder.Common.responderRelease());
-
-  // React Native will wait for minimal delay of DEFAULT_MIN_PRESS_DURATION
-  // before emitting the `pressOut` event. We need to wait here, so that
-  // `press()` function does not return before that.
-  if (DEFAULT_MIN_PRESS_DURATION - options.duration > 0) {
-    await act(async () => {
-      await wait(config, DEFAULT_MIN_PRESS_DURATION - options.duration);
-    });
-  }
 };
 
 const isEnabledTouchResponder = (element: ReactTestInstance) => {
@@ -127,7 +125,10 @@ async function emitTextPressEvents(
 
   dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
 
-  // Regular press events are emitted after `pressOut`.
+  // Regular press events are emitted after `pressOut` according to the React Native docs.
+  // See: https://reactnative.dev/docs/pressable#onpress
+  // Experimentally for very short presses (< 130ms) `press` events are actually emitted before `onPressOut`, but
+  // we will ignore that as in reality most pressed would be above the 130ms threshold.
   if (options.type === 'press') {
     dispatchEvent(element, 'press', EventBuilder.Common.touch());
   }

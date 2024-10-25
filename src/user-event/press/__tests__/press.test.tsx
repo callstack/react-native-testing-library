@@ -129,7 +129,7 @@ describe('userEvent.press with fake timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
   test('crawls up in the tree to find an element that responds to touch events', async () => {

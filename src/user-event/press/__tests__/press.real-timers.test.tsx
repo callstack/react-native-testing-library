@@ -32,7 +32,7 @@ describe('userEvent.press with real timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
   test('does not trigger event when pressable is disabled', async () => {
@@ -128,7 +128,7 @@ describe('userEvent.press with real timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
   test('crawls up in the tree to find an element that responds to touch events', async () => {
