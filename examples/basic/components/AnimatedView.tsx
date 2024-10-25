@@ -17,7 +17,7 @@ export function AnimatedView(props: AnimatedViewProps) {
       duration: props.fadeInDuration ?? 250,
       useNativeDriver: props.useNativeDriver ?? true,
     }).start();
-  }, [fadeAnim]);
+  }, [fadeAnim, props.fadeInDuration, props.useNativeDriver]);
 
   return (
     <Animated.View
