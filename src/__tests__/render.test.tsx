@@ -247,16 +247,7 @@ test('supports legacy rendering', () => {
   expect(screen.root).toBeDefined();
 });
 
-// Enable concurrent rendering globally
-configure({ concurrentRoot: true });
-
-test('globally enable concurrent rendering', () => {
-  render(<View testID="test" />);
-  expect(screen.root).toBeOnTheScreen();
-});
-
-// Enable concurrent rendering locally
-test('locally enable concurrent rendering', () => {
+test('supports concurrent rendering', () => {
   render(<View testID="test" />, { concurrentRoot: true });
   expect(screen.root).toBeOnTheScreen();
 });
