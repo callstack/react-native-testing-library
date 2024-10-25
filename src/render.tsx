@@ -24,10 +24,10 @@ export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
 
   /**
-   * Set to `true` to enable concurrent rendering.
-   * Otherwise `render` will default to legacy synchronous rendering.
+   * Set to `false` to disable concurrent rendering.
+   * Otherwise `render` will default to concurrent rendering.
    */
-  concurrentRoot?: boolean | undefined;
+  concurrentRoot?: boolean;
 
   createNodeMock?: (element: React.ReactElement) => unknown;
   unstable_validateStringsRenderedWithinText?: boolean;
