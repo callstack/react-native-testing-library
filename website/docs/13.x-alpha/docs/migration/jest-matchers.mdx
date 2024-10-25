@@ -8,11 +8,7 @@ All of the built-in Jest matchers provided by the React Native Testing Library s
 
 ## Usage
 
-You can use the built-in matchers by adding the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
-
-```ts title=jest-setup.ts
-import '@testing-library/react-native/extend-expect';
-```
+You don't need to do anything to use the built-in matchers. They are automatically available when you import anything from `@testing-library/react-native`.
 
 ### Gradual migration
 
@@ -23,7 +19,6 @@ You can use the built-in matchers alongside legacy Jest Native matchers by chang
 // import '@testing-library/jest-native/extend-expect';
 
 // With this:
-import '@testing-library/react-native/extend-expect';
 import '@testing-library/jest-native/legacy-extend-expect';
 ```
 
