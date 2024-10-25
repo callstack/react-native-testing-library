@@ -118,11 +118,19 @@ async function emitTextPressEvents(
   await wait(config);
   dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
 
-  // Emit either `press` or `longPress`.
-  dispatchEvent(element, options.type, EventBuilder.Common.touch());
-
   await wait(config, options.duration);
+
+  // Long press events are emitted before `pressOut`.
+  if (options.type === 'longPress') {
+    dispatchEvent(element, 'longPress', EventBuilder.Common.touch());
+  }
+
   dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
+
+  // Regular press events are emitted after `pressOut`.
+  if (options.type === 'press') {
+    dispatchEvent(element, 'press', EventBuilder.Common.touch());
+  }
 }
 
 /**
