@@ -1,5 +1,5 @@
 import createReconciler, { Fiber } from 'react-reconciler';
-import { DefaultEventPriority } from 'react-reconciler/constants';
+import { DefaultEventPriority  } from 'react-reconciler/constants';
 
 export type Type = string;
 export type Props = Record<string, unknown>;
@@ -217,6 +217,37 @@ const hostConfig = {
     return false;
   },
 
+  
+  export function setCurrentUpdatePriority(newPriority: EventPriority): void {
+    currentUpdatePriority = newPriority;
+  }
+
+  export function getCurrentUpdatePriority(): EventPriority {
+    return currentUpdatePriority;
+  }
+
+  export function resolveUpdatePriority(): EventPriority {
+    if (currentUpdatePriority !== NoEventPriority) {
+      return currentUpdatePriority;
+    }
+
+    const currentEventPriority = fabricGetCurrentEventPriority
+      ? fabricGetCurrentEventPriority()
+      : null;
+
+    if (currentEventPriority != null) {
+      switch (currentEventPriority) {
+        case FabricDiscretePriority:
+          return DiscreteEventPriority;
+        case FabricDefaultPriority:
+        default:
+          return DefaultEventPriority;
+      }
+    }
+
+    return DefaultEventPriority;
+  }
+
   /**
    * This method lets you return the initial host context from the root of the tree. See `getChildHostContext`
    * for the explanation of host context.
@@ -386,8 +417,7 @@ const hostConfig = {
   getInstanceFromNode(node: any): OpaqueHandle | null | undefined {
     const instance = nodeToInstanceMap.get(node);
     if (instance !== undefined) {
-      // TODO: why not just return the instance?
-      return instance;
+      return instance.internalHandle;
     }
 
     return null;

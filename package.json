@@ -48,7 +48,7 @@
   "dependencies": {
     "jest-matcher-utils": "^29.7.0",
     "pretty-format": "^29.7.0",
-    "react-reconciler": "0.29.2",
+    "react-reconciler": "0.31.0-rc-fb9a90fa48-20240614",
     "redent": "^3.0.0"
   },
   "peerDependencies": {
@@ -83,8 +83,8 @@
     "flow-bin": "~0.170.0",
     "jest": "^29.7.0",
     "prettier": "^2.8.8",
-    "react": "18.3.1",
-    "react-native": "0.76.0-rc.6",
+    "react": "19.0.0-rc-fb9a90fa48-20240614",
+    "react-native": "0.77.0-nightly-20241019-f3e37e29e",
     "release-it": "^17.6.0",
     "strip-ansi": "^6.0.1",
     "typescript": "^5.5.4"
