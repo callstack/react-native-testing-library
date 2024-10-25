@@ -34,7 +34,7 @@
     "build:js": "babel src --out-dir build --extensions \".js,.ts,.jsx,.tsx\" --source-maps --ignore \"**/__tests__/**\"",
     "build:ts": "tsc --build tsconfig.release.json",
     "build": "yarn clean && yarn build:js && yarn build:ts && yarn copy-flowtypes",
-    "publish": "yarn build && release-it"
+    "release": "release-it"
   },
   "files": [
     "build/",
