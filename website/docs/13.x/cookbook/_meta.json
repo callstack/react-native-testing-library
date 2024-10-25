@@ -1,0 +1,18 @@
+[
+  "index",
+  {
+    "type": "dir",
+    "name": "basics",
+    "label": "Basic Recipes"
+  },
+  {
+    "type": "dir",
+    "name": "advanced",
+    "label": "Advanced Recipes"
+  },
+  {
+    "type": "dir",
+    "name": "state-management",
+    "label": "State Management Recipes"
+  }
+]

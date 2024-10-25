@@ -1,0 +1,8 @@
+[
+  { "type": "file", "name": "render", "label": "Render function" },
+  { "type": "file", "name": "screen", "label": "Screen object" },
+  "queries",
+  "jest-matchers",
+  { "type": "dir", "name": "events", "label": "Triggering events" },
+  { "type": "dir", "name": "misc", "label": "Miscellaneous" }
+]

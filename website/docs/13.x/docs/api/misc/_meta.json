@@ -1,0 +1,7 @@
+[
+  { "type": "file", "name": "render-hook", "label": "Render Hook function" },
+  "async",
+  "config",
+  "accessibility",
+  "other"
+]
