@@ -1,8 +1,10 @@
 // This file and the act() implementation is sourced from react-testing-library
-// https://github.com/testing-library/react-testing-library/blob/c80809a956b0b9f3289c4a6fa8b5e8cc72d6ef6d/src/act-compat.js
+// https://github.com/testing-library/react-testing-library/blob/3dcd8a9649e25054c0e650d95fca2317b7008576/types/index.d.ts
+import * as React from 'react';
 import { act as reactTestRendererAct } from 'react-test-renderer';
 
-type ReactAct = typeof reactTestRendererAct;
+const reactAct = typeof React.act === 'function' ? React.act : reactTestRendererAct;
+type ReactAct = 0 extends 1 & typeof React.act ? typeof reactTestRendererAct : typeof React.act;
 
 // See https://github.com/reactwg/react-18/discussions/102 for more context on global.IS_REACT_ACT_ENVIRONMENT
 declare global {
@@ -22,19 +24,13 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
     const previousActEnvironment = getIsReactActEnvironment();
     setIsReactActEnvironment(true);
 
-    // this code is riddled with eslint disabling comments because this doesn't use real promises but eslint thinks we do
     try {
       // The return value of `act` is always a thenable.
       let callbackNeedsToBeAwaited = false;
       const actResult = actImplementation(() => {
         const result = callback();
-        if (
-          result !== null &&
-          typeof result === 'object' &&
-          // @ts-expect-error this should be a promise or thenable
-          // eslint-disable-next-line promise/prefer-await-to-then
-          typeof result.then === 'function'
-        ) {
+        // @ts-expect-error TS is too strict here
+        if (result !== null && typeof result === 'object' && typeof result.then === 'function') {
           callbackNeedsToBeAwaited = true;
         }
         return result;
@@ -44,15 +40,17 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
         const thenable = actResult;
         return {
           then: (resolve: (value: never) => never, reject: (value: never) => never) => {
-            // eslint-disable-next-line
+            // eslint-disable-next-line promise/catch-or-return, promise/prefer-await-to-then
             thenable.then(
               // eslint-disable-next-line promise/always-return
               (returnValue) => {
                 setIsReactActEnvironment(previousActEnvironment);
+                // @ts-expect-error
                 resolve(returnValue);
               },
               (error) => {
                 setIsReactActEnvironment(previousActEnvironment);
+                // @ts-expect-error
                 reject(error);
               },
             );
@@ -71,7 +69,8 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
   };
 }
 
-const act = withGlobalActEnvironment(reactTestRendererAct) as ReactAct;
+// @ts-expect-error
+const act = withGlobalActEnvironment(reactAct) as ReactAct;
 
 export default act;
 export { setIsReactActEnvironment as setReactActEnvironment, getIsReactActEnvironment };
