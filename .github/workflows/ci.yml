@@ -61,8 +61,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
 
-
-  test-concurrent:
+  test-legacy:
     needs: [install-cache-deps]
     runs-on: ubuntu-latest
     name: Test (concurrent mode)
@@ -74,7 +73,7 @@ jobs:
         uses: ./.github/actions/setup-deps
 
       - name: Test in concurrent mode
-        run: CONCURRENT_MODE=1 yarn test:ci
+        run: CONCURRENT_MODE=0 yarn test:ci
 
   test-website:
     runs-on: ubuntu-latest
