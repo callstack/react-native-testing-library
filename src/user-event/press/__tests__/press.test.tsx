@@ -372,3 +372,27 @@ describe('userEvent.press with fake timers', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 });
+
+function Component() {
+  const [mounted, setMounted] = React.useState(true);
+
+  const onPressIn = () => {
+    setMounted(false);
+  };
+
+  return (
+    <View>
+      {mounted && (
+        <Pressable onPressIn={onPressIn}>
+          <Text>Unmount</Text>
+        </Pressable>
+      )}
+    </View>
+  );
+}
+
+test('unmounts component', async () => {
+  render(<Component />);
+  await userEvent.press(screen.getByText('Unmount'));
+  expect(screen.queryByText('Unmount')).not.toBeOnTheScreen();
+});

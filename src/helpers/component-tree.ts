@@ -1,5 +1,5 @@
 import { ReactTestInstance } from 'react-test-renderer';
-
+import { screen } from '../screen';
 /**
  * ReactTestInstance referring to host element.
  */
@@ -11,6 +11,10 @@ export type HostTestInstance = ReactTestInstance & { type: string };
  */
 export function isHostElement(element?: ReactTestInstance | null): element is HostTestInstance {
   return typeof element?.type === 'string';
+}
+
+export function isElementMounted(element: ReactTestInstance | null) {
+  return getUnsafeRootElement(element) === screen.UNSAFE_root;
 }
 
 /**
