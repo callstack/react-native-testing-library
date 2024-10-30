@@ -20,7 +20,7 @@ export interface PressOptions {
 export async function press(this: UserEventInstance, element: ReactTestInstance): Promise<void> {
   await basePress(this.config, element, {
     type: 'press',
-    duration: DEFAULT_MIN_PRESS_DURATION,
+    duration: undefined,
   });
 }
 
@@ -37,7 +37,7 @@ export async function longPress(
 
 interface BasePressOptions {
   type: 'press' | 'longPress';
-  duration: number;
+  duration: number | undefined;
 }
 
 const basePress = async (
@@ -77,16 +77,17 @@ const emitPressablePressEvents = async (
 
   dispatchEvent(element, 'responderGrant', EventBuilder.Common.responderGrant());
 
-  await wait(config, options.duration);
+  const duration = options.duration ?? DEFAULT_MIN_PRESS_DURATION;
+  await wait(config, duration);
 
   dispatchEvent(element, 'responderRelease', EventBuilder.Common.responderRelease());
 
   // React Native will wait for minimal delay of DEFAULT_MIN_PRESS_DURATION
   // before emitting the `pressOut` event. We need to wait here, so that
   // `press()` function does not return before that.
-  if (DEFAULT_MIN_PRESS_DURATION - options.duration > 0) {
+  if (DEFAULT_MIN_PRESS_DURATION - duration > 0) {
     await act(async () => {
-      await wait(config, DEFAULT_MIN_PRESS_DURATION - options.duration);
+      await wait(config, DEFAULT_MIN_PRESS_DURATION - duration);
     });
   }
 };
