@@ -20,7 +20,6 @@ export interface PressOptions {
 export async function press(this: UserEventInstance, element: ReactTestInstance): Promise<void> {
   await basePress(this.config, element, {
     type: 'press',
-    duration: undefined,
   });
 }
 
@@ -37,7 +36,7 @@ export async function longPress(
 
 interface BasePressOptions {
   type: 'press' | 'longPress';
-  duration: number | undefined;
+  duration?: number;
 }
 
 const basePress = async (
