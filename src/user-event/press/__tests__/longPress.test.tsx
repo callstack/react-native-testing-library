@@ -1,13 +1,76 @@
 import React from 'react';
-import { Pressable, Text } from 'react-native';
-import { render, screen } from '../../../pure';
+import { Pressable, Text, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { createEventLogger, getEventsNames } from '../../../test-utils';
+import { render, screen } from '../../..';
 import { userEvent } from '../..';
-import { createEventLogger } from '../../../test-utils';
 
 describe('userEvent.longPress with fake timers', () => {
   beforeEach(() => {
     jest.useFakeTimers();
     jest.setSystemTime(0);
+  });
+
+  test('works on Pressable', async () => {
+    const { events, logEvent } = createEventLogger();
+    const user = userEvent.setup();
+
+    render(
+      <Pressable
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
+        testID="pressable"
+      />,
+    );
+
+    await user.longPress(screen.getByTestId('pressable'));
+    expect(getEventsNames(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
+    expect(events).toMatchSnapshot();
+  });
+
+  test('works on TouchableOpacity', async () => {
+    const mockOnPress = jest.fn();
+
+    render(
+      <TouchableOpacity onPress={mockOnPress}>
+        <Text>press me</Text>
+      </TouchableOpacity>,
+    );
+
+    await userEvent.longPress(screen.getByText('press me'));
+    expect(mockOnPress).toHaveBeenCalled();
+  });
+
+  test('works on TouchableHighlight', async () => {
+    const mockOnPress = jest.fn();
+
+    render(
+      <TouchableHighlight onPress={mockOnPress}>
+        <Text>press me</Text>
+      </TouchableHighlight>,
+    );
+
+    await userEvent.longPress(screen.getByText('press me'));
+    expect(mockOnPress).toHaveBeenCalled();
+  });
+
+  test('works on Text', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    render(
+      <Text
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
+      >
+        press me
+      </Text>,
+    );
+
+    await userEvent.longPress(screen.getByText('press me'));
+    expect(getEventsNames(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
   });
 
   test('calls onLongPress if the delayLongPress is the default one', async () => {

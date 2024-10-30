@@ -249,5 +249,5 @@ test('supports legacy rendering', () => {
 
 test('supports concurrent rendering', () => {
   render(<View testID="test" />, { concurrentRoot: true });
-  expect(screen.root).toBeDefined();
+  expect(screen.root).toBeOnTheScreen();
 });

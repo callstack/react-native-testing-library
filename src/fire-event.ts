@@ -7,7 +7,7 @@ import {
   ScrollViewProps,
 } from 'react-native';
 import act from './act';
-import { isHostElement } from './helpers/component-tree';
+import { isElementMounted, isHostElement } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isTextInputEditable } from './helpers/text-input';
@@ -121,6 +121,10 @@ type EventName = StringWithAutocomplete<
 >;
 
 function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {
+  if (!isElementMounted(element)) {
+    return;
+  }
+
   setNativeStateIfNeeded(element, eventName, data[0]);
 
   const handler = findEventHandler(element, eventName);
