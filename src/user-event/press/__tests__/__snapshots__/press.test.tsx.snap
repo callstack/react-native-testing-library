@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`userEvent.press with fake timers calls onPressIn, onPress and onPressOut prop of touchable 1`] = `
+exports[`userEvent.press with fake timers works on Pressable 1`] = `
 [
   {
     "name": "pressIn",

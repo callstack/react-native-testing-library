@@ -9,6 +9,7 @@ import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait } from '../utils';
 
 // These are constants defined in the React Native repo
+// See: https://github.com/facebook/react-native/blob/50e38cc9f1e6713228a91ad50f426c4f65e65e1a/packages/react-native/Libraries/Pressability/Pressability.js#L264
 export const DEFAULT_MIN_PRESS_DURATION = 130;
 export const DEFAULT_LONG_PRESS_DELAY_MS = 500;
 

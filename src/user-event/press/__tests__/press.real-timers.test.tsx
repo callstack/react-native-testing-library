@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Button,
   Pressable,
   Text,
   TextInput,
@@ -17,7 +18,7 @@ describe('userEvent.press with real timers', () => {
     jest.restoreAllMocks();
   });
 
-  test('calls onPressIn, onPress and onPressOut prop of touchable', async () => {
+  test('works on Pressable', async () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
@@ -30,9 +31,77 @@ describe('userEvent.press with real timers', () => {
         testID="pressable"
       />,
     );
-    await user.press(screen.getByTestId('pressable'));
 
+    await user.press(screen.getByTestId('pressable'));
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
+  });
+
+  test('works on TouchableOpacity', async () => {
+    const mockOnPress = jest.fn();
+
+    render(
+      <TouchableOpacity onPress={mockOnPress}>
+        <Text>press me</Text>
+      </TouchableOpacity>,
+    );
+
+    await userEvent.press(screen.getByText('press me'));
+    expect(mockOnPress).toHaveBeenCalled();
+  });
+
+  test('works on TouchableHighlight', async () => {
+    const mockOnPress = jest.fn();
+
+    render(
+      <TouchableHighlight onPress={mockOnPress}>
+        <Text>press me</Text>
+      </TouchableHighlight>,
+    );
+
+    await userEvent.press(screen.getByText('press me'));
+    expect(mockOnPress).toHaveBeenCalled();
+  });
+
+  test('works on Text', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    render(
+      <Text
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
+      >
+        press me
+      </Text>,
+    );
+
+    await userEvent.press(screen.getByText('press me'));
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
+  });
+
+  test('works on TextInput', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    render(
+      <TextInput
+        placeholder="email"
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+      />,
+    );
+
+    await userEvent.press(screen.getByPlaceholderText('email'));
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut']);
+  });
+
+  test('works on Button', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    render(<Button title="press me" onPress={logEvent('press')} />);
+
+    await userEvent.press(screen.getByText('press me'));
+    expect(getEventsNames(events)).toEqual(['press']);
   });
 
   test('does not trigger event when pressable is disabled', async () => {
@@ -157,50 +226,6 @@ describe('userEvent.press with real timers', () => {
     expect(mockOnLongPress).not.toHaveBeenCalled();
   });
 
-  test('works on TouchableOpacity', async () => {
-    const mockOnPress = jest.fn();
-
-    render(
-      <TouchableOpacity onPress={mockOnPress}>
-        <Text>press me</Text>
-      </TouchableOpacity>,
-    );
-    await userEvent.press(screen.getByText('press me'));
-
-    expect(mockOnPress).toHaveBeenCalled();
-  });
-
-  test('works on TouchableHighlight', async () => {
-    const mockOnPress = jest.fn();
-
-    render(
-      <TouchableHighlight onPress={mockOnPress}>
-        <Text>press me</Text>
-      </TouchableHighlight>,
-    );
-    await userEvent.press(screen.getByText('press me'));
-
-    expect(mockOnPress).toHaveBeenCalled();
-  });
-
-  test('works on Text', async () => {
-    const { events, logEvent } = createEventLogger();
-
-    render(
-      <Text
-        onPress={logEvent('press')}
-        onPressIn={logEvent('pressIn')}
-        onPressOut={logEvent('pressOut')}
-        onLongPress={logEvent('longPress')}
-      >
-        press me
-      </Text>,
-    );
-    await userEvent.press(screen.getByText('press me'));
-
-    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
-  });
-
   test('does not trigger on disabled Text', async () => {
     const { events, logEvent } = createEventLogger();
 
@@ -238,21 +263,6 @@ describe('userEvent.press with real timers', () => {
     await userEvent.press(screen.getByText('press me'));
 
     expect(events).toEqual([]);
-  });
-
-  test('works on TextInput', async () => {
-    const { events, logEvent } = createEventLogger();
-
-    render(
-      <TextInput
-        placeholder="email"
-        onPressIn={logEvent('pressIn')}
-        onPressOut={logEvent('pressOut')}
-      />,
-    );
-    await userEvent.press(screen.getByPlaceholderText('email'));
-
-    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut']);
   });
 
   test('does not call onPressIn and onPressOut on non editable TextInput', async () => {
@@ -295,7 +305,6 @@ describe('userEvent.press with real timers', () => {
     );
 
     await userEvent.press(screen.getByText('press me'));
-
     expect(mockOnPress).toHaveBeenCalled();
   });
 });
