@@ -1,4 +1,4 @@
-import { getConfig, configure, resetToDefaults, configureInternal } from '../config';
+import { getConfig, configure, resetToDefaults } from '../config';
 
 beforeEach(() => {
   resetToDefaults();
@@ -34,7 +34,7 @@ test('resetToDefaults() resets config to defaults', () => {
 });
 
 test('resetToDefaults() resets internal config to defaults', () => {
-  configureInternal({ asyncUtilTimeout: 2000 });
+  configure({ asyncUtilTimeout: 2000 });
   expect(getConfig().asyncUtilTimeout).toBe(2000);
 
   resetToDefaults();

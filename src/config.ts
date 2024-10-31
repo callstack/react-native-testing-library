@@ -52,13 +52,6 @@ export function configure(options: Partial<Config & ConfigAliasOptions>) {
   };
 }
 
-export function configureInternal(option: Partial<InternalConfig>) {
-  config = {
-    ...config,
-    ...option,
-  };
-}
-
 export function resetToDefaults() {
   config = { ...defaultConfig };
 }
