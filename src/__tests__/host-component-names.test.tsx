@@ -1,123 +1,48 @@
 import * as React from 'react';
-import { View } from 'react-native';
-import TestRenderer from 'react-test-renderer';
-import { configureInternal, getConfig } from '../config';
+import { Image, Modal, ScrollView, Switch, Text, TextInput } from 'react-native';
 import {
-  getHostComponentNames,
-  configureHostComponentNamesIfNeeded,
+  isHostImage,
+  isHostModal,
+  isHostScrollView,
+  isHostSwitch,
+  isHostText,
+  isHostTextInput,
 } from '../helpers/host-component-names';
-import { act, render } from '..';
+import { render, screen } from '..';
 
-describe('getHostComponentNames', () => {
-  test('returns host component names from internal config', () => {
-    configureInternal({
-      hostComponentNames: {
-        text: 'banana',
-        textInput: 'banana',
-        image: 'banana',
-        switch: 'banana',
-        scrollView: 'banana',
-        modal: 'banana',
-      },
-    });
-
-    expect(getHostComponentNames()).toEqual({
-      text: 'banana',
-      textInput: 'banana',
-      image: 'banana',
-      switch: 'banana',
-      scrollView: 'banana',
-      modal: 'banana',
-    });
-  });
-
-  test('detects host component names if not present in internal config', () => {
-    expect(getConfig().hostComponentNames).toBeUndefined();
-
-    const hostComponentNames = getHostComponentNames();
-
-    expect(hostComponentNames).toEqual({
-      text: 'Text',
-      textInput: 'TextInput',
-      image: 'Image',
-      switch: 'RCTSwitch',
-      scrollView: 'RCTScrollView',
-      modal: 'Modal',
-    });
-    expect(getConfig().hostComponentNames).toBe(hostComponentNames);
-  });
-
-  // Repro test for case when user indirectly triggers `getHostComponentNames` calls from
-  // explicit `act` wrapper.
-  // See: https://github.com/callstack/react-native-testing-library/issues/1302
-  // and https://github.com/callstack/react-native-testing-library/issues/1305
-  test('does not throw when wrapped in act after render has been called', () => {
-    render(<View />);
-    expect(() =>
-      act(() => {
-        getHostComponentNames();
-      }),
-    ).not.toThrow();
-  });
+test('detects host Text component', () => {
+  render(<Text>Hello</Text>);
+  expect(isHostText(screen.root)).toBe(true);
 });
 
-describe('configureHostComponentNamesIfNeeded', () => {
-  test('updates internal config with host component names when they are not defined', () => {
-    expect(getConfig().hostComponentNames).toBeUndefined();
+// Some users might use the raw RCTText component directly for performance reasons.
+// See: https://blog.theodo.com/2023/10/native-views-rn-performance/
+test('detects raw RCTText component', () => {
+  render(React.createElement('RCTText', { testID: 'text' }, 'Hello'));
+  expect(isHostText(screen.root)).toBe(true);
+});
 
-    configureHostComponentNamesIfNeeded();
+test('detects host TextInput component', () => {
+  render(<TextInput />);
+  expect(isHostTextInput(screen.root)).toBe(true);
+});
 
-    expect(getConfig().hostComponentNames).toEqual({
-      text: 'Text',
-      textInput: 'TextInput',
-      image: 'Image',
-      switch: 'RCTSwitch',
-      scrollView: 'RCTScrollView',
-      modal: 'Modal',
-    });
-  });
+test('detects host Image component', () => {
+  render(<Image />);
+  expect(isHostImage(screen.root)).toBe(true);
+});
 
-  test('does not update internal config when host component names are already configured', () => {
-    configureInternal({
-      hostComponentNames: {
-        text: 'banana',
-        textInput: 'banana',
-        image: 'banana',
-        switch: 'banana',
-        scrollView: 'banana',
-        modal: 'banana',
-      },
-    });
+test('detects host Switch component', () => {
+  render(<Switch />);
+  expect(isHostSwitch(screen.root)).toBe(true);
+});
 
-    configureHostComponentNamesIfNeeded();
+test('detects host ScrollView component', () => {
+  render(<ScrollView />);
+  expect(isHostScrollView(screen.root)).toBe(true);
+});
 
-    expect(getConfig().hostComponentNames).toEqual({
-      text: 'banana',
-      textInput: 'banana',
-      image: 'banana',
-      switch: 'banana',
-      scrollView: 'banana',
-      modal: 'banana',
-    });
-  });
-
-  test('throw an error when auto-detection fails', () => {
-    const mockCreate = jest.spyOn(TestRenderer, 'create') as jest.Mock;
-    const renderer = TestRenderer.create(<View />);
-
-    mockCreate.mockReturnValue({
-      root: renderer.root,
-    });
-
-    expect(() => configureHostComponentNamesIfNeeded()).toThrowErrorMatchingInlineSnapshot(`
-      "Trying to detect host component names triggered the following error:
-
-      Unable to find an element with testID: text
-
-      There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
-      Please check if you are using compatible versions of React Native and React Native Testing Library."
-    `);
-
-    mockCreate.mockReset();
-  });
+test('detects host Modal component', () => {
+  render(<Modal />);
+  expect(isHostModal(screen.root)).toBe(true);
 });

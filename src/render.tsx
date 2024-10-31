@@ -8,9 +8,8 @@ import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
-import { getHostChildren } from './helpers/component-tree';
+import { getHostSelves } from './helpers/component-tree';
 import { debug, DebugOptions } from './helpers/debug';
-import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
 import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
@@ -43,18 +42,10 @@ export default function render<T>(component: React.ReactElement<T>, options: Ren
   return renderInternal(component, options);
 }
 
-export interface RenderInternalOptions extends RenderOptions {
-  detectHostComponentNames?: boolean;
-}
-
-export function renderInternal<T>(
-  component: React.ReactElement<T>,
-  options?: RenderInternalOptions,
-) {
+export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderOptions) {
   const {
     wrapper: Wrapper,
     concurrentRoot,
-    detectHostComponentNames = true,
     unstable_validateStringsRenderedWithinText,
     ...rest
   } = options || {};
@@ -64,10 +55,6 @@ export function renderInternal<T>(
     // @ts-expect-error incomplete typing on RTR package
     unstable_isConcurrent: concurrentRoot ?? getConfig().concurrentRoot,
   };
-
-  if (detectHostComponentNames) {
-    configureHostComponentNamesIfNeeded();
-  }
 
   if (unstable_validateStringsRenderedWithinText) {
     return renderWithStringValidation(component, {
@@ -130,7 +117,7 @@ function buildRenderResult(
     toJSON: renderer.toJSON,
     debug: makeDebug(instance, renderer),
     get root(): ReactTestInstance {
-      return getHostChildren(instance)[0];
+      return getHostSelves(instance)[0];
     },
     UNSAFE_root: instance,
   };

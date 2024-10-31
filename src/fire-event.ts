@@ -52,7 +52,7 @@ export function isEventEnabled(
   eventName: string,
   nearestTouchResponder?: ReactTestInstance,
 ) {
-  if (isHostTextInput(nearestTouchResponder)) {
+  if (nearestTouchResponder != null && isHostTextInput(nearestTouchResponder)) {
     return (
       isTextInputEditable(nearestTouchResponder) ||
       textInputEventsIgnoringEditableProp.has(eventName)

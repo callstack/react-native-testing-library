@@ -34,27 +34,11 @@ test('resetToDefaults() resets config to defaults', () => {
 });
 
 test('resetToDefaults() resets internal config to defaults', () => {
-  configureInternal({
-    hostComponentNames: {
-      text: 'A',
-      textInput: 'A',
-      image: 'A',
-      switch: 'A',
-      scrollView: 'A',
-      modal: 'A',
-    },
-  });
-  expect(getConfig().hostComponentNames).toEqual({
-    text: 'A',
-    textInput: 'A',
-    image: 'A',
-    switch: 'A',
-    scrollView: 'A',
-    modal: 'A',
-  });
+  configureInternal({ asyncUtilTimeout: 2000 });
+  expect(getConfig().asyncUtilTimeout).toBe(2000);
 
   resetToDefaults();
-  expect(getConfig().hostComponentNames).toBe(undefined);
+  expect(getConfig().asyncUtilTimeout).toBe(1000);
 });
 
 test('configure handles alias option defaultHidden', () => {
