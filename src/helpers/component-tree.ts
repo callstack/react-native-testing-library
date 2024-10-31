@@ -13,7 +13,7 @@ export function isHostElement(element?: ReactTestInstance | null): element is Ho
   return typeof element?.type === 'string';
 }
 
-export function isElementMounted(element: ReactTestInstance | null) {
+export function isElementMounted(element: ReactTestInstance) {
   return getUnsafeRootElement(element) === screen.UNSAFE_root;
 }
 
