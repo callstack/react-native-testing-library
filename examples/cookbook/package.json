@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "expo": "^52.0.0-preview.3",
+    "expo": "^52.0.0-preview.13",
     "expo-constants": "~17.0.1",
     "expo-linking": "~7.0.1",
     "expo-router": "~4.0.0-preview.1",

@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "expo": "^52.0.0-preview.3",
+    "expo": "^52.0.0-preview.13",
     "expo-status-bar": "~2.0.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
-    "@testing-library/react-native": "^12.8.0",
+    "@testing-library/react-native": "^12.8.1",
     "@types/eslint": "^8.56.10",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.79",
