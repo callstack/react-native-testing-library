@@ -72,7 +72,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
 
-      - name: Test in concurrent mode
+      - name: Test in legacy mode
         run: CONCURRENT_MODE=0 yarn test:ci
 
   test-website:
