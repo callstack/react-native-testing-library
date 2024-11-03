@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
+import { CONTAINER_TYPE } from 'universal-test-renderer';
 import { getConfig } from '../config';
-import { CONTAINER_TYPE } from '../renderer/contants';
 import { fireEvent, render, type RenderAPI, screen, resetToDefaults } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';

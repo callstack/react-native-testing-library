@@ -1,8 +1,8 @@
+import { HostComponent } from 'universal-test-renderer';
 import act from '../../act';
 import { isTextInputEditable } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
-import { HostElement } from '../../renderer/host-element';
 import { EventBuilder } from '../event-builder';
 import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait } from '../utils';
@@ -12,7 +12,7 @@ export interface PressOptions {
   duration?: number;
 }
 
-export async function press(this: UserEventInstance, element: HostElement): Promise<void> {
+export async function press(this: UserEventInstance, element: HostComponent): Promise<void> {
   await basePress(this.config, element, {
     type: 'press',
     duration: 0,
@@ -21,7 +21,7 @@ export async function press(this: UserEventInstance, element: HostElement): Prom
 
 export async function longPress(
   this: UserEventInstance,
-  element: HostElement,
+  element: HostComponent,
   options?: PressOptions,
 ): Promise<void> {
   await basePress(this.config, element, {
@@ -37,7 +37,7 @@ interface BasePressOptions {
 
 const basePress = async (
   config: UserEventConfig,
-  element: HostElement,
+  element: HostComponent,
   options: BasePressOptions,
 ): Promise<void> => {
   if (isPressableText(element)) {
@@ -65,7 +65,7 @@ const basePress = async (
 
 const emitPressablePressEvents = async (
   config: UserEventConfig,
-  element: HostElement,
+  element: HostComponent,
   options: BasePressOptions,
 ) => {
   await wait(config);
@@ -86,11 +86,11 @@ const emitPressablePressEvents = async (
   }
 };
 
-const isEnabledTouchResponder = (element: HostElement) => {
+const isEnabledTouchResponder = (element: HostComponent) => {
   return isPointerEventEnabled(element) && element.props.onStartShouldSetResponder?.();
 };
 
-const isPressableText = (element: HostElement) => {
+const isPressableText = (element: HostComponent) => {
   const hasPressEventHandler = Boolean(
     element.props.onPress ||
       element.props.onLongPress ||
@@ -111,7 +111,7 @@ const isPressableText = (element: HostElement) => {
  */
 async function emitTextPressEvents(
   config: UserEventConfig,
-  element: HostElement,
+  element: HostComponent,
   options: BasePressOptions,
 ) {
   await wait(config);
@@ -129,7 +129,7 @@ async function emitTextPressEvents(
  */
 async function emitTextInputPressEvents(
   config: UserEventConfig,
-  element: HostElement,
+  element: HostComponent,
   options: BasePressOptions,
 ) {
   await wait(config);

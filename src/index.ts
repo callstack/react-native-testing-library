@@ -1,3 +1,5 @@
+export { HostComponent } from 'universal-test-renderer';
+
 import { cleanup } from './pure';
 import { flushMicroTasksLegacy } from './flush-micro-tasks';
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
@@ -31,4 +33,3 @@ if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
 }
 
 export * from './pure';
-export { HostElement } from './renderer/host-element';

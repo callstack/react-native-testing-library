@@ -1,4 +1,4 @@
-import { HostElement } from '../../renderer/host-element';
+import { HostComponent } from 'universal-test-renderer';
 import act from '../../act';
 
 /**
@@ -8,7 +8,7 @@ import act from '../../act';
  * @param eventName name of the event
  * @param event event payload(s)
  */
-export function dispatchEvent(element: HostElement, eventName: string, ...event: unknown[]) {
+export function dispatchEvent(element: HostComponent, eventName: string, ...event: unknown[]) {
   const handler = getEventHandler(element, eventName);
   if (!handler) {
     return;
@@ -20,7 +20,7 @@ export function dispatchEvent(element: HostElement, eventName: string, ...event:
   });
 }
 
-function getEventHandler(element: HostElement, eventName: string) {
+function getEventHandler(element: HostComponent, eventName: string) {
   const handleName = getEventHandlerName(eventName);
   const handle = element.props[handleName] as unknown;
   if (typeof handle !== 'function') {

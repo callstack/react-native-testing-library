@@ -1,6 +1,6 @@
-import { HostElement } from '../renderer/host-element';
+import { HostComponent } from 'universal-test-renderer';
 
-export function getTextContent(element: HostElement | string | null): string {
+export function getTextContent(element: HostComponent | string | null): string {
   if (!element) {
     return '';
   }

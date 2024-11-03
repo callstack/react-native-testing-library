@@ -1,9 +1,9 @@
 import { matcherHint } from 'jest-matcher-utils';
+import { HostComponent } from 'universal-test-renderer';
 import { computeAriaSelected } from '../helpers/accessibility';
-import { HostElement } from '../renderer/host-element';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeSelected(this: jest.MatcherContext, element: HostElement) {
+export function toBeSelected(this: jest.MatcherContext, element: HostComponent) {
   checkHostElement(element, toBeSelected, this);
 
   return {

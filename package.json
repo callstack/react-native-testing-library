@@ -54,7 +54,8 @@
   "peerDependencies": {
     "jest": ">=28.0.0",
     "react": ">=18.0.0",
-    "react-native": ">=0.59"
+    "react-native": ">=0.59",
+    "universal-test-renderer": "0.1.2"
   },
   "peerDependenciesMeta": {
     "jest": {
@@ -87,7 +88,8 @@
     "react-native": "0.76.0-rc.6",
     "release-it": "^17.6.0",
     "strip-ansi": "^6.0.1",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "universal-test-renderer": "0.1.2"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

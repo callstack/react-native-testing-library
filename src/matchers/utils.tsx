@@ -8,9 +8,9 @@ import {
 } from 'jest-matcher-utils';
 import prettyFormat, { plugins } from 'pretty-format';
 import redent from 'redent';
+import { HostComponent, HostNode } from 'universal-test-renderer';
 import { isValidElement } from '../helpers/component-tree';
 import { defaultMapProps } from '../helpers/format-default';
-import { HostElement, HostNode } from '../renderer/host-element';
 
 class HostElementTypeError extends Error {
   constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {
@@ -41,15 +41,15 @@ class HostElementTypeError extends Error {
 /**
  * Throws HostElementTypeError if passed element is not a host element.
  *
- * @param element HostElement to check.
+ * @param element HostComponent to check.
  * @param matcherFn Matcher function calling the check used for formatting error.
  * @param context Jest matcher context used for formatting error.
  */
 export function checkHostElement(
-  element: HostElement | null | undefined,
+  element: HostComponent | null | undefined,
   matcherFn: jest.CustomMatcher,
   context: jest.MatcherContext,
-): asserts element is HostElement {
+): asserts element is HostComponent {
   if (!isValidElement(element)) {
     throw new HostElementTypeError(element, matcherFn, context);
   }

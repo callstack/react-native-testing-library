@@ -1,10 +1,10 @@
+import { HostComponent } from 'universal-test-renderer';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import { nativeState } from '../../native-state';
 import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { getTextInputValue, isTextInputEditable } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
-import { HostElement } from '../../renderer/host-element';
 import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait, getTextContentSize } from '../utils';
 import { parseKeys } from './parse-keys';
@@ -16,7 +16,7 @@ export interface TypeOptions {
 
 export async function type(
   this: UserEventInstance,
-  element: HostElement,
+  element: HostComponent,
   text: string,
   options?: TypeOptions,
 ): Promise<void> {
@@ -80,7 +80,7 @@ type EmitTypingEventsContext = {
 };
 
 export async function emitTypingEvents(
-  element: HostElement,
+  element: HostComponent,
   { config, key, text, isAccepted }: EmitTypingEventsContext,
 ) {
   const isMultiline = element.props.multiline === true;
@@ -129,7 +129,7 @@ function applyKey(text: string, key: string) {
   return text + key;
 }
 
-function isTextChangeAccepted(element: HostElement, text: string) {
+function isTextChangeAccepted(element: HostComponent, text: string) {
   const maxLength = element.props.maxLength;
   return maxLength === undefined || text.length <= maxLength;
 }

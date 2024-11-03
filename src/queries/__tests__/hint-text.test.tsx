@@ -26,22 +26,22 @@ const Button = ({ children }: { children: React.ReactNode }) => (
 );
 
 const Section = () => (
-  <>
+  <View>
     <Typography accessibilityHint={TEXT_HINT}>Title</Typography>
     <Button>Hello</Button>
-  </>
+  </View>
 );
 
 test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
   render(<Section />);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    [
+    <View>
       <Text
         accessibilityHint="static text"
       >
         Title
-      </Text>,
+      </Text>
       <View
         accessibilityHint="click this button"
         accessibilityState={
@@ -79,8 +79,8 @@ test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
         >
           Hello
         </Text>
-      </View>,
-    ]
+      </View>
+    </View>
   `);
 
   expect(screen.getByA11yHint(BUTTON_HINT).props.accessibilityHint).toEqual(BUTTON_HINT);

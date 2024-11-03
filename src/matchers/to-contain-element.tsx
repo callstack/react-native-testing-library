@@ -1,12 +1,12 @@
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
-import { HostElement } from '../renderer/host-element';
+import { HostComponent } from 'universal-test-renderer';
 import { findAll } from '../helpers/find-all';
 import { checkHostElement, formatElement } from './utils';
 
 export function toContainElement(
   this: jest.MatcherContext,
-  container: HostElement,
-  element: HostElement | null,
+  container: HostComponent,
+  element: HostComponent | null,
 ) {
   checkHostElement(container, toContainElement, this);
 
@@ -14,7 +14,7 @@ export function toContainElement(
     checkHostElement(element, toContainElement, this);
   }
 
-  let matches: HostElement[] = [];
+  let matches: HostComponent[] = [];
   if (element) {
     matches = findAll(container, (node) => node === element);
   }

@@ -1,9 +1,9 @@
 import { matcherHint } from 'jest-matcher-utils';
+import { HostComponent } from 'universal-test-renderer';
 import { computeAriaBusy } from '../helpers/accessibility';
-import { HostElement } from '../renderer/host-element';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeBusy(this: jest.MatcherContext, element: HostElement) {
+export function toBeBusy(this: jest.MatcherContext, element: HostComponent) {
   checkHostElement(element, toBeBusy, this);
 
   return {

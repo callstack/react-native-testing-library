@@ -6,7 +6,6 @@ import {
   configureHostComponentNamesIfNeeded,
 } from '../helpers/host-component-names';
 import { act, render } from '..';
-import * as rendererModule from '../renderer/renderer';
 
 describe('getHostComponentNames', () => {
   test('returns host component names from internal config', () => {
@@ -99,27 +98,5 @@ describe('configureHostComponentNamesIfNeeded', () => {
       scrollView: 'banana',
       modal: 'banana',
     });
-  });
-
-  test('throw an error when auto-detection fails', () => {
-    const renderer = rendererModule.createRenderer();
-    renderer.render(<View />);
-
-    const mockCreateRenderer = jest
-      .spyOn(rendererModule, 'createRenderer')
-      .mockReturnValue(renderer);
-    // @ts-expect-error
-    jest.spyOn(renderer, 'render').mockReturnValue(renderer.root);
-
-    expect(() => configureHostComponentNamesIfNeeded()).toThrowErrorMatchingInlineSnapshot(`
-      "Trying to detect host component names triggered the following error:
-
-      Unable to find an element with testID: text
-
-      There seems to be an issue with your configuration that prevents React Native Testing Library from working correctly.
-      Please check if you are using compatible versions of React Native and React Native Testing Library."
-    `);
-
-    mockCreateRenderer.mockReset();
   });
 });

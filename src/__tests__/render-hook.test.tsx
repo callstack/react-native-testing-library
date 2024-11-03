@@ -1,6 +1,5 @@
 /* eslint-disable jest/no-conditional-expect */
 import React, { ReactNode } from 'react';
-import * as rendererModule from '../renderer/renderer';
 import { renderHook } from '../pure';
 
 test('gives committed result', () => {
@@ -85,23 +84,4 @@ test('props type is inferred correctly when initial props is explicitly undefine
   rerender(6);
 
   expect(result.current).toBe(6);
-});
-
-/**
- * This test makes sure that calling renderHook does
- * not try to detect host component names in any form.
- * But since there are numerous methods that could trigger that
- * we check the count of renders using React Test Renderers.
- */
-test('does render only once', () => {
-  const renderer = rendererModule.createRenderer();
-  const renderSpy = jest.spyOn(renderer, 'render');
-  jest.spyOn(rendererModule, 'createRenderer').mockReturnValue(renderer);
-
-  renderHook(() => {
-    const [state, setState] = React.useState(1);
-    return [state, setState];
-  });
-
-  expect(renderSpy).toHaveBeenCalledTimes(1);
 });

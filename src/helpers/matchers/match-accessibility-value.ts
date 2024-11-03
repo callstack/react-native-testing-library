@@ -1,6 +1,6 @@
+import { HostComponent } from 'universal-test-renderer';
 import { computeAriaValue } from '../accessibility';
 import { TextMatch } from '../../matches';
-import { HostElement } from '../../renderer/host-element';
 import { matchStringProp } from './match-string-prop';
 
 export interface AccessibilityValueMatcher {
@@ -11,7 +11,7 @@ export interface AccessibilityValueMatcher {
 }
 
 export function matchAccessibilityValue(
-  node: HostElement,
+  node: HostComponent,
   matcher: AccessibilityValueMatcher,
 ): boolean {
   const value = computeAriaValue(node);

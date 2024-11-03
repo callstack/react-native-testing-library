@@ -1,11 +1,10 @@
-import { CONTAINER_TYPE } from '../renderer/contants';
-import { HostElement } from '../renderer/host-element';
+import { CONTAINER_TYPE, HostComponent } from 'universal-test-renderer';
 
 /**
  * Checks if the given element is a host element.
  * @param element The element to check.
  */
-export function isValidElement(element?: HostElement | null): element is HostElement {
+export function isValidElement(element?: HostComponent | null): element is HostComponent {
   return typeof element?.type === 'string' && element.type !== CONTAINER_TYPE;
 }
 
@@ -15,8 +14,8 @@ export function isValidElement(element?: HostElement | null): element is HostEle
  * @param element The element start traversing from.
  * @returns The root element of the tree (host or composite).
  */
-export function getRootElement(element: HostElement) {
-  let current: HostElement | null = element;
+export function getRootElement(element: HostComponent) {
+  let current: HostComponent | null = element;
   while (current?.parent) {
     current = current.parent;
   }
@@ -28,11 +27,11 @@ export function getRootElement(element: HostElement) {
  * Returns host siblings for given element.
  * @param element The element start traversing from.
  */
-export function getHostSiblings(element: HostElement | null): HostElement[] {
+export function getHostSiblings(element: HostComponent | null): HostComponent[] {
   const hostParent = element?.parent ?? null;
   return (
     hostParent?.children.filter(
-      (sibling): sibling is HostElement => typeof sibling === 'object' && sibling !== element,
+      (sibling): sibling is HostComponent => typeof sibling === 'object' && sibling !== element,
     ) ?? []
   );
 }

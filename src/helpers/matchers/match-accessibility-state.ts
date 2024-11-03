@@ -1,4 +1,4 @@
-import { HostElement } from '../../renderer/host-element';
+import { HostComponent } from 'universal-test-renderer';
 import {
   computeAriaBusy,
   computeAriaChecked,
@@ -19,7 +19,7 @@ export interface AccessibilityStateMatcher {
   expanded?: boolean;
 }
 
-export function matchAccessibilityState(node: HostElement, matcher: AccessibilityStateMatcher) {
+export function matchAccessibilityState(node: HostComponent, matcher: AccessibilityStateMatcher) {
   if (matcher.busy !== undefined && matcher.busy !== computeAriaBusy(node)) {
     return false;
   }

@@ -1,4 +1,4 @@
-import { HostElement } from './renderer/host-element';
+import { HostComponent } from 'universal-test-renderer';
 import { RenderResult } from './render';
 
 const SCREEN_ERROR = '`render` method has not been called';
@@ -18,10 +18,10 @@ interface Screen extends RenderResult {
 
 const defaultScreen: Screen = {
   isDetached: true,
-  get root(): HostElement | null {
+  get root(): HostComponent | null {
     throw new Error(SCREEN_ERROR);
   },
-  get container(): HostElement {
+  get container(): HostComponent {
     throw new Error(SCREEN_ERROR);
   },
   debug: notImplementedDebug,

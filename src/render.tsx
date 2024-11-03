@@ -1,17 +1,16 @@
 import * as React from 'react';
+import { createRenderer, HostComponent, Renderer } from 'universal-test-renderer';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import debugDeep, { DebugOptions } from './helpers/debug-deep';
 import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
-import { HostElement } from './renderer/host-element';
-import { createRenderer, Renderer } from './renderer/renderer';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
 export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
-  createNodeMock?: (element: React.ReactElement) => unknown;
+  createNodeMock?: (element: React.ReactElement) => object;
   isConcurrent?: boolean;
 }
 
@@ -30,7 +29,7 @@ export interface RenderInternalOptions extends RenderOptions {
 }
 
 export function renderInternal<T>(element: React.ReactElement<T>, options?: RenderInternalOptions) {
-  const { wrapper: Wrapper, detectHostComponentNames = true, ...restOptions } = options || {};
+  const { wrapper: Wrapper, detectHostComponentNames = true } = options || {};
 
   if (detectHostComponentNames) {
     configureHostComponentNamesIfNeeded();
@@ -38,7 +37,11 @@ export function renderInternal<T>(element: React.ReactElement<T>, options?: Rend
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
 
-  const renderer = createRenderer(restOptions);
+  const renderer = createRenderer({
+    isConcurrent: options?.isConcurrent,
+    textComponents: ['Text'],
+    createNodeMock: options?.createNodeMock,
+  });
   void act(() => {
     renderer.render(wrap(element));
   });
@@ -66,10 +69,10 @@ function buildRenderResult(renderer: Renderer, wrap: (element: React.ReactElemen
     update,
     unmount,
     rerender: update, // alias for `update`
-    toJSON: renderer.toJSON,
+    toJSON: () => renderer.root?.toJSON(),
     debug: debug(renderer),
     container: renderer.container,
-    get root(): HostElement | null {
+    get root(): HostComponent | null {
       return renderer.root;
     },
   };
@@ -95,7 +98,7 @@ function debug(renderer: Renderer): DebugFunction {
       );
     }
 
-    const json = renderer.toJSON();
+    const json = renderer.root?.toJSON();
     if (json) {
       return debugDeep(json, debugOptions);
     }

@@ -1,4 +1,4 @@
-import { HostElement } from './renderer/host-element';
+import { HostComponent } from 'universal-test-renderer';
 import { Point } from './types';
 
 /**
@@ -7,8 +7,8 @@ import { Point } from './types';
  * Values from `value` props (managed controls) should take precedence over these values.
  */
 export type NativeState = {
-  valueForElement: WeakMap<HostElement, string>;
-  contentOffsetForElement: WeakMap<HostElement, Point>;
+  valueForElement: WeakMap<HostComponent, string>;
+  contentOffsetForElement: WeakMap<HostComponent, Point>;
 };
 
 export let nativeState: NativeState = {

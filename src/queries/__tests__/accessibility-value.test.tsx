@@ -22,16 +22,16 @@ const Button = ({ children }: { children: React.ReactNode }) => (
 );
 
 const Section = () => (
-  <>
+  <View>
     <Typography accessibilityValue={{ max: 60 }}>Title</Typography>
     <Button>{TEXT_LABEL}</Button>
-  </>
+  </View>
 );
 
 test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
   render(<Section />);
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    [
+    <View>
       <Text
         accessibilityValue={
           {
@@ -40,7 +40,7 @@ test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
         }
       >
         Title
-      </Text>,
+      </Text>
       <View
         accessibilityState={
           {
@@ -85,8 +85,8 @@ test('getByA11yValue, queryByA11yValue, findByA11yValue', async () => {
         >
           cool text
         </Text>
-      </View>,
-    ]
+      </View>
+    </View>
   `);
 
   expect(screen.getByA11yValue({ min: 40 }).props.accessibilityValue).toEqual({

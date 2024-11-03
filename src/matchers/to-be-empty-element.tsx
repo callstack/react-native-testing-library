@@ -1,8 +1,8 @@
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
-import { HostElement } from '../renderer/host-element';
+import { HostComponent } from 'universal-test-renderer';
 import { checkHostElement, formatElementArray } from './utils';
 
-export function toBeEmptyElement(this: jest.MatcherContext, element: HostElement) {
+export function toBeEmptyElement(this: jest.MatcherContext, element: HostComponent) {
   checkHostElement(element, toBeEmptyElement, this);
 
   const hostChildren = element.children;

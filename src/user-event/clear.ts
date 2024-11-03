@@ -1,14 +1,14 @@
+import { HostComponent } from 'universal-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { getTextInputValue, isTextInputEditable } from '../helpers/text-input';
 import { isPointerEventEnabled } from '../helpers/pointer-events';
-import { HostElement } from '../renderer/host-element';
 import { EventBuilder } from './event-builder';
 import { UserEventInstance } from './setup';
 import { dispatchEvent, wait } from './utils';
 import { emitTypingEvents } from './type/type';
 
-export async function clear(this: UserEventInstance, element: HostElement): Promise<void> {
+export async function clear(this: UserEventInstance, element: HostComponent): Promise<void> {
   if (!isHostTextInput(element)) {
     throw new ErrorWithStack(
       `clear() only supports host "TextInput" elements. Passed element has type: "${element.type}".`,

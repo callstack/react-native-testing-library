@@ -1,10 +1,10 @@
 import { matcherHint } from 'jest-matcher-utils';
+import { HostComponent } from 'universal-test-renderer';
 import { computeAriaChecked, getRole, isAccessibilityElement } from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
-import { HostElement } from '../renderer/host-element';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBePartiallyChecked(this: jest.MatcherContext, element: HostElement) {
+export function toBePartiallyChecked(this: jest.MatcherContext, element: HostComponent) {
   checkHostElement(element, toBePartiallyChecked, this);
 
   if (!hasValidAccessibilityRole(element)) {
@@ -28,7 +28,7 @@ export function toBePartiallyChecked(this: jest.MatcherContext, element: HostEle
   };
 }
 
-function hasValidAccessibilityRole(element: HostElement) {
+function hasValidAccessibilityRole(element: HostComponent) {
   const role = getRole(element);
   return isAccessibilityElement(element) && role === 'checkbox';
 }

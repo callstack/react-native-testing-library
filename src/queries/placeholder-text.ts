@@ -1,7 +1,7 @@
+import { HostComponent } from 'universal-test-renderer';
 import { findAll } from '../helpers/find-all';
 import { matches, TextMatch, TextMatchOptions } from '../matches';
 import { isHostTextInput } from '../helpers/host-component-names';
-import { HostElement } from '../renderer/host-element';
 import { makeQueries } from './make-queries';
 import type {
   FindAllByQuery,
@@ -16,7 +16,7 @@ import type { CommonQueryOptions } from './options';
 type ByPlaceholderTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const matchPlaceholderText = (
-  node: HostElement,
+  node: HostComponent,
   placeholder: TextMatch,
   options: TextMatchOptions = {},
 ) => {
@@ -25,7 +25,7 @@ const matchPlaceholderText = (
 };
 
 const queryAllByPlaceholderText = (
-  instance: HostElement,
+  instance: HostComponent,
 ): QueryAllByQuery<TextMatch, ByPlaceholderTextOptions> =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
     return findAll(
@@ -55,7 +55,9 @@ export type ByPlaceholderTextQueries = {
   findAllByPlaceholderText: FindAllByQuery<TextMatch, ByPlaceholderTextOptions>;
 };
 
-export const bindByPlaceholderTextQueries = (instance: HostElement): ByPlaceholderTextQueries => ({
+export const bindByPlaceholderTextQueries = (
+  instance: HostComponent,
+): ByPlaceholderTextQueries => ({
   getByPlaceholderText: getBy(instance),
   getAllByPlaceholderText: getAllBy(instance),
   queryByPlaceholderText: queryBy(instance),

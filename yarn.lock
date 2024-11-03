@@ -2603,10 +2603,12 @@ __metadata:
     release-it: "npm:^17.6.0"
     strip-ansi: "npm:^6.0.1"
     typescript: "npm:^5.5.4"
+    universal-test-renderer: "npm:0.1.2"
   peerDependencies:
     jest: ">=28.0.0"
     react: ">=18.0.0"
     react-native: ">=0.59"
+    universal-test-renderer: 0.1.2
   peerDependenciesMeta:
     jest:
       optional: true
@@ -9045,7 +9047,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-reconciler@npm:0.29.2":
+"react-reconciler@npm:0.29.2, react-reconciler@npm:^0.29.2":
   version: 0.29.2
   resolution: "react-reconciler@npm:0.29.2"
   dependencies:
@@ -10556,6 +10558,17 @@ __metadata:
   dependencies:
     imurmurhash: "npm:^0.1.4"
   checksum: 10c0/cb811d9d54eb5821b81b18205750be84cb015c20a4a44280794e915f5a0a70223ce39066781a354e872df3572e8155c228f43ff0cce94c7cbf4da2cc7cbdd635
+  languageName: node
+  linkType: hard
+
+"universal-test-renderer@npm:0.1.2":
+  version: 0.1.2
+  resolution: "universal-test-renderer@npm:0.1.2"
+  dependencies:
+    react-reconciler: "npm:^0.29.2"
+  peerDependencies:
+    react: ^18.3.1
+  checksum: 10c0/d64eb134a3d44d978a52a769c82ac8442b0f65825c0d239abc87d674e7dcfd52abd6e8f737eac153e71642b45dc3b0e3386cec9d6bc49e3fd158bcca7ef7cc2a
   languageName: node
   linkType: hard
 
