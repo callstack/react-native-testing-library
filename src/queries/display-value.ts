@@ -1,4 +1,4 @@
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { findAll } from '../helpers/find-all';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { getTextInputValue } from '../helpers/text-input';
@@ -17,7 +17,7 @@ import type { CommonQueryOptions } from './options';
 type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;
 
 const matchDisplayValue = (
-  node: HostComponent,
+  node: HostElement,
   expectedValue: TextMatch,
   options: TextMatchOptions = {},
 ) => {
@@ -27,7 +27,7 @@ const matchDisplayValue = (
 };
 
 const queryAllByDisplayValue = (
-  instance: HostComponent,
+  instance: HostElement,
 ): QueryAllByQuery<TextMatch, ByDisplayValueOptions> =>
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
     return findAll(
@@ -57,7 +57,7 @@ export type ByDisplayValueQueries = {
   findAllByDisplayValue: FindAllByQuery<TextMatch, ByDisplayValueOptions>;
 };
 
-export const bindByDisplayValueQueries = (instance: HostComponent): ByDisplayValueQueries => ({
+export const bindByDisplayValueQueries = (instance: HostElement): ByDisplayValueQueries => ({
   getByDisplayValue: getBy(instance),
   getAllByDisplayValue: getAllBy(instance),
   queryByDisplayValue: queryBy(instance),

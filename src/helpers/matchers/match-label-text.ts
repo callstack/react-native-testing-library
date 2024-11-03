@@ -1,12 +1,12 @@
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { matches, TextMatch, TextMatchOptions } from '../../matches';
 import { computeAriaLabel, computeAriaLabelledBy } from '../accessibility';
 import { findAll } from '../find-all';
 import { matchTextContent } from './match-text-content';
 
 export function matchLabelText(
-  root: HostComponent,
-  element: HostComponent,
+  root: HostElement,
+  element: HostElement,
   expectedText: TextMatch,
   options: TextMatchOptions = {},
 ) {
@@ -17,7 +17,7 @@ export function matchLabelText(
 }
 
 function matchAccessibilityLabel(
-  element: HostComponent,
+  element: HostElement,
   expectedLabel: TextMatch,
   options: TextMatchOptions,
 ) {
@@ -25,7 +25,7 @@ function matchAccessibilityLabel(
 }
 
 function matchAccessibilityLabelledBy(
-  root: HostComponent,
+  root: HostElement,
   nativeId: string | undefined,
   text: TextMatch,
   options: TextMatchOptions,

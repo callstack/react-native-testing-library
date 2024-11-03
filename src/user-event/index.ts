@@ -1,4 +1,4 @@
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { setup } from './setup';
 import { PressOptions } from './press';
 import { TypeOptions } from './type';
@@ -10,13 +10,11 @@ export const userEvent = {
   setup,
 
   // Direct access for User Event v13 compatibility
-  press: (element: HostComponent) => setup().press(element),
-  longPress: (element: HostComponent, options?: PressOptions) =>
-    setup().longPress(element, options),
-  type: (element: HostComponent, text: string, options?: TypeOptions) =>
+  press: (element: HostElement) => setup().press(element),
+  longPress: (element: HostElement, options?: PressOptions) => setup().longPress(element, options),
+  type: (element: HostElement, text: string, options?: TypeOptions) =>
     setup().type(element, text, options),
-  clear: (element: HostComponent) => setup().clear(element),
-  paste: (element: HostComponent, text: string) => setup().paste(element, text),
-  scrollTo: (element: HostComponent, options: ScrollToOptions) =>
-    setup().scrollTo(element, options),
+  clear: (element: HostElement) => setup().clear(element),
+  paste: (element: HostElement, text: string) => setup().paste(element, text),
+  scrollTo: (element: HostElement, options: ScrollToOptions) => setup().scrollTo(element, options),
 };

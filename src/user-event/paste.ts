@@ -1,4 +1,4 @@
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { isPointerEventEnabled } from '../helpers/pointer-events';
@@ -10,7 +10,7 @@ import { dispatchEvent, getTextContentSize, wait } from './utils';
 
 export async function paste(
   this: UserEventInstance,
-  element: HostComponent,
+  element: HostElement,
   text: string,
 ): Promise<void> {
   if (!isHostTextInput(element)) {

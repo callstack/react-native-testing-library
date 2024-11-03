@@ -1,9 +1,9 @@
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import { createQueryByError } from '../helpers/errors';
 import { findAll } from '../helpers/find-all';
 
-const UNSAFE_getByType = (instance: HostComponent): ((type: string) => HostComponent) =>
+const UNSAFE_getByType = (instance: HostElement): ((type: string) => HostElement) =>
   function getByTypeFn(type: string) {
     const results = findAllByType(instance, type);
     if (results.length === 0) {
@@ -15,7 +15,7 @@ const UNSAFE_getByType = (instance: HostComponent): ((type: string) => HostCompo
     return results[0];
   };
 
-const UNSAFE_getAllByType = (instance: HostComponent): ((type: string) => Array<HostComponent>) =>
+const UNSAFE_getAllByType = (instance: HostElement): ((type: string) => Array<HostElement>) =>
   function getAllByTypeFn(type: string) {
     const results = findAllByType(instance, type);
     if (results.length === 0) {
@@ -24,7 +24,7 @@ const UNSAFE_getAllByType = (instance: HostComponent): ((type: string) => Array<
     return results;
   };
 
-const UNSAFE_queryByType = (instance: HostComponent): ((type: string) => HostComponent | null) =>
+const UNSAFE_queryByType = (instance: HostElement): ((type: string) => HostElement | null) =>
   function queryByTypeFn(type: string) {
     try {
       return UNSAFE_getByType(instance)(type);
@@ -34,7 +34,7 @@ const UNSAFE_queryByType = (instance: HostComponent): ((type: string) => HostCom
   };
 
 const UNSAFE_queryAllByType =
-  (instance: HostComponent): ((type: string) => Array<HostComponent>) =>
+  (instance: HostElement): ((type: string) => Array<HostElement>) =>
   (type: string) => {
     try {
       return UNSAFE_getAllByType(instance)(type);
@@ -45,20 +45,20 @@ const UNSAFE_queryAllByType =
 
 // Unsafe aliases
 export type UnsafeByTypeQueries = {
-  UNSAFE_getByType: (type: string) => HostComponent;
-  UNSAFE_getAllByType: (type: string) => Array<HostComponent>;
-  UNSAFE_queryByType: (type: string) => HostComponent | null;
-  UNSAFE_queryAllByType: (type: string) => Array<HostComponent>;
+  UNSAFE_getByType: (type: string) => HostElement;
+  UNSAFE_getAllByType: (type: string) => Array<HostElement>;
+  UNSAFE_queryByType: (type: string) => HostElement | null;
+  UNSAFE_queryAllByType: (type: string) => Array<HostElement>;
 };
 
 // TODO: migrate to makeQueries pattern
-export const bindUnsafeByTypeQueries = (instance: HostComponent): UnsafeByTypeQueries => ({
+export const bindUnsafeByTypeQueries = (instance: HostElement): UnsafeByTypeQueries => ({
   UNSAFE_getByType: UNSAFE_getByType(instance),
   UNSAFE_getAllByType: UNSAFE_getAllByType(instance),
   UNSAFE_queryByType: UNSAFE_queryByType(instance),
   UNSAFE_queryAllByType: UNSAFE_queryAllByType(instance),
 });
 
-function findAllByType(instance: HostComponent, type: string) {
+function findAllByType(instance: HostElement, type: string) {
   return findAll(instance, (element) => element.type === type);
 }

@@ -1,9 +1,9 @@
 import { matcherHint } from 'jest-matcher-utils';
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { computeAriaExpanded } from '../helpers/accessibility';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeExpanded(this: jest.MatcherContext, element: HostComponent) {
+export function toBeExpanded(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeExpanded, this);
 
   return {
@@ -20,7 +20,7 @@ export function toBeExpanded(this: jest.MatcherContext, element: HostComponent) 
   };
 }
 
-export function toBeCollapsed(this: jest.MatcherContext, element: HostComponent) {
+export function toBeCollapsed(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeCollapsed, this);
 
   return {

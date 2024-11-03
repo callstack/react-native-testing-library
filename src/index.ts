@@ -1,4 +1,4 @@
-export { HostComponent } from 'universal-test-renderer';
+export { HostElement } from 'universal-test-renderer';
 
 import { cleanup } from './pure';
 import { flushMicroTasksLegacy } from './flush-micro-tasks';

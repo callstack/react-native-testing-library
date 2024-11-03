@@ -2718,12 +2718,12 @@ __metadata:
     release-it: "npm:^17.10.0"
     strip-ansi: "npm:^6.0.1"
     typescript: "npm:^5.6.3"
-    universal-test-renderer: "npm:0.1.2"
+    universal-test-renderer: "npm:0.2.0"
   peerDependencies:
     jest: ">=28.0.0"
     react: ">=18.0.0"
     react-native: ">=0.59"
-    universal-test-renderer: 0.1.2
+    universal-test-renderer: 0.2.0
   peerDependenciesMeta:
     jest:
       optional: true
@@ -10787,14 +10787,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"universal-test-renderer@npm:0.1.2":
-  version: 0.1.2
-  resolution: "universal-test-renderer@npm:0.1.2"
+"universal-test-renderer@npm:0.2.0":
+  version: 0.2.0
+  resolution: "universal-test-renderer@npm:0.2.0"
   dependencies:
     react-reconciler: "npm:^0.29.2"
   peerDependencies:
     react: ^18.3.1
-  checksum: 10c0/d64eb134a3d44d978a52a769c82ac8442b0f65825c0d239abc87d674e7dcfd52abd6e8f737eac153e71642b45dc3b0e3386cec9d6bc49e3fd158bcca7ef7cc2a
+  checksum: 10c0/4d4839d9e6e35cb31bb15db28a452b740b2f5ea5e0684e50f6cefa1a63153f86665ad51637bbf5d1f11f7555dc387aa2dbaf412946614bc9b3cdb168dd36005d
   languageName: node
   linkType: hard
 

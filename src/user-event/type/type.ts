@@ -1,4 +1,4 @@
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import { nativeState } from '../../native-state';
 import { EventBuilder } from '../event-builder';
@@ -16,7 +16,7 @@ export interface TypeOptions {
 
 export async function type(
   this: UserEventInstance,
-  element: HostComponent,
+  element: HostElement,
   text: string,
   options?: TypeOptions,
 ): Promise<void> {
@@ -80,7 +80,7 @@ type EmitTypingEventsContext = {
 };
 
 export async function emitTypingEvents(
-  element: HostComponent,
+  element: HostElement,
   { config, key, text, isAccepted }: EmitTypingEventsContext,
 ) {
   const isMultiline = element.props.multiline === true;
@@ -129,7 +129,7 @@ function applyKey(text: string, key: string) {
   return text + key;
 }
 
-function isTextChangeAccepted(element: HostComponent, text: string) {
+function isTextChangeAccepted(element: HostElement, text: string) {
   const maxLength = element.props.maxLength;
   return maxLength === undefined || text.length <= maxLength;
 }

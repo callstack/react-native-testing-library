@@ -1,5 +1,5 @@
 import { matcherHint, stringify } from 'jest-matcher-utils';
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { computeAriaValue } from '../helpers/accessibility';
 import {
   AccessibilityValueMatcher,
@@ -10,7 +10,7 @@ import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveAccessibilityValue(
   this: jest.MatcherContext,
-  element: HostComponent,
+  element: HostElement,
   expectedValue: AccessibilityValueMatcher,
 ) {
   checkHostElement(element, toHaveAccessibilityValue, this);

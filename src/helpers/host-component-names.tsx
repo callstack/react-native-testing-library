@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Image, Modal, ScrollView, Switch, Text, TextInput, View } from 'react-native';
-import { createRenderer, HostComponent } from 'universal-test-renderer';
+import { createRenderer, HostElement } from 'universal-test-renderer';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import act from '../act';
 import { findAll } from './find-all';
@@ -61,7 +61,7 @@ function detectHostComponentNames(): HostComponentNames {
   }
 }
 
-function getByTestId(element: HostComponent, testID: string) {
+function getByTestId(element: HostElement, testID: string) {
   const nodes = findAll(
     element,
     (node) => typeof node.type === 'string' && node.props.testID === testID,
@@ -78,7 +78,7 @@ function getByTestId(element: HostComponent, testID: string) {
  * Checks if the given element is a host Text element.
  * @param element The element to check.
  */
-export function isHostText(element?: HostComponent | null) {
+export function isHostText(element?: HostElement | null) {
   return element?.type === getHostComponentNames().text;
 }
 
@@ -86,7 +86,7 @@ export function isHostText(element?: HostComponent | null) {
  * Checks if the given element is a host TextInput element.
  * @param element The element to check.
  */
-export function isHostTextInput(element?: HostComponent | null) {
+export function isHostTextInput(element?: HostElement | null) {
   return element?.type === getHostComponentNames().textInput;
 }
 
@@ -94,7 +94,7 @@ export function isHostTextInput(element?: HostComponent | null) {
  * Checks if the given element is a host Image element.
  * @param element The element to check.
  */
-export function isHostImage(element?: HostComponent | null) {
+export function isHostImage(element?: HostElement | null) {
   return element?.type === getHostComponentNames().image;
 }
 
@@ -102,7 +102,7 @@ export function isHostImage(element?: HostComponent | null) {
  * Checks if the given element is a host Switch element.
  * @param element The element to check.
  */
-export function isHostSwitch(element?: HostComponent | null) {
+export function isHostSwitch(element?: HostElement | null) {
   return element?.type === getHostComponentNames().switch;
 }
 
@@ -110,7 +110,7 @@ export function isHostSwitch(element?: HostComponent | null) {
  * Checks if the given element is a host ScrollView element.
  * @param element The element to check.
  */
-export function isHostScrollView(element?: HostComponent | null) {
+export function isHostScrollView(element?: HostElement | null) {
   return element?.type === getHostComponentNames().scrollView;
 }
 
@@ -118,6 +118,6 @@ export function isHostScrollView(element?: HostComponent | null) {
  * Checks if the given element is a host Modal element.
  * @param element The element to check.
  */
-export function isHostModal(element?: HostComponent | null) {
+export function isHostModal(element?: HostElement | null) {
   return element?.type === getHostComponentNames().modal;
 }

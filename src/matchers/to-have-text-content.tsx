@@ -1,12 +1,12 @@
 import { matcherHint } from 'jest-matcher-utils';
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { getTextContent } from '../helpers/text-content';
 import { TextMatch, TextMatchOptions, matches } from '../matches';
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveTextContent(
   this: jest.MatcherContext,
-  element: HostComponent,
+  element: HostElement,
   expectedText: TextMatch,
   options?: TextMatchOptions,
 ) {

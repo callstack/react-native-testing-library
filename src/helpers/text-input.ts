@@ -1,8 +1,8 @@
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { nativeState } from '../native-state';
 import { isHostTextInput } from './host-component-names';
 
-export function isTextInputEditable(element: HostComponent) {
+export function isTextInputEditable(element: HostElement) {
   if (!isHostTextInput(element)) {
     throw new Error(`Element is not a "TextInput", but it has type "${element.type}".`);
   }
@@ -10,7 +10,7 @@ export function isTextInputEditable(element: HostComponent) {
   return element.props.editable !== false;
 }
 
-export function getTextInputValue(element: HostComponent) {
+export function getTextInputValue(element: HostElement) {
   if (!isHostTextInput(element)) {
     throw new Error(`Element is not a "TextInput", but it has type "${element.type}".`);
   }

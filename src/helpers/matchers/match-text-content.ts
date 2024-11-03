@@ -1,4 +1,4 @@
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { matches, TextMatch, TextMatchOptions } from '../../matches';
 import { getTextContent } from '../text-content';
 
@@ -10,7 +10,7 @@ import { getTextContent } from '../text-content';
  * @returns - Whether the node's text content matches the given string or regex.
  */
 export function matchTextContent(
-  node: HostComponent,
+  node: HostElement,
   text: TextMatch,
   options: TextMatchOptions = {},
 ) {

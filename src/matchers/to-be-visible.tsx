@@ -1,11 +1,11 @@
 import { matcherHint } from 'jest-matcher-utils';
 import { StyleSheet } from 'react-native';
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { isHiddenFromAccessibility } from '../helpers/accessibility';
 import { isHostModal } from '../helpers/host-component-names';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeVisible(this: jest.MatcherContext, element: HostComponent) {
+export function toBeVisible(this: jest.MatcherContext, element: HostElement) {
   if (element !== null || !this.isNot) {
     checkHostElement(element, toBeVisible, this);
   }
@@ -25,11 +25,11 @@ export function toBeVisible(this: jest.MatcherContext, element: HostComponent) {
 }
 
 function isElementVisible(
-  element: HostComponent,
-  accessibilityCache?: WeakMap<HostComponent, boolean>,
+  element: HostElement,
+  accessibilityCache?: WeakMap<HostElement, boolean>,
 ): boolean {
   // Use cache to speed up repeated searches by `isHiddenFromAccessibility`.
-  const cache = accessibilityCache ?? new WeakMap<HostComponent, boolean>();
+  const cache = accessibilityCache ?? new WeakMap<HostElement, boolean>();
   if (isHiddenFromAccessibility(element, { cache })) {
     return false;
   }
@@ -52,7 +52,7 @@ function isElementVisible(
   return isElementVisible(hostParent, cache);
 }
 
-function isHiddenForStyles(element: HostComponent) {
+function isHiddenForStyles(element: HostElement) {
   const flatStyle = StyleSheet.flatten(element.props.style);
   return flatStyle?.display === 'none' || flatStyle?.opacity === 0;
 }

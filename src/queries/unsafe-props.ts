@@ -1,12 +1,12 @@
 import prettyFormat from 'pretty-format';
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
 import { createQueryByError } from '../helpers/errors';
 import { findAllByProps } from '../helpers/find-all';
 
 const UNSAFE_getByProps = (
-  instance: HostComponent,
-): ((props: { [propName: string]: any }) => HostComponent) =>
+  instance: HostElement,
+): ((props: { [propName: string]: any }) => HostElement) =>
   function getByPropsFn(props: { [propName: string]: any }) {
     try {
       const results = findAllByProps(instance, props);
@@ -29,8 +29,8 @@ const UNSAFE_getByProps = (
   };
 
 const UNSAFE_getAllByProps = (
-  instance: HostComponent,
-): ((props: { [propName: string]: any }) => Array<HostComponent>) =>
+  instance: HostElement,
+): ((props: { [propName: string]: any }) => Array<HostElement>) =>
   function getAllByPropsFn(props: { [propName: string]: any }) {
     const results = findAllByProps(instance, props);
     if (results.length === 0) {
@@ -43,8 +43,8 @@ const UNSAFE_getAllByProps = (
   };
 
 const UNSAFE_queryByProps = (
-  instance: HostComponent,
-): ((props: { [propName: string]: any }) => HostComponent | null) =>
+  instance: HostElement,
+): ((props: { [propName: string]: any }) => HostElement | null) =>
   function queryByPropsFn(props: { [propName: string]: any }) {
     try {
       return UNSAFE_getByProps(instance)(props);
@@ -54,7 +54,7 @@ const UNSAFE_queryByProps = (
   };
 
 const UNSAFE_queryAllByProps =
-  (instance: HostComponent): ((props: { [propName: string]: any }) => Array<HostComponent>) =>
+  (instance: HostElement): ((props: { [propName: string]: any }) => Array<HostElement>) =>
   (props: { [propName: string]: any }) => {
     try {
       return UNSAFE_getAllByProps(instance)(props);
@@ -65,14 +65,14 @@ const UNSAFE_queryAllByProps =
 
 // Unsafe aliases
 export type UnsafeByPropsQueries = {
-  UNSAFE_getByProps: (props: { [key: string]: any }) => HostComponent;
-  UNSAFE_getAllByProps: (props: { [key: string]: any }) => Array<HostComponent>;
-  UNSAFE_queryByProps: (props: { [key: string]: any }) => HostComponent | null;
-  UNSAFE_queryAllByProps: (props: { [key: string]: any }) => Array<HostComponent>;
+  UNSAFE_getByProps: (props: { [key: string]: any }) => HostElement;
+  UNSAFE_getAllByProps: (props: { [key: string]: any }) => Array<HostElement>;
+  UNSAFE_queryByProps: (props: { [key: string]: any }) => HostElement | null;
+  UNSAFE_queryAllByProps: (props: { [key: string]: any }) => Array<HostElement>;
 };
 
 // TODO: migrate to makeQueries pattern
-export const bindUnsafeByPropsQueries = (instance: HostComponent): UnsafeByPropsQueries => ({
+export const bindUnsafeByPropsQueries = (instance: HostElement): UnsafeByPropsQueries => ({
   UNSAFE_getByProps: UNSAFE_getByProps(instance),
   UNSAFE_getAllByProps: UNSAFE_getAllByProps(instance),
   UNSAFE_queryByProps: UNSAFE_queryByProps(instance),

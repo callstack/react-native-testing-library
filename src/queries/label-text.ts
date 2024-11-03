@@ -1,4 +1,4 @@
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { findAll } from '../helpers/find-all';
 import { TextMatch, TextMatchOptions } from '../matches';
 import { matchLabelText } from '../helpers/matchers/match-label-text';
@@ -15,7 +15,7 @@ import { CommonQueryOptions } from './options';
 
 type ByLabelTextOptions = CommonQueryOptions & TextMatchOptions;
 
-function queryAllByLabelText(instance: HostComponent) {
+function queryAllByLabelText(instance: HostElement) {
   return (text: TextMatch, queryOptions?: ByLabelTextOptions) => {
     return findAll(
       instance,
@@ -45,7 +45,7 @@ export type ByLabelTextQueries = {
   findAllByLabelText: FindAllByQuery<TextMatch, ByLabelTextOptions>;
 };
 
-export const bindByLabelTextQueries = (instance: HostComponent): ByLabelTextQueries => ({
+export const bindByLabelTextQueries = (instance: HostElement): ByLabelTextQueries => ({
   getByLabelText: getBy(instance),
   getAllByLabelText: getAllBy(instance),
   queryByLabelText: queryBy(instance),

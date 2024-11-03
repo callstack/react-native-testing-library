@@ -1,5 +1,5 @@
 import { matcherHint } from 'jest-matcher-utils';
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import {
   computeAriaChecked,
   getRole,
@@ -10,7 +10,7 @@ import { ErrorWithStack } from '../helpers/errors';
 import { isHostSwitch } from '../helpers/host-component-names';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeChecked(this: jest.MatcherContext, element: HostComponent) {
+export function toBeChecked(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeChecked, this);
 
   if (!isHostSwitch(element) && !isSupportedAccessibilityElement(element)) {
@@ -34,7 +34,7 @@ export function toBeChecked(this: jest.MatcherContext, element: HostComponent) {
   };
 }
 
-function isSupportedAccessibilityElement(element: HostComponent) {
+function isSupportedAccessibilityElement(element: HostElement) {
   if (!isAccessibilityElement(element)) {
     return false;
   }

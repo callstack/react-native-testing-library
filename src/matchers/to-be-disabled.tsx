@@ -1,9 +1,9 @@
 import { matcherHint } from 'jest-matcher-utils';
-import { HostComponent } from 'universal-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { computeAriaDisabled } from '../helpers/accessibility';
 import { checkHostElement, formatElement } from './utils';
 
-export function toBeDisabled(this: jest.MatcherContext, element: HostComponent) {
+export function toBeDisabled(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeDisabled, this);
 
   const isDisabled = computeAriaDisabled(element) || isAncestorDisabled(element);
@@ -22,7 +22,7 @@ export function toBeDisabled(this: jest.MatcherContext, element: HostComponent) 
   };
 }
 
-export function toBeEnabled(this: jest.MatcherContext, element: HostComponent) {
+export function toBeEnabled(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeEnabled, this);
 
   const isEnabled = !computeAriaDisabled(element) && !isAncestorDisabled(element);
@@ -41,7 +41,7 @@ export function toBeEnabled(this: jest.MatcherContext, element: HostComponent) {
   };
 }
 
-function isAncestorDisabled(element: HostComponent): boolean {
+function isAncestorDisabled(element: HostElement): boolean {
   const parent = element.parent;
   if (parent == null) {
     return false;

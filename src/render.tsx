@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, HostComponent, Renderer } from 'universal-test-renderer';
+import { createRenderer, HostElement, Renderer } from 'universal-test-renderer';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
@@ -80,7 +80,7 @@ function buildRenderResult(renderer: Renderer, wrap: (element: React.ReactElemen
     toJSON: () => renderer.root?.toJSON(),
     debug: debug(renderer),
     container: renderer.container,
-    get root(): HostComponent | null {
+    get root(): HostElement | null {
       return renderer.root;
     },
   };
