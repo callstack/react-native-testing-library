@@ -1,5 +1,6 @@
 import { HostComponent } from 'universal-test-renderer';
 import act from '../../act';
+import { isElementMounted } from '../../helpers/component-tree';
 
 /**
  * Basic dispatch event function used by User Event module.
@@ -9,6 +10,10 @@ import act from '../../act';
  * @param event event payload(s)
  */
 export function dispatchEvent(element: HostComponent, eventName: string, ...event: unknown[]) {
+  if (!isElementMounted(element)) {
+    return;
+  }
+
   const handler = getEventHandler(element, eventName);
   if (!handler) {
     return;

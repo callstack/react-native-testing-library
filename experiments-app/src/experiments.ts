@@ -1,4 +1,5 @@
 import { AccessibilityScreen } from './screens/Accessibility';
+import { PressEvents } from './screens/PressEvents';
 import { TextInputEventPropagation } from './screens/TextInputEventPropagation';
 import { TextInputEvents } from './screens/TextInputEvents';
 import { ScrollViewEvents } from './screens/ScrollViewEvents';
@@ -12,6 +13,11 @@ export const experiments = [
     key: 'Accessibility',
     title: 'Accessibility',
     component: AccessibilityScreen,
+  },
+  {
+    key: 'PressEvents',
+    title: 'Press Events',
+    component: PressEvents,
   },
   {
     key: 'TextInputEvents',

@@ -1,7 +1,6 @@
 import React from 'react';
 import { type AccessibilityRole, View } from 'react-native';
 import { render, screen } from '../..';
-import '../extend-expect';
 
 function renderViewsWithRole(role: AccessibilityRole) {
   return render(

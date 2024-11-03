@@ -9,9 +9,17 @@ import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
 export interface RenderOptions {
+  /**
+   * Pass a React Component as the wrapper option to have it rendered around the inner element. This is most useful for creating
+   *  reusable custom render functions for common data providers.
+   */
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => object;
-  isConcurrent?: boolean;
+  /**
+   * Set to `true` to enable concurrent rendering.
+   * Otherwise `render` will default to legacy synchronous rendering.
+   */
+  concurrentRoot?: boolean | undefined;
 }
 
 export type RenderResult = ReturnType<typeof render>;
@@ -38,7 +46,7 @@ export function renderInternal<T>(element: React.ReactElement<T>, options?: Rend
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
 
   const renderer = createRenderer({
-    isConcurrent: options?.isConcurrent,
+    isConcurrent: options?.concurrentRoot ?? getConfig().concurrentRoot,
     textComponents: ['Text'],
     createNodeMock: options?.createNodeMock,
   });

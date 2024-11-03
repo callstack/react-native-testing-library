@@ -1,4 +1,5 @@
 import { CONTAINER_TYPE, HostComponent } from 'universal-test-renderer';
+import { screen } from '../screen';
 
 /**
  * Checks if the given element is a host element.
@@ -6,6 +7,10 @@ import { CONTAINER_TYPE, HostComponent } from 'universal-test-renderer';
  */
 export function isValidElement(element?: HostComponent | null): element is HostComponent {
   return typeof element?.type === 'string' && element.type !== CONTAINER_TYPE;
+}
+
+export function isElementMounted(element: HostComponent) {
+  return getRootElement(element) === screen.container;
 }
 
 /**

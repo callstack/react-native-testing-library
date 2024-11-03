@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { HostComponent } from 'universal-test-renderer';
 import act from './act';
-import { isValidElement } from './helpers/component-tree';
+import { isElementMounted, isValidElement } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isTextInputEditable } from './helpers/text-input';
@@ -132,6 +132,10 @@ type EventName = StringWithAutocomplete<
 >;
 
 function fireEvent(element: HostComponent, eventName: EventName, ...data: unknown[]) {
+  if (!isElementMounted(element)) {
+    return;
+  }
+
   setNativeStateIfNeeded(element, eventName, data[0]);
 
   const handler = findEventHandler(element, eventName);

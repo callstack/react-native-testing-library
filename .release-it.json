@@ -1,17 +1,47 @@
 {
+  "hooks": {
+    "before:init": ["yarn typecheck", "yarn test", "yarn lint"],
+    "after:bump": "yarn build",
+    "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
+  },
   "git": {
-    "commitMessage": "chore: release ${version}",
+    "commitMessage": "chore: release v${version}",
     "tagName": "v${version}"
   },
   "npm": {
     "publish": true
   },
   "github": {
-    "release": true
+    "release": true,
+    "releaseName": "v${version}"
   },
   "plugins": {
     "@release-it/conventional-changelog": {
-      "preset": "angular"
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          {
+            "type": "feat",
+            "section": "✨ Features"
+          },
+          {
+            "type": "perf",
+            "section": "💨 Performance Improvements"
+          },
+          {
+            "type": "fix",
+            "section": "🐛 Bug Fixes"
+          },
+          {
+            "type": "chore(deps)",
+            "section": "🛠️ Dependency Upgrades"
+          },
+          {
+            "type": "docs",
+            "section": "📚 Documentation"
+          }
+        ]
+      }
     }
   }
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
 import { render, screen } from '../..';
-import '../extend-expect';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function DoNotRenderChildren({ children }: { children: React.ReactNode }) {
