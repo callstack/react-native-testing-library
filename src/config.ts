@@ -26,21 +26,7 @@ export type ConfigAliasOptions = {
   defaultHidden: boolean;
 };
 
-export type HostComponentNames = {
-  text: string;
-  textInput: string;
-  image: string;
-  switch: string;
-  scrollView: string;
-  modal: string;
-};
-
-export type InternalConfig = Config & {
-  /** Names for key React Native host components. */
-  hostComponentNames?: HostComponentNames;
-};
-
-const defaultConfig: InternalConfig = {
+const defaultConfig: Config = {
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: false,
   concurrentRoot: true,
@@ -63,13 +49,6 @@ export function configure(options: Partial<Config & ConfigAliasOptions>) {
     ...config,
     ...restOptions,
     defaultIncludeHiddenElements,
-  };
-}
-
-export function configureInternal(option: Partial<InternalConfig>) {
-  config = {
-    ...config,
-    ...option,
   };
 }
 

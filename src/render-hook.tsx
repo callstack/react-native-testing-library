@@ -37,7 +37,6 @@ export function renderHook<Result, Props>(
     <TestComponent renderCallbackProps={initialProps} />,
     {
       wrapper,
-      detectHostComponentNames: false,
     },
   );
 

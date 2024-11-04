@@ -7,13 +7,7 @@ import {
 } from 'react-native';
 import { ReactTestInstance } from 'react-test-renderer';
 import { getHostSiblings, getUnsafeRootElement } from './component-tree';
-import {
-  getHostComponentNames,
-  isHostImage,
-  isHostSwitch,
-  isHostText,
-  isHostTextInput,
-} from './host-component-names';
+import { isHostImage, isHostSwitch, isHostText, isHostTextInput } from './host-component-names';
 import { getTextContent } from './text-content';
 import { isTextInputEditable } from './text-input';
 
@@ -112,12 +106,7 @@ export function isAccessibilityElement(element: ReactTestInstance | null): boole
     return element.props.accessible;
   }
 
-  const hostComponentNames = getHostComponentNames();
-  return (
-    element?.type === hostComponentNames?.text ||
-    element?.type === hostComponentNames?.textInput ||
-    element?.type === hostComponentNames?.switch
-  );
+  return isHostText(element) || isHostTextInput(element) || isHostSwitch(element);
 }
 
 /**
