@@ -1,13 +1,13 @@
 {
   "extends": "@callstack",
   "rules": {
-    "react-native/no-raw-text": 0,
     "no-console": 1,
-    "react/no-multi-comp": 0,
     // Ignore certain webpack alias because it can't be resolved
     "import/no-unresolved": [2, { "ignore": ["^@theme", "^@docusaurus", "^@generated"] }],
+    "react/no-multi-comp": 0,
     "react-native/no-color-literals": "off",
     "react-native/no-inline-styles": "off",
+    "react-native/no-raw-text": 0,
     "react-native-a11y/has-valid-accessibility-descriptors": "off",
     "react-native-a11y/has-valid-accessibility-ignores-invert-colors": 0,
     "react-native-a11y/has-valid-accessibility-value": "off"
