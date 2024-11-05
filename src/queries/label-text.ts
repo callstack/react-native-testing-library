@@ -1,7 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { findAll } from '../helpers/find-all';
 import { TextMatch, TextMatchOptions } from '../matches';
-import { matchLabelText } from '../helpers/matchers/match-label-text';
+import { matchAccessibilityLabel } from '../helpers/matchers/match-label-text';
 import { makeQueries } from './make-queries';
 import type {
   FindAllByQuery,
@@ -19,7 +19,7 @@ function queryAllByLabelText(instance: ReactTestInstance) {
   return (text: TextMatch, queryOptions?: ByLabelTextOptions) => {
     return findAll(
       instance,
-      (node) => matchLabelText(instance, node, text, queryOptions),
+      (node) => matchAccessibilityLabel(node, text, queryOptions),
       queryOptions,
     );
   };
