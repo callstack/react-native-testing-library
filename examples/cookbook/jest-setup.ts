@@ -1,7 +1,5 @@
 import { configure } from '@testing-library/react-native';
 
-// Import built-in Jest matchers
-import '@testing-library/react-native/extend-expect';
 import { server } from './app/network-requests/__tests__/test-utils';
 
 // Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
@@ -15,5 +13,3 @@ afterEach(() => server.resetHandlers());
 
 // Disable API mocking after the tests are done
 afterAll(() => server.close());
-
-configure({ concurrentRoot: true });
