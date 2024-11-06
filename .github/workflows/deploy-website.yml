@@ -2,8 +2,8 @@ name: Website
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths: ['website/**']
 
 jobs:
   deploy:
