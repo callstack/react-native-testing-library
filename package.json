@@ -39,7 +39,6 @@
   },
   "files": [
     "build/",
-    "jest-preset/",
     "matchers.js",
     "matchers.d.ts",
     "pure.js",
