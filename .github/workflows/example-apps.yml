@@ -3,8 +3,10 @@ name: Validate Example Apps
 on:
   push:
     branches: [main]
+    paths: ['examples/**']
   pull_request:
     branches: ['**']
+    paths: ['examples/**']
 
 jobs:
   test-example:
