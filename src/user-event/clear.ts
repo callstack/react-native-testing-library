@@ -1,7 +1,7 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
-import { getTextInputValue, isTextInputEditable } from '../helpers/text-input';
+import { getTextInputValue, isEditableTextInput } from '../helpers/text-input';
 import { isPointerEventEnabled } from '../helpers/pointer-events';
 import { EventBuilder } from './event-builder';
 import { UserEventInstance } from './setup';
@@ -16,7 +16,7 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
     );
   }
 
-  if (!isTextInputEditable(element) || !isPointerEventEnabled(element)) {
+  if (!isEditableTextInput(element) || !isPointerEventEnabled(element)) {
     return;
   }
 

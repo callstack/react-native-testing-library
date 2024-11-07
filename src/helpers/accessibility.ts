@@ -10,7 +10,7 @@ import { getHostSiblings, getUnsafeRootElement, isHostElement } from './componen
 import { findAll } from './find-all';
 import { isHostImage, isHostSwitch, isHostText, isHostTextInput } from './host-component-names';
 import { getTextContent } from './text-content';
-import { isTextInputEditable } from './text-input';
+import { isEditableTextInput } from './text-input';
 
 type IsInaccessibleOptions = {
   cache?: WeakMap<ReactTestInstance, boolean>;
@@ -208,7 +208,7 @@ export function computeAriaChecked(element: ReactTestInstance): AccessibilitySta
 
 // See: https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State#disabled-state
 export function computeAriaDisabled(element: ReactTestInstance): boolean {
-  if (isHostTextInput(element) && !isTextInputEditable(element)) {
+  if (isHostTextInput(element) && !isEditableTextInput(element)) {
     return true;
   }
 
