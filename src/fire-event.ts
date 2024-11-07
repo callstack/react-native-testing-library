@@ -10,7 +10,7 @@ import act from './act';
 import { isElementMounted, isHostElement } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
-import { isTextInputEditable } from './helpers/text-input';
+import { isEditableTextInput } from './helpers/text-input';
 import { Point, StringWithAutocomplete } from './types';
 import { nativeState } from './native-state';
 
@@ -54,7 +54,7 @@ export function isEventEnabled(
 ) {
   if (nearestTouchResponder != null && isHostTextInput(nearestTouchResponder)) {
     return (
-      isTextInputEditable(nearestTouchResponder) ||
+      isEditableTextInput(nearestTouchResponder) ||
       textInputEventsIgnoringEditableProp.has(eventName)
     );
   }
@@ -160,12 +160,7 @@ const scrollEventNames = new Set([
 ]);
 
 function setNativeStateIfNeeded(element: ReactTestInstance, eventName: string, value: unknown) {
-  if (
-    eventName === 'changeText' &&
-    typeof value === 'string' &&
-    isHostTextInput(element) &&
-    isTextInputEditable(element)
-  ) {
+  if (eventName === 'changeText' && typeof value === 'string' && isEditableTextInput(element)) {
     nativeState.valueForElement.set(element, value);
   }
 

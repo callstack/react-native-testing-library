@@ -1,9 +1,9 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import act from '../../act';
 import { getHostParent } from '../../helpers/component-tree';
-import { isTextInputEditable } from '../../helpers/text-input';
+import { isEditableTextInput } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
-import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
+import { isHostText } from '../../helpers/host-component-names';
 import { EventBuilder } from '../event-builder';
 import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait } from '../utils';
@@ -49,7 +49,7 @@ const basePress = async (
     return;
   }
 
-  if (isHostTextInput(element) && isTextInputEditable(element) && isPointerEventEnabled(element)) {
+  if (isEditableTextInput(element) && isPointerEventEnabled(element)) {
     await emitTextInputPressEvents(config, element, options);
     return;
   }
