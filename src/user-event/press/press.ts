@@ -3,7 +3,7 @@ import act from '../../act';
 import { getHostParent } from '../../helpers/component-tree';
 import { isEditableTextInput } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
-import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
+import { isHostText } from '../../helpers/host-component-names';
 import { EventBuilder } from '../event-builder';
 import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait } from '../utils';
