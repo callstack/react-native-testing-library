@@ -6,7 +6,7 @@ import { render, fireEvent, screen } from '..';
 const originalConsoleError = console.error;
 
 const VALIDATION_ERROR =
-  'Invariant Violation: Text strings must be rendered within a <Text> component';
+  'Invariant Violation: Text strings must be rendered within a <Text> or <RCTText> component';
 const PROFILER_ERROR = 'The above error occurred in the <Text> component';
 
 beforeEach(() => {

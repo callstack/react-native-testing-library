@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, HostElement, Renderer } from 'universal-test-renderer';
+import { createRoot, HostElement, Renderer } from 'universal-test-renderer/react-native';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
@@ -45,9 +45,8 @@ export function renderInternal<T>(element: React.ReactElement<T>, options?: Rend
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
 
-  const renderer = createRenderer({
-    isConcurrent: options?.concurrentRoot ?? getConfig().concurrentRoot,
-    textComponents: ['Text'],
+  const renderer = createRoot({
+    legacyRoot: !(options?.concurrentRoot ?? getConfig().concurrentRoot),
     createNodeMock: options?.createNodeMock,
   });
   void act(() => {

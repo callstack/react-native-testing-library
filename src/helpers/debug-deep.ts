@@ -1,4 +1,4 @@
-import type { JsonNode } from 'universal-test-renderer/dist/index.d.ts';
+import type { JsonNode } from 'universal-test-renderer';
 import format, { FormatOptions } from './format';
 
 export type DebugOptions = {

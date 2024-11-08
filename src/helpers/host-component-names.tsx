@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Image, Modal, ScrollView, Switch, Text, TextInput, View } from 'react-native';
-import { createRenderer, HostElement } from 'universal-test-renderer';
+import { createRoot, HostElement } from 'universal-test-renderer/react-native';
 import { configureInternal, getConfig, HostComponentNames } from '../config';
 import act from '../act';
 import { findAll } from './find-all';
@@ -30,7 +30,7 @@ export function configureHostComponentNamesIfNeeded() {
 
 function detectHostComponentNames(): HostComponentNames {
   try {
-    const renderer = createRenderer();
+    const renderer = createRoot({});
     act(() => {
       renderer.render(
         <View>
