@@ -35,7 +35,7 @@
     "build:ts": "tsc --build tsconfig.release.json",
     "build": "yarn clean && yarn build:js && yarn build:ts && yarn copy-flowtypes",
     "release": "release-it",
-    "release:alpha": "release-it --preRelease=alpha"
+    "release:beta": "release-it --preRelease=beta"
   },
   "files": [
     "build/",
