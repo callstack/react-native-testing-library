@@ -24,8 +24,8 @@ class HostElementTypeError extends Error {
     let withType = '';
     try {
       withType = printWithType('Received', received, printReceived);
-      /* istanbul ignore next */
     } catch {
+      /* istanbul ignore next */
       // Deliberately empty.
     }
 
