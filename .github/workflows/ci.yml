@@ -61,21 +61,6 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
 
-
-  test-concurrent:
-    needs: [install-cache-deps]
-    runs-on: ubuntu-latest
-    name: Test (concurrent mode)
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js and deps
-        uses: ./.github/actions/setup-deps
-
-      - name: Test in concurrent mode
-        run: CONCURRENT_MODE=1 yarn test:ci
-
   test-website:
     runs-on: ubuntu-latest
     name: Test Website

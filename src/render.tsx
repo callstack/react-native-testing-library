@@ -15,11 +15,6 @@ export interface RenderOptions {
    */
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => object;
-  /**
-   * Set to `true` to enable concurrent rendering.
-   * Otherwise `render` will default to legacy synchronous rendering.
-   */
-  concurrentRoot?: boolean | undefined;
 }
 
 export type RenderResult = ReturnType<typeof render>;
@@ -46,7 +41,6 @@ export function renderInternal<T>(element: React.ReactElement<T>, options?: Rend
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
 
   const renderer = createRoot({
-    legacyRoot: !(options?.concurrentRoot ?? getConfig().concurrentRoot),
     createNodeMock: options?.createNodeMock,
   });
   void act(() => {

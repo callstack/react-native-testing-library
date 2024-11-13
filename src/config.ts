@@ -13,12 +13,6 @@ export type Config = {
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
-
-  /**
-   * Set to `true` to enable concurrent rendering.
-   * Otherwise `render` will default to legacy synchronous rendering.
-   */
-  concurrentRoot: boolean;
 };
 
 export type ConfigAliasOptions = {
@@ -43,7 +37,6 @@ export type InternalConfig = Config & {
 const defaultConfig: InternalConfig = {
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: false,
-  concurrentRoot: false,
 };
 
 let config = { ...defaultConfig };
