@@ -143,7 +143,7 @@ test.each([false, true])(
     fireEvent.press(screen.getByText('Change freshness!'));
     expect(screen.queryByText('Fresh')).toBeNull();
 
-    act(() => {
+    await act(() => {
       jest.advanceTimersByTime(300);
     });
     const freshBananaText = await waitFor(() => screen.getByText('Fresh'));

@@ -8,10 +8,7 @@ export type DebugOptions = {
 /**
  * Log pretty-printed deep test component instance
  */
-export function debug(
-  instance: JsonNode | JsonNode[],
-  options?: DebugOptions | string,
-) {
+export function debug(instance: JsonNode | JsonNode[], options?: DebugOptions | string) {
   const message = typeof options === 'string' ? options : options?.message;
 
   const formatOptions = typeof options === 'object' ? { mapProps: options?.mapProps } : undefined;
