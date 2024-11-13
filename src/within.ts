@@ -1,25 +1,21 @@
 import { HostElement } from 'universal-test-renderer';
-import { bindByTextQueries } from './queries/text';
-import { bindByTestIdQueries } from './queries/test-id';
 import { bindByDisplayValueQueries } from './queries/display-value';
-import { bindByPlaceholderTextQueries } from './queries/placeholder-text';
-import { bindByLabelTextQueries } from './queries/label-text';
 import { bindByHintTextQueries } from './queries/hint-text';
+import { bindByLabelTextQueries } from './queries/label-text';
+import { bindByPlaceholderTextQueries } from './queries/placeholder-text';
 import { bindByRoleQueries } from './queries/role';
-import { bindUnsafeByTypeQueries } from './queries/unsafe-type';
-import { bindUnsafeByPropsQueries } from './queries/unsafe-props';
+import { bindByTestIdQueries } from './queries/test-id';
+import { bindByTextQueries } from './queries/text';
 
 export function within(instance: HostElement) {
   return {
-    ...bindByTextQueries(instance),
-    ...bindByTestIdQueries(instance),
     ...bindByDisplayValueQueries(instance),
     ...bindByPlaceholderTextQueries(instance),
-    ...bindByLabelTextQueries(instance),
     ...bindByHintTextQueries(instance),
+    ...bindByLabelTextQueries(instance),
     ...bindByRoleQueries(instance),
-    ...bindUnsafeByTypeQueries(instance),
-    ...bindUnsafeByPropsQueries(instance),
+    ...bindByTestIdQueries(instance),
+    ...bindByTextQueries(instance),
   };
 }
 
