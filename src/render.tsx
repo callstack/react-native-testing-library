@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRoot, HostElement, Renderer } from 'universal-test-renderer/react-native';
+import { createRoot, HostElement, Root } from 'universal-test-renderer/react-native';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
@@ -50,7 +50,7 @@ export function renderInternal<T>(element: React.ReactElement<T>, options?: Rend
   return buildRenderResult(renderer, wrap);
 }
 
-function buildRenderResult(renderer: Renderer, wrap: (element: React.ReactElement) => JSX.Element) {
+function buildRenderResult(renderer: Root, wrap: (element: React.ReactElement) => JSX.Element) {
   const update = (element: React.ReactElement) => {
     void act(() => {
       renderer.render(wrap(element));
@@ -84,7 +84,7 @@ function buildRenderResult(renderer: Renderer, wrap: (element: React.ReactElemen
 
 export type DebugFunction = (options?: DebugOptions | string) => void;
 
-function debug(renderer: Renderer): DebugFunction {
+function debug(renderer: Root): DebugFunction {
   function debugImpl(options?: DebugOptions | string) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions =
