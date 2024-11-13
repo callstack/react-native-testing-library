@@ -1,5 +1,4 @@
-import { resetToDefaults, configure } from './src/pure';
-import './src/matchers/extend-expect';
+import { resetToDefaults } from './src/pure';
 
 beforeEach(() => {
   resetToDefaults();

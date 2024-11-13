@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View, Pressable } from 'react-native';
 import { fireEvent, render, waitFor, configure, screen, act } from '..';
-import '../matchers/extend-expect';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Text } from 'react-native';
 import { act, fireEvent, render, screen } from '../';
-import '../matchers/extend-expect';
 
 type UseEffectProps = { callback(): void };
 const UseEffect = ({ callback }: UseEffectProps) => {
