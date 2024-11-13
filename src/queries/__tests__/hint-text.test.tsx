@@ -26,14 +26,62 @@ const Button = ({ children }: { children: React.ReactNode }) => (
 );
 
 const Section = () => (
-  <>
+  <View>
     <Typography accessibilityHint={TEXT_HINT}>Title</Typography>
     <Button>Hello</Button>
-  </>
+  </View>
 );
 
 test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
   render(<Section />);
+
+  expect(screen.toJSON()).toMatchInlineSnapshot(`
+    <View>
+      <Text
+        accessibilityHint="static text"
+      >
+        Title
+      </Text>
+      <View
+        accessibilityHint="click this button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+      >
+        <Text
+          accessibilityHint="static text"
+        >
+          Hello
+        </Text>
+      </View>
+    </View>
+  `);
 
   expect(screen.getByA11yHint(BUTTON_HINT).props.accessibilityHint).toEqual(BUTTON_HINT);
   const button = screen.queryByA11yHint(BUTTON_HINT);

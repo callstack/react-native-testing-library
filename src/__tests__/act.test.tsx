@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text } from 'react-native';
 import { act, fireEvent, render, screen } from '../';
+import '../matchers/extend-expect';
 
 type UseEffectProps = { callback(): void };
 const UseEffect = ({ callback }: UseEffectProps) => {
@@ -34,9 +35,9 @@ test('fireEvent should trigger useState', () => {
   render(<Counter />);
   const counter = screen.getByText(/Total count/i);
 
-  expect(counter.props.children).toEqual('Total count: 0');
+  expect(counter).toHaveTextContent('Total count: 0');
   fireEvent.press(counter);
-  expect(counter.props.children).toEqual('Total count: 1');
+  expect(counter).toHaveTextContent('Total count: 1');
 });
 
 test('should be able to not await act', () => {

@@ -1,10 +1,10 @@
-import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, stringify, printExpected } from 'jest-matcher-utils';
+import { HostElement } from 'universal-test-renderer';
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveProp(
   this: jest.MatcherContext,
-  element: ReactTestInstance,
+  element: HostElement,
   name: string,
   expectedValue: unknown,
 ) {

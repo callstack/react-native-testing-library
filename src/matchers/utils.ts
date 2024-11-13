@@ -1,4 +1,3 @@
-import { ReactTestInstance } from 'react-test-renderer';
 import {
   EXPECTED_COLOR,
   RECEIVED_COLOR,
@@ -9,7 +8,8 @@ import {
 } from 'jest-matcher-utils';
 import prettyFormat, { plugins } from 'pretty-format';
 import redent from 'redent';
-import { isHostElement } from '../helpers/component-tree';
+import { HostElement, HostNode } from 'universal-test-renderer';
+import { isValidElement } from '../helpers/component-tree';
 import { defaultMapProps } from '../helpers/format-default';
 
 class HostElementTypeError extends Error {
@@ -41,16 +41,16 @@ class HostElementTypeError extends Error {
 /**
  * Throws HostElementTypeError if passed element is not a host element.
  *
- * @param element ReactTestInstance to check.
+ * @param element HostElement to check.
  * @param matcherFn Matcher function calling the check used for formatting error.
  * @param context Jest matcher context used for formatting error.
  */
 export function checkHostElement(
-  element: ReactTestInstance | null | undefined,
+  element: HostElement | null | undefined,
   matcherFn: jest.CustomMatcher,
   context: jest.MatcherContext,
-): asserts element is ReactTestInstance {
-  if (!isHostElement(element)) {
+): asserts element is HostElement {
+  if (!isValidElement(element)) {
     throw new HostElementTypeError(element, matcherFn, context);
   }
 }
@@ -60,13 +60,17 @@ export function checkHostElement(
  *
  * @param element Element to format.
  */
-export function formatElement(element: ReactTestInstance | null) {
+export function formatElement(element: HostNode | null) {
   if (element == null) {
     return '  null';
   }
 
+  if (typeof element === 'string') {
+    return element;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { children, ...props } = element.props;
-  const childrenToDisplay = typeof children === 'string' ? [children] : undefined;
 
   return redent(
     prettyFormat(
@@ -76,7 +80,8 @@ export function formatElement(element: ReactTestInstance | null) {
         $$typeof: Symbol.for('react.test.json'),
         type: element.type,
         props: defaultMapProps(props),
-        children: childrenToDisplay,
+        // TODO: Recursively format children
+        children: element.children.filter((child) => typeof child === 'string'),
       },
       {
         plugins: [plugins.ReactTestComponent, plugins.ReactElement],
@@ -89,7 +94,7 @@ export function formatElement(element: ReactTestInstance | null) {
   );
 }
 
-export function formatElementArray(elements: ReactTestInstance[]) {
+export function formatElementArray(elements: HostNode[]) {
   if (elements.length === 0) {
     return '  (no elements)';
   }

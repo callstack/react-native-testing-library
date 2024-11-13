@@ -1,4 +1,3 @@
-import { ReactTestInstance } from 'react-test-renderer';
 import {
   ViewProps,
   TextProps,
@@ -6,18 +5,20 @@ import {
   PressableProps,
   ScrollViewProps,
 } from 'react-native';
+import { HostElement } from 'universal-test-renderer';
 import act from './act';
-import { isElementMounted, isHostElement } from './helpers/component-tree';
+import { isElementMounted, isValidElement } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { Point, StringWithAutocomplete } from './types';
 import { nativeState } from './native-state';
+import { EventBuilder } from './user-event/event-builder';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
-export function isTouchResponder(element: ReactTestInstance) {
-  if (!isHostElement(element)) {
+export function isTouchResponder(element: HostElement) {
+  if (!isValidElement(element)) {
     return false;
   }
 
@@ -30,7 +31,15 @@ export function isTouchResponder(element: ReactTestInstance) {
  * Note: `fireEvent` is accepting both `press` and `onPress` for event names,
  * so we need cover both forms.
  */
-const eventsAffectedByPointerEventsProp = new Set(['press', 'onPress']);
+const eventsAffectedByPointerEventsProp = new Set([
+  'press',
+  'onPress',
+  'responderGrant',
+  'responderRelease',
+  'longPress',
+  'pressIn',
+  'pressOut',
+]);
 
 /**
  * List of `TextInput` events not affected by `editable` prop.
@@ -48,9 +57,9 @@ const textInputEventsIgnoringEditableProp = new Set([
 ]);
 
 export function isEventEnabled(
-  element: ReactTestInstance,
+  element: HostElement,
   eventName: string,
-  nearestTouchResponder?: ReactTestInstance,
+  nearestTouchResponder?: HostElement,
 ) {
   if (nearestTouchResponder != null && isHostTextInput(nearestTouchResponder)) {
     return (
@@ -73,14 +82,16 @@ export function isEventEnabled(
 }
 
 function findEventHandler(
-  element: ReactTestInstance,
+  element: HostElement,
   eventName: string,
-  nearestTouchResponder?: ReactTestInstance,
+  nearestTouchResponder?: HostElement,
 ): EventHandler | null {
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
   const handler = getEventHandler(element, eventName);
-  if (handler && isEventEnabled(element, eventName, touchResponder)) return handler;
+  if (handler && isEventEnabled(element, eventName, touchResponder)) {
+    return handler;
+  }
 
   // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
   if (element.parent === null || element.parent.parent === null) {
@@ -90,7 +101,7 @@ function findEventHandler(
   return findEventHandler(element.parent, eventName, touchResponder);
 }
 
-function getEventHandler(element: ReactTestInstance, eventName: string) {
+function getEventHandler(element: HostElement, eventName: string) {
   const eventHandlerName = getEventHandlerName(eventName);
   if (typeof element.props[eventHandlerName] === 'function') {
     return element.props[eventHandlerName];
@@ -120,7 +131,7 @@ type EventName = StringWithAutocomplete<
   | EventNameExtractor<ScrollViewProps>
 >;
 
-function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {
+function fireEvent(element: HostElement, eventName: EventName, ...data: unknown[]) {
   if (!isElementMounted(element)) {
     return;
   }
@@ -140,13 +151,41 @@ function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: un
   return returnValue;
 }
 
-fireEvent.press = (element: ReactTestInstance, ...data: unknown[]) =>
+fireEvent.press = (element: HostElement, ...data: unknown[]) => {
+  const nativeData =
+    data.length === 1 &&
+    typeof data[0] === 'object' &&
+    data[0] !== null &&
+    'nativeEvent' in data[0] &&
+    typeof data[0].nativeEvent === 'object'
+      ? data[0].nativeEvent
+      : null;
+
+  let responderGrantEvent = EventBuilder.Common.responderGrant();
+  if (nativeData) {
+    responderGrantEvent.nativeEvent = {
+      ...responderGrantEvent.nativeEvent,
+      ...nativeData,
+    };
+  }
+  fireEvent(element, 'responderGrant', responderGrantEvent);
+
   fireEvent(element, 'press', ...data);
 
-fireEvent.changeText = (element: ReactTestInstance, ...data: unknown[]) =>
+  let responderReleaseEvent = EventBuilder.Common.responderRelease();
+  if (nativeData) {
+    responderReleaseEvent.nativeEvent = {
+      ...responderReleaseEvent.nativeEvent,
+      ...nativeData,
+    };
+  }
+  fireEvent(element, 'responderRelease', responderReleaseEvent);
+};
+
+fireEvent.changeText = (element: HostElement, ...data: unknown[]) =>
   fireEvent(element, 'changeText', ...data);
 
-fireEvent.scroll = (element: ReactTestInstance, ...data: unknown[]) =>
+fireEvent.scroll = (element: HostElement, ...data: unknown[]) =>
   fireEvent(element, 'scroll', ...data);
 
 export default fireEvent;
@@ -159,7 +198,7 @@ const scrollEventNames = new Set([
   'momentumScrollEnd',
 ]);
 
-function setNativeStateIfNeeded(element: ReactTestInstance, eventName: string, value: unknown) {
+function setNativeStateIfNeeded(element: HostElement, eventName: string, value: unknown) {
   if (eventName === 'changeText' && typeof value === 'string' && isEditableTextInput(element)) {
     nativeState.valueForElement.set(element, value);
   }
