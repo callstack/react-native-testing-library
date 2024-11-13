@@ -42,8 +42,6 @@ function findAllInternal(
 ): HostElement[] {
   const results: HostElement[] = [];
 
-  //console.log(`${indent} 🟢 findAllInternal`, node.type, node.props);
-
   // Match descendants first but do not add them to results yet.
   const matchingDescendants: HostElement[] = [];
   node.children.forEach((child) => {
@@ -66,21 +64,4 @@ function findAllInternal(
   results.push(...matchingDescendants);
 
   return results;
-}
-
-export function findAllByProps(
-  root: HostElement,
-  props: { [propName: string]: any },
-  options?: FindAllOptions,
-): HostElement[] {
-  return findAll(root, (element) => matchProps(element, props), options);
-}
-
-function matchProps(element: HostElement, props: { [propName: string]: any }): boolean {
-  for (const key in props) {
-    if (props[key] !== element.props[key]) {
-      return false;
-    }
-  }
-  return true;
 }

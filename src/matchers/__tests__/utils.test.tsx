@@ -8,6 +8,7 @@ function fakeMatcher() {
 }
 
 test('formatElement', () => {
+  expect(formatElement('Hello')).toMatchInlineSnapshot(`"Hello"`);
   expect(formatElement(null)).toMatchInlineSnapshot(`"  null"`);
 });
 
