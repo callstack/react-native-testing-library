@@ -82,6 +82,7 @@ type(
   options?: {
     skipPress?: boolean
     submitEditing?: boolean
+    skipBlur?: boolean;
   }
 ```
 
@@ -104,6 +105,7 @@ This function will add text to the text already present in the text input (as sp
 
 - `skipPress` - if true, `pressIn` and `pressOut` events will not be triggered.
 - `submitEditing` - if true, `submitEditing` event will be triggered after typing the text.
+- `skipBlur` - if true, `endEditing` and `blur` events will not be triggered when typing is complete. This is useful in scenarios where you want to prevent the TextInput from losing focus or avoid triggering certain actions associated with blur events.
 
 ### Sequence of events {#type-sequence}
 
@@ -134,6 +136,7 @@ The `pressIn` and `pressOut` events are sent by default but can be skipped by pa
 - `blur`
 
 The `submitEditing` event is skipped by default. It can sent by setting the `submitEditing: true` option.
+The `endEditing` and `blur` events can also be skipped by passing the `skipBlur: true` option.
 
 ## `clear()`
 
