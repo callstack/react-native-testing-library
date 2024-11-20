@@ -51,7 +51,7 @@ jobs:
   test:
     needs: [install-cache-deps]
     runs-on: ubuntu-latest
-    name: Test (concurrent)
+    name: Test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -66,20 +66,6 @@ jobs:
         uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-  test-legacy:
-    needs: [install-cache-deps]
-    runs-on: ubuntu-latest
-    name: Test (legacy)
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js and deps
-        uses: ./.github/actions/setup-deps
-
-      - name: Test in legacy mode
-        run: CONCURRENT_MODE=0 yarn test:ci
 
   test-website:
     runs-on: ubuntu-latest

@@ -1,4 +1,4 @@
-import type { ReactTestRendererJSON } from 'react-test-renderer';
+import type { JsonNode } from 'universal-test-renderer';
 import format, { FormatOptions } from './format';
 
 export type DebugOptions = {
@@ -8,10 +8,7 @@ export type DebugOptions = {
 /**
  * Log pretty-printed deep test component instance
  */
-export function debug(
-  instance: ReactTestRendererJSON | ReactTestRendererJSON[],
-  options?: DebugOptions | string,
-) {
+export function debug(instance: JsonNode | JsonNode[], options?: DebugOptions | string) {
   const message = typeof options === 'string' ? options : options?.message;
 
   const formatOptions = typeof options === 'object' ? { mapProps: options?.mapProps } : undefined;

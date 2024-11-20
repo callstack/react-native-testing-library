@@ -16,7 +16,7 @@ test('byText matches inner nested text', () => {
   expect(screen.getByText('Hello World').props.testID).toBe('inner');
 });
 
-test('byText matches accross multiple texts', () => {
+test('byText matches across multiple texts', () => {
   render(
     <Text testID="outer">
       <Text testID="inner-1">Hello</Text> <Text testID="inner-2">World</Text>
@@ -56,11 +56,11 @@ test('getByText, queryByText', () => {
   render(<Banana />);
   const button = screen.getByText(/change/i);
 
-  expect(button.props.children).toBe('Change freshness!');
+  expect(button).toHaveTextContent('Change freshness!');
 
   const sameButton = screen.getByText('not fresh');
 
-  expect(sameButton.props.children).toBe('not fresh');
+  expect(sameButton).toHaveTextContent('not fresh');
   expect(() => screen.getByText('InExistent')).toThrow(
     'Unable to find an element with text: InExistent',
   );
@@ -90,7 +90,7 @@ test('getByText, screen.queryByText with children as Array', () => {
   render(<BananaStore />);
 
   const threeBananaBunch = screen.getByText('There are 3 bananas in the bunch');
-  expect(threeBananaBunch.props.children).toEqual(['There are ', 3, ' bananas in the bunch']);
+  expect(threeBananaBunch).toHaveTextContent('There are 3 bananas in the bunch');
 });
 
 test('getAllByText, queryAllByText', () => {

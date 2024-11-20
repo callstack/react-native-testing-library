@@ -34,9 +34,9 @@ test('fireEvent should trigger useState', () => {
   render(<Counter />);
   const counter = screen.getByText(/Total count/i);
 
-  expect(counter.props.children).toEqual('Total count: 0');
+  expect(counter).toHaveTextContent('Total count: 0');
   fireEvent.press(counter);
-  expect(counter.props.children).toEqual('Total count: 1');
+  expect(counter).toHaveTextContent('Total count: 1');
 });
 
 test('should be able to not await act', () => {

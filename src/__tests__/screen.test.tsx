@@ -53,7 +53,7 @@ test('screen works with nested re-mounting rerender', () => {
 
 test('screen throws without render', () => {
   expect(() => screen.root).toThrow('`render` method has not been called');
-  expect(() => screen.UNSAFE_root).toThrow('`render` method has not been called');
+  expect(() => screen.container).toThrow('`render` method has not been called');
   expect(() => screen.debug()).toThrow('`render` method has not been called');
   expect(() => screen.getByText('Mt. Everest')).toThrow('`render` method has not been called');
 });

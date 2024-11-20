@@ -1,9 +1,9 @@
-import { ReactTestInstance } from 'react-test-renderer';
+import { HostElement } from 'universal-test-renderer';
 import { matches, TextMatch, TextMatchOptions } from '../../matches';
 import { computeAriaLabel } from '../accessibility';
 
 export function matchAccessibilityLabel(
-  element: ReactTestInstance,
+  element: HostElement,
   expectedLabel: TextMatch,
   options?: TextMatchOptions,
 ) {

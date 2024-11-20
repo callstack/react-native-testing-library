@@ -1,3 +1,5 @@
+export { HostElement } from 'universal-test-renderer';
+
 import { cleanup } from './pure';
 import { flushMicroTasks } from './flush-micro-tasks';
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
