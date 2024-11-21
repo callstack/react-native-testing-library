@@ -1,0 +1,122 @@
+# Migration to 13.x
+
+Migration to React Native Testing Library version 13 from version 12.x.
+
+Overall the v13 release is relatively small, focusing on removing deprecated queries and improving the developer experience.
+
+## Breaking changes
+
+### Supported React and React Native versions
+
+This version supports only React 18+ and corresponding React Native versions (0.71+). If you use React 16 or 17, please use latest of v12 versions.
+
+Note: at the moment there is no React Native for React 19, and React 19 is still in RC phase, so we test against React Native nightly builds.
+
+### Concurrent rendering by default
+
+This version introduces concurrent rendering by default. In general this should not be visible in regular tests, but it might affect your tests if you use React Suspense or similar.
+
+You can revert to legacy rendering by passing `concurrentRoot: false` to `render` or `configure` methods.
+
+Note: in React 19, concurrent rendering is the only supported rendering mode.
+
+### Extend Jest matchers by default
+
+You can remove `import '@testing-library/react-native/extend-expect'` imports, as now Jest matchers are extended by default when you import anything from `@testing-library/react-native`.
+
+You can avoid automatic extending of Jest matchers by importing `@testing-library/react-native/pure` instead.
+
+```tsx
+// Remove this:
+import '@testing-library/react-native/extend-expect';
+```
+
+### Removed deprecated `*ByAccessibilityState` queries
+
+This deprecated query has been removed as is typically too general to give meaningful results. Use one of the following options:
+
+- [`*ByRole`](#by-role) query with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
+- use built-in Jest matchers to check the state of element found using some other query:
+  - enabled state: [`toBeEnabled()` / `toBeDisabled()`](docs/api/jest-matchers#tobeenabled)
+  - checked state: [`toBeChecked()` / `toBePartiallyChecked()`](docs/api/jest-matchers#tobechecked)
+  - selected state: [`toBeSelected()`](docs/api/jest-matchers#tobeselected)
+  - expanded state: [`toBeExpanded()` / `toBeCollapsed()`](docs/api/jest-matchers#tobeexpanded)
+  - busy state: [`toBeBusy()`](docs/api/jest-matchers#tobebusy)
+
+```ts
+// Replace this:
+const view = screen.getByAccessibilityState({ disabled: true });
+
+// with this (getByRole query):
+const view = screen.getByRole('<proper role here>', { disabled: true });
+
+// or this (Jest matcher):
+const view = screen.getBy*(...); // Find the element using any query: *ByRole, *ByText, *ByTestId
+expect(view).toBeDisabled(); // Assert its accessibility state
+```
+
+### Removed deprecated `*ByAccessibilityValue` queries
+
+This deprecated query has been removed as is typically too general to give meaningful results. Use one of the following options:
+
+- [`toHaveAccessibilityValue()`](docs/api/jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
+- [`*ByRole`](#by-role) query with `value` option
+
+```ts
+// Replace this:
+const view = screen.getByAccessibilityValue({ now: 50, min: 0, max: 50 });
+
+// with this (getByRole query):
+const view = screen.getByRole('<proper role here>', { value: { now: 50, min: 0, max: 50 } });
+
+// or this (Jest matcher):
+const view = screen.getBy*(...); // Find the element using any query: *ByRole, *ByText, *ByTestId
+expect(view).toHaveAccessibilityValue({ now: 50, min: 0, max: 50 }); // Assert its accessibility value
+```
+
+### Removed Jest preset
+
+RNTL Jest preset has been removed, so you should change you `jest.config.js` accordingly.
+
+Replace:
+
+```ts title=jest.config.js
+// replace this:
+preset: '@testing-library/react-native';
+
+// with this:
+preset: 'react-native';
+```
+
+### Removed `debug.shallow`
+
+For a time being we didn't support shallow rendering. Now we are removing the last remains of it: `debug.shallow()`. If you are interested in shallow rendering see [here](docs/migration/previous/v2#removed-global-shallow-function).
+
+### Changes to accessibility label calculation
+
+Explicit labels:
+
+- `accessiblityLabelledBy`
+- `accessiblityLabel`
+- `aria-labelledby`
+- `aria-label`
+
+now take strict priority over implicit labels derived from the text content of the element.
+
+## Other changes
+
+### Removed host component names autodetection
+
+This should not break any tests, additionally this should make RNTL tests run 10-20% faster.
+
+### Use React implementation of `act` instead of React Test Renderer one
+
+This should not break any tests.
+
+### Updated `flushMicroTasks` internal method
+
+This should not break any tests.
+
+## Full Changelog
+
+https://github.com/callstack/react-native-testing-library/compare/v12.5.2...v13.0.0-beta.0
