@@ -1,20 +1,20 @@
 # Migration to 13.x
 
-Migration to React Native Testing Library version 13 from version 12.x.
+This guide describes the migration to React Native Testing Library version 13 from version 12.x.
 
-Overall the v13 release is relatively small, focusing on removing deprecated queries and improving the developer experience.
+Overall, the v13 release is relatively small, focusing on removing deprecated queries and improving the developer experience.
 
 ## Breaking changes
 
 ### Supported React and React Native versions
 
-This version supports only React 18+ and corresponding React Native versions (0.71+). If you use React 16 or 17, please use latest of v12 versions.
+This version supports only React 18+ and corresponding React Native versions (0.71+). If you use React 16 or 17, please use the latest of v12 versions.
 
-Note: at the moment there is no React Native for React 19, and React 19 is still in RC phase, so we test against React Native nightly builds.
+Note: currently, stable React Native is unavailable for React 19, which is still in the RC phase, so we test against React Native nightly builds.
 
 ### Concurrent rendering by default
 
-This version introduces concurrent rendering by default. In general this should not be visible in regular tests, but it might affect your tests if you use React Suspense or similar.
+This version introduces concurrent rendering by default. This change should not affect regular tests, but it might affect your tests if you use React Suspense or similar.
 
 You can revert to legacy rendering by passing `concurrentRoot: false` to [render](docs/api/render#concurrent-root) or [configure](docs/api/misc/config#concurrent-root) methods.
 
@@ -24,7 +24,7 @@ Note: in React 19, concurrent rendering is the only supported rendering mode.
 
 You can remove `import '@testing-library/react-native/extend-expect'` imports, as now Jest matchers are extended by default when you import anything from `@testing-library/react-native`.
 
-You can avoid automatic extending of Jest matchers by importing `@testing-library/react-native/pure` instead.
+You can avoid the automatic extending of Jest matchers by importing `@testing-library/react-native/pure` instead.
 
 ```tsx title=jest-setup.ts
 // Remove this:
@@ -33,7 +33,7 @@ import '@testing-library/react-native/extend-expect';
 
 ### Removed deprecated `*ByAccessibilityState` queries
 
-This deprecated query has been removed as is typically too general to give meaningful results. Use one of the following options:
+We have removed this deprecated query as it is typically too general to give meaningful results. Use one of the following options:
 
 - [\*ByRole](#by-role) query with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
 - use built-in Jest matchers to check the state of element found using some other query:
@@ -57,7 +57,7 @@ expect(view).toBeDisabled(); // Assert its accessibility state
 
 ### Removed deprecated `*ByAccessibilityValue` queries
 
-This deprecated query has been removed as is typically too general to give meaningful results. Use one of the following options:
+We have removed this deprecated query as it is typically too general to give meaningful results. Use one of the following options:
 
 - [toHaveAccessibilityValue()](docs/api/jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
 - [\*ByRole](#by-role) query with `value` option
@@ -76,7 +76,7 @@ expect(view).toHaveAccessibilityValue({ now: 50, min: 0, max: 50 }); // Assert i
 
 ### Removed Jest preset
 
-RNTL Jest preset has been removed, so you should change you `jest.config.js` accordingly.
+We have removed RNTL Jest preset, so you should change you `jest.config.js` accordingly.
 
 Replace:
 
@@ -90,7 +90,7 @@ preset: 'react-native';
 
 ### Removed `debug.shallow`
 
-For a time being we didn't support shallow rendering. Now we are removing the last remains of it: `debug.shallow()`. If you are interested in shallow rendering see [here](docs/migration/previous/v2#removed-global-shallow-function).
+We didn't support shallow rendering for the time being. Now, we are removing the last remains of it: `debug.shallow()`. If you are interested in shallow rendering see [here](docs/migration/previous/v2#removed-global-shallow-function).
 
 ### Changes to accessibility label calculation
 
@@ -101,21 +101,21 @@ Explicit labels:
 - `aria-labelledby`
 - `aria-label`
 
-now take strict priority over implicit labels derived from the text content of the element.
+now take strict priority over implicit labels derived from the element's text content.
 
 ## Other changes
 
 ### Removed host component names autodetection
 
-This should not break any tests, additionally this should make RNTL tests run 10-20% faster.
+This change should not break any tests, it should also make RNTL tests run 10-20% faster.
 
 ### Use React implementation of `act` instead of React Test Renderer one
 
-This should not break any tests.
+This change should not break any tests.
 
 ### Updated `flushMicroTasks` internal method
 
-This should not break any tests.
+This change should not break any tests.
 
 ## Full Changelog
 
