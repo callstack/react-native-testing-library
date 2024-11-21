@@ -16,7 +16,7 @@ Note: at the moment there is no React Native for React 19, and React 19 is still
 
 This version introduces concurrent rendering by default. In general this should not be visible in regular tests, but it might affect your tests if you use React Suspense or similar.
 
-You can revert to legacy rendering by passing `concurrentRoot: false` to `render` or `configure` methods.
+You can revert to legacy rendering by passing `concurrentRoot: false` to [render](docs/api/render#concurrent-root) or [configure](docs/api/misc/config#concurrent-root) methods.
 
 Note: in React 19, concurrent rendering is the only supported rendering mode.
 
@@ -35,13 +35,13 @@ import '@testing-library/react-native/extend-expect';
 
 This deprecated query has been removed as is typically too general to give meaningful results. Use one of the following options:
 
-- [`*ByRole`](#by-role) query with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
+- [\*ByRole](#by-role) query with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
 - use built-in Jest matchers to check the state of element found using some other query:
-  - enabled state: [`toBeEnabled()` / `toBeDisabled()`](docs/api/jest-matchers#tobeenabled)
-  - checked state: [`toBeChecked()` / `toBePartiallyChecked()`](docs/api/jest-matchers#tobechecked)
-  - selected state: [`toBeSelected()`](docs/api/jest-matchers#tobeselected)
-  - expanded state: [`toBeExpanded()` / `toBeCollapsed()`](docs/api/jest-matchers#tobeexpanded)
-  - busy state: [`toBeBusy()`](docs/api/jest-matchers#tobebusy)
+  - enabled state: [toBeEnabled() / toBeDisabled()](docs/api/jest-matchers#tobeenabled)
+  - checked state: [toBeChecked() / toBePartiallyChecked()](docs/api/jest-matchers#tobechecked)
+  - selected state: [toBeSelected()](docs/api/jest-matchers#tobeselected)
+  - expanded state: [toBeExpanded() / toBeCollapsed()](docs/api/jest-matchers#tobeexpanded)
+  - busy state: [toBeBusy()](docs/api/jest-matchers#tobebusy)
 
 ```ts
 // Replace this:
@@ -59,8 +59,8 @@ expect(view).toBeDisabled(); // Assert its accessibility state
 
 This deprecated query has been removed as is typically too general to give meaningful results. Use one of the following options:
 
-- [`toHaveAccessibilityValue()`](docs/api/jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
-- [`*ByRole`](#by-role) query with `value` option
+- [toHaveAccessibilityValue()](docs/api/jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
+- [\*ByRole](#by-role) query with `value` option
 
 ```ts
 // Replace this:
@@ -119,4 +119,4 @@ This should not break any tests.
 
 ## Full Changelog
 
-https://github.com/callstack/react-native-testing-library/compare/v12.5.2...v13.0.0-beta.0
+https://github.com/callstack/react-native-testing-library/compare/v12.8.1...v13.0.0-beta.0
