@@ -2,7 +2,7 @@
 
 :::warning
 
-This guide is for version 13.x of React Native Testing Library which is currently in alpha!
+This guide is for version 13.x of React Native Testing Library which is currently in beta!
 
 :::
 

@@ -386,4 +386,34 @@ describe('type()', () => {
     await user.type(input, ' World');
     expect(input).toHaveDisplayValue('Hello World');
   });
+
+  it('skips blur and endEditing events when `skipBlur: true`', async () => {
+    const { events } = renderTextInputWithToolkit();
+
+    const user = userEvent.setup();
+    await user.type(screen.getByTestId('input'), 'a', {
+      skipBlur: true,
+    });
+
+    const eventNames = getEventsNames(events);
+
+    // Ensure 'endEditing' and 'blur' are not present
+    expect(eventNames).not.toContain('endEditing');
+    expect(eventNames).not.toContain('blur');
+
+    // Verify the exact events that should be present
+    expect(eventNames).toEqual([
+      'pressIn',
+      'focus',
+      'pressOut',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+    ]);
+
+    expect(lastEventPayload(events, 'selectionChange')).toMatchObject({
+      nativeEvent: { selection: { start: 1, end: 1 } },
+    });
+  });
 });

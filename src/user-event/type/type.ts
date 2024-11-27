@@ -12,6 +12,7 @@ import { parseKeys } from './parse-keys';
 export interface TypeOptions {
   skipPress?: boolean;
   submitEditing?: boolean;
+  skipBlur?: boolean;
 }
 
 export async function type(
@@ -67,9 +68,10 @@ export async function type(
     dispatchEvent(element, 'submitEditing', EventBuilder.TextInput.submitEditing(finalText));
   }
 
-  dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(finalText));
-
-  dispatchEvent(element, 'blur', EventBuilder.Common.blur());
+  if (!options?.skipBlur) {
+    dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(finalText));
+    dispatchEvent(element, 'blur', EventBuilder.Common.blur());
+  }
 }
 
 type EmitTypingEventsContext = {
