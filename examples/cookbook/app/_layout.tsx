@@ -13,7 +13,6 @@ export default function RootLayout() {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-        headerBackTitleVisible: false,
       }}
     >
       <Stack.Screen name="index" options={{ headerTitle: '' }} />
