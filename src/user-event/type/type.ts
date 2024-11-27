@@ -135,4 +135,3 @@ function isTextChangeAccepted(element: ReactTestInstance, text: string) {
   const maxLength = element.props.maxLength;
   return maxLength === undefined || text.length <= maxLength;
 }
-
