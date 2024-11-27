@@ -80,9 +80,9 @@ type(
   element: ReactTestInstance,
   text: string,
   options?: {
-    skipPress?: boolean
-    submitEditing?: boolean
+    skipPress?: boolean;
     skipBlur?: boolean;
+    submitEditing?: boolean;
   }
 ```
 
@@ -104,8 +104,8 @@ This function will add text to the text already present in the text input (as sp
 ### Options {#type-options}
 
 - `skipPress` - if true, `pressIn` and `pressOut` events will not be triggered.
+- `skipBlur` - if true, `endEditing` and `blur` events will not be triggered when typing is complete.
 - `submitEditing` - if true, `submitEditing` event will be triggered after typing the text.
-- `skipBlur` - if true, `endEditing` and `blur` events will not be triggered when typing is complete. This is useful in scenarios where you want to prevent the TextInput from losing focus or avoid triggering certain actions associated with blur events.
 
 ### Sequence of events {#type-sequence}
 
