@@ -95,5 +95,5 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
-  "packageManager": "yarn@4.4.0"
+  "packageManager": "yarn@4.5.3"
 }
