@@ -30,7 +30,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@expo/metro-runtime": "~4.0.0",
-    "@testing-library/react-native": "^12.8.1",
+    "@testing-library/react-native": "^13.0.0-beta.0",
     "@types/eslint": "^8.56.10",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.3.12",

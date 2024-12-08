@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
-import { getConfig, resetToDefaults } from '../config';
 import { fireEvent, render, RenderAPI, screen } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
@@ -234,17 +233,9 @@ test('returned output can be spread using rest operator', () => {
   expect(rest).toBeTruthy();
 });
 
-test('render calls detects host component names', () => {
-  resetToDefaults();
-  expect(getConfig().hostComponentNames).toBeUndefined();
-
-  render(<View testID="test" />);
-  expect(getConfig().hostComponentNames).not.toBeUndefined();
-});
-
 test('supports legacy rendering', () => {
   render(<View testID="test" />, { concurrentRoot: false });
-  expect(screen.root).toBeDefined();
+  expect(screen.root).toBeOnTheScreen();
 });
 
 test('supports concurrent rendering', () => {

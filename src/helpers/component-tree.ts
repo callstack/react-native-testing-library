@@ -13,7 +13,7 @@ export function isHostElement(element?: ReactTestInstance | null): element is Ho
   return typeof element?.type === 'string';
 }
 
-export function isElementMounted(element: ReactTestInstance | null) {
+export function isElementMounted(element: ReactTestInstance) {
   return getUnsafeRootElement(element) === screen.UNSAFE_root;
 }
 
@@ -91,11 +91,7 @@ export function getHostSiblings(element: ReactTestInstance | null): HostTestInst
  * @param element The element start traversing from.
  * @returns The root element of the tree (host or composite).
  */
-export function getUnsafeRootElement(element: ReactTestInstance | null) {
-  if (element == null) {
-    return null;
-  }
-
+export function getUnsafeRootElement(element: ReactTestInstance) {
   let current = element;
   while (current.parent) {
     current = current.parent;

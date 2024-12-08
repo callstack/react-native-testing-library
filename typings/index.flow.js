@@ -55,10 +55,10 @@ declare type A11yRole =
 
 declare type A11yState = {|
   disabled?: boolean,
-  selected?: boolean,
-  checked?: boolean | 'mixed',
-  busy?: boolean,
-  expanded?: boolean,
+    selected ?: boolean,
+    checked ?: boolean | 'mixed',
+    busy ?: boolean,
+    expanded ?: boolean,
 |};
 
 declare type A11yValue = {
@@ -258,38 +258,6 @@ interface A11yAPI {
     queryOptions?: ByRoleOptions,
     waitForOptions?: WaitForOptions
   ) => FindAllReturn;
-
-  // State
-  getByA11yState: (matcher: A11yState, options?: CommonQueryOptions) => GetReturn;
-  getAllByA11yState: (matcher: A11yState, options?: CommonQueryOptions) => GetAllReturn;
-  queryByA11yState: (matcher: A11yState, options?: CommonQueryOptions) => QueryReturn;
-  queryAllByA11yState: (matcher: A11yState, options?: CommonQueryOptions) => QueryAllReturn;
-  findByA11yState: (
-    matcher: A11yState,
-    queryOptions?: CommonQueryOptions,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
-  findAllByA11yState: (
-    matcher: A11yState,
-    queryOptions?: CommonQueryOptions,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
-
-  // Value
-  getByA11yValue: (matcher: A11yValue, options?: CommonQueryOptions) => GetReturn;
-  getAllByA11yValue: (matcher: A11yValue, options?: CommonQueryOptions) => GetAllReturn;
-  queryByA11yValue: (matcher: A11yValue, options?: CommonQueryOptions) => QueryReturn;
-  queryAllByA11yValue: (matcher: A11yValue, options?: CommonQueryOptions) => QueryAllReturn;
-  findByA11yValue: (
-    matcher: A11yValue,
-    queryOptions?: CommonQueryOptions,
-    waitForOptions?: WaitForOptions
-  ) => FindReturn;
-  findAllByA11yValue: (
-    matcher: A11yValue,
-    queryOptions?: CommonQueryOptions,
-    waitForOptions?: WaitForOptions
-  ) => FindAllReturn;
 }
 
 interface Thenable {
@@ -308,7 +276,6 @@ type DebugOptions = {
 
 type Debug = {
   (options?: DebugOptions | string): void,
-  shallow: (message?: string) => void,
 };
 
 type Queries = ByTextQueries &

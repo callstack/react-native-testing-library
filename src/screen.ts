@@ -10,7 +10,6 @@ const notImplemented = () => {
 const notImplementedDebug = () => {
   throw new Error(SCREEN_ERROR);
 };
-notImplementedDebug.shallow = notImplemented;
 
 interface Screen extends RenderResult {
   isDetached?: boolean;
@@ -59,30 +58,6 @@ const defaultScreen: Screen = {
   queryAllByRole: notImplemented,
   findByRole: notImplemented,
   findAllByRole: notImplemented,
-  getByA11yState: notImplemented,
-  getAllByA11yState: notImplemented,
-  queryByA11yState: notImplemented,
-  queryAllByA11yState: notImplemented,
-  findByA11yState: notImplemented,
-  findAllByA11yState: notImplemented,
-  getByAccessibilityState: notImplemented,
-  getAllByAccessibilityState: notImplemented,
-  queryByAccessibilityState: notImplemented,
-  queryAllByAccessibilityState: notImplemented,
-  findByAccessibilityState: notImplemented,
-  findAllByAccessibilityState: notImplemented,
-  getByA11yValue: notImplemented,
-  getAllByA11yValue: notImplemented,
-  queryByA11yValue: notImplemented,
-  queryAllByA11yValue: notImplemented,
-  findByA11yValue: notImplemented,
-  findAllByA11yValue: notImplemented,
-  getByAccessibilityValue: notImplemented,
-  getAllByAccessibilityValue: notImplemented,
-  queryByAccessibilityValue: notImplemented,
-  queryAllByAccessibilityValue: notImplemented,
-  findByAccessibilityValue: notImplemented,
-  findAllByAccessibilityValue: notImplemented,
   UNSAFE_getByProps: notImplemented,
   UNSAFE_getAllByProps: notImplemented,
   UNSAFE_queryByProps: notImplemented,

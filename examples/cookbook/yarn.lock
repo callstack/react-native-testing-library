@@ -3024,22 +3024,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react-native@npm:^12.8.1":
-  version: 12.8.1
-  resolution: "@testing-library/react-native@npm:12.8.1"
+"@testing-library/react-native@npm:^13.0.0-beta.0":
+  version: 13.0.0-beta.0
+  resolution: "@testing-library/react-native@npm:13.0.0-beta.0"
   dependencies:
     jest-matcher-utils: "npm:^29.7.0"
     pretty-format: "npm:^29.7.0"
     redent: "npm:^3.0.0"
   peerDependencies:
-    jest: ">=28.0.0"
-    react: ">=16.8.0"
-    react-native: ">=0.59"
-    react-test-renderer: ">=16.8.0"
+    jest: ">=29.0.0"
+    react: ">=18.2.0"
+    react-native: ">=0.71"
+    react-test-renderer: ">=18.2.0"
   peerDependenciesMeta:
     jest:
       optional: true
-  checksum: 10c0/8fc3ba4b1e5767fc1d24133a907515aa155b3b400fd8a681bf5957a9bb56e0885569234ab4f7fe66441e91ca9de5f761b1db1fdfc049735bc0c4ecc2b6d92bc5
+  checksum: 10c0/98ceabedd4f7fec5a78b3a504f1ecad6cef79c58df7f195c04264c0d09f107385ec1fe60764169324dc74a34374061260f6f12c061b4d0c839d63a16b7fc623c
   languageName: node
   linkType: hard
 
@@ -9395,7 +9395,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.20.0"
     "@expo/metro-runtime": "npm:~4.0.0"
-    "@testing-library/react-native": "npm:^12.8.1"
+    "@testing-library/react-native": "npm:^13.0.0-beta.0"
     "@types/eslint": "npm:^8.56.10"
     "@types/jest": "npm:^29.5.12"
     "@types/react": "npm:~18.3.12"

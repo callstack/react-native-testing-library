@@ -3,7 +3,7 @@ import { isHostTextInput } from '../../helpers/host-component-names';
 import { nativeState } from '../../native-state';
 import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
-import { getTextInputValue, isTextInputEditable } from '../../helpers/text-input';
+import { getTextInputValue, isEditableTextInput } from '../../helpers/text-input';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait, getTextContentSize } from '../utils';
@@ -29,7 +29,7 @@ export async function type(
   }
 
   // Skip events if the element is disabled
-  if (!isTextInputEditable(element) || !isPointerEventEnabled(element)) {
+  if (!isEditableTextInput(element) || !isPointerEventEnabled(element)) {
     return;
   }
 

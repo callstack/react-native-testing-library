@@ -1,6 +1,7 @@
 import { cleanup } from './pure';
-import { flushMicroTasksLegacy } from './flush-micro-tasks';
+import { flushMicroTasks } from './flush-micro-tasks';
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
+import './matchers/extend-expect';
 
 if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
   // If we're running in a test runner that supports afterEach
@@ -11,7 +12,7 @@ if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
   if (typeof afterEach === 'function') {
     // eslint-disable-next-line no-undef
     afterEach(async () => {
-      await flushMicroTasksLegacy();
+      await flushMicroTasks();
       cleanup();
     });
   }

@@ -8,10 +8,8 @@ import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
-import { getHostChildren } from './helpers/component-tree';
-import debugDeep, { DebugOptions } from './helpers/debug-deep';
-import debugShallow from './helpers/debug-shallow';
-import { configureHostComponentNamesIfNeeded } from './helpers/host-component-names';
+import { getHostSelves } from './helpers/component-tree';
+import { debug, DebugOptions } from './helpers/debug';
 import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
@@ -25,10 +23,10 @@ export interface RenderOptions {
   wrapper?: React.ComponentType<any>;
 
   /**
-   * Set to `true` to enable concurrent rendering.
-   * Otherwise `render` will default to legacy synchronous rendering.
+   * Set to `false` to disable concurrent rendering.
+   * Otherwise `render` will default to concurrent rendering.
    */
-  concurrentRoot?: boolean | undefined;
+  concurrentRoot?: boolean;
 
   createNodeMock?: (element: React.ReactElement) => unknown;
   unstable_validateStringsRenderedWithinText?: boolean;
@@ -44,18 +42,10 @@ export default function render<T>(component: React.ReactElement<T>, options: Ren
   return renderInternal(component, options);
 }
 
-export interface RenderInternalOptions extends RenderOptions {
-  detectHostComponentNames?: boolean;
-}
-
-export function renderInternal<T>(
-  component: React.ReactElement<T>,
-  options?: RenderInternalOptions,
-) {
+export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderOptions) {
   const {
     wrapper: Wrapper,
     concurrentRoot,
-    detectHostComponentNames = true,
     unstable_validateStringsRenderedWithinText,
     ...rest
   } = options || {};
@@ -65,10 +55,6 @@ export function renderInternal<T>(
     // @ts-expect-error incomplete typing on RTR package
     unstable_isConcurrent: concurrentRoot ?? getConfig().concurrentRoot,
   };
-
-  if (detectHostComponentNames) {
-    configureHostComponentNamesIfNeeded();
-  }
 
   if (unstable_validateStringsRenderedWithinText) {
     return renderWithStringValidation(component, {
@@ -129,9 +115,9 @@ function buildRenderResult(
     unmount,
     rerender: update, // alias for `update`
     toJSON: renderer.toJSON,
-    debug: debug(instance, renderer),
+    debug: makeDebug(instance, renderer),
     get root(): ReactTestInstance {
-      return getHostChildren(instance)[0];
+      return getHostSelves(instance)[0];
     },
     UNSAFE_root: instance,
   };
@@ -164,12 +150,9 @@ function updateWithAct(
   };
 }
 
-export interface DebugFunction {
-  (options?: DebugOptions | string): void;
-  shallow: (message?: string) => void;
-}
+export type DebugFunction = (options?: DebugOptions | string) => void;
 
-function debug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugFunction {
+function makeDebug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugFunction {
   function debugImpl(options?: DebugOptions | string) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions =
@@ -180,15 +163,14 @@ function debug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugF
     if (typeof options === 'string') {
       // eslint-disable-next-line no-console
       console.warn(
-        'Using debug("message") is deprecated and will be removed in future release, please use debug({ message; "message" }) instead.',
+        'Using debug("message") is deprecated and will be removed in future release, please use debug({ message: "message" }) instead.',
       );
     }
 
     const json = renderer.toJSON();
     if (json) {
-      return debugDeep(json, debugOptions);
+      return debug(json, debugOptions);
     }
   }
-  debugImpl.shallow = (message?: string) => debugShallow(instance, message);
   return debugImpl;
 }
