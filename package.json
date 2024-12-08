@@ -1,6 +1,6 @@
 {
   "name": "@testing-library/react-native",
-  "version": "13.0.0-beta.0",
+  "version": "13.0.0-rc.0",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
