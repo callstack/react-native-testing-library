@@ -76,7 +76,7 @@
     "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@types/jest": "^29.5.14",
     "@types/react": "^18.3.12",
-    "@types/react-test-renderer": "^18.3.0",
+    "@types/react-test-renderer": "^19.0.0",
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "del-cli": "^6.0.0",
@@ -87,7 +87,7 @@
     "prettier": "^2.8.8",
     "react": "18.3.1",
     "react-native": "0.77.0-rc.0",
-    "react-test-renderer": "18.3.1",
+    "react-test-renderer": "19.0.0",
     "release-it": "^17.10.0",
     "strip-ansi": "^6.0.1",
     "typescript": "^5.6.3"
