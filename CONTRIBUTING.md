@@ -49,11 +49,11 @@ When you're sending a pull request:
 
 ### Publishing a release
 
-```sh
-yarn publish
-```
+We use [release-it](https://github.com/release-it/release-it) to publish a release. It takes care of versioning, changelog generation, and publishing to NPM.
 
-5. Push changes & tag to `origin`.
+```sh
+yarn release
+```
 
 ## Reporting issues
 
