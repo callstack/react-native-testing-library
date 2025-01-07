@@ -9,8 +9,10 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import act from './act';
 import { isElementMounted, isHostElement } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
+import { logger } from './helpers/logger';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
+import { formatElement } from './matchers/utils';
 import { nativeState } from './native-state';
 import type { Point, StringWithAutocomplete } from './types';
 
@@ -80,7 +82,15 @@ function findEventHandler(
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
   const handler = getEventHandler(element, eventName);
-  if (handler && isEventEnabled(element, eventName, touchResponder)) return handler;
+  if (handler) {
+    if (isEventEnabled(element, eventName, touchResponder)) {
+      return handler;
+    } else {
+      logger.warn(
+        `${formatElement(element, { minimal: true })}: "${eventName}" event is not enabled.`,
+      );
+    }
+  }
 
   // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
   if (element.parent === null || element.parent.parent === null) {
@@ -129,6 +139,11 @@ function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: un
 
   const handler = findEventHandler(element, eventName);
   if (!handler) {
+    logger.warn(
+      `${formatElement(element, {
+        minimal: true,
+      })}: no "${eventName}" event handler found on element or any of it's ancestors`,
+    );
     return;
   }
 
