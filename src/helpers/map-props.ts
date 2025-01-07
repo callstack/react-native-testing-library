@@ -28,6 +28,7 @@ const propsToDisplay = [
   'aria-valuenow',
   'aria-valuetext',
   'defaultValue',
+  'disabled',
   'editable',
   'importantForAccessibility',
   'nativeID',

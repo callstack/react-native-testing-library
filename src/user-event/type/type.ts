@@ -9,6 +9,8 @@ import { EventBuilder } from '../event-builder';
 import type { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, getTextContentSize, wait } from '../utils';
 import { parseKeys } from './parse-keys';
+import { logger } from '../../helpers/logger';
+import { formatElement } from '../../helpers/format-element';
 
 export interface TypeOptions {
   skipPress?: boolean;
@@ -29,11 +31,19 @@ export async function type(
     );
   }
 
-  // Skip events if the element is disabled
-  if (!isEditableTextInput(element) || !isPointerEventEnabled(element)) {
+  if (!isEditableTextInput(element)) {
+    logger.warn(
+      `User Event (type): element ${formatElement(element, { compact: true })} is not editable.`,
+    );
     return;
   }
 
+  if (!isPointerEventEnabled(element)) {
+    logger.warn(
+      `User Event (type): element ${formatElement(element, { compact: true })} has pointer event handlers disabled.`,
+    );
+    return;
+  }
   const keys = parseKeys(text);
 
   if (!options?.skipPress) {

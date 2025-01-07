@@ -19,6 +19,11 @@ export type Config = {
    * Otherwise `render` will default to concurrent rendering.
    */
   concurrentRoot: boolean;
+
+  /**
+   * Verbose logging for the library.
+   */
+  debug: boolean;
 };
 
 export type ConfigAliasOptions = {
@@ -30,6 +35,7 @@ const defaultConfig: Config = {
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: false,
   concurrentRoot: true,
+  debug: false,
 };
 
 let config = { ...defaultConfig };

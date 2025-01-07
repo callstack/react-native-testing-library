@@ -3,6 +3,8 @@ import pc from 'picocolors';
 import redent from 'redent';
 import * as nodeUtil from 'util';
 
+import { getConfig } from '../config';
+
 export const _console = {
   debug: nodeConsole.debug,
   info: nodeConsole.info,
@@ -12,8 +14,10 @@ export const _console = {
 
 export const logger = {
   debug(message: unknown, ...args: unknown[]) {
-    const output = formatMessage('●', message, ...args);
-    _console.debug(pc.dim(output));
+    if (getConfig().debug) {
+      const output = formatMessage('●', message, ...args);
+      _console.debug(pc.dim(output));
+    }
   },
 
   info(message: unknown, ...args: unknown[]) {
