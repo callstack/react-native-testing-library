@@ -1,15 +1,15 @@
+import * as React from 'react';
 import type {
   ReactTestInstance,
   ReactTestRenderer,
   TestRendererOptions,
 } from 'react-test-renderer';
-import * as React from 'react';
-import { Profiler } from 'react';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import { getHostSelves } from './helpers/component-tree';
-import { debug, DebugOptions } from './helpers/debug';
+import type { DebugOptions } from './helpers/debug';
+import { debug } from './helpers/debug';
 import { logger } from './helpers/logger';
 import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
@@ -77,9 +77,9 @@ function renderWithStringValidation<T>(
   const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
 
   const wrap = (element: React.ReactElement) => (
-    <Profiler id="renderProfiler" onRender={handleRender}>
+    <React.Profiler id="renderProfiler" onRender={handleRender}>
       {Wrapper ? <Wrapper>{element}</Wrapper> : element}
-    </Profiler>
+    </React.Profiler>
   );
 
   const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {

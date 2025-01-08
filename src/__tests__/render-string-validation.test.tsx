@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { render, fireEvent, screen } from '..';
+import { Pressable, Text, View } from 'react-native';
+import { fireEvent, render, screen } from '..';
 
 // eslint-disable-next-line no-console
 const originalConsoleError = console.error;

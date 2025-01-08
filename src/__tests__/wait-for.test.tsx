@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Text, TouchableOpacity, View, Pressable } from 'react-native';
-import { fireEvent, render, waitFor, configure, screen } from '..';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { configure, fireEvent, render, screen, waitFor } from '..';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {

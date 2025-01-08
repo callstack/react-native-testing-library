@@ -1,6 +1,6 @@
-import waitFor from './wait-for';
-import type { WaitForOptions } from './wait-for';
 import { ErrorWithStack } from './helpers/errors';
+import type { WaitForOptions } from './wait-for';
+import waitFor from './wait-for';
 
 function isRemoved<T>(result: T): boolean {
   return !result || (Array.isArray(result) && !result.length);

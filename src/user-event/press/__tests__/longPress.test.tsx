@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, Text, TouchableHighlight, TouchableOpacity } from 'react-native';
-import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { render, screen } from '../../..';
+import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { userEvent } from '../..';
 
 describe('userEvent.longPress with fake timers', () => {

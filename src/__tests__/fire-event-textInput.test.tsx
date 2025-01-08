@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, TextInput, TextInputProps } from 'react-native';
-import { render, fireEvent, screen } from '..';
+import type { TextInputProps } from 'react-native';
+import { Text, TextInput } from 'react-native';
+import { fireEvent, render, screen } from '..';
 
 function WrappedTextInput(props: TextInputProps) {
   return <TextInput {...props} />;

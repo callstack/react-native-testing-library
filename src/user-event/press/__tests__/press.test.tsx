@@ -1,15 +1,15 @@
 import * as React from 'react';
 import {
+  Button,
   Pressable,
   Text,
   TextInput,
   TouchableHighlight,
   TouchableOpacity,
   View,
-  Button,
 } from 'react-native';
-import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { render, screen } from '../../..';
+import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { userEvent } from '../..';
 
 describe('userEvent.press with fake timers', () => {

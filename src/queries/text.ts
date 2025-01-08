@@ -2,8 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import { findAll } from '../helpers/find-all';
 import { isHostText } from '../helpers/host-component-names';
 import { matchTextContent } from '../helpers/matchers/match-text-content';
-import { TextMatch, TextMatchOptions } from '../matches';
-import { makeQueries } from './make-queries';
+import type { TextMatch, TextMatchOptions } from '../matches';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -12,6 +11,7 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './make-queries';
+import { makeQueries } from './make-queries';
 import type { CommonQueryOptions } from './options';
 
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;

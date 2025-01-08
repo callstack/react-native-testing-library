@@ -1,7 +1,7 @@
-import * as nodeConsole from 'console';
-import * as nodeUtil from 'util';
 import chalk from 'chalk';
+import * as nodeConsole from 'console';
 import redent from 'redent';
+import * as nodeUtil from 'util';
 
 export const logger = {
   debug(message: unknown, ...args: unknown[]) {

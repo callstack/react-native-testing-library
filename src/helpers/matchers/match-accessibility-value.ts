@@ -1,6 +1,6 @@
-import { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance } from 'react-test-renderer';
+import type { TextMatch } from '../../matches';
 import { computeAriaValue } from '../accessibility';
-import { TextMatch } from '../../matches';
 import { matchStringProp } from './match-string-prop';
 
 export interface AccessibilityValueMatcher {

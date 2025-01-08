@@ -1,11 +1,11 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
-import waitFor from '../wait-for';
-import type { WaitForOptions } from '../wait-for';
 import format from '../helpers/format';
+import { defaultMapProps } from '../helpers/format-default';
 import { logger } from '../helpers/logger';
 import { screen } from '../screen';
-import { defaultMapProps } from '../helpers/format-default';
+import type { WaitForOptions } from '../wait-for';
+import waitFor from '../wait-for';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,

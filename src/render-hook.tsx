@@ -1,5 +1,5 @@
-import React from 'react';
 import type { ComponentType } from 'react';
+import React from 'react';
 import { renderInternal } from './render';
 
 export type RenderHookResult<Result, Props> = {

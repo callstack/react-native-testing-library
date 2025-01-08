@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Text } from 'react-native';
 import { render, screen } from '../../../';
-import { dispatchEvent } from '../dispatch-event';
 import { EventBuilder } from '../../event-builder';
+import { dispatchEvent } from '../dispatch-event';
 
 const TOUCH_EVENT = EventBuilder.Common.touch();
 

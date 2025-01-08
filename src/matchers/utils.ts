@@ -1,10 +1,10 @@
-import { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance } from 'react-test-renderer';
 import {
   EXPECTED_COLOR,
-  RECEIVED_COLOR,
   matcherHint,
-  printWithType,
   printReceived,
+  printWithType,
+  RECEIVED_COLOR,
   stringify,
 } from 'jest-matcher-utils';
 import prettyFormat, { plugins } from 'pretty-format';

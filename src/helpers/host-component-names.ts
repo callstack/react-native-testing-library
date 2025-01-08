@@ -1,5 +1,5 @@
-import { ReactTestInstance } from 'react-test-renderer';
-import { HostTestInstance } from './component-tree';
+import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostTestInstance } from './component-tree';
 
 const HOST_TEXT_NAMES = ['Text', 'RCTText'];
 const HOST_TEXT_INPUT_NAMES = ['TextInput'];

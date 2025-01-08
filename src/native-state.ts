@@ -1,5 +1,5 @@
-import { ReactTestInstance } from 'react-test-renderer';
-import { Point } from './types';
+import type { ReactTestInstance } from 'react-test-renderer';
+import type { Point } from './types';
 
 /**
  * Simulated native state for unmanaged controls.

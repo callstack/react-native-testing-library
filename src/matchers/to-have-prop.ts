@@ -1,5 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { matcherHint, stringify, printExpected } from 'jest-matcher-utils';
+import { matcherHint, printExpected, stringify } from 'jest-matcher-utils';
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveProp(

@@ -1,6 +1,7 @@
+import type { ImageStyle, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
-import { ImageStyle, StyleProp, StyleSheet, TextStyle, ViewStyle } from 'react-native';
-import { matcherHint, diff } from 'jest-matcher-utils';
+import { diff, matcherHint } from 'jest-matcher-utils';
 import { checkHostElement, formatMessage } from './utils';
 
 export type Style = ViewStyle | TextStyle | ImageStyle;

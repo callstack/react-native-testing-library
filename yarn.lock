@@ -2795,6 +2795,7 @@ __metadata:
     chalk: "npm:^4.1.2"
     del-cli: "npm:^6.0.0"
     eslint: "npm:^9.17.0"
+    eslint-plugin-simple-import-sort: "npm:^12.1.1"
     flow-bin: "npm:~0.170.0"
     jest: "npm:^29.7.0"
     jest-matcher-utils: "npm:^29.7.0"
@@ -5123,6 +5124,15 @@ __metadata:
   peerDependencies:
     eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
   checksum: 10c0/e8b267ab928c63e651e35ba936e84098f4189fbaebbf3607341e6affedcfe39f2afba85fb3ef83ec322b32829b22d7433230eb6af0f692d262473c6a19441ba5
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-simple-import-sort@npm:^12.1.1":
+  version: 12.1.1
+  resolution: "eslint-plugin-simple-import-sort@npm:12.1.1"
+  peerDependencies:
+    eslint: ">=5.0.0"
+  checksum: 10c0/0ad1907ad9ddbadd1db655db0a9d0b77076e274b793a77b982c8525d808d868e6ecfce24f3a411e8a1fa551077387f9ebb38c00956073970ebd7ee6a029ce2b3
   languageName: node
   linkType: hard
 
