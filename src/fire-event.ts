@@ -87,7 +87,7 @@ function findEventHandler(
       return handler;
     } else {
       logger.warn(
-        `FireEvent(${eventName}): event handler is disabled on ${formatElement(element, {
+        `FireEvent "${eventName}": event handler is disabled on ${formatElement(element, {
           minimal: true,
         })}`,
       );
@@ -142,9 +142,9 @@ function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: un
   const handler = findEventHandler(element, eventName);
   if (!handler) {
     logger.warn(
-      `FireEvent(${eventName}): no event handler found on ${formatElement(element, {
+      `FireEvent "${eventName}": no event handler found on ${formatElement(element, {
         minimal: true,
-      })}`,
+      })} or its ancestors`,
     );
     return;
   }
