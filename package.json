@@ -73,7 +73,7 @@
     "@babel/preset-typescript": "^7.26.0",
     "@callstack/eslint-config": "^15.0.0",
     "@react-native/babel-preset": "0.77.0-rc.0",
-    "@release-it/conventional-changelog": "^9.0.2",
+    "@release-it/conventional-changelog": "^10.0.0",
     "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@types/jest": "^29.5.14",
     "@types/react": "^18.3.12",
