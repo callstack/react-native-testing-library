@@ -4,7 +4,7 @@ import { render, screen, userEvent } from '..';
 
 type QuestionsBoardProps = {
   questions: string[];
-  onSubmit: (obj: {}) => void;
+  onSubmit: (obj: object) => void;
 };
 
 jest.useFakeTimers();

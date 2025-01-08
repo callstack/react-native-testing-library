@@ -8,6 +8,7 @@ type ReactAct = 0 extends 1 & typeof React.act ? typeof reactTestRendererAct : t
 
 // See https://github.com/reactwg/react-18/discussions/102 for more context on global.IS_REACT_ACT_ENVIRONMENT
 declare global {
+  // eslint-disable-next-line no-var
   var IS_REACT_ACT_ENVIRONMENT: boolean | undefined;
 }
 
@@ -45,13 +46,11 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
               // eslint-disable-next-line promise/always-return
               (returnValue) => {
                 setIsReactActEnvironment(previousActEnvironment);
-                // @ts-expect-error
-                resolve(returnValue);
+                resolve(returnValue as never);
               },
               (error) => {
                 setIsReactActEnvironment(previousActEnvironment);
-                // @ts-expect-error
-                reject(error);
+                reject(error as never);
               },
             );
           },
@@ -69,7 +68,7 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
   };
 }
 
-// @ts-expect-error
+// @ts-expect-error: typings get too complex
 const act = withGlobalActEnvironment(reactAct) as ReactAct;
 
 export default act;

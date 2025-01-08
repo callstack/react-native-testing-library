@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp */
 import * as React from 'react';
 import { View } from 'react-native';
 import { cleanup, render } from '../pure';

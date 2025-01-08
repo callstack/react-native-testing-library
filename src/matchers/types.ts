@@ -279,14 +279,16 @@ export interface JestNativeMatchers<R> {
 
 // Implicit Jest global `expect`.
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
     interface Matchers<R, T = {}> extends JestNativeMatchers<R> {}
   }
 }
 
 // Explicit `@jest/globals` `expect` matchers.
-// @ts-ignore
+// @ts-expect-error: Invalid module name in augmentation, module '@jest/expect' cannot be found
 declare module '@jest/expect' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface Matchers<R extends void | Promise<void>> extends JestNativeMatchers<R> {}
 }

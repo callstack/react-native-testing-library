@@ -19,8 +19,9 @@ import { getQueriesForElement } from './within';
 export interface RenderOptions {
   /**
    * Pass a React Component as the wrapper option to have it rendered around the inner element. This is most useful for creating
-   *  reusable custom render functions for common data providers.
+   * reusable custom render functions for common data providers.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: React.ComponentType<any>;
 
   /**
@@ -73,14 +74,7 @@ function renderWithStringValidation<T>(
   component: React.ReactElement<T>,
   options: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
 ) {
-  let renderer: ReactTestRenderer;
   const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
-
-  const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
-    if (renderer && phase === 'update') {
-      validateStringsRenderedWithinText(renderer.toJSON());
-    }
-  };
 
   const wrap = (element: React.ReactElement) => (
     <Profiler id="renderProfiler" onRender={handleRender}>
@@ -88,8 +82,13 @@ function renderWithStringValidation<T>(
     </Profiler>
   );
 
-  renderer = renderWithAct(wrap(component), testRendererOptions);
+  const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
+    if (renderer && phase === 'update') {
+      validateStringsRenderedWithinText(renderer.toJSON());
+    }
+  };
 
+  const renderer: ReactTestRenderer = renderWithAct(wrap(component), testRendererOptions);
   validateStringsRenderedWithinText(renderer.toJSON());
 
   return buildRenderResult(renderer, wrap);

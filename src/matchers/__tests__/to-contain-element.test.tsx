@@ -123,7 +123,7 @@ test('toContainElement() handles non-element element', () => {
   const view = screen.getByTestId('view');
 
   expect(() =>
-    // @ts-expect-error
+    // @ts-expect-error: intentionally passing wrong element shape
     expect(view).not.toContainElement({ name: 'non-element' }),
   ).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).not.toContainElement()

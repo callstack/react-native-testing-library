@@ -1,6 +1,7 @@
 import prettyFormat from 'pretty-format';
 
 export class ErrorWithStack extends Error {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   constructor(message: string | undefined, callsite: Function) {
     super(message);
     if (Error.captureStackTrace) {
@@ -32,6 +33,7 @@ export const prepareErrorMessage = (
   return errorMessage;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export const createQueryByError = (error: unknown, callsite: Function): null => {
   if (error instanceof Error) {
     if (error.message.includes('No instances found')) {
@@ -41,9 +43,7 @@ export const createQueryByError = (error: unknown, callsite: Function): null => 
   }
 
   throw new ErrorWithStack(
-    // generic refining of `unknown` is very hard, you cannot do `'toString' in error` or anything like that
-    // Converting as any with extra safe optional chaining will do the job just as well
-    `Query: caught unknown error type: ${typeof error}, value: ${(error as any)?.toString?.()}`,
+    `Query: caught unknown error type: ${typeof error}, value: ${error}`,
     callsite,
   );
 };

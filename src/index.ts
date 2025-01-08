@@ -10,7 +10,6 @@ if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
   // if you don't like this then either import the `pure` module
   // or set the RNTL_SKIP_AUTO_CLEANUP env variable to 'true'.
   if (typeof afterEach === 'function') {
-    // eslint-disable-next-line no-undef
     afterEach(async () => {
       await flushMicroTasks();
       cleanup();

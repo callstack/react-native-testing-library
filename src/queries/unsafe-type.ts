@@ -3,10 +3,13 @@ import * as React from 'react';
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
 import { createQueryByError } from '../helpers/errors';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type UnsafeComponentType = React.ComponentType<any>;
+
 const UNSAFE_getByType = (
   instance: ReactTestInstance,
-): ((type: React.ComponentType<any>) => ReactTestInstance) =>
-  function getByTypeFn(type: React.ComponentType<any>) {
+): ((type: UnsafeComponentType) => ReactTestInstance) =>
+  function getByTypeFn(type: UnsafeComponentType) {
     try {
       return instance.findByType(type);
     } catch (error) {
@@ -16,8 +19,8 @@ const UNSAFE_getByType = (
 
 const UNSAFE_getAllByType = (
   instance: ReactTestInstance,
-): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) =>
-  function getAllByTypeFn(type: React.ComponentType<any>) {
+): ((type: UnsafeComponentType) => Array<ReactTestInstance>) =>
+  function getAllByTypeFn(type: UnsafeComponentType) {
     const results = instance.findAllByType(type);
     if (results.length === 0) {
       throw new ErrorWithStack('No instances found', getAllByTypeFn);
@@ -27,8 +30,8 @@ const UNSAFE_getAllByType = (
 
 const UNSAFE_queryByType = (
   instance: ReactTestInstance,
-): ((type: React.ComponentType<any>) => ReactTestInstance | null) =>
-  function queryByTypeFn(type: React.ComponentType<any>) {
+): ((type: UnsafeComponentType) => ReactTestInstance | null) =>
+  function queryByTypeFn(type: UnsafeComponentType) {
     try {
       return UNSAFE_getByType(instance)(type);
     } catch (error) {
@@ -37,8 +40,8 @@ const UNSAFE_queryByType = (
   };
 
 const UNSAFE_queryAllByType =
-  (instance: ReactTestInstance): ((type: React.ComponentType<any>) => Array<ReactTestInstance>) =>
-  (type: React.ComponentType<any>) => {
+  (instance: ReactTestInstance): ((type: UnsafeComponentType) => Array<ReactTestInstance>) =>
+  (type: UnsafeComponentType) => {
     try {
       return UNSAFE_getAllByType(instance)(type);
     } catch {

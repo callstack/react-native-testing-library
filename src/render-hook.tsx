@@ -10,6 +10,7 @@ export type RenderHookResult<Result, Props> = {
 
 export type RenderHookOptions<Props> = {
   initialProps?: Props;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: ComponentType<any>;
 };
 
