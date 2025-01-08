@@ -49,29 +49,43 @@ const textInputEventsIgnoringEditableProp = new Set([
   'onScroll',
 ]);
 
-export function isEventEnabled(
+type EventHandlerState = {
+  enabled: boolean;
+  reason?: string;
+};
+
+function getEventHandlerState(
   element: ReactTestInstance,
   eventName: string,
   nearestTouchResponder?: ReactTestInstance,
-) {
+): EventHandlerState {
   if (nearestTouchResponder != null && isHostTextInput(nearestTouchResponder)) {
-    return (
-      isEditableTextInput(nearestTouchResponder) ||
-      textInputEventsIgnoringEditableProp.has(eventName)
-    );
+    if (isEditableTextInput(nearestTouchResponder)) {
+      return { enabled: true };
+    }
+
+    if (textInputEventsIgnoringEditableProp.has(eventName)) {
+      return { enabled: true };
+    }
+
+    return { enabled: false, reason: '"editable" prop' };
   }
 
   if (eventsAffectedByPointerEventsProp.has(eventName) && !isPointerEventEnabled(element)) {
-    return false;
+    return { enabled: false, reason: '"pointerEvents" prop' };
   }
 
   const touchStart = nearestTouchResponder?.props.onStartShouldSetResponder?.();
   const touchMove = nearestTouchResponder?.props.onMoveShouldSetResponder?.();
   if (touchStart || touchMove) {
-    return true;
+    return { enabled: true };
   }
 
-  return touchStart === undefined && touchMove === undefined;
+  if (touchStart === undefined && touchMove === undefined) {
+    return { enabled: true };
+  }
+
+  return { enabled: false, reason: 'not a touch responder' };
 }
 
 function findEventHandler(
@@ -83,13 +97,15 @@ function findEventHandler(
 
   const handler = getEventHandler(element, eventName);
   if (handler) {
-    if (isEventEnabled(element, eventName, touchResponder)) {
+    const handlerState = getEventHandlerState(element, eventName, touchResponder);
+
+    if (handlerState.enabled) {
       return handler;
     } else {
       logger.warn(
-        `FireEvent "${eventName}": event handler is disabled on ${formatElement(element, {
+        `FireEvent: "${eventName}" event handler is disabled on ${formatElement(element, {
           minimal: true,
-        })}`,
+        })} (${handlerState.reason}).`,
       );
     }
   }
@@ -142,9 +158,9 @@ function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: un
   const handler = findEventHandler(element, eventName);
   if (!handler) {
     logger.warn(
-      `FireEvent "${eventName}": no event handler found on ${formatElement(element, {
+      `FireEvent: no enabled event handler for "${eventName}" found on ${formatElement(element, {
         minimal: true,
-      })} or its ancestors`,
+      })} or its ancestors.`,
     );
     return;
   }
