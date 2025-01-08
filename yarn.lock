@@ -2904,7 +2904,6 @@ __metadata:
     react-test-renderer: "npm:18.3.1"
     redent: "npm:^3.0.0"
     release-it: "npm:^18.0.0"
-    strip-ansi: "npm:^6.0.1"
     typescript: "npm:^5.6.3"
     typescript-eslint: "npm:^8.19.1"
   peerDependencies:

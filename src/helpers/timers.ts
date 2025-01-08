@@ -64,7 +64,7 @@ function getFakeTimersConfigFromType(type: FakeTimersTypes) {
 const jestFakeTimersAreEnabled = (): boolean => Boolean(getJestFakeTimersType());
 
 // we only run our tests in node, and setImmediate is supported in node.
-function setImmediatePolyfill(fn: Function) {
+function setImmediatePolyfill(fn: () => void) {
   return globalObj.setTimeout(fn, 0);
 }
 
