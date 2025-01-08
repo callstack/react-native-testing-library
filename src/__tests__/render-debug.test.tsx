@@ -98,9 +98,9 @@ test('debug', () => {
   screen.debug({ message: 'another custom message' });
 
   const mockCalls = jest.mocked(logger.info).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
-  expect(stripAnsi(mockCalls[1][0] + mockCalls[1][1])).toMatchSnapshot('with message');
-  expect(stripAnsi(mockCalls[2][0] + mockCalls[2][1])).toMatchSnapshot('another custom message');
+  expect(mockCalls[0][0]).toMatchSnapshot();
+  expect(`${mockCalls[1][0]}\n${mockCalls[1][1]}`).toMatchSnapshot('with message');
+  expect(`${mockCalls[2][0]}\n${mockCalls[2][1]}`).toMatchSnapshot('another custom message');
 
   const mockWarnCalls = jest.mocked(logger.warn).mock.calls;
   expect(mockWarnCalls[0]).toMatchInlineSnapshot(`
@@ -117,9 +117,7 @@ test('debug changing component', () => {
   screen.debug();
 
   const mockCalls = jest.mocked(logger.info).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot(
-    'bananaFresh button message should now be "fresh"',
-  );
+  expect(mockCalls[0][0]).toMatchSnapshot('bananaFresh button message should now be "fresh"');
 });
 
 test('debug with only children prop', () => {
@@ -127,7 +125,7 @@ test('debug with only children prop', () => {
   screen.debug({ mapProps: () => ({}) });
 
   const mockCalls = jest.mocked(logger.info).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+  expect(mockCalls[0][0]).toMatchSnapshot();
 });
 
 test('debug with only prop whose value is bananaChef', () => {
@@ -145,7 +143,7 @@ test('debug with only prop whose value is bananaChef', () => {
   });
 
   const mockCalls = jest.mocked(logger.info).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+  expect(mockCalls[0][0]).toMatchSnapshot();
 });
 
 test('debug with only props from TextInput components', () => {
@@ -155,7 +153,7 @@ test('debug with only props from TextInput components', () => {
   });
 
   const mockCalls = jest.mocked(logger.info).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+  expect(mockCalls[0][0]).toMatchSnapshot();
 });
 
 test('debug should use debugOptions from config when no option is specified', () => {
@@ -169,7 +167,7 @@ test('debug should use debugOptions from config when no option is specified', ()
   screen.debug();
 
   const mockCalls = jest.mocked(logger.info).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+  expect(mockCalls[0][0]).toMatchSnapshot();
 });
 
 test('filtering out props through mapProps option should not modify component', () => {
@@ -190,5 +188,5 @@ test('debug should use given options over config debugOptions', () => {
   screen.debug({ mapProps: (props) => props });
 
   const mockCalls = jest.mocked(logger.info).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+  expect(mockCalls[0][0]).toMatchSnapshot();
 });

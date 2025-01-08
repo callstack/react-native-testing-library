@@ -288,6 +288,7 @@ exports[`debug with only props from TextInput components 1`] = `
 exports[`debug: another custom message 1`] = `
 "another custom message
 
+
 <View>
   <Text>
     Is the banana fresh?
@@ -369,6 +370,7 @@ exports[`debug: another custom message 1`] = `
 
 exports[`debug: with message 1`] = `
 "my custom message
+
 
 <View>
   <Text>

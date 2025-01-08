@@ -3,10 +3,12 @@ import prettyFormat from 'pretty-format';
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
 import { createQueryByError } from '../helpers/errors';
 
+export type UnsafeProps = Record<string, unknown>;
+
 const UNSAFE_getByProps = (
   instance: ReactTestInstance,
-): ((props: { [propName: string]: any }) => ReactTestInstance) =>
-  function getByPropsFn(props: { [propName: string]: any }) {
+): ((props: UnsafeProps) => ReactTestInstance) =>
+  function getByPropsFn(props: UnsafeProps) {
     try {
       return instance.findByProps(props);
     } catch (error) {
@@ -16,8 +18,8 @@ const UNSAFE_getByProps = (
 
 const UNSAFE_getAllByProps = (
   instance: ReactTestInstance,
-): ((props: { [propName: string]: any }) => Array<ReactTestInstance>) =>
-  function getAllByPropsFn(props: { [propName: string]: any }) {
+): ((props: UnsafeProps) => Array<ReactTestInstance>) =>
+  function getAllByPropsFn(props: UnsafeProps) {
     const results = instance.findAllByProps(props);
     if (results.length === 0) {
       throw new ErrorWithStack(
@@ -30,8 +32,8 @@ const UNSAFE_getAllByProps = (
 
 const UNSAFE_queryByProps = (
   instance: ReactTestInstance,
-): ((props: { [propName: string]: any }) => ReactTestInstance | null) =>
-  function queryByPropsFn(props: { [propName: string]: any }) {
+): ((props: UnsafeProps) => ReactTestInstance | null) =>
+  function queryByPropsFn(props: UnsafeProps) {
     try {
       return UNSAFE_getByProps(instance)(props);
     } catch (error) {
@@ -40,10 +42,8 @@ const UNSAFE_queryByProps = (
   };
 
 const UNSAFE_queryAllByProps =
-  (
-    instance: ReactTestInstance,
-  ): ((props: { [propName: string]: any }) => Array<ReactTestInstance>) =>
-  (props: { [propName: string]: any }) => {
+  (instance: ReactTestInstance): ((props: UnsafeProps) => Array<ReactTestInstance>) =>
+  (props: UnsafeProps) => {
     try {
       return UNSAFE_getAllByProps(instance)(props);
     } catch {
@@ -53,10 +53,10 @@ const UNSAFE_queryAllByProps =
 
 // Unsafe aliases
 export type UnsafeByPropsQueries = {
-  UNSAFE_getByProps: (props: { [key: string]: any }) => ReactTestInstance;
-  UNSAFE_getAllByProps: (props: { [key: string]: any }) => Array<ReactTestInstance>;
-  UNSAFE_queryByProps: (props: { [key: string]: any }) => ReactTestInstance | null;
-  UNSAFE_queryAllByProps: (props: { [key: string]: any }) => Array<ReactTestInstance>;
+  UNSAFE_getByProps: (props: UnsafeProps) => ReactTestInstance;
+  UNSAFE_getAllByProps: (props: UnsafeProps) => Array<ReactTestInstance>;
+  UNSAFE_queryByProps: (props: UnsafeProps) => ReactTestInstance | null;
+  UNSAFE_queryAllByProps: (props: UnsafeProps) => Array<ReactTestInstance>;
 };
 
 // TODO: migrate to makeQueries pattern
