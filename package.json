@@ -71,6 +71,7 @@
     "@babel/preset-flow": "^7.25.9",
     "@babel/preset-react": "^7.25.9",
     "@babel/preset-typescript": "^7.26.0",
+    "@callstack/eslint-config": "^15.0.0",
     "@eslint/js": "^9.17.0",
     "@react-native/babel-preset": "0.77.0-rc.0",
     "@release-it/conventional-changelog": "^9.0.2",

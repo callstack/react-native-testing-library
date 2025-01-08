@@ -169,7 +169,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
  * @see https://github.com/testing-library/user-event/blob/7a305dee9ab833d6f338d567fc2e862b4838b76a/src/setup/setup.ts#L121
  */
 function wrapAndBindImpl<
-  Args extends any[],
+  Args extends never[],
   Impl extends (this: UserEventInstance, ...args: Args) => Promise<unknown>,
 >(instance: UserEventInstance, impl: Impl) {
   function method(...args: Args) {

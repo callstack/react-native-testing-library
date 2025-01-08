@@ -10,10 +10,10 @@ export function renderWithAct(
 
   // This will be called synchronously.
   void act(() => {
-    // @ts-expect-error TestRenderer.create is not typed correctly
+    // @ts-expect-error `TestRenderer.create` is not typed correctly
     renderer = TestRenderer.create(component, options);
   });
 
-  // @ts-ignore act is synchronous, so renderer is already initialized here
+  // @ts-expect-error: `act` is synchronous, so `renderer` is already initialized here
   return renderer;
 }
