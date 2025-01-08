@@ -1,10 +1,8 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, stringify } from 'jest-matcher-utils';
 import { computeAriaValue } from '../helpers/accessibility';
-import {
-  AccessibilityValueMatcher,
-  matchAccessibilityValue,
-} from '../helpers/matchers/match-accessibility-value';
+import type { AccessibilityValueMatcher } from '../helpers/matchers/match-accessibility-value';
+import { matchAccessibilityValue } from '../helpers/matchers/match-accessibility-value';
 import { removeUndefinedKeys } from '../helpers/object';
 import { checkHostElement, formatMessage } from './utils';
 

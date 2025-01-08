@@ -1,5 +1,6 @@
 import tseslint from 'typescript-eslint';
 import callstackConfig from '@callstack/eslint-config/react-native.flat.js';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 export default [
   {
@@ -15,8 +16,23 @@ export default [
   ...callstackConfig,
   ...tseslint.configs.strict,
   {
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
+    rules: {
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [['^\\u0000', '^react', '^@?\\w', '^', '^\\.']],
+        },
+      ],
+    },
+  },
+  {
     rules: {
       'no-console': 'error',
+      'import/order': 'off',
+      '@typescript-eslint/consistent-type-imports': 'error',
     },
   },
   {

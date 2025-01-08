@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TextInput, Image } from 'react-native';
+import { Image, Text, TextInput, View } from 'react-native';
 import { render, screen } from '../..';
 
 test('toHaveAccessibleName() handles view with "accessibilityLabel" prop', () => {

@@ -1,4 +1,5 @@
-import { StyleSheet, ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { removeUndefinedKeys } from './object';
 
 const propsToDisplay = [

@@ -2,12 +2,12 @@ import React from 'react';
 import {
   Button,
   Pressable,
+  Text,
   TextInput,
   TouchableHighlight,
   TouchableNativeFeedback,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Text,
   View,
 } from 'react-native';
 import { render, screen } from '../..';

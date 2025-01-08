@@ -87,9 +87,9 @@ const { clearTimeoutFn, setImmediateFn, setTimeoutFn } = runWithRealTimers(
 ) as BindTimeFunctions;
 
 export {
-  runWithRealTimers,
-  jestFakeTimersAreEnabled,
   clearTimeoutFn as clearTimeout,
+  jestFakeTimersAreEnabled,
+  runWithRealTimers,
   setImmediateFn as setImmediate,
   setTimeoutFn as setTimeout,
 };

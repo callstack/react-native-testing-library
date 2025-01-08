@@ -1,7 +1,7 @@
+import '../../matchers/extend-expect';
 import * as React from 'react';
 import { TextInput, View } from 'react-native';
 import { fireEvent, render, screen } from '../..';
-import '../../matchers/extend-expect';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';

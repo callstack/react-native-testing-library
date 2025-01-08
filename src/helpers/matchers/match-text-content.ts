@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
-import { matches, TextMatch, TextMatchOptions } from '../../matches';
+import type { TextMatch, TextMatchOptions } from '../../matches';
+import { matches } from '../../matches';
 import { getTextContent } from '../text-content';
 
 /**

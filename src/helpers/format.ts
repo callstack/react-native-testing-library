@@ -1,5 +1,6 @@
 import type { ReactTestRendererJSON } from 'react-test-renderer';
-import prettyFormat, { NewPlugin, plugins } from 'pretty-format';
+import type { NewPlugin } from 'pretty-format';
+import prettyFormat, { plugins } from 'pretty-format';
 
 export type MapPropsFunction = (
   props: Record<string, unknown>,

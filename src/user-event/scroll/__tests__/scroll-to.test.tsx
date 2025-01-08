@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { ScrollView, ScrollViewProps, View } from 'react-native';
-import { EventEntry, createEventLogger } from '../../../test-utils';
+import type { ScrollViewProps } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { fireEvent, render, screen } from '../../..';
+import type { EventEntry } from '../../../test-utils';
+import { createEventLogger } from '../../../test-utils';
 import { userEvent } from '../..';
 
 function mapEventsToShortForm(events: EventEntry[]) {

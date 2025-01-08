@@ -1,4 +1,4 @@
-import { ReactTestRendererNode } from 'react-test-renderer';
+import type { ReactTestRendererNode } from 'react-test-renderer';
 
 export const validateStringsRenderedWithinText = (
   rendererJSON: ReactTestRendererNode | Array<ReactTestRendererNode> | null,

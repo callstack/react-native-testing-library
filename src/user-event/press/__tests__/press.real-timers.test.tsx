@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { render, screen } from '../../..';
+import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { userEvent } from '../..';
 
 describe('userEvent.press with real timers', () => {

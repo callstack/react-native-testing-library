@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React from 'react';
 import TestRenderer from 'react-test-renderer';
 import { renderHook } from '../pure';
 

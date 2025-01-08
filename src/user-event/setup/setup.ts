@@ -1,11 +1,14 @@
-import { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance } from 'react-test-renderer';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { wrapAsync } from '../../helpers/wrap-async';
 import { clear } from '../clear';
 import { paste } from '../paste';
-import { PressOptions, press, longPress } from '../press';
-import { ScrollToOptions, scrollTo } from '../scroll';
-import { TypeOptions, type } from '../type';
+import type { PressOptions } from '../press';
+import { longPress, press } from '../press';
+import type { ScrollToOptions } from '../scroll';
+import { scrollTo } from '../scroll';
+import type { TypeOptions } from '../type';
+import { type } from '../type';
 import { wait } from '../utils';
 
 export interface UserEventSetupOptions {

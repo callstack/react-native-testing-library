@@ -1,5 +1,5 @@
-import type { ReactTestInstance } from 'react-test-renderer';
 import type { AccessibilityRole, Role } from 'react-native';
+import type { ReactTestInstance } from 'react-test-renderer';
 import {
   accessibilityStateKeys,
   accessibilityValueKeys,
@@ -8,19 +8,14 @@ import {
   normalizeRole,
 } from '../helpers/accessibility';
 import { findAll } from '../helpers/find-all';
-import {
-  AccessibilityStateMatcher,
-  matchAccessibilityState,
-} from '../helpers/matchers/match-accessibility-state';
-import {
-  AccessibilityValueMatcher,
-  matchAccessibilityValue,
-} from '../helpers/matchers/match-accessibility-value';
+import type { AccessibilityStateMatcher } from '../helpers/matchers/match-accessibility-state';
+import { matchAccessibilityState } from '../helpers/matchers/match-accessibility-state';
+import type { AccessibilityValueMatcher } from '../helpers/matchers/match-accessibility-value';
+import { matchAccessibilityValue } from '../helpers/matchers/match-accessibility-value';
 import { matchStringProp } from '../helpers/matchers/match-string-prop';
 import type { TextMatch } from '../matches';
-import { StringWithAutocomplete } from '../types';
+import type { StringWithAutocomplete } from '../types';
 import { getQueriesForElement } from '../within';
-import { makeQueries } from './make-queries';
 import type {
   FindAllByQuery,
   FindByQuery,
@@ -29,7 +24,8 @@ import type {
   QueryAllByQuery,
   QueryByQuery,
 } from './make-queries';
-import { CommonQueryOptions } from './options';
+import { makeQueries } from './make-queries';
+import type { CommonQueryOptions } from './options';
 
 export type ByRoleMatcher = StringWithAutocomplete<AccessibilityRole | Role> | RegExp;
 

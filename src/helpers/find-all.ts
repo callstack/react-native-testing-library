@@ -1,7 +1,8 @@
-import { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance } from 'react-test-renderer';
 import { getConfig } from '../config';
 import { isHiddenFromAccessibility } from './accessibility';
-import { HostTestInstance, isHostElement } from './component-tree';
+import type { HostTestInstance } from './component-tree';
+import { isHostElement } from './component-tree';
 
 interface FindAllOptions {
   /** Match elements hidden from accessibility */

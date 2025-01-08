@@ -72,4 +72,4 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
 const act = withGlobalActEnvironment(reactAct) as ReactAct;
 
 export default act;
-export { setIsReactActEnvironment as setReactActEnvironment, getIsReactActEnvironment };
+export { getIsReactActEnvironment, setIsReactActEnvironment as setReactActEnvironment };

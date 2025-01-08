@@ -1,4 +1,4 @@
-import { Point, Size } from '../../types';
+import type { Point, Size } from '../../types';
 import { baseSyntheticEvent } from './base';
 
 /**

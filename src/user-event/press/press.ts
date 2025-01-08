@@ -1,11 +1,11 @@
-import { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance } from 'react-test-renderer';
 import act from '../../act';
 import { getHostParent } from '../../helpers/component-tree';
-import { isEditableTextInput } from '../../helpers/text-input';
-import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { isHostText } from '../../helpers/host-component-names';
+import { isPointerEventEnabled } from '../../helpers/pointer-events';
+import { isEditableTextInput } from '../../helpers/text-input';
 import { EventBuilder } from '../event-builder';
-import { UserEventConfig, UserEventInstance } from '../setup';
+import type { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait } from '../utils';
 
 // These are constants defined in the React Native repo

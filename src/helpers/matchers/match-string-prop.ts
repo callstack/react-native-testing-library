@@ -1,4 +1,4 @@
-import { TextMatch } from '../../matches';
+import type { TextMatch } from '../../matches';
 
 /**
  * Matches the given string property again string or regex matcher.

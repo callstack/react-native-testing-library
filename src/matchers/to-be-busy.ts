@@ -1,4 +1,4 @@
-import { ReactTestInstance } from 'react-test-renderer';
+import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import { computeAriaBusy } from '../helpers/accessibility';
 import { checkHostElement, formatElement } from './utils';

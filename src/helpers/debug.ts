@@ -1,5 +1,6 @@
 import type { ReactTestRendererJSON } from 'react-test-renderer';
-import format, { FormatOptions } from './format';
+import type { FormatOptions } from './format';
+import format from './format';
 import { logger } from './logger';
 
 export type DebugOptions = {

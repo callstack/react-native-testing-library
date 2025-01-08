@@ -1,4 +1,4 @@
-import { Size } from '../../types';
+import type { Size } from '../../types';
 
 /**
  * Simple function for getting mock the size of given text.

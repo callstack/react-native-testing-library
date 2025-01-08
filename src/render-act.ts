@@ -1,5 +1,5 @@
-import TestRenderer from 'react-test-renderer';
 import type { ReactTestRenderer, TestRendererOptions } from 'react-test-renderer';
+import TestRenderer from 'react-test-renderer';
 import act from './act';
 
 export function renderWithAct(

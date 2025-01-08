@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TextInput, Image, Pressable } from 'react-native';
+import { Image, Pressable, Text, TextInput, View } from 'react-native';
 import { render, screen } from '../..';
 import { logger } from '../../helpers/logger';
 

@@ -1,6 +1,6 @@
+import { StyleSheet } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
-import { StyleSheet } from 'react-native';
 import { isHiddenFromAccessibility } from '../helpers/accessibility';
 import { getHostParent } from '../helpers/component-tree';
 import { isHostModal } from '../helpers/host-component-names';

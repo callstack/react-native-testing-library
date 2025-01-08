@@ -1,8 +1,8 @@
 /* globals jest */
 import { getConfig } from './config';
 import { flushMicroTasks } from './flush-micro-tasks';
-import { ErrorWithStack, copyStackTrace } from './helpers/errors';
-import { setTimeout, clearTimeout, jestFakeTimersAreEnabled } from './helpers/timers';
+import { copyStackTrace, ErrorWithStack } from './helpers/errors';
+import { clearTimeout, jestFakeTimersAreEnabled, setTimeout } from './helpers/timers';
 import { wrapAsync } from './helpers/wrap-async';
 
 const DEFAULT_INTERVAL = 50;

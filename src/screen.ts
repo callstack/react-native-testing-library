@@ -1,5 +1,5 @@
-import { ReactTestInstance } from 'react-test-renderer';
-import { RenderResult } from './render';
+import type { ReactTestInstance } from 'react-test-renderer';
+import type { RenderResult } from './render';
 
 const SCREEN_ERROR = '`render` method has not been called';
 
