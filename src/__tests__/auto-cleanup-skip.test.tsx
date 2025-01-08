@@ -4,6 +4,7 @@ import { View } from 'react-native';
 let render: (element: React.ReactElement) => void;
 beforeAll(() => {
   process.env.RNTL_SKIP_AUTO_CLEANUP = 'true';
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const rntl = require('..');
   render = rntl.render;
 });
