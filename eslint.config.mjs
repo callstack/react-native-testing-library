@@ -16,13 +16,14 @@ export default [
   ...callstackConfig,
   ...tseslint.configs.strict,
   {
-    files: ['**/*.test.{ts,tsx}', 'test-utils/**'],
+    files: ['**/*.test.{ts,tsx}', 'src/test-utils/**'],
     rules: {
       'react-native/no-color-literals': 'off',
       'react-native/no-inline-styles': 'off',
       'react-native/no-raw-text': 'off',
       'react-native-a11y/has-valid-accessibility-descriptors': 'off',
       'react-native-a11y/has-valid-accessibility-ignores-invert-colors': 'off',
+      'react-native-a11y/has-valid-accessibility-value': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
     },
   },

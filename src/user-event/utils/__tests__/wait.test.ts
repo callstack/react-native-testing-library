@@ -28,7 +28,7 @@ describe('wait()', () => {
     expect(advanceTimers).toHaveBeenCalledWith(100);
   });
 
-  it('wait with null delay does not wait with real timers', async () => {
+  it('wait with undefined delay does not wait with real timers', async () => {
     jest.spyOn(globalThis, 'setTimeout');
     const advanceTimers = jest.fn();
 

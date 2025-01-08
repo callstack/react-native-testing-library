@@ -73,14 +73,7 @@ function renderWithStringValidation<T>(
   component: React.ReactElement<T>,
   options: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
 ) {
-  let renderer: ReactTestRenderer;
   const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
-
-  const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
-    if (renderer && phase === 'update') {
-      validateStringsRenderedWithinText(renderer.toJSON());
-    }
-  };
 
   const wrap = (element: React.ReactElement) => (
     <Profiler id="renderProfiler" onRender={handleRender}>
@@ -88,8 +81,13 @@ function renderWithStringValidation<T>(
     </Profiler>
   );
 
-  renderer = renderWithAct(wrap(component), testRendererOptions);
+  const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
+    if (renderer && phase === 'update') {
+      validateStringsRenderedWithinText(renderer.toJSON());
+    }
+  };
 
+  const renderer: ReactTestRenderer = renderWithAct(wrap(component), testRendererOptions);
   validateStringsRenderedWithinText(renderer.toJSON());
 
   return buildRenderResult(renderer, wrap);
