@@ -3,6 +3,7 @@ import { ErrorWithStack } from '../helpers/errors';
 import waitFor from '../wait-for';
 import type { WaitForOptions } from '../wait-for';
 import format from '../helpers/format';
+import { logger } from '../helpers/logger';
 import { screen } from '../screen';
 import { defaultMapProps } from '../helpers/format-default';
 
@@ -69,8 +70,7 @@ function extractDeprecatedWaitForOptions(options?: WaitForOptions) {
   deprecatedKeys.forEach((key) => {
     const option = options[key];
     if (option) {
-      // eslint-disable-next-line no-console
-      console.warn(
+      logger.warn(
         `Use of option "${key}" in a findBy* query options (2nd parameter) is deprecated. Please pass this option in the waitForOptions (3rd parameter).
 Example:
 

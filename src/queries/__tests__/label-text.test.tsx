@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, Text, TextInput, Image, Pressable } from 'react-native';
 import { render, screen } from '../..';
+import { logger } from '../../helpers/logger';
 
 const BUTTON_LABEL = 'cool button';
 const BUTTON_HINT = 'click this button';
@@ -105,7 +106,7 @@ test('getAllByLabelText, queryAllByLabelText, findAllByLabelText with exact as f
 describe('findBy options deprecations', () => {
   let warnSpy: jest.SpyInstance;
   beforeEach(() => {
-    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
   });
   afterEach(() => {
     warnSpy.mockRestore();

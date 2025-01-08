@@ -10,6 +10,7 @@ import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import { getHostSelves } from './helpers/component-tree';
 import { debug, DebugOptions } from './helpers/debug';
+import { logger } from './helpers/logger';
 import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
@@ -161,8 +162,7 @@ function makeDebug(instance: ReactTestInstance, renderer: ReactTestRenderer): De
         : { ...defaultDebugOptions, ...options };
 
     if (typeof options === 'string') {
-      // eslint-disable-next-line no-console
-      console.warn(
+      logger.warn(
         'Using debug("message") is deprecated and will be removed in future release, please use debug({ message: "message" }) instead.',
       );
     }
