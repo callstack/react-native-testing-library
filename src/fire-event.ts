@@ -8,11 +8,11 @@ import type {
 import type { ReactTestInstance } from 'react-test-renderer';
 import act from './act';
 import { isElementMounted, isHostElement } from './helpers/component-tree';
+import { formatElement } from './helpers/format-element';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { logger } from './helpers/logger';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
-import { formatElement } from './matchers/utils';
 import { nativeState } from './native-state';
 import type { Point, StringWithAutocomplete } from './types';
 
@@ -87,7 +87,9 @@ function findEventHandler(
       return handler;
     } else {
       logger.warn(
-        `${formatElement(element, { minimal: true })}: "${eventName}" event is not enabled.`,
+        `FireEvent(${eventName}): event handler is disabled on ${formatElement(element, {
+          minimal: true,
+        })}`,
       );
     }
   }
@@ -140,9 +142,9 @@ function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: un
   const handler = findEventHandler(element, eventName);
   if (!handler) {
     logger.warn(
-      `${formatElement(element, {
+      `FireEvent(${eventName}): no event handler found on ${formatElement(element, {
         minimal: true,
-      })}: no "${eventName}" event handler found on element or any of it's ancestors`,
+      })}`,
     );
     return;
   }
