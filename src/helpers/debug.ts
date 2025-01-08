@@ -1,5 +1,6 @@
 import type { ReactTestRendererJSON } from 'react-test-renderer';
 import format, { FormatOptions } from './format';
+import { logger } from './logger';
 
 export type DebugOptions = {
   message?: string;
@@ -17,10 +18,8 @@ export function debug(
   const formatOptions = typeof options === 'object' ? { mapProps: options?.mapProps } : undefined;
 
   if (message) {
-    // eslint-disable-next-line no-console
-    console.log(`${message}\n\n`, format(instance, formatOptions));
+    logger.info(`${message}\n\n`, format(instance, formatOptions));
   } else {
-    // eslint-disable-next-line no-console
-    console.log(format(instance, formatOptions));
+    logger.info(format(instance, formatOptions));
   }
 }
