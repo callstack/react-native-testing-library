@@ -127,10 +127,10 @@ function waitForInternal<T>(
       try {
         const result = expectation();
 
-        // @ts-ignore result can be a promise
+        // @ts-expect-error result can be a promise
         // eslint-disable-next-line promise/prefer-await-to-then
         if (typeof result?.then === 'function') {
-          const promiseResult: Promise<T> = result as any;
+          const promiseResult: Promise<T> = result as unknown as Promise<T>;
           promiseStatus = 'pending';
           // eslint-disable-next-line promise/catch-or-return, promise/prefer-await-to-then
           promiseResult.then(

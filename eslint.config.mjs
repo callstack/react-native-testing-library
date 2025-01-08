@@ -16,8 +16,14 @@ export default [
   ...callstackConfig,
   ...tseslint.configs.strict,
   {
+    rules: {
+      'no-console': 'error',
+    },
+  },
+  {
     files: ['**/*.test.{ts,tsx}', 'src/test-utils/**'],
     rules: {
+      'react/no-multi-comp': 'off',
       'react-native/no-color-literals': 'off',
       'react-native/no-inline-styles': 'off',
       'react-native/no-raw-text': 'off',
