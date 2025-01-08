@@ -43,7 +43,6 @@ function waitForInternal<T>(
       // infinite loop. However, eslint isn't smart enough to know that we're
       // setting finished inside `onDone` which will be called when we're done
       // waiting or when we've timed out.
-      // eslint-disable-next-line no-unmodified-loop-condition
       let fakeTimeRemaining = timeout;
       while (!finished) {
         if (!jestFakeTimersAreEnabled()) {
@@ -82,7 +81,6 @@ function waitForInternal<T>(
         // to resolve before continuing. We don't need to take advantage
         // of parallelization so we're fine.
         // https://stackoverflow.com/a/59243586/971592
-        // eslint-disable-next-line no-await-in-loop
         await flushMicroTasks();
       }
     } else {
@@ -128,7 +126,6 @@ function waitForInternal<T>(
         const result = expectation();
 
         // @ts-expect-error result can be a promise
-        // eslint-disable-next-line promise/prefer-await-to-then
         if (typeof result?.then === 'function') {
           const promiseResult: Promise<T> = result as unknown as Promise<T>;
           promiseStatus = 'pending';

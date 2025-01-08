@@ -46,13 +46,11 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
               // eslint-disable-next-line promise/always-return
               (returnValue) => {
                 setIsReactActEnvironment(previousActEnvironment);
-                // @ts-expect-error
-                resolve(returnValue);
+                resolve(returnValue as never);
               },
               (error) => {
                 setIsReactActEnvironment(previousActEnvironment);
-                // @ts-expect-error
-                reject(error);
+                reject(error as never);
               },
             );
           },
@@ -70,7 +68,7 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
   };
 }
 
-// @ts-expect-error
+// @ts-expect-error: typings get too complex
 const act = withGlobalActEnvironment(reactAct) as ReactAct;
 
 export default act;
