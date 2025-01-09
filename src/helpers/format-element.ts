@@ -57,10 +57,6 @@ export function formatElementType(type: ElementType): string {
     return type.displayName ?? type.name;
   }
 
-  // if (typeof type === 'object') {
-  //   console.log('OBJECT', type);
-  // }
-
   if (typeof type === 'object' && 'type' in type) {
     // @ts-expect-error: despite typing this can happen for class components, e.g. HOCs
     const nestedType = formatElementType(type.type);
