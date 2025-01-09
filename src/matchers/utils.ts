@@ -11,7 +11,7 @@ import {
 import prettyFormat, { plugins } from 'pretty-format';
 import redent from 'redent';
 import { isHostElement } from '../helpers/component-tree';
-import { defaultMapProps } from '../helpers/format-default';
+import { defaultMapProps } from '../helpers/map-props';
 
 class HostElementTypeError extends Error {
   constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {

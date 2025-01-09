@@ -1,26 +1,25 @@
 import type { ReactTestRendererJSON } from 'react-test-renderer';
-import type { FormatOptions } from './format';
-import format from './format';
+import type { FormatElementOptions } from './format-element';
+import { formatJson } from './format-element';
 import { logger } from './logger';
 
 export type DebugOptions = {
   message?: string;
-} & FormatOptions;
+} & FormatElementOptions;
 
 /**
  * Log pretty-printed deep test component instance
  */
 export function debug(
   instance: ReactTestRendererJSON | ReactTestRendererJSON[],
-  options?: DebugOptions | string,
+  options: DebugOptions | string = {},
 ) {
-  const message = typeof options === 'string' ? options : options?.message;
-
-  const formatOptions = typeof options === 'object' ? { mapProps: options?.mapProps } : undefined;
+  const { message, ...formatOptions } =
+    typeof options === 'string' ? { message: options } : options;
 
   if (message) {
-    logger.info(`${message}\n\n`, format(instance, formatOptions));
+    logger.info(`${message}\n\n`, formatJson(instance, formatOptions));
   } else {
-    logger.info(format(instance, formatOptions));
+    logger.info(formatJson(instance, formatOptions));
   }
 }
