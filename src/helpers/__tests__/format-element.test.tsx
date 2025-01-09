@@ -21,5 +21,5 @@ test('formatElement', () => {
       Hello
     </Text>"
   `);
-  expect(formatElement(null)).toMatchInlineSnapshot(`"null"`);
+  expect(formatElement(null)).toMatchInlineSnapshot(`"(null)"`);
 });

@@ -26,7 +26,7 @@ export function formatElement(
   { compact, highlight = true, mapProps = defaultMapProps }: FormatElementOptions = {},
 ) {
   if (element == null) {
-    return 'null';
+    return '(null)';
   }
 
   const { children, ...props } = element.props;
