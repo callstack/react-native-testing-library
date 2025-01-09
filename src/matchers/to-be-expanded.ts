@@ -1,7 +1,9 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
+import redent from 'redent';
 import { computeAriaExpanded } from '../helpers/accessibility';
-import { checkHostElement, formatElement } from './utils';
+import { formatElement } from '../helpers/format-element';
+import { checkHostElement } from './utils';
 
 export function toBeExpanded(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeExpanded, this);
@@ -14,7 +16,7 @@ export function toBeExpanded(this: jest.MatcherContext, element: ReactTestInstan
         matcher,
         '',
         `Received element is ${this.isNot ? '' : 'not '}expanded:`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };
@@ -31,7 +33,7 @@ export function toBeCollapsed(this: jest.MatcherContext, element: ReactTestInsta
         matcher,
         '',
         `Received element is ${this.isNot ? '' : 'not '}collapsed:`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };

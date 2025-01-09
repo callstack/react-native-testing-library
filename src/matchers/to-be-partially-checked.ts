@@ -1,8 +1,10 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
+import redent from 'redent';
 import { computeAriaChecked, getRole, isAccessibilityElement } from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
-import { checkHostElement, formatElement } from './utils';
+import { formatElement } from '../helpers/format-element';
+import { checkHostElement } from './utils';
 
 export function toBePartiallyChecked(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBePartiallyChecked, this);
@@ -22,7 +24,7 @@ export function toBePartiallyChecked(this: jest.MatcherContext, element: ReactTe
         matcherHint(`${this.isNot ? '.not' : ''}.toBePartiallyChecked`, 'element', ''),
         '',
         `Received element ${is} partially checked:`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };

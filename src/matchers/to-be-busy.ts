@@ -1,7 +1,9 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
+import redent from 'redent';
 import { computeAriaBusy } from '../helpers/accessibility';
-import { checkHostElement, formatElement } from './utils';
+import { formatElement } from '../helpers/format-element';
+import { checkHostElement } from './utils';
 
 export function toBeBusy(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeBusy, this);
@@ -14,7 +16,7 @@ export function toBeBusy(this: jest.MatcherContext, element: ReactTestInstance) 
         matcher,
         '',
         `Received element is ${this.isNot ? '' : 'not '}busy:`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };

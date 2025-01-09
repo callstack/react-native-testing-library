@@ -1,15 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
 import { render, screen } from '../..';
-import { checkHostElement, formatElement } from '../utils';
+import { checkHostElement } from '../utils';
 
 function fakeMatcher() {
   return { pass: true, message: () => 'fake' };
 }
-
-test('formatElement', () => {
-  expect(formatElement(null)).toMatchInlineSnapshot(`"  null"`);
-});
 
 test('checkHostElement allows host element', () => {
   render(<View testID="view" />);

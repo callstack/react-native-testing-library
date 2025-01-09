@@ -1,8 +1,10 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
+import redent from 'redent';
 import { computeAriaDisabled } from '../helpers/accessibility';
 import { getHostParent } from '../helpers/component-tree';
-import { checkHostElement, formatElement } from './utils';
+import { formatElement } from '../helpers/format-element';
+import { checkHostElement } from './utils';
 
 export function toBeDisabled(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeDisabled, this);
@@ -17,7 +19,7 @@ export function toBeDisabled(this: jest.MatcherContext, element: ReactTestInstan
         matcherHint(`${this.isNot ? '.not' : ''}.toBeDisabled`, 'element', ''),
         '',
         `Received element ${is} disabled:`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };
@@ -36,7 +38,7 @@ export function toBeEnabled(this: jest.MatcherContext, element: ReactTestInstanc
         matcherHint(`${this.isNot ? '.not' : ''}.toBeEnabled`, 'element', ''),
         '',
         `Received element ${is} enabled:`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };
