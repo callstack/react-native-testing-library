@@ -2,6 +2,7 @@ import type { ElementType } from 'react';
 import type { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
 import type { NewPlugin } from 'pretty-format';
 import prettyFormat, { plugins } from 'pretty-format';
+import type { MapPropsFunction } from './map-props';
 import { defaultMapProps } from './map-props';
 
 export type FormatElementOptions = {
@@ -14,8 +15,6 @@ export type FormatElementOptions = {
   /** Filter or map props to display. */
   mapProps?: MapPropsFunction | null;
 };
-
-export type MapPropsFunction = (props: Record<string, unknown>) => Record<string, unknown>;
 
 /***
  * Format given element as a pretty-printed string.
