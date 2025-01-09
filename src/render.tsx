@@ -114,7 +114,7 @@ function buildRenderResult(
     unmount,
     rerender: update, // alias for `update`
     toJSON: renderer.toJSON,
-    debug: makeDebug(instance, renderer),
+    debug: makeDebug(renderer),
     get root(): ReactTestInstance {
       return getHostSelves(instance)[0];
     },
@@ -151,7 +151,7 @@ function updateWithAct(
 
 export type DebugFunction = (options?: DebugOptions) => void;
 
-function makeDebug(_instance: ReactTestInstance, renderer: ReactTestRenderer): DebugFunction {
+function makeDebug(renderer: ReactTestRenderer): DebugFunction {
   function debugImpl(options?: DebugOptions) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions = { ...defaultDebugOptions, ...options };

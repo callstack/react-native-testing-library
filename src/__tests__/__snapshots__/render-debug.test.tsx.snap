@@ -295,61 +295,6 @@ exports[`debug: All Props 1`] = `
 undefined"
 `;
 
-exports[`debug: Legacy message 1`] = `
-"my custom message
-
-
-<View>
-  <Text>
-    Is the banana fresh?
-  </Text>
-  <Text
-    testID="bananaFresh"
-  >
-    not fresh
-  </Text>
-  <TextInput
-    placeholder="Add custom freshness"
-    testID="bananaCustomFreshness"
-    value="Custom Freshie"
-  />
-  <TextInput
-    defaultValue="What did you inspect?"
-    placeholder="Who inspected freshness?"
-    testID="bananaChef"
-    value="I inspected freshie"
-  />
-  <TextInput
-    defaultValue="What banana?"
-  />
-  <TextInput
-    defaultValue="hello"
-    value=""
-  />
-  <View
-    accessible={true}
-    role="button"
-  >
-    <Text>
-      Change freshness!
-    </Text>
-  </View>
-  <Text
-    testID="duplicateText"
-  >
-    First Text
-  </Text>
-  <Text
-    testID="duplicateText"
-  >
-    Second Text
-  </Text>
-  <Text>
-    0
-  </Text>
-</View>"
-`;
-
 exports[`debug: Option message 1`] = `
 "another custom message
 
