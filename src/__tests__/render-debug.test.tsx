@@ -94,21 +94,12 @@ test('debug', () => {
 
   screen.debug();
   screen.debug({ message: 'another custom message' });
-  screen.debug('my custom message');
   screen.debug({ mapProps: null });
 
   const mockCalls = jest.mocked(logger.info).mock.calls;
   expect(mockCalls[0][0]).toMatchSnapshot();
   expect(`${mockCalls[1][0]}\n${mockCalls[1][1]}`).toMatchSnapshot('Option message');
-  expect(`${mockCalls[2][0]}\n${mockCalls[2][1]}`).toMatchSnapshot('Legacy message');
-  expect(`${mockCalls[3][0]}\n${mockCalls[3][1]}`).toMatchSnapshot('All Props');
-
-  const mockWarnCalls = jest.mocked(logger.warn).mock.calls;
-  expect(mockWarnCalls[0]).toMatchInlineSnapshot(`
-    [
-      "Using debug("message") is deprecated and will be removed in future release, please use debug({ message: "message" }) instead.",
-    ]
-  `);
+  expect(`${mockCalls[2][0]}\n${mockCalls[2][1]}`).toMatchSnapshot('All Props');
 });
 
 test('debug changing component', () => {

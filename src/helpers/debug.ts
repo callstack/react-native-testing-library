@@ -12,11 +12,8 @@ export type DebugOptions = {
  */
 export function debug(
   instance: ReactTestRendererJSON | ReactTestRendererJSON[],
-  options: DebugOptions | string = {},
+  { message, ...formatOptions }: DebugOptions = {},
 ) {
-  const { message, ...formatOptions } =
-    typeof options === 'string' ? { message: options } : options;
-
   if (message) {
     logger.info(`${message}\n\n`, formatJson(instance, formatOptions));
   } else {

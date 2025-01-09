@@ -10,7 +10,6 @@ import { getConfig } from './config';
 import { getHostSelves } from './helpers/component-tree';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
-import { logger } from './helpers/logger';
 import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
@@ -150,22 +149,12 @@ function updateWithAct(
   };
 }
 
-export type DebugFunction = (options?: DebugOptions | string) => void;
+export type DebugFunction = (options?: DebugOptions) => void;
 
-function makeDebug(instance: ReactTestInstance, renderer: ReactTestRenderer): DebugFunction {
-  function debugImpl(options?: DebugOptions | string) {
+function makeDebug(_instance: ReactTestInstance, renderer: ReactTestRenderer): DebugFunction {
+  function debugImpl(options?: DebugOptions) {
     const { defaultDebugOptions } = getConfig();
-    const debugOptions =
-      typeof options === 'string'
-        ? { ...defaultDebugOptions, message: options }
-        : { ...defaultDebugOptions, ...options };
-
-    if (typeof options === 'string') {
-      logger.warn(
-        'Using debug("message") is deprecated and will be removed in future release, please use debug({ message: "message" }) instead.',
-      );
-    }
-
+    const debugOptions = { ...defaultDebugOptions, ...options };
     const json = renderer.toJSON();
     if (json) {
       return debug(json, debugOptions);
