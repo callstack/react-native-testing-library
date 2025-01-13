@@ -53,11 +53,6 @@ export function checkHostElement(
   }
 }
 
-export type FormatElementOptions = {
-  // Minimize used space.
-  minimal?: boolean;
-};
-
 export function formatMessage(
   matcher: string,
   expectedLabel: string,
