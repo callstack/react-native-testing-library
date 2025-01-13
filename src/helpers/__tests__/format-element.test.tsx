@@ -11,7 +11,7 @@ test('formatElement', () => {
     </View>,
   );
 
-  expect(formatElement(screen.getByTestId('view'))).toMatchInlineSnapshot(`
+  expect(formatElement(screen.getByTestId('view'), { mapProps: null })).toMatchInlineSnapshot(`
     "<View
       testID="view"
     />"
