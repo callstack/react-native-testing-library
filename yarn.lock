@@ -2792,7 +2792,7 @@ __metadata:
     "@types/react-test-renderer": "npm:^18.3.0"
     babel-jest: "npm:^29.7.0"
     babel-plugin-module-resolver: "npm:^5.0.2"
-    chalk: "npm:^4.1.2"
+    chalk: "npm:^5.4.1"
     del-cli: "npm:^6.0.0"
     eslint: "npm:^9.17.0"
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
@@ -3844,14 +3844,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:5.4.1, chalk@npm:^5.3.0":
+"chalk@npm:5.4.1, chalk@npm:^5.3.0, chalk@npm:^5.4.1":
   version: 5.4.1
   resolution: "chalk@npm:5.4.1"
   checksum: 10c0/b23e88132c702f4855ca6d25cb5538b1114343e41472d5263ee8a37cccfccd9c4216d111e1097c6a27830407a1dc81fecdf2a56f2c63033d4dbbd88c10b0dcef
   languageName: node
   linkType: hard
 
-"chalk@npm:^4.0.0, chalk@npm:^4.1.2":
+"chalk@npm:^4.0.0":
   version: 4.1.2
   resolution: "chalk@npm:4.1.2"
   dependencies:
