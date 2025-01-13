@@ -85,7 +85,7 @@ function getEventHandlerState(
     return { enabled: true };
   }
 
-  return { enabled: false, reason: 'not a touch responder' };
+  return { enabled: false, reason: 'not being a touch responder' };
 }
 
 function findEventHandler(
@@ -104,8 +104,8 @@ function findEventHandler(
     } else {
       logger.warn(
         `FireEvent: "${eventName}" event handler is disabled on ${formatElement(element, {
-          minimal: true,
-        })} (${handlerState.reason}).`,
+          compact: true,
+        })} due to ${handlerState.reason}.`,
       );
     }
   }
@@ -159,7 +159,7 @@ function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: un
   if (!handler) {
     logger.warn(
       `FireEvent: no enabled event handler for "${eventName}" found on ${formatElement(element, {
-        minimal: true,
+        compact: true,
       })} or its ancestors.`,
     );
     return;
