@@ -55,10 +55,10 @@ declare type A11yRole =
 
 declare type A11yState = {|
   disabled?: boolean,
-  selected?: boolean,
-  checked?: boolean | 'mixed',
-  busy?: boolean,
-  expanded?: boolean,
+    selected ?: boolean,
+    checked ?: boolean | 'mixed',
+    busy ?: boolean,
+    expanded ?: boolean,
 |};
 
 declare type A11yValue = {
@@ -274,10 +274,6 @@ type DebugOptions = {
   mapProps?: MapPropsFunction,
 };
 
-type Debug = {
-  (options?: DebugOptions): void,
-};
-
 type Queries = ByTextQueries &
   ByTestIdQueries &
   ByDisplayValueQueries &
@@ -304,7 +300,7 @@ declare module '@testing-library/react-native' {
     rerender(nextElement: React.Element<any>): void;
     unmount(nextElement?: React.Element<any>): void;
     toJSON(): ReactTestRendererJSON[] | ReactTestRendererJSON | null;
-    debug: Debug;
+    debug(options?: DebugOptions): void;
     root: ReactTestInstance;
     UNSAFE_root: ReactTestInstance;
   }

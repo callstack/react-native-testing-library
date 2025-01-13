@@ -53,6 +53,10 @@ const view = screen.getBy*(...); // Find the element using any query: *ByRole, *
 expect(view).toHaveAccessibilityValue({ now: 50, min: 0, max: 50 }); // Assert its accessibility value
 ```
 
+## Removed deprecated `debug(message)` variant
+
+The `debug(message)` variant has been removed. Use `debug({ message })` instead.
+
 ## Removed `debug.shallow`
 
 For a time being we didn't support shallow rendering. Now we are removing the last remains of it: `debug.shallow()`. If you are interested in shallow rendering see [here](docs/migration/previous/v2#removed-global-shallow-function).
