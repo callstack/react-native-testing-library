@@ -1,7 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
-import format from '../helpers/format';
-import { defaultMapProps } from '../helpers/format-default';
+import { formatJson } from '../helpers/format-element';
 import { logger } from '../helpers/logger';
 import { screen } from '../screen';
 import type { WaitForOptions } from '../wait-for';
@@ -96,9 +95,7 @@ function formatErrorMessage(message: string, printElementTree: boolean) {
     return message;
   }
 
-  return `${message}\n\n${format(json, {
-    mapProps: defaultMapProps,
-  })}`;
+  return `${message}\n\n${formatJson(json)}`;
 }
 
 function appendElementTreeToError(error: Error) {

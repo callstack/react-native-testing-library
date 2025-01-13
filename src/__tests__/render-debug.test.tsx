@@ -93,27 +93,20 @@ test('debug', () => {
   render(<Banana />);
 
   screen.debug();
-  screen.debug('my custom message');
   screen.debug({ message: 'another custom message' });
+  screen.debug({ mapProps: null });
 
   const mockCalls = jest.mocked(logger.info).mock.calls;
   expect(mockCalls[0][0]).toMatchSnapshot();
-  expect(`${mockCalls[1][0]}\n${mockCalls[1][1]}`).toMatchSnapshot('with message');
-  expect(`${mockCalls[2][0]}\n${mockCalls[2][1]}`).toMatchSnapshot('another custom message');
-
-  const mockWarnCalls = jest.mocked(logger.warn).mock.calls;
-  expect(mockWarnCalls[0]).toMatchInlineSnapshot(`
-    [
-      "Using debug("message") is deprecated and will be removed in future release, please use debug({ message: "message" }) instead.",
-    ]
-  `);
+  expect(`${mockCalls[1][0]}\n${mockCalls[1][1]}`).toMatchSnapshot('Option message');
+  expect(`${mockCalls[2][0]}\n${mockCalls[2][1]}`).toMatchSnapshot('All Props');
 });
 
 test('debug changing component', () => {
   render(<Banana />);
   fireEvent.press(screen.getByRole('button', { name: 'Change freshness!' }));
 
-  screen.debug();
+  screen.debug({ mapProps: null });
 
   const mockCalls = jest.mocked(logger.info).mock.calls;
   expect(mockCalls[0][0]).toMatchSnapshot('bananaFresh button message should now be "fresh"');
@@ -139,16 +132,6 @@ test('debug with only prop whose value is bananaChef', () => {
       });
       return filterProps;
     },
-  });
-
-  const mockCalls = jest.mocked(logger.info).mock.calls;
-  expect(mockCalls[0][0]).toMatchSnapshot();
-});
-
-test('debug with only props from TextInput components', () => {
-  render(<Banana />);
-  screen.debug({
-    mapProps: (props, node) => (node.type === 'TextInput' ? props : {}),
   });
 
   const mockCalls = jest.mocked(logger.info).mock.calls;

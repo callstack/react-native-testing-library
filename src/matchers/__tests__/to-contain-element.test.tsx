@@ -89,7 +89,7 @@ test('toContainElement() handles null element', () => {
 
     does not contain:
 
-       null
+       (null)
             "
   `);
 });

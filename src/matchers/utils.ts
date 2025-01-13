@@ -7,10 +7,8 @@ import {
   RECEIVED_COLOR,
   stringify,
 } from 'jest-matcher-utils';
-import prettyFormat, { plugins } from 'pretty-format';
 import redent from 'redent';
 import { isHostElement } from '../helpers/component-tree';
-import { defaultMapProps } from '../helpers/format-default';
 
 class HostElementTypeError extends Error {
   constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {
@@ -53,48 +51,6 @@ export function checkHostElement(
   if (!isHostElement(element)) {
     throw new HostElementTypeError(element, matcherFn, context);
   }
-}
-
-/***
- * Format given element as a pretty-printed string.
- *
- * @param element Element to format.
- */
-export function formatElement(element: ReactTestInstance | null) {
-  if (element == null) {
-    return '  null';
-  }
-
-  const { children, ...props } = element.props;
-  const childrenToDisplay = typeof children === 'string' ? [children] : undefined;
-
-  return redent(
-    prettyFormat(
-      {
-        // This prop is needed persuade the prettyFormat that the element is
-        // a ReactTestRendererJSON instance, so it is formatted as JSX.
-        $$typeof: Symbol.for('react.test.json'),
-        type: element.type,
-        props: defaultMapProps(props),
-        children: childrenToDisplay,
-      },
-      {
-        plugins: [plugins.ReactTestComponent, plugins.ReactElement],
-        printFunctionName: false,
-        printBasicPrototype: false,
-        highlight: true,
-      },
-    ),
-    2,
-  );
-}
-
-export function formatElementArray(elements: ReactTestInstance[]) {
-  if (elements.length === 0) {
-    return '  (no elements)';
-  }
-
-  return redent(elements.map(formatElement).join('\n'), 2);
 }
 
 export function formatMessage(

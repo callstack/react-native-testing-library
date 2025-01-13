@@ -1,10 +1,12 @@
 import { StyleSheet } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
+import redent from 'redent';
 import { isHiddenFromAccessibility } from '../helpers/accessibility';
 import { getHostParent } from '../helpers/component-tree';
+import { formatElement } from '../helpers/format-element';
 import { isHostModal } from '../helpers/host-component-names';
-import { checkHostElement, formatElement } from './utils';
+import { checkHostElement } from './utils';
 
 export function toBeVisible(this: jest.MatcherContext, element: ReactTestInstance) {
   if (element !== null || !this.isNot) {
@@ -19,7 +21,7 @@ export function toBeVisible(this: jest.MatcherContext, element: ReactTestInstanc
         matcherHint(`${this.isNot ? '.not' : ''}.toBeVisible`, 'element', ''),
         '',
         `Received element ${is} visible:`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };

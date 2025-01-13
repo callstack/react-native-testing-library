@@ -1,7 +1,9 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
+import redent from 'redent';
 import { computeAriaSelected } from '../helpers/accessibility';
-import { checkHostElement, formatElement } from './utils';
+import { formatElement } from '../helpers/format-element';
+import { checkHostElement } from './utils';
 
 export function toBeSelected(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeSelected, this);
@@ -14,7 +16,7 @@ export function toBeSelected(this: jest.MatcherContext, element: ReactTestInstan
         matcherHint(`${this.isNot ? '.not' : ''}.toBeSelected`, 'element', ''),
         '',
         `Received element ${is} selected`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };

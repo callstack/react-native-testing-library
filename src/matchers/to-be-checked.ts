@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
+import redent from 'redent';
 import {
   computeAriaChecked,
   getRole,
@@ -7,8 +8,9 @@ import {
   rolesSupportingCheckedState,
 } from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
+import { formatElement } from '../helpers/format-element';
 import { isHostSwitch } from '../helpers/host-component-names';
-import { checkHostElement, formatElement } from './utils';
+import { checkHostElement } from './utils';
 
 export function toBeChecked(this: jest.MatcherContext, element: ReactTestInstance) {
   checkHostElement(element, toBeChecked, this);
@@ -28,7 +30,7 @@ export function toBeChecked(this: jest.MatcherContext, element: ReactTestInstanc
         matcherHint(`${this.isNot ? '.not' : ''}.toBeChecked`, 'element', ''),
         '',
         `Received element ${is} checked:`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };

@@ -1,4 +1,4 @@
-import { defaultMapProps } from '../format-default';
+import { defaultMapProps } from '../map-props';
 
 describe('mapPropsForQueryError', () => {
   test('preserves props that are helpful for debugging', () => {
