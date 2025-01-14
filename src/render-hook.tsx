@@ -35,7 +35,7 @@ export function renderHook<Result, Props>(
 
   const result: React.MutableRefObject<Result | null> = React.createRef();
 
-  function TestComponent({ hookProps: hookProps }: { hookProps: Props }) {
+  function TestComponent({ hookProps }: { hookProps: Props }) {
     const renderResult = hookToRender(hookProps);
 
     React.useEffect(() => {
