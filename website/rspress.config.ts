@@ -18,8 +18,8 @@ export default defineConfig({
     codeHighlighter: 'prism',
   },
   multiVersion: {
-    default: '12.x',
-    versions: ['12.x', '13.x-next'],
+    default: '13.x',
+    versions: ['12.x', '13.x'],
   },
   route: {
     cleanUrls: true,
