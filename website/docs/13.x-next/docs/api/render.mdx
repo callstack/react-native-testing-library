@@ -20,11 +20,11 @@ test('basic test', () => {
 
 > When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases, it's convenient to create your own custom `render` method. [Follow this great guide on how to set this up](https://testing-library.com/docs/react-testing-library/setup#custom-render).
 
-### Options {#render-options}
+## Options
 
 The behavior of the `render` method can be customized by passing various options as a second argument of the `RenderOptions` type:
 
-#### `wrapper` option
+### `wrapper` option
 
 ```ts
 wrapper?: React.ComponentType<any>,
@@ -32,12 +32,12 @@ wrapper?: React.ComponentType<any>,
 
 This option allows you to wrap the tested component, passed as the first option to the `render()` function, in an additional wrapper component. This is useful for creating reusable custom render functions for common React Context providers.
 
-#### `concurrentRoot` option {#concurrent-root}
+### `concurrentRoot` option {#concurrent-root}
 
 Set to `false` to disable concurrent rendering.
 Otherwise, `render` will default to using concurrent rendering used in the React Native New Architecture.
 
-#### `createNodeMock` option
+### `createNodeMock` option
 
 ```ts
 createNodeMock?: (element: React.Element) => unknown,
@@ -45,7 +45,7 @@ createNodeMock?: (element: React.Element) => unknown,
 
 This option allows you to pass `createNodeMock` option to `ReactTestRenderer.create()` method in order to allow for custom mock refs. You can learn more about this option from [React Test Renderer documentation](https://reactjs.org/docs/test-renderer.html#ideas).
 
-#### `unstable_validateStringsRenderedWithinText` option
+### `unstable_validateStringsRenderedWithinText` option
 
 ```ts
 unstable_validateStringsRenderedWithinText?: boolean;
@@ -59,7 +59,7 @@ This **experimental** option allows you to replicate React Native behavior of th
 
 React Test Renderer does not enforce this check; hence, by default, React Native Testing Library also does not check this. That might result in runtime errors when running your code on a device, while the code works without errors in tests.
 
-### Result {#render-result}
+## Result
 
 The `render` function returns the same queries and utilities as the [`screen`](docs/api/screen) object. We recommended using the `screen` object as more developer-friendly way.
 

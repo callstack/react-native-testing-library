@@ -45,7 +45,7 @@ The `props` passed into the callback will be the `initialProps` provided in the 
 
 A `RenderHookOptions<Props>` object to modify the execution of the `callback` function, containing the following properties:
 
-### `initialProps`
+### `initialProps` {#initial-props}
 
 The initial values to pass as `props` to the `callback` function of `renderHook`. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
 
@@ -53,7 +53,12 @@ The initial values to pass as `props` to the `callback` function of `renderHook`
 
 A React component to wrap the test component in when rendering. This is usually used to add context providers from `React.createContext` for the hook to access with `useContext`.
 
-## `RenderHookResult`
+### `concurrentRoot` {#concurrent-root}
+
+Set to `false` to disable concurrent rendering.
+Otherwise, `render` will default to using concurrent rendering used in the React Native New Architecture.
+
+## Result
 
 ```ts
 interface RenderHookResult<Result, Props> {
