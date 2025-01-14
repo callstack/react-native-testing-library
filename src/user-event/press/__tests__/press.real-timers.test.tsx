@@ -197,7 +197,12 @@ describe('userEvent.press with real timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
+    const eventsNames = getEventsNames(events).join(',  ');
+    // Typical event order is pressIn, pressOut, press
+    // But sometimes due to a race condition, the order is pressIn, press, pressOut.
+    expect(
+      eventsNames === 'pressIn, pressOut, press' || eventsNames === 'pressIn, press, pressOut',
+    ).toBe(true);
   });
 
   test('crawls up in the tree to find an element that responds to touch events', async () => {
