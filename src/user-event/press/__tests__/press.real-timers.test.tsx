@@ -197,7 +197,7 @@ describe('userEvent.press with real timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    const eventsNames = getEventsNames(events).join(',  ');
+    const eventsNames = getEventsNames(events).join(', ');
     // Typical event order is pressIn, pressOut, press
     // But sometimes due to a race condition, the order is pressIn, press, pressOut.
     expect(
