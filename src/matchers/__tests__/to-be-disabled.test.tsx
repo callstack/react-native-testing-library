@@ -158,7 +158,6 @@ test.each([
   ['TouchableNativeFeedback', TouchableNativeFeedback],
 ] as const)('toBeDisabled()/toBeEnabled() supports %s with "disabled" prop', (_, Component) => {
   render(
-    // @ts-expect-error disabled prop is not available on all Touchables
     <Component disabled testID="subject">
       <Text>Button</Text>
     </Component>,
@@ -190,7 +189,6 @@ test.each([
   'toBeDisabled()/toBeEnabled() supports %s with "aria-disabled" prop',
   (_, Component) => {
     render(
-      // @ts-expect-error too generic for typescript
       <Component testID="subject" aria-disabled>
         <Text>Hello</Text>
       </Component>,
@@ -217,7 +215,6 @@ test.each([
   'toBeDisabled()/toBeEnabled() supports %s with "accessibilityState.disabled" prop',
   (_, Component) => {
     render(
-      // @ts-expect-error disabled prop is not available on all Touchables
       <Component testID="subject" accessibilityState={{ disabled: true }}>
         <Text>Hello</Text>
       </Component>,
