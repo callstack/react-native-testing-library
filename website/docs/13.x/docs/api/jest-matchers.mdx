@@ -4,20 +4,7 @@ This guide describes built-in Jest matchers, we recommend using these matchers a
 
 ## Setup
 
-You can use the built-in matchers by adding the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
-
-```ts title=jest-setup.ts
-import '@testing-library/react-native/extend-expect';
-```
-
-Alternatively, you can add above script to your Jest configuration (usually located either in the `jest.config.js` file or in the `package.json` file under the `"jest"` key):
-
-```json title=jest.config.js
-{
-  "preset": "react-native",
-  "setupFilesAfterEnv": ["@testing-library/react-native/extend-expect"]
-}
-```
+There is no need to setup the built-in matchers, they are automatically available in your tests when you import anything from `@testing-library/react-native`, e.g. `render`.
 
 ## Migration from legacy Jest Native matchers.
 

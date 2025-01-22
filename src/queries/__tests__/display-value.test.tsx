@@ -1,4 +1,3 @@
-import '../../matchers/extend-expect';
 import * as React from 'react';
 import { TextInput, View } from 'react-native';
 import { fireEvent, render, screen } from '../..';
