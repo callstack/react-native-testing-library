@@ -8,6 +8,7 @@ import type {
 import type { ReactTestInstance } from 'react-test-renderer';
 
 import act from './act';
+import { getEventHandler } from './event-handler';
 import { isElementMounted, isHostElement } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
@@ -80,7 +81,7 @@ function findEventHandler(
 ): EventHandler | null {
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
-  const handler = getEventHandler(element, eventName);
+  const handler = getEventHandler(element, eventName, { loose: true });
   if (handler && isEventEnabled(element, eventName, touchResponder)) return handler;
 
   // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
@@ -89,23 +90,6 @@ function findEventHandler(
   }
 
   return findEventHandler(element.parent, eventName, touchResponder);
-}
-
-function getEventHandler(element: ReactTestInstance, eventName: string) {
-  const eventHandlerName = getEventHandlerName(eventName);
-  if (typeof element.props[eventHandlerName] === 'function') {
-    return element.props[eventHandlerName];
-  }
-
-  if (typeof element.props[eventName] === 'function') {
-    return element.props[eventName];
-  }
-
-  return undefined;
-}
-
-function getEventHandlerName(eventName: string) {
-  return `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 }
 
 // String union type of keys of T that start with on, stripped of 'on'
