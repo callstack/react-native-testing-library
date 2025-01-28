@@ -1,6 +1,6 @@
 # Third-Party Library Integration
 
-React Native Testing Library (RNTL) is designed to simulate core React Native behaviors.
+React Native Testing Library is designed to simulate core React Native behaviors.
 However, it does not replicate the internal logic of third-party libraries. This guide
 explains how to integrate your library with RNTL.
 
@@ -17,30 +17,32 @@ to expose custom events to RNTL's event subsystems. Both subsystems will first a
 
 ### Example: React Native Gesture Handler
 
-React Native Gesture Handler (RNGH) provides a composite `Pressable` component with `onPress` props.
+React Native Gesture Handler (RNGH) provides a composite [Pressable](https://docs.swmansion.com/react-native-gesture-handler/docs/components/pressable/)
+component with `onPressXxx` props.
 These props are part of the library's internal event flow, which involves native modules and
 `EventEmitters`. As a result, they are not directly exposed to the host components rendered by
 `Pressable`, making them inaccessible to RNTL's event subsystems.
 
-To enable RNTL to interact with RNGH's `Pressable` component, the library exposes `testOnly_onPress`
+To enable RNTL to interact with RNGH's `Pressable` component, the library exposes `testOnly_onPressXxx`
 props on the `NativeButton` host component rendered by `Pressable`. This allows RNTL to simulate
 interactions during testing.
 
 ```tsx title="Simplified RNGH Pressable component"
 function Pressable({ onPress, onPressIn, onPressOut, ... }) {
-    // Component logic...
 
-    const isTestEnv = process.env.NODE_ENV === 'test';
+  // Component logic...
 
-    return (
-        <GestureDetector gesture={gesture}>
-            <NativeButton
-                { /* Other props... */ }
-                testOnly_onPress={isTestEnv ? onPress : undefined}
-                testOnly_onPressIn={isTestEnv ? onPressIn : undefined}
-                testOnly_onPressOut={isTestEnv ? onPressOut : undefined}
-        />
+  const isTestEnv = process.env.NODE_ENV === 'test';
+
+  return (
+    <GestureDetector gesture={gesture}>
+      <NativeButton
+        { /* Other props... */ }
+        testOnly_onPress={isTestEnv ? onPress : undefined}
+        testOnly_onPressIn={isTestEnv ? onPressIn : undefined}
+        testOnly_onPressOut={isTestEnv ? onPressOut : undefined}
+      />
     </GestureDetector>
-    );
+  );
 }
 ```
