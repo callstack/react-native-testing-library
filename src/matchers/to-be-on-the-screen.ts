@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import redent from 'redent';
+
 import { getUnsafeRootElement } from '../helpers/component-tree';
 import { formatElement } from '../helpers/format-element';
 import { screen } from '../screen';

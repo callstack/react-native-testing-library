@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+
 import { getHostParent } from './component-tree';
 
 /**

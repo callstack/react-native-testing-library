@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
+
 import { configure, fireEvent, render, screen } from '..';
 import { logger } from '../helpers/logger';
 

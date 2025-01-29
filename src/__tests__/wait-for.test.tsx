@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
+
 import { configure, fireEvent, render, screen, waitFor } from '..';
 
 class Banana extends React.Component<any> {

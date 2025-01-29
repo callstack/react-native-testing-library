@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
+
 import { isHiddenFromAccessibility } from '../helpers/accessibility';
 import { getHostParent } from '../helpers/component-tree';
 import { formatElement } from '../helpers/format-element';

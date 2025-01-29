@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import { cleanup, render } from '../pure';
 
 class Test extends React.Component<{ onUnmount: () => void }> {

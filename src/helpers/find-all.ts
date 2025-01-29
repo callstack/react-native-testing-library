@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+
 import { getConfig } from '../config';
 import { isHiddenFromAccessibility } from './accessibility';
 import type { HostTestInstance } from './component-tree';

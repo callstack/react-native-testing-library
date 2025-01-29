@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import redent from 'redent';
+
 import { formatElement } from '../helpers/format-element';
 import { checkHostElement } from './utils';
 

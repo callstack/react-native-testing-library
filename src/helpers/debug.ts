@@ -1,4 +1,5 @@
 import type { ReactTestRendererJSON } from 'react-test-renderer';
+
 import type { FormatElementOptions } from './format-element';
 import { formatJson } from './format-element';
 import { logger } from './logger';

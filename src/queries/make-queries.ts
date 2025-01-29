@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+
 import { ErrorWithStack } from '../helpers/errors';
 import { formatJson } from '../helpers/format-element';
 import { logger } from '../helpers/logger';

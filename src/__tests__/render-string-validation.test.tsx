@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Pressable, Text, View } from 'react-native';
+
 import { fireEvent, render, screen } from '..';
 
 // eslint-disable-next-line no-console

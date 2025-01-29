@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import { configure, render, screen } from '../..';
 
 test('includeHiddenElements query option takes priority over hidden option and global config', () => {

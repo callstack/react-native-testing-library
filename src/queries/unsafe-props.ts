@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import prettyFormat from 'pretty-format';
+
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
 import { createQueryByError } from '../helpers/errors';
 

@@ -8,6 +8,7 @@ import {
   stringify,
 } from 'jest-matcher-utils';
 import redent from 'redent';
+
 import { isHostElement } from '../helpers/component-tree';
 
 class HostElementTypeError extends Error {

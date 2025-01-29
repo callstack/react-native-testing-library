@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+
 import { render, screen, userEvent } from '..';
 
 type QuestionsBoardProps = {

@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+
 import type { HostTestInstance } from './component-tree';
 
 const HOST_TEXT_NAMES = ['Text', 'RCTText'];

@@ -1,5 +1,6 @@
 import type { ViewStyle } from 'react-native';
 import { StyleSheet } from 'react-native';
+
 import { removeUndefinedKeys } from './object';
 
 export type MapPropsFunction = (props: Record<string, unknown>) => Record<string, unknown>;

@@ -4,6 +4,7 @@ import type {
   ReactTestRenderer,
   TestRendererOptions,
 } from 'react-test-renderer';
+
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { ViewStyle } from 'react-native';
 import { Animated } from 'react-native';
+
 import { act, render, screen } from '..';
 
 type AnimatedViewProps = {

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
 import { render, screen } from '../../..';
 import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { userEvent } from '../..';

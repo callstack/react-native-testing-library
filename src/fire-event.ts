@@ -6,6 +6,7 @@ import type {
   ViewProps,
 } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
+
 import act from './act';
 import { isElementMounted, isHostElement } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
