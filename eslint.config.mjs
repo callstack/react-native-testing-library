@@ -23,7 +23,7 @@ export default [
       'simple-import-sort/imports': [
         'error',
         {
-          groups: [['^\\u0000', '^react', '^@?\\w', '^', '^\\.']],
+          groups: [['^\\u0000', '^react', '^@?\\w', '^'], ['^\\.']],
         },
       ],
     },

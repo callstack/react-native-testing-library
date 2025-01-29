@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import { render, screen } from '../..';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

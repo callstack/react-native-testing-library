@@ -1,4 +1,5 @@
 import './matchers/extend-expect';
+
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
 import { flushMicroTasks } from './flush-micro-tasks';
 import { cleanup } from './pure';

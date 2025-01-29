@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { ScrollViewProps } from 'react-native';
 import { ScrollView, View } from 'react-native';
+
 import { fireEvent, render, screen } from '../../..';
 import type { EventEntry } from '../../../test-utils';
 import { createEventLogger } from '../../../test-utils';

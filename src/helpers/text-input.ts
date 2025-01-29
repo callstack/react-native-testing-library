@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+
 import { nativeState } from '../native-state';
 import { isHostTextInput } from './host-component-names';
 

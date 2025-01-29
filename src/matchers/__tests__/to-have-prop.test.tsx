@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, TextInput, View } from 'react-native';
+
 import { render, screen } from '../..';
 
 test('toHaveProp() basic case', () => {

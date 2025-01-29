@@ -1,5 +1,6 @@
 import type { StyleProp } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
+
 import type { AccessibilityValueMatcher } from '../helpers/matchers/match-accessibility-value';
 import type { TextMatch, TextMatchOptions } from '../matches';
 import type { Style } from './to-have-style';

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
+
 import type { RenderAPI } from '..';
 import { fireEvent, render, screen } from '..';
 

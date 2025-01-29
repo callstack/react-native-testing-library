@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text } from 'react-native';
-import { render, screen } from '../../../';
+
+import { render, screen } from '../../..';
 import { EventBuilder } from '../../event-builder';
 import { dispatchEvent } from '../dispatch-event';
 

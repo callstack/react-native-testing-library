@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text } from 'react-native';
-import { render, screen } from '../../';
+
+import { render, screen } from '../..';
 import { getTextContent } from '../text-content';
 
 test('getTextContent with simple content', () => {

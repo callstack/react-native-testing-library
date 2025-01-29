@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+
 import act from '../../act';
 import { isElementMounted } from '../../helpers/component-tree';
 

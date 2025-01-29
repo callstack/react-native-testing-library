@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Modal, View } from 'react-native';
+
 import { render, screen } from '../..';
 
 test('toBeVisible() on empty view', () => {

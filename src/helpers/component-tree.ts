@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+
 import { screen } from '../screen';
 /**
  * ReactTestInstance referring to host element.

@@ -1,5 +1,6 @@
 import React from 'react';
 import { type AccessibilityRole, View } from 'react-native';
+
 import { render, screen } from '../..';
 
 function renderViewsWithRole(role: AccessibilityRole) {

@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+
 import { render, screen } from '../..';
 
 test('toBeDisabled()/toBeEnabled() supports basic case', () => {

@@ -1,4 +1,5 @@
 import type { ReactTestInstance } from 'react-test-renderer';
+
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';

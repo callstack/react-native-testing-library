@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+
 import { isHiddenFromAccessibility, isInaccessible, render, screen } from '../..';
 import { computeAriaLabel, isAccessibilityElement } from '../accessibility';
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FlatList, Image, Modal, ScrollView, Switch, Text, TextInput, View } from 'react-native';
+
 import { render, screen } from '..';
 
 /**

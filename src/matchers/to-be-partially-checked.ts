@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
+
 import { computeAriaChecked, getRole, isAccessibilityElement } from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
 import { formatElement } from '../helpers/format-element';

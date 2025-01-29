@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Pressable, Text, View } from 'react-native';
+
 import { render, screen, within } from '../pure';
 
 /**

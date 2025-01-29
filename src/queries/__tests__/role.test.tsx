@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+
 import { render, screen } from '../..';
 
 const TEXT_LABEL = 'cool text';

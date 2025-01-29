@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Image, Modal, ScrollView, Switch, Text, TextInput } from 'react-native';
+
 import { render, screen } from '..';
 import {
   isHostImage,
