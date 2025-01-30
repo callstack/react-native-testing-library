@@ -9,7 +9,9 @@ import type { ReactTestInstance } from 'react-test-renderer';
 
 import act from './act';
 import { isElementMounted, isHostElement } from './helpers/component-tree';
+import { formatElement } from './helpers/format-element';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
+import { debugLogger } from './helpers/logger';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
@@ -48,29 +50,43 @@ const textInputEventsIgnoringEditableProp = new Set([
   'onScroll',
 ]);
 
-export function isEventEnabled(
+type EventHandlerState = {
+  enabled: boolean;
+  reason?: string;
+};
+
+function getEventHandlerState(
   element: ReactTestInstance,
   eventName: string,
   nearestTouchResponder?: ReactTestInstance,
-) {
+): EventHandlerState {
   if (nearestTouchResponder != null && isHostTextInput(nearestTouchResponder)) {
-    return (
-      isEditableTextInput(nearestTouchResponder) ||
-      textInputEventsIgnoringEditableProp.has(eventName)
-    );
+    if (isEditableTextInput(nearestTouchResponder)) {
+      return { enabled: true };
+    }
+
+    if (textInputEventsIgnoringEditableProp.has(eventName)) {
+      return { enabled: true };
+    }
+
+    return { enabled: false, reason: '"editable" prop' };
   }
 
   if (eventsAffectedByPointerEventsProp.has(eventName) && !isPointerEventEnabled(element)) {
-    return false;
+    return { enabled: false, reason: '"pointerEvents" prop' };
   }
 
   const touchStart = nearestTouchResponder?.props.onStartShouldSetResponder?.();
   const touchMove = nearestTouchResponder?.props.onMoveShouldSetResponder?.();
   if (touchStart || touchMove) {
-    return true;
+    return { enabled: true };
   }
 
-  return touchStart === undefined && touchMove === undefined;
+  if (touchStart === undefined && touchMove === undefined) {
+    return { enabled: true };
+  }
+
+  return { enabled: false, reason: 'not being a touch responder' };
 }
 
 function findEventHandler(
@@ -81,7 +97,19 @@ function findEventHandler(
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
   const handler = getEventHandler(element, eventName);
-  if (handler && isEventEnabled(element, eventName, touchResponder)) return handler;
+  if (handler) {
+    const handlerState = getEventHandlerState(element, eventName, touchResponder);
+
+    if (handlerState.enabled) {
+      return handler;
+    } else {
+      debugLogger.warn(
+        `FireEvent: "${eventName}" event handler is disabled on ${formatElement(element, {
+          compact: true,
+        })} due to ${handlerState.reason}.`,
+      );
+    }
+  }
 
   // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
   if (element.parent === null || element.parent.parent === null) {
@@ -130,6 +158,12 @@ function fireEvent(element: ReactTestInstance, eventName: EventName, ...data: un
 
   const handler = findEventHandler(element, eventName);
   if (!handler) {
+    debugLogger.warn(
+      `FireEvent: no enabled event handler for "${eventName}" found on ${formatElement(element, {
+        compact: true,
+      })} or its ancestors.`,
+    );
+
     return;
   }
 
