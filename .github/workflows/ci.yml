@@ -51,7 +51,7 @@ jobs:
   test:
     needs: [install-cache-deps]
     runs-on: ubuntu-latest
-    name: Test (concurrent)
+    name: Test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
