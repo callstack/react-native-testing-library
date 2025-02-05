@@ -96,7 +96,7 @@ function renderWithStringValidation<T>(
 
 function buildRenderResult(
   renderer: ReactTestRenderer,
-  wrap: (element: React.ReactElement) => JSX.Element,
+  wrap: (element: React.ReactElement) => React.JSX.Element,
 ) {
   const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
