@@ -67,10 +67,10 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  test-legacy:
+  test-18:
     needs: [install-cache-deps]
     runs-on: ubuntu-latest
-    name: Test (legacy)
+    name: Test React 18
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -78,5 +78,9 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
 
-      - name: Test in legacy mode
-        run: CONCURRENT_MODE=0 yarn test:ci
+      - name: Switch to React 18
+        run:
+          yarn add react@18.3.1 react-test-renderer@18.3.1 react-native@0.77.0 @react-native/babel-preset@0.77.0
+
+      - name: Test
+        run: yarn test:ci
