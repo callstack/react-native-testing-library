@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 
 import act from '../../act';
+import { getEventHandler } from '../../event-handler';
 import { isElementMounted } from '../../helpers/component-tree';
 
 /**
@@ -24,18 +25,4 @@ export function dispatchEvent(element: ReactTestInstance, eventName: string, ...
   void act(() => {
     handler(...event);
   });
-}
-
-function getEventHandler(element: ReactTestInstance, eventName: string) {
-  const handleName = getEventHandlerName(eventName);
-  const handle = element.props[handleName] as unknown;
-  if (typeof handle !== 'function') {
-    return undefined;
-  }
-
-  return handle;
-}
-
-function getEventHandlerName(eventName: string) {
-  return `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 }
