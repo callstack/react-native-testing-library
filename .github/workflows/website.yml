@@ -4,10 +4,31 @@ on:
   push:
     branches: [main]
     paths: ['website/**']
+  pull_request:
+    branches: ['**']
+    paths: ['website/**']
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'main')}}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Test Website
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and website deps
+        uses: ./.github/actions/setup-website-deps
+
+      - name: Build website
+        run: yarn --cwd website build
+
   deploy:
     name: Deploy to GitHub Pages
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,7 +46,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Build output to publish to the `gh-pages` branch:
           publish_dir: ./website/build
           # The following lines assign commit authorship to the official
           # GH-Actions bot for deploys to `gh-pages` branch:
