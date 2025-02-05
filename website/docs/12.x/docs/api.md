@@ -1,6 +1,7 @@
 ---
 uri: /api
 ---
+
 # API Overview
 
 React Native Testing Library consists of following APIs:
@@ -12,10 +13,9 @@ React Native Testing Library consists of following APIs:
   - Helpers: [`debug`](docs/api/screen#debug), [`toJSON`](docs/api/screen#tojson), [`root`](docs/api/screen#root)
 - [Jest matchers](docs/api/jest-matchers) - validate assumptions about your UI
 - [User Event](docs/api/events/user-event) - simulate common user interactions like [`press`](docs/api/events/user-event#press) or [`type`](docs/api/events/user-event#type) in a realistic way
-- [Fire Event](docs/api/events/fire-event) - simulate any component event in a simplified way
-purposes
+- [Fire Event](docs/api/events/fire-event) - simulate any component event in a simplified way purposes
 - Misc APIs:
-  - [`renderHook` function](docs/api/misc/render-hook) - render hooks for testing 
+  - [`renderHook` function](docs/api/misc/render-hook) - render hooks for testing
   - [Async utils](docs/api/misc/async): `findBy*` queries, `wait`, `waitForElementToBeRemoved`
   - [Configuration](docs/api/misc/config): `configure`, `resetToDefaults`
   - [Accessibility](docs/api/misc/accessibility): `isHiddenFromAccessibility`
