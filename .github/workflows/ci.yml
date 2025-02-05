@@ -79,7 +79,7 @@ jobs:
         uses: ./.github/actions/setup-deps
 
       - name: Switch to React 18
-        run:
+        run: |
           yarn remove react react-test-renderer react-native @react-native/babel-preset
           yarn add -D react@18.3.1 react-test-renderer@18.3.1 react-native@0.77.0 @react-native/babel-preset@0.77.0
 
