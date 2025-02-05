@@ -1,6 +1,7 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 
 export type EventHandlerOptions = {
+  /** Include check for event handler named without adding `on*` prefix. */
   loose?: boolean;
 };
 
