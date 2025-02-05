@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
+
 import { render, screen } from '..';
 import { getEventHandler } from '../event-handler';
 
