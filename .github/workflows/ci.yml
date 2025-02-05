@@ -67,7 +67,7 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  test-18:
+  test-react-18:
     needs: [install-cache-deps]
     runs-on: ubuntu-latest
     name: Test React 18
@@ -80,7 +80,8 @@ jobs:
 
       - name: Switch to React 18
         run:
-          yarn add react@18.3.1 react-test-renderer@18.3.1 react-native@0.77.0 @react-native/babel-preset@0.77.0
+          yarn remove react react-test-renderer react-native @react-native/babel-preset
+          yarn add -D react@18.3.1 react-test-renderer@18.3.1 react-native@0.77.0 @react-native/babel-preset@0.77.0
 
       - name: Test
         run: yarn test:ci
