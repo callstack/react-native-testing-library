@@ -51,7 +51,7 @@ const basePress = async (
     return;
   }
 
-  if (isHostPressable(element)) {
+  if (!isHostTextInput(element) && isHostPressable(element)) {
     await emitTextPressEvents(config, element, options);
     return;
   }
@@ -106,7 +106,6 @@ const isHostPressable = (element: ReactTestInstance) => {
 
   return (
     isHostElement(element) &&
-    !isHostTextInput(element) &&
     isPointerEventEnabled(element) &&
     !element.props.disabled &&
     hasPressEventHandler
