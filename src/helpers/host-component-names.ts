@@ -9,19 +9,28 @@ const HOST_SWITCH_NAMES = ['RCTSwitch'];
 const HOST_SCROLL_VIEW_NAMES = ['RCTScrollView'];
 const HOST_MODAL_NAMES = ['Modal'];
 
+export type HostText = HostTestInstance & {
+  type: 'Text';
+};
+
 /**
  * Checks if the given element is a host Text element.
  * @param element The element to check.
  */
-export function isHostText(element: ReactTestInstance): element is HostTestInstance {
+export function isHostText(element: ReactTestInstance): element is HostText {
   return typeof element?.type === 'string' && HOST_TEXT_NAMES.includes(element.type);
 }
+
+export type HostTextInput = HostTestInstance & {
+  type: 'TextInput';
+  editable?: boolean;
+};
 
 /**
  * Checks if the given element is a host TextInput element.
  * @param element The element to check.
  */
-export function isHostTextInput(element: ReactTestInstance): element is HostTestInstance {
+export function isHostTextInput(element: ReactTestInstance): element is HostTextInput {
   return typeof element?.type === 'string' && HOST_TEXT_INPUT_NAMES.includes(element.type);
 }
 

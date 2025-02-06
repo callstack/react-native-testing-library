@@ -1,8 +1,9 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 
 import act from '../../act';
-import { getHostParent } from '../../helpers/component-tree';
-import { isHostText } from '../../helpers/host-component-names';
+import { getEventHandler } from '../../event-handler';
+import { getHostParent, isHostElement } from '../../helpers/component-tree';
+import { isHostTextInput } from '../../helpers/host-component-names';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { isEditableTextInput } from '../../helpers/text-input';
 import { EventBuilder } from '../event-builder';
@@ -45,13 +46,13 @@ const basePress = async (
   element: ReactTestInstance,
   options: BasePressOptions,
 ): Promise<void> => {
-  if (isPressableText(element)) {
-    await emitTextPressEvents(config, element, options);
+  if (isEditableTextInput(element) && isPointerEventEnabled(element)) {
+    await emitTextInputPressEvents(config, element, options);
     return;
   }
 
-  if (isEditableTextInput(element) && isPointerEventEnabled(element)) {
-    await emitTextInputPressEvents(config, element, options);
+  if (isHostPressable(element)) {
+    await emitTextPressEvents(config, element, options);
     return;
   }
 
@@ -96,16 +97,16 @@ const isEnabledTouchResponder = (element: ReactTestInstance) => {
   return isPointerEventEnabled(element) && element.props.onStartShouldSetResponder?.();
 };
 
-const isPressableText = (element: ReactTestInstance) => {
-  const hasPressEventHandler = Boolean(
-    element.props.onPress ||
-      element.props.onLongPress ||
-      element.props.onPressIn ||
-      element.props.onPressOut,
-  );
+const isHostPressable = (element: ReactTestInstance) => {
+  const hasPressEventHandler =
+    getEventHandler(element, 'press') ||
+    getEventHandler(element, 'longPress') ||
+    getEventHandler(element, 'pressIn') ||
+    getEventHandler(element, 'pressOut');
 
   return (
-    isHostText(element) &&
+    isHostElement(element) &&
+    !isHostTextInput(element) &&
     isPointerEventEnabled(element) &&
     !element.props.disabled &&
     hasPressEventHandler
