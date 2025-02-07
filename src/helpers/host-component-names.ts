@@ -17,11 +17,6 @@ export function isHostText(element: ReactTestInstance): element is HostTestInsta
   return typeof element?.type === 'string' && HOST_TEXT_NAMES.includes(element.type);
 }
 
-export type HostTextInput = HostTestInstance & {
-  type: 'TextInput';
-  editable?: boolean;
-};
-
 /**
  * Checks if the given element is a host TextInput element.
  * @param element The element to check.
