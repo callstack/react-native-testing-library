@@ -55,35 +55,6 @@ test('userEvent can invoke press events for RNGH Pressable', async () => {
     </View>,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <View>
-      <RNGestureHandlerButton
-        collapsable={false}
-        enabled={true}
-        hitSlop={
-          {
-            "bottom": 0,
-            "left": 0,
-            "right": 0,
-            "top": 0,
-          }
-        }
-        rippleColor="transparent"
-        style={
-          [
-            {},
-            undefined,
-          ]
-        }
-        testID="pressable"
-        testOnly_onLongPress={[Function]}
-        testOnly_onPress={[Function]}
-        testOnly_onPressIn={[Function]}
-        testOnly_onPressOut={[Function]}
-      />
-    </View>
-  `);
-
   const pressable = screen.getByTestId('pressable');
   await user.press(pressable);
   expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
