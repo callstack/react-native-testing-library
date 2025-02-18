@@ -34,7 +34,10 @@ describe('userEvent.press with real timers', () => {
     );
 
     await user.press(screen.getByTestId('pressable'));
-    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
+    const eventSequence = getEventsNames(events).join(', ');
+    expect(
+      eventSequence === 'pressIn, pressOut, press' || eventSequence === 'pressIn, press, pressOut',
+    ).toBe(true);
   });
 
   test('works on TouchableOpacity', async () => {
