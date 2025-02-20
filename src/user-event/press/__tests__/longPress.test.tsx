@@ -177,8 +177,8 @@ describe('userEvent.longPress with fake timers', () => {
     const user = userEvent.setup();
 
     const compositeView = screen.getByTestId('view').parent as ReactTestInstance;
-    await expect(user.press(compositeView)).rejects.toThrowErrorMatchingInlineSnapshot(`
-      "press() works only with host elements. Passed element has type "function Component() {
+    await expect(user.longPress(compositeView)).rejects.toThrowErrorMatchingInlineSnapshot(`
+      "longPress() works only with host elements. Passed element has type "function Component() {
             (0, _classCallCheck2.default)(this, Component);
             return _callSuper(this, Component, arguments);
           }"."
