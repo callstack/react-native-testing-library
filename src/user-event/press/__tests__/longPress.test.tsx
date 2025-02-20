@@ -168,8 +168,8 @@ describe('userEvent.longPress with fake timers', () => {
       />,
     );
 
-    await user.longPress(screen.getByTestId('pressable'), { duration: 250 });
-    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
+    await user.longPress(screen.getByTestId('pressable'), { duration: 50 });
+    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
   });
 
   it('longPress throws on composite components', async () => {
