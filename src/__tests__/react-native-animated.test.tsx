@@ -51,7 +51,7 @@ describe('AnimatedView', () => {
     );
     expect(screen.root).toHaveStyle({ opacity: 0 });
 
-    await act(() => jest.advanceTimersByTime(250));
+    act(() => jest.advanceTimersByTime(250));
     // This stopped working in tests in RN 0.77
     // expect(screen.root).toHaveStyle({ opacity: 0 });
   });
@@ -64,7 +64,7 @@ describe('AnimatedView', () => {
     );
     expect(screen.root).toHaveStyle({ opacity: 0 });
 
-    await act(() => jest.advanceTimersByTime(250));
+    act(() => jest.advanceTimersByTime(250));
     expect(screen.root).toHaveStyle({ opacity: 1 });
   });
 });

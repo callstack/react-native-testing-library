@@ -156,8 +156,6 @@ async function emitPressabilityPressEvents(
   // before emitting the `pressOut` event. We need to wait here, so that
   // `press()` function does not return before that.
   if (DEFAULT_MIN_PRESS_DURATION - duration > 0) {
-    await act(async () => {
-      await wait(config, DEFAULT_MIN_PRESS_DURATION - duration);
-    });
+    await act(() => wait(config, DEFAULT_MIN_PRESS_DURATION - duration));
   }
 }
