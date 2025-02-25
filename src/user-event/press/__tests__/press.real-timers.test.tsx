@@ -34,6 +34,8 @@ describe('userEvent.press with real timers', () => {
     );
 
     await user.press(screen.getByTestId('pressable'));
+    // Typical event order is pressIn, pressOut, press
+    // But sometimes due to a race condition, the order is pressIn, press, pressOut.
     const eventSequence = getEventsNames(events).join(', ');
     expect(
       eventSequence === 'pressIn, pressOut, press' || eventSequence === 'pressIn, press, pressOut',
@@ -201,11 +203,11 @@ describe('userEvent.press with real timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    const eventsNames = getEventsNames(events).join(', ');
+    const eventSequence = getEventsNames(events).join(', ');
     // Typical event order is pressIn, pressOut, press
     // But sometimes due to a race condition, the order is pressIn, press, pressOut.
     expect(
-      eventsNames === 'pressIn, pressOut, press' || eventsNames === 'pressIn, press, pressOut',
+      eventSequence === 'pressIn, pressOut, press' || eventSequence === 'pressIn, press, pressOut',
     ).toBe(true);
   });
 

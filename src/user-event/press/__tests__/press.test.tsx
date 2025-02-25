@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import type { ReactTestInstance } from 'react-test-renderer';
 
 import { render, screen } from '../../..';
 import { createEventLogger, getEventsNames } from '../../../test-utils';
@@ -329,6 +330,19 @@ describe('userEvent.press with fake timers', () => {
     await userEvent.press(screen.getByText('press me'));
 
     expect(mockOnPress).toHaveBeenCalled();
+  });
+
+  it('press throws on composite components', async () => {
+    render(<View testID="view" />);
+    const user = userEvent.setup();
+
+    const compositeView = screen.getByTestId('view').parent as ReactTestInstance;
+    await expect(user.press(compositeView)).rejects.toThrowErrorMatchingInlineSnapshot(`
+      "press() works only with host elements. Passed element has type "function Component() {
+            (0, _classCallCheck2.default)(this, Component);
+            return _callSuper(this, Component, arguments);
+          }"."
+    `);
   });
 
   test('disables act environmennt', async () => {

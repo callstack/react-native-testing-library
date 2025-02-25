@@ -169,9 +169,7 @@ If we wanted to stick with real timers then things get a bit more complex. Letâ€
 ```jsx
 test('render with real timers - sleep', async () => {
   render(<TestAsyncComponent />);
-  await act(async () => {
-    await sleep(100); // Wait a bit longer than setTimeout in `TestAsyncComponent`
-  });
+  await act(() => sleep(100)); // Wait a bit longer than setTimeout in `TestAsyncComponent`
 
   expect(screen.getByText('Count 1')).toBeOnTheScreen();
 });

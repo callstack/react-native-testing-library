@@ -43,7 +43,7 @@ describe('AnimatedView', () => {
     jest.useRealTimers();
   });
 
-  it('should use native driver when useNativeDriver is true', async () => {
+  it('should use native driver when useNativeDriver is true', () => {
     render(
       <AnimatedView fadeInDuration={250} useNativeDriver={true}>
         Test
@@ -51,12 +51,12 @@ describe('AnimatedView', () => {
     );
     expect(screen.root).toHaveStyle({ opacity: 0 });
 
-    await act(() => jest.advanceTimersByTime(250));
+    act(() => jest.advanceTimersByTime(250));
     // This stopped working in tests in RN 0.77
     // expect(screen.root).toHaveStyle({ opacity: 0 });
   });
 
-  it('should not use native driver when useNativeDriver is false', async () => {
+  it('should not use native driver when useNativeDriver is false', () => {
     render(
       <AnimatedView fadeInDuration={250} useNativeDriver={false}>
         Test
@@ -64,7 +64,7 @@ describe('AnimatedView', () => {
     );
     expect(screen.root).toHaveStyle({ opacity: 0 });
 
-    await act(() => jest.advanceTimersByTime(250));
+    act(() => jest.advanceTimersByTime(250));
     expect(screen.root).toHaveStyle({ opacity: 1 });
   });
 });
