@@ -50,6 +50,7 @@
     "chalk": "^4.1.2",
     "jest-matcher-utils": "^29.7.0",
     "pretty-format": "^29.7.0",
+    "react-native-gesture-handler": "^2.23.1",
     "redent": "^3.0.0"
   },
   "peerDependencies": {

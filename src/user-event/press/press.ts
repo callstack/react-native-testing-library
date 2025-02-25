@@ -1,10 +1,12 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 
 import act from '../../act';
-import { getHostParent } from '../../helpers/component-tree';
-import { isHostText } from '../../helpers/host-component-names';
+import { getEventHandler } from '../../event-handler';
+import type { HostTestInstance } from '../../helpers/component-tree';
+import { getHostParent, isHostElement } from '../../helpers/component-tree';
+import { ErrorWithStack } from '../../helpers/errors';
+import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
-import { isEditableTextInput } from '../../helpers/text-input';
 import { EventBuilder } from '../event-builder';
 import type { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait } from '../utils';
@@ -19,6 +21,13 @@ export interface PressOptions {
 }
 
 export async function press(this: UserEventInstance, element: ReactTestInstance): Promise<void> {
+  if (!isHostElement(element)) {
+    throw new ErrorWithStack(
+      `press() works only with host elements. Passed element has type "${element.type}".`,
+      press,
+    );
+  }
+
   await basePress(this.config, element, {
     type: 'press',
   });
@@ -29,6 +38,13 @@ export async function longPress(
   element: ReactTestInstance,
   options?: PressOptions,
 ): Promise<void> {
+  if (!isHostElement(element)) {
+    throw new ErrorWithStack(
+      `longPress() works only with host elements. Passed element has type "${element.type}".`,
+      longPress,
+    );
+  }
+
   await basePress(this.config, element, {
     type: 'longPress',
     duration: options?.duration ?? DEFAULT_LONG_PRESS_DELAY_MS,
@@ -42,21 +58,16 @@ interface BasePressOptions {
 
 const basePress = async (
   config: UserEventConfig,
-  element: ReactTestInstance,
+  element: HostTestInstance,
   options: BasePressOptions,
 ): Promise<void> => {
-  if (isPressableText(element)) {
-    await emitTextPressEvents(config, element, options);
-    return;
-  }
-
-  if (isEditableTextInput(element) && isPointerEventEnabled(element)) {
-    await emitTextInputPressEvents(config, element, options);
+  if (isEnabledHostElement(element) && hasPressEventHandler(element)) {
+    await emitDirectPressEvents(config, element, options);
     return;
   }
 
   if (isEnabledTouchResponder(element)) {
-    await emitPressablePressEvents(config, element, options);
+    await emitPressabilityPressEvents(config, element, options);
     return;
   }
 
@@ -68,56 +79,42 @@ const basePress = async (
   await basePress(config, hostParentElement, options);
 };
 
-const emitPressablePressEvents = async (
-  config: UserEventConfig,
-  element: ReactTestInstance,
-  options: BasePressOptions,
-) => {
-  await wait(config);
-
-  dispatchEvent(element, 'responderGrant', EventBuilder.Common.responderGrant());
-
-  const duration = options.duration ?? DEFAULT_MIN_PRESS_DURATION;
-  await wait(config, duration);
-
-  dispatchEvent(element, 'responderRelease', EventBuilder.Common.responderRelease());
-
-  // React Native will wait for minimal delay of DEFAULT_MIN_PRESS_DURATION
-  // before emitting the `pressOut` event. We need to wait here, so that
-  // `press()` function does not return before that.
-  if (DEFAULT_MIN_PRESS_DURATION - duration > 0) {
-    await act(async () => {
-      await wait(config, DEFAULT_MIN_PRESS_DURATION - duration);
-    });
+function isEnabledHostElement(element: HostTestInstance) {
+  if (!isPointerEventEnabled(element)) {
+    return false;
   }
-};
 
-const isEnabledTouchResponder = (element: ReactTestInstance) => {
+  if (isHostText(element)) {
+    return element.props.disabled !== true;
+  }
+
+  if (isHostTextInput(element)) {
+    // @ts-expect-error - workaround incorrect ReactTestInstance type
+    return element.props.editable !== false;
+  }
+
+  return true;
+}
+
+function isEnabledTouchResponder(element: HostTestInstance) {
   return isPointerEventEnabled(element) && element.props.onStartShouldSetResponder?.();
-};
+}
 
-const isPressableText = (element: ReactTestInstance) => {
-  const hasPressEventHandler = Boolean(
-    element.props.onPress ||
-      element.props.onLongPress ||
-      element.props.onPressIn ||
-      element.props.onPressOut,
-  );
-
+function hasPressEventHandler(element: HostTestInstance) {
   return (
-    isHostText(element) &&
-    isPointerEventEnabled(element) &&
-    !element.props.disabled &&
-    hasPressEventHandler
+    getEventHandler(element, 'press') ||
+    getEventHandler(element, 'longPress') ||
+    getEventHandler(element, 'pressIn') ||
+    getEventHandler(element, 'pressOut')
   );
-};
+}
 
 /**
- * Dispatches a press event sequence for Text.
+ * Dispatches a press event sequence for host elements that have `onPress*` event handlers.
  */
-async function emitTextPressEvents(
+async function emitDirectPressEvents(
   config: UserEventConfig,
-  element: ReactTestInstance,
+  element: HostTestInstance,
   options: BasePressOptions,
 ) {
   await wait(config);
@@ -141,19 +138,24 @@ async function emitTextPressEvents(
   }
 }
 
-/**
- * Dispatches a press event sequence for TextInput.
- */
-async function emitTextInputPressEvents(
+async function emitPressabilityPressEvents(
   config: UserEventConfig,
-  element: ReactTestInstance,
+  element: HostTestInstance,
   options: BasePressOptions,
 ) {
   await wait(config);
-  dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
 
-  // Note: TextInput does not have `onPress`/`onLongPress` props.
+  dispatchEvent(element, 'responderGrant', EventBuilder.Common.responderGrant());
 
-  await wait(config, options.duration);
-  dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
+  const duration = options.duration ?? DEFAULT_MIN_PRESS_DURATION;
+  await wait(config, duration);
+
+  dispatchEvent(element, 'responderRelease', EventBuilder.Common.responderRelease());
+
+  // React Native will wait for minimal delay of DEFAULT_MIN_PRESS_DURATION
+  // before emitting the `pressOut` event. We need to wait here, so that
+  // `press()` function does not return before that.
+  if (DEFAULT_MIN_PRESS_DURATION - duration > 0) {
+    await act(() => wait(config, DEFAULT_MIN_PRESS_DURATION - duration));
+  }
 }
