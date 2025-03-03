@@ -2838,6 +2838,7 @@ __metadata:
     "@release-it/conventional-changelog": "npm:^10.0.0"
     "@relmify/jest-serializer-strip-ansi": "npm:^1.0.2"
     "@types/jest": "npm:^29.5.14"
+    "@types/node": "npm:^22.13.8"
     "@types/react": "npm:^19.0.0"
     "@types/react-test-renderer": "npm:^19.0.0"
     babel-jest: "npm:^29.7.0"
@@ -2851,10 +2852,10 @@ __metadata:
     jest-matcher-utils: "npm:^29.7.0"
     prettier: "npm:^2.8.8"
     pretty-format: "npm:^29.7.0"
-    react: "npm:^19.0.0"
+    react: "npm:19.0.0"
     react-native: "npm:0.78.0"
     react-native-gesture-handler: "npm:^2.23.1"
-    react-test-renderer: "npm:^19.0.0"
+    react-test-renderer: "npm:19.0.0"
     redent: "npm:^3.0.0"
     release-it: "npm:^18.0.0"
     typescript: "npm:^5.6.3"
@@ -3008,6 +3009,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^22.13.8":
+  version: 22.13.8
+  resolution: "@types/node@npm:22.13.8"
+  dependencies:
+    undici-types: "npm:~6.20.0"
+  checksum: 10c0/bfc92b734a9dce6ac5daee0a52feccdf5dcb3804d895e4bc5384e2f4644612b8801725cd03c8c3c0888fb5eeb16b875877ac44b77641e0196dc1a837b1c2a366
+  languageName: node
+  linkType: hard
+
 "@types/normalize-package-data@npm:^2.4.3":
   version: 2.4.4
   resolution: "@types/normalize-package-data@npm:2.4.4"
@@ -3031,7 +3041,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^19.0.0":
+"@types/react@npm:*":
+  version: 19.0.10
+  resolution: "@types/react@npm:19.0.10"
+  dependencies:
+    csstype: "npm:^3.0.2"
+  checksum: 10c0/41884cca21850c8b2d6578b172ca0ca4fff6021251a68532b19f2031ac23dc5a9222470208065f8d9985d367376047df2f49ece8d927f7d04cdc94922b1eb34b
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^19.0.0":
   version: 19.0.8
   resolution: "@types/react@npm:19.0.8"
   dependencies:
@@ -9261,7 +9280,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-test-renderer@npm:^19.0.0":
+"react-test-renderer@npm:19.0.0":
   version: 19.0.0
   resolution: "react-test-renderer@npm:19.0.0"
   dependencies:
@@ -9273,7 +9292,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^19.0.0":
+"react@npm:19.0.0":
   version: 19.0.0
   resolution: "react@npm:19.0.0"
   checksum: 10c0/9cad8f103e8e3a16d15cb18a0d8115d8bd9f9e1ce3420310aea381eb42aa0a4f812cf047bb5441349257a05fba8a291515691e3cb51267279b2d2c3253f38471
