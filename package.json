@@ -50,7 +50,6 @@
     "chalk": "^4.1.2",
     "jest-matcher-utils": "^29.7.0",
     "pretty-format": "^29.7.0",
-    "react-native-gesture-handler": "^2.23.1",
     "redent": "^3.0.0"
   },
   "peerDependencies": {
@@ -90,6 +89,7 @@
     "prettier": "^2.8.8",
     "react": "19.0.0",
     "react-native": "0.78.0",
+    "react-native-gesture-handler": "^2.23.1",
     "react-test-renderer": "19.0.0",
     "release-it": "^18.0.0",
     "typescript": "^5.6.3",
