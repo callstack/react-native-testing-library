@@ -1,4 +1,5 @@
-import './helpers/ensure-peer-deps';
+// Temporaryli disable peer deps check
+// import './helpers/ensure-peer-deps';
 import './matchers/extend-expect';
 
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
