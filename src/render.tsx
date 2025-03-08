@@ -13,8 +13,9 @@ import { getQueriesForElement } from './within';
 export interface RenderOptions {
   /**
    * Pass a React Component as the wrapper option to have it rendered around the inner element. This is most useful for creating
-   *  reusable custom render functions for common data providers.
+   * reusable custom render functions for common data providers.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: React.ComponentType<any>;
   createNodeMock?: (element: React.ReactElement) => object;
 }
