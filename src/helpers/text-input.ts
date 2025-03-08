@@ -1,4 +1,5 @@
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import { nativeState } from '../native-state';
 import { isHostTextInput } from './host-component-names';
 

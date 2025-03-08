@@ -1,4 +1,5 @@
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import act from '../../act';
 import { getEventHandler } from '../../event-handler';
 import { isElementMounted } from '../../helpers/component-tree';
@@ -25,4 +26,3 @@ export function dispatchEvent(element: HostElement, eventName: string, ...event:
     handler(...event);
   });
 }
-

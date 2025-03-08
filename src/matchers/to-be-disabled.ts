@@ -1,9 +1,10 @@
 import { matcherHint } from 'jest-matcher-utils';
-import { HostElement } from 'universal-test-renderer';
-import { computeAriaDisabled } from '../helpers/accessibility';
-import { checkHostElement } from './utils';
 import redent from 'redent';
+import type { HostElement } from 'universal-test-renderer';
+
+import { computeAriaDisabled } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';
+import { checkHostElement } from './utils';
 
 export function toBeDisabled(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeDisabled, this);

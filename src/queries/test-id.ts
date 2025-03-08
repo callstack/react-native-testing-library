@@ -1,4 +1,5 @@
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import { findAll } from '../helpers/find-all';
 import type { TextMatch, TextMatchOptions } from '../matches';
 import { matches } from '../matches';

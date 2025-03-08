@@ -1,11 +1,12 @@
-import { matcherHint } from 'jest-matcher-utils';
 import { StyleSheet } from 'react-native';
-import { HostElement } from 'universal-test-renderer';
+import { matcherHint } from 'jest-matcher-utils';
+import redent from 'redent';
+import type { HostElement } from 'universal-test-renderer';
+
 import { isHiddenFromAccessibility } from '../helpers/accessibility';
+import { formatElement } from '../helpers/format-element';
 import { isHostModal } from '../helpers/host-component-names';
 import { checkHostElement } from './utils';
-import redent from 'redent';
-import { formatElement } from '../helpers/format-element';
 
 export function toBeVisible(this: jest.MatcherContext, element: HostElement) {
   if (element !== null || !this.isNot) {

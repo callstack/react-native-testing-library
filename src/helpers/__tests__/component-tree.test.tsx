@@ -1,7 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import { render, screen } from '../..';
-import { getHostSiblings, getContainerElement } from '../component-tree';
+import { getContainerElement, getHostSiblings } from '../component-tree';
 
 function MultipleHostChildren() {
   return (

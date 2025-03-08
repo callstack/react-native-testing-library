@@ -1,4 +1,5 @@
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import type { PressOptions } from './press';
 import type { ScrollToOptions } from './scroll';
 import { setup } from './setup';

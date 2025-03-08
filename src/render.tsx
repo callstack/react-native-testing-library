@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { createRoot, HostElement, Root } from 'universal-test-renderer/react-native';
+import type { HostElement, Root } from 'universal-test-renderer/react-native';
+import { createRoot } from 'universal-test-renderer/react-native';
+
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
-import { debug, DebugOptions } from './helpers/debug';
+import type { DebugOptions } from './helpers/debug';
+import { debug } from './helpers/debug';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
@@ -40,7 +43,10 @@ export function renderInternal<T>(element: React.ReactElement<T>, options?: Rend
   return buildRenderResult(renderer, wrap);
 }
 
-function buildRenderResult(renderer: Root, wrap: (element: React.ReactElement) => React.JSX.Element) {
+function buildRenderResult(
+  renderer: Root,
+  wrap: (element: React.ReactElement) => React.JSX.Element,
+) {
   const update = (element: React.ReactElement) => {
     void act(() => {
       renderer.render(wrap(element));

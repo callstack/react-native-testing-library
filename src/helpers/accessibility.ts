@@ -1,12 +1,8 @@
-import {
-  AccessibilityRole,
-  AccessibilityState,
-  AccessibilityValue,
-  Role,
-  StyleSheet,
-} from 'react-native';
-import { HostElement } from 'universal-test-renderer';
-import { getHostSiblings, getContainerElement, isValidElement } from './component-tree';
+import type { AccessibilityRole, AccessibilityState, AccessibilityValue, Role } from 'react-native';
+import { StyleSheet } from 'react-native';
+import type { HostElement } from 'universal-test-renderer';
+
+import { getContainerElement, getHostSiblings, isValidElement } from './component-tree';
 import { findAll } from './find-all';
 import { isHostImage, isHostSwitch, isHostText, isHostTextInput } from './host-component-names';
 import { getTextContent } from './text-content';

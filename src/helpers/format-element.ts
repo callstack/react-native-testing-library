@@ -1,9 +1,9 @@
 import type { NewPlugin } from 'pretty-format';
 import prettyFormat, { plugins } from 'pretty-format';
+import type { HostNode, JsonNode } from 'universal-test-renderer';
 
 import type { MapPropsFunction } from './map-props';
 import { defaultMapProps } from './map-props';
-import { HostNode, JsonNode } from 'universal-test-renderer';
 
 export type FormatElementOptions = {
   /** Minimize used space. */
@@ -33,7 +33,6 @@ export function formatElement(
     return element;
   }
 
-  const { children, ...props } = element.props;
   const childrenToDisplay = element.children.filter((child) => typeof child === 'string');
 
   return prettyFormat(
@@ -42,7 +41,7 @@ export function formatElement(
       // a ReactTestRendererJSON instance, so it is formatted as JSX.
       $$typeof: Symbol.for('react.test.json'),
       type: `${element.type}`,
-      props: mapProps ? mapProps(props) : props,
+      props: mapProps ? mapProps(element.props) : element.props,
       children: childrenToDisplay,
     },
     // See: https://www.npmjs.com/package/pretty-format#usage-with-options

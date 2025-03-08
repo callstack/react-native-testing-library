@@ -1,4 +1,5 @@
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import { findAll } from '../helpers/find-all';
 import { isHostText } from '../helpers/host-component-names';
 import { matchTextContent } from '../helpers/matchers/match-text-content';

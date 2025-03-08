@@ -1,5 +1,6 @@
-import { HostElement } from 'universal-test-renderer';
-import { RenderResult } from './render';
+import type { HostElement } from 'universal-test-renderer';
+
+import type { RenderResult } from './render';
 
 const SCREEN_ERROR = '`render` method has not been called';
 

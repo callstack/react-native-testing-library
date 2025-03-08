@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import { Pressable, Text, TouchableHighlight, TouchableOpacity } from 'react-native';
 
 import { render, screen } from '../../..';
 import { createEventLogger, getEventsNames } from '../../../test-utils';

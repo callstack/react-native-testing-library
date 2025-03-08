@@ -1,4 +1,4 @@
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 export function getTextContent(element: HostElement | string | null): string {
   if (!element) {

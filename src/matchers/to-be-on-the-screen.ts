@@ -1,10 +1,11 @@
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
-import { HostElement } from 'universal-test-renderer';
+import redent from 'redent';
+import type { HostElement } from 'universal-test-renderer';
+
 import { getContainerElement } from '../helpers/component-tree';
+import { formatElement } from '../helpers/format-element';
 import { screen } from '../screen';
 import { checkHostElement } from './utils';
-import redent from 'redent';
-import { formatElement } from '../helpers/format-element';
 
 export function toBeOnTheScreen(this: jest.MatcherContext, element: HostElement) {
   if (element !== null || !this.isNot) {

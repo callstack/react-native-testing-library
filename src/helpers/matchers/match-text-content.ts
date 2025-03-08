@@ -1,5 +1,7 @@
-import { HostElement } from 'universal-test-renderer';
-import { matches, TextMatch, TextMatchOptions } from '../../matches';
+import type { HostElement } from 'universal-test-renderer';
+
+import type { TextMatch, TextMatchOptions } from '../../matches';
+import { matches } from '../../matches';
 import { getTextContent } from '../text-content';
 
 /**

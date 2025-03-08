@@ -1,8 +1,9 @@
 import type { StyleProp } from 'react-native';
-import { HostElement } from 'universal-test-renderer';
-import { AccessibilityValueMatcher } from '../helpers/matchers/match-accessibility-value';
-import { TextMatch, TextMatchOptions } from '../matches';
-import { Style } from './to-have-style';
+import type { HostElement } from 'universal-test-renderer';
+
+import type { AccessibilityValueMatcher } from '../helpers/matchers/match-accessibility-value';
+import type { TextMatch, TextMatchOptions } from '../matches';
+import type { Style } from './to-have-style';
 
 export interface JestNativeMatchers<R> {
   /**

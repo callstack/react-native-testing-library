@@ -1,6 +1,7 @@
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import { computeAriaBusy } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';
 import { checkHostElement } from './utils';

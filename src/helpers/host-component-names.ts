@@ -1,4 +1,5 @@
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import { isValidElement } from './component-tree';
 
 const HOST_TEXT_NAMES = ['Text', 'RCTText'];

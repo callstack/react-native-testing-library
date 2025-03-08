@@ -1,5 +1,6 @@
 import { stringify } from 'jest-matcher-utils';
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';

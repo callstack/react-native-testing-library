@@ -1,5 +1,6 @@
-/* eslint-disable jest/no-conditional-expect */
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React from 'react';
+
 import { renderHook } from '../pure';
 
 test('gives committed result', () => {

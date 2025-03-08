@@ -1,5 +1,7 @@
 import { matcherHint } from 'jest-matcher-utils';
-import { HostElement } from 'universal-test-renderer';
+import redent from 'redent';
+import type { HostElement } from 'universal-test-renderer';
+
 import {
   computeAriaChecked,
   getRole,
@@ -10,7 +12,6 @@ import { ErrorWithStack } from '../helpers/errors';
 import { formatElement } from '../helpers/format-element';
 import { isHostSwitch } from '../helpers/host-component-names';
 import { checkHostElement } from './utils';
-import redent from 'redent';
 
 export function toBeChecked(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeChecked, this);

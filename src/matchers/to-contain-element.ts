@@ -1,9 +1,10 @@
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
-import { HostElement } from 'universal-test-renderer';
-import { findAll } from '../helpers/find-all';
-import { checkHostElement } from './utils';
 import redent from 'redent';
+import type { HostElement } from 'universal-test-renderer';
+
+import { findAll } from '../helpers/find-all';
 import { formatElement } from '../helpers/format-element';
+import { checkHostElement } from './utils';
 
 export function toContainElement(
   this: jest.MatcherContext,

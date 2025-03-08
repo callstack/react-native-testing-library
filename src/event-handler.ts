@@ -1,4 +1,4 @@
-import { HostElement } from "universal-test-renderer";
+import type { HostElement } from 'universal-test-renderer';
 
 export type EventHandlerOptions = {
   /** Include check for event handler named without adding `on*` prefix. */

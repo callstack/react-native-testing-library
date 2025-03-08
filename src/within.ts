@@ -1,4 +1,5 @@
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import { bindByDisplayValueQueries } from './queries/display-value';
 import { bindByHintTextQueries } from './queries/hint-text';
 import { bindByLabelTextQueries } from './queries/label-text';

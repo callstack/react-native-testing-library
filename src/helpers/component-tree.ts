@@ -1,4 +1,6 @@
-import { CONTAINER_TYPE, HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+import { CONTAINER_TYPE } from 'universal-test-renderer';
+
 import { screen } from '../screen';
 
 /**

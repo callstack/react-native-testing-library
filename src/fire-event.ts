@@ -1,20 +1,21 @@
-import {
-  ViewProps,
-  TextProps,
-  TextInputProps,
+import type {
   PressableProps,
   ScrollViewProps,
+  TextInputProps,
+  TextProps,
+  ViewProps,
 } from 'react-native';
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import act from './act';
+import { getEventHandler } from './event-handler';
 import { isElementMounted, isValidElement } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
-import { Point, StringWithAutocomplete } from './types';
 import { nativeState } from './native-state';
+import type { Point, StringWithAutocomplete } from './types';
 import { EventBuilder } from './user-event/event-builder';
-import { getEventHandler } from './event-handler';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
@@ -145,7 +146,7 @@ fireEvent.press = (element: HostElement, ...data: unknown[]) => {
       ? data[0].nativeEvent
       : null;
 
-  let responderGrantEvent = EventBuilder.Common.responderGrant();
+  const responderGrantEvent = EventBuilder.Common.responderGrant();
   if (nativeData) {
     responderGrantEvent.nativeEvent = {
       ...responderGrantEvent.nativeEvent,
@@ -156,7 +157,7 @@ fireEvent.press = (element: HostElement, ...data: unknown[]) => {
 
   fireEvent(element, 'press', ...data);
 
-  let responderReleaseEvent = EventBuilder.Common.responderRelease();
+  const responderReleaseEvent = EventBuilder.Common.responderRelease();
   if (nativeData) {
     responderReleaseEvent.nativeEvent = {
       ...responderReleaseEvent.nativeEvent,

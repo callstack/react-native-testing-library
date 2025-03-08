@@ -1,4 +1,5 @@
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import { findAll } from '../helpers/find-all';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { getTextInputValue } from '../helpers/text-input';

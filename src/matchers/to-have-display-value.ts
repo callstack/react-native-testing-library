@@ -1,7 +1,8 @@
 import { matcherHint } from 'jest-matcher-utils';
-import { HostElement } from 'universal-test-renderer';
-import { isHostTextInput } from '../helpers/host-component-names';
+import type { HostElement } from 'universal-test-renderer';
+
 import { ErrorWithStack } from '../helpers/errors';
+import { isHostTextInput } from '../helpers/host-component-names';
 import { getTextInputValue } from '../helpers/text-input';
 import type { TextMatch, TextMatchOptions } from '../matches';
 import { matches } from '../matches';

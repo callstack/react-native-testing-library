@@ -1,9 +1,10 @@
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import { ErrorWithStack } from '../helpers/errors';
-import { screen } from '../screen';
-import waitFor, { type WaitForOptions } from '../wait-for';
 import { formatJson } from '../helpers/format-element';
 import { logger } from '../helpers/logger';
+import { screen } from '../screen';
+import waitFor, { type WaitForOptions } from '../wait-for';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,

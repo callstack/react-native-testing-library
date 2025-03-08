@@ -7,10 +7,9 @@ import {
   stringify,
 } from 'jest-matcher-utils';
 import redent from 'redent';
-import { HostElement, HostNode } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import { isValidElement } from '../helpers/component-tree';
-import { defaultMapProps } from '../helpers/map-props';
-import prettyFormat, { plugins } from 'pretty-format';
 
 class HostElementTypeError extends Error {
   constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {

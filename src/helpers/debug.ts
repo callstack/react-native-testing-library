@@ -1,6 +1,8 @@
 import type { JsonNode } from 'universal-test-renderer';
+
+import type { FormatElementOptions } from './format-element';
+import { formatJson } from './format-element';
 import { logger } from './logger';
-import { FormatElementOptions, formatJson } from './format-element';
 
 export type DebugOptions = {
   message?: string;

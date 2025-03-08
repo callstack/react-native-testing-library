@@ -1,4 +1,5 @@
-import { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
+
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { isPointerEventEnabled } from '../helpers/pointer-events';

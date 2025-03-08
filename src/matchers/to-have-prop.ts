@@ -1,5 +1,6 @@
-import { matcherHint, stringify, printExpected } from 'jest-matcher-utils';
-import { HostElement } from 'universal-test-renderer';
+import { matcherHint, printExpected, stringify } from 'jest-matcher-utils';
+import type { HostElement } from 'universal-test-renderer';
+
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveProp(

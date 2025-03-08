@@ -1,5 +1,6 @@
-import { HostElement } from 'universal-test-renderer';
-import { Point } from './types';
+import type { HostElement } from 'universal-test-renderer';
+
+import type { Point } from './types';
 
 /**
  * Simulated native state for unmanaged controls.
