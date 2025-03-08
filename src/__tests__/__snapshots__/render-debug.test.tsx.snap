@@ -29,35 +29,7 @@ exports[`debug 1`] = `
     value=""
   />
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
     accessible={true}
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function onBlur]}
-    onClick={[Function onClick]}
-    onFocus={[Function onFocus]}
-    onResponderGrant={[Function onResponderGrant]}
-    onResponderMove={[Function onResponderMove]}
-    onResponderRelease={[Function onResponderRelease]}
-    onResponderTerminate={[Function onResponderTerminate]}
-    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
-    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
     role="button"
   >
     <Text>
@@ -242,53 +214,8 @@ exports[`debug with only prop whose value is bananaChef 1`] = `
 </View>"
 `;
 
-exports[`debug with only props from TextInput components 1`] = `
+exports[`debug: All Props 1`] = `
 "<View>
-  <Text>
-    Is the banana fresh?
-  </Text>
-  <Text>
-    not fresh
-  </Text>
-  <TextInput
-    placeholder="Add custom freshness"
-    testID="bananaCustomFreshness"
-    value="Custom Freshie"
-  />
-  <TextInput
-    defaultValue="What did you inspect?"
-    placeholder="Who inspected freshness?"
-    testID="bananaChef"
-    value="I inspected freshie"
-  />
-  <TextInput
-    defaultValue="What banana?"
-  />
-  <TextInput
-    defaultValue="hello"
-    value=""
-  />
-  <View>
-    <Text>
-      Change freshness!
-    </Text>
-  </View>
-  <Text>
-    First Text
-  </Text>
-  <Text>
-    Second Text
-  </Text>
-  <Text>
-    0
-  </Text>
-</View>"
-`;
-
-exports[`debug: another custom message 1`] = `
-"another custom message
-
-<View>
   <Text>
     Is the banana fresh?
   </Text>
@@ -364,11 +291,13 @@ exports[`debug: another custom message 1`] = `
   <Text>
     0
   </Text>
-</View>"
+</View>
+undefined"
 `;
 
-exports[`debug: with message 1`] = `
-"my custom message
+exports[`debug: Option message 1`] = `
+"another custom message
+
 
 <View>
   <Text>
@@ -398,35 +327,7 @@ exports[`debug: with message 1`] = `
     value=""
   />
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
     accessible={true}
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function onBlur]}
-    onClick={[Function onClick]}
-    onFocus={[Function onFocus]}
-    onResponderGrant={[Function onResponderGrant]}
-    onResponderMove={[Function onResponderMove]}
-    onResponderRelease={[Function onResponderRelease]}
-    onResponderTerminate={[Function onResponderTerminate]}
-    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
-    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
     role="button"
   >
     <Text>

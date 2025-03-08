@@ -14,6 +14,7 @@ import { isEditableTextInput } from './helpers/text-input';
 import { Point, StringWithAutocomplete } from './types';
 import { nativeState } from './native-state';
 import { EventBuilder } from './user-event/event-builder';
+import { getEventHandler } from './event-handler';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
@@ -88,7 +89,7 @@ function findEventHandler(
 ): EventHandler | null {
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
-  const handler = getEventHandler(element, eventName);
+  const handler = getEventHandler(element, eventName, { loose: true });
   if (handler && isEventEnabled(element, eventName, touchResponder)) {
     return handler;
   }
@@ -99,23 +100,6 @@ function findEventHandler(
   }
 
   return findEventHandler(element.parent, eventName, touchResponder);
-}
-
-function getEventHandler(element: HostElement, eventName: string) {
-  const eventHandlerName = getEventHandlerName(eventName);
-  if (typeof element.props[eventHandlerName] === 'function') {
-    return element.props[eventHandlerName];
-  }
-
-  if (typeof element.props[eventName] === 'function') {
-    return element.props[eventName];
-  }
-
-  return undefined;
-}
-
-function getEventHandlerName(eventName: string) {
-  return `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
 }
 
 // String union type of keys of T that start with on, stripped of 'on'

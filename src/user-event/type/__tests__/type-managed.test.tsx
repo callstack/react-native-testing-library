@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { TextInput } from 'react-native';
-import { createEventLogger, getEventsNames } from '../../../test-utils';
+
 import { render, screen } from '../../..';
+import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { userEvent } from '../..';
 
 beforeEach(() => {
@@ -109,5 +110,32 @@ describe('type() for managed TextInput', () => {
     ]);
 
     expect(events).toMatchSnapshot('input: "ABC", value: "XXX"');
+  });
+
+  it('skips blur and endEditing events when `skipBlur: true` in managed TextInput', async () => {
+    const { events, logEvent } = createEventLogger();
+    render(<ManagedTextInput logEvent={logEvent} />);
+
+    const user = userEvent.setup();
+    await user.type(screen.getByTestId('input'), 'a', {
+      skipBlur: true,
+    });
+
+    const eventNames = getEventsNames(events);
+
+    // Ensure 'endEditing' and 'blur' are not present
+    expect(eventNames).not.toContain('endEditing');
+    expect(eventNames).not.toContain('blur');
+
+    // Verify the exact events that should be present
+    expect(eventNames).toEqual([
+      'pressIn',
+      'focus',
+      'pressOut',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+    ]);
   });
 });

@@ -40,7 +40,7 @@ export function renderInternal<T>(element: React.ReactElement<T>, options?: Rend
   return buildRenderResult(renderer, wrap);
 }
 
-function buildRenderResult(renderer: Root, wrap: (element: React.ReactElement) => JSX.Element) {
+function buildRenderResult(renderer: Root, wrap: (element: React.ReactElement) => React.JSX.Element) {
   const update = (element: React.ReactElement) => {
     void act(() => {
       renderer.render(wrap(element));

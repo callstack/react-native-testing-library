@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+
 import { fireEvent, render, screen, waitForElementToBeRemoved } from '..';
 
 const TestSetup = ({ shouldUseDelay = true }) => {

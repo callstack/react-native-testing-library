@@ -1,4 +1,4 @@
-import { Point } from '../../types';
+import type { Point } from '../../types';
 
 const DEFAULT_STEPS_COUNT = 5;
 

@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
-import stripAnsi from 'strip-ansi';
+
 import { configure, fireEvent, render, screen } from '..';
+import { logger } from '../helpers/logger';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -13,13 +13,11 @@ const DEFAULT_INPUT_CUSTOMER = 'What banana?';
 
 const ignoreWarnings = ['Using debug("message") is deprecated'];
 
-const realConsoleWarn = console.warn;
-
 beforeEach(() => {
-  jest.spyOn(console, 'log').mockImplementation(() => {});
-  jest.spyOn(console, 'warn').mockImplementation((message) => {
-    if (!ignoreWarnings.some((warning) => message.includes(warning))) {
-      realConsoleWarn(message);
+  jest.spyOn(logger, 'info').mockImplementation(() => {});
+  jest.spyOn(logger, 'warn').mockImplementation((message) => {
+    if (!ignoreWarnings.some((warning) => `${message}`.includes(warning))) {
+      logger.warn(message);
     }
   });
 });
@@ -96,40 +94,31 @@ test('debug', () => {
   render(<Banana />);
 
   screen.debug();
-  screen.debug('my custom message');
   screen.debug({ message: 'another custom message' });
+  screen.debug({ mapProps: null });
 
-  const mockCalls = jest.mocked(console.log).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
-  expect(stripAnsi(mockCalls[1][0] + mockCalls[1][1])).toMatchSnapshot('with message');
-  expect(stripAnsi(mockCalls[2][0] + mockCalls[2][1])).toMatchSnapshot('another custom message');
-
-  const mockWarnCalls = jest.mocked(console.warn).mock.calls;
-  expect(mockWarnCalls[0]).toMatchInlineSnapshot(`
-    [
-      "Using debug("message") is deprecated and will be removed in future release, please use debug({ message: "message" }) instead.",
-    ]
-  `);
+  const mockCalls = jest.mocked(logger.info).mock.calls;
+  expect(mockCalls[0][0]).toMatchSnapshot();
+  expect(`${mockCalls[1][0]}\n${mockCalls[1][1]}`).toMatchSnapshot('Option message');
+  expect(`${mockCalls[2][0]}\n${mockCalls[2][1]}`).toMatchSnapshot('All Props');
 });
 
 test('debug changing component', () => {
   render(<Banana />);
   fireEvent.press(screen.getByRole('button', { name: 'Change freshness!' }));
 
-  screen.debug();
+  screen.debug({ mapProps: null });
 
-  const mockCalls = jest.mocked(console.log).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot(
-    'bananaFresh button message should now be "fresh"',
-  );
+  const mockCalls = jest.mocked(logger.info).mock.calls;
+  expect(mockCalls[0][0]).toMatchSnapshot('bananaFresh button message should now be "fresh"');
 });
 
 test('debug with only children prop', () => {
   render(<Banana />);
   screen.debug({ mapProps: () => ({}) });
 
-  const mockCalls = jest.mocked(console.log).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+  const mockCalls = jest.mocked(logger.info).mock.calls;
+  expect(mockCalls[0][0]).toMatchSnapshot();
 });
 
 test('debug with only prop whose value is bananaChef', () => {
@@ -146,18 +135,8 @@ test('debug with only prop whose value is bananaChef', () => {
     },
   });
 
-  const mockCalls = jest.mocked(console.log).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
-});
-
-test('debug with only props from TextInput components', () => {
-  render(<Banana />);
-  screen.debug({
-    mapProps: (props, node) => (node.type === 'TextInput' ? props : {}),
-  });
-
-  const mockCalls = jest.mocked(console.log).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+  const mockCalls = jest.mocked(logger.info).mock.calls;
+  expect(mockCalls[0][0]).toMatchSnapshot();
 });
 
 test('debug should use debugOptions from config when no option is specified', () => {
@@ -170,8 +149,8 @@ test('debug should use debugOptions from config when no option is specified', ()
   );
   screen.debug();
 
-  const mockCalls = jest.mocked(console.log).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+  const mockCalls = jest.mocked(logger.info).mock.calls;
+  expect(mockCalls[0][0]).toMatchSnapshot();
 });
 
 test('filtering out props through mapProps option should not modify component', () => {
@@ -191,6 +170,6 @@ test('debug should use given options over config debugOptions', () => {
   );
   screen.debug({ mapProps: (props) => props });
 
-  const mockCalls = jest.mocked(console.log).mock.calls;
-  expect(stripAnsi(mockCalls[0][0])).toMatchSnapshot();
+  const mockCalls = jest.mocked(logger.info).mock.calls;
+  expect(mockCalls[0][0]).toMatchSnapshot();
 });

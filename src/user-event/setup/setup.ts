@@ -3,9 +3,12 @@ import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { wrapAsync } from '../../helpers/wrap-async';
 import { clear } from '../clear';
 import { paste } from '../paste';
-import { PressOptions, press, longPress } from '../press';
-import { ScrollToOptions, scrollTo } from '../scroll';
-import { TypeOptions, type } from '../type';
+import type { PressOptions } from '../press';
+import { longPress, press } from '../press';
+import type { ScrollToOptions } from '../scroll';
+import { scrollTo } from '../scroll';
+import type { TypeOptions } from '../type';
+import { type } from '../type';
 import { wait } from '../utils';
 
 export interface UserEventSetupOptions {
@@ -169,7 +172,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
  * @see https://github.com/testing-library/user-event/blob/7a305dee9ab833d6f338d567fc2e862b4838b76a/src/setup/setup.ts#L121
  */
 function wrapAndBindImpl<
-  Args extends any[],
+  Args extends never[],
   Impl extends (this: UserEventInstance, ...args: Args) => Promise<unknown>,
 >(instance: UserEventInstance, impl: Impl) {
   function method(...args: Args) {

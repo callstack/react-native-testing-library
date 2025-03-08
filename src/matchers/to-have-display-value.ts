@@ -3,7 +3,8 @@ import { HostElement } from 'universal-test-renderer';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { ErrorWithStack } from '../helpers/errors';
 import { getTextInputValue } from '../helpers/text-input';
-import { TextMatch, TextMatchOptions, matches } from '../matches';
+import type { TextMatch, TextMatchOptions } from '../matches';
+import { matches } from '../matches';
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveDisplayValue(

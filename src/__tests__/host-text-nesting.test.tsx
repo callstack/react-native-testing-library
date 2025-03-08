@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Text, Pressable, View } from 'react-native';
-import { render, within, screen } from '../pure';
+import { Pressable, Text, View } from 'react-native';
+
+import { render, screen, within } from '../pure';
 
 /**
  * Our queries interact differently with composite and host elements, and some specific cases require us

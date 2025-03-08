@@ -1,12 +1,12 @@
 import { HostElement } from 'universal-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
-import { getTextInputValue, isEditableTextInput } from '../helpers/text-input';
 import { isPointerEventEnabled } from '../helpers/pointer-events';
+import { getTextInputValue, isEditableTextInput } from '../helpers/text-input';
 import { EventBuilder } from './event-builder';
-import { UserEventInstance } from './setup';
-import { dispatchEvent, wait } from './utils';
+import type { UserEventInstance } from './setup';
 import { emitTypingEvents } from './type/type';
+import { dispatchEvent, wait } from './utils';
 
 export async function clear(this: UserEventInstance, element: HostElement): Promise<void> {
   if (!isHostTextInput(element)) {

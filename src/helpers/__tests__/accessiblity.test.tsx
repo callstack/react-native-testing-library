@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, TextInput, Pressable, Switch, TouchableOpacity } from 'react-native';
-import { render, isHiddenFromAccessibility, isInaccessible, screen } from '../..';
+import { Pressable, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+
+import { isHiddenFromAccessibility, isInaccessible, render, screen } from '../..';
 import { computeAriaLabel, isAccessibilityElement } from '../accessibility';
 
 describe('isHiddenFromAccessibility', () => {

@@ -11,7 +11,7 @@ export type NativeState = {
   contentOffsetForElement: WeakMap<HostElement, Point>;
 };
 
-export let nativeState: NativeState = {
+export const nativeState: NativeState = {
   valueForElement: new WeakMap(),
   contentOffsetForElement: new WeakMap(),
 };

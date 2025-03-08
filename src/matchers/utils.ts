@@ -1,16 +1,16 @@
 import {
   EXPECTED_COLOR,
-  RECEIVED_COLOR,
   matcherHint,
-  printWithType,
   printReceived,
+  printWithType,
+  RECEIVED_COLOR,
   stringify,
 } from 'jest-matcher-utils';
-import prettyFormat, { plugins } from 'pretty-format';
 import redent from 'redent';
 import { HostElement, HostNode } from 'universal-test-renderer';
 import { isValidElement } from '../helpers/component-tree';
-import { defaultMapProps } from '../helpers/format-default';
+import { defaultMapProps } from '../helpers/map-props';
+import prettyFormat, { plugins } from 'pretty-format';
 
 class HostElementTypeError extends Error {
   constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {
@@ -52,53 +52,6 @@ export function checkHostElement(
   if (!isValidElement(element)) {
     throw new HostElementTypeError(element, matcherFn, context);
   }
-}
-
-/***
- * Format given element as a pretty-printed string.
- *
- * @param element Element to format.
- */
-export function formatElement(element: HostNode | null) {
-  if (element == null) {
-    return '  null';
-  }
-
-  if (typeof element === 'string') {
-    return element;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { children, ...props } = element.props;
-
-  return redent(
-    prettyFormat(
-      {
-        // This prop is needed persuade the prettyFormat that the element is
-        // a ReactTestRendererJSON instance, so it is formatted as JSX.
-        $$typeof: Symbol.for('react.test.json'),
-        type: element.type,
-        props: defaultMapProps(props),
-        // TODO: Recursively format children
-        children: element.children.filter((child) => typeof child === 'string'),
-      },
-      {
-        plugins: [plugins.ReactTestComponent, plugins.ReactElement],
-        printFunctionName: false,
-        printBasicPrototype: false,
-        highlight: true,
-      },
-    ),
-    2,
-  );
-}
-
-export function formatElementArray(elements: HostNode[]) {
-  if (elements.length === 0) {
-    return '  (no elements)';
-  }
-
-  return redent(elements.map(formatElement).join('\n'), 2);
 }
 
 export function formatMessage(

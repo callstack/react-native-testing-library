@@ -1,7 +1,7 @@
 import { HostElement } from 'universal-test-renderer';
 import { computeAriaValue } from '../accessibility';
-import { TextMatch } from '../../matches';
 import { matchStringProp } from './match-string-prop';
+import type { TextMatch } from '../../matches';
 
 export interface AccessibilityValueMatcher {
   min?: number;

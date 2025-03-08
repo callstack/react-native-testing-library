@@ -1,8 +1,11 @@
-import { UserEventConfig } from '../setup';
+type WaitConfig = {
+  delay?: number;
+  advanceTimers: (delay: number) => Promise<void> | void;
+};
 
-export function wait(config: UserEventConfig, durationInMs?: number) {
+export function wait(config: WaitConfig, durationInMs?: number) {
   const delay = durationInMs ?? config.delay;
-  if (typeof delay !== 'number') {
+  if (typeof delay !== 'number' || delay == null) {
     return;
   }
 

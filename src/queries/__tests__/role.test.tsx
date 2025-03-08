@@ -1,15 +1,16 @@
 import * as React from 'react';
 import {
   Button as RNButton,
+  Image,
   Pressable,
+  Switch,
   Text,
   TextInput,
-  Image,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  Switch,
 } from 'react-native';
+
 import { render, screen } from '../..';
 
 const TEXT_LABEL = 'cool text';

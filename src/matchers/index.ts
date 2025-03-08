@@ -2,7 +2,7 @@ export { toBeBusy } from './to-be-busy';
 export { toBeChecked } from './to-be-checked';
 export { toBeDisabled, toBeEnabled } from './to-be-disabled';
 export { toBeEmptyElement } from './to-be-empty-element';
-export { toBeExpanded, toBeCollapsed } from './to-be-expanded';
+export { toBeCollapsed, toBeExpanded } from './to-be-expanded';
 export { toBeOnTheScreen } from './to-be-on-the-screen';
 export { toBePartiallyChecked } from './to-be-partially-checked';
 export { toBeSelected } from './to-be-selected';

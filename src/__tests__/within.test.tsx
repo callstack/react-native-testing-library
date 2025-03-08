@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View, Text, TextInput } from 'react-native';
-import { render, within, getQueriesForElement } from '..';
+import { Text, TextInput, View } from 'react-native';
+
+import { getQueriesForElement, render, within } from '..';
 
 test('within() exposes basic queries', async () => {
   const rootQueries = render(

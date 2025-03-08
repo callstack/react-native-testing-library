@@ -7,8 +7,10 @@ import {
   rolesSupportingCheckedState,
 } from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
+import { formatElement } from '../helpers/format-element';
 import { isHostSwitch } from '../helpers/host-component-names';
-import { checkHostElement, formatElement } from './utils';
+import { checkHostElement } from './utils';
+import redent from 'redent';
 
 export function toBeChecked(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeChecked, this);
@@ -28,7 +30,7 @@ export function toBeChecked(this: jest.MatcherContext, element: HostElement) {
         matcherHint(`${this.isNot ? '.not' : ''}.toBeChecked`, 'element', ''),
         '',
         `Received element ${is} checked:`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };

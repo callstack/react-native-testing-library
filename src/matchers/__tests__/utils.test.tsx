@@ -1,22 +1,18 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import { render, screen } from '../..';
-import { checkHostElement, formatElement } from '../utils';
+import { checkHostElement } from '../utils';
 
 function fakeMatcher() {
-  // Do nothing.
+  return { pass: true, message: () => 'fake' };
 }
-
-test('formatElement', () => {
-  expect(formatElement('Hello')).toMatchInlineSnapshot(`"Hello"`);
-  expect(formatElement(null)).toMatchInlineSnapshot(`"  null"`);
-});
 
 test('checkHostElement allows host element', () => {
   render(<View testID="view" />);
 
   expect(() => {
-    // @ts-expect-error
+    // @ts-expect-error: intentionally passing wrong element shape
     checkHostElement(screen.getByTestId('view'), fakeMatcher, {});
   }).not.toThrow();
 });
@@ -32,7 +28,7 @@ test('checkHostElement allows rejects composite element', () => {
 
 test('checkHostElement allows rejects null element', () => {
   expect(() => {
-    // @ts-expect-error
+    // @ts-expect-error: intentionally passing wrong element shape
     checkHostElement(null, fakeMatcher, {});
   }).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).fakeMatcher()

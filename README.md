@@ -102,7 +102,7 @@ React Native Testing Library consists of following APIs:
 
 ## Migration Guides
 
-- [Migration to 12.0](https://callstack.github.io/react-native-testing-library/docs/migration/v12)
+- [Migration to 13.0](https://callstack.github.io/react-native-testing-library/docs/migration/v13)
 - [Migration to built-in Jest Matchers](https://callstack.github.io/react-native-testing-library/docs/migration/jest-matchers)
 
 ## Troubleshooting

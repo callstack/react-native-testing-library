@@ -1,23 +1,21 @@
 import type { JsonNode } from 'universal-test-renderer';
-import format, { FormatOptions } from './format';
+import { logger } from './logger';
+import { FormatElementOptions, formatJson } from './format-element';
 
 export type DebugOptions = {
   message?: string;
-} & FormatOptions;
+} & FormatElementOptions;
 
 /**
  * Log pretty-printed deep test component instance
  */
-export function debug(instance: JsonNode | JsonNode[], options?: DebugOptions | string) {
-  const message = typeof options === 'string' ? options : options?.message;
-
-  const formatOptions = typeof options === 'object' ? { mapProps: options?.mapProps } : undefined;
+export function debug(instance: JsonNode | JsonNode[], options?: DebugOptions) {
+  const message = options?.message;
+  const formatOptions = { mapProps: options?.mapProps };
 
   if (message) {
-    // eslint-disable-next-line no-console
-    console.log(`${message}\n\n`, format(instance, formatOptions));
+    logger.info(`${message}\n\n`, formatJson(instance, formatOptions));
   } else {
-    // eslint-disable-next-line no-console
-    console.log(format(instance, formatOptions));
+    logger.info(formatJson(instance, formatOptions));
   }
 }

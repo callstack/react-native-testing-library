@@ -1,4 +1,4 @@
-import { getConfig, configure, resetToDefaults } from '../config';
+import { configure, getConfig, resetToDefaults } from '../config';
 
 beforeEach(() => {
   resetToDefaults();

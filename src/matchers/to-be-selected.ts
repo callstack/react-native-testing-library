@@ -1,7 +1,9 @@
 import { matcherHint } from 'jest-matcher-utils';
 import { HostElement } from 'universal-test-renderer';
 import { computeAriaSelected } from '../helpers/accessibility';
-import { checkHostElement, formatElement } from './utils';
+import { formatElement } from '../helpers/format-element';
+import { checkHostElement } from './utils';
+import redent from 'redent';
 
 export function toBeSelected(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeSelected, this);
@@ -14,7 +16,7 @@ export function toBeSelected(this: jest.MatcherContext, element: HostElement) {
         matcherHint(`${this.isNot ? '.not' : ''}.toBeSelected`, 'element', ''),
         '',
         `Received element ${is} selected`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };

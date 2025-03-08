@@ -28,26 +28,24 @@ describe('wait()', () => {
     expect(advanceTimers).toHaveBeenCalledWith(100);
   });
 
-  it('wait with null delay does not wait with real timers', async () => {
+  it('wait with undefined delay does not wait with real timers', async () => {
     jest.spyOn(globalThis, 'setTimeout');
     const advanceTimers = jest.fn();
 
-    // @ts-expect-error
-    await wait({ delay: null, advanceTimers });
+    await wait({ advanceTimers });
 
     expect(globalThis.setTimeout).not.toHaveBeenCalled();
     expect(advanceTimers).not.toHaveBeenCalled();
   });
 
   it.each(['modern', 'legacy'])(
-    'wait with null delay does not wait with %s fake timers',
+    'wait with undefined delay does not wait with %s fake timers',
     async (type) => {
       jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
       jest.spyOn(globalThis, 'setTimeout');
       const advanceTimers = jest.fn();
 
-      // @ts-expect-error
-      await wait({ delay: null, advanceTimers });
+      await wait({ advanceTimers });
 
       expect(globalThis.setTimeout).not.toHaveBeenCalled();
       expect(advanceTimers).not.toHaveBeenCalled();

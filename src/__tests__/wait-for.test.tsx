@@ -19,7 +19,7 @@ class Banana extends React.Component<any> {
   }
 }
 
-class BananaContainer extends React.Component<{}, any> {
+class BananaContainer extends React.Component<object, any> {
   state = { fresh: false };
 
   onChangeFresh = async () => {
@@ -198,7 +198,7 @@ test.each([false, true])(
 
 const blockThread = (timeToBlockThread: number, legacyFakeTimers: boolean) => {
   jest.useRealTimers();
-  let end = Date.now() + timeToBlockThread;
+  const end = Date.now() + timeToBlockThread;
 
   while (Date.now() < end) {
     // do nothing

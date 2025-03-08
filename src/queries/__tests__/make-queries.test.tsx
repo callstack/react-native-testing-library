@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, TextInput, View } from 'react-native';
+
 import { render, screen } from '../..';
 
 describe('printing element tree', () => {

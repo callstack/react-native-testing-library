@@ -1,9 +1,9 @@
 import { HostElement } from 'universal-test-renderer';
 import { ErrorWithStack } from '../helpers/errors';
-import format from '../helpers/format';
-import { defaultMapProps } from '../helpers/format-default';
 import { screen } from '../screen';
 import waitFor, { type WaitForOptions } from '../wait-for';
+import { formatJson } from '../helpers/format-element';
+import { logger } from '../helpers/logger';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
@@ -68,8 +68,7 @@ function extractDeprecatedWaitForOptions(options?: WaitForOptions) {
   deprecatedKeys.forEach((key) => {
     const option = options[key];
     if (option) {
-      // eslint-disable-next-line no-console
-      console.warn(
+      logger.warn(
         `Use of option "${key}" in a findBy* query options (2nd parameter) is deprecated. Please pass this option in the waitForOptions (3rd parameter).
 Example:
 
@@ -95,9 +94,7 @@ function formatErrorMessage(message: string, printElementTree: boolean) {
     return message;
   }
 
-  return `${message}\n\n${format(json, {
-    mapProps: defaultMapProps,
-  })}`;
+  return `${message}\n\n${formatJson(json)}`;
 }
 
 function appendElementTreeToError(error: Error) {

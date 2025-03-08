@@ -1,4 +1,4 @@
-import { NormalizerFn } from '../matches';
+import type { NormalizerFn } from '../matches';
 
 export type CommonQueryOptions = {
   /** Should query include elements hidden from accessibility. */

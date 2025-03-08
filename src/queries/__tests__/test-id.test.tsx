@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Text, TextInput, View } from 'react-native';
+
 import { render, screen } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';

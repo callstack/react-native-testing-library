@@ -1,5 +1,5 @@
-import { Size } from '../../types';
-import { TextRange } from '../utils/text-range';
+import type { Size } from '../../types';
+import type { TextRange } from '../utils/text-range';
 import { baseSyntheticEvent } from './base';
 
 export const TextInputEventBuilder = {

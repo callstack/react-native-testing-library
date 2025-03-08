@@ -2,7 +2,9 @@ import { matcherHint } from 'jest-matcher-utils';
 import { HostElement } from 'universal-test-renderer';
 import { computeAriaChecked, getRole, isAccessibilityElement } from '../helpers/accessibility';
 import { ErrorWithStack } from '../helpers/errors';
-import { checkHostElement, formatElement } from './utils';
+import { formatElement } from '../helpers/format-element';
+import { checkHostElement } from './utils';
+import redent from 'redent';
 
 export function toBePartiallyChecked(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBePartiallyChecked, this);
@@ -22,7 +24,7 @@ export function toBePartiallyChecked(this: jest.MatcherContext, element: HostEle
         matcherHint(`${this.isNot ? '.not' : ''}.toBePartiallyChecked`, 'element', ''),
         '',
         `Received element ${is} partially checked:`,
-        formatElement(element),
+        redent(formatElement(element), 2),
       ].join('\n');
     },
   };

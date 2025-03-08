@@ -2,7 +2,9 @@ import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import { HostElement } from 'universal-test-renderer';
 import { getContainerElement } from '../helpers/component-tree';
 import { screen } from '../screen';
-import { checkHostElement, formatElement } from './utils';
+import { checkHostElement } from './utils';
+import redent from 'redent';
+import { formatElement } from '../helpers/format-element';
 
 export function toBeOnTheScreen(this: jest.MatcherContext, element: HostElement) {
   if (element !== null || !this.isNot) {
@@ -12,7 +14,10 @@ export function toBeOnTheScreen(this: jest.MatcherContext, element: HostElement)
   const pass = element === null ? false : screen.container === getContainerElement(element);
 
   const errorFound = () => {
-    return `expected element tree not to contain element, but found\n${formatElement(element)}`;
+    return `expected element tree not to contain element, but found\n${redent(
+      formatElement(element),
+      2,
+    )}`;
   };
 
   const errorNotFound = () => {

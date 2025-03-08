@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { TextInput, View } from 'react-native';
+
 import { render, screen } from '../..';
 
 test('toHaveDisplayValue() example test', () => {

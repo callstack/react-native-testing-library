@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text } from 'react-native';
-import { act, fireEvent, render, screen } from '../';
+
+import { act, fireEvent, render, screen } from '..';
 
 type UseEffectProps = { callback(): void };
 const UseEffect = ({ callback }: UseEffectProps) => {

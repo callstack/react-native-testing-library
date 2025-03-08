@@ -1,17 +1,18 @@
 import { HostElement } from 'universal-test-renderer';
 import { isHostTextInput } from '../../helpers/host-component-names';
+import { isPointerEventEnabled } from '../../helpers/pointer-events';
+import { getTextInputValue, isEditableTextInput } from '../../helpers/text-input';
 import { nativeState } from '../../native-state';
 import { EventBuilder } from '../event-builder';
-import { ErrorWithStack } from '../../helpers/errors';
-import { getTextInputValue, isEditableTextInput } from '../../helpers/text-input';
-import { isPointerEventEnabled } from '../../helpers/pointer-events';
-import { UserEventConfig, UserEventInstance } from '../setup';
-import { dispatchEvent, wait, getTextContentSize } from '../utils';
+import type { UserEventConfig, UserEventInstance } from '../setup';
+import { dispatchEvent, getTextContentSize, wait } from '../utils';
 import { parseKeys } from './parse-keys';
+import { ErrorWithStack } from '../../helpers/errors';
 
 export interface TypeOptions {
   skipPress?: boolean;
   submitEditing?: boolean;
+  skipBlur?: boolean;
 }
 
 export async function type(
@@ -67,9 +68,10 @@ export async function type(
     dispatchEvent(element, 'submitEditing', EventBuilder.TextInput.submitEditing(finalText));
   }
 
-  dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(finalText));
-
-  dispatchEvent(element, 'blur', EventBuilder.Common.blur());
+  if (!options?.skipBlur) {
+    dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(finalText));
+    dispatchEvent(element, 'blur', EventBuilder.Common.blur());
+  }
 }
 
 type EmitTypingEventsContext = {

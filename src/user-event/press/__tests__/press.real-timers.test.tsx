@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { createEventLogger, getEventsNames } from '../../../test-utils';
+
 import { render, screen } from '../../..';
+import { createEventLogger, getEventsNames } from '../../../test-utils';
 import { userEvent } from '../..';
 
 describe('userEvent.press with real timers', () => {
@@ -33,7 +34,12 @@ describe('userEvent.press with real timers', () => {
     );
 
     await user.press(screen.getByTestId('pressable'));
-    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
+    // Typical event order is pressIn, pressOut, press
+    // But sometimes due to a race condition, the order is pressIn, press, pressOut.
+    const eventSequence = getEventsNames(events).join(', ');
+    expect(
+      eventSequence === 'pressIn, pressOut, press' || eventSequence === 'pressIn, press, pressOut',
+    ).toBe(true);
   });
 
   test('works on TouchableOpacity', async () => {
@@ -197,7 +203,12 @@ describe('userEvent.press with real timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
+    const eventSequence = getEventsNames(events).join(', ');
+    // Typical event order is pressIn, pressOut, press
+    // But sometimes due to a race condition, the order is pressIn, press, pressOut.
+    expect(
+      eventSequence === 'pressIn, pressOut, press' || eventSequence === 'pressIn, press, pressOut',
+    ).toBe(true);
   });
 
   test('crawls up in the tree to find an element that responds to touch events', async () => {

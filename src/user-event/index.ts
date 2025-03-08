@@ -1,8 +1,8 @@
 import { HostElement } from 'universal-test-renderer';
+import type { PressOptions } from './press';
+import type { ScrollToOptions } from './scroll';
 import { setup } from './setup';
-import { PressOptions } from './press';
-import { TypeOptions } from './type';
-import { ScrollToOptions } from './scroll';
+import type { TypeOptions } from './type';
 
 export { UserEventConfig } from './setup';
 

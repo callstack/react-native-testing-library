@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
 import { fireEvent, render, screen } from '..';
 
 type OnPressComponentProps = {
