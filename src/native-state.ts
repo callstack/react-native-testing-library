@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import type { Point } from './types';
 
@@ -8,8 +8,8 @@ import type { Point } from './types';
  * Values from `value` props (managed controls) should take precedence over these values.
  */
 export type NativeState = {
-  valueForElement: WeakMap<ReactTestInstance, string>;
-  contentOffsetForElement: WeakMap<ReactTestInstance, Point>;
+  valueForElement: WeakMap<HostElement, string>;
+  contentOffsetForElement: WeakMap<HostElement, Point>;
 };
 
 export const nativeState: NativeState = {

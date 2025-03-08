@@ -1,14 +1,15 @@
-import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import redent from 'redent';
+import type { HostElement } from 'universal-test-renderer';
 
+import { findAll } from '../helpers/find-all';
 import { formatElement } from '../helpers/format-element';
 import { checkHostElement } from './utils';
 
 export function toContainElement(
   this: jest.MatcherContext,
-  container: ReactTestInstance,
-  element: ReactTestInstance | null,
+  container: HostElement,
+  element: HostElement | null,
 ) {
   checkHostElement(container, toContainElement, this);
 
@@ -16,9 +17,9 @@ export function toContainElement(
     checkHostElement(element, toContainElement, this);
   }
 
-  let matches: ReactTestInstance[] = [];
+  let matches: HostElement[] = [];
   if (element) {
-    matches = container.findAll((node) => node === element);
+    matches = findAll(container, (node) => node === element);
   }
 
   return {

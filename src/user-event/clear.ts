@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
@@ -9,7 +9,7 @@ import type { UserEventInstance } from './setup';
 import { emitTypingEvents } from './type/type';
 import { dispatchEvent, wait } from './utils';
 
-export async function clear(this: UserEventInstance, element: ReactTestInstance): Promise<void> {
+export async function clear(this: UserEventInstance, element: HostElement): Promise<void> {
   if (!isHostTextInput(element)) {
     throw new ErrorWithStack(
       `clear() only supports host "TextInput" elements. Passed element has type: "${element.type}".`,

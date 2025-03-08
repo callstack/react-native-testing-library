@@ -1,10 +1,7 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import act from '../../act';
 import { getEventHandler } from '../../event-handler';
-import type { HostTestInstance } from '../../helpers/component-tree';
-import { getHostParent, isHostElement } from '../../helpers/component-tree';
-import { ErrorWithStack } from '../../helpers/errors';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { EventBuilder } from '../event-builder';
@@ -20,14 +17,7 @@ export interface PressOptions {
   duration?: number;
 }
 
-export async function press(this: UserEventInstance, element: ReactTestInstance): Promise<void> {
-  if (!isHostElement(element)) {
-    throw new ErrorWithStack(
-      `press() works only with host elements. Passed element has type "${element.type}".`,
-      press,
-    );
-  }
-
+export async function press(this: UserEventInstance, element: HostElement): Promise<void> {
   await basePress(this.config, element, {
     type: 'press',
   });
@@ -35,16 +25,9 @@ export async function press(this: UserEventInstance, element: ReactTestInstance)
 
 export async function longPress(
   this: UserEventInstance,
-  element: ReactTestInstance,
+  element: HostElement,
   options?: PressOptions,
 ): Promise<void> {
-  if (!isHostElement(element)) {
-    throw new ErrorWithStack(
-      `longPress() works only with host elements. Passed element has type "${element.type}".`,
-      longPress,
-    );
-  }
-
   await basePress(this.config, element, {
     type: 'longPress',
     duration: options?.duration ?? DEFAULT_LONG_PRESS_DELAY_MS,
@@ -58,7 +41,7 @@ interface BasePressOptions {
 
 const basePress = async (
   config: UserEventConfig,
-  element: HostTestInstance,
+  element: HostElement,
   options: BasePressOptions,
 ): Promise<void> => {
   if (isEnabledHostElement(element) && hasPressEventHandler(element)) {
@@ -71,7 +54,7 @@ const basePress = async (
     return;
   }
 
-  const hostParentElement = getHostParent(element);
+  const hostParentElement = element.parent;
   if (!hostParentElement) {
     return;
   }
@@ -79,7 +62,7 @@ const basePress = async (
   await basePress(config, hostParentElement, options);
 };
 
-function isEnabledHostElement(element: HostTestInstance) {
+function isEnabledHostElement(element: HostElement) {
   if (!isPointerEventEnabled(element)) {
     return false;
   }
@@ -89,18 +72,17 @@ function isEnabledHostElement(element: HostTestInstance) {
   }
 
   if (isHostTextInput(element)) {
-    // @ts-expect-error - workaround incorrect ReactTestInstance type
     return element.props.editable !== false;
   }
 
   return true;
 }
 
-function isEnabledTouchResponder(element: HostTestInstance) {
+function isEnabledTouchResponder(element: HostElement) {
   return isPointerEventEnabled(element) && element.props.onStartShouldSetResponder?.();
 }
 
-function hasPressEventHandler(element: HostTestInstance) {
+function hasPressEventHandler(element: HostElement) {
   return (
     getEventHandler(element, 'press') ||
     getEventHandler(element, 'longPress') ||
@@ -114,7 +96,7 @@ function hasPressEventHandler(element: HostTestInstance) {
  */
 async function emitDirectPressEvents(
   config: UserEventConfig,
-  element: HostTestInstance,
+  element: HostElement,
   options: BasePressOptions,
 ) {
   await wait(config);
@@ -140,7 +122,7 @@ async function emitDirectPressEvents(
 
 async function emitPressabilityPressEvents(
   config: UserEventConfig,
-  element: HostTestInstance,
+  element: HostElement,
   options: BasePressOptions,
 ) {
   await wait(config);

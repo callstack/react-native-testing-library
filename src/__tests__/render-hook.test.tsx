@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import React from 'react';
-import TestRenderer from 'react-test-renderer';
 
 import { renderHook } from '../pure';
 
@@ -86,21 +85,4 @@ test('props type is inferred correctly when initial props is explicitly undefine
   rerender(6);
 
   expect(result.current).toBe(6);
-});
-
-/**
- * This test makes sure that calling renderHook does
- * not try to detect host component names in any form.
- * But since there are numerous methods that could trigger that
- * we check the count of renders using React Test Renderers.
- */
-test('does render only once', () => {
-  jest.spyOn(TestRenderer, 'create');
-
-  renderHook(() => {
-    const [state, setState] = React.useState(1);
-    return [state, setState];
-  });
-
-  expect(TestRenderer.create).toHaveBeenCalledTimes(1);
 });

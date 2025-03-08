@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { render, screen } from '../..';
 
@@ -13,6 +13,7 @@ test('toBeEmptyElement() base case', () => {
   render(
     <View testID="not-empty">
       <View testID="empty" />
+      <Text testID="text">Hello</Text>
     </View>,
   );
 
@@ -33,7 +34,21 @@ test('toBeEmptyElement() base case', () => {
     Received:
       <View
         testID="empty"
-      />"
+      />
+      <Text
+        testID="text"
+      >
+        Hello
+      </Text>"
+  `);
+
+  const text = screen.getByTestId('text');
+  expect(text).not.toBeEmptyElement();
+  expect(() => expect(text).toBeEmptyElement()).toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toBeEmptyElement()
+
+    Received:
+      Hello"
   `);
 });
 

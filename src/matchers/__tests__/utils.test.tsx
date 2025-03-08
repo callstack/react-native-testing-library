@@ -17,15 +17,6 @@ test('checkHostElement allows host element', () => {
   }).not.toThrow();
 });
 
-test('checkHostElement allows rejects composite element', () => {
-  render(<View testID="view" />);
-
-  expect(() => {
-    // @ts-expect-error: intentionally passing wrong element shape
-    checkHostElement(screen.UNSAFE_root, fakeMatcher, {});
-  }).toThrow(/value must be a host element./);
-});
-
 test('checkHostElement allows rejects null element', () => {
   expect(() => {
     // @ts-expect-error: intentionally passing wrong element shape
