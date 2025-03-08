@@ -12,6 +12,9 @@ test('formatElement', () => {
     </View>,
   );
 
+  expect(formatElement(null)).toMatchInlineSnapshot(`"(null)"`);
+  expect(formatElement('Hello World')).toMatchInlineSnapshot(`"Hello World"`);
+
   expect(formatElement(screen.getByTestId('view'), { mapProps: null })).toMatchInlineSnapshot(`
     "<View
       testID="view"

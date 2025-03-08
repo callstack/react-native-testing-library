@@ -79,23 +79,12 @@ function buildRenderResult(
   return result;
 }
 
-export type DebugFunction = (options?: DebugOptions | string) => void;
+export type DebugFunction = (options?: DebugOptions) => void;
 
 function makeDebug(renderer: Root): DebugFunction {
-  function debugImpl(options?: DebugOptions | string) {
+  function debugImpl(options?: DebugOptions) {
     const { defaultDebugOptions } = getConfig();
-    const debugOptions =
-      typeof options === 'string'
-        ? { ...defaultDebugOptions, message: options }
-        : { ...defaultDebugOptions, ...options };
-
-    if (typeof options === 'string') {
-      // eslint-disable-next-line no-console
-      console.warn(
-        'Using debug("message") is deprecated and will be removed in future release, please use debug({ message: "message" }) instead.',
-      );
-    }
-
+    const debugOptions = { ...defaultDebugOptions, ...options };
     const json = renderer.root?.toJSON();
     if (json) {
       return debug(json, debugOptions);
