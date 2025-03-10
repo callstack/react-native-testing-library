@@ -2866,12 +2866,12 @@ __metadata:
     release-it: "npm:^18.0.0"
     typescript: "npm:^5.6.3"
     typescript-eslint: "npm:^8.19.1"
-    universal-test-renderer: "npm:0.5.0"
+    universal-test-renderer: "npm:0.6.0"
   peerDependencies:
     jest: ">=29.0.0"
     react: ">=19.0.0"
     react-native: ">=0.77"
-    universal-test-renderer: 0.5.0
+    universal-test-renderer: 0.6.0
   peerDependenciesMeta:
     jest:
       optional: true
@@ -9295,7 +9295,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-reconciler@npm:^0.31.0-rc-fb9a90fa48-20240614":
+"react-reconciler@npm:~0.31.0":
   version: 0.31.0
   resolution: "react-reconciler@npm:0.31.0"
   dependencies:
@@ -10832,14 +10832,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"universal-test-renderer@npm:0.5.0":
-  version: 0.5.0
-  resolution: "universal-test-renderer@npm:0.5.0"
+"universal-test-renderer@npm:0.6.0":
+  version: 0.6.0
+  resolution: "universal-test-renderer@npm:0.6.0"
   dependencies:
-    react-reconciler: "npm:^0.31.0-rc-fb9a90fa48-20240614"
+    react-reconciler: "npm:~0.31.0"
   peerDependencies:
-    react: ^19.0.0-rc-fb9a90fa48-20240614
-  checksum: 10c0/baf87e2ca3ab77cc3f472b818437771dc95a6d2ecc11e513e0e1f992c106d9cfa94449137d26b159ec07d740ce5353dd4025fdc12730b8012ad3edbca474cb48
+    react: ^19.0.0
+  checksum: 10c0/526a653347bbb40197ed8c08f1d623984b6646ad5c8e679b7ea00394dda7f8a6d747dc6f83e254a9f791301983eb81207a187603302db42ffc86f2ad99eda56c
   languageName: node
   linkType: hard
 

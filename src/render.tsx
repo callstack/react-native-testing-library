@@ -1,12 +1,13 @@
 import * as React from 'react';
-import type { HostElement, Root } from 'universal-test-renderer/react-native';
-import { createRoot } from 'universal-test-renderer/react-native';
+import type { HostElement, Root, RootOptions } from 'universal-test-renderer';
+import { createRoot } from 'universal-test-renderer';
 
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
+import { HOST_TEXT_NAMES } from './helpers/host-component-names';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
@@ -22,19 +23,20 @@ export interface RenderOptions {
 
 export type RenderResult = ReturnType<typeof render>;
 
+const createRootOptions: RootOptions = {
+  textComponents: HOST_TEXT_NAMES,
+};
+
 /**
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export default function render<T>(element: React.ReactElement<T>, options: RenderOptions = {}) {
-  return renderInternal(element, options);
-}
-
-export function renderInternal<T>(element: React.ReactElement<T>, options?: RenderOptions) {
+export function render<T>(element: React.ReactElement<T>, options: RenderOptions = {}) {
   const { wrapper: Wrapper } = options || {};
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
   const renderer = createRoot({
+    ...createRootOptions,
     createNodeMock: options?.createNodeMock,
   });
   void act(() => {
