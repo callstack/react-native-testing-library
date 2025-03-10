@@ -1,6 +1,6 @@
-import type { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
 import type { NewPlugin } from 'pretty-format';
 import prettyFormat, { plugins } from 'pretty-format';
+import type { HostNode, JsonNode } from 'universal-test-renderer';
 
 import type { MapPropsFunction } from './map-props';
 import { defaultMapProps } from './map-props';
@@ -22,15 +22,18 @@ export type FormatElementOptions = {
  * @param element Element to format.
  */
 export function formatElement(
-  element: ReactTestInstance | null,
+  element: HostNode | null,
   { compact, highlight = true, mapProps = defaultMapProps }: FormatElementOptions = {},
 ) {
   if (element == null) {
     return '(null)';
   }
 
-  const { children, ...props } = element.props;
-  const childrenToDisplay = typeof children === 'string' ? [children] : undefined;
+  if (typeof element === 'string') {
+    return element;
+  }
+
+  const childrenToDisplay = element.children.filter((child) => typeof child === 'string');
 
   return prettyFormat(
     {
@@ -38,12 +41,12 @@ export function formatElement(
       // a ReactTestRendererJSON instance, so it is formatted as JSX.
       $$typeof: Symbol.for('react.test.json'),
       type: `${element.type}`,
-      props: mapProps ? mapProps(props) : props,
+      props: mapProps ? mapProps(element.props) : element.props,
       children: childrenToDisplay,
     },
     // See: https://www.npmjs.com/package/pretty-format#usage-with-options
     {
-      plugins: [plugins.ReactTestComponent, plugins.ReactElement],
+      plugins: [plugins.ReactTestComponent],
       printFunctionName: false,
       printBasicPrototype: false,
       highlight: highlight,
@@ -52,7 +55,7 @@ export function formatElement(
   );
 }
 
-export function formatElementList(elements: ReactTestInstance[], options?: FormatElementOptions) {
+export function formatElementList(elements: HostNode[], options?: FormatElementOptions) {
   if (elements.length === 0) {
     return '(no elements)';
   }
@@ -61,7 +64,7 @@ export function formatElementList(elements: ReactTestInstance[], options?: Forma
 }
 
 export function formatJson(
-  json: ReactTestRendererJSON | ReactTestRendererJSON[],
+  json: JsonNode | JsonNode[],
   { compact, highlight = true, mapProps = defaultMapProps }: FormatElementOptions = {},
 ) {
   return prettyFormat(json, {

@@ -11,15 +11,8 @@ const INPUT_CHEF = 'I inspected freshie';
 const DEFAULT_INPUT_CHEF = 'What did you inspect?';
 const DEFAULT_INPUT_CUSTOMER = 'What banana?';
 
-const ignoreWarnings = ['Using debug("message") is deprecated'];
-
 beforeEach(() => {
   jest.spyOn(logger, 'info').mockImplementation(() => {});
-  jest.spyOn(logger, 'warn').mockImplementation((message) => {
-    if (!ignoreWarnings.some((warning) => `${message}`.includes(warning))) {
-      logger.warn(message);
-    }
-  });
 });
 
 afterEach(() => {

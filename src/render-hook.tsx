@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { renderInternal } from './render';
+import { render } from './render';
 
 export type RenderHookResult<Result, Props> = {
   rerender: (props: Props) => void;
@@ -46,7 +46,7 @@ export function renderHook<Result, Props>(
     return null;
   }
 
-  const { rerender: componentRerender, unmount } = renderInternal(
+  const { rerender: componentRerender, unmount } = render(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
     <TestComponent hookProps={initialProps} />,
     renderOptions,

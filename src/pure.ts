@@ -1,7 +1,7 @@
 export { default as act } from './act';
 export { default as cleanup } from './cleanup';
 export { default as fireEvent } from './fire-event';
-export { default as render } from './render';
+export { render } from './render';
 export { default as waitFor } from './wait-for';
 export { default as waitForElementToBeRemoved } from './wait-for-element-to-be-removed';
 export { within, getQueriesForElement } from './within';

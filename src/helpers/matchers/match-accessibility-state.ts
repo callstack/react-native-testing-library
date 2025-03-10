@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import {
   computeAriaBusy,
@@ -20,10 +20,7 @@ export interface AccessibilityStateMatcher {
   expanded?: boolean;
 }
 
-export function matchAccessibilityState(
-  node: ReactTestInstance,
-  matcher: AccessibilityStateMatcher,
-) {
+export function matchAccessibilityState(node: HostElement, matcher: AccessibilityStateMatcher) {
   if (matcher.busy !== undefined && matcher.busy !== computeAriaBusy(node)) {
     return false;
   }

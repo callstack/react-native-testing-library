@@ -119,14 +119,14 @@ test('toHaveAccessibleName() handles a view without name when called without exp
 });
 
 it('toHaveAccessibleName() rejects non-host element', () => {
-  const nonElement = 'This is not a ReactTestInstance';
+  const nonElement = 'This is not a HostElement';
 
   expect(() => expect(nonElement).toHaveAccessibleName()).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).toHaveAccessibleName()
 
     received value must be a host element.
     Received has type:  string
-    Received has value: "This is not a ReactTestInstance""
+    Received has value: "This is not a HostElement""
   `);
 
   expect(() => expect(nonElement).not.toHaveAccessibleName()).toThrowErrorMatchingInlineSnapshot(`
@@ -134,6 +134,6 @@ it('toHaveAccessibleName() rejects non-host element', () => {
 
     received value must be a host element.
     Received has type:  string
-    Received has value: "This is not a ReactTestInstance""
+    Received has value: "This is not a HostElement""
   `);
 });

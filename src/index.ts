@@ -1,6 +1,6 @@
-import './helpers/ensure-peer-deps';
 import './matchers/extend-expect';
 
+export { HostElement } from 'universal-test-renderer';
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
 import { flushMicroTasks } from './flush-micro-tasks';
 import { cleanup } from './pure';

@@ -1,15 +1,14 @@
 import { StyleSheet } from 'react-native';
-import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
+import type { HostElement } from 'universal-test-renderer';
 
 import { isHiddenFromAccessibility } from '../helpers/accessibility';
-import { getHostParent } from '../helpers/component-tree';
 import { formatElement } from '../helpers/format-element';
 import { isHostModal } from '../helpers/host-component-names';
 import { checkHostElement } from './utils';
 
-export function toBeVisible(this: jest.MatcherContext, element: ReactTestInstance) {
+export function toBeVisible(this: jest.MatcherContext, element: HostElement) {
   if (element !== null || !this.isNot) {
     checkHostElement(element, toBeVisible, this);
   }
@@ -29,11 +28,11 @@ export function toBeVisible(this: jest.MatcherContext, element: ReactTestInstanc
 }
 
 function isElementVisible(
-  element: ReactTestInstance,
-  accessibilityCache?: WeakMap<ReactTestInstance, boolean>,
+  element: HostElement,
+  accessibilityCache?: WeakMap<HostElement, boolean>,
 ): boolean {
   // Use cache to speed up repeated searches by `isHiddenFromAccessibility`.
-  const cache = accessibilityCache ?? new WeakMap<ReactTestInstance, boolean>();
+  const cache = accessibilityCache ?? new WeakMap<HostElement, boolean>();
   if (isHiddenFromAccessibility(element, { cache })) {
     return false;
   }
@@ -48,7 +47,7 @@ function isElementVisible(
     return false;
   }
 
-  const hostParent = getHostParent(element);
+  const hostParent = element.parent;
   if (hostParent === null) {
     return true;
   }
@@ -56,7 +55,7 @@ function isElementVisible(
   return isElementVisible(hostParent, cache);
 }
 
-function isHiddenForStyles(element: ReactTestInstance) {
+function isHiddenForStyles(element: HostElement) {
   const flatStyle = StyleSheet.flatten(element.props.style);
   return flatStyle?.display === 'none' || flatStyle?.opacity === 0;
 }

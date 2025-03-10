@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 
-import { configure, fireEvent, render, screen, waitFor } from '..';
+import { act, configure, fireEvent, render, screen, waitFor } from '..';
 
 class Banana extends React.Component<any> {
   changeFresh = () => {
@@ -46,7 +46,7 @@ test('waits for element until it stops throwing', async () => {
 
   const freshBananaText = await waitFor(() => screen.getByText('Fresh'));
 
-  expect(freshBananaText.props.children).toBe('Fresh');
+  expect(freshBananaText).toHaveTextContent('Fresh');
 });
 
 test('waits for element until timeout is met', async () => {
@@ -143,10 +143,12 @@ test.each([false, true])(
     fireEvent.press(screen.getByText('Change freshness!'));
     expect(screen.queryByText('Fresh')).toBeNull();
 
-    jest.advanceTimersByTime(300);
+    await act(() => {
+      jest.advanceTimersByTime(300);
+    });
     const freshBananaText = await waitFor(() => screen.getByText('Fresh'));
 
-    expect(freshBananaText.props.children).toBe('Fresh');
+    expect(freshBananaText).toHaveTextContent('Fresh');
   },
 );
 
