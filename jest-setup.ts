@@ -1,4 +1,3 @@
-import './src/__tests__/setImmediateShim'
 import { resetToDefaults, configure } from './src/pure';
 
 beforeEach(() => {
