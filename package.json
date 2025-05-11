@@ -86,6 +86,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "flow-bin": "~0.170.0",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "prettier": "^2.8.8",
     "react": "19.0.0",
     "react-native": "0.79.1",
