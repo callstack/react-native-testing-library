@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`paste() paste on empty text input 1`] = `
 [
@@ -360,8 +360,7 @@ exports[`paste() supports defaultValue prop: defaultValue: "Hello Default!" 1`] 
 ]
 `;
 
-exports[`paste() supports multiline: value: "Hello World!
-How are you?" multiline: true, 1`] = `
+exports[`paste() supports multiline: value: "Hello World!\\nHow are you?" multiline: true, 1`] = `
 [
   {
     "name": "focus",
