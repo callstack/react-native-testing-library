@@ -223,9 +223,7 @@ test('React Native API assumption: <Modal> renders a single host element', () =>
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
     <Modal
-      hardwareAccelerated={false}
       testID="test"
-      visible={true}
     >
       <Text>
         Modal Content
