@@ -2841,7 +2841,7 @@ __metadata:
     pretty-format: "npm:^29.7.0"
     react: "npm:19.1.0"
     react-native: "npm:0.80.0-rc.2"
-    react-native-gesture-handler: "npm:^2.23.1"
+    react-native-gesture-handler: "npm:^2.25.0"
     react-test-renderer: "npm:19.1.0"
     redent: "npm:^3.0.0"
     release-it: "npm:^18.0.0"
@@ -9099,7 +9099,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-gesture-handler@npm:^2.23.1":
+"react-native-gesture-handler@npm:^2.25.0":
   version: 2.25.0
   resolution: "react-native-gesture-handler@npm:2.25.0"
   dependencies:
