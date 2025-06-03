@@ -4,7 +4,7 @@
   </a>
   <div align="center">
     <p>Developer-friendly and complete React Native testing utilities that encourage good testing practices.</p>
-  <div />
+  </div>
 </div>
 
 [![Version][version-badge]][package]
