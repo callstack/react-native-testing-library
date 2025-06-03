@@ -1,12 +1,8 @@
-<div align='center'>
-  <h1>React Native Testing Library</h1>
-  <img
-    height="80"
-    width="80"
-    alt="owl"
-    src="https://raw.githubusercontent.com/callstack/react-native-testing-library/main/website/docs/public/img/owl.png"
-  />
-  <p>Developer-friendly and complete React Native testing utilities that encourage good testing practices.</P>
+<div align="center">
+  <a href="https://www.callstack.com/open-source" align="center">
+    <img src="https://github.com/user-attachments/assets/4d452312-4ffd-4439-855f-a9b12ad7d6c2" alt="React Native Testing Library" />
+  </a>
+  <p align="center">Developer-friendly and complete React Native testing utilities that encourage good testing practices.</p>
 </div>
 
 [![Version][version-badge]][package]
