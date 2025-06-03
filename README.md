@@ -2,7 +2,9 @@
   <a href="https://www.callstack.com/open-source" align="center">
     <img src="https://github.com/user-attachments/assets/4d452312-4ffd-4439-855f-a9b12ad7d6c2" alt="React Native Testing Library" />
   </a>
-  <p>Developer-friendly and complete React Native testing utilities that encourage good testing practices.</P>
+  <div align="center">
+    <p>Developer-friendly and complete React Native testing utilities that encourage good testing practices.</p>
+  <div />
 </div>
 
 [![Version][version-badge]][package]
