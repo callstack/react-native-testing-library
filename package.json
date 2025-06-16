@@ -48,7 +48,7 @@
   ],
   "dependencies": {
     "chalk": "^4.1.2",
-    "jest-matcher-utils": "^29.7.0",
+    "jest-matcher-utils": "^30.0.0",
     "pretty-format": "^29.7.0",
     "redent": "^3.0.0"
   },
