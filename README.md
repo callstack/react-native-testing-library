@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://www.callstack.com/open-source" align="center">
+  <a href="https://www.callstack.com/open-source?utm_campaign=generic&utm_source=github&utm_medium=referral&utm_content=react-native-testing-library" align="center">
     <img src="https://github.com/user-attachments/assets/4d452312-4ffd-4439-855f-a9b12ad7d6c2" alt="React Native Testing Library" />
   </a>
   <p align="center">Developer-friendly and complete React Native testing utilities that encourage good testing practices.</p>
