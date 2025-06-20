@@ -8,7 +8,6 @@ type ReactAct = 0 extends 1 & typeof React.act ? typeof reactTestRendererAct : t
 
 // See https://github.com/reactwg/react-18/discussions/102 for more context on global.IS_REACT_ACT_ENVIRONMENT
 declare global {
-  // eslint-disable-next-line no-var
   var IS_REACT_ACT_ENVIRONMENT: boolean | undefined;
 }
 
