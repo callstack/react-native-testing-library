@@ -18,6 +18,6 @@ test('findByTestId detects screen being detached', async () => {
     Screen is no longer attached. Check your test for "findBy*" or "waitFor" calls that have not been awaited.
 
     We recommend enabling "eslint-plugin-testing-library" to catch these issues at build time:
-    https://callstack.github.io/react-native-testing-library/docs/getting-started#eslint-plugin"
+    https://callstack.github.io/react-native-testing-library/docs/start/quick-start#eslint-plugin"
   `);
 });
