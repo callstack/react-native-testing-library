@@ -27,16 +27,14 @@ describe('Counter', () => {
     expect(screen.getByText('1')).toBeOnTheScreen();
   });
 
-  it('should increment the count when the button is pressed', async () => {
-    const user = userEvent.setup();
-
+  it('should increment the count when the button is pressed', () => {
     render(<Counter />);
     expect(screen.getByText('0')).toBeOnTheScreen();
 
     const button = screen.getByRole('button', { name: 'Increment' });
     expect(button).toBeOnTheScreen();
 
-    await user.press(button);
+    fireEvent.press(button);
     expect(screen.getByText('1')).toBeOnTheScreen();
   });
 });
