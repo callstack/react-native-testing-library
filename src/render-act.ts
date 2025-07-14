@@ -18,3 +18,19 @@ export function renderWithAct(
   // @ts-expect-error: `act` is synchronous, so `renderer` is already initialized here
   return renderer;
 }
+
+export async function renderWithAsyncAct(
+  component: React.ReactElement,
+  options?: Partial<TestRendererOptions>,
+): Promise<ReactTestRenderer> {
+  let renderer: ReactTestRenderer;
+
+  // eslint-disable-next-line require-await
+  await act(async () => {
+    // @ts-expect-error `TestRenderer.create` is not typed correctly
+    renderer = TestRenderer.create(component, options);
+  });
+
+  // @ts-expect-error: `renderer` is already initialized here
+  return renderer;
+}

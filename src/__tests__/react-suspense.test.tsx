@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { render, screen, within, configure } from '..';
 import TestRenderer, { type ReactTestRenderer } from 'react-test-renderer';
+
+import { configure, renderAsync, screen, within } from '..';
 
 configure({
   asyncUtilTimeout: 5000,
@@ -21,7 +22,7 @@ function Suspendable<T>({ promise }: { promise: Promise<T> }) {
 }
 
 test('render supports components which can suspend', async () => {
-  render(
+  await renderAsync(
     <View>
       <React.Suspense fallback={<View testID="fallback" />}>
         <Suspendable promise={wait(100)} />
@@ -30,16 +31,10 @@ test('render supports components which can suspend', async () => {
   );
 
   expect(screen.getByTestId('fallback')).toBeOnTheScreen();
-
-  // eslint-disable-next-line require-await
-  await React.act(async () => {
-    await wait(1000);
-  });
-
   expect(await screen.findByTestId('test')).toBeOnTheScreen();
 });
 
-test.only('react test renderer supports components which can suspend', async () => {
+test('react test renderer supports components which can suspend', async () => {
   let renderer: ReactTestRenderer;
 
   // eslint-disable-next-line require-await
@@ -60,7 +55,7 @@ test.only('react test renderer supports components which can suspend', async () 
   expect(await view.findByTestId('test')).toBeDefined();
 });
 
-test.only('react test renderer supports components which can suspend 500', async () => {
+test('react test renderer supports components which can suspend 500', async () => {
   let renderer: ReactTestRenderer;
 
   // eslint-disable-next-line require-await
@@ -81,7 +76,7 @@ test.only('react test renderer supports components which can suspend 500', async
   expect(await view.findByTestId('test')).toBeDefined();
 });
 
-test.only('react test renderer supports components which can suspend 1000ms', async () => {
+test('react test renderer supports components which can suspend 1000ms', async () => {
   let renderer: ReactTestRenderer;
 
   // eslint-disable-next-line require-await
