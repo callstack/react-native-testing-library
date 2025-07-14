@@ -117,3 +117,15 @@ function updateWithAsyncAct(
 }
 
 export type DebugFunction = (options?: DebugOptions) => void;
+
+function makeDebug(renderer: ReactTestRenderer): DebugFunction {
+  function debugImpl(options?: DebugOptions) {
+    const { defaultDebugOptions } = getConfig();
+    const debugOptions = { ...defaultDebugOptions, ...options };
+    const json = renderer.toJSON();
+    if (json) {
+      return debug(json, debugOptions);
+    }
+  }
+  return debugImpl;
+}
