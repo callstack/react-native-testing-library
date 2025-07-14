@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { Text, View, Pressable, TextInput } from 'react-native';
+import { html } from 'react-strict-dom';
 import { render, screen, userEvent } from '@testing-library/react-native';
 
 function Counter() {
   const [count, setCount] = React.useState(0);
 
   return (
-    <View>
-      <Text>{count}</Text>
-      <Pressable role="button" onPress={() => setCount(count + 1)}>
-        <Text>Increment</Text>
-      </Pressable>
-    </View>
+    <html.div>
+      <html.p>{count}</html.p>
+      <html.button role="button" onClick={() => setCount(count + 1)}>
+        Increment
+      </html.button>
+    </html.div>
   );
 }
 
@@ -43,25 +43,29 @@ function LoginForm() {
 
   if (state === 'success') {
     return (
-      <View>
-        <Text role="heading">Login successful</Text>
-      </View>
+      <html.div>
+        <html.h1>Login successful</html.h1>
+      </html.div>
     );
   }
   return (
-    <View>
-      <TextInput placeholder="Email" value={email} onChangeText={setEmail} />
-      <TextInput placeholder="Password" value={password} onChangeText={setPassword} />
-      {state === 'error' && (
-        <Text accessible role="alert">
-          Invalid credentials
-        </Text>
-      )}
+    <html.div>
+      <html.input
+        placeholder="Email"
+        value={email}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+      />
+      <html.input
+        placeholder="Password"
+        value={password}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+      />
+      {state === 'error' && <html.p role="alert">Invalid credentials</html.p>}
 
-      <Pressable role="button" onPress={handleLogin}>
-        <Text>Login</Text>
-      </Pressable>
-    </View>
+      <html.button role="button" onClick={handleLogin}>
+        Login
+      </html.button>
+    </html.div>
   );
 }
 
@@ -83,5 +87,6 @@ test('should show error message with invalid credentials', async () => {
   await user.type(screen.getByPlaceholderText('Email'), 'test@test.com');
   await user.type(screen.getByPlaceholderText('Password'), 'wrong-password');
   await user.press(screen.getByRole('button', { name: 'Login' }));
+
   expect(screen.getByRole('alert', { name: 'Invalid credentials' })).toBeOnTheScreen();
 });
