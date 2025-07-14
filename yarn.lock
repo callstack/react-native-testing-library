@@ -2723,19 +2723,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native/babel-plugin-codegen@npm:0.80.0-rc.2":
-  version: 0.80.0-rc.2
-  resolution: "@react-native/babel-plugin-codegen@npm:0.80.0-rc.2"
+"@react-native/babel-plugin-codegen@npm:0.80.1":
+  version: 0.80.1
+  resolution: "@react-native/babel-plugin-codegen@npm:0.80.1"
   dependencies:
     "@babel/traverse": "npm:^7.25.3"
-    "@react-native/codegen": "npm:0.80.0-rc.2"
-  checksum: 10c0/17b933387dd1a85e042485a71f8e25ccf7a8e85e3fbf4a410a73925c474d96944aface6cbede5be2647911d31948ee8bb40e03d7e63481543b07343629232998
+    "@react-native/codegen": "npm:0.80.1"
+  checksum: 10c0/7ab2bc5f601b4d8bf9854beba13561be9c4ef4384d692a7e9c23937dcf34d583435927a733cd17b7b01cfcf3352dfe6a6902aa382ec0d51bada183e36c7d1967
   languageName: node
   linkType: hard
 
-"@react-native/babel-preset@npm:0.80.0-rc.2":
-  version: 0.80.0-rc.2
-  resolution: "@react-native/babel-preset@npm:0.80.0-rc.2"
+"@react-native/babel-preset@npm:0.80.1":
+  version: 0.80.1
+  resolution: "@react-native/babel-preset@npm:0.80.1"
   dependencies:
     "@babel/core": "npm:^7.25.2"
     "@babel/plugin-proposal-export-default-from": "npm:^7.24.7"
@@ -2778,28 +2778,13 @@ __metadata:
     "@babel/plugin-transform-typescript": "npm:^7.25.2"
     "@babel/plugin-transform-unicode-regex": "npm:^7.24.7"
     "@babel/template": "npm:^7.25.0"
-    "@react-native/babel-plugin-codegen": "npm:0.80.0-rc.2"
+    "@react-native/babel-plugin-codegen": "npm:0.80.1"
     babel-plugin-syntax-hermes-parser: "npm:0.28.1"
     babel-plugin-transform-flow-enums: "npm:^0.0.2"
     react-refresh: "npm:^0.14.0"
   peerDependencies:
     "@babel/core": "*"
-  checksum: 10c0/e14a754c7d971dcc4be3a6ff3278188723a88ea5673aae30c7957532bb689061e536006568196366e6a1f9b5261fa38e52abd27a8af9eab2d2209da9b042d80b
-  languageName: node
-  linkType: hard
-
-"@react-native/codegen@npm:0.80.0-rc.2":
-  version: 0.80.0-rc.2
-  resolution: "@react-native/codegen@npm:0.80.0-rc.2"
-  dependencies:
-    glob: "npm:^7.1.1"
-    hermes-parser: "npm:0.28.1"
-    invariant: "npm:^2.2.4"
-    nullthrows: "npm:^1.1.1"
-    yargs: "npm:^17.6.2"
-  peerDependencies:
-    "@babel/core": "*"
-  checksum: 10c0/3dc22956196da22baf2e56c665211e5529f8956376fad22af50483747b4afba32eb1c0a9d1c878aaeab57ac9fc549e2482d90e204c28d45a30c814f95b817e1f
+  checksum: 10c0/71b2288c3380d0ce938a84667de5ffb6a3bf8c13cf4a8fc78101cfa2150d289014f95eabd6bb402525bf3b69f7b23c76df241262fd9bdd7db3ac4874c5724045
   languageName: node
   linkType: hard
 
@@ -3013,7 +2998,7 @@ __metadata:
     "@babel/preset-react": "npm:^7.25.9"
     "@babel/preset-typescript": "npm:^7.26.0"
     "@callstack/eslint-config": "npm:^15.0.0"
-    "@react-native/babel-preset": "npm:0.80.0-rc.2"
+    "@react-native/babel-preset": "npm:0.80.1"
     "@release-it/conventional-changelog": "npm:^10.0.0"
     "@relmify/jest-serializer-strip-ansi": "npm:^1.0.2"
     "@types/jest": "npm:^30.0.0"
