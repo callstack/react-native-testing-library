@@ -14,6 +14,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@callstack/rspress-theme@npm:^0.1.3":
+  version: 0.1.3
+  resolution: "@callstack/rspress-theme@npm:0.1.3"
+  peerDependencies:
+    react: ^19.0.0
+  bin:
+    rspress-theme: cli.cjs
+  checksum: 10c0/9a726c51294635a674a8a22727f196646271c208237aca1f9292ef327eea2699fb93db4a8a4e1e58029b45e4fa130e86faa562dc9ed17b19ec36874179afa03c
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -5042,6 +5053,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "website@workspace:."
   dependencies:
+    "@callstack/rspress-theme": "npm:^0.1.3"
     "@types/node": "npm:^18"
     "@types/react": "npm:^18.2.64"
     rsbuild-plugin-open-graph: "npm:^1.0.0"

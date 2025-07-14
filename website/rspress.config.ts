@@ -3,6 +3,7 @@ import { defineConfig } from 'rspress/config';
 import { pluginFontOpenSans } from 'rspress-plugin-font-open-sans';
 import vercelAnalytics from 'rspress-plugin-vercel-analytics';
 import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
+import callstackTheme from '@callstack/rspress-theme';
 
 export default defineConfig({
   root: 'docs',
@@ -27,6 +28,7 @@ export default defineConfig({
   search: {
     versioned: true,
   },
+  theme: callstackTheme,
   themeConfig: {
     enableContentAnimation: true,
     enableScrollToTop: true,
