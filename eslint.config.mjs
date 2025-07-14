@@ -1,6 +1,7 @@
 import tseslint from 'typescript-eslint';
 import callstackConfig from '@callstack/eslint-config/react-native.flat.js';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import jest from 'eslint-plugin-jest';
 
 export default [
   {
@@ -37,6 +38,9 @@ export default [
   },
   {
     files: ['**/*.test.{ts,tsx}', 'src/test-utils/**'],
+    plugins: {
+      jest: jest,
+    },
     rules: {
       'react/no-multi-comp': 'off',
       'react-native/no-color-literals': 'off',
@@ -46,6 +50,10 @@ export default [
       'react-native-a11y/has-valid-accessibility-ignores-invert-colors': 'off',
       'react-native-a11y/has-valid-accessibility-value': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      'jest/no-standalone-expect': [
+        'error',
+        { additionalTestBlockFunctions: ['testGateReact19'] },
+      ],
     },
   },
 ];

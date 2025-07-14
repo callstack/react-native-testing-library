@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`clear() supports basic case: value: "Hello! 1`] = `
 [
@@ -274,8 +274,7 @@ exports[`clear() supports defaultValue prop: defaultValue: "Hello Default!" 1`] 
 ]
 `;
 
-exports[`clear() supports multiline: value: "Hello World!
-How are you?" multiline: true, 1`] = `
+exports[`clear() supports multiline: value: "Hello World!\\nHow are you?" multiline: true, 1`] = `
 [
   {
     "name": "focus",
