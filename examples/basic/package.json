@@ -16,8 +16,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.5",
-    "react-native-web": "~0.19.13",
-    "react-strict-dom": "^0.0.39"
+    "react-native-web": "~0.19.13"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
