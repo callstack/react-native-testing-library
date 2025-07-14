@@ -1,8 +1,8 @@
 import * as path from 'path';
 import { defineConfig } from 'rspress/config';
-import { pluginFontOpenSans } from 'rspress-plugin-font-open-sans';
-import vercelAnalytics from 'rspress-plugin-vercel-analytics';
+import { pluginCallstackTheme } from '@callstack/rspress-theme/plugin';
 import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
+import pluginVercelAnalytics from 'rspress-plugin-vercel-analytics';
 
 export default defineConfig({
   root: 'docs',
@@ -32,7 +32,7 @@ export default defineConfig({
     enableScrollToTop: true,
     outlineTitle: 'Contents',
     footer: {
-      message: 'Copyright © 2024 Callstack Open Source',
+      message: `Copyright © ${new Date().getFullYear()} Callstack Open Source`,
     },
     socialLinks: [
       {
@@ -42,7 +42,6 @@ export default defineConfig({
       },
     ],
   },
-  globalStyles: path.join(__dirname, 'docs/styles/index.css'),
   builderConfig: {
     plugins: [
       pluginOpenGraph({
@@ -52,16 +51,10 @@ export default defineConfig({
         description: 'Helps you to write better tests with less effort.',
       }),
     ],
-    tools: {
-      rspack(config, { addRules }) {
-        addRules([
-          {
-            resourceQuery: /raw/,
-            type: 'asset/source',
-          },
-        ]);
-      },
-    },
   },
-  plugins: [pluginFontOpenSans(), vercelAnalytics()],
+  plugins: [
+    pluginCallstackTheme(),
+    // @ts-expect-error
+    pluginVercelAnalytics(),
+  ],
 });
