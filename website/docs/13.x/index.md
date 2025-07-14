@@ -9,7 +9,7 @@ hero:
   tagline: Helps you to write better tests with less effort.
   actions:
     - theme: brand
-      text: <span className="home-hero-primary-action">Quick Start</span>
+      text: Quick Start
       link: /docs/start/quick-start
     - theme: alt
       text: Explore API
