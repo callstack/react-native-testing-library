@@ -136,7 +136,7 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <View
+    <View_withRef
       accessibilityHint="HINT"
       accessible={true}
     />"
@@ -145,7 +145,7 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getAllByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <View
+    <View_withRef
       accessibilityHint="HINT"
       accessible={true}
     />"
@@ -154,7 +154,7 @@ test('error message renders the element tree, preserving only helpful props', as
   await expect(screen.findByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <View
+    <View_withRef
       accessibilityHint="HINT"
       accessible={true}
     />"
@@ -163,7 +163,7 @@ test('error message renders the element tree, preserving only helpful props', as
   await expect(screen.findAllByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <View
+    <View_withRef
       accessibilityHint="HINT"
       accessible={true}
     />"

@@ -95,7 +95,7 @@ test('toBeCheck() with "checkbox" role', () => {
     "expect(element).not.toBeChecked()
 
     Received element is checked:
-      <View
+      <View_withRef
         accessibilityRole="checkbox"
         accessibilityState={
           {
@@ -110,7 +110,7 @@ test('toBeCheck() with "checkbox" role', () => {
     "expect(element).toBeChecked()
 
     Received element is not checked:
-      <View
+      <View_withRef
         accessibilityRole="checkbox"
         accessibilityState={
           {
@@ -125,7 +125,7 @@ test('toBeCheck() with "checkbox" role', () => {
     "expect(element).toBeChecked()
 
     Received element is not checked:
-      <View
+      <View_withRef
         accessibilityRole="checkbox"
         accessibilityState={
           {
@@ -140,7 +140,7 @@ test('toBeCheck() with "checkbox" role', () => {
     "expect(element).toBeChecked()
 
     Received element is not checked:
-      <View
+      <View_withRef
         accessibilityRole="checkbox"
         accessible={true}
         testID="checkbox-default"
@@ -163,7 +163,7 @@ test('toBeCheck() with "radio" role', () => {
     "expect(element).not.toBeChecked()
 
     Received element is checked:
-      <View
+      <View_withRef
         accessibilityRole="radio"
         accessibilityState={
           {
@@ -178,7 +178,7 @@ test('toBeCheck() with "radio" role', () => {
     "expect(element).toBeChecked()
 
     Received element is not checked:
-      <View
+      <View_withRef
         accessibilityRole="radio"
         accessibilityState={
           {
@@ -193,7 +193,7 @@ test('toBeCheck() with "radio" role', () => {
     "expect(element).toBeChecked()
 
     Received element is not checked:
-      <View
+      <View_withRef
         accessibilityRole="radio"
         accessible={true}
         testID="radio-default"
@@ -216,7 +216,7 @@ test('toBeCheck() with "switch" role', () => {
     "expect(element).not.toBeChecked()
 
     Received element is checked:
-      <View
+      <View_withRef
         accessibilityRole="switch"
         accessibilityState={
           {
@@ -231,7 +231,7 @@ test('toBeCheck() with "switch" role', () => {
     "expect(element).toBeChecked()
 
     Received element is not checked:
-      <View
+      <View_withRef
         accessibilityRole="switch"
         accessibilityState={
           {
@@ -246,7 +246,7 @@ test('toBeCheck() with "switch" role', () => {
     "expect(element).toBeChecked()
 
     Received element is not checked:
-      <View
+      <View_withRef
         accessibilityRole="switch"
         accessible={true}
         testID="switch-default"
