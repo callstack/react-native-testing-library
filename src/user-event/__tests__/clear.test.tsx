@@ -178,7 +178,7 @@ describe('clear()', () => {
     await expect(
       user.clear(screen.getByTestId('input')),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"clear() only supports host "TextInput" elements. Passed element has type: "View"."`,
+      `"clear() only supports host "TextInput" elements. Passed element has type: "View_withRef"."`,
     );
   });
 

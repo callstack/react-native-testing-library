@@ -12,7 +12,7 @@ test('toBeVisible() on empty view', () => {
     "expect(element).not.toBeVisible()
 
     Received element is visible:
-      <View
+      <View_withRef
         testID="view"
       />"
   `);
@@ -27,7 +27,7 @@ test('toBeVisible() on view with opacity', () => {
     "expect(element).not.toBeVisible()
 
     Received element is visible:
-      <View
+      <View_withRef
         testID="view"
       />"
   `);
@@ -42,7 +42,7 @@ test('toBeVisible() on view with 0 opacity', () => {
     "expect(element).toBeVisible()
 
     Received element is not visible:
-      <View
+      <View_withRef
         style={
           {
             "opacity": 0,
@@ -62,7 +62,7 @@ test('toBeVisible() on view with display "none"', () => {
     "expect(element).toBeVisible()
 
     Received element is not visible:
-      <View
+      <View_withRef
         style={
           {
             "display": "none",
@@ -88,7 +88,7 @@ test('toBeVisible() on ancestor view with 0 opacity', () => {
     "expect(element).toBeVisible()
 
     Received element is not visible:
-      <View
+      <View_withRef
         testID="view"
       />"
   `);
@@ -109,7 +109,7 @@ test('toBeVisible() on ancestor view with display "none"', () => {
     "expect(element).toBeVisible()
 
     Received element is not visible:
-      <View
+      <View_withRef
         testID="view"
       />"
   `);

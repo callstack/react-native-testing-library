@@ -52,7 +52,7 @@ test('getByDisplayValue, queryByDisplayValue get element by default value only w
   expect(() => screen.getByDisplayValue(DEFAULT_INPUT_CHEF)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: What did you inspect?
 
-    <View>
+    <View_withRef>
       <TextInput
         placeholder="Add custom freshness"
         testID="bananaCustomFreshness"
@@ -71,14 +71,14 @@ test('getByDisplayValue, queryByDisplayValue get element by default value only w
         defaultValue="hello"
         value=""
       />
-    </View>"
+    </View_withRef>"
   `);
   expect(screen.queryByDisplayValue(DEFAULT_INPUT_CHEF)).toBeNull();
 
   expect(() => screen.getByDisplayValue('hello')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: hello
 
-    <View>
+    <View_withRef>
       <TextInput
         placeholder="Add custom freshness"
         testID="bananaCustomFreshness"
@@ -97,7 +97,7 @@ test('getByDisplayValue, queryByDisplayValue get element by default value only w
         defaultValue="hello"
         value=""
       />
-    </View>"
+    </View_withRef>"
   `);
   expect(screen.queryByDisplayValue('hello')).toBeNull();
 

@@ -213,7 +213,7 @@ describe('scrollTo()', () => {
     await expect(
       user.scrollTo(screen.getByTestId('view'), { y: 20 }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"scrollTo() works only with host "ScrollView" elements. Passed element has type "View"."`,
+      `"scrollTo() works only with host "ScrollView" elements. Passed element has type "View_withRef"."`,
     );
   });
 

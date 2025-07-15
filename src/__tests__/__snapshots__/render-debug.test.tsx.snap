@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`debug 1`] = `
-"<View>
+"<View_withRef>
   <Text>
     Is the banana fresh?
   </Text>
@@ -28,14 +28,14 @@ exports[`debug 1`] = `
     defaultValue="hello"
     value=""
   />
-  <View
+  <View_withRef
     accessible={true}
     role="button"
   >
     <Text>
       Change freshness!
     </Text>
-  </View>
+  </View_withRef>
   <Text
     testID="duplicateText"
   >
@@ -49,11 +49,11 @@ exports[`debug 1`] = `
   <Text>
     0
   </Text>
-</View>"
+</View_withRef>"
 `;
 
 exports[`debug changing component: bananaFresh button message should now be "fresh" 1`] = `
-"<View>
+"<View_withRef>
   <Text>
     Is the banana fresh?
   </Text>
@@ -80,7 +80,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     defaultValue="hello"
     value=""
   />
-  <View
+  <View_withRef
     accessibilityState={
       {
         "busy": undefined,
@@ -115,7 +115,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     <Text>
       Change freshness!
     </Text>
-  </View>
+  </View_withRef>
   <Text
     testID="duplicateText"
   >
@@ -129,19 +129,19 @@ exports[`debug changing component: bananaFresh button message should now be "fre
   <Text>
     0
   </Text>
-</View>"
+</View_withRef>"
 `;
 
 exports[`debug should use debugOptions from config when no option is specified 1`] = `
-"<View>
+"<View_withRef>
   <Text>
     hello
   </Text>
-</View>"
+</View_withRef>"
 `;
 
 exports[`debug should use given options over config debugOptions 1`] = `
-"<View
+"<View_withRef
   style={
     {
       "backgroundColor": "red",
@@ -151,11 +151,11 @@ exports[`debug should use given options over config debugOptions 1`] = `
   <Text>
     hello
   </Text>
-</View>"
+</View_withRef>"
 `;
 
 exports[`debug with only children prop 1`] = `
-"<View>
+"<View_withRef>
   <Text>
     Is the banana fresh?
   </Text>
@@ -166,11 +166,11 @@ exports[`debug with only children prop 1`] = `
   <TextInput />
   <TextInput />
   <TextInput />
-  <View>
+  <View_withRef>
     <Text>
       Change freshness!
     </Text>
-  </View>
+  </View_withRef>
   <Text>
     First Text
   </Text>
@@ -180,11 +180,11 @@ exports[`debug with only children prop 1`] = `
   <Text>
     0
   </Text>
-</View>"
+</View_withRef>"
 `;
 
 exports[`debug with only prop whose value is bananaChef 1`] = `
-"<View>
+"<View_withRef>
   <Text>
     Is the banana fresh?
   </Text>
@@ -197,11 +197,11 @@ exports[`debug with only prop whose value is bananaChef 1`] = `
   />
   <TextInput />
   <TextInput />
-  <View>
+  <View_withRef>
     <Text>
       Change freshness!
     </Text>
-  </View>
+  </View_withRef>
   <Text>
     First Text
   </Text>
@@ -211,11 +211,11 @@ exports[`debug with only prop whose value is bananaChef 1`] = `
   <Text>
     0
   </Text>
-</View>"
+</View_withRef>"
 `;
 
 exports[`debug: All Props 1`] = `
-"<View>
+"<View_withRef>
   <Text>
     Is the banana fresh?
   </Text>
@@ -242,7 +242,7 @@ exports[`debug: All Props 1`] = `
     defaultValue="hello"
     value=""
   />
-  <View
+  <View_withRef
     accessibilityState={
       {
         "busy": undefined,
@@ -277,7 +277,7 @@ exports[`debug: All Props 1`] = `
     <Text>
       Change freshness!
     </Text>
-  </View>
+  </View_withRef>
   <Text
     testID="duplicateText"
   >
@@ -291,7 +291,7 @@ exports[`debug: All Props 1`] = `
   <Text>
     0
   </Text>
-</View>
+</View_withRef>
 undefined"
 `;
 
@@ -299,7 +299,7 @@ exports[`debug: Option message 1`] = `
 "another custom message
 
 
-<View>
+<View_withRef>
   <Text>
     Is the banana fresh?
   </Text>
@@ -326,14 +326,14 @@ exports[`debug: Option message 1`] = `
     defaultValue="hello"
     value=""
   />
-  <View
+  <View_withRef
     accessible={true}
     role="button"
   >
     <Text>
       Change freshness!
     </Text>
-  </View>
+  </View_withRef>
   <Text
     testID="duplicateText"
   >
@@ -347,5 +347,5 @@ exports[`debug: Option message 1`] = `
   <Text>
     0
   </Text>
-</View>"
+</View_withRef>"
 `;

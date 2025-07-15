@@ -26,7 +26,7 @@ test('toBeOnTheScreen() on attached element', () => {
     "expect(element).not.toBeOnTheScreen()
 
     expected element tree not to contain element, but found
-      <View
+      <View_withRef
         testID="test"
       />"
   `);
