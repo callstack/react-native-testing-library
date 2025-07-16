@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-standalone-expect */
 import * as React from 'react';
 import { View } from 'react-native';
 import TestRenderer, { type ReactTestRenderer } from 'react-test-renderer';
@@ -24,7 +25,7 @@ function Suspending<T>({ promise }: { promise: Promise<T> }) {
   return <View testID="view" />;
 }
 
-testGateReact19('render supports components which can suspend', async () => {
+testGateReact19('renderAsync supports components which can suspend', async () => {
   await renderAsync(
     <View>
       <React.Suspense fallback={<View testID="fallback" />}>
