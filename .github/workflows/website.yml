@@ -8,6 +8,10 @@ on:
     branches: ['**']
     paths: ['website/**']
 
+# Set minimal permissions by default
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ !contains(github.ref, 'main')}}
@@ -28,8 +32,13 @@ jobs:
 
   deploy:
     name: Deploy to GitHub Pages
+    # Only run on push to main (trusted event) - secrets are safe here
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
