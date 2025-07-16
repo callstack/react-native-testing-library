@@ -8,6 +8,10 @@ on:
     branches: ['**']
     paths: ['examples/**']
 
+# Set minimal permissions by default
+permissions:
+  contents: read
+
 jobs:
   test-example:
     strategy:
