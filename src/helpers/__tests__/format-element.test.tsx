@@ -13,7 +13,7 @@ test('formatElement', () => {
   );
 
   expect(formatElement(screen.getByTestId('view'), { mapProps: null })).toMatchInlineSnapshot(`
-    "<View
+    "<View_withRef
       testID="view"
     />"
   `);

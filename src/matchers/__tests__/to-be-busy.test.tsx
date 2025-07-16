@@ -37,7 +37,7 @@ test('toBeBusy() error messages', () => {
     "expect(element).not.toBeBusy()
 
     Received element is busy:
-      <View
+      <View_withRef
         accessibilityState={
           {
             "busy": true,
@@ -52,7 +52,7 @@ test('toBeBusy() error messages', () => {
     "expect(element).not.toBeBusy()
 
     Received element is busy:
-      <View
+      <View_withRef
         aria-busy={true}
         testID="busy-aria"
       />"
@@ -63,7 +63,7 @@ test('toBeBusy() error messages', () => {
     "expect(element).toBeBusy()
 
     Received element is not busy:
-      <View
+      <View_withRef
         accessibilityState={
           {
             "busy": false,
@@ -78,7 +78,7 @@ test('toBeBusy() error messages', () => {
     "expect(element).toBeBusy()
 
     Received element is not busy:
-      <View
+      <View_withRef
         aria-busy={false}
         testID="not-busy-aria"
       />"
@@ -89,7 +89,7 @@ test('toBeBusy() error messages', () => {
     "expect(element).toBeBusy()
 
     Received element is not busy:
-      <View
+      <View_withRef
         testID="default"
       />"
   `);

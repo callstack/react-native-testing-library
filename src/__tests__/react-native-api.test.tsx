@@ -15,7 +15,7 @@ test('React Native API assumption: <View> renders a single host element', () => 
   render(<View testID="test" />);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <View
+    <View_withRef
       testID="test"
     />
   `);
@@ -154,11 +154,11 @@ test('React Native API assumption: <ScrollView> renders a single host element', 
     <RCTScrollView
       testID="scrollView"
     >
-      <View>
-        <View
+      <View_withRef>
+        <View_withRef
           testID="view"
         />
-      </View>
+      </View_withRef>
     </RCTScrollView>
   `);
 });
@@ -193,8 +193,8 @@ test('React Native API assumption: <FlatList> renders a single host <ScrollView>
       testID="flatList"
       viewabilityConfigCallbackPairs={[]}
     >
-      <View>
-        <View
+      <View_withRef>
+        <View_withRef
           onFocusCapture={[Function]}
           onLayout={[Function]}
           style={null}
@@ -202,8 +202,8 @@ test('React Native API assumption: <FlatList> renders a single host <ScrollView>
           <Text>
             1
           </Text>
-        </View>
-        <View
+        </View_withRef>
+        <View_withRef
           onFocusCapture={[Function]}
           onLayout={[Function]}
           style={null}
@@ -211,8 +211,8 @@ test('React Native API assumption: <FlatList> renders a single host <ScrollView>
           <Text>
             2
           </Text>
-        </View>
-      </View>
+        </View_withRef>
+      </View_withRef>
     </RCTScrollView>
   `);
 });
@@ -260,7 +260,7 @@ test('React Native API assumption: aria-* props render directly on host View', (
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <View
+    <View_withRef
       aria-busy={true}
       aria-checked={true}
       aria-disabled={true}
