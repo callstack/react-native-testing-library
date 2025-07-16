@@ -5,13 +5,13 @@ runs:
   using: composite
   steps:
     - name: Setup Node.js
-      uses: actions/setup-node@49933ea # v4.4.0
+      uses: actions/setup-node@49933eaac618a4045da5c5ba6b6a05208f4c5f3b # v4.4.0
       with:
         node-version-file: .nvmrc
 
     - name: Cache deps
       id: yarn-cache
-      uses: actions/cache@a3ec84 # v4.2.3
+      uses: actions/cache@a3ec84d8ac3925e8ca3ed95ee7e46eed168d7b0e # v4.2.3
       with:
         path: |
           ./node_modules
