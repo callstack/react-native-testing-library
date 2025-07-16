@@ -15,7 +15,7 @@ jobs:
     name: Install and Cache deps
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup
         uses: ./.github/actions/setup-deps
@@ -26,7 +26,7 @@ jobs:
     name: Lint
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
@@ -40,7 +40,7 @@ jobs:
     name: Typecheck
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
@@ -54,7 +54,7 @@ jobs:
     name: Test
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
@@ -63,7 +63,7 @@ jobs:
         run: yarn test:ci:coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@54bcd8715eee62d40e33596ef5e8f0f48dbbccab # v4.1.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -73,7 +73,7 @@ jobs:
     name: Test React 18
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
