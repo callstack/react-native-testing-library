@@ -10,9 +10,9 @@ This update enhances the security of your GitHub Actions workflows by pinning al
 
 | Action | Previous Version | New SHA (Version) | 
 |--------|------------------|-------------------|
-| `actions/checkout` | `@v4` | `@11bd71901bbe5b1630ceea73d27597364c9af683` (v4.2.2) |
-| `actions/setup-node` | `@v4` | `@60edb5dd545a775178f52524783378180af0d1f8` (v4.0.4) |
-| `actions/cache` | `@v4` | `@ab5e6d0c87105b4c9c2047343972218f562e4319` (v4.0.1) |
+| `actions/checkout` | `@v4` | `@11bd719` (v4.2.2) |
+| `actions/setup-node` | `@v4` | `@49933ea` (v4.4.0) |
+| `actions/cache` | `@v4` | `@a3ec84` (v4.2.3) |
 | `codecov/codecov-action` | `@v4` | `@54bcd8715eee62d40e33596ef5e8f0f48dbbccab` (v4.1.0) |
 | `peaceiris/actions-gh-pages` | `@v3` | `@373f7f263a76c20808c831209c920827a82a2847` (v3.9.3) |
 
