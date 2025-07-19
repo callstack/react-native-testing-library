@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import type { ReactTestInstance } from 'react-test-renderer';
 
 import { getHostParent } from './component-tree';
@@ -10,11 +11,13 @@ import { getHostParent } from './component-tree';
  * 'box-only': The view can be the target of touch events but its subviews cannot be
  * see the official react native doc https://reactnative.dev/docs/view#pointerevents */
 export const isPointerEventEnabled = (element: ReactTestInstance, isParent?: boolean): boolean => {
-  const parentCondition = isParent
-    ? element?.props.pointerEvents === 'box-only'
-    : element?.props.pointerEvents === 'box-none';
+  // Check both props.pointerEvents and props.style.pointerEvents
+  const pointerEvents =
+    element?.props.pointerEvents ?? StyleSheet.flatten(element?.props.style)?.pointerEvents;
 
-  if (element?.props.pointerEvents === 'none' || parentCondition) {
+  const parentCondition = isParent ? pointerEvents === 'box-only' : pointerEvents === 'box-none';
+
+  if (pointerEvents === 'none' || parentCondition) {
     return false;
   }
 
