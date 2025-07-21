@@ -11,7 +11,11 @@ import { isElementMounted } from '../../helpers/component-tree';
  * @param eventName name of the event
  * @param event event payload(s)
  */
-export async function dispatchEvent(element: ReactTestInstance, eventName: string, ...event: unknown[]) {
+export async function dispatchEvent(
+  element: ReactTestInstance,
+  eventName: string,
+  ...event: unknown[]
+) {
   if (!isElementMounted(element)) {
     return;
   }
@@ -21,8 +25,8 @@ export async function dispatchEvent(element: ReactTestInstance, eventName: strin
     return;
   }
 
-  // React 19 support: use async act
-  await act(async () => { 
-    handler(...event)
+  // eslint-disable-next-line require-await
+  await act(async () => {
+    handler(...event);
   });
 }

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
+
 import { act, renderAsync, screen } from '..';
 
 const testGateReact19 = React.version.startsWith('19.') ? test : test.skip;

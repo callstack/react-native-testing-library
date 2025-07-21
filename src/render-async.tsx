@@ -68,6 +68,7 @@ function buildRenderResult(
     });
   };
   const updateAsync = async function (component: React.ReactElement) {
+    // eslint-disable-next-line require-await
     await act(async () => {
       renderer.update(wrap(component));
     });
@@ -79,6 +80,7 @@ function buildRenderResult(
     });
   };
   const unmountAsync = async () => {
+    // eslint-disable-next-line require-await
     await act(async () => {
       renderer.unmount();
     });
@@ -117,19 +119,6 @@ function buildRenderResult(
   setRenderResult(result);
 
   return result;
-}
-
-// TODO: test this
-function updateWithAsyncAct(
-  renderer: ReactTestRenderer,
-  wrap: (innerElement: React.ReactElement) => React.ReactElement,
-) {
-  return async function (component: React.ReactElement) {
-    // eslint-disable-next-line require-await
-    await act(async () => {
-      renderer.update(wrap(component));
-    });
-  };
 }
 
 export type DebugFunction = (options?: DebugOptions) => void;

@@ -30,7 +30,11 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
     start: 0,
     end: textToClear.length,
   };
-  await dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(selectionRange));
+  await dispatchEvent(
+    element,
+    'selectionChange',
+    EventBuilder.TextInput.selectionChange(selectionRange),
+  );
 
   // 3. Press backspace with selected text
   const emptyText = '';
