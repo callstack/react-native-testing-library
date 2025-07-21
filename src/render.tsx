@@ -15,6 +15,7 @@ import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
+import renderAsync from './render-async';
 
 export interface RenderOptions {
   /**
@@ -98,11 +99,26 @@ function buildRenderResult(
   renderer: ReactTestRenderer,
   wrap: (element: React.ReactElement) => React.JSX.Element,
 ) {
-  const update = updateWithAct(renderer, wrap);
   const instance = renderer.root;
+
+  const update = function (component: React.ReactElement) {
+    void act(() => {
+      renderer.update(wrap(component));
+    });
+  };
+  const updateAsync = async function (component: React.ReactElement) {
+    await act(async () => {
+      renderer.update(wrap(component));
+    });
+  };
 
   const unmount = () => {
     void act(() => {
+      renderer.unmount();
+    });
+  };
+  const unmountAsync = async () => {
+    await act(async () => {
       renderer.unmount();
     });
   };
@@ -112,8 +128,11 @@ function buildRenderResult(
   const result = {
     ...getQueriesForElement(instance),
     update,
-    unmount,
+    updateAsync,
     rerender: update, // alias for `update`
+    rerenderAsync: updateAsync, // alias for `update`
+    unmount,
+    unmountAsync,
     toJSON: renderer.toJSON,
     debug: makeDebug(renderer),
     get root(): ReactTestInstance {

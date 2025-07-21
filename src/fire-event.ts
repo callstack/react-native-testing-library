@@ -135,6 +135,36 @@ fireEvent.changeText = (element: ReactTestInstance, ...data: unknown[]) =>
 fireEvent.scroll = (element: ReactTestInstance, ...data: unknown[]) =>
   fireEvent(element, 'scroll', ...data);
 
+async function fireEventAsync(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {
+  if (!isElementMounted(element)) {
+    return;
+  }
+
+  setNativeStateIfNeeded(element, eventName, data[0]);
+
+  const handler = findEventHandler(element, eventName);
+  if (!handler) {
+    return;
+  }
+
+  let returnValue;
+  await act(async () => {
+    returnValue = handler(...data);
+  });
+
+  return returnValue;
+}
+
+fireEventAsync.press = async (element: ReactTestInstance, ...data: unknown[]) =>
+  fireEventAsync(element, 'press', ...data);
+
+fireEventAsync.changeText = async (element: ReactTestInstance, ...data: unknown[]) =>
+  fireEventAsync(element, 'changeText', ...data);
+
+fireEventAsync.scroll = async (element: ReactTestInstance, ...data: unknown[]) =>
+  fireEventAsync(element, 'scroll', ...data);
+
+export { fireEventAsync };
 export default fireEvent;
 
 const scrollEventNames = new Set([
