@@ -37,14 +37,14 @@ export async function type(
   const keys = parseKeys(text);
 
   if (!options?.skipPress) {
-    dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
+    await dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
   }
 
-  dispatchEvent(element, 'focus', EventBuilder.Common.focus());
+  await dispatchEvent(element, 'focus', EventBuilder.Common.focus());
 
   if (!options?.skipPress) {
     await wait(this.config);
-    dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
+    await dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
   }
 
   let currentText = getTextInputValue(element);
@@ -66,12 +66,12 @@ export async function type(
   await wait(this.config);
 
   if (options?.submitEditing) {
-    dispatchEvent(element, 'submitEditing', EventBuilder.TextInput.submitEditing(finalText));
+    await dispatchEvent(element, 'submitEditing', EventBuilder.TextInput.submitEditing(finalText));
   }
 
   if (!options?.skipBlur) {
-    dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(finalText));
-    dispatchEvent(element, 'blur', EventBuilder.Common.blur());
+    await dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(finalText));
+    await dispatchEvent(element, 'blur', EventBuilder.Common.blur());
   }
 }
 
@@ -89,7 +89,7 @@ export async function emitTypingEvents(
   const isMultiline = element.props.multiline === true;
 
   await wait(config);
-  dispatchEvent(element, 'keyPress', EventBuilder.TextInput.keyPress(key));
+  await dispatchEvent(element, 'keyPress', EventBuilder.TextInput.keyPress(key));
 
   // Platform difference (based on experiments):
   // - iOS and RN Web: TextInput emits only `keyPress` event when max length has been reached
@@ -99,20 +99,20 @@ export async function emitTypingEvents(
   }
 
   nativeState.valueForElement.set(element, text);
-  dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
-  dispatchEvent(element, 'changeText', text);
+  await dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
+  await dispatchEvent(element, 'changeText', text);
 
   const selectionRange = {
     start: text.length,
     end: text.length,
   };
-  dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(selectionRange));
+  await dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(selectionRange));
 
   // According to the docs only multiline TextInput emits contentSizeChange event
   // @see: https://reactnative.dev/docs/textinput#oncontentsizechange
   if (isMultiline) {
     const contentSize = getTextContentSize(text);
-    dispatchEvent(
+    await dispatchEvent(
       element,
       'contentSizeChange',
       EventBuilder.TextInput.contentSizeChange(contentSize),

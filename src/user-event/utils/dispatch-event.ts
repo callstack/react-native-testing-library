@@ -11,7 +11,7 @@ import { isElementMounted } from '../../helpers/component-tree';
  * @param eventName name of the event
  * @param event event payload(s)
  */
-export function dispatchEvent(element: ReactTestInstance, eventName: string, ...event: unknown[]) {
+export async function dispatchEvent(element: ReactTestInstance, eventName: string, ...event: unknown[]) {
   if (!isElementMounted(element)) {
     return;
   }
@@ -21,8 +21,8 @@ export function dispatchEvent(element: ReactTestInstance, eventName: string, ...
     return;
   }
 
-  // This will be called synchronously.
-  void act(() => {
-    handler(...event);
+  // React 19 support: use async act
+  await act(async () => { 
+    handler(...event)
   });
 }

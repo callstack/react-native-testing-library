@@ -26,27 +26,27 @@ export async function paste(
   }
 
   // 1. Enter element
-  dispatchEvent(element, 'focus', EventBuilder.Common.focus());
+  await dispatchEvent(element, 'focus', EventBuilder.Common.focus());
 
   // 2. Select all
   const textToClear = getTextInputValue(element);
   const rangeToClear = { start: 0, end: textToClear.length };
-  dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(rangeToClear));
+  await dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(rangeToClear));
 
   // 3. Paste the text
   nativeState.valueForElement.set(element, text);
-  dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
-  dispatchEvent(element, 'changeText', text);
+  await dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
+  await dispatchEvent(element, 'changeText', text);
 
   const rangeAfter = { start: text.length, end: text.length };
-  dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(rangeAfter));
+  await dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(rangeAfter));
 
   // According to the docs only multiline TextInput emits contentSizeChange event
   // @see: https://reactnative.dev/docs/textinput#oncontentsizechange
   const isMultiline = element.props.multiline === true;
   if (isMultiline) {
     const contentSize = getTextContentSize(text);
-    dispatchEvent(
+    await dispatchEvent(
       element,
       'contentSizeChange',
       EventBuilder.TextInput.contentSizeChange(contentSize),
@@ -55,6 +55,6 @@ export async function paste(
 
   // 4. Exit element
   await wait(this.config);
-  dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(text));
-  dispatchEvent(element, 'blur', EventBuilder.Common.blur());
+  await dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(text));
+  await dispatchEvent(element, 'blur', EventBuilder.Common.blur());
 }
