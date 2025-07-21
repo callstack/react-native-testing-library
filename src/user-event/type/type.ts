@@ -106,7 +106,11 @@ export async function emitTypingEvents(
     start: text.length,
     end: text.length,
   };
-  await dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(selectionRange));
+  await dispatchEvent(
+    element,
+    'selectionChange',
+    EventBuilder.TextInput.selectionChange(selectionRange),
+  );
 
   // According to the docs only multiline TextInput emits contentSizeChange event
   // @see: https://reactnative.dev/docs/textinput#oncontentsizechange

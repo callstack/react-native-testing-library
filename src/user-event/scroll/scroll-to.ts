@@ -99,12 +99,20 @@ async function emitDragScrollEvents(
   // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
   for (let i = 1; i < scrollSteps.length - 1; i += 1) {
     await wait(config);
-    await dispatchEvent(element, 'scroll', EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions));
+    await dispatchEvent(
+      element,
+      'scroll',
+      EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions),
+    );
   }
 
   await wait(config);
   const lastStep = scrollSteps.at(-1);
-  await dispatchEvent(element, 'scrollEndDrag', EventBuilder.ScrollView.scroll(lastStep, scrollOptions));
+  await dispatchEvent(
+    element,
+    'scrollEndDrag',
+    EventBuilder.ScrollView.scroll(lastStep, scrollOptions),
+  );
 }
 
 async function emitMomentumScrollEvents(
@@ -129,7 +137,11 @@ async function emitMomentumScrollEvents(
   // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
   for (let i = 1; i < scrollSteps.length; i += 1) {
     await wait(config);
-    await dispatchEvent(element, 'scroll', EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions));
+    await dispatchEvent(
+      element,
+      'scroll',
+      EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions),
+    );
   }
 
   await wait(config);

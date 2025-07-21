@@ -134,7 +134,11 @@ fireEvent.changeText = (element: ReactTestInstance, ...data: unknown[]) =>
 fireEvent.scroll = (element: ReactTestInstance, ...data: unknown[]) =>
   fireEvent(element, 'scroll', ...data);
 
-async function fireEventAsync(element: ReactTestInstance, eventName: EventName, ...data: unknown[]) {
+async function fireEventAsync(
+  element: ReactTestInstance,
+  eventName: EventName,
+  ...data: unknown[]
+) {
   if (!isElementMounted(element)) {
     return;
   }
@@ -147,6 +151,7 @@ async function fireEventAsync(element: ReactTestInstance, eventName: EventName, 
   }
 
   let returnValue;
+  // eslint-disable-next-line require-await
   await act(async () => {
     returnValue = handler(...data);
   });
@@ -155,13 +160,13 @@ async function fireEventAsync(element: ReactTestInstance, eventName: EventName, 
 }
 
 fireEventAsync.press = async (element: ReactTestInstance, ...data: unknown[]) =>
-  fireEventAsync(element, 'press', ...data);
+  await fireEventAsync(element, 'press', ...data);
 
 fireEventAsync.changeText = async (element: ReactTestInstance, ...data: unknown[]) =>
-  fireEventAsync(element, 'changeText', ...data);
+  await fireEventAsync(element, 'changeText', ...data);
 
 fireEventAsync.scroll = async (element: ReactTestInstance, ...data: unknown[]) =>
-  fireEventAsync(element, 'scroll', ...data);
+  await fireEventAsync(element, 'scroll', ...data);
 
 export { fireEventAsync };
 export default fireEvent;

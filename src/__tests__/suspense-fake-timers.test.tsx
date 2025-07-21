@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
+
 import { act, renderAsync, screen } from '..';
 
 jest.useFakeTimers();
@@ -28,7 +29,7 @@ testGateReact19('resolves timer-controlled promise', async () => {
   expect(screen.queryByTestId('content')).not.toBeOnTheScreen();
   expect(screen.queryByTestId('sibling')).not.toBeOnTheScreen();
 
-  await act(async () => jest.runOnlyPendingTimers());
+  await act(async () => await jest.runOnlyPendingTimersAsync());
   expect(screen.getByTestId('content')).toBeOnTheScreen();
   expect(screen.getByTestId('sibling')).toBeOnTheScreen();
   expect(screen.queryByText('Loading...')).not.toBeOnTheScreen();

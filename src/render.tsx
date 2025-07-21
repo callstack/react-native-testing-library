@@ -15,7 +15,6 @@ import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
-import renderAsync from './render-async';
 
 export interface RenderOptions {
   /**
@@ -107,6 +106,7 @@ function buildRenderResult(
     });
   };
   const updateAsync = async function (component: React.ReactElement) {
+    // eslint-disable-next-line require-await
     await act(async () => {
       renderer.update(wrap(component));
     });
@@ -118,6 +118,7 @@ function buildRenderResult(
     });
   };
   const unmountAsync = async () => {
+    // eslint-disable-next-line require-await
     await act(async () => {
       renderer.unmount();
     });
@@ -156,17 +157,6 @@ function buildRenderResult(
   setRenderResult(result);
 
   return result;
-}
-
-function updateWithAct(
-  renderer: ReactTestRenderer,
-  wrap: (innerElement: React.ReactElement) => React.ReactElement,
-) {
-  return function (component: React.ReactElement) {
-    void act(() => {
-      renderer.update(wrap(component));
-    });
-  };
 }
 
 export type DebugFunction = (options?: DebugOptions) => void;
