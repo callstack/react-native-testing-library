@@ -11,7 +11,7 @@ function Suspending({ promise }: { promise: Promise<unknown> }) {
 }
 
 testGateReact19('resolves manually-controlled promise', async () => {
-  let resolvePromise: (value: void) => void;
+  let resolvePromise: (value: unknown) => void;
   const promise = new Promise((resolve) => {
     resolvePromise = resolve;
   });
@@ -28,7 +28,8 @@ testGateReact19('resolves manually-controlled promise', async () => {
   expect(screen.queryByTestId('content')).not.toBeOnTheScreen();
   expect(screen.queryByTestId('sibling')).not.toBeOnTheScreen();
 
-  await act(async () => resolvePromise());
+  // eslint-disable-next-line require-await
+  await act(async () => resolvePromise(null));
   expect(screen.getByTestId('content')).toBeOnTheScreen();
   expect(screen.getByTestId('sibling')).toBeOnTheScreen();
   expect(screen.queryByText('Loading...')).not.toBeOnTheScreen();
