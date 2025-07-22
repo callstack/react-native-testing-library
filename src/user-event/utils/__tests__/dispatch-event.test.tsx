@@ -8,15 +8,15 @@ import { dispatchEvent } from '../dispatch-event';
 const TOUCH_EVENT = EventBuilder.Common.touch();
 
 describe('dispatchEvent', () => {
-  it('does dispatch event', () => {
+  it('does dispatch event', async () => {
     const onPress = jest.fn();
     render(<Text testID="text" onPress={onPress} />);
 
-    dispatchEvent(screen.getByTestId('text'), 'press', TOUCH_EVENT);
+    await dispatchEvent(screen.getByTestId('text'), 'press', TOUCH_EVENT);
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('does not dispatch event to parent host component', () => {
+  it('does not dispatch event to parent host component', async () => {
     const onPressParent = jest.fn();
     render(
       <Text onPress={onPressParent}>
@@ -24,17 +24,19 @@ describe('dispatchEvent', () => {
       </Text>,
     );
 
-    dispatchEvent(screen.getByTestId('text'), 'press', TOUCH_EVENT);
+    await dispatchEvent(screen.getByTestId('text'), 'press', TOUCH_EVENT);
     expect(onPressParent).not.toHaveBeenCalled();
   });
 
-  it('does NOT throw if no handler found', () => {
+  it('does NOT throw if no handler found', async () => {
     render(
       <Text>
         <Text testID="text" />
       </Text>,
     );
 
-    expect(() => dispatchEvent(screen.getByTestId('text'), 'press', TOUCH_EVENT)).not.toThrow();
+    await expect(
+      dispatchEvent(screen.getByTestId('text'), 'press', TOUCH_EVENT),
+    ).resolves.not.toThrow();
   });
 });
