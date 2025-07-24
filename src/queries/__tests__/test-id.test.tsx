@@ -164,7 +164,7 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    <View
+    <View_withRef
       testID="TEST_ID"
     />"
   `);
@@ -172,7 +172,7 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getAllByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    <View
+    <View_withRef
       testID="TEST_ID"
     />"
   `);
@@ -180,7 +180,7 @@ test('error message renders the element tree, preserving only helpful props', as
   await expect(screen.findByTestId('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    <View
+    <View_withRef
       testID="TEST_ID"
     />"
   `);
@@ -188,7 +188,7 @@ test('error message renders the element tree, preserving only helpful props', as
   await expect(screen.findAllByTestId('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    <View
+    <View_withRef
       testID="TEST_ID"
     />"
   `);

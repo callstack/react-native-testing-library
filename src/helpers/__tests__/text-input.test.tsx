@@ -18,7 +18,7 @@ test('getTextInputValue basic test', () => {
 
   const view = screen.getByTestId('view');
   expect(() => getTextInputValue(view)).toThrowErrorMatchingInlineSnapshot(
-    `"Element is not a "TextInput", but it has type "View"."`,
+    `"Element is not a "TextInput", but it has type "View_withRef"."`,
   );
 });
 

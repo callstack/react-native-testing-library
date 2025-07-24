@@ -82,10 +82,11 @@ function findEventHandler(
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
   const handler = getEventHandler(element, eventName, { loose: true });
-  if (handler && isEventEnabled(element, eventName, touchResponder)) return handler;
+  if (handler && isEventEnabled(element, eventName, touchResponder)) {
+    return handler;
+  }
 
-  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-  if (element.parent === null || element.parent.parent === null) {
+  if (element.parent === null) {
     return null;
   }
 

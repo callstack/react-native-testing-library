@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`toJSON renders host output 1`] = `
-<View
+<View_withRef
   accessibilityState={
     {
       "busy": undefined,
@@ -35,5 +35,5 @@ exports[`toJSON renders host output 1`] = `
   <Text>
     press me
   </Text>
-</View>
+</View_withRef>
 `;
