@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { isHiddenFromAccessibility, isInaccessible, render, screen } from '../..';
-import { computeAriaLabel, isAccessibilityElement } from '../accessibility';
+import { computeAriaDisabled, computeAriaLabel, isAccessibilityElement } from '../accessibility';
 
 describe('isHiddenFromAccessibility', () => {
   test('returns false for accessible elements', () => {
@@ -278,11 +278,11 @@ describe('isHiddenFromAccessibility', () => {
   test('has isInaccessible alias', () => {
     expect(isInaccessible).toBe(isHiddenFromAccessibility);
   });
-});
 
-test('is not triggered for element with "aria-modal" prop', () => {
-  render(<View aria-modal testID="subject" />);
-  expect(isHiddenFromAccessibility(screen.getByTestId('subject'))).toBe(false);
+  test('is not triggered for element with "aria-modal" prop', () => {
+    render(<View aria-modal testID="subject" />);
+    expect(isHiddenFromAccessibility(screen.getByTestId('subject'))).toBe(false);
+  });
 });
 
 describe('isAccessibilityElement', () => {
@@ -406,5 +406,69 @@ describe('computeAriaLabel', () => {
     );
 
     expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('External Label');
+  });
+});
+
+describe('computeAriaDisabled', () => {
+  test('supports basic usage', () => {
+    render(
+      <View>
+        <View testID="disabled" aria-disabled />
+        <View testID="not-disabled" />
+        <View testID="disabled-by-state" accessibilityState={{ disabled: true }} />
+        <View testID="not-disabled-by-state" accessibilityState={{ disabled: false }} />
+      </View>,
+    );
+
+    expect(computeAriaDisabled(screen.getByTestId('disabled'))).toBe(true);
+    expect(computeAriaDisabled(screen.getByTestId('not-disabled'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByTestId('disabled-by-state'))).toBe(true);
+    expect(computeAriaDisabled(screen.getByTestId('not-disabled-by-state'))).toBe(false);
+  });
+
+  test('supports TextInput', () => {
+    render(
+      <View>
+        <TextInput testID="disabled" editable={false} />
+        <TextInput testID="not-disabled" editable />
+      </View>,
+    );
+
+    expect(computeAriaDisabled(screen.getByTestId('disabled'))).toBe(true);
+    expect(computeAriaDisabled(screen.getByTestId('not-disabled'))).toBe(false);
+  });
+
+  test('supports Button', () => {
+    render(
+      <View>
+        <Pressable testID="disabled" disabled>
+          <Text>Disabled Button</Text>
+        </Pressable>
+        <Pressable testID="not-disabled">
+          <Text>Enabled Button</Text>
+        </Pressable>
+      </View>,
+    );
+
+    expect(computeAriaDisabled(screen.getByTestId('disabled'))).toBe(true);
+    expect(computeAriaDisabled(screen.getByTestId('not-disabled'))).toBe(false);
+  });
+
+  test('supports Text', () => {
+    render(
+      <View>
+        <Text testID="disabled" disabled>
+          Disabled Text
+        </Text>
+        <Text testID="aria-disabled" aria-disabled>
+          Disabled Text
+        </Text>
+        <Text testID="not-disabled">Enabled Text</Text>
+      </View>,
+    );
+
+    expect(computeAriaDisabled(screen.getByTestId('disabled'))).toBe(true);
+    expect(computeAriaDisabled(screen.getByTestId('aria-disabled'))).toBe(true);
+    expect(computeAriaDisabled(screen.getByTestId('not-disabled'))).toBe(false);
   });
 });
