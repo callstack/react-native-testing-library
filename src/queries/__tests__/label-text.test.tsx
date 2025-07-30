@@ -240,7 +240,7 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <View_withRef
+    <View
       accessibilityLabel="LABEL"
       accessible={true}
     />"
@@ -249,7 +249,7 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getAllByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <View_withRef
+    <View
       accessibilityLabel="LABEL"
       accessible={true}
     />"
@@ -258,7 +258,7 @@ test('error message renders the element tree, preserving only helpful props', as
   await expect(screen.findByLabelText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <View_withRef
+    <View
       accessibilityLabel="LABEL"
       accessible={true}
     />"
@@ -267,7 +267,7 @@ test('error message renders the element tree, preserving only helpful props', as
   await expect(screen.findAllByLabelText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <View_withRef
+    <View
       accessibilityLabel="LABEL"
       accessible={true}
     />"

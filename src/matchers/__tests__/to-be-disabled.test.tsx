@@ -42,7 +42,7 @@ test('toBeDisabled()/toBeEnabled() supports basic case', () => {
     "expect(element).not.toBeDisabled()
 
     Received element is disabled:
-      <View_withRef
+      <View
         aria-disabled={true}
         testID="disabled-parent"
       />"
@@ -53,7 +53,7 @@ test('toBeDisabled()/toBeEnabled() supports basic case', () => {
     "expect(element).toBeDisabled()
 
     Received element is not disabled:
-      <View_withRef
+      <View
         testID="enabled-view"
       />"
   `);
@@ -70,7 +70,7 @@ test('toBeDisabled()/toBeEnabled() supports basic case', () => {
     "expect(element).toBeEnabled()
 
     Received element is not enabled:
-      <View_withRef
+      <View
         aria-disabled={true}
         testID="disabled-parent"
       />"
@@ -81,7 +81,7 @@ test('toBeDisabled()/toBeEnabled() supports basic case', () => {
     "expect(element).not.toBeEnabled()
 
     Received element is enabled:
-      <View_withRef
+      <View
         testID="enabled-view"
       />"
   `);
@@ -106,7 +106,7 @@ test('toBeDisabled()/toBeEnabled() supports Pressable with "disabled" prop', () 
     "expect(element).toBeEnabled()
 
     Received element is not enabled:
-      <View_withRef
+      <View
         accessibilityState={
           {
             "disabled": true,
@@ -121,7 +121,7 @@ test('toBeDisabled()/toBeEnabled() supports Pressable with "disabled" prop', () 
     "expect(element).not.toBeDisabled()
 
     Received element is disabled:
-      <View_withRef
+      <View
         accessibilityState={
           {
             "disabled": true,

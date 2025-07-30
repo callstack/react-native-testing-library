@@ -37,7 +37,7 @@ test('toBeSelected() error messages', () => {
     "expect(element).not.toBeSelected()
 
     Received element is selected
-      <View_withRef
+      <View
         accessibilityState={
           {
             "selected": true,
@@ -52,7 +52,7 @@ test('toBeSelected() error messages', () => {
     "expect(element).not.toBeSelected()
 
     Received element is selected
-      <View_withRef
+      <View
         aria-selected={true}
         testID="selected-aria"
       />"
@@ -63,7 +63,7 @@ test('toBeSelected() error messages', () => {
     "expect(element).toBeSelected()
 
     Received element is not selected
-      <View_withRef
+      <View
         accessibilityState={
           {
             "selected": false,
@@ -78,7 +78,7 @@ test('toBeSelected() error messages', () => {
     "expect(element).toBeSelected()
 
     Received element is not selected
-      <View_withRef
+      <View
         aria-selected={false}
         testID="not-selected-aria"
       />"
@@ -89,7 +89,7 @@ test('toBeSelected() error messages', () => {
     "expect(element).toBeSelected()
 
     Received element is not selected
-      <View_withRef
+      <View
         testID="default"
       />"
   `);

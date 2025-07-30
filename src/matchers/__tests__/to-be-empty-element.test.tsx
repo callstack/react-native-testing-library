@@ -31,7 +31,7 @@ test('toBeEmptyElement() base case', () => {
     "expect(element).toBeEmptyElement()
 
     Received:
-      <View_withRef
+      <View
         testID="empty"
       />"
   `);

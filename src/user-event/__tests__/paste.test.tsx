@@ -194,7 +194,7 @@ describe('paste()', () => {
     await expect(
       user.paste(screen.getByTestId('input'), 'Hi!'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"paste() only supports host "TextInput" elements. Passed element has type: "View_withRef"."`,
+      `"paste() only supports host "TextInput" elements. Passed element has type: "View"."`,
     );
   });
 
