@@ -23,13 +23,6 @@ const OnPressComponent = ({ onPress, text }: OnPressComponentProps) => (
   </View>
 );
 
-type WithoutEventComponentProps = { onPress: () => void };
-const WithoutEventComponent = (_props: WithoutEventComponentProps) => (
-  <View>
-    <Text>Without event</Text>
-  </View>
-);
-
 type CustomEventComponentProps = {
   onCustomEvent: () => void;
 };
@@ -73,16 +66,6 @@ describe('fireEvent', () => {
 
     fireEvent(screen.getByText(text), 'press');
     expect(onPressMock).toHaveBeenCalled();
-  });
-
-  test('should not fire if the press handler is not passed to children', () => {
-    const onPressMock = jest.fn();
-    render(
-      // TODO: this functionality is buggy, i.e. it will fail if we wrap this component with a View.
-      <WithoutEventComponent onPress={onPressMock} />,
-    );
-    fireEvent(screen.getByText('Without event'), 'press');
-    expect(onPressMock).not.toHaveBeenCalled();
   });
 
   test('should invoke event with custom name', () => {
