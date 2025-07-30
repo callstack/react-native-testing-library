@@ -18,13 +18,13 @@ test('toContainElement() supports basic case', () => {
   expect(() => expect(parent).not.toContainElement(child)).toThrowErrorMatchingInlineSnapshot(`
     "expect(container).not.toContainElement(element)
 
-      <View_withRef
+      <View
         testID="parent"
       /> 
 
     contains:
 
-       <View_withRef
+       <View
         testID="child"
       />
             "
@@ -48,13 +48,13 @@ test('toContainElement() supports negative case', () => {
   expect(() => expect(view1).toContainElement(view2)).toThrowErrorMatchingInlineSnapshot(`
     "expect(container).toContainElement(element)
 
-      <View_withRef
+      <View
         testID="view1"
       /> 
 
     does not contain:
 
-       <View_withRef
+       <View
         testID="view2"
       />
             "
@@ -84,7 +84,7 @@ test('toContainElement() handles null element', () => {
   expect(() => expect(view).toContainElement(null)).toThrowErrorMatchingInlineSnapshot(`
     "expect(container).toContainElement(element)
 
-      <View_withRef
+      <View
         testID="view"
       /> 
 

@@ -494,7 +494,7 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <View_withRef
+    <View
       accessibilityViewIsModal={true}
     />"
   `);
@@ -502,7 +502,7 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <View_withRef
+    <View
       accessibilityViewIsModal={true}
     />"
   `);
@@ -510,7 +510,7 @@ test('error message renders the element tree, preserving only helpful props', as
   await expect(screen.findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <View_withRef
+    <View
       accessibilityViewIsModal={true}
     />"
   `);
@@ -518,7 +518,7 @@ test('error message renders the element tree, preserving only helpful props', as
   await expect(screen.findAllByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <View_withRef
+    <View
       accessibilityViewIsModal={true}
     />"
   `);

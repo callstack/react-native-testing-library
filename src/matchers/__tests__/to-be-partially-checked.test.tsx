@@ -47,7 +47,7 @@ test('toBePartiallyCheck() with checkbox role', () => {
     "expect(element).not.toBePartiallyChecked()
 
     Received element is partially checked:
-      <View_withRef
+      <View
         accessibilityRole="checkbox"
         accessibilityState={
           {
@@ -63,7 +63,7 @@ test('toBePartiallyCheck() with checkbox role', () => {
     "expect(element).toBePartiallyChecked()
 
     Received element is not partially checked:
-      <View_withRef
+      <View
         accessibilityRole="checkbox"
         accessibilityState={
           {
@@ -78,7 +78,7 @@ test('toBePartiallyCheck() with checkbox role', () => {
     "expect(element).toBePartiallyChecked()
 
     Received element is not partially checked:
-      <View_withRef
+      <View
         accessibilityRole="checkbox"
         accessible={true}
         testID="checkbox-default"

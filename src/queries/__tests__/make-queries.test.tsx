@@ -52,7 +52,7 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <View_withRef
+      <View
         accessibilityElementsHidden={true}
         accessibilityHint="HINT"
         accessibilityLabel="LABEL"
@@ -85,7 +85,7 @@ describe('printing element tree', () => {
         <Text>
           Some Text
         </Text>
-      </View_withRef>"
+      </View>"
     `);
   });
 
@@ -95,7 +95,7 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <View_withRef
+      <View
         accessibilityViewIsModal={true}
       />"
     `);
@@ -103,7 +103,7 @@ describe('printing element tree', () => {
     expect(() => screen.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <View_withRef
+      <View
         accessibilityViewIsModal={true}
       />"
     `);
@@ -111,7 +111,7 @@ describe('printing element tree', () => {
     await expect(screen.findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <View_withRef
+      <View
         accessibilityViewIsModal={true}
       />"
     `);
@@ -119,7 +119,7 @@ describe('printing element tree', () => {
     await expect(screen.findAllByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <View_withRef
+      <View
         accessibilityViewIsModal={true}
       />"
     `);
@@ -184,7 +184,7 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <View_withRef>
+      <View>
         <Text
           style={
             {
@@ -194,7 +194,7 @@ describe('printing element tree', () => {
         >
           Some text
         </Text>
-      </View_withRef>"
+      </View>"
     `);
   });
 
@@ -208,7 +208,7 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <View_withRef
+      <View
         accessibilityState={
           {
             "busy": false,
@@ -216,8 +216,8 @@ describe('printing element tree', () => {
           }
         }
       >
-        <View_withRef />
-      </View_withRef>"
+        <View />
+      </View>"
     `);
   });
 
@@ -231,15 +231,15 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <View_withRef
+      <View
         accessibilityValue={
           {
             "min": 1,
           }
         }
       >
-        <View_withRef />
-      </View_withRef>"
+        <View />
+      </View>"
     `);
   });
 

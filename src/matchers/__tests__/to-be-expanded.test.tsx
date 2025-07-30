@@ -37,7 +37,7 @@ test('toBeExpanded() error messages', () => {
     "expect(element).not.toBeExpanded()
 
     Received element is expanded:
-      <View_withRef
+      <View
         accessibilityState={
           {
             "expanded": true,
@@ -52,7 +52,7 @@ test('toBeExpanded() error messages', () => {
     "expect(element).not.toBeExpanded()
 
     Received element is expanded:
-      <View_withRef
+      <View
         aria-expanded={true}
         testID="expanded-aria"
       />"
@@ -63,7 +63,7 @@ test('toBeExpanded() error messages', () => {
     "expect(element).toBeExpanded()
 
     Received element is not expanded:
-      <View_withRef
+      <View
         accessibilityState={
           {
             "expanded": false,
@@ -78,7 +78,7 @@ test('toBeExpanded() error messages', () => {
     "expect(element).toBeExpanded()
 
     Received element is not expanded:
-      <View_withRef
+      <View
         aria-expanded={false}
         testID="not-expanded-aria"
       />"
@@ -89,7 +89,7 @@ test('toBeExpanded() error messages', () => {
     "expect(element).toBeExpanded()
 
     Received element is not expanded:
-      <View_withRef
+      <View
         testID="default"
       />"
   `);
@@ -129,7 +129,7 @@ test('toBeCollapsed() error messages', () => {
     "expect(element).toBeCollapsed()
 
     Received element is not collapsed:
-      <View_withRef
+      <View
         accessibilityState={
           {
             "expanded": true,
@@ -144,7 +144,7 @@ test('toBeCollapsed() error messages', () => {
     "expect(element).toBeCollapsed()
 
     Received element is not collapsed:
-      <View_withRef
+      <View
         aria-expanded={true}
         testID="expanded-aria"
       />"
@@ -155,7 +155,7 @@ test('toBeCollapsed() error messages', () => {
     "expect(element).not.toBeCollapsed()
 
     Received element is collapsed:
-      <View_withRef
+      <View
         accessibilityState={
           {
             "expanded": false,
@@ -170,7 +170,7 @@ test('toBeCollapsed() error messages', () => {
     "expect(element).not.toBeCollapsed()
 
     Received element is collapsed:
-      <View_withRef
+      <View
         aria-expanded={false}
         testID="not-expanded-aria"
       />"
@@ -181,7 +181,7 @@ test('toBeCollapsed() error messages', () => {
     "expect(element).toBeCollapsed()
 
     Received element is not collapsed:
-      <View_withRef
+      <View
         testID="default"
       />"
   `);

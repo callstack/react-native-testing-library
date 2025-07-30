@@ -273,7 +273,7 @@ describe('type()', () => {
     await expect(
       user.type(screen.getByTestId('input'), 'abc'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"type() works only with host "TextInput" elements. Passed element has type "View_withRef"."`,
+      `"type() works only with host "TextInput" elements. Passed element has type "View"."`,
     );
   });
 
