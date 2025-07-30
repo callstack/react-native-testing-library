@@ -413,62 +413,70 @@ describe('computeAriaDisabled', () => {
   test('supports basic usage', () => {
     render(
       <View>
+        <View testID="default" />
         <View testID="disabled" aria-disabled />
-        <View testID="not-disabled" />
+        <View testID="disabled-false" aria-disabled={false} />
         <View testID="disabled-by-state" accessibilityState={{ disabled: true }} />
-        <View testID="not-disabled-by-state" accessibilityState={{ disabled: false }} />
+        <View testID="disabled-false-by-state" accessibilityState={{ disabled: false }} />
       </View>,
     );
 
+    expect(computeAriaDisabled(screen.getByTestId('default'))).toBe(false);
     expect(computeAriaDisabled(screen.getByTestId('disabled'))).toBe(true);
-    expect(computeAriaDisabled(screen.getByTestId('not-disabled'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByTestId('disabled-false'))).toBe(false);
     expect(computeAriaDisabled(screen.getByTestId('disabled-by-state'))).toBe(true);
-    expect(computeAriaDisabled(screen.getByTestId('not-disabled-by-state'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByTestId('disabled-false-by-state'))).toBe(false);
   });
 
   test('supports TextInput', () => {
     render(
       <View>
-        <TextInput testID="disabled" editable={false} />
-        <TextInput testID="not-disabled" editable />
+        <TextInput testID="default" />
+        <TextInput testID="editable" editable />
+        <TextInput testID="editable-false" editable={false} />   
       </View>,
     );
 
-    expect(computeAriaDisabled(screen.getByTestId('disabled'))).toBe(true);
-    expect(computeAriaDisabled(screen.getByTestId('not-disabled'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByTestId('default'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByTestId('editable'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByTestId('editable-false'))).toBe(true);
   });
 
   test('supports Button', () => {
     render(
       <View>
-        <Pressable testID="disabled" disabled>
+        <Pressable testID="default" role="button">
+          <Text>Default Button</Text>
+        </Pressable>
+        <Pressable testID="disabled" role="button" disabled >
           <Text>Disabled Button</Text>
         </Pressable>
-        <Pressable testID="not-disabled">
-          <Text>Enabled Button</Text>
+        <Pressable testID="disabled-false" role="button" disabled={false}>
+          <Text>Disabled False Button</Text>
         </Pressable>
       </View>,
     );
 
+    expect(computeAriaDisabled(screen.getByTestId('default'))).toBe(false);
     expect(computeAriaDisabled(screen.getByTestId('disabled'))).toBe(true);
-    expect(computeAriaDisabled(screen.getByTestId('not-disabled'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByTestId('disabled-false'))).toBe(false);
   });
 
   test('supports Text', () => {
     render(
       <View>
-        <Text testID="disabled" disabled>
+        <Text>Default Text</Text>
+        <Text disabled>
           Disabled Text
         </Text>
-        <Text testID="aria-disabled" aria-disabled>
-          Disabled Text
+        <Text aria-disabled>
+          ARIA Disabled Text
         </Text>
-        <Text testID="not-disabled">Enabled Text</Text>
       </View>,
     );
 
-    expect(computeAriaDisabled(screen.getByTestId('disabled'))).toBe(true);
-    expect(computeAriaDisabled(screen.getByTestId('aria-disabled'))).toBe(true);
-    expect(computeAriaDisabled(screen.getByTestId('not-disabled'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByText('Default Text'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByText('Disabled Text'))).toBe(true);
+    expect(computeAriaDisabled(screen.getByText('ARIA Disabled Text'))).toBe(true);
   });
 });
