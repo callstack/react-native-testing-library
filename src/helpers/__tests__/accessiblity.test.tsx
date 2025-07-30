@@ -433,7 +433,7 @@ describe('computeAriaDisabled', () => {
       <View>
         <TextInput testID="default" />
         <TextInput testID="editable" editable />
-        <TextInput testID="editable-false" editable={false} />   
+        <TextInput testID="editable-false" editable={false} />
       </View>,
     );
 
@@ -448,7 +448,7 @@ describe('computeAriaDisabled', () => {
         <Pressable testID="default" role="button">
           <Text>Default Button</Text>
         </Pressable>
-        <Pressable testID="disabled" role="button" disabled >
+        <Pressable testID="disabled" role="button" disabled>
           <Text>Disabled Button</Text>
         </Pressable>
         <Pressable testID="disabled-false" role="button" disabled={false}>
@@ -466,12 +466,8 @@ describe('computeAriaDisabled', () => {
     render(
       <View>
         <Text>Default Text</Text>
-        <Text disabled>
-          Disabled Text
-        </Text>
-        <Text aria-disabled>
-          ARIA Disabled Text
-        </Text>
+        <Text disabled>Disabled Text</Text>
+        <Text aria-disabled>ARIA Disabled Text</Text>
       </View>,
     );
 

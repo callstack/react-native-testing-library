@@ -213,7 +213,7 @@ export function computeAriaDisabled(element: ReactTestInstance): boolean {
   if (isHostText(element) && props.disabled) {
     return true;
   }
-  
+
   return props['aria-disabled'] ?? props.accessibilityState?.disabled ?? false;
 }
 
