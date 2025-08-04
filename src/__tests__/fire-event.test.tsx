@@ -553,3 +553,47 @@ describe('native events', () => {
     expect(onMomentumScrollEndSpy).toHaveBeenCalled();
   });
 });
+
+test('should handle unmounted elements gracefully', () => {
+  const onPress = jest.fn();
+  const result = render(
+    <TouchableOpacity onPress={onPress}>
+      <Text>Test</Text>
+    </TouchableOpacity>,
+  );
+
+  const element = screen.getByText('Test');
+
+  // Unmount the component
+  result.unmount();
+
+  // Firing event on unmounted element should not crash
+  fireEvent.press(element);
+  expect(onPress).not.toHaveBeenCalled();
+});
+
+test('should handle invalid scroll event data gracefully', () => {
+  const onScrollSpy = jest.fn();
+  render(<ScrollView testID="scroll-view" onScroll={onScrollSpy} />);
+
+  const scrollView = screen.getByTestId('scroll-view');
+
+  // Test with malformed event data that would cause an error in tryGetContentOffset
+  fireEvent.scroll(scrollView, { malformed: 'data' });
+  expect(onScrollSpy).toHaveBeenCalled();
+});
+
+test('should handle scroll event with invalid contentOffset', () => {
+  const onScrollSpy = jest.fn();
+  render(<ScrollView testID="scroll-view" onScroll={onScrollSpy} />);
+
+  const scrollView = screen.getByTestId('scroll-view');
+
+  // Test with event data that has invalid contentOffset structure
+  fireEvent.scroll(scrollView, {
+    nativeEvent: {
+      contentOffset: { x: 'invalid', y: null },
+    },
+  });
+  expect(onScrollSpy).toHaveBeenCalled();
+});

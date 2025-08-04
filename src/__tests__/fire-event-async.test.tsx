@@ -641,3 +641,21 @@ describe('React.Suspense integration', () => {
     expect(screen.getByText('Loading data...')).toBeTruthy();
   });
 });
+
+test('should handle unmounted elements gracefully in async mode', async () => {
+  const onPress = jest.fn();
+  const result = render(
+    <TouchableOpacity onPress={onPress}>
+      <Text>Test</Text>
+    </TouchableOpacity>,
+  );
+
+  const element = screen.getByText('Test');
+
+  // Unmount the component
+  result.unmount();
+
+  // Firing async event on unmounted element should not crash
+  await fireEventAsync.press(element);
+  expect(onPress).not.toHaveBeenCalled();
+});

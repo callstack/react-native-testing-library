@@ -243,3 +243,30 @@ test('supports concurrent rendering', () => {
   render(<View testID="test" />, { concurrentRoot: true });
   expect(screen.root).toBeOnTheScreen();
 });
+
+test('updateAsync updates the component asynchronously', async () => {
+  const fn = jest.fn();
+  const result = render(<Banana onUpdate={fn} />);
+
+  await result.updateAsync(<Banana onUpdate={fn} />);
+
+  expect(fn).toHaveBeenCalledTimes(1);
+});
+
+test('rerenderAsync is an alias for updateAsync', async () => {
+  const fn = jest.fn();
+  const result = render(<Banana onUpdate={fn} />);
+
+  await result.rerenderAsync(<Banana onUpdate={fn} />);
+
+  expect(fn).toHaveBeenCalledTimes(1);
+});
+
+test('unmountAsync unmounts the component asynchronously', async () => {
+  const fn = jest.fn();
+  const result = render(<Banana onUnmount={fn} />);
+
+  await result.unmountAsync();
+
+  expect(fn).toHaveBeenCalled();
+});
