@@ -54,7 +54,7 @@ testGateReact19('resolves timer-controlled promise', async () => {
   expect(screen.queryByTestId('content')).not.toBeOnTheScreen();
   expect(screen.queryByTestId('sibling')).not.toBeOnTheScreen();
 
-  await act(async () => await jest.runOnlyPendingTimersAsync());
+  expect(await screen.findByTestId('content')).toBeOnTheScreen();
   expect(screen.getByTestId('content')).toBeOnTheScreen();
   expect(screen.getByTestId('sibling')).toBeOnTheScreen();
   expect(screen.queryByText('Loading...')).not.toBeOnTheScreen();
