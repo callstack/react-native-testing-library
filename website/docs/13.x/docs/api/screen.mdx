@@ -41,6 +41,35 @@ function rerender(element: React.Element<unknown>): void;
 
 Re-render the in-memory tree with a new root element. This simulates a React update render at the root. If the new element has the same type (and `key`) as the previous element, the tree will be updated; otherwise, it will re-mount a new tree, in both cases triggering the appropriate lifecycle events.
 
+### `rerenderAsync`
+
+_Also available under `updateAsync` alias_
+
+:::info RNTL minimal version
+
+This API requires RNTL v13.3.0 or later.
+
+:::
+
+```ts
+function rerenderAsync(element: React.Element<unknown>): Promise<void>;
+```
+
+Async versions of `rerender` designed for working with React 19 and React Suspense. These methods wait for async operations to complete during re-rendering, making them suitable for components that use suspense boundaries or other async behavior.
+
+```jsx
+import { renderAsync, screen } from '@testing-library/react-native';
+
+test('async rerender test', async () => {
+  await renderAsync(<MyComponent initialData="first" />);
+  
+  // Use async rerender when component has suspense or async behavior
+  await screen.rerenderAsync(<MyComponent initialData="updated" />);
+  
+  expect(screen.getByText('updated')).toBeOnTheScreen();
+});
+```
+
 ### `unmount`
 
 ```ts
@@ -50,7 +79,29 @@ function unmount(): void;
 Unmount the in-memory tree, triggering the appropriate lifecycle events.
 
 :::note
+
 Usually you should not need to call `unmount` as it is done automatically if your test runner supports `afterEach` hook (like Jest, mocha, Jasmine).
+
+:::
+
+### `unmountAsync`
+
+:::info RNTL minimal version
+
+This API requires RNTL v13.3.0 or later.
+
+:::
+
+```ts
+function unmountAsync(): Promise<void>;
+```
+
+Async version of `unmount` designed for working with React 19 and React Suspense. This method waits for async cleanup operations to complete during unmounting, making it suitable for components that have async cleanup behavior.
+
+:::note
+
+Usually you should not need to call `unmount` as it is done automatically if your test runner supports `afterEach` hook (like Jest, mocha, Jasmine).
+
 :::
 
 ### `debug`

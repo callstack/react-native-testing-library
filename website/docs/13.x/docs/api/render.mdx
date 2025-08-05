@@ -64,3 +64,43 @@ React Test Renderer does not enforce this check; hence, by default, React Native
 The `render` function returns the same queries and utilities as the [`screen`](docs/api/screen) object. We recommended using the `screen` object as more developer-friendly way.
 
 See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
+
+## `renderAsync` function
+
+:::info RNTL minimal version
+
+This API requires RNTL v13.3.0 or later.
+
+:::
+
+```jsx
+async function renderAsync(
+  component: React.Element<any>,
+  options?: RenderAsyncOptions
+): Promise<RenderAsyncResult>
+```
+
+The `renderAsync` function is the async version of `render` designed for working with React 19 and React Suspense. It allows components to be properly rendered when they contain suspense boundaries or async behavior that needs to complete before the render result is returned.
+
+```jsx
+import { renderAsync, screen } from '@testing-library/react-native';
+
+test('async component test', async () => {
+  await renderAsync(<MyAsyncApp />);
+  expect(screen.getAllByRole('button', { name: 'start' })).toBeOnTheScreen();
+});
+```
+
+### Options
+
+`renderAsync` accepts the same options as `render`.
+
+### Result
+
+The `renderAsync` function returns a promise that resolves to the same queries and utilities as the [`screen`](docs/api/screen) object. We recommend using the `screen` object for queries and the async lifecycle methods from the render result when needed.
+
+:::note Async lifecycle methods
+
+When using `renderAsync`, you have to use correspodning lifecycle methods: `updateAsync`/`rerenderAsync` and `unmountAsync` instead of their sync versions.
+
+::

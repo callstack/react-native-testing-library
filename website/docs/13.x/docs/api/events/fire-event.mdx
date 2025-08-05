@@ -32,7 +32,7 @@ test('fire changeText event', () => {
 ```
 
 :::note
-Please note that from version `7.0` `fireEvent` performs checks that should prevent events firing on disabled elements.
+`fireEvent` performs checks that should prevent events firing on disabled elements.
 :::
 
 An example using `fireEvent` with native events that aren't already aliased by the `fireEvent` api.
@@ -156,3 +156,58 @@ fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 Prefer using [`user.scrollTo`](docs/api/events/user-event#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
 
 :::
+
+
+## `fireEventAsync`
+
+:::info RNTL minimal version
+
+This API requires RNTL v13.3.0 or later.
+
+:::
+
+
+```ts
+async function fireEventAsync(element: ReactTestInstance, eventName: string, ...data: unknown[]): Promise<unknown>;
+```
+
+The `fireEventAsync` function is the async version of `fireEvent` designed for working with React 19 and React Suspense. It wraps event handler execution in async `act()`, making it suitable for event handlers that trigger suspense boundaries or other async behavior.
+
+```jsx
+import { renderAsync, screen, fireEventAsync } from '@testing-library/react-native';
+
+test('async fire event test', async () => {
+  await renderAsync(<MyAsyncComponent />);
+  
+  // Use fireEventAsync when event handlers have async behavior
+  await fireEventAsync(screen.getByText('Async Button'), 'press');
+  
+  expect(screen.getByText('Async operation completed')).toBeOnTheScreen();
+});
+```
+
+Like `fireEvent`, `fireEventAsync` also provides convenience methods for common events: `fireEventAsync.press`, `fireEventAsync.changeText`, and `fireEventAsync.scroll`.
+
+### `fireEventAsync.press` {#async-press}
+
+```
+fireEventAsync.press: (element: ReactTestInstance, ...data: Array<any>) => Promise<unknown>
+```
+
+Async version of `fireEvent.press` designed for React 19 and React Suspense. Use when press event handlers trigger suspense boundaries or other async behavior.
+
+### `fireEventAsync.changeText` {#async-change-text}
+
+```
+fireEventAsync.changeText: (element: ReactTestInstance, ...data: Array<any>) => Promise<unknown>
+```
+
+Async version of `fireEvent.changeText` designed for React 19 and React Suspense. Use when changeText event handlers trigger suspense boundaries or other async behavior.
+
+### `fireEventAsync.scroll` {#async-scroll}
+
+```
+fireEventAsync.scroll: (element: ReactTestInstance, ...data: Array<any>) => Promise<unknown>
+```
+
+Async version of `fireEvent.scroll` designed for React 19 and React Suspense. Use when scroll event handlers trigger suspense boundaries or other async behavior.
