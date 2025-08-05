@@ -63,9 +63,9 @@ function buildRenderResult(
   const instance = renderer.root;
 
   const update = function (component: React.ReactElement) {
-    void act(() => {
-      renderer.update(wrap(component));
-    });
+    throw new Error(
+      '`update(...)` is not supported when using `renderAsync` use `await updateAsync(...)` instead',
+    );
   };
   const updateAsync = async function (component: React.ReactElement) {
     // eslint-disable-next-line require-await
@@ -75,9 +75,9 @@ function buildRenderResult(
   };
 
   const unmount = () => {
-    void act(() => {
-      renderer.unmount();
-    });
+    throw new Error(
+      '`unmount()` is not supported when using `renderAsync` use `await unmountAsync()` instead',
+    );
   };
   const unmountAsync = async () => {
     // eslint-disable-next-line require-await
