@@ -62,12 +62,12 @@ function buildRenderResult(
 ) {
   const instance = renderer.root;
 
-  const update = function (component: React.ReactElement) {
+  const rerender = function (component: React.ReactElement) {
     throw new Error(
-      '`update(...)` is not supported when using `renderAsync` use `await updateAsync(...)` instead',
+      '`rerender(...)` is not supported when using `renderAsync` use `await rerenderAsync(...)` instead',
     );
   };
-  const updateAsync = async function (component: React.ReactElement) {
+  const rerenderAsync = async function (component: React.ReactElement) {
     // eslint-disable-next-line require-await
     await act(async () => {
       renderer.update(wrap(component));
@@ -86,14 +86,14 @@ function buildRenderResult(
     });
   };
 
-  addToCleanupQueue(unmount);
+  addToCleanupQueue(unmountAsync);
 
   const result = {
     ...getQueriesForElement(instance),
-    update,
-    updateAsync,
-    rerender: update, // alias for `update`
-    rerenderAsync: updateAsync, // alias for `update`
+    rerender,
+    rerenderAsync,
+    update: rerender, // alias for `rerender`
+    updateAsync: rerenderAsync, // alias for `rerenderAsync`
     unmount,
     unmountAsync,
     toJSON: renderer.toJSON,

@@ -64,49 +64,46 @@ test('renderAsync supports legacy rendering option', async () => {
   expect(screen.root).toBeOnTheScreen();
 });
 
-test('update function updates component synchronously', async () => {
-  const fn = jest.fn();
-  const result = await renderAsync(<Banana onUpdate={fn} />);
+test('rerender function throws error when used with renderAsync', async () => {
+  const result = await renderAsync(<Banana />);
 
-  result.update(<Banana onUpdate={fn} />);
-
-  expect(fn).toHaveBeenCalledTimes(1);
+  expect(() => result.rerender(<Banana />)).toThrowErrorMatchingInlineSnapshot(
+    `"\`rerender(...)\` is not supported when using \`renderAsync\` use \`await rerenderAsync(...)\` instead"`
+  );
 });
 
-test('updateAsync function updates component asynchronously', async () => {
+test('rerenderAsync function updates component asynchronously', async () => {
   const fn = jest.fn();
   const result = await renderAsync(<Banana onUpdate={fn} />);
-
-  await result.updateAsync(<Banana onUpdate={fn} />);
-
-  expect(fn).toHaveBeenCalledTimes(1);
-});
-
-test('rerender is an alias for update', async () => {
-  const fn = jest.fn();
-  const result = await renderAsync(<Banana onUpdate={fn} />);
-
-  result.rerender(<Banana onUpdate={fn} />);
-
-  expect(fn).toHaveBeenCalledTimes(1);
-});
-
-test('rerenderAsync is an alias for updateAsync', async () => {
-  const fn = jest.fn();
-  const result = await renderAsync(<Banana onUpdate={fn} />);
-
+  expect(fn).toHaveBeenCalledTimes(0);
+  
   await result.rerenderAsync(<Banana onUpdate={fn} />);
-
   expect(fn).toHaveBeenCalledTimes(1);
 });
 
-test('unmount function unmounts component synchronously', async () => {
+test('rerender function throws error when used with renderAsync', async () => {
+  const result = await renderAsync(<Banana />);
+
+  expect(() => result.rerender(<Banana />)).toThrowErrorMatchingInlineSnapshot(
+    `"\`rerender(...)\` is not supported when using \`renderAsync\` use \`await rerenderAsync(...)\` instead"`
+  );
+});
+
+test('rerenderAsync function updates component asynchronously', async () => {
   const fn = jest.fn();
-  const result = await renderAsync(<Banana onUnmount={fn} />);
+  const result = await renderAsync(<Banana onUpdate={fn} />);
+  expect(fn).toHaveBeenCalledTimes(0);
+  
+  await result.rerenderAsync(<Banana onUpdate={fn} />);
+  expect(fn).toHaveBeenCalledTimes(1);
+});
 
-  result.unmount();
+test('unmount function throws error when used with renderAsync', async () => {
+  const result = await renderAsync(<Banana />);
 
-  expect(fn).toHaveBeenCalled();
+  expect(() => result.unmount()).toThrowErrorMatchingInlineSnapshot(
+    `"\`unmount()\` is not supported when using \`renderAsync\` use \`await unmountAsync()\` instead"`
+  );
 });
 
 test('unmountAsync function unmounts component asynchronously', async () => {
@@ -114,7 +111,6 @@ test('unmountAsync function unmounts component asynchronously', async () => {
   const result = await renderAsync(<Banana onUnmount={fn} />);
 
   await result.unmountAsync();
-
   expect(fn).toHaveBeenCalled();
 });
 
