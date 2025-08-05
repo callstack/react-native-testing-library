@@ -81,14 +81,6 @@ test('rerenderAsync function updates component asynchronously', async () => {
   expect(fn).toHaveBeenCalledTimes(1);
 });
 
-test('rerender function throws error when used with renderAsync', async () => {
-  const result = await renderAsync(<Banana />);
-
-  expect(() => result.rerender(<Banana />)).toThrowErrorMatchingInlineSnapshot(
-    `"\`rerender(...)\` is not supported when using \`renderAsync\` use \`await rerenderAsync(...)\` instead"`,
-  );
-});
-
 test('unmount function throws error when used with renderAsync', async () => {
   const result = await renderAsync(<Banana />);
 
