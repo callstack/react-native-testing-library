@@ -62,7 +62,7 @@ function buildRenderResult(
 ) {
   const instance = renderer.root;
 
-  const rerender = function (component: React.ReactElement) {
+  const rerender = function (_component: React.ReactElement) {
     throw new Error(
       '`rerender(...)` is not supported when using `renderAsync` use `await rerenderAsync(...)` instead',
     );

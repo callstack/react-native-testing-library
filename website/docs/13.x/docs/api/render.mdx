@@ -97,10 +97,10 @@ test('async component test', async () => {
 
 ### Result
 
-The `renderAsync` function returns a promise that resolves to the same queries and utilities as the [`screen`](docs/api/screen) object. We recommend using the `screen` object for queries and the async lifecycle methods from the render result when needed.
+The `renderAsync` function returns a promise that resolves to the same queries and utilities as the [`screen`](docs/api/screen) object. We recommend using the `screen` object for queries and the lifecycle methods from the render result when needed.
 
-:::note Async lifecycle methods
+:::warning Async lifecycle methods
 
-When using `renderAsync`, you have to use correspodning lifecycle methods: `updateAsync`/`rerenderAsync` and `unmountAsync` instead of their sync versions.
+When using `renderAsync`, you have to use correspodning lifecycle methods: `rerenderAsync` and `unmountAsync` instead of their sync versions.
 
-::
+:::

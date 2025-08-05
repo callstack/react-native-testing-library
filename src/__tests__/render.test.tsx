@@ -110,16 +110,16 @@ test('UNSAFE_getAllByProp, UNSAFE_queryAllByProps', () => {
   expect(screen.UNSAFE_queryAllByProps({ type: 'inexistent' })).toHaveLength(0);
 });
 
-test('update', () => {
+test('rerender', () => {
   const fn = jest.fn();
   render(<Banana onUpdate={fn} />);
+  expect(fn).toHaveBeenCalledTimes(0);
 
   fireEvent.press(screen.getByText('Change freshness!'));
+  expect(fn).toHaveBeenCalledTimes(1);
 
-  screen.update(<Banana onUpdate={fn} />);
   screen.rerender(<Banana onUpdate={fn} />);
-
-  expect(fn).toHaveBeenCalledTimes(3);
+  expect(fn).toHaveBeenCalledTimes(2);
 });
 
 test('unmount', () => {
