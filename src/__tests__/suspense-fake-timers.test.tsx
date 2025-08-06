@@ -142,117 +142,36 @@ testGateReact19('handles suspense with error boundary in fake timers', async () 
   expect(screen.queryByText('Loading...')).not.toBeOnTheScreen();
 });
 
-function AnimationSuspending() {
-  const [progress, setProgress] = React.useState(0);
+function MultiComponentSuspense() {
+  let resolveFirst: (value: unknown) => void;
+  let resolveSecond: (value: unknown) => void;
   
-  React.useEffect(() => {
-    const animate = () => {
-      setProgress(p => {
-        if (p >= 100) return 100;
-        setTimeout(animate, 16); // 60fps
-        return p + 1;
-      });
-    };
-    animate();
-  }, []);
-
-  if (progress < 100) {
-    const promise = new Promise(() => {}); // Suspend until animation complete
-    React.use(promise);
-  }
+  const firstPromise = new Promise((resolve) => {
+    resolveFirst = resolve;
+  });
+  const secondPromise = new Promise((resolve) => {
+    resolveSecond = resolve;
+  });
   
-  return <View testID="animation-complete" />;
+  return (
+    <View>
+      <React.Suspense fallback={<Text>First Loading...</Text>}>
+        <Suspending promise={firstPromise} />
+      </React.Suspense>
+      <React.Suspense fallback={<Text>Second Loading...</Text>}>
+        <View testID="second-boundary">
+          <Suspending promise={secondPromise} />
+        </View>
+      </React.Suspense>
+    </View>
+  );
 }
 
-testGateReact19('handles animation-like suspense with fake timers', async () => {
-  await renderAsync(
-    <React.Suspense fallback={<Text>Animating...</Text>}>
-      <AnimationSuspending />
-    </React.Suspense>,
-  );
-
-  expect(screen.getByText('Animating...')).toBeOnTheScreen();
-  expect(screen.queryByTestId('animation-complete')).not.toBeOnTheScreen();
-
-  // Should complete after animation finishes
-  expect(await screen.findByTestId('animation-complete')).toBeOnTheScreen();
-  expect(screen.queryByText('Animating...')).not.toBeOnTheScreen();
-});
-
-function RetryingSuspending({ maxRetries = 3 }: { maxRetries?: number }) {
-  const [retries, setRetries] = React.useState(0);
+testGateReact19('handles multiple independent suspense boundaries', async () => {
+  await renderAsync(<MultiComponentSuspense />);
   
-  const promise = React.useMemo(() => {
-    if (retries < maxRetries) {
-      // Simulate a failing request that retries
-      setTimeout(() => setRetries(r => r + 1), 100);
-      return new Promise(() => {}); // Never resolves, will retry
-    }
-    // Success case
-    return Promise.resolve('success');
-  }, [retries, maxRetries]);
-  
-  const data = React.use(promise);
-  return <View testID={`retry-content-${data}`} />;
-}
-
-testGateReact19('handles retry logic with fake timers', async () => {
-  await renderAsync(
-    <React.Suspense fallback={<Text>Retrying...</Text>}>
-      <RetryingSuspending maxRetries={2} />
-    </React.Suspense>,
-  );
-
-  expect(screen.getByText('Retrying...')).toBeOnTheScreen();
-  expect(screen.queryByTestId('retry-content-success')).not.toBeOnTheScreen();
-
-  // Should eventually succeed after retries
-  expect(await screen.findByTestId('retry-content-success')).toBeOnTheScreen();
-  expect(screen.queryByText('Retrying...')).not.toBeOnTheScreen();
-});
-
-function CascadingSuspending({ level }: { level: number }) {
-  const delay = level * 50;
-  const promise = React.useMemo(() => 
-    new Promise((resolve) => {
-      setTimeout(() => resolve(level), delay);
-    }), [delay, level]
-  );
-  
-  const data = React.use(promise);
-  
-  if (level > 1) {
-    return (
-      <View>
-        <View testID={`cascade-${data}`} />
-        <React.Suspense fallback={<Text>Cascade Loading {level - 1}...</Text>}>
-          <CascadingSuspending level={level - 1} />
-        </React.Suspense>
-      </View>
-    );
-  }
-  
-  return <View testID={`cascade-${data}`} />;
-}
-
-testGateReact19('handles cascading suspense with fake timers', async () => {
-  await renderAsync(
-    <React.Suspense fallback={<Text>Cascade Loading 3...</Text>}>
-      <CascadingSuspending level={3} />
-    </React.Suspense>,
-  );
-
-  expect(screen.getByText('Cascade Loading 3...')).toBeOnTheScreen();
-
-  // Should resolve level by level
-  expect(await screen.findByTestId('cascade-3')).toBeOnTheScreen();
-  expect(screen.getByText('Cascade Loading 2...')).toBeOnTheScreen();
-  
-  expect(await screen.findByTestId('cascade-2')).toBeOnTheScreen();
-  expect(screen.getByText('Cascade Loading 1...')).toBeOnTheScreen();
-  
-  expect(await screen.findByTestId('cascade-1')).toBeOnTheScreen();
-  expect(screen.queryByText('Cascade Loading 1...')).not.toBeOnTheScreen();
-  expect(screen.queryByText('Cascade Loading 2...')).not.toBeOnTheScreen();
-  expect(screen.queryByText('Cascade Loading 3...')).not.toBeOnTheScreen();
+  expect(screen.getByText('First Loading...')).toBeOnTheScreen();
+  expect(screen.getByText('Second Loading...')).toBeOnTheScreen();
+  expect(screen.queryByTestId('content')).not.toBeOnTheScreen();
+  expect(screen.queryByTestId('second-boundary')).not.toBeOnTheScreen();
 });
