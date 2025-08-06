@@ -141,9 +141,14 @@ testGateReact19('handles nested suspense boundaries', async () => {
   expect(screen.queryByText('Inner Loading...')).not.toBeOnTheScreen();
 });
 
-function MultipleSuspending({ promises }: { promises: Promise<unknown>[] }) {
-  promises.forEach((promise) => React.use(promise));
-  return <View testID="multiple-content" />;
+function FirstSuspending({ promise }: { promise: Promise<unknown> }) {
+  React.use(promise);
+  return <View testID="first-resolved" />;
+}
+
+function SecondSuspending({ promise }: { promise: Promise<unknown> }) {
+  React.use(promise);
+  return <View testID="second-resolved" />;
 }
 
 testGateReact19('handles multiple suspending promises in same boundary', async () => {
@@ -159,29 +164,37 @@ testGateReact19('handles multiple suspending promises in same boundary', async (
 
   await renderAsync(
     <React.Suspense fallback={<Text>Multiple Loading...</Text>}>
-      <MultipleSuspending promises={[promise1, promise2]} />
+      <FirstSuspending promise={promise1} />
+      <SecondSuspending promise={promise2} />
     </React.Suspense>,
   );
 
   expect(screen.getByText('Multiple Loading...')).toBeOnTheScreen();
-  expect(screen.queryByTestId('multiple-content')).not.toBeOnTheScreen();
+  expect(screen.queryByTestId('first-resolved')).not.toBeOnTheScreen();
+  expect(screen.queryByTestId('second-resolved')).not.toBeOnTheScreen();
 
-  // Resolve first promise - should still be loading
+  // Resolve first promise - should still be loading because second is pending
   // eslint-disable-next-line require-await
   await act(async () => resolvePromise1(null));
   expect(screen.getByText('Multiple Loading...')).toBeOnTheScreen();
-  expect(screen.queryByTestId('multiple-content')).not.toBeOnTheScreen();
+  expect(screen.queryByTestId('first-resolved')).not.toBeOnTheScreen();
+  expect(screen.queryByTestId('second-resolved')).not.toBeOnTheScreen();
 
-  // Resolve second promise - should now render content
+  // Resolve second promise - should now render all content
   // eslint-disable-next-line require-await
   await act(async () => resolvePromise2(null));
-  expect(screen.getByTestId('multiple-content')).toBeOnTheScreen();
+  expect(screen.getByTestId('first-resolved')).toBeOnTheScreen();
+  expect(screen.getByTestId('second-resolved')).toBeOnTheScreen();
   expect(screen.queryByText('Multiple Loading...')).not.toBeOnTheScreen();
 });
 
-function ConditionalSuspending({ shouldSuspend }: { shouldSuspend: boolean }) {
+function ConditionalSuspending({ shouldSuspend, promiseResolver }: { shouldSuspend: boolean; promiseResolver?: () => void }) {
   if (shouldSuspend) {
-    const promise = new Promise(() => {}); // Never resolves
+    const promise = React.useMemo(() => new Promise<void>((resolve) => {
+      if (promiseResolver) {
+        promiseResolver = resolve;
+      }
+    }), [promiseResolver]);
     React.use(promise);
   }
   return <View testID="conditional-content" />;
@@ -198,31 +211,32 @@ testGateReact19('handles conditional suspense', async () => {
   expect(screen.getByTestId('conditional-content')).toBeOnTheScreen();
   expect(screen.queryByText('Conditional Loading...')).not.toBeOnTheScreen();
 
-  // Re-render with suspense
+  // Re-render with suspense - this creates a new component that will suspend
   await result.rerenderAsync(
     <React.Suspense fallback={<Text>Conditional Loading...</Text>}>
       <ConditionalSuspending shouldSuspend={true} />
     </React.Suspense>,
   );
 
+  // Should now be suspended
   expect(screen.getByText('Conditional Loading...')).toBeOnTheScreen();
   expect(screen.queryByTestId('conditional-content')).not.toBeOnTheScreen();
 });
 
 function SuspendingWithState() {
-  const [count, setCount] = React.useState(0);
+  const [isReady, setIsReady] = React.useState(false);
   
   React.useEffect(() => {
-    const timer = setTimeout(() => setCount(1), 50);
+    const timer = setTimeout(() => setIsReady(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
-  if (count === 0) {
+  if (!isReady) {
     const promise = new Promise(() => {}); // Never resolves
     React.use(promise);
   }
   
-  return <View testID={`state-content-${count}`} />;
+  return <View testID="state-ready-content" />;
 }
 
 testGateReact19('handles suspense with state updates', async () => {
@@ -233,9 +247,9 @@ testGateReact19('handles suspense with state updates', async () => {
   );
 
   expect(screen.getByText('State Loading...')).toBeOnTheScreen();
-  expect(screen.queryByTestId('state-content-0')).not.toBeOnTheScreen();
+  expect(screen.queryByTestId('state-ready-content')).not.toBeOnTheScreen();
 
   // Wait for state update to resolve suspense
-  expect(await screen.findByTestId('state-content-1')).toBeOnTheScreen();
+  expect(await screen.findByTestId('state-ready-content')).toBeOnTheScreen();
   expect(screen.queryByText('State Loading...')).not.toBeOnTheScreen();
 });

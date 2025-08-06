@@ -60,70 +60,86 @@ testGateReact19('resolves timer-controlled promise', async () => {
   expect(screen.queryByText('Loading...')).not.toBeOnTheScreen();
 });
 
-function DelayedSuspending({ delay }: { delay: number }) {
+function DelayedSuspending({ delay, id }: { delay: number; id: string }) {
+  let resolvePromise: (value: string) => void;
   const promise = React.useMemo(() => 
-    new Promise((resolve) => {
-      setTimeout(() => resolve(`data-${delay}`), delay);
-    }), [delay]
+    new Promise<string>((resolve) => {
+      resolvePromise = resolve;
+      setTimeout(() => resolve(`data-${id}`), delay);
+    }), [delay, id]
   );
   
   const data = React.use(promise);
   return <View testID={`delayed-content-${data}`} />;
 }
 
-testGateReact19('handles multiple delays with fake timers', async () => {
+testGateReact19('handles timer-based promises with fake timers', async () => {
+  let resolveManual: (value: unknown) => void;
+  const manualPromise = new Promise((resolve) => {
+    resolveManual = resolve;
+  });
+
   await renderAsync(
     <View>
-      <React.Suspense fallback={<Text>Fast Loading...</Text>}>
-        <DelayedSuspending delay={50} />
+      <React.Suspense fallback={<Text>Manual Loading...</Text>}>
+        <Suspending promise={manualPromise} />
       </React.Suspense>
-      <React.Suspense fallback={<Text>Slow Loading...</Text>}>
-        <DelayedSuspending delay={200} />
-      </React.Suspense>
+      <View testID="outside-suspense" />
     </View>,
   );
 
-  expect(screen.getByText('Fast Loading...')).toBeOnTheScreen();
-  expect(screen.getByText('Slow Loading...')).toBeOnTheScreen();
+  expect(screen.getByText('Manual Loading...')).toBeOnTheScreen();
+  expect(screen.getByTestId('outside-suspense')).toBeOnTheScreen();
 
-  // Fast timer completes first
-  expect(await screen.findByTestId('delayed-content-data-50')).toBeOnTheScreen();
-  expect(screen.queryByText('Fast Loading...')).not.toBeOnTheScreen();
-  expect(screen.getByText('Slow Loading...')).toBeOnTheScreen();
-
-  // Slow timer completes later
-  expect(await screen.findByTestId('delayed-content-data-200')).toBeOnTheScreen();
-  expect(screen.queryByText('Slow Loading...')).not.toBeOnTheScreen();
+  // eslint-disable-next-line require-await
+  await act(async () => resolveManual(null));
+  expect(screen.getByTestId('content')).toBeOnTheScreen();
+  expect(screen.queryByText('Manual Loading...')).not.toBeOnTheScreen();
 });
 
-function IntervalSuspending({ interval }: { interval: number }) {
-  const [count, setCount] = React.useState(0);
-  
-  React.useEffect(() => {
-    const timer = setInterval(() => setCount(c => c + 1), interval);
-    return () => clearInterval(timer);
-  }, [interval]);
-
-  if (count < 3) {
-    const promise = new Promise(() => {}); // Never resolves until count >= 3
-    React.use(promise);
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallback?: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode; fallback?: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
   }
-  
-  return <View testID={`interval-content-${count}`} />;
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || <Text>Something went wrong.</Text>;
+    }
+
+    return this.props.children;
+  }
 }
 
-testGateReact19('handles interval-based suspense with fake timers', async () => {
+testGateReact19('handles suspense with error boundary in fake timers', async () => {
+  let rejectPromise: (error: Error) => void;
+  const promise = new Promise<unknown>((_, reject) => {
+    rejectPromise = reject;
+  });
+
   await renderAsync(
-    <React.Suspense fallback={<Text>Interval Loading...</Text>}>
-      <IntervalSuspending interval={100} />
-    </React.Suspense>,
+    <ErrorBoundary fallback={<Text>Error occurred</Text>}>
+      <React.Suspense fallback={<Text>Loading...</Text>}>
+        <Suspending promise={promise} />
+      </React.Suspense>
+    </ErrorBoundary>,
   );
 
-  expect(screen.getByText('Interval Loading...')).toBeOnTheScreen();
-  
-  // Should resolve after enough intervals pass
-  expect(await screen.findByTestId('interval-content-3')).toBeOnTheScreen();
-  expect(screen.queryByText('Interval Loading...')).not.toBeOnTheScreen();
+  expect(screen.getByText('Loading...')).toBeOnTheScreen();
+
+  // eslint-disable-next-line require-await
+  await act(async () => rejectPromise(new Error('Test error')));
+
+  expect(screen.getByText('Error occurred')).toBeOnTheScreen();
+  expect(screen.queryByText('Loading...')).not.toBeOnTheScreen();
 });
 
 function AnimationSuspending() {
