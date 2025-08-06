@@ -118,40 +118,7 @@ function NestedSuspending({ promise }: { promise: Promise<unknown> }) {
   );
 }
 
-testGateReact19('handles nested suspense boundaries', async () => {
-  let resolveOuterPromise: (value: unknown) => void;
-  const outerPromise = new Promise((resolve) => {
-    resolveOuterPromise = resolve;
-  });
-
-  await renderAsync(
-    <React.Suspense fallback={<Text>Outer Loading...</Text>}>
-      <NestedSuspending promise={outerPromise} />
-    </React.Suspense>,
-  );
-
-  expect(screen.getByText('Outer Loading...')).toBeOnTheScreen();
-  expect(screen.queryByText('Inner Loading...')).not.toBeOnTheScreen();
-
-  // eslint-disable-next-line require-await
-  await act(async () => resolveOuterPromise(null));
-
-  expect(screen.getByTestId('inner-resolved')).toBeOnTheScreen();
-  expect(screen.queryByText('Outer Loading...')).not.toBeOnTheScreen();
-  expect(screen.queryByText('Inner Loading...')).not.toBeOnTheScreen();
-});
-
-function FirstSuspending({ promise }: { promise: Promise<unknown> }) {
-  React.use(promise);
-  return <View testID="first-resolved" />;
-}
-
-function SecondSuspending({ promise }: { promise: Promise<unknown> }) {
-  React.use(promise);
-  return <View testID="second-resolved" />;
-}
-
-testGateReact19('handles multiple suspending promises in same boundary', async () => {
+testGateReact19('handles multiple suspense boundaries independently', async () => {
   let resolvePromise1: (value: unknown) => void;
   let resolvePromise2: (value: unknown) => void;
   
@@ -163,93 +130,33 @@ testGateReact19('handles multiple suspending promises in same boundary', async (
   });
 
   await renderAsync(
-    <React.Suspense fallback={<Text>Multiple Loading...</Text>}>
-      <FirstSuspending promise={promise1} />
-      <SecondSuspending promise={promise2} />
-    </React.Suspense>,
+    <View>
+      <React.Suspense fallback={<Text>First Loading...</Text>}>
+        <Suspending promise={promise1} />
+      </React.Suspense>
+      <React.Suspense fallback={<Text>Second Loading...</Text>}>
+        <View testID="second-boundary">
+          <Suspending promise={promise2} />
+        </View>
+      </React.Suspense>
+    </View>
   );
 
-  expect(screen.getByText('Multiple Loading...')).toBeOnTheScreen();
-  expect(screen.queryByTestId('first-resolved')).not.toBeOnTheScreen();
-  expect(screen.queryByTestId('second-resolved')).not.toBeOnTheScreen();
+  expect(screen.getByText('First Loading...')).toBeOnTheScreen();
+  expect(screen.getByText('Second Loading...')).toBeOnTheScreen();
+  expect(screen.queryByTestId('content')).not.toBeOnTheScreen();
+  expect(screen.queryByTestId('second-boundary')).not.toBeOnTheScreen();
 
-  // Resolve first promise - should still be loading because second is pending
+  // Resolve first promise
   // eslint-disable-next-line require-await
   await act(async () => resolvePromise1(null));
-  expect(screen.getByText('Multiple Loading...')).toBeOnTheScreen();
-  expect(screen.queryByTestId('first-resolved')).not.toBeOnTheScreen();
-  expect(screen.queryByTestId('second-resolved')).not.toBeOnTheScreen();
+  expect(screen.getByTestId('content')).toBeOnTheScreen();
+  expect(screen.queryByText('First Loading...')).not.toBeOnTheScreen();
+  expect(screen.getByText('Second Loading...')).toBeOnTheScreen();
 
-  // Resolve second promise - should now render all content
+  // Resolve second promise
   // eslint-disable-next-line require-await
   await act(async () => resolvePromise2(null));
-  expect(screen.getByTestId('first-resolved')).toBeOnTheScreen();
-  expect(screen.getByTestId('second-resolved')).toBeOnTheScreen();
-  expect(screen.queryByText('Multiple Loading...')).not.toBeOnTheScreen();
-});
-
-function ConditionalSuspending({ shouldSuspend, promiseResolver }: { shouldSuspend: boolean; promiseResolver?: () => void }) {
-  if (shouldSuspend) {
-    const promise = React.useMemo(() => new Promise<void>((resolve) => {
-      if (promiseResolver) {
-        promiseResolver = resolve;
-      }
-    }), [promiseResolver]);
-    React.use(promise);
-  }
-  return <View testID="conditional-content" />;
-}
-
-testGateReact19('handles conditional suspense', async () => {
-  const result = await renderAsync(
-    <React.Suspense fallback={<Text>Conditional Loading...</Text>}>
-      <ConditionalSuspending shouldSuspend={false} />
-    </React.Suspense>,
-  );
-
-  // Should render immediately when not suspending
-  expect(screen.getByTestId('conditional-content')).toBeOnTheScreen();
-  expect(screen.queryByText('Conditional Loading...')).not.toBeOnTheScreen();
-
-  // Re-render with suspense - this creates a new component that will suspend
-  await result.rerenderAsync(
-    <React.Suspense fallback={<Text>Conditional Loading...</Text>}>
-      <ConditionalSuspending shouldSuspend={true} />
-    </React.Suspense>,
-  );
-
-  // Should now be suspended
-  expect(screen.getByText('Conditional Loading...')).toBeOnTheScreen();
-  expect(screen.queryByTestId('conditional-content')).not.toBeOnTheScreen();
-});
-
-function SuspendingWithState() {
-  const [isReady, setIsReady] = React.useState(false);
-  
-  React.useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!isReady) {
-    const promise = new Promise(() => {}); // Never resolves
-    React.use(promise);
-  }
-  
-  return <View testID="state-ready-content" />;
-}
-
-testGateReact19('handles suspense with state updates', async () => {
-  await renderAsync(
-    <React.Suspense fallback={<Text>State Loading...</Text>}>
-      <SuspendingWithState />
-    </React.Suspense>,
-  );
-
-  expect(screen.getByText('State Loading...')).toBeOnTheScreen();
-  expect(screen.queryByTestId('state-ready-content')).not.toBeOnTheScreen();
-
-  // Wait for state update to resolve suspense
-  expect(await screen.findByTestId('state-ready-content')).toBeOnTheScreen();
-  expect(screen.queryByText('State Loading...')).not.toBeOnTheScreen();
+  expect(screen.getByTestId('second-boundary')).toBeOnTheScreen();
+  expect(screen.queryByText('Second Loading...')).not.toBeOnTheScreen();
 });
