@@ -1,11 +1,18 @@
 import * as React from 'react';
 
-import { renderInternal } from './render';
+import render from './render';
+import renderAsync from './render-async';
 
 export type RenderHookResult<Result, Props> = {
+  result: React.RefObject<Result>;
   rerender: (props: Props) => void;
-  result: React.MutableRefObject<Result>;
   unmount: () => void;
+};
+
+export type RenderHookAsyncResult<Result, Props> = {
+  result: React.RefObject<Result>;
+  rerender: (props: Props) => Promise<void>;
+  unmount: () => Promise<void>;
 };
 
 export type RenderHookOptions<Props> = {
@@ -32,13 +39,10 @@ export function renderHook<Result, Props>(
   hookToRender: (props: Props) => Result,
   options?: RenderHookOptions<Props>,
 ): RenderHookResult<Result, Props> {
-  const { initialProps, ...renderOptions } = options ?? {};
+  const result: React.RefObject<Result | null> = React.createRef();
 
-  const result: React.MutableRefObject<Result | null> = React.createRef();
-
-  function TestComponent({ hookProps }: { hookProps: Props }) {
+  function HookContainer({ hookProps }: { hookProps: Props }) {
     const renderResult = hookToRender(hookProps);
-
     React.useEffect(() => {
       result.current = renderResult;
     });
@@ -46,20 +50,47 @@ export function renderHook<Result, Props>(
     return null;
   }
 
-  const { rerender: componentRerender, unmount } = renderInternal(
+  const { initialProps, ...renderOptions } = options ?? {};
+  const { rerender: rerenderComponent, unmount } = render(
+    // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
+    <HookContainer hookProps={initialProps} />,
+    renderOptions,
+  );
+
+  return {
+    // Result should already be set after the first render effects are run.
+    result: result as React.RefObject<Result>,
+    rerender: (hookProps: Props) => rerenderComponent(<HookContainer hookProps={hookProps} />),
+    unmount,
+  };
+}
+
+export async function renderHookAsync<Result, Props>(
+  hookToRender: (props: Props) => Result,
+  options?: RenderHookOptions<Props>,
+): Promise<RenderHookAsyncResult<Result, Props>> {
+  const result: React.RefObject<Result | null> = React.createRef();
+
+  function TestComponent({ hookProps }: { hookProps: Props }) {
+    const renderResult = hookToRender(hookProps);
+    React.useEffect(() => {
+      result.current = renderResult;
+    });
+
+    return null;
+  }
+
+  const { initialProps, ...renderOptions } = options ?? {};
+  const { rerenderAsync: rerenderComponentAsync, unmountAsync } = await renderAsync(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
     <TestComponent hookProps={initialProps} />,
     renderOptions,
   );
 
-  function rerender(hookProps: Props) {
-    return componentRerender(<TestComponent hookProps={hookProps} />);
-  }
-
   return {
     // Result should already be set after the first render effects are run.
-    result: result as React.MutableRefObject<Result>,
-    rerender,
-    unmount,
+    result: result as React.RefObject<Result>,
+    rerender: (hookProps: Props) => rerenderComponentAsync(<TestComponent hookProps={hookProps} />),
+    unmount: unmountAsync,
   };
 }
