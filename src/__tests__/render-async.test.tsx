@@ -54,8 +54,8 @@ test('renderAsync with wrapper option', async () => {
   expect(screen.getByTestId('inner')).toBeTruthy();
 });
 
-test('renderAsync supports concurrent rendering option', async () => {
-  await renderAsync(<View testID="test" />, { concurrentRoot: true });
+test('renderAsync supports legacy rendering option', async () => {
+  await renderAsync(<View testID="test" />, { concurrentRoot: false });
   expect(screen.root).toBeOnTheScreen();
 });
 

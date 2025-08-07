@@ -10,7 +10,7 @@ export { within, getQueriesForElement } from './within';
 export { configure, resetToDefaults } from './config';
 export { isHiddenFromAccessibility, isInaccessible } from './helpers/accessibility';
 export { getDefaultNormalizer } from './matches';
-export { renderHook } from './render-hook';
+export { renderHook, renderHookAsync } from './render-hook';
 export { screen } from './screen';
 export { userEvent } from './user-event';
 
