@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TextInput } from 'react-native';
 
 import { render, screen } from '../../..';
-import { createEventLogger, getEventsNames } from '../../../test-utils';
+import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 import { userEvent } from '../..';
 
 beforeEach(() => {

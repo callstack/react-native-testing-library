@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, Text, TouchableHighlight, TouchableOpacity } from 'react-native';
 
 import { render, screen } from '../../..';
-import { createEventLogger, getEventsNames } from '../../../test-utils';
+import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 import { userEvent } from '../..';
 
 describe('userEvent.longPress with real timers', () => {

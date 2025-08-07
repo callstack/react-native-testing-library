@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'react-native',
   setupFilesAfterEnv: ['./jest-setup.ts'],
-  testPathIgnorePatterns: ['build/', 'examples/', 'experiments-app/', 'timer-utils'],
+  testPathIgnorePatterns: ['build/', 'examples/', 'experiments-app/', 'test-utils'],
   testTimeout: 60000,
   transformIgnorePatterns: [
     '/node_modules/(?!(@react-native|react-native|react-native-gesture-handler)/).*/',
