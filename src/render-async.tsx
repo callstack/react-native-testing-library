@@ -63,13 +63,13 @@ function buildRenderResult(
 ) {
   const instance = renderer.root;
 
-  const rerender = function (_component: React.ReactElement) {
+  const rerender = (_component: React.ReactElement) => {
     throw new ErrorWithStack(
       '"rerender(...)" is not supported when using "renderAsync" use "await rerenderAsync(...)" instead',
       rerender,
     );
   };
-  const rerenderAsync = async function (component: React.ReactElement) {
+  const rerenderAsync = async (component: React.ReactElement) => {
     // eslint-disable-next-line require-await
     await act(async () => {
       renderer.update(wrap(component));

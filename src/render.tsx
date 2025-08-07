@@ -100,12 +100,12 @@ function buildRenderResult(
 ) {
   const instance = renderer.root;
 
-  const update = function (component: React.ReactElement) {
+  const rerender = (component: React.ReactElement) => {
     void act(() => {
       renderer.update(wrap(component));
     });
   };
-  const updateAsync = async function (component: React.ReactElement) {
+  const rerenderAsync = async (component: React.ReactElement) => {
     // eslint-disable-next-line require-await
     await act(async () => {
       renderer.update(wrap(component));
@@ -128,10 +128,10 @@ function buildRenderResult(
 
   const result = {
     ...getQueriesForElement(instance),
-    update,
-    updateAsync,
-    rerender: update, // alias for `update`
-    rerenderAsync: updateAsync, // alias for `update`
+    rerender,
+    rerenderAsync,
+    update: rerender, // alias for 'rerender'
+    updateAsync: rerenderAsync, // alias for `rerenderAsync`
     unmount,
     unmountAsync,
     toJSON: renderer.toJSON,
