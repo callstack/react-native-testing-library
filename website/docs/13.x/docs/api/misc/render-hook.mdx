@@ -2,7 +2,7 @@
 
 ```ts
 function renderHook<Result, Props>(
-  callback: (props?: Props) => Result,
+  hookFn: (props?: Props) => Result,
   options?: RenderHookOptions<Props>
 ): RenderHookResult<Result, Props>;
 ```
@@ -129,3 +129,52 @@ it('should use context value', () => {
   // ...
 });
 ```
+
+## `renderHookAsync` function
+
+```ts
+async function renderHookAsync<Result, Props>(
+  hookFn: (props?: Props) => Result,
+  options?: RenderHookOptions<Props>
+): Promise<RenderHookAsyncResult<Result, Props>>;
+```
+
+Async versions of `renderHook` designed for working with React 19 and React Suspense. This method uses async `act` function internally to ensure all pending React updates are executed during rendering.
+
+- **Returns a Promise**: Should be awaited
+- **Async methods**: Both `rerender` and `unmount` return Promises and should be awaited
+- **Suspense support**: Compatible with React Suspense boundaries and `React.use()`
+
+### Result {#result-async}
+
+```ts
+interface RenderHookAsyncResult<Result, Props> {
+  result: { current: Result };
+  rerender: (props: Props) => Promise<void>;
+  unmount: () => Promise<void>;
+}
+```
+
+The `RenderHookAsyncResult` differs from `RenderHookResult` in that `rerender` and `unmount` are async functions.
+
+```ts
+import { renderHookAsync, act } from '@testing-library/react-native';
+
+test('should handle async hook behavior', async () => {
+  const { result, rerender } = await renderHookAsync(useAsyncHook);
+
+  // Test initial state
+  expect(result.current.loading).toBe(true);
+
+  // Wait for async operation to complete
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  });
+
+  // Re-render to get updated state
+  await rerender();
+  expect(result.current.loading).toBe(false);
+});
+```
+
+Use `renderHookAsync` when testing hooks that use React Suspense, `React.use()`, or other concurrent features where timing of re-renders matters.
