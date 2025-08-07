@@ -11,7 +11,7 @@ import {
 import type { ReactTestInstance } from 'react-test-renderer';
 
 import { render, screen } from '../../..';
-import { createEventLogger, getEventsNames } from '../../../test-utils';
+import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 import { userEvent } from '../..';
 
 describe('userEvent.press with fake timers', () => {
