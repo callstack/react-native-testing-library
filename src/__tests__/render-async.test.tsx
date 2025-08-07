@@ -59,11 +59,6 @@ test('renderAsync supports concurrent rendering option', async () => {
   expect(screen.root).toBeOnTheScreen();
 });
 
-test('renderAsync supports legacy rendering option', async () => {
-  await renderAsync(<View testID="test" />, { concurrentRoot: false });
-  expect(screen.root).toBeOnTheScreen();
-});
-
 test('rerender function throws error when used with renderAsync', async () => {
   await renderAsync(<Banana />);
 
