@@ -11,10 +11,10 @@ import { getConfig } from './config';
 import { getHostSelves } from './helpers/component-tree';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
+import { ErrorWithStack } from './helpers/errors';
 import { renderWithAsyncAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
-import { ErrorWithStack } from './helpers/errors';
 
 export interface RenderAsyncOptions {
   /**
@@ -71,7 +71,9 @@ function buildRenderResult(
   };
   const rerenderAsync = async function (component: React.ReactElement) {
     // eslint-disable-next-line require-await
-    await act(async () => { renderer.update(wrap(component)); });
+    await act(async () => {
+      renderer.update(wrap(component));
+    });
   };
 
   const unmount = () => {
