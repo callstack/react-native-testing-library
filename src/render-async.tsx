@@ -14,6 +14,7 @@ import { debug } from './helpers/debug';
 import { renderWithAsyncAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
+import { ErrorWithStack } from './helpers/errors';
 
 export interface RenderAsyncOptions {
   /**
@@ -63,20 +64,20 @@ function buildRenderResult(
   const instance = renderer.root;
 
   const rerender = function (_component: React.ReactElement) {
-    throw new Error(
-      '`rerender(...)` is not supported when using `renderAsync` use `await rerenderAsync(...)` instead',
+    throw new ErrorWithStack(
+      '"rerender(...)" is not supported when using "renderAsync" use "await rerenderAsync(...)" instead',
+      rerender,
     );
   };
   const rerenderAsync = async function (component: React.ReactElement) {
     // eslint-disable-next-line require-await
-    await act(async () => {
-      renderer.update(wrap(component));
-    });
+    await act(async () => { renderer.update(wrap(component)); });
   };
 
   const unmount = () => {
-    throw new Error(
-      '`unmount()` is not supported when using `renderAsync` use `await unmountAsync()` instead',
+    throw new ErrorWithStack(
+      '"unmount()" is not supported when using "renderAsync" use "await unmountAsync()" instead',
+      unmount,
     );
   };
   const unmountAsync = async () => {

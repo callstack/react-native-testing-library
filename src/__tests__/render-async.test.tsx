@@ -65,35 +65,35 @@ test('renderAsync supports legacy rendering option', async () => {
 });
 
 test('rerender function throws error when used with renderAsync', async () => {
-  const result = await renderAsync(<Banana />);
+  await renderAsync(<Banana />);
 
-  expect(() => result.rerender(<Banana />)).toThrowErrorMatchingInlineSnapshot(
-    `"\`rerender(...)\` is not supported when using \`renderAsync\` use \`await rerenderAsync(...)\` instead"`,
+  expect(() => screen.rerender(<Banana />)).toThrowErrorMatchingInlineSnapshot(
+    `""rerender(...)" is not supported when using "renderAsync" use "await rerenderAsync(...)" instead"`,
   );
 });
 
 test('rerenderAsync function updates component asynchronously', async () => {
   const fn = jest.fn();
-  const result = await renderAsync(<Banana onUpdate={fn} />);
+  await renderAsync(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(0);
 
-  await result.rerenderAsync(<Banana onUpdate={fn} />);
+  await screen.rerenderAsync(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(1);
 });
 
 test('unmount function throws error when used with renderAsync', async () => {
-  const result = await renderAsync(<Banana />);
+  await renderAsync(<Banana />);
 
-  expect(() => result.unmount()).toThrowErrorMatchingInlineSnapshot(
-    `"\`unmount()\` is not supported when using \`renderAsync\` use \`await unmountAsync()\` instead"`,
+  expect(() => screen.unmount()).toThrowErrorMatchingInlineSnapshot(
+    `""unmount()" is not supported when using "renderAsync" use "await unmountAsync()" instead"`,
   );
 });
 
 test('unmountAsync function unmounts component asynchronously', async () => {
   const fn = jest.fn();
-  const result = await renderAsync(<Banana onUnmount={fn} />);
+  await renderAsync(<Banana onUnmount={fn} />);
 
-  await result.unmountAsync();
+  await screen.unmountAsync();
   expect(fn).toHaveBeenCalled();
 });
 
