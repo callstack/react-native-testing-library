@@ -553,3 +553,19 @@ describe('native events', () => {
     expect(onMomentumScrollEndSpy).toHaveBeenCalled();
   });
 });
+
+test('should handle unmounted elements gracefully', () => {
+  const onPress = jest.fn();
+  render(
+    <TouchableOpacity onPress={onPress}>
+      <Text>Test</Text>
+    </TouchableOpacity>,
+  );
+
+  const element = screen.getByText('Test');
+  screen.unmount();
+
+  // Firing event on unmounted element should not crash
+  fireEvent.press(element);
+  expect(onPress).not.toHaveBeenCalled();
+});

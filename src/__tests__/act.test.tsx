@@ -23,10 +23,10 @@ test('render should trigger useEffect', () => {
   expect(effectCallback).toHaveBeenCalledTimes(1);
 });
 
-test('update should trigger useEffect', () => {
+test('rerender should trigger useEffect', () => {
   const effectCallback = jest.fn();
   render(<UseEffect callback={effectCallback} />);
-  screen.update(<UseEffect callback={effectCallback} />);
+  screen.rerender(<UseEffect callback={effectCallback} />);
 
   expect(effectCallback).toHaveBeenCalledTimes(2);
 });

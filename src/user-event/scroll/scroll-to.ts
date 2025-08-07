@@ -50,7 +50,7 @@ export async function scrollTo(
 
   ensureScrollViewDirection(element, options);
 
-  dispatchEvent(
+  await dispatchEvent(
     element,
     'contentSizeChange',
     options.contentSize?.width ?? 0,
@@ -88,7 +88,7 @@ async function emitDragScrollEvents(
   }
 
   await wait(config);
-  dispatchEvent(
+  await dispatchEvent(
     element,
     'scrollBeginDrag',
     EventBuilder.ScrollView.scroll(scrollSteps[0], scrollOptions),
@@ -99,12 +99,20 @@ async function emitDragScrollEvents(
   // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
   for (let i = 1; i < scrollSteps.length - 1; i += 1) {
     await wait(config);
-    dispatchEvent(element, 'scroll', EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions));
+    await dispatchEvent(
+      element,
+      'scroll',
+      EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions),
+    );
   }
 
   await wait(config);
   const lastStep = scrollSteps.at(-1);
-  dispatchEvent(element, 'scrollEndDrag', EventBuilder.ScrollView.scroll(lastStep, scrollOptions));
+  await dispatchEvent(
+    element,
+    'scrollEndDrag',
+    EventBuilder.ScrollView.scroll(lastStep, scrollOptions),
+  );
 }
 
 async function emitMomentumScrollEvents(
@@ -118,7 +126,7 @@ async function emitMomentumScrollEvents(
   }
 
   await wait(config);
-  dispatchEvent(
+  await dispatchEvent(
     element,
     'momentumScrollBegin',
     EventBuilder.ScrollView.scroll(scrollSteps[0], scrollOptions),
@@ -129,12 +137,16 @@ async function emitMomentumScrollEvents(
   // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
   for (let i = 1; i < scrollSteps.length; i += 1) {
     await wait(config);
-    dispatchEvent(element, 'scroll', EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions));
+    await dispatchEvent(
+      element,
+      'scroll',
+      EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions),
+    );
   }
 
   await wait(config);
   const lastStep = scrollSteps.at(-1);
-  dispatchEvent(
+  await dispatchEvent(
     element,
     'momentumScrollEnd',
     EventBuilder.ScrollView.scroll(lastStep, scrollOptions),

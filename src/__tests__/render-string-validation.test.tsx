@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { fireEvent, render, screen } from '..';
+import { excludeConsoleMessage } from '../test-utils/console';
 
 // eslint-disable-next-line no-console
 const originalConsoleError = console.error;
@@ -12,13 +13,8 @@ const PROFILER_ERROR = 'The above error occurred in the <Profiler> component';
 
 beforeEach(() => {
   // eslint-disable-next-line no-console
-  console.error = (errorMessage: string) => {
-    if (!errorMessage.includes(PROFILER_ERROR)) {
-      originalConsoleError(errorMessage);
-    }
-  };
+  console.error = excludeConsoleMessage(console.error, PROFILER_ERROR);
 });
-
 afterEach(() => {
   // eslint-disable-next-line no-console
   console.error = originalConsoleError;

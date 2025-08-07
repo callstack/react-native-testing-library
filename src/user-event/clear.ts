@@ -22,7 +22,7 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
   }
 
   // 1. Enter element
-  dispatchEvent(element, 'focus', EventBuilder.Common.focus());
+  await dispatchEvent(element, 'focus', EventBuilder.Common.focus());
 
   // 2. Select all
   const textToClear = getTextInputValue(element);
@@ -30,7 +30,11 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
     start: 0,
     end: textToClear.length,
   };
-  dispatchEvent(element, 'selectionChange', EventBuilder.TextInput.selectionChange(selectionRange));
+  await dispatchEvent(
+    element,
+    'selectionChange',
+    EventBuilder.TextInput.selectionChange(selectionRange),
+  );
 
   // 3. Press backspace with selected text
   const emptyText = '';
@@ -42,6 +46,6 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
 
   // 4. Exit element
   await wait(this.config);
-  dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(emptyText));
-  dispatchEvent(element, 'blur', EventBuilder.Common.blur());
+  await dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(emptyText));
+  await dispatchEvent(element, 'blur', EventBuilder.Common.blur());
 }

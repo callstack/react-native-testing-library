@@ -3,7 +3,7 @@ import type { TextInputProps } from 'react-native';
 import { TextInput, View } from 'react-native';
 
 import { render, screen } from '../../..';
-import { createEventLogger, getEventsNames, lastEventPayload } from '../../../test-utils';
+import { createEventLogger, getEventsNames, lastEventPayload } from '../../../test-utils/events';
 import { userEvent } from '../..';
 
 beforeEach(() => {

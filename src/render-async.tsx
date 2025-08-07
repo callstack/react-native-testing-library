@@ -11,12 +11,12 @@ import { getConfig } from './config';
 import { getHostSelves } from './helpers/component-tree';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
-import { validateStringsRenderedWithinText } from './helpers/string-validation';
-import { renderWithAct } from './render-act';
+import { ErrorWithStack } from './helpers/errors';
+import { renderWithAsyncAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
-export interface RenderOptions {
+export interface RenderAsyncOptions {
   /**
    * Pass a React Component as the wrapper option to have it rendered around the inner element. This is most useful for creating
    * reusable custom render functions for common data providers.
@@ -28,29 +28,23 @@ export interface RenderOptions {
    * Set to `false` to disable concurrent rendering.
    * Otherwise `render` will default to concurrent rendering.
    */
+  // TODO: should we assume concurrentRoot is true for react suspense?
   concurrentRoot?: boolean;
 
   createNodeMock?: (element: React.ReactElement) => unknown;
-  unstable_validateStringsRenderedWithinText?: boolean;
 }
 
-export type RenderResult = ReturnType<typeof render>;
+export type RenderAsyncResult = ReturnType<typeof renderAsync>;
 
 /**
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export default function render<T>(component: React.ReactElement<T>, options: RenderOptions = {}) {
-  return renderInternal(component, options);
-}
-
-export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderOptions) {
-  const {
-    wrapper: Wrapper,
-    concurrentRoot,
-    unstable_validateStringsRenderedWithinText,
-    ...rest
-  } = options || {};
+export default async function renderAsync<T>(
+  component: React.ReactElement<T>,
+  options: RenderAsyncOptions = {},
+) {
+  const { wrapper: Wrapper, concurrentRoot, ...rest } = options || {};
 
   const testRendererOptions: TestRendererOptions = {
     ...rest,
@@ -58,39 +52,8 @@ export function renderInternal<T>(component: React.ReactElement<T>, options?: Re
     unstable_isConcurrent: concurrentRoot ?? getConfig().concurrentRoot,
   };
 
-  if (unstable_validateStringsRenderedWithinText) {
-    return renderWithStringValidation(component, {
-      wrapper: Wrapper,
-      ...testRendererOptions,
-    });
-  }
-
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-  const renderer = renderWithAct(wrap(component), testRendererOptions);
-  return buildRenderResult(renderer, wrap);
-}
-
-function renderWithStringValidation<T>(
-  component: React.ReactElement<T>,
-  options: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
-) {
-  const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
-
-  const wrap = (element: React.ReactElement) => (
-    <React.Profiler id="renderProfiler" onRender={handleRender}>
-      {Wrapper ? <Wrapper>{element}</Wrapper> : element}
-    </React.Profiler>
-  );
-
-  const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
-    if (renderer && phase === 'update') {
-      validateStringsRenderedWithinText(renderer.toJSON());
-    }
-  };
-
-  const renderer: ReactTestRenderer = renderWithAct(wrap(component), testRendererOptions);
-  validateStringsRenderedWithinText(renderer.toJSON());
-
+  const renderer = await renderWithAsyncAct(wrap(component), testRendererOptions);
   return buildRenderResult(renderer, wrap);
 }
 
@@ -100,10 +63,11 @@ function buildRenderResult(
 ) {
   const instance = renderer.root;
 
-  const rerender = (component: React.ReactElement) => {
-    void act(() => {
-      renderer.update(wrap(component));
-    });
+  const rerender = (_component: React.ReactElement) => {
+    throw new ErrorWithStack(
+      '"rerender(...)" is not supported when using "renderAsync" use "await rerenderAsync(...)" instead',
+      rerender,
+    );
   };
   const rerenderAsync = async (component: React.ReactElement) => {
     // eslint-disable-next-line require-await
@@ -113,9 +77,10 @@ function buildRenderResult(
   };
 
   const unmount = () => {
-    void act(() => {
-      renderer.unmount();
-    });
+    throw new ErrorWithStack(
+      '"unmount()" is not supported when using "renderAsync" use "await unmountAsync()" instead',
+      unmount,
+    );
   };
   const unmountAsync = async () => {
     // eslint-disable-next-line require-await
@@ -124,13 +89,13 @@ function buildRenderResult(
     });
   };
 
-  addToCleanupQueue(unmount);
+  addToCleanupQueue(unmountAsync);
 
   const result = {
     ...getQueriesForElement(instance),
     rerender,
     rerenderAsync,
-    update: rerender, // alias for 'rerender'
+    update: rerender, // alias for `rerender`
     updateAsync: rerenderAsync, // alias for `rerenderAsync`
     unmount,
     unmountAsync,

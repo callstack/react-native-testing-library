@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { Pressable } from 'react-native-gesture-handler';
 
 import { fireEvent, render, screen, userEvent } from '..';
-import { createEventLogger, getEventsNames } from '../test-utils';
+import { createEventLogger, getEventsNames } from '../test-utils/events';
 
 test('fireEvent can invoke press events for RNGH Pressable', () => {
   const onPress = jest.fn();

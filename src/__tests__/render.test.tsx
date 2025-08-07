@@ -110,16 +110,16 @@ test('UNSAFE_getAllByProp, UNSAFE_queryAllByProps', () => {
   expect(screen.UNSAFE_queryAllByProps({ type: 'inexistent' })).toHaveLength(0);
 });
 
-test('update', () => {
+test('rerender', () => {
   const fn = jest.fn();
   render(<Banana onUpdate={fn} />);
+  expect(fn).toHaveBeenCalledTimes(0);
 
   fireEvent.press(screen.getByText('Change freshness!'));
+  expect(fn).toHaveBeenCalledTimes(1);
 
-  screen.update(<Banana onUpdate={fn} />);
   screen.rerender(<Banana onUpdate={fn} />);
-
-  expect(fn).toHaveBeenCalledTimes(3);
+  expect(fn).toHaveBeenCalledTimes(2);
 });
 
 test('unmount', () => {
@@ -242,4 +242,31 @@ test('supports legacy rendering', () => {
 test('supports concurrent rendering', () => {
   render(<View testID="test" />, { concurrentRoot: true });
   expect(screen.root).toBeOnTheScreen();
+});
+
+test('rerenderAsync updates the component asynchronously', async () => {
+  const fn = jest.fn();
+  const result = render(<Banana onUpdate={fn} />);
+
+  await result.rerenderAsync(<Banana onUpdate={fn} />);
+
+  expect(fn).toHaveBeenCalledTimes(1);
+});
+
+test('updateAsync is an alias for rerenderAsync', async () => {
+  const fn = jest.fn();
+  const result = render(<Banana onUpdate={fn} />);
+
+  await result.updateAsync(<Banana onUpdate={fn} />);
+
+  expect(fn).toHaveBeenCalledTimes(1);
+});
+
+test('unmountAsync unmounts the component asynchronously', async () => {
+  const fn = jest.fn();
+  const result = render(<Banana onUnmount={fn} />);
+
+  await result.unmountAsync();
+
+  expect(fn).toHaveBeenCalled();
 });
