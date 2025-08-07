@@ -176,13 +176,11 @@ The `fireEventAsync` function is the async version of `fireEvent` designed for w
 ```jsx
 import { renderAsync, screen, fireEventAsync } from '@testing-library/react-native';
 
-test('async fire event test', async () => {
-  await renderAsync(<MyAsyncComponent />);
+test('fire event test', async () => {
+  await renderAsync(<MySuspenseComponent />);
   
-  // Use fireEventAsync when event handlers have async behavior
-  await fireEventAsync(screen.getByText('Async Button'), 'press');
-  
-  expect(screen.getByText('Async operation completed')).toBeOnTheScreen();
+  await fireEventAsync(screen.getByText('Button'), 'press');
+  expect(screen.getByText('Action completed')).toBeOnTheScreen();
 });
 ```
 
