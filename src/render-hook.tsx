@@ -90,7 +90,8 @@ export async function renderHookAsync<Result, Props>(
   return {
     // Result should already be set after the first render effects are run.
     result: result as React.RefObject<Result>,
-    rerenderAsync: (hookProps: Props) => rerenderComponentAsync(<TestComponent hookProps={hookProps} />),
+    rerenderAsync: (hookProps: Props) =>
+      rerenderComponentAsync(<TestComponent hookProps={hookProps} />),
     unmountAsync,
   };
 }

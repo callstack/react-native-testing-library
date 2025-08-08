@@ -62,7 +62,9 @@ test('rerenderAsync function updates hook asynchronously', async () => {
     return state;
   }
 
-  const { result, rerenderAsync } = await renderHookAsync(useTestHook, { initialProps: { value: 5 } });
+  const { result, rerenderAsync } = await renderHookAsync(useTestHook, {
+    initialProps: { value: 5 },
+  });
   expect(result.current).toEqual(10);
 
   await rerenderAsync({ value: 10 });
@@ -241,7 +243,9 @@ test('handles hook with cleanup and re-initialization', async () => {
       effectCount++;
       setValue(`${props.key}-effect`);
 
-      return () => { cleanupCount++; };
+      return () => {
+        cleanupCount++;
+      };
     }, [props.key]);
 
     return value;
