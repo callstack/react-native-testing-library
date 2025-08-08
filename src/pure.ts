@@ -21,6 +21,6 @@ export type {
   DebugFunction,
 } from './render';
 export type { RenderAsyncOptions, RenderAsyncResult } from './render-async';
-export type { RenderHookOptions, RenderHookResult } from './render-hook';
+export type { RenderHookOptions, RenderHookResult, RenderHookAsyncResult } from './render-hook';
 export type { Config } from './config';
 export type { UserEventConfig } from './user-event';
