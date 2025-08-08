@@ -157,7 +157,6 @@ Prefer using [`user.scrollTo`](docs/api/events/user-event#scrollto) over `fireEv
 
 :::
 
-
 ## `fireEventAsync`
 
 :::info RNTL minimal version
@@ -166,12 +165,15 @@ This API requires RNTL v13.3.0 or later.
 
 :::
 
-
 ```ts
-async function fireEventAsync(element: ReactTestInstance, eventName: string, ...data: unknown[]): Promise<unknown>;
+async function fireEventAsync(
+  element: ReactTestInstance,
+  eventName: string,
+  ...data: unknown[]
+): Promise<unknown>;
 ```
 
-The `fireEventAsync` function is the async version of `fireEvent` designed for working with React 19 and React Suspense. It wraps event handler execution in async `act()`, making it suitable for event handlers that trigger suspense boundaries or other async behavior.
+The `fireEventAsync` function is the async version of `fireEvent` designed for working with React 19 and React Suspense. This function uses async `act` function internally to ensure all pending React updates are executed during event handling.
 
 ```jsx
 import { renderAsync, screen, fireEventAsync } from '@testing-library/react-native';
@@ -192,7 +194,7 @@ Like `fireEvent`, `fireEventAsync` also provides convenience methods for common 
 fireEventAsync.press: (element: ReactTestInstance, ...data: Array<any>) => Promise<unknown>
 ```
 
-Async version of `fireEvent.press` designed for React 19 and React Suspense. Use when press event handlers trigger suspense boundaries or other async behavior.
+Async version of `fireEvent.press` designed for React 19 and React Suspense. Use when press event handlers trigger suspense boundaries.
 
 ### `fireEventAsync.changeText` {#async-change-text}
 
@@ -200,7 +202,7 @@ Async version of `fireEvent.press` designed for React 19 and React Suspense. Use
 fireEventAsync.changeText: (element: ReactTestInstance, ...data: Array<any>) => Promise<unknown>
 ```
 
-Async version of `fireEvent.changeText` designed for React 19 and React Suspense. Use when changeText event handlers trigger suspense boundaries or other async behavior.
+Async version of `fireEvent.changeText` designed for React 19 and React Suspense. Use when changeText event handlers trigger suspense boundaries.
 
 ### `fireEventAsync.scroll` {#async-scroll}
 
@@ -208,4 +210,4 @@ Async version of `fireEvent.changeText` designed for React 19 and React Suspense
 fireEventAsync.scroll: (element: ReactTestInstance, ...data: Array<any>) => Promise<unknown>
 ```
 
-Async version of `fireEvent.scroll` designed for React 19 and React Suspense. Use when scroll event handlers trigger suspense boundaries or other async behavior.
+Async version of `fireEvent.scroll` designed for React 19 and React Suspense. Use when scroll event handlers trigger suspense boundaries.
