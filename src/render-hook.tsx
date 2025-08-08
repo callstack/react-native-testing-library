@@ -11,8 +11,8 @@ export type RenderHookResult<Result, Props> = {
 
 export type RenderHookAsyncResult<Result, Props> = {
   result: React.RefObject<Result>;
-  rerender: (props: Props) => Promise<void>;
-  unmount: () => Promise<void>;
+  rerenderAsync: (props: Props) => Promise<void>;
+  unmountAsync: () => Promise<void>;
 };
 
 export type RenderHookOptions<Props> = {
@@ -90,7 +90,7 @@ export async function renderHookAsync<Result, Props>(
   return {
     // Result should already be set after the first render effects are run.
     result: result as React.RefObject<Result>,
-    rerender: (hookProps: Props) => rerenderComponentAsync(<TestComponent hookProps={hookProps} />),
-    unmount: unmountAsync,
+    rerenderAsync: (hookProps: Props) => rerenderComponentAsync(<TestComponent hookProps={hookProps} />),
+    unmountAsync,
   };
 }

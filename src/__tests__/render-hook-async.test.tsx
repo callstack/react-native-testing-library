@@ -51,7 +51,7 @@ test('renderHookAsync supports legacy rendering option', async () => {
   expect(result.current).toEqual(42);
 });
 
-test('rerender function updates hook asynchronously', async () => {
+test('rerenderAsync function updates hook asynchronously', async () => {
   function useTestHook(props: { value: number }) {
     const [state, setState] = React.useState(props.value);
 
@@ -62,10 +62,10 @@ test('rerender function updates hook asynchronously', async () => {
     return state;
   }
 
-  const { result, rerender } = await renderHookAsync(useTestHook, { initialProps: { value: 5 } });
+  const { result, rerenderAsync } = await renderHookAsync(useTestHook, { initialProps: { value: 5 } });
   expect(result.current).toEqual(10);
 
-  await rerender({ value: 10 });
+  await rerenderAsync({ value: 10 });
   expect(result.current).toEqual(20);
 });
 
@@ -82,10 +82,10 @@ test('unmount function unmounts hook asynchronously', async () => {
     return 'test';
   }
 
-  const { unmount } = await renderHookAsync(useTestHook);
+  const { unmountAsync } = await renderHookAsync(useTestHook);
   expect(cleanupCalled).toBe(false);
 
-  await unmount();
+  await unmountAsync();
   expect(cleanupCalled).toBe(true);
 });
 
@@ -214,29 +214,20 @@ test('handles custom hooks with complex logic', async () => {
     return { count, increment, decrement, reset };
   }
 
-  const { result, rerender } = await renderHookAsync(useCounter, { initialProps: 5 });
-
+  const { result, rerenderAsync } = await renderHookAsync(useCounter, { initialProps: 5 });
   expect(result.current.count).toBe(5);
 
-  // Test increment
   result.current.increment();
-  await rerender(5);
+  await rerenderAsync(5);
   expect(result.current.count).toBe(6);
 
-  // Test decrement
-  result.current.decrement();
-  await rerender(5);
-  expect(result.current.count).toBe(5);
-
-  // Test reset
-  result.current.increment();
-  result.current.increment();
-  await rerender(5);
-  expect(result.current.count).toBe(7);
-
   result.current.reset();
-  await rerender(5);
+  await rerenderAsync(5);
   expect(result.current.count).toBe(5);
+
+  result.current.decrement();
+  await rerenderAsync(5);
+  expect(result.current.count).toBe(4);
 });
 
 test('handles hook with cleanup and re-initialization', async () => {
@@ -250,15 +241,13 @@ test('handles hook with cleanup and re-initialization', async () => {
       effectCount++;
       setValue(`${props.key}-effect`);
 
-      return () => {
-        cleanupCount++;
-      };
+      return () => { cleanupCount++; };
     }, [props.key]);
 
     return value;
   }
 
-  const { result, rerender, unmount } = await renderHookAsync(useTestHook, {
+  const { result, rerenderAsync, unmountAsync } = await renderHookAsync(useTestHook, {
     initialProps: { key: 'initial' },
   });
 
@@ -266,12 +255,12 @@ test('handles hook with cleanup and re-initialization', async () => {
   expect(effectCount).toBe(1);
   expect(cleanupCount).toBe(0);
 
-  await rerender({ key: 'updated' });
+  await rerenderAsync({ key: 'updated' });
   expect(result.current).toBe('updated-effect');
   expect(effectCount).toBe(2);
   expect(cleanupCount).toBe(1);
 
-  await unmount();
+  await unmountAsync();
   expect(effectCount).toBe(2);
   expect(cleanupCount).toBe(2);
 });
