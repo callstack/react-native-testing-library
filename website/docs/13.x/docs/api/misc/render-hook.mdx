@@ -1,5 +1,7 @@
 # `renderHook` function
 
+## `renderHook`
+
 ```ts
 function renderHook<Result, Props>(
   hookFn: (props?: Props) => Result,
@@ -41,15 +43,15 @@ Callback is a function that is called each `render` of the test component. This 
 
 The `props` passed into the callback will be the `initialProps` provided in the `options` to `renderHook`, unless new props are provided by a subsequent `rerender` call.
 
-## `options`
+### `options`
 
 A `RenderHookOptions<Props>` object to modify the execution of the `callback` function, containing the following properties:
 
-### `initialProps` {#initial-props}
+#### `initialProps` {#initial-props}
 
 The initial values to pass as `props` to the `callback` function of `renderHook`. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
 
-### `wrapper`
+#### `wrapper`
 
 A React component to wrap the test component in when rendering. This is usually used to add context providers from `React.createContext` for the hook to access with `useContext`.
 
@@ -58,7 +60,7 @@ A React component to wrap the test component in when rendering. This is usually 
 Set to `false` to disable concurrent rendering.
 Otherwise, `render` will default to using concurrent rendering used in the React Native New Architecture.
 
-## Result
+### Result
 
 ```ts
 interface RenderHookResult<Result, Props> {
@@ -70,23 +72,23 @@ interface RenderHookResult<Result, Props> {
 
 The `renderHook` function returns an object that has the following properties:
 
-### `result`
+#### `result`
 
 The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`. The `Result` type is determined by the type passed to or inferred by the `renderHook` call.
 
-### `rerender`
+#### `rerender`
 
 A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
 
-### `unmount`
+#### `unmount`
 
 A function to unmount the test component. This is commonly used to trigger cleanup effects for `useEffect` hooks.
 
-## Examples
+### Examples
 
 Here we present some extra examples of using `renderHook` API.
 
-### With `initialProps`
+#### With `initialProps`
 
 ```ts
 const useCount = (initialCount: number) => {
@@ -117,7 +119,7 @@ it('should increment count', () => {
 });
 ```
 
-### With `wrapper`
+#### With `wrapper`
 
 ```tsx
 it('should use context value', () => {
@@ -150,18 +152,18 @@ Async versions of `renderHook` designed for working with React 19 and React Susp
 ```ts
 interface RenderHookAsyncResult<Result, Props> {
   result: { current: Result };
-  rerender: (props: Props) => Promise<void>;
-  unmount: () => Promise<void>;
+  rerenderAsync: (props: Props) => Promise<void>;
+  unmountAsync: () => Promise<void>;
 }
 ```
 
-The `RenderHookAsyncResult` differs from `RenderHookResult` in that `rerender` and `unmount` are async functions.
+The `RenderHookAsyncResult` differs from `RenderHookResult` in that `rerenderAsync` and `unmountAsync` are async functions.
 
 ```ts
 import { renderHookAsync, act } from '@testing-library/react-native';
 
 test('should handle async hook behavior', async () => {
-  const { result, rerender } = await renderHookAsync(useAsyncHook);
+  const { result, rerenderAsync } = await renderHookAsync(useAsyncHook);
 
   // Test initial state
   expect(result.current.loading).toBe(true);
@@ -172,7 +174,7 @@ test('should handle async hook behavior', async () => {
   });
 
   // Re-render to get updated state
-  await rerender();
+  await rerenderAsync();
   expect(result.current.loading).toBe(false);
 });
 ```
