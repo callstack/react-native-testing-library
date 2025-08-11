@@ -55,17 +55,17 @@ This API requires RNTL v13.3.0 or later.
 function rerenderAsync(element: React.Element<unknown>): Promise<void>;
 ```
 
-Async versions of `rerender` designed for working with React 19 and React Suspense. These methods wait for async operations to complete during re-rendering, making them suitable for components that use suspense boundaries or other async behavior.
+Async versions of `rerender` designed for working with React 19 and React Suspense. This method uses async `act` function internally to ensure all pending React updates are executed during updating.
 
 ```jsx
 import { renderAsync, screen } from '@testing-library/react-native';
 
 test('async rerender test', async () => {
   await renderAsync(<MyComponent initialData="first" />);
-  
+
   // Use async rerender when component has suspense or async behavior
   await screen.rerenderAsync(<MyComponent initialData="updated" />);
-  
+
   expect(screen.getByText('updated')).toBeOnTheScreen();
 });
 ```
@@ -96,7 +96,7 @@ This API requires RNTL v13.3.0 or later.
 function unmountAsync(): Promise<void>;
 ```
 
-Async version of `unmount` designed for working with React 19 and React Suspense. This method waits for async cleanup operations to complete during unmounting, making it suitable for components that have async cleanup behavior.
+Async version of `unmount` designed for working with React 19 and React Suspense. This method uses async `act` function internally to ensure all pending React updates are executed during unmounting.
 
 :::note
 

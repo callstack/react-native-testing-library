@@ -77,10 +77,10 @@ This API requires RNTL v13.3.0 or later.
 async function renderAsync(
   component: React.Element<any>,
   options?: RenderAsyncOptions
-): Promise<RenderAsyncResult>
+): Promise<RenderAsyncResult>;
 ```
 
-The `renderAsync` function is the async version of `render` designed for working with React 19 and React Suspense. It allows components to be properly rendered when they contain suspense boundaries or async behavior that needs to complete before the render result is returned.
+The `renderAsync` function is the async version of `render` designed for working with React 19 and React Suspense. This function uses async `act` function internally to ensure all pending React updates are executed during rendering.
 
 ```jsx
 import { renderAsync, screen } from '@testing-library/react-native';
