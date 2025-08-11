@@ -6,7 +6,7 @@ React 19 introduced full support for React Suspense, `React.use()`, and other as
 
 React 19's async rendering features make React's rendering process more asynchronous by nature. This requires the use of the [`async act`](https://react.dev/reference/react/act) helper when testing components that use these new APIs, which in turn affects several React Native Testing Library APIs. 
 
-Note that `renderAsync`, and other changes support React 18.
+Note that `renderAsync` and other async APIs also support React 18.
 
 ## New Async APIs in RNTL 13.3
 
@@ -23,8 +23,8 @@ To support React 19's async rendering, RNTL 13.3 introduces several new async AP
 Some APIs didn't require changes:
 
 - `screen` object: most of the methods, including queries
-- **[`userEvent`](docs/api/user-event) didn't require API changes as it was already async
-- Jest Matchers didn't require any changes as they work already processed output
+- **[`userEvent`](docs/api/user-event)** didn't require API changes as it was already async
+- **Jest Matchers** didn't require any changes as they work with already processed output
 
 ## Key Changes for Testing
 
