@@ -1,0 +1,56 @@
+# React 19 & Suspense Support
+
+React 19 introduced full support for React Suspense, `React.use()`, and other async rendering features to React Native. These new capabilities enable more sophisticated async patterns but also require updates to testing approaches.
+
+## Impact on React Rendering
+
+React 19's async rendering features make React's rendering process more asynchronous by nature. This requires the use of the `async act` helper when testing components that use these new APIs, which in turn affects several React Native Testing Library APIs. 
+
+Note that `renderAsync`, and other changes support React 18.
+
+## New Async APIs in RNTL 13.3
+
+To support React 19's async rendering, RNTL 13.3 introduces several new async APIs:
+
+- **[`renderAsync`](docs/api/render#render-async)** - async version of [`render`](docs/api/render)
+- `screen` object
+    - **[`rerenderAsync`](docs/api/screen#rerender-async)** - async version of [`rerender`](docs/api/screen#rerender)
+    - **[`unmountAsync`](docs/api/screen#unmount-async)** - async version of [`unmount`](docs/api/screen#unmount)
+- **[`fireEventAsync`](docs/api/fire-event#fire-event-async)** - async version of [`fireEvent`](docs/api/fire-event#fire-event)
+
+## Unchanged APIs
+
+Some APIs didn't require changes:
+
+- `screen` object: most of the methods, including queries
+- **[`userEvent`](docs/api/user-event) didn't require API changes as it was already async
+- Jest Matchers didn't require any changes as they work already processed output
+
+## Key Changes for Testing
+
+### Main Change: `renderAsync`
+
+The primary change is the introduction of [`renderAsync`](docs/api/render#renderasync), which requires making your tests `async` and using the `await` keyword:
+
+```tsx
+// Before (React 18 and earlier)
+test('my component', () => {
+  render(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+
+// After (React 19 with Suspense)
+test('my component', async () => {
+  await renderAsync(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+```
+
+## Migration Strategy
+
+While these async APIs are new in RNTL 13.3, we expect them to become the default recommendation in the future. We advise:
+
+- **New testing code**: use the async APIs (`renderAsync`, etc.) for all new tests
+- **Legacy testing code**: can continue using the synchronous versions (`render`, etc.) without any required changes
+
+This approach allows for gradual migration while ensuring compatibility with both React 18 and React 19 features.
