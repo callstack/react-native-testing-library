@@ -1,6 +1,6 @@
-# `render` function
+# `render` API
 
-## `render`
+## `render` function {#render}
 
 ```jsx
 function render(
@@ -67,7 +67,7 @@ The `render` function returns the same queries and utilities as the [`screen`](d
 
 See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
 
-## `renderAsync` function
+## `renderAsync` function {#render-async}
 
 :::info RNTL minimal version
 
@@ -82,7 +82,7 @@ async function renderAsync(
 ): Promise<RenderAsyncResult>;
 ```
 
-The `renderAsync` function is the async version of `render` designed for working with React 19 and React Suspense. This function uses async `act` function internally to ensure all pending React updates are executed during rendering.
+The `renderAsync` function is the async version of [`render`](#render) designed for working with React 19 and React Suspense. This function uses async `act` function internally to ensure all pending React updates are executed during rendering.
 
 ```jsx
 import { renderAsync, screen } from '@testing-library/react-native';

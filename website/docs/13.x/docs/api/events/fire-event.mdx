@@ -170,7 +170,7 @@ fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 Prefer using [`user.scrollTo`](docs/api/events/user-event#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
 :::
 
-## `fireEventAsync` {#async}
+## `fireEventAsync` {#fire-event-async}
 
 :::info RNTL minimal version
 
@@ -186,7 +186,7 @@ async function fireEventAsync(
 ): Promise<unknown>;
 ```
 
-The `fireEventAsync` function is the async version of `fireEvent` designed for working with React 19 and React Suspense. This function uses async `act` function internally to ensure all pending React updates are executed during event handling.
+The `fireEventAsync` function is the async version of [`fireEvent`](#fire-event) designed for working with React 19 and React Suspense. This function uses async `act` function internally to ensure all pending React updates are executed during event handling.
 
 ```jsx
 import { renderAsync, screen, fireEventAsync } from '@testing-library/react-native';
@@ -214,7 +214,7 @@ fireEventAsync.press: (
 ) => Promise<unknown>
 ```
 
-Async version of `fireEvent.press` designed for React 19 and React Suspense. Use when `press` event handlers trigger suspense boundaries.
+Async version of [`fireEvent.press`](#press) designed for React 19 and React Suspense. Use when `press` event handlers trigger suspense boundaries.
 
 ### `fireEventAsync.changeText` {#async-change-text}
 
@@ -229,7 +229,7 @@ fireEventAsync.changeText: (
 ) => Promise<unknown>
 ```
 
-Async version of `fireEvent.changeText` designed for React 19 and React Suspense. Use when `changeText` event handlers trigger suspense boundaries.
+Async version of [`fireEvent.changeText`](#change-text) designed for React 19 and React Suspense. Use when `changeText` event handlers trigger suspense boundaries.
 
 ### `fireEventAsync.scroll` {#async-scroll}
 
@@ -244,4 +244,4 @@ fireEventAsync.scroll: (
 ) => Promise<unknown>
 ```
 
-Async version of `fireEvent.scroll` designed for React 19 and React Suspense. Use when `scroll` event handlers trigger suspense boundaries.
+Async version of [`fireEvent.scroll`](#scroll) designed for React 19 and React Suspense. Use when `scroll` event handlers trigger suspense boundaries.
