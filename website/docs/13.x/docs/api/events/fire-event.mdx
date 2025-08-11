@@ -1,8 +1,6 @@
 # Fire Event API
 
-```ts
-function fireEvent(element: ReactTestInstance, eventName: string, ...data: unknown[]): void;
-```
+## `fireEvent` {#fire-event}
 
 :::note
 For common events like `press` or `type` it's recommended to use [User Event API](docs/api/events/user-event) as it offers
@@ -10,6 +8,10 @@ more realistic event simulation by emitting a sequence of events with proper eve
 
 Use Fire Event for cases not supported by User Event and for triggering event handlers on composite components.
 :::
+
+```ts
+function fireEvent(element: ReactTestInstance, eventName: string, ...data: unknown[]): void;
+```
 
 The `fireEvent` API allows you to trigger all kinds of event handlers on both host and composite components. It will try to invoke a single event handler traversing the component tree bottom-up from passed element and trying to find enabled event handler named `onXxx` when `xxx` is the name of the event passed.
 
@@ -57,13 +59,16 @@ FireEvent exposes convenience methods for common events like: `press`, `changeTe
 
 ### `fireEvent.press` {#press}
 
-```
-fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void
-```
-
 :::note
 It is recommended to use the User Event [`press()`](docs/api/events/user-event#press) helper instead as it offers more realistic simulation of press interaction, including pressable support.
 :::
+
+```tsx
+fireEvent.press: (
+  element: ReactTestInstance,
+  ...data: Array<any>,
+) => void
+```
 
 Invokes `press` event handler on the element or parent element in the tree.
 
@@ -93,13 +98,16 @@ expect(onPressMock).toHaveBeenCalledWith(eventData);
 
 ### `fireEvent.changeText` {#change-text}
 
-```
-fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void
-```
-
 :::note
 It is recommended to use the User Event [`type()`](docs/api/events/user-event#type) helper instead as it offers more realistic simulation of text change interaction, including key-by-key typing, element focus, and other editing events.
 :::
+
+```tsx
+fireEvent.changeText: (
+  element: ReactTestInstance,
+  ...data: Array<any>,
+) => void
+```
 
 Invokes `changeText` event handler on the element or parent element in the tree.
 
@@ -121,8 +129,15 @@ fireEvent.changeText(screen.getByPlaceholderText('Enter data'), CHANGE_TEXT);
 
 ### `fireEvent.scroll` {#scroll}
 
-```
-fireEvent.scroll: (element: ReactTestInstance, ...data: Array<any>) => void
+:::note
+Prefer using [`user.scrollTo`](docs/api/events/user-event#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
+:::
+
+```tsx
+fireEvent.scroll: (
+  element: ReactTestInstance,
+  ...data: Array<any>,
+) => void
 ```
 
 Invokes `scroll` event handler on the element or parent element in the tree.
@@ -152,12 +167,10 @@ fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 ```
 
 :::note
-
 Prefer using [`user.scrollTo`](docs/api/events/user-event#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
-
 :::
 
-## `fireEventAsync`
+## `fireEventAsync` {#async}
 
 :::info RNTL minimal version
 
@@ -190,24 +203,45 @@ Like `fireEvent`, `fireEventAsync` also provides convenience methods for common 
 
 ### `fireEventAsync.press` {#async-press}
 
-```
-fireEventAsync.press: (element: ReactTestInstance, ...data: Array<any>) => Promise<unknown>
+:::note
+It is recommended to use the User Event [`press()`](docs/api/events/user-event#press) helper instead as it offers more realistic simulation of press interaction, including pressable support.
+:::
+
+```tsx
+fireEventAsync.press: (
+  element: ReactTestInstance,
+  ...data: Array<any>,
+) => Promise<unknown>
 ```
 
-Async version of `fireEvent.press` designed for React 19 and React Suspense. Use when press event handlers trigger suspense boundaries.
+Async version of `fireEvent.press` designed for React 19 and React Suspense. Use when `press` event handlers trigger suspense boundaries.
 
 ### `fireEventAsync.changeText` {#async-change-text}
 
-```
-fireEventAsync.changeText: (element: ReactTestInstance, ...data: Array<any>) => Promise<unknown>
+:::note
+It is recommended to use the User Event [`type()`](docs/api/events/user-event#type) helper instead as it offers more realistic simulation of text change interaction, including key-by-key typing, element focus, and other editing events.
+:::
+
+```tsx
+fireEventAsync.changeText: (
+  element: ReactTestInstance,
+  ...data: Array<any>,
+) => Promise<unknown>
 ```
 
-Async version of `fireEvent.changeText` designed for React 19 and React Suspense. Use when changeText event handlers trigger suspense boundaries.
+Async version of `fireEvent.changeText` designed for React 19 and React Suspense. Use when `changeText` event handlers trigger suspense boundaries.
 
 ### `fireEventAsync.scroll` {#async-scroll}
 
-```
-fireEventAsync.scroll: (element: ReactTestInstance, ...data: Array<any>) => Promise<unknown>
+:::note
+Prefer using [`user.scrollTo`](docs/api/events/user-event#scrollto) over `fireEventAsync.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
+:::
+
+```tsx
+fireEventAsync.scroll: (
+  element: ReactTestInstance,
+  ...data: Array<any>,
+) => Promise<unknown>
 ```
 
-Async version of `fireEvent.scroll` designed for React 19 and React Suspense. Use when scroll event handlers trigger suspense boundaries.
+Async version of `fireEvent.scroll` designed for React 19 and React Suspense. Use when `scroll` event handlers trigger suspense boundaries.
