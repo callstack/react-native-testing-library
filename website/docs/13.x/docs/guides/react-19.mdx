@@ -1,10 +1,10 @@
 # React 19 & Suspense Support
 
-React 19 introduced full support for React Suspense, `React.use()`, and other async rendering features to React Native. These new capabilities enable more sophisticated async patterns but also require updates to testing approaches.
+React 19 introduced full support for React Suspense, `React.use()`, and other async rendering features to React Native [0.78.0](https://github.com/facebook/react-native/releases/tag/v0.78.0). These new capabilities enable more sophisticated async patterns but also require updates to testing approaches.
 
 ## Impact on React Rendering
 
-React 19's async rendering features make React's rendering process more asynchronous by nature. This requires the use of the `async act` helper when testing components that use these new APIs, which in turn affects several React Native Testing Library APIs. 
+React 19's async rendering features make React's rendering process more asynchronous by nature. This requires the use of the [`async act`](https://react.dev/reference/react/act) helper when testing components that use these new APIs, which in turn affects several React Native Testing Library APIs. 
 
 Note that `renderAsync`, and other changes support React 18.
 
