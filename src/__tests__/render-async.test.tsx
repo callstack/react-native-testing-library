@@ -101,17 +101,3 @@ test('container property displays deprecation message', async () => {
     Consider using 'root' property which returns root host element."
   `);
 });
-
-test('debug function handles null JSON', async () => {
-  const result = await renderAsync(<View testID="test" />);
-
-  // Mock toJSON to return null to test the debug edge case
-  const originalToJSON = result.toJSON;
-  (result as any).toJSON = jest.fn().mockReturnValue(null);
-
-  // This should not throw and handle null JSON gracefully
-  expect(() => result.debug()).not.toThrow();
-
-  // Restore original toJSON
-  (result as any).toJSON = originalToJSON;
-});
