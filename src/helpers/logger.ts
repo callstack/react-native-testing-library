@@ -1,12 +1,12 @@
-import chalk from 'chalk';
 import * as nodeConsole from 'console';
+import pc from 'picocolors';
 import redent from 'redent';
 import * as nodeUtil from 'util';
 
 export const logger = {
   debug(message: unknown, ...args: unknown[]) {
     const output = formatMessage('●', message, ...args);
-    nodeConsole.debug(chalk.dim(output));
+    nodeConsole.debug(pc.dim(output));
   },
 
   info(message: unknown, ...args: unknown[]) {
@@ -16,12 +16,12 @@ export const logger = {
 
   warn(message: unknown, ...args: unknown[]) {
     const output = formatMessage('▲', message, ...args);
-    nodeConsole.warn(chalk.yellow(output));
+    nodeConsole.warn(pc.yellow(output));
   },
 
   error(message: unknown, ...args: unknown[]) {
     const output = formatMessage('■', message, ...args);
-    nodeConsole.error(chalk.red(output));
+    nodeConsole.error(pc.red(output));
   },
 };
 
