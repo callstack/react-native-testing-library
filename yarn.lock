@@ -3006,7 +3006,7 @@ __metadata:
     redent: "npm:^3.0.0"
     release-it: "npm:^19.0.4"
     typescript: "npm:^5.9.2"
-    typescript-eslint: "npm:^8.19.1"
+    typescript-eslint: "npm:^8.39.1"
   peerDependencies:
     jest: ">=29.0.0"
     react: ">=18.2.0"
@@ -10727,7 +10727,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-eslint@npm:^8.19.1":
+"typescript-eslint@npm:^8.39.1":
   version: 8.39.1
   resolution: "typescript-eslint@npm:8.39.1"
   dependencies:

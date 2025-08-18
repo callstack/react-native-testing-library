@@ -93,7 +93,7 @@
     "react-test-renderer": "19.1.0",
     "release-it": "^19.0.4",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.19.1"
+    "typescript-eslint": "^8.39.1"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
