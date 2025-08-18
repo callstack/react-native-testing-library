@@ -2892,7 +2892,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@release-it/conventional-changelog@npm:^10.0.0":
+"@release-it/conventional-changelog@npm:^10.0.1":
   version: 10.0.1
   resolution: "@release-it/conventional-changelog@npm:10.0.1"
   dependencies:
@@ -2982,7 +2982,7 @@ __metadata:
     "@babel/preset-typescript": "npm:^7.27.1"
     "@callstack/eslint-config": "npm:^15.0.0"
     "@react-native/babel-preset": "npm:0.81.0"
-    "@release-it/conventional-changelog": "npm:^10.0.0"
+    "@release-it/conventional-changelog": "npm:^10.0.1"
     "@relmify/jest-serializer-strip-ansi": "npm:^1.0.2"
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^24.3.0"
@@ -2995,17 +2995,17 @@ __metadata:
     eslint: "npm:^9.17.0"
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
     flow-bin: "npm:~0.170.0"
-    jest: "npm:^30.0.2"
-    jest-matcher-utils: "npm:^30.0.2"
+    jest: "npm:^30.0.5"
+    jest-matcher-utils: "npm:^30.0.5"
     prettier: "npm:^2.8.8"
-    pretty-format: "npm:^30.0.2"
+    pretty-format: "npm:^30.0.5"
     react: "npm:19.1.0"
     react-native: "npm:0.81.0"
-    react-native-gesture-handler: "npm:^2.27.1"
+    react-native-gesture-handler: "npm:^2.28.0"
     react-test-renderer: "npm:19.1.0"
     redent: "npm:^3.0.0"
-    release-it: "npm:^19.0.3"
-    typescript: "npm:^5.6.3"
+    release-it: "npm:^19.0.4"
+    typescript: "npm:^5.9.2"
     typescript-eslint: "npm:^8.19.1"
   peerDependencies:
     jest: ">=29.0.0"
@@ -7331,7 +7331,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-matcher-utils@npm:30.0.5, jest-matcher-utils@npm:^30.0.2":
+"jest-matcher-utils@npm:30.0.5, jest-matcher-utils@npm:^30.0.5":
   version: 30.0.5
   resolution: "jest-matcher-utils@npm:30.0.5"
   dependencies:
@@ -7637,7 +7637,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^30.0.2":
+"jest@npm:^30.0.5":
   version: 30.0.5
   resolution: "jest@npm:30.0.5"
   dependencies:
@@ -9248,7 +9248,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:30.0.5, pretty-format@npm:^30.0.0, pretty-format@npm:^30.0.2":
+"pretty-format@npm:30.0.5, pretty-format@npm:^30.0.0, pretty-format@npm:^30.0.5":
   version: 30.0.5
   resolution: "pretty-format@npm:30.0.5"
   dependencies:
@@ -9415,7 +9415,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-gesture-handler@npm:^2.27.1":
+"react-native-gesture-handler@npm:^2.28.0":
   version: 2.28.0
   resolution: "react-native-gesture-handler@npm:2.28.0"
   dependencies:
@@ -9651,7 +9651,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"release-it@npm:^19.0.3":
+"release-it@npm:^19.0.4":
   version: 19.0.4
   resolution: "release-it@npm:19.0.4"
   dependencies:
@@ -10751,7 +10751,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.6.3":
+"typescript@npm:^5.9.2":
   version: 5.9.2
   resolution: "typescript@npm:5.9.2"
   bin:
@@ -10761,7 +10761,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5.6.3#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5.9.2#optional!builtin<compat/typescript>":
   version: 5.9.2
   resolution: "typescript@patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"
   bin:
