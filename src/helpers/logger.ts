@@ -1,27 +1,34 @@
-import chalk from 'chalk';
 import * as nodeConsole from 'console';
+import pc from 'picocolors';
 import redent from 'redent';
 import * as nodeUtil from 'util';
+
+export const _console = {
+  debug: nodeConsole.debug,
+  info: nodeConsole.info,
+  warn: nodeConsole.warn,
+  error: nodeConsole.error,
+};
 
 export const logger = {
   debug(message: unknown, ...args: unknown[]) {
     const output = formatMessage('●', message, ...args);
-    nodeConsole.debug(chalk.dim(output));
+    _console.debug(pc.dim(output));
   },
 
   info(message: unknown, ...args: unknown[]) {
     const output = formatMessage('●', message, ...args);
-    nodeConsole.info(output);
+    _console.info(output);
   },
 
   warn(message: unknown, ...args: unknown[]) {
     const output = formatMessage('▲', message, ...args);
-    nodeConsole.warn(chalk.yellow(output));
+    _console.warn(pc.yellow(output));
   },
 
   error(message: unknown, ...args: unknown[]) {
     const output = formatMessage('■', message, ...args);
-    nodeConsole.error(chalk.red(output));
+    _console.error(pc.red(output));
   },
 };
 
