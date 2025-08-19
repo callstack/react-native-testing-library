@@ -1,4 +1,4 @@
-name: Setup deps (nightly)
+name: Setup deps (RN nightly)
 description: Setup Node.js and install dependencies
 
 runs:
