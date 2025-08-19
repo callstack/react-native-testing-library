@@ -40,7 +40,7 @@ export function renderHook<Result, Props>(
   hookToRender: (props: Props) => Result,
   options?: RenderHookOptions<Props>,
 ): RenderHookResult<Result, Props> {
-  const result = React.createRef<Result>();
+  const result = React.createRef<Result>() as RefObject<Result>;
 
   function HookContainer({ hookProps }: { hookProps: Props }) {
     const renderResult = hookToRender(hookProps);
@@ -59,8 +59,7 @@ export function renderHook<Result, Props>(
   );
 
   return {
-    // Result should already be set after the first render effects are run.
-    result: result as RefObject<Result>,
+    result: result,
     rerender: (hookProps: Props) => rerenderComponent(<HookContainer hookProps={hookProps} />),
     unmount,
   };
@@ -70,7 +69,7 @@ export async function renderHookAsync<Result, Props>(
   hookToRender: (props: Props) => Result,
   options?: RenderHookOptions<Props>,
 ): Promise<RenderHookAsyncResult<Result, Props>> {
-  const result = React.createRef<Result>();
+  const result = React.createRef<Result>() as RefObject<Result>;
 
   function TestComponent({ hookProps }: { hookProps: Props }) {
     const renderResult = hookToRender(hookProps);
@@ -89,8 +88,7 @@ export async function renderHookAsync<Result, Props>(
   );
 
   return {
-    // Result should already be set after the first render effects are run.
-    result: result as RefObject<Result>,
+    result: result,
     rerenderAsync: (hookProps: Props) =>
       rerenderComponentAsync(<TestComponent hookProps={hookProps} />),
     unmountAsync,
