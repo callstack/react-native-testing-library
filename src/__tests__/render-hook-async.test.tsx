@@ -216,19 +216,25 @@ test('handles custom hooks with complex logic', async () => {
     return { count, increment, decrement, reset };
   }
 
-  const { result, rerenderAsync } = await renderHookAsync(useCounter, { initialProps: 5 });
+  const { result } = await renderHookAsync(useCounter, { initialProps: 5 });
   expect(result.current.count).toBe(5);
 
-  result.current.increment();
-  await rerenderAsync(5);
+  // eslint-disable-next-line require-await
+  await act(async () => {
+    result.current.increment();
+  });
   expect(result.current.count).toBe(6);
 
-  result.current.reset();
-  await rerenderAsync(5);
+  // eslint-disable-next-line require-await
+  await act(async () => {
+    result.current.reset();
+  });
   expect(result.current.count).toBe(5);
 
-  result.current.decrement();
-  await rerenderAsync(5);
+  // eslint-disable-next-line require-await
+  await act(async () => {
+    result.current.decrement();
+  });
   expect(result.current.count).toBe(4);
 });
 
