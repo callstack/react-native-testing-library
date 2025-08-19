@@ -60,20 +60,18 @@ test('allows wrapper components', () => {
   expect(result.current).toEqual('provided');
 });
 
-const useMyHook = (param: number | undefined) => {
-  return param;
-};
+function useMyHook<T>(param: T) {
+  return { param };
+}
 
 test('props type is inferred correctly when initial props is defined', () => {
-  const { result, rerender } = renderHook((num: number | undefined) => useMyHook(num), {
+  const { result, rerender } = renderHook((num: number) => useMyHook(num), {
     initialProps: 5,
   });
-
-  expect(result.current).toBe(5);
+  expect(result.current.param).toBe(5);
 
   rerender(6);
-
-  expect(result.current).toBe(6);
+  expect(result.current.param).toBe(6);
 });
 
 test('props type is inferred correctly when initial props is explicitly undefined', () => {
@@ -81,11 +79,10 @@ test('props type is inferred correctly when initial props is explicitly undefine
     initialProps: undefined,
   });
 
-  expect(result.current).toBeUndefined();
+  expect(result.current.param).toBeUndefined();
 
   rerender(6);
-
-  expect(result.current).toBe(6);
+  expect(result.current.param).toBe(6);
 });
 
 /**
