@@ -113,4 +113,7 @@ test('scrollTo with contentSize and layoutMeasurement update FlatList content', 
   expect(screen.getByText('Item 0')).toBeOnTheScreen();
   expect(screen.getByText('Item 7')).toBeOnTheScreen();
   expect(screen.getByText('Item 15')).toBeOnTheScreen();
+
+  // Prevent act warning by unmounting the component
+  await screen.unmountAsync();
 });
