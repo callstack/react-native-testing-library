@@ -1,8 +1,8 @@
-name: Nightly
+name: React Native Nightly
 on:
-  # Runs every night at 2 AM
+  # Runs every night at 5 AM
   schedule:
-    - cron: '0 2 * * *'
+    - cron: '0 5 * * *'
   # Manaual trigger
   workflow_dispatch:
 
