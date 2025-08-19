@@ -30,3 +30,4 @@ runs:
       run: |
         yarn remove react react-test-renderer react-native @react-native/babel-preset
         yarn add -D react@19.1.0 react-test-renderer@19.1.0 react-native@nightly @react-native/babel-preset@nightly
+      shell: bash
