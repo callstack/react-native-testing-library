@@ -1,3 +1,8 @@
+/** `RefObject` type from React 19. */
+export type RefObject<T> = {
+  current: T;
+};
+
 /**
  * Location of an element.
  */

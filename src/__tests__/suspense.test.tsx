@@ -14,6 +14,8 @@ afterEach(() => {
 });
 
 function Suspending({ promise, testID }: { promise: Promise<unknown>; testID: string }) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore React 18 does not have `use` hook
   React.use(promise);
   return <View testID={testID} />;
 }
