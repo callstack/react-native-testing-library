@@ -1,8 +1,8 @@
-name: React Native Nightly
+name: React Native Latest
 on:
-  # Runs every night at 5 AM
+  # Runs every night at 2 AM
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '0 2 * * *'
   # Manual trigger
   workflow_dispatch:
 
@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Node.js and deps
-        uses: ./.github/actions/setup-deps-rn-nightly
+        uses: ./.github/actions/setup-deps-rn-latest
 
       - name: Lint
         run: yarn lint
@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Node.js and deps
-        uses: ./.github/actions/setup-deps-rn-nightly
+        uses: ./.github/actions/setup-deps-rn-latest
 
       - name: Typecheck
         run: yarn typecheck
@@ -49,7 +49,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Node.js and deps
-        uses: ./.github/actions/setup-deps-rn-nightly
+        uses: ./.github/actions/setup-deps-rn-latest
 
       - name: Test
         run: yarn test:ci

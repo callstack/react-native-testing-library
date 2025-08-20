@@ -1,4 +1,4 @@
-name: Setup deps (RN nightly)
+name: Setup deps (RN @latest)
 description: Setup Node.js and install dependencies
 
 runs:
@@ -26,7 +26,7 @@ runs:
       run: yarn install --immutable
       shell: bash
 
-    - name: Switch to React Native Nightly
+    - name: Switch to React Native Latest
       run: |
-        yarn add -D react-native@nightly @react-native/babel-preset@nightly react@19.1.1 react-test-renderer@19.1.1 
+        yarn add -D react-native@latest @react-native/babel-preset@latest
       shell: bash
