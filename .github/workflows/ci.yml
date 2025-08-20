@@ -40,10 +40,9 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-  typecheck-react-19:
-    needs: [install-cache-deps]
+  typecheck-react-18:
     runs-on: ubuntu-latest
-    name: Typecheck
+    name: Typecheck React 18
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -53,7 +52,6 @@ jobs:
 
       - name: Switch to React 18
         run: |
-          yarn remove react react-test-renderer react-native @react-native/babel-preset
           yarn add -D react@18.3.1 react-test-renderer@18.3.1 react-native@0.77.0 @react-native/babel-preset@0.77.0
 
       - name: Typecheck
@@ -89,7 +87,6 @@ jobs:
 
       - name: Switch to React 18
         run: |
-          yarn remove react react-test-renderer react-native @react-native/babel-preset
           yarn add -D react@18.3.1 react-test-renderer@18.3.1 react-native@0.77.0 @react-native/babel-preset@0.77.0
 
       - name: Test
