@@ -48,11 +48,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Node.js and deps
-        uses: ./.github/actions/setup-deps
-
-      - name: Switch to React 18
-        run: |
-          yarn add -D react@18.3.1 react-test-renderer@18.3.1 react-native@0.77.0 @react-native/babel-preset@0.77.0
+        uses: ./.github/actions/setup-deps-react-18
 
       - name: Typecheck
         run: yarn typecheck
@@ -83,11 +79,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Node.js and deps
-        uses: ./.github/actions/setup-deps
-
-      - name: Switch to React 18
-        run: |
-          yarn add -D react@18.3.1 react-test-renderer@18.3.1 react-native@0.77.0 @react-native/babel-preset@0.77.0
+        uses: ./.github/actions/setup-deps-react-18
 
       - name: Test
         run: yarn test:ci

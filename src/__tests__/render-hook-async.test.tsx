@@ -13,6 +13,12 @@ afterEach(() => {
   console.error = originalConsoleError;
 });
 
+function useSuspendingHook(promise: Promise<string>) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore: React 18 does not have `use` hook
+  return React.use(promise);
+}
+
 test('renderHookAsync renders hook asynchronously', async () => {
   const { result } = await renderHookAsync(() => {
     const [state, setState] = React.useState(1);
@@ -124,10 +130,6 @@ test('handles multiple state updates in effects', async () => {
 });
 
 testGateReact19('handles hook with suspense', async () => {
-  function useSuspendingHook(promise: Promise<string>) {
-    return React.use(promise);
-  }
-
   let resolvePromise: (value: string) => void;
   const promise = new Promise<string>((resolve) => {
     resolvePromise = resolve;
@@ -168,10 +170,6 @@ testGateReact19('handles hook suspense with error boundary', async () => {
   const ERROR_MESSAGE = 'Hook Promise Rejected In Test';
   // eslint-disable-next-line no-console
   console.error = excludeConsoleMessage(console.error, ERROR_MESSAGE);
-
-  function useSuspendingHook(promise: Promise<string>) {
-    return React.use(promise);
-  }
 
   let rejectPromise: (error: Error) => void;
   const promise = new Promise<string>((_resolve, reject) => {
