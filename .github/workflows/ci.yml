@@ -14,18 +14,7 @@ concurrency:
   cancel-in-progress: ${{ !contains(github.ref, 'main')}}
 
 jobs:
-  install-cache-deps:
-    runs-on: ubuntu-latest
-    name: Install and Cache deps
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      - name: Setup
-        uses: ./.github/actions/setup-deps
-
   lint:
-    needs: [install-cache-deps]
     runs-on: ubuntu-latest
     name: Lint
     steps:
@@ -39,7 +28,6 @@ jobs:
         run: yarn lint
 
   typecheck:
-    needs: [install-cache-deps]
     runs-on: ubuntu-latest
     name: Typecheck
     steps:
@@ -53,7 +41,6 @@ jobs:
         run: yarn typecheck
 
   test:
-    needs: [install-cache-deps]
     runs-on: ubuntu-latest
     name: Test
     steps:
@@ -72,7 +59,6 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   test-react-18:
-    needs: [install-cache-deps]
     runs-on: ubuntu-latest
     name: Test React 18
     steps:
