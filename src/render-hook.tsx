@@ -38,7 +38,7 @@ export type RenderHookOptions<Props> = {
 
 export function renderHook<Result, Props>(
   hookToRender: (props: Props) => Result,
-  options?: RenderHookOptions<Props>,
+  options?: RenderHookOptions<NoInfer<Props>>,
 ): RenderHookResult<Result, Props> {
   const result = React.createRef<Result>() as RefObject<Result>;
 
@@ -67,7 +67,7 @@ export function renderHook<Result, Props>(
 
 export async function renderHookAsync<Result, Props>(
   hookToRender: (props: Props) => Result,
-  options?: RenderHookOptions<Props>,
+  options?: RenderHookOptions<NoInfer<Props>>,
 ): Promise<RenderHookAsyncResult<Result, Props>> {
   const result = React.createRef<Result>() as RefObject<Result>;
 
