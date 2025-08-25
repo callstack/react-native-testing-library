@@ -14,9 +14,10 @@ test('configure() overrides existing config values', () => {
   configure({ defaultDebugOptions: { message: 'debug message' } });
   expect(getConfig()).toEqual({
     asyncUtilTimeout: 5000,
+    concurrentRoot: true,
+    debug: false,
     defaultDebugOptions: { message: 'debug message' },
     defaultIncludeHiddenElements: false,
-    concurrentRoot: true,
   });
 });
 

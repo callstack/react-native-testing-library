@@ -37,7 +37,7 @@ export function formatElement(
       // This prop is needed persuade the prettyFormat that the element is
       // a ReactTestRendererJSON instance, so it is formatted as JSX.
       $$typeof: Symbol.for('react.test.json'),
-      type: `${element.type}`,
+      type: formatElementName(element.type),
       props: mapProps ? mapProps(props) : props,
       children: childrenToDisplay,
     },
@@ -50,6 +50,25 @@ export function formatElement(
       min: compact,
     },
   );
+}
+
+function formatElementName(type: ReactTestInstance['type']) {
+  if (typeof type === 'function') {
+    return type.displayName ?? type.name;
+  }
+
+  if (typeof type === 'object') {
+    if ('type' in type) {
+      // @ts-expect-error: despite typing this can happen for React.memo.
+      return formatElementName(type.type);
+    }
+    if ('render' in type) {
+      // @ts-expect-error: despite typing this can happen for React.forwardRefs.
+      return formatElementName(type.render);
+    }
+  }
+
+  return `${type}`;
 }
 
 export function formatElementList(elements: ReactTestInstance[], options?: FormatElementOptions) {
