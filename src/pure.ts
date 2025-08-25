@@ -1,5 +1,5 @@
 export { default as act } from './act';
-export { default as cleanup } from './cleanup';
+export { default as cleanup, cleanupAsync } from './cleanup';
 export { default as fireEvent, fireEventAsync } from './fire-event';
 export { default as render } from './render';
 export { default as renderAsync } from './render-async';
