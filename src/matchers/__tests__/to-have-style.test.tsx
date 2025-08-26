@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { render, screen } from '../..';
 
@@ -70,8 +70,8 @@ test('toHaveStyle error messages', () => {
     - Expected
     + Received
 
-    - backgroundColor: red;
-    + backgroundColor: blue;"
+    - backgroundColor: "red";
+    + backgroundColor: "blue";"
   `);
 
   expect(() =>
@@ -85,7 +85,7 @@ test('toHaveStyle error messages', () => {
     - Expected
     + Received
 
-      backgroundColor: blue;
+      backgroundColor: "blue";
       transform: [
         {
     -     "scale": 1
@@ -102,9 +102,9 @@ test('toHaveStyle error messages', () => {
     "expect(element).not.toHaveStyle()
 
     Expected element not to have style:
-      backgroundColor: blue;
+      backgroundColor: "blue";
     Received:
-      backgroundColor: blue;"
+      backgroundColor: "blue";"
   `);
 
   expect(() => expect(view).toHaveStyle({ fontWeight: 'bold' }))
@@ -114,7 +114,7 @@ test('toHaveStyle error messages', () => {
     - Expected
     + Received
 
-    - fontWeight: bold;"
+    - fontWeight: "bold";"
   `);
 
   expect(() => expect(view).not.toHaveStyle({ backgroundColor: 'blue' }))
@@ -122,9 +122,9 @@ test('toHaveStyle error messages', () => {
     "expect(element).not.toHaveStyle()
 
     Expected element not to have style:
-      backgroundColor: blue;
+      backgroundColor: "blue";
     Received:
-      backgroundColor: blue;"
+      backgroundColor: "blue";"
   `);
 });
 
@@ -167,4 +167,27 @@ test('toHaveStyle() supports Pressable with function "style" prop', () => {
   render(<Pressable testID="view" style={() => ({ backgroundColor: 'blue' })} />);
 
   expect(screen.getByTestId('view')).toHaveStyle({ backgroundColor: 'blue' });
+});
+
+test('toHaveStyle() to differentiate number vs string values', () => {
+  const screen = render(
+    <Text
+      testID="view"
+      style={{
+        fontWeight: '600',
+      }}
+    />,
+  );
+
+  const view = screen.getByTestId('view');
+  expect(view).toHaveStyle({ fontWeight: '600' });
+  expect(() => expect(view).toHaveStyle({ fontWeight: 600 })).toThrowErrorMatchingInlineSnapshot(`
+    "expect(element).toHaveStyle()
+
+    - Expected
+    + Received
+
+    - fontWeight: 600;
+    + fontWeight: "600";"
+  `);
 });
