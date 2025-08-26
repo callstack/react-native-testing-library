@@ -124,7 +124,7 @@ function buildRenderResult(
     });
   };
 
-  addToCleanupQueue(unmount);
+  addToCleanupQueue(unmountAsync);
 
   const result = {
     ...getQueriesForElement(instance),

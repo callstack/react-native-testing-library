@@ -3,7 +3,7 @@ import './matchers/extend-expect';
 
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
 import { flushMicroTasks } from './flush-micro-tasks';
-import { cleanup } from './pure';
+import { cleanupAsync } from './pure';
 
 if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
   // If we're running in a test runner that supports afterEach
@@ -14,7 +14,7 @@ if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
   if (typeof afterEach === 'function') {
     afterEach(async () => {
       await flushMicroTasks();
-      cleanup();
+      await cleanupAsync();
     });
   }
 
