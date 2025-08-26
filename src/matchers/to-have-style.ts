@@ -67,10 +67,6 @@ function pickReceivedStyles(expected: StyleLike, received: StyleLike) {
 function formatStyles(style: StyleLike) {
   return Object.keys(style)
     .sort()
-    .map((prop) =>
-      Array.isArray(style[prop])
-        ? `${prop}: ${JSON.stringify(style[prop], null, 2)};`
-        : `${prop}: ${style[prop]};`,
-    )
+    .map((prop) => `${prop}: ${JSON.stringify(style[prop], null, 2)};`)
     .join('\n');
 }
