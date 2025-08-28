@@ -8,7 +8,7 @@ coverage:
         target: 80% # Required patch coverage target
     project:
       default:
-        threshold: 0.5%  # Allowable coverage drop in percentage points
+        threshold: 0.5% # Allowable coverage drop in percentage points
 
 comment:
   behavior: default

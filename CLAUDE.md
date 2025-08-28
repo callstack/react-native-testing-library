@@ -9,22 +9,26 @@ This is the **React Native Testing Library (RNTL)** - a comprehensive testing so
 ## Key Development Commands
 
 ### Testing
+
 - `yarn test` - Run all tests
 - `yarn test:ci` - Run tests with CI optimizations (maxWorkers=2)
 - `yarn test:ci:coverage` - Run tests with coverage reporting
 
 ### Building
+
 - `yarn build` - Full build process (clean, build JS, build types, copy flow types)
 - `yarn build:js` - Build JavaScript using Babel
 - `yarn build:ts` - Build TypeScript declarations
 - `yarn clean` - Clean build directory
 
 ### Code Quality
+
 - `yarn typecheck` - Run TypeScript compiler
 - `yarn lint` - Run ESLint with caching
 - `yarn validate` - Run lint + typecheck + test (pre-commit validation)
 
 ### Testing Single Files
+
 To test a specific file: `yarn test path/to/test.test.tsx`
 
 ## Architecture Overview
@@ -47,6 +51,7 @@ To test a specific file: `yarn test path/to/test.test.tsx`
 ### Query System
 
 The library provides three query variants for each selector:
+
 - `get*` - Throws if not found (for assertions)
 - `query*` - Returns null if not found (for conditional logic)
 - `find*` - Returns Promise, waits for element (for async operations)
@@ -59,16 +64,19 @@ The library provides three query variants for each selector:
 ## Configuration
 
 ### Jest Setup
+
 - Main Jest config: `jest.config.js`
 - Setup file: `jest-setup.ts`
 - Uses React Native preset with custom transform ignore patterns
 
 ### TypeScript
+
 - Main config: `tsconfig.json` (development)
 - Release config: `tsconfig.release.json` (for builds)
 - Strict mode enabled with ES2022 target
 
 ### ESLint
+
 - Config: `eslint.config.mjs`
 - Uses Callstack config + TypeScript strict rules
 - Custom rules for import sorting and test files
@@ -76,20 +84,23 @@ The library provides three query variants for each selector:
 ## Testing Patterns
 
 ### Component Testing
+
 ```jsx
 import { render, screen, userEvent } from '@testing-library/react-native';
 
 test('component behavior', async () => {
   const user = userEvent.setup();
   render(<MyComponent />);
-  
+
   await user.press(screen.getByRole('button'));
   expect(screen.getByText('Expected text')).toBeOnTheScreen();
 });
 ```
 
 ### Async Testing
+
 Use `findBy*` queries or `waitFor` for async operations:
+
 ```jsx
 const element = await screen.findByText('Async content');
 await waitFor(() => expect(mockFn).toHaveBeenCalled());
@@ -105,6 +116,7 @@ await waitFor(() => expect(mockFn).toHaveBeenCalled());
 ## Build Process
 
 The build creates:
+
 - `build/` - Compiled JavaScript and TypeScript declarations
 - `matchers.js` - Jest matchers for separate import
 - `pure.js` - Pure version without auto-cleanup

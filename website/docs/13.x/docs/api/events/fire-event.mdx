@@ -193,7 +193,7 @@ import { renderAsync, screen, fireEventAsync } from '@testing-library/react-nati
 
 test('fire event test', async () => {
   await renderAsync(<MySuspenseComponent />);
-  
+
   await fireEventAsync(screen.getByText('Button'), 'press');
   expect(screen.getByText('Action completed')).toBeOnTheScreen();
 });
