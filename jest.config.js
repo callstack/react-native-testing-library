@@ -9,9 +9,9 @@ module.exports = {
   snapshotSerializers: ['@relmify/jest-serializer-strip-ansi/always'],
   clearMocks: true,
   collectCoverageFrom: [
-    "src/**/*.{js,jsx,ts,tsx}",
-    "!src/**/__tests__/**",
-    "!src/**/*.test.js",
-    "!src/test-utils/**",      // Exclude setup files
+    'src/**/*.{js,jsx,ts,tsx}',
+    '!src/**/__tests__/**',
+    '!src/**/*.test.js',
+    '!src/test-utils/**', // Exclude setup files
   ],
 };

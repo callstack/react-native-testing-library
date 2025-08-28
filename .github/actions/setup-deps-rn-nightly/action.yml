@@ -28,5 +28,5 @@ runs:
 
     - name: Switch to React Native Nightly
       run: |
-        yarn add -D react-native@nightly @react-native/babel-preset@nightly react@19.1.1 react-test-renderer@19.1.1 
+        yarn add -D react-native@nightly @react-native/babel-preset@nightly react@19.1.1 react-test-renderer@19.1.1
       shell: bash
