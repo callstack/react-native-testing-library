@@ -28,7 +28,7 @@ jobs:
         run: yarn lint
 
       - name: Prettier
-        run: yarn prettier --check .
+        run: yarn prettier
 
   typecheck:
     runs-on: ubuntu-latest
