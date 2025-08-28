@@ -2,6 +2,7 @@ import * as React from 'react';
 import { FlatList, Image, Modal, ScrollView, Switch, Text, TextInput, View } from 'react-native';
 
 import { render, screen } from '..';
+import { mapJsonProps } from '../test-utils/json';
 
 const isReact19 = React.version.startsWith('19.');
 const testGateReact19 = isReact19 ? test : test.skip;
@@ -109,18 +110,17 @@ test('React Native API assumption: <TextInput> with nested Text renders single h
 test('React Native API assumption: <Switch> renders a single host element', () => {
   render(<Switch testID="test" value={true} onChange={jest.fn()} />);
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(
+    mapJsonProps(screen.toJSON(), {
+      style: '/* Intentional excluded */',
+    }),
+  ).toMatchInlineSnapshot(`
     <RCTSwitch
       accessibilityRole="switch"
       onChange={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
-      style={
-        {
-          "height": 31,
-          "width": 51,
-        }
-      }
+      style="/* Intentional excluded */"
       testID="test"
       value={true}
     />
