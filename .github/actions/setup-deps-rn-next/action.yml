@@ -28,5 +28,5 @@ runs:
 
     - name: Switch to React Native Next
       run: |
-        yarn add -D react-native@next @react-native/babel-preset@next
+        yarn add -D react-native@next @react-native/babel-preset@next react@19.1.1 react-test-renderer@19.1.1
       shell: bash
