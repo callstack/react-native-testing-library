@@ -10,7 +10,9 @@ import type { ReactTestInstance } from 'react-test-renderer';
 import act from './act';
 import { getEventHandler } from './event-handler';
 import { isElementMounted, isHostElement } from './helpers/component-tree';
+import { formatElement } from './helpers/format-element';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
+import { logger } from './helpers/logger';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
@@ -74,23 +76,41 @@ export function isEventEnabled(
   return touchStart === undefined && touchMove === undefined;
 }
 
+type FindEventHandlerState = {
+  nearestTouchResponder?: ReactTestInstance;
+  disabledElements: ReactTestInstance[];
+  targetElement: ReactTestInstance;
+};
+
 function findEventHandler(
   element: ReactTestInstance,
   eventName: string,
-  nearestTouchResponder?: ReactTestInstance,
+  state: FindEventHandlerState = {
+    disabledElements: [],
+    targetElement: element,
+  },
 ): EventHandler | null {
-  const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
+  const touchResponder = isTouchResponder(element) ? element : state.nearestTouchResponder;
 
   const handler = getEventHandler(element, eventName, { loose: true });
-  if (handler && isEventEnabled(element, eventName, touchResponder)) {
-    return handler;
+  if (handler) {
+    const isEnabled = isEventEnabled(element, eventName, touchResponder);
+    if (isEnabled) {
+      return handler;
+    } else {
+      state.disabledElements.push(element);
+    }
   }
 
   if (element.parent === null) {
+    logger.warn(formatEnabledEventHandlerNotFound(eventName, state));
     return null;
   }
 
-  return findEventHandler(element.parent, eventName, touchResponder);
+  return findEventHandler(element.parent, eventName, {
+    ...state,
+    nearestTouchResponder: touchResponder,
+  });
 }
 
 // String union type of keys of T that start with on, stripped of 'on'
@@ -210,4 +230,24 @@ function tryGetContentOffset(event: unknown): Point | null {
   }
 
   return null;
+}
+
+function formatEnabledEventHandlerNotFound(eventName: string, state: FindEventHandlerState) {
+  if (state.disabledElements.length === 0) {
+    return `Fire Event: no event handler for "${eventName}" event found on ${formatElement(
+      state.targetElement,
+      {
+        compact: true,
+      },
+    )} or any of its ancestors.`;
+  }
+
+  return `Fire Event: no enabled event handler for "${eventName}" event found. Found disabled event handler(s) on:\n${state.disabledElements
+    .map(
+      (e) =>
+        ` - ${formatElement(e, { compact: true })}${
+          typeof e.type === 'string' ? '' : ' (composite element)'
+        }`,
+    )
+    .join('\n')}`;
 }
