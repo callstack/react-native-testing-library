@@ -8,10 +8,10 @@ import type { PressOptions } from '../press';
 import { longPress, press } from '../press';
 import type { ScrollToOptions } from '../scroll';
 import { scrollTo } from '../scroll';
+import { pullToRefresh } from '../scroll/pull-to-refresh';
 import type { TypeOptions } from '../type';
 import { type } from '../type';
 import { wait } from '../utils';
-import { pullToRefresh } from '../scroll/pull-to-refresh';
 
 export interface UserEventSetupOptions {
   /**

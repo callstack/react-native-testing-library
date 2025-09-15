@@ -52,4 +52,18 @@ describe('pullToRefresh()', () => {
     await user.pullToRefresh(screen.getByTestId('view'));
     expect(onRefreshMock).toHaveBeenCalled();
   });
+
+  it('does not throw when RefreshControl is not set', async () => {
+    render(<ScrollView testID="view" />);
+    const user = userEvent.setup();
+
+    await expect(() => user.pullToRefresh(screen.getByTestId('view'))).not.toThrow();
+  });
+
+  it('does not throw when RefreshControl onRefresh is not set', async () => {
+    render(<ScrollView testID="view" refreshControl={<RefreshControl refreshing={false} />} />);
+    const user = userEvent.setup();
+
+    await expect(() => user.pullToRefresh(screen.getByTestId('view'))).not.toThrow();
+  });
 });
