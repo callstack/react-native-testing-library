@@ -49,9 +49,9 @@
     "typings/index.flow.js"
   ],
   "dependencies": {
-    "jest-matcher-utils": "^30.0.5",
+    "jest-matcher-utils": "^30.2.0",
     "picocolors": "^1.1.1",
-    "pretty-format": "^30.0.5",
+    "pretty-format": "^30.2.0",
     "redent": "^3.0.0"
   },
   "peerDependencies": {
@@ -81,13 +81,13 @@
     "@types/node": "^24.7.0",
     "@types/react": "^19.1.10",
     "@types/react-test-renderer": "^19.1.0",
-    "babel-jest": "^30.0.5",
+    "babel-jest": "^30.2.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "del-cli": "^6.0.0",
     "eslint": "^9.33.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "flow-bin": "~0.170.0",
-    "jest": "^30.0.5",
+    "jest": "^30.2.0",
     "prettier": "^3.6.2",
     "react": "19.1.1",
     "react-native": "0.82.0",
