@@ -3106,7 +3106,7 @@ __metadata:
     "@types/react-test-renderer": "npm:^19.1.0"
     babel-jest: "npm:^30.2.0"
     babel-plugin-module-resolver: "npm:^5.0.2"
-    del-cli: "npm:^6.0.0"
+    del-cli: "npm:^7.0.0"
     eslint: "npm:^9.33.0"
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
     flow-bin: "npm:~0.170.0"
@@ -5006,30 +5006,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"del-cli@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "del-cli@npm:6.0.0"
+"del-cli@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "del-cli@npm:7.0.0"
   dependencies:
-    del: "npm:^8.0.0"
-    meow: "npm:^13.2.0"
+    del: "npm:^8.0.1"
+    meow: "npm:^14.0.0"
+    presentable-error: "npm:^0.0.1"
   bin:
     del: cli.js
     del-cli: cli.js
-  checksum: 10c0/920a57efd804afab7799b8304de97d3ebbaf98dc0a524a4938115a494d67bf116674e3b38375c9cd091cf7caa8b4c2a32cbda3a032f66e0554d30d03ed5eddbe
+  checksum: 10c0/5430d233e55bfb52f3e27647e177535d0d2dac0354aeef99ff8769892203d949dc18e0bb945ef2b17d6941a8d27432b87192f50545ef4847f1b430c6b45b9305
   languageName: node
   linkType: hard
 
-"del@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "del@npm:8.0.0"
+"del@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "del@npm:8.0.1"
   dependencies:
     globby: "npm:^14.0.2"
     is-glob: "npm:^4.0.3"
     is-path-cwd: "npm:^3.0.0"
     is-path-inside: "npm:^4.0.0"
     p-map: "npm:^7.0.2"
+    presentable-error: "npm:^0.0.1"
     slash: "npm:^5.1.0"
-  checksum: 10c0/dd9099dc245173caad16a6372c7c9eb316e19e75e7bebfdce86ee59572c2591be5e569e15e8768108bb451f5319c57407cfa7adf74424f150d4d29c7f6da5601
+  checksum: 10c0/77100f260e6b5bd2a927fe4a770b321c088aa15ce9c8266b9f0297a85613c225913e52fc78150ea701b163d0d9c9fec945107fef0e23836747a57a7d3709fb1c
   languageName: node
   linkType: hard
 
@@ -8270,10 +8272,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"meow@npm:^13.0.0, meow@npm:^13.2.0":
+"meow@npm:^13.0.0":
   version: 13.2.0
   resolution: "meow@npm:13.2.0"
   checksum: 10c0/d5b339ae314715bcd0b619dd2f8a266891928e21526b4800d49b4fba1cc3fff7e2c1ff5edd3344149fac841bc2306157f858e8c4d5eaee4d52ce52ad925664ce
+  languageName: node
+  linkType: hard
+
+"meow@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "meow@npm:14.0.0"
+  checksum: 10c0/dbe4e136e0f858472d8b8c24d382054fe9898f6f47c58a42be25e6b1985e5ae31048573bf399f6e5877bf9d5b89cb840beae7350682019f998ff30baaa5e4106
   languageName: node
   linkType: hard
 
@@ -9459,6 +9468,13 @@ __metadata:
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
   checksum: 10c0/b00d617431e7886c520a6f498a2e14c75ec58f6d93ba48c3b639cf241b54232d90daa05d83a9e9b9fef6baa63cb7e1e4602c2372fea5bc169668401eb127d0cd
+  languageName: node
+  linkType: hard
+
+"presentable-error@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "presentable-error@npm:0.0.1"
+  checksum: 10c0/84a0ef6f2c34fbb1ee006b803b9e6df52886b39ae431f0359364f8a8b74b41ca98976217fdced80bf56a9dee05fa2b456cbb57323cfc3e135bce8825ec5e8650
   languageName: node
   linkType: hard
 
