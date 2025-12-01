@@ -8,6 +8,7 @@ import type { PressOptions } from '../press';
 import { longPress, press } from '../press';
 import type { ScrollToOptions } from '../scroll';
 import { scrollTo } from '../scroll';
+import { pullToRefresh } from '../scroll/pull-to-refresh';
 import type { TypeOptions } from '../type';
 import { type } from '../type';
 import { wait } from '../utils';
@@ -138,12 +139,24 @@ export interface UserEventInstance {
   paste: (element: ReactTestInstance, text: string) => Promise<void>;
 
   /**
-   * Simlate user scorlling a ScrollView element.
+   * Simlate user scorlling a given `ScrollView`-like element.
    *
-   * @param element ScrollView element
+   * Supported components: ScrollView, FlatList, SectionList
+   *
+   * @param element ScrollView-like element
    * @returns
    */
   scrollTo: (element: ReactTestInstance, options: ScrollToOptions) => Promise<void>;
+
+  /**
+   * Simulate using pull-to-refresh gesture on a given `ScrollView`-like element.
+   *
+   * Supported components: ScrollView, FlatList, SectionList
+   *
+   * @param element ScrollView-like element
+   * @returns
+   */
+  pullToRefresh: (element: ReactTestInstance) => Promise<void>;
 }
 
 function createInstance(config: UserEventConfig): UserEventInstance {
@@ -159,6 +172,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
     clear: wrapAndBindImpl(instance, clear),
     paste: wrapAndBindImpl(instance, paste),
     scrollTo: wrapAndBindImpl(instance, scrollTo),
+    pullToRefresh: wrapAndBindImpl(instance, pullToRefresh),
   };
 
   Object.assign(instance, api);
