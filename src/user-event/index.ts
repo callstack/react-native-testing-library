@@ -1,5 +1,6 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 
+import type { BlurOptions } from './clear';
 import type { PressOptions } from './press';
 import type { ScrollToOptions } from './scroll';
 import { setup } from './setup';
@@ -16,7 +17,7 @@ export const userEvent = {
     setup().longPress(element, options),
   type: (element: ReactTestInstance, text: string, options?: TypeOptions) =>
     setup().type(element, text, options),
-  clear: (element: ReactTestInstance) => setup().clear(element),
+  clear: (element: ReactTestInstance, options?: BlurOptions) => setup().clear(element, options),
   paste: (element: ReactTestInstance, text: string) => setup().paste(element, text),
   scrollTo: (element: ReactTestInstance, options: ScrollToOptions) =>
     setup().scrollTo(element, options),

@@ -14,6 +14,7 @@ export interface TypeOptions {
   skipPress?: boolean;
   submitEditing?: boolean;
   skipBlur?: boolean;
+  clearBefore?: boolean;
 }
 
 export async function type(
@@ -45,6 +46,26 @@ export async function type(
   if (!options?.skipPress) {
     await wait(this.config);
     await dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
+  }
+
+  if (options?.clearBefore) {
+    const textToClear = getTextInputValue(element);
+    const selectionRange = {
+      start: 0,
+      end: textToClear.length,
+    };
+    await dispatchEvent(
+      element,
+      'selectionChange',
+      EventBuilder.TextInput.selectionChange(selectionRange),
+    );
+
+    const emptyText = '';
+    await emitTypingEvents(element, {
+      config: this.config,
+      key: 'Backspace',
+      text: emptyText,
+    });
   }
 
   let currentText = getTextInputValue(element);
