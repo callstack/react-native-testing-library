@@ -9,7 +9,15 @@ import type { UserEventInstance } from './setup';
 import { emitTypingEvents } from './type/type';
 import { dispatchEvent, wait } from './utils';
 
-export async function clear(this: UserEventInstance, element: ReactTestInstance): Promise<void> {
+export interface BlurOptions {
+  skipBlur?: boolean;
+}
+
+export async function clear(
+  this: UserEventInstance,
+  element: ReactTestInstance,
+  options?: BlurOptions,
+): Promise<void> {
   if (!isHostTextInput(element)) {
     throw new ErrorWithStack(
       `clear() only supports host "TextInput" elements. Passed element has type: "${element.type}".`,
@@ -45,7 +53,9 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
   });
 
   // 4. Exit element
-  await wait(this.config);
-  await dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(emptyText));
-  await dispatchEvent(element, 'blur', EventBuilder.Common.blur());
+  if (!options?.skipBlur) {
+    await wait(this.config);
+    await dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(emptyText));
+    await dispatchEvent(element, 'blur', EventBuilder.Common.blur());
+  }
 }

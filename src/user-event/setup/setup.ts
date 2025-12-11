@@ -2,6 +2,7 @@ import type { ReactTestInstance } from 'react-test-renderer';
 
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { wrapAsync } from '../../helpers/wrap-async';
+import type { BlurOptions } from '../clear';
 import { clear } from '../clear';
 import { paste } from '../paste';
 import type { PressOptions } from '../press';
@@ -122,7 +123,7 @@ export interface UserEventInstance {
    *
    * @param element TextInput element to clear
    */
-  clear: (element: ReactTestInstance) => Promise<void>;
+  clear: (element: ReactTestInstance, options?: BlurOptions) => Promise<void>;
 
   /**
    * Simulate user pasting the text to a given `TextInput` element.

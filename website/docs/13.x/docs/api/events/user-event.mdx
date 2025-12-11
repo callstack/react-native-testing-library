@@ -83,6 +83,7 @@ type(
     skipPress?: boolean;
     skipBlur?: boolean;
     submitEditing?: boolean;
+    clearBefore?: boolean;
   }
 ```
 
@@ -98,7 +99,7 @@ This helper simulates the user focusing on a `TextInput` element, typing `text` 
 This function supports only host `TextInput` elements. Passing other element types will result in throwing an error.
 
 :::note
-This function will add text to the text already present in the text input (as specified by `value` or `defaultValue` props). To replace existing text, use [`clear()`](#clear) helper first.
+This function will add text to the text already present in the text input (as specified by `value` or `defaultValue` props). To replace existing text, use the `clearBefore` option or use the [`clear()`](#clear) helper first.
 :::
 
 ### Options {#type-options}
@@ -106,6 +107,7 @@ This function will add text to the text already present in the text input (as sp
 - `skipPress` - if true, `pressIn` and `pressOut` events will not be triggered.
 - `skipBlur` - if true, `endEditing` and `blur` events will not be triggered when typing is complete.
 - `submitEditing` - if true, `submitEditing` event will be triggered after typing the text.
+- `clearBefore` - if true, the existing text in the input will be cleared before typing the new text.
 
 ### Sequence of events {#type-sequence}
 
@@ -143,6 +145,9 @@ The `endEditing` and `blur` events can be skipped by passing the `skipBlur: true
 ```ts
 clear(
   element: ReactTestInstance,
+  options?: {
+    skipBlur?: boolean;
+  }
 )
 ```
 
@@ -156,6 +161,10 @@ await user.clear(textInput);
 This helper simulates the user clearing the content of a `TextInput` element.
 
 This function supports only host `TextInput` elements. Passing other element types will result in throwing an error.
+
+### Options {#clear-options}
+
+- `skipBlur` - if true, `endEditing` and `blur` events will not be triggered after clearing the text.
 
 ### Sequence of events {#clear-sequence}
 

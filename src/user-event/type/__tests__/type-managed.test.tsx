@@ -138,4 +138,50 @@ describe('type() for managed TextInput', () => {
       'selectionChange',
     ]);
   });
+
+  it('clears existing text when `clearBefore: true` in managed TextInput', async () => {
+    jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
+    const { events, logEvent } = createEventLogger();
+    render(<ManagedTextInput initialValue="Hello!" logEvent={logEvent} />);
+
+    const user = userEvent.setup();
+    await user.type(screen.getByTestId('input'), 'World', {
+      clearBefore: true,
+    });
+
+    expect(getEventsNames(events)).toEqual([
+      'pressIn',
+      'focus',
+      'pressOut',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'endEditing',
+      'blur',
+    ]);
+
+    expect(events).toMatchSnapshot('input: "World", initialValue: "Hello!", clearBefore: true');
+  });
 });

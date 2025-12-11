@@ -418,4 +418,58 @@ describe('type()', () => {
       nativeEvent: { selection: { start: 1, end: 1 } },
     });
   });
+
+  it('clears existing text when `clearBefore: true`', async () => {
+    const { events } = renderTextInputWithToolkit({
+      defaultValue: 'Hello!',
+    });
+
+    const user = userEvent.setup();
+    await user.type(screen.getByTestId('input'), 'World', {
+      clearBefore: true,
+    });
+
+    expect(getEventsNames(events)).toEqual([
+      'pressIn',
+      'focus',
+      'pressOut',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+      'endEditing',
+      'blur',
+    ]);
+
+    expect(lastEventPayload(events, 'changeText')).toBe('World');
+    expect(lastEventPayload(events, 'endEditing')).toMatchObject({
+      nativeEvent: {
+        target: 0,
+        text: 'World',
+      },
+    });
+
+    expect(events).toMatchSnapshot('input: "World", defaultValue: "Hello!", clearBefore: true');
+  });
 });
