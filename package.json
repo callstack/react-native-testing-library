@@ -78,7 +78,7 @@
     "@release-it/conventional-changelog": "^10.0.2",
     "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.3",
     "@types/react": "^19.2.6",
     "@types/react-test-renderer": "^19.1.0",
     "babel-jest": "^30.2.0",
