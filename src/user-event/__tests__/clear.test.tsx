@@ -219,4 +219,45 @@ describe('clear()', () => {
     await user.clear(input);
     expect(input).toHaveDisplayValue('');
   });
+
+  it('skips blur and endEditing events when `skipBlur: true`', async () => {
+    const { textInput, events } = renderTextInputWithToolkit({
+      value: 'Hello!',
+    });
+
+    const user = userEvent.setup();
+    await user.clear(textInput, {
+      skipBlur: true,
+    });
+
+    const eventNames = getEventsNames(events);
+
+    // Ensure 'endEditing' and 'blur' are not present
+    expect(eventNames).not.toContain('endEditing');
+    expect(eventNames).not.toContain('blur');
+
+    // Verify the exact events that should be present
+    expect(eventNames).toEqual([
+      'focus',
+      'selectionChange',
+      'keyPress',
+      'change',
+      'changeText',
+      'selectionChange',
+    ]);
+
+    expect(events).toMatchSnapshot('value: "Hello!" skipBlur: true');
+  });
+
+  it('sets native state value for unmanaged text inputs when `skipBlur: true`', async () => {
+    render(<TextInput testID="input" />);
+
+    const user = userEvent.setup();
+    const input = screen.getByTestId('input');
+    await user.type(input, 'abc');
+    expect(input).toHaveDisplayValue('abc');
+
+    await user.clear(input, { skipBlur: true });
+    expect(input).toHaveDisplayValue('');
+  });
 });
