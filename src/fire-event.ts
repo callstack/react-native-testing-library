@@ -9,7 +9,7 @@ import type { HostElement } from 'universal-test-renderer';
 
 import act from './act';
 import { getEventHandler } from './event-handler';
-import { isElementMounted, isValidElement } from './helpers/component-tree';
+import { isElementMounted } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
@@ -20,10 +20,6 @@ import { EventBuilder } from './user-event/event-builder';
 type EventHandler = (...args: unknown[]) => unknown;
 
 export function isTouchResponder(element: HostElement) {
-  if (!isValidElement(element)) {
-    return false;
-  }
-
   return Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element);
 }
 

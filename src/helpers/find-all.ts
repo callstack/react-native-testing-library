@@ -2,7 +2,6 @@ import type { HostElement } from 'universal-test-renderer';
 
 import { getConfig } from '../config';
 import { isHiddenFromAccessibility } from './accessibility';
-import { isValidElement } from './component-tree';
 
 interface FindAllOptions {
   /** Match elements hidden from accessibility */
@@ -55,7 +54,6 @@ function findAllInternal(
   if (
     // When matchDeepestOnly = true: add current element only if no descendants match
     (!options?.matchDeepestOnly || matchingDescendants.length === 0) &&
-    isValidElement(node) &&
     predicate(node)
   ) {
     results.push(node);

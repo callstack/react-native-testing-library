@@ -1,7 +1,5 @@
 import type { HostElement } from 'universal-test-renderer';
 
-import { isValidElement } from './component-tree';
-
 export const HOST_TEXT_NAMES = ['Text', 'RCTText'];
 const HOST_TEXT_INPUT_NAMES = ['TextInput'];
 const HOST_IMAGE_NAMES = ['Image'];
@@ -14,7 +12,7 @@ const HOST_MODAL_NAMES = ['Modal'];
  * @param element The element to check.
  */
 export function isHostText(element: HostElement | null) {
-  return isValidElement(element) && HOST_TEXT_NAMES.includes(element.type);
+  return element != null && HOST_TEXT_NAMES.includes(element.type);
 }
 
 /**
@@ -22,7 +20,7 @@ export function isHostText(element: HostElement | null) {
  * @param element The element to check.
  */
 export function isHostTextInput(element: HostElement | null) {
-  return isValidElement(element) && HOST_TEXT_INPUT_NAMES.includes(element.type);
+  return element != null && HOST_TEXT_INPUT_NAMES.includes(element.type);
 }
 
 /**
@@ -30,7 +28,7 @@ export function isHostTextInput(element: HostElement | null) {
  * @param element The element to check.
  */
 export function isHostImage(element: HostElement | null) {
-  return isValidElement(element) && HOST_IMAGE_NAMES.includes(element.type);
+  return element != null && HOST_IMAGE_NAMES.includes(element.type);
 }
 
 /**
@@ -38,7 +36,7 @@ export function isHostImage(element: HostElement | null) {
  * @param element The element to check.
  */
 export function isHostSwitch(element: HostElement | null) {
-  return isValidElement(element) && HOST_SWITCH_NAMES.includes(element.type);
+  return element != null && HOST_SWITCH_NAMES.includes(element.type);
 }
 
 /**
@@ -46,7 +44,7 @@ export function isHostSwitch(element: HostElement | null) {
  * @param element The element to check.
  */
 export function isHostScrollView(element: HostElement | null) {
-  return isValidElement(element) && HOST_SCROLL_VIEW_NAMES.includes(element.type);
+  return element != null && HOST_SCROLL_VIEW_NAMES.includes(element.type);
 }
 
 /**
@@ -54,5 +52,5 @@ export function isHostScrollView(element: HostElement | null) {
  * @param element The element to check.
  */
 export function isHostModal(element: HostElement | null) {
-  return isValidElement(element) && HOST_MODAL_NAMES.includes(element.type);
+  return element != null && HOST_MODAL_NAMES.includes(element.type);
 }

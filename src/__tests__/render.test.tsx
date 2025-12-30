@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
-import { CONTAINER_TYPE } from 'universal-test-renderer';
 
 import { fireEvent, render, type RenderAPI, screen } from '..';
 
@@ -166,14 +165,6 @@ test('returns host root', () => {
   expect(screen.root).toBeDefined();
   expect(screen.root?.type).toBe('View');
   expect(screen.root?.props.testID).toBe('inner');
-});
-
-test('returns container', () => {
-  render(<View testID="inner" />);
-
-  expect(screen.container).toBeDefined();
-  expect(screen.container.type).toBe(CONTAINER_TYPE);
-  expect(screen.container.props).toEqual({});
 });
 
 test('RenderAPI type', () => {

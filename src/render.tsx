@@ -65,13 +65,12 @@ function buildRenderResult(
   addToCleanupQueue(unmount);
 
   const result = {
-    ...getQueriesForElement(renderer.container),
+    ...getQueriesForElement(renderer.root!),
     update,
     unmount,
     rerender: update, // alias for `update`
     toJSON: () => renderer.root?.toJSON(),
     debug: makeDebug(renderer),
-    container: renderer.container,
     get root(): HostElement | null {
       return renderer.root;
     },
