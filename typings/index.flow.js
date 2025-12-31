@@ -55,10 +55,10 @@ declare type A11yRole =
 
 declare type A11yState = {|
   disabled?: boolean,
-    selected ?: boolean,
-    checked ?: boolean | 'mixed',
-    busy ?: boolean,
-    expanded ?: boolean,
+  selected?: boolean,
+  checked?: boolean | 'mixed',
+  busy?: boolean,
+  expanded?: boolean,
 |};
 
 declare type A11yValue = {

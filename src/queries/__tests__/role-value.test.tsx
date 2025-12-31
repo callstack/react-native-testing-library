@@ -80,93 +80,101 @@ describe('accessibility value', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: adjustable, name: Hello, min value: 5
 
-      <Text
-        accessibilityRole="adjustable"
-        accessibilityState={
-          {
-            "disabled": true,
+      <RntlContainer>
+        <Text
+          accessibilityRole="adjustable"
+          accessibilityState={
+            {
+              "disabled": true,
+            }
           }
-        }
-        accessibilityValue={
-          {
-            "max": 20,
-            "min": 10,
-            "now": 12,
-            "text": "Hello",
+          accessibilityValue={
+            {
+              "max": 20,
+              "min": 10,
+              "now": 12,
+              "text": "Hello",
+            }
           }
-        }
-      >
-        Hello
-      </Text>"
+        >
+          Hello
+        </Text>
+      </RntlContainer>"
     `);
     expect(() => screen.getByRole('adjustable', { name: 'World', value: { min: 10 } }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: adjustable, name: World, min value: 10
 
-      <Text
-        accessibilityRole="adjustable"
-        accessibilityState={
-          {
-            "disabled": true,
+      <RntlContainer>
+        <Text
+          accessibilityRole="adjustable"
+          accessibilityState={
+            {
+              "disabled": true,
+            }
           }
-        }
-        accessibilityValue={
-          {
-            "max": 20,
-            "min": 10,
-            "now": 12,
-            "text": "Hello",
+          accessibilityValue={
+            {
+              "max": 20,
+              "min": 10,
+              "now": 12,
+              "text": "Hello",
+            }
           }
-        }
-      >
-        Hello
-      </Text>"
+        >
+          Hello
+        </Text>
+      </RntlContainer>"
     `);
     expect(() => screen.getByRole('adjustable', { name: 'Hello', value: { min: 5 } }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: adjustable, name: Hello, min value: 5
 
-      <Text
-        accessibilityRole="adjustable"
-        accessibilityState={
-          {
-            "disabled": true,
+      <RntlContainer>
+        <Text
+          accessibilityRole="adjustable"
+          accessibilityState={
+            {
+              "disabled": true,
+            }
           }
-        }
-        accessibilityValue={
-          {
-            "max": 20,
-            "min": 10,
-            "now": 12,
-            "text": "Hello",
+          accessibilityValue={
+            {
+              "max": 20,
+              "min": 10,
+              "now": 12,
+              "text": "Hello",
+            }
           }
-        }
-      >
-        Hello
-      </Text>"
+        >
+          Hello
+        </Text>
+      </RntlContainer>"
     `);
     expect(() => screen.getByRole('adjustable', { selected: true, value: { min: 10 } }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: adjustable, selected state: true, min value: 10
 
-      <Text
-        accessibilityRole="adjustable"
-        accessibilityState={
-          {
-            "disabled": true,
+      <RntlContainer>
+        <Text
+          accessibilityRole="adjustable"
+          accessibilityState={
+            {
+              "disabled": true,
+            }
           }
-        }
-        accessibilityValue={
-          {
-            "max": 20,
-            "min": 10,
-            "now": 12,
-            "text": "Hello",
+          accessibilityValue={
+            {
+              "max": 20,
+              "min": 10,
+              "now": 12,
+              "text": "Hello",
+            }
           }
-        }
-      >
-        Hello
-      </Text>"
+        >
+          Hello
+        </Text>
+      </RntlContainer>"
     `);
   });
 

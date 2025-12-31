@@ -1,8 +1,4 @@
-import Theme, {
-  Link,
-  PrevNextPage,
-  getCustomMDXComponent,
-} from 'rspress/theme';
+import Theme, { Link, PrevNextPage, getCustomMDXComponent } from 'rspress/theme';
 
 const Layout = () => <Theme.Layout />;
 
@@ -17,19 +13,14 @@ const { code: Code, pre: Pre } = getCustomMDXComponent();
 export const CodeBlock = ({ children, language, title }) => {
   return (
     <Pre>
-      <Code
-        className={`language-${language}`}
-        meta={title ? `title="${title}"` : undefined}
-      >
+      <Code className={`language-${language}`} meta={title ? `title="${title}"` : undefined}>
         {children}
       </Code>
     </Pre>
   );
 };
 
-const CustomLink = (props) => (
-  <Link {...props} className={props.className + ' rspress-link'} />
-);
+const CustomLink = (props) => <Link {...props} className={props.className + ' rspress-link'} />;
 
 /* omit rendering for edge cases */
 const CustomPrevNextPage = (props) => {

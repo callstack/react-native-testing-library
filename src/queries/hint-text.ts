@@ -1,4 +1,4 @@
-import type { HostElement } from 'universal-test-renderer';
+import type { ContainerElement, HostElement } from 'universal-test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import type { TextMatch, TextMatchOptions } from '../matches';
@@ -21,7 +21,9 @@ const getNodeByHintText = (node: HostElement, text: TextMatch, options: TextMatc
   return matches(text, node.props.accessibilityHint, normalizer, exact);
 };
 
-const queryAllByHintText = (instance: HostElement): QueryAllByQuery<TextMatch, ByHintTextOptions> =>
+const queryAllByHintText = (
+  instance: ContainerElement | HostElement,
+): QueryAllByQuery<TextMatch, ByHintTextOptions> =>
   function queryAllByA11yHintFn(hint, queryOptions) {
     return findAll(instance, (node) => getNodeByHintText(node, hint, queryOptions), queryOptions);
   };
@@ -62,7 +64,9 @@ export type ByHintTextQueries = {
   findAllByAccessibilityHint: FindAllByQuery<TextMatch, ByHintTextOptions>;
 };
 
-export const bindByHintTextQueries = (instance: HostElement): ByHintTextQueries => {
+export const bindByHintTextQueries = (
+  instance: ContainerElement | HostElement,
+): ByHintTextQueries => {
   const getByHintText = getBy(instance);
   const getAllByHintText = getAllBy(instance);
   const queryByHintText = queryBy(instance);

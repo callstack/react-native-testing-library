@@ -12,9 +12,11 @@ test('React Native API assumption: <View> renders a single host element', () => 
   render(<View testID="test" />);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <View
-      testID="test"
-    />
+    <RntlContainer>
+      <View
+        testID="test"
+      />
+    </RntlContainer>
   `);
 });
 
@@ -22,11 +24,13 @@ test('React Native API assumption: <Text> renders a single host element', () => 
   render(<Text testID="test">Hello</Text>);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <Text
-      testID="test"
-    >
-      Hello
-    </Text>
+    <RntlContainer>
+      <Text
+        testID="test"
+      >
+        Hello
+      </Text>
+    </RntlContainer>
   `);
 });
 
@@ -42,25 +46,27 @@ test('React Native API assumption: nested <Text> renders a single host element',
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <Text
-      testID="test"
-    >
+    <RntlContainer>
       <Text
-        testID="before"
-      >
-        Before
-      </Text>
-      Hello
-      <Text
-        testID="after"
+        testID="test"
       >
         <Text
-          testID="deeplyNested"
+          testID="before"
         >
-          Deeply nested
+          Before
+        </Text>
+        Hello
+        <Text
+          testID="after"
+        >
+          <Text
+            testID="deeplyNested"
+          >
+            Deeply nested
+          </Text>
         </Text>
       </Text>
-    </Text>
+    </RntlContainer>
   `);
 });
 
@@ -75,12 +81,14 @@ test('React Native API assumption: <TextInput> renders a single host element', (
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <TextInput
-      defaultValue="default"
-      placeholder="Placeholder"
-      testID="test"
-      value="currentValue"
-    />
+    <RntlContainer>
+      <TextInput
+        defaultValue="default"
+        placeholder="Placeholder"
+        testID="test"
+        value="currentValue"
+      />
+    </RntlContainer>
   `);
 });
 
@@ -92,14 +100,16 @@ test('React Native API assumption: <TextInput> with nested Text renders single h
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <TextInput
-      placeholder="Placeholder"
-      testID="test"
-    >
-      <Text>
-        Hello
-      </Text>
-    </TextInput>
+    <RntlContainer>
+      <TextInput
+        placeholder="Placeholder"
+        testID="test"
+      >
+        <Text>
+          Hello
+        </Text>
+      </TextInput>
+    </RntlContainer>
   `);
 });
 
@@ -107,20 +117,22 @@ test('React Native API assumption: <Switch> renders a single host element', () =
   render(<Switch testID="test" value={true} onChange={jest.fn()} />);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RCTSwitch
-      accessibilityRole="switch"
-      onChange={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        {
-          "height": 31,
-          "width": 51,
+    <RntlContainer>
+      <RCTSwitch
+        accessibilityRole="switch"
+        onChange={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "height": 31,
+            "width": 51,
+          }
         }
-      }
-      testID="test"
-      value={true}
-    />
+        testID="test"
+        value={true}
+      />
+    </RntlContainer>
   `);
 });
 
@@ -128,15 +140,17 @@ test('React Native API assumption: <Image> renders a single host element', () =>
   render(<Image testID="test" source={{ uri: 'https://fake.url/image.jpg' }} alt="Alt text" />);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <Image
-      alt="Alt text"
-      source={
-        {
-          "uri": "https://fake.url/image.jpg",
+    <RntlContainer>
+      <Image
+        alt="Alt text"
+        source={
+          {
+            "uri": "https://fake.url/image.jpg",
+          }
         }
-      }
-      testID="test"
-    />
+        testID="test"
+      />
+    </RntlContainer>
   `);
 });
 
@@ -148,15 +162,17 @@ test('React Native API assumption: <ScrollView> renders a single host element', 
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RCTScrollView
-      testID="scrollView"
-    >
-      <View>
-        <View
-          testID="view"
-        />
-      </View>
-    </RCTScrollView>
+    <RntlContainer>
+      <RCTScrollView
+        testID="scrollView"
+      >
+        <View>
+          <View
+            testID="view"
+          />
+        </View>
+      </RCTScrollView>
+    </RntlContainer>
   `);
 });
 
@@ -166,51 +182,53 @@ test('React Native API assumption: <FlatList> renders a single host <ScrollView>
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RCTScrollView
-      data={
-        [
-          1,
-          2,
-        ]
-      }
-      getItem={[Function]}
-      getItemCount={[Function]}
-      keyExtractor={[Function]}
-      onContentSizeChange={[Function]}
-      onLayout={[Function]}
-      onMomentumScrollBegin={[Function]}
-      onMomentumScrollEnd={[Function]}
-      onScroll={[Function]}
-      onScrollBeginDrag={[Function]}
-      onScrollEndDrag={[Function]}
-      removeClippedSubviews={false}
-      renderItem={[Function]}
-      scrollEventThrottle={0.0001}
-      stickyHeaderIndices={[]}
-      testID="flatList"
-      viewabilityConfigCallbackPairs={[]}
-    >
-      <View>
-        <View
-          onFocusCapture={[Function]}
-          onLayout={[Function]}
-          style={null}
-        >
-          <Text>
-            1
-          </Text>
+    <RntlContainer>
+      <RCTScrollView
+        data={
+          [
+            1,
+            2,
+          ]
+        }
+        getItem={[Function]}
+        getItemCount={[Function]}
+        keyExtractor={[Function]}
+        onContentSizeChange={[Function]}
+        onLayout={[Function]}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        removeClippedSubviews={false}
+        renderItem={[Function]}
+        scrollEventThrottle={0.0001}
+        stickyHeaderIndices={[]}
+        testID="flatList"
+        viewabilityConfigCallbackPairs={[]}
+      >
+        <View>
+          <View
+            onFocusCapture={[Function]}
+            onLayout={[Function]}
+            style={null}
+          >
+            <Text>
+              1
+            </Text>
+          </View>
+          <View
+            onFocusCapture={[Function]}
+            onLayout={[Function]}
+            style={null}
+          >
+            <Text>
+              2
+            </Text>
+          </View>
         </View>
-        <View
-          onFocusCapture={[Function]}
-          onLayout={[Function]}
-          style={null}
-        >
-          <Text>
-            2
-          </Text>
-        </View>
-      </View>
-    </RCTScrollView>
+      </RCTScrollView>
+    </RntlContainer>
   `);
 });
 
@@ -222,15 +240,17 @@ test('React Native API assumption: <Modal> renders a single host element', () =>
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <Modal
-      hardwareAccelerated={false}
-      testID="test"
-      visible={true}
-    >
-      <Text>
-        Modal Content
-      </Text>
-    </Modal>
+    <RntlContainer>
+      <Modal
+        hardwareAccelerated={false}
+        testID="test"
+        visible={true}
+      >
+        <Text>
+          Modal Content
+        </Text>
+      </Modal>
+    </RntlContainer>
   `);
 });
 
@@ -259,26 +279,28 @@ test('React Native API assumption: aria-* props render directly on host View', (
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <View
-      aria-busy={true}
-      aria-checked={true}
-      aria-disabled={true}
-      aria-expanded={true}
-      aria-hidden={true}
-      aria-label="Label"
-      aria-labelledby="LabelledBy"
-      aria-live="polite"
-      aria-modal={true}
-      aria-pressed={true}
-      aria-readonly={true}
-      aria-required={true}
-      aria-selected={true}
-      aria-valuemax={10}
-      aria-valuemin={0}
-      aria-valuenow={5}
-      aria-valuetext="ValueText"
-      testID="test"
-    />
+    <RntlContainer>
+      <View
+        aria-busy={true}
+        aria-checked={true}
+        aria-disabled={true}
+        aria-expanded={true}
+        aria-hidden={true}
+        aria-label="Label"
+        aria-labelledby="LabelledBy"
+        aria-live="polite"
+        aria-modal={true}
+        aria-pressed={true}
+        aria-readonly={true}
+        aria-required={true}
+        aria-selected={true}
+        aria-valuemax={10}
+        aria-valuemin={0}
+        aria-valuenow={5}
+        aria-valuetext="ValueText"
+        testID="test"
+      />
+    </RntlContainer>
   `);
 });
 
@@ -307,26 +329,28 @@ test('React Native API assumption: aria-* props render directly on host Text', (
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <Text
-      aria-busy={true}
-      aria-checked={true}
-      aria-disabled={true}
-      aria-expanded={true}
-      aria-hidden={true}
-      aria-label="Label"
-      aria-labelledby="LabelledBy"
-      aria-live="polite"
-      aria-modal={true}
-      aria-pressed={true}
-      aria-readonly={true}
-      aria-required={true}
-      aria-selected={true}
-      aria-valuemax={10}
-      aria-valuemin={0}
-      aria-valuenow={5}
-      aria-valuetext="ValueText"
-      testID="test"
-    />
+    <RntlContainer>
+      <Text
+        aria-busy={true}
+        aria-checked={true}
+        aria-disabled={true}
+        aria-expanded={true}
+        aria-hidden={true}
+        aria-label="Label"
+        aria-labelledby="LabelledBy"
+        aria-live="polite"
+        aria-modal={true}
+        aria-pressed={true}
+        aria-readonly={true}
+        aria-required={true}
+        aria-selected={true}
+        aria-valuemax={10}
+        aria-valuemin={0}
+        aria-valuenow={5}
+        aria-valuetext="ValueText"
+        testID="test"
+      />
+    </RntlContainer>
   `);
 });
 
@@ -355,25 +379,27 @@ test('React Native API assumption: aria-* props render directly on host TextInpu
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <TextInput
-      aria-busy={true}
-      aria-checked={true}
-      aria-disabled={true}
-      aria-expanded={true}
-      aria-hidden={true}
-      aria-label="Label"
-      aria-labelledby="LabelledBy"
-      aria-live="polite"
-      aria-modal={true}
-      aria-pressed={true}
-      aria-readonly={true}
-      aria-required={true}
-      aria-selected={true}
-      aria-valuemax={10}
-      aria-valuemin={0}
-      aria-valuenow={5}
-      aria-valuetext="ValueText"
-      testID="test"
-    />
+    <RntlContainer>
+      <TextInput
+        aria-busy={true}
+        aria-checked={true}
+        aria-disabled={true}
+        aria-expanded={true}
+        aria-hidden={true}
+        aria-label="Label"
+        aria-labelledby="LabelledBy"
+        aria-live="polite"
+        aria-modal={true}
+        aria-pressed={true}
+        aria-readonly={true}
+        aria-required={true}
+        aria-selected={true}
+        aria-valuemax={10}
+        aria-valuemin={0}
+        aria-valuenow={5}
+        aria-valuetext="ValueText"
+        testID="test"
+      />
+    </RntlContainer>
   `);
 });

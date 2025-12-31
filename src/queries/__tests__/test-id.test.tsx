@@ -147,16 +147,18 @@ test('byTestId queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: hidden
 
-    <Text
-      style={
-        {
-          "display": "none",
+    <RntlContainer>
+      <Text
+        style={
+          {
+            "display": "none",
+          }
         }
-      }
-      testID="hidden"
-    >
-      Hidden from accessibility
-    </Text>"
+        testID="hidden"
+      >
+        Hidden from accessibility
+      </Text>
+    </RntlContainer>"
   `);
 });
 
@@ -166,32 +168,40 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    <View
-      testID="TEST_ID"
-    />"
+    <RntlContainer>
+      <View
+        testID="TEST_ID"
+      />
+    </RntlContainer>"
   `);
 
   expect(() => screen.getAllByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    <View
-      testID="TEST_ID"
-    />"
+    <RntlContainer>
+      <View
+        testID="TEST_ID"
+      />
+    </RntlContainer>"
   `);
 
   await expect(screen.findByTestId('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    <View
-      testID="TEST_ID"
-    />"
+    <RntlContainer>
+      <View
+        testID="TEST_ID"
+      />
+    </RntlContainer>"
   `);
 
   await expect(screen.findAllByTestId('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
 
-    <View
-      testID="TEST_ID"
-    />"
+    <RntlContainer>
+      <View
+        testID="TEST_ID"
+      />
+    </RntlContainer>"
   `);
 });

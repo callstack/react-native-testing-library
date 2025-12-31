@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { HostElement, Root, RootOptions } from 'universal-test-renderer';
+import type { ContainerElement, HostElement, Root, RootOptions } from 'universal-test-renderer';
 import { createRoot } from 'universal-test-renderer';
 
 import act from './act';
@@ -25,6 +25,7 @@ export type RenderResult = ReturnType<typeof render>;
 
 const createRootOptions: RootOptions = {
   textComponents: HOST_TEXT_NAMES,
+  containerType: 'RntlContainer',
 };
 
 /**
@@ -65,12 +66,15 @@ function buildRenderResult(
   addToCleanupQueue(unmount);
 
   const result = {
-    ...getQueriesForElement(renderer.root!),
+    ...getQueriesForElement(renderer.container),
     update,
     unmount,
     rerender: update, // alias for `update`
-    toJSON: () => renderer.root?.toJSON(),
+    toJSON: () => renderer.container?.toJSON(),
     debug: makeDebug(renderer),
+    get container(): ContainerElement {
+      return renderer.container;
+    },
     get root(): HostElement | null {
       return renderer.root;
     },

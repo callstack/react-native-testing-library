@@ -334,7 +334,7 @@ describe('PhoneBook', () => {
   });
 });
 
-````
+```
 
 ## Global guarding against unwanted API requests
 

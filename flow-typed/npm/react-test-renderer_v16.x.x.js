@@ -31,15 +31,12 @@ type ReactTestInstance = {
 
   findAll(
     predicate: (node: ReactTestInstance) => boolean,
-    options?: { deep: boolean }
+    options?: { deep: boolean },
   ): ReactTestInstance[],
-  findAllByType(
-    type: React$ElementType,
-    options?: { deep: boolean }
-  ): ReactTestInstance[],
+  findAllByType(type: React$ElementType, options?: { deep: boolean }): ReactTestInstance[],
   findAllByProps(
     props: { [propName: string]: any },
-    options?: { deep: boolean }
+    options?: { deep: boolean },
   ): ReactTestInstance[],
 };
 
@@ -63,7 +60,7 @@ declare module 'react-test-renderer' {
 
   declare function create(
     nextElement: React$Element<any>,
-    options?: TestRendererOptions
+    options?: TestRendererOptions,
   ): ReactTestRenderer;
 
   declare function act(callback: () => void): Thenable;

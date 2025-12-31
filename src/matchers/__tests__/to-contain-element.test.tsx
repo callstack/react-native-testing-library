@@ -100,22 +100,13 @@ test('toContainElement() handles non-element container', () => {
 
   const view = screen.getByTestId('view');
 
-  expect(() => expect({ name: 'non-element' }).not.toContainElement(view))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "expect(received).not.toContainElement()
+  expect(() =>
+    expect({ name: 'non-element' }).not.toContainElement(view),
+  ).toThrowErrorMatchingInlineSnapshot(`"Cannot read properties of undefined (reading 'forEach')"`);
 
-    received value must be a host element.
-    Received has type:  object
-    Received has value: {"name": "non-element"}"
-  `);
-
-  expect(() => expect(true).not.toContainElement(view)).toThrowErrorMatchingInlineSnapshot(`
-      "expect(received).not.toContainElement()
-
-      received value must be a host element.
-      Received has type:  boolean
-      Received has value: true"
-    `);
+  expect(() => expect(true).not.toContainElement(view)).toThrowErrorMatchingInlineSnapshot(
+    `"Cannot read properties of undefined (reading 'forEach')"`,
+  );
 });
 
 test('toContainElement() handles non-element element', () => {

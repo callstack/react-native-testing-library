@@ -5,7 +5,7 @@ import { render, screen } from '../..';
 
 function renderViewsWithRole(role: AccessibilityRole) {
   render(
-    <>
+    <View>
       <View
         testID={`${role}-checked`}
         accessible
@@ -25,17 +25,17 @@ function renderViewsWithRole(role: AccessibilityRole) {
         accessibilityState={{ checked: 'mixed' }}
       />
       <View testID={`${role}-default`} accessible accessibilityRole={role} />
-    </>,
+    </View>,
   );
 }
 
 test('toBeCheck() with Switch', () => {
   render(
-    <>
+    <View>
       <Switch testID="checked" value={true} />
       <Switch testID="unchecked" value={false} />
       <Switch testID="default" />
-    </>,
+    </View>,
   );
 
   const checked = screen.getByTestId('checked');

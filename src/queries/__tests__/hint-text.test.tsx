@@ -37,51 +37,53 @@ test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
   render(<Section />);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <View>
-      <Text
-        accessibilityHint="static text"
-      >
-        Title
-      </Text>
-      <View
-        accessibilityHint="click this button"
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onBlur={[Function]}
-        onClick={[Function]}
-        onFocus={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-      >
+    <RntlContainer>
+      <View>
         <Text
           accessibilityHint="static text"
         >
-          Hello
+          Title
         </Text>
+        <View
+          accessibilityHint="click this button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <Text
+            accessibilityHint="static text"
+          >
+            Hello
+          </Text>
+        </View>
       </View>
-    </View>
+    </RntlContainer>
   `);
 
   expect(screen.getByA11yHint(BUTTON_HINT).props.accessibilityHint).toEqual(BUTTON_HINT);
@@ -165,16 +167,18 @@ test('byHintText queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: hidden
 
-    <Text
-      accessibilityHint="hidden"
-      style={
-        {
-          "display": "none",
+    <RntlContainer>
+      <Text
+        accessibilityHint="hidden"
+        style={
+          {
+            "display": "none",
+          }
         }
-      }
-    >
-      Hidden from accessiblity
-    </Text>"
+      >
+        Hidden from accessiblity
+      </Text>
+    </RntlContainer>"
   `);
 });
 
@@ -184,36 +188,44 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <View
-      accessibilityHint="HINT"
-      accessible={true}
-    />"
+    <RntlContainer>
+      <View
+        accessibilityHint="HINT"
+        accessible={true}
+      />
+    </RntlContainer>"
   `);
 
   expect(() => screen.getAllByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <View
-      accessibilityHint="HINT"
-      accessible={true}
-    />"
+    <RntlContainer>
+      <View
+        accessibilityHint="HINT"
+        accessible={true}
+      />
+    </RntlContainer>"
   `);
 
   await expect(screen.findByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <View
-      accessibilityHint="HINT"
-      accessible={true}
-    />"
+    <RntlContainer>
+      <View
+        accessibilityHint="HINT"
+        accessible={true}
+      />
+    </RntlContainer>"
   `);
 
   await expect(screen.findAllByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <View
-      accessibilityHint="HINT"
-      accessible={true}
-    />"
+    <RntlContainer>
+      <View
+        accessibilityHint="HINT"
+        accessible={true}
+      />
+    </RntlContainer>"
   `);
 });

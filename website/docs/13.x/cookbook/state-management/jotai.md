@@ -110,10 +110,10 @@ export interface RenderWithAtomsOptions {
  */
 export const renderWithAtoms = <T,>(
   component: React.ReactElement,
-  options: RenderWithAtomsOptions,
+  options: RenderWithAtomsOptions
 ) => {
   return render(
-    <HydrateAtomsWrapper initialValues={options.initialValues}>{component}</HydrateAtomsWrapper>,
+    <HydrateAtomsWrapper initialValues={options.initialValues}>{component}</HydrateAtomsWrapper>
   );
 };
 
