@@ -112,7 +112,7 @@ function makeDebug(renderer: Root): DebugFunction {
   function debugImpl(options?: DebugOptions) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions = { ...defaultDebugOptions, ...options };
-    const json = renderer.toJSON();
+    const json = renderer.container.toJSON();
     if (json) {
       return debug(json, debugOptions);
     }
