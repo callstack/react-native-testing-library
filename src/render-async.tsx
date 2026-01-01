@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { HostElement, Root, TestRendererOptions } from 'universal-test-renderer';
+import type { HostElement, Root, RootOptions } from 'universal-test-renderer';
 
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
@@ -33,14 +33,13 @@ export default async function renderAsync<T>(
   component: React.ReactElement<T>,
   options: RenderAsyncOptions = {},
 ) {
-  const { wrapper: Wrapper, ...rest } = options || {};
+  const { wrapper: Wrapper } = options || {};
 
-  const testRendererOptions: TestRendererOptions = {
-    ...rest,
-  };
+  // TODO allow passing some options
+  const rendererOptions: RootOptions = {};
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-  const renderer = await renderWithAsyncAct(wrap(component), testRendererOptions);
+  const renderer = await renderWithAsyncAct(wrap(component), rendererOptions);
   return buildRenderResult(renderer, wrap);
 }
 
