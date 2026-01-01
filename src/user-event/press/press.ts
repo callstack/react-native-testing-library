@@ -1,7 +1,7 @@
 import type { HostElement } from 'universal-test-renderer';
 
 import act from '../../act';
-import { getEventHandler } from '../../event-handler';
+import { getEventHandlerFromProps } from '../../event-handler';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { EventBuilder } from '../event-builder';
@@ -84,10 +84,10 @@ function isEnabledTouchResponder(element: HostElement) {
 
 function hasPressEventHandler(element: HostElement) {
   return (
-    getEventHandler(element, 'press') ||
-    getEventHandler(element, 'longPress') ||
-    getEventHandler(element, 'pressIn') ||
-    getEventHandler(element, 'pressOut')
+    getEventHandlerFromProps(element.props, 'press') ||
+    getEventHandlerFromProps(element.props, 'longPress') ||
+    getEventHandlerFromProps(element.props, 'pressIn') ||
+    getEventHandlerFromProps(element.props, 'pressOut')
   );
 }
 

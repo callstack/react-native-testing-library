@@ -8,7 +8,8 @@ import type {
 import type { HostElement } from 'universal-test-renderer';
 
 import act from './act';
-import { getEventHandler, getFiberEventHandler } from './event-handler';
+import type { EventHandler } from './event-handler';
+import { getEventHandlerFromProps } from './event-handler';
 import { isElementMounted } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
@@ -16,11 +17,7 @@ import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
 import type { Point, StringWithAutocomplete } from './types';
 
-type EventHandler = (...args: unknown[]) => unknown;
-
-export function isTouchResponder(element: HostElement) {
-  return Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element);
-}
+type Fiber = HostElement['unstable_fiber'];
 
 /**
  * List of events affected by `pointerEvents` prop.
@@ -53,6 +50,46 @@ const textInputEventsIgnoringEditableProp = new Set([
   'onScroll',
 ]);
 
+function findEventHandler(
+  element: HostElement,
+  eventName: string,
+  nearestTouchResponder?: HostElement,
+): EventHandler | null {
+  const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
+
+  const handler =
+    getEventHandlerFromProps(element.props, eventName, { loose: true }) ??
+    findEventHandlerFromRelatedFibers(element.unstable_fiber, eventName);
+  if (handler && isEventEnabled(element, eventName, touchResponder)) {
+    return handler;
+  }
+
+  if (element.parent === null) {
+    return null;
+  }
+
+  return findEventHandler(element.parent, eventName, touchResponder);
+}
+
+function findEventHandlerFromRelatedFibers(fiber: Fiber, eventName: string): EventHandler | null {
+  // Container fibers have memoizedProps set to null
+  if (!fiber?.memoizedProps) {
+    return null;
+  }
+
+  const handler = getEventHandlerFromProps(fiber.memoizedProps, eventName, { loose: true });
+  if (handler) {
+    return handler;
+  }
+
+  // No parent fiber or we reached another host element
+  if (fiber.return === null || typeof fiber.return.type === 'string') {
+    return null;
+  }
+
+  return findEventHandlerFromRelatedFibers(fiber.return, eventName);
+}
+
 export function isEventEnabled(
   element: HostElement,
   eventName: string,
@@ -78,45 +115,8 @@ export function isEventEnabled(
   return touchStart === undefined && touchMove === undefined;
 }
 
-function findEventHandler(
-  element: HostElement,
-  eventName: string,
-  nearestTouchResponder?: HostElement,
-): EventHandler | null {
-  const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
-
-  const handler =
-    getEventHandler(element, eventName, { loose: true }) ??
-    findEventHandlerFromFiber(element.unstable_fiber, eventName);
-  if (handler && isEventEnabled(element, eventName, touchResponder)) {
-    return handler;
-  }
-
-  if (element.parent === null) {
-    return null;
-  }
-
-  return findEventHandler(element.parent, eventName, touchResponder);
-}
-
-type Fiber = HostElement['unstable_fiber'];
-
-function findEventHandlerFromFiber(fiber: Fiber, eventName: string): EventHandler | null {
-  if (fiber === null) {
-    return null;
-  }
-
-  const handler = getFiberEventHandler(fiber, eventName, { loose: true });
-  if (handler) {
-    return handler;
-  }
-
-  // No parent fiber or we reached another host element
-  if (fiber.return === null || typeof fiber.return.type === 'string') {
-    return null;
-  }
-
-  return findEventHandlerFromFiber(fiber.return, eventName);
+export function isTouchResponder(element: HostElement) {
+  return Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element);
 }
 
 // String union type of keys of T that start with on, stripped of 'on'
