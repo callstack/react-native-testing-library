@@ -8,14 +8,13 @@ import type {
 import type { HostElement } from 'universal-test-renderer';
 
 import act from './act';
-import { getEventHandler } from './event-handler';
+import { getEventHandler, getFiberEventHandler } from './event-handler';
 import { isElementMounted } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
 import type { Point, StringWithAutocomplete } from './types';
-import { EventBuilder } from './user-event/event-builder';
 
 type EventHandler = (...args: unknown[]) => unknown;
 
@@ -86,17 +85,38 @@ function findEventHandler(
 ): EventHandler | null {
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
-  const handler = getEventHandler(element, eventName, { loose: true });
+  const handler =
+    getEventHandler(element, eventName, { loose: true }) ??
+    findEventHandlerFromFiber(element.unstable_fiber, eventName);
   if (handler && isEventEnabled(element, eventName, touchResponder)) {
     return handler;
   }
 
-  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-  if (element.parent === null || element.parent.parent === null) {
+  if (element.parent === null) {
     return null;
   }
 
   return findEventHandler(element.parent, eventName, touchResponder);
+}
+
+type Fiber = HostElement['unstable_fiber'];
+
+function findEventHandlerFromFiber(fiber: Fiber, eventName: string): EventHandler | null {
+  if (fiber === null) {
+    return null;
+  }
+
+  const handler = getFiberEventHandler(fiber, eventName, { loose: true });
+  if (handler) {
+    return handler;
+  }
+
+  // No parent fiber or we reached another host element
+  if (fiber.return === null || typeof fiber.return.type === 'string') {
+    return null;
+  }
+
+  return findEventHandlerFromFiber(fiber.return, eventName);
 }
 
 // String union type of keys of T that start with on, stripped of 'on'
@@ -132,36 +152,8 @@ function fireEvent(element: HostElement, eventName: EventName, ...data: unknown[
   return returnValue;
 }
 
-fireEvent.press = (element: HostElement, ...data: unknown[]) => {
-  const nativeData =
-    data.length === 1 &&
-    typeof data[0] === 'object' &&
-    data[0] !== null &&
-    'nativeEvent' in data[0] &&
-    typeof data[0].nativeEvent === 'object'
-      ? data[0].nativeEvent
-      : null;
-
-  const responderGrantEvent = EventBuilder.Common.responderGrant();
-  if (nativeData) {
-    responderGrantEvent.nativeEvent = {
-      ...responderGrantEvent.nativeEvent,
-      ...nativeData,
-    };
-  }
-  fireEvent(element, 'responderGrant', responderGrantEvent);
-
+fireEvent.press = (element: HostElement, ...data: unknown[]) =>
   fireEvent(element, 'press', ...data);
-
-  const responderReleaseEvent = EventBuilder.Common.responderRelease();
-  if (nativeData) {
-    responderReleaseEvent.nativeEvent = {
-      ...responderReleaseEvent.nativeEvent,
-      ...nativeData,
-    };
-  }
-  fireEvent(element, 'responderRelease', responderReleaseEvent);
-};
 
 fireEvent.changeText = (element: HostElement, ...data: unknown[]) =>
   fireEvent(element, 'changeText', ...data);

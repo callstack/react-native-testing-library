@@ -1,5 +1,4 @@
-import type { ContainerElement, HostElement } from 'universal-test-renderer';
-import { findAll as findAllInternal } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import { getConfig } from '../config';
 import { isHiddenFromAccessibility } from './accessibility';
@@ -16,11 +15,11 @@ interface FindAllOptions {
 }
 
 export function findAll(
-  root: ContainerElement | HostElement,
+  root: HostElement,
   predicate: (element: HostElement) => boolean,
   options?: FindAllOptions,
 ): HostElement[] {
-  const results = findAllInternal(root, predicate, options);
+  const results = root.findAll(predicate, options);
 
   const includeHiddenElements =
     options?.includeHiddenElements ?? options?.hidden ?? getConfig()?.defaultIncludeHiddenElements;

@@ -1,4 +1,4 @@
-import type { ContainerElement, HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import { matchAccessibilityLabel } from '../helpers/matchers/match-label-text';
@@ -16,7 +16,7 @@ import type { CommonQueryOptions } from './options';
 
 type ByLabelTextOptions = CommonQueryOptions & TextMatchOptions;
 
-function queryAllByLabelText(instance: ContainerElement | HostElement) {
+function queryAllByLabelText(instance: HostElement) {
   return (text: TextMatch, queryOptions?: ByLabelTextOptions) => {
     return findAll(
       instance,
@@ -46,9 +46,7 @@ export type ByLabelTextQueries = {
   findAllByLabelText: FindAllByQuery<TextMatch, ByLabelTextOptions>;
 };
 
-export const bindByLabelTextQueries = (
-  instance: ContainerElement | HostElement,
-): ByLabelTextQueries => ({
+export const bindByLabelTextQueries = (instance: HostElement): ByLabelTextQueries => ({
   getByLabelText: getBy(instance),
   getAllByLabelText: getAllBy(instance),
   queryByLabelText: queryBy(instance),

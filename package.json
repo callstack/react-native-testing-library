@@ -93,7 +93,7 @@
     "release-it": "^18.0.0",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.19.1",
-    "universal-test-renderer": "0.8.1"
+    "universal-test-renderer": "0.8.2"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

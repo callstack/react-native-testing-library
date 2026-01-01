@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { ContainerElement, HostElement, Root, RootOptions } from 'universal-test-renderer';
+import type { HostElement, Root, RootOptions } from 'universal-test-renderer';
 import { createRoot } from 'universal-test-renderer';
 
 import act from './act';
@@ -72,7 +72,7 @@ function buildRenderResult(
     rerender: update, // alias for `update`
     toJSON: () => renderer.container?.toJSON(),
     debug: makeDebug(renderer),
-    get container(): ContainerElement {
+    get container(): HostElement {
       return renderer.container;
     },
     get root(): HostElement | null {

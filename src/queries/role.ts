@@ -1,5 +1,5 @@
 import type { AccessibilityRole, Role } from 'react-native';
-import type { ContainerElement, HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import {
   accessibilityStateKeys,
@@ -51,9 +51,7 @@ const matchAccessibilityValueIfNeeded = (node: HostElement, value?: Accessibilit
   return value != null ? matchAccessibilityValue(node, value) : true;
 };
 
-const queryAllByRole = (
-  instance: ContainerElement | HostElement,
-): QueryAllByQuery<ByRoleMatcher, ByRoleOptions> =>
+const queryAllByRole = (instance: HostElement): QueryAllByQuery<ByRoleMatcher, ByRoleOptions> =>
   function queryAllByRoleFn(role, options) {
     const normalizedRole = typeof role === 'string' ? normalizeRole(role) : role;
     return findAll(
@@ -112,7 +110,7 @@ export type ByRoleQueries = {
   findAllByRole: FindAllByQuery<ByRoleMatcher, ByRoleOptions>;
 };
 
-export const bindByRoleQueries = (instance: ContainerElement | HostElement): ByRoleQueries => ({
+export const bindByRoleQueries = (instance: HostElement): ByRoleQueries => ({
   getByRole: getBy(instance),
   getAllByRole: getAllBy(instance),
   queryByRole: queryBy(instance),

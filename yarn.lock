@@ -2866,7 +2866,7 @@ __metadata:
     release-it: "npm:^18.0.0"
     typescript: "npm:^5.6.3"
     typescript-eslint: "npm:^8.19.1"
-    universal-test-renderer: "npm:0.8.1"
+    universal-test-renderer: "npm:0.8.2"
   peerDependencies:
     jest: ">=29.0.0"
     react: ">=19.0.0"
@@ -10832,14 +10832,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"universal-test-renderer@npm:0.8.1":
-  version: 0.8.1
-  resolution: "universal-test-renderer@npm:0.8.1"
+"universal-test-renderer@npm:0.8.2":
+  version: 0.8.2
+  resolution: "universal-test-renderer@npm:0.8.2"
   dependencies:
     react-reconciler: "npm:~0.31.0"
   peerDependencies:
     react: ^19.0.0
-  checksum: 10c0/74a9b95f1902968addbbf69b04477f519cfde73350805d812d4b723ebf96891cd81f728c4b7ff92ab08c6fd616b29e27837e3d28ee9ce692c26c5d4ab22e0181
+  checksum: 10c0/e7ec70477c70e279679644f3b7d88d1b64d38172d97171fdb81c6d4d011e2ee461c36b69acf9c9f596b2671ac2432e985131cf8dc8df92a2e7588370caca34e7
   languageName: node
   linkType: hard
 

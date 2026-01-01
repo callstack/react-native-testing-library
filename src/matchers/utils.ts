@@ -9,6 +9,8 @@ import {
 import redent from 'redent';
 import type { HostElement } from 'universal-test-renderer';
 
+import { isValidHostElement } from '../helpers/component-tree';
+
 class HostElementTypeError extends Error {
   constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {
     super();
@@ -46,7 +48,7 @@ export function checkHostElement(
   matcherFn: jest.CustomMatcher,
   context: jest.MatcherContext,
 ): asserts element is HostElement {
-  if (element == null) {
+  if (!isValidHostElement(element)) {
     throw new HostElementTypeError(element, matcherFn, context);
   }
 }

@@ -1,4 +1,4 @@
-import type { ContainerElement, HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import type { RenderResult } from './render';
 
@@ -21,7 +21,7 @@ const defaultScreen: Screen = {
   get root(): HostElement | null {
     throw new Error(SCREEN_ERROR);
   },
-  get container(): ContainerElement {
+  get container(): HostElement {
     throw new Error(SCREEN_ERROR);
   },
   debug: notImplementedDebug,

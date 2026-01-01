@@ -237,13 +237,22 @@ test('toBeVisible() on null elements', () => {
 });
 
 test('toBeVisible() on non-React elements', () => {
-  expect(() =>
-    expect({ name: 'Non-React element' }).not.toBeVisible(),
-  ).toThrowErrorMatchingInlineSnapshot(`"Cannot read properties of undefined (reading 'style')"`);
+  expect(() => expect({ name: 'Non-React element' }).not.toBeVisible())
+    .toThrowErrorMatchingInlineSnapshot(`
+    "expect(received).not.toBeVisible()
 
-  expect(() => expect(true).not.toBeVisible()).toThrowErrorMatchingInlineSnapshot(
-    `"Invalid value used as weak map key"`,
-  );
+    received value must be a host element.
+    Received has type:  object
+    Received has value: {"name": "Non-React element"}"
+  `);
+
+  expect(() => expect(true).not.toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
+    "expect(received).not.toBeVisible()
+
+    received value must be a host element.
+    Received has type:  boolean
+    Received has value: true"
+  `);
 });
 
 test('toBeVisible() does not throw on invalid style', () => {

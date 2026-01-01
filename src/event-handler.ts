@@ -30,6 +30,35 @@ export function getEventHandler(
   return undefined;
 }
 
+export function getFiberEventHandler(
+  element: HostElement['unstable_fiber'],
+  eventName: string,
+  options?: EventHandlerOptions,
+) {
+  if (element === null || !element.memoizedProps) {
+    return undefined;
+  }
+
+  const handlerName = getEventHandlerName(eventName);
+  if (typeof element.memoizedProps[handlerName] === 'function') {
+    return element.memoizedProps[handlerName];
+  }
+
+  if (options?.loose && typeof element.memoizedProps[eventName] === 'function') {
+    return element.memoizedProps[eventName];
+  }
+
+  if (typeof element.memoizedProps[`testOnly_${handlerName}`] === 'function') {
+    return element.memoizedProps[`testOnly_${handlerName}`];
+  }
+
+  if (options?.loose && typeof element.memoizedProps[`testOnly_${eventName}`] === 'function') {
+    return element.memoizedProps[`testOnly_${eventName}`];
+  }
+
+  return undefined;
+}
+
 export function getEventHandlerName(eventName: string) {
   return `on${capitalizeFirstLetter(eventName)}`;
 }

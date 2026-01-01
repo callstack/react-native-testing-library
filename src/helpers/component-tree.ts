@@ -2,8 +2,16 @@ import type { HostElement } from 'universal-test-renderer';
 
 import { screen } from '../screen';
 
+/**
+ * Checks if the given element is a host element.
+ * @param element The element to check.
+ */
+export function isValidHostElement(element?: HostElement | null): element is HostElement {
+  return typeof element?.type === 'string' && element.props !== null;
+}
+
 export function isElementMounted(element: HostElement) {
-  return true; // getContainerElement(element) === screen.container;
+  return getContainerElement(element) === screen.container;
 }
 
 /**

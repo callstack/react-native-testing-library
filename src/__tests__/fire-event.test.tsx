@@ -49,14 +49,11 @@ describe('fireEvent', () => {
     expect(onPressMock).toHaveBeenCalled();
   });
 
-  test('should not fire if the press handler is not passed to children', () => {
+  test('should fire if the press handler is not passed to children', () => {
     const onPressMock = jest.fn();
-    render(
-      // TODO: this functionality is buggy, i.e. it will fail if we wrap this component with a View.
-      <WithoutEventComponent onPress={onPressMock} />,
-    );
+    render(<WithoutEventComponent onPress={onPressMock} />);
     fireEvent(screen.getByText('Without event'), 'press');
-    expect(onPressMock).not.toHaveBeenCalled();
+    expect(onPressMock).toHaveBeenCalled();
   });
 });
 

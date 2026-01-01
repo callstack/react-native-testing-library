@@ -1,4 +1,4 @@
-import type { ContainerElement, HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import { ErrorWithStack } from '../helpers/errors';
 import { formatJson } from '../helpers/format-element';
@@ -40,7 +40,7 @@ export type FindAllByQuery<Predicate, Options = void> = (
   waitForOptions?: WaitForOptions,
 ) => Promise<HostElement[]>;
 
-type UnboundQuery<Query> = (instance: ContainerElement | HostElement) => Query;
+type UnboundQuery<Query> = (instance: HostElement) => Query;
 
 export type UnboundQueries<Predicate, Options> = {
   getBy: UnboundQuery<GetByQuery<Predicate, Options>>;
@@ -113,10 +113,7 @@ export function makeQueries<Predicate, Options>(
   getMissingError: (predicate: Predicate, options?: Options) => string,
   getMultipleError: (predicate: Predicate, options?: Options) => string,
 ): UnboundQueries<Predicate, Options> {
-  function getAllByQuery(
-    instance: ContainerElement | HostElement,
-    { printElementTree = true } = {},
-  ) {
+  function getAllByQuery(instance: HostElement, { printElementTree = true } = {}) {
     return function getAllFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
 
@@ -132,10 +129,7 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function queryByQuery(
-    instance: ContainerElement | HostElement,
-    { printElementTree = true } = {},
-  ) {
+  function queryByQuery(instance: HostElement, { printElementTree = true } = {}) {
     return function singleQueryFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
 
@@ -154,7 +148,7 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function getByQuery(instance: ContainerElement | HostElement, { printElementTree = true } = {}) {
+  function getByQuery(instance: HostElement, { printElementTree = true } = {}) {
     return function getFn(predicate: Predicate, options?: Options) {
       const results = queryAllByQuery(instance)(predicate, options);
 
@@ -174,7 +168,7 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function findAllByQuery(instance: ContainerElement | HostElement) {
+  function findAllByQuery(instance: HostElement) {
     return function findAllFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
@@ -198,7 +192,7 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function findByQuery(instance: ContainerElement | HostElement) {
+  function findByQuery(instance: HostElement) {
     return function findFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,

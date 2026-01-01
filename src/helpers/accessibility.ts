@@ -157,8 +157,8 @@ export function computeAriaModal(element: HostElement): boolean | undefined {
 export function computeAriaLabel(element: HostElement): string | undefined {
   const labelElementId = element.props['aria-labelledby'] ?? element.props.accessibilityLabelledBy;
   if (labelElementId) {
-    const rootElement = getContainerElement(element);
-    const labelElement = findAll(rootElement, (node) => node.props.nativeID === labelElementId, {
+    const container = getContainerElement(element);
+    const labelElement = findAll(container, (node) => node.props.nativeID === labelElementId, {
       includeHiddenElements: true,
     });
     if (labelElement.length > 0) {
