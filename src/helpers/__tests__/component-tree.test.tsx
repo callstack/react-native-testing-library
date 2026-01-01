@@ -218,8 +218,8 @@ describe('getHostSiblings()', () => {
   });
 });
 
-describe('getUnsafeRootElement()', () => {
-  it('returns UNSAFE_root for mounted view', () => {
+describe('getContainerElement()', () => {
+  it('returns container for mounted view', () => {
     render(
       <View>
         <View testID="view" />
@@ -227,6 +227,6 @@ describe('getUnsafeRootElement()', () => {
     );
 
     const view = screen.getByTestId('view');
-    expect(getContainerElement(view)).toEqual(screen.UNSAFE_root);
+    expect(getContainerElement(view)).toEqual(screen.container);
   });
 });

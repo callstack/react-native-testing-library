@@ -33,14 +33,13 @@ export default function render<T>(component: React.ReactElement<T>, options: Ren
 }
 
 export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderOptions) {
-  const { wrapper: Wrapper, ...rest } = options || {};
+  const { wrapper: Wrapper } = options || {};
 
-  const testRendererOptions: RootOptions = {
-    ...rest,
-  };
+  // TODO allow passing some options
+  const rendererOptions: RootOptions = {};
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-  const renderer = renderWithAct(wrap(component), testRendererOptions);
+  const renderer = renderWithAct(wrap(component), rendererOptions);
   return buildRenderResult(renderer, wrap);
 }
 
@@ -48,8 +47,6 @@ function buildRenderResult(
   renderer: Root,
   wrap: (element: React.ReactElement) => React.JSX.Element,
 ) {
-  const instance = renderer.root;
-
   const rerender = (component: React.ReactElement) => {
     void act(() => {
       renderer.render(wrap(component));
@@ -77,7 +74,7 @@ function buildRenderResult(
   addToCleanupQueue(unmountAsync);
 
   const result = {
-    ...getQueriesForElement(instance),
+    ...getQueriesForElement(renderer.container),
     rerender,
     rerenderAsync,
     update: rerender, // alias for 'rerender'
@@ -86,23 +83,20 @@ function buildRenderResult(
     unmountAsync,
     toJSON: () => renderer.container.toJSON(),
     debug: makeDebug(renderer),
-    get root(): HostElement {
-      return getHostSelves(instance)[0];
+    get container(): HostElement {
+      return renderer.container;
     },
-    UNSAFE_root: instance,
-  };
+    get root(): HostElement | null {
+      const firstChild = renderer.container.children[0];
+      if (typeof firstChild === 'string') {
+        throw new Error(
+          'Invariant Violation: Root element must be a host element. Detected attempt to render a string within the root element.',
+        );
+      }
 
-  // Add as non-enumerable property, so that it's safe to enumerate
-  // `render` result, e.g. using destructuring rest syntax.
-  Object.defineProperty(result, 'container', {
-    enumerable: false,
-    get() {
-      throw new Error(
-        "'container' property has been renamed to 'UNSAFE_root'.\n\n" +
-          "Consider using 'root' property which returns root host element.",
-      );
+      return firstChild;
     },
-  });
+  };
 
   setRenderResult(result);
 
@@ -115,7 +109,7 @@ function makeDebug(renderer: Root): DebugFunction {
   function debugImpl(options?: DebugOptions) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions = { ...defaultDebugOptions, ...options };
-    const json = renderer.toJSON();
+    const json = renderer.container.toJSON();
     if (json) {
       return debug(json, debugOptions);
     }

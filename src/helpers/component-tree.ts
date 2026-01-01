@@ -15,7 +15,7 @@ export function isHostElement(element?: HostElement | null): element is HostTest
 }
 
 export function isElementMounted(element: HostElement) {
-  return getContainerElement(element) === screen.UNSAFE_root;
+  return getContainerElement(element) === screen.container;
 }
 
 /**

@@ -4,7 +4,6 @@ import type { HostElement, Root, RootOptions } from 'universal-test-renderer';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
-import { getHostSelves } from './helpers/component-tree';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
 import { ErrorWithStack } from './helpers/errors';
@@ -47,7 +46,7 @@ function buildRenderResult(
   renderer: Root,
   wrap: (element: React.ReactElement) => React.JSX.Element,
 ) {
-  const instance = renderer.root;
+  const container = renderer.container;
 
   const rerender = (_component: React.ReactElement) => {
     throw new ErrorWithStack(
@@ -58,7 +57,7 @@ function buildRenderResult(
   const rerenderAsync = async (component: React.ReactElement) => {
     // eslint-disable-next-line require-await
     await act(async () => {
-      renderer.update(wrap(component));
+      renderer.render(wrap(component));
     });
   };
 
@@ -78,32 +77,29 @@ function buildRenderResult(
   addToCleanupQueue(unmountAsync);
 
   const result = {
-    ...getQueriesForElement(instance),
+    ...getQueriesForElement(renderer.container),
     rerender,
     rerenderAsync,
     update: rerender, // alias for `rerender`
     updateAsync: rerenderAsync, // alias for `rerenderAsync`
     unmount,
     unmountAsync,
-    toJSON: renderer.toJSON,
+    toJSON: () => renderer.container.toJSON(),
     debug: makeDebug(renderer),
-    get root(): HostElement {
-      return getHostSelves(instance)[0];
+    get container(): HostElement {
+      return renderer.container;
     },
-    UNSAFE_root: instance,
-  };
+    get root(): HostElement | null {
+      const firstChild = container.children[0];
+      if (typeof firstChild === 'string') {
+        throw new Error(
+          'Invariant Violation: Root element must be a host element. Detected attempt to render a string within the root element.',
+        );
+      }
 
-  // Add as non-enumerable property, so that it's safe to enumerate
-  // `render` result, e.g. using destructuring rest syntax.
-  Object.defineProperty(result, 'container', {
-    enumerable: false,
-    get() {
-      throw new Error(
-        "'container' property has been renamed to 'UNSAFE_root'.\n\n" +
-          "Consider using 'root' property which returns root host element.",
-      );
+      return firstChild;
     },
-  });
+  };
 
   setRenderResult(result);
 

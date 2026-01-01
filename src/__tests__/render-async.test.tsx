@@ -86,13 +86,3 @@ test('unmountAsync function unmounts component asynchronously', async () => {
   await screen.unmountAsync();
   expect(fn).toHaveBeenCalled();
 });
-
-test('container property displays deprecation message', async () => {
-  await renderAsync(<View testID="inner" />);
-
-  expect(() => (screen as any).container).toThrowErrorMatchingInlineSnapshot(`
-    "'container' property has been renamed to 'UNSAFE_root'.
-
-    Consider using 'root' property which returns root host element."
-  `);
-});
