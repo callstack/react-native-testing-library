@@ -129,13 +129,15 @@ test('renders options.wrapper around node', () => {
 
   expect(screen.getByTestId('wrapper')).toBeTruthy();
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <View
-      testID="wrapper"
-    >
+    <>
       <View
-        testID="inner"
-      />
-    </View>
+        testID="wrapper"
+      >
+        <View
+          testID="inner"
+        />
+      </View>
+    </>
   `);
 });
 
@@ -153,15 +155,17 @@ test('renders options.wrapper around updated node', () => {
 
   expect(screen.getByTestId('wrapper')).toBeTruthy();
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <View
-      testID="wrapper"
-    >
+    <>
       <View
-        accessibilityHint="test"
-        accessibilityLabel="test"
-        testID="inner"
-      />
-    </View>
+        testID="wrapper"
+      >
+        <View
+          accessibilityHint="test"
+          accessibilityLabel="test"
+          testID="inner"
+        />
+      </View>
+    </>
   `);
 });
 

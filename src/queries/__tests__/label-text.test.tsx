@@ -141,16 +141,18 @@ test('byLabelText queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: hidden
 
-    <Text
-      accessibilityLabel="hidden"
-      style={
-        {
-          "display": "none",
+    <>
+      <Text
+        accessibilityLabel="hidden"
+        style={
+          {
+            "display": "none",
+          }
         }
-      }
-    >
-      Hidden from accessibility
-    </Text>"
+      >
+        Hidden from accessibility
+      </Text>
+    </>"
   `);
 });
 
@@ -240,36 +242,44 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <View
-      accessibilityLabel="LABEL"
-      accessible={true}
-    />"
+    <>
+      <View
+        accessibilityLabel="LABEL"
+        accessible={true}
+      />
+    </>"
   `);
 
   expect(() => screen.getAllByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <View
-      accessibilityLabel="LABEL"
-      accessible={true}
-    />"
+    <>
+      <View
+        accessibilityLabel="LABEL"
+        accessible={true}
+      />
+    </>"
   `);
 
   await expect(screen.findByLabelText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <View
-      accessibilityLabel="LABEL"
-      accessible={true}
-    />"
+    <>
+      <View
+        accessibilityLabel="LABEL"
+        accessible={true}
+      />
+    </>"
   `);
 
   await expect(screen.findAllByLabelText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <View
-      accessibilityLabel="LABEL"
-      accessible={true}
-    />"
+    <>
+      <View
+        accessibilityLabel="LABEL"
+        accessible={true}
+      />
+    </>"
   `);
 });
