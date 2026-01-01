@@ -1,6 +1,6 @@
-import type { HostElement } from 'universal-test-renderer';
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import redent from 'redent';
+import type { HostElement } from 'universal-test-renderer';
 
 import { formatElement } from '../helpers/format-element';
 import { checkHostElement } from './utils';
