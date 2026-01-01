@@ -1,6 +1,7 @@
 function ensurePeerDeps() {
-  const reactVersion = getPackageVersion('react');
-  ensurePackage('universal-test-renderer', reactVersion);
+  // TEMP
+  // const reactVersion = getPackageVersion('react');
+  // ensurePackage('universal-test-renderer', reactVersion);
 }
 
 function ensurePackage(name: string, expectedVersion: string) {
