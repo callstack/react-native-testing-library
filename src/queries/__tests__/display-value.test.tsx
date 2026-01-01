@@ -52,7 +52,7 @@ test('getByDisplayValue, queryByDisplayValue get element by default value only w
   expect(() => screen.getByDisplayValue(DEFAULT_INPUT_CHEF)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: What did you inspect?
 
-    <RntlContainer>
+    <>
       <View>
         <TextInput
           placeholder="Add custom freshness"
@@ -73,14 +73,14 @@ test('getByDisplayValue, queryByDisplayValue get element by default value only w
           value=""
         />
       </View>
-    </RntlContainer>"
+    </>"
   `);
   expect(screen.queryByDisplayValue(DEFAULT_INPUT_CHEF)).toBeNull();
 
   expect(() => screen.getByDisplayValue('hello')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: hello
 
-    <RntlContainer>
+    <>
       <View>
         <TextInput
           placeholder="Add custom freshness"
@@ -101,7 +101,7 @@ test('getByDisplayValue, queryByDisplayValue get element by default value only w
           value=""
         />
       </View>
-    </RntlContainer>"
+    </>"
   `);
   expect(screen.queryByDisplayValue('hello')).toBeNull();
 
@@ -154,7 +154,7 @@ test('byDisplayValue queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: hidden
 
-    <RntlContainer>
+    <>
       <TextInput
         style={
           {
@@ -163,7 +163,7 @@ test('byDisplayValue queries support hidden option', () => {
         }
         value="hidden"
       />
-    </RntlContainer>"
+    </>"
   `);
 });
 
@@ -179,41 +179,41 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
-    <RntlContainer>
+    <>
       <TextInput
         value="1"
       />
-    </RntlContainer>"
+    </>"
   `);
 
   expect(() => screen.getAllByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
-    <RntlContainer>
+    <>
       <TextInput
         value="1"
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findByDisplayValue('2')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
-    <RntlContainer>
+    <>
       <TextInput
         value="1"
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findAllByDisplayValue('2')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
 
-    <RntlContainer>
+    <>
       <TextInput
         value="1"
       />
-    </RntlContainer>"
+    </>"
   `);
 });
 

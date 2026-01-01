@@ -476,7 +476,7 @@ test('byText support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /hidden/i
 
-    <RntlContainer>
+    <>
       <Text
         style={
           {
@@ -486,7 +486,7 @@ test('byText support hidden option', () => {
       >
         Hidden from accessibility
       </Text>
-    </RntlContainer>"
+    </>"
   `);
 });
 
@@ -496,41 +496,41 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <RntlContainer>
+    <>
       <View
         accessibilityViewIsModal={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 
   expect(() => screen.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <RntlContainer>
+    <>
       <View
         accessibilityViewIsModal={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <RntlContainer>
+    <>
       <View
         accessibilityViewIsModal={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findAllByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <RntlContainer>
+    <>
       <View
         accessibilityViewIsModal={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 });
 

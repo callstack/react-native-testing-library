@@ -25,7 +25,7 @@ export type RenderResult = ReturnType<typeof render>;
 
 const createRootOptions: RootOptions = {
   textComponents: HOST_TEXT_NAMES,
-  containerType: 'RntlContainer',
+  containerType: '',
 };
 
 /**
@@ -76,7 +76,12 @@ function buildRenderResult(
       return renderer.container;
     },
     get root(): HostElement | null {
-      return renderer.root;
+      const root = renderer.container.children[0];
+      if (typeof root === 'string') {
+        throw new Error(`Root should not be a string (found: ${root})`);
+      }
+
+      return root ?? null;
     },
   };
 
@@ -90,7 +95,7 @@ function makeDebug(renderer: Root): DebugFunction {
   function debugImpl(options?: DebugOptions) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions = { ...defaultDebugOptions, ...options };
-    const json = renderer.root?.toJSON();
+    const json = renderer.container.toJSON();
     if (json) {
       return debug(json, debugOptions);
     }

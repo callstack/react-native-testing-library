@@ -10,11 +10,11 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <RntlContainer>
+      <>
         <Text>
           Some text
         </Text>
-      </RntlContainer>"
+      </>"
     `);
   });
 
@@ -54,7 +54,7 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <RntlContainer>
+      <>
         <View
           accessibilityElementsHidden={true}
           accessibilityHint="HINT"
@@ -89,7 +89,7 @@ describe('printing element tree', () => {
             Some Text
           </Text>
         </View>
-      </RntlContainer>"
+      </>"
     `);
   });
 
@@ -99,41 +99,41 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <RntlContainer>
+      <>
         <View
           accessibilityViewIsModal={true}
         />
-      </RntlContainer>"
+      </>"
     `);
 
     expect(() => screen.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <RntlContainer>
+      <>
         <View
           accessibilityViewIsModal={true}
         />
-      </RntlContainer>"
+      </>"
     `);
 
     await expect(screen.findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <RntlContainer>
+      <>
         <View
           accessibilityViewIsModal={true}
         />
-      </RntlContainer>"
+      </>"
     `);
 
     await expect(screen.findAllByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <RntlContainer>
+      <>
         <View
           accessibilityViewIsModal={true}
         />
-      </RntlContainer>"
+      </>"
     `);
   });
 
@@ -196,7 +196,7 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <RntlContainer>
+      <>
         <View>
           <Text
             style={
@@ -208,7 +208,7 @@ describe('printing element tree', () => {
             Some text
           </Text>
         </View>
-      </RntlContainer>"
+      </>"
     `);
   });
 
@@ -222,7 +222,7 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <RntlContainer>
+      <>
         <View
           accessibilityState={
             {
@@ -233,7 +233,7 @@ describe('printing element tree', () => {
         >
           <View />
         </View>
-      </RntlContainer>"
+      </>"
     `);
   });
 
@@ -247,7 +247,7 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <RntlContainer>
+      <>
         <View
           accessibilityValue={
             {
@@ -257,7 +257,7 @@ describe('printing element tree', () => {
         >
           <View />
         </View>
-      </RntlContainer>"
+      </>"
     `);
   });
 

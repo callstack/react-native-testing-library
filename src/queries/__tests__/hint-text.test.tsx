@@ -37,7 +37,7 @@ test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
   render(<Section />);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <View>
         <Text
           accessibilityHint="static text"
@@ -83,7 +83,7 @@ test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
           </Text>
         </View>
       </View>
-    </RntlContainer>
+    </>
   `);
 
   expect(screen.getByA11yHint(BUTTON_HINT).props.accessibilityHint).toEqual(BUTTON_HINT);
@@ -167,7 +167,7 @@ test('byHintText queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: hidden
 
-    <RntlContainer>
+    <>
       <Text
         accessibilityHint="hidden"
         style={
@@ -178,7 +178,7 @@ test('byHintText queries support hidden option', () => {
       >
         Hidden from accessiblity
       </Text>
-    </RntlContainer>"
+    </>"
   `);
 });
 
@@ -188,44 +188,44 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <RntlContainer>
+    <>
       <View
         accessibilityHint="HINT"
         accessible={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 
   expect(() => screen.getAllByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <RntlContainer>
+    <>
       <View
         accessibilityHint="HINT"
         accessible={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <RntlContainer>
+    <>
       <View
         accessibilityHint="HINT"
         accessible={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findAllByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <RntlContainer>
+    <>
       <View
         accessibilityHint="HINT"
         accessible={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 });

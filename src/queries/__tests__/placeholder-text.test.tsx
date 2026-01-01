@@ -69,7 +69,7 @@ test('byPlaceholderText queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: hidden
 
-    <RntlContainer>
+    <>
       <TextInput
         placeholder="hidden"
         style={
@@ -78,7 +78,7 @@ test('byPlaceholderText queries support hidden option', () => {
           }
         }
       />
-    </RntlContainer>"
+    </>"
   `);
 });
 
@@ -94,40 +94,40 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    <RntlContainer>
+    <>
       <TextInput
         placeholder="PLACEHOLDER"
       />
-    </RntlContainer>"
+    </>"
   `);
 
   expect(() => screen.getAllByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    <RntlContainer>
+    <>
       <TextInput
         placeholder="PLACEHOLDER"
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findByPlaceholderText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    <RntlContainer>
+    <>
       <TextInput
         placeholder="PLACEHOLDER"
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findAllByPlaceholderText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    <RntlContainer>
+    <>
       <TextInput
         placeholder="PLACEHOLDER"
       />
-    </RntlContainer>"
+    </>"
   `);
 });

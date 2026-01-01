@@ -141,7 +141,7 @@ test('byLabelText queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: hidden
 
-    <RntlContainer>
+    <>
       <Text
         accessibilityLabel="hidden"
         style={
@@ -152,7 +152,7 @@ test('byLabelText queries support hidden option', () => {
       >
         Hidden from accessibility
       </Text>
-    </RntlContainer>"
+    </>"
   `);
 });
 
@@ -242,44 +242,44 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <RntlContainer>
+    <>
       <View
         accessibilityLabel="LABEL"
         accessible={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 
   expect(() => screen.getAllByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <RntlContainer>
+    <>
       <View
         accessibilityLabel="LABEL"
         accessible={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findByLabelText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <RntlContainer>
+    <>
       <View
         accessibilityLabel="LABEL"
         accessible={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findAllByLabelText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO
 
-    <RntlContainer>
+    <>
       <View
         accessibilityLabel="LABEL"
         accessible={true}
       />
-    </RntlContainer>"
+    </>"
   `);
 });

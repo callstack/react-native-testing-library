@@ -123,7 +123,7 @@ test('renders options.wrapper around node', () => {
 
   expect(screen.getByTestId('wrapper')).toBeTruthy();
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <View
         testID="wrapper"
       >
@@ -131,7 +131,7 @@ test('renders options.wrapper around node', () => {
           testID="inner"
         />
       </View>
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -149,7 +149,7 @@ test('renders options.wrapper around updated node', () => {
 
   expect(screen.getByTestId('wrapper')).toBeTruthy();
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <View
         testID="wrapper"
       >
@@ -159,7 +159,7 @@ test('renders options.wrapper around updated node', () => {
           testID="inner"
         />
       </View>
-    </RntlContainer>
+    </>
   `);
 });
 

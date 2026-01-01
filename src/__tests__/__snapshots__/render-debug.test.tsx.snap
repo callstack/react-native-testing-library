@@ -1,297 +1,311 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`debug 1`] = `
-"<View>
-  <Text>
-    Is the banana fresh?
-  </Text>
-  <Text
-    testID="bananaFresh"
-  >
-    not fresh
-  </Text>
-  <TextInput
-    placeholder="Add custom freshness"
-    testID="bananaCustomFreshness"
-    value="Custom Freshie"
-  />
-  <TextInput
-    defaultValue="What did you inspect?"
-    placeholder="Who inspected freshness?"
-    testID="bananaChef"
-    value="I inspected freshie"
-  />
-  <TextInput
-    defaultValue="What banana?"
-  />
-  <TextInput
-    defaultValue="hello"
-    value=""
-  />
-  <View
-    accessible={true}
-    role="button"
-  >
+"<>
+  <View>
     <Text>
-      Change freshness!
+      Is the banana fresh?
+    </Text>
+    <Text
+      testID="bananaFresh"
+    >
+      not fresh
+    </Text>
+    <TextInput
+      placeholder="Add custom freshness"
+      testID="bananaCustomFreshness"
+      value="Custom Freshie"
+    />
+    <TextInput
+      defaultValue="What did you inspect?"
+      placeholder="Who inspected freshness?"
+      testID="bananaChef"
+      value="I inspected freshie"
+    />
+    <TextInput
+      defaultValue="What banana?"
+    />
+    <TextInput
+      defaultValue="hello"
+      value=""
+    />
+    <View
+      accessible={true}
+      role="button"
+    >
+      <Text>
+        Change freshness!
+      </Text>
+    </View>
+    <Text
+      testID="duplicateText"
+    >
+      First Text
+    </Text>
+    <Text
+      testID="duplicateText"
+    >
+      Second Text
+    </Text>
+    <Text>
+      0
     </Text>
   </View>
-  <Text
-    testID="duplicateText"
-  >
-    First Text
-  </Text>
-  <Text
-    testID="duplicateText"
-  >
-    Second Text
-  </Text>
-  <Text>
-    0
-  </Text>
-</View>"
+</>"
 `;
 
 exports[`debug changing component: bananaFresh button message should now be "fresh" 1`] = `
-"<View>
-  <Text>
-    Is the banana fresh?
-  </Text>
-  <Text
-    testID="bananaFresh"
-  >
-    fresh
-  </Text>
-  <TextInput
-    placeholder="Add custom freshness"
-    testID="bananaCustomFreshness"
-    value="Custom Freshie"
-  />
-  <TextInput
-    defaultValue="What did you inspect?"
-    placeholder="Who inspected freshness?"
-    testID="bananaChef"
-    value="I inspected freshie"
-  />
-  <TextInput
-    defaultValue="What banana?"
-  />
-  <TextInput
-    defaultValue="hello"
-    value=""
-  />
-  <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function onBlur]}
-    onClick={[Function onClick]}
-    onFocus={[Function onFocus]}
-    onResponderGrant={[Function onResponderGrant]}
-    onResponderMove={[Function onResponderMove]}
-    onResponderRelease={[Function onResponderRelease]}
-    onResponderTerminate={[Function onResponderTerminate]}
-    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
-    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
-    role="button"
-  >
+"<>
+  <View>
     <Text>
-      Change freshness!
+      Is the banana fresh?
+    </Text>
+    <Text
+      testID="bananaFresh"
+    >
+      fresh
+    </Text>
+    <TextInput
+      placeholder="Add custom freshness"
+      testID="bananaCustomFreshness"
+      value="Custom Freshie"
+    />
+    <TextInput
+      defaultValue="What did you inspect?"
+      placeholder="Who inspected freshness?"
+      testID="bananaChef"
+      value="I inspected freshie"
+    />
+    <TextInput
+      defaultValue="What banana?"
+    />
+    <TextInput
+      defaultValue="hello"
+      value=""
+    />
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function onBlur]}
+      onClick={[Function onClick]}
+      onFocus={[Function onFocus]}
+      onResponderGrant={[Function onResponderGrant]}
+      onResponderMove={[Function onResponderMove]}
+      onResponderRelease={[Function onResponderRelease]}
+      onResponderTerminate={[Function onResponderTerminate]}
+      onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+      onStartShouldSetResponder={[Function onStartShouldSetResponder]}
+      role="button"
+    >
+      <Text>
+        Change freshness!
+      </Text>
+    </View>
+    <Text
+      testID="duplicateText"
+    >
+      First Text
+    </Text>
+    <Text
+      testID="duplicateText"
+    >
+      Second Text
+    </Text>
+    <Text>
+      0
     </Text>
   </View>
-  <Text
-    testID="duplicateText"
-  >
-    First Text
-  </Text>
-  <Text
-    testID="duplicateText"
-  >
-    Second Text
-  </Text>
-  <Text>
-    0
-  </Text>
-</View>"
+</>"
 `;
 
 exports[`debug should use debugOptions from config when no option is specified 1`] = `
-"<View>
-  <Text>
-    hello
-  </Text>
-</View>"
+"<>
+  <View>
+    <Text>
+      hello
+    </Text>
+  </View>
+</>"
 `;
 
 exports[`debug should use given options over config debugOptions 1`] = `
-"<View
-  style={
-    {
-      "backgroundColor": "red",
+"<>
+  <View
+    style={
+      {
+        "backgroundColor": "red",
+      }
     }
-  }
->
-  <Text>
-    hello
-  </Text>
-</View>"
+  >
+    <Text>
+      hello
+    </Text>
+  </View>
+</>"
 `;
 
 exports[`debug with only children prop 1`] = `
-"<View>
-  <Text>
-    Is the banana fresh?
-  </Text>
-  <Text>
-    not fresh
-  </Text>
-  <TextInput />
-  <TextInput />
-  <TextInput />
-  <TextInput />
+"<>
   <View>
     <Text>
-      Change freshness!
+      Is the banana fresh?
+    </Text>
+    <Text>
+      not fresh
+    </Text>
+    <TextInput />
+    <TextInput />
+    <TextInput />
+    <TextInput />
+    <View>
+      <Text>
+        Change freshness!
+      </Text>
+    </View>
+    <Text>
+      First Text
+    </Text>
+    <Text>
+      Second Text
+    </Text>
+    <Text>
+      0
     </Text>
   </View>
-  <Text>
-    First Text
-  </Text>
-  <Text>
-    Second Text
-  </Text>
-  <Text>
-    0
-  </Text>
-</View>"
+</>"
 `;
 
 exports[`debug with only prop whose value is bananaChef 1`] = `
-"<View>
-  <Text>
-    Is the banana fresh?
-  </Text>
-  <Text>
-    not fresh
-  </Text>
-  <TextInput />
-  <TextInput
-    testID="bananaChef"
-  />
-  <TextInput />
-  <TextInput />
+"<>
   <View>
     <Text>
-      Change freshness!
+      Is the banana fresh?
+    </Text>
+    <Text>
+      not fresh
+    </Text>
+    <TextInput />
+    <TextInput
+      testID="bananaChef"
+    />
+    <TextInput />
+    <TextInput />
+    <View>
+      <Text>
+        Change freshness!
+      </Text>
+    </View>
+    <Text>
+      First Text
+    </Text>
+    <Text>
+      Second Text
+    </Text>
+    <Text>
+      0
     </Text>
   </View>
-  <Text>
-    First Text
-  </Text>
-  <Text>
-    Second Text
-  </Text>
-  <Text>
-    0
-  </Text>
-</View>"
+</>"
 `;
 
 exports[`debug: All Props 1`] = `
-"<View>
-  <Text>
-    Is the banana fresh?
-  </Text>
-  <Text
-    testID="bananaFresh"
-  >
-    not fresh
-  </Text>
-  <TextInput
-    placeholder="Add custom freshness"
-    testID="bananaCustomFreshness"
-    value="Custom Freshie"
-  />
-  <TextInput
-    defaultValue="What did you inspect?"
-    placeholder="Who inspected freshness?"
-    testID="bananaChef"
-    value="I inspected freshie"
-  />
-  <TextInput
-    defaultValue="What banana?"
-  />
-  <TextInput
-    defaultValue="hello"
-    value=""
-  />
-  <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function onBlur]}
-    onClick={[Function onClick]}
-    onFocus={[Function onFocus]}
-    onResponderGrant={[Function onResponderGrant]}
-    onResponderMove={[Function onResponderMove]}
-    onResponderRelease={[Function onResponderRelease]}
-    onResponderTerminate={[Function onResponderTerminate]}
-    onResponderTerminationRequest={[Function onResponderTerminationRequest]}
-    onStartShouldSetResponder={[Function onStartShouldSetResponder]}
-    role="button"
-  >
+"<>
+  <View>
     <Text>
-      Change freshness!
+      Is the banana fresh?
+    </Text>
+    <Text
+      testID="bananaFresh"
+    >
+      not fresh
+    </Text>
+    <TextInput
+      placeholder="Add custom freshness"
+      testID="bananaCustomFreshness"
+      value="Custom Freshie"
+    />
+    <TextInput
+      defaultValue="What did you inspect?"
+      placeholder="Who inspected freshness?"
+      testID="bananaChef"
+      value="I inspected freshie"
+    />
+    <TextInput
+      defaultValue="What banana?"
+    />
+    <TextInput
+      defaultValue="hello"
+      value=""
+    />
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function onBlur]}
+      onClick={[Function onClick]}
+      onFocus={[Function onFocus]}
+      onResponderGrant={[Function onResponderGrant]}
+      onResponderMove={[Function onResponderMove]}
+      onResponderRelease={[Function onResponderRelease]}
+      onResponderTerminate={[Function onResponderTerminate]}
+      onResponderTerminationRequest={[Function onResponderTerminationRequest]}
+      onStartShouldSetResponder={[Function onStartShouldSetResponder]}
+      role="button"
+    >
+      <Text>
+        Change freshness!
+      </Text>
+    </View>
+    <Text
+      testID="duplicateText"
+    >
+      First Text
+    </Text>
+    <Text
+      testID="duplicateText"
+    >
+      Second Text
+    </Text>
+    <Text>
+      0
     </Text>
   </View>
-  <Text
-    testID="duplicateText"
-  >
-    First Text
-  </Text>
-  <Text
-    testID="duplicateText"
-  >
-    Second Text
-  </Text>
-  <Text>
-    0
-  </Text>
-</View>
+</>
 undefined"
 `;
 
@@ -299,53 +313,55 @@ exports[`debug: Option message 1`] = `
 "another custom message
 
 
-<View>
-  <Text>
-    Is the banana fresh?
-  </Text>
-  <Text
-    testID="bananaFresh"
-  >
-    not fresh
-  </Text>
-  <TextInput
-    placeholder="Add custom freshness"
-    testID="bananaCustomFreshness"
-    value="Custom Freshie"
-  />
-  <TextInput
-    defaultValue="What did you inspect?"
-    placeholder="Who inspected freshness?"
-    testID="bananaChef"
-    value="I inspected freshie"
-  />
-  <TextInput
-    defaultValue="What banana?"
-  />
-  <TextInput
-    defaultValue="hello"
-    value=""
-  />
-  <View
-    accessible={true}
-    role="button"
-  >
+<>
+  <View>
     <Text>
-      Change freshness!
+      Is the banana fresh?
+    </Text>
+    <Text
+      testID="bananaFresh"
+    >
+      not fresh
+    </Text>
+    <TextInput
+      placeholder="Add custom freshness"
+      testID="bananaCustomFreshness"
+      value="Custom Freshie"
+    />
+    <TextInput
+      defaultValue="What did you inspect?"
+      placeholder="Who inspected freshness?"
+      testID="bananaChef"
+      value="I inspected freshie"
+    />
+    <TextInput
+      defaultValue="What banana?"
+    />
+    <TextInput
+      defaultValue="hello"
+      value=""
+    />
+    <View
+      accessible={true}
+      role="button"
+    >
+      <Text>
+        Change freshness!
+      </Text>
+    </View>
+    <Text
+      testID="duplicateText"
+    >
+      First Text
+    </Text>
+    <Text
+      testID="duplicateText"
+    >
+      Second Text
+    </Text>
+    <Text>
+      0
     </Text>
   </View>
-  <Text
-    testID="duplicateText"
-  >
-    First Text
-  </Text>
-  <Text
-    testID="duplicateText"
-  >
-    Second Text
-  </Text>
-  <Text>
-    0
-  </Text>
-</View>"
+</>"
 `;

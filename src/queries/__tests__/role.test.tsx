@@ -791,9 +791,9 @@ describe('error messages', () => {
     expect(() => screen.getByRole('button')).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: button
 
-      <RntlContainer>
+      <>
         <View />
-      </RntlContainer>"
+      </>"
     `);
   });
 
@@ -803,9 +803,9 @@ describe('error messages', () => {
     expect(() => screen.getByRole('button', { name: 'Save' })).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: button, name: Save
 
-      <RntlContainer>
+      <>
         <View />
-      </RntlContainer>"
+      </>"
     `);
   });
 
@@ -816,9 +816,9 @@ describe('error messages', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: button, name: Save, disabled state: true
 
-      <RntlContainer>
+      <>
         <View />
-      </RntlContainer>"
+      </>"
     `);
   });
 
@@ -829,9 +829,9 @@ describe('error messages', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: button, name: Save, disabled state: true, selected state: true
 
-      <RntlContainer>
+      <>
         <View />
-      </RntlContainer>"
+      </>"
     `);
   });
 
@@ -842,9 +842,9 @@ describe('error messages', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: button, disabled state: true
 
-      <RntlContainer>
+      <>
         <View />
-      </RntlContainer>"
+      </>"
     `);
   });
 
@@ -855,9 +855,9 @@ describe('error messages', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: adjustable, min value: 1
 
-      <RntlContainer>
+      <>
         <View />
-      </RntlContainer>"
+      </>"
     `);
 
     expect(() =>
@@ -867,9 +867,9 @@ describe('error messages', () => {
     ).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: adjustable, min value: 1, max value: 2, now value: 1, text value: /hello/
 
-      <RntlContainer>
+      <>
         <View />
-      </RntlContainer>"
+      </>"
     `);
   });
 });
@@ -889,7 +889,7 @@ test('byRole queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: button
 
-    <RntlContainer>
+    <>
       <View
         accessibilityRole="button"
         accessible={true}
@@ -903,7 +903,7 @@ test('byRole queries support hidden option', () => {
           Hidden from accessibility
         </Text>
       </View>
-    </RntlContainer>"
+    </>"
   `);
 });
 
@@ -942,40 +942,40 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByRole('link')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: link
 
-    <RntlContainer>
+    <>
       <View
         accessibilityRole="button"
       />
-    </RntlContainer>"
+    </>"
   `);
 
   expect(() => screen.getAllByRole('link')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: link
 
-    <RntlContainer>
+    <>
       <View
         accessibilityRole="button"
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findByRole('link')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: link
 
-    <RntlContainer>
+    <>
       <View
         accessibilityRole="button"
       />
-    </RntlContainer>"
+    </>"
   `);
 
   await expect(screen.findAllByRole('link')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with role: link
 
-    <RntlContainer>
+    <>
       <View
         accessibilityRole="button"
       />
-    </RntlContainer>"
+    </>"
   `);
 });

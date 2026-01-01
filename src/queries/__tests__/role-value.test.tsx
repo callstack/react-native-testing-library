@@ -80,7 +80,7 @@ describe('accessibility value', () => {
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: adjustable, name: Hello, min value: 5
 
-      <RntlContainer>
+      <>
         <Text
           accessibilityRole="adjustable"
           accessibilityState={
@@ -99,13 +99,13 @@ describe('accessibility value', () => {
         >
           Hello
         </Text>
-      </RntlContainer>"
+      </>"
     `);
     expect(() => screen.getByRole('adjustable', { name: 'World', value: { min: 10 } }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: adjustable, name: World, min value: 10
 
-      <RntlContainer>
+      <>
         <Text
           accessibilityRole="adjustable"
           accessibilityState={
@@ -124,13 +124,13 @@ describe('accessibility value', () => {
         >
           Hello
         </Text>
-      </RntlContainer>"
+      </>"
     `);
     expect(() => screen.getByRole('adjustable', { name: 'Hello', value: { min: 5 } }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: adjustable, name: Hello, min value: 5
 
-      <RntlContainer>
+      <>
         <Text
           accessibilityRole="adjustable"
           accessibilityState={
@@ -149,13 +149,13 @@ describe('accessibility value', () => {
         >
           Hello
         </Text>
-      </RntlContainer>"
+      </>"
     `);
     expect(() => screen.getByRole('adjustable', { selected: true, value: { min: 10 } }))
       .toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: adjustable, selected state: true, min value: 10
 
-      <RntlContainer>
+      <>
         <Text
           accessibilityRole="adjustable"
           accessibilityState={
@@ -174,7 +174,7 @@ describe('accessibility value', () => {
         >
           Hello
         </Text>
-      </RntlContainer>"
+      </>"
     `);
   });
 

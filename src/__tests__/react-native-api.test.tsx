@@ -12,11 +12,11 @@ test('React Native API assumption: <View> renders a single host element', () => 
   render(<View testID="test" />);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <View
         testID="test"
       />
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -24,13 +24,13 @@ test('React Native API assumption: <Text> renders a single host element', () => 
   render(<Text testID="test">Hello</Text>);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <Text
         testID="test"
       >
         Hello
       </Text>
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -46,7 +46,7 @@ test('React Native API assumption: nested <Text> renders a single host element',
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <Text
         testID="test"
       >
@@ -66,7 +66,7 @@ test('React Native API assumption: nested <Text> renders a single host element',
           </Text>
         </Text>
       </Text>
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -81,14 +81,14 @@ test('React Native API assumption: <TextInput> renders a single host element', (
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <TextInput
         defaultValue="default"
         placeholder="Placeholder"
         testID="test"
         value="currentValue"
       />
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -100,7 +100,7 @@ test('React Native API assumption: <TextInput> with nested Text renders single h
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <TextInput
         placeholder="Placeholder"
         testID="test"
@@ -109,7 +109,7 @@ test('React Native API assumption: <TextInput> with nested Text renders single h
           Hello
         </Text>
       </TextInput>
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -117,7 +117,7 @@ test('React Native API assumption: <Switch> renders a single host element', () =
   render(<Switch testID="test" value={true} onChange={jest.fn()} />);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <RCTSwitch
         accessibilityRole="switch"
         onChange={[Function]}
@@ -132,7 +132,7 @@ test('React Native API assumption: <Switch> renders a single host element', () =
         testID="test"
         value={true}
       />
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -140,7 +140,7 @@ test('React Native API assumption: <Image> renders a single host element', () =>
   render(<Image testID="test" source={{ uri: 'https://fake.url/image.jpg' }} alt="Alt text" />);
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <Image
         alt="Alt text"
         source={
@@ -150,7 +150,7 @@ test('React Native API assumption: <Image> renders a single host element', () =>
         }
         testID="test"
       />
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -162,7 +162,7 @@ test('React Native API assumption: <ScrollView> renders a single host element', 
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <RCTScrollView
         testID="scrollView"
       >
@@ -172,7 +172,7 @@ test('React Native API assumption: <ScrollView> renders a single host element', 
           />
         </View>
       </RCTScrollView>
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -182,7 +182,7 @@ test('React Native API assumption: <FlatList> renders a single host <ScrollView>
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <RCTScrollView
         data={
           [
@@ -228,7 +228,7 @@ test('React Native API assumption: <FlatList> renders a single host <ScrollView>
           </View>
         </View>
       </RCTScrollView>
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -240,7 +240,7 @@ test('React Native API assumption: <Modal> renders a single host element', () =>
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <Modal
         hardwareAccelerated={false}
         testID="test"
@@ -250,7 +250,7 @@ test('React Native API assumption: <Modal> renders a single host element', () =>
           Modal Content
         </Text>
       </Modal>
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -279,7 +279,7 @@ test('React Native API assumption: aria-* props render directly on host View', (
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <View
         aria-busy={true}
         aria-checked={true}
@@ -300,7 +300,7 @@ test('React Native API assumption: aria-* props render directly on host View', (
         aria-valuetext="ValueText"
         testID="test"
       />
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -329,7 +329,7 @@ test('React Native API assumption: aria-* props render directly on host Text', (
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <Text
         aria-busy={true}
         aria-checked={true}
@@ -350,7 +350,7 @@ test('React Native API assumption: aria-* props render directly on host Text', (
         aria-valuetext="ValueText"
         testID="test"
       />
-    </RntlContainer>
+    </>
   `);
 });
 
@@ -379,7 +379,7 @@ test('React Native API assumption: aria-* props render directly on host TextInpu
   );
 
   expect(screen.toJSON()).toMatchInlineSnapshot(`
-    <RntlContainer>
+    <>
       <TextInput
         aria-busy={true}
         aria-checked={true}
@@ -400,6 +400,6 @@ test('React Native API assumption: aria-* props render directly on host TextInpu
         aria-valuetext="ValueText"
         testID="test"
       />
-    </RntlContainer>
+    </>
   `);
 });
