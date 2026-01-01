@@ -48,12 +48,12 @@ function isElementVisible(
     return false;
   }
 
-  const hostParent = getHostParent(element);
-  if (hostParent === null) {
+  const parent = element.parent;
+  if (parent === null) {
     return true;
   }
 
-  return isElementVisible(hostParent, cache);
+  return isElementVisible(parent, cache);
 }
 
 function isHiddenForStyles(element: HostElement) {

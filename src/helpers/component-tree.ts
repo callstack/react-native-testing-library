@@ -1,16 +1,12 @@
 import type { HostElement } from 'universal-test-renderer';
 
 import { screen } from '../screen';
-/**
- * HostElement referring to host element.
- */
-export type HostTestInstance = HostElement & { type: string };
 
 /**
  * Checks if the given element is a host element.
  * @param element The element to check.
  */
-export function isHostElement(element?: HostElement | null): element is HostTestInstance {
+export function isHostElement(element?: HostElement | null): element is HostElement {
   return typeof element?.type === 'string';
 }
 
@@ -19,36 +15,15 @@ export function isElementMounted(element: HostElement) {
 }
 
 /**
- * Returns first host ancestor for given element.
- * @param element The element start traversing from.
- */
-export function getHostParent(element: HostElement | null): HostTestInstance | null {
-  if (element == null) {
-    return null;
-  }
-
-  let current = element.parent;
-  while (current) {
-    if (isHostElement(current)) {
-      return current;
-    }
-
-    current = current.parent;
-  }
-
-  return null;
-}
-
-/**
  * Returns host children for given element.
  * @param element The element start traversing from.
  */
-export function getHostChildren(element: HostElement | null): HostTestInstance[] {
+export function getHostChildren(element: HostElement | null): HostElement[] {
   if (element == null) {
     return [];
   }
 
-  const hostChildren: HostTestInstance[] = [];
+  const hostChildren: HostElement[] = [];
 
   element.children.forEach((child) => {
     if (typeof child !== 'object') {
@@ -72,7 +47,7 @@ export function getHostChildren(element: HostElement | null): HostTestInstance[]
  * @returns If the passed element is a host element, it will return an array containing only that element,
  * if the passed element is a composite element, it will return an array containing its host children (zero, one or many).
  */
-export function getHostSelves(element: HostElement | null): HostTestInstance[] {
+export function getHostSelves(element: HostElement | null): HostElement[] {
   return isHostElement(element) ? [element] : getHostChildren(element);
 }
 
@@ -80,8 +55,8 @@ export function getHostSelves(element: HostElement | null): HostTestInstance[] {
  * Returns host siblings for given element.
  * @param element The element start traversing from.
  */
-export function getHostSiblings(element: HostElement | null): HostTestInstance[] {
-  const hostParent = getHostParent(element);
+export function getHostSiblings(element: HostElement | null): HostElement[] {
+  const hostParent = element?.parent;
   const hostSelves = getHostSelves(element);
   return getHostChildren(hostParent).filter((sibling) => !hostSelves.includes(sibling));
 }

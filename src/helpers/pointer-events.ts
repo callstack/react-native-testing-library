@@ -21,8 +21,9 @@ export const isPointerEventEnabled = (element: HostElement, isParent?: boolean):
     return false;
   }
 
-  const hostParent = getHostParent(element);
-  if (!hostParent) return true;
+  if (!element.parent) {
+    return true;
+  }
 
-  return isPointerEventEnabled(hostParent, true);
+  return isPointerEventEnabled(element.parent, true);
 };

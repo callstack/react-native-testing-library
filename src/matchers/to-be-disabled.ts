@@ -46,7 +46,7 @@ export function toBeEnabled(this: jest.MatcherContext, element: HostElement) {
 }
 
 function isAncestorDisabled(element: HostElement): boolean {
-  const parent = getHostParent(element);
+  const parent = element.parent;
   if (parent == null) {
     return false;
   }

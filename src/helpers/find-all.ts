@@ -2,7 +2,6 @@ import type { HostElement } from 'universal-test-renderer';
 
 import { getConfig } from '../config';
 import { isHiddenFromAccessibility } from './accessibility';
-import type { HostTestInstance } from './component-tree';
 import { isHostElement } from './component-tree';
 
 interface FindAllOptions {
@@ -20,7 +19,7 @@ export function findAll(
   root: HostElement,
   predicate: (element: HostElement) => boolean,
   options?: FindAllOptions,
-): HostTestInstance[] {
+): HostElement[] {
   const results = findAllInternal(root, predicate, options);
 
   const includeHiddenElements =
@@ -40,11 +39,11 @@ function findAllInternal(
   root: HostElement,
   predicate: (element: HostElement) => boolean,
   options?: FindAllOptions,
-): HostTestInstance[] {
-  const results: HostTestInstance[] = [];
+): HostElement[] {
+  const results: HostElement[] = [];
 
   // Match descendants first but do not add them to results yet.
-  const matchingDescendants: HostTestInstance[] = [];
+  const matchingDescendants: HostElement[] = [];
   root.children.forEach((child) => {
     if (typeof child === 'string') {
       return;

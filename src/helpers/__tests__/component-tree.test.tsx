@@ -24,31 +24,6 @@ function MultipleHostChildren() {
   );
 }
 
-describe('getHostParent()', () => {
-  it('returns host parent for host component', () => {
-    render(
-      <View testID="grandparent">
-        <View testID="parent">
-          <View testID="subject" />
-          <View testID="sibling" />
-        </View>
-      </View>,
-    );
-
-    const hostParent = getHostParent(screen.getByTestId('subject'));
-    expect(hostParent).toBe(screen.getByTestId('parent'));
-
-    const hostGrandparent = getHostParent(hostParent);
-    expect(hostGrandparent).toBe(screen.getByTestId('grandparent'));
-
-    expect(getHostParent(hostGrandparent)).toBe(null);
-  });
-
-  it('returns host parent for null', () => {
-    expect(getHostParent(null)).toBe(null);
-  });
-});
-
 describe('getHostChildren()', () => {
   it('returns host children for host component', () => {
     render(
