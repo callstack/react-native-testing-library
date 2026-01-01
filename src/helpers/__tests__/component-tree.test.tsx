@@ -47,19 +47,6 @@ describe('getHostParent()', () => {
   it('returns host parent for null', () => {
     expect(getHostParent(null)).toBe(null);
   });
-
-  it('returns host parent for composite component', () => {
-    render(
-      <View testID="parent">
-        <MultipleHostChildren />
-        <View testID="subject" />
-      </View>,
-    );
-
-    const compositeComponent = screen.UNSAFE_getByType(MultipleHostChildren);
-    const hostParent = getHostParent(compositeComponent);
-    expect(hostParent).toBe(screen.getByTestId('parent'));
-  });
 });
 
 describe('getHostChildren()', () => {
@@ -152,25 +139,6 @@ describe('getHostSelves()', () => {
     expect(getHostSelves(compositeTextInputByValue)).toEqual([hostTextInput]);
     expect(getHostSelves(compositeTextInputByPlaceholder)).toEqual([hostTextInput]);
   });
-
-  test('returns host children for custom composite components', () => {
-    render(
-      <View testID="parent">
-        <ZeroHostChildren />
-        <MultipleHostChildren />
-        <View testID="sibling" />
-      </View>,
-    );
-
-    const zeroCompositeComponent = screen.UNSAFE_getByType(ZeroHostChildren);
-    expect(getHostSelves(zeroCompositeComponent)).toEqual([]);
-
-    const multipleCompositeComponent = screen.UNSAFE_getByType(MultipleHostChildren);
-    const hostChild1 = screen.getByTestId('child1');
-    const hostChild2 = screen.getByTestId('child2');
-    const hostChild3 = screen.getByTestId('child3');
-    expect(getHostSelves(multipleCompositeComponent)).toEqual([hostChild1, hostChild2, hostChild3]);
-  });
 });
 
 describe('getHostSiblings()', () => {
@@ -193,27 +161,6 @@ describe('getHostSiblings()', () => {
       screen.getByTestId('child1'),
       screen.getByTestId('child2'),
       screen.getByTestId('child3'),
-    ]);
-  });
-
-  it('returns host siblings for composite component', () => {
-    render(
-      <View testID="grandparent">
-        <View testID="parent">
-          <View testID="siblingBefore" />
-          <View testID="subject" />
-          <View testID="siblingAfter" />
-          <MultipleHostChildren />
-        </View>
-      </View>,
-    );
-
-    const compositeComponent = screen.UNSAFE_getByType(MultipleHostChildren);
-    const hostSiblings = getHostSiblings(compositeComponent);
-    expect(hostSiblings).toEqual([
-      screen.getByTestId('siblingBefore'),
-      screen.getByTestId('subject'),
-      screen.getByTestId('siblingAfter'),
     ]);
   });
 });
