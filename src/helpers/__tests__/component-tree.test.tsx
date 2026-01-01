@@ -7,7 +7,7 @@ import {
   getHostParent,
   getHostSelves,
   getHostSiblings,
-  getUnsafeRootElement,
+  getContainerElement,
 } from '../component-tree';
 
 function ZeroHostChildren() {
@@ -227,6 +227,6 @@ describe('getUnsafeRootElement()', () => {
     );
 
     const view = screen.getByTestId('view');
-    expect(getUnsafeRootElement(view)).toEqual(screen.UNSAFE_root);
+    expect(getContainerElement(view)).toEqual(screen.UNSAFE_root);
   });
 });

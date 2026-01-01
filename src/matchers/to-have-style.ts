@@ -1,6 +1,6 @@
 import type { ImageStyle, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { StyleSheet } from 'react-native';
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 import { diff, matcherHint } from 'jest-matcher-utils';
 
 import { checkHostElement, formatMessage } from './utils';
@@ -11,7 +11,7 @@ type StyleLike = Record<string, unknown>;
 
 export function toHaveStyle(
   this: jest.MatcherContext,
-  element: ReactTestInstance,
+  element: HostElement,
   style: StyleProp<Style>,
 ) {
   checkHostElement(element, toHaveStyle, this);

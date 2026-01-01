@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
 
@@ -13,7 +13,7 @@ import { formatElement } from '../helpers/format-element';
 import { isHostSwitch } from '../helpers/host-component-names';
 import { checkHostElement } from './utils';
 
-export function toBeChecked(this: jest.MatcherContext, element: ReactTestInstance) {
+export function toBeChecked(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeChecked, this);
 
   if (!isHostSwitch(element) && !isSupportedAccessibilityElement(element)) {
@@ -37,7 +37,7 @@ export function toBeChecked(this: jest.MatcherContext, element: ReactTestInstanc
   };
 }
 
-function isSupportedAccessibilityElement(element: ReactTestInstance) {
+function isSupportedAccessibilityElement(element: HostElement) {
   if (!isAccessibilityElement(element)) {
     return false;
   }

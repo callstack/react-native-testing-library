@@ -1,9 +1,5 @@
 import * as React from 'react';
-import type {
-  ReactTestInstance,
-  ReactTestRenderer,
-  TestRendererOptions,
-} from 'react-test-renderer';
+import type { HostElement, Root, TestRendererOptions } from 'universal-test-renderer';
 
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
@@ -58,7 +54,7 @@ export default async function renderAsync<T>(
 }
 
 function buildRenderResult(
-  renderer: ReactTestRenderer,
+  renderer: Root,
   wrap: (element: React.ReactElement) => React.JSX.Element,
 ) {
   const instance = renderer.root;
@@ -101,7 +97,7 @@ function buildRenderResult(
     unmountAsync,
     toJSON: renderer.toJSON,
     debug: makeDebug(renderer),
-    get root(): ReactTestInstance {
+    get root(): HostElement {
       return getHostSelves(instance)[0];
     },
     UNSAFE_root: instance,
@@ -126,7 +122,7 @@ function buildRenderResult(
 
 export type DebugFunction = (options?: DebugOptions) => void;
 
-function makeDebug(renderer: ReactTestRenderer): DebugFunction {
+function makeDebug(renderer: Root): DebugFunction {
   function debugImpl(options?: DebugOptions) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions = { ...defaultDebugOptions, ...options };

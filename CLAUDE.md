@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is the **React Native Testing Library (RNTL)** - a comprehensive testing solution for React Native applications that provides React Native runtime simulation on top of `react-test-renderer`. The library encourages better testing practices by focusing on testing behavior rather than implementation details.
+This is the **React Native Testing Library (RNTL)** - a comprehensive testing solution for React Native applications that provides React Native runtime simulation on top of `universal-test-renderer`. The library encourages better testing practices by focusing on testing behavior rather than implementation details.
 
 ## Key Development Commands
 
@@ -37,7 +37,7 @@ To test a specific file: `yarn test path/to/test.test.tsx`
 
 1. **`src/index.ts`** - Main entry point that sets up auto-cleanup and extends Jest matchers
 2. **`src/pure.ts`** - Pure exports without auto-cleanup for advanced use cases
-3. **`src/render.tsx`** - Core rendering functionality using `react-test-renderer`
+3. **`src/render.tsx`** - Core rendering functionality using `universal-test-renderer`
 4. **`src/screen.ts`** - Global screen object providing access to rendered components
 
 ### Key Modules
@@ -131,7 +131,7 @@ The build creates:
 
 ## Testing Environment
 
-- Uses `react-test-renderer` for component rendering
+- Uses `universal-test-renderer` for component rendering
 - Fake timers recommended for user events
 - String validation available for text rendering checks
 - Supports both concurrent and legacy React rendering modes

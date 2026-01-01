@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
 import { createQueryByError } from '../helpers/errors';
@@ -7,9 +7,7 @@ import { createQueryByError } from '../helpers/errors';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type UnsafeComponentType = React.ComponentType<any>;
 
-const UNSAFE_getByType = (
-  instance: ReactTestInstance,
-): ((type: UnsafeComponentType) => ReactTestInstance) =>
+const UNSAFE_getByType = (instance: HostElement): ((type: UnsafeComponentType) => HostElement) =>
   function getByTypeFn(type: UnsafeComponentType) {
     try {
       return instance.findByType(type);
@@ -19,8 +17,8 @@ const UNSAFE_getByType = (
   };
 
 const UNSAFE_getAllByType = (
-  instance: ReactTestInstance,
-): ((type: UnsafeComponentType) => Array<ReactTestInstance>) =>
+  instance: HostElement,
+): ((type: UnsafeComponentType) => Array<HostElement>) =>
   function getAllByTypeFn(type: UnsafeComponentType) {
     const results = instance.findAllByType(type);
     if (results.length === 0) {
@@ -30,8 +28,8 @@ const UNSAFE_getAllByType = (
   };
 
 const UNSAFE_queryByType = (
-  instance: ReactTestInstance,
-): ((type: UnsafeComponentType) => ReactTestInstance | null) =>
+  instance: HostElement,
+): ((type: UnsafeComponentType) => HostElement | null) =>
   function queryByTypeFn(type: UnsafeComponentType) {
     try {
       return UNSAFE_getByType(instance)(type);
@@ -41,7 +39,7 @@ const UNSAFE_queryByType = (
   };
 
 const UNSAFE_queryAllByType =
-  (instance: ReactTestInstance): ((type: UnsafeComponentType) => Array<ReactTestInstance>) =>
+  (instance: HostElement): ((type: UnsafeComponentType) => Array<HostElement>) =>
   (type: UnsafeComponentType) => {
     try {
       return UNSAFE_getAllByType(instance)(type);
@@ -52,14 +50,14 @@ const UNSAFE_queryAllByType =
 
 // Unsafe aliases
 export type UnsafeByTypeQueries = {
-  UNSAFE_getByType: <P>(type: React.ComponentType<P>) => ReactTestInstance;
-  UNSAFE_getAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
-  UNSAFE_queryByType: <P>(type: React.ComponentType<P>) => ReactTestInstance | null;
-  UNSAFE_queryAllByType: <P>(type: React.ComponentType<P>) => Array<ReactTestInstance>;
+  UNSAFE_getByType: <P>(type: React.ComponentType<P>) => HostElement;
+  UNSAFE_getAllByType: <P>(type: React.ComponentType<P>) => Array<HostElement>;
+  UNSAFE_queryByType: <P>(type: React.ComponentType<P>) => HostElement | null;
+  UNSAFE_queryAllByType: <P>(type: React.ComponentType<P>) => Array<HostElement>;
 };
 
 // TODO: migrate to makeQueries pattern
-export const bindUnsafeByTypeQueries = (instance: ReactTestInstance): UnsafeByTypeQueries => ({
+export const bindUnsafeByTypeQueries = (instance: HostElement): UnsafeByTypeQueries => ({
   UNSAFE_getByType: UNSAFE_getByType(instance),
   UNSAFE_getAllByType: UNSAFE_getAllByType(instance),
   UNSAFE_queryByType: UNSAFE_queryByType(instance),

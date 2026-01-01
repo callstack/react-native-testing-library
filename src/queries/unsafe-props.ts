@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 import prettyFormat from 'pretty-format';
 
 import { ErrorWithStack, prepareErrorMessage } from '../helpers/errors';
@@ -6,7 +6,7 @@ import { createQueryByError } from '../helpers/errors';
 
 type Props = Record<string, unknown>;
 
-const UNSAFE_getByProps = (instance: ReactTestInstance): ((props: Props) => ReactTestInstance) =>
+const UNSAFE_getByProps = (instance: HostElement): ((props: Props) => HostElement) =>
   function getByPropsFn(props: Props) {
     try {
       return instance.findByProps(props);
@@ -15,9 +15,7 @@ const UNSAFE_getByProps = (instance: ReactTestInstance): ((props: Props) => Reac
     }
   };
 
-const UNSAFE_getAllByProps = (
-  instance: ReactTestInstance,
-): ((props: Props) => Array<ReactTestInstance>) =>
+const UNSAFE_getAllByProps = (instance: HostElement): ((props: Props) => Array<HostElement>) =>
   function getAllByPropsFn(props: Props) {
     const results = instance.findAllByProps(props);
     if (results.length === 0) {
@@ -29,9 +27,7 @@ const UNSAFE_getAllByProps = (
     return results;
   };
 
-const UNSAFE_queryByProps = (
-  instance: ReactTestInstance,
-): ((props: Props) => ReactTestInstance | null) =>
+const UNSAFE_queryByProps = (instance: HostElement): ((props: Props) => HostElement | null) =>
   function queryByPropsFn(props: Props) {
     try {
       return UNSAFE_getByProps(instance)(props);
@@ -41,7 +37,7 @@ const UNSAFE_queryByProps = (
   };
 
 const UNSAFE_queryAllByProps =
-  (instance: ReactTestInstance): ((props: Props) => Array<ReactTestInstance>) =>
+  (instance: HostElement): ((props: Props) => Array<HostElement>) =>
   (props: Props) => {
     try {
       return UNSAFE_getAllByProps(instance)(props);
@@ -52,14 +48,14 @@ const UNSAFE_queryAllByProps =
 
 // Unsafe aliases
 export type UnsafeByPropsQueries = {
-  UNSAFE_getByProps: (props: Props) => ReactTestInstance;
-  UNSAFE_getAllByProps: (props: Props) => Array<ReactTestInstance>;
-  UNSAFE_queryByProps: (props: Props) => ReactTestInstance | null;
-  UNSAFE_queryAllByProps: (props: Props) => Array<ReactTestInstance>;
+  UNSAFE_getByProps: (props: Props) => HostElement;
+  UNSAFE_getAllByProps: (props: Props) => Array<HostElement>;
+  UNSAFE_queryByProps: (props: Props) => HostElement | null;
+  UNSAFE_queryAllByProps: (props: Props) => Array<HostElement>;
 };
 
 // TODO: migrate to makeQueries pattern
-export const bindUnsafeByPropsQueries = (instance: ReactTestInstance): UnsafeByPropsQueries => ({
+export const bindUnsafeByPropsQueries = (instance: HostElement): UnsafeByPropsQueries => ({
   UNSAFE_getByProps: UNSAFE_getByProps(instance),
   UNSAFE_getAllByProps: UNSAFE_getAllByProps(instance),
   UNSAFE_queryByProps: UNSAFE_queryByProps(instance),

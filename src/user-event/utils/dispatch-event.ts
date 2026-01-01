@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import act from '../../act';
 import { getEventHandler } from '../../event-handler';
@@ -11,11 +11,7 @@ import { isElementMounted } from '../../helpers/component-tree';
  * @param eventName name of the event
  * @param event event payload(s)
  */
-export async function dispatchEvent(
-  element: ReactTestInstance,
-  eventName: string,
-  ...event: unknown[]
-) {
+export async function dispatchEvent(element: HostElement, eventName: string, ...event: unknown[]) {
   if (!isElementMounted(element)) {
     return;
   }

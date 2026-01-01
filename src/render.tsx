@@ -1,9 +1,5 @@
 import * as React from 'react';
-import type {
-  ReactTestInstance,
-  ReactTestRenderer,
-  TestRendererOptions,
-} from 'react-test-renderer';
+import type { HostElement, Root, RootOptions } from 'universal-test-renderer';
 
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
@@ -11,7 +7,6 @@ import { getConfig } from './config';
 import { getHostSelves } from './helpers/component-tree';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
-import { validateStringsRenderedWithinText } from './helpers/string-validation';
 import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
@@ -31,7 +26,6 @@ export interface RenderOptions {
   concurrentRoot?: boolean;
 
   createNodeMock?: (element: React.ReactElement) => unknown;
-  unstable_validateStringsRenderedWithinText?: boolean;
 }
 
 export type RenderResult = ReturnType<typeof render>;
@@ -45,70 +39,32 @@ export default function render<T>(component: React.ReactElement<T>, options: Ren
 }
 
 export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderOptions) {
-  const {
-    wrapper: Wrapper,
-    concurrentRoot,
-    unstable_validateStringsRenderedWithinText,
-    ...rest
-  } = options || {};
+  const { wrapper: Wrapper, concurrentRoot, ...rest } = options || {};
 
-  const testRendererOptions: TestRendererOptions = {
+  const testRendererOptions: RootOptions = {
     ...rest,
-    // @ts-expect-error incomplete typing on RTR package
-    unstable_isConcurrent: concurrentRoot ?? getConfig().concurrentRoot,
   };
-
-  if (unstable_validateStringsRenderedWithinText) {
-    return renderWithStringValidation(component, {
-      wrapper: Wrapper,
-      ...testRendererOptions,
-    });
-  }
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
   const renderer = renderWithAct(wrap(component), testRendererOptions);
   return buildRenderResult(renderer, wrap);
 }
 
-function renderWithStringValidation<T>(
-  component: React.ReactElement<T>,
-  options: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
-) {
-  const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
-
-  const wrap = (element: React.ReactElement) => (
-    <React.Profiler id="renderProfiler" onRender={handleRender}>
-      {Wrapper ? <Wrapper>{element}</Wrapper> : element}
-    </React.Profiler>
-  );
-
-  const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
-    if (renderer && phase === 'update') {
-      validateStringsRenderedWithinText(renderer.toJSON());
-    }
-  };
-
-  const renderer: ReactTestRenderer = renderWithAct(wrap(component), testRendererOptions);
-  validateStringsRenderedWithinText(renderer.toJSON());
-
-  return buildRenderResult(renderer, wrap);
-}
-
 function buildRenderResult(
-  renderer: ReactTestRenderer,
+  renderer: Root,
   wrap: (element: React.ReactElement) => React.JSX.Element,
 ) {
   const instance = renderer.root;
 
   const rerender = (component: React.ReactElement) => {
     void act(() => {
-      renderer.update(wrap(component));
+      renderer.render(wrap(component));
     });
   };
   const rerenderAsync = async (component: React.ReactElement) => {
     // eslint-disable-next-line require-await
     await act(async () => {
-      renderer.update(wrap(component));
+      renderer.render(wrap(component));
     });
   };
 
@@ -134,9 +90,9 @@ function buildRenderResult(
     updateAsync: rerenderAsync, // alias for `rerenderAsync`
     unmount,
     unmountAsync,
-    toJSON: renderer.toJSON,
+    toJSON: () => renderer.container.toJSON(),
     debug: makeDebug(renderer),
-    get root(): ReactTestInstance {
+    get root(): HostElement {
       return getHostSelves(instance)[0];
     },
     UNSAFE_root: instance,
@@ -161,7 +117,7 @@ function buildRenderResult(
 
 export type DebugFunction = (options?: DebugOptions) => void;
 
-function makeDebug(renderer: ReactTestRenderer): DebugFunction {
+function makeDebug(renderer: Root): DebugFunction {
   function debugImpl(options?: DebugOptions) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions = { ...defaultDebugOptions, ...options };

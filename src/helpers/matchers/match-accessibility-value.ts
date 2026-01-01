@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import type { TextMatch } from '../../matches';
 import { computeAriaValue } from '../accessibility';
@@ -12,7 +12,7 @@ export interface AccessibilityValueMatcher {
 }
 
 export function matchAccessibilityValue(
-  node: ReactTestInstance,
+  node: HostElement,
   matcher: AccessibilityValueMatcher,
 ): boolean {
   const value = computeAriaValue(node);

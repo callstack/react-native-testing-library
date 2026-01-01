@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import { bindByDisplayValueQueries } from './queries/display-value';
 import { bindByHintTextQueries } from './queries/hint-text';
@@ -10,7 +10,7 @@ import { bindByTextQueries } from './queries/text';
 import { bindUnsafeByPropsQueries } from './queries/unsafe-props';
 import { bindUnsafeByTypeQueries } from './queries/unsafe-type';
 
-export function within(instance: ReactTestInstance) {
+export function within(instance: HostElement) {
   return {
     ...bindByTextQueries(instance),
     ...bindByTestIdQueries(instance),

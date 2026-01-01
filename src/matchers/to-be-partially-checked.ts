@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
 
@@ -7,7 +7,7 @@ import { ErrorWithStack } from '../helpers/errors';
 import { formatElement } from '../helpers/format-element';
 import { checkHostElement } from './utils';
 
-export function toBePartiallyChecked(this: jest.MatcherContext, element: ReactTestInstance) {
+export function toBePartiallyChecked(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBePartiallyChecked, this);
 
   if (!hasValidAccessibilityRole(element)) {
@@ -31,7 +31,7 @@ export function toBePartiallyChecked(this: jest.MatcherContext, element: ReactTe
   };
 }
 
-function hasValidAccessibilityRole(element: ReactTestInstance) {
+function hasValidAccessibilityRole(element: HostElement) {
   const role = getRole(element);
   return isAccessibilityElement(element) && role === 'checkbox';
 }

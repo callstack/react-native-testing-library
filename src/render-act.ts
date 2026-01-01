@@ -1,36 +1,29 @@
-import type { ReactTestRenderer, TestRendererOptions } from 'react-test-renderer';
-import TestRenderer from 'react-test-renderer';
+import type { Root, RootOptions } from 'universal-test-renderer';
+import { createRoot } from 'universal-test-renderer';
 
 import act from './act';
 
-export function renderWithAct(
-  component: React.ReactElement,
-  options?: Partial<TestRendererOptions>,
-): ReactTestRenderer {
-  let renderer: ReactTestRenderer;
+export function renderWithAct(element: React.ReactElement, options?: RootOptions): Root {
+  const root = createRoot(options);
 
   // This will be called synchronously.
   void act(() => {
-    // @ts-expect-error `TestRenderer.create` is not typed correctly
-    renderer = TestRenderer.create(component, options);
+    root.render(element);
   });
 
-  // @ts-expect-error: `act` is synchronous, so `renderer` is already initialized here
-  return renderer;
+  return root;
 }
 
 export async function renderWithAsyncAct(
-  component: React.ReactElement,
-  options?: Partial<TestRendererOptions>,
-): Promise<ReactTestRenderer> {
-  let renderer: ReactTestRenderer;
+  element: React.ReactElement,
+  options?: RootOptions,
+): Promise<Root> {
+  const root = createRoot(options);
 
   // eslint-disable-next-line require-await
   await act(async () => {
-    // @ts-expect-error `TestRenderer.create` is not typed correctly
-    renderer = TestRenderer.create(component, options);
+    root.render(element);
   });
 
-  // @ts-expect-error: `renderer` is already initialized here
-  return renderer;
+  return root;
 }

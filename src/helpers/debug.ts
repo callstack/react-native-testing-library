@@ -1,4 +1,4 @@
-import type { ReactTestRendererJSON } from 'react-test-renderer';
+import type { JsonNode } from 'universal-test-renderer';
 
 import type { FormatElementOptions } from './format-element';
 import { formatJson } from './format-element';
@@ -12,7 +12,7 @@ export type DebugOptions = {
  * Log pretty-printed deep test component instance
  */
 export function debug(
-  instance: ReactTestRendererJSON | ReactTestRendererJSON[],
+  instance: JsonNode | JsonNode[],
   { message, ...formatOptions }: DebugOptions = {},
 ) {
   if (message) {

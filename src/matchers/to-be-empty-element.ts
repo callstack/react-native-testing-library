@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import redent from 'redent';
 
@@ -6,7 +6,7 @@ import { getHostChildren } from '../helpers/component-tree';
 import { formatElementList } from '../helpers/format-element';
 import { checkHostElement } from './utils';
 
-export function toBeEmptyElement(this: jest.MatcherContext, element: ReactTestInstance) {
+export function toBeEmptyElement(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeEmptyElement, this);
 
   const hostChildren = getHostChildren(element);

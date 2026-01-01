@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import type { TextMatch, TextMatchOptions } from '../matches';
@@ -16,18 +16,12 @@ import type { CommonQueryOptions } from './options';
 
 type ByTestIdOptions = CommonQueryOptions & TextMatchOptions;
 
-const matchTestId = (
-  node: ReactTestInstance,
-  testId: TextMatch,
-  options: TextMatchOptions = {},
-) => {
+const matchTestId = (node: HostElement, testId: TextMatch, options: TextMatchOptions = {}) => {
   const { exact, normalizer } = options;
   return matches(testId, node.props.testID, normalizer, exact);
 };
 
-const queryAllByTestId = (
-  instance: ReactTestInstance,
-): QueryAllByQuery<TextMatch, ByTestIdOptions> =>
+const queryAllByTestId = (instance: HostElement): QueryAllByQuery<TextMatch, ByTestIdOptions> =>
   function queryAllByTestIdFn(testId, queryOptions) {
     return findAll(instance, (node) => matchTestId(node, testId, queryOptions), queryOptions);
   };
@@ -52,7 +46,7 @@ export type ByTestIdQueries = {
   findAllByTestId: FindAllByQuery<TextMatch, ByTestIdOptions>;
 };
 
-export const bindByTestIdQueries = (instance: ReactTestInstance): ByTestIdQueries => ({
+export const bindByTestIdQueries = (instance: HostElement): ByTestIdQueries => ({
   getByTestId: getBy(instance),
   getAllByTestId: getAllBy(instance),
   queryByTestId: queryBy(instance),

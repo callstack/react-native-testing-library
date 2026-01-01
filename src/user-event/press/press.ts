@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import act from '../../act';
 import { getEventHandler } from '../../event-handler';
@@ -20,7 +20,7 @@ export interface PressOptions {
   duration?: number;
 }
 
-export async function press(this: UserEventInstance, element: ReactTestInstance): Promise<void> {
+export async function press(this: UserEventInstance, element: HostElement): Promise<void> {
   if (!isHostElement(element)) {
     throw new ErrorWithStack(
       `press() works only with host elements. Passed element has type "${element.type}".`,
@@ -35,7 +35,7 @@ export async function press(this: UserEventInstance, element: ReactTestInstance)
 
 export async function longPress(
   this: UserEventInstance,
-  element: ReactTestInstance,
+  element: HostElement,
   options?: PressOptions,
 ): Promise<void> {
   if (!isHostElement(element)) {
@@ -89,7 +89,7 @@ function isEnabledHostElement(element: HostTestInstance) {
   }
 
   if (isHostTextInput(element)) {
-    // @ts-expect-error - workaround incorrect ReactTestInstance type
+    // @ts-expect-error - workaround incorrect HostElement type
     return element.props.editable !== false;
   }
 

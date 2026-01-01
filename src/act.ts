@@ -1,13 +1,13 @@
 // This file and the act() implementation is sourced from react-testing-library
 // https://github.com/testing-library/react-testing-library/blob/3dcd8a9649e25054c0e650d95fca2317b7008576/types/index.d.ts
 import * as React from 'react';
-import { act as reactTestRendererAct } from 'react-test-renderer';
 
-const reactAct = typeof React.act === 'function' ? React.act : reactTestRendererAct;
-type ReactAct = 0 extends 1 & typeof React.act ? typeof reactTestRendererAct : typeof React.act;
+const reactAct = React.act;
+type ReactAct = typeof React.act;
 
 // See https://github.com/reactwg/react-18/discussions/102 for more context on global.IS_REACT_ACT_ENVIRONMENT
 declare global {
+  // eslint-disable-next-line no-var
   var IS_REACT_ACT_ENVIRONMENT: boolean | undefined;
 }
 
@@ -67,7 +67,6 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
   };
 }
 
-// @ts-expect-error: typings get too complex
 const act = withGlobalActEnvironment(reactAct) as ReactAct;
 
 export default act;

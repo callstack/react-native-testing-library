@@ -1,10 +1,10 @@
-import type { ReactTestRendererJSON } from 'react-test-renderer';
+import type { JsonNode } from 'universal-test-renderer';
 
 type JsonPropsMapper = {
   [key: string]: unknown;
 };
 
-export function mapJsonProps<T extends ReactTestRendererJSON | ReactTestRendererJSON[] | null>(
+export function mapJsonProps<T extends JsonNode | JsonNode[] | null>(
   element: T,
   mapper: JsonPropsMapper,
 ): T {

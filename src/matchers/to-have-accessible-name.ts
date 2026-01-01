@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 
 import { computeAccessibleName } from '../helpers/accessibility';
@@ -8,7 +8,7 @@ import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveAccessibleName(
   this: jest.MatcherContext,
-  element: ReactTestInstance,
+  element: HostElement,
   expectedName?: TextMatch,
   options?: TextMatchOptions,
 ) {

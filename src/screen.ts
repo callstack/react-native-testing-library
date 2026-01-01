@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 
 import type { RenderResult } from './render';
 
@@ -8,23 +8,19 @@ const notImplemented = () => {
   throw new Error(SCREEN_ERROR);
 };
 
-const notImplementedDebug = () => {
-  throw new Error(SCREEN_ERROR);
-};
-
 interface Screen extends RenderResult {
   isDetached?: boolean;
 }
 
 const defaultScreen: Screen = {
   isDetached: true,
-  get root(): ReactTestInstance {
+  get container(): HostElement {
     throw new Error(SCREEN_ERROR);
   },
-  get UNSAFE_root(): ReactTestInstance {
+  get root(): HostElement | null {
     throw new Error(SCREEN_ERROR);
   },
-  debug: notImplementedDebug,
+  debug: notImplemented,
   rerender: notImplemented,
   rerenderAsync: notImplemented,
   update: notImplemented,

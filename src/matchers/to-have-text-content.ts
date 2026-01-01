@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 
 import { getTextContent } from '../helpers/text-content';
@@ -8,7 +8,7 @@ import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveTextContent(
   this: jest.MatcherContext,
-  element: ReactTestInstance,
+  element: HostElement,
   expectedText: TextMatch,
   options?: TextMatchOptions,
 ) {

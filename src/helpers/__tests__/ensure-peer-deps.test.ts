@@ -2,7 +2,7 @@
 
 // Mock the require calls
 jest.mock('react/package.json', () => ({ version: '19.0.0' }));
-jest.mock('react-test-renderer/package.json', () => ({ version: '19.0.0' }));
+jest.mock('universal-test-renderer/package.json', () => ({ version: '19.0.0' }));
 
 describe('ensurePeerDeps', () => {
   const originalEnv = process.env;
@@ -21,27 +21,27 @@ describe('ensurePeerDeps', () => {
     expect(() => require('../ensure-peer-deps')).not.toThrow();
   });
 
-  it('should throw when react-test-renderer is missing', () => {
-    jest.mock('react-test-renderer/package.json', () => {
+  it('should throw when universal-test-renderer is missing', () => {
+    jest.mock('universal-test-renderer/package.json', () => {
       throw new Error('Module not found');
     });
 
     expect(() => require('../ensure-peer-deps')).toThrow(
-      'Missing dev dependency "react-test-renderer@19.0.0"',
+      'Missing dev dependency "universal-test-renderer@19.0.0"',
     );
   });
 
-  it('should throw when react-test-renderer version mismatches', () => {
-    jest.mock('react-test-renderer/package.json', () => ({ version: '18.2.0' }));
+  it('should throw when universal-test-renderer version mismatches', () => {
+    jest.mock('universal-test-renderer/package.json', () => ({ version: '18.2.0' }));
 
     expect(() => require('../ensure-peer-deps')).toThrow(
-      'Incorrect version of "react-test-renderer" detected. Expected "19.0.0", but found "18.2.0"',
+      'Incorrect version of "universal-test-renderer" detected. Expected "19.0.0", but found "18.2.0"',
     );
   });
 
   it('should skip dependency check when RNTL_SKIP_DEPS_CHECK is set', () => {
     process.env.RNTL_SKIP_DEPS_CHECK = '1';
-    jest.mock('react-test-renderer/package.json', () => {
+    jest.mock('universal-test-renderer/package.json', () => {
       throw new Error('Module not found');
     });
 

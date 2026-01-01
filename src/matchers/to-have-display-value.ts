@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 
 import { ErrorWithStack } from '../helpers/errors';
@@ -10,7 +10,7 @@ import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveDisplayValue(
   this: jest.MatcherContext,
-  element: ReactTestInstance,
+  element: HostElement,
   expectedValue: TextMatch,
   options?: TextMatchOptions,
 ) {

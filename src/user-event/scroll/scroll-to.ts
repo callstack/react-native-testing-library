@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'universal-test-renderer';
 import { stringify } from 'jest-matcher-utils';
 
 import { ErrorWithStack } from '../../helpers/errors';
@@ -38,7 +38,7 @@ export type ScrollToOptions = VerticalScrollToOptions | HorizontalScrollToOption
 
 export async function scrollTo(
   this: UserEventInstance,
-  element: ReactTestInstance,
+  element: HostElement,
   options: ScrollToOptions,
 ): Promise<void> {
   if (!isHostScrollView(element)) {
@@ -79,7 +79,7 @@ export async function scrollTo(
 
 async function emitDragScrollEvents(
   config: UserEventConfig,
-  element: ReactTestInstance,
+  element: HostElement,
   scrollSteps: Point[],
   scrollOptions: ScrollToOptions,
 ) {
@@ -117,7 +117,7 @@ async function emitDragScrollEvents(
 
 async function emitMomentumScrollEvents(
   config: UserEventConfig,
-  element: ReactTestInstance,
+  element: HostElement,
   scrollSteps: Point[],
   scrollOptions: ScrollToOptions,
 ) {
@@ -153,7 +153,7 @@ async function emitMomentumScrollEvents(
   );
 }
 
-function ensureScrollViewDirection(element: ReactTestInstance, options: ScrollToOptions) {
+function ensureScrollViewDirection(element: HostElement, options: ScrollToOptions) {
   const isVerticalScrollView = element.props.horizontal !== true;
 
   const hasHorizontalScrollOptions = options.x !== undefined || options.momentumX !== undefined;
