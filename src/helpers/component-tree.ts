@@ -15,32 +15,6 @@ export function isElementMounted(element: HostElement) {
 }
 
 /**
- * Returns host children for given element.
- * @param element The element start traversing from.
- */
-export function getHostChildren(element: HostElement | null): HostElement[] {
-  if (element == null) {
-    return [];
-  }
-
-  const hostChildren: HostElement[] = [];
-
-  element.children.forEach((child) => {
-    if (typeof child !== 'object') {
-      return;
-    }
-
-    if (isHostElement(child)) {
-      hostChildren.push(child);
-    } else {
-      hostChildren.push(...getHostChildren(child));
-    }
-  });
-
-  return hostChildren;
-}
-
-/**
  * Return the array of host elements that represent the passed element.
  *
  * @param element The element start traversing from.
