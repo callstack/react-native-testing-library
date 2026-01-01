@@ -28,12 +28,6 @@ export type RenderHookOptions<Props> = {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: React.ComponentType<any>;
-
-  /**
-   * Set to `false` to disable concurrent rendering.
-   * Otherwise `renderHook` will default to concurrent rendering.
-   */
-  concurrentRoot?: boolean;
 };
 
 export function renderHook<Result, Props>(

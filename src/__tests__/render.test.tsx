@@ -74,6 +74,11 @@ class Banana extends React.Component<any, { fresh: boolean }> {
   }
 }
 
+test('supports basic rendering', () => {
+  render(<View testID="test" />);
+  expect(screen.root).toBeOnTheScreen();
+});
+
 test('UNSAFE_getAllByType, UNSAFE_queryAllByType', () => {
   render(<Banana />);
   const [text, status, button] = screen.UNSAFE_getAllByType(Text);
@@ -204,14 +209,6 @@ test('returns host root', () => {
   expect(screen.root.props.testID).toBe('inner');
 });
 
-test('returns composite UNSAFE_root', () => {
-  render(<View testID="inner" />);
-
-  expect(screen.UNSAFE_root).toBeDefined();
-  expect(screen.UNSAFE_root.type).toBe(View);
-  expect(screen.UNSAFE_root.props.testID).toBe('inner');
-});
-
 test('container displays deprecation', () => {
   render(<View testID="inner" />);
 
@@ -232,16 +229,6 @@ test('returned output can be spread using rest operator', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { rerender, ...rest } = render(<View testID="test" />);
   expect(rest).toBeTruthy();
-});
-
-test('supports legacy rendering', () => {
-  render(<View testID="test" />, { concurrentRoot: false });
-  expect(screen.root).toBeOnTheScreen();
-});
-
-test('supports concurrent rendering', () => {
-  render(<View testID="test" />, { concurrentRoot: true });
-  expect(screen.root).toBeOnTheScreen();
 });
 
 test('rerenderAsync updates the component asynchronously', async () => {

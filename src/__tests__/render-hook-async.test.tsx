@@ -48,15 +48,6 @@ test('renderHookAsync with wrapper option', async () => {
   expect(result.current).toEqual('provided');
 });
 
-test('renderHookAsync supports legacy rendering option', async () => {
-  function useTestHook() {
-    return React.useState(42)[0];
-  }
-
-  const { result } = await renderHookAsync(useTestHook, { concurrentRoot: false });
-  expect(result.current).toEqual(42);
-});
-
 test('rerenderAsync function updates hook asynchronously', async () => {
   function useTestHook(props: { value: number }) {
     const [state, setState] = React.useState(props.value);

@@ -19,12 +19,6 @@ export interface RenderOptions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: React.ComponentType<any>;
 
-  /**
-   * Set to `false` to disable concurrent rendering.
-   * Otherwise `render` will default to concurrent rendering.
-   */
-  concurrentRoot?: boolean;
-
   createNodeMock?: (element: React.ReactElement) => unknown;
 }
 
@@ -39,7 +33,7 @@ export default function render<T>(component: React.ReactElement<T>, options: Ren
 }
 
 export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderOptions) {
-  const { wrapper: Wrapper, concurrentRoot, ...rest } = options || {};
+  const { wrapper: Wrapper, ...rest } = options || {};
 
   const testRendererOptions: RootOptions = {
     ...rest,

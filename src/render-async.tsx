@@ -20,13 +20,6 @@ export interface RenderAsyncOptions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: React.ComponentType<any>;
 
-  /**
-   * Set to `false` to disable concurrent rendering.
-   * Otherwise `render` will default to concurrent rendering.
-   */
-  // TODO: should we assume concurrentRoot is true for react suspense?
-  concurrentRoot?: boolean;
-
   createNodeMock?: (element: React.ReactElement) => unknown;
 }
 
@@ -40,12 +33,10 @@ export default async function renderAsync<T>(
   component: React.ReactElement<T>,
   options: RenderAsyncOptions = {},
 ) {
-  const { wrapper: Wrapper, concurrentRoot, ...rest } = options || {};
+  const { wrapper: Wrapper, ...rest } = options || {};
 
   const testRendererOptions: TestRendererOptions = {
     ...rest,
-    // @ts-expect-error incomplete typing on RTR package
-    unstable_isConcurrent: concurrentRoot ?? getConfig().concurrentRoot,
   };
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
