@@ -1,5 +1,5 @@
-import type { HostElement } from 'universal-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
+import type { HostElement } from 'universal-test-renderer';
 
 import { computeAccessibleName } from '../helpers/accessibility';
 import type { TextMatch, TextMatchOptions } from '../matches';

@@ -1,5 +1,5 @@
-import type { HostElement } from 'universal-test-renderer';
 import { matcherHint, stringify } from 'jest-matcher-utils';
+import type { HostElement } from 'universal-test-renderer';
 
 import { computeAriaValue } from '../helpers/accessibility';
 import type { AccessibilityValueMatcher } from '../helpers/matchers/match-accessibility-value';

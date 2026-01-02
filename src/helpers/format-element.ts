@@ -1,6 +1,6 @@
-import type { HostElement, JsonNode } from 'universal-test-renderer';
 import type { NewPlugin } from 'pretty-format';
 import prettyFormat, { plugins } from 'pretty-format';
+import type { HostElement, JsonNode } from 'universal-test-renderer';
 
 import type { MapPropsFunction } from './map-props';
 import { defaultMapProps } from './map-props';

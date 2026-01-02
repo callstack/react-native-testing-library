@@ -8,7 +8,8 @@ import type {
 import type { Fiber, HostElement } from 'universal-test-renderer';
 
 import act from './act';
-import { EventHandler, getEventHandlerFromProps } from './event-handler';
+import type { EventHandler } from './event-handler';
+import { getEventHandlerFromProps } from './event-handler';
 import { isElementMounted, isHostElement } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';

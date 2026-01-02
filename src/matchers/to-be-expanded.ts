@@ -1,6 +1,6 @@
-import type { HostElement } from 'universal-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
+import type { HostElement } from 'universal-test-renderer';
 
 import { computeAriaExpanded } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';
