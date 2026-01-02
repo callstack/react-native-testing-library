@@ -50,7 +50,6 @@ export default [
       'react-native-a11y/has-valid-accessibility-ignores-invert-colors': 'off',
       'react-native-a11y/has-valid-accessibility-value': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
-      'jest/no-standalone-expect': ['error', { additionalTestBlockFunctions: ['testGateReact19'] }],
     },
   },
 ];

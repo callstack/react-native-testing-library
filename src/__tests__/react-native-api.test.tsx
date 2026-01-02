@@ -4,9 +4,6 @@ import { FlatList, Image, Modal, ScrollView, Switch, Text, TextInput, View } fro
 import { render, screen } from '..';
 import { mapJsonProps } from '../test-utils/json';
 
-const isReact19 = React.version.startsWith('19.');
-const testGateReact19 = isReact19 ? test : test.skip;
-
 /**
  * Tests in this file are intended to give us an proactive warning that React Native behavior has
  * changed in a way that may impact our code like queries or event handling.
@@ -239,7 +236,7 @@ test('React Native API assumption: <FlatList> renders a single host <ScrollView>
   `);
 });
 
-testGateReact19('React Native API assumption: <Modal> renders a single host element', () => {
+test('React Native API assumption: <Modal> renders a single host element', () => {
   render(
     <Modal testID="test">
       <Text>Modal Content</Text>

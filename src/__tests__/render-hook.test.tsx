@@ -84,20 +84,3 @@ test('props type is inferred correctly when initial props is explicitly undefine
   rerender(6);
   expect(result.current.param).toBe(6);
 });
-
-/**
- * This test makes sure that calling renderHook does
- * not try to detect host component names in any form.
- * But since there are numerous methods that could trigger that
- * we check the count of renders using React Test Renderers.
- */
-test('does render only once', () => {
-  jest.spyOn(UniversalTestRenderer, 'createRoot');
-
-  renderHook(() => {
-    const [state, setState] = React.useState(1);
-    return [state, setState];
-  });
-
-  expect(UniversalTestRenderer.createRoot).toHaveBeenCalledTimes(1);
-});

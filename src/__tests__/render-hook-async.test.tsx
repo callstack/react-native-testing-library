@@ -5,8 +5,6 @@ import { Text } from 'react-native';
 import { act, renderHookAsync } from '..';
 import { excludeConsoleMessage } from '../test-utils/console';
 
-const testGateReact19 = React.version.startsWith('19.') ? test : test.skip;
-
 // eslint-disable-next-line no-console
 const originalConsoleError = console.error;
 afterEach(() => {
@@ -121,7 +119,7 @@ test('handles multiple state updates in effects', async () => {
   expect(result.current).toEqual({ first: 10, second: 20 });
 });
 
-testGateReact19('handles hook with suspense', async () => {
+test('handles hook with suspense', async () => {
   let resolvePromise: (value: string) => void;
   const promise = new Promise<string>((resolve) => {
     resolvePromise = resolve;
@@ -160,7 +158,7 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-testGateReact19('handles hook suspense with error boundary', async () => {
+test('handles hook suspense with error boundary', async () => {
   const ERROR_MESSAGE = 'Hook Promise Rejected In Test';
   // eslint-disable-next-line no-console
   console.error = excludeConsoleMessage(console.error, ERROR_MESSAGE);
