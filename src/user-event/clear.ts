@@ -1,7 +1,9 @@
 import type { ReactTestInstance } from 'react-test-renderer';
 
 import { ErrorWithStack } from '../helpers/errors';
+import { formatElement } from '../helpers/format-element';
 import { isHostTextInput } from '../helpers/host-component-names';
+import { logger } from '../helpers/logger';
 import { isPointerEventEnabled } from '../helpers/pointer-events';
 import { getTextInputValue, isEditableTextInput } from '../helpers/text-input';
 import { EventBuilder } from './event-builder';
@@ -17,7 +19,17 @@ export async function clear(this: UserEventInstance, element: ReactTestInstance)
     );
   }
 
-  if (!isEditableTextInput(element) || !isPointerEventEnabled(element)) {
+  if (!isEditableTextInput(element)) {
+    logger.warn(
+      `User Event (clear): element ${formatElement(element, { compact: true })} is not editable.`,
+    );
+    return;
+  }
+
+  if (!isPointerEventEnabled(element)) {
+    logger.warn(
+      `User Event (clear): element ${formatElement(element, { compact: true })} has pointer event handlers disabled.`,
+    );
     return;
   }
 

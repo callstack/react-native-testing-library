@@ -8,6 +8,8 @@ import { nativeState } from '../native-state';
 import { EventBuilder } from './event-builder';
 import type { UserEventInstance } from './setup';
 import { dispatchEvent, getTextContentSize, wait } from './utils';
+import { formatElement } from '../helpers/format-element';
+import { logger } from '../helpers/logger';
 
 export async function paste(
   this: UserEventInstance,
@@ -21,7 +23,17 @@ export async function paste(
     );
   }
 
-  if (!isEditableTextInput(element) || !isPointerEventEnabled(element)) {
+  if (!isEditableTextInput(element)) {
+    logger.warn(
+      `User Event (paste): element ${formatElement(element, { compact: true })} is not editable.`,
+    );
+    return;
+  }
+
+  if (!isPointerEventEnabled(element)) {
+    logger.warn(
+      `User Event (paste): element ${formatElement(element, { compact: true })} has pointer event handlers disabled.`,
+    );
     return;
   }
 
