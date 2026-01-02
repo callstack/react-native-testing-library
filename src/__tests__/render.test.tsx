@@ -114,7 +114,7 @@ test('unmount should handle cleanup functions', () => {
 
 test('toJSON renders host output', () => {
   render(<MyButton>press me</MyButton>);
-  expect(screen.toJSON()).toMatchSnapshot();
+  expect(screen).toMatchSnapshot();
 });
 
 test('renders options.wrapper around node', () => {
@@ -128,7 +128,7 @@ test('renders options.wrapper around node', () => {
   });
 
   expect(screen.getByTestId('wrapper')).toBeTruthy();
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <View
         testID="wrapper"
@@ -154,7 +154,7 @@ test('renders options.wrapper around updated node', () => {
   screen.rerender(<View testID="inner" accessibilityLabel="test" accessibilityHint="test" />);
 
   expect(screen.getByTestId('wrapper')).toBeTruthy();
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <View
         testID="wrapper"

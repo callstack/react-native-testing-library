@@ -12,7 +12,7 @@ import { mapJsonProps } from '../test-utils/json';
 test('React Native API assumption: <View> renders a single host element', () => {
   render(<View testID="test" />);
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <View
         testID="test"
@@ -24,7 +24,7 @@ test('React Native API assumption: <View> renders a single host element', () => 
 test('React Native API assumption: <Text> renders a single host element', () => {
   render(<Text testID="test">Hello</Text>);
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <Text
         testID="test"
@@ -46,7 +46,7 @@ test('React Native API assumption: nested <Text> renders a single host element',
     </Text>,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <Text
         testID="test"
@@ -81,7 +81,7 @@ test('React Native API assumption: <TextInput> renders a single host element', (
     />,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <TextInput
         defaultValue="default"
@@ -100,7 +100,7 @@ test('React Native API assumption: <TextInput> with nested Text renders single h
     </TextInput>,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <TextInput
         placeholder="Placeholder"
@@ -143,7 +143,7 @@ test('React Native API assumption: <Switch> renders a single host element', () =
 test('React Native API assumption: <Image> renders a single host element', () => {
   render(<Image testID="test" source={{ uri: 'https://fake.url/image.jpg' }} alt="Alt text" />);
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <Image
         alt="Alt text"
@@ -165,7 +165,7 @@ test('React Native API assumption: <ScrollView> renders a single host element', 
     </ScrollView>,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <RCTScrollView
         testID="scrollView"
@@ -185,7 +185,7 @@ test('React Native API assumption: <FlatList> renders a single host <ScrollView>
     <FlatList testID="flatList" data={[1, 2]} renderItem={({ item }) => <Text>{item}</Text>} />,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <RCTScrollView
         data={
@@ -243,7 +243,7 @@ test('React Native API assumption: <Modal> renders a single host element', () =>
     </Modal>,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <Modal
         testID="test"
@@ -280,7 +280,7 @@ test('React Native API assumption: aria-* props render directly on host View', (
     />,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <View
         aria-busy={true}
@@ -330,7 +330,7 @@ test('React Native API assumption: aria-* props render directly on host Text', (
     />,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <Text
         aria-busy={true}
@@ -380,7 +380,7 @@ test('React Native API assumption: aria-* props render directly on host TextInpu
     />,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <>
       <TextInput
         aria-busy={true}
