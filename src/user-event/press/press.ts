@@ -1,8 +1,8 @@
 import type { HostElement } from 'universal-test-renderer';
 
 import act from '../../act';
-import { getEventHandler } from '../../event-handler';
-import { getHostParent, isHostElement } from '../../helpers/component-tree';
+import { getEventHandlerFromProps } from '../../event-handler';
+import { isHostElement } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
@@ -87,7 +87,6 @@ function isEnabledHostElement(element: HostElement) {
   }
 
   if (isHostTextInput(element)) {
-    // @ts-expect-error - workaround incorrect HostElement type
     return element.props.editable !== false;
   }
 
@@ -100,10 +99,10 @@ function isEnabledTouchResponder(element: HostElement) {
 
 function hasPressEventHandler(element: HostElement) {
   return (
-    getEventHandler(element, 'press') ||
-    getEventHandler(element, 'longPress') ||
-    getEventHandler(element, 'pressIn') ||
-    getEventHandler(element, 'pressOut')
+    getEventHandlerFromProps(element.props, 'press') ||
+    getEventHandlerFromProps(element.props, 'longPress') ||
+    getEventHandlerFromProps(element.props, 'pressIn') ||
+    getEventHandlerFromProps(element.props, 'pressOut')
   );
 }
 

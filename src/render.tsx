@@ -4,7 +4,6 @@ import type { HostElement, Root, RootOptions } from 'universal-test-renderer';
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
-import { getHostSelves } from './helpers/component-tree';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
 import { renderWithAct } from './render-act';

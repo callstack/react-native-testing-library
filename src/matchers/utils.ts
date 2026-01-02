@@ -1,4 +1,3 @@
-import type { HostElement } from 'universal-test-renderer';
 import {
   EXPECTED_COLOR,
   matcherHint,
@@ -8,6 +7,7 @@ import {
   stringify,
 } from 'jest-matcher-utils';
 import redent from 'redent';
+import type { HostElement } from 'universal-test-renderer';
 
 import { isHostElement } from '../helpers/component-tree';
 

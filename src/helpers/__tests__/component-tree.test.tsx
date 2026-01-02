@@ -1,12 +1,8 @@
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { View } from 'react-native';
 
 import { render, screen } from '../..';
-import { getHostSelves, getHostSiblings, getContainerElement } from '../component-tree';
-
-function ZeroHostChildren() {
-  return <></>;
-}
+import { getContainerElement, getHostSiblings } from '../component-tree';
 
 function MultipleHostChildren() {
   return (
@@ -17,55 +13,6 @@ function MultipleHostChildren() {
     </>
   );
 }
-
-describe('getHostSelves()', () => {
-  it('returns passed element for host components', () => {
-    render(
-      <View testID="grandparent">
-        <View testID="parent">
-          <View testID="subject" />
-          <View testID="sibling" />
-        </View>
-      </View>,
-    );
-
-    const hostSubject = screen.getByTestId('subject');
-    expect(getHostSelves(hostSubject)).toEqual([hostSubject]);
-
-    const hostSibling = screen.getByTestId('sibling');
-    expect(getHostSelves(hostSibling)).toEqual([hostSibling]);
-
-    const hostParent = screen.getByTestId('parent');
-    expect(getHostSelves(hostParent)).toEqual([hostParent]);
-
-    const hostGrandparent = screen.getByTestId('grandparent');
-    expect(getHostSelves(hostGrandparent)).toEqual([hostGrandparent]);
-  });
-
-  test('returns single host element for React Native composite components', () => {
-    render(
-      <View testID="parent">
-        <Text testID="text">Text</Text>
-        <TextInput
-          testID="textInput"
-          defaultValue="TextInputValue"
-          placeholder="TextInputPlaceholder"
-        />
-      </View>,
-    );
-
-    const compositeText = screen.getByText('Text');
-    const hostText = screen.getByTestId('text');
-    expect(getHostSelves(compositeText)).toEqual([hostText]);
-
-    const compositeTextInputByValue = screen.getByDisplayValue('TextInputValue');
-    const compositeTextInputByPlaceholder = screen.getByPlaceholderText('TextInputPlaceholder');
-
-    const hostTextInput = screen.getByTestId('textInput');
-    expect(getHostSelves(compositeTextInputByValue)).toEqual([hostTextInput]);
-    expect(getHostSelves(compositeTextInputByPlaceholder)).toEqual([hostTextInput]);
-  });
-});
 
 describe('getHostSiblings()', () => {
   it('returns host siblings for host component', () => {

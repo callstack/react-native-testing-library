@@ -8,15 +8,13 @@ import type {
 import type { HostElement } from 'universal-test-renderer';
 
 import act from './act';
-import { getEventHandler } from './event-handler';
+import { EventHandler, getEventHandlerFromProps } from './event-handler';
 import { isElementMounted, isHostElement } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
 import type { Point, StringWithAutocomplete } from './types';
-
-type EventHandler = (...args: unknown[]) => unknown;
 
 export function isTouchResponder(element: HostElement) {
   if (!isHostElement(element)) {
@@ -81,7 +79,7 @@ function findEventHandler(
 ): EventHandler | null {
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
-  const handler = getEventHandler(element, eventName, { loose: true });
+  const handler = getEventHandlerFromProps(element.props, eventName, { loose: true });
   if (handler && isEventEnabled(element, eventName, touchResponder)) {
     return handler;
   }

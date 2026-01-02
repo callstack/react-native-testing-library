@@ -1,30 +1,30 @@
-import type { HostElement } from 'universal-test-renderer';
+export type EventHandler = (...args: unknown[]) => unknown;
 
 export type EventHandlerOptions = {
   /** Include check for event handler named without adding `on*` prefix. */
   loose?: boolean;
 };
 
-export function getEventHandler(
-  element: HostElement,
+export function getEventHandlerFromProps(
+  props: Record<string, unknown>,
   eventName: string,
   options?: EventHandlerOptions,
-) {
+): EventHandler | undefined {
   const handlerName = getEventHandlerName(eventName);
-  if (typeof element.props[handlerName] === 'function') {
-    return element.props[handlerName];
+  if (typeof props[handlerName] === 'function') {
+    return props[handlerName] as EventHandler;
   }
 
-  if (options?.loose && typeof element.props[eventName] === 'function') {
-    return element.props[eventName];
+  if (options?.loose && typeof props[eventName] === 'function') {
+    return props[eventName] as EventHandler;
   }
 
-  if (typeof element.props[`testOnly_${handlerName}`] === 'function') {
-    return element.props[`testOnly_${handlerName}`];
+  if (typeof props[`testOnly_${handlerName}`] === 'function') {
+    return props[`testOnly_${handlerName}`] as EventHandler;
   }
 
-  if (options?.loose && typeof element.props[`testOnly_${eventName}`] === 'function') {
-    return element.props[`testOnly_${eventName}`];
+  if (options?.loose && typeof props[`testOnly_${eventName}`] === 'function') {
+    return props[`testOnly_${eventName}`] as EventHandler;
   }
 
   return undefined;

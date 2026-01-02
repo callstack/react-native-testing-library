@@ -1,10 +1,9 @@
 import { StyleSheet } from 'react-native';
-import type { HostElement } from 'universal-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
+import type { HostElement } from 'universal-test-renderer';
 
 import { isHiddenFromAccessibility } from '../helpers/accessibility';
-import { getHostParent } from '../helpers/component-tree';
 import { formatElement } from '../helpers/format-element';
 import { isHostModal } from '../helpers/host-component-names';
 import { checkHostElement } from './utils';

@@ -1,8 +1,6 @@
 import { StyleSheet } from 'react-native';
 import type { HostElement } from 'universal-test-renderer';
 
-import { getHostParent } from './component-tree';
-
 /**
  * pointerEvents controls whether the View can be the target of touch events.
  * 'auto': The View and its children can be the target of touch events.

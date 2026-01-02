@@ -1,7 +1,7 @@
 import type { HostElement } from 'universal-test-renderer';
 
 import act from '../../act';
-import { getEventHandler } from '../../event-handler';
+import { getEventHandlerFromProps } from '../../event-handler';
 import { isElementMounted } from '../../helpers/component-tree';
 
 /**
@@ -16,7 +16,7 @@ export async function dispatchEvent(element: HostElement, eventName: string, ...
     return;
   }
 
-  const handler = getEventHandler(element, eventName);
+  const handler = getEventHandlerFromProps(element.props, eventName);
   if (!handler) {
     return;
   }

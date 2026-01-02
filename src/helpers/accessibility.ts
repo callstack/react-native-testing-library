@@ -2,7 +2,7 @@ import type { AccessibilityRole, AccessibilityState, AccessibilityValue, Role } 
 import { StyleSheet } from 'react-native';
 import type { HostElement } from 'universal-test-renderer';
 
-import { getHostSiblings, getContainerElement, isHostElement } from './component-tree';
+import { getContainerElement, getHostSiblings, isHostElement } from './component-tree';
 import { findAll } from './find-all';
 import { isHostImage, isHostSwitch, isHostText, isHostTextInput } from './host-component-names';
 import { getTextContent } from './text-content';
@@ -157,9 +157,9 @@ export function computeAriaModal(element: HostElement): boolean | undefined {
 export function computeAriaLabel(element: HostElement): string | undefined {
   const labelElementId = element.props['aria-labelledby'] ?? element.props.accessibilityLabelledBy;
   if (labelElementId) {
-    const rootElement = getContainerElement(element);
+    const container = getContainerElement(element);
     const labelElement = findAll(
-      rootElement,
+      container,
       (node) => isHostElement(node) && node.props.nativeID === labelElementId,
       { includeHiddenElements: true },
     );
