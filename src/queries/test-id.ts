@@ -21,9 +21,9 @@ const matchTestId = (node: HostElement, testId: TextMatch, options: TextMatchOpt
   return matches(testId, node.props.testID, normalizer, exact);
 };
 
-const queryAllByTestId = (instance: HostElement): QueryAllByQuery<TextMatch, ByTestIdOptions> =>
+const queryAllByTestId = (element: HostElement): QueryAllByQuery<TextMatch, ByTestIdOptions> =>
   function queryAllByTestIdFn(testId, queryOptions) {
-    return findAll(instance, (node) => matchTestId(node, testId, queryOptions), queryOptions);
+    return findAll(element, (node) => matchTestId(node, testId, queryOptions), queryOptions);
   };
 
 const getMultipleError = (testId: TextMatch) =>
@@ -46,11 +46,11 @@ export type ByTestIdQueries = {
   findAllByTestId: FindAllByQuery<TextMatch, ByTestIdOptions>;
 };
 
-export const bindByTestIdQueries = (instance: HostElement): ByTestIdQueries => ({
-  getByTestId: getBy(instance),
-  getAllByTestId: getAllBy(instance),
-  queryByTestId: queryBy(instance),
-  queryAllByTestId: queryAllBy(instance),
-  findByTestId: findBy(instance),
-  findAllByTestId: findAllBy(instance),
+export const bindByTestIdQueries = (element: HostElement): ByTestIdQueries => ({
+  getByTestId: getBy(element),
+  getAllByTestId: getAllBy(element),
+  queryByTestId: queryBy(element),
+  queryAllByTestId: queryAllBy(element),
+  findByTestId: findBy(element),
+  findAllByTestId: findAllBy(element),
 });

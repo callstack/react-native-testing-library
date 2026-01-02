@@ -8,15 +8,15 @@ import { bindByRoleQueries } from './queries/role';
 import { bindByTestIdQueries } from './queries/test-id';
 import { bindByTextQueries } from './queries/text';
 
-export function within(instance: HostElement) {
+export function within(element: HostElement) {
   return {
-    ...bindByTextQueries(instance),
-    ...bindByTestIdQueries(instance),
-    ...bindByDisplayValueQueries(instance),
-    ...bindByPlaceholderTextQueries(instance),
-    ...bindByLabelTextQueries(instance),
-    ...bindByHintTextQueries(instance),
-    ...bindByRoleQueries(instance),
+    ...bindByTextQueries(element),
+    ...bindByTestIdQueries(element),
+    ...bindByDisplayValueQueries(element),
+    ...bindByPlaceholderTextQueries(element),
+    ...bindByLabelTextQueries(element),
+    ...bindByHintTextQueries(element),
+    ...bindByRoleQueries(element),
   };
 }
 

@@ -21,9 +21,9 @@ const getNodeByHintText = (node: HostElement, text: TextMatch, options: TextMatc
   return matches(text, node.props.accessibilityHint, normalizer, exact);
 };
 
-const queryAllByHintText = (instance: HostElement): QueryAllByQuery<TextMatch, ByHintTextOptions> =>
+const queryAllByHintText = (element: HostElement): QueryAllByQuery<TextMatch, ByHintTextOptions> =>
   function queryAllByA11yHintFn(hint, queryOptions) {
-    return findAll(instance, (node) => getNodeByHintText(node, hint, queryOptions), queryOptions);
+    return findAll(element, (node) => getNodeByHintText(node, hint, queryOptions), queryOptions);
   };
 
 const getMultipleError = (hint: TextMatch) =>
@@ -62,13 +62,13 @@ export type ByHintTextQueries = {
   findAllByAccessibilityHint: FindAllByQuery<TextMatch, ByHintTextOptions>;
 };
 
-export const bindByHintTextQueries = (instance: HostElement): ByHintTextQueries => {
-  const getByHintText = getBy(instance);
-  const getAllByHintText = getAllBy(instance);
-  const queryByHintText = queryBy(instance);
-  const queryAllByHintText = queryAllBy(instance);
-  const findByHintText = findBy(instance);
-  const findAllByHintText = findAllBy(instance);
+export const bindByHintTextQueries = (element: HostElement): ByHintTextQueries => {
+  const getByHintText = getBy(element);
+  const getAllByHintText = getAllBy(element);
+  const queryByHintText = queryBy(element);
+  const queryAllByHintText = queryAllBy(element);
+  const findByHintText = findBy(element);
+  const findAllByHintText = findAllBy(element);
 
   return {
     getByHintText,

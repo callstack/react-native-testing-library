@@ -41,7 +41,7 @@ export type FindAllByQuery<Predicate, Options = void> = (
   waitForOptions?: WaitForOptions,
 ) => Promise<HostElement[]>;
 
-type UnboundQuery<Query> = (instance: HostElement) => Query;
+type UnboundQuery<Query> = (element: HostElement) => Query;
 
 export type UnboundQueries<Predicate, Options> = {
   getBy: UnboundQuery<GetByQuery<Predicate, Options>>;
@@ -114,9 +114,9 @@ export function makeQueries<Predicate, Options>(
   getMissingError: (predicate: Predicate, options?: Options) => string,
   getMultipleError: (predicate: Predicate, options?: Options) => string,
 ): UnboundQueries<Predicate, Options> {
-  function getAllByQuery(instance: HostElement, { printElementTree = true } = {}) {
+  function getAllByQuery(element: HostElement, { printElementTree = true } = {}) {
     return function getAllFn(predicate: Predicate, options?: Options) {
-      const results = queryAllByQuery(instance)(predicate, options);
+      const results = queryAllByQuery(element)(predicate, options);
 
       if (results.length === 0) {
         const errorMessage = formatErrorMessage(
@@ -130,9 +130,9 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function queryByQuery(instance: HostElement, { printElementTree = true } = {}) {
+  function queryByQuery(element: HostElement, { printElementTree = true } = {}) {
     return function singleQueryFn(predicate: Predicate, options?: Options) {
-      const results = queryAllByQuery(instance)(predicate, options);
+      const results = queryAllByQuery(element)(predicate, options);
 
       if (results.length > 1) {
         throw new ErrorWithStack(
@@ -149,9 +149,9 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function getByQuery(instance: HostElement, { printElementTree = true } = {}) {
+  function getByQuery(element: HostElement, { printElementTree = true } = {}) {
     return function getFn(predicate: Predicate, options?: Options) {
-      const results = queryAllByQuery(instance)(predicate, options);
+      const results = queryAllByQuery(element)(predicate, options);
 
       if (results.length > 1) {
         throw new ErrorWithStack(getMultipleError(predicate, options), getFn);
@@ -169,7 +169,7 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function findAllByQuery(instance: HostElement) {
+  function findAllByQuery(element: HostElement) {
     return function findAllFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
@@ -182,7 +182,7 @@ export function makeQueries<Predicate, Options>(
       const deprecatedWaitForOptions = extractDeprecatedWaitForOptions(queryOptions);
 
       return waitFor(
-        () => getAllByQuery(instance, { printElementTree: false })(predicate, queryOptions),
+        () => getAllByQuery(element, { printElementTree: false })(predicate, queryOptions),
         {
           ...deprecatedWaitForOptions,
           ...waitForOptions,
@@ -193,7 +193,7 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function findByQuery(instance: HostElement) {
+  function findByQuery(element: HostElement) {
     return function findFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
@@ -206,7 +206,7 @@ export function makeQueries<Predicate, Options>(
       const deprecatedWaitForOptions = extractDeprecatedWaitForOptions(queryOptions);
 
       return waitFor(
-        () => getByQuery(instance, { printElementTree: false })(predicate, queryOptions),
+        () => getByQuery(element, { printElementTree: false })(predicate, queryOptions),
         {
           ...deprecatedWaitForOptions,
           ...waitForOptions,

@@ -51,11 +51,11 @@ const matchAccessibilityValueIfNeeded = (node: HostElement, value?: Accessibilit
   return value != null ? matchAccessibilityValue(node, value) : true;
 };
 
-const queryAllByRole = (instance: HostElement): QueryAllByQuery<ByRoleMatcher, ByRoleOptions> =>
+const queryAllByRole = (element: HostElement): QueryAllByQuery<ByRoleMatcher, ByRoleOptions> =>
   function queryAllByRoleFn(role, options) {
     const normalizedRole = typeof role === 'string' ? normalizeRole(role) : role;
     return findAll(
-      instance,
+      element,
       (node) =>
         // run the cheapest checks first, and early exit to avoid unneeded computations
         isAccessibilityElement(node) &&
@@ -110,11 +110,11 @@ export type ByRoleQueries = {
   findAllByRole: FindAllByQuery<ByRoleMatcher, ByRoleOptions>;
 };
 
-export const bindByRoleQueries = (instance: HostElement): ByRoleQueries => ({
-  getByRole: getBy(instance),
-  getAllByRole: getAllBy(instance),
-  queryByRole: queryBy(instance),
-  queryAllByRole: queryAllBy(instance),
-  findByRole: findBy(instance),
-  findAllByRole: findAllBy(instance),
+export const bindByRoleQueries = (element: HostElement): ByRoleQueries => ({
+  getByRole: getBy(element),
+  getAllByRole: getAllBy(element),
+  queryByRole: queryBy(element),
+  queryAllByRole: queryAllBy(element),
+  findByRole: findBy(element),
+  findAllByRole: findAllBy(element),
 });

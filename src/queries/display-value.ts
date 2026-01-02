@@ -29,11 +29,11 @@ const matchDisplayValue = (
 };
 
 const queryAllByDisplayValue = (
-  instance: HostElement,
+  element: HostElement,
 ): QueryAllByQuery<TextMatch, ByDisplayValueOptions> =>
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
     return findAll(
-      instance,
+      element,
       (node) => isHostTextInput(node) && matchDisplayValue(node, displayValue, queryOptions),
       queryOptions,
     );
@@ -59,11 +59,11 @@ export type ByDisplayValueQueries = {
   findAllByDisplayValue: FindAllByQuery<TextMatch, ByDisplayValueOptions>;
 };
 
-export const bindByDisplayValueQueries = (instance: HostElement): ByDisplayValueQueries => ({
-  getByDisplayValue: getBy(instance),
-  getAllByDisplayValue: getAllBy(instance),
-  queryByDisplayValue: queryBy(instance),
-  queryAllByDisplayValue: queryAllBy(instance),
-  findByDisplayValue: findBy(instance),
-  findAllByDisplayValue: findAllBy(instance),
+export const bindByDisplayValueQueries = (element: HostElement): ByDisplayValueQueries => ({
+  getByDisplayValue: getBy(element),
+  getAllByDisplayValue: getAllBy(element),
+  queryByDisplayValue: queryBy(element),
+  queryAllByDisplayValue: queryAllBy(element),
+  findByDisplayValue: findBy(element),
+  findAllByDisplayValue: findAllBy(element),
 });

@@ -27,11 +27,11 @@ const matchPlaceholderText = (
 };
 
 const queryAllByPlaceholderText = (
-  instance: HostElement,
+  element: HostElement,
 ): QueryAllByQuery<TextMatch, ByPlaceholderTextOptions> =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
     return findAll(
-      instance,
+      element,
       (node) => isHostTextInput(node) && matchPlaceholderText(node, placeholder, queryOptions),
       queryOptions,
     );
@@ -57,11 +57,11 @@ export type ByPlaceholderTextQueries = {
   findAllByPlaceholderText: FindAllByQuery<TextMatch, ByPlaceholderTextOptions>;
 };
 
-export const bindByPlaceholderTextQueries = (instance: HostElement): ByPlaceholderTextQueries => ({
-  getByPlaceholderText: getBy(instance),
-  getAllByPlaceholderText: getAllBy(instance),
-  queryByPlaceholderText: queryBy(instance),
-  queryAllByPlaceholderText: queryAllBy(instance),
-  findByPlaceholderText: findBy(instance),
-  findAllByPlaceholderText: findAllBy(instance),
+export const bindByPlaceholderTextQueries = (element: HostElement): ByPlaceholderTextQueries => ({
+  getByPlaceholderText: getBy(element),
+  getAllByPlaceholderText: getAllBy(element),
+  queryByPlaceholderText: queryBy(element),
+  queryAllByPlaceholderText: queryAllBy(element),
+  findByPlaceholderText: findBy(element),
+  findAllByPlaceholderText: findAllBy(element),
 });

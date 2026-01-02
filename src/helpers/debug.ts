@@ -12,12 +12,12 @@ export type DebugOptions = {
  * Log pretty-printed deep test component instance
  */
 export function debug(
-  instance: JsonNode | JsonNode[],
+  node: JsonNode | JsonNode[],
   { message, ...formatOptions }: DebugOptions = {},
 ) {
   if (message) {
-    logger.info(`${message}\n\n`, formatJson(instance, formatOptions));
+    logger.info(`${message}\n\n`, formatJson(node, formatOptions));
   } else {
-    logger.info(formatJson(instance, formatOptions));
+    logger.info(formatJson(node, formatOptions));
   }
 }
