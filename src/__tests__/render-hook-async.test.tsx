@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import * as React from 'react';
+import { Text } from 'react-native';
 
 import { act, renderHookAsync } from '..';
 import { excludeConsoleMessage } from '../test-utils/console';
@@ -128,7 +129,9 @@ testGateReact19('handles hook with suspense', async () => {
 
   const { result } = await renderHookAsync(useSuspendingHook, {
     initialProps: promise,
-    wrapper: ({ children }) => <React.Suspense fallback="loading">{children}</React.Suspense>,
+    wrapper: ({ children }) => (
+      <React.Suspense fallback={<Text>Loading...</Text>}>{children}</React.Suspense>
+    ),
   });
 
   // Initially suspended, result should not be available
@@ -171,7 +174,7 @@ testGateReact19('handles hook suspense with error boundary', async () => {
     initialProps: promise,
     wrapper: ({ children }) => (
       <ErrorBoundary fallback="error-fallback">
-        <React.Suspense fallback="loading">{children}</React.Suspense>
+        <React.Suspense fallback={<Text>Loading...</Text>}>{children}</React.Suspense>
       </ErrorBoundary>
     ),
   });

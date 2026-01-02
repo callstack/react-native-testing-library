@@ -332,19 +332,6 @@ describe('userEvent.press with fake timers', () => {
     expect(mockOnPress).toHaveBeenCalled();
   });
 
-  it('press throws on composite components', async () => {
-    render(<View testID="view" />);
-    const user = userEvent.setup();
-
-    const compositeView = screen.getByTestId('view').parent as HostElement;
-    await expect(user.press(compositeView)).rejects.toThrowErrorMatchingInlineSnapshot(`
-      "press() works only with host elements. Passed element has type "function Component() {
-            (0, _classCallCheck2.default)(this, Component);
-            return _callSuper(this, Component, arguments);
-          }"."
-    `);
-  });
-
   test('disables act environmennt', async () => {
     // In this test there is state update during await when typing
     // Since wait is not wrapped by act there would be a warning

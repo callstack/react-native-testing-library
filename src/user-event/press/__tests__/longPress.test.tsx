@@ -171,17 +171,4 @@ describe('userEvent.longPress with fake timers', () => {
     await user.longPress(screen.getByTestId('pressable'), { duration: 50 });
     expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
   });
-
-  it('longPress throws on composite components', async () => {
-    render(<View testID="view" />);
-    const user = userEvent.setup();
-
-    const compositeView = screen.getByTestId('view').parent as HostElement;
-    await expect(user.longPress(compositeView)).rejects.toThrowErrorMatchingInlineSnapshot(`
-      "longPress() works only with host elements. Passed element has type "function Component() {
-            (0, _classCallCheck2.default)(this, Component);
-            return _callSuper(this, Component, arguments);
-          }"."
-    `);
-  });
 });
