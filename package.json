@@ -1,6 +1,6 @@
 {
   "name": "@testing-library/react-native",
-  "version": "13.3.3",
+  "version": "14.0.0-alpha.1",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -36,6 +36,7 @@
     "build": "yarn clean && yarn build:js && yarn build:ts && yarn copy-flowtypes",
     "release": "release-it",
     "release:rc": "release-it --preRelease=rc",
+    "release:alpha": "release-it --preRelease=alpha",
     "prettier": "prettier --check .",
     "prettier:write": "prettier --write ."
   },
@@ -56,9 +57,9 @@
   },
   "peerDependencies": {
     "jest": ">=29.0.0",
-    "react": ">=18.2.0",
+    "react": ">=19.0.0",
     "react-native": ">=0.71",
-    "universal-test-renderer": ">=18.2.0"
+    "universal-test-renderer": "~0.10.0"
   },
   "peerDependenciesMeta": {
     "jest": {
