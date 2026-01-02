@@ -1,4 +1,3 @@
-import './helpers/ensure-peer-deps';
 import './matchers/extend-expect';
 
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
