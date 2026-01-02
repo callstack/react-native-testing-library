@@ -3058,9 +3058,9 @@ __metadata:
     universal-test-renderer: "npm:0.10.0"
   peerDependencies:
     jest: ">=29.0.0"
-    react: ">=18.2.0"
+    react: ">=19.0.0"
     react-native: ">=0.71"
-    universal-test-renderer: ">=18.2.0"
+    universal-test-renderer: ~0.10.0
   peerDependenciesMeta:
     jest:
       optional: true
