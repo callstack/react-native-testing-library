@@ -18,7 +18,7 @@ export function toContainElement(
 
   let matches: HostElement[] = [];
   if (element) {
-    matches = container.findAll((node) => node === element);
+    matches = container.queryAll((node) => node === element);
   }
 
   return {

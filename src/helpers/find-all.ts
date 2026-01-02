@@ -20,7 +20,7 @@ export function findAll(
   options: FindAllOptions = {},
 ): HostElement[] {
   const { matchDeepestOnly } = options;
-  const results = root.findAll(predicate, { matchDeepestOnly });
+  const results = root.queryAll(predicate, { matchDeepestOnly });
 
   const includeHiddenElements =
     options?.includeHiddenElements ?? options?.hidden ?? getConfig()?.defaultIncludeHiddenElements;

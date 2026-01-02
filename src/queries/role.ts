@@ -4,6 +4,7 @@ import type { HostElement } from 'universal-test-renderer';
 import {
   accessibilityStateKeys,
   accessibilityValueKeys,
+  computeAccessibleName,
   getRole,
   isAccessibilityElement,
   normalizeRole,
@@ -14,7 +15,8 @@ import { matchAccessibilityState } from '../helpers/matchers/match-accessibility
 import type { AccessibilityValueMatcher } from '../helpers/matchers/match-accessibility-value';
 import { matchAccessibilityValue } from '../helpers/matchers/match-accessibility-value';
 import { matchStringProp } from '../helpers/matchers/match-string-prop';
-import type { TextMatch } from '../matches';
+import { getTextContent } from '../helpers/text-content';
+import { matches, type TextMatch } from '../matches';
 import type { StringWithAutocomplete } from '../types';
 import { getQueriesForElement } from '../within';
 import type {
@@ -38,6 +40,12 @@ export type ByRoleOptions = CommonQueryOptions &
 
 const matchAccessibleNameIfNeeded = (node: HostElement, name?: TextMatch) => {
   if (name == null) return true;
+
+  // TODO: rewrite computeAccessibleName for real world a11y compliance
+  const accessibleName = computeAccessibleName(node);
+  if (matches(name, accessibleName)) {
+    return true;
+  }
 
   const { queryAllByText, queryAllByLabelText } = getQueriesForElement(node);
   return queryAllByText(name).length > 0 || queryAllByLabelText(name).length > 0;

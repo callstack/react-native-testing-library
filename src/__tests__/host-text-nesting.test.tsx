@@ -1,20 +1,12 @@
 import * as React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { render, screen, within } from '../pure';
+import { render, screen } from '../pure';
 
-/**
- * Our queries interact differently with composite and host elements, and some specific cases require us
- * to crawl up the tree to a Text composite element to be able to traverse it down again. Going up the tree
- * is a dangerous behaviour because we could take the risk of then traversing a sibling node to the original one.
- * This test suite is designed to be able to test as many different combinations, as a safety net.
- * Specific cases should still be tested within the relevant file (for instance an edge case with `within` should have
- * an explicit test in the within test suite)
- */
 describe('nested text handling', () => {
-  test('within same node', () => {
+  test('basic', () => {
     render(<Text testID="subject">Hello</Text>);
-    expect(within(screen.getByTestId('subject')).getByText('Hello')).toBeTruthy();
+    expect(screen.getByText('Hello')).toBeTruthy();
   });
 
   test('role with direct text children', () => {

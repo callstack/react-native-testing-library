@@ -453,16 +453,10 @@ test('getByText and queryByText work with tabs', () => {
   expect(screen.queryByText(textWithTabs)).toBeTruthy();
 });
 
-test('getByText searches for text within itself', () => {
+test('getByText does not search for text within itself', () => {
   render(<Text testID="subject">Hello</Text>);
   const textNode = within(screen.getByText('Hello'));
-  expect(textNode.getByText('Hello')).toBeTruthy();
-});
-
-test('getByText searches for text within self host element', () => {
-  render(<Text testID="subject">Hello</Text>);
-  const textNode = within(screen.getByTestId('subject'));
-  expect(textNode.getByText('Hello')).toBeTruthy();
+  expect(textNode.queryByText('Hello')).toBeNull();
 });
 
 test('byText support hidden option', () => {
