@@ -10,11 +10,9 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <>
-        <Text>
-          Some text
-        </Text>
-      </>"
+      <Text>
+        Some text
+      </Text>"
     `);
   });
 
@@ -54,42 +52,40 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <>
-        <View
-          accessibilityElementsHidden={true}
-          accessibilityHint="HINT"
-          accessibilityLabel="LABEL"
-          accessibilityLabelledBy="LABELLED_BY"
-          accessibilityRole="summary"
-          accessibilityViewIsModal={true}
-          aria-busy={false}
-          aria-checked="mixed"
-          aria-disabled={false}
-          aria-expanded={false}
-          aria-hidden={true}
-          aria-label="ARIA_LABEL"
-          aria-labelledby="ARIA_LABELLED_BY"
-          aria-modal={true}
-          aria-selected={false}
-          aria-valuemax={30}
-          aria-valuemin={10}
-          aria-valuenow={20}
-          aria-valuetext="Hello Value"
-          importantForAccessibility="yes"
-          nativeID="NATIVE_ID"
-          role="summary"
-          testID="TEST_ID"
-        >
-          <TextInput
-            defaultValue="DEFAULT_VALUE"
-            placeholder="PLACEHOLDER"
-            value="VALUE"
-          />
-          <Text>
-            Some Text
-          </Text>
-        </View>
-      </>"
+      <View
+        accessibilityElementsHidden={true}
+        accessibilityHint="HINT"
+        accessibilityLabel="LABEL"
+        accessibilityLabelledBy="LABELLED_BY"
+        accessibilityRole="summary"
+        accessibilityViewIsModal={true}
+        aria-busy={false}
+        aria-checked="mixed"
+        aria-disabled={false}
+        aria-expanded={false}
+        aria-hidden={true}
+        aria-label="ARIA_LABEL"
+        aria-labelledby="ARIA_LABELLED_BY"
+        aria-modal={true}
+        aria-selected={false}
+        aria-valuemax={30}
+        aria-valuemin={10}
+        aria-valuenow={20}
+        aria-valuetext="Hello Value"
+        importantForAccessibility="yes"
+        nativeID="NATIVE_ID"
+        role="summary"
+        testID="TEST_ID"
+      >
+        <TextInput
+          defaultValue="DEFAULT_VALUE"
+          placeholder="PLACEHOLDER"
+          value="VALUE"
+        />
+        <Text>
+          Some Text
+        </Text>
+      </View>"
     `);
   });
 
@@ -99,41 +95,33 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <>
-        <View
-          accessibilityViewIsModal={true}
-        />
-      </>"
+      <View
+        accessibilityViewIsModal={true}
+      />"
     `);
 
     expect(() => screen.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <>
-        <View
-          accessibilityViewIsModal={true}
-        />
-      </>"
+      <View
+        accessibilityViewIsModal={true}
+      />"
     `);
 
     await expect(screen.findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <>
-        <View
-          accessibilityViewIsModal={true}
-        />
-      </>"
+      <View
+        accessibilityViewIsModal={true}
+      />"
     `);
 
     await expect(screen.findAllByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <>
-        <View
-          accessibilityViewIsModal={true}
-        />
-      </>"
+      <View
+        accessibilityViewIsModal={true}
+      />"
     `);
   });
 
@@ -196,19 +184,17 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <>
-        <View>
-          <Text
-            style={
-              {
-                "display": "none",
-              }
+      <View>
+        <Text
+          style={
+            {
+              "display": "none",
             }
-          >
-            Some text
-          </Text>
-        </View>
-      </>"
+          }
+        >
+          Some text
+        </Text>
+      </View>"
     `);
   });
 
@@ -222,18 +208,16 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <>
-        <View
-          accessibilityState={
-            {
-              "busy": false,
-              "checked": true,
-            }
+      <View
+        accessibilityState={
+          {
+            "busy": false,
+            "checked": true,
           }
-        >
-          <View />
-        </View>
-      </>"
+        }
+      >
+        <View />
+      </View>"
     `);
   });
 
@@ -247,17 +231,15 @@ describe('printing element tree', () => {
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
 
-      <>
-        <View
-          accessibilityValue={
-            {
-              "min": 1,
-            }
+      <View
+        accessibilityValue={
+          {
+            "min": 1,
           }
-        >
-          <View />
-        </View>
-      </>"
+        }
+      >
+        <View />
+      </View>"
     `);
   });
 

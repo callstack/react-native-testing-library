@@ -117,18 +117,16 @@ test('byHintText queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: hidden
 
-    <>
-      <Text
-        accessibilityHint="hidden"
-        style={
-          {
-            "display": "none",
-          }
+    <Text
+      accessibilityHint="hidden"
+      style={
+        {
+          "display": "none",
         }
-      >
-        Hidden from accessiblity
-      </Text>
-    </>"
+      }
+    >
+      Hidden from accessiblity
+    </Text>"
   `);
 });
 
@@ -138,44 +136,36 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <>
-      <View
-        accessibilityHint="HINT"
-        accessible={true}
-      />
-    </>"
+    <View
+      accessibilityHint="HINT"
+      accessible={true}
+    />"
   `);
 
   expect(() => screen.getAllByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <>
-      <View
-        accessibilityHint="HINT"
-        accessible={true}
-      />
-    </>"
+    <View
+      accessibilityHint="HINT"
+      accessible={true}
+    />"
   `);
 
   await expect(screen.findByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <>
-      <View
-        accessibilityHint="HINT"
-        accessible={true}
-      />
-    </>"
+    <View
+      accessibilityHint="HINT"
+      accessible={true}
+    />"
   `);
 
   await expect(screen.findAllByHintText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO
 
-    <>
-      <View
-        accessibilityHint="HINT"
-        accessible={true}
-      />
-    </>"
+    <View
+      accessibilityHint="HINT"
+      accessible={true}
+    />"
   `);
 });

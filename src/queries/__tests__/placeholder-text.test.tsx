@@ -69,16 +69,14 @@ test('byPlaceholderText queries support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: hidden
 
-    <>
-      <TextInput
-        placeholder="hidden"
-        style={
-          {
-            "display": "none",
-          }
+    <TextInput
+      placeholder="hidden"
+      style={
+        {
+          "display": "none",
         }
-      />
-    </>"
+      }
+    />"
   `);
 });
 
@@ -94,40 +92,32 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    <>
-      <TextInput
-        placeholder="PLACEHOLDER"
-      />
-    </>"
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
   `);
 
   expect(() => screen.getAllByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    <>
-      <TextInput
-        placeholder="PLACEHOLDER"
-      />
-    </>"
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
   `);
 
   await expect(screen.findByPlaceholderText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    <>
-      <TextInput
-        placeholder="PLACEHOLDER"
-      />
-    </>"
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
   `);
 
   await expect(screen.findAllByPlaceholderText('FOO')).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO
 
-    <>
-      <TextInput
-        placeholder="PLACEHOLDER"
-      />
-    </>"
+    <TextInput
+      placeholder="PLACEHOLDER"
+    />"
   `);
 });

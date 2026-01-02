@@ -470,17 +470,15 @@ test('byText support hidden option', () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /hidden/i
 
-    <>
-      <Text
-        style={
-          {
-            "display": "none",
-          }
+    <Text
+      style={
+        {
+          "display": "none",
         }
-      >
-        Hidden from accessibility
-      </Text>
-    </>"
+      }
+    >
+      Hidden from accessibility
+    </Text>"
   `);
 });
 
@@ -490,41 +488,33 @@ test('error message renders the element tree, preserving only helpful props', as
   expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <>
-      <View
-        accessibilityViewIsModal={true}
-      />
-    </>"
+    <View
+      accessibilityViewIsModal={true}
+    />"
   `);
 
   expect(() => screen.getAllByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <>
-      <View
-        accessibilityViewIsModal={true}
-      />
-    </>"
+    <View
+      accessibilityViewIsModal={true}
+    />"
   `);
 
   await expect(screen.findByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <>
-      <View
-        accessibilityViewIsModal={true}
-      />
-    </>"
+    <View
+      accessibilityViewIsModal={true}
+    />"
   `);
 
   await expect(screen.findAllByText(/foo/)).rejects.toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
 
-    <>
-      <View
-        accessibilityViewIsModal={true}
-      />
-    </>"
+    <View
+      accessibilityViewIsModal={true}
+    />"
   `);
 });
 

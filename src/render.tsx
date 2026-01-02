@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { HostElement, Root, RootOptions } from 'universal-test-renderer';
+import type { HostElement, JsonElement, Root, RootOptions } from 'universal-test-renderer';
 
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
@@ -70,6 +70,19 @@ function buildRenderResult(
     });
   };
 
+  const toJSON = (): JsonElement | null => {
+    const json = renderer.container.toJSON();
+    if (json?.children?.length === 0) {
+      return null;
+    }
+
+    if (json?.children?.length === 1 && typeof json.children[0] !== 'string') {
+      return json.children[0];
+    }
+
+    return json;
+  };
+
   addToCleanupQueue(unmountAsync);
 
   const result = {
@@ -80,7 +93,7 @@ function buildRenderResult(
     updateAsync: rerenderAsync, // alias for `rerenderAsync`
     unmount,
     unmountAsync,
-    toJSON: () => renderer.container.toJSON(),
+    toJSON,
     debug: makeDebug(renderer),
     get container(): HostElement {
       return renderer.container;
