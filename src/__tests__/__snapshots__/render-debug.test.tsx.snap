@@ -63,7 +63,7 @@ exports[`debug changing component: bananaFresh button message should now be "fre
     <Text
       testID="bananaFresh"
     >
-      not fresh
+      fresh
     </Text>
     <TextInput
       placeholder="Add custom freshness"

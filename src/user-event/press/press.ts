@@ -21,10 +21,7 @@ export interface PressOptions {
 
 export async function press(this: UserEventInstance, element: HostElement): Promise<void> {
   if (!isHostElement(element)) {
-    throw new ErrorWithStack(
-      `press() works only with host elements. Passed element has type "${element.type}".`,
-      press,
-    );
+    throw new ErrorWithStack(`press() works only with host elements.`, press);
   }
 
   await basePress(this.config, element, {
@@ -38,10 +35,7 @@ export async function longPress(
   options?: PressOptions,
 ): Promise<void> {
   if (!isHostElement(element)) {
-    throw new ErrorWithStack(
-      `longPress() works only with host elements. Passed element has type "${element.type}".`,
-      longPress,
-    );
+    throw new ErrorWithStack(`longPress() works only with host elements.`, longPress);
   }
 
   await basePress(this.config, element, {

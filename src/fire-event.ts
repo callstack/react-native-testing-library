@@ -5,7 +5,7 @@ import type {
   TextProps,
   ViewProps,
 } from 'react-native';
-import type { HostElement } from 'universal-test-renderer';
+import type { Fiber, HostElement } from 'universal-test-renderer';
 
 import act from './act';
 import { EventHandler, getEventHandlerFromProps } from './event-handler';
@@ -79,7 +79,9 @@ function findEventHandler(
 ): EventHandler | null {
   const touchResponder = isTouchResponder(element) ? element : nearestTouchResponder;
 
-  const handler = getEventHandlerFromProps(element.props, eventName, { loose: true });
+  const handler =
+    getEventHandlerFromProps(element.props, eventName, { loose: true }) ??
+    findEventHandlerFromFiber(element.unstable_fiber, eventName);
   if (handler && isEventEnabled(element, eventName, touchResponder)) {
     return handler;
   }
@@ -89,6 +91,25 @@ function findEventHandler(
   }
 
   return findEventHandler(element.parent, eventName, touchResponder);
+}
+
+function findEventHandlerFromFiber(fiber: Fiber | null, eventName: string): EventHandler | null {
+  // Container fibers have memoizedProps set to null
+  if (!fiber?.memoizedProps) {
+    return null;
+  }
+
+  const handler = getEventHandlerFromProps(fiber.memoizedProps, eventName, { loose: true });
+  if (handler) {
+    return handler;
+  }
+
+  // No parent fiber or we reached another host element
+  if (fiber.return === null || typeof fiber.return.type === 'string') {
+    return null;
+  }
+
+  return findEventHandlerFromFiber(fiber.return, eventName);
 }
 
 // String union type of keys of T that start with on, stripped of 'on'
