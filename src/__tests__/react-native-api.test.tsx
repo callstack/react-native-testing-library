@@ -3,6 +3,7 @@ import { FlatList, Image, Modal, ScrollView, Switch, Text, TextInput, View } fro
 
 import { render, screen } from '..';
 import { mapJsonProps } from '../test-utils/json';
+import { getReactNativeVersion } from '../test-utils/version';
 
 /**
  * Tests in this file are intended to give us an proactive warning that React Native behavior has
@@ -221,7 +222,23 @@ test('React Native API assumption: <Modal> renders a single host element', () =>
     </Modal>,
   );
 
-  expect(screen).toMatchInlineSnapshot(`
+  const rnVersion = getReactNativeVersion();
+  if (rnVersion.major == 0 && rnVersion.minor <= 79) {
+    // eslint-disable-next-line jest/no-conditional-expect
+    expect(screen).toMatchInlineSnapshot(`
+    <Modal
+      hardwareAccelerated={false}
+      testID="test"
+      visible={true}
+    >
+      <Text>
+        Modal Content
+      </Text>
+    </Modal>
+  `);
+  } else {
+    // eslint-disable-next-line jest/no-conditional-expect
+    expect(screen).toMatchInlineSnapshot(`
     <Modal
       testID="test"
     >
@@ -230,6 +247,7 @@ test('React Native API assumption: <Modal> renders a single host element', () =>
       </Text>
     </Modal>
   `);
+  }
 });
 
 test('React Native API assumption: aria-* props render directly on host View', () => {
