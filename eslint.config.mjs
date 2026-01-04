@@ -5,14 +5,7 @@ import jest from 'eslint-plugin-jest';
 
 export default [
   {
-    ignores: [
-      'flow-typed/',
-      'build/',
-      'experiments-rtl/',
-      'website/',
-      'eslint.config.mjs',
-      'jest-setup.ts',
-    ],
+    ignores: ['build/', 'experiments-rtl/', 'website/', 'eslint.config.mjs', 'jest-setup.ts'],
   },
   ...callstackConfig,
   ...tseslint.configs.strict,
