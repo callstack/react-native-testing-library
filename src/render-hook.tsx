@@ -1,19 +1,12 @@
 import * as React from 'react';
 
-import render from './render';
 import renderAsync from './render-async';
 import type { RefObject } from './types';
 
 export type RenderHookResult<Result, Props> = {
   result: RefObject<Result>;
-  rerender: (props: Props) => void;
-  unmount: () => void;
-};
-
-export type RenderHookAsyncResult<Result, Props> = {
-  result: RefObject<Result>;
-  rerenderAsync: (props: Props) => Promise<void>;
-  unmountAsync: () => Promise<void>;
+  rerender: (props: Props) => Promise<void>;
+  unmount: () => Promise<void>;
 };
 
 export type RenderHookOptions<Props> = {
@@ -30,39 +23,10 @@ export type RenderHookOptions<Props> = {
   wrapper?: React.ComponentType<any>;
 };
 
-export function renderHook<Result, Props>(
+export async function renderHook<Result, Props>(
   hookToRender: (props: Props) => Result,
   options?: RenderHookOptions<NoInfer<Props>>,
-): RenderHookResult<Result, Props> {
-  const result = React.createRef<Result>() as RefObject<Result>;
-
-  function HookContainer({ hookProps }: { hookProps: Props }) {
-    const renderResult = hookToRender(hookProps);
-    React.useEffect(() => {
-      result.current = renderResult;
-    });
-
-    return null;
-  }
-
-  const { initialProps, ...renderOptions } = options ?? {};
-  const { rerender: rerenderComponent, unmount } = render(
-    // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
-    <HookContainer hookProps={initialProps} />,
-    renderOptions,
-  );
-
-  return {
-    result: result,
-    rerender: (hookProps: Props) => rerenderComponent(<HookContainer hookProps={hookProps} />),
-    unmount,
-  };
-}
-
-export async function renderHookAsync<Result, Props>(
-  hookToRender: (props: Props) => Result,
-  options?: RenderHookOptions<NoInfer<Props>>,
-): Promise<RenderHookAsyncResult<Result, Props>> {
+): Promise<RenderHookResult<Result, Props>> {
   const result = React.createRef<Result>() as RefObject<Result>;
 
   function TestComponent({ hookProps }: { hookProps: Props }) {
@@ -83,8 +47,7 @@ export async function renderHookAsync<Result, Props>(
 
   return {
     result: result,
-    rerenderAsync: (hookProps: Props) =>
-      rerenderComponentAsync(<TestComponent hookProps={hookProps} />),
-    unmountAsync,
+    rerender: (hookProps: Props) => rerenderComponentAsync(<TestComponent hookProps={hookProps} />),
+    unmount: unmountAsync,
   };
 }

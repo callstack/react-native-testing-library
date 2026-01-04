@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import * as React from 'react';
 import { Text } from 'react-native';
 
-import { act, renderHookAsync } from '..';
+import { act, renderHook } from '..';
 import { excludeConsoleMessage } from '../test-utils/console';
 
 // eslint-disable-next-line no-console
@@ -18,8 +18,8 @@ function useSuspendingHook(promise: Promise<string>) {
   return React.use(promise);
 }
 
-test('renderHookAsync renders hook asynchronously', async () => {
-  const { result } = await renderHookAsync(() => {
+test('renderHook renders hook asynchronously', async () => {
+  const { result } = await renderHook(() => {
     const [state, setState] = React.useState(1);
 
     React.useEffect(() => {
@@ -32,7 +32,7 @@ test('renderHookAsync renders hook asynchronously', async () => {
   expect(result.current).toEqual(2);
 });
 
-test('renderHookAsync with wrapper option', async () => {
+test('renderHook with wrapper option', async () => {
   const Context = React.createContext('default');
 
   function useTestHook() {
@@ -43,7 +43,7 @@ test('renderHookAsync with wrapper option', async () => {
     return <Context.Provider value="provided">{children}</Context.Provider>;
   }
 
-  const { result } = await renderHookAsync(useTestHook, { wrapper: Wrapper });
+  const { result } = await renderHook(useTestHook, { wrapper: Wrapper });
   expect(result.current).toEqual('provided');
 });
 
@@ -58,12 +58,12 @@ test('rerenderAsync function updates hook asynchronously', async () => {
     return state;
   }
 
-  const { result, rerenderAsync } = await renderHookAsync(useTestHook, {
+  const { result, rerender } = await renderHook(useTestHook, {
     initialProps: { value: 5 },
   });
   expect(result.current).toEqual(10);
 
-  await rerenderAsync({ value: 10 });
+  await rerender({ value: 10 });
   expect(result.current).toEqual(20);
 });
 
@@ -80,10 +80,10 @@ test('unmount function unmounts hook asynchronously', async () => {
     return 'test';
   }
 
-  const { unmountAsync } = await renderHookAsync(useTestHook);
+  const { unmount } = await renderHook(useTestHook);
   expect(cleanupCalled).toBe(false);
 
-  await unmountAsync();
+  await unmount();
   expect(cleanupCalled).toBe(true);
 });
 
@@ -98,7 +98,7 @@ test('handles hook with state updates during effects', async () => {
     return count;
   }
 
-  const { result } = await renderHookAsync(useTestHook);
+  const { result } = await renderHook(useTestHook);
   expect(result.current).toBe(1);
 });
 
@@ -115,7 +115,7 @@ test('handles multiple state updates in effects', async () => {
     return { first, second };
   }
 
-  const { result } = await renderHookAsync(useTestHook);
+  const { result } = await renderHook(useTestHook);
   expect(result.current).toEqual({ first: 10, second: 20 });
 });
 
@@ -125,7 +125,7 @@ test('handles hook with suspense', async () => {
     resolvePromise = resolve;
   });
 
-  const { result } = await renderHookAsync(useSuspendingHook, {
+  const { result } = await renderHook(useSuspendingHook, {
     initialProps: promise,
     wrapper: ({ children }) => (
       <React.Suspense fallback={<Text>Loading...</Text>}>{children}</React.Suspense>
@@ -168,7 +168,7 @@ test('handles hook suspense with error boundary', async () => {
     rejectPromise = reject;
   });
 
-  const { result } = await renderHookAsync(useSuspendingHook, {
+  const { result } = await renderHook(useSuspendingHook, {
     initialProps: promise,
     wrapper: ({ children }) => (
       <ErrorBoundary fallback="error-fallback">
@@ -206,7 +206,7 @@ test('handles custom hooks with complex logic', async () => {
     return { count, increment, decrement, reset };
   }
 
-  const { result } = await renderHookAsync(useCounter, { initialProps: 5 });
+  const { result } = await renderHook(useCounter, { initialProps: 5 });
   expect(result.current.count).toBe(5);
 
   // eslint-disable-next-line require-await
@@ -247,7 +247,7 @@ test('handles hook with cleanup and re-initialization', async () => {
     return value;
   }
 
-  const { result, rerenderAsync, unmountAsync } = await renderHookAsync(useTestHook, {
+  const { result, rerender, unmount } = await renderHook(useTestHook, {
     initialProps: { key: 'initial' },
   });
 
@@ -255,12 +255,12 @@ test('handles hook with cleanup and re-initialization', async () => {
   expect(effectCount).toBe(1);
   expect(cleanupCount).toBe(0);
 
-  await rerenderAsync({ key: 'updated' });
+  await rerender({ key: 'updated' });
   expect(result.current).toBe('updated-effect');
   expect(effectCount).toBe(2);
   expect(cleanupCount).toBe(1);
 
-  await unmountAsync();
+  await unmount();
   expect(effectCount).toBe(2);
   expect(cleanupCount).toBe(2);
 });

@@ -3,20 +3,22 @@
 ## `renderHook`
 
 ```ts
-function renderHook<Result, Props>(
+async function renderHook<Result, Props>(
   hookFn: (props?: Props) => Result,
   options?: RenderHookOptions<Props>
-): RenderHookResult<Result, Props>;
+): Promise<RenderHookResult<Result, Props>>;
 ```
 
-Renders a test component that will call the provided `callback`, including any hooks it calls, every time it renders. Returns [`RenderHookResult`](#renderhookresult) object, which you can interact with.
+Renders a test component that will call the provided `callback`, including any hooks it calls, every time it renders. Returns a Promise that resolves to a [`RenderHookResult`](#renderhookresult) object, which you can interact with.
+
+This method uses async `act` function internally to ensure all pending React updates are executed during rendering. It's designed for working with React 19 and React Suspense, and is compatible with React Suspense boundaries and `React.use()`.
 
 ```ts
 import { renderHook } from '@testing-library/react-native';
 import { useCount } from '../useCount';
 
-it('should increment count', () => {
-  const { result } = renderHook(() => useCount());
+it('should increment count', async () => {
+  const { result } = await renderHook(() => useCount());
 
   expect(result.current.count).toBe(0);
   act(() => {
@@ -41,7 +43,7 @@ The `renderHook` function accepts the following arguments:
 
 Callback is a function that is called each `render` of the test component. This function should call one or more hooks for testing.
 
-The `props` passed into the callback will be the `initialProps` provided in the `options` to `renderHook`, unless new props are provided by a subsequent `rerender` call.
+The `props` passed into the callback will be the `initialProps` provided in the `options` to `renderHook`, unless new props are provided by a subsequent `rerender` call. Note that `renderHook` is async and must be awaited, and `rerender` and `unmount` are also async and must be awaited.
 
 ### `options`
 
@@ -65,12 +67,12 @@ Otherwise, `render` will default to using concurrent rendering used in the React
 ```ts
 interface RenderHookResult<Result, Props> {
   result: { current: Result };
-  rerender: (props: Props) => void;
-  unmount: () => void;
+  rerender: (props: Props) => Promise<void>;
+  unmount: () => Promise<void>;
 }
 ```
 
-The `renderHook` function returns an object that has the following properties:
+The `renderHook` function returns a Promise that resolves to an object that has the following properties:
 
 #### `result`
 
@@ -78,11 +80,11 @@ The `current` value of the `result` will reflect the latest of whatever is retur
 
 #### `rerender`
 
-A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
+An async function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call. This function returns a Promise and must be awaited.
 
 #### `unmount`
 
-A function to unmount the test component. This is commonly used to trigger cleanup effects for `useEffect` hooks.
+An async function to unmount the test component. This is commonly used to trigger cleanup effects for `useEffect` hooks. This function returns a Promise and must be awaited.
 
 ### Examples
 
@@ -102,8 +104,8 @@ const useCount = (initialCount: number) => {
   return { count, increment };
 };
 
-it('should increment count', () => {
-  const { result, rerender } = renderHook((initialCount: number) => useCount(initialCount), {
+it('should increment count', async () => {
+  const { result, rerender } = await renderHook((initialCount: number) => useCount(initialCount), {
     initialProps: 1,
   });
 
@@ -114,7 +116,7 @@ it('should increment count', () => {
   });
 
   expect(result.current.count).toBe(2);
-  rerender(5);
+  await rerender(5);
   expect(result.current.count).toBe(5);
 });
 ```
@@ -122,61 +124,12 @@ it('should increment count', () => {
 #### With `wrapper`
 
 ```tsx
-it('should use context value', () => {
+it('should use context value', async () => {
   function Wrapper({ children }: { children: ReactNode }) {
     return <Context.Provider value="provided">{children}</Context.Provider>;
   }
 
-  const { result } = renderHook(() => useHook(), { wrapper: Wrapper });
+  const { result } = await renderHook(() => useHook(), { wrapper: Wrapper });
   // ...
 });
 ```
-
-## `renderHookAsync` function
-
-```ts
-async function renderHookAsync<Result, Props>(
-  hookFn: (props?: Props) => Result,
-  options?: RenderHookOptions<Props>
-): Promise<RenderHookAsyncResult<Result, Props>>;
-```
-
-Async versions of `renderHook` designed for working with React 19 and React Suspense. This method uses async `act` function internally to ensure all pending React updates are executed during rendering.
-
-- **Returns a Promise**: Should be awaited
-- **Async methods**: Both `rerender` and `unmount` return Promises and should be awaited
-- **Suspense support**: Compatible with React Suspense boundaries and `React.use()`
-
-### Result {#result-async}
-
-```ts
-interface RenderHookAsyncResult<Result, Props> {
-  result: { current: Result };
-  rerenderAsync: (props: Props) => Promise<void>;
-  unmountAsync: () => Promise<void>;
-}
-```
-
-The `RenderHookAsyncResult` differs from `RenderHookResult` in that `rerenderAsync` and `unmountAsync` are async functions.
-
-```ts
-import { renderHookAsync, act } from '@testing-library/react-native';
-
-test('should handle async hook behavior', async () => {
-  const { result, rerenderAsync } = await renderHookAsync(useAsyncHook);
-
-  // Test initial state
-  expect(result.current.loading).toBe(true);
-
-  // Wait for async operation to complete
-  await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  });
-
-  // Re-render to get updated state
-  await rerenderAsync();
-  expect(result.current.loading).toBe(false);
-});
-```
-
-Use `renderHookAsync` when testing hooks that use React Suspense, `React.use()`, or other concurrent features where timing of re-renders matters.

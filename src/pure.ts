@@ -10,7 +10,7 @@ export { within, getQueriesForElement } from './within';
 export { configure, resetToDefaults } from './config';
 export { isHiddenFromAccessibility, isInaccessible } from './helpers/accessibility';
 export { getDefaultNormalizer } from './matches';
-export { renderHook, renderHookAsync } from './render-hook';
+export { renderHook } from './render-hook';
 export { screen } from './screen';
 export { userEvent } from './user-event';
 
@@ -21,6 +21,6 @@ export type {
   DebugFunction,
 } from './render';
 export type { RenderAsyncOptions, RenderAsyncResult } from './render-async';
-export type { RenderHookOptions, RenderHookResult, RenderHookAsyncResult } from './render-hook';
+export type { RenderHookOptions, RenderHookResult } from './render-hook';
 export type { Config } from './config';
 export type { UserEventConfig } from './user-event';
