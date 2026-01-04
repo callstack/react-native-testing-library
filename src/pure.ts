@@ -1,6 +1,6 @@
 export { default as act } from './act';
 export { default as cleanup, cleanupAsync } from './cleanup';
-export { default as fireEvent, fireEventAsync } from './fire-event';
+export { fireEvent, deprecated_fireEventSync } from './fire-event';
 export { default as render } from './render';
 export { default as renderAsync } from './render-async';
 export { default as waitFor } from './wait-for';

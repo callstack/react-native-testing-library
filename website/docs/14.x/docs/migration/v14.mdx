@@ -4,6 +4,63 @@ This guide describes the migration to React Native Testing Library version 14 fr
 
 ## Breaking changes
 
+### `fireEvent` is now async by default
+
+In v14, `fireEvent` and its helpers (`press`, `changeText`, `scroll`) are now async by default and return a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+
+**Before (v13):**
+
+```ts
+import { fireEvent, screen } from '@testing-library/react-native';
+
+it('should press button', () => {
+  render(<MyComponent />);
+  fireEvent.press(screen.getByText('Press me'));
+  expect(onPress).toHaveBeenCalled();
+});
+```
+
+**After (v14):**
+
+```ts
+import { fireEvent, screen } from '@testing-library/react-native';
+
+it('should press button', async () => {
+  render(<MyComponent />);
+  await fireEvent.press(screen.getByText('Press me'));
+  expect(onPress).toHaveBeenCalled();
+});
+```
+
+### Migration path
+
+To ease migration, we provide `deprecated_fireEventSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
+
+#### `deprecated_fireEventSync` {#deprecated-fire-event-sync}
+
+```ts
+function deprecated_fireEventSync(
+  element: ReactTestInstance,
+  eventName: string,
+  ...data: unknown[]
+): void;
+```
+
+**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `fireEvent` instead.
+
+The synchronous version of `fireEvent` that returns immediately without awaiting React updates. This maintains backward compatibility with v13 tests but is not recommended for new code.
+
+```ts
+// Old v13 code (still works but deprecated)
+import { deprecated_fireEventSync } from '@testing-library/react-native';
+
+it('should press button', () => {
+  render(<MyComponent />);
+  deprecated_fireEventSync.press(screen.getByText('Press me'));
+  expect(onPress).toHaveBeenCalled();
+});
+```
+
 ### `renderHook` is now async by default
 
 In v14, `renderHook` is now async by default and returns a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.

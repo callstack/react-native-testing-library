@@ -87,7 +87,7 @@ Therefore, we should use `act` whenever there is some action that causes element
 - re-rendering of component -`renderer.update` call
 - triggering any event handlers that cause component tree render
 
-Thankfully, for these basic cases RNTL has got you covered as our `render`, `update` and `fireEvent` methods already wrap their calls in sync `act` so that you do not have to do it explicitly.
+Thankfully, for these basic cases RNTL has got you covered as our `render`, `update` and `fireEvent` methods already wrap their calls in `act` so that you do not have to do it explicitly.
 
 Note that `act` calls can be safely nested and internally form a stack of calls. However, overlapping `act` calls, which can be achieved using async version of `act`, [are not supported](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js#L161).
 

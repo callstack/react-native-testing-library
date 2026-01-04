@@ -31,12 +31,12 @@ test('rerender should trigger useEffect', () => {
   expect(effectCallback).toHaveBeenCalledTimes(2);
 });
 
-test('fireEvent should trigger useState', () => {
+test('fireEvent should trigger useState', async () => {
   render(<Counter />);
   const counter = screen.getByText(/Total count/i);
 
   expect(counter.props.children).toEqual('Total count: 0');
-  fireEvent.press(counter);
+  await fireEvent.press(counter);
   expect(counter.props.children).toEqual('Total count: 1');
 });
 

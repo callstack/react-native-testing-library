@@ -203,12 +203,12 @@ test('error message renders the element tree, preserving only helpful props', as
   `);
 });
 
-test('supports unmanaged TextInput element', () => {
+test('supports unmanaged TextInput element', async () => {
   render(<TextInput testID="input" />);
 
   const input = screen.getByDisplayValue('');
   expect(input).toHaveDisplayValue('');
 
-  fireEvent.changeText(input, 'Hello!');
+  await fireEvent.changeText(input, 'Hello!');
   expect(input).toHaveDisplayValue('Hello!');
 });

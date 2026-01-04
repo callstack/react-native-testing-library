@@ -10,17 +10,23 @@ Use Fire Event for cases not supported by User Event and for triggering event ha
 :::
 
 ```ts
-function fireEvent(element: ReactTestInstance, eventName: string, ...data: unknown[]): void;
+function fireEvent(
+  element: ReactTestInstance,
+  eventName: string,
+  ...data: unknown[]
+): Promise<unknown>;
 ```
 
 The `fireEvent` API allows you to trigger all kinds of event handlers on both host and composite components. It will try to invoke a single event handler traversing the component tree bottom-up from passed element and trying to find enabled event handler named `onXxx` when `xxx` is the name of the event passed.
 
 Unlike User Event, this API does not automatically pass event object to event handler, this is responsibility of the user to construct such object.
 
+This function uses async `act` function internally to ensure all pending React updates are executed during event handling.
+
 ```jsx
 import { render, screen, fireEvent } from '@testing-library/react-native';
 
-test('fire changeText event', () => {
+test('fire changeText event', async () => {
   const onEventMock = jest.fn();
   render(
     // MyComponent renders TextInput which has a placeholder 'Enter details'
@@ -28,7 +34,7 @@ test('fire changeText event', () => {
     <MyComponent handleChangeText={onEventMock} />
   );
 
-  fireEvent(screen.getByPlaceholderText('change'), 'onChangeText', 'ab');
+  await fireEvent(screen.getByPlaceholderText('change'), 'onChangeText', 'ab');
   expect(onEventMock).toHaveBeenCalledWith('ab');
 });
 ```
@@ -52,7 +58,7 @@ render(
 );
 
 // you can omit the `on` prefix
-fireEvent(screen.getByPlaceholderText('my placeholder'), 'blur');
+await fireEvent(screen.getByPlaceholderText('my placeholder'), 'blur');
 ```
 
 FireEvent exposes convenience methods for common events like: `press`, `changeText`, `scroll`.
@@ -67,7 +73,7 @@ It is recommended to use the User Event [`press()`](docs/api/events/user-event#p
 fireEvent.press: (
   element: ReactTestInstance,
   ...data: Array<any>,
-) => void
+) => Promise<unknown>
 ```
 
 Invokes `press` event handler on the element or parent element in the tree.
@@ -92,7 +98,7 @@ render(
   </View>
 );
 
-fireEvent.press(screen.getByText('Press me'), eventData);
+await fireEvent.press(screen.getByText('Press me'), eventData);
 expect(onPressMock).toHaveBeenCalledWith(eventData);
 ```
 
@@ -106,7 +112,7 @@ It is recommended to use the User Event [`type()`](docs/api/events/user-event#ty
 fireEvent.changeText: (
   element: ReactTestInstance,
   ...data: Array<any>,
-) => void
+) => Promise<unknown>
 ```
 
 Invokes `changeText` event handler on the element or parent element in the tree.
@@ -124,7 +130,7 @@ render(
   </View>
 );
 
-fireEvent.changeText(screen.getByPlaceholderText('Enter data'), CHANGE_TEXT);
+await fireEvent.changeText(screen.getByPlaceholderText('Enter data'), CHANGE_TEXT);
 ```
 
 ### `fireEvent.scroll` {#scroll}
@@ -137,7 +143,7 @@ Prefer using [`user.scrollTo`](docs/api/events/user-event#scrollto) over `fireEv
 fireEvent.scroll: (
   element: ReactTestInstance,
   ...data: Array<any>,
-) => void
+) => Promise<unknown>
 ```
 
 Invokes `scroll` event handler on the element or parent element in the tree.
@@ -163,85 +169,18 @@ render(
   </ScrollView>
 );
 
-fireEvent.scroll(screen.getByText('scroll-view'), eventData);
+await fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 ```
 
-:::note
-Prefer using [`user.scrollTo`](docs/api/events/user-event#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
-:::
-
-## `fireEventAsync` {#fire-event-async}
-
-:::info RNTL minimal version
-
-This API requires RNTL v13.3.0 or later.
-
-:::
+## `deprecated_fireEventSync` {#deprecated-fire-event-sync}
 
 ```ts
-async function fireEventAsync(
+function deprecated_fireEventSync(
   element: ReactTestInstance,
   eventName: string,
   ...data: unknown[]
-): Promise<unknown>;
+): void;
 ```
 
-The `fireEventAsync` function is the async version of [`fireEvent`](#fire-event) designed for working with React 19 and React Suspense. This function uses async `act` function internally to ensure all pending React updates are executed during event handling.
-
-```jsx
-import { renderAsync, screen, fireEventAsync } from '@testing-library/react-native';
-
-test('fire event test', async () => {
-  await renderAsync(<MySuspenseComponent />);
-
-  await fireEventAsync(screen.getByText('Button'), 'press');
-  expect(screen.getByText('Action completed')).toBeOnTheScreen();
-});
-```
-
-Like `fireEvent`, `fireEventAsync` also provides convenience methods for common events: `fireEventAsync.press`, `fireEventAsync.changeText`, and `fireEventAsync.scroll`.
-
-### `fireEventAsync.press` {#async-press}
-
-:::note
-It is recommended to use the User Event [`press()`](docs/api/events/user-event#press) helper instead as it offers more realistic simulation of press interaction, including pressable support.
-:::
-
-```tsx
-fireEventAsync.press: (
-  element: ReactTestInstance,
-  ...data: Array<any>,
-) => Promise<unknown>
-```
-
-Async version of [`fireEvent.press`](#press) designed for React 19 and React Suspense. Use when `press` event handlers trigger suspense boundaries.
-
-### `fireEventAsync.changeText` {#async-change-text}
-
-:::note
-It is recommended to use the User Event [`type()`](docs/api/events/user-event#type) helper instead as it offers more realistic simulation of text change interaction, including key-by-key typing, element focus, and other editing events.
-:::
-
-```tsx
-fireEventAsync.changeText: (
-  element: ReactTestInstance,
-  ...data: Array<any>,
-) => Promise<unknown>
-```
-
-Async version of [`fireEvent.changeText`](#change-text) designed for React 19 and React Suspense. Use when `changeText` event handlers trigger suspense boundaries.
-
-### `fireEventAsync.scroll` {#async-scroll}
-
-:::note
-Prefer using [`user.scrollTo`](docs/api/events/user-event#scrollto) over `fireEventAsync.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
-:::
-
-```tsx
-fireEventAsync.scroll: (
-  element: ReactTestInstance,
-  ...data: Array<any>,
-) => Promise<unknown>
-```
-
-Async version of [`fireEvent.scroll`](#scroll) designed for React 19 and React Suspense. Use when `scroll` event handlers trigger suspense boundaries.
+Synchronous version of `fireEvent`. Deprecated and will be removed in future versions.
+Use only if you cannot use `await fireEvent` for some reason.

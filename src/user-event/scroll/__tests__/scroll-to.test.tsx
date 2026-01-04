@@ -130,7 +130,7 @@ describe('scrollTo()', () => {
     const { events } = renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
-    fireEvent.scroll(screen.getByTestId('scrollView'), {
+    await fireEvent.scroll(screen.getByTestId('scrollView'), {
       nativeEvent: { contentOffset: { y: 100 } },
     });
     await user.scrollTo(screen.getByTestId('scrollView'), { y: 200 });
