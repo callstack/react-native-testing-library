@@ -35,7 +35,7 @@ test('works with wrapper option', () => {
 });
 
 test('works with initialProps option', () => {
-  const { result, rerender } = deprecated_renderHookSync(
+  const { result } = deprecated_renderHookSync(
     (props: { branch: 'left' | 'right' }) => {
       const [left, setLeft] = React.useState('left');
       const [right, setRight] = React.useState('right');
