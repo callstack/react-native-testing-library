@@ -1,0 +1,206 @@
+# Migration to 14.x
+
+This guide describes the migration to React Native Testing Library version 14 from version 13.x.
+
+## Breaking changes
+
+### `renderHook` is now async by default
+
+In v14, `renderHook` is now async by default and returns a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+
+**Before (v13):**
+
+```ts
+import { renderHook } from '@testing-library/react-native';
+
+it('should test hook', () => {
+  const { result, rerender } = renderHook(() => useMyHook());
+
+  rerender(newProps);
+  unmount();
+});
+```
+
+**After (v14):**
+
+```ts
+import { renderHook } from '@testing-library/react-native';
+
+it('should test hook', async () => {
+  const { result, rerender } = await renderHook(() => useMyHook());
+
+  await rerender(newProps);
+  await unmount();
+});
+```
+
+### Migration path
+
+To ease migration, we provide `deprecated_renderHookSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
+
+#### `deprecated_renderHookSync` {#deprecated-render-hook-sync}
+
+```ts
+function deprecated_renderHookSync<Result, Props>(
+  hookFn: (props?: Props) => Result,
+  options?: RenderHookOptions<Props>
+): RenderHookSyncResult<Result, Props>;
+```
+
+**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `renderHook` instead.
+
+The synchronous version of `renderHook` that returns immediately without awaiting React updates. This maintains backward compatibility with v13 tests but is not recommended for new code.
+
+```ts
+// Old v13 code (still works but deprecated)
+import { deprecated_renderHookSync } from '@testing-library/react-native';
+
+it('should increment count', () => {
+  const { result, rerender } = deprecated_renderHookSync(() => useCount());
+
+  expect(result.current.count).toBe(0);
+  act(() => {
+    result.current.increment();
+  });
+  expect(result.current.count).toBe(1);
+
+  rerender();
+});
+```
+
+#### Result types
+
+**v13 (deprecated):**
+
+```ts
+interface RenderHookSyncResult<Result, Props> {
+  result: { current: Result };
+  rerender: (props: Props) => void;
+  unmount: () => void;
+}
+```
+
+**v14 (default):**
+
+```ts
+interface RenderHookResult<Result, Props> {
+  result: { current: Result };
+  rerender: (props: Props) => Promise<void>;
+  unmount: () => Promise<void>;
+}
+```
+
+**Note**: Both `RenderHookSyncResult` and `RenderHookResult` use `rerender` and `unmount` methods. The difference is that `RenderHookSyncResult` methods are synchronous (return `void`), while `RenderHookResult` methods are async (return `Promise<void>`).
+
+## Step-by-step migration guide
+
+To migrate from `deprecated_renderHookSync` to `renderHook`:
+
+### 1. Add `async` to your test function
+
+```ts
+// Before
+it('should test hook', () => {
+
+// After
+it('should test hook', async () => {
+```
+
+### 2. Await `renderHook`
+
+```ts
+// Before
+const { result } = deprecated_renderHookSync(() => useMyHook());
+
+// After
+const { result } = await renderHook(() => useMyHook());
+```
+
+### 3. Update `rerender` calls to await
+
+```ts
+// Before
+rerender(newProps);
+
+// After
+await rerender(newProps);
+```
+
+### 4. Update `unmount` calls to await
+
+```ts
+// Before
+unmount();
+
+// After
+await unmount();
+```
+
+### 5. Update `act` calls to use async `act`
+
+```ts
+// Before
+act(() => {
+  result.current.doSomething();
+});
+
+// After
+await act(async () => {
+  result.current.doSomething();
+});
+```
+
+## Complete example
+
+**Before (v13):**
+
+```ts
+import { renderHook, act } from '@testing-library/react-native';
+
+it('should increment count', () => {
+  const { result, rerender } = renderHook((initialCount: number) => useCount(initialCount), {
+    initialProps: 1,
+  });
+
+  expect(result.current.count).toBe(1);
+
+  act(() => {
+    result.current.increment();
+  });
+
+  expect(result.current.count).toBe(2);
+  rerender(5);
+  expect(result.current.count).toBe(5);
+});
+```
+
+**After (v14):**
+
+```ts
+import { renderHook, act } from '@testing-library/react-native';
+
+it('should increment count', async () => {
+  const { result, rerender } = await renderHook((initialCount: number) => useCount(initialCount), {
+    initialProps: 1,
+  });
+
+  expect(result.current.count).toBe(1);
+
+  await act(async () => {
+    result.current.increment();
+  });
+
+  expect(result.current.count).toBe(2);
+  await rerender(5);
+  expect(result.current.count).toBe(5);
+});
+```
+
+## Benefits of async `renderHook`
+
+- **React 19 compatibility**: Works seamlessly with React 19's async features
+- **Suspense support**: Properly handles React Suspense boundaries and `React.use()`
+- **Better timing**: Ensures all pending React updates are executed before assertions
+- **Future-proof**: Aligns with React's direction toward async rendering
+
+For more details, see the [`renderHook` API documentation](/docs/api/misc/render-hook).
