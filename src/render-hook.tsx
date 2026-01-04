@@ -37,7 +37,7 @@ export async function renderHook<Result, Props>(
 ): Promise<RenderHookResult<Result, Props>> {
   const result = React.createRef<Result>() as RefObject<Result>;
 
-  function TestComponent({ hookProps }: { hookProps: Props }) {
+  function HookContainer({ hookProps }: { hookProps: Props }) {
     const renderResult = hookToRender(hookProps);
     React.useEffect(() => {
       result.current = renderResult;
@@ -49,13 +49,13 @@ export async function renderHook<Result, Props>(
   const { initialProps, ...renderOptions } = options ?? {};
   const { rerenderAsync: rerenderComponentAsync, unmountAsync } = await renderAsync(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
-    <TestComponent hookProps={initialProps} />,
+    <HookContainer hookProps={initialProps} />,
     renderOptions,
   );
 
   return {
     result: result,
-    rerender: (hookProps: Props) => rerenderComponentAsync(<TestComponent hookProps={hookProps} />),
+    rerender: (hookProps: Props) => rerenderComponentAsync(<HookContainer hookProps={hookProps} />),
     unmount: unmountAsync,
   };
 }
