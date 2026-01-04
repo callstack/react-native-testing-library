@@ -12,13 +12,7 @@ afterEach(() => {
   console.error = originalConsoleError;
 });
 
-function useSuspendingHook(promise: Promise<string>) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: React 18 does not have `use` hook
-  return React.use(promise);
-}
-
-test('gives committed result', async () => {
+test('renders hook and waits for effects to complete', async () => {
   const { result } = await renderHook(() => {
     const [state, setState] = React.useState(1);
 
@@ -32,7 +26,41 @@ test('gives committed result', async () => {
   expect(result.current).toEqual([2, expect.any(Function)]);
 });
 
-test('allows rerendering', async () => {
+test('handles multiple state updates in single effect', async () => {
+  function useTestHook() {
+    const [first, setFirst] = React.useState(1);
+    const [second, setSecond] = React.useState(2);
+
+    React.useEffect(() => {
+      setFirst(10);
+      setSecond(20);
+    }, []);
+
+    return { first, second };
+  }
+
+  const { result } = await renderHook(useTestHook);
+  expect(result.current).toEqual({ first: 10, second: 20 });
+});
+
+test('renders hook with initialProps', async () => {
+  function useTestHook(props: { value: number }) {
+    const [state, setState] = React.useState(props.value);
+
+    React.useEffect(() => {
+      setState(props.value * 2);
+    }, [props.value]);
+
+    return state;
+  }
+
+  const { result } = await renderHook(useTestHook, {
+    initialProps: { value: 5 },
+  });
+  expect(result.current).toEqual(10);
+});
+
+test('rerenders hook with new props', async () => {
   const { result, rerender } = await renderHook(
     (props: { branch: 'left' | 'right' }) => {
       const [left, setLeft] = React.useState('left');
@@ -57,49 +85,7 @@ test('allows rerendering', async () => {
   expect(result.current).toEqual(['right', expect.any(Function)]);
 });
 
-test('allows wrapper components', async () => {
-  const Context = React.createContext('default');
-  function Wrapper({ children }: { children: ReactNode }) {
-    return <Context.Provider value="provided">{children}</Context.Provider>;
-  }
-  const { result } = await renderHook(
-    () => {
-      return React.useContext(Context);
-    },
-    {
-      wrapper: Wrapper,
-    },
-  );
-
-  expect(result.current).toEqual('provided');
-});
-
-function useMyHook<T>(param: T) {
-  return { param };
-}
-
-test('props type is inferred correctly when initial props is defined', async () => {
-  const { result, rerender } = await renderHook((num: number) => useMyHook(num), {
-    initialProps: 5,
-  });
-  expect(result.current.param).toBe(5);
-
-  await rerender(6);
-  expect(result.current.param).toBe(6);
-});
-
-test('props type is inferred correctly when initial props is explicitly undefined', async () => {
-  const { result, rerender } = await renderHook((num: number | undefined) => useMyHook(num), {
-    initialProps: undefined,
-  });
-
-  expect(result.current.param).toBeUndefined();
-
-  await rerender(6);
-  expect(result.current.param).toBe(6);
-});
-
-test('rerender function updates hook asynchronously', async () => {
+test('rerender updates hook state based on props', async () => {
   function useTestHook(props: { value: number }) {
     const [state, setState] = React.useState(props.value);
 
@@ -119,7 +105,24 @@ test('rerender function updates hook asynchronously', async () => {
   expect(result.current).toEqual(20);
 });
 
-test('unmount function unmounts hook asynchronously', async () => {
+test('supports wrapper option for context providers', async () => {
+  const Context = React.createContext('default');
+  function Wrapper({ children }: { children: ReactNode }) {
+    return <Context.Provider value="provided">{children}</Context.Provider>;
+  }
+  const { result } = await renderHook(
+    () => {
+      return React.useContext(Context);
+    },
+    {
+      wrapper: Wrapper,
+    },
+  );
+
+  expect(result.current).toEqual('provided');
+});
+
+test('unmount triggers cleanup effects', async () => {
   let cleanupCalled = false;
 
   function useTestHook() {
@@ -139,24 +142,75 @@ test('unmount function unmounts hook asynchronously', async () => {
   expect(cleanupCalled).toBe(true);
 });
 
-test('handles multiple state updates in effects', async () => {
-  function useTestHook() {
-    const [first, setFirst] = React.useState(1);
-    const [second, setSecond] = React.useState(2);
+test('handles cleanup effects on rerender and unmount', async () => {
+  let effectCount = 0;
+  let cleanupCount = 0;
+
+  function useTestHook(props: { key: string }) {
+    const [value, setValue] = React.useState(props.key);
 
     React.useEffect(() => {
-      setFirst(10);
-      setSecond(20);
-    }, []);
+      effectCount++;
+      setValue(`${props.key}-effect`);
 
-    return { first, second };
+      return () => {
+        cleanupCount++;
+      };
+    }, [props.key]);
+
+    return value;
   }
 
-  const { result } = await renderHook(useTestHook);
-  expect(result.current).toEqual({ first: 10, second: 20 });
+  const { result, rerender, unmount } = await renderHook(useTestHook, {
+    initialProps: { key: 'initial' },
+  });
+
+  expect(result.current).toBe('initial-effect');
+  expect(effectCount).toBe(1);
+  expect(cleanupCount).toBe(0);
+
+  await rerender({ key: 'updated' });
+  expect(result.current).toBe('updated-effect');
+  expect(effectCount).toBe(2);
+  expect(cleanupCount).toBe(1);
+
+  await unmount();
+  expect(effectCount).toBe(2);
+  expect(cleanupCount).toBe(2);
 });
 
-test('handles hook with suspense', async () => {
+function useMyHook<T>(param: T) {
+  return { param };
+}
+
+test('infers props type from initialProps', async () => {
+  const { result, rerender } = await renderHook((num: number) => useMyHook(num), {
+    initialProps: 5,
+  });
+  expect(result.current.param).toBe(5);
+
+  await rerender(6);
+  expect(result.current.param).toBe(6);
+});
+
+test('infers props type when initialProps is undefined', async () => {
+  const { result, rerender } = await renderHook((num: number | undefined) => useMyHook(num), {
+    initialProps: undefined,
+  });
+
+  expect(result.current.param).toBeUndefined();
+
+  await rerender(6);
+  expect(result.current.param).toBe(6);
+});
+
+function useSuspendingHook(promise: Promise<string>) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore: React 18 does not have `use` hook
+  return React.use(promise);
+}
+
+test('supports React Suspense', async () => {
   let resolvePromise: (value: string) => void;
   const promise = new Promise<string>((resolve) => {
     resolvePromise = resolve;
@@ -195,7 +249,7 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-test('handles hook suspense with error boundary', async () => {
+test('handles Suspense errors with error boundary', async () => {
   const ERROR_MESSAGE = 'Hook Promise Rejected In Test';
   // eslint-disable-next-line no-console
   console.error = excludeConsoleMessage(console.error, ERROR_MESSAGE);
@@ -224,7 +278,7 @@ test('handles hook suspense with error boundary', async () => {
   expect(result.current).toBeNull();
 });
 
-test('handles custom hooks with complex logic', async () => {
+test('handles hooks with callbacks and complex state', async () => {
   function useCounter(initialValue: number) {
     const [count, setCount] = React.useState(initialValue);
 
@@ -263,41 +317,4 @@ test('handles custom hooks with complex logic', async () => {
     result.current.decrement();
   });
   expect(result.current.count).toBe(4);
-});
-
-test('handles hook with cleanup and re-initialization', async () => {
-  let effectCount = 0;
-  let cleanupCount = 0;
-
-  function useTestHook(props: { key: string }) {
-    const [value, setValue] = React.useState(props.key);
-
-    React.useEffect(() => {
-      effectCount++;
-      setValue(`${props.key}-effect`);
-
-      return () => {
-        cleanupCount++;
-      };
-    }, [props.key]);
-
-    return value;
-  }
-
-  const { result, rerender, unmount } = await renderHook(useTestHook, {
-    initialProps: { key: 'initial' },
-  });
-
-  expect(result.current).toBe('initial-effect');
-  expect(effectCount).toBe(1);
-  expect(cleanupCount).toBe(0);
-
-  await rerender({ key: 'updated' });
-  expect(result.current).toBe('updated-effect');
-  expect(effectCount).toBe(2);
-  expect(cleanupCount).toBe(1);
-
-  await unmount();
-  expect(effectCount).toBe(2);
-  expect(cleanupCount).toBe(2);
 });
