@@ -53,7 +53,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.2.0
+          react-version: 19.2.0
           react-native-version: 0.83.1
 
       - name: Typecheck
@@ -69,7 +69,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.2.0
+          react-version: 19.2.0
           react-native-version: 0.83.0
 
       - name: Typecheck
@@ -85,7 +85,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.1.1
+          react-version: 19.1.1
           react-native-version: 0.82.1
 
       - name: Typecheck
@@ -101,7 +101,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.1.1
+          react-version: 19.1.1
           react-native-version: 0.82.0
 
       - name: Typecheck
@@ -117,7 +117,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.1.0
+          react-version: 19.1.0
           react-native-version: 0.81.5
 
       - name: Typecheck
@@ -133,7 +133,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.1.0
+          react-version: 19.1.0
           react-native-version: 0.80.2
 
       - name: Typecheck
@@ -149,7 +149,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.0.0
+          react-version: 19.0.0
           react-native-version: 0.79.2
 
       - name: Typecheck
@@ -165,7 +165,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.0.0
+          react-version: 19.0.0
           react-native-version: 0.78.3
 
       - name: Typecheck
@@ -199,7 +199,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.2.0
+          react-version: 19.2.0
           react-native-version: 0.83.1
 
       - name: Test
@@ -215,7 +215,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.2.0
+          react-version: 19.2.0
           react-native-version: 0.83.0
 
       - name: Test
@@ -231,7 +231,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.1.1
+          react-version: 19.1.1
           react-native-version: 0.82.1
 
       - name: Test
@@ -247,7 +247,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.1.1
+          react-version: 19.1.1
           react-native-version: 0.82.0
 
       - name: Test
@@ -263,7 +263,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.1.0
+          react-version: 19.1.0
           react-native-version: 0.81.5
 
       - name: Test
@@ -279,7 +279,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.1.0
+          react-version: 19.1.0
           react-native-version: 0.80.2
 
       - name: Test
@@ -295,7 +295,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.0.0
+          react-version: 19.0.0
           react-native-version: 0.79.2
 
       - name: Test
@@ -311,7 +311,7 @@ jobs:
       - name: Setup Node.js and deps
         uses: ./.github/actions/setup-deps
         with:
-          react-version: ^19.0.0
+          react-version: 19.0.0
           react-native-version: 0.78.3
 
       - name: Test
