@@ -1,6 +1,6 @@
-# Gemini Code Assistant Context
+# Code Assistant Context
 
-This document provides context for the Gemini code assistant to understand the `@testing-library/react-native` project.
+This document provides context for the any code assistant to understand the `@testing-library/react-native` project.
 
 ## Project Overview
 
@@ -32,7 +32,7 @@ The project uses `yarn` for dependency management and script execution.
 
 - **Testing:**
   - **Framework:** Jest with `react-native` preset.
-  - **Location:** Tests are located within `src`, typically in `__tests__` directories or co-located.
+  - **Location:** Tests are located within `src`, typically co-located in `__tests__` directories.
   - **Setup:** `jest-setup.ts` configures the test environment. `src/index.ts` automatically configures cleanup after each test unless skipped.
   - **Coverage:** Collected from `src`, excluding tests.
 
