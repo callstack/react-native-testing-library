@@ -94,6 +94,16 @@ test('works with initialProps option', async () => {
   expect(result.current).toEqual(10);
 });
 
+test('works without initialProps option', async () => {
+  function useTestHook() {
+    const [count, setCount] = React.useState(0);
+    return { count, setCount };
+  }
+
+  const { result } = await renderHook(useTestHook);
+  expect(result.current.count).toBe(0);
+});
+
 test('rerender updates hook with new props', async () => {
   function useTestHook(props: { value: number }) {
     const [state, setState] = React.useState(props.value);

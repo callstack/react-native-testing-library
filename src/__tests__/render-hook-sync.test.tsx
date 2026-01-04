@@ -55,6 +55,16 @@ test('works with initialProps option', () => {
   expect(result.current).toEqual(['left', expect.any(Function)]);
 });
 
+test('works without initialProps option', () => {
+  function useTestHook() {
+    const [count, setCount] = React.useState(0);
+    return { count, setCount };
+  }
+
+  const { result } = deprecated_renderHookSync(useTestHook);
+  expect(result.current.count).toBe(0);
+});
+
 test('rerender updates hook with new props', () => {
   const { result, rerender } = deprecated_renderHookSync(
     (props: { branch: 'left' | 'right' }) => {
