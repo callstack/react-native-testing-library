@@ -26,7 +26,7 @@ test('render should trigger useEffect', async () => {
 test('rerender should trigger useEffect', async () => {
   const effectCallback = jest.fn();
   await render(<UseEffect callback={effectCallback} />);
-  await screen.rerenderAsync(<UseEffect callback={effectCallback} />);
+  await screen.rerender(<UseEffect callback={effectCallback} />);
 
   expect(effectCallback).toHaveBeenCalledTimes(2);
 });

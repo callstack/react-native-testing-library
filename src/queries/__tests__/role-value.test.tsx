@@ -4,8 +4,8 @@ import { Text, View } from 'react-native';
 import { render, screen } from '../..';
 
 describe('accessibility value', () => {
-  test('matches using all value props', () => {
-    render(
+  test('matches using all value props', async () => {
+    await render(
       <View
         accessible
         accessibilityRole="adjustable"
@@ -40,8 +40,8 @@ describe('accessibility value', () => {
     ).toBeFalsy();
   });
 
-  test('matches using single value', () => {
-    render(
+  test('matches using single value', async () => {
+    await render(
       <View
         accessible
         accessibilityRole="adjustable"
@@ -62,8 +62,8 @@ describe('accessibility value', () => {
     expect(screen.queryByRole('adjustable', { value: { text: /no/ } })).toBeFalsy();
   });
 
-  test('matches using single value and other options', () => {
-    render(
+  test('matches using single value and other options', async () => {
+    await render(
       <Text
         accessibilityRole="adjustable"
         accessibilityState={{ disabled: true }}
@@ -170,34 +170,34 @@ describe('accessibility value', () => {
     `);
   });
 
-  test('supports "aria-valuemax" prop', () => {
-    render(<View accessible role="slider" aria-valuemax={10} />);
+  test('supports "aria-valuemax" prop', async () => {
+    await render(<View accessible role="slider" aria-valuemax={10} />);
     expect(screen.getByRole('slider', { value: { max: 10 } })).toBeTruthy();
     expect(screen.queryByRole('slider', { value: { max: 20 } })).toBeNull();
   });
 
-  test('supports "aria-valuemin" prop', () => {
-    render(<View accessible role="slider" aria-valuemin={20} />);
+  test('supports "aria-valuemin" prop', async () => {
+    await render(<View accessible role="slider" aria-valuemin={20} />);
     expect(screen.getByRole('slider', { value: { min: 20 } })).toBeTruthy();
     expect(screen.queryByRole('slider', { value: { min: 30 } })).toBeNull();
   });
 
-  test('supports "aria-valuenow" prop', () => {
-    render(<View accessible role="slider" aria-valuenow={30} />);
+  test('supports "aria-valuenow" prop', async () => {
+    await render(<View accessible role="slider" aria-valuenow={30} />);
     expect(screen.getByRole('slider', { value: { now: 30 } })).toBeTruthy();
     expect(screen.queryByRole('slider', { value: { now: 10 } })).toBeNull();
   });
 
-  test('supports "aria-valuetext" prop', () => {
-    render(<View accessible role="slider" aria-valuetext="Hello World" />);
+  test('supports "aria-valuetext" prop', async () => {
+    await render(<View accessible role="slider" aria-valuetext="Hello World" />);
     expect(screen.getByRole('slider', { value: { text: 'Hello World' } })).toBeTruthy();
     expect(screen.getByRole('slider', { value: { text: /hello/i } })).toBeTruthy();
     expect(screen.queryByRole('slider', { value: { text: 'Hello' } })).toBeNull();
     expect(screen.queryByRole('slider', { value: { text: /salut/i } })).toBeNull();
   });
 
-  test('supports multiple "aria-value*" props', () => {
-    render(
+  test('supports multiple "aria-value*" props', async () => {
+    await render(
       <View accessible role="slider" aria-valuenow={50} aria-valuemin={0} aria-valuemax={100} />,
     );
     expect(screen.getByRole('slider', { value: { now: 50, min: 0, max: 100 } })).toBeTruthy();

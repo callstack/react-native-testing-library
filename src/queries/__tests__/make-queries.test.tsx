@@ -4,8 +4,8 @@ import { Text, TextInput, View } from 'react-native';
 import { render, screen } from '../..';
 
 describe('printing element tree', () => {
-  test('includes element tree on error with less-helpful props stripped', () => {
-    render(<Text onPress={() => null}>Some text</Text>);
+  test('includes element tree on error with less-helpful props stripped', async () => {
+    await render(<Text onPress={() => null}>Some text</Text>);
 
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
@@ -16,8 +16,8 @@ describe('printing element tree', () => {
     `);
   });
 
-  test('prints helpful props but not others', () => {
-    render(
+  test('prints helpful props but not others', async () => {
+    await render(
       <View
         key="this is filtered"
         testID="TEST_ID"
@@ -90,7 +90,7 @@ describe('printing element tree', () => {
   });
 
   test('prints tree and filters props with getBy, getAllBy, findBy, findAllBy', async () => {
-    render(<View accessibilityViewIsModal key="this is filtered" />);
+    await render(<View accessibilityViewIsModal key="this is filtered" />);
 
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with text: /foo/
@@ -126,7 +126,7 @@ describe('printing element tree', () => {
   });
 
   test('only appends element tree on last failure with findBy', async () => {
-    render(<View accessibilityViewIsModal key="this is filtered" />);
+    await render(<View accessibilityViewIsModal key="this is filtered" />);
 
     jest.spyOn(screen, 'toJSON');
 
@@ -136,7 +136,7 @@ describe('printing element tree', () => {
   });
 
   test('onTimeout with findBy receives error without element tree', async () => {
-    render(<View />);
+    await render(<View />);
 
     const onTimeout = jest.fn((_: Error) => new Error('Replacement error'));
 
@@ -152,7 +152,7 @@ describe('printing element tree', () => {
   });
 
   test('onTimeout with findAllBy receives error without element tree', async () => {
-    render(<View />);
+    await render(<View />);
 
     const onTimeout = jest.fn((_: Error) => new Error('Replacement error'));
 
@@ -167,8 +167,8 @@ describe('printing element tree', () => {
     );
   });
 
-  test('does not strip display: none from "style" prop, but does strip other styles', () => {
-    render(
+  test('does not strip display: none from "style" prop, but does strip other styles', async () => {
+    await render(
       <View style={{ display: 'flex', position: 'absolute' }}>
         <Text
           style={[
@@ -198,8 +198,8 @@ describe('printing element tree', () => {
     `);
   });
 
-  test('strips undefined values from accessibilityState', () => {
-    render(
+  test('strips undefined values from accessibilityState', async () => {
+    await render(
       <View accessibilityState={{ checked: true, busy: false }}>
         <View accessibilityState={{ checked: undefined }} />
       </View>,
@@ -221,8 +221,8 @@ describe('printing element tree', () => {
     `);
   });
 
-  test('strips undefined values from accessibilityValue', () => {
-    render(
+  test('strips undefined values from accessibilityValue', async () => {
+    await render(
       <View accessibilityValue={{ min: 1 }}>
         <View accessibilityState={{}} />
       </View>,
@@ -243,8 +243,8 @@ describe('printing element tree', () => {
     `);
   });
 
-  test('does not render element tree when toJSON() returns null', () => {
-    render(<View />);
+  test('does not render element tree when toJSON() returns null', async () => {
+    await render(<View />);
 
     jest.spyOn(screen, 'toJSON').mockImplementation(() => null);
     expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(

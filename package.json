@@ -30,7 +30,7 @@
     "typecheck": "tsc",
     "lint": "eslint src --cache",
     "validate": "yarn prettier && yarn lint && yarn typecheck && yarn test",
-    "validate:write": "yarn prettier:write && yarn lint --fix && yarn typecheck && yarn test",
+    "validate:write": "yarn prettier:write && yarn lint --fix && yarn typecheck && yarn test -u",
     "build:js": "babel src --out-dir build --extensions \".js,.ts,.jsx,.tsx\" --source-maps --ignore \"**/__tests__/**\"",
     "build:ts": "tsc --build tsconfig.release.json",
     "build": "yarn clean && yarn build:js && yarn build:ts",

@@ -3,15 +3,15 @@ import { TextInput, View } from 'react-native';
 
 import { render, screen } from '../..';
 
-test('toHaveDisplayValue() example test', () => {
-  render(<TextInput testID="text-input" value="test" />);
+test('toHaveDisplayValue() example test', async () => {
+  await render(<TextInput testID="text-input" value="test" />);
 
   const textInput = screen.getByTestId('text-input');
   expect(textInput).toHaveDisplayValue('test');
 });
 
-test('toHaveDisplayValue() on matching display value', () => {
-  render(<TextInput testID="text-input" value="test" />);
+test('toHaveDisplayValue() on matching display value', async () => {
+  await render(<TextInput testID="text-input" value="test" />);
 
   const textInput = screen.getByTestId('text-input');
   expect(textInput).toHaveDisplayValue('test');
@@ -27,8 +27,8 @@ test('toHaveDisplayValue() on matching display value', () => {
   `);
 });
 
-test('toHaveDisplayValue() on non-matching display value', () => {
-  render(<TextInput testID="text-input" value="test" />);
+test('toHaveDisplayValue() on non-matching display value', async () => {
+  await render(<TextInput testID="text-input" value="test" />);
 
   const textInput = screen.getByTestId('text-input');
   expect(textInput).not.toHaveDisplayValue('non-test');
@@ -44,8 +44,8 @@ test('toHaveDisplayValue() on non-matching display value', () => {
   `);
 });
 
-test("toHaveDisplayValue() on non-'TextInput' elements", () => {
-  render(<View testID="view" />);
+test("toHaveDisplayValue() on non-'TextInput' elements", async () => {
+  await render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
   expect(() => expect(view).toHaveDisplayValue('test')).toThrowErrorMatchingInlineSnapshot(
@@ -53,8 +53,8 @@ test("toHaveDisplayValue() on non-'TextInput' elements", () => {
   );
 });
 
-test('toHaveDisplayValue() performing partial match', () => {
-  render(<TextInput testID="text-input" value="Hello World" />);
+test('toHaveDisplayValue() performing partial match', async () => {
+  await render(<TextInput testID="text-input" value="Hello World" />);
 
   const textInput = screen.getByTestId('text-input');
   expect(textInput).toHaveDisplayValue('Hello World');
@@ -68,15 +68,15 @@ test('toHaveDisplayValue() performing partial match', () => {
   expect(textInput).toHaveDisplayValue('world', { exact: false });
 });
 
-test('toHaveDisplayValue() uses defaultValue', () => {
-  render(<TextInput testID="text-input" defaultValue="default" />);
+test('toHaveDisplayValue() uses defaultValue', async () => {
+  await render(<TextInput testID="text-input" defaultValue="default" />);
 
   const textInput = screen.getByTestId('text-input');
   expect(textInput).toHaveDisplayValue('default');
 });
 
-test('toHaveDisplayValue() prioritizes value over defaultValue', () => {
-  render(<TextInput testID="text-input" value="value" defaultValue="default" />);
+test('toHaveDisplayValue() prioritizes value over defaultValue', async () => {
+  await render(<TextInput testID="text-input" value="value" defaultValue="default" />);
 
   const textInput = screen.getByTestId('text-input');
   expect(textInput).toHaveDisplayValue('value');

@@ -25,8 +25,8 @@ const Banana = () => (
   </View>
 );
 
-test('getByPlaceholderText, queryByPlaceholderText', () => {
-  render(<Banana />);
+test('getByPlaceholderText, queryByPlaceholderText', async () => {
+  await render(<Banana />);
   const input = screen.getByPlaceholderText(/custom/i);
 
   expect(input.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
@@ -45,8 +45,8 @@ test('getByPlaceholderText, queryByPlaceholderText', () => {
   );
 });
 
-test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
-  render(<Banana />);
+test('getAllByPlaceholderText, queryAllByPlaceholderText', async () => {
+  await render(<Banana />);
   const inputs = screen.getAllByPlaceholderText(/fresh/i);
 
   expect(inputs).toHaveLength(2);
@@ -58,8 +58,8 @@ test('getAllByPlaceholderText, queryAllByPlaceholderText', () => {
   expect(screen.queryAllByPlaceholderText('no placeholder')).toHaveLength(0);
 });
 
-test('byPlaceholderText queries support hidden option', () => {
-  render(<TextInput placeholder="hidden" style={{ display: 'none' }} />);
+test('byPlaceholderText queries support hidden option', async () => {
+  await render(<TextInput placeholder="hidden" style={{ display: 'none' }} />);
 
   expect(screen.getByPlaceholderText('hidden', { includeHiddenElements: true })).toBeTruthy();
 
@@ -80,14 +80,14 @@ test('byPlaceholderText queries support hidden option', () => {
   `);
 });
 
-test('byPlaceHolderText should return host component', () => {
-  render(<TextInput placeholder="placeholder" />);
+test('byPlaceHolderText should return host component', async () => {
+  await render(<TextInput placeholder="placeholder" />);
 
   expect(screen.getByPlaceholderText('placeholder').type).toBe('TextInput');
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  render(<TextInput placeholder="PLACEHOLDER" key="3" />);
+  await render(<TextInput placeholder="PLACEHOLDER" key="3" />);
 
   expect(() => screen.getByPlaceholderText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with placeholder: FOO

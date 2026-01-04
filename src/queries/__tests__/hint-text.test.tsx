@@ -34,7 +34,7 @@ const Section = () => (
 );
 
 test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
-  render(<Section />);
+  await render(<Section />);
 
   expect(screen.getByA11yHint(BUTTON_HINT).props.accessibilityHint).toEqual(BUTTON_HINT);
   const button = screen.queryByA11yHint(BUTTON_HINT);
@@ -64,7 +64,7 @@ test('getByA11yHint, queryByA11yHint, findByA11yHint', async () => {
 });
 
 test('getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint', async () => {
-  render(<Section />);
+  await render(<Section />);
 
   expect(screen.getAllByA11yHint(TEXT_HINT)).toHaveLength(2);
   expect(screen.queryAllByA11yHint(TEXT_HINT)).toHaveLength(2);
@@ -80,8 +80,8 @@ test('getAllByA11yHint, queryAllByA11yHint, findAllByA11yHint', async () => {
   );
 });
 
-test('getByHintText, getByHintText', () => {
-  render(
+test('getByHintText, getByHintText', async () => {
+  await render(
     <View>
       <View accessibilityHint="test" />
       <View accessibilityHint="tests id" />
@@ -91,8 +91,8 @@ test('getByHintText, getByHintText', () => {
   expect(screen.getAllByHintText('test', { exact: false })).toHaveLength(2);
 });
 
-test('getByHintText, getByHintText and exact = true', () => {
-  render(
+test('getByHintText, getByHintText and exact = true', async () => {
+  await render(
     <View>
       <View accessibilityHint="test" />
       <View accessibilityHint="tests id" />
@@ -102,8 +102,8 @@ test('getByHintText, getByHintText and exact = true', () => {
   expect(screen.getAllByHintText('test', { exact: true })).toHaveLength(1);
 });
 
-test('byHintText queries support hidden option', () => {
-  render(
+test('byHintText queries support hidden option', async () => {
+  await render(
     <Text accessibilityHint="hidden" style={{ display: 'none' }}>
       Hidden from accessiblity
     </Text>,
@@ -131,7 +131,7 @@ test('byHintText queries support hidden option', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  render(<Pressable accessibilityHint="HINT" key="3" />);
+  await render(<Pressable accessibilityHint="HINT" key="3" />);
 
   expect(() => screen.getByHintText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility hint: FOO

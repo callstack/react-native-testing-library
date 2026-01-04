@@ -28,7 +28,7 @@ test('screen works with updating rerender', async () => {
   const result = await render(<Text>Mt. Everest</Text>);
   expect(screen).toBe(result);
 
-  await screen.rerenderAsync(<Text>Śnieżka</Text>);
+  await screen.rerender(<Text>Śnieżka</Text>);
   expect(screen).toBe(result);
   expect(screen.getByText('Śnieżka')).toBeTruthy();
 });
@@ -41,7 +41,7 @@ test('screen works with nested re-mounting rerender', async () => {
   );
   expect(screen).toBe(result);
 
-  await screen.rerenderAsync(
+  await screen.rerender(
     <View>
       <View>
         <Text>Śnieżka</Text>

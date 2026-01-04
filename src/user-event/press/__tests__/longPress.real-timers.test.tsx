@@ -15,7 +15,7 @@ describe('userEvent.longPress with real timers', () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
-    render(
+    await render(
       <Pressable
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
@@ -32,7 +32,7 @@ describe('userEvent.longPress with real timers', () => {
   test('works on TouchableOpacity', async () => {
     const mockOnPress = jest.fn();
 
-    render(
+    await render(
       <TouchableOpacity onPress={mockOnPress}>
         <Text>press me</Text>
       </TouchableOpacity>,
@@ -45,7 +45,7 @@ describe('userEvent.longPress with real timers', () => {
   test('works on TouchableHighlight', async () => {
     const mockOnPress = jest.fn();
 
-    render(
+    await render(
       <TouchableHighlight onPress={mockOnPress}>
         <Text>press me</Text>
       </TouchableHighlight>,
@@ -58,7 +58,7 @@ describe('userEvent.longPress with real timers', () => {
   test('works on Text', async () => {
     const { events, logEvent } = createEventLogger();
 
-    render(
+    await render(
       <Text
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
@@ -77,7 +77,7 @@ describe('userEvent.longPress with real timers', () => {
     const mockOnLongPress = jest.fn();
     const user = userEvent.setup();
 
-    render(
+    await render(
       <Pressable onLongPress={mockOnLongPress}>
         <Text>press me</Text>
       </Pressable>,
@@ -92,7 +92,7 @@ describe('userEvent.longPress with real timers', () => {
     const mockOnPress = jest.fn();
     const user = userEvent.setup();
 
-    render(
+    await render(
       <Pressable delayLongPress={800} onLongPress={mockOnLongPress} onPress={mockOnPress}>
         <Text>press me</Text>
       </Pressable>,
@@ -111,7 +111,7 @@ describe('userEvent.longPress with real timers', () => {
     const mockOnPress = jest.fn();
     const user = userEvent.setup();
 
-    render(
+    await render(
       <Pressable delayLongPress={1000} onLongPress={mockOnLongPress} onPress={mockOnPress}>
         <Text>press me</Text>
       </Pressable>,
@@ -127,7 +127,7 @@ describe('userEvent.longPress with real timers', () => {
     const mockOnPress = jest.fn();
     const user = userEvent.setup();
 
-    render(
+    await render(
       <Pressable onLongPress={mockOnLongPress} onPress={mockOnPress}>
         <Text>press me</Text>
       </Pressable>,
@@ -141,7 +141,7 @@ describe('userEvent.longPress with real timers', () => {
   test('longPress is accessible directly in userEvent', async () => {
     const mockOnLongPress = jest.fn();
 
-    render(
+    await render(
       <Pressable onLongPress={mockOnLongPress}>
         <Text>press me</Text>
       </Pressable>,

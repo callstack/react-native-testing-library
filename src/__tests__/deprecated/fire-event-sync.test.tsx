@@ -567,7 +567,7 @@ test('should handle unmounted elements gracefully', async () => {
   );
 
   const element = screen.getByText('Test');
-  await screen.unmountAsync();
+  await screen.unmount();
 
   // Firing event on unmounted element should not crash
   deprecated_fireEventSync.press(element);

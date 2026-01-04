@@ -28,8 +28,8 @@ const Banana = () => (
   </View>
 );
 
-test('getByDisplayValue, queryByDisplayValue', () => {
-  render(<Banana />);
+test('getByDisplayValue, queryByDisplayValue', async () => {
+  await render(<Banana />);
 
   const input = screen.getByDisplayValue(/custom/i);
   expect(input).toHaveDisplayValue(INPUT_FRESHNESS);
@@ -47,8 +47,8 @@ test('getByDisplayValue, queryByDisplayValue', () => {
   );
 });
 
-test('getByDisplayValue, queryByDisplayValue get element by default value only when value is undefined', () => {
-  render(<Banana />);
+test('getByDisplayValue, queryByDisplayValue get element by default value only when value is undefined', async () => {
+  await render(<Banana />);
   expect(() => screen.getByDisplayValue(DEFAULT_INPUT_CHEF)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: What did you inspect?
 
@@ -105,8 +105,8 @@ test('getByDisplayValue, queryByDisplayValue get element by default value only w
   expect(screen.queryByDisplayValue(DEFAULT_INPUT_CUSTOMER)).toBeTruthy();
 });
 
-test('getAllByDisplayValue, queryAllByDisplayValue', () => {
-  render(<Banana />);
+test('getAllByDisplayValue, queryAllByDisplayValue', async () => {
+  await render(<Banana />);
   const inputs = screen.getAllByDisplayValue(/fresh/i);
 
   expect(inputs).toHaveLength(2);
@@ -120,7 +120,7 @@ test('getAllByDisplayValue, queryAllByDisplayValue', () => {
 
 test('findBy queries work asynchronously', async () => {
   const options = { timeout: 10 }; // Short timeout so that this test runs quickly
-  render(<View />);
+  await render(<View />);
 
   await expect(screen.findByDisplayValue('Display Value', {}, options)).rejects.toBeTruthy();
   await expect(screen.findAllByDisplayValue('Display Value', {}, options)).rejects.toBeTruthy();
@@ -139,8 +139,8 @@ test('findBy queries work asynchronously', async () => {
   await expect(screen.findAllByDisplayValue('Display Value')).resolves.toHaveLength(1);
 }, 20000);
 
-test('byDisplayValue queries support hidden option', () => {
-  render(<TextInput value="hidden" style={{ display: 'none' }} />);
+test('byDisplayValue queries support hidden option', async () => {
+  await render(<TextInput value="hidden" style={{ display: 'none' }} />);
 
   expect(screen.getByDisplayValue('hidden', { includeHiddenElements: true })).toBeTruthy();
 
@@ -161,14 +161,14 @@ test('byDisplayValue queries support hidden option', () => {
   `);
 });
 
-test('byDisplayValue should return host component', () => {
-  render(<TextInput value="value" />);
+test('byDisplayValue should return host component', async () => {
+  await render(<TextInput value="value" />);
 
   expect(screen.getByDisplayValue('value').type).toBe('TextInput');
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  render(<TextInput value="1" key="3" />);
+  await render(<TextInput value="1" key="3" />);
 
   expect(() => screen.getByDisplayValue('2')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with displayValue: 2
@@ -204,7 +204,7 @@ test('error message renders the element tree, preserving only helpful props', as
 });
 
 test('supports unmanaged TextInput element', async () => {
-  render(<TextInput testID="input" />);
+  await render(<TextInput testID="input" />);
 
   const input = screen.getByDisplayValue('');
   expect(input).toHaveDisplayValue('');

@@ -47,14 +47,14 @@ function buildRenderResult(
 ) {
   const container = renderer.container;
 
-  const rerenderAsync = async (component: React.ReactElement) => {
+  const rerender = async (component: React.ReactElement) => {
     // eslint-disable-next-line require-await
     await act(async () => {
       renderer.render(wrap(component));
     });
   };
 
-  const unmountAsync = async () => {
+  const unmount = async () => {
     // eslint-disable-next-line require-await
     await act(async () => {
       renderer.unmount();
@@ -74,16 +74,13 @@ function buildRenderResult(
     return json;
   };
 
-  addToCleanupQueue(unmountAsync);
+  addToCleanupQueue(unmount);
 
   const result = {
     ...getQueriesForElement(renderer.container),
-    rerender: rerenderAsync,
-    rerenderAsync,
-    update: rerenderAsync, // alias for `rerender`
-    updateAsync: rerenderAsync, // alias for `rerenderAsync`
-    unmount: unmountAsync,
-    unmountAsync,
+    rerender,
+    update: rerender, // alias for `rerender`
+    unmount,
     toJSON,
     debug: makeDebug(renderer),
     get container(): HostElement {

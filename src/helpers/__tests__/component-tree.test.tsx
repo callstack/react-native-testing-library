@@ -15,8 +15,8 @@ function MultipleHostChildren() {
 }
 
 describe('getHostSiblings()', () => {
-  it('returns host siblings for host component', () => {
-    render(
+  it('returns host siblings for host component', async () => {
+    await render(
       <View testID="grandparent">
         <View testID="parent">
           <View testID="siblingBefore" />
@@ -39,8 +39,8 @@ describe('getHostSiblings()', () => {
 });
 
 describe('getContainerElement()', () => {
-  it('returns container for mounted view', () => {
-    render(
+  it('returns container for mounted view', async () => {
+    await render(
       <View>
         <View testID="view" />
       </View>,

@@ -47,7 +47,7 @@ export async function renderHook<Result, Props>(
   }
 
   const { initialProps, ...renderOptions } = options ?? {};
-  const { rerenderAsync: rerenderComponentAsync, unmountAsync } = await render(
+  const { rerender: rerenderComponentAsync, unmount } = await render(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
     <HookContainer hookProps={initialProps} />,
     renderOptions,
@@ -56,7 +56,7 @@ export async function renderHook<Result, Props>(
   return {
     result: result,
     rerender: (hookProps: Props) => rerenderComponentAsync(<HookContainer hookProps={hookProps} />),
-    unmount: unmountAsync,
+    unmount,
   };
 }
 

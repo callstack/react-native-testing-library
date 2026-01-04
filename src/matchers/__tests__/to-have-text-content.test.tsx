@@ -3,8 +3,8 @@ import { Text, View } from 'react-native';
 
 import { render, screen } from '../..';
 
-test('toHaveTextContent() example test', () => {
-  render(
+test('toHaveTextContent() example test', async () => {
+  await render(
     <View testID="view">
       <Text>Hello</Text> <Text>World</Text>
     </View>,
@@ -15,8 +15,8 @@ test('toHaveTextContent() example test', () => {
   expect(view).not.toHaveTextContent('Hello there');
 });
 
-test('toHaveTextContent() handles positive test cases', () => {
-  render(<Text testID="text">Hello World</Text>);
+test('toHaveTextContent() handles positive test cases', async () => {
+  await render(<Text testID="text">Hello World</Text>);
 
   const text = screen.getByTestId('text');
   expect(text).toHaveTextContent('Hello World');
@@ -24,8 +24,8 @@ test('toHaveTextContent() handles positive test cases', () => {
   expect(text).toHaveTextContent(/Hello World/);
 });
 
-test('toHaveTextContent() does exact match by default', () => {
-  render(<Text testID="text">Hello World</Text>);
+test('toHaveTextContent() does exact match by default', async () => {
+  await render(<Text testID="text">Hello World</Text>);
 
   const text = screen.getByTestId('text');
   expect(text).toHaveTextContent('Hello World');
@@ -33,8 +33,8 @@ test('toHaveTextContent() does exact match by default', () => {
   expect(text).not.toHaveTextContent('World');
 });
 
-test('toHaveTextContent() handles nested text', () => {
-  render(
+test('toHaveTextContent() handles nested text', async () => {
+  await render(
     <Text testID="text">
       Hello <Text>React</Text>
     </Text>,
@@ -44,8 +44,8 @@ test('toHaveTextContent() handles nested text', () => {
   expect(text).toHaveTextContent('Hello React');
 });
 
-test('toHaveTextContent() negative test cases', () => {
-  render(<Text testID="text">Hello World</Text>);
+test('toHaveTextContent() negative test cases', async () => {
+  await render(<Text testID="text">Hello World</Text>);
 
   const text = screen.getByTestId('text');
   expect(text).not.toHaveTextContent(/Hello React/);

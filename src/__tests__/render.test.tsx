@@ -54,35 +54,19 @@ test('render with wrapper option', async () => {
   expect(screen.getByTestId('inner')).toBeTruthy();
 });
 
-test('rerender function throws error when used with render', async () => {
-  await render(<Banana />);
-
-  expect(() => screen.rerender(<Banana />)).toThrowErrorMatchingInlineSnapshot(
-    `""rerender(...)" is not supported when using "render" use "await rerenderAsync(...)" instead"`,
-  );
-});
-
-test('rerenderAsync function updates component asynchronously', async () => {
+test('rerender function updates component asynchronously', async () => {
   const fn = jest.fn();
   await render(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(0);
 
-  await screen.rerenderAsync(<Banana onUpdate={fn} />);
+  await screen.rerender(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(1);
 });
 
-test('unmount function throws error when used with render', async () => {
-  await render(<Banana />);
-
-  expect(() => screen.unmount()).toThrowErrorMatchingInlineSnapshot(
-    `""unmount()" is not supported when using "render" use "await unmountAsync()" instead"`,
-  );
-});
-
-test('unmountAsync function unmounts component asynchronously', async () => {
+test('unmount function unmounts component asynchronously', async () => {
   const fn = jest.fn();
   await render(<Banana onUnmount={fn} />);
 
-  await screen.unmountAsync();
+  await screen.unmount();
   expect(fn).toHaveBeenCalled();
 });

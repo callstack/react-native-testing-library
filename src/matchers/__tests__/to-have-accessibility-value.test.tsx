@@ -4,60 +4,60 @@ import { View } from 'react-native';
 import { render, screen } from '../..';
 
 describe('toHaveAccessibilityValue', () => {
-  it('supports "accessibilityValue.min"', () => {
-    render(<View accessibilityValue={{ min: 0 }} />);
+  it('supports "accessibilityValue.min"', async () => {
+    await render(<View accessibilityValue={{ min: 0 }} />);
     expect(screen.root).toHaveAccessibilityValue({ min: 0 });
     expect(screen.root).not.toHaveAccessibilityValue({ min: 1 });
   });
 
-  it('supports "accessibilityValue.max"', () => {
-    render(<View accessibilityValue={{ max: 100 }} />);
+  it('supports "accessibilityValue.max"', async () => {
+    await render(<View accessibilityValue={{ max: 100 }} />);
     expect(screen.root).toHaveAccessibilityValue({ max: 100 });
     expect(screen.root).not.toHaveAccessibilityValue({ max: 99 });
   });
 
-  it('supports "accessibilityValue.now"', () => {
-    render(<View accessibilityValue={{ now: 33 }} />);
+  it('supports "accessibilityValue.now"', async () => {
+    await render(<View accessibilityValue={{ now: 33 }} />);
     expect(screen.root).toHaveAccessibilityValue({ now: 33 });
     expect(screen.root).not.toHaveAccessibilityValue({ now: 34 });
   });
 
-  it('supports "accessibilityValue.text"', () => {
-    render(<View testID="view" accessibilityValue={{ text: 'Hello' }} />);
+  it('supports "accessibilityValue.text"', async () => {
+    await render(<View testID="view" accessibilityValue={{ text: 'Hello' }} />);
     expect(screen.root).toHaveAccessibilityValue({ text: 'Hello' });
     expect(screen.root).toHaveAccessibilityValue({ text: /He/ });
     expect(screen.root).not.toHaveAccessibilityValue({ text: 'Hi' });
     expect(screen.root).not.toHaveAccessibilityValue({ text: /Hi/ });
   });
 
-  it('supports "aria-valuemin"', () => {
-    render(<View testID="view" aria-valuemin={0} />);
+  it('supports "aria-valuemin"', async () => {
+    await render(<View testID="view" aria-valuemin={0} />);
     expect(screen.root).toHaveAccessibilityValue({ min: 0 });
     expect(screen.root).not.toHaveAccessibilityValue({ min: 1 });
   });
 
-  it('supports "aria-valuemax"', () => {
-    render(<View testID="view" aria-valuemax={100} />);
+  it('supports "aria-valuemax"', async () => {
+    await render(<View testID="view" aria-valuemax={100} />);
     expect(screen.root).toHaveAccessibilityValue({ max: 100 });
     expect(screen.root).not.toHaveAccessibilityValue({ max: 99 });
   });
 
-  it('supports "aria-valuenow"', () => {
-    render(<View testID="view" aria-valuenow={33} />);
+  it('supports "aria-valuenow"', async () => {
+    await render(<View testID="view" aria-valuenow={33} />);
     expect(screen.root).toHaveAccessibilityValue({ now: 33 });
     expect(screen.root).not.toHaveAccessibilityValue({ now: 34 });
   });
 
-  it('supports "aria-valuetext"', () => {
-    render(<View testID="view" aria-valuetext="Hello" />);
+  it('supports "aria-valuetext"', async () => {
+    await render(<View testID="view" aria-valuetext="Hello" />);
     expect(screen.root).toHaveAccessibilityValue({ text: 'Hello' });
     expect(screen.root).toHaveAccessibilityValue({ text: /He/ });
     expect(screen.root).not.toHaveAccessibilityValue({ text: 'Hi' });
     expect(screen.root).not.toHaveAccessibilityValue({ text: /Hi/ });
   });
 
-  it('supports multi-argument matching', () => {
-    render(<View accessibilityValue={{ min: 1, max: 10, now: 5, text: '5/10' }} />);
+  it('supports multi-argument matching', async () => {
+    await render(<View accessibilityValue={{ min: 1, max: 10, now: 5, text: '5/10' }} />);
 
     expect(screen.root).toHaveAccessibilityValue({ now: 5 });
     expect(screen.root).toHaveAccessibilityValue({ now: 5, min: 1 });
@@ -83,8 +83,8 @@ describe('toHaveAccessibilityValue', () => {
     });
   });
 
-  it('gives precedence to ARIA values', () => {
-    render(
+  it('gives precedence to ARIA values', async () => {
+    await render(
       <View
         testID="view"
         aria-valuemin={0}
@@ -106,8 +106,8 @@ describe('toHaveAccessibilityValue', () => {
     expect(screen.root).not.toHaveAccessibilityValue({ text: 'Hi' });
   });
 
-  it('shows errors in expected format', () => {
-    render(
+  it('shows errors in expected format', async () => {
+    await render(
       <View
         testID="view"
         aria-valuemin={0}
@@ -138,8 +138,8 @@ describe('toHaveAccessibilityValue', () => {
     `);
   });
 
-  it('shows errors in expected format with partial value', () => {
-    render(<View testID="view" aria-valuenow={33} aria-valuetext="Hello" />);
+  it('shows errors in expected format with partial value', async () => {
+    await render(<View testID="view" aria-valuenow={33} aria-valuetext="Hello" />);
 
     expect(() => expect(screen.root).toHaveAccessibilityValue({ min: 30 }))
       .toThrowErrorMatchingInlineSnapshot(`

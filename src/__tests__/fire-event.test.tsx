@@ -484,7 +484,7 @@ describe('React.Suspense integration', () => {
     // Resolve the promise
     resolveMockPromise('loaded');
     await waitFor(async () => {
-      await screen.rerenderAsync(
+      await screen.rerender(
         <SuspenseWrapper>
           <AsyncComponent onPress={onPressMock} shouldSuspend={false} />
         </SuspenseWrapper>,
@@ -547,7 +547,7 @@ describe('React.Suspense integration', () => {
       );
     }
 
-    const { rerenderAsync } = await render(
+    const { rerender } = await render(
       <React.Suspense fallback={<Text>Outer Loading...</Text>}>
         <NestedAsync onPress={outerPressMock} shouldSuspend={false} level="Outer" />
         <React.Suspense fallback={<Text>Inner Loading...</Text>}>
@@ -567,7 +567,7 @@ describe('React.Suspense integration', () => {
     // Resolve inner component
     resolveMockPromise('inner-loaded');
     await waitFor(async () => {
-      await rerenderAsync(
+      await rerender(
         <React.Suspense fallback={<Text>Outer Loading...</Text>}>
           <NestedAsync onPress={outerPressMock} shouldSuspend={false} level="Outer" />
           <React.Suspense fallback={<Text>Inner Loading...</Text>}>
@@ -628,7 +628,7 @@ describe('React.Suspense integration', () => {
     expect(onPressMock).toHaveBeenCalled();
 
     // Rerender - now DataComponent should suspend
-    await screen.rerenderAsync(
+    await screen.rerender(
       <View>
         <ButtonComponent />
         <React.Suspense fallback={<Text>Loading data...</Text>}>
@@ -651,7 +651,7 @@ test('should handle unmounted elements gracefully in async mode', async () => {
   );
 
   const element = screen.getByText('Test');
-  await screen.unmountAsync();
+  await screen.unmount();
 
   // Firing async event on unmounted element should not crash
   await fireEvent.press(element);

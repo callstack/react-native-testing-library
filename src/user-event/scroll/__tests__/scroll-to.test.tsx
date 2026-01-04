@@ -15,10 +15,10 @@ function mapEventsToShortForm(events: EventEntry[]) {
   ]);
 }
 
-function renderScrollViewWithToolkit(props: ScrollViewProps = {}) {
+async function renderScrollViewWithToolkit(props: ScrollViewProps = {}) {
   const { events, logEvent } = createEventLogger();
 
-  render(
+  await render(
     <ScrollView
       testID="scrollView"
       onScroll={logEvent('scroll')}
@@ -40,7 +40,7 @@ beforeEach(() => {
 
 describe('scrollTo()', () => {
   it('supports vertical drag scroll', async () => {
-    const { events } = renderScrollViewWithToolkit();
+    const { events } = await renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
     await user.scrollTo(screen.getByTestId('scrollView'), { y: 100 });
@@ -55,7 +55,7 @@ describe('scrollTo()', () => {
   });
 
   it('supports horizontal drag scroll', async () => {
-    const { events } = renderScrollViewWithToolkit({ horizontal: true });
+    const { events } = await renderScrollViewWithToolkit({ horizontal: true });
     const user = userEvent.setup();
 
     await user.scrollTo(screen.getByTestId('scrollView'), { x: 100 });
@@ -69,7 +69,7 @@ describe('scrollTo()', () => {
   });
 
   it('supports vertical momentum scroll', async () => {
-    const { events } = renderScrollViewWithToolkit();
+    const { events } = await renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
     await user.scrollTo(screen.getByTestId('scrollView'), {
@@ -93,7 +93,7 @@ describe('scrollTo()', () => {
 
   test('works with fake timers', async () => {
     jest.useFakeTimers();
-    const { events } = renderScrollViewWithToolkit();
+    const { events } = await renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
     await user.scrollTo(screen.getByTestId('scrollView'), { y: 100 });
@@ -107,7 +107,7 @@ describe('scrollTo()', () => {
   });
 
   test('remembers previous scroll offset', async () => {
-    const { events } = renderScrollViewWithToolkit();
+    const { events } = await renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
     await user.scrollTo(screen.getByTestId('scrollView'), { y: 100 });
@@ -127,7 +127,7 @@ describe('scrollTo()', () => {
   });
 
   test('remembers previous scroll offset from "fireEvent.scroll"', async () => {
-    const { events } = renderScrollViewWithToolkit();
+    const { events } = await renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
     await fireEvent.scroll(screen.getByTestId('scrollView'), {
@@ -145,7 +145,7 @@ describe('scrollTo()', () => {
   });
 
   it('validates vertical scroll direction', async () => {
-    renderScrollViewWithToolkit();
+    await renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
     await expect(() =>
@@ -156,7 +156,7 @@ describe('scrollTo()', () => {
   });
 
   it('validates horizontal scroll direction', async () => {
-    renderScrollViewWithToolkit({ horizontal: true });
+    await renderScrollViewWithToolkit({ horizontal: true });
     const user = userEvent.setup();
 
     await expect(() =>
@@ -167,7 +167,7 @@ describe('scrollTo()', () => {
   });
 
   it('generates single drag step if already at target offset', async () => {
-    const { events } = renderScrollViewWithToolkit();
+    const { events } = await renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
     await user.scrollTo(screen.getByTestId('scrollView'), { y: 0 });
@@ -178,7 +178,7 @@ describe('scrollTo()', () => {
   });
 
   it('generates single momentum step if already at target offset', async () => {
-    const { events } = renderScrollViewWithToolkit();
+    const { events } = await renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
     await user.scrollTo(screen.getByTestId('scrollView'), {
@@ -198,7 +198,7 @@ describe('scrollTo()', () => {
   });
 
   it('generates no steps for scroll without offset', async () => {
-    const { events } = renderScrollViewWithToolkit();
+    const { events } = await renderScrollViewWithToolkit();
     const user = userEvent.setup();
 
     // @ts-expect-error intentionally omitting required options
@@ -207,7 +207,7 @@ describe('scrollTo()', () => {
   });
 
   it('does NOT work on View', async () => {
-    render(<View testID="view" />);
+    await render(<View testID="view" />);
     const user = userEvent.setup();
 
     await expect(
@@ -218,7 +218,7 @@ describe('scrollTo()', () => {
   });
 
   test('is accessible directly in userEvent', async () => {
-    const { events } = renderScrollViewWithToolkit();
+    const { events } = await renderScrollViewWithToolkit();
 
     await userEvent.scrollTo(screen.getByTestId('scrollView'), { y: 100 });
     expect(mapEventsToShortForm(events)).toEqual([
