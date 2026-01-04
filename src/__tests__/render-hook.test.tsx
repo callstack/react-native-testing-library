@@ -13,12 +13,10 @@ afterEach(() => {
 });
 
 function useSuspendingHook(promise: Promise<string>) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: React 18 does not have `use` hook
   return React.use(promise);
 }
 
-test('renderHook renders hook asynchronously', async () => {
+test('renders hook and returns committed result', async () => {
   const { result } = await renderHook(() => {
     const [state, setState] = React.useState(1);
 
@@ -30,61 +28,6 @@ test('renderHook renders hook asynchronously', async () => {
   });
 
   expect(result.current).toEqual(2);
-});
-
-test('renderHook with wrapper option', async () => {
-  const Context = React.createContext('default');
-
-  function useTestHook() {
-    return React.useContext(Context);
-  }
-
-  function Wrapper({ children }: { children: ReactNode }) {
-    return <Context.Provider value="provided">{children}</Context.Provider>;
-  }
-
-  const { result } = await renderHook(useTestHook, { wrapper: Wrapper });
-  expect(result.current).toEqual('provided');
-});
-
-test('rerender function updates hook asynchronously', async () => {
-  function useTestHook(props: { value: number }) {
-    const [state, setState] = React.useState(props.value);
-
-    React.useEffect(() => {
-      setState(props.value * 2);
-    }, [props.value]);
-
-    return state;
-  }
-
-  const { result, rerender } = await renderHook(useTestHook, {
-    initialProps: { value: 5 },
-  });
-  expect(result.current).toEqual(10);
-
-  await rerender({ value: 10 });
-  expect(result.current).toEqual(20);
-});
-
-test('unmount function unmounts hook asynchronously', async () => {
-  let cleanupCalled = false;
-
-  function useTestHook() {
-    React.useEffect(() => {
-      return () => {
-        cleanupCalled = true;
-      };
-    }, []);
-
-    return 'test';
-  }
-
-  const { unmount } = await renderHook(useTestHook);
-  expect(cleanupCalled).toBe(false);
-
-  await unmount();
-  expect(cleanupCalled).toBe(true);
 });
 
 test('handles hook with state updates during effects', async () => {
@@ -117,6 +60,115 @@ test('handles multiple state updates in effects', async () => {
 
   const { result } = await renderHook(useTestHook);
   expect(result.current).toEqual({ first: 10, second: 20 });
+});
+
+test('works with wrapper option', async () => {
+  const Context = React.createContext('default');
+
+  function useTestHook() {
+    return React.useContext(Context);
+  }
+
+  function Wrapper({ children }: { children: ReactNode }) {
+    return <Context.Provider value="provided">{children}</Context.Provider>;
+  }
+
+  const { result } = await renderHook(useTestHook, { wrapper: Wrapper });
+  expect(result.current).toEqual('provided');
+});
+
+test('works with initialProps option', async () => {
+  function useTestHook(props: { value: number }) {
+    const [state, setState] = React.useState(props.value);
+
+    React.useEffect(() => {
+      setState(props.value * 2);
+    }, [props.value]);
+
+    return state;
+  }
+
+  const { result } = await renderHook(useTestHook, {
+    initialProps: { value: 5 },
+  });
+  expect(result.current).toEqual(10);
+});
+
+test('rerender updates hook with new props', async () => {
+  function useTestHook(props: { value: number }) {
+    const [state, setState] = React.useState(props.value);
+
+    React.useEffect(() => {
+      setState(props.value * 2);
+    }, [props.value]);
+
+    return state;
+  }
+
+  const { result, rerender } = await renderHook(useTestHook, {
+    initialProps: { value: 5 },
+  });
+  expect(result.current).toEqual(10);
+
+  await rerender({ value: 10 });
+  expect(result.current).toEqual(20);
+});
+
+test('unmount triggers cleanup effects', async () => {
+  let cleanupCalled = false;
+
+  function useTestHook() {
+    React.useEffect(() => {
+      return () => {
+        cleanupCalled = true;
+      };
+    }, []);
+
+    return 'test';
+  }
+
+  const { unmount } = await renderHook(useTestHook);
+  expect(cleanupCalled).toBe(false);
+
+  await unmount();
+  expect(cleanupCalled).toBe(true);
+});
+
+test('handles hook with cleanup and re-initialization', async () => {
+  let effectCount = 0;
+  let cleanupCount = 0;
+
+  function useTestHook(props: { key: string }) {
+    const [value, setValue] = React.useState(props.key);
+
+    React.useEffect(() => {
+      effectCount++;
+      setValue(`${props.key}-effect`);
+
+      return () => {
+        cleanupCount++;
+      };
+    }, [props.key]);
+
+    return value;
+  }
+
+  const { result, rerender, unmount } = await renderHook(useTestHook, {
+    initialProps: { key: 'initial' },
+  });
+
+  expect(result.current).toBe('initial-effect');
+  expect(effectCount).toBe(1);
+  expect(cleanupCount).toBe(0);
+
+  await rerender({ key: 'updated' });
+  expect(result.current).toBe('updated-effect');
+  expect(effectCount).toBe(2);
+  expect(cleanupCount).toBe(1);
+
+  await unmount();
+  expect(effectCount).toBe(2);
+  expect(cleanupCount).toBe(2);
 });
 
 test('handles hook with suspense', async () => {
@@ -226,41 +278,4 @@ test('handles custom hooks with complex logic', async () => {
     result.current.decrement();
   });
   expect(result.current.count).toBe(4);
-});
-
-test('handles hook with cleanup and re-initialization', async () => {
-  let effectCount = 0;
-  let cleanupCount = 0;
-
-  function useTestHook(props: { key: string }) {
-    const [value, setValue] = React.useState(props.key);
-
-    React.useEffect(() => {
-      effectCount++;
-      setValue(`${props.key}-effect`);
-
-      return () => {
-        cleanupCount++;
-      };
-    }, [props.key]);
-
-    return value;
-  }
-
-  const { result, rerender, unmount } = await renderHook(useTestHook, {
-    initialProps: { key: 'initial' },
-  });
-
-  expect(result.current).toBe('initial-effect');
-  expect(effectCount).toBe(1);
-  expect(cleanupCount).toBe(0);
-
-  await rerender({ key: 'updated' });
-  expect(result.current).toBe('updated-effect');
-  expect(effectCount).toBe(2);
-  expect(cleanupCount).toBe(1);
-
-  await unmount();
-  expect(effectCount).toBe(2);
-  expect(cleanupCount).toBe(2);
 });

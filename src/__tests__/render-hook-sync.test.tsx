@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { deprecated_renderHookSync } from '../pure';
 
-test('gives committed result', () => {
+test('renders hook and returns committed result', () => {
   const { result } = deprecated_renderHookSync(() => {
     const [state, setState] = React.useState(1);
 
@@ -17,7 +17,45 @@ test('gives committed result', () => {
   expect(result.current).toEqual([2, expect.any(Function)]);
 });
 
-test('allows rerendering', () => {
+test('works with wrapper option', () => {
+  const Context = React.createContext('default');
+  function Wrapper({ children }: { children: ReactNode }) {
+    return <Context.Provider value="provided">{children}</Context.Provider>;
+  }
+  const { result } = deprecated_renderHookSync(
+    () => {
+      return React.useContext(Context);
+    },
+    {
+      wrapper: Wrapper,
+    },
+  );
+
+  expect(result.current).toEqual('provided');
+});
+
+test('works with initialProps option', () => {
+  const { result, rerender } = deprecated_renderHookSync(
+    (props: { branch: 'left' | 'right' }) => {
+      const [left, setLeft] = React.useState('left');
+      const [right, setRight] = React.useState('right');
+
+      switch (props.branch) {
+        case 'left':
+          return [left, setLeft];
+        case 'right':
+          return [right, setRight];
+        default:
+          throw new Error('No Props passed. This is a bug in the implementation');
+      }
+    },
+    { initialProps: { branch: 'left' } },
+  );
+
+  expect(result.current).toEqual(['left', expect.any(Function)]);
+});
+
+test('rerender updates hook with new props', () => {
   const { result, rerender } = deprecated_renderHookSync(
     (props: { branch: 'left' | 'right' }) => {
       const [left, setLeft] = React.useState('left');
@@ -41,21 +79,24 @@ test('allows rerendering', () => {
   expect(result.current).toEqual(['right', expect.any(Function)]);
 });
 
-test('allows wrapper components', () => {
-  const Context = React.createContext('default');
-  function Wrapper({ children }: { children: ReactNode }) {
-    return <Context.Provider value="provided">{children}</Context.Provider>;
-  }
-  const { result } = deprecated_renderHookSync(
-    () => {
-      return React.useContext(Context);
-    },
-    {
-      wrapper: Wrapper,
-    },
-  );
+test('unmount triggers cleanup effects', () => {
+  let cleanupCalled = false;
 
-  expect(result.current).toEqual('provided');
+  function useTestHook() {
+    React.useEffect(() => {
+      return () => {
+        cleanupCalled = true;
+      };
+    }, []);
+
+    return 'test';
+  }
+
+  const { unmount } = deprecated_renderHookSync(useTestHook);
+  expect(cleanupCalled).toBe(false);
+
+  unmount();
+  expect(cleanupCalled).toBe(true);
 });
 
 function useMyHook<T>(param: T) {
