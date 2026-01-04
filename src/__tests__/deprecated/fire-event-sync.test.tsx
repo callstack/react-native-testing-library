@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import { deprecated_fireEventSync, render, screen } from '..';
+import { deprecated_fireEventSync, render, screen } from '../..';
 
 type OnPressComponentProps = {
   onPress: () => void;

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import * as React from 'react';
 
-import { deprecated_renderHookSync } from '../pure';
+import { deprecated_renderHookSync } from '../../pure';
 
 test('renders hook and returns committed result', () => {
   const { result } = deprecated_renderHookSync(() => {
