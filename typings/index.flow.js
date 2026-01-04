@@ -286,9 +286,21 @@ type FireEventFunction = (
   element: ReactTestInstance,
   eventName: string,
   ...data: Array<any>
-) => any;
+) => Promise<any>;
 
 type FireEventAPI = FireEventFunction & {
+  press: (element: ReactTestInstance, ...data: Array<any>) => Promise<any>,
+  changeText: (element: ReactTestInstance, ...data: Array<any>) => Promise<any>,
+  scroll: (element: ReactTestInstance, ...data: Array<any>) => Promise<any>,
+};
+
+type DeprecatedFireEventSyncFunction = (
+  element: ReactTestInstance,
+  eventName: string,
+  ...data: Array<any>
+) => any;
+
+type DeprecatedFireEventSyncAPI = DeprecatedFireEventSyncFunction & {
   press: (element: ReactTestInstance, ...data: Array<any>) => any,
   changeText: (element: ReactTestInstance, ...data: Array<any>) => any,
   scroll: (element: ReactTestInstance, ...data: Array<any>) => any,
@@ -325,6 +337,7 @@ declare module '@testing-library/react-native' {
 
   declare export var cleanup: () => void;
   declare export var fireEvent: FireEventAPI;
+  declare export var deprecated_fireEventSync: DeprecatedFireEventSyncAPI;
 
   declare export var waitFor: WaitForFunction;
 
