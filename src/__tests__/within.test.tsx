@@ -4,7 +4,7 @@ import { Text, TextInput, View } from 'react-native';
 import { getQueriesForElement, render, within } from '..';
 
 test('within() exposes basic queries', async () => {
-  const rootQueries = render(
+  const rootQueries = await render(
     <View>
       <View accessibilityHint="first">
         <Text>Same Text</Text>
@@ -41,7 +41,7 @@ test('within() exposes basic queries', async () => {
 });
 
 test('within() exposes a11y queries', async () => {
-  const rootQueries = render(
+  const rootQueries = await render(
     <View>
       <View accessibilityHint="first">
         <TextInput

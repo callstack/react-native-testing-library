@@ -1,12 +1,11 @@
 import * as React from 'react';
-import type { HostElement, Root, RootOptions } from 'universal-test-renderer';
+import type { HostElement, JsonElement, Root, RootOptions } from 'universal-test-renderer';
 
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
-import { ErrorWithStack } from './helpers/errors';
 import { renderWithAsyncAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
@@ -22,7 +21,7 @@ export interface RenderOptions {
   createNodeMock?: (element: React.ReactElement) => unknown;
 }
 
-export type RenderResult = ReturnType<typeof render>;
+export type RenderResult = Awaited<ReturnType<typeof render>>;
 
 /**
  * Renders test component deeply using React Test Renderer and exposes helpers
@@ -48,12 +47,6 @@ function buildRenderResult(
 ) {
   const container = renderer.container;
 
-  const rerender = (_component: React.ReactElement) => {
-    throw new ErrorWithStack(
-      '"rerender(...)" is not supported when using "render" use "await rerenderAsync(...)" instead',
-      rerender,
-    );
-  };
   const rerenderAsync = async (component: React.ReactElement) => {
     // eslint-disable-next-line require-await
     await act(async () => {
@@ -61,12 +54,6 @@ function buildRenderResult(
     });
   };
 
-  const unmount = () => {
-    throw new ErrorWithStack(
-      '"unmount()" is not supported when using "render" use "await unmountAsync()" instead',
-      unmount,
-    );
-  };
   const unmountAsync = async () => {
     // eslint-disable-next-line require-await
     await act(async () => {
@@ -74,17 +61,30 @@ function buildRenderResult(
     });
   };
 
+  const toJSON = (): JsonElement | null => {
+    const json = renderer.container.toJSON();
+    if (json?.children?.length === 0) {
+      return null;
+    }
+
+    if (json?.children?.length === 1 && typeof json.children[0] !== 'string') {
+      return json.children[0];
+    }
+
+    return json;
+  };
+
   addToCleanupQueue(unmountAsync);
 
   const result = {
     ...getQueriesForElement(renderer.container),
-    rerender,
+    rerender: rerenderAsync,
     rerenderAsync,
-    update: rerender, // alias for `rerender`
+    update: rerenderAsync, // alias for `rerender`
     updateAsync: rerenderAsync, // alias for `rerenderAsync`
-    unmount,
+    unmount: unmountAsync,
     unmountAsync,
-    toJSON: () => renderer.container.toJSON(),
+    toJSON,
     debug: makeDebug(renderer),
     get container(): HostElement {
       return renderer.container;

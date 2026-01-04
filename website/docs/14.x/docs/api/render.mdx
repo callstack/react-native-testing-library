@@ -84,8 +84,8 @@ This function is deprecated and provided for migration purposes only. Use async 
 ```tsx
 function deprecated_renderSync(
   component: React.Element<any>,
-  options?: DeprecatedRenderOptions
-): DeprecatedRenderResult;
+  options?: RenderSyncOptions
+): RenderSyncResult;
 ```
 
 The `deprecated_renderSync` function is the synchronous version of [`render`](#render). It was the default `render` function in previous versions but is now deprecated in favor of the async `render` function.

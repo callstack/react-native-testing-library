@@ -10,7 +10,7 @@ import { renderWithAct } from '../render-act';
 import { setRenderResult } from '../screen';
 import { getQueriesForElement } from '../within';
 
-export interface DeprecatedRenderOptions {
+export interface RenderSyncOptions {
   /**
    * Pass a React Component as the wrapper option to have it rendered around the inner element. This is most useful for creating
    * reusable custom render functions for common data providers.
@@ -28,17 +28,14 @@ export interface DeprecatedRenderOptions {
  */
 export default function deprecated_renderSync<T>(
   component: React.ReactElement<T>,
-  options: DeprecatedRenderOptions = {},
+  options: RenderSyncOptions = {},
 ) {
   return renderInternal(component, options);
 }
 
-export type DeprecatedRenderResult = ReturnType<typeof deprecated_renderSync>;
+export type RenderSyncResult = ReturnType<typeof deprecated_renderSync>;
 
-export function renderInternal<T>(
-  component: React.ReactElement<T>,
-  options?: DeprecatedRenderOptions,
-) {
+export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderSyncOptions) {
   const { wrapper: Wrapper } = options || {};
 
   // TODO allow passing some options

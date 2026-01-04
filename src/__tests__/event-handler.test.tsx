@@ -4,11 +4,11 @@ import { Text, View } from 'react-native';
 import { render, screen } from '..';
 import { getEventHandlerFromProps } from '../event-handler';
 
-test('getEventHandler strict mode', () => {
+test('getEventHandler strict mode', async () => {
   const onPress = jest.fn();
   const testOnlyOnPress = jest.fn();
 
-  render(
+  await render(
     <View>
       <Text testID="regular" onPress={onPress} />
       {/* @ts-expect-error Intentionally passing such props */}
@@ -31,11 +31,11 @@ test('getEventHandler strict mode', () => {
   expect(getEventHandlerFromProps(both.props, 'onPress')).toBe(undefined);
 });
 
-test('getEventHandler loose mode', () => {
+test('getEventHandler loose mode', async () => {
   const onPress = jest.fn();
   const testOnlyOnPress = jest.fn();
 
-  render(
+  await render(
     <View>
       <Text testID="regular" onPress={onPress} />
       {/* @ts-expect-error Intentionally passing such props */}

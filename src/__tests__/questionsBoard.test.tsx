@@ -44,7 +44,7 @@ test('form submits two answers', async () => {
   const onSubmit = jest.fn();
 
   const user = userEvent.setup();
-  render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
+  await render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
 
   const answerInputs = screen.getAllByLabelText('answer input');
   await user.type(answerInputs[0], 'a1');

@@ -38,7 +38,7 @@ afterEach(() => {
 });
 
 test('waits for element until it stops throwing', async () => {
-  render(<BananaContainer />);
+  await render(<BananaContainer />);
 
   await fireEvent.press(screen.getByText('Change freshness!'));
 
@@ -50,7 +50,7 @@ test('waits for element until it stops throwing', async () => {
 });
 
 test('waits for element until timeout is met', async () => {
-  render(<BananaContainer />);
+  await render(<BananaContainer />);
 
   await fireEvent.press(screen.getByText('Change freshness!'));
 
@@ -63,7 +63,7 @@ test('waits for element until timeout is met', async () => {
 
 test('waitFor defaults to asyncWaitTimeout config option', async () => {
   configure({ asyncUtilTimeout: 100 });
-  render(<BananaContainer />);
+  await render(<BananaContainer />);
 
   await fireEvent.press(screen.getByText('Change freshness!'));
   await expect(waitFor(() => screen.getByText('Fresh'))).rejects.toThrow();
@@ -75,7 +75,7 @@ test('waitFor defaults to asyncWaitTimeout config option', async () => {
 
 test('waitFor timeout option takes precendence over `asyncWaitTimeout` config option', async () => {
   configure({ asyncUtilTimeout: 2000 });
-  render(<BananaContainer />);
+  await render(<BananaContainer />);
 
   await fireEvent.press(screen.getByText('Change freshness!'));
   await expect(waitFor(() => screen.getByText('Fresh'), { timeout: 100 })).rejects.toThrow();
@@ -125,7 +125,7 @@ const Comp = ({ onPress }: { onPress: () => void }) => {
 
 test('waits for async event with fireEvent', async () => {
   const spy = jest.fn();
-  render(<Comp onPress={spy} />);
+  await render(<Comp onPress={spy} />);
 
   await fireEvent.press(screen.getByText('Trigger'));
 
@@ -138,7 +138,7 @@ test.each([false, true])(
   'waits for element until it stops throwing using fake timers (legacyFakeTimers = %s)',
   async (legacyFakeTimers) => {
     jest.useFakeTimers({ legacyFakeTimers });
-    render(<BananaContainer />);
+    await render(<BananaContainer />);
 
     await fireEvent.press(screen.getByText('Change freshness!'));
     expect(screen.queryByText('Fresh')).toBeNull();
@@ -294,7 +294,7 @@ test.each([
     }
 
     const onPress = jest.fn();
-    render(<Apple onPress={onPress} />);
+    await render(<Apple onPress={onPress} />);
 
     // Required: this `waitFor` will succeed on first check, because the "root" view is there
     // since the initial mount.

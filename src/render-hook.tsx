@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import deprecated_renderSync from './deprecated/render';
+import deprecated_renderSync from './deprecated/render-sync';
 import render from './render';
 import type { RefObject } from './types';
 

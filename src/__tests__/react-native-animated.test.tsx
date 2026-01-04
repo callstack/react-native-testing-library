@@ -44,7 +44,7 @@ describe('AnimatedView', () => {
   });
 
   it('should use native driver when useNativeDriver is true', async () => {
-    render(
+    await render(
       <AnimatedView fadeInDuration={250} useNativeDriver={true}>
         Test
       </AnimatedView>,
@@ -57,7 +57,7 @@ describe('AnimatedView', () => {
   });
 
   it('should not use native driver when useNativeDriver is false', async () => {
-    render(
+    await render(
       <AnimatedView fadeInDuration={250} useNativeDriver={false}>
         Test
       </AnimatedView>,

@@ -12,7 +12,7 @@ test('fireEvent can invoke press events for RNGH Pressable', async () => {
   const onPressOut = jest.fn();
   const onLongPress = jest.fn();
 
-  render(
+  await render(
     <View>
       <Pressable
         testID="pressable"
@@ -43,7 +43,7 @@ test('userEvent can invoke press events for RNGH Pressable', async () => {
   const { events, logEvent } = createEventLogger();
   const user = userEvent.setup();
 
-  render(
+  await render(
     <View>
       <Pressable
         testID="pressable"

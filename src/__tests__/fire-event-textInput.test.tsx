@@ -20,7 +20,7 @@ test('should fire only non-touch-related events on non-editable TextInput', asyn
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  render(
+  await render(
     <TextInput
       editable={false}
       testID="subject"
@@ -49,7 +49,7 @@ test('should fire only non-touch-related events on non-editable TextInput with n
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  render(
+  await render(
     <TextInput
       editable={false}
       testID="subject"
@@ -100,7 +100,7 @@ test('should fire only non-touch-related events on non-editable wrapped TextInpu
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  render(
+  await render(
     <WrappedTextInput
       editable={false}
       testID="subject"
@@ -132,7 +132,7 @@ test('should fire only non-touch-related events on non-editable double wrapped T
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  render(
+  await render(
     <DoubleWrappedTextInput
       editable={false}
       testID="subject"

@@ -9,8 +9,8 @@ function DoNotRenderChildren({ children }: { children: React.ReactNode }) {
   return null;
 }
 
-test('toBeEmptyElement() base case', () => {
-  render(
+test('toBeEmptyElement() base case', async () => {
+  await render(
     <View testID="not-empty">
       <View testID="empty" />
     </View>,
@@ -37,8 +37,8 @@ test('toBeEmptyElement() base case', () => {
   `);
 });
 
-test('toBeEmptyElement() ignores composite-only children', () => {
-  render(
+test('toBeEmptyElement() ignores composite-only children', async () => {
+  await render(
     <View testID="view">
       <DoNotRenderChildren>
         <View testID="not-rendered" />

@@ -96,8 +96,8 @@ To ease migration, we provide `deprecated_renderSync` which maintains the same s
 ```ts
 function deprecated_renderSync(
   component: React.Element<any>,
-  options?: DeprecatedRenderOptions
-): DeprecatedRenderResult;
+  options?: RenderSyncOptions
+): RenderSyncResult;
 ```
 
 **⚠️ Deprecated**: This function is provided for migration purposes only. Use async `render` instead.

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 
 import type { RenderAPI } from '../..';
-import { fireEvent, deprecated_renderSync, screen } from '../..';
+import { deprecated_renderSync, fireEvent, screen } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
