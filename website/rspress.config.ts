@@ -19,7 +19,7 @@ export default defineConfig({
   },
   multiVersion: {
     default: '13.x',
-    versions: ['12.x', '13.x'],
+    versions: ['12.x', '13.x', '14.x'],
   },
   route: {
     cleanUrls: true,
