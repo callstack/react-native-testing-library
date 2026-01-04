@@ -56,6 +56,13 @@ function buildRenderResult(
     });
   };
 
+  const rerenderAsync = async (component: React.ReactElement) => {
+    // eslint-disable-next-line require-await
+    await act(async () => {
+      renderer.render(wrap(component));
+    });
+  };
+
   const unmount = () => {
     void act(() => {
       renderer.unmount();
@@ -106,7 +113,12 @@ function buildRenderResult(
     },
   };
 
-  setRenderResult(result);
+  setRenderResult({
+    ...result,
+    rerender: rerenderAsync,
+    update: rerenderAsync,
+    unmount: unmountAsync,
+  });
 
   return result;
 }

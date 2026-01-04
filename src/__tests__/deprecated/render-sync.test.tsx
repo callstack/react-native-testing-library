@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 
-import { deprecated_renderSync, fireEvent, screen } from '../..';
+import { deprecated_fireEventSync, deprecated_renderSync, screen } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -78,22 +78,22 @@ test('supports basic rendering', () => {
   expect(screen.root).toBeOnTheScreen();
 });
 
-test('rerender', async () => {
+test('rerender', () => {
   const fn = jest.fn();
-  deprecated_renderSync(<Banana onUpdate={fn} />);
+  const { rerender } = deprecated_renderSync(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(0);
 
-  await fireEvent.press(screen.getByText('Change freshness!'));
+  deprecated_fireEventSync.press(screen.getByText('Change freshness!'));
   expect(fn).toHaveBeenCalledTimes(1);
 
-  void screen.rerender(<Banana onUpdate={fn} />);
+  rerender(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(2);
 });
 
 test('unmount', () => {
   const fn = jest.fn();
-  deprecated_renderSync(<Banana onUnmount={fn} />);
-  void screen.unmount();
+  const { unmount } = deprecated_renderSync(<Banana onUnmount={fn} />);
+  unmount();
   expect(fn).toHaveBeenCalled();
 });
 
@@ -104,9 +104,9 @@ test('unmount should handle cleanup functions', () => {
     return null;
   };
 
-  deprecated_renderSync(<Component />);
+  const { unmount } = deprecated_renderSync(<Component />);
 
-  void screen.unmount();
+  unmount();
 
   expect(cleanup).toHaveBeenCalledTimes(1);
 });
@@ -156,8 +156,6 @@ test('renders options.wrapper around updated node', () => {
       testID="wrapper"
     >
       <View
-        accessibilityHint="test"
-        accessibilityLabel="test"
         testID="inner"
       />
     </View>

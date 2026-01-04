@@ -1,9 +1,8 @@
 import type { HostElement } from 'universal-test-renderer';
 
-import type { RenderSyncResult } from './deprecated/render-sync';
 import type { RenderResult } from './render';
 
-const SCREEN_ERROR = '`render` method has not been called';
+const SCREEN_ERROR = '`render` function has not been called';
 
 const notImplemented = () => {
   throw new Error(SCREEN_ERROR);
@@ -84,8 +83,8 @@ const defaultScreen: Screen = {
 
 export let screen: Screen = defaultScreen;
 
-export function setRenderResult(renderResult: RenderResult | RenderSyncResult) {
-  screen = renderResult as RenderResult;
+export function setRenderResult(renderResult: RenderResult) {
+  screen = renderResult;
 }
 
 export function clearRenderResult() {
