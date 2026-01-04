@@ -837,7 +837,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-flow-strip-types@npm:^7.25.2, @babel/plugin-transform-flow-strip-types@npm:^7.27.1":
+"@babel/plugin-transform-flow-strip-types@npm:^7.25.2":
   version: 7.27.1
   resolution: "@babel/plugin-transform-flow-strip-types@npm:7.27.1"
   dependencies:
@@ -1437,19 +1437,6 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 10c0/d1b730158de290f1c54ed7db0f4fed3f82db5f868ab0a4cb3fc2ea76ed683b986ae136f6e7eb0b44b91bc9a99039a2559851656b4fd50193af1a815a3e32e524
-  languageName: node
-  linkType: hard
-
-"@babel/preset-flow@npm:^7.27.1":
-  version: 7.27.1
-  resolution: "@babel/preset-flow@npm:7.27.1"
-  dependencies:
-    "@babel/helper-plugin-utils": "npm:^7.27.1"
-    "@babel/helper-validator-option": "npm:^7.27.1"
-    "@babel/plugin-transform-flow-strip-types": "npm:^7.27.1"
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-  checksum: 10c0/252216c91ba3cc126f10c81c1df495ef2c622687d17373bc619354a7fb7280ea83f434ed1e7149dbddd712790d16ab60f5b864d007edd153931d780f834e52c1
   languageName: node
   linkType: hard
 
@@ -3027,7 +3014,6 @@ __metadata:
     "@babel/core": "npm:^7.28.5"
     "@babel/plugin-transform-strict-mode": "npm:^7.27.1"
     "@babel/preset-env": "npm:^7.28.5"
-    "@babel/preset-flow": "npm:^7.27.1"
     "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.28.5"
     "@callstack/eslint-config": "npm:^15.0.0"
@@ -3042,7 +3028,6 @@ __metadata:
     del-cli: "npm:^7.0.0"
     eslint: "npm:^9.39.1"
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
-    flow-bin: "npm:~0.170.0"
     jest: "npm:^30.2.0"
     jest-matcher-utils: "npm:^30.2.0"
     picocolors: "npm:^1.1.1"
@@ -5842,15 +5827,6 @@ __metadata:
   version: 3.3.3
   resolution: "flatted@npm:3.3.3"
   checksum: 10c0/e957a1c6b0254aa15b8cce8533e24165abd98fadc98575db082b786b5da1b7d72062b81bfdcd1da2f4d46b6ed93bec2434e62333e9b4261d79ef2e75a10dd538
-  languageName: node
-  linkType: hard
-
-"flow-bin@npm:~0.170.0":
-  version: 0.170.0
-  resolution: "flow-bin@npm:0.170.0"
-  bin:
-    flow: cli.js
-  checksum: 10c0/cdb54136cc334915ef788350f9b6c87024ddda2b676a70497fa38da05b373171d61f27f23796e625cdc3f96019dc05be9aadd629332335e8b1a9d40ba21605bd
   languageName: node
   linkType: hard
 

@@ -21,7 +21,7 @@ The project uses `yarn` for dependency management and script execution.
 - **Type Check:** `yarn typecheck` (Runs TypeScript compiler)
 - **Format Check:** `yarn prettier`
 - **Validate All:** `yarn validate` (Runs Prettier, ESLint, Typecheck, and Tests in sequence)
-- **Build Project:** `yarn build` (Cleans, builds JS with Babel, builds TS types, and copies Flow types)
+- **Build Project:** `yarn build` (Cleans, builds JS with Babel, and builds TS types)
 
 ## Development Conventions
 
