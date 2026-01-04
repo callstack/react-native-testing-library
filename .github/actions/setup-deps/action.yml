@@ -1,6 +1,14 @@
 name: Setup deps
 description: Setup Node.js and install dependencies
 
+inputs:
+  react-version:
+    description: React version to install (e.g., ^19.2.0)
+    required: false
+  react-native-version:
+    description: React Native version to install (e.g., 0.83.1)
+    required: false
+
 runs:
   using: composite
   steps:
@@ -24,4 +32,10 @@ runs:
     - name: Install deps
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
+      shell: bash
+
+    - name: Switch to React and React Native versions
+      if: inputs.react-version != '' && inputs.react-native-version != ''
+      run: |
+        yarn add -D react@${{ inputs.react-version }} @types/react@${{ inputs.react-version }} react-native@${{ inputs.react-native-version }} @react-native/babel-preset@${{ inputs.react-native-version }}
       shell: bash
