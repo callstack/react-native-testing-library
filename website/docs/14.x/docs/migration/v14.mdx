@@ -61,6 +61,146 @@ it('should press button', () => {
 });
 ```
 
+### `render` is now async by default
+
+In v14, `render` is now async by default and returns a Promise. The previous synchronous `render` function has been renamed to `deprecated_renderSync`. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+
+**Before (v13):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should render component', () => {
+  render(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+```
+
+**After (v14):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should render component', async () => {
+  await render(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+```
+
+### Migration path
+
+To ease migration, we provide `deprecated_renderSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
+
+#### `deprecated_renderSync` {#deprecated-render-sync}
+
+```ts
+function deprecated_renderSync(
+  component: React.Element<any>,
+  options?: DeprecatedRenderOptions
+): DeprecatedRenderResult;
+```
+
+**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `render` instead.
+
+The synchronous version of `render` that returns immediately without awaiting React updates. This maintains backward compatibility with v13 tests but is not recommended for new code.
+
+```ts
+// Old v13 code (still works but deprecated)
+import { deprecated_renderSync } from '@testing-library/react-native';
+
+it('should render component', () => {
+  deprecated_renderSync(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+```
+
+### Step-by-step migration guide
+
+To migrate from `deprecated_renderSync` to `render`:
+
+### 1. Add `async` to your test function
+
+```ts
+// Before
+it('should render component', () => {
+
+// After
+it('should render component', async () => {
+```
+
+### 2. Await `render`
+
+```ts
+// Before
+render(<MyComponent />);
+
+// After
+await render(<MyComponent />);
+```
+
+### 3. Update `rerender` calls to use `rerenderAsync` and await
+
+```ts
+// Before
+screen.rerender(<MyComponent />);
+
+// After
+await screen.rerenderAsync(<MyComponent />);
+```
+
+### 4. Update `unmount` calls to use `unmountAsync` and await
+
+```ts
+// Before
+screen.unmount();
+
+// After
+await screen.unmountAsync();
+```
+
+### Complete example
+
+**Before (v13):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should update component', () => {
+  render(<Counter initialCount={0} />);
+  expect(screen.getByText('Count: 0')).toBeOnTheScreen();
+
+  screen.rerender(<Counter initialCount={5} />);
+  expect(screen.getByText('Count: 5')).toBeOnTheScreen();
+
+  screen.unmount();
+});
+```
+
+**After (v14):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should update component', async () => {
+  await render(<Counter initialCount={0} />);
+  expect(screen.getByText('Count: 0')).toBeOnTheScreen();
+
+  await screen.rerenderAsync(<Counter initialCount={5} />);
+  expect(screen.getByText('Count: 5')).toBeOnTheScreen();
+
+  await screen.unmountAsync();
+});
+```
+
+## Benefits of async `render`
+
+- **React 19 compatibility**: Works seamlessly with React 19's async features
+- **Suspense support**: Properly handles React Suspense boundaries and `React.use()`
+- **Better timing**: Ensures all pending React updates are executed before assertions
+- **Future-proof**: Aligns with React's direction toward async rendering
+
+For more details, see the [`render` API documentation](/docs/api/render).
+
 ### `renderHook` is now async by default
 
 In v14, `renderHook` is now async by default and returns a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.

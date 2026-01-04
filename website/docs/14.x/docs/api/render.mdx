@@ -3,19 +3,19 @@
 ## `render` function {#render}
 
 ```jsx
-function render(
+async function render(
   component: React.Element<any>,
   options?: RenderOptions
-): RenderResult
+): Promise<RenderResult>
 ```
 
-The `render` function is the entry point for writing React Native Testing Library tests. It deeply renders the given React element and returns helpers to query the output components' structure.
+The `render` function is the entry point for writing React Native Testing Library tests. It deeply renders the given React element and returns helpers to query the output components' structure. This function is async by default and uses async `act` internally to ensure all pending React updates are executed during rendering, making it compatible with React 19, React Suspense, and `React.use()`.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-test('basic test', () => {
-  render(<MyApp />);
+test('basic test', async () => {
+  await render(<MyApp />);
   expect(screen.getAllByRole('button', { name: 'start' })).toBeOnTheScreen();
 });
 ```
@@ -63,46 +63,52 @@ React Test Renderer does not enforce this check; hence, by default, React Native
 
 ### Result
 
-The `render` function returns the same queries and utilities as the [`screen`](docs/api/screen) object. We recommended using the `screen` object as more developer-friendly way.
+The `render` function returns a promise that resolves to the same queries and utilities as the [`screen`](docs/api/screen) object. We recommend using the `screen` object for queries and the lifecycle methods from the render result when needed.
 
 See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
 
-## `renderAsync` function {#render-async}
+:::warning Async lifecycle methods
 
-:::info RNTL minimal version
+When using `render`, you have to use corresponding lifecycle methods: `rerenderAsync` and `unmountAsync` instead of their sync versions.
 
-This API requires RNTL v13.3.0 or later.
+:::
+
+## `deprecated_renderSync` function {#deprecated-render-sync}
+
+:::warning Deprecated
+
+This function is deprecated and provided for migration purposes only. Use async `render` instead.
 
 :::
 
 ```tsx
-async function renderAsync(
+function deprecated_renderSync(
   component: React.Element<any>,
-  options?: RenderAsyncOptions
-): Promise<RenderAsyncResult>;
+  options?: DeprecatedRenderOptions
+): DeprecatedRenderResult;
 ```
 
-The `renderAsync` function is the async version of [`render`](#render) designed for working with React 19 and React Suspense. This function uses async `act` function internally to ensure all pending React updates are executed during rendering.
+The `deprecated_renderSync` function is the synchronous version of [`render`](#render). It was the default `render` function in previous versions but is now deprecated in favor of the async `render` function.
 
 ```jsx
-import { renderAsync, screen } from '@testing-library/react-native';
+import { deprecated_renderSync, screen } from '@testing-library/react-native';
 
-test('async component test', async () => {
-  await renderAsync(<MyAsyncApp />);
+test('sync component test', () => {
+  deprecated_renderSync(<MyApp />);
   expect(screen.getAllByRole('button', { name: 'start' })).toBeOnTheScreen();
 });
 ```
 
 ### Options
 
-`renderAsync` accepts the same options as `render`.
+`deprecated_renderSync` accepts the same options as `render`.
 
 ### Result
 
-The `renderAsync` function returns a promise that resolves to the same queries and utilities as the [`screen`](docs/api/screen) object. We recommend using the `screen` object for queries and the lifecycle methods from the render result when needed.
+The `deprecated_renderSync` function returns the same queries and utilities as the [`screen`](docs/api/screen) object. We recommended using the `screen` object as more developer-friendly way.
 
-:::warning Async lifecycle methods
+:::note Migration
 
-When using `renderAsync`, you have to use correspodning lifecycle methods: `rerenderAsync` and `unmountAsync` instead of their sync versions.
+To migrate from `deprecated_renderSync` to `render`, see the [migration guide](/docs/migration/v14#render-is-now-async-by-default).
 
 :::

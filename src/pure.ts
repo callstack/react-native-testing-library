@@ -1,8 +1,8 @@
 export { default as act } from './act';
 export { default as cleanup, cleanupAsync } from './cleanup';
 export { fireEvent, deprecated_fireEventSync } from './fire-event';
+export { default as deprecated_renderSync } from './deprecated/render';
 export { default as render } from './render';
-export { default as renderAsync } from './render-async';
 export { default as waitFor } from './wait-for';
 export { default as waitForElementToBeRemoved } from './wait-for-element-to-be-removed';
 export { within, getQueriesForElement } from './within';
@@ -15,12 +15,11 @@ export { screen } from './screen';
 export { userEvent } from './user-event';
 
 export type {
-  RenderOptions,
-  RenderResult,
-  RenderResult as RenderAPI,
+  DeprecatedRenderOptions,
+  DeprecatedRenderResult,
   DebugFunction,
-} from './render';
-export type { RenderAsyncOptions, RenderAsyncResult } from './render-async';
+} from './deprecated/render';
+export type { RenderOptions, RenderResult, RenderResult as RenderAPI } from './render';
 export type { RenderHookOptions, RenderHookResult, RenderHookSyncResult } from './render-hook';
 export type { Config } from './config';
 export type { UserEventConfig } from './user-event';

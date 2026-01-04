@@ -6,11 +6,11 @@ When testing components that use these features, React requires the [`async act`
 
 ## New async APIs
 
-RNTL 13.3 introduces async versions of the core testing APIs to handle React 19's async rendering:
+RNTL 14 introduces async versions of the core testing APIs to handle React 19's async rendering:
 
 **Rendering APIs:**
 
-- **[`renderAsync`](docs/api/render#render-async)** - async version of `render`
+- **[`render`](docs/api/render#render)** - now async by default (was `renderAsync` in v13)
 - **[`screen.rerenderAsync`](docs/api/screen#rerender-async)** - async version of `screen.rerender`
 - **[`screen.unmountAsync`](docs/api/screen#unmount-async)** - async version of `screen.unmount`
 
@@ -30,21 +30,21 @@ Many existing APIs continue to work without modification:
 
 ### Making tests async
 
-The main change is using [`renderAsync`](docs/api/render#renderasync) instead of `render`, which requires:
+The main change is using [`render`](docs/api/render#render) which is now async by default, which requires:
 
 1. Making your test function `async`
-2. Adding `await` before `renderAsync`
+2. Adding `await` before `render`
 
 ```tsx
-// Synchronous approach (React 18 pattern)
+// Synchronous approach (deprecated in v14)
 test('my component', () => {
-  render(<MyComponent />);
+  deprecated_renderSync(<MyComponent />);
   expect(screen.getByText('Hello')).toBeOnTheScreen();
 });
 
-// Async approach (React 19 ready)
+// Async approach (React 19 ready, default in v14)
 test('my component', async () => {
-  await renderAsync(<MyComponent />);
+  await render(<MyComponent />);
   expect(screen.getByText('Hello')).toBeOnTheScreen();
 });
 ```
@@ -61,16 +61,16 @@ Use the async APIs when your components:
 
 ### New projects
 
-Use the async-ready APIs (`renderAsync`, User Event, Jest Matchers, etc.) from the start. They work with both React 18 and React 19.
+Use the async-ready APIs (`render`, User Event, Jest Matchers, etc.) from the start. They work with both React 18 and React 19.
 
 ### Existing projects
 
 You can migrate gradually:
 
-- **Existing tests** continue to work with synchronous APIs (`render`, etc.)
-- **New tests** should use async APIs
-- **Tests with Suspense/`React.use()`** must use async APIs
+- **Existing tests** can use `deprecated_renderSync` for backward compatibility
+- **New tests** should use async `render` (default in v14)
+- **Tests with Suspense/`React.use()`** must use async `render`
 
-### Future direction
+### Migration
 
-Async APIs will become the default recommendation as React 19 adoption grows. Starting with them now saves migration effort later.
+See the [v14 migration guide](/docs/migration/v14#render-is-now-async-by-default) for detailed migration steps from `deprecated_renderSync` to `render`.

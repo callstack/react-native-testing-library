@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 
-import type { RenderAPI } from '..';
-import { fireEvent, render, screen } from '..';
+import type { RenderAPI } from '../..';
+import { fireEvent, deprecated_renderSync, screen } from '../..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
@@ -75,13 +75,13 @@ class Banana extends React.Component<any, { fresh: boolean }> {
 }
 
 test('supports basic rendering', () => {
-  render(<View testID="test" />);
+  deprecated_renderSync(<View testID="test" />);
   expect(screen.root).toBeOnTheScreen();
 });
 
 test('rerender', async () => {
   const fn = jest.fn();
-  render(<Banana onUpdate={fn} />);
+  deprecated_renderSync(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(0);
 
   await fireEvent.press(screen.getByText('Change freshness!'));
@@ -93,7 +93,7 @@ test('rerender', async () => {
 
 test('unmount', () => {
   const fn = jest.fn();
-  render(<Banana onUnmount={fn} />);
+  deprecated_renderSync(<Banana onUnmount={fn} />);
   screen.unmount();
   expect(fn).toHaveBeenCalled();
 });
@@ -105,7 +105,7 @@ test('unmount should handle cleanup functions', () => {
     return null;
   };
 
-  render(<Component />);
+  deprecated_renderSync(<Component />);
 
   screen.unmount();
 
@@ -113,7 +113,7 @@ test('unmount should handle cleanup functions', () => {
 });
 
 test('toJSON renders host output', () => {
-  render(<MyButton>press me</MyButton>);
+  deprecated_renderSync(<MyButton>press me</MyButton>);
   expect(screen).toMatchSnapshot();
 });
 
@@ -123,7 +123,7 @@ test('renders options.wrapper around node', () => {
     <View testID="wrapper">{children}</View>
   );
 
-  render(<View testID="inner" />, {
+  deprecated_renderSync(<View testID="inner" />, {
     wrapper: WrapperComponent,
   });
 
@@ -145,7 +145,7 @@ test('renders options.wrapper around updated node', () => {
     <View testID="wrapper">{children}</View>
   );
 
-  render(<View testID="inner" />, {
+  deprecated_renderSync(<View testID="inner" />, {
     wrapper: WrapperComponent,
   });
 
@@ -166,7 +166,7 @@ test('renders options.wrapper around updated node', () => {
 });
 
 test('returns host root', () => {
-  render(<View testID="inner" />);
+  deprecated_renderSync(<View testID="inner" />);
 
   expect(screen.root).toBeDefined();
   expect(screen.root?.type).toBe('View');
@@ -174,20 +174,20 @@ test('returns host root', () => {
 });
 
 test('RenderAPI type', () => {
-  render(<Banana />) as RenderAPI;
+  deprecated_renderSync(<Banana />) as RenderAPI;
   expect(true).toBeTruthy();
 });
 
 test('returned output can be spread using rest operator', () => {
   // Next line should not throw
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { rerender, ...rest } = render(<View testID="test" />);
+  const { rerender, ...rest } = deprecated_renderSync(<View testID="test" />);
   expect(rest).toBeTruthy();
 });
 
 test('rerenderAsync updates the component asynchronously', async () => {
   const fn = jest.fn();
-  const result = render(<Banana onUpdate={fn} />);
+  const result = deprecated_renderSync(<Banana onUpdate={fn} />);
 
   await result.rerenderAsync(<Banana onUpdate={fn} />);
 
@@ -196,7 +196,7 @@ test('rerenderAsync updates the component asynchronously', async () => {
 
 test('updateAsync is an alias for rerenderAsync', async () => {
   const fn = jest.fn();
-  const result = render(<Banana onUpdate={fn} />);
+  const result = deprecated_renderSync(<Banana onUpdate={fn} />);
 
   await result.updateAsync(<Banana onUpdate={fn} />);
 
@@ -205,7 +205,7 @@ test('updateAsync is an alias for rerenderAsync', async () => {
 
 test('unmountAsync unmounts the component asynchronously', async () => {
   const fn = jest.fn();
-  const result = render(<Banana onUnmount={fn} />);
+  const result = deprecated_renderSync(<Banana onUnmount={fn} />);
 
   await result.unmountAsync();
 

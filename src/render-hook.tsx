@@ -1,7 +1,7 @@
 import * as React from 'react';
 
+import deprecated_renderSync from './deprecated/render';
 import render from './render';
-import renderAsync from './render-async';
 import type { RefObject } from './types';
 
 export type RenderHookResult<Result, Props> = {
@@ -47,7 +47,7 @@ export async function renderHook<Result, Props>(
   }
 
   const { initialProps, ...renderOptions } = options ?? {};
-  const { rerenderAsync: rerenderComponentAsync, unmountAsync } = await renderAsync(
+  const { rerenderAsync: rerenderComponentAsync, unmountAsync } = await render(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
     <HookContainer hookProps={initialProps} />,
     renderOptions,
@@ -77,7 +77,7 @@ export function deprecated_renderHookSync<Result, Props>(
   }
 
   const { initialProps, ...renderOptions } = options ?? {};
-  const { rerender: rerenderComponent, unmount } = render(
+  const { rerender: rerenderComponent, unmount } = deprecated_renderSync(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
     <HookContainer hookProps={initialProps} />,
     renderOptions,

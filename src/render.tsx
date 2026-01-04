@@ -1,12 +1,13 @@
 import * as React from 'react';
-import type { HostElement, JsonElement, Root, RootOptions } from 'universal-test-renderer';
+import type { HostElement, Root, RootOptions } from 'universal-test-renderer';
 
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
-import { renderWithAct } from './render-act';
+import { ErrorWithStack } from './helpers/errors';
+import { renderWithAsyncAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
@@ -27,18 +28,17 @@ export type RenderResult = ReturnType<typeof render>;
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export default function render<T>(component: React.ReactElement<T>, options: RenderOptions = {}) {
-  return renderInternal(component, options);
-}
-
-export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderOptions) {
+export default async function render<T>(
+  component: React.ReactElement<T>,
+  options: RenderOptions = {},
+) {
   const { wrapper: Wrapper } = options || {};
 
   // TODO allow passing some options
   const rendererOptions: RootOptions = {};
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-  const renderer = renderWithAct(wrap(component), rendererOptions);
+  const renderer = await renderWithAsyncAct(wrap(component), rendererOptions);
   return buildRenderResult(renderer, wrap);
 }
 
@@ -46,10 +46,13 @@ function buildRenderResult(
   renderer: Root,
   wrap: (element: React.ReactElement) => React.JSX.Element,
 ) {
-  const rerender = (component: React.ReactElement) => {
-    void act(() => {
-      renderer.render(wrap(component));
-    });
+  const container = renderer.container;
+
+  const rerender = (_component: React.ReactElement) => {
+    throw new ErrorWithStack(
+      '"rerender(...)" is not supported when using "render" use "await rerenderAsync(...)" instead',
+      rerender,
+    );
   };
   const rerenderAsync = async (component: React.ReactElement) => {
     // eslint-disable-next-line require-await
@@ -59,9 +62,10 @@ function buildRenderResult(
   };
 
   const unmount = () => {
-    void act(() => {
-      renderer.unmount();
-    });
+    throw new ErrorWithStack(
+      '"unmount()" is not supported when using "render" use "await unmountAsync()" instead',
+      unmount,
+    );
   };
   const unmountAsync = async () => {
     // eslint-disable-next-line require-await
@@ -70,36 +74,23 @@ function buildRenderResult(
     });
   };
 
-  const toJSON = (): JsonElement | null => {
-    const json = renderer.container.toJSON();
-    if (json?.children?.length === 0) {
-      return null;
-    }
-
-    if (json?.children?.length === 1 && typeof json.children[0] !== 'string') {
-      return json.children[0];
-    }
-
-    return json;
-  };
-
   addToCleanupQueue(unmountAsync);
 
   const result = {
     ...getQueriesForElement(renderer.container),
     rerender,
     rerenderAsync,
-    update: rerender, // alias for 'rerender'
+    update: rerender, // alias for `rerender`
     updateAsync: rerenderAsync, // alias for `rerenderAsync`
     unmount,
     unmountAsync,
-    toJSON,
+    toJSON: () => renderer.container.toJSON(),
     debug: makeDebug(renderer),
     get container(): HostElement {
       return renderer.container;
     },
     get root(): HostElement | null {
-      const firstChild = renderer.container.children[0];
+      const firstChild = container.children[0];
       if (typeof firstChild === 'string') {
         throw new Error(
           'Invariant Violation: Root element must be a host element. Detected attempt to render a string within the root element.',

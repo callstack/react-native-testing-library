@@ -14,11 +14,11 @@ interface RenderWithProvidersProps {
   theme?: Theme;
 }
 
-export function renderWithProviders<T>(
+export async function renderWithProviders<T>(
   ui: React.ReactElement<T>,
   options?: RenderWithProvidersProps
 ) {
-  return render(
+  return await render(
     <UserProvider.Provider value={options?.user ?? null}>
       <ThemeProvider.Provider value={options?.theme ?? 'light'}>{ui}</ThemeProvider.Provider>
     </UserProvider.Provider>
@@ -31,13 +31,13 @@ import { screen } from '@testing-library/react-native';
 import { renderWithProviders } from '../test-utils';
 // ...
 
-test('renders WelcomeScreen with user', () => {
-  renderWithProviders(<WelcomeScreen />, { user: { name: 'Jar-Jar' } });
+test('renders WelcomeScreen with user', async () => {
+  await renderWithProviders(<WelcomeScreen />, { user: { name: 'Jar-Jar' } });
   expect(screen.getByText(/hello Jar-Jar/i)).toBeOnTheScreen();
 });
 
-test('renders WelcomeScreen without user', () => {
-  renderWithProviders(<WelcomeScreen />, { user: null });
+test('renders WelcomeScreen without user', async () => {
+  await renderWithProviders(<WelcomeScreen />, { user: null });
   expect(screen.getByText(/hello stranger/i)).toBeOnTheScreen();
 });
 ```

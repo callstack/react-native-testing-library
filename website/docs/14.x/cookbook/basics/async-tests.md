@@ -17,7 +17,7 @@ Consider a basic asynchronous test for a user signing in with correct credential
 test('User can sign in with correct credentials', async () => {
   // Typical test setup
   const user = userEvent.setup();
-  render(<App />);
+  await render(<App />);
 
   // No need to use async here, components are already rendered
   expect(screen.getByRole('header', { name: 'Sign in to Hello World App!' })).toBeOnTheScreen();

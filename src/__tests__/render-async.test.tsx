@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
-import { renderAsync, screen } from '..';
+import { render, screen } from '..';
 
 class Banana extends React.Component<any, { fresh: boolean }> {
   state = {
@@ -36,17 +36,17 @@ class Banana extends React.Component<any, { fresh: boolean }> {
   }
 }
 
-test('renderAsync renders component asynchronously', async () => {
-  await renderAsync(<View testID="test" />);
+test('render renders component asynchronously', async () => {
+  await render(<View testID="test" />);
   expect(screen.getByTestId('test')).toBeOnTheScreen();
 });
 
-test('renderAsync with wrapper option', async () => {
+test('render with wrapper option', async () => {
   const WrapperComponent = ({ children }: { children: React.ReactNode }) => (
     <View testID="wrapper">{children}</View>
   );
 
-  await renderAsync(<View testID="inner" />, {
+  await render(<View testID="inner" />, {
     wrapper: WrapperComponent,
   });
 
@@ -54,34 +54,34 @@ test('renderAsync with wrapper option', async () => {
   expect(screen.getByTestId('inner')).toBeTruthy();
 });
 
-test('rerender function throws error when used with renderAsync', async () => {
-  await renderAsync(<Banana />);
+test('rerender function throws error when used with render', async () => {
+  await render(<Banana />);
 
   expect(() => screen.rerender(<Banana />)).toThrowErrorMatchingInlineSnapshot(
-    `""rerender(...)" is not supported when using "renderAsync" use "await rerenderAsync(...)" instead"`,
+    `""rerender(...)" is not supported when using "render" use "await rerenderAsync(...)" instead"`,
   );
 });
 
 test('rerenderAsync function updates component asynchronously', async () => {
   const fn = jest.fn();
-  await renderAsync(<Banana onUpdate={fn} />);
+  await render(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(0);
 
   await screen.rerenderAsync(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(1);
 });
 
-test('unmount function throws error when used with renderAsync', async () => {
-  await renderAsync(<Banana />);
+test('unmount function throws error when used with render', async () => {
+  await render(<Banana />);
 
   expect(() => screen.unmount()).toThrowErrorMatchingInlineSnapshot(
-    `""unmount()" is not supported when using "renderAsync" use "await unmountAsync()" instead"`,
+    `""unmount()" is not supported when using "render" use "await unmountAsync()" instead"`,
   );
 });
 
 test('unmountAsync function unmounts component asynchronously', async () => {
   const fn = jest.fn();
-  await renderAsync(<Banana onUnmount={fn} />);
+  await render(<Banana onUnmount={fn} />);
 
   await screen.unmountAsync();
   expect(fn).toHaveBeenCalled();
