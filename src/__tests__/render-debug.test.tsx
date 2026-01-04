@@ -103,9 +103,9 @@ test('debug', () => {
   expect(`${mockCalls[2][0]}\n${mockCalls[2][1]}`).toMatchSnapshot('All Props');
 });
 
-test('debug changing component', () => {
+test('debug changing component', async () => {
   render(<Banana />);
-  fireEvent.press(screen.getByRole('button', { name: 'Change freshness!' }));
+  await fireEvent.press(screen.getByRole('button', { name: 'Change freshness!' }));
 
   screen.debug({ mapProps: null });
 

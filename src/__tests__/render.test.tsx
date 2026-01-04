@@ -79,12 +79,12 @@ test('supports basic rendering', () => {
   expect(screen.root).toBeOnTheScreen();
 });
 
-test('rerender', () => {
+test('rerender', async () => {
   const fn = jest.fn();
   render(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(0);
 
-  fireEvent.press(screen.getByText('Change freshness!'));
+  await fireEvent.press(screen.getByText('Change freshness!'));
   expect(fn).toHaveBeenCalledTimes(1);
 
   screen.rerender(<Banana onUpdate={fn} />);

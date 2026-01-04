@@ -126,7 +126,7 @@ type EventName = StringWithAutocomplete<
   | EventNameExtractor<ScrollViewProps>
 >;
 
-function fireEvent(element: HostElement, eventName: EventName, ...data: unknown[]) {
+function deprecated_fireEventSync(element: HostElement, eventName: EventName, ...data: unknown[]) {
   if (!isElementMounted(element)) {
     return;
   }
@@ -146,16 +146,16 @@ function fireEvent(element: HostElement, eventName: EventName, ...data: unknown[
   return returnValue;
 }
 
-fireEvent.press = (element: HostElement, ...data: unknown[]) =>
-  fireEvent(element, 'press', ...data);
+deprecated_fireEventSync.press = (element: HostElement, ...data: unknown[]) =>
+  deprecated_fireEventSync(element, 'press', ...data);
 
-fireEvent.changeText = (element: HostElement, ...data: unknown[]) =>
-  fireEvent(element, 'changeText', ...data);
+deprecated_fireEventSync.changeText = (element: HostElement, ...data: unknown[]) =>
+  deprecated_fireEventSync(element, 'changeText', ...data);
 
-fireEvent.scroll = (element: HostElement, ...data: unknown[]) =>
-  fireEvent(element, 'scroll', ...data);
+deprecated_fireEventSync.scroll = (element: HostElement, ...data: unknown[]) =>
+  deprecated_fireEventSync(element, 'scroll', ...data);
 
-async function fireEventAsync(element: HostElement, eventName: EventName, ...data: unknown[]) {
+async function fireEvent(element: HostElement, eventName: EventName, ...data: unknown[]) {
   if (!isElementMounted(element)) {
     return;
   }
@@ -176,16 +176,16 @@ async function fireEventAsync(element: HostElement, eventName: EventName, ...dat
   return returnValue;
 }
 
-fireEventAsync.press = async (element: HostElement, ...data: unknown[]) =>
-  await fireEventAsync(element, 'press', ...data);
+fireEvent.press = async (element: HostElement, ...data: unknown[]) =>
+  await fireEvent(element, 'press', ...data);
 
-fireEventAsync.changeText = async (element: HostElement, ...data: unknown[]) =>
-  await fireEventAsync(element, 'changeText', ...data);
+fireEvent.changeText = async (element: HostElement, ...data: unknown[]) =>
+  await fireEvent(element, 'changeText', ...data);
 
-fireEventAsync.scroll = async (element: HostElement, ...data: unknown[]) =>
-  await fireEventAsync(element, 'scroll', ...data);
+fireEvent.scroll = async (element: HostElement, ...data: unknown[]) =>
+  await fireEvent(element, 'scroll', ...data);
 
-export { fireEventAsync };
+export { fireEvent, deprecated_fireEventSync };
 export default fireEvent;
 
 const scrollEventNames = new Set([

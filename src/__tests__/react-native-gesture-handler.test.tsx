@@ -6,7 +6,7 @@ import { Pressable } from 'react-native-gesture-handler';
 import { fireEvent, render, screen, userEvent } from '..';
 import { createEventLogger, getEventsNames } from '../test-utils/events';
 
-test('fireEvent can invoke press events for RNGH Pressable', () => {
+test('fireEvent can invoke press events for RNGH Pressable', async () => {
   const onPress = jest.fn();
   const onPressIn = jest.fn();
   const onPressOut = jest.fn();
@@ -26,16 +26,16 @@ test('fireEvent can invoke press events for RNGH Pressable', () => {
 
   const pressable = screen.getByTestId('pressable');
 
-  fireEvent.press(pressable);
+  await fireEvent.press(pressable);
   expect(onPress).toHaveBeenCalled();
 
-  fireEvent(pressable, 'pressIn');
+  await fireEvent(pressable, 'pressIn');
   expect(onPressIn).toHaveBeenCalled();
 
-  fireEvent(pressable, 'pressOut');
+  await fireEvent(pressable, 'pressOut');
   expect(onPressOut).toHaveBeenCalled();
 
-  fireEvent(pressable, 'longPress');
+  await fireEvent(pressable, 'longPress');
   expect(onLongPress).toHaveBeenCalled();
 });
 
