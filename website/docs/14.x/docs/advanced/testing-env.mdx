@@ -18,11 +18,11 @@ React allows you to write declarative code using JSX, write function or class co
 
 When you run your tests in the React Native Testing Library, somewhat contrary to what the name suggests, they are actually **not** using React Native renderer. This is because this renderer needs to be run on an iOS or Android operating system, so it would need to run on a device or simulator.
 
-## React Test Renderer
+## Universal Test Renderer
 
-Instead, RNTL uses React Test Renderer, a specialized renderer that allows rendering to pure JavaScript objects without access to mobile OS and can run in a Node.js environment using Jest (or any other JavaScript test runner).
+Instead, RNTL uses [Universal Test Renderer](https://github.com/mdjastrzebski/universal-test-renderer), a modern, actively maintained renderer that allows rendering to pure JavaScript objects without access to mobile OS and can run in a Node.js environment using Jest (or any other JavaScript test runner). Universal Test Renderer replaces the deprecated `react-test-renderer` package and provides better compatibility with React 19 and improved type safety.
 
-Using React Test Renderer has pros and cons.
+Using Universal Test Renderer has pros and cons.
 
 Benefits:
 
@@ -41,9 +41,9 @@ It's worth noting that the React Testing Library (web one) works a bit different
 
 ## Element tree
 
-Calling the `render()` function creates an element tree. This is done internally by invoking `TestRenderer.create()` method. The output tree represents your React Native component tree, and each node of that tree is an "instance" of some React component (to be more precise, each node represents a React fiber, and only class components have instances, while function components store the hook state using fibers).
+Calling the `render()` function creates an element tree. This is done internally by invoking the renderer's `create()` method from Universal Test Renderer. The output tree represents your React Native component tree, and each node of that tree is an "instance" of some React component (to be more precise, each node represents a React fiber, and only class components have instances, while function components store the hook state using fibers).
 
-These tree elements are represented by `HostElement` type:
+These tree elements are represented by `HostElement` type from Universal Test Renderer:
 
 ```tsx
 interface HostElement {
@@ -56,7 +56,7 @@ interface HostElement {
 }
 ```
 
-Based on: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-test-renderer/index.d.ts
+For more details, see the [Universal Test Renderer documentation](https://github.com/mdjastrzebski/universal-test-renderer).
 
 ## Host and composite components
 

@@ -29,7 +29,7 @@ Use cases for scoped queries include:
 
 ## `act`
 
-Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/main/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
+Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is provided by [Universal Test Renderer](https://github.com/callstack/universal-test-renderer) and re-exported for convenience.
 
 Consult our [Understanding Act function](docs/advanced/understanding-act.md) document for more understanding of its intricacies.
 

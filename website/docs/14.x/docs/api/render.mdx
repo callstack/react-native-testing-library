@@ -45,21 +45,15 @@ Otherwise, `render` will default to using concurrent rendering used in the React
 createNodeMock?: (element: React.Element) => unknown,
 ```
 
-This option allows you to pass `createNodeMock` option to `ReactTestRenderer.create()` method in order to allow for custom mock refs. You can learn more about this option from [React Test Renderer documentation](https://reactjs.org/docs/test-renderer.html#ideas).
+This option allows you to pass `createNodeMock` option to the renderer's `create()` method in order to allow for custom mock refs. This option is passed through to [Universal Test Renderer](https://github.com/mdjastrzebski/universal-test-renderer).
 
-#### `unstable_validateStringsRenderedWithinText`
+:::note Text string validation
 
-```ts
-unstable_validateStringsRenderedWithinText?: boolean;
-```
+Universal Test Renderer automatically enforces React Native's requirement that text strings must be rendered within a `<Text>` component. If you try to render a `string` value under components other than `<Text>` (e.g., under `<View>`), it will throw an `Invariant Violation: Text strings must be rendered within a <Text> component` error, matching React Native's runtime behavior.
 
-:::note
-This options is experimental, in some cases it might not work as intended, and its behavior might change without observing [SemVer](https://semver.org/) requirements for breaking changes.
+This validation is always enabled and cannot be disabled, ensuring your tests accurately reflect how your code will behave in production.
+
 :::
-
-This **experimental** option allows you to replicate React Native behavior of throwing `Invariant Violation: Text strings must be rendered within a <Text> component` error when you try to render `string` value under components different than `<Text>`, e.g., under `<View>`.
-
-React Test Renderer does not enforce this check; hence, by default, React Native Testing Library also does not check this. That might result in runtime errors when running your code on a device, while the code works without errors in tests.
 
 ### Result
 

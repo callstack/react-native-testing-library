@@ -6,7 +6,7 @@ You want to write maintainable tests for your React Native components. As a part
 
 ## This solution
 
-The React Native Testing Library (RNTL) is a lightweight solution for testing React Native components. It provides light utility functions on top of React Test Renderer, in a way that encourages better testing practices. Its primary guiding principle is:
+The React Native Testing Library (RNTL) is a lightweight solution for testing React Native components. It provides light utility functions on top of [Universal Test Renderer](https://github.com/mdjastrzebski/universal-test-renderer), in a way that encourages better testing practices. Its primary guiding principle is:
 
 > The more your tests resemble how your software is used, the more confidence they can give you.
 

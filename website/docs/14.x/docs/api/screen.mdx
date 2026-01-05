@@ -148,7 +148,7 @@ Get the rendered component JSON representation, e.g. for snapshot testing.
 const container: HostElement;
 ```
 
-Returns a pseudo-element container whose children are the elements you asked to render. This is the root container element from React Test Renderer.
+Returns a pseudo-element container whose children are the elements you asked to render. This is the root container element from [Universal Test Renderer](https://github.com/mdjastrzebski/universal-test-renderer).
 
 The `container` is safe to use and provides access to the entire rendered tree. It's useful when you need to query or manipulate the entire rendered output, similar to how `container` works in [React Testing Library](https://testing-library.com/docs/react-testing-library/other#container-1).
 
@@ -177,7 +177,11 @@ This API is primarily useful for component tests, as it allows you to access roo
 import { render, screen } from '@testing-library/react-native';
 
 test('example', async () => {
-  await render(<View testID="root-view"><Text>Hello</Text></View>);
+  await render(
+    <View testID="root-view">
+      <Text>Hello</Text>
+    </View>
+  );
   // root is the View element you rendered
   expect(screen.root.props.testID).toBe('root-view');
 });

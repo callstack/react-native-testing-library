@@ -4,6 +4,105 @@ This guide describes the migration to React Native Testing Library version 14 fr
 
 ## Breaking changes
 
+### Universal Test Renderer replaces React Test Renderer
+
+In v14, React Native Testing Library now uses [Universal Test Renderer](https://github.com/mdjastrzebski/universal-test-renderer) instead of the deprecated `react-test-renderer` package. Universal Test Renderer is a modern, actively maintained alternative that provides better compatibility with React 19 and improved type safety.
+
+**What changed:**
+
+- The underlying rendering engine has been switched from `react-test-renderer` to `universal-test-renderer`
+- This change is mostly internal and should not require code changes in most cases
+- Type definitions have been updated to use `HostElement` from Universal Test Renderer instead of `ReactTestInstance`
+
+**Migration:**
+
+#### 1. Update dependencies
+
+Remove `react-test-renderer` and its type definitions from your dev dependencies, and add `universal-test-renderer`:
+
+```bash
+# Using npm
+npm uninstall react-test-renderer @types/react-test-renderer
+npm install -D universal-test-renderer@^0.10.0
+
+# Using yarn
+yarn remove react-test-renderer @types/react-test-renderer
+yarn add -D universal-test-renderer@^0.10.0
+
+# Using pnpm
+pnpm remove react-test-renderer @types/react-test-renderer
+pnpm add -D universal-test-renderer@^0.10.0
+```
+
+#### 2. Update type imports (if needed)
+
+If you were directly importing types from `react-test-renderer`, you may need to update your imports:
+
+```ts
+// Before (v13)
+import type { ReactTestInstance } from 'react-test-renderer';
+
+// After (v14)
+import type { HostElement } from 'universal-test-renderer';
+```
+
+**Note:** Most users won't need to update type imports, as React Native Testing Library now exports the necessary types directly.
+
+For more details, see the [Universal Test Renderer documentation](https://github.com/mdjastrzebski/universal-test-renderer).
+
+### `container` API reintroduced
+
+In v14, the `container` API has been reintroduced and is now safe to use. Previously, `container` was renamed to `UNSAFE_root` in v12 due to behavioral differences from React Testing Library's `container`. In v14, `container` now returns a pseudo-element container whose children are the elements you asked to render, making it safe and consistent with React Testing Library's behavior.
+
+**What changed:**
+
+- `screen.container` is now available and safe to use
+- `container` returns a pseudo-element container from Universal Test Renderer
+- The container's children are the elements you rendered
+- `UNSAFE_root` has been removed
+
+**Before (v13):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should access root', () => {
+  render(<MyComponent />);
+  // UNSAFE_root was the only way to access the container
+  const root = screen.UNSAFE_root;
+});
+```
+
+**After (v14):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should access container', async () => {
+  await render(<MyComponent />);
+  // container is now safe and available
+  const container = screen.container;
+  // root is the first child of container
+  const root = screen.root;
+});
+```
+
+**Migration:**
+
+If you were using `UNSAFE_root`, replace it with `container`:
+
+```ts
+// Before
+const root = screen.UNSAFE_root;
+
+// After
+const container = screen.container;
+// Or use screen.root if you need the actual root element
+const root = screen.root;
+```
+
+For more details, see the [`screen` API documentation](/docs/api/screen#container).
+
 ### `render` is now async by default {#render-async-default}
 
 In v14, `render` is now async by default and returns a Promise. The previous synchronous `render` function has been renamed to `unsafe_renderSync`. This change makes it compatible with React 19, React Suspense, and `React.use()`.
@@ -397,3 +496,30 @@ it('should press button', () => {
   expect(onPress).toHaveBeenCalled();
 });
 ```
+
+### Text string validation now enforced by default
+
+In v14, Universal Test Renderer automatically enforces React Native's requirement that text strings must be rendered within a `<Text>` component. This means the `unstable_validateStringsRenderedWithinText` option has been removed from `RenderOptions`, as this validation is now always enabled.
+
+**What changed:**
+
+- Text string validation is now always enabled and cannot be disabled
+- The `unstable_validateStringsRenderedWithinText` option has been removed
+- Tests will now throw `Invariant Violation: Text strings must be rendered within a <Text> component` errors when attempting to render strings outside of `<Text>` components, matching React Native's runtime behavior
+
+**Migration:**
+
+If you were using `unstable_validateStringsRenderedWithinText: true` in your render options, you can simply remove this option as the validation is now always enabled:
+
+```ts
+// Before (v13)
+await render(<MyComponent />, {
+  unstable_validateStringsRenderedWithinText: true,
+});
+
+// After (v14)
+await render(<MyComponent />);
+// Validation is now always enabled
+```
+
+If you were relying on the previous behavior where strings could be rendered outside of `<Text>` components, you'll need to fix your components to wrap strings in `<Text>` components, as this matches React Native's actual runtime behavior.
