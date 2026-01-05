@@ -139,6 +139,45 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
+  typecheck-rn-latest:
+    runs-on: ubuntu-latest
+    name: Typecheck RN Latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps-rn-latest
+
+      - name: Typecheck
+        run: yarn typecheck
+
+  typecheck-rn-next:
+    runs-on: ubuntu-latest
+    name: Typecheck RN Next
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps-rn-next
+
+      - name: Typecheck
+        run: yarn typecheck
+
+  typecheck-rn-nightly:
+    runs-on: ubuntu-latest
+    name: Typecheck RN Nightly
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps-rn-nightly
+
+      - name: Typecheck
+        run: yarn typecheck
+
   test:
     runs-on: ubuntu-latest
     name: Test
@@ -249,6 +288,45 @@ jobs:
         with:
           react-version: 19.0.0
           react-native-version: 0.78.3
+
+      - name: Test
+        run: yarn test:ci
+
+  test-rn-latest:
+    runs-on: ubuntu-latest
+    name: Test RN Latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps-rn-latest
+
+      - name: Test
+        run: yarn test:ci
+
+  test-rn-next:
+    runs-on: ubuntu-latest
+    name: Test RN Next
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps-rn-next
+
+      - name: Test
+        run: yarn test:ci
+
+  test-rn-nightly:
+    runs-on: ubuntu-latest
+    name: Test RN Nightly
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps-rn-nightly
 
       - name: Test
         run: yarn test:ci
