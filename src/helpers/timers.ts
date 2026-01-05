@@ -88,6 +88,7 @@ const { clearTimeoutFn, setImmediateFn, setTimeoutFn } = runWithRealTimers(
 
 export {
   clearTimeoutFn as clearTimeout,
+  getJestFakeTimersType,
   jestFakeTimersAreEnabled,
   runWithRealTimers,
   setImmediateFn as setImmediate,
