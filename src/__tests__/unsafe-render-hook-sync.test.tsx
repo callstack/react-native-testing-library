@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import * as React from 'react';
 
-import { unsafe_renderHookSync } from '../../pure';
+import { unsafe_renderHookSync } from '../pure';
 
 test('renders hook and returns committed result', () => {
   const { result } = unsafe_renderHookSync(() => {

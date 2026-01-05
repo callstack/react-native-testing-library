@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import { screen, unsafe_fireEventSync, unsafe_renderSync } from '../..';
+import { screen, unsafe_fireEventSync, unsafe_renderSync } from '..';
 
 type OnPressComponentProps = {
   onPress: () => void;

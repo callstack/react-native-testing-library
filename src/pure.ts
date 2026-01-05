@@ -14,8 +14,8 @@ export { renderHook, unsafe_renderHookSync } from './render-hook';
 export { screen } from './screen';
 export { userEvent } from './user-event';
 
-export type { RenderSyncOptions, RenderSyncResult, DebugFunction } from './unsafe-render-sync';
-export type { RenderOptions, RenderResult, RenderResult as RenderAPI } from './render';
+export type { RenderOptions, RenderResult, DebugFunction } from './render';
+export type { RenderSyncOptions, RenderSyncResult } from './unsafe-render-sync';
 export type { RenderHookOptions, RenderHookResult, RenderHookSyncResult } from './render-hook';
 export type { Config } from './config';
 export type { UserEventConfig } from './user-event';

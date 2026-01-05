@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 
-import { screen, unsafe_fireEventSync, unsafe_renderSync } from '../..';
+import { screen, unsafe_fireEventSync, unsafe_renderSync } from '..';
 
 const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
 const PLACEHOLDER_CHEF = 'Who inspected freshness?';
