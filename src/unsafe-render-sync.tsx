@@ -1,14 +1,15 @@
 import * as React from 'react';
 import type { HostElement, JsonElement, Root, RootOptions } from 'universal-test-renderer';
 
-import act from '../act';
-import { addToCleanupQueue } from '../cleanup';
-import { getConfig } from '../config';
-import type { DebugOptions } from '../helpers/debug';
-import { debug } from '../helpers/debug';
-import { renderWithAct } from '../render-act';
-import { setRenderResult } from '../screen';
-import { getQueriesForElement } from '../within';
+import act from './act';
+import { addToCleanupQueue } from './cleanup';
+import { getConfig } from './config';
+import type { DebugOptions } from './helpers/debug';
+import { debug } from './helpers/debug';
+import { HOST_TEXT_NAMES } from './helpers/host-component-names';
+import { renderWithAct } from './render-act';
+import { setRenderResult } from './screen';
+import { getQueriesForElement } from './within';
 
 export interface RenderSyncOptions {
   /**
@@ -18,7 +19,7 @@ export interface RenderSyncOptions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: React.ComponentType<any>;
 
-  createNodeMock?: (element: React.ReactElement) => unknown;
+  createNodeMock?: (element: React.ReactElement) => object;
 }
 
 /**
@@ -26,7 +27,7 @@ export interface RenderSyncOptions {
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export default function unsafe_renderSync<T>(
+export function unsafe_renderSync<T>(
   component: React.ReactElement<T>,
   options: RenderSyncOptions = {},
 ) {
@@ -36,10 +37,12 @@ export default function unsafe_renderSync<T>(
 export type RenderSyncResult = ReturnType<typeof unsafe_renderSync>;
 
 export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderSyncOptions) {
-  const { wrapper: Wrapper } = options || {};
+  const { wrapper: Wrapper, createNodeMock } = options || {};
 
-  // TODO allow passing some options
-  const rendererOptions: RootOptions = {};
+  const rendererOptions: RootOptions = {
+    textComponents: HOST_TEXT_NAMES,
+    createNodeMock,
+  };
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
   const renderer = renderWithAct(wrap(component), rendererOptions);

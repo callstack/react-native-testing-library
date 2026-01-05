@@ -1,4 +1,4 @@
-import waitFor from '../wait-for';
+import { waitFor } from '../wait-for';
 
 describe.each([false, true])('fake timers tests (legacyFakeTimers = %s)', (legacyFakeTimers) => {
   beforeEach(() => {

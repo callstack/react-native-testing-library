@@ -6,6 +6,7 @@ import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
+import { HOST_TEXT_NAMES } from './helpers/host-component-names';
 import { renderWithAsyncAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
@@ -18,7 +19,7 @@ export interface RenderOptions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: React.ComponentType<any>;
 
-  createNodeMock?: (element: React.ReactElement) => unknown;
+  createNodeMock?: (element: React.ReactElement) => object;
 }
 
 export type RenderResult = Awaited<ReturnType<typeof render>>;
@@ -27,14 +28,13 @@ export type RenderResult = Awaited<ReturnType<typeof render>>;
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export default async function render<T>(
-  component: React.ReactElement<T>,
-  options: RenderOptions = {},
-) {
-  const { wrapper: Wrapper } = options || {};
+export async function render<T>(component: React.ReactElement<T>, options: RenderOptions = {}) {
+  const { wrapper: Wrapper, createNodeMock } = options || {};
 
-  // TODO allow passing some options
-  const rendererOptions: RootOptions = {};
+  const rendererOptions: RootOptions = {
+    textComponents: HOST_TEXT_NAMES,
+    createNodeMock,
+  };
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
   const renderer = await renderWithAsyncAct(wrap(component), rendererOptions);

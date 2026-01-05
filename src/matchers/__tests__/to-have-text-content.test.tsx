@@ -6,7 +6,9 @@ import { render, screen } from '../..';
 test('toHaveTextContent() example test', async () => {
   await render(
     <View testID="view">
-      <Text>Hello</Text> <Text>World</Text>
+      <Text>Hello</Text>
+      <Text> </Text>
+      <Text>World</Text>
     </View>,
   );
 

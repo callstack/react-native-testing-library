@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import unsafe_renderSync from './deprecated/render-sync';
-import render from './render';
+import { render } from './render';
 import type { RefObject } from './types';
+import { unsafe_renderSync } from './unsafe-render-sync';
 
 export type RenderHookResult<Result, Props> = {
   result: RefObject<Result>;

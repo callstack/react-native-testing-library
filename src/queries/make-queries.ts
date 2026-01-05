@@ -5,7 +5,7 @@ import { formatJson } from '../helpers/format-element';
 import { logger } from '../helpers/logger';
 import { screen } from '../screen';
 import type { WaitForOptions } from '../wait-for';
-import waitFor from '../wait-for';
+import { waitFor } from '../wait-for';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
