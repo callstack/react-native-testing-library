@@ -57,7 +57,7 @@
   "peerDependencies": {
     "jest": ">=29.0.0",
     "react": ">=19.0.0",
-    "react-native": ">=0.71",
+    "react-native": ">=0.78",
     "universal-test-renderer": "~0.10.1"
   },
   "peerDependenciesMeta": {
@@ -73,7 +73,7 @@
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
     "@callstack/eslint-config": "^15.0.0",
-    "@react-native/babel-preset": "0.82.1",
+    "@react-native/babel-preset": "0.83.1",
     "@release-it/conventional-changelog": "^10.0.2",
     "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@types/jest": "^30.0.0",
@@ -86,8 +86,8 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "jest": "^30.2.0",
     "prettier": "^3.6.2",
-    "react": "19.1.1",
-    "react-native": "0.82.1",
+    "react": "19.2.0",
+    "react-native": "0.83.1",
     "react-native-gesture-handler": "^2.29.1",
     "release-it": "^19.0.6",
     "typescript": "^5.9.3",
@@ -99,6 +99,6 @@
   },
   "packageManager": "yarn@4.11.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }
