@@ -34,12 +34,12 @@ it('should press button', async () => {
 
 ### Migration path
 
-To ease migration, we provide `deprecated_fireEventSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
+To ease migration, we provide `unsafe_fireEventSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
 
-#### `deprecated_fireEventSync` {#deprecated-fire-event-sync}
+#### `unsafe_fireEventSync` {#unsafe-fire-event-sync}
 
 ```ts
-function deprecated_fireEventSync(
+function unsafe_fireEventSync(
   element: ReactTestInstance,
   eventName: string,
   ...data: unknown[]
@@ -52,18 +52,18 @@ The synchronous version of `fireEvent` that returns immediately without awaiting
 
 ```ts
 // Old v13 code (still works but deprecated)
-import { deprecated_fireEventSync } from '@testing-library/react-native';
+import { unsafe_fireEventSync } from '@testing-library/react-native';
 
 it('should press button', () => {
   render(<MyComponent />);
-  deprecated_fireEventSync.press(screen.getByText('Press me'));
+  unsafe_fireEventSync.press(screen.getByText('Press me'));
   expect(onPress).toHaveBeenCalled();
 });
 ```
 
 ### `render` is now async by default
 
-In v14, `render` is now async by default and returns a Promise. The previous synchronous `render` function has been renamed to `deprecated_renderSync`. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+In v14, `render` is now async by default and returns a Promise. The previous synchronous `render` function has been renamed to `unsafe_renderSync`. This change makes it compatible with React 19, React Suspense, and `React.use()`.
 
 **Before (v13):**
 
@@ -89,12 +89,12 @@ it('should render component', async () => {
 
 ### Migration path
 
-To ease migration, we provide `deprecated_renderSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
+To ease migration, we provide `unsafe_renderSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
 
-#### `deprecated_renderSync` {#deprecated-render-sync}
+#### `unsafe_renderSync` {#unsafe-render-sync}
 
 ```ts
-function deprecated_renderSync(
+function unsafe_renderSync(
   component: React.Element<any>,
   options?: RenderSyncOptions
 ): RenderSyncResult;
@@ -106,17 +106,17 @@ The synchronous version of `render` that returns immediately without awaiting Re
 
 ```ts
 // Old v13 code (still works but deprecated)
-import { deprecated_renderSync } from '@testing-library/react-native';
+import { unsafe_renderSync } from '@testing-library/react-native';
 
 it('should render component', () => {
-  deprecated_renderSync(<MyComponent />);
+  unsafe_renderSync(<MyComponent />);
   expect(screen.getByText('Hello')).toBeOnTheScreen();
 });
 ```
 
 ### Step-by-step migration guide
 
-To migrate from `deprecated_renderSync` to `render`:
+To migrate from `unsafe_renderSync` to `render`:
 
 ### 1. Add `async` to your test function
 
@@ -233,12 +233,12 @@ it('should test hook', async () => {
 
 ### Migration path
 
-To ease migration, we provide `deprecated_renderHookSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
+To ease migration, we provide `unsafe_renderHookSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
 
-#### `deprecated_renderHookSync` {#deprecated-render-hook-sync}
+#### `unsafe_renderHookSync` {#unsafe-render-hook-sync}
 
 ```ts
-function deprecated_renderHookSync<Result, Props>(
+function unsafe_renderHookSync<Result, Props>(
   hookFn: (props?: Props) => Result,
   options?: RenderHookOptions<Props>
 ): RenderHookSyncResult<Result, Props>;
@@ -250,10 +250,10 @@ The synchronous version of `renderHook` that returns immediately without awaitin
 
 ```ts
 // Old v13 code (still works but deprecated)
-import { deprecated_renderHookSync } from '@testing-library/react-native';
+import { unsafe_renderHookSync } from '@testing-library/react-native';
 
 it('should increment count', () => {
-  const { result, rerender } = deprecated_renderHookSync(() => useCount());
+  const { result, rerender } = unsafe_renderHookSync(() => useCount());
 
   expect(result.current.count).toBe(0);
   act(() => {
@@ -291,7 +291,7 @@ interface RenderHookResult<Result, Props> {
 
 ## Step-by-step migration guide
 
-To migrate from `deprecated_renderHookSync` to `renderHook`:
+To migrate from `unsafe_renderHookSync` to `renderHook`:
 
 ### 1. Add `async` to your test function
 
@@ -307,7 +307,7 @@ it('should test hook', async () => {
 
 ```ts
 // Before
-const { result } = deprecated_renderHookSync(() => useMyHook());
+const { result } = unsafe_renderHookSync(() => useMyHook());
 
 // After
 const { result } = await renderHook(() => useMyHook());

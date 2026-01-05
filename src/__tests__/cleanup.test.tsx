@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { cleanupAsync, deprecated_renderSync, render } from '../pure';
+import { cleanup, render, unsafe_renderSync } from '../pure';
 
 class Test extends React.Component<{ onUnmount: () => void }> {
   componentWillUnmount() {
@@ -14,17 +14,6 @@ class Test extends React.Component<{ onUnmount: () => void }> {
   }
 }
 
-test('cleanup after deprecated_renderSync', async () => {
-  const fn = jest.fn();
-
-  deprecated_renderSync(<Test onUnmount={fn} />);
-  deprecated_renderSync(<Test onUnmount={fn} />);
-  expect(fn).not.toHaveBeenCalled();
-
-  await cleanupAsync();
-  expect(fn).toHaveBeenCalledTimes(2);
-});
-
 test('cleanup after render', async () => {
   const fn = jest.fn();
 
@@ -32,6 +21,17 @@ test('cleanup after render', async () => {
   await render(<Test onUnmount={fn} />);
   expect(fn).not.toHaveBeenCalled();
 
-  await cleanupAsync();
+  await cleanup();
+  expect(fn).toHaveBeenCalledTimes(2);
+});
+
+test('cleanup after unsafe_renderSync', async () => {
+  const fn = jest.fn();
+
+  unsafe_renderSync(<Test onUnmount={fn} />);
+  unsafe_renderSync(<Test onUnmount={fn} />);
+  expect(fn).not.toHaveBeenCalled();
+
+  await cleanup();
   expect(fn).toHaveBeenCalledTimes(2);
 });

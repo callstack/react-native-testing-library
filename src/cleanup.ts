@@ -1,18 +1,10 @@
 import { clearRenderResult } from './screen';
 
-type CleanUpFunction = () => void;
-type CleanUpFunctionAsync = () => Promise<void>;
+type CleanUpFunction = () => Promise<void> | void;
 
-const cleanupQueue = new Set<CleanUpFunction | CleanUpFunctionAsync>();
+const cleanupQueue = new Set<CleanUpFunction>();
 
-export default function cleanup() {
-  clearRenderResult();
-
-  cleanupQueue.forEach((fn) => fn());
-  cleanupQueue.clear();
-}
-
-export async function cleanupAsync() {
+export async function cleanup() {
   clearRenderResult();
 
   for (const fn of cleanupQueue) {
@@ -22,6 +14,6 @@ export async function cleanupAsync() {
   cleanupQueue.clear();
 }
 
-export function addToCleanupQueue(fn: CleanUpFunction | CleanUpFunctionAsync) {
+export function addToCleanupQueue(fn: CleanUpFunction) {
   cleanupQueue.add(fn);
 }

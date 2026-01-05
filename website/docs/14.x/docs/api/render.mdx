@@ -73,7 +73,7 @@ When using `render`, you have to use corresponding lifecycle methods: `rerenderA
 
 :::
 
-## `deprecated_renderSync` function {#deprecated-render-sync}
+## `unsafe_renderSync` function {#unsafe-render-sync}
 
 :::warning Deprecated
 
@@ -82,33 +82,33 @@ This function is deprecated and provided for migration purposes only. Use async 
 :::
 
 ```tsx
-function deprecated_renderSync(
+function unsafe_renderSync(
   component: React.Element<any>,
   options?: RenderSyncOptions
 ): RenderSyncResult;
 ```
 
-The `deprecated_renderSync` function is the synchronous version of [`render`](#render). It was the default `render` function in previous versions but is now deprecated in favor of the async `render` function.
+The `unsafe_renderSync` function is the synchronous version of [`render`](#render). It was the default `render` function in previous versions but is now deprecated in favor of the async `render` function.
 
 ```jsx
-import { deprecated_renderSync, screen } from '@testing-library/react-native';
+import { unsafe_renderSync, screen } from '@testing-library/react-native';
 
 test('sync component test', () => {
-  deprecated_renderSync(<MyApp />);
+  unsafe_renderSync(<MyApp />);
   expect(screen.getAllByRole('button', { name: 'start' })).toBeOnTheScreen();
 });
 ```
 
 ### Options
 
-`deprecated_renderSync` accepts the same options as `render`.
+`unsafe_renderSync` accepts the same options as `render`.
 
 ### Result
 
-The `deprecated_renderSync` function returns the same queries and utilities as the [`screen`](docs/api/screen) object. We recommended using the `screen` object as more developer-friendly way.
+The `unsafe_renderSync` function returns the same queries and utilities as the [`screen`](docs/api/screen) object. We recommended using the `screen` object as more developer-friendly way.
 
 :::note Migration
 
-To migrate from `deprecated_renderSync` to `render`, see the [migration guide](/docs/migration/v14#render-is-now-async-by-default).
+To migrate from `unsafe_renderSync` to `render`, see the [migration guide](/docs/migration/v14#render-is-now-async-by-default).
 
 :::

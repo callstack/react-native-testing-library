@@ -38,7 +38,7 @@ The main change is using [`render`](docs/api/render#render) which is now async b
 ```tsx
 // Synchronous approach (deprecated in v14)
 test('my component', () => {
-  deprecated_renderSync(<MyComponent />);
+  unsafe_renderSync(<MyComponent />);
   expect(screen.getByText('Hello')).toBeOnTheScreen();
 });
 
@@ -67,10 +67,10 @@ Use the async-ready APIs (`render`, User Event, Jest Matchers, etc.) from the st
 
 You can migrate gradually:
 
-- **Existing tests** can use `deprecated_renderSync` for backward compatibility
+- **Existing tests** can use `unsafe_renderSync` for backward compatibility
 - **New tests** should use async `render` (default in v14)
 - **Tests with Suspense/`React.use()`** must use async `render`
 
 ### Migration
 
-See the [v14 migration guide](/docs/migration/v14#render-is-now-async-by-default) for detailed migration steps from `deprecated_renderSync` to `render`.
+See the [v14 migration guide](/docs/migration/v14#render-is-now-async-by-default) for detailed migration steps from `unsafe_renderSync` to `render`.

@@ -172,10 +172,10 @@ render(
 await fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 ```
 
-## `deprecated_fireEventSync` {#deprecated-fire-event-sync}
+## `unsafe_fireEventSync` {#unsafe-fire-event-sync}
 
 ```ts
-function deprecated_fireEventSync(
+function unsafe_fireEventSync(
   element: ReactTestInstance,
   eventName: string,
   ...data: unknown[]

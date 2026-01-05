@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 import * as React from 'react';
 
-import { deprecated_renderHookSync } from '../../pure';
+import { unsafe_renderHookSync } from '../../pure';
 
 test('renders hook and returns committed result', () => {
-  const { result } = deprecated_renderHookSync(() => {
+  const { result } = unsafe_renderHookSync(() => {
     const [state, setState] = React.useState(1);
 
     React.useEffect(() => {
@@ -22,7 +22,7 @@ test('works with wrapper option', () => {
   function Wrapper({ children }: { children: ReactNode }) {
     return <Context.Provider value="provided">{children}</Context.Provider>;
   }
-  const { result } = deprecated_renderHookSync(
+  const { result } = unsafe_renderHookSync(
     () => {
       return React.useContext(Context);
     },
@@ -35,7 +35,7 @@ test('works with wrapper option', () => {
 });
 
 test('works with initialProps option', () => {
-  const { result } = deprecated_renderHookSync(
+  const { result } = unsafe_renderHookSync(
     (props: { branch: 'left' | 'right' }) => {
       const [left, setLeft] = React.useState('left');
       const [right, setRight] = React.useState('right');
@@ -61,12 +61,12 @@ test('works without initialProps option', () => {
     return { count, setCount };
   }
 
-  const { result } = deprecated_renderHookSync(useTestHook);
+  const { result } = unsafe_renderHookSync(useTestHook);
   expect(result.current.count).toBe(0);
 });
 
 test('rerender updates hook with new props', () => {
-  const { result, rerender } = deprecated_renderHookSync(
+  const { result, rerender } = unsafe_renderHookSync(
     (props: { branch: 'left' | 'right' }) => {
       const [left, setLeft] = React.useState('left');
       const [right, setRight] = React.useState('right');
@@ -102,7 +102,7 @@ test('unmount triggers cleanup effects', () => {
     return 'test';
   }
 
-  const { unmount } = deprecated_renderHookSync(useTestHook);
+  const { unmount } = unsafe_renderHookSync(useTestHook);
   expect(cleanupCalled).toBe(false);
 
   unmount();
@@ -114,7 +114,7 @@ function useMyHook<T>(param: T) {
 }
 
 test('props type is inferred correctly when initial props is defined', () => {
-  const { result, rerender } = deprecated_renderHookSync((num: number) => useMyHook(num), {
+  const { result, rerender } = unsafe_renderHookSync((num: number) => useMyHook(num), {
     initialProps: 5,
   });
   expect(result.current.param).toBe(5);
@@ -124,12 +124,9 @@ test('props type is inferred correctly when initial props is defined', () => {
 });
 
 test('props type is inferred correctly when initial props is explicitly undefined', () => {
-  const { result, rerender } = deprecated_renderHookSync(
-    (num: number | undefined) => useMyHook(num),
-    {
-      initialProps: undefined,
-    },
-  );
+  const { result, rerender } = unsafe_renderHookSync((num: number | undefined) => useMyHook(num), {
+    initialProps: undefined,
+  });
 
   expect(result.current.param).toBeUndefined();
 

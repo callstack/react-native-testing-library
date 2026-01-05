@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import deprecated_renderSync from './deprecated/render-sync';
+import unsafe_renderSync from './deprecated/render-sync';
 import render from './render';
 import type { RefObject } from './types';
 
@@ -61,7 +61,7 @@ export async function renderHook<Result, Props>(
 }
 
 /** @deprecated - Use async `renderHook` instead.   */
-export function deprecated_renderHookSync<Result, Props>(
+export function unsafe_renderHookSync<Result, Props>(
   hookToRender: (props: Props) => Result,
   options?: RenderHookOptions<NoInfer<Props>>,
 ): RenderHookSyncResult<Result, Props> {
@@ -77,7 +77,7 @@ export function deprecated_renderHookSync<Result, Props>(
   }
 
   const { initialProps, ...renderOptions } = options ?? {};
-  const { rerender: rerenderComponent, unmount } = deprecated_renderSync(
+  const { rerender: rerenderComponent, unmount } = unsafe_renderSync(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
     <HookContainer hookProps={initialProps} />,
     renderOptions,

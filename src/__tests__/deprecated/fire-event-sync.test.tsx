@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import { deprecated_fireEventSync, deprecated_renderSync, screen } from '../..';
+import { screen, unsafe_fireEventSync, unsafe_renderSync } from '../..';
 
 type OnPressComponentProps = {
   onPress: () => void;
@@ -51,12 +51,12 @@ const CustomEventComponentWithCustomName = ({
   <MyCustomButton handlePress={handlePress} text="Custom component" />
 );
 
-describe('deprecated_fireEventSync', () => {
+describe('unsafe_fireEventSync', () => {
   test('should invoke specified event', () => {
     const onPressMock = jest.fn();
-    deprecated_renderSync(<OnPressComponent onPress={onPressMock} text="Press me" />);
+    unsafe_renderSync(<OnPressComponent onPress={onPressMock} text="Press me" />);
 
-    deprecated_fireEventSync(screen.getByText('Press me'), 'press');
+    unsafe_fireEventSync(screen.getByText('Press me'), 'press');
 
     expect(onPressMock).toHaveBeenCalled();
   });
@@ -64,9 +64,9 @@ describe('deprecated_fireEventSync', () => {
   test('should invoke specified event on parent element', () => {
     const onPressMock = jest.fn();
     const text = 'New press text';
-    deprecated_renderSync(<OnPressComponent onPress={onPressMock} text={text} />);
+    unsafe_renderSync(<OnPressComponent onPress={onPressMock} text={text} />);
 
-    deprecated_fireEventSync(screen.getByText(text), 'press');
+    unsafe_fireEventSync(screen.getByText(text), 'press');
     expect(onPressMock).toHaveBeenCalled();
   });
 
@@ -74,19 +74,19 @@ describe('deprecated_fireEventSync', () => {
     const handlerMock = jest.fn();
     const EVENT_DATA = 'event data';
 
-    deprecated_renderSync(
+    unsafe_renderSync(
       <View>
         <CustomEventComponent onCustomEvent={handlerMock} />
       </View>,
     );
 
-    deprecated_fireEventSync(screen.getByText('Custom event component'), 'customEvent', EVENT_DATA);
+    unsafe_fireEventSync(screen.getByText('Custom event component'), 'customEvent', EVENT_DATA);
 
     expect(handlerMock).toHaveBeenCalledWith(EVENT_DATA);
   });
 });
 
-test('deprecated_fireEventSync.press', () => {
+test('unsafe_fireEventSync.press', () => {
   const onPressMock = jest.fn();
   const text = 'Fireevent press';
   const eventData = {
@@ -95,14 +95,14 @@ test('deprecated_fireEventSync.press', () => {
       pageY: 30,
     },
   };
-  deprecated_renderSync(<OnPressComponent onPress={onPressMock} text={text} />);
+  unsafe_renderSync(<OnPressComponent onPress={onPressMock} text={text} />);
 
-  deprecated_fireEventSync.press(screen.getByText(text), eventData);
+  unsafe_fireEventSync.press(screen.getByText(text), eventData);
 
   expect(onPressMock).toHaveBeenCalledWith(eventData);
 });
 
-test('deprecated_fireEventSync.scroll', () => {
+test('unsafe_fireEventSync.scroll', () => {
   const onScrollMock = jest.fn();
   const eventData = {
     nativeEvent: {
@@ -112,47 +112,47 @@ test('deprecated_fireEventSync.scroll', () => {
     },
   };
 
-  deprecated_renderSync(
+  unsafe_renderSync(
     <ScrollView onScroll={onScrollMock}>
       <Text>XD</Text>
     </ScrollView>,
   );
 
-  deprecated_fireEventSync.scroll(screen.getByText('XD'), eventData);
+  unsafe_fireEventSync.scroll(screen.getByText('XD'), eventData);
 
   expect(onScrollMock).toHaveBeenCalledWith(eventData);
 });
 
-test('deprecated_fireEventSync.changeText', () => {
+test('unsafe_fireEventSync.changeText', () => {
   const onChangeTextMock = jest.fn();
 
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View>
       <TextInput placeholder="Customer placeholder" onChangeText={onChangeTextMock} />
     </View>,
   );
 
   const input = screen.getByPlaceholderText('Customer placeholder');
-  deprecated_fireEventSync.changeText(input, 'content');
+  unsafe_fireEventSync.changeText(input, 'content');
   expect(onChangeTextMock).toHaveBeenCalledWith('content');
 });
 
 it('sets native state value for unmanaged text inputs', () => {
-  deprecated_renderSync(<TextInput testID="input" />);
+  unsafe_renderSync(<TextInput testID="input" />);
 
   const input = screen.getByTestId('input');
   expect(input).toHaveDisplayValue('');
 
-  deprecated_fireEventSync.changeText(input, 'abc');
+  unsafe_fireEventSync.changeText(input, 'abc');
   expect(input).toHaveDisplayValue('abc');
 });
 
 test('custom component with custom event name', () => {
   const handlePress = jest.fn();
 
-  deprecated_renderSync(<CustomEventComponentWithCustomName handlePress={handlePress} />);
+  unsafe_renderSync(<CustomEventComponentWithCustomName handlePress={handlePress} />);
 
-  deprecated_fireEventSync(screen.getByText('Custom component'), 'handlePress');
+  unsafe_fireEventSync(screen.getByText('Custom component'), 'handlePress');
 
   expect(handlePress).toHaveBeenCalled();
 });
@@ -160,16 +160,16 @@ test('custom component with custom event name', () => {
 test('event with multiple handler parameters', () => {
   const handlePress = jest.fn();
 
-  deprecated_renderSync(<CustomEventComponentWithCustomName handlePress={handlePress} />);
+  unsafe_renderSync(<CustomEventComponentWithCustomName handlePress={handlePress} />);
 
-  deprecated_fireEventSync(screen.getByText('Custom component'), 'handlePress', 'param1', 'param2');
+  unsafe_fireEventSync(screen.getByText('Custom component'), 'handlePress', 'param1', 'param2');
 
   expect(handlePress).toHaveBeenCalledWith('param1', 'param2');
 });
 
 test('should not fire on disabled TouchableOpacity', () => {
   const handlePress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View>
       <TouchableOpacity onPress={handlePress} disabled={true}>
         <Text>Trigger</Text>
@@ -177,13 +177,13 @@ test('should not fire on disabled TouchableOpacity', () => {
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
   expect(handlePress).not.toHaveBeenCalled();
 });
 
 test('should not fire on disabled Pressable', () => {
   const handlePress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View>
       <Pressable onPress={handlePress} disabled={true}>
         <Text>Trigger</Text>
@@ -191,13 +191,13 @@ test('should not fire on disabled Pressable', () => {
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
   expect(handlePress).not.toHaveBeenCalled();
 });
 
 test('should not fire inside View with pointerEvents="none" in props', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View pointerEvents="none">
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -205,14 +205,14 @@ test('should not fire inside View with pointerEvents="none" in props', () => {
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'onPress');
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'onPress');
   expect(onPress).not.toHaveBeenCalled();
 });
 
 test('should not fire inside View with pointerEvents="none" in styles', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View style={{ pointerEvents: 'none' }}>
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -220,14 +220,14 @@ test('should not fire inside View with pointerEvents="none" in styles', () => {
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'onPress');
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'onPress');
   expect(onPress).not.toHaveBeenCalled();
 });
 
 test('should not fire inside View with pointerEvents="none" in styles array', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View style={[{ pointerEvents: 'none' }]}>
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -235,14 +235,14 @@ test('should not fire inside View with pointerEvents="none" in styles array', ()
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'onPress');
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'onPress');
   expect(onPress).not.toHaveBeenCalled();
 });
 
 test('should not fire inside View with pointerEvents="box-only" in props', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View pointerEvents="box-only">
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -250,14 +250,14 @@ test('should not fire inside View with pointerEvents="box-only" in props', () =>
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'onPress');
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'onPress');
   expect(onPress).not.toHaveBeenCalled();
 });
 
 test('should not fire inside View with pointerEvents="box-only" in styles', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View style={{ pointerEvents: 'box-only' }}>
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -265,14 +265,14 @@ test('should not fire inside View with pointerEvents="box-only" in styles', () =
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'onPress');
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'onPress');
   expect(onPress).not.toHaveBeenCalled();
 });
 
 test('should fire inside View with pointerEvents="box-none" in props', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View pointerEvents="box-none">
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -280,14 +280,14 @@ test('should fire inside View with pointerEvents="box-none" in props', () => {
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'onPress');
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'onPress');
   expect(onPress).toHaveBeenCalledTimes(2);
 });
 
 test('should fire inside View with pointerEvents="box-none" in styles', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View style={{ pointerEvents: 'box-none' }}>
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -295,14 +295,14 @@ test('should fire inside View with pointerEvents="box-none" in styles', () => {
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'onPress');
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'onPress');
   expect(onPress).toHaveBeenCalledTimes(2);
 });
 
 test('should fire inside View with pointerEvents="auto" in props', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View pointerEvents="auto">
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -310,14 +310,14 @@ test('should fire inside View with pointerEvents="auto" in props', () => {
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'onPress');
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'onPress');
   expect(onPress).toHaveBeenCalledTimes(2);
 });
 
 test('should fire inside View with pointerEvents="auto" in styles', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View style={{ pointerEvents: 'auto' }}>
       <Pressable onPress={onPress}>
         <Text>Trigger</Text>
@@ -325,14 +325,14 @@ test('should fire inside View with pointerEvents="auto" in styles', () => {
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'onPress');
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'onPress');
   expect(onPress).toHaveBeenCalledTimes(2);
 });
 
 test('should not fire deeply inside View with pointerEvents="box-only" in props', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View pointerEvents="box-only">
       <View>
         <Pressable onPress={onPress}>
@@ -342,14 +342,14 @@ test('should not fire deeply inside View with pointerEvents="box-only" in props'
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'onPress');
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'onPress');
   expect(onPress).not.toHaveBeenCalled();
 });
 
 test('should not fire deeply inside View with pointerEvents="box-only" in styles', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View style={{ pointerEvents: 'box-only' }}>
       <View>
         <Pressable onPress={onPress}>
@@ -359,46 +359,44 @@ test('should not fire deeply inside View with pointerEvents="box-only" in styles
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'onPress');
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'onPress');
   expect(onPress).not.toHaveBeenCalled();
 });
 
 test('should fire non-pointer events inside View with pointerEvents="box-none" in props', () => {
   const onTouchStart = jest.fn();
-  deprecated_renderSync(
-    <View testID="view" pointerEvents="box-none" onTouchStart={onTouchStart} />,
-  );
+  unsafe_renderSync(<View testID="view" pointerEvents="box-none" onTouchStart={onTouchStart} />);
 
-  deprecated_fireEventSync(screen.getByTestId('view'), 'touchStart');
+  unsafe_fireEventSync(screen.getByTestId('view'), 'touchStart');
   expect(onTouchStart).toHaveBeenCalled();
 });
 
 test('should fire non-pointer events inside View with pointerEvents="box-none" in styles', () => {
   const onTouchStart = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View testID="view" style={{ pointerEvents: 'box-none' }} onTouchStart={onTouchStart} />,
   );
 
-  deprecated_fireEventSync(screen.getByTestId('view'), 'touchStart');
+  unsafe_fireEventSync(screen.getByTestId('view'), 'touchStart');
   expect(onTouchStart).toHaveBeenCalled();
 });
 
 test('should fire non-touch events inside View with pointerEvents="box-none" in props', () => {
   const onLayout = jest.fn();
-  deprecated_renderSync(<View testID="view" pointerEvents="box-none" onLayout={onLayout} />);
+  unsafe_renderSync(<View testID="view" pointerEvents="box-none" onLayout={onLayout} />);
 
-  deprecated_fireEventSync(screen.getByTestId('view'), 'layout');
+  unsafe_fireEventSync(screen.getByTestId('view'), 'layout');
   expect(onLayout).toHaveBeenCalled();
 });
 
 test('should fire non-touch events inside View with pointerEvents="box-none" in styles', () => {
   const onLayout = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View testID="view" style={{ pointerEvents: 'box-none' }} onLayout={onLayout} />,
   );
 
-  deprecated_fireEventSync(screen.getByTestId('view'), 'layout');
+  unsafe_fireEventSync(screen.getByTestId('view'), 'layout');
   expect(onLayout).toHaveBeenCalled();
 });
 
@@ -406,28 +404,26 @@ test('should fire non-touch events inside View with pointerEvents="box-none" in 
 // the 'press' event on host View rendered by pressable.
 test('should fire on Pressable with pointerEvents="box-only" in props', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
-    <Pressable testID="pressable" pointerEvents="box-only" onPress={onPress} />,
-  );
+  unsafe_renderSync(<Pressable testID="pressable" pointerEvents="box-only" onPress={onPress} />);
 
-  deprecated_fireEventSync.press(screen.getByTestId('pressable'));
+  unsafe_fireEventSync.press(screen.getByTestId('pressable'));
   expect(onPress).toHaveBeenCalled();
 });
 
 test('should fire on Pressable with pointerEvents="box-only" in styles', () => {
   const onPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <Pressable testID="pressable" style={{ pointerEvents: 'box-only' }} onPress={onPress} />,
   );
 
-  deprecated_fireEventSync.press(screen.getByTestId('pressable'));
+  unsafe_fireEventSync.press(screen.getByTestId('pressable'));
   expect(onPress).toHaveBeenCalled();
 });
 
 test('should pass event up on disabled TouchableOpacity', () => {
   const handleInnerPress = jest.fn();
   const handleOuterPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <TouchableOpacity onPress={handleOuterPress}>
       <TouchableOpacity onPress={handleInnerPress} disabled={true}>
         <Text>Inner Trigger</Text>
@@ -435,7 +431,7 @@ test('should pass event up on disabled TouchableOpacity', () => {
     </TouchableOpacity>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Inner Trigger'));
+  unsafe_fireEventSync.press(screen.getByText('Inner Trigger'));
   expect(handleInnerPress).not.toHaveBeenCalled();
   expect(handleOuterPress).toHaveBeenCalledTimes(1);
 });
@@ -443,7 +439,7 @@ test('should pass event up on disabled TouchableOpacity', () => {
 test('should pass event up on disabled Pressable', () => {
   const handleInnerPress = jest.fn();
   const handleOuterPress = jest.fn();
-  deprecated_renderSync(
+  unsafe_renderSync(
     <Pressable onPress={handleOuterPress}>
       <Pressable onPress={handleInnerPress} disabled={true}>
         <Text>Inner Trigger</Text>
@@ -451,7 +447,7 @@ test('should pass event up on disabled Pressable', () => {
     </Pressable>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Inner Trigger'));
+  unsafe_fireEventSync.press(screen.getByText('Inner Trigger'));
   expect(handleInnerPress).not.toHaveBeenCalled();
   expect(handleOuterPress).toHaveBeenCalledTimes(1);
 });
@@ -470,9 +466,9 @@ const TestComponent = ({ onPress }: TestComponentProps) => {
 
 test('is not fooled by non-native disabled prop', () => {
   const handlePress = jest.fn();
-  deprecated_renderSync(<TestComponent onPress={handlePress} disabled={true} />);
+  unsafe_renderSync(<TestComponent onPress={handlePress} disabled={true} />);
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger Test'));
+  unsafe_fireEventSync.press(screen.getByText('Trigger Test'));
   expect(handlePress).toHaveBeenCalledTimes(1);
 });
 
@@ -494,13 +490,13 @@ function TestChildTouchableComponent({ onPress, someProp }: TestChildTouchableCo
 test('is not fooled by non-responder wrapping host elements', () => {
   const handlePress = jest.fn();
 
-  deprecated_renderSync(
+  unsafe_renderSync(
     <View>
       <TestChildTouchableComponent onPress={handlePress} someProp={true} />
     </View>,
   );
 
-  deprecated_fireEventSync.press(screen.getByText('Trigger'));
+  unsafe_fireEventSync.press(screen.getByText('Trigger'));
   expect(handlePress).not.toHaveBeenCalled();
 });
 
@@ -522,57 +518,55 @@ function TestDraggableComponent({ onDrag }: TestDraggableComponentProps) {
 test('has only onMove', () => {
   const handleDrag = jest.fn();
 
-  deprecated_renderSync(<TestDraggableComponent onDrag={handleDrag} />);
+  unsafe_renderSync(<TestDraggableComponent onDrag={handleDrag} />);
 
-  deprecated_fireEventSync(screen.getByText('Trigger'), 'responderMove', {
+  unsafe_fireEventSync(screen.getByText('Trigger'), 'responderMove', {
     touchHistory: { mostRecentTimeStamp: '2', touchBank: [] },
   });
   expect(handleDrag).toHaveBeenCalled();
 });
 
-// Those events ideally should be triggered through `deprecated_fireEventSync.scroll`, but they are handled at the
+// Those events ideally should be triggered through `unsafe_fireEventSync.scroll`, but they are handled at the
 // native level, so we need to support manually triggering them
 describe('native events', () => {
   test('triggers onScrollBeginDrag', () => {
     const onScrollBeginDragSpy = jest.fn();
-    deprecated_renderSync(<ScrollView testID="test-id" onScrollBeginDrag={onScrollBeginDragSpy} />);
+    unsafe_renderSync(<ScrollView testID="test-id" onScrollBeginDrag={onScrollBeginDragSpy} />);
 
-    deprecated_fireEventSync(screen.getByTestId('test-id'), 'onScrollBeginDrag');
+    unsafe_fireEventSync(screen.getByTestId('test-id'), 'onScrollBeginDrag');
     expect(onScrollBeginDragSpy).toHaveBeenCalled();
   });
 
   test('triggers onScrollEndDrag', () => {
     const onScrollEndDragSpy = jest.fn();
-    deprecated_renderSync(<ScrollView testID="test-id" onScrollEndDrag={onScrollEndDragSpy} />);
+    unsafe_renderSync(<ScrollView testID="test-id" onScrollEndDrag={onScrollEndDragSpy} />);
 
-    deprecated_fireEventSync(screen.getByTestId('test-id'), 'onScrollEndDrag');
+    unsafe_fireEventSync(screen.getByTestId('test-id'), 'onScrollEndDrag');
     expect(onScrollEndDragSpy).toHaveBeenCalled();
   });
 
   test('triggers onMomentumScrollBegin', () => {
     const onMomentumScrollBeginSpy = jest.fn();
-    deprecated_renderSync(
+    unsafe_renderSync(
       <ScrollView testID="test-id" onMomentumScrollBegin={onMomentumScrollBeginSpy} />,
     );
 
-    deprecated_fireEventSync(screen.getByTestId('test-id'), 'onMomentumScrollBegin');
+    unsafe_fireEventSync(screen.getByTestId('test-id'), 'onMomentumScrollBegin');
     expect(onMomentumScrollBeginSpy).toHaveBeenCalled();
   });
 
   test('triggers onMomentumScrollEnd', () => {
     const onMomentumScrollEndSpy = jest.fn();
-    deprecated_renderSync(
-      <ScrollView testID="test-id" onMomentumScrollEnd={onMomentumScrollEndSpy} />,
-    );
+    unsafe_renderSync(<ScrollView testID="test-id" onMomentumScrollEnd={onMomentumScrollEndSpy} />);
 
-    deprecated_fireEventSync(screen.getByTestId('test-id'), 'onMomentumScrollEnd');
+    unsafe_fireEventSync(screen.getByTestId('test-id'), 'onMomentumScrollEnd');
     expect(onMomentumScrollEndSpy).toHaveBeenCalled();
   });
 });
 
 test('should handle unmounted elements gracefully', () => {
   const onPress = jest.fn();
-  const { unmount } = deprecated_renderSync(
+  const { unmount } = unsafe_renderSync(
     <TouchableOpacity onPress={onPress}>
       <Text>Test</Text>
     </TouchableOpacity>,
@@ -582,6 +576,6 @@ test('should handle unmounted elements gracefully', () => {
   unmount();
 
   // Firing event on unmounted element should not crash
-  deprecated_fireEventSync.press(element);
+  unsafe_fireEventSync.press(element);
   expect(onPress).not.toHaveBeenCalled();
 });

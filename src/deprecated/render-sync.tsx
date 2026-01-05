@@ -26,14 +26,14 @@ export interface RenderSyncOptions {
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export default function deprecated_renderSync<T>(
+export default function unsafe_renderSync<T>(
   component: React.ReactElement<T>,
   options: RenderSyncOptions = {},
 ) {
   return renderInternal(component, options);
 }
 
-export type RenderSyncResult = ReturnType<typeof deprecated_renderSync>;
+export type RenderSyncResult = ReturnType<typeof unsafe_renderSync>;
 
 export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderSyncOptions) {
   const { wrapper: Wrapper } = options || {};
