@@ -95,7 +95,7 @@ You can opt-out of this behavior by running tests with `RNTL_SKIP_AUTO_CLEANUP=t
 
 ### No [NativeTestInstance](https://www.native-testing-library.com/docs/api-test-instance) abstraction
 
-We don't provide any abstraction over `ReactTestInstance` returned by queries, but allow to use it directly to access queried component's `props` or `type` for that example.
+We don't provide any abstraction over `HostElement` returned by queries, but allow to use it directly to access queried component's `props` or `type` for that example.
 
 ### No `container` nor `baseElement` returned from `render`
 
@@ -109,7 +109,7 @@ There are slight differences in how `fireEvent` works in both libraries:
 1. Signature is different:
    ```diff
    -fireEvent[eventName](node: FiberRoot, eventProperties: NativeTestEvent)
-   +fireEvent(element: ReactTestInstance, eventName: string, ...data: Array<any>)
+   +fireEvent(element: HostElement, eventName: string, ...data: Array<any>)
    ```
 1. There is no `NativeTestEvent` - second and rest arguments are used instead.
 1. There are only 3 short-hand events: [`fireEvent.press`](docs/api/events/fire-event#press), [`fireEvent.changeText`](docs/api/events/fire-event#change-text) and [`fireEvent.scroll`](docs/api/events/fire-event#scroll). For all other or custom events you can use the base signature.

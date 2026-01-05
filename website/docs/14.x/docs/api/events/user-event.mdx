@@ -34,7 +34,7 @@ Creates a User Event object instance, which can be used to trigger events.
 
 ```ts
 press(
-  element: ReactTestInstance,
+  element: HostElement,
 ): Promise<void>
 ```
 
@@ -53,7 +53,7 @@ This event will take a minimum of 130 ms to run due to the internal React Native
 
 ```ts
 longPress(
-  element: ReactTestInstance,
+  element: HostElement,
   options: { duration: number } = { duration: 500 }
 ): Promise<void>
 ```
@@ -77,7 +77,7 @@ This event will, by default, take 500 ms to run. Due to internal React Native lo
 
 ```ts
 type(
-  element: ReactTestInstance,
+  element: HostElement,
   text: string,
   options?: {
     skipPress?: boolean;
@@ -142,7 +142,7 @@ The `endEditing` and `blur` events can be skipped by passing the `skipBlur: true
 
 ```ts
 clear(
-  element: ReactTestInstance,
+  element: HostElement,
 )
 ```
 
@@ -185,7 +185,7 @@ Events will not be emitted if the `editable` prop is set to `false`.
 
 ```ts
 paste(
-  element: ReactTestInstance,
+  element: HostElement,
   text: string,
 )
 ```
@@ -228,7 +228,7 @@ Events will not be emitted if the `editable` prop is set to `false`.
 
 ```ts
 scrollTo(
-  element: ReactTestInstance,
+  element: HostElement,
   options: {
     y: number,
     momentumY?: number,

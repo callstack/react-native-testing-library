@@ -43,14 +43,14 @@ It's worth noting that the React Testing Library (web one) works a bit different
 
 Calling the `render()` function creates an element tree. This is done internally by invoking `TestRenderer.create()` method. The output tree represents your React Native component tree, and each node of that tree is an "instance" of some React component (to be more precise, each node represents a React fiber, and only class components have instances, while function components store the hook state using fibers).
 
-These tree elements are represented by `ReactTestInstance` type:
+These tree elements are represented by `HostElement` type:
 
 ```tsx
-interface ReactTestInstance {
+interface HostElement {
   type: ElementType;
   props: { [propName: string]: any };
-  parent: ReactTestInstance | null;
-  children: Array<ReactTestInstance | string>;
+  parent: HostElement | null;
+  children: Array<HostElement | string>;
 
   // Other props and methods
 }
@@ -96,7 +96,7 @@ Not all React Native components are organized this way, e.g., when you use `Pres
 
 ### Differentiating between host and composite elements
 
-Any easy way to differentiate between host and composite elements is the `type` prop of `ReactTestInstance`:
+Any easy way to differentiate between host and composite elements is the `type` prop of `HostElement`:
 
 - for host components, it's always a string value representing a component name, e.g., `"View"`
 - for composite components, it's a function or class corresponding to the component
@@ -104,7 +104,7 @@ Any easy way to differentiate between host and composite elements is the `type` 
 You can use the following code to check if a given element is a host one:
 
 ```jsx
-function isHostElement(element: ReactTestInstance) {
+function isHostElement(element: HostElement) {
   return typeof element.type === 'string';
 }
 ```
@@ -135,7 +135,7 @@ In the above example, user-defined components accept both `onPress` and `style` 
 You should avoid navigating over the element tree, as this makes your testing code fragile and may result in false positives. This section is more relevant for people who want to contribute to our codebase.
 :::
 
-You will encounter host and composite elements when navigating a tree of react elements using `parent` or `children` props of a `ReactTestInstance` element. You should be careful when navigating the element tree, as the tree structure for third-party components can change independently from your code and cause unexpected test failures.
+You will encounter host and composite elements when navigating a tree of react elements using `parent` or `children` props of a `HostElement` element. You should be careful when navigating the element tree, as the tree structure for third-party components can change independently from your code and cause unexpected test failures.
 
 Inside RNTL, we have various tree navigation helpers: `getHostParent`, `getHostChildren`, etc. These are intentionally not exported, as using them is not recommended.
 

@@ -11,8 +11,8 @@ RNTL 14 introduces async versions of the core testing APIs to handle React 19's 
 **Rendering APIs:**
 
 - **[`render`](docs/api/render#render)** - now async by default (was `renderAsync` in v13)
-- **[`screen.rerenderAsync`](docs/api/screen#rerender-async)** - async version of `screen.rerender`
-- **[`screen.unmountAsync`](docs/api/screen#unmount-async)** - async version of `screen.unmount`
+- **[`screen.rerender`](docs/api/screen#rerender)** - now async (returns `Promise<void>`)
+- **[`screen.unmount`](docs/api/screen#unmount)** - now async (returns `Promise<void>`)
 
 **Event APIs:**
 

@@ -3,12 +3,12 @@
 ```ts
 let screen: {
   ...queries;
-  rerender(element: React.Element<unknown>): void;
-  unmount(): void;
+  rerender(element: React.Element<unknown>): Promise<void>;
+  unmount(): Promise<void>;
   debug(options?: DebugOptions): void
-  toJSON(): ReactTestRendererJSON | null;
-  root: ReactTestInstance;
-  UNSAFE_root: ReactTestInstance;
+  toJSON(): JsonElement | null;
+  container: HostElement;
+  root: HostElement;
 };
 ```
 
@@ -27,8 +27,10 @@ See [Queries](docs/api/queries) for a complete list.
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<MyComponent />);
-const buttonStart = screen.getByRole('button', { name: 'start' });
+test('example', async () => {
+  await render(<MyComponent />);
+  const buttonStart = screen.getByRole('button', { name: 'start' });
+});
 ```
 
 ### `rerender`
@@ -36,32 +38,20 @@ const buttonStart = screen.getByRole('button', { name: 'start' });
 _Also available under `update` alias_
 
 ```ts
-function rerender(element: React.Element<unknown>): void;
+function rerender(element: React.Element<unknown>): Promise<void>;
 ```
 
 Re-render the in-memory tree with a new root element. This simulates a React update render at the root. If the new element has the same type (and `key`) as the previous element, the tree will be updated; otherwise, it will re-mount a new tree, in both cases triggering the appropriate lifecycle events.
 
-### `rerenderAsync`
-
-_Also available under `updateAsync` alias_
-
-:::info RNTL minimal version
-This API requires RNTL v13.3.0 or later.
-:::
-
-```ts
-function rerenderAsync(element: React.Element<unknown>): Promise<void>;
-```
-
-Async versions of [`rerender`](#rerender) designed for working with React 19 and React Suspense. This method uses async `act` function internally to ensure all pending React updates are executed during updating.
+This method is async and uses async `act` function internally to ensure all pending React updates are executed during updating, making it compatible with React 19, React Suspense, and `React.use()`.
 
 ```jsx
-import { renderAsync, screen } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
 test('async rerender test', async () => {
-  await renderAsync(<MyComponent initialData="first" />);
+  await render(<MyComponent initialData="first" />);
 
-  await screen.rerenderAsync(<MyComponent initialData="updated" />);
+  await screen.rerender(<MyComponent initialData="updated" />);
   expect(screen.getByText('updated')).toBeOnTheScreen();
 });
 ```
@@ -69,31 +59,17 @@ test('async rerender test', async () => {
 ### `unmount`
 
 ```ts
-function unmount(): void;
+function unmount(): Promise<void>;
 ```
 
 Unmount the in-memory tree, triggering the appropriate lifecycle events.
+
+This method is async and uses async `act` function internally to ensure all pending React updates are executed during unmounting, making it compatible with React 19, React Suspense, and `React.use()`.
 
 :::note
 
 Usually you should not need to call `unmount` as it is done automatically if your test runner supports `afterEach` hook (like Jest, mocha, Jasmine).
 
-:::
-
-### `unmountAsync`
-
-:::info RNTL minimal version
-This API requires RNTL v13.3.0 or later.
-:::
-
-```ts
-function unmountAsync(): Promise<void>;
-```
-
-Async version of [`unmount`](#unmount) designed for working with React 19 and React Suspense. This method uses async `act` function internally to ensure all pending React updates are executed during unmounting.
-
-:::note
-Usually you should not need to call `unmountAsync` as it is done automatically if your test runner supports `afterEach` hook (like Jest, mocha, Jasmine).
 :::
 
 ### `debug`
@@ -109,7 +85,7 @@ Pretty prints deeply rendered component passed to `render`.
 You can provide a message that will be printed on top.
 
 ```jsx
-render(<Component />);
+await render(<Component />);
 screen.debug({ message: 'optional message' });
 ```
 
@@ -134,7 +110,7 @@ function debug({ mapProps: (props) => ({}) });
 You can use the `mapProps` option to transform the props that will be printed :
 
 ```jsx
-render(<View style={{ backgroundColor: 'red' }} />);
+await render(<View style={{ backgroundColor: 'red' }} />);
 screen.debug({ mapProps: ({ style, ...props }) => ({ props }) });
 ```
 
@@ -161,33 +137,48 @@ screen.debug({ mapProps: ({ path, ...props }) => ({ ...props }) });
 ### `toJSON`
 
 ```ts
-function toJSON(): ReactTestRendererJSON | null;
+function toJSON(): JsonElement | null;
 ```
 
 Get the rendered component JSON representation, e.g. for snapshot testing.
 
+### `container`
+
+```ts
+const container: HostElement;
+```
+
+Returns a pseudo-element container whose children are the elements you asked to render. This is the root container element from React Test Renderer.
+
+The `container` is safe to use and provides access to the entire rendered tree. It's useful when you need to query or manipulate the entire rendered output, similar to how `container` works in [React Testing Library](https://testing-library.com/docs/react-testing-library/other#container-1).
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+test('example', async () => {
+  await render(<MyComponent />);
+  // container contains the entire rendered tree
+  const container = screen.container;
+  expect(container).toBeTruthy();
+});
+```
+
 ### `root`
 
 ```ts
-const root: ReactTestInstance;
+const root: HostElement;
 ```
 
-Returns the rendered root [host element](docs/advanced/testing-env#host-and-composite-components).
+Returns the rendered root [host element](docs/advanced/testing-env#host-and-composite-components). This is the first child of the `container`, which represents the actual root element you rendered.
 
 This API is primarily useful for component tests, as it allows you to access root host view without using `*ByTestId` queries or similar methods.
 
-### `UNSAFE_root`
+```jsx
+import { render, screen } from '@testing-library/react-native';
 
-:::caution
-This API typically will return a composite view, which goes against recommended testing practices. This API is primarily available for legacy test suites that rely on such testing.
-:::
-
-```ts
-const UNSAFE_root: ReactTestInstance;
+test('example', async () => {
+  await render(<View testID="root-view"><Text>Hello</Text></View>);
+  // root is the View element you rendered
+  expect(screen.root.props.testID).toBe('root-view');
+});
 ```
-
-Returns the rendered [composite root element](docs/advanced/testing-env#host-and-composite-components).
-
-:::note
-This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/other#container-1). However, despite the same name, the actual behavior has been significantly different; hence, we decided to change the name to `UNSAFE_root`.
-:::

@@ -69,7 +69,7 @@ See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testin
 
 :::warning Async lifecycle methods
 
-When using `render`, you have to use corresponding lifecycle methods: `rerenderAsync` and `unmountAsync` instead of their sync versions.
+When using `render`, the lifecycle methods `rerender`, `update`, and `unmount` are async and must be awaited.
 
 :::
 

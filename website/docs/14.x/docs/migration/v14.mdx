@@ -4,63 +4,6 @@ This guide describes the migration to React Native Testing Library version 14 fr
 
 ## Breaking changes
 
-### `fireEvent` is now async by default
-
-In v14, `fireEvent` and its helpers (`press`, `changeText`, `scroll`) are now async by default and return a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
-
-**Before (v13):**
-
-```ts
-import { fireEvent, screen } from '@testing-library/react-native';
-
-it('should press button', () => {
-  render(<MyComponent />);
-  fireEvent.press(screen.getByText('Press me'));
-  expect(onPress).toHaveBeenCalled();
-});
-```
-
-**After (v14):**
-
-```ts
-import { fireEvent, screen } from '@testing-library/react-native';
-
-it('should press button', async () => {
-  render(<MyComponent />);
-  await fireEvent.press(screen.getByText('Press me'));
-  expect(onPress).toHaveBeenCalled();
-});
-```
-
-### Migration path
-
-To ease migration, we provide `unsafe_fireEventSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
-
-#### `unsafe_fireEventSync` {#unsafe-fire-event-sync}
-
-```ts
-function unsafe_fireEventSync(
-  element: ReactTestInstance,
-  eventName: string,
-  ...data: unknown[]
-): void;
-```
-
-**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `fireEvent` instead.
-
-The synchronous version of `fireEvent` that returns immediately without awaiting React updates. This maintains backward compatibility with v13 tests but is not recommended for new code.
-
-```ts
-// Old v13 code (still works but deprecated)
-import { unsafe_fireEventSync } from '@testing-library/react-native';
-
-it('should press button', () => {
-  render(<MyComponent />);
-  unsafe_fireEventSync.press(screen.getByText('Press me'));
-  expect(onPress).toHaveBeenCalled();
-});
-```
-
 ### `render` is now async by default {#render-async-default}
 
 In v14, `render` is now async by default and returns a Promise. The previous synchronous `render` function has been renamed to `unsafe_renderSync`. This change makes it compatible with React 19, React Suspense, and `React.use()`.
@@ -87,11 +30,11 @@ it('should render component', async () => {
 });
 ```
 
-### Migration path
+#### Migration path
 
 To ease migration, we provide `unsafe_renderSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
 
-#### `unsafe_renderSync` {#unsafe-render-sync}
+##### `unsafe_renderSync` {#unsafe-render-sync}
 
 ```ts
 function unsafe_renderSync(
@@ -114,11 +57,11 @@ it('should render component', () => {
 });
 ```
 
-### Step-by-step migration guide
+#### Step-by-step migration guide
 
 To migrate from `unsafe_renderSync` to `render`:
 
-### 1. Add `async` to your test function
+##### 1. Add `async` to your test function
 
 ```ts
 // Before
@@ -128,7 +71,7 @@ it('should render component', () => {
 it('should render component', async () => {
 ```
 
-### 2. Await `render`
+##### 2. Await `render`
 
 ```ts
 // Before
@@ -138,27 +81,27 @@ render(<MyComponent />);
 await render(<MyComponent />);
 ```
 
-### 3. Update `rerender` calls to use `rerenderAsync` and await
+##### 3. Update `rerender` calls to await
 
 ```ts
 // Before
 screen.rerender(<MyComponent />);
 
 // After
-await screen.rerenderAsync(<MyComponent />);
+await screen.rerender(<MyComponent />);
 ```
 
-### 4. Update `unmount` calls to use `unmountAsync` and await
+##### 4. Update `unmount` calls to await
 
 ```ts
 // Before
 screen.unmount();
 
 // After
-await screen.unmountAsync();
+await screen.unmount();
 ```
 
-### Complete example
+#### Complete example
 
 **Before (v13):**
 
@@ -185,14 +128,14 @@ it('should update component', async () => {
   await render(<Counter initialCount={0} />);
   expect(screen.getByText('Count: 0')).toBeOnTheScreen();
 
-  await screen.rerenderAsync(<Counter initialCount={5} />);
+  await screen.rerender(<Counter initialCount={5} />);
   expect(screen.getByText('Count: 5')).toBeOnTheScreen();
 
-  await screen.unmountAsync();
+  await screen.unmount();
 });
 ```
 
-## Benefits of async `render`
+#### Benefits of async `render`
 
 - **React 19 compatibility**: Works seamlessly with React 19's async features
 - **Suspense support**: Properly handles React Suspense boundaries and `React.use()`
@@ -231,11 +174,11 @@ it('should test hook', async () => {
 });
 ```
 
-### Migration path
+#### Migration path
 
 To ease migration, we provide `unsafe_renderHookSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
 
-#### `unsafe_renderHookSync` {#unsafe-render-hook-sync}
+##### `unsafe_renderHookSync` {#unsafe-render-hook-sync}
 
 ```ts
 function unsafe_renderHookSync<Result, Props>(
@@ -265,7 +208,7 @@ it('should increment count', () => {
 });
 ```
 
-#### Result types
+##### Result types
 
 **v13 (deprecated):**
 
@@ -289,11 +232,11 @@ interface RenderHookResult<Result, Props> {
 
 **Note**: Both `RenderHookSyncResult` and `RenderHookResult` use `rerender` and `unmount` methods. The difference is that `RenderHookSyncResult` methods are synchronous (return `void`), while `RenderHookResult` methods are async (return `Promise<void>`).
 
-## Step-by-step migration guide
+#### Step-by-step migration guide
 
 To migrate from `unsafe_renderHookSync` to `renderHook`:
 
-### 1. Add `async` to your test function
+##### 1. Add `async` to your test function
 
 ```ts
 // Before
@@ -303,7 +246,7 @@ it('should test hook', () => {
 it('should test hook', async () => {
 ```
 
-### 2. Await `renderHook`
+##### 2. Await `renderHook`
 
 ```ts
 // Before
@@ -313,7 +256,7 @@ const { result } = unsafe_renderHookSync(() => useMyHook());
 const { result } = await renderHook(() => useMyHook());
 ```
 
-### 3. Update `rerender` calls to await
+##### 3. Update `rerender` calls to await
 
 ```ts
 // Before
@@ -323,7 +266,7 @@ rerender(newProps);
 await rerender(newProps);
 ```
 
-### 4. Update `unmount` calls to await
+##### 4. Update `unmount` calls to await
 
 ```ts
 // Before
@@ -333,7 +276,7 @@ unmount();
 await unmount();
 ```
 
-### 5. Update `act` calls to use async `act`
+##### 5. Update `act` calls to use async `act`
 
 ```ts
 // Before
@@ -347,7 +290,7 @@ await act(async () => {
 });
 ```
 
-## Complete example
+#### Complete example
 
 **Before (v13):**
 
@@ -393,7 +336,7 @@ it('should increment count', async () => {
 });
 ```
 
-## Benefits of async `renderHook`
+#### Benefits of async `renderHook`
 
 - **React 19 compatibility**: Works seamlessly with React 19's async features
 - **Suspense support**: Properly handles React Suspense boundaries and `React.use()`
@@ -401,3 +344,56 @@ it('should increment count', async () => {
 - **Future-proof**: Aligns with React's direction toward async rendering
 
 For more details, see the [`renderHook` API documentation](/docs/api/misc/render-hook).
+
+### `fireEvent` is now async by default
+
+In v14, `fireEvent` and its helpers (`press`, `changeText`, `scroll`) are now async by default and return a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+
+**Before (v13):**
+
+```ts
+import { fireEvent, screen } from '@testing-library/react-native';
+
+it('should press button', () => {
+  render(<MyComponent />);
+  fireEvent.press(screen.getByText('Press me'));
+  expect(onPress).toHaveBeenCalled();
+});
+```
+
+**After (v14):**
+
+```ts
+import { fireEvent, screen } from '@testing-library/react-native';
+
+it('should press button', async () => {
+  render(<MyComponent />);
+  await fireEvent.press(screen.getByText('Press me'));
+  expect(onPress).toHaveBeenCalled();
+});
+```
+
+#### Migration path
+
+To ease migration, we provide `unsafe_fireEventSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
+
+##### `unsafe_fireEventSync` {#unsafe-fire-event-sync}
+
+```ts
+function unsafe_fireEventSync(element: HostElement, eventName: string, ...data: unknown[]): void;
+```
+
+**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `fireEvent` instead.
+
+The synchronous version of `fireEvent` that returns immediately without awaiting React updates. This maintains backward compatibility with v13 tests but is not recommended for new code.
+
+```ts
+// Old v13 code (still works but deprecated)
+import { unsafe_fireEventSync } from '@testing-library/react-native';
+
+it('should press button', () => {
+  render(<MyComponent />);
+  unsafe_fireEventSync.press(screen.getByText('Press me'));
+  expect(onPress).toHaveBeenCalled();
+});
+```

@@ -18,14 +18,14 @@ For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
 
 The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
 
-| Variant                                        | Assertion                     | Return type                                | Is Async? |
-| ---------------------------------------------- | ----------------------------- | ------------------------------------------ | --------- |
-| [`getBy*`](docs/api/queries#get-by)            | Exactly one matching element  | `ReactTestInstance`                        | No        |
-| [`getAllBy*`](docs/api/queries#get-all-by)     | At least one matching element | `Array<ReactTestInstance>`                 | No        |
-| [`queryBy*`](docs/api/queries#query-by)        | Zero or one matching element  | <code>ReactTestInstance &#124; null</code> | No        |
-| [`queryAllBy*`](docs/api/queries#query-all-by) | No assertion                  | `Array<ReactTestInstance>`                 | No        |
-| [`findBy*`](docs/api/queries#find-by)          | Exactly one matching element  | `Promise<ReactTestInstance>`               | Yes       |
-| [`findAllBy*`](docs/api/queries#find-all-by)   | At least one matching element | `Promise<Array<ReactTestInstance>>`        | Yes       |
+| Variant                                        | Assertion                     | Return type                          | Is Async? |
+| ---------------------------------------------- | ----------------------------- | ------------------------------------ | --------- |
+| [`getBy*`](docs/api/queries#get-by)            | Exactly one matching element  | `HostElement`                        | No        |
+| [`getAllBy*`](docs/api/queries#get-all-by)     | At least one matching element | `Array<HostElement>`                 | No        |
+| [`queryBy*`](docs/api/queries#query-by)        | Zero or one matching element  | <code>HostElement &#124; null</code> | No        |
+| [`queryAllBy*`](docs/api/queries#query-all-by) | No assertion                  | `Array<HostElement>`                 | No        |
+| [`findBy*`](docs/api/queries#find-by)          | Exactly one matching element  | `Promise<HostElement>`               | Yes       |
+| [`findAllBy*`](docs/api/queries#find-all-by)   | At least one matching element | `Promise<Array<HostElement>>`        | Yes       |
 
 Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
 

@@ -10,11 +10,7 @@ Use Fire Event for cases not supported by User Event and for triggering event ha
 :::
 
 ```ts
-function fireEvent(
-  element: ReactTestInstance,
-  eventName: string,
-  ...data: unknown[]
-): Promise<unknown>;
+function fireEvent(element: HostElement, eventName: string, ...data: unknown[]): Promise<unknown>;
 ```
 
 The `fireEvent` API allows you to trigger all kinds of event handlers on both host and composite components. It will try to invoke a single event handler traversing the component tree bottom-up from passed element and trying to find enabled event handler named `onXxx` when `xxx` is the name of the event passed.
@@ -71,7 +67,7 @@ It is recommended to use the User Event [`press()`](docs/api/events/user-event#p
 
 ```tsx
 fireEvent.press: (
-  element: ReactTestInstance,
+  element: HostElement,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```
@@ -110,7 +106,7 @@ It is recommended to use the User Event [`type()`](docs/api/events/user-event#ty
 
 ```tsx
 fireEvent.changeText: (
-  element: ReactTestInstance,
+  element: HostElement,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```
@@ -141,7 +137,7 @@ Prefer using [`user.scrollTo`](docs/api/events/user-event#scrollto) over `fireEv
 
 ```tsx
 fireEvent.scroll: (
-  element: ReactTestInstance,
+  element: HostElement,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```
@@ -175,11 +171,7 @@ await fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 ## `unsafe_fireEventSync` {#unsafe-fire-event-sync}
 
 ```ts
-function unsafe_fireEventSync(
-  element: ReactTestInstance,
-  eventName: string,
-  ...data: unknown[]
-): void;
+function unsafe_fireEventSync(element: HostElement, eventName: string, ...data: unknown[]): void;
 ```
 
 Synchronous version of `fireEvent`. Deprecated and will be removed in future versions.
