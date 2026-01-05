@@ -1,12 +1,12 @@
 import { ErrorWithStack } from './helpers/errors';
 import type { WaitForOptions } from './wait-for';
-import waitFor from './wait-for';
+import { waitFor } from './wait-for';
 
 function isRemoved<T>(result: T): boolean {
   return !result || (Array.isArray(result) && !result.length);
 }
 
-export default async function waitForElementToBeRemoved<T>(
+export async function waitForElementToBeRemoved<T>(
   expectation: () => T,
   options?: WaitForOptions,
 ): Promise<T> {

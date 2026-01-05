@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
-import { act, renderAsync, screen } from '..';
+import { act, render, screen } from '..';
 import { excludeConsoleMessage } from '../test-utils/console';
 
 jest.useFakeTimers();
@@ -26,7 +26,7 @@ test('resolves manually-controlled promise', async () => {
     resolvePromise = resolve;
   });
 
-  await renderAsync(
+  await render(
     <View>
       <React.Suspense fallback={<Text>Loading...</Text>}>
         <Suspending promise={promise} testID="content" />
@@ -50,7 +50,7 @@ test('resolves timer-controlled promise', async () => {
     setTimeout(() => resolve(null), 100);
   });
 
-  await renderAsync(
+  await render(
     <View>
       <React.Suspense fallback={<Text>Loading...</Text>}>
         <Suspending promise={promise} testID="content" />
@@ -96,7 +96,7 @@ test('handles promise rejection with error boundary', async () => {
     rejectPromise = reject;
   });
 
-  await renderAsync(
+  await render(
     <ErrorBoundary fallback={<Text>Error occurred</Text>}>
       <React.Suspense fallback={<Text>Loading...</Text>}>
         <Suspending promise={promise} testID="content" />
@@ -126,7 +126,7 @@ test('handles multiple suspending components', async () => {
     resolvePromise2 = resolve;
   });
 
-  await renderAsync(
+  await render(
     <View>
       <React.Suspense fallback={<Text>Loading...</Text>}>
         <Suspending promise={promise1} testID="content-1" />
@@ -163,7 +163,7 @@ test('handles multiple suspense boundaries independently', async () => {
     resolvePromise2 = resolve;
   });
 
-  await renderAsync(
+  await render(
     <View>
       <React.Suspense fallback={<Text>First Loading...</Text>}>
         <Suspending promise={promise1} testID="content-1" />

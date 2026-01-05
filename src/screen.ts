@@ -2,7 +2,7 @@ import type { HostElement } from 'universal-test-renderer';
 
 import type { RenderResult } from './render';
 
-const SCREEN_ERROR = '`render` method has not been called';
+const SCREEN_ERROR = '`render` function has not been called';
 
 const notImplemented = () => {
   throw new Error(SCREEN_ERROR);
@@ -22,11 +22,8 @@ const defaultScreen: Screen = {
   },
   debug: notImplemented,
   rerender: notImplemented,
-  rerenderAsync: notImplemented,
   update: notImplemented,
-  updateAsync: notImplemented,
   unmount: notImplemented,
-  unmountAsync: notImplemented,
   toJSON: notImplemented,
   getByLabelText: notImplemented,
   getAllByLabelText: notImplemented,

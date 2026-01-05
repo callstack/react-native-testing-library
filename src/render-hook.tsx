@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import render from './render';
-import renderAsync from './render-async';
+import { render } from './render';
 import type { RefObject } from './types';
+import { unsafe_renderSync } from './unsafe-render-sync';
 
 export type RenderHookResult<Result, Props> = {
   result: RefObject<Result>;
@@ -47,21 +47,21 @@ export async function renderHook<Result, Props>(
   }
 
   const { initialProps, ...renderOptions } = options ?? {};
-  const { rerenderAsync: rerenderComponentAsync, unmountAsync } = await renderAsync(
-    // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
+  const { rerender: rerenderComponent, unmount } = await render(
+    // @ts-expect-error since option can be undefined, initialProps can be undefined when it shouldn't be
     <HookContainer hookProps={initialProps} />,
     renderOptions,
   );
 
   return {
     result: result,
-    rerender: (hookProps: Props) => rerenderComponentAsync(<HookContainer hookProps={hookProps} />),
-    unmount: unmountAsync,
+    rerender: (hookProps: Props) => rerenderComponent(<HookContainer hookProps={hookProps} />),
+    unmount,
   };
 }
 
 /** @deprecated - Use async `renderHook` instead.   */
-export function deprecated_renderHookSync<Result, Props>(
+export function unsafe_renderHookSync<Result, Props>(
   hookToRender: (props: Props) => Result,
   options?: RenderHookOptions<NoInfer<Props>>,
 ): RenderHookSyncResult<Result, Props> {
@@ -77,7 +77,7 @@ export function deprecated_renderHookSync<Result, Props>(
   }
 
   const { initialProps, ...renderOptions } = options ?? {};
-  const { rerender: rerenderComponent, unmount } = render(
+  const { rerender: rerenderComponent, unmount } = unsafe_renderSync(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it should'nt
     <HookContainer hookProps={initialProps} />,
     renderOptions,

@@ -1,17 +1,17 @@
 import * as React from 'react';
-import type { HostElement, Root, RootOptions } from 'universal-test-renderer';
+import type { HostElement, JsonElement, Root, RootOptions } from 'universal-test-renderer';
 
 import act from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
-import { ErrorWithStack } from './helpers/errors';
-import { renderWithAsyncAct } from './render-act';
+import { HOST_TEXT_NAMES } from './helpers/host-component-names';
+import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
-export interface RenderAsyncOptions {
+export interface RenderSyncOptions {
   /**
    * Pass a React Component as the wrapper option to have it rendered around the inner element. This is most useful for creating
    * reusable custom render functions for common data providers.
@@ -19,26 +19,33 @@ export interface RenderAsyncOptions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: React.ComponentType<any>;
 
-  createNodeMock?: (element: React.ReactElement) => unknown;
+  createNodeMock?: (element: React.ReactElement) => object;
 }
 
-export type RenderAsyncResult = ReturnType<typeof renderAsync>;
-
 /**
+ * @deprecated Use `render` (async) instead. This function is provided for migration purposes only.
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export default async function renderAsync<T>(
+export function unsafe_renderSync<T>(
   component: React.ReactElement<T>,
-  options: RenderAsyncOptions = {},
+  options: RenderSyncOptions = {},
 ) {
-  const { wrapper: Wrapper } = options || {};
+  return renderInternal(component, options);
+}
 
-  // TODO allow passing some options
-  const rendererOptions: RootOptions = {};
+export type RenderSyncResult = ReturnType<typeof unsafe_renderSync>;
+
+export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderSyncOptions) {
+  const { wrapper: Wrapper, createNodeMock } = options || {};
+
+  const rendererOptions: RootOptions = {
+    textComponents: HOST_TEXT_NAMES,
+    createNodeMock,
+  };
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-  const renderer = await renderWithAsyncAct(wrap(component), rendererOptions);
+  const renderer = renderWithAct(wrap(component), rendererOptions);
   return buildRenderResult(renderer, wrap);
 }
 
@@ -46,14 +53,12 @@ function buildRenderResult(
   renderer: Root,
   wrap: (element: React.ReactElement) => React.JSX.Element,
 ) {
-  const container = renderer.container;
-
-  const rerender = (_component: React.ReactElement) => {
-    throw new ErrorWithStack(
-      '"rerender(...)" is not supported when using "renderAsync" use "await rerenderAsync(...)" instead',
-      rerender,
-    );
+  const rerender = (component: React.ReactElement) => {
+    void act(() => {
+      renderer.render(wrap(component));
+    });
   };
+
   const rerenderAsync = async (component: React.ReactElement) => {
     // eslint-disable-next-line require-await
     await act(async () => {
@@ -62,11 +67,11 @@ function buildRenderResult(
   };
 
   const unmount = () => {
-    throw new ErrorWithStack(
-      '"unmount()" is not supported when using "renderAsync" use "await unmountAsync()" instead',
-      unmount,
-    );
+    void act(() => {
+      renderer.unmount();
+    });
   };
+
   const unmountAsync = async () => {
     // eslint-disable-next-line require-await
     await act(async () => {
@@ -74,23 +79,33 @@ function buildRenderResult(
     });
   };
 
+  const toJSON = (): JsonElement | null => {
+    const json = renderer.container.toJSON();
+    if (json?.children?.length === 0) {
+      return null;
+    }
+
+    if (json?.children?.length === 1 && typeof json.children[0] !== 'string') {
+      return json.children[0];
+    }
+
+    return json;
+  };
+
   addToCleanupQueue(unmountAsync);
 
   const result = {
     ...getQueriesForElement(renderer.container),
     rerender,
-    rerenderAsync,
-    update: rerender, // alias for `rerender`
-    updateAsync: rerenderAsync, // alias for `rerenderAsync`
+    update: rerender, // alias for 'rerender'
     unmount,
-    unmountAsync,
-    toJSON: () => renderer.container.toJSON(),
+    toJSON,
     debug: makeDebug(renderer),
     get container(): HostElement {
       return renderer.container;
     },
     get root(): HostElement | null {
-      const firstChild = container.children[0];
+      const firstChild = renderer.container.children[0];
       if (typeof firstChild === 'string') {
         throw new Error(
           'Invariant Violation: Root element must be a host element. Detected attempt to render a string within the root element.',
@@ -101,7 +116,12 @@ function buildRenderResult(
     },
   };
 
-  setRenderResult(result);
+  setRenderResult({
+    ...result,
+    rerender: rerenderAsync,
+    update: rerenderAsync,
+    unmount: unmountAsync,
+  });
 
   return result;
 }

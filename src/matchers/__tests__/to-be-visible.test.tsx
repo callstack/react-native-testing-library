@@ -3,8 +3,8 @@ import { Modal, View } from 'react-native';
 
 import { render, screen } from '../..';
 
-test('toBeVisible() on empty view', () => {
-  render(<View testID="view" />);
+test('toBeVisible() on empty view', async () => {
+  await render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
   expect(view).toBeVisible();
@@ -18,8 +18,8 @@ test('toBeVisible() on empty view', () => {
   `);
 });
 
-test('toBeVisible() on view with opacity', () => {
-  render(<View testID="view" style={{ opacity: 0.2 }} />);
+test('toBeVisible() on view with opacity', async () => {
+  await render(<View testID="view" style={{ opacity: 0.2 }} />);
 
   const view = screen.getByTestId('view');
   expect(view).toBeVisible();
@@ -33,8 +33,8 @@ test('toBeVisible() on view with opacity', () => {
   `);
 });
 
-test('toBeVisible() on view with 0 opacity', () => {
-  render(<View testID="view" style={{ opacity: 0 }} />);
+test('toBeVisible() on view with 0 opacity', async () => {
+  await render(<View testID="view" style={{ opacity: 0 }} />);
 
   const view = screen.getByTestId('view');
   expect(view).not.toBeVisible();
@@ -53,8 +53,8 @@ test('toBeVisible() on view with 0 opacity', () => {
   `);
 });
 
-test('toBeVisible() on view with display "none"', () => {
-  render(<View testID="view" style={{ display: 'none' }} />);
+test('toBeVisible() on view with display "none"', async () => {
+  await render(<View testID="view" style={{ display: 'none' }} />);
 
   const view = screen.getByTestId('view', { includeHiddenElements: true });
   expect(view).not.toBeVisible();
@@ -73,8 +73,8 @@ test('toBeVisible() on view with display "none"', () => {
   `);
 });
 
-test('toBeVisible() on ancestor view with 0 opacity', () => {
-  render(
+test('toBeVisible() on ancestor view with 0 opacity', async () => {
+  await render(
     <View style={{ opacity: 0 }}>
       <View>
         <View testID="view" />
@@ -94,8 +94,8 @@ test('toBeVisible() on ancestor view with 0 opacity', () => {
   `);
 });
 
-test('toBeVisible() on ancestor view with display "none"', () => {
-  render(
+test('toBeVisible() on ancestor view with display "none"', async () => {
+  await render(
     <View style={{ display: 'none' }}>
       <View>
         <View testID="view" />
@@ -115,8 +115,8 @@ test('toBeVisible() on ancestor view with display "none"', () => {
   `);
 });
 
-test('toBeVisible() on empty Modal', () => {
-  render(<Modal testID="modal" />);
+test('toBeVisible() on empty Modal', async () => {
+  await render(<Modal testID="modal" />);
 
   const modal = screen.getByTestId('modal');
   expect(modal).toBeVisible();
@@ -130,8 +130,8 @@ test('toBeVisible() on empty Modal', () => {
   `);
 });
 
-test('toBeVisible() on view within Modal', () => {
-  render(
+test('toBeVisible() on view within Modal', async () => {
+  await render(
     <Modal visible>
       <View>
         <View testID="view-within-modal" />
@@ -141,8 +141,8 @@ test('toBeVisible() on view within Modal', () => {
   expect(screen.getByTestId('view-within-modal')).toBeVisible();
 });
 
-test('toBeVisible() on not visible Modal', () => {
-  render(
+test('toBeVisible() on not visible Modal', async () => {
+  await render(
     <Modal testID="modal" visible={false}>
       <View>
         <View testID="view-within-modal" />
@@ -163,18 +163,18 @@ test('toBeVisible() on not visible Modal', () => {
   `);
 });
 
-test('toBeVisible() on inaccessible view', () => {
-  render(<View testID="test" aria-hidden />);
+test('toBeVisible() on inaccessible view', async () => {
+  await render(<View testID="test" aria-hidden />);
 
   const test = screen.getByTestId('test', { includeHiddenElements: true });
   expect(test).not.toBeVisible();
 
-  screen.update(<View testID="test" />);
+  await screen.update(<View testID="test" />);
   expect(test).toBeVisible();
 });
 
-test('toBeVisible() on view within inaccessible view', () => {
-  render(
+test('toBeVisible() on view within inaccessible view', async () => {
+  await render(
     <View aria-hidden>
       <View>
         <View testID="test" />
@@ -184,18 +184,18 @@ test('toBeVisible() on view within inaccessible view', () => {
   expect(screen.getByTestId('test', { includeHiddenElements: true })).not.toBeVisible();
 });
 
-test('toBeVisible() on inaccessible view (iOS)', () => {
-  render(<View testID="test" accessibilityElementsHidden />);
+test('toBeVisible() on inaccessible view (iOS)', async () => {
+  await render(<View testID="test" accessibilityElementsHidden />);
 
   const test = screen.getByTestId('test', { includeHiddenElements: true });
   expect(test).not.toBeVisible();
 
-  screen.update(<View testID="test" accessibilityElementsHidden={false} />);
+  await screen.update(<View testID="test" accessibilityElementsHidden={false} />);
   expect(test).toBeVisible();
 });
 
-test('toBeVisible() on view within inaccessible view (iOS)', () => {
-  render(
+test('toBeVisible() on view within inaccessible view (iOS)', async () => {
+  await render(
     <View accessibilityElementsHidden>
       <View>
         <View testID="test" />
@@ -205,18 +205,18 @@ test('toBeVisible() on view within inaccessible view (iOS)', () => {
   expect(screen.getByTestId('test', { includeHiddenElements: true })).not.toBeVisible();
 });
 
-test('toBeVisible() on inaccessible view (Android)', () => {
-  render(<View testID="test" importantForAccessibility="no-hide-descendants" />);
+test('toBeVisible() on inaccessible view (Android)', async () => {
+  await render(<View testID="test" importantForAccessibility="no-hide-descendants" />);
 
   const test = screen.getByTestId('test', { includeHiddenElements: true });
   expect(test).not.toBeVisible();
 
-  screen.update(<View testID="test" importantForAccessibility="auto" />);
+  await screen.update(<View testID="test" importantForAccessibility="auto" />);
   expect(test).toBeVisible();
 });
 
-test('toBeVisible() on view within inaccessible view (Android)', () => {
-  render(
+test('toBeVisible() on view within inaccessible view (Android)', async () => {
+  await render(
     <View importantForAccessibility="no-hide-descendants">
       <View>
         <View testID="test" />
@@ -255,10 +255,10 @@ test('toBeVisible() on non-React elements', () => {
     `);
 });
 
-test('toBeVisible() does not throw on invalid style', () => {
+test('toBeVisible() does not throw on invalid style', async () => {
   // @ts-expect-error: intentionally passing invalid style to
   // trigger StyleSheet.flatten() returning undefined.
-  render(<View testID="view" style={0} />);
+  await render(<View testID="view" style={0} />);
 
   const view = screen.getByTestId('view');
   expect(view).toBeVisible();

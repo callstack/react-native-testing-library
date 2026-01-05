@@ -17,11 +17,11 @@ function mapEventsToShortForm(events: EventEntry[]) {
   ]);
 }
 
-function renderFlatListWithToolkit(props: ScrollViewProps = {}) {
+async function renderFlatListWithToolkit(props: ScrollViewProps = {}) {
   const { events, logEvent } = createEventLogger();
 
   const renderItem = (title: string) => <Text>{title}</Text>;
-  render(
+  await render(
     <FlatList
       testID="flatList"
       onScroll={logEvent('scroll')}
@@ -43,7 +43,7 @@ function renderFlatListWithToolkit(props: ScrollViewProps = {}) {
 
 describe('scrollTo() with FlatList', () => {
   it('supports vertical drag scroll', async () => {
-    const { events } = renderFlatListWithToolkit();
+    const { events } = await renderFlatListWithToolkit();
     const user = userEvent.setup();
 
     await user.scrollTo(screen.getByTestId('flatList'), { y: 100 });
@@ -58,7 +58,7 @@ describe('scrollTo() with FlatList', () => {
   });
 
   it('supports horizontal drag scroll', async () => {
-    const { events } = renderFlatListWithToolkit({ horizontal: true });
+    const { events } = await renderFlatListWithToolkit({ horizontal: true });
     const user = userEvent.setup();
 
     await user.scrollTo(screen.getByTestId('flatList'), { x: 100 });
@@ -97,7 +97,7 @@ function Item({ title }: { title: string }) {
 }
 
 test('scrollTo with contentSize and layoutMeasurement update FlatList content', async () => {
-  render(<Scrollable />);
+  await render(<Scrollable />);
   const user = userEvent.setup();
 
   expect(screen.getByText('Item 0')).toBeOnTheScreen();
@@ -115,5 +115,5 @@ test('scrollTo with contentSize and layoutMeasurement update FlatList content', 
   expect(screen.getByText('Item 15')).toBeOnTheScreen();
 
   // Prevent act warning by unmounting the component
-  await screen.unmountAsync();
+  await screen.unmount();
 });

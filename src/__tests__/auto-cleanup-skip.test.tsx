@@ -29,9 +29,9 @@ class Test extends React.Component<{ onUnmount?(): void }> {
 
 // This just verifies that by importing RNTL in pure mode in an environment which supports
 // afterEach (like jest) we won't get automatic cleanup between tests.
-test('component is mounted, but not umounted before test ends', () => {
+test('component is mounted, but not umounted before test ends', async () => {
   const fn = jest.fn();
-  render(<Test onUnmount={fn} />);
+  await render(<Test onUnmount={fn} />);
   expect(fn).not.toHaveBeenCalled();
 });
 

@@ -18,11 +18,11 @@ React allows you to write declarative code using JSX, write function or class co
 
 When you run your tests in the React Native Testing Library, somewhat contrary to what the name suggests, they are actually **not** using React Native renderer. This is because this renderer needs to be run on an iOS or Android operating system, so it would need to run on a device or simulator.
 
-## React Test Renderer
+## Universal Test Renderer
 
-Instead, RNTL uses React Test Renderer, a specialized renderer that allows rendering to pure JavaScript objects without access to mobile OS and can run in a Node.js environment using Jest (or any other JavaScript test runner).
+Instead, RNTL uses [Universal Test Renderer](https://github.com/mdjastrzebski/universal-test-renderer), a modern, actively maintained renderer that allows rendering to pure JavaScript objects without access to mobile OS and can run in a Node.js environment using Jest (or any other JavaScript test runner). Universal Test Renderer replaces the deprecated `react-test-renderer` package and provides better compatibility with React 19 and improved type safety.
 
-Using React Test Renderer has pros and cons.
+Using Universal Test Renderer has pros and cons.
 
 Benefits:
 
@@ -41,22 +41,22 @@ It's worth noting that the React Testing Library (web one) works a bit different
 
 ## Element tree
 
-Calling the `render()` function creates an element tree. This is done internally by invoking `TestRenderer.create()` method. The output tree represents your React Native component tree, and each node of that tree is an "instance" of some React component (to be more precise, each node represents a React fiber, and only class components have instances, while function components store the hook state using fibers).
+Calling the `render()` function creates an element tree. This is done internally by invoking the renderer's `create()` method from Universal Test Renderer. The output tree represents your React Native component tree, and each node of that tree is an "instance" of some React component (to be more precise, each node represents a React fiber, and only class components have instances, while function components store the hook state using fibers).
 
-These tree elements are represented by `ReactTestInstance` type:
+These tree elements are represented by `HostElement` type from Universal Test Renderer:
 
 ```tsx
-interface ReactTestInstance {
+interface HostElement {
   type: ElementType;
   props: { [propName: string]: any };
-  parent: ReactTestInstance | null;
-  children: Array<ReactTestInstance | string>;
+  parent: HostElement | null;
+  children: Array<HostElement | string>;
 
   // Other props and methods
 }
 ```
 
-Based on: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-test-renderer/index.d.ts
+For more details, see the [Universal Test Renderer documentation](https://github.com/mdjastrzebski/universal-test-renderer).
 
 ## Host and composite components
 
@@ -96,7 +96,7 @@ Not all React Native components are organized this way, e.g., when you use `Pres
 
 ### Differentiating between host and composite elements
 
-Any easy way to differentiate between host and composite elements is the `type` prop of `ReactTestInstance`:
+Any easy way to differentiate between host and composite elements is the `type` prop of `HostElement`:
 
 - for host components, it's always a string value representing a component name, e.g., `"View"`
 - for composite components, it's a function or class corresponding to the component
@@ -104,7 +104,7 @@ Any easy way to differentiate between host and composite elements is the `type` 
 You can use the following code to check if a given element is a host one:
 
 ```jsx
-function isHostElement(element: ReactTestInstance) {
+function isHostElement(element: HostElement) {
   return typeof element.type === 'string';
 }
 ```
@@ -135,7 +135,7 @@ In the above example, user-defined components accept both `onPress` and `style` 
 You should avoid navigating over the element tree, as this makes your testing code fragile and may result in false positives. This section is more relevant for people who want to contribute to our codebase.
 :::
 
-You will encounter host and composite elements when navigating a tree of react elements using `parent` or `children` props of a `ReactTestInstance` element. You should be careful when navigating the element tree, as the tree structure for third-party components can change independently from your code and cause unexpected test failures.
+You will encounter host and composite elements when navigating a tree of react elements using `parent` or `children` props of a `HostElement` element. You should be careful when navigating the element tree, as the tree structure for third-party components can change independently from your code and cause unexpected test failures.
 
 Inside RNTL, we have various tree navigation helpers: `getHostParent`, `getHostChildren`, etc. These are intentionally not exported, as using them is not recommended.
 

@@ -51,7 +51,7 @@ describe('type() for managed TextInput', () => {
   it('supports basic case', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
     const { events, logEvent } = createEventLogger();
-    render(<ManagedTextInput logEvent={logEvent} />);
+    await render(<ManagedTextInput logEvent={logEvent} />);
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'Wow');
@@ -82,7 +82,7 @@ describe('type() for managed TextInput', () => {
   test('supports rejecting TextInput', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
     const { events, logEvent } = createEventLogger();
-    render(
+    await render(
       <ManagedTextInput initialValue="XXX" logEvent={logEvent} valueTransformer={() => 'XXX'} />,
     );
 
@@ -114,7 +114,7 @@ describe('type() for managed TextInput', () => {
 
   it('skips blur and endEditing events when `skipBlur: true` in managed TextInput', async () => {
     const { events, logEvent } = createEventLogger();
-    render(<ManagedTextInput logEvent={logEvent} />);
+    await render(<ManagedTextInput logEvent={logEvent} />);
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'a', {

@@ -4,8 +4,8 @@ import { TextInput, View } from 'react-native';
 import { render, screen } from '../..';
 import { getTextInputValue, isEditableTextInput } from '../text-input';
 
-test('getTextInputValue basic test', () => {
-  render(
+test('getTextInputValue basic test', async () => {
+  await render(
     <View>
       <TextInput testID="value" value="text-a" />
       <TextInput testID="default-value" defaultValue="text-b" />
@@ -22,8 +22,8 @@ test('getTextInputValue basic test', () => {
   );
 });
 
-test('isEditableTextInput basic test', () => {
-  render(
+test('isEditableTextInput basic test', async () => {
+  await render(
     <View>
       <TextInput testID="default" />
       <TextInput testID="editable" editable={true} />

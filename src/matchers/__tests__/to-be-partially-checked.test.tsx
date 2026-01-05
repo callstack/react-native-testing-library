@@ -29,8 +29,8 @@ function renderViewsWithRole(role: AccessibilityRole) {
   );
 }
 
-test('toBePartiallyCheck() with checkbox role', () => {
-  renderViewsWithRole('checkbox');
+test('toBePartiallyCheck() with checkbox role', async () => {
+  await renderViewsWithRole('checkbox');
 
   const checked = screen.getByTestId('checkbox-checked');
   const unchecked = screen.getByTestId('checkbox-unchecked');
@@ -86,8 +86,8 @@ test('toBePartiallyCheck() with checkbox role', () => {
   `);
 });
 
-test('toBeCheck() with radio role', () => {
-  renderViewsWithRole('radio');
+test('toBeCheck() with radio role', async () => {
+  await renderViewsWithRole('radio');
 
   const checked = screen.getByTestId('radio-checked');
   const mixed = screen.getByTestId('radio-mixed');

@@ -3,8 +3,8 @@ import { View } from 'react-native';
 
 import { render, screen } from '../..';
 
-test('toBeExpanded() basic case', () => {
-  render(
+test('toBeExpanded() basic case', async () => {
+  await render(
     <>
       <View testID="expanded" accessibilityState={{ expanded: true }} />
       <View testID="expanded-aria" aria-expanded />
@@ -21,8 +21,8 @@ test('toBeExpanded() basic case', () => {
   expect(screen.getByTestId('default')).not.toBeExpanded();
 });
 
-test('toBeExpanded() error messages', () => {
-  render(
+test('toBeExpanded() error messages', async () => {
+  await render(
     <>
       <View testID="expanded" accessibilityState={{ expanded: true }} />
       <View testID="expanded-aria" aria-expanded />
@@ -95,8 +95,8 @@ test('toBeExpanded() error messages', () => {
   `);
 });
 
-test('toBeCollapsed() basic case', () => {
-  render(
+test('toBeCollapsed() basic case', async () => {
+  await render(
     <>
       <View testID="expanded" accessibilityState={{ expanded: true }} />
       <View testID="expanded-aria" aria-expanded />
@@ -113,8 +113,8 @@ test('toBeCollapsed() basic case', () => {
   expect(screen.getByTestId('default')).not.toBeCollapsed();
 });
 
-test('toBeCollapsed() error messages', () => {
-  render(
+test('toBeCollapsed() error messages', async () => {
+  await render(
     <>
       <View testID="expanded" accessibilityState={{ expanded: true }} />
       <View testID="expanded-aria" aria-expanded />

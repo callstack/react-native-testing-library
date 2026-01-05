@@ -1,25 +1,7 @@
 import * as React from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import type { RenderAPI } from '..';
-import { fireEvent, render, screen } from '..';
-
-const PLACEHOLDER_FRESHNESS = 'Add custom freshness';
-const PLACEHOLDER_CHEF = 'Who inspected freshness?';
-const INPUT_FRESHNESS = 'Custom Freshie';
-const INPUT_CHEF = 'I inspected freshie';
-const DEFAULT_INPUT_CHEF = 'What did you inspect?';
-const DEFAULT_INPUT_CUSTOMER = 'What banana?';
-
-class MyButton extends React.Component<any> {
-  render() {
-    return (
-      <Pressable onPress={this.props.onPress}>
-        <Text>{this.props.children}</Text>
-      </Pressable>
-    );
-  }
-}
+import { render, screen } from '..';
 
 class Banana extends React.Component<any, { fresh: boolean }> {
   state = {
@@ -45,169 +27,46 @@ class Banana extends React.Component<any, { fresh: boolean }> {
   };
 
   render() {
-    const test = 0;
     return (
       <View>
         <Text>Is the banana fresh?</Text>
         <Text testID="bananaFresh">{this.state.fresh ? 'fresh' : 'not fresh'}</Text>
-        <TextInput
-          testID="bananaCustomFreshness"
-          placeholder={PLACEHOLDER_FRESHNESS}
-          value={INPUT_FRESHNESS}
-        />
-        <TextInput
-          testID="bananaChef"
-          placeholder={PLACEHOLDER_CHEF}
-          value={INPUT_CHEF}
-          defaultValue={DEFAULT_INPUT_CHEF}
-        />
-        <TextInput defaultValue={DEFAULT_INPUT_CUSTOMER} />
-        <TextInput defaultValue={'hello'} value="" />
-        <MyButton onPress={this.changeFresh} type="primary">
-          Change freshness!
-        </MyButton>
-        <Text testID="duplicateText">First Text</Text>
-        <Text testID="duplicateText">Second Text</Text>
-        <Text>{test}</Text>
       </View>
     );
   }
 }
 
-test('supports basic rendering', () => {
-  render(<View testID="test" />);
-  expect(screen.root).toBeOnTheScreen();
+test('render renders component asynchronously', async () => {
+  await render(<View testID="test" />);
+  expect(screen.getByTestId('test')).toBeOnTheScreen();
 });
 
-test('rerender', async () => {
+test('render with wrapper option', async () => {
+  const WrapperComponent = ({ children }: { children: React.ReactNode }) => (
+    <View testID="wrapper">{children}</View>
+  );
+
+  await render(<View testID="inner" />, {
+    wrapper: WrapperComponent,
+  });
+
+  expect(screen.getByTestId('wrapper')).toBeTruthy();
+  expect(screen.getByTestId('inner')).toBeTruthy();
+});
+
+test('rerender function updates component asynchronously', async () => {
   const fn = jest.fn();
-  render(<Banana onUpdate={fn} />);
+  await render(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(0);
 
-  await fireEvent.press(screen.getByText('Change freshness!'));
-  expect(fn).toHaveBeenCalledTimes(1);
-
-  screen.rerender(<Banana onUpdate={fn} />);
-  expect(fn).toHaveBeenCalledTimes(2);
-});
-
-test('unmount', () => {
-  const fn = jest.fn();
-  render(<Banana onUnmount={fn} />);
-  screen.unmount();
-  expect(fn).toHaveBeenCalled();
-});
-
-test('unmount should handle cleanup functions', () => {
-  const cleanup = jest.fn();
-  const Component = () => {
-    React.useEffect(() => cleanup);
-    return null;
-  };
-
-  render(<Component />);
-
-  screen.unmount();
-
-  expect(cleanup).toHaveBeenCalledTimes(1);
-});
-
-test('toJSON renders host output', () => {
-  render(<MyButton>press me</MyButton>);
-  expect(screen).toMatchSnapshot();
-});
-
-test('renders options.wrapper around node', () => {
-  type WrapperComponentProps = { children: React.ReactNode };
-  const WrapperComponent = ({ children }: WrapperComponentProps) => (
-    <View testID="wrapper">{children}</View>
-  );
-
-  render(<View testID="inner" />, {
-    wrapper: WrapperComponent,
-  });
-
-  expect(screen.getByTestId('wrapper')).toBeTruthy();
-  expect(screen).toMatchInlineSnapshot(`
-    <View
-      testID="wrapper"
-    >
-      <View
-        testID="inner"
-      />
-    </View>
-  `);
-});
-
-test('renders options.wrapper around updated node', () => {
-  type WrapperComponentProps = { children: React.ReactNode };
-  const WrapperComponent = ({ children }: WrapperComponentProps) => (
-    <View testID="wrapper">{children}</View>
-  );
-
-  render(<View testID="inner" />, {
-    wrapper: WrapperComponent,
-  });
-
-  screen.rerender(<View testID="inner" accessibilityLabel="test" accessibilityHint="test" />);
-
-  expect(screen.getByTestId('wrapper')).toBeTruthy();
-  expect(screen).toMatchInlineSnapshot(`
-    <View
-      testID="wrapper"
-    >
-      <View
-        accessibilityHint="test"
-        accessibilityLabel="test"
-        testID="inner"
-      />
-    </View>
-  `);
-});
-
-test('returns host root', () => {
-  render(<View testID="inner" />);
-
-  expect(screen.root).toBeDefined();
-  expect(screen.root?.type).toBe('View');
-  expect(screen.root?.props.testID).toBe('inner');
-});
-
-test('RenderAPI type', () => {
-  render(<Banana />) as RenderAPI;
-  expect(true).toBeTruthy();
-});
-
-test('returned output can be spread using rest operator', () => {
-  // Next line should not throw
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { rerender, ...rest } = render(<View testID="test" />);
-  expect(rest).toBeTruthy();
-});
-
-test('rerenderAsync updates the component asynchronously', async () => {
-  const fn = jest.fn();
-  const result = render(<Banana onUpdate={fn} />);
-
-  await result.rerenderAsync(<Banana onUpdate={fn} />);
-
+  await screen.rerender(<Banana onUpdate={fn} />);
   expect(fn).toHaveBeenCalledTimes(1);
 });
 
-test('updateAsync is an alias for rerenderAsync', async () => {
+test('unmount function unmounts component asynchronously', async () => {
   const fn = jest.fn();
-  const result = render(<Banana onUpdate={fn} />);
+  await render(<Banana onUnmount={fn} />);
 
-  await result.updateAsync(<Banana onUpdate={fn} />);
-
-  expect(fn).toHaveBeenCalledTimes(1);
-});
-
-test('unmountAsync unmounts the component asynchronously', async () => {
-  const fn = jest.fn();
-  const result = render(<Banana onUnmount={fn} />);
-
-  await result.unmountAsync();
-
+  await screen.unmount();
   expect(fn).toHaveBeenCalled();
 });

@@ -3,19 +3,19 @@
 ## `render` function {#render}
 
 ```jsx
-function render(
+async function render(
   component: React.Element<any>,
   options?: RenderOptions
-): RenderResult
+): Promise<RenderResult>
 ```
 
-The `render` function is the entry point for writing React Native Testing Library tests. It deeply renders the given React element and returns helpers to query the output components' structure.
+The `render` function is the entry point for writing React Native Testing Library tests. It deeply renders the given React element and returns helpers to query the output components' structure. This function is async by default and uses async `act` internally to ensure all pending React updates are executed during rendering, making it compatible with React 19, React Suspense, and `React.use()`.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-test('basic test', () => {
-  render(<MyApp />);
+test('basic test', async () => {
+  await render(<MyApp />);
   expect(screen.getAllByRole('button', { name: 'start' })).toBeOnTheScreen();
 });
 ```
@@ -45,64 +45,64 @@ Otherwise, `render` will default to using concurrent rendering used in the React
 createNodeMock?: (element: React.Element) => unknown,
 ```
 
-This option allows you to pass `createNodeMock` option to `ReactTestRenderer.create()` method in order to allow for custom mock refs. You can learn more about this option from [React Test Renderer documentation](https://reactjs.org/docs/test-renderer.html#ideas).
+This option allows you to pass `createNodeMock` option to the renderer's `create()` method in order to allow for custom mock refs. This option is passed through to [Universal Test Renderer](https://github.com/mdjastrzebski/universal-test-renderer).
 
-#### `unstable_validateStringsRenderedWithinText`
+:::note Text string validation
 
-```ts
-unstable_validateStringsRenderedWithinText?: boolean;
-```
+Universal Test Renderer automatically enforces React Native's requirement that text strings must be rendered within a `<Text>` component. If you try to render a `string` value under components other than `<Text>` (e.g., under `<View>`), it will throw an `Invariant Violation: Text strings must be rendered within a <Text> component` error, matching React Native's runtime behavior.
 
-:::note
-This options is experimental, in some cases it might not work as intended, and its behavior might change without observing [SemVer](https://semver.org/) requirements for breaking changes.
+This validation is always enabled and cannot be disabled, ensuring your tests accurately reflect how your code will behave in production.
+
 :::
-
-This **experimental** option allows you to replicate React Native behavior of throwing `Invariant Violation: Text strings must be rendered within a <Text> component` error when you try to render `string` value under components different than `<Text>`, e.g., under `<View>`.
-
-React Test Renderer does not enforce this check; hence, by default, React Native Testing Library also does not check this. That might result in runtime errors when running your code on a device, while the code works without errors in tests.
 
 ### Result
 
-The `render` function returns the same queries and utilities as the [`screen`](docs/api/screen) object. We recommended using the `screen` object as more developer-friendly way.
+The `render` function returns a promise that resolves to the same queries and utilities as the [`screen`](docs/api/screen) object. We recommend using the `screen` object for queries and the lifecycle methods from the render result when needed.
 
 See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
 
-## `renderAsync` function {#render-async}
+:::warning Async lifecycle methods
 
-:::info RNTL minimal version
+When using `render`, the lifecycle methods `rerender`, `update`, and `unmount` are async and must be awaited.
 
-This API requires RNTL v13.3.0 or later.
+:::
+
+## `unsafe_renderSync` function {#unsafe-render-sync}
+
+:::warning Deprecated
+
+This function is deprecated and provided for migration purposes only. Use async `render` instead.
 
 :::
 
 ```tsx
-async function renderAsync(
+function unsafe_renderSync(
   component: React.Element<any>,
-  options?: RenderAsyncOptions
-): Promise<RenderAsyncResult>;
+  options?: RenderSyncOptions
+): RenderSyncResult;
 ```
 
-The `renderAsync` function is the async version of [`render`](#render) designed for working with React 19 and React Suspense. This function uses async `act` function internally to ensure all pending React updates are executed during rendering.
+The `unsafe_renderSync` function is the synchronous version of [`render`](#render). It was the default `render` function in previous versions but is now deprecated in favor of the async `render` function.
 
 ```jsx
-import { renderAsync, screen } from '@testing-library/react-native';
+import { unsafe_renderSync, screen } from '@testing-library/react-native';
 
-test('async component test', async () => {
-  await renderAsync(<MyAsyncApp />);
+test('sync component test', () => {
+  unsafe_renderSync(<MyApp />);
   expect(screen.getAllByRole('button', { name: 'start' })).toBeOnTheScreen();
 });
 ```
 
 ### Options
 
-`renderAsync` accepts the same options as `render`.
+`unsafe_renderSync` accepts the same options as `render`.
 
 ### Result
 
-The `renderAsync` function returns a promise that resolves to the same queries and utilities as the [`screen`](docs/api/screen) object. We recommend using the `screen` object for queries and the lifecycle methods from the render result when needed.
+The `unsafe_renderSync` function returns the same queries and utilities as the [`screen`](docs/api/screen) object. We recommended using the `screen` object as more developer-friendly way.
 
-:::warning Async lifecycle methods
+:::note Migration
 
-When using `renderAsync`, you have to use correspodning lifecycle methods: `rerenderAsync` and `unmountAsync` instead of their sync versions.
+To migrate from `unsafe_renderSync` to `render`, see the [migration guide](../migration/v14#render-async-default).
 
 :::

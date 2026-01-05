@@ -10,7 +10,7 @@ const TOUCH_EVENT = EventBuilder.Common.touch();
 describe('dispatchEvent', () => {
   it('does dispatch event', async () => {
     const onPress = jest.fn();
-    render(<Text testID="text" onPress={onPress} />);
+    await render(<Text testID="text" onPress={onPress} />);
 
     await dispatchEvent(screen.getByTestId('text'), 'press', TOUCH_EVENT);
     expect(onPress).toHaveBeenCalledTimes(1);
@@ -18,7 +18,7 @@ describe('dispatchEvent', () => {
 
   it('does not dispatch event to parent host component', async () => {
     const onPressParent = jest.fn();
-    render(
+    await render(
       <Text onPress={onPressParent}>
         <Text testID="text" />
       </Text>,
@@ -29,7 +29,7 @@ describe('dispatchEvent', () => {
   });
 
   it('does NOT throw if no handler found', async () => {
-    render(
+    await render(
       <Text>
         <Text testID="text" />
       </Text>,

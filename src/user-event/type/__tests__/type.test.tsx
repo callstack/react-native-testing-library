@@ -10,10 +10,10 @@ beforeEach(() => {
   jest.useRealTimers();
 });
 
-function renderTextInputWithToolkit(props: TextInputProps = {}) {
+async function renderTextInputWithToolkit(props: TextInputProps = {}) {
   const { events, logEvent } = createEventLogger();
 
-  render(
+  await render(
     <TextInput
       testID="input"
       onFocus={logEvent('focus')}
@@ -39,7 +39,7 @@ function renderTextInputWithToolkit(props: TextInputProps = {}) {
 describe('type()', () => {
   it('supports basic case', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
-    const { events } = renderTextInputWithToolkit();
+    const { events } = await renderTextInputWithToolkit();
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abc');
@@ -69,7 +69,7 @@ describe('type()', () => {
 
   it.each(['modern', 'legacy'])('works with %s fake timers', async (type) => {
     jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
-    const { events } = renderTextInputWithToolkit();
+    const { events } = await renderTextInputWithToolkit();
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abc');
@@ -96,7 +96,7 @@ describe('type()', () => {
   });
 
   it('supports defaultValue prop', async () => {
-    const { events } = renderTextInputWithToolkit({
+    const { events } = await renderTextInputWithToolkit({
       defaultValue: 'xxx',
     });
 
@@ -123,7 +123,7 @@ describe('type()', () => {
   });
 
   it('does respect editable prop', async () => {
-    const { events } = renderTextInputWithToolkit({
+    const { events } = await renderTextInputWithToolkit({
       editable: false,
     });
 
@@ -134,7 +134,7 @@ describe('type()', () => {
   });
 
   it('supports backspace', async () => {
-    const { events } = renderTextInputWithToolkit({
+    const { events } = await renderTextInputWithToolkit({
       defaultValue: 'xxx',
     });
 
@@ -161,7 +161,7 @@ describe('type()', () => {
   });
 
   it('supports multiline', async () => {
-    const { events } = renderTextInputWithToolkit({
+    const { events } = await renderTextInputWithToolkit({
       multiline: true,
     });
 
@@ -190,7 +190,7 @@ describe('type()', () => {
   });
 
   test('skips press events when `skipPress: true`', async () => {
-    const { events } = renderTextInputWithToolkit();
+    const { events } = await renderTextInputWithToolkit();
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'a', {
@@ -216,7 +216,7 @@ describe('type()', () => {
   });
 
   it('triggers submit event with `submitEditing: true`', async () => {
-    const { events } = renderTextInputWithToolkit();
+    const { events } = await renderTextInputWithToolkit();
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'a', {
@@ -245,7 +245,7 @@ describe('type()', () => {
 
   it('works when not all events have handlers', async () => {
     const { events, logEvent } = createEventLogger();
-    render(
+    await render(
       <TextInput
         testID="input"
         onChangeText={logEvent('changeText')}
@@ -267,7 +267,7 @@ describe('type()', () => {
   });
 
   it('does NOT work on View', async () => {
-    render(<View testID="input" />);
+    await render(<View testID="input" />);
 
     const user = userEvent.setup();
     await expect(
@@ -282,7 +282,7 @@ describe('type()', () => {
 
   it('does NOT bubble up', async () => {
     const parentHandler = jest.fn();
-    render(
+    await render(
       <AnyView
         onChangeText={parentHandler}
         onChange={parentHandler}
@@ -305,7 +305,7 @@ describe('type()', () => {
 
   it('supports direct access', async () => {
     const { events, logEvent } = createEventLogger();
-    render(
+    await render(
       <TextInput
         testID="input"
         onChangeText={logEvent('changeText')}
@@ -328,7 +328,7 @@ describe('type()', () => {
   // See: https://github.com/callstack/react-native-testing-library/issues/1588
   it('can call "persist()" on "onKeyPress" event handler', async () => {
     const handleKeyPress = jest.fn();
-    render(
+    await render(
       <TextInput
         testID="input"
         onKeyPress={(e) => {
@@ -343,7 +343,7 @@ describe('type()', () => {
   });
 
   it('respects the "maxLength" prop', async () => {
-    const { events } = renderTextInputWithToolkit({ maxLength: 2 });
+    const { events } = await renderTextInputWithToolkit({ maxLength: 2 });
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abcd');
@@ -376,7 +376,7 @@ describe('type()', () => {
   });
 
   it('unmanaged text inputs preserve their native state', async () => {
-    render(<TextInput testID="input" />);
+    await render(<TextInput testID="input" />);
 
     const user = userEvent.setup();
     const input = screen.getByTestId('input');
@@ -390,7 +390,7 @@ describe('type()', () => {
   });
 
   it('skips blur and endEditing events when `skipBlur: true`', async () => {
-    const { events } = renderTextInputWithToolkit();
+    const { events } = await renderTextInputWithToolkit();
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'a', {

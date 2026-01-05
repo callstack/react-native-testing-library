@@ -182,7 +182,7 @@ function waitForInternal<T>(
   });
 }
 
-export default function waitFor<T>(expectation: () => T, options?: WaitForOptions): Promise<T> {
+export function waitFor<T>(expectation: () => T, options?: WaitForOptions): Promise<T> {
   // Being able to display a useful stack trace requires generating it before doing anything async
   const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', waitFor);
   const optionsWithStackTrace = { stackTraceError, ...options };

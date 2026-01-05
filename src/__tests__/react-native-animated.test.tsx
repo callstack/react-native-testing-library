@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { ViewStyle } from 'react-native';
-import { Animated } from 'react-native';
+import { Animated, Text } from 'react-native';
 
 import { act, render, screen } from '..';
 
@@ -44,9 +44,9 @@ describe('AnimatedView', () => {
   });
 
   it('should use native driver when useNativeDriver is true', async () => {
-    render(
+    await render(
       <AnimatedView fadeInDuration={250} useNativeDriver={true}>
-        Test
+        <Text>Test</Text>
       </AnimatedView>,
     );
     expect(screen.root).toHaveStyle({ opacity: 0 });
@@ -57,9 +57,9 @@ describe('AnimatedView', () => {
   });
 
   it('should not use native driver when useNativeDriver is false', async () => {
-    render(
+    await render(
       <AnimatedView fadeInDuration={250} useNativeDriver={false}>
-        Test
+        <Text>Test</Text>
       </AnimatedView>,
     );
     expect(screen.root).toHaveStyle({ opacity: 0 });

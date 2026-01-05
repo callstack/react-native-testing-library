@@ -41,7 +41,7 @@ const Section = () => (
 );
 
 test('getByLabelText, queryByLabelText, findByLabelText', async () => {
-  render(<Section />);
+  await render(<Section />);
 
   expect(screen.getByLabelText(BUTTON_LABEL).props.accessibilityLabel).toEqual(BUTTON_LABEL);
   const button = screen.queryByLabelText(/button/);
@@ -71,7 +71,7 @@ test('getByLabelText, queryByLabelText, findByLabelText', async () => {
 });
 
 test('getAllByLabelText, queryAllByLabelText, findAllByLabelText', async () => {
-  render(<Section />);
+  await render(<Section />);
 
   expect(screen.getAllByLabelText(TEXT_LABEL)).toHaveLength(2);
   expect(screen.queryAllByLabelText(/cool/)).toHaveLength(3);
@@ -88,7 +88,7 @@ test('getAllByLabelText, queryAllByLabelText, findAllByLabelText', async () => {
 });
 
 test('getAllByLabelText, queryAllByLabelText, findAllByLabelText with exact as false', async () => {
-  render(<Section />);
+  await render(<Section />);
 
   expect(screen.getAllByLabelText(TEXT_LABEL, { exact: false })).toHaveLength(2);
   expect(screen.queryAllByLabelText(/cool/, { exact: false })).toHaveLength(3);
@@ -116,7 +116,7 @@ describe('findBy options deprecations', () => {
   test('findByText queries warn on deprecated use of WaitForOptions', async () => {
     const options = { timeout: 10 };
     // mock implementation to avoid warning in the test suite
-    render(<View />);
+    await render(<View />);
     await expect(screen.findByLabelText('Some Text', options)).rejects.toBeTruthy();
 
     setTimeout(() => screen.rerender(<View accessibilityLabel="Some Text" />), 20);
@@ -126,8 +126,8 @@ describe('findBy options deprecations', () => {
   }, 20000);
 });
 
-test('byLabelText queries support hidden option', () => {
-  render(
+test('byLabelText queries support hidden option', async () => {
+  await render(
     <Text accessibilityLabel="hidden" style={{ display: 'none' }}>
       Hidden from accessibility
     </Text>,
@@ -154,8 +154,8 @@ test('byLabelText queries support hidden option', () => {
   `);
 });
 
-test('getByLabelText supports aria-label', () => {
-  render(
+test('getByLabelText supports aria-label', async () => {
+  await render(
     <>
       <View testID="view" aria-label="view-label" />
       <Text testID="text" aria-label="text-label">
@@ -170,8 +170,8 @@ test('getByLabelText supports aria-label', () => {
   expect(screen.getByLabelText('text-input-label')).toBe(screen.getByTestId('text-input'));
 });
 
-test('getByLabelText supports accessibilityLabelledBy', () => {
-  render(
+test('getByLabelText supports accessibilityLabelledBy', async () => {
+  await render(
     <>
       <Text nativeID="label">Label for input</Text>
       <TextInput testID="textInput" accessibilityLabelledBy="label" />
@@ -182,8 +182,8 @@ test('getByLabelText supports accessibilityLabelledBy', () => {
   expect(screen.getByLabelText(/input/)).toBe(screen.getByTestId('textInput'));
 });
 
-test('getByLabelText supports nested accessibilityLabelledBy', () => {
-  render(
+test('getByLabelText supports nested accessibilityLabelledBy', async () => {
+  await render(
     <>
       <View nativeID="label">
         <Text>Label for input</Text>
@@ -196,8 +196,8 @@ test('getByLabelText supports nested accessibilityLabelledBy', () => {
   expect(screen.getByLabelText(/input/)).toBe(screen.getByTestId('textInput'));
 });
 
-test('getByLabelText supports aria-labelledby', () => {
-  render(
+test('getByLabelText supports aria-labelledby', async () => {
+  await render(
     <>
       <Text nativeID="label">Text Label</Text>
       <TextInput testID="text-input" aria-labelledby="label" />
@@ -208,8 +208,8 @@ test('getByLabelText supports aria-labelledby', () => {
   expect(screen.getByLabelText(/text label/i)).toBe(screen.getByTestId('text-input'));
 });
 
-test('getByLabelText supports nested aria-labelledby', () => {
-  render(
+test('getByLabelText supports nested aria-labelledby', async () => {
+  await render(
     <>
       <View nativeID="label">
         <Text>Nested Text Label</Text>
@@ -222,8 +222,8 @@ test('getByLabelText supports nested aria-labelledby', () => {
   expect(screen.getByLabelText(/nested text label/i)).toBe(screen.getByTestId('text-input'));
 });
 
-test('getByLabelText supports "Image"" with "alt" prop', () => {
-  render(
+test('getByLabelText supports "Image"" with "alt" prop', async () => {
+  await render(
     <>
       <Image alt="Image Label" testID="image" />
     </>,
@@ -235,7 +235,7 @@ test('getByLabelText supports "Image"" with "alt" prop', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  render(<Pressable accessibilityLabel="LABEL" key="3" />);
+  await render(<Pressable accessibilityLabel="LABEL" key="3" />);
 
   expect(() => screen.getByLabelText('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with accessibility label: FOO

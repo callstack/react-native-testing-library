@@ -6,7 +6,8 @@ import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
-import { renderWithAct } from './render-act';
+import { HOST_TEXT_NAMES } from './helpers/host-component-names';
+import { renderWithAsyncAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
@@ -18,27 +19,25 @@ export interface RenderOptions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: React.ComponentType<any>;
 
-  createNodeMock?: (element: React.ReactElement) => unknown;
+  createNodeMock?: (element: React.ReactElement) => object;
 }
 
-export type RenderResult = ReturnType<typeof render>;
+export type RenderResult = Awaited<ReturnType<typeof render>>;
 
 /**
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export default function render<T>(component: React.ReactElement<T>, options: RenderOptions = {}) {
-  return renderInternal(component, options);
-}
+export async function render<T>(component: React.ReactElement<T>, options: RenderOptions = {}) {
+  const { wrapper: Wrapper, createNodeMock } = options || {};
 
-export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderOptions) {
-  const { wrapper: Wrapper } = options || {};
-
-  // TODO allow passing some options
-  const rendererOptions: RootOptions = {};
+  const rendererOptions: RootOptions = {
+    textComponents: HOST_TEXT_NAMES,
+    createNodeMock,
+  };
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-  const renderer = renderWithAct(wrap(component), rendererOptions);
+  const renderer = await renderWithAsyncAct(wrap(component), rendererOptions);
   return buildRenderResult(renderer, wrap);
 }
 
@@ -46,24 +45,16 @@ function buildRenderResult(
   renderer: Root,
   wrap: (element: React.ReactElement) => React.JSX.Element,
 ) {
-  const rerender = (component: React.ReactElement) => {
-    void act(() => {
-      renderer.render(wrap(component));
-    });
-  };
-  const rerenderAsync = async (component: React.ReactElement) => {
+  const container = renderer.container;
+
+  const rerender = async (component: React.ReactElement) => {
     // eslint-disable-next-line require-await
     await act(async () => {
       renderer.render(wrap(component));
     });
   };
 
-  const unmount = () => {
-    void act(() => {
-      renderer.unmount();
-    });
-  };
-  const unmountAsync = async () => {
+  const unmount = async () => {
     // eslint-disable-next-line require-await
     await act(async () => {
       renderer.unmount();
@@ -83,23 +74,20 @@ function buildRenderResult(
     return json;
   };
 
-  addToCleanupQueue(unmountAsync);
+  addToCleanupQueue(unmount);
 
   const result = {
     ...getQueriesForElement(renderer.container),
     rerender,
-    rerenderAsync,
-    update: rerender, // alias for 'rerender'
-    updateAsync: rerenderAsync, // alias for `rerenderAsync`
+    update: rerender, // alias for `rerender`
     unmount,
-    unmountAsync,
     toJSON,
     debug: makeDebug(renderer),
     get container(): HostElement {
       return renderer.container;
     },
     get root(): HostElement | null {
-      const firstChild = renderer.container.children[0];
+      const firstChild = container.children[0];
       if (typeof firstChild === 'string') {
         throw new Error(
           'Invariant Violation: Root element must be a host element. Detected attempt to render a string within the root element.',

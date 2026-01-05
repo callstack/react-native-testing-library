@@ -23,7 +23,7 @@ describe('userEvent.press with fake timers', () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
-    render(
+    await render(
       <Pressable
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
@@ -41,7 +41,7 @@ describe('userEvent.press with fake timers', () => {
   test('works on TouchableOpacity', async () => {
     const mockOnPress = jest.fn();
 
-    render(
+    await render(
       <TouchableOpacity onPress={mockOnPress}>
         <Text>press me</Text>
       </TouchableOpacity>,
@@ -54,7 +54,7 @@ describe('userEvent.press with fake timers', () => {
   test('works on TouchableHighlight', async () => {
     const mockOnPress = jest.fn();
 
-    render(
+    await render(
       <TouchableHighlight onPress={mockOnPress}>
         <Text>press me</Text>
       </TouchableHighlight>,
@@ -67,7 +67,7 @@ describe('userEvent.press with fake timers', () => {
   test('works on Text', async () => {
     const { events, logEvent } = createEventLogger();
 
-    render(
+    await render(
       <Text
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
@@ -85,7 +85,7 @@ describe('userEvent.press with fake timers', () => {
   test('works on TextInput', async () => {
     const { events, logEvent } = createEventLogger();
 
-    render(
+    await render(
       <TextInput
         placeholder="email"
         onPressIn={logEvent('pressIn')}
@@ -100,7 +100,7 @@ describe('userEvent.press with fake timers', () => {
   test('works on Button', async () => {
     const { events, logEvent } = createEventLogger();
 
-    render(<Button title="press me" onPress={logEvent('press')} />);
+    await render(<Button title="press me" onPress={logEvent('press')} />);
 
     await userEvent.press(screen.getByText('press me'));
     expect(getEventsNames(events)).toEqual(['press']);
@@ -110,7 +110,7 @@ describe('userEvent.press with fake timers', () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
-    render(
+    await render(
       <Pressable
         disabled
         onPress={logEvent('press')}
@@ -129,7 +129,7 @@ describe('userEvent.press with fake timers', () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
-    render(
+    await render(
       <Pressable
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
@@ -148,7 +148,7 @@ describe('userEvent.press with fake timers', () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
-    render(
+    await render(
       <Pressable
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
@@ -167,7 +167,7 @@ describe('userEvent.press with fake timers', () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
-    render(
+    await render(
       <View pointerEvents="box-only">
         <Pressable
           onPress={logEvent('press')}
@@ -187,7 +187,7 @@ describe('userEvent.press with fake timers', () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
-    render(
+    await render(
       <Pressable
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
@@ -205,7 +205,7 @@ describe('userEvent.press with fake timers', () => {
   test('crawls up in the tree to find an element that responds to touch events', async () => {
     const mockOnPress = jest.fn();
 
-    render(
+    await render(
       <Pressable onPress={mockOnPress}>
         <Text>press me</Text>
       </Pressable>,
@@ -218,7 +218,7 @@ describe('userEvent.press with fake timers', () => {
   test('does not call onLongPress', async () => {
     const mockOnLongPress = jest.fn();
 
-    render(
+    await render(
       <Pressable onLongPress={mockOnLongPress}>
         <Text>press me</Text>
       </Pressable>,
@@ -231,7 +231,7 @@ describe('userEvent.press with fake timers', () => {
   test('longPress works Text', async () => {
     const { events, logEvent } = createEventLogger();
 
-    render(
+    await render(
       <Text
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
@@ -249,7 +249,7 @@ describe('userEvent.press with fake timers', () => {
   test('does not trigger on disabled Text', async () => {
     const { events, logEvent } = createEventLogger();
 
-    render(
+    await render(
       <Text
         onPress={logEvent('press')}
         onPressIn={logEvent('pressIn')}
@@ -268,7 +268,7 @@ describe('userEvent.press with fake timers', () => {
   test('does not trigger on Text with disabled pointer events', async () => {
     const { events, logEvent } = createEventLogger();
 
-    render(
+    await render(
       <View pointerEvents="box-only">
         <Text
           onPress={logEvent('press')}
@@ -288,7 +288,7 @@ describe('userEvent.press with fake timers', () => {
   test('does not call onPressIn and onPressOut on non editable TextInput', async () => {
     const { events, logEvent } = createEventLogger();
 
-    render(
+    await render(
       <TextInput
         placeholder="email"
         editable={false}
@@ -304,7 +304,7 @@ describe('userEvent.press with fake timers', () => {
   test('does not call onPressIn and onPressOut on TextInput with pointer events disabled', async () => {
     const { events, logEvent } = createEventLogger();
 
-    render(
+    await render(
       <TextInput
         placeholder="email"
         pointerEvents="box-none"
@@ -320,7 +320,7 @@ describe('userEvent.press with fake timers', () => {
   test('press is accessible directly in userEvent', async () => {
     const mockOnPress = jest.fn();
 
-    render(
+    await render(
       <Pressable onPress={mockOnPress}>
         <Text>press me</Text>
       </Pressable>,
@@ -353,7 +353,7 @@ describe('userEvent.press with fake timers', () => {
       );
     };
 
-    render(<TestComponent />);
+    await render(<TestComponent />);
     await userEvent.press(screen.getByTestId('pressable'));
 
     expect(consoleErrorSpy).not.toHaveBeenCalled();
@@ -379,7 +379,7 @@ function Component() {
 }
 
 test('unmounts component', async () => {
-  render(<Component />);
+  await render(<Component />);
   await userEvent.press(screen.getByText('Unmount'));
   expect(screen.queryByText('Unmount')).not.toBeOnTheScreen();
 });

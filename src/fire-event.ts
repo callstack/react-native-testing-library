@@ -157,7 +157,7 @@ fireEvent.scroll = async (element: HostElement, ...data: unknown[]) =>
   await fireEvent(element, 'scroll', ...data);
 
 /** @deprecated - Use async `fireEvent` instead. */
-function deprecated_fireEventSync(element: HostElement, eventName: EventName, ...data: unknown[]) {
+function unsafe_fireEventSync(element: HostElement, eventName: EventName, ...data: unknown[]) {
   if (!isElementMounted(element)) {
     return;
   }
@@ -178,18 +178,18 @@ function deprecated_fireEventSync(element: HostElement, eventName: EventName, ..
 }
 
 /** @deprecated - Use async `fireEvent.press` instead. */
-deprecated_fireEventSync.press = (element: HostElement, ...data: unknown[]) =>
-  deprecated_fireEventSync(element, 'press', ...data);
+unsafe_fireEventSync.press = (element: HostElement, ...data: unknown[]) =>
+  unsafe_fireEventSync(element, 'press', ...data);
 
 /** @deprecated - Use async `fireEvent.changeText` instead. */
-deprecated_fireEventSync.changeText = (element: HostElement, ...data: unknown[]) =>
-  deprecated_fireEventSync(element, 'changeText', ...data);
+unsafe_fireEventSync.changeText = (element: HostElement, ...data: unknown[]) =>
+  unsafe_fireEventSync(element, 'changeText', ...data);
 
 /** @deprecated - Use async `fireEvent.scroll` instead. */
-deprecated_fireEventSync.scroll = (element: HostElement, ...data: unknown[]) =>
-  deprecated_fireEventSync(element, 'scroll', ...data);
+unsafe_fireEventSync.scroll = (element: HostElement, ...data: unknown[]) =>
+  unsafe_fireEventSync(element, 'scroll', ...data);
 
-export { fireEvent, deprecated_fireEventSync };
+export { fireEvent, unsafe_fireEventSync };
 
 const scrollEventNames = new Set([
   'scroll',

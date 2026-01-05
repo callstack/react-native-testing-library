@@ -203,10 +203,10 @@ test('handles hook with suspense', async () => {
 });
 
 class ErrorBoundary extends React.Component<
-  { children: React.ReactNode; fallback: string },
+  { children: React.ReactNode; fallback: React.ReactNode },
   { hasError: boolean }
 > {
-  constructor(props: { children: React.ReactNode; fallback: string }) {
+  constructor(props: { children: React.ReactNode; fallback: React.ReactNode }) {
     super(props);
     this.state = { hasError: false };
   }
@@ -233,7 +233,7 @@ test('handles hook suspense with error boundary', async () => {
   const { result } = await renderHook(useSuspendingHook, {
     initialProps: promise,
     wrapper: ({ children }) => (
-      <ErrorBoundary fallback="error-fallback">
+      <ErrorBoundary fallback={<Text>Error Fallback</Text>}>
         <React.Suspense fallback={<Text>Loading...</Text>}>{children}</React.Suspense>
       </ErrorBoundary>
     ),

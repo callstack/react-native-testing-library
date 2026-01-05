@@ -17,7 +17,7 @@ Consider a basic asynchronous test for a user signing in with correct credential
 test('User can sign in with correct credentials', async () => {
   // Typical test setup
   const user = userEvent.setup();
-  render(<App />);
+  await render(<App />);
 
   // No need to use async here, components are already rendered
   expect(screen.getByRole('header', { name: 'Sign in to Hello World App!' })).toBeOnTheScreen();
@@ -60,7 +60,7 @@ function findByRole: (
     interval?: number;
     // ..
   }
-): Promise<ReactTestInstance>;
+): Promise<HostElement>;
 ```
 
 Each query has a default `timeout` value of 1000 ms and a default `interval` of 50 ms. Custom timeout and check intervals can be specified if needed, as shown below:

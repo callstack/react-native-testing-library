@@ -30,7 +30,7 @@ afterEach(() => {
 });
 
 test('waits when using getBy query', async () => {
-  render(<TestSetup />);
+  await render(<TestSetup />);
 
   await fireEvent.press(screen.getByText('Remove Element'));
   const element = screen.getByText('Observed Element');
@@ -42,7 +42,7 @@ test('waits when using getBy query', async () => {
 });
 
 test('waits when using getAllBy query', async () => {
-  render(<TestSetup />);
+  await render(<TestSetup />);
 
   await fireEvent.press(screen.getByText('Remove Element'));
   const elements = screen.getAllByText('Observed Element');
@@ -54,7 +54,7 @@ test('waits when using getAllBy query', async () => {
 });
 
 test('waits when using queryBy query', async () => {
-  render(<TestSetup />);
+  await render(<TestSetup />);
 
   await fireEvent.press(screen.getByText('Remove Element'));
   const element = screen.getByText('Observed Element');
@@ -66,7 +66,7 @@ test('waits when using queryBy query', async () => {
 });
 
 test('waits when using queryAllBy query', async () => {
-  render(<TestSetup />);
+  await render(<TestSetup />);
 
   await fireEvent.press(screen.getByText('Remove Element'));
   const elements = screen.getAllByText('Observed Element');
@@ -78,7 +78,7 @@ test('waits when using queryAllBy query', async () => {
 });
 
 test('checks if elements exist at start', async () => {
-  render(<TestSetup shouldUseDelay={false} />);
+  await render(<TestSetup shouldUseDelay={false} />);
 
   await fireEvent.press(screen.getByText('Remove Element'));
   expect(screen.queryByText('Observed Element')).toBeNull();
@@ -91,7 +91,7 @@ test('checks if elements exist at start', async () => {
 });
 
 test('waits until timeout', async () => {
-  render(<TestSetup />);
+  await render(<TestSetup />);
 
   await fireEvent.press(screen.getByText('Remove Element'));
   expect(screen.getByText('Observed Element')).toBeTruthy();

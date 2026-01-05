@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { cleanupAsync, render, renderAsync } from '../pure';
+import { cleanup, render, unsafe_renderSync } from '../pure';
 
 class Test extends React.Component<{ onUnmount: () => void }> {
   componentWillUnmount() {
@@ -17,21 +17,21 @@ class Test extends React.Component<{ onUnmount: () => void }> {
 test('cleanup after render', async () => {
   const fn = jest.fn();
 
-  render(<Test onUnmount={fn} />);
-  render(<Test onUnmount={fn} />);
+  await render(<Test onUnmount={fn} />);
+  await render(<Test onUnmount={fn} />);
   expect(fn).not.toHaveBeenCalled();
 
-  await cleanupAsync();
+  await cleanup();
   expect(fn).toHaveBeenCalledTimes(2);
 });
 
-test('cleanup after renderAsync', async () => {
+test('cleanup after unsafe_renderSync', async () => {
   const fn = jest.fn();
 
-  await renderAsync(<Test onUnmount={fn} />);
-  await renderAsync(<Test onUnmount={fn} />);
+  unsafe_renderSync(<Test onUnmount={fn} />);
+  unsafe_renderSync(<Test onUnmount={fn} />);
   expect(fn).not.toHaveBeenCalled();
 
-  await cleanupAsync();
+  await cleanup();
   expect(fn).toHaveBeenCalledTimes(2);
 });

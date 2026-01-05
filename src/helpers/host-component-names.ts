@@ -1,6 +1,6 @@
 import type { HostElement } from 'universal-test-renderer';
 
-const HOST_TEXT_NAMES = ['Text', 'RCTText'];
+export const HOST_TEXT_NAMES = ['Text', 'RCTText'];
 const HOST_TEXT_INPUT_NAMES = ['TextInput'];
 const HOST_IMAGE_NAMES = ['Image'];
 const HOST_SWITCH_NAMES = ['RCTSwitch'];

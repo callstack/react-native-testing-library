@@ -4,62 +4,244 @@ This guide describes the migration to React Native Testing Library version 14 fr
 
 ## Breaking changes
 
-### `fireEvent` is now async by default
+### Universal Test Renderer replaces React Test Renderer
 
-In v14, `fireEvent` and its helpers (`press`, `changeText`, `scroll`) are now async by default and return a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+In v14, React Native Testing Library now uses [Universal Test Renderer](https://github.com/mdjastrzebski/universal-test-renderer) instead of the deprecated `react-test-renderer` package. Universal Test Renderer is a modern, actively maintained alternative that provides better compatibility with React 19 and improved type safety.
+
+**What changed:**
+
+- The underlying rendering engine has been switched from `react-test-renderer` to `universal-test-renderer`
+- This change is mostly internal and should not require code changes in most cases
+- Type definitions have been updated to use `HostElement` from Universal Test Renderer instead of `ReactTestInstance`
+
+**Migration:**
+
+#### 1. Update dependencies
+
+Remove `react-test-renderer` and its type definitions from your dev dependencies, and add `universal-test-renderer`:
+
+```bash
+# Using npm
+npm uninstall react-test-renderer @types/react-test-renderer
+npm install -D universal-test-renderer@^0.10.0
+
+# Using yarn
+yarn remove react-test-renderer @types/react-test-renderer
+yarn add -D universal-test-renderer@^0.10.0
+
+# Using pnpm
+pnpm remove react-test-renderer @types/react-test-renderer
+pnpm add -D universal-test-renderer@^0.10.0
+```
+
+#### 2. Update type imports (if needed)
+
+If you were directly importing types from `react-test-renderer`, you may need to update your imports:
+
+```ts
+// Before (v13)
+import type { ReactTestInstance } from 'react-test-renderer';
+
+// After (v14)
+import type { HostElement } from 'universal-test-renderer';
+```
+
+**Note:** Most users won't need to update type imports, as React Native Testing Library now exports the necessary types directly.
+
+For more details, see the [Universal Test Renderer documentation](https://github.com/mdjastrzebski/universal-test-renderer).
+
+### `container` API reintroduced
+
+In v14, the `container` API has been reintroduced and is now safe to use. Previously, `container` was renamed to `UNSAFE_root` in v12 due to behavioral differences from React Testing Library's `container`. In v14, `container` now returns a pseudo-element container whose children are the elements you asked to render, making it safe and consistent with React Testing Library's behavior.
+
+**What changed:**
+
+- `screen.container` is now available and safe to use
+- `container` returns a pseudo-element container from Universal Test Renderer
+- The container's children are the elements you rendered
+- `UNSAFE_root` has been removed
 
 **Before (v13):**
 
 ```ts
-import { fireEvent, screen } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-it('should press button', () => {
+it('should access root', () => {
   render(<MyComponent />);
-  fireEvent.press(screen.getByText('Press me'));
-  expect(onPress).toHaveBeenCalled();
+  // UNSAFE_root was the only way to access the container
+  const root = screen.UNSAFE_root;
 });
 ```
 
 **After (v14):**
 
 ```ts
-import { fireEvent, screen } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
-it('should press button', async () => {
-  render(<MyComponent />);
-  await fireEvent.press(screen.getByText('Press me'));
-  expect(onPress).toHaveBeenCalled();
+it('should access container', async () => {
+  await render(<MyComponent />);
+  // container is now safe and available
+  const container = screen.container;
+  // root is the first child of container
+  const root = screen.root;
 });
 ```
 
-### Migration path
+**Migration:**
 
-To ease migration, we provide `deprecated_fireEventSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
-
-#### `deprecated_fireEventSync` {#deprecated-fire-event-sync}
+If you were using `UNSAFE_root`, replace it with `container`:
 
 ```ts
-function deprecated_fireEventSync(
-  element: ReactTestInstance,
-  eventName: string,
-  ...data: unknown[]
-): void;
+// Before
+const root = screen.UNSAFE_root;
+
+// After
+const container = screen.container;
+// Or use screen.root if you need the actual root element
+const root = screen.root;
 ```
 
-**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `fireEvent` instead.
+For more details, see the [`screen` API documentation](/docs/api/screen#container).
 
-The synchronous version of `fireEvent` that returns immediately without awaiting React updates. This maintains backward compatibility with v13 tests but is not recommended for new code.
+### `render` is now async by default {#render-async-default}
+
+In v14, `render` is now async by default and returns a Promise. The previous synchronous `render` function has been renamed to `unsafe_renderSync`. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+
+**Before (v13):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should render component', () => {
+  render(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+```
+
+**After (v14):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should render component', async () => {
+  await render(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+```
+
+#### Migration path
+
+To ease migration, we provide `unsafe_renderSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
+
+##### `unsafe_renderSync` {#unsafe-render-sync}
+
+```ts
+function unsafe_renderSync(
+  component: React.Element<any>,
+  options?: RenderSyncOptions
+): RenderSyncResult;
+```
+
+**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `render` instead.
+
+The synchronous version of `render` that returns immediately without awaiting React updates. This maintains backward compatibility with v13 tests but is not recommended for new code.
 
 ```ts
 // Old v13 code (still works but deprecated)
-import { deprecated_fireEventSync } from '@testing-library/react-native';
+import { unsafe_renderSync } from '@testing-library/react-native';
 
-it('should press button', () => {
-  render(<MyComponent />);
-  deprecated_fireEventSync.press(screen.getByText('Press me'));
-  expect(onPress).toHaveBeenCalled();
+it('should render component', () => {
+  unsafe_renderSync(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
 });
 ```
+
+#### Step-by-step migration guide
+
+To migrate from `unsafe_renderSync` to `render`:
+
+##### 1. Add `async` to your test function
+
+```ts
+// Before
+it('should render component', () => {
+
+// After
+it('should render component', async () => {
+```
+
+##### 2. Await `render`
+
+```ts
+// Before
+render(<MyComponent />);
+
+// After
+await render(<MyComponent />);
+```
+
+##### 3. Update `rerender` calls to await
+
+```ts
+// Before
+screen.rerender(<MyComponent />);
+
+// After
+await screen.rerender(<MyComponent />);
+```
+
+##### 4. Update `unmount` calls to await
+
+```ts
+// Before
+screen.unmount();
+
+// After
+await screen.unmount();
+```
+
+#### Complete example
+
+**Before (v13):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should update component', () => {
+  render(<Counter initialCount={0} />);
+  expect(screen.getByText('Count: 0')).toBeOnTheScreen();
+
+  screen.rerender(<Counter initialCount={5} />);
+  expect(screen.getByText('Count: 5')).toBeOnTheScreen();
+
+  screen.unmount();
+});
+```
+
+**After (v14):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should update component', async () => {
+  await render(<Counter initialCount={0} />);
+  expect(screen.getByText('Count: 0')).toBeOnTheScreen();
+
+  await screen.rerender(<Counter initialCount={5} />);
+  expect(screen.getByText('Count: 5')).toBeOnTheScreen();
+
+  await screen.unmount();
+});
+```
+
+#### Benefits of async `render`
+
+- **React 19 compatibility**: Works seamlessly with React 19's async features
+- **Suspense support**: Properly handles React Suspense boundaries and `React.use()`
+- **Better timing**: Ensures all pending React updates are executed before assertions
+- **Future-proof**: Aligns with React's direction toward async rendering
+
+For more details, see the [`render` API documentation](/docs/api/render).
 
 ### `renderHook` is now async by default
 
@@ -91,14 +273,14 @@ it('should test hook', async () => {
 });
 ```
 
-### Migration path
+#### Migration path
 
-To ease migration, we provide `deprecated_renderHookSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
+To ease migration, we provide `unsafe_renderHookSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
 
-#### `deprecated_renderHookSync` {#deprecated-render-hook-sync}
+##### `unsafe_renderHookSync` {#unsafe-render-hook-sync}
 
 ```ts
-function deprecated_renderHookSync<Result, Props>(
+function unsafe_renderHookSync<Result, Props>(
   hookFn: (props?: Props) => Result,
   options?: RenderHookOptions<Props>
 ): RenderHookSyncResult<Result, Props>;
@@ -110,10 +292,10 @@ The synchronous version of `renderHook` that returns immediately without awaitin
 
 ```ts
 // Old v13 code (still works but deprecated)
-import { deprecated_renderHookSync } from '@testing-library/react-native';
+import { unsafe_renderHookSync } from '@testing-library/react-native';
 
 it('should increment count', () => {
-  const { result, rerender } = deprecated_renderHookSync(() => useCount());
+  const { result, rerender } = unsafe_renderHookSync(() => useCount());
 
   expect(result.current.count).toBe(0);
   act(() => {
@@ -125,7 +307,7 @@ it('should increment count', () => {
 });
 ```
 
-#### Result types
+##### Result types
 
 **v13 (deprecated):**
 
@@ -149,11 +331,11 @@ interface RenderHookResult<Result, Props> {
 
 **Note**: Both `RenderHookSyncResult` and `RenderHookResult` use `rerender` and `unmount` methods. The difference is that `RenderHookSyncResult` methods are synchronous (return `void`), while `RenderHookResult` methods are async (return `Promise<void>`).
 
-## Step-by-step migration guide
+#### Step-by-step migration guide
 
-To migrate from `deprecated_renderHookSync` to `renderHook`:
+To migrate from `unsafe_renderHookSync` to `renderHook`:
 
-### 1. Add `async` to your test function
+##### 1. Add `async` to your test function
 
 ```ts
 // Before
@@ -163,17 +345,17 @@ it('should test hook', () => {
 it('should test hook', async () => {
 ```
 
-### 2. Await `renderHook`
+##### 2. Await `renderHook`
 
 ```ts
 // Before
-const { result } = deprecated_renderHookSync(() => useMyHook());
+const { result } = unsafe_renderHookSync(() => useMyHook());
 
 // After
 const { result } = await renderHook(() => useMyHook());
 ```
 
-### 3. Update `rerender` calls to await
+##### 3. Update `rerender` calls to await
 
 ```ts
 // Before
@@ -183,7 +365,7 @@ rerender(newProps);
 await rerender(newProps);
 ```
 
-### 4. Update `unmount` calls to await
+##### 4. Update `unmount` calls to await
 
 ```ts
 // Before
@@ -193,7 +375,7 @@ unmount();
 await unmount();
 ```
 
-### 5. Update `act` calls to use async `act`
+##### 5. Update `act` calls to use async `act`
 
 ```ts
 // Before
@@ -207,7 +389,7 @@ await act(async () => {
 });
 ```
 
-## Complete example
+#### Complete example
 
 **Before (v13):**
 
@@ -253,7 +435,7 @@ it('should increment count', async () => {
 });
 ```
 
-## Benefits of async `renderHook`
+#### Benefits of async `renderHook`
 
 - **React 19 compatibility**: Works seamlessly with React 19's async features
 - **Suspense support**: Properly handles React Suspense boundaries and `React.use()`
@@ -261,3 +443,83 @@ it('should increment count', async () => {
 - **Future-proof**: Aligns with React's direction toward async rendering
 
 For more details, see the [`renderHook` API documentation](/docs/api/misc/render-hook).
+
+### `fireEvent` is now async by default
+
+In v14, `fireEvent` and its helpers (`press`, `changeText`, `scroll`) are now async by default and return a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+
+**Before (v13):**
+
+```ts
+import { fireEvent, screen } from '@testing-library/react-native';
+
+it('should press button', () => {
+  render(<MyComponent />);
+  fireEvent.press(screen.getByText('Press me'));
+  expect(onPress).toHaveBeenCalled();
+});
+```
+
+**After (v14):**
+
+```ts
+import { fireEvent, screen } from '@testing-library/react-native';
+
+it('should press button', async () => {
+  render(<MyComponent />);
+  await fireEvent.press(screen.getByText('Press me'));
+  expect(onPress).toHaveBeenCalled();
+});
+```
+
+#### Migration path
+
+To ease migration, we provide `unsafe_fireEventSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
+
+##### `unsafe_fireEventSync` {#unsafe-fire-event-sync}
+
+```ts
+function unsafe_fireEventSync(element: HostElement, eventName: string, ...data: unknown[]): void;
+```
+
+**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `fireEvent` instead.
+
+The synchronous version of `fireEvent` that returns immediately without awaiting React updates. This maintains backward compatibility with v13 tests but is not recommended for new code.
+
+```ts
+// Old v13 code (still works but deprecated)
+import { unsafe_fireEventSync } from '@testing-library/react-native';
+
+it('should press button', () => {
+  render(<MyComponent />);
+  unsafe_fireEventSync.press(screen.getByText('Press me'));
+  expect(onPress).toHaveBeenCalled();
+});
+```
+
+### Text string validation now enforced by default
+
+In v14, Universal Test Renderer automatically enforces React Native's requirement that text strings must be rendered within a `<Text>` component. This means the `unstable_validateStringsRenderedWithinText` option has been removed from `RenderOptions`, as this validation is now always enabled.
+
+**What changed:**
+
+- Text string validation is now always enabled and cannot be disabled
+- The `unstable_validateStringsRenderedWithinText` option has been removed
+- Tests will now throw `Invariant Violation: Text strings must be rendered within a <Text> component` errors when attempting to render strings outside of `<Text>` components, matching React Native's runtime behavior
+
+**Migration:**
+
+If you were using `unstable_validateStringsRenderedWithinText: true` in your render options, you can simply remove this option as the validation is now always enabled:
+
+```ts
+// Before (v13)
+await render(<MyComponent />, {
+  unstable_validateStringsRenderedWithinText: true,
+});
+
+// After (v14)
+await render(<MyComponent />);
+// Validation is now always enabled
+```
+
+If you were relying on the previous behavior where strings could be rendered outside of `<Text>` components, you'll need to fix your components to wrap strings in `<Text>` components, as this matches React Native's actual runtime behavior.

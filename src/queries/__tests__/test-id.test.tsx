@@ -25,8 +25,8 @@ const Banana = () => (
 
 const MyComponent = (_props: { testID?: string }) => <Text>My Component</Text>;
 
-test('getByTestId returns only native elements', () => {
-  render(
+test('getByTestId returns only native elements', async () => {
+  await render(
     <View>
       <Text testID="text">Text</Text>
       <TextInput testID="textInput" />
@@ -54,8 +54,8 @@ test('getByTestId returns only native elements', () => {
   );
 });
 
-test('supports a regex matcher', () => {
-  render(
+test('supports a regex matcher', async () => {
+  await render(
     <View>
       <Text testID="text">Text</Text>
       <TextInput testID="textInput" />
@@ -69,8 +69,8 @@ test('supports a regex matcher', () => {
   expect(screen.getAllByTestId(/text/)).toHaveLength(2);
 });
 
-test('getByTestId, queryByTestId', () => {
-  render(<Banana />);
+test('getByTestId, queryByTestId', async () => {
+  await render(<Banana />);
   const component = screen.getByTestId('bananaFresh');
 
   expect(component.props.children).toBe('not fresh');
@@ -89,8 +89,8 @@ test('getByTestId, queryByTestId', () => {
   );
 });
 
-test('getAllByTestId, queryAllByTestId', () => {
-  render(<Banana />);
+test('getAllByTestId, queryAllByTestId', async () => {
+  await render(<Banana />);
   const textElements = screen.getAllByTestId('duplicateText');
 
   expect(textElements.length).toBe(2);
@@ -110,7 +110,7 @@ test('getAllByTestId, queryAllByTestId', () => {
 
 test('findByTestId and findAllByTestId work asynchronously', async () => {
   const options = { timeout: 10 }; // Short timeout so that this test runs quickly
-  render(<View />);
+  await render(<View />);
   await expect(screen.findByTestId('aTestId', {}, options)).rejects.toBeTruthy();
   await expect(screen.findAllByTestId('aTestId', {}, options)).rejects.toBeTruthy();
 
@@ -130,8 +130,8 @@ test('findByTestId and findAllByTestId work asynchronously', async () => {
   await expect(screen.findAllByTestId('aTestId')).resolves.toHaveLength(1);
 }, 20000);
 
-test('byTestId queries support hidden option', () => {
-  render(
+test('byTestId queries support hidden option', async () => {
+  await render(
     <Text style={{ display: 'none' }} testID="hidden">
       Hidden from accessibility
     </Text>,
@@ -159,7 +159,7 @@ test('byTestId queries support hidden option', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  render(<View testID="TEST_ID" key="3" />);
+  await render(<View testID="TEST_ID" key="3" />);
 
   expect(() => screen.getByTestId('FOO')).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with testID: FOO
