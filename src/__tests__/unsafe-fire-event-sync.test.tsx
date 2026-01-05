@@ -566,14 +566,14 @@ describe('native events', () => {
 
 test('should handle unmounted elements gracefully', () => {
   const onPress = jest.fn();
-  const { unmount } = unsafe_renderSync(
+  const { rerender } = unsafe_renderSync(
     <TouchableOpacity onPress={onPress}>
       <Text>Test</Text>
     </TouchableOpacity>,
   );
 
   const element = screen.getByText('Test');
-  unmount();
+  rerender(<View />);
 
   // Firing event on unmounted element should not crash
   unsafe_fireEventSync.press(element);
