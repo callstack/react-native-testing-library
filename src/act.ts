@@ -66,7 +66,10 @@ function withGlobalActEnvironment(actImplementation: ReactAct) {
   };
 }
 
-const act = withGlobalActEnvironment(reactAct) as ReactAct;
+export const unsafe_act = withGlobalActEnvironment(reactAct) as ReactAct;
 
-export default act;
+export function act<T>(callback: () => T | Promise<T>): Promise<T> {
+  return unsafe_act(async () => await callback());
+}
+
 export { getIsReactActEnvironment, setIsReactActEnvironment as setReactActEnvironment };

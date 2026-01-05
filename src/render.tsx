@@ -1,13 +1,18 @@
 import * as React from 'react';
-import type { HostElement, JsonElement, Root, RootOptions } from 'universal-test-renderer';
+import {
+  createRoot,
+  type HostElement,
+  type JsonElement,
+  type Root,
+  type RootOptions,
+} from 'universal-test-renderer';
 
-import act from './act';
+import { act } from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
 import { HOST_TEXT_NAMES } from './helpers/host-component-names';
-import { renderWithAsyncAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
@@ -28,7 +33,7 @@ export type RenderResult = Awaited<ReturnType<typeof render>>;
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export async function render<T>(component: React.ReactElement<T>, options: RenderOptions = {}) {
+export async function render<T>(element: React.ReactElement<T>, options: RenderOptions = {}) {
   const { wrapper: Wrapper, createNodeMock } = options || {};
 
   const rendererOptions: RootOptions = {
@@ -37,26 +42,22 @@ export async function render<T>(component: React.ReactElement<T>, options: Rende
   };
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-  const renderer = await renderWithAsyncAct(wrap(component), rendererOptions);
-  return buildRenderResult(renderer, wrap);
-}
+  const renderer = createRoot(rendererOptions);
 
-function buildRenderResult(
-  renderer: Root,
-  wrap: (element: React.ReactElement) => React.JSX.Element,
-) {
+  await act(() => {
+    renderer.render(wrap(element));
+  });
+
   const container = renderer.container;
 
   const rerender = async (component: React.ReactElement) => {
-    // eslint-disable-next-line require-await
-    await act(async () => {
+    await act(() => {
       renderer.render(wrap(component));
     });
   };
 
   const unmount = async () => {
-    // eslint-disable-next-line require-await
-    await act(async () => {
+    await act(() => {
       renderer.unmount();
     });
   };

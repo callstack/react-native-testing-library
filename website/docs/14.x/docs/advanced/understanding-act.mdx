@@ -61,9 +61,9 @@ test('render without act', () => {
 When testing without `act` call wrapping rendering call, we see that the assertion runs just after the rendering but before `useEffect`hooks effects are applied. Which is not what we expected in our tests.
 
 ```jsx
-test('render with act', () => {
+test('render with act', async () => {
   let renderer: ReactTestRenderer;
-  act(() => {
+  await act(async () => {
     renderer = TestRenderer.create(<TestComponent />);
   });
 
@@ -72,6 +72,8 @@ test('render with act', () => {
   expect(view.getByText('Count 1')).toBeOnTheScreen();
 });
 ```
+
+**Note**: In v14, `act` is now async by default and always returns a Promise. Even if your callback is synchronous, you should use `await act(async () => ...)`.
 
 When wrapping rendering call with `act` we see that the changes caused by `useEffect` hook have been applied as we would expect.
 
@@ -95,7 +97,7 @@ Note that `act` calls can be safely nested and internally form a stack of calls.
 
 As of React version of 18.1.0, the `act` implementation is defined in the [ReactAct.js source file](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js) inside React repository. This implementation has been fairly stable since React 17.0.
 
-RNTL exports `act` for convenience of the users as defined in the [act.ts source file](https://github.com/callstack/react-native-testing-library/blob/main/src/act.ts). That file refers to [ReactTestRenderer.js source](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react-test-renderer/src/ReactTestRenderer.js#L52) file from React Test Renderer package, which finally leads to React act implementation in ReactAct.js (already mentioned above).
+RNTL exports `act` for convenience of the users as defined in the [act.ts source file](https://github.com/callstack/react-native-testing-library/blob/main/src/act.ts). In v14, `act` is now async by default and always returns a Promise, making it compatible with React 19, React Suspense, and `React.use()`. The underlying implementation still uses React's `act` function, but wraps it to ensure consistent async behavior.
 
 ## Asynchronous `act`
 
@@ -149,16 +151,18 @@ Note that this is not yet the infamous async act warning. It only asks us to wra
 First solution is to use Jest's fake timers inside out tests:
 
 ```jsx
-test('render with fake timers', () => {
+test('render with fake timers', async () => {
   jest.useFakeTimers();
   render(<TestAsyncComponent />);
 
-  act(() => {
+  await act(async () => {
     jest.runAllTimers();
   });
   expect(screen.getByText('Count 1')).toBeOnTheScreen();
 });
 ```
+
+**Note**: In v14, `act` is now async by default, so you should await it even when using fake timers.
 
 That way we can wrap `jest.runAllTimers()` call which triggers the `setTimeout` updates inside an `act` call, hence resolving the act warning. Note that this whole code is synchronous thanks to usage of Jest fake timers.
 

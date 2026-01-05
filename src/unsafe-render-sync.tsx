@@ -1,13 +1,18 @@
 import * as React from 'react';
-import type { HostElement, JsonElement, Root, RootOptions } from 'universal-test-renderer';
+import {
+  createRoot,
+  type HostElement,
+  type JsonElement,
+  type Root,
+  type RootOptions,
+} from 'universal-test-renderer';
 
-import act from './act';
+import { act, unsafe_act } from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
 import { HOST_TEXT_NAMES } from './helpers/host-component-names';
-import { renderWithAct } from './render-act';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
@@ -45,36 +50,33 @@ export function renderInternal<T>(component: React.ReactElement<T>, options?: Re
   };
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-  const renderer = renderWithAct(wrap(component), rendererOptions);
-  return buildRenderResult(renderer, wrap);
-}
 
-function buildRenderResult(
-  renderer: Root,
-  wrap: (element: React.ReactElement) => React.JSX.Element,
-) {
+  const renderer = createRoot(rendererOptions);
+
+  unsafe_act(() => {
+    renderer.render(wrap(component));
+  });
+
   const rerender = (component: React.ReactElement) => {
-    void act(() => {
+    unsafe_act(() => {
       renderer.render(wrap(component));
     });
   };
 
   const rerenderAsync = async (component: React.ReactElement) => {
-    // eslint-disable-next-line require-await
-    await act(async () => {
+    await act(() => {
       renderer.render(wrap(component));
     });
   };
 
   const unmount = () => {
-    void act(() => {
+    unsafe_act(() => {
       renderer.unmount();
     });
   };
 
   const unmountAsync = async () => {
-    // eslint-disable-next-line require-await
-    await act(async () => {
+    await act(() => {
       renderer.unmount();
     });
   };

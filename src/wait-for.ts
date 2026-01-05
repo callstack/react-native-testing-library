@@ -1,5 +1,5 @@
 /* globals jest */
-import act from './act';
+import { act } from './act';
 import { getConfig } from './config';
 import { flushMicroTasks } from './flush-micro-tasks';
 import { copyStackTrace, ErrorWithStack } from './helpers/errors';
@@ -70,7 +70,7 @@ function waitForInternal<T>(
         // third party code that's setting up recursive timers so rapidly that
         // the user's timer's don't get a chance to resolve. So we'll advance
         // by an interval instead. (We have a test for this case).
-        await act(async () => await jest.advanceTimersByTime(interval));
+        await act(() => jest.advanceTimersByTime(interval));
 
         // It's really important that checkExpectation is run *before* we flush
         // in-flight promises. To be honest, I'm not sure why, and I can't quite
