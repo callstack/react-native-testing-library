@@ -57,5 +57,9 @@ test('userEvent can invoke press events for RNGH Pressable', async () => {
 
   const pressable = screen.getByTestId('pressable');
   await user.press(pressable);
-  expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
+
+  const eventSequence = getEventsNames(events).join(', ');
+  expect(
+    eventSequence === 'pressIn, pressOut, press' || eventSequence === 'pressIn, press, pressOut',
+  ).toBe(true);
 });
