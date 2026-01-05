@@ -523,3 +523,163 @@ await render(<MyComponent />);
 ```
 
 If you were relying on the previous behavior where strings could be rendered outside of `<Text>` components, you'll need to fix your components to wrap strings in `<Text>` components, as this matches React Native's actual runtime behavior.
+
+### `act` is now async by default
+
+In v14, `act` is now async by default and always returns a Promise. The previous synchronous `act` function has been renamed to `unsafe_act`. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+
+**What changed:**
+
+- `act` now always returns a `Promise<T>` instead of `T | Thenable<T>`
+- `unsafe_act` is available for the old behavior (direct React.act wrapper)
+- Both `act` and `unsafe_act` are now named exports (no default export)
+
+**Before (v13):**
+
+```ts
+import act from '@testing-library/react-native';
+
+it('should update state', () => {
+  act(() => {
+    // Synchronous callback
+    setState('new value');
+  });
+  // act could return synchronously or a thenable
+  expect(state).toBe('new value');
+});
+```
+
+**After (v14):**
+
+```ts
+import { act } from '@testing-library/react-native';
+
+it('should update state', async () => {
+  await act(async () => {
+    // Callback can be sync or async
+    setState('new value');
+  });
+  // act always returns a Promise
+  expect(state).toBe('new value');
+});
+```
+
+#### Migration path
+
+To ease migration, we provide `unsafe_act` which maintains the same behavior as v13. This allows you to migrate gradually.
+
+##### `unsafe_act` {#unsafe-act}
+
+```ts
+function unsafe_act<T>(callback: () => T | Promise<T>): T | Thenable<T>;
+```
+
+**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `act` instead.
+
+The synchronous version of `act` that returns immediately for sync callbacks or a thenable for async callbacks. This maintains backward compatibility with v13 tests but is not recommended for new code.
+
+```ts
+// Old v13 code (still works but deprecated)
+import { unsafe_act } from '@testing-library/react-native';
+
+it('should update state', () => {
+  unsafe_act(() => {
+    setState('new value');
+  });
+  expect(state).toBe('new value');
+});
+```
+
+#### Step-by-step migration guide
+
+To migrate from `unsafe_act` to `act`:
+
+##### 1. Update import statement
+
+```ts
+// Before
+import act from '@testing-library/react-native';
+
+// After
+import { act } from '@testing-library/react-native';
+```
+
+##### 2. Add `async` to your test function
+
+```ts
+// Before
+it('should update state', () => {
+
+// After
+it('should update state', async () => {
+```
+
+##### 3. Await `act` calls
+
+```ts
+// Before
+act(() => {
+  setState('new value');
+});
+
+// After
+await act(async () => {
+  setState('new value');
+});
+```
+
+**Note**: Even if your callback is synchronous, you should still use `await act(async () => ...)` as `act` now always returns a Promise.
+
+#### Complete example
+
+**Before (v13):**
+
+```ts
+import act from '@testing-library/react-native';
+
+it('should update state synchronously', () => {
+  act(() => {
+    setState('new value');
+  });
+  expect(state).toBe('new value');
+});
+
+it('should update state asynchronously', () => {
+  act(async () => {
+    await Promise.resolve();
+    setState('new value');
+  }).then(() => {
+    expect(state).toBe('new value');
+  });
+});
+```
+
+**After (v14):**
+
+```ts
+import { act } from '@testing-library/react-native';
+
+it('should update state synchronously', async () => {
+  await act(async () => {
+    setState('new value');
+  });
+  expect(state).toBe('new value');
+});
+
+it('should update state asynchronously', async () => {
+  await act(async () => {
+    await Promise.resolve();
+    setState('new value');
+  });
+  expect(state).toBe('new value');
+});
+```
+
+#### Benefits of async `act`
+
+- **React 19 compatibility**: Works seamlessly with React 19's async features
+- **Suspense support**: Properly handles React Suspense boundaries and `React.use()`
+- **Consistent API**: Always returns a Promise, making the API more predictable
+- **Future-proof**: Aligns with React's direction toward async rendering
+
+For more details, see the [`act` API documentation](/docs/api/misc/other#act).

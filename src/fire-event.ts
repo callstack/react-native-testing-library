@@ -7,7 +7,7 @@ import type {
 } from 'react-native';
 import type { Fiber, HostElement } from 'universal-test-renderer';
 
-import act from './act';
+import { act, unsafe_act } from './act';
 import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
 import { isElementMounted, isHostElement } from './helpers/component-tree';
@@ -139,8 +139,7 @@ async function fireEvent(element: HostElement, eventName: EventName, ...data: un
   }
 
   let returnValue;
-  // eslint-disable-next-line require-await
-  await act(async () => {
+  await act(() => {
     returnValue = handler(...data);
   });
 
@@ -170,7 +169,7 @@ function unsafe_fireEventSync(element: HostElement, eventName: EventName, ...dat
   }
 
   let returnValue;
-  void act(() => {
+  void unsafe_act(() => {
     returnValue = handler(...data);
   });
 

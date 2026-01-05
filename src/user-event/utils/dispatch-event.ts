@@ -1,6 +1,6 @@
 import type { HostElement } from 'universal-test-renderer';
 
-import act from '../../act';
+import { act } from '../../act';
 import { getEventHandlerFromProps } from '../../event-handler';
 import { isElementMounted } from '../../helpers/component-tree';
 
@@ -21,8 +21,7 @@ export async function dispatchEvent(element: HostElement, eventName: string, ...
     return;
   }
 
-  // eslint-disable-next-line require-await
-  await act(async () => {
+  await act(() => {
     handler(...event);
   });
 }

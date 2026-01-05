@@ -1,6 +1,6 @@
 import type { HostElement } from 'universal-test-renderer';
 
-import act from '../../act';
+import { act } from '../../act';
 import { getEventHandlerFromProps } from '../../event-handler';
 import { isHostElement } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
