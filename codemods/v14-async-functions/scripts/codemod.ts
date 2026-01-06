@@ -13,6 +13,122 @@ const ASYNC_VARIANTS_TO_RENAME = new Map([
   ['fireEventAsync', 'fireEvent'],
 ]);
 
+export default async function transform(
+  root: Parameters<Transform<TSX>>[0],
+  options?: Parameters<Transform<TSX>>[1],
+): ReturnType<Transform<TSX>> {
+  const rootNode = root.root();
+  const edits: Edit[] = [];
+
+  const customRenderFunctionsSet = parseCustomRenderFunctionsFromOptions(options);
+  const rntlImports = findRNTLImportStatements(rootNode);
+
+  if (rntlImports.length === 0 && customRenderFunctionsSet.size === 0) {
+    return null;
+  }
+
+  const specifiersToRemove: Array<{ specifier: SgNode<TSX>; importStmt: SgNode<TSX> }> = [];
+  const importedFunctions = extractImportedFunctionNames(rntlImports, specifiersToRemove, edits);
+  removeDuplicateImportSpecifiers(specifiersToRemove, rootNode, edits);
+
+  if (importedFunctions.size === 0 && customRenderFunctionsSet.size === 0) {
+    return null;
+  }
+
+  renameAsyncVariantsInUsages(rootNode, edits);
+
+  const functionCalls: SgNode<TSX>[] = [];
+  functionCalls.push(...findDirectFunctionCalls(rootNode, importedFunctions));
+  functionCalls.push(...findFireEventMethodCalls(rootNode, importedFunctions, rntlImports));
+  functionCalls.push(...findScreenMethodCalls(rootNode));
+
+  const rendererVariables = trackVariablesAssignedFromRender(rootNode, importedFunctions);
+  functionCalls.push(...findRendererMethodCalls(rootNode, rendererVariables));
+
+  const { renderHookVariables, renderHookMethodVariables } = trackVariablesAssignedFromRenderHook(
+    rootNode,
+    importedFunctions,
+  );
+  functionCalls.push(...findRenderHookMethodCalls(rootNode, renderHookVariables, renderHookMethodVariables));
+
+  if (functionCalls.length === 0 && customRenderFunctionsSet.size === 0) {
+    if (edits.length === 0) {
+      return null;
+    }
+  }
+
+  const functionsToMakeAsync = new Map<number, SgNode<TSX>>();
+  const customRenderFunctionsToMakeAsync = new Map<number, SgNode<TSX>>();
+
+  if (customRenderFunctionsSet.size > 0 && importedFunctions.size > 0) {
+    const customRenderFunctionDefinitions = findCustomRenderFunctionDefinitions(rootNode, customRenderFunctionsSet);
+    for (const funcDef of customRenderFunctionDefinitions) {
+      transformRNTLCallsInsideCustomRender(
+        funcDef,
+        importedFunctions,
+        edits,
+        customRenderFunctionsToMakeAsync,
+        rootNode,
+      );
+    }
+  }
+
+  for (const functionCall of functionCalls) {
+    if (isCallAlreadyAwaited(functionCall)) {
+      continue;
+    }
+
+    if (shouldSkipTransformation(functionCall)) {
+      continue;
+    }
+
+    const containingFunction = findContainingTestFunction(functionCall);
+    if (!containingFunction) {
+      continue;
+    }
+
+    if (!isFunctionAlreadyAsync(containingFunction, rootNode) && !functionsToMakeAsync.has(containingFunction.id())) {
+      functionsToMakeAsync.set(containingFunction.id(), containingFunction);
+    }
+
+    addAwaitBeforeCall(functionCall, edits);
+  }
+
+  if (customRenderFunctionsSet.size > 0) {
+    const customRenderCalls = findCustomRenderFunctionCalls(rootNode, customRenderFunctionsSet);
+    for (const callExpr of customRenderCalls) {
+      const containingFunction = findContainingTestFunction(callExpr);
+      if (containingFunction) {
+        if (isCallAlreadyAwaited(callExpr)) {
+          continue;
+        }
+
+        if (!isFunctionAlreadyAsync(containingFunction, rootNode) && !functionsToMakeAsync.has(containingFunction.id())) {
+          functionsToMakeAsync.set(containingFunction.id(), containingFunction);
+        }
+
+        addAwaitBeforeCall(callExpr, edits);
+      }
+    }
+  }
+
+  for (const func of functionsToMakeAsync.values()) {
+    addAsyncKeywordToFunction(func, edits);
+  }
+
+  for (const func of customRenderFunctionsToMakeAsync.values()) {
+    addAsyncKeywordToFunction(func, edits);
+  }
+
+  if (edits.length === 0) {
+    return null;
+  }
+
+  edits.sort((a, b) => b.startPos - a.startPos);
+
+  return rootNode.commitEdits(edits);
+}
+
 function parseCustomRenderFunctionsFromOptions(options: any): Set<string> {
   const customRenderFunctionsParam = options?.params?.customRenderFunctions
     ? String(options.params.customRenderFunctions)
@@ -975,118 +1091,3 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
 
   return null;
 }
-
-const transform: Transform<TSX> = async (root, options) => {
-  const rootNode = root.root();
-  const edits: Edit[] = [];
-
-  const customRenderFunctionsSet = parseCustomRenderFunctionsFromOptions(options);
-  const rntlImports = findRNTLImportStatements(rootNode);
-
-  if (rntlImports.length === 0 && customRenderFunctionsSet.size === 0) {
-    return null;
-  }
-
-  const specifiersToRemove: Array<{ specifier: SgNode<TSX>; importStmt: SgNode<TSX> }> = [];
-  const importedFunctions = extractImportedFunctionNames(rntlImports, specifiersToRemove, edits);
-  removeDuplicateImportSpecifiers(specifiersToRemove, rootNode, edits);
-
-  if (importedFunctions.size === 0 && customRenderFunctionsSet.size === 0) {
-    return null;
-  }
-
-  renameAsyncVariantsInUsages(rootNode, edits);
-
-  const functionCalls: SgNode<TSX>[] = [];
-  functionCalls.push(...findDirectFunctionCalls(rootNode, importedFunctions));
-  functionCalls.push(...findFireEventMethodCalls(rootNode, importedFunctions, rntlImports));
-  functionCalls.push(...findScreenMethodCalls(rootNode));
-
-  const rendererVariables = trackVariablesAssignedFromRender(rootNode, importedFunctions);
-  functionCalls.push(...findRendererMethodCalls(rootNode, rendererVariables));
-
-  const { renderHookVariables, renderHookMethodVariables } = trackVariablesAssignedFromRenderHook(
-    rootNode,
-    importedFunctions,
-  );
-  functionCalls.push(...findRenderHookMethodCalls(rootNode, renderHookVariables, renderHookMethodVariables));
-
-  if (functionCalls.length === 0 && customRenderFunctionsSet.size === 0) {
-    if (edits.length === 0) {
-      return null;
-    }
-  }
-
-  const functionsToMakeAsync = new Map<number, SgNode<TSX>>();
-  const customRenderFunctionsToMakeAsync = new Map<number, SgNode<TSX>>();
-
-  if (customRenderFunctionsSet.size > 0 && importedFunctions.size > 0) {
-    const customRenderFunctionDefinitions = findCustomRenderFunctionDefinitions(rootNode, customRenderFunctionsSet);
-    for (const funcDef of customRenderFunctionDefinitions) {
-      transformRNTLCallsInsideCustomRender(
-        funcDef,
-        importedFunctions,
-        edits,
-        customRenderFunctionsToMakeAsync,
-        rootNode,
-      );
-    }
-  }
-
-  for (const functionCall of functionCalls) {
-    if (isCallAlreadyAwaited(functionCall)) {
-      continue;
-    }
-
-    if (shouldSkipTransformation(functionCall)) {
-      continue;
-    }
-
-    const containingFunction = findContainingTestFunction(functionCall);
-    if (!containingFunction) {
-      continue;
-    }
-
-    if (!isFunctionAlreadyAsync(containingFunction, rootNode) && !functionsToMakeAsync.has(containingFunction.id())) {
-      functionsToMakeAsync.set(containingFunction.id(), containingFunction);
-    }
-
-    addAwaitBeforeCall(functionCall, edits);
-  }
-
-  if (customRenderFunctionsSet.size > 0) {
-    const customRenderCalls = findCustomRenderFunctionCalls(rootNode, customRenderFunctionsSet);
-    for (const callExpr of customRenderCalls) {
-      const containingFunction = findContainingTestFunction(callExpr);
-      if (containingFunction) {
-        if (isCallAlreadyAwaited(callExpr)) {
-          continue;
-        }
-
-        if (!isFunctionAlreadyAsync(containingFunction, rootNode) && !functionsToMakeAsync.has(containingFunction.id())) {
-          functionsToMakeAsync.set(containingFunction.id(), containingFunction);
-        }
-
-        addAwaitBeforeCall(callExpr, edits);
-      }
-    }
-  }
-
-  for (const func of functionsToMakeAsync.values()) {
-    addAsyncKeywordToFunction(func, edits);
-  }
-
-  for (const func of customRenderFunctionsToMakeAsync.values()) {
-    addAsyncKeywordToFunction(func, edits);
-  }
-
-  if (edits.length === 0) {
-    return null;
-  }
-
-  edits.sort((a, b) => b.startPos - a.startPos);
-
-  return rootNode.commitEdits(edits);
-};
-
-export default transform;
