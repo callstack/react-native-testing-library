@@ -11,12 +11,16 @@ const FIRE_EVENT_METHODS = new Set(['press', 'changeText', 'scroll']);
 // Variants that should be skipped (they're already async or have different behavior)
 const SKIP_VARIANTS = new Set(['renderAsync', 'unsafe_renderHookSync', 'unsafe_act']);
 
-const transform: Transform<TSX> = async (root) => {
+const transform: Transform<TSX> = async (root, options) => {
   const rootNode = root.root();
 
-  // Parse custom render functions from environment variable
-  // Format: CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme,renderCustom"
-  const customRenderFunctionsParam = process.env.CUSTOM_RENDER_FUNCTIONS || '';
+  // Parse custom render functions from workflow parameters or environment variable
+  // Priority: 1. --param customRenderFunctions=... 2. CUSTOM_RENDER_FUNCTIONS env var
+  // Format: "renderWithProviders,renderWithTheme,renderCustom"
+  const customRenderFunctionsParam = options?.params?.customRenderFunctions
+    ? String(options.params.customRenderFunctions)
+    : '';
+
   const customRenderFunctionsSet = new Set<string>();
   if (customRenderFunctionsParam) {
     customRenderFunctionsParam
@@ -37,8 +41,10 @@ const transform: Transform<TSX> = async (root) => {
     },
   });
 
-  if (rntlImports.length === 0) {
-    return null; // No RNTL imports, skip this file
+  // If we have custom render functions to process, we should still process the file
+  // even if it doesn't have RNTL imports (it might call custom render functions)
+  if (rntlImports.length === 0 && customRenderFunctionsSet.size === 0) {
+    return null; // No RNTL imports and no custom render functions, skip this file
   }
 
   // Track which functions are imported using a Set
@@ -94,13 +100,15 @@ const transform: Transform<TSX> = async (root) => {
     }
   }
 
-  if (importedFunctions.size === 0) {
-    return null; // None of the target functions are imported, skip
+  // If we have custom render functions to process, continue even if no RNTL functions are imported
+  // (the file might only call custom render functions)
+  if (importedFunctions.size === 0 && customRenderFunctionsSet.size === 0) {
+    return null; // None of the target functions are imported and no custom render functions, skip
   }
 
   // Step 2: Find all call expressions for imported functions
   const functionCalls: SgNode<TSX>[] = [];
-  
+
   // Find standalone function calls (render, act, renderHook, fireEvent)
   for (const funcName of importedFunctions) {
     const calls = rootNode.findAll({
@@ -158,28 +166,61 @@ const transform: Transform<TSX> = async (root) => {
   const customRenderFunctionsToMakeAsync = new Map<number, SgNode<TSX>>(); // Track custom render functions that need to be async
 
   // Step 2.5: Find and process custom render function definitions
-  if (customRenderFunctionsSet.size > 0) {
+  // Note: This only processes definitions. Calls to custom render functions are handled in Step 3.5
+  // We need importedFunctions to be populated to find RNTL calls inside custom render functions
+  // If there are no RNTL imports but we have custom render functions, we still want to process
+  // calls to custom render functions in tests (Step 3.5), but we can't process their definitions
+  if (customRenderFunctionsSet.size > 0 && importedFunctions.size > 0) {
+    console.log(
+      `[RNTL Codemod] Processing ${customRenderFunctionsSet.size} custom render functions: ${Array.from(customRenderFunctionsSet).join(', ')}`,
+    );
+    console.log(
+      `[RNTL Codemod] Imported RNTL functions: ${Array.from(importedFunctions).join(', ') || 'none'}`,
+    );
+    console.log(`[RNTL Codemod] File: ${root.filename()}`);
+
     // Find function declarations
     const functionDeclarations = rootNode.findAll({
       rule: { kind: 'function_declaration' },
     });
+    console.log(
+      `[RNTL Codemod] Found ${functionDeclarations.length} function declaration(s) in file`,
+    );
+    let foundCustomFunctions = 0;
+    const allFunctionNames: string[] = [];
     for (const funcDecl of functionDeclarations) {
       const nameNode = funcDecl.find({
         rule: { kind: 'identifier' },
       });
       if (nameNode) {
         const funcName = nameNode.text();
+        allFunctionNames.push(funcName);
         if (customRenderFunctionsSet.has(funcName)) {
+          foundCustomFunctions++;
+          console.log(`[RNTL Codemod] ✓ Found custom render function declaration: ${funcName}`);
           // Found a custom render function declaration
-          processCustomRenderFunction(funcDecl, importedFunctions, edits, customRenderFunctionsToMakeAsync, rootNode);
+          processCustomRenderFunction(
+            funcDecl,
+            importedFunctions,
+            edits,
+            customRenderFunctionsToMakeAsync,
+            rootNode,
+          );
         }
       }
+    }
+    if (allFunctionNames.length > 0 && foundCustomFunctions === 0) {
+      console.log(`[RNTL Codemod] Function names found in file: ${allFunctionNames.join(', ')}`);
     }
 
     // Find arrow functions and function expressions (const renderWithX = () => {} or const renderWithX = function() {})
     const variableDeclarations = rootNode.findAll({
       rule: { kind: 'lexical_declaration' },
     });
+    console.log(
+      `[RNTL Codemod] Found ${variableDeclarations.length} variable declaration(s) in file`,
+    );
+    const allVariableNames: string[] = [];
     for (const varDecl of variableDeclarations) {
       const declarators = varDecl.findAll({
         rule: { kind: 'variable_declarator' },
@@ -190,24 +231,45 @@ const transform: Transform<TSX> = async (root) => {
         });
         if (nameNode) {
           const funcName = nameNode.text();
+          allVariableNames.push(funcName);
           if (customRenderFunctionsSet.has(funcName)) {
             // Check if it's an arrow function or function expression
             const init = declarator.find({
               rule: {
-                any: [
-                  { kind: 'arrow_function' },
-                  { kind: 'function_expression' },
-                ],
+                any: [{ kind: 'arrow_function' }, { kind: 'function_expression' }],
               },
             });
             if (init) {
+              foundCustomFunctions++;
+              console.log(
+                `[RNTL Codemod] ✓ Found custom render function (arrow/expression): ${funcName}`,
+              );
               // Found a custom render function (arrow or expression)
-              processCustomRenderFunction(init, importedFunctions, edits, customRenderFunctionsToMakeAsync, rootNode);
+              processCustomRenderFunction(
+                init,
+                importedFunctions,
+                edits,
+                customRenderFunctionsToMakeAsync,
+                rootNode,
+              );
+            } else {
+              console.log(
+                `[RNTL Codemod] Variable ${funcName} found but is not a function (arrow/expression)`,
+              );
             }
           }
         }
       }
     }
+    if (allVariableNames.length > 0 && foundCustomFunctions === 0) {
+      const matchingVars = allVariableNames.filter((name) => customRenderFunctionsSet.has(name));
+      if (matchingVars.length > 0) {
+        console.log(
+          `[RNTL Codemod] Found matching variable names but they're not functions: ${matchingVars.join(', ')}`,
+        );
+      }
+    }
+    console.log(`[RNTL Codemod] Total custom render functions found: ${foundCustomFunctions}`);
   }
 
   // Step 3: Process each function call
@@ -268,6 +330,10 @@ const transform: Transform<TSX> = async (root) => {
     const allCallExpressions = rootNode.findAll({
       rule: { kind: 'call_expression' },
     });
+    console.log(
+      `[RNTL Codemod] Checking ${allCallExpressions.length} call expressions for custom render function calls`,
+    );
+    let foundCustomCalls = 0;
     for (const callExpr of allCallExpressions) {
       const funcNode = callExpr.field('function');
       if (!funcNode) continue;
@@ -281,6 +347,8 @@ const transform: Transform<TSX> = async (root) => {
       }
 
       if (calledFunctionName && customRenderFunctionsSet.has(calledFunctionName)) {
+        foundCustomCalls++;
+        console.log(`[RNTL Codemod] Found call to custom render function: ${calledFunctionName}`);
         // Check if this call is inside a test function
         const containingFunction = findContainingTestFunction(callExpr);
         if (containingFunction) {
@@ -315,6 +383,9 @@ const transform: Transform<TSX> = async (root) => {
         }
       }
     }
+    console.log(
+      `[RNTL Codemod] Found ${foundCustomCalls} call(s) to custom render functions in tests`,
+    );
   }
 
   // Step 7: Add async keyword to functions that need it
@@ -408,10 +479,14 @@ function processCustomRenderFunction(
   importedFunctions: Set<string>,
   edits: Edit[],
   customRenderFunctionsToMakeAsync: Map<number, SgNode<TSX>>,
-  rootNode: SgNode<TSX>
+  rootNode: SgNode<TSX>,
 ): void {
   // Find RNTL function calls inside this custom render function
   const rntlCalls: SgNode<TSX>[] = [];
+
+  console.log(
+    `[RNTL Codemod] Processing custom render function, importedFunctions: ${Array.from(importedFunctions).join(', ') || 'none'}`,
+  );
 
   // Find standalone function calls (render, act, renderHook, fireEvent)
   for (const funcName of importedFunctions) {
@@ -425,6 +500,11 @@ function processCustomRenderFunction(
         },
       },
     });
+    if (calls.length > 0) {
+      console.log(
+        `[RNTL Codemod] Found ${calls.length} call(s) to ${funcName} inside custom render function`,
+      );
+    }
     rntlCalls.push(...calls);
   }
 
@@ -459,6 +539,10 @@ function processCustomRenderFunction(
       }
     }
   }
+
+  console.log(
+    `[RNTL Codemod] Found ${rntlCalls.length} total RNTL call(s) inside custom render function`,
+  );
 
   // Process each RNTL call found inside the custom render function
   let needsAsync = false;

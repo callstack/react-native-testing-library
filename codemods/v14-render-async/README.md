@@ -35,7 +35,10 @@ npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --t
 # Or if published to the registry
 npx codemod@latest run @testing-library/react-native-v14-render-async --target ./path/to/your/tests
 
-# With custom render functions (comma-separated list)
+# With custom render functions - Option 1: Workflow parameter (recommended)
+npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --target ./path/to/your/tests --param customRenderFunctions="renderWithProviders,renderWithTheme"
+
+# With custom render functions - Option 2: Environment variable
 CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme" npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --target ./path/to/your/tests
 ```
 
@@ -346,7 +349,7 @@ yarn test
 
 ## Limitations
 
-1. **Helper functions**: Function calls (`render`, `act`, `renderHook`, `fireEvent`) inside helper functions (not directly in test callbacks) are not transformed by default. You can specify custom render function names via the `CUSTOM_RENDER_FUNCTIONS` environment variable to have them automatically transformed. For other helper functions, you'll need to manually update them to be async and await their calls.
+1. **Helper functions**: Function calls (`render`, `act`, `renderHook`, `fireEvent`) inside helper functions (not directly in test callbacks) are not transformed by default. You can specify custom render function names via the `--param customRenderFunctions=...` flag or `CUSTOM_RENDER_FUNCTIONS` environment variable to have them automatically transformed. For other helper functions, you'll need to manually update them to be async and await their calls.
 
 2. **Namespace imports**: The codemod currently doesn't handle namespace imports like `import * as RNTL from '@testing-library/react-native'`. If you use this pattern, you'll need to manually update those calls.
 
@@ -357,7 +360,11 @@ yarn test
 ## Migration Guide
 
 1. **Run the codemod** on your test files
-2. **If you have custom render functions** (like `renderWithProviders`, `renderWithTheme`, etc.), run the codemod with `CUSTOM_RENDER_FUNCTIONS` environment variable:
+2. **If you have custom render functions** (like `renderWithProviders`, `renderWithTheme`, etc.), run the codemod with the `--param` flag:
+   ```bash
+   npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --target ./path/to/your/tests --param customRenderFunctions="renderWithProviders,renderWithTheme"
+   ```
+   Or use the environment variable:
    ```bash
    CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme" npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --target ./path/to/your/tests
    ```
