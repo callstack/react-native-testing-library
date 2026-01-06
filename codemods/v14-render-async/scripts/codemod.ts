@@ -161,10 +161,10 @@ const transform: Transform<TSX> = async (root) => {
       }
     }
 
-    // Step 4: Find the containing function (test/it callback)
+    // Step 4: Find the containing function (test/it/hook callback)
     const containingFunction = findContainingTestFunction(functionCall);
     if (!containingFunction) {
-      // Not inside a test function, skip (could be a helper function)
+      // Not inside a test function or hook, skip (could be a helper function)
       continue;
     }
 
@@ -244,7 +244,7 @@ const transform: Transform<TSX> = async (root) => {
 };
 
 /**
- * Find the containing test function (test/it callback) for a given node
+ * Find the containing test function or hook callback (test/it/beforeEach/afterEach/etc.) for a given node
  */
 function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
   // Walk up the AST to find the containing function
@@ -268,11 +268,11 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
             const funcNode = grandParent.field('function');
             if (funcNode) {
               const funcText = funcNode.text();
-              // Match test, it, describe
-              if (/^(test|it|describe)$/.test(funcText)) {
+              // Match test, it, describe, beforeEach, afterEach, beforeAll, afterAll
+              if (/^(test|it|describe|beforeEach|afterEach|beforeAll|afterAll)$/.test(funcText)) {
                 return current;
               }
-              // Handle test.skip and it.skip (member expressions)
+              // Handle test.skip, it.skip, etc. (member expressions)
               if (funcNode.is('member_expression')) {
                 try {
                   const object = funcNode.field('object');
@@ -296,7 +296,7 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
           const funcNode = parent.field('function');
           if (funcNode) {
             const funcText = funcNode.text();
-            if (/^(test|it|describe)$/.test(funcText)) {
+            if (/^(test|it|describe|beforeEach|afterEach|beforeAll|afterAll)$/.test(funcText)) {
               return current;
             }
             if (funcNode.is('member_expression')) {

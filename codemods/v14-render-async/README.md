@@ -11,6 +11,7 @@ This codemod migrates your test files from React Native Testing Library v13 to v
 - ✅ Transforms `fireEvent.press()`, `fireEvent.changeText()`, and `fireEvent.scroll()` calls to `await fireEvent.press()`, etc.
 - ✅ Makes test functions async if they're not already
 - ✅ Handles `test()`, `it()`, `test.skip()`, and `it.skip()` patterns
+- ✅ Handles `beforeEach()`, `afterEach()`, `beforeAll()`, and `afterAll()` hooks
 - ✅ Preserves already-awaited function calls
 - ✅ Skips function calls in helper functions (not inside test callbacks)
 - ✅ Only transforms calls imported from `@testing-library/react-native`
