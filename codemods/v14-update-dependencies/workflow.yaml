@@ -8,7 +8,15 @@ nodes:
     type: automatic
     steps:
       - name: "Update dependencies in package.json"
-        command: |
-          find . -name "package.json" -not -path "*/node_modules/*" -not -path "*/build/*" -not -path "*/dist/*" -not -path "*/.next/*" -not -path "*/coverage/*" -not -path "*/.yarn/*" | while read -r file; do
-            node "$(dirname "$0")/scripts/codemod.js" "$file" || true
-          done
+        js-ast-grep:
+          js_file: scripts/codemod-json.js
+          language: json
+          include:
+            - "**/package.json"
+          exclude:
+            - "**/node_modules/**"
+            - "**/build/**"
+            - "**/dist/**"
+            - "**/.next/**"
+            - "**/coverage/**"
+            - "**/.yarn/**"
