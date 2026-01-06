@@ -1,0 +1,20 @@
+schema_version: "1.0"
+
+name: "@testing-library/react-native-v14-render-async"
+version: "0.1.0"
+description: "Codemod to migrate render() calls to await render() for RNTL v14"
+author: "Callstack"
+license: "MIT"
+workflow: "workflow.yaml"
+
+
+targets:
+  languages: ["typescript", "tsx", "javascript", "jsx"]
+
+keywords: ["transformation", "migration"]
+
+registry:
+  access: "public"
+  visibility: "public"
+
+capabilities: []

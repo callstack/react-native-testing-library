@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/codemod/codemod/refs/heads/main/schemas/workflow.json
+
+version: "1"
+
+nodes:
+  - id: apply-transforms
+    name: Apply AST Transformations
+    type: automatic
+    steps:
+      - name: "Transform render() calls to await render()"
+        js-ast-grep:
+          js_file: scripts/codemod.ts
+          language: "tsx"
+          include:
+            - "**/*.test.ts"
+            - "**/*.test.tsx"
+            - "**/*.spec.ts"
+            - "**/*.spec.tsx"
+            - "**/*.test.js"
+            - "**/*.test.jsx"
+            - "**/*.spec.js"
+            - "**/*.spec.jsx"
+          exclude:
+            - "**/node_modules/**"
+            - "**/build/**"
+            - "**/dist/**"
+            - "**/.next/**"
+            - "**/coverage/**"
