@@ -1,6 +1,6 @@
 schema_version: '1.0'
 
-name: '@testing-library/react-native-v14-async-functions'
+name: 'rntl-v14-async-functions'
 version: '0.1.0'
 description: 'Codemod to migrate sync RNTL function and method calls to async for RNTL v14'
 author: 'Maciej Jastrzebski'
