@@ -509,6 +509,189 @@ const transform: Transform<TSX> = async (root, options) => {
     }
   }
 
+  // Find renderHook result method calls (hookResult.rerender, hookResult.unmount)
+  // Track variables that are assigned the result of renderHook() calls
+  const renderHookVariables = new Set<string>();
+  // Track renamed method variables (e.g., rerenderHook from const { rerender: rerenderHook })
+  const renderHookMethodVariables = new Set<string>();
+  
+  // Find all renderHook() calls and track what they're assigned to
+  if (importedFunctions.has('renderHook')) {
+    const renderHookCalls = rootNode.findAll({
+      rule: {
+        kind: 'call_expression',
+        has: {
+          field: 'function',
+          kind: 'identifier',
+          regex: '^renderHook$',
+        },
+      },
+    });
+
+    for (const renderHookCall of renderHookCalls) {
+      // Check if this renderHook() call is assigned to a variable
+      // Handle both: const hookResult = renderHook(...) and const hookResult = await renderHook(...)
+      let parent = renderHookCall.parent();
+      const isAwaited = parent && parent.is('await_expression');
+      
+      // If awaited, get the await expression's parent
+      if (isAwaited) {
+        parent = parent.parent();
+      }
+      
+      if (parent && parent.is('variable_declarator')) {
+        // Handle: const hookResult = renderHook(...) or const { rerender, unmount, result } = renderHook(...)
+        // Try to find object_pattern first (destructuring)
+        const objectPattern = parent.find({
+          rule: { kind: 'object_pattern' },
+        });
+        if (objectPattern) {
+          // Destructuring: const { rerender, unmount, result } = ... or const { rerender: rerenderHook } = ...
+          const shorthandProps = objectPattern.findAll({
+            rule: { kind: 'shorthand_property_identifier_pattern' },
+          });
+          for (const prop of shorthandProps) {
+            // The shorthand_property_identifier_pattern IS the identifier
+            const propName = prop.text();
+            if (RENDERER_METHODS.has(propName)) {
+              renderHookVariables.add(propName);
+            }
+          }
+          // Also handle renamed properties: const { rerender: rerenderHook } = ...
+          const pairPatterns = objectPattern.findAll({
+            rule: { kind: 'pair_pattern' },
+          });
+          for (const pair of pairPatterns) {
+            // Find the key (property name) and value (variable name)
+            const key = pair.find({
+              rule: { kind: 'property_identifier' },
+            });
+            const value = pair.find({
+              rule: { kind: 'identifier' },
+            });
+            if (key && value) {
+              const keyName = key.text();
+              const valueName = value.text();
+              // If the key is rerender or unmount, track the value (renamed variable)
+              if (RENDERER_METHODS.has(keyName)) {
+                renderHookVariables.add(valueName);
+                renderHookMethodVariables.add(valueName);
+              }
+            }
+          }
+        } else {
+          // Simple variable assignment: const hookResult = ...
+          const nameNode = parent.find({
+            rule: { kind: 'identifier' },
+          });
+          if (nameNode) {
+            const varName = nameNode.text();
+            renderHookVariables.add(varName);
+          }
+        }
+      } else if (parent && parent.is('assignment_expression')) {
+        // Handle: hookResult = renderHook(...) or hookResult = await renderHook(...)
+        const left = parent.find({
+          rule: { kind: 'identifier' },
+        });
+        if (left) {
+          const varName = left.text();
+          renderHookVariables.add(varName);
+        } else {
+          // Handle destructuring assignment: { rerender } = renderHook(...) or { rerender: rerenderHook } = renderHook(...)
+          const objectPattern = parent.find({
+            rule: { kind: 'object_pattern' },
+          });
+          if (objectPattern) {
+            const shorthandProps = objectPattern.findAll({
+              rule: { kind: 'shorthand_property_identifier_pattern' },
+            });
+            for (const prop of shorthandProps) {
+              // The shorthand_property_identifier_pattern IS the identifier
+              const propName = prop.text();
+              if (RENDERER_METHODS.has(propName)) {
+                renderHookVariables.add(propName);
+              }
+            }
+            // Also handle renamed properties in assignment
+            const pairPatterns = objectPattern.findAll({
+              rule: { kind: 'pair_pattern' },
+            });
+            for (const pair of pairPatterns) {
+              const key = pair.find({
+                rule: { kind: 'property_identifier' },
+              });
+              const value = pair.find({
+                rule: { kind: 'identifier' },
+              });
+              if (key && value) {
+                const keyName = key.text();
+                const valueName = value.text();
+                if (RENDERER_METHODS.has(keyName)) {
+                  renderHookVariables.add(valueName);
+                  renderHookMethodVariables.add(valueName);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Now find calls to .rerender() or .unmount() on these variables
+    // Handle both: hookResult.rerender() and rerender() (when destructured)
+    if (renderHookVariables.size > 0) {
+      // Find member expression calls: hookResult.rerender()
+      const renderHookMethodCalls = rootNode.findAll({
+        rule: {
+          kind: 'call_expression',
+          has: {
+            field: 'function',
+            kind: 'member_expression',
+          },
+        },
+      });
+
+      for (const call of renderHookMethodCalls) {
+        const funcNode = call.field('function');
+        if (funcNode && funcNode.is('member_expression')) {
+          try {
+            const object = funcNode.field('object');
+            const property = funcNode.field('property');
+            if (object && property) {
+              const objText = object.text();
+              const propText = property.text();
+              // Check if it's renderHookVariable.methodName where methodName is rerender or unmount
+              if (renderHookVariables.has(objText) && RENDERER_METHODS.has(propText)) {
+                functionCalls.push(call);
+              }
+            }
+          } catch {
+            // field() might not be available for this node type, skip
+          }
+        }
+      }
+
+      // Find direct identifier calls: rerender(), unmount(), or renamed variants like rerenderHook()
+      for (const varName of renderHookVariables) {
+        if (RENDERER_METHODS.has(varName) || renderHookMethodVariables.has(varName)) {
+          // This is a destructured method name (rerender, unmount, or renamed variant)
+          const directCalls = rootNode.findAll({
+            rule: {
+              kind: 'call_expression',
+              has: {
+                field: 'function',
+                kind: 'identifier',
+                regex: `^${varName}$`,
+              },
+            },
+          });
+          functionCalls.push(...directCalls);
+        }
+      }
+    }
+  }
+
   if (functionCalls.length === 0 && customRenderFunctionsSet.size === 0) {
     // If we have rename edits (from async variants), we should still return them
     if (edits.length === 0) {
@@ -913,11 +1096,11 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
             const funcNode = grandParent.field('function');
             if (funcNode) {
               const funcText = funcNode.text();
-              // Match test, it, describe, beforeEach, afterEach, beforeAll, afterAll
-              if (/^(test|it|describe|beforeEach|afterEach|beforeAll|afterAll)$/.test(funcText)) {
+              // Match test, it, beforeEach, afterEach, beforeAll, afterAll
+              if (/^(test|it|beforeEach|afterEach|beforeAll|afterAll)$/.test(funcText)) {
                 return current;
               }
-              // Handle test.skip, it.skip, etc. (member expressions)
+              // Handle test.skip, it.skip, test.only, it.only (member expressions)
               if (funcNode.is('member_expression')) {
                 try {
                   // @ts-expect-error - field() types are complex, but this works at runtime
@@ -927,8 +1110,30 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
                   if (object && property) {
                     const objText = object.text();
                     const propText = property.text();
-                    if ((objText === 'test' || objText === 'it') && propText === 'skip') {
+                    if ((objText === 'test' || objText === 'it') && (propText === 'skip' || propText === 'only')) {
                       return current;
+                    }
+                  }
+                } catch {
+                  // field() might not be available for this node type, skip
+                }
+              }
+              // Handle test.each([...])('name', callback) and it.each([...])('name', callback)
+              // The function of the outer call is itself a call expression: test.each([...])
+              if (funcNode.is('call_expression')) {
+                try {
+                  const innerFuncNode = funcNode.field('function');
+                  if (innerFuncNode && innerFuncNode.is('member_expression')) {
+                    // @ts-expect-error - field() types are complex, but this works at runtime
+                    const object = innerFuncNode.field('object');
+                    // @ts-expect-error - field() types are complex, but this works at runtime
+                    const property = innerFuncNode.field('property');
+                    if (object && property) {
+                      const objText = object.text();
+                      const propText = property.text();
+                      if ((objText === 'test' || objText === 'it') && propText === 'each') {
+                        return current;
+                      }
                     }
                   }
                 } catch {
@@ -943,7 +1148,7 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
           const funcNode = parent.field('function');
           if (funcNode) {
             const funcText = funcNode.text();
-            if (/^(test|it|describe|beforeEach|afterEach|beforeAll|afterAll)$/.test(funcText)) {
+            if (/^(test|it|beforeEach|afterEach|beforeAll|afterAll)$/.test(funcText)) {
               return current;
             }
             if (funcNode.is('member_expression')) {
@@ -955,8 +1160,29 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
                 if (object && property) {
                   const objText = object.text();
                   const propText = property.text();
-                  if ((objText === 'test' || objText === 'it') && propText === 'skip') {
+                  if ((objText === 'test' || objText === 'it') && (propText === 'skip' || propText === 'only')) {
                     return current;
+                  }
+                }
+              } catch {
+                // field() might not be available for this node type, skip
+              }
+            }
+            // Handle test.each([...])('name', callback) and it.each([...])('name', callback)
+            if (funcNode.is('call_expression')) {
+              try {
+                const innerFuncNode = funcNode.field('function');
+                if (innerFuncNode && innerFuncNode.is('member_expression')) {
+                  // @ts-expect-error - field() types are complex, but this works at runtime
+                  const object = innerFuncNode.field('object');
+                  // @ts-expect-error - field() types are complex, but this works at runtime
+                  const property = innerFuncNode.field('property');
+                  if (object && property) {
+                    const objText = object.text();
+                    const propText = property.text();
+                    if ((objText === 'test' || objText === 'it') && propText === 'each') {
+                      return current;
+                    }
                   }
                 }
               } catch {

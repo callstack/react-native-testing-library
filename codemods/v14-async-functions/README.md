@@ -11,9 +11,11 @@ This codemod migrates your test files from React Native Testing Library v13 to v
 - ✅ Transforms `fireEvent.press()`, `fireEvent.changeText()`, and `fireEvent.scroll()` calls to `await fireEvent.press()`, etc.
 - ✅ Transforms `screen.rerender()` and `screen.unmount()` calls to `await screen.rerender()`, etc.
 - ✅ Transforms `renderer.rerender()` and `renderer.unmount()` calls (where renderer is the return value from `render()`) to `await renderer.rerender()`, etc.
+- ✅ Transforms `hookResult.rerender()` and `hookResult.unmount()` calls (where hookResult is the return value from `renderHook()`) to `await hookResult.rerender()`, etc.
 - ✅ Makes test functions async if they're not already
-- ✅ Handles `test()`, `it()`, `test.skip()`, and `it.skip()` patterns
+- ✅ Handles `test()`, `it()`, `test.skip()`, `it.skip()`, `test.only()`, `it.only()`, `test.each()`, and `it.each()` patterns
 - ✅ Handles `beforeEach()`, `afterEach()`, `beforeAll()`, and `afterAll()` hooks
+- ✅ Does NOT make `describe()` block callbacks async (they are just grouping mechanisms)
 - ✅ Preserves already-awaited function calls
 - ✅ Skips function calls in helper functions (not inside test callbacks)
 - ✅ Only transforms calls imported from `@testing-library/react-native`
@@ -25,6 +27,7 @@ This codemod migrates your test files from React Native Testing Library v13 to v
 - ❌ Does not transform function calls from other libraries
 - ❌ Does not handle namespace imports (e.g., `import * as RNTL from '@testing-library/react-native'`)
 - ❌ Does not transform unsafe variants (`unsafe_act`, `unsafe_renderHookSync`) or `renderAsync`
+- ❌ Does not make `describe()` block callbacks async (they are grouping mechanisms, not test functions)
 
 ## Usage
 
@@ -339,6 +342,54 @@ test('uses custom render', async () => {
   await renderWithTheme(<Component />);
 });
 ```
+
+#### Describe blocks (not made async)
+
+`describe()` blocks are grouping mechanisms and their callbacks are not made async, even if they contain `render` calls in helper functions. However, `test()` callbacks inside `describe` blocks are still made async.
+
+**Before:**
+```typescript
+import { render, screen } from '@testing-library/react-native';
+
+describe('MyComponent', () => {
+  function setupComponent() {
+    render(<MyComponent />);
+  }
+
+  test('renders component', () => {
+    setupComponent();
+    expect(screen.getByText('Hello')).toBeOnTheScreen();
+  });
+
+  test('renders with direct render call', () => {
+    render(<MyComponent />);
+    expect(screen.getByText('Hello')).toBeOnTheScreen();
+  });
+});
+```
+
+**After:**
+```typescript
+import { render, screen } from '@testing-library/react-native';
+
+describe('MyComponent', () => {
+  function setupComponent() {
+    render(<MyComponent />);
+  }
+
+  test('renders component', () => {
+    setupComponent();
+    expect(screen.getByText('Hello')).toBeOnTheScreen();
+  });
+
+  test('renders with direct render call', async () => {
+    await render(<MyComponent />);
+    expect(screen.getByText('Hello')).toBeOnTheScreen();
+  });
+});
+```
+
+Note: The `describe` callback remains synchronous. The `test` callback that directly calls `render()` is made async, but the `test` callback that only calls a helper function (not in `CUSTOM_RENDER_FUNCTIONS`) remains synchronous.
 
 ## Testing
 
