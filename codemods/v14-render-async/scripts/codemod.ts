@@ -3,7 +3,10 @@ import type TSX from 'codemod:ast-grep/langs/tsx';
 import type { Edit, SgNode } from '@codemod.com/jssg-types/main';
 
 // Functions that should be transformed to async
-const FUNCTIONS_TO_TRANSFORM = new Set(['render', 'renderHook', 'act']);
+const FUNCTIONS_TO_TRANSFORM = new Set(['render', 'renderHook', 'act', 'fireEvent']);
+
+// fireEvent methods that should be transformed to async
+const FIRE_EVENT_METHODS = new Set(['press', 'changeText', 'scroll']);
 
 // Variants that should be skipped (they're already async or have different behavior)
 const SKIP_VARIANTS = new Set(['renderAsync', 'unsafe_renderHookSync', 'unsafe_act']);
@@ -85,6 +88,8 @@ const transform: Transform<TSX> = async (root) => {
 
   // Step 2: Find all call expressions for imported functions
   const functionCalls: SgNode<TSX>[] = [];
+  
+  // Find standalone function calls (render, act, renderHook, fireEvent)
   for (const funcName of importedFunctions) {
     const calls = rootNode.findAll({
       rule: {
@@ -97,6 +102,39 @@ const transform: Transform<TSX> = async (root) => {
       },
     });
     functionCalls.push(...calls);
+  }
+
+  // Find fireEvent method calls (fireEvent.press, fireEvent.changeText, fireEvent.scroll)
+  if (importedFunctions.has('fireEvent')) {
+    const fireEventMethodCalls = rootNode.findAll({
+      rule: {
+        kind: 'call_expression',
+        has: {
+          field: 'function',
+          kind: 'member_expression',
+        },
+      },
+    });
+
+    for (const call of fireEventMethodCalls) {
+      const funcNode = call.field('function');
+      if (funcNode && funcNode.is('member_expression')) {
+        try {
+          const object = funcNode.field('object');
+          const property = funcNode.field('property');
+          if (object && property) {
+            const objText = object.text();
+            const propText = property.text();
+            // Check if it's fireEvent.methodName where methodName is one of our target methods
+            if (objText === 'fireEvent' && FIRE_EVENT_METHODS.has(propText)) {
+              functionCalls.push(call);
+            }
+          }
+        } catch {
+          // field() might not be available for this node type, skip
+        }
+      }
+    }
   }
 
   if (functionCalls.length === 0) {

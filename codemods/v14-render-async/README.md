@@ -1,12 +1,14 @@
-# RNTL v14: Make render(), act(), and renderHook() calls async
+# RNTL v14: Make render(), act(), renderHook(), and fireEvent() calls async
 
-This codemod migrates your test files from React Native Testing Library v13 to v14 by transforming synchronous `render()`, `act()`, and `renderHook()` calls to `await render()`, `await act()`, and `await renderHook()` calls and making test functions async when needed.
+This codemod migrates your test files from React Native Testing Library v13 to v14 by transforming synchronous `render()`, `act()`, `renderHook()`, and `fireEvent()` calls to their async versions (`await render()`, `await act()`, `await renderHook()`, `await fireEvent()`, etc.) and making test functions async when needed.
 
 ## What it does
 
 - ✅ Transforms `render()` calls to `await render()` in test functions
 - ✅ Transforms `act()` calls to `await act()` in test functions
 - ✅ Transforms `renderHook()` calls to `await renderHook()` in test functions
+- ✅ Transforms `fireEvent()` calls to `await fireEvent()` in test functions
+- ✅ Transforms `fireEvent.press()`, `fireEvent.changeText()`, and `fireEvent.scroll()` calls to `await fireEvent.press()`, etc.
 - ✅ Makes test functions async if they're not already
 - ✅ Handles `test()`, `it()`, `test.skip()`, and `it.skip()` patterns
 - ✅ Preserves already-awaited function calls
@@ -181,6 +183,66 @@ test('uses all three', async () => {
 });
 ```
 
+#### Using fireEvent()
+
+**Before:**
+```typescript
+import { fireEvent, render, screen } from '@testing-library/react-native';
+
+test('uses fireEvent', () => {
+  render(<MyComponent />);
+  const button = screen.getByRole('button');
+  fireEvent(button, 'press');
+  expect(screen.getByText('Clicked')).toBeOnTheScreen();
+});
+```
+
+**After:**
+```typescript
+import { fireEvent, render, screen } from '@testing-library/react-native';
+
+test('uses fireEvent', async () => {
+  await render(<MyComponent />);
+  const button = screen.getByRole('button');
+  await fireEvent(button, 'press');
+  expect(screen.getByText('Clicked')).toBeOnTheScreen();
+});
+```
+
+#### Using fireEvent methods
+
+**Before:**
+```typescript
+import { fireEvent, render, screen } from '@testing-library/react-native';
+
+test('uses fireEvent methods', () => {
+  render(<MyComponent />);
+  const input = screen.getByPlaceholderText('Enter text');
+  const button = screen.getByRole('button');
+  const scrollView = screen.getByTestId('scroll-view');
+  
+  fireEvent.press(button);
+  fireEvent.changeText(input, 'Hello');
+  fireEvent.scroll(scrollView, { nativeEvent: { contentOffset: { y: 100 } } });
+});
+```
+
+**After:**
+```typescript
+import { fireEvent, render, screen } from '@testing-library/react-native';
+
+test('uses fireEvent methods', async () => {
+  await render(<MyComponent />);
+  const input = screen.getByPlaceholderText('Enter text');
+  const button = screen.getByRole('button');
+  const scrollView = screen.getByTestId('scroll-view');
+  
+  await fireEvent.press(button);
+  await fireEvent.changeText(input, 'Hello');
+  await fireEvent.scroll(scrollView, { nativeEvent: { contentOffset: { y: 100 } } });
+});
+```
+
 #### Skipping unsafe variants
 
 **Before:**
@@ -244,19 +306,22 @@ yarn test
 
 ## Limitations
 
-1. **Helper functions**: Function calls (`render`, `act`, `renderHook`) inside helper functions (not directly in test callbacks) are not transformed. You'll need to manually update these functions to be async and await their calls.
+1. **Helper functions**: Function calls (`render`, `act`, `renderHook`, `fireEvent`) inside helper functions (not directly in test callbacks) are not transformed. You'll need to manually update these functions to be async and await their calls.
 
 2. **Namespace imports**: The codemod currently doesn't handle namespace imports like `import * as RNTL from '@testing-library/react-native'`. If you use this pattern, you'll need to manually update those calls.
 
 3. **Semantic analysis**: The codemod uses pattern matching rather than semantic analysis, so it may transform function calls that aren't from RNTL if they match the pattern. Always review the changes.
 
+4. **fireEvent methods**: Only `fireEvent.press`, `fireEvent.changeText`, and `fireEvent.scroll` are transformed. Other `fireEvent` methods are not automatically transformed.
+
 ## Migration Guide
 
 1. **Run the codemod** on your test files
 2. **Review the changes** to ensure all transformations are correct
-3. **Manually update helper functions** that contain `render`, `act`, or `renderHook` calls
-4. **Update your RNTL version** to v14
-5. **Run your tests** to verify everything works
+3. **Manually update helper functions** that contain `render`, `act`, `renderHook`, or `fireEvent` calls
+4. **Manually update other fireEvent methods** if you use methods other than `press`, `changeText`, or `scroll`
+5. **Update your RNTL version** to v14
+6. **Run your tests** to verify everything works
 
 ## Contributing
 
