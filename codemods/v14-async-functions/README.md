@@ -52,6 +52,7 @@ CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme" npx codemod@latest
 #### Basic sync test
 
 **Before:**
+
 ```typescript
 import { render, screen } from '@testing-library/react-native';
 
@@ -62,6 +63,7 @@ test('renders component', () => {
 ```
 
 **After:**
+
 ```typescript
 import { render, screen } from '@testing-library/react-native';
 
@@ -74,6 +76,7 @@ test('renders component', async () => {
 #### Already async test
 
 **Before:**
+
 ```typescript
 test('renders component', async () => {
   render(<MyComponent />);
@@ -81,6 +84,7 @@ test('renders component', async () => {
 ```
 
 **After:**
+
 ```typescript
 test('renders component', async () => {
   await render(<MyComponent />);
@@ -90,6 +94,7 @@ test('renders component', async () => {
 #### Multiple render calls
 
 **Before:**
+
 ```typescript
 test('renders multiple', () => {
   render(<Comp1 />);
@@ -98,6 +103,7 @@ test('renders multiple', () => {
 ```
 
 **After:**
+
 ```typescript
 test('renders multiple', async () => {
   await render(<Comp1 />);
@@ -108,6 +114,7 @@ test('renders multiple', async () => {
 #### Render with options
 
 **Before:**
+
 ```typescript
 test('renders with wrapper', () => {
   render(<Component />, { wrapper: Wrapper });
@@ -115,6 +122,7 @@ test('renders with wrapper', () => {
 ```
 
 **After:**
+
 ```typescript
 test('renders with wrapper', async () => {
   await render(<Component />, { wrapper: Wrapper });
@@ -124,6 +132,7 @@ test('renders with wrapper', async () => {
 #### Using act()
 
 **Before:**
+
 ```typescript
 import { act } from '@testing-library/react-native';
 
@@ -135,6 +144,7 @@ test('updates state', () => {
 ```
 
 **After:**
+
 ```typescript
 import { act } from '@testing-library/react-native';
 
@@ -148,6 +158,7 @@ test('updates state', async () => {
 #### Using renderHook()
 
 **Before:**
+
 ```typescript
 import { renderHook } from '@testing-library/react-native';
 
@@ -158,6 +169,7 @@ test('renders hook', () => {
 ```
 
 **After:**
+
 ```typescript
 import { renderHook } from '@testing-library/react-native';
 
@@ -170,6 +182,7 @@ test('renders hook', async () => {
 #### Combined usage
 
 **Before:**
+
 ```typescript
 import { render, act, renderHook, screen } from '@testing-library/react-native';
 
@@ -183,6 +196,7 @@ test('uses all three', () => {
 ```
 
 **After:**
+
 ```typescript
 import { render, act, renderHook, screen } from '@testing-library/react-native';
 
@@ -198,6 +212,7 @@ test('uses all three', async () => {
 #### Using fireEvent()
 
 **Before:**
+
 ```typescript
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -210,6 +225,7 @@ test('uses fireEvent', () => {
 ```
 
 **After:**
+
 ```typescript
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -224,6 +240,7 @@ test('uses fireEvent', async () => {
 #### Using fireEvent methods
 
 **Before:**
+
 ```typescript
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -232,7 +249,7 @@ test('uses fireEvent methods', () => {
   const input = screen.getByPlaceholderText('Enter text');
   const button = screen.getByRole('button');
   const scrollView = screen.getByTestId('scroll-view');
-  
+
   fireEvent.press(button);
   fireEvent.changeText(input, 'Hello');
   fireEvent.scroll(scrollView, { nativeEvent: { contentOffset: { y: 100 } } });
@@ -240,6 +257,7 @@ test('uses fireEvent methods', () => {
 ```
 
 **After:**
+
 ```typescript
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -248,7 +266,7 @@ test('uses fireEvent methods', async () => {
   const input = screen.getByPlaceholderText('Enter text');
   const button = screen.getByRole('button');
   const scrollView = screen.getByTestId('scroll-view');
-  
+
   await fireEvent.press(button);
   await fireEvent.changeText(input, 'Hello');
   await fireEvent.scroll(scrollView, { nativeEvent: { contentOffset: { y: 100 } } });
@@ -258,6 +276,7 @@ test('uses fireEvent methods', async () => {
 #### Skipping unsafe variants
 
 **Before:**
+
 ```typescript
 import { act, renderHook, unsafe_act, unsafe_renderHookSync, renderAsync } from '@testing-library/react-native';
 
@@ -271,6 +290,7 @@ test('skips unsafe variants', () => {
 ```
 
 **After:**
+
 ```typescript
 import { act, renderHook, unsafe_act, unsafe_renderHookSync, renderAsync } from '@testing-library/react-native';
 
@@ -286,6 +306,7 @@ test('skips unsafe variants', async () => {
 #### Helper functions (not transformed by default)
 
 **Before:**
+
 ```typescript
 function renderWithProviders(component: React.ReactElement) {
   render(component); // This is NOT transformed by default
@@ -297,6 +318,7 @@ test('uses helper', () => {
 ```
 
 **After (without CUSTOM_RENDER_FUNCTIONS):**
+
 ```typescript
 function renderWithProviders(component: React.ReactElement) {
   render(component); // Unchanged - helper functions are skipped by default
@@ -312,6 +334,7 @@ test('uses helper', () => {
 When you specify custom render function names via the `CUSTOM_RENDER_FUNCTIONS` environment variable, those functions will be transformed:
 
 **Before:**
+
 ```typescript
 function renderWithProviders(component: React.ReactElement) {
   render(component);
@@ -328,6 +351,7 @@ test('uses custom render', () => {
 ```
 
 **After (with CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme"):**
+
 ```typescript
 async function renderWithProviders(component: React.ReactElement) {
   await render(component);
@@ -348,6 +372,7 @@ test('uses custom render', async () => {
 `describe()` blocks are grouping mechanisms and their callbacks are not made async, even if they contain `render` calls in helper functions. However, `test()` callbacks inside `describe` blocks are still made async.
 
 **Before:**
+
 ```typescript
 import { render, screen } from '@testing-library/react-native';
 
@@ -369,6 +394,7 @@ describe('MyComponent', () => {
 ```
 
 **After:**
+
 ```typescript
 import { render, screen } from '@testing-library/react-native';
 

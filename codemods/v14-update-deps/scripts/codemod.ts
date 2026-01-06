@@ -14,7 +14,9 @@ interface PackageJson {
   [key: string]: unknown;
 }
 
-export default async function transform(root: Parameters<Transform<JSONLang>>[0]): Promise<string | null> {
+export default async function transform(
+  root: Parameters<Transform<JSONLang>>[0],
+): Promise<string | null> {
   const filename = root.filename();
 
   if (!isPackageJsonFile(filename)) {
@@ -79,7 +81,9 @@ function hasRNTLOrUTR(packageJson: PackageJson): boolean {
 
 function removePackageFromAllDependencyTypes(pkgName: string, packageJson: PackageJson): boolean {
   let removed = false;
-  (['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'] as const).forEach((depType) => {
+  (
+    ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'] as const
+  ).forEach((depType) => {
     if (packageJson[depType]?.[pkgName]) {
       delete packageJson[depType]![pkgName];
       removed = true;
@@ -107,7 +111,10 @@ function ensureDevDependenciesObjectExists(packageJson: PackageJson): boolean {
 }
 
 function removeObsoletePackages(packageJson: PackageJson): boolean {
-  const removedTypes = removePackageFromAllDependencyTypes('@types/react-test-renderer', packageJson);
+  const removedTypes = removePackageFromAllDependencyTypes(
+    '@types/react-test-renderer',
+    packageJson,
+  );
   const removedRenderer = removePackageFromAllDependencyTypes('react-test-renderer', packageJson);
   return removedTypes || removedRenderer;
 }

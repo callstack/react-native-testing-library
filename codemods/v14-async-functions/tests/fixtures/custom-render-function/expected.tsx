@@ -11,7 +11,7 @@ const renderWithTheme = async (component: React.ReactElement) => {
 };
 
 // Function expression
-const renderCustom = async function(component: React.ReactElement) {
+const renderCustom = async function (component: React.ReactElement) {
   await render(component);
 };
 

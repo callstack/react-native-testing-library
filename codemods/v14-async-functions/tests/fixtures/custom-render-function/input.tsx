@@ -11,7 +11,7 @@ const renderWithTheme = (component: React.ReactElement) => {
 };
 
 // Function expression
-const renderCustom = function(component: React.ReactElement) {
+const renderCustom = function (component: React.ReactElement) {
   render(component);
 };
 

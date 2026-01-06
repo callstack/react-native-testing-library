@@ -17,16 +17,16 @@ const fixturesDir = join(__dirname, '..', 'tests', 'fixtures');
 async function runCodemod(filePath) {
   const { readFileSync } = await import('fs');
   const { default: transform } = await import('./codemod.ts');
-  
+
   // Mock the codemod platform root object
   const packageJsonContent = readFileSync(filePath, 'utf8');
   const mockRoot = {
     filename: () => filePath,
     root: () => ({
-      text: () => packageJsonContent
-    })
+      text: () => packageJsonContent,
+    }),
   };
-  
+
   const result = await transform(mockRoot);
   // Return result or original content if null (no changes)
   return result || packageJsonContent;
@@ -50,21 +50,21 @@ for (const testCase of testCases) {
   try {
     const inputContent = readFileSync(inputPath, 'utf8');
     const expectedContent = readFileSync(expectedPath, 'utf8');
-    
-    // Create a temporary file to test
-    const tempPath = join(fixturesDir, testCase, 'temp.json');
+
+    // Create a temporary file to test (must be named package.json for codemod to process it)
+    const tempPath = join(fixturesDir, testCase, 'package.json');
     writeFileSync(tempPath, inputContent, 'utf8');
-    
+
     // Run codemod
     const result = await runCodemod(tempPath);
-    
+
     // Handle null result (no changes or skipped)
     const resultContent = result || inputContent;
-    
+
     // Compare results
     const expectedJson = JSON.parse(expectedContent);
     const resultJson = JSON.parse(resultContent);
-    
+
     if (JSON.stringify(expectedJson, null, 2) === JSON.stringify(resultJson, null, 2)) {
       console.log(`✅ ${testCase}: PASSED`);
       passed++;
@@ -76,11 +76,12 @@ for (const testCase of testCases) {
       console.log(JSON.stringify(resultJson, null, 2));
       failed++;
     }
-    
+
     // Clean up temp file
-    if (existsSync(tempPath)) {
+    const tempFilePath = join(fixturesDir, testCase, 'package.json');
+    if (existsSync(tempFilePath)) {
       const { unlinkSync } = await import('fs');
-      unlinkSync(tempPath);
+      unlinkSync(tempFilePath);
     }
   } catch (error) {
     console.log(`❌ ${testCase}: ERROR - ${error.message}`);

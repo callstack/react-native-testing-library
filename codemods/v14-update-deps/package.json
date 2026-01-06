@@ -4,7 +4,7 @@
   "description": "Codemod to update dependencies for RNTL v14 migration",
   "type": "module",
   "scripts": {
-    "test": "node scripts/test.js"
+    "test": "node --loader tsx/esm scripts/test.js"
   },
   "devDependencies": {},
   "dependencies": {}

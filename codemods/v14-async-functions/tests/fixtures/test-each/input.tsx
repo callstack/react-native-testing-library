@@ -1,9 +1,6 @@
 import { render } from '@testing-library/react-native';
 
-test.each([
-  { name: 'Alice' },
-  { name: 'Bob' },
-])('renders for $name', ({ name }) => {
+test.each([{ name: 'Alice' }, { name: 'Bob' }])('renders for $name', ({ name }) => {
   render(<Component name={name} />);
 });
 

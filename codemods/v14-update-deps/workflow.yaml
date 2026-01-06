@@ -1,22 +1,22 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/codemod/codemod/refs/heads/main/schemas/workflow.json
 
-version: "1"
+version: '1'
 
 nodes:
   - id: update-package-json
     name: Update package.json dependencies
     type: automatic
     steps:
-      - name: "Update dependencies in package.json"
+      - name: 'Update dependencies in package.json'
         js-ast-grep:
           js_file: scripts/codemod.ts
           language: json
           include:
-            - "**/package.json"
+            - '**/package.json'
           exclude:
-            - "**/node_modules/**"
-            - "**/build/**"
-            - "**/dist/**"
-            - "**/.next/**"
-            - "**/coverage/**"
-            - "**/.yarn/**"
+            - '**/node_modules/**'
+            - '**/build/**'
+            - '**/dist/**'
+            - '**/.next/**'
+            - '**/coverage/**'
+            - '**/.yarn/**'

@@ -12,7 +12,14 @@ const ASYNC_FUNCTIONS_TO_RENAME = new Map([
   ['renderHookAsync', 'renderHook'],
   ['fireEventAsync', 'fireEvent'],
 ]);
-const TEST_FUNCTION_NAMES = new Set(['test', 'it', 'beforeEach', 'afterEach', 'beforeAll', 'afterAll']);
+const TEST_FUNCTION_NAMES = new Set([
+  'test',
+  'it',
+  'beforeEach',
+  'afterEach',
+  'beforeAll',
+  'afterAll',
+]);
 const TEST_FUNCTION_PREFIXES = new Set(['test', 'it']);
 const TEST_MODIFIERS = new Set(['skip', 'only']);
 const TEST_EACH_METHOD = 'each';
@@ -37,7 +44,45 @@ export default async function transform(
   );
   removeDuplicateImportSpecifiers(specifiersToRemove, rootNode, edits);
 
-  if (importedFunctions.size === 0 && customRenderFunctionsSet.size === 0) {
+  let finalCustomRenderFunctionsSet = customRenderFunctionsSet;
+  if (finalCustomRenderFunctionsSet.size === 0 && importedFunctions.has('render')) {
+    const autoDetectedCustomRenders = findAutoDetectedCustomRenderFunctions(
+      rootNode,
+      importedFunctions,
+    );
+    if (autoDetectedCustomRenders.size > 1) {
+      finalCustomRenderFunctionsSet = autoDetectedCustomRenders;
+    }
+  }
+
+  const importedAsyncVariants = new Set<string>();
+  for (const importStmt of rntlImports) {
+    const importClause = importStmt.find({
+      rule: { kind: 'import_clause' },
+    });
+    if (!importClause) continue;
+    const namedImports = importClause.find({
+      rule: { kind: 'named_imports' },
+    });
+    if (namedImports) {
+      const specifiers = namedImports.findAll({
+        rule: { kind: 'import_specifier' },
+      });
+      for (const specifier of specifiers) {
+        const identifier = specifier.find({
+          rule: { kind: 'identifier' },
+        });
+        if (identifier) {
+          const funcName = identifier.text();
+          if (ASYNC_FUNCTIONS_TO_RENAME.has(funcName)) {
+            importedAsyncVariants.add(funcName);
+          }
+        }
+      }
+    }
+  }
+
+  if (importedFunctions.size === 0 && finalCustomRenderFunctionsSet.size === 0) {
     return null;
   }
 
@@ -45,6 +90,24 @@ export default async function transform(
 
   const functionCalls: SgNode<TSX>[] = [];
   functionCalls.push(...findDirectFunctionCalls(rootNode, importedFunctions));
+
+  for (const asyncName of importedAsyncVariants) {
+    const syncName = ASYNC_FUNCTIONS_TO_RENAME.get(asyncName)!;
+    const asyncCalls = rootNode.findAll({
+      rule: {
+        kind: 'call_expression',
+        has: {
+          field: 'function',
+          kind: 'identifier',
+          regex: `^${asyncName}$`,
+        },
+      },
+    });
+    functionCalls.push(...asyncCalls);
+    if (!importedFunctions.has(syncName)) {
+      importedFunctions.add(syncName);
+    }
+  }
   functionCalls.push(...findFireEventMethodCalls(rootNode, importedFunctions, rntlImports));
   functionCalls.push(...findScreenMethodCalls(rootNode));
 
@@ -59,7 +122,7 @@ export default async function transform(
     ...findRenderHookMethodCalls(rootNode, renderHookVariables, renderHookMethodVariables),
   );
 
-  if (functionCalls.length === 0 && customRenderFunctionsSet.size === 0) {
+  if (functionCalls.length === 0 && finalCustomRenderFunctionsSet.size === 0) {
     if (edits.length === 0) {
       return null;
     }
@@ -68,10 +131,10 @@ export default async function transform(
   const functionsToMakeAsync = new Map<number, SgNode<TSX>>();
   const customRenderFunctionsToMakeAsync = new Map<number, SgNode<TSX>>();
 
-  if (customRenderFunctionsSet.size > 0 && importedFunctions.size > 0) {
+  if (finalCustomRenderFunctionsSet.size > 0 && importedFunctions.size > 0) {
     const customRenderFunctionDefinitions = findCustomRenderFunctionDefinitions(
       rootNode,
-      customRenderFunctionsSet,
+      finalCustomRenderFunctionsSet,
     );
     for (const funcDef of customRenderFunctionDefinitions) {
       transformRNTLCallsInsideCustomRender(
@@ -108,8 +171,11 @@ export default async function transform(
     addAwaitBeforeCall(functionCall, edits);
   }
 
-  if (customRenderFunctionsSet.size > 0) {
-    const customRenderCalls = findCustomRenderFunctionCalls(rootNode, customRenderFunctionsSet);
+  if (finalCustomRenderFunctionsSet.size > 0) {
+    const customRenderCalls = findCustomRenderFunctionCalls(
+      rootNode,
+      finalCustomRenderFunctionsSet,
+    );
     for (const callExpr of customRenderCalls) {
       const containingFunction = findContainingTestFunction(callExpr);
       if (containingFunction) {
@@ -786,6 +852,149 @@ function findRenderHookMethodCalls(
   }
 
   return functionCalls;
+}
+
+function findAutoDetectedCustomRenderFunctions(
+  rootNode: SgNode<TSX>,
+  importedFunctions: Set<string>,
+): Set<string> {
+  const customRenderFunctions = new Set<string>();
+
+  if (!importedFunctions.has('render')) {
+    return customRenderFunctions;
+  }
+
+  const allCallExpressions = rootNode.findAll({
+    rule: { kind: 'call_expression' },
+  });
+
+  const functionsCalledFromTests = new Set<string>();
+  for (const callExpr of allCallExpressions) {
+    const funcNode = callExpr.field('function');
+    if (!funcNode) continue;
+
+    let calledFunctionName: string | null = null;
+    if (funcNode.is('identifier')) {
+      calledFunctionName = funcNode.text();
+    } else if (funcNode.is('member_expression')) {
+      continue;
+    }
+
+    if (calledFunctionName) {
+      const containingFunction = findContainingTestFunction(callExpr);
+      if (containingFunction) {
+        functionsCalledFromTests.add(calledFunctionName);
+      }
+    }
+  }
+
+  const functionDeclarations = rootNode.findAll({
+    rule: { kind: 'function_declaration' },
+  });
+  for (const funcDecl of functionDeclarations) {
+    const nameNode = funcDecl.find({
+      rule: { kind: 'identifier' },
+    });
+    if (nameNode) {
+      const funcName = nameNode.text();
+      if (funcName.startsWith('render') && functionsCalledFromTests.has(funcName)) {
+        let parent = funcDecl.parent();
+        let isTopLevel = false;
+        while (parent) {
+          if (parent.is('program') || parent.is('module')) {
+            isTopLevel = true;
+            break;
+          }
+          if (
+            parent.is('statement_block') ||
+            parent.is('lexical_declaration') ||
+            parent.is('variable_declaration')
+          ) {
+            const grandParent = parent.parent();
+            if (grandParent && (grandParent.is('program') || grandParent.is('module'))) {
+              isTopLevel = true;
+              break;
+            }
+          }
+          parent = parent.parent();
+        }
+        if (isTopLevel) {
+          const renderCalls = funcDecl.findAll({
+            rule: {
+              kind: 'call_expression',
+              has: {
+                field: 'function',
+                kind: 'identifier',
+                regex: '^render$',
+              },
+            },
+          });
+          if (renderCalls.length > 0) {
+            customRenderFunctions.add(funcName);
+          }
+        }
+      }
+    }
+  }
+
+  const variableDeclarations = rootNode.findAll({
+    rule: { kind: 'lexical_declaration' },
+  });
+  for (const varDecl of variableDeclarations) {
+    const declarators = varDecl.findAll({
+      rule: { kind: 'variable_declarator' },
+    });
+    for (const declarator of declarators) {
+      const nameNode = declarator.find({
+        rule: { kind: 'identifier' },
+      });
+      if (nameNode) {
+        const funcName = nameNode.text();
+        if (funcName.startsWith('render') && functionsCalledFromTests.has(funcName)) {
+          let parent = varDecl.parent();
+          let isTopLevel = false;
+          while (parent) {
+            if (parent.is('program') || parent.is('module')) {
+              isTopLevel = true;
+              break;
+            }
+            if (parent.is('statement_block')) {
+              const grandParent = parent.parent();
+              if (grandParent && (grandParent.is('program') || grandParent.is('module'))) {
+                isTopLevel = true;
+                break;
+              }
+            }
+            parent = parent.parent();
+          }
+          if (isTopLevel) {
+            const init = declarator.find({
+              rule: {
+                any: [{ kind: 'arrow_function' }, { kind: 'function_expression' }],
+              },
+            });
+            if (init) {
+              const renderCalls = init.findAll({
+                rule: {
+                  kind: 'call_expression',
+                  has: {
+                    field: 'function',
+                    kind: 'identifier',
+                    regex: '^render$',
+                  },
+                },
+              });
+              if (renderCalls.length > 0) {
+                customRenderFunctions.add(funcName);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return customRenderFunctions;
 }
 
 function findCustomRenderFunctionDefinitions(

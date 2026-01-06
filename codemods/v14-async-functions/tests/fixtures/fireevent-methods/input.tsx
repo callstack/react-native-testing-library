@@ -5,10 +5,10 @@ test('uses fireEvent methods', () => {
   const input = screen.getByPlaceholderText('Enter text');
   const button = screen.getByRole('button');
   const scrollView = screen.getByTestId('scroll-view');
-  
+
   fireEvent.press(button);
   fireEvent.changeText(input, 'Hello');
   fireEvent.scroll(scrollView, { nativeEvent: { contentOffset: { y: 100 } } });
-  
+
   expect(screen.getByText('Hello')).toBeOnTheScreen();
 });

@@ -38,6 +38,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./
 ### Example transformations
 
 #### Before:
+
 ```json
 {
   "dependencies": {
@@ -51,6 +52,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./
 ```
 
 #### After:
+
 ```json
 {
   "devDependencies": {
@@ -63,6 +65,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./
 #### Moving from dependencies to devDependencies:
 
 **Before:**
+
 ```json
 {
   "dependencies": {
@@ -72,6 +75,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./
 ```
 
 **After:**
+
 ```json
 {
   "devDependencies": {
@@ -84,6 +88,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./
 #### Adding if not present:
 
 **Before:**
+
 ```json
 {
   "devDependencies": {
@@ -93,6 +98,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./
 ```
 
 **After:**
+
 ```json
 {
   "devDependencies": {
@@ -106,6 +112,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./
 ## Important Notes
 
 1. **After running the codemod**, you'll need to run your package manager to install the new dependencies:
+
    ```bash
    npm install
    # or
