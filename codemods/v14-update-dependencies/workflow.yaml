@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/codemod/codemod/refs/heads/main/schemas/workflow.json
+
+version: "1"
+
+nodes:
+  - id: update-package-json
+    name: Update package.json dependencies
+    type: automatic
+    steps:
+      - name: "Update dependencies in package.json"
+        command: |
+          find . -name "package.json" -not -path "*/node_modules/*" -not -path "*/build/*" -not -path "*/dist/*" -not -path "*/.next/*" -not -path "*/coverage/*" -not -path "*/.yarn/*" | while read -r file; do
+            node "$(dirname "$0")/scripts/codemod.js" "$file" || true
+          done
