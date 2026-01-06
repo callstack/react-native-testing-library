@@ -4,113 +4,35 @@
  * Test script for the package.json update codemod
  */
 
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const codemodScript = join(__dirname, 'codemod.js');
 const fixturesDir = join(__dirname, '..', 'tests', 'fixtures');
-
-// Version constants - must match codemod.js
-const RNTL_VERSION = '^14.0.0-alpha';
-const UNIVERSAL_TEST_RENDERER_VERSION = '0.10.1';
 
 // Import the codemod logic
 async function runCodemod(filePath) {
-  const { readFileSync, writeFileSync } = await import('fs');
+  const { readFileSync } = await import('fs');
+  const { default: transform } = await import('./codemod-json.js');
+  
+  // Mock the codemod platform root object
   const packageJsonContent = readFileSync(filePath, 'utf8');
-  const packageJson = JSON.parse(packageJsonContent);
-
-  let hasChanges = false;
-
-  const removePackage = (pkgName, pkgJson) => {
-    let removed = false;
-    ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'].forEach((depType) => {
-      if (pkgJson[depType] && pkgJson[depType][pkgName]) {
-        delete pkgJson[depType][pkgName];
-        removed = true;
-        hasChanges = true;
-        if (Object.keys(pkgJson[depType]).length === 0) {
-          delete pkgJson[depType];
-        }
-      }
-    });
-    return removed;
+  const mockRoot = {
+    filename: () => filePath,
+    root: () => ({
+      text: () => packageJsonContent
+    })
   };
-
-  const addOrUpdatePackage = (pkgName, version, pkgJson, isDevDep = false) => {
-    const depType = isDevDep ? 'devDependencies' : 'dependencies';
-    if (!pkgJson[depType]) {
-      pkgJson[depType] = {};
-    }
-    const currentVersion = pkgJson[depType][pkgName];
-    if (currentVersion !== version) {
-      pkgJson[depType][pkgName] = version;
-      hasChanges = true;
-      return true;
-    }
-    return false;
-  };
-
-  removePackage('@types/react-test-renderer', packageJson);
-  removePackage('react-test-renderer', packageJson);
-
-  // Ensure devDependencies exists
-  if (!packageJson.devDependencies) {
-    packageJson.devDependencies = {};
-    hasChanges = true;
-  }
-
-  // Handle @testing-library/react-native
-  const rntlInDeps = packageJson.dependencies && packageJson.dependencies['@testing-library/react-native'];
-  const rntlInDevDeps = packageJson.devDependencies['@testing-library/react-native'];
-
-  // If RNTL is in dependencies, move it to devDependencies
-  if (rntlInDeps) {
-    const version = packageJson.dependencies['@testing-library/react-native'];
-    delete packageJson.dependencies['@testing-library/react-native'];
-    if (Object.keys(packageJson.dependencies).length === 0) {
-      delete packageJson.dependencies;
-    }
-    packageJson.devDependencies['@testing-library/react-native'] = version;
-    hasChanges = true;
-  }
-
-  // Always ensure @testing-library/react-native is in devDependencies
-  if (!packageJson.devDependencies['@testing-library/react-native']) {
-    packageJson.devDependencies['@testing-library/react-native'] = RNTL_VERSION;
-    hasChanges = true;
-  } else {
-    const currentVersion = packageJson.devDependencies['@testing-library/react-native'];
-    if (!currentVersion.includes('alpha') && !currentVersion.includes('beta') && !currentVersion.includes('rc')) {
-      packageJson.devDependencies['@testing-library/react-native'] = RNTL_VERSION;
-      hasChanges = true;
-    } else if (currentVersion.includes('alpha') && currentVersion !== RNTL_VERSION) {
-      packageJson.devDependencies['@testing-library/react-native'] = RNTL_VERSION;
-      hasChanges = true;
-    }
-  }
-
-  // Always ensure universal-test-renderer is in devDependencies
-  if (!packageJson.devDependencies['universal-test-renderer']) {
-    packageJson.devDependencies['universal-test-renderer'] = UNIVERSAL_TEST_RENDERER_VERSION;
-    hasChanges = true;
-  } else if (packageJson.devDependencies['universal-test-renderer'] !== UNIVERSAL_TEST_RENDERER_VERSION) {
-    packageJson.devDependencies['universal-test-renderer'] = UNIVERSAL_TEST_RENDERER_VERSION;
-    hasChanges = true;
-  }
-
-  if (hasChanges) {
-    return JSON.stringify(packageJson, null, 2) + '\n';
-  }
-  return packageJsonContent;
+  
+  const result = await transform(mockRoot);
+  // Return result or original content if null (no changes)
+  return result || packageJsonContent;
 }
 
 // Test each fixture
-import { readdirSync } from 'fs';
 const testCases = readdirSync(fixturesDir);
 
 let passed = 0;
@@ -136,9 +58,12 @@ for (const testCase of testCases) {
     // Run codemod
     const result = await runCodemod(tempPath);
     
+    // Handle null result (no changes or skipped)
+    const resultContent = result || inputContent;
+    
     // Compare results
     const expectedJson = JSON.parse(expectedContent);
-    const resultJson = JSON.parse(result);
+    const resultJson = JSON.parse(resultContent);
     
     if (JSON.stringify(expectedJson, null, 2) === JSON.stringify(resultJson, null, 2)) {
       console.log(`✅ ${testCase}: PASSED`);

@@ -1,8 +1,14 @@
 #!/usr/bin/env node
 
 /**
- * JavaScript codemod for updating package.json files
- * This version works with the codemod CLI workflow system
+ * Codemod to update package.json dependencies for RNTL v14 migration:
+ * - Removes @types/react-test-renderer
+ * - Removes react-test-renderer
+ * - Moves @testing-library/react-native from dependencies to devDependencies if present
+ * - Adds/updates @testing-library/react-native to ^14.0.0-alpha in devDependencies
+ * - Adds/updates universal-test-renderer@0.10.1 to devDependencies
+ * 
+ * Only processes package.json files that already contain RNTL or UTR.
  */
 
 // Version constants - adjust these to update versions
@@ -41,6 +47,23 @@ async function transform(root) {
       });
       return removed;
     };
+
+    // Check if RNTL or UTR already exists in the package.json
+    // Only proceed if at least one of them is present
+    const hasRNTL =
+      (packageJson.dependencies && packageJson.dependencies['@testing-library/react-native']) ||
+      (packageJson.devDependencies && packageJson.devDependencies['@testing-library/react-native']) ||
+      (packageJson.peerDependencies && packageJson.peerDependencies['@testing-library/react-native']);
+    
+    const hasUTR =
+      (packageJson.dependencies && packageJson.dependencies['universal-test-renderer']) ||
+      (packageJson.devDependencies && packageJson.devDependencies['universal-test-renderer']) ||
+      (packageJson.peerDependencies && packageJson.peerDependencies['universal-test-renderer']);
+
+    // Skip this file if neither RNTL nor UTR is present
+    if (!hasRNTL && !hasUTR) {
+      return null; // No changes - skip this file
+    }
 
     // Remove @types/react-test-renderer
     removePackage('@types/react-test-renderer', packageJson);
