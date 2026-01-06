@@ -9,6 +9,8 @@ This codemod migrates your test files from React Native Testing Library v13 to v
 - ✅ Transforms `renderHook()` calls to `await renderHook()` in test functions
 - ✅ Transforms `fireEvent()` calls to `await fireEvent()` in test functions
 - ✅ Transforms `fireEvent.press()`, `fireEvent.changeText()`, and `fireEvent.scroll()` calls to `await fireEvent.press()`, etc.
+- ✅ Transforms `screen.rerender()` and `screen.unmount()` calls to `await screen.rerender()`, etc.
+- ✅ Transforms `renderer.rerender()` and `renderer.unmount()` calls (where renderer is the return value from `render()`) to `await renderer.rerender()`, etc.
 - ✅ Makes test functions async if they're not already
 - ✅ Handles `test()`, `it()`, `test.skip()`, and `it.skip()` patterns
 - ✅ Handles `beforeEach()`, `afterEach()`, `beforeAll()`, and `afterAll()` hooks
@@ -30,16 +32,16 @@ This codemod migrates your test files from React Native Testing Library v13 to v
 
 ```bash
 # Run on your test files
-npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --target ./path/to/your/tests
+npx codemod@latest workflow run -w ./codemods/v14-async-functions/workflow.yaml --target ./path/to/your/tests
 
 # Or if published to the registry
-npx codemod@latest run @testing-library/react-native-v14-render-async --target ./path/to/your/tests
+npx codemod@latest run @testing-library/react-native-v14-async-functions --target ./path/to/your/tests
 
 # With custom render functions - Option 1: Workflow parameter (recommended)
-npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --target ./path/to/your/tests --param customRenderFunctions="renderWithProviders,renderWithTheme"
+npx codemod@latest workflow run -w ./codemods/v14-async-functions/workflow.yaml --target ./path/to/your/tests --param customRenderFunctions="renderWithProviders,renderWithTheme"
 
 # With custom render functions - Option 2: Environment variable
-CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme" npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --target ./path/to/your/tests
+CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme" npx codemod@latest workflow run -w ./codemods/v14-async-functions/workflow.yaml --target ./path/to/your/tests
 ```
 
 ### Example transformations
@@ -343,7 +345,7 @@ test('uses custom render', async () => {
 Run the test suite:
 
 ```bash
-cd codemods/v14-render-async
+cd codemods/v14-async-functions
 yarn test
 ```
 
@@ -362,11 +364,11 @@ yarn test
 1. **Run the codemod** on your test files
 2. **If you have custom render functions** (like `renderWithProviders`, `renderWithTheme`, etc.), run the codemod with the `--param` flag:
    ```bash
-   npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --target ./path/to/your/tests --param customRenderFunctions="renderWithProviders,renderWithTheme"
+   npx codemod@latest workflow run -w ./codemods/v14-async-functions/workflow.yaml --target ./path/to/your/tests --param customRenderFunctions="renderWithProviders,renderWithTheme"
    ```
    Or use the environment variable:
    ```bash
-   CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme" npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --target ./path/to/your/tests
+   CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme" npx codemod@latest workflow run -w ./codemods/v14-async-functions/workflow.yaml --target ./path/to/your/tests
    ```
 3. **Review the changes** to ensure all transformations are correct
 4. **Manually update helper functions** that contain `render`, `act`, `renderHook`, or `fireEvent` calls (if not specified in `CUSTOM_RENDER_FUNCTIONS`)

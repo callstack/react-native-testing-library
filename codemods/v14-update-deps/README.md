@@ -29,10 +29,10 @@ This codemod automatically updates your `package.json` dependencies to match the
 
 ```bash
 # Run on your project
-npx codemod@latest workflow run -w ./codemods/v14-update-dependencies/workflow.yaml --target ./path/to/your/project
+npx codemod@latest workflow run -w ./codemods/v14-update-deps/workflow.yaml --target ./path/to/your/project
 
 # Or if published to the registry
-npx codemod@latest run @testing-library/react-native-v14-update-dependencies --target ./path/to/your/project
+npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./path/to/your/project
 ```
 
 ### Example transformations
@@ -123,7 +123,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-dependencies --t
 Run the test suite:
 
 ```bash
-cd codemods/v14-update-dependencies
+cd codemods/v14-update-deps
 npm test
 ```
 
@@ -144,7 +144,7 @@ npm test
    ```
 3. **Run the render-async codemod** to update your test code:
    ```bash
-   npx codemod@latest run @testing-library/react-native-v14-render-async --target ./path/to/your/tests
+   npx codemod@latest run @testing-library/react-native-v14-async-functions --target ./path/to/your/tests
    ```
 4. **Review and test** your changes
 5. **Update your RNTL version** to a specific alpha version if needed

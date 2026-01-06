@@ -1,5 +1,5 @@
 {
-  "name": "@testing-library/react-native-v14-render-async",
+  "name": "@testing-library/react-native-v14-async-functions",
   "version": "0.1.0",
   "description": "Codemod to migrate render() calls to await render() for RNTL v14",
   "type": "module",

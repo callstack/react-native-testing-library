@@ -8,6 +8,12 @@ const FUNCTIONS_TO_TRANSFORM = new Set(['render', 'renderHook', 'act', 'fireEven
 // fireEvent methods that should be transformed to async
 const FIRE_EVENT_METHODS = new Set(['press', 'changeText', 'scroll']);
 
+// Screen methods that should be transformed to async
+const SCREEN_METHODS = new Set(['rerender', 'unmount']);
+
+// Renderer methods that should be transformed to async (methods on render() return value)
+const RENDERER_METHODS = new Set(['rerender', 'unmount']);
+
 // Variants that should be skipped (they're already async or have different behavior)
 const SKIP_VARIANTS = new Set(['renderAsync', 'unsafe_renderHookSync', 'unsafe_act']);
 
@@ -157,6 +163,177 @@ const transform: Transform<TSX> = async (root, options) => {
     }
   }
 
+  // Find screen method calls (screen.rerender, screen.unmount)
+  // Check if screen is imported or available
+  const screenMethodCalls = rootNode.findAll({
+    rule: {
+      kind: 'call_expression',
+      has: {
+        field: 'function',
+        kind: 'member_expression',
+      },
+    },
+  });
+
+  for (const call of screenMethodCalls) {
+    const funcNode = call.field('function');
+    if (funcNode && funcNode.is('member_expression')) {
+      try {
+        const object = funcNode.field('object');
+        const property = funcNode.field('property');
+        if (object && property) {
+          const objText = object.text();
+          const propText = property.text();
+          // Check if it's screen.methodName where methodName is rerender or unmount
+          if (objText === 'screen' && SCREEN_METHODS.has(propText)) {
+            functionCalls.push(call);
+          }
+        }
+      } catch {
+        // field() might not be available for this node type, skip
+      }
+    }
+  }
+
+  // Find renderer method calls (renderer.rerender, renderer.unmount)
+  // Track variables that are assigned the result of render() calls
+  const rendererVariables = new Set<string>();
+  
+  // Find all render() calls and track what they're assigned to
+  if (importedFunctions.has('render')) {
+    const renderCalls = rootNode.findAll({
+      rule: {
+        kind: 'call_expression',
+        has: {
+          field: 'function',
+          kind: 'identifier',
+          regex: '^render$',
+        },
+      },
+    });
+
+    for (const renderCall of renderCalls) {
+      // Check if this render() call is assigned to a variable
+      // Handle both: const renderer = render(...) and const renderer = await render(...)
+      let parent = renderCall.parent();
+      const isAwaited = parent && parent.is('await_expression');
+      
+      // If awaited, get the await expression's parent
+      if (isAwaited) {
+        parent = parent.parent();
+      }
+      
+      if (parent && parent.is('variable_declarator')) {
+        // Handle: const renderer = render(...) or const { rerender, unmount } = render(...)
+        // Try to find object_pattern first (destructuring)
+        const objectPattern = parent.find({
+          rule: { kind: 'object_pattern' },
+        });
+        if (objectPattern) {
+          // Destructuring: const { rerender, unmount } = ...
+          const shorthandProps = objectPattern.findAll({
+            rule: { kind: 'shorthand_property_identifier_pattern' },
+          });
+          for (const prop of shorthandProps) {
+            // The shorthand_property_identifier_pattern IS the identifier
+            const propName = prop.text();
+            if (RENDERER_METHODS.has(propName)) {
+              rendererVariables.add(propName);
+            }
+          }
+        } else {
+          // Simple variable assignment: const renderer = ...
+          const nameNode = parent.find({
+            rule: { kind: 'identifier' },
+          });
+          if (nameNode) {
+            const varName = nameNode.text();
+            rendererVariables.add(varName);
+          }
+        }
+      } else if (parent && parent.is('assignment_expression')) {
+        // Handle: renderer = render(...) or renderer = await render(...)
+        const left = parent.find({
+          rule: { kind: 'identifier' },
+        });
+        if (left) {
+          const varName = left.text();
+          rendererVariables.add(varName);
+        } else {
+          // Handle destructuring assignment: { rerender } = render(...)
+          const objectPattern = parent.find({
+            rule: { kind: 'object_pattern' },
+          });
+          if (objectPattern) {
+            const shorthandProps = objectPattern.findAll({
+              rule: { kind: 'shorthand_property_identifier_pattern' },
+            });
+            for (const prop of shorthandProps) {
+              // The shorthand_property_identifier_pattern IS the identifier
+              const propName = prop.text();
+              if (RENDERER_METHODS.has(propName)) {
+                rendererVariables.add(propName);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Now find calls to .rerender() or .unmount() on these variables
+    // Handle both: renderer.rerender() and rerender() (when destructured)
+    if (rendererVariables.size > 0) {
+      // Find member expression calls: renderer.rerender()
+      const rendererMethodCalls = rootNode.findAll({
+        rule: {
+          kind: 'call_expression',
+          has: {
+            field: 'function',
+            kind: 'member_expression',
+          },
+        },
+      });
+
+      for (const call of rendererMethodCalls) {
+        const funcNode = call.field('function');
+        if (funcNode && funcNode.is('member_expression')) {
+          try {
+            const object = funcNode.field('object');
+            const property = funcNode.field('property');
+            if (object && property) {
+              const objText = object.text();
+              const propText = property.text();
+              // Check if it's rendererVariable.methodName where methodName is rerender or unmount
+              if (rendererVariables.has(objText) && RENDERER_METHODS.has(propText)) {
+                functionCalls.push(call);
+              }
+            }
+          } catch {
+            // field() might not be available for this node type, skip
+          }
+        }
+      }
+
+      // Find direct identifier calls: rerender() and unmount() (when destructured)
+      for (const varName of rendererVariables) {
+        if (RENDERER_METHODS.has(varName)) {
+          // This is a destructured method name (rerender or unmount)
+          const directCalls = rootNode.findAll({
+            rule: {
+              kind: 'call_expression',
+              has: {
+                field: 'function',
+                kind: 'identifier',
+                regex: `^${varName}$`,
+              },
+            },
+          });
+          functionCalls.push(...directCalls);
+        }
+      }
+    }
+  }
+
   if (functionCalls.length === 0 && customRenderFunctionsSet.size === 0) {
     return null; // No function calls found and no custom render functions to process
   }
@@ -171,33 +348,17 @@ const transform: Transform<TSX> = async (root, options) => {
   // If there are no RNTL imports but we have custom render functions, we still want to process
   // calls to custom render functions in tests (Step 3.5), but we can't process their definitions
   if (customRenderFunctionsSet.size > 0 && importedFunctions.size > 0) {
-    console.log(
-      `[RNTL Codemod] Processing ${customRenderFunctionsSet.size} custom render functions: ${Array.from(customRenderFunctionsSet).join(', ')}`,
-    );
-    console.log(
-      `[RNTL Codemod] Imported RNTL functions: ${Array.from(importedFunctions).join(', ') || 'none'}`,
-    );
-    console.log(`[RNTL Codemod] File: ${root.filename()}`);
-
     // Find function declarations
     const functionDeclarations = rootNode.findAll({
       rule: { kind: 'function_declaration' },
     });
-    console.log(
-      `[RNTL Codemod] Found ${functionDeclarations.length} function declaration(s) in file`,
-    );
-    let foundCustomFunctions = 0;
-    const allFunctionNames: string[] = [];
     for (const funcDecl of functionDeclarations) {
       const nameNode = funcDecl.find({
         rule: { kind: 'identifier' },
       });
       if (nameNode) {
         const funcName = nameNode.text();
-        allFunctionNames.push(funcName);
         if (customRenderFunctionsSet.has(funcName)) {
-          foundCustomFunctions++;
-          console.log(`[RNTL Codemod] ✓ Found custom render function declaration: ${funcName}`);
           // Found a custom render function declaration
           processCustomRenderFunction(
             funcDecl,
@@ -209,18 +370,11 @@ const transform: Transform<TSX> = async (root, options) => {
         }
       }
     }
-    if (allFunctionNames.length > 0 && foundCustomFunctions === 0) {
-      console.log(`[RNTL Codemod] Function names found in file: ${allFunctionNames.join(', ')}`);
-    }
 
     // Find arrow functions and function expressions (const renderWithX = () => {} or const renderWithX = function() {})
     const variableDeclarations = rootNode.findAll({
       rule: { kind: 'lexical_declaration' },
     });
-    console.log(
-      `[RNTL Codemod] Found ${variableDeclarations.length} variable declaration(s) in file`,
-    );
-    const allVariableNames: string[] = [];
     for (const varDecl of variableDeclarations) {
       const declarators = varDecl.findAll({
         rule: { kind: 'variable_declarator' },
@@ -231,7 +385,6 @@ const transform: Transform<TSX> = async (root, options) => {
         });
         if (nameNode) {
           const funcName = nameNode.text();
-          allVariableNames.push(funcName);
           if (customRenderFunctionsSet.has(funcName)) {
             // Check if it's an arrow function or function expression
             const init = declarator.find({
@@ -240,10 +393,6 @@ const transform: Transform<TSX> = async (root, options) => {
               },
             });
             if (init) {
-              foundCustomFunctions++;
-              console.log(
-                `[RNTL Codemod] ✓ Found custom render function (arrow/expression): ${funcName}`,
-              );
               // Found a custom render function (arrow or expression)
               processCustomRenderFunction(
                 init,
@@ -252,24 +401,11 @@ const transform: Transform<TSX> = async (root, options) => {
                 customRenderFunctionsToMakeAsync,
                 rootNode,
               );
-            } else {
-              console.log(
-                `[RNTL Codemod] Variable ${funcName} found but is not a function (arrow/expression)`,
-              );
             }
           }
         }
       }
     }
-    if (allVariableNames.length > 0 && foundCustomFunctions === 0) {
-      const matchingVars = allVariableNames.filter((name) => customRenderFunctionsSet.has(name));
-      if (matchingVars.length > 0) {
-        console.log(
-          `[RNTL Codemod] Found matching variable names but they're not functions: ${matchingVars.join(', ')}`,
-        );
-      }
-    }
-    console.log(`[RNTL Codemod] Total custom render functions found: ${foundCustomFunctions}`);
   }
 
   // Step 3: Process each function call
@@ -330,9 +466,6 @@ const transform: Transform<TSX> = async (root, options) => {
     const allCallExpressions = rootNode.findAll({
       rule: { kind: 'call_expression' },
     });
-    console.log(
-      `[RNTL Codemod] Checking ${allCallExpressions.length} call expressions for custom render function calls`,
-    );
     let foundCustomCalls = 0;
     for (const callExpr of allCallExpressions) {
       const funcNode = callExpr.field('function');
@@ -348,7 +481,6 @@ const transform: Transform<TSX> = async (root, options) => {
 
       if (calledFunctionName && customRenderFunctionsSet.has(calledFunctionName)) {
         foundCustomCalls++;
-        console.log(`[RNTL Codemod] Found call to custom render function: ${calledFunctionName}`);
         // Check if this call is inside a test function
         const containingFunction = findContainingTestFunction(callExpr);
         if (containingFunction) {
@@ -383,9 +515,6 @@ const transform: Transform<TSX> = async (root, options) => {
         }
       }
     }
-    console.log(
-      `[RNTL Codemod] Found ${foundCustomCalls} call(s) to custom render functions in tests`,
-    );
   }
 
   // Step 7: Add async keyword to functions that need it
@@ -484,9 +613,6 @@ function processCustomRenderFunction(
   // Find RNTL function calls inside this custom render function
   const rntlCalls: SgNode<TSX>[] = [];
 
-  console.log(
-    `[RNTL Codemod] Processing custom render function, importedFunctions: ${Array.from(importedFunctions).join(', ') || 'none'}`,
-  );
 
   // Find standalone function calls (render, act, renderHook, fireEvent)
   for (const funcName of importedFunctions) {
@@ -501,9 +627,6 @@ function processCustomRenderFunction(
       },
     });
     if (calls.length > 0) {
-      console.log(
-        `[RNTL Codemod] Found ${calls.length} call(s) to ${funcName} inside custom render function`,
-      );
     }
     rntlCalls.push(...calls);
   }
@@ -540,9 +663,6 @@ function processCustomRenderFunction(
     }
   }
 
-  console.log(
-    `[RNTL Codemod] Found ${rntlCalls.length} total RNTL call(s) inside custom render function`,
-  );
 
   // Process each RNTL call found inside the custom render function
   let needsAsync = false;

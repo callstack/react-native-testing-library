@@ -1,5 +1,5 @@
 {
-  "name": "@testing-library/react-native-v14-update-dependencies",
+  "name": "@testing-library/react-native-v14-update-deps",
   "version": "0.1.0",
   "description": "Codemod to update dependencies for RNTL v14 migration",
   "type": "module",
