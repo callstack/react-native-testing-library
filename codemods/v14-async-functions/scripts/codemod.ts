@@ -110,16 +110,11 @@ export default async function transform(
   functionCalls.push(...findFireEventMethodCalls(rootNode, importedFunctions, rntlImports));
   functionCalls.push(...findScreenMethodCalls(rootNode));
 
-  const rendererVariables = trackVariablesAssignedFromRender(rootNode, importedFunctions);
-  functionCalls.push(...findRendererMethodCalls(rootNode, rendererVariables));
-
-  const { renderHookVariables, renderHookMethodVariables } = trackVariablesAssignedFromRenderHook(
+  const { allVariables, renamedMethodVariables } = trackVariablesAssignedFromRenderAndRenderHook(
     rootNode,
     importedFunctions,
   );
-  functionCalls.push(
-    ...findRenderHookMethodCalls(rootNode, renderHookVariables, renderHookMethodVariables),
-  );
+  functionCalls.push(...findResultMethodCalls(rootNode, allVariables, renamedMethodVariables));
 
   if (functionCalls.length === 0 && finalCustomRenderFunctionsSet.size === 0) {
     if (edits.length === 0) {
@@ -558,193 +553,53 @@ function findScreenMethodCalls(rootNode: SgNode<TSX>): SgNode<TSX>[] {
 }
 
 /**
- * Tracks variables assigned from render() calls to identify renderer result objects.
- * This helps identify calls like `renderer.rerender()` or `renderer.unmount()` that need to be made async.
+ * Tracks variables assigned from render() and renderHook() calls to identify result objects.
+ * This helps identify calls like `renderer.rerender()`, `renderer.unmount()`, `result.rerender()`, etc.
+ * that need to be made async.
  *
  * Handles various assignment patterns:
- * - Direct assignment: `const renderer = render(...)`
- * - Destructured assignment: `const { rerender } = render(...)`
- * - Assignment expressions: `renderer = render(...)`
+ * - Direct assignment: `const renderer = render(...)` or `const result = renderHook(...)`
+ * - Destructured assignment: `const { rerender } = render(...)` or `const { rerender } = renderHook(...)`
+ * - Renamed destructuring: `const { rerender: rerenderHook } = renderHook(...)` (renderHook only)
+ * - Assignment expressions: `renderer = render(...)` or `result = renderHook(...)`
  *
  * @param rootNode - The root AST node to search within
- * @param importedFunctions - Set of imported function names (must include 'render')
- * @returns Set of variable names that represent renderer results
- */
-function trackVariablesAssignedFromRender(
-  rootNode: SgNode<TSX>,
-  importedFunctions: Set<string>,
-): Set<string> {
-  const rendererVariables = new Set<string>();
-
-  if (importedFunctions.has('render')) {
-    const renderCalls = rootNode.findAll({
-      rule: {
-        kind: 'call_expression',
-        has: {
-          field: 'function',
-          kind: 'identifier',
-          regex: '^render$',
-        },
-      },
-    });
-
-    for (const renderCall of renderCalls) {
-      let parent = renderCall.parent();
-      const isAwaited = parent && parent.is('await_expression');
-
-      if (isAwaited) {
-        parent = parent.parent();
-      }
-
-      if (parent && parent.is('variable_declarator')) {
-        const objectPattern = parent.find({
-          rule: { kind: 'object_pattern' },
-        });
-        if (objectPattern) {
-          const shorthandProps = objectPattern.findAll({
-            rule: { kind: 'shorthand_property_identifier_pattern' },
-          });
-          for (const prop of shorthandProps) {
-            const propName = prop.text();
-            if (RESULT_METHODS_TO_MAKE_ASYNC.has(propName)) {
-              rendererVariables.add(propName);
-            }
-          }
-        } else {
-          const nameNode = parent.find({
-            rule: { kind: 'identifier' },
-          });
-          if (nameNode) {
-            const varName = nameNode.text();
-            rendererVariables.add(varName);
-          }
-        }
-      } else if (parent && parent.is('assignment_expression')) {
-        const left = parent.find({
-          rule: { kind: 'identifier' },
-        });
-        if (left) {
-          const varName = left.text();
-          rendererVariables.add(varName);
-        } else {
-          const objectPattern = parent.find({
-            rule: { kind: 'object_pattern' },
-          });
-          if (objectPattern) {
-            const shorthandProps = objectPattern.findAll({
-              rule: { kind: 'shorthand_property_identifier_pattern' },
-            });
-            for (const prop of shorthandProps) {
-              const propName = prop.text();
-              if (RESULT_METHODS_TO_MAKE_ASYNC.has(propName)) {
-                rendererVariables.add(propName);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return rendererVariables;
-}
-
-function findRendererMethodCalls(
-  rootNode: SgNode<TSX>,
-  rendererVariables: Set<string>,
-): SgNode<TSX>[] {
-  const functionCalls: SgNode<TSX>[] = [];
-
-  if (rendererVariables.size > 0) {
-    const rendererMethodCalls = rootNode.findAll({
-      rule: {
-        kind: 'call_expression',
-        has: {
-          field: 'function',
-          kind: 'member_expression',
-        },
-      },
-    });
-
-    for (const call of rendererMethodCalls) {
-      const funcNode = call.field('function');
-      if (funcNode && funcNode.is('member_expression')) {
-        try {
-          const object = funcNode.field('object');
-          const property = funcNode.field('property');
-          if (object && property) {
-            const objText = object.text();
-            const propText = property.text();
-            if (rendererVariables.has(objText) && RESULT_METHODS_TO_MAKE_ASYNC.has(propText)) {
-              functionCalls.push(call);
-            }
-          }
-        } catch {
-          // Skip nodes where field() is not available or AST structure doesn't match expectations.
-          // This is expected for malformed or edge-case AST structures and should be silently ignored.
-        }
-      }
-    }
-
-    for (const varName of rendererVariables) {
-      if (RESULT_METHODS_TO_MAKE_ASYNC.has(varName)) {
-        const directCalls = rootNode.findAll({
-          rule: {
-            kind: 'call_expression',
-            has: {
-              field: 'function',
-              kind: 'identifier',
-              regex: `^${varName}$`,
-            },
-          },
-        });
-        functionCalls.push(...directCalls);
-      }
-    }
-  }
-
-  return functionCalls;
-}
-
-/**
- * Tracks variables assigned from renderHook() calls to identify hook result objects.
- * Similar to trackVariablesAssignedFromRender but handles renderHook-specific patterns.
- *
- * Handles various assignment patterns:
- * - Direct assignment: `const result = renderHook(...)`
- * - Destructured assignment: `const { rerender, unmount } = renderHook(...)`
- * - Renamed destructuring: `const { rerender: rerenderHook } = renderHook(...)`
- *
- * @param rootNode - The root AST node to search within
- * @param importedFunctions - Set of imported function names (must include 'renderHook')
+ * @param importedFunctions - Set of imported function names (should include 'render' and/or 'renderHook')
  * @returns Object containing:
- *   - renderHookVariables: Set of all variable names representing hook results
- *   - renderHookMethodVariables: Set of renamed method variables (e.g., rerenderHook)
+ *   - allVariables: Set of all variable names representing render/renderHook results
+ *   - renamedMethodVariables: Set of renamed method variables (e.g., rerenderHook from renderHook)
  */
-function trackVariablesAssignedFromRenderHook(
+function trackVariablesAssignedFromRenderAndRenderHook(
   rootNode: SgNode<TSX>,
   importedFunctions: Set<string>,
 ): {
-  renderHookVariables: Set<string>;
-  renderHookMethodVariables: Set<string>;
+  allVariables: Set<string>;
+  renamedMethodVariables: Set<string>;
 } {
-  const renderHookVariables = new Set<string>();
-  const renderHookMethodVariables = new Set<string>();
+  const allVariables = new Set<string>();
+  const renamedMethodVariables = new Set<string>();
 
-  if (importedFunctions.has('renderHook')) {
-    const renderHookCalls = rootNode.findAll({
+  // Track variables from both render() and renderHook() calls
+  const functionsToTrack = ['render', 'renderHook'] as const;
+
+  for (const funcName of functionsToTrack) {
+    if (!importedFunctions.has(funcName)) {
+      continue;
+    }
+
+    const functionCalls = rootNode.findAll({
       rule: {
         kind: 'call_expression',
         has: {
           field: 'function',
           kind: 'identifier',
-          regex: '^renderHook$',
+          regex: `^${funcName}$`,
         },
       },
     });
 
-    for (const renderHookCall of renderHookCalls) {
-      let parent = renderHookCall.parent();
+    for (const functionCall of functionCalls) {
+      let parent = functionCall.parent();
       const isAwaited = parent && parent.is('await_expression');
 
       if (isAwaited) {
@@ -762,9 +617,10 @@ function trackVariablesAssignedFromRenderHook(
           for (const prop of shorthandProps) {
             const propName = prop.text();
             if (RESULT_METHODS_TO_MAKE_ASYNC.has(propName)) {
-              renderHookVariables.add(propName);
+              allVariables.add(propName);
             }
           }
+          // Handle renamed destructuring (only for renderHook, but we check for both to be safe)
           const pairPatterns = objectPattern.findAll({
             rule: { kind: 'pair_pattern' },
           });
@@ -779,8 +635,8 @@ function trackVariablesAssignedFromRenderHook(
               const keyName = key.text();
               const valueName = value.text();
               if (RESULT_METHODS_TO_MAKE_ASYNC.has(keyName)) {
-                renderHookVariables.add(valueName);
-                renderHookMethodVariables.add(valueName);
+                allVariables.add(valueName);
+                renamedMethodVariables.add(valueName);
               }
             }
           }
@@ -790,7 +646,7 @@ function trackVariablesAssignedFromRenderHook(
           });
           if (nameNode) {
             const varName = nameNode.text();
-            renderHookVariables.add(varName);
+            allVariables.add(varName);
           }
         }
       } else if (parent && parent.is('assignment_expression')) {
@@ -799,7 +655,7 @@ function trackVariablesAssignedFromRenderHook(
         });
         if (left) {
           const varName = left.text();
-          renderHookVariables.add(varName);
+          allVariables.add(varName);
         } else {
           const objectPattern = parent.find({
             rule: { kind: 'object_pattern' },
@@ -811,9 +667,10 @@ function trackVariablesAssignedFromRenderHook(
             for (const prop of shorthandProps) {
               const propName = prop.text();
               if (RESULT_METHODS_TO_MAKE_ASYNC.has(propName)) {
-                renderHookVariables.add(propName);
+                allVariables.add(propName);
               }
             }
+            // Handle renamed destructuring in assignment expressions
             const pairPatterns = objectPattern.findAll({
               rule: { kind: 'pair_pattern' },
             });
@@ -828,8 +685,8 @@ function trackVariablesAssignedFromRenderHook(
                 const keyName = key.text();
                 const valueName = value.text();
                 if (RESULT_METHODS_TO_MAKE_ASYNC.has(keyName)) {
-                  renderHookVariables.add(valueName);
-                  renderHookMethodVariables.add(valueName);
+                  allVariables.add(valueName);
+                  renamedMethodVariables.add(valueName);
                 }
               }
             }
@@ -839,18 +696,27 @@ function trackVariablesAssignedFromRenderHook(
     }
   }
 
-  return { renderHookVariables, renderHookMethodVariables };
+  return { allVariables, renamedMethodVariables };
 }
 
-function findRenderHookMethodCalls(
+/**
+ * Finds method calls on render/renderHook result variables (e.g., renderer.rerender(), result.unmount()).
+ * Also finds direct calls to renamed method variables (e.g., rerenderHook()).
+ *
+ * @param rootNode - The root AST node to search within
+ * @param allVariables - Set of all variable names from render/renderHook results
+ * @param renamedMethodVariables - Set of renamed method variables (e.g., rerenderHook)
+ * @returns Array of function call nodes that need to be made async
+ */
+function findResultMethodCalls(
   rootNode: SgNode<TSX>,
-  renderHookVariables: Set<string>,
-  renderHookMethodVariables: Set<string>,
+  allVariables: Set<string>,
+  renamedMethodVariables: Set<string>,
 ): SgNode<TSX>[] {
   const functionCalls: SgNode<TSX>[] = [];
 
-  if (renderHookVariables.size > 0) {
-    const renderHookMethodCalls = rootNode.findAll({
+  if (allVariables.size > 0) {
+    const resultMethodCalls = rootNode.findAll({
       rule: {
         kind: 'call_expression',
         has: {
@@ -860,7 +726,7 @@ function findRenderHookMethodCalls(
       },
     });
 
-    for (const call of renderHookMethodCalls) {
+    for (const call of resultMethodCalls) {
       const funcNode = call.field('function');
       if (funcNode && funcNode.is('member_expression')) {
         try {
@@ -869,7 +735,7 @@ function findRenderHookMethodCalls(
           if (object && property) {
             const objText = object.text();
             const propText = property.text();
-            if (renderHookVariables.has(objText) && RESULT_METHODS_TO_MAKE_ASYNC.has(propText)) {
+            if (allVariables.has(objText) && RESULT_METHODS_TO_MAKE_ASYNC.has(propText)) {
               functionCalls.push(call);
             }
           }
@@ -880,8 +746,9 @@ function findRenderHookMethodCalls(
       }
     }
 
-    for (const varName of renderHookVariables) {
-      if (RESULT_METHODS_TO_MAKE_ASYNC.has(varName) || renderHookMethodVariables.has(varName)) {
+    // Find direct calls to method variables (e.g., rerender(), unmount(), rerenderHook())
+    for (const varName of allVariables) {
+      if (RESULT_METHODS_TO_MAKE_ASYNC.has(varName) || renamedMethodVariables.has(varName)) {
         const directCalls = rootNode.findAll({
           rule: {
             kind: 'call_expression',
@@ -899,6 +766,8 @@ function findRenderHookMethodCalls(
 
   return functionCalls;
 }
+
+
 
 /**
  * Automatically detects custom render functions by analyzing the code structure.
