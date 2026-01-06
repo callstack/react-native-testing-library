@@ -2,16 +2,20 @@ import type { Transform } from 'codemod:ast-grep';
 import type TSX from 'codemod:ast-grep/langs/tsx';
 import type { Edit, SgNode } from '@codemod.com/jssg-types/main';
 
-const FUNCTIONS_TO_TRANSFORM = new Set(['render', 'renderHook', 'act', 'fireEvent']);
-const FIRE_EVENT_METHODS = new Set(['press', 'changeText', 'scroll']);
-const SCREEN_METHODS = new Set(['rerender', 'unmount']);
-const RENDERER_METHODS = new Set(['rerender', 'unmount']);
+const FUNCTIONS_TO_MAKE_ASYNC = new Set(['render', 'renderHook', 'act', 'fireEvent']);
+const FIRE_EVENT_METHODS_TO_MAKE_ASYNC = new Set(['press', 'changeText', 'scroll']);
+const SCREEN_METHODS_TO_MAKE_ASYNC = new Set(['rerender', 'unmount']);
+const RESULT_METHODS_TO_MAKE_ASYNC = new Set(['rerender', 'unmount']);
 const SKIP_VARIANTS = new Set(['unsafe_renderHookSync', 'unsafe_act']);
-const ASYNC_VARIANTS_TO_RENAME = new Map([
+const ASYNC_FUNCTIONS_TO_RENAME = new Map([
   ['renderAsync', 'render'],
   ['renderHookAsync', 'renderHook'],
   ['fireEventAsync', 'fireEvent'],
 ]);
+const TEST_FUNCTION_NAMES = new Set(['test', 'it', 'beforeEach', 'afterEach', 'beforeAll', 'afterAll']);
+const TEST_FUNCTION_PREFIXES = new Set(['test', 'it']);
+const TEST_MODIFIERS = new Set(['skip', 'only']);
+const TEST_EACH_METHOD = 'each';
 
 export default async function transform(
   root: Parameters<Transform<TSX>>[0],
@@ -27,8 +31,10 @@ export default async function transform(
     return null;
   }
 
-  const specifiersToRemove: Array<{ specifier: SgNode<TSX>; importStmt: SgNode<TSX> }> = [];
-  const importedFunctions = extractImportedFunctionNames(rntlImports, specifiersToRemove, edits);
+  const { importedFunctions, specifiersToRemove } = extractImportedFunctionNames(
+    rntlImports,
+    edits,
+  );
   removeDuplicateImportSpecifiers(specifiersToRemove, rootNode, edits);
 
   if (importedFunctions.size === 0 && customRenderFunctionsSet.size === 0) {
@@ -49,7 +55,9 @@ export default async function transform(
     rootNode,
     importedFunctions,
   );
-  functionCalls.push(...findRenderHookMethodCalls(rootNode, renderHookVariables, renderHookMethodVariables));
+  functionCalls.push(
+    ...findRenderHookMethodCalls(rootNode, renderHookVariables, renderHookMethodVariables),
+  );
 
   if (functionCalls.length === 0 && customRenderFunctionsSet.size === 0) {
     if (edits.length === 0) {
@@ -61,7 +69,10 @@ export default async function transform(
   const customRenderFunctionsToMakeAsync = new Map<number, SgNode<TSX>>();
 
   if (customRenderFunctionsSet.size > 0 && importedFunctions.size > 0) {
-    const customRenderFunctionDefinitions = findCustomRenderFunctionDefinitions(rootNode, customRenderFunctionsSet);
+    const customRenderFunctionDefinitions = findCustomRenderFunctionDefinitions(
+      rootNode,
+      customRenderFunctionsSet,
+    );
     for (const funcDef of customRenderFunctionDefinitions) {
       transformRNTLCallsInsideCustomRender(
         funcDef,
@@ -87,7 +98,10 @@ export default async function transform(
       continue;
     }
 
-    if (!isFunctionAlreadyAsync(containingFunction, rootNode) && !functionsToMakeAsync.has(containingFunction.id())) {
+    if (
+      !isFunctionAlreadyAsync(containingFunction, rootNode) &&
+      !functionsToMakeAsync.has(containingFunction.id())
+    ) {
       functionsToMakeAsync.set(containingFunction.id(), containingFunction);
     }
 
@@ -103,7 +117,10 @@ export default async function transform(
           continue;
         }
 
-        if (!isFunctionAlreadyAsync(containingFunction, rootNode) && !functionsToMakeAsync.has(containingFunction.id())) {
+        if (
+          !isFunctionAlreadyAsync(containingFunction, rootNode) &&
+          !functionsToMakeAsync.has(containingFunction.id())
+        ) {
           functionsToMakeAsync.set(containingFunction.id(), containingFunction);
         }
 
@@ -159,10 +176,13 @@ function findRNTLImportStatements(rootNode: SgNode<TSX>): SgNode<TSX>[] {
 
 function extractImportedFunctionNames(
   rntlImports: SgNode<TSX>[],
-  specifiersToRemove: Array<{ specifier: SgNode<TSX>; importStmt: SgNode<TSX> }>,
   edits: Edit[],
-): Set<string> {
+): {
+  importedFunctions: Set<string>;
+  specifiersToRemove: Array<{ specifier: SgNode<TSX>; importStmt: SgNode<TSX> }>;
+} {
   const importedFunctions = new Set<string>();
+  const specifiersToRemove: Array<{ specifier: SgNode<TSX>; importStmt: SgNode<TSX> }> = [];
 
   for (const importStmt of rntlImports) {
     const importClause = importStmt.find({
@@ -195,8 +215,8 @@ function extractImportedFunctionNames(
         });
         if (identifier) {
           const funcName = identifier.text();
-          if (ASYNC_VARIANTS_TO_RENAME.has(funcName)) {
-            const newName = ASYNC_VARIANTS_TO_RENAME.get(funcName)!;
+          if (ASYNC_FUNCTIONS_TO_RENAME.has(funcName)) {
+            const newName = ASYNC_FUNCTIONS_TO_RENAME.get(funcName)!;
             if (importedNames.has(newName)) {
               specifiersToRemove.push({ specifier, importStmt });
               importedFunctions.add(newName);
@@ -209,7 +229,7 @@ function extractImportedFunctionNames(
               });
               importedFunctions.add(newName);
             }
-          } else if (FUNCTIONS_TO_TRANSFORM.has(funcName)) {
+          } else if (FUNCTIONS_TO_MAKE_ASYNC.has(funcName)) {
             importedFunctions.add(funcName);
           }
         }
@@ -221,7 +241,7 @@ function extractImportedFunctionNames(
     });
     if (defaultImport) {
       const funcName = defaultImport.text();
-      if (FUNCTIONS_TO_TRANSFORM.has(funcName)) {
+      if (FUNCTIONS_TO_MAKE_ASYNC.has(funcName)) {
         importedFunctions.add(funcName);
       }
     }
@@ -230,12 +250,12 @@ function extractImportedFunctionNames(
       rule: { kind: 'namespace_import' },
     });
     if (namespaceImport) {
-      FUNCTIONS_TO_TRANSFORM.forEach((func) => importedFunctions.add(func));
+      FUNCTIONS_TO_MAKE_ASYNC.forEach((func) => importedFunctions.add(func));
       break;
     }
   }
 
-  return importedFunctions;
+  return { importedFunctions, specifiersToRemove };
 }
 
 function removeDuplicateImportSpecifiers(
@@ -243,7 +263,9 @@ function removeDuplicateImportSpecifiers(
   rootNode: SgNode<TSX>,
   edits: Edit[],
 ): void {
-  specifiersToRemove.sort((a, b) => b.specifier.range().start.index - a.specifier.range().start.index);
+  specifiersToRemove.sort(
+    (a, b) => b.specifier.range().start.index - a.specifier.range().start.index,
+  );
 
   for (const { specifier } of specifiersToRemove) {
     const specifierRange = specifier.range();
@@ -285,7 +307,7 @@ function removeDuplicateImportSpecifiers(
 }
 
 function renameAsyncVariantsInUsages(rootNode: SgNode<TSX>, edits: Edit[]): void {
-  for (const [asyncName, syncName] of ASYNC_VARIANTS_TO_RENAME.entries()) {
+  for (const [asyncName, syncName] of ASYNC_FUNCTIONS_TO_RENAME.entries()) {
     const asyncIdentifiers = rootNode.findAll({
       rule: {
         kind: 'identifier',
@@ -331,7 +353,10 @@ function renameAsyncVariantsInUsages(rootNode: SgNode<TSX>, edits: Edit[]): void
   }
 }
 
-function findDirectFunctionCalls(rootNode: SgNode<TSX>, importedFunctions: Set<string>): SgNode<TSX>[] {
+function findDirectFunctionCalls(
+  rootNode: SgNode<TSX>,
+  importedFunctions: Set<string>,
+): SgNode<TSX>[] {
   const functionCalls: SgNode<TSX>[] = [];
 
   for (const funcName of importedFunctions) {
@@ -363,7 +388,7 @@ function findFireEventMethodCalls(
     fireEventNames.add('fireEvent');
   }
 
-  for (const [asyncName, syncName] of ASYNC_VARIANTS_TO_RENAME.entries()) {
+  for (const [asyncName, syncName] of ASYNC_FUNCTIONS_TO_RENAME.entries()) {
     if (syncName === 'fireEvent') {
       const wasImported = rntlImports.some((importStmt) => {
         const importClause = importStmt.find({ rule: { kind: 'import_clause' } });
@@ -402,7 +427,7 @@ function findFireEventMethodCalls(
           if (object && property) {
             const objText = object.text();
             const propText = property.text();
-            if (fireEventNames.has(objText) && FIRE_EVENT_METHODS.has(propText)) {
+            if (fireEventNames.has(objText) && FIRE_EVENT_METHODS_TO_MAKE_ASYNC.has(propText)) {
               functionCalls.push(call);
             }
           }
@@ -437,7 +462,7 @@ function findScreenMethodCalls(rootNode: SgNode<TSX>): SgNode<TSX>[] {
         if (object && property) {
           const objText = object.text();
           const propText = property.text();
-          if (objText === 'screen' && SCREEN_METHODS.has(propText)) {
+          if (objText === 'screen' && SCREEN_METHODS_TO_MAKE_ASYNC.has(propText)) {
             functionCalls.push(call);
           }
         }
@@ -450,7 +475,10 @@ function findScreenMethodCalls(rootNode: SgNode<TSX>): SgNode<TSX>[] {
   return functionCalls;
 }
 
-function trackVariablesAssignedFromRender(rootNode: SgNode<TSX>, importedFunctions: Set<string>): Set<string> {
+function trackVariablesAssignedFromRender(
+  rootNode: SgNode<TSX>,
+  importedFunctions: Set<string>,
+): Set<string> {
   const rendererVariables = new Set<string>();
 
   if (importedFunctions.has('render')) {
@@ -483,7 +511,7 @@ function trackVariablesAssignedFromRender(rootNode: SgNode<TSX>, importedFunctio
           });
           for (const prop of shorthandProps) {
             const propName = prop.text();
-            if (RENDERER_METHODS.has(propName)) {
+            if (RESULT_METHODS_TO_MAKE_ASYNC.has(propName)) {
               rendererVariables.add(propName);
             }
           }
@@ -513,7 +541,7 @@ function trackVariablesAssignedFromRender(rootNode: SgNode<TSX>, importedFunctio
             });
             for (const prop of shorthandProps) {
               const propName = prop.text();
-              if (RENDERER_METHODS.has(propName)) {
+              if (RESULT_METHODS_TO_MAKE_ASYNC.has(propName)) {
                 rendererVariables.add(propName);
               }
             }
@@ -526,7 +554,10 @@ function trackVariablesAssignedFromRender(rootNode: SgNode<TSX>, importedFunctio
   return rendererVariables;
 }
 
-function findRendererMethodCalls(rootNode: SgNode<TSX>, rendererVariables: Set<string>): SgNode<TSX>[] {
+function findRendererMethodCalls(
+  rootNode: SgNode<TSX>,
+  rendererVariables: Set<string>,
+): SgNode<TSX>[] {
   const functionCalls: SgNode<TSX>[] = [];
 
   if (rendererVariables.size > 0) {
@@ -549,7 +580,7 @@ function findRendererMethodCalls(rootNode: SgNode<TSX>, rendererVariables: Set<s
           if (object && property) {
             const objText = object.text();
             const propText = property.text();
-            if (rendererVariables.has(objText) && RENDERER_METHODS.has(propText)) {
+            if (rendererVariables.has(objText) && RESULT_METHODS_TO_MAKE_ASYNC.has(propText)) {
               functionCalls.push(call);
             }
           }
@@ -560,7 +591,7 @@ function findRendererMethodCalls(rootNode: SgNode<TSX>, rendererVariables: Set<s
     }
 
     for (const varName of rendererVariables) {
-      if (RENDERER_METHODS.has(varName)) {
+      if (RESULT_METHODS_TO_MAKE_ASYNC.has(varName)) {
         const directCalls = rootNode.findAll({
           rule: {
             kind: 'call_expression',
@@ -579,7 +610,10 @@ function findRendererMethodCalls(rootNode: SgNode<TSX>, rendererVariables: Set<s
   return functionCalls;
 }
 
-function trackVariablesAssignedFromRenderHook(rootNode: SgNode<TSX>, importedFunctions: Set<string>): {
+function trackVariablesAssignedFromRenderHook(
+  rootNode: SgNode<TSX>,
+  importedFunctions: Set<string>,
+): {
   renderHookVariables: Set<string>;
   renderHookMethodVariables: Set<string>;
 } {
@@ -616,7 +650,7 @@ function trackVariablesAssignedFromRenderHook(rootNode: SgNode<TSX>, importedFun
           });
           for (const prop of shorthandProps) {
             const propName = prop.text();
-            if (RENDERER_METHODS.has(propName)) {
+            if (RESULT_METHODS_TO_MAKE_ASYNC.has(propName)) {
               renderHookVariables.add(propName);
             }
           }
@@ -633,7 +667,7 @@ function trackVariablesAssignedFromRenderHook(rootNode: SgNode<TSX>, importedFun
             if (key && value) {
               const keyName = key.text();
               const valueName = value.text();
-              if (RENDERER_METHODS.has(keyName)) {
+              if (RESULT_METHODS_TO_MAKE_ASYNC.has(keyName)) {
                 renderHookVariables.add(valueName);
                 renderHookMethodVariables.add(valueName);
               }
@@ -665,7 +699,7 @@ function trackVariablesAssignedFromRenderHook(rootNode: SgNode<TSX>, importedFun
             });
             for (const prop of shorthandProps) {
               const propName = prop.text();
-              if (RENDERER_METHODS.has(propName)) {
+              if (RESULT_METHODS_TO_MAKE_ASYNC.has(propName)) {
                 renderHookVariables.add(propName);
               }
             }
@@ -682,7 +716,7 @@ function trackVariablesAssignedFromRenderHook(rootNode: SgNode<TSX>, importedFun
               if (key && value) {
                 const keyName = key.text();
                 const valueName = value.text();
-                if (RENDERER_METHODS.has(keyName)) {
+                if (RESULT_METHODS_TO_MAKE_ASYNC.has(keyName)) {
                   renderHookVariables.add(valueName);
                   renderHookMethodVariables.add(valueName);
                 }
@@ -724,7 +758,7 @@ function findRenderHookMethodCalls(
           if (object && property) {
             const objText = object.text();
             const propText = property.text();
-            if (renderHookVariables.has(objText) && RENDERER_METHODS.has(propText)) {
+            if (renderHookVariables.has(objText) && RESULT_METHODS_TO_MAKE_ASYNC.has(propText)) {
               functionCalls.push(call);
             }
           }
@@ -735,7 +769,7 @@ function findRenderHookMethodCalls(
     }
 
     for (const varName of renderHookVariables) {
-      if (RENDERER_METHODS.has(varName) || renderHookMethodVariables.has(varName)) {
+      if (RESULT_METHODS_TO_MAKE_ASYNC.has(varName) || renderHookMethodVariables.has(varName)) {
         const directCalls = rootNode.findAll({
           rule: {
             kind: 'call_expression',
@@ -805,7 +839,10 @@ function findCustomRenderFunctionDefinitions(
   return customRenderFunctions;
 }
 
-function findCustomRenderFunctionCalls(rootNode: SgNode<TSX>, customRenderFunctionsSet: Set<string>): SgNode<TSX>[] {
+function findCustomRenderFunctionCalls(
+  rootNode: SgNode<TSX>,
+  customRenderFunctionsSet: Set<string>,
+): SgNode<TSX>[] {
   const customRenderCalls: SgNode<TSX>[] = [];
   const allCallExpressions = rootNode.findAll({
     rule: { kind: 'call_expression' },
@@ -830,7 +867,10 @@ function findCustomRenderFunctionCalls(rootNode: SgNode<TSX>, customRenderFuncti
   return customRenderCalls;
 }
 
-function findRNTLFunctionCallsInNode(funcNode: SgNode<TSX>, importedFunctions: Set<string>): SgNode<TSX>[] {
+function findRNTLFunctionCallsInNode(
+  funcNode: SgNode<TSX>,
+  importedFunctions: Set<string>,
+): SgNode<TSX>[] {
   const rntlCalls: SgNode<TSX>[] = [];
 
   for (const funcName of importedFunctions) {
@@ -867,7 +907,7 @@ function findRNTLFunctionCallsInNode(funcNode: SgNode<TSX>, importedFunctions: S
           if (object && property) {
             const objText = object.text();
             const propText = property.text();
-            if (objText === 'fireEvent' && FIRE_EVENT_METHODS.has(propText)) {
+            if (objText === 'fireEvent' && FIRE_EVENT_METHODS_TO_MAKE_ASYNC.has(propText)) {
               rntlCalls.push(call);
             }
           }
@@ -1002,7 +1042,7 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
             const funcNode = grandParent.field('function');
             if (funcNode) {
               const funcText = funcNode.text();
-              if (/^(test|it|beforeEach|afterEach|beforeAll|afterAll)$/.test(funcText)) {
+              if (TEST_FUNCTION_NAMES.has(funcText)) {
                 return current;
               }
               if (funcNode.is('member_expression')) {
@@ -1012,7 +1052,7 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
                   if (object && property) {
                     const objText = object.text();
                     const propText = property.text();
-                    if ((objText === 'test' || objText === 'it') && (propText === 'skip' || propText === 'only')) {
+                    if (TEST_FUNCTION_PREFIXES.has(objText) && TEST_MODIFIERS.has(propText)) {
                       return current;
                     }
                   }
@@ -1029,7 +1069,7 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
                     if (object && property) {
                       const objText = object.text();
                       const propText = property.text();
-                      if ((objText === 'test' || objText === 'it') && propText === 'each') {
+                      if (TEST_FUNCTION_PREFIXES.has(objText) && propText === TEST_EACH_METHOD) {
                         return current;
                       }
                     }
@@ -1045,7 +1085,7 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
           const funcNode = parent.field('function');
           if (funcNode) {
             const funcText = funcNode.text();
-            if (/^(test|it|beforeEach|afterEach|beforeAll|afterAll)$/.test(funcText)) {
+            if (TEST_FUNCTION_NAMES.has(funcText)) {
               return current;
             }
             if (funcNode.is('member_expression')) {
@@ -1055,7 +1095,7 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
                 if (object && property) {
                   const objText = object.text();
                   const propText = property.text();
-                  if ((objText === 'test' || objText === 'it') && (propText === 'skip' || propText === 'only')) {
+                  if (TEST_FUNCTION_PREFIXES.has(objText) && TEST_MODIFIERS.has(propText)) {
                     return current;
                   }
                 }
@@ -1072,7 +1112,7 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
                   if (object && property) {
                     const objText = object.text();
                     const propText = property.text();
-                    if ((objText === 'test' || objText === 'it') && propText === 'each') {
+                    if (TEST_FUNCTION_PREFIXES.has(objText) && propText === TEST_EACH_METHOD) {
                       return current;
                     }
                   }
