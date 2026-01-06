@@ -20,4 +20,5 @@ export const userEvent = {
   paste: (element: ReactTestInstance, text: string) => setup().paste(element, text),
   scrollTo: (element: ReactTestInstance, options: ScrollToOptions) =>
     setup().scrollTo(element, options),
+  pullToRefresh: (element: ReactTestInstance) => setup().pullToRefresh(element),
 };
