@@ -6,7 +6,6 @@ const FUNCTIONS_TO_MAKE_ASYNC = new Set(['render', 'renderHook', 'act', 'fireEve
 const FIRE_EVENT_METHODS_TO_MAKE_ASYNC = new Set(['press', 'changeText', 'scroll']);
 const SCREEN_METHODS_TO_MAKE_ASYNC = new Set(['rerender', 'unmount']);
 const RESULT_METHODS_TO_MAKE_ASYNC = new Set(['rerender', 'unmount']);
-const SKIP_VARIANTS = new Set(['unsafe_renderHookSync', 'unsafe_act']);
 const ASYNC_FUNCTIONS_TO_RENAME = new Map([
   ['renderAsync', 'render'],
   ['renderHookAsync', 'renderHook'],
@@ -149,10 +148,6 @@ export default async function transform(
 
   for (const functionCall of functionCalls) {
     if (isCallAlreadyAwaited(functionCall)) {
-      continue;
-    }
-
-    if (shouldSkipTransformation(functionCall)) {
       continue;
     }
 
@@ -1146,14 +1141,6 @@ function transformRNTLCallsInsideCustomRender(
       continue;
     }
 
-    const functionNode = rntlCall.field('function');
-    if (functionNode) {
-      const funcName = functionNode.text();
-      if (SKIP_VARIANTS.has(funcName)) {
-        continue;
-      }
-    }
-
     const callStart = rntlCall.range().start.index;
     edits.push({
       startPos: callStart,
@@ -1174,15 +1161,6 @@ function transformRNTLCallsInsideCustomRender(
 function isCallAlreadyAwaited(functionCall: SgNode<TSX>): boolean {
   const parent = functionCall.parent();
   return parent !== null && parent.is('await_expression');
-}
-
-function shouldSkipTransformation(functionCall: SgNode<TSX>): boolean {
-  const functionNode = functionCall.field('function');
-  if (functionNode) {
-    const funcName = functionNode.text();
-    return SKIP_VARIANTS.has(funcName);
-  }
-  return false;
 }
 
 function addAwaitBeforeCall(functionCall: SgNode<TSX>, edits: Edit[]): void {
