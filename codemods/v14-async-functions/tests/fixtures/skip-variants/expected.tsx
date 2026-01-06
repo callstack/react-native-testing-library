@@ -1,4 +1,4 @@
-import { render, act, renderHook, unsafe_act, unsafe_renderHookSync, renderAsync } from '@testing-library/react-native';
+import { render, act, renderHook, unsafe_act, unsafe_renderHookSync } from '@testing-library/react-native';
 
 test('skips unsafe variants', async () => {
   await render(<MyComponent />);
@@ -15,5 +15,5 @@ test('skips unsafe variants', async () => {
   
   unsafe_renderHookSync(() => ({ value: 43 }));
   
-  renderAsync(<MyComponent />);
+  await render(<MyComponent />);
 });

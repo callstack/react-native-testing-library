@@ -63,6 +63,9 @@ const transform: Transform<TSX> = async (root, options) => {
   // Track which functions are imported using a Set
   const importedFunctions = new Set<string>();
   
+  // Track which async variant specifiers need to be removed (because target name already exists)
+  const specifiersToRemove: Array<{ specifier: SgNode<TSX>; importStmt: SgNode<TSX> }> = [];
+  
   // Initialize edits array for collecting transformations
   const edits: Edit[] = [];
   
@@ -80,6 +83,20 @@ const transform: Transform<TSX> = async (root, options) => {
       const specifiers = namedImports.findAll({
         rule: { kind: 'import_specifier' },
       });
+      
+      // First pass: collect all imported names to detect duplicates
+      const importedNames = new Set<string>();
+      for (const specifier of specifiers) {
+        const identifier = specifier.find({
+          rule: { kind: 'identifier' },
+        });
+        if (identifier) {
+          const funcName = identifier.text();
+          importedNames.add(funcName);
+        }
+      }
+      
+      // Second pass: process each specifier
       for (const specifier of specifiers) {
         const identifier = specifier.find({
           rule: { kind: 'identifier' },
@@ -89,15 +106,24 @@ const transform: Transform<TSX> = async (root, options) => {
           // Check if this is an async variant that needs to be renamed
           if (ASYNC_VARIANTS_TO_RENAME.has(funcName)) {
             const newName = ASYNC_VARIANTS_TO_RENAME.get(funcName)!;
-            // Rename in import: renderAsync -> render
-            const identifierRange = identifier.range();
-            edits.push({
-              startPos: identifierRange.start.index,
-              endPos: identifierRange.end.index,
-              insertedText: newName,
-            });
-            // Track the renamed function as imported
-            importedFunctions.add(newName);
+            // Check if the target name is already imported
+            if (importedNames.has(newName)) {
+              // Target name already exists - mark this specifier for removal
+              // The renaming logic below will rename all usages of the async variant to the sync name
+              specifiersToRemove.push({ specifier, importStmt });
+              // Track the target name as imported (since it already exists)
+              importedFunctions.add(newName);
+            } else {
+              // Target name doesn't exist, rename the async variant in the import
+              const identifierRange = identifier.range();
+              edits.push({
+                startPos: identifierRange.start.index,
+                endPos: identifierRange.end.index,
+                insertedText: newName,
+              });
+              // Track the renamed function as imported
+              importedFunctions.add(newName);
+            }
           } else if (FUNCTIONS_TO_TRANSFORM.has(funcName)) {
             importedFunctions.add(funcName);
           }
@@ -126,6 +152,54 @@ const transform: Transform<TSX> = async (root, options) => {
       // We assume all functions might be available via namespace
       FUNCTIONS_TO_TRANSFORM.forEach((func) => importedFunctions.add(func));
       break;
+    }
+  }
+
+  // Remove duplicate specifiers (async variants whose target name already exists)
+  // Sort by position in reverse order to avoid offset issues
+  specifiersToRemove.sort((a, b) => b.specifier.range().start.index - a.specifier.range().start.index);
+  
+  for (const { specifier } of specifiersToRemove) {
+    const specifierRange = specifier.range();
+    const parent = specifier.parent();
+    
+    if (parent && parent.is('named_imports')) {
+      const fullText = rootNode.text();
+      const specifierEnd = specifierRange.end.index;
+      
+      // Check for trailing comma and whitespace
+      const textAfter = fullText.substring(specifierEnd);
+      const trailingCommaMatch = textAfter.match(/^\s*,\s*/);
+      
+      if (trailingCommaMatch) {
+        // Remove specifier and trailing comma/whitespace
+        edits.push({
+          startPos: specifierRange.start.index,
+          endPos: specifierEnd + trailingCommaMatch[0].length,
+          insertedText: '',
+        });
+      } else {
+        // Check for leading comma and whitespace before this specifier
+        const textBefore = fullText.substring(0, specifierRange.start.index);
+        const leadingCommaMatch = textBefore.match(/,\s*$/);
+        
+        if (leadingCommaMatch) {
+          // Remove leading comma/whitespace and specifier
+          edits.push({
+            startPos: specifierRange.start.index - leadingCommaMatch[0].length,
+            endPos: specifierEnd,
+            insertedText: '',
+          });
+        } else {
+          // Edge case: single specifier or malformed import (shouldn't happen normally)
+          // Just remove the specifier itself
+          edits.push({
+            startPos: specifierRange.start.index,
+            endPos: specifierEnd,
+            insertedText: '',
+          });
+        }
+      }
     }
   }
 
@@ -160,6 +234,30 @@ const transform: Transform<TSX> = async (root, options) => {
         insertedText: syncName,
       });
     }
+    
+    // Also handle member expressions like fireEventAsync.press -> fireEvent.press
+    const memberExpressions = rootNode.findAll({
+      rule: {
+        kind: 'member_expression',
+        has: {
+          field: 'object',
+          kind: 'identifier',
+          regex: `^${asyncName}$`,
+        },
+      },
+    });
+    
+    for (const memberExpr of memberExpressions) {
+      const object = memberExpr.field('object');
+      if (object && object.is('identifier')) {
+        const objectRange = object.range();
+        edits.push({
+          startPos: objectRange.start.index,
+          endPos: objectRange.end.index,
+          insertedText: syncName,
+        });
+      }
+    }
   }
 
   // Step 2: Find all call expressions for imported functions
@@ -182,7 +280,33 @@ const transform: Transform<TSX> = async (root, options) => {
   }
 
   // Find fireEvent method calls (fireEvent.press, fireEvent.changeText, fireEvent.scroll)
+  // Also check for fireEventAsync variants that will be renamed
+  const fireEventNames = new Set<string>();
   if (importedFunctions.has('fireEvent')) {
+    fireEventNames.add('fireEvent');
+  }
+  // Also check for async variants that will be renamed to fireEvent
+  for (const [asyncName, syncName] of ASYNC_VARIANTS_TO_RENAME.entries()) {
+    if (syncName === 'fireEvent') {
+      // Check if this async variant was imported (even if it will be removed)
+      const wasImported = rntlImports.some((importStmt) => {
+        const importClause = importStmt.find({ rule: { kind: 'import_clause' } });
+        if (!importClause) return false;
+        const namedImports = importClause.find({ rule: { kind: 'named_imports' } });
+        if (!namedImports) return false;
+        const specifiers = namedImports.findAll({ rule: { kind: 'import_specifier' } });
+        return specifiers.some((spec) => {
+          const identifier = spec.find({ rule: { kind: 'identifier' } });
+          return identifier && identifier.text() === asyncName;
+        });
+      });
+      if (wasImported) {
+        fireEventNames.add(asyncName);
+      }
+    }
+  }
+  
+  if (fireEventNames.size > 0) {
     const fireEventMethodCalls = rootNode.findAll({
       rule: {
         kind: 'call_expression',
@@ -202,8 +326,8 @@ const transform: Transform<TSX> = async (root, options) => {
           if (object && property) {
             const objText = object.text();
             const propText = property.text();
-            // Check if it's fireEvent.methodName where methodName is one of our target methods
-            if (objText === 'fireEvent' && FIRE_EVENT_METHODS.has(propText)) {
+            // Check if it's fireEvent.methodName or fireEventAsync.methodName where methodName is one of our target methods
+            if (fireEventNames.has(objText) && FIRE_EVENT_METHODS.has(propText)) {
               functionCalls.push(call);
             }
           }
