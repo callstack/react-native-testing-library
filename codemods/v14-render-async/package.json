@@ -4,7 +4,7 @@
   "description": "Codemod to migrate render() calls to await render() for RNTL v14",
   "type": "module",
   "scripts": {
-    "test": "yarn dlx codemod@latest jssg test -l typescript ./scripts/codemod.ts",
+    "test": "yarn dlx codemod@latest jssg test -l tsx ./scripts/codemod.ts",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
