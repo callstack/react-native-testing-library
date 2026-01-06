@@ -19,7 +19,7 @@ This codemod migrates your test files from React Native Testing Library v13 to v
 
 ## What it doesn't do
 
-- ❌ Does not transform function calls in helper functions (like `renderWithProviders`)
+- ❌ Does not transform function calls in helper functions (like `renderWithProviders`) - **unless specified via `CUSTOM_RENDER_FUNCTIONS`**
 - ❌ Does not transform function calls from other libraries
 - ❌ Does not handle namespace imports (e.g., `import * as RNTL from '@testing-library/react-native'`)
 - ❌ Does not transform unsafe variants (`unsafe_act`, `unsafe_renderHookSync`) or `renderAsync`
@@ -34,6 +34,9 @@ npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --t
 
 # Or if published to the registry
 npx codemod@latest run @testing-library/react-native-v14-render-async --target ./path/to/your/tests
+
+# With custom render functions (comma-separated list)
+CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme" npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --target ./path/to/your/tests
 ```
 
 ### Example transformations
@@ -272,12 +275,12 @@ test('skips unsafe variants', async () => {
 });
 ```
 
-#### Helper functions (not transformed)
+#### Helper functions (not transformed by default)
 
 **Before:**
 ```typescript
 function renderWithProviders(component: React.ReactElement) {
-  render(component); // This is NOT transformed
+  render(component); // This is NOT transformed by default
 }
 
 test('uses helper', () => {
@@ -285,14 +288,50 @@ test('uses helper', () => {
 });
 ```
 
-**After:**
+**After (without CUSTOM_RENDER_FUNCTIONS):**
 ```typescript
 function renderWithProviders(component: React.ReactElement) {
-  render(component); // Unchanged - helper functions are skipped
+  render(component); // Unchanged - helper functions are skipped by default
 }
 
 test('uses helper', () => {
   renderWithProviders(<Component />);
+});
+```
+
+#### Custom render functions (with CUSTOM_RENDER_FUNCTIONS)
+
+When you specify custom render function names via the `CUSTOM_RENDER_FUNCTIONS` environment variable, those functions will be transformed:
+
+**Before:**
+```typescript
+function renderWithProviders(component: React.ReactElement) {
+  render(component);
+}
+
+const renderWithTheme = (component: React.ReactElement) => {
+  render(component);
+};
+
+test('uses custom render', () => {
+  renderWithProviders(<Component />);
+  renderWithTheme(<Component />);
+});
+```
+
+**After (with CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme"):**
+```typescript
+async function renderWithProviders(component: React.ReactElement) {
+  await render(component);
+}
+
+const renderWithTheme = async (component: React.ReactElement) => {
+  await render(component);
+};
+
+test('uses custom render', async () => {
+  await renderWithProviders(<Component />);
+  await renderWithTheme(<Component />);
 });
 ```
 
@@ -307,7 +346,7 @@ yarn test
 
 ## Limitations
 
-1. **Helper functions**: Function calls (`render`, `act`, `renderHook`, `fireEvent`) inside helper functions (not directly in test callbacks) are not transformed. You'll need to manually update these functions to be async and await their calls.
+1. **Helper functions**: Function calls (`render`, `act`, `renderHook`, `fireEvent`) inside helper functions (not directly in test callbacks) are not transformed by default. You can specify custom render function names via the `CUSTOM_RENDER_FUNCTIONS` environment variable to have them automatically transformed. For other helper functions, you'll need to manually update them to be async and await their calls.
 
 2. **Namespace imports**: The codemod currently doesn't handle namespace imports like `import * as RNTL from '@testing-library/react-native'`. If you use this pattern, you'll need to manually update those calls.
 
@@ -318,11 +357,15 @@ yarn test
 ## Migration Guide
 
 1. **Run the codemod** on your test files
-2. **Review the changes** to ensure all transformations are correct
-3. **Manually update helper functions** that contain `render`, `act`, `renderHook`, or `fireEvent` calls
-4. **Manually update other fireEvent methods** if you use methods other than `press`, `changeText`, or `scroll`
-5. **Update your RNTL version** to v14
-6. **Run your tests** to verify everything works
+2. **If you have custom render functions** (like `renderWithProviders`, `renderWithTheme`, etc.), run the codemod with `CUSTOM_RENDER_FUNCTIONS` environment variable:
+   ```bash
+   CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme" npx codemod@latest workflow run -w ./codemods/v14-render-async/workflow.yaml --target ./path/to/your/tests
+   ```
+3. **Review the changes** to ensure all transformations are correct
+4. **Manually update helper functions** that contain `render`, `act`, `renderHook`, or `fireEvent` calls (if not specified in `CUSTOM_RENDER_FUNCTIONS`)
+5. **Manually update other fireEvent methods** if you use methods other than `press`, `changeText`, or `scroll`
+6. **Update your RNTL version** to v14
+7. **Run your tests** to verify everything works
 
 ## Contributing
 

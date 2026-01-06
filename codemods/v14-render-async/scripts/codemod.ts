@@ -14,6 +14,18 @@ const SKIP_VARIANTS = new Set(['renderAsync', 'unsafe_renderHookSync', 'unsafe_a
 const transform: Transform<TSX> = async (root) => {
   const rootNode = root.root();
 
+  // Parse custom render functions from environment variable
+  // Format: CUSTOM_RENDER_FUNCTIONS="renderWithProviders,renderWithTheme,renderCustom"
+  const customRenderFunctionsParam = process.env.CUSTOM_RENDER_FUNCTIONS || '';
+  const customRenderFunctionsSet = new Set<string>();
+  if (customRenderFunctionsParam) {
+    customRenderFunctionsParam
+      .split(',')
+      .map((name) => name.trim())
+      .filter((name) => name.length > 0)
+      .forEach((name) => customRenderFunctionsSet.add(name));
+  }
+
   // Step 1: Check if any of the target functions are imported from @testing-library/react-native
   const rntlImports = rootNode.findAll({
     rule: {
@@ -137,12 +149,66 @@ const transform: Transform<TSX> = async (root) => {
     }
   }
 
-  if (functionCalls.length === 0) {
-    return null; // No function calls found
+  if (functionCalls.length === 0 && customRenderFunctionsSet.size === 0) {
+    return null; // No function calls found and no custom render functions to process
   }
 
   const edits: Edit[] = [];
   const functionsToMakeAsync = new Map<number, SgNode<TSX>>(); // Use Map with node ID to ensure uniqueness
+  const customRenderFunctionsToMakeAsync = new Map<number, SgNode<TSX>>(); // Track custom render functions that need to be async
+
+  // Step 2.5: Find and process custom render function definitions
+  if (customRenderFunctionsSet.size > 0) {
+    // Find function declarations
+    const functionDeclarations = rootNode.findAll({
+      rule: { kind: 'function_declaration' },
+    });
+    for (const funcDecl of functionDeclarations) {
+      const nameNode = funcDecl.find({
+        rule: { kind: 'identifier' },
+      });
+      if (nameNode) {
+        const funcName = nameNode.text();
+        if (customRenderFunctionsSet.has(funcName)) {
+          // Found a custom render function declaration
+          processCustomRenderFunction(funcDecl, importedFunctions, edits, customRenderFunctionsToMakeAsync, rootNode);
+        }
+      }
+    }
+
+    // Find arrow functions and function expressions (const renderWithX = () => {} or const renderWithX = function() {})
+    const variableDeclarations = rootNode.findAll({
+      rule: { kind: 'lexical_declaration' },
+    });
+    for (const varDecl of variableDeclarations) {
+      const declarators = varDecl.findAll({
+        rule: { kind: 'variable_declarator' },
+      });
+      for (const declarator of declarators) {
+        const nameNode = declarator.find({
+          rule: { kind: 'identifier' },
+        });
+        if (nameNode) {
+          const funcName = nameNode.text();
+          if (customRenderFunctionsSet.has(funcName)) {
+            // Check if it's an arrow function or function expression
+            const init = declarator.find({
+              rule: {
+                any: [
+                  { kind: 'arrow_function' },
+                  { kind: 'function_expression' },
+                ],
+              },
+            });
+            if (init) {
+              // Found a custom render function (arrow or expression)
+              processCustomRenderFunction(init, importedFunctions, edits, customRenderFunctionsToMakeAsync, rootNode);
+            }
+          }
+        }
+      }
+    }
+  }
 
   // Step 3: Process each function call
   for (const functionCall of functionCalls) {
@@ -197,6 +263,60 @@ const transform: Transform<TSX> = async (root) => {
     });
   }
 
+  // Step 3.5: Transform calls to custom render functions in tests
+  if (customRenderFunctionsSet.size > 0) {
+    const allCallExpressions = rootNode.findAll({
+      rule: { kind: 'call_expression' },
+    });
+    for (const callExpr of allCallExpressions) {
+      const funcNode = callExpr.field('function');
+      if (!funcNode) continue;
+
+      let calledFunctionName: string | null = null;
+      if (funcNode.is('identifier')) {
+        calledFunctionName = funcNode.text();
+      } else if (funcNode.is('member_expression')) {
+        // Skip member expressions (e.g., obj.renderWithX())
+        continue;
+      }
+
+      if (calledFunctionName && customRenderFunctionsSet.has(calledFunctionName)) {
+        // Check if this call is inside a test function
+        const containingFunction = findContainingTestFunction(callExpr);
+        if (containingFunction) {
+          // Skip if already awaited
+          const parent = callExpr.parent();
+          if (parent && parent.is('await_expression')) {
+            continue;
+          }
+
+          // Track that the test function needs to be async
+          let isAsync = false;
+          if (containingFunction.is('arrow_function')) {
+            const children = containingFunction.children();
+            isAsync = children.some((child) => child.text() === 'async');
+          } else {
+            const funcStart = containingFunction.range().start.index;
+            const textBefore = rootNode.text().substring(Math.max(0, funcStart - 10), funcStart);
+            isAsync = textBefore.trim().endsWith('async');
+          }
+
+          if (!isAsync && !functionsToMakeAsync.has(containingFunction.id())) {
+            functionsToMakeAsync.set(containingFunction.id(), containingFunction);
+          }
+
+          // Add await before the call
+          const callStart = callExpr.range().start.index;
+          edits.push({
+            startPos: callStart,
+            endPos: callStart,
+            insertedText: 'await ',
+          });
+        }
+      }
+    }
+  }
+
   // Step 7: Add async keyword to functions that need it
   for (const func of functionsToMakeAsync.values()) {
     if (func.is('arrow_function')) {
@@ -233,6 +353,43 @@ const transform: Transform<TSX> = async (root) => {
     }
   }
 
+  // Step 7.5: Add async keyword to custom render functions that need it
+  for (const func of customRenderFunctionsToMakeAsync.values()) {
+    if (func.is('arrow_function')) {
+      const funcStart = func.range().start.index;
+      edits.push({
+        startPos: funcStart,
+        endPos: funcStart,
+        insertedText: 'async ',
+      });
+    } else if (func.is('function_declaration') || func.is('function_expression')) {
+      const children = func.children();
+      const firstChild = children.length > 0 ? children[0] : null;
+      if (firstChild && firstChild.text() === 'function') {
+        const funcKeywordStart = firstChild.range().start.index;
+        edits.push({
+          startPos: funcKeywordStart,
+          endPos: funcKeywordStart,
+          insertedText: 'async ',
+        });
+      } else {
+        const funcStart = func.range().start.index;
+        edits.push({
+          startPos: funcStart,
+          endPos: funcStart,
+          insertedText: 'async ',
+        });
+      }
+    }
+  }
+
+  if (edits.length === 0) {
+    return null; // No changes needed
+  }
+
+  // Sort edits by position (reverse order to avoid offset issues)
+  edits.sort((a, b) => b.startPos - a.startPos);
+
   if (edits.length === 0) {
     return null; // No changes needed
   }
@@ -242,6 +399,113 @@ const transform: Transform<TSX> = async (root) => {
 
   return rootNode.commitEdits(edits);
 };
+
+/**
+ * Process a custom render function: find RNTL calls inside it and transform them
+ */
+function processCustomRenderFunction(
+  funcNode: SgNode<TSX>,
+  importedFunctions: Set<string>,
+  edits: Edit[],
+  customRenderFunctionsToMakeAsync: Map<number, SgNode<TSX>>,
+  rootNode: SgNode<TSX>
+): void {
+  // Find RNTL function calls inside this custom render function
+  const rntlCalls: SgNode<TSX>[] = [];
+
+  // Find standalone function calls (render, act, renderHook, fireEvent)
+  for (const funcName of importedFunctions) {
+    const calls = funcNode.findAll({
+      rule: {
+        kind: 'call_expression',
+        has: {
+          field: 'function',
+          kind: 'identifier',
+          regex: `^${funcName}$`,
+        },
+      },
+    });
+    rntlCalls.push(...calls);
+  }
+
+  // Find fireEvent method calls
+  if (importedFunctions.has('fireEvent')) {
+    const fireEventMethodCalls = funcNode.findAll({
+      rule: {
+        kind: 'call_expression',
+        has: {
+          field: 'function',
+          kind: 'member_expression',
+        },
+      },
+    });
+
+    for (const call of fireEventMethodCalls) {
+      const funcCallNode = call.field('function');
+      if (funcCallNode && funcCallNode.is('member_expression')) {
+        try {
+          const object = funcCallNode.field('object');
+          const property = funcCallNode.field('property');
+          if (object && property) {
+            const objText = object.text();
+            const propText = property.text();
+            if (objText === 'fireEvent' && FIRE_EVENT_METHODS.has(propText)) {
+              rntlCalls.push(call);
+            }
+          }
+        } catch {
+          // Skip if field() is not available
+        }
+      }
+    }
+  }
+
+  // Process each RNTL call found inside the custom render function
+  let needsAsync = false;
+  for (const rntlCall of rntlCalls) {
+    // Skip if already awaited
+    const parent = rntlCall.parent();
+    if (parent && parent.is('await_expression')) {
+      continue;
+    }
+
+    // Skip variants that should not be transformed
+    const functionNode = rntlCall.field('function');
+    if (functionNode) {
+      const funcName = functionNode.text();
+      if (SKIP_VARIANTS.has(funcName)) {
+        continue;
+      }
+    }
+
+    // Add await before the call
+    const callStart = rntlCall.range().start.index;
+    edits.push({
+      startPos: callStart,
+      endPos: callStart,
+      insertedText: 'await ',
+    });
+    needsAsync = true;
+  }
+
+  // Track that this custom render function needs to be async
+  if (needsAsync && !customRenderFunctionsToMakeAsync.has(funcNode.id())) {
+    // Check if function is already async
+    let isAsync = false;
+    if (funcNode.is('arrow_function')) {
+      const children = funcNode.children();
+      isAsync = children.some((child) => child.text() === 'async');
+    } else {
+      const funcStart = funcNode.range().start.index;
+      const textBefore = rootNode.text().substring(Math.max(0, funcStart - 10), funcStart);
+      isAsync = textBefore.trim().endsWith('async');
+    }
+
+    if (!isAsync) {
+      customRenderFunctionsToMakeAsync.set(funcNode.id(), funcNode);
+    }
+  }
+}
 
 /**
  * Find the containing test function or hook callback (test/it/beforeEach/afterEach/etc.) for a given node
@@ -275,7 +539,9 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
               // Handle test.skip, it.skip, etc. (member expressions)
               if (funcNode.is('member_expression')) {
                 try {
+                  // @ts-expect-error - field() types are complex, but this works at runtime
                   const object = funcNode.field('object');
+                  // @ts-expect-error - field() types are complex, but this works at runtime
                   const property = funcNode.field('property');
                   if (object && property) {
                     const objText = object.text();
@@ -301,7 +567,9 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
             }
             if (funcNode.is('member_expression')) {
               try {
+                // @ts-expect-error - field() types are complex, but this works at runtime
                 const object = funcNode.field('object');
+                // @ts-expect-error - field() types are complex, but this works at runtime
                 const property = funcNode.field('property');
                 if (object && property) {
                   const objText = object.text();
