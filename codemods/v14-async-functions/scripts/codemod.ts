@@ -15,7 +15,14 @@ const SCREEN_METHODS = new Set(['rerender', 'unmount']);
 const RENDERER_METHODS = new Set(['rerender', 'unmount']);
 
 // Variants that should be skipped (they're already async or have different behavior)
-const SKIP_VARIANTS = new Set(['renderAsync', 'unsafe_renderHookSync', 'unsafe_act']);
+const SKIP_VARIANTS = new Set(['unsafe_renderHookSync', 'unsafe_act']);
+
+// Async variants that should be renamed to their sync names (they're already async)
+const ASYNC_VARIANTS_TO_RENAME = new Map([
+  ['renderAsync', 'render'],
+  ['renderHookAsync', 'renderHook'],
+  ['fireEventAsync', 'fireEvent'],
+]);
 
 const transform: Transform<TSX> = async (root, options) => {
   const rootNode = root.root();
@@ -55,6 +62,10 @@ const transform: Transform<TSX> = async (root, options) => {
 
   // Track which functions are imported using a Set
   const importedFunctions = new Set<string>();
+  
+  // Initialize edits array for collecting transformations
+  const edits: Edit[] = [];
+  
   for (const importStmt of rntlImports) {
     const importClause = importStmt.find({
       rule: { kind: 'import_clause' },
@@ -75,7 +86,19 @@ const transform: Transform<TSX> = async (root, options) => {
         });
         if (identifier) {
           const funcName = identifier.text();
-          if (FUNCTIONS_TO_TRANSFORM.has(funcName)) {
+          // Check if this is an async variant that needs to be renamed
+          if (ASYNC_VARIANTS_TO_RENAME.has(funcName)) {
+            const newName = ASYNC_VARIANTS_TO_RENAME.get(funcName)!;
+            // Rename in import: renderAsync -> render
+            const identifierRange = identifier.range();
+            edits.push({
+              startPos: identifierRange.start.index,
+              endPos: identifierRange.end.index,
+              insertedText: newName,
+            });
+            // Track the renamed function as imported
+            importedFunctions.add(newName);
+          } else if (FUNCTIONS_TO_TRANSFORM.has(funcName)) {
             importedFunctions.add(funcName);
           }
         }
@@ -112,10 +135,38 @@ const transform: Transform<TSX> = async (root, options) => {
     return null; // None of the target functions are imported and no custom render functions, skip
   }
 
+  // Step 1.5: Rename all usages of async variants (renderAsync -> render, etc.)
+  // Find all calls to async variants and rename them throughout the file
+  for (const [asyncName, syncName] of ASYNC_VARIANTS_TO_RENAME.entries()) {
+    // Find all identifier usages of the async variant
+    const asyncIdentifiers = rootNode.findAll({
+      rule: {
+        kind: 'identifier',
+        regex: `^${asyncName}$`,
+      },
+    });
+    
+    for (const identifier of asyncIdentifiers) {
+      // Skip if it's already in an import (we handled that above)
+      const parent = identifier.parent();
+      if (parent && parent.is('import_specifier')) {
+        continue;
+      }
+      // Rename the usage - these are already async so they don't need await
+      const identifierRange = identifier.range();
+      edits.push({
+        startPos: identifierRange.start.index,
+        endPos: identifierRange.end.index,
+        insertedText: syncName,
+      });
+    }
+  }
+
   // Step 2: Find all call expressions for imported functions
   const functionCalls: SgNode<TSX>[] = [];
 
   // Find standalone function calls (render, act, renderHook, fireEvent)
+  // Note: renderAsync, renderHookAsync, fireEventAsync are already renamed above
   for (const funcName of importedFunctions) {
     const calls = rootNode.findAll({
       rule: {
@@ -335,10 +386,12 @@ const transform: Transform<TSX> = async (root, options) => {
   }
 
   if (functionCalls.length === 0 && customRenderFunctionsSet.size === 0) {
-    return null; // No function calls found and no custom render functions to process
+    // If we have rename edits (from async variants), we should still return them
+    if (edits.length === 0) {
+      return null; // No function calls found and no custom render functions to process
+    }
   }
 
-  const edits: Edit[] = [];
   const functionsToMakeAsync = new Map<number, SgNode<TSX>>(); // Use Map with node ID to ensure uniqueness
   const customRenderFunctionsToMakeAsync = new Map<number, SgNode<TSX>>(); // Track custom render functions that need to be async
 
