@@ -5,8 +5,8 @@ This codemod updates your `package.json` file to prepare for React Native Testin
 - ✅ Removing `@types/react-test-renderer` (no longer needed)
 - ✅ Removing `react-test-renderer` (replaced by universal-test-renderer)
 - ✅ Moving `@testing-library/react-native` from `dependencies` to `devDependencies` if present
-- ✅ Adding `@testing-library/react-native@^14.0.0-alpha` to `devDependencies` if not present
-- ✅ Updating `@testing-library/react-native` to `^14.0.0-alpha` (latest alpha version)
+- ✅ Adding `@testing-library/react-native@^14.0.0-alpha.5` to `devDependencies` if not present
+- ✅ Updating `@testing-library/react-native` to `^14.0.0-alpha.5`
 - ✅ Adding `universal-test-renderer@0.10.1` to `devDependencies` (always added)
 
 ## What it does
@@ -17,9 +17,9 @@ This codemod automatically updates your `package.json` dependencies to match the
 
 2. **Moves RNTL to devDependencies**: If `@testing-library/react-native` is in `dependencies`, it's moved to `devDependencies`
 
-3. **Ensures RNTL is present**: If `@testing-library/react-native` is not present, it's added to `devDependencies` with version `^14.0.0-alpha`
+3. **Ensures RNTL is present**: If `@testing-library/react-native` is not present, it's added to `devDependencies` with version `^14.0.0-alpha.5`
 
-4. **Updates RNTL version**: Updates `@testing-library/react-native` to `^14.0.0-alpha` to get the latest alpha version
+4. **Updates RNTL version**: Updates `@testing-library/react-native` to `^14.0.0-alpha.5`
 
 5. **Adds universal-test-renderer**: Always adds `universal-test-renderer@0.10.1` to `devDependencies`
 
@@ -56,7 +56,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./
 ```json
 {
   "devDependencies": {
-    "@testing-library/react-native": "^14.0.0-alpha",
+    "@testing-library/react-native": "^14.0.0-alpha.5",
     "universal-test-renderer": "0.10.1"
   }
 }
@@ -79,7 +79,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./
 ```json
 {
   "devDependencies": {
-    "@testing-library/react-native": "^14.0.0-alpha",
+    "@testing-library/react-native": "^14.0.0-alpha.5",
     "universal-test-renderer": "0.10.1"
   }
 }
@@ -103,7 +103,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./
 {
   "devDependencies": {
     "some-other-package": "^1.0.0",
-    "@testing-library/react-native": "^14.0.0-alpha",
+    "@testing-library/react-native": "^14.0.0-alpha.5",
     "universal-test-renderer": "0.10.1"
   }
 }
@@ -121,7 +121,7 @@ npx codemod@latest run @testing-library/react-native-v14-update-deps --target ./
    pnpm install
    ```
 
-2. **Version resolution**: The codemod sets `@testing-library/react-native` to `^14.0.0-alpha`, which will resolve to the latest alpha version available. You can manually update this to a specific version if needed.
+2. **Version resolution**: The codemod sets `@testing-library/react-native` to `^14.0.0-alpha.5`. You can manually update this to a different version if needed.
 
 3. **Always adds packages**: The codemod always ensures both `@testing-library/react-native` and `universal-test-renderer` are present in `devDependencies`, even if they weren't there before.
 
@@ -138,7 +138,7 @@ npm test
 
 1. **Package manager**: The codemod updates `package.json` but doesn't run the package manager install command. You need to run `npm install` / `yarn install` / `pnpm install` manually after the codemod completes.
 
-2. **Version pinning**: If you have a specific alpha version pinned, the codemod will update it to the range `^14.0.0-alpha`. You may want to review and adjust the version after running the codemod.
+2. **Version pinning**: If you have a specific alpha version pinned, the codemod will update it to `^14.0.0-alpha.5`. You may want to review and adjust the version after running the codemod.
 
 3. **Workspace projects**: For monorepos with multiple `package.json` files, the codemod will process each one individually.
 

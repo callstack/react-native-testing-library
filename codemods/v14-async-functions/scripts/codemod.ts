@@ -157,7 +157,7 @@ export default async function transform(
     }
 
     if (
-      !isFunctionAlreadyAsync(containingFunction, rootNode) &&
+      !isFunctionAlreadyAsync(containingFunction) &&
       !functionsToMakeAsync.has(containingFunction.id())
     ) {
       functionsToMakeAsync.set(containingFunction.id(), containingFunction);
@@ -179,7 +179,7 @@ export default async function transform(
         }
 
         if (
-          !isFunctionAlreadyAsync(containingFunction, rootNode) &&
+          !isFunctionAlreadyAsync(containingFunction) &&
           !functionsToMakeAsync.has(containingFunction.id())
         ) {
           functionsToMakeAsync.set(containingFunction.id(), containingFunction);
@@ -207,7 +207,15 @@ export default async function transform(
   return rootNode.commitEdits(edits);
 }
 
-function parseCustomRenderFunctionsFromOptions(options: any): Set<string> {
+interface CodemodOptions {
+  params?: {
+    customRenderFunctions?: string | number | boolean;
+  };
+}
+
+function parseCustomRenderFunctionsFromOptions(
+  options?: CodemodOptions,
+): Set<string> {
   const customRenderFunctionsParam = options?.params?.customRenderFunctions
     ? String(options.params.customRenderFunctions)
     : '';
@@ -319,6 +327,17 @@ function extractImportedFunctionNames(
   return { importedFunctions, specifiersToRemove };
 }
 
+/**
+ * Removes duplicate import specifiers from import statements.
+ * Handles complex comma placement scenarios when removing specifiers:
+ * - Trailing commas after the specifier
+ * - Leading commas before the specifier
+ * - Edge cases with single vs multiple specifiers
+ *
+ * @param specifiersToRemove - Array of specifiers to remove with their import statements
+ * @param rootNode - The root AST node (used to get full text for comma detection)
+ * @param edits - Array to collect edit operations
+ */
 function removeDuplicateImportSpecifiers(
   specifiersToRemove: Array<{ specifier: SgNode<TSX>; importStmt: SgNode<TSX> }>,
   rootNode: SgNode<TSX>,
@@ -493,7 +512,8 @@ function findFireEventMethodCalls(
             }
           }
         } catch {
-          // Skip if field() is not available
+          // Skip nodes where field() is not available or AST structure doesn't match expectations.
+          // This is expected for malformed or edge-case AST structures and should be silently ignored.
         }
       }
     }
@@ -528,7 +548,8 @@ function findScreenMethodCalls(rootNode: SgNode<TSX>): SgNode<TSX>[] {
           }
         }
       } catch {
-        // Skip if field() is not available
+        // Skip nodes where field() is not available or AST structure doesn't match expectations.
+        // This is expected for malformed or edge-case AST structures and should be silently ignored.
       }
     }
   }
@@ -536,6 +557,19 @@ function findScreenMethodCalls(rootNode: SgNode<TSX>): SgNode<TSX>[] {
   return functionCalls;
 }
 
+/**
+ * Tracks variables assigned from render() calls to identify renderer result objects.
+ * This helps identify calls like `renderer.rerender()` or `renderer.unmount()` that need to be made async.
+ *
+ * Handles various assignment patterns:
+ * - Direct assignment: `const renderer = render(...)`
+ * - Destructured assignment: `const { rerender } = render(...)`
+ * - Assignment expressions: `renderer = render(...)`
+ *
+ * @param rootNode - The root AST node to search within
+ * @param importedFunctions - Set of imported function names (must include 'render')
+ * @returns Set of variable names that represent renderer results
+ */
 function trackVariablesAssignedFromRender(
   rootNode: SgNode<TSX>,
   importedFunctions: Set<string>,
@@ -646,7 +680,8 @@ function findRendererMethodCalls(
             }
           }
         } catch {
-          // Skip if field() is not available
+          // Skip nodes where field() is not available or AST structure doesn't match expectations.
+          // This is expected for malformed or edge-case AST structures and should be silently ignored.
         }
       }
     }
@@ -671,6 +706,21 @@ function findRendererMethodCalls(
   return functionCalls;
 }
 
+/**
+ * Tracks variables assigned from renderHook() calls to identify hook result objects.
+ * Similar to trackVariablesAssignedFromRender but handles renderHook-specific patterns.
+ *
+ * Handles various assignment patterns:
+ * - Direct assignment: `const result = renderHook(...)`
+ * - Destructured assignment: `const { rerender, unmount } = renderHook(...)`
+ * - Renamed destructuring: `const { rerender: rerenderHook } = renderHook(...)`
+ *
+ * @param rootNode - The root AST node to search within
+ * @param importedFunctions - Set of imported function names (must include 'renderHook')
+ * @returns Object containing:
+ *   - renderHookVariables: Set of all variable names representing hook results
+ *   - renderHookMethodVariables: Set of renamed method variables (e.g., rerenderHook)
+ */
 function trackVariablesAssignedFromRenderHook(
   rootNode: SgNode<TSX>,
   importedFunctions: Set<string>,
@@ -824,7 +874,8 @@ function findRenderHookMethodCalls(
             }
           }
         } catch {
-          // Skip if field() is not available
+          // Skip nodes where field() is not available or AST structure doesn't match expectations.
+          // This is expected for malformed or edge-case AST structures and should be silently ignored.
         }
       }
     }
@@ -849,6 +900,20 @@ function findRenderHookMethodCalls(
   return functionCalls;
 }
 
+/**
+ * Automatically detects custom render functions by analyzing the code structure.
+ * A custom render function is identified as:
+ * - A function/const that starts with 'render' (e.g., renderWithProviders, renderWithTheme)
+ * - Called from within test functions
+ * - Contains calls to the base render() function from RNTL
+ * - Defined at the top level (not nested inside other functions)
+ *
+ * This helps identify custom render wrappers that should be transformed.
+ *
+ * @param rootNode - The root AST node to search within
+ * @param importedFunctions - Set of imported function names (must include 'render')
+ * @returns Set of custom render function names that were auto-detected
+ */
 function findAutoDetectedCustomRenderFunctions(
   rootNode: SgNode<TSX>,
   importedFunctions: Set<string>,
@@ -1116,7 +1181,8 @@ function findRNTLFunctionCallsInNode(
             }
           }
         } catch {
-          // Skip if field() is not available
+          // Skip nodes where field() is not available or AST structure doesn't match expectations.
+          // This is expected for malformed or edge-case AST structures and should be silently ignored.
         }
       }
     }
@@ -1151,7 +1217,7 @@ function transformRNTLCallsInsideCustomRender(
   }
 
   if (needsAsync && !customRenderFunctionsToMakeAsync.has(funcNode.id())) {
-    const isAsync = isFunctionAlreadyAsync(funcNode, rootNode);
+    const isAsync = isFunctionAlreadyAsync(funcNode);
     if (!isAsync) {
       customRenderFunctionsToMakeAsync.set(funcNode.id(), funcNode);
     }
@@ -1172,15 +1238,30 @@ function addAwaitBeforeCall(functionCall: SgNode<TSX>, edits: Edit[]): void {
   });
 }
 
-function isFunctionAlreadyAsync(func: SgNode<TSX>, rootNode: SgNode<TSX>): boolean {
+/**
+ * Checks if a function is already marked as async using AST-based detection.
+ * This is more reliable than string matching and handles edge cases better.
+ */
+function isFunctionAlreadyAsync(func: SgNode<TSX>): boolean {
   if (func.is('arrow_function')) {
+    // For arrow functions, check if 'async' is a direct child
     const children = func.children();
     return children.some((child) => child.text() === 'async');
-  } else {
-    const funcStart = func.range().start.index;
-    const textBefore = rootNode.text().substring(Math.max(0, funcStart - 10), funcStart);
-    return textBefore.trim().endsWith('async');
+  } else if (func.is('function_declaration') || func.is('function_expression')) {
+    // For function declarations/expressions, check for async modifier
+    // The async keyword appears before the 'function' keyword
+    const children = func.children();
+    const functionKeywordIndex = children.findIndex((child) => child.text() === 'function');
+    if (functionKeywordIndex > 0) {
+      // Check if any child before 'function' is 'async'
+      return children
+        .slice(0, functionKeywordIndex)
+        .some((child) => child.text() === 'async');
+    }
+    // Also check if the first child is 'async'
+    return children.length > 0 && children[0].text() === 'async';
   }
+  return false;
 }
 
 function addAsyncKeywordToFunction(func: SgNode<TSX>, edits: Edit[]): void {
@@ -1212,6 +1293,19 @@ function addAsyncKeywordToFunction(func: SgNode<TSX>, edits: Edit[]): void {
   }
 }
 
+/**
+ * Finds the containing test function (test, it, beforeEach, etc.) for a given node.
+ * Traverses up the AST tree to find the nearest test function that contains the node.
+ *
+ * Handles various test patterns:
+ * - Direct test functions: test(), it()
+ * - Test modifiers: test.skip(), it.only()
+ * - Test.each patterns: test.each(), it.each()
+ * - Hooks: beforeEach(), afterEach(), beforeAll(), afterAll()
+ *
+ * @param node - The AST node to find the containing test function for
+ * @returns The containing test function node, or null if not found
+ */
 function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
   let current: SgNode<TSX> | null = node;
 
@@ -1244,7 +1338,8 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
                     }
                   }
                 } catch {
-                  // Skip if field() is not available
+                  // Skip nodes where field() is not available or AST structure doesn't match expectations.
+                  // This is expected for malformed or edge-case AST structures and should be silently ignored.
                 }
               }
               if (funcNode.is('call_expression')) {
@@ -1262,7 +1357,8 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
                     }
                   }
                 } catch {
-                  // Skip if field() is not available
+                  // Skip nodes where field() is not available or AST structure doesn't match expectations.
+                  // This is expected for malformed or edge-case AST structures and should be silently ignored.
                 }
               }
             }
@@ -1287,7 +1383,8 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
                   }
                 }
               } catch {
-                // Skip if field() is not available
+                // Skip nodes where field() is not available or AST structure doesn't match expectations.
+                // This is expected for malformed or edge-case AST structures and should be silently ignored.
               }
             }
             if (funcNode.is('call_expression')) {
@@ -1305,7 +1402,8 @@ function findContainingTestFunction(node: SgNode<TSX>): SgNode<TSX> | null {
                   }
                 }
               } catch {
-                // Skip if field() is not available
+                // Skip nodes where field() is not available or AST structure doesn't match expectations.
+                // This is expected for malformed or edge-case AST structures and should be silently ignored.
               }
             }
           }

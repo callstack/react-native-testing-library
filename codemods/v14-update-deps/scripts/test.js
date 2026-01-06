@@ -2,8 +2,10 @@
 
 /**
  * Test script for the package.json update codemod
+ * Note: This test script uses console.log for test output, which is acceptable for test scripts
  */
 
+/* eslint-disable no-console */
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';

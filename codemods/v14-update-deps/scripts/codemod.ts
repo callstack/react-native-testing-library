@@ -55,9 +55,11 @@ export default async function transform(
 
     return null;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error(`Error processing ${filename}:`, errorMessage);
-    return null;
+    // Re-throw error to let the codemod platform handle it
+    // This provides better error reporting than silently returning null
+    throw new Error(
+      `Error processing ${filename}: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
