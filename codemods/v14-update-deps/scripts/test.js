@@ -16,7 +16,7 @@ const fixturesDir = join(__dirname, '..', 'tests', 'fixtures');
 // Import the codemod logic
 async function runCodemod(filePath) {
   const { readFileSync } = await import('fs');
-  const { default: transform } = await import('./codemod-json.js');
+  const { default: transform } = await import('./codemod.ts');
   
   // Mock the codemod platform root object
   const packageJsonContent = readFileSync(filePath, 'utf8');

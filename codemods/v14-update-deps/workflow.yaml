@@ -9,7 +9,7 @@ nodes:
     steps:
       - name: "Update dependencies in package.json"
         js-ast-grep:
-          js_file: scripts/codemod-json.js
+          js_file: scripts/codemod.ts
           language: json
           include:
             - "**/package.json"
