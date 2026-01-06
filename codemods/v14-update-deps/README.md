@@ -19,6 +19,7 @@ npx codemod@latest run rntl-v14-update-deps --target ./path/to/your/project
 ## Example
 
 **Before:**
+
 ```json
 {
   "dependencies": {
@@ -32,6 +33,7 @@ npx codemod@latest run rntl-v14-update-deps --target ./path/to/your/project
 ```
 
 **After:**
+
 ```json
 {
   "devDependencies": {

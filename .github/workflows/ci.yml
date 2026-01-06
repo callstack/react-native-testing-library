@@ -196,6 +196,19 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  test-codemods:
+    runs-on: ubuntu-latest
+    name: Test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps
+
+      - name: Test
+        run: yarn test:codemods
+
   test-rn-0-83-1:
     runs-on: ubuntu-latest
     name: Test RN 0.83.1

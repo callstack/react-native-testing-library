@@ -208,9 +208,7 @@ interface CodemodOptions {
   };
 }
 
-function parseCustomRenderFunctionsFromOptions(
-  options?: CodemodOptions,
-): Set<string> {
+function parseCustomRenderFunctionsFromOptions(options?: CodemodOptions): Set<string> {
   const customRenderFunctionsParam = options?.params?.customRenderFunctions
     ? String(options.params.customRenderFunctions)
     : '';
@@ -767,8 +765,6 @@ function findResultMethodCalls(
   return functionCalls;
 }
 
-
-
 /**
  * Automatically detects custom render functions by analyzing the code structure.
  * A custom render function is identified as:
@@ -1123,9 +1119,7 @@ function isFunctionAlreadyAsync(func: SgNode<TSX>): boolean {
     const functionKeywordIndex = children.findIndex((child) => child.text() === 'function');
     if (functionKeywordIndex > 0) {
       // Check if any child before 'function' is 'async'
-      return children
-        .slice(0, functionKeywordIndex)
-        .some((child) => child.text() === 'async');
+      return children.slice(0, functionKeywordIndex).some((child) => child.text() === 'async');
     }
     // Also check if the first child is 'async'
     return children.length > 0 && children[0].text() === 'async';
