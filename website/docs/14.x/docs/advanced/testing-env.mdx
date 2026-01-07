@@ -18,11 +18,11 @@ React allows you to write declarative code using JSX, write function or class co
 
 When you run your tests in the React Native Testing Library, somewhat contrary to what the name suggests, they are actually **not** using React Native renderer. This is because this renderer needs to be run on an iOS or Android operating system, so it would need to run on a device or simulator.
 
-## Universal Test Renderer
+## Test Renderer
 
-Instead, RNTL uses [Universal Test Renderer](https://github.com/mdjastrzebski/test-renderer), a modern, actively maintained renderer that allows rendering to pure JavaScript objects without access to mobile OS and can run in a Node.js environment using Jest (or any other JavaScript test runner). Universal Test Renderer replaces the deprecated `react-test-renderer` package and provides better compatibility with React 19 and improved type safety.
+Instead, RNTL uses [Test Renderer](https://github.com/mdjastrzebski/test-renderer), a modern, actively maintained renderer that allows rendering to pure JavaScript objects without access to mobile OS and can run in a Node.js environment using Jest (or any other JavaScript test runner). Test Renderer replaces the deprecated `react-test-renderer` package and provides better compatibility with React 19 and improved type safety.
 
-Using Universal Test Renderer has pros and cons.
+Using Test Renderer has pros and cons.
 
 Benefits:
 
@@ -41,9 +41,9 @@ It's worth noting that the React Testing Library (web one) works a bit different
 
 ## Element tree
 
-Calling the `render()` function creates an element tree. This is done internally by invoking the renderer's `create()` method from Universal Test Renderer. The output tree represents your React Native component tree, and each node of that tree is an "instance" of some React component (to be more precise, each node represents a React fiber, and only class components have instances, while function components store the hook state using fibers).
+Calling the `render()` function creates an element tree. This is done internally by invoking the renderer's `create()` method from Test Renderer. The output tree represents your React Native component tree, and each node of that tree is an "instance" of some React component (to be more precise, each node represents a React fiber, and only class components have instances, while function components store the hook state using fibers).
 
-These tree elements are represented by `HostElement` type from Universal Test Renderer:
+These tree elements are represented by `HostElement` type from Test Renderer:
 
 ```tsx
 interface HostElement {
@@ -56,7 +56,7 @@ interface HostElement {
 }
 ```
 
-For more details, see the [Universal Test Renderer documentation](https://github.com/mdjastrzebski/test-renderer).
+For more details, see the [Test Renderer documentation](https://github.com/mdjastrzebski/test-renderer).
 
 ## Host and composite components
 

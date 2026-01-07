@@ -2,17 +2,17 @@
 
 This guide describes common issues found by users when integrating React Native Test Library to their projects:
 
-## Matching React Native, React & Universal Test Renderer versions
+## Matching React Native, React & Test Renderer versions
 
 Check that you have matching versions of core dependencies:
 
 - React Native
 - React
-- Universal Test Renderer (automatically installed with RNTL)
+- Test Renderer (automatically installed with RNTL)
 
 React Native uses different versioning scheme from React, you can use [React Native Upgrade Helper](https://react-native-community.github.io/upgrade-helper/) to find the correct matching between React Native & React versions. In case you use Expo, run `npx expo install --fix` in your project to validate and install compatible versions of these dependencies.
 
-Universal Test Renderer is automatically managed as a dependency of React Native Testing Library and is compatible with React 18 and React 19.
+Test Renderer is automatically managed as a dependency of React Native Testing Library and is compatible with React 18 and React 19.
 
 Related issues: [#1061](https://github.com/callstack/react-native-testing-library/issues/1061), [#938](https://github.com/callstack/react-native-testing-library/issues/938), [#920](https://github.com/callstack/react-native-testing-library/issues/920)
 
