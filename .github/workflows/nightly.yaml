@@ -1,0 +1,90 @@
+name: React Native Nightly
+on:
+  # Runs every night at 4 AM
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+# Set minimal permissions by default
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'main')}}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint - ${{ matrix.rn-version }}
+    strategy:
+      matrix:
+        rn-version: [latest, next, nightly]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js and deps (latest)
+        if: matrix.rn-version == 'latest'
+        uses: ./.github/actions/setup-deps-rn-latest
+
+      - name: Setup Node.js and deps (next)
+        if: matrix.rn-version == 'next'
+        uses: ./.github/actions/setup-deps-rn-next
+
+      - name: Setup Node.js and deps (nightly)
+        if: matrix.rn-version == 'nightly'
+        uses: ./.github/actions/setup-deps-rn-nightly
+
+      - name: Lint
+        run: yarn lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    name: Typecheck - ${{ matrix.rn-version }}
+    strategy:
+      matrix:
+        rn-version: [latest, next, nightly]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js and deps (latest)
+        if: matrix.rn-version == 'latest'
+        uses: ./.github/actions/setup-deps-rn-latest
+
+      - name: Setup Node.js and deps (next)
+        if: matrix.rn-version == 'next'
+        uses: ./.github/actions/setup-deps-rn-next
+
+      - name: Setup Node.js and deps (nightly)
+        if: matrix.rn-version == 'nightly'
+        uses: ./.github/actions/setup-deps-rn-nightly
+
+      - name: Typecheck
+        run: yarn typecheck
+
+  test:
+    runs-on: ubuntu-latest
+    name: Test - ${{ matrix.rn-version }}
+    strategy:
+      matrix:
+        rn-version: [latest, next, nightly]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js and deps (latest)
+        if: matrix.rn-version == 'latest'
+        uses: ./.github/actions/setup-deps-rn-latest
+
+      - name: Setup Node.js and deps (next)
+        if: matrix.rn-version == 'next'
+        uses: ./.github/actions/setup-deps-rn-next
+
+      - name: Setup Node.js and deps (nightly)
+        if: matrix.rn-version == 'nightly'
+        uses: ./.github/actions/setup-deps-rn-nightly
+
+      - name: Test
+        run: yarn test:ci
