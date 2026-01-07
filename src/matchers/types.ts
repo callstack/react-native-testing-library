@@ -1,5 +1,5 @@
 import type { StyleProp } from 'react-native';
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import type { AccessibilityValueMatcher } from '../helpers/matchers/match-accessibility-value';
 import type { TextMatch, TextMatchOptions } from '../matches';

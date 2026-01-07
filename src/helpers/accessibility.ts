@@ -1,6 +1,6 @@
 import type { AccessibilityRole, AccessibilityState, AccessibilityValue, Role } from 'react-native';
 import { StyleSheet } from 'react-native';
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { getContainerElement, getHostSiblings, isHostElement } from './component-tree';
 import { findAll } from './find-all';

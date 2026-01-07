@@ -1,4 +1,4 @@
-import type { JsonNode } from 'universal-test-renderer';
+import type { JsonNode } from 'test-renderer';
 
 import type { FormatElementOptions } from './format-element';
 import { formatJson } from './format-element';

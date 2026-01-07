@@ -1,5 +1,5 @@
 import { matcherHint, printExpected, stringify } from 'jest-matcher-utils';
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { checkHostElement, formatMessage } from './utils';
 

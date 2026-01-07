@@ -1,5 +1,5 @@
 import type { AccessibilityRole, Role } from 'react-native';
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import {
   accessibilityStateKeys,

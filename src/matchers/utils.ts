@@ -7,7 +7,7 @@ import {
   stringify,
 } from 'jest-matcher-utils';
 import redent from 'redent';
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { isHostElement } from '../helpers/component-tree';
 

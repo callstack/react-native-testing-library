@@ -1,4 +1,4 @@
-import type { HostElement, HostNode } from 'universal-test-renderer';
+import type { HostElement, HostNode } from 'test-renderer';
 
 import { screen } from '../screen';
 

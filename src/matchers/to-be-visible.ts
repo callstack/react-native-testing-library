@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { isHiddenFromAccessibility } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';

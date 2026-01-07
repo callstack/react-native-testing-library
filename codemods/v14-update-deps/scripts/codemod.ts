@@ -4,7 +4,7 @@ import type { Transform } from 'codemod:ast-grep';
 import type JSONLang from 'codemod:ast-grep/langs/json';
 
 const RNTL_VERSION = '^14.0.0-alpha.5';
-const UNIVERSAL_TEST_RENDERER_VERSION = '0.10.1';
+const TEST_RENDERER_VERSION = '0.12.0';
 
 interface PackageJson {
   dependencies?: Record<string, string>;
@@ -74,9 +74,9 @@ function hasRNTLOrUTR(packageJson: PackageJson): boolean {
     packageJson.peerDependencies?.['@testing-library/react-native'];
 
   const hasUTR =
-    packageJson.dependencies?.['universal-test-renderer'] ||
-    packageJson.devDependencies?.['universal-test-renderer'] ||
-    packageJson.peerDependencies?.['universal-test-renderer'];
+    packageJson.dependencies?.['test-renderer'] ||
+    packageJson.devDependencies?.['test-renderer'] ||
+    packageJson.peerDependencies?.['test-renderer'];
 
   return hasRNTL || hasUTR;
 }
@@ -141,9 +141,9 @@ function ensureRNTLInDevDependencies(packageJson: PackageJson): boolean {
 }
 
 function updateUTRVersionInDevDependencies(packageJson: PackageJson): boolean {
-  const currentVersion = packageJson.devDependencies?.['universal-test-renderer'];
-  if (currentVersion !== UNIVERSAL_TEST_RENDERER_VERSION) {
-    packageJson.devDependencies!['universal-test-renderer'] = UNIVERSAL_TEST_RENDERER_VERSION;
+  const currentVersion = packageJson.devDependencies?.['test-renderer'];
+  if (currentVersion !== TEST_RENDERER_VERSION) {
+    packageJson.devDependencies!['test-renderer'] = TEST_RENDERER_VERSION;
     return true;
   }
   return false;

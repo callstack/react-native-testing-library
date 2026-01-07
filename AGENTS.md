@@ -8,7 +8,7 @@ This document provides context for the any code assistant to understand the `@te
 
 - **Core Principle:** "The more your tests resemble the way your software is used, the more confidence they can give you."
 - **Tech Stack:** TypeScript, React Native, Jest.
-- **Architecture:** The library simulates the React Native runtime on top of `universal-test-renderer`.
+- **Architecture:** The library simulates the React Native runtime on top of `test-renderer`.
 
 ## Project Guidelines
 

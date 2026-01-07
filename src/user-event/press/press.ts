@@ -1,4 +1,4 @@
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { act } from '../../act';
 import { getEventHandlerFromProps } from '../../event-handler';
