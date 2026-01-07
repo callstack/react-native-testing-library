@@ -1,0 +1,19 @@
+schema_version: '1.0'
+
+name: 'rntl-v14-update-deps'
+version: '0.1.0'
+description: 'Codemod to update dependencies for RNTL v14 migration'
+author: 'Maciej Jastrzebski'
+license: 'MIT'
+workflow: 'workflow.yaml'
+
+targets:
+  languages: ['json']
+
+keywords: ['transformation', 'migration', 'dependencies']
+
+registry:
+  access: 'public'
+  visibility: 'public'
+
+capabilities: []
