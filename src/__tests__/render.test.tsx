@@ -70,3 +70,15 @@ test('unmount function unmounts component asynchronously', async () => {
   await screen.unmount();
   expect(fn).toHaveBeenCalled();
 });
+
+test('render accepts RCTText component', async () => {
+  await render(React.createElement('RCTText', { testID: 'text' }, 'Hello'));
+  expect(screen.getByTestId('text')).toBeOnTheScreen();
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+
+test('render throws when text string is rendered without Text component', async () => {
+  await expect(render(<View>Hello</View>)).rejects.toThrowErrorMatchingInlineSnapshot(
+    `"Invariant Violation: Text strings must be rendered within a <Text> component. Detected attempt to render "Hello" string within a <View> component."`,
+  );
+});
