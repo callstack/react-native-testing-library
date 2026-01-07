@@ -10,6 +10,12 @@ This document provides context for the any code assistant to understand the `@te
 - **Tech Stack:** TypeScript, React Native, Jest.
 - **Architecture:** The library simulates the React Native runtime on top of `universal-test-renderer`.
 
+## Project Guidelines
+
+- Small API surface
+- Expose all features of the underlying platform (react, react-reconciler) for Testing Libraries to use
+- Render host elements only, yet provide escape hatches to fibers when needed
+
 ## Building and Running
 
 The project uses `yarn` for dependency management and script execution.
