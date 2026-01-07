@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 /**
  * pointerEvents controls whether the View can be the target of touch events.

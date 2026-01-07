@@ -3038,14 +3038,14 @@ __metadata:
     react-native-gesture-handler: "npm:^2.29.1"
     redent: "npm:^3.0.0"
     release-it: "npm:^19.0.6"
+    test-renderer: "npm:0.12.0"
     typescript: "npm:^5.9.3"
     typescript-eslint: "npm:^8.47.0"
-    universal-test-renderer: "npm:0.10.1"
   peerDependencies:
     jest: ">=29.0.0"
     react: ">=19.0.0"
     react-native: ">=0.78"
-    universal-test-renderer: ~0.10.1
+    test-renderer: ~0.10.1
   peerDependenciesMeta:
     jest:
       optional: true
@@ -10440,6 +10440,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"test-renderer@npm:0.12.0":
+  version: 0.12.0
+  resolution: "test-renderer@npm:0.12.0"
+  dependencies:
+    "@types/react-reconciler": "npm:~0.31.0"
+    react-reconciler: "npm:~0.31.0"
+  peerDependencies:
+    react: ^19.0.0
+  checksum: 10c0/a9737762a58bbf7b7a3569fb8b4c44482dac2b7135b17b50080e51e39d87474484574f72c77aef21eecd4b737c3ade1ee4faeb2ac4fa0ee146cbdc8735550b29
+  languageName: node
+  linkType: hard
+
 "throat@npm:^5.0.0":
   version: 5.0.0
   resolution: "throat@npm:5.0.0"
@@ -10742,18 +10754,6 @@ __metadata:
   dependencies:
     imurmurhash: "npm:^0.1.4"
   checksum: 10c0/d324c5a44887bd7e105ce800fcf7533d43f29c48757ac410afd42975de82cc38ea2035c0483f4de82d186691bf3208ef35c644f73aa2b1b20b8e651be5afd293
-  languageName: node
-  linkType: hard
-
-"universal-test-renderer@npm:0.10.1":
-  version: 0.10.1
-  resolution: "universal-test-renderer@npm:0.10.1"
-  dependencies:
-    "@types/react-reconciler": "npm:~0.31.0"
-    react-reconciler: "npm:~0.31.0"
-  peerDependencies:
-    react: ^19.0.0
-  checksum: 10c0/b25d3c29bc316bb0adefa3746fd64d898bd02962ddafc02fe87e2d798bb0573c527f9b99e8b35706f73dec2f16189b6d52795d6ac5086c31906d78cf66e2515f
   languageName: node
   linkType: hard
 

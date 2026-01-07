@@ -1,4 +1,4 @@
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import type { TextMatch, TextMatchOptions } from '../../matches';
 import { matches } from '../../matches';

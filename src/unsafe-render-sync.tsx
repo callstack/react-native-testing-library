@@ -5,7 +5,7 @@ import {
   type JsonElement,
   type Root,
   type RootOptions,
-} from 'universal-test-renderer';
+} from 'test-renderer';
 
 import { act, unsafe_act } from './act';
 import { addToCleanupQueue } from './cleanup';
@@ -45,7 +45,8 @@ export function renderInternal<T>(component: React.ReactElement<T>, options?: Re
   const { wrapper: Wrapper, createNodeMock } = options || {};
 
   const rendererOptions: RootOptions = {
-    textComponents: HOST_TEXT_NAMES,
+    textComponentTypes: HOST_TEXT_NAMES,
+    publicTextComponentTypes: ['Text'],
     createNodeMock,
   };
 

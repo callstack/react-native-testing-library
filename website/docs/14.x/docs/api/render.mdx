@@ -45,11 +45,11 @@ Otherwise, `render` will default to using concurrent rendering used in the React
 createNodeMock?: (element: React.Element) => unknown,
 ```
 
-This option allows you to pass `createNodeMock` option to the renderer's `create()` method in order to allow for custom mock refs. This option is passed through to [Universal Test Renderer](https://github.com/mdjastrzebski/universal-test-renderer).
+This option allows you to pass `createNodeMock` option to the renderer's `create()` method in order to allow for custom mock refs. This option is passed through to [Test Renderer](https://github.com/mdjastrzebski/test-renderer).
 
 :::note Text string validation
 
-Universal Test Renderer automatically enforces React Native's requirement that text strings must be rendered within a `<Text>` component. If you try to render a `string` value under components other than `<Text>` (e.g., under `<View>`), it will throw an `Invariant Violation: Text strings must be rendered within a <Text> component` error, matching React Native's runtime behavior.
+Test Renderer automatically enforces React Native's requirement that text strings must be rendered within a `<Text>` component. If you try to render a `string` value under components other than `<Text>` (e.g., under `<View>`), it will throw an `Invariant Violation: Text strings must be rendered within a <Text> component` error, matching React Native's runtime behavior.
 
 This validation is always enabled and cannot be disabled, ensuring your tests accurately reflect how your code will behave in production.
 

@@ -1,4 +1,4 @@
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { wrapAsync } from '../../helpers/wrap-async';

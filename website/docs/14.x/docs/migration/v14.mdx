@@ -4,34 +4,34 @@ This guide describes the migration to React Native Testing Library version 14 fr
 
 ## Breaking changes
 
-### Universal Test Renderer replaces React Test Renderer
+### Test Renderer replaces React Test Renderer
 
-In v14, React Native Testing Library now uses [Universal Test Renderer](https://github.com/mdjastrzebski/universal-test-renderer) instead of the deprecated `react-test-renderer` package. Universal Test Renderer is a modern, actively maintained alternative that provides better compatibility with React 19 and improved type safety.
+In v14, React Native Testing Library now uses [Test Renderer](https://github.com/mdjastrzebski/test-renderer) instead of the deprecated `react-test-renderer` package. Test Renderer is a modern, actively maintained alternative that provides better compatibility with React 19 and improved type safety.
 
 **What changed:**
 
-- The underlying rendering engine has been switched from `react-test-renderer` to `universal-test-renderer`
+- The underlying rendering engine has been switched from `react-test-renderer` to `test-renderer`
 - This change is mostly internal and should not require code changes in most cases
-- Type definitions have been updated to use `HostElement` from Universal Test Renderer instead of `ReactTestInstance`
+- Type definitions have been updated to use `HostElement` from Test Renderer instead of `ReactTestInstance`
 
 **Migration:**
 
 #### 1. Update dependencies
 
-Remove `react-test-renderer` and its type definitions from your dev dependencies, and add `universal-test-renderer`:
+Remove `react-test-renderer` and its type definitions from your dev dependencies, and add `test-renderer`:
 
 ```bash
 # Using npm
 npm uninstall react-test-renderer @types/react-test-renderer
-npm install -D universal-test-renderer@^0.10.0
+npm install -D test-renderer@^0.10.0
 
 # Using yarn
 yarn remove react-test-renderer @types/react-test-renderer
-yarn add -D universal-test-renderer@^0.10.0
+yarn add -D test-renderer@^0.10.0
 
 # Using pnpm
 pnpm remove react-test-renderer @types/react-test-renderer
-pnpm add -D universal-test-renderer@^0.10.0
+pnpm add -D test-renderer@^0.10.0
 ```
 
 #### 2. Update type imports (if needed)
@@ -43,12 +43,12 @@ If you were directly importing types from `react-test-renderer`, you may need to
 import type { ReactTestInstance } from 'react-test-renderer';
 
 // After (v14)
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 ```
 
 **Note:** Most users won't need to update type imports, as React Native Testing Library now exports the necessary types directly.
 
-For more details, see the [Universal Test Renderer documentation](https://github.com/mdjastrzebski/universal-test-renderer).
+For more details, see the [Test Renderer documentation](https://github.com/mdjastrzebski/test-renderer).
 
 ### `container` API reintroduced
 
@@ -57,7 +57,7 @@ In v14, the `container` API has been reintroduced and is now safe to use. Previo
 **What changed:**
 
 - `screen.container` is now available and safe to use
-- `container` returns a pseudo-element container from Universal Test Renderer
+- `container` returns a pseudo-element container from Test Renderer
 - The container's children are the elements you rendered
 - `UNSAFE_root` has been removed
 
@@ -499,7 +499,7 @@ it('should press button', () => {
 
 ### Text string validation now enforced by default
 
-In v14, Universal Test Renderer automatically enforces React Native's requirement that text strings must be rendered within a `<Text>` component. This means the `unstable_validateStringsRenderedWithinText` option has been removed from `RenderOptions`, as this validation is now always enabled.
+In v14, Test Renderer automatically enforces React Native's requirement that text strings must be rendered within a `<Text>` component. This means the `unstable_validateStringsRenderedWithinText` option has been removed from `RenderOptions`, as this validation is now always enabled.
 
 **What changed:**
 

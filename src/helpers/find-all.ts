@@ -1,4 +1,4 @@
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { getConfig } from '../config';
 import { isHiddenFromAccessibility } from './accessibility';

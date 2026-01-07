@@ -1,4 +1,4 @@
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 export const HOST_TEXT_NAMES = ['Text', 'RCTText'];
 const HOST_TEXT_INPUT_NAMES = ['TextInput'];

@@ -1,4 +1,4 @@
-import type { JsonNode } from 'universal-test-renderer';
+import type { JsonNode } from 'test-renderer';
 
 type JsonPropsMapper = {
   [key: string]: unknown;

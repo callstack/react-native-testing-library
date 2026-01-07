@@ -1,4 +1,4 @@
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import type { TextMatch } from '../../matches';
 import { computeAriaValue } from '../accessibility';

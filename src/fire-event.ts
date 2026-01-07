@@ -5,7 +5,7 @@ import type {
   TextProps,
   ViewProps,
 } from 'react-native';
-import type { Fiber, HostElement } from 'universal-test-renderer';
+import type { Fiber, HostElement } from 'test-renderer';
 
 import { act, unsafe_act } from './act';
 import type { EventHandler } from './event-handler';

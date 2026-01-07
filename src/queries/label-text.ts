@@ -1,4 +1,4 @@
-import type { HostElement } from 'universal-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import { matchAccessibilityLabel } from '../helpers/matchers/match-label-text';

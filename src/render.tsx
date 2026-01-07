@@ -5,7 +5,7 @@ import {
   type JsonElement,
   type Root,
   type RootOptions,
-} from 'universal-test-renderer';
+} from 'test-renderer';
 
 import { act } from './act';
 import { addToCleanupQueue } from './cleanup';
@@ -37,7 +37,8 @@ export async function render<T>(element: React.ReactElement<T>, options: RenderO
   const { wrapper: Wrapper, createNodeMock } = options || {};
 
   const rendererOptions: RootOptions = {
-    textComponents: HOST_TEXT_NAMES,
+    textComponentTypes: HOST_TEXT_NAMES,
+    publicTextComponentTypes: ['Text'],
     createNodeMock,
   };
 
