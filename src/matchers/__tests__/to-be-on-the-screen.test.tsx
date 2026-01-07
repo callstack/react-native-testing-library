@@ -3,8 +3,8 @@ import { Text, View } from 'react-native';
 
 import { render, screen } from '../..';
 
-test('toBeOnTheScreen() example test', () => {
-  render(
+test('toBeOnTheScreen() example test', async () => {
+  await render(
     <View>
       <View testID="child" />
     </View>,
@@ -13,12 +13,12 @@ test('toBeOnTheScreen() example test', () => {
   const child = screen.getByTestId('child');
   expect(child).toBeOnTheScreen();
 
-  screen.update(<View />);
+  await screen.update(<View />);
   expect(child).not.toBeOnTheScreen();
 });
 
-test('toBeOnTheScreen() on attached element', () => {
-  render(<View testID="test" />);
+test('toBeOnTheScreen() on attached element', async () => {
+  await render(<View testID="test" />);
 
   const element = screen.getByTestId('test');
   expect(element).toBeOnTheScreen();
@@ -42,12 +42,12 @@ function ShowChildren({ show }: { show: boolean }) {
   );
 }
 
-test('toBeOnTheScreen() on detached element', () => {
-  render(<ShowChildren show={true} />);
+test('toBeOnTheScreen() on detached element', async () => {
+  await render(<ShowChildren show={true} />);
 
   const element = screen.getByTestId('text');
   // Next line will unmount the element, yet `element` variable will still hold reference to it.
-  screen.update(<ShowChildren show={false} />);
+  await screen.update(<ShowChildren show={false} />);
 
   expect(element).toBeTruthy();
   expect(element).not.toBeOnTheScreen();

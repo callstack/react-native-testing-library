@@ -1,5 +1,5 @@
-import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
+import type { HostElement } from 'test-renderer';
 
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
@@ -10,7 +10,7 @@ import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveDisplayValue(
   this: jest.MatcherContext,
-  element: ReactTestInstance,
+  element: HostElement,
   expectedValue: TextMatch,
   options?: TextMatchOptions,
 ) {

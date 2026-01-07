@@ -3,8 +3,8 @@ import { Text, TextInput, View } from 'react-native';
 
 import { render, screen } from '../..';
 
-test('toHaveProp() basic case', () => {
-  render(
+test('toHaveProp() basic case', async () => {
+  await render(
     <View testID="view" style={null}>
       <Text ellipsizeMode="head">Hello</Text>
       <TextInput testID="input" textAlign="right" />
@@ -30,8 +30,8 @@ test('toHaveProp() basic case', () => {
   expect(input).not.toHaveProp('editable', false);
 });
 
-test('toHaveProp() error messages', () => {
-  render(<View testID="view" collapsable={false} />);
+test('toHaveProp() error messages', async () => {
+  await render(<View testID="view" collapsable={false} />);
 
   const view = screen.getByTestId('view');
 

@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import { isHostTextInput } from '../helpers/host-component-names';
@@ -19,7 +19,7 @@ import type { CommonQueryOptions } from './options';
 type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;
 
 const matchDisplayValue = (
-  node: ReactTestInstance,
+  node: HostElement,
   expectedValue: TextMatch,
   options: TextMatchOptions = {},
 ) => {
@@ -29,11 +29,11 @@ const matchDisplayValue = (
 };
 
 const queryAllByDisplayValue = (
-  instance: ReactTestInstance,
+  element: HostElement,
 ): QueryAllByQuery<TextMatch, ByDisplayValueOptions> =>
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
     return findAll(
-      instance,
+      element,
       (node) => isHostTextInput(node) && matchDisplayValue(node, displayValue, queryOptions),
       queryOptions,
     );
@@ -59,11 +59,11 @@ export type ByDisplayValueQueries = {
   findAllByDisplayValue: FindAllByQuery<TextMatch, ByDisplayValueOptions>;
 };
 
-export const bindByDisplayValueQueries = (instance: ReactTestInstance): ByDisplayValueQueries => ({
-  getByDisplayValue: getBy(instance),
-  getAllByDisplayValue: getAllBy(instance),
-  queryByDisplayValue: queryBy(instance),
-  queryAllByDisplayValue: queryAllBy(instance),
-  findByDisplayValue: findBy(instance),
-  findAllByDisplayValue: findAllBy(instance),
+export const bindByDisplayValueQueries = (element: HostElement): ByDisplayValueQueries => ({
+  getByDisplayValue: getBy(element),
+  getAllByDisplayValue: getAllBy(element),
+  queryByDisplayValue: queryBy(element),
+  queryAllByDisplayValue: queryAllBy(element),
+  findByDisplayValue: findBy(element),
+  findAllByDisplayValue: findAllBy(element),
 });

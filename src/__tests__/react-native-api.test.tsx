@@ -3,29 +3,27 @@ import { FlatList, Image, Modal, ScrollView, Switch, Text, TextInput, View } fro
 
 import { render, screen } from '..';
 import { mapJsonProps } from '../test-utils/json';
-
-const isReact19 = React.version.startsWith('19.');
-const testGateReact19 = isReact19 ? test : test.skip;
+import { getReactNativeVersion } from '../test-utils/version';
 
 /**
  * Tests in this file are intended to give us an proactive warning that React Native behavior has
  * changed in a way that may impact our code like queries or event handling.
  */
 
-test('React Native API assumption: <View> renders a single host element', () => {
-  render(<View testID="test" />);
+test('React Native API assumption: <View> renders a single host element', async () => {
+  await render(<View testID="test" />);
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <View
       testID="test"
     />
   `);
 });
 
-test('React Native API assumption: <Text> renders a single host element', () => {
-  render(<Text testID="test">Hello</Text>);
+test('React Native API assumption: <Text> renders a single host element', async () => {
+  await render(<Text testID="test">Hello</Text>);
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <Text
       testID="test"
     >
@@ -34,8 +32,8 @@ test('React Native API assumption: <Text> renders a single host element', () => 
   `);
 });
 
-test('React Native API assumption: nested <Text> renders a single host element', () => {
-  render(
+test('React Native API assumption: nested <Text> renders a single host element', async () => {
+  await render(
     <Text testID="test">
       <Text testID="before">Before</Text>
       Hello
@@ -45,7 +43,7 @@ test('React Native API assumption: nested <Text> renders a single host element',
     </Text>,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <Text
       testID="test"
     >
@@ -68,8 +66,8 @@ test('React Native API assumption: nested <Text> renders a single host element',
   `);
 });
 
-test('React Native API assumption: <TextInput> renders a single host element', () => {
-  render(
+test('React Native API assumption: <TextInput> renders a single host element', async () => {
+  await render(
     <TextInput
       testID="test"
       defaultValue="default"
@@ -78,7 +76,7 @@ test('React Native API assumption: <TextInput> renders a single host element', (
     />,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <TextInput
       defaultValue="default"
       placeholder="Placeholder"
@@ -88,14 +86,14 @@ test('React Native API assumption: <TextInput> renders a single host element', (
   `);
 });
 
-test('React Native API assumption: <TextInput> with nested Text renders single host element', () => {
-  render(
+test('React Native API assumption: <TextInput> with nested Text renders single host element', async () => {
+  await render(
     <TextInput testID="test" placeholder="Placeholder">
       <Text>Hello</Text>
     </TextInput>,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <TextInput
       placeholder="Placeholder"
       testID="test"
@@ -107,8 +105,8 @@ test('React Native API assumption: <TextInput> with nested Text renders single h
   `);
 });
 
-test('React Native API assumption: <Switch> renders a single host element', () => {
-  render(<Switch testID="test" value={true} onChange={jest.fn()} />);
+test('React Native API assumption: <Switch> renders a single host element', async () => {
+  await render(<Switch testID="test" value={true} onChange={jest.fn()} />);
 
   expect(
     mapJsonProps(screen.toJSON(), {
@@ -127,10 +125,12 @@ test('React Native API assumption: <Switch> renders a single host element', () =
   `);
 });
 
-test('React Native API assumption: <Image> renders a single host element', () => {
-  render(<Image testID="test" source={{ uri: 'https://fake.url/image.jpg' }} alt="Alt text" />);
+test('React Native API assumption: <Image> renders a single host element', async () => {
+  await render(
+    <Image testID="test" source={{ uri: 'https://fake.url/image.jpg' }} alt="Alt text" />,
+  );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <Image
       alt="Alt text"
       source={
@@ -143,14 +143,14 @@ test('React Native API assumption: <Image> renders a single host element', () =>
   `);
 });
 
-test('React Native API assumption: <ScrollView> renders a single host element', () => {
-  render(
+test('React Native API assumption: <ScrollView> renders a single host element', async () => {
+  await render(
     <ScrollView testID="scrollView">
       <View testID="view" />
     </ScrollView>,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <RCTScrollView
       testID="scrollView"
     >
@@ -163,12 +163,12 @@ test('React Native API assumption: <ScrollView> renders a single host element', 
   `);
 });
 
-test('React Native API assumption: <FlatList> renders a single host <ScrollView> element', () => {
-  render(
+test('React Native API assumption: <FlatList> renders a single host <ScrollView> element', async () => {
+  await render(
     <FlatList testID="flatList" data={[1, 2]} renderItem={({ item }) => <Text>{item}</Text>} />,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <RCTScrollView
       data={
         [
@@ -217,14 +217,30 @@ test('React Native API assumption: <FlatList> renders a single host <ScrollView>
   `);
 });
 
-testGateReact19('React Native API assumption: <Modal> renders a single host element', () => {
-  render(
+test('React Native API assumption: <Modal> renders a single host element', async () => {
+  await render(
     <Modal testID="test">
       <Text>Modal Content</Text>
     </Modal>,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  const rnVersion = getReactNativeVersion();
+  if (rnVersion.major == 0 && rnVersion.minor <= 79) {
+    // eslint-disable-next-line jest/no-conditional-expect
+    expect(screen).toMatchInlineSnapshot(`
+    <Modal
+      hardwareAccelerated={false}
+      testID="test"
+      visible={true}
+    >
+      <Text>
+        Modal Content
+      </Text>
+    </Modal>
+  `);
+  } else {
+    // eslint-disable-next-line jest/no-conditional-expect
+    expect(screen).toMatchInlineSnapshot(`
     <Modal
       testID="test"
     >
@@ -233,10 +249,11 @@ testGateReact19('React Native API assumption: <Modal> renders a single host elem
       </Text>
     </Modal>
   `);
+  }
 });
 
-test('React Native API assumption: aria-* props render directly on host View', () => {
-  render(
+test('React Native API assumption: aria-* props render directly on host View', async () => {
+  await render(
     <View
       testID="test"
       aria-busy
@@ -259,7 +276,7 @@ test('React Native API assumption: aria-* props render directly on host View', (
     />,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <View
       aria-busy={true}
       aria-checked={true}
@@ -283,8 +300,8 @@ test('React Native API assumption: aria-* props render directly on host View', (
   `);
 });
 
-test('React Native API assumption: aria-* props render directly on host Text', () => {
-  render(
+test('React Native API assumption: aria-* props render directly on host Text', async () => {
+  await render(
     <Text
       testID="test"
       aria-busy
@@ -307,7 +324,7 @@ test('React Native API assumption: aria-* props render directly on host Text', (
     />,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <Text
       aria-busy={true}
       aria-checked={true}
@@ -331,8 +348,8 @@ test('React Native API assumption: aria-* props render directly on host Text', (
   `);
 });
 
-test('React Native API assumption: aria-* props render directly on host TextInput', () => {
-  render(
+test('React Native API assumption: aria-* props render directly on host TextInput', async () => {
+  await render(
     <TextInput
       testID="test"
       aria-busy
@@ -355,7 +372,7 @@ test('React Native API assumption: aria-* props render directly on host TextInpu
     />,
   );
 
-  expect(screen.toJSON()).toMatchInlineSnapshot(`
+  expect(screen).toMatchInlineSnapshot(`
     <TextInput
       aria-busy={true}
       aria-checked={true}

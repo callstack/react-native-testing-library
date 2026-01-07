@@ -1,0 +1,19 @@
+schema_version: '1.0'
+
+name: 'rntl-v14-async-functions'
+version: '0.1.0'
+description: 'Codemod to migrate sync RNTL function and method calls to async for RNTL v14'
+author: 'Maciej Jastrzebski'
+license: 'MIT'
+workflow: 'workflow.yaml'
+
+targets:
+  languages: ['typescript', 'tsx', 'javascript', 'jsx']
+
+keywords: ['transformation', 'migration']
+
+registry:
+  access: 'public'
+  visibility: 'public'
+
+capabilities: []

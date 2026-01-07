@@ -1,6 +1,6 @@
 {
   "name": "@testing-library/react-native",
-  "version": "13.3.3",
+  "version": "14.0.0-alpha.5",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -27,15 +27,17 @@
     "test": "jest",
     "test:ci": "jest --maxWorkers=2",
     "test:ci:coverage": "jest --maxWorkers=2 --collectCoverage=true --coverage-provider=v8",
+    "test:codemods": "node scripts/test-codemods.mjs",
     "typecheck": "tsc",
-    "copy-flowtypes": "cp typings/index.flow.js build",
     "lint": "eslint src --cache",
     "validate": "yarn prettier && yarn lint && yarn typecheck && yarn test",
+    "validate:write": "yarn prettier:write && yarn lint --fix && yarn typecheck && yarn test -u",
     "build:js": "babel src --out-dir build --extensions \".js,.ts,.jsx,.tsx\" --source-maps --ignore \"**/__tests__/**\"",
     "build:ts": "tsc --build tsconfig.release.json",
-    "build": "yarn clean && yarn build:js && yarn build:ts && yarn copy-flowtypes",
+    "build": "yarn clean && yarn build:js && yarn build:ts",
     "release": "release-it",
     "release:rc": "release-it --preRelease=rc",
+    "release:alpha": "release-it --preRelease=alpha",
     "prettier": "prettier --check .",
     "prettier:write": "prettier --write ."
   },
@@ -45,8 +47,7 @@
     "matchers.d.ts",
     "pure.js",
     "pure.d.ts",
-    "dont-cleanup-after-each.js",
-    "typings/index.flow.js"
+    "dont-cleanup-after-each.js"
   ],
   "dependencies": {
     "jest-matcher-utils": "^30.2.0",
@@ -56,9 +57,9 @@
   },
   "peerDependencies": {
     "jest": ">=29.0.0",
-    "react": ">=18.2.0",
-    "react-native": ">=0.71",
-    "react-test-renderer": ">=18.2.0"
+    "react": ">=19.0.0",
+    "react-native": ">=0.78",
+    "test-renderer": "~0.10.1"
   },
   "peerDependenciesMeta": {
     "jest": {
@@ -70,30 +71,27 @@
     "@babel/core": "^7.28.5",
     "@babel/plugin-transform-strict-mode": "^7.27.1",
     "@babel/preset-env": "^7.28.5",
-    "@babel/preset-flow": "^7.27.1",
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
     "@callstack/eslint-config": "^15.0.0",
-    "@react-native/babel-preset": "0.82.1",
+    "@react-native/babel-preset": "0.83.1",
     "@release-it/conventional-changelog": "^10.0.2",
     "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.6",
-    "@types/react-test-renderer": "^19.1.0",
     "babel-jest": "^30.2.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "del-cli": "^7.0.0",
     "eslint": "^9.39.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "flow-bin": "~0.170.0",
     "jest": "^30.2.0",
     "prettier": "^3.6.2",
-    "react": "19.1.1",
-    "react-native": "0.82.1",
+    "react": "19.2.0",
+    "react-native": "0.83.1",
     "react-native-gesture-handler": "^2.29.1",
-    "react-test-renderer": "19.1.1",
     "release-it": "^19.0.6",
+    "test-renderer": "0.12.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.47.0"
   },
@@ -102,6 +100,6 @@
   },
   "packageManager": "yarn@4.11.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }

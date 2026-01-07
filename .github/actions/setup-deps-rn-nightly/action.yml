@@ -31,7 +31,5 @@ runs:
         yarn add -D \
           react-native@nightly \
           @react-native/babel-preset@nightly \
-          react@19.2.3 \
-          react-test-renderer@19.2.3 \
-          @types/react@^19.2.7 \
+          react@19.2.3
       shell: bash

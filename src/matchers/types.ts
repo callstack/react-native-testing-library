@@ -1,5 +1,5 @@
 import type { StyleProp } from 'react-native';
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import type { AccessibilityValueMatcher } from '../helpers/matchers/match-accessibility-value';
 import type { TextMatch, TextMatchOptions } from '../matches';
@@ -189,7 +189,7 @@ export interface JestNativeMatchers<R> {
    *
    * expect(getByTestId('outer')).toContainElement(getByTestId('inner'));
    */
-  toContainElement(element: ReactTestInstance | null): R;
+  toContainElement(element: HostElement | null): R;
 
   /**
    * Assert whether a host element has a given accessbility value.

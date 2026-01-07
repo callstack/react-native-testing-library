@@ -1,18 +1,18 @@
 import * as React from 'react';
-import type {
-  ReactTestInstance,
-  ReactTestRenderer,
-  TestRendererOptions,
-} from 'react-test-renderer';
+import {
+  createRoot,
+  type HostElement,
+  type JsonElement,
+  type Root,
+  type RootOptions,
+} from 'test-renderer';
 
-import act from './act';
+import { act } from './act';
 import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
-import { getHostSelves } from './helpers/component-tree';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
-import { validateStringsRenderedWithinText } from './helpers/string-validation';
-import { renderWithAct } from './render-act';
+import { HOST_TEXT_NAMES } from './helpers/host-component-names';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
@@ -24,135 +24,81 @@ export interface RenderOptions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: React.ComponentType<any>;
 
-  /**
-   * Set to `false` to disable concurrent rendering.
-   * Otherwise `render` will default to concurrent rendering.
-   */
-  concurrentRoot?: boolean;
-
-  createNodeMock?: (element: React.ReactElement) => unknown;
-  unstable_validateStringsRenderedWithinText?: boolean;
+  createNodeMock?: (element: React.ReactElement) => object;
 }
 
-export type RenderResult = ReturnType<typeof render>;
+export type RenderResult = Awaited<ReturnType<typeof render>>;
 
 /**
  * Renders test component deeply using React Test Renderer and exposes helpers
  * to assert on the output.
  */
-export default function render<T>(component: React.ReactElement<T>, options: RenderOptions = {}) {
-  return renderInternal(component, options);
-}
+export async function render<T>(element: React.ReactElement<T>, options: RenderOptions = {}) {
+  const { wrapper: Wrapper, createNodeMock } = options || {};
 
-export function renderInternal<T>(component: React.ReactElement<T>, options?: RenderOptions) {
-  const {
-    wrapper: Wrapper,
-    concurrentRoot,
-    unstable_validateStringsRenderedWithinText,
-    ...rest
-  } = options || {};
-
-  const testRendererOptions: TestRendererOptions = {
-    ...rest,
-    // @ts-expect-error incomplete typing on RTR package
-    unstable_isConcurrent: concurrentRoot ?? getConfig().concurrentRoot,
+  const rendererOptions: RootOptions = {
+    textComponentTypes: HOST_TEXT_NAMES,
+    publicTextComponentTypes: ['Text'],
+    createNodeMock,
   };
-
-  if (unstable_validateStringsRenderedWithinText) {
-    return renderWithStringValidation(component, {
-      wrapper: Wrapper,
-      ...testRendererOptions,
-    });
-  }
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
-  const renderer = renderWithAct(wrap(component), testRendererOptions);
-  return buildRenderResult(renderer, wrap);
-}
+  const renderer = createRoot(rendererOptions);
 
-function renderWithStringValidation<T>(
-  component: React.ReactElement<T>,
-  options: Omit<RenderOptions, 'unstable_validateStringsRenderedWithinText'> = {},
-) {
-  const { wrapper: Wrapper, ...testRendererOptions } = options ?? {};
+  await act(() => {
+    renderer.render(wrap(element));
+  });
 
-  const wrap = (element: React.ReactElement) => (
-    <React.Profiler id="renderProfiler" onRender={handleRender}>
-      {Wrapper ? <Wrapper>{element}</Wrapper> : element}
-    </React.Profiler>
-  );
+  const container = renderer.container;
 
-  const handleRender: React.ProfilerOnRenderCallback = (_, phase) => {
-    if (renderer && phase === 'update') {
-      validateStringsRenderedWithinText(renderer.toJSON());
+  const rerender = async (component: React.ReactElement) => {
+    await act(() => {
+      renderer.render(wrap(component));
+    });
+  };
+
+  const unmount = async () => {
+    await act(() => {
+      renderer.unmount();
+    });
+  };
+
+  const toJSON = (): JsonElement | null => {
+    const json = renderer.container.toJSON();
+    if (json?.children?.length === 0) {
+      return null;
     }
+
+    if (json?.children?.length === 1 && typeof json.children[0] !== 'string') {
+      return json.children[0];
+    }
+
+    return json;
   };
 
-  const renderer: ReactTestRenderer = renderWithAct(wrap(component), testRendererOptions);
-  validateStringsRenderedWithinText(renderer.toJSON());
-
-  return buildRenderResult(renderer, wrap);
-}
-
-function buildRenderResult(
-  renderer: ReactTestRenderer,
-  wrap: (element: React.ReactElement) => React.JSX.Element,
-) {
-  const instance = renderer.root;
-
-  const rerender = (component: React.ReactElement) => {
-    void act(() => {
-      renderer.update(wrap(component));
-    });
-  };
-  const rerenderAsync = async (component: React.ReactElement) => {
-    // eslint-disable-next-line require-await
-    await act(async () => {
-      renderer.update(wrap(component));
-    });
-  };
-
-  const unmount = () => {
-    void act(() => {
-      renderer.unmount();
-    });
-  };
-  const unmountAsync = async () => {
-    // eslint-disable-next-line require-await
-    await act(async () => {
-      renderer.unmount();
-    });
-  };
-
-  addToCleanupQueue(unmountAsync);
+  addToCleanupQueue(unmount);
 
   const result = {
-    ...getQueriesForElement(instance),
+    ...getQueriesForElement(renderer.container),
     rerender,
-    rerenderAsync,
-    update: rerender, // alias for 'rerender'
-    updateAsync: rerenderAsync, // alias for `rerenderAsync`
+    update: rerender, // alias for `rerender`
     unmount,
-    unmountAsync,
-    toJSON: renderer.toJSON,
+    toJSON,
     debug: makeDebug(renderer),
-    get root(): ReactTestInstance {
-      return getHostSelves(instance)[0];
+    get container(): HostElement {
+      return renderer.container;
     },
-    UNSAFE_root: instance,
-  };
+    get root(): HostElement | null {
+      const firstChild = container.children[0];
+      if (typeof firstChild === 'string') {
+        throw new Error(
+          'Invariant Violation: Root element must be a host element. Detected attempt to render a string within the root element.',
+        );
+      }
 
-  // Add as non-enumerable property, so that it's safe to enumerate
-  // `render` result, e.g. using destructuring rest syntax.
-  Object.defineProperty(result, 'container', {
-    enumerable: false,
-    get() {
-      throw new Error(
-        "'container' property has been renamed to 'UNSAFE_root'.\n\n" +
-          "Consider using 'root' property which returns root host element.",
-      );
+      return firstChild;
     },
-  });
+  };
 
   setRenderResult(result);
 
@@ -161,11 +107,11 @@ function buildRenderResult(
 
 export type DebugFunction = (options?: DebugOptions) => void;
 
-function makeDebug(renderer: ReactTestRenderer): DebugFunction {
+function makeDebug(renderer: Root): DebugFunction {
   function debugImpl(options?: DebugOptions) {
     const { defaultDebugOptions } = getConfig();
     const debugOptions = { ...defaultDebugOptions, ...options };
-    const json = renderer.toJSON();
+    const json = renderer.container.toJSON();
     if (json) {
       return debug(json, debugOptions);
     }

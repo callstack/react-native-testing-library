@@ -1,9 +1,14 @@
 /* globals jest */
-import act from './act';
+import { act } from './act';
 import { getConfig } from './config';
 import { flushMicroTasks } from './flush-micro-tasks';
 import { copyStackTrace, ErrorWithStack } from './helpers/errors';
-import { clearTimeout, jestFakeTimersAreEnabled, setTimeout } from './helpers/timers';
+import {
+  clearTimeout,
+  getJestFakeTimersType,
+  jestFakeTimersAreEnabled,
+  setTimeout,
+} from './helpers/timers';
 import { wrapAsync } from './helpers/wrap-async';
 
 const DEFAULT_INTERVAL = 50;
@@ -36,9 +41,9 @@ function waitForInternal<T>(
 
     let overallTimeoutTimer: NodeJS.Timeout | null = null;
 
-    const usingFakeTimers = jestFakeTimersAreEnabled();
+    const fakeTimersType = getJestFakeTimersType();
 
-    if (usingFakeTimers) {
+    if (fakeTimersType) {
       checkExpectation();
       // this is a dangerous rule to disable because it could lead to an
       // infinite loop. However, eslint isn't smart enough to know that we're
@@ -70,7 +75,11 @@ function waitForInternal<T>(
         // third party code that's setting up recursive timers so rapidly that
         // the user's timer's don't get a chance to resolve. So we'll advance
         // by an interval instead. (We have a test for this case).
-        await act(async () => await jest.advanceTimersByTime(interval));
+        await act(() =>
+          fakeTimersType === 'modern'
+            ? jest.advanceTimersByTimeAsync(interval)
+            : jest.advanceTimersByTime(interval),
+        );
 
         // It's really important that checkExpectation is run *before* we flush
         // in-flight promises. To be honest, I'm not sure why, and I can't quite
@@ -96,7 +105,7 @@ function waitForInternal<T>(
         clearTimeout(overallTimeoutTimer);
       }
 
-      if (!usingFakeTimers) {
+      if (!fakeTimersType) {
         clearInterval(intervalId);
       }
 
@@ -182,7 +191,7 @@ function waitForInternal<T>(
   });
 }
 
-export default function waitFor<T>(expectation: () => T, options?: WaitForOptions): Promise<T> {
+export function waitFor<T>(expectation: () => T, options?: WaitForOptions): Promise<T> {
   // Being able to display a useful stack trace requires generating it before doing anything async
   const stackTraceError = new ErrorWithStack('STACK_TRACE_ERROR', waitFor);
   const optionsWithStackTrace = { stackTraceError, ...options };

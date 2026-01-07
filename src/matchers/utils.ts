@@ -1,4 +1,3 @@
-import type { ReactTestInstance } from 'react-test-renderer';
 import {
   EXPECTED_COLOR,
   matcherHint,
@@ -8,6 +7,7 @@ import {
   stringify,
 } from 'jest-matcher-utils';
 import redent from 'redent';
+import type { HostElement } from 'test-renderer';
 
 import { isHostElement } from '../helpers/component-tree';
 
@@ -40,15 +40,15 @@ class HostElementTypeError extends Error {
 /**
  * Throws HostElementTypeError if passed element is not a host element.
  *
- * @param element ReactTestInstance to check.
+ * @param element HostElement to check.
  * @param matcherFn Matcher function calling the check used for formatting error.
  * @param context Jest matcher context used for formatting error.
  */
 export function checkHostElement(
-  element: ReactTestInstance | null | undefined,
+  element: HostElement | null | undefined,
   matcherFn: jest.CustomMatcher,
   context: jest.MatcherContext,
-): asserts element is ReactTestInstance {
+): asserts element is HostElement {
   if (!isHostElement(element)) {
     throw new HostElementTypeError(element, matcherFn, context);
   }

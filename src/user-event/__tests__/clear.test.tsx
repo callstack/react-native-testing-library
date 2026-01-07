@@ -9,10 +9,10 @@ beforeEach(() => {
   jest.useRealTimers();
 });
 
-function renderTextInputWithToolkit(props: TextInputProps = {}) {
+async function renderTextInputWithToolkit(props: TextInputProps = {}) {
   const { events, logEvent } = createEventLogger();
 
-  render(
+  await render(
     <TextInput
       testID="input"
       onFocus={logEvent('focus')}
@@ -41,7 +41,7 @@ function renderTextInputWithToolkit(props: TextInputProps = {}) {
 describe('clear()', () => {
   it('supports basic case', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
-    const { textInput, events } = renderTextInputWithToolkit({
+    const { textInput, events } = await renderTextInputWithToolkit({
       value: 'Hello!',
     });
 
@@ -64,7 +64,7 @@ describe('clear()', () => {
 
   it.each(['modern', 'legacy'])('works with %s fake timers', async (type) => {
     jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
-    const { textInput, events } = renderTextInputWithToolkit({
+    const { textInput, events } = await renderTextInputWithToolkit({
       value: 'Hello!',
     });
 
@@ -84,7 +84,7 @@ describe('clear()', () => {
   });
 
   it('supports defaultValue prop', async () => {
-    const { textInput, events } = renderTextInputWithToolkit({
+    const { textInput, events } = await renderTextInputWithToolkit({
       defaultValue: 'Hello Default!',
     });
 
@@ -106,7 +106,7 @@ describe('clear()', () => {
   });
 
   it('does respect editable prop', async () => {
-    const { textInput } = renderTextInputWithToolkit({
+    const { textInput } = await renderTextInputWithToolkit({
       value: 'Hello!',
       editable: false,
     });
@@ -118,7 +118,7 @@ describe('clear()', () => {
   });
 
   it('does respect pointer-events prop', async () => {
-    const { textInput } = renderTextInputWithToolkit({
+    const { textInput } = await renderTextInputWithToolkit({
       value: 'Hello!',
       pointerEvents: 'none',
     });
@@ -130,7 +130,7 @@ describe('clear()', () => {
   });
 
   it('supports multiline', async () => {
-    const { textInput, events } = renderTextInputWithToolkit({
+    const { textInput, events } = await renderTextInputWithToolkit({
       value: 'Hello World!\nHow are you?',
       multiline: true,
     });
@@ -155,7 +155,7 @@ describe('clear()', () => {
 
   it('works when not all events have handlers', async () => {
     const { events, logEvent } = createEventLogger();
-    render(
+    await render(
       <TextInput
         testID="input"
         onChangeText={logEvent('changeText')}
@@ -172,7 +172,7 @@ describe('clear()', () => {
   });
 
   it('does NOT work on View', async () => {
-    render(<View testID="input" />);
+    await render(<View testID="input" />);
 
     const user = userEvent.setup();
     await expect(
@@ -187,7 +187,7 @@ describe('clear()', () => {
 
   it('does NOT bubble up', async () => {
     const parentHandler = jest.fn();
-    render(
+    await render(
       <AnyView
         onChangeText={parentHandler}
         onChange={parentHandler}
@@ -209,7 +209,7 @@ describe('clear()', () => {
   });
 
   it('sets native state value for unmanaged text inputs', async () => {
-    render(<TextInput testID="input" />);
+    await render(<TextInput testID="input" />);
 
     const user = userEvent.setup();
     const input = screen.getByTestId('input');

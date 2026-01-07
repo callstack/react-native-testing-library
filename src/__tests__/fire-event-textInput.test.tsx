@@ -14,13 +14,13 @@ function DoubleWrappedTextInput(props: TextInputProps) {
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
 
-test('should fire only non-touch-related events on non-editable TextInput', () => {
+test('should fire only non-touch-related events on non-editable TextInput', async () => {
   const onFocus = jest.fn();
   const onChangeText = jest.fn();
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  render(
+  await render(
     <TextInput
       editable={false}
       testID="subject"
@@ -32,10 +32,10 @@ test('should fire only non-touch-related events on non-editable TextInput', () =
   );
 
   const subject = screen.getByTestId('subject');
-  fireEvent(subject, 'focus');
-  fireEvent.changeText(subject, 'Text');
-  fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
-  fireEvent(subject, 'layout', layoutEvent);
+  await fireEvent(subject, 'focus');
+  await fireEvent.changeText(subject, 'Text');
+  await fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
+  await fireEvent(subject, 'layout', layoutEvent);
 
   expect(onFocus).not.toHaveBeenCalled();
   expect(onChangeText).not.toHaveBeenCalled();
@@ -43,13 +43,13 @@ test('should fire only non-touch-related events on non-editable TextInput', () =
   expect(onLayout).toHaveBeenCalledWith(layoutEvent);
 });
 
-test('should fire only non-touch-related events on non-editable TextInput with nested Text', () => {
+test('should fire only non-touch-related events on non-editable TextInput with nested Text', async () => {
   const onFocus = jest.fn();
   const onChangeText = jest.fn();
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  render(
+  await render(
     <TextInput
       editable={false}
       testID="subject"
@@ -63,13 +63,13 @@ test('should fire only non-touch-related events on non-editable TextInput with n
   );
 
   const subject = screen.getByText('Nested Text');
-  fireEvent(subject, 'focus');
-  fireEvent(subject, 'onFocus');
-  fireEvent.changeText(subject, 'Text');
-  fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
-  fireEvent(subject, 'onSubmitEditing', { nativeEvent: { text: 'Text' } });
-  fireEvent(subject, 'layout', layoutEvent);
-  fireEvent(subject, 'onLayout', layoutEvent);
+  await fireEvent(subject, 'focus');
+  await fireEvent(subject, 'onFocus');
+  await fireEvent.changeText(subject, 'Text');
+  await fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
+  await fireEvent(subject, 'onSubmitEditing', { nativeEvent: { text: 'Text' } });
+  await fireEvent(subject, 'layout', layoutEvent);
+  await fireEvent(subject, 'onLayout', layoutEvent);
 
   expect(onFocus).not.toHaveBeenCalled();
   expect(onChangeText).not.toHaveBeenCalled();
@@ -94,13 +94,13 @@ test('should fire only non-touch-related events on non-editable TextInput with n
  * user composite TextInput level, hence invoking the event handlers that
  * should be blocked by `editable={false}` prop.
  */
-test('should fire only non-touch-related events on non-editable wrapped TextInput', () => {
+test('should fire only non-touch-related events on non-editable wrapped TextInput', async () => {
   const onFocus = jest.fn();
   const onChangeText = jest.fn();
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  render(
+  await render(
     <WrappedTextInput
       editable={false}
       testID="subject"
@@ -112,10 +112,10 @@ test('should fire only non-touch-related events on non-editable wrapped TextInpu
   );
 
   const subject = screen.getByTestId('subject');
-  fireEvent(subject, 'focus');
-  fireEvent.changeText(subject, 'Text');
-  fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
-  fireEvent(subject, 'layout', layoutEvent);
+  await fireEvent(subject, 'focus');
+  await fireEvent.changeText(subject, 'Text');
+  await fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
+  await fireEvent(subject, 'layout', layoutEvent);
 
   expect(onFocus).not.toHaveBeenCalled();
   expect(onChangeText).not.toHaveBeenCalled();
@@ -126,13 +126,13 @@ test('should fire only non-touch-related events on non-editable wrapped TextInpu
 /**
  * Ditto testing for even deeper hierarchy of TextInput wrappers.
  */
-test('should fire only non-touch-related events on non-editable double wrapped TextInput', () => {
+test('should fire only non-touch-related events on non-editable double wrapped TextInput', async () => {
   const onFocus = jest.fn();
   const onChangeText = jest.fn();
   const onSubmitEditing = jest.fn();
   const onLayout = jest.fn();
 
-  render(
+  await render(
     <DoubleWrappedTextInput
       editable={false}
       testID="subject"
@@ -144,10 +144,10 @@ test('should fire only non-touch-related events on non-editable double wrapped T
   );
 
   const subject = screen.getByTestId('subject');
-  fireEvent(subject, 'focus');
-  fireEvent.changeText(subject, 'Text');
-  fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
-  fireEvent(subject, 'layout', layoutEvent);
+  await fireEvent(subject, 'focus');
+  await fireEvent.changeText(subject, 'Text');
+  await fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
+  await fireEvent(subject, 'layout', layoutEvent);
 
   expect(onFocus).not.toHaveBeenCalled();
   expect(onChangeText).not.toHaveBeenCalled();

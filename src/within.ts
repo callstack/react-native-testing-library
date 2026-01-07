@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { bindByDisplayValueQueries } from './queries/display-value';
 import { bindByHintTextQueries } from './queries/hint-text';
@@ -7,20 +7,16 @@ import { bindByPlaceholderTextQueries } from './queries/placeholder-text';
 import { bindByRoleQueries } from './queries/role';
 import { bindByTestIdQueries } from './queries/test-id';
 import { bindByTextQueries } from './queries/text';
-import { bindUnsafeByPropsQueries } from './queries/unsafe-props';
-import { bindUnsafeByTypeQueries } from './queries/unsafe-type';
 
-export function within(instance: ReactTestInstance) {
+export function within(element: HostElement) {
   return {
-    ...bindByTextQueries(instance),
-    ...bindByTestIdQueries(instance),
-    ...bindByDisplayValueQueries(instance),
-    ...bindByPlaceholderTextQueries(instance),
-    ...bindByLabelTextQueries(instance),
-    ...bindByHintTextQueries(instance),
-    ...bindByRoleQueries(instance),
-    ...bindUnsafeByTypeQueries(instance),
-    ...bindUnsafeByPropsQueries(instance),
+    ...bindByTextQueries(element),
+    ...bindByTestIdQueries(element),
+    ...bindByDisplayValueQueries(element),
+    ...bindByPlaceholderTextQueries(element),
+    ...bindByLabelTextQueries(element),
+    ...bindByHintTextQueries(element),
+    ...bindByRoleQueries(element),
   };
 }
 

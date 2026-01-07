@@ -5,7 +5,7 @@ import { render, screen } from '../..';
 import { clearRenderResult } from '../../screen';
 
 test('findByTestId detects screen being detached', async () => {
-  render(<View />);
+  await render(<View />);
 
   const promise = screen.findByTestId('not-exists', {}, { timeout: 50 });
 

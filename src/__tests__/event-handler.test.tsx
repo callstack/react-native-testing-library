@@ -2,13 +2,13 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 
 import { render, screen } from '..';
-import { getEventHandler } from '../event-handler';
+import { getEventHandlerFromProps } from '../event-handler';
 
-test('getEventHandler strict mode', () => {
+test('getEventHandler strict mode', async () => {
   const onPress = jest.fn();
   const testOnlyOnPress = jest.fn();
 
-  render(
+  await render(
     <View>
       <Text testID="regular" onPress={onPress} />
       {/* @ts-expect-error Intentionally passing such props */}
@@ -22,20 +22,20 @@ test('getEventHandler strict mode', () => {
   const testOnly = screen.getByTestId('testOnly');
   const both = screen.getByTestId('both');
 
-  expect(getEventHandler(regular, 'press')).toBe(onPress);
-  expect(getEventHandler(testOnly, 'press')).toBe(testOnlyOnPress);
-  expect(getEventHandler(both, 'press')).toBe(onPress);
+  expect(getEventHandlerFromProps(regular.props, 'press')).toBe(onPress);
+  expect(getEventHandlerFromProps(testOnly.props, 'press')).toBe(testOnlyOnPress);
+  expect(getEventHandlerFromProps(both.props, 'press')).toBe(onPress);
 
-  expect(getEventHandler(regular, 'onPress')).toBe(undefined);
-  expect(getEventHandler(testOnly, 'onPress')).toBe(undefined);
-  expect(getEventHandler(both, 'onPress')).toBe(undefined);
+  expect(getEventHandlerFromProps(regular.props, 'onPress')).toBe(undefined);
+  expect(getEventHandlerFromProps(testOnly.props, 'onPress')).toBe(undefined);
+  expect(getEventHandlerFromProps(both.props, 'onPress')).toBe(undefined);
 });
 
-test('getEventHandler loose mode', () => {
+test('getEventHandler loose mode', async () => {
   const onPress = jest.fn();
   const testOnlyOnPress = jest.fn();
 
-  render(
+  await render(
     <View>
       <Text testID="regular" onPress={onPress} />
       {/* @ts-expect-error Intentionally passing such props */}
@@ -49,11 +49,13 @@ test('getEventHandler loose mode', () => {
   const testOnly = screen.getByTestId('testOnly');
   const both = screen.getByTestId('both');
 
-  expect(getEventHandler(regular, 'press', { loose: true })).toBe(onPress);
-  expect(getEventHandler(testOnly, 'press', { loose: true })).toBe(testOnlyOnPress);
-  expect(getEventHandler(both, 'press', { loose: true })).toBe(onPress);
+  expect(getEventHandlerFromProps(regular.props, 'press', { loose: true })).toBe(onPress);
+  expect(getEventHandlerFromProps(testOnly.props, 'press', { loose: true })).toBe(testOnlyOnPress);
+  expect(getEventHandlerFromProps(both.props, 'press', { loose: true })).toBe(onPress);
 
-  expect(getEventHandler(regular, 'onPress', { loose: true })).toBe(onPress);
-  expect(getEventHandler(testOnly, 'onPress', { loose: true })).toBe(testOnlyOnPress);
-  expect(getEventHandler(both, 'onPress', { loose: true })).toBe(onPress);
+  expect(getEventHandlerFromProps(regular.props, 'onPress', { loose: true })).toBe(onPress);
+  expect(getEventHandlerFromProps(testOnly.props, 'onPress', { loose: true })).toBe(
+    testOnlyOnPress,
+  );
+  expect(getEventHandlerFromProps(both.props, 'onPress', { loose: true })).toBe(onPress);
 });

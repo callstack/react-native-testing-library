@@ -1,9 +1,8 @@
-import './helpers/ensure-peer-deps';
 import './matchers/extend-expect';
 
 import { getIsReactActEnvironment, setReactActEnvironment } from './act';
 import { flushMicroTasks } from './flush-micro-tasks';
-import { cleanupAsync } from './pure';
+import { cleanup } from './pure';
 
 if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
   // If we're running in a test runner that supports afterEach
@@ -14,7 +13,7 @@ if (!process?.env?.RNTL_SKIP_AUTO_CLEANUP) {
   if (typeof afterEach === 'function') {
     afterEach(async () => {
       await flushMicroTasks();
-      await cleanupAsync();
+      await cleanup();
     });
   }
 

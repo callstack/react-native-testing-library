@@ -3,8 +3,8 @@ import { type AccessibilityRole, Switch, View } from 'react-native';
 
 import { render, screen } from '../..';
 
-function renderViewsWithRole(role: AccessibilityRole) {
-  render(
+async function renderViewsWithRole(role: AccessibilityRole) {
+  await render(
     <>
       <View
         testID={`${role}-checked`}
@@ -29,8 +29,8 @@ function renderViewsWithRole(role: AccessibilityRole) {
   );
 }
 
-test('toBeCheck() with Switch', () => {
-  render(
+test('toBeCheck() with Switch', async () => {
+  await render(
     <>
       <Switch testID="checked" value={true} />
       <Switch testID="unchecked" value={false} />
@@ -78,8 +78,8 @@ test('toBeCheck() with Switch', () => {
   `);
 });
 
-test('toBeCheck() with "checkbox" role', () => {
-  renderViewsWithRole('checkbox');
+test('toBeCheck() with "checkbox" role', async () => {
+  await renderViewsWithRole('checkbox');
 
   const checked = screen.getByTestId('checkbox-checked');
   const unchecked = screen.getByTestId('checkbox-unchecked');
@@ -148,8 +148,8 @@ test('toBeCheck() with "checkbox" role', () => {
   `);
 });
 
-test('toBeCheck() with "radio" role', () => {
-  renderViewsWithRole('radio');
+test('toBeCheck() with "radio" role', async () => {
+  await renderViewsWithRole('radio');
 
   const checked = screen.getByTestId('radio-checked');
   const unchecked = screen.getByTestId('radio-unchecked');
@@ -201,8 +201,8 @@ test('toBeCheck() with "radio" role', () => {
   `);
 });
 
-test('toBeCheck() with "switch" role', () => {
-  renderViewsWithRole('switch');
+test('toBeCheck() with "switch" role', async () => {
+  await renderViewsWithRole('switch');
 
   const checked = screen.getByTestId('switch-checked');
   const unchecked = screen.getByTestId('switch-unchecked');
@@ -254,8 +254,8 @@ test('toBeCheck() with "switch" role', () => {
   `);
 });
 
-test('throws error for invalid role', () => {
-  renderViewsWithRole('adjustable');
+test('throws error for invalid role', async () => {
+  await renderViewsWithRole('adjustable');
 
   const checked = screen.getByTestId('adjustable-checked');
   const unchecked = screen.getByTestId('adjustable-unchecked');
@@ -268,8 +268,8 @@ test('throws error for invalid role', () => {
   );
 });
 
-test('throws error for non-accessibility element', () => {
-  render(<View testID="test" />);
+test('throws error for non-accessibility element', async () => {
+  await render(<View testID="test" />);
 
   const view = screen.getByTestId('test');
   expect(() => expect(view).toBeChecked()).toThrowErrorMatchingInlineSnapshot(

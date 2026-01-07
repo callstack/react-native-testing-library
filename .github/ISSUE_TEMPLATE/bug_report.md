@@ -34,5 +34,5 @@ labels: 'bug report'
 <!--
   run following command in terminal of your root project and paste the result down
 
-  `npx envinfo --npmPackages react,react-native,react-test-renderer,@testing-library/react-native`
+  `npx envinfo --npmPackages react,react-native,test-renderer,@testing-library/react-native`
 -->

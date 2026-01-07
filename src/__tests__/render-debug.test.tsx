@@ -90,8 +90,8 @@ class Banana extends React.Component<any, { fresh: boolean }> {
   }
 }
 
-test('debug', () => {
-  render(<Banana />);
+test('debug', async () => {
+  await render(<Banana />);
 
   screen.debug();
   screen.debug({ message: 'another custom message' });
@@ -103,9 +103,9 @@ test('debug', () => {
   expect(`${mockCalls[2][0]}\n${mockCalls[2][1]}`).toMatchSnapshot('All Props');
 });
 
-test('debug changing component', () => {
-  render(<Banana />);
-  fireEvent.press(screen.getByRole('button', { name: 'Change freshness!' }));
+test('debug changing component', async () => {
+  await render(<Banana />);
+  await fireEvent.press(screen.getByRole('button', { name: 'Change freshness!' }));
 
   screen.debug({ mapProps: null });
 
@@ -113,16 +113,16 @@ test('debug changing component', () => {
   expect(mockCalls[0][0]).toMatchSnapshot('bananaFresh button message should now be "fresh"');
 });
 
-test('debug with only children prop', () => {
-  render(<Banana />);
+test('debug with only children prop', async () => {
+  await render(<Banana />);
   screen.debug({ mapProps: () => ({}) });
 
   const mockCalls = jest.mocked(logger.info).mock.calls;
   expect(mockCalls[0][0]).toMatchSnapshot();
 });
 
-test('debug with only prop whose value is bananaChef', () => {
-  render(<Banana />);
+test('debug with only prop whose value is bananaChef', async () => {
+  await render(<Banana />);
   screen.debug({
     mapProps: (props) => {
       const filterProps: Record<string, unknown> = {};
@@ -139,10 +139,10 @@ test('debug with only prop whose value is bananaChef', () => {
   expect(mockCalls[0][0]).toMatchSnapshot();
 });
 
-test('debug should use debugOptions from config when no option is specified', () => {
+test('debug should use debugOptions from config when no option is specified', async () => {
   configure({ defaultDebugOptions: { mapProps: () => ({}) } });
 
-  render(
+  await render(
     <View style={{ backgroundColor: 'red' }}>
       <Text>hello</Text>
     </View>,
@@ -153,17 +153,17 @@ test('debug should use debugOptions from config when no option is specified', ()
   expect(mockCalls[0][0]).toMatchSnapshot();
 });
 
-test('filtering out props through mapProps option should not modify component', () => {
-  render(<View testID="viewTestID" />);
+test('filtering out props through mapProps option should not modify component', async () => {
+  await render(<View testID="viewTestID" />);
   screen.debug({ mapProps: () => ({}) });
 
   expect(screen.getByTestId('viewTestID')).toBeTruthy();
 });
 
-test('debug should use given options over config debugOptions', () => {
+test('debug should use given options over config debugOptions', async () => {
   configure({ defaultDebugOptions: { mapProps: () => ({}) } });
 
-  render(
+  await render(
     <View style={{ backgroundColor: 'red' }}>
       <Text>hello</Text>
     </View>,

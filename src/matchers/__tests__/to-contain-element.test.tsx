@@ -3,8 +3,8 @@ import { View } from 'react-native';
 
 import { render, screen } from '../..';
 
-test('toContainElement() supports basic case', () => {
-  render(
+test('toContainElement() supports basic case', async () => {
+  await render(
     <View testID="parent">
       <View testID="child" />
     </View>,
@@ -31,8 +31,8 @@ test('toContainElement() supports basic case', () => {
   `);
 });
 
-test('toContainElement() supports negative case', () => {
-  render(
+test('toContainElement() supports negative case', async () => {
+  await render(
     <>
       <View testID="view1" />
       <View testID="view2" />
@@ -61,8 +61,8 @@ test('toContainElement() supports negative case', () => {
   `);
 });
 
-test('toContainElement() handles null container', () => {
-  render(<View testID="view" />);
+test('toContainElement() handles null container', async () => {
+  await render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
 
@@ -74,8 +74,8 @@ test('toContainElement() handles null container', () => {
   `);
 });
 
-test('toContainElement() handles null element', () => {
-  render(<View testID="view" />);
+test('toContainElement() handles null element', async () => {
+  await render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
 
@@ -95,8 +95,8 @@ test('toContainElement() handles null element', () => {
   `);
 });
 
-test('toContainElement() handles non-element container', () => {
-  render(<View testID="view" />);
+test('toContainElement() handles non-element container', async () => {
+  await render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
 
@@ -118,8 +118,8 @@ test('toContainElement() handles non-element container', () => {
     `);
 });
 
-test('toContainElement() handles non-element element', () => {
-  render(<View testID="view" />);
+test('toContainElement() handles non-element element', async () => {
+  await render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
 

@@ -1,4 +1,3 @@
 node_modules/
 .yarn
-
-flow-typed/
+codemods/**/tests/fixtures/**

@@ -1,0 +1,116 @@
+# Other helpers
+
+## `within`, `getQueriesForElement` {#within}
+
+```jsx
+function within(element: HostElement): Queries {}
+
+function getQueriesForElement(element: HostElement): Queries {}
+```
+
+`within` (also available as `getQueriesForElement` alias) performs [queries](docs/api/queries) scoped to given element.
+
+:::note
+Please note that additional `render` specific operations like `update`, `unmount`, `debug`, `toJSON` are _not_ included.
+:::
+
+```jsx
+const detailsScreen = within(screen.getByA11yHint('Details Screen'));
+expect(detailsScreen.getByText('Some Text')).toBeOnTheScreen();
+expect(detailsScreen.getByDisplayValue('Some Value')).toBeOnTheScreen();
+expect(detailsScreen.queryByLabelText('Some Label')).toBeOnTheScreen();
+await expect(detailsScreen.findByA11yHint('Some Label')).resolves.toBeOnTheScreen();
+```
+
+Use cases for scoped queries include:
+
+- queries scoped to a single item inside a FlatList containing many items
+- queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
+
+## `act`
+
+```ts
+function act<T>(callback: () => T | Promise<T>): Promise<T>;
+```
+
+Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually.
+
+**In v14, `act` is now async by default and always returns a Promise**, making it compatible with React 19, React Suspense, and `React.use()`. This ensures all pending React updates are executed before the Promise resolves.
+
+```ts
+import { act } from '@testing-library/react-native';
+
+it('should update state', async () => {
+  await act(async () => {
+    setState('new value');
+  });
+  expect(state).toBe('new value');
+});
+```
+
+**Note**: Even if your callback is synchronous, you should still use `await act(async () => ...)` as `act` now always returns a Promise.
+
+Consult our [Understanding Act function](docs/advanced/understanding-act.md) document for more understanding of its intricacies.
+
+## `unsafe_act`
+
+```ts
+function unsafe_act<T>(callback: () => T | Promise<T>): T | Thenable<T>;
+```
+
+**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `act` instead.
+
+The synchronous version of `act` that maintains the same behavior as v13. It returns immediately for sync callbacks or a thenable for async callbacks. This is not recommended for new code as it doesn't work well with React 19's async features.
+
+```ts
+// Deprecated - use act instead
+import { unsafe_act } from '@testing-library/react-native';
+
+it('should update state', () => {
+  unsafe_act(() => {
+    setState('new value');
+  });
+  expect(state).toBe('new value');
+});
+```
+
+## `cleanup`
+
+```ts
+const cleanup: () => void;
+```
+
+Unmounts React trees that were mounted with `render` and clears `screen` variable that holds latest `render` output.
+
+:::info
+Please note that this is done automatically if the testing framework you're using supports the `afterEach` global (like mocha, Jest, and Jasmine). If not, you will need to do manual cleanups after each test.
+:::
+
+For example, if you're using the `jest` testing framework, then you would need to use the `afterEach` hook like so:
+
+```jsx
+import { cleanup, render } from '@testing-library/react-native/pure';
+import { View } from 'react-native';
+
+afterEach(cleanup);
+
+it('renders a view', () => {
+  render(<View />);
+  // ...
+});
+```
+
+The `afterEach(cleanup)` call also works in `describe` blocks:
+
+```jsx
+describe('when logged in', () => {
+  afterEach(cleanup);
+
+  it('renders the user', () => {
+    render(<SiteHeader />);
+    // ...
+  });
+});
+```
+
+Failing to call `cleanup` when you've called `render` could result in a memory leak and tests which are not "idempotent" (which can lead to difficult to debug errors in your tests).

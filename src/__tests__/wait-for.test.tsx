@@ -38,9 +38,9 @@ afterEach(() => {
 });
 
 test('waits for element until it stops throwing', async () => {
-  render(<BananaContainer />);
+  await render(<BananaContainer />);
 
-  fireEvent.press(screen.getByText('Change freshness!'));
+  await fireEvent.press(screen.getByText('Change freshness!'));
 
   expect(screen.queryByText('Fresh')).toBeNull();
 
@@ -50,9 +50,9 @@ test('waits for element until it stops throwing', async () => {
 });
 
 test('waits for element until timeout is met', async () => {
-  render(<BananaContainer />);
+  await render(<BananaContainer />);
 
-  fireEvent.press(screen.getByText('Change freshness!'));
+  await fireEvent.press(screen.getByText('Change freshness!'));
 
   await expect(waitFor(() => screen.getByText('Fresh'), { timeout: 100 })).rejects.toThrow();
 
@@ -63,9 +63,9 @@ test('waits for element until timeout is met', async () => {
 
 test('waitFor defaults to asyncWaitTimeout config option', async () => {
   configure({ asyncUtilTimeout: 100 });
-  render(<BananaContainer />);
+  await render(<BananaContainer />);
 
-  fireEvent.press(screen.getByText('Change freshness!'));
+  await fireEvent.press(screen.getByText('Change freshness!'));
   await expect(waitFor(() => screen.getByText('Fresh'))).rejects.toThrow();
 
   // Async action ends after 300ms and we only waited 100ms, so we need to wait
@@ -75,9 +75,9 @@ test('waitFor defaults to asyncWaitTimeout config option', async () => {
 
 test('waitFor timeout option takes precendence over `asyncWaitTimeout` config option', async () => {
   configure({ asyncUtilTimeout: 2000 });
-  render(<BananaContainer />);
+  await render(<BananaContainer />);
 
-  fireEvent.press(screen.getByText('Change freshness!'));
+  await fireEvent.press(screen.getByText('Change freshness!'));
   await expect(waitFor(() => screen.getByText('Fresh'), { timeout: 100 })).rejects.toThrow();
 
   // Async action ends after 300ms and we only waited 100ms, so we need to wait
@@ -125,9 +125,9 @@ const Comp = ({ onPress }: { onPress: () => void }) => {
 
 test('waits for async event with fireEvent', async () => {
   const spy = jest.fn();
-  render(<Comp onPress={spy} />);
+  await render(<Comp onPress={spy} />);
 
-  fireEvent.press(screen.getByText('Trigger'));
+  await fireEvent.press(screen.getByText('Trigger'));
 
   await waitFor(() => {
     expect(spy).toHaveBeenCalled();
@@ -138,9 +138,9 @@ test.each([false, true])(
   'waits for element until it stops throwing using fake timers (legacyFakeTimers = %s)',
   async (legacyFakeTimers) => {
     jest.useFakeTimers({ legacyFakeTimers });
-    render(<BananaContainer />);
+    await render(<BananaContainer />);
 
-    fireEvent.press(screen.getByText('Change freshness!'));
+    await fireEvent.press(screen.getByText('Change freshness!'));
     expect(screen.queryByText('Fresh')).toBeNull();
 
     jest.advanceTimersByTime(300);
@@ -294,7 +294,7 @@ test.each([
     }
 
     const onPress = jest.fn();
-    render(<Apple onPress={onPress} />);
+    await render(<Apple onPress={onPress} />);
 
     // Required: this `waitFor` will succeed on first check, because the "root" view is there
     // since the initial mount.
@@ -305,7 +305,7 @@ test.each([
     await waitFor(() => screen.getByText('red'));
 
     // Check that the `onPress` callback is called with the already-updated value of `syncedColor`.
-    fireEvent.press(screen.getByText('Trigger'));
+    await fireEvent.press(screen.getByText('Trigger'));
     expect(onPress).toHaveBeenCalledWith('red');
   },
 );

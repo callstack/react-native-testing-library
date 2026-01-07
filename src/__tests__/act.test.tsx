@@ -16,33 +16,28 @@ const Counter = () => {
   return <Text onPress={() => setCount(count + 1)}>{text}</Text>;
 };
 
-test('render should trigger useEffect', () => {
+test('render should trigger useEffect', async () => {
   const effectCallback = jest.fn();
-  render(<UseEffect callback={effectCallback} />);
+  await render(<UseEffect callback={effectCallback} />);
 
   expect(effectCallback).toHaveBeenCalledTimes(1);
 });
 
-test('rerender should trigger useEffect', () => {
+test('rerender should trigger useEffect', async () => {
   const effectCallback = jest.fn();
-  render(<UseEffect callback={effectCallback} />);
-  screen.rerender(<UseEffect callback={effectCallback} />);
+  await render(<UseEffect callback={effectCallback} />);
+  await screen.rerender(<UseEffect callback={effectCallback} />);
 
   expect(effectCallback).toHaveBeenCalledTimes(2);
 });
 
-test('fireEvent should trigger useState', () => {
-  render(<Counter />);
+test('fireEvent should trigger useState', async () => {
+  await render(<Counter />);
   const counter = screen.getByText(/Total count/i);
 
   expect(counter.props.children).toEqual('Total count: 0');
-  fireEvent.press(counter);
+  await fireEvent.press(counter);
   expect(counter.props.children).toEqual('Total count: 1');
-});
-
-test('should be able to not await act', () => {
-  const result = act(() => {});
-  expect(result).toHaveProperty('then');
 });
 
 test('should be able to await act', async () => {

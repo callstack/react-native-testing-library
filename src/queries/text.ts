@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import { isHostText } from '../helpers/host-component-names';
@@ -17,9 +17,9 @@ import type { CommonQueryOptions } from './options';
 
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
-const queryAllByText = (instance: ReactTestInstance): QueryAllByQuery<TextMatch, ByTextOptions> =>
+const queryAllByText = (element: HostElement): QueryAllByQuery<TextMatch, ByTextOptions> =>
   function queryAllByTextFn(text, options = {}) {
-    return findAll(instance, (node) => isHostText(node) && matchTextContent(node, text, options), {
+    return findAll(element, (node) => isHostText(node) && matchTextContent(node, text, options), {
       ...options,
       matchDeepestOnly: true,
     });
@@ -44,11 +44,11 @@ export type ByTextQueries = {
   findAllByText: FindAllByQuery<TextMatch, ByTextOptions>;
 };
 
-export const bindByTextQueries = (instance: ReactTestInstance): ByTextQueries => ({
-  getByText: getBy(instance),
-  getAllByText: getAllBy(instance),
-  queryByText: queryBy(instance),
-  queryAllByText: queryAllBy(instance),
-  findByText: findBy(instance),
-  findAllByText: findAllBy(instance),
+export const bindByTextQueries = (element: HostElement): ByTextQueries => ({
+  getByText: getBy(element),
+  getAllByText: getAllBy(element),
+  queryByText: queryBy(element),
+  queryAllByText: queryAllBy(element),
+  findByText: findBy(element),
+  findAllByText: findAllBy(element),
 });

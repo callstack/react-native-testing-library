@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
-import { act, renderAsync, screen } from '..';
+import { act, render, screen } from '..';
 import { excludeConsoleMessage } from '../test-utils/console';
 
 jest.useFakeTimers();
-
-const testGateReact19 = React.version.startsWith('19.') ? test : test.skip;
 
 // eslint-disable-next-line no-console
 const originalConsoleError = console.error;
@@ -22,13 +20,13 @@ function Suspending({ promise, testID }: { promise: Promise<unknown>; testID: st
   return <View testID={testID} />;
 }
 
-testGateReact19('resolves manually-controlled promise', async () => {
+test('resolves manually-controlled promise', async () => {
   let resolvePromise: (value: unknown) => void;
   const promise = new Promise((resolve) => {
     resolvePromise = resolve;
   });
 
-  await renderAsync(
+  await render(
     <View>
       <React.Suspense fallback={<Text>Loading...</Text>}>
         <Suspending promise={promise} testID="content" />
@@ -47,12 +45,12 @@ testGateReact19('resolves manually-controlled promise', async () => {
   expect(screen.queryByText('Loading...')).not.toBeOnTheScreen();
 });
 
-testGateReact19('resolves timer-controlled promise', async () => {
+test('resolves timer-controlled promise', async () => {
   const promise = new Promise((resolve) => {
     setTimeout(() => resolve(null), 100);
   });
 
-  await renderAsync(
+  await render(
     <View>
       <React.Suspense fallback={<Text>Loading...</Text>}>
         <Suspending promise={promise} testID="content" />
@@ -88,7 +86,7 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-testGateReact19('handles promise rejection with error boundary', async () => {
+test('handles promise rejection with error boundary', async () => {
   const ERROR_MESSAGE = 'Promise Rejected In Test';
   // eslint-disable-next-line no-console
   console.error = excludeConsoleMessage(console.error, ERROR_MESSAGE);
@@ -98,7 +96,7 @@ testGateReact19('handles promise rejection with error boundary', async () => {
     rejectPromise = reject;
   });
 
-  await renderAsync(
+  await render(
     <ErrorBoundary fallback={<Text>Error occurred</Text>}>
       <React.Suspense fallback={<Text>Loading...</Text>}>
         <Suspending promise={promise} testID="content" />
@@ -117,7 +115,7 @@ testGateReact19('handles promise rejection with error boundary', async () => {
   expect(screen.queryByTestId('error-content')).not.toBeOnTheScreen();
 });
 
-testGateReact19('handles multiple suspending components', async () => {
+test('handles multiple suspending components', async () => {
   let resolvePromise1: (value: unknown) => void;
   let resolvePromise2: (value: unknown) => void;
 
@@ -128,7 +126,7 @@ testGateReact19('handles multiple suspending components', async () => {
     resolvePromise2 = resolve;
   });
 
-  await renderAsync(
+  await render(
     <View>
       <React.Suspense fallback={<Text>Loading...</Text>}>
         <Suspending promise={promise1} testID="content-1" />
@@ -154,7 +152,7 @@ testGateReact19('handles multiple suspending components', async () => {
   expect(screen.queryByText('Loading...')).not.toBeOnTheScreen();
 });
 
-testGateReact19('handles multiple suspense boundaries independently', async () => {
+test('handles multiple suspense boundaries independently', async () => {
   let resolvePromise1: (value: unknown) => void;
   let resolvePromise2: (value: unknown) => void;
 
@@ -165,7 +163,7 @@ testGateReact19('handles multiple suspense boundaries independently', async () =
     resolvePromise2 = resolve;
   });
 
-  await renderAsync(
+  await render(
     <View>
       <React.Suspense fallback={<Text>First Loading...</Text>}>
         <Suspending promise={promise1} testID="content-1" />

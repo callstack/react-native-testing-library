@@ -4,8 +4,8 @@ import { Text, View } from 'react-native';
 import { render, screen } from '../..';
 import { formatElement } from '../format-element';
 
-test('formatElement', () => {
-  render(
+test('formatElement', async () => {
+  await render(
     <View testID="root">
       <View testID="view" />
       <Text>Hello</Text>

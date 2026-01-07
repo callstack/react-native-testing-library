@@ -1,0 +1,76 @@
+# React 19 & Suspense Support
+
+React 19 introduced full support for React Suspense, [`React.use()`](https://react.dev/reference/react/use), and other async rendering features to React Native [0.78.0](https://github.com/facebook/react-native/releases/tag/v0.78.0).
+
+When testing components that use these features, React requires the [`async act`](https://react.dev/reference/react/act) helper to handle async state updates. This means React Native Testing Library needs new async versions of its core APIs. These async APIs work with both React 18 and React 19.
+
+## New async APIs
+
+RNTL 14 introduces async versions of the core testing APIs to handle React 19's async rendering:
+
+**Rendering APIs:**
+
+- **[`render`](docs/api/render#render)** - now async by default (was `renderAsync` in v13)
+- **[`screen.rerender`](docs/api/screen#rerender)** - now async (returns `Promise<void>`)
+- **[`screen.unmount`](docs/api/screen#unmount)** - now async (returns `Promise<void>`)
+
+**Event APIs:**
+
+- **[`fireEvent`](docs/api/events/fire-event)** - updated to be async by default.
+
+## APIs that remain unchanged
+
+Many existing APIs continue to work without modification:
+
+- **[Query methods](docs/api/queries)**: `screen.getBy*`, `screen.queryBy*`, `screen.findBy*` - all work the same
+- **[User Event API](docs/api/events/user-event)** - already async, so no API changes needed
+- **[Jest matchers](docs/api/jest-matchers)** - work with already-rendered output, so no changes required
+
+## What changes in your tests
+
+### Making tests async
+
+The main change is using [`render`](docs/api/render#render) which is now async by default, which requires:
+
+1. Making your test function `async`
+2. Adding `await` before `render`
+
+```tsx
+// Synchronous approach (deprecated in v14)
+test('my component', () => {
+  unsafe_renderSync(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+
+// Async approach (React 19 ready, default in v14)
+test('my component', async () => {
+  await render(<MyComponent />);
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+```
+
+### When to use async APIs
+
+Use the async APIs when your components:
+
+- Use React Suspense for data fetching or code splitting
+- Call `React.use()` for reading promises or context
+- Have async state updates that need proper `act()` handling
+
+## Migration strategy
+
+### New projects
+
+Use the async-ready APIs (`render`, User Event, Jest Matchers, etc.) from the start. They work with both React 18 and React 19.
+
+### Existing projects
+
+You can migrate gradually:
+
+- **Existing tests** can use `unsafe_renderSync` for backward compatibility
+- **New tests** should use async `render` (default in v14)
+- **Tests with Suspense/`React.use()`** must use async `render`
+
+### Migration
+
+See the [v14 migration guide](../migration/v14#render-async-default) for detailed migration steps from `unsafe_renderSync` to `render`.

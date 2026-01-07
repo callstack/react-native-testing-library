@@ -1,0 +1,108 @@
+# `render` API
+
+## `render` function {#render}
+
+```jsx
+async function render(
+  component: React.Element<any>,
+  options?: RenderOptions
+): Promise<RenderResult>
+```
+
+The `render` function is the entry point for writing React Native Testing Library tests. It deeply renders the given React element and returns helpers to query the output components' structure. This function is async by default and uses async `act` internally to ensure all pending React updates are executed during rendering, making it compatible with React 19, React Suspense, and `React.use()`.
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+test('basic test', async () => {
+  await render(<MyApp />);
+  expect(screen.getAllByRole('button', { name: 'start' })).toBeOnTheScreen();
+});
+```
+
+> When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases, it's convenient to create your own custom `render` method. [Follow this great guide on how to set this up](https://testing-library.com/docs/react-testing-library/setup#custom-render).
+
+### Options
+
+The behavior of the `render` method can be customized by passing various options as a second argument of the `RenderOptions` type:
+
+#### `wrapper`
+
+```ts
+wrapper?: React.ComponentType<any>,
+```
+
+This option allows you to wrap the tested component, passed as the first option to the `render()` function, in an additional wrapper component. This is useful for creating reusable custom render functions for common React Context providers.
+
+#### `concurrentRoot` {#concurrent-root}
+
+Set to `false` to disable concurrent rendering.
+Otherwise, `render` will default to using concurrent rendering used in the React Native New Architecture.
+
+#### `createNodeMock` {#create-node-mock}
+
+```ts
+createNodeMock?: (element: React.Element) => unknown,
+```
+
+This option allows you to pass `createNodeMock` option to the renderer's `create()` method in order to allow for custom mock refs. This option is passed through to [Test Renderer](https://github.com/mdjastrzebski/test-renderer).
+
+:::note Text string validation
+
+Test Renderer automatically enforces React Native's requirement that text strings must be rendered within a `<Text>` component. If you try to render a `string` value under components other than `<Text>` (e.g., under `<View>`), it will throw an `Invariant Violation: Text strings must be rendered within a <Text> component` error, matching React Native's runtime behavior.
+
+This validation is always enabled and cannot be disabled, ensuring your tests accurately reflect how your code will behave in production.
+
+:::
+
+### Result
+
+The `render` function returns a promise that resolves to the same queries and utilities as the [`screen`](docs/api/screen) object. We recommend using the `screen` object for queries and the lifecycle methods from the render result when needed.
+
+See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
+
+:::warning Async lifecycle methods
+
+When using `render`, the lifecycle methods `rerender`, `update`, and `unmount` are async and must be awaited.
+
+:::
+
+## `unsafe_renderSync` function {#unsafe-render-sync}
+
+:::warning Deprecated
+
+This function is deprecated and provided for migration purposes only. Use async `render` instead.
+
+:::
+
+```tsx
+function unsafe_renderSync(
+  component: React.Element<any>,
+  options?: RenderSyncOptions
+): RenderSyncResult;
+```
+
+The `unsafe_renderSync` function is the synchronous version of [`render`](#render). It was the default `render` function in previous versions but is now deprecated in favor of the async `render` function.
+
+```jsx
+import { unsafe_renderSync, screen } from '@testing-library/react-native';
+
+test('sync component test', () => {
+  unsafe_renderSync(<MyApp />);
+  expect(screen.getAllByRole('button', { name: 'start' })).toBeOnTheScreen();
+});
+```
+
+### Options
+
+`unsafe_renderSync` accepts the same options as `render`.
+
+### Result
+
+The `unsafe_renderSync` function returns the same queries and utilities as the [`screen`](docs/api/screen) object. We recommended using the `screen` object as more developer-friendly way.
+
+:::note Migration
+
+To migrate from `unsafe_renderSync` to `render`, see the [migration guide](../migration/v14#render-async-default).
+
+:::

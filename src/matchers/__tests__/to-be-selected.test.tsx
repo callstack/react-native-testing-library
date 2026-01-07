@@ -3,8 +3,8 @@ import { View } from 'react-native';
 
 import { render, screen } from '../..';
 
-test('toBeSelected() basic case', () => {
-  render(
+test('toBeSelected() basic case', async () => {
+  await render(
     <>
       <View testID="selected" accessibilityState={{ selected: true }} />
       <View testID="selected-aria" aria-selected />
@@ -21,8 +21,8 @@ test('toBeSelected() basic case', () => {
   expect(screen.getByTestId('default')).not.toBeSelected();
 });
 
-test('toBeSelected() error messages', () => {
-  render(
+test('toBeSelected() error messages', async () => {
+  await render(
     <>
       <View testID="selected" accessibilityState={{ selected: true }} />
       <View testID="selected-aria" aria-selected />

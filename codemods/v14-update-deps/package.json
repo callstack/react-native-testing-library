@@ -1,0 +1,11 @@
+{
+  "name": "@testing-library/react-native-v14-update-deps",
+  "version": "0.1.0",
+  "description": "Codemod to update dependencies for RNTL v14 migration",
+  "type": "module",
+  "scripts": {
+    "test": "node --loader tsx/esm scripts/test.js"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

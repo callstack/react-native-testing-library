@@ -1,4 +1,4 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import { isHostTextInput } from '../helpers/host-component-names';
@@ -18,7 +18,7 @@ import type { CommonQueryOptions } from './options';
 type ByPlaceholderTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const matchPlaceholderText = (
-  node: ReactTestInstance,
+  node: HostElement,
   placeholder: TextMatch,
   options: TextMatchOptions = {},
 ) => {
@@ -27,11 +27,11 @@ const matchPlaceholderText = (
 };
 
 const queryAllByPlaceholderText = (
-  instance: ReactTestInstance,
+  element: HostElement,
 ): QueryAllByQuery<TextMatch, ByPlaceholderTextOptions> =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
     return findAll(
-      instance,
+      element,
       (node) => isHostTextInput(node) && matchPlaceholderText(node, placeholder, queryOptions),
       queryOptions,
     );
@@ -57,13 +57,11 @@ export type ByPlaceholderTextQueries = {
   findAllByPlaceholderText: FindAllByQuery<TextMatch, ByPlaceholderTextOptions>;
 };
 
-export const bindByPlaceholderTextQueries = (
-  instance: ReactTestInstance,
-): ByPlaceholderTextQueries => ({
-  getByPlaceholderText: getBy(instance),
-  getAllByPlaceholderText: getAllBy(instance),
-  queryByPlaceholderText: queryBy(instance),
-  queryAllByPlaceholderText: queryAllBy(instance),
-  findByPlaceholderText: findBy(instance),
-  findAllByPlaceholderText: findAllBy(instance),
+export const bindByPlaceholderTextQueries = (element: HostElement): ByPlaceholderTextQueries => ({
+  getByPlaceholderText: getBy(element),
+  getAllByPlaceholderText: getAllBy(element),
+  queryByPlaceholderText: queryBy(element),
+  queryAllByPlaceholderText: queryAllBy(element),
+  findByPlaceholderText: findBy(element),
+  findAllByPlaceholderText: findAllBy(element),
 });

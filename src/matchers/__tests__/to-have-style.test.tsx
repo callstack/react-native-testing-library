@@ -7,8 +7,8 @@ const styles = StyleSheet.create({
   container: { borderBottomColor: 'white' },
 });
 
-test('toHaveStyle() handles basic cases', () => {
-  render(
+test('toHaveStyle() handles basic cases', async () => {
+  await render(
     <View
       testID="view"
       style={[
@@ -49,8 +49,8 @@ test('toHaveStyle() handles basic cases', () => {
   });
 });
 
-test('toHaveStyle error messages', () => {
-  render(
+test('toHaveStyle error messages', async () => {
+  await render(
     <View
       testID="view"
       style={{
@@ -128,15 +128,15 @@ test('toHaveStyle error messages', () => {
   `);
 });
 
-test('toHaveStyle() supports missing "style" prop', () => {
-  render(<View testID="view" />);
+test('toHaveStyle() supports missing "style" prop', async () => {
+  await render(<View testID="view" />);
 
   const view = screen.getByTestId('view');
   expect(view).not.toHaveStyle({ fontWeight: 'bold' });
 });
 
-test('toHaveStyle() supports undefined "transform" style', () => {
-  render(
+test('toHaveStyle() supports undefined "transform" style', async () => {
+  await render(
     <View
       testID="view"
       style={{
@@ -163,14 +163,14 @@ test('toHaveStyle() supports undefined "transform" style', () => {
   `);
 });
 
-test('toHaveStyle() supports Pressable with function "style" prop', () => {
-  render(<Pressable testID="view" style={() => ({ backgroundColor: 'blue' })} />);
+test('toHaveStyle() supports Pressable with function "style" prop', async () => {
+  await render(<Pressable testID="view" style={() => ({ backgroundColor: 'blue' })} />);
 
   expect(screen.getByTestId('view')).toHaveStyle({ backgroundColor: 'blue' });
 });
 
-test('toHaveStyle() to differentiate number vs string values', () => {
-  const screen = render(
+test('toHaveStyle() to differentiate number vs string values', async () => {
+  const screen = await render(
     <Text
       testID="view"
       style={{

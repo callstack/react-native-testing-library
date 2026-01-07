@@ -1,6 +1,6 @@
-import type { ReactTestInstance, ReactTestRendererJSON } from 'react-test-renderer';
 import type { NewPlugin } from 'pretty-format';
 import prettyFormat, { plugins } from 'pretty-format';
+import type { HostElement, JsonNode } from 'test-renderer';
 
 import type { MapPropsFunction } from './map-props';
 import { defaultMapProps } from './map-props';
@@ -22,7 +22,7 @@ export type FormatElementOptions = {
  * @param element Element to format.
  */
 export function formatElement(
-  element: ReactTestInstance | null,
+  element: HostElement | null,
   { compact, highlight = true, mapProps = defaultMapProps }: FormatElementOptions = {},
 ) {
   if (element == null) {
@@ -35,7 +35,7 @@ export function formatElement(
   return prettyFormat(
     {
       // This prop is needed persuade the prettyFormat that the element is
-      // a ReactTestRendererJSON instance, so it is formatted as JSX.
+      // a JsonNode instance, so it is formatted as JSX.
       $$typeof: Symbol.for('react.test.json'),
       type: `${element.type}`,
       props: mapProps ? mapProps(props) : props,
@@ -52,7 +52,7 @@ export function formatElement(
   );
 }
 
-export function formatElementList(elements: ReactTestInstance[], options?: FormatElementOptions) {
+export function formatElementList(elements: HostElement[], options?: FormatElementOptions) {
   if (elements.length === 0) {
     return '(no elements)';
   }
@@ -61,7 +61,7 @@ export function formatElementList(elements: ReactTestInstance[], options?: Forma
 }
 
 export function formatJson(
-  json: ReactTestRendererJSON | ReactTestRendererJSON[],
+  json: JsonNode | JsonNode[],
   { compact, highlight = true, mapProps = defaultMapProps }: FormatElementOptions = {},
 ) {
   return prettyFormat(json, {

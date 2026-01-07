@@ -1,12 +1,12 @@
-import type { ReactTestInstance } from 'react-test-renderer';
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
+import type { HostElement } from 'test-renderer';
 
 import { computeAriaBusy } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';
 import { checkHostElement } from './utils';
 
-export function toBeBusy(this: jest.MatcherContext, element: ReactTestInstance) {
+export function toBeBusy(this: jest.MatcherContext, element: HostElement) {
   checkHostElement(element, toBeBusy, this);
 
   return {

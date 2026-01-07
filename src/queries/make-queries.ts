@@ -1,47 +1,47 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import { ErrorWithStack } from '../helpers/errors';
 import { formatJson } from '../helpers/format-element';
 import { logger } from '../helpers/logger';
 import { screen } from '../screen';
 import type { WaitForOptions } from '../wait-for';
-import waitFor from '../wait-for';
+import { waitFor } from '../wait-for';
 
 export type GetByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options,
-) => ReactTestInstance;
+) => HostElement;
 
 export type GetAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options,
-) => ReactTestInstance[];
+) => HostElement[];
 
 export type QueryByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options,
-) => ReactTestInstance | null;
+) => HostElement | null;
 
 export type QueryAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   options?: Options,
-) => ReactTestInstance[];
+) => HostElement[];
 
 export type FindByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   // Remove `& WaitForOptions` when all queries have been migrated to support 2nd arg query options.
   options?: Options & WaitForOptions,
   waitForOptions?: WaitForOptions,
-) => Promise<ReactTestInstance>;
+) => Promise<HostElement>;
 
 export type FindAllByQuery<Predicate, Options = void> = (
   predicate: Predicate,
   // Remove `& WaitForOptions` when all queries have been migrated to support 2nd arg query options.
   options?: Options & WaitForOptions,
   waitForOptions?: WaitForOptions,
-) => Promise<ReactTestInstance[]>;
+) => Promise<HostElement[]>;
 
-type UnboundQuery<Query> = (instance: ReactTestInstance) => Query;
+type UnboundQuery<Query> = (element: HostElement) => Query;
 
 export type UnboundQueries<Predicate, Options> = {
   getBy: UnboundQuery<GetByQuery<Predicate, Options>>;
@@ -114,9 +114,9 @@ export function makeQueries<Predicate, Options>(
   getMissingError: (predicate: Predicate, options?: Options) => string,
   getMultipleError: (predicate: Predicate, options?: Options) => string,
 ): UnboundQueries<Predicate, Options> {
-  function getAllByQuery(instance: ReactTestInstance, { printElementTree = true } = {}) {
+  function getAllByQuery(element: HostElement, { printElementTree = true } = {}) {
     return function getAllFn(predicate: Predicate, options?: Options) {
-      const results = queryAllByQuery(instance)(predicate, options);
+      const results = queryAllByQuery(element)(predicate, options);
 
       if (results.length === 0) {
         const errorMessage = formatErrorMessage(
@@ -130,9 +130,9 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function queryByQuery(instance: ReactTestInstance, { printElementTree = true } = {}) {
+  function queryByQuery(element: HostElement, { printElementTree = true } = {}) {
     return function singleQueryFn(predicate: Predicate, options?: Options) {
-      const results = queryAllByQuery(instance)(predicate, options);
+      const results = queryAllByQuery(element)(predicate, options);
 
       if (results.length > 1) {
         throw new ErrorWithStack(
@@ -149,9 +149,9 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function getByQuery(instance: ReactTestInstance, { printElementTree = true } = {}) {
+  function getByQuery(element: HostElement, { printElementTree = true } = {}) {
     return function getFn(predicate: Predicate, options?: Options) {
-      const results = queryAllByQuery(instance)(predicate, options);
+      const results = queryAllByQuery(element)(predicate, options);
 
       if (results.length > 1) {
         throw new ErrorWithStack(getMultipleError(predicate, options), getFn);
@@ -169,7 +169,7 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function findAllByQuery(instance: ReactTestInstance) {
+  function findAllByQuery(element: HostElement) {
     return function findAllFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
@@ -182,7 +182,7 @@ export function makeQueries<Predicate, Options>(
       const deprecatedWaitForOptions = extractDeprecatedWaitForOptions(queryOptions);
 
       return waitFor(
-        () => getAllByQuery(instance, { printElementTree: false })(predicate, queryOptions),
+        () => getAllByQuery(element, { printElementTree: false })(predicate, queryOptions),
         {
           ...deprecatedWaitForOptions,
           ...waitForOptions,
@@ -193,7 +193,7 @@ export function makeQueries<Predicate, Options>(
     };
   }
 
-  function findByQuery(instance: ReactTestInstance) {
+  function findByQuery(element: HostElement) {
     return function findFn(
       predicate: Predicate,
       queryOptions?: Options & WaitForOptions,
@@ -206,7 +206,7 @@ export function makeQueries<Predicate, Options>(
       const deprecatedWaitForOptions = extractDeprecatedWaitForOptions(queryOptions);
 
       return waitFor(
-        () => getByQuery(instance, { printElementTree: false })(predicate, queryOptions),
+        () => getByQuery(element, { printElementTree: false })(predicate, queryOptions),
         {
           ...deprecatedWaitForOptions,
           ...waitForOptions,

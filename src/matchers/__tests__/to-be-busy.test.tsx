@@ -3,8 +3,8 @@ import { View } from 'react-native';
 
 import { render, screen } from '../..';
 
-test('toBeBusy() basic case', () => {
-  render(
+test('toBeBusy() basic case', async () => {
+  await render(
     <>
       <View testID="busy" accessibilityState={{ busy: true }} />
       <View testID="busy-aria" aria-busy />
@@ -21,8 +21,8 @@ test('toBeBusy() basic case', () => {
   expect(screen.getByTestId('default')).not.toBeBusy();
 });
 
-test('toBeBusy() error messages', () => {
-  render(
+test('toBeBusy() error messages', async () => {
+  await render(
     <>
       <View testID="busy" accessibilityState={{ busy: true }} />
       <View testID="busy-aria" aria-busy />

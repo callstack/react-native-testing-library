@@ -1,14 +1,10 @@
-import type { ReactTestInstance } from 'react-test-renderer';
+import type { HostElement } from 'test-renderer';
 
 import type { RenderResult } from './render';
 
-const SCREEN_ERROR = '`render` method has not been called';
+const SCREEN_ERROR = '`render` function has not been called';
 
 const notImplemented = () => {
-  throw new Error(SCREEN_ERROR);
-};
-
-const notImplementedDebug = () => {
   throw new Error(SCREEN_ERROR);
 };
 
@@ -18,19 +14,16 @@ interface Screen extends RenderResult {
 
 const defaultScreen: Screen = {
   isDetached: true,
-  get root(): ReactTestInstance {
+  get container(): HostElement {
     throw new Error(SCREEN_ERROR);
   },
-  get UNSAFE_root(): ReactTestInstance {
+  get root(): HostElement | null {
     throw new Error(SCREEN_ERROR);
   },
-  debug: notImplementedDebug,
+  debug: notImplemented,
   rerender: notImplemented,
-  rerenderAsync: notImplemented,
   update: notImplemented,
-  updateAsync: notImplemented,
   unmount: notImplemented,
-  unmountAsync: notImplemented,
   toJSON: notImplemented,
   getByLabelText: notImplemented,
   getAllByLabelText: notImplemented,
@@ -62,14 +55,6 @@ const defaultScreen: Screen = {
   queryAllByRole: notImplemented,
   findByRole: notImplemented,
   findAllByRole: notImplemented,
-  UNSAFE_getByProps: notImplemented,
-  UNSAFE_getAllByProps: notImplemented,
-  UNSAFE_queryByProps: notImplemented,
-  UNSAFE_queryAllByProps: notImplemented,
-  UNSAFE_getByType: notImplemented,
-  UNSAFE_getAllByType: notImplemented,
-  UNSAFE_queryByType: notImplemented,
-  UNSAFE_queryAllByType: notImplemented,
   getByPlaceholderText: notImplemented,
   getAllByPlaceholderText: notImplemented,
   queryByPlaceholderText: notImplemented,

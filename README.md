@@ -18,7 +18,7 @@ You want to write maintainable tests for your React Native components. As a part
 
 ## This solution
 
-The React Native Testing Library (RNTL) is a comprehensive solution for testing React Native components. It provides React Native runtime simulation on top of `react-test-renderer`, in a way that encourages better testing practices. Its primary guiding principle is:
+The React Native Testing Library (RNTL) is a comprehensive solution for testing React Native components. It provides React Native runtime simulation on top of `test-renderer`, in a way that encourages better testing practices. Its primary guiding principle is:
 
 > The more your tests resemble the way your software is used, the more confidence they can give you.
 
@@ -36,7 +36,7 @@ yarn add --dev @testing-library/react-native
 npm install --save-dev @testing-library/react-native
 ```
 
-This library has a `peerDependencies` listing for `react-test-renderer`. Make sure that your `react-test-renderer` version matches exactly the `react` version, avoid using `^` in version number.
+This library has a `peerDependencies` listing for `test-renderer`. Make sure that your `test-renderer` version matches exactly the `react` version, avoid using `^` in version number.
 
 ### Additional Jest matchers
 

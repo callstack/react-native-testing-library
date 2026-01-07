@@ -3,13 +3,13 @@ import { Button, Image, Text, TextInput, TouchableOpacity, View } from 'react-na
 
 import { getDefaultNormalizer, render, screen, within } from '../..';
 
-test('byText matches simple text', () => {
-  render(<Text testID="text">Hello World</Text>);
+test('byText matches simple text', async () => {
+  await render(<Text testID="text">Hello World</Text>);
   expect(screen.getByText('Hello World').props.testID).toBe('text');
 });
 
-test('byText matches inner nested text', () => {
-  render(
+test('byText matches inner nested text', async () => {
+  await render(
     <Text testID="outer">
       <Text testID="inner">Hello World</Text>
     </Text>,
@@ -17,8 +17,8 @@ test('byText matches inner nested text', () => {
   expect(screen.getByText('Hello World').props.testID).toBe('inner');
 });
 
-test('byText matches accross multiple texts', () => {
-  render(
+test('byText matches accross multiple texts', async () => {
+  await render(
     <Text testID="outer">
       <Text testID="inner-1">Hello</Text> <Text testID="inner-2">World</Text>
     </Text>,
@@ -53,8 +53,8 @@ const Banana = () => {
 
 type ChildrenProps = { children: React.ReactNode };
 
-test('getByText, queryByText', () => {
-  render(<Banana />);
+test('getByText, queryByText', async () => {
+  await render(<Banana />);
   const button = screen.getByText(/change/i);
 
   expect(button.props.children).toBe('Change freshness!');
@@ -74,7 +74,7 @@ test('getByText, queryByText', () => {
   expect(screen.queryByText('0')).toBe(zeroText);
 });
 
-test('getByText, screen.queryByText with children as Array', () => {
+test('getByText, screen.queryByText with children as Array', async () => {
   type BananaCounterProps = { numBananas: number };
   const BananaCounter = ({ numBananas }: BananaCounterProps) => (
     <Text>There are {numBananas} bananas in the bunch</Text>
@@ -88,14 +88,14 @@ test('getByText, screen.queryByText with children as Array', () => {
     </View>
   );
 
-  render(<BananaStore />);
+  await render(<BananaStore />);
 
   const threeBananaBunch = screen.getByText('There are 3 bananas in the bunch');
   expect(threeBananaBunch.props.children).toEqual(['There are ', 3, ' bananas in the bunch']);
 });
 
-test('getAllByText, queryAllByText', () => {
-  render(<Banana />);
+test('getAllByText, queryAllByText', async () => {
+  await render(<Banana />);
   const buttons = screen.getAllByText(/fresh/i);
 
   expect(buttons).toHaveLength(3);
@@ -109,7 +109,7 @@ test('getAllByText, queryAllByText', () => {
 
 test('findByText queries work asynchronously', async () => {
   const options = { timeout: 10 }; // Short timeout so that this test runs quickly
-  render(<View />);
+  await render(<View />);
   await expect(screen.findByText('Some Text', {}, options)).rejects.toBeTruthy();
   await expect(screen.findAllByText('Some Text', {}, options)).rejects.toBeTruthy();
 
@@ -127,21 +127,23 @@ test('findByText queries work asynchronously', async () => {
   await expect(screen.findAllByText('Some Text')).resolves.toHaveLength(1);
 }, 20000);
 
-test('getByText works properly with custom text component', () => {
+test('getByText works properly with custom text component', async () => {
   function BoldText({ children }: ChildrenProps) {
     return <Text>{children}</Text>;
   }
 
   expect(
-    render(
-      <Text>
-        <BoldText>Hello</BoldText>
-      </Text>,
+    (
+      await render(
+        <Text>
+          <BoldText>Hello</BoldText>
+        </Text>,
+      )
     ).getByText('Hello'),
   ).toBeTruthy();
 });
 
-test('getByText works properly with custom text container', () => {
+test('getByText works properly with custom text container', async () => {
   function MyText({ children }: ChildrenProps) {
     return <Text>{children}</Text>;
   }
@@ -151,61 +153,71 @@ test('getByText works properly with custom text container', () => {
   }
 
   expect(
-    render(
-      <MyText>
-        <BoldText>Hello</BoldText>
-      </MyText>,
+    (
+      await render(
+        <MyText>
+          <BoldText>Hello</BoldText>
+        </MyText>,
+      )
     ).getByText('Hello'),
   ).toBeTruthy();
 });
 
-test('queryByText nested <Image> in <Text> at start', () => {
+test('queryByText nested <Image> in <Text> at start', async () => {
   expect(
-    render(
-      <Text>
-        <Image source={{}} />
-        Hello
-      </Text>,
+    (
+      await render(
+        <Text>
+          <Image source={{}} />
+          Hello
+        </Text>,
+      )
     ).queryByText('Hello'),
   ).toBeTruthy();
 });
 
-test('queryByText nested <Image> in <Text> at end', () => {
+test('queryByText nested <Image> in <Text> at end', async () => {
   expect(
-    render(
-      <Text>
-        Hello
-        <Image source={{}} />
-      </Text>,
+    (
+      await render(
+        <Text>
+          Hello
+          <Image source={{}} />
+        </Text>,
+      )
     ).queryByText('Hello'),
   ).toBeTruthy();
 });
 
-test('queryByText nested <Image> in <Text> in middle', () => {
+test('queryByText nested <Image> in <Text> in middle', async () => {
   expect(
-    render(
-      <Text>
-        Hello
-        <Image source={{}} />
-        World
-      </Text>,
+    (
+      await render(
+        <Text>
+          Hello
+          <Image source={{}} />
+          World
+        </Text>,
+      )
     ).queryByText('HelloWorld'),
   ).toBeTruthy();
 });
 
-test('queryByText not found', () => {
+test('queryByText not found', async () => {
   expect(
-    render(
-      <Text>
-        Hello
-        <Image source={{}} />
-      </Text>,
+    (
+      await render(
+        <Text>
+          Hello
+          <Image source={{}} />
+        </Text>,
+      )
     ).queryByText('SomethingElse'),
   ).toBeFalsy();
 });
 
-test('*ByText matches text across multiple nested Text', () => {
-  render(
+test('*ByText matches text across multiple nested Text', async () => {
+  await render(
     <Text nativeID="1">
       Hello{' '}
       <Text nativeID="2">
@@ -218,18 +230,18 @@ test('*ByText matches text across multiple nested Text', () => {
   expect(screen.getByText('Hello World!')).toBeTruthy();
 });
 
-test('queryByText with nested Text components return the closest Text', () => {
+test('queryByText with nested Text components return the closest Text', async () => {
   const NestedTexts = () => (
     <Text nativeID="1">
       <Text nativeID="2">My text</Text>
     </Text>
   );
 
-  render(<NestedTexts />);
+  await render(<NestedTexts />);
   expect(screen.queryByText('My text', { exact: false })?.props.nativeID).toBe('2');
 });
 
-test('queryByText with nested Text components each with text return the lowest one', () => {
+test('queryByText with nested Text components each with text return the lowest one', async () => {
   const NestedTexts = () => (
     <Text nativeID="1">
       bob
@@ -237,27 +249,29 @@ test('queryByText with nested Text components each with text return the lowest o
     </Text>
   );
 
-  render(<NestedTexts />);
+  await render(<NestedTexts />);
 
   expect(screen.queryByText('My text', { exact: false })?.props.nativeID).toBe('2');
 });
 
-test('queryByText nested deep <CustomText> in <Text>', () => {
+test('queryByText nested deep <CustomText> in <Text>', async () => {
   const CustomText = ({ children }: ChildrenProps) => {
     return <Text>{children}</Text>;
   };
 
   expect(
-    render(
-      <Text>
-        <CustomText>Hello</CustomText> <CustomText>World!</CustomText>
-      </Text>,
+    (
+      await render(
+        <Text>
+          <CustomText>Hello</CustomText> <CustomText>World!</CustomText>
+        </Text>,
+      )
     ).getByText('Hello World!'),
   ).toBeTruthy();
 });
 
-test('queryByText with nested Text components: not-exact text match returns the most deeply nested common component', () => {
-  render(
+test('queryByText with nested Text components: not-exact text match returns the most deeply nested common component', async () => {
+  await render(
     <Text nativeID="1">
       bob
       <Text nativeID="2">My </Text>
@@ -265,7 +279,7 @@ test('queryByText with nested Text components: not-exact text match returns the 
     </Text>,
   );
 
-  render(
+  await render(
     <Text nativeID="1">
       bob
       <Text nativeID="2">My text for test</Text>
@@ -276,32 +290,36 @@ test('queryByText with nested Text components: not-exact text match returns the 
   expect(screen.queryByText('My text', { exact: false })?.props.nativeID).toBe('2');
 });
 
-test('queryAllByText does not match several times the same text', () => {
-  const allMatched = render(
-    <Text nativeID="1">
-      Start
-      <Text nativeID="2">This is a long text</Text>
-    </Text>,
+test('queryAllByText does not match several times the same text', async () => {
+  const allMatched = (
+    await render(
+      <Text nativeID="1">
+        Start
+        <Text nativeID="2">This is a long text</Text>
+      </Text>,
+    )
   ).queryAllByText('long text', { exact: false });
   expect(allMatched.length).toBe(1);
   expect(allMatched[0].props.nativeID).toBe('2');
 });
 
-test('queryAllByText matches all the matching nodes', () => {
-  const allMatched = render(
-    <Text nativeID="1">
-      Start
-      <Text nativeID="2">This is a long text</Text>
-      <Text nativeID="3">This is another long text</Text>
-    </Text>,
+test('queryAllByText matches all the matching nodes', async () => {
+  const allMatched = (
+    await render(
+      <Text nativeID="1">
+        Start
+        <Text nativeID="2">This is a long text</Text>
+        <Text nativeID="3">This is another long text</Text>
+      </Text>,
+    )
   ).queryAllByText('long text', { exact: false });
   expect(allMatched.length).toBe(2);
   expect(allMatched.map((node) => node.props.nativeID)).toEqual(['2', '3']);
 });
 
 describe('supports TextMatch options', () => {
-  test('getByText, getAllByText', () => {
-    render(
+  test('getByText, getAllByText', async () => {
+    await render(
       <View>
         <Text testID="text">Text and details</Text>
         <Button testID="button" title="Button and a detail" onPress={jest.fn()} />
@@ -312,8 +330,8 @@ describe('supports TextMatch options', () => {
     expect(screen.getAllByText('detail', { exact: false })).toHaveLength(2);
   });
 
-  test('getByPlaceholderText, getAllByPlaceholderText', () => {
-    render(
+  test('getByPlaceholderText, getAllByPlaceholderText', async () => {
+    await render(
       <View>
         <TextInput placeholder={'Placeholder with details'} />
         <TextInput placeholder={'Placeholder with a DETAIL'} />
@@ -324,8 +342,8 @@ describe('supports TextMatch options', () => {
     expect(screen.getAllByPlaceholderText('detail', { exact: false })).toHaveLength(2);
   });
 
-  test('getByDisplayValue, getAllByDisplayValue', () => {
-    render(
+  test('getByDisplayValue, getAllByDisplayValue', async () => {
+    await render(
       <View>
         <TextInput value={'Value with details'} />
         <TextInput value={'Value with a detail'} />
@@ -336,8 +354,8 @@ describe('supports TextMatch options', () => {
     expect(screen.getAllByDisplayValue('detail', { exact: false })).toHaveLength(2);
   });
 
-  test('getByTestId, getAllByTestId', () => {
-    render(
+  test('getByTestId, getAllByTestId', async () => {
+    await render(
       <View>
         <View testID="test" />
         <View testID="tests id" />
@@ -347,8 +365,8 @@ describe('supports TextMatch options', () => {
     expect(screen.getAllByTestId('test', { exact: false })).toHaveLength(2);
   });
 
-  test('with TextMatch option exact === false text search is NOT case sensitive', () => {
-    render(
+  test('with TextMatch option exact === false text search is NOT case sensitive', async () => {
+    await render(
       <View>
         <Text testID="text">Text and details</Text>
         <Button testID="button" title="Button and a DeTAil" onPress={jest.fn()} />
@@ -361,8 +379,8 @@ describe('supports TextMatch options', () => {
 });
 
 describe('Supports normalization', () => {
-  test('trims and collapses whitespace by default', () => {
-    render(
+  test('trims and collapses whitespace by default', async () => {
+    await render(
       <View>
         <Text>{`  Text     and
 
@@ -373,11 +391,11 @@ describe('Supports normalization', () => {
     expect(screen.getByText('Text and whitespace')).toBeTruthy();
   });
 
-  test('trim and collapseWhitespace is customizable by getDefaultNormalizer param', () => {
+  test('trim and collapseWhitespace is customizable by getDefaultNormalizer param', async () => {
     const testTextWithWhitespace = `  Text     and
 
         whitespace`;
-    render(
+    await render(
       <View>
         <Text>{testTextWithWhitespace}</Text>
       </View>,
@@ -393,10 +411,10 @@ describe('Supports normalization', () => {
     ).toBeTruthy();
   });
 
-  test('normalizer function is customisable', () => {
+  test('normalizer function is customisable', async () => {
     const testText = 'A TO REMOVE text';
     const normalizerFn = (textToNormalize: string) => textToNormalize.replace('TO REMOVE ', '');
-    render(
+    await render(
       <View>
         <Text>{testText}</Text>
       </View>,
@@ -406,8 +424,8 @@ describe('Supports normalization', () => {
   });
 });
 
-test('getByText and queryByText work properly with text nested in React.Fragment', () => {
-  render(
+test('getByText and queryByText work properly with text nested in React.Fragment', async () => {
+  await render(
     <Text>
       <>Hello</>
     </Text>,
@@ -416,8 +434,8 @@ test('getByText and queryByText work properly with text nested in React.Fragment
   expect(screen.queryByText('Hello')).not.toBeNull();
 });
 
-test('getByText and queryByText work properly with text partially nested in React.Fragment', () => {
-  render(
+test('getByText and queryByText work properly with text partially nested in React.Fragment', async () => {
+  await render(
     <Text>
       He<>llo</>
     </Text>,
@@ -426,8 +444,8 @@ test('getByText and queryByText work properly with text partially nested in Reac
   expect(screen.queryByText('Hello')).not.toBeNull();
 });
 
-test('getByText and queryByText work properly with multiple nested fragments', () => {
-  render(
+test('getByText and queryByText work properly with multiple nested fragments', async () => {
+  await render(
     <Text>
       He
       <>
@@ -439,34 +457,28 @@ test('getByText and queryByText work properly with multiple nested fragments', (
   expect(screen.queryByText('Hello')).not.toBeNull();
 });
 
-test('getByText and queryByText work with newlines', () => {
+test('getByText and queryByText work with newlines', async () => {
   const textWithNewLines = 'Line 1\nLine 2';
-  render(<Text>{textWithNewLines}</Text>);
+  await render(<Text>{textWithNewLines}</Text>);
   expect(screen.getByText(textWithNewLines)).toBeTruthy();
   expect(screen.queryByText(textWithNewLines)).toBeTruthy();
 });
 
-test('getByText and queryByText work with tabs', () => {
+test('getByText and queryByText work with tabs', async () => {
   const textWithTabs = 'Line 1\tLine 2';
-  render(<Text>{textWithTabs}</Text>);
+  await render(<Text>{textWithTabs}</Text>);
   expect(screen.getByText(textWithTabs)).toBeTruthy();
   expect(screen.queryByText(textWithTabs)).toBeTruthy();
 });
 
-test('getByText searches for text within itself', () => {
-  render(<Text testID="subject">Hello</Text>);
+test('getByText does not search for text within itself', async () => {
+  await render(<Text testID="subject">Hello</Text>);
   const textNode = within(screen.getByText('Hello'));
-  expect(textNode.getByText('Hello')).toBeTruthy();
+  expect(textNode.queryByText('Hello')).toBeNull();
 });
 
-test('getByText searches for text within self host element', () => {
-  render(<Text testID="subject">Hello</Text>);
-  const textNode = within(screen.getByTestId('subject'));
-  expect(textNode.getByText('Hello')).toBeTruthy();
-});
-
-test('byText support hidden option', () => {
-  render(<Text style={{ display: 'none' }}>Hidden from accessibility</Text>);
+test('byText support hidden option', async () => {
+  await render(<Text style={{ display: 'none' }}>Hidden from accessibility</Text>);
 
   expect(screen.getByText(/hidden/i, { includeHiddenElements: true })).toBeTruthy();
 
@@ -489,7 +501,7 @@ test('byText support hidden option', () => {
 });
 
 test('error message renders the element tree, preserving only helpful props', async () => {
-  render(<View accessibilityViewIsModal key="this is filtered" />);
+  await render(<View accessibilityViewIsModal key="this is filtered" />);
 
   expect(() => screen.getByText(/foo/)).toThrowErrorMatchingInlineSnapshot(`
     "Unable to find an element with text: /foo/
@@ -524,7 +536,7 @@ test('error message renders the element tree, preserving only helpful props', as
   `);
 });
 
-test('byText should return host component', () => {
-  render(<Text>hello</Text>);
+test('byText should return host component', async () => {
+  await render(<Text>hello</Text>);
   expect(screen.getByText('hello').type).toBe('Text');
 });

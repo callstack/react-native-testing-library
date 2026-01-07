@@ -27,9 +27,9 @@ afterEach(() => {
 
 // This just verifies that by importing RNTL in an environment which supports afterEach (like jest)
 // we'll get automatic cleanup between tests.
-test('component is mounted, but not umounted before test ends', () => {
+test('component is mounted, but not umounted before test ends', async () => {
   const fn = jest.fn();
-  render(<Test onUnmount={fn} />);
+  await render(<Test onUnmount={fn} />);
   expect(isMounted).toEqual(true);
   expect(fn).not.toHaveBeenCalled();
 });
@@ -38,14 +38,14 @@ test('component is automatically umounted after first test ends', () => {
   expect(isMounted).toEqual(false);
 });
 
-test('does not time out with legacy fake timers', () => {
+test('does not time out with legacy fake timers', async () => {
   jest.useFakeTimers({ legacyFakeTimers: true });
-  render(<Test />);
+  await render(<Test />);
   expect(isMounted).toEqual(true);
 });
 
-test('does not time out with fake timers', () => {
+test('does not time out with fake timers', async () => {
   jest.useFakeTimers();
-  render(<Test />);
+  await render(<Test />);
   expect(isMounted).toEqual(true);
 });
