@@ -27,7 +27,7 @@ export default async function transform(
     const content = root.root().text();
     const packageJson: PackageJson = JSON.parse(content);
 
-    if (!hasRNTLOrUTR(packageJson)) {
+    if (!hasRntlOrTestRenderer(packageJson)) {
       return null;
     }
 
@@ -41,11 +41,11 @@ export default async function transform(
       hasChanges = true;
     }
 
-    if (ensureRNTLInDevDependencies(packageJson)) {
+    if (ensureRntlInDevDependencies(packageJson)) {
       hasChanges = true;
     }
 
-    if (updateUTRVersionInDevDependencies(packageJson)) {
+    if (updateTestRendererVersionInDevDependencies(packageJson)) {
       hasChanges = true;
     }
 
@@ -67,18 +67,18 @@ function isPackageJsonFile(filename: string): boolean {
   return filename.endsWith('package.json');
 }
 
-function hasRNTLOrUTR(packageJson: PackageJson): boolean {
-  const hasRNTL =
+function hasRntlOrTestRenderer(packageJson: PackageJson): boolean {
+  const hasRntl =
     packageJson.dependencies?.['@testing-library/react-native'] ||
     packageJson.devDependencies?.['@testing-library/react-native'] ||
     packageJson.peerDependencies?.['@testing-library/react-native'];
 
-  const hasUTR =
+  const hasTestRenderer =
     packageJson.dependencies?.['test-renderer'] ||
     packageJson.devDependencies?.['test-renderer'] ||
     packageJson.peerDependencies?.['test-renderer'];
 
-  return hasRNTL || hasUTR;
+  return hasRntl || hasTestRenderer;
 }
 
 function removePackageFromAllDependencyTypes(pkgName: string, packageJson: PackageJson): boolean {
@@ -121,7 +121,7 @@ function removeObsoletePackages(packageJson: PackageJson): boolean {
   return removedTypes || removedRenderer;
 }
 
-function ensureRNTLInDevDependencies(packageJson: PackageJson): boolean {
+function ensureRntlInDevDependencies(packageJson: PackageJson): boolean {
   let hasChanges = false;
   const rntlInDeps = packageJson.dependencies?.['@testing-library/react-native'];
 
@@ -140,7 +140,7 @@ function ensureRNTLInDevDependencies(packageJson: PackageJson): boolean {
   return hasChanges;
 }
 
-function updateUTRVersionInDevDependencies(packageJson: PackageJson): boolean {
+function updateTestRendererVersionInDevDependencies(packageJson: PackageJson): boolean {
   const currentVersion = packageJson.devDependencies?.['test-renderer'];
   if (currentVersion !== TEST_RENDERER_VERSION) {
     packageJson.devDependencies!['test-renderer'] = TEST_RENDERER_VERSION;
