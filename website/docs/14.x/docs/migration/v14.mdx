@@ -416,13 +416,12 @@ If you were relying on the previous behavior where strings could be rendered out
 
 ### `act` is now async by default
 
-In v14, `act` is now async by default and always returns a Promise. The previous synchronous `act` function has been renamed to `unsafe_act`. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+In v14, `act` is now async by default and always returns a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
 
 **What changed:**
 
 - `act` now always returns a `Promise<T>` instead of `T | Thenable<T>`
-- `unsafe_act` is available for the old behavior (direct React.act wrapper)
-- Both `act` and `unsafe_act` are now named exports (no default export)
+- `act` is now a named export (no default export)
 
 **Before (v13):**
 
@@ -454,35 +453,9 @@ it('should update state', async () => {
 });
 ```
 
-#### Migration path
-
-To ease migration, we provide `unsafe_act` which maintains the same behavior as v13. This allows you to migrate gradually.
-
-##### `unsafe_act` {#unsafe-act}
-
-```ts
-function unsafe_act<T>(callback: () => T | Promise<T>): T | Thenable<T>;
-```
-
-**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `act` instead.
-
-The synchronous version of `act` that returns immediately for sync callbacks or a thenable for async callbacks. This maintains backward compatibility with v13 tests but is not recommended for new code.
-
-```ts
-// Old v13 code (still works but deprecated)
-import { unsafe_act } from '@testing-library/react-native';
-
-it('should update state', () => {
-  unsafe_act(() => {
-    setState('new value');
-  });
-  expect(state).toBe('new value');
-});
-```
-
 #### Step-by-step migration guide
 
-To migrate from `unsafe_act` to `act`:
+To migrate from v13 `act` to v14 `act`:
 
 ##### 1. Update import statement
 

@@ -1,4 +1,4 @@
-export { act, unsafe_act } from './act';
+export { act } from './act';
 export { cleanup } from './cleanup';
 export { fireEvent } from './fire-event';
 export { render } from './render';
