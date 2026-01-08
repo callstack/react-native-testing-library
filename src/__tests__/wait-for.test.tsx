@@ -31,3 +31,20 @@ it('resolves when expectation returns a promise that resolves', async () => {
   expect(result).toBe('success');
   expect(attemptCount).toBeGreaterThanOrEqual(3);
 });
+
+it('calls onTimeout callback with error and uses returned error when provided', async () => {
+  const customError = new Error('Custom timeout message');
+  const onTimeout = jest.fn((error: Error) => customError);
+
+  await expect(
+    waitFor(
+      () => {
+        throw new Error('Condition not met');
+      },
+      { timeout: 100, onTimeout },
+    ),
+  ).rejects.toThrow('Custom timeout message');
+
+  expect(onTimeout).toHaveBeenCalledTimes(1);
+  expect(onTimeout).toHaveBeenCalledWith(expect.any(Error));
+});
