@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
-import { render, screen, waitForElementToBeRemoved } from '..';
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '..';
 
 it('throws error when element is already removed at the time of calling', async () => {
   await expect(waitForElementToBeRemoved(() => null)).rejects.toThrow(
@@ -10,16 +10,25 @@ it('throws error when element is already removed at the time of calling', async 
 });
 
 it('resolves when query throws error after element is removed', async () => {
-  const Component = ({ showText }: { showText: boolean }) => (
-    <View>{showText && <Text>Hello</Text>}</View>
-  );
+  const Component = () => {
+    const [showText, setShowText] = React.useState(true);
 
-  const { rerender } = await render(<Component showText={true} />);
+    return (
+      <View>
+        {showText && <Text>Hello</Text>}
+        <Pressable onPress={() => setShowText(false)} testID="remove-button">
+          <Text>Remove</Text>
+        </Pressable>
+      </View>
+    );
+  };
+
+  await render(<Component />);
 
   expect(screen.getByText('Hello')).toBeOnTheScreen();
 
-  setTimeout(async () => {
-    await rerender(<Component showText={false} />);
+  void setTimeout(() => {
+    void fireEvent.press(screen.getByTestId('remove-button'));
   }, 50);
 
   await waitForElementToBeRemoved(() => screen.getByText('Hello'));
