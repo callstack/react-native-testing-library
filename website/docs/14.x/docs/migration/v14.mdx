@@ -163,7 +163,25 @@ screen.rerender(<MyComponent />);
 await screen.rerender(<MyComponent />);
 ```
 
-##### 4. Update `unmount` calls to await
+##### 4. Replace `update` alias with `rerender`
+
+The `update` alias for `rerender` has been removed in v14. If you were using `screen.update()` or `renderer.update()`, replace it with `rerender()`:
+
+```ts
+// Before (v13)
+screen.update(<MyComponent />);
+// or
+const { update } = render(<MyComponent />);
+update(<MyComponent />);
+
+// After (v14)
+await screen.rerender(<MyComponent />);
+// or
+const { rerender } = await render(<MyComponent />);
+await rerender(<MyComponent />);
+```
+
+##### 5. Update `unmount` calls to await
 
 ```ts
 // Before
@@ -215,6 +233,36 @@ it('should update component', async () => {
 - **Future-proof**: Aligns with React's direction toward async rendering
 
 For more details, see the [`render` API documentation](/docs/api/render).
+
+### `update` alias removed
+
+In v14, the `update` alias for `rerender` has been removed. You must use `rerender` instead.
+
+**What changed:**
+
+- `screen.update()` has been removed
+- `renderer.update()` has been removed
+- Only `rerender` is now available
+
+**Migration:**
+
+Replace all `update` calls with `rerender`:
+
+```ts
+// Before (v13)
+screen.update(<MyComponent />);
+// or
+const { update } = render(<MyComponent />);
+update(<MyComponent />);
+
+// After (v14)
+await screen.rerender(<MyComponent />);
+// or
+const { rerender } = await render(<MyComponent />);
+await rerender(<MyComponent />);
+```
+
+**Note:** This change is included in the step-by-step migration guide for async `render` above.
 
 ### `renderHook` is now async by default
 
@@ -290,7 +338,7 @@ unmount();
 await unmount();
 ```
 
-##### 5. Update `act` calls to use async `act`
+##### 6. Update `act` calls to use async `act`
 
 ```ts
 // Before

@@ -169,7 +169,7 @@ test('toBeVisible() on inaccessible view', async () => {
   const test = screen.getByTestId('test', { includeHiddenElements: true });
   expect(test).not.toBeVisible();
 
-  await screen.update(<View testID="test" />);
+  await screen.rerender(<View testID="test" />);
   expect(test).toBeVisible();
 });
 
@@ -190,7 +190,7 @@ test('toBeVisible() on inaccessible view (iOS)', async () => {
   const test = screen.getByTestId('test', { includeHiddenElements: true });
   expect(test).not.toBeVisible();
 
-  await screen.update(<View testID="test" accessibilityElementsHidden={false} />);
+  await screen.rerender(<View testID="test" accessibilityElementsHidden={false} />);
   expect(test).toBeVisible();
 });
 
@@ -211,7 +211,7 @@ test('toBeVisible() on inaccessible view (Android)', async () => {
   const test = screen.getByTestId('test', { includeHiddenElements: true });
   expect(test).not.toBeVisible();
 
-  await screen.update(<View testID="test" importantForAccessibility="auto" />);
+  await screen.rerender(<View testID="test" importantForAccessibility="auto" />);
   expect(test).toBeVisible();
 });
 

@@ -81,7 +81,6 @@ export async function render<T>(element: React.ReactElement<T>, options: RenderO
   const result = {
     ...getQueriesForElement(renderer.container),
     rerender,
-    update: rerender, // alias for `rerender`
     unmount,
     toJSON,
     debug: makeDebug(renderer),
