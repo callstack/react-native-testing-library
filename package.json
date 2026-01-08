@@ -30,16 +30,16 @@
     "test:codemods": "node scripts/test-codemods.mjs",
     "typecheck": "tsc",
     "lint": "eslint src --cache",
-    "validate": "yarn prettier && yarn lint && yarn typecheck && yarn test",
-    "validate:write": "yarn prettier:write && yarn lint --fix && yarn typecheck && yarn test -u",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "validate": "yarn typecheck && yarn test && yarn lint &&  yarn prettier",
+    "validate:fix": "yarn prettier:fix && yarn lint --fix && yarn typecheck && yarn test -u",
     "build:js": "babel src --out-dir build --extensions \".js,.ts,.jsx,.tsx\" --source-maps --ignore \"**/__tests__/**\"",
     "build:ts": "tsc --build tsconfig.release.json",
     "build": "yarn clean && yarn build:js && yarn build:ts",
     "release": "release-it",
     "release:rc": "release-it --preRelease=rc",
-    "release:alpha": "release-it --preRelease=alpha",
-    "prettier": "prettier --check .",
-    "prettier:write": "prettier --write ."
+    "release:alpha": "release-it --preRelease=alpha"
   },
   "files": [
     "build/",
@@ -91,7 +91,7 @@
     "react-native": "0.83.1",
     "react-native-gesture-handler": "^2.29.1",
     "release-it": "^19.0.6",
-    "test-renderer": "0.12.0",
+    "test-renderer": "0.13.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.47.0"
   },
