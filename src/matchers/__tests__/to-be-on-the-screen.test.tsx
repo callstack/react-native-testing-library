@@ -13,7 +13,7 @@ test('toBeOnTheScreen() example test', async () => {
   const child = screen.getByTestId('child');
   expect(child).toBeOnTheScreen();
 
-  await screen.update(<View />);
+  await screen.rerender(<View />);
   expect(child).not.toBeOnTheScreen();
 });
 
@@ -47,7 +47,7 @@ test('toBeOnTheScreen() on detached element', async () => {
 
   const element = screen.getByTestId('text');
   // Next line will unmount the element, yet `element` variable will still hold reference to it.
-  await screen.update(<ShowChildren show={false} />);
+  await screen.rerender(<ShowChildren show={false} />);
 
   expect(element).toBeTruthy();
   expect(element).not.toBeOnTheScreen();

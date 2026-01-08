@@ -1,17 +1,15 @@
 # Other helpers
 
-## `within`, `getQueriesForElement` {#within}
+## `within` {#within}
 
 ```jsx
 function within(element: HostElement): Queries {}
-
-function getQueriesForElement(element: HostElement): Queries {}
 ```
 
-`within` (also available as `getQueriesForElement` alias) performs [queries](docs/api/queries) scoped to given element.
+`within` performs [queries](docs/api/queries) scoped to given element.
 
 :::note
-Please note that additional `render` specific operations like `update`, `unmount`, `debug`, `toJSON` are _not_ included.
+Please note that additional `render` specific operations like `rerender`, `unmount`, `debug`, `toJSON` are _not_ included.
 :::
 
 ```jsx
@@ -33,7 +31,7 @@ Use cases for scoped queries include:
 function act<T>(callback: () => T | Promise<T>): Promise<T>;
 ```
 
-Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually.
+Useful function to help testing components that use hooks API. By default any `render`, `rerender`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually.
 
 **In v14, `act` is now async by default and always returns a Promise**, making it compatible with React 19, React Suspense, and `React.use()`. This ensures all pending React updates are executed before the Promise resolves.
 

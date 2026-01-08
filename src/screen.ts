@@ -22,7 +22,6 @@ const defaultScreen: Screen = {
   },
   debug: notImplemented,
   rerender: notImplemented,
-  update: notImplemented,
   unmount: notImplemented,
   toJSON: notImplemented,
   getByLabelText: notImplemented,

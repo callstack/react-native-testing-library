@@ -4,7 +4,7 @@ export { fireEvent } from './fire-event';
 export { render } from './render';
 export { waitFor } from './wait-for';
 export { waitForElementToBeRemoved } from './wait-for-element-to-be-removed';
-export { within, getQueriesForElement } from './within';
+export { within } from './within';
 
 export { configure, resetToDefaults } from './config';
 export { isHiddenFromAccessibility, isInaccessible } from './helpers/accessibility';

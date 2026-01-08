@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, TextInput, View } from 'react-native';
 
-import { getQueriesForElement, render, within } from '..';
+import { render, within } from '..';
 
 test('within() exposes basic queries', async () => {
   const rootQueries = await render(
@@ -78,8 +78,4 @@ test('within() exposes a11y queries', async () => {
   expect(secondQueries.queryAllByA11yHint('Same Hint')).toHaveLength(1);
   await expect(secondQueries.findAllByLabelText('Same Label')).resolves.toHaveLength(1);
   await expect(secondQueries.findAllByA11yHint('Same Hint')).resolves.toHaveLength(1);
-});
-
-test('getQueriesForElement is alias to within', () => {
-  expect(getQueriesForElement).toBe(within);
 });
