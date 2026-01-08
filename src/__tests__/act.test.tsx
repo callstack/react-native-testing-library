@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Text } from 'react-native';
 
 import { act, fireEvent, render, screen } from '..';
+import { getIsReactActEnvironment } from '../act';
 
 type UseEffectProps = { callback(): void };
 const UseEffect = ({ callback }: UseEffectProps) => {
@@ -47,4 +48,37 @@ test('should be able to await act', async () => {
 
 test('should be able to await act when promise rejects', async () => {
   await expect(act(() => Promise.reject('error'))).rejects.toBe('error');
+});
+
+test('should restore act environment when callback throws synchronously', async () => {
+  const previousEnvironment = getIsReactActEnvironment();
+  
+  const testError = new Error('Synchronous error in act');
+  
+  try {
+    await act(() => {
+      throw testError;
+    });
+    // Should not reach here
+    expect(true).toBe(false);
+  } catch (error) {
+    expect(error).toBe(testError);
+  }
+  
+  // Verify the act environment was restored even after error
+  expect(getIsReactActEnvironment()).toBe(previousEnvironment);
+});
+
+test('should restore act environment when callback returns non-promise value', async () => {
+  const previousEnvironment = getIsReactActEnvironment();
+  
+  // Call act with a callback that returns a non-promise value
+  // This tests the else branch in withGlobalActEnvironment
+  const result = await act(() => {
+    return 42;
+  });
+  
+  expect(result).toBe(42);
+  // Verify the act environment was restored
+  expect(getIsReactActEnvironment()).toBe(previousEnvironment);
 });
