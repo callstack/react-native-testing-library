@@ -34,7 +34,7 @@ it('resolves when expectation returns a promise that resolves', async () => {
 
 it('calls onTimeout callback with error and uses returned error when provided', async () => {
   const customError = new Error('Custom timeout message');
-  const onTimeout = jest.fn((error: Error) => customError);
+  const onTimeout = jest.fn((_error: Error) => customError);
 
   await expect(
     waitFor(
