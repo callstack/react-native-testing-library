@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
+
 import { render, screen } from '..';
 
 it('renders a React Native component and makes it queryable', async () => {

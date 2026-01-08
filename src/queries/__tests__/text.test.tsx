@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
+
 import { render, screen } from '../..';
 
 it('finds text elements using partial matching when exact option is false', async () => {
