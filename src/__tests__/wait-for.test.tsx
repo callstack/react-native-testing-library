@@ -316,3 +316,34 @@ test('waitFor throws if expectation is not a function', async () => {
     waitFor('not a function'),
   ).rejects.toThrowErrorMatchingInlineSnapshot(`"Received \`expectation\` arg must be a function"`);
 });
+
+test.each([false, true])(
+  'waitFor throws clear error when switching from fake timers to real timers (legacyFakeTimers = %s)',
+  async (legacyFakeTimers) => {
+    jest.useFakeTimers({ legacyFakeTimers });
+
+    const waitForPromise = waitFor(() => {
+      // Switch to real timers during waitFor - this should trigger an error
+      jest.useRealTimers();
+      throw new Error('test');
+    });
+
+    await expect(waitForPromise).rejects.toThrow(
+      'Changed from using fake timers to real timers while using waitFor',
+    );
+  },
+);
+
+test('waitFor throws clear error when switching from real timers to fake timers', async () => {
+  jest.useRealTimers();
+
+    const waitForPromise = waitFor(() => {
+      // Switch to fake timers during waitFor - this should trigger an error
+      jest.useFakeTimers();
+      throw new Error('test');
+    });
+
+    await expect(waitForPromise).rejects.toThrow(
+      'Changed from using real timers to fake timers while using waitFor',
+    );
+});
