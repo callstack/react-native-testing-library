@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { renderHook } from '..';
 
 it('renders a hook with initial props and allows rerendering with new props', async () => {
