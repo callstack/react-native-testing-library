@@ -1,1 +1,2 @@
 test(render): Basic render function test - validates that users can render components and query rendered elements. Coverage: 77.31% statements, 66.66% branches, 75% functions for render.tsx. Uncovered: rerender, unmount, toJSON methods, root getter error path, debug function.
+test(queries/text): Validates getByText with exact:false option for partial text matching - critical for testing dynamic/long text content. Coverage: 100% statements, 100% branches (was 80%), 66.66% functions for text.ts. Covered options parameter branch.
