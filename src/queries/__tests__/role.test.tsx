@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { render } from '..';
+import { render } from '../..';
 
 it('finds elements by role with name option using text fallback when accessible name is not set', async () => {
   const Component = () => (
