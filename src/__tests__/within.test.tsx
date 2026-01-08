@@ -79,4 +79,3 @@ test('within() exposes a11y queries', async () => {
   await expect(secondQueries.findAllByLabelText('Same Label')).resolves.toHaveLength(1);
   await expect(secondQueries.findAllByA11yHint('Same Hint')).resolves.toHaveLength(1);
 });
-
