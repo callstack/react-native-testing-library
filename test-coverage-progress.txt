@@ -1,0 +1,1 @@
+test(render): Basic render function test - validates that users can render components and query rendered elements. Coverage: 77.31% statements, 66.66% branches, 75% functions for render.tsx. Uncovered: rerender, unmount, toJSON methods, root getter error path, debug function.
