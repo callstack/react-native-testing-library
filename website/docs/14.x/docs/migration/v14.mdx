@@ -105,7 +105,7 @@ For more details, see the [`screen` API documentation](/docs/api/screen#containe
 
 ### `render` is now async by default {#render-async-default}
 
-In v14, `render` is now async by default and returns a Promise. The previous synchronous `render` function has been renamed to `unsafe_renderSync`. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+In v14, `render` is now async by default and returns a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
 
 **Before (v13):**
 
@@ -129,44 +129,17 @@ it('should render component', async () => {
 });
 ```
 
-#### Migration path
-
-To ease migration, we provide `unsafe_renderSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
-
-##### `unsafe_renderSync` {#unsafe-render-sync}
-
-```ts
-function unsafe_renderSync(
-  component: React.Element<any>,
-  options?: RenderSyncOptions
-): RenderSyncResult;
-```
-
-**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `render` instead.
-
-The synchronous version of `render` that returns immediately without awaiting React updates. This maintains backward compatibility with v13 tests but is not recommended for new code.
-
-```ts
-// Old v13 code (still works but deprecated)
-import { unsafe_renderSync } from '@testing-library/react-native';
-
-it('should render component', () => {
-  unsafe_renderSync(<MyComponent />);
-  expect(screen.getByText('Hello')).toBeOnTheScreen();
-});
-```
-
 #### Step-by-step migration guide
 
-To migrate from `unsafe_renderSync` to `render`:
+To migrate from v13 `render` to v14 `render`:
 
 ##### 1. Add `async` to your test function
 
 ```ts
-// Before
+// Before (v13)
 it('should render component', () => {
 
-// After
+// After (v14)
 it('should render component', async () => {
 ```
 
@@ -273,67 +246,9 @@ it('should test hook', async () => {
 });
 ```
 
-#### Migration path
-
-To ease migration, we provide `unsafe_renderHookSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
-
-##### `unsafe_renderHookSync` {#unsafe-render-hook-sync}
-
-```ts
-function unsafe_renderHookSync<Result, Props>(
-  hookFn: (props?: Props) => Result,
-  options?: RenderHookOptions<Props>
-): RenderHookSyncResult<Result, Props>;
-```
-
-**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `renderHook` instead.
-
-The synchronous version of `renderHook` that returns immediately without awaiting React updates. This maintains backward compatibility with v13 tests but is not recommended for new code.
-
-```ts
-// Old v13 code (still works but deprecated)
-import { unsafe_renderHookSync } from '@testing-library/react-native';
-
-it('should increment count', () => {
-  const { result, rerender } = unsafe_renderHookSync(() => useCount());
-
-  expect(result.current.count).toBe(0);
-  act(() => {
-    result.current.increment();
-  });
-  expect(result.current.count).toBe(1);
-
-  rerender();
-});
-```
-
-##### Result types
-
-**v13 (deprecated):**
-
-```ts
-interface RenderHookSyncResult<Result, Props> {
-  result: { current: Result };
-  rerender: (props: Props) => void;
-  unmount: () => void;
-}
-```
-
-**v14 (default):**
-
-```ts
-interface RenderHookResult<Result, Props> {
-  result: { current: Result };
-  rerender: (props: Props) => Promise<void>;
-  unmount: () => Promise<void>;
-}
-```
-
-**Note**: Both `RenderHookSyncResult` and `RenderHookResult` use `rerender` and `unmount` methods. The difference is that `RenderHookSyncResult` methods are synchronous (return `void`), while `RenderHookResult` methods are async (return `Promise<void>`).
-
 #### Step-by-step migration guide
 
-To migrate from `unsafe_renderHookSync` to `renderHook`:
+To migrate from v13 `renderHook` to v14 `renderHook`:
 
 ##### 1. Add `async` to your test function
 
@@ -348,10 +263,10 @@ it('should test hook', async () => {
 ##### 2. Await `renderHook`
 
 ```ts
-// Before
-const { result } = unsafe_renderHookSync(() => useMyHook());
+// Before (v13)
+const { result } = renderHook(() => useMyHook());
 
-// After
+// After (v14)
 const { result } = await renderHook(() => useMyHook());
 ```
 
@@ -468,31 +383,6 @@ import { fireEvent, screen } from '@testing-library/react-native';
 it('should press button', async () => {
   render(<MyComponent />);
   await fireEvent.press(screen.getByText('Press me'));
-  expect(onPress).toHaveBeenCalled();
-});
-```
-
-#### Migration path
-
-To ease migration, we provide `unsafe_fireEventSync` which maintains the same synchronous behavior as v13. This allows you to migrate gradually.
-
-##### `unsafe_fireEventSync` {#unsafe-fire-event-sync}
-
-```ts
-function unsafe_fireEventSync(element: HostElement, eventName: string, ...data: unknown[]): void;
-```
-
-**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `fireEvent` instead.
-
-The synchronous version of `fireEvent` that returns immediately without awaiting React updates. This maintains backward compatibility with v13 tests but is not recommended for new code.
-
-```ts
-// Old v13 code (still works but deprecated)
-import { unsafe_fireEventSync } from '@testing-library/react-native';
-
-it('should press button', () => {
-  render(<MyComponent />);
-  unsafe_fireEventSync.press(screen.getByText('Press me'));
   expect(onPress).toHaveBeenCalled();
 });
 ```

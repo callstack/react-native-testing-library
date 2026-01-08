@@ -167,11 +167,3 @@ it('handles hook with suspense', async () => {
   expect(result.current).toBe('resolved');
 });
 ```
-
-## Migration from v13
-
-If you're migrating from React Native Testing Library v13, you may have existing tests using the synchronous `renderHook` API. To ease migration, we provide `unsafe_renderHookSync` which maintains the same synchronous behavior.
-
-**⚠️ Deprecated**: `unsafe_renderHookSync` is provided for migration purposes only. Use async `renderHook` instead.
-
-For detailed migration instructions, see the [v14 migration guide](../../migration/v14).

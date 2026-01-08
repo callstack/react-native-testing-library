@@ -167,12 +167,3 @@ render(
 
 await fireEvent.scroll(screen.getByText('scroll-view'), eventData);
 ```
-
-## `unsafe_fireEventSync` {#unsafe-fire-event-sync}
-
-```ts
-function unsafe_fireEventSync(element: HostElement, eventName: string, ...data: unknown[]): void;
-```
-
-Synchronous version of `fireEvent`. Deprecated and will be removed in future versions.
-Use only if you cannot use `await fireEvent` for some reason.

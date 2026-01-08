@@ -7,7 +7,7 @@ import type {
 } from 'react-native';
 import type { Fiber, HostElement } from 'test-renderer';
 
-import { act, unsafe_act } from './act';
+import { act } from './act';
 import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
 import { isElementMounted, isHostElement } from './helpers/component-tree';
@@ -155,40 +155,7 @@ fireEvent.changeText = async (element: HostElement, ...data: unknown[]) =>
 fireEvent.scroll = async (element: HostElement, ...data: unknown[]) =>
   await fireEvent(element, 'scroll', ...data);
 
-/** @deprecated - Use async `fireEvent` instead. */
-function unsafe_fireEventSync(element: HostElement, eventName: EventName, ...data: unknown[]) {
-  if (!isElementMounted(element)) {
-    return;
-  }
-
-  setNativeStateIfNeeded(element, eventName, data[0]);
-
-  const handler = findEventHandler(element, eventName);
-  if (!handler) {
-    return;
-  }
-
-  let returnValue;
-  void unsafe_act(() => {
-    returnValue = handler(...data);
-  });
-
-  return returnValue;
-}
-
-/** @deprecated - Use async `fireEvent.press` instead. */
-unsafe_fireEventSync.press = (element: HostElement, ...data: unknown[]) =>
-  unsafe_fireEventSync(element, 'press', ...data);
-
-/** @deprecated - Use async `fireEvent.changeText` instead. */
-unsafe_fireEventSync.changeText = (element: HostElement, ...data: unknown[]) =>
-  unsafe_fireEventSync(element, 'changeText', ...data);
-
-/** @deprecated - Use async `fireEvent.scroll` instead. */
-unsafe_fireEventSync.scroll = (element: HostElement, ...data: unknown[]) =>
-  unsafe_fireEventSync(element, 'scroll', ...data);
-
-export { fireEvent, unsafe_fireEventSync };
+export { fireEvent };
 
 const scrollEventNames = new Set([
   'scroll',
