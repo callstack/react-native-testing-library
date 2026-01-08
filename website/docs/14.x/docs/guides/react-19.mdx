@@ -36,12 +36,6 @@ The main change is using [`render`](docs/api/render#render) which is now async b
 2. Adding `await` before `render`
 
 ```tsx
-// Synchronous approach (deprecated in v14)
-test('my component', () => {
-  unsafe_renderSync(<MyComponent />);
-  expect(screen.getByText('Hello')).toBeOnTheScreen();
-});
-
 // Async approach (React 19 ready, default in v14)
 test('my component', async () => {
   await render(<MyComponent />);
@@ -67,10 +61,10 @@ Use the async-ready APIs (`render`, User Event, Jest Matchers, etc.) from the st
 
 You can migrate gradually:
 
-- **Existing tests** can use `unsafe_renderSync` for backward compatibility
+- **Existing tests** should be migrated to use async `render` (see migration guide)
 - **New tests** should use async `render` (default in v14)
 - **Tests with Suspense/`React.use()`** must use async `render`
 
 ### Migration
 
-See the [v14 migration guide](../migration/v14#render-async-default) for detailed migration steps from `unsafe_renderSync` to `render`.
+See the [v14 migration guide](../migration/v14#render-async-default) for detailed migration steps.

@@ -52,28 +52,6 @@ it('should update state', async () => {
 
 Consult our [Understanding Act function](docs/advanced/understanding-act.md) document for more understanding of its intricacies.
 
-## `unsafe_act`
-
-```ts
-function unsafe_act<T>(callback: () => T | Promise<T>): T | Thenable<T>;
-```
-
-**⚠️ Deprecated**: This function is provided for migration purposes only. Use async `act` instead.
-
-The synchronous version of `act` that maintains the same behavior as v13. It returns immediately for sync callbacks or a thenable for async callbacks. This is not recommended for new code as it doesn't work well with React 19's async features.
-
-```ts
-// Deprecated - use act instead
-import { unsafe_act } from '@testing-library/react-native';
-
-it('should update state', () => {
-  unsafe_act(() => {
-    setState('new value');
-  });
-  expect(state).toBe('new value');
-});
-```
-
 ## `cleanup`
 
 ```ts
