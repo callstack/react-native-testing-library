@@ -17,3 +17,17 @@ it('throws timeout error when expectation never passes within timeout period', a
   expect(elapsed).toBeGreaterThanOrEqual(timeout);
   expect(elapsed).toBeLessThan(timeout + 50); // Allow small margin for test execution
 });
+
+it('resolves when expectation returns a promise that resolves', async () => {
+  let attemptCount = 0;
+  const result = await waitFor(() => {
+    attemptCount++;
+    if (attemptCount < 3) {
+      return Promise.reject(new Error('not ready yet'));
+    }
+    return Promise.resolve('success');
+  });
+
+  expect(result).toBe('success');
+  expect(attemptCount).toBeGreaterThanOrEqual(3);
+});
