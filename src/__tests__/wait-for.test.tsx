@@ -337,13 +337,13 @@ test.each([false, true])(
 test('waitFor throws clear error when switching from real timers to fake timers', async () => {
   jest.useRealTimers();
 
-    const waitForPromise = waitFor(() => {
-      // Switch to fake timers during waitFor - this should trigger an error
-      jest.useFakeTimers();
-      throw new Error('test');
-    });
+  const waitForPromise = waitFor(() => {
+    // Switch to fake timers during waitFor - this should trigger an error
+    jest.useFakeTimers();
+    throw new Error('test');
+  });
 
-    await expect(waitForPromise).rejects.toThrow(
-      'Changed from using real timers to fake timers while using waitFor',
-    );
+  await expect(waitForPromise).rejects.toThrow(
+    'Changed from using real timers to fake timers while using waitFor',
+  );
 });
