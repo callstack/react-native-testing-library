@@ -65,12 +65,11 @@ export async function render<T>(element: React.ReactElement<T>, options: RenderO
 
   const toJSON = (): JsonElement | null => {
     const json = renderer.container.toJSON();
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (json?.children!.length === 0) {
+    if (json?.children.length === 0) {
       return null;
     }
 
-    if (json?.children?.length === 1 && typeof json.children[0] !== 'string') {
+    if (json?.children.length === 1 && typeof json.children[0] !== 'string') {
       return json.children[0];
     }
 
