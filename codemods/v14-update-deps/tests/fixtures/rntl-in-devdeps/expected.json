@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@testing-library/react-native": "^14.0.0-alpha.5",
-    "test-renderer": "0.12.0"
+    "@testing-library/react-native": "^14.0.0-alpha.6",
+    "test-renderer": "0.13.2"
   }
 }
