@@ -1,0 +1,152 @@
+# LLM Guidelines for React Native Testing Library
+
+Actionable guidelines for writing tests with React Native Testing Library (RNTL) v14.
+
+## Query Selection
+
+- **Prefer `getByRole`** as first choice for querying elements
+- **Query priority**: `getByRole` → `getByLabelText` → `getByPlaceholderText` → `getByText` → `getByDisplayValue` → `getByTestId` (last resort)
+- **Use `findBy*`** for elements that appear asynchronously (after API calls, timeouts, state updates)
+- **Use `queryBy*` ONLY** for checking non-existence (with `.not.toBeOnTheScreen()`)
+- **Never use `getBy*`** for non-existence checks
+- **Avoid `container.queryAll()`** - use `screen` queries instead
+- **Query by visible text**, not `testID` when text is available
+
+## Assertions
+
+- **Use RNTL matchers**: `toBeOnTheScreen()`, `toBeDisabled()`, `toHaveTextContent()`, `toHaveAccessibleName()`
+- **Don't assert on props directly** - use semantic matchers instead
+- **Combine queries with matchers**: `expect(screen.getByText('Hello')).toBeOnTheScreen()`
+- **No redundant null checks** - `getBy*` already throws if not found
+
+## Async/Await (v14)
+
+- **Always `await`**: `render()`, `fireEvent.*`, `renderHook()`, `userEvent.*`
+- **Make test functions `async`**: `test('name', async () => { ... })`
+- **Don't wrap in `act()`** - `render` and `fireEvent` handle it internally
+
+## waitFor Usage
+
+- **Use `findBy*`** instead of `waitFor` + `getBy*` when waiting for elements
+- **Never perform side-effects** (like `fireEvent.press()`) inside `waitFor` callbacks
+- **One assertion per `waitFor`** callback
+- **Never pass empty callbacks** - always include a meaningful assertion
+- **Place side-effects before `waitFor`** - perform actions, then wait for result
+
+## Accessibility
+
+- **Prefer ARIA attributes** over `accessibility*` props:
+  - `role` instead of `accessibilityRole`
+  - `aria-label` instead of `accessibilityLabel`
+  - `aria-disabled` instead of `accessibilityState={{ disabled: true }}`
+  - `aria-checked` instead of `accessibilityState={{ checked: true }}`
+  - `aria-selected` instead of `accessibilityState={{ selected: true }}`
+  - `aria-expanded` instead of `accessibilityState={{ expanded: true }}`
+  - `aria-busy` instead of `accessibilityState={{ busy: true }}`
+- **Only add necessary attributes** - don't add unnecessary accessibility props
+- **Use `role` prop** on interactive elements for better querying
+
+## Code Organization
+
+- **Use `screen`** instead of destructuring from `render()`: `screen.getByText()` not `const { getByText } = render()`
+- **Prefer `userEvent`** over `fireEvent` for realistic interactions
+- **Don't use `cleanup()`** - handled automatically
+- **Name wrappers descriptively**: `ThemeProvider` not `Wrapper`
+- **Install ESLint plugin**: `eslint-plugin-testing-library`
+
+## Quick Checklist
+
+- ✅ Using `getByRole` as first choice?
+- ✅ Using `await` for all async operations?
+- ✅ Using `findBy*` for async elements (not `waitFor` + `getBy*`)?
+- ✅ Using `queryBy*` only for non-existence?
+- ✅ Using RNTL matchers (`toBeOnTheScreen()`, `toBeDisabled()`, etc.)?
+- ✅ Using ARIA attributes (`role`, `aria-label`) not `accessibility*` props?
+- ✅ Using `screen` not destructuring from `render()`?
+- ✅ Avoiding side-effects in `waitFor`?
+- ✅ Using `userEvent` when appropriate?
+
+## Example: Good Pattern
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+import userEvent from '@testing-library/react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
+
+test('user can submit form', async () => {
+  const user = userEvent.setup();
+  
+  const Component = () => {
+    const [name, setName] = React.useState('');
+    const [submitted, setSubmitted] = React.useState(false);
+    
+    return (
+      <View>
+        <TextInput
+          role="textbox"
+          aria-label="Name"
+          value={name}
+          onChangeText={setName}
+        />
+        <Pressable 
+          role="button" 
+          aria-label="Submit"
+          onPress={() => setSubmitted(true)}
+        >
+          <Text>Submit</Text>
+        </Pressable>
+        {submitted && <Text role="alert">Form submitted!</Text>}
+      </View>
+    );
+  };
+
+  await render(<Component />);
+  
+  // ✅ getByRole as first choice
+  const input = screen.getByRole('textbox', { name: 'Name' });
+  const button = screen.getByRole('button', { name: 'Submit' });
+  
+  // ✅ userEvent for realistic interactions
+  await user.type(input, 'John Doe');
+  await user.press(button);
+  
+  // ✅ findBy* for async elements
+  const successMessage = await screen.findByRole('alert');
+  
+  // ✅ RNTL matchers
+  expect(successMessage).toBeOnTheScreen();
+  expect(successMessage).toHaveTextContent('Form submitted!');
+});
+```
+
+## Example: Anti-Patterns
+
+```tsx
+// ❌ Missing await
+test('bad', () => {
+  render(<Component />);
+  fireEvent.press(screen.getByText('Submit'));
+});
+
+// ❌ getBy* for non-existence
+expect(screen.getByText('Error')).not.toBeOnTheScreen();
+
+// ❌ waitFor + getBy* instead of findBy*
+await waitFor(() => {
+  expect(screen.getByText('Loaded')).toBeOnTheScreen();
+});
+
+// ❌ Side-effect in waitFor
+await waitFor(async () => {
+  await fireEvent.press(button);
+  expect(screen.getByText('Result')).toBeOnTheScreen();
+});
+
+// ❌ accessibility* props instead of ARIA
+<Pressable accessibilityRole="button" accessibilityLabel="Submit" />
+
+// ❌ Destructuring from render
+const { getByText } = await render(<Component />);
+```
+
+By following these guidelines, your tests will be more maintainable, accessible, and reliable.
