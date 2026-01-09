@@ -10,7 +10,7 @@ This guide outlines some common mistakes people make when using React Native Tes
 
 ## Not using Testing Library ESLint plugins {#not-using-testing-library-eslint-plugins}
 
-**Importance: high**
+**Importance: medium**
 
 There's an ESLint plugin for Testing Library: [`eslint-plugin-testing-library`](https://github.com/testing-library/eslint-plugin-testing-library). This plugin can help you avoid common mistakes and will automatically fix your code in many cases.
 
@@ -57,7 +57,7 @@ This works fine, but it's more conventional to name it something more descriptiv
 
 ## Using cleanup {#using-cleanup}
 
-**Importance: low**
+**Importance: medium**
 
 React Native Testing Library automatically cleans up after each test. You don't need to call `cleanup()` manually unless you're using the `pure` export (which doesn't include automatic cleanup).
 
@@ -121,7 +121,7 @@ Using `screen` has several benefits:
 
 ## Using the wrong assertion {#using-the-wrong-assertion}
 
-**Importance: medium**
+**Importance: high**
 
 React Native Testing Library provides built-in Jest matchers. Make sure you're using the right ones:
 
@@ -332,7 +332,7 @@ Note: React Native supports both ARIA-compatible (`role`) and traditional (`acce
 
 ## Adding aria-, role, and other accessibility attributes incorrectly {#adding-aria-role-and-other-accessibility-attributes-incorrectly}
 
-**Importance: medium**
+**Importance: high**
 
 React Native supports ARIA-compatible attributes. Use them correctly:
 
@@ -419,7 +419,7 @@ test('uses userEvent', async () => {
 
 ## Using query\* variants for anything except checking for non-existence {#using-query-variants-for-anything-except-checking-for-non-existence}
 
-**Importance: medium**
+**Importance: high**
 
 Use `queryBy*` only when checking that an element doesn't exist:
 
@@ -448,7 +448,7 @@ test('checks non-existence', async () => {
 
 ## Using waitFor to wait for elements that can be queried with find\* {#using-waitfor-to-wait-for-elements-that-can-be-queried-with-find}
 
-**Importance: medium**
+**Importance: high**
 
 Use `findBy*` queries instead of `waitFor` + `getBy*`:
 
@@ -486,7 +486,7 @@ test('waits for element', async () => {
 
 ## Passing an empty callback to waitFor {#passing-an-empty-callback-to-waitfor}
 
-**Importance: low**
+**Importance: high**
 
 Don't pass an empty callback to `waitFor`:
 
@@ -509,7 +509,7 @@ test('waits correctly', async () => {
 
 ## Having multiple assertions in a single waitFor callback {#having-multiple-assertions-in-a-single-waitfor-callback}
 
-**Importance: medium**
+**Importance: low**
 
 Keep `waitFor` callbacks focused on a single assertion:
 
@@ -593,7 +593,7 @@ test('avoids side effects in waitFor', async () => {
 
 ## Using get\* variants as assertions {#using-get-variants-as-assertions}
 
-**Importance: medium**
+**Importance: low**
 
 `getBy*` queries throw errors when elements aren't found, so they work as assertions. However, for better error messages, you might want to combine them with explicit matchers:
 
