@@ -625,15 +625,13 @@ This works fine, but it's more conventional to name it something more descriptiv
 
 The key principles to remember:
 
-1. Use the right query for your use case (prefer `getByRole`)
-2. Use `findBy*` for async elements instead of `waitFor` + `getBy*`
-3. Use `queryBy*` only for checking non-existence
-4. Avoid side-effects in `waitFor`
-5. Use ARIA attributes (`role`, `aria-label`) instead of `accessibility*` props
-6. Use the right assertions (RNTL matchers)
-7. Prefer `screen` over destructuring from `render`
-8. Use `userEvent` for realistic user interactions
-9. Remember that `render`, `fireEvent`, and `renderHook` are async in v14
-10. Don't use `container.queryAll` directly - use proper queries
+1. **Use the right query** - Prefer `getByRole` as your first choice, use `findBy*` for async elements, and `queryBy*` only for checking non-existence
+2. **Use proper assertions** - Use RNTL's built-in matchers (`toBeOnTheScreen()`, `toBeDisabled()`, etc.) instead of asserting on props directly
+3. **Handle async operations correctly** - Always `await` `render()`, `fireEvent`, `renderHook`, and `userEvent` methods in v14
+4. **Use `waitFor` correctly** - Avoid side-effects in callbacks, use `findBy*` instead when possible, and keep callbacks focused
+5. **Follow accessibility best practices** - Prefer ARIA attributes (`role`, `aria-label`) over `accessibility*` props
+6. **Organize code well** - Use `screen` over destructuring, prefer `userEvent` over `fireEvent`, and don't use `cleanup()`
 
-By following these guidelines, your tests will be more maintainable, accessible, and reliable.
+For detailed guidelines and examples, see the [LLM Guidelines](llm-guidelines) document.
+
+By following these principles, your tests will be more maintainable, accessible, and reliable.
