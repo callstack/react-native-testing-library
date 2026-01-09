@@ -94,7 +94,6 @@ describe('rerender', () => {
     expect(screen.getByText('2')).toBeOnTheScreen();
     expect(screen.getByTestId('wrapper')).toBeOnTheScreen();
   });
-
 });
 
 test('unmount removes component from tree', async () => {
