@@ -3,8 +3,8 @@
 import type { Transform } from 'codemod:ast-grep';
 import type JSONLang from 'codemod:ast-grep/langs/json';
 
-const RNTL_VERSION = '^14.0.0-alpha.5';
-const TEST_RENDERER_VERSION = '0.12.0';
+const RNTL_VERSION = '^14.0.0-alpha.6';
+const TEST_RENDERER_VERSION = '0.13.2';
 
 interface PackageJson {
   dependencies?: Record<string, string>;
