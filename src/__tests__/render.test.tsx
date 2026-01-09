@@ -41,6 +41,20 @@ describe('render options', () => {
   });
 });
 
+describe('component rendering', () => {
+  test('render accepts RCTText component', async () => {
+    await render(React.createElement('RCTText', { testID: 'text' }, 'Hello'));
+    expect(screen.getByTestId('text')).toBeOnTheScreen();
+    expect(screen.getByText('Hello')).toBeOnTheScreen();
+  });
+
+  test('render throws when text string is rendered without Text component', async () => {
+    await expect(render(<View>Hello</View>)).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Invariant Violation: Text strings must be rendered within a <Text> component. Detected attempt to render "Hello" string within a <View> component."`,
+    );
+  });
+});
+
 describe('rerender', () => {
   test('rerender updates component with new props', async () => {
     interface TestComponentProps {
@@ -80,6 +94,7 @@ describe('rerender', () => {
     expect(screen.getByText('2')).toBeOnTheScreen();
     expect(screen.getByTestId('wrapper')).toBeOnTheScreen();
   });
+
 });
 
 test('unmount removes component from tree', async () => {
@@ -92,6 +107,44 @@ test('unmount removes component from tree', async () => {
   await screen.unmount();
 
   expect(screen.queryByTestId('content')).not.toBeOnTheScreen();
+});
+
+test('rerender calls componentDidUpdate and unmount calls componentWillUnmount', async () => {
+  interface ClassComponentProps {
+    onUpdate?: () => void;
+    onUnmount?: () => void;
+  }
+  class ClassComponent extends React.Component<ClassComponentProps> {
+    componentDidUpdate() {
+      if (this.props.onUpdate) {
+        this.props.onUpdate();
+      }
+    }
+
+    componentWillUnmount() {
+      if (this.props.onUnmount) {
+        this.props.onUnmount();
+      }
+    }
+
+    render() {
+      return <Text>Class Component</Text>;
+    }
+  }
+
+  const onUpdate = jest.fn();
+  const onUnmount = jest.fn();
+  await render(<ClassComponent onUpdate={onUpdate} onUnmount={onUnmount} />);
+  expect(onUpdate).toHaveBeenCalledTimes(0);
+  expect(onUnmount).toHaveBeenCalledTimes(0);
+
+  await screen.rerender(<ClassComponent onUpdate={onUpdate} onUnmount={onUnmount} />);
+  expect(onUpdate).toHaveBeenCalledTimes(1);
+  expect(onUnmount).toHaveBeenCalledTimes(0);
+
+  await screen.unmount();
+  expect(onUpdate).toHaveBeenCalledTimes(1);
+  expect(onUnmount).toHaveBeenCalledTimes(1);
 });
 
 describe('toJSON', () => {
