@@ -26,7 +26,7 @@
     "clean": "del build",
     "test": "jest",
     "test:ci": "jest --maxWorkers=2",
-    "test:ci:coverage": "jest --maxWorkers=2 --collectCoverage=true --coverage-provider=v8",
+    "test:ci:coverage": "jest --maxWorkers=2 --collectCoverage=true",
     "test:codemods": "node scripts/test-codemods.mjs",
     "typecheck": "tsc",
     "lint": "eslint src --cache",

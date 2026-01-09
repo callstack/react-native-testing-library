@@ -65,7 +65,8 @@ export async function render<T>(element: React.ReactElement<T>, options: RenderO
 
   const toJSON = (): JsonElement | null => {
     const json = renderer.container.toJSON();
-    if (json?.children?.length === 0) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (json?.children!.length === 0) {
       return null;
     }
 
@@ -90,6 +91,7 @@ export async function render<T>(element: React.ReactElement<T>, options: RenderO
     get root(): HostElement | null {
       const firstChild = container.children[0];
       if (typeof firstChild === 'string') {
+        /* istanbul ignore next */
         throw new Error(
           'Invariant Violation: Root element must be a host element. Detected attempt to render a string within the root element.',
         );
