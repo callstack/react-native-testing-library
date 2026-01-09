@@ -1,0 +1,639 @@
+# Common Mistakes with React Native Testing Library
+
+> **Note:** This guide is adapted from Kent C. Dodds' article ["Common mistakes with React Testing Library"](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library) for React Native Testing Library v14. The original article focuses on web React, but the principles apply to React Native as well. This adaptation includes React Native-specific examples, async API usage (v14), and ARIA-compatible accessibility attributes.
+
+React Native Testing Library is a very lightweight solution for testing React Native components. It provides light utility functions on top of `react-test-renderer` in a way that encourages better testing practices. Its primary guiding principle is:
+
+> "The more your tests resemble the way your software is used, the more confidence they can give you."
+
+This guide outlines some common mistakes people make when using React Native Testing Library and how to avoid them.
+
+## Not using Testing Library ESLint plugins {#not-using-testing-library-eslint-plugins}
+
+**Importance: high**
+
+There's an ESLint plugin for Testing Library: [`eslint-plugin-testing-library`](https://github.com/testing-library/eslint-plugin-testing-library). This plugin can help you avoid common mistakes and will automatically fix your code in many cases.
+
+You can install it with:
+
+```bash
+yarn add --dev eslint-plugin-testing-library
+```
+
+And configure it in your ESLint config:
+
+```json
+{
+  "extends": ["plugin:testing-library/react-native"]
+}
+```
+
+Note: Unlike React Testing Library, React Native Testing Library has built-in Jest matchers, so you don't need `eslint-plugin-jest-dom`.
+
+## Using wrapper as the variable name {#using-wrapper-as-the-variable-name}
+
+**Importance: low**
+
+This is not really a "mistake" per se, but it's a common pattern that can be improved. When you use the `wrapper` option in `render`, you might be tempted to name your wrapper component `Wrapper`:
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+import { View } from 'react-native';
+
+test('renders with wrapper', async () => {
+  const Wrapper = ({ children }: { children: React.ReactNode }) => (
+    <View testID="wrapper">{children}</View>
+  );
+
+  await render(<View testID="content">Content</View>, {
+    wrapper: Wrapper,
+  });
+
+  expect(screen.getByTestId('content')).toBeOnTheScreen();
+});
+```
+
+This works fine, but it's more conventional to name it something more descriptive like `ThemeProvider` or `AllTheProviders` (if you're wrapping with multiple providers). This makes it clearer what the wrapper is doing.
+
+## Using cleanup {#using-cleanup}
+
+**Importance: low**
+
+React Native Testing Library automatically cleans up after each test. You don't need to call `cleanup()` manually unless you're using the `pure` export (which doesn't include automatic cleanup).
+
+If you want to disable automatic cleanup for a specific test, you can use:
+
+```tsx
+import { render } from '@testing-library/react-native';
+
+test('does not cleanup', async () => {
+  // This test won't cleanup automatically
+  await render(<MyComponent />);
+  // ... your test
+});
+```
+
+But in most cases, you don't need to worry about cleanup at all - it's handled automatically.
+
+## Not using screen {#not-using-screen}
+
+**Importance: medium**
+
+You can get all the queries from the `render` result:
+
+```tsx
+import { render } from '@testing-library/react-native';
+import { View, Text } from 'react-native';
+
+test('renders component', async () => {
+  const { getByText } = await render(
+    <View>
+      <Text>Hello</Text>
+    </View>
+  );
+
+  expect(getByText('Hello')).toBeOnTheScreen();
+});
+```
+
+But you can also get them from the `screen` object:
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+import { View, Text } from 'react-native';
+
+test('renders component', async () => {
+  await render(
+    <View>
+      <Text>Hello</Text>
+    </View>
+  );
+
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+```
+
+Using `screen` has several benefits:
+
+1. You don't need to destructure `getByText` from `render`
+2. You can use queries before calling `render` (useful for debugging)
+3. It's more consistent with the Testing Library ecosystem
+
+## Using the wrong assertion {#using-the-wrong-assertion}
+
+**Importance: medium**
+
+React Native Testing Library provides built-in Jest matchers. Make sure you're using the right ones:
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+import { Pressable, Text } from 'react-native';
+
+test('button is disabled', async () => {
+  await render(
+    <Pressable role="button" aria-disabled>
+      <Text>Submit</Text>
+    </Pressable>
+  );
+
+  const button = screen.getByRole('button');
+  
+  // ✅ Good - uses RNTL matcher
+  expect(button).toBeDisabled();
+  
+  // ❌ Bad - doesn't use RNTL matcher
+  expect(button.props['aria-disabled']).toBe(true);
+});
+```
+
+Common matchers include:
+- `toBeOnTheScreen()` - checks if element is rendered (replaces `toBeInTheDocument()`)
+- `toBeDisabled()` - checks if element is disabled
+- `toHaveTextContent()` - checks text content
+- `toHaveAccessibleName()` - checks accessible name
+- And more...
+
+## Wrapping things in act unnecessarily {#wrapping-things-in-act-unnecessarily}
+
+**Importance: medium**
+
+React Native Testing Library's `render` and `fireEvent` are already wrapped in `act`, so you don't need to wrap them yourself:
+
+```tsx
+import { render, fireEvent, screen } from '@testing-library/react-native';
+import { Pressable, Text, View } from 'react-native';
+
+test('updates on press', async () => {
+  const Component = () => {
+    const [count, setCount] = React.useState(0);
+    return (
+      <View>
+        <Pressable role="button" onPress={() => setCount(count + 1)}>
+          <Text>Count: {count}</Text>
+        </Pressable>
+      </View>
+    );
+  };
+
+  await render(<Component />);
+  
+  const button = screen.getByRole('button');
+  
+  // ✅ Good - fireEvent is already wrapped in act
+  await fireEvent.press(button);
+  
+  expect(screen.getByText('Count: 1')).toBeOnTheScreen();
+  
+  // ❌ Bad - unnecessary act wrapper
+  // await act(async () => {
+  //   await fireEvent.press(button);
+  // });
+});
+```
+
+In v14, `render`, `fireEvent`, and `renderHook` are all async and handle `act` internally, so you rarely need to use `act` directly.
+
+## Using the wrong query {#using-the-wrong-query}
+
+**Importance: high**
+
+React Native Testing Library provides several query types. Here's the priority order:
+
+1. **Queries that reflect user experience:**
+   - `getByRole` - most accessible
+   - `getByLabelText` - accessible label
+   - `getByPlaceholderText` - placeholder text
+   - `getByText` - text content
+   - `getByDisplayValue` - input value
+
+2. **Semantic queries:**
+   - `getByTestId` - only if nothing else works
+
+Here's an example of using the right query:
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+import { TextInput, View } from 'react-native';
+
+test('finds input by label', async () => {
+  await render(
+    <View>
+      <TextInput
+        aria-label="Username"
+        placeholder="Enter username"
+        value=""
+      />
+    </View>
+  );
+
+  // ✅ Good - uses accessible label
+  const input = screen.getByLabelText('Username');
+  
+  // ✅ Also good - uses placeholder
+  const inputByPlaceholder = screen.getByPlaceholderText('Enter username');
+  
+  // ❌ Bad - uses testID when accessible queries work
+  // const input = screen.getByTestId('username-input');
+});
+```
+
+## Using container to query for elements {#using-container-to-query-for-elements}
+
+**Importance: high**
+
+React Native doesn't have a DOM, so there's no `container.querySelector()`. Instead, React Native Testing Library provides a `container` object that has a `queryAll` method, but you should avoid using it directly:
+
+```tsx
+import { render } from '@testing-library/react-native';
+import { View, Text } from 'react-native';
+
+test('finds element incorrectly', async () => {
+  const { container } = await render(
+    <View>
+      <Text testID="message">Hello</Text>
+    </View>
+  );
+
+  // ❌ Bad - using container.queryAll directly
+  const element = container.queryAll((node) => node.props.testID === 'message')[0];
+  
+  // ✅ Good - use proper queries
+  // const element = screen.getByTestId('message');
+});
+```
+
+Instead, use the proper query methods from `screen` or the `render` result. The `container` is a low-level API that you rarely need.
+
+## Not querying by text {#not-querying-by-text}
+
+**Importance: medium**
+
+In React Native, text is rendered in `<Text>` components. You should query by the text content that users see:
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+import { Text, View } from 'react-native';
+
+test('finds text correctly', async () => {
+  await render(
+    <View>
+      <Text>Hello World</Text>
+    </View>
+  );
+
+  // ✅ Good - queries by visible text
+  expect(screen.getByText('Hello World')).toBeOnTheScreen();
+  
+  // ❌ Bad - queries by testID when text is available
+  // expect(screen.getByTestId('greeting')).toBeOnTheScreen();
+});
+```
+
+## Not using \*ByRole most of the time {#not-using-byrole-most-of-the-time}
+
+**Importance: high**
+
+`getByRole` is the most accessible query and should be your first choice. It queries elements by their semantic role:
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
+
+test('uses role queries', async () => {
+  await render(
+    <View>
+      <Pressable role="button" aria-label="Submit">
+        <Text>Submit</Text>
+      </Pressable>
+      <TextInput role="searchbox" aria-label="Search" placeholder="Search..." />
+    </View>
+  );
+
+  // ✅ Good - uses role query
+  const button = screen.getByRole('button', { name: 'Submit' });
+  const searchbox = screen.getByRole('searchbox', { name: 'Search' });
+  
+  expect(button).toBeOnTheScreen();
+  expect(searchbox).toBeOnTheScreen();
+});
+```
+
+Common roles in React Native include:
+- `button` - pressable elements
+- `text` - static text
+- `header` / `heading` - headers
+- `searchbox` - search inputs
+- `switch` - toggle switches
+- `checkbox` - checkboxes
+- `radio` - radio buttons
+- And more...
+
+Note: React Native supports both ARIA-compatible (`role`) and traditional (`accessibilityRole`) props. Prefer `role` for consistency with web standards.
+
+## Adding aria-, role, and other accessibility attributes incorrectly {#adding-aria-role-and-other-accessibility-attributes-incorrectly}
+
+**Importance: medium**
+
+React Native supports ARIA-compatible attributes. Use them correctly:
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+import { Pressable, Text } from 'react-native';
+
+test('uses accessibility attributes correctly', async () => {
+  await render(
+    <Pressable role="button" aria-label="Submit" aria-disabled>
+      <Text>Submit</Text>
+    </Pressable>
+  );
+
+  // ✅ Good - uses ARIA attributes
+  const button = screen.getByRole('button', { name: 'Submit' });
+  expect(button).toBeDisabled();
+});
+```
+
+**Prefer ARIA attributes:**
+- `role` instead of `accessibilityRole`
+- `aria-label` instead of `accessibilityLabel`
+- `aria-labelledby` instead of `accessibilityLabelledBy`
+- `aria-disabled` instead of `accessibilityState={{ disabled: true }}`
+- `aria-checked` instead of `accessibilityState={{ checked: true }}`
+- `aria-selected` instead of `accessibilityState={{ selected: true }}`
+- `aria-expanded` instead of `accessibilityState={{ expanded: true }}`
+- `aria-busy` instead of `accessibilityState={{ busy: true }}`
+
+Both ARIA-compatible and traditional props are supported, but ARIA attributes are preferred for consistency with web standards.
+
+## Not using @testing-library/user-event {#not-using-testing-library-user-event}
+
+**Importance: medium**
+
+`userEvent` provides a more realistic way to simulate user interactions:
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+import userEvent from '@testing-library/react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
+
+test('uses userEvent', async () => {
+  const user = userEvent.setup();
+  
+  const Component = () => {
+    const [value, setValue] = React.useState('');
+    return (
+      <View>
+        <TextInput
+          aria-label="Name"
+          value={value}
+          onChangeText={setValue}
+        />
+        <Pressable role="button" onPress={() => setValue('')}>
+          <Text>Clear</Text>
+        </Pressable>
+      </View>
+    );
+  };
+
+  await render(<Component />);
+  
+  const input = screen.getByLabelText('Name');
+  const button = screen.getByRole('button');
+  
+  // ✅ Good - uses userEvent for realistic interactions
+  await user.type(input, 'John');
+  expect(input.props.value).toBe('John');
+  
+  await user.press(button);
+  expect(input.props.value).toBe('');
+});
+```
+
+`userEvent` methods are async and must be awaited. Available methods include:
+- `press()` - simulates a press (replaces `click()`)
+- `type()` - simulates typing
+- `clear()` - clears text input
+- `paste()` - simulates pasting
+- `scrollTo()` - simulates scrolling
+- `longPress()` - simulates long press
+
+## Using query\* variants for anything except checking for non-existence {#using-query-variants-for-anything-except-checking-for-non-existence}
+
+**Importance: medium**
+
+Use `queryBy*` only when checking that an element doesn't exist:
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+import { View, Text } from 'react-native';
+
+test('checks non-existence', async () => {
+  await render(
+    <View>
+      <Text>Hello</Text>
+    </View>
+  );
+
+  // ✅ Good - uses queryBy for non-existence check
+  expect(screen.queryByText('Goodbye')).not.toBeOnTheScreen();
+  
+  // ❌ Bad - uses queryBy when element should exist
+  // const element = screen.queryByText('Hello');
+  // expect(element).toBeOnTheScreen();
+  
+  // ✅ Good - uses getBy when element should exist
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+});
+```
+
+## Using waitFor to wait for elements that can be queried with find\* {#using-waitfor-to-wait-for-elements-that-can-be-queried-with-find}
+
+**Importance: medium**
+
+Use `findBy*` queries instead of `waitFor` + `getBy*`:
+
+```tsx
+import { render, screen, waitFor } from '@testing-library/react-native';
+import { View, Text } from 'react-native';
+
+test('waits for element', async () => {
+  const Component = () => {
+    const [show, setShow] = React.useState(false);
+    
+    React.useEffect(() => {
+      setTimeout(() => setShow(true), 100);
+    }, []);
+    
+    return (
+      <View>
+        {show && <Text>Loaded</Text>}
+      </View>
+    );
+  };
+
+  await render(<Component />);
+
+  // ✅ Good - uses findBy query
+  const element = await screen.findByText('Loaded');
+  expect(element).toBeOnTheScreen();
+  
+  // ❌ Bad - uses waitFor + getBy
+  // await waitFor(() => {
+  //   expect(screen.getByText('Loaded')).toBeOnTheScreen();
+  // });
+});
+```
+
+## Passing an empty callback to waitFor {#passing-an-empty-callback-to-waitfor}
+
+**Importance: low**
+
+Don't pass an empty callback to `waitFor`:
+
+```tsx
+import { render, waitFor } from '@testing-library/react-native';
+import { View } from 'react-native';
+
+test('waits correctly', async () => {
+  await render(<View testID="test" />);
+
+  // ❌ Bad - empty callback
+  // await waitFor(() => {});
+  
+  // ✅ Good - meaningful assertion
+  await waitFor(() => {
+    expect(screen.getByTestId('test')).toBeOnTheScreen();
+  });
+});
+```
+
+## Having multiple assertions in a single waitFor callback {#having-multiple-assertions-in-a-single-waitfor-callback}
+
+**Importance: medium**
+
+Keep `waitFor` callbacks focused on a single assertion:
+
+```tsx
+import { render, screen, waitFor } from '@testing-library/react-native';
+import { View, Text } from 'react-native';
+
+test('waits with single assertion', async () => {
+  const Component = () => {
+    const [count, setCount] = React.useState(0);
+    
+    React.useEffect(() => {
+      setTimeout(() => setCount(1), 100);
+    }, []);
+    
+    return (
+      <View>
+        <Text>Count: {count}</Text>
+      </View>
+    );
+  };
+
+  await render(<Component />);
+
+  // ✅ Good - single assertion per waitFor
+  await waitFor(() => {
+    expect(screen.getByText('Count: 1')).toBeOnTheScreen();
+  });
+  
+  // If you need multiple assertions, do them after waitFor
+  expect(screen.getByText('Count: 1')).toHaveTextContent('Count: 1');
+  
+  // ❌ Bad - multiple assertions in waitFor
+  // await waitFor(() => {
+  //   expect(screen.getByText('Count: 1')).toBeOnTheScreen();
+  //   expect(screen.getByText('Count: 1')).toHaveTextContent('Count: 1');
+  // });
+});
+```
+
+## Performing side-effects in waitFor {#performing-side-effects-in-waitfor}
+
+**Importance: high**
+
+Don't perform side-effects in `waitFor` callbacks:
+
+```tsx
+import { render, screen, waitFor, fireEvent } from '@testing-library/react-native';
+import { Pressable, Text, View } from 'react-native';
+
+test('avoids side effects in waitFor', async () => {
+  const Component = () => {
+    const [count, setCount] = React.useState(0);
+    return (
+      <View>
+        <Pressable role="button" onPress={() => setCount(count + 1)}>
+          <Text>Increment</Text>
+        </Pressable>
+        <Text>Count: {count}</Text>
+      </View>
+    );
+  };
+
+  await render(<Component />);
+  
+  const button = screen.getByRole('button');
+
+  // ❌ Bad - side effect in waitFor
+  // await waitFor(async () => {
+  //   await fireEvent.press(button);
+  //   expect(screen.getByText('Count: 1')).toBeOnTheScreen();
+  // });
+  
+  // ✅ Good - side effect outside waitFor
+  await fireEvent.press(button);
+  await waitFor(() => {
+    expect(screen.getByText('Count: 1')).toBeOnTheScreen();
+  });
+});
+```
+
+## Using get\* variants as assertions {#using-get-variants-as-assertions}
+
+**Importance: medium**
+
+`getBy*` queries throw errors when elements aren't found, so they work as assertions. However, for better error messages, you might want to combine them with explicit matchers:
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+import { View, Text } from 'react-native';
+
+test('uses getBy as assertion', async () => {
+  await render(
+    <View>
+      <Text>Hello</Text>
+    </View>
+  );
+
+  // ✅ Good - getBy throws if not found, so it's an assertion
+  const element = screen.getByText('Hello');
+  expect(element).toBeOnTheScreen();
+  
+  // ✅ Also good - more explicit
+  expect(screen.getByText('Hello')).toBeOnTheScreen();
+  
+  // ❌ Bad - redundant assertion
+  // const element = screen.getByText('Hello');
+  // expect(element).not.toBeNull(); // getBy already throws if null
+});
+```
+
+## Summary
+
+The key principles to remember:
+
+1. Use the Testing Library ESLint plugin
+2. Prefer `screen` over destructuring from `render`
+3. Use the right query for your use case (prefer `getByRole`)
+4. Use `findBy*` for async elements instead of `waitFor` + `getBy*`
+5. Use `queryBy*` only for checking non-existence
+6. Avoid side-effects in `waitFor`
+7. Use ARIA attributes (`role`, `aria-label`) instead of `accessibility*` props
+8. Use `userEvent` for realistic user interactions
+9. Remember that `render`, `fireEvent`, and `renderHook` are async in v14
+10. Don't use `container.queryAll` directly - use proper queries
+
+By following these guidelines, your tests will be more maintainable, accessible, and reliable.
