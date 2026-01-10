@@ -249,6 +249,20 @@ test('fireEvent calls handler on element when both element and parent have handl
   expect(parentHandler).not.toHaveBeenCalled();
 });
 
+test('fireEvent does nothing when element is unmounted', async () => {
+  const onPress = jest.fn();
+  await render(
+    <View>
+      <Pressable testID="btn" onPress={onPress} />
+    </View>,
+  );
+  const element = screen.getByTestId('btn');
+
+  await screen.rerender(<View />);
+  await fireEvent.press(element);
+  expect(onPress).not.toHaveBeenCalled();
+});
+
 test('fireEvent does not throw when called with non-existent event name', async () => {
   await render(<Pressable testID="btn" />);
   const element = screen.getByTestId('btn');
