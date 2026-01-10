@@ -18,7 +18,7 @@ import { nativeState } from '../native-state';
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
 const verticalScrollEvent = { nativeEvent: { contentOffset: { y: 200 } } };
-const scrollEvent = { nativeEvent: { contentOffset: { x: 100, y: 200 } } };
+const horizontalScrollEvent = { nativeEvent: { contentOffset: { x: 50 } } };
 const pressEventData = { nativeEvent: { pageX: 20, pageY: 30 } };
 
 test('fireEvent accepts event name with or without "on" prefix', async () => {
@@ -127,11 +127,9 @@ describe('fireEvent.scroll', () => {
     const handler = jest.fn();
     await render(<ScrollView testID="scroll" {...{ [propName]: handler }} />);
     const scrollView = screen.getByTestId('scroll');
-    await fireEvent(scrollView, eventName, scrollEvent);
-    expect(handler).toHaveBeenCalledWith(scrollEvent);
-    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual(
-      scrollEvent.nativeEvent.contentOffset,
-    );
+    await fireEvent(scrollView, eventName, verticalScrollEvent);
+    expect(handler).toHaveBeenCalledWith(verticalScrollEvent);
+    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 0, y: 200 });
   });
 
   test('without contentOffset does not update native state', async () => {
@@ -156,7 +154,35 @@ describe('fireEvent.scroll', () => {
     );
     const scrollView = screen.getByTestId('scroll');
     await fireEvent.scroll(scrollView, {
-      nativeEvent: { contentOffset: { x: Infinity, y: NaN } },
+      nativeEvent: { contentOffset: { y: Infinity } },
+    });
+    expect(onScroll).toHaveBeenCalled();
+    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 0, y: 0 });
+  });
+
+  test('with horizontal scroll updates native state', async () => {
+    const onScroll = jest.fn();
+    await render(
+      <ScrollView testID="scroll" onScroll={onScroll}>
+        <Text>Content</Text>
+      </ScrollView>,
+    );
+    const scrollView = screen.getByTestId('scroll');
+    await fireEvent.scroll(scrollView, horizontalScrollEvent);
+    expect(onScroll).toHaveBeenCalledWith(horizontalScrollEvent);
+    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 50, y: 0 });
+  });
+
+  test('with non-finite x contentOffset value uses 0', async () => {
+    const onScroll = jest.fn();
+    await render(
+      <ScrollView testID="scroll" onScroll={onScroll}>
+        <Text>Content</Text>
+      </ScrollView>,
+    );
+    const scrollView = screen.getByTestId('scroll');
+    await fireEvent.scroll(scrollView, {
+      nativeEvent: { contentOffset: { x: Infinity } },
     });
     expect(onScroll).toHaveBeenCalled();
     expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 0, y: 0 });
@@ -170,11 +196,9 @@ describe('fireEvent.scroll', () => {
       </ScrollView>,
     );
     const scrollView = screen.getByTestId('scroll');
-    await fireEvent.scroll(scrollView, {
-      nativeEvent: { contentOffset: { x: 100, y: 200 } },
-    });
+    await fireEvent.scroll(scrollView, verticalScrollEvent);
     expect(onScroll).toHaveBeenCalled();
-    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 100, y: 200 });
+    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 0, y: 200 });
   });
 });
 
