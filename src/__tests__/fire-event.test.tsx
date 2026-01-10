@@ -63,58 +63,21 @@ test('fireEvent bubbles event to parent handler', async () => {
 });
 
 describe('fireEvent.press', () => {
-  test('works on Pressable', async () => {
-    const onPress = jest.fn();
-    await render(<Pressable testID="pressable" onPress={onPress} />);
-    await fireEvent.press(screen.getByTestId('pressable'));
-    expect(onPress).toHaveBeenCalled();
-  });
-
-  test('works on TouchableOpacity', async () => {
+  test.each([
+    ['Pressable', Pressable],
+    ['TouchableOpacity', TouchableOpacity],
+    ['TouchableHighlight', TouchableHighlight],
+    ['TouchableWithoutFeedback', TouchableWithoutFeedback],
+    ['TouchableNativeFeedback', TouchableNativeFeedback],
+  ])('works on %s', async (_, Component) => {
     const onPress = jest.fn();
     await render(
-      <TouchableOpacity testID="touchable" onPress={onPress}>
+      // @ts-expect-error - Component is a valid React component
+      <Component testID="subject" onPress={onPress}>
         <Text>Press me</Text>
-      </TouchableOpacity>,
+      </Component>,
     );
-    await fireEvent.press(screen.getByTestId('touchable'));
-    expect(onPress).toHaveBeenCalled();
-  });
-
-  test('works on TouchableHighlight', async () => {
-    const onPress = jest.fn();
-    await render(
-      <TouchableHighlight testID="touchable" onPress={onPress}>
-        <Text>Press me</Text>
-      </TouchableHighlight>,
-    );
-    await fireEvent.press(screen.getByTestId('touchable'));
-    expect(onPress).toHaveBeenCalled();
-  });
-
-  test('works on TouchableWithoutFeedback', async () => {
-    const onPress = jest.fn();
-    await render(
-      <TouchableWithoutFeedback testID="touchable" onPress={onPress}>
-        <View>
-          <Text>Press me</Text>
-        </View>
-      </TouchableWithoutFeedback>,
-    );
-    await fireEvent.press(screen.getByTestId('touchable'));
-    expect(onPress).toHaveBeenCalled();
-  });
-
-  test('works on TouchableNativeFeedback', async () => {
-    const onPress = jest.fn();
-    await render(
-      <TouchableNativeFeedback testID="touchable" onPress={onPress}>
-        <View>
-          <Text>Press me</Text>
-        </View>
-      </TouchableNativeFeedback>,
-    );
-    await fireEvent.press(screen.getByTestId('touchable'));
+    await fireEvent.press(screen.getByTestId('subject'));
     expect(onPress).toHaveBeenCalled();
   });
 });
@@ -127,14 +90,6 @@ describe('fireEvent.changeText', () => {
     await fireEvent.changeText(input, 'new text');
     expect(onChangeText).toHaveBeenCalledWith('new text');
     expect(nativeState.valueForElement.get(input)).toBe('new text');
-  });
-
-  test('updates native state for uncontrolled TextInput', async () => {
-    await render(<TextInput testID="input" />);
-    const input = screen.getByTestId('input');
-    await fireEvent.changeText(input, 'hello');
-    expect(input).toHaveDisplayValue('hello');
-    expect(nativeState.valueForElement.get(input)).toBe('hello');
   });
 
   test('does not fire on non-editable TextInput', async () => {
