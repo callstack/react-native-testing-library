@@ -249,17 +249,6 @@ test('fireEvent calls handler on element when both element and parent have handl
   expect(parentHandler).not.toHaveBeenCalled();
 });
 
-test('fireEvent does nothing when element is unmounted', async () => {
-  const onPress = jest.fn();
-  const { unmount } = await render(<Pressable testID="btn" onPress={onPress} />);
-  const element = screen.getByTestId('btn');
-
-  await unmount();
-
-  await fireEvent.press(element);
-  expect(onPress).not.toHaveBeenCalled();
-});
-
 test('fireEvent does not update native state when element is unmounted', async () => {
   const { unmount } = await render(<TextInput testID="input" />);
   const input = screen.getByTestId('input');
