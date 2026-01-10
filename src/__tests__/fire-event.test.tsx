@@ -74,7 +74,8 @@ describe('fireEvent.press', () => {
   ])('works on %s', async (_, Component) => {
     const onPress = jest.fn();
     await render(
-      // @ts-expect-error - Component is a valid React component
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - Component is a valid React component - but some RN versions have incorrect type definitions
       <Component testID="subject" onPress={onPress}>
         <Text>Press me</Text>
       </Component>,
