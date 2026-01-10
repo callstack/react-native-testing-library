@@ -2,7 +2,6 @@ import * as React from 'react';
 import type { TextInputProps } from 'react-native';
 import {
   PanResponder,
-  Platform,
   Pressable,
   ScrollView,
   Text,
@@ -192,21 +191,18 @@ describe('fireEvent.press', () => {
     expect(onPress).toHaveBeenCalled();
   });
 
-  (Platform.OS === 'android' ? test : test.skip)(
-    'works on TouchableNativeFeedback',
-    async () => {
-      const onPress = jest.fn();
-      await render(
-        <TouchableNativeFeedback testID="touchable" onPress={onPress}>
-          <View>
-            <Text>Press me</Text>
-          </View>
-        </TouchableNativeFeedback>,
-      );
-      await fireEvent.press(screen.getByTestId('touchable'));
-      expect(onPress).toHaveBeenCalled();
-    },
-  );
+  test('works on TouchableNativeFeedback', async () => {
+    const onPress = jest.fn();
+    await render(
+      <TouchableNativeFeedback testID="touchable" onPress={onPress}>
+        <View>
+          <Text>Press me</Text>
+        </View>
+      </TouchableNativeFeedback>,
+    );
+    await fireEvent.press(screen.getByTestId('touchable'));
+    expect(onPress).toHaveBeenCalled();
+  });
 });
 
 describe('fireEvent.changeText', () => {
@@ -699,10 +695,7 @@ describe('responder system', () => {
   test('both responder handlers can be evaluated together', async () => {
     const onPress = jest.fn();
     await render(
-      <View
-        onStartShouldSetResponder={() => true}
-        onMoveShouldSetResponder={() => true}
-      >
+      <View onStartShouldSetResponder={() => true} onMoveShouldSetResponder={() => true}>
         <Pressable onPress={onPress}>
           <Text testID="text">Press</Text>
         </Pressable>
