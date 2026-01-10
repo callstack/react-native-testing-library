@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { TextInputProps } from 'react-native';
 import {
   PanResponder,
   Platform,
@@ -15,6 +16,14 @@ import {
 
 import { fireEvent, render, screen } from '..';
 import { nativeState } from '../native-state';
+
+function WrappedTextInput(props: TextInputProps) {
+  return <TextInput {...props} />;
+}
+
+function DoubleWrappedTextInput(props: TextInputProps) {
+  return <WrappedTextInput {...props} />;
+}
 
 test('fireEvent accepts event name with or without "on" prefix', async () => {
   const onPress = jest.fn();
@@ -464,6 +473,104 @@ describe('pointerEvents prop', () => {
 });
 
 describe('non-editable TextInput', () => {
+  const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
+
+  test('blocks touch-related events but allows non-touch events', async () => {
+    const onFocus = jest.fn();
+    const onChangeText = jest.fn();
+    const onSubmitEditing = jest.fn();
+    const onLayout = jest.fn();
+
+    await render(
+      <TextInput
+        editable={false}
+        testID="input"
+        onFocus={onFocus}
+        onChangeText={onChangeText}
+        onSubmitEditing={onSubmitEditing}
+        onLayout={onLayout}
+      />,
+    );
+
+    const input = screen.getByTestId('input');
+    await fireEvent(input, 'focus');
+    await fireEvent.changeText(input, 'Text');
+    await fireEvent(input, 'submitEditing', { nativeEvent: { text: 'Text' } });
+    await fireEvent(input, 'layout', layoutEvent);
+
+    expect(onFocus).not.toHaveBeenCalled();
+    expect(onChangeText).not.toHaveBeenCalled();
+    expect(onSubmitEditing).not.toHaveBeenCalled();
+    expect(onLayout).toHaveBeenCalledWith(layoutEvent);
+  });
+
+  test('blocks touch-related events when firing on nested Text child', async () => {
+    const onFocus = jest.fn();
+    const onChangeText = jest.fn();
+    const onSubmitEditing = jest.fn();
+    const onLayout = jest.fn();
+
+    await render(
+      <TextInput
+        editable={false}
+        testID="input"
+        onFocus={onFocus}
+        onChangeText={onChangeText}
+        onSubmitEditing={onSubmitEditing}
+        onLayout={onLayout}
+      >
+        <Text>Nested Text</Text>
+      </TextInput>,
+    );
+
+    const subject = screen.getByText('Nested Text');
+    await fireEvent(subject, 'focus');
+    await fireEvent(subject, 'onFocus');
+    await fireEvent.changeText(subject, 'Text');
+    await fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
+    await fireEvent(subject, 'onSubmitEditing', { nativeEvent: { text: 'Text' } });
+    await fireEvent(subject, 'layout', layoutEvent);
+    await fireEvent(subject, 'onLayout', layoutEvent);
+
+    expect(onFocus).not.toHaveBeenCalled();
+    expect(onChangeText).not.toHaveBeenCalled();
+    expect(onSubmitEditing).not.toHaveBeenCalled();
+    expect(onLayout).toHaveBeenCalledTimes(2);
+    expect(onLayout).toHaveBeenCalledWith(layoutEvent);
+  });
+
+  test.each([
+    ['WrappedTextInput', WrappedTextInput],
+    ['DoubleWrappedTextInput', DoubleWrappedTextInput],
+  ])('blocks touch-related events on %s', async (_, Component) => {
+    const onFocus = jest.fn();
+    const onChangeText = jest.fn();
+    const onSubmitEditing = jest.fn();
+    const onLayout = jest.fn();
+
+    await render(
+      <Component
+        editable={false}
+        testID="input"
+        onFocus={onFocus}
+        onChangeText={onChangeText}
+        onSubmitEditing={onSubmitEditing}
+        onLayout={onLayout}
+      />,
+    );
+
+    const input = screen.getByTestId('input');
+    await fireEvent(input, 'focus');
+    await fireEvent.changeText(input, 'Text');
+    await fireEvent(input, 'submitEditing', { nativeEvent: { text: 'Text' } });
+    await fireEvent(input, 'layout', layoutEvent);
+
+    expect(onFocus).not.toHaveBeenCalled();
+    expect(onChangeText).not.toHaveBeenCalled();
+    expect(onSubmitEditing).not.toHaveBeenCalled();
+    expect(onLayout).toHaveBeenCalledWith(layoutEvent);
+  });
+
   test('fires layout event', async () => {
     const onLayout = jest.fn();
     await render(<TextInput testID="input" editable={false} onLayout={onLayout} />);
