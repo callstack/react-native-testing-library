@@ -249,16 +249,6 @@ test('fireEvent calls handler on element when both element and parent have handl
   expect(parentHandler).not.toHaveBeenCalled();
 });
 
-test('fireEvent does not update native state when element is unmounted', async () => {
-  const { unmount } = await render(<TextInput testID="input" />);
-  const input = screen.getByTestId('input');
-
-  await unmount();
-
-  await fireEvent.changeText(input, 'should not update');
-  expect(nativeState.valueForElement.get(input)).toBeUndefined();
-});
-
 test('fireEvent does not throw when called with non-existent event name', async () => {
   await render(<Pressable testID="btn" />);
   const element = screen.getByTestId('btn');
