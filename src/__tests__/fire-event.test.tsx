@@ -17,6 +17,8 @@ import { fireEvent, render, screen } from '..';
 import { nativeState } from '../native-state';
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
+const verticalScrollEvent = { nativeEvent: { contentOffset: { y: 200 } } };
+const scrollEvent = { nativeEvent: { contentOffset: { x: 100, y: 200 } } };
 const pressEventData = { nativeEvent: { pageX: 20, pageY: 30 } };
 
 test('fireEvent accepts event name with or without "on" prefix', async () => {
@@ -103,9 +105,6 @@ describe('fireEvent.changeText', () => {
 });
 
 describe('fireEvent.scroll', () => {
-  const scrollEventWithY = { nativeEvent: { contentOffset: { y: 200 } } };
-  const scrollEventWithXY = { nativeEvent: { contentOffset: { x: 50, y: 100 } } };
-
   test('works on ScrollView', async () => {
     const onScroll = jest.fn();
     await render(
@@ -114,48 +113,25 @@ describe('fireEvent.scroll', () => {
       </ScrollView>,
     );
     const scrollView = screen.getByTestId('scroll');
-    await fireEvent.scroll(scrollView, scrollEventWithY);
-    expect(onScroll).toHaveBeenCalledWith(scrollEventWithY);
+    await fireEvent.scroll(scrollView, verticalScrollEvent);
+    expect(onScroll).toHaveBeenCalledWith(verticalScrollEvent);
     expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 0, y: 200 });
   });
 
-  test('fires onScrollBeginDrag', async () => {
-    const onScrollBeginDrag = jest.fn();
-    await render(<ScrollView testID="scroll" onScrollBeginDrag={onScrollBeginDrag} />);
+  test.each([
+    ['onScrollBeginDrag', 'scrollBeginDrag'],
+    ['onScrollEndDrag', 'scrollEndDrag'],
+    ['onMomentumScrollBegin', 'momentumScrollBegin'],
+    ['onMomentumScrollEnd', 'momentumScrollEnd'],
+  ])('fires %s', async (propName, eventName) => {
+    const handler = jest.fn();
+    await render(<ScrollView testID="scroll" {...{ [propName]: handler }} />);
     const scrollView = screen.getByTestId('scroll');
-    await fireEvent(scrollView, 'scrollBeginDrag', scrollEventWithXY);
-    expect(onScrollBeginDrag).toHaveBeenCalledWith(scrollEventWithXY);
-    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 50, y: 100 });
-  });
-
-  test('fires onScrollEndDrag', async () => {
-    const onScrollEndDrag = jest.fn();
-    const eventData = { nativeEvent: { contentOffset: { x: 75, y: 150 } } };
-    await render(<ScrollView testID="scroll" onScrollEndDrag={onScrollEndDrag} />);
-    const scrollView = screen.getByTestId('scroll');
-    await fireEvent(scrollView, 'scrollEndDrag', eventData);
-    expect(onScrollEndDrag).toHaveBeenCalledWith(eventData);
-    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 75, y: 150 });
-  });
-
-  test('fires onMomentumScrollBegin', async () => {
-    const onMomentumScrollBegin = jest.fn();
-    const eventData = { nativeEvent: { contentOffset: { x: 120, y: 250 } } };
-    await render(<ScrollView testID="scroll" onMomentumScrollBegin={onMomentumScrollBegin} />);
-    const scrollView = screen.getByTestId('scroll');
-    await fireEvent(scrollView, 'momentumScrollBegin', eventData);
-    expect(onMomentumScrollBegin).toHaveBeenCalledWith(eventData);
-    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 120, y: 250 });
-  });
-
-  test('fires onMomentumScrollEnd', async () => {
-    const onMomentumScrollEnd = jest.fn();
-    const eventData = { nativeEvent: { contentOffset: { x: 200, y: 400 } } };
-    await render(<ScrollView testID="scroll" onMomentumScrollEnd={onMomentumScrollEnd} />);
-    const scrollView = screen.getByTestId('scroll');
-    await fireEvent(scrollView, 'momentumScrollEnd', eventData);
-    expect(onMomentumScrollEnd).toHaveBeenCalledWith(eventData);
-    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 200, y: 400 });
+    await fireEvent(scrollView, eventName, scrollEvent);
+    expect(handler).toHaveBeenCalledWith(scrollEvent);
+    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual(
+      scrollEvent.nativeEvent.contentOffset,
+    );
   });
 
   test('without contentOffset does not update native state', async () => {
