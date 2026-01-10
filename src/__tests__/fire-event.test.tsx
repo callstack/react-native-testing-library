@@ -160,15 +160,19 @@ describe('fireEvent.changeText', () => {
   test('works on TextInput', async () => {
     const onChangeText = jest.fn();
     await render(<TextInput testID="input" onChangeText={onChangeText} />);
-    await fireEvent.changeText(screen.getByTestId('input'), 'new text');
+    const input = screen.getByTestId('input');
+    await fireEvent.changeText(input, 'new text');
     expect(onChangeText).toHaveBeenCalledWith('new text');
+    expect(nativeState.valueForElement.get(input)).toBe('new text');
   });
 
   test('does not fire on non-editable TextInput', async () => {
     const onChangeText = jest.fn();
     await render(<TextInput testID="input" editable={false} onChangeText={onChangeText} />);
-    await fireEvent.changeText(screen.getByTestId('input'), 'new text');
+    const input = screen.getByTestId('input');
+    await fireEvent.changeText(input, 'new text');
     expect(onChangeText).not.toHaveBeenCalled();
+    expect(nativeState.valueForElement.get(input)).toBeUndefined();
   });
 
   test('updates native state for uncontrolled TextInput', async () => {
@@ -189,36 +193,50 @@ describe('fireEvent.scroll', () => {
         <Text>Content</Text>
       </ScrollView>,
     );
-    await fireEvent.scroll(screen.getByTestId('scroll'), eventData);
+    const scrollView = screen.getByTestId('scroll');
+    await fireEvent.scroll(scrollView, eventData);
     expect(onScroll).toHaveBeenCalledWith(eventData);
+    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 0, y: 200 });
   });
 
   test('fires onScrollBeginDrag', async () => {
     const onScrollBeginDrag = jest.fn();
+    const eventData = { nativeEvent: { contentOffset: { x: 50, y: 100 } } };
     await render(<ScrollView testID="scroll" onScrollBeginDrag={onScrollBeginDrag} />);
-    await fireEvent(screen.getByTestId('scroll'), 'scrollBeginDrag');
-    expect(onScrollBeginDrag).toHaveBeenCalled();
+    const scrollView = screen.getByTestId('scroll');
+    await fireEvent(scrollView, 'scrollBeginDrag', eventData);
+    expect(onScrollBeginDrag).toHaveBeenCalledWith(eventData);
+    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 50, y: 100 });
   });
 
   test('fires onScrollEndDrag', async () => {
     const onScrollEndDrag = jest.fn();
+    const eventData = { nativeEvent: { contentOffset: { x: 75, y: 150 } } };
     await render(<ScrollView testID="scroll" onScrollEndDrag={onScrollEndDrag} />);
-    await fireEvent(screen.getByTestId('scroll'), 'scrollEndDrag');
-    expect(onScrollEndDrag).toHaveBeenCalled();
+    const scrollView = screen.getByTestId('scroll');
+    await fireEvent(scrollView, 'scrollEndDrag', eventData);
+    expect(onScrollEndDrag).toHaveBeenCalledWith(eventData);
+    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 75, y: 150 });
   });
 
   test('fires onMomentumScrollBegin', async () => {
     const onMomentumScrollBegin = jest.fn();
+    const eventData = { nativeEvent: { contentOffset: { x: 120, y: 250 } } };
     await render(<ScrollView testID="scroll" onMomentumScrollBegin={onMomentumScrollBegin} />);
-    await fireEvent(screen.getByTestId('scroll'), 'momentumScrollBegin');
-    expect(onMomentumScrollBegin).toHaveBeenCalled();
+    const scrollView = screen.getByTestId('scroll');
+    await fireEvent(scrollView, 'momentumScrollBegin', eventData);
+    expect(onMomentumScrollBegin).toHaveBeenCalledWith(eventData);
+    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 120, y: 250 });
   });
 
   test('fires onMomentumScrollEnd', async () => {
     const onMomentumScrollEnd = jest.fn();
+    const eventData = { nativeEvent: { contentOffset: { x: 200, y: 400 } } };
     await render(<ScrollView testID="scroll" onMomentumScrollEnd={onMomentumScrollEnd} />);
-    await fireEvent(screen.getByTestId('scroll'), 'momentumScrollEnd');
-    expect(onMomentumScrollEnd).toHaveBeenCalled();
+    const scrollView = screen.getByTestId('scroll');
+    await fireEvent(scrollView, 'momentumScrollEnd', eventData);
+    expect(onMomentumScrollEnd).toHaveBeenCalledWith(eventData);
+    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 200, y: 400 });
   });
 
   test('without contentOffset does not update native state', async () => {
