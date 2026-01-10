@@ -10,7 +10,7 @@ import type { Fiber, HostElement } from 'test-renderer';
 import { act } from './act';
 import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
-import { isElementMounted, isHostElement } from './helpers/component-tree';
+import { isElementMounted } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
@@ -18,10 +18,6 @@ import { nativeState } from './native-state';
 import type { Point, StringWithAutocomplete } from './types';
 
 export function isTouchResponder(element: HostElement) {
-  if (!isHostElement(element)) {
-    return false;
-  }
-
   return Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element);
 }
 
@@ -184,6 +180,7 @@ function tryGetContentOffset(event: unknown): Point | null {
     const contentOffset = event?.nativeEvent?.contentOffset;
     const x = contentOffset?.x;
     const y = contentOffset?.y;
+
     if (typeof x === 'number' || typeof y === 'number') {
       return {
         x: Number.isFinite(x) ? x : 0,
