@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 
 import { render, screen } from '..';
+import { logger } from '../helpers/logger';
 
 test('renders a simple component', async () => {
   const TestComponent = () => (
@@ -203,6 +204,14 @@ describe('toJSON', () => {
 });
 
 describe('debug', () => {
+  beforeEach(() => {
+    jest.spyOn(logger, 'info').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   test('debug outputs formatted component tree', async () => {
     const TestComponent = () => (
       <View testID="container">
