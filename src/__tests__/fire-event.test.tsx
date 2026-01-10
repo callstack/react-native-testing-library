@@ -16,7 +16,6 @@ import {
 import { fireEvent, render, screen } from '..';
 import { nativeState } from '../native-state';
 
-// Shared test data
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
 const pressEventData = { nativeEvent: { pageX: 20, pageY: 30 } };
 
@@ -45,6 +44,13 @@ test('fireEvent passes multiple parameters to handler', async () => {
   expect(handlePress).toHaveBeenCalledWith('param1', 'param2', 'param3');
 });
 
+test('fireEvent returns handler return value', async () => {
+  const handler = jest.fn().mockReturnValue('result');
+  await render(<Pressable testID="btn" onPress={handler} />);
+  const result = await fireEvent.press(screen.getByTestId('btn'));
+  expect(result).toBe('result');
+});
+
 test('fireEvent bubbles event to parent handler', async () => {
   const onPress = jest.fn();
   await render(
@@ -54,98 +60,6 @@ test('fireEvent bubbles event to parent handler', async () => {
   );
   await fireEvent.press(screen.getByText('Press me'));
   expect(onPress).toHaveBeenCalled();
-});
-
-test('fireEvent calls handler on element when both element and parent have handlers', async () => {
-  const childHandler = jest.fn();
-  const parentHandler = jest.fn();
-  await render(
-    <TouchableOpacity onPress={parentHandler}>
-      <Pressable testID="child" onPress={childHandler}>
-        <Text>Press me</Text>
-      </Pressable>
-    </TouchableOpacity>,
-  );
-  await fireEvent.press(screen.getByTestId('child'));
-  expect(childHandler).toHaveBeenCalledTimes(1);
-  expect(parentHandler).not.toHaveBeenCalled();
-});
-
-test('fireEvent returns handler return value', async () => {
-  const handler = jest.fn().mockReturnValue('result');
-  await render(<Pressable testID="btn" onPress={handler} />);
-  const result = await fireEvent.press(screen.getByTestId('btn'));
-  expect(result).toBe('result');
-});
-
-test('fireEvent returns undefined when handler does not return a value', async () => {
-  const handler = jest.fn();
-  await render(<Pressable testID="btn" onPress={handler} />);
-  const result = await fireEvent.press(screen.getByTestId('btn'));
-  expect(result).toBeUndefined();
-});
-
-test('fireEvent does nothing when element is unmounted', async () => {
-  const onPress = jest.fn();
-  const { unmount } = await render(<Pressable testID="btn" onPress={onPress} />);
-  const element = screen.getByTestId('btn');
-
-  await unmount();
-
-  await fireEvent.press(element);
-  expect(onPress).not.toHaveBeenCalled();
-});
-
-test('fireEvent does not update native state when element is unmounted', async () => {
-  const { unmount } = await render(<TextInput testID="input" />);
-  const input = screen.getByTestId('input');
-
-  await unmount();
-
-  await fireEvent.changeText(input, 'should not update');
-  expect(nativeState.valueForElement.get(input)).toBeUndefined();
-});
-
-test('fireEvent does not throw when called with non-existent event name', async () => {
-  await render(<Pressable testID="btn" />);
-  const element = screen.getByTestId('btn');
-  // Should not throw, just do nothing
-  await expect(fireEvent(element, 'nonExistentEvent' as any)).resolves.toBeUndefined();
-});
-
-test('fireEvent handles handler that throws gracefully', async () => {
-  const error = new Error('Handler error');
-  const onPress = jest.fn(() => {
-    throw error;
-  });
-  await render(<Pressable testID="btn" onPress={onPress} />);
-  await expect(fireEvent.press(screen.getByTestId('btn'))).rejects.toThrow('Handler error');
-  expect(onPress).toHaveBeenCalledTimes(1);
-});
-
-test('fireEvent fires custom event (onCustomEvent) on composite component', async () => {
-  const CustomComponent = ({ onCustomEvent }: { onCustomEvent: (data: string) => void }) => (
-    <TouchableOpacity onPress={() => onCustomEvent('event data')}>
-      <Text>Custom</Text>
-    </TouchableOpacity>
-  );
-  const handler = jest.fn();
-  await render(<CustomComponent onCustomEvent={handler} />);
-  // fireEvent accepts both 'customEvent' and 'onCustomEvent' event names
-  await fireEvent(screen.getByText('Custom'), 'customEvent', 'event data');
-  expect(handler).toHaveBeenCalledWith('event data');
-});
-
-test('fireEvent fires event with custom prop name (handlePress) on composite component', async () => {
-  const MyButton = ({ handlePress }: { handlePress: () => void }) => (
-    <TouchableOpacity onPress={handlePress}>
-      <Text>Button</Text>
-    </TouchableOpacity>
-  );
-  const handler = jest.fn();
-  await render(<MyButton handlePress={handler} />);
-  await fireEvent(screen.getByText('Button'), 'handlePress');
-  expect(handler).toHaveBeenCalled();
 });
 
 describe('fireEvent.press', () => {
@@ -215,6 +129,14 @@ describe('fireEvent.changeText', () => {
     expect(nativeState.valueForElement.get(input)).toBe('new text');
   });
 
+  test('updates native state for uncontrolled TextInput', async () => {
+    await render(<TextInput testID="input" />);
+    const input = screen.getByTestId('input');
+    await fireEvent.changeText(input, 'hello');
+    expect(input).toHaveDisplayValue('hello');
+    expect(nativeState.valueForElement.get(input)).toBe('hello');
+  });
+
   test('does not fire on non-editable TextInput', async () => {
     const onChangeText = jest.fn();
     await render(<TextInput testID="input" editable={false} onChangeText={onChangeText} />);
@@ -222,14 +144,6 @@ describe('fireEvent.changeText', () => {
     await fireEvent.changeText(input, 'new text');
     expect(onChangeText).not.toHaveBeenCalled();
     expect(nativeState.valueForElement.get(input)).toBeUndefined();
-  });
-
-  test('updates native state for uncontrolled TextInput', async () => {
-    await render(<TextInput testID="input" />);
-    const input = screen.getByTestId('input');
-    await fireEvent.changeText(input, 'hello');
-    expect(input).toHaveDisplayValue('hello');
-    expect(nativeState.valueForElement.get(input)).toBe('hello');
   });
 });
 
@@ -331,6 +245,89 @@ describe('fireEvent.scroll', () => {
     expect(onScroll).toHaveBeenCalled();
     expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 100, y: 200 });
   });
+});
+
+test('fireEvent fires custom event (onCustomEvent) on composite component', async () => {
+  const CustomComponent = ({ onCustomEvent }: { onCustomEvent: (data: string) => void }) => (
+    <TouchableOpacity onPress={() => onCustomEvent('event data')}>
+      <Text>Custom</Text>
+    </TouchableOpacity>
+  );
+  const handler = jest.fn();
+  await render(<CustomComponent onCustomEvent={handler} />);
+  await fireEvent(screen.getByText('Custom'), 'customEvent', 'event data');
+  expect(handler).toHaveBeenCalledWith('event data');
+});
+
+test('fireEvent fires event with custom prop name (handlePress) on composite component', async () => {
+  const MyButton = ({ handlePress }: { handlePress: () => void }) => (
+    <TouchableOpacity onPress={handlePress}>
+      <Text>Button</Text>
+    </TouchableOpacity>
+  );
+  const handler = jest.fn();
+  await render(<MyButton handlePress={handler} />);
+  await fireEvent(screen.getByText('Button'), 'handlePress');
+  expect(handler).toHaveBeenCalled();
+});
+
+test('fireEvent returns undefined when handler does not return a value', async () => {
+  const handler = jest.fn();
+  await render(<Pressable testID="btn" onPress={handler} />);
+  const result = await fireEvent.press(screen.getByTestId('btn'));
+  expect(result).toBeUndefined();
+});
+
+test('fireEvent calls handler on element when both element and parent have handlers', async () => {
+  const childHandler = jest.fn();
+  const parentHandler = jest.fn();
+  await render(
+    <TouchableOpacity onPress={parentHandler}>
+      <Pressable testID="child" onPress={childHandler}>
+        <Text>Press me</Text>
+      </Pressable>
+    </TouchableOpacity>,
+  );
+  await fireEvent.press(screen.getByTestId('child'));
+  expect(childHandler).toHaveBeenCalledTimes(1);
+  expect(parentHandler).not.toHaveBeenCalled();
+});
+
+test('fireEvent does nothing when element is unmounted', async () => {
+  const onPress = jest.fn();
+  const { unmount } = await render(<Pressable testID="btn" onPress={onPress} />);
+  const element = screen.getByTestId('btn');
+
+  await unmount();
+
+  await fireEvent.press(element);
+  expect(onPress).not.toHaveBeenCalled();
+});
+
+test('fireEvent does not update native state when element is unmounted', async () => {
+  const { unmount } = await render(<TextInput testID="input" />);
+  const input = screen.getByTestId('input');
+
+  await unmount();
+
+  await fireEvent.changeText(input, 'should not update');
+  expect(nativeState.valueForElement.get(input)).toBeUndefined();
+});
+
+test('fireEvent does not throw when called with non-existent event name', async () => {
+  await render(<Pressable testID="btn" />);
+  const element = screen.getByTestId('btn');
+  await expect(fireEvent(element, 'nonExistentEvent' as any)).resolves.toBeUndefined();
+});
+
+test('fireEvent handles handler that throws gracefully', async () => {
+  const error = new Error('Handler error');
+  const onPress = jest.fn(() => {
+    throw error;
+  });
+  await render(<Pressable testID="btn" onPress={onPress} />);
+  await expect(fireEvent.press(screen.getByTestId('btn'))).rejects.toThrow('Handler error');
+  expect(onPress).toHaveBeenCalledTimes(1);
 });
 
 describe('disabled elements', () => {
@@ -514,8 +511,6 @@ describe('pointerEvents prop', () => {
 });
 
 describe('non-editable TextInput', () => {
-  // Helper components used to test that fireEvent correctly traverses
-  // composite component wrappers to find the underlying TextInput
   function WrappedTextInput(props: TextInputProps) {
     return <TextInput {...props} />;
   }
@@ -638,9 +633,6 @@ describe('non-editable TextInput', () => {
 describe('responder system', () => {
   test('responder handlers are checked during event handling', async () => {
     const onPress = jest.fn();
-    // Tests that responder handlers (onStartShouldSetResponder) are evaluated
-    // during event handling. The responder system affects event propagation,
-    // but handlers directly on the element will still fire.
     await render(
       <View onStartShouldSetResponder={() => false}>
         <Pressable onPress={onPress}>
@@ -649,7 +641,6 @@ describe('responder system', () => {
       </View>,
     );
     await fireEvent.press(screen.getByTestId('text'));
-    // Handler on Pressable fires because it's directly on the element
     expect(onPress).toHaveBeenCalled();
   });
 
