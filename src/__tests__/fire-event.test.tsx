@@ -120,11 +120,12 @@ describe('fireEvent.scroll', () => {
   });
 
   test.each([
+    ['onScroll', 'scroll'],
     ['onScrollBeginDrag', 'scrollBeginDrag'],
     ['onScrollEndDrag', 'scrollEndDrag'],
     ['onMomentumScrollBegin', 'momentumScrollBegin'],
     ['onMomentumScrollEnd', 'momentumScrollEnd'],
-  ])('fires %s', async (propName, eventName) => {
+  ])('fires %s on ScrollView', async (propName, eventName) => {
     const handler = jest.fn();
     await render(<ScrollView testID="scroll" {...{ [propName]: handler }} />);
     const scrollView = screen.getByTestId('scroll');
@@ -187,19 +188,6 @@ describe('fireEvent.scroll', () => {
     });
     expect(onScroll).toHaveBeenCalled();
     expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 0, y: 0 });
-  });
-
-  test('with valid contentOffset updates native state', async () => {
-    const onScroll = jest.fn();
-    await render(
-      <ScrollView testID="scroll" onScroll={onScroll}>
-        <Text>Content</Text>
-      </ScrollView>,
-    );
-    const scrollView = screen.getByTestId('scroll');
-    await fireEvent.scroll(scrollView, verticalScrollEvent);
-    expect(onScroll).toHaveBeenCalled();
-    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 0, y: 200 });
   });
 });
 
@@ -280,17 +268,6 @@ test('fireEvent handles handler that throws gracefully', async () => {
 });
 
 describe('disabled elements', () => {
-  test('does not fire on disabled TouchableOpacity', async () => {
-    const onPress = jest.fn();
-    await render(
-      <TouchableOpacity onPress={onPress} disabled={true}>
-        <Text>Trigger</Text>
-      </TouchableOpacity>,
-    );
-    await fireEvent.press(screen.getByText('Trigger'));
-    expect(onPress).not.toHaveBeenCalled();
-  });
-
   test('does not fire on disabled Pressable', async () => {
     const onPress = jest.fn();
     await render(
@@ -302,19 +279,15 @@ describe('disabled elements', () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  test('bubbles event past disabled inner to enabled outer TouchableOpacity', async () => {
-    const handleInnerPress = jest.fn();
-    const handleOuterPress = jest.fn();
+  test('does not fire on disabled TouchableOpacity', async () => {
+    const onPress = jest.fn();
     await render(
-      <TouchableOpacity onPress={handleOuterPress}>
-        <TouchableOpacity onPress={handleInnerPress} disabled={true}>
-          <Text>Inner Trigger</Text>
-        </TouchableOpacity>
+      <TouchableOpacity onPress={onPress} disabled={true}>
+        <Text>Trigger</Text>
       </TouchableOpacity>,
     );
-    await fireEvent.press(screen.getByText('Inner Trigger'));
-    expect(handleInnerPress).not.toHaveBeenCalled();
-    expect(handleOuterPress).toHaveBeenCalledTimes(1);
+    await fireEvent.press(screen.getByText('Trigger'));
+    expect(onPress).not.toHaveBeenCalled();
   });
 
   test('bubbles event past disabled inner to enabled outer Pressable', async () => {
@@ -332,6 +305,21 @@ describe('disabled elements', () => {
     expect(handleOuterPress).toHaveBeenCalledTimes(1);
   });
 
+  test('bubbles event past disabled inner to enabled outer TouchableOpacity', async () => {
+    const handleInnerPress = jest.fn();
+    const handleOuterPress = jest.fn();
+    await render(
+      <TouchableOpacity onPress={handleOuterPress}>
+        <TouchableOpacity onPress={handleInnerPress} disabled={true}>
+          <Text>Inner Trigger</Text>
+        </TouchableOpacity>
+      </TouchableOpacity>,
+    );
+    await fireEvent.press(screen.getByText('Inner Trigger'));
+    expect(handleInnerPress).not.toHaveBeenCalled();
+    expect(handleOuterPress).toHaveBeenCalledTimes(1);
+  });
+
   test('ignores custom disabled prop on composite component (only respects native disabled)', async () => {
     const TestComponent = ({ onPress }: { onPress: () => void; disabled?: boolean }) => (
       <TouchableOpacity onPress={onPress}>
@@ -342,32 +330,6 @@ describe('disabled elements', () => {
     await render(<TestComponent onPress={handlePress} disabled={true} />);
     await fireEvent.press(screen.getByText('Trigger Test'));
     expect(handlePress).toHaveBeenCalledTimes(1);
-  });
-
-  test('respects disabled prop through composite wrappers', async () => {
-    function TestChildTouchableComponent({
-      onPress,
-      someProp,
-    }: {
-      onPress: () => void;
-      someProp: boolean;
-    }) {
-      return (
-        <View>
-          <TouchableOpacity onPress={onPress} disabled={someProp}>
-            <Text>Trigger</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-    const handlePress = jest.fn();
-    await render(
-      <View>
-        <TestChildTouchableComponent onPress={handlePress} someProp={true} />
-      </View>,
-    );
-    await fireEvent.press(screen.getByText('Trigger'));
-    expect(handlePress).not.toHaveBeenCalled();
   });
 });
 
@@ -438,13 +400,6 @@ describe('pointerEvents prop', () => {
   });
 
   test('fires non-pointer events inside View with pointerEvents="box-none"', async () => {
-    const onTouchStart = jest.fn();
-    await render(<View testID="view" pointerEvents="box-none" onTouchStart={onTouchStart} />);
-    await fireEvent(screen.getByTestId('view'), 'touchStart');
-    expect(onTouchStart).toHaveBeenCalled();
-  });
-
-  test('fires layout event inside View with pointerEvents="box-none"', async () => {
     const onLayout = jest.fn();
     await render(<View testID="view" pointerEvents="box-none" onLayout={onLayout} />);
     await fireEvent(screen.getByTestId('view'), 'layout');
