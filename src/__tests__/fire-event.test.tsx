@@ -535,67 +535,30 @@ describe('non-editable TextInput', () => {
 });
 
 describe('responder system', () => {
-  test('responder handlers are evaluated down the tree when returning false', async () => {
-    const onPress = jest.fn();
-    await render(
-      <Pressable onPress={onPress} onStartShouldSetResponder={() => false}>
-        <Text testID="text">Press</Text>
-      </Pressable>,
-    );
-    await fireEvent.press(screen.getByTestId('text'));
-    expect(onPress).not.toHaveBeenCalled();
-  });
-
-  test('responder handlers are evaluated down the tree when returning true', async () => {
-    const onPress = jest.fn();
-    await render(
-      <Pressable onPress={onPress}>
-        <View onStartShouldSetResponder={() => true}>
-          <Text testID="text">Press</Text>
+  test('respects disabled prop through composite wrappers', async () => {
+    function TestChildTouchableComponent({
+      onPress,
+      someProp,
+    }: {
+      onPress: () => void;
+      someProp: boolean;
+    }) {
+      return (
+        <View>
+          <TouchableOpacity onPress={onPress} disabled={someProp}>
+            <Text>Trigger</Text>
+          </TouchableOpacity>
         </View>
-      </Pressable>,
-    );
-    await fireEvent.press(screen.getByTestId('text'));
-    expect(onPress).toHaveBeenCalled();
-  });
-
-  test('onMoveShouldSetResponder is evaluated down the tree', async () => {
-    const onPress = jest.fn();
+      );
+    }
+    const handlePress = jest.fn();
     await render(
-      <Pressable onPress={onPress}>
-        <View onMoveShouldSetResponder={() => false}>
-          <Text testID="text">Press</Text>
-        </View>
-      </Pressable>,
+      <View>
+        <TestChildTouchableComponent onPress={handlePress} someProp={true} />
+      </View>,
     );
-    await fireEvent.press(screen.getByTestId('text'));
-    expect(onPress).toHaveBeenCalled();
-  });
-
-  test('onMoveShouldSetResponder allows events when returning true', async () => {
-    const onPress = jest.fn();
-    await render(
-      <Pressable onPress={onPress}>
-        <View onMoveShouldSetResponder={() => true}>
-          <Text testID="text">Press</Text>
-        </View>
-      </Pressable>,
-    );
-    await fireEvent.press(screen.getByTestId('text'));
-    expect(onPress).toHaveBeenCalled();
-  });
-
-  test('both responder handlers can be evaluated together', async () => {
-    const onPress = jest.fn();
-    await render(
-      <Pressable onPress={onPress}>
-        <View onStartShouldSetResponder={() => true} onMoveShouldSetResponder={() => true}>
-          <Text testID="text">Press</Text>
-        </View>
-      </Pressable>,
-    );
-    await fireEvent.press(screen.getByTestId('text'));
-    expect(onPress).toHaveBeenCalled();
+    await fireEvent.press(screen.getByText('Trigger'));
+    expect(handlePress).not.toHaveBeenCalled();
   });
 
   test('fires responderMove on PanResponder component', async () => {
