@@ -29,7 +29,7 @@ describe('ErrorWithStack', () => {
   });
 });
 
-describe('copyStackTrace', () => {
+describe('copyStackTraceIfNeeded', () => {
   test('should copy stack trace from source to target when both are Error instances', () => {
     const target = new Error('Target error');
     const source = new Error('Source error');
@@ -60,8 +60,14 @@ describe('copyStackTrace', () => {
 
     const target = new Error('Target error');
     const originalStack = target.stack;
-    const sourceNotError = { message: 'Not an error' };
 
+    copyStackTraceIfNeeded(target, undefined);
+    expect(target.stack).toBe(originalStack);
+
+    copyStackTraceIfNeeded(target, null as unknown as Error);
+    expect(target.stack).toBe(originalStack);
+
+    const sourceNotError = { message: 'Not an error' };
     copyStackTraceIfNeeded(target, sourceNotError as Error);
     expect(target.stack).toBe(originalStack);
 
