@@ -1,10 +1,20 @@
-import { ErrorWithStack, copyStackTrace } from '../errors';
+import { copyStackTrace, ErrorWithStack } from '../errors';
 
 describe('ErrorWithStack', () => {
-  test('should create an error with message and handle stack trace capture', () => {
+  test('should create an error with message', () => {
     const error = new ErrorWithStack('Test error', ErrorWithStack);
     expect(error.message).toBe('Test error');
     expect(error).toBeInstanceOf(Error);
+
+    const originalCaptureStackTrace = Error.captureStackTrace;
+    // @ts-expect-error - intentionally removing captureStackTrace
+    delete Error.captureStackTrace;
+
+    const errorWithoutCapture = new ErrorWithStack('Test error', ErrorWithStack);
+    expect(errorWithoutCapture.message).toBe('Test error');
+    expect(errorWithoutCapture).toBeInstanceOf(Error);
+
+    Error.captureStackTrace = originalCaptureStackTrace;
   });
 
   test('should capture stack trace if Error.captureStackTrace is available', () => {
@@ -17,18 +27,6 @@ describe('ErrorWithStack', () => {
 
     Error.captureStackTrace = originalCaptureStackTrace;
   });
-
-  test('should work when Error.captureStackTrace is not available', () => {
-    const originalCaptureStackTrace = Error.captureStackTrace;
-    // @ts-expect-error - intentionally removing captureStackTrace
-    delete Error.captureStackTrace;
-
-    const error = new ErrorWithStack('Test error', ErrorWithStack);
-    expect(error.message).toBe('Test error');
-    expect(error).toBeInstanceOf(Error);
-
-    Error.captureStackTrace = originalCaptureStackTrace;
-  });
 });
 
 describe('copyStackTrace', () => {
@@ -38,20 +36,16 @@ describe('copyStackTrace', () => {
     source.stack = 'Error: Source error\n    at test.js:1:1';
 
     copyStackTrace(target, source);
-
     expect(target.stack).toBe('Error: Target error\n    at test.js:1:1');
-  });
 
-  test('should handle stack trace with multiple occurrences of source message', () => {
-    const target = new Error('Target error');
-    const source = new Error('Source error');
-    source.stack =
+    const target2 = new Error('Target error');
+    const source2 = new Error('Source error');
+    source2.stack =
       'Error: Source error\n    at test.js:1:1\nError: Source error\n    at test.js:2:2';
 
-    copyStackTrace(target, source);
-
+    copyStackTrace(target2, source2);
     // Should replace only the first occurrence
-    expect(target.stack).toBe(
+    expect(target2.stack).toBe(
       'Error: Target error\n    at test.js:1:1\nError: Source error\n    at test.js:2:2',
     );
   });
