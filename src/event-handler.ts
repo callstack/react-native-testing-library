@@ -30,7 +30,7 @@ export function getEventHandlerFromProps(
   return undefined;
 }
 
-export function getEventHandlerName(eventName: string) {
+function getEventHandlerName(eventName: string) {
   return `on${capitalizeFirstLetter(eventName)}`;
 }
 

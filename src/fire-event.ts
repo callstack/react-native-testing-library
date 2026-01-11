@@ -17,7 +17,7 @@ import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
 import type { Point, StringWithAutocomplete } from './types';
 
-export function isTouchResponder(element: HostElement) {
+function isTouchResponder(element: HostElement) {
   return Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element);
 }
 
@@ -44,7 +44,7 @@ const textInputEventsIgnoringEditableProp = new Set([
   'onScroll',
 ]);
 
-export function isEventEnabled(
+function isEventEnabled(
   element: HostElement,
   eventName: string,
   nearestTouchResponder?: HostElement,
