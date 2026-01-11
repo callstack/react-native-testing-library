@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 
 import { configure, fireEvent, render, screen, waitFor } from '..';
-import { useTimerType } from '../test-utils/timers';
+import { setupTimeType, TimerType } from '../test-utils/timers';
 
 beforeEach(() => {
   jest.useRealTimers();
@@ -24,26 +24,26 @@ test('waits for expect() assertion to pass', async () => {
   expect(mockFunction).toHaveBeenCalledTimes(1);
 });
 
-test.each([
-  { timerType: 'real' as const },
-  { timerType: 'fake' as const },
-  { timerType: 'fake-legacy' as const },
-])('waits for query with $timerType timers', async ({ timerType }) => {
-  function AsyncComponent() {
-    const [text, setText] = React.useState('Loading...');
+test.each(['real', 'fake', 'fake-legacy'] as const)(
+  'waits for query with %s timers',
+  async (timerType) => {
+    setupTimeType(timerType as TimerType);
+    function AsyncComponent() {
+      const [text, setText] = React.useState('Loading...');
 
-    React.useEffect(() => {
-      setTimeout(() => setText('Loaded'), 100);
-    }, []);
+      React.useEffect(() => {
+        setTimeout(() => setText('Loaded'), 100);
+      }, []);
 
-    return <Text>{text}</Text>;
-  }
+      return <Text>{text}</Text>;
+    }
 
-  useTimerType(timerType);
-  await render(<AsyncComponent />);
-  await waitFor(() => screen.getByText('Loaded'));
-  expect(screen.getByText('Loaded')).toBeOnTheScreen();
-});
+    setupTimeType(timerType);
+    await render(<AsyncComponent />);
+    await waitFor(() => screen.getByText('Loaded'));
+    expect(screen.getByText('Loaded')).toBeOnTheScreen();
+  },
+);
 
 test('throws timeout error when condition never becomes true', async () => {
   function Component() {
@@ -66,6 +66,17 @@ test('uses custom error from onTimeout callback when timeout occurs', async () =
       onTimeout: () => new Error(customErrorMessage),
     }),
   ).rejects.toThrow(customErrorMessage);
+});
+
+test('onTimeout callback returning falsy value keeps original error', async () => {
+  await render(<View />);
+  // When onTimeout returns null/undefined/false, the original error should be kept (line 181 false branch)
+  await expect(
+    waitFor(() => screen.getByText('Never appears'), {
+      timeout: 100,
+      onTimeout: () => null as any,
+    }),
+  ).rejects.toThrow('Unable to find an element with text: Never appears');
 });
 
 test('throws TypeError when expectation is not a function', async () => {
@@ -152,7 +163,9 @@ test('throws timeout error with fake timers when condition never becomes true', 
 
   await jest.advanceTimersByTimeAsync(100);
 
-  await expect(waitForPromise).rejects.toThrow('Unable to find an element with text: Never appears');
+  await expect(waitForPromise).rejects.toThrow(
+    'Unable to find an element with text: Never appears',
+  );
 });
 
 test('throws generic timeout error when promise rejects with falsy value until timeout', async () => {
@@ -178,73 +191,61 @@ test('waits for element with custom interval', async () => {
 });
 
 test('waitFor defaults to asyncUtilTimeout config option', async () => {
-  class BananaContainer extends React.Component<object, any> {
-    state = { fresh: false };
+  function Component() {
+    const [active, setActive] = React.useState(false);
 
-    onChangeFresh = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      this.setState({ fresh: true });
+    const handlePress = () => {
+      setTimeout(() => setActive(true), 300);
     };
 
-    render() {
-      return (
-        <View>
-          {this.state.fresh && <Text>Fresh</Text>}
-          <TouchableOpacity onPress={this.onChangeFresh}>
-            <Text>Change freshness!</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
+    return (
+      <View>
+        {active && <Text>Active</Text>}
+        <Pressable onPress={handlePress}>
+          <Text>Activate</Text>
+        </Pressable>
+      </View>
+    );
   }
 
   configure({ asyncUtilTimeout: 100 });
-  await render(<BananaContainer />);
-
-  fireEvent.press(screen.getByText('Change freshness!'));
-
-  expect(screen.queryByText('Fresh')).toBeNull();
-
-  await expect(waitFor(() => screen.getByText('Fresh'))).rejects.toThrow();
+  await render(<Component />);
+  await fireEvent.press(screen.getByText('Activate'));
+  expect(screen.queryByText('Active')).toBeNull();
+  await expect(waitFor(() => screen.getByText('Active'))).rejects.toThrow();
 
   // Async action ends after 300ms and we only waited 100ms, so we need to wait
   // for the remaining async actions to finish
-  await waitFor(() => screen.getByText('Fresh'), { timeout: 1000 });
+  await waitFor(() => screen.getByText('Active'), { timeout: 1000 });
 });
 
 test('waitFor timeout option takes precedence over asyncUtilTimeout config option', async () => {
-  class BananaContainer extends React.Component<object, any> {
-    state = { fresh: false };
+  function AsyncTextToggle() {
+    const [active, setActive] = React.useState(false);
 
-    onChangeFresh = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      this.setState({ fresh: true });
+    const handlePress = () => {
+      setTimeout(() => setActive(true), 300);
     };
 
-    render() {
-      return (
-        <View>
-          {this.state.fresh && <Text>Fresh</Text>}
-          <TouchableOpacity onPress={this.onChangeFresh}>
-            <Text>Change freshness!</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
+    return (
+      <View>
+        {active && <Text>Active</Text>}
+        <TouchableOpacity onPress={handlePress}>
+          <Text>Activate</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 
   configure({ asyncUtilTimeout: 2000 });
-  await render(<BananaContainer />);
-
-  fireEvent.press(screen.getByText('Change freshness!'));
-
-  expect(screen.queryByText('Fresh')).toBeNull();
-
-  await expect(waitFor(() => screen.getByText('Fresh'), { timeout: 100 })).rejects.toThrow();
+  await render(<AsyncTextToggle />);
+  await fireEvent.press(screen.getByText('Activate'));
+  expect(screen.queryByText('Active')).toBeNull();
+  await expect(waitFor(() => screen.getByText('Active'), { timeout: 100 })).rejects.toThrow();
 
   // Async action ends after 300ms and we only waited 100ms, so we need to wait
   // for the remaining async actions to finish
-  await waitFor(() => screen.getByText('Fresh'));
+  await waitFor(() => screen.getByText('Active'));
 });
 
 test('waits for async event with fireEvent', async () => {
@@ -279,18 +280,12 @@ test('waits for async event with fireEvent', async () => {
   });
 });
 
-test.each([
-  [false, false],
-  [true, false],
-  [true, true],
-])(
-  'flushes scheduled updates before returning (fakeTimers = %s, legacyFakeTimers = %s)',
-  async (fakeTimers, legacyFakeTimers) => {
-    if (fakeTimers) {
-      jest.useFakeTimers({ legacyFakeTimers });
-    }
+test.each(['real', 'fake', 'fake-legacy'] as const)(
+  'flushes scheduled updates before returning (timerType = %s)',
+  async (timerType) => {
+    setupTimeType(timerType);
 
-    function Apple({ onPress }: { onPress: (color: string) => void }) {
+    function Component({ onPress }: { onPress: (color: string) => void }) {
       const [color, setColor] = React.useState('green');
       const [syncedColor, setSyncedColor] = React.useState(color);
 
@@ -316,7 +311,7 @@ test.each([
     }
 
     const onPress = jest.fn();
-    await render(<Apple onPress={onPress} />);
+    await render(<Component onPress={onPress} />);
 
     // Required: this `waitFor` will succeed on first check, because the "root" view is there
     // since the initial mount.
@@ -332,14 +327,14 @@ test.each([
   },
 );
 
-test.each([true, false])(
-  'it should not depend on real time when using fake timers (legacyFakeTimers = %s)',
-  async (legacyFakeTimers) => {
-    jest.useFakeTimers({ legacyFakeTimers });
+test.each(['fake', 'fake-legacy'] as const)(
+  'it should not depend on real time when using %s timers',
+  async (timerType) => {
+    setupTimeType(timerType);
     const WAIT_FOR_INTERVAL = 20;
     const WAIT_FOR_TIMEOUT = WAIT_FOR_INTERVAL * 5;
 
-    const blockThread = (timeToBlockThread: number, legacyFakeTimers: boolean) => {
+    const blockThread = (timeToBlockThread: number, timerType: TimerType): void => {
       jest.useRealTimers();
       const end = Date.now() + timeToBlockThread;
 
@@ -347,12 +342,12 @@ test.each([true, false])(
         // do nothing
       }
 
-      jest.useFakeTimers({ legacyFakeTimers });
+      setupTimeType(timerType);
     };
 
     const mockErrorFn = jest.fn(() => {
       // Wait 2 times interval so that check time is longer than interval
-      blockThread(WAIT_FOR_INTERVAL * 2, legacyFakeTimers);
+      blockThread(WAIT_FOR_INTERVAL * 2, timerType);
       throw new Error('test');
     });
 
@@ -371,10 +366,10 @@ test.each([true, false])(
   },
 );
 
-test.each([false, true])(
-  'waits for assertion until timeout is met with fake timers and interval (legacyFakeTimers = %s)',
-  async (legacyFakeTimers) => {
-    jest.useFakeTimers({ legacyFakeTimers });
+test.each(['fake', 'fake-legacy'] as const)(
+  'waits for assertion until timeout is met with %s timers and interval',
+  async (timerType) => {
+    setupTimeType(timerType);
 
     const mockFn = jest.fn(() => {
       throw Error('test');
@@ -390,10 +385,10 @@ test.each([false, true])(
   },
 );
 
-test.each([false, true])(
-  'waits for assertion until timeout is met with fake timers, interval, and onTimeout (legacyFakeTimers = %s)',
-  async (legacyFakeTimers) => {
-    jest.useFakeTimers({ legacyFakeTimers });
+test.each(['fake', 'fake-legacy'] as const)(
+  'waits for assertion until timeout is met with %s timers, interval, and onTimeout',
+  async (timerType) => {
+    setupTimeType(timerType);
 
     const mockErrorFn = jest.fn(() => {
       throw Error('test');

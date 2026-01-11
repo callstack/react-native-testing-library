@@ -2,7 +2,7 @@
 import { act } from './act';
 import { getConfig } from './config';
 import { flushMicroTasks } from './flush-micro-tasks';
-import { copyStackTrace, ErrorWithStack } from './helpers/errors';
+import { copyStackTraceIfNeeded, ErrorWithStack } from './helpers/errors';
 import {
   clearTimeout,
   getJestFakeTimersType,
@@ -55,9 +55,7 @@ function waitForInternal<T>(
           const error = new Error(
             `Changed from using fake timers to real timers while using waitFor. This is not allowed and will result in very strange behavior. Please ensure you're awaiting all async things your test is doing before changing to real timers. For more info, please go to https://github.com/testing-library/dom-testing-library/issues/830`,
           );
-          if (stackTraceError) {
-            copyStackTrace(error, stackTraceError);
-          }
+          copyStackTraceIfNeeded(error, stackTraceError);
           reject(error);
           return;
         }
@@ -121,9 +119,7 @@ function waitForInternal<T>(
         const error = new Error(
           `Changed from using real timers to fake timers while using waitFor. This is not allowed and will result in very strange behavior. Please ensure you're awaiting all async things your test is doing before changing to fake timers. For more info, please go to https://github.com/testing-library/dom-testing-library/issues/830`,
         );
-        if (stackTraceError) {
-          copyStackTrace(error, stackTraceError);
-        }
+        copyStackTraceIfNeeded(error, stackTraceError);
         return reject(error);
       } else {
         return checkExpectation();
@@ -131,7 +127,11 @@ function waitForInternal<T>(
     }
 
     function checkExpectation() {
-      if (promiseStatus === 'pending') return;
+      /* istanbul ignore next */
+      if (promiseStatus === 'pending') {
+        return;
+      }
+
       try {
         const result = expectation();
 
@@ -171,14 +171,10 @@ function waitForInternal<T>(
           error = new Error(String(lastError));
         }
 
-        if (stackTraceError) {
-          copyStackTrace(error, stackTraceError);
-        }
+        copyStackTraceIfNeeded(error, stackTraceError);
       } else {
         error = new Error('Timed out in waitFor.');
-        if (stackTraceError) {
-          copyStackTrace(error, stackTraceError);
-        }
+        copyStackTraceIfNeeded(error, stackTraceError);
       }
       if (typeof onTimeout === 'function') {
         const result = onTimeout(error);
