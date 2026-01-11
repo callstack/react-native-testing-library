@@ -41,6 +41,7 @@ The project uses `yarn` for dependency management and script execution.
   - **Location:** Tests are located within `src`, typically co-located in `__tests__` directories.
   - **Setup:** `jest-setup.ts` configures the test environment. `src/index.ts` automatically configures cleanup after each test unless skipped.
   - **Coverage:** Collected from `src`, excluding tests.
+  - **Organization:** Use `describe` to group test by theme. Avoid putting all tests in the same `describe` block. Avoid `describe` nesting. Avoid `describe` with only single test, make that test top-level. Prefere `test` over `it`.
 
 - **Commits & Releases:**
   - **Commits:** Follow the **Conventional Commits** specification (e.g., `fix:`, `feat:`, `chore:`). This is enforced and used for changelog generation.
