@@ -8,8 +8,8 @@ export class ErrorWithStack extends Error {
   }
 }
 
-export function copyStackTrace(target: unknown, stackTraceSource: Error) {
-  if (target instanceof Error && stackTraceSource.stack) {
+export function copyStackTraceIfNeeded(target: unknown, stackTraceSource: Error | undefined) {
+  if (stackTraceSource != null && target instanceof Error && stackTraceSource.stack) {
     target.stack = stackTraceSource.stack.replace(stackTraceSource.message, target.message);
   }
 }

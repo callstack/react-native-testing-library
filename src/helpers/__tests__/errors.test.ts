@@ -1,4 +1,4 @@
-import { copyStackTrace, ErrorWithStack } from '../errors';
+import { copyStackTraceIfNeeded, ErrorWithStack } from '../errors';
 
 describe('ErrorWithStack', () => {
   test('should create an error with message', () => {
@@ -29,13 +29,13 @@ describe('ErrorWithStack', () => {
   });
 });
 
-describe('copyStackTrace', () => {
+describe('copyStackTraceIfNeeded', () => {
   test('should copy stack trace from source to target when both are Error instances', () => {
     const target = new Error('Target error');
     const source = new Error('Source error');
     source.stack = 'Error: Source error\n    at test.js:1:1';
 
-    copyStackTrace(target, source);
+    copyStackTraceIfNeeded(target, source);
     expect(target.stack).toBe('Error: Target error\n    at test.js:1:1');
 
     const target2 = new Error('Target error');
@@ -43,7 +43,7 @@ describe('copyStackTrace', () => {
     source2.stack =
       'Error: Source error\n    at test.js:1:1\nError: Source error\n    at test.js:2:2';
 
-    copyStackTrace(target2, source2);
+    copyStackTraceIfNeeded(target2, source2);
     // Should replace only the first occurrence
     expect(target2.stack).toBe(
       'Error: Target error\n    at test.js:1:1\nError: Source error\n    at test.js:2:2',
@@ -55,20 +55,26 @@ describe('copyStackTrace', () => {
     const source = new Error('Source error');
     source.stack = 'Error: Source error\n    at test.js:1:1';
 
-    copyStackTrace(targetNotError, source);
+    copyStackTraceIfNeeded(targetNotError, source);
     expect(targetNotError).toEqual({ message: 'Not an error' });
 
     const target = new Error('Target error');
     const originalStack = target.stack;
-    const sourceNotError = { message: 'Not an error' };
 
-    copyStackTrace(target, sourceNotError as Error);
+    copyStackTraceIfNeeded(target, undefined);
+    expect(target.stack).toBe(originalStack);
+
+    copyStackTraceIfNeeded(target, null as unknown as Error);
+    expect(target.stack).toBe(originalStack);
+
+    const sourceNotError = { message: 'Not an error' };
+    copyStackTraceIfNeeded(target, sourceNotError as Error);
     expect(target.stack).toBe(originalStack);
 
     const sourceNoStack = new Error('Source error');
     delete sourceNoStack.stack;
 
-    copyStackTrace(target, sourceNoStack);
+    copyStackTraceIfNeeded(target, sourceNoStack);
     expect(target.stack).toBe(originalStack);
   });
 });
