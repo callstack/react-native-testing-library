@@ -49,20 +49,13 @@ describe('successful waiting', () => {
 
   test('waits for async event with fireEvent', async () => {
     const Component = ({ onDelayedPress }: { onDelayedPress: () => void }) => {
-      const [state, setState] = React.useState(false);
-
-      React.useEffect(() => {
-        if (state) {
-          onDelayedPress();
-        }
-      }, [state, onDelayedPress]);
-
       return (
         <Pressable
-          onPress={async () => {
-            await Promise.resolve();
-            setState(true);
-          }}
+          onPress={() =>
+            setTimeout(() => {
+              onDelayedPress();
+            }, 100)
+          }
         >
           <Text>Press</Text>
         </Pressable>
@@ -87,16 +80,15 @@ describe('successful waiting', () => {
         const [color, setColor] = React.useState('green');
         const [syncedColor, setSyncedColor] = React.useState(color);
 
-        // On mount, set the color to "red" in a promise microtask
+        // Cascading state updates
+        React.useEffect(() => {
+          setSyncedColor(color);
+        }, [color]);
+
         React.useEffect(() => {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises, promise/catch-or-return, promise/prefer-await-to-then
           Promise.resolve('red').then((c) => setColor(c));
         }, []);
-
-        // Sync the `color` state to `syncedColor` state, but with a delay caused by the effect
-        React.useEffect(() => {
-          setSyncedColor(color);
-        }, [color]);
 
         return (
           <View testID="root">
@@ -110,13 +102,6 @@ describe('successful waiting', () => {
 
       const onPress = jest.fn();
       await render(<Component onPress={onPress} />);
-
-      // Required: this `waitFor` will succeed on first check, because the "root" view is there
-      // since the initial mount.
-      await waitFor(() => screen.getByTestId('root'));
-
-      // This `waitFor` will also succeed on first check, because the promise that sets the
-      // `color` state to "red" resolves right after the previous `await waitFor` statement.
       await waitFor(() => screen.getByText('red'));
 
       // Check that the `onPress` callback is called with the already-updated value of `syncedColor`.
@@ -145,28 +130,20 @@ describe('successful waiting', () => {
 });
 
 describe('timeout errors', () => {
-  test('throws timeout error when condition never becomes true', async () => {
-    function Component() {
-      return <Text>Hello</Text>;
-    }
+  test.each(['real', 'fake', 'fake-legacy'] as const)(
+    'throws timeout error when condition never succeeds with %s timers',
+    async (timerType) => {
+      setupTimeType(timerType);
+      function Component() {
+        return <Text>Hello</Text>;
+      }
 
-    await render(<Component />);
-    await expect(
-      waitFor(() => screen.getByText('Never appears'), { timeout: 100 }),
-    ).rejects.toThrow('Unable to find an element with text: Never appears');
-  });
-
-  test('throws timeout error with fake timers when condition never becomes true', async () => {
-    jest.useFakeTimers();
-    await render(<View />);
-
-    const waitForPromise = waitFor(() => screen.getByText('Never appears'), { timeout: 100 });
-
-    await jest.advanceTimersByTimeAsync(100);
-    await expect(waitForPromise).rejects.toThrow(
-      'Unable to find an element with text: Never appears',
-    );
-  });
+      await render(<Component />);
+      await expect(
+        waitFor(() => screen.getByText('Never appears'), { timeout: 100 }),
+      ).rejects.toThrow('Unable to find an element with text: Never appears');
+    },
+  );
 
   test('throws generic timeout error when promise rejects with falsy value until timeout', async () => {
     await expect(
@@ -379,17 +356,17 @@ describe('fake timers behavior', () => {
     async (timerType) => {
       setupTimeType(timerType);
 
-      const mockFn = jest.fn(() => {
+      const expection = jest.fn(() => {
         throw Error('test');
       });
 
       try {
-        await waitFor(() => mockFn(), { timeout: 400, interval: 200 });
+        await waitFor(() => expection(), { timeout: 400, interval: 200 });
       } catch {
         // suppress
       }
 
-      expect(mockFn).toHaveBeenCalledTimes(3);
+      expect(expection).toHaveBeenCalledTimes(3);
     },
   );
 
@@ -398,24 +375,24 @@ describe('fake timers behavior', () => {
     async (timerType) => {
       setupTimeType(timerType);
 
-      const mockErrorFn = jest.fn(() => {
+      const expection = jest.fn(() => {
         throw Error('test');
       });
 
-      const mockHandleFn = jest.fn((e) => e);
+      const onTimeout = jest.fn((e) => e);
 
       try {
-        await waitFor(() => mockErrorFn(), {
+        await waitFor(() => expection(), {
           timeout: 400,
           interval: 200,
-          onTimeout: mockHandleFn,
+          onTimeout: onTimeout,
         });
       } catch {
         // suppress
       }
 
-      expect(mockErrorFn).toHaveBeenCalledTimes(3);
-      expect(mockHandleFn).toHaveBeenCalledTimes(1);
+      expect(expection).toHaveBeenCalledTimes(3);
+      expect(onTimeout).toHaveBeenCalledTimes(1);
     },
   );
 });
