@@ -30,7 +30,7 @@ export interface RenderOptions {
 export type RenderResult = Awaited<ReturnType<typeof render>>;
 
 /**
- * Renders test component deeply using React Test Renderer and exposes helpers
+ * Renders test component deeply using Test Renderer and exposes helpers
  * to assert on the output.
  */
 export async function render<T>(element: React.ReactElement<T>, options: RenderOptions = {}) {
