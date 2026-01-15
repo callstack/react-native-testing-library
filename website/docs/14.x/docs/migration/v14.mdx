@@ -26,11 +26,11 @@ We provide codemods to automate most of the migration:
 
 **Step 1: Update dependencies**
 
-<PackageManagerTabs command={{ npm: 'npx codemod@latest rntl-v14-update-deps --target .\nnpm install', yarn: 'yarn dlx codemod@latest rntl-v14-update-deps --target .\nyarn install', pnpm: 'pnpm dlx codemod@latest rntl-v14-update-deps --target .\npnpm install' }} />
+<PackageManagerTabs command={{ npm: 'npx codemod@latest rntl-v14-update-deps --target .\nnpm install', yarn: 'yarn dlx codemod@latest rntl-v14-update-deps --target .\nyarn install', pnpm: 'pnpm dlx codemod@latest rntl-v14-update-deps --target .\npnpm install', bun: 'bunx codemod@latest rntl-v14-update-deps --target .\nbun install' }} />
 
 **Step 2: Update test code to async**
 
-<PackageManagerTabs command={{ npm: 'npx codemod@latest rntl-v14-async-functions --target ./src', yarn: 'yarn dlx codemod@latest rntl-v14-async-functions --target ./src', pnpm: 'pnpm dlx codemod@latest rntl-v14-async-functions --target ./src' }} />
+<PackageManagerTabs command={{ npm: 'npx codemod@latest rntl-v14-async-functions --target ./src', yarn: 'yarn dlx codemod@latest rntl-v14-async-functions --target ./src', pnpm: 'pnpm dlx codemod@latest rntl-v14-async-functions --target ./src', bun: 'bunx codemod@latest rntl-v14-async-functions --target ./src' }} />
 
 After running the codemods, review the changes and run your tests.
 
@@ -61,13 +61,13 @@ In v14, React Native Testing Library now uses [Test Renderer](https://github.com
 
 Run codemod for updating dependencies:
 
-<PackageManagerTabs command={{ npm: 'npx codemod@latest rntl-v14-update-deps\nnpm install', yarn: 'yarn dlx codemod@latest rntl-v14-update-deps\nyarn install', pnpm: 'pnpm dlx codemod@latest rntl-v14-update-deps\npnpm install' }} />
+<PackageManagerTabs command={{ npm: 'npx codemod@latest rntl-v14-update-deps\nnpm install', yarn: 'yarn dlx codemod@latest rntl-v14-update-deps\nyarn install', pnpm: 'pnpm dlx codemod@latest rntl-v14-update-deps\npnpm install', bun: 'bunx codemod@latest rntl-v14-update-deps\nbun install' }} />
 
 ##### Manual changes
 
 Remove React Test Renderer and its type definitions from your dev dependencies, and add Test Renderer:
 
-<PackageManagerTabs command={{ npm: 'npm uninstall react-test-renderer @types/react-test-renderer\nnpm install -D test-renderer@^0.14.0', yarn: 'yarn remove react-test-renderer @types/react-test-renderer\nyarn add -D test-renderer@^0.14.0', pnpm: 'pnpm remove react-test-renderer @types/react-test-renderer\npnpm add -D test-renderer@^0.14.0' }} />
+<PackageManagerTabs command={{ npm: 'npm uninstall react-test-renderer @types/react-test-renderer\nnpm install -D test-renderer@^0.14.0', yarn: 'yarn remove react-test-renderer @types/react-test-renderer\nyarn add -D test-renderer@^0.14.0', pnpm: 'pnpm remove react-test-renderer @types/react-test-renderer\npnpm add -D test-renderer@^0.14.0', bun: 'bun remove react-test-renderer @types/react-test-renderer\nbun add -D test-renderer@^0.14.0' }} />
 
 #### 2. Update type imports (if needed)
 
@@ -384,7 +384,7 @@ Updates your `package.json`:
 - Adds Test Renderer (`test-renderer`)
 - Updates `@testing-library/react-native` to `^14.0.0`
 
-<PackageManagerTabs command={{ npm: 'npx codemod@latest rntl-v14-update-deps --target .\nnpm install', yarn: 'yarn dlx codemod@latest rntl-v14-update-deps --target .\nyarn install', pnpm: 'pnpm dlx codemod@latest rntl-v14-update-deps --target .\npnpm install' }} />
+<PackageManagerTabs command={{ npm: 'npx codemod@latest rntl-v14-update-deps --target .\nnpm install', yarn: 'yarn dlx codemod@latest rntl-v14-update-deps --target .\nyarn install', pnpm: 'pnpm dlx codemod@latest rntl-v14-update-deps --target .\npnpm install', bun: 'bunx codemod@latest rntl-v14-update-deps --target .\nbun install' }} />
 
 ### `rntl-v14-async-functions`
 
@@ -393,7 +393,7 @@ Transforms test files:
 - Makes test functions async when needed
 - Handles `screen.rerender()`, `screen.unmount()`, and renderer methods
 
-<PackageManagerTabs command={{ npm: 'npx codemod@latest rntl-v14-async-functions --target ./src', yarn: 'yarn dlx codemod@latest rntl-v14-async-functions --target ./src', pnpm: 'pnpm dlx codemod@latest rntl-v14-async-functions --target ./src' }} />
+<PackageManagerTabs command={{ npm: 'npx codemod@latest rntl-v14-async-functions --target ./src', yarn: 'yarn dlx codemod@latest rntl-v14-async-functions --target ./src', pnpm: 'pnpm dlx codemod@latest rntl-v14-async-functions --target ./src', bun: 'bunx codemod@latest rntl-v14-async-functions --target ./src' }} />
 
 #### Custom render functions
 
@@ -403,7 +403,8 @@ If you have custom render helpers (like `renderWithProviders`), you can specify 
   command={{
     npm: 'npx codemod@latest rntl-v14-async-functions \\\n  --target ./src \\\n  --param customRenderFunctions="renderWithProviders,renderWithTheme"',
     yarn: 'yarn dlx codemod@latest rntl-v14-async-functions \\\n  --target ./src \\\n  --param customRenderFunctions="renderWithProviders,renderWithTheme"',
-    pnpm: 'pnpm dlx codemod@latest rntl-v14-async-functions \\\n  --target ./src \\\n  --param customRenderFunctions="renderWithProviders,renderWithTheme"'
+    pnpm: 'pnpm dlx codemod@latest rntl-v14-async-functions \\\n  --target ./src \\\n  --param customRenderFunctions="renderWithProviders,renderWithTheme"',
+    bun: 'bunx codemod@latest rntl-v14-async-functions \\\n  --target ./src \\\n  --param customRenderFunctions="renderWithProviders,renderWithTheme"'
   }}
 />
 
