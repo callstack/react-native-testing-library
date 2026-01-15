@@ -4,13 +4,22 @@
 
 ```ts
 type Config = {
+  /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
-  defaultHidden: boolean;
-  defaultDebugOptions: Partial<DebugOptions>;
-  concurrentRoot: boolean;
+
+  /** Default value for `includeHiddenElements` query option. */
+  defaultIncludeHiddenElements: boolean;
+
+  /** Default options for `debug` helper. */
+  defaultDebugOptions?: Partial<DebugOptions>;
 };
 
-function configure(options: Partial<Config>) {}
+type ConfigAliasOptions = {
+  /** RTL-compatibility alias for `defaultIncludeHiddenElements`. */
+  defaultHidden: boolean;
+};
+
+function configure(options: Partial<Config & ConfigAliasOptions>) {}
 ```
 
 ### `asyncUtilTimeout` option
@@ -26,11 +35,6 @@ This option is also available as `defaultHidden` alias for compatibility with [R
 ### `defaultDebugOptions` option
 
 Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
-
-### `concurrentRoot` option {#concurrent-root}
-
-Set to `false` to disable concurrent rendering.
-Otherwise, `render` will default to using concurrent rendering used in the React Native New Architecture.
 
 ## `resetToDefaults()`
 

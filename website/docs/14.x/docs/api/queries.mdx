@@ -11,8 +11,8 @@ All queries described below are accessible in two main ways: through the `screen
 ```tsx
 import { render, screen } from '@testing-library/react-native';
 
-test('accessing queries using "screen" object', () => {
-  render(...);
+test('accessing queries using "screen" object', async () => {
+  await render(...);
 
   screen.getByRole("button", { name: "Start" });
 })
@@ -25,8 +25,8 @@ The modern and recommended way of accessing queries is to use the `screen` objec
 ```tsx
 import { render } from '@testing-library/react-native';
 
-test('accessing queries using "render" result', () => {
-  const { getByRole } = render(...);
+test('accessing queries using "render" result', async () => {
+  const { getByRole } = await render(...);
   getByRole("button", { name: "Start" });
 })
 ```
@@ -130,11 +130,11 @@ In cases when your `findBy*` and `findAllBy*` queries throw when unable to find 
 
 ## Query predicates
 
-_Note: most methods like this one return a [`HostElement`](https://reactjs.org/docs/test-renderer.html#testinstance) with following properties that you may be interested in:_
+_Note: most methods like this one return a [`HostElement`](https://github.com/mdjastrzebski/test-renderer#hostelement) with following properties that you may be interested in:_
 
 ```typescript
 type HostElement = {
-  type: string | Function;
+  type: string;
   props: { [propName: string]: any };
   parent: HostElement | null;
   children: Array<HostElement | string>;
@@ -180,7 +180,7 @@ In order for `*ByRole` queries to match an element it needs to be considered an 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(
+await render(
   <Pressable accessibilityRole="button" disabled>
     <Text>Hello</Text>
   </Pressable>
@@ -237,11 +237,12 @@ Returns a `HostElement` with matching label:
 
 - either by matching [`aria-label`](https://reactnative.dev/docs/accessibility#aria-label)/[`accessibilityLabel`](https://reactnative.dev/docs/accessibility#accessibilitylabel) prop
 - or by matching text content of view referenced by [`aria-labelledby`](https://reactnative.dev/docs/accessibility#aria-labelledby-android)/[`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
+- or by matching the [`alt`](https://reactnative.dev/docs/image#alt) prop on `Image` elements
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<MyComponent />);
+await render(<MyComponent />);
 const element = screen.getByLabelText('my-label');
 ```
 
@@ -265,7 +266,7 @@ Returns a `HostElement` for a `TextInput` with a matching placeholder – may be
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<MyComponent />);
+await render(<MyComponent />);
 const element = screen.getByPlaceholderText('username');
 ```
 
@@ -289,7 +290,7 @@ Returns a `HostElement` for a `TextInput` with a matching display value – may 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<MyComponent />);
+await render(<MyComponent />);
 const element = screen.getByDisplayValue('username');
 ```
 
@@ -315,7 +316,7 @@ This method will join `<Text>` siblings to find matches, similarly to [how React
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<MyComponent />);
+await render(<MyComponent />);
 const element = screen.getByText('banana');
 ```
 
@@ -341,7 +342,7 @@ Returns a `HostElement` with matching `accessibilityHint` prop.
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<MyComponent />);
+await render(<MyComponent />);
 const element = screen.getByHintText('Plays a song');
 ```
 
@@ -369,7 +370,7 @@ Returns a `HostElement` with matching `testID` prop. `testID` – may be a strin
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<MyComponent />);
+await render(<MyComponent />);
 const element = screen.getByTestId('unique-id');
 ```
 
@@ -392,7 +393,7 @@ This option is also available as `hidden` alias for compatibility with [React Te
 **Examples**
 
 ```tsx
-render(<Text style={{ display: 'none' }}>Hidden from accessibility</Text>);
+await render(<Text style={{ display: 'none' }}>Hidden from accessibility</Text>);
 
 // Exclude hidden elements
 expect(
@@ -421,7 +422,7 @@ Most of the query APIs take a `TextMatch` as an argument, which means the argume
 Given the following render:
 
 ```jsx
-render(<Text>Hello World</Text>);
+await render(<Text>Hello World</Text>);
 ```
 
 Will **find a match**:
@@ -491,7 +492,7 @@ Specifying a value for `normalizer` replaces the built-in normalization, but you
 To perform a match against text without trimming:
 
 ```typescript
-screen.getByText(node, 'text', {
+screen.getByText('text', {
   normalizer: getDefaultNormalizer({ trim: false }),
 });
 ```
@@ -499,33 +500,7 @@ screen.getByText(node, 'text', {
 To override normalization to remove some Unicode characters whilst keeping some (but not all) of the built-in normalization behavior:
 
 ```typescript
-screen.getByText(node, 'text', {
+screen.getByText('text', {
   normalizer: (str) => getDefaultNormalizer({ trim: false })(str).replace(/[\u200E-\u200F]*/g, ''),
 });
 ```
-
-## Legacy unit testing helpers
-
-`render` from `@testing-library/react-native` exposes additional queries that **should not be used in integration or component testing**, but some users (like component library creators) interested in unit testing some components may find helpful.
-
-The interface is the same as for other queries, but we won't provide full names so that they're harder to find by search engines.
-
-### `UNSAFE_ByType`
-
-> UNSAFE_getByType, UNSAFE_getAllByType, UNSAFE_queryByType, UNSAFE_queryAllByType
-
-Returns a `HostElement` with matching a React component type.
-
-:::caution
-This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
-:::
-
-### `UNSAFE_ByProps`
-
-> UNSAFE_getByProps, UNSAFE_getAllByProps, UNSAFE_queryByProps, UNSAFE_queryAllByProps
-
-Returns a `HostElement` with matching props object.
-
-:::caution
-This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
-:::

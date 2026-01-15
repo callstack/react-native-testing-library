@@ -24,7 +24,7 @@ import { render, screen, fireEvent } from '@testing-library/react-native';
 
 test('fire changeText event', async () => {
   const onEventMock = jest.fn();
-  render(
+  await render(
     // MyComponent renders TextInput which has a placeholder 'Enter details'
     // and with `onChangeText` bound to handleChangeText
     <MyComponent handleChangeText={onEventMock} />
@@ -43,11 +43,11 @@ An example using `fireEvent` with native events that aren't already aliased by t
 
 ```jsx
 import { TextInput, View } from 'react-native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 
 const onBlurMock = jest.fn();
 
-render(
+await render(
   <View>
     <TextInput placeholder="my placeholder" onBlur={onBlurMock} />
   </View>
@@ -86,7 +86,7 @@ const eventData = {
   },
 };
 
-render(
+await render(
   <View>
     <TouchableOpacity onPress={onPressMock}>
       <Text>Press me</Text>
@@ -120,7 +120,7 @@ import { render, screen, fireEvent } from '@testing-library/react-native';
 const onChangeTextMock = jest.fn();
 const CHANGE_TEXT = 'content';
 
-render(
+await render(
   <View>
     <TextInput placeholder="Enter data" onChangeText={onChangeTextMock} />
   </View>
@@ -159,11 +159,11 @@ const eventData = {
   },
 };
 
-render(
-  <ScrollView onScroll={onScrollMock}>
-    <Text>XD</Text>
+await render(
+  <ScrollView testID="scroll-view" onScroll={onScrollMock}>
+    <Text>Content</Text>
   </ScrollView>
 );
 
-await fireEvent.scroll(screen.getByText('scroll-view'), eventData);
+await fireEvent.scroll(screen.getByTestId('scroll-view'), eventData);
 ```

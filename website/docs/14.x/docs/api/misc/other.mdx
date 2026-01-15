@@ -13,11 +13,11 @@ Please note that additional `render` specific operations like `rerender`, `unmou
 :::
 
 ```jsx
-const detailsScreen = within(screen.getByA11yHint('Details Screen'));
+const detailsScreen = within(screen.getByHintText('Details Screen'));
 expect(detailsScreen.getByText('Some Text')).toBeOnTheScreen();
 expect(detailsScreen.getByDisplayValue('Some Value')).toBeOnTheScreen();
 expect(detailsScreen.queryByLabelText('Some Label')).toBeOnTheScreen();
-await expect(detailsScreen.findByA11yHint('Some Label')).resolves.toBeOnTheScreen();
+await expect(detailsScreen.findByHintText('Some Label')).resolves.toBeOnTheScreen();
 ```
 
 Use cases for scoped queries include:
@@ -31,29 +31,29 @@ Use cases for scoped queries include:
 function act<T>(callback: () => T | Promise<T>): Promise<T>;
 ```
 
-Useful function to help testing components that use hooks API. By default any `render`, `rerender`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually.
+Wraps code that causes React state updates to ensure all updates are processed before assertions. By default any `render`, `rerender`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually.
 
-**In v14, `act` is now async by default and always returns a Promise**, making it compatible with React 19, React Suspense, and `React.use()`. This ensures all pending React updates are executed before the Promise resolves.
+**In v14, `act` is now async by default and always returns a Promise**, making it compatible with async React features like `Suspense` boundary or `use()` hook. This ensures all pending React updates are executed before the Promise resolves.
 
 ```ts
 import { act } from '@testing-library/react-native';
 
 it('should update state', async () => {
-  await act(async () => {
+  await act(() => {
     setState('new value');
   });
   expect(state).toBe('new value');
 });
 ```
 
-**Note**: Even if your callback is synchronous, you should still use `await act(async () => ...)` as `act` now always returns a Promise.
+**Note**: Even if your callback is synchronous, you should still use `await act(...)` as `act` now always returns a Promise.
 
-Consult our [Understanding Act function](docs/advanced/understanding-act.md) document for more understanding of its intricacies.
+Consult our [Understanding Act function](docs/advanced/understanding-act) document for more understanding of its intricacies.
 
 ## `cleanup`
 
 ```ts
-const cleanup: () => void;
+function cleanup(): Promise<void>;
 ```
 
 Unmounts React trees that were mounted with `render` and clears `screen` variable that holds latest `render` output.
@@ -68,10 +68,12 @@ For example, if you're using the `jest` testing framework, then you would need t
 import { cleanup, render } from '@testing-library/react-native/pure';
 import { View } from 'react-native';
 
-afterEach(cleanup);
+afterEach(async () => {
+  await cleanup();
+});
 
-it('renders a view', () => {
-  render(<View />);
+it('renders a view', async () => {
+  await render(<View />);
   // ...
 });
 ```
@@ -80,10 +82,12 @@ The `afterEach(cleanup)` call also works in `describe` blocks:
 
 ```jsx
 describe('when logged in', () => {
-  afterEach(cleanup);
+  afterEach(async () => {
+    await cleanup();
+  });
 
-  it('renders the user', () => {
-    render(<SiteHeader />);
+  it('renders the user', async () => {
+    await render(<SiteHeader />);
     // ...
   });
 });

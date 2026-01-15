@@ -8,16 +8,29 @@ Open a Terminal in your project's folder and run:
 
 <PackageManagerTabs
   command={{
-    yarn: 'yarn add -D @testing-library/react-native',
     npm: 'npm install -D @testing-library/react-native',
+    yarn: 'yarn add -D @testing-library/react-native',
+    pnpm: 'pnpm add -D @testing-library/react-native',
+    bun: 'bun add -D @testing-library/react-native',
   }}
 />
 
-This library uses [Test Renderer](https://github.com/mdjastrzebski/test-renderer) as its underlying rendering engine. Test Renderer is automatically installed as a dependency and provides better compatibility with React 19 and improved type safety compared to the deprecated `react-test-renderer` package.
+This library has a peer dependency on [Test Renderer](https://github.com/mdjastrzebski/test-renderer). Make sure to install it:
+
+<PackageManagerTabs
+  command={{
+    npm: 'npm install -D test-renderer',
+    yarn: 'yarn add -D test-renderer',
+    pnpm: 'pnpm add -D test-renderer',
+    bun: 'bun add -D test-renderer',
+  }}
+/>
+
+Test Renderer provides better compatibility with React 19 and improved type safety compared to the deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html).
 
 ### Jest matchers
 
-RNTL v13 automatically extends Jest with React Native-specific matchers. The only thing you need to do is to import anything from `@testing-library/react-native` which you already need to do to access the `render` function.
+RNTL automatically extends Jest with React Native-specific matchers. The only thing you need to do is to import anything from `@testing-library/react-native` which you already need to do to access the `render` function.
 
 ### ESLint plugin
 
@@ -27,8 +40,10 @@ Install the plugin (assuming you already have `eslint` installed & configured):
 
 <PackageManagerTabs
   command={{
-    yarn: 'yarn add -D eslint-plugin-testing-library',
     npm: 'npm install -D eslint-plugin-testing-library',
+    yarn: 'yarn add -D eslint-plugin-testing-library',
+    pnpm: 'pnpm add -D eslint-plugin-testing-library',
+    bun: 'bun add -D eslint-plugin-testing-library',
   }}
 />
 

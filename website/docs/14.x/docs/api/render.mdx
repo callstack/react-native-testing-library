@@ -2,14 +2,14 @@
 
 ## `render` function {#render}
 
-```jsx
-async function render(
-  component: React.Element<any>,
+```ts
+async function render<T>(
+  element: React.ReactElement<T>,
   options?: RenderOptions
-): Promise<RenderResult>
+): Promise<RenderResult>;
 ```
 
-The `render` function is the entry point for writing React Native Testing Library tests. It deeply renders the given React element and returns helpers to query the output components' structure. This function is async by default and uses async `act` internally to ensure all pending React updates are executed during rendering, making it compatible with React 19, React Suspense, and `React.use()`.
+The `render` function is the entry point for writing React Native Testing Library tests. It deeply renders the given React element and returns helpers to query the output components' structure. This function is async by default and uses async `act` internally to ensure all pending React updates are executed during rendering, making it compatible with async React features like `Suspense` boundary or `use()` hook.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -34,15 +34,10 @@ wrapper?: React.ComponentType<any>,
 
 This option allows you to wrap the tested component, passed as the first option to the `render()` function, in an additional wrapper component. This is useful for creating reusable custom render functions for common React Context providers.
 
-#### `concurrentRoot` {#concurrent-root}
-
-Set to `false` to disable concurrent rendering.
-Otherwise, `render` will default to using concurrent rendering used in the React Native New Architecture.
-
 #### `createNodeMock` {#create-node-mock}
 
 ```ts
-createNodeMock?: (element: React.Element) => unknown,
+createNodeMock?: (element: React.ReactElement) => object,
 ```
 
 This option allows you to pass `createNodeMock` option to the renderer's `create()` method in order to allow for custom mock refs. This option is passed through to [Test Renderer](https://github.com/mdjastrzebski/test-renderer).
@@ -61,8 +56,8 @@ The `render` function returns a promise that resolves to the same queries and ut
 
 See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
 
-:::warning Async lifecycle methods
+:::note Type information
 
-When using `render`, the lifecycle methods `rerender` and `unmount` are async and must be awaited.
+Query results and element references use the `HostElement` type from [Test Renderer](https://github.com/mdjastrzebski/test-renderer). If you need to type element variables, you can import this type directly from `test-renderer`.
 
 :::
