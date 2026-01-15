@@ -58,7 +58,7 @@ const defaultOptions: Required<UserEventSetupOptions> = {
  * @returns UserEvent instance
  */
 export function setup(options?: UserEventSetupOptions) {
-  const config = createConfig(options);
+  const config = createConfig(options, setup);
   const instance = createInstance(config);
   return instance;
 }
@@ -74,9 +74,14 @@ export interface UserEventConfig {
   advanceTimers: (delay: number) => Promise<void> | void;
 }
 
-function createConfig(options?: UserEventSetupOptions): UserEventConfig {
-  const { delay, advanceTimers, ...rest } = options ?? {};
-  validateOptions('userEvent.setup', rest);
+function createConfig(
+  options: UserEventSetupOptions = {},
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  callsite: Function,
+): UserEventConfig {
+  const { delay, advanceTimers, ...rest } = options;
+  validateOptions('userEvent.setup', rest, callsite);
+
   return {
     ...defaultOptions,
     ...(delay !== undefined && { delay }),

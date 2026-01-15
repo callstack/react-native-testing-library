@@ -40,7 +40,7 @@ export async function renderHook<Result, Props>(
   }
 
   const { initialProps, wrapper, ...rest } = options ?? {};
-  validateOptions('renderHook', rest);
+  validateOptions('renderHook', rest, renderHook);
   const renderOptions = wrapper ? { wrapper } : {};
   const { rerender: rerenderComponent, unmount } = await render(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it shouldn't be

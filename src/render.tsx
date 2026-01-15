@@ -36,7 +36,7 @@ export type RenderResult = Awaited<ReturnType<typeof render>>;
  */
 export async function render<T>(element: React.ReactElement<T>, options: RenderOptions = {}) {
   const { wrapper: Wrapper, createNodeMock, ...rest } = options || {};
-  validateOptions('render', rest);
+  validateOptions('render', rest, render);
 
   const rendererOptions: RootOptions = {
     textComponentTypes: HOST_TEXT_NAMES,
