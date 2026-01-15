@@ -476,7 +476,7 @@ If you were relying on the previous behavior where strings could be rendered out
 
 ## Codemods
 
-We provide two codemods to automate the migration:
+We provide two codemods to automate the migration. Both codemods are **safe to run multiple times** - they will only transform code that hasn't been migrated yet.
 
 ### `rntl-v14-update-deps`
 
@@ -503,11 +503,13 @@ npx codemod@latest rntl-v14-async-functions --target ./src
 
 #### Custom render functions
 
-If you have custom render helpers (like `renderWithProviders`), specify them:
+If you have custom render helpers (like `renderWithProviders`), you can specify them using the `customRenderFunctions` parameter. The codemod will then also transform calls to these functions:
 
 ```bash
 npx codemod@latest rntl-v14-async-functions --target ./src --param customRenderFunctions="renderWithProviders,renderWithTheme"
 ```
+
+This will add `await` to your custom render calls and make the containing test functions async, just like it does for the standard `render` function.
 
 #### Limitations
 
