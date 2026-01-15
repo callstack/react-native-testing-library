@@ -1,6 +1,1 @@
-[
-  "v14",
-  "v13",
-  "jest-matchers",
-  { "type": "dir", "name": "previous", "label": "Previous versions", "collapsed": true }
-]
+["jest-matchers", "v13", "v12", "v11", "v9", "v7", "v2"]

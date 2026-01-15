@@ -18,20 +18,21 @@ In v14, React Native Testing Library now uses [Test Renderer](https://github.com
 
 #### 1. Update dependencies
 
+Run codemod for updating dependencies:
+
+```bash
+npx codemode@latest rntl-v14-update-deps
+npm install
+```
+
+##### Manual changes
+
 Remove `react-test-renderer` and its type definitions from your dev dependencies, and add `test-renderer`:
 
 ```bash
 # Using npm
 npm uninstall react-test-renderer @types/react-test-renderer
-npm install -D test-renderer@^0.10.0
-
-# Using yarn
-yarn remove react-test-renderer @types/react-test-renderer
-yarn add -D test-renderer@^0.10.0
-
-# Using pnpm
-pnpm remove react-test-renderer @types/react-test-renderer
-pnpm add -D test-renderer@^0.10.0
+npm install -D test-renderer@^0.14.0
 ```
 
 #### 2. Update type imports (if needed)

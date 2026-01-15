@@ -7,7 +7,7 @@ This codemod automatically updates your `package.json` to prepare for React Nati
 - Removes `@types/react-test-renderer` and `react-test-renderer` (no longer needed)
 - Moves `@testing-library/react-native` to `devDependencies` if it's in `dependencies`
 - Updates `@testing-library/react-native` to `^14.0.0-alpha.5`
-- Adds `test-renderer@0.12.0` to `devDependencies`
+- Adds `test-renderer@0.14.0` to `devDependencies`
 
 ## Usage
 
