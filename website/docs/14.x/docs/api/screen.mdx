@@ -8,7 +8,7 @@ let screen: {
   debug(options?: DebugOptions): void
   toJSON(): JsonElement | null;
   container: HostElement;
-  root: HostElement;
+  root: HostElement | null;
 };
 ```
 
@@ -164,12 +164,18 @@ test('example', async () => {
 ### `root`
 
 ```ts
-const root: HostElement;
+const root: HostElement | null;
 ```
 
-Returns the rendered root [host element](docs/advanced/testing-env#host-and-composite-components). This is the first child of the `container`, which represents the actual root element you rendered.
+Returns the rendered root [host element](docs/advanced/testing-env#host-and-composite-components), or `null` if nothing was rendered. This is the first child of the `container`, which represents the actual root element you rendered.
 
 This API is primarily useful for component tests, as it allows you to access root host view without using `*ByTestId` queries or similar methods.
+
+:::note
+
+In rare cases where your root element is a `React.Fragment` with multiple children, the `container` will have more than one child, and `root` will return only the first one. In such cases, use `container.children` to access all rendered elements.
+
+:::
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
