@@ -193,6 +193,12 @@ In v14, `act` is now async by default and always returns a Promise. You should a
 - `act` should always be awaited
 - The API is more consistent and predictable
 
+:::note
+
+The transition to async `act` may prevent testing very short transient states, as awaiting `act` will flush all pending updates before returning.
+
+:::
+
 **Before (v13):**
 
 ```ts
