@@ -399,7 +399,13 @@ Transforms test files:
 
 If you have custom render helpers (like `renderWithProviders`), you can specify them using the `customRenderFunctions` parameter. The codemod will then also transform calls to these functions:
 
-<PackageManagerTabs command={{ npm: 'npx codemod@latest rntl-v14-async-functions --target ./src --param customRenderFunctions="renderWithProviders,renderWithTheme"', yarn: 'yarn dlx codemod@latest rntl-v14-async-functions --target ./src --param customRenderFunctions="renderWithProviders,renderWithTheme"', pnpm: 'pnpm dlx codemod@latest rntl-v14-async-functions --target ./src --param customRenderFunctions="renderWithProviders,renderWithTheme"' }} />
+<PackageManagerTabs
+  command={{
+    npm: 'npx codemod@latest rntl-v14-async-functions \\\n  --target ./src \\\n  --param customRenderFunctions="renderWithProviders,renderWithTheme"',
+    yarn: 'yarn dlx codemod@latest rntl-v14-async-functions \\\n  --target ./src \\\n  --param customRenderFunctions="renderWithProviders,renderWithTheme"',
+    pnpm: 'pnpm dlx codemod@latest rntl-v14-async-functions \\\n  --target ./src \\\n  --param customRenderFunctions="renderWithProviders,renderWithTheme"'
+  }}
+/>
 
 This will add `await` to your custom render calls and make the containing test functions async, just like it does for the standard `render` function.
 
