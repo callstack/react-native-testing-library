@@ -101,6 +101,8 @@ The `act` implementation is defined in the [ReactAct.js source file](https://git
 
 RNTL exports `act` for convenience of the users as defined in the [act.ts source file](https://github.com/callstack/react-native-testing-library/blob/main/src/act.ts). In v14, `act` is now async by default and always returns a Promise, making it compatible with async React features like `Suspense` boundary or `use()` hook. The underlying implementation wraps React's `act` function to ensure consistent async behavior.
 
+**Important**: You should always use `act` exported from `@testing-library/react-native` rather than the one from `react`. The RNTL version automatically ensures async behavior, whereas using `React.act` directly could still trigger synchronous act behavior if used improperly, leading to subtle test issues.
+
 ## Asynchronous code
 
 In v14, `act` is always async and returns a Promise. While the callback you pass to `act` can be synchronous (dealing with things like synchronous effects or mocks using already resolved promises), the `act` function itself should always be awaited. However, not all component code is synchronous. Frequently our components or mocks contain some asynchronous behaviours like `setTimeout` calls or network calls.
