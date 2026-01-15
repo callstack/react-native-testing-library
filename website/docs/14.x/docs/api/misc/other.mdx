@@ -33,7 +33,7 @@ function act<T>(callback: () => T | Promise<T>): Promise<T>;
 
 Wraps code that causes React state updates to ensure all updates are processed before assertions. By default any `render`, `rerender`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually.
 
-**In v14, `act` is now async by default and always returns a Promise**, making it compatible with React 19, React Suspense, and `React.use()`. This ensures all pending React updates are executed before the Promise resolves.
+**In v14, `act` is now async by default and always returns a Promise**, making it compatible with async React features like `Suspense` boundary or `use()` hook. This ensures all pending React updates are executed before the Promise resolves.
 
 ```ts
 import { act } from '@testing-library/react-native';

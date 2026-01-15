@@ -41,7 +41,7 @@ function rerender(element: React.Element<unknown>): Promise<void>;
 
 Re-render the in-memory tree with a new root element. This simulates a React update render at the root. If the new element has the same type (and `key`) as the previous element, the tree will be updated; otherwise, it will re-mount a new tree, in both cases triggering the appropriate lifecycle events.
 
-This method is async and uses async `act` function internally to ensure all pending React updates are executed during updating, making it compatible with React 19, React Suspense, and `React.use()`.
+This method is async and uses async `act` function internally to ensure all pending React updates are executed during updating, making it compatible with async React features like `Suspense` boundary or `use()` hook.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -62,7 +62,7 @@ function unmount(): Promise<void>;
 
 Unmount the in-memory tree, triggering the appropriate lifecycle events.
 
-This method is async and uses async `act` function internally to ensure all pending React updates are executed during unmounting, making it compatible with React 19, React Suspense, and `React.use()`.
+This method is async and uses async `act` function internally to ensure all pending React updates are executed during unmounting, making it compatible with async React features like `Suspense` boundary or `use()` hook.
 
 :::note
 

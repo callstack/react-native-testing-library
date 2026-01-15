@@ -97,7 +97,7 @@ Note that `act` calls can be safely nested and internally form a stack of calls.
 
 As of React version of 18.1.0, the `act` implementation is defined in the [ReactAct.js source file](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js) inside React repository. This implementation has been fairly stable since React 17.0.
 
-RNTL exports `act` for convenience of the users as defined in the [act.ts source file](https://github.com/callstack/react-native-testing-library/blob/main/src/act.ts). In v14, `act` is now async by default and always returns a Promise, making it compatible with React 19, React Suspense, and `React.use()`. The underlying implementation still uses React's `act` function, but wraps it to ensure consistent async behavior.
+RNTL exports `act` for convenience of the users as defined in the [act.ts source file](https://github.com/callstack/react-native-testing-library/blob/main/src/act.ts). In v14, `act` is now async by default and always returns a Promise, making it compatible with async React features like `Suspense` boundary or `use()` hook. The underlying implementation still uses React's `act` function, but wraps it to ensure consistent async behavior.
 
 ## Asynchronous `act`
 
