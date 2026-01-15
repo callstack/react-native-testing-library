@@ -285,6 +285,22 @@ const container = screen.container; // pseudo-element container
 const root = screen.root;           // first rendered host element
 ```
 
+#### Legacy `UNSAFE_*` queries removed
+
+The legacy `UNSAFE_getAllByType`, `UNSAFE_getByType`, `UNSAFE_getAllByProps`, and `UNSAFE_getByProps` queries have been removed. These queries could return composite (user-defined) components, which is no longer supported with [Test Renderer](https://github.com/mdjastrzebski/test-renderer) as it only renders host elements.
+
+If you were using these legacy queries, you should refactor your tests to use the standard queries (`getByRole`, `getByText`, `getByTestId`, etc.) which target host elements.
+
+```ts
+// Before (v13)
+const buttons = screen.UNSAFE_getAllByType(Button);
+const input = screen.UNSAFE_getByProps({ placeholder: 'Enter text' });
+
+// After (v14)
+const buttons = screen.getAllByRole('button');
+const input = screen.getByPlaceholderText('Enter text');
+```
+
 ### `container` API reintroduced
 
 In v14, the `container` API has been reintroduced and is now safe to use. Previously, `container` was renamed to `UNSAFE_root` in v12 due to behavioral differences from React Testing Library's `container`. In v14, `container` now returns a pseudo-element container whose children are the elements you asked to render, making it safe and consistent with React Testing Library's behavior.
