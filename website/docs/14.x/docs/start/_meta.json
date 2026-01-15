@@ -1,1 +1,9 @@
-["intro", "quick-start", "v14"]
+[
+  "intro",
+  "quick-start",
+  {
+    "type": "link",
+    "label": "v14 Migration",
+    "link": "/docs/migration/v14"
+  }
+]
