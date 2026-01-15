@@ -2,7 +2,7 @@
 
 React 19 introduced full support for React Suspense, [`React.use()`](https://react.dev/reference/react/use), and other async rendering features to React Native [0.78.0](https://github.com/facebook/react-native/releases/tag/v0.78.0).
 
-When testing components that use these features, React requires the [`async act`](https://react.dev/reference/react/act) helper to handle async state updates. This means React Native Testing Library needs new async versions of its core APIs. These async APIs work with both React 18 and React 19.
+When testing components that use these features, React requires the [`async act`](https://react.dev/reference/react/act) helper to handle async state updates. RNTL v14 fully embraces this async-first paradigm with async versions of its core APIs.
 
 ## New async APIs
 
@@ -45,26 +45,8 @@ test('my component', async () => {
 
 ### When to use async APIs
 
-Use the async APIs when your components:
+In RNTL v14, all core APIs are async by default to properly support React 19's async rendering features.
 
-- Use React Suspense for data fetching or code splitting
-- Call `React.use()` for reading promises or context
-- Have async state updates that need proper `act()` handling
+## Migration
 
-## Migration strategy
-
-### New projects
-
-Use the async-ready APIs (`render`, User Event, Jest Matchers, etc.) from the start. They work with both React 18 and React 19.
-
-### Existing projects
-
-You can migrate gradually:
-
-- **Existing tests** should be migrated to use async `render` (see migration guide)
-- **New tests** should use async `render` (default in v14)
-- **Tests with Suspense/`React.use()`** must use async `render`
-
-### Migration
-
-See the [v14 migration guide](../migration/v14#render-async-default) for detailed migration steps.
+See the [v14 migration guide](/docs/start/v14) for detailed migration steps.

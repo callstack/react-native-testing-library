@@ -5,6 +5,10 @@
     "activeMatch": "^/docs/"
   },
   {
+    "text": "v14 Migration",
+    "link": "/docs/start/v14"
+  },
+  {
     "text": "Cookbook",
     "link": "/cookbook/",
     "activeMatch": "^/cookbook/"

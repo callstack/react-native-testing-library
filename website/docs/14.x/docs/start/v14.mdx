@@ -2,7 +2,47 @@
 
 This guide describes the migration to React Native Testing Library version 14 from version 13.x.
 
-## Breaking changes
+## Overview
+
+RNTL v14 is a major release that **drops support for React 18** and fully embraces React 19's async-first paradigm. Key changes include:
+
+- **React 19+ required**: Minimum supported versions are React 19.0.0 and React Native 0.78+
+- **Async APIs by default**: `render`, `renderHook`, `fireEvent`, and `act` are now async
+- **New rendering engine**: Switched from deprecated `react-test-renderer` to [`test-renderer`](https://github.com/mdjastrzebski/test-renderer)
+- **API cleanup**: Removed deprecated APIs (`update`, `getQueriesForElement`, `UNSAFE_root`)
+- **Safe `container` API**: Reintroduced `container` which is now safe to use
+
+:::info React 18 Users
+
+If you need to support React 18, please continue using RNTL v13.x.
+
+:::
+
+## Quick Migration
+
+We provide codemods to automate most of the migration:
+
+```bash
+# Step 1: Update dependencies
+npx codemod@latest rntl-v14-update-deps --target .
+npm install  # or yarn/pnpm
+
+# Step 2: Update test code to async
+npx codemod@latest rntl-v14-async-functions --target ./src
+```
+
+After running the codemods, review the changes and run your tests.
+
+## Breaking Changes
+
+### Supported React and React Native versions
+
+**This version requires React 19+ and React Native 0.78+.** If you need to support React 18, please use the latest v13.x version.
+
+| RNTL Version | React Version | React Native Version |
+|--------------|---------------|---------------------|
+| v14.x        | >= 19.0.0     | >= 0.78             |
+| v13.x        | >= 18.0.0     | >= 0.71             |
 
 ### Test Renderer replaces React Test Renderer
 
@@ -21,7 +61,7 @@ In v14, React Native Testing Library now uses [Test Renderer](https://github.com
 Run codemod for updating dependencies:
 
 ```bash
-npx codemode@latest rntl-v14-update-deps
+npx codemod@latest rntl-v14-update-deps
 npm install
 ```
 
@@ -51,62 +91,19 @@ import type { HostElement } from 'test-renderer';
 
 For more details, see the [Test Renderer documentation](https://github.com/mdjastrzebski/test-renderer).
 
-### `container` API reintroduced
+### Async APIs by Default
 
-In v14, the `container` API has been reintroduced and is now safe to use. Previously, `container` was renamed to `UNSAFE_root` in v12 due to behavioral differences from React Testing Library's `container`. In v14, `container` now returns a pseudo-element container whose children are the elements you asked to render, making it safe and consistent with React Testing Library's behavior.
+With React 18 support dropped, RNTL v14 fully embraces React 19's async rendering model. The following functions are now async by default:
 
-**What changed:**
+- `render()` → returns `Promise<RenderResult>`
+- `rerender()` and `unmount()` → return `Promise<void>`
+- `renderHook()` → returns `Promise<RenderHookResult>`
+- `fireEvent()` and helpers (`press`, `changeText`, `scroll`) → return `Promise<void>`
+- `act()` → always returns `Promise<T>`
 
-- `screen.container` is now available and safe to use
-- `container` returns a pseudo-element container from Test Renderer
-- The container's children are the elements you rendered
-- `UNSAFE_root` has been removed
+#### `render` is now async {#render-async-default}
 
-**Before (v13):**
-
-```ts
-import { render, screen } from '@testing-library/react-native';
-
-it('should access root', () => {
-  render(<MyComponent />);
-  // UNSAFE_root was the only way to access the container
-  const root = screen.UNSAFE_root;
-});
-```
-
-**After (v14):**
-
-```ts
-import { render, screen } from '@testing-library/react-native';
-
-it('should access container', async () => {
-  await render(<MyComponent />);
-  // container is now safe and available
-  const container = screen.container;
-  // root is the first child of container
-  const root = screen.root;
-});
-```
-
-**Migration:**
-
-If you were using `UNSAFE_root`, replace it with `container`:
-
-```ts
-// Before
-const root = screen.UNSAFE_root;
-
-// After
-const container = screen.container;
-// Or use screen.root if you need the actual root element
-const root = screen.root;
-```
-
-For more details, see the [`screen` API documentation](/docs/api/screen#container).
-
-### `render` is now async by default {#render-async-default}
-
-In v14, `render` is now async by default and returns a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+In v14, `render` is now async by default and returns a Promise. This change leverages React 19's async rendering model, enabling proper support for React Suspense and `React.use()`.
 
 **Before (v13):**
 
@@ -130,11 +127,11 @@ it('should render component', async () => {
 });
 ```
 
-#### Step-by-step migration guide
+##### Step-by-step migration
 
 To migrate from v13 `render` to v14 `render`:
 
-##### 1. Add `async` to your test function
+**1. Add `async` to your test function**
 
 ```ts
 // Before (v13)
@@ -144,7 +141,7 @@ it('should render component', () => {
 it('should render component', async () => {
 ```
 
-##### 2. Await `render`
+**2. Await `render`**
 
 ```ts
 // Before
@@ -154,7 +151,7 @@ render(<MyComponent />);
 await render(<MyComponent />);
 ```
 
-##### 3. Update `rerender` calls to await
+**3. Update `rerender` calls to await**
 
 ```ts
 // Before
@@ -164,25 +161,7 @@ screen.rerender(<MyComponent />);
 await screen.rerender(<MyComponent />);
 ```
 
-##### 4. Replace `update` alias with `rerender`
-
-The `update` alias for `rerender` has been removed in v14. If you were using `screen.update()` or `renderer.update()`, replace it with `rerender()`:
-
-```ts
-// Before (v13)
-screen.update(<MyComponent />);
-// or
-const { update } = render(<MyComponent />);
-update(<MyComponent />);
-
-// After (v14)
-await screen.rerender(<MyComponent />);
-// or
-const { rerender } = await render(<MyComponent />);
-await rerender(<MyComponent />);
-```
-
-##### 5. Update `unmount` calls to await
+**4. Update `unmount` calls to await**
 
 ```ts
 // Before
@@ -192,7 +171,7 @@ screen.unmount();
 await screen.unmount();
 ```
 
-#### Complete example
+##### Complete example
 
 **Before (v13):**
 
@@ -226,76 +205,11 @@ it('should update component', async () => {
 });
 ```
 
-#### Benefits of async `render`
-
-- **React 19 compatibility**: Works seamlessly with React 19's async features
-- **Suspense support**: Properly handles React Suspense boundaries and `React.use()`
-- **Better timing**: Ensures all pending React updates are executed before assertions
-- **Future-proof**: Aligns with React's direction toward async rendering
-
 For more details, see the [`render` API documentation](/docs/api/render).
 
-### `update` alias removed
+#### `renderHook` is now async
 
-In v14, the `update` alias for `rerender` has been removed. You must use `rerender` instead.
-
-**What changed:**
-
-- `screen.update()` has been removed
-- `renderer.update()` has been removed
-- Only `rerender` is now available
-
-**Migration:**
-
-Replace all `update` calls with `rerender`:
-
-```ts
-// Before (v13)
-screen.update(<MyComponent />);
-// or
-const { update } = render(<MyComponent />);
-update(<MyComponent />);
-
-// After (v14)
-await screen.rerender(<MyComponent />);
-// or
-const { rerender } = await render(<MyComponent />);
-await rerender(<MyComponent />);
-```
-
-**Note:** This change is included in the step-by-step migration guide for async `render` above.
-
-### `getQueriesForElement` export removed
-
-In v14, the `getQueriesForElement` export alias for `within` has been removed. You must use `within` instead.
-
-**What changed:**
-
-- `getQueriesForElement` is no longer exported from the main package
-- `within` is the only exported function for scoped queries
-- `getQueriesForElement` remains available internally but is not part of the public API
-
-**Migration:**
-
-Replace all `getQueriesForElement` imports and usage with `within`:
-
-```ts
-// Before (v13)
-import { getQueriesForElement } from '@testing-library/react-native';
-
-const queries = getQueriesForElement(element);
-
-// After (v14)
-import { within } from '@testing-library/react-native';
-
-const queries = within(element);
-```
-
-**Note:** `getQueriesForElement` was just an alias for `within`, so the functionality is identical - only the import needs to change.
-
-### `renderHook` is now async by default
-
-In v14, `renderHook` is now async by default and returns a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+In v14, `renderHook` is now async by default and returns a Promise. This change leverages React 19's async rendering model.
 
 **Before (v13):**
 
@@ -323,65 +237,7 @@ it('should test hook', async () => {
 });
 ```
 
-#### Step-by-step migration guide
-
-To migrate from v13 `renderHook` to v14 `renderHook`:
-
-##### 1. Add `async` to your test function
-
-```ts
-// Before
-it('should test hook', () => {
-
-// After
-it('should test hook', async () => {
-```
-
-##### 2. Await `renderHook`
-
-```ts
-// Before (v13)
-const { result } = renderHook(() => useMyHook());
-
-// After (v14)
-const { result } = await renderHook(() => useMyHook());
-```
-
-##### 3. Update `rerender` calls to await
-
-```ts
-// Before
-rerender(newProps);
-
-// After
-await rerender(newProps);
-```
-
-##### 4. Update `unmount` calls to await
-
-```ts
-// Before
-unmount();
-
-// After
-await unmount();
-```
-
-##### 6. Update `act` calls to use async `act`
-
-```ts
-// Before
-act(() => {
-  result.current.doSomething();
-});
-
-// After
-await act(async () => {
-  result.current.doSomething();
-});
-```
-
-#### Complete example
+##### Complete example
 
 **Before (v13):**
 
@@ -427,18 +283,11 @@ it('should increment count', async () => {
 });
 ```
 
-#### Benefits of async `renderHook`
-
-- **React 19 compatibility**: Works seamlessly with React 19's async features
-- **Suspense support**: Properly handles React Suspense boundaries and `React.use()`
-- **Better timing**: Ensures all pending React updates are executed before assertions
-- **Future-proof**: Aligns with React's direction toward async rendering
-
 For more details, see the [`renderHook` API documentation](/docs/api/misc/render-hook).
 
-### `fireEvent` is now async by default
+#### `fireEvent` is now async
 
-In v14, `fireEvent` and its helpers (`press`, `changeText`, `scroll`) are now async by default and return a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+In v14, `fireEvent` and its helpers (`press`, `changeText`, `scroll`) are now async by default and return a Promise.
 
 **Before (v13):**
 
@@ -458,13 +307,147 @@ it('should press button', () => {
 import { fireEvent, screen } from '@testing-library/react-native';
 
 it('should press button', async () => {
-  render(<MyComponent />);
+  await render(<MyComponent />);
   await fireEvent.press(screen.getByText('Press me'));
   expect(onPress).toHaveBeenCalled();
 });
 ```
 
-### Text string validation now enforced by default
+#### `act` is now async
+
+In v14, `act` is now async by default and always returns a Promise.
+
+**What changed:**
+
+- `act` now always returns a `Promise<T>` instead of `T | Thenable<T>`
+- The API is more consistent and predictable
+
+**Before (v13):**
+
+```ts
+import { act } from '@testing-library/react-native';
+
+it('should update state', () => {
+  act(() => {
+    setState('new value');
+  });
+  expect(state).toBe('new value');
+});
+```
+
+**After (v14):**
+
+```ts
+import { act } from '@testing-library/react-native';
+
+it('should update state', async () => {
+  await act(async () => {
+    setState('new value');
+  });
+  expect(state).toBe('new value');
+});
+```
+
+**Note**: Even if your callback is synchronous, you should still use `await act(async () => ...)` as `act` now always returns a Promise.
+
+For more details, see the [`act` API documentation](/docs/api/misc/other#act).
+
+#### Benefits of Async APIs
+
+- **Suspense support**: Properly handles React Suspense boundaries and `React.use()`
+- **Better timing**: Ensures all pending React updates are executed before assertions
+- **Simpler mental model**: All rendering operations are consistently async
+- **Future-proof**: Aligns with React's direction toward async rendering
+
+### Removed APIs
+
+#### `update` alias removed
+
+The `update` alias for `rerender` has been removed. Use `rerender` instead:
+
+```ts
+// Before (v13)
+screen.update(<MyComponent />);
+const { update } = render(<MyComponent />);
+update(<MyComponent newProp />);
+
+// After (v14)
+await screen.rerender(<MyComponent />);
+const { rerender } = await render(<MyComponent />);
+await rerender(<MyComponent newProp />);
+```
+
+#### `getQueriesForElement` export removed
+
+The `getQueriesForElement` export alias for `within` has been removed. Use `within` instead:
+
+```ts
+// Before (v13)
+import { getQueriesForElement } from '@testing-library/react-native';
+
+const queries = getQueriesForElement(element);
+
+// After (v14)
+import { within } from '@testing-library/react-native';
+
+const queries = within(element);
+```
+
+**Note:** `getQueriesForElement` was just an alias for `within`, so the functionality is identical - only the import needs to change.
+
+#### `UNSAFE_root` removed
+
+`UNSAFE_root` has been removed. Use `container` to access the pseudo-element container, or `root` to access the first rendered host element:
+
+```ts
+// Before (v13)
+const unsafeRoot = screen.UNSAFE_root;
+
+// After (v14)
+const container = screen.container; // pseudo-element container
+const root = screen.root;           // first rendered host element
+```
+
+### `container` API reintroduced
+
+In v14, the `container` API has been reintroduced and is now safe to use. Previously, `container` was renamed to `UNSAFE_root` in v12 due to behavioral differences from React Testing Library's `container`. In v14, `container` now returns a pseudo-element container whose children are the elements you asked to render, making it safe and consistent with React Testing Library's behavior.
+
+**What changed:**
+
+- `screen.container` is now available and safe to use
+- `container` returns a pseudo-element container from Test Renderer
+- The container's children are the elements you rendered
+- `UNSAFE_root` has been removed
+
+**Before (v13):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should access root', () => {
+  render(<MyComponent />);
+  // UNSAFE_root was the only way to access the container
+  const root = screen.UNSAFE_root;
+});
+```
+
+**After (v14):**
+
+```ts
+import { render, screen } from '@testing-library/react-native';
+
+it('should access container', async () => {
+  await render(<MyComponent />);
+  // container is now safe and available
+  const container = screen.container;
+  // root is the first child of container
+  const root = screen.root;
+});
+```
+
+For more details, see the [`screen` API documentation](/docs/api/screen#container).
+
+### Text string validation enforced by default
 
 In v14, Test Renderer automatically enforces React Native's requirement that text strings must be rendered within a `<Text>` component. This means the `unstable_validateStringsRenderedWithinText` option has been removed from `RenderOptions`, as this validation is now always enabled.
 
@@ -491,135 +474,46 @@ await render(<MyComponent />);
 
 If you were relying on the previous behavior where strings could be rendered outside of `<Text>` components, you'll need to fix your components to wrap strings in `<Text>` components, as this matches React Native's actual runtime behavior.
 
-### `act` is now async by default
+## Codemods
 
-In v14, `act` is now async by default and always returns a Promise. This change makes it compatible with React 19, React Suspense, and `React.use()`.
+We provide two codemods to automate the migration:
 
-**What changed:**
+### `rntl-v14-update-deps`
 
-- `act` now always returns a `Promise<T>` instead of `T | Thenable<T>`
-- `act` is now a named export (no default export)
+Updates your `package.json`:
+- Removes `react-test-renderer` and `@types/react-test-renderer`
+- Adds `test-renderer`
+- Updates `@testing-library/react-native` to `^14.0.0`
 
-**Before (v13):**
-
-```ts
-import act from '@testing-library/react-native';
-
-it('should update state', () => {
-  act(() => {
-    // Synchronous callback
-    setState('new value');
-  });
-  // act could return synchronously or a thenable
-  expect(state).toBe('new value');
-});
+```bash
+npx codemod@latest rntl-v14-update-deps --target .
+npm install
 ```
 
-**After (v14):**
+### `rntl-v14-async-functions`
 
-```ts
-import { act } from '@testing-library/react-native';
+Transforms test files:
+- Adds `await` to `render()`, `act()`, `renderHook()`, `fireEvent()` calls
+- Makes test functions async when needed
+- Handles `screen.rerender()`, `screen.unmount()`, and renderer methods
 
-it('should update state', async () => {
-  await act(async () => {
-    // Callback can be sync or async
-    setState('new value');
-  });
-  // act always returns a Promise
-  expect(state).toBe('new value');
-});
+```bash
+npx codemod@latest rntl-v14-async-functions --target ./src
 ```
 
-#### Step-by-step migration guide
+#### Custom render functions
 
-To migrate from v13 `act` to v14 `act`:
+If you have custom render helpers (like `renderWithProviders`), specify them:
 
-##### 1. Update import statement
-
-```ts
-// Before
-import act from '@testing-library/react-native';
-
-// After
-import { act } from '@testing-library/react-native';
+```bash
+npx codemod@latest rntl-v14-async-functions --target ./src --param customRenderFunctions="renderWithProviders,renderWithTheme"
 ```
 
-##### 2. Add `async` to your test function
+#### Limitations
 
-```ts
-// Before
-it('should update state', () => {
+- Helper functions defined in test files are not transformed by default
+- Namespace imports (`import * as RNTL`) are not handled
 
-// After
-it('should update state', async () => {
-```
+## Full Changelog
 
-##### 3. Await `act` calls
-
-```ts
-// Before
-act(() => {
-  setState('new value');
-});
-
-// After
-await act(async () => {
-  setState('new value');
-});
-```
-
-**Note**: Even if your callback is synchronous, you should still use `await act(async () => ...)` as `act` now always returns a Promise.
-
-#### Complete example
-
-**Before (v13):**
-
-```ts
-import act from '@testing-library/react-native';
-
-it('should update state synchronously', () => {
-  act(() => {
-    setState('new value');
-  });
-  expect(state).toBe('new value');
-});
-
-it('should update state asynchronously', () => {
-  act(async () => {
-    await Promise.resolve();
-    setState('new value');
-  }).then(() => {
-    expect(state).toBe('new value');
-  });
-});
-```
-
-**After (v14):**
-
-```ts
-import { act } from '@testing-library/react-native';
-
-it('should update state synchronously', async () => {
-  await act(async () => {
-    setState('new value');
-  });
-  expect(state).toBe('new value');
-});
-
-it('should update state asynchronously', async () => {
-  await act(async () => {
-    await Promise.resolve();
-    setState('new value');
-  });
-  expect(state).toBe('new value');
-});
-```
-
-#### Benefits of async `act`
-
-- **React 19 compatibility**: Works seamlessly with React 19's async features
-- **Suspense support**: Properly handles React Suspense boundaries and `React.use()`
-- **Consistent API**: Always returns a Promise, making the API more predictable
-- **Future-proof**: Aligns with React's direction toward async rendering
-
-For more details, see the [`act` API documentation](/docs/api/misc/other#act).
+https://github.com/callstack/react-native-testing-library/compare/v13.x.x...v14.0.0
