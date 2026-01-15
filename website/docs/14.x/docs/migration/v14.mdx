@@ -8,7 +8,7 @@ RNTL v14 is a major release that **drops support for React 18** and fully embrac
 
 - **React 19+ required**: Minimum supported versions are React 19.0.0 and React Native 0.78+
 - **Async APIs by default**: `render`, `renderHook`, `fireEvent`, and `act` are now async
-- **New rendering engine**: Switched from deprecated `react-test-renderer` to [`test-renderer`](https://github.com/mdjastrzebski/test-renderer)
+- **New renderer**: Switched from deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html) to [Test Renderer](https://github.com/mdjastrzebski/test-renderer)
 - **API cleanup**: Removed deprecated APIs (`update`, `getQueriesForElement`, `UNSAFE_root`)
 - **Safe `container` API**: Reintroduced `container` which is now safe to use
 
@@ -46,11 +46,11 @@ After running the codemods, review the changes and run your tests.
 
 ### Test Renderer replaces React Test Renderer
 
-In v14, React Native Testing Library now uses [Test Renderer](https://github.com/mdjastrzebski/test-renderer) instead of the deprecated `react-test-renderer` package. Test Renderer is a modern, actively maintained alternative that provides better compatibility with React 19 and improved type safety.
+In v14, React Native Testing Library now uses [Test Renderer](https://github.com/mdjastrzebski/test-renderer) instead of the deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html). Test Renderer is a modern, actively maintained alternative that provides better compatibility with React 19 and improved type safety.
 
 **What changed:**
 
-- The underlying rendering engine has been switched from `react-test-renderer` to `test-renderer`
+- The underlying renderer has been switched from React Test Renderer to Test Renderer
 - This change is mostly internal and should not require code changes in most cases
 - Type definitions have been updated to use `HostElement` from Test Renderer instead of `ReactTestInstance`
 
@@ -67,7 +67,7 @@ npm install
 
 ##### Manual changes
 
-Remove `react-test-renderer` and its type definitions from your dev dependencies, and add `test-renderer`:
+Remove React Test Renderer and its type definitions from your dev dependencies, and add Test Renderer:
 
 ```bash
 # Using npm
@@ -77,7 +77,7 @@ npm install -D test-renderer@^0.14.0
 
 #### 2. Update type imports (if needed)
 
-If you were directly importing types from `react-test-renderer`, you may need to update your imports:
+If you were directly importing types from React Test Renderer, you may need to update your imports:
 
 ```ts
 // Before (v13)
@@ -481,8 +481,8 @@ We provide two codemods to automate the migration. Both codemods are **safe to r
 ### `rntl-v14-update-deps`
 
 Updates your `package.json`:
-- Removes `react-test-renderer` and `@types/react-test-renderer`
-- Adds `test-renderer`
+- Removes React Test Renderer (`react-test-renderer` and `@types/react-test-renderer`)
+- Adds Test Renderer (`test-renderer`)
 - Updates `@testing-library/react-native` to `^14.0.0`
 
 ```bash
