@@ -9,7 +9,11 @@ The `findBy*` queries are used to find elements that are not instantly available
 ```tsx
 function waitFor<T>(
   expectation: () => T,
-  options?: { timeout: number; interval: number }
+  options?: {
+    timeout?: number;
+    interval?: number;
+    onTimeout?: (error: Error) => Error;
+  }
 ): Promise<T>;
 ```
 
@@ -40,9 +44,9 @@ You can enforce awaiting `waitFor` by using the [await-async-utils](https://gith
 Since `waitFor` is likely to run `expectation` callback multiple times, it is highly recommended for it [not to perform any side effects](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#performing-side-effects-in-waitfor) in `waitFor`.
 
 ```jsx
-await waitFor(() => {
+await waitFor(async () => {
   // ❌ button will be pressed on each waitFor iteration
-  fireEvent.press(screen.getByText('press me'));
+  await fireEvent.press(screen.getByText('press me'));
   expect(mockOnPress).toHaveBeenCalled();
 });
 ```
@@ -87,19 +91,29 @@ jest.useFakeTimers();
 
 await waitFor(() => {
   expect(someFunction).toHaveBeenCalledWith();
-}, 10000);
+}, { timeout: 10000 });
 ```
 
 :::note
 If you receive warnings related to `act()` function consult our [Understanding Act](docs/advanced/understanding-act.md) function document.
 :::
 
+### Options
+
+- `timeout`: How long to wait for, in ms. Defaults to 1000 ms (configured by `asyncUtilTimeout` option).
+- `interval`: How often to check, in ms. Defaults to 50 ms.
+- `onTimeout`: Callback to transform the error before it's thrown. Useful for debugging, e.g., `onTimeout: () => { screen.debug(); }`.
+
 ## `waitForElementToBeRemoved`
 
 ```ts
 function waitForElementToBeRemoved<T>(
   expectation: () => T,
-  options?: { timeout: number; interval: number }
+  options?: {
+    timeout?: number;
+    interval?: number;
+    onTimeout?: (error: Error) => Error;
+  }
 ): Promise<T>;
 ```
 
@@ -109,7 +123,7 @@ Waits for non-deterministic periods of time until queried element is removed or 
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react-native';
 
 test('waiting for an Banana to be removed', async () => {
-  render(<Banana />);
+  await render(<Banana />);
 
   await waitForElementToBeRemoved(() => screen.getByText('Banana ready'));
 });
