@@ -11,7 +11,7 @@ RNTL v14 is a major release that **drops support for React 18** and fully embrac
 - **React 19+ required**: Minimum supported versions are React 19.0.0 and React Native 0.78+
 - **Async APIs by default**: `render`, `renderHook`, `fireEvent`, and `act` are now async
 - **New renderer**: Switched from deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html) to [Test Renderer](https://github.com/mdjastrzebski/test-renderer)
-- **API cleanup**: Removed deprecated APIs (`update`, `getQueriesForElement`, `UNSAFE_root`)
+- **API cleanup**: Removed deprecated APIs (`update`, `getQueriesForElement`, `UNSAFE_root`, `concurrentRoot` option)
 - **Safe `container` API**: Reintroduced `container` which is now safe to use
 
 :::info React 18 Users
@@ -306,6 +306,21 @@ const input = screen.UNSAFE_getByProps({ placeholder: 'Enter text' });
 const buttons = screen.getAllByRole('button');
 const input = screen.getByPlaceholderText('Enter text');
 ```
+
+#### `concurrentRoot` option removed
+
+The `concurrentRoot` render option has been removed. In v14, concurrent rendering is always enabled by default, as it is the standard rendering mode for React 19 and React Native's New Architecture.
+
+```ts
+// Before (v13)
+render(<MyComponent />, { concurrentRoot: true });  // Enable concurrent mode
+render(<MyComponent />, { concurrentRoot: false }); // Disable concurrent mode
+
+// After (v14)
+await render(<MyComponent />); // Always uses concurrent rendering
+```
+
+**Migration:** Simply remove any `concurrentRoot` options from your `render` calls. If you were explicitly setting `concurrentRoot: true`, no changes are needed beyond removing the option. If you were setting `concurrentRoot: false` to disable concurrent rendering, this is no longer supported in v14.
 
 ### `container` API reintroduced
 
