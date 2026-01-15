@@ -76,6 +76,12 @@ Usage notes:
 <available_skills>
 
 <skill>
+<name>code-review</name>
+<description>Master effective code review practices to provide constructive feedback, catch bugs early, and foster knowledge sharing while maintaining team morale. Use when reviewing pull requests, establishing review standards, or mentoring developers.</description>
+<location>project</location>
+</skill>
+
+<skill>
 <name>doc-coauthoring</name>
 <description>Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. This workflow helps users efficiently transfer context, refine content through iteration, and verify the doc works for readers. Trigger when user mentions writing docs, creating proposals, drafting specs, or similar documentation tasks.</description>
 <location>project</location>
