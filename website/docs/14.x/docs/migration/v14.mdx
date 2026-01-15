@@ -309,18 +309,19 @@ const input = screen.getByPlaceholderText('Enter text');
 
 #### `concurrentRoot` option removed
 
-The `concurrentRoot` render option has been removed. In v14, concurrent rendering is always enabled by default, as it is the standard rendering mode for React 19 and React Native's New Architecture.
+The `concurrentRoot` option has been removed from both `render` options and `configure` function. In v14, concurrent rendering is always enabled by default, as it is the standard rendering mode for React 19 and React Native's New Architecture.
 
 ```ts
 // Before (v13)
 render(<MyComponent />, { concurrentRoot: true });  // Enable concurrent mode
 render(<MyComponent />, { concurrentRoot: false }); // Disable concurrent mode
+configure({ concurrentRoot: false });               // Disable globally
 
 // After (v14)
 await render(<MyComponent />); // Always uses concurrent rendering
 ```
 
-**Migration:** Simply remove any `concurrentRoot` options from your `render` calls. If you were explicitly setting `concurrentRoot: true`, no changes are needed beyond removing the option. If you were setting `concurrentRoot: false` to disable concurrent rendering, this is no longer supported in v14.
+**Migration:** Simply remove any `concurrentRoot` options from your `render` calls and `configure` function. If you were explicitly setting `concurrentRoot: true`, no changes are needed beyond removing the option. If you were setting `concurrentRoot: false` to disable concurrent rendering, this is no longer supported in v14.
 
 ### `container` API reintroduced
 
