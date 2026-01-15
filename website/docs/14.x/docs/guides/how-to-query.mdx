@@ -46,15 +46,15 @@ Avoid using `queryAllBy*` in regular tests, as it provides no assertions on the 
 
 The query predicate describes how you decide whether to match the given element.
 
-| Predicate                                                    | Supported elements | Inspected props                                                                             |
-| ------------------------------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------- |
-| [`*ByRole`](docs/api/queries#by-role)                        | all host elements  | `role`, `accessibilityRole`,<br /> optional: accessible name, accessibility state and value |
-| [`*ByLabelText`](docs/api/queries#by-label-text)             | all host elements  | `aria-label`, `aria-labelledby`,<br /> `accessibilityLabel`, `accessibilityLabelledBy`,<br /> `alt` (for `Image`)      |
-| [`*ByDisplayValue`](docs/api/queries#by-display-value)       | `TextInput`        | `value`, `defaultValue`                                                                     |
-| [`*ByPlaceholderText`](docs/api/queries#by-placeholder-text) | `TextInput`        | `placeholder`                                                                               |
-| [`*ByText`](docs/api/queries#by-text)                        | `Text`             | `children` (text content)                                                                   |
-| [`*ByHintText`](docs/api/queries#by-hint-text)               | all host elements  | `accessibilityHint`                                                                         |
-| [`*ByTestId`](docs/api/queries#by-test-id)                   | all host elements  | `testID`                                                                                    |
+| Predicate                                                    | Supported elements | Inspected props                                                                                                   |
+| ------------------------------------------------------------ | ------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| [`*ByRole`](docs/api/queries#by-role)                        | all host elements  | `role`, `accessibilityRole`,<br /> optional: accessible name, accessibility state and value                       |
+| [`*ByLabelText`](docs/api/queries#by-label-text)             | all host elements  | `aria-label`, `aria-labelledby`,<br /> `accessibilityLabel`, `accessibilityLabelledBy`,<br /> `alt` (for `Image`) |
+| [`*ByDisplayValue`](docs/api/queries#by-display-value)       | `TextInput`        | `value`, `defaultValue`                                                                                           |
+| [`*ByPlaceholderText`](docs/api/queries#by-placeholder-text) | `TextInput`        | `placeholder`                                                                                                     |
+| [`*ByText`](docs/api/queries#by-text)                        | `Text`             | `children` (text content)                                                                                         |
+| [`*ByHintText`](docs/api/queries#by-hint-text)               | all host elements  | `accessibilityHint`                                                                                               |
+| [`*ByTestId`](docs/api/queries#by-test-id)                   | all host elements  | `testID`                                                                                                          |
 
 ### Idiomatic query predicates
 

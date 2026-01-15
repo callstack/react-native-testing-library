@@ -89,9 +89,12 @@ setTimeout(() => {
 // in test
 jest.useFakeTimers();
 
-await waitFor(() => {
-  expect(someFunction).toHaveBeenCalledWith();
-}, { timeout: 10000 });
+await waitFor(
+  () => {
+    expect(someFunction).toHaveBeenCalledWith();
+  },
+  { timeout: 10000 }
+);
 ```
 
 :::note
