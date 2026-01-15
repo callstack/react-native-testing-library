@@ -65,7 +65,7 @@ import { act, within } from '@testing-library/react-native';
 
 test('render with act', async () => {
   const renderer = createRoot();
-  await act(async () => {
+  await act(() => {
     renderer.render(<TestComponent />);
   });
 
@@ -75,7 +75,7 @@ test('render with act', async () => {
 });
 ```
 
-**Note**: In v14, `act` is now async by default and always returns a Promise. You should always use `await act(async () => ...)`.
+**Note**: In v14, `act` is now async by default and always returns a Promise. You should always use `await act(...)`.
 
 When wrapping rendering call with `act` we see that the changes caused by `useEffect` hook have been applied as we would expect.
 
@@ -146,7 +146,7 @@ test('render with fake timers', async () => {
   jest.useFakeTimers();
   await render(<TestAsyncComponent />);
 
-  await act(async () => {
+  await act(() => {
     jest.runAllTimers();
   });
   expect(screen.getByText('Count 1')).toBeOnTheScreen();
@@ -164,7 +164,7 @@ If we wanted to stick with real timers then things get a bit more complex. Let's
 ```jsx
 test('render with real timers - sleep', async () => {
   await render(<TestAsyncComponent />);
-  await act(async () => {
+  await act(() => {
     await sleep(100); // Wait a bit longer than setTimeout in `TestAsyncComponent`
   });
 

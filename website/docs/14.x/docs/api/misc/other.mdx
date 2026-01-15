@@ -39,14 +39,14 @@ Wraps code that causes React state updates to ensure all updates are processed b
 import { act } from '@testing-library/react-native';
 
 it('should update state', async () => {
-  await act(async () => {
+  await act(() => {
     setState('new value');
   });
   expect(state).toBe('new value');
 });
 ```
 
-**Note**: Even if your callback is synchronous, you should still use `await act(async () => ...)` as `act` now always returns a Promise.
+**Note**: Even if your callback is synchronous, you should still use `await act(...)` as `act` now always returns a Promise.
 
 Consult our [Understanding Act function](docs/advanced/understanding-act) document for more understanding of its intricacies.
 
