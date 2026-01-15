@@ -1,6 +1,7 @@
 import type { HostElement } from 'test-renderer';
 
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
+import { validateOptions } from '../../helpers/validate-options';
 import { wrapAsync } from '../../helpers/wrap-async';
 import { clear } from '../clear';
 import { paste } from '../paste';
@@ -74,9 +75,12 @@ export interface UserEventConfig {
 }
 
 function createConfig(options?: UserEventSetupOptions): UserEventConfig {
+  const { delay, advanceTimers, ...rest } = options ?? {};
+  validateOptions('userEvent.setup', rest);
   return {
     ...defaultOptions,
-    ...options,
+    ...(delay !== undefined && { delay }),
+    ...(advanceTimers !== undefined && { advanceTimers }),
   };
 }
 

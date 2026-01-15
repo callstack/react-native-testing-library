@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { validateOptions } from './helpers/validate-options';
 import { render } from './render';
 import type { RefObject } from './types';
 
@@ -38,7 +39,9 @@ export async function renderHook<Result, Props>(
     return null;
   }
 
-  const { initialProps, ...renderOptions } = options ?? {};
+  const { initialProps, wrapper, ...rest } = options ?? {};
+  validateOptions('renderHook', rest);
+  const renderOptions = wrapper ? { wrapper } : {};
   const { rerender: rerenderComponent, unmount } = await render(
     // @ts-expect-error since option can be undefined, initialProps can be undefined when it shouldn't be
     <HookContainer hookProps={initialProps} />,
