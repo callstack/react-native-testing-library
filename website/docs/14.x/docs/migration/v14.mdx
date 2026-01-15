@@ -121,84 +121,6 @@ it('should render component', async () => {
 });
 ```
 
-##### Step-by-step migration
-
-To migrate from v13 `render` to v14 `render`:
-
-**1. Add `async` to your test function**
-
-```ts
-// Before (v13)
-it('should render component', () => {
-
-// After (v14)
-it('should render component', async () => {
-```
-
-**2. Await `render`**
-
-```ts
-// Before
-render(<MyComponent />);
-
-// After
-await render(<MyComponent />);
-```
-
-**3. Update `rerender` calls to await**
-
-```ts
-// Before
-screen.rerender(<MyComponent />);
-
-// After
-await screen.rerender(<MyComponent />);
-```
-
-**4. Update `unmount` calls to await**
-
-```ts
-// Before
-screen.unmount();
-
-// After
-await screen.unmount();
-```
-
-##### Complete example
-
-**Before (v13):**
-
-```ts
-import { render, screen } from '@testing-library/react-native';
-
-it('should update component', () => {
-  render(<Counter initialCount={0} />);
-  expect(screen.getByText('Count: 0')).toBeOnTheScreen();
-
-  screen.rerender(<Counter initialCount={5} />);
-  expect(screen.getByText('Count: 5')).toBeOnTheScreen();
-
-  screen.unmount();
-});
-```
-
-**After (v14):**
-
-```ts
-import { render, screen } from '@testing-library/react-native';
-
-it('should update component', async () => {
-  await render(<Counter initialCount={0} />);
-  expect(screen.getByText('Count: 0')).toBeOnTheScreen();
-
-  await screen.rerender(<Counter initialCount={5} />);
-  expect(screen.getByText('Count: 5')).toBeOnTheScreen();
-
-  await screen.unmount();
-});
-```
-
 For more details, see the [`render` API documentation](/docs/api/render).
 
 #### `renderHook` is now async
@@ -228,52 +150,6 @@ it('should test hook', async () => {
 
   await rerender(newProps);
   await unmount();
-});
-```
-
-##### Complete example
-
-**Before (v13):**
-
-```ts
-import { renderHook, act } from '@testing-library/react-native';
-
-it('should increment count', () => {
-  const { result, rerender } = renderHook((initialCount: number) => useCount(initialCount), {
-    initialProps: 1,
-  });
-
-  expect(result.current.count).toBe(1);
-
-  act(() => {
-    result.current.increment();
-  });
-
-  expect(result.current.count).toBe(2);
-  rerender(5);
-  expect(result.current.count).toBe(5);
-});
-```
-
-**After (v14):**
-
-```ts
-import { renderHook, act } from '@testing-library/react-native';
-
-it('should increment count', async () => {
-  const { result, rerender } = await renderHook((initialCount: number) => useCount(initialCount), {
-    initialProps: 1,
-  });
-
-  expect(result.current.count).toBe(1);
-
-  await act(async () => {
-    result.current.increment();
-  });
-
-  expect(result.current.count).toBe(2);
-  await rerender(5);
-  expect(result.current.count).toBe(5);
 });
 ```
 
@@ -309,11 +185,12 @@ it('should press button', async () => {
 
 #### `act` is now async
 
-In v14, `act` is now async by default and always returns a Promise.
+In v14, `act` is now async by default and always returns a Promise. You should always `await` the result of `act()`.
 
 **What changed:**
 
 - `act` now always returns a `Promise<T>` instead of `T | Thenable<T>`
+- `act` should always be awaited
 - The API is more consistent and predictable
 
 **Before (v13):**
