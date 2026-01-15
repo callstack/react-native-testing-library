@@ -4,7 +4,7 @@
 
 ```ts
 async function renderHook<Result, Props>(
-  hookFn: (props?: Props) => Result,
+  hookFn: (props: Props) => Result,
   options?: RenderHookOptions<Props>
 ): Promise<RenderHookResult<Result, Props>>;
 ```
@@ -35,6 +35,8 @@ it('should increment count', async () => {
 
 ```ts
 // useCount.js
+import { useState } from 'react';
+
 export const useCount = () => {
   const [count, setCount] = useState(0);
   const increment = () => setCount((previousCount) => previousCount + 1);
@@ -77,6 +79,8 @@ The `renderHook` function returns a Promise that resolves to an object with the 
 
 The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`. The `Result` type is determined by the type passed to or inferred by the `renderHook` call.
 
+**Note:** When using React Suspense, `result.current` will be `null` while the hook is suspended.
+
 #### `rerender`
 
 An async function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
@@ -96,6 +100,9 @@ Here we present some extra examples of using `renderHook` API.
 #### With `initialProps`
 
 ```ts
+import { useState, useEffect } from 'react';
+import { renderHook, act } from '@testing-library/react-native';
+
 const useCount = (initialCount: number) => {
   const [count, setCount] = useState(initialCount);
   const increment = () => setCount((previousCount) => previousCount + 1);
