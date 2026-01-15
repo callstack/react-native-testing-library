@@ -133,7 +133,7 @@ expect(element).toBeExpanded();
 expect(element).toBeCollapsed();
 ```
 
-These allows you to assert whether the given element is expanded or collapsed from the user's perspective. It relies on the accessibility disabled state as set by `aria-expanded` or `accessibilityState.expanded` props.
+These allow you to assert whether the given element is expanded or collapsed from the user's perspective. It relies on the accessibility expanded state as set by `aria-expanded` or `accessibilityState.expanded` props.
 
 :::note
 These matchers are the negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both won't pass for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
@@ -145,7 +145,7 @@ These matchers are the negation of each other for expandable elements (elements 
 expect(element).toBeBusy();
 ```
 
-This allows you to assert whether the given element is busy from the user's perspective. It relies on the accessibility selected state as set by `aria-busy` or `accessibilityState.busy` props.
+This allows you to assert whether the given element is busy from the user's perspective. It relies on the accessibility busy state as set by `aria-busy` or `accessibilityState.busy` props.
 
 ## Checking element style
 
@@ -185,7 +185,7 @@ expect(element).toHaveAccessibleName(
 
 This allows you to assert whether the given element has a specified accessible name. It accepts either `string` or `RegExp` matchers, as well as [text match options](docs/api/queries#text-match-options) of `exact` and `normalizer`.
 
-The accessible name will be computed based on `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props, in the absence of these props, the element text content will be used.
+The accessible name will be computed based on `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props. For `Image` elements, the `alt` prop will also be considered. In the absence of these props, the element text content will be used.
 
 When the `name` parameter is `undefined` it will only check if the element has any accessible name.
 
