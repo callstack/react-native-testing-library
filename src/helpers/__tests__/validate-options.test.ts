@@ -16,7 +16,10 @@ test('does not warn when rest object is empty', () => {
 });
 
 test('warns when unknown option is passed', () => {
-  validateOptions('testFunction', { unknownOption: 'value' }, testFunction);
+  function testFunctionWithCall() {
+    validateOptions('testFunction', { unknownOption: 'value' }, testFunctionWithCall);
+  }
+  testFunctionWithCall();
 
   expect(_console.warn).toHaveBeenCalledTimes(1);
   const warningMessage = jest.mocked(_console.warn).mock.calls[0][0];
@@ -25,11 +28,14 @@ test('warns when unknown option is passed', () => {
 });
 
 test('warns when multiple unknown options are passed', () => {
-  validateOptions(
-    'testFunction',
-    { option1: 'value1', option2: 'value2', option3: 'value3' },
-    testFunction,
-  );
+  function testFunctionWithCall() {
+    validateOptions(
+      'testFunction',
+      { option1: 'value1', option2: 'value2', option3: 'value3' },
+      testFunctionWithCall,
+    );
+  }
+  testFunctionWithCall();
 
   expect(_console.warn).toHaveBeenCalledTimes(1);
   const warningMessage = jest.mocked(_console.warn).mock.calls[0][0];
@@ -41,9 +47,9 @@ test('warns when multiple unknown options are passed', () => {
 
 test('warns with correct function name and includes stack trace', () => {
   function render() {
-    // Test function
+    validateOptions('render', { invalid: true }, render);
   }
-  validateOptions('render', { invalid: true }, render);
+  render();
 
   expect(_console.warn).toHaveBeenCalledTimes(1);
   const warningMessage = jest.mocked(_console.warn).mock.calls[0][0];
