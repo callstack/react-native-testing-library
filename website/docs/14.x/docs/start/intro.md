@@ -6,7 +6,7 @@ You want to write maintainable tests for your React Native components. As a part
 
 ## This solution
 
-The React Native Testing Library (RNTL) is a lightweight solution for testing React Native components. It provides light utility functions on top of [Test Renderer](https://github.com/mdjastrzebski/test-renderer), in a way that encourages better testing practices. Its primary guiding principle is:
+The React Native Testing Library (RNTL) is a comprehensive solution for testing React Native components. It provides React Native runtime simulation on top of [Test Renderer](https://github.com/mdjastrzebski/test-renderer), in a way that encourages better testing practices. Its primary guiding principle is:
 
 > The more your tests resemble how your software is used, the more confidence they can give you.
 
@@ -23,7 +23,7 @@ test('form submits two answers', async () => {
   const onSubmit = jest.fn();
 
   const user = userEvent.setup();
-  render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
+  await render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
 
   const answerInputs = screen.getAllByLabelText('answer input');
   await user.type(answerInputs[0], 'a1');

@@ -1,17 +1,18 @@
-# Async tests
+# Async Events
 
 ## Summary
 
-Typically, you would write synchronous tests, as they are simple and get the work done. However, there are cases when using asynchronous (async) tests might be necessary or beneficial. The two most common cases are:
+In RNTL v14, all tests are async since `render()`, `fireEvent()`, and other core APIs return Promises. Beyond the basic async APIs, there are additional async utilities for handling events that complete over time:
 
-1. **Testing Code with asynchronous operations**: When your code relies on asynchronous operations, such as network calls or database queries, async tests are essential. Even though you should mock these network calls, the mock should act similarly to the actual behavior and hence by async.
-2. **UserEvent API:** Using the [User Event API](docs/api/events/user-event) in your tests creates more realistic event handling. These interactions introduce delays (even though these are typically event-loop ticks with 0 ms delays), requiring async tests to handle the timing correctly.
+1. **Waiting for elements to appear**: Use `findBy*` queries when elements appear after some delay (e.g., after data fetching).
+2. **Waiting for conditions**: Use `waitFor()` to wait for arbitrary conditions to be met.
+3. **Waiting for elements to disappear**: Use `waitForElementToBeRemoved()` when elements should be removed after some action.
 
-Using async tests when needed ensures your tests are reliable and simulate real-world conditions accurately.
+These utilities help you write reliable tests that properly handle timing in your application.
 
 ### Example
 
-Consider a basic asynchronous test for a user signing in with correct credentials:
+Consider a test for a user signing in with correct credentials:
 
 ```javascript
 test('User can sign in with correct credentials', async () => {

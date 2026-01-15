@@ -65,18 +65,18 @@ We can test our `TaskList` component using React Native Testing Library's (RNTL)
 function. Although it is sufficient to test the empty state of the `TaskList` component, it is not
 enough to test the component with initial tasks present in the list.
 
-```tsx title=status-management/jotai/__tests__/TaskList.test.tsx
+```tsx title=state-management/jotai/__tests__/TaskList.test.tsx
 import * as React from 'react';
 import { render, screen, userEvent } from '@testing-library/react-native';
 import { renderWithAtoms } from './test-utils';
-import { TaskList } from './TaskList';
-import { newTaskTitleAtom, tasksAtom } from './state';
-import { Task } from './types';
+import { TaskList } from '../TaskList';
+import { newTaskTitleAtom, tasksAtom } from '../state';
+import { Task } from '../types';
 
 jest.useFakeTimers();
 
-test('renders an empty task list', () => {
-  render(<TaskList />);
+test('renders an empty task list', async () => {
+  await render(<TaskList />);
   expect(screen.getByText(/no tasks, start by adding one/i)).toBeOnTheScreen();
 });
 ```
@@ -88,7 +88,7 @@ initial values. We can create a custom render function that uses Jotai's `useHyd
 hydrate the atoms with initial values. This function will accept the initial atoms and their
 corresponding values as an argument.
 
-```tsx title=status-management/jotai/test-utils.tsx
+```tsx title=state-management/jotai/__tests__/test-utils.tsx
 import * as React from 'react';
 import { render } from '@testing-library/react-native';
 import { useHydrateAtoms } from 'jotai/utils';
@@ -108,14 +108,14 @@ export interface RenderWithAtomsOptions {
  * @param options - The render options including the initial atom values.
  * @returns The render result from `@testing-library/react-native`.
  */
-export const renderWithAtoms = <T,>(
+export async function renderWithAtoms<T>(
   component: React.ReactElement,
-  options: RenderWithAtomsOptions
-) => {
-  return render(
-    <HydrateAtomsWrapper initialValues={options.initialValues}>{component}</HydrateAtomsWrapper>
+  options: RenderWithAtomsOptions,
+) {
+  return await render(
+    <HydrateAtomsWrapper initialValues={options.initialValues}>{component}</HydrateAtomsWrapper>,
   );
-};
+}
 
 export type HydrateAtomsWrapperProps = React.PropsWithChildren<{
   initialValues: AtomInitialValueTuple<unknown>[];
@@ -144,12 +144,11 @@ We can now use the `renderWithAtoms` function to render the `TaskList` component
 In our test, we populated only one atom and its initial value, but you can add other Jotai atoms and their corresponding values to the initialValues array as needed.
 :::
 
-```tsx title=status-management/jotai/__tests__/TaskList.test.tsx
-=======
+```tsx title=state-management/jotai/__tests__/TaskList.test.tsx
 const INITIAL_TASKS: Task[] = [{ id: '1', title: 'Buy bread' }];
 
 test('renders a to do list with 1 items initially, and adds a new item', async () => {
-  renderWithAtoms(<TaskList />, {
+  await renderWithAtoms(<TaskList />, {
     initialValues: [
       [tasksAtom, INITIAL_TASKS],
       [newTaskTitleAtom, ''],
@@ -202,7 +201,7 @@ No special setup is required to test these functions, as `store.set` is availabl
 Jotai.
 
 ```tsx title=state-management/jotai/__tests__/TaskList.test.tsx
-import { addTask, getAllTasks, store, tasksAtom } from './state';
+import { addTask, getAllTasks, store, tasksAtom } from '../state';
 
 //...
 
