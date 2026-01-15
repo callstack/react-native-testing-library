@@ -1,4 +1,5 @@
 import type { DebugOptions } from './helpers/debug';
+import { validateOptions } from './helpers/validate-options';
 
 /**
  * Global configuration options for React Native Testing Library.
@@ -31,17 +32,24 @@ let config = { ...defaultConfig };
  * Configure global options for React Native Testing Library.
  */
 export function configure(options: Partial<Config & ConfigAliasOptions>) {
-  const { defaultHidden, ...restOptions } = options;
+  const {
+    asyncUtilTimeout,
+    defaultDebugOptions,
+    defaultHidden,
+    defaultIncludeHiddenElements,
+    ...rest
+  } = options;
 
-  const defaultIncludeHiddenElements =
-    restOptions.defaultIncludeHiddenElements ??
-    defaultHidden ??
-    config.defaultIncludeHiddenElements;
+  validateOptions('configure', rest, configure);
+
+  const resolvedDefaultIncludeHiddenElements =
+    defaultIncludeHiddenElements ?? defaultHidden ?? config.defaultIncludeHiddenElements;
 
   config = {
     ...config,
-    ...restOptions,
-    defaultIncludeHiddenElements,
+    asyncUtilTimeout: asyncUtilTimeout ?? config.asyncUtilTimeout,
+    defaultDebugOptions,
+    defaultIncludeHiddenElements: resolvedDefaultIncludeHiddenElements,
   };
 }
 

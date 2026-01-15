@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 
 import { render, screen } from '..';
-import { logger } from '../helpers/logger';
+import { _console, logger } from '../helpers/logger';
 
 test('renders a simple component', async () => {
   const TestComponent = () => (
@@ -15,6 +15,42 @@ test('renders a simple component', async () => {
 
   expect(screen.getByTestId('container')).toBeOnTheScreen();
   expect(screen.getByText('Hello World')).toBeOnTheScreen();
+});
+
+beforeEach(() => {
+  jest.spyOn(_console, 'warn').mockImplementation(() => {});
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+test('does not warn when no options are passed', async () => {
+  const TestComponent = () => <Text testID="test">Test</Text>;
+
+  await render(<TestComponent />);
+
+  expect(_console.warn).not.toHaveBeenCalled();
+});
+
+test('does not warn when only valid options are passed', async () => {
+  const TestComponent = () => <Text testID="test">Test</Text>;
+  const Wrapper = ({ children }: { children: React.ReactNode }) => <View>{children}</View>;
+
+  await render(<TestComponent />, { wrapper: Wrapper, createNodeMock: jest.fn() });
+
+  expect(_console.warn).not.toHaveBeenCalled();
+});
+
+test('warns when unknown option is passed', async () => {
+  const TestComponent = () => <Text testID="test">Test</Text>;
+
+  await render(<TestComponent />, { unknownOption: 'value' } as any);
+
+  expect(_console.warn).toHaveBeenCalledTimes(1);
+  expect(jest.mocked(_console.warn).mock.calls[0][0]).toContain(
+    'Unknown option(s) passed to render: unknownOption',
+  );
 });
 
 describe('render options', () => {

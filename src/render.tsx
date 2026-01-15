@@ -13,6 +13,7 @@ import { getConfig } from './config';
 import type { DebugOptions } from './helpers/debug';
 import { debug } from './helpers/debug';
 import { HOST_TEXT_NAMES } from './helpers/host-component-names';
+import { validateOptions } from './helpers/validate-options';
 import { setRenderResult } from './screen';
 import { getQueriesForElement } from './within';
 
@@ -34,7 +35,8 @@ export type RenderResult = Awaited<ReturnType<typeof render>>;
  * to assert on the output.
  */
 export async function render<T>(element: React.ReactElement<T>, options: RenderOptions = {}) {
-  const { wrapper: Wrapper, createNodeMock } = options || {};
+  const { wrapper: Wrapper, createNodeMock, ...rest } = options || {};
+  validateOptions('render', rest, render);
 
   const rendererOptions: RootOptions = {
     textComponentTypes: HOST_TEXT_NAMES,
