@@ -69,7 +69,11 @@ Each query has a default `timeout` value of 1000 ms and a default `interval` of 
 #### Example
 
 ```typescript
-const button = await screen.findByRole('button'), { name: 'Start' }, { timeout: 1000, interval: 50 });
+const button = await screen.findByRole(
+  'button',
+  { name: 'Start' },
+  { timeout: 1000, interval: 50 }
+);
 ```
 
 Alternatively, a default global `timeout` value can be set using the [`configure` function](docs/api/misc/config#configure):

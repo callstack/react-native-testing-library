@@ -123,7 +123,9 @@ You can also transform prop values so that they are more readable (e.g., flatten
 ```ts
 import { StyleSheet } from 'react-native';
 
-screen.debug({ mapProps : {({ style, ...props })} => ({ style : StyleSheet.flatten(style), ...props }) });
+screen.debug({
+  mapProps: ({ style, ...props }) => ({ style: StyleSheet.flatten(style), ...props }),
+});
 ```
 
 Or remove props that have little value when debugging tests, e.g. path prop for svgs
