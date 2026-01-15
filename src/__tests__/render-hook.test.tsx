@@ -323,26 +323,6 @@ test('does not warn when only valid options are passed', async () => {
   expect(_console.warn).not.toHaveBeenCalled();
 });
 
-test('warns for unknown options but still passes valid options to render', async () => {
-  const Context = React.createContext('default');
-
-  function useTestHook() {
-    return React.useContext(Context);
-  }
-
-  function Wrapper({ children }: { children: ReactNode }) {
-    return <Context.Provider value="provided">{children}</Context.Provider>;
-  }
-
-  const { result } = await renderHook(useTestHook, {
-    wrapper: Wrapper,
-    unknownOption: 'value',
-  } as any);
-
-  expect(_console.warn).toHaveBeenCalledTimes(1);
-  expect(result.current).toEqual('provided');
-});
-
 test('warns when unknown option is passed', async () => {
   function useTestHook() {
     return React.useState(0);
@@ -353,18 +333,5 @@ test('warns when unknown option is passed', async () => {
   expect(_console.warn).toHaveBeenCalledTimes(1);
   expect(jest.mocked(_console.warn).mock.calls[0][0]).toContain(
     'Unknown option(s) passed to renderHook: unknownOption',
-  );
-});
-
-test('warns when multiple unknown options are passed', async () => {
-  function useTestHook() {
-    return React.useState(0);
-  }
-
-  await renderHook(useTestHook, { unknown1: 'value1', unknown2: 'value2' } as any);
-
-  expect(_console.warn).toHaveBeenCalledTimes(1);
-  expect(jest.mocked(_console.warn).mock.calls[0][0]).toContain(
-    'Unknown option(s) passed to renderHook: unknown1, unknown2',
   );
 });

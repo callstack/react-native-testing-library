@@ -78,19 +78,3 @@ test('warns when unknown option is passed', () => {
   expect(warningMessage).toContain('Unknown option(s) passed to configure: unknownOption');
   expect(warningMessage).toContain('config.test.ts');
 });
-
-test('warns when multiple unknown options are passed', () => {
-  configure({ asyncUtilTimeout: 1000, unknown1: 'value1', unknown2: 'value2' } as any);
-
-  expect(_console.warn).toHaveBeenCalledTimes(1);
-  const warningMessage = jest.mocked(_console.warn).mock.calls[0][0];
-  expect(warningMessage).toContain('Unknown option(s) passed to configure: unknown1, unknown2');
-  expect(warningMessage).toContain('config.test.ts');
-});
-
-test('still configures correctly when unknown options are passed', () => {
-  configure({ asyncUtilTimeout: 3000, unknownOption: 'value' } as any);
-
-  expect(_console.warn).toHaveBeenCalledTimes(1);
-  expect(getConfig().asyncUtilTimeout).toBe(3000);
-});

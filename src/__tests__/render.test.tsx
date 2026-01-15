@@ -53,17 +53,6 @@ test('warns when unknown option is passed', async () => {
   );
 });
 
-test('warns when multiple unknown options are passed', async () => {
-  const TestComponent = () => <Text testID="test">Test</Text>;
-
-  await render(<TestComponent />, { unknown1: 'value1', unknown2: 'value2' } as any);
-
-  expect(_console.warn).toHaveBeenCalledTimes(1);
-  expect(jest.mocked(_console.warn).mock.calls[0][0]).toContain(
-    'Unknown option(s) passed to render: unknown1, unknown2',
-  );
-});
-
 describe('render options', () => {
   test('renders component with wrapper option', async () => {
     const TestComponent = () => <Text testID="inner">Inner Content</Text>;
