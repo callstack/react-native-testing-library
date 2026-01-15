@@ -95,6 +95,12 @@ With React 18 support dropped, RNTL v14 fully embraces React 19's async renderin
 - `fireEvent()` and helpers (`press`, `changeText`, `scroll`) → return `Promise<void>`
 - `act()` → always returns `Promise<T>`
 
+:::tip Already using async APIs?
+
+If you adopted the async APIs introduced in RNTL v13.3 (`renderAsync`, `fireEventAsync`, `renderHookAsync`), simply rename them to their non-async counterparts (`render`, `fireEvent`, `renderHook`). The async versions have been removed as the standard APIs are now async by default.
+
+:::
+
 #### `render` is now async {#render-async-default}
 
 In v14, `render` is now async by default and returns a Promise. This change leverages React 19's async rendering model, enabling proper support for React Suspense and `React.use()`.
