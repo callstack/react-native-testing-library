@@ -33,10 +33,10 @@ let config = { ...defaultConfig };
  */
 export function configure(options: Partial<Config & ConfigAliasOptions>) {
   const {
-    defaultHidden,
     asyncUtilTimeout,
-    defaultIncludeHiddenElements,
     defaultDebugOptions,
+    defaultHidden,
+    defaultIncludeHiddenElements,
     ...rest
   } = options;
 
@@ -47,9 +47,8 @@ export function configure(options: Partial<Config & ConfigAliasOptions>) {
 
   config = {
     ...config,
-    ...(asyncUtilTimeout !== undefined && { asyncUtilTimeout }),
-    ...(defaultIncludeHiddenElements !== undefined && { defaultIncludeHiddenElements }),
-    ...(defaultDebugOptions !== undefined && { defaultDebugOptions }),
+    asyncUtilTimeout: asyncUtilTimeout ?? config.asyncUtilTimeout,
+    defaultDebugOptions,
     defaultIncludeHiddenElements: resolvedDefaultIncludeHiddenElements,
   };
 }
