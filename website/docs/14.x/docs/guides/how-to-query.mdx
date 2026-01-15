@@ -49,7 +49,7 @@ The query predicate describes how you decide whether to match the given element.
 | Predicate                                                    | Supported elements | Inspected props                                                                             |
 | ------------------------------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------- |
 | [`*ByRole`](docs/api/queries#by-role)                        | all host elements  | `role`, `accessibilityRole`,<br /> optional: accessible name, accessibility state and value |
-| [`*ByLabelText`](docs/api/queries#by-label-text)             | all host elements  | `aria-label`, `aria-labelledby`,<br /> `accessibilityLabel`, `accessibilityLabelledBy`      |
+| [`*ByLabelText`](docs/api/queries#by-label-text)             | all host elements  | `aria-label`, `aria-labelledby`,<br /> `accessibilityLabel`, `accessibilityLabelledBy`,<br /> `alt` (for `Image`)      |
 | [`*ByDisplayValue`](docs/api/queries#by-display-value)       | `TextInput`        | `value`, `defaultValue`                                                                     |
 | [`*ByPlaceholderText`](docs/api/queries#by-placeholder-text) | `TextInput`        | `placeholder`                                                                               |
 | [`*ByText`](docs/api/queries#by-text)                        | `Text`             | `children` (text content)                                                                   |
