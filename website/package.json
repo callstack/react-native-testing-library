@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@callstack/rspress-theme": "^0.5.1",
-    "@rspress/core": "^2.0.0-rc.4",
+    "@rspress/core": "^2.0.0-rc.5",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "rsbuild-plugin-open-graph": "^1.0.2",

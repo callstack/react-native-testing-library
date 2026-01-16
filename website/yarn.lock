@@ -604,7 +604,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspress/core@npm:^2.0.0-rc.4":
+"@rspress/core@npm:^2.0.0-rc.5":
   version: 2.0.0-rc.5
   resolution: "@rspress/core@npm:2.0.0-rc.5"
   dependencies:
@@ -4720,7 +4720,7 @@ __metadata:
   resolution: "website@workspace:."
   dependencies:
     "@callstack/rspress-theme": "npm:^0.5.1"
-    "@rspress/core": "npm:^2.0.0-rc.4"
+    "@rspress/core": "npm:^2.0.0-rc.5"
     "@types/node": "npm:^24.0.13"
     "@types/react": "npm:^18.3.23"
     react: "npm:^19.2.0"
