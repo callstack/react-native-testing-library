@@ -9,10 +9,10 @@ hero:
   actions:
     - theme: brand
       text: Quick Start
-      link: /docs/start/quick-start
+      link: /12.x/docs/start/quick-start
     - theme: alt
       text: Explore API
-      link: /docs/api
+      link: /12.x/docs/api
 features:
   - title: Maintainable
     details: Write maintainable tests for your React Native apps.
