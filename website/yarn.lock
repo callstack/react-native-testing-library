@@ -443,9 +443,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspress/core@npm:1.44.0":
-  version: 1.44.0
-  resolution: "@rspress/core@npm:1.44.0"
+"@rspress/core@npm:1.47.0":
+  version: 1.47.0
+  resolution: "@rspress/core@npm:1.47.0"
   dependencies:
     "@mdx-js/loader": "npm:^2.3.0"
     "@mdx-js/mdx": "npm:^2.3.0"
@@ -455,13 +455,13 @@ __metadata:
     "@rsbuild/plugin-react": "npm:~1.3.1"
     "@rsbuild/plugin-sass": "npm:~1.3.0"
     "@rspress/mdx-rs": "npm:0.6.6"
-    "@rspress/plugin-auto-nav-sidebar": "npm:1.44.0"
-    "@rspress/plugin-container-syntax": "npm:1.44.0"
-    "@rspress/plugin-last-updated": "npm:1.44.0"
-    "@rspress/plugin-medium-zoom": "npm:1.44.0"
-    "@rspress/runtime": "npm:1.44.0"
-    "@rspress/shared": "npm:1.44.0"
-    "@rspress/theme-default": "npm:1.44.0"
+    "@rspress/plugin-auto-nav-sidebar": "npm:1.47.0"
+    "@rspress/plugin-container-syntax": "npm:1.47.0"
+    "@rspress/plugin-last-updated": "npm:1.47.0"
+    "@rspress/plugin-medium-zoom": "npm:1.47.0"
+    "@rspress/runtime": "npm:1.47.0"
+    "@rspress/shared": "npm:1.47.0"
+    "@rspress/theme-default": "npm:1.47.0"
     enhanced-resolve: "npm:5.18.0"
     github-slugger: "npm:^2.0.0"
     hast-util-from-html: "npm:^2.0.3"
@@ -485,7 +485,7 @@ __metadata:
     unified: "npm:^10.1.2"
     unist-util-visit: "npm:^4.1.2"
     unist-util-visit-children: "npm:^2.0.2"
-  checksum: 10c0/2d5d5b8870977e3c516973b6193531aeae1d42bd3518ddae6ac030dcb9a734a958597337fb21fbaed2a1d7d65348b7f32f16691697d9fac1d21e37f60102a457
+  checksum: 10c0/2bd809585d6456b4c55a967663084f1a0d0167277eeacb1c53aa251b9a3bcac34b4663cb0003627713710864cb2b883c89d427708627d0b4371189dcdf0d75bc
   languageName: node
   linkType: hard
 
@@ -578,58 +578,70 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspress/plugin-auto-nav-sidebar@npm:1.44.0":
-  version: 1.44.0
-  resolution: "@rspress/plugin-auto-nav-sidebar@npm:1.44.0"
+"@rspress/plugin-auto-nav-sidebar@npm:1.47.0":
+  version: 1.47.0
+  resolution: "@rspress/plugin-auto-nav-sidebar@npm:1.47.0"
   dependencies:
-    "@rspress/shared": "npm:1.44.0"
-  checksum: 10c0/a06561f9b541e6bbf57bda49523b4b3cc55194a4243fc5011fd34db014ae5adbad0dfc8e353303dda60bb7dd072d613980d5c37f4ce036cfba497d9efc678a97
+    "@rspress/shared": "npm:1.47.0"
+  checksum: 10c0/7a071f2f284fc8ec992fbfc36fe3d5e4e2700455d625cc1c6559dbc20b8b951364c74199c10dc8b2204b4113caaf090c8dc19e26da76d2db287248b50c2b54fb
   languageName: node
   linkType: hard
 
-"@rspress/plugin-container-syntax@npm:1.44.0":
-  version: 1.44.0
-  resolution: "@rspress/plugin-container-syntax@npm:1.44.0"
+"@rspress/plugin-container-syntax@npm:1.47.0":
+  version: 1.47.0
+  resolution: "@rspress/plugin-container-syntax@npm:1.47.0"
   dependencies:
-    "@rspress/shared": "npm:1.44.0"
-  checksum: 10c0/1da0a6a2b17034d1941aea6c58ce85083449697d34b492ab776994e19f56e338d99be723e4184e917995113b3f0e4e0ad4be0bd737ff80c8f08eab23e285e391
+    "@rspress/shared": "npm:1.47.0"
+  checksum: 10c0/ef24d8f9b1be54afc98d8f39deb7e1c561c3e71d7a8d0cb7a97892ec659ccf0e0a922e0644a00fa1d1fa5e704b50bbd6ed4e834b6692f50ede291b80ed897036
   languageName: node
   linkType: hard
 
-"@rspress/plugin-last-updated@npm:1.44.0":
-  version: 1.44.0
-  resolution: "@rspress/plugin-last-updated@npm:1.44.0"
+"@rspress/plugin-last-updated@npm:1.47.0":
+  version: 1.47.0
+  resolution: "@rspress/plugin-last-updated@npm:1.47.0"
   dependencies:
-    "@rspress/shared": "npm:1.44.0"
-  checksum: 10c0/09688d4a362864d15de0624bd75edbcd5950ae0a47bfeb4f1ac4806fd6beeb116f32826048c59fae4fb727e3049724a7eea80db85062776980bbeec26419ac3f
+    "@rspress/shared": "npm:1.47.0"
+  checksum: 10c0/2b5253aa415922c714efe184ea0a54eedd283ae52e33e5235494ca28cedc46f59a75c61980db39d818fb3d31ffcfdff56eb6c890a21a1bfb962a01467d0b9f4c
   languageName: node
   linkType: hard
 
-"@rspress/plugin-medium-zoom@npm:1.44.0":
-  version: 1.44.0
-  resolution: "@rspress/plugin-medium-zoom@npm:1.44.0"
+"@rspress/plugin-medium-zoom@npm:1.47.0":
+  version: 1.47.0
+  resolution: "@rspress/plugin-medium-zoom@npm:1.47.0"
   dependencies:
     medium-zoom: "npm:1.1.0"
   peerDependencies:
-    "@rspress/runtime": ^1.44.0
-  checksum: 10c0/378717c6a61f81ea078cba8c0988c73d8cc9b969c904f4945aeee9c92ad13221f9c66c5375e63ca73a9ddd7f07b22621ca71d4146e241e0a3870e0120952d5cb
+    "@rspress/runtime": ^1.47.0
+  checksum: 10c0/65d0787628c2c86d30855871c9b57339378a186cb27204aa677db1de93d9f5342cc2aeab0209054e030842e0292c64ce24bb2a82e409081dba3a9d20246b90d1
   languageName: node
   linkType: hard
 
-"@rspress/runtime@npm:1.44.0":
-  version: 1.44.0
-  resolution: "@rspress/runtime@npm:1.44.0"
+"@rspress/runtime@npm:1.47.0":
+  version: 1.47.0
+  resolution: "@rspress/runtime@npm:1.47.0"
   dependencies:
-    "@rspress/shared": "npm:1.44.0"
+    "@rspress/shared": "npm:1.47.0"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     react-helmet-async: "npm:^1.3.0"
     react-router-dom: "npm:^6.29.0"
-  checksum: 10c0/fc9de02ce7e5a2e131095cc8da103d8a101777b202ffa6b4aae471b8e0f83789b012b95248bf0209b3d0fd42eb8ddcb725173dd98ce7158b69f2a20c281df919
+  checksum: 10c0/ba10b76f69df6501615ba17cfcf0810c23a07e6290e165a15d63e5d5060a54bba1f0d5f58259805b438398275c2fa0cbe157d5e7ead77140661013344d609cd6
   languageName: node
   linkType: hard
 
-"@rspress/shared@npm:1.44.0, @rspress/shared@npm:^1.17.1":
+"@rspress/shared@npm:1.47.0":
+  version: 1.47.0
+  resolution: "@rspress/shared@npm:1.47.0"
+  dependencies:
+    "@rsbuild/core": "npm:~1.3.18"
+    gray-matter: "npm:4.0.3"
+    lodash-es: "npm:^4.17.21"
+    unified: "npm:^10.1.2"
+  checksum: 10c0/4958be7dd80db75eda78acaa3c74fa6dd369c582b53976fcaf67b3b722ac8bfa095135e18980da0c3e579f090576aa585dd4b6b83c3905a701132e4eecb7cd8b
+  languageName: node
+  linkType: hard
+
+"@rspress/shared@npm:^1.17.1":
   version: 1.44.0
   resolution: "@rspress/shared@npm:1.44.0"
   dependencies:
@@ -641,13 +653,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rspress/theme-default@npm:1.44.0":
-  version: 1.44.0
-  resolution: "@rspress/theme-default@npm:1.44.0"
+"@rspress/theme-default@npm:1.47.0":
+  version: 1.47.0
+  resolution: "@rspress/theme-default@npm:1.47.0"
   dependencies:
     "@mdx-js/react": "npm:2.3.0"
-    "@rspress/runtime": "npm:1.44.0"
-    "@rspress/shared": "npm:1.44.0"
+    "@rspress/runtime": "npm:1.47.0"
+    "@rspress/shared": "npm:1.47.0"
     body-scroll-lock: "npm:4.0.0-beta.0"
     copy-to-clipboard: "npm:^3.3.3"
     flexsearch: "npm:0.7.43"
@@ -659,7 +671,7 @@ __metadata:
     react-dom: "npm:^18.3.1"
     react-helmet-async: "npm:^1.3.0"
     react-syntax-highlighter: "npm:^15.6.1"
-  checksum: 10c0/46f0c747f5854b23bf6de44d84f81de22a8bd584315c888afce5c182b5edecd804b57f1157686ea9f2a489a05211894892edf71aa256fab448d5b873ad9dcd7c
+  checksum: 10c0/9d7322935b4d3c3f9b41c4f89e8f4393c0b1cb1c91dc18b6d6db427608914bec86fc154027df9c98bf77d9d0bc697d3ba1723ddd388f85d350d693a3f562c8c7
   languageName: node
   linkType: hard
 
@@ -4072,19 +4084,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rspress@npm:1.44.0":
-  version: 1.44.0
-  resolution: "rspress@npm:1.44.0"
+"rspress@npm:^1.46.3":
+  version: 1.47.0
+  resolution: "rspress@npm:1.47.0"
   dependencies:
     "@rsbuild/core": "npm:~1.3.18"
-    "@rspress/core": "npm:1.44.0"
-    "@rspress/shared": "npm:1.44.0"
+    "@rspress/core": "npm:1.47.0"
+    "@rspress/shared": "npm:1.47.0"
     cac: "npm:^6.7.14"
     chokidar: "npm:^3.6.0"
     picocolors: "npm:^1.1.1"
   bin:
     rspress: bin/rspress.js
-  checksum: 10c0/0bae62f212c3c3c9568650d4b41e43b2ff930518486f735d1f9dc47271e53aaa5ac5f68a279c3355e6cc22acf3c2a219d3dd965b80a489a7ad0e1aaa6cb1f6a1
+  checksum: 10c0/ceb1d8a7925f0bd008c43a32426d9c3a76b65a8361518bf47f5b2bd692755d4b1500d12895b33f1ad3c4c4799f2b4a1f624fbb89cb34ca25146e1f1510bf5ac9
   languageName: node
   linkType: hard
 
@@ -4997,7 +5009,7 @@ __metadata:
     "@types/node": "npm:^24.0.13"
     "@types/react": "npm:^18.3.23"
     rsbuild-plugin-open-graph: "npm:^1.0.2"
-    rspress: "npm:1.44.0"
+    rspress: "npm:^1.46.3"
     rspress-plugin-font-open-sans: "npm:^1.0.0"
     rspress-plugin-vercel-analytics: "npm:^0.3.0"
     typescript: "npm:^5.8.3"
