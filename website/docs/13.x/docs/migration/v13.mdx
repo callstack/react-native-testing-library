@@ -16,7 +16,7 @@ Note: currently, stable React Native is unavailable for React 19, which is still
 
 This version introduces concurrent rendering by default. This change should not affect regular tests, but it might affect your tests if you use React Suspense or similar.
 
-You can revert to legacy rendering by passing `concurrentRoot: false` to [render](docs/api/render#concurrent-root) or [configure](docs/api/misc/config#concurrent-root) methods.
+You can revert to legacy rendering by passing `concurrentRoot: false` to [render](/docs/api/render#concurrent-root) or [configure](/docs/api/misc/config#concurrent-root) methods.
 
 Note: in React 19, concurrent rendering is the only supported rendering mode.
 
@@ -37,11 +37,11 @@ We have removed this deprecated query as it is typically too general to give mea
 
 - [\*ByRole](#by-role) query with relevant state options: `disabled`, `selected`, `checked`, `expanded` and `busy`
 - use built-in Jest matchers to check the state of element found using some other query:
-  - enabled state: [toBeEnabled() / toBeDisabled()](docs/api/jest-matchers#tobeenabled)
-  - checked state: [toBeChecked() / toBePartiallyChecked()](docs/api/jest-matchers#tobechecked)
-  - selected state: [toBeSelected()](docs/api/jest-matchers#tobeselected)
-  - expanded state: [toBeExpanded() / toBeCollapsed()](docs/api/jest-matchers#tobeexpanded)
-  - busy state: [toBeBusy()](docs/api/jest-matchers#tobebusy)
+  - enabled state: [toBeEnabled() / toBeDisabled()](/docs/api/jest-matchers#tobeenabled)
+  - checked state: [toBeChecked() / toBePartiallyChecked()](/docs/api/jest-matchers#tobechecked)
+  - selected state: [toBeSelected()](/docs/api/jest-matchers#tobeselected)
+  - expanded state: [toBeExpanded() / toBeCollapsed()](/docs/api/jest-matchers#tobeexpanded)
+  - busy state: [toBeBusy()](/docs/api/jest-matchers#tobebusy)
 
 ```ts
 // Replace this:
@@ -59,7 +59,7 @@ expect(view).toBeDisabled(); // Assert its accessibility state
 
 We have removed this deprecated query as it is typically too general to give meaningful results. Use one of the following options:
 
-- [toHaveAccessibilityValue()](docs/api/jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
+- [toHaveAccessibilityValue()](/docs/api/jest-matchers#tohaveaccessibilityvalue) Jest matcher to check the state of element found using some other query
 - [\*ByRole](#by-role) query with `value` option
 
 ```ts
@@ -90,7 +90,7 @@ preset: 'react-native';
 
 ### Removed `debug.shallow`
 
-We didn't support shallow rendering for the time being. Now, we are removing the last remains of it: `debug.shallow()`. If you are interested in shallow rendering see [here](docs/migration/previous/v2#removed-global-shallow-function).
+We didn't support shallow rendering for the time being. Now, we are removing the last remains of it: `debug.shallow()`. If you are interested in shallow rendering see [here](/docs/migration/previous/v2#removed-global-shallow-function).
 
 ### Changes to accessibility label calculation
 
