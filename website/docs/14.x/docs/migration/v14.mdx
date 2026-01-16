@@ -2,6 +2,12 @@ import { PackageManagerTabs } from 'rspress/theme';
 
 # Migration to 14.x
 
+:::warning Alpha Version
+
+This version is currently in alpha. APIs and behavior may change before the stable release. Please report any issues you encounter.
+
+:::
+
 This guide describes the migration to React Native Testing Library version 14 from version 13.x.
 
 ## Overview
@@ -90,10 +96,10 @@ Remove React Test Renderer and its type definitions from your dev dependencies, 
 
 <PackageManagerTabs
   command={{
-    npm: 'npm uninstall react-test-renderer @types/react-test-renderer\nnpm install -D test-renderer@^0.14.0',
-    yarn: 'yarn remove react-test-renderer @types/react-test-renderer\nyarn add -D test-renderer@^0.14.0',
-    pnpm: 'pnpm remove react-test-renderer @types/react-test-renderer\npnpm add -D test-renderer@^0.14.0',
-    bun: 'bun remove react-test-renderer @types/react-test-renderer\nbun add -D test-renderer@^0.14.0',
+    npm: 'npm uninstall react-test-renderer @types/react-test-renderer\nnpm install -D test-renderer',
+    yarn: 'yarn remove react-test-renderer @types/react-test-renderer\nyarn add -D test-renderer',
+    pnpm: 'pnpm remove react-test-renderer @types/react-test-renderer\npnpm add -D test-renderer',
+    bun: 'bun remove react-test-renderer @types/react-test-renderer\nbun add -D test-renderer',
   }}
 />
 
@@ -427,7 +433,7 @@ Updates your `package.json`:
 
 - Removes React Test Renderer (`react-test-renderer` and `@types/react-test-renderer`)
 - Adds Test Renderer (`test-renderer`)
-- Updates `@testing-library/react-native` to `^14.0.0`
+- Updates `@testing-library/react-native` to alpha version
 
 <PackageManagerTabs
   command={{
