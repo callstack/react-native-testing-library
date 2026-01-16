@@ -16,11 +16,11 @@ hero:
 features:
   - title: Maintainable
     details: Write maintainable tests for your React Native apps.
-    icon: ✨
+    icon: <img src="/react-native-testing-library/img/icon-code.svg" width="36" />
   - title: Reliable
     details: Promotes testing public APIs and avoiding implementation details.
-    icon: ✅
+    icon: <img src="/react-native-testing-library/img/icon-check-double.svg" width="36" />
   - title: Community Driven
     details: Supported by React Native community and its core contributors.
-    icon: ❤️
+    icon: <img src="/react-native-testing-library/img/icon-users.svg" width="36" />
 ---
