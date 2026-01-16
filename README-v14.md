@@ -32,10 +32,10 @@ Open a Terminal in your project's folder and run:
 
 ```sh
 # Yarn install:
-yarn add --dev @testing-library/react-native
+yarn add --dev @testing-library/react-native@alpha
 
 # NPM install
-npm install --save-dev @testing-library/react-native
+npm install --save-dev @testing-library/react-native@alpha
 ```
 
 This library has a `peerDependencies` listing for [Test Renderer](https://github.com/mdjastrzebski/test-renderer). Make sure to install it as a dev dependency:
