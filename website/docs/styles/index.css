@@ -5,15 +5,41 @@
   text-align: center;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
 }
 
 .pre-release-banner strong {
   font-weight: 600;
+}
+
+/* Old Version Banner */
+.old-version-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(90deg, var(--rp-c-brand-darker) 0%, var(--rp-c-brand) 100%);
+  color: #ffffff;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.old-version-banner strong {
+  font-weight: 600;
+}
+
+.old-version-banner-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.old-version-banner-link:hover {
+  color: #ffffff !important;
+  opacity: 0.85;
 }
 
 :root {
