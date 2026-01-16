@@ -4,46 +4,37 @@ import { pluginCallstackTheme } from '@callstack/rspress-theme/plugin';
 import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
 import pluginVercelAnalytics from 'rspress-plugin-vercel-analytics';
 
-type SidebarItem =
-  | { text: string; link: string }
-  | { text: string; collapsed?: boolean; items: SidebarItem[] };
-
-// Shared sidebar structure for docs section
-const createDocsSidebar = (
-  version: string,
-  extras: { guides?: string[]; migration?: SidebarItem[] } = {},
-): SidebarItem[] => {
-  const prefix = version ? `/${version}` : '';
-  return [
+const sidebar12x = {
+  '/12.x/docs/': [
     {
       text: 'Getting started',
       items: [
-        { text: 'Introduction', link: `${prefix}/docs/start/intro` },
-        { text: 'Quick Start', link: `${prefix}/docs/start/quick-start` },
+        { text: 'Introduction', link: '/12.x/docs/start/intro' },
+        { text: 'Quick Start', link: '/12.x/docs/start/quick-start' },
       ],
     },
     {
       text: 'API reference',
       items: [
-        { text: 'Render function', link: `${prefix}/docs/api/render` },
-        { text: 'Screen object', link: `${prefix}/docs/api/screen` },
-        { text: 'Queries', link: `${prefix}/docs/api/queries` },
-        { text: 'Jest Matchers', link: `${prefix}/docs/api/jest-matchers` },
+        { text: 'Render function', link: '/12.x/docs/api/render' },
+        { text: 'Screen object', link: '/12.x/docs/api/screen' },
+        { text: 'Queries', link: '/12.x/docs/api/queries' },
+        { text: 'Jest Matchers', link: '/12.x/docs/api/jest-matchers' },
         {
           text: 'Triggering events',
           items: [
-            { text: 'Fire Event', link: `${prefix}/docs/api/events/fire-event` },
-            { text: 'User Event', link: `${prefix}/docs/api/events/user-event` },
+            { text: 'Fire Event', link: '/12.x/docs/api/events/fire-event' },
+            { text: 'User Event', link: '/12.x/docs/api/events/user-event' },
           ],
         },
         {
           text: 'Miscellaneous',
           items: [
-            { text: 'Accessibility', link: `${prefix}/docs/api/misc/accessibility` },
-            { text: 'Async utilities', link: `${prefix}/docs/api/misc/async` },
-            { text: 'Config', link: `${prefix}/docs/api/misc/config` },
-            { text: 'Other', link: `${prefix}/docs/api/misc/other` },
-            { text: 'Render Hook', link: `${prefix}/docs/api/misc/render-hook` },
+            { text: 'Accessibility', link: '/12.x/docs/api/misc/accessibility' },
+            { text: 'Async utilities', link: '/12.x/docs/api/misc/async' },
+            { text: 'Config', link: '/12.x/docs/api/misc/config' },
+            { text: 'Other', link: '/12.x/docs/api/misc/other' },
+            { text: 'Render Hook', link: '/12.x/docs/api/misc/render-hook' },
           ],
         },
       ],
@@ -51,139 +42,330 @@ const createDocsSidebar = (
     {
       text: 'Guides',
       items: [
-        { text: 'How to Query', link: `${prefix}/docs/guides/how-to-query` },
-        ...(extras.guides || []).map((g) => ({
-          text: g === 'react-19' ? 'React 19' : g,
-          link: `${prefix}/docs/guides/${g}`,
-        })),
-        { text: 'Troubleshooting', link: `${prefix}/docs/guides/troubleshooting` },
-        { text: 'FAQ', link: `${prefix}/docs/guides/faq` },
-        { text: 'Community Resources', link: `${prefix}/docs/guides/community-resources` },
+        { text: 'How to Query', link: '/12.x/docs/guides/how-to-query' },
+        { text: 'Troubleshooting', link: '/12.x/docs/guides/troubleshooting' },
+        { text: 'FAQ', link: '/12.x/docs/guides/faq' },
+        { text: 'Community Resources', link: '/12.x/docs/guides/community-resources' },
       ],
     },
     {
       text: 'Advanced Guides',
       items: [
-        { text: 'Testing Environment', link: `${prefix}/docs/advanced/testing-env` },
-        ...(version !== '12.x' && version !== ''
-          ? [{ text: 'Third-party Integration', link: `${prefix}/docs/advanced/third-party-integration` }]
-          : []),
-        ...(version === ''
-          ? [{ text: 'Third-party Integration', link: `${prefix}/docs/advanced/third-party-integration` }]
-          : []),
-        { text: 'Understanding Act', link: `${prefix}/docs/advanced/understanding-act` },
+        { text: 'Testing Environment', link: '/12.x/docs/advanced/testing-env' },
+        { text: 'Understanding Act', link: '/12.x/docs/advanced/understanding-act' },
       ],
     },
     {
       text: 'Migration Guides',
       collapsed: true,
-      items: extras.migration || [],
+      items: [
+        { text: 'v12 Migration', link: '/12.x/docs/migration/v12' },
+        { text: 'Jest Matchers', link: '/12.x/docs/migration/jest-matchers' },
+        {
+          text: 'Previous versions',
+          collapsed: true,
+          items: [
+            { text: 'v11', link: '/12.x/docs/migration/previous/v11' },
+            { text: 'v9', link: '/12.x/docs/migration/previous/v9' },
+            { text: 'v7', link: '/12.x/docs/migration/previous/v7' },
+            { text: 'v2', link: '/12.x/docs/migration/previous/v2' },
+          ],
+        },
+      ],
     },
-  ];
-};
-
-const createCookbookSidebar = (version: string, asyncFileName: string): SidebarItem[] => {
-  const prefix = version ? `/${version}` : '';
-  return [
-    { text: 'Cookbook', link: `${prefix}/cookbook/` },
+  ],
+  '/12.x/cookbook/': [
+    { text: 'Cookbook', link: '/12.x/cookbook/' },
     {
       text: 'Basic Recipes',
       items: [
-        { text: 'Async Tests', link: `${prefix}/cookbook/basics/${asyncFileName}` },
-        { text: 'Custom Render', link: `${prefix}/cookbook/basics/custom-render` },
+        { text: 'Async Tests', link: '/12.x/cookbook/basics/async-tests' },
+        { text: 'Custom Render', link: '/12.x/cookbook/basics/custom-render' },
       ],
     },
     {
       text: 'Advanced Recipes',
-      items: [{ text: 'Network Requests', link: `${prefix}/cookbook/advanced/network-requests` }],
+      items: [{ text: 'Network Requests', link: '/12.x/cookbook/advanced/network-requests' }],
     },
     {
       text: 'State Management Recipes',
-      items: [{ text: 'Jotai', link: `${prefix}/cookbook/state-management/jotai` }],
+      items: [{ text: 'Jotai', link: '/12.x/cookbook/state-management/jotai' }],
     },
-  ];
-};
-
-// Version-specific configurations
-const sidebar12x = {
-  '/12.x/docs/': createDocsSidebar('12.x', {
-    migration: [
-      { text: 'v12 Migration', link: '/12.x/docs/migration/v12' },
-      { text: 'Jest Matchers', link: '/12.x/docs/migration/jest-matchers' },
-      {
-        text: 'Previous versions',
-        collapsed: true,
-        items: [
-          { text: 'v11', link: '/12.x/docs/migration/previous/v11' },
-          { text: 'v9', link: '/12.x/docs/migration/previous/v9' },
-          { text: 'v7', link: '/12.x/docs/migration/previous/v7' },
-          { text: 'v2', link: '/12.x/docs/migration/previous/v2' },
-        ],
-      },
-    ],
-  }),
-  '/12.x/cookbook/': createCookbookSidebar('12.x', 'async-tests'),
+  ],
 };
 
 const sidebar13x = {
-  '/13.x/docs/': createDocsSidebar('13.x', {
-    guides: ['react-19'],
-    migration: [
-      { text: 'v13 Migration', link: '/13.x/docs/migration/v13' },
-      { text: 'Jest Matchers', link: '/13.x/docs/migration/jest-matchers' },
-      {
-        text: 'Previous versions',
-        collapsed: true,
-        items: [
-          { text: 'v12', link: '/13.x/docs/migration/previous/v12' },
-          { text: 'v11', link: '/13.x/docs/migration/previous/v11' },
-          { text: 'v9', link: '/13.x/docs/migration/previous/v9' },
-          { text: 'v7', link: '/13.x/docs/migration/previous/v7' },
-          { text: 'v2', link: '/13.x/docs/migration/previous/v2' },
-        ],
-      },
-    ],
-  }),
-  '/13.x/cookbook/': createCookbookSidebar('13.x', 'async-tests'),
+  '/13.x/docs/': [
+    {
+      text: 'Getting started',
+      items: [
+        { text: 'Introduction', link: '/13.x/docs/start/intro' },
+        { text: 'Quick Start', link: '/13.x/docs/start/quick-start' },
+      ],
+    },
+    {
+      text: 'API reference',
+      items: [
+        { text: 'Render function', link: '/13.x/docs/api/render' },
+        { text: 'Screen object', link: '/13.x/docs/api/screen' },
+        { text: 'Queries', link: '/13.x/docs/api/queries' },
+        { text: 'Jest Matchers', link: '/13.x/docs/api/jest-matchers' },
+        {
+          text: 'Triggering events',
+          items: [
+            { text: 'Fire Event', link: '/13.x/docs/api/events/fire-event' },
+            { text: 'User Event', link: '/13.x/docs/api/events/user-event' },
+          ],
+        },
+        {
+          text: 'Miscellaneous',
+          items: [
+            { text: 'Accessibility', link: '/13.x/docs/api/misc/accessibility' },
+            { text: 'Async utilities', link: '/13.x/docs/api/misc/async' },
+            { text: 'Config', link: '/13.x/docs/api/misc/config' },
+            { text: 'Other', link: '/13.x/docs/api/misc/other' },
+            { text: 'Render Hook', link: '/13.x/docs/api/misc/render-hook' },
+          ],
+        },
+      ],
+    },
+    {
+      text: 'Guides',
+      items: [
+        { text: 'How to Query', link: '/13.x/docs/guides/how-to-query' },
+        { text: 'React 19', link: '/13.x/docs/guides/react-19' },
+        { text: 'Troubleshooting', link: '/13.x/docs/guides/troubleshooting' },
+        { text: 'FAQ', link: '/13.x/docs/guides/faq' },
+        { text: 'Community Resources', link: '/13.x/docs/guides/community-resources' },
+      ],
+    },
+    {
+      text: 'Advanced Guides',
+      items: [
+        { text: 'Testing Environment', link: '/13.x/docs/advanced/testing-env' },
+        { text: 'Third-party Integration', link: '/13.x/docs/advanced/third-party-integration' },
+        { text: 'Understanding Act', link: '/13.x/docs/advanced/understanding-act' },
+      ],
+    },
+    {
+      text: 'Migration Guides',
+      collapsed: true,
+      items: [
+        { text: 'v13 Migration', link: '/13.x/docs/migration/v13' },
+        { text: 'Jest Matchers', link: '/13.x/docs/migration/jest-matchers' },
+        {
+          text: 'Previous versions',
+          collapsed: true,
+          items: [
+            { text: 'v12', link: '/13.x/docs/migration/previous/v12' },
+            { text: 'v11', link: '/13.x/docs/migration/previous/v11' },
+            { text: 'v9', link: '/13.x/docs/migration/previous/v9' },
+            { text: 'v7', link: '/13.x/docs/migration/previous/v7' },
+            { text: 'v2', link: '/13.x/docs/migration/previous/v2' },
+          ],
+        },
+      ],
+    },
+  ],
+  '/13.x/cookbook/': [
+    { text: 'Cookbook', link: '/13.x/cookbook/' },
+    {
+      text: 'Basic Recipes',
+      items: [
+        { text: 'Async Tests', link: '/13.x/cookbook/basics/async-tests' },
+        { text: 'Custom Render', link: '/13.x/cookbook/basics/custom-render' },
+      ],
+    },
+    {
+      text: 'Advanced Recipes',
+      items: [{ text: 'Network Requests', link: '/13.x/cookbook/advanced/network-requests' }],
+    },
+    {
+      text: 'State Management Recipes',
+      items: [{ text: 'Jotai', link: '/13.x/cookbook/state-management/jotai' }],
+    },
+  ],
 };
 
 const sidebar14x = {
-  '/14.x/docs/': createDocsSidebar('14.x', {
-    migration: [
-      { text: 'v14 Migration', link: '/14.x/docs/migration/v14' },
-      { text: 'Jest Matchers', link: '/14.x/docs/migration/jest-matchers' },
-      { text: 'v13', link: '/14.x/docs/migration/v13' },
-      { text: 'v12', link: '/14.x/docs/migration/v12' },
-      { text: 'v11', link: '/14.x/docs/migration/v11' },
-      { text: 'v9', link: '/14.x/docs/migration/v9' },
-      { text: 'v7', link: '/14.x/docs/migration/v7' },
-      { text: 'v2', link: '/14.x/docs/migration/v2' },
-    ],
-  }),
-  '/14.x/cookbook/': createCookbookSidebar('14.x', 'async-events'),
+  '/14.x/docs/': [
+    {
+      text: 'Getting started',
+      items: [
+        { text: 'Introduction', link: '/14.x/docs/start/intro' },
+        { text: 'Quick Start', link: '/14.x/docs/start/quick-start' },
+      ],
+    },
+    {
+      text: 'API reference',
+      items: [
+        { text: 'Render function', link: '/14.x/docs/api/render' },
+        { text: 'Screen object', link: '/14.x/docs/api/screen' },
+        { text: 'Queries', link: '/14.x/docs/api/queries' },
+        { text: 'Jest Matchers', link: '/14.x/docs/api/jest-matchers' },
+        {
+          text: 'Triggering events',
+          items: [
+            { text: 'Fire Event', link: '/14.x/docs/api/events/fire-event' },
+            { text: 'User Event', link: '/14.x/docs/api/events/user-event' },
+          ],
+        },
+        {
+          text: 'Miscellaneous',
+          items: [
+            { text: 'Accessibility', link: '/14.x/docs/api/misc/accessibility' },
+            { text: 'Async utilities', link: '/14.x/docs/api/misc/async' },
+            { text: 'Config', link: '/14.x/docs/api/misc/config' },
+            { text: 'Other', link: '/14.x/docs/api/misc/other' },
+            { text: 'Render Hook', link: '/14.x/docs/api/misc/render-hook' },
+          ],
+        },
+      ],
+    },
+    {
+      text: 'Guides',
+      items: [
+        { text: 'How to Query', link: '/14.x/docs/guides/how-to-query' },
+        { text: 'Troubleshooting', link: '/14.x/docs/guides/troubleshooting' },
+        { text: 'FAQ', link: '/14.x/docs/guides/faq' },
+        { text: 'Community Resources', link: '/14.x/docs/guides/community-resources' },
+      ],
+    },
+    {
+      text: 'Advanced Guides',
+      items: [
+        { text: 'Testing Environment', link: '/14.x/docs/advanced/testing-env' },
+        { text: 'Third-party Integration', link: '/14.x/docs/advanced/third-party-integration' },
+        { text: 'Understanding Act', link: '/14.x/docs/advanced/understanding-act' },
+      ],
+    },
+    {
+      text: 'Migration Guides',
+      collapsed: true,
+      items: [
+        { text: 'v14 Migration', link: '/14.x/docs/migration/v14' },
+        { text: 'Jest Matchers', link: '/14.x/docs/migration/jest-matchers' },
+        { text: 'v13', link: '/14.x/docs/migration/v13' },
+        { text: 'v12', link: '/14.x/docs/migration/v12' },
+        { text: 'v11', link: '/14.x/docs/migration/v11' },
+        { text: 'v9', link: '/14.x/docs/migration/v9' },
+        { text: 'v7', link: '/14.x/docs/migration/v7' },
+        { text: 'v2', link: '/14.x/docs/migration/v2' },
+      ],
+    },
+  ],
+  '/14.x/cookbook/': [
+    { text: 'Cookbook', link: '/14.x/cookbook/' },
+    {
+      text: 'Basic Recipes',
+      items: [
+        { text: 'Async Events', link: '/14.x/cookbook/basics/async-events' },
+        { text: 'Custom Render', link: '/14.x/cookbook/basics/custom-render' },
+      ],
+    },
+    {
+      text: 'Advanced Recipes',
+      items: [{ text: 'Network Requests', link: '/14.x/cookbook/advanced/network-requests' }],
+    },
+    {
+      text: 'State Management Recipes',
+      items: [{ text: 'Jotai', link: '/14.x/cookbook/state-management/jotai' }],
+    },
+  ],
 };
 
 // Default version (13.x) sidebar without version prefix
 const sidebarDefault = {
-  '/docs/': createDocsSidebar('', {
-    guides: ['react-19'],
-    migration: [
-      { text: 'v13 Migration', link: '/docs/migration/v13' },
-      { text: 'Jest Matchers', link: '/docs/migration/jest-matchers' },
-      {
-        text: 'Previous versions',
-        collapsed: true,
-        items: [
-          { text: 'v12', link: '/docs/migration/previous/v12' },
-          { text: 'v11', link: '/docs/migration/previous/v11' },
-          { text: 'v9', link: '/docs/migration/previous/v9' },
-          { text: 'v7', link: '/docs/migration/previous/v7' },
-          { text: 'v2', link: '/docs/migration/previous/v2' },
-        ],
-      },
-    ],
-  }),
-  '/cookbook/': createCookbookSidebar('', 'async-tests'),
+  '/docs/': [
+    {
+      text: 'Getting started',
+      items: [
+        { text: 'Introduction', link: '/docs/start/intro' },
+        { text: 'Quick Start', link: '/docs/start/quick-start' },
+      ],
+    },
+    {
+      text: 'API reference',
+      items: [
+        { text: 'Render function', link: '/docs/api/render' },
+        { text: 'Screen object', link: '/docs/api/screen' },
+        { text: 'Queries', link: '/docs/api/queries' },
+        { text: 'Jest Matchers', link: '/docs/api/jest-matchers' },
+        {
+          text: 'Triggering events',
+          items: [
+            { text: 'Fire Event', link: '/docs/api/events/fire-event' },
+            { text: 'User Event', link: '/docs/api/events/user-event' },
+          ],
+        },
+        {
+          text: 'Miscellaneous',
+          items: [
+            { text: 'Accessibility', link: '/docs/api/misc/accessibility' },
+            { text: 'Async utilities', link: '/docs/api/misc/async' },
+            { text: 'Config', link: '/docs/api/misc/config' },
+            { text: 'Other', link: '/docs/api/misc/other' },
+            { text: 'Render Hook', link: '/docs/api/misc/render-hook' },
+          ],
+        },
+      ],
+    },
+    {
+      text: 'Guides',
+      items: [
+        { text: 'How to Query', link: '/docs/guides/how-to-query' },
+        { text: 'React 19', link: '/docs/guides/react-19' },
+        { text: 'Troubleshooting', link: '/docs/guides/troubleshooting' },
+        { text: 'FAQ', link: '/docs/guides/faq' },
+        { text: 'Community Resources', link: '/docs/guides/community-resources' },
+      ],
+    },
+    {
+      text: 'Advanced Guides',
+      items: [
+        { text: 'Testing Environment', link: '/docs/advanced/testing-env' },
+        { text: 'Third-party Integration', link: '/docs/advanced/third-party-integration' },
+        { text: 'Understanding Act', link: '/docs/advanced/understanding-act' },
+      ],
+    },
+    {
+      text: 'Migration Guides',
+      collapsed: true,
+      items: [
+        { text: 'v13 Migration', link: '/docs/migration/v13' },
+        { text: 'Jest Matchers', link: '/docs/migration/jest-matchers' },
+        {
+          text: 'Previous versions',
+          collapsed: true,
+          items: [
+            { text: 'v12', link: '/docs/migration/previous/v12' },
+            { text: 'v11', link: '/docs/migration/previous/v11' },
+            { text: 'v9', link: '/docs/migration/previous/v9' },
+            { text: 'v7', link: '/docs/migration/previous/v7' },
+            { text: 'v2', link: '/docs/migration/previous/v2' },
+          ],
+        },
+      ],
+    },
+  ],
+  '/cookbook/': [
+    { text: 'Cookbook', link: '/cookbook/' },
+    {
+      text: 'Basic Recipes',
+      items: [
+        { text: 'Async Tests', link: '/cookbook/basics/async-tests' },
+        { text: 'Custom Render', link: '/cookbook/basics/custom-render' },
+      ],
+    },
+    {
+      text: 'Advanced Recipes',
+      items: [{ text: 'Network Requests', link: '/cookbook/advanced/network-requests' }],
+    },
+    {
+      text: 'State Management Recipes',
+      items: [{ text: 'Jotai', link: '/cookbook/state-management/jotai' }],
+    },
+  ],
 };
 
 export default defineConfig({
