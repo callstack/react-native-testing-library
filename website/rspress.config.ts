@@ -438,4 +438,5 @@ export default defineConfig({
     // @ts-expect-error
     pluginVercelAnalytics(),
   ],
+  globalUIComponents: [path.join(__dirname, 'theme/PreReleaseBanner.tsx')],
 });
