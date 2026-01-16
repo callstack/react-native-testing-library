@@ -46,9 +46,9 @@ There are several asynchronous utilities you might use in your tests.
 
 ### `findBy*` queries
 
-The most common are the [`findBy*` queries](docs/api/queries#find-by). These are useful when waiting for a matching element to appear. They can be understood as a [`getBy*` queries](docs/api/queries#get-by) used in conjunction with a [`waitFor` function](docs/api/misc/async#waitfor).
+The most common are the [`findBy*` queries](/docs/api/queries#find-by). These are useful when waiting for a matching element to appear. They can be understood as a [`getBy*` queries](/docs/api/queries#get-by) used in conjunction with a [`waitFor` function](/docs/api/misc/async#waitfor).
 
-They accept the same predicates as `getBy*` queries like `findByRole`, `findByTest`, etc. They also have a multiple elements variant called [`findAllBy*`](docs/api/queries#find-all-by).
+They accept the same predicates as `getBy*` queries like `findByRole`, `findByTest`, etc. They also have a multiple elements variant called [`findAllBy*`](/docs/api/queries#find-all-by).
 
 ```typescript
 function findByRole: (
@@ -76,7 +76,7 @@ const button = await screen.findByRole(
 );
 ```
 
-Alternatively, a default global `timeout` value can be set using the [`configure` function](docs/api/misc/config#configure):
+Alternatively, a default global `timeout` value can be set using the [`configure` function](/docs/api/misc/config#configure):
 
 ```typescript
 configure({ asyncUtilTimeout: timeout });
@@ -108,7 +108,7 @@ If you want to use it with `getBy*` queries, use the `findBy*` queries instead, 
 
 ### `waitForElementToBeRemoved` function
 
-A specialized function, [`waitForElementToBeRemoved`](docs/api/misc/async#waitforelementtoberemoved), is used to verify that a matching element was present but has since been removed.
+A specialized function, [`waitForElementToBeRemoved`](/docs/api/misc/async#waitforelementtoberemoved), is used to verify that a matching element was present but has since been removed.
 
 ```typescript
 function waitForElementToBeRemoved<T>(

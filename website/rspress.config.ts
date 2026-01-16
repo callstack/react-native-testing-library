@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { defineConfig } from 'rspress/config';
+import { defineConfig } from '@rspress/core';
 import { pluginCallstackTheme } from '@callstack/rspress-theme/plugin';
 import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
 import pluginVercelAnalytics from 'rspress-plugin-vercel-analytics';
@@ -14,8 +14,8 @@ export default defineConfig({
   logoText: 'React Native Testing Library',
   outDir: 'build',
   markdown: {
-    checkDeadLinks: true,
-    codeHighlighter: 'prism',
+    // checkDeadLinks is enabled by default in V2
+    // Shiki is now the default code highlighter
   },
   multiVersion: {
     default: '13.x',

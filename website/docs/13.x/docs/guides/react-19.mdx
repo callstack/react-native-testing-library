@@ -10,27 +10,27 @@ RNTL 13.3 introduces async versions of the core testing APIs to handle React 19'
 
 **Rendering APIs:**
 
-- **[`renderAsync`](docs/api/render#render-async)** - async version of `render`
-- **[`screen.rerenderAsync`](docs/api/screen#rerender-async)** - async version of `screen.rerender`
-- **[`screen.unmountAsync`](docs/api/screen#unmount-async)** - async version of `screen.unmount`
+- **[`renderAsync`](/docs/api/render#render-async)** - async version of `render`
+- **[`screen.rerenderAsync`](/docs/api/screen#rerender-async)** - async version of `screen.rerender`
+- **[`screen.unmountAsync`](/docs/api/screen#unmount-async)** - async version of `screen.unmount`
 
 **Event APIs:**
 
-- **[`fireEventAsync`](docs/api/events/fire-event#fire-event-async)** - async version of `fireEvent`
+- **[`fireEventAsync`](/docs/api/events/fire-event#fire-event-async)** - async version of `fireEvent`
 
 ## APIs that remain unchanged
 
 Many existing APIs continue to work without modification:
 
-- **[Query methods](docs/api/queries)**: `screen.getBy*`, `screen.queryBy*`, `screen.findBy*` - all work the same
-- **[User Event API](docs/api/events/user-event)** - already async, so no API changes needed
-- **[Jest matchers](docs/api/jest-matchers)** - work with already-rendered output, so no changes required
+- **[Query methods](/docs/api/queries)**: `screen.getBy*`, `screen.queryBy*`, `screen.findBy*` - all work the same
+- **[User Event API](/docs/api/events/user-event)** - already async, so no API changes needed
+- **[Jest matchers](/docs/api/jest-matchers)** - work with already-rendered output, so no changes required
 
 ## What changes in your tests
 
 ### Making tests async
 
-The main change is using [`renderAsync`](docs/api/render#renderasync) instead of `render`, which requires:
+The main change is using [`renderAsync`](/docs/api/render#renderasync) instead of `render`, which requires:
 
 1. Making your test function `async`
 2. Adding `await` before `renderAsync`
