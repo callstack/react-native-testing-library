@@ -4,6 +4,8 @@ import { pluginCallstackTheme } from '@callstack/rspress-theme/plugin';
 import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
 import pluginVercelAnalytics from 'rspress-plugin-vercel-analytics';
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
 const sidebar12x = {
   '/12.x/docs/': [
     {
@@ -377,6 +379,7 @@ export default defineConfig({
   logo: '/img/owl.png',
   logoText: 'React Native Testing Library',
   outDir: 'build',
+  globalStyles: path.join(__dirname, 'docs/styles/index.css'),
   markdown: {
     // checkDeadLinks is enabled by default in V2
     // Shiki is now the default code highlighter

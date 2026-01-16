@@ -2,8 +2,7 @@
 pageType: home
 
 hero:
-  name: 'React Native'
-  text: 'Testing Library'
+  name: 'React Native Testing Library'
   image:
     src: /img/owl.png
   tagline: Helps you to write better tests with less effort.

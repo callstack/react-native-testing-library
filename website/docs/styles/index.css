@@ -242,3 +242,47 @@ p.rspress-home-hero-text {
     font-size: 3rem;
   }
 }
+
+/* Hero Image (Owl Logo) Sizing */
+[class*='heroImage-'] {
+  width: 96px !important;
+  height: 96px !important;
+  min-width: 96px !important;
+  min-height: 96px !important;
+}
+
+@media (min-width: 640px) {
+  [class*='heroImage-'] {
+    width: 120px !important;
+    height: 120px !important;
+    min-width: 120px !important;
+    min-height: 120px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  [class*='heroImage-'] {
+    width: 144px !important;
+    height: 144px !important;
+    min-width: 144px !important;
+    min-height: 144px !important;
+  }
+}
+
+/* Feature Card Icons (Emojis) Sizing */
+[class*='featureIcon-'] {
+  font-size: 1.5rem !important;
+  line-height: 1 !important;
+}
+
+@media (min-width: 640px) {
+  [class*='featureIcon-'] {
+    font-size: 1.75rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  [class*='featureIcon-'] {
+    font-size: 2rem !important;
+  }
+}
