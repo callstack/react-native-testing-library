@@ -362,9 +362,11 @@ export default defineConfig({
   base: '/react-native-testing-library/',
   title: 'React Native Testing Library',
   description: 'Helps you to write better tests with less effort.',
-  icon: '/img/owl.png',
-  logo: '/img/owl.png',
-  logoText: 'React Native Testing Library',
+  icon: '/img/logo-light.png',
+  logo: {
+    light: '/img/logo-light.svg',
+    dark: '/img/logo-dark.svg',
+  },
   outDir: 'build',
   globalStyles: path.join(__dirname, 'docs/styles/index.css'),
   markdown: {

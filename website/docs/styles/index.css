@@ -287,30 +287,30 @@ p.rspress-home-hero-text {
   }
 }
 
-/* Hero Image (Owl Logo) Sizing */
-[class*='heroImage-'] {
-  width: 96px !important;
-  height: 96px !important;
-  min-width: 96px !important;
-  min-height: 96px !important;
+/* Hero Image (Logo) Sizing */
+[class*='heroImage-'],
+.rp-home-hero__image-img {
+  height: 24px !important;
+  width: auto !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
 }
 
-@media (min-width: 640px) {
-  [class*='heroImage-'] {
-    width: 120px !important;
-    height: 120px !important;
-    min-width: 120px !important;
-    min-height: 120px !important;
-  }
+/* Hero Image Dark/Light Mode */
+.rp-home-hero__image-img--dark {
+  display: none;
 }
 
-@media (min-width: 768px) {
-  [class*='heroImage-'] {
-    width: 144px !important;
-    height: 144px !important;
-    min-width: 144px !important;
-    min-height: 144px !important;
-  }
+.rp-home-hero__image-img--light {
+  display: block;
+}
+
+.dark .rp-home-hero__image-img--dark {
+  display: block;
+}
+
+.dark .rp-home-hero__image-img--light {
+  display: none;
 }
 
 /* Feature Card Icons (Emojis) Sizing */
