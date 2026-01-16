@@ -2,10 +2,10 @@
 pageType: home
 
 hero:
-  name: 'React Native Testing Library'
   image:
-    src: /img/logo-light.svg
-    dark: /img/logo-dark.svg
+    src:
+      light: /img/logo-light.svg
+      dark: /img/logo-dark.svg
   tagline: Helps you to write better tests with less effort.
   actions:
     - theme: brand

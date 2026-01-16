@@ -288,11 +288,29 @@ p.rspress-home-hero-text {
 }
 
 /* Hero Image (Logo) Sizing */
-[class*='heroImage-'] {
+[class*='heroImage-'],
+.rp-home-hero__image-img {
   height: 24px !important;
   width: auto !important;
   margin-left: 0 !important;
   margin-right: auto !important;
+}
+
+/* Hero Image Dark/Light Mode */
+.rp-home-hero__image-img--dark {
+  display: none;
+}
+
+.rp-home-hero__image-img--light {
+  display: block;
+}
+
+.dark .rp-home-hero__image-img--dark {
+  display: block;
+}
+
+.dark .rp-home-hero__image-img--light {
+  display: none;
 }
 
 /* Feature Card Icons (Emojis) Sizing */
