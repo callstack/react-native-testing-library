@@ -1,3 +1,47 @@
+/* Pre-Release Banner */
+.pre-release-banner {
+  background: linear-gradient(90deg, var(--rp-c-brand-darker) 0%, var(--rp-c-brand) 100%);
+  color: #ffffff;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.pre-release-banner strong {
+  font-weight: 600;
+}
+
+/* Old Version Banner */
+.old-version-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(90deg, var(--rp-c-brand-darker) 0%, var(--rp-c-brand) 100%);
+  color: #ffffff;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.old-version-banner strong {
+  font-weight: 600;
+}
+
+.old-version-banner-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.old-version-banner-link:hover {
+  color: #ffffff !important;
+  opacity: 0.85;
+}
+
 :root {
   --rp-nav-height: 60px !important;
   --rp-sidebar-width: 320px !important;
@@ -240,5 +284,49 @@ p.rspress-home-hero-text {
 @media (min-width: 768px) {
   p.rspress-home-hero-text {
     font-size: 3rem;
+  }
+}
+
+/* Hero Image (Owl Logo) Sizing */
+[class*='heroImage-'] {
+  width: 96px !important;
+  height: 96px !important;
+  min-width: 96px !important;
+  min-height: 96px !important;
+}
+
+@media (min-width: 640px) {
+  [class*='heroImage-'] {
+    width: 120px !important;
+    height: 120px !important;
+    min-width: 120px !important;
+    min-height: 120px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  [class*='heroImage-'] {
+    width: 144px !important;
+    height: 144px !important;
+    min-width: 144px !important;
+    min-height: 144px !important;
+  }
+}
+
+/* Feature Card Icons (Emojis) Sizing */
+[class*='featureIcon-'] {
+  font-size: 1.5rem !important;
+  line-height: 1 !important;
+}
+
+@media (min-width: 640px) {
+  [class*='featureIcon-'] {
+    font-size: 1.75rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  [class*='featureIcon-'] {
+    font-size: 2rem !important;
   }
 }

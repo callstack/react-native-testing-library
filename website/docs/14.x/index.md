@@ -2,18 +2,17 @@
 pageType: home
 
 hero:
-  name: 'React Native'
-  text: 'Testing Library'
+  name: 'React Native Testing Library'
   image:
     src: /img/owl.png
   tagline: Helps you to write better tests with less effort.
   actions:
     - theme: brand
       text: Quick Start
-      link: /docs/start/quick-start
+      link: /14.x/docs/start/quick-start
     - theme: alt
       text: Explore API
-      link: /docs/api
+      link: /14.x/docs/api
 features:
   - title: Maintainable
     details: Write maintainable tests for your React Native apps.

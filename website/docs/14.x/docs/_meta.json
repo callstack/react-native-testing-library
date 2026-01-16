@@ -14,11 +14,5 @@
     "type": "dir",
     "name": "advanced",
     "label": "Advanced Guides"
-  },
-  {
-    "type": "dir",
-    "name": "migration",
-    "label": "Migration Guides",
-    "collapsed": true
   }
 ]

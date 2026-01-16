@@ -4,6 +4,8 @@ import { pluginCallstackTheme } from '@callstack/rspress-theme/plugin';
 import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
 import pluginVercelAnalytics from 'rspress-plugin-vercel-analytics';
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
 const sidebar12x = {
   '/12.x/docs/': [
     {
@@ -194,6 +196,7 @@ const sidebar14x = {
       items: [
         { text: 'Introduction', link: '/14.x/docs/start/intro' },
         { text: 'Quick Start', link: '/14.x/docs/start/quick-start' },
+        { text: 'v14 Migration', link: '/14.x/docs/start/migration-v14' },
       ],
     },
     {
@@ -237,20 +240,6 @@ const sidebar14x = {
         { text: 'Testing Environment', link: '/14.x/docs/advanced/testing-env' },
         { text: 'Third-party Integration', link: '/14.x/docs/advanced/third-party-integration' },
         { text: 'Understanding Act', link: '/14.x/docs/advanced/understanding-act' },
-      ],
-    },
-    {
-      text: 'Migration Guides',
-      collapsed: true,
-      items: [
-        { text: 'v14 Migration', link: '/14.x/docs/migration/v14' },
-        { text: 'Jest Matchers', link: '/14.x/docs/migration/jest-matchers' },
-        { text: 'v13', link: '/14.x/docs/migration/v13' },
-        { text: 'v12', link: '/14.x/docs/migration/v12' },
-        { text: 'v11', link: '/14.x/docs/migration/v11' },
-        { text: 'v9', link: '/14.x/docs/migration/v9' },
-        { text: 'v7', link: '/14.x/docs/migration/v7' },
-        { text: 'v2', link: '/14.x/docs/migration/v2' },
       ],
     },
   ],
@@ -377,6 +366,7 @@ export default defineConfig({
   logo: '/img/owl.png',
   logoText: 'React Native Testing Library',
   outDir: 'build',
+  globalStyles: path.join(__dirname, 'docs/styles/index.css'),
   markdown: {
     // checkDeadLinks is enabled by default in V2
     // Shiki is now the default code highlighter
