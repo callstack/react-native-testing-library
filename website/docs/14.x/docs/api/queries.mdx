@@ -49,8 +49,8 @@ For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
 
 The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
 
-| Variant                                        | Assertion                     | Return type                          | Is Async? |
-| ---------------------------------------------- | ----------------------------- | ------------------------------------ | --------- |
+| Variant                                         | Assertion                     | Return type                          | Is Async? |
+| ----------------------------------------------- | ----------------------------- | ------------------------------------ | --------- |
 | [`getBy*`](/docs/api/queries#get-by)            | Exactly one matching element  | `HostElement`                        | No        |
 | [`getAllBy*`](/docs/api/queries#get-all-by)     | At least one matching element | `Array<HostElement>`                 | No        |
 | [`queryBy*`](/docs/api/queries#query-by)        | Zero or one matching element  | <code>HostElement &#124; null</code> | No        |
