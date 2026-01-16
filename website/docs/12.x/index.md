@@ -6,7 +6,8 @@ hero:
     src:
       light: /img/logo-light.svg
       dark: /img/logo-dark.svg
-  tagline: Helps you to write better tests with less effort.
+  name: JavaScript Integration testing for React Native
+  tagline: The more your tests resemble the way your software is used, the more confidence they can give you.<br/>— Kent C. Dodds
   actions:
     - theme: brand
       text: Quick Start
