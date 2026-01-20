@@ -10,7 +10,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element is present in the element tree (screen) or not.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobeonthescreen)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tobeonthescreen)
    *
    * @example
    * <Text>Hello</Text>
@@ -24,7 +24,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element is checked based on accessibility props.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobechecked)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tobechecked)
    *
    * @see {@link toBePartiallyChecked} for a related matcher.
    *
@@ -39,7 +39,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element is collapsed based on accessibility props.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobeexpanded)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tobeexpanded)
    *
    * @see {@link toBeExpanded} for an inverse matcher.
    *
@@ -56,7 +56,7 @@ export interface JestNativeMatchers<R> {
    * This matcher will check ancestor elements for their disabled state as well.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobeenabled)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tobeenabled)
    *
    * @see {@link toBeEnabled} for an inverse matcher.
    *
@@ -74,7 +74,7 @@ export interface JestNativeMatchers<R> {
    * This matcher will check ancestor elements for their disabled state as well.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobebusy)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tobebusy)
    *
    * @example
    * <View testID="loader" aria-busy />
@@ -87,7 +87,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element has no host children or text content.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobeemptyelement)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tobeemptyelement)
    *
    * @example
    * <View testID="not-empty">
@@ -105,7 +105,7 @@ export interface JestNativeMatchers<R> {
    * This matcher will check ancestor elements for their disabled state as well.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobeenabled)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tobeenabled)
    *
    * @see {@link toBeDisabled} for inverse matcher.
    *
@@ -120,7 +120,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element is expanded based on accessibility props.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobeexpanded)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tobeexpanded)
    *
    * @see {@link toBeCollapsed} for inverse matcher.
    *
@@ -135,7 +135,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element is partially checked based on accessibility props.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobechecked)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tobechecked)
    *
    * @see {@link toBeChecked} for related matcher.
    *
@@ -150,7 +150,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element is selected based on accessibility props.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobeselected)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tobeselected)
    *
    * @example
    * <View testID="view" aria-selected />
@@ -165,7 +165,7 @@ export interface JestNativeMatchers<R> {
    * This matcher will check ancestor elements for their visibility as well.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tobevisible)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tobevisible)
    *
    * @example
    * <View testID="visible" />
@@ -180,7 +180,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element contains another host element.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tocontainelement)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tocontainelement)
    *
    * @example
    * <View testID="outer">
@@ -195,7 +195,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element has a given accessbility value.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tohaveaccessibilityvalue)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tohaveaccessibilityvalue)
    *
    *
    * @example
@@ -209,7 +209,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element has a given accessibile name based on the accessibility label or text content.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tohaveaccessiblename)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tohaveaccessiblename)
    *
    * @example
    * <View testID="view" aria-label="Hello" />
@@ -222,7 +222,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host `TextInput` element has a given display value based on `value` prop, unmanaged native state, and `defaultValue` prop.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tohavedisplayvalue)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tohavedisplayvalue)
    *
    * @example
    * <TextInput testID="input" value="Hello" />
@@ -235,7 +235,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element has a given prop.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tohaveprop)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tohaveprop)
    *
    * @example
    * <Text testID="text" numberOfLines={1]} />
@@ -249,7 +249,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element has a given style.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tohavestyle)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tohavestyle)
    *
    * @example
    * <View testID="view" style={{ width: '100%' }} />
@@ -263,7 +263,7 @@ export interface JestNativeMatchers<R> {
    * Assert whether a host element has a given text content.
    *
    * @see
-   * [Jest Matchers docs](https://callstack.github.io/react-native-testing-library/docs/jest-matchers#tohavetextcontent)
+   * [Jest Matchers docs](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers#tohavetextcontent)
    *
    * @example
    * <View testID="view">

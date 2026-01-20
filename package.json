@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://www.github.com/callstack/react-native-testing-library.git"
   },
-  "homepage": "https://callstack.github.io/react-native-testing-library",
+  "homepage": "https://oss.callstack.com/react-native-testing-library",
   "author": "Michał Pierzchała <thymikee@gmail.com> (https://github.com/thymikee), Maciej Jastrzębski <mdjastrzebski@gmail.com> (https://github.com/mdjastrzebski)",
   "contributors": [
     "Augustin Le Fèvre <augustin.le-fevre@klarna.com> (https://github.com/AugustinLF)",
@@ -39,7 +39,8 @@
     "build": "yarn clean && yarn build:js && yarn build:ts",
     "release": "release-it",
     "release:rc": "release-it --preRelease=rc",
-    "release:beta": "release-it --preRelease=beta"
+    "release:beta": "release-it --preRelease=beta",
+    "release:codemods": "release-it --preRelease=alpha"
   },
   "files": [
     "build/",

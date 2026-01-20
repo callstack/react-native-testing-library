@@ -82,32 +82,32 @@ You can find the source of `QuestionsBoard` component and this example [here](ht
 
 React Native Testing Library consists of following APIs:
 
-- [`render` function](https://callstack.github.io/react-native-testing-library/docs/api/render) - render your UI components for testing purposes
-- [`screen` object](https://callstack.github.io/react-native-testing-library/docs/api/screen) - access rendered UI:
-  - [Queries](https://callstack.github.io/react-native-testing-library/docs/api/queries) - find rendered components by various predicates: role, text, test ids, etc
-  - Lifecycle methods: [`rerender`](https://callstack.github.io/react-native-testing-library/docs/api/screen#rerender), [`unmount`](https://callstack.github.io/react-native-testing-library/docs/api/screen#unmount)
-  - Helpers: [`debug`](https://callstack.github.io/react-native-testing-library/docs/api/screen#debug), [`toJSON`](https://callstack.github.io/react-native-testing-library/docs/api/screen#tojson), [`root`](https://callstack.github.io/react-native-testing-library/docs/api/screen#root), [`container`](https://callstack.github.io/react-native-testing-library/docs/api/screen#container)
-- [Jest matchers](https://callstack.github.io/react-native-testing-library/docs/api/jest-matchers) - validate assumptions about your UI
-- [User Event](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event) - simulate common user interactions like [`press`](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event#press) or [`type`](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event#type)
-- [Fire Event](https://callstack.github.io/react-native-testing-library/docs/api/events/fire-event) - simulate any component event
-- [`renderHook` function](https://callstack.github.io/react-native-testing-library/docs/api/misc/render-hook) - render hooks for testing purposes
+- [`render` function](https://oss.callstack.com/react-native-testing-library/docs/api/render) - render your UI components for testing purposes
+- [`screen` object](https://oss.callstack.com/react-native-testing-library/docs/api/screen) - access rendered UI:
+  - [Queries](https://oss.callstack.com/react-native-testing-library/docs/api/queries) - find rendered components by various predicates: role, text, test ids, etc
+  - Lifecycle methods: [`rerender`](https://oss.callstack.com/react-native-testing-library/docs/api/screen#rerender), [`unmount`](https://oss.callstack.com/react-native-testing-library/docs/api/screen#unmount)
+  - Helpers: [`debug`](https://oss.callstack.com/react-native-testing-library/docs/api/screen#debug), [`toJSON`](https://oss.callstack.com/react-native-testing-library/docs/api/screen#tojson), [`root`](https://oss.callstack.com/react-native-testing-library/docs/api/screen#root), [`container`](https://oss.callstack.com/react-native-testing-library/docs/api/screen#container)
+- [Jest matchers](https://oss.callstack.com/react-native-testing-library/docs/api/jest-matchers) - validate assumptions about your UI
+- [User Event](https://oss.callstack.com/react-native-testing-library/docs/api/events/user-event) - simulate common user interactions like [`press`](https://oss.callstack.com/react-native-testing-library/docs/api/events/user-event#press) or [`type`](https://oss.callstack.com/react-native-testing-library/docs/api/events/user-event#type)
+- [Fire Event](https://oss.callstack.com/react-native-testing-library/docs/api/events/fire-event) - simulate any component event
+- [`renderHook` function](https://oss.callstack.com/react-native-testing-library/docs/api/misc/render-hook) - render hooks for testing purposes
 - Miscellaneous APIs:
-  - [Async utils](https://callstack.github.io/react-native-testing-library/docs/api/misc/async): `findBy*` queries, `waitFor`, `waitForElementToBeRemoved`
-  - [Configuration](https://callstack.github.io/react-native-testing-library/docs/api/misc/config): `configure`, `resetToDefaults`
-  - [Accessibility](https://callstack.github.io/react-native-testing-library/docs/api/misc/accessibility): `isHiddenFromAccessibility`
-  - [Other](https://callstack.github.io/react-native-testing-library/docs/api/misc/other): `within`, `act`, `cleanup`
+  - [Async utils](https://oss.callstack.com/react-native-testing-library/docs/api/misc/async): `findBy*` queries, `waitFor`, `waitForElementToBeRemoved`
+  - [Configuration](https://oss.callstack.com/react-native-testing-library/docs/api/misc/config): `configure`, `resetToDefaults`
+  - [Accessibility](https://oss.callstack.com/react-native-testing-library/docs/api/misc/accessibility): `isHiddenFromAccessibility`
+  - [Other](https://oss.callstack.com/react-native-testing-library/docs/api/misc/other): `within`, `act`, `cleanup`
 
 ## Migration Guides
 
-- **[Migration to 14.0](https://callstack.github.io/react-native-testing-library/docs/migration/v14)** - Drops React 18, async APIs by default
+- **[Migration to 14.0](https://oss.callstack.com/react-native-testing-library/docs/migration/v14)** - Drops React 18, async APIs by default
 
 ## Troubleshooting
 
-- [Troubleshooting guide](https://callstack.github.io/react-native-testing-library/docs/guides/troubleshooting)
+- [Troubleshooting guide](https://oss.callstack.com/react-native-testing-library/docs/guides/troubleshooting)
 
 ## Community Resources
 
-Check out our list of [Community Resources about RNTL](https://callstack.github.io/react-native-testing-library/docs/guides/community-resources).
+Check out our list of [Community Resources about RNTL](https://oss.callstack.com/react-native-testing-library/docs/guides/community-resources).
 
 ## Made with ❤️ at Callstack
 

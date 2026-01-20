@@ -417,7 +417,7 @@ export default defineConfig({
       pluginOpenGraph({
         title: 'React Native Testing Library',
         type: 'website',
-        url: 'https://callstack.github.io/react-native-testing-library/',
+        url: 'https://oss.callstack.com/react-native-testing-library/',
         description: 'Helps you to write better tests with less effort.',
       }),
     ],
