@@ -1,6 +1,6 @@
 # Queries
 
-Queries are one of the main building blocks for the React Native Testing Library. They enable you to find relevant elements in the element tree, which represents your application's user interface when running under tests.
+Queries are one of the main building blocks of React Native Testing Library. They let you find elements in the element tree, which represents your application's user interface when running under tests.
 
 ## Accessing queries
 
@@ -18,7 +18,7 @@ test('accessing queries using "screen" object', () => {
 })
 ```
 
-The modern and recommended way to access queries is to use the `screen` object exported by the `@testing-library/react-native` package. This object contains methods for all available queries bound to the most recently rendered UI.
+The recommended way to access queries is to use the `screen` object exported by `@testing-library/react-native`. It contains methods for all available queries bound to the most recently rendered UI.
 
 ### Using `render` result
 
@@ -35,19 +35,16 @@ The classic way is to capture query functions returned from the `render` functio
 
 ## Query parts
 
-Each query is composed of two parts: variant and predicate, which are separated by the `by` word in the middle of the name.
+Each query is composed of two parts: variant and predicate, separated by the word `by` in the middle.
 
-Consider the following query:
+Consider the query `getByRole()`:
 
-```
-getByRole()
-```
-
-For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
+- `getBy*` is the query variant
+- `*ByRole` is the predicate
 
 ## Query variant
 
-The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
+The query variants describe the expected number (and timing) of matching elements, so they differ in return type.
 
 | Variant                                         | Assertion                     | Return type                                | Is Async? |
 | ----------------------------------------------- | ----------------------------- | ------------------------------------------ | --------- |
@@ -130,7 +127,7 @@ When your `findBy*` and `findAllBy*` queries throw because they can't find match
 
 ## Query predicates
 
-_Note: most methods like this one return a [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance) with following properties that you may be interested in:_
+_Note: most methods like this one return a [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance) with the following properties that you may be interested in:_
 
 ```typescript
 type ReactTestInstance = {
@@ -169,7 +166,7 @@ getByRole(
 Returns a `ReactTestInstance` with matching `role` or `accessibilityRole` prop.
 
 :::info
-In order for `*ByRole` queries to match an element it needs to be considered an accessibility element:
+For `*ByRole` queries to match an element, it needs to be considered an accessibility element:
 
 1. `Text`, `TextInput` and `Switch` host elements are these by default.
 2. `View` host elements need an explicit [`accessible`](https://reactnative.dev/docs/accessibility#accessible) prop set to `true`
@@ -236,7 +233,7 @@ getByLabelText(
 Returns a `ReactTestInstance` with matching label:
 
 - either by matching [`aria-label`](https://reactnative.dev/docs/accessibility#aria-label)/[`accessibilityLabel`](https://reactnative.dev/docs/accessibility#accessibilitylabel) prop
-- or by matching text content of view referenced by [`aria-labelledby`](https://reactnative.dev/docs/accessibility#aria-labelledby-android)/[`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
+- or by matching the text content of the view referenced by [`aria-labelledby`](https://reactnative.dev/docs/accessibility#aria-labelledby-android)/[`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -284,7 +281,7 @@ getByDisplayValue(
 ): ReactTestInstance;
 ```
 
-Returns a `ReactTestInstance` for a `TextInput` with a matching display value—may be a string or regular expression.
+Returns a `ReactTestInstance` for a `TextInput` with a matching display value. The value can be a string or regular expression.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -308,7 +305,7 @@ getByText(
 ): ReactTestInstance;
 ```
 
-Returns a `ReactTestInstance` with matching text—may be a string or regular expression.
+Returns a `ReactTestInstance` with matching text. The text can be a string or regular expression.
 
 This method joins `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This allows querying for strings that will be visually rendered together but may be semantically separate React components.
 
