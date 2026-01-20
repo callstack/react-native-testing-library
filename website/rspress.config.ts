@@ -383,6 +383,7 @@ export default defineConfig({
   search: {
     versioned: true,
   },
+  llms: true,
   themeConfig: {
     enableContentAnimation: true,
     enableScrollToTop: true,
