@@ -21,3 +21,4 @@ build
 .docusaurus
 
 
+codemods/**/dist/
