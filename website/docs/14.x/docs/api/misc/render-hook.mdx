@@ -9,9 +9,9 @@ async function renderHook<Result, Props>(
 ): Promise<RenderHookResult<Result, Props>>;
 ```
 
-Renders a test component that will call the provided `callback`, including any hooks it calls, every time it renders. Returns a Promise that resolves to a [`RenderHookResult`](#renderhookresult) object, which you can interact with.
+Renders a test component that calls the provided `callback` (and any hooks it uses) on each render. Returns a Promise that resolves to a [`RenderHookResult`](#renderhookresult) object.
 
-**This is the recommended default API** for testing hooks. It uses async `act` internally to ensure all pending React updates are executed during rendering, making it compatible with async React features like `Suspense` boundary or `use()` hook.
+**This is the recommended default API** for testing hooks. It uses async `act` internally to ensure all pending React updates are executed during rendering. This makes it compatible with async React features like `Suspense` boundaries and the `use()` hook.
 
 - **Returns a Promise**: Should be awaited
 - **Async methods**: Both `rerender` and `unmount` return Promises and should be awaited
@@ -47,13 +47,13 @@ export const useCount = () => {
 
 The `renderHook` function accepts the following arguments:
 
-Callback is a function that is called each `render` of the test component. This function should call one or more hooks for testing.
+**Callback**: A function called on each render of the test component. This function should call one or more hooks for testing.
 
-The `props` passed into the callback will be the `initialProps` provided in the `options` to `renderHook`, unless new props are provided by a subsequent `rerender` call.
+The callback receives `props` from the `initialProps` option, or from a subsequent `rerender` call if provided.
 
 ### `options`
 
-A `RenderHookOptions<Props>` object to modify the execution of the `callback` function, containing the following properties:
+A `RenderHookOptions<Props>` object with the following properties:
 
 #### `initialProps` {#initial-props}
 
@@ -61,7 +61,7 @@ The initial values to pass as `props` to the `callback` function of `renderHook`
 
 #### `wrapper`
 
-A React component to wrap the test component in when rendering. This is usually used to add context providers from `React.createContext` for the hook to access with `useContext`.
+A React component that wraps the test component. Use this to add context providers so hooks can access them with `useContext`.
 
 ### Result
 
@@ -77,13 +77,13 @@ The `renderHook` function returns a Promise that resolves to an object with the 
 
 #### `result`
 
-The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`. The `Result` type is determined by the type passed to or inferred by the `renderHook` call.
+The `current` value contains whatever the `callback` returned from `renderHook`. The `Result` type is determined by the type passed to or inferred by the `renderHook` call.
 
 **Note:** When using React Suspense, `result.current` will be `null` while the hook is suspended.
 
 #### `rerender`
 
-An async function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
+An async function that rerenders the test component and recalculates hooks. If `newProps` are passed, they replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
 
 **Note**: This method returns a Promise and should be awaited.
 
@@ -95,7 +95,7 @@ An async function to unmount the test component. This is commonly used to trigge
 
 ### Examples
 
-Here we present some extra examples of using `renderHook` API.
+Additional examples of using `renderHook`:
 
 #### With `initialProps`
 
