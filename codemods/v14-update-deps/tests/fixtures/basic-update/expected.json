@@ -2,7 +2,7 @@
   "name": "test-project",
   "version": "1.0.0",
   "devDependencies": {
-    "@testing-library/react-native": "^14.0.0-alpha.6",
-    "test-renderer": "0.13.2"
+    "@testing-library/react-native": "^14.0.0-beta.0",
+    "test-renderer": "0.14.0"
   }
 }
