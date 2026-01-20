@@ -39,7 +39,7 @@
     "build": "yarn clean && yarn build:js && yarn build:ts",
     "release": "release-it",
     "release:rc": "release-it --preRelease=rc",
-    "release:alpha": "release-it --preRelease=alpha"
+    "release:beta": "release-it --preRelease=beta"
   },
   "files": [
     "build/",

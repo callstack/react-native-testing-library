@@ -12,15 +12,13 @@
 [![MIT License][license-badge]][license]
 [![Sponsored by Callstack][callstack-badge]][callstack]
 
-> ⚠️ **Alpha Version:** This version is currently in alpha. APIs and behavior may change before the stable release. Please report any issues you encounter.
-
 ## The problem
 
 You want to write maintainable tests for your React Native components. As a part of this goal, you want your tests to avoid including implementation details of your components and rather focus on making your tests give you the confidence for which they are intended. As part of this, you want your tests to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don't break your tests and slow you and your team down.
 
 ## This solution
 
-The React Native Testing Library (RNTL) is a comprehensive solution for testing React Native components. It provides React Native runtime simulation on top of `test-renderer`, in a way that encourages better testing practices. Its primary guiding principle is:
+The React Native Testing Library (RNTL) is a comprehensive solution for testing React Native components. It provides React Native runtime simulation on top of `react-test-renderer`, in a way that encourages better testing practices. Its primary guiding principle is:
 
 > The more your tests resemble the way your software is used, the more confidence they can give you.
 
@@ -32,21 +30,13 @@ Open a Terminal in your project's folder and run:
 
 ```sh
 # Yarn install:
-yarn add --dev @testing-library/react-native@alpha
+yarn add --dev @testing-library/react-native
 
 # NPM install
-npm install --save-dev @testing-library/react-native@alpha
+npm install --save-dev @testing-library/react-native
 ```
 
-This library has a `peerDependencies` listing for [Test Renderer](https://github.com/mdjastrzebski/test-renderer). Make sure to install it as a dev dependency:
-
-```sh
-# Yarn install:
-yarn add --dev test-renderer
-
-# NPM install
-npm install --save-dev test-renderer
-```
+This library has a `peerDependencies` listing for `react-test-renderer`. Make sure that your `react-test-renderer` version matches exactly the `react` version, avoid using `^` in version number.
 
 ### Additional Jest matchers
 
@@ -67,7 +57,7 @@ test('form submits two answers', async () => {
   const onSubmit = jest.fn();
 
   const user = userEvent.setup();
-  await render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
+  render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
 
   const answerInputs = screen.getAllByLabelText('answer input');
 
@@ -95,7 +85,7 @@ React Native Testing Library consists of following APIs:
 - [`screen` object](https://callstack.github.io/react-native-testing-library/docs/api/screen) - access rendered UI:
   - [Queries](https://callstack.github.io/react-native-testing-library/docs/api/queries) - find rendered components by various predicates: role, text, test ids, etc
   - Lifecycle methods: [`rerender`](https://callstack.github.io/react-native-testing-library/docs/api/screen#rerender), [`unmount`](https://callstack.github.io/react-native-testing-library/docs/api/screen#unmount)
-  - Helpers: [`debug`](https://callstack.github.io/react-native-testing-library/docs/api/screen#debug), [`toJSON`](https://callstack.github.io/react-native-testing-library/docs/api/screen#tojson), [`root`](https://callstack.github.io/react-native-testing-library/docs/api/screen#root), [`container`](https://callstack.github.io/react-native-testing-library/docs/api/screen#container)
+  - Helpers: [`debug`](https://callstack.github.io/react-native-testing-library/docs/api/screen#debug), [`toJSON`](https://callstack.github.io/react-native-testing-library/docs/api/screen#tojson), [`root`](https://callstack.github.io/react-native-testing-library/docs/api/screen#root)
 - [Jest matchers](https://callstack.github.io/react-native-testing-library/docs/api/jest-matchers) - validate assumptions about your UI
 - [User Event](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event) - simulate common user interactions like [`press`](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event#press) or [`type`](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event#type) in a realistic way
 - [Fire Event](https://callstack.github.io/react-native-testing-library/docs/api/events/fire-event) - simulate any component event in a simplified way
@@ -108,7 +98,6 @@ React Native Testing Library consists of following APIs:
 
 ## Migration Guides
 
-- **[Migration to 14.0](https://callstack.github.io/react-native-testing-library/docs/migration/v14)** - Drops React 18, async APIs by default
 - [Migration to 13.0](https://callstack.github.io/react-native-testing-library/docs/migration/v13)
 - [Migration to built-in Jest Matchers](https://callstack.github.io/react-native-testing-library/docs/migration/jest-matchers)
 
