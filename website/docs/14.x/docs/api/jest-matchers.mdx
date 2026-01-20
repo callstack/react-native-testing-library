@@ -1,6 +1,6 @@
 # Jest matchers
 
-This guide describes built-in Jest matchers, we recommend using these matchers as they provide readable tests, accessibility support, and a better developer experience.
+This guide covers the built-in Jest matchers. These matchers make your tests easier to read and work better with accessibility features.
 
 ## Setup
 
@@ -14,7 +14,7 @@ There is no need to set up the built-in matchers; they are automatically availab
 expect(element).toBeOnTheScreen();
 ```
 
-Asserts whether an element is attached to the element tree. If you hold a reference to an element and it gets unmounted during the test, it will no longer pass this assertion.
+Checks if an element is attached to the element tree. If you have a reference to an element and it gets unmounted during the test, this assertion will fail.
 
 ## Element Content
 
@@ -30,7 +30,7 @@ expect(element).toHaveTextContent(
 )
 ```
 
-Asserts whether the given element has the given text content. It accepts either `string` or `RegExp` matchers, as well as [text match options](/docs/api/queries#text-match-options) of `exact` and `normalizer`.
+Checks if an element has the specified text content. You can pass a `string` or `RegExp`, plus [text match options](/docs/api/queries#text-match-options) like `exact` and `normalizer`.
 
 ### `toContainElement()`
 
@@ -40,7 +40,7 @@ expect(container).toContainElement(
 )
 ```
 
-Asserts whether the given container element contains another host element.
+Checks if a container element contains another host element.
 
 ### `toBeEmptyElement()`
 
@@ -48,7 +48,7 @@ Asserts whether the given container element contains another host element.
 expect(element).toBeEmptyElement();
 ```
 
-Asserts whether the given element has no host child elements or text content.
+Checks if an element has no host child elements or text content.
 
 ## Checking element state
 
@@ -64,7 +64,7 @@ expect(element).toHaveDisplayValue(
 )
 ```
 
-Asserts whether the given `TextInput` element has a specified display value. It accepts either `string` or `RegExp` matchers, as well as [text match options](/docs/api/queries#text-match-options) of `exact` and `normalizer`.
+Checks if a `TextInput` element has the specified display value. You can pass a `string` or `RegExp`, plus [text match options](/docs/api/queries#text-match-options) like `exact` and `normalizer`.
 
 ### `toHaveAccessibilityValue()`
 
@@ -79,11 +79,11 @@ expect(element).toHaveAccessibilityValue(
 )
 ```
 
-Asserts whether the given element has a specified accessible value.
+Checks if an element has the specified accessible value.
 
-This matcher will assert accessibility value based on `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` and `accessibilityValue` props. Only defined value entries will be used in the assertion, the element might have additional accessibility value entries and still be matched.
+The matcher checks accessibility values from `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext`, and `accessibilityValue` props. It only checks the values you specify—the element can have other accessibility value entries and still match.
 
-When querying by `text` entry a string or `RegExp` might be used.
+For the `text` entry, you can use a string or `RegExp`.
 
 ### `toBeEnabled()` / `toBeDisabled` {#tobeenabled}
 
@@ -92,10 +92,10 @@ expect(element).toBeEnabled();
 expect(element).toBeDisabled();
 ```
 
-Asserts whether the given element is enabled or disabled from the user's perspective. It relies on the accessibility disabled state as set by `aria-disabled` or `accessibilityState.disabled` props. It considers an element disabled when it or any of its ancestors is disabled.
+Checks if an element is enabled or disabled. Uses the accessibility disabled state from `aria-disabled` or `accessibilityState.disabled` props. An element is considered disabled if it or any of its ancestors is disabled.
 
 :::note
-These matchers are the negation of each other, and both are provided to avoid double negations in your assertions.
+These matchers are opposites. Both are available so you can avoid double negations like `expect(element).not.toBeDisabled()`.
 :::
 
 ### `toBeSelected()`
@@ -104,7 +104,7 @@ These matchers are the negation of each other, and both are provided to avoid do
 expect(element).toBeSelected();
 ```
 
-Asserts whether the given element is selected from the user's perspective. It relies on the accessibility selected state as set by `aria-selected` or `accessibilityState.selected` props.
+Checks if an element is selected. Uses the accessibility selected state from `aria-selected` or `accessibilityState.selected` props.
 
 ### `toBeChecked()` / `toBePartiallyChecked()` {#tobechecked}
 
@@ -113,12 +113,12 @@ expect(element).toBeChecked();
 expect(element).toBePartiallyChecked();
 ```
 
-Asserts whether the given element is checked or partially checked from the user's perspective. It relies on the accessibility checked state as set by `aria-checked` or `accessibilityState.checked` props.
+Checks if an element is checked or partially checked. Uses the accessibility checked state from `aria-checked` or `accessibilityState.checked` props.
 
 :::note
 
-- `toBeChecked()` matcher works only on `Switch` host elements and accessibility elements with `checkbox`, `radio` or `switch` role.
-- `toBePartiallyChecked()` matcher works only on elements with `checkbox` role.
+- `toBeChecked()` only works on `Switch` host elements and elements with `checkbox`, `radio`, or `switch` role.
+- `toBePartiallyChecked()` only works on elements with `checkbox` role.
 
 :::
 
@@ -129,10 +129,10 @@ expect(element).toBeExpanded();
 expect(element).toBeCollapsed();
 ```
 
-Asserts whether the given element is expanded or collapsed from the user's perspective. It relies on the accessibility expanded state as set by `aria-expanded` or `accessibilityState.expanded` props.
+Checks if an element is expanded or collapsed. Uses the accessibility expanded state from `aria-expanded` or `accessibilityState.expanded` props.
 
 :::note
-These matchers are the negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both won't pass for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
+These matchers are opposites for expandable elements (those with explicit `aria-expanded` or `accessibilityState.expanded` props). For non-expandable elements, neither matcher will pass.
 :::
 
 ### `toBeBusy()`
@@ -141,7 +141,7 @@ These matchers are the negation of each other for expandable elements (elements 
 expect(element).toBeBusy();
 ```
 
-Asserts whether the given element is busy from the user's perspective. It relies on the accessibility busy state as set by `aria-busy` or `accessibilityState.busy` props.
+Checks if an element is busy. Uses the accessibility busy state from `aria-busy` or `accessibilityState.busy` props.
 
 ## Checking element style
 
@@ -151,9 +151,9 @@ Asserts whether the given element is busy from the user's perspective. It relies
 expect(element).toBeVisible();
 ```
 
-Asserts whether the given element is visible from the user's perspective.
+Checks if an element is visible.
 
-The element is considered invisible when itself or any of its ancestors has `display: none` or `opacity: 0` styles, as well as when it's hidden from accessibility.
+An element is considered invisible if it or any of its ancestors has `display: none` or `opacity: 0` styles, or if it's hidden from accessibility.
 
 ### `toHaveStyle()`
 
@@ -163,7 +163,7 @@ expect(element).toHaveStyle(
 )
 ```
 
-Asserts whether the given element has given styles.
+Checks if an element has the specified styles.
 
 ## Other matchers
 
@@ -179,11 +179,11 @@ expect(element).toHaveAccessibleName(
 )
 ```
 
-Asserts whether the given element has a specified accessible name. It accepts either `string` or `RegExp` matchers, as well as [text match options](/docs/api/queries#text-match-options) of `exact` and `normalizer`.
+Checks if an element has the specified accessible name. You can pass a `string` or `RegExp`, plus [text match options](/docs/api/queries#text-match-options) like `exact` and `normalizer`.
 
-The accessible name will be computed based on `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props. For `Image` elements, the `alt` prop will also be considered. In the absence of these props, the element text content will be used.
+The accessible name comes from `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props. For `Image` elements, the `alt` prop is also used. If none of these are present, the element's text content is used.
 
-When the `name` parameter is `undefined` it will only check if the element has any accessible name.
+If you don't pass a `name` parameter (or pass `undefined`), it only checks whether the element has any accessible name.
 
 ### `toHaveProp()`
 
@@ -194,8 +194,8 @@ expect(element).toHaveProp(
 )
 ```
 
-Asserts whether the given element has a given prop. When the `value` parameter is `undefined`, it only checks for prop existence. When `value` is defined, it checks if the actual value matches the passed value.
+Checks if an element has a prop. If you don't pass a `value` (or pass `undefined`), it only checks if the prop exists. If you pass a `value`, it checks if the prop's value matches.
 
 :::note
-This matcher should be treated as an escape hatch to be used when all other matchers are not suitable.
+Use this matcher as a last resort when other matchers don't fit your needs.
 :::
