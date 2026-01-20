@@ -12,13 +12,13 @@ This guide describes the migration to React Native Testing Library version 14 fr
 
 ## Overview
 
-RNTL v14 is a major release that **drops support for React 18** and fully embraces React 19's async-first paradigm. Key changes include:
+RNTL v14 drops support for React 18 and adopts React 19's async rendering model. Here's what changed:
 
-- **React 19+ required**: Minimum supported versions are React 19.0.0 and React Native 0.78+
-- **Async APIs by default**: `render`, `renderHook`, `fireEvent`, and `act` are now async
-- **New renderer**: Switched from deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html) to [Test Renderer](https://github.com/mdjastrzebski/test-renderer)
-- **API cleanup**: Removed deprecated APIs (`update`, `getQueriesForElement`, `UNSAFE_root`, `concurrentRoot` option)
-- **Safe `container` API**: Reintroduced `container` which is now safe to use
+- React 19.0.0+ and React Native 0.78+ are now required
+- `render`, `renderHook`, `fireEvent`, and `act` are now async
+- Switched from deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html) to [Test Renderer](https://github.com/mdjastrzebski/test-renderer)
+- Removed deprecated APIs: `update`, `getQueriesForElement`, `UNSAFE_root`, `concurrentRoot` option
+- Reintroduced `container` API, which is now safe to use
 
 :::info React 18 Users
 
@@ -67,13 +67,13 @@ After running the codemods, review the changes and run your tests.
 
 ### Test Renderer replaces React Test Renderer
 
-In v14, React Native Testing Library now uses [Test Renderer](https://github.com/mdjastrzebski/test-renderer) instead of the deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html). Test Renderer is a modern, actively maintained alternative that provides better compatibility with React 19 and improved type safety.
+In v14, React Native Testing Library uses [Test Renderer](https://github.com/mdjastrzebski/test-renderer) instead of the deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html). Test Renderer works with React 19 and has better TypeScript support.
 
 **What changed:**
 
-- The underlying renderer has been switched from React Test Renderer to Test Renderer
-- This change is mostly internal and should not require code changes in most cases
-- Type definitions have been updated to use [`HostElement`](https://github.com/mdjastrzebski/test-renderer#hostelement) from Test Renderer instead of `ReactTestInstance`
+- The underlying renderer is now Test Renderer instead of React Test Renderer
+- This is mostly an internal change; your tests should work without modifications in most cases
+- Type definitions now use [`HostElement`](https://github.com/mdjastrzebski/test-renderer#hostelement) from Test Renderer instead of `ReactTestInstance`
 
 **Migration:**
 
@@ -117,11 +117,11 @@ import type { HostElement } from 'test-renderer';
 
 **Note:** Most users won't need to update type imports, as React Native Testing Library now exports the necessary types directly.
 
-For more details, see the [Test Renderer documentation](https://github.com/mdjastrzebski/test-renderer).
+See the [Test Renderer documentation](https://github.com/mdjastrzebski/test-renderer) for more.
 
 ### Async APIs by Default
 
-With React 18 support dropped, RNTL v14 fully embraces React 19's async rendering model. The following functions are now async by default:
+With React 18 support dropped, RNTL v14 uses React 19's async rendering model. The following functions are now async by default:
 
 - `render()` → returns `Promise<RenderResult>`
 - `rerender()` and `unmount()` → return `Promise<void>`
@@ -131,13 +131,13 @@ With React 18 support dropped, RNTL v14 fully embraces React 19's async renderin
 
 :::tip Already using async APIs?
 
-If you adopted the async APIs introduced in RNTL v13.3 (`renderAsync`, `fireEventAsync`, `renderHookAsync`), simply rename them to their non-async counterparts (`render`, `fireEvent`, `renderHook`). The async versions have been removed as the standard APIs are now async by default.
+If you adopted the async APIs introduced in RNTL v13.3 (`renderAsync`, `fireEventAsync`, `renderHookAsync`), rename them to their non-async counterparts (`render`, `fireEvent`, `renderHook`). The async versions have been removed since the standard APIs are now async by default.
 
 :::
 
 #### `render` is now async {#render-async-default}
 
-In v14, `render` is now async by default and returns a Promise. This change enables proper support for async React features like `Suspense` boundary or `use()` hook.
+In v14, `render` is async by default and returns a Promise. This allows proper support for `Suspense` boundaries and the `use()` hook.
 
 **Before (v13):**
 
@@ -161,11 +161,11 @@ it('should render component', async () => {
 });
 ```
 
-For more details, see the [`render` API documentation](/docs/api/render).
+See the [`render` API documentation](/docs/api/render).
 
 #### `renderHook` is now async
 
-In v14, `renderHook` is now async by default and returns a Promise.
+In v14, `renderHook` is async by default and returns a Promise.
 
 **Before (v13):**
 
@@ -193,11 +193,11 @@ it('should test hook', async () => {
 });
 ```
 
-For more details, see the [`renderHook` API documentation](/docs/api/misc/render-hook).
+See the [`renderHook` API documentation](/docs/api/misc/render-hook).
 
 #### `fireEvent` is now async
 
-In v14, `fireEvent` and its helpers (`press`, `changeText`, `scroll`) are now async by default and return a Promise.
+In v14, `fireEvent` and its helpers (`press`, `changeText`, `scroll`) are async by default and return a Promise.
 
 **Before (v13):**
 
@@ -225,13 +225,12 @@ it('should press button', async () => {
 
 #### `act` is now async
 
-In v14, `act` is now async by default and always returns a Promise. You should always `await` the result of `act()`.
+In v14, `act` is async by default and always returns a Promise. You should always `await` the result of `act()`.
 
 **What changed:**
 
-- `act` now always returns a `Promise<T>` instead of `T | Thenable<T>`
+- `act` now always returns `Promise<T>` instead of `T | Thenable<T>`
 - `act` should always be awaited
-- The API is more consistent and predictable
 
 :::note
 
@@ -267,14 +266,11 @@ it('should update state', async () => {
 
 **Note**: Even if your callback is synchronous, you should still use `await act(...)` as `act` now always returns a Promise.
 
-For more details, see the [`act` API documentation](/docs/api/misc/other#act).
+See the [`act` API documentation](/docs/api/misc/other#act).
 
-#### Benefits of Async APIs
+#### Why async APIs?
 
-- **Suspense support**: Properly handles `Suspense` boundaries and `use()` hook
-- **Better timing**: Ensures all pending React updates are executed before assertions
-- **Simpler mental model**: All rendering operations are consistently async
-- **Future-proof**: Aligns with React's direction toward async rendering
+The async APIs properly handle `Suspense` boundaries and the `use()` hook, and ensure all pending React updates complete before assertions run. This matches React 19's async rendering model.
 
 ### Removed APIs
 
@@ -343,7 +339,7 @@ const input = screen.getByPlaceholderText('Enter text');
 
 #### `concurrentRoot` option removed
 
-The `concurrentRoot` option has been removed from both `render` options and `configure` function. In v14, concurrent rendering is always enabled by default, as it is the standard rendering mode for React 19 and React Native's New Architecture.
+The `concurrentRoot` option has been removed from both `render` options and `configure` function. In v14, concurrent rendering is always enabled, since it's the standard rendering mode for React 19 and React Native's New Architecture.
 
 ```ts
 // Before (v13)
@@ -355,11 +351,11 @@ configure({ concurrentRoot: false });               // Disable globally
 await render(<MyComponent />); // Always uses concurrent rendering
 ```
 
-**Migration:** Simply remove any `concurrentRoot` options from your `render` calls and `configure` function. If you were explicitly setting `concurrentRoot: true`, no changes are needed beyond removing the option. If you were setting `concurrentRoot: false` to disable concurrent rendering, this is no longer supported in v14.
+**Migration:** Remove any `concurrentRoot` options from your `render` calls and `configure` function. If you were setting `concurrentRoot: true`, just remove the option. If you were setting `concurrentRoot: false` to disable concurrent rendering, this is no longer supported in v14.
 
 ### `container` API reintroduced
 
-In v14, the `container` API has been reintroduced and is now safe to use. Previously, `container` was renamed to `UNSAFE_root` in v12 due to behavioral differences from React Testing Library's `container`. In v14, `container` now returns a pseudo-element container whose children are the elements you asked to render, making it safe and consistent with React Testing Library's behavior.
+In v14, the `container` API has been reintroduced and is now safe to use. Previously, `container` was renamed to `UNSAFE_root` in v12 due to behavioral differences from React Testing Library's `container`. Now `container` returns a pseudo-element container whose children are the elements you rendered, consistent with React Testing Library's behavior.
 
 **What changed:**
 
@@ -394,11 +390,11 @@ it('should access container', async () => {
 });
 ```
 
-For more details, see the [`screen` API documentation](/docs/api/screen#container).
+See the [`screen` API documentation](/docs/api/screen#container).
 
 ### Text string validation enforced by default
 
-In v14, Test Renderer automatically enforces React Native's requirement that text strings must be rendered within a `<Text>` component. This means the `unstable_validateStringsRenderedWithinText` option has been removed from `RenderOptions`, as this validation is now always enabled.
+In v14, Test Renderer enforces React Native's requirement that text strings must be rendered within a `<Text>` component. The `unstable_validateStringsRenderedWithinText` option has been removed from `RenderOptions` since this validation is now always on.
 
 **What changed:**
 
@@ -425,7 +421,7 @@ If you were relying on the previous behavior where strings could be rendered out
 
 ## Codemods
 
-We provide two codemods to automate the migration. Both codemods are **safe to run multiple times** - they will only transform code that hasn't been migrated yet.
+Two codemods are available to automate the migration. Both are safe to run multiple times - they only transform code that hasn't been migrated yet.
 
 ### `rntl-v14-update-deps`
 
