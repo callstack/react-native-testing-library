@@ -12,13 +12,13 @@ let screen: {
 };
 ```
 
-The `screen` object offers a recommended way to access queries and utilities for the currently rendered UI.
+The `screen` object provides access to queries and utilities for the currently rendered UI.
 
 This object is assigned after the `render` call and cleared after each test by calling [`cleanup`](/docs/api/misc/other#cleanup). If no `render` call has been made in a given test, then it holds a special object and throws a helpful error on each property and method access.
 
 ### `...queries`
 
-The most important feature of `screen` is providing a set of helpful queries that allow you to find certain elements in the view hierarchy.
+The main feature of `screen` is its queries for finding elements in the view hierarchy.
 
 See [Queries](/docs/api/queries) for a complete list.
 
@@ -41,7 +41,7 @@ function rerender(element: React.Element<unknown>): Promise<void>;
 
 Re-render the in-memory tree with a new root element. This simulates a React update render at the root. If the new element has the same type (and `key`) as the previous element, the tree will be updated; otherwise, it will re-mount a new tree, in both cases triggering the appropriate lifecycle events.
 
-This method is async and uses async `act` function internally to ensure all pending React updates are executed during updating, making it compatible with async React features like `Suspense` boundary or `use()` hook.
+This method is async and uses async `act` internally to execute all pending React updates during updating. This works with async React features like `Suspense` boundaries and the `use()` hook.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -62,7 +62,7 @@ function unmount(): Promise<void>;
 
 Unmount the in-memory tree, triggering the appropriate lifecycle events.
 
-This method is async and uses async `act` function internally to ensure all pending React updates are executed during unmounting, making it compatible with async React features like `Suspense` boundary or `use()` hook.
+This method is async and uses async `act` internally to execute all pending React updates during unmounting. This works with async React features like `Suspense` boundaries and the `use()` hook.
 
 :::note
 
@@ -150,7 +150,7 @@ const container: HostElement;
 
 Returns a pseudo-element container whose children are the elements you asked to render. This is the root container element from [Test Renderer](https://github.com/mdjastrzebski/test-renderer).
 
-The `container` is safe to use and provides access to the entire rendered tree. It's useful when you need to query or manipulate the entire rendered output, similar to how `container` works in [React Testing Library](https://testing-library.com/docs/react-testing-library/other#container-1).
+The `container` provides access to the entire rendered tree. Use it to query or manipulate the rendered output, similar to how `container` works in [React Testing Library](https://testing-library.com/docs/react-testing-library/other#container-1).
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -171,7 +171,7 @@ const root: HostElement | null;
 
 Returns the rendered root [host element](/docs/advanced/testing-env#host-and-composite-components), or `null` if nothing was rendered. This is the first child of the `container`, which represents the actual root element you rendered.
 
-This API is primarily useful for component tests, as it allows you to access root host view without using `*ByTestId` queries or similar methods.
+This API is useful for component tests where you need to access the root host view without using `*ByTestId` queries or similar methods.
 
 :::note
 

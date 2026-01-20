@@ -4,9 +4,9 @@ This guide describes common issues found by users when integrating React Native 
 
 ## Example repository
 
-We maintain an [example repository](https://github.com/callstack/react-native-testing-library/tree/main/examples/basic) that showcases a modern React Native Testing Library setup with TypeScript, etc.
+We maintain an [example repository](https://github.com/callstack/react-native-testing-library/tree/main/examples/basic) with a React Native Testing Library setup using TypeScript.
 
-In case something does not work in your setup you can refer to this repository for recommended configuration.
+If something doesn't work in your setup, check this repository for configuration examples.
 
 ## Undefined component error
 
@@ -24,7 +24,7 @@ jest.mock('@react-navigation/native', () => {
 
 The above mock will mock `useNavigation` hook as intended, but at the same time all other exports from `@react-navigation/native` package are now `undefined`. If you want to use `NavigationContainer` component from the same package it will be `undefined` and result in the error above.
 
-In order to mock only a part of given package you should re-export all other exports using `jest.requireActual` helper:
+To mock only part of a package, re-export all other exports using `jest.requireActual`:
 
 ```ts
 jest.mock('@react-navigation/native', () => {
@@ -41,7 +41,7 @@ Alternatively, you can use `jest.spyOn` to mock package exports selectively.
 
 ### Mocking React Native
 
-In case of mocking `react-native` package you should not mock the whole package at once, as this approach has issues with `jest.requireActual` call. In this case it is recommended to mock particular library paths inside the package, e.g.:
+When mocking the `react-native` package, don't mock the whole package at once, as this has issues with `jest.requireActual`. Mock specific library paths inside the package instead, e.g.:
 
 ```ts title=jest-setup.ts
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');

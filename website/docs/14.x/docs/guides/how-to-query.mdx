@@ -1,6 +1,6 @@
 # How should I query?
 
-React Native Testing Library provides various query types, allowing great flexibility in finding views appropriate for your tests. At the same time, the number of queries might be confusing. This guide aims to help you pick the correct queries for your test scenarios.
+React Native Testing Library provides various query types for finding views in tests. The number of queries can be confusing. This guide helps you pick the right queries for your test scenarios.
 
 ## Query parts
 
@@ -58,13 +58,13 @@ The query predicate describes how you decide whether to match the given element.
 
 ### Idiomatic query predicates
 
-Choosing the proper query predicate helps better express the test's intent and make the tests resemble how users interact with your code (components, screens, etc.) as much as possible following our [Guiding Principles](https://testing-library.com/docs/guiding-principles). Additionally, most predicates promote the usage of proper accessibility props, which add a semantic layer on top of an element tree composed primarily of [`View`](https://reactnative.dev/docs/view) elements.
+Choosing the right query predicate helps express test intent and makes tests resemble how users interact with your code (components, screens, etc.), following our [Guiding Principles](https://testing-library.com/docs/guiding-principles). Most predicates also promote proper accessibility props, which add a semantic layer on top of an element tree composed primarily of [`View`](https://reactnative.dev/docs/view) elements.
 
-It is recommended to use query predicates in the following order of priority:
+Use query predicates in the following order of priority:
 
 ### 1. By Role query {#by-role-query}
 
-The first and most versatile predicate is [`*ByRole`](/docs/api/queries#by-role), which starts with the semantic role of the element and can be further narrowed down with additional options. React Native has two role systems, the web/ARIA-compatible one based on [`role`](https://reactnative.dev/docs/accessibility#role) prop and the traditional one based on [`accessibilityRole`](https://reactnative.dev/docs/accessibility#accessibilityrole) prop, you can use either of these.
+The [`*ByRole`](/docs/api/queries#by-role) predicate starts with the semantic role of the element and can be narrowed down with additional options. React Native has two role systems: the web/ARIA-compatible one based on [`role`](https://reactnative.dev/docs/accessibility#role) prop and the traditional one based on [`accessibilityRole`](https://reactnative.dev/docs/accessibility#accessibilityrole) prop. You can use either.
 
 In most cases, you need to set accessibility roles explicitly (or your component library can set some of them for you). These roles allow assistive technologies (like screen readers) and testing code to understand your view hierarchy better.
 
@@ -122,4 +122,4 @@ These queries include:
 
 As a final predicate, you can use the `testID` prop to find relevant views. Using the [`*ByTestId`](/docs/api/queries#by-test-id) predicate offers the most flexibility, but at the same time, it does not represent the user experience, as users are not aware of test IDs.
 
-Note that using test IDs is a widespread technique in end-to-end testing due to various issues with querying views through other means **in its specific context**. Nevertheless, we still encourage you to use recommended RNTL queries as it will make your integration and component test more reliable and resilient.
+Note that using test IDs is common in end-to-end testing due to various issues with querying views through other means **in that specific context**. For integration and component tests, use the recommended RNTL queries to make tests more reliable and resilient.

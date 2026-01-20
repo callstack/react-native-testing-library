@@ -14,7 +14,7 @@ There is no need to set up the built-in matchers; they are automatically availab
 expect(element).toBeOnTheScreen();
 ```
 
-This allows you to assert whether an element is attached to the element tree or not. If you hold a reference to an element and it gets unmounted during the test it will no longer pass this assertion.
+Asserts whether an element is attached to the element tree. If you hold a reference to an element and it gets unmounted during the test, it will no longer pass this assertion.
 
 ## Element Content
 
@@ -30,7 +30,7 @@ expect(element).toHaveTextContent(
 )
 ```
 
-This allows you to assert whether the given element has the given text content or not. It accepts either `string` or `RegExp` matchers, as well as [text match options](/docs/api/queries#text-match-options) of `exact` and `normalizer`.
+Asserts whether the given element has the given text content. It accepts either `string` or `RegExp` matchers, as well as [text match options](/docs/api/queries#text-match-options) of `exact` and `normalizer`.
 
 ### `toContainElement()`
 
@@ -40,7 +40,7 @@ expect(container).toContainElement(
 )
 ```
 
-This allows you to assert whether the given container element does contain another host element.
+Asserts whether the given container element contains another host element.
 
 ### `toBeEmptyElement()`
 
@@ -48,7 +48,7 @@ This allows you to assert whether the given container element does contain anoth
 expect(element).toBeEmptyElement();
 ```
 
-This allows you to assert whether the given element does not have any host child elements or text content.
+Asserts whether the given element has no host child elements or text content.
 
 ## Checking element state
 
@@ -64,7 +64,7 @@ expect(element).toHaveDisplayValue(
 )
 ```
 
-This allows you to assert whether the given `TextInput` element has a specified display value. It accepts either `string` or `RegExp` matchers, as well as [text match options](/docs/api/queries#text-match-options) of `exact` and `normalizer`.
+Asserts whether the given `TextInput` element has a specified display value. It accepts either `string` or `RegExp` matchers, as well as [text match options](/docs/api/queries#text-match-options) of `exact` and `normalizer`.
 
 ### `toHaveAccessibilityValue()`
 
@@ -79,7 +79,7 @@ expect(element).toHaveAccessibilityValue(
 )
 ```
 
-This allows you to assert whether the given element has a specified accessible value.
+Asserts whether the given element has a specified accessible value.
 
 This matcher will assert accessibility value based on `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` and `accessibilityValue` props. Only defined value entries will be used in the assertion, the element might have additional accessibility value entries and still be matched.
 
@@ -92,7 +92,7 @@ expect(element).toBeEnabled();
 expect(element).toBeDisabled();
 ```
 
-These allow you to assert whether the given element is enabled or disabled from the user's perspective. It relies on the accessibility disabled state as set by `aria-disabled` or `accessibilityState.disabled` props. It will consider a given element disabled when it or any of its ancestors is disabled.
+Asserts whether the given element is enabled or disabled from the user's perspective. It relies on the accessibility disabled state as set by `aria-disabled` or `accessibilityState.disabled` props. It considers an element disabled when it or any of its ancestors is disabled.
 
 :::note
 These matchers are the negation of each other, and both are provided to avoid double negations in your assertions.
@@ -104,7 +104,7 @@ These matchers are the negation of each other, and both are provided to avoid do
 expect(element).toBeSelected();
 ```
 
-This allows you to assert whether the given element is selected from the user's perspective. It relies on the accessibility selected state as set by `aria-selected` or `accessibilityState.selected` props.
+Asserts whether the given element is selected from the user's perspective. It relies on the accessibility selected state as set by `aria-selected` or `accessibilityState.selected` props.
 
 ### `toBeChecked()` / `toBePartiallyChecked()` {#tobechecked}
 
@@ -113,7 +113,7 @@ expect(element).toBeChecked();
 expect(element).toBePartiallyChecked();
 ```
 
-These allow you to assert whether the given element is checked or partially checked from the user's perspective. It relies on the accessibility checked state as set by `aria-checked` or `accessibilityState.checked` props.
+Asserts whether the given element is checked or partially checked from the user's perspective. It relies on the accessibility checked state as set by `aria-checked` or `accessibilityState.checked` props.
 
 :::note
 
@@ -129,7 +129,7 @@ expect(element).toBeExpanded();
 expect(element).toBeCollapsed();
 ```
 
-These allow you to assert whether the given element is expanded or collapsed from the user's perspective. It relies on the accessibility expanded state as set by `aria-expanded` or `accessibilityState.expanded` props.
+Asserts whether the given element is expanded or collapsed from the user's perspective. It relies on the accessibility expanded state as set by `aria-expanded` or `accessibilityState.expanded` props.
 
 :::note
 These matchers are the negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both won't pass for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
@@ -141,7 +141,7 @@ These matchers are the negation of each other for expandable elements (elements 
 expect(element).toBeBusy();
 ```
 
-This allows you to assert whether the given element is busy from the user's perspective. It relies on the accessibility busy state as set by `aria-busy` or `accessibilityState.busy` props.
+Asserts whether the given element is busy from the user's perspective. It relies on the accessibility busy state as set by `aria-busy` or `accessibilityState.busy` props.
 
 ## Checking element style
 
@@ -151,7 +151,7 @@ This allows you to assert whether the given element is busy from the user's pers
 expect(element).toBeVisible();
 ```
 
-This allows you to assert whether the given element is visible from the user's perspective.
+Asserts whether the given element is visible from the user's perspective.
 
 The element is considered invisible when itself or any of its ancestors has `display: none` or `opacity: 0` styles, as well as when it's hidden from accessibility.
 
@@ -163,7 +163,7 @@ expect(element).toHaveStyle(
 )
 ```
 
-This allows you to assert whether the given element has given styles.
+Asserts whether the given element has given styles.
 
 ## Other matchers
 
@@ -179,7 +179,7 @@ expect(element).toHaveAccessibleName(
 )
 ```
 
-This allows you to assert whether the given element has a specified accessible name. It accepts either `string` or `RegExp` matchers, as well as [text match options](/docs/api/queries#text-match-options) of `exact` and `normalizer`.
+Asserts whether the given element has a specified accessible name. It accepts either `string` or `RegExp` matchers, as well as [text match options](/docs/api/queries#text-match-options) of `exact` and `normalizer`.
 
 The accessible name will be computed based on `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props. For `Image` elements, the `alt` prop will also be considered. In the absence of these props, the element text content will be used.
 
@@ -194,7 +194,7 @@ expect(element).toHaveProp(
 )
 ```
 
-This allows you to assert whether the given element has a given prop. When the `value` parameter is `undefined` it will only check for existence of the prop, and when `value` is defined it will check if the actual value matches passed value.
+Asserts whether the given element has a given prop. When the `value` parameter is `undefined`, it only checks for prop existence. When `value` is defined, it checks if the actual value matches the passed value.
 
 :::note
 This matcher should be treated as an escape hatch to be used when all other matchers are not suitable.

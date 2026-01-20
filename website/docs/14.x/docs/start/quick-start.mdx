@@ -32,7 +32,7 @@ This library has a peer dependency on [Test Renderer](https://github.com/mdjastr
   }}
 />
 
-Test Renderer provides better compatibility with React 19 and improved type safety compared to the deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html).
+Test Renderer has better compatibility with React 19 and improved type safety compared to the deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html).
 
 ### Jest matchers
 
@@ -40,7 +40,7 @@ RNTL automatically extends Jest with React Native-specific matchers. The only th
 
 ### ESLint plugin
 
-We recommend setting up [`eslint-plugin-testing-library`](https://github.com/testing-library/eslint-plugin-testing-library) package to help you avoid common Testing Library mistakes and bad practices.
+Set up [`eslint-plugin-testing-library`](https://github.com/testing-library/eslint-plugin-testing-library) to avoid common Testing Library mistakes and bad practices.
 
 Install the plugin (assuming you already have `eslint` installed & configured):
 
@@ -53,7 +53,7 @@ Install the plugin (assuming you already have `eslint` installed & configured):
   }}
 />
 
-Then, add relevant entry to your ESLint config (e.g., `.eslintrc.js`). We recommend extending the `react` plugin:
+Then, add this to your ESLint config (e.g., `.eslintrc.js`). Extend the `react` plugin:
 
 ```js title=.eslintrc.js
 module.exports = {

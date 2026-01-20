@@ -14,11 +14,11 @@
 
 ## The problem
 
-You want to write maintainable tests for your React Native components. As a part of this goal, you want your tests to avoid including implementation details of your components and rather focus on making your tests give you the confidence for which they are intended. As part of this, you want your tests to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don't break your tests and slow you and your team down.
+You want to write maintainable tests for your React Native components. Your tests should avoid implementation details and focus on giving you confidence. They should remain maintainable so refactors (changes to implementation but not functionality) don't break your tests and slow you and your team down.
 
 ## This solution
 
-The React Native Testing Library (RNTL) is a comprehensive solution for testing React Native components. It provides React Native runtime simulation on top of `react-test-renderer`, in a way that encourages better testing practices. Its primary guiding principle is:
+The React Native Testing Library (RNTL) tests React Native components. It simulates the React Native runtime on top of `react-test-renderer` and encourages better testing practices. Its primary guiding principle is:
 
 > The more your tests resemble the way your software is used, the more confidence they can give you.
 
@@ -48,8 +48,8 @@ You can use the built-in Jest matchers automatically by having any import from `
 import { render, screen, userEvent } from '@testing-library/react-native';
 import { QuestionsBoard } from '../QuestionsBoard';
 
-// It is recommended to use userEvent with fake timers
-// Some events involve duration so your tests may take a long time to run.
+// Use userEvent with fake timers
+// Some events involve duration, so tests may take a long time to run.
 jest.useFakeTimers();
 
 test('form submits two answers', async () => {
@@ -87,8 +87,8 @@ React Native Testing Library consists of following APIs:
   - Lifecycle methods: [`rerender`](https://callstack.github.io/react-native-testing-library/docs/api/screen#rerender), [`unmount`](https://callstack.github.io/react-native-testing-library/docs/api/screen#unmount)
   - Helpers: [`debug`](https://callstack.github.io/react-native-testing-library/docs/api/screen#debug), [`toJSON`](https://callstack.github.io/react-native-testing-library/docs/api/screen#tojson), [`root`](https://callstack.github.io/react-native-testing-library/docs/api/screen#root)
 - [Jest matchers](https://callstack.github.io/react-native-testing-library/docs/api/jest-matchers) - validate assumptions about your UI
-- [User Event](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event) - simulate common user interactions like [`press`](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event#press) or [`type`](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event#type) in a realistic way
-- [Fire Event](https://callstack.github.io/react-native-testing-library/docs/api/events/fire-event) - simulate any component event in a simplified way
+- [User Event](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event) - simulate common user interactions like [`press`](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event#press) or [`type`](https://callstack.github.io/react-native-testing-library/docs/api/events/user-event#type)
+- [Fire Event](https://callstack.github.io/react-native-testing-library/docs/api/events/fire-event) - simulate any component event
 - [`renderHook` function](https://callstack.github.io/react-native-testing-library/docs/api/misc/render-hook) - render hooks for testing purposes
 - Miscellaneous APIs:
   - [Async utils](https://callstack.github.io/react-native-testing-library/docs/api/misc/async): `findBy*` queries, `waitFor`, `waitForElementToBeRemoved`

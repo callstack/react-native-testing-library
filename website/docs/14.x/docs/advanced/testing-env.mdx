@@ -6,7 +6,7 @@ This document is intended for a more advanced audience who want to understand th
 
 :::
 
-React Native Testing Library allows you to write integration and component tests for your React Native app or library. While the JSX code used in tests closely resembles your React Native app, things are not as simple as they might appear. This document will describe the key elements of our testing environment and highlight things to be aware of when writing more advanced tests or diagnosing issues.
+React Native Testing Library lets you write integration and component tests for your React Native app or library. While the JSX code in tests closely resembles your React Native app, the underlying environment differs. This document describes the key elements of our testing environment and highlights things to be aware of when writing advanced tests or diagnosing issues.
 
 ## React renderers
 
@@ -20,21 +20,19 @@ When you run your tests in the React Native Testing Library, somewhat contrary t
 
 ## Test Renderer
 
-Instead, RNTL uses [Test Renderer](https://github.com/mdjastrzebski/test-renderer), a modern, actively maintained renderer that allows rendering to pure JavaScript objects without access to mobile OS and can run in a Node.js environment using Jest (or any other JavaScript test runner). Test Renderer replaces the deprecated `react-test-renderer` package and provides better compatibility with React 19 and improved type safety.
+Instead, RNTL uses [Test Renderer](https://github.com/mdjastrzebski/test-renderer), a modern, actively maintained renderer that renders to pure JavaScript objects without access to mobile OS and runs in a Node.js environment using Jest (or any other JavaScript test runner). Test Renderer replaces the deprecated `react-test-renderer` package and has better compatibility with React 19 and improved type safety.
 
-Using Test Renderer has pros and cons.
+Using Test Renderer has trade-offs:
 
 Benefits:
+- Tests run on most CIs (Linux, etc) without a mobile device or emulator
+- Faster test execution
+- Light runtime environment
 
-- tests can run on most CIs (Linux, etc) and do not require a mobile device or emulator
-- faster test execution
-- light runtime environment
-
-Disadvantages:
-
-- Tests do not execute native code
-- Tests are unaware of the view state that would be managed by native components, e.g., focus, unmanaged text boxes, etc.
-- Assertions do not operate on native view hierarchy
+Limitations:
+- Tests don't execute native code
+- Tests are unaware of view state managed by native components, e.g., focus, unmanaged text boxes, etc.
+- Assertions don't operate on native view hierarchy
 - Runtime behaviors are simulated, sometimes imperfectly
 
 It's worth noting that the React Testing Library (web one) works a bit differently. While RTL also runs in Jest, it has access to a simulated browser DOM environment from the `jsdom` package, which allows it to use a regular React DOM renderer. Unfortunately, there is no similar React Native runtime environment package. This is probably because while the browser environment is well-defined and highly standardized, the React Native environment constantly evolves in sync with the evolution of underlying OS-es. Maintaining such an environment would require duplicating countless React Native behaviors and keeping them in sync as React Native develops.
@@ -90,13 +88,13 @@ Not all React Native components are organized this way, e.g., when you use `Pres
 
 ### Host-only element tree
 
-In RNTL v14, [Test Renderer](https://github.com/mdjastrzebski/test-renderer) only exposes host elements in the element tree. Composite components are not visible in the tree - you only see their host element output. This is an intentional design choice that aligns with Testing Library's philosophy: tests should focus on what users can see and interact with (host elements), not on implementation details (composite components).
+In RNTL v14, [Test Renderer](https://github.com/mdjastrzebski/test-renderer) only exposes host elements in the element tree. Composite components aren't visible in the tree—you only see their host element output. This aligns with Testing Library's philosophy: tests should focus on what users can see and interact with (host elements), not implementation details (composite components).
 
 For a `HostElement`, the `type` prop is always a string value representing the host component name, e.g., `"View"`, `"Text"`, `"TextInput"`.
 
 ## Tree nodes
 
-RNTL v14 queries and the element tree only expose host elements. This aligns with Testing Library's philosophy: tests should assert on what users can see and interact with. Host elements represent the actual UI controls that users interact with, while composite components exist purely in the JavaScript domain.
+RNTL v14 queries and the element tree only expose host elements. Tests assert on what users can see and interact with. Host elements represent the actual UI controls users interact with, while composite components exist purely in the JavaScript domain.
 
 ### Understanding props
 

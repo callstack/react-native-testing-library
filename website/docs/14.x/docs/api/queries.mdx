@@ -18,7 +18,7 @@ test('accessing queries using "screen" object', async () => {
 })
 ```
 
-The modern and recommended way of accessing queries is to use the `screen` object exported by the `@testing-library/react-native` package. This object will contain methods of all available queries bound to the most recently rendered UI.
+Use the `screen` object exported by `@testing-library/react-native` to access queries. This object contains all available query methods bound to the most recently rendered UI.
 
 ### Using `render` result
 
@@ -31,7 +31,7 @@ test('accessing queries using "render" result', async () => {
 })
 ```
 
-The classic way is to capture query functions, as they are returned from the `render` function call. This provides access to the same functions as in the case of the `screen` object.
+You can also capture query functions from the `render` function return value. This provides the same query functions as the `screen` object.
 
 ## Query parts
 
@@ -82,7 +82,7 @@ getAllByX(...): HostElement[]
 queryByX(...): HostElement | null
 ```
 
-`queryBy*` queries return the first matching node for a query, and return `null` if no elements match. This is useful for asserting an element that is not present. This throws if more than one match is found (use `queryAllBy` instead).
+`queryBy*` queries return the first matching node for a query, or `null` if no elements match. Use these to assert that an element is not present. They throw if more than one match is found (use `queryAllBy` instead).
 
 ### `queryAllBy*` queries {#query-all-by}
 
@@ -375,7 +375,7 @@ const element = screen.getByTestId('unique-id');
 ```
 
 :::info
-In the spirit of [the guiding principles](https://testing-library.com/docs/guiding-principles), it is recommended to use this only after the other queries don't work for your use case. Using `testID` attributes do not resemble how your software is used and should be avoided if possible. However, they are particularly useful for end-to-end testing on real devices, e.g. using Detox and it's an encouraged technique to use there. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
+Following [the guiding principles](https://testing-library.com/docs/guiding-principles), use this only when other queries don't work for your use case. `testID` attributes don't resemble how your software is used and should be avoided when possible. They're useful for end-to-end testing on real devices, e.g. with Detox. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
 :::
 
 ### Common options
