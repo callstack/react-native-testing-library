@@ -2,13 +2,12 @@
 
 ## Introduction
 
-Mocking network requests is an essential part of testing React Native applications. By mocking
-network
-requests, you can control the data that is returned from the server and test how your application
-behaves in different scenarios, such as when the request is successful or when it fails.
+Mocking network requests is essential for testing React Native applications. By mocking
+network requests, you can control the data returned from the server and test how your application
+behaves in different scenarios, such as when the request succeeds or fails.
 
-In this guide, we will show you how to mock network requests and guard your test suits from unwanted
-and unmocked/unhandled network requests
+This guide shows how to mock network requests and guard your test suites against unwanted
+and unmocked/unhandled network requests.
 
 :::info
 To simulate a real-world scenario, we will use the [Random User Generator API](https://randomuser.me/) that provides random user data.
@@ -363,14 +362,14 @@ Which will result in a warning in the console if you forget to mock an API reque
 
 ## Conclusion
 
-Testing a component that makes network requests in combination with MSW takes some initial preparation to configure and describe the overridden networks.
-We can achieve that by using MSW's request handlers and intercepting APIs.
+Testing components that make network requests with MSW requires initial setup to configure and describe the overridden networks.
+Use MSW's request handlers and intercepting APIs to achieve this.
 
-Once up and running we gain full grip over the network requests, their responses, statuses.
-Doing so is crucial to be able to test how our application behaves in different
-scenarios, such as when the request is successful or when it fails.
+Once configured, you have full control over network requests, their responses, and statuses.
+This lets you test how your application behaves in different
+scenarios, such as when requests succeed or fail.
 
-When global configuration is in place, MSW's will also warn us when an unhandled network requests has occurred throughout a test suite.
+With global configuration in place, MSW will also warn you when an unhandled network request occurs during a test suite.
 
 ## Further Reading and Alternatives
 

@@ -2,7 +2,7 @@
 
 ## The problem
 
-You want to write maintainable tests for your React Native components. As a part of this goal, you want your tests to avoid including implementation details of your components and focus on making your tests give you the confidence they are intended. As part of this, you want your tests to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don't break your tests and slow you and your team down.
+You want to write maintainable tests for your React Native components. Your tests should avoid implementation details and focus on giving you confidence that your components work correctly. Tests should also be maintainable so refactors (changes to implementation but not functionality) don't break your tests and slow you and your team down.
 
 ## This solution
 

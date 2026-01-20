@@ -13,20 +13,20 @@ function waitFor<T>(
 ): Promise<T>;
 ```
 
-Waits for a period of time for the `expectation` callback to pass. `waitFor` may run the callback a number of times until timeout is reached, as specified by the `timeout` and `interval` options. The callback must throw an error when the expectation is not met. Returning any value, including a falsy one, will be treated as meeting the expectation, and the callback result will be returned to the caller of `waitFor` function.
+Waits for the `expectation` callback to pass. `waitFor` may run the callback multiple times until the timeout is reached, as specified by the `timeout` and `interval` options. The callback must throw an error when the expectation isn't met. Returning any value, including a falsy one, is treated as meeting the expectation, and the callback result is returned to the caller of `waitFor`.
 
 ```tsx
 await waitFor(() => expect(mockFunction).toHaveBeenCalledWith());
 ```
 
-`waitFor` function will be executing `expectation` callback every `interval` (default: every 50 ms) until `timeout` (default: 1000 ms) is reached. The repeated execution of callback is stopped as soon as it does not throw an error, in such case the value returned by the callback is returned to `waitFor` caller. Otherwise, when it reaches the timeout, the final error thrown by `expectation` will be re-thrown by `waitFor` to the calling code.
+`waitFor` executes the `expectation` callback every `interval` (default: every 50 ms) until `timeout` (default: 1000 ms) is reached. The repeated execution stops as soon as it doesn't throw an error, and the value returned by the callback is returned to the `waitFor` caller. Otherwise, when it reaches the timeout, the final error thrown by `expectation` is re-thrown by `waitFor` to the calling code.
 
 ```tsx
 // ❌ `waitFor` will return immediately because callback does not throw
 await waitFor(() => false);
 ```
 
-`waitFor` is an async function so you need to `await` the result to pause test execution.
+`waitFor` is an async function, so you need to `await` the result to pause test execution.
 
 ```jsx
 // ❌ missing `await`: `waitFor` will just return Promise that will be rejected when the timeout is reached
@@ -37,7 +37,7 @@ waitFor(() => expect(1).toBe(2));
 You can enforce awaiting `waitFor` by using the [await-async-utils](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/await-async-utils.md) rule from [eslint-plugin-testing-library](https://github.com/testing-library/eslint-plugin-testing-library).
 :::
 
-Since `waitFor` is likely to run `expectation` callback multiple times, it is highly recommended for it [not to perform any side effects](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#performing-side-effects-in-waitfor) in `waitFor`.
+Since `waitFor` is likely to run the `expectation` callback multiple times, it's highly recommended [not to perform any side effects](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#performing-side-effects-in-waitfor) in `waitFor`.
 
 ```jsx
 await waitFor(() => {
@@ -51,9 +51,9 @@ await waitFor(() => {
 Avoiding side effects in `expectation` callback can be partially enforced with the [`no-wait-for-side-effects` rule](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-wait-for-side-effects.md).
 :::
 
-It is also recommended to have a [single assertion per each `waitFor`](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#having-multiple-assertions-in-a-single-waitfor-callback) for more consistency and faster failing tests. If you want to make several assertions, then they should be in seperate `waitFor` calls. In many cases you won't actually need to wrap the second assertion in `waitFor` since the first one will do the waiting required for asynchronous change to happen.
+It's also recommended to have a [single assertion per each `waitFor`](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#having-multiple-assertions-in-a-single-waitfor-callback) for more consistency and faster failing tests. If you want to make several assertions, put them in separate `waitFor` calls. In many cases you won't need to wrap the second assertion in `waitFor` since the first one will do the waiting required for the asynchronous change to happen.
 
-`waitFor` checks whether Jest fake timers are enabled and adapts its behavior in such case. The following snippet is a simplified version of how it behaves when fake timers are enabled:
+`waitFor` checks whether Jest fake timers are enabled and adapts its behavior accordingly. The following snippet is a simplified version of how it behaves when fake timers are enabled:
 
 ```tsx
 let fakeTimeRemaining = timeout;
@@ -74,7 +74,7 @@ while (fakeTimeRemaining > 0) {
 throw lastError;
 ```
 
-In the following example we test that a function is called after 10 seconds using fake timers. Since we're using fake timers, the test won't depend on real time passing and thus be much faster and more reliable. Also we don't have to advance fake timers through Jest fake timers API because `waitFor` already does this for us.
+In the following example we test that a function is called after 10 seconds using fake timers. Since we're using fake timers, the test won't depend on real time passing and will be much faster and more reliable. We don't have to advance fake timers through Jest fake timers API because `waitFor` already does this for us.
 
 ```tsx
 // in component
@@ -103,7 +103,7 @@ function waitForElementToBeRemoved<T>(
 ): Promise<T>;
 ```
 
-Waits for non-deterministic periods of time until queried element is removed or times out. `waitForElementToBeRemoved` periodically calls `expectation` every `interval` milliseconds to determine whether the element has been removed or not.
+Waits until the queried element is removed or times out. `waitForElementToBeRemoved` periodically calls `expectation` every `interval` milliseconds to determine whether the element has been removed or not.
 
 ```jsx
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react-native';
@@ -115,9 +115,9 @@ test('waiting for an Banana to be removed', async () => {
 });
 ```
 
-This method expects that the element is initially present in the render tree and then is removed from it. If the element is not present when you call this method it throws an error.
+This method expects the element to be initially present in the render tree and then removed from it. If the element isn't present when you call this method, it throws an error.
 
-You can use any of `getBy`, `getAllBy`, `queryBy` and `queryAllBy` queries for `expectation` parameter.
+You can use any of `getBy`, `getAllBy`, `queryBy`, and `queryAllBy` queries for the `expectation` parameter.
 
 :::note
 If you receive warnings related to `act()` function consult our [Understanding Act](/docs/advanced/understanding-act.md) function document.

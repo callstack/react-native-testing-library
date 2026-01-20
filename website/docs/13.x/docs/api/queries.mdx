@@ -4,7 +4,7 @@ Queries are one of the main building blocks for the React Native Testing Library
 
 ## Accessing queries
 
-All queries described below are accessible in two main ways: through the `screen` object or by capturing the `render` function call result.
+All queries described below are accessible in two main ways: through the `screen` object or by capturing the result of the `render` function call.
 
 ### Using `screen` object
 
@@ -18,7 +18,7 @@ test('accessing queries using "screen" object', () => {
 })
 ```
 
-The modern and recommended way of accessing queries is to use the `screen` object exported by the `@testing-library/react-native` package. This object will contain methods of all available queries bound to the most recently rendered UI.
+The modern and recommended way to access queries is to use the `screen` object exported by the `@testing-library/react-native` package. This object contains methods for all available queries bound to the most recently rendered UI.
 
 ### Using `render` result
 
@@ -31,7 +31,7 @@ test('accessing queries using "render" result', () => {
 })
 ```
 
-The classic way is to capture query functions, as they are returned from the `render` function call. This provides access to the same functions as in the case of the `screen` object.
+The classic way is to capture query functions returned from the `render` function call. This provides access to the same functions as the `screen` object.
 
 ## Query parts
 
@@ -58,7 +58,7 @@ The query variants describe the expected number (and timing) of matching element
 | [`findBy*`](/docs/api/queries#find-by)          | Exactly one matching element  | `Promise<ReactTestInstance>`               | Yes       |
 | [`findAllBy*`](/docs/api/queries#find-all-by)   | At least one matching element | `Promise<Array<ReactTestInstance>>`        | Yes       |
 
-Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
+Queries work as implicit assertions on the number of matching elements and throw an error when the assertion fails.
 
 ### `getBy*` queries {#get-by}
 
@@ -66,7 +66,7 @@ Queries work as implicit assertions on the number of matching elements and will 
 getByX(...): ReactTestInstance
 ```
 
-`getBy*` queries return the single matching element for a query, and throw an error if no elements match or if more than one match is found. If you need to find more than one element, then use `getAllBy`.
+`getBy*` queries return the single matching element for a query and throw an error if no elements match or if more than one match is found. If you need to find more than one element, use `getAllBy`.
 
 ### `getAllBy*` queries {#get-all-by}
 
@@ -82,7 +82,7 @@ getAllByX(...): ReactTestInstance[]
 queryByX(...): ReactTestInstance | null
 ```
 
-`queryBy*` queries return the first matching node for a query, and return `null` if no elements match. This is useful for asserting an element that is not present. This throws if more than one match is found (use `queryAllBy` instead).
+`queryBy*` queries return the first matching node for a query and return `null` if no elements match. This is useful for asserting that an element is not present. This throws if more than one match is found (use `queryAllBy` instead).
 
 ### `queryAllBy*` queries {#query-all-by}
 
@@ -104,7 +104,7 @@ findByX(
 ): Promise<ReactTestInstance>
 ```
 
-`findBy*` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element use `findAllBy*` queries.
+`findBy*` queries return a promise that resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element, use `findAllBy*` queries.
 
 ### `findAllBy*` queries {#find-all-by}
 
@@ -118,14 +118,14 @@ findAllByX(
 ): Promise<ReactTestInstance[]>
 ```
 
-`findAllBy*` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
+`findAllBy*` queries return a promise that resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
 
 :::info
 `findBy*` and `findAllBy*` queries accept optional `waitForOptions` object arguments, which can contain `timeout`, `interval` and `onTimeout` properties which have the same meaning as respective options for [`waitFor`](/docs/api/misc/async#waitfor) function.
 :::
 
 :::info
-In cases when your `findBy*` and `findAllBy*` queries throw when unable to find matching elements, it is helpful to pass `onTimeout: () => { screen.debug(); }` callback using the `waitForOptions` parameter.
+When your `findBy*` and `findAllBy*` queries throw because they can't find matching elements, it's helpful to pass `onTimeout: () => { screen.debug(); }` callback using the `waitForOptions` parameter.
 :::
 
 ## Query predicates
@@ -192,29 +192,29 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 
 #### Options {#by-role-options}
 
-- `name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (= accessability label or text content).
+- `name`: Finds an element with the given `role`/`accessibilityRole` and an accessible name (= accessibility label or text content).
 
-- `disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessbilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
+- `disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessibilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
   - This option can alternatively be expressed using the [`toBeEnabled()` / `toBeDisabled()`](/docs/api/jest-matchers#tobeenabled) Jest matchers.
 
-- `selected`: You can filter elements by their selected state (coming either from `aria-selected` prop or `accessbilityState.selected` prop). The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
+- `selected`: You can filter elements by their selected state (coming either from `aria-selected` prop or `accessibilityState.selected` prop). The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
   - This option can alternatively be expressed using the [`toBeSelected()`](/docs/api/jest-matchers#tobeselected) Jest matcher.
 
-* `checked`: You can filter elements by their checked state (coming either from `aria-checked` prop or `accessbilityState.checked` prop). The possible values are `true`, `false`, or `"mixed"`.
+* `checked`: You can filter elements by their checked state (coming either from `aria-checked` prop or `accessibilityState.checked` prop). The possible values are `true`, `false`, or `"mixed"`.
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
   - This option can alternatively be expressed using the [`toBeChecked()` / `toBePartiallyChecked()`](/docs/api/jest-matchers#tobechecked) Jest matchers.
 
-* `busy`: You can filter elements by their busy state (coming either from `aria-busy` prop or `accessbilityState.busy` prop). The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
+* `busy`: You can filter elements by their busy state (coming either from `aria-busy` prop or `accessibilityState.busy` prop). The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
   - This option can alternatively be expressed using the [`toBeBusy()`](/docs/api/jest-matchers#tobebusy) Jest matcher.
 
-* `expanded`: You can filter elements by their expanded state (coming either from `aria-expanded` prop or `accessbilityState.expanded` prop). The possible values are `true` or `false`.
+* `expanded`: You can filter elements by their expanded state (coming either from `aria-expanded` prop or `accessibilityState.expanded` prop). The possible values are `true` or `false`.
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
   - This option can alternatively be expressed using the [`toBeExpanded()` / `toBeCollapsed()`](/docs/api/jest-matchers#tobeexpanded) Jest matchers.
 
-* `value`: Filter elements by their accessibility value, based on either `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` or `accessibilityValue` props. Accessiblity value conceptually consists of numeric `min`, `max` and `now` entries, as well as string `text` entry.
+* `value`: Filter elements by their accessibility value, based on either `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext`, or `accessibilityValue` props. Accessibility value conceptually consists of numeric `min`, `max`, and `now` entries, as well as string `text` entry.
   - See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about the accessibility value concept.
   - This option can alternatively be expressed using the [`toHaveAccessibilityValue()`](/docs/api/jest-matchers#tohaveaccessibilityvalue) Jest matcher.
 
@@ -260,7 +260,7 @@ getByPlaceholderText(
 ): ReactTestInstance;
 ```
 
-Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
+Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder—may be a string or regular expression.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -284,7 +284,7 @@ getByDisplayValue(
 ): ReactTestInstance;
 ```
 
-Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
+Returns a `ReactTestInstance` for a `TextInput` with a matching display value—may be a string or regular expression.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -308,9 +308,9 @@ getByText(
 ): ReactTestInstance;
 ```
 
-Returns a `ReactTestInstance` with matching text – may be a string or regular expression.
+Returns a `ReactTestInstance` with matching text—may be a string or regular expression.
 
-This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
+This method joins `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This allows querying for strings that will be visually rendered together but may be semantically separate React components.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -364,7 +364,7 @@ getByTestId(
 ): ReactTestInstance;
 ```
 
-Returns a `ReactTestInstance` with matching `testID` prop. `testID` – may be a string or a regular expression.
+Returns a `ReactTestInstance` with a matching `testID` prop. `testID` may be a string or a regular expression.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -374,16 +374,16 @@ const element = screen.getByTestId('unique-id');
 ```
 
 :::info
-In the spirit of [the guiding principles](https://testing-library.com/docs/guiding-principles), it is recommended to use this only after the other queries don't work for your use case. Using `testID` attributes do not resemble how your software is used and should be avoided if possible. However, they are particularly useful for end-to-end testing on real devices, e.g. using Detox and it's an encouraged technique to use there. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
+In the spirit of [the guiding principles](https://testing-library.com/docs/guiding-principles), use this only after the other queries don't work for your use case. Using `testID` attributes doesn't resemble how your software is used and should be avoided if possible. However, they're particularly useful for end-to-end testing on real devices, e.g. using Detox, and it's an encouraged technique to use there. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
 :::
 
 ### Common options
 
-Usually query first argument can be a **string** or a **regex**. All queries take at least the [`hidden`](#hidden-option) option as an optionnal second argument and some queries accept more options which change string matching behaviour. See [TextMatch](#textmatch) for more info.
+Usually the query's first argument can be a **string** or a **regex**. All queries take at least the [`hidden`](#hidden-option) option as an optional second argument, and some queries accept more options that change string matching behavior. See [TextMatch](#textmatch) for more info.
 
 #### `includeHiddenElements` option
 
-All queries have the `includeHiddenElements` option which affects whether [elements hidden from accessibility](/docs/api/misc/accessibility#ishiddenfromaccessibility) are matched by the query. By default queries will not match hidden elements, because the users of the app would not be able to see such elements.
+All queries have the `includeHiddenElements` option which affects whether [elements hidden from accessibility](/docs/api/misc/accessibility#ishiddenfromaccessibility) are matched by the query. By default, queries won't match hidden elements because users of the app wouldn't be able to see such elements.
 
 You can configure the default value with the [`configure` function](/docs/api/misc/config#configure).
 
@@ -414,7 +414,7 @@ expect(
 type TextMatch = string | RegExp;
 ```
 
-Most of the query APIs take a `TextMatch` as an argument, which means the argument can be either a _string_ or _regex_.
+Most query APIs take a `TextMatch` as an argument, which means the argument can be either a _string_ or _regex_.
 
 ### Examples
 
@@ -462,26 +462,26 @@ type TextMatchOptions = {
 };
 ```
 
-Queries that take a `TextMatch` also accept an object as the second argument that can contain options that affect the precision of string matching:
+Queries that take a `TextMatch` also accept an object as the second argument that contains options affecting the precision of string matching:
 
 - `exact`: Defaults to `true`; matches full strings, case-sensitive. When false, matches substrings and is not case-sensitive.
   - `exact` has no effect on regex argument.
   - In most cases using a `regex` instead of a string gives you more control over fuzzy matching and should be preferred over `{ exact: false }`.
 - `normalizer`: An optional function which overrides normalization behavior. See [Normalization](#normalization).
 
-`exact` option defaults to `true` but if you want to search for a text slice or make text matching case-insensitive you can override it. That being said we advise you to use regex in more complex scenarios.
+The `exact` option defaults to `true`, but if you want to search for a text slice or make text matching case-insensitive, you can override it. That said, we advise you to use regex in more complex scenarios.
 
 #### Normalization
 
-Before running any matching logic against text, it is automatically normalized. By default, normalization consists of trimming whitespace from the start and end of text, and collapsing multiple adjacent whitespace characters into a single space.
+Before running any matching logic against text, it's automatically normalized. By default, normalization consists of trimming whitespace from the start and end of text and collapsing multiple adjacent whitespace characters into a single space.
 
-If you want to prevent that normalization, or provide alternative normalization (e.g. to remove Unicode control characters), you can provide a `normalizer` function in the options object. This function will be given a string and is expected to return a normalized version of that string.
+If you want to prevent that normalization or provide alternative normalization (e.g., to remove Unicode control characters), you can provide a `normalizer` function in the options object. This function is given a string and is expected to return a normalized version of that string.
 
 :::info
 Specifying a value for `normalizer` replaces the built-in normalization, but you can call `getDefaultNormalizer` to obtain a built-in normalizer, either to adjust that normalization or to call it from your own normalizer.
 :::
 
-`getDefaultNormalizer` take options object which allows the selection of behaviour:
+`getDefaultNormalizer` takes an options object that allows selection of behavior:
 
 - `trim`: Defaults to `true`. Trims leading and trailing whitespace.
 - `collapseWhitespace`: Defaults to `true`. Collapses inner whitespace (newlines, tabs repeated spaces) into a single space.
@@ -508,24 +508,24 @@ screen.getByText(node, 'text', {
 
 `render` from `@testing-library/react-native` exposes additional queries that **should not be used in integration or component testing**, but some users (like component library creators) interested in unit testing some components may find helpful.
 
-The interface is the same as for other queries, but we won't provide full names so that they're harder to find by search engines.
+The interface is the same as for other queries, but we won't provide full names so they're harder to find via search engines.
 
 ### `UNSAFE_ByType`
 
 > UNSAFE_getByType, UNSAFE_getAllByType, UNSAFE_queryByType, UNSAFE_queryAllByType
 
-Returns a `ReactTestInstance` with matching a React component type.
+Returns a `ReactTestInstance` with a matching React component type.
 
 :::caution
-This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+This query has been marked unsafe because it requires knowledge about implementation details of the component. Use responsibly.
 :::
 
 ### `UNSAFE_ByProps`
 
 > UNSAFE_getByProps, UNSAFE_getAllByProps, UNSAFE_queryByProps, UNSAFE_queryAllByProps
 
-Returns a `ReactTestInstance` with matching props object.
+Returns a `ReactTestInstance` with matching props.
 
 :::caution
-This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+This query has been marked unsafe because it requires knowledge about implementation details of the component. Use responsibly.
 :::

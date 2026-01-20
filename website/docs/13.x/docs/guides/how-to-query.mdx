@@ -1,6 +1,6 @@
 # How should I query?
 
-React Native Testing Library provides various query types, allowing great flexibility in finding views appropriate for your tests. At the same time, the number of queries might be confusing. This guide aims to help you pick the correct queries for your test scenarios.
+React Native Testing Library provides various query types for finding views in your tests. The number of queries might be confusing. This guide helps you pick the right queries for your test scenarios.
 
 ## Query parts
 
@@ -58,7 +58,7 @@ The query predicate describes how you decide whether to match the given element.
 
 ### Idiomatic query predicates
 
-Choosing the proper query predicate helps better express the test's intent and make the tests resemble how users interact with your code (components, screens, etc.) as much as possible following our [Guiding Principles](https://testing-library.com/docs/guiding-principles). Additionally, most predicates promote the usage of proper accessibility props, which add a semantic layer on top of an element tree composed primarily of [`View`](https://reactnative.dev/docs/view) elements.
+Choosing the right query predicate helps express the test's intent and makes tests resemble how users interact with your code (components, screens, etc.) following our [Guiding Principles](https://testing-library.com/docs/guiding-principles). Most predicates also promote using proper accessibility props, which add a semantic layer on top of an element tree composed primarily of [`View`](https://reactnative.dev/docs/view) elements.
 
 It is recommended to use query predicates in the following order of priority:
 

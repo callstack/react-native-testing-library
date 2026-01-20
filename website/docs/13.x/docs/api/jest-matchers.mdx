@@ -1,6 +1,6 @@
 # Jest matchers
 
-This guide describes built-in Jest matchers, we recommend using these matchers as they provide readable tests, accessibility support, and a better developer experience.
+This guide describes built-in Jest matchers. We recommend using these matchers as they provide readable tests, accessibility support, and a better developer experience.
 
 ## Setup
 
@@ -133,7 +133,7 @@ expect(element).toBeExpanded();
 expect(element).toBeCollapsed();
 ```
 
-These allows you to assert whether the given element is expanded or collapsed from the user's perspective. It relies on the accessibility disabled state as set by `aria-expanded` or `accessibilityState.expanded` props.
+These allow you to assert whether the given element is expanded or collapsed from the user's perspective. They rely on the accessibility expanded state as set by `aria-expanded` or `accessibilityState.expanded` props.
 
 :::note
 These matchers are the negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both won't pass for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
@@ -145,7 +145,7 @@ These matchers are the negation of each other for expandable elements (elements 
 expect(element).toBeBusy();
 ```
 
-This allows you to assert whether the given element is busy from the user's perspective. It relies on the accessibility selected state as set by `aria-busy` or `accessibilityState.busy` props.
+This allows you to assert whether the given element is busy from the user's perspective. It relies on the accessibility busy state as set by `aria-busy` or `accessibilityState.busy` props.
 
 ## Checking element style
 

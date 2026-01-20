@@ -6,7 +6,7 @@ This document is intended for a more advanced audience who want to understand th
 
 :::
 
-React Native Testing Library allows you to write integration and component tests for your React Native app or library. While the JSX code used in tests closely resembles your React Native app, things are not as simple as they might appear. This document will describe the key elements of our testing environment and highlight things to be aware of when writing more advanced tests or diagnosing issues.
+React Native Testing Library allows you to write integration and component tests for your React Native app or library. While the JSX code used in tests closely resembles your React Native app, things aren't as simple as they might appear. This document describes the key elements of our testing environment and highlights things to be aware of when writing more advanced tests or diagnosing issues.
 
 ## React renderers
 
@@ -37,7 +37,7 @@ Disadvantages:
 - Assertions do not operate on native view hierarchy
 - Runtime behaviors are simulated, sometimes imperfectly
 
-It's worth noting that the React Testing Library (web one) works a bit differently. While RTL also runs in Jest, it has access to a simulated browser DOM environment from the `jsdom` package, which allows it to use a regular React DOM renderer. Unfortunately, there is no similar React Native runtime environment package. This is probably because while the browser environment is well-defined and highly standardized, the React Native environment constantly evolves in sync with the evolution of underlying OS-es. Maintaining such an environment would require duplicating countless React Native behaviors and keeping them in sync as React Native develops.
+The React Testing Library (web one) works differently. While RTL also runs in Jest, it has access to a simulated browser DOM environment from the `jsdom` package, which allows it to use a regular React DOM renderer. Unfortunately, there's no similar React Native runtime environment package. This is probably because while the browser environment is well-defined and highly standardized, the React Native environment constantly evolves in sync with the evolution of underlying OS-es. Maintaining such an environment would require duplicating countless React Native behaviors and keeping them in sync as React Native develops.
 
 ## Element tree
 
@@ -111,7 +111,7 @@ function isHostElement(element: ReactTestInstance) {
 
 ## Tree nodes
 
-We encourage you to only assert values on host views in your tests because they represent the user interface view and controls which the user can see and interact with. Users cannot see or interact with composite views as they exist purely in the JavaScript domain and do not generate any visible UI.
+We encourage you to only assert values on host views in your tests because they represent the user interface view and controls that users can see and interact with. Users can't see or interact with composite views as they exist purely in the JavaScript domain and don't generate any visible UI.
 
 ### Asserting props
 

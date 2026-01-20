@@ -9,7 +9,7 @@ function renderHook<Result, Props>(
 ): RenderHookResult<Result, Props>;
 ```
 
-Renders a test component that will call the provided `callback`, including any hooks it calls, every time it renders. Returns [`RenderHookResult`](#renderhookresult) object, which you can interact with.
+Renders a test component that calls the provided `callback`, including any hooks it calls, every time it renders. Returns a [`RenderHookResult`](#renderhookresult) object that you can interact with.
 
 ```ts
 import { renderHook } from '@testing-library/react-native';
@@ -78,7 +78,7 @@ The `current` value of the `result` will reflect the latest of whatever is retur
 
 #### `rerender`
 
-A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
+A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
 
 #### `unmount`
 
@@ -86,7 +86,7 @@ A function to unmount the test component. This is commonly used to trigger clean
 
 ### Examples
 
-Here we present some extra examples of using `renderHook` API.
+Here are some additional examples of using the `renderHook` API.
 
 #### With `initialProps`
 
@@ -157,7 +157,7 @@ interface RenderHookAsyncResult<Result, Props> {
 }
 ```
 
-The `RenderHookAsyncResult` differs from `RenderHookResult` in that `rerenderAsync` and `unmountAsync` are async functions.
+The `RenderHookAsyncResult` differs from `RenderHookResult` in that `rerenderAsync` and `unmountAsync` are async functions that return Promises.
 
 ```ts
 import { renderHookAsync, act } from '@testing-library/react-native';
@@ -179,4 +179,4 @@ test('should handle async hook behavior', async () => {
 });
 ```
 
-Use `renderHookAsync` when testing hooks that use React Suspense, `React.use()`, or other concurrent features where timing of re-renders matters.
+Use `renderHookAsync` when testing hooks that use React Suspense, `React.use()`, or other concurrent features where re-render timing matters.
