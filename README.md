@@ -12,7 +12,10 @@
 [![MIT License][license-badge]][license]
 [![Sponsored by Callstack][callstack-badge]][callstack]
 
-> ⚠️ **Beta Version:** This version is currently in beta. APIs and behavior may change before the stable release. Please report any issues you encounter.
+> [!WARNING]
+> **Beta Version:** This version (v14) is currently in beta. APIs and behavior may change before the stable release. Please report any issues you encounter.
+>
+> For stable version (v13) see [README-v13.md](./README-v13.md).
 
 ## The problem
 
