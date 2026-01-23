@@ -31,8 +31,8 @@ import { render, screen } from '@testing-library/react-native';
  * Key concept: Using the { name: 'text' } predicate to distinguish between
  * multiple elements with the same role.
  */
-test('query by semantic role: *ByRole (highly recommended)', () => {
-  render(
+test('query by semantic role: *ByRole (highly recommended)', async () => {
+  await render(
     <View>
       {/* Heading role - accessible to screen readers */}
       <Text role="heading">Heading Text</Text>
@@ -86,8 +86,8 @@ test('query by semantic role: *ByRole (highly recommended)', () => {
  * 2. *ByPlaceholderText - Good when placeholder is descriptive
  * 3. *ByDisplayValue - Useful for testing current input values
  */
-test('querying TextInput elements', () => {
-  render(
+test('querying TextInput elements', async () => {
+  await render(
     <View>
       {/* TextInput with multiple identifiers for demonstration */}
       <TextInput placeholder="Enter Text..." aria-label="Text Label" defaultValue="Hello" />
@@ -119,8 +119,8 @@ test('querying TextInput elements', () => {
  * 2. *ByLabelText (for labeled interactive elements)
  * 3. *ByHintText (for additional context)
  */
-test('other accessible queries', () => {
-  render(
+test('other accessible queries', async () => {
+  await render(
     <View>
       {/* Simple text content - directly queryable by its text */}
       <Text>Text content</Text>
@@ -162,8 +162,8 @@ test('other accessible queries', () => {
  *
  * Always try accessible queries first!
  */
-test('escape hatch: *ByTestId (use as a last resort)', () => {
-  render(
+test('escape hatch: *ByTestId (use as a last resort)', async () => {
+  await render(
     <View>
       {/* TestID should be used sparingly - prefer accessible queries */}
       <Text testID="Text 1">Text 1</Text>

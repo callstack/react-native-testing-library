@@ -2,8 +2,8 @@ import * as React from 'react';
 import { html } from 'react-strict-dom';
 import { render, screen } from '@testing-library/react-native';
 
-test('query by semantic role: *ByRole (highly recommended)', () => {
-  render(
+test('query by semantic role: *ByRole (highly recommended)', async () => {
+  await render(
     <html.div>
       <html.h1>Heading Text</html.h1>
 
@@ -28,8 +28,8 @@ test('query by semantic role: *ByRole (highly recommended)', () => {
   // expect(screen.getAllByRole('menuitem')).toHaveLength(2);
 });
 
-test('querying TextInput elements (recommended)', () => {
-  render(
+test('querying TextInput elements (recommended)', async () => {
+  await render(
     <html.div>
       <html.input placeholder="Enter Text..." aria-label="Text Label" defaultValue="Hello" />
     </html.div>,
@@ -45,8 +45,8 @@ test('querying TextInput elements (recommended)', () => {
   expect(screen.getByDisplayValue('Hello')).toBeOnTheScreen();
 });
 
-test('other accessible queries (ok)', () => {
-  render(
+test('other accessible queries (ok)', async () => {
+  await render(
     <html.div>
       <html.span>Text content</html.span>
       <html.div aria-label="ARIA Label" />
@@ -57,8 +57,8 @@ test('other accessible queries (ok)', () => {
   expect(screen.getByLabelText('ARIA Label')).toBeOnTheScreen();
 });
 
-test('escape hatch: *ByTestId (use as a last resort)', () => {
-  render(
+test('escape hatch: *ByTestId (use as a last resort)', async () => {
+  await render(
     <html.div>
       <html.span data-testid="Text 1">Text 1</html.span>
     </html.div>,

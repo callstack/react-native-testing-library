@@ -64,7 +64,7 @@ test('Counter should increment the count when the button is pressed', async () =
   const user = userEvent.setup();
 
   // Render the component
-  render(<Counter />);
+  await render(<Counter />);
 
   // Verify initial state
   expect(screen.getByText('0')).toBeOnTheScreen();
@@ -150,7 +150,7 @@ function LoginForm() {
  */
 test('should login with valid credentials', async () => {
   const user = userEvent.setup();
-  render(<LoginForm />);
+  await render(<LoginForm />);
 
   // Simulate typing in the email field
   await user.type(screen.getByPlaceholderText('Email'), 'test@test.com');
@@ -181,7 +181,7 @@ test('should login with valid credentials', async () => {
  */
 test('should show error message with invalid credentials', async () => {
   const user = userEvent.setup();
-  render(<LoginForm />);
+  await render(<LoginForm />);
 
   // Enter valid email but invalid password
   await user.type(screen.getByPlaceholderText('Email'), 'test@test.com');
