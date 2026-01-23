@@ -67,7 +67,9 @@ describe('Greeting', () => {
 
     // After unmounting, queries should throw an error
     // This ensures the component is properly cleaned up
-    expect(() => screen.getByText('Hello, John!')).toThrowErrorMatchingInlineSnapshot(`"Cannot access .container on unmounted test renderer"`);
+    expect(() => screen.getByText('Hello, John!')).toThrowErrorMatchingInlineSnapshot(
+      `"Cannot access .container on unmounted test renderer"`,
+    );
   });
 });
 
