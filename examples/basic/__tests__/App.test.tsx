@@ -7,9 +7,9 @@ jest.useFakeTimers();
 /**
  * A good place to start is having a tests that your component renders correctly.
  */
-test('renders correctly', () => {
+test('renders correctly', async () => {
   // Idiom: no need to capture render output, as we will use `screen` for queries.
-  render(<App />);
+  await render(<App />);
 
   // Idiom: `getBy*` queries are predicates by themselves, but we will use it with `expect().toBeOnTheScreen()`
   // to clarify our intent.
@@ -26,7 +26,7 @@ test('User can sign in successully with correct credentials', async () => {
   const user = userEvent.setup();
 
   // Idiom: no need to capture render output, as we will use `screen` for queries.
-  render(<App />);
+  await render(<App />);
 
   // Idiom: `getBy*` queries are predicates by themselves, but we will use it with `expect().toBeOnTheScreen()`
   // to clarify our intent.
@@ -65,7 +65,7 @@ test('User can sign in successully with correct credentials', async () => {
  */
 test('User will see errors for incorrect credentials', async () => {
   const user = userEvent.setup();
-  render(<App />);
+  await render(<App />);
 
   expect(screen.getByRole('header', { name: 'Sign in to Example App' })).toBeOnTheScreen();
 
@@ -86,7 +86,7 @@ test('User will see errors for incorrect credentials', async () => {
  */
 test('User can sign in after incorrect attempt', async () => {
   const user = userEvent.setup();
-  render(<App />);
+  await render(<App />);
 
   expect(screen.getByRole('header', { name: 'Sign in to Example App' })).toBeOnTheScreen();
 
