@@ -10,9 +10,8 @@ jest.setTimeout(10000);
 
 describe('PhoneBook', () => {
   it('fetches all contacts and favorites successfully and renders lists in sections correctly', async () => {
-    render(<PhoneBook />);
+    await render(<PhoneBook />);
 
-    await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
     expect(await screen.findByText('Name: Mrs Ida Kristensen')).toBeOnTheScreen();
     expect(await screen.findByText('Email: ida.kristensen@example.com')).toBeOnTheScreen();
     expect(await screen.findAllByText(/name/i)).toHaveLength(3);
@@ -22,9 +21,8 @@ describe('PhoneBook', () => {
 
   it('fails to fetch all contacts and renders error message', async () => {
     mockServerFailureForGetAllContacts();
-    render(<PhoneBook />);
+    await render(<PhoneBook />);
 
-    await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
     expect(
       await screen.findByText(/an error occurred: error fetching contacts/i),
     ).toBeOnTheScreen();
@@ -32,9 +30,8 @@ describe('PhoneBook', () => {
 
   it('fails to fetch favorites and renders error message', async () => {
     mockServerFailureForGetAllFavorites();
-    render(<PhoneBook />);
+    await render(<PhoneBook />);
 
-    await waitForElementToBeRemoved(() => screen.getByText(/figuring out your favorites/i));
     expect(await screen.findByText(/error fetching favorites/i)).toBeOnTheScreen();
   });
 });

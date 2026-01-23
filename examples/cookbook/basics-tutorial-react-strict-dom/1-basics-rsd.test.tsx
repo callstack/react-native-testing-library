@@ -11,17 +11,17 @@ function Greeting({ name = 'World' }) {
 }
 
 describe('Greeting', () => {
-  it('should render', () => {
+  it('should render', async () => {
     // Arrange
-    render(<Greeting />);
+    await render(<Greeting />);
 
     // Assert
     expect(screen.getByText('Hello, World!')).toBeOnTheScreen();
   });
 
-  it('should render with the correct name', () => {
+  it('should render with the correct name', async () => {
     // Arrange
-    render(<Greeting name="John" />);
+    await render(<Greeting name="John" />);
 
     // Assert
     expect(screen.getByText('Hello, John!')).toBeOnTheScreen();

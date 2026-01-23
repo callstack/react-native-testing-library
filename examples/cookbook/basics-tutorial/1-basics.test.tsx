@@ -47,10 +47,10 @@ describe('Greeting', () => {
    * This test verifies that our component renders correctly with default props.
    * It follows the Arrange-Act-Assert pattern (though "Act" is implicit in the render).
    */
-  it('should render', () => {
+  it('should render', async () => {
     // Arrange: Set up the test by rendering the component
     // The render() function creates a virtual DOM representation of your component
-    render(<Greeting />);
+    await render(<Greeting />);
 
     // Assert: Verify the expected behavior
     // screen.getByText() queries for an element containing the specified text
@@ -64,10 +64,10 @@ describe('Greeting', () => {
    * This test demonstrates how to test component behavior when props change.
    * It shows how the same component can render differently based on input.
    */
-  it('should render with the correct name', () => {
+  it('should render with the correct name', async () => {
     // Arrange: Render the component with specific props
     // We're passing a custom name prop to test dynamic content
-    render(<Greeting name="John" />);
+    await render(<Greeting name="John" />);
 
     // Assert: Verify that the component renders with the provided prop
     // The text should now include "John" instead of the default "World"

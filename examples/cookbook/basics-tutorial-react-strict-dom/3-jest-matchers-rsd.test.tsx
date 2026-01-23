@@ -2,8 +2,8 @@ import * as React from 'react';
 import { render, screen } from '@testing-library/react-native';
 import { html, css } from 'react-strict-dom';
 
-test('showcase: toBeOnTheScreen', () => {
-  render(
+test('showcase: toBeOnTheScreen', async () => {
+  await render(
     <html.div>
       <html.div data-testid="view" />
     </html.div>,
@@ -13,8 +13,8 @@ test('showcase: toBeOnTheScreen', () => {
   expect(screen.queryByTestId('non-existent')).not.toBeOnTheScreen();
 });
 
-test('showcase: toBeIntoHaveTextContentTheDocument', () => {
-  render(
+test('showcase: toBeIntoHaveTextContentTheDocument', async () => {
+  await render(
     <html.div>
       <html.p data-testid="text">Hello World</html.p>
     </html.div>,
@@ -25,8 +25,8 @@ test('showcase: toBeIntoHaveTextContentTheDocument', () => {
   expect(screen.getByTestId('text')).toHaveTextContent('Hello', { exact: false });
 });
 
-test('showcase: toContainElement', () => {
-  render(
+test('showcase: toContainElement', async () => {
+  await render(
     <html.div>
       <html.div data-testid="outer">
         <html.div data-testid="inner" />
@@ -39,8 +39,8 @@ test('showcase: toContainElement', () => {
   expect(screen.getByTestId('outer')).not.toContainElement(screen.getByTestId('outer-2'));
 });
 
-test('showcase: toBeEmptyElement', () => {
-  render(
+test('showcase: toBeEmptyElement', async () => {
+  await render(
     <html.div>
       <html.div data-testid="empty" />
       <html.div data-testid="not-empty">
@@ -53,8 +53,8 @@ test('showcase: toBeEmptyElement', () => {
   expect(screen.getByTestId('not-empty')).not.toBeEmptyElement();
 });
 
-test('showcase: toHaveDisplayValue', () => {
-  render(
+test('showcase: toHaveDisplayValue', async () => {
+  await render(
     <html.div>
       <html.input data-testid="input" value="Hello" />
     </html.div>,
@@ -63,8 +63,8 @@ test('showcase: toHaveDisplayValue', () => {
   expect(screen.getByTestId('input')).toHaveDisplayValue('Hello');
 });
 
-test('showcase: toHaveAccessibilityValue', () => {
-  render(
+test('showcase: toHaveAccessibilityValue', async () => {
+  await render(
     <html.div>
       <html.div
         data-testid="view"
@@ -81,8 +81,8 @@ test('showcase: toHaveAccessibilityValue', () => {
   expect(screen.getByTestId('view')).toHaveAccessibilityValue({ now: 33, min: 0, max: 100 });
 });
 
-test('showcase: toBeEnabled/toBeDisabled', () => {
-  render(
+test('showcase: toBeEnabled/toBeDisabled', async () => {
+  await render(
     <html.div>
       <html.div data-testid="enabled" aria-disabled={false} />
       <html.div data-testid="disabled" aria-disabled />
@@ -95,8 +95,8 @@ test('showcase: toBeEnabled/toBeDisabled', () => {
   expect(screen.getByTestId('disabled')).not.toBeEnabled();
 });
 
-test('showcase: toBeSelected', () => {
-  render(
+test('showcase: toBeSelected', async () => {
+  await render(
     <html.div>
       <html.div data-testid="selected" aria-selected />
       <html.div data-testid="not-selected" />
@@ -107,8 +107,8 @@ test('showcase: toBeSelected', () => {
   expect(screen.getByTestId('not-selected')).not.toBeSelected();
 });
 
-test('showcase: toBeBusy', () => {
-  render(
+test('showcase: toBeBusy', async () => {
+  await render(
     <html.div>
       <html.div data-testid="busy" aria-busy />
       <html.div data-testid="not-busy" />
@@ -119,8 +119,8 @@ test('showcase: toBeBusy', () => {
   expect(screen.getByTestId('not-busy')).not.toBeBusy();
 });
 
-test('showcase: toBeExpanded/toBeCollapsed', () => {
-  render(
+test('showcase: toBeExpanded/toBeCollapsed', async () => {
+  await render(
     <html.div>
       <html.div data-testid="expanded" aria-expanded />
       <html.div data-testid="collapsed" aria-expanded={false} />
@@ -138,8 +138,8 @@ test('showcase: toBeExpanded/toBeCollapsed', () => {
   expect(screen.getByTestId('default')).not.toBeExpanded();
 });
 
-test('showcase: toBeVisible', () => {
-  render(
+test('showcase: toBeVisible', async () => {
+  await render(
     <html.div>
       <html.div data-testid="visible" />
       <html.div data-testid="not-visible" style={styles.opacityZero} />
@@ -150,8 +150,8 @@ test('showcase: toBeVisible', () => {
   expect(screen.getByTestId('not-visible')).not.toBeVisible();
 });
 
-test('showcase: toHaveStyle', () => {
-  render(
+test('showcase: toHaveStyle', async () => {
+  await render(
     <html.div>
       <html.span data-testid="text" style={styles.fontSize16}>
         Hello World
@@ -163,8 +163,8 @@ test('showcase: toHaveStyle', () => {
   expect(screen.getByTestId('text')).not.toHaveStyle({ fontSize: 12 });
 });
 
-test('showcase: toHaveProp', () => {
-  render(
+test('showcase: toHaveProp', async () => {
+  await render(
     <html.div>
       <html.p data-testid="text" aria-label="Hello World" />
     </html.div>,

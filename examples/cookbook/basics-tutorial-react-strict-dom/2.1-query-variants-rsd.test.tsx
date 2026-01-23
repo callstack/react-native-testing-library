@@ -2,8 +2,8 @@ import * as React from 'react';
 import { html } from 'react-strict-dom';
 import { render, screen } from '@testing-library/react-native';
 
-test('showcase query variants', () => {
-  render(
+test('showcase query variants', async () => {
+  await render(
     <html.div>
       <html.span>Item 1</html.span>
       <html.span>Item 2</html.span>
@@ -33,7 +33,7 @@ function LazyText({ content }: { content: string }) {
 }
 
 test('showcase async query variants', async () => {
-  render(
+  await render(
     <html.div>
       <LazyText content="Lazy Item 1" />
       <LazyText content="Lazy Item 2" />

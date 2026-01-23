@@ -17,11 +17,11 @@ export interface RenderWithAtomsOptions {
  * @param options - The render options including the initial atom values.
  * @returns The render result from `@testing-library/react-native`.
  */
-export const renderWithAtoms = <T,>(
+export const renderWithAtoms = async <T,>(
   component: React.ReactElement,
   options: RenderWithAtomsOptions,
 ) => {
-  return render(
+  return await render(
     <HydrateAtomsWrapper initialValues={options.initialValues}>{component}</HydrateAtomsWrapper>,
   );
 };

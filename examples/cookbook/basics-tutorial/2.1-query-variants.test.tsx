@@ -20,9 +20,9 @@ import { render, screen } from '@testing-library/react-native';
  * This test demonstrates the fundamental differences between getBy*, getAllBy*,
  * and queryBy* queries for synchronous DOM queries.
  */
-test('showcase query variants', () => {
+test('showcase query variants', async () => {
   // Render a simple component with multiple text elements
-  render(
+  await render(
     <View>
       <Text>Item 1</Text>
       <Text>Item 2</Text>
@@ -76,7 +76,7 @@ function LazyText({ content }: { content: string }) {
  */
 test('showcase async query variants', async () => {
   // Render components that will load content asynchronously
-  render(
+  await render(
     <View>
       <LazyText content="Lazy Item 1" />
       <LazyText content="Lazy Item 2" />

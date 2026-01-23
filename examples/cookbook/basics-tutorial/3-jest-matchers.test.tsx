@@ -29,8 +29,8 @@ import { s } from 'react-strict-dom/runtime';
  * - expect(element).toBeOnTheScreen() - element should be rendered
  * - expect(element).not.toBeOnTheScreen() - element should not be rendered
  */
-test('showcase: toBeOnTheScreen', () => {
-  render(
+test('showcase: toBeOnTheScreen', async () => {
+  await render(
     <View>
       <View testID="view" />
     </View>,
@@ -57,8 +57,8 @@ test('showcase: toBeOnTheScreen', () => {
  * - expect(element).toHaveTextContent(/pattern/i) - regex with case-insensitive flag
  * - expect(element).toHaveTextContent('partial', { exact: false })
  */
-test('showcase: toBeIntoHaveTextContentTheDocument', () => {
-  render(
+test('showcase: toBeIntoHaveTextContentTheDocument', async () => {
+  await render(
     <View>
       <Text testID="text">Hello World</Text>
     </View>,
@@ -84,8 +84,8 @@ test('showcase: toBeIntoHaveTextContentTheDocument', () => {
  * - expect(parentElement).toContainElement(childElement)
  * - expect(parentElement).not.toContainElement(unrelatedElement)
  */
-test('showcase: toContainElement', () => {
-  render(
+test('showcase: toContainElement', async () => {
+  await render(
     <View>
       <View testID="outer">
         <View testID="inner" />
@@ -112,8 +112,8 @@ test('showcase: toContainElement', () => {
  * - expect(element).toBeEmptyElement() - element has no children
  * - expect(element).not.toBeEmptyElement() - element has children
  */
-test('showcase: toBeEmptyElement', () => {
-  render(
+test('showcase: toBeEmptyElement', async () => {
+  await render(
     <View>
       <View testID="empty" />
       <View testID="not-empty">
@@ -140,8 +140,8 @@ test('showcase: toBeEmptyElement', () => {
  * - expect(inputElement).toHaveDisplayValue('expected value')
  * - expect(inputElement).toHaveDisplayValue(['value1', 'value2']) - for multiple values
  */
-test('showcase: toHaveDisplayValue', () => {
-  render(
+test('showcase: toHaveDisplayValue', async () => {
+  await render(
     <View>
       <TextInput testID="input" value="Hello" />
     </View>,
@@ -167,8 +167,8 @@ test('showcase: toHaveDisplayValue', () => {
  * - expect(element).toHaveAccessibilityValue({ text: 'description' })
  * - expect(element).toHaveAccessibilityValue({ now: 50, min: 0, max: 100 })
  */
-test('showcase: toHaveAccessibilityValue', () => {
-  render(
+test('showcase: toHaveAccessibilityValue', async () => {
+  await render(
     <View>
       <View
         testID="view"
@@ -202,8 +202,8 @@ test('showcase: toHaveAccessibilityValue', () => {
  * - expect(element).not.toBeEnabled() - same as toBeDisabled()
  * - expect(element).not.toBeDisabled() - same as toBeEnabled()
  */
-test('showcase: toBeEnabled/toBeDisabled', () => {
-  render(
+test('showcase: toBeEnabled/toBeDisabled', async () => {
+  await render(
     <View>
       <View testID="enabled" aria-disabled={false} />
       <View testID="disabled" aria-disabled />
@@ -230,8 +230,8 @@ test('showcase: toBeEnabled/toBeDisabled', () => {
  * - expect(element).toBeSelected() - element is selected
  * - expect(element).not.toBeSelected() - element is not selected
  */
-test('showcase: toBeSelected', () => {
-  render(
+test('showcase: toBeSelected', async () => {
+  await render(
     <View>
       <View testID="selected" aria-selected />
       <View testID="not-selected" />
@@ -261,8 +261,8 @@ test('showcase: toBeSelected', () => {
  * - expect(checkbox).toBePartiallyChecked() - checkbox is in mixed state
  * - expect(checkbox).not.toBeChecked() - checkbox is not checked
  */
-test('showcase: toBeChecked/toBePartiallyChecked (role: checkbox)', () => {
-  render(
+test('showcase: toBeChecked/toBePartiallyChecked (role: checkbox)', async () => {
+  await render(
     <View>
       <View accessible role="checkbox" testID="checked" aria-checked />
       <View accessible role="checkbox" testID="partially-checked" aria-checked="mixed" />
@@ -293,8 +293,8 @@ test('showcase: toBeChecked/toBePartiallyChecked (role: checkbox)', () => {
  * - expect(switch).toBeChecked() - switch is on
  * - expect(radio).toBeChecked() - radio is selected
  */
-test('showcase: toBeChecked (roles: switch, radio)', () => {
-  render(
+test('showcase: toBeChecked (roles: switch, radio)', async () => {
+  await render(
     <View>
       <View accessible role="switch" testID="checked" aria-checked />
       <View accessible role="radio" testID="not-checked" />
@@ -318,8 +318,8 @@ test('showcase: toBeChecked (roles: switch, radio)', () => {
  * - expect(element).toBeBusy() - element is in loading/busy state
  * - expect(element).not.toBeBusy() - element is not busy
  */
-test('showcase: toBeBusy', () => {
-  render(
+test('showcase: toBeBusy', async () => {
+  await render(
     <View>
       <View testID="busy" aria-busy />
       <View testID="not-busy" />
@@ -350,8 +350,8 @@ test('showcase: toBeBusy', () => {
  * - expect(element).not.toBeExpanded() - element is not expanded
  * - expect(element).not.toBeCollapsed() - element is not collapsed
  */
-test('showcase: toBeExpanded/toBeCollapsed', () => {
-  render(
+test('showcase: toBeExpanded/toBeCollapsed', async () => {
+  await render(
     <View>
       <View testID="expanded" aria-expanded />
       <View testID="collapsed" aria-expanded={false} />
@@ -385,8 +385,8 @@ test('showcase: toBeExpanded/toBeCollapsed', () => {
  * - expect(element).toBeVisible() - element is visible to user
  * - expect(element).not.toBeVisible() - element is hidden from user
  */
-test('showcase: toBeVisible', () => {
-  render(
+test('showcase: toBeVisible', async () => {
+  await render(
     <View>
       <View testID="visible" />
       <View testID="not-visible" style={{ opacity: 0 }} />
@@ -415,8 +415,8 @@ test('showcase: toBeVisible', () => {
  * - expect(element).toHaveStyle({ property: 'value' })
  * - expect(element).not.toHaveStyle({ property: 'wrongValue' })
  */
-test('showcase: toHaveStyle', () => {
-  render(
+test('showcase: toHaveStyle', async () => {
+  await render(
     <View>
       <View testID="view" style={{ backgroundColor: 'red' }} />
     </View>,
@@ -445,8 +445,8 @@ test('showcase: toHaveStyle', () => {
  * - expect(element).toHaveProp('propName', value) - prop has specific value
  * - expect(element).not.toHaveProp('propName') - prop doesn't exist
  */
-test('showcase: toHaveProp', () => {
-  render(
+test('showcase: toHaveProp', async () => {
+  await render(
     <View>
       <Text testID="text" numberOfLines={1} />
     </View>,

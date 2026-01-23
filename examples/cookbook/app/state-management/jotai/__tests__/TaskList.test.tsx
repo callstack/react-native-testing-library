@@ -7,15 +7,15 @@ import { renderWithAtoms } from './test-utils';
 
 jest.useFakeTimers();
 
-test('renders an empty task list', () => {
-  render(<TaskList />);
+test('renders an empty task list', async () => {
+  await render(<TaskList />);
   expect(screen.getByText(/no tasks, start by adding one/i)).toBeOnTheScreen();
 });
 
 const INITIAL_TASKS: Task[] = [{ id: '1', title: 'Buy bread' }];
 
 test('renders a to do list with 1 items initially, and adds a new item', async () => {
-  renderWithAtoms(<TaskList />, {
+  await renderWithAtoms(<TaskList />, {
     initialValues: [
       [tasksAtom, INITIAL_TASKS],
       [newTaskTitleAtom, ''],

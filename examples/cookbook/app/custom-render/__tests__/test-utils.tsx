@@ -8,11 +8,11 @@ interface RenderWithProvidersProps {
   theme?: Theme;
 }
 
-export function renderWithProviders<T>(
+export async function renderWithProviders<T>(
   ui: React.ReactElement<T>,
   options?: RenderWithProvidersProps,
 ) {
-  return render(
+  return await render(
     <UserProvider.Provider value={options?.user ?? null}>
       <ThemeProvider.Provider value={options?.theme ?? 'light'}>{ui}</ThemeProvider.Provider>
     </UserProvider.Provider>,
