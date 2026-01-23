@@ -6,6 +6,6 @@
   "scripts": {
     "test": "node --loader tsx/esm scripts/test.js"
   },
-  "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {}
 }

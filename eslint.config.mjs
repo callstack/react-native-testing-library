@@ -27,6 +27,7 @@ export default [
       'no-console': 'error',
       'import/order': 'off',
       '@typescript-eslint/consistent-type-imports': 'error',
+      'prettier/prettier': 'off',
     },
   },
   {

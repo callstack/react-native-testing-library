@@ -16,12 +16,12 @@ interface RenderWithProvidersProps {
 
 export function renderWithProviders<T>(
   ui: React.ReactElement<T>,
-  options?: RenderWithProvidersProps
+  options?: RenderWithProvidersProps,
 ) {
   return render(
     <UserProvider.Provider value={options?.user ?? null}>
       <ThemeProvider.Provider value={options?.theme ?? 'light'}>{ui}</ThemeProvider.Provider>
-    </UserProvider.Provider>
+    </UserProvider.Provider>,
   );
 }
 ```

@@ -2,26 +2,37 @@
   "name": "@testing-library/react-native",
   "version": "14.0.0-beta.0",
   "description": "Simple and complete React Native testing utilities that encourage good testing practices.",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "https://www.github.com/callstack/react-native-testing-library.git"
-  },
+  "keywords": [
+    "integration",
+    "react",
+    "react-native",
+    "test"
+  ],
   "homepage": "https://oss.callstack.com/react-native-testing-library",
+  "license": "MIT",
   "author": "Maciej Jastrzębski <mdjastrzebski@gmail.com> (https://github.com/mdjastrzebski), Michał Pierzchała <thymikee@gmail.com> (https://github.com/thymikee)",
   "contributors": [
     "Augustin Le Fèvre <augustin.le-fevre@klarna.com> (https://github.com/AugustinLF)",
     "Pierre Zimmermann <pierrez@nam.tech> (https://github.com/pierrezimmermannbam)",
     "MattAgn <matthieua@bam.tech> (https://github.com/MattAgn)"
   ],
-  "license": "MIT",
-  "keywords": [
-    "react-native",
-    "react",
-    "test",
-    "integration"
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/callstack/react-native-testing-library.git"
+  },
+  "files": [
+    "dont-cleanup-after-each.js",
+    "matchers.d.ts",
+    "matchers.js",
+    "pure.d.ts",
+    "pure.js",
+    "build/"
   ],
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "scripts": {
     "clean": "del build",
     "test": "jest",
@@ -30,10 +41,10 @@
     "test:codemods": "node scripts/test-codemods.mjs",
     "typecheck": "tsc",
     "lint": "eslint src --cache",
-    "prettier": "prettier --check .",
-    "prettier:fix": "prettier --write .",
-    "validate": "yarn typecheck && yarn test && yarn lint &&  yarn prettier",
-    "validate:fix": "yarn prettier:fix && yarn lint --fix && yarn typecheck && yarn test -u",
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt",
+    "validate": "yarn typecheck && yarn test && yarn lint &&  yarn format",
+    "validate:fix": "yarn format:fix && yarn lint --fix && yarn typecheck && yarn test -u",
     "build:js": "babel src --out-dir build --extensions \".js,.ts,.jsx,.tsx\" --source-maps --ignore \"**/__tests__/**\"",
     "build:ts": "tsc --build tsconfig.release.json",
     "build": "yarn clean && yarn build:js && yarn build:ts",
@@ -42,30 +53,11 @@
     "release:beta": "release-it --preRelease=beta",
     "release:codemods": "release-it --preRelease=alpha"
   },
-  "files": [
-    "build/",
-    "matchers.js",
-    "matchers.d.ts",
-    "pure.js",
-    "pure.d.ts",
-    "dont-cleanup-after-each.js"
-  ],
   "dependencies": {
     "jest-matcher-utils": "^30.2.0",
     "picocolors": "^1.1.1",
     "pretty-format": "^30.2.0",
     "redent": "^3.0.0"
-  },
-  "peerDependencies": {
-    "jest": ">=29.0.0",
-    "react": ">=19.0.0",
-    "react-native": ">=0.78",
-    "test-renderer": "^0.14.0"
-  },
-  "peerDependenciesMeta": {
-    "jest": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@babel/cli": "^7.28.3",
@@ -87,7 +79,7 @@
     "eslint": "^9.39.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "jest": "^30.2.0",
-    "prettier": "^3.6.2",
+    "oxfmt": "^0.26.0",
     "react": "19.2.0",
     "react-native": "0.83.1",
     "react-native-gesture-handler": "^2.29.1",
@@ -96,11 +88,19 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.47.0"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org"
+  "peerDependencies": {
+    "jest": ">=29.0.0",
+    "react": ">=19.0.0",
+    "react-native": ">=0.78",
+    "test-renderer": "^0.14.0"
   },
-  "packageManager": "yarn@4.11.0",
+  "peerDependenciesMeta": {
+    "jest": {
+      "optional": true
+    }
+  },
   "engines": {
     "node": ">=20"
-  }
+  },
+  "packageManager": "yarn@4.11.0"
 }

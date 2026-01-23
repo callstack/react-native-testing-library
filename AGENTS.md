@@ -25,15 +25,15 @@ The project uses `yarn` for dependency management and script execution.
 - **Run Tests (CI):** `yarn test:ci` (Runs Jest with worker limits)
 - **Lint Code:** `yarn lint` (Runs ESLint on `src`)
 - **Type Check:** `yarn typecheck` (Runs TypeScript compiler)
-- **Format Check:** `yarn prettier`
-- **Validate All:** `yarn validate` (Runs Prettier, ESLint, Typecheck, and Tests in sequence)
+- **Format Check:** `yarn format` (Runs Oxfmt)
+- **Validate All:** `yarn validate` (Runs Oxfmt, ESLint, Typecheck, and Tests in sequence)
 - **Build Project:** `yarn build` (Cleans, builds JS with Babel, and builds TS types)
 
 ## Development Conventions
 
 - **Code Style:**
   - **Linting:** ESLint is configured with `@callstack/eslint-config` and `typescript-eslint`. It enforces strict rules, including `no-console` and consistent type imports.
-  - **Formatting:** Prettier is used for code formatting (single quotes, trailing commas).
+  - **Formatting:** Oxfmt is used for code formatting (single quotes, trailing commas).
   - **Imports:** Sorted using `eslint-plugin-simple-import-sort`.
 
 - **Testing:**

@@ -5,7 +5,7 @@
 ```ts
 function renderHook<Result, Props>(
   hookFn: (props?: Props) => Result,
-  options?: RenderHookOptions<Props>
+  options?: RenderHookOptions<Props>,
 ): RenderHookResult<Result, Props>;
 ```
 
@@ -137,7 +137,7 @@ it('should use context value', () => {
 ```ts
 async function renderHookAsync<Result, Props>(
   hookFn: (props?: Props) => Result,
-  options?: RenderHookOptions<Props>
+  options?: RenderHookOptions<Props>,
 ): Promise<RenderHookAsyncResult<Result, Props>>;
 ```
 

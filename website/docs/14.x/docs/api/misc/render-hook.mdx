@@ -5,7 +5,7 @@
 ```ts
 async function renderHook<Result, Props>(
   hookFn: (props: Props) => Result,
-  options?: RenderHookOptions<Props>
+  options?: RenderHookOptions<Props>,
 ): Promise<RenderHookResult<Result, Props>>;
 ```
 

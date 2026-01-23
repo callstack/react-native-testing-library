@@ -186,7 +186,7 @@ test('example', async () => {
   await render(
     <View testID="root-view">
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
   // root is the View element you rendered
   expect(screen.root.props.testID).toBe('root-view');

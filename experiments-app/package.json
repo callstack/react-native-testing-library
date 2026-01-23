@@ -1,8 +1,8 @@
 {
   "name": "experiments-app",
+  "version": "1.0.0",
   "private": true,
   "description": "Expo app for conducting experiments of React Native behaviour.",
-  "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "typecheck": "tsc -noEmit",
