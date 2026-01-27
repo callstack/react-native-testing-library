@@ -9,6 +9,11 @@ const FUNCTIONS_TO_RENAME = new Map([
 ]);
 
 const FIRE_EVENT_METHODS_TO_MAKE_ASYNC = new Set(['press', 'changeText', 'scroll']);
+const SCREEN_METHODS_TO_RENAME = new Map([
+  ['rerender', 'rerenderAsync'],
+  ['update', 'rerenderAsync'],
+  ['unmount', 'unmountAsync'],
+]);
 const TEST_FUNCTION_NAMES = new Set([
   'test',
   'it',
@@ -46,9 +51,12 @@ export default async function transform(
   const functionCalls: SgNode<TSX>[] = [];
   functionCalls.push(...findDirectFunctionCallsThatWillBeRenamed(rootNode, importedFunctions));
   functionCalls.push(...findFireEventMethodCallsThatWillBeRenamed(rootNode, importedFunctions));
+  const screenMethodCalls = findScreenMethodCallsThatWillBeRenamed(rootNode);
+  functionCalls.push(...screenMethodCalls);
 
   // Now rename the functions
   renameFunctionsInUsages(rootNode, importedFunctions, edits);
+  renameScreenMethodsInUsages(rootNode, screenMethodCalls, edits);
 
   // Add await to the calls we found
   const functionsToMakeAsync = new Map<number, SgNode<TSX>>();
@@ -306,6 +314,71 @@ function findFireEventMethodCallsThatWillBeRenamed(
   }
 
   return functionCalls;
+}
+
+function findScreenMethodCallsThatWillBeRenamed(rootNode: SgNode<TSX>): SgNode<TSX>[] {
+  const functionCalls: SgNode<TSX>[] = [];
+  const screenMethodCalls = rootNode.findAll({
+    rule: {
+      kind: 'call_expression',
+      has: {
+        field: 'function',
+        kind: 'member_expression',
+      },
+    },
+  });
+
+  for (const call of screenMethodCalls) {
+    const funcNode = call.field('function');
+    if (funcNode && funcNode.is('member_expression')) {
+      try {
+        const object = funcNode.field('object');
+        const property = funcNode.field('property');
+        if (object && property) {
+          const objText = object.text();
+          const propText = property.text();
+          if (objText === 'screen' && SCREEN_METHODS_TO_RENAME.has(propText)) {
+            functionCalls.push(call);
+          }
+        }
+      } catch {
+        // Skip nodes where field() is not available or AST structure doesn't match expectations.
+        // This is expected for malformed or edge-case AST structures and should be silently ignored.
+      }
+    }
+  }
+
+  return functionCalls;
+}
+
+function renameScreenMethodsInUsages(
+  rootNode: SgNode<TSX>,
+  screenMethodCalls: SgNode<TSX>[],
+  edits: Edit[],
+): void {
+  for (const call of screenMethodCalls) {
+    const funcNode = call.field('function');
+    if (funcNode && funcNode.is('member_expression')) {
+      try {
+        const property = funcNode.field('property');
+        if (property) {
+          const propText = property.text();
+          if (SCREEN_METHODS_TO_RENAME.has(propText)) {
+            const newName = SCREEN_METHODS_TO_RENAME.get(propText)!;
+            const propertyRange = property.range();
+            edits.push({
+              startPos: propertyRange.start.index,
+              endPos: propertyRange.end.index,
+              insertedText: newName,
+            });
+          }
+        }
+      } catch {
+        // Skip nodes where field() is not available or AST structure doesn't match expectations.
+        // This is expected for malformed or edge-case AST structures and should be silently ignored.
+      }
+    }
+  }
 }
 
 function isCallAlreadyAwaited(functionCall: SgNode<TSX>): boolean {
