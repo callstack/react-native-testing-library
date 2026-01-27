@@ -1,8 +1,8 @@
 import { fireEventAsync } from '@testing-library/react-native';
 
-test('handles events', () => {
+test('handles events', async () => {
   const input = getByTestId('input');
-  fireEventAsync.changeText(input, 'Hello');
-  fireEventAsync.press(input);
-  fireEventAsync.scroll(input);
+  await fireEventAsync.changeText(input, 'Hello');
+  await fireEventAsync.press(input);
+  await fireEventAsync.scroll(input);
 });
