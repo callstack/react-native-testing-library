@@ -1,0 +1,19 @@
+schema_version: '1.0'
+
+name: 'rntl-v13-async-functions'
+version: '0.1.0'
+description: 'Codemod to rename RNTL functions to async variants for RNTL v13'
+author: 'Maciej Jastrzebski'
+license: 'MIT'
+workflow: 'workflow.yaml'
+
+targets:
+  languages: ['typescript', 'tsx', 'javascript', 'jsx']
+
+keywords: ['transformation', 'migration']
+
+registry:
+  access: 'public'
+  visibility: 'public'
+
+capabilities: []

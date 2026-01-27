@@ -1,0 +1,14 @@
+{
+  "name": "@testing-library/react-native-v13-async-functions",
+  "version": "0.1.0",
+  "description": "Codemod to rename render(), renderHook(), and fireEvent() to async variants for RNTL v13",
+  "type": "module",
+  "scripts": {
+    "test": "yarn dlx codemod@latest jssg test -l tsx ./scripts/codemod.ts",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@codemod.com/jssg-types": "^1.3.0",
+    "typescript": "^5.8.3"
+  }
+}
