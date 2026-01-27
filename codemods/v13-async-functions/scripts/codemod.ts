@@ -14,6 +14,11 @@ const SCREEN_METHODS_TO_RENAME = new Map([
   ['update', 'rerenderAsync'],
   ['unmount', 'unmountAsync'],
 ]);
+const RESULT_METHODS_TO_RENAME = new Map([
+  ['rerender', 'rerenderAsync'],
+  ['update', 'rerenderAsync'],
+  ['unmount', 'unmountAsync'],
+]);
 const TEST_FUNCTION_NAMES = new Set([
   'test',
   'it',
@@ -54,9 +59,20 @@ export default async function transform(
   const screenMethodCalls = findScreenMethodCallsThatWillBeRenamed(rootNode);
   functionCalls.push(...screenMethodCalls);
 
+  // Track variables assigned from render/renderAsync/renderHook/renderHookAsync
+  const { allVariables, renamedMethodVariables, destructuringPatterns, assignmentVariablesToRename } = trackVariablesAssignedFromRenderAndRenderHook(
+    rootNode,
+    importedFunctions,
+  );
+  const resultMethodCalls = findResultMethodCalls(rootNode, allVariables, renamedMethodVariables);
+  functionCalls.push(...resultMethodCalls);
+
   // Now rename the functions
   renameFunctionsInUsages(rootNode, importedFunctions, edits);
   renameScreenMethodsInUsages(rootNode, screenMethodCalls, edits);
+  renameResultMethodsInDestructuringPatterns(rootNode, destructuringPatterns, edits);
+  renameAssignmentVariableDeclarations(rootNode, assignmentVariablesToRename, edits);
+  renameResultMethodsInUsages(rootNode, resultMethodCalls, edits, renamedMethodVariables);
 
   // Add await to the calls we found
   const functionsToMakeAsync = new Map<number, SgNode<TSX>>();
@@ -376,6 +392,368 @@ function renameScreenMethodsInUsages(
       } catch {
         // Skip nodes where field() is not available or AST structure doesn't match expectations.
         // This is expected for malformed or edge-case AST structures and should be silently ignored.
+      }
+    }
+  }
+}
+
+/**
+ * Tracks variables assigned from render()/renderAsync() and renderHook()/renderHookAsync() calls to identify result objects.
+ * This helps identify calls like `renderer.rerender()`, `renderer.unmount()`, `result.rerender()`, etc.
+ * that need to be made async.
+ *
+ * Handles various assignment patterns:
+ * - Direct assignment: `const renderer = render(...)` or `const result = renderHook(...)`
+ * - Destructured assignment: `const { rerender } = render(...)` or `const { rerender } = renderHook(...)`
+ * - Renamed destructuring: `const { rerender: rerenderHook } = renderHook(...)` (renderHook only)
+ * - Assignment expressions: `renderer = render(...)` or `result = renderHook(...)`
+ *
+ * @param rootNode - The root AST node to search within
+ * @param importedFunctions - Set of imported function names (should include 'render' and/or 'renderHook')
+ * @returns Object containing:
+ *   - allVariables: Set of all variable names representing render/renderHook results
+ *   - renamedMethodVariables: Set of renamed method variables (e.g., rerenderHook from renderHook)
+ */
+function trackVariablesAssignedFromRenderAndRenderHook(
+  rootNode: SgNode<TSX>,
+  importedFunctions: Set<string>,
+): {
+  allVariables: Set<string>;
+  renamedMethodVariables: Set<string>;
+  destructuringPatterns: Array<{ key: SgNode<TSX>; keyName: string }>;
+  assignmentVariablesToRename: Set<string>;
+} {
+  const allVariables = new Set<string>();
+  const renamedMethodVariables = new Set<string>();
+  const destructuringPatterns: Array<{ key: SgNode<TSX>; keyName: string }> = [];
+  const assignmentVariablesToRename = new Set<string>();
+
+  // Track variables from both render/renderAsync and renderHook/renderHookAsync calls
+  // We track both sync and async variants because:
+  // - render/renderHook will be renamed to renderAsync/renderHookAsync
+  // - renderAsync/renderHookAsync might already exist in the code
+  const functionsToTrack: Array<{ name: string; shouldTrack: boolean }> = [];
+  
+  if (importedFunctions.has('render')) {
+    functionsToTrack.push({ name: 'render', shouldTrack: true });
+    functionsToTrack.push({ name: 'renderAsync', shouldTrack: true });
+  }
+  if (importedFunctions.has('renderHook')) {
+    functionsToTrack.push({ name: 'renderHook', shouldTrack: true });
+    functionsToTrack.push({ name: 'renderHookAsync', shouldTrack: true });
+  }
+
+  for (const { name: funcName } of functionsToTrack) {
+
+    const functionCalls = rootNode.findAll({
+      rule: {
+        kind: 'call_expression',
+        has: {
+          field: 'function',
+          kind: 'identifier',
+          regex: `^${funcName}$`,
+        },
+      },
+    });
+
+    for (const functionCall of functionCalls) {
+      let parent = functionCall.parent();
+      const isAwaited = parent && parent.is('await_expression');
+
+      if (isAwaited) {
+        parent = parent.parent();
+      }
+
+      if (parent && parent.is('variable_declarator')) {
+        const objectPattern = parent.find({
+          rule: { kind: 'object_pattern' },
+        });
+        if (objectPattern) {
+          const shorthandProps = objectPattern.findAll({
+            rule: { kind: 'shorthand_property_identifier_pattern' },
+          });
+          for (const prop of shorthandProps) {
+            const propName = prop.text();
+            if (RESULT_METHODS_TO_RENAME.has(propName)) {
+              allVariables.add(propName);
+            }
+          }
+          // Handle renamed destructuring (only for renderHook, but we check for both to be safe)
+          const pairPatterns = objectPattern.findAll({
+            rule: { kind: 'pair_pattern' },
+          });
+          for (const pair of pairPatterns) {
+            const key = pair.find({
+              rule: { kind: 'property_identifier' },
+            });
+            const value = pair.find({
+              rule: { kind: 'identifier' },
+            });
+            if (key && value) {
+              const keyName = key.text();
+              const valueName = value.text();
+              if (RESULT_METHODS_TO_RENAME.has(keyName)) {
+                allVariables.add(valueName);
+                renamedMethodVariables.add(valueName);
+                destructuringPatterns.push({ key, keyName });
+              }
+            }
+          }
+          // Also track shorthand properties that need renaming
+          for (const prop of shorthandProps) {
+            const propName = prop.text();
+            if (RESULT_METHODS_TO_RENAME.has(propName)) {
+              destructuringPatterns.push({ key: prop, keyName: propName });
+            }
+          }
+        } else {
+          const nameNode = parent.find({
+            rule: { kind: 'identifier' },
+          });
+          if (nameNode) {
+            const varName = nameNode.text();
+            allVariables.add(varName);
+          }
+        }
+      } else if (parent && parent.is('assignment_expression')) {
+        const left = parent.find({
+          rule: { kind: 'identifier' },
+        });
+        if (left) {
+          const varName = left.text();
+          allVariables.add(varName);
+        } else {
+          const objectPattern = parent.find({
+            rule: { kind: 'object_pattern' },
+          });
+          if (objectPattern) {
+            const shorthandProps = objectPattern.findAll({
+              rule: { kind: 'shorthand_property_identifier_pattern' },
+            });
+            for (const prop of shorthandProps) {
+              const propName = prop.text();
+              if (RESULT_METHODS_TO_RENAME.has(propName)) {
+                allVariables.add(propName);
+                // Track that this variable declaration should be renamed
+                assignmentVariablesToRename.add(propName);
+              }
+            }
+            // Handle renamed destructuring in assignment expressions
+            const pairPatterns = objectPattern.findAll({
+              rule: { kind: 'pair_pattern' },
+            });
+            for (const pair of pairPatterns) {
+              const key = pair.find({
+                rule: { kind: 'property_identifier' },
+              });
+              const value = pair.find({
+                rule: { kind: 'identifier' },
+              });
+              if (key && value) {
+                const keyName = key.text();
+                const valueName = value.text();
+                if (RESULT_METHODS_TO_RENAME.has(keyName)) {
+                  allVariables.add(valueName);
+                  renamedMethodVariables.add(valueName);
+                  destructuringPatterns.push({ key, keyName });
+                }
+              }
+            }
+            // Also track shorthand properties in assignment expressions
+            for (const prop of shorthandProps) {
+              const propName = prop.text();
+              if (RESULT_METHODS_TO_RENAME.has(propName)) {
+                destructuringPatterns.push({ key: prop, keyName: propName });
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return { allVariables, renamedMethodVariables, destructuringPatterns, assignmentVariablesToRename };
+}
+
+/**
+ * Finds method calls on render/renderHook result variables (e.g., renderer.rerender(), result.unmount()).
+ * Also finds direct calls to renamed method variables (e.g., rerenderHook()).
+ *
+ * @param rootNode - The root AST node to search within
+ * @param allVariables - Set of all variable names from render/renderHook results
+ * @param renamedMethodVariables - Set of renamed method variables (e.g., rerenderHook)
+ * @returns Array of function call nodes that need to be made async
+ */
+function findResultMethodCalls(
+  rootNode: SgNode<TSX>,
+  allVariables: Set<string>,
+  renamedMethodVariables: Set<string>,
+): SgNode<TSX>[] {
+  const functionCalls: SgNode<TSX>[] = [];
+
+  if (allVariables.size > 0) {
+    const resultMethodCalls = rootNode.findAll({
+      rule: {
+        kind: 'call_expression',
+        has: {
+          field: 'function',
+          kind: 'member_expression',
+        },
+      },
+    });
+
+    for (const call of resultMethodCalls) {
+      const funcNode = call.field('function');
+      if (funcNode && funcNode.is('member_expression')) {
+        try {
+          const object = funcNode.field('object');
+          const property = funcNode.field('property');
+          if (object && property) {
+            const objText = object.text();
+            const propText = property.text();
+            if (allVariables.has(objText) && RESULT_METHODS_TO_RENAME.has(propText)) {
+              functionCalls.push(call);
+            }
+          }
+        } catch {
+          // Skip nodes where field() is not available or AST structure doesn't match expectations.
+          // This is expected for malformed or edge-case AST structures and should be silently ignored.
+        }
+      }
+    }
+
+    // Find direct calls to method variables (e.g., rerender(), unmount(), rerenderHook())
+    for (const varName of allVariables) {
+      if (RESULT_METHODS_TO_RENAME.has(varName) || renamedMethodVariables.has(varName)) {
+        const directCalls = rootNode.findAll({
+          rule: {
+            kind: 'call_expression',
+            has: {
+              field: 'function',
+              kind: 'identifier',
+              regex: `^${varName}$`,
+            },
+          },
+        });
+        functionCalls.push(...directCalls);
+      }
+    }
+  }
+
+  return functionCalls;
+}
+
+function renameResultMethodsInDestructuringPatterns(
+  rootNode: SgNode<TSX>,
+  destructuringPatterns: Array<{ key: SgNode<TSX>; keyName: string }>,
+  edits: Edit[],
+): void {
+  for (const { key, keyName } of destructuringPatterns) {
+    if (RESULT_METHODS_TO_RENAME.has(keyName)) {
+      const newName = RESULT_METHODS_TO_RENAME.get(keyName)!;
+      const keyRange = key.range();
+      edits.push({
+        startPos: keyRange.start.index,
+        endPos: keyRange.end.index,
+        insertedText: newName,
+      });
+    }
+  }
+}
+
+function renameAssignmentVariableDeclarations(
+  rootNode: SgNode<TSX>,
+  assignmentVariablesToRename: Set<string>,
+  edits: Edit[],
+): void {
+  for (const varName of assignmentVariablesToRename) {
+    if (!RESULT_METHODS_TO_RENAME.has(varName)) {
+      continue;
+    }
+    const newName = RESULT_METHODS_TO_RENAME.get(varName)!;
+    
+    // Find variable declarations (let, const, var) that declare these variables
+    const variableDeclarations = rootNode.findAll({
+      rule: {
+        any: [
+          { kind: 'lexical_declaration' },
+          { kind: 'variable_declaration' },
+        ],
+      },
+    });
+    
+    for (const varDecl of variableDeclarations) {
+      const declarators = varDecl.findAll({
+        rule: { kind: 'variable_declarator' },
+      });
+      
+      for (const declarator of declarators) {
+        const nameNode = declarator.find({
+          rule: { kind: 'identifier' },
+        });
+        // Only rename if this variable is in our set (meaning it's used in assignment destructuring)
+        if (nameNode && nameNode.text() === varName) {
+          const nameRange = nameNode.range();
+          edits.push({
+            startPos: nameRange.start.index,
+            endPos: nameRange.end.index,
+            insertedText: newName,
+          });
+        }
+      }
+    }
+  }
+}
+
+function renameResultMethodsInUsages(
+  rootNode: SgNode<TSX>,
+  resultMethodCalls: SgNode<TSX>[],
+  edits: Edit[],
+  renamedMethodVariables?: Set<string>,
+): void {
+  for (const call of resultMethodCalls) {
+    const funcNode = call.field('function');
+    if (funcNode && funcNode.is('member_expression')) {
+      try {
+        const property = funcNode.field('property');
+        if (property) {
+          const propText = property.text();
+          if (RESULT_METHODS_TO_RENAME.has(propText)) {
+            const newName = RESULT_METHODS_TO_RENAME.get(propText)!;
+            const propertyRange = property.range();
+            edits.push({
+              startPos: propertyRange.start.index,
+              endPos: propertyRange.end.index,
+              insertedText: newName,
+            });
+          }
+        }
+      } catch {
+        // Skip nodes where field() is not available or AST structure doesn't match expectations.
+        // This is expected for malformed or edge-case AST structures and should be silently ignored.
+      }
+    } else if (funcNode && funcNode.is('identifier')) {
+      // Handle direct calls to method variables (e.g., rerender(), rerenderHook())
+      const funcText = funcNode.text();
+      if (RESULT_METHODS_TO_RENAME.has(funcText)) {
+        // Direct method name (e.g., rerender -> rerenderAsync)
+        const newName = RESULT_METHODS_TO_RENAME.get(funcText)!;
+        const identifierRange = funcNode.range();
+        edits.push({
+          startPos: identifierRange.start.index,
+          endPos: identifierRange.end.index,
+          insertedText: newName,
+        });
+      } else if (renamedMethodVariables && renamedMethodVariables.has(funcText)) {
+        // Renamed method variable (e.g., rerenderHook -> rerenderHookAsync)
+        // Append "Async" to the variable name
+        const newName = `${funcText}Async`;
+        const identifierRange = funcNode.range();
+        edits.push({
+          startPos: identifierRange.start.index,
+          endPos: identifierRange.end.index,
+          insertedText: newName,
+        });
       }
     }
   }
