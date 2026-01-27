@@ -50,8 +50,7 @@
     "build": "yarn clean && yarn build:js && yarn build:ts",
     "release": "release-it",
     "release:rc": "release-it --preRelease=rc",
-    "release:beta": "release-it --preRelease=beta",
-    "release:codemods": "release-it --preRelease=alpha"
+    "release:beta": "release-it --preRelease=beta"
   },
   "dependencies": {
     "jest-matcher-utils": "^30.2.0",
