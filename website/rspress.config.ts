@@ -2,7 +2,6 @@ import * as path from 'path';
 import { defineConfig } from '@rspress/core';
 import { pluginCallstackTheme } from '@callstack/rspress-theme/plugin';
 import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
-import pluginVercelAnalytics from 'rspress-plugin-vercel-analytics';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -333,9 +332,5 @@ export default defineConfig({
       }),
     ],
   },
-  plugins: [
-    pluginCallstackTheme(),
-    // @ts-expect-error
-    pluginVercelAnalytics(),
-  ],
+  plugins: [pluginCallstackTheme()],
 });
