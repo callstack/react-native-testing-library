@@ -307,6 +307,7 @@ const sidebarDefault = {
       items: [
         { text: 'How to Query', link: '/docs/guides/how-to-query' },
         { text: 'Common Mistakes', link: '/docs/guides/common-mistakes' },
+        { text: 'LLM Guidelines', link: '/docs/guides/llm-guidelines' },
         { text: 'React 19', link: '/docs/guides/react-19' },
         { text: 'Troubleshooting', link: '/docs/guides/troubleshooting' },
         { text: 'FAQ', link: '/docs/guides/faq' },
