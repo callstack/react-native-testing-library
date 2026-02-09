@@ -14,10 +14,62 @@ Actionable guidelines for writing tests with React Native Testing Library (RNTL)
 
 ## Assertions
 
-- **Use RNTL matchers**: `toBeOnTheScreen()`, `toBeDisabled()`, `toHaveTextContent()`, `toHaveAccessibleName()`
-- **Don't assert on props directly** - use semantic matchers instead
+- **Use RNTL matchers** - prefer semantic matchers over prop assertions
 - **Combine queries with matchers**: `expect(screen.getByText('Hello')).toBeOnTheScreen()`
 - **No redundant null checks** - `getBy*` already throws if not found
+
+## Jest Matchers Reference
+
+| Matcher | Description |
+|---------|-------------|
+| `toBeOnTheScreen()` | Element is present in the element tree |
+| `toBeVisible()` | Element is visible (checks style, `aria-hidden`, `accessibilityElementsHidden`, ancestors) |
+| `toBeEmptyElement()` | Element has no children or text content |
+| `toContainElement(element)` | Element contains another element |
+| `toBeEnabled()` | Element is not disabled (checks `aria-disabled`, `accessibilityState`, ancestors) |
+| `toBeDisabled()` | Element has `aria-disabled` or `accessibilityState={{ disabled: true }}` (checks ancestors) |
+| `toBeBusy()` | Element has `aria-busy` or `accessibilityState={{ busy: true }}` |
+| `toBeChecked()` | Element has `aria-checked` or `accessibilityState={{ checked: true }}` |
+| `toBePartiallyChecked()` | Element has `aria-checked="mixed"` or `accessibilityState={{ checked: 'mixed' }}` |
+| `toBeSelected()` | Element has `aria-selected` or `accessibilityState={{ selected: true }}` |
+| `toBeExpanded()` | Element has `aria-expanded` or `accessibilityState={{ expanded: true }}` |
+| `toBeCollapsed()` | Element has `aria-expanded={false}` or `accessibilityState={{ expanded: false }}` |
+| `toHaveTextContent(text)` | Element has matching text content |
+| `toHaveDisplayValue(value)` | TextInput has matching display value |
+| `toHaveAccessibleName(name?)` | Element has matching `aria-label`, `accessibilityLabel`, or text content |
+| `toHaveAccessibilityValue(value)` | Element has matching `aria-value*` or `accessibilityValue` |
+| `toHaveStyle(style)` | Element has matching style |
+| `toHaveProp(name, value?)` | Element has prop (use semantic matchers when possible) |
+
+## User Interactions
+
+**Prefer `userEvent`** over `fireEvent` for realistic user interaction simulation. `userEvent` triggers the complete event sequence that real users would produce.
+
+### userEvent (Preferred, Async)
+
+```tsx
+const user = userEvent.setup();
+```
+
+| Method | Description |
+|--------|-------------|
+| `await user.press(element)` | Press an element (triggers `pressIn`, `pressOut`, `press`) |
+| `await user.longPress(element, options?)` | Long press with optional `{ duration }` |
+| `await user.type(element, text, options?)` | Type into TextInput (triggers `focus`, `keyPress`, `change`, `changeText` per char) |
+| `await user.clear(element)` | Clear TextInput (select all + backspace) |
+| `await user.paste(element, text)` | Paste text into TextInput |
+| `await user.scrollTo(element, options)` | Scroll a ScrollView with `{ y }` or `{ x }` offset |
+
+### fireEvent (Low-level, Sync in v13)
+
+Use only when `userEvent` doesn't support the event or when you need direct control.
+
+| Method | Description |
+|--------|-------------|
+| `fireEvent(element, eventName, ...data)` | Fire any event by name |
+| `fireEvent.press(element)` | Fire `onPress` only (no `pressIn`/`pressOut`) |
+| `fireEvent.changeText(element, text)` | Fire `onChangeText` directly |
+| `fireEvent.scroll(element, eventData)` | Fire `onScroll` with event data |
 
 ## Sync vs Async APIs (v13)
 
