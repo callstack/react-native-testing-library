@@ -135,6 +135,7 @@ const sidebar13x = {
       text: 'Guides',
       items: [
         { text: 'How to Query', link: '/13.x/docs/guides/how-to-query' },
+        { text: 'Common Mistakes', link: '/13.x/docs/guides/common-mistakes' },
         { text: 'React 19', link: '/13.x/docs/guides/react-19' },
         { text: 'Troubleshooting', link: '/13.x/docs/guides/troubleshooting' },
         { text: 'FAQ', link: '/13.x/docs/guides/faq' },
@@ -305,6 +306,7 @@ const sidebarDefault = {
       text: 'Guides',
       items: [
         { text: 'How to Query', link: '/docs/guides/how-to-query' },
+        { text: 'Common Mistakes', link: '/docs/guides/common-mistakes' },
         { text: 'React 19', link: '/docs/guides/react-19' },
         { text: 'Troubleshooting', link: '/docs/guides/troubleshooting' },
         { text: 'FAQ', link: '/docs/guides/faq' },
