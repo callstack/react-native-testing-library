@@ -2,6 +2,53 @@
 
 Actionable guidelines for writing tests with React Native Testing Library (RNTL) v13.
 
+## Core APIs
+
+### render
+
+```tsx
+const result = render(<Component />, options?);  // Sync in v13
+```
+
+| Option | Description |
+|--------|-------------|
+| `wrapper` | React component to wrap the rendered component (e.g., providers) |
+| `createNodeMock` | Function to create mock refs |
+
+| Return | Description |
+|--------|-------------|
+| `rerender(component)` | Re-render with a new component |
+| `unmount()` | Unmount the rendered component |
+| `toJSON()` | Get JSON representation for snapshots |
+| `debug(options?)` | Print the component tree to console |
+| `root` | Root element of the rendered component |
+
+### screen
+
+**Prefer `screen`** over destructuring from `render()`. Provides all query methods after `render()` is called.
+
+```tsx
+render(<Component />);
+screen.getByRole('button');  // Access queries via screen
+```
+
+### renderHook
+
+```tsx
+const { result, rerender, unmount } = renderHook(() => useMyHook(), options?);  // Sync in v13
+```
+
+| Option | Description |
+|--------|-------------|
+| `initialProps` | Initial props passed to the hook |
+| `wrapper` | React component to wrap the hook (e.g., providers) |
+
+| Return | Description |
+|--------|-------------|
+| `result.current` | Current return value of the hook |
+| `rerender(props?)` | Re-render hook with new props |
+| `unmount()` | Unmount the hook |
+
 ## Query Selection
 
 - **Prefer `getByRole`** as first choice for querying elements
