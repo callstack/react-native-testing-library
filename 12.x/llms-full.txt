@@ -1,0 +1,4181 @@
+---
+url: /react-native-testing-library/12.x/cookbook/advanced/network-requests.md
+---
+
+# Network Requests
+
+## Introduction
+
+Mocking network requests is an essential part of testing React Native applications. By mocking
+network
+requests, you can control the data that is returned from the server and test how your application
+behaves in different scenarios, such as when the request is successful or when it fails.
+
+In this guide, we will show you how to mock network requests and guard your test suits from unwanted
+and unmocked/unhandled network requests
+
+:::info
+To simulate a real-world scenario, we will use the [Random User Generator API](https://randomuser.me/) that provides random user data.
+:::
+
+## Phonebook Example
+
+Let's assume we have a simple phonebook application that
+uses [`fetch`](https://reactnative.dev/docs/network#using-fetch) for fetching Data from a server.
+In our case, we have a list of contacts and favorites that we want to display in our application.
+
+This is how the root of the application looks like:
+
+```tsx title=network-requests/Phonebook.tsx
+import React, { useEffect, useState } from 'react';
+import { Text } from 'react-native';
+import { User } from './types';
+import ContactsList from './components/ContactsList';
+import FavoritesList from './components/FavoritesList';
+import getAllContacts from './api/getAllContacts';
+import getAllFavorites from './api/getAllFavorites';
+
+export default () => {
+  const [usersData, setUsersData] = useState<User[]>([]);
+  const [favoritesData, setFavoritesData] = useState<User[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const _getAllContacts = async () => {
+      const _data = await getAllContacts();
+      setUsersData(_data);
+    };
+    const _getAllFavorites = async () => {
+      const _data = await getAllFavorites();
+      setFavoritesData(_data);
+    };
+
+    const run = async () => {
+      try {
+        await Promise.all([_getAllContacts(), _getAllFavorites()]);
+      } catch (e) {
+        const message = isErrorWithMessage(e) ? e.message : 'Something went wrong';
+        setError(message);
+      }
+    };
+
+    void run();
+  }, []);
+
+  if (error) {
+    return <Text>An error occurred: {error}</Text>;
+  }
+
+  return (
+    <>
+      <FavoritesList users={favoritesData} />
+      <ContactsList users={usersData} />
+    </>
+  );
+};
+```
+
+We fetch the contacts from the server using the `getAllFavorites` function that utilizes `fetch`.
+
+```tsx title=network-requests/api/getAllContacts.ts
+import { User } from '../types';
+
+export default async (): Promise<User[]> => {
+  const res = await fetch('https://randomuser.me/api/?results=25');
+  if (!res.ok) {
+    throw new Error(`Error fetching contacts`);
+  }
+  const json = await res.json();
+  return json.results;
+};
+```
+
+We have similar function for fetching the favorites, but this time limiting the results to 10.
+
+```tsx title=network-requests/api/getAllFavorites.ts
+import { User } from '../types';
+
+export default async (): Promise<User[]> => {
+  const res = await fetch('https://randomuser.me/api/?results=10');
+  if (!res.ok) {
+    throw new Error(`Error fetching favorites`);
+  }
+  const json = await res.json();
+  return json.results;
+};
+```
+
+Our `FavoritesList` component is a simple component that displays the list of favorite contacts and
+their avatars horizontally.
+
+```tsx title=network-requests/components/FavoritesList.tsx
+import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import React, {useCallback} from 'react';
+import type {ListRenderItem} from '@react-native/virtualized-lists';
+import {User} from '../types';
+
+export default ({users}: { users: User[] }) => {
+  const renderItem: ListRenderItem<User> = useCallback(({item: {picture}}) => {
+    return (
+      <View style={styles.userContainer}>
+        <Image
+          source={{uri: picture.thumbnail}}
+          style={styles.userImage}
+          accessibilityLabel={'favorite-contact-avatar'}
+        />
+      </View>
+    );
+  }, []);
+
+  if (users.length === 0) return (
+    <View style={styles.loaderContainer}>
+      <Text>Figuring out your favorites...</Text>
+    </View>
+  );
+
+  return (
+    <View style={styles.outerContainer}>
+      <Text>⭐My Favorites</Text>
+      <FlatList<User>
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={users}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => `${index}-${item.id.value}`}
+      />
+    </View>
+  );
+};
+
+// Looking for styles?
+// Check examples/cookbook/app/advanced/components/FavoritesList.tsx
+const styles =
+...
+```
+
+Our `ContactsList` component is similar to the `FavoritesList` component, but it displays the list
+of
+all contacts vertically.
+
+```tsx title=network-requests/components/ContactsList.tsx
+import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback } from 'react';
+import type { ListRenderItem } from '@react-native/virtualized-lists';
+import { User } from '../types';
+
+export default ({ users }: { users: User[] }) => {
+  const renderItem: ListRenderItem<User> = useCallback(
+    ({ item: { name, email, picture, cell }, index }) => {
+      const { title, first, last } = name;
+      const backgroundColor = index % 2 === 0 ? '#f9f9f9' : '#fff';
+      return (
+        <View style={[{ backgroundColor }, styles.userContainer]}>
+          <Image source={{ uri: picture.thumbnail }} style={styles.userImage} />
+          <View>
+            <Text>
+              Name: {title} {first} {last}
+            </Text>
+            <Text>Email: {email}</Text>
+            <Text>Mobile: {cell}</Text>
+          </View>
+        </View>
+      );
+    },
+    [],
+  );
+
+  if (users.length === 0) return <FullScreenLoader />;
+
+  return (
+    <View>
+      <FlatList<User>
+        data={users}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => `${index}-${item.id.value}`}
+      />
+    </View>
+  );
+};
+
+// Looking for styles or FullScreenLoader component?
+// Check examples/cookbook/app/advanced/components/ContactsList.tsx
+const FullScreenLoader = () => ...
+const styles = ...
+```
+
+## Start testing with a simple test
+
+In our initial test we would like to test if the `PhoneBook` component renders the `FavoritesList`
+and `ContactsList` components correctly.
+We will need to mock the network requests and their corresponding responses to ensure that the component behaves as
+expected. To mock the network requests we will use [MSW (Mock Service Worker)](https://mswjs.io/docs/getting-started).
+
+:::note
+We recommend using the Mock Service Worker (MSW) library to declaratively mock API communication in your tests instead of stubbing `fetch`, or relying on third-party adapters.
+:::
+
+:::info
+You can install MSW by running `npm install msw --save-dev` or `yarn add msw --dev`.
+More info regarding installation can be found in [MSW's getting started guide](https://mswjs.io/docs/getting-started#step-1-install).
+
+Please make sure you're also aware of [MSW's setup guide](https://mswjs.io/docs/integrations/react-native).
+Please be minded that the MSW's setup guide is potentially incomplete and might contain discrepancies/missing pieces.
+:::
+
+```tsx title=network-requests/Phonebook.test.tsx
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react-native';
+import React from 'react';
+import PhoneBook from '../PhoneBook';
+import { User } from '../types';
+import {http, HttpResponse} from "msw";
+import {setupServer} from "msw/node";
+
+// Define request handlers and response resolvers for random user API.
+// By default, we always return the happy path response.
+const handlers = [
+  http.get('https://randomuser.me/api/*', () => {
+    return HttpResponse.json(DATA);
+  }),
+];
+
+// Setup a request interception server with the given request handlers.
+const server = setupServer(...handlers);
+
+// Enable API mocking via Mock Service Worker (MSW)
+beforeAll(() => server.listen());
+// Reset any runtime request handlers we may add during the tests
+afterEach(() => server.resetHandlers());
+// Disable API mocking after the tests are done
+afterAll(() => server.close());
+
+describe('PhoneBook', () => {
+  it('fetches all contacts and favorites successfully and renders lists in sections correctly', async () => {
+    render(<PhoneBook />);
+
+    await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
+    expect(await screen.findByText('Name: Mrs Ida Kristensen')).toBeOnTheScreen();
+    expect(await screen.findByText('Email: ida.kristensen@example.com')).toBeOnTheScreen();
+    expect(await screen.findAllByText(/name/i)).toHaveLength(3);
+    expect(await screen.findByText(/my favorites/i)).toBeOnTheScreen();
+    expect(await screen.findAllByLabelText('favorite-contact-avatar')).toHaveLength(3);
+  });
+});
+
+const DATA: { results: User[] } = {
+  results: [
+    {
+      name: {
+        title: 'Mrs',
+        first: 'Ida',
+        last: 'Kristensen',
+      },
+      email: 'ida.kristensen@example.com',
+      id: {
+        name: 'CPR',
+        value: '250562-5730',
+      },
+      picture: {
+        large: 'https://randomuser.me/api/portraits/women/26.jpg',
+        medium: 'https://randomuser.me/api/portraits/med/women/26.jpg',
+        thumbnail: 'https://randomuser.me/api/portraits/thumb/women/26.jpg',
+      },
+      cell: '123-4567-890',
+    },
+    // For brevity, we have omitted the rest of the users, you can still find them in
+    // examples/cookbook/app/network-requests/__tests__/test-utils.ts
+    ...
+  ],
+};
+```
+
+:::info
+More info regarding how to describe the network using request handlers, intercepting a request and handling its response can be found in the [MSW's documentation](https://mswjs.io/docs/getting-started#step-2-describe).
+:::
+
+## Testing error handling
+
+As we are dealing with network requests, and things can go wrong, we should also cover the case when
+the API request fails. In this case, we would like to test how our application behaves when the API request fails.
+
+:::info
+The nature of the network can be highly dynamic, which makes it challenging to describe it completely in a fixed list of request handlers.
+MSW provides us the means to override any particular network behavior using the designated `.use()` API.
+More info can be found in [MSW's Network behavior overrides documentation](https://mswjs.io/docs/best-practices/network-behavior-overrides)
+:::
+
+```tsx title=network-requests/Phonebook.test.tsx
+...
+
+const mockServerFailureForGetAllContacts = () => {
+  server.use(
+    http.get('https://randomuser.me/api/', ({ request }) => {
+      // Construct a URL instance out of the intercepted request.
+      const url = new URL(request.url);
+      // Read the "results" URL query parameter using the "URLSearchParams" API.
+      const resultsLength = url.searchParams.get('results');
+      // Simulate a server error for the get all contacts request.
+      // We check if the "results" query parameter is set to "25"
+      // to know it's the correct request to mock, in our case get all contacts.
+      if (resultsLength === '25') {
+        return new HttpResponse(null, { status: 500 });
+      }
+      // Return the default response for all other requests that match URL and verb. (in our case get favorites)
+      return HttpResponse.json(DATA);
+    }),
+  );
+};
+
+describe('PhoneBook', () => {
+...
+  it('fails to fetch all contacts and renders error message', async () => {
+    mockServerFailureForGetAllContacts();
+    render(<PhoneBook />);
+
+    await waitForElementToBeRemoved(() => screen.getByText(/users data not quite there yet/i));
+    expect(
+      await screen.findByText(/an error occurred: error fetching contacts/i),
+    ).toBeOnTheScreen();
+  });
+});
+
+```
+
+## Global guarding against unwanted API requests
+
+As mistakes may happen, we might forget to mock a network request in one of our tests in the future.
+To prevent us from happening, and alert when a certain network request is left unhandled, you may choose to
+move MSW's server management from `PhoneBook.test.tsx` to Jest's setup file via [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array).
+
+```tsx title=examples/cookbook/jest-setup.ts
+// Enable API mocking via Mock Service Worker (MSW)
+beforeAll(() => server.listen());
+// Reset any runtime request handlers we may add during the tests
+afterEach(() => server.resetHandlers());
+// Disable API mocking after the tests are done
+afterAll(() => server.close());
+
+// ... rest of your setup file
+```
+
+This setup will ensure you have the MSW server running before any test suite starts and stops it after all tests are done.
+Which will result in a warning in the console if you forget to mock an API request in your test suite.
+
+```bash
+[MSW] Warning: intercepted a request without a matching request handler:
+ • GET https://randomuser.me/api/?results=25?results=25
+```
+
+## Conclusion
+
+Testing a component that makes network requests in combination with MSW takes some initial preparation to configure and describe the overridden networks.
+We can achieve that by using MSW's request handlers and intercepting APIs.
+
+Once up and running we gain full grip over the network requests, their responses, statuses.
+Doing so is crucial to be able to test how our application behaves in different
+scenarios, such as when the request is successful or when it fails.
+
+When global configuration is in place, MSW's will also warn us when an unhandled network requests has occurred throughout a test suite.
+
+## Further Reading and Alternatives
+
+Explore more advanced scenarios for mocking network requests with MSW:
+
+- MSW's Basics - [Intercepting requests](https://mswjs.io/docs/basics/intercepting-requests) and/or [Mocking responses](https://mswjs.io/docs/basics/mocking-responses)
+- MSW's Network behavior - how to describe [REST](https://mswjs.io/docs/network-behavior/rest) and/or [GraphQL](https://mswjs.io/docs/network-behavior/graphql) APIs
+
+
+
+---
+url: /react-native-testing-library/12.x/cookbook/basics/async-tests.md
+---
+
+# Async tests
+
+## Summary
+
+Typically, you would write synchronous tests, as they are simple and get the work done. However, there are cases when using asynchronous (async) tests might be necessary or beneficial. The two most common cases are:
+
+1. **Testing Code with asynchronous operations**: When your code relies on asynchronous operations, such as network calls or database queries, async tests are essential. Even though you should mock these network calls, the mock should act similarly to the actual behavior and hence by async.
+2. **UserEvent API:** Using the [User Event API](/react-native-testing-library/12.x/docs/api/events/user-event.md) in your tests creates more realistic event handling. These interactions introduce delays (even though these are typically event-loop ticks with 0 ms delays), requiring async tests to handle the timing correctly.
+
+Using async tests when needed ensures your tests are reliable and simulate real-world conditions accurately.
+
+### Example
+
+Consider a basic asynchronous test for a user signing in with correct credentials:
+
+```javascript
+test('User can sign in with correct credentials', async () => {
+  // Typical test setup
+  const user = userEvent.setup();
+  render(<App />);
+
+  // No need to use async here, components are already rendered
+  expect(screen.getByRole('header', { name: 'Sign in to Hello World App!' })).toBeOnTheScreen();
+
+  // Using await as User Event requires it
+  await user.type(screen.getByLabelText('Username'), 'admin');
+  await user.type(screen.getByLabelText('Password'), 'admin1');
+  await user.press(screen.getByRole('button', { name: 'Sign In' }));
+
+  // Using await as sign in operation is asynchronous
+  expect(await screen.findByRole('header', { name: 'Welcome admin!' })).toBeOnTheScreen();
+
+  // Follow-up assertions do not need to be async, as we already waited for sign in operation to complete
+  expect(
+    screen.queryByRole('header', { name: 'Sign in to Hello World App' })
+  ).not.toBeOnTheScreen();
+  expect(screen.queryByLabelText('Username')).not.toBeOnTheScreen();
+  expect(screen.queryByLabelText('Password')).not.toBeOnTheScreen();
+});
+```
+
+## Async utilities
+
+There are several asynchronous utilities you might use in your tests.
+
+### `findBy*` queries
+
+The most common are the [`findBy*` queries](/react-native-testing-library/12.x/docs/api/queries.md#find-by). These are useful when waiting for a matching element to appear. They can be understood as a [`getBy*` queries](/react-native-testing-library/12.x/docs/api/queries.md#get-by) used in conjunction with a [`waitFor` function](/react-native-testing-library/12.x/docs/api/misc/async.md#waitfor).
+
+They accept the same predicates as `getBy*` queries like `findByRole`, `findByTest`, etc. They also have a multiple elements variant called [`findAllBy*`](/react-native-testing-library/12.x/docs/api/queries.md#find-all-by).
+
+```typescript
+function findByRole: (
+  role: TextMatch,
+  queryOptions?: {
+    // Query specific options
+  }
+  waitForOptions?: {
+    timeout?: number;
+    interval?: number;
+    // ..
+  }
+): Promise<ReactTestInstance>;
+```
+
+Each query has a default `timeout` value of 1000 ms and a default `interval` of 50 ms. Custom timeout and check intervals can be specified if needed, as shown below:
+
+#### Example
+
+```typescript
+const button = await screen.findByRole('button'), { name: 'Start' }, { timeout: 1000, interval: 50 });
+```
+
+Alternatively, a default global `timeout` value can be set using the [`configure` function](/react-native-testing-library/12.x/docs/api/misc/config.md#configure):
+
+```typescript
+configure({ asyncUtilTimeout: timeout });
+```
+
+### `waitFor` function
+
+The `waitFor` function is another option, serving as a lower-level utility in more advanced cases.
+
+```typescript
+function waitFor<T>(
+  expectation: () => T,
+  options?: {
+    timeout: number;
+    interval: number;
+  }
+): Promise<T>;
+```
+
+It accepts an `expectation` to be validated and repeats the check every defined interval until it no longer throws an error. Similarly to `findBy*` queries they accept `timeout` and `interval` options and have the same default values of 1000ms for timeout, and a checking interval of 50 ms.
+
+#### Example
+
+```typescript
+await waitFor(() => expect(mockAPI).toHaveBeenCalledTimes(1));
+```
+
+If you want to use it with `getBy*` queries, use the `findBy*` queries instead, as they essentially do the same, but offer better developer experience.
+
+### `waitForElementToBeRemoved` function
+
+A specialized function, [`waitForElementToBeRemoved`](/react-native-testing-library/12.x/docs/api/misc/async.md#waitforelementtoberemoved), is used to verify that a matching element was present but has since been removed.
+
+```typescript
+function waitForElementToBeRemoved<T>(
+  expectation: () => T,
+  options?: {
+    timeout: number;
+    interval: number;
+  }
+): Promise<T> {}
+```
+
+This function is, in a way, the negation of `waitFor` as it expects the initial expectation to be true (not throw an error), only to turn invalid (start throwing errors) on subsequent runs. It operates using the same `timeout` and `interval` parameters as `findBy*` queries and `waitFor`.
+
+#### Example
+
+```typescript
+await waitForElementToBeRemoved(() => getByText('Hello World'));
+```
+
+## Fake Timers
+
+Asynchronous tests can take long to execute due to the delays introduced by asynchronous operations. To mitigate this, fake timers can be used. These are particularly useful when delays are mere waits, such as the 130 milliseconds wait introduced by the UserEvent `press()` event due to React Native runtime behavior or simulated 1000 wait in a API call mock. Fake timers allow for precise fast-forwarding through these wait periods.
+
+Here are the basics of using [Jest fake timers](https://jestjs.io/docs/timer-mocks):
+
+- Enable fake timers with: `jest.useFakeTimers()`
+- Disable fake timers with: `jest.useRealTimers()`
+- Advance fake timers forward with: `jest.advanceTimersByTime(interval)`
+- Run **all timers** to completion with: `jest.runAllTimers()`
+- Run **currently pending timers** to completion with: `jest.runOnlyPendingTimers()`
+
+Be cautious when running all timers to completion as it might create an infinite loop if these timers schedule follow-up timers. In such cases, it's safer to use `jest.runOnlyPendingTimers()` to avoid ending up in an infinite loop of scheduled tasks.
+
+You can use both built-in Jest fake timers, as well as [Sinon.JS fake timers](https://sinonjs.org/releases/latest/fake-timers/).
+
+Note: you do not need to advance timers by hand when using User Event API, as it's automatically.
+
+
+
+---
+url: /react-native-testing-library/12.x/cookbook/basics/custom-render.md
+---
+
+# Custom `render` function
+
+### Summary
+
+RNTL exposes the `render` function as the primary entry point for tests. If you make complex, repeating setups for your tests, consider creating a custom render function. The idea is to encapsulate common setup steps and test wiring inside a render function suitable for your tests.
+
+### Example
+
+```tsx title=test-utils.ts
+// ...
+
+interface RenderWithProvidersProps {
+  user?: User | null;
+  theme?: Theme;
+}
+
+export function renderWithProviders<T>(
+  ui: React.ReactElement<T>,
+  options?: RenderWithProvidersProps
+) {
+  return render(
+    <UserProvider.Provider value={options?.user ?? null}>
+      <ThemeProvider.Provider value={options?.theme ?? 'light'}>{ui}</ThemeProvider.Provider>
+    </UserProvider.Provider>
+  );
+}
+```
+
+```tsx title=custom-render/index.test.tsx
+import { screen } from '@testing-library/react-native';
+import { renderWithProviders } from '../test-utils';
+// ...
+
+test('renders WelcomeScreen with user', () => {
+  renderWithProviders(<WelcomeScreen />, { user: { name: 'Jar-Jar' } });
+  expect(screen.getByText(/hello Jar-Jar/i)).toBeOnTheScreen();
+});
+
+test('renders WelcomeScreen without user', () => {
+  renderWithProviders(<WelcomeScreen />, { user: null });
+  expect(screen.getByText(/hello stranger/i)).toBeOnTheScreen();
+});
+```
+
+Example [full source code](https://github.com/callstack/react-native-testing-library/tree/main/examples/cookbook/custom-render).
+
+### More info
+
+#### Additional params
+
+A custom render function might accept additional parameters to allow for setting up different start conditions for a test, e.g., the initial state for global state management.
+
+```tsx title=SomeScreen.test.tsx
+test('renders SomeScreen for logged in user', () => {
+  renderScreen(<SomeScreen />, { state: loggedInState });
+  // ...
+});
+```
+
+#### Multiple functions
+
+Depending on the situation, you may declare more than one custom render function. For example, you have one function for testing application flows and a second for testing individual screens.
+
+```tsx title=test-utils.tsx
+function renderNavigator(ui, options);
+function renderScreen(ui, options);
+```
+
+#### Async function
+
+Make it async if you want to put some async setup in your custom render function.
+
+```tsx title=SomeScreen.test.tsx
+test('renders SomeScreen', async () => {
+  await renderWithAsync(<SomeScreen />);
+  // ...
+});
+```
+
+
+
+---
+url: /react-native-testing-library/12.x/cookbook/index.md
+---
+
+# Introduction
+
+Welcome to the **React Native Testing Library (RNTL) Cookbook**!
+This app is your go-to resource for learning how to effectively test React Native applications.
+It provides a collection of **best practices**, **ready-made recipes**, and **tips & tricks** to
+simplify and improve your testing workflow. Whether you’re a beginner just getting started or a
+seasoned developer looking to sharpen your
+skills, the Cookbook has something for everyone.
+
+## What's Inside the Cookbook?
+
+The Cookbook is currently organized into **three main chapters**:
+
+- **Basic Recipes**: A great starting point, covering essential testing scenarios such as async
+  operations and custom render functions.
+- **Advanced Recipes**: More complex scenarios like network requests and in the future, navigation
+  testing and more.
+- **State Management Recipes**: Best practices for testing state management libraries
+
+Each recipe includes a clear explanation along with a corresponding code example to help you get
+hands-on with testing. Checkout
+the [Cookbook App](https://github.com/callstack/react-native-testing-library/tree/main/examples/cookbook#rntl-cookbook) to see the
+recipes in action.
+
+## What's Next?
+
+Join the conversation
+on [GitHub](https://github.com/callstack/react-native-testing-library/issues/1624) here to discuss
+ideas, ask questions, or provide feedback.
+
+
+
+---
+url: /react-native-testing-library/12.x/cookbook/state-management/jotai.md
+---
+
+# Jotai
+
+## Introduction
+
+Jotai is a global state management library for React that uses an atomic approach to optimize
+renders and solve issues like extra re-renders and the need for memoization. It scales from simple
+state management to complex enterprise applications, offering utilities and extensions to enhance
+the developer experience.
+
+## Task List Example
+
+Let's assume we have a simple task list component that uses Jotai for state management. The
+component has a list of tasks, a text input for typing new task name and a button to add a new task to the list.
+
+```tsx title=state-management/jotai/TaskList.tsx
+import * as React from 'react';
+import { Pressable, Text, TextInput, View } from 'react-native';
+import { useAtom } from 'jotai';
+import { nanoid } from 'nanoid';
+import { newTaskTitleAtom, tasksAtom } from './state';
+
+export function TaskList() {
+  const [tasks, setTasks] = useAtom(tasksAtom);
+  const [newTaskTitle, setNewTaskTitle] = useAtom(newTaskTitleAtom);
+
+  const handleAddTask = () => {
+    setTasks((tasks) => [
+      ...tasks,
+      {
+        id: nanoid(),
+        title: newTaskTitle,
+      },
+    ]);
+    setNewTaskTitle('');
+  };
+
+  return (
+    <View>
+      {tasks.map((task) => (
+        <Text key={task.id} testID="task-item">
+          {task.title}
+        </Text>
+      ))}
+
+      {!tasks.length ? <Text>No tasks, start by adding one...</Text> : null}
+
+      <TextInput
+        accessibilityLabel="New Task"
+        placeholder="New Task..."
+        value={newTaskTitle}
+        onChangeText={(text) => setNewTaskTitle(text)}
+      />
+
+      <Pressable accessibilityRole="button" onPress={handleAddTask}>
+        <Text>Add Task</Text>
+      </Pressable>
+    </View>
+  );
+}
+```
+
+## Starting with a Simple Test
+
+We can test our `TaskList` component using React Native Testing Library's (RNTL) regular `render`
+function. Although it is sufficient to test the empty state of the `TaskList` component, it is not
+enough to test the component with initial tasks present in the list.
+
+```tsx title=status-management/jotai/__tests__/TaskList.test.tsx
+import * as React from 'react';
+import { render, screen, userEvent } from '@testing-library/react-native';
+import { renderWithAtoms } from './test-utils';
+import { TaskList } from './TaskList';
+import { newTaskTitleAtom, tasksAtom } from './state';
+import { Task } from './types';
+
+jest.useFakeTimers();
+
+test('renders an empty task list', () => {
+  render(<TaskList />);
+  expect(screen.getByText(/no tasks, start by adding one/i)).toBeOnTheScreen();
+});
+```
+
+## Custom Render Function to populate Jotai Atoms with Initial Values
+
+To test the `TaskList` component with initial tasks, we need to be able to populate the `tasksAtom` with
+initial values. We can create a custom render function that uses Jotai's `useHydrateAtoms` hook to
+hydrate the atoms with initial values. This function will accept the initial atoms and their
+corresponding values as an argument.
+
+```tsx title=status-management/jotai/test-utils.tsx
+import * as React from 'react';
+import { render } from '@testing-library/react-native';
+import { useHydrateAtoms } from 'jotai/utils';
+import { PrimitiveAtom } from 'jotai/vanilla/atom';
+
+// Jotai types are not well exported, so we will make our life easier by using `any`.
+export type AtomInitialValueTuple<T> = [PrimitiveAtom<T>, T];
+
+export interface RenderWithAtomsOptions {
+  initialValues: AtomInitialValueTuple<any>[];
+}
+
+/**
+ * Renders a React component with Jotai atoms for testing purposes.
+ *
+ * @param component - The React component to render.
+ * @param options - The render options including the initial atom values.
+ * @returns The render result from `@testing-library/react-native`.
+ */
+export const renderWithAtoms = <T,>(
+  component: React.ReactElement,
+  options: RenderWithAtomsOptions
+) => {
+  return render(
+    <HydrateAtomsWrapper initialValues={options.initialValues}>{component}</HydrateAtomsWrapper>
+  );
+};
+
+export type HydrateAtomsWrapperProps = React.PropsWithChildren<{
+  initialValues: AtomInitialValueTuple<unknown>[];
+}>;
+
+/**
+ * A wrapper component that hydrates Jotai atoms with initial values.
+ *
+ * @param initialValues - The initial values for the Jotai atoms.
+ * @param children - The child components to render.
+ * @returns The rendered children.
+
+ */
+function HydrateAtomsWrapper({ initialValues, children }: HydrateAtomsWrapperProps) {
+  useHydrateAtoms(initialValues);
+  return children;
+}
+```
+
+## Testing the `TaskList` Component with initial tasks
+
+We can now use the `renderWithAtoms` function to render the `TaskList` component with initial tasks. The
+`initialValues` property will contain the `tasksAtom`, `newTaskTitleAtom` and their initial values. We can then test the component to ensure that the initial tasks are rendered correctly.
+
+:::info
+In our test, we populated only one atom and its initial value, but you can add other Jotai atoms and their corresponding values to the initialValues array as needed.
+:::
+
+```tsx title=status-management/jotai/__tests__/TaskList.test.tsx
+=======
+const INITIAL_TASKS: Task[] = [{ id: '1', title: 'Buy bread' }];
+
+test('renders a to do list with 1 items initially, and adds a new item', async () => {
+  renderWithAtoms(<TaskList />, {
+    initialValues: [
+      [tasksAtom, INITIAL_TASKS],
+      [newTaskTitleAtom, ''],
+    ],
+  });
+
+  expect(screen.getByText(/buy bread/i)).toBeOnTheScreen();
+  expect(screen.getAllByTestId('task-item')).toHaveLength(1);
+
+  const user = userEvent.setup();
+  await user.type(screen.getByPlaceholderText(/new task/i), 'Buy almond milk');
+  await user.press(screen.getByRole('button', { name: /add task/i }));
+
+  expect(screen.getByText(/buy almond milk/i)).toBeOnTheScreen();
+  expect(screen.getAllByTestId('task-item')).toHaveLength(2);
+});
+```
+
+## Modifying atom outside of React components
+
+In several cases, you might need to change an atom's state outside a React component. In our case,
+we have a set of functions to get tasks and set tasks, which change the state of the task list atom.
+
+```tsx title=state-management/jotai/state.ts
+import { atom, createStore } from 'jotai';
+import { Task } from './types';
+
+export const tasksAtom = atom<Task[]>([]);
+export const newTaskTitleAtom = atom('');
+
+// Available for use outside React components
+export const store = createStore();
+
+// Selectors
+export function getAllTasks(): Task[] {
+  return store.get(tasksAtom);
+}
+
+// Actions
+export function addTask(task: Task) {
+  store.set(tasksAtom, [...getAllTasks(), task]);
+}
+```
+
+## Testing atom outside of React components
+
+You can test the `getAllTasks` and `addTask` functions outside the React component's scope by setting
+the initial to-do items in the store and then checking if the functions work as expected.
+No special setup is required to test these functions, as `store.set` is available by default by
+Jotai.
+
+```tsx title=state-management/jotai/__tests__/TaskList.test.tsx
+import { addTask, getAllTasks, store, tasksAtom } from './state';
+
+//...
+
+test('modify store outside of React component', () => {
+  // Set the initial to do items in the store
+  store.set(tasksAtom, INITIAL_TASKS);
+  expect(getAllTasks()).toEqual(INITIAL_TASKS);
+
+  const NEW_TASK = { id: '2', title: 'Buy almond milk' };
+  addTask(NEW_TASK);
+  expect(getAllTasks()).toEqual([...INITIAL_TASKS, NEW_TASK]);
+});
+```
+
+## Conclusion
+
+Testing a component or a function that depends on Jotai atoms is straightforward with the help of
+the `useHydrateAtoms` hook. We've seen how to create a custom render function `renderWithAtoms` that
+sets up atoms and their initial values for testing purposes. We've also seen how to test functions
+that change the state of atoms outside React components. This approach allows us to test components
+in different states and scenarios, ensuring they behave as expected.
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/advanced/testing-env.md
+---
+
+# Testing environment
+
+:::info
+
+This document is intended for a more advanced audience who want to understand the internals of our testing environment better, e.g., to contribute to the codebase. You should be able to write integration or component tests without reading this.
+
+:::
+
+React Native Testing Library allows you to write integration and component tests for your React Native app or library. While the JSX code used in tests closely resembles your React Native app, things are not as simple as they might appear. This document will describe the key elements of our testing environment and highlight things to be aware of when writing more advanced tests or diagnosing issues.
+
+## React renderers
+
+React allows you to write declarative code using JSX, write function or class components, or use hooks like `useState`. You need to use a renderer to output the results of your components. Every React app uses some renderer:
+
+- React Native is a renderer for mobile apps,
+- React DOM is a renderer for web apps,
+- There are other more [specialized renderers](https://github.com/chentsulin/awesome-react-renderer) that can e.g., render to console or HTML canvas.
+
+When you run your tests in the React Native Testing Library, somewhat contrary to what the name suggests, they are actually **not** using React Native renderer. This is because this renderer needs to be run on an iOS or Android operating system, so it would need to run on a device or simulator.
+
+## React Test Renderer
+
+Instead, RNTL uses React Test Renderer, a specialized renderer that allows rendering to pure JavaScript objects without access to mobile OS and can run in a Node.js environment using Jest (or any other JavaScript test runner).
+
+Using React Test Renderer has pros and cons.
+
+Benefits:
+
+- tests can run on most CIs (Linux, etc) and do not require a mobile device or emulator
+- faster test execution
+- light runtime environment
+
+Disadvantages:
+
+- Tests do not execute native code
+- Tests are unaware of the view state that would be managed by native components, e.g., focus, unmanaged text boxes, etc.
+- Assertions do not operate on native view hierarchy
+- Runtime behaviors are simulated, sometimes imperfectly
+
+It's worth noting that the React Testing Library (web one) works a bit differently. While RTL also runs in Jest, it has access to a simulated browser DOM environment from the `jsdom` package, which allows it to use a regular React DOM renderer. Unfortunately, there is no similar React Native runtime environment package. This is probably because while the browser environment is well-defined and highly standardized, the React Native environment constantly evolves in sync with the evolution of underlying OS-es. Maintaining such an environment would require duplicating countless React Native behaviors and keeping them in sync as React Native develops.
+
+## Element tree
+
+Calling the `render()` function creates an element tree. This is done internally by invoking `TestRenderer.create()` method. The output tree represents your React Native component tree, and each node of that tree is an "instance" of some React component (to be more precise, each node represents a React fiber, and only class components have instances, while function components store the hook state using fibers).
+
+These tree elements are represented by `ReactTestInstance` type:
+
+```tsx
+interface ReactTestInstance {
+  type: ElementType;
+  props: { [propName: string]: any };
+  parent: ReactTestInstance | null;
+  children: Array<ReactTestInstance | string>;
+
+  // Other props and methods
+}
+```
+
+Based on: [https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-test-renderer/index.d.ts](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-test-renderer/index.d.ts)
+
+## Host and composite components
+
+One of the most important aspects of the element tree is that it is composed of both host and composite components:
+
+- [Host components](https://reactnative.dev/architecture/glossary#react-host-components-or-host-components) will have direct counterparts in the native view tree. Typical examples are `<View>`, `<Text>` , `<TextInput>`, and `<Image>` from React Native. You can think of these as an analog of `<div>`, `<span>` etc on the Web. You can also create custom host views as native modules or import them from 3rd party libraries, like React Navigation or React Native Gesture Handler.
+- [Composite components](https://reactnative.dev/architecture/glossary#react-composite-components) are React code organization units that exist only on the JavaScript side of your app. Typical examples are components you create (function and class components), components imported from React Native (`View`, `Text`, etc.), or 3rd party packages.
+
+That might initially sound confusing since we put React Native's `View` in both categories. There are two `View` components: composite and host. The relation between them is as follows:
+
+- composite `View` is the type imported from the `react-native` package. It is a JavaScript component that renders the host `View` as its only child in the element tree.
+- host `View`, which you do not render directly. React Native takes the props you pass to the composite `View`, does some processing on them and passes them to the host `View`.
+
+The part of the tree looks as follows:
+
+```jsx
+* <View> (composite)
+  * <View> (host)
+    * children prop passed in JSX
+```
+
+A similar relation exists between other composite and host pairs: e.g. `Text` , `TextInput`, and `Image` components:
+
+```jsx
+* <Text> (composite)
+  * <Text> (host)
+    * string (or mixed) content
+```
+
+Not all React Native components are organized this way, e.g., when you use `Pressable` (or `TouchableOpacity`), there is no host `Pressable`, but composite `Pressable` is rendering a host `View` with specific props being set:
+
+```jsx
+* <Pressable> (composite)
+  * <View accessible={true} {...}> (host)
+    * children prop passed in JSX
+```
+
+### Differentiating between host and composite elements
+
+Any easy way to differentiate between host and composite elements is the `type` prop of `ReactTestInstance`:
+
+- for host components, it's always a string value representing a component name, e.g., `"View"`
+- for composite components, it's a function or class corresponding to the component
+
+You can use the following code to check if a given element is a host one:
+
+```jsx
+function isHostElement(element: ReactTestInstance) {
+  return typeof element.type === 'string';
+}
+```
+
+## Tree nodes
+
+We encourage you to only assert values on host views in your tests because they represent the user interface view and controls which the user can see and interact with. Users cannot see or interact with composite views as they exist purely in the JavaScript domain and do not generate any visible UI.
+
+### Asserting props
+
+For example, suppose you assert a `style` prop of a composite element. In that case, there is no guarantee that the style will be visible to the user, as the component author can forget to pass this prop to some underlying `View` or other host component. Similarly `onPress` event handler on a composite prop can be unreachable by the user.
+
+```jsx
+function ForgotToPassPropsButton({ title, onPress, style }) {
+  return (
+    <Pressable>
+      <Text>{title}</Text>
+    </Pressable>
+  );
+}
+```
+
+In the above example, user-defined components accept both `onPress` and `style` props but do not pass them (through `Pressable`) to host views, so they will not affect the user interface. Additionally, React Native and other libraries might pass some of the props under different names or transform their values between composite and host components.
+
+## Tree navigation
+
+:::caution
+You should avoid navigating over the element tree, as this makes your testing code fragile and may result in false positives. This section is more relevant for people who want to contribute to our codebase.
+:::
+
+You will encounter host and composite elements when navigating a tree of react elements using `parent` or `children` props of a `ReactTestInstance` element. You should be careful when navigating the element tree, as the tree structure for third-party components can change independently from your code and cause unexpected test failures.
+
+Inside RNTL, we have various tree navigation helpers: `getHostParent`, `getHostChildren`, etc. These are intentionally not exported, as using them is not recommended.
+
+## Queries
+
+All recommended Testing Library queries return host components to encourage the best practices described above.
+
+Only `UNSAFE_*ByType` and `UNSAFE_*ByProps` queries can return both host and composite components depending on used predicates. They are marked as unsafe precisely because testing composite components makes your test more fragile.
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/advanced/understanding-act.md
+---
+
+# Understanding `act` function
+
+When writing RNTL tests one of the things that confuses developers the most are cryptic [`act()`](https://reactjs.org/docs/testing-recipes.html#act) function errors logged into console. In this article I will try to build an understanding of the purpose and behaviour of `act()` so you can build your tests with more confidence.
+
+## `act` warnings
+
+Let’s start with typical `act()` warnings logged to console. There are two kinds of these issues, let’s call the first one the "sync `act()`" warning:
+
+```
+Warning: An update to Component inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+```
+
+The second one relates to async usage of `act` so let’s call it the "async `act`" error:
+
+```
+Warning: You called act(async () => ...) without await. This could lead to unexpected
+testing behaviour, interleaving multiple act calls and mixing their scopes. You should
+- await act(async () => ...);
+```
+
+## Synchronous `act`
+
+### Responsibility
+
+This function is intended only for using in automated tests and works only in development mode. Attempting to use it in production build will throw an error.
+
+The responsibility for `act` function is to make React renders and updates work in tests in a similar way they work in real application by grouping and executing related units of interaction (e.g. renders, effects, etc) together.
+
+To showcase that behaviour let make a small experiment. First we define a function component that uses `useEffect` hook in a trivial way.
+
+```jsx
+function TestComponent() {
+  const [count, setCount] = React.useState(0);
+  React.useEffect(() => {
+    setCount((c) => c + 1);
+  }, []);
+
+  return <Text>Count {count}</Text>;
+}
+```
+
+In the following tests we will directly use `ReactTestRenderer` instead of RNTL `render` function to render our component for tests. In order to expose familiar queries like `getByText` we will use `within` function from RNTL.
+
+```jsx
+test('render without act', () => {
+  const renderer = TestRenderer.create(<TestComponent />);
+
+  // Bind RNTL queries for root element.
+  const view = within(renderer.root);
+  expect(view.getByText('Count 0')).toBeOnTheScreen();
+});
+```
+
+When testing without `act` call wrapping rendering call, we see that the assertion runs just after the rendering but before `useEffect`hooks effects are applied. Which is not what we expected in our tests.
+
+```jsx
+test('render with act', () => {
+  let renderer: ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(<TestComponent />);
+  });
+
+  // Bind RNTL queries for root element.
+  const view = within(renderer!.root);
+  expect(view.getByText('Count 1')).toBeOnTheScreen();
+});
+```
+
+When wrapping rendering call with `act` we see that the changes caused by `useEffect` hook have been applied as we would expect.
+
+### When to use act
+
+The name `act` comes from [Arrange-Act-Assert](http://wiki.c2.com/?ArrangeActAssert) unit testing pattern. Which means it’s related to part of the test when we execute some actions on the component tree.
+
+So far we learned that `act` function allows tests to wait for all pending React interactions to be applied before we make our assertions. When using `act` we get guarantee that any state updates will be executed as well as any enqueued effects will be executed.
+
+Therefore, we should use `act` whenever there is some action that causes element tree to render, particularly:
+
+- initial render call - `ReactTestRenderer.create` call
+- re-rendering of component -`renderer.update` call
+- triggering any event handlers that cause component tree render
+
+Thankfully, for these basic cases RNTL has got you covered as our `render`, `update` and `fireEvent` methods already wrap their calls in sync `act` so that you do not have to do it explicitly.
+
+Note that `act` calls can be safely nested and internally form a stack of calls. However, overlapping `act` calls, which can be achieved using async version of `act`, [are not supported](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js#L161).
+
+### Implementation
+
+As of React version of 18.1.0, the `act` implementation is defined in the [ReactAct.js source file](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js) inside React repository. This implementation has been fairly stable since React 17.0.
+
+RNTL exports `act` for convenience of the users as defined in the [act.ts source file](https://github.com/callstack/react-native-testing-library/blob/main/src/act.ts). That file refers to [ReactTestRenderer.js source](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react-test-renderer/src/ReactTestRenderer.js#L52) file from React Test Renderer package, which finally leads to React act implementation in ReactAct.js (already mentioned above).
+
+## Asynchronous `act`
+
+So far we have seen synchronous version of `act` which runs its callback immediately. This can deal with things like synchronous effects or mocks using already resolved promises. However, not all component code is synchronous. Frequently our components or mocks contain some asynchronous behaviours like `setTimeout` calls or network calls. Starting from React 16.9, `act` can also be called in asynchronous mode. In such case `act` implementation checks that the passed callback returns [object resembling promise](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react/src/ReactAct.js#L60).
+
+### Asynchronous code
+
+Asynchronous version of `act` also is executed immediately, but the callback is not yet completed because of some asynchronous operations inside.
+
+Lets look at a simple example with component using `setTimeout` call to simulate asynchronous behaviour:
+
+```jsx
+function TestAsyncComponent() {
+  const [count, setCount] = React.useState(0);
+  React.useEffect(() => {
+    setTimeout(() => {
+      setCount((c) => c + 1);
+    }, 50);
+  }, []);
+
+  return <Text>Count {count}</Text>;
+}
+```
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+test('render async natively', () => {
+  render(<TestAsyncComponent />);
+  expect(screen.getByText('Count 0')).toBeOnTheScreen();
+});
+```
+
+If we test our component in a native way without handling its asynchronous behaviour we will end up with sync act warning:
+
+```
+Warning: An update to TestAsyncComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+```
+
+Note that this is not yet the infamous async act warning. It only asks us to wrap our event code with `act` calls. However, this time our immediate state change does not originate from externally triggered events but rather forms an internal part of the component. So how can we apply `act` in such scenario?
+
+### Solution with fake timers
+
+First solution is to use Jest's fake timers inside out tests:
+
+```jsx
+test('render with fake timers', () => {
+  jest.useFakeTimers();
+  render(<TestAsyncComponent />);
+
+  act(() => {
+    jest.runAllTimers();
+  });
+  expect(screen.getByText('Count 1')).toBeOnTheScreen();
+});
+```
+
+That way we can wrap `jest.runAllTimers()` call which triggers the `setTimeout` updates inside an `act` call, hence resolving the act warning. Note that this whole code is synchronous thanks to usage of Jest fake timers.
+
+### Solution with real timers
+
+If we wanted to stick with real timers then things get a bit more complex. Let’s start by applying a crude solution of opening async `act()` call for the expected duration of components updates:
+
+```jsx
+test('render with real timers - sleep', async () => {
+  render(<TestAsyncComponent />);
+  await act(() => sleep(100)); // Wait a bit longer than setTimeout in `TestAsyncComponent`
+
+  expect(screen.getByText('Count 1')).toBeOnTheScreen();
+});
+```
+
+This works correctly as we use an explicit async `act()` call that resolves the console error. However, it relies on our knowledge of exact implementation details which is a bad practice.
+
+Let’s try more elegant solution using `waitFor` that will wait for our desired state:
+
+```jsx
+test('render with real timers - waitFor', async () => {
+  render(<TestAsyncComponent />);
+
+  await waitFor(() => screen.getByText('Count 1'));
+  expect(screen.getByText('Count 1')).toBeOnTheScreen();
+});
+```
+
+This also works correctly, because `waitFor` call executes async `act()` call internally.
+
+The above code can be simplified using `findBy` query:
+
+```jsx
+test('render with real timers - findBy', async () => {
+  render(<TestAsyncComponent />);
+
+  expect(await screen.findByText('Count 1')).toBeOnTheScreen();
+});
+```
+
+This also works since `findByText` internally calls `waitFor` which uses async `act()`.
+
+Note that all of the above examples are async tests using & awaiting async `act()` function call.
+
+### Async act warning
+
+If we modify any of the above async tests and remove `await` keyword, then we will trigger the notorious async `act()`warning:
+
+```jsx
+Warning: You called act(async () => ...) without await. This could lead to unexpected
+testing behaviour, interleaving multiple act calls and mixing their scopes. You should
+- await act(async () => ...);
+```
+
+React decides to show this error whenever it detects that async `act()`call [has not been awaited](https://github.com/facebook/react/blob/ce13860281f833de8a3296b7a3dad9caced102e9/packages/react/src/ReactAct.js#L93).
+
+The exact reasons why you might see async `act()` warnings vary, but finally it means that `act()` has been called with callback that returns `Promise`-like object, but it has not been waited on.
+
+## References
+
+- [React `act` implementation source](https://github.com/facebook/react/blob/main/packages/react/src/ReactAct.js)
+- [React testing recipes: `act()`](https://reactjs.org/docs/testing-recipes.html#act)
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api.md
+---
+
+# API Overview
+
+React Native Testing Library consists of following APIs:
+
+- [`render` function](/react-native-testing-library/12.x/docs/api/render.md) - render your UI components for testing purposes
+- [`screen` object](/react-native-testing-library/12.x/docs/api/screen.md) - access rendered UI:
+  - [Queries](/react-native-testing-library/12.x/docs/api/queries.md) - find relevant components by various predicates: role, text, test ids, etc
+  - Lifecycle methods: [`rerender`](/react-native-testing-library/12.x/docs/api/screen.md#rerender), [`unmount`](/react-native-testing-library/12.x/docs/api/screen.md#unmount)
+  - Helpers: [`debug`](/react-native-testing-library/12.x/docs/api/screen.md#debug), [`toJSON`](/react-native-testing-library/12.x/docs/api/screen.md#tojson), [`root`](/react-native-testing-library/12.x/docs/api/screen.md#root)
+- [Jest matchers](/react-native-testing-library/12.x/docs/api/jest-matchers.md) - validate assumptions about your UI
+- [User Event](/react-native-testing-library/12.x/docs/api/events/user-event.md) - simulate common user interactions like [`press`](/react-native-testing-library/12.x/docs/api/events/user-event.md#press) or [`type`](/react-native-testing-library/12.x/docs/api/events/user-event.md#type) in a realistic way
+- [Fire Event](/react-native-testing-library/12.x/docs/api/events/fire-event.md) - simulate any component event in a simplified way purposes
+- Misc APIs:
+  - [`renderHook` function](/react-native-testing-library/12.x/docs/api/misc/render-hook.md) - render hooks for testing
+  - [Async utils](/react-native-testing-library/12.x/docs/api/misc/async.md): `findBy*` queries, `wait`, `waitForElementToBeRemoved`
+  - [Configuration](/react-native-testing-library/12.x/docs/api/misc/config.md): `configure`, `resetToDefaults`
+  - [Accessibility](/react-native-testing-library/12.x/docs/api/misc/accessibility.md): `isHiddenFromAccessibility`
+  - [Other](/react-native-testing-library/12.x/docs/api/misc/other.md): `within`, `act`, `cleanup`
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api/events/fire-event.md
+---
+
+# Fire Event API
+
+```ts
+function fireEvent(element: ReactTestInstance, eventName: string, ...data: unknown[]): void;
+```
+
+:::note
+For common events like `press` or `type` it's recommended to use [User Event API](/react-native-testing-library/12.x/docs/api/events/user-event.md) as it offers
+more realistic event simulation by emitting a sequence of events with proper event objects that mimic React Native runtime behavior.
+
+Use Fire Event for cases not supported by User Event and for triggering event handlers on composite components.
+:::
+
+The `fireEvent` API allows you to trigger all kinds of event handlers on both host and composite components. It will try to invoke a single event handler traversing the component tree bottom-up from passed element and trying to find enabled event handler named `onXxx` when `xxx` is the name of the event passed.
+
+Unlike User Event, this API does not automatically pass event object to event handler, this is responsibility of the user to construct such object.
+
+```jsx
+import { render, screen, fireEvent } from '@testing-library/react-native';
+
+test('fire changeText event', () => {
+  const onEventMock = jest.fn();
+  render(
+    // MyComponent renders TextInput which has a placeholder 'Enter details'
+    // and with `onChangeText` bound to handleChangeText
+    <MyComponent handleChangeText={onEventMock} />
+  );
+
+  fireEvent(screen.getByPlaceholderText('change'), 'onChangeText', 'ab');
+  expect(onEventMock).toHaveBeenCalledWith('ab');
+});
+```
+
+:::note
+Please note that from version `7.0` `fireEvent` performs checks that should prevent events firing on disabled elements.
+:::
+
+An example using `fireEvent` with native events that aren't already aliased by the `fireEvent` api.
+
+```jsx
+import { TextInput, View } from 'react-native';
+import { fireEvent, render } from '@testing-library/react-native';
+
+const onBlurMock = jest.fn();
+
+render(
+  <View>
+    <TextInput placeholder="my placeholder" onBlur={onBlurMock} />
+  </View>
+);
+
+// you can omit the `on` prefix
+fireEvent(screen.getByPlaceholderText('my placeholder'), 'blur');
+```
+
+FireEvent exposes convenience methods for common events like: `press`, `changeText`, `scroll`.
+
+### `fireEvent.press` \{#press}
+
+```
+fireEvent.press: (element: ReactTestInstance, ...data: Array<any>) => void
+```
+
+:::note
+It is recommended to use the User Event [`press()`](/react-native-testing-library/12.x/docs/api/events/user-event.md#press) helper instead as it offers more realistic simulation of press interaction, including pressable support.
+:::
+
+Invokes `press` event handler on the element or parent element in the tree.
+
+```jsx
+import { View, Text, TouchableOpacity } from 'react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
+
+const onPressMock = jest.fn();
+const eventData = {
+  nativeEvent: {
+    pageX: 20,
+    pageY: 30,
+  },
+};
+
+render(
+  <View>
+    <TouchableOpacity onPress={onPressMock}>
+      <Text>Press me</Text>
+    </TouchableOpacity>
+  </View>
+);
+
+fireEvent.press(screen.getByText('Press me'), eventData);
+expect(onPressMock).toHaveBeenCalledWith(eventData);
+```
+
+### `fireEvent.changeText` \{#change-text}
+
+```
+fireEvent.changeText: (element: ReactTestInstance, ...data: Array<any>) => void
+```
+
+:::note
+It is recommended to use the User Event [`type()`](/react-native-testing-library/12.x/docs/api/events/user-event.md#type) helper instead as it offers more realistic simulation of text change interaction, including key-by-key typing, element focus, and other editing events.
+:::
+
+Invokes `changeText` event handler on the element or parent element in the tree.
+
+```jsx
+import { View, TextInput } from 'react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
+
+const onChangeTextMock = jest.fn();
+const CHANGE_TEXT = 'content';
+
+render(
+  <View>
+    <TextInput placeholder="Enter data" onChangeText={onChangeTextMock} />
+  </View>
+);
+
+fireEvent.changeText(screen.getByPlaceholderText('Enter data'), CHANGE_TEXT);
+```
+
+### `fireEvent.scroll` \{#scroll}
+
+```
+fireEvent.scroll: (element: ReactTestInstance, ...data: Array<any>) => void
+```
+
+Invokes `scroll` event handler on the element or parent element in the tree.
+
+#### On a `ScrollView`
+
+```jsx
+import { ScrollView, Text } from 'react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
+
+const onScrollMock = jest.fn();
+const eventData = {
+  nativeEvent: {
+    contentOffset: {
+      y: 200,
+    },
+  },
+};
+
+render(
+  <ScrollView onScroll={onScrollMock}>
+    <Text>XD</Text>
+  </ScrollView>
+);
+
+fireEvent.scroll(screen.getByText('scroll-view'), eventData);
+```
+
+:::note
+
+Prefer using [`user.scrollTo`](/react-native-testing-library/12.x/docs/api/events/user-event.md#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event provides a more realistic event simulation based on React Native runtime behavior.
+
+:::
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api/events/user-event.md
+---
+
+# User Event interactions
+
+:::info RNTL minimal version
+
+User Event interactions require RNTL v12.2.0 or later.
+
+:::
+
+## Comparison with Fire Event API
+
+Fire Event is our original event simulation API. It can invoke **any event handler** declared on **either host or composite elements**. Suppose the element does not have `onEventName` event handler for the passed `eventName` event, or the element is disabled. In that case, Fire Event will traverse up the component tree, looking for an event handler on both host and composite elements along the way. By default, it will **not pass any event data**, but the user might provide it in the last argument.
+
+In contrast, User Event provides realistic event simulation for user interactions like `press` or `type`. Each interaction will trigger a **sequence of events** corresponding to React Native runtime behavior. These events will be invoked **only on host elements**, and **will automatically receive event data** corresponding to each event.
+
+If User Event supports a given interaction, you should always prefer it over the Fire Event counterpart, as it will make your tests much more realistic and, hence, reliable. In other cases, e.g., when User Event does not support the given event or when invoking event handlers on composite elements, you have to use Fire Event as the only available option.
+
+## `setup()`
+
+```ts
+userEvent.setup(options?: {
+  delay: number;
+  advanceTimers: (delay: number) => Promise<void> | void;
+})
+```
+
+Example
+
+```ts
+const user = userEvent.setup();
+```
+
+Creates a User Event object instance, which can be used to trigger events.
+
+### Options \{#setup-options}
+
+- `delay` controls the default delay between subsequent events, e.g., keystrokes.
+- `advanceTimers` is a time advancement utility function that should be used for fake timers. The default setup handles both real timers and Jest fake timers.
+
+## `press()`
+
+```ts
+press(
+  element: ReactTestInstance,
+): Promise<void>
+```
+
+Example
+
+```ts
+const user = userEvent.setup();
+await user.press(element);
+```
+
+This helper simulates a press on any pressable element, e.g. `Pressable`, `TouchableOpacity`, `Text`, `TextInput`, etc. Unlike `fireEvent.press()`, a more straightforward API that will only call the `onPress` prop, this function simulates the entire press interaction in a more realistic way by reproducing the event sequence emitted by React Native runtime. This helper will trigger additional events like `pressIn` and `pressOut`.
+
+This event will take a minimum of 130 ms to run due to the internal React Native logic. Consider using fake timers to speed up test execution for tests involving `press` and `longPress` interactions.
+
+## `longPress()`
+
+```ts
+longPress(
+  element: ReactTestInstance,
+  options: { duration: number } = { duration: 500 }
+): Promise<void>
+```
+
+Example
+
+```ts
+const user = userEvent.setup();
+await user.longPress(element);
+```
+
+Simulates a long press user interaction. In React Native, the `longPress` event is emitted when the press duration exceeds the long press threshold (by default, 500 ms). In other aspects, this action behaves similarly to regular `press` action, e.g., by emitting `pressIn` and `pressOut` events. The press duration is customizable through the options. This should be useful if you use the `delayLongPress` prop.
+
+This event will, by default, take 500 ms to run. Due to internal React Native logic, it will take at least 130 ms regardless of the duration option passed. Consider using fake timers to speed up test execution for tests involving `press` and `longPress` interactions.
+
+### Options \{#longpress-options}
+
+- `duration` - duration of the press in milliseconds. The default value is 500 ms.
+
+## `type()`
+
+```ts
+type(
+  element: ReactTestInstance,
+  text: string,
+  options?: {
+    skipPress?: boolean;
+    skipBlur?: boolean;
+    submitEditing?: boolean;
+  }
+```
+
+Example
+
+```ts
+const user = userEvent.setup();
+await user.type(textInput, 'Hello world!');
+```
+
+This helper simulates the user focusing on a `TextInput` element, typing `text` one character at a time, and leaving the element.
+
+This function supports only host `TextInput` elements. Passing other element types will result in throwing an error.
+
+:::note
+This function will add text to the text already present in the text input (as specified by `value` or `defaultValue` props). To replace existing text, use [`clear()`](#clear) helper first.
+:::
+
+### Options \{#type-options}
+
+- `skipPress` - if true, `pressIn` and `pressOut` events will not be triggered.
+- `skipBlur` - if true, `endEditing` and `blur` events will not be triggered when typing is complete.
+- `submitEditing` - if true, `submitEditing` event will be triggered after typing the text.
+
+### Sequence of events \{#type-sequence}
+
+The sequence of events depends on the `multiline` prop and the passed options.
+
+Events will not be emitted if the `editable` prop is set to `false`.
+
+**Entering the element**:
+
+- `pressIn` (optional)
+- `focus`
+- `pressOut` (optional)
+
+The `pressIn` and `pressOut` events are sent by default but can be skipped by passing the `skipPress: true` option.
+
+**Typing (for each character)**:
+
+- `keyPress`
+- `change`
+- `changeText`
+- `selectionChange`
+- `contentSizeChange` (only multiline)
+
+**Leaving the element**:
+
+- `submitEditing` (optional)
+- `endEditing`
+- `blur`
+
+The `submitEditing` event is skipped by default. It can sent by setting the `submitEditing: true` option.
+The `endEditing` and `blur` events can be skipped by passing the `skipBlur: true` option.
+
+## `clear()`
+
+```ts
+clear(
+  element: ReactTestInstance,
+)
+```
+
+Example
+
+```ts
+const user = userEvent.setup();
+await user.clear(textInput);
+```
+
+This helper simulates the user clearing the content of a `TextInput` element.
+
+This function supports only host `TextInput` elements. Passing other element types will result in throwing an error.
+
+### Sequence of events \{#clear-sequence}
+
+Events will not be emitted if the `editable` prop is set to `false`.
+
+**Entering the element**:
+
+- `focus`
+
+**Selecting all content**:
+
+- `selectionChange`
+
+**Pressing backspace**:
+
+- `keyPress`
+- `change`
+- `changeText`
+- `selectionChange`
+
+**Leaving the element**:
+
+- `endEditing`
+- `blur`
+
+## `paste()`
+
+```ts
+paste(
+  element: ReactTestInstance,
+  text: string,
+)
+```
+
+Example
+
+```ts
+const user = userEvent.setup();
+await user.paste(textInput, 'Text to paste');
+```
+
+This helper simulates the user pasting given text to a `TextInput` element.
+
+This function supports only host `TextInput` elements. Passing other element types will result in throwing an error.
+
+### Sequence of events \{#paste-sequence}
+
+Events will not be emitted if the `editable` prop is set to `false`.
+
+**Entering the element**:
+
+- `focus`
+
+**Selecting all content**:
+
+- `selectionChange`
+
+**Pasting the text**:
+
+- `change`
+- `changeText`
+- `selectionChange`
+
+**Leaving the element**:
+
+- `endEditing`
+- `blur`
+
+## `scrollTo()` \{#scroll-to}
+
+:::note
+`scrollTo` interaction has been introduced in RNTL v12.4.0.
+:::
+
+```ts
+scrollTo(
+  element: ReactTestInstance,
+  options: {
+    y: number,
+    momentumY?: number,
+    contentSize?: { width: number, height: number },
+    layoutMeasurement?: { width: number, height: number },
+  } | {
+    x: number,
+    momentumX?: number,
+    contentSize?: { width: number, height: number },
+    layoutMeasurement?: { width: number, height: number },
+  }
+```
+
+Example
+
+```ts
+const user = userEvent.setup();
+await user.scrollTo(scrollView, { y: 100, momentumY: 200 });
+```
+
+This helper simulates the user scrolling a host `ScrollView` element.
+
+This function supports only host `ScrollView` elements, passing other element types will result in an error. Note that `FlatList` is accepted as it renders to a host `ScrollView` element.
+
+Scroll interaction should match the `ScrollView` element direction:
+
+- for a vertical scroll view (default or `horizontal={false}`), you should pass only the `y` option (and optionally also `momentumY`).
+- for a horizontal scroll view (`horizontal={true}`), you should pass only the `x` option (and optionally `momentumX`).
+
+Each scroll interaction consists of a mandatory drag scroll part, which simulates the user dragging the scroll view with his finger (the `y` or `x` option). This may optionally be followed by a momentum scroll movement, which simulates the inertial movement of scroll view content after the user lifts his finger (`momentumY` or `momentumX` options).
+
+### Options \{#scroll-to-options}
+
+- `y` - target vertical drag scroll offset
+- `x` - target horizontal drag scroll offset
+- `momentumY` - target vertical momentum scroll offset
+- `momentumX` - target horizontal momentum scroll offset
+- `contentSize` - passed to `ScrollView` events and enabling `FlatList` updates
+- `layoutMeasurement` - passed to `ScrollView` events and enabling `FlatList` updates
+
+User Event will generate several intermediate scroll steps to simulate user scroll interaction. You should not rely on exact number or values of these scrolls steps as they might be change in the future version.
+
+This function will remember where the last scroll ended, so subsequent scroll interaction will starts from that position. The initial scroll position will be assumed to be `{ y: 0, x: 0 }`.
+
+To simulate a `FlatList` (and other controls based on `VirtualizedList`) scrolling, you should pass the `contentSize` and `layoutMeasurement` options, which enable the underlying logic to update the currently visible window.
+
+### Sequence of events \{#scroll-sequence}
+
+The sequence of events depends on whether the scroll includes an optional momentum scroll component.
+
+**Drag scroll**:
+
+- `contentSizeChange`
+- `scrollBeginDrag`
+- `scroll` (multiple events)
+- `scrollEndDrag`
+
+**Momentum scroll (optional)**:
+
+- `momentumScrollBegin`
+- `scroll` (multiple events)
+- `momentumScrollEnd`
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api/jest-matchers.md
+---
+
+# Jest matchers
+
+:::info RNTL minimal version
+
+Built-in Jest matchers require RNTL v12.4.0 or later.
+
+:::
+
+This guide describes built-in Jest matchers, we recommend using these matchers as they provide readable tests, accessibility support, and a better developer experience.
+
+## Setup
+
+You can use the built-in matchers by adding the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
+
+```ts title=jest-setup.ts
+import '@testing-library/react-native/extend-expect';
+```
+
+Alternatively, you can add above script to your Jest configuration (usually located either in the `jest.config.js` file or in the `package.json` file under the `"jest"` key):
+
+```json title=jest.config.js
+{
+  "preset": "react-native",
+  "setupFilesAfterEnv": ["@testing-library/react-native/extend-expect"]
+}
+```
+
+## Migration from legacy Jest Native matchers.
+
+If you are already using legacy Jest Native matchers we have a [migration guide](/react-native-testing-library/12.x/docs/migration/jest-matchers.md) for moving to the built-in matchers.
+
+## Checking element existence
+
+### `toBeOnTheScreen()`
+
+```ts
+expect(element).toBeOnTheScreen();
+```
+
+This allows you to assert whether an element is attached to the element tree or not. If you hold a reference to an element and it gets unmounted during the test it will no longer pass this assertion.
+
+## Element Content
+
+### `toHaveTextContent()`
+
+```ts
+expect(element).toHaveTextContent(
+  text: string | RegExp,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  },
+)
+```
+
+This allows you to assert whether the given element has the given text content or not. It accepts either `string` or `RegExp` matchers, as well as [text match options](/react-native-testing-library/12.x/docs/api/queries.md#text-match-options) of `exact` and `normalizer`.
+
+### `toContainElement()`
+
+```ts
+expect(container).toContainElement(
+  element: ReactTestInstance | null,
+)
+```
+
+This allows you to assert whether the given container element does contain another host element.
+
+### `toBeEmptyElement()`
+
+```ts
+expect(element).toBeEmptyElement();
+```
+
+This allows you to assert whether the given element does not have any host child elements or text content.
+
+## Checking element state
+
+### `toHaveDisplayValue()`
+
+```ts
+expect(element).toHaveDisplayValue(
+  value: string | RegExp,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  },
+)
+```
+
+This allows you to assert whether the given `TextInput` element has a specified display value. It accepts either `string` or `RegExp` matchers, as well as [text match options](/react-native-testing-library/12.x/docs/api/queries.md#text-match-options) of `exact` and `normalizer`.
+
+### `toHaveAccessibilityValue()`
+
+```ts
+expect(element).toHaveAccessibilityValue(
+  value: {
+    min?: number;
+    max?: number;
+    now?: number;
+    text?: string | RegExp;
+  },
+)
+```
+
+This allows you to assert whether the given element has a specified accessible value.
+
+This matcher will assert accessibility value based on `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` and `accessibilityValue` props. Only defined value entries will be used in the assertion, the element might have additional accessibility value entries and still be matched.
+
+When querying by `text` entry a string or `RegExp` might be used.
+
+### `toBeEnabled()` / `toBeDisabled` \{#tobeenabled}
+
+```ts
+expect(element).toBeEnabled();
+expect(element).toBeDisabled();
+```
+
+These allow you to assert whether the given element is enabled or disabled from the user's perspective. It relies on the accessibility disabled state as set by `aria-disabled` or `accessibilityState.disabled` props. It will consider a given element disabled when it or any of its ancestors is disabled.
+
+:::note
+These matchers are the negation of each other, and both are provided to avoid double negations in your assertions.
+:::
+
+### `toBeSelected()`
+
+```ts
+expect(element).toBeSelected();
+```
+
+This allows you to assert whether the given element is selected from the user's perspective. It relies on the accessibility selected state as set by `aria-selected` or `accessibilityState.selected` props.
+
+### `toBeChecked()` / `toBePartiallyChecked()` \{#tobechecked}
+
+```ts
+expect(element).toBeChecked();
+expect(element).toBePartiallyChecked();
+```
+
+These allow you to assert whether the given element is checked or partially checked from the user's perspective. It relies on the accessibility checked state as set by `aria-checked` or `accessibilityState.checked` props.
+
+:::note
+
+- `toBeChecked()` matcher works only on `Switch` host elements and accessibility elements with `checkbox`, `radio` or `switch` role.
+- `toBePartiallyChecked()` matcher works only on elements with `checkbox` role.
+
+:::
+
+### `toBeExpanded()` / `toBeCollapsed()` \{#tobeexpanded}
+
+```ts
+expect(element).toBeExpanded();
+expect(element).toBeCollapsed();
+```
+
+These allows you to assert whether the given element is expanded or collapsed from the user's perspective. It relies on the accessibility disabled state as set by `aria-expanded` or `accessibilityState.expanded` props.
+
+:::note
+These matchers are the negation of each other for expandable elements (elements with explicit `aria-expanded` or `accessibilityState.expanded` props). However, both won't pass for non-expandable elements (ones without explicit `aria-expanded` or `accessibilityState.expanded` props).
+:::
+
+### `toBeBusy()`
+
+```ts
+expect(element).toBeBusy();
+```
+
+This allows you to assert whether the given element is busy from the user's perspective. It relies on the accessibility selected state as set by `aria-busy` or `accessibilityState.busy` props.
+
+## Checking element style
+
+### `toBeVisible()`
+
+```ts
+expect(element).toBeVisible();
+```
+
+This allows you to assert whether the given element is visible from the user's perspective.
+
+The element is considered invisible when itself or any of its ancestors has `display: none` or `opacity: 0` styles, as well as when it's hidden from accessibility.
+
+### `toHaveStyle()`
+
+```ts
+expect(element).toHaveStyle(
+  style: StyleProp<Style>,
+)
+```
+
+This allows you to assert whether the given element has given styles.
+
+## Other matchers
+
+### `toHaveAccessibleName()`
+
+```ts
+expect(element).toHaveAccessibleName(
+  name?: string | RegExp,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+  },
+)
+```
+
+This allows you to assert whether the given element has a specified accessible name. It accepts either `string` or `RegExp` matchers, as well as [text match options](/react-native-testing-library/12.x/docs/api/queries.md#text-match-options) of `exact` and `normalizer`.
+
+The accessible name will be computed based on `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props, in the absence of these props, the element text content will be used.
+
+When the `name` parameter is `undefined` it will only check if the element has any accessible name.
+
+### `toHaveProp()`
+
+```ts
+expect(element).toHaveProp(
+  name: string,
+  value?: unknown,
+)
+```
+
+This allows you to assert whether the given element has a given prop. When the `value` parameter is `undefined` it will only check for existence of the prop, and when `value` is defined it will check if the actual value matches passed value.
+
+:::note
+This matcher should be treated as an escape hatch to be used when all other matchers are not suitable.
+:::
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api/misc/accessibility.md
+---
+
+# Accessibility
+
+## `isHiddenFromAccessibility`
+
+```ts
+function isHiddenFromAccessibility(element: ReactTestInstance | null): boolean {}
+```
+
+Also available as `isInaccessible()` alias for React Testing Library compatibility.
+
+Checks if given element is hidden from assistive technology, e.g. screen readers.
+
+:::note
+Like [`isInaccessible`](https://testing-library.com/docs/dom-testing-library/api-accessibility/#isinaccessible) function from DOM Testing Library this function considers both accessibility elements and presentational elements (regular `View`s) to be accessible, unless they are hidden in terms of host platform.
+
+This covers only part of [ARIA notion of Accessiblity Tree](https://www.w3.org/TR/wai-aria-1.2/#tree_exclusion), as ARIA excludes both hidden and presentational elements from the Accessibility Tree.
+:::
+
+For the scope of this function, element is inaccessible when it, or any of its ancestors, meets any of the following conditions:
+
+- it has `display: none` style
+- it has [`aria-hidden`](https://reactnative.dev/docs/accessibility#aria-hidden) prop set to `true`
+- it has [`accessibilityElementsHidden`](https://reactnative.dev/docs/accessibility#accessibilityelementshidden-ios) prop set to `true`
+- it has [`importantForAccessibility`](https://reactnative.dev/docs/accessibility#importantforaccessibility-android) prop set to `no-hide-descendants`
+- it has sibling host element with either [`aria-modal`](https://reactnative.dev/docs/accessibility#aria-modal-ios) or [`accessibilityViewIsModal`](https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios) prop set to `true`
+
+Specifying `accessible={false}`, `accessiblityRole="none"`, or `importantForAccessibility="no"` props does not cause the element to become inaccessible.
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api/misc/async.md
+---
+
+# Async utilities
+
+## `findBy*` queries
+
+The `findBy*` queries are used to find elements that are not instantly available but will be added as a result of some asynchronous action. Learn more details [here](/react-native-testing-library/12.x/docs/api/queries.md#find-by).
+
+## `waitFor`
+
+```tsx
+function waitFor<T>(
+  expectation: () => T,
+  options?: { timeout: number; interval: number }
+): Promise<T>;
+```
+
+Waits for a period of time for the `expectation` callback to pass. `waitFor` may run the callback a number of times until timeout is reached, as specified by the `timeout` and `interval` options. The callback must throw an error when the expectation is not met. Returning any value, including a falsy one, will be treated as meeting the expectation, and the callback result will be returned to the caller of `waitFor` function.
+
+```tsx
+await waitFor(() => expect(mockFunction).toHaveBeenCalledWith());
+```
+
+`waitFor` function will be executing `expectation` callback every `interval` (default: every 50 ms) until `timeout` (default: 1000 ms) is reached. The repeated execution of callback is stopped as soon as it does not throw an error, in such case the value returned by the callback is returned to `waitFor` caller. Otherwise, when it reaches the timeout, the final error thrown by `expectation` will be re-thrown by `waitFor` to the calling code.
+
+```tsx
+// ❌ `waitFor` will return immediately because callback does not throw
+await waitFor(() => false);
+```
+
+`waitFor` is an async function so you need to `await` the result to pause test execution.
+
+```jsx
+// ❌ missing `await`: `waitFor` will just return Promise that will be rejected when the timeout is reached
+waitFor(() => expect(1).toBe(2));
+```
+
+:::note
+You can enforce awaiting `waitFor` by using the [await-async-utils](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/await-async-utils.md) rule from [eslint-plugin-testing-library](https://github.com/testing-library/eslint-plugin-testing-library).
+:::
+
+Since `waitFor` is likely to run `expectation` callback multiple times, it is highly recommended for it [not to perform any side effects](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#performing-side-effects-in-waitfor) in `waitFor`.
+
+```jsx
+await waitFor(() => {
+  // ❌ button will be pressed on each waitFor iteration
+  fireEvent.press(screen.getByText('press me'));
+  expect(mockOnPress).toHaveBeenCalled();
+});
+```
+
+:::note
+Avoiding side effects in `expectation` callback can be partially enforced with the [`no-wait-for-side-effects` rule](https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-wait-for-side-effects.md).
+:::
+
+It is also recommended to have a [single assertion per each `waitFor`](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#having-multiple-assertions-in-a-single-waitfor-callback) for more consistency and faster failing tests. If you want to make several assertions, then they should be in seperate `waitFor` calls. In many cases you won't actually need to wrap the second assertion in `waitFor` since the first one will do the waiting required for asynchronous change to happen.
+
+### Using a React Native version \< 0.71 with Jest fake timers
+
+:::caution
+When using a version of React Native \< 0.71 and modern fake timers (the default for `Jest` >= 27), `waitFor` won't work (it will always timeout even if `expectation()` doesn't throw) unless you use the custom [@testing-library/react-native preset](https://github.com/callstack/react-native-testing-library#custom-jest-preset).
+:::
+
+`waitFor` checks whether Jest fake timers are enabled and adapts its behavior in such case. The following snippet is a simplified version of how it behaves when fake timers are enabled:
+
+```tsx
+let fakeTimeRemaining = timeout;
+let lastError;
+
+while (fakeTimeRemaining > 0) {
+  fakeTimeRemaining = fakeTimeRemaining - interval;
+  jest.advanceTimersByTime(interval);
+  try {
+    // resolve
+    return expectation();
+  } catch (error) {
+    lastError = error;
+  }
+}
+
+// reject
+throw lastError;
+```
+
+In the following example we test that a function is called after 10 seconds using fake timers. Since we're using fake timers, the test won't depend on real time passing and thus be much faster and more reliable. Also we don't have to advance fake timers through Jest fake timers API because `waitFor` already does this for us.
+
+```tsx
+// in component
+setTimeout(() => {
+  someFunction();
+}, 10000);
+
+// in test
+jest.useFakeTimers();
+
+await waitFor(() => {
+  expect(someFunction).toHaveBeenCalledWith();
+}, 10000);
+```
+
+:::info
+In order to properly use `waitFor` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
+:::
+
+:::note
+If you receive warnings related to `act()` function consult our [Understanding Act](/react-native-testing-library/12.x/docs/advanced/understanding-act.md) function document.
+:::
+
+## `waitForElementToBeRemoved`
+
+```ts
+function waitForElementToBeRemoved<T>(
+  expectation: () => T,
+  options?: { timeout: number; interval: number }
+): Promise<T>;
+```
+
+Waits for non-deterministic periods of time until queried element is removed or times out. `waitForElementToBeRemoved` periodically calls `expectation` every `interval` milliseconds to determine whether the element has been removed or not.
+
+```jsx
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react-native';
+
+test('waiting for an Banana to be removed', async () => {
+  render(<Banana />);
+
+  await waitForElementToBeRemoved(() => screen.getByText('Banana ready'));
+});
+```
+
+This method expects that the element is initially present in the render tree and then is removed from it. If the element is not present when you call this method it throws an error.
+
+You can use any of `getBy`, `getAllBy`, `queryBy` and `queryAllBy` queries for `expectation` parameter.
+
+:::info
+In order to properly use `waitForElementToBeRemoved` you need at least React >=16.9.0 (featuring async `act`) or React Native >=0.61 (which comes with React >=16.9.0).
+:::
+
+:::note
+If you receive warnings related to `act()` function consult our [Understanding Act](/react-native-testing-library/12.x/docs/advanced/understanding-act.md) function document.
+:::
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api/misc/config.md
+---
+
+# Configuration
+
+## `configure`
+
+```ts
+type Config = {
+  asyncUtilTimeout: number;
+  defaultHidden: boolean;
+  defaultDebugOptions: Partial<DebugOptions>;
+  concurrentRoot: boolean;
+};
+
+function configure(options: Partial<Config>) {}
+```
+
+### `asyncUtilTimeout` option
+
+Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementToBeRemoved`) and `findBy*` queries. Defaults to 1000 ms.
+
+### `defaultIncludeHiddenElements` option
+
+Default value for [includeHiddenElements](/react-native-testing-library/12.x/docs/api/queries.md#includehiddenelements-option) query option for all queries. The default value is set to `false`, so all queries will not match [elements hidden from accessibility](#ishiddenfromaccessibility). This is because the users of the app would not be able to see such elements.
+
+This option is also available as `defaultHidden` alias for compatibility with [React Testing Library](https://testing-library.com/docs/dom-testing-library/api-configuration/#defaulthidden).
+
+### `defaultDebugOptions` option
+
+Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
+
+### `concurrentRoot` option \{#concurrent-root}
+
+Set to `true` to enable concurrent rendering used in the React Native New Architecture. Otherwise `render` will default to legacy synchronous rendering.
+
+## `resetToDefaults()`
+
+```ts
+function resetToDefaults() {}
+```
+
+## Environment variables
+
+### `RNTL_SKIP_AUTO_CLEANUP`
+
+Set to `true` to disable automatic `cleanup()` after each test. It works the same as importing `react-native-testing-library/dont-cleanup-after-each` or using `react-native-testing-library/pure`.
+
+```shell
+$ RNTL_SKIP_AUTO_CLEANUP=true jest
+```
+
+### `RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS`
+
+Set to `true` to disable auto-detection of fake timers. This might be useful in rare cases when you want to use non-Jest fake timers. See [issue #886](https://github.com/callstack/react-native-testing-library/issues/886) for more details.
+
+```shell
+$ RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS=true jest
+```
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api/misc/other.md
+---
+
+# Other helpers
+
+## `within`, `getQueriesForElement` \{#within}
+
+```jsx
+function within(element: ReactTestInstance): Queries {}
+
+function getQueriesForElement(element: ReactTestInstance): Queries {}
+```
+
+`within` (also available as `getQueriesForElement` alias) performs [queries](/react-native-testing-library/12.x/docs/api/queries.md) scoped to given element.
+
+:::note
+Please note that additional `render` specific operations like `update`, `unmount`, `debug`, `toJSON` are _not_ included.
+:::
+
+```jsx
+const detailsScreen = within(screen.getByA11yHint('Details Screen'));
+expect(detailsScreen.getByText('Some Text')).toBeOnTheScreen();
+expect(detailsScreen.getByDisplayValue('Some Value')).toBeOnTheScreen();
+expect(detailsScreen.queryByLabelText('Some Label')).toBeOnTheScreen();
+await expect(detailsScreen.findByA11yHint('Some Label')).resolves.toBeOnTheScreen();
+```
+
+Use cases for scoped queries include:
+
+- queries scoped to a single item inside a FlatList containing many items
+- queries scoped to a single screen in tests involving screen transitions (e.g. with react-navigation)
+
+## `act`
+
+Useful function to help testing components that use hooks API. By default any `render`, `update`, `fireEvent`, and `waitFor` calls are wrapped by this function, so there is no need to wrap it manually. This method is re-exported from [`react-test-renderer`](https://github.com/facebook/react/blob/main/packages/react-test-renderer/src/ReactTestRenderer.js#L567]).
+
+Consult our [Understanding Act function](/react-native-testing-library/12.x/docs/advanced/understanding-act.md) document for more understanding of its intricacies.
+
+## `cleanup`
+
+```ts
+const cleanup: () => void;
+```
+
+Unmounts React trees that were mounted with `render` and clears `screen` variable that holds latest `render` output.
+
+:::info
+Please note that this is done automatically if the testing framework you're using supports the `afterEach` global (like mocha, Jest, and Jasmine). If not, you will need to do manual cleanups after each test.
+:::
+
+For example, if you're using the `jest` testing framework, then you would need to use the `afterEach` hook like so:
+
+```jsx
+import { cleanup, render } from '@testing-library/react-native/pure';
+import { View } from 'react-native';
+
+afterEach(cleanup);
+
+it('renders a view', () => {
+  render(<View />);
+  // ...
+});
+```
+
+The `afterEach(cleanup)` call also works in `describe` blocks:
+
+```jsx
+describe('when logged in', () => {
+  afterEach(cleanup);
+
+  it('renders the user', () => {
+    render(<SiteHeader />);
+    // ...
+  });
+});
+```
+
+Failing to call `cleanup` when you've called `render` could result in a memory leak and tests which are not "idempotent" (which can lead to difficult to debug errors in your tests).
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api/misc/render-hook.md
+---
+
+# `renderHook` function
+
+```ts
+function renderHook<Result, Props>(
+  callback: (props?: Props) => Result,
+  options?: RenderHookOptions<Props>
+): RenderHookResult<Result, Props>;
+```
+
+Renders a test component that will call the provided `callback`, including any hooks it calls, every time it renders. Returns [`RenderHookResult`](#renderhookresult) object, which you can interact with.
+
+```ts
+import { renderHook } from '@testing-library/react-native';
+import { useCount } from '../useCount';
+
+it('should increment count', () => {
+  const { result } = renderHook(() => useCount());
+
+  expect(result.current.count).toBe(0);
+  act(() => {
+    // Note that you should wrap the calls to functions your hook returns with `act` if they trigger an update of your hook's state to ensure pending useEffects are run before your next assertion.
+    result.current.increment();
+  });
+  expect(result.current.count).toBe(1);
+});
+```
+
+```ts
+// useCount.js
+export const useCount = () => {
+  const [count, setCount] = useState(0);
+  const increment = () => setCount((previousCount) => previousCount + 1);
+
+  return { count, increment };
+};
+```
+
+The `renderHook` function accepts the following arguments:
+
+Callback is a function that is called each `render` of the test component. This function should call one or more hooks for testing.
+
+The `props` passed into the callback will be the `initialProps` provided in the `options` to `renderHook`, unless new props are provided by a subsequent `rerender` call.
+
+## `options`
+
+A `RenderHookOptions<Props>` object to modify the execution of the `callback` function, containing the following properties:
+
+### `initialProps`
+
+The initial values to pass as `props` to the `callback` function of `renderHook`. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
+
+### `wrapper`
+
+A React component to wrap the test component in when rendering. This is usually used to add context providers from `React.createContext` for the hook to access with `useContext`.
+
+## `RenderHookResult`
+
+```ts
+interface RenderHookResult<Result, Props> {
+  result: { current: Result };
+  rerender: (props: Props) => void;
+  unmount: () => void;
+}
+```
+
+The `renderHook` function returns an object that has the following properties:
+
+### `result`
+
+The `current` value of the `result` will reflect the latest of whatever is returned from the `callback` passed to `renderHook`. The `Result` type is determined by the type passed to or inferred by the `renderHook` call.
+
+### `rerender`
+
+A function to rerender the test component, causing any hooks to be recalculated. If `newProps` are passed, they will replace the `callback` function's `initialProps` for subsequent rerenders. The `Props` type is determined by the type passed to or inferred by the `renderHook` call.
+
+### `unmount`
+
+A function to unmount the test component. This is commonly used to trigger cleanup effects for `useEffect` hooks.
+
+## Examples
+
+Here we present some extra examples of using `renderHook` API.
+
+### With `initialProps`
+
+```ts
+const useCount = (initialCount: number) => {
+  const [count, setCount] = useState(initialCount);
+  const increment = () => setCount((previousCount) => previousCount + 1);
+
+  useEffect(() => {
+    setCount(initialCount);
+  }, [initialCount]);
+
+  return { count, increment };
+};
+
+it('should increment count', () => {
+  const { result, rerender } = renderHook((initialCount: number) => useCount(initialCount), {
+    initialProps: 1,
+  });
+
+  expect(result.current.count).toBe(1);
+
+  act(() => {
+    result.current.increment();
+  });
+
+  expect(result.current.count).toBe(2);
+  rerender(5);
+  expect(result.current.count).toBe(5);
+});
+```
+
+### With `wrapper`
+
+```tsx
+it('should use context value', () => {
+  function Wrapper({ children }: { children: ReactNode }) {
+    return <Context.Provider value="provided">{children}</Context.Provider>;
+  }
+
+  const { result } = renderHook(() => useHook(), { wrapper: Wrapper });
+  // ...
+});
+```
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api/queries.md
+---
+
+# Queries
+
+Queries are one of the main building blocks for the React Native Testing Library. They enable you to find relevant elements in the element tree, which represents your application's user interface when running under tests.
+
+## Accessing queries
+
+All queries described below are accessible in two main ways: through the `screen` object or by capturing the `render` function call result.
+
+### Using `screen` object
+
+```tsx
+import { render, screen } from '@testing-library/react-native';
+
+test('accessing queries using "screen" object', () => {
+  render(...);
+
+  screen.getByRole("button", { name: "Start" });
+})
+```
+
+The modern and recommended way of accessing queries is to use the `screen` object exported by the `@testing-library/react-native` package. This object will contain methods of all available queries bound to the most recently rendered UI.
+
+### Using `render` result
+
+```tsx
+import { render } from '@testing-library/react-native';
+
+test('accessing queries using "render" result', () => {
+  const { getByRole } = render(...);
+  getByRole("button", { name: "Start" });
+})
+```
+
+The classic way is to capture query functions, as they are returned from the `render` function call. This provides access to the same functions as in the case of the `screen` object.
+
+## Query parts
+
+Each query is composed of two parts: variant and predicate, which are separated by the `by` word in the middle of the name.
+
+Consider the following query:
+
+```
+getByRole()
+```
+
+For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
+
+## Query variant
+
+The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
+
+| Variant                                                                              | Assertion                     | Return type                            | Is Async? |
+| ------------------------------------------------------------------------------------ | ----------------------------- | -------------------------------------- | --------- |
+| [`getBy*`](/react-native-testing-library/12.x/docs/api/queries.md#get-by)            | Exactly one matching element  | `ReactTestInstance`                    | No        |
+| [`getAllBy*`](/react-native-testing-library/12.x/docs/api/queries.md#get-all-by)     | At least one matching element | `Array<ReactTestInstance>`             | No        |
+| [`queryBy*`](/react-native-testing-library/12.x/docs/api/queries.md#query-by)        | Zero or one matching element  | <code>ReactTestInstance \| null</code> | No        |
+| [`queryAllBy*`](/react-native-testing-library/12.x/docs/api/queries.md#query-all-by) | No assertion                  | `Array<ReactTestInstance>`             | No        |
+| [`findBy*`](/react-native-testing-library/12.x/docs/api/queries.md#find-by)          | Exactly one matching element  | `Promise<ReactTestInstance>`           | Yes       |
+| [`findAllBy*`](/react-native-testing-library/12.x/docs/api/queries.md#find-all-by)   | At least one matching element | `Promise<Array<ReactTestInstance>>`    | Yes       |
+
+Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
+
+### `getBy*` queries \{#get-by}
+
+```ts
+getByX(...): ReactTestInstance
+```
+
+`getBy*` queries return the single matching element for a query, and throw an error if no elements match or if more than one match is found. If you need to find more than one element, then use `getAllBy`.
+
+### `getAllBy*` queries \{#get-all-by}
+
+```ts
+getAllByX(...): ReactTestInstance[]
+```
+
+`getAllBy*` queries return an array of all matching elements for a query and throw an error if no elements match.
+
+### `queryBy*` queries \{#query-by}
+
+```ts
+queryByX(...): ReactTestInstance | null
+```
+
+`queryBy*` queries return the first matching node for a query, and return `null` if no elements match. This is useful for asserting an element that is not present. This throws if more than one match is found (use `queryAllBy` instead).
+
+### `queryAllBy*` queries \{#query-all-by}
+
+```ts
+queryAllByX(...): ReactTestInstance[]
+```
+
+`queryAllBy*` queries return an array of all matching nodes for a query and return an empty array (`[]`) when no elements match.
+
+### `findBy*` queries \{#find-by}
+
+```ts
+findByX(
+  ...,
+  waitForOptions?: {
+    timeout?: number,
+    interval?: number,
+  },
+): Promise<ReactTestInstance>
+```
+
+`findBy*` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element use `findAllBy*` queries.
+
+### `findAllBy*` queries \{#find-all-by}
+
+```ts
+findAllByX(
+  ...,
+  waitForOptions?: {
+    timeout?: number,
+    interval?: number,
+  },
+): Promise<ReactTestInstance[]>
+```
+
+`findAllBy*` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
+
+:::info
+`findBy*` and `findAllBy*` queries accept optional `waitForOptions` object arguments, which can contain `timeout`, `interval` and `onTimeout` properties which have the same meaning as respective options for [`waitFor`](/react-native-testing-library/12.x/docs/api/misc/async.md#waitfor) function.
+:::
+
+:::info
+In cases when your `findBy*` and `findAllBy*` queries throw when unable to find matching elements, it is helpful to pass `onTimeout: () => { screen.debug(); }` callback using the `waitForOptions` parameter.
+:::
+
+## Query predicates
+
+_Note: most methods like this one return a [`ReactTestInstance`](https://reactjs.org/docs/test-renderer.html#testinstance) with following properties that you may be interested in:_
+
+```typescript
+type ReactTestInstance = {
+  type: string | Function;
+  props: { [propName: string]: any };
+  parent: ReactTestInstance | null;
+  children: Array<ReactTestInstance | string>;
+};
+```
+
+### `*ByRole` \{#by-role}
+
+> getByRole, getAllByRole, queryByRole, queryAllByRole, findByRole, findAllByRole
+
+```ts
+getByRole(
+  role: TextMatch,
+  options?: {
+    name?: TextMatch
+    disabled?: boolean,
+    selected?: boolean,
+    checked?: boolean | 'mixed',
+    busy?: boolean,
+    expanded?: boolean,
+    value: {
+      min?: number;
+      max?: number;
+      now?: number;
+      text?: TextMatch;
+    },
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` with matching `role` or `accessibilityRole` prop.
+
+:::info
+In order for `*ByRole` queries to match an element it needs to be considered an accessibility element:
+
+1. `Text`, `TextInput` and `Switch` host elements are these by default.
+2. `View` host elements need an explicit [`accessible`](https://reactnative.dev/docs/accessibility#accessible) prop set to `true`
+3. Some React Native composite components like `Pressable` & `TouchableOpacity` render host `View` element with `accessible` prop already set.
+
+:::
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(
+  <Pressable accessibilityRole="button" disabled>
+    <Text>Hello</Text>
+  </Pressable>
+);
+const element = screen.getByRole('button');
+const element2 = screen.getByRole('button', { name: 'Hello' });
+const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
+```
+
+#### Options \{#by-role-options}
+
+- `name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (= accessability label or text content).
+
+- `disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessbilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
+  - This option can alternatively be expressed using the [`toBeEnabled()` / `toBeDisabled()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobeenabled) Jest matchers.
+
+- `selected`: You can filter elements by their selected state (coming either from `aria-selected` prop or `accessbilityState.selected` prop). The possible values are `true` or `false`. Querying `selected: false` will also match elements with `selected: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `selected` state.
+  - This option can alternatively be expressed using the [`toBeSelected()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobeselected) Jest matcher.
+
+- `checked`: You can filter elements by their checked state (coming either from `aria-checked` prop or `accessbilityState.checked` prop). The possible values are `true`, `false`, or `"mixed"`.
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `checked` state.
+  - This option can alternatively be expressed using the [`toBeChecked()` / `toBePartiallyChecked()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobechecked) Jest matchers.
+
+- `busy`: You can filter elements by their busy state (coming either from `aria-busy` prop or `accessbilityState.busy` prop). The possible values are `true` or `false`. Querying `busy: false` will also match elements with `busy: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `busy` state.
+  - This option can alternatively be expressed using the [`toBeBusy()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobebusy) Jest matcher.
+
+- `expanded`: You can filter elements by their expanded state (coming either from `aria-expanded` prop or `accessbilityState.expanded` prop). The possible values are `true` or `false`.
+  - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `expanded` state.
+  - This option can alternatively be expressed using the [`toBeExpanded()` / `toBeCollapsed()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobeexpanded) Jest matchers.
+
+- `value`: Filter elements by their accessibility value, based on either `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext` or `accessibilityValue` props. Accessiblity value conceptually consists of numeric `min`, `max` and `now` entries, as well as string `text` entry.
+  - See React Native [accessibilityValue](https://reactnative.dev/docs/accessibility#accessibilityvalue) docs to learn more about the accessibility value concept.
+  - This option can alternatively be expressed using the [`toHaveAccessibilityValue()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tohaveaccessibilityvalue) Jest matcher.
+
+### `*ByLabelText` \{#by-label-text}
+
+> getByLabelText, getAllByLabelText, queryByLabelText, queryAllByLabelText, findByLabelText, findAllByLabelText
+
+```ts
+getByLabelText(
+  text: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  },
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` with matching label:
+
+- either by matching [`aria-label`](https://reactnative.dev/docs/accessibility#aria-label)/[`accessibilityLabel`](https://reactnative.dev/docs/accessibility#accessibilitylabel) prop
+- or by matching text content of view referenced by [`aria-labelledby`](https://reactnative.dev/docs/accessibility#aria-labelledby-android)/[`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(<MyComponent />);
+const element = screen.getByLabelText('my-label');
+```
+
+### `*ByPlaceholderText` \{#by-placeholder-text}
+
+> getByPlaceholderText, getAllByPlaceholderText, queryByPlaceholderText, queryAllByPlaceholderText, findByPlaceholderText, findAllByPlaceholderText
+
+```ts
+getByPlaceholderText(
+  text: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(<MyComponent />);
+const element = screen.getByPlaceholderText('username');
+```
+
+### `*ByDisplayValue` \{#by-display-value}
+
+> getByDisplayValue, getAllByDisplayValue, queryByDisplayValue, queryAllByDisplayValue, findByDisplayValue, findAllByDisplayValue
+
+```ts
+getByDisplayValue(
+  value: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  },
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(<MyComponent />);
+const element = screen.getByDisplayValue('username');
+```
+
+### `*ByText` \{#by-text}
+
+> getByText, getAllByText, queryByText, queryAllByText, findByText, findAllByText
+
+```ts
+getByText(
+  text: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  }
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` with matching text – may be a string or regular expression.
+
+This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(<MyComponent />);
+const element = screen.getByText('banana');
+```
+
+### `*ByHintText` \{#by-hint-text}
+
+> getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint, findByA11yHint, findAllByA11yHint
+> getByAccessibilityHint, getAllByAccessibilityHint, queryByAccessibilityHint, queryAllByAccessibilityHint, findByAccessibilityHint, findAllByAccessibilityHint
+> getByHintText, getAllByHintText, queryByHintText, queryAllByHintText, findByHintText, findAllByHintText
+
+```ts
+getByHintText(
+  hint: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  },
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` with matching `accessibilityHint` prop.
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(<MyComponent />);
+const element = screen.getByHintText('Plays a song');
+```
+
+:::info
+Please consult [Apple guidelines on how `accessibilityHint` should be used](https://developer.apple.com/documentation/objectivec/nsobject/1615093-accessibilityhint).
+:::
+
+### `*ByTestId` \{#by-test-id}
+
+> getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, findByTestId, findAllByTestId
+
+```ts
+getByTestId(
+  testId: TextMatch,
+  options?: {
+    exact?: boolean;
+    normalizer?: (text: string) => string;
+    includeHiddenElements?: boolean;
+  },
+): ReactTestInstance;
+```
+
+Returns a `ReactTestInstance` with matching `testID` prop. `testID` – may be a string or a regular expression.
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(<MyComponent />);
+const element = screen.getByTestId('unique-id');
+```
+
+:::info
+In the spirit of [the guiding principles](https://testing-library.com/docs/guiding-principles), it is recommended to use this only after the other queries don't work for your use case. Using `testID` attributes do not resemble how your software is used and should be avoided if possible. However, they are particularly useful for end-to-end testing on real devices, e.g. using Detox and it's an encouraged technique to use there. Learn more from the blog post ["Making your UI tests resilient to change"](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).
+:::
+
+### Common options
+
+Usually query first argument can be a **string** or a **regex**. All queries take at least the [`hidden`](#hidden-option) option as an optionnal second argument and some queries accept more options which change string matching behaviour. See [TextMatch](#textmatch) for more info.
+
+#### `includeHiddenElements` option
+
+All queries have the `includeHiddenElements` option which affects whether [elements hidden from accessibility](/react-native-testing-library/12.x/docs/api/misc/accessibility.md#ishiddenfromaccessibility) are matched by the query. By default queries will not match hidden elements, because the users of the app would not be able to see such elements.
+
+You can configure the default value with the [`configure` function](/react-native-testing-library/12.x/docs/api/misc/config.md#configure).
+
+This option is also available as `hidden` alias for compatibility with [React Testing Library](https://testing-library.com/docs/queries/byrole#hidden).
+
+**Examples**
+
+```tsx
+render(<Text style={{ display: 'none' }}>Hidden from accessibility</Text>);
+
+// Exclude hidden elements
+expect(
+  screen.queryByText('Hidden from accessibility', {
+    includeHiddenElements: false,
+  })
+).not.toBeOnTheScreen();
+
+// Include hidden elements
+expect(screen.getByText('Hidden from accessibility')).toBeOnTheScreen();
+expect(
+  screen.getByText('Hidden from accessibility', { includeHiddenElements: true })
+).toBeOnTheScreen();
+```
+
+## TextMatch type
+
+```ts
+type TextMatch = string | RegExp;
+```
+
+Most of the query APIs take a `TextMatch` as an argument, which means the argument can be either a _string_ or _regex_.
+
+### Examples
+
+Given the following render:
+
+```jsx
+render(<Text>Hello World</Text>);
+```
+
+Will **find a match**:
+
+```js
+// Matching a string:
+screen.getByText('Hello World'); // full string match
+screen.getByText('llo Worl', { exact: false }); // substring match
+screen.getByText('hello world', { exact: false }); // ignore case-sensitivity
+
+// Matching a regex:
+screen.getByText(/World/); // substring match
+screen.getByText(/world/i); // substring match, ignore case
+screen.getByText(/^hello world$/i); // full string match, ignore case-sensitivity
+screen.getByText(/Hello W?oRlD/i); // advanced regex
+```
+
+Will **NOT find a match**
+
+```js
+// substring does not match
+screen.getByText('llo Worl');
+// full string does not match
+screen.getByText('Goodbye World');
+
+// case-sensitive regex with different case
+screen.getByText(/hello world/);
+```
+
+### Options \{#text-match-options}
+
+#### Precision
+
+```typescript
+type TextMatchOptions = {
+  exact?: boolean;
+  normalizer?: (text: string) => string;
+};
+```
+
+Queries that take a `TextMatch` also accept an object as the second argument that can contain options that affect the precision of string matching:
+
+- `exact`: Defaults to `true`; matches full strings, case-sensitive. When false, matches substrings and is not case-sensitive.
+  - `exact` has no effect on regex argument.
+  - In most cases using a `regex` instead of a string gives you more control over fuzzy matching and should be preferred over `{ exact: false }`.
+- `normalizer`: An optional function which overrides normalization behavior. See [Normalization](#normalization).
+
+`exact` option defaults to `true` but if you want to search for a text slice or make text matching case-insensitive you can override it. That being said we advise you to use regex in more complex scenarios.
+
+#### Normalization
+
+Before running any matching logic against text, it is automatically normalized. By default, normalization consists of trimming whitespace from the start and end of text, and collapsing multiple adjacent whitespace characters into a single space.
+
+If you want to prevent that normalization, or provide alternative normalization (e.g. to remove Unicode control characters), you can provide a `normalizer` function in the options object. This function will be given a string and is expected to return a normalized version of that string.
+
+:::info
+Specifying a value for `normalizer` replaces the built-in normalization, but you can call `getDefaultNormalizer` to obtain a built-in normalizer, either to adjust that normalization or to call it from your own normalizer.
+:::
+
+`getDefaultNormalizer` take options object which allows the selection of behaviour:
+
+- `trim`: Defaults to `true`. Trims leading and trailing whitespace.
+- `collapseWhitespace`: Defaults to `true`. Collapses inner whitespace (newlines, tabs repeated spaces) into a single space.
+
+##### Normalization Examples
+
+To perform a match against text without trimming:
+
+```typescript
+screen.getByText(node, 'text', {
+  normalizer: getDefaultNormalizer({ trim: false }),
+});
+```
+
+To override normalization to remove some Unicode characters whilst keeping some (but not all) of the built-in normalization behavior:
+
+```typescript
+screen.getByText(node, 'text', {
+  normalizer: (str) => getDefaultNormalizer({ trim: false })(str).replace(/[\u200E-\u200F]*/g, ''),
+});
+```
+
+## Legacy unit testing helpers
+
+`render` from `@testing-library/react-native` exposes additional queries that **should not be used in integration or component testing**, but some users (like component library creators) interested in unit testing some components may find helpful.
+
+The interface is the same as for other queries, but we won't provide full names so that they're harder to find by search engines.
+
+### `UNSAFE_ByType`
+
+> UNSAFE\_getByType, UNSAFE\_getAllByType, UNSAFE\_queryByType, UNSAFE\_queryAllByType
+
+Returns a `ReactTestInstance` with matching a React component type.
+
+:::caution
+This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+:::
+
+### `UNSAFE_ByProps`
+
+> UNSAFE\_getByProps, UNSAFE\_getAllByProps, UNSAFE\_queryByProps, UNSAFE\_queryAllByProps
+
+Returns a `ReactTestInstance` with matching props object.
+
+:::caution
+This query has been marked unsafe, since it requires knowledge about implementation details of the component. Use responsibly.
+:::
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api/render.md
+---
+
+# `render` function
+
+```jsx
+function render(
+  component: React.Element<any>,
+  options?: RenderOptions
+): RenderResult
+```
+
+The `render` function is the entry point for writing React Native Testing Library tests. It deeply renders the given React element and returns helpers to query the output components' structure.
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+test('basic test', () => {
+  render(<MyApp />);
+  expect(screen.getAllByRole('button', { name: 'start' })).toBeOnTheScreen();
+});
+```
+
+> When using React context providers, like Redux Provider, you'll likely want to wrap rendered component with them. In such cases, it's convenient to create your own custom `render` method. [Follow this great guide on how to set this up](https://testing-library.com/docs/react-testing-library/setup#custom-render).
+
+### Options \{#render-options}
+
+The behavior of the `render` method can be customized by passing various options as a second argument of the `RenderOptions` type:
+
+#### `wrapper` option
+
+```ts
+wrapper?: React.ComponentType<any>,
+```
+
+This option allows you to wrap the tested component, passed as the first option to the `render()` function, in an additional wrapper component. This is useful for creating reusable custom render functions for common React Context providers.
+
+#### `concurrentRoot` option \{#concurrent-root}
+
+Set to `true` to enable concurrent rendering used in the React Native New Architecture. Otherwise `render` will default to legacy synchronous rendering.
+
+#### `createNodeMock` option
+
+```ts
+createNodeMock?: (element: React.Element) => unknown,
+```
+
+This option allows you to pass `createNodeMock` option to `ReactTestRenderer.create()` method in order to allow for custom mock refs. You can learn more about this option from [React Test Renderer documentation](https://reactjs.org/docs/test-renderer.html#ideas).
+
+#### `unstable_validateStringsRenderedWithinText` option
+
+```ts
+unstable_validateStringsRenderedWithinText?: boolean;
+```
+
+:::note
+This options is experimental, in some cases it might not work as intended, and its behavior might change without observing [SemVer](https://semver.org/) requirements for breaking changes.
+:::
+
+This **experimental** option allows you to replicate React Native behavior of throwing `Invariant Violation: Text strings must be rendered within a <Text> component` error when you try to render `string` value under components different than `<Text>`, e.g., under `<View>`.
+
+React Test Renderer does not enforce this check; hence, by default, React Native Testing Library also does not check this. That might result in runtime errors when running your code on a device, while the code works without errors in tests.
+
+### Result \{#render-result}
+
+The `render` function returns the same queries and utilities as the [`screen`](/react-native-testing-library/12.x/docs/api/screen.md) object. We recommended using the `screen` object as more developer-friendly way.
+
+See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) from Kent C. Dodds for more details.
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/api/screen.md
+---
+
+# `screen` object
+
+```ts
+let screen: {
+  ...queries;
+  rerender(element: React.Element<unknown>): void;
+  unmount(): void;
+  debug(options?: DebugOptions): void
+  toJSON(): ReactTestRendererJSON | null;
+  root: ReactTestInstance;
+  UNSAFE_root: ReactTestInstance;
+};
+```
+
+The `screen` object offers a recommended way to access queries and utilities for the currently rendered UI.
+
+This object is assigned after the `render` call and cleared after each test by calling [`cleanup`](/react-native-testing-library/12.x/docs/api/misc/other.md#cleanup). If no `render` call has been made in a given test, then it holds a special object and throws a helpful error on each property and method access.
+
+### `...queries`
+
+The most important feature of `screen` is providing a set of helpful queries that allow you to find certain elements in the view hierarchy.
+
+See [Queries](/react-native-testing-library/12.x/docs/api/queries.md) for a complete list.
+
+#### Example
+
+```jsx
+import { render, screen } from '@testing-library/react-native';
+
+render(<MyComponent />);
+const buttonStart = screen.getByRole('button', { name: 'start' });
+```
+
+### `rerender`
+
+_Also available under `update` alias_
+
+```ts
+function rerender(element: React.Element<unknown>): void;
+```
+
+Re-render the in-memory tree with a new root element. This simulates a React update render at the root. If the new element has the same type (and `key`) as the previous element, the tree will be updated; otherwise, it will re-mount a new tree, in both cases triggering the appropriate lifecycle events.
+
+### `unmount`
+
+```ts
+function unmount(): void;
+```
+
+Unmount the in-memory tree, triggering the appropriate lifecycle events.
+
+:::note
+Usually you should not need to call `unmount` as it is done automatically if your test runner supports `afterEach` hook (like Jest, mocha, Jasmine).
+:::
+
+### `debug`
+
+```ts
+function debug(options?: { message?: string; mapProps?: MapPropsFunction }): void;
+```
+
+Pretty prints deeply rendered component passed to `render`.
+
+#### `message` option \{#debug-message-option}
+
+You can provide a message that will be printed on top.
+
+```jsx
+render(<Component />);
+screen.debug({ message: 'optional message' });
+```
+
+logs optional message and colored JSX:
+
+```jsx
+optional message
+
+<View
+  onPress={[Function bound fn]}
+>
+  <Text>Press me</Text>
+</View>
+```
+
+#### `mapProps` option \{#debug-map-props-option}
+
+```ts
+function debug({ mapProps: (props) => ({}) });
+```
+
+You can use the `mapProps` option to transform the props that will be printed :
+
+```jsx
+render(<View style={{ backgroundColor: 'red' }} />);
+screen.debug({ mapProps: ({ style, ...props }) => ({ props }) });
+```
+
+This will log the rendered JSX without the `style` props.
+
+The `children` prop cannot be filtered out so the following will print all rendered components with all props but `children` filtered out.
+
+This option can be used to target specific props when debugging a query (for instance, keeping only the `children` prop when debugging a `getByText` query).
+
+You can also transform prop values so that they are more readable (e.g., flatten styles).
+
+```ts
+import { StyleSheet } from 'react-native';
+
+screen.debug({ mapProps : {({ style, ...props })} => ({ style : StyleSheet.flatten(style), ...props }) });
+```
+
+Or remove props that have little value when debugging tests, e.g. path prop for svgs
+
+```ts
+screen.debug({ mapProps: ({ path, ...props }) => ({ ...props }) });
+```
+
+### `toJSON`
+
+```ts
+function toJSON(): ReactTestRendererJSON | null;
+```
+
+Get the rendered component JSON representation, e.g. for snapshot testing.
+
+### `root`
+
+```ts
+const root: ReactTestInstance;
+```
+
+Returns the rendered root [host element](/react-native-testing-library/12.x/docs/advanced/testing-env.md#host-and-composite-components).
+
+This API is primarily useful for component tests, as it allows you to access root host view without using `*ByTestId` queries or similar methods.
+
+### `UNSAFE_root`
+
+:::caution
+This API typically will return a composite view, which goes against recommended testing practices. This API is primarily available for legacy test suites that rely on such testing.
+:::
+
+```ts
+const UNSAFE_root: ReactTestInstance;
+```
+
+Returns the rendered [composite root element](/react-native-testing-library/12.x/docs/advanced/testing-env.md#host-and-composite-components).
+
+:::note
+This API has been previously named `container` for compatibility with [React Testing Library](https://testing-library.com/docs/react-testing-library/other#container-1). However, despite the same name, the actual behavior has been significantly different; hence, we decided to change the name to `UNSAFE_root`.
+:::
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/guides/community-resources.md
+---
+
+# Community resources
+
+## Recommended content
+
+- [The Testing Trophy and Testing Classifications](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) by Kent C. Dodds (2021) - classic article explaining testing philosophy behind all Testing Library implementations.
+- [Common mistakes with React Testing Library](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library) by Kent C. Dodds (2020) - classic article explaining React Testing Library best practices, highly applicable to RNTL as well.
+- [React Native — UI Testing (Ultimate Guide)](https://github.com/anisurrahman072/React-Native-Advanced-Guide/blob/master/Testing/RNTL-Component-Testing-ultimate-guide.md) by Anisur Rahman - comprehensive guide to RNTL testing
+- [React Native Testing examples repo](https://github.com/vanGalilea/react-native-testing) by Steve Galili - extensive repo with RN testing examples for RNTL and Maestro
+
+## Older, potentially outdated content
+
+- [Where and how to start testing 🧪 your react-native app ⚛️ and how to keep on testin’](https://blog.usejournal.com/where-and-how-to-start-testing-your-react-native-app-%EF%B8%8F-and-how-to-keep-on-testin-ec3464fb9b41) by Steve Galili (2020) - article referencing Steve's examples repo.
+- [Intro to React Native Testing Library & Jest Native](https://youtu.be/CpTQb0XWlRc) by Alireza Ghamkhar (2020) - video tutorial on RNTL setup and testing.
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/guides/faq.md
+---
+
+# FAQ
+
+## Can I test the native features of React Native apps?
+
+Short answer: no.
+
+React Native Testing Library does not provide an entire React Native runtime since that would require running on a physical device
+or iOS simulator/Android emulator to provision the underlying OS and platform APIs.
+
+Instead of using React Native renderer, it simulates only the JavaScript part of its runtime
+using [React Test Renderer](https://reactjs.org/docs/test-renderer.html) while providing queries
+and event APIs ([User Event](/react-native-testing-library/12.x/docs/api/events/user-event.md), [Fire Event](/react-native-testing-library/12.x/docs/api/events/fire-event.md)) that mimicking certain behaviors from the actual runtime.
+
+You can learn more about our testing environment [here](/react-native-testing-library/12.x/docs/advanced/testing-env.md).
+
+This approach has specific benefits and shortfalls. On the positive side:
+
+- it allows testing most of the logic of regular React Native apps
+- it allows running tests on any OS supported by Jest or other test runners, e.g., on CI
+- it uses much less resources than full runtime simulation
+- you can use Jest fake timers
+
+On the negative side:
+
+- you cannot test native features
+- it might not perfectly simulate certain JavaScript features, but we are working on it
+
+The [User Event interactions](/react-native-testing-library/12.x/docs/api/events/user-event.md) solve some of the simulation issues, as they offer more realistic event handling than the basic [Fire Event API](/react-native-testing-library/12.x/docs/api/events/fire-event.md).
+
+## Should I use/migrate to `screen` queries?
+
+There is no need to migrate existing test code to use `screen`-bases queries. You can still use
+queries and other functions returned by `render`. The `screen` object captures the latest `render` result.
+
+For new code, you are encouraged to use `screen` as there are some good reasons for that, which are described in [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library#not-using-screen) by Kent C. Dodds.
+
+## Should I use/migrate to User Event interactions?
+
+We encourage you to migrate existing tests to use the [User Event interactions](/react-native-testing-library/12.x/docs/api/events/user-event.md), which offer more realistic event handling than the basic [Fire Event API](/react-native-testing-library/12.x/docs/api/events/fire-event.md). Hence, it will provide more confidence in the quality of your code.
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/guides/how-to-query.md
+---
+
+# How should I query?
+
+React Native Testing Library provides various query types, allowing great flexibility in finding views appropriate for your tests. At the same time, the number of queries might be confusing. This guide aims to help you pick the correct queries for your test scenarios.
+
+## Query parts
+
+Each query is composed of two parts: variant and predicate, which are separated by the `by` word in the middle of the query.
+
+Consider the following query:
+
+```ts
+getByRole();
+```
+
+For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
+
+## Query variant
+
+The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
+
+| Variant                                                                              | Assertion                     | Return type                            | Is Async? |
+| ------------------------------------------------------------------------------------ | ----------------------------- | -------------------------------------- | --------- |
+| [`getBy*`](/react-native-testing-library/12.x/docs/api/queries.md#get-by)            | Exactly one matching element  | `ReactTestInstance`                    | No        |
+| [`getAllBy*`](/react-native-testing-library/12.x/docs/api/queries.md#get-all-by)     | At least one matching element | `Array<ReactTestInstance>`             | No        |
+| [`queryBy*`](/react-native-testing-library/12.x/docs/api/queries.md#query-by)        | Zero or one matching element  | <code>ReactTestInstance \| null</code> | No        |
+| [`queryAllBy*`](/react-native-testing-library/12.x/docs/api/queries.md#query-all-by) | No assertion                  | `Array<ReactTestInstance>`             | No        |
+| [`findBy*`](/react-native-testing-library/12.x/docs/api/queries.md#find-by)          | Exactly one matching element  | `Promise<ReactTestInstance>`           | Yes       |
+| [`findAllBy*`](/react-native-testing-library/12.x/docs/api/queries.md#find-all-by)   | At least one matching element | `Promise<Array<ReactTestInstance>>`    | Yes       |
+
+Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
+
+### Idiomatic query variants
+
+Idiomatic query variants clarify test intent and the expected number of matching elements. They will also throw helpful errors if assertions fail to help diagnose the issues.
+
+Here are general guidelines for picking idiomatic query variants:
+
+1. Use `getBy*` in the most common case when you expect a **single matching element**. Use other queries only in more specific cases.
+2. Use `findBy*` when an element is not yet in the element tree, but you expect it to be there as a **result of some asynchronous action**.
+3. Use `getAllBy*` (and `findAllBy*` for async) if you expect **more than one matching element**, e.g. in a list.
+4. Use `queryBy*` only when element **should not exist** to use it together with e.g. [`not.toBeOnTheScreen()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobeonthescreen) matcher.
+
+Avoid using `queryAllBy*` in regular tests, as it provides no assertions on the number of matching elements. You may still find it useful when building reusable custom testing tools.
+
+## Query predicate
+
+The query predicate describes how you decide whether to match the given element.
+
+| Predicate                                                                                          | Supported elements | Inspected props                                                                             |
+| -------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------- |
+| [`*ByRole`](/react-native-testing-library/12.x/docs/api/queries.md#by-role)                        | all host elements  | `role`, `accessibilityRole`,<br /> optional: accessible name, accessibility state and value |
+| [`*ByLabelText`](/react-native-testing-library/12.x/docs/api/queries.md#by-label-text)             | all host elements  | `aria-label`, `aria-labelledby`,<br /> `accessibilityLabel`, `accessibilityLabelledBy`      |
+| [`*ByDisplayValue`](/react-native-testing-library/12.x/docs/api/queries.md#by-display-value)       | `TextInput`        | `value`, `defaultValue`                                                                     |
+| [`*ByPlaceholderText`](/react-native-testing-library/12.x/docs/api/queries.md#by-placeholder-text) | `TextInput`        | `placeholder`                                                                               |
+| [`*ByText`](/react-native-testing-library/12.x/docs/api/queries.md#by-text)                        | `Text`             | `children` (text content)                                                                   |
+| [`*ByHintText`](/react-native-testing-library/12.x/docs/api/queries.md#by-hint-text)               | all host elements  | `accessibilityHint`                                                                         |
+| [`*ByTestId`](/react-native-testing-library/12.x/docs/api/queries.md#by-test-id)                   | all host elements  | `testID`                                                                                    |
+
+### Idiomatic query predicates
+
+Choosing the proper query predicate helps better express the test's intent and make the tests resemble how users interact with your code (components, screens, etc.) as much as possible following our [Guiding Principles](https://testing-library.com/docs/guiding-principles). Additionally, most predicates promote the usage of proper accessibility props, which add a semantic layer on top of an element tree composed primarily of [`View`](https://reactnative.dev/docs/view) elements.
+
+It is recommended to use query predicates in the following order of priority:
+
+### 1. By Role query \{#by-role-query}
+
+The first and most versatile predicate is [`*ByRole`](/react-native-testing-library/12.x/docs/api/queries.md#by-role), which starts with the semantic role of the element and can be further narrowed down with additional options. React Native has two role systems, the web/ARIA-compatible one based on [`role`](https://reactnative.dev/docs/accessibility#role) prop and the traditional one based on [`accessibilityRole`](https://reactnative.dev/docs/accessibility#accessibilityrole) prop, you can use either of these.
+
+In most cases, you need to set accessibility roles explicitly (or your component library can set some of them for you). These roles allow assistive technologies (like screen readers) and testing code to understand your view hierarchy better.
+
+Some frequently used roles include:
+
+- `alert` - important text to be presented to the user, e.g., error message
+- `button`
+- `checkbox` & `switch` - on/off controls
+- `heading` (`header`) - header for content section, e.g., the title of navigation bar
+- `img` (`image`)
+- `link`
+- `menu` & `menuitem`
+- `progressbar`
+- `radiogroup` & `radio`
+- `searchbox` (`search`)
+- `slider` (`adjustable`)
+- `summary`
+- `tablist` & `tab`
+- `text` - static text that cannot change
+- `toolbar` - container for action buttons
+
+#### Name option \{#by-role-query-name-option}
+
+Frequently, you will want to add the [`name`](/react-native-testing-library/12.x/docs/api/queries.md#by-role-options) option, which will match both the element's role and its accessible name (= element's accessibility label or text content).
+
+Here are a couple of examples:
+
+- start button: `getByRole("button", { name: "Start" })`
+- silent mode switch: `getByRole("switch", { name: "Silent Mode" })`
+- screen header: `getByRole("header", { name: "Settings" })`
+- undo menu item: `getByRole("menuitem", { name: "Undo" })`
+- error messages: `getByRole("alert", { name: /Not logged in/ })`
+
+### 2. Text input queries \{#text-input-queries}
+
+Querying [`TextInput`](https://reactnative.dev/docs/textinput) elements presents a unique challenge as there is no separate role for `TextInput` elements. There is a `searchbox`/`search` role, which can be assigned to `TextInput`, but it should be only used in the context of search inputs, leaving other text inputs without a role to query with.
+
+Therefore, you can use the following queries to find relevant text inputs:
+
+1. [`*ByLabelText`](/react-native-testing-library/12.x/docs/api/queries.md#by-label-text) - will match the accessibility label of the element. This query will match any host elements, including `TextInput` elements.
+2. [`*ByPlaceholderText`](/react-native-testing-library/12.x/docs/api/queries.md#by-placeholder-text) - will match the placeholder of `TextInput` element. This query will match only `TextInput` elements.
+3. [`*ByDisplayValue`](/react-native-testing-library/12.x/docs/api/queries.md#by-display-value) - will the current (or default) value of `TextInput` element. This query will match only `TextInput` elements.
+
+### 3. Other accessible queries \{#other-accessible-queries}
+
+These queries reflect the apps' user experience, both visual and through assistive technologies (e.g. screen reader).
+
+These queries include:
+
+- [`*ByText`](/react-native-testing-library/12.x/docs/api/queries.md#by-text) - will match the text content of the element. This query will match only `Text` elements.
+- [`*ByLabelText`](/react-native-testing-library/12.x/docs/api/queries.md#by-label-text) - will match the accessibility label of the element.
+- [`*ByHintText`](/react-native-testing-library/12.x/docs/api/queries.md#by-hint-text) - will match the accessibility hint of the element.
+
+### 4. Test ID query \{#test-id-query}
+
+As a final predicate, you can use the `testID` prop to find relevant views. Using the [`*ByTestId`](/react-native-testing-library/12.x/docs/api/queries.md#by-test-id) predicate offers the most flexibility, but at the same time, it does not represent the user experience, as users are not aware of test IDs.
+
+Note that using test IDs is a widespread technique in end-to-end testing due to various issues with querying views through other means **in its specific context**. Nevertheless, we still encourage you to use recommended RNTL queries as it will make your integration and component test more reliable and resilient.
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/guides/troubleshooting.md
+---
+
+# Troubleshooting
+
+This guide describes common issues found by users when integrating React Native Test Library to their projects:
+
+## Matching React Native, React & React Test Renderer versions
+
+Check that you have matching versions of core dependencies:
+
+- React Native
+- React
+- React Test Renderer
+
+React Native uses different versioning scheme from React, you can use [React Native Upgrade Helper](https://react-native-community.github.io/upgrade-helper/) to find the correct matching between React Native & React versions. In case you use Expo, run `npx expo install --fix` in your project to validate and install compatible versions of these dependencies.
+
+React Test Renderer usually has same major & minor version as React, as they are closely related and React Test Renderer is part of [React monorepo](https://github.com/facebook/react).
+
+Related issues: [#1061](https://github.com/callstack/react-native-testing-library/issues/1061), [#938](https://github.com/callstack/react-native-testing-library/issues/938), [#920](https://github.com/callstack/react-native-testing-library/issues/920)
+
+Errors that might indicate that you are facing this issue:
+
+- `TypeError: Cannot read property 'current' of undefined` when calling `render()`
+- `TypeError: Cannot read property 'isBatchingLegacy' of undefined` when calling `render()`
+
+## Example repository
+
+We maintain an [example repository](https://github.com/callstack/react-native-testing-library/tree/main/examples/basic) that showcases a modern React Native Testing Library setup with TypeScript, etc.
+
+In case something does not work in your setup you can refer to this repository for recommended configuration.
+
+## Undefined component error
+
+> Warning: React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: undefined.
+
+This frequently happens when you mock a complex module incorrectly, e.g.:
+
+```ts
+jest.mock('@react-navigation/native', () => {
+  return {
+    useNavigation: jest.fn(),
+  };
+});
+```
+
+The above mock will mock `useNavigation` hook as intended, but at the same time all other exports from `@react-navigation/native` package are now `undefined`. If you want to use `NavigationContainer` component from the same package it will be `undefined` and result in the error above.
+
+In order to mock only a part of given package you should re-export all other exports using `jest.requireActual` helper:
+
+```ts
+jest.mock('@react-navigation/native', () => {
+  return {
+    ...jest.requireActual('@react-navigation/native'),
+    useNavigation: jest.fn(),
+  };
+});
+```
+
+That way the mock will re-export all of the `@react-navigation/native` members and overwrite only the `useNavigation` hook.
+
+Alternatively, you can use `jest.spyOn` to mock package exports selectively.
+
+### Mocking React Native
+
+In case of mocking `react-native` package you should not mock the whole package at once, as this approach has issues with `jest.requireActual` call. In this case it is recommended to mock particular library paths inside the package, e.g.:
+
+```ts title=jest-setup.ts
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+```
+
+## Act warnings
+
+When writing tests you may encounter warnings connected with `act()` function. There are two kinds of these warnings:
+
+- sync `act()` warning - `Warning: An update to Component inside a test was not wrapped in act(...)`
+- async `act()` warning - `Warning: You called act(async () => ...) without await`
+
+You can read more about `act()` function in our [understanding `act` function guide](/react-native-testing-library/12.x/docs/advanced/understanding-act.md).
+
+Normally, you should not encounter sync `act()` warnings, but if that happens this probably indicate an issue with your test and should be investigated.
+
+In case of async `act()` function this might happen more or less randomly, especially if your components contain async logic. So far this warning does not seem to affect test correctness.
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/migration/jest-matchers.md
+---
+
+# Migration to built-in Jest matchers
+
+This guide describes the steps necessary to migrate from [legacy Jest Native matchers v5](https://github.com/testing-library/jest-native) to [built-in Jest matchers](/react-native-testing-library/12.x/docs/api/jest-matchers.md).
+
+## General notes
+
+All of the built-in Jest matchers provided by the React Native Testing Library support only host elements. This should not be an issue, as all RNTL v12 queries already return only host elements. When this guide states that a given matcher should work the same it assumes behavior only host elements. If you need to assert the status of composite elements use Jest Native matchers in [legacy mode](#gradual-migration).
+
+## Usage
+
+You can use the built-in matchers by adding the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
+
+```ts title=jest-setup.ts
+import '@testing-library/react-native/extend-expect';
+```
+
+### Gradual migration
+
+You can use the built-in matchers alongside legacy Jest Native matchers by changing their import in your `jest-setup.ts` file:
+
+```ts
+// Replace this:
+// import '@testing-library/jest-native/extend-expect';
+
+// With this:
+import '@testing-library/react-native/extend-expect';
+import '@testing-library/jest-native/legacy-extend-expect';
+```
+
+In this case legacy matchers will be available using the `legacy_` prefix, e.g.:
+
+```ts
+expect(element).legacy_toHaveAccessibilityState({ busy: true });
+```
+
+## Migration details
+
+### Matchers not requiring changes
+
+The following matchers should work the same:
+
+- [`toBeEmptyElement()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobeemptyelement)
+- [`toBeEnabled()` / `toBeDisabled()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobeenabled)
+- [`toBeOnTheScreen()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobeonthescreen)
+- [`toBeVisible()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobevisible)
+- [`toContainElement()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tocontainelement)
+- [`toHaveAccessibilityValue()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tohaveaccessibilityvalue)
+- [`toHaveDisplayValue()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tohavedisplayvalue)
+- [`toHaveProp()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tohaveprop)
+- [`toHaveStyle()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tohavestyle)
+- [`toHaveTextContent()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tohavetextcontent)
+
+### Replaced matchers
+
+The `toHaveAccessibilityState()` matcher has been replaced by the following matchers:
+
+- enabled state: [`toBeEnabled()` / `toBeDisabled()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobeenabled)
+- checked state: [`toBeChecked()` / `toBePartiallyChecked()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobechecked)
+- selected state: [`toBeSelected()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobeselected)
+- expanded state: [`toBeExpanded()` / `toBeCollapsed()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobeexpanded)
+- busy state: [`toBeBusy()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobebusy)
+
+The new matchers support both `accessibilityState` and `aria-*` props.
+
+### Added matchers
+
+New [`toHaveAccessibleName()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tohaveaccessiblename) has been added.
+
+### Noteworthy details
+
+You should be aware of the following details:
+
+- [`toBeEnabled()` / `toBeDisabled()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobeenabled) matchers also check the disabled state for the element's ancestors and not only the element itself. This is the same as in legacy Jest Native matchers of the same name but differs from the removed `toHaveAccessibilityState()` matcher.
+- [`toBeChecked()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobechecked) matcher supports only elements with a `checkbox`, `radio` and 'switch' role
+- [`toBePartiallyChecked()`](/react-native-testing-library/12.x/docs/api/jest-matchers.md#tobechecked) matcher supports only elements with `checkbox` role
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/migration/previous/v11.md
+---
+
+# Migration to 11.x
+
+Migration to React Native Testing Library version 11 from version 9.x or 10.x should be a relatively easy task due small amount of breaking changes.
+
+## Breaking changes
+
+### Update to Jest 28 if you use fake timers
+
+If you use fake timers in any of your tests you should update your Jest dependencies to version 28. This is due to the fact that [`jest.useFakeTimers()` config structure](https://jestjs.io/docs/jest-object#jestusefaketimersfaketimersconfig) has changed.
+
+### Refactor legacy `waitForOptions` position
+
+In version 9 we introducted query `options` parameters for each query type. This affected all `findBy` and `findAllBy` queries because their signatures changed e.g. from:
+
+```ts
+function findByText(text: TextMatch, waitForOptions?: WaitForOptions);
+function findAllByText(text: TextMatch, waitForOptions?: WaitForOptions);
+```
+
+to
+
+```ts
+function findByText(text: TextMatch, options?: TextMatchOptions, waitForOptions?: WaitForOptions);
+function findAllByText(
+  text: TextMatch,
+  options?: TextMatchOptions,
+  waitForOptions?: WaitForOptions
+);
+```
+
+In order to facilitate transition, in version 9 and 10, we provided a temporary possibility to pass `WaitForOptions` like `timeout`, `interval`, etc inside `options` argument. From this release we require passing these as the proper third parameter.
+
+This change is easy to implement:
+
+```ts
+findByText(/Text/, { timeout: 1000 });
+```
+
+should become
+
+```ts
+findByText(/Text/, {}, { timeout: 1000 });
+```
+
+### Triggering non-touch events on targets with `pointerEvents="box-none"` prop
+
+Up to version 10, RNTL disables all events for a target with `pointerEvents="box-none"`. This behavior is counter to how React Native itself functions.
+
+From version 11, RNTL continues to disable `press` event for these targets but allows triggering other events, e.g. `layout`.
+
+## Full Changelog
+
+[https://github.com/callstack/react-native-testing-library/compare/v10.1.1...v11.0.0](https://github.com/callstack/react-native-testing-library/compare/v10.1.1...v11.0.0)
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/migration/previous/v2.md
+---
+
+# Migration to 2.x
+
+This guide describes steps necessary to migrate from React Native Testing Library `v1.x` to `v2.x`.
+
+## Dropping Node 8
+
+Node 8 reached its EOL more than 5 months ago, so it's about time to target the library to Node 10. If you used lower version, you'll have to upgrade to v10, but we recommend using the latest LTS version.
+
+## Auto Cleanup
+
+`cleanup()` function is now called automatically after every test if your testing framework supports `afterEach` hook (like Jest, Mocha, and Jasmine).
+
+You should be able to remove all `afterEach(cleanup)` calls in your code.
+
+This change might break your code, if you tests are not isolated, i.e. you call `render` outside `test` block. Generally, you should [keep your tests isolated](https://kentcdodds.com/blog/test-isolation-with-react). But if you can't or don't want to do this right away you can prevent this behavior using any of the following ways:
+
+- by importing `'react-native-testing-library/pure'` instead of `'react-native-testing-library'`
+
+- by importing `'react-native-testing-library/dont-cleanup-after-each'` before importing `'react-native-testing-library'`. You can do it in a global way by using Jest's `setupFiles` like this:
+
+  ```json
+  {
+    "setupFiles": ["react-native-testing-library/dont-cleanup-after-each"];
+  }
+  ```
+
+- by setting `RNTL_SKIP_AUTO_CLEANUP` env variable to `true`. You can do this with `cross-evn` like this:
+
+  ```sh
+  cross-env RNTL_SKIP_AUTO_CLEANUP=true jest
+  ```
+
+## WaitFor API changes
+
+We renamed `waitForElement` function to `waitFor` for consistency with React Testing Library. Additionally, the signature has slightly changed from:
+
+```jsx
+export default function waitForElement<T>(
+  expectation: () => T,
+  timeout?: number,
+  interval?: number
+): Promise<T> {}
+```
+
+to:
+
+```jsx
+export default function waitFor<T>(
+  expectation: () => T,
+  options: {
+    timeout?: number,
+    interval?: number,
+  }
+): Promise<T> {}
+```
+
+Both changes should improve code readibility.
+
+`waitFor` calls (and hence also `findBy` queries) are now wrapped in `act` by default, so that you should no longer need to use `act` directly in your tests.
+
+:::tip
+You can usually avoid `waitFor` by a proper use of `findBy` asynchronous queries. It will result in more streamlined testing experience.
+:::
+
+## Removed global `debug` function
+
+The `debug()` method returned from `render()` function is all you need. We removed the global export to avoid confusion.
+
+## Removed global `shallow` function
+
+Shallow rendering React component is usually not a good idea, so we decided to remove the API. But, if you find it useful or need to support legacy tests, feel free to use this implementation:
+
+```js
+import ShallowRenderer from 'react-test-renderer/shallow';
+
+export function shallow(instance: ReactTestInstance | React.Element<any>) {
+  const renderer = new ShallowRenderer();
+  renderer.render(React.createElement(instance.type, instance.props));
+
+  return { output: renderer.getRenderOutput() };
+}
+```
+
+## Removed functions
+
+Following query functions have been removed after being deprecated for more than a year now:
+
+- `getByName`
+- `getAllByName`
+- `queryByName`
+- `queryAllByName`
+
+The `*ByType` and `*ByProps` queries has been prefixed with `UNSAFE_`. These `UNSAFE_` functions are not planned for removal in future versions but their usage is discouraged. You can rename them using global search/replace in your project:
+
+- `getByType` -> `UNSAFE_getByType`
+- `getAllByType` -> `UNSAFE_getAllByType`
+- `queryByType` -> `UNSAFE_queryByType`
+- `queryAllByType` -> `UNSAFE_queryAllByType`
+- `getByProps` -> `UNSAFE_getByProps`
+- `getAllByProps` -> `UNSAFE_getAllByProps`
+- `queryByProps` -> `UNSAFE_queryByProps`
+- `queryAllByProps` -> `UNSAFE_queryAllByProps`
+
+## Some `ByTestId` queries behavior changes
+
+In version `1.x` the `getByTestId` and `queryByTestId` queries could return non-native instances. This was a serious bug. Other query functions like `getAllByTestId`, `queryAllByTestId`, `findByTestId` and `findAllByTestId` didn't have this issue. These correctly returned only native components instances (e.g. `View`, `Text`, etc) that got the `testID`.
+
+In v2 we fixed this inconsistency, which may result in failing tests, if you relied on this behavior. There are few ways to handle these failures:
+
+- pass the `testID` prop down so it can reach a native component, like `View` or `Text`
+- replace `testID` with proper `accessibilityHint` or `accessibilityLabel` if it benefits the user
+- use safe queries like `*ByText` or `*ByA11yHint`
+
+## Deprecated `flushMicrotasksQueue`
+
+We have deprecated `flushMicrotasksQueue` and plan to remove it in the next major. We have better alternatives available for helping you write async tests – `findBy` async queries and `waitFor` helper.
+
+If you can't or don't want to migrate your tests, don't worry. You can use the same implementation we have today:
+
+```js
+function flushMicrotasksQueue() {
+  return new Promise((resolve) => setImmediate(resolve));
+}
+```
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/migration/previous/v7.md
+---
+
+# Migration to 7.x
+
+:::info
+
+We renamed the `react-native-testing-library` npm package to `@testing-library/react-native`, officially joining the "Testing Library" family 🎉.
+
+:::
+
+As the version 7.0 involves merging two libraries together, there are two variants for migration guide, dependent on library you used previously:
+
+## Guide for `react-native-testing-library` users
+
+This guide describes steps necessary to migrate from React Native Testing Library `v2.x` or `v6.0` to `v7.0`.
+
+### Renaming the library
+
+1. Install `@testing-library/react-native`.
+2. Uninstall `react-native-testing-library`.
+3. Rename all references of `react-native-testing-library` to `@testing-library/react-native`.
+
+You may have noticed a strange v2 to v7 upgrade, skipping versions 3, 4, 5 and 6. This is because we renamed the `react-native-testing-library` npm package to `@testing-library/react-native`, officially joining the "Testing Library" family 🎉. We're merging existing two libraries into a single one. The [native-testing-library](https://github.com/testing-library/native-testing-library) repository, which had v6, will soon be archived and using `@testing-library/react-native` below v7, sourced from mentioned repository, is deprecated.
+
+For branding purposes we keep the "React Native Testing Library" name, similar to "React Testing Library". Only the npm published package is changing. The code repository also stays the same under Callstack governance.
+
+### New aliases
+
+To improve compatibility with React Testing Library, and ease the migration for `@testing-library/react-native` users using version below v7, we've introduced new aliases to our accessibility queries:
+
+- `ByLabelText` aliasing `ByA11yLabel` queries
+- `ByHintText` aliasing `ByA11yHint` queries
+- `ByRole` aliasing `ByA11yRole` queries
+
+We like the new names and consider removing the aliases in future releases.
+
+### Renaming `ByPlaceholder` queries
+
+To improve compatibility with React Testing Library, and to ease the migration for `@testing-library/react-native` users using version below v7, we've renamed following queries:
+
+- `ByPlaceholder` -> `ByPlaceholderText`
+
+Please replace all occurrences of these queries in your codebase.
+
+### `fireEvent` support for disabled components
+
+To improve compatibility with the real React Native environment `fireEvent` now performs checks whether the component is "disabled" before firing an event on it. It uses the Responder system to establish should the event fire, which resembles the actual React Native runtime closer than we used to.
+
+If your code contained any workarounds for preventing events firing on disabled events, you should now be able to remove them.
+
+## Guide for `@testing-library/react-native` users
+
+This guide describes steps necessary to migrate from `@testing-library/react-native` from `v6.0` to `v7.0`. Although the name stays the same, this is a different library, sourced at [Callstack GitHub repository](https://github.com/callstack/react-native-testing-library). We made sure the upgrade path is as easy for you as possible.
+
+### Renaming "wait" helpers
+
+The `wait` and `waitForElement` helpers are replaced by `waitFor`. Please rename all occurrences of these in your codebase.
+
+### Changes to `ByTestId` queries
+
+The `ByTestId` queries don't accept RegExps. Please use strings instead. We're happy to accept PRs adding this functionality :).
+
+### No `ByTitle` queries
+
+Our library doesn't implement `ByTitle` queries, which are targetting components with `title` prop, specifically `Button` and `RefreshControl`. If your tests only use `ByTitle` to target `Button` components, you can replace them with `ByText` queries, since React Native renders `Text` under the hood.
+
+If you need to query `RefreshControl` component and can't figure out other way around it, you can use e.g. `UNSAFE_getByProps({title})` query.
+
+### No custom Jest configuration
+
+Use the official React Native preset for Jest:
+
+```diff
+{
+  "jest": {
+-    "preset": "@testing-library/react-native"
++    "preset": "react-native"
+  }
+}
+```
+
+We're told this also speeds up your tests startup on cold cache. Using official preset has another benefit – the library is compatible with any version of React Native without introducing breaking changes.
+
+### Cleanup is included by default
+
+Cleaning up (unmounting) components after each test is included by default in the same manner as in React Testing Library. Please remove this setup file from Jest config:
+
+```diff
+{
+  "jest": {
+-    "setupFilesAfterEnv": ["@testing-library/react-native/cleanup-after-each"]
+  }
+}
+```
+
+You can opt-out of this behavior by running tests with `RNTL_SKIP_AUTO_CLEANUP=true` flag or importing from `@testing-library/react-native/pure`. We encourage you to keep the default though.
+
+### No [NativeTestInstance](https://www.native-testing-library.com/docs/api-test-instance) abstraction
+
+We don't provide any abstraction over `ReactTestInstance` returned by queries, but allow to use it directly to access queried component's `props` or `type` for that example.
+
+### No `container` nor `baseElement` returned from `render`
+
+There's no `container` returned from the `render` function. If you must, use `react-test-renderer` directly, although we advise against doing so. We also don't implement `baseElement` because of that, since there's no `document.documentElement` nor `container`.
+
+### Firing events changes
+
+There are slight differences in how `fireEvent` works in both libraries:
+
+1. Our library doesn't perform validation checks for events fired upon tested components.
+2. Signature is different:
+   ```diff
+   -fireEvent[eventName](node: FiberRoot, eventProperties: NativeTestEvent)
+   +fireEvent(element: ReactTestInstance, eventName: string, ...data: Array<any>)
+   ```
+3. There is no `NativeTestEvent` - second and rest arguments are used instead.
+4. There are only 3 short-hand events: [`fireEvent.press`](/react-native-testing-library/12.x/docs/api/events/fire-event.md#press), [`fireEvent.changeText`](/react-native-testing-library/12.x/docs/api/events/fire-event.md#change-text) and [`fireEvent.scroll`](/react-native-testing-library/12.x/docs/api/events/fire-event.md#scroll). For all other or custom events you can use the base signature.
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/migration/previous/v9.md
+---
+
+# Migration to 9.x
+
+Version 7.0 brought React Native Testing Library into the `@testing-library` family. Since it has been implemented independently from its web counterpart – the React Testing Library – there are some differences in the API and behavior. Version 9.0 solves several of these problems.
+
+## Support for text match options a.k.a string precision API
+
+This is a backward compatible change.
+
+When querying text, it is now possible to pass a [`TextMatch`](/react-native-testing-library/12.x/docs/api/queries.md#textmatch) to most text based queries, which lets you configure how `@testing-library/react-native` should match your text. For instance, passing `exact: false` will allow matching substrings and will ignore case:
+
+```jsx
+const { getByText } = render(<Text>Hello World</Text>);
+
+getByText('Hello World'); // Matches
+getByText('Hello'); // Doesn't match
+getByText('hello', { exact: false }); // ignore case-sensitivity and does partial matching
+```
+
+Please note that the `findBy*` queries used to take a `waitForOptions` parameter as a second argument, which has now been moved to the third argument:
+
+```diff
+-findByText('Hello world', { timeout: 3000 }); // old findBy* API
++findByText('Hello world', {}, { timeout: 3000 }); // new findBy* API
+```
+
+For backward compatibility RNTL v9 can still read `waitForOptions` from the second argument but will print a deprecation warning.
+
+## Reverted matching text across several nodes
+
+:::caution
+This is a breaking change.
+:::
+
+In v1.14 we've introduced a feature allowing to match text when it's spread across several nodes:
+
+```tsx
+const { getByText } = render(
+  <Text>
+    Hello <Text>world</Text>
+  </Text>
+);
+getByText('Hello world'); // matches
+```
+
+However this behavior was different than the web one, and wouldn't always be straightforward to reason about. For instance it could match text nodes far from each other on the screen. It also prevented us from implementing the string precision API. From v9, this type of match will not work.
+
+A work around is to use `within`:
+
+```tsx
+import { Text } from 'react-native'
+import { render, within } from '@testing-library/react-native'
+
+const { getByText } = render(<Text>Hello <Text>world</Text</Text>)
+
+within(getByText('Hello', {exact: false})).getByText('world')
+```
+
+## Future plans
+
+This release changes a lot of internal logic in the library, paving the way for more improvements to bring us closer to our web counterpart, with a possibly better story for accessibility queries.
+
+We're also [migrating the codebase to TypeScript](https://github.com/callstack/react-native-testing-library/issues/877). Please let us know if you're interested in helping us with this effort.
+
+Stay safe!
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/migration/v12.md
+---
+
+# Migration to 12.x
+
+:::info
+
+If you are already using legacy `@testing-library/jest-native` Jest Matchers, we have a [migration guide](/react-native-testing-library/12.x/docs/migration/jest-matchers.md) for moving to the built-in matchers.
+
+:::
+
+React Native Testing Library 12 introduces a handful of breaking changes compared to 11.x versions. We believe they were necessary to improve the experience using the library and help the users [fall into the pit of success](https://blog.codinghorror.com/falling-into-the-pit-of-success/) when writing meaningful tests. You will find migration instructions for each and every change described below.
+
+## Breaking changes
+
+### 1. All queries exclude elements hidden from accessibility by default
+
+Elements that are hidden from accessiblity, e.g. elements on non-active screen when using React Navigation, now will not be matched by default by all queries. This is the effect of switching the default value for global config option `defaultIncludeHiddenElements`(api#defaultincludehiddenelements-option) to `false`.
+
+Previous behaviour of matching hidden elements can be enabled on query level using [includeHiddenElements](/react-native-testing-library/12.x/docs/api/queries.md#includehiddenelements-option) query options or globally using `defaultIncludeHiddenElements`(api#defaultincludehiddenelements-option) configuration option.
+
+### 2. `*ByRole` queries now return only accessibility elements
+
+`*ByRole` queries now return only accessibility elements, either explicitly marked with `accessible` prop or implicit ones where this status is derived from component type itself (e.g `Text`, `TextInput`, `Switch`, but not `View`).
+
+You may need to adjust relevant components under test to make sure they pass `isAccessibilityElement` check.
+
+#### Examples
+
+Let's assume we are using `getByRole("button")` query.
+
+Following elements will match:
+
+```tsx
+// Explicit "accessible" prop for View
+<View accessible accessibilityRole="button" />
+
+// No need to "accessible" prop for Text, as it is implicitly accessible element.
+<Text accessibilityRole="button">Button</Text>
+```
+
+While following elements will not match:
+
+```tsx
+// Missing "accessible" prop for View
+<View accessibilityRole="button" />
+
+// Explicit "accessible={false}" prop for View
+<View accessible={false} accessibilityRole="button" />
+
+// Explicit "accessible={false}" for Text, which is implicitly accessible element
+<Text accessible={false} accessibilityRole="button">Button</Text>
+```
+
+### 3. `*ByText`, `*ByDisplayValue`, `*ByPlaceholderText` queries now return host elements
+
+`*ByText`, `*ByDisplayValue`, `*ByPlaceholderText` queries now return [host elements](/react-native-testing-library/12.x/docs/advanced/testing-env.md#host-and-composite-components), which is consistent with other queries.
+
+While potentially breaking, this should not cause issues in tests if you are using recommended queries and Jest Matchers from Jest Native package.
+
+Problematic cases may include: directly checking some prop values (without using Jest Native matchers), referencing other nodes using `parent` or `children` props, examining `type` property of `ReactTestInstance`, etc.
+
+### 4. `container` API has been renamed to `UNSAFE_root`.
+
+Historically `container` was supposed to mimic the [RTL's container](https://testing-library.com/docs/react-testing-library/screen#container). However it turned out not so relevant in RNTL's environment, where we actually used it to return React Test Renderer's root instance.
+
+RNTL v12 introduces `root` API as an alternative that returns a root **host** element. The difference between `root` and `UNSAFE_root` properties is that that `root` will always represents a host element, while `UNSAFE_root` will typically represent a composite element.
+
+If you use `toBeOnTheScreen` matcher from [@testing-library/jest-native](https://github.com/testing-library/jest-native) your tests will fail because it uses the `container` api. To fix this, update `@testing-library/jest-native` to version 5.4.2.
+
+## Full Changelog
+
+[https://github.com/callstack/react-native-testing-library/compare/v11.5.2...v12.0.0](https://github.com/callstack/react-native-testing-library/compare/v11.5.2...v12.0.0)
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/start/intro.md
+---
+
+# Introduction
+
+## The problem
+
+You want to write maintainable tests for your React Native components. As a part of this goal, you want your tests to avoid including implementation details of your components and focus on making your tests give you the confidence they are intended. As part of this, you want your tests to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don't break your tests and slow you and your team down.
+
+## This solution
+
+The React Native Testing Library (RNTL) is a lightweight solution for testing React Native components. It provides light utility functions on top of React Test Renderer, in a way that encourages better testing practices. Its primary guiding principle is:
+
+> The more your tests resemble how your software is used, the more confidence they can give you.
+
+This project is inspired by [React Testing Library](https://github.com/testing-library/react-testing-library). It is tested to work with Jest, but it should work with other test runners as well.
+
+## Example
+
+```jsx
+import { render, screen, userEvent } from '@testing-library/react-native';
+import { QuestionsBoard } from '../QuestionsBoard';
+
+test('form submits two answers', async () => {
+  const questions = ['q1', 'q2'];
+  const onSubmit = jest.fn();
+
+  const user = userEvent.setup();
+  render(<QuestionsBoard questions={questions} onSubmit={onSubmit} />);
+
+  const answerInputs = screen.getAllByLabelText('answer input');
+  await user.type(answerInputs[0], 'a1');
+  await user.type(answerInputs[1], 'a2');
+  await user.press(screen.getByRole('button', { name: 'Submit' }));
+
+  expect(onSubmit).toHaveBeenCalledWith({
+    1: { q: 'q1', a: 'a1' },
+    2: { q: 'q2', a: 'a2' },
+  });
+});
+```
+
+You can find the source of the `QuestionsBoard` component and this example [here](https://github.com/callstack/react-native-testing-library/blob/main/src/__tests__/questionsBoard.test.tsx).
+
+
+
+---
+url: /react-native-testing-library/12.x/docs/start/quick-start.md
+---
+
+# Quick Start
+
+## Installation
+
+Open a Terminal in your project's folder and run:
+
+
+```sh [yarn]
+yarn add -D @testing-library/react-native
+```
+
+```sh [npm]
+npm install -D @testing-library/react-native
+```
+
+This library has a peer dependency for `react-test-renderer` package. Make sure that your `react-test-renderer` version matches exactly your `react` version.
+
+### Jest matchers
+
+To set up React Native-specific Jest matchers, add the following line to your `jest-setup.ts` file (configured using [`setupFilesAfterEnv`](https://jestjs.io/docs/configuration#setupfilesafterenv-array)):
+
+```ts title=jest-setup.ts
+import '@testing-library/react-native/extend-expect';
+```
+
+### ESLint plugin
+
+We recommend setting up [`eslint-plugin-testing-library`](https://github.com/testing-library/eslint-plugin-testing-library) package to help you avoid common Testing Library mistakes and bad practices.
+
+Install the plugin (assuming you already have `eslint` installed & configured):
+
+
+```sh [yarn]
+yarn add -D eslint-plugin-testing-library
+```
+
+```sh [npm]
+npm install -D eslint-plugin-testing-library
+```
+
+Then, add relevant entry to your ESLint config (e.g., `.eslintrc.js`). We recommend extending the `react` plugin:
+
+```js title=.eslintrc.js
+module.exports = {
+  overrides: [
+    {
+      // Test files only
+      files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+      extends: ['plugin:testing-library/react'],
+    },
+  ],
+};
+```
+
+
+
+---
+url: /react-native-testing-library/12.x/index.md
+---
+
+# JavaScript Integration testing for React Native
+
+> The more your tests resemble the way your software is used, the more confidence they can give you.<br/>— Kent C. Dodds
+
+[Quick Start](/12.x/docs/start/quick-start) | [Explore API](/12.x/docs/api)
+
+## Features
+
+- <img src="/react-native-testing-library/img/icon-code.svg" width="36" /> **Maintainable**: Write maintainable tests for your React Native apps.
+- <img src="/react-native-testing-library/img/icon-check-double.svg" width="36" /> **Reliable**: Promotes testing public APIs and avoiding implementation details.
+- <img src="/react-native-testing-library/img/icon-users.svg" width="36" /> **Community Driven**: Supported by React Native community and its core contributors.
+
+
