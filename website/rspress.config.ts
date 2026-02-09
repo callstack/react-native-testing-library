@@ -332,7 +332,5 @@ export default defineConfig({
       }),
     ],
   },
-  plugins: [
-    pluginCallstackTheme(),
-],
+  plugins: [pluginCallstackTheme()],
 });
