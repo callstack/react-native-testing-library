@@ -8,12 +8,11 @@
     "preview": "rspress preview"
   },
   "dependencies": {
-    "@callstack/rspress-theme": "^0.5.1",
-    "@rspress/core": "^2.0.0-rc.5",
+    "@callstack/rspress-theme": "^0.6.0",
+    "@rspress/core": "^2.0.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "rsbuild-plugin-open-graph": "^1.0.2",
-    "rspress-plugin-vercel-analytics": "^0.3.0"
+    "rsbuild-plugin-open-graph": "^1.0.2"
   },
   "devDependencies": {
     "@types/node": "^24.0.13",
