@@ -230,6 +230,7 @@ const sidebar14x = {
       items: [
         { text: 'How to Query', link: '/14.x/docs/guides/how-to-query' },
         { text: 'Common Mistakes', link: '/14.x/docs/guides/common-mistakes' },
+        { text: 'LLM Guidelines', link: '/14.x/docs/guides/llm-guidelines' },
         { text: 'Troubleshooting', link: '/14.x/docs/guides/troubleshooting' },
         { text: 'FAQ', link: '/14.x/docs/guides/faq' },
         { text: 'Community Resources', link: '/14.x/docs/guides/community-resources' },
