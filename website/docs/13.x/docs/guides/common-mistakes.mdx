@@ -10,7 +10,7 @@ This guide outlines some common mistakes people make when using React Native Tes
 
 ## Using the wrong query {#using-the-wrong-query}
 
-<span style={{color: '#a94442', fontWeight: 'bold'}}>Importance: high</span>
+<span style={{ color: '#a94442', fontWeight: 'bold' }}>Importance: high</span>
 
 React Native Testing Library provides several query types. Here's the priority order:
 
@@ -50,7 +50,7 @@ test('finds input by label', () => {
 
 ## Not using `*ByRole` query most of the time {#not-using-byrole-most-of-the-time}
 
-<span style={{color: '#a94442', fontWeight: 'bold'}}>Importance: high</span>
+<span style={{ color: '#a94442', fontWeight: 'bold' }}>Importance: high</span>
 
 `getByRole` is the most accessible query and should be your first choice. It queries elements by their semantic role:
 
@@ -92,7 +92,7 @@ Note: React Native supports both ARIA-compatible (`role`) and legacy (`accessibi
 
 ## Using the wrong assertion {#using-the-wrong-assertion}
 
-<span style={{color: '#a94442', fontWeight: 'bold'}}>Importance: high</span>
+<span style={{ color: '#a94442', fontWeight: 'bold' }}>Importance: high</span>
 
 React Native Testing Library provides built-in Jest matchers. Make sure you're using the right ones:
 
@@ -127,7 +127,7 @@ Common matchers include:
 
 ## Using `query*` variants for anything except checking for non-existence {#using-query-variants-for-anything-except-checking-for-non-existence}
 
-<span style={{color: '#a94442', fontWeight: 'bold'}}>Importance: high</span>
+<span style={{ color: '#a94442', fontWeight: 'bold' }}>Importance: high</span>
 
 Use `queryBy*` only when checking that an element doesn't exist:
 
@@ -156,7 +156,7 @@ test('checks non-existence', () => {
 
 ## Using `waitFor` to wait for elements that can be queried with `find*` {#using-waitfor-to-wait-for-elements-that-can-be-queried-with-find}
 
-<span style={{color: '#a94442', fontWeight: 'bold'}}>Importance: high</span>
+<span style={{ color: '#a94442', fontWeight: 'bold' }}>Importance: high</span>
 
 Use `findBy*` queries instead of `waitFor` + `getBy*`:
 
@@ -190,7 +190,7 @@ test('waits for element', async () => {
 
 ## Performing side-effects in `waitFor` {#performing-side-effects-in-waitfor}
 
-<span style={{color: '#a94442', fontWeight: 'bold'}}>Importance: high</span>
+<span style={{ color: '#a94442', fontWeight: 'bold' }}>Importance: high</span>
 
 Don't perform side-effects in `waitFor` callbacks:
 
@@ -231,7 +231,7 @@ test('avoids side effects in waitFor', async () => {
 
 ## Using `UNSAFE_root` to query for elements {#using-unsafe-root-to-query-for-elements}
 
-<span style={{color: '#a94442', fontWeight: 'bold'}}>Importance: high</span>
+<span style={{ color: '#a94442', fontWeight: 'bold' }}>Importance: high</span>
 
 React Native Testing Library provides an `UNSAFE_root` object that gives access to the root element, but you should avoid using it directly:
 
@@ -258,7 +258,7 @@ Instead, use the proper query methods from `screen` or the `render` result. The 
 
 ## Passing an empty callback to `waitFor` {#passing-an-empty-callback-to-waitfor}
 
-<span style={{color: '#a94442', fontWeight: 'bold'}}>Importance: high</span>
+<span style={{ color: '#a94442', fontWeight: 'bold' }}>Importance: high</span>
 
 Don't pass an empty callback to `waitFor`:
 
@@ -281,7 +281,7 @@ test('waits correctly', async () => {
 
 ## Not using `screen` {#not-using-screen}
 
-<span style={{color: '#8a6d3b', fontWeight: 'bold'}}>Importance: medium</span>
+<span style={{ color: '#8a6d3b', fontWeight: 'bold' }}>Importance: medium</span>
 
 You can get all the queries from the `render` result:
 
@@ -324,7 +324,7 @@ Using `screen` has several benefits:
 
 ## Wrapping things in `act` unnecessarily {#wrapping-things-in-act-unnecessarily}
 
-<span style={{color: '#8a6d3b', fontWeight: 'bold'}}>Importance: medium</span>
+<span style={{ color: '#8a6d3b', fontWeight: 'bold' }}>Importance: medium</span>
 
 React Native Testing Library's `userEvent` methods are already wrapped in `act`, so you don't need to wrap them yourself:
 
@@ -362,7 +362,7 @@ test('updates on press', () => {
 
 ## Not using User Event API
 
-<span style={{color: '#8a6d3b', fontWeight: 'bold'}}>Importance: medium</span>
+<span style={{ color: '#8a6d3b', fontWeight: 'bold' }}>Importance: medium</span>
 
 `userEvent` provides a more realistic way to simulate user interactions:
 
@@ -410,7 +410,7 @@ test('uses userEvent', async () => {
 
 ## Not querying by text {#not-querying-by-text}
 
-<span style={{color: '#8a6d3b', fontWeight: 'bold'}}>Importance: medium</span>
+<span style={{ color: '#8a6d3b', fontWeight: 'bold' }}>Importance: medium</span>
 
 In React Native, text is rendered in `<Text>` components. You should query by the text content that users see:
 
@@ -435,7 +435,7 @@ test('finds text correctly', () => {
 
 ## Not using Testing Library ESLint plugins {#not-using-testing-library-eslint-plugins}
 
-<span style={{color: '#8a6d3b', fontWeight: 'bold'}}>Importance: medium</span>
+<span style={{ color: '#8a6d3b', fontWeight: 'bold' }}>Importance: medium</span>
 
 There's an ESLint plugin for Testing Library: [`eslint-plugin-testing-library`](https://github.com/testing-library/eslint-plugin-testing-library). This plugin can help you avoid common mistakes and will automatically fix your code in many cases.
 
@@ -450,16 +450,14 @@ And configure it in your `eslint.config.js` (flat config):
 ```js
 import testingLibrary from 'eslint-plugin-testing-library';
 
-export default [
-  testingLibrary.configs['flat/react'],
-];
+export default [testingLibrary.configs['flat/react']];
 ```
 
 Note: Unlike React Testing Library, React Native Testing Library has built-in Jest matchers, so you don't need `eslint-plugin-jest-dom`.
 
 ## Using `cleanup` {#using-cleanup}
 
-<span style={{color: '#8a6d3b', fontWeight: 'bold'}}>Importance: medium</span>
+<span style={{ color: '#8a6d3b', fontWeight: 'bold' }}>Importance: medium</span>
 
 React Native Testing Library automatically cleans up after each test. You don't need to call `cleanup()` manually unless you're using the `pure` export (which doesn't include automatic cleanup).
 
@@ -479,7 +477,7 @@ But in most cases, you don't need to worry about cleanup at all - it's handled a
 
 ## Using `get*` variants as assertions {#using-get-variants-as-assertions}
 
-<span style={{color: '#3c763d', fontWeight: 'bold'}}>Importance: low</span>
+<span style={{ color: '#3c763d', fontWeight: 'bold' }}>Importance: low</span>
 
 `getBy*` queries throw errors when elements aren't found, so they work as assertions. However, for better error messages, you might want to combine them with explicit matchers:
 
@@ -509,7 +507,7 @@ test('uses getBy as assertion', () => {
 
 ## Having multiple assertions in a single `waitFor` callback {#having-multiple-assertions-in-a-single-waitfor-callback}
 
-<span style={{color: '#3c763d', fontWeight: 'bold'}}>Importance: low</span>
+<span style={{ color: '#3c763d', fontWeight: 'bold' }}>Importance: low</span>
 
 Keep `waitFor` callbacks focused on a single assertion:
 
@@ -552,7 +550,7 @@ test('waits with single assertion', async () => {
 
 ## Using `wrapper` as the variable name {#using-wrapper-as-the-variable-name}
 
-<span style={{color: '#3c763d', fontWeight: 'bold'}}>Importance: low</span>
+<span style={{ color: '#3c763d', fontWeight: 'bold' }}>Importance: low</span>
 
 This is not really a "mistake" per se, but it's a common pattern that can be improved. When you use the `wrapper` option in `render`, you might be tempted to name your wrapper component `Wrapper`:
 

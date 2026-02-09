@@ -10,19 +10,19 @@ Actionable guidelines for writing tests with React Native Testing Library (RNTL)
 const result = await render(<Component />, options?);
 ```
 
-| Option | Description |
-|--------|-------------|
-| `wrapper` | React component to wrap the rendered component (e.g., providers) |
-| `createNodeMock` | Function to create mock refs |
+| Option           | Description                                                      |
+| ---------------- | ---------------------------------------------------------------- |
+| `wrapper`        | React component to wrap the rendered component (e.g., providers) |
+| `createNodeMock` | Function to create mock refs                                     |
 
-| Return | Description |
-|--------|-------------|
-| `rerender(component)` | Re-render with a new component (async) |
-| `unmount()` | Unmount the rendered component (async) |
-| `toJSON()` | Get JSON representation for snapshots |
-| `debug(options?)` | Print the component tree to console |
-| `container` | Root host element of the rendered tree |
-| `root` | First child host element (your component's root) |
+| Return                | Description                                      |
+| --------------------- | ------------------------------------------------ |
+| `rerender(component)` | Re-render with a new component (async)           |
+| `unmount()`           | Unmount the rendered component (async)           |
+| `toJSON()`            | Get JSON representation for snapshots            |
+| `debug(options?)`     | Print the component tree to console              |
+| `container`           | Root host element of the rendered tree           |
+| `root`                | First child host element (your component's root) |
 
 ### screen
 
@@ -30,7 +30,7 @@ const result = await render(<Component />, options?);
 
 ```tsx
 await render(<Component />);
-screen.getByRole('button');  // Access queries via screen
+screen.getByRole('button'); // Access queries via screen
 ```
 
 ### renderHook
@@ -39,16 +39,16 @@ screen.getByRole('button');  // Access queries via screen
 const { result, rerender, unmount } = await renderHook(() => useMyHook(), options?);
 ```
 
-| Option | Description |
-|--------|-------------|
-| `initialProps` | Initial props passed to the hook |
-| `wrapper` | React component to wrap the hook (e.g., providers) |
+| Option         | Description                                        |
+| -------------- | -------------------------------------------------- |
+| `initialProps` | Initial props passed to the hook                   |
+| `wrapper`      | React component to wrap the hook (e.g., providers) |
 
-| Return | Description |
-|--------|-------------|
-| `result.current` | Current return value of the hook |
+| Return             | Description                           |
+| ------------------ | ------------------------------------- |
+| `result.current`   | Current return value of the hook      |
 | `rerender(props?)` | Re-render hook with new props (async) |
-| `unmount()` | Unmount the hook (async) |
+| `unmount()`        | Unmount the hook (async)              |
 
 ## Query Selection
 
@@ -68,26 +68,26 @@ const { result, rerender, unmount } = await renderHook(() => useMyHook(), option
 
 ## Jest Matchers Reference
 
-| Matcher | Description |
-|---------|-------------|
-| `toBeOnTheScreen()` | Element is present in the element tree |
-| `toBeVisible()` | Element is visible (checks style, `aria-hidden`, `accessibilityElementsHidden`, ancestors) |
-| `toBeEmptyElement()` | Element has no children or text content |
-| `toContainElement(element)` | Element contains another element |
-| `toBeEnabled()` | Element is not disabled (checks `aria-disabled`, `accessibilityState`, ancestors) |
-| `toBeDisabled()` | Element has `aria-disabled` or `accessibilityState={{ disabled: true }}` (checks ancestors) |
-| `toBeBusy()` | Element has `aria-busy` or `accessibilityState={{ busy: true }}` |
-| `toBeChecked()` | Element has `aria-checked` or `accessibilityState={{ checked: true }}` |
-| `toBePartiallyChecked()` | Element has `aria-checked="mixed"` or `accessibilityState={{ checked: 'mixed' }}` |
-| `toBeSelected()` | Element has `aria-selected` or `accessibilityState={{ selected: true }}` |
-| `toBeExpanded()` | Element has `aria-expanded` or `accessibilityState={{ expanded: true }}` |
-| `toBeCollapsed()` | Element has `aria-expanded={false}` or `accessibilityState={{ expanded: false }}` |
-| `toHaveTextContent(text)` | Element has matching text content |
-| `toHaveDisplayValue(value)` | TextInput has matching display value |
-| `toHaveAccessibleName(name?)` | Element has matching `aria-label`, `accessibilityLabel`, or text content |
-| `toHaveAccessibilityValue(value)` | Element has matching `aria-value*` or `accessibilityValue` |
-| `toHaveStyle(style)` | Element has matching style |
-| `toHaveProp(name, value?)` | Element has prop (use semantic matchers when possible) |
+| Matcher                           | Description                                                                                 |
+| --------------------------------- | ------------------------------------------------------------------------------------------- |
+| `toBeOnTheScreen()`               | Element is present in the element tree                                                      |
+| `toBeVisible()`                   | Element is visible (checks style, `aria-hidden`, `accessibilityElementsHidden`, ancestors)  |
+| `toBeEmptyElement()`              | Element has no children or text content                                                     |
+| `toContainElement(element)`       | Element contains another element                                                            |
+| `toBeEnabled()`                   | Element is not disabled (checks `aria-disabled`, `accessibilityState`, ancestors)           |
+| `toBeDisabled()`                  | Element has `aria-disabled` or `accessibilityState={{ disabled: true }}` (checks ancestors) |
+| `toBeBusy()`                      | Element has `aria-busy` or `accessibilityState={{ busy: true }}`                            |
+| `toBeChecked()`                   | Element has `aria-checked` or `accessibilityState={{ checked: true }}`                      |
+| `toBePartiallyChecked()`          | Element has `aria-checked="mixed"` or `accessibilityState={{ checked: 'mixed' }}`           |
+| `toBeSelected()`                  | Element has `aria-selected` or `accessibilityState={{ selected: true }}`                    |
+| `toBeExpanded()`                  | Element has `aria-expanded` or `accessibilityState={{ expanded: true }}`                    |
+| `toBeCollapsed()`                 | Element has `aria-expanded={false}` or `accessibilityState={{ expanded: false }}`           |
+| `toHaveTextContent(text)`         | Element has matching text content                                                           |
+| `toHaveDisplayValue(value)`       | TextInput has matching display value                                                        |
+| `toHaveAccessibleName(name?)`     | Element has matching `aria-label`, `accessibilityLabel`, or text content                    |
+| `toHaveAccessibilityValue(value)` | Element has matching `aria-value*` or `accessibilityValue`                                  |
+| `toHaveStyle(style)`              | Element has matching style                                                                  |
+| `toHaveProp(name, value?)`        | Element has prop (use semantic matchers when possible)                                      |
 
 ## User Interactions
 
@@ -99,25 +99,25 @@ const { result, rerender, unmount } = await renderHook(() => useMyHook(), option
 const user = userEvent.setup();
 ```
 
-| Method | Description |
-|--------|-------------|
-| `user.press(element)` | Press an element (triggers `pressIn`, `pressOut`, `press`) |
-| `user.longPress(element, options?)` | Long press with optional `{ duration }` |
+| Method                               | Description                                                                         |
+| ------------------------------------ | ----------------------------------------------------------------------------------- |
+| `user.press(element)`                | Press an element (triggers `pressIn`, `pressOut`, `press`)                          |
+| `user.longPress(element, options?)`  | Long press with optional `{ duration }`                                             |
 | `user.type(element, text, options?)` | Type into TextInput (triggers `focus`, `keyPress`, `change`, `changeText` per char) |
-| `user.clear(element)` | Clear TextInput (select all + backspace) |
-| `user.paste(element, text)` | Paste text into TextInput |
-| `user.scrollTo(element, options)` | Scroll a ScrollView with `{ y }` or `{ x }` offset |
+| `user.clear(element)`                | Clear TextInput (select all + backspace)                                            |
+| `user.paste(element, text)`          | Paste text into TextInput                                                           |
+| `user.scrollTo(element, options)`    | Scroll a ScrollView with `{ y }` or `{ x }` offset                                  |
 
 ### fireEvent (Low-level)
 
 Use only when `userEvent` doesn't support the event or when you need direct control.
 
-| Method | Description |
-|--------|-------------|
-| `fireEvent(element, eventName, ...data)` | Fire any event by name |
-| `fireEvent.press(element)` | Fire `onPress` only (no `pressIn`/`pressOut`) |
-| `fireEvent.changeText(element, text)` | Fire `onChangeText` directly |
-| `fireEvent.scroll(element, eventData)` | Fire `onScroll` with event data |
+| Method                                   | Description                                   |
+| ---------------------------------------- | --------------------------------------------- |
+| `fireEvent(element, eventName, ...data)` | Fire any event by name                        |
+| `fireEvent.press(element)`               | Fire `onPress` only (no `pressIn`/`pressOut`) |
+| `fireEvent.changeText(element, text)`    | Fire `onChangeText` directly                  |
+| `fireEvent.scroll(element, eventData)`   | Fire `onScroll` with event data               |
 
 ## Async/Await (v14)
 
@@ -161,24 +161,15 @@ import { Pressable, Text, TextInput, View } from 'react-native';
 
 test('user can submit form', async () => {
   const user = userEvent.setup();
-  
+
   const Component = () => {
     const [name, setName] = React.useState('');
     const [submitted, setSubmitted] = React.useState(false);
-    
+
     return (
       <View>
-        <TextInput
-          role="textbox"
-          aria-label="Name"
-          value={name}
-          onChangeText={setName}
-        />
-        <Pressable 
-          role="button" 
-          aria-label="Submit"
-          onPress={() => setSubmitted(true)}
-        >
+        <TextInput role="textbox" aria-label="Name" value={name} onChangeText={setName} />
+        <Pressable role="button" aria-label="Submit" onPress={() => setSubmitted(true)}>
           <Text>Submit</Text>
         </Pressable>
         {submitted && <Text role="alert">Form submitted!</Text>}
@@ -187,18 +178,18 @@ test('user can submit form', async () => {
   };
 
   await render(<Component />);
-  
+
   // ✅ getByRole as first choice
   const input = screen.getByRole('textbox', { name: 'Name' });
   const button = screen.getByRole('button', { name: 'Submit' });
-  
+
   // ✅ userEvent for realistic interactions
   await user.type(input, 'John Doe');
   await user.press(button);
-  
+
   // ✅ findBy* for async elements
   const successMessage = await screen.findByRole('alert');
-  
+
   // ✅ RNTL matchers
   expect(successMessage).toBeOnTheScreen();
   expect(successMessage).toHaveTextContent('Form submitted!');
@@ -229,7 +220,7 @@ await waitFor(async () => {
 });
 
 // ❌ accessibility* props instead of ARIA
-<Pressable accessibilityRole="button" accessibilityLabel="Submit" />
+<Pressable accessibilityRole="button" accessibilityLabel="Submit" />;
 
 // ❌ Destructuring from render
 const { getByText } = await render(<Component />);
