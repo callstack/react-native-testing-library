@@ -96,99 +96,6 @@ const sidebar12x = {
   ],
 };
 
-const sidebar13x = {
-  '/13.x/docs/': [
-    {
-      text: 'Getting started',
-      items: [
-        { text: 'Introduction', link: '/13.x/docs/start/intro' },
-        { text: 'Quick Start', link: '/13.x/docs/start/quick-start' },
-      ],
-    },
-    {
-      text: 'API reference',
-      items: [
-        { text: 'Render function', link: '/13.x/docs/api/render' },
-        { text: 'Screen object', link: '/13.x/docs/api/screen' },
-        { text: 'Queries', link: '/13.x/docs/api/queries' },
-        { text: 'Jest Matchers', link: '/13.x/docs/api/jest-matchers' },
-        {
-          text: 'Triggering events',
-          items: [
-            { text: 'Fire Event', link: '/13.x/docs/api/events/fire-event' },
-            { text: 'User Event', link: '/13.x/docs/api/events/user-event' },
-          ],
-        },
-        {
-          text: 'Miscellaneous',
-          items: [
-            { text: 'Accessibility', link: '/13.x/docs/api/misc/accessibility' },
-            { text: 'Async utilities', link: '/13.x/docs/api/misc/async' },
-            { text: 'Config', link: '/13.x/docs/api/misc/config' },
-            { text: 'Other', link: '/13.x/docs/api/misc/other' },
-            { text: 'Render Hook', link: '/13.x/docs/api/misc/render-hook' },
-          ],
-        },
-      ],
-    },
-    {
-      text: 'Guides',
-      items: [
-        { text: 'How to Query', link: '/13.x/docs/guides/how-to-query' },
-        { text: 'React 19', link: '/13.x/docs/guides/react-19' },
-        { text: 'Troubleshooting', link: '/13.x/docs/guides/troubleshooting' },
-        { text: 'FAQ', link: '/13.x/docs/guides/faq' },
-        { text: 'Community Resources', link: '/13.x/docs/guides/community-resources' },
-      ],
-    },
-    {
-      text: 'Advanced Guides',
-      items: [
-        { text: 'Testing Environment', link: '/13.x/docs/advanced/testing-env' },
-        { text: 'Third-party Integration', link: '/13.x/docs/advanced/third-party-integration' },
-        { text: 'Understanding Act', link: '/13.x/docs/advanced/understanding-act' },
-      ],
-    },
-    {
-      text: 'Migration Guides',
-      collapsed: true,
-      items: [
-        { text: 'v13 Migration', link: '/13.x/docs/migration/v13' },
-        { text: 'Jest Matchers', link: '/13.x/docs/migration/jest-matchers' },
-        {
-          text: 'Previous versions',
-          collapsed: true,
-          items: [
-            { text: 'v12', link: '/13.x/docs/migration/previous/v12' },
-            { text: 'v11', link: '/13.x/docs/migration/previous/v11' },
-            { text: 'v9', link: '/13.x/docs/migration/previous/v9' },
-            { text: 'v7', link: '/13.x/docs/migration/previous/v7' },
-            { text: 'v2', link: '/13.x/docs/migration/previous/v2' },
-          ],
-        },
-      ],
-    },
-  ],
-  '/13.x/cookbook/': [
-    { text: 'Cookbook', link: '/13.x/cookbook/' },
-    {
-      text: 'Basic Recipes',
-      items: [
-        { text: 'Async Tests', link: '/13.x/cookbook/basics/async-tests' },
-        { text: 'Custom Render', link: '/13.x/cookbook/basics/custom-render' },
-      ],
-    },
-    {
-      text: 'Advanced Recipes',
-      items: [{ text: 'Network Requests', link: '/13.x/cookbook/advanced/network-requests' }],
-    },
-    {
-      text: 'State Management Recipes',
-      items: [{ text: 'Jotai', link: '/13.x/cookbook/state-management/jotai' }],
-    },
-  ],
-};
-
 const sidebar14x = {
   '/14.x/docs/': [
     {
@@ -229,6 +136,8 @@ const sidebar14x = {
       text: 'Guides',
       items: [
         { text: 'How to Query', link: '/14.x/docs/guides/how-to-query' },
+        { text: 'Common Mistakes', link: '/14.x/docs/guides/common-mistakes' },
+        { text: 'LLM Guidelines', link: '/14.x/docs/guides/llm-guidelines' },
         { text: 'Troubleshooting', link: '/14.x/docs/guides/troubleshooting' },
         { text: 'FAQ', link: '/14.x/docs/guides/faq' },
         { text: 'Community Resources', link: '/14.x/docs/guides/community-resources' },
@@ -303,6 +212,8 @@ const sidebarDefault = {
       text: 'Guides',
       items: [
         { text: 'How to Query', link: '/docs/guides/how-to-query' },
+        { text: 'Common Mistakes', link: '/docs/guides/common-mistakes' },
+        { text: 'LLM Guidelines', link: '/docs/guides/llm-guidelines' },
         { text: 'React 19', link: '/docs/guides/react-19' },
         { text: 'Troubleshooting', link: '/docs/guides/troubleshooting' },
         { text: 'FAQ', link: '/docs/guides/faq' },
@@ -409,7 +320,6 @@ export default defineConfig({
     sidebar: {
       ...sidebarDefault,
       ...sidebar12x,
-      ...sidebar13x,
       ...sidebar14x,
     },
   },
