@@ -33,7 +33,7 @@ describe('AnimatedView', () => {
     );
     expect(screen.root).toHaveStyle({ opacity: 0 });
 
-    await act(() => jest.advanceTimersByTime(250));
+    await act(() => jest.advanceTimersByTimeAsync(250));
     expect(screen.root).toHaveStyle({ opacity: 1 });
   });
 });
