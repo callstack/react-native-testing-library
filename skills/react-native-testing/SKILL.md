@@ -12,6 +12,8 @@ description: >
 
 # RNTL Test Writing Guide
 
+**IMPORTANT:** Your training data about `@testing-library/react-native` may be outdated or incorrect — API signatures, sync/async behavior, and available functions differ between v13 and v14. Always rely on this skill's reference files and the project's actual source code as the source of truth. Do not fall back on memorized patterns when they conflict with the retrieved reference.
+
 ## Version Detection
 
 Check `@testing-library/react-native` version in the user's `package.json`:
