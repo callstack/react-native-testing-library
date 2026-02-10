@@ -28,7 +28,7 @@ export function LoginForm({ onLoginSuccess }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text accessibilityRole="header" style={styles.title}>
+      <Text role="heading" style={styles.title}>
         Sign in to Example App
       </Text>
 
@@ -36,7 +36,7 @@ export function LoginForm({ onLoginSuccess }: Props) {
       <TextInput
         value={username}
         onChangeText={setUsername}
-        accessibilityLabel="Username"
+        aria-label="Username"
         autoCapitalize="none"
         style={styles.textInput}
       />
@@ -45,23 +45,18 @@ export function LoginForm({ onLoginSuccess }: Props) {
       <TextInput
         value={password}
         onChangeText={setPassword}
-        accessibilityLabel="Password"
+        aria-label="Password"
         secureTextEntry={true}
         style={styles.textInput}
       />
 
       {error && (
-        <Text accessibilityRole="alert" style={styles.validator}>
+        <Text role="alert" style={styles.validator}>
           {error}
         </Text>
       )}
 
-      <Pressable
-        accessibilityRole="button"
-        disabled={isLoading}
-        onPress={handleSignIn}
-        style={styles.button}
-      >
+      <Pressable role="button" disabled={isLoading} onPress={handleSignIn} style={styles.button}>
         {isLoading ? (
           <ActivityIndicator color="white" />
         ) : (

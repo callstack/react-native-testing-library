@@ -31,13 +31,13 @@ export function TaskList() {
       {!tasks.length ? <Text>No tasks, start by adding one...</Text> : null}
 
       <TextInput
-        accessibilityLabel="New Task"
+        aria-label="New Task"
         placeholder="New Task..."
         value={newTaskTitle}
         onChangeText={(text) => setNewTaskTitle(text)}
       />
 
-      <Pressable accessibilityRole="button" onPress={handleAddTask}>
+      <Pressable role="button" onPress={handleAddTask}>
         <Text>Add Task</Text>
       </Pressable>
     </View>

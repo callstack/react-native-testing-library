@@ -3941,7 +3941,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^9.0.0":
+"eslint@npm:9.39.2":
   version: 9.39.2
   resolution: "eslint@npm:9.39.2"
   dependencies:
@@ -7378,7 +7378,7 @@ __metadata:
     "@testing-library/react-native": "npm:^14.0.0-beta.0"
     "@types/jest": "npm:^29.5.12"
     "@types/react": "npm:~19.1.10"
-    eslint: "npm:^9.0.0"
+    eslint: "npm:9.39.2"
     eslint-plugin-testing-library: "npm:^7.1.1"
     expo: "npm:^54.0.32"
     expo-status-bar: "npm:~3.0.9"

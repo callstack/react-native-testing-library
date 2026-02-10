@@ -13,7 +13,7 @@ test('showcase: toBeOnTheScreen', async () => {
   expect(screen.queryByTestId('non-existent')).not.toBeOnTheScreen();
 });
 
-test('showcase: toBeIntoHaveTextContentTheDocument', async () => {
+test('showcase: toHaveTextContent', async () => {
   await render(
     <html.div>
       <html.p data-testid="text">Hello World</html.p>
