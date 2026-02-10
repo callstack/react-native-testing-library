@@ -1,17 +1,19 @@
-# RNTL v13 Anti-Patterns
+# RNTL Anti-Patterns
 
 ## Table of Contents
 
-- [Wrong query variant](#wrong-query-variant)
-- [Not using \*ByRole](#not-using-byrole)
-- [Wrong assertions](#wrong-assertions)
-- [waitFor misuse](#waitfor-misuse)
-- [Unnecessary act()](#unnecessary-act)
-- [fireEvent instead of userEvent](#fireevent-instead-of-userevent)
-- [Destructuring render](#destructuring-render)
-- [Using UNSAFE_root](#using-unsafe_root)
-- [Manual cleanup](#manual-cleanup)
-- [Legacy accessibility props](#legacy-accessibility-props)
+- Wrong query variant
+- Not using \*ByRole
+- Wrong assertions
+- waitFor misuse
+- Unnecessary act()
+- fireEvent instead of userEvent
+- Destructuring render
+- Using UNSAFE_root
+- Manual cleanup
+- Legacy accessibility props
+- Forgetting to await (v14)
+- Using removed APIs (v14)
 
 ## Wrong query variant
 
@@ -210,4 +212,76 @@ afterEach(() => {
 
 // GOOD: ARIA state props
 <Pressable aria-disabled aria-checked>
+```
+
+## Forgetting to await (v14)
+
+In RNTL v14, `render`, `fireEvent`, `rerender`, `unmount`, `renderHook`, and `act` are async. Forgetting `await` causes subtle bugs where tests pass but assertions run before operations complete.
+
+```tsx
+// BAD: missing await on render (v14)
+render(<Component />);
+expect(screen.getByText('Hello')).toBeOnTheScreen(); // may fail intermittently
+
+// GOOD: await render (v14)
+await render(<Component />);
+expect(screen.getByText('Hello')).toBeOnTheScreen();
+
+// BAD: missing await on fireEvent (v14)
+fireEvent.press(screen.getByRole('button'));
+// state updates may not have flushed yet
+
+// GOOD: await fireEvent (v14)
+await fireEvent.press(screen.getByRole('button'));
+
+// BAD: missing await on act (v14)
+act(() => {
+  result.current.increment();
+});
+
+// GOOD: await act (v14)
+await act(() => {
+  result.current.increment();
+});
+```
+
+## Using removed APIs (v14)
+
+These APIs exist in v13 but are removed in v14. Using them will cause import or runtime errors.
+
+```tsx
+// BAD: using renderAsync in v14 (removed — render is already async)
+import { renderAsync } from '@testing-library/react-native';
+await renderAsync(<Component />);
+
+// GOOD: use render in v14
+import { render } from '@testing-library/react-native';
+await render(<Component />);
+
+// BAD: using fireEventAsync in v14 (removed — fireEvent is already async)
+import { fireEventAsync } from '@testing-library/react-native';
+await fireEventAsync.press(button);
+
+// GOOD: use fireEvent in v14
+import { fireEvent } from '@testing-library/react-native';
+await fireEvent.press(button);
+
+// BAD: using UNSAFE_root in v14 (removed)
+screen.UNSAFE_root;
+
+// GOOD: use container or root in v14
+screen.container;
+screen.root;
+
+// BAD: using concurrentRoot option in v14 (removed — always on)
+render(<Component />, { concurrentRoot: false });
+
+// GOOD: just render without concurrentRoot
+await render(<Component />);
+
+// BAD: using update() in v14 (removed)
+screen.update(<Component newProp />);
+
+// GOOD: use rerender in v14
+await screen.rerender(<Component newProp />);
 ```
