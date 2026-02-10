@@ -1,59 +1,98 @@
-# RNTL v13 API Reference
+# RNTL v14 API Reference
+
+Complete API reference for `@testing-library/react-native` v14.x (React 19+).
+
+**Test renderer:** `test-renderer` (not `react-test-renderer`)
+**Element type:** `HostElement` (not `ReactTestInstance`)
 
 ## Table of Contents
 
-- [render / renderAsync](#render--renderasync)
-- [screen](#screen)
-- [Queries](#queries)
-- [User Event](#user-event)
-- [Fire Event](#fire-event)
-- [Jest Matchers](#jest-matchers)
-- [Async Utilities](#async-utilities)
-- [Other Helpers](#other-helpers)
-- [renderHook / renderHookAsync](#renderhook--renderhookasync)
-- [Configuration](#configuration)
-- [Accessibility](#accessibility)
+- Core Pattern
+- Key Rule: Always await
+- render
+- screen
+- Queries
+- User Event
+- Fire Event
+- Jest Matchers
+- Async Utilities
+- Other Helpers
+- renderHook
+- act
+- Configuration
+- Accessibility
+- Removed APIs
+- Migration Codemods
 
 ---
 
-## render / renderAsync
+## Core Pattern
 
-```ts
-function render(component: React.Element<any>, options?: RenderOptions): RenderResult;
-async function renderAsync(
-  component: React.Element<any>,
-  options?: RenderAsyncOptions,
-): Promise<RenderAsyncResult>;
+```tsx
+import { render, screen, userEvent } from '@testing-library/react-native';
+
+jest.useFakeTimers(); // recommended when using userEvent
+
+test('description', async () => {
+  const user = userEvent.setup();
+  await render(<Component />); // async in v14 — always await
+
+  const button = screen.getByRole('button', { name: 'Submit' });
+  await user.press(button);
+
+  expect(screen.getByText('Done')).toBeOnTheScreen();
+});
 ```
 
-`render` deeply renders the given React element and returns helpers to query the output. Use `screen` for queries instead of destructuring the result.
+---
 
-`renderAsync` (v13.3+) is the async version for React 19 / Suspense. When using `renderAsync`, use `rerenderAsync` and `unmountAsync` instead of their sync versions.
+## Key Rule: Always `await`
+
+In v14, the following APIs are **async** and must always be awaited:
+
+- `await render(<Component />)`
+- `await fireEvent.press(element)` (and all fireEvent variants)
+- `await screen.rerender(<Component />)`
+- `await screen.unmount()`
+- `await renderHook(() => useHook())`
+- `await act(() => { ... })` (even with sync callbacks)
+
+---
+
+## render
+
+```ts
+async function render(
+  component: React.Element<any>,
+  options?: RenderOptions,
+): Promise<RenderResult>;
+```
+
+`render` returns a `Promise<RenderResult>` — always `await` it.
+
+There is no `renderAsync` in v14. The standard `render` is already async.
 
 ### Options
 
-| Option                                       | Type                                  | Description                                                   |
-| -------------------------------------------- | ------------------------------------- | ------------------------------------------------------------- |
-| `wrapper`                                    | `React.ComponentType<any>`            | Wraps tested component (useful for context providers)         |
-| `concurrentRoot`                             | `boolean`                             | Set `false` to disable concurrent rendering (default: `true`) |
-| `createNodeMock`                             | `(element: React.Element) => unknown` | Custom mock refs for `ReactTestRenderer.create()`             |
-| `unstable_validateStringsRenderedWithinText` | `boolean`                             | Experimental: replicate RN `Text` string validation           |
+| Option           | Type                       | Description                                           |
+| ---------------- | -------------------------- | ----------------------------------------------------- |
+| `wrapper`        | `React.ComponentType<any>` | Wraps tested component (useful for context providers) |
+| `createNodeMock` | `(element) => unknown`     | Custom mock refs                                      |
+
+Note: `concurrentRoot` and `unstable_validateStringsRenderedWithinText` are removed in v14 (concurrent rendering is always on, string validation is always on).
 
 ### Example
 
 ```tsx
 import { render, screen } from '@testing-library/react-native';
 
-render(<MyApp />);
+await render(<MyApp />);
 expect(screen.getByRole('button', { name: 'start' })).toBeOnTheScreen();
 
 // With wrapper
-render(<MyComponent />, {
+await render(<MyComponent />, {
   wrapper: ({ children }) => <ThemeProvider>{children}</ThemeProvider>,
 });
-
-// Async (React 19 / Suspense)
-await renderAsync(<SuspenseComponent />);
 ```
 
 ---
@@ -63,14 +102,12 @@ await renderAsync(<SuspenseComponent />);
 ```ts
 let screen: {
   ...queries;
-  rerender(element: React.Element<unknown>): void;
-  rerenderAsync(element: React.Element<unknown>): Promise<void>;  // v13.3+
-  unmount(): void;
-  unmountAsync(): Promise<void>;  // v13.3+
+  rerender(element: React.Element<unknown>): Promise<void>;  // async
+  unmount(): Promise<void>;                                    // async
   debug(options?: { message?: string; mapProps?: MapPropsFunction }): void;
-  toJSON(): ReactTestRendererJSON | null;
-  root: ReactTestInstance;        // root host element
-  UNSAFE_root: ReactTestInstance; // root composite element (avoid)
+  toJSON(): RendererJSON | null;
+  container: HostElement;  // safe root host element
+  root: HostElement;       // root host element
 };
 ```
 
@@ -78,13 +115,14 @@ The `screen` object provides queries and utilities for the currently rendered UI
 
 ### Methods
 
-- **`rerender(element)`** — Re-render with new root element. Triggers lifecycle events.
-- **`rerenderAsync(element)`** — Async version for React 19 / Suspense (v13.3+).
-- **`unmount()`** — Unmount the tree. Usually not needed (auto-cleanup).
-- **`unmountAsync()`** — Async version for React 19 / Suspense (v13.3+).
+- **`rerender(element)`** — Re-render with new root element. **Async** — must `await`. Triggers lifecycle events.
+- **`unmount()`** — Unmount the tree. **Async** — must `await`. Usually not needed (auto-cleanup).
 - **`debug({ message?, mapProps? })`** — Pretty-print the rendered tree. Use `mapProps` to filter/transform props in output.
 - **`toJSON()`** — Get JSON representation (for snapshot testing).
-- **`root`** — The rendered root host element.
+- **`container`** — Root host element (safe accessor, replaces `UNSAFE_root`).
+- **`root`** — Root host element.
+
+Note: `UNSAFE_root` is removed in v14. Use `container` or `root` instead.
 
 ---
 
@@ -94,14 +132,14 @@ Each query = **variant** + **predicate** (e.g., `getByRole` = `getBy` + `ByRole`
 
 ### Query Variants
 
-| Variant       | Assertion          | Return Type                                | Async |
-| ------------- | ------------------ | ------------------------------------------ | ----- |
-| `getBy*`      | Exactly one match  | `ReactTestInstance` (throws if 0 or >1)    | No    |
-| `getAllBy*`   | At least one match | `ReactTestInstance[]` (throws if 0)        | No    |
-| `queryBy*`    | Zero or one match  | `ReactTestInstance \| null` (throws if >1) | No    |
-| `queryAllBy*` | No assertion       | `ReactTestInstance[]` (empty if 0)         | No    |
-| `findBy*`     | Exactly one match  | `Promise<ReactTestInstance>`               | Yes   |
-| `findAllBy*`  | At least one match | `Promise<ReactTestInstance[]>`             | Yes   |
+| Variant       | Assertion          | Return Type                          | Async |
+| ------------- | ------------------ | ------------------------------------ | ----- |
+| `getBy*`      | Exactly one match  | `HostElement` (throws if 0 or >1)    | No    |
+| `getAllBy*`   | At least one match | `HostElement[]` (throws if 0)        | No    |
+| `queryBy*`    | Zero or one match  | `HostElement \| null` (throws if >1) | No    |
+| `queryAllBy*` | No assertion       | `HostElement[]` (empty if 0)         | No    |
+| `findBy*`     | Exactly one match  | `Promise<HostElement>`               | Yes   |
+| `findAllBy*`  | At least one match | `Promise<HostElement[]>`             | Yes   |
 
 `findBy*` / `findAllBy*` accept optional `waitForOptions: { timeout?, interval?, onTimeout? }`.
 
@@ -119,7 +157,7 @@ getByRole(role: TextMatch, options?: {
   expanded?: boolean;
   value?: { min?: number; max?: number; now?: number; text?: TextMatch };
   includeHiddenElements?: boolean;
-}): ReactTestInstance;
+}): HostElement;
 ```
 
 Matches elements by `role` or `accessibilityRole`. Element must be an accessibility element:
@@ -139,7 +177,7 @@ screen.getByRole('slider', { value: { now: 50, min: 0, max: 100 } });
 #### `*ByLabelText`
 
 ```ts
-getByLabelText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): ReactTestInstance;
+getByLabelText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
 ```
 
 Matches by `aria-label`/`accessibilityLabel` or text content of element referenced by `aria-labelledby`/`accessibilityLabelledBy`.
@@ -147,7 +185,7 @@ Matches by `aria-label`/`accessibilityLabel` or text content of element referenc
 #### `*ByPlaceholderText`
 
 ```ts
-getByPlaceholderText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): ReactTestInstance;
+getByPlaceholderText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
 ```
 
 Matches `TextInput` by `placeholder` prop.
@@ -155,7 +193,7 @@ Matches `TextInput` by `placeholder` prop.
 #### `*ByText`
 
 ```ts
-getByText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): ReactTestInstance;
+getByText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
 ```
 
 Matches by text content. Joins `<Text>` siblings to find matches (like RN runtime).
@@ -163,7 +201,7 @@ Matches by text content. Joins `<Text>` siblings to find matches (like RN runtim
 #### `*ByDisplayValue`
 
 ```ts
-getByDisplayValue(value: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): ReactTestInstance;
+getByDisplayValue(value: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
 ```
 
 Matches `TextInput` by current display value.
@@ -171,7 +209,7 @@ Matches `TextInput` by current display value.
 #### `*ByHintText`
 
 ```ts
-getByHintText(hint: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): ReactTestInstance;
+getByHintText(hint: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
 ```
 
 Matches by `accessibilityHint` prop. Also available as `getByA11yHint` / `getByAccessibilityHint`.
@@ -179,7 +217,7 @@ Matches by `accessibilityHint` prop. Also available as `getByA11yHint` / `getByA
 #### `*ByTestId` (last resort)
 
 ```ts
-getByTestId(testId: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): ReactTestInstance;
+getByTestId(testId: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
 ```
 
 Matches by `testID` prop. Use only when other queries don't work.
@@ -284,8 +322,14 @@ Scrolls a host `ScrollView` (including `FlatList`). Match scroll direction to `h
 
 Use when `userEvent` doesn't support the event or when triggering events on composite elements.
 
+**Async** in v14 — always `await`:
+
 ```ts
-function fireEvent(element: ReactTestInstance, eventName: string, ...data: unknown[]): void;
+async function fireEvent(
+  element: HostElement,
+  eventName: string,
+  ...data: unknown[]
+): Promise<void>;
 ```
 
 Traverses tree bottom-up looking for `onXxx` handler. Does **not** auto-pass event data.
@@ -293,19 +337,12 @@ Traverses tree bottom-up looking for `onXxx` handler. Does **not** auto-pass eve
 ### Convenience Methods
 
 ```ts
-fireEvent.press(element, ...data): void;
-fireEvent.changeText(element, ...data): void;
-fireEvent.scroll(element, ...data): void;
+await fireEvent.press(element, ...data): Promise<void>;
+await fireEvent.changeText(element, ...data): Promise<void>;
+await fireEvent.scroll(element, ...data): Promise<void>;
 ```
 
-### Async Variants (v13.3+, for React 19 / Suspense)
-
-```ts
-async function fireEventAsync(element, eventName, ...data): Promise<unknown>;
-fireEventAsync.press(element, ...data): Promise<unknown>;
-fireEventAsync.changeText(element, ...data): Promise<unknown>;
-fireEventAsync.scroll(element, ...data): Promise<unknown>;
-```
+There is no `fireEventAsync` in v14. The standard `fireEvent` is already async.
 
 ---
 
@@ -324,7 +361,7 @@ Available automatically with any `@testing-library/react-native` import. No setu
 | Matcher               | Signature                                                     | Description                 |
 | --------------------- | ------------------------------------------------------------- | --------------------------- |
 | `toHaveTextContent()` | `(text: string \| RegExp, options?: { exact?, normalizer? })` | Text content match          |
-| `toContainElement()`  | `(element: ReactTestInstance \| null)`                        | Contains child element      |
+| `toContainElement()`  | `(element: HostElement \| null)`                              | Contains child element      |
 | `toBeEmptyElement()`  | —                                                             | No children or text content |
 
 ### Element State
@@ -390,10 +427,10 @@ Waits until the queried element is removed. Element must be initially present.
 
 ## Other Helpers
 
-### `within` / `getQueriesForElement`
+### `within`
 
 ```ts
-function within(element: ReactTestInstance): Queries;
+function within(element: HostElement): Queries;
 ```
 
 Scoped queries on a subtree. Useful for querying within a single `FlatList` item or a specific screen.
@@ -402,10 +439,6 @@ Scoped queries on a subtree. Useful for querying within a single `FlatList` item
 const item = within(screen.getByTestId('list-item-1'));
 expect(item.getByText('Title')).toBeOnTheScreen();
 ```
-
-### `act`
-
-Re-exported from `react-test-renderer`. Usually not needed — `render`, `fireEvent`, `userEvent`, and `waitFor` handle it internally.
 
 ### `cleanup`
 
@@ -417,40 +450,56 @@ Unmounts rendered trees and clears `screen`. Automatic after each test (if test 
 
 ---
 
-## renderHook / renderHookAsync
+## renderHook
+
+**Async** in v14:
 
 ```ts
-function renderHook<Result, Props>(
+async function renderHook<Result, Props>(
   hookFn: (props?: Props) => Result,
-  options?: { initialProps?: Props; wrapper?: React.ComponentType; concurrentRoot?: boolean },
-): { result: { current: Result }; rerender: (props: Props) => void; unmount: () => void };
-
-// Async version (v13.3+)
-async function renderHookAsync<Result, Props>(
-  hookFn: (props?: Props) => Result,
-  options?: { initialProps?: Props; wrapper?: React.ComponentType; concurrentRoot?: boolean },
+  options?: { initialProps?: Props; wrapper?: React.ComponentType },
 ): Promise<{
   result: { current: Result };
-  rerenderAsync: (props: Props) => Promise<void>;
-  unmountAsync: () => Promise<void>;
+  rerender: (props: Props) => Promise<void>;
+  unmount: () => Promise<void>;
 }>;
 ```
+
+There is no `renderHookAsync` in v14. The standard `renderHook` is already async.
 
 Renders a test component that calls the provided hook. Use `act()` when calling functions returned by the hook that trigger state updates.
 
 ```tsx
-const { result } = renderHook(() => useCount());
+const { result } = await renderHook(() => useCount());
 expect(result.current.count).toBe(0);
-act(() => {
+await act(() => {
   result.current.increment();
 });
 expect(result.current.count).toBe(1);
 
 // With wrapper
-renderHook(() => useHook(), {
+await renderHook(() => useHook(), {
   wrapper: ({ children }) => <Provider>{children}</Provider>,
 });
 ```
+
+---
+
+## act
+
+In v14, `act` always returns a `Promise<T>` and must be awaited, even with sync callbacks:
+
+```ts
+async function act<T>(callback: () => T): Promise<T>;
+```
+
+```tsx
+await act(() => {
+  result.current.increment();
+});
+```
+
+Usually not needed — `render`, `fireEvent`, `userEvent`, and `waitFor` handle it internally.
 
 ---
 
@@ -462,12 +511,13 @@ function configure(
     asyncUtilTimeout: number; // default timeout for waitFor/findBy* (default: 1000ms)
     defaultIncludeHiddenElements: boolean; // default for includeHiddenElements option (default: false)
     defaultDebugOptions: Partial<DebugOptions>;
-    concurrentRoot: boolean; // default concurrent rendering (default: true)
   }>,
 ): void;
 
 function resetToDefaults(): void;
 ```
+
+Note: `concurrentRoot` option is removed (always on). `unstable_validateStringsRenderedWithinText` is removed (always on).
 
 ### Environment Variables
 
@@ -483,7 +533,7 @@ function resetToDefaults(): void;
 ### `isHiddenFromAccessibility`
 
 ```ts
-function isHiddenFromAccessibility(element: ReactTestInstance | null): boolean;
+function isHiddenFromAccessibility(element: HostElement | null): boolean;
 ```
 
 Also available as `isInaccessible()` alias.
@@ -495,3 +545,30 @@ Element is hidden when it or any ancestor has:
 - `accessibilityElementsHidden={true}` (iOS)
 - `importantForAccessibility="no-hide-descendants"` (Android)
 - Sibling with `aria-modal={true}` or `accessibilityViewIsModal={true}` (iOS)
+
+---
+
+## Removed APIs
+
+The following are removed in v14 and must not be used:
+
+- **`renderAsync`** — Use `render` (already async)
+- **`fireEventAsync`** — Use `fireEvent` (already async)
+- **`renderHookAsync`** — Use `renderHook` (already async)
+- **`rerenderAsync` / `unmountAsync`** — Use `rerender` / `unmount` (already async)
+- **`update()`** — Use `rerender()`
+- **`getQueriesForElement()`** — Use `within()`
+- **`UNSAFE_root`** — Use `container` or `root`
+- **`UNSAFE_getByType`**, **`UNSAFE_getAllByType`**, **`UNSAFE_queryByType`**, **`UNSAFE_queryAllByType`** — Removed
+- **`UNSAFE_getByProps`**, **`UNSAFE_getAllByProps`**, **`UNSAFE_queryByProps`**, **`UNSAFE_queryAllByProps`** — Removed
+- **`concurrentRoot` option** — Always on
+- **`unstable_validateStringsRenderedWithinText` option** — Always on
+
+---
+
+## Migration Codemods
+
+Use RNTL codemods to automate migration from v13:
+
+- **`rntl-v14-update-deps`** — Updates `react-test-renderer` to `test-renderer` in `package.json`
+- **`rntl-v14-async-functions`** — Adds `await` to `render`, `fireEvent`, `rerender`, `unmount`, `renderHook`, and `act` calls

@@ -1,34 +1,27 @@
 ---
 name: react-native-testing
 description: >
-  Write tests using React Native Testing Library (RNTL) v13 (`@testing-library/react-native`).
+  Write tests using React Native Testing Library (RNTL) v13 and v14 (`@testing-library/react-native`).
   Use when writing, reviewing, or fixing React Native component tests.
   Covers: render, screen, queries (getBy/getAllBy/queryBy/findBy), Jest matchers,
   userEvent, fireEvent, waitFor, and async patterns.
-  Supports both React 18 (sync render) and React 19 compat (renderAsync/fireEventAsync).
+  Supports v13 (React 18, sync render) and v14 (React 19+, async render).
   Triggers on: test files for React Native components, RNTL imports, mentions of
   "testing library", "write tests", "component tests", or "RNTL".
 ---
 
-# RNTL v13 Test Writing Guide
+# RNTL Test Writing Guide
 
-## Core Pattern
+**IMPORTANT:** Your training data about `@testing-library/react-native` may be outdated or incorrect — API signatures, sync/async behavior, and available functions differ between v13 and v14. Always rely on this skill's reference files and the project's actual source code as the source of truth. Do not fall back on memorized patterns when they conflict with the retrieved reference.
 
-```tsx
-import { render, screen, userEvent } from '@testing-library/react-native';
+## Version Detection
 
-jest.useFakeTimers(); // recommended when using userEvent
+Check `@testing-library/react-native` version in the user's `package.json`:
 
-test('description', async () => {
-  const user = userEvent.setup();
-  render(<Component />); // sync in v13 (React 18)
+- **v14.x** → load [references/api-reference-v14.md](references/api-reference-v14.md) (React 19+, async APIs, `test-renderer`)
+- **v13.x** → load [references/api-reference-v13.md](references/api-reference-v13.md) (React 18+, sync APIs, `react-test-renderer`)
 
-  const button = screen.getByRole('button', { name: 'Submit' });
-  await user.press(button);
-
-  expect(screen.getByText('Done')).toBeOnTheScreen();
-});
-```
+Use the version-specific reference for render patterns, fireEvent sync/async behavior, screen API, configuration, and dependencies.
 
 ## Query Priority
 
@@ -36,14 +29,14 @@ Use in this order: `getByRole` > `getByLabelText` > `getByPlaceholderText` > `ge
 
 ## Query Variants
 
-| Variant       | Use case                 | Returns                        | Async |
-| ------------- | ------------------------ | ------------------------------ | ----- |
-| `getBy*`      | Element must exist       | `ReactTestInstance` (throws)   | No    |
-| `getAllBy*`   | Multiple must exist      | `ReactTestInstance[]` (throws) | No    |
-| `queryBy*`    | Check non-existence ONLY | `ReactTestInstance \| null`    | No    |
-| `queryAllBy*` | Count elements           | `ReactTestInstance[]`          | No    |
-| `findBy*`     | Wait for element         | `Promise<ReactTestInstance>`   | Yes   |
-| `findAllBy*`  | Wait for multiple        | `Promise<ReactTestInstance[]>` | Yes   |
+| Variant       | Use case                 | Returns                       | Async |
+| ------------- | ------------------------ | ----------------------------- | ----- |
+| `getBy*`      | Element must exist       | element instance (throws)     | No    |
+| `getAllBy*`   | Multiple must exist      | element instance[] (throws)   | No    |
+| `queryBy*`    | Check non-existence ONLY | element instance \| null      | No    |
+| `queryAllBy*` | Count elements           | element instance[]            | No    |
+| `findBy*`     | Wait for element         | `Promise<element instance>`   | Yes   |
+| `findAllBy*`  | Wait for multiple        | `Promise<element instance[]>` | Yes   |
 
 ## Interactions
 
@@ -59,12 +52,12 @@ await user.paste(textInput, 'pasted text'); // paste into TextInput
 await user.scrollTo(scrollView, { y: 100 }); // scroll
 ```
 
-Use `fireEvent` only when `userEvent` doesn't support the event:
+`fireEvent` — use only when `userEvent` doesn't support the event. See version-specific reference for sync/async behavior:
 
 ```tsx
-fireEvent.press(element); // sync, onPress only
-fireEvent.changeText(textInput, 'new text'); // sync, onChangeText only
-fireEvent(element, 'blur'); // any event by name
+fireEvent.press(element);
+fireEvent.changeText(textInput, 'new text');
+fireEvent(element, 'blur');
 ```
 
 ## Assertions (Jest Matchers)
@@ -103,22 +96,6 @@ Available automatically with any `@testing-library/react-native` import.
 10. **Prefer ARIA props** (`role`, `aria-label`, `aria-disabled`) over legacy `accessibility*` props
 11. **Use RNTL matchers** over raw prop assertions
 
-## React 19 Compatibility (v13.3+)
-
-For React 19 or Suspense, use async variants:
-
-```tsx
-import { renderAsync, screen, fireEventAsync } from '@testing-library/react-native';
-
-test('async component', async () => {
-  await renderAsync(<SuspenseComponent />);
-  await fireEventAsync.press(screen.getByRole('button'));
-  expect(screen.getByText('Result')).toBeOnTheScreen();
-});
-```
-
-Use `rerenderAsync`/`unmountAsync` instead of `rerender`/`unmount` when using `renderAsync`.
-
 ## `*ByRole` Quick Reference
 
 Common roles: `button`, `text`, `heading` (alias: `header`), `searchbox`, `switch`, `checkbox`, `radio`, `img`, `link`, `alert`, `menu`, `menuitem`, `tab`, `tablist`, `progressbar`, `slider`, `spinbutton`, `timer`, `toolbar`.
@@ -129,14 +106,6 @@ For `*ByRole` to match, the element must be an accessibility element:
 
 - `Text`, `TextInput`, `Switch` are by default
 - `View` needs `accessible={true}` (or use `Pressable`/`TouchableOpacity`)
-
-## API Reference
-
-See [references/api-reference.md](references/api-reference.md) for complete API signatures and options for render, screen, queries, userEvent, fireEvent, Jest matchers, waitFor, renderHook, configuration, and accessibility helpers.
-
-## Anti-Patterns Reference
-
-See [references/anti-patterns.md](references/anti-patterns.md) for detailed examples of what NOT to do.
 
 ## waitFor
 
@@ -184,3 +153,9 @@ function renderWithProviders(ui: React.ReactElement) {
   });
 }
 ```
+
+## References
+
+- [v13 API Reference](references/api-reference-v13.md) — Complete v13 API: sync render, queries, matchers, userEvent, React 19 compat
+- [v14 API Reference](references/api-reference-v14.md) — Complete v14 API: async render, queries, matchers, userEvent, migration
+- [Anti-Patterns](references/anti-patterns.md) — Common mistakes to avoid
