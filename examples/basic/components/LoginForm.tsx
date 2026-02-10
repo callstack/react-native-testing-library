@@ -56,12 +56,7 @@ export function LoginForm({ onLoginSuccess }: Props) {
         </Text>
       )}
 
-      <Pressable
-        role="button"
-        disabled={isLoading}
-        onPress={handleSignIn}
-        style={styles.button}
-      >
+      <Pressable role="button" disabled={isLoading} onPress={handleSignIn} style={styles.button}>
         {isLoading ? (
           <ActivityIndicator color="white" />
         ) : (
