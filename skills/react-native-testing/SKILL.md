@@ -21,7 +21,7 @@ jest.useFakeTimers(); // recommended when using userEvent
 
 test('description', async () => {
   const user = userEvent.setup();
-  render(<Component />);                            // sync in v13 (React 18)
+  render(<Component />); // sync in v13 (React 18)
 
   const button = screen.getByRole('button', { name: 'Submit' });
   await user.press(button);
@@ -36,14 +36,14 @@ Use in this order: `getByRole` > `getByLabelText` > `getByPlaceholderText` > `ge
 
 ## Query Variants
 
-| Variant      | Use case                  | Returns                         | Async |
-|-------------|---------------------------|---------------------------------|-------|
-| `getBy*`    | Element must exist        | `ReactTestInstance` (throws)    | No    |
-| `getAllBy*`  | Multiple must exist       | `ReactTestInstance[]` (throws)  | No    |
-| `queryBy*`  | Check non-existence ONLY  | `ReactTestInstance \| null`     | No    |
-| `queryAllBy*`| Count elements           | `ReactTestInstance[]`           | No    |
-| `findBy*`   | Wait for element          | `Promise<ReactTestInstance>`    | Yes   |
-| `findAllBy*` | Wait for multiple        | `Promise<ReactTestInstance[]>`  | Yes   |
+| Variant       | Use case                 | Returns                        | Async |
+| ------------- | ------------------------ | ------------------------------ | ----- |
+| `getBy*`      | Element must exist       | `ReactTestInstance` (throws)   | No    |
+| `getAllBy*`   | Multiple must exist      | `ReactTestInstance[]` (throws) | No    |
+| `queryBy*`    | Check non-existence ONLY | `ReactTestInstance \| null`    | No    |
+| `queryAllBy*` | Count elements           | `ReactTestInstance[]`          | No    |
+| `findBy*`     | Wait for element         | `Promise<ReactTestInstance>`   | Yes   |
+| `findAllBy*`  | Wait for multiple        | `Promise<ReactTestInstance[]>` | Yes   |
 
 ## Interactions
 
@@ -51,42 +51,43 @@ Prefer `userEvent` over `fireEvent`. userEvent is always async.
 
 ```tsx
 const user = userEvent.setup();
-await user.press(element);                          // full press sequence
-await user.longPress(element, { duration: 800 });   // long press
-await user.type(textInput, 'Hello');                 // char-by-char typing
-await user.clear(textInput);                         // clear TextInput
-await user.paste(textInput, 'pasted text');          // paste into TextInput
-await user.scrollTo(scrollView, { y: 100 });         // scroll
+await user.press(element); // full press sequence
+await user.longPress(element, { duration: 800 }); // long press
+await user.type(textInput, 'Hello'); // char-by-char typing
+await user.clear(textInput); // clear TextInput
+await user.paste(textInput, 'pasted text'); // paste into TextInput
+await user.scrollTo(scrollView, { y: 100 }); // scroll
 ```
 
 Use `fireEvent` only when `userEvent` doesn't support the event:
+
 ```tsx
-fireEvent.press(element);                           // sync, onPress only
-fireEvent.changeText(textInput, 'new text');         // sync, onChangeText only
-fireEvent(element, 'blur');                          // any event by name
+fireEvent.press(element); // sync, onPress only
+fireEvent.changeText(textInput, 'new text'); // sync, onChangeText only
+fireEvent(element, 'blur'); // any event by name
 ```
 
 ## Assertions (Jest Matchers)
 
 Available automatically with any `@testing-library/react-native` import.
 
-| Matcher                          | Use for                                      |
-|---------------------------------|----------------------------------------------|
-| `toBeOnTheScreen()`             | Element exists in tree                       |
-| `toBeVisible()`                 | Element visible (not hidden/display:none)     |
-| `toBeEnabled()` / `toBeDisabled()` | Disabled state via `aria-disabled`        |
-| `toBeChecked()` / `toBePartiallyChecked()` | Checked state                   |
-| `toBeSelected()`                | Selected state                               |
-| `toBeExpanded()` / `toBeCollapsed()` | Expanded state                          |
-| `toBeBusy()`                    | Busy state                                   |
-| `toHaveTextContent(text)`       | Text content match                           |
-| `toHaveDisplayValue(value)`     | TextInput display value                      |
-| `toHaveAccessibleName(name)`    | Accessible name                              |
-| `toHaveAccessibilityValue(val)` | Accessibility value                          |
-| `toHaveStyle(style)`            | Style match                                  |
-| `toHaveProp(name, value?)`      | Prop check (last resort)                     |
-| `toContainElement(el)`          | Contains child element                       |
-| `toBeEmptyElement()`            | No children                                  |
+| Matcher                                    | Use for                                   |
+| ------------------------------------------ | ----------------------------------------- |
+| `toBeOnTheScreen()`                        | Element exists in tree                    |
+| `toBeVisible()`                            | Element visible (not hidden/display:none) |
+| `toBeEnabled()` / `toBeDisabled()`         | Disabled state via `aria-disabled`        |
+| `toBeChecked()` / `toBePartiallyChecked()` | Checked state                             |
+| `toBeSelected()`                           | Selected state                            |
+| `toBeExpanded()` / `toBeCollapsed()`       | Expanded state                            |
+| `toBeBusy()`                               | Busy state                                |
+| `toHaveTextContent(text)`                  | Text content match                        |
+| `toHaveDisplayValue(value)`                | TextInput display value                   |
+| `toHaveAccessibleName(name)`               | Accessible name                           |
+| `toHaveAccessibilityValue(val)`            | Accessibility value                       |
+| `toHaveStyle(style)`                       | Style match                               |
+| `toHaveProp(name, value?)`                 | Prop check (last resort)                  |
+| `toContainElement(el)`                     | Contains child element                    |
+| `toBeEmptyElement()`                       | No children                               |
 
 ## Rules
 
@@ -125,6 +126,7 @@ Common roles: `button`, `text`, `heading` (alias: `header`), `searchbox`, `switc
 `getByRole` options: `{ name, disabled, selected, checked, busy, expanded, value: { min, max, now, text } }`.
 
 For `*ByRole` to match, the element must be an accessibility element:
+
 - `Text`, `TextInput`, `Switch` are by default
 - `View` needs `accessible={true}` (or use `Pressable`/`TouchableOpacity`)
 
@@ -175,7 +177,9 @@ Wrap providers using `wrapper` option:
 function renderWithProviders(ui: React.ReactElement) {
   return render(ui, {
     wrapper: ({ children }) => (
-      <ThemeProvider><AuthProvider>{children}</AuthProvider></ThemeProvider>
+      <ThemeProvider>
+        <AuthProvider>{children}</AuthProvider>
+      </ThemeProvider>
     ),
   });
 }

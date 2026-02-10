@@ -1,8 +1,9 @@
 # RNTL v13 Anti-Patterns
 
 ## Table of Contents
+
 - [Wrong query variant](#wrong-query-variant)
-- [Not using *ByRole](#not-using-byrole)
+- [Not using \*ByRole](#not-using-byrole)
 - [Wrong assertions](#wrong-assertions)
 - [waitFor misuse](#waitfor-misuse)
 - [Unnecessary act()](#unnecessary-act)
@@ -38,13 +39,13 @@ await waitFor(() => {
 expect(await screen.findByText('Loaded')).toBeOnTheScreen();
 ```
 
-## Not using *ByRole
+## Not using \*ByRole
 
 ```tsx
 // BAD: testID when accessible query works
 <Pressable testID="submit-btn" role="button">
   <Text>Submit</Text>
-</Pressable>
+</Pressable>;
 screen.getByTestId('submit-btn');
 
 // GOOD: query by role and accessible name
@@ -173,7 +174,7 @@ screen.getByText('Hello');
 ```tsx
 // BAD: traversing the tree manually
 const { UNSAFE_root } = render(<Component />);
-const el = UNSAFE_root.findAll(node => node.props.testID === 'foo')[0];
+const el = UNSAFE_root.findAll((node) => node.props.testID === 'foo')[0];
 
 // GOOD: use proper queries
 render(<Component />);

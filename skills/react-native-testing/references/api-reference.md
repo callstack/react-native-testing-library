@@ -1,6 +1,7 @@
 # RNTL v13 API Reference
 
 ## Table of Contents
+
 - [render / renderAsync](#render--renderasync)
 - [screen](#screen)
 - [Queries](#queries)
@@ -19,7 +20,10 @@
 
 ```ts
 function render(component: React.Element<any>, options?: RenderOptions): RenderResult;
-async function renderAsync(component: React.Element<any>, options?: RenderAsyncOptions): Promise<RenderAsyncResult>;
+async function renderAsync(
+  component: React.Element<any>,
+  options?: RenderAsyncOptions,
+): Promise<RenderAsyncResult>;
 ```
 
 `render` deeply renders the given React element and returns helpers to query the output. Use `screen` for queries instead of destructuring the result.
@@ -28,12 +32,12 @@ async function renderAsync(component: React.Element<any>, options?: RenderAsyncO
 
 ### Options
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `wrapper` | `React.ComponentType<any>` | Wraps tested component (useful for context providers) |
-| `concurrentRoot` | `boolean` | Set `false` to disable concurrent rendering (default: `true`) |
-| `createNodeMock` | `(element: React.Element) => unknown` | Custom mock refs for `ReactTestRenderer.create()` |
-| `unstable_validateStringsRenderedWithinText` | `boolean` | Experimental: replicate RN `Text` string validation |
+| Option                                       | Type                                  | Description                                                   |
+| -------------------------------------------- | ------------------------------------- | ------------------------------------------------------------- |
+| `wrapper`                                    | `React.ComponentType<any>`            | Wraps tested component (useful for context providers)         |
+| `concurrentRoot`                             | `boolean`                             | Set `false` to disable concurrent rendering (default: `true`) |
+| `createNodeMock`                             | `(element: React.Element) => unknown` | Custom mock refs for `ReactTestRenderer.create()`             |
+| `unstable_validateStringsRenderedWithinText` | `boolean`                             | Experimental: replicate RN `Text` string validation           |
 
 ### Example
 
@@ -90,14 +94,14 @@ Each query = **variant** + **predicate** (e.g., `getByRole` = `getBy` + `ByRole`
 
 ### Query Variants
 
-| Variant | Assertion | Return Type | Async |
-|---------|-----------|-------------|-------|
-| `getBy*` | Exactly one match | `ReactTestInstance` (throws if 0 or >1) | No |
-| `getAllBy*` | At least one match | `ReactTestInstance[]` (throws if 0) | No |
-| `queryBy*` | Zero or one match | `ReactTestInstance \| null` (throws if >1) | No |
-| `queryAllBy*` | No assertion | `ReactTestInstance[]` (empty if 0) | No |
-| `findBy*` | Exactly one match | `Promise<ReactTestInstance>` | Yes |
-| `findAllBy*` | At least one match | `Promise<ReactTestInstance[]>` | Yes |
+| Variant       | Assertion          | Return Type                                | Async |
+| ------------- | ------------------ | ------------------------------------------ | ----- |
+| `getBy*`      | Exactly one match  | `ReactTestInstance` (throws if 0 or >1)    | No    |
+| `getAllBy*`   | At least one match | `ReactTestInstance[]` (throws if 0)        | No    |
+| `queryBy*`    | Zero or one match  | `ReactTestInstance \| null` (throws if >1) | No    |
+| `queryAllBy*` | No assertion       | `ReactTestInstance[]` (empty if 0)         | No    |
+| `findBy*`     | Exactly one match  | `Promise<ReactTestInstance>`               | Yes   |
+| `findAllBy*`  | At least one match | `Promise<ReactTestInstance[]>`             | Yes   |
 
 `findBy*` / `findAllBy*` accept optional `waitForOptions: { timeout?, interval?, onTimeout? }`.
 
@@ -119,6 +123,7 @@ getByRole(role: TextMatch, options?: {
 ```
 
 Matches elements by `role` or `accessibilityRole`. Element must be an accessibility element:
+
 - `Text`, `TextInput`, `Switch` are by default
 - `View` needs `accessible={true}` (or use `Pressable`/`TouchableOpacity`)
 
@@ -189,10 +194,10 @@ type TextMatch = string | RegExp;
 - **RegExp**: substring match by default. Use anchors (`^...$`) for full match.
 
 ```tsx
-screen.getByText('Hello World');              // exact full match
+screen.getByText('Hello World'); // exact full match
 screen.getByText('llo Worl', { exact: false }); // substring, case-insensitive
-screen.getByText(/World/);                    // regex substring
-screen.getByText(/^hello world$/i);           // regex full match, case-insensitive
+screen.getByText(/World/); // regex substring
+screen.getByText(/^hello world$/i); // regex full match, case-insensitive
 ```
 
 ### Common Query Options
@@ -310,43 +315,43 @@ Available automatically with any `@testing-library/react-native` import. No setu
 
 ### Element Existence
 
-| Matcher | Description |
-|---------|-------------|
+| Matcher             | Description                             |
+| ------------------- | --------------------------------------- |
 | `toBeOnTheScreen()` | Element is attached to the element tree |
 
 ### Element Content
 
-| Matcher | Signature | Description |
-|---------|-----------|-------------|
-| `toHaveTextContent()` | `(text: string \| RegExp, options?: { exact?, normalizer? })` | Text content match |
-| `toContainElement()` | `(element: ReactTestInstance \| null)` | Contains child element |
-| `toBeEmptyElement()` | — | No children or text content |
+| Matcher               | Signature                                                     | Description                 |
+| --------------------- | ------------------------------------------------------------- | --------------------------- |
+| `toHaveTextContent()` | `(text: string \| RegExp, options?: { exact?, normalizer? })` | Text content match          |
+| `toContainElement()`  | `(element: ReactTestInstance \| null)`                        | Contains child element      |
+| `toBeEmptyElement()`  | —                                                             | No children or text content |
 
 ### Element State
 
-| Matcher | Description |
-|---------|-------------|
-| `toHaveDisplayValue(value: string \| RegExp, options?)` | TextInput display value |
-| `toHaveAccessibilityValue({ min?, max?, now?, text? })` | Accessibility value (partial match) |
-| `toBeEnabled()` / `toBeDisabled()` | Disabled state via `aria-disabled` (checks ancestors) |
-| `toBeSelected()` | Selected state via `aria-selected` |
-| `toBeChecked()` / `toBePartiallyChecked()` | Checked state via `aria-checked` |
-| `toBeExpanded()` / `toBeCollapsed()` | Expanded state via `aria-expanded` |
-| `toBeBusy()` | Busy state via `aria-busy` |
+| Matcher                                                 | Description                                           |
+| ------------------------------------------------------- | ----------------------------------------------------- |
+| `toHaveDisplayValue(value: string \| RegExp, options?)` | TextInput display value                               |
+| `toHaveAccessibilityValue({ min?, max?, now?, text? })` | Accessibility value (partial match)                   |
+| `toBeEnabled()` / `toBeDisabled()`                      | Disabled state via `aria-disabled` (checks ancestors) |
+| `toBeSelected()`                                        | Selected state via `aria-selected`                    |
+| `toBeChecked()` / `toBePartiallyChecked()`              | Checked state via `aria-checked`                      |
+| `toBeExpanded()` / `toBeCollapsed()`                    | Expanded state via `aria-expanded`                    |
+| `toBeBusy()`                                            | Busy state via `aria-busy`                            |
 
 ### Element Style
 
-| Matcher | Description |
-|---------|-------------|
-| `toBeVisible()` | Not hidden (`display: none`, `opacity: 0`, or hidden from a11y) |
-| `toHaveStyle(style: StyleProp<Style>)` | Specific style match |
+| Matcher                                | Description                                                     |
+| -------------------------------------- | --------------------------------------------------------------- |
+| `toBeVisible()`                        | Not hidden (`display: none`, `opacity: 0`, or hidden from a11y) |
+| `toHaveStyle(style: StyleProp<Style>)` | Specific style match                                            |
 
 ### Other
 
-| Matcher | Signature | Description |
-|---------|-----------|-------------|
+| Matcher                  | Signature                                                      | Description                                                         |
+| ------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------- |
 | `toHaveAccessibleName()` | `(name?: string \| RegExp, options?: { exact?, normalizer? })` | Accessible name from `aria-label`/`aria-labelledby` or text content |
-| `toHaveProp()` | `(name: string, value?: unknown)` | Prop existence/value check (last resort) |
+| `toHaveProp()`           | `(name: string, value?: unknown)`                              | Prop existence/value check (last resort)                            |
 
 ---
 
@@ -355,12 +360,16 @@ Available automatically with any `@testing-library/react-native` import. No setu
 ### `waitFor`
 
 ```ts
-function waitFor<T>(expectation: () => T, options?: { timeout?: number; interval?: number }): Promise<T>;
+function waitFor<T>(
+  expectation: () => T,
+  options?: { timeout?: number; interval?: number },
+): Promise<T>;
 ```
 
 Runs `expectation` every `interval` (default 50ms) until `timeout` (default 1000ms). Callback must **throw** on failure. Auto-detects and works with Jest fake timers.
 
 Rules:
+
 - No side effects inside callback (no `fireEvent`/`userEvent`)
 - One assertion per `waitFor`
 - Never pass empty callback
@@ -369,7 +378,10 @@ Rules:
 ### `waitForElementToBeRemoved`
 
 ```ts
-function waitForElementToBeRemoved<T>(expectation: () => T, options?: { timeout?: number; interval?: number }): Promise<T>;
+function waitForElementToBeRemoved<T>(
+  expectation: () => T,
+  options?: { timeout?: number; interval?: number },
+): Promise<T>;
 ```
 
 Waits until the queried element is removed. Element must be initially present.
@@ -410,14 +422,18 @@ Unmounts rendered trees and clears `screen`. Automatic after each test (if test 
 ```ts
 function renderHook<Result, Props>(
   hookFn: (props?: Props) => Result,
-  options?: { initialProps?: Props; wrapper?: React.ComponentType; concurrentRoot?: boolean }
+  options?: { initialProps?: Props; wrapper?: React.ComponentType; concurrentRoot?: boolean },
 ): { result: { current: Result }; rerender: (props: Props) => void; unmount: () => void };
 
 // Async version (v13.3+)
 async function renderHookAsync<Result, Props>(
   hookFn: (props?: Props) => Result,
-  options?: { initialProps?: Props; wrapper?: React.ComponentType; concurrentRoot?: boolean }
-): Promise<{ result: { current: Result }; rerenderAsync: (props: Props) => Promise<void>; unmountAsync: () => Promise<void> }>;
+  options?: { initialProps?: Props; wrapper?: React.ComponentType; concurrentRoot?: boolean },
+): Promise<{
+  result: { current: Result };
+  rerenderAsync: (props: Props) => Promise<void>;
+  unmountAsync: () => Promise<void>;
+}>;
 ```
 
 Renders a test component that calls the provided hook. Use `act()` when calling functions returned by the hook that trigger state updates.
@@ -425,7 +441,9 @@ Renders a test component that calls the provided hook. Use `act()` when calling 
 ```tsx
 const { result } = renderHook(() => useCount());
 expect(result.current.count).toBe(0);
-act(() => { result.current.increment(); });
+act(() => {
+  result.current.increment();
+});
 expect(result.current.count).toBe(1);
 
 // With wrapper
@@ -439,22 +457,24 @@ renderHook(() => useHook(), {
 ## Configuration
 
 ```ts
-function configure(options: Partial<{
-  asyncUtilTimeout: number;              // default timeout for waitFor/findBy* (default: 1000ms)
-  defaultIncludeHiddenElements: boolean; // default for includeHiddenElements option (default: false)
-  defaultDebugOptions: Partial<DebugOptions>;
-  concurrentRoot: boolean;               // default concurrent rendering (default: true)
-}>): void;
+function configure(
+  options: Partial<{
+    asyncUtilTimeout: number; // default timeout for waitFor/findBy* (default: 1000ms)
+    defaultIncludeHiddenElements: boolean; // default for includeHiddenElements option (default: false)
+    defaultDebugOptions: Partial<DebugOptions>;
+    concurrentRoot: boolean; // default concurrent rendering (default: true)
+  }>,
+): void;
 
 function resetToDefaults(): void;
 ```
 
 ### Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `RNTL_SKIP_AUTO_CLEANUP=true` | Disable automatic cleanup after each test |
-| `RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS=true` | Disable auto-detection of fake timers |
+| Variable                                 | Description                               |
+| ---------------------------------------- | ----------------------------------------- |
+| `RNTL_SKIP_AUTO_CLEANUP=true`            | Disable automatic cleanup after each test |
+| `RNTL_SKIP_AUTO_DETECT_FAKE_TIMERS=true` | Disable auto-detection of fake timers     |
 
 ---
 
@@ -469,6 +489,7 @@ function isHiddenFromAccessibility(element: ReactTestInstance | null): boolean;
 Also available as `isInaccessible()` alias.
 
 Element is hidden when it or any ancestor has:
+
 - `display: none` style
 - `aria-hidden={true}`
 - `accessibilityElementsHidden={true}` (iOS)
