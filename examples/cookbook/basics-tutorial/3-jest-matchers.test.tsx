@@ -17,7 +17,6 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react-native';
 import { Text, TextInput, View } from 'react-native';
-import { s } from 'react-strict-dom/runtime';
 
 /**
  * MATCHER 1: toBeOnTheScreen()
@@ -57,7 +56,7 @@ test('showcase: toBeOnTheScreen', async () => {
  * - expect(element).toHaveTextContent(/pattern/i) - regex with case-insensitive flag
  * - expect(element).toHaveTextContent('partial', { exact: false })
  */
-test('showcase: toBeIntoHaveTextContentTheDocument', async () => {
+test('showcase: toHaveTextContent', async () => {
   await render(
     <View>
       <Text testID="text">Hello World</Text>

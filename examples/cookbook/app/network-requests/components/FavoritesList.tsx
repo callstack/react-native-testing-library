@@ -10,7 +10,7 @@ export default ({ users }: { users: User[] }) => {
         <Image
           source={{ uri: picture.thumbnail }}
           style={styles.userImage}
-          accessibilityLabel={'favorite-contact-avatar'}
+          aria-label="favorite-contact-avatar"
         />
       </View>
     );
