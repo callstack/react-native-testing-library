@@ -1,5 +1,5 @@
 ---
-name: react-native-teting-library-v13
+name: react-native-testing
 description: >
   Write tests using React Native Testing Library (RNTL) v13 (`@testing-library/react-native`).
   Use when writing, reviewing, or fixing React Native component tests.

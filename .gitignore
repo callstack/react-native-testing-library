@@ -22,3 +22,8 @@ build
 
 
 codemods/**/dist/
+
+# AI assistant skills (3rd party, fetched on demand)
+.agents/skills/
+.claude/skills/
+.cursor/skills/
