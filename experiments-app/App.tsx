@@ -2,8 +2,8 @@ import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { MainScreen } from './MainScreen';
-import { experiments } from './experiments';
+import { MainScreen } from './src/MainScreen';
+import { experiments } from './src/experiments';
 
 const Stack = createNativeStackNavigator();
 

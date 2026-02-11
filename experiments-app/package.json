@@ -3,7 +3,7 @@
   "private": true,
   "description": "Expo app for conducting experiments of React Native behaviour.",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "typecheck": "tsc -noEmit",
     "start": "expo start",
