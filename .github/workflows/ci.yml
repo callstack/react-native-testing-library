@@ -224,7 +224,7 @@ jobs:
 
       - name: Test
         run: yarn test:codemods
-  
+
   test-rn-0-84-0:
     runs-on: ubuntu-latest
     name: Test RN 0.84.0
