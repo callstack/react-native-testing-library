@@ -6,7 +6,7 @@ import { getContainerElement, getHostSiblings, isHostElement } from './component
 import { findAll } from './find-all';
 import { isHostImage, isHostSwitch, isHostText, isHostTextInput } from './host-component-names';
 import { getTextContent } from './text-content';
-import { getTextInputValue, isEditableTextInput } from './text-input';
+import { isEditableTextInput } from './text-input';
 
 type IsInaccessibleOptions = {
   cache?: WeakMap<HostElement, boolean>;

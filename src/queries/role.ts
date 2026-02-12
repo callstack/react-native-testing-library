@@ -17,7 +17,6 @@ import { matchAccessibilityValue } from '../helpers/matchers/match-accessibility
 import { matchStringProp } from '../helpers/matchers/match-string-prop';
 import { matches, type TextMatch } from '../matches';
 import type { StringWithAutocomplete } from '../types';
-import { getQueriesForElement } from '../within';
 import type {
   FindAllByQuery,
   FindByQuery,

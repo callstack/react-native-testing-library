@@ -90,7 +90,7 @@
     "prettier": "^3.6.2",
     "react": "19.2.3",
     "react-native": "0.84.0",
-    "react-native-gesture-handler": "^2.29.1",
+    "react-native-gesture-handler": "^2.30.0",
     "release-it": "^19.0.6",
     "test-renderer": "0.14.0",
     "typescript": "^5.9.3",
