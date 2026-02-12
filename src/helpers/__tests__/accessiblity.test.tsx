@@ -2,7 +2,12 @@ import React from 'react';
 import { Pressable, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { isHiddenFromAccessibility, isInaccessible, render, screen } from '../..';
-import { computeAriaDisabled, computeAriaLabel, isAccessibilityElement } from '../accessibility';
+import {
+  computeAccessibleName,
+  computeAriaDisabled,
+  computeAriaLabel,
+  isAccessibilityElement,
+} from '../accessibility';
 
 describe('isHiddenFromAccessibility', () => {
   test('returns false for accessible elements', async () => {
@@ -474,5 +479,47 @@ describe('computeAriaDisabled', () => {
     expect(computeAriaDisabled(screen.getByText('Default Text'))).toBe(false);
     expect(computeAriaDisabled(screen.getByText('Disabled Text'))).toBe(true);
     expect(computeAriaDisabled(screen.getByText('ARIA Disabled Text'))).toBe(true);
+  });
+});
+
+describe('computeAccessibleName', () => {
+  test('basic cases', async () => {
+    await render(
+      <>
+        <View testID="aria-label" aria-label="ARIA Label" />
+        <View testID="accessibility-label" accessibilityLabel="Accessibility Label" />
+        <View testID="text-content">
+          <Text>Text Content</Text>
+        </View>
+        <TextInput testID="text-input" placeholder="Text Input" />
+      </>,
+    );
+    expect(computeAccessibleName(screen.getByTestId('aria-label'))).toBe('ARIA Label');
+    expect(computeAccessibleName(screen.getByTestId('accessibility-label'))).toBe(
+      'Accessibility Label',
+    );
+    expect(computeAccessibleName(screen.getByTestId('text-content'))).toBe('Text Content');
+    expect(computeAccessibleName(screen.getByTestId('text-input'))).toBe('Text Input');
+  });
+
+  test('basic precedence', async () => {
+    await render(
+      <>
+        <View testID="aria-label" aria-label="ARIA Label" accessibilityLabel="Accessibility Label">
+          <Text>Text Content</Text>
+        </View>
+        <View testID="accessibility-label" accessibilityLabel="Accessibility Label">
+          <Text>Text Content</Text>
+        </View>
+        <View testID="text-content">
+          <Text>Text Content</Text>
+        </View>
+      </>,
+    );
+    expect(computeAccessibleName(screen.getByTestId('aria-label'))).toBe('ARIA Label');
+    expect(computeAccessibleName(screen.getByTestId('accessibility-label'))).toBe(
+      'Accessibility Label',
+    );
+    expect(computeAccessibleName(screen.getByTestId('text-content'))).toBe('Text Content');
   });
 });

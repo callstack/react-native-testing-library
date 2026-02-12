@@ -6,7 +6,7 @@ import { getContainerElement, getHostSiblings, isHostElement } from './component
 import { findAll } from './find-all';
 import { isHostImage, isHostSwitch, isHostText, isHostTextInput } from './host-component-names';
 import { getTextContent } from './text-content';
-import { isEditableTextInput } from './text-input';
+import { getTextInputValue, isEditableTextInput } from './text-input';
 
 type IsInaccessibleOptions = {
   cache?: WeakMap<HostElement, boolean>;
@@ -245,7 +245,30 @@ export function computeAriaValue(element: HostElement): AccessibilityValue {
 }
 
 export function computeAccessibleName(element: HostElement): string | undefined {
-  return computeAriaLabel(element) ?? getTextContent(element);
+  const label = computeAriaLabel(element);
+  if (label) {
+    return label;
+  }
+
+  if (isHostTextInput(element) && element.props.placeholder) {
+    return element.props.placeholder;
+  }
+
+  const parts = [];
+  for (const child of element.children) {
+    if (typeof child === 'string') {
+      if (child) {
+        parts.push(child);
+      }
+    } else {
+      const childLabel = computeAccessibleName(child);
+      if (childLabel) {
+        parts.push(childLabel);
+      }
+    }
+  }
+
+  return parts.join(' ');
 }
 
 type RoleSupportMap = Partial<Record<Role | AccessibilityRole, true>>;
