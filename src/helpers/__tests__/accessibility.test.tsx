@@ -659,9 +659,7 @@ describe('computeAriaExpanded', () => {
   });
 
   test('supports accessibilityState.expanded', async () => {
-    await render(
-      <View testID="subject" accessibilityState={{ expanded: true }} />,
-    );
+    await render(<View testID="subject" accessibilityState={{ expanded: true }} />);
     expect(computeAriaExpanded(screen.getByTestId('subject'))).toBe(true);
   });
 });
@@ -678,9 +676,7 @@ describe('computeAriaSelected', () => {
   });
 
   test('supports accessibilityState.selected', async () => {
-    await render(
-      <View testID="subject" accessibilityState={{ selected: true }} />,
-    );
+    await render(<View testID="subject" accessibilityState={{ selected: true }} />);
     expect(computeAriaSelected(screen.getByTestId('subject'))).toBe(true);
   });
 });
@@ -716,10 +712,7 @@ describe('computeAriaValue', () => {
 
   test('supports accessibilityValue prop', async () => {
     await render(
-      <View
-        testID="subject"
-        accessibilityValue={{ min: 0, max: 100, now: 25, text: '25%' }}
-      />,
+      <View testID="subject" accessibilityValue={{ min: 0, max: 100, now: 25, text: '25%' }} />,
     );
     expect(computeAriaValue(screen.getByTestId('subject'))).toEqual({
       min: 0,
