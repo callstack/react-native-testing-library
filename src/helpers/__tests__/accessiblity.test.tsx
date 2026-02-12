@@ -522,4 +522,73 @@ describe('computeAccessibleName', () => {
     );
     expect(computeAccessibleName(screen.getByTestId('text-content'))).toBe('Text Content');
   });
+
+  test('concatenates children accessible names', async () => {
+    await render(
+      <>
+        <View testID="multiple-text">
+          <Text>Hello</Text>
+          <Text>World</Text>
+        </View>
+        <View testID="nested-views">
+          <View>
+            <Text>Hello</Text>
+          </View>
+          <View>
+            <Text>World</Text>
+          </View>
+        </View>
+        <View testID="child-with-label">
+          <View aria-label="Hello" />
+          <Text>World</Text>
+        </View>
+        <View testID="deeply-nested">
+          <View>
+            <View>
+              <Text>Hello</Text>
+            </View>
+          </View>
+          <Text>World</Text>
+        </View>
+        <View testID="child-label-over-text">
+          <View aria-label="Hello">
+            <Text>Ignored</Text>
+          </View>
+          <Text>World</Text>
+        </View>
+        <View testID="child-accessibility-label-over-text">
+          <View accessibilityLabel="Hello">
+            <Text>Ignored</Text>
+          </View>
+          <Text>World</Text>
+        </View>
+      </>,
+    );
+    expect(computeAccessibleName(screen.getByTestId('multiple-text'))).toBe('Hello World');
+    expect(computeAccessibleName(screen.getByTestId('nested-views'))).toBe('Hello World');
+    expect(computeAccessibleName(screen.getByTestId('child-with-label'))).toBe('Hello World');
+    expect(computeAccessibleName(screen.getByTestId('deeply-nested'))).toBe('Hello World');
+    expect(computeAccessibleName(screen.getByTestId('child-label-over-text'))).toBe('Hello World');
+    expect(computeAccessibleName(screen.getByTestId('child-accessibility-label-over-text'))).toBe(
+      'Hello World',
+    );
+  });
+
+  test('TextInput placeholder is used only for the element itself', async () => {
+    await render(
+      <>
+        <TextInput testID="text-input" placeholder="Placeholder" />
+        <View testID="parent">
+          <TextInput placeholder="Placeholder" />
+          <Text>Hello</Text>
+        </View>
+        <View testID="parent-no-text">
+          <TextInput placeholder="Placeholder" />
+        </View>
+      </>,
+    );
+    expect(computeAccessibleName(screen.getByTestId('text-input'))).toBe('Placeholder');
+    expect(computeAccessibleName(screen.getByTestId('parent'))).toBe('Hello');
+    expect(computeAccessibleName(screen.getByTestId('parent-no-text'))).toBe('');
+  });
 });

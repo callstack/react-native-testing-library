@@ -244,13 +244,20 @@ export function computeAriaValue(element: HostElement): AccessibilityValue {
   };
 }
 
-export function computeAccessibleName(element: HostElement): string | undefined {
+type ComputeAccessibleNameOptions = {
+  root?: boolean;
+};
+
+export function computeAccessibleName(
+  element: HostElement,
+  options?: ComputeAccessibleNameOptions,
+): string | undefined {
   const label = computeAriaLabel(element);
   if (label) {
     return label;
   }
 
-  if (isHostTextInput(element) && element.props.placeholder) {
+  if (isHostTextInput(element) && element.props.placeholder && options?.root !== false) {
     return element.props.placeholder;
   }
 
@@ -261,7 +268,7 @@ export function computeAccessibleName(element: HostElement): string | undefined 
         parts.push(child);
       }
     } else {
-      const childLabel = computeAccessibleName(child);
+      const childLabel = computeAccessibleName(child, { root: false });
       if (childLabel) {
         parts.push(childLabel);
       }

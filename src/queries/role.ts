@@ -40,14 +40,8 @@ export type ByRoleOptions = CommonQueryOptions &
 const matchAccessibleNameIfNeeded = (node: HostElement, name?: TextMatch) => {
   if (name == null) return true;
 
-  // TODO: rewrite computeAccessibleName for real world a11y compliance
   const accessibleName = computeAccessibleName(node);
-  if (matches(name, accessibleName)) {
-    return true;
-  }
-
-  const { queryAllByText, queryAllByLabelText } = getQueriesForElement(node);
-  return queryAllByText(name).length > 0 || queryAllByLabelText(name).length > 0;
+  return matches(name, accessibleName);
 };
 
 const matchAccessibleStateIfNeeded = (node: HostElement, options?: ByRoleOptions) => {
