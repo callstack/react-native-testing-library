@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { isHiddenFromAccessibility, isInaccessible, render, screen } from '../..';
 import {
@@ -492,6 +492,7 @@ describe('computeAccessibleName', () => {
           <Text>Text Content</Text>
         </View>
         <TextInput testID="text-input" placeholder="Text Input" />
+        <Image testID="image" alt="Image Alt" src="https://example.com/image.jpg" />
       </>,
     );
     expect(computeAccessibleName(screen.getByTestId('aria-label'))).toBe('ARIA Label');
@@ -500,6 +501,7 @@ describe('computeAccessibleName', () => {
     );
     expect(computeAccessibleName(screen.getByTestId('text-content'))).toBe('Text Content');
     expect(computeAccessibleName(screen.getByTestId('text-input'))).toBe('Text Input');
+    expect(computeAccessibleName(screen.getByTestId('image'))).toBe('Image Alt');
   });
 
   test('basic precedence', async () => {
