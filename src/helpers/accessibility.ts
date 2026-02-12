@@ -53,11 +53,6 @@ export function isHiddenFromAccessibility(
 export const isInaccessible = isHiddenFromAccessibility;
 
 function isSubtreeInaccessible(element: HostElement): boolean {
-  // Null props can happen for React.Fragments
-  if (element.props == null) {
-    return false;
-  }
-
   // See: https://reactnative.dev/docs/accessibility#aria-hidden
   if (element.props['aria-hidden']) {
     return true;

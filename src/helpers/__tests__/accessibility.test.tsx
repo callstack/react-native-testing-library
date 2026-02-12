@@ -4,9 +4,16 @@ import { Image, Pressable, Switch, Text, TextInput, TouchableOpacity, View } fro
 import { isHiddenFromAccessibility, isInaccessible, render, screen } from '../..';
 import {
   computeAccessibleName,
+  computeAriaBusy,
+  computeAriaChecked,
   computeAriaDisabled,
+  computeAriaExpanded,
   computeAriaLabel,
+  computeAriaSelected,
+  computeAriaValue,
+  getRole,
   isAccessibilityElement,
+  normalizeRole,
 } from '../accessibility';
 
 describe('isHiddenFromAccessibility', () => {
@@ -280,6 +287,21 @@ describe('isHiddenFromAccessibility', () => {
     expect(isHiddenFromAccessibility(screen.getByTestId('subject'))).toBe(false);
   });
 
+  test('uses cache when provided', async () => {
+    await render(
+      <View>
+        <View testID="subject" />
+      </View>,
+    );
+    const element = screen.getByTestId('subject', { includeHiddenElements: true });
+    const cache = new WeakMap();
+
+    // First call populates the cache
+    isHiddenFromAccessibility(element, { cache });
+    // Second call should use the cache
+    expect(isHiddenFromAccessibility(element, { cache })).toBe(false);
+  });
+
   test('has isInaccessible alias', () => {
     expect(isInaccessible).toBe(isHiddenFromAccessibility);
   });
@@ -373,6 +395,17 @@ describe('isAccessibilityElement', () => {
     expect(isAccessibilityElement(screen.getByTestId('false'))).toBeFalsy();
   });
 
+  test('matches Image component with alt prop', async () => {
+    await render(
+      <View>
+        <Image testID="with-alt" alt="Test image" />
+        <Image testID="without-alt" />
+      </View>,
+    );
+    expect(isAccessibilityElement(screen.getByTestId('with-alt'))).toBeTruthy();
+    expect(isAccessibilityElement(screen.getByTestId('without-alt'))).toBeFalsy();
+  });
+
   test('returns false when given null', () => {
     expect(isAccessibilityElement(null)).toEqual(false);
   });
@@ -411,6 +444,33 @@ describe('computeAriaLabel', () => {
     );
 
     expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('External Label');
+  });
+
+  test('supports accessibilityLabel', async () => {
+    await render(<View testID="subject" accessibilityLabel="Legacy Label" />);
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('Legacy Label');
+  });
+
+  test('supports accessibilityLabelledBy', async () => {
+    await render(
+      <View>
+        <View testID="subject" accessibilityLabelledBy="ext-label" />
+        <View nativeID="ext-label">
+          <Text>External</Text>
+        </View>
+      </View>,
+    );
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('External');
+  });
+
+  test('supports Image with alt prop', async () => {
+    await render(<Image testID="subject" alt="Image Alt" />);
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('Image Alt');
+  });
+
+  test('returns undefined when aria-labelledby references non-existent element', async () => {
+    await render(<View testID="subject" aria-labelledby="non-existent-id" />);
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toBeUndefined();
   });
 });
 
@@ -479,6 +539,200 @@ describe('computeAriaDisabled', () => {
     expect(computeAriaDisabled(screen.getByText('Default Text'))).toBe(false);
     expect(computeAriaDisabled(screen.getByText('Disabled Text'))).toBe(true);
     expect(computeAriaDisabled(screen.getByText('ARIA Disabled Text'))).toBe(true);
+  });
+});
+
+describe('getRole', () => {
+  test('returns explicit role from "role" prop', async () => {
+    await render(<View testID="subject" role="button" />);
+    expect(getRole(screen.getByTestId('subject'))).toBe('button');
+  });
+
+  test('returns explicit role from "accessibilityRole" prop', async () => {
+    await render(<View testID="subject" accessibilityRole="link" />);
+    expect(getRole(screen.getByTestId('subject'))).toBe('link');
+  });
+
+  test('prefers "role" over "accessibilityRole"', async () => {
+    await render(<View testID="subject" role="button" accessibilityRole="link" />);
+    expect(getRole(screen.getByTestId('subject'))).toBe('button');
+  });
+
+  test('returns "text" for Text elements', async () => {
+    await render(<Text testID="subject">Hello</Text>);
+    expect(getRole(screen.getByTestId('subject'))).toBe('text');
+  });
+
+  test('returns "none" for elements without explicit role', async () => {
+    await render(<View testID="subject" />);
+    expect(getRole(screen.getByTestId('subject'))).toBe('none');
+  });
+
+  test('normalizes "image" role to "img"', async () => {
+    await render(<View testID="subject" accessibilityRole="image" />);
+    expect(getRole(screen.getByTestId('subject'))).toBe('img');
+  });
+});
+
+describe('normalizeRole', () => {
+  test('converts "image" to "img"', () => {
+    expect(normalizeRole('image')).toBe('img');
+  });
+
+  test('passes through other roles unchanged', () => {
+    expect(normalizeRole('button')).toBe('button');
+    expect(normalizeRole('link')).toBe('link');
+    expect(normalizeRole('none')).toBe('none');
+  });
+});
+
+describe('computeAriaBusy', () => {
+  test('returns false by default', async () => {
+    await render(<View testID="subject" />);
+    expect(computeAriaBusy(screen.getByTestId('subject'))).toBe(false);
+  });
+
+  test('supports aria-busy prop', async () => {
+    await render(<View testID="subject" aria-busy />);
+    expect(computeAriaBusy(screen.getByTestId('subject'))).toBe(true);
+  });
+
+  test('supports accessibilityState.busy', async () => {
+    await render(<View testID="subject" accessibilityState={{ busy: true }} />);
+    expect(computeAriaBusy(screen.getByTestId('subject'))).toBe(true);
+  });
+});
+
+describe('computeAriaChecked', () => {
+  test('returns undefined for roles that do not support checked', async () => {
+    await render(<View testID="subject" role="button" aria-checked />);
+    expect(computeAriaChecked(screen.getByTestId('subject'))).toBeUndefined();
+  });
+
+  test('supports aria-checked for checkbox role', async () => {
+    await render(
+      <View>
+        <View testID="checked" role="checkbox" aria-checked />
+        <View testID="unchecked" role="checkbox" aria-checked={false} />
+        <View testID="mixed" role="checkbox" aria-checked="mixed" />
+      </View>,
+    );
+    expect(computeAriaChecked(screen.getByTestId('checked'))).toBe(true);
+    expect(computeAriaChecked(screen.getByTestId('unchecked'))).toBe(false);
+    expect(computeAriaChecked(screen.getByTestId('mixed'))).toBe('mixed');
+  });
+
+  test('supports accessibilityState.checked for radio role', async () => {
+    await render(
+      <View testID="subject" accessibilityRole="radio" accessibilityState={{ checked: true }} />,
+    );
+    expect(computeAriaChecked(screen.getByTestId('subject'))).toBe(true);
+  });
+
+  test('supports Switch component value', async () => {
+    await render(
+      <View>
+        <Switch testID="on" value={true} />
+        <Switch testID="off" value={false} />
+      </View>,
+    );
+    expect(computeAriaChecked(screen.getByTestId('on'))).toBe(true);
+    expect(computeAriaChecked(screen.getByTestId('off'))).toBe(false);
+  });
+});
+
+describe('computeAriaExpanded', () => {
+  test('returns undefined by default', async () => {
+    await render(<View testID="subject" />);
+    expect(computeAriaExpanded(screen.getByTestId('subject'))).toBeUndefined();
+  });
+
+  test('supports aria-expanded prop', async () => {
+    await render(
+      <View>
+        <View testID="expanded" aria-expanded />
+        <View testID="collapsed" aria-expanded={false} />
+      </View>,
+    );
+    expect(computeAriaExpanded(screen.getByTestId('expanded'))).toBe(true);
+    expect(computeAriaExpanded(screen.getByTestId('collapsed'))).toBe(false);
+  });
+
+  test('supports accessibilityState.expanded', async () => {
+    await render(<View testID="subject" accessibilityState={{ expanded: true }} />);
+    expect(computeAriaExpanded(screen.getByTestId('subject'))).toBe(true);
+  });
+});
+
+describe('computeAriaSelected', () => {
+  test('returns false by default', async () => {
+    await render(<View testID="subject" />);
+    expect(computeAriaSelected(screen.getByTestId('subject'))).toBe(false);
+  });
+
+  test('supports aria-selected prop', async () => {
+    await render(<View testID="subject" aria-selected />);
+    expect(computeAriaSelected(screen.getByTestId('subject'))).toBe(true);
+  });
+
+  test('supports accessibilityState.selected', async () => {
+    await render(<View testID="subject" accessibilityState={{ selected: true }} />);
+    expect(computeAriaSelected(screen.getByTestId('subject'))).toBe(true);
+  });
+});
+
+describe('computeAriaValue', () => {
+  test('returns empty values by default', async () => {
+    await render(<View testID="subject" />);
+    expect(computeAriaValue(screen.getByTestId('subject'))).toEqual({
+      min: undefined,
+      max: undefined,
+      now: undefined,
+      text: undefined,
+    });
+  });
+
+  test('supports aria-value* props', async () => {
+    await render(
+      <View
+        testID="subject"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={50}
+        aria-valuetext="50%"
+      />,
+    );
+    expect(computeAriaValue(screen.getByTestId('subject'))).toEqual({
+      min: 0,
+      max: 100,
+      now: 50,
+      text: '50%',
+    });
+  });
+
+  test('supports accessibilityValue prop', async () => {
+    await render(
+      <View testID="subject" accessibilityValue={{ min: 0, max: 100, now: 25, text: '25%' }} />,
+    );
+    expect(computeAriaValue(screen.getByTestId('subject'))).toEqual({
+      min: 0,
+      max: 100,
+      now: 25,
+      text: '25%',
+    });
+  });
+
+  test('aria-value* props take precedence over accessibilityValue', async () => {
+    await render(
+      <View
+        testID="subject"
+        aria-valuenow={75}
+        accessibilityValue={{ min: 0, max: 100, now: 50, text: '50%' }}
+      />,
+    );
+    const value = computeAriaValue(screen.getByTestId('subject'));
+    expect(value.now).toBe(75);
+    expect(value.min).toBe(0);
   });
 });
 
