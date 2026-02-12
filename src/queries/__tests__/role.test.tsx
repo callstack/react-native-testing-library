@@ -135,16 +135,16 @@ describe('supports name option', () => {
     expect(screen.getByRole('button', { name: 'Save' }).props.testID).toBe('target-button');
   });
 
-  test('returns an element that has the corresponding role when several children include the name', async () => {
+  test('returns an element that has the corresponding role when several children provide the name', async () => {
     await render(
       <TouchableOpacity accessibilityRole="button" testID="target-button">
         <Text>Save</Text>
-        <Text>Save</Text>
+        <Text>As</Text>
       </TouchableOpacity>,
     );
 
     // assert on the testId to be sure that the returned element is the one with the accessibilityRole
-    expect(screen.getByRole('button', { name: 'Save' }).props.testID).toBe('target-button');
+    expect(screen.getByRole('button', { name: 'Save As' }).props.testID).toBe('target-button');
   });
 
   test('returns an element that has the corresponding role and a children with a matching accessibilityLabel', async () => {

@@ -1,8 +1,13 @@
 import React from 'react';
-import { Pressable, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { isHiddenFromAccessibility, isInaccessible, render, screen } from '../..';
-import { computeAriaDisabled, computeAriaLabel, isAccessibilityElement } from '../accessibility';
+import {
+  computeAccessibleName,
+  computeAriaDisabled,
+  computeAriaLabel,
+  isAccessibilityElement,
+} from '../accessibility';
 
 describe('isHiddenFromAccessibility', () => {
   test('returns false for accessible elements', async () => {
@@ -474,5 +479,118 @@ describe('computeAriaDisabled', () => {
     expect(computeAriaDisabled(screen.getByText('Default Text'))).toBe(false);
     expect(computeAriaDisabled(screen.getByText('Disabled Text'))).toBe(true);
     expect(computeAriaDisabled(screen.getByText('ARIA Disabled Text'))).toBe(true);
+  });
+});
+
+describe('computeAccessibleName', () => {
+  test('basic cases', async () => {
+    await render(
+      <>
+        <View testID="aria-label" aria-label="ARIA Label" />
+        <View testID="accessibility-label" accessibilityLabel="Accessibility Label" />
+        <View testID="text-content">
+          <Text>Text Content</Text>
+        </View>
+        <TextInput testID="text-input" placeholder="Text Input" />
+        <Image testID="image" alt="Image Alt" src="https://example.com/image.jpg" />
+      </>,
+    );
+    expect(computeAccessibleName(screen.getByTestId('aria-label'))).toBe('ARIA Label');
+    expect(computeAccessibleName(screen.getByTestId('accessibility-label'))).toBe(
+      'Accessibility Label',
+    );
+    expect(computeAccessibleName(screen.getByTestId('text-content'))).toBe('Text Content');
+    expect(computeAccessibleName(screen.getByTestId('text-input'))).toBe('Text Input');
+    expect(computeAccessibleName(screen.getByTestId('image'))).toBe('Image Alt');
+  });
+
+  test('basic precedence', async () => {
+    await render(
+      <>
+        <View testID="aria-label" aria-label="ARIA Label" accessibilityLabel="Accessibility Label">
+          <Text>Text Content</Text>
+        </View>
+        <View testID="accessibility-label" accessibilityLabel="Accessibility Label">
+          <Text>Text Content</Text>
+        </View>
+        <View testID="text-content">
+          <Text>Text Content</Text>
+        </View>
+      </>,
+    );
+    expect(computeAccessibleName(screen.getByTestId('aria-label'))).toBe('ARIA Label');
+    expect(computeAccessibleName(screen.getByTestId('accessibility-label'))).toBe(
+      'Accessibility Label',
+    );
+    expect(computeAccessibleName(screen.getByTestId('text-content'))).toBe('Text Content');
+  });
+
+  test('concatenates children accessible names', async () => {
+    await render(
+      <>
+        <View testID="multiple-text">
+          <Text>Hello</Text>
+          <Text>World</Text>
+        </View>
+        <View testID="nested-views">
+          <View>
+            <Text>Hello</Text>
+          </View>
+          <View>
+            <Text>World</Text>
+          </View>
+        </View>
+        <View testID="child-with-label">
+          <View aria-label="Hello" />
+          <Text>World</Text>
+        </View>
+        <View testID="deeply-nested">
+          <View>
+            <View>
+              <Text>Hello</Text>
+            </View>
+          </View>
+          <Text>World</Text>
+        </View>
+        <View testID="child-label-over-text">
+          <View aria-label="Hello">
+            <Text>Ignored</Text>
+          </View>
+          <Text>World</Text>
+        </View>
+        <View testID="child-accessibility-label-over-text">
+          <View accessibilityLabel="Hello">
+            <Text>Ignored</Text>
+          </View>
+          <Text>World</Text>
+        </View>
+      </>,
+    );
+    expect(computeAccessibleName(screen.getByTestId('multiple-text'))).toBe('Hello World');
+    expect(computeAccessibleName(screen.getByTestId('nested-views'))).toBe('Hello World');
+    expect(computeAccessibleName(screen.getByTestId('child-with-label'))).toBe('Hello World');
+    expect(computeAccessibleName(screen.getByTestId('deeply-nested'))).toBe('Hello World');
+    expect(computeAccessibleName(screen.getByTestId('child-label-over-text'))).toBe('Hello World');
+    expect(computeAccessibleName(screen.getByTestId('child-accessibility-label-over-text'))).toBe(
+      'Hello World',
+    );
+  });
+
+  test('TextInput placeholder is used only for the element itself', async () => {
+    await render(
+      <>
+        <TextInput testID="text-input" placeholder="Placeholder" />
+        <View testID="parent">
+          <TextInput placeholder="Placeholder" />
+          <Text>Hello</Text>
+        </View>
+        <View testID="parent-no-text">
+          <TextInput placeholder="Placeholder" />
+        </View>
+      </>,
+    );
+    expect(computeAccessibleName(screen.getByTestId('text-input'))).toBe('Placeholder');
+    expect(computeAccessibleName(screen.getByTestId('parent'))).toBe('Hello');
+    expect(computeAccessibleName(screen.getByTestId('parent-no-text'))).toBe('');
   });
 });

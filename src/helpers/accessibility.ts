@@ -244,8 +244,38 @@ export function computeAriaValue(element: HostElement): AccessibilityValue {
   };
 }
 
-export function computeAccessibleName(element: HostElement): string | undefined {
-  return computeAriaLabel(element) ?? getTextContent(element);
+type ComputeAccessibleNameOptions = {
+  root?: boolean;
+};
+
+export function computeAccessibleName(
+  element: HostElement,
+  options?: ComputeAccessibleNameOptions,
+): string | undefined {
+  const label = computeAriaLabel(element);
+  if (label) {
+    return label;
+  }
+
+  if (isHostTextInput(element) && element.props.placeholder && options?.root !== false) {
+    return element.props.placeholder;
+  }
+
+  const parts = [];
+  for (const child of element.children) {
+    if (typeof child === 'string') {
+      if (child) {
+        parts.push(child);
+      }
+    } else {
+      const childLabel = computeAccessibleName(child, { root: false });
+      if (childLabel) {
+        parts.push(childLabel);
+      }
+    }
+  }
+
+  return parts.join(' ');
 }
 
 type RoleSupportMap = Partial<Record<Role | AccessibilityRole, true>>;
