@@ -36,7 +36,7 @@ test('fireEvent passes event data to handler', async () => {
   const onPress = jest.fn();
   await render(<Pressable testID="btn" onPress={onPress} />);
   await fireEvent.press(screen.getByTestId('btn'), pressEventData);
-  expect(onPress).toHaveBeenCalledWith(pressEventData);
+  expect(onPress.mock.calls[0][0]).toMatchObject(pressEventData);
 });
 
 test('fireEvent passes multiple parameters to handler', async () => {
@@ -46,11 +46,11 @@ test('fireEvent passes multiple parameters to handler', async () => {
   expect(handlePress).toHaveBeenCalledWith('param1', 'param2', 'param3');
 });
 
-test('fireEvent returns handler return value', async () => {
+test('fireEvent.press returns undefined when event handler returns a value', async () => {
   const handler = jest.fn().mockReturnValue('result');
   await render(<Pressable testID="btn" onPress={handler} />);
   const result = await fireEvent.press(screen.getByTestId('btn'));
-  expect(result).toBe('result');
+  expect(result).toBe(undefined);
 });
 
 test('fireEvent bubbles event to parent handler', async () => {
@@ -115,7 +115,7 @@ describe('fireEvent.scroll', () => {
     );
     const scrollView = screen.getByTestId('scroll');
     await fireEvent.scroll(scrollView, verticalScrollEvent);
-    expect(onScroll).toHaveBeenCalledWith(verticalScrollEvent);
+    expect(onScroll.mock.calls[0][0]).toMatchObject(verticalScrollEvent);
     expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 0, y: 200 });
   });
 
@@ -171,7 +171,7 @@ describe('fireEvent.scroll', () => {
     );
     const scrollView = screen.getByTestId('scroll');
     await fireEvent.scroll(scrollView, horizontalScrollEvent);
-    expect(onScroll).toHaveBeenCalledWith(horizontalScrollEvent);
+    expect(onScroll.mock.calls[0][0]).toMatchObject(horizontalScrollEvent);
     expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 50, y: 0 });
   });
 

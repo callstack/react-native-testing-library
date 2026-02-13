@@ -16,6 +16,7 @@ import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
 import type { Point, StringWithAutocomplete } from './types';
+import { EventBuilder } from './user-event/event-builder';
 
 function isTouchResponder(element: HostElement) {
   return Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element);
@@ -142,14 +143,28 @@ async function fireEvent(element: HostElement, eventName: EventName, ...data: un
   return returnValue;
 }
 
-fireEvent.press = async (element: HostElement, ...data: unknown[]) =>
-  await fireEvent(element, 'press', ...data);
+type EventProps = Record<string, unknown>;
 
 fireEvent.changeText = async (element: HostElement, ...data: unknown[]) =>
   await fireEvent(element, 'changeText', ...data);
 
-fireEvent.scroll = async (element: HostElement, ...data: unknown[]) =>
-  await fireEvent(element, 'scroll', ...data);
+fireEvent.press = async (element: HostElement, eventProps?: EventProps) => {
+  const event = EventBuilder.Common.touch();
+  if (eventProps) {
+    mergeEventProps(event, eventProps);
+  }
+
+  await fireEvent(element, 'press', event);
+};
+
+fireEvent.scroll = async (element: HostElement, eventProps?: EventProps) => {
+  const event = EventBuilder.ScrollView.scroll();
+  if (eventProps) {
+    mergeEventProps(event, eventProps);
+  }
+
+  await fireEvent(element, 'scroll', event);
+};
 
 export { fireEvent };
 
@@ -192,4 +207,26 @@ function tryGetContentOffset(event: unknown): Point | null {
   }
 
   return null;
+}
+
+function mergeEventProps(target: Record<string, unknown>, source: Record<string, unknown>) {
+  for (const key of Object.keys(source)) {
+    const sourceValue = source[key];
+    const targetValue = target[key];
+    if (
+      sourceValue &&
+      typeof sourceValue === 'object' &&
+      !Array.isArray(sourceValue) &&
+      targetValue &&
+      typeof targetValue === 'object' &&
+      !Array.isArray(targetValue)
+    ) {
+      mergeEventProps(
+        targetValue as Record<string, unknown>,
+        sourceValue as Record<string, unknown>,
+      );
+    } else {
+      target[key] = sourceValue;
+    }
+  }
 }
