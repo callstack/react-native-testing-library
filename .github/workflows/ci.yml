@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [main]
+    branches: [main, v13-stable]
   pull_request:
     branches: ['**']
 
