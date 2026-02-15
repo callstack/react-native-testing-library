@@ -134,7 +134,7 @@ describe('fireEvent.scroll', () => {
     expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 0, y: 200 });
   });
 
-  test('without contentOffset does not update native state', async () => {
+  test('without contentOffset scrolls to (0, 0)', async () => {
     const onScroll = jest.fn();
     await render(
       <ScrollView testID="scroll" onScroll={onScroll}>
@@ -143,8 +143,10 @@ describe('fireEvent.scroll', () => {
     );
     const scrollView = screen.getByTestId('scroll');
     await fireEvent.scroll(scrollView, {});
-    expect(onScroll).toHaveBeenCalled();
-    expect(nativeState.contentOffsetForElement.get(scrollView)).toBeUndefined();
+    expect(onScroll.mock.calls[0][0]).toMatchObject({
+      nativeEvent: { contentOffset: { x: 0, y: 0 } },
+    });
+    expect(nativeState.contentOffsetForElement.get(scrollView)).toEqual({ x: 0, y: 0 });
   });
 
   test('with non-finite contentOffset values uses 0', async () => {
