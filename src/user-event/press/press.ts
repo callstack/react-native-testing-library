@@ -1,7 +1,11 @@
 import type { HostElement } from 'test-renderer';
 
 import { act } from '../../act';
-import { EventBuilder } from '../../event-builder';
+import {
+  buildResponderGrantEvent,
+  buildResponderReleaseEvent,
+  buildTouchEvent,
+} from '../../event-builder';
 import { getEventHandlerFromProps } from '../../event-handler';
 import { isHostElement } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
@@ -109,23 +113,23 @@ async function emitDirectPressEvents(
   options: BasePressOptions,
 ) {
   await wait(config);
-  await dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
+  await dispatchEvent(element, 'pressIn', buildTouchEvent());
 
   await wait(config, options.duration);
 
   // Long press events are emitted before `pressOut`.
   if (options.type === 'longPress') {
-    await dispatchEvent(element, 'longPress', EventBuilder.Common.touch());
+    await dispatchEvent(element, 'longPress', buildTouchEvent());
   }
 
-  await dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
+  await dispatchEvent(element, 'pressOut', buildTouchEvent());
 
   // Regular press events are emitted after `pressOut` according to the React Native docs.
   // See: https://reactnative.dev/docs/pressable#onpress
   // Experimentally for very short presses (< 130ms) `press` events are actually emitted before `onPressOut`, but
   // we will ignore that as in reality most pressed would be above the 130ms threshold.
   if (options.type === 'press') {
-    await dispatchEvent(element, 'press', EventBuilder.Common.touch());
+    await dispatchEvent(element, 'press', buildTouchEvent());
   }
 }
 
@@ -136,12 +140,12 @@ async function emitPressabilityPressEvents(
 ) {
   await wait(config);
 
-  await dispatchEvent(element, 'responderGrant', EventBuilder.Common.responderGrant());
+  await dispatchEvent(element, 'responderGrant', buildResponderGrantEvent());
 
   const duration = options.duration ?? DEFAULT_MIN_PRESS_DURATION;
   await wait(config, duration);
 
-  await dispatchEvent(element, 'responderRelease', EventBuilder.Common.responderRelease());
+  await dispatchEvent(element, 'responderRelease', buildResponderReleaseEvent());
 
   // React Native will wait for minimal delay of DEFAULT_MIN_PRESS_DURATION
   // before emitting the `pressOut` event. We need to wait here, so that

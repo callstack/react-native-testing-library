@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Text } from 'react-native';
 
 import { render, screen } from '../../..';
-import { EventBuilder } from '../../../event-builder';
+import { buildTouchEvent } from '../../../event-builder';
 import { dispatchEvent } from '../dispatch-event';
 
-const TOUCH_EVENT = EventBuilder.Common.touch();
+const TOUCH_EVENT = buildTouchEvent();
 
 describe('dispatchEvent', () => {
   it('does dispatch event', async () => {

@@ -8,7 +8,7 @@ import type {
 import type { Fiber, HostElement } from 'test-renderer';
 
 import { act } from './act';
-import { EventBuilder } from './event-builder';
+import { buildScrollEvent, buildTouchEvent } from './event-builder';
 import type { Point } from './event-builder/types';
 import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
@@ -150,7 +150,7 @@ fireEvent.changeText = async (element: HostElement, text: string) =>
   await fireEvent(element, 'changeText', text);
 
 fireEvent.press = async (element: HostElement, eventProps?: EventProps) => {
-  const event = EventBuilder.Common.touch();
+  const event = buildTouchEvent();
   if (eventProps) {
     mergeEventProps(event, eventProps);
   }
@@ -159,7 +159,7 @@ fireEvent.press = async (element: HostElement, eventProps?: EventProps) => {
 };
 
 fireEvent.scroll = async (element: HostElement, eventProps?: EventProps) => {
-  const event = EventBuilder.ScrollView.scroll();
+  const event = buildScrollEvent();
   if (eventProps) {
     mergeEventProps(event, eventProps);
   }

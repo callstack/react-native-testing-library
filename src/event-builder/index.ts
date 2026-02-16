@@ -1,9 +1,3 @@
-import { CommonEventBuilder } from './common';
-import { ScrollViewEventBuilder } from './scroll-view';
-import { TextInputEventBuilder } from './text-input';
-
-export const EventBuilder = {
-  Common: CommonEventBuilder,
-  ScrollView: ScrollViewEventBuilder,
-  TextInput: TextInputEventBuilder,
-};
+export * from './common';
+export * from './scroll';
+export * from './text';
