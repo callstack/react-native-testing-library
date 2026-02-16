@@ -9,7 +9,7 @@ function touch() {
   return {
     ...baseSyntheticEvent(),
     nativeEvent: {
-      changedTouches: [],
+      changedTouches: [] as number[],
       identifier: 0,
       locationX: 0,
       locationY: 0,
@@ -17,11 +17,13 @@ function touch() {
       pageY: 0,
       target: 0,
       timestamp: Date.now(),
-      touches: [],
+      touches: [] as number[],
     },
     currentTarget: { measure: () => {} },
   };
 }
+
+export type TouchEvent = ReturnType<typeof touch>;
 
 export const CommonEventBuilder = {
   touch,

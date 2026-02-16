@@ -8,6 +8,8 @@ import type {
 import type { Fiber, HostElement } from 'test-renderer';
 
 import { act } from './act';
+import { EventBuilder } from './event-builder';
+import type { Point } from './event-builder/types';
 import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
 import { isElementMounted } from './helpers/component-tree';
@@ -15,8 +17,7 @@ import { isHostScrollView, isHostTextInput } from './helpers/host-component-name
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
-import type { Point, StringWithAutocomplete } from './types';
-import { EventBuilder } from './user-event/event-builder';
+import type { StringWithAutocomplete } from './types';
 
 function isTouchResponder(element: HostElement) {
   return Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element);
@@ -145,8 +146,8 @@ async function fireEvent(element: HostElement, eventName: EventName, ...data: un
 
 type EventProps = Record<string, unknown>;
 
-fireEvent.changeText = async (element: HostElement, ...data: unknown[]) =>
-  await fireEvent(element, 'changeText', ...data);
+fireEvent.changeText = async (element: HostElement, text: string) =>
+  await fireEvent(element, 'changeText', text);
 
 fireEvent.press = async (element: HostElement, eventProps?: EventProps) => {
   const event = EventBuilder.Common.touch();

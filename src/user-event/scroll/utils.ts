@@ -1,4 +1,4 @@
-import type { Point } from '../../types';
+import type { Point } from '../../event-builder/types';
 
 const DEFAULT_STEPS_COUNT = 5;
 

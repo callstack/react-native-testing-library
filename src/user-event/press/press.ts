@@ -1,12 +1,12 @@
 import type { HostElement } from 'test-renderer';
 
 import { act } from '../../act';
+import { EventBuilder } from '../../event-builder';
 import { getEventHandlerFromProps } from '../../event-handler';
 import { isHostElement } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
-import { EventBuilder } from '../event-builder';
 import type { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait } from '../utils';
 

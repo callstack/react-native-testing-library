@@ -1,11 +1,11 @@
 import type { HostElement } from 'test-renderer';
 
+import { EventBuilder } from '../event-builder';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { isPointerEventEnabled } from '../helpers/pointer-events';
 import { getTextInputValue, isEditableTextInput } from '../helpers/text-input';
 import { nativeState } from '../native-state';
-import { EventBuilder } from './event-builder';
 import type { UserEventInstance } from './setup';
 import { dispatchEvent, getTextContentSize, wait } from './utils';
 

@@ -1,4 +1,4 @@
-import type { Size } from '../../types';
+import type { Size } from '../../event-builder/types';
 
 /**
  * Simple function for getting mock the size of given text.
