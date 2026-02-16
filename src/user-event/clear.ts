@@ -1,10 +1,15 @@
 import type { HostElement } from 'test-renderer';
 
+import {
+  buildBlurEvent,
+  buildEndEditingEvent,
+  buildFocusEvent,
+  buildTextSelectionChangeEvent,
+} from '../event-builder';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { isPointerEventEnabled } from '../helpers/pointer-events';
 import { getTextInputValue, isEditableTextInput } from '../helpers/text-input';
-import { EventBuilder } from './event-builder';
 import type { UserEventInstance } from './setup';
 import { emitTypingEvents } from './type/type';
 import { dispatchEvent, wait } from './utils';
@@ -22,7 +27,7 @@ export async function clear(this: UserEventInstance, element: HostElement): Prom
   }
 
   // 1. Enter element
-  await dispatchEvent(element, 'focus', EventBuilder.Common.focus());
+  await dispatchEvent(element, 'focus', buildFocusEvent());
 
   // 2. Select all
   const textToClear = getTextInputValue(element);
@@ -30,11 +35,7 @@ export async function clear(this: UserEventInstance, element: HostElement): Prom
     start: 0,
     end: textToClear.length,
   };
-  await dispatchEvent(
-    element,
-    'selectionChange',
-    EventBuilder.TextInput.selectionChange(selectionRange),
-  );
+  await dispatchEvent(element, 'selectionChange', buildTextSelectionChangeEvent(selectionRange));
 
   // 3. Press backspace with selected text
   const emptyText = '';
@@ -46,6 +47,6 @@ export async function clear(this: UserEventInstance, element: HostElement): Prom
 
   // 4. Exit element
   await wait(this.config);
-  await dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(emptyText));
-  await dispatchEvent(element, 'blur', EventBuilder.Common.blur());
+  await dispatchEvent(element, 'endEditing', buildEndEditingEvent(emptyText));
+  await dispatchEvent(element, 'blur', buildBlurEvent());
 }

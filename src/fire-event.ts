@@ -8,6 +8,7 @@ import type {
 import type { Fiber, HostElement } from 'test-renderer';
 
 import { act } from './act';
+import { buildScrollEvent, buildTouchEvent } from './event-builder';
 import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
 import { isElementMounted } from './helpers/component-tree';
@@ -142,14 +143,28 @@ async function fireEvent(element: HostElement, eventName: EventName, ...data: un
   return returnValue;
 }
 
-fireEvent.press = async (element: HostElement, ...data: unknown[]) =>
-  await fireEvent(element, 'press', ...data);
+type EventProps = Record<string, unknown>;
 
-fireEvent.changeText = async (element: HostElement, ...data: unknown[]) =>
-  await fireEvent(element, 'changeText', ...data);
+fireEvent.changeText = async (element: HostElement, text: string) =>
+  await fireEvent(element, 'changeText', text);
 
-fireEvent.scroll = async (element: HostElement, ...data: unknown[]) =>
-  await fireEvent(element, 'scroll', ...data);
+fireEvent.press = async (element: HostElement, eventProps?: EventProps) => {
+  const event = buildTouchEvent();
+  if (eventProps) {
+    mergeEventProps(event, eventProps);
+  }
+
+  await fireEvent(element, 'press', event);
+};
+
+fireEvent.scroll = async (element: HostElement, eventProps?: EventProps) => {
+  const event = buildScrollEvent();
+  if (eventProps) {
+    mergeEventProps(event, eventProps);
+  }
+
+  await fireEvent(element, 'scroll', event);
+};
 
 export { fireEvent };
 
@@ -192,4 +207,26 @@ function tryGetContentOffset(event: unknown): Point | null {
   }
 
   return null;
+}
+
+function mergeEventProps(target: Record<string, unknown>, source: Record<string, unknown>) {
+  for (const key of Object.keys(source)) {
+    const sourceValue = source[key];
+    const targetValue = target[key];
+    if (
+      sourceValue != null &&
+      typeof sourceValue === 'object' &&
+      !Array.isArray(sourceValue) &&
+      targetValue &&
+      typeof targetValue === 'object' &&
+      !Array.isArray(targetValue)
+    ) {
+      mergeEventProps(
+        targetValue as Record<string, unknown>,
+        sourceValue as Record<string, unknown>,
+      );
+    } else {
+      target[key] = sourceValue;
+    }
+  }
 }
