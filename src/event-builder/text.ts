@@ -1,5 +1,5 @@
+import type { Size, TextRange } from '../types';
 import { baseSyntheticEvent } from './base';
-import type { Size, TextRange } from './types';
 
 /**
  * Experimental values:

@@ -1,5 +1,5 @@
+import type { Point, Size } from '../types';
 import { baseSyntheticEvent } from './base';
-import type { Point, Size } from './types';
 
 /**
  * Other options for constructing a scroll event.
