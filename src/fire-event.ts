@@ -9,7 +9,6 @@ import type { Fiber, HostElement } from 'test-renderer';
 
 import { act } from './act';
 import { buildScrollEvent, buildTouchEvent } from './event-builder';
-import type { Point } from './event-builder/types';
 import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
 import { isElementMounted } from './helpers/component-tree';
@@ -17,7 +16,7 @@ import { isHostScrollView, isHostTextInput } from './helpers/host-component-name
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
-import type { StringWithAutocomplete } from './types';
+import type { Point, StringWithAutocomplete } from './types';
 
 function isTouchResponder(element: HostElement) {
   return Boolean(element.props.onStartShouldSetResponder) || isHostTextInput(element);
@@ -215,7 +214,7 @@ function mergeEventProps(target: Record<string, unknown>, source: Record<string,
     const sourceValue = source[key];
     const targetValue = target[key];
     if (
-      sourceValue &&
+      sourceValue != null &&
       typeof sourceValue === 'object' &&
       !Array.isArray(sourceValue) &&
       targetValue &&

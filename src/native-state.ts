@@ -1,6 +1,6 @@
 import type { HostElement } from 'test-renderer';
 
-import type { Point } from './event-builder/types';
+import type { Point } from './types';
 
 /**
  * Simulated native state for unmanaged controls.

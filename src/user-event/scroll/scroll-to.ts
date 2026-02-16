@@ -2,11 +2,11 @@ import { stringify } from 'jest-matcher-utils';
 import type { HostElement } from 'test-renderer';
 
 import { buildScrollEvent } from '../../event-builder';
-import type { Point, Size } from '../../event-builder/types';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';
 import { nativeState } from '../../native-state';
+import type { Point, Size } from '../../types';
 import type { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait } from '../utils';
 import { createScrollSteps, inertialInterpolator, linearInterpolator } from './utils';

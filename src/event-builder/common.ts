@@ -9,7 +9,7 @@ export function buildTouchEvent() {
   return {
     ...baseSyntheticEvent(),
     nativeEvent: {
-      changedTouches: [] as number[],
+      changedTouches: [] as unknown[],
       identifier: 0,
       locationX: 0,
       locationY: 0,
@@ -17,7 +17,7 @@ export function buildTouchEvent() {
       pageY: 0,
       target: 0,
       timestamp: Date.now(),
-      touches: [] as number[],
+      touches: [] as unknown[],
     },
     currentTarget: { measure: () => {} },
   };
