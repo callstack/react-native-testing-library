@@ -21,10 +21,13 @@ test('buildScrollEvent uses provided offset', () => {
 });
 
 test('buildScrollEvent uses provided options', () => {
-  const event = buildScrollEvent({ y: 0, x: 0 }, {
-    contentSize: { height: 1000, width: 400 },
-    layoutMeasurement: { height: 800, width: 400 },
-  });
+  const event = buildScrollEvent(
+    { y: 0, x: 0 },
+    {
+      contentSize: { height: 1000, width: 400 },
+      layoutMeasurement: { height: 800, width: 400 },
+    },
+  );
 
   expect(event.nativeEvent.contentSize).toEqual({ height: 1000, width: 400 });
   expect(event.nativeEvent.layoutMeasurement).toEqual({ height: 800, width: 400 });

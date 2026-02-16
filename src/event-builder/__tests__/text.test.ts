@@ -1,10 +1,10 @@
 import {
-  buildTextChangeEvent,
+  buildContentSizeChangeEvent,
+  buildEndEditingEvent,
   buildKeyPressEvent,
   buildSubmitEditingEvent,
-  buildEndEditingEvent,
+  buildTextChangeEvent,
   buildTextSelectionChangeEvent,
-  buildContentSizeChangeEvent,
 } from '../text';
 
 test('buildTextChangeEvent returns event with text', () => {

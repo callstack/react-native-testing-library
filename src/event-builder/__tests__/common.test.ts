@@ -1,9 +1,9 @@
 import {
-  buildTouchEvent,
+  buildBlurEvent,
+  buildFocusEvent,
   buildResponderGrantEvent,
   buildResponderReleaseEvent,
-  buildFocusEvent,
-  buildBlurEvent,
+  buildTouchEvent,
 } from '../common';
 
 test('buildTouchEvent returns event with touch nativeEvent', () => {
