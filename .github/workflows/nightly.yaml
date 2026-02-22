@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint - ${{ matrix.rn-version }}
     strategy:
+      fail-fast: false
       matrix:
         rn-version: [latest, next, nightly]
     steps:
@@ -43,6 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Typecheck - ${{ matrix.rn-version }}
     strategy:
+      fail-fast: false
       matrix:
         rn-version: [latest, next, nightly]
     steps:
@@ -68,6 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Test - ${{ matrix.rn-version }}
     strategy:
+      fail-fast: false
       matrix:
         rn-version: [latest, next, nightly]
     steps:

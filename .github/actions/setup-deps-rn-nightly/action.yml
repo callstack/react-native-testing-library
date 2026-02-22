@@ -33,7 +33,3 @@ runs:
           @react-native/babel-preset@nightly \
           @react-native/jest-preset@nightly
       shell: bash
-
-    - name: Patch jest.config.js for nightly preset
-      run: bash scripts/setup-rn-jest-preset.sh
-      shell: bash
