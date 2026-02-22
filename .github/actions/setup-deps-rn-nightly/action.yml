@@ -30,5 +30,6 @@ runs:
       run: |
         yarn add -D \
           react-native@nightly \
-          @react-native/babel-preset@nightly
+          @react-native/babel-preset@nightly \
+          @react-native/jest-preset@nightly
       shell: bash
