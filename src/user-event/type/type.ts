@@ -1,11 +1,21 @@
 import type { HostElement } from 'test-renderer';
 
+import {
+  buildBlurEvent,
+  buildContentSizeChangeEvent,
+  buildEndEditingEvent,
+  buildFocusEvent,
+  buildKeyPressEvent,
+  buildSubmitEditingEvent,
+  buildTextChangeEvent,
+  buildTextSelectionChangeEvent,
+  buildTouchEvent,
+} from '../../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import { getTextInputValue, isEditableTextInput } from '../../helpers/text-input';
 import { nativeState } from '../../native-state';
-import { EventBuilder } from '../event-builder';
 import type { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, getTextContentSize, wait } from '../utils';
 import { parseKeys } from './parse-keys';
@@ -37,14 +47,14 @@ export async function type(
   const keys = parseKeys(text);
 
   if (!options?.skipPress) {
-    await dispatchEvent(element, 'pressIn', EventBuilder.Common.touch());
+    await dispatchEvent(element, 'pressIn', buildTouchEvent());
   }
 
-  await dispatchEvent(element, 'focus', EventBuilder.Common.focus());
+  await dispatchEvent(element, 'focus', buildFocusEvent());
 
   if (!options?.skipPress) {
     await wait(this.config);
-    await dispatchEvent(element, 'pressOut', EventBuilder.Common.touch());
+    await dispatchEvent(element, 'pressOut', buildTouchEvent());
   }
 
   let currentText = getTextInputValue(element);
@@ -66,12 +76,12 @@ export async function type(
   await wait(this.config);
 
   if (options?.submitEditing) {
-    await dispatchEvent(element, 'submitEditing', EventBuilder.TextInput.submitEditing(finalText));
+    await dispatchEvent(element, 'submitEditing', buildSubmitEditingEvent(finalText));
   }
 
   if (!options?.skipBlur) {
-    await dispatchEvent(element, 'endEditing', EventBuilder.TextInput.endEditing(finalText));
-    await dispatchEvent(element, 'blur', EventBuilder.Common.blur());
+    await dispatchEvent(element, 'endEditing', buildEndEditingEvent(finalText));
+    await dispatchEvent(element, 'blur', buildBlurEvent());
   }
 }
 
@@ -89,7 +99,7 @@ export async function emitTypingEvents(
   const isMultiline = element.props.multiline === true;
 
   await wait(config);
-  await dispatchEvent(element, 'keyPress', EventBuilder.TextInput.keyPress(key));
+  await dispatchEvent(element, 'keyPress', buildKeyPressEvent(key));
 
   // Platform difference (based on experiments):
   // - iOS and RN Web: TextInput emits only `keyPress` event when max length has been reached
@@ -99,28 +109,20 @@ export async function emitTypingEvents(
   }
 
   nativeState.valueForElement.set(element, text);
-  await dispatchEvent(element, 'change', EventBuilder.TextInput.change(text));
+  await dispatchEvent(element, 'change', buildTextChangeEvent(text));
   await dispatchEvent(element, 'changeText', text);
 
   const selectionRange = {
     start: text.length,
     end: text.length,
   };
-  await dispatchEvent(
-    element,
-    'selectionChange',
-    EventBuilder.TextInput.selectionChange(selectionRange),
-  );
+  await dispatchEvent(element, 'selectionChange', buildTextSelectionChangeEvent(selectionRange));
 
   // According to the docs only multiline TextInput emits contentSizeChange event
   // @see: https://reactnative.dev/docs/textinput#oncontentsizechange
   if (isMultiline) {
     const contentSize = getTextContentSize(text);
-    await dispatchEvent(
-      element,
-      'contentSizeChange',
-      EventBuilder.TextInput.contentSizeChange(contentSize),
-    );
+    await dispatchEvent(element, 'contentSizeChange', buildContentSizeChangeEvent(contentSize));
   }
 }
 

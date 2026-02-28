@@ -1,12 +1,12 @@
 import { stringify } from 'jest-matcher-utils';
 import type { HostElement } from 'test-renderer';
 
+import { buildScrollEvent } from '../../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';
 import { nativeState } from '../../native-state';
 import type { Point, Size } from '../../types';
-import { EventBuilder } from '../event-builder';
 import type { UserEventConfig, UserEventInstance } from '../setup';
 import { dispatchEvent, wait } from '../utils';
 import { createScrollSteps, inertialInterpolator, linearInterpolator } from './utils';
@@ -88,31 +88,19 @@ async function emitDragScrollEvents(
   }
 
   await wait(config);
-  await dispatchEvent(
-    element,
-    'scrollBeginDrag',
-    EventBuilder.ScrollView.scroll(scrollSteps[0], scrollOptions),
-  );
+  await dispatchEvent(element, 'scrollBeginDrag', buildScrollEvent(scrollSteps[0], scrollOptions));
 
   // Note: experimentally, in case of drag scroll the last scroll step
   // will not trigger `scroll` event.
   // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
   for (let i = 1; i < scrollSteps.length - 1; i += 1) {
     await wait(config);
-    await dispatchEvent(
-      element,
-      'scroll',
-      EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions),
-    );
+    await dispatchEvent(element, 'scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
   }
 
   await wait(config);
   const lastStep = scrollSteps.at(-1);
-  await dispatchEvent(
-    element,
-    'scrollEndDrag',
-    EventBuilder.ScrollView.scroll(lastStep, scrollOptions),
-  );
+  await dispatchEvent(element, 'scrollEndDrag', buildScrollEvent(lastStep, scrollOptions));
 }
 
 async function emitMomentumScrollEvents(
@@ -129,7 +117,7 @@ async function emitMomentumScrollEvents(
   await dispatchEvent(
     element,
     'momentumScrollBegin',
-    EventBuilder.ScrollView.scroll(scrollSteps[0], scrollOptions),
+    buildScrollEvent(scrollSteps[0], scrollOptions),
   );
 
   // Note: experimentally, in case of momentum scroll the last scroll step
@@ -137,20 +125,12 @@ async function emitMomentumScrollEvents(
   // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
   for (let i = 1; i < scrollSteps.length; i += 1) {
     await wait(config);
-    await dispatchEvent(
-      element,
-      'scroll',
-      EventBuilder.ScrollView.scroll(scrollSteps[i], scrollOptions),
-    );
+    await dispatchEvent(element, 'scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
   }
 
   await wait(config);
   const lastStep = scrollSteps.at(-1);
-  await dispatchEvent(
-    element,
-    'momentumScrollEnd',
-    EventBuilder.ScrollView.scroll(lastStep, scrollOptions),
-  );
+  await dispatchEvent(element, 'momentumScrollEnd', buildScrollEvent(lastStep, scrollOptions));
 }
 
 function ensureScrollViewDirection(element: HostElement, options: ScrollToOptions) {

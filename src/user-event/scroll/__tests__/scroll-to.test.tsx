@@ -135,7 +135,7 @@ describe('scrollTo()', () => {
     });
     await user.scrollTo(screen.getByTestId('scrollView'), { y: 200 });
     expect(mapEventsToShortForm(events)).toEqual([
-      ['scroll', 100, undefined],
+      ['scroll', 100, 0],
       ['scrollBeginDrag', 100, 0],
       ['scroll', 125, 0],
       ['scroll', 150, 0],
