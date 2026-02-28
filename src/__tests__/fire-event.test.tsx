@@ -21,6 +21,10 @@ const verticalScrollEvent = { nativeEvent: { contentOffset: { y: 200 } } };
 const horizontalScrollEvent = { nativeEvent: { contentOffset: { x: 50 } } };
 const pressEventData = { nativeEvent: { pageX: 20, pageY: 30 } };
 
+beforeEach(() => {
+  jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
+});
+
 test('fireEvent accepts event name with or without "on" prefix', async () => {
   const onPress = jest.fn();
   await render(<Pressable testID="btn" onPress={onPress} />);
@@ -65,6 +69,71 @@ test('fireEvent bubbles event to parent handler', async () => {
 });
 
 describe('fireEvent.press', () => {
+  test('passes default press event object to handler', async () => {
+    const onPress = jest.fn();
+    await render(<Pressable testID="btn" onPress={onPress} />);
+    await fireEvent.press(screen.getByTestId('btn'));
+    expect(onPress.mock.calls[0][0]).toMatchInlineSnapshot(`
+      {
+        "currentTarget": {
+          "measure": [Function],
+        },
+        "isDefaultPrevented": [Function],
+        "isPersistent": [Function],
+        "isPropagationStopped": [Function],
+        "nativeEvent": {
+          "changedTouches": [],
+          "identifier": 0,
+          "locationX": 0,
+          "locationY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "target": 0,
+          "timestamp": 100100100100,
+          "touches": [],
+        },
+        "persist": [Function],
+        "preventDefault": [Function],
+        "stopPropagation": [Function],
+        "target": {},
+        "timeStamp": 0,
+      }
+    `);
+  });
+
+  test('overrides default event properties with passed event props', async () => {
+    const onPress = jest.fn();
+    await render(<Pressable testID="btn" onPress={onPress} />);
+    const customEventData = { nativeEvent: { pageX: 20, pageY: 30 } };
+    await fireEvent.press(screen.getByTestId('btn'), customEventData);
+    expect(onPress.mock.calls[0][0]).toMatchInlineSnapshot(`
+      {
+        "currentTarget": {
+          "measure": [Function],
+        },
+        "isDefaultPrevented": [Function],
+        "isPersistent": [Function],
+        "isPropagationStopped": [Function],
+        "nativeEvent": {
+          "changedTouches": [],
+          "identifier": 0,
+          "locationX": 0,
+          "locationY": 0,
+          "pageX": 20,
+          "pageY": 30,
+          "target": 0,
+          "timestamp": 100100100100,
+          "touches": [],
+        },
+        "persist": [Function],
+        "preventDefault": [Function],
+        "stopPropagation": [Function],
+        "target": {},
+        "timeStamp": 0,
+      }
+    `);
+  });
+
   test.each([
     ['Pressable', Pressable],
     ['TouchableOpacity', TouchableOpacity],
@@ -106,6 +175,107 @@ describe('fireEvent.changeText', () => {
 });
 
 describe('fireEvent.scroll', () => {
+  test('passes default scroll event object to handler', async () => {
+    const onScroll = jest.fn();
+    await render(
+      <ScrollView testID="scroll" onScroll={onScroll}>
+        <Text>Content</Text>
+      </ScrollView>,
+    );
+    const scrollView = screen.getByTestId('scroll');
+    await fireEvent.scroll(scrollView);
+    expect(onScroll.mock.calls[0][0]).toMatchInlineSnapshot(`
+      {
+        "currentTarget": {},
+        "isDefaultPrevented": [Function],
+        "isPersistent": [Function],
+        "isPropagationStopped": [Function],
+        "nativeEvent": {
+          "contentInset": {
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "top": 0,
+          },
+          "contentOffset": {
+            "x": 0,
+            "y": 0,
+          },
+          "contentSize": {
+            "height": 0,
+            "width": 0,
+          },
+          "layoutMeasurement": {
+            "height": 0,
+            "width": 0,
+          },
+          "responderIgnoreScroll": true,
+          "target": 0,
+          "velocity": {
+            "x": 0,
+            "y": 0,
+          },
+        },
+        "persist": [Function],
+        "preventDefault": [Function],
+        "stopPropagation": [Function],
+        "target": {},
+        "timeStamp": 0,
+      }
+    `);
+  });
+
+  test('overrides default event properties with passed event props', async () => {
+    const onScroll = jest.fn();
+    await render(
+      <ScrollView testID="scroll" onScroll={onScroll}>
+        <Text>Content</Text>
+      </ScrollView>,
+    );
+    const scrollView = screen.getByTestId('scroll');
+    const customEventData = { nativeEvent: { contentOffset: { x: 50, y: 200 } } };
+    await fireEvent.scroll(scrollView, customEventData);
+    expect(onScroll.mock.calls[0][0]).toMatchInlineSnapshot(`
+      {
+        "currentTarget": {},
+        "isDefaultPrevented": [Function],
+        "isPersistent": [Function],
+        "isPropagationStopped": [Function],
+        "nativeEvent": {
+          "contentInset": {
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "top": 0,
+          },
+          "contentOffset": {
+            "x": 50,
+            "y": 200,
+          },
+          "contentSize": {
+            "height": 0,
+            "width": 0,
+          },
+          "layoutMeasurement": {
+            "height": 0,
+            "width": 0,
+          },
+          "responderIgnoreScroll": true,
+          "target": 0,
+          "velocity": {
+            "x": 0,
+            "y": 0,
+          },
+        },
+        "persist": [Function],
+        "preventDefault": [Function],
+        "stopPropagation": [Function],
+        "target": {},
+        "timeStamp": 0,
+      }
+    `);
+  });
+
   test('works on ScrollView', async () => {
     const onScroll = jest.fn();
     await render(
