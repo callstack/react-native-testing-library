@@ -57,5 +57,10 @@ test('userEvent can invoke press events for RNGH Pressable', async () => {
 
   const pressable = screen.getByTestId('pressable');
   await user.press(pressable);
-  expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
+
+  // Typical event order is pressIn, pressOut, press
+  // But sometimes due to a race condition, the order is pressIn, press, pressOut.
+  expect(['pressIn,pressOut,press', 'pressIn,press,pressOut']).toContain(
+    getEventsNames(events).join(','),
+  );
 });

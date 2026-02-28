@@ -36,10 +36,9 @@ describe('userEvent.press with real timers', () => {
     await user.press(screen.getByTestId('pressable'));
     // Typical event order is pressIn, pressOut, press
     // But sometimes due to a race condition, the order is pressIn, press, pressOut.
-    const eventSequence = getEventsNames(events).join(', ');
-    expect(
-      eventSequence === 'pressIn, pressOut, press' || eventSequence === 'pressIn, press, pressOut',
-    ).toBe(true);
+    expect(['pressIn,pressOut,press', 'pressIn,press,pressOut']).toContain(
+      getEventsNames(events).join(','),
+    );
   });
 
   test('works on TouchableOpacity', async () => {
@@ -203,12 +202,11 @@ describe('userEvent.press with real timers', () => {
     );
     await user.press(screen.getByTestId('pressable'));
 
-    const eventSequence = getEventsNames(events).join(', ');
     // Typical event order is pressIn, pressOut, press
     // But sometimes due to a race condition, the order is pressIn, press, pressOut.
-    expect(
-      eventSequence === 'pressIn, pressOut, press' || eventSequence === 'pressIn, press, pressOut',
-    ).toBe(true);
+    expect(['pressIn,pressOut,press', 'pressIn,press,pressOut']).toContain(
+      getEventsNames(events).join(','),
+    );
   });
 
   test('crawls up in the tree to find an element that responds to touch events', async () => {
