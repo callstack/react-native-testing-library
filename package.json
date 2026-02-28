@@ -90,7 +90,7 @@
     "jest": "^30.2.0",
     "prettier": "^3.6.2",
     "react": "19.2.3",
-    "react-native": "0.84.0",
+    "react-native": "0.84.1",
     "react-native-gesture-handler": "^2.30.0",
     "react-test-renderer": "19.2.3",
     "release-it": "^19.0.6",

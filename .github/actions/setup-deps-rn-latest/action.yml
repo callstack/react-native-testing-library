@@ -28,5 +28,6 @@ runs:
 
     - name: Switch to React Native Latest
       run: |
-        yarn add -D react-native@latest @react-native/babel-preset@latest
+        yarn add -D react-native@latest \
+          @react-native/babel-preset@latest
       shell: bash
