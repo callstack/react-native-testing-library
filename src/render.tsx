@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { StyleProp } from 'react-native';
 import {
   createRoot,
   type HostElement,
@@ -39,6 +40,10 @@ export async function render<T>(element: React.ReactElement<T>, options: RenderO
   const rendererOptions: RootOptions = {
     textComponentTypes: HOST_TEXT_NAMES,
     publicTextComponentTypes: ['Text'],
+    transformHiddenInstanceProps: ({ props }) => ({
+      ...props,
+      style: withHiddenStyle(props.style as StyleProp<StyleLike>),
+    }),
   };
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);
@@ -116,4 +121,14 @@ function makeDebug(renderer: Root): DebugFunction {
     }
   }
   return debugImpl;
+}
+
+type StyleLike = Record<string, unknown>;
+
+function withHiddenStyle(style: StyleProp<StyleLike>): StyleProp<StyleLike> {
+  if (style == null) {
+    return null;
+  }
+
+  return [style, { display: 'none' }];
 }
