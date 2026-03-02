@@ -7,7 +7,7 @@ import {
   buildTouchEvent,
 } from '../../event-builder';
 import { getEventHandlerFromProps } from '../../event-handler';
-import { isHostElement } from '../../helpers/component-tree';
+import { isTestInstance } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
 import { isPointerEventEnabled } from '../../helpers/pointer-events';
@@ -24,7 +24,7 @@ export interface PressOptions {
 }
 
 export async function press(this: UserEventInstance, element: HostElement): Promise<void> {
-  if (!isHostElement(element)) {
+  if (!isTestInstance(element)) {
     throw new ErrorWithStack(`press() works only with host elements.`, press);
   }
 
@@ -38,7 +38,7 @@ export async function longPress(
   element: HostElement,
   options?: PressOptions,
 ): Promise<void> {
-  if (!isHostElement(element)) {
+  if (!isTestInstance(element)) {
     throw new ErrorWithStack(`longPress() works only with host elements.`, longPress);
   }
 

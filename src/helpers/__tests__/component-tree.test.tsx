@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { render, screen } from '../..';
-import { getContainerElement, getHostSiblings } from '../component-tree';
+import { getContainerElement, getInstanceSiblings } from '../component-tree';
 
 function MultipleHostChildren() {
   return (
@@ -27,7 +27,7 @@ describe('getHostSiblings()', () => {
       </View>,
     );
 
-    const hostSiblings = getHostSiblings(screen.getByTestId('subject'));
+    const hostSiblings = getInstanceSiblings(screen.getByTestId('subject'));
     expect(hostSiblings).toEqual([
       screen.getByTestId('siblingBefore'),
       screen.getByTestId('siblingAfter'),
