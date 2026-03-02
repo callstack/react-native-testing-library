@@ -92,7 +92,7 @@
     "react-native": "0.84.0",
     "react-native-gesture-handler": "^2.30.0",
     "release-it": "^19.0.6",
-    "test-renderer": "0.14.0",
+    "test-renderer": "0.15.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.47.0"
   },

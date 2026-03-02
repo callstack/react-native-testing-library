@@ -24,8 +24,6 @@ export interface RenderOptions {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapper?: React.ComponentType<any>;
-
-  createNodeMock?: (element: React.ReactElement) => object;
 }
 
 export type RenderResult = Awaited<ReturnType<typeof render>>;
@@ -35,13 +33,12 @@ export type RenderResult = Awaited<ReturnType<typeof render>>;
  * to assert on the output.
  */
 export async function render<T>(element: React.ReactElement<T>, options: RenderOptions = {}) {
-  const { wrapper: Wrapper, createNodeMock, ...rest } = options || {};
+  const { wrapper: Wrapper, ...rest } = options || {};
   validateOptions('render', rest, render);
 
   const rendererOptions: RootOptions = {
     textComponentTypes: HOST_TEXT_NAMES,
     publicTextComponentTypes: ['Text'],
-    createNodeMock,
   };
 
   const wrap = (element: React.ReactElement) => (Wrapper ? <Wrapper>{element}</Wrapper> : element);

@@ -3011,7 +3011,7 @@ __metadata:
     react-native-gesture-handler: "npm:^2.30.0"
     redent: "npm:^3.0.0"
     release-it: "npm:^19.0.6"
-    test-renderer: "npm:0.14.0"
+    test-renderer: "npm:0.15.0"
     typescript: "npm:^5.9.3"
     typescript-eslint: "npm:^8.47.0"
   peerDependencies:
@@ -10416,15 +10416,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"test-renderer@npm:0.14.0":
-  version: 0.14.0
-  resolution: "test-renderer@npm:0.14.0"
+"test-renderer@npm:0.15.0":
+  version: 0.15.0
+  resolution: "test-renderer@npm:0.15.0"
   dependencies:
     "@types/react-reconciler": "npm:~0.31.0"
     react-reconciler: "npm:~0.31.0"
   peerDependencies:
     react: ^19.0.0
-  checksum: 10c0/d259f5d146f57bb6689cb828de73cd95a559bc3203f1a21824b027a6b43143447bbf60eed5d2f8ea18b806ee15002aa6ba1d023e01669fa9945ca8278391667d
+  checksum: 10c0/80a81a042dfe803afffbb391bf6ca802e534e235e6361dc121ad848a8acd3ab97c857f04da4f77ad884df01e5f005f197100dbac5906ad901dac29a3c27f24b4
   languageName: node
   linkType: hard
 

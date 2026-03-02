@@ -2,7 +2,7 @@ import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import redent from 'redent';
 import type { HostElement } from 'test-renderer';
 
-import { isHostElement } from '../helpers/component-tree';
+import { isTestInstance } from '../helpers/component-tree';
 import { formatElementList } from '../helpers/format-element';
 import { checkHostElement } from './utils';
 
@@ -10,7 +10,7 @@ export function toBeEmptyElement(this: jest.MatcherContext, element: HostElement
   checkHostElement(element, toBeEmptyElement, this);
 
   // TODO check
-  const children = element.children.filter((child) => isHostElement(child));
+  const children = element.children.filter((child) => isTestInstance(child));
 
   return {
     pass: children.length === 0,
