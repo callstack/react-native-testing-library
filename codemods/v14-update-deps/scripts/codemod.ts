@@ -4,7 +4,7 @@ import type { Transform } from 'codemod:ast-grep';
 import type JSONLang from 'codemod:ast-grep/langs/json';
 
 const RNTL_VERSION = '^14.0.0-beta.0';
-const TEST_RENDERER_VERSION = '0.14.0';
+const TEST_RENDERER_VERSION = '0.16.0';
 
 interface PackageJson {
   dependencies?: Record<string, string>;
