@@ -16,25 +16,46 @@ concurrency:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: Lint - ${{ matrix.rn-version }}
+    name: Lint - ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
-        rn-version: [latest, next, nightly]
+        include:
+          - name: RN 0.84.0
+            react-version: 19.2.3
+            react-native-version: 0.84.0
+            setup: stable
+          - name: RN 0.85.0
+            react-version: 19.2.3
+            react-native-version: 0.85.0
+            setup: stable
+          - name: RN Latest
+            setup: latest
+          - name: RN Next
+            setup: next
+          - name: RN Nightly
+            setup: nightly
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
+      - name: Setup Node.js and deps (stable)
+        if: matrix.setup == 'stable'
+        uses: ./.github/actions/setup-deps
+        with:
+          react-version: ${{ matrix.react-version }}
+          react-native-version: ${{ matrix.react-native-version }}
+
       - name: Setup Node.js and deps (latest)
-        if: matrix.rn-version == 'latest'
+        if: matrix.setup == 'latest'
         uses: ./.github/actions/setup-deps-rn-latest
 
       - name: Setup Node.js and deps (next)
-        if: matrix.rn-version == 'next'
+        if: matrix.setup == 'next'
         uses: ./.github/actions/setup-deps-rn-next
 
       - name: Setup Node.js and deps (nightly)
-        if: matrix.rn-version == 'nightly'
+        if: matrix.setup == 'nightly'
         uses: ./.github/actions/setup-deps-rn-nightly
 
       - name: Lint
@@ -42,25 +63,46 @@ jobs:
 
   typecheck:
     runs-on: ubuntu-latest
-    name: Typecheck - ${{ matrix.rn-version }}
+    name: Typecheck - ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
-        rn-version: [latest, next, nightly]
+        include:
+          - name: RN 0.84.0
+            react-version: 19.2.3
+            react-native-version: 0.84.0
+            setup: stable
+          - name: RN 0.85.0
+            react-version: 19.2.3
+            react-native-version: 0.85.0
+            setup: stable
+          - name: RN Latest
+            setup: latest
+          - name: RN Next
+            setup: next
+          - name: RN Nightly
+            setup: nightly
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
+      - name: Setup Node.js and deps (stable)
+        if: matrix.setup == 'stable'
+        uses: ./.github/actions/setup-deps
+        with:
+          react-version: ${{ matrix.react-version }}
+          react-native-version: ${{ matrix.react-native-version }}
+
       - name: Setup Node.js and deps (latest)
-        if: matrix.rn-version == 'latest'
+        if: matrix.setup == 'latest'
         uses: ./.github/actions/setup-deps-rn-latest
 
       - name: Setup Node.js and deps (next)
-        if: matrix.rn-version == 'next'
+        if: matrix.setup == 'next'
         uses: ./.github/actions/setup-deps-rn-next
 
       - name: Setup Node.js and deps (nightly)
-        if: matrix.rn-version == 'nightly'
+        if: matrix.setup == 'nightly'
         uses: ./.github/actions/setup-deps-rn-nightly
 
       - name: Typecheck
@@ -68,25 +110,46 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    name: Test - ${{ matrix.rn-version }}
+    name: Test - ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
-        rn-version: [latest, next, nightly]
+        include:
+          - name: RN 0.84.0
+            react-version: 19.2.3
+            react-native-version: 0.84.0
+            setup: stable
+          - name: RN 0.85.0
+            react-version: 19.2.3
+            react-native-version: 0.85.0
+            setup: stable
+          - name: RN Latest
+            setup: latest
+          - name: RN Next
+            setup: next
+          - name: RN Nightly
+            setup: nightly
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
+      - name: Setup Node.js and deps (stable)
+        if: matrix.setup == 'stable'
+        uses: ./.github/actions/setup-deps
+        with:
+          react-version: ${{ matrix.react-version }}
+          react-native-version: ${{ matrix.react-native-version }}
+
       - name: Setup Node.js and deps (latest)
-        if: matrix.rn-version == 'latest'
+        if: matrix.setup == 'latest'
         uses: ./.github/actions/setup-deps-rn-latest
 
       - name: Setup Node.js and deps (next)
-        if: matrix.rn-version == 'next'
+        if: matrix.setup == 'next'
         uses: ./.github/actions/setup-deps-rn-next
 
       - name: Setup Node.js and deps (nightly)
-        if: matrix.rn-version == 'nightly'
+        if: matrix.setup == 'nightly'
         uses: ./.github/actions/setup-deps-rn-nightly
 
       - name: Test

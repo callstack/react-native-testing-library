@@ -37,5 +37,5 @@ runs:
     - name: Switch to React and React Native versions
       if: inputs.react-version != '' && inputs.react-native-version != ''
       run: |
-        yarn add -D react@${{ inputs.react-version }} @types/react@${{ inputs.react-version }} react-native@${{ inputs.react-native-version }} @react-native/babel-preset@${{ inputs.react-native-version }}
+        yarn add -D react@${{ inputs.react-version }} @types/react@${{ inputs.react-version }} react-native@${{ inputs.react-native-version }} @react-native/babel-preset@${{ inputs.react-native-version }} @react-native/jest-preset@${{ inputs.react-native-version }}
       shell: bash
