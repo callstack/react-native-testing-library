@@ -21,9 +21,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: RN 0.84.0
+          - name: RN 0.84.1
             react-version: 19.2.3
-            react-native-version: 0.84.0
+            react-native-version: 0.84.1
             setup: stable
           - name: RN 0.85.0
             react-version: 19.2.3
@@ -68,9 +68,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: RN 0.84.0
+          - name: RN 0.84.1
             react-version: 19.2.3
-            react-native-version: 0.84.0
+            react-native-version: 0.84.1
             setup: stable
           - name: RN 0.85.0
             react-version: 19.2.3
@@ -115,9 +115,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: RN 0.84.0
+          - name: RN 0.84.1
             react-version: 19.2.3
-            react-native-version: 0.84.0
+            react-native-version: 0.84.1
             setup: stable
           - name: RN 0.85.0
             react-version: 19.2.3
