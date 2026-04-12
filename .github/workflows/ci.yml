@@ -43,7 +43,7 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-  typecheck-rn-0-85-0:
+  typecheck-rn-0-85:
     runs-on: ubuntu-latest
     name: Typecheck RN 0.85.0
     steps:
@@ -59,7 +59,7 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-  typecheck-rn-0-84-1:
+  typecheck-rn-0-84:
     runs-on: ubuntu-latest
     name: Typecheck RN 0.84.1
     steps:
@@ -75,7 +75,7 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-  typecheck-rn-0-83-4:
+  typecheck-rn-0-83:
     runs-on: ubuntu-latest
     name: Typecheck RN 0.83.4
     steps:
@@ -91,7 +91,7 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-  typecheck-rn-0-82-1:
+  typecheck-rn-0-82:
     runs-on: ubuntu-latest
     name: Typecheck RN 0.82.1
     steps:
@@ -107,7 +107,7 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-  typecheck-rn-0-81-6:
+  typecheck-rn-0-81:
     runs-on: ubuntu-latest
     name: Typecheck RN 0.81.6
     steps:
@@ -123,7 +123,7 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-  typecheck-rn-0-80-3:
+  typecheck-rn-0-80:
     runs-on: ubuntu-latest
     name: Typecheck RN 0.80.3
     steps:
@@ -139,7 +139,7 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-  typecheck-rn-0-79-7:
+  typecheck-rn-0-79:
     runs-on: ubuntu-latest
     name: Typecheck RN 0.79.7
     steps:
@@ -155,7 +155,7 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-  typecheck-rn-0-78-3:
+  typecheck-rn-0-78:
     runs-on: ubuntu-latest
     name: Typecheck RN 0.78.3
     steps:
@@ -241,7 +241,7 @@ jobs:
       - name: Test
         run: yarn test:codemods
 
-  test-rn-0-85-0:
+  test-rn-0-85:
     runs-on: ubuntu-latest
     name: Test RN 0.85.0
     steps:
@@ -257,7 +257,7 @@ jobs:
       - name: Test
         run: yarn test:ci
 
-  test-rn-0-84-1:
+  test-rn-0-84:
     runs-on: ubuntu-latest
     name: Test RN 0.84.1
     steps:
@@ -273,7 +273,7 @@ jobs:
       - name: Test
         run: yarn test:ci
 
-  test-rn-0-83-4:
+  test-rn-0-83:
     runs-on: ubuntu-latest
     name: Test RN 0.83.4
     steps:
@@ -289,7 +289,7 @@ jobs:
       - name: Test
         run: yarn test:ci
 
-  test-rn-0-82-1:
+  test-rn-0-82:
     runs-on: ubuntu-latest
     name: Test RN 0.82.1
     steps:
@@ -305,7 +305,7 @@ jobs:
       - name: Test
         run: yarn test:ci
 
-  test-rn-0-81-6:
+  test-rn-0-81:
     runs-on: ubuntu-latest
     name: Test RN 0.81.6
     steps:
@@ -321,7 +321,7 @@ jobs:
       - name: Test
         run: yarn test:ci
 
-  test-rn-0-80-3:
+  test-rn-0-80:
     runs-on: ubuntu-latest
     name: Test RN 0.80.3
     steps:
@@ -337,7 +337,7 @@ jobs:
       - name: Test
         run: yarn test:ci
 
-  test-rn-0-79-7:
+  test-rn-0-79:
     runs-on: ubuntu-latest
     name: Test RN 0.79.7
     steps:
@@ -353,7 +353,7 @@ jobs:
       - name: Test
         run: yarn test:ci
 
-  test-rn-0-78-3:
+  test-rn-0-78:
     runs-on: ubuntu-latest
     name: Test RN 0.78.3
     steps:
