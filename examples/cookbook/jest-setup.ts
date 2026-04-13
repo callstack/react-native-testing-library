@@ -1,5 +1,3 @@
-import { configure } from '@testing-library/react-native';
-
 import { server } from './app/network-requests/__tests__/test-utils';
 
 // Enable API mocking via Mock Service Worker (MSW)

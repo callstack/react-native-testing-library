@@ -3,7 +3,7 @@ import tseslint from 'typescript-eslint';
 
 export default [
   {
-    ignores: ['node_modules/**', 'jest-setup.ts'],
+    ignores: ['node_modules/**', '.expo/**', 'dist/**', 'web-build/**', 'expo-env.d.ts', 'jest-setup.ts'],
   },
   ...tseslint.configs.recommended,
   {
