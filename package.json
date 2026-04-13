@@ -98,7 +98,7 @@
     "react-native-gesture-handler": "^2.31.1",
     "release-it": "^19.2.4",
     "test-renderer": "0.14.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.1"
   },
   "publishConfig": {
