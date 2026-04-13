@@ -8,7 +8,8 @@
     "eject": "expo eject",
     "test": "jest",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate": "yarn expo install --check && yarn lint && yarn typecheck && yarn test --watchman=false"
   },
   "dependencies": {
     "expo": "~54.0.33",

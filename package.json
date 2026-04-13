@@ -33,6 +33,8 @@
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "validate": "yarn typecheck && yarn test && yarn lint &&  yarn prettier",
+    "validate:examples": "yarn --cwd examples/basic validate && yarn --cwd examples/cookbook validate",
+    "validate:all": "yarn validate && yarn validate:examples && yarn --cwd website validate && yarn --cwd experiments-app validate",
     "validate:fix": "yarn prettier:fix && yarn lint --fix && yarn typecheck && yarn test -u",
     "build:js": "babel src --out-dir build --extensions \".js,.ts,.jsx,.tsx\" --source-maps --ignore \"**/__tests__/**\"",
     "build:ts": "tsc --build tsconfig.release.json",
