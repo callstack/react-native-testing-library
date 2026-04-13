@@ -87,7 +87,7 @@
     "babel-jest": "^30.3.0",
     "babel-plugin-module-resolver": "^5.0.3",
     "del-cli": "^7.0.0",
-    "eslint": "^9.39.1",
+    "eslint": "^10.2.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "jest": "^30.3.0",
     "prettier": "^3.8.2",
