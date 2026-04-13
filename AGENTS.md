@@ -53,3 +53,9 @@ The project uses `yarn` for dependency management and script execution.
   - `src/index.ts`: Main entry point, re-exports `pure` and adds side effects (auto-cleanup).
   - `examples/`: Example React Native applications using the library.
   - `website/`: Documentation website.
+
+## PR draft workflow:
+
+- Maintain `PR.txt` at the repository root using the structure from `.github/pull_request_template.md`.
+- Keep `PR.txt` aligned with the current branch diff relative to `origin/main`, including tests actually run and any known validation gaps.
+- Do not commit `PR.txt`.

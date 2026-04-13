@@ -37,5 +37,22 @@ runs:
     - name: Switch to React and React Native versions
       if: inputs.react-version != '' && inputs.react-native-version != ''
       run: |
-        yarn add -D react@${{ inputs.react-version }} @types/react@${{ inputs.react-version }} react-native@${{ inputs.react-native-version }} @react-native/babel-preset@${{ inputs.react-native-version }}
+        RN_VERSION='${{ inputs.react-native-version }}'
+        RN_MINOR="${RN_VERSION#0.}"
+        RN_MINOR="${RN_MINOR%%.*}"
+
+        deps=(
+          "react@${{ inputs.react-version }}"
+          "@types/react@${{ inputs.react-version }}"
+          "react-native@${RN_VERSION}"
+          "@react-native/babel-preset@${RN_VERSION}"
+        )
+
+        if (( RN_MINOR >= 85 )); then
+          deps+=("@react-native/jest-preset@${RN_VERSION}")
+        else
+          yarn remove @react-native/jest-preset
+        fi
+
+        yarn add -D "${deps[@]}"
       shell: bash
