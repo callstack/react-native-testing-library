@@ -127,7 +127,7 @@ type StyleLike = Record<string, unknown>;
 
 function withHiddenStyle(style: StyleProp<StyleLike>): StyleProp<StyleLike> {
   if (style == null) {
-    return null;
+    return { display: 'none' };
   }
 
   return [style, { display: 'none' }];
