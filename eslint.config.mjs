@@ -1,13 +1,27 @@
 import tseslint from 'typescript-eslint';
 import callstackConfig from '@callstack/eslint-config/react-native.flat.js';
+import { fixupPluginRules } from '@eslint/compat';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import jest from 'eslint-plugin-jest';
+
+const patchedCallstackConfig = callstackConfig.map((configItem) => {
+  if (!configItem.plugins?.react) {
+    return configItem;
+  }
+
+  return {
+    ...configItem,
+    plugins: {
+      ...configItem.plugins,
+      react: fixupPluginRules(configItem.plugins.react),
+    },
+  };
+});
 
 export default [
   {
     ignores: ['build/', 'experiments-rtl/', 'website/', 'eslint.config.mjs', 'jest-setup.ts'],
   },
-  ...callstackConfig,
+  ...patchedCallstackConfig,
   ...tseslint.configs.strict,
   {
     plugins: {
@@ -31,9 +45,6 @@ export default [
   },
   {
     files: ['**/*.test.{ts,tsx}', 'src/test-utils/**'],
-    plugins: {
-      jest: jest,
-    },
     rules: {
       'react/no-multi-comp': 'off',
       'react-native/no-color-literals': 'off',

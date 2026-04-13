@@ -57,12 +57,11 @@ export async function type(
     await dispatchEvent(element, 'pressOut', buildTouchEvent());
   }
 
-  let currentText = getTextInputValue(element);
   for (const key of keys) {
     const previousText = getTextInputValue(element);
     const proposedText = applyKey(previousText, key);
     const isAccepted = isTextChangeAccepted(element, proposedText);
-    currentText = isAccepted ? proposedText : previousText;
+    const currentText = isAccepted ? proposedText : previousText;
 
     await emitTypingEvents(element, {
       config: this.config,

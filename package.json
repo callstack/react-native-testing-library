@@ -77,6 +77,8 @@
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
     "@callstack/eslint-config": "^15.0.0",
+    "@eslint/compat": "^2.0.5",
+    "@eslint/js": "^10.0.1",
     "@react-native/babel-preset": "0.85.0",
     "@react-native/jest-preset": "0.85.0",
     "@release-it/conventional-changelog": "^10.0.6",
@@ -87,7 +89,7 @@
     "babel-jest": "^30.3.0",
     "babel-plugin-module-resolver": "^5.0.3",
     "del-cli": "^7.0.0",
-    "eslint": "^9.39.1",
+    "eslint": "^10.2.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "jest": "^30.3.0",
     "prettier": "^3.8.2",
@@ -101,6 +103,9 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
+  },
+  "resolutions": {
+    "@eslint/compat": "^2.0.5"
   },
   "packageManager": "yarn@4.11.0",
   "engines": {

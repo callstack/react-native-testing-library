@@ -17,15 +17,11 @@ export function toHaveAccessibleName(
   const receivedName = computeAccessibleName(element);
   const missingExpectedValue = arguments.length === 1;
 
-  let pass = false;
-  if (missingExpectedValue) {
-    pass = receivedName !== '';
-  } else {
-    pass =
-      expectedName != null
-        ? matches(expectedName, receivedName, options?.normalizer, options?.exact)
-        : false;
-  }
+  const pass = missingExpectedValue
+    ? receivedName !== ''
+    : expectedName != null
+      ? matches(expectedName, receivedName, options?.normalizer, options?.exact)
+      : false;
 
   return {
     pass,
