@@ -4,6 +4,9 @@ import { nativeEventLogger, logEvent } from '../utils/helpers';
 
 export function TextInputEvents() {
   const [value, setValue] = React.useState('');
+  const experimentalTextInputProps = {
+    onTextInput: nativeEventLogger('textInput'),
+  } as unknown as React.ComponentProps<typeof TextInput>;
 
   const handleChangeText = (value: string) => {
     setValue(value);
@@ -21,13 +24,13 @@ export function TextInputEvents() {
         onKeyPress={nativeEventLogger('keyPress')}
         onEndEditing={nativeEventLogger('endEditing')}
         onSubmitEditing={nativeEventLogger('submitEditing')}
-        onTextInput={nativeEventLogger('textInput')}
         onSelectionChange={nativeEventLogger('selectionChange')}
         onContentSizeChange={nativeEventLogger('contentSizeChange')}
         onFocus={nativeEventLogger('focus')}
         onBlur={nativeEventLogger('blur')}
         onPressIn={nativeEventLogger('pressIn')}
         onPressOut={nativeEventLogger('pressOut')}
+        {...experimentalTextInputProps}
       />
     </SafeAreaView>
   );

@@ -3,7 +3,7 @@
   "private": true,
   "description": "Expo app for conducting experiments of React Native behaviour.",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "index.ts",
   "scripts": {
     "typecheck": "tsc -noEmit",
     "start": "expo start",
@@ -12,8 +12,8 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@react-navigation/native": "^7.1.28",
-    "@react-navigation/native-stack": "^7.12.0",
+    "@react-navigation/native": "^7.2.2",
+    "@react-navigation/native-stack": "^7.14.10",
     "expo": "^54.0.33",
     "expo-status-bar": "~3.0.9",
     "react": "19.1.0",
@@ -22,7 +22,7 @@
     "react-native-screens": "~4.16.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.0",
+    "@babel/core": "^7.29.0",
     "@types/react": "~19.1.10",
     "typescript": "~5.9.2"
   }
