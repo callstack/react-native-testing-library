@@ -4,9 +4,6 @@ import { nativeEventLogger, logEvent } from '../utils/helpers';
 
 export function TextInputEvents() {
   const [value, setValue] = React.useState('');
-  const experimentalTextInputProps = {
-    onTextInput: nativeEventLogger('textInput'),
-  } as unknown as React.ComponentProps<typeof TextInput>;
 
   const handleChangeText = (value: string) => {
     setValue(value);
@@ -30,7 +27,6 @@ export function TextInputEvents() {
         onBlur={nativeEventLogger('blur')}
         onPressIn={nativeEventLogger('pressIn')}
         onPressOut={nativeEventLogger('pressOut')}
-        {...experimentalTextInputProps}
       />
     </SafeAreaView>
   );
