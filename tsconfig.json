@@ -7,10 +7,12 @@
     "jsx": "react",
     "target": "ES2022",
     "lib": ["ES2022", "DOM"],
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "declaration": true,
     "noEmit": true,
+    "rootDir": "src",
+    "types": ["jest", "node"],
     "outDir": "build"
   },
   "include": ["src/**/*"]
