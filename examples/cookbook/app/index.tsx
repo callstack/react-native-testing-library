@@ -3,6 +3,12 @@ import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native
 import { useRouter } from 'expo-router';
 import theme from '../theme';
 
+// React Native static assets are resolved via require().
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const iconSource = require('../assets/icon.png');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const bannerSource = require('../assets/gradientRNBanner.png');
+
 export default function Home() {
   const router = useRouter();
 
@@ -15,12 +21,8 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <View style={styles.bannerContainer}>
-        <Image source={require('../assets/icon.png')} style={styles.logo} />
-        <Image
-          resizeMode={'contain'}
-          source={require('../assets/gradientRNBanner.png')}
-          style={styles.banner}
-        />
+        <Image source={iconSource} style={styles.logo} />
+        <Image resizeMode={'contain'} source={bannerSource} style={styles.banner} />
         <Text style={styles.title}>Testing Library</Text>
         <Text style={styles.subTitle}>Cookbook App</Text>
       </View>

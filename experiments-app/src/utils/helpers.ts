@@ -1,4 +1,4 @@
-import { NativeSyntheticEvent } from 'react-native/types';
+import type { NativeSyntheticEvent } from 'react-native';
 
 let lastEventTimeStamp: number | null = null;
 

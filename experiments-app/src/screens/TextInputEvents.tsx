@@ -21,7 +21,6 @@ export function TextInputEvents() {
         onKeyPress={nativeEventLogger('keyPress')}
         onEndEditing={nativeEventLogger('endEditing')}
         onSubmitEditing={nativeEventLogger('submitEditing')}
-        onTextInput={nativeEventLogger('textInput')}
         onSelectionChange={nativeEventLogger('selectionChange')}
         onContentSizeChange={nativeEventLogger('contentSizeChange')}
         onFocus={nativeEventLogger('focus')}

@@ -19,7 +19,7 @@ test('renders a to do list with 1 items initially, and adds a new item', async (
     initialValues: [
       [tasksAtom, INITIAL_TASKS],
       [newTaskTitleAtom, ''],
-    ],
+    ] as const,
   });
 
   expect(screen.getByText(/buy bread/i)).toBeOnTheScreen();

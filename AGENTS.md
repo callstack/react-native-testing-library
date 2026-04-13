@@ -54,6 +54,52 @@ The project uses `yarn` for dependency management and script execution.
   - `examples/`: Example React Native applications using the library.
   - `website/`: Documentation website.
 
+## Example App Regeneration
+
+- Prefer regenerating Expo example apps in a temporary directory and then copying the fresh scaffold into place, instead of mutating the existing app in place.
+- Before replacing an example app, move the current app directory to `/tmp` so repo-specific code, tests, assets, and configs can be restored selectively.
+- After copying a freshly generated app into `examples/`, remove the generated `.git` directory and generated `node_modules`, then reinstall from inside the repo workspace.
+
+- `examples/basic`:
+  - Generate from the Expo blank TypeScript scaffold:
+    - `yarn create expo-app /tmp/rntl-basic-fresh --template blank-typescript --yes`
+  - Restore the repo-specific sample app files on top of the new scaffold:
+    - `App.tsx`
+    - `components/`
+    - `__tests__/`
+    - `theme.ts`
+    - `jest.config.js`
+    - `jest-setup.ts`
+    - `babel.config.js`
+    - `eslint.config.mjs`
+    - `README.md`
+    - `.expo-shared/assets.json` if it existed before
+  - Keep the fresh Expo entrypoint (`index.ts`) and update `package.json` / `app.json` to match the repo naming and scripts.
+
+- `examples/cookbook`:
+  - Generate from a router-enabled Expo scaffold:
+    - `yarn create expo-app /tmp/rntl-cookbook-fresh --example with-router --yes`
+  - Restore the repo-specific cookbook files on top of the new scaffold:
+    - `app/`
+    - tutorial test directories such as `basics-tutorial/` and `basics-tutorial-react-strict-dom/`
+    - `theme.ts`
+    - `jest.config.js`
+    - `jest-setup.ts`
+    - `babel.config.js`
+    - `.eslintrc`, `.eslintignore`
+    - `README.md`
+    - custom assets not present in the scaffold, such as `assets/gradientRNBanner.png`
+    - `.expo-shared/assets.json` if it existed before
+  - Keep the fresh Expo Router entry setup, then reapply the cookbook-specific dependency set in `package.json` and `app.json`.
+
+- After regenerating either example app, validate from inside the app directory:
+  - `yarn expo install --check`
+  - `yarn lint`
+  - `yarn typecheck`
+  - `yarn test --watchman=false`
+
+- If the fresh scaffold introduces dependency-resolution churn, prefer restoring the previous `yarn.lock` first and then running `yarn install`, rather than re-resolving the whole dependency tree from scratch.
+
 ## PR draft workflow:
 
 - Maintain `PR.txt` at the repository root using the structure from `.github/pull_request_template.md`.
