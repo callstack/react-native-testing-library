@@ -31,9 +31,10 @@ export const renderWithAtoms = async <TInitialValues extends InitialValues>(
   );
 };
 
-export type HydrateAtomsWrapperProps<TInitialValues extends InitialValues> = React.PropsWithChildren<{
-  initialValues: TInitialValues;
-}>;
+export type HydrateAtomsWrapperProps<TInitialValues extends InitialValues> =
+  React.PropsWithChildren<{
+    initialValues: TInitialValues;
+  }>;
 
 /**
  * A wrapper component that hydrates Jotai atoms with initial values.

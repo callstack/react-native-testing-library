@@ -15,7 +15,10 @@ export default [
     },
   },
   {
-    files: ['basics-tutorial-react-strict-dom/**/*.ts', 'basics-tutorial-react-strict-dom/**/*.tsx'],
+    files: [
+      'basics-tutorial-react-strict-dom/**/*.ts',
+      'basics-tutorial-react-strict-dom/**/*.tsx',
+    ],
     rules: {
       'import/no-unresolved': 'off',
     },
