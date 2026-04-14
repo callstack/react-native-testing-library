@@ -1,43 +1,43 @@
-import type { HostElement, HostNode } from 'test-renderer';
+import type { TestInstance, TestNode } from 'test-renderer';
 
 import { screen } from '../screen';
 
 /**
  * Checks if the given element is a host element.
- * @param element The element to check.
+ * @param node The element to check.
  */
-export function isHostElement(element?: HostNode | null): element is HostElement {
-  return typeof element !== 'string' && typeof element?.type === 'string';
+export function isTestInstance(node?: TestNode | null): node is TestInstance {
+  return typeof node !== 'string' && typeof node?.type === 'string';
 }
 
-export function isElementMounted(element: HostElement) {
+export function isElementMounted(element: TestInstance) {
   return getContainerElement(element) === screen.container;
 }
 
 /**
  * Returns host siblings for given element.
- * @param element The element start traversing from.
+ * @param instance The element start traversing from.
  */
-export function getHostSiblings(element: HostElement): HostElement[] {
+export function getInstanceSiblings(instance: TestInstance): TestInstance[] {
   // Should not happen
-  const parent = element.parent;
+  const parent = instance.parent;
   if (!parent) {
     return [];
   }
 
   return parent.children.filter(
-    (sibling) => typeof sibling !== 'string' && sibling !== element,
-  ) as HostElement[];
+    (sibling) => typeof sibling !== 'string' && sibling !== instance,
+  ) as TestInstance[];
 }
 
 /**
- * Returns the containerelement of the tree.
+ * Returns the container element of the tree.
  *
- * @param element The element start traversing from.
+ * @param instance The element start traversing from.
  * @returns The container element of the tree.
  */
-export function getContainerElement(element: HostElement) {
-  let current = element;
+export function getContainerElement(instance: TestInstance) {
+  let current = instance;
   while (current.parent) {
     current = current.parent;
   }

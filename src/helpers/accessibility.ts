@@ -2,7 +2,7 @@ import type { AccessibilityRole, AccessibilityState, AccessibilityValue, Role } 
 import { StyleSheet } from 'react-native';
 import type { HostElement } from 'test-renderer';
 
-import { getContainerElement, getHostSiblings, isHostElement } from './component-tree';
+import { getContainerElement, getInstanceSiblings, isTestInstance } from './component-tree';
 import { findAll } from './find-all';
 import { isHostImage, isHostSwitch, isHostText, isHostTextInput } from './host-component-names';
 import { getTextContent } from './text-content';
@@ -76,7 +76,7 @@ function isSubtreeInaccessible(element: HostElement): boolean {
 
   // iOS: accessibilityViewIsModal or aria-modal
   // See: https://reactnative.dev/docs/accessibility#accessibilityviewismodal-ios
-  const hostSiblings = getHostSiblings(element);
+  const hostSiblings = getInstanceSiblings(element);
   if (hostSiblings.some((sibling) => computeAriaModal(sibling))) {
     return true;
   }
@@ -155,7 +155,7 @@ export function computeAriaLabel(element: HostElement): string | undefined {
     const container = getContainerElement(element);
     const labelElement = findAll(
       container,
-      (node) => isHostElement(node) && node.props.nativeID === labelElementId,
+      (node) => isTestInstance(node) && node.props.nativeID === labelElementId,
       { includeHiddenElements: true },
     );
     if (labelElement.length > 0) {

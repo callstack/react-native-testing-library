@@ -9,7 +9,7 @@ import {
 import redent from 'redent';
 import type { HostElement } from 'test-renderer';
 
-import { isHostElement } from '../helpers/component-tree';
+import { isTestInstance } from '../helpers/component-tree';
 
 class HostElementTypeError extends Error {
   constructor(received: unknown, matcherFn: jest.CustomMatcher, context: jest.MatcherContext) {
@@ -49,7 +49,7 @@ export function checkHostElement(
   matcherFn: jest.CustomMatcher,
   context: jest.MatcherContext,
 ): asserts element is HostElement {
-  if (!isHostElement(element)) {
+  if (!isTestInstance(element)) {
     throw new HostElementTypeError(element, matcherFn, context);
   }
 }

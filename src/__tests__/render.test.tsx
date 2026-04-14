@@ -33,11 +33,20 @@ test('does not warn when no options are passed', async () => {
   expect(_console.warn).not.toHaveBeenCalled();
 });
 
+test('supports null options', async () => {
+  const TestComponent = () => <Text testID="test">Test</Text>;
+
+  await render(<TestComponent />, null as any);
+
+  expect(screen.getByTestId('test')).toBeOnTheScreen();
+  expect(_console.warn).not.toHaveBeenCalled();
+});
+
 test('does not warn when only valid options are passed', async () => {
   const TestComponent = () => <Text testID="test">Test</Text>;
   const Wrapper = ({ children }: { children: React.ReactNode }) => <View>{children}</View>;
 
-  await render(<TestComponent />, { wrapper: Wrapper, createNodeMock: jest.fn() });
+  await render(<TestComponent />, { wrapper: Wrapper });
 
   expect(_console.warn).not.toHaveBeenCalled();
 });
@@ -65,16 +74,6 @@ describe('render options', () => {
     expect(screen.getByTestId('wrapper')).toBeOnTheScreen();
     expect(screen.getByTestId('inner')).toBeOnTheScreen();
     expect(screen.getByText('Inner Content')).toBeOnTheScreen();
-  });
-
-  test('createNodeMock option is passed to renderer', async () => {
-    const TestComponent = () => <View testID="test" />;
-    const mockNode = { testProperty: 'testValue' };
-    const createNodeMock = jest.fn(() => mockNode);
-
-    await render(<TestComponent />, { createNodeMock });
-
-    expect(screen.getByTestId('test')).toBeOnTheScreen();
   });
 });
 

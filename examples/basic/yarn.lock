@@ -5012,7 +5012,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-core-module@npm:^2.16.0, is-core-module@npm:^2.16.1":
+"is-core-module@npm:^2.16.0":
   version: 2.16.1
   resolution: "is-core-module@npm:2.16.1"
   dependencies:
@@ -7430,20 +7430,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:^1.20.0":
-  version: 1.22.11
-  resolution: "resolve@npm:1.22.11"
-  dependencies:
-    is-core-module: "npm:^2.16.1"
-    path-parse: "npm:^1.0.7"
-    supports-preserve-symlinks-flag: "npm:^1.0.0"
-  bin:
-    resolve: bin/resolve
-  checksum: 10c0/f657191507530f2cbecb5815b1ee99b20741ea6ee02a59c57028e9ec4c2c8d7681afcc35febbd554ac0ded459db6f2d8153382c53a2f266cee2575e512674409
-  languageName: node
-  linkType: hard
-
-"resolve@npm:^1.22.10, resolve@npm:^1.22.2":
+"resolve@npm:^1.20.0, resolve@npm:^1.22.10, resolve@npm:^1.22.2":
   version: 1.22.10
   resolution: "resolve@npm:1.22.10"
   dependencies:
@@ -7465,20 +7452,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@npm%3A^1.20.0#optional!builtin<compat/resolve>":
-  version: 1.22.11
-  resolution: "resolve@patch:resolve@npm%3A1.22.11#optional!builtin<compat/resolve>::version=1.22.11&hash=c3c19d"
-  dependencies:
-    is-core-module: "npm:^2.16.1"
-    path-parse: "npm:^1.0.7"
-    supports-preserve-symlinks-flag: "npm:^1.0.0"
-  bin:
-    resolve: bin/resolve
-  checksum: 10c0/ee5b182f2e37cb1165465e58c6abc797fec0a80b5ba3231607beb4677db0c9291ac010c47cf092b6daa2b7f518d69a0e21888e7e2b633f68d501a874212a8c63
-  languageName: node
-  linkType: hard
-
-"resolve@patch:resolve@npm%3A^1.22.10#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.22.2#optional!builtin<compat/resolve>":
+"resolve@patch:resolve@npm%3A^1.20.0#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.22.10#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.22.2#optional!builtin<compat/resolve>":
   version: 1.22.10
   resolution: "resolve@patch:resolve@npm%3A1.22.10#optional!builtin<compat/resolve>::version=1.22.10&hash=c3c19d"
   dependencies:
@@ -7546,7 +7520,7 @@ __metadata:
     react-native: "npm:0.81.5"
     react-native-safe-area-context: "npm:^5.6.2"
     react-native-web: "npm:^0.21.2"
-    test-renderer: "npm:0.14.0"
+    test-renderer: "npm:0.16.0"
     typescript: "npm:~5.9.2"
     typescript-eslint: "npm:^8.58.1"
   languageName: unknown
@@ -8137,15 +8111,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"test-renderer@npm:0.14.0":
-  version: 0.14.0
-  resolution: "test-renderer@npm:0.14.0"
+"test-renderer@npm:0.16.0":
+  version: 0.16.0
+  resolution: "test-renderer@npm:0.16.0"
   dependencies:
     "@types/react-reconciler": "npm:~0.31.0"
     react-reconciler: "npm:~0.31.0"
   peerDependencies:
     react: ^19.0.0
-  checksum: 10c0/d259f5d146f57bb6689cb828de73cd95a559bc3203f1a21824b027a6b43143447bbf60eed5d2f8ea18b806ee15002aa6ba1d023e01669fa9945ca8278391667d
+  checksum: 10c0/8175d6519f68285357b17a3dd40ea500877a9920483a2d7271583139d4b296175f672d57a98a9f6ad9417ce3cd464d557130214585c7c959ded3dde1cae1f48e
   languageName: node
   linkType: hard
 
