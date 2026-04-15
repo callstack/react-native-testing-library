@@ -231,6 +231,81 @@ describe('hidden instance props', () => {
       </>
     `);
   });
+
+  test('applies hidden styles to multiple direct child views when suspending', async () => {
+    const promise = new Promise<unknown>(() => {});
+
+    await render(
+      <TestSuspenseWrapper promise={promise} suspend={false}>
+        <View testID="hidden-target-1">
+          <Text>First</Text>
+        </View>
+        <View style={{ opacity: 0.5 }} testID="hidden-target-2">
+          <Text>Second</Text>
+        </View>
+      </TestSuspenseWrapper>,
+    );
+
+    expect(screen.getByText('First')).toBeOnTheScreen();
+    expect(screen.getByText('Second')).toBeOnTheScreen();
+
+    await screen.rerender(
+      <TestSuspenseWrapper promise={promise} suspend>
+        <View testID="hidden-target-1">
+          <Text>First</Text>
+        </View>
+        <View style={{ opacity: 0.5 }} testID="hidden-target-2">
+          <Text>Second</Text>
+        </View>
+      </TestSuspenseWrapper>,
+    );
+
+    expect(screen.getByText('Loading...')).toBeOnTheScreen();
+    expect(
+      screen.getByTestId('hidden-target-1', { includeHiddenElements: true }).props.style,
+    ).toEqual({
+      display: 'none',
+    });
+    expect(
+      screen.getByTestId('hidden-target-2', { includeHiddenElements: true }).props.style,
+    ).toEqual([{ opacity: 0.5 }, { display: 'none' }]);
+    expect(screen.toJSON()).toMatchInlineSnapshot(`
+      <>
+        <View
+          style={
+            {
+              "display": "none",
+            }
+          }
+          testID="hidden-target-1"
+        >
+          <Text>
+            First
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "opacity": 0.5,
+              },
+              {
+                "display": "none",
+              },
+            ]
+          }
+          testID="hidden-target-2"
+        >
+          <Text>
+            Second
+          </Text>
+        </View>
+        <Text>
+          Loading...
+        </Text>
+      </>
+    `);
+  });
 });
 
 describe('component rendering', () => {
