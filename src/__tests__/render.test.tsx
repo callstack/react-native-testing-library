@@ -20,6 +20,24 @@ function MaybeSuspend({
   return children;
 }
 
+function TestSuspenseWrapper({
+  children,
+  promise,
+  suspend,
+}: {
+  children: React.ReactNode;
+  promise: Promise<unknown>;
+  suspend: boolean;
+}) {
+  return (
+    <React.Suspense fallback={<Text>Loading...</Text>}>
+      <MaybeSuspend promise={promise} suspend={suspend}>
+        {children}
+      </MaybeSuspend>
+    </React.Suspense>
+  );
+}
+
 test('renders a simple component', async () => {
   const TestComponent = () => (
     <View testID="container">
@@ -94,26 +112,47 @@ describe('render options', () => {
 });
 
 describe('hidden instance props', () => {
+  test('does not retain hidden UI when the component suspends on initial render', async () => {
+    const promise = new Promise<unknown>(() => {});
+
+    await render(
+      <TestSuspenseWrapper promise={promise} suspend>
+        <View testID="hidden-target">
+          <Text>Ready</Text>
+        </View>
+      </TestSuspenseWrapper>,
+    );
+
+    expect(screen.getByText('Loading...')).toBeOnTheScreen();
+    expect(screen.queryByTestId('hidden-target')).not.toBeOnTheScreen();
+    expect(screen.queryByTestId('hidden-target', { includeHiddenElements: true })).toBeNull();
+    expect(screen.toJSON()).toMatchInlineSnapshot(`
+      <Text>
+        Loading...
+      </Text>
+    `);
+  });
+
   test('sets hidden suspended elements with no style to display none', async () => {
     const promise = new Promise<unknown>(() => {});
 
-    function TestComponent({ suspend }: { suspend: boolean }) {
-      return (
-        <React.Suspense fallback={<Text>Loading...</Text>}>
-          <MaybeSuspend promise={promise} suspend={suspend}>
-            <View testID="hidden-target">
-              <Text>Ready</Text>
-            </View>
-          </MaybeSuspend>
-        </React.Suspense>
-      );
-    }
-
-    await render(<TestComponent suspend={false} />);
+    await render(
+      <TestSuspenseWrapper promise={promise} suspend={false}>
+        <View testID="hidden-target">
+          <Text>Ready</Text>
+        </View>
+      </TestSuspenseWrapper>,
+    );
 
     expect(screen.getByText('Ready')).toBeOnTheScreen();
 
-    await screen.rerender(<TestComponent suspend />);
+    await screen.rerender(
+      <TestSuspenseWrapper promise={promise} suspend>
+        <View testID="hidden-target">
+          <Text>Ready</Text>
+        </View>
+      </TestSuspenseWrapper>,
+    );
 
     expect(screen.getByText('Loading...')).toBeOnTheScreen();
     expect(
@@ -121,33 +160,76 @@ describe('hidden instance props', () => {
     ).toEqual({
       display: 'none',
     });
+    expect(screen.toJSON()).toMatchInlineSnapshot(`
+      <>
+        <View
+          style={
+            {
+              "display": "none",
+            }
+          }
+          testID="hidden-target"
+        >
+          <Text>
+            Ready
+          </Text>
+        </View>
+        <Text>
+          Loading...
+        </Text>
+      </>
+    `);
   });
 
   test('appends display none when suspending an element with existing style', async () => {
     const promise = new Promise<unknown>(() => {});
 
-    function TestComponent({ suspend }: { suspend: boolean }) {
-      return (
-        <React.Suspense fallback={<Text>Loading...</Text>}>
-          <MaybeSuspend promise={promise} suspend={suspend}>
-            <View style={{ opacity: 0.5 }} testID="hidden-target">
-              <Text>Ready</Text>
-            </View>
-          </MaybeSuspend>
-        </React.Suspense>
-      );
-    }
-
-    await render(<TestComponent suspend={false} />);
+    await render(
+      <TestSuspenseWrapper promise={promise} suspend={false}>
+        <View style={{ opacity: 0.5 }} testID="hidden-target">
+          <Text>Ready</Text>
+        </View>
+      </TestSuspenseWrapper>,
+    );
 
     expect(screen.getByText('Ready')).toBeOnTheScreen();
 
-    await screen.rerender(<TestComponent suspend />);
+    await screen.rerender(
+      <TestSuspenseWrapper promise={promise} suspend>
+        <View style={{ opacity: 0.5 }} testID="hidden-target">
+          <Text>Ready</Text>
+        </View>
+      </TestSuspenseWrapper>,
+    );
 
     expect(screen.getByText('Loading...')).toBeOnTheScreen();
     expect(
       screen.getByTestId('hidden-target', { includeHiddenElements: true }).props.style,
     ).toEqual([{ opacity: 0.5 }, { display: 'none' }]);
+    expect(screen.toJSON()).toMatchInlineSnapshot(`
+      <>
+        <View
+          style={
+            [
+              {
+                "opacity": 0.5,
+              },
+              {
+                "display": "none",
+              },
+            ]
+          }
+          testID="hidden-target"
+        >
+          <Text>
+            Ready
+          </Text>
+        </View>
+        <Text>
+          Loading...
+        </Text>
+      </>
+    `);
   });
 });
 
