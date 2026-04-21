@@ -3,7 +3,7 @@
 ## `within` \{#within}
 
 ```jsx
-function within(element: HostElement): Queries {}
+function within(instance: TestInstance): Queries {}
 ```
 
 `within` performs [queries](/react-native-testing-library/14.x/docs/api/queries.md) scoped to given element.

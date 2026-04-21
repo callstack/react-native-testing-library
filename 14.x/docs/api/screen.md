@@ -7,8 +7,8 @@ let screen: {
   unmount(): Promise<void>;
   debug(options?: DebugOptions): void
   toJSON(): JsonElement | null;
-  container: HostElement;
-  root: HostElement | null;
+  container: TestInstance;
+  root: TestInstance | null;
 };
 ```
 
@@ -145,7 +145,7 @@ Get the rendered component JSON representation, e.g. for snapshot testing.
 ### `container`
 
 ```ts
-const container: HostElement;
+const container: TestInstance;
 ```
 
 Returns a pseudo-element container whose children are the elements you asked to render. This is the root container element from [Test Renderer](https://github.com/mdjastrzebski/test-renderer).
@@ -166,7 +166,7 @@ test('example', async () => {
 ### `root`
 
 ```ts
-const root: HostElement | null;
+const root: TestInstance | null;
 ```
 
 Returns the rendered root [host element](/react-native-testing-library/14.x/docs/advanced/testing-env.md#host-and-composite-components), or `null` if nothing was rendered. This is the first child of the `container`, which represents the actual root element you rendered.

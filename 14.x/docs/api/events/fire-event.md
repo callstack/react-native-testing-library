@@ -9,7 +9,7 @@ Use Fire Event for cases not supported by User Event and for triggering event ha
 :::
 
 ```ts
-function fireEvent(element: HostElement, eventName: string, ...data: unknown[]): Promise<unknown>;
+function fireEvent(instance: TestInstance, eventName: string, ...data: unknown[]): Promise<unknown>;
 ```
 
 The `fireEvent` API triggers event handlers on both host and composite components. It traverses the component tree bottom-up from the passed element to find an enabled event handler named `onXxx` where `xxx` is the event name.
@@ -66,7 +66,7 @@ Use the User Event [`press()`](/react-native-testing-library/14.x/docs/api/event
 
 ```tsx
 fireEvent.press: (
-  element: HostElement,
+  instance: TestInstance,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```
@@ -105,7 +105,7 @@ Use the User Event [`type()`](/react-native-testing-library/14.x/docs/api/events
 
 ```tsx
 fireEvent.changeText: (
-  element: HostElement,
+  instance: TestInstance,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```
@@ -136,7 +136,7 @@ Prefer [`user.scrollTo`](/react-native-testing-library/14.x/docs/api/events/user
 
 ```tsx
 fireEvent.scroll: (
-  element: HostElement,
+  instance: TestInstance,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```

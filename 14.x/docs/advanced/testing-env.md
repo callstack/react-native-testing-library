@@ -43,14 +43,14 @@ It's worth noting that the React Testing Library (web one) works a bit different
 
 Calling the `render()` function creates an element tree. This is done internally by invoking the `createRoot()` function from Test Renderer. The output tree represents your React Native component tree, containing only host elements. Each node of that tree corresponds to a host component that would have a counterpart in the native view hierarchy.
 
-These tree elements are represented by `HostElement` type from Test Renderer:
+These tree elements are represented by `TestInstance` type from Test Renderer:
 
 ```tsx
-interface HostElement {
+interface TestInstance {
   type: ElementType;
   props: { [propName: string]: any };
-  parent: HostElement | null;
-  children: Array<HostElement | string>;
+  parent: TestInstance | null;
+  children: Array<TestInstance | string>;
 
   // Other props and methods
 }
@@ -92,7 +92,7 @@ Not all React Native components are organized this way, e.g., when you use `Pres
 
 In RNTL v14, [Test Renderer](https://github.com/mdjastrzebski/test-renderer) only exposes host elements in the element tree. Composite components aren't visible in the tree—you only see their host element output. This aligns with Testing Library's philosophy: tests should focus on what users can see and interact with (host elements), not implementation details (composite components).
 
-For a `HostElement`, the `type` prop is always a string value representing the host component name, e.g., `"View"`, `"Text"`, `"TextInput"`.
+For a `TestInstance`, the `type` prop is always a string value representing the host component name, e.g., `"View"`, `"Text"`, `"TextInput"`.
 
 ## Tree nodes
 
@@ -120,7 +120,7 @@ In the above example, the component accepts `onPress` and `style` props but does
 You should avoid navigating over the element tree, as this makes your testing code fragile and may result in false positives. This section is more relevant for people who want to contribute to our codebase.
 :::
 
-You can navigate the tree of host elements using `parent` or `children` props of a `HostElement`. Be careful when doing this, as the tree structure for third-party components can change independently from your code and cause unexpected test failures.
+You can navigate the tree of host elements using `parent` or `children` props of a `TestInstance`. Be careful when doing this, as the tree structure for third-party components can change independently from your code and cause unexpected test failures.
 
 ## Queries
 

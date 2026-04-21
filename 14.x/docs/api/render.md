@@ -58,6 +58,6 @@ See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testin
 
 :::note Type information
 
-Query results and element references use the `HostElement` type from [Test Renderer](https://github.com/mdjastrzebski/test-renderer). If you need to type element variables, import this type directly from `test-renderer`.
+Query results and element references use the `TestInstance` type from [Test Renderer](https://github.com/mdjastrzebski/test-renderer). If you need to type element variables, import this type directly from `test-renderer`.
 
 :::

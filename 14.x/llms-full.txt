@@ -452,7 +452,7 @@ function findByRole: (
     interval?: number;
     // ..
   }
-): Promise<HostElement>;
+): Promise<TestInstance>;
 ```
 
 Each query has a default `timeout` value of 1000 ms and a default `interval` of 50 ms. Custom timeout and check intervals can be specified if needed, as shown below:
@@ -946,14 +946,14 @@ It's worth noting that the React Testing Library (web one) works a bit different
 
 Calling the `render()` function creates an element tree. This is done internally by invoking the `createRoot()` function from Test Renderer. The output tree represents your React Native component tree, containing only host elements. Each node of that tree corresponds to a host component that would have a counterpart in the native view hierarchy.
 
-These tree elements are represented by `HostElement` type from Test Renderer:
+These tree elements are represented by `TestInstance` type from Test Renderer:
 
 ```tsx
-interface HostElement {
+interface TestInstance {
   type: ElementType;
   props: { [propName: string]: any };
-  parent: HostElement | null;
-  children: Array<HostElement | string>;
+  parent: TestInstance | null;
+  children: Array<TestInstance | string>;
 
   // Other props and methods
 }
@@ -995,7 +995,7 @@ Not all React Native components are organized this way, e.g., when you use `Pres
 
 In RNTL v14, [Test Renderer](https://github.com/mdjastrzebski/test-renderer) only exposes host elements in the element tree. Composite components aren't visible in the tree—you only see their host element output. This aligns with Testing Library's philosophy: tests should focus on what users can see and interact with (host elements), not implementation details (composite components).
 
-For a `HostElement`, the `type` prop is always a string value representing the host component name, e.g., `"View"`, `"Text"`, `"TextInput"`.
+For a `TestInstance`, the `type` prop is always a string value representing the host component name, e.g., `"View"`, `"Text"`, `"TextInput"`.
 
 ## Tree nodes
 
@@ -1023,7 +1023,7 @@ In the above example, the component accepts `onPress` and `style` props but does
 You should avoid navigating over the element tree, as this makes your testing code fragile and may result in false positives. This section is more relevant for people who want to contribute to our codebase.
 :::
 
-You can navigate the tree of host elements using `parent` or `children` props of a `HostElement`. Be careful when doing this, as the tree structure for third-party components can change independently from your code and cause unexpected test failures.
+You can navigate the tree of host elements using `parent` or `children` props of a `TestInstance`. Be careful when doing this, as the tree structure for third-party components can change independently from your code and cause unexpected test failures.
 
 ## Queries
 
@@ -1331,7 +1331,7 @@ Use Fire Event for cases not supported by User Event and for triggering event ha
 :::
 
 ```ts
-function fireEvent(element: HostElement, eventName: string, ...data: unknown[]): Promise<unknown>;
+function fireEvent(instance: TestInstance, eventName: string, ...data: unknown[]): Promise<unknown>;
 ```
 
 The `fireEvent` API triggers event handlers on both host and composite components. It traverses the component tree bottom-up from the passed element to find an enabled event handler named `onXxx` where `xxx` is the event name.
@@ -1388,7 +1388,7 @@ Use the User Event [`press()`](/react-native-testing-library/14.x/docs/api/event
 
 ```tsx
 fireEvent.press: (
-  element: HostElement,
+  instance: TestInstance,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```
@@ -1427,7 +1427,7 @@ Use the User Event [`type()`](/react-native-testing-library/14.x/docs/api/events
 
 ```tsx
 fireEvent.changeText: (
-  element: HostElement,
+  instance: TestInstance,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```
@@ -1458,7 +1458,7 @@ Prefer [`user.scrollTo`](/react-native-testing-library/14.x/docs/api/events/user
 
 ```tsx
 fireEvent.scroll: (
-  element: HostElement,
+  instance: TestInstance,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```
@@ -1531,7 +1531,7 @@ Creates a User Event object instance, which can be used to trigger events.
 
 ```ts
 press(
-  element: HostElement,
+  instance: TestInstance,
 ): Promise<void>
 ```
 
@@ -1550,7 +1550,7 @@ This event will take a minimum of 130 ms to run due to the internal React Native
 
 ```ts
 longPress(
-  element: HostElement,
+  instance: TestInstance,
   options?: { duration?: number }
 ): Promise<void>
 ```
@@ -1574,7 +1574,7 @@ This event will, by default, take 500 ms to run. Due to internal React Native lo
 
 ```ts
 type(
-  element: HostElement,
+  instance: TestInstance,
   text: string,
   options?: {
     skipPress?: boolean;
@@ -1640,7 +1640,7 @@ The `endEditing` and `blur` events can be skipped by passing the `skipBlur: true
 
 ```ts
 clear(
-  element: HostElement,
+  instance: TestInstance,
 ): Promise<void>
 ```
 
@@ -1683,7 +1683,7 @@ Events will not be emitted if the `editable` prop is set to `false`.
 
 ```ts
 paste(
-  element: HostElement,
+  instance: TestInstance,
   text: string,
 ): Promise<void>
 ```
@@ -1727,7 +1727,7 @@ Events will not be emitted if the `editable` prop is set to `false`.
 
 ```ts
 scrollTo(
-  element: HostElement,
+  instance: TestInstance,
   options: {
     y: number;
     momentumY?: number;
@@ -1836,7 +1836,7 @@ Checks if an element has the specified text content. Accepts `string` or `RegExp
 
 ```ts
 expect(container).toContainElement(
-  element: HostElement | null,
+  instance: TestInstance | null,
 )
 ```
 
@@ -2011,7 +2011,7 @@ url: /react-native-testing-library/14.x/docs/api/misc/accessibility.md
 ## `isHiddenFromAccessibility`
 
 ```ts
-function isHiddenFromAccessibility(element: HostElement | null): boolean {}
+function isHiddenFromAccessibility(instance: TestInstance | null): boolean {}
 ```
 
 Also available as `isInaccessible()` alias for React Testing Library compatibility.
@@ -2261,7 +2261,7 @@ url: /react-native-testing-library/14.x/docs/api/misc/other.md
 ## `within` \{#within}
 
 ```jsx
-function within(element: HostElement): Queries {}
+function within(instance: TestInstance): Queries {}
 ```
 
 `within` performs [queries](/react-native-testing-library/14.x/docs/api/queries.md) scoped to given element.
@@ -2593,21 +2593,21 @@ For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
 
 The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
 
-| Variant                                                                              | Assertion                     | Return type                      | Is Async? |
-| ------------------------------------------------------------------------------------ | ----------------------------- | -------------------------------- | --------- |
-| [`getBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-by)            | Exactly one matching element  | `HostElement`                    | No        |
-| [`getAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-all-by)     | At least one matching element | `Array<HostElement>`             | No        |
-| [`queryBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-by)        | Zero or one matching element  | <code>HostElement \| null</code> | No        |
-| [`queryAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-all-by) | No assertion                  | `Array<HostElement>`             | No        |
-| [`findBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-by)          | Exactly one matching element  | `Promise<HostElement>`           | Yes       |
-| [`findAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-all-by)   | At least one matching element | `Promise<Array<HostElement>>`    | Yes       |
+| Variant                                                                              | Assertion                     | Return type                       | Is Async? |
+| ------------------------------------------------------------------------------------ | ----------------------------- | --------------------------------- | --------- |
+| [`getBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-by)            | Exactly one matching element  | `TestInstance`                    | No        |
+| [`getAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-all-by)     | At least one matching element | `Array<TestInstance>`             | No        |
+| [`queryBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-by)        | Zero or one matching element  | <code>TestInstance \| null</code> | No        |
+| [`queryAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-all-by) | No assertion                  | `Array<TestInstance>`             | No        |
+| [`findBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-by)          | Exactly one matching element  | `Promise<TestInstance>`           | Yes       |
+| [`findAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-all-by)   | At least one matching element | `Promise<Array<TestInstance>>`    | Yes       |
 
 Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
 
 ### `getBy*` queries \{#get-by}
 
 ```ts
-getByX(...): HostElement
+getByX(...): TestInstance
 ```
 
 `getBy*` queries return the single matching element for a query, and throw an error if no elements match or if more than one match is found. If you need to find more than one element, then use `getAllBy`.
@@ -2615,7 +2615,7 @@ getByX(...): HostElement
 ### `getAllBy*` queries \{#get-all-by}
 
 ```ts
-getAllByX(...): HostElement[]
+getAllByX(...): TestInstance[]
 ```
 
 `getAllBy*` queries return an array of all matching elements for a query and throw an error if no elements match.
@@ -2623,7 +2623,7 @@ getAllByX(...): HostElement[]
 ### `queryBy*` queries \{#query-by}
 
 ```ts
-queryByX(...): HostElement | null
+queryByX(...): TestInstance | null
 ```
 
 `queryBy*` queries return the first matching node for a query, or `null` if no elements match. Use these to assert that an element is not present. They throw if more than one match is found (use `queryAllBy` instead).
@@ -2631,7 +2631,7 @@ queryByX(...): HostElement | null
 ### `queryAllBy*` queries \{#query-all-by}
 
 ```ts
-queryAllByX(...): HostElement[]
+queryAllByX(...): TestInstance[]
 ```
 
 `queryAllBy*` queries return an array of all matching nodes for a query and return an empty array (`[]`) when no elements match.
@@ -2645,7 +2645,7 @@ findByX(
     timeout?: number,
     interval?: number,
   },
-): Promise<HostElement>
+): Promise<TestInstance>
 ```
 
 `findBy*` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element use `findAllBy*` queries.
@@ -2659,7 +2659,7 @@ findAllByX(
     timeout?: number,
     interval?: number,
   },
-): Promise<HostElement[]>
+): Promise<TestInstance[]>
 ```
 
 `findAllBy*` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
@@ -2674,14 +2674,14 @@ In cases when your `findBy*` and `findAllBy*` queries throw when unable to find 
 
 ## Query predicates
 
-_Note: most methods like this one return a [`HostElement`](https://github.com/mdjastrzebski/test-renderer#hostelement) with following properties that you may be interested in:_
+_Note: most methods like this one return a [`TestInstance`](https://github.com/mdjastrzebski/test-renderer#test-instance) with following properties that you may be interested in:_
 
 ```typescript
-type HostElement = {
+type TestInstance = {
   type: string;
   props: { [propName: string]: any };
-  parent: HostElement | null;
-  children: Array<HostElement | string>;
+  parent: TestInstance | null;
+  children: Array<TestInstance | string>;
 };
 ```
 
@@ -2707,10 +2707,10 @@ getByRole(
     },
     includeHiddenElements?: boolean;
   }
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` with matching `role` or `accessibilityRole` prop.
+Returns a `TestInstance` with matching `role` or `accessibilityRole` prop.
 
 :::info
 In order for `*ByRole` queries to match an element it needs to be considered an accessibility element:
@@ -2774,10 +2774,10 @@ getByLabelText(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   },
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` with matching label:
+Returns a `TestInstance` with matching label:
 
 - either by matching [`aria-label`](https://reactnative.dev/docs/accessibility#aria-label)/[`accessibilityLabel`](https://reactnative.dev/docs/accessibility#accessibilitylabel) prop
 - or by matching text content of view referenced by [`aria-labelledby`](https://reactnative.dev/docs/accessibility#aria-labelledby-android)/[`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
@@ -2802,10 +2802,10 @@ getByPlaceholderText(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   }
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` for a `TextInput` with a matching placeholder – may be a string or regular expression.
+Returns a `TestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -2826,10 +2826,10 @@ getByDisplayValue(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   },
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` for a `TextInput` with a matching display value – may be a string or regular expression.
+Returns a `TestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -2850,10 +2850,10 @@ getByText(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   }
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` with matching text – may be a string or regular expression.
+Returns a `TestInstance` with matching text – may be a string or regular expression.
 
 This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
 
@@ -2878,10 +2878,10 @@ getByHintText(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   },
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` with matching `accessibilityHint` prop.
+Returns a `TestInstance` with matching `accessibilityHint` prop.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -2906,10 +2906,10 @@ getByTestId(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   },
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` with matching `testID` prop. `testID` – may be a string or a regular expression.
+Returns a `TestInstance` with matching `testID` prop. `testID` – may be a string or a regular expression.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -3115,7 +3115,7 @@ See [this article](https://kentcdodds.com/blog/common-mistakes-with-react-testin
 
 :::note Type information
 
-Query results and element references use the `HostElement` type from [Test Renderer](https://github.com/mdjastrzebski/test-renderer). If you need to type element variables, import this type directly from `test-renderer`.
+Query results and element references use the `TestInstance` type from [Test Renderer](https://github.com/mdjastrzebski/test-renderer). If you need to type element variables, import this type directly from `test-renderer`.
 
 :::
 
@@ -3134,8 +3134,8 @@ let screen: {
   unmount(): Promise<void>;
   debug(options?: DebugOptions): void
   toJSON(): JsonElement | null;
-  container: HostElement;
-  root: HostElement | null;
+  container: TestInstance;
+  root: TestInstance | null;
 };
 ```
 
@@ -3272,7 +3272,7 @@ Get the rendered component JSON representation, e.g. for snapshot testing.
 ### `container`
 
 ```ts
-const container: HostElement;
+const container: TestInstance;
 ```
 
 Returns a pseudo-element container whose children are the elements you asked to render. This is the root container element from [Test Renderer](https://github.com/mdjastrzebski/test-renderer).
@@ -3293,7 +3293,7 @@ test('example', async () => {
 ### `root`
 
 ```ts
-const root: HostElement | null;
+const root: TestInstance | null;
 ```
 
 Returns the rendered root [host element](/react-native-testing-library/14.x/docs/advanced/testing-env.md#host-and-composite-components), or `null` if nothing was rendered. This is the first child of the `container`, which represents the actual root element you rendered.
@@ -4008,14 +4008,14 @@ For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
 
 The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
 
-| Variant                                                                              | Assertion                     | Return type                      | Is Async? |
-| ------------------------------------------------------------------------------------ | ----------------------------- | -------------------------------- | --------- |
-| [`getBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-by)            | Exactly one matching element  | `HostElement`                    | No        |
-| [`getAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-all-by)     | At least one matching element | `Array<HostElement>`             | No        |
-| [`queryBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-by)        | Zero or one matching element  | <code>HostElement \| null</code> | No        |
-| [`queryAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-all-by) | No assertion                  | `Array<HostElement>`             | No        |
-| [`findBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-by)          | Exactly one matching element  | `Promise<HostElement>`           | Yes       |
-| [`findAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-all-by)   | At least one matching element | `Promise<Array<HostElement>>`    | Yes       |
+| Variant                                                                              | Assertion                     | Return type                       | Is Async? |
+| ------------------------------------------------------------------------------------ | ----------------------------- | --------------------------------- | --------- |
+| [`getBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-by)            | Exactly one matching element  | `TestInstance`                    | No        |
+| [`getAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-all-by)     | At least one matching element | `Array<TestInstance>`             | No        |
+| [`queryBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-by)        | Zero or one matching element  | <code>TestInstance \| null</code> | No        |
+| [`queryAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-all-by) | No assertion                  | `Array<TestInstance>`             | No        |
+| [`findBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-by)          | Exactly one matching element  | `Promise<TestInstance>`           | Yes       |
+| [`findAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-all-by)   | At least one matching element | `Promise<Array<TestInstance>>`    | Yes       |
 
 Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
 
@@ -4570,7 +4570,7 @@ In v14, React Native Testing Library uses [Test Renderer](https://github.com/mdj
 
 - The underlying renderer is now Test Renderer instead of React Test Renderer
 - This is mostly an internal change; your tests should work without modifications in most cases
-- Type definitions now use [`HostElement`](https://github.com/mdjastrzebski/test-renderer#hostelement) from Test Renderer instead of `ReactTestInstance`
+- Type definitions now use [`TestInstance`](https://github.com/mdjastrzebski/test-renderer#test-instance) from Test Renderer instead of `ReactTestInstance`
 
 **Migration:**
 
@@ -4633,7 +4633,7 @@ If you were directly importing types from React Test Renderer, you may need to u
 import type { ReactTestInstance } from 'react-test-renderer';
 
 // After (v14)
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 ```
 
 **Note:** Most users won't need to update type imports, as React Native Testing Library now exports the necessary types directly.

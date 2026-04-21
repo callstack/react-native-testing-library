@@ -61,7 +61,7 @@ function findByRole: (
     interval?: number;
     // ..
   }
-): Promise<HostElement>;
+): Promise<TestInstance>;
 ```
 
 Each query has a default `timeout` value of 1000 ms and a default `interval` of 50 ms. Custom timeout and check intervals can be specified if needed, as shown below:

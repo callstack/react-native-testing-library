@@ -18,14 +18,14 @@ For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
 
 The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
 
-| Variant                                                                              | Assertion                     | Return type                      | Is Async? |
-| ------------------------------------------------------------------------------------ | ----------------------------- | -------------------------------- | --------- |
-| [`getBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-by)            | Exactly one matching element  | `HostElement`                    | No        |
-| [`getAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-all-by)     | At least one matching element | `Array<HostElement>`             | No        |
-| [`queryBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-by)        | Zero or one matching element  | <code>HostElement \| null</code> | No        |
-| [`queryAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-all-by) | No assertion                  | `Array<HostElement>`             | No        |
-| [`findBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-by)          | Exactly one matching element  | `Promise<HostElement>`           | Yes       |
-| [`findAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-all-by)   | At least one matching element | `Promise<Array<HostElement>>`    | Yes       |
+| Variant                                                                              | Assertion                     | Return type                       | Is Async? |
+| ------------------------------------------------------------------------------------ | ----------------------------- | --------------------------------- | --------- |
+| [`getBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-by)            | Exactly one matching element  | `TestInstance`                    | No        |
+| [`getAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-all-by)     | At least one matching element | `Array<TestInstance>`             | No        |
+| [`queryBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-by)        | Zero or one matching element  | <code>TestInstance \| null</code> | No        |
+| [`queryAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-all-by) | No assertion                  | `Array<TestInstance>`             | No        |
+| [`findBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-by)          | Exactly one matching element  | `Promise<TestInstance>`           | Yes       |
+| [`findAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-all-by)   | At least one matching element | `Promise<Array<TestInstance>>`    | Yes       |
 
 Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
 

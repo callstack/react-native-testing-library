@@ -49,21 +49,21 @@ For this query, `getBy*` is the query variant, and `*ByRole` is the predicate.
 
 The query variants describe the expected number (and timing) of matching elements, so they differ in their return type.
 
-| Variant                                                                              | Assertion                     | Return type                      | Is Async? |
-| ------------------------------------------------------------------------------------ | ----------------------------- | -------------------------------- | --------- |
-| [`getBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-by)            | Exactly one matching element  | `HostElement`                    | No        |
-| [`getAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-all-by)     | At least one matching element | `Array<HostElement>`             | No        |
-| [`queryBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-by)        | Zero or one matching element  | <code>HostElement \| null</code> | No        |
-| [`queryAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-all-by) | No assertion                  | `Array<HostElement>`             | No        |
-| [`findBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-by)          | Exactly one matching element  | `Promise<HostElement>`           | Yes       |
-| [`findAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-all-by)   | At least one matching element | `Promise<Array<HostElement>>`    | Yes       |
+| Variant                                                                              | Assertion                     | Return type                       | Is Async? |
+| ------------------------------------------------------------------------------------ | ----------------------------- | --------------------------------- | --------- |
+| [`getBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-by)            | Exactly one matching element  | `TestInstance`                    | No        |
+| [`getAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#get-all-by)     | At least one matching element | `Array<TestInstance>`             | No        |
+| [`queryBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-by)        | Zero or one matching element  | <code>TestInstance \| null</code> | No        |
+| [`queryAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#query-all-by) | No assertion                  | `Array<TestInstance>`             | No        |
+| [`findBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-by)          | Exactly one matching element  | `Promise<TestInstance>`           | Yes       |
+| [`findAllBy*`](/react-native-testing-library/14.x/docs/api/queries.md#find-all-by)   | At least one matching element | `Promise<Array<TestInstance>>`    | Yes       |
 
 Queries work as implicit assertions on the number of matching elements and will throw an error when the assertion fails.
 
 ### `getBy*` queries \{#get-by}
 
 ```ts
-getByX(...): HostElement
+getByX(...): TestInstance
 ```
 
 `getBy*` queries return the single matching element for a query, and throw an error if no elements match or if more than one match is found. If you need to find more than one element, then use `getAllBy`.
@@ -71,7 +71,7 @@ getByX(...): HostElement
 ### `getAllBy*` queries \{#get-all-by}
 
 ```ts
-getAllByX(...): HostElement[]
+getAllByX(...): TestInstance[]
 ```
 
 `getAllBy*` queries return an array of all matching elements for a query and throw an error if no elements match.
@@ -79,7 +79,7 @@ getAllByX(...): HostElement[]
 ### `queryBy*` queries \{#query-by}
 
 ```ts
-queryByX(...): HostElement | null
+queryByX(...): TestInstance | null
 ```
 
 `queryBy*` queries return the first matching node for a query, or `null` if no elements match. Use these to assert that an element is not present. They throw if more than one match is found (use `queryAllBy` instead).
@@ -87,7 +87,7 @@ queryByX(...): HostElement | null
 ### `queryAllBy*` queries \{#query-all-by}
 
 ```ts
-queryAllByX(...): HostElement[]
+queryAllByX(...): TestInstance[]
 ```
 
 `queryAllBy*` queries return an array of all matching nodes for a query and return an empty array (`[]`) when no elements match.
@@ -101,7 +101,7 @@ findByX(
     timeout?: number,
     interval?: number,
   },
-): Promise<HostElement>
+): Promise<TestInstance>
 ```
 
 `findBy*` queries return a promise which resolves when a matching element is found. The promise is rejected if no elements match or if more than one match is found after a default timeout of 1000 ms. If you need to find more than one element use `findAllBy*` queries.
@@ -115,7 +115,7 @@ findAllByX(
     timeout?: number,
     interval?: number,
   },
-): Promise<HostElement[]>
+): Promise<TestInstance[]>
 ```
 
 `findAllBy*` queries return a promise which resolves to an array of matching elements. The promise is rejected if no elements match after a default timeout of 1000 ms.
@@ -130,14 +130,14 @@ In cases when your `findBy*` and `findAllBy*` queries throw when unable to find 
 
 ## Query predicates
 
-_Note: most methods like this one return a [`HostElement`](https://github.com/mdjastrzebski/test-renderer#hostelement) with following properties that you may be interested in:_
+_Note: most methods like this one return a [`TestInstance`](https://github.com/mdjastrzebski/test-renderer#test-instance) with following properties that you may be interested in:_
 
 ```typescript
-type HostElement = {
+type TestInstance = {
   type: string;
   props: { [propName: string]: any };
-  parent: HostElement | null;
-  children: Array<HostElement | string>;
+  parent: TestInstance | null;
+  children: Array<TestInstance | string>;
 };
 ```
 
@@ -163,10 +163,10 @@ getByRole(
     },
     includeHiddenElements?: boolean;
   }
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` with matching `role` or `accessibilityRole` prop.
+Returns a `TestInstance` with matching `role` or `accessibilityRole` prop.
 
 :::info
 In order for `*ByRole` queries to match an element it needs to be considered an accessibility element:
@@ -230,10 +230,10 @@ getByLabelText(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   },
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` with matching label:
+Returns a `TestInstance` with matching label:
 
 - either by matching [`aria-label`](https://reactnative.dev/docs/accessibility#aria-label)/[`accessibilityLabel`](https://reactnative.dev/docs/accessibility#accessibilitylabel) prop
 - or by matching text content of view referenced by [`aria-labelledby`](https://reactnative.dev/docs/accessibility#aria-labelledby-android)/[`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
@@ -258,10 +258,10 @@ getByPlaceholderText(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   }
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` for a `TextInput` with a matching placeholder – may be a string or regular expression.
+Returns a `TestInstance` for a `TextInput` with a matching placeholder – may be a string or regular expression.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -282,10 +282,10 @@ getByDisplayValue(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   },
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` for a `TextInput` with a matching display value – may be a string or regular expression.
+Returns a `TestInstance` for a `TextInput` with a matching display value – may be a string or regular expression.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -306,10 +306,10 @@ getByText(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   }
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` with matching text – may be a string or regular expression.
+Returns a `TestInstance` with matching text – may be a string or regular expression.
 
 This method will join `<Text>` siblings to find matches, similarly to [how React Native handles these components](https://reactnative.dev/docs/text#containers). This will allow for querying for strings that will be visually rendered together, but may be semantically separate React components.
 
@@ -334,10 +334,10 @@ getByHintText(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   },
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` with matching `accessibilityHint` prop.
+Returns a `TestInstance` with matching `accessibilityHint` prop.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
@@ -362,10 +362,10 @@ getByTestId(
     normalizer?: (text: string) => string;
     includeHiddenElements?: boolean;
   },
-): HostElement;
+): TestInstance;
 ```
 
-Returns a `HostElement` with matching `testID` prop. `testID` – may be a string or a regular expression.
+Returns a `TestInstance` with matching `testID` prop. `testID` – may be a string or a regular expression.
 
 ```jsx
 import { render, screen } from '@testing-library/react-native';
