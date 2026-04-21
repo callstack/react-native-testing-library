@@ -18,9 +18,9 @@ test('toHaveDisplayValue() on matching display value', async () => {
 
   expect(() => expect(textInput).not.toHaveDisplayValue('test'))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toHaveDisplayValue()
+    "expect(instance).not.toHaveDisplayValue()
 
-    Expected element not to have display value:
+    Expected instance not to have display value:
       test
     Received:
       test"
@@ -35,9 +35,9 @@ test('toHaveDisplayValue() on non-matching display value', async () => {
 
   expect(() => expect(textInput).toHaveDisplayValue('non-test'))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveDisplayValue()
+    "expect(instance).toHaveDisplayValue()
 
-    Expected element to have display value:
+    Expected instance to have display value:
       non-test
     Received:
       test"
@@ -49,7 +49,7 @@ test("toHaveDisplayValue() on non-'TextInput' elements", async () => {
 
   const view = screen.getByTestId('view');
   expect(() => expect(view).toHaveDisplayValue('test')).toThrowErrorMatchingInlineSnapshot(
-    `"toHaveDisplayValue() works only with host "TextInput" elements. Passed element has type "View"."`,
+    `"toHaveDisplayValue() works only with host "TextInput" elements. Passed instance has type "View"."`,
   );
 });
 

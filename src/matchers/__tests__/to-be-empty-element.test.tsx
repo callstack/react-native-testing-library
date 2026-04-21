@@ -19,7 +19,7 @@ test('toBeEmptyElement() base case', async () => {
   const empty = screen.getByTestId('empty');
   expect(empty).toBeEmptyElement();
   expect(() => expect(empty).not.toBeEmptyElement()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeEmptyElement()
+    "expect(instance).not.toBeEmptyElement()
 
     Received:
       (no elements)"
@@ -28,7 +28,7 @@ test('toBeEmptyElement() base case', async () => {
   const notEmpty = screen.getByTestId('not-empty');
   expect(notEmpty).not.toBeEmptyElement();
   expect(() => expect(notEmpty).toBeEmptyElement()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeEmptyElement()
+    "expect(instance).toBeEmptyElement()
 
     Received:
       <View
@@ -49,7 +49,7 @@ test('toBeEmptyElement() ignores composite-only children', async () => {
   const view = screen.getByTestId('view');
   expect(view).toBeEmptyElement();
   expect(() => expect(view).not.toBeEmptyElement()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeEmptyElement()
+    "expect(instance).not.toBeEmptyElement()
 
     Received:
       (no elements)"
@@ -62,7 +62,7 @@ test('toBeEmptyElement() on null element', () => {
   }).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).toBeEmptyElement()
 
-    received value must be a host element.
+    received value must be a host instance.
     Received has value: null"
   `);
 });

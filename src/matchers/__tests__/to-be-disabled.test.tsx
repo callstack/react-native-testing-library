@@ -39,9 +39,9 @@ test('toBeDisabled()/toBeEnabled() supports basic case', async () => {
 
   expect(() => expect(screen.getByTestId('disabled-parent')).not.toBeDisabled())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeDisabled()
+    "expect(instance).not.toBeDisabled()
 
-    Received element is disabled:
+    Received instance is disabled:
       <View
         aria-disabled={true}
         testID="disabled-parent"
@@ -50,9 +50,9 @@ test('toBeDisabled()/toBeEnabled() supports basic case', async () => {
 
   expect(() => expect(screen.getByTestId('enabled-view')).toBeDisabled())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeDisabled()
+    "expect(instance).toBeDisabled()
 
-    Received element is not disabled:
+    Received instance is not disabled:
       <View
         testID="enabled-view"
       />"
@@ -67,9 +67,9 @@ test('toBeDisabled()/toBeEnabled() supports basic case', async () => {
 
   expect(() => expect(screen.getByTestId('disabled-parent')).toBeEnabled())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeEnabled()
+    "expect(instance).toBeEnabled()
 
-    Received element is not enabled:
+    Received instance is not enabled:
       <View
         aria-disabled={true}
         testID="disabled-parent"
@@ -78,9 +78,9 @@ test('toBeDisabled()/toBeEnabled() supports basic case', async () => {
 
   expect(() => expect(screen.getByTestId('enabled-view')).not.toBeEnabled())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeEnabled()
+    "expect(instance).not.toBeEnabled()
 
-    Received element is enabled:
+    Received instance is enabled:
       <View
         testID="enabled-view"
       />"
@@ -103,9 +103,9 @@ test('toBeDisabled()/toBeEnabled() supports Pressable with "disabled" prop', asy
   expect(title).not.toBeEnabled();
 
   expect(() => expect(pressable).toBeEnabled()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeEnabled()
+    "expect(instance).toBeEnabled()
 
-    Received element is not enabled:
+    Received instance is not enabled:
       <View
         accessibilityState={
           {
@@ -118,9 +118,9 @@ test('toBeDisabled()/toBeEnabled() supports Pressable with "disabled" prop', asy
   `);
 
   expect(() => expect(pressable).not.toBeDisabled()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeDisabled()
+    "expect(instance).not.toBeDisabled()
 
-    Received element is disabled:
+    Received instance is disabled:
       <View
         accessibilityState={
           {
@@ -133,18 +133,18 @@ test('toBeDisabled()/toBeEnabled() supports Pressable with "disabled" prop', asy
   `);
 
   expect(() => expect(title).toBeEnabled()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeEnabled()
+    "expect(instance).toBeEnabled()
 
-    Received element is not enabled:
+    Received instance is not enabled:
       <Text>
         Button
       </Text>"
   `);
 
   expect(() => expect(title).not.toBeDisabled()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeDisabled()
+    "expect(instance).not.toBeDisabled()
 
-    Received element is disabled:
+    Received instance is disabled:
       <Text>
         Button
       </Text>"

@@ -119,21 +119,21 @@ describe('toHaveAccessibilityValue', () => {
 
     expect(() => expect(screen.root).toHaveAccessibilityValue({ min: 10 }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "expect(element).toHaveAccessibilityValue({"min": 10})
+      "expect(instance).toHaveAccessibilityValue({"min": 10})
 
-      Expected the element to have accessibility value:
+      Expected the instance to have accessibility value:
         {"min": 10}
-      Received element with accessibility value:
+      Received instance with accessibility value:
         {"max": 100, "min": 0, "now": 33, "text": "Hello"}"
     `);
 
     expect(() => expect(screen.root).not.toHaveAccessibilityValue({ min: 0 }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "expect(element).not.toHaveAccessibilityValue({"min": 0})
+      "expect(instance).not.toHaveAccessibilityValue({"min": 0})
 
-      Expected the element not to have accessibility value:
+      Expected the instance not to have accessibility value:
         {"min": 0}
-      Received element with accessibility value:
+      Received instance with accessibility value:
         {"max": 100, "min": 0, "now": 33, "text": "Hello"}"
     `);
   });
@@ -143,21 +143,21 @@ describe('toHaveAccessibilityValue', () => {
 
     expect(() => expect(screen.root).toHaveAccessibilityValue({ min: 30 }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "expect(element).toHaveAccessibilityValue({"min": 30})
+      "expect(instance).toHaveAccessibilityValue({"min": 30})
 
-      Expected the element to have accessibility value:
+      Expected the instance to have accessibility value:
         {"min": 30}
-      Received element with accessibility value:
+      Received instance with accessibility value:
         {"now": 33, "text": "Hello"}"
     `);
 
     expect(() => expect(screen.root).not.toHaveAccessibilityValue({ now: 33 }))
       .toThrowErrorMatchingInlineSnapshot(`
-      "expect(element).not.toHaveAccessibilityValue({"now": 33})
+      "expect(instance).not.toHaveAccessibilityValue({"now": 33})
 
-      Expected the element not to have accessibility value:
+      Expected the instance not to have accessibility value:
         {"now": 33}
-      Received element with accessibility value:
+      Received instance with accessibility value:
         {"now": 33, "text": "Hello"}"
     `);
   });

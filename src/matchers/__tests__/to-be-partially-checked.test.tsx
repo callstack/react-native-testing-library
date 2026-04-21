@@ -44,9 +44,9 @@ test('toBePartiallyCheck() with checkbox role', async () => {
   expect(defaultView).not.toBePartiallyChecked();
 
   expect(() => expect(mixed).not.toBePartiallyChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBePartiallyChecked()
+    "expect(instance).not.toBePartiallyChecked()
 
-    Received element is partially checked:
+    Received instance is partially checked:
       <View
         accessibilityRole="checkbox"
         accessibilityState={
@@ -60,9 +60,9 @@ test('toBePartiallyCheck() with checkbox role', async () => {
   `);
 
   expect(() => expect(checked).toBePartiallyChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBePartiallyChecked()
+    "expect(instance).toBePartiallyChecked()
 
-    Received element is not partially checked:
+    Received instance is not partially checked:
       <View
         accessibilityRole="checkbox"
         accessibilityState={
@@ -75,9 +75,9 @@ test('toBePartiallyCheck() with checkbox role', async () => {
       />"
   `);
   expect(() => expect(defaultView).toBePartiallyChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBePartiallyChecked()
+    "expect(instance).toBePartiallyChecked()
 
-    Received element is not partially checked:
+    Received instance is not partially checked:
       <View
         accessibilityRole="checkbox"
         accessible={true}

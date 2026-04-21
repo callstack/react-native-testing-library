@@ -34,9 +34,9 @@ test('toBeSelected() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('selected')).not.toBeSelected())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeSelected()
+    "expect(instance).not.toBeSelected()
 
-    Received element is selected
+    Received instance is selected
       <View
         accessibilityState={
           {
@@ -49,9 +49,9 @@ test('toBeSelected() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('selected-aria')).not.toBeSelected())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeSelected()
+    "expect(instance).not.toBeSelected()
 
-    Received element is selected
+    Received instance is selected
       <View
         aria-selected={true}
         testID="selected-aria"
@@ -60,9 +60,9 @@ test('toBeSelected() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('not-selected')).toBeSelected())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeSelected()
+    "expect(instance).toBeSelected()
 
-    Received element is not selected
+    Received instance is not selected
       <View
         accessibilityState={
           {
@@ -75,9 +75,9 @@ test('toBeSelected() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('not-selected-aria')).toBeSelected())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeSelected()
+    "expect(instance).toBeSelected()
 
-    Received element is not selected
+    Received instance is not selected
       <View
         aria-selected={false}
         testID="not-selected-aria"
@@ -86,9 +86,9 @@ test('toBeSelected() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('default')).toBeSelected())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeSelected()
+    "expect(instance).toBeSelected()
 
-    Received element is not selected
+    Received instance is not selected
       <View
         testID="default"
       />"

@@ -16,7 +16,7 @@ test('toContainElement() supports basic case', async () => {
   expect(parent).toContainElement(child);
 
   expect(() => expect(parent).not.toContainElement(child)).toThrowErrorMatchingInlineSnapshot(`
-    "expect(container).not.toContainElement(element)
+    "expect(container).not.toContainElement(instance)
 
       <View
         testID="parent"
@@ -46,7 +46,7 @@ test('toContainElement() supports negative case', async () => {
   expect(view2).not.toContainElement(view1);
 
   expect(() => expect(view1).toContainElement(view2)).toThrowErrorMatchingInlineSnapshot(`
-    "expect(container).toContainElement(element)
+    "expect(container).toContainElement(instance)
 
       <View
         testID="view1"
@@ -69,7 +69,7 @@ test('toContainElement() handles null container', async () => {
   expect(() => expect(null).toContainElement(view)).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).toContainElement()
 
-    received value must be a host element.
+    received value must be a host instance.
     Received has value: null"
   `);
 });
@@ -82,7 +82,7 @@ test('toContainElement() handles null element', async () => {
   expect(view).not.toContainElement(null);
 
   expect(() => expect(view).toContainElement(null)).toThrowErrorMatchingInlineSnapshot(`
-    "expect(container).toContainElement(element)
+    "expect(container).toContainElement(instance)
 
       <View
         testID="view"
@@ -104,18 +104,18 @@ test('toContainElement() handles non-element container', async () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(received).not.toContainElement()
 
-    received value must be a host element.
+    received value must be a host instance.
     Received has type:  object
     Received has value: {"name": "non-element"}"
   `);
 
   expect(() => expect(true).not.toContainElement(view)).toThrowErrorMatchingInlineSnapshot(`
-      "expect(received).not.toContainElement()
+    "expect(received).not.toContainElement()
 
-      received value must be a host element.
-      Received has type:  boolean
-      Received has value: true"
-    `);
+    received value must be a host instance.
+    Received has type:  boolean
+    Received has value: true"
+  `);
 });
 
 test('toContainElement() handles non-element element', async () => {
@@ -129,7 +129,7 @@ test('toContainElement() handles non-element element', async () => {
   ).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).not.toContainElement()
 
-    received value must be a host element.
+    received value must be a host instance.
     Received has type:  object
     Received has value: {"name": "non-element"}"
   `);

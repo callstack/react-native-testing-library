@@ -34,9 +34,9 @@ test('toBeExpanded() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('expanded')).not.toBeExpanded())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeExpanded()
+    "expect(instance).not.toBeExpanded()
 
-    Received element is expanded:
+    Received instance is expanded:
       <View
         accessibilityState={
           {
@@ -49,9 +49,9 @@ test('toBeExpanded() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('expanded-aria')).not.toBeExpanded())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeExpanded()
+    "expect(instance).not.toBeExpanded()
 
-    Received element is expanded:
+    Received instance is expanded:
       <View
         aria-expanded={true}
         testID="expanded-aria"
@@ -60,9 +60,9 @@ test('toBeExpanded() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('not-expanded')).toBeExpanded())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeExpanded()
+    "expect(instance).toBeExpanded()
 
-    Received element is not expanded:
+    Received instance is not expanded:
       <View
         accessibilityState={
           {
@@ -75,9 +75,9 @@ test('toBeExpanded() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('not-expanded-aria')).toBeExpanded())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeExpanded()
+    "expect(instance).toBeExpanded()
 
-    Received element is not expanded:
+    Received instance is not expanded:
       <View
         aria-expanded={false}
         testID="not-expanded-aria"
@@ -86,9 +86,9 @@ test('toBeExpanded() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('default')).toBeExpanded())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeExpanded()
+    "expect(instance).toBeExpanded()
 
-    Received element is not expanded:
+    Received instance is not expanded:
       <View
         testID="default"
       />"
@@ -126,9 +126,9 @@ test('toBeCollapsed() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('expanded')).toBeCollapsed())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeCollapsed()
+    "expect(instance).toBeCollapsed()
 
-    Received element is not collapsed:
+    Received instance is not collapsed:
       <View
         accessibilityState={
           {
@@ -141,9 +141,9 @@ test('toBeCollapsed() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('expanded-aria')).toBeCollapsed())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeCollapsed()
+    "expect(instance).toBeCollapsed()
 
-    Received element is not collapsed:
+    Received instance is not collapsed:
       <View
         aria-expanded={true}
         testID="expanded-aria"
@@ -152,9 +152,9 @@ test('toBeCollapsed() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('not-expanded')).not.toBeCollapsed())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeCollapsed()
+    "expect(instance).not.toBeCollapsed()
 
-    Received element is collapsed:
+    Received instance is collapsed:
       <View
         accessibilityState={
           {
@@ -167,9 +167,9 @@ test('toBeCollapsed() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('not-expanded-aria')).not.toBeCollapsed())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeCollapsed()
+    "expect(instance).not.toBeCollapsed()
 
-    Received element is collapsed:
+    Received instance is collapsed:
       <View
         aria-expanded={false}
         testID="not-expanded-aria"
@@ -178,9 +178,9 @@ test('toBeCollapsed() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('default')).toBeCollapsed())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeCollapsed()
+    "expect(instance).toBeCollapsed()
 
-    Received element is not collapsed:
+    Received instance is not collapsed:
       <View
         testID="default"
       />"
