@@ -3018,14 +3018,14 @@ __metadata:
     react-native-gesture-handler: "npm:^2.31.1"
     redent: "npm:^3.0.0"
     release-it: "npm:^19.2.4"
-    test-renderer: "npm:0.16.0"
+    test-renderer: "npm:1.0.0"
     typescript: "npm:^6.0.2"
     typescript-eslint: "npm:^8.58.1"
   peerDependencies:
     jest: ">=29.0.0"
     react: ">=19.0.0"
     react-native: ">=0.78"
-    test-renderer: ^0.16.0
+    test-renderer: ^1.0.0
   peerDependenciesMeta:
     jest:
       optional: true
@@ -10343,15 +10343,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"test-renderer@npm:0.16.0":
-  version: 0.16.0
-  resolution: "test-renderer@npm:0.16.0"
+"test-renderer@npm:1.0.0":
+  version: 1.0.0
+  resolution: "test-renderer@npm:1.0.0"
   dependencies:
     "@types/react-reconciler": "npm:~0.31.0"
     react-reconciler: "npm:~0.31.0"
   peerDependencies:
     react: ^19.0.0
-  checksum: 10c0/8175d6519f68285357b17a3dd40ea500877a9920483a2d7271583139d4b296175f672d57a98a9f6ad9417ce3cd464d557130214585c7c959ded3dde1cae1f48e
+  checksum: 10c0/f63cbed064231faa039e4ba7bdb382bf777d7b58dba710ff71cf9e56283dba0b10c36166b4f22f5c8c62a4f21d9173d2a527d6c18c70476eeab8c28bc2c7fd57
   languageName: node
   linkType: hard
 
