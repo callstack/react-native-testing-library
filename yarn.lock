@@ -3018,7 +3018,7 @@ __metadata:
     react-native-gesture-handler: "npm:^2.31.1"
     redent: "npm:^3.0.0"
     release-it: "npm:^19.2.4"
-    test-renderer: "npm:1.0.0"
+    test-renderer: "npm:1.1.0"
     typescript: "npm:^6.0.2"
     typescript-eslint: "npm:^8.58.1"
   peerDependencies:
@@ -3200,12 +3200,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-reconciler@npm:~0.31.0":
-  version: 0.31.0
-  resolution: "@types/react-reconciler@npm:0.31.0"
+"@types/react-reconciler@npm:~0.32.0":
+  version: 0.32.3
+  resolution: "@types/react-reconciler@npm:0.32.3"
   peerDependencies:
     "@types/react": "*"
-  checksum: 10c0/9d8fd6334760d51e94dbf22b9783199c8937a2b76d1f682ef6f7f46d0ced578ccc8a9e285475931c9d410df1cae4b0fc17c0b3bb55dd00cc4e9a70a5707b3b09
+  checksum: 10c0/8d6485c6da3aa6d84b5c320c4cf9737e67511cd6c7ebfb7252ec032fd1cfb0515d3a2c06054491603c6ab040202694ff5ad125cd840e1da9e76d7447cef53dff
   languageName: node
   linkType: hard
 
@@ -9302,14 +9302,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-reconciler@npm:~0.31.0":
-  version: 0.31.0
-  resolution: "react-reconciler@npm:0.31.0"
+"react-reconciler@npm:~0.32.0":
+  version: 0.32.0
+  resolution: "react-reconciler@npm:0.32.0"
   dependencies:
-    scheduler: "npm:^0.25.0"
+    scheduler: "npm:^0.26.0"
   peerDependencies:
-    react: ^19.0.0
-  checksum: 10c0/97920e1866c7206e200c3920c133c2e85f62a3c54fd9bc4b83c10c558d83d98eb378caab4fe37498e0cc1b1b2665d898627f2ae2537b29c8ab295ec8abc0c580
+    react: ^19.1.0
+  checksum: 10c0/ace0562d2aa99685416ac62741354706dec6df334aa64acc7ad455bd8a6f6af0068b276ad2e5412c3875388022ab13807f0b7d688fda7b2835301c110247146b
   languageName: node
   linkType: hard
 
@@ -9681,10 +9681,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.25.0":
-  version: 0.25.0
-  resolution: "scheduler@npm:0.25.0"
-  checksum: 10c0/a4bb1da406b613ce72c1299db43759526058fdcc413999c3c3e0db8956df7633acf395cb20eb2303b6a65d658d66b6585d344460abaee8080b4aa931f10eaafe
+"scheduler@npm:^0.26.0":
+  version: 0.26.0
+  resolution: "scheduler@npm:0.26.0"
+  checksum: 10c0/5b8d5bfddaae3513410eda54f2268e98a376a429931921a81b5c3a2873aab7ca4d775a8caac5498f8cbc7d0daeab947cf923dbd8e215d61671f9f4e392d34356
   languageName: node
   linkType: hard
 
@@ -10343,15 +10343,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"test-renderer@npm:1.0.0":
-  version: 1.0.0
-  resolution: "test-renderer@npm:1.0.0"
+"test-renderer@npm:1.1.0":
+  version: 1.1.0
+  resolution: "test-renderer@npm:1.1.0"
   dependencies:
-    "@types/react-reconciler": "npm:~0.31.0"
-    react-reconciler: "npm:~0.31.0"
+    "@types/react-reconciler": "npm:~0.32.0"
+    react-reconciler: "npm:~0.32.0"
   peerDependencies:
     react: ^19.0.0
-  checksum: 10c0/f63cbed064231faa039e4ba7bdb382bf777d7b58dba710ff71cf9e56283dba0b10c36166b4f22f5c8c62a4f21d9173d2a527d6c18c70476eeab8c28bc2c7fd57
+  checksum: 10c0/0ccdfa5ec15fa5f7339b7b53b496b9ec97434b9aab4ac298b419c64efd8ec13bc85cf572757e20f90ff946aa6ef8112eb6e1b911dd274c6e4c698bc07033088d
   languageName: node
   linkType: hard
 
