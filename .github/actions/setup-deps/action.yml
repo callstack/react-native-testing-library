@@ -8,6 +8,9 @@ inputs:
   react-native-version:
     description: React Native version to install (e.g., 0.83.1)
     required: false
+  test-renderer-version:
+    description: Test renderer version to install (e.g., 1.1.0)
+    required: false
 
 runs:
   using: composite
@@ -55,4 +58,9 @@ runs:
         fi
 
         yarn add -D "${deps[@]}"
+      shell: bash
+
+    - name: Switch to test-renderer version
+      if: inputs.test-renderer-version != ''
+      run: yarn add -D test-renderer@${{ inputs.test-renderer-version }}
       shell: bash
