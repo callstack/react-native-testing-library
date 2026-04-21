@@ -1,6 +1,6 @@
 import type { NewPlugin } from 'pretty-format';
 import prettyFormat, { plugins } from 'pretty-format';
-import type { HostElement, JsonNode } from 'test-renderer';
+import type { JsonNode, TestInstance } from 'test-renderer';
 
 import type { MapPropsFunction } from './map-props';
 import { defaultMapProps } from './map-props';
@@ -22,7 +22,7 @@ export type FormatElementOptions = {
  * @param element Element to format.
  */
 export function formatElement(
-  element: HostElement | null,
+  element: TestInstance | null,
   { compact, highlight = true, mapProps = defaultMapProps }: FormatElementOptions = {},
 ) {
   if (element == null) {
@@ -52,7 +52,7 @@ export function formatElement(
   );
 }
 
-export function formatElementList(elements: HostElement[], options?: FormatElementOptions) {
+export function formatElementList(elements: TestInstance[], options?: FormatElementOptions) {
   if (elements.length === 0) {
     return '(no elements)';
   }

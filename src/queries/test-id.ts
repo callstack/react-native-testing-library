@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import type { TextMatch, TextMatchOptions } from '../matches';
@@ -16,12 +16,12 @@ import type { CommonQueryOptions } from './options';
 
 type ByTestIdOptions = CommonQueryOptions & TextMatchOptions;
 
-const matchTestId = (node: HostElement, testId: TextMatch, options: TextMatchOptions = {}) => {
+const matchTestId = (node: TestInstance, testId: TextMatch, options: TextMatchOptions = {}) => {
   const { exact, normalizer } = options;
   return matches(testId, node.props.testID, normalizer, exact);
 };
 
-const queryAllByTestId = (element: HostElement): QueryAllByQuery<TextMatch, ByTestIdOptions> =>
+const queryAllByTestId = (element: TestInstance): QueryAllByQuery<TextMatch, ByTestIdOptions> =>
   function queryAllByTestIdFn(testId, queryOptions) {
     return findAll(element, (node) => matchTestId(node, testId, queryOptions), queryOptions);
   };
@@ -46,7 +46,7 @@ export type ByTestIdQueries = {
   findAllByTestId: FindAllByQuery<TextMatch, ByTestIdOptions>;
 };
 
-export const bindByTestIdQueries = (element: HostElement): ByTestIdQueries => ({
+export const bindByTestIdQueries = (element: TestInstance): ByTestIdQueries => ({
   getByTestId: getBy(element),
   getAllByTestId: getAllBy(element),
   queryByTestId: queryBy(element),

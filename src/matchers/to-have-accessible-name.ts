@@ -1,5 +1,5 @@
 import { matcherHint } from 'jest-matcher-utils';
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { computeAccessibleName } from '../helpers/accessibility';
 import type { TextMatch, TextMatchOptions } from '../matches';
@@ -8,7 +8,7 @@ import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveAccessibleName(
   this: jest.MatcherContext,
-  element: HostElement,
+  element: TestInstance,
   expectedName?: TextMatch,
   options?: TextMatchOptions,
 ) {

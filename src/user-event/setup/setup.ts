@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { validateOptions } from '../../helpers/validate-options';
@@ -95,8 +95,8 @@ function createConfig(
 export interface UserEventInstance {
   config: UserEventConfig;
 
-  press: (element: HostElement) => Promise<void>;
-  longPress: (element: HostElement, options?: PressOptions) => Promise<void>;
+  press: (element: TestInstance) => Promise<void>;
+  longPress: (element: TestInstance, options?: PressOptions) => Promise<void>;
 
   /**
    * Simulate user pressing on a given `TextInput` element and typing given text.
@@ -118,7 +118,7 @@ export interface UserEventInstance {
    * - `submitEditing` - if true, `submitEditing` event will be triggered after
    * typing the text.
    */
-  type: (element: HostElement, text: string, options?: TypeOptions) => Promise<void>;
+  type: (element: TestInstance, text: string, options?: TypeOptions) => Promise<void>;
 
   /**
    * Simulate user clearing the text of a given `TextInput` element.
@@ -131,7 +131,7 @@ export interface UserEventInstance {
    *
    * @param element TextInput element to clear
    */
-  clear: (element: HostElement) => Promise<void>;
+  clear: (element: TestInstance) => Promise<void>;
 
   /**
    * Simulate user pasting the text to a given `TextInput` element.
@@ -144,7 +144,7 @@ export interface UserEventInstance {
    *
    * @param element TextInput element to paste to
    */
-  paste: (element: HostElement, text: string) => Promise<void>;
+  paste: (element: TestInstance, text: string) => Promise<void>;
 
   /**
    * Simlate user scorlling a ScrollView element.
@@ -152,7 +152,7 @@ export interface UserEventInstance {
    * @param element ScrollView element
    * @returns
    */
-  scrollTo: (element: HostElement, options: ScrollToOptions) => Promise<void>;
+  scrollTo: (element: TestInstance, options: ScrollToOptions) => Promise<void>;
 }
 
 function createInstance(config: UserEventConfig): UserEventInstance {

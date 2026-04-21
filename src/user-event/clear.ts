@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import {
   buildBlurEvent,
@@ -14,7 +14,7 @@ import type { UserEventInstance } from './setup';
 import { emitTypingEvents } from './type/type';
 import { dispatchEvent, wait } from './utils';
 
-export async function clear(this: UserEventInstance, element: HostElement): Promise<void> {
+export async function clear(this: UserEventInstance, element: TestInstance): Promise<void> {
   if (!isHostTextInput(element)) {
     throw new ErrorWithStack(
       `clear() only supports host "TextInput" elements. Passed element has type: "${element.type}".`,

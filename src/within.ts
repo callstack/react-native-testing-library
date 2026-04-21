@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { bindByDisplayValueQueries } from './queries/display-value';
 import { bindByHintTextQueries } from './queries/hint-text';
@@ -8,7 +8,7 @@ import { bindByRoleQueries } from './queries/role';
 import { bindByTestIdQueries } from './queries/test-id';
 import { bindByTextQueries } from './queries/text';
 
-export function within(element: HostElement) {
+export function within(element: TestInstance) {
   return {
     ...bindByTextQueries(element),
     ...bindByTestIdQueries(element),

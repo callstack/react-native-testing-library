@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import type { TextMatch } from '../../matches';
 import { computeAriaValue } from '../accessibility';
@@ -12,7 +12,7 @@ export interface AccessibilityValueMatcher {
 }
 
 export function matchAccessibilityValue(
-  node: HostElement,
+  node: TestInstance,
   matcher: AccessibilityValueMatcher,
 ): boolean {
   const value = computeAriaValue(node);

@@ -1,12 +1,12 @@
 import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import redent from 'redent';
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { isTestInstance } from '../helpers/component-tree';
 import { formatElementList } from '../helpers/format-element';
 import { checkHostElement } from './utils';
 
-export function toBeEmptyElement(this: jest.MatcherContext, element: HostElement) {
+export function toBeEmptyElement(this: jest.MatcherContext, element: TestInstance) {
   checkHostElement(element, toBeEmptyElement, this);
 
   // TODO check

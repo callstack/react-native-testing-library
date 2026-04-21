@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import { isHostText } from '../helpers/host-component-names';
@@ -17,7 +17,7 @@ import type { CommonQueryOptions } from './options';
 
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
-const queryAllByText = (element: HostElement): QueryAllByQuery<TextMatch, ByTextOptions> =>
+const queryAllByText = (element: TestInstance): QueryAllByQuery<TextMatch, ByTextOptions> =>
   function queryAllByTextFn(text, options = {}) {
     return findAll(element, (node) => isHostText(node) && matchTextContent(node, text, options), {
       ...options,
@@ -44,7 +44,7 @@ export type ByTextQueries = {
   findAllByText: FindAllByQuery<TextMatch, ByTextOptions>;
 };
 
-export const bindByTextQueries = (element: HostElement): ByTextQueries => ({
+export const bindByTextQueries = (element: TestInstance): ByTextQueries => ({
   getByText: getBy(element),
   getAllByText: getAllBy(element),
   queryByText: queryBy(element),

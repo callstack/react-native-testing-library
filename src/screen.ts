@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import type { RenderResult } from './render';
 
@@ -14,10 +14,10 @@ interface Screen extends RenderResult {
 
 const defaultScreen: Screen = {
   isDetached: true,
-  get container(): HostElement {
+  get container(): TestInstance {
     throw new Error(SCREEN_ERROR);
   },
-  get root(): HostElement | null {
+  get root(): TestInstance | null {
     throw new Error(SCREEN_ERROR);
   },
   debug: notImplemented,

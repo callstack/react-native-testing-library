@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import type { TextMatch, TextMatchOptions } from '../../matches';
 import { matches } from '../../matches';
@@ -12,7 +12,7 @@ import { getTextContent } from '../text-content';
  * @returns - Whether the node's text content matches the given string or regex.
  */
 export function matchTextContent(
-  node: HostElement,
+  node: TestInstance,
   text: TextMatch,
   options: TextMatchOptions = {},
 ) {

@@ -7,7 +7,7 @@ import {
   stringify,
 } from 'jest-matcher-utils';
 import redent from 'redent';
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { isTestInstance } from '../helpers/component-tree';
 
@@ -40,15 +40,15 @@ class HostElementTypeError extends Error {
 /**
  * Throws HostElementTypeError if passed element is not a host element.
  *
- * @param element HostElement to check.
+ * @param element TestInstance to check.
  * @param matcherFn Matcher function calling the check used for formatting error.
  * @param context Jest matcher context used for formatting error.
  */
 export function checkHostElement(
-  element: HostElement | null | undefined,
+  element: TestInstance | null | undefined,
   matcherFn: jest.CustomMatcher,
   context: jest.MatcherContext,
-): asserts element is HostElement {
+): asserts element is TestInstance {
   if (!isTestInstance(element)) {
     throw new HostElementTypeError(element, matcherFn, context);
   }

@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
 import {
@@ -23,7 +23,7 @@ export interface PressOptions {
   duration?: number;
 }
 
-export async function press(this: UserEventInstance, element: HostElement): Promise<void> {
+export async function press(this: UserEventInstance, element: TestInstance): Promise<void> {
   if (!isTestInstance(element)) {
     throw new ErrorWithStack(`press() works only with host elements.`, press);
   }
@@ -35,7 +35,7 @@ export async function press(this: UserEventInstance, element: HostElement): Prom
 
 export async function longPress(
   this: UserEventInstance,
-  element: HostElement,
+  element: TestInstance,
   options?: PressOptions,
 ): Promise<void> {
   if (!isTestInstance(element)) {
@@ -55,7 +55,7 @@ interface BasePressOptions {
 
 const basePress = async (
   config: UserEventConfig,
-  element: HostElement,
+  element: TestInstance,
   options: BasePressOptions,
 ): Promise<void> => {
   if (isEnabledHostElement(element) && hasPressEventHandler(element)) {
@@ -75,7 +75,7 @@ const basePress = async (
   await basePress(config, element.parent, options);
 };
 
-function isEnabledHostElement(element: HostElement) {
+function isEnabledHostElement(element: TestInstance) {
   if (!isPointerEventEnabled(element)) {
     return false;
   }
@@ -91,11 +91,11 @@ function isEnabledHostElement(element: HostElement) {
   return true;
 }
 
-function isEnabledTouchResponder(element: HostElement) {
+function isEnabledTouchResponder(element: TestInstance) {
   return isPointerEventEnabled(element) && element.props.onStartShouldSetResponder?.();
 }
 
-function hasPressEventHandler(element: HostElement) {
+function hasPressEventHandler(element: TestInstance) {
   return (
     getEventHandlerFromProps(element.props, 'press') ||
     getEventHandlerFromProps(element.props, 'longPress') ||
@@ -109,7 +109,7 @@ function hasPressEventHandler(element: HostElement) {
  */
 async function emitDirectPressEvents(
   config: UserEventConfig,
-  element: HostElement,
+  element: TestInstance,
   options: BasePressOptions,
 ) {
   await wait(config);
@@ -135,7 +135,7 @@ async function emitDirectPressEvents(
 
 async function emitPressabilityPressEvents(
   config: UserEventConfig,
-  element: HostElement,
+  element: TestInstance,
   options: BasePressOptions,
 ) {
   await wait(config);

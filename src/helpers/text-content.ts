@@ -1,6 +1,6 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
-export function getTextContent(element: HostElement | string | null): string {
+export function getTextContent(element: TestInstance | string | null): string {
   if (!element) {
     return '';
   }

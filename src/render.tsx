@@ -2,10 +2,10 @@ import * as React from 'react';
 import type { StyleProp } from 'react-native';
 import {
   createRoot,
-  type HostElement,
   type JsonElement,
   type Root,
   type RootOptions,
+  type TestInstance,
 } from 'test-renderer';
 
 import { act } from './act';
@@ -88,10 +88,10 @@ export async function render<T>(element: React.ReactElement<T>, options: RenderO
     unmount,
     toJSON,
     debug: makeDebug(renderer),
-    get container(): HostElement {
+    get container(): TestInstance {
       return renderer.container;
     },
-    get root(): HostElement | null {
+    get root(): TestInstance | null {
       const firstChild = container.children[0];
       if (typeof firstChild === 'string') {
         /* istanbul ignore next */

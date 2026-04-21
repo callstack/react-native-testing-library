@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import {
   buildBlurEvent,
@@ -28,7 +28,7 @@ export interface TypeOptions {
 
 export async function type(
   this: UserEventInstance,
-  element: HostElement,
+  element: TestInstance,
   text: string,
   options?: TypeOptions,
 ): Promise<void> {
@@ -92,7 +92,7 @@ type EmitTypingEventsContext = {
 };
 
 export async function emitTypingEvents(
-  element: HostElement,
+  element: TestInstance,
   { config, key, text, isAccepted }: EmitTypingEventsContext,
 ) {
   const isMultiline = element.props.multiline === true;
@@ -137,7 +137,7 @@ function applyKey(text: string, key: string) {
   return text + key;
 }
 
-function isTextChangeAccepted(element: HostElement, text: string) {
+function isTextChangeAccepted(element: TestInstance, text: string) {
   const maxLength = element.props.maxLength;
   return maxLength === undefined || text.length <= maxLength;
 }

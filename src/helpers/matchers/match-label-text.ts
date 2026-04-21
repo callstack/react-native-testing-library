@@ -1,11 +1,11 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import type { TextMatch, TextMatchOptions } from '../../matches';
 import { matches } from '../../matches';
 import { computeAriaLabel } from '../accessibility';
 
 export function matchAccessibilityLabel(
-  element: HostElement,
+  element: TestInstance,
   expectedLabel: TextMatch,
   options?: TextMatchOptions,
 ) {

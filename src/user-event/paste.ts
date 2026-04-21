@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import {
   buildBlurEvent,
@@ -18,7 +18,7 @@ import { dispatchEvent, getTextContentSize, wait } from './utils';
 
 export async function paste(
   this: UserEventInstance,
-  element: HostElement,
+  element: TestInstance,
   text: string,
 ): Promise<void> {
   if (!isHostTextInput(element)) {

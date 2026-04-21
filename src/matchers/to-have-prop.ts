@@ -1,11 +1,11 @@
 import { matcherHint, printExpected, stringify } from 'jest-matcher-utils';
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveProp(
   this: jest.MatcherContext,
-  element: HostElement,
+  element: TestInstance,
   name: string,
   expectedValue: unknown,
 ) {

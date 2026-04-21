@@ -1,5 +1,5 @@
 import { stringify } from 'jest-matcher-utils';
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { buildScrollEvent } from '../../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
@@ -38,7 +38,7 @@ export type ScrollToOptions = VerticalScrollToOptions | HorizontalScrollToOption
 
 export async function scrollTo(
   this: UserEventInstance,
-  element: HostElement,
+  element: TestInstance,
   options: ScrollToOptions,
 ): Promise<void> {
   if (!isHostScrollView(element)) {
@@ -79,7 +79,7 @@ export async function scrollTo(
 
 async function emitDragScrollEvents(
   config: UserEventConfig,
-  element: HostElement,
+  element: TestInstance,
   scrollSteps: Point[],
   scrollOptions: ScrollToOptions,
 ) {
@@ -105,7 +105,7 @@ async function emitDragScrollEvents(
 
 async function emitMomentumScrollEvents(
   config: UserEventConfig,
-  element: HostElement,
+  element: TestInstance,
   scrollSteps: Point[],
   scrollOptions: ScrollToOptions,
 ) {
@@ -133,7 +133,7 @@ async function emitMomentumScrollEvents(
   await dispatchEvent(element, 'momentumScrollEnd', buildScrollEvent(lastStep, scrollOptions));
 }
 
-function ensureScrollViewDirection(element: HostElement, options: ScrollToOptions) {
+function ensureScrollViewDirection(element: TestInstance, options: ScrollToOptions) {
   const isVerticalScrollView = element.props.horizontal !== true;
 
   const hasHorizontalScrollOptions = options.x !== undefined || options.momentumX !== undefined;

@@ -1,12 +1,12 @@
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { computeAriaSelected } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';
 import { checkHostElement } from './utils';
 
-export function toBeSelected(this: jest.MatcherContext, element: HostElement) {
+export function toBeSelected(this: jest.MatcherContext, element: TestInstance) {
   checkHostElement(element, toBeSelected, this);
 
   return {

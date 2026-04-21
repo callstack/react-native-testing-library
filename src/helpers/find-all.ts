@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { getConfig } from '../config';
 import { isHiddenFromAccessibility } from './accessibility';
@@ -15,10 +15,10 @@ interface FindAllOptions {
 }
 
 export function findAll(
-  root: HostElement,
-  predicate: (element: HostElement) => boolean,
+  root: TestInstance,
+  predicate: (element: TestInstance) => boolean,
   options: FindAllOptions = {},
-): HostElement[] {
+): TestInstance[] {
   const { matchDeepestOnly } = options;
   const results = root.queryAll(predicate, { matchDeepestOnly });
 
@@ -29,6 +29,6 @@ export function findAll(
     return results;
   }
 
-  const cache = new WeakMap<HostElement>();
+  const cache = new WeakMap<TestInstance>();
   return results.filter((element) => !isHiddenFromAccessibility(element, { cache }));
 }
