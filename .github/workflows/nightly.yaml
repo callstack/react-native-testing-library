@@ -16,7 +16,7 @@ concurrency:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: Lint - ${{ matrix.rn-version }}
+    name: Lint: RN ${{ matrix.rn-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -42,7 +42,7 @@ jobs:
 
   typecheck:
     runs-on: ubuntu-latest
-    name: Typecheck - ${{ matrix.rn-version }}
+    name: Typecheck: RN ${{ matrix.rn-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -68,7 +68,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    name: Test - RN ${{ matrix.rn-lane }} - TR ${{ matrix.test-renderer-version }}
+    name: Test: RN ${{ matrix.rn-lane }} x TR ${{ matrix.test-renderer-version }}
     strategy:
       fail-fast: false
       matrix:
