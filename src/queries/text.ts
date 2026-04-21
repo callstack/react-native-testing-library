@@ -17,9 +17,9 @@ import type { CommonQueryOptions } from './options';
 
 type ByTextOptions = CommonQueryOptions & TextMatchOptions;
 
-const queryAllByText = (element: TestInstance): QueryAllByQuery<TextMatch, ByTextOptions> =>
+const queryAllByText = (instance: TestInstance): QueryAllByQuery<TextMatch, ByTextOptions> =>
   function queryAllByTextFn(text, options = {}) {
-    return findAll(element, (node) => isHostText(node) && matchTextContent(node, text, options), {
+    return findAll(instance, (item) => isHostText(item) && matchTextContent(item, text, options), {
       ...options,
       matchDeepestOnly: true,
     });
@@ -44,11 +44,11 @@ export type ByTextQueries = {
   findAllByText: FindAllByQuery<TextMatch, ByTextOptions>;
 };
 
-export const bindByTextQueries = (element: TestInstance): ByTextQueries => ({
-  getByText: getBy(element),
-  getAllByText: getAllBy(element),
-  queryByText: queryBy(element),
-  queryAllByText: queryAllBy(element),
-  findByText: findBy(element),
-  findAllByText: findAllBy(element),
+export const bindByTextQueries = (instance: TestInstance): ByTextQueries => ({
+  getByText: getBy(instance),
+  getAllByText: getAllBy(instance),
+  queryByText: queryBy(instance),
+  queryAllByText: queryAllBy(instance),
+  findByText: findBy(instance),
+  findAllByText: findAllBy(instance),
 });

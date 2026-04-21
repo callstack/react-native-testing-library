@@ -95,8 +95,8 @@ function createConfig(
 export interface UserEventInstance {
   config: UserEventConfig;
 
-  press: (element: TestInstance) => Promise<void>;
-  longPress: (element: TestInstance, options?: PressOptions) => Promise<void>;
+  press: (instance: TestInstance) => Promise<void>;
+  longPress: (instance: TestInstance, options?: PressOptions) => Promise<void>;
 
   /**
    * Simulate user pressing on a given `TextInput` element and typing given text.
@@ -110,7 +110,7 @@ export interface UserEventInstance {
    * The exact events sent depend on the props of the TextInput (`editable`,
    * `multiline`, etc) and passed options.
    *
-   * @param element TextInput element to type on
+   * @param instance TextInput instance to type on
    * @param text Text to type
    * @param options Options affecting typing behavior:
    *  - `skipPress` - if true, `pressIn` and `pressOut` events will not be
@@ -118,7 +118,7 @@ export interface UserEventInstance {
    * - `submitEditing` - if true, `submitEditing` event will be triggered after
    * typing the text.
    */
-  type: (element: TestInstance, text: string, options?: TypeOptions) => Promise<void>;
+  type: (instance: TestInstance, text: string, options?: TypeOptions) => Promise<void>;
 
   /**
    * Simulate user clearing the text of a given `TextInput` element.
@@ -129,9 +129,9 @@ export interface UserEventInstance {
    * 3. pressing backspace to delete all text
    * 4. leaving TextInput
    *
-   * @param element TextInput element to clear
+   * @param instance TextInput instance to clear
    */
-  clear: (element: TestInstance) => Promise<void>;
+  clear: (instance: TestInstance) => Promise<void>;
 
   /**
    * Simulate user pasting the text to a given `TextInput` element.
@@ -142,17 +142,17 @@ export interface UserEventInstance {
    * 3. paste the text
    * 4. leaving TextInput
    *
-   * @param element TextInput element to paste to
+   * @param instance TextInput instance to paste to
    */
-  paste: (element: TestInstance, text: string) => Promise<void>;
+  paste: (instance: TestInstance, text: string) => Promise<void>;
 
   /**
    * Simlate user scorlling a ScrollView element.
    *
-   * @param element ScrollView element
+   * @param instance ScrollView instance
    * @returns
    */
-  scrollTo: (element: TestInstance, options: ScrollToOptions) => Promise<void>;
+  scrollTo: (instance: TestInstance, options: ScrollToOptions) => Promise<void>;
 }
 
 function createInstance(config: UserEventConfig): UserEventInstance {

@@ -8,11 +8,11 @@ import type { Point } from './types';
  * Values from `value` props (managed controls) should take precedence over these values.
  */
 export type NativeState = {
-  valueForElement: WeakMap<TestInstance, string>;
-  contentOffsetForElement: WeakMap<TestInstance, Point>;
+  valueForInstance: WeakMap<TestInstance, string>;
+  contentOffsetForInstance: WeakMap<TestInstance, Point>;
 };
 
 export const nativeState: NativeState = {
-  valueForElement: new WeakMap(),
-  contentOffsetForElement: new WeakMap(),
+  valueForInstance: new WeakMap(),
+  contentOffsetForInstance: new WeakMap(),
 };

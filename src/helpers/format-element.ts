@@ -17,19 +17,19 @@ export type FormatElementOptions = {
 };
 
 /***
- * Format given element as a pretty-printed string.
+ * Format given instance as a pretty-printed string.
  *
- * @param element Element to format.
+ * @param instance Instance to format.
  */
 export function formatElement(
-  element: TestInstance | null,
+  instance: TestInstance | null,
   { compact, highlight = true, mapProps = defaultMapProps }: FormatElementOptions = {},
 ) {
-  if (element == null) {
+  if (instance == null) {
     return '(null)';
   }
 
-  const { children, ...props } = element.props;
+  const { children, ...props } = instance.props;
   const childrenToDisplay = typeof children === 'string' ? [children] : undefined;
 
   return prettyFormat(
@@ -37,7 +37,7 @@ export function formatElement(
       // This prop is needed persuade the prettyFormat that the element is
       // a JsonNode instance, so it is formatted as JSX.
       $$typeof: Symbol.for('react.test.json'),
-      type: `${element.type}`,
+      type: `${instance.type}`,
       props: mapProps ? mapProps(props) : props,
       children: childrenToDisplay,
     },
@@ -52,12 +52,12 @@ export function formatElement(
   );
 }
 
-export function formatElementList(elements: TestInstance[], options?: FormatElementOptions) {
-  if (elements.length === 0) {
+export function formatElementList(instances: TestInstance[], options?: FormatElementOptions) {
+  if (instances.length === 0) {
     return '(no elements)';
   }
 
-  return elements.map((element) => formatElement(element, options)).join('\n');
+  return instances.map((instance) => formatElement(instance, options)).join('\n');
 }
 
 export function formatJson(

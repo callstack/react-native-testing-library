@@ -16,11 +16,11 @@ import type { CommonQueryOptions } from './options';
 
 type ByLabelTextOptions = CommonQueryOptions & TextMatchOptions;
 
-function queryAllByLabelText(element: TestInstance) {
+function queryAllByLabelText(instance: TestInstance) {
   return (text: TextMatch, queryOptions?: ByLabelTextOptions) => {
     return findAll(
-      element,
-      (node) => matchAccessibilityLabel(node, text, queryOptions),
+      instance,
+      (item) => matchAccessibilityLabel(item, text, queryOptions),
       queryOptions,
     );
   };
@@ -46,11 +46,11 @@ export type ByLabelTextQueries = {
   findAllByLabelText: FindAllByQuery<TextMatch, ByLabelTextOptions>;
 };
 
-export const bindByLabelTextQueries = (element: TestInstance): ByLabelTextQueries => ({
-  getByLabelText: getBy(element),
-  getAllByLabelText: getAllBy(element),
-  queryByLabelText: queryBy(element),
-  queryAllByLabelText: queryAllBy(element),
-  findByLabelText: findBy(element),
-  findAllByLabelText: findAllBy(element),
+export const bindByLabelTextQueries = (instance: TestInstance): ByLabelTextQueries => ({
+  getByLabelText: getBy(instance),
+  getAllByLabelText: getAllBy(instance),
+  queryByLabelText: queryBy(instance),
+  queryAllByLabelText: queryAllBy(instance),
+  findByLabelText: findBy(instance),
+  findAllByLabelText: findAllBy(instance),
 });

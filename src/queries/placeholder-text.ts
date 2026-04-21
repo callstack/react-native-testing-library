@@ -18,21 +18,21 @@ import type { CommonQueryOptions } from './options';
 type ByPlaceholderTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const matchPlaceholderText = (
-  node: TestInstance,
+  instance: TestInstance,
   placeholder: TextMatch,
   options: TextMatchOptions = {},
 ) => {
   const { exact, normalizer } = options;
-  return matches(placeholder, node.props.placeholder, normalizer, exact);
+  return matches(placeholder, instance.props.placeholder, normalizer, exact);
 };
 
 const queryAllByPlaceholderText = (
-  element: TestInstance,
+  instance: TestInstance,
 ): QueryAllByQuery<TextMatch, ByPlaceholderTextOptions> =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
     return findAll(
-      element,
-      (node) => isHostTextInput(node) && matchPlaceholderText(node, placeholder, queryOptions),
+      instance,
+      (item) => isHostTextInput(item) && matchPlaceholderText(item, placeholder, queryOptions),
       queryOptions,
     );
   };
@@ -57,11 +57,13 @@ export type ByPlaceholderTextQueries = {
   findAllByPlaceholderText: FindAllByQuery<TextMatch, ByPlaceholderTextOptions>;
 };
 
-export const bindByPlaceholderTextQueries = (element: TestInstance): ByPlaceholderTextQueries => ({
-  getByPlaceholderText: getBy(element),
-  getAllByPlaceholderText: getAllBy(element),
-  queryByPlaceholderText: queryBy(element),
-  queryAllByPlaceholderText: queryAllBy(element),
-  findByPlaceholderText: findBy(element),
-  findAllByPlaceholderText: findAllBy(element),
+export const bindByPlaceholderTextQueries = (
+  instance: TestInstance,
+): ByPlaceholderTextQueries => ({
+  getByPlaceholderText: getBy(instance),
+  getAllByPlaceholderText: getAllBy(instance),
+  queryByPlaceholderText: queryBy(instance),
+  queryAllByPlaceholderText: queryAllBy(instance),
+  findByPlaceholderText: findBy(instance),
+  findAllByPlaceholderText: findAllBy(instance),
 });

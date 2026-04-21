@@ -23,26 +23,26 @@ export interface PressOptions {
   duration?: number;
 }
 
-export async function press(this: UserEventInstance, element: TestInstance): Promise<void> {
-  if (!isTestInstance(element)) {
+export async function press(this: UserEventInstance, instance: TestInstance): Promise<void> {
+  if (!isTestInstance(instance)) {
     throw new ErrorWithStack(`press() works only with host elements.`, press);
   }
 
-  await basePress(this.config, element, {
+  await basePress(this.config, instance, {
     type: 'press',
   });
 }
 
 export async function longPress(
   this: UserEventInstance,
-  element: TestInstance,
+  instance: TestInstance,
   options?: PressOptions,
 ): Promise<void> {
-  if (!isTestInstance(element)) {
+  if (!isTestInstance(instance)) {
     throw new ErrorWithStack(`longPress() works only with host elements.`, longPress);
   }
 
-  await basePress(this.config, element, {
+  await basePress(this.config, instance, {
     type: 'longPress',
     duration: options?.duration ?? DEFAULT_LONG_PRESS_DELAY_MS,
   });
@@ -55,52 +55,52 @@ interface BasePressOptions {
 
 const basePress = async (
   config: UserEventConfig,
-  element: TestInstance,
+  instance: TestInstance,
   options: BasePressOptions,
 ): Promise<void> => {
-  if (isEnabledHostElement(element) && hasPressEventHandler(element)) {
-    await emitDirectPressEvents(config, element, options);
+  if (isEnabledHostElement(instance) && hasPressEventHandler(instance)) {
+    await emitDirectPressEvents(config, instance, options);
     return;
   }
 
-  if (isEnabledTouchResponder(element)) {
-    await emitPressabilityPressEvents(config, element, options);
+  if (isEnabledTouchResponder(instance)) {
+    await emitPressabilityPressEvents(config, instance, options);
     return;
   }
 
-  if (!element.parent) {
+  if (!instance.parent) {
     return;
   }
 
-  await basePress(config, element.parent, options);
+  await basePress(config, instance.parent, options);
 };
 
-function isEnabledHostElement(element: TestInstance) {
-  if (!isPointerEventEnabled(element)) {
+function isEnabledHostElement(instance: TestInstance) {
+  if (!isPointerEventEnabled(instance)) {
     return false;
   }
 
-  if (isHostText(element)) {
-    return element.props.disabled !== true;
+  if (isHostText(instance)) {
+    return instance.props.disabled !== true;
   }
 
-  if (isHostTextInput(element)) {
-    return element.props.editable !== false;
+  if (isHostTextInput(instance)) {
+    return instance.props.editable !== false;
   }
 
   return true;
 }
 
-function isEnabledTouchResponder(element: TestInstance) {
-  return isPointerEventEnabled(element) && element.props.onStartShouldSetResponder?.();
+function isEnabledTouchResponder(instance: TestInstance) {
+  return isPointerEventEnabled(instance) && instance.props.onStartShouldSetResponder?.();
 }
 
-function hasPressEventHandler(element: TestInstance) {
+function hasPressEventHandler(instance: TestInstance) {
   return (
-    getEventHandlerFromProps(element.props, 'press') ||
-    getEventHandlerFromProps(element.props, 'longPress') ||
-    getEventHandlerFromProps(element.props, 'pressIn') ||
-    getEventHandlerFromProps(element.props, 'pressOut')
+    getEventHandlerFromProps(instance.props, 'press') ||
+    getEventHandlerFromProps(instance.props, 'longPress') ||
+    getEventHandlerFromProps(instance.props, 'pressIn') ||
+    getEventHandlerFromProps(instance.props, 'pressOut')
   );
 }
 
@@ -109,43 +109,43 @@ function hasPressEventHandler(element: TestInstance) {
  */
 async function emitDirectPressEvents(
   config: UserEventConfig,
-  element: TestInstance,
+  instance: TestInstance,
   options: BasePressOptions,
 ) {
   await wait(config);
-  await dispatchEvent(element, 'pressIn', buildTouchEvent());
+  await dispatchEvent(instance, 'pressIn', buildTouchEvent());
 
   await wait(config, options.duration);
 
   // Long press events are emitted before `pressOut`.
   if (options.type === 'longPress') {
-    await dispatchEvent(element, 'longPress', buildTouchEvent());
+    await dispatchEvent(instance, 'longPress', buildTouchEvent());
   }
 
-  await dispatchEvent(element, 'pressOut', buildTouchEvent());
+  await dispatchEvent(instance, 'pressOut', buildTouchEvent());
 
   // Regular press events are emitted after `pressOut` according to the React Native docs.
   // See: https://reactnative.dev/docs/pressable#onpress
   // Experimentally for very short presses (< 130ms) `press` events are actually emitted before `onPressOut`, but
   // we will ignore that as in reality most pressed would be above the 130ms threshold.
   if (options.type === 'press') {
-    await dispatchEvent(element, 'press', buildTouchEvent());
+    await dispatchEvent(instance, 'press', buildTouchEvent());
   }
 }
 
 async function emitPressabilityPressEvents(
   config: UserEventConfig,
-  element: TestInstance,
+  instance: TestInstance,
   options: BasePressOptions,
 ) {
   await wait(config);
 
-  await dispatchEvent(element, 'responderGrant', buildResponderGrantEvent());
+  await dispatchEvent(instance, 'responderGrant', buildResponderGrantEvent());
 
   const duration = options.duration ?? DEFAULT_MIN_PRESS_DURATION;
   await wait(config, duration);
 
-  await dispatchEvent(element, 'responderRelease', buildResponderReleaseEvent());
+  await dispatchEvent(instance, 'responderRelease', buildResponderReleaseEvent());
 
   // React Native will wait for minimal delay of DEFAULT_MIN_PRESS_DURATION
   // before emitting the `pressOut` event. We need to wait here, so that

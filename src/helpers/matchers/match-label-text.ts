@@ -5,9 +5,9 @@ import { matches } from '../../matches';
 import { computeAriaLabel } from '../accessibility';
 
 export function matchAccessibilityLabel(
-  element: TestInstance,
+  instance: TestInstance,
   expectedLabel: TextMatch,
   options?: TextMatchOptions,
 ) {
-  return matches(expectedLabel, computeAriaLabel(element), options?.normalizer, options?.exact);
+  return matches(expectedLabel, computeAriaLabel(instance), options?.normalizer, options?.exact);
 }

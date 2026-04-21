@@ -12,10 +12,10 @@ export interface AccessibilityValueMatcher {
 }
 
 export function matchAccessibilityValue(
-  node: TestInstance,
+  instance: TestInstance,
   matcher: AccessibilityValueMatcher,
 ): boolean {
-  const value = computeAriaValue(node);
+  const value = computeAriaValue(instance);
   return (
     (matcher.min === undefined || matcher.min === value?.min) &&
     (matcher.max === undefined || matcher.max === value?.max) &&

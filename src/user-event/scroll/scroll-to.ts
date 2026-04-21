@@ -38,32 +38,32 @@ export type ScrollToOptions = VerticalScrollToOptions | HorizontalScrollToOption
 
 export async function scrollTo(
   this: UserEventInstance,
-  element: TestInstance,
+  instance: TestInstance,
   options: ScrollToOptions,
 ): Promise<void> {
-  if (!isHostScrollView(element)) {
+  if (!isHostScrollView(instance)) {
     throw new ErrorWithStack(
-      `scrollTo() works only with host "ScrollView" elements. Passed element has type "${element.type}".`,
+      `scrollTo() works only with host "ScrollView" elements. Passed instance has type "${instance.type}".`,
       scrollTo,
     );
   }
 
-  ensureScrollViewDirection(element, options);
+  ensureScrollViewDirection(instance, options);
 
   await dispatchEvent(
-    element,
+    instance,
     'contentSizeChange',
     options.contentSize?.width ?? 0,
     options.contentSize?.height ?? 0,
   );
 
-  const initialOffset = nativeState.contentOffsetForElement.get(element) ?? { x: 0, y: 0 };
+  const initialOffset = nativeState.contentOffsetForInstance.get(instance) ?? { x: 0, y: 0 };
   const dragSteps = createScrollSteps(
     { y: options.y, x: options.x },
     initialOffset,
     linearInterpolator,
   );
-  await emitDragScrollEvents(this.config, element, dragSteps, options);
+  await emitDragScrollEvents(this.config, instance, dragSteps, options);
 
   const momentumStart = dragSteps.at(-1) ?? initialOffset;
   const momentumSteps = createScrollSteps(
@@ -71,15 +71,15 @@ export async function scrollTo(
     momentumStart,
     inertialInterpolator,
   );
-  await emitMomentumScrollEvents(this.config, element, momentumSteps, options);
+  await emitMomentumScrollEvents(this.config, instance, momentumSteps, options);
 
   const finalOffset = momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialOffset;
-  nativeState.contentOffsetForElement.set(element, finalOffset);
+  nativeState.contentOffsetForInstance.set(instance, finalOffset);
 }
 
 async function emitDragScrollEvents(
   config: UserEventConfig,
-  element: TestInstance,
+  instance: TestInstance,
   scrollSteps: Point[],
   scrollOptions: ScrollToOptions,
 ) {
@@ -88,24 +88,24 @@ async function emitDragScrollEvents(
   }
 
   await wait(config);
-  await dispatchEvent(element, 'scrollBeginDrag', buildScrollEvent(scrollSteps[0], scrollOptions));
+  await dispatchEvent(instance, 'scrollBeginDrag', buildScrollEvent(scrollSteps[0], scrollOptions));
 
   // Note: experimentally, in case of drag scroll the last scroll step
   // will not trigger `scroll` event.
   // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
   for (let i = 1; i < scrollSteps.length - 1; i += 1) {
     await wait(config);
-    await dispatchEvent(element, 'scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
+    await dispatchEvent(instance, 'scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
   }
 
   await wait(config);
   const lastStep = scrollSteps.at(-1);
-  await dispatchEvent(element, 'scrollEndDrag', buildScrollEvent(lastStep, scrollOptions));
+  await dispatchEvent(instance, 'scrollEndDrag', buildScrollEvent(lastStep, scrollOptions));
 }
 
 async function emitMomentumScrollEvents(
   config: UserEventConfig,
-  element: TestInstance,
+  instance: TestInstance,
   scrollSteps: Point[],
   scrollOptions: ScrollToOptions,
 ) {
@@ -115,7 +115,7 @@ async function emitMomentumScrollEvents(
 
   await wait(config);
   await dispatchEvent(
-    element,
+    instance,
     'momentumScrollBegin',
     buildScrollEvent(scrollSteps[0], scrollOptions),
   );
@@ -125,16 +125,16 @@ async function emitMomentumScrollEvents(
   // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
   for (let i = 1; i < scrollSteps.length; i += 1) {
     await wait(config);
-    await dispatchEvent(element, 'scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
+    await dispatchEvent(instance, 'scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
   }
 
   await wait(config);
   const lastStep = scrollSteps.at(-1);
-  await dispatchEvent(element, 'momentumScrollEnd', buildScrollEvent(lastStep, scrollOptions));
+  await dispatchEvent(instance, 'momentumScrollEnd', buildScrollEvent(lastStep, scrollOptions));
 }
 
-function ensureScrollViewDirection(element: TestInstance, options: ScrollToOptions) {
-  const isVerticalScrollView = element.props.horizontal !== true;
+function ensureScrollViewDirection(instance: TestInstance, options: ScrollToOptions) {
+  const isVerticalScrollView = instance.props.horizontal !== true;
 
   const hasHorizontalScrollOptions = options.x !== undefined || options.momentumX !== undefined;
   if (isVerticalScrollView && hasHorizontalScrollOptions) {

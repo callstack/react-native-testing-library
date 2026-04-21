@@ -16,7 +16,7 @@ interface FindAllOptions {
 
 export function findAll(
   root: TestInstance,
-  predicate: (element: TestInstance) => boolean,
+  predicate: (instance: TestInstance) => boolean,
   options: FindAllOptions = {},
 ): TestInstance[] {
   const { matchDeepestOnly } = options;
@@ -30,5 +30,5 @@ export function findAll(
   }
 
   const cache = new WeakMap<TestInstance>();
-  return results.filter((element) => !isHiddenFromAccessibility(element, { cache }));
+  return results.filter((instance) => !isHiddenFromAccessibility(instance, { cache }));
 }

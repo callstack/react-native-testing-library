@@ -9,48 +9,48 @@ const HOST_MODAL_NAMES = ['Modal'];
 
 /**
  * Checks if the given element is a host Text element.
- * @param element The element to check.
+ * @param instance The instance to check.
  */
-export function isHostText(element: TestInstance | null) {
-  return typeof element?.type === 'string' && HOST_TEXT_NAMES.includes(element.type);
+export function isHostText(instance: TestInstance | null) {
+  return typeof instance?.type === 'string' && HOST_TEXT_NAMES.includes(instance.type);
 }
 
 /**
  * Checks if the given element is a host TextInput element.
- * @param element The element to check.
+ * @param instance The instance to check.
  */
-export function isHostTextInput(element: TestInstance | null) {
-  return typeof element?.type === 'string' && HOST_TEXT_INPUT_NAMES.includes(element.type);
+export function isHostTextInput(instance: TestInstance | null) {
+  return typeof instance?.type === 'string' && HOST_TEXT_INPUT_NAMES.includes(instance.type);
 }
 
 /**
  * Checks if the given element is a host Image element.
- * @param element The element to check.
+ * @param instance The instance to check.
  */
-export function isHostImage(element: TestInstance | null) {
-  return typeof element?.type === 'string' && HOST_IMAGE_NAMES.includes(element.type);
+export function isHostImage(instance: TestInstance | null) {
+  return typeof instance?.type === 'string' && HOST_IMAGE_NAMES.includes(instance.type);
 }
 
 /**
  * Checks if the given element is a host Switch element.
- * @param element The element to check.
+ * @param instance The instance to check.
  */
-export function isHostSwitch(element: TestInstance | null) {
-  return typeof element?.type === 'string' && HOST_SWITCH_NAMES.includes(element.type);
+export function isHostSwitch(instance: TestInstance | null) {
+  return typeof instance?.type === 'string' && HOST_SWITCH_NAMES.includes(instance.type);
 }
 
 /**
  * Checks if the given element is a host ScrollView element.
- * @param element The element to check.
+ * @param instance The instance to check.
  */
-export function isHostScrollView(element: TestInstance | null) {
-  return typeof element?.type === 'string' && HOST_SCROLL_VIEW_NAMES.includes(element.type);
+export function isHostScrollView(instance: TestInstance | null) {
+  return typeof instance?.type === 'string' && HOST_SCROLL_VIEW_NAMES.includes(instance.type);
 }
 
 /**
  * Checks if the given element is a host Modal element.
- * @param element The element to check.
+ * @param instance The instance to check.
  */
-export function isHostModal(element: TestInstance | null) {
-  return typeof element?.type === 'string' && HOST_MODAL_NAMES.includes(element.type);
+export function isHostModal(instance: TestInstance | null) {
+  return typeof instance?.type === 'string' && HOST_MODAL_NAMES.includes(instance.type);
 }

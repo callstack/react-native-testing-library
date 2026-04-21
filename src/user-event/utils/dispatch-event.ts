@@ -2,21 +2,25 @@ import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
 import { getEventHandlerFromProps } from '../../event-handler';
-import { isElementMounted } from '../../helpers/component-tree';
+import { isInstanceMounted } from '../../helpers/component-tree';
 
 /**
  * Basic dispatch event function used by User Event module.
  *
- * @param element element trigger event on
+ * @param instance instance to trigger event on
  * @param eventName name of the event
  * @param event event payload(s)
  */
-export async function dispatchEvent(element: TestInstance, eventName: string, ...event: unknown[]) {
-  if (!isElementMounted(element)) {
+export async function dispatchEvent(
+  instance: TestInstance,
+  eventName: string,
+  ...event: unknown[]
+) {
+  if (!isInstanceMounted(instance)) {
     return;
   }
 
-  const handler = getEventHandlerFromProps(element.props, eventName);
+  const handler = getEventHandlerFromProps(instance.props, eventName);
   if (!handler) {
     return;
   }

@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { render, screen } from '../..';
-import { getContainerElement, getInstanceSiblings } from '../component-tree';
+import { getContainerInstance, getInstanceSiblings } from '../component-tree';
 
 function MultipleHostChildren() {
   return (
@@ -38,7 +38,7 @@ describe('getHostSiblings()', () => {
   });
 });
 
-describe('getContainerElement()', () => {
+describe('getContainerInstance()', () => {
   it('returns container for mounted view', async () => {
     await render(
       <View>
@@ -47,6 +47,6 @@ describe('getContainerElement()', () => {
     );
 
     const view = screen.getByTestId('view');
-    expect(getContainerElement(view)).toEqual(screen.container);
+    expect(getContainerInstance(view)).toEqual(screen.container);
   });
 });

@@ -11,11 +11,12 @@ export const userEvent = {
   setup,
 
   // Direct access for User Event v13 compatibility
-  press: (element: TestInstance) => setup().press(element),
-  longPress: (element: TestInstance, options?: PressOptions) => setup().longPress(element, options),
-  type: (element: TestInstance, text: string, options?: TypeOptions) =>
-    setup().type(element, text, options),
-  clear: (element: TestInstance) => setup().clear(element),
-  paste: (element: TestInstance, text: string) => setup().paste(element, text),
-  scrollTo: (element: TestInstance, options: ScrollToOptions) => setup().scrollTo(element, options),
+  press: (instance: TestInstance) => setup().press(instance),
+  longPress: (instance: TestInstance, options?: PressOptions) =>
+    setup().longPress(instance, options),
+  type: (instance: TestInstance, text: string, options?: TypeOptions) =>
+    setup().type(instance, text, options),
+  clear: (instance: TestInstance) => setup().clear(instance),
+  paste: (instance: TestInstance, text: string) => setup().paste(instance, text),
+  scrollTo: (instance: TestInstance, options: ScrollToOptions) => setup().scrollTo(instance, options),
 };

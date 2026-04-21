@@ -3,19 +3,19 @@ import type { TestInstance } from 'test-renderer';
 import { nativeState } from '../native-state';
 import { isHostTextInput } from './host-component-names';
 
-export function isEditableTextInput(element: TestInstance) {
-  return isHostTextInput(element) && element.props.editable !== false;
+export function isEditableTextInput(instance: TestInstance) {
+  return isHostTextInput(instance) && instance.props.editable !== false;
 }
 
-export function getTextInputValue(element: TestInstance) {
-  if (!isHostTextInput(element)) {
-    throw new Error(`Element is not a "TextInput", but it has type "${element.type}".`);
+export function getTextInputValue(instance: TestInstance) {
+  if (!isHostTextInput(instance)) {
+    throw new Error(`Element is not a "TextInput", but it has type "${instance.type}".`);
   }
 
   return (
-    element.props.value ??
-    nativeState.valueForElement.get(element) ??
-    element.props.defaultValue ??
+    instance.props.value ??
+    nativeState.valueForInstance.get(instance) ??
+    instance.props.defaultValue ??
     ''
   );
 }
