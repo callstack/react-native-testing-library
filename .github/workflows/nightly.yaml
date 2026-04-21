@@ -68,30 +68,77 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    name: Test - ${{ matrix.rn-version }} - TR ${{ matrix.test-renderer-version }}
+    name: Test - RN ${{ matrix.rn-lane }} - TR ${{ matrix.test-renderer-version }}
     strategy:
       fail-fast: false
       matrix:
-        rn-version: [latest, next, nightly]
+        rn-lane: ['0.85.0', '0.84.1', '0.83.4', '0.82.1', '0.81.6', '0.80.3', '0.79.7', '0.78.3', latest, next, nightly]
         test-renderer-version: ['1.0.0', '1.1.0', '1.2.0']
+        include:
+          - rn-lane: '0.85.0'
+            setup-kind: stable
+            react-version: '19.2.3'
+            react-native-version: '0.85.0'
+          - rn-lane: '0.84.1'
+            setup-kind: stable
+            react-version: '19.2.3'
+            react-native-version: '0.84.1'
+          - rn-lane: '0.83.4'
+            setup-kind: stable
+            react-version: '19.2.0'
+            react-native-version: '0.83.4'
+          - rn-lane: '0.82.1'
+            setup-kind: stable
+            react-version: '19.1.1'
+            react-native-version: '0.82.1'
+          - rn-lane: '0.81.6'
+            setup-kind: stable
+            react-version: '19.1.4'
+            react-native-version: '0.81.6'
+          - rn-lane: '0.80.3'
+            setup-kind: stable
+            react-version: '19.1.0'
+            react-native-version: '0.80.3'
+          - rn-lane: '0.79.7'
+            setup-kind: stable
+            react-version: '19.0.0'
+            react-native-version: '0.79.7'
+          - rn-lane: '0.78.3'
+            setup-kind: stable
+            react-version: '19.0.0'
+            react-native-version: '0.78.3'
+          - rn-lane: latest
+            setup-kind: latest
+          - rn-lane: next
+            setup-kind: next
+          - rn-lane: nightly
+            setup-kind: nightly
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
+      - name: Setup Node.js and deps (stable)
+        if: matrix.setup-kind == 'stable'
+        uses: ./.github/actions/setup-deps
+        with:
+          react-version: ${{ matrix.react-version }}
+          react-native-version: ${{ matrix.react-native-version }}
+          test-renderer-version: ${{ matrix.test-renderer-version }}
+
       - name: Setup Node.js and deps (latest)
-        if: matrix.rn-version == 'latest'
+        if: matrix.setup-kind == 'latest'
         uses: ./.github/actions/setup-deps-rn-latest
         with:
           test-renderer-version: ${{ matrix.test-renderer-version }}
 
       - name: Setup Node.js and deps (next)
-        if: matrix.rn-version == 'next'
+        if: matrix.setup-kind == 'next'
         uses: ./.github/actions/setup-deps-rn-next
         with:
           test-renderer-version: ${{ matrix.test-renderer-version }}
 
       - name: Setup Node.js and deps (nightly)
-        if: matrix.rn-version == 'nightly'
+        if: matrix.setup-kind == 'nightly'
         uses: ./.github/actions/setup-deps-rn-nightly
         with:
           test-renderer-version: ${{ matrix.test-renderer-version }}
