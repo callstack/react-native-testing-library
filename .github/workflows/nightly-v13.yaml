@@ -16,7 +16,7 @@ concurrency:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: Lint: ${{ matrix.rn-version }}
+    name: Lint → ${{ matrix.rn-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -44,7 +44,7 @@ jobs:
 
   typecheck:
     runs-on: ubuntu-latest
-    name: Typecheck: ${{ matrix.rn-version }}
+    name: Typecheck → ${{ matrix.rn-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -72,7 +72,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    name: Test: ${{ matrix.rn-version }}
+    name: Test → ${{ matrix.rn-version }}
     strategy:
       fail-fast: false
       matrix:

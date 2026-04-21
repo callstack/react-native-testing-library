@@ -45,7 +45,7 @@ jobs:
 
   typecheck-rn-0-85:
     runs-on: ubuntu-latest
-    name: Typecheck: RN 0.85
+    name: Typecheck → RN 0.85
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -61,7 +61,7 @@ jobs:
 
   typecheck-rn-0-84:
     runs-on: ubuntu-latest
-    name: Typecheck: RN 0.84
+    name: Typecheck → RN 0.84
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -77,7 +77,7 @@ jobs:
 
   typecheck-rn-0-83:
     runs-on: ubuntu-latest
-    name: Typecheck: RN 0.83
+    name: Typecheck → RN 0.83
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -93,7 +93,7 @@ jobs:
 
   typecheck-rn-0-82:
     runs-on: ubuntu-latest
-    name: Typecheck: RN 0.82
+    name: Typecheck → RN 0.82
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -109,7 +109,7 @@ jobs:
 
   typecheck-rn-0-81:
     runs-on: ubuntu-latest
-    name: Typecheck: RN 0.81
+    name: Typecheck → RN 0.81
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -125,7 +125,7 @@ jobs:
 
   typecheck-rn-0-80:
     runs-on: ubuntu-latest
-    name: Typecheck: RN 0.80.3
+    name: Typecheck → RN 0.80.3
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -141,7 +141,7 @@ jobs:
 
   typecheck-rn-0-79:
     runs-on: ubuntu-latest
-    name: Typecheck: RN 0.79.7
+    name: Typecheck → RN 0.79.7
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -157,7 +157,7 @@ jobs:
 
   typecheck-rn-0-78:
     runs-on: ubuntu-latest
-    name: Typecheck: RN 0.78.3
+    name: Typecheck → RN 0.78.3
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -173,7 +173,7 @@ jobs:
 
   typecheck-rn-latest:
     runs-on: ubuntu-latest
-    name: Typecheck: RN Latest
+    name: Typecheck → RN Latest
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -186,7 +186,7 @@ jobs:
 
   typecheck-rn-next:
     runs-on: ubuntu-latest
-    name: Typecheck: RN Next
+    name: Typecheck → RN Next
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -199,7 +199,7 @@ jobs:
 
   typecheck-rn-nightly:
     runs-on: ubuntu-latest
-    name: Typecheck: RN Nightly
+    name: Typecheck → RN Nightly
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -243,7 +243,7 @@ jobs:
 
   test-rn-0-85:
     runs-on: ubuntu-latest
-    name: Test: RN 0.85
+    name: Test → RN 0.85
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -260,7 +260,7 @@ jobs:
 
   test-rn-0-84:
     runs-on: ubuntu-latest
-    name: Test: RN 0.84
+    name: Test → RN 0.84
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -277,7 +277,7 @@ jobs:
 
   test-rn-0-83:
     runs-on: ubuntu-latest
-    name: Test: RN 0.83
+    name: Test → RN 0.83
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -294,7 +294,7 @@ jobs:
 
   test-rn-0-82:
     runs-on: ubuntu-latest
-    name: Test: RN 0.82
+    name: Test → RN 0.82
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -311,7 +311,7 @@ jobs:
 
   test-rn-0-81:
     runs-on: ubuntu-latest
-    name: Test: RN 0.81
+    name: Test → RN 0.81
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -328,7 +328,7 @@ jobs:
 
   test-rn-0-80:
     runs-on: ubuntu-latest
-    name: Test: RN 0.80
+    name: Test → RN 0.80
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -345,7 +345,7 @@ jobs:
 
   test-rn-0-79:
     runs-on: ubuntu-latest
-    name: Test: RN 0.79
+    name: Test → RN 0.79
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -362,7 +362,7 @@ jobs:
 
   test-rn-0-78:
     runs-on: ubuntu-latest
-    name: Test: RN 0.78
+    name: Test → RN 0.78
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -379,7 +379,7 @@ jobs:
 
   test-rn-latest:
     runs-on: ubuntu-latest
-    name: Test: RN Latest
+    name: Test → RN Latest
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -392,7 +392,7 @@ jobs:
 
   test-rn-next:
     runs-on: ubuntu-latest
-    name: Test: RN Next
+    name: Test → RN Next
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -405,7 +405,7 @@ jobs:
 
   test-rn-nightly:
     runs-on: ubuntu-latest
-    name: Test: RN Nightly
+    name: Test → RN Nightly
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
