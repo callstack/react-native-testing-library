@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 
 import { render, screen } from '..';
 import { _console, logger } from '../helpers/logger';
+import { testGateReact19_2 } from '../test-utils/react-version-gates';
 
 function MaybeSuspend({
   children,
@@ -112,7 +113,7 @@ describe('render options', () => {
 });
 
 describe('hidden instance props', () => {
-  test('renders Activity hidden and then visible', async () => {
+  testGateReact19_2('renders Activity hidden and then visible', async () => {
     await render(
       <React.Activity mode="hidden">
         <View testID="activity-target">
@@ -122,11 +123,11 @@ describe('hidden instance props', () => {
     );
 
     expect(screen.queryByTestId('activity-target')).not.toBeOnTheScreen();
-    expect(screen.getByTestId('activity-target', { includeHiddenElements: true }).props.style).toEqual(
-      {
-        display: 'none',
-      },
-    );
+    expect(
+      screen.getByTestId('activity-target', { includeHiddenElements: true }).props.style,
+    ).toEqual({
+      display: 'none',
+    });
     expect(screen.toJSON()).toMatchInlineSnapshot(`
       <View
         style={
