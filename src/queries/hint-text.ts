@@ -25,9 +25,15 @@ const getInstanceByHintText = (
   return matches(text, instance.props.accessibilityHint, normalizer, exact);
 };
 
-const queryAllByHintText = (instance: TestInstance): QueryAllByQuery<TextMatch, ByHintTextOptions> =>
+const queryAllByHintText = (
+  instance: TestInstance,
+): QueryAllByQuery<TextMatch, ByHintTextOptions> =>
   function queryAllByA11yHintFn(hint, queryOptions) {
-    return findAll(instance, (item) => getInstanceByHintText(item, hint, queryOptions), queryOptions);
+    return findAll(
+      instance,
+      (item) => getInstanceByHintText(item, hint, queryOptions),
+      queryOptions,
+    );
   };
 
 const getMultipleError = (hint: TextMatch) =>

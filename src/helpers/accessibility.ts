@@ -150,7 +150,8 @@ export function computeAriaModal(instance: TestInstance): boolean | undefined {
 }
 
 export function computeAriaLabel(instance: TestInstance): string | undefined {
-  const labelElementId = instance.props['aria-labelledby'] ?? instance.props.accessibilityLabelledBy;
+  const labelElementId =
+    instance.props['aria-labelledby'] ?? instance.props.accessibilityLabelledBy;
   if (labelElementId) {
     const container = getContainerInstance(instance);
     const labelInstance = findAll(

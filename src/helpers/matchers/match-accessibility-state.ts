@@ -20,7 +20,10 @@ export interface AccessibilityStateMatcher {
   expanded?: boolean;
 }
 
-export function matchAccessibilityState(instance: TestInstance, matcher: AccessibilityStateMatcher) {
+export function matchAccessibilityState(
+  instance: TestInstance,
+  matcher: AccessibilityStateMatcher,
+) {
   if (matcher.busy !== undefined && matcher.busy !== computeAriaBusy(instance)) {
     return false;
   }

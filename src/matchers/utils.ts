@@ -31,26 +31,26 @@ class HostElementTypeError extends Error {
     this.message = [
       matcherHint(`${context.isNot ? '.not' : ''}.${matcherFn.name}`, 'received', ''),
       '',
-      `${RECEIVED_COLOR('received')} value must be a host element.`,
+      `${RECEIVED_COLOR('received')} value must be a host instance.`,
       withType,
     ].join('\n');
   }
 }
 
 /**
- * Throws HostElementTypeError if passed element is not a host element.
+ * Throws HostElementTypeError if passed instance is not a host instance.
  *
- * @param element TestInstance to check.
+ * @param instance TestInstance to check.
  * @param matcherFn Matcher function calling the check used for formatting error.
  * @param context Jest matcher context used for formatting error.
  */
 export function checkHostElement(
-  element: TestInstance | null | undefined,
+  instance: TestInstance | null | undefined,
   matcherFn: jest.CustomMatcher,
   context: jest.MatcherContext,
-): asserts element is TestInstance {
-  if (!isTestInstance(element)) {
-    throw new HostElementTypeError(element, matcherFn, context);
+): asserts instance is TestInstance {
+  if (!isTestInstance(instance)) {
+    throw new HostElementTypeError(instance, matcherFn, context);
   }
 }
 

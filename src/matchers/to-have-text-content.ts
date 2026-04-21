@@ -8,21 +8,21 @@ import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveTextContent(
   this: jest.MatcherContext,
-  element: TestInstance,
+  instance: TestInstance,
   expectedText: TextMatch,
   options?: TextMatchOptions,
 ) {
-  checkHostElement(element, toHaveTextContent, this);
+  checkHostElement(instance, toHaveTextContent, this);
 
-  const text = getTextContent(element);
+  const text = getTextContent(instance);
 
   return {
     pass: matches(expectedText, text, options?.normalizer, options?.exact),
     message: () => {
       return [
         formatMessage(
-          matcherHint(`${this.isNot ? '.not' : ''}.toHaveTextContent`, 'element', ''),
-          `Expected element ${this.isNot ? 'not to' : 'to'} have text content`,
+          matcherHint(`${this.isNot ? '.not' : ''}.toHaveTextContent`, 'instance', ''),
+          `Expected instance ${this.isNot ? 'not to' : 'to'} have text content`,
           expectedText,
           'Received',
           text,

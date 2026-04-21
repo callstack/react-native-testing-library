@@ -18,5 +18,6 @@ export const userEvent = {
     setup().type(instance, text, options),
   clear: (instance: TestInstance) => setup().clear(instance),
   paste: (instance: TestInstance, text: string) => setup().paste(instance, text),
-  scrollTo: (instance: TestInstance, options: ScrollToOptions) => setup().scrollTo(instance, options),
+  scrollTo: (instance: TestInstance, options: ScrollToOptions) =>
+    setup().scrollTo(instance, options),
 };

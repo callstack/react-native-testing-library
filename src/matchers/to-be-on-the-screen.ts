@@ -2,34 +2,34 @@ import { matcherHint, RECEIVED_COLOR } from 'jest-matcher-utils';
 import redent from 'redent';
 import type { TestInstance } from 'test-renderer';
 
-import { getContainerElement } from '../helpers/component-tree';
+import { getContainerInstance } from '../helpers/component-tree';
 import { formatElement } from '../helpers/format-element';
 import { screen } from '../screen';
 import { checkHostElement } from './utils';
 
-export function toBeOnTheScreen(this: jest.MatcherContext, element: TestInstance) {
-  if (element !== null || !this.isNot) {
-    checkHostElement(element, toBeOnTheScreen, this);
+export function toBeOnTheScreen(this: jest.MatcherContext, instance: TestInstance) {
+  if (instance !== null || !this.isNot) {
+    checkHostElement(instance, toBeOnTheScreen, this);
   }
 
-  const pass = element === null ? false : screen.container === getContainerElement(element);
+  const pass = instance === null ? false : screen.container === getContainerInstance(instance);
 
   const errorFound = () => {
-    return `expected element tree not to contain element, but found\n${redent(
-      formatElement(element),
+    return `expected instance tree not to contain instance, but found\n${redent(
+      formatElement(instance),
       2,
     )}`;
   };
 
   const errorNotFound = () => {
-    return `element could not be found in the element tree`;
+    return `instance could not be found in the instance tree`;
   };
 
   return {
     pass,
     message: () => {
       return [
-        matcherHint(`${this.isNot ? '.not' : ''}.toBeOnTheScreen`, 'element', ''),
+        matcherHint(`${this.isNot ? '.not' : ''}.toBeOnTheScreen`, 'instance', ''),
         '',
         RECEIVED_COLOR(this.isNot ? errorFound() : errorNotFound()),
       ].join('\n');

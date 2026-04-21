@@ -326,7 +326,7 @@ Use when `userEvent` doesn't support the event or when triggering events on comp
 
 ```ts
 async function fireEvent(
-  element: TestInstance,
+  instance: TestInstance,
   eventName: string,
   ...data: unknown[]
 ): Promise<void>;
@@ -361,7 +361,7 @@ Available automatically with any `@testing-library/react-native` import. No setu
 | Matcher               | Signature                                                     | Description                 |
 | --------------------- | ------------------------------------------------------------- | --------------------------- |
 | `toHaveTextContent()` | `(text: string \| RegExp, options?: { exact?, normalizer? })` | Text content match          |
-| `toContainElement()`  | `(element: TestInstance \| null)`                             | Contains child element      |
+| `toContainElement()`  | `(instance: TestInstance \| null)`                            | Contains child element      |
 | `toBeEmptyElement()`  | —                                                             | No children or text content |
 
 ### Element State
@@ -430,7 +430,7 @@ Waits until the queried element is removed. Element must be initially present.
 ### `within`
 
 ```ts
-function within(element: TestInstance): Queries;
+function within(instance: TestInstance): Queries;
 ```
 
 Scoped queries on a subtree. Useful for querying within a single `FlatList` item or a specific screen.
@@ -533,7 +533,7 @@ Note: `concurrentRoot` option is removed (always on). `unstable_validateStringsR
 ### `isHiddenFromAccessibility`
 
 ```ts
-function isHiddenFromAccessibility(element: TestInstance | null): boolean;
+function isHiddenFromAccessibility(instance: TestInstance | null): boolean;
 ```
 
 Also available as `isInaccessible()` alias.

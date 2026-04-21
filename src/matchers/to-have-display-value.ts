@@ -10,28 +10,28 @@ import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveDisplayValue(
   this: jest.MatcherContext,
-  element: TestInstance,
+  instance: TestInstance,
   expectedValue: TextMatch,
   options?: TextMatchOptions,
 ) {
-  checkHostElement(element, toHaveDisplayValue, this);
+  checkHostElement(instance, toHaveDisplayValue, this);
 
-  if (!isHostTextInput(element)) {
+  if (!isHostTextInput(instance)) {
     throw new ErrorWithStack(
-      `toHaveDisplayValue() works only with host "TextInput" elements. Passed element has type "${element.type}".`,
+      `toHaveDisplayValue() works only with host "TextInput" elements. Passed instance has type "${instance.type}".`,
       toHaveDisplayValue,
     );
   }
 
-  const receivedValue = getTextInputValue(element);
+  const receivedValue = getTextInputValue(instance);
 
   return {
     pass: matches(expectedValue, receivedValue, options?.normalizer, options?.exact),
     message: () => {
       return [
         formatMessage(
-          matcherHint(`${this.isNot ? '.not' : ''}.toHaveDisplayValue`, 'element', ''),
-          `Expected element ${this.isNot ? 'not to' : 'to'} have display value`,
+          matcherHint(`${this.isNot ? '.not' : ''}.toHaveDisplayValue`, 'instance', ''),
+          `Expected instance ${this.isNot ? 'not to' : 'to'} have display value`,
           expectedValue,
           'Received',
           receivedValue,

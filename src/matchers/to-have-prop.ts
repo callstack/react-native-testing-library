@@ -5,15 +5,15 @@ import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveProp(
   this: jest.MatcherContext,
-  element: TestInstance,
+  instance: TestInstance,
   name: string,
   expectedValue: unknown,
 ) {
-  checkHostElement(element, toHaveProp, this);
+  checkHostElement(instance, toHaveProp, this);
 
   const isExpectedValueDefined = expectedValue !== undefined;
-  const hasProp = name in element.props;
-  const receivedValue = element.props[name];
+  const hasProp = name in instance.props;
+  const receivedValue = instance.props[name];
 
   const pass = isExpectedValueDefined
     ? hasProp && this.equals(expectedValue, receivedValue)
@@ -25,7 +25,7 @@ export function toHaveProp(
       const to = this.isNot ? 'not to' : 'to';
       const matcher = matcherHint(
         `${this.isNot ? '.not' : ''}.toHaveProp`,
-        'element',
+        'instance',
         printExpected(name),
         {
           secondArgument: isExpectedValueDefined ? printExpected(expectedValue) : undefined,
@@ -33,7 +33,7 @@ export function toHaveProp(
       );
       return formatMessage(
         matcher,
-        `Expected element ${to} have prop`,
+        `Expected instance ${to} have prop`,
         formatProp(name, expectedValue),
         'Received',
         hasProp ? formatProp(name, receivedValue) : undefined,

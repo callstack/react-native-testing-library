@@ -189,7 +189,7 @@ export interface JestNativeMatchers<R> {
    *
    * expect(getByTestId('outer')).toContainElement(getByTestId('inner'));
    */
-  toContainElement(element: TestInstance | null): R;
+  toContainElement(instance: TestInstance | null): R;
 
   /**
    * Assert whether a host element has a given accessbility value.

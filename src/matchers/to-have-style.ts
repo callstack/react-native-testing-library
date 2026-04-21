@@ -11,13 +11,13 @@ type StyleLike = Record<string, unknown>;
 
 export function toHaveStyle(
   this: jest.MatcherContext,
-  element: TestInstance,
+  instance: TestInstance,
   style: StyleProp<Style>,
 ) {
-  checkHostElement(element, toHaveStyle, this);
+  checkHostElement(instance, toHaveStyle, this);
 
   const expected = (StyleSheet.flatten(style) as StyleLike) ?? {};
-  const received = (StyleSheet.flatten(element.props.style) as StyleLike) ?? {};
+  const received = (StyleSheet.flatten(instance.props.style) as StyleLike) ?? {};
 
   const pass = Object.keys(expected).every((key) => this.equals(expected[key], received[key]));
 
@@ -25,12 +25,12 @@ export function toHaveStyle(
     pass,
     message: () => {
       const to = this.isNot ? 'not to' : 'to';
-      const matcher = matcherHint(`${this.isNot ? '.not' : ''}.toHaveStyle`, 'element', '');
+      const matcher = matcherHint(`${this.isNot ? '.not' : ''}.toHaveStyle`, 'instance', '');
 
       if (pass) {
         return formatMessage(
           matcher,
-          `Expected element ${to} have style`,
+          `Expected instance ${to} have style`,
           formatStyles(expected),
           'Received',
           formatStyles(pickReceivedStyles(expected, received)),

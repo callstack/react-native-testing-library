@@ -6,18 +6,18 @@ import { computeAriaBusy } from '../helpers/accessibility';
 import { formatElement } from '../helpers/format-element';
 import { checkHostElement } from './utils';
 
-export function toBeBusy(this: jest.MatcherContext, element: TestInstance) {
-  checkHostElement(element, toBeBusy, this);
+export function toBeBusy(this: jest.MatcherContext, instance: TestInstance) {
+  checkHostElement(instance, toBeBusy, this);
 
   return {
-    pass: computeAriaBusy(element),
+    pass: computeAriaBusy(instance),
     message: () => {
-      const matcher = matcherHint(`${this.isNot ? '.not' : ''}.toBeBusy`, 'element', '');
+      const matcher = matcherHint(`${this.isNot ? '.not' : ''}.toBeBusy`, 'instance', '');
       return [
         matcher,
         '',
-        `Received element is ${this.isNot ? '' : 'not '}busy:`,
-        redent(formatElement(element), 2),
+        `Received instance is ${this.isNot ? '' : 'not '}busy:`,
+        redent(formatElement(instance), 2),
       ].join('\n');
     },
   };

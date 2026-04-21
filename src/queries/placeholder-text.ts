@@ -57,9 +57,7 @@ export type ByPlaceholderTextQueries = {
   findAllByPlaceholderText: FindAllByQuery<TextMatch, ByPlaceholderTextOptions>;
 };
 
-export const bindByPlaceholderTextQueries = (
-  instance: TestInstance,
-): ByPlaceholderTextQueries => ({
+export const bindByPlaceholderTextQueries = (instance: TestInstance): ByPlaceholderTextQueries => ({
   getByPlaceholderText: getBy(instance),
   getAllByPlaceholderText: getAllBy(instance),
   queryByPlaceholderText: queryBy(instance),

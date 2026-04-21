@@ -7,10 +7,10 @@ import { ErrorWithStack } from '../helpers/errors';
 import { formatElement } from '../helpers/format-element';
 import { checkHostElement } from './utils';
 
-export function toBePartiallyChecked(this: jest.MatcherContext, element: TestInstance) {
-  checkHostElement(element, toBePartiallyChecked, this);
+export function toBePartiallyChecked(this: jest.MatcherContext, instance: TestInstance) {
+  checkHostElement(instance, toBePartiallyChecked, this);
 
-  if (!hasValidAccessibilityRole(element)) {
+  if (!hasValidAccessibilityRole(instance)) {
     throw new ErrorWithStack(
       'toBePartiallyChecked() works only on accessibility elements with "checkbox" role.',
       toBePartiallyChecked,
@@ -18,20 +18,20 @@ export function toBePartiallyChecked(this: jest.MatcherContext, element: TestIns
   }
 
   return {
-    pass: computeAriaChecked(element) === 'mixed',
+    pass: computeAriaChecked(instance) === 'mixed',
     message: () => {
       const is = this.isNot ? 'is' : 'is not';
       return [
-        matcherHint(`${this.isNot ? '.not' : ''}.toBePartiallyChecked`, 'element', ''),
+        matcherHint(`${this.isNot ? '.not' : ''}.toBePartiallyChecked`, 'instance', ''),
         '',
-        `Received element ${is} partially checked:`,
-        redent(formatElement(element), 2),
+        `Received instance ${is} partially checked:`,
+        redent(formatElement(instance), 2),
       ].join('\n');
     },
   };
 }
 
-function hasValidAccessibilityRole(element: TestInstance) {
-  const role = getRole(element);
-  return isAccessibilityElement(element) && role === 'checkbox';
+function hasValidAccessibilityRole(instance: TestInstance) {
+  const role = getRole(instance);
+  return isAccessibilityElement(instance) && role === 'checkbox';
 }
