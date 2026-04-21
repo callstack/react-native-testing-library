@@ -73,7 +73,7 @@ In v14, React Native Testing Library uses [Test Renderer](https://github.com/mdj
 
 - The underlying renderer is now Test Renderer instead of React Test Renderer
 - This is mostly an internal change; your tests should work without modifications in most cases
-- Type definitions now use [`HostElement`](https://github.com/mdjastrzebski/test-renderer#hostelement) from Test Renderer instead of `ReactTestInstance`
+- Type definitions now use [`TestInstance`](https://github.com/mdjastrzebski/test-renderer#test-instance) from Test Renderer instead of `ReactTestInstance`
 
 **Migration:**
 
@@ -112,7 +112,7 @@ If you were directly importing types from React Test Renderer, you may need to u
 import type { ReactTestInstance } from 'react-test-renderer';
 
 // After (v14)
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 ```
 
 **Note:** Most users won't need to update type imports, as React Native Testing Library now exports the necessary types directly.

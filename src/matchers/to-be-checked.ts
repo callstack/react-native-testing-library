@@ -1,6 +1,6 @@
 import { matcherHint } from 'jest-matcher-utils';
 import redent from 'redent';
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import {
   computeAriaChecked,
@@ -13,35 +13,35 @@ import { formatElement } from '../helpers/format-element';
 import { isHostSwitch } from '../helpers/host-component-names';
 import { checkHostElement } from './utils';
 
-export function toBeChecked(this: jest.MatcherContext, element: HostElement) {
-  checkHostElement(element, toBeChecked, this);
+export function toBeChecked(this: jest.MatcherContext, instance: TestInstance) {
+  checkHostElement(instance, toBeChecked, this);
 
-  if (!isHostSwitch(element) && !isSupportedAccessibilityElement(element)) {
+  if (!isHostSwitch(instance) && !isSupportedAccessibilityElement(instance)) {
     throw new ErrorWithStack(
-      `toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role.`,
+      `toBeChecked() works only on host "Switch" instances or accessible instance with "checkbox", "radio" or "switch" role.`,
       toBeChecked,
     );
   }
 
   return {
-    pass: computeAriaChecked(element) === true,
+    pass: computeAriaChecked(instance) === true,
     message: () => {
       const is = this.isNot ? 'is' : 'is not';
       return [
-        matcherHint(`${this.isNot ? '.not' : ''}.toBeChecked`, 'element', ''),
+        matcherHint(`${this.isNot ? '.not' : ''}.toBeChecked`, 'instance', ''),
         '',
-        `Received element ${is} checked:`,
-        redent(formatElement(element), 2),
+        `Received instance ${is} checked:`,
+        redent(formatElement(instance), 2),
       ].join('\n');
     },
   };
 }
 
-function isSupportedAccessibilityElement(element: HostElement) {
-  if (!isAccessibilityElement(element)) {
+function isSupportedAccessibilityElement(instance: TestInstance) {
+  if (!isAccessibilityElement(instance)) {
     return false;
   }
 
-  const role = getRole(element);
+  const role = getRole(instance);
   return rolesSupportingCheckedState[role];
 }

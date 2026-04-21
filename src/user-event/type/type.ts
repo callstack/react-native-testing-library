@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import {
   buildBlurEvent,
@@ -28,42 +28,42 @@ export interface TypeOptions {
 
 export async function type(
   this: UserEventInstance,
-  element: HostElement,
+  instance: TestInstance,
   text: string,
   options?: TypeOptions,
 ): Promise<void> {
-  if (!isHostTextInput(element)) {
+  if (!isHostTextInput(instance)) {
     throw new ErrorWithStack(
-      `type() works only with host "TextInput" elements. Passed element has type "${element.type}".`,
+      `type() works only with host "TextInput" instances. Passed instance has type "${instance.type}".`,
       type,
     );
   }
 
-  // Skip events if the element is disabled
-  if (!isEditableTextInput(element) || !isPointerEventEnabled(element)) {
+  // Skip events if the instance is disabled
+  if (!isEditableTextInput(instance) || !isPointerEventEnabled(instance)) {
     return;
   }
 
   const keys = parseKeys(text);
 
   if (!options?.skipPress) {
-    await dispatchEvent(element, 'pressIn', buildTouchEvent());
+    await dispatchEvent(instance, 'pressIn', buildTouchEvent());
   }
 
-  await dispatchEvent(element, 'focus', buildFocusEvent());
+  await dispatchEvent(instance, 'focus', buildFocusEvent());
 
   if (!options?.skipPress) {
     await wait(this.config);
-    await dispatchEvent(element, 'pressOut', buildTouchEvent());
+    await dispatchEvent(instance, 'pressOut', buildTouchEvent());
   }
 
   for (const key of keys) {
-    const previousText = getTextInputValue(element);
+    const previousText = getTextInputValue(instance);
     const proposedText = applyKey(previousText, key);
-    const isAccepted = isTextChangeAccepted(element, proposedText);
+    const isAccepted = isTextChangeAccepted(instance, proposedText);
     const currentText = isAccepted ? proposedText : previousText;
 
-    await emitTypingEvents(element, {
+    await emitTypingEvents(instance, {
       config: this.config,
       key,
       text: currentText,
@@ -71,16 +71,16 @@ export async function type(
     });
   }
 
-  const finalText = getTextInputValue(element);
+  const finalText = getTextInputValue(instance);
   await wait(this.config);
 
   if (options?.submitEditing) {
-    await dispatchEvent(element, 'submitEditing', buildSubmitEditingEvent(finalText));
+    await dispatchEvent(instance, 'submitEditing', buildSubmitEditingEvent(finalText));
   }
 
   if (!options?.skipBlur) {
-    await dispatchEvent(element, 'endEditing', buildEndEditingEvent(finalText));
-    await dispatchEvent(element, 'blur', buildBlurEvent());
+    await dispatchEvent(instance, 'endEditing', buildEndEditingEvent(finalText));
+    await dispatchEvent(instance, 'blur', buildBlurEvent());
   }
 }
 
@@ -92,13 +92,13 @@ type EmitTypingEventsContext = {
 };
 
 export async function emitTypingEvents(
-  element: HostElement,
+  instance: TestInstance,
   { config, key, text, isAccepted }: EmitTypingEventsContext,
 ) {
-  const isMultiline = element.props.multiline === true;
+  const isMultiline = instance.props.multiline === true;
 
   await wait(config);
-  await dispatchEvent(element, 'keyPress', buildKeyPressEvent(key));
+  await dispatchEvent(instance, 'keyPress', buildKeyPressEvent(key));
 
   // Platform difference (based on experiments):
   // - iOS and RN Web: TextInput emits only `keyPress` event when max length has been reached
@@ -107,21 +107,21 @@ export async function emitTypingEvents(
     return;
   }
 
-  nativeState.valueForElement.set(element, text);
-  await dispatchEvent(element, 'change', buildTextChangeEvent(text));
-  await dispatchEvent(element, 'changeText', text);
+  nativeState.valueForInstance.set(instance, text);
+  await dispatchEvent(instance, 'change', buildTextChangeEvent(text));
+  await dispatchEvent(instance, 'changeText', text);
 
   const selectionRange = {
     start: text.length,
     end: text.length,
   };
-  await dispatchEvent(element, 'selectionChange', buildTextSelectionChangeEvent(selectionRange));
+  await dispatchEvent(instance, 'selectionChange', buildTextSelectionChangeEvent(selectionRange));
 
   // According to the docs only multiline TextInput emits contentSizeChange event
   // @see: https://reactnative.dev/docs/textinput#oncontentsizechange
   if (isMultiline) {
     const contentSize = getTextContentSize(text);
-    await dispatchEvent(element, 'contentSizeChange', buildContentSizeChangeEvent(contentSize));
+    await dispatchEvent(instance, 'contentSizeChange', buildContentSizeChangeEvent(contentSize));
   }
 }
 
@@ -137,7 +137,7 @@ function applyKey(text: string, key: string) {
   return text + key;
 }
 
-function isTextChangeAccepted(element: HostElement, text: string) {
-  const maxLength = element.props.maxLength;
+function isTextChangeAccepted(instance: TestInstance, text: string) {
+  const maxLength = instance.props.maxLength;
   return maxLength === undefined || text.length <= maxLength;
 }

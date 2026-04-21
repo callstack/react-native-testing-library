@@ -3,7 +3,7 @@
 Complete API reference for `@testing-library/react-native` v14.x (React 19+).
 
 **Test renderer:** `test-renderer` (not `react-test-renderer`)
-**Element type:** `HostElement` (not `ReactTestInstance`)
+**Element type:** `TestInstance` (not `ReactTestInstance`)
 
 ## Table of Contents
 
@@ -106,8 +106,8 @@ let screen: {
   unmount(): Promise<void>;                                    // async
   debug(options?: { message?: string; mapProps?: MapPropsFunction }): void;
   toJSON(): RendererJSON | null;
-  container: HostElement;  // safe root host element
-  root: HostElement;       // root host element
+  container: TestInstance;  // safe root host element
+  root: TestInstance;       // root host element
 };
 ```
 
@@ -132,14 +132,14 @@ Each query = **variant** + **predicate** (e.g., `getByRole` = `getBy` + `ByRole`
 
 ### Query Variants
 
-| Variant       | Assertion          | Return Type                          | Async |
-| ------------- | ------------------ | ------------------------------------ | ----- |
-| `getBy*`      | Exactly one match  | `HostElement` (throws if 0 or >1)    | No    |
-| `getAllBy*`   | At least one match | `HostElement[]` (throws if 0)        | No    |
-| `queryBy*`    | Zero or one match  | `HostElement \| null` (throws if >1) | No    |
-| `queryAllBy*` | No assertion       | `HostElement[]` (empty if 0)         | No    |
-| `findBy*`     | Exactly one match  | `Promise<HostElement>`               | Yes   |
-| `findAllBy*`  | At least one match | `Promise<HostElement[]>`             | Yes   |
+| Variant       | Assertion          | Return Type                           | Async |
+| ------------- | ------------------ | ------------------------------------- | ----- |
+| `getBy*`      | Exactly one match  | `TestInstance` (throws if 0 or >1)    | No    |
+| `getAllBy*`   | At least one match | `TestInstance[]` (throws if 0)        | No    |
+| `queryBy*`    | Zero or one match  | `TestInstance \| null` (throws if >1) | No    |
+| `queryAllBy*` | No assertion       | `TestInstance[]` (empty if 0)         | No    |
+| `findBy*`     | Exactly one match  | `Promise<TestInstance>`               | Yes   |
+| `findAllBy*`  | At least one match | `Promise<TestInstance[]>`             | Yes   |
 
 `findBy*` / `findAllBy*` accept optional `waitForOptions: { timeout?, interval?, onTimeout? }`.
 
@@ -157,7 +157,7 @@ getByRole(role: TextMatch, options?: {
   expanded?: boolean;
   value?: { min?: number; max?: number; now?: number; text?: TextMatch };
   includeHiddenElements?: boolean;
-}): HostElement;
+}): TestInstance;
 ```
 
 Matches elements by `role` or `accessibilityRole`. Element must be an accessibility element:
@@ -177,7 +177,7 @@ screen.getByRole('slider', { value: { now: 50, min: 0, max: 100 } });
 #### `*ByLabelText`
 
 ```ts
-getByLabelText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
+getByLabelText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): TestInstance;
 ```
 
 Matches by `aria-label`/`accessibilityLabel` or text content of element referenced by `aria-labelledby`/`accessibilityLabelledBy`.
@@ -185,7 +185,7 @@ Matches by `aria-label`/`accessibilityLabel` or text content of element referenc
 #### `*ByPlaceholderText`
 
 ```ts
-getByPlaceholderText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
+getByPlaceholderText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): TestInstance;
 ```
 
 Matches `TextInput` by `placeholder` prop.
@@ -193,7 +193,7 @@ Matches `TextInput` by `placeholder` prop.
 #### `*ByText`
 
 ```ts
-getByText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
+getByText(text: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): TestInstance;
 ```
 
 Matches by text content. Joins `<Text>` siblings to find matches (like RN runtime).
@@ -201,7 +201,7 @@ Matches by text content. Joins `<Text>` siblings to find matches (like RN runtim
 #### `*ByDisplayValue`
 
 ```ts
-getByDisplayValue(value: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
+getByDisplayValue(value: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): TestInstance;
 ```
 
 Matches `TextInput` by current display value.
@@ -209,7 +209,7 @@ Matches `TextInput` by current display value.
 #### `*ByHintText`
 
 ```ts
-getByHintText(hint: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
+getByHintText(hint: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): TestInstance;
 ```
 
 Matches by `accessibilityHint` prop. Also available as `getByA11yHint` / `getByAccessibilityHint`.
@@ -217,7 +217,7 @@ Matches by `accessibilityHint` prop. Also available as `getByA11yHint` / `getByA
 #### `*ByTestId` (last resort)
 
 ```ts
-getByTestId(testId: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): HostElement;
+getByTestId(testId: TextMatch, options?: { exact?: boolean; normalizer?: Function; includeHiddenElements?: boolean }): TestInstance;
 ```
 
 Matches by `testID` prop. Use only when other queries don't work.
@@ -326,7 +326,7 @@ Use when `userEvent` doesn't support the event or when triggering events on comp
 
 ```ts
 async function fireEvent(
-  element: HostElement,
+  instance: TestInstance,
   eventName: string,
   ...data: unknown[]
 ): Promise<void>;
@@ -361,7 +361,7 @@ Available automatically with any `@testing-library/react-native` import. No setu
 | Matcher               | Signature                                                     | Description                 |
 | --------------------- | ------------------------------------------------------------- | --------------------------- |
 | `toHaveTextContent()` | `(text: string \| RegExp, options?: { exact?, normalizer? })` | Text content match          |
-| `toContainElement()`  | `(element: HostElement \| null)`                              | Contains child element      |
+| `toContainElement()`  | `(instance: TestInstance \| null)`                            | Contains child element      |
 | `toBeEmptyElement()`  | —                                                             | No children or text content |
 
 ### Element State
@@ -430,7 +430,7 @@ Waits until the queried element is removed. Element must be initially present.
 ### `within`
 
 ```ts
-function within(element: HostElement): Queries;
+function within(instance: TestInstance): Queries;
 ```
 
 Scoped queries on a subtree. Useful for querying within a single `FlatList` item or a specific screen.
@@ -533,7 +533,7 @@ Note: `concurrentRoot` option is removed (always on). `unstable_validateStringsR
 ### `isHiddenFromAccessibility`
 
 ```ts
-function isHiddenFromAccessibility(element: HostElement | null): boolean;
+function isHiddenFromAccessibility(instance: TestInstance | null): boolean;
 ```
 
 Also available as `isInaccessible()` alias.

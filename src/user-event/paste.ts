@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import {
   buildBlurEvent,
@@ -18,46 +18,46 @@ import { dispatchEvent, getTextContentSize, wait } from './utils';
 
 export async function paste(
   this: UserEventInstance,
-  element: HostElement,
+  instance: TestInstance,
   text: string,
 ): Promise<void> {
-  if (!isHostTextInput(element)) {
+  if (!isHostTextInput(instance)) {
     throw new ErrorWithStack(
-      `paste() only supports host "TextInput" elements. Passed element has type: "${element.type}".`,
+      `paste() only supports host "TextInput" instances. Passed instance has type: "${instance.type}".`,
       paste,
     );
   }
 
-  if (!isEditableTextInput(element) || !isPointerEventEnabled(element)) {
+  if (!isEditableTextInput(instance) || !isPointerEventEnabled(instance)) {
     return;
   }
 
-  // 1. Enter element
-  await dispatchEvent(element, 'focus', buildFocusEvent());
+  // 1. Enter instance
+  await dispatchEvent(instance, 'focus', buildFocusEvent());
 
   // 2. Select all
-  const textToClear = getTextInputValue(element);
+  const textToClear = getTextInputValue(instance);
   const rangeToClear = { start: 0, end: textToClear.length };
-  await dispatchEvent(element, 'selectionChange', buildTextSelectionChangeEvent(rangeToClear));
+  await dispatchEvent(instance, 'selectionChange', buildTextSelectionChangeEvent(rangeToClear));
 
   // 3. Paste the text
-  nativeState.valueForElement.set(element, text);
-  await dispatchEvent(element, 'change', buildTextChangeEvent(text));
-  await dispatchEvent(element, 'changeText', text);
+  nativeState.valueForInstance.set(instance, text);
+  await dispatchEvent(instance, 'change', buildTextChangeEvent(text));
+  await dispatchEvent(instance, 'changeText', text);
 
   const rangeAfter = { start: text.length, end: text.length };
-  await dispatchEvent(element, 'selectionChange', buildTextSelectionChangeEvent(rangeAfter));
+  await dispatchEvent(instance, 'selectionChange', buildTextSelectionChangeEvent(rangeAfter));
 
   // According to the docs only multiline TextInput emits contentSizeChange event
   // @see: https://reactnative.dev/docs/textinput#oncontentsizechange
-  const isMultiline = element.props.multiline === true;
+  const isMultiline = instance.props.multiline === true;
   if (isMultiline) {
     const contentSize = getTextContentSize(text);
-    await dispatchEvent(element, 'contentSizeChange', buildContentSizeChangeEvent(contentSize));
+    await dispatchEvent(instance, 'contentSizeChange', buildContentSizeChangeEvent(contentSize));
   }
 
-  // 4. Exit element
+  // 4. Exit instance
   await wait(this.config);
-  await dispatchEvent(element, 'endEditing', buildEndEditingEvent(text));
-  await dispatchEvent(element, 'blur', buildBlurEvent());
+  await dispatchEvent(instance, 'endEditing', buildEndEditingEvent(text));
+  await dispatchEvent(instance, 'blur', buildBlurEvent());
 }

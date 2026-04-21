@@ -9,9 +9,9 @@ test('toBeVisible() on empty view', async () => {
   const view = screen.getByTestId('view');
   expect(view).toBeVisible();
   expect(() => expect(view).not.toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeVisible()
+    "expect(instance).not.toBeVisible()
 
-    Received element is visible:
+    Received instance is visible:
       <View
         testID="view"
       />"
@@ -24,9 +24,9 @@ test('toBeVisible() on view with opacity', async () => {
   const view = screen.getByTestId('view');
   expect(view).toBeVisible();
   expect(() => expect(view).not.toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeVisible()
+    "expect(instance).not.toBeVisible()
 
-    Received element is visible:
+    Received instance is visible:
       <View
         testID="view"
       />"
@@ -39,9 +39,9 @@ test('toBeVisible() on view with 0 opacity', async () => {
   const view = screen.getByTestId('view');
   expect(view).not.toBeVisible();
   expect(() => expect(view).toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeVisible()
+    "expect(instance).toBeVisible()
 
-    Received element is not visible:
+    Received instance is not visible:
       <View
         style={
           {
@@ -59,9 +59,9 @@ test('toBeVisible() on view with display "none"', async () => {
   const view = screen.getByTestId('view', { includeHiddenElements: true });
   expect(view).not.toBeVisible();
   expect(() => expect(view).toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeVisible()
+    "expect(instance).toBeVisible()
 
-    Received element is not visible:
+    Received instance is not visible:
       <View
         style={
           {
@@ -85,9 +85,9 @@ test('toBeVisible() on ancestor view with 0 opacity', async () => {
   const view = screen.getByTestId('view');
   expect(view).not.toBeVisible();
   expect(() => expect(view).toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeVisible()
+    "expect(instance).toBeVisible()
 
-    Received element is not visible:
+    Received instance is not visible:
       <View
         testID="view"
       />"
@@ -106,9 +106,9 @@ test('toBeVisible() on ancestor view with display "none"', async () => {
   const view = screen.getByTestId('view', { includeHiddenElements: true });
   expect(view).not.toBeVisible();
   expect(() => expect(view).toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeVisible()
+    "expect(instance).toBeVisible()
 
-    Received element is not visible:
+    Received instance is not visible:
       <View
         testID="view"
       />"
@@ -121,9 +121,9 @@ test('toBeVisible() on empty Modal', async () => {
   const modal = screen.getByTestId('modal');
   expect(modal).toBeVisible();
   expect(() => expect(modal).not.toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeVisible()
+    "expect(instance).not.toBeVisible()
 
-    Received element is visible:
+    Received instance is visible:
       <Modal
         testID="modal"
       />"
@@ -158,7 +158,7 @@ test('toBeVisible() on not visible Modal', async () => {
     .toThrowErrorMatchingInlineSnapshot(`
     "expect(received).toBeVisible()
 
-    received value must be a host element.
+    received value must be a host instance.
     Received has value: null"
   `);
 });
@@ -229,30 +229,30 @@ test('toBeVisible() on view within inaccessible view (Android)', async () => {
 test('toBeVisible() on null elements', () => {
   expect(null).not.toBeVisible();
   expect(() => expect(null).toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
-      "expect(received).toBeVisible()
+    "expect(received).toBeVisible()
 
-      received value must be a host element.
-      Received has value: null"
-    `);
+    received value must be a host instance.
+    Received has value: null"
+  `);
 });
 
 test('toBeVisible() on non-React elements', () => {
   expect(() => expect({ name: 'Non-React element' }).not.toBeVisible())
     .toThrowErrorMatchingInlineSnapshot(`
-      "expect(received).not.toBeVisible()
+    "expect(received).not.toBeVisible()
 
-      received value must be a host element.
-      Received has type:  object
-      Received has value: {"name": "Non-React element"}"
-    `);
+    received value must be a host instance.
+    Received has type:  object
+    Received has value: {"name": "Non-React element"}"
+  `);
 
   expect(() => expect(true).not.toBeVisible()).toThrowErrorMatchingInlineSnapshot(`
-      "expect(received).not.toBeVisible()
+    "expect(received).not.toBeVisible()
 
-      received value must be a host element.
-      Received has type:  boolean
-      Received has value: true"
-    `);
+    received value must be a host instance.
+    Received has type:  boolean
+    Received has value: true"
+  `);
 });
 
 test('toBeVisible() does not throw on invalid style', async () => {

@@ -47,9 +47,9 @@ test('toBeCheck() with Switch', async () => {
   expect(defaultView).not.toBeChecked();
 
   expect(() => expect(checked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeChecked()
+    "expect(instance).not.toBeChecked()
 
-    Received element is checked:
+    Received instance is checked:
       <RCTSwitch
         accessibilityRole="switch"
         testID="checked"
@@ -57,9 +57,9 @@ test('toBeCheck() with Switch', async () => {
       />"
   `);
   expect(() => expect(unchecked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeChecked()
+    "expect(instance).toBeChecked()
 
-    Received element is not checked:
+    Received instance is not checked:
       <RCTSwitch
         accessibilityRole="switch"
         testID="unchecked"
@@ -67,9 +67,9 @@ test('toBeCheck() with Switch', async () => {
       />"
   `);
   expect(() => expect(defaultView).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeChecked()
+    "expect(instance).toBeChecked()
 
-    Received element is not checked:
+    Received instance is not checked:
       <RCTSwitch
         accessibilityRole="switch"
         testID="default"
@@ -92,9 +92,9 @@ test('toBeCheck() with "checkbox" role', async () => {
   expect(defaultView).not.toBeChecked();
 
   expect(() => expect(checked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeChecked()
+    "expect(instance).not.toBeChecked()
 
-    Received element is checked:
+    Received instance is checked:
       <View
         accessibilityRole="checkbox"
         accessibilityState={
@@ -107,9 +107,9 @@ test('toBeCheck() with "checkbox" role', async () => {
       />"
   `);
   expect(() => expect(unchecked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeChecked()
+    "expect(instance).toBeChecked()
 
-    Received element is not checked:
+    Received instance is not checked:
       <View
         accessibilityRole="checkbox"
         accessibilityState={
@@ -122,9 +122,9 @@ test('toBeCheck() with "checkbox" role', async () => {
       />"
   `);
   expect(() => expect(mixed).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeChecked()
+    "expect(instance).toBeChecked()
 
-    Received element is not checked:
+    Received instance is not checked:
       <View
         accessibilityRole="checkbox"
         accessibilityState={
@@ -137,9 +137,9 @@ test('toBeCheck() with "checkbox" role', async () => {
       />"
   `);
   expect(() => expect(defaultView).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeChecked()
+    "expect(instance).toBeChecked()
 
-    Received element is not checked:
+    Received instance is not checked:
       <View
         accessibilityRole="checkbox"
         accessible={true}
@@ -160,9 +160,9 @@ test('toBeCheck() with "radio" role', async () => {
   expect(defaultView).not.toBeChecked();
 
   expect(() => expect(checked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeChecked()
+    "expect(instance).not.toBeChecked()
 
-    Received element is checked:
+    Received instance is checked:
       <View
         accessibilityRole="radio"
         accessibilityState={
@@ -175,9 +175,9 @@ test('toBeCheck() with "radio" role', async () => {
       />"
   `);
   expect(() => expect(unchecked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeChecked()
+    "expect(instance).toBeChecked()
 
-    Received element is not checked:
+    Received instance is not checked:
       <View
         accessibilityRole="radio"
         accessibilityState={
@@ -190,9 +190,9 @@ test('toBeCheck() with "radio" role', async () => {
       />"
   `);
   expect(() => expect(defaultView).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeChecked()
+    "expect(instance).toBeChecked()
 
-    Received element is not checked:
+    Received instance is not checked:
       <View
         accessibilityRole="radio"
         accessible={true}
@@ -213,9 +213,9 @@ test('toBeCheck() with "switch" role', async () => {
   expect(defaultView).not.toBeChecked();
 
   expect(() => expect(checked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeChecked()
+    "expect(instance).not.toBeChecked()
 
-    Received element is checked:
+    Received instance is checked:
       <View
         accessibilityRole="switch"
         accessibilityState={
@@ -228,9 +228,9 @@ test('toBeCheck() with "switch" role', async () => {
       />"
   `);
   expect(() => expect(unchecked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeChecked()
+    "expect(instance).toBeChecked()
 
-    Received element is not checked:
+    Received instance is not checked:
       <View
         accessibilityRole="switch"
         accessibilityState={
@@ -243,9 +243,9 @@ test('toBeCheck() with "switch" role', async () => {
       />"
   `);
   expect(() => expect(defaultView).toBeChecked()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeChecked()
+    "expect(instance).toBeChecked()
 
-    Received element is not checked:
+    Received instance is not checked:
       <View
         accessibilityRole="switch"
         accessible={true}
@@ -261,10 +261,10 @@ test('throws error for invalid role', async () => {
   const unchecked = screen.getByTestId('adjustable-unchecked');
 
   expect(() => expect(checked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role."`,
+    `"toBeChecked() works only on host "Switch" instances or accessible instance with "checkbox", "radio" or "switch" role."`,
   );
   expect(() => expect(unchecked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role."`,
+    `"toBeChecked() works only on host "Switch" instances or accessible instance with "checkbox", "radio" or "switch" role."`,
   );
 });
 
@@ -273,6 +273,6 @@ test('throws error for non-accessibility element', async () => {
 
   const view = screen.getByTestId('test');
   expect(() => expect(view).toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role."`,
+    `"toBeChecked() works only on host "Switch" instances or accessible instance with "checkbox", "radio" or "switch" role."`,
   );
 });

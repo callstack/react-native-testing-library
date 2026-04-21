@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import {
   buildBlurEvent,
@@ -14,39 +14,39 @@ import type { UserEventInstance } from './setup';
 import { emitTypingEvents } from './type/type';
 import { dispatchEvent, wait } from './utils';
 
-export async function clear(this: UserEventInstance, element: HostElement): Promise<void> {
-  if (!isHostTextInput(element)) {
+export async function clear(this: UserEventInstance, instance: TestInstance): Promise<void> {
+  if (!isHostTextInput(instance)) {
     throw new ErrorWithStack(
-      `clear() only supports host "TextInput" elements. Passed element has type: "${element.type}".`,
+      `clear() only supports host "TextInput" instances. Passed instance has type: "${instance.type}".`,
       clear,
     );
   }
 
-  if (!isEditableTextInput(element) || !isPointerEventEnabled(element)) {
+  if (!isEditableTextInput(instance) || !isPointerEventEnabled(instance)) {
     return;
   }
 
-  // 1. Enter element
-  await dispatchEvent(element, 'focus', buildFocusEvent());
+  // 1. Enter instance
+  await dispatchEvent(instance, 'focus', buildFocusEvent());
 
   // 2. Select all
-  const textToClear = getTextInputValue(element);
+  const textToClear = getTextInputValue(instance);
   const selectionRange = {
     start: 0,
     end: textToClear.length,
   };
-  await dispatchEvent(element, 'selectionChange', buildTextSelectionChangeEvent(selectionRange));
+  await dispatchEvent(instance, 'selectionChange', buildTextSelectionChangeEvent(selectionRange));
 
   // 3. Press backspace with selected text
   const emptyText = '';
-  await emitTypingEvents(element, {
+  await emitTypingEvents(instance, {
     config: this.config,
     key: 'Backspace',
     text: emptyText,
   });
 
-  // 4. Exit element
+  // 4. Exit instance
   await wait(this.config);
-  await dispatchEvent(element, 'endEditing', buildEndEditingEvent(emptyText));
-  await dispatchEvent(element, 'blur', buildBlurEvent());
+  await dispatchEvent(instance, 'endEditing', buildEndEditingEvent(emptyText));
+  await dispatchEvent(instance, 'blur', buildBlurEvent());
 }

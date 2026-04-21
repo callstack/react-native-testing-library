@@ -2,10 +2,10 @@ import * as React from 'react';
 import type { StyleProp } from 'react-native';
 import {
   createRoot,
-  type HostElement,
   type JsonElement,
   type Root,
   type RootOptions,
+  type TestInstance,
 } from 'test-renderer';
 
 import { act } from './act';
@@ -16,7 +16,7 @@ import { debug } from './helpers/debug';
 import { HOST_TEXT_NAMES } from './helpers/host-component-names';
 import { validateOptions } from './helpers/validate-options';
 import { setRenderResult } from './screen';
-import { getQueriesForElement } from './within';
+import { getQueriesForInstance } from './within';
 
 export interface RenderOptions {
   /**
@@ -83,15 +83,15 @@ export async function render<T>(element: React.ReactElement<T>, options: RenderO
   addToCleanupQueue(unmount);
 
   const result = {
-    ...getQueriesForElement(renderer.container),
+    ...getQueriesForInstance(renderer.container),
     rerender,
     unmount,
     toJSON,
     debug: makeDebug(renderer),
-    get container(): HostElement {
+    get container(): TestInstance {
       return renderer.container;
     },
-    get root(): HostElement | null {
+    get root(): TestInstance | null {
       const firstChild = container.children[0];
       if (typeof firstChild === 'string') {
         /* istanbul ignore next */

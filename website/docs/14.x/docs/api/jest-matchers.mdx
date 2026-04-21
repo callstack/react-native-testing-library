@@ -36,7 +36,7 @@ Checks if an element has the specified text content. Accepts `string` or `RegExp
 
 ```ts
 expect(container).toContainElement(
-  element: HostElement | null,
+  instance: TestInstance | null,
 )
 ```
 

@@ -23,9 +23,9 @@ test('toBeOnTheScreen() on attached element', async () => {
   const element = screen.getByTestId('test');
   expect(element).toBeOnTheScreen();
   expect(() => expect(element).not.toBeOnTheScreen()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeOnTheScreen()
+    "expect(instance).not.toBeOnTheScreen()
 
-    expected element tree not to contain element, but found
+    expected instance tree not to contain instance, but found
       <View
         testID="test"
       />"
@@ -52,9 +52,9 @@ test('toBeOnTheScreen() on detached element', async () => {
   expect(element).toBeTruthy();
   expect(element).not.toBeOnTheScreen();
   expect(() => expect(element).toBeOnTheScreen()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeOnTheScreen()
+    "expect(instance).toBeOnTheScreen()
 
-    element could not be found in the element tree"
+    instance could not be found in the instance tree"
   `);
 });
 
@@ -63,7 +63,7 @@ test('toBeOnTheScreen() on null element', () => {
   expect(() => expect(null).toBeOnTheScreen()).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).toBeOnTheScreen()
 
-    received value must be a host element.
+    received value must be a host instance.
     Received has value: null"
   `);
 });

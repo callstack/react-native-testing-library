@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import { isHostTextInput } from '../helpers/host-component-names';
@@ -19,22 +19,22 @@ import type { CommonQueryOptions } from './options';
 type ByDisplayValueOptions = CommonQueryOptions & TextMatchOptions;
 
 const matchDisplayValue = (
-  node: HostElement,
+  instance: TestInstance,
   expectedValue: TextMatch,
   options: TextMatchOptions = {},
 ) => {
   const { exact, normalizer } = options;
-  const nodeValue = getTextInputValue(node);
-  return matches(expectedValue, nodeValue, normalizer, exact);
+  const instanceValue = getTextInputValue(instance);
+  return matches(expectedValue, instanceValue, normalizer, exact);
 };
 
 const queryAllByDisplayValue = (
-  element: HostElement,
+  instance: TestInstance,
 ): QueryAllByQuery<TextMatch, ByDisplayValueOptions> =>
   function queryAllByDisplayValueFn(displayValue, queryOptions) {
     return findAll(
-      element,
-      (node) => isHostTextInput(node) && matchDisplayValue(node, displayValue, queryOptions),
+      instance,
+      (item) => isHostTextInput(item) && matchDisplayValue(item, displayValue, queryOptions),
       queryOptions,
     );
   };
@@ -59,11 +59,11 @@ export type ByDisplayValueQueries = {
   findAllByDisplayValue: FindAllByQuery<TextMatch, ByDisplayValueOptions>;
 };
 
-export const bindByDisplayValueQueries = (element: HostElement): ByDisplayValueQueries => ({
-  getByDisplayValue: getBy(element),
-  getAllByDisplayValue: getAllBy(element),
-  queryByDisplayValue: queryBy(element),
-  queryAllByDisplayValue: queryAllBy(element),
-  findByDisplayValue: findBy(element),
-  findAllByDisplayValue: findAllBy(element),
+export const bindByDisplayValueQueries = (instance: TestInstance): ByDisplayValueQueries => ({
+  getByDisplayValue: getBy(instance),
+  getAllByDisplayValue: getAllBy(instance),
+  queryByDisplayValue: queryBy(instance),
+  queryAllByDisplayValue: queryAllBy(instance),
+  findByDisplayValue: findBy(instance),
+  findAllByDisplayValue: findAllBy(instance),
 });

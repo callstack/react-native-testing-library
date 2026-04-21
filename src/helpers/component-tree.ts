@@ -10,8 +10,8 @@ export function isTestInstance(node?: TestNode | null): node is TestInstance {
   return typeof node !== 'string' && typeof node?.type === 'string';
 }
 
-export function isElementMounted(element: TestInstance) {
-  return getContainerElement(element) === screen.container;
+export function isInstanceMounted(instance: TestInstance) {
+  return getContainerInstance(instance) === screen.container;
 }
 
 /**
@@ -36,7 +36,7 @@ export function getInstanceSiblings(instance: TestInstance): TestInstance[] {
  * @param instance The element start traversing from.
  * @returns The container element of the tree.
  */
-export function getContainerElement(instance: TestInstance) {
+export function getContainerInstance(instance: TestInstance) {
   let current = instance;
   while (current.parent) {
     current = current.parent;

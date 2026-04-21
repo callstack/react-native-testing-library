@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import { isHostTextInput } from '../helpers/host-component-names';
@@ -18,21 +18,21 @@ import type { CommonQueryOptions } from './options';
 type ByPlaceholderTextOptions = CommonQueryOptions & TextMatchOptions;
 
 const matchPlaceholderText = (
-  node: HostElement,
+  instance: TestInstance,
   placeholder: TextMatch,
   options: TextMatchOptions = {},
 ) => {
   const { exact, normalizer } = options;
-  return matches(placeholder, node.props.placeholder, normalizer, exact);
+  return matches(placeholder, instance.props.placeholder, normalizer, exact);
 };
 
 const queryAllByPlaceholderText = (
-  element: HostElement,
+  instance: TestInstance,
 ): QueryAllByQuery<TextMatch, ByPlaceholderTextOptions> =>
   function queryAllByPlaceholderFn(placeholder, queryOptions) {
     return findAll(
-      element,
-      (node) => isHostTextInput(node) && matchPlaceholderText(node, placeholder, queryOptions),
+      instance,
+      (item) => isHostTextInput(item) && matchPlaceholderText(item, placeholder, queryOptions),
       queryOptions,
     );
   };
@@ -57,11 +57,11 @@ export type ByPlaceholderTextQueries = {
   findAllByPlaceholderText: FindAllByQuery<TextMatch, ByPlaceholderTextOptions>;
 };
 
-export const bindByPlaceholderTextQueries = (element: HostElement): ByPlaceholderTextQueries => ({
-  getByPlaceholderText: getBy(element),
-  getAllByPlaceholderText: getAllBy(element),
-  queryByPlaceholderText: queryBy(element),
-  queryAllByPlaceholderText: queryAllBy(element),
-  findByPlaceholderText: findBy(element),
-  findAllByPlaceholderText: findAllBy(element),
+export const bindByPlaceholderTextQueries = (instance: TestInstance): ByPlaceholderTextQueries => ({
+  getByPlaceholderText: getBy(instance),
+  getAllByPlaceholderText: getAllBy(instance),
+  queryByPlaceholderText: queryBy(instance),
+  queryAllByPlaceholderText: queryAllBy(instance),
+  findByPlaceholderText: findBy(instance),
+  findAllByPlaceholderText: findAllBy(instance),
 });

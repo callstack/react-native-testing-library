@@ -9,7 +9,7 @@ Use Fire Event for cases not supported by User Event and for triggering event ha
 :::
 
 ```ts
-function fireEvent(element: HostElement, eventName: string, ...data: unknown[]): Promise<unknown>;
+function fireEvent(instance: TestInstance, eventName: string, ...data: unknown[]): Promise<unknown>;
 ```
 
 The `fireEvent` API triggers event handlers on both host and composite components. It traverses the component tree bottom-up from the passed element to find an enabled event handler named `onXxx` where `xxx` is the event name.
@@ -66,7 +66,7 @@ Use the User Event [`press()`](/docs/api/events/user-event#press) helper instead
 
 ```tsx
 fireEvent.press: (
-  element: HostElement,
+  instance: TestInstance,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```
@@ -105,7 +105,7 @@ Use the User Event [`type()`](/docs/api/events/user-event#type) helper instead. 
 
 ```tsx
 fireEvent.changeText: (
-  element: HostElement,
+  instance: TestInstance,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```
@@ -136,7 +136,7 @@ Prefer [`user.scrollTo`](/docs/api/events/user-event#scrollto) over `fireEvent.s
 
 ```tsx
 fireEvent.scroll: (
-  element: HostElement,
+  instance: TestInstance,
   ...data: Array<any>,
 ) => Promise<unknown>
 ```

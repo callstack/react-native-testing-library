@@ -1,5 +1,5 @@
 import type { AccessibilityRole, Role } from 'react-native';
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import {
   accessibilityStateKeys,
@@ -36,33 +36,36 @@ export type ByRoleOptions = CommonQueryOptions &
     value?: AccessibilityValueMatcher;
   };
 
-const matchAccessibleNameIfNeeded = (node: HostElement, name?: TextMatch) => {
+const matchAccessibleNameIfNeeded = (instance: TestInstance, name?: TextMatch) => {
   if (name == null) return true;
 
-  const accessibleName = computeAccessibleName(node);
+  const accessibleName = computeAccessibleName(instance);
   return matches(name, accessibleName);
 };
 
-const matchAccessibleStateIfNeeded = (node: HostElement, options?: ByRoleOptions) => {
-  return options != null ? matchAccessibilityState(node, options) : true;
+const matchAccessibleStateIfNeeded = (instance: TestInstance, options?: ByRoleOptions) => {
+  return options != null ? matchAccessibilityState(instance, options) : true;
 };
 
-const matchAccessibilityValueIfNeeded = (node: HostElement, value?: AccessibilityValueMatcher) => {
-  return value != null ? matchAccessibilityValue(node, value) : true;
+const matchAccessibilityValueIfNeeded = (
+  instance: TestInstance,
+  value?: AccessibilityValueMatcher,
+) => {
+  return value != null ? matchAccessibilityValue(instance, value) : true;
 };
 
-const queryAllByRole = (element: HostElement): QueryAllByQuery<ByRoleMatcher, ByRoleOptions> =>
+const queryAllByRole = (instance: TestInstance): QueryAllByQuery<ByRoleMatcher, ByRoleOptions> =>
   function queryAllByRoleFn(role, options) {
     const normalizedRole = typeof role === 'string' ? normalizeRole(role) : role;
     return findAll(
-      element,
-      (node) =>
+      instance,
+      (item) =>
         // run the cheapest checks first, and early exit to avoid unneeded computations
-        isAccessibilityElement(node) &&
-        matchStringProp(getRole(node), normalizedRole) &&
-        matchAccessibleStateIfNeeded(node, options) &&
-        matchAccessibilityValueIfNeeded(node, options?.value) &&
-        matchAccessibleNameIfNeeded(node, options?.name),
+        isAccessibilityElement(item) &&
+        matchStringProp(getRole(item), normalizedRole) &&
+        matchAccessibleStateIfNeeded(item, options) &&
+        matchAccessibilityValueIfNeeded(item, options?.value) &&
+        matchAccessibleNameIfNeeded(item, options?.name),
       options,
     );
   };
@@ -110,11 +113,11 @@ export type ByRoleQueries = {
   findAllByRole: FindAllByQuery<ByRoleMatcher, ByRoleOptions>;
 };
 
-export const bindByRoleQueries = (element: HostElement): ByRoleQueries => ({
-  getByRole: getBy(element),
-  getAllByRole: getAllBy(element),
-  queryByRole: queryBy(element),
-  queryAllByRole: queryAllBy(element),
-  findByRole: findBy(element),
-  findAllByRole: findAllBy(element),
+export const bindByRoleQueries = (instance: TestInstance): ByRoleQueries => ({
+  getByRole: getBy(instance),
+  getAllByRole: getAllBy(instance),
+  queryByRole: queryBy(instance),
+  queryAllByRole: queryAllBy(instance),
+  findByRole: findBy(instance),
+  findAllByRole: findAllBy(instance),
 });

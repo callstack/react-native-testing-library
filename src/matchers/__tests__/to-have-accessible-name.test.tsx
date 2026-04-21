@@ -94,9 +94,9 @@ test('toHaveAccessibleName() supports calling without expected name', async () =
   const element = screen.getByTestId('view');
   expect(element).toHaveAccessibleName();
   expect(() => expect(element).not.toHaveAccessibleName()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toHaveAccessibleName()
+    "expect(instance).not.toHaveAccessibleName()
 
-    Expected element not to have accessible name:
+    Expected instance not to have accessible name:
       undefined
     Received:
       Test label"
@@ -109,9 +109,9 @@ test('toHaveAccessibleName() handles a view without name when called without exp
 
   expect(element).not.toHaveAccessibleName();
   expect(() => expect(element).toHaveAccessibleName()).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveAccessibleName()
+    "expect(instance).toHaveAccessibleName()
 
-    Expected element to have accessible name:
+    Expected instance to have accessible name:
       undefined
     Received:
     "
@@ -119,21 +119,21 @@ test('toHaveAccessibleName() handles a view without name when called without exp
 });
 
 it('toHaveAccessibleName() rejects non-host element', () => {
-  const nonElement = 'This is not a HostElement';
+  const nonElement = 'This is not a TestInstance';
 
   expect(() => expect(nonElement).toHaveAccessibleName()).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).toHaveAccessibleName()
 
-    received value must be a host element.
+    received value must be a host instance.
     Received has type:  string
-    Received has value: "This is not a HostElement""
+    Received has value: "This is not a TestInstance""
   `);
 
   expect(() => expect(nonElement).not.toHaveAccessibleName()).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).not.toHaveAccessibleName()
 
-    received value must be a host element.
+    received value must be a host instance.
     Received has type:  string
-    Received has value: "This is not a HostElement""
+    Received has value: "This is not a TestInstance""
   `);
 });

@@ -1,5 +1,5 @@
 import { matcherHint } from 'jest-matcher-utils';
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { computeAccessibleName } from '../helpers/accessibility';
 import type { TextMatch, TextMatchOptions } from '../matches';
@@ -8,13 +8,13 @@ import { checkHostElement, formatMessage } from './utils';
 
 export function toHaveAccessibleName(
   this: jest.MatcherContext,
-  element: HostElement,
+  instance: TestInstance,
   expectedName?: TextMatch,
   options?: TextMatchOptions,
 ) {
-  checkHostElement(element, toHaveAccessibleName, this);
+  checkHostElement(instance, toHaveAccessibleName, this);
 
-  const receivedName = computeAccessibleName(element);
+  const receivedName = computeAccessibleName(instance);
   const missingExpectedValue = arguments.length === 1;
 
   const pass = missingExpectedValue
@@ -28,8 +28,8 @@ export function toHaveAccessibleName(
     message: () => {
       return [
         formatMessage(
-          matcherHint(`${this.isNot ? '.not' : ''}.toHaveAccessibleName`, 'element', ''),
-          `Expected element ${this.isNot ? 'not to' : 'to'} have accessible name`,
+          matcherHint(`${this.isNot ? '.not' : ''}.toHaveAccessibleName`, 'instance', ''),
+          `Expected instance ${this.isNot ? 'not to' : 'to'} have accessible name`,
           expectedName,
           'Received',
           receivedName,

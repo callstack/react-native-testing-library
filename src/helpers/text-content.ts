@@ -1,16 +1,16 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
-export function getTextContent(element: HostElement | string | null): string {
-  if (!element) {
+export function getTextContent(instance: TestInstance | string | null): string {
+  if (!instance) {
     return '';
   }
 
-  if (typeof element === 'string') {
-    return element;
+  if (typeof instance === 'string') {
+    return instance;
   }
 
   const result: string[] = [];
-  element.children?.forEach((child) => {
+  instance.children?.forEach((child) => {
     result.push(getTextContent(child));
   });
 

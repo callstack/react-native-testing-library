@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import {
   computeAriaBusy,
@@ -20,20 +20,23 @@ export interface AccessibilityStateMatcher {
   expanded?: boolean;
 }
 
-export function matchAccessibilityState(node: HostElement, matcher: AccessibilityStateMatcher) {
-  if (matcher.busy !== undefined && matcher.busy !== computeAriaBusy(node)) {
+export function matchAccessibilityState(
+  instance: TestInstance,
+  matcher: AccessibilityStateMatcher,
+) {
+  if (matcher.busy !== undefined && matcher.busy !== computeAriaBusy(instance)) {
     return false;
   }
-  if (matcher.checked !== undefined && matcher.checked !== computeAriaChecked(node)) {
+  if (matcher.checked !== undefined && matcher.checked !== computeAriaChecked(instance)) {
     return false;
   }
-  if (matcher.disabled !== undefined && matcher.disabled !== computeAriaDisabled(node)) {
+  if (matcher.disabled !== undefined && matcher.disabled !== computeAriaDisabled(instance)) {
     return false;
   }
-  if (matcher.expanded !== undefined && matcher.expanded !== computeAriaExpanded(node)) {
+  if (matcher.expanded !== undefined && matcher.expanded !== computeAriaExpanded(instance)) {
     return false;
   }
-  if (matcher.selected !== undefined && matcher.selected !== computeAriaSelected(node)) {
+  if (matcher.selected !== undefined && matcher.selected !== computeAriaSelected(instance)) {
     return false;
   }
 

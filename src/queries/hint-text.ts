@@ -1,4 +1,4 @@
-import type { HostElement } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { findAll } from '../helpers/find-all';
 import type { TextMatch, TextMatchOptions } from '../matches';
@@ -16,14 +16,24 @@ import type { CommonQueryOptions } from './options';
 
 type ByHintTextOptions = CommonQueryOptions & TextMatchOptions;
 
-const getNodeByHintText = (node: HostElement, text: TextMatch, options: TextMatchOptions = {}) => {
+const getInstanceByHintText = (
+  instance: TestInstance,
+  text: TextMatch,
+  options: TextMatchOptions = {},
+) => {
   const { exact, normalizer } = options;
-  return matches(text, node.props.accessibilityHint, normalizer, exact);
+  return matches(text, instance.props.accessibilityHint, normalizer, exact);
 };
 
-const queryAllByHintText = (element: HostElement): QueryAllByQuery<TextMatch, ByHintTextOptions> =>
+const queryAllByHintText = (
+  instance: TestInstance,
+): QueryAllByQuery<TextMatch, ByHintTextOptions> =>
   function queryAllByA11yHintFn(hint, queryOptions) {
-    return findAll(element, (node) => getNodeByHintText(node, hint, queryOptions), queryOptions);
+    return findAll(
+      instance,
+      (item) => getInstanceByHintText(item, hint, queryOptions),
+      queryOptions,
+    );
   };
 
 const getMultipleError = (hint: TextMatch) =>
@@ -62,13 +72,13 @@ export type ByHintTextQueries = {
   findAllByAccessibilityHint: FindAllByQuery<TextMatch, ByHintTextOptions>;
 };
 
-export const bindByHintTextQueries = (element: HostElement): ByHintTextQueries => {
-  const getByHintText = getBy(element);
-  const getAllByHintText = getAllBy(element);
-  const queryByHintText = queryBy(element);
-  const queryAllByHintText = queryAllBy(element);
-  const findByHintText = findBy(element);
-  const findAllByHintText = findAllBy(element);
+export const bindByHintTextQueries = (instance: TestInstance): ByHintTextQueries => {
+  const getByHintText = getBy(instance);
+  const getAllByHintText = getAllBy(instance);
+  const queryByHintText = queryBy(instance);
+  const queryAllByHintText = queryAllBy(instance);
+  const findByHintText = findBy(instance);
+  const findAllByHintText = findAllBy(instance);
 
   return {
     getByHintText,

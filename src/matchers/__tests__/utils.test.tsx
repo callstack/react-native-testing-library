@@ -24,7 +24,7 @@ test('checkHostElement allows rejects null element', () => {
   }).toThrowErrorMatchingInlineSnapshot(`
     "expect(received).fakeMatcher()
 
-    received value must be a host element.
+    received value must be a host instance.
     Received has value: null"
   `);
 });

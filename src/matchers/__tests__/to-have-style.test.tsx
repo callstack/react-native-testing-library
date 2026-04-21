@@ -65,7 +65,7 @@ test('toHaveStyle error messages', async () => {
   const view = screen.getByTestId('view');
   expect(() => expect(view).toHaveStyle({ backgroundColor: 'red' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveStyle()
+    "expect(instance).toHaveStyle()
 
     - Expected
     + Received
@@ -80,7 +80,7 @@ test('toHaveStyle error messages', async () => {
       transform: [{ scale: 1 }],
     }),
   ).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveStyle()
+    "expect(instance).toHaveStyle()
 
     - Expected
     + Received
@@ -99,9 +99,9 @@ test('toHaveStyle error messages', async () => {
 
   expect(() => expect(view).not.toHaveStyle({ backgroundColor: 'blue' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toHaveStyle()
+    "expect(instance).not.toHaveStyle()
 
-    Expected element not to have style:
+    Expected instance not to have style:
       backgroundColor: "blue";
     Received:
       backgroundColor: "blue";"
@@ -109,7 +109,7 @@ test('toHaveStyle error messages', async () => {
 
   expect(() => expect(view).toHaveStyle({ fontWeight: 'bold' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveStyle()
+    "expect(instance).toHaveStyle()
 
     - Expected
     + Received
@@ -119,9 +119,9 @@ test('toHaveStyle error messages', async () => {
 
   expect(() => expect(view).not.toHaveStyle({ backgroundColor: 'blue' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toHaveStyle()
+    "expect(instance).not.toHaveStyle()
 
-    Expected element not to have style:
+    Expected instance not to have style:
       backgroundColor: "blue";
     Received:
       backgroundColor: "blue";"
@@ -149,7 +149,7 @@ test('toHaveStyle() supports undefined "transform" style', async () => {
   const view = screen.getByTestId('view');
   expect(() => expect(view).toHaveStyle({ transform: [{ scale: 1 }] }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveStyle()
+    "expect(instance).toHaveStyle()
 
     - Expected
     + Received
@@ -182,7 +182,7 @@ test('toHaveStyle() to differentiate number vs string values', async () => {
   const view = screen.getByTestId('view');
   expect(view).toHaveStyle({ fontWeight: '600' });
   expect(() => expect(view).toHaveStyle({ fontWeight: 600 })).toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toHaveStyle()
+    "expect(instance).toHaveStyle()
 
     - Expected
     + Received

@@ -34,9 +34,9 @@ test('toBeBusy() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('busy')).not.toBeBusy())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeBusy()
+    "expect(instance).not.toBeBusy()
 
-    Received element is busy:
+    Received instance is busy:
       <View
         accessibilityState={
           {
@@ -49,9 +49,9 @@ test('toBeBusy() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('busy-aria')).not.toBeBusy())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).not.toBeBusy()
+    "expect(instance).not.toBeBusy()
 
-    Received element is busy:
+    Received instance is busy:
       <View
         aria-busy={true}
         testID="busy-aria"
@@ -60,9 +60,9 @@ test('toBeBusy() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('not-busy')).toBeBusy())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeBusy()
+    "expect(instance).toBeBusy()
 
-    Received element is not busy:
+    Received instance is not busy:
       <View
         accessibilityState={
           {
@@ -75,9 +75,9 @@ test('toBeBusy() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('not-busy-aria')).toBeBusy())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeBusy()
+    "expect(instance).toBeBusy()
 
-    Received element is not busy:
+    Received instance is not busy:
       <View
         aria-busy={false}
         testID="not-busy-aria"
@@ -86,9 +86,9 @@ test('toBeBusy() error messages', async () => {
 
   expect(() => expect(screen.getByTestId('default')).toBeBusy())
     .toThrowErrorMatchingInlineSnapshot(`
-    "expect(element).toBeBusy()
+    "expect(instance).toBeBusy()
 
-    Received element is not busy:
+    Received instance is not busy:
       <View
         testID="default"
       />"
