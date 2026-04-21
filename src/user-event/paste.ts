@@ -23,7 +23,7 @@ export async function paste(
 ): Promise<void> {
   if (!isHostTextInput(instance)) {
     throw new ErrorWithStack(
-      `paste() only supports host "TextInput" elements. Passed instance has type: "${instance.type}".`,
+      `paste() only supports host "TextInput" instances. Passed instance has type: "${instance.type}".`,
       paste,
     );
   }

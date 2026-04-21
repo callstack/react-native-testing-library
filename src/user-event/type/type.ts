@@ -34,7 +34,7 @@ export async function type(
 ): Promise<void> {
   if (!isHostTextInput(instance)) {
     throw new ErrorWithStack(
-      `type() works only with host "TextInput" elements. Passed instance has type "${instance.type}".`,
+      `type() works only with host "TextInput" instances. Passed instance has type "${instance.type}".`,
       type,
     );
   }

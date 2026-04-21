@@ -261,10 +261,10 @@ test('throws error for invalid role', async () => {
   const unchecked = screen.getByTestId('adjustable-unchecked');
 
   expect(() => expect(checked).toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role."`,
+    `"toBeChecked() works only on host "Switch" instances or accessible instance with "checkbox", "radio" or "switch" role."`,
   );
   expect(() => expect(unchecked).not.toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role."`,
+    `"toBeChecked() works only on host "Switch" instances or accessible instance with "checkbox", "radio" or "switch" role."`,
   );
 });
 
@@ -273,6 +273,6 @@ test('throws error for non-accessibility element', async () => {
 
   const view = screen.getByTestId('test');
   expect(() => expect(view).toBeChecked()).toThrowErrorMatchingInlineSnapshot(
-    `"toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role."`,
+    `"toBeChecked() works only on host "Switch" instances or accessible instance with "checkbox", "radio" or "switch" role."`,
   );
 });

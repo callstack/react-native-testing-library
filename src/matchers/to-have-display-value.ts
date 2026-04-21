@@ -18,7 +18,7 @@ export function toHaveDisplayValue(
 
   if (!isHostTextInput(instance)) {
     throw new ErrorWithStack(
-      `toHaveDisplayValue() works only with host "TextInput" elements. Passed instance has type "${instance.type}".`,
+      `toHaveDisplayValue() works only with host "TextInput" instances. Passed instance has type "${instance.type}".`,
       toHaveDisplayValue,
     );
   }

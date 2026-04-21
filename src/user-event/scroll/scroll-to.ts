@@ -43,7 +43,7 @@ export async function scrollTo(
 ): Promise<void> {
   if (!isHostScrollView(instance)) {
     throw new ErrorWithStack(
-      `scrollTo() works only with host "ScrollView" elements. Passed instance has type "${instance.type}".`,
+      `scrollTo() works only with host "ScrollView" instances. Passed instance has type "${instance.type}".`,
       scrollTo,
     );
   }

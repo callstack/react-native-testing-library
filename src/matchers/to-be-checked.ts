@@ -18,7 +18,7 @@ export function toBeChecked(this: jest.MatcherContext, instance: TestInstance) {
 
   if (!isHostSwitch(instance) && !isSupportedAccessibilityElement(instance)) {
     throw new ErrorWithStack(
-      `toBeChecked() works only on host "Switch" elements or accessibility elements with "checkbox", "radio" or "switch" role.`,
+      `toBeChecked() works only on host "Switch" instances or accessible instance with "checkbox", "radio" or "switch" role.`,
       toBeChecked,
     );
   }

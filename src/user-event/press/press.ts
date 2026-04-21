@@ -25,7 +25,7 @@ export interface PressOptions {
 
 export async function press(this: UserEventInstance, instance: TestInstance): Promise<void> {
   if (!isTestInstance(instance)) {
-    throw new ErrorWithStack(`press() works only with host elements.`, press);
+    throw new ErrorWithStack(`press() works only with host instances.`, press);
   }
 
   await basePress(this.config, instance, {
@@ -39,7 +39,7 @@ export async function longPress(
   options?: PressOptions,
 ): Promise<void> {
   if (!isTestInstance(instance)) {
-    throw new ErrorWithStack(`longPress() works only with host elements.`, longPress);
+    throw new ErrorWithStack(`longPress() works only with host instances.`, longPress);
   }
 
   await basePress(this.config, instance, {
@@ -105,7 +105,7 @@ function hasPressEventHandler(instance: TestInstance) {
 }
 
 /**
- * Dispatches a press event sequence for host elements that have `onPress*` event handlers.
+ * Dispatches a press event sequence for host instances that have `onPress*` event handlers.
  */
 async function emitDirectPressEvents(
   config: UserEventConfig,

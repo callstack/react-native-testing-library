@@ -17,7 +17,7 @@ import { dispatchEvent, wait } from './utils';
 export async function clear(this: UserEventInstance, instance: TestInstance): Promise<void> {
   if (!isHostTextInput(instance)) {
     throw new ErrorWithStack(
-      `clear() only supports host "TextInput" elements. Passed instance has type: "${instance.type}".`,
+      `clear() only supports host "TextInput" instances. Passed instance has type: "${instance.type}".`,
       clear,
     );
   }
