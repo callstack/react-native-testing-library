@@ -66,6 +66,9 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
+      - name: Typecheck React 19.2-only tests
+        uses: ./.github/actions/typecheck-react-19_2-if-supported
+
   test:
     runs-on: ubuntu-latest
     name: Test → RN ${{ matrix.rn-lane }} x TR ${{ matrix.test-renderer-version }}

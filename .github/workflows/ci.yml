@@ -43,6 +43,9 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
+      - name: Typecheck React 19.2-only tests
+        run: yarn typecheck:react-19_2
+
   typecheck-rn-0-85:
     runs-on: ubuntu-latest
     name: Typecheck → RN 0.85
@@ -58,6 +61,9 @@ jobs:
 
       - name: Typecheck
         run: yarn typecheck
+
+      - name: Typecheck React 19.2-only tests
+        run: yarn typecheck:react-19_2
 
   typecheck-rn-0-84:
     runs-on: ubuntu-latest
@@ -75,6 +81,9 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
+      - name: Typecheck React 19.2-only tests
+        run: yarn typecheck:react-19_2
+
   typecheck-rn-0-83:
     runs-on: ubuntu-latest
     name: Typecheck → RN 0.83
@@ -90,6 +99,9 @@ jobs:
 
       - name: Typecheck
         run: yarn typecheck
+
+      - name: Typecheck React 19.2-only tests
+        run: yarn typecheck:react-19_2
 
   typecheck-rn-0-82:
     runs-on: ubuntu-latest

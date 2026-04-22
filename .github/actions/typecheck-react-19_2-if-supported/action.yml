@@ -1,0 +1,20 @@
+name: Typecheck React 19.2 tests if supported
+description: Run React 19.2-only test typecheck when the installed React version is 19.2 or newer
+
+runs:
+  using: composite
+  steps:
+    - name: Typecheck React 19.2-only tests
+      run: |
+        REACT_VERSION="$(node -p "require('react/package.json').version")"
+        REACT_MAJOR="${REACT_VERSION%%.*}"
+        REACT_MINOR_PATCH="${REACT_VERSION#*.}"
+        REACT_MINOR="${REACT_MINOR_PATCH%%.*}"
+
+        if [ "$REACT_MAJOR" -gt 19 ] || { [ "$REACT_MAJOR" -eq 19 ] && [ "$REACT_MINOR" -ge 2 ]; }; then
+          echo "Running React 19.2-only typecheck for React $REACT_VERSION"
+          yarn typecheck:react-19_2
+        else
+          echo "Skipping React 19.2-only typecheck for React $REACT_VERSION"
+        fi
+      shell: bash
