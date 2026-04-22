@@ -4,7 +4,7 @@ import { fixupPluginRules } from '@eslint/compat';
 import pluginJest from 'eslint-plugin-jest';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
-const additionalTestBlockFunctions = ['testGateReact19_2', 'testGateReact19_3'];
+const additionalTestBlockFunctions = ['testGateReact19_2'];
 
 const patchedCallstackConfig = callstackConfig.map((configItem) => {
   if (!configItem.plugins?.react) {
@@ -44,6 +44,14 @@ export default [
       'no-console': 'error',
       'import/order': 'off',
       '@typescript-eslint/consistent-type-imports': 'error',
+    },
+  },
+  {
+    files: ['src/__tests__/react-19_2/**/*.{ts,tsx}'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.react-19_2.json',
+      },
     },
   },
   {

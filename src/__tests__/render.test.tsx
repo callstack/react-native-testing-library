@@ -3,7 +3,6 @@ import { Text, View } from 'react-native';
 
 import { render, screen } from '..';
 import { _console, logger } from '../helpers/logger';
-import { testGateReact19_2 } from '../test-utils/react-version-gates';
 
 function MaybeSuspend({
   children,
@@ -113,56 +112,6 @@ describe('render options', () => {
 });
 
 describe('hidden instance props', () => {
-  testGateReact19_2('renders Activity hidden and then visible', async () => {
-    await render(
-      <React.Activity mode="hidden">
-        <View testID="activity-target">
-          <Text>Ready</Text>
-        </View>
-      </React.Activity>,
-    );
-
-    expect(screen.queryByTestId('activity-target')).not.toBeOnTheScreen();
-    expect(
-      screen.getByTestId('activity-target', { includeHiddenElements: true }).props.style,
-    ).toEqual({
-      display: 'none',
-    });
-    expect(screen.toJSON()).toMatchInlineSnapshot(`
-      <View
-        style={
-          {
-            "display": "none",
-          }
-        }
-        testID="activity-target"
-      >
-        <Text>
-          Ready
-        </Text>
-      </View>
-    `);
-
-    await screen.rerender(
-      <React.Activity mode="visible">
-        <View testID="activity-target">
-          <Text>Ready</Text>
-        </View>
-      </React.Activity>,
-    );
-
-    expect(screen.getByTestId('activity-target')).toBeOnTheScreen();
-    expect(screen.toJSON()).toMatchInlineSnapshot(`
-      <View
-        testID="activity-target"
-      >
-        <Text>
-          Ready
-        </Text>
-      </View>
-    `);
-  });
-
   test('does not retain hidden UI when the component suspends on initial render', async () => {
     const promise = new Promise<unknown>(() => {});
 

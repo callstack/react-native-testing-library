@@ -29,6 +29,7 @@
     "test:ci:coverage": "jest --maxWorkers=2 --collectCoverage=true",
     "test:codemods": "node scripts/test-codemods.mjs",
     "typecheck": "tsc",
+    "typecheck:react-19_2": "tsc -p tsconfig.react-19_2.json",
     "lint": "eslint src --cache",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",

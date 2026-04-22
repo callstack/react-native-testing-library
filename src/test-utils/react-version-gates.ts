@@ -2,7 +2,7 @@ import React from 'react';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const testRendererVersion = require('test-renderer/package.json').version;
 
-function matchesMinVersion(
+function isVersionAtLeast(
   versionString: string,
   targetMajor: number,
   targetMinor: number,
@@ -30,6 +30,6 @@ function matchesMinVersion(
 }
 
 export const testGateReact19_2 =
-  matchesMinVersion(React.version, 19, 2, 0) && matchesMinVersion(testRendererVersion, 1, 2, 0)
+  isVersionAtLeast(React.version, 19, 2, 0) && isVersionAtLeast(testRendererVersion, 1, 2, 0)
     ? test
     : test.skip;
