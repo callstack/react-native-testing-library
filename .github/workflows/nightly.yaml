@@ -76,19 +76,7 @@ jobs:
       fail-fast: false
       matrix:
         rn-lane:
-          [
-            '0.85',
-            '0.84',
-            '0.83',
-            '0.82',
-            '0.81',
-            '0.80',
-            '0.79',
-            '0.78',
-            latest,
-            next,
-            nightly,
-          ]
+          ['0.85', '0.84', '0.83', '0.82', '0.81', '0.80', '0.79', '0.78', latest, next, nightly]
         test-renderer-version: ['~1.0.0', '~1.1.0', '~1.2.0']
         include:
           - rn-lane: '0.85'
