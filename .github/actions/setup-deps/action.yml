@@ -41,7 +41,14 @@ runs:
       if: inputs.react-version != '' && inputs.react-native-version != ''
       run: |
         RN_VERSION='${{ inputs.react-native-version }}'
-        RN_MINOR="${RN_VERSION#0.}"
+        RN_VERSION_CLEAN="$RN_VERSION"
+
+        case "$RN_VERSION_CLEAN" in
+          '~'*) RN_VERSION_CLEAN="${RN_VERSION_CLEAN#\~}" ;;
+          '^'*) RN_VERSION_CLEAN="${RN_VERSION_CLEAN#^}" ;;
+        esac
+
+        RN_MINOR="${RN_VERSION_CLEAN#0.}"
         RN_MINOR="${RN_MINOR%%.*}"
 
         deps=(
