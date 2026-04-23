@@ -15,5 +15,6 @@
     "types": ["jest", "node"],
     "outDir": "build"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["src/__tests__/react-19_2/**/*"]
 }

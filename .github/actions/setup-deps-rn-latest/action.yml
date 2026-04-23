@@ -1,6 +1,11 @@
 name: Setup deps (RN @latest)
 description: Setup Node.js and install dependencies
 
+inputs:
+  test-renderer-version:
+    description: Test renderer version to install (e.g., 1.1.0)
+    required: false
+
 runs:
   using: composite
   steps:
@@ -31,4 +36,9 @@ runs:
         yarn add -D react-native@latest \
           @react-native/babel-preset@latest \
           @react-native/jest-preset@latest
+      shell: bash
+
+    - name: Switch to test-renderer version
+      if: inputs.test-renderer-version != ''
+      run: yarn add -D test-renderer@${{ inputs.test-renderer-version }}
       shell: bash

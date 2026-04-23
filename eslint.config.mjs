@@ -1,7 +1,10 @@
 import tseslint from 'typescript-eslint';
 import callstackConfig from '@callstack/eslint-config/react-native.flat.js';
 import { fixupPluginRules } from '@eslint/compat';
+import pluginJest from 'eslint-plugin-jest';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+
+const additionalTestBlockFunctions = ['testGateReact19_2'];
 
 const patchedCallstackConfig = callstackConfig.map((configItem) => {
   if (!configItem.plugins?.react) {
@@ -44,7 +47,18 @@ export default [
     },
   },
   {
+    files: ['src/__tests__/react-19_2/**/*.{ts,tsx}'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.react-19_2.json',
+      },
+    },
+  },
+  {
     files: ['**/*.test.{ts,tsx}', 'src/test-utils/**'],
+    plugins: {
+      jest: pluginJest,
+    },
     rules: {
       'react/no-multi-comp': 'off',
       'react-native/no-color-literals': 'off',
@@ -54,6 +68,8 @@ export default [
       'react-native-a11y/has-valid-accessibility-ignores-invert-colors': 'off',
       'react-native-a11y/has-valid-accessibility-value': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      'jest/expect-expect': ['error', { additionalTestBlockFunctions }],
+      'jest/no-standalone-expect': ['error', { additionalTestBlockFunctions }],
     },
   },
 ];

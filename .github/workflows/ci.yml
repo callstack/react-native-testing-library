@@ -43,9 +43,12 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
+      - name: Typecheck React 19.2-only tests
+        run: yarn typecheck:react-19_2
+
   typecheck-rn-0-85:
     runs-on: ubuntu-latest
-    name: Typecheck RN 0.85.0
+    name: Typecheck → RN 0.85
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -54,14 +57,17 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.2.3
-          react-native-version: 0.85.0
+          react-native-version: ~0.85.0
 
       - name: Typecheck
         run: yarn typecheck
+
+      - name: Typecheck React 19.2-only tests
+        run: yarn typecheck:react-19_2
 
   typecheck-rn-0-84:
     runs-on: ubuntu-latest
-    name: Typecheck RN 0.84.1
+    name: Typecheck → RN 0.84
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -70,14 +76,17 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.2.3
-          react-native-version: 0.84.1
+          react-native-version: ~0.84.1
 
       - name: Typecheck
         run: yarn typecheck
 
+      - name: Typecheck React 19.2-only tests
+        run: yarn typecheck:react-19_2
+
   typecheck-rn-0-83:
     runs-on: ubuntu-latest
-    name: Typecheck RN 0.83.4
+    name: Typecheck → RN 0.83
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -86,14 +95,17 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.2.0
-          react-native-version: 0.83.4
+          react-native-version: ~0.83.4
 
       - name: Typecheck
         run: yarn typecheck
 
+      - name: Typecheck React 19.2-only tests
+        run: yarn typecheck:react-19_2
+
   typecheck-rn-0-82:
     runs-on: ubuntu-latest
-    name: Typecheck RN 0.82.1
+    name: Typecheck → RN 0.82
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -102,14 +114,14 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.1.1
-          react-native-version: 0.82.1
+          react-native-version: ~0.82.1
 
       - name: Typecheck
         run: yarn typecheck
 
   typecheck-rn-0-81:
     runs-on: ubuntu-latest
-    name: Typecheck RN 0.81.6
+    name: Typecheck → RN 0.81
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -118,14 +130,14 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.1.4
-          react-native-version: 0.81.6
+          react-native-version: ~0.81.6
 
       - name: Typecheck
         run: yarn typecheck
 
   typecheck-rn-0-80:
     runs-on: ubuntu-latest
-    name: Typecheck RN 0.80.3
+    name: Typecheck → RN 0.80.3
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -141,7 +153,7 @@ jobs:
 
   typecheck-rn-0-79:
     runs-on: ubuntu-latest
-    name: Typecheck RN 0.79.7
+    name: Typecheck → RN 0.79.7
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -157,7 +169,7 @@ jobs:
 
   typecheck-rn-0-78:
     runs-on: ubuntu-latest
-    name: Typecheck RN 0.78.3
+    name: Typecheck → RN 0.78.3
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -173,7 +185,7 @@ jobs:
 
   typecheck-rn-latest:
     runs-on: ubuntu-latest
-    name: Typecheck RN Latest
+    name: Typecheck → RN Latest
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -186,7 +198,7 @@ jobs:
 
   typecheck-rn-next:
     runs-on: ubuntu-latest
-    name: Typecheck RN Next
+    name: Typecheck → RN Next
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -199,7 +211,7 @@ jobs:
 
   typecheck-rn-nightly:
     runs-on: ubuntu-latest
-    name: Typecheck RN Nightly
+    name: Typecheck → RN Nightly
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -243,7 +255,7 @@ jobs:
 
   test-rn-0-85:
     runs-on: ubuntu-latest
-    name: Test RN 0.85.0
+    name: Test → RN 0.85
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -252,14 +264,15 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.2.3
-          react-native-version: 0.85.0
+          react-native-version: ~0.85.0
+          test-renderer-version: ~1.2.0
 
       - name: Test
         run: yarn test:ci
 
   test-rn-0-84:
     runs-on: ubuntu-latest
-    name: Test RN 0.84.1
+    name: Test → RN 0.84
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -268,14 +281,15 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.2.3
-          react-native-version: 0.84.1
+          react-native-version: ~0.84.1
+          test-renderer-version: ~1.2.0
 
       - name: Test
         run: yarn test:ci
 
   test-rn-0-83:
     runs-on: ubuntu-latest
-    name: Test RN 0.83.4
+    name: Test → RN 0.83
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -284,14 +298,15 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.2.0
-          react-native-version: 0.83.4
+          react-native-version: ~0.83.4
+          test-renderer-version: ~1.2.0
 
       - name: Test
         run: yarn test:ci
 
   test-rn-0-82:
     runs-on: ubuntu-latest
-    name: Test RN 0.82.1
+    name: Test → RN 0.82
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -300,14 +315,15 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.1.1
-          react-native-version: 0.82.1
+          react-native-version: ~0.82.1
+          test-renderer-version: ~1.1.0
 
       - name: Test
         run: yarn test:ci
 
   test-rn-0-81:
     runs-on: ubuntu-latest
-    name: Test RN 0.81.6
+    name: Test → RN 0.81
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -316,14 +332,15 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.1.4
-          react-native-version: 0.81.6
+          react-native-version: ~0.81.6
+          test-renderer-version: ~1.1.0
 
       - name: Test
         run: yarn test:ci
 
   test-rn-0-80:
     runs-on: ubuntu-latest
-    name: Test RN 0.80.3
+    name: Test → RN 0.80
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -332,14 +349,15 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.1.0
-          react-native-version: 0.80.3
+          react-native-version: ~0.80.3
+          test-renderer-version: ~1.1.0
 
       - name: Test
         run: yarn test:ci
 
   test-rn-0-79:
     runs-on: ubuntu-latest
-    name: Test RN 0.79.7
+    name: Test → RN 0.79
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -348,14 +366,15 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.0.0
-          react-native-version: 0.79.7
+          react-native-version: ~0.79.7
+          test-renderer-version: ~1.0.0
 
       - name: Test
         run: yarn test:ci
 
   test-rn-0-78:
     runs-on: ubuntu-latest
-    name: Test RN 0.78.3
+    name: Test → RN 0.78
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -364,14 +383,15 @@ jobs:
         uses: ./.github/actions/setup-deps
         with:
           react-version: 19.0.0
-          react-native-version: 0.78.3
+          react-native-version: ~0.78.3
+          test-renderer-version: ~1.0.0
 
       - name: Test
         run: yarn test:ci
 
   test-rn-latest:
     runs-on: ubuntu-latest
-    name: Test RN Latest
+    name: Test → RN Latest
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -384,7 +404,7 @@ jobs:
 
   test-rn-next:
     runs-on: ubuntu-latest
-    name: Test RN Next
+    name: Test → RN Next
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -397,7 +417,7 @@ jobs:
 
   test-rn-nightly:
     runs-on: ubuntu-latest
-    name: Test RN Nightly
+    name: Test → RN Nightly
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2

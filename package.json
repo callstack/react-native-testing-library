@@ -29,6 +29,7 @@
     "test:ci:coverage": "jest --maxWorkers=2 --collectCoverage=true",
     "test:codemods": "node scripts/test-codemods.mjs",
     "typecheck": "tsc",
+    "typecheck:react-19_2": "tsc -p tsconfig.react-19_2.json",
     "lint": "eslint src --cache",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
@@ -62,7 +63,7 @@
     "jest": ">=29.0.0",
     "react": ">=19.0.0",
     "react-native": ">=0.78",
-    "test-renderer": "^0.16.0"
+    "test-renderer": "^1.0.0"
   },
   "peerDependenciesMeta": {
     "jest": {
@@ -97,7 +98,8 @@
     "react-native": "0.85.0",
     "react-native-gesture-handler": "^2.31.1",
     "release-it": "^19.2.4",
-    "test-renderer": "0.16.0",
+    "test-renderer": "1.2.0",
+    "tsx": "^4.21.0",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.1"
   },

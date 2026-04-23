@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/__tests__/react-19_2/**/*"],
+  "exclude": []
+}

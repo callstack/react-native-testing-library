@@ -1,6 +1,11 @@
 name: Setup deps (RN nightly)
 description: Setup Node.js and install dependencies
 
+inputs:
+  test-renderer-version:
+    description: Test renderer version to install (e.g., 1.1.0)
+    required: false
+
 runs:
   using: composite
   steps:
@@ -32,4 +37,9 @@ runs:
           react-native@nightly \
           @react-native/babel-preset@nightly \
           @react-native/jest-preset@nightly
+      shell: bash
+
+    - name: Switch to test-renderer version
+      if: inputs.test-renderer-version != ''
+      run: yarn add -D test-renderer@${{ inputs.test-renderer-version }}
       shell: bash
