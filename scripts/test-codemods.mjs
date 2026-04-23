@@ -25,7 +25,7 @@ try {
 
 console.log('Running update-deps codemod tests...\n');
 try {
-  execSync(`yarn dlx tsx ${join(rootDir, 'codemods/v14-update-deps/scripts/test.js')}`, {
+  execSync(`node --import tsx/esm ${join(rootDir, 'codemods/v14-update-deps/scripts/test.js')}`, {
     cwd: rootDir,
     stdio: 'inherit',
   });
