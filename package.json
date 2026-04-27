@@ -82,7 +82,7 @@
     "@eslint/js": "^10.0.1",
     "@react-native/babel-preset": "0.85.0",
     "@react-native/jest-preset": "0.85.0",
-    "@release-it/conventional-changelog": "^10.0.6",
+    "@release-it/conventional-changelog": "^11.0.0",
     "@relmify/jest-serializer-strip-ansi": "^1.0.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.12.2",
