@@ -96,7 +96,6 @@
     "prettier": "^3.8.2",
     "react": "19.2.3",
     "react-native": "0.85.0",
-    "react-native-gesture-handler": "^2.31.1",
     "release-it": "^19.2.4",
     "test-renderer": "1.2.0",
     "tsx": "^4.21.0",

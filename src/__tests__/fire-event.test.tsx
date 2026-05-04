@@ -152,6 +152,41 @@ describe('fireEvent.press', () => {
     await fireEvent.press(screen.getByTestId('subject'));
     expect(onPress).toHaveBeenCalled();
   });
+
+  test('works with testOnly_onPress handlers', async () => {
+    const onPress = jest.fn();
+    const onPressIn = jest.fn();
+    const onPressOut = jest.fn();
+    const onLongPress = jest.fn();
+
+    await render(
+      <View
+        testID="subject"
+        // @ts-expect-error Intentionally passing test-only event props.
+        testOnly_onPress={onPress}
+        // @ts-expect-error Intentionally passing test-only event props.
+        testOnly_onPressIn={onPressIn}
+        // @ts-expect-error Intentionally passing test-only event props.
+        testOnly_onPressOut={onPressOut}
+        // @ts-expect-error Intentionally passing test-only event props.
+        testOnly_onLongPress={onLongPress}
+      />,
+    );
+
+    const subject = screen.getByTestId('subject');
+
+    await fireEvent.press(subject);
+    expect(onPress).toHaveBeenCalledTimes(1);
+
+    await fireEvent(subject, 'pressIn');
+    expect(onPressIn).toHaveBeenCalledTimes(1);
+
+    await fireEvent(subject, 'pressOut');
+    expect(onPressOut).toHaveBeenCalledTimes(1);
+
+    await fireEvent(subject, 'longPress');
+    expect(onLongPress).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('fireEvent.changeText', () => {
