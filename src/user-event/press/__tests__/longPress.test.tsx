@@ -75,6 +75,22 @@ describe('userEvent.longPress with fake timers', () => {
     expect(getEventsNames(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
   });
 
+  test('works with testOnly_onPress handlers', async () => {
+    const { events, logEvent } = createEventLogger();
+    const user = userEvent.setup();
+    const testOnlyPressProps = {
+      testOnly_onPress: logEvent('press'),
+      testOnly_onPressIn: logEvent('pressIn'),
+      testOnly_onPressOut: logEvent('pressOut'),
+      testOnly_onLongPress: logEvent('longPress'),
+    };
+
+    render(<View testID="subject" {...testOnlyPressProps} />);
+
+    await user.longPress(screen.getByTestId('subject'));
+    expect(getEventsNames(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
+  });
+
   test('calls onLongPress if the delayLongPress is the default one', async () => {
     const { logEvent, events } = createEventLogger();
     const user = userEvent.setup();

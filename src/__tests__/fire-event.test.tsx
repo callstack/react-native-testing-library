@@ -100,6 +100,35 @@ test('fireEvent.press', () => {
   expect(onPressMock).toHaveBeenCalledWith(eventData);
 });
 
+test('fireEvent works with testOnly_onPress handlers', () => {
+  const onPress = jest.fn();
+  const onPressIn = jest.fn();
+  const onPressOut = jest.fn();
+  const onLongPress = jest.fn();
+  const testOnlyPressProps = {
+    testOnly_onPress: onPress,
+    testOnly_onPressIn: onPressIn,
+    testOnly_onPressOut: onPressOut,
+    testOnly_onLongPress: onLongPress,
+  };
+
+  render(<View testID="subject" {...testOnlyPressProps} />);
+
+  const subject = screen.getByTestId('subject');
+
+  fireEvent.press(subject);
+  expect(onPress).toHaveBeenCalledTimes(1);
+
+  fireEvent(subject, 'pressIn');
+  expect(onPressIn).toHaveBeenCalledTimes(1);
+
+  fireEvent(subject, 'pressOut');
+  expect(onPressOut).toHaveBeenCalledTimes(1);
+
+  fireEvent(subject, 'longPress');
+  expect(onLongPress).toHaveBeenCalledTimes(1);
+});
+
 test('fireEvent.scroll', () => {
   const onScrollMock = jest.fn();
   const eventData = {
