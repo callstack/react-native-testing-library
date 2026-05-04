@@ -158,20 +158,14 @@ describe('fireEvent.press', () => {
     const onPressIn = jest.fn();
     const onPressOut = jest.fn();
     const onLongPress = jest.fn();
+    const testOnlyPressProps = {
+      testOnly_onPress: onPress,
+      testOnly_onPressIn: onPressIn,
+      testOnly_onPressOut: onPressOut,
+      testOnly_onLongPress: onLongPress,
+    };
 
-    await render(
-      <View
-        testID="subject"
-        // @ts-expect-error Intentionally passing test-only event props.
-        testOnly_onPress={onPress}
-        // @ts-expect-error Intentionally passing test-only event props.
-        testOnly_onPressIn={onPressIn}
-        // @ts-expect-error Intentionally passing test-only event props.
-        testOnly_onPressOut={onPressOut}
-        // @ts-expect-error Intentionally passing test-only event props.
-        testOnly_onLongPress={onLongPress}
-      />,
-    );
+    await render(<View testID="subject" {...testOnlyPressProps} />);
 
     const subject = screen.getByTestId('subject');
 

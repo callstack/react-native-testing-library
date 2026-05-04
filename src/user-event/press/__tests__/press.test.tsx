@@ -100,20 +100,14 @@ describe('userEvent.press with fake timers', () => {
   test('works with testOnly_onPress handlers', async () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
+    const testOnlyPressProps = {
+      testOnly_onPress: logEvent('press'),
+      testOnly_onPressIn: logEvent('pressIn'),
+      testOnly_onPressOut: logEvent('pressOut'),
+      testOnly_onLongPress: logEvent('longPress'),
+    };
 
-    await render(
-      <View
-        testID="subject"
-        // @ts-expect-error Intentionally passing test-only event props.
-        testOnly_onPress={logEvent('press')}
-        // @ts-expect-error Intentionally passing test-only event props.
-        testOnly_onPressIn={logEvent('pressIn')}
-        // @ts-expect-error Intentionally passing test-only event props.
-        testOnly_onPressOut={logEvent('pressOut')}
-        // @ts-expect-error Intentionally passing test-only event props.
-        testOnly_onLongPress={logEvent('longPress')}
-      />,
-    );
+    await render(<View testID="subject" {...testOnlyPressProps} />);
 
     await user.press(screen.getByTestId('subject'));
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
