@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { Pressable, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 
 import { render, screen } from '../../..';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
@@ -71,6 +71,22 @@ describe('userEvent.longPress with fake timers', () => {
     );
 
     await userEvent.longPress(screen.getByText('press me'));
+    expect(getEventsNames(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
+  });
+
+  test('works with testOnly_onPress handlers', async () => {
+    const { events, logEvent } = createEventLogger();
+    const user = userEvent.setup();
+    const testOnlyPressProps = {
+      testOnly_onPress: logEvent('press'),
+      testOnly_onPressIn: logEvent('pressIn'),
+      testOnly_onPressOut: logEvent('pressOut'),
+      testOnly_onLongPress: logEvent('longPress'),
+    };
+
+    await render(<View testID="subject" {...testOnlyPressProps} />);
+
+    await user.longPress(screen.getByTestId('subject'));
     expect(getEventsNames(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
   });
 

@@ -152,6 +152,35 @@ describe('fireEvent.press', () => {
     await fireEvent.press(screen.getByTestId('subject'));
     expect(onPress).toHaveBeenCalled();
   });
+
+  test('works with testOnly_onPress handlers', async () => {
+    const onPress = jest.fn();
+    const onPressIn = jest.fn();
+    const onPressOut = jest.fn();
+    const onLongPress = jest.fn();
+    const testOnlyPressProps = {
+      testOnly_onPress: onPress,
+      testOnly_onPressIn: onPressIn,
+      testOnly_onPressOut: onPressOut,
+      testOnly_onLongPress: onLongPress,
+    };
+
+    await render(<View testID="subject" {...testOnlyPressProps} />);
+
+    const subject = screen.getByTestId('subject');
+
+    await fireEvent.press(subject);
+    expect(onPress).toHaveBeenCalledTimes(1);
+
+    await fireEvent(subject, 'pressIn');
+    expect(onPressIn).toHaveBeenCalledTimes(1);
+
+    await fireEvent(subject, 'pressOut');
+    expect(onPressOut).toHaveBeenCalledTimes(1);
+
+    await fireEvent(subject, 'longPress');
+    expect(onLongPress).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('fireEvent.changeText', () => {
