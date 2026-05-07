@@ -10,10 +10,9 @@ Actionable guidelines for writing tests with React Native Testing Library (RNTL)
 const result = await render(<Component />, options?);
 ```
 
-| Option           | Description                                                      |
-| ---------------- | ---------------------------------------------------------------- |
-| `wrapper`        | React component to wrap the rendered component (e.g., providers) |
-| `createNodeMock` | Function to create mock refs                                     |
+| Option    | Description                                                      |
+| --------- | ---------------------------------------------------------------- |
+| `wrapper` | React component to wrap the rendered component (e.g., providers) |
 
 | Return                | Description                                      |
 | --------------------- | ------------------------------------------------ |
