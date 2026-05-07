@@ -1,8 +1,9 @@
 {
-  "name": "test-project",
-  "version": "1.0.0",
+  "dependencies": {
+    "react": "19.0.0"
+  },
   "devDependencies": {
     "@testing-library/react-native": "^14.0.0-0",
-    "test-renderer": "^1.2.0"
+    "test-renderer": "^1.0.0"
   }
 }
