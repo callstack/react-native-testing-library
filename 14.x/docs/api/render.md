@@ -34,14 +34,6 @@ wrapper?: React.ComponentType<any>,
 
 Wraps the tested component in an additional wrapper component. Use this to create custom render functions for common React Context providers.
 
-#### `createNodeMock` \{#create-node-mock}
-
-```ts
-createNodeMock?: (element: React.ReactElement) => object,
-```
-
-Passes `createNodeMock` to the renderer's `create()` method for custom mock refs. This option is passed through to [Test Renderer](https://github.com/mdjastrzebski/test-renderer).
-
 :::note Text string validation
 
 Test Renderer enforces React Native's requirement that text strings must be rendered within a `<Text>` component. If you render a `string` value under components other than `<Text>` (e.g., under `<View>`), it throws an `Invariant Violation: Text strings must be rendered within a <Text> component` error. This matches React Native's runtime behavior.
