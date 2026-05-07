@@ -14,8 +14,11 @@ step-by-step upgrade instructions, codemods, and before/after examples.
 
 - Dropped support for React 18. React 19.0.0 or newer is now required.
 - Raised the minimum supported React Native version to 0.78.
+- Raised the minimum supported Node.js version to `^22.13.0 || >=24`.
 - Replaced the deprecated React Test Renderer with
   [Test Renderer](https://github.com/mdjastrzebski/test-renderer).
+- Added a peer dependency on Test Renderer 1.x. Install the Test Renderer compatibility line
+  that matches your React 19 minor version.
 - Made the core rendering and event APIs async by default:
   - `render()` now returns `Promise<RenderResult>`.
   - `renderHook()` now returns `Promise<RenderHookResult>`.
@@ -34,6 +37,8 @@ step-by-step upgrade instructions, codemods, and before/after examples.
   - `UNSAFE_getByProps`
 - Removed the `concurrentRoot` render and configuration option. Concurrent rendering is
   always enabled in v14.
+- Removed the `createNodeMock` render option, which is not supported by the new Test Renderer
+  integration.
 - Removed the `unstable_validateStringsRenderedWithinText` render option. Text string
   validation is now always enabled.
 
@@ -45,8 +50,32 @@ step-by-step upgrade instructions, codemods, and before/after examples.
   components are no longer visible through the test tree.
 - Type definitions now use `TestInstance` from Test Renderer instead of
   `ReactTestInstance` from React Test Renderer.
+- Suspended or hidden instances are now represented with React Native-like hidden props, such
+  as `display: 'none'`, so visibility queries and matchers behave closer to runtime behavior.
+- `fireEvent.press()` and `fireEvent.scroll()` now pass default synthetic native event objects
+  to handlers and deep-merge any event props supplied by the test.
+- Accessible name calculation now follows React Native inputs more closely, including
+  `TextInput` placeholder handling, child accessible name concatenation, and stricter
+  `getByRole(..., { name })` matching.
+- `configure`, `render`, `renderHook`, and `userEvent.setup` now warn when unknown options are
+  passed, helping catch stale or misspelled options during migration.
 - Text strings rendered outside of React Native `<Text>` components now throw, matching
   React Native runtime behavior.
+
+### Test Renderer versions
+
+Install the Test Renderer version that matches your React 19 minor version:
+
+| React version | Recommended Test Renderer version |
+| ------------- | --------------------------------- |
+| `19.2`        | `test-renderer@1.2`               |
+| `19.1`        | `test-renderer@1.1`               |
+| `19.0`        | `test-renderer@1.0`               |
+
+Older Test Renderer lines may not support newer React 19 features in tests. Newer Test
+Renderer lines can produce peer dependency warnings, or an install error with `npm`. See the
+[Test Renderer React 19 compatibility lines](https://github.com/mdjastrzebski/test-renderer#react-19-compatibility-lines)
+for the latest recommendations.
 
 ### Codemods
 
