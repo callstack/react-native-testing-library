@@ -41,9 +41,8 @@
     "build:ts": "tsc --build tsconfig.release.json",
     "build": "yarn clean && yarn build:js && yarn build:ts",
     "release": "release-it",
-    "release:rc": "release-it --preRelease=rc",
-    "release:beta": "release-it --preRelease=beta",
-    "release:codemods": "release-it --preRelease=alpha"
+    "release:next": "release-it --preRelease=rc --npm.tag=next",
+    "release:codemods": "yarn test:codemods && yarn dlx codemod@latest publish codemods/v14-async-functions && yarn dlx codemod@latest publish codemods/v14-update-deps"
   },
   "files": [
     "build/",
