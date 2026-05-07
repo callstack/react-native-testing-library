@@ -3,8 +3,13 @@
 import type { Transform } from 'codemod:ast-grep';
 import type JSONLang from 'codemod:ast-grep/langs/json';
 
-const RNTL_VERSION = '^14.0.0-beta.0';
-const TEST_RENDERER_VERSION = '^1.0.0';
+const RNTL_VERSION = '^14.0.0-0';
+const TEST_RENDERER_FALLBACK_VERSION = '^1.2.0';
+const TEST_RENDERER_VERSION_BY_REACT_MINOR: Record<string, string> = {
+  '19.0': '^1.0.0',
+  '19.1': '^1.1.0',
+  '19.2': '^1.2.0',
+};
 
 interface PackageJson {
   dependencies?: Record<string, string>;
@@ -141,10 +146,44 @@ function ensureRntlInDevDependencies(packageJson: PackageJson): boolean {
 }
 
 function updateTestRendererVersionInDevDependencies(packageJson: PackageJson): boolean {
+  const expectedVersion = getTestRendererVersion(packageJson);
   const currentVersion = packageJson.devDependencies?.['test-renderer'];
-  if (currentVersion !== TEST_RENDERER_VERSION) {
-    packageJson.devDependencies!['test-renderer'] = TEST_RENDERER_VERSION;
+  if (currentVersion !== expectedVersion) {
+    packageJson.devDependencies!['test-renderer'] = expectedVersion;
     return true;
   }
   return false;
+}
+
+function getTestRendererVersion(packageJson: PackageJson): string {
+  const reactVersion = getPackageVersion(packageJson, 'react');
+  const reactMinor = reactVersion ? getKnownReact19Minor(reactVersion) : null;
+
+  return reactMinor
+    ? TEST_RENDERER_VERSION_BY_REACT_MINOR[reactMinor]
+    : TEST_RENDERER_FALLBACK_VERSION;
+}
+
+function getPackageVersion(packageJson: PackageJson, pkgName: string): string | undefined {
+  for (const depType of [
+    'dependencies',
+    'devDependencies',
+    'peerDependencies',
+    'optionalDependencies',
+  ] as const) {
+    const version = packageJson[depType]?.[pkgName];
+    if (version) {
+      return version;
+    }
+  }
+
+  return undefined;
+}
+
+function getKnownReact19Minor(version: string): string | null {
+  const trimmedVersion = version.trim();
+  const exactVersionMatch = trimmedVersion.match(/^=?~?(19\.(?:0|1|2))(?:\.\d+)?(?:-[\w.-]+)?$/);
+  const xRangeMatch = trimmedVersion.match(/^~?(19\.(?:0|1|2))\.(?:x|\*)$/i);
+
+  return exactVersionMatch?.[1] ?? xRangeMatch?.[1] ?? null;
 }

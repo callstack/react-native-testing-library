@@ -6,8 +6,12 @@ This codemod automatically updates your `package.json` to prepare for React Nati
 
 - Removes `@types/react-test-renderer` and `react-test-renderer` (no longer needed)
 - Moves `@testing-library/react-native` to `devDependencies` if it's in `dependencies`
-- Updates `@testing-library/react-native` to `^14.0.0-beta.0`
-- Adds `test-renderer@^1.0.0` to `devDependencies`
+- Updates `@testing-library/react-native` to `^14.0.0-0`
+- Adds `test-renderer` to `devDependencies`, using the matching React 19 compatibility line when it can infer one:
+  - React 19.0: `test-renderer@^1.0.0`
+  - React 19.1: `test-renderer@^1.1.0`
+  - React 19.2: `test-renderer@^1.2.0`
+  - Missing or ambiguous React version: `test-renderer@^1.2.0`
 
 ## Usage
 
@@ -37,8 +41,8 @@ npx codemod@latest run rntl-v14-update-deps --target ./path/to/your/project
 ```json
 {
   "devDependencies": {
-    "@testing-library/react-native": "^14.0.0-beta.0",
-    "test-renderer": "^1.0.0"
+    "@testing-library/react-native": "^14.0.0-0",
+    "test-renderer": "^1.2.0"
   }
 }
 ```
@@ -50,7 +54,7 @@ npx codemod@latest run rntl-v14-update-deps --target ./path/to/your/project
   npm install
   # or yarn install / pnpm install
   ```
-- The codemod sets the version to `^14.0.0-beta.0`. You can manually update this if needed.
+- The codemod sets the version to `^14.0.0-0`. You can manually update this if needed.
 - For monorepos, the codemod processes each `package.json` file individually.
 
 ## Next steps
