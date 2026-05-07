@@ -13,9 +13,10 @@ This guide describes the migration to React Native Testing Library version 14 fr
 RNTL v14 drops support for React 18 and adopts React 19's async rendering model. Here's what changed:
 
 - React 19.0.0+ and React Native 0.78+ are now required
+- Node.js `^22.13.0 || >=24` is now required
 - `render`, `renderHook`, `fireEvent`, and `act` are now async
 - Switched from deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html) to [Test Renderer](https://github.com/mdjastrzebski/test-renderer)
-- Removed deprecated APIs: `update`, `getQueriesForElement`, `UNSAFE_root`, `concurrentRoot` option
+- Removed deprecated APIs: `update`, `getQueriesForElement`, `UNSAFE_root`, `concurrentRoot` option, `createNodeMock` option
 - Reintroduced `container` API, which is now safe to use
 
 :::info React 18 Users
@@ -74,14 +75,14 @@ After running the codemods, review the changes and run your tests.
 
 ## Breaking Changes
 
-### Supported React and React Native versions
+### Supported React, React Native, and Node.js versions
 
-**This version requires React 19+ and React Native 0.78+.** If you need to support React 18, please use the latest v13.x version.
+**This version requires React 19+, React Native 0.78+, and Node.js `^22.13.0 || >=24`.** If you need to support React 18, please use the latest v13.x version.
 
-| RNTL Version | React Version | React Native Version |
-| ------------ | ------------- | -------------------- |
-| v14.x        | >= 19.0.0     | >= 0.78              |
-| v13.x        | >= 18.0.0     | >= 0.71              |
+| RNTL Version | React Version | React Native Version | Node.js Version    |
+| ------------ | ------------- | -------------------- | ------------------ |
+| v14.x        | >= 19.0.0     | >= 0.78              | ^22.13.0 \|\| >=24 |
+| v13.x        | >= 18.0.0     | >= 0.71              | >= 18              |
 
 ### Test Renderer replaces React Test Renderer
 
@@ -92,6 +93,21 @@ In v14, React Native Testing Library uses [Test Renderer](https://github.com/mdj
 - The underlying renderer is now Test Renderer instead of React Test Renderer
 - This is mostly an internal change; your tests should work without modifications in most cases
 - Type definitions now use [`TestInstance`](https://github.com/mdjastrzebski/test-renderer#test-instance) from Test Renderer instead of `ReactTestInstance`
+- Test Renderer 1.x is required as a peer dependency. Use the recommended Test Renderer version for your React 19 minor version.
+
+#### Recommended Test Renderer versions
+
+Choose the Test Renderer version that matches your React 19 minor version:
+
+| React version | Recommended Test Renderer version | Notable React features                            |
+| ------------- | --------------------------------- | ------------------------------------------------- |
+| `19.2`        | `test-renderer@1.2`               | `<Activity />`, `useEffectEvent`                  |
+| `19.1`        | `test-renderer@1.1`               | Owner Stack support, updated `useId()` format     |
+| `19.0`        | `test-renderer@1.0`               | Actions, `useActionState`, `useOptimistic`, `use` |
+
+Using an older Test Renderer line can prevent RNTL from supporting newer React 19 features in your tests. Using a newer Test Renderer line than your React version can produce peer dependency warnings, or an install error with `npm`.
+
+See the [Test Renderer React 19 compatibility lines](https://github.com/mdjastrzebski/test-renderer#react-19-compatibility-lines) for the latest recommendations.
 
 **Migration:**
 
@@ -122,28 +138,30 @@ bun install
 
 ##### Manual changes
 
-Remove React Test Renderer and its type definitions from your dev dependencies, and add Test Renderer:
+Remove React Test Renderer and its type definitions from your dev dependencies, and add the Test Renderer line that matches your React minor version:
 
 
 ```sh [npm]
 npm uninstall react-test-renderer @types/react-test-renderer
-npm install -D test-renderer
+npm install -D test-renderer@1.2
 ```
 
 ```sh [yarn]
 yarn remove react-test-renderer @types/react-test-renderer
-yarn add -D test-renderer
+yarn add -D test-renderer@1.2
 ```
 
 ```sh [pnpm]
 pnpm remove react-test-renderer @types/react-test-renderer
-pnpm add -D test-renderer
+pnpm add -D test-renderer@1.2
 ```
 
 ```sh [bun]
 bun remove react-test-renderer @types/react-test-renderer
-bun add -D test-renderer
+bun add -D test-renderer@1.2
 ```
+
+The commands above use `test-renderer@1.2` for React 19.2. Use `test-renderer@1.1` for React 19.1, or `test-renderer@1.0` for React 19.0.
 
 #### 2. Update type imports (if needed)
 
@@ -264,6 +282,22 @@ it('should press button', async () => {
   expect(onPress).toHaveBeenCalled();
 });
 ```
+
+`fireEvent.press()` and `fireEvent.scroll()` now create default synthetic native event objects. If you pass event props, they are deep-merged into the default event object:
+
+```ts
+await fireEvent.press(screen.getByText('Press me'), {
+  nativeEvent: { pageX: 20, pageY: 30 },
+});
+
+expect(onPress).toHaveBeenCalledWith(
+  expect.objectContaining({
+    nativeEvent: expect.objectContaining({ pageX: 20, pageY: 30 }),
+  })
+);
+```
+
+If your v13 assertions expected the handler to receive exactly the object you passed to `fireEvent.press()` or `fireEvent.scroll()`, update them to use partial matching.
 
 #### `act` is now async
 
@@ -395,6 +429,27 @@ await render(<MyComponent />); // Always uses concurrent rendering
 
 **Migration:** Remove any `concurrentRoot` options from your `render` calls and `configure` function. If you were setting `concurrentRoot: true`, just remove the option. If you were setting `concurrentRoot: false` to disable concurrent rendering, this is no longer supported in v14.
 
+#### `createNodeMock` option removed
+
+The `createNodeMock` render option has been removed. It was previously passed through to React Test Renderer, but the v14 Test Renderer integration does not support this option.
+
+```ts
+// Before (v13)
+render(<MyComponent />, {
+  createNodeMock: (element) => {
+    if (element.type === TextInput) {
+      return { focus: jest.fn() };
+    }
+    return {};
+  },
+});
+
+// After (v14)
+await render(<MyComponent />);
+```
+
+If you used `createNodeMock` to mock imperative refs, prefer testing user-visible behavior and mock the component or native module at the boundary where the ref behavior is introduced.
+
 ### `container` API reintroduced
 
 In v14, the `container` API has been reintroduced and is now safe to use. Previously, `container` was renamed to `UNSAFE_root` in v12 due to behavioral differences from React Testing Library's `container`. Now `container` returns a pseudo-element container whose children are the elements you rendered, consistent with React Testing Library's behavior.
@@ -461,6 +516,35 @@ await render(<MyComponent />);
 
 If you were relying on the previous behavior where strings could be rendered outside of `<Text>` components, you'll need to fix your components to wrap strings in `<Text>` components, as this matches React Native's actual runtime behavior.
 
+### Hidden Suspense and Activity content
+
+When React keeps previously rendered content hidden, such as suspended content or React 19.2 `<Activity mode="hidden">`, RNTL now applies React Native-like hidden props to the affected instances. In practice, hidden instances receive `display: 'none'`, preserving existing styles by appending the hidden style.
+
+This makes visibility queries and matchers behave closer to runtime behavior:
+
+- default queries do not match hidden instances
+- queries with `{ includeHiddenElements: true }` can still find hidden instances
+- `toBeVisible()` treats these instances as hidden
+
+### Accessible name changes
+
+Accessible name calculation has been updated to better match React Native behavior:
+
+- `aria-labelledby` and `accessibilityLabelledBy` still take precedence over explicit labels
+- `aria-label` and `accessibilityLabel` take precedence over text content
+- `Image` `alt` is used as an accessible label
+- a root `TextInput` can use its `placeholder` as its accessible name
+- child accessible names are concatenated with spaces
+- child `TextInput` placeholders are not used when computing a parent's accessible name
+
+This affects `getByRole(..., { name })` and `toHaveAccessibleName()`. If a v13 role query matched because descendant text or label queries were used as a fallback, update the test to match the element's computed accessible name directly or query the descendant element instead.
+
+### Unknown options now warn
+
+RNTL now logs a warning when unknown options are passed to `configure`, `render`, `renderHook`, or `userEvent.setup`. This helps catch stale v13 options and misspellings during migration.
+
+For example, after removing `concurrentRoot`, `createNodeMock`, or `unstable_validateStringsRenderedWithinText`, make sure those options are not still being passed through shared test helpers.
+
 ## Codemods
 
 Two codemods are available to automate the migration. Both are safe to run multiple times - they only transform code that hasn't been migrated yet.
@@ -470,8 +554,8 @@ Two codemods are available to automate the migration. Both are safe to run multi
 Updates your `package.json`:
 
 - Removes React Test Renderer (`react-test-renderer` and `@types/react-test-renderer`)
-- Adds Test Renderer (`test-renderer`)
-- Updates `@testing-library/react-native` to alpha version
+- Adds Test Renderer (`test-renderer`) using the current recommended 1.x line
+- Updates `@testing-library/react-native` to the v14 version
 
 
 ```sh [npx]
