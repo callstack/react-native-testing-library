@@ -1565,7 +1565,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@conventional-changelog/git-client@npm:^2.5.1, @conventional-changelog/git-client@npm:^2.6.0":
+"@conventional-changelog/git-client@npm:^2.5.1, @conventional-changelog/git-client@npm:^2.6.0, @conventional-changelog/git-client@npm:^2.7.0":
   version: 2.7.0
   resolution: "@conventional-changelog/git-client@npm:2.7.0"
   dependencies:
@@ -3054,20 +3054,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@release-it/conventional-changelog@npm:^10.0.6":
-  version: 10.0.6
-  resolution: "@release-it/conventional-changelog@npm:10.0.6"
+"@release-it/conventional-changelog@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "@release-it/conventional-changelog@npm:11.0.0"
   dependencies:
-    "@conventional-changelog/git-client": "npm:^2.6.0"
+    "@conventional-changelog/git-client": "npm:^2.7.0"
     concat-stream: "npm:^2.0.0"
     conventional-changelog: "npm:^7.2.0"
-    conventional-changelog-angular: "npm:^8.3.0"
-    conventional-changelog-conventionalcommits: "npm:^9.3.0"
+    conventional-changelog-angular: "npm:^8.3.1"
+    conventional-changelog-conventionalcommits: "npm:^9.3.1"
     conventional-recommended-bump: "npm:^11.2.0"
     semver: "npm:^7.7.4"
   peerDependencies:
-    release-it: ^18.0.0 || ^19.0.0
-  checksum: 10c0/d7812cfbbc34f7258385801393a1d88d7d6f76aeebb4fa2a884156f5382ba93f7f14be1f7b4d1f2b6982c1bf10e33c4ca3a8374fc2cde50cf4e1d1a929129da4
+    release-it: ^18.0.0 || ^19.0.0 || ^20.0.0
+  checksum: 10c0/58dad5c092d5f7e4217a691c19df37dc354f10b9d162bb0f90b6f1f173e6064e8b4062f8345c08d047c7935709c549792a13f98dfb6c6533ab4ca04c2e2fdf3d
   languageName: node
   linkType: hard
 
@@ -3171,7 +3171,7 @@ __metadata:
     "@eslint/js": "npm:^10.0.1"
     "@react-native/babel-preset": "npm:0.85.0"
     "@react-native/jest-preset": "npm:0.85.0"
-    "@release-it/conventional-changelog": "npm:^10.0.6"
+    "@release-it/conventional-changelog": "npm:^11.0.0"
     "@relmify/jest-serializer-strip-ansi": "npm:^1.0.2"
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^24.12.2"
@@ -4705,7 +4705,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-angular@npm:^8.3.0":
+"conventional-changelog-angular@npm:^8.3.1":
   version: 8.3.1
   resolution: "conventional-changelog-angular@npm:8.3.1"
   dependencies:
@@ -4714,7 +4714,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-conventionalcommits@npm:^9.3.0":
+"conventional-changelog-conventionalcommits@npm:^9.3.1":
   version: 9.3.1
   resolution: "conventional-changelog-conventionalcommits@npm:9.3.1"
   dependencies:
