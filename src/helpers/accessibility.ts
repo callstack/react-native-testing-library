@@ -153,10 +153,11 @@ export function computeAriaLabel(instance: TestInstance): string | undefined {
   const labelElementId =
     instance.props['aria-labelledby'] ?? instance.props.accessibilityLabelledBy;
   if (labelElementId) {
+    const labelElementIds = Array.isArray(labelElementId) ? labelElementId : [labelElementId];
     const container = getContainerInstance(instance);
     const labelInstance = findAll(
       container,
-      (node) => isTestInstance(node) && node.props.nativeID === labelElementId,
+      (node) => isTestInstance(node) && labelElementIds.includes(node.props.nativeID),
       { includeHiddenElements: true },
     );
     if (labelInstance.length > 0) {

@@ -195,6 +195,40 @@ describe('supports name option', () => {
     expect(screen.getByRole('button', { name: 'Save' }).props.testID).toBe('target-button');
   });
 
+  test('returns an element that has the corresponding role and a matching accessibilityLabelledBy', async () => {
+    await render(
+      <>
+        <Text nativeID="button-label">Save</Text>
+        <Pressable
+          accessible
+          role="button"
+          testID="target-button"
+          accessibilityLabelledBy="button-label"
+        />
+      </>,
+    );
+
+    // assert on the testId to be sure that the returned element is the one with the accessibilityRole
+    expect(screen.getByRole('button', { name: 'Save' }).props.testID).toBe('target-button');
+  });
+
+  test('returns an element that has the corresponding role and a matching accessibilityLabelledBy array', async () => {
+    await render(
+      <>
+        <Text nativeID="button-label">Save</Text>
+        <Pressable
+          accessible
+          role="button"
+          testID="target-button"
+          accessibilityLabelledBy={['button-label']}
+        />
+      </>,
+    );
+
+    // assert on the testId to be sure that the returned element is the one with the accessibilityRole
+    expect(screen.getByRole('button', { name: 'Save' }).props.testID).toBe('target-button');
+  });
+
   test('returns an element when the direct child is text', async () => {
     await render(
       <Text accessibilityRole="header" testID="target-header">
