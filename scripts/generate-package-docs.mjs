@@ -285,7 +285,7 @@ function buildReadme(pages) {
 
 These markdown files are bundled with the npm package for coding agents. They describe the installed package version.
 
-Start with [LLM Guidelines](./guides/llm-guidelines.md) for quick rules, or use the included page list below to load specific references.
+Start with [LLM Guidelines](./guides/llm-guidelines.md) for the agent setup snippet and quick rules, or use the included page list below to load specific references.
 
 ## Included pages
 
