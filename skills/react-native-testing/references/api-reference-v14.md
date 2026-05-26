@@ -181,6 +181,7 @@ getByLabelText(text: TextMatch, options?: { exact?: boolean; normalizer?: Functi
 ```
 
 Matches by `aria-label`/`accessibilityLabel` or text content of element referenced by `aria-labelledby`/`accessibilityLabelledBy`.
+When multiple elements are referenced, their text content is joined with spaces in the referenced order and matched as a single label.
 
 #### `*ByPlaceholderText`
 

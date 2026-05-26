@@ -182,6 +182,20 @@ test('getByLabelText supports accessibilityLabelledBy', async () => {
   expect(screen.getByLabelText(/input/)).toBe(screen.getByTestId('textInput'));
 });
 
+test('getByLabelText matches concatenated accessibilityLabelledBy array labels', async () => {
+  await render(
+    <>
+      <Text nativeID="first-label">First</Text>
+      <Text nativeID="second-label">Second</Text>
+      <TextInput testID="textInput" accessibilityLabelledBy={['first-label', 'second-label']} />
+    </>,
+  );
+
+  expect(screen.getByLabelText('First Second')).toBe(screen.getByTestId('textInput'));
+  expect(screen.queryByLabelText('First')).toBeNull();
+  expect(screen.queryByLabelText('Second')).toBeNull();
+});
+
 test('getByLabelText supports nested accessibilityLabelledBy', async () => {
   await render(
     <>

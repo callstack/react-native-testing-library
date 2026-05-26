@@ -433,6 +433,17 @@ describe('computeAriaLabel', () => {
     expect(computeAriaLabel(screen.getByTestId('text-content'))).toBeUndefined();
   });
 
+  test('does not fall back to aria-label when aria-labelledby resolves to empty text', async () => {
+    await render(
+      <View>
+        <View testID="subject" aria-label="Internal Label" aria-labelledby="empty-label" />
+        <View nativeID="empty-label" />
+      </View>,
+    );
+
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('');
+  });
+
   test('label priority', async () => {
     await render(
       <View>
@@ -461,6 +472,29 @@ describe('computeAriaLabel', () => {
       </View>,
     );
     expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('External');
+  });
+
+  test('supports accessibilityLabelledBy array with a single item', async () => {
+    await render(
+      <View>
+        <View testID="subject" accessibilityLabelledBy={['ext-label']} />
+        <Text nativeID="ext-label">External</Text>
+      </View>,
+    );
+
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('External');
+  });
+
+  test('concatenates labels referenced by accessibilityLabelledBy array', async () => {
+    await render(
+      <View>
+        <View testID="subject" accessibilityLabelledBy={['first-label', 'second-label']} />
+        <Text nativeID="first-label">First</Text>
+        <Text nativeID="second-label">Second</Text>
+      </View>,
+    );
+
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('First Second');
   });
 
   test('supports Image with alt prop', async () => {
