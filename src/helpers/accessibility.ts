@@ -150,17 +150,23 @@ export function computeAriaModal(instance: TestInstance): boolean | undefined {
 }
 
 export function computeAriaLabel(instance: TestInstance): string | undefined {
-  const labelElementId =
-    instance.props['aria-labelledby'] ?? instance.props.accessibilityLabelledBy;
-  if (labelElementId) {
+  const labelElementIds = getAriaLabelledByIds(instance);
+  if (labelElementIds.length > 0) {
     const container = getContainerInstance(instance);
-    const labelInstance = findAll(
-      container,
-      (node) => isTestInstance(node) && node.props.nativeID === labelElementId,
-      { includeHiddenElements: true },
-    );
-    if (labelInstance.length > 0) {
-      return getTextContent(labelInstance[0]);
+    const labelTexts = labelElementIds
+      .map((labelElementId) => {
+        const labelInstance = findAll(
+          container,
+          (node) => isTestInstance(node) && node.props.nativeID === labelElementId,
+          { includeHiddenElements: true },
+        );
+
+        return labelInstance.length > 0 ? getTextContent(labelInstance[0]) : undefined;
+      })
+      .filter((labelText): labelText is string => labelText !== undefined);
+
+    if (labelTexts.length > 0) {
+      return labelTexts.join(' ');
     }
   }
 
@@ -175,6 +181,24 @@ export function computeAriaLabel(instance: TestInstance): string | undefined {
   }
 
   return undefined;
+}
+
+function getAriaLabelledByIds(instance: TestInstance): string[] {
+  const ariaLabelledBy = instance.props['aria-labelledby'];
+  if (typeof ariaLabelledBy === 'string') {
+    return ariaLabelledBy.split(/\s*,\s*/g).filter(Boolean);
+  }
+
+  const accessibilityLabelledBy = instance.props.accessibilityLabelledBy;
+  if (Array.isArray(accessibilityLabelledBy)) {
+    return accessibilityLabelledBy;
+  }
+
+  if (typeof accessibilityLabelledBy === 'string') {
+    return [accessibilityLabelledBy];
+  }
+
+  return [];
 }
 
 // See: https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State#busy-state
