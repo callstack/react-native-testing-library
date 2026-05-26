@@ -1,30 +1,24 @@
 # Quick Start
 
-:::warning Alpha Version
-
-This version is currently in alpha. APIs and behavior may change before the stable release. Please report any issues you encounter.
-
-:::
-
 ## Installation
 
 Open a Terminal in your project's folder and run:
 
 
 ```sh [npm]
-npm install -D @testing-library/react-native@alpha
+npm install -D @testing-library/react-native
 ```
 
 ```sh [yarn]
-yarn add -D @testing-library/react-native@alpha
+yarn add -D @testing-library/react-native
 ```
 
 ```sh [pnpm]
-pnpm add -D @testing-library/react-native@alpha
+pnpm add -D @testing-library/react-native
 ```
 
 ```sh [bun]
-bun add -D @testing-library/react-native@alpha
+bun add -D @testing-library/react-native
 ```
 
 This library has a peer dependency on [Test Renderer](https://github.com/mdjastrzebski/test-renderer). Make sure to install it:

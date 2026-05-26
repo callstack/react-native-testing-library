@@ -1309,7 +1309,7 @@ React Native Testing Library consists of following APIs:
 - [Fire Event](/react-native-testing-library/14.x/docs/api/events/fire-event.md) - simulate any component event in a simplified way purposes
 - Misc APIs:
   - [`renderHook` function](/react-native-testing-library/14.x/docs/api/misc/render-hook.md) - render hooks for testing
-  - [Async utils](/react-native-testing-library/14.x/docs/api/misc/async.md): `findBy*` queries, `wait`, `waitForElementToBeRemoved`
+  - [Async utils](/react-native-testing-library/14.x/docs/api/misc/async.md): `findBy*` queries, `waitFor`, `waitForElementToBeRemoved`
   - [Configuration](/react-native-testing-library/14.x/docs/api/misc/config.md): `configure`, `resetToDefaults`
   - [Accessibility](/react-native-testing-library/14.x/docs/api/misc/accessibility.md): `isHiddenFromAccessibility`
   - [Other](/react-native-testing-library/14.x/docs/api/misc/other.md): `within`, `act`, `cleanup`
@@ -1337,6 +1337,8 @@ function fireEvent(instance: TestInstance, eventName: string, ...data: unknown[]
 The `fireEvent` API triggers event handlers on both host and composite components. It traverses the component tree bottom-up from the passed element to find an enabled event handler named `onXxx` where `xxx` is the event name.
 
 Unlike User Event, this API does not automatically pass event object to event handler, this is responsibility of the user to construct such object.
+
+The base `fireEvent(instance, eventName, ...data)` API can pass multiple custom arguments to the handler. Convenience helpers such as `fireEvent.press` and `fireEvent.scroll` are different: they create a default event object and accept one optional object to merge into it.
 
 This function uses async `act` internally to execute all pending React updates during event handling.
 
@@ -1389,11 +1391,11 @@ Use the User Event [`press()`](/react-native-testing-library/14.x/docs/api/event
 ```tsx
 fireEvent.press: (
   instance: TestInstance,
-  ...data: Array<any>,
-) => Promise<unknown>
+  eventProps?: Record<string, unknown>,
+) => Promise<void>
 ```
 
-Invokes `press` event handler on the element or parent element in the tree.
+Builds a press event object, merges `eventProps` into it, and invokes the `press` handler on the element or nearest eligible parent.
 
 ```jsx
 import { View, Text, TouchableOpacity } from 'react-native';
@@ -1416,7 +1418,7 @@ await render(
 );
 
 await fireEvent.press(screen.getByText('Press me'), eventData);
-expect(onPressMock).toHaveBeenCalledWith(eventData);
+expect(onPressMock).toHaveBeenCalledWith(expect.objectContaining(eventData));
 ```
 
 ### `fireEvent.changeText` \{#change-text}
@@ -1428,8 +1430,8 @@ Use the User Event [`type()`](/react-native-testing-library/14.x/docs/api/events
 ```tsx
 fireEvent.changeText: (
   instance: TestInstance,
-  ...data: Array<any>,
-) => Promise<unknown>
+  text: string,
+) => Promise<void>
 ```
 
 Invokes `changeText` event handler on the element or parent element in the tree.
@@ -1459,11 +1461,11 @@ Prefer [`user.scrollTo`](/react-native-testing-library/14.x/docs/api/events/user
 ```tsx
 fireEvent.scroll: (
   instance: TestInstance,
-  ...data: Array<any>,
-) => Promise<unknown>
+  eventProps?: Record<string, unknown>,
+) => Promise<void>
 ```
 
-Invokes `scroll` event handler on the element or parent element in the tree.
+Builds a scroll event object, merges `eventProps` into it, and invokes the `scroll` handler on the element or nearest eligible parent.
 
 #### On a `ScrollView`
 
@@ -1982,6 +1984,8 @@ expect(element).toHaveAccessibleName(
 Checks if an element has the specified accessible name. Accepts `string` or `RegExp`, with optional [text match options](/react-native-testing-library/14.x/docs/api/queries.md#text-match-options) like `exact` and `normalizer`.
 
 The accessible name comes from `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props. For `Image` elements, the `alt` prop is also used. If none are present, the element's text content is used.
+
+When `accessibilityLabelledBy` references multiple elements with an array, their text content is joined with spaces in the referenced order and matched as a single accessible name. `aria-labelledby` follows React Native's single `nativeID` value behavior.
 
 Without a `name` parameter (or with `undefined`), it only checks whether the element has any accessible name.
 
@@ -2783,6 +2787,8 @@ Returns a `TestInstance` with matching label:
 - or by matching text content of view referenced by [`aria-labelledby`](https://reactnative.dev/docs/accessibility#aria-labelledby-android)/[`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
 - or by matching the [`alt`](https://reactnative.dev/docs/image#alt) prop on `Image` elements
 
+When `accessibilityLabelledBy` references multiple elements with an array, their text content is joined with spaces in the referenced order and matched as a single label. `aria-labelledby` follows React Native's single `nativeID` value behavior.
+
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
@@ -2947,7 +2953,6 @@ expect(
 ).not.toBeOnTheScreen();
 
 // Include hidden elements
-expect(screen.getByText('Hidden from accessibility')).toBeOnTheScreen();
 expect(
   screen.getByText('Hidden from accessibility', { includeHiddenElements: true })
 ).toBeOnTheScreen();
@@ -4116,6 +4121,25 @@ url: /react-native-testing-library/14.x/docs/guides/llm-guidelines.md
 
 Actionable guidelines for writing tests with React Native Testing Library (RNTL) v14.
 
+## Agent docs in the package
+
+RNTL ships package-specific documentation for coding agents in `node_modules/@testing-library/react-native/docs/`.
+Add this snippet to your project's `AGENTS.md` or `CLAUDE.md` file so agents use the docs for the installed package version:
+
+```md
+<!-- BEGIN:react-native-testing-library-agent-rules -->
+
+# React Native Testing Library in this project
+
+This project uses `@testing-library/react-native`. Its APIs and testing conventions can differ from your training data.
+Before writing or changing RNTL tests, read the relevant guide in
+`node_modules/@testing-library/react-native/docs/`, starting with
+`node_modules/@testing-library/react-native/docs/guides/llm-guidelines.md`.
+Prefer those package docs over stale assumptions, and follow deprecation notices.
+
+<!-- END:react-native-testing-library-agent-rules -->
+```
+
 ## Core APIs
 
 ### render
@@ -4417,12 +4441,6 @@ url: /react-native-testing-library/14.x/docs/start/intro.md
 
 # Introduction
 
-:::warning Alpha Version
-
-This version is currently in alpha. APIs and behavior may change before the stable release. Please report any issues you encounter.
-
-:::
-
 ## The problem
 
 You want to write maintainable tests for your React Native components. As a part of this goal, you want your tests to avoid including implementation details of your components and focus on making your tests give you the confidence they are intended. As part of this, you want your tests to be maintainable in the long run so refactors of your components (changes to implementation but not functionality) don't break your tests and slow you and your team down.
@@ -4469,12 +4487,6 @@ url: /react-native-testing-library/14.x/docs/start/migration-v14.md
 ---
 
 # Migration to 14.x
-
-:::warning Alpha Version
-
-This version is currently in alpha. APIs and behavior may change before the stable release. Please report any issues you encounter.
-
-:::
 
 This guide describes the migration to React Native Testing Library version 14 from version 13.x.
 
@@ -5121,31 +5133,25 @@ url: /react-native-testing-library/14.x/docs/start/quick-start.md
 
 # Quick Start
 
-:::warning Alpha Version
-
-This version is currently in alpha. APIs and behavior may change before the stable release. Please report any issues you encounter.
-
-:::
-
 ## Installation
 
 Open a Terminal in your project's folder and run:
 
 
 ```sh [npm]
-npm install -D @testing-library/react-native@alpha
+npm install -D @testing-library/react-native
 ```
 
 ```sh [yarn]
-yarn add -D @testing-library/react-native@alpha
+yarn add -D @testing-library/react-native
 ```
 
 ```sh [pnpm]
-pnpm add -D @testing-library/react-native@alpha
+pnpm add -D @testing-library/react-native
 ```
 
 ```sh [bun]
-bun add -D @testing-library/react-native@alpha
+bun add -D @testing-library/react-native
 ```
 
 This library has a peer dependency on [Test Renderer](https://github.com/mdjastrzebski/test-renderer). Make sure to install it:

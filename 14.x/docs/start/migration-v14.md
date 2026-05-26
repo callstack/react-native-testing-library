@@ -1,11 +1,5 @@
 # Migration to 14.x
 
-:::warning Alpha Version
-
-This version is currently in alpha. APIs and behavior may change before the stable release. Please report any issues you encounter.
-
-:::
-
 This guide describes the migration to React Native Testing Library version 14 from version 13.x.
 
 ## Overview

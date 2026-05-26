@@ -16,6 +16,8 @@ The `fireEvent` API triggers event handlers on both host and composite component
 
 Unlike User Event, this API does not automatically pass event object to event handler, this is responsibility of the user to construct such object.
 
+The base `fireEvent(instance, eventName, ...data)` API can pass multiple custom arguments to the handler. Convenience helpers such as `fireEvent.press` and `fireEvent.scroll` are different: they create a default event object and accept one optional object to merge into it.
+
 This function uses async `act` internally to execute all pending React updates during event handling.
 
 ```jsx
@@ -67,11 +69,11 @@ Use the User Event [`press()`](/react-native-testing-library/14.x/docs/api/event
 ```tsx
 fireEvent.press: (
   instance: TestInstance,
-  ...data: Array<any>,
-) => Promise<unknown>
+  eventProps?: Record<string, unknown>,
+) => Promise<void>
 ```
 
-Invokes `press` event handler on the element or parent element in the tree.
+Builds a press event object, merges `eventProps` into it, and invokes the `press` handler on the element or nearest eligible parent.
 
 ```jsx
 import { View, Text, TouchableOpacity } from 'react-native';
@@ -94,7 +96,7 @@ await render(
 );
 
 await fireEvent.press(screen.getByText('Press me'), eventData);
-expect(onPressMock).toHaveBeenCalledWith(eventData);
+expect(onPressMock).toHaveBeenCalledWith(expect.objectContaining(eventData));
 ```
 
 ### `fireEvent.changeText` \{#change-text}
@@ -106,8 +108,8 @@ Use the User Event [`type()`](/react-native-testing-library/14.x/docs/api/events
 ```tsx
 fireEvent.changeText: (
   instance: TestInstance,
-  ...data: Array<any>,
-) => Promise<unknown>
+  text: string,
+) => Promise<void>
 ```
 
 Invokes `changeText` event handler on the element or parent element in the tree.
@@ -137,11 +139,11 @@ Prefer [`user.scrollTo`](/react-native-testing-library/14.x/docs/api/events/user
 ```tsx
 fireEvent.scroll: (
   instance: TestInstance,
-  ...data: Array<any>,
-) => Promise<unknown>
+  eventProps?: Record<string, unknown>,
+) => Promise<void>
 ```
 
-Invokes `scroll` event handler on the element or parent element in the tree.
+Builds a scroll event object, merges `eventProps` into it, and invokes the `scroll` handler on the element or nearest eligible parent.
 
 #### On a `ScrollView`
 

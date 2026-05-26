@@ -239,6 +239,8 @@ Returns a `TestInstance` with matching label:
 - or by matching text content of view referenced by [`aria-labelledby`](https://reactnative.dev/docs/accessibility#aria-labelledby-android)/[`accessibilityLabelledBy`](https://reactnative.dev/docs/accessibility#accessibilitylabelledby-android) prop
 - or by matching the [`alt`](https://reactnative.dev/docs/image#alt) prop on `Image` elements
 
+When `accessibilityLabelledBy` references multiple elements with an array, their text content is joined with spaces in the referenced order and matched as a single label. `aria-labelledby` follows React Native's single `nativeID` value behavior.
+
 ```jsx
 import { render, screen } from '@testing-library/react-native';
 
@@ -403,7 +405,6 @@ expect(
 ).not.toBeOnTheScreen();
 
 // Include hidden elements
-expect(screen.getByText('Hidden from accessibility')).toBeOnTheScreen();
 expect(
   screen.getByText('Hidden from accessibility', { includeHiddenElements: true })
 ).toBeOnTheScreen();
