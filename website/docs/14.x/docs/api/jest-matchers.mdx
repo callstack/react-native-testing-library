@@ -183,6 +183,8 @@ Checks if an element has the specified accessible name. Accepts `string` or `Reg
 
 The accessible name comes from `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props. For `Image` elements, the `alt` prop is also used. If none are present, the element's text content is used.
 
+When `aria-labelledby` or `accessibilityLabelledBy` references multiple elements, their text content is joined with spaces in the referenced order and matched as a single accessible name.
+
 Without a `name` parameter (or with `undefined`), it only checks whether the element has any accessible name.
 
 ### `toHaveProp()`
