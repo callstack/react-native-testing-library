@@ -2,19 +2,16 @@ import { PackageManagerTabs } from '@rspress/core/theme';
 
 # Quick Start
 
-> [!WARNING] Alpha Version
-> This version is currently in alpha. APIs and behavior may change before the stable release. Please report any issues you encounter.
-
 ## Installation
 
 Open a Terminal in your project's folder and run:
 
 <PackageManagerTabs
 command={{
-    npm: 'npm install -D @testing-library/react-native@alpha',
-    yarn: 'yarn add -D @testing-library/react-native@alpha',
-    pnpm: 'pnpm add -D @testing-library/react-native@alpha',
-    bun: 'bun add -D @testing-library/react-native@alpha',
+    npm: 'npm install -D @testing-library/react-native',
+    yarn: 'yarn add -D @testing-library/react-native',
+    pnpm: 'pnpm add -D @testing-library/react-native',
+    bun: 'bun add -D @testing-library/react-native',
   }}
 />
 
