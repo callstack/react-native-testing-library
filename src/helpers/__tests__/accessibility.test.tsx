@@ -433,6 +433,18 @@ describe('computeAriaLabel', () => {
     expect(computeAriaLabel(screen.getByTestId('text-content'))).toBeUndefined();
   });
 
+  test('concatenates labels referenced by comma-separated aria-labelledby', async () => {
+    await render(
+      <View>
+        <View testID="subject" aria-labelledby="first-label, second-label" />
+        <Text nativeID="first-label">First</Text>
+        <Text nativeID="second-label">Second</Text>
+      </View>,
+    );
+
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('First Second');
+  });
+
   test('label priority', async () => {
     await render(
       <View>
@@ -463,22 +475,21 @@ describe('computeAriaLabel', () => {
     expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('External');
   });
 
+  test('supports accessibilityLabelledBy array with a single item', async () => {
+    await render(
+      <View>
+        <View testID="subject" accessibilityLabelledBy={['ext-label']} />
+        <Text nativeID="ext-label">External</Text>
+      </View>,
+    );
+
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('External');
+  });
+
   test('concatenates labels referenced by accessibilityLabelledBy array', async () => {
     await render(
       <View>
         <View testID="subject" accessibilityLabelledBy={['first-label', 'second-label']} />
-        <Text nativeID="first-label">First</Text>
-        <Text nativeID="second-label">Second</Text>
-      </View>,
-    );
-
-    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('First Second');
-  });
-
-  test('concatenates labels referenced by comma-separated aria-labelledby', async () => {
-    await render(
-      <View>
-        <View testID="subject" aria-labelledby="first-label, second-label" />
         <Text nativeID="first-label">First</Text>
         <Text nativeID="second-label">Second</Text>
       </View>,
