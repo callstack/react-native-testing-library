@@ -12,11 +12,6 @@
 [![MIT License][license-badge]][license]
 [![Sponsored by Callstack][callstack-badge]][callstack]
 
-> [!WARNING]
-> **Beta Version:** This version (v14) is currently in beta. APIs and behavior may change before the stable release. Please report any issues you encounter.
->
-> For stable version (v13) see [README-v13.md](./README-v13.md).
-
 ## The problem
 
 You want to write maintainable tests for your React Native components. Your tests should avoid implementation details and focus on giving you confidence. They should remain maintainable so refactors (changes to implementation but not functionality) don't break your tests and slow you and your team down.
@@ -34,7 +29,7 @@ This project is inspired by [React Testing Library](https://github.com/testing-l
 Open a Terminal in your project's folder and run:
 
 ```sh
-npm install --save-dev @testing-library/react-native@alpha
+npm install --save-dev @testing-library/react-native
 ```
 
 This library has a `peerDependencies` listing for [Test Renderer](https://github.com/mdjastrzebski/test-renderer). Make sure to install it as a dev dependency:

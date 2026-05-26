@@ -15,11 +15,8 @@ RNTL v14 drops support for React 18 and adopts React 19's async rendering model.
 - Removed deprecated APIs: `update`, `getQueriesForElement`, `UNSAFE_root`, `concurrentRoot` option, `createNodeMock` option
 - Reintroduced `container` API, which is now safe to use
 
-:::info React 18 Users
-
-If you need to support React 18, please continue using RNTL v13.x.
-
-:::
+> [!INFO] React 18 Users
+> If you need to support React 18, please continue using RNTL v13.x.
 
 ## Quick Migration
 
@@ -28,7 +25,7 @@ We provide codemods to automate most of the migration:
 **Step 1: Update dependencies**
 
 <PackageManagerTabs
-  command={{
+command={{
     npm: 'npx codemod@latest rntl-v14-update-deps --target .\nnpm install',
     yarn: 'yarn dlx codemod@latest rntl-v14-update-deps --target .\nyarn install',
     pnpm: 'pnpm dlx codemod@latest rntl-v14-update-deps --target .\npnpm install',
@@ -39,7 +36,7 @@ We provide codemods to automate most of the migration:
 **Step 2: Update test code to async**
 
 <PackageManagerTabs
-  command={{
+command={{
     npm: 'npx codemod@latest rntl-v14-async-functions --target ./src',
     yarn: 'yarn dlx codemod@latest rntl-v14-async-functions --target ./src',
     pnpm: 'pnpm dlx codemod@latest rntl-v14-async-functions --target ./src',
@@ -92,7 +89,7 @@ See the [Test Renderer React 19 compatibility lines](https://github.com/mdjastrz
 Run codemod for updating dependencies:
 
 <PackageManagerTabs
-  command={{
+command={{
     npm: 'npx codemod@latest rntl-v14-update-deps\nnpm install',
     yarn: 'yarn dlx codemod@latest rntl-v14-update-deps\nyarn install',
     pnpm: 'pnpm dlx codemod@latest rntl-v14-update-deps\npnpm install',
@@ -105,7 +102,7 @@ Run codemod for updating dependencies:
 Remove React Test Renderer and its type definitions from your dev dependencies, and add the Test Renderer line that matches your React minor version:
 
 <PackageManagerTabs
-  command={{
+command={{
     npm: 'npm uninstall react-test-renderer @types/react-test-renderer\nnpm install -D test-renderer@1.2',
     yarn: 'yarn remove react-test-renderer @types/react-test-renderer\nyarn add -D test-renderer@1.2',
     pnpm: 'pnpm remove react-test-renderer @types/react-test-renderer\npnpm add -D test-renderer@1.2',
@@ -141,13 +138,10 @@ With React 18 support dropped, RNTL v14 uses React 19's async rendering model. T
 - `fireEvent()` and helpers (`press`, `changeText`, `scroll`) → return `Promise<void>`
 - `act()` → always returns `Promise<T>`
 
-:::tip Already using async APIs?
+> [!TIP] Already using async APIs?
+> If you adopted the async APIs introduced in RNTL v13.3 (`renderAsync`, `fireEventAsync`, `renderHookAsync`), rename them to their non-async counterparts (`render`, `fireEvent`, `renderHook`). The async versions have been removed since the standard APIs are now async by default.
 
-If you adopted the async APIs introduced in RNTL v13.3 (`renderAsync`, `fireEventAsync`, `renderHookAsync`), rename them to their non-async counterparts (`render`, `fireEvent`, `renderHook`). The async versions have been removed since the standard APIs are now async by default.
-
-:::
-
-#### `render` is now async {#render-async-default}
+#### `render` is now async
 
 In v14, `render` is async by default and returns a Promise. This allows proper support for `Suspense` boundaries and the `use()` hook.
 
@@ -173,7 +167,7 @@ it('should render component', async () => {
 });
 ```
 
-See the [`render` API documentation](/docs/api/render).
+See the [`render` API documentation](../api/render.md).
 
 #### `renderHook` is now async
 
@@ -205,7 +199,7 @@ it('should test hook', async () => {
 });
 ```
 
-See the [`renderHook` API documentation](/docs/api/misc/render-hook).
+See the [`renderHook` API documentation](../api/render-hook.md).
 
 #### `fireEvent` is now async
 
@@ -245,7 +239,7 @@ await fireEvent.press(screen.getByText('Press me'), {
 expect(onPress).toHaveBeenCalledWith(
   expect.objectContaining({
     nativeEvent: expect.objectContaining({ pageX: 20, pageY: 30 }),
-  })
+  }),
 );
 ```
 
@@ -260,11 +254,8 @@ In v14, `act` is async by default and always returns a Promise. You should alway
 - `act` now always returns `Promise<T>` instead of `T | Thenable<T>`
 - `act` should always be awaited
 
-:::note
-
-The transition to async `act` may prevent testing very short transient states, as awaiting `act` will flush all pending updates before returning.
-
-:::
+> [!NOTE]
+> The transition to async `act` may prevent testing very short transient states, as awaiting `act` will flush all pending updates before returning.
 
 **Before (v13):**
 
@@ -294,7 +285,7 @@ it('should update state', async () => {
 
 **Note**: Even if your callback is synchronous, you should still use `await act(...)` as `act` now always returns a Promise.
 
-See the [`act` API documentation](/docs/api/misc/other#act).
+See the [`act` API documentation](../api/other-helpers.md#act).
 
 #### Why async APIs?
 
@@ -439,7 +430,7 @@ it('should access container', async () => {
 });
 ```
 
-See the [`screen` API documentation](/docs/api/screen#container).
+See the [`screen` API documentation](../api/screen.md#container).
 
 ### Text string validation enforced by default
 
@@ -510,7 +501,7 @@ Updates your `package.json`:
 - Updates `@testing-library/react-native` to the v14 version
 
 <PackageManagerTabs
-  command={{
+command={{
     npm: 'npx codemod@latest rntl-v14-update-deps --target .\nnpm install',
     yarn: 'yarn dlx codemod@latest rntl-v14-update-deps --target .\nyarn install',
     pnpm: 'pnpm dlx codemod@latest rntl-v14-update-deps --target .\npnpm install',
@@ -527,7 +518,7 @@ Transforms test files:
 - Handles `screen.rerender()`, `screen.unmount()`, and renderer methods
 
 <PackageManagerTabs
-  command={{
+command={{
     npm: 'npx codemod@latest rntl-v14-async-functions --target ./src',
     yarn: 'yarn dlx codemod@latest rntl-v14-async-functions --target ./src',
     pnpm: 'pnpm dlx codemod@latest rntl-v14-async-functions --target ./src',
@@ -540,7 +531,7 @@ Transforms test files:
 If you have custom render helpers (like `renderWithProviders`), you can specify them using the `customRenderFunctions` parameter. The codemod will then also transform calls to these functions:
 
 <PackageManagerTabs
-  command={{
+command={{
     npm: 'npx codemod@latest rntl-v14-async-functions \\\n  --target ./src \\\n  --param customRenderFunctions="renderWithProviders,renderWithTheme"',
     yarn: 'yarn dlx codemod@latest rntl-v14-async-functions \\\n  --target ./src \\\n  --param customRenderFunctions="renderWithProviders,renderWithTheme"',
     pnpm: 'pnpm dlx codemod@latest rntl-v14-async-functions \\\n  --target ./src \\\n  --param customRenderFunctions="renderWithProviders,renderWithTheme"',

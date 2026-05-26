@@ -7,7 +7,7 @@ import { PackageManagerTabs } from '@rspress/core/theme';
 Open a Terminal in your project's folder and run:
 
 <PackageManagerTabs
-  command={{
+command={{
     npm: 'npm install -D @testing-library/react-native',
     yarn: 'yarn add -D @testing-library/react-native',
     pnpm: 'pnpm add -D @testing-library/react-native',
@@ -18,7 +18,7 @@ Open a Terminal in your project's folder and run:
 This library has a peer dependency on [Test Renderer](https://github.com/mdjastrzebski/test-renderer). Make sure to install it:
 
 <PackageManagerTabs
-  command={{
+command={{
     npm: 'npm install -D test-renderer',
     yarn: 'yarn add -D test-renderer',
     pnpm: 'pnpm add -D test-renderer',
@@ -39,7 +39,7 @@ Set up [`eslint-plugin-testing-library`](https://github.com/testing-library/esli
 Install the plugin (assuming you already have `eslint` installed & configured):
 
 <PackageManagerTabs
-  command={{
+command={{
     npm: 'npm install -D eslint-plugin-testing-library',
     yarn: 'yarn add -D eslint-plugin-testing-library',
     pnpm: 'pnpm add -D eslint-plugin-testing-library',

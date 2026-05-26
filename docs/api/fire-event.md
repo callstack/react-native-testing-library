@@ -1,12 +1,11 @@
 # Fire Event API
 
-## `fireEvent` {#fire-event}
+## `fireEvent`
 
-:::note
-For common events like `press` or `type`, use the [User Event API](/docs/api/events/user-event). It simulates events more realistically by emitting a sequence of events with proper event objects that mimic React Native runtime behavior.
-
-Use Fire Event for cases not supported by User Event and for triggering event handlers on composite components.
-:::
+> [!NOTE]
+> For common events like `press` or `type`, use the [User Event API](./user-event.md). It simulates events more realistically by emitting a sequence of events with proper event objects that mimic React Native runtime behavior.
+>
+> Use Fire Event for cases not supported by User Event and for triggering event handlers on composite components.
 
 ```ts
 function fireEvent(instance: TestInstance, eventName: string, ...data: unknown[]): Promise<unknown>;
@@ -28,7 +27,7 @@ test('fire changeText event', async () => {
   await render(
     // MyComponent renders TextInput which has a placeholder 'Enter details'
     // and with `onChangeText` bound to handleChangeText
-    <MyComponent handleChangeText={onEventMock} />
+    <MyComponent handleChangeText={onEventMock} />,
   );
 
   await fireEvent(screen.getByPlaceholderText('change'), 'onChangeText', 'ab');
@@ -36,9 +35,8 @@ test('fire changeText event', async () => {
 });
 ```
 
-:::note
-`fireEvent` performs checks that should prevent events firing on disabled elements.
-:::
+> [!NOTE]
+> `fireEvent` performs checks that should prevent events firing on disabled elements.
 
 An example using `fireEvent` with native events that aren't already aliased by the `fireEvent` api.
 
@@ -51,7 +49,7 @@ const onBlurMock = jest.fn();
 await render(
   <View>
     <TextInput placeholder="my placeholder" onBlur={onBlurMock} />
-  </View>
+  </View>,
 );
 
 // you can omit the `on` prefix
@@ -60,11 +58,10 @@ await fireEvent(screen.getByPlaceholderText('my placeholder'), 'blur');
 
 FireEvent exposes convenience methods for common events like: `press`, `changeText`, `scroll`.
 
-### `fireEvent.press` {#press}
+### `fireEvent.press`
 
-:::note
-Use the User Event [`press()`](/docs/api/events/user-event#press) helper instead. It simulates press interactions more realistically, including pressable support.
-:::
+> [!NOTE]
+> Use the User Event [`press()`](./user-event.md#press) helper instead. It simulates press interactions more realistically, including pressable support.
 
 ```tsx
 fireEvent.press: (
@@ -92,18 +89,17 @@ await render(
     <TouchableOpacity onPress={onPressMock}>
       <Text>Press me</Text>
     </TouchableOpacity>
-  </View>
+  </View>,
 );
 
 await fireEvent.press(screen.getByText('Press me'), eventData);
 expect(onPressMock).toHaveBeenCalledWith(expect.objectContaining(eventData));
 ```
 
-### `fireEvent.changeText` {#change-text}
+### `fireEvent.changeText`
 
-:::note
-Use the User Event [`type()`](/docs/api/events/user-event#type) helper instead. It simulates text change interactions more realistically, including key-by-key typing, element focus, and other editing events.
-:::
+> [!NOTE]
+> Use the User Event [`type()`](./user-event.md#type) helper instead. It simulates text change interactions more realistically, including key-by-key typing, element focus, and other editing events.
 
 ```tsx
 fireEvent.changeText: (
@@ -124,17 +120,16 @@ const CHANGE_TEXT = 'content';
 await render(
   <View>
     <TextInput placeholder="Enter data" onChangeText={onChangeTextMock} />
-  </View>
+  </View>,
 );
 
 await fireEvent.changeText(screen.getByPlaceholderText('Enter data'), CHANGE_TEXT);
 ```
 
-### `fireEvent.scroll` {#scroll}
+### `fireEvent.scroll`
 
-:::note
-Prefer [`user.scrollTo`](/docs/api/events/user-event#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event simulates events more realistically based on React Native runtime behavior.
-:::
+> [!NOTE]
+> Prefer [`user.scrollTo`](./user-event.md#scrollto) over `fireEvent.scroll` for `ScrollView`, `FlatList`, and `SectionList` components. User Event simulates events more realistically based on React Native runtime behavior.
 
 ```tsx
 fireEvent.scroll: (
@@ -163,7 +158,7 @@ const eventData = {
 await render(
   <ScrollView testID="scroll-view" onScroll={onScrollMock}>
     <Text>Content</Text>
-  </ScrollView>
+  </ScrollView>,
 );
 
 await fireEvent.scroll(screen.getByTestId('scroll-view'), eventData);
