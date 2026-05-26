@@ -16,7 +16,7 @@ React Native Testing Library consists of following APIs:
 - [Fire Event](/docs/api/events/fire-event) - simulate any component event in a simplified way purposes
 - Misc APIs:
   - [`renderHook` function](/docs/api/misc/render-hook) - render hooks for testing
-  - [Async utils](/docs/api/misc/async): `findBy*` queries, `wait`, `waitForElementToBeRemoved`
+  - [Async utils](/docs/api/misc/async): `findBy*` queries, `waitFor`, `waitForElementToBeRemoved`
   - [Configuration](/docs/api/misc/config): `configure`, `resetToDefaults`
   - [Accessibility](/docs/api/misc/accessibility): `isHiddenFromAccessibility`
   - [Other](/docs/api/misc/other): `within`, `act`, `cleanup`
