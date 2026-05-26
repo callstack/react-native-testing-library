@@ -463,6 +463,30 @@ describe('computeAriaLabel', () => {
     expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('External');
   });
 
+  test('concatenates labels referenced by accessibilityLabelledBy array', async () => {
+    await render(
+      <View>
+        <View testID="subject" accessibilityLabelledBy={['first-label', 'second-label']} />
+        <Text nativeID="first-label">First</Text>
+        <Text nativeID="second-label">Second</Text>
+      </View>,
+    );
+
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('First Second');
+  });
+
+  test('concatenates labels referenced by comma-separated aria-labelledby', async () => {
+    await render(
+      <View>
+        <View testID="subject" aria-labelledby="first-label, second-label" />
+        <Text nativeID="first-label">First</Text>
+        <Text nativeID="second-label">Second</Text>
+      </View>,
+    );
+
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('First Second');
+  });
+
   test('supports Image with alt prop', async () => {
     await render(<Image testID="subject" alt="Image Alt" />);
     expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('Image Alt');
