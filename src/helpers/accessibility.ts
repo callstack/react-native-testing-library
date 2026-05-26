@@ -166,7 +166,7 @@ export function computeAriaLabel(instance: TestInstance): string | undefined {
       .filter((labelText): labelText is string => labelText !== undefined);
 
     if (labelTexts.length > 0) {
-      return labelTexts.join(' ');
+      return labelTexts.join(' ').trim().replace(/\s+/g, ' ');
     }
   }
 
@@ -186,7 +186,7 @@ export function computeAriaLabel(instance: TestInstance): string | undefined {
 function getAriaLabelledByIds(instance: TestInstance): string[] {
   const ariaLabelledBy = instance.props['aria-labelledby'];
   if (typeof ariaLabelledBy === 'string') {
-    return ariaLabelledBy.split(/\s*,\s*/g).filter(Boolean);
+    return [ariaLabelledBy];
   }
 
   const accessibilityLabelledBy = instance.props.accessibilityLabelledBy;

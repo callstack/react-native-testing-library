@@ -222,20 +222,6 @@ test('getByLabelText supports aria-labelledby', async () => {
   expect(screen.getByLabelText(/text label/i)).toBe(screen.getByTestId('text-input'));
 });
 
-test('getByLabelText matches concatenated comma-separated aria-labelledby labels', async () => {
-  await render(
-    <>
-      <Text nativeID="first-label">First</Text>
-      <Text nativeID="second-label">Second</Text>
-      <TextInput testID="text-input" aria-labelledby="first-label, second-label" />
-    </>,
-  );
-
-  expect(screen.getByLabelText('First Second')).toBe(screen.getByTestId('text-input'));
-  expect(screen.queryByLabelText('First')).toBeNull();
-  expect(screen.queryByLabelText('Second')).toBeNull();
-});
-
 test('getByLabelText supports nested aria-labelledby', async () => {
   await render(
     <>

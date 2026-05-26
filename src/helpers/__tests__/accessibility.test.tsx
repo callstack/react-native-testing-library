@@ -433,16 +433,15 @@ describe('computeAriaLabel', () => {
     expect(computeAriaLabel(screen.getByTestId('text-content'))).toBeUndefined();
   });
 
-  test('concatenates labels referenced by comma-separated aria-labelledby', async () => {
+  test('does not fall back to aria-label when aria-labelledby resolves to empty text', async () => {
     await render(
       <View>
-        <View testID="subject" aria-labelledby="first-label, second-label" />
-        <Text nativeID="first-label">First</Text>
-        <Text nativeID="second-label">Second</Text>
+        <View testID="subject" aria-label="Internal Label" aria-labelledby="empty-label" />
+        <View nativeID="empty-label" />
       </View>,
     );
 
-    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('First Second');
+    expect(computeAriaLabel(screen.getByTestId('subject'))).toEqual('');
   });
 
   test('label priority', async () => {
