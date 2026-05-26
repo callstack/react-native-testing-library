@@ -397,7 +397,6 @@ expect(
 ).not.toBeOnTheScreen();
 
 // Include hidden elements
-expect(screen.getByText('Hidden from accessibility')).toBeOnTheScreen();
 expect(
   screen.getByText('Hidden from accessibility', { includeHiddenElements: true }),
 ).toBeOnTheScreen();
