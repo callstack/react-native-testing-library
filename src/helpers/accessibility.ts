@@ -295,7 +295,10 @@ export function computeAccessibleName(
     }
   }
 
-  return parts.join(' ');
+  // Text children are already part of one inline phrase and contain their own spacing.
+  // Other elements contribute separate accessible names, so separate them with spaces.
+  const separator = isHostText(instance) ? '' : ' ';
+  return parts.join(separator);
 }
 
 type RoleSupportMap = Partial<Record<Role | AccessibilityRole, true>>;

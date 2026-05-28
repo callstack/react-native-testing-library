@@ -864,6 +864,14 @@ describe('computeAccessibleName', () => {
     );
   });
 
+  test('concatenates inline text children without extra spaces', async () => {
+    const user = 'admin';
+
+    await render(<Text testID="subject">Welcome {user}!</Text>);
+
+    expect(computeAccessibleName(screen.getByTestId('subject'))).toBe('Welcome admin!');
+  });
+
   test('TextInput placeholder is used only for the element itself', async () => {
     await render(
       <>

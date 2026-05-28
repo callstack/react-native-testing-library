@@ -207,6 +207,20 @@ describe('supports name option', () => {
     expect(screen.getByRole('header', { name: 'About' }).props.testID).toBe('target-header');
   });
 
+  test('returns an element when inline text children form the name', async () => {
+    const user = 'admin';
+
+    await render(
+      <Text accessibilityRole="header" testID="target-header">
+        Welcome {user}!
+      </Text>,
+    );
+
+    expect(screen.getByRole('header', { name: 'Welcome admin!' })).toBe(
+      screen.getByTestId('target-header'),
+    );
+  });
+
   test('returns an element with nested Text as children', async () => {
     await render(
       <Text accessibilityRole="header" testID="parent">
