@@ -208,15 +208,29 @@ describe('supports name option', () => {
   });
 
   test('returns an element when inline text children form the name', async () => {
-    const user = 'admin';
+    const name = 'World';
 
     await render(
       <Text accessibilityRole="header" testID="target-header">
-        Welcome {user}!
+        Hello {name}!
       </Text>,
     );
 
-    expect(screen.getByRole('header', { name: 'Welcome admin!' })).toBe(
+    expect(screen.getByRole('header', { name: 'Hello World!' })).toBe(
+      screen.getByTestId('target-header'),
+    );
+  });
+
+  test('returns an element when nested inline Text children form the name', async () => {
+    const name = 'World';
+
+    await render(
+      <Text accessibilityRole="header" testID="target-header">
+        Hello <Text>{name}</Text>!
+      </Text>,
+    );
+
+    expect(screen.getByRole('header', { name: 'Hello World!' })).toBe(
       screen.getByTestId('target-header'),
     );
   });

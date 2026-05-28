@@ -865,11 +865,23 @@ describe('computeAccessibleName', () => {
   });
 
   test('concatenates inline text children without extra spaces', async () => {
-    const user = 'admin';
+    const name = 'World';
 
-    await render(<Text testID="subject">Welcome {user}!</Text>);
+    await render(<Text testID="subject">Hello {name}!</Text>);
 
-    expect(computeAccessibleName(screen.getByTestId('subject'))).toBe('Welcome admin!');
+    expect(computeAccessibleName(screen.getByTestId('subject'))).toBe('Hello World!');
+  });
+
+  test('concatenates nested inline Text children without extra spaces', async () => {
+    const name = 'World';
+
+    await render(
+      <Text testID="subject">
+        Hello <Text>{name}</Text>!
+      </Text>,
+    );
+
+    expect(computeAccessibleName(screen.getByTestId('subject'))).toBe('Hello World!');
   });
 
   test('TextInput placeholder is used only for the element itself', async () => {
