@@ -2,25 +2,6 @@
 
 Actionable guidelines for writing tests with React Native Testing Library (RNTL) v14.
 
-## Agent docs in the package
-
-RNTL ships package-specific documentation for coding agents in `node_modules/@testing-library/react-native/docs/`.
-Add this snippet to your project's `AGENTS.md` or `CLAUDE.md` file so agents use the docs for the installed package version:
-
-```md
-<!-- BEGIN:react-native-testing-library-agent-rules -->
-
-# React Native Testing Library in this project
-
-This project uses `@testing-library/react-native`. Its APIs and testing conventions can differ from your training data.
-Before writing or changing RNTL tests, read the relevant guide in
-`node_modules/@testing-library/react-native/docs/`, starting with
-`node_modules/@testing-library/react-native/docs/guides/llm-guidelines.md`.
-Prefer those package docs over stale assumptions, and follow deprecation notices.
-
-<!-- END:react-native-testing-library-agent-rules -->
-```
-
 ## Core APIs
 
 ### render
