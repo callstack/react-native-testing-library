@@ -300,15 +300,21 @@ export function computeAccessibleName(
     }
   }
 
-  // Text children are already part of one inline phrase and contain their own spacing.
-  // Other elements contribute separate accessible names, so separate them with spaces.
+  return joinAccessibleNameParts(parts, { inline: isHostText(instance) });
+}
+
+function joinAccessibleNameParts(
+  parts: AccessibleNamePart[],
+  options: { inline: boolean },
+): string {
   return parts.reduce((accessibleName, part, index) => {
     if (index === 0) {
       return part.text;
     }
 
     const previousPart = parts[index - 1];
-    const separator = isHostText(instance) && previousPart.isInlineText && part.isInlineText ? '' : ' ';
+    const separator =
+      options.inline && previousPart.isInlineText && part.isInlineText ? '' : ' ';
     return `${accessibleName}${separator}${part.text}`;
   }, '');
 }
