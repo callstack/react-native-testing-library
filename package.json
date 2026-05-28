@@ -109,7 +109,7 @@
   },
   "resolutions": {
     "@eslint/compat": "^2.1.0",
-    "jest-environment-node@npm:^29.7.0": "30.4.1"
+    "jest-environment-node": "30.4.1"
   },
   "packageManager": "yarn@4.11.0",
   "engines": {
