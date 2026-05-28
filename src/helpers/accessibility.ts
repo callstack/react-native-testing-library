@@ -268,6 +268,11 @@ type ComputeAccessibleNameOptions = {
   root?: boolean;
 };
 
+type AccessibleNamePart = {
+  text: string;
+  isInlineText: boolean;
+};
+
 export function computeAccessibleName(
   instance: TestInstance,
   options?: ComputeAccessibleNameOptions,
@@ -281,21 +286,36 @@ export function computeAccessibleName(
     return instance.props.placeholder;
   }
 
-  const parts = [];
+  const parts: AccessibleNamePart[] = [];
   for (const child of instance.children) {
     if (typeof child === 'string') {
       if (child) {
-        parts.push(child);
+        parts.push({ text: child, isInlineText: true });
       }
     } else {
       const childLabel = computeAccessibleName(child, { root: false });
       if (childLabel) {
-        parts.push(childLabel);
+        parts.push({ text: childLabel, isInlineText: isHostText(child) });
       }
     }
   }
 
-  return parts.join(' ');
+  return joinAccessibleNameParts(parts, { inline: isHostText(instance) });
+}
+
+function joinAccessibleNameParts(
+  parts: AccessibleNamePart[],
+  options: { inline: boolean },
+): string {
+  return parts.reduce((accessibleName, part, index) => {
+    if (index === 0) {
+      return part.text;
+    }
+
+    const previousPart = parts[index - 1];
+    const separator = options.inline && previousPart.isInlineText && part.isInlineText ? '' : ' ';
+    return `${accessibleName}${separator}${part.text}`;
+  }, '');
 }
 
 type RoleSupportMap = Partial<Record<Role | AccessibilityRole, true>>;
