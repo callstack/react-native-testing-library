@@ -884,6 +884,17 @@ describe('computeAccessibleName', () => {
     expect(computeAccessibleName(screen.getByTestId('subject'))).toBe('Hello World!');
   });
 
+  test('separates non-text accessible names inside Text from adjacent inline text', async () => {
+    await render(
+      <Text testID="subject">
+        <View aria-label="icon" />
+        <Text>label</Text>
+      </Text>,
+    );
+
+    expect(computeAccessibleName(screen.getByTestId('subject'))).toBe('icon label');
+  });
+
   test('TextInput placeholder is used only for the element itself', async () => {
     await render(
       <>

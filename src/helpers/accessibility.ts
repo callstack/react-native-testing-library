@@ -268,6 +268,11 @@ type ComputeAccessibleNameOptions = {
   root?: boolean;
 };
 
+type AccessibleNamePart = {
+  text: string;
+  isInlineText: boolean;
+};
+
 export function computeAccessibleName(
   instance: TestInstance,
   options?: ComputeAccessibleNameOptions,
@@ -281,24 +286,31 @@ export function computeAccessibleName(
     return instance.props.placeholder;
   }
 
-  const parts = [];
+  const parts: AccessibleNamePart[] = [];
   for (const child of instance.children) {
     if (typeof child === 'string') {
       if (child) {
-        parts.push(child);
+        parts.push({ text: child, isInlineText: true });
       }
     } else {
       const childLabel = computeAccessibleName(child, { root: false });
       if (childLabel) {
-        parts.push(childLabel);
+        parts.push({ text: childLabel, isInlineText: isHostText(child) });
       }
     }
   }
 
   // Text children are already part of one inline phrase and contain their own spacing.
   // Other elements contribute separate accessible names, so separate them with spaces.
-  const separator = isHostText(instance) ? '' : ' ';
-  return parts.join(separator);
+  return parts.reduce((accessibleName, part, index) => {
+    if (index === 0) {
+      return part.text;
+    }
+
+    const previousPart = parts[index - 1];
+    const separator = isHostText(instance) && previousPart.isInlineText && part.isInlineText ? '' : ' ';
+    return `${accessibleName}${separator}${part.text}`;
+  }, '');
 }
 
 type RoleSupportMap = Partial<Record<Role | AccessibilityRole, true>>;
