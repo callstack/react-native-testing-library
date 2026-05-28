@@ -28,6 +28,21 @@ command={{
 
 Test Renderer has better compatibility with React 19 and improved type safety compared to the deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html).
 
+## Agent docs in the package
+
+RNTL ships package-specific documentation for coding agents in `node_modules/@testing-library/react-native/docs/`.
+Add this snippet to your project's `AGENTS.md` or `CLAUDE.md` file so agents use the docs for the installed package version:
+
+```md
+# React Native Testing Library in this project
+
+This project uses `@testing-library/react-native`. Its APIs and testing conventions can differ from your training data.
+Before writing or changing RNTL tests, read the relevant guide in
+`node_modules/@testing-library/react-native/docs/`, starting with
+`node_modules/@testing-library/react-native/docs/guides/llm-guidelines.md`.
+Prefer those package docs over stale assumptions, and follow deprecation notices.
+```
+
 ### Jest matchers
 
 RNTL automatically extends Jest with React Native-specific matchers. The only thing you need to do is to import anything from `@testing-library/react-native` which you already need to do to access the `render` function.

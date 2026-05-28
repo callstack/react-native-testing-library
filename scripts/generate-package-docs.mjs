@@ -258,6 +258,8 @@ function rewriteInternalLinks(markdown, output) {
     ['docs/guides/common-mistakes', 'guides/common-mistakes.md'],
     ['docs/guides/troubleshooting', 'guides/troubleshooting.md'],
     ['docs/guides/llm-guidelines', 'guides/llm-guidelines.md'],
+    ['docs/start/quick-start', 'guides/quick-start.md'],
+    ['docs/start/migration-v14', 'guides/migration-v14.md'],
     ['docs/advanced/testing-env', 'guides/testing-environment.md'],
     ['docs/advanced/understanding-act', 'guides/understanding-act.md'],
     ['cookbook/basics/custom-render', 'cookbook/custom-render.md'],
@@ -285,7 +287,7 @@ function buildReadme(pages) {
 
 These markdown files are bundled with the npm package for coding agents. They describe the installed package version.
 
-Start with [LLM Guidelines](./guides/llm-guidelines.md) for the agent setup snippet and quick rules, or use the included page list below to load specific references.
+Start with [LLM Guidelines](./guides/llm-guidelines.md) for rules overview, or use the included page list below to load specific references.
 
 ## Included pages
 

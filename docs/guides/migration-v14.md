@@ -46,6 +46,8 @@ command={{
 
 After running the codemods, review the changes and run your tests.
 
+If your project uses coding agents, add the RNTL package-docs instruction snippet from the [Quick Start](./quick-start.md#agent-docs-in-the-package) so agents read the docs that match your installed package version.
+
 ## Breaking Changes
 
 ### Supported React, React Native, and Node.js versions
