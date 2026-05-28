@@ -12,9 +12,9 @@
   - `yarn build`
   - `yarn validate`
 - Task-specific guidance:
-  - [Architecture and API design](docs/agents/architecture.md)
-  - [Build, validation, and repo layout](docs/agents/build-and-validation.md)
-  - [TypeScript and code style](docs/agents/code-style.md)
-  - [Testing conventions](docs/agents/testing.md)
-  - [Example app regeneration](docs/agents/example-apps.md)
-  - [Git, releases, and PR workflow](docs/agents/git-workflow.md)
+  - [Architecture and API design](agents/architecture.md)
+  - [Build, validation, and repo layout](agents/build-and-validation.md)
+  - [TypeScript and code style](agents/code-style.md)
+  - [Testing conventions](agents/testing.md)
+  - [Example app regeneration](agents/example-apps.md)
+  - [Git, releases, and PR workflow](agents/git-workflow.md)
