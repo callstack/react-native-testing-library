@@ -6,8 +6,7 @@ const LATEST_VERSION = '13.x';
 const PreReleaseBanner = () => (
   <div className="pre-release-banner">
     <span>
-      You are viewing documentation for <strong>v14 alpha</strong>. This version is under active
-      development and APIs may change.
+      You are viewing documentation for <strong>v14 RC</strong>.
     </span>
   </div>
 );
