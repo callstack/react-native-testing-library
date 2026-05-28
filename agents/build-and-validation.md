@@ -15,7 +15,7 @@
 
 - `yarn lint` runs ESLint on `src`.
 - `yarn validate` runs typecheck, tests, lint, and Prettier checks for the main package.
-- `yarn build` cleans `build/`, transpiles source with Babel, and emits TypeScript declarations.
+- `yarn build` cleans `dist/`, transpiles source with Babel, and emits TypeScript declarations.
 
 ## Repo layout
 

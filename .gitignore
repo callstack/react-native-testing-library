@@ -3,7 +3,9 @@ node_modules
 coverage
 *.log
 .eslintcache
+*.tsbuildinfo
 build
+dist
 .idea
 .DS_Store
 

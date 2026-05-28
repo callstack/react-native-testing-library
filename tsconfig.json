@@ -13,7 +13,7 @@
     "noEmit": true,
     "rootDir": "src",
     "types": ["jest", "node"],
-    "outDir": "build"
+    "outDir": "dist"
   },
   "include": ["src/**/*"],
   "exclude": ["src/__tests__/react-19_2/**/*"]

@@ -1,1 +1,1 @@
-export * from './build/pure';
+export * from './dist/pure';
