@@ -313,8 +313,7 @@ function joinAccessibleNameParts(
     }
 
     const previousPart = parts[index - 1];
-    const separator =
-      options.inline && previousPart.isInlineText && part.isInlineText ? '' : ' ';
+    const separator = options.inline && previousPart.isInlineText && part.isInlineText ? '' : ' ';
     return `${accessibleName}${separator}${part.text}`;
   }, '');
 }
