@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { render } from '@testing-library/react-native';
 import { useHydrateAtoms } from 'jotai/utils';
 import type { WritableAtom } from 'jotai/vanilla';
 import { PrimitiveAtom } from 'jotai/vanilla/atom';
+import * as React from 'react';
 
 // Jotai models hydrated atom values as variadic writable-atom tuples.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

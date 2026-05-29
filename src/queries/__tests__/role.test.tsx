@@ -853,8 +853,13 @@ describe('error messages', () => {
   test('gives a descriptive error message when querying with a role, a name and several accessibility state', async () => {
     await render(<View />);
 
-    expect(() => screen.getByRole('button', { name: 'Save', disabled: true, selected: true }))
-      .toThrowErrorMatchingInlineSnapshot(`
+    expect(() =>
+      screen.getByRole('button', {
+        name: 'Save',
+        disabled: true,
+        selected: true,
+      }),
+    ).toThrowErrorMatchingInlineSnapshot(`
       "Unable to find an element with role: button, name: Save, disabled state: true, selected state: true
 
       <View />"

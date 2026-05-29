@@ -12,11 +12,10 @@
  * - Encourages testing behavior rather than implementation details
  */
 
-import * as React from 'react';
-import { Text, View } from 'react-native';
-
 // Import the essential testing utilities from React Native Testing Library
 import { render, screen } from '@testing-library/react-native';
+import * as React from 'react';
+import { Text, View } from 'react-native';
 // - render: Creates a virtual representation of your component for testing
 // - screen: Provides convenient methods to query rendered elements
 

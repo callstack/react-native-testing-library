@@ -78,7 +78,7 @@ This API requires RNTL v13.3.0 or later.
 ```tsx
 async function renderAsync(
   component: React.Element<any>,
-  options?: RenderAsyncOptions
+  options?: RenderAsyncOptions,
 ): Promise<RenderAsyncResult>;
 ```
 

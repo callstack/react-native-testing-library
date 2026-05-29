@@ -121,7 +121,10 @@ You can also transform prop values so that they are more readable (e.g., flatten
 import { StyleSheet } from 'react-native';
 
 screen.debug({
-  mapProps: ({ style, ...props }) => ({ style: StyleSheet.flatten(style), ...props }),
+  mapProps: ({ style, ...props }) => ({
+    style: StyleSheet.flatten(style),
+    ...props,
+  }),
 });
 ```
 

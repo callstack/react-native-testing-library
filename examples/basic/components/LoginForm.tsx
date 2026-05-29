@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, TextInput, Pressable, ActivityIndicator } from 'react-native';
+
 import { theme } from '../theme';
 
 type Props = {

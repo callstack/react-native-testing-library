@@ -10,7 +10,11 @@ import {
 test('buildTextChangeEvent returns event with text', () => {
   const event = buildTextChangeEvent('Hello');
 
-  expect(event.nativeEvent).toEqual({ text: 'Hello', target: 0, eventCount: 0 });
+  expect(event.nativeEvent).toEqual({
+    text: 'Hello',
+    target: 0,
+    eventCount: 0,
+  });
 });
 
 test('buildKeyPressEvent returns event with key', () => {

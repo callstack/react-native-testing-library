@@ -7,7 +7,7 @@
 - Run tests in CI mode: `yarn test:ci`
 - Type check: `yarn typecheck`
 - Lint source files: `yarn lint`
-- Check formatting: `yarn prettier`
+- Check formatting: `yarn format`
 - Validate the main package: `yarn validate`
 - Build the package: `yarn build`
 

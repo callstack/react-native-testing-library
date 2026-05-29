@@ -1,6 +1,6 @@
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -160,7 +160,10 @@ const pages = [
 ];
 
 for (const generatedPath of generatedPaths) {
-  fs.rmSync(path.join(generatedRoot, generatedPath), { recursive: true, force: true });
+  fs.rmSync(path.join(generatedRoot, generatedPath), {
+    recursive: true,
+    force: true,
+  });
 }
 
 fs.mkdirSync(generatedRoot, { recursive: true });
@@ -185,8 +188,11 @@ fs.writeFileSync(path.join(generatedRoot, 'README.md'), buildReadme(writtenPages
 
 execFileSync(
   'yarn',
-  ['prettier', '--write', 'docs/README.md', 'docs/api', 'docs/guides', 'docs/cookbook'],
-  { cwd: repoRoot, stdio: 'inherit' },
+  ['oxfmt', '--write', 'docs/README.md', 'docs/api', 'docs/guides', 'docs/cookbook'],
+  {
+    cwd: repoRoot,
+    stdio: 'inherit',
+  },
 );
 
 console.log(`Generated package docs from website/docs/${docsVersion}`);

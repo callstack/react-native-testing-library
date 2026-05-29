@@ -14,9 +14,9 @@
  * - Testing error states triggered by events
  */
 
+import { render, screen, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
 import { Text, View, Pressable, TextInput } from 'react-native';
-import { render, screen, userEvent } from '@testing-library/react-native';
 
 /*
  * Example 1: Basic Counter Component with Press Events

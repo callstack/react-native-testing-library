@@ -2,10 +2,10 @@ import * as React from 'react';
 import type { ScrollViewProps } from 'react-native';
 import { ScrollView, View } from 'react-native';
 
+import { userEvent } from '../..';
 import { fireEvent, render, screen } from '../../..';
 import type { EventEntry } from '../../../test-utils/events';
 import { createEventLogger } from '../../../test-utils/events';
-import { userEvent } from '../..';
 
 function mapEventsToShortForm(events: EventEntry[]) {
   return events.map((e) => [

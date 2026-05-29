@@ -247,7 +247,7 @@ await fireEvent.press(screen.getByText('Press me'), {
 expect(onPress).toHaveBeenCalledWith(
   expect.objectContaining({
     nativeEvent: expect.objectContaining({ pageX: 20, pageY: 30 }),
-  })
+  }),
 );
 ```
 

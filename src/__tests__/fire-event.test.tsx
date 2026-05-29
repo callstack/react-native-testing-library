@@ -262,7 +262,9 @@ describe('fireEvent.scroll', () => {
       </ScrollView>,
     );
     const scrollView = screen.getByTestId('scroll');
-    const customEventData = { nativeEvent: { contentOffset: { x: 50, y: 200 } } };
+    const customEventData = {
+      nativeEvent: { contentOffset: { x: 50, y: 200 } },
+    };
     await fireEvent.scroll(scrollView, customEventData);
     expect(onScroll.mock.calls[0][0]).toMatchInlineSnapshot(`
       {
@@ -315,7 +317,10 @@ describe('fireEvent.scroll', () => {
     const scrollView = screen.getByTestId('scroll');
     await fireEvent.scroll(scrollView, verticalScrollEvent);
     expect(onScroll.mock.calls[0][0]).toMatchObject(verticalScrollEvent);
-    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({ x: 0, y: 200 });
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
+      x: 0,
+      y: 200,
+    });
   });
 
   test.each([
@@ -330,7 +335,10 @@ describe('fireEvent.scroll', () => {
     const scrollView = screen.getByTestId('scroll');
     await fireEvent(scrollView, eventName, verticalScrollEvent);
     expect(handler).toHaveBeenCalledWith(verticalScrollEvent);
-    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({ x: 0, y: 200 });
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
+      x: 0,
+      y: 200,
+    });
   });
 
   test('without contentOffset scrolls to (0, 0)', async () => {
@@ -345,7 +353,10 @@ describe('fireEvent.scroll', () => {
     expect(onScroll.mock.calls[0][0]).toMatchObject({
       nativeEvent: { contentOffset: { x: 0, y: 0 } },
     });
-    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({ x: 0, y: 0 });
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
+      x: 0,
+      y: 0,
+    });
   });
 
   test('with non-finite contentOffset values uses 0', async () => {
@@ -360,7 +371,10 @@ describe('fireEvent.scroll', () => {
       nativeEvent: { contentOffset: { y: Infinity } },
     });
     expect(onScroll).toHaveBeenCalled();
-    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({ x: 0, y: 0 });
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
+      x: 0,
+      y: 0,
+    });
   });
 
   test('with horizontal scroll updates native state', async () => {
@@ -373,7 +387,10 @@ describe('fireEvent.scroll', () => {
     const scrollView = screen.getByTestId('scroll');
     await fireEvent.scroll(scrollView, horizontalScrollEvent);
     expect(onScroll.mock.calls[0][0]).toMatchObject(horizontalScrollEvent);
-    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({ x: 50, y: 0 });
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
+      x: 50,
+      y: 0,
+    });
   });
 
   test('without contentOffset via fireEvent() does not update native state', async () => {
@@ -401,7 +418,10 @@ describe('fireEvent.scroll', () => {
       nativeEvent: { contentOffset: { x: Infinity } },
     });
     expect(onScroll).toHaveBeenCalled();
-    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({ x: 0, y: 0 });
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
+      x: 0,
+      y: 0,
+    });
   });
 });
 
@@ -689,8 +709,12 @@ describe('non-editable TextInput', () => {
     await fireEvent(subject, 'focus');
     await fireEvent(subject, 'onFocus');
     await fireEvent.changeText(subject, 'Text');
-    await fireEvent(subject, 'submitEditing', { nativeEvent: { text: 'Text' } });
-    await fireEvent(subject, 'onSubmitEditing', { nativeEvent: { text: 'Text' } });
+    await fireEvent(subject, 'submitEditing', {
+      nativeEvent: { text: 'Text' },
+    });
+    await fireEvent(subject, 'onSubmitEditing', {
+      nativeEvent: { text: 'Text' },
+    });
     await fireEvent(subject, 'layout', layoutEvent);
     await fireEvent(subject, 'onLayout', layoutEvent);
 

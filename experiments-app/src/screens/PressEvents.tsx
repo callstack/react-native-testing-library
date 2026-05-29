@@ -8,6 +8,7 @@ import {
   Pressable,
   TouchableOpacity,
 } from 'react-native';
+
 import { nativeEventLogger, logEvent } from '../utils/helpers';
 
 export function PressEvents() {

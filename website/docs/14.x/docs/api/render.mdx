@@ -5,7 +5,7 @@
 ```ts
 async function render<T>(
   element: React.ReactElement<T>,
-  options?: RenderOptions
+  options?: RenderOptions,
 ): Promise<RenderResult>;
 ```
 

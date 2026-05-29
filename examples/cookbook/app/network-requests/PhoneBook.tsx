@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Text } from 'react-native';
-import { User } from './types';
-import ContactsList from './components/ContactsList';
-import FavoritesList from './components/FavoritesList';
+
 import getAllContacts from './api/getAllContacts';
 import getAllFavorites from './api/getAllFavorites';
+import ContactsList from './components/ContactsList';
+import FavoritesList from './components/FavoritesList';
+import { User } from './types';
 
 export default () => {
   const [usersData, setUsersData] = useState<User[]>([]);

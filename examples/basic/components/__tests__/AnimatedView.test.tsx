@@ -1,6 +1,7 @@
+import { act, render, screen } from '@testing-library/react-native';
 import * as React from 'react';
 import { Text } from 'react-native';
-import { act, render, screen } from '@testing-library/react-native';
+
 import { AnimatedView } from '../AnimatedView';
 
 describe('AnimatedView', () => {

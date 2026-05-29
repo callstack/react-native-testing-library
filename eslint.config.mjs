@@ -1,8 +1,7 @@
-import tseslint from 'typescript-eslint';
 import callstackConfig from '@callstack/eslint-config/react-native.flat.js';
 import { fixupPluginRules } from '@eslint/compat';
 import pluginJest from 'eslint-plugin-jest';
-import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import tseslint from 'typescript-eslint';
 
 const additionalTestBlockFunctions = ['testGateReact19_2'];
 
@@ -27,22 +26,10 @@ export default [
   ...patchedCallstackConfig,
   ...tseslint.configs.strict,
   {
-    plugins: {
-      'simple-import-sort': simpleImportSort,
-    },
-    rules: {
-      'simple-import-sort/imports': [
-        'error',
-        {
-          groups: [['^\\u0000', '^react', '^@?\\w', '^'], ['^\\.']],
-        },
-      ],
-    },
-  },
-  {
     rules: {
       'no-console': 'error',
       'import/order': 'off',
+      'prettier/prettier': 'off',
       '@typescript-eslint/consistent-type-imports': 'error',
     },
   },

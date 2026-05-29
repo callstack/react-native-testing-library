@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { render, screen } from '@testing-library/react-native';
+import * as React from 'react';
 import { html, css } from 'react-strict-dom';
 
 test('showcase: toBeOnTheScreen', async () => {
@@ -22,7 +22,9 @@ test('showcase: toHaveTextContent', async () => {
 
   expect(screen.getByTestId('text')).toHaveTextContent('Hello World');
   expect(screen.getByTestId('text')).toHaveTextContent(/hello/i);
-  expect(screen.getByTestId('text')).toHaveTextContent('Hello', { exact: false });
+  expect(screen.getByTestId('text')).toHaveTextContent('Hello', {
+    exact: false,
+  });
 });
 
 test('showcase: toContainElement', async () => {
@@ -78,7 +80,11 @@ test('showcase: toHaveAccessibilityValue', async () => {
 
   expect(screen.getByTestId('view')).toHaveAccessibilityValue({ text: '33%' });
   expect(screen.getByTestId('view')).toHaveAccessibilityValue({ now: 33 });
-  expect(screen.getByTestId('view')).toHaveAccessibilityValue({ now: 33, min: 0, max: 100 });
+  expect(screen.getByTestId('view')).toHaveAccessibilityValue({
+    now: 33,
+    min: 0,
+    max: 100,
+  });
 });
 
 test('showcase: toBeEnabled/toBeDisabled', async () => {

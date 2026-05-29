@@ -9,4 +9,4 @@
 
 ## Imports
 
-- Keep imports sorted with `eslint-plugin-simple-import-sort`.
+- Keep imports sorted with `oxfmt`.

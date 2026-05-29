@@ -97,7 +97,9 @@ function findEventHandlerFromFiber(fiber: Fiber | null, eventName: string): Even
     return null;
   }
 
-  const handler = getEventHandlerFromProps(fiber.memoizedProps, eventName, { loose: true });
+  const handler = getEventHandlerFromProps(fiber.memoizedProps, eventName, {
+    loose: true,
+  });
   if (handler) {
     return handler;
   }

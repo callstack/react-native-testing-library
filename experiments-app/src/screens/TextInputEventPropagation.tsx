@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Pressable } from 'react-native';
+
 import { nativeEventLogger } from '../utils/helpers';
 
 export function TextInputEventPropagation() {

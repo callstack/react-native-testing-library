@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, Text, View, SectionList } from 'react-native';
+
 import { customEventLogger, nativeEventLogger } from '../utils/helpers';
 
 interface SectionData {
