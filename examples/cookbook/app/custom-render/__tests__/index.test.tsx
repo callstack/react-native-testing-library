@@ -1,5 +1,6 @@
-import * as React from 'react';
 import { screen } from '@testing-library/react-native';
+import * as React from 'react';
+
 import WelcomeScreen from '../WelcomeScreen';
 import { renderWithProviders } from './test-utils';
 

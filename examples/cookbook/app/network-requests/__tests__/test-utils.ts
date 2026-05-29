@@ -1,6 +1,7 @@
-import { User } from '../types';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
+
+import { User } from '../types';
 
 // Define request handlers and response resolvers for random user API.
 // By default, we always return the happy path response.

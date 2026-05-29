@@ -465,8 +465,16 @@ Unmounts rendered trees and clears `screen`. Automatic after each test (if test 
 ```ts
 function renderHook<Result, Props>(
   hookFn: (props?: Props) => Result,
-  options?: { initialProps?: Props; wrapper?: React.ComponentType; concurrentRoot?: boolean },
-): { result: { current: Result }; rerender: (props: Props) => void; unmount: () => void };
+  options?: {
+    initialProps?: Props;
+    wrapper?: React.ComponentType;
+    concurrentRoot?: boolean;
+  },
+): {
+  result: { current: Result };
+  rerender: (props: Props) => void;
+  unmount: () => void;
+};
 ```
 
 ### renderHookAsync (v13.3+)
@@ -474,7 +482,11 @@ function renderHook<Result, Props>(
 ```ts
 async function renderHookAsync<Result, Props>(
   hookFn: (props?: Props) => Result,
-  options?: { initialProps?: Props; wrapper?: React.ComponentType; concurrentRoot?: boolean },
+  options?: {
+    initialProps?: Props;
+    wrapper?: React.ComponentType;
+    concurrentRoot?: boolean;
+  },
 ): Promise<{
   result: { current: Result };
   rerenderAsync: (props: Props) => Promise<void>;

@@ -15,10 +15,7 @@ export function toBeOnTheScreen(this: jest.MatcherContext, instance: TestInstanc
   const pass = instance === null ? false : screen.container === getContainerInstance(instance);
 
   const errorFound = () => {
-    return `expected instance tree not to contain instance, but found\n${redent(
-      formatElement(instance),
-      2,
-    )}`;
+    return `expected instance tree not to contain instance, but found\n${redent(formatElement(instance), 2)}`;
   };
 
   const errorNotFound = () => {

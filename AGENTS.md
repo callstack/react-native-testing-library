@@ -8,7 +8,7 @@
   - `yarn test:ci`
   - `yarn typecheck`
   - `yarn lint`
-  - `yarn prettier`
+  - `yarn format:check`
   - `yarn build`
   - `yarn validate`
 - Task-specific guidance:

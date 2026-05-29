@@ -1,8 +1,10 @@
 import 'react-native-get-random-values';
+
+import { useAtom } from 'jotai';
 import { nanoid } from 'nanoid';
 import * as React from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useAtom } from 'jotai';
+
 import { newTaskTitleAtom, tasksAtom } from './state';
 
 export function TaskList() {

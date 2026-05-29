@@ -1,6 +1,6 @@
-import * as path from 'path';
-import { defineConfig } from '@rspress/core';
 import { pluginCallstackTheme } from '@callstack/rspress-theme/plugin';
+import { defineConfig } from '@rspress/core';
+import * as path from 'path';
 import { pluginOpenGraph } from 'rsbuild-plugin-open-graph';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -31,7 +31,10 @@ const sidebar12x = {
         {
           text: 'Miscellaneous',
           items: [
-            { text: 'Accessibility', link: '/12.x/docs/api/misc/accessibility' },
+            {
+              text: 'Accessibility',
+              link: '/12.x/docs/api/misc/accessibility',
+            },
             { text: 'Async utilities', link: '/12.x/docs/api/misc/async' },
             { text: 'Config', link: '/12.x/docs/api/misc/config' },
             { text: 'Other', link: '/12.x/docs/api/misc/other' },
@@ -46,14 +49,23 @@ const sidebar12x = {
         { text: 'How to Query', link: '/12.x/docs/guides/how-to-query' },
         { text: 'Troubleshooting', link: '/12.x/docs/guides/troubleshooting' },
         { text: 'FAQ', link: '/12.x/docs/guides/faq' },
-        { text: 'Community Resources', link: '/12.x/docs/guides/community-resources' },
+        {
+          text: 'Community Resources',
+          link: '/12.x/docs/guides/community-resources',
+        },
       ],
     },
     {
       text: 'Advanced Guides',
       items: [
-        { text: 'Testing Environment', link: '/12.x/docs/advanced/testing-env' },
-        { text: 'Understanding Act', link: '/12.x/docs/advanced/understanding-act' },
+        {
+          text: 'Testing Environment',
+          link: '/12.x/docs/advanced/testing-env',
+        },
+        {
+          text: 'Understanding Act',
+          link: '/12.x/docs/advanced/understanding-act',
+        },
       ],
     },
     {
@@ -86,7 +98,12 @@ const sidebar12x = {
     },
     {
       text: 'Advanced Recipes',
-      items: [{ text: 'Network Requests', link: '/12.x/cookbook/advanced/network-requests' }],
+      items: [
+        {
+          text: 'Network Requests',
+          link: '/12.x/cookbook/advanced/network-requests',
+        },
+      ],
     },
     {
       text: 'State Management Recipes',
@@ -122,7 +139,10 @@ const sidebar14x = {
         {
           text: 'Miscellaneous',
           items: [
-            { text: 'Accessibility', link: '/14.x/docs/api/misc/accessibility' },
+            {
+              text: 'Accessibility',
+              link: '/14.x/docs/api/misc/accessibility',
+            },
             { text: 'Async utilities', link: '/14.x/docs/api/misc/async' },
             { text: 'Config', link: '/14.x/docs/api/misc/config' },
             { text: 'Other', link: '/14.x/docs/api/misc/other' },
@@ -139,15 +159,27 @@ const sidebar14x = {
         { text: 'LLM Guidelines', link: '/14.x/docs/guides/llm-guidelines' },
         { text: 'Troubleshooting', link: '/14.x/docs/guides/troubleshooting' },
         { text: 'FAQ', link: '/14.x/docs/guides/faq' },
-        { text: 'Community Resources', link: '/14.x/docs/guides/community-resources' },
+        {
+          text: 'Community Resources',
+          link: '/14.x/docs/guides/community-resources',
+        },
       ],
     },
     {
       text: 'Advanced Guides',
       items: [
-        { text: 'Testing Environment', link: '/14.x/docs/advanced/testing-env' },
-        { text: 'Third-party Integration', link: '/14.x/docs/advanced/third-party-integration' },
-        { text: 'Understanding Act', link: '/14.x/docs/advanced/understanding-act' },
+        {
+          text: 'Testing Environment',
+          link: '/14.x/docs/advanced/testing-env',
+        },
+        {
+          text: 'Third-party Integration',
+          link: '/14.x/docs/advanced/third-party-integration',
+        },
+        {
+          text: 'Understanding Act',
+          link: '/14.x/docs/advanced/understanding-act',
+        },
       ],
     },
   ],
@@ -162,7 +194,12 @@ const sidebar14x = {
     },
     {
       text: 'Advanced Recipes',
-      items: [{ text: 'Network Requests', link: '/14.x/cookbook/advanced/network-requests' }],
+      items: [
+        {
+          text: 'Network Requests',
+          link: '/14.x/cookbook/advanced/network-requests',
+        },
+      ],
     },
     {
       text: 'State Management Recipes',
@@ -216,14 +253,20 @@ const sidebarDefault = {
         { text: 'React 19', link: '/docs/guides/react-19' },
         { text: 'Troubleshooting', link: '/docs/guides/troubleshooting' },
         { text: 'FAQ', link: '/docs/guides/faq' },
-        { text: 'Community Resources', link: '/docs/guides/community-resources' },
+        {
+          text: 'Community Resources',
+          link: '/docs/guides/community-resources',
+        },
       ],
     },
     {
       text: 'Advanced Guides',
       items: [
         { text: 'Testing Environment', link: '/docs/advanced/testing-env' },
-        { text: 'Third-party Integration', link: '/docs/advanced/third-party-integration' },
+        {
+          text: 'Third-party Integration',
+          link: '/docs/advanced/third-party-integration',
+        },
         { text: 'Understanding Act', link: '/docs/advanced/understanding-act' },
       ],
     },
@@ -258,7 +301,12 @@ const sidebarDefault = {
     },
     {
       text: 'Advanced Recipes',
-      items: [{ text: 'Network Requests', link: '/cookbook/advanced/network-requests' }],
+      items: [
+        {
+          text: 'Network Requests',
+          link: '/cookbook/advanced/network-requests',
+        },
+      ],
     },
     {
       text: 'State Management Recipes',

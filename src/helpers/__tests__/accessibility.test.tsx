@@ -293,7 +293,9 @@ describe('isHiddenFromAccessibility', () => {
         <View testID="subject" />
       </View>,
     );
-    const element = screen.getByTestId('subject', { includeHiddenElements: true });
+    const element = screen.getByTestId('subject', {
+      includeHiddenElements: true,
+    });
     const cache = new WeakMap();
 
     // First call populates the cache

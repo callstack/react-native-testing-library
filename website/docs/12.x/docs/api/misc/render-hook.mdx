@@ -3,7 +3,7 @@
 ```ts
 function renderHook<Result, Props>(
   callback: (props?: Props) => Result,
-  options?: RenderHookOptions<Props>
+  options?: RenderHookOptions<Props>,
 ): RenderHookResult<Result, Props>;
 ```
 

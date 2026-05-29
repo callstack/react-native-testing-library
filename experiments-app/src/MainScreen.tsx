@@ -1,6 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, SafeAreaView, Text, FlatList, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+
 import { Experiment, experiments } from './experiments';
 
 export function MainScreen() {

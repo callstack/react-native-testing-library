@@ -1,5 +1,10 @@
 [
   "v12",
   "jest-matchers",
-  { "type": "dir", "name": "previous", "label": "Previous versions", "collapsed": true }
+  {
+    "type": "dir",
+    "name": "previous",
+    "label": "Previous versions",
+    "collapsed": true
+  }
 ]

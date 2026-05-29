@@ -13,7 +13,7 @@ function waitFor<T>(
     timeout?: number;
     interval?: number;
     onTimeout?: (error: Error) => Error;
-  }
+  },
 ): Promise<T>;
 ```
 
@@ -93,7 +93,7 @@ await waitFor(
   () => {
     expect(someFunction).toHaveBeenCalledWith();
   },
-  { timeout: 10000 }
+  { timeout: 10000 },
 );
 ```
 
@@ -116,7 +116,7 @@ function waitForElementToBeRemoved<T>(
     timeout?: number;
     interval?: number;
     onTimeout?: (error: Error) => Error;
-  }
+  },
 ): Promise<T>;
 ```
 

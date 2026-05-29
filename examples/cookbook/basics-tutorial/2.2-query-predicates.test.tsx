@@ -18,9 +18,9 @@
  * - When to use testID as a last resort
  */
 
+import { render, screen } from '@testing-library/react-native';
 import * as React from 'react';
 import { Pressable, Switch, Text, TextInput, View } from 'react-native';
-import { render, screen } from '@testing-library/react-native';
 
 /**
  * Test 1: Query by semantic role with predicates

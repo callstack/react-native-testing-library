@@ -1,6 +1,7 @@
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
-import React, { useCallback } from 'react';
 import type { ListRenderItem } from '@react-native/virtualized-lists';
+import React, { useCallback } from 'react';
+import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+
 import { User } from '../types';
 
 export default ({ users }: { users: User[] }) => {

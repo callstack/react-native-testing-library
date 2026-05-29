@@ -1,6 +1,6 @@
+import { diff, matcherHint } from 'jest-matcher-utils';
 import type { ImageStyle, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { StyleSheet } from 'react-native';
-import { diff, matcherHint } from 'jest-matcher-utils';
 import type { TestInstance } from 'test-renderer';
 
 import { checkHostElement, formatMessage } from './utils';

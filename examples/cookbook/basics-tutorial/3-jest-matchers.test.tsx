@@ -14,8 +14,8 @@
  * - expect(element).not.toBeOnTheScreen() - asserts element is NOT rendered
  */
 
-import * as React from 'react';
 import { render, screen } from '@testing-library/react-native';
+import * as React from 'react';
 import { Text, TextInput, View } from 'react-native';
 
 /**
@@ -70,7 +70,9 @@ test('showcase: toHaveTextContent', async () => {
   expect(screen.getByTestId('text')).toHaveTextContent(/hello/i);
 
   // Partial text match - useful when you only care about part of the text
-  expect(screen.getByTestId('text')).toHaveTextContent('Hello', { exact: false });
+  expect(screen.getByTestId('text')).toHaveTextContent('Hello', {
+    exact: false,
+  });
 });
 
 /**
@@ -186,7 +188,11 @@ test('showcase: toHaveAccessibilityValue', async () => {
   expect(screen.getByTestId('view')).toHaveAccessibilityValue({ now: 33 });
 
   // Check multiple accessibility values at once
-  expect(screen.getByTestId('view')).toHaveAccessibilityValue({ now: 33, min: 0, max: 100 });
+  expect(screen.getByTestId('view')).toHaveAccessibilityValue({
+    now: 33,
+    min: 0,
+    max: 100,
+  });
 });
 
 /**
@@ -425,7 +431,9 @@ test('showcase: toHaveStyle', async () => {
   expect(screen.getByTestId('view')).toHaveStyle({ backgroundColor: 'red' });
 
   // Test incorrect style property
-  expect(screen.getByTestId('view')).not.toHaveStyle({ backgroundColor: 'blue' });
+  expect(screen.getByTestId('view')).not.toHaveStyle({
+    backgroundColor: 'blue',
+  });
 });
 
 /**

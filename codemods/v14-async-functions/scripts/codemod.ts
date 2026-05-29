@@ -1,6 +1,6 @@
+import type { Edit, SgNode } from '@codemod.com/jssg-types/main';
 import type { Transform } from 'codemod:ast-grep';
 import type TSX from 'codemod:ast-grep/langs/tsx';
-import type { Edit, SgNode } from '@codemod.com/jssg-types/main';
 
 const FUNCTIONS_TO_MAKE_ASYNC = new Set(['render', 'renderHook', 'act', 'fireEvent']);
 const FIRE_EVENT_METHODS_TO_MAKE_ASYNC = new Set(['press', 'changeText', 'scroll']);
@@ -241,10 +241,16 @@ function extractImportedFunctionNames(
   edits: Edit[],
 ): {
   importedFunctions: Set<string>;
-  specifiersToRemove: Array<{ specifier: SgNode<TSX>; importStmt: SgNode<TSX> }>;
+  specifiersToRemove: Array<{
+    specifier: SgNode<TSX>;
+    importStmt: SgNode<TSX>;
+  }>;
 } {
   const importedFunctions = new Set<string>();
-  const specifiersToRemove: Array<{ specifier: SgNode<TSX>; importStmt: SgNode<TSX> }> = [];
+  const specifiersToRemove: Array<{
+    specifier: SgNode<TSX>;
+    importStmt: SgNode<TSX>;
+  }> = [];
 
   for (const importStmt of rntlImports) {
     const importClause = importStmt.find({
@@ -332,7 +338,10 @@ function extractImportedFunctionNames(
  * @param edits - Array to collect edit operations
  */
 function removeDuplicateImportSpecifiers(
-  specifiersToRemove: Array<{ specifier: SgNode<TSX>; importStmt: SgNode<TSX> }>,
+  specifiersToRemove: Array<{
+    specifier: SgNode<TSX>;
+    importStmt: SgNode<TSX>;
+  }>,
   rootNode: SgNode<TSX>,
   edits: Edit[],
 ): void {
@@ -464,11 +473,17 @@ function findFireEventMethodCalls(
   for (const [asyncName, syncName] of ASYNC_FUNCTIONS_TO_RENAME.entries()) {
     if (syncName === 'fireEvent') {
       const wasImported = rntlImports.some((importStmt) => {
-        const importClause = importStmt.find({ rule: { kind: 'import_clause' } });
+        const importClause = importStmt.find({
+          rule: { kind: 'import_clause' },
+        });
         if (!importClause) return false;
-        const namedImports = importClause.find({ rule: { kind: 'named_imports' } });
+        const namedImports = importClause.find({
+          rule: { kind: 'named_imports' },
+        });
         if (!namedImports) return false;
-        const specifiers = namedImports.findAll({ rule: { kind: 'import_specifier' } });
+        const specifiers = namedImports.findAll({
+          rule: { kind: 'import_specifier' },
+        });
         return specifiers.some((spec) => {
           const identifier = spec.find({ rule: { kind: 'identifier' } });
           return identifier && identifier.text() === asyncName;

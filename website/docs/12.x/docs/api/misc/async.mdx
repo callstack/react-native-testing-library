@@ -9,7 +9,7 @@ The `findBy*` queries are used to find elements that are not instantly available
 ```tsx
 function waitFor<T>(
   expectation: () => T,
-  options?: { timeout: number; interval: number }
+  options?: { timeout: number; interval: number },
 ): Promise<T>;
 ```
 
@@ -109,7 +109,7 @@ If you receive warnings related to `act()` function consult our [Understanding A
 ```ts
 function waitForElementToBeRemoved<T>(
   expectation: () => T,
-  options?: { timeout: number; interval: number }
+  options?: { timeout: number; interval: number },
 ): Promise<T>;
 ```
 

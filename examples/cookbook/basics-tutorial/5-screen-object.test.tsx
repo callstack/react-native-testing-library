@@ -13,9 +13,9 @@
  * - Consistent API across all tests
  */
 
+import { render, screen } from '@testing-library/react-native';
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { render, screen } from '@testing-library/react-native';
 
 // Simple component for demonstration
 function Greeting({ name = 'World' }) {

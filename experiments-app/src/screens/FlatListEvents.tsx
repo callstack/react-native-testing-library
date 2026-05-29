@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
+
 import { customEventLogger, nativeEventLogger } from '../utils/helpers';
 
 interface ItemData {

@@ -32,10 +32,10 @@ Our pre-commit hooks verify that your commit message matches this format when co
 
 ### Linting and tests
 
-We use TypeScript for type checking, `eslint` with `prettier` for linting and formatting the code, and `jest` for testing. Our pre-commit hooks verify that the linter and tests pass when committing. You can also run the following commands manually:
+We use TypeScript for type checking, `eslint` and `oxfmt` for linting and formatting the code, and `jest` for testing. Our pre-commit hooks verify that the linter and tests pass when committing. You can also run the following commands manually:
 
 - `yarn typecheck`: run TypeScript compiler on all files.
-- `yarn lint`: run eslint and prettier.
+- `yarn lint`: run eslint.
 - `yarn test`: run tests.
 
 ### Sending a pull request

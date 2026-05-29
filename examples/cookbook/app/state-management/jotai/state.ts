@@ -1,4 +1,5 @@
 import { atom, createStore } from 'jotai';
+
 import { Task } from './types';
 
 export const tasksAtom = atom<Task[]>([]);

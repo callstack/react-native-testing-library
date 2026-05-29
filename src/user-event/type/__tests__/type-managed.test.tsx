@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { TextInput } from 'react-native';
 
+import { userEvent } from '../..';
 import { render, screen } from '../../..';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
-import { userEvent } from '../..';
 
 beforeEach(() => {
   jest.useRealTimers();

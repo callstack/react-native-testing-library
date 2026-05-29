@@ -124,7 +124,10 @@ You can also transform prop values so that they are more readable (e.g., flatten
 import { StyleSheet } from 'react-native';
 
 screen.debug({
-  mapProps: ({ style, ...props }) => ({ style: StyleSheet.flatten(style), ...props }),
+  mapProps: ({ style, ...props }) => ({
+    style: StyleSheet.flatten(style),
+    ...props,
+  }),
 });
 ```
 
@@ -186,7 +189,7 @@ test('example', async () => {
   await render(
     <View testID="root-view">
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
   // root is the View element you rendered
   expect(screen.root.props.testID).toBe('root-view');

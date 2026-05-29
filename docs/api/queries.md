@@ -400,7 +400,9 @@ expect(
 
 // Include hidden elements
 expect(
-  screen.getByText('Hidden from accessibility', { includeHiddenElements: true }),
+  screen.getByText('Hidden from accessibility', {
+    includeHiddenElements: true,
+  }),
 ).toBeOnTheScreen();
 ```
 

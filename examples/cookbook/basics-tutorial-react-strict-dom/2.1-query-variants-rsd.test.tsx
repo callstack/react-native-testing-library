@@ -1,6 +1,6 @@
+import { render, screen } from '@testing-library/react-native';
 import * as React from 'react';
 import { html } from 'react-strict-dom';
-import { render, screen } from '@testing-library/react-native';
 
 test('showcase query variants', async () => {
   await render(

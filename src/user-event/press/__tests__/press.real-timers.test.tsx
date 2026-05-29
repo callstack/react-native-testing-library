@@ -9,9 +9,9 @@ import {
   View,
 } from 'react-native';
 
+import { userEvent } from '../..';
 import { render, screen } from '../../..';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
-import { userEvent } from '../..';
 
 describe('userEvent.press with real timers', () => {
   beforeEach(() => {

@@ -57,7 +57,10 @@ export async function scrollTo(
     options.contentSize?.height ?? 0,
   );
 
-  const initialOffset = nativeState.contentOffsetForInstance.get(instance) ?? { x: 0, y: 0 };
+  const initialOffset = nativeState.contentOffsetForInstance.get(instance) ?? {
+    x: 0,
+    y: 0,
+  };
   const dragSteps = createScrollSteps(
     { y: options.y, x: options.x },
     initialOffset,

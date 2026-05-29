@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
 import { matcherHint } from 'jest-matcher-utils';
+import { StyleSheet } from 'react-native';
 import redent from 'redent';
 import type { TestInstance } from 'test-renderer';
 

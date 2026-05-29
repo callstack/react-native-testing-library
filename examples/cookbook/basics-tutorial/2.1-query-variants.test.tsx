@@ -10,9 +10,9 @@
  * that returns arrays of elements instead of single elements.
  */
 
+import { render, screen } from '@testing-library/react-native';
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { render, screen } from '@testing-library/react-native';
 
 /**
  * TEST 1: Basic Query Variants

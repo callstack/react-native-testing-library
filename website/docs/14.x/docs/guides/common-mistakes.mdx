@@ -34,7 +34,7 @@ test('finds input by label', async () => {
   await render(
     <View>
       <TextInput aria-label="Username" placeholder="Enter username" value="" />
-    </View>
+    </View>,
   );
 
   // ✅ Good - uses accessible label
@@ -65,7 +65,7 @@ test('uses role queries', async () => {
         <Text>Submit</Text>
       </Pressable>
       <TextInput role="searchbox" aria-label="Search" placeholder="Search..." />
-    </View>
+    </View>,
   );
 
   // ✅ Good - uses role query
@@ -104,7 +104,7 @@ test('button is disabled', async () => {
   await render(
     <Pressable role="button" aria-disabled>
       <Text>Submit</Text>
-    </Pressable>
+    </Pressable>,
   );
 
   const button = screen.getByRole('button', { name: 'Submit' });
@@ -139,7 +139,7 @@ test('checks non-existence', async () => {
   await render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   // ✅ Good - uses queryBy for non-existence check
@@ -243,7 +243,7 @@ test('finds element incorrectly', async () => {
   const { container } = await render(
     <View>
       <Text testID="message">Hello</Text>
-    </View>
+    </View>,
   );
 
   // ❌ Bad - using container.queryAll directly
@@ -293,7 +293,7 @@ test('renders component', async () => {
   const { getByText } = await render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   expect(getByText('Hello')).toBeOnTheScreen();
@@ -310,7 +310,7 @@ test('renders component', async () => {
   await render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   expect(screen.getByText('Hello')).toBeOnTheScreen();
@@ -422,7 +422,7 @@ test('finds text correctly', async () => {
   await render(
     <View>
       <Text>Hello World</Text>
-    </View>
+    </View>,
   );
 
   // ✅ Good - queries by visible text
@@ -489,7 +489,7 @@ test('uses getBy as assertion', async () => {
   await render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   // ✅ Good - getBy throws if not found, so it's an assertion

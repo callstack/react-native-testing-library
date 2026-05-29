@@ -30,5 +30,8 @@ test('buildScrollEvent uses provided options', () => {
   );
 
   expect(event.nativeEvent.contentSize).toEqual({ height: 1000, width: 400 });
-  expect(event.nativeEvent.layoutMeasurement).toEqual({ height: 800, width: 400 });
+  expect(event.nativeEvent.layoutMeasurement).toEqual({
+    height: 800,
+    width: 400,
+  });
 });

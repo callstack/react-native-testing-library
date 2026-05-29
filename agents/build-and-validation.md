@@ -7,14 +7,14 @@
 - Run tests in CI mode: `yarn test:ci`
 - Type check: `yarn typecheck`
 - Lint source files: `yarn lint`
-- Check formatting: `yarn prettier`
+- Check formatting: `yarn format:check`
 - Validate the main package: `yarn validate`
 - Build the package: `yarn build`
 
 ## Command notes
 
 - `yarn lint` runs ESLint on `src`.
-- `yarn validate` runs typecheck, tests, lint, and Prettier checks for the main package.
+- `yarn validate` runs typecheck, tests, lint, and oxfmt checks for the main package.
 - `yarn build` cleans `dist/`, transpiles source with Babel, and emits TypeScript declarations.
 
 ## Repo layout

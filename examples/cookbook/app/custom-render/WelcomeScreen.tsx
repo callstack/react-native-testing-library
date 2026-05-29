@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useUser } from './providers/user-provider';
+
 import { useTheme } from './providers/theme-provider';
+import { useUser } from './providers/user-provider';
 
 export default function WelcomeScreen() {
   const theme = useTheme();

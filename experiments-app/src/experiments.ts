@@ -1,10 +1,10 @@
 import { AccessibilityScreen } from './screens/Accessibility';
+import { FlatListEvents } from './screens/FlatListEvents';
 import { PressEvents } from './screens/PressEvents';
+import { ScrollViewEvents } from './screens/ScrollViewEvents';
+import { SectionListEvents } from './screens/SectionListEvents';
 import { TextInputEventPropagation } from './screens/TextInputEventPropagation';
 import { TextInputEvents } from './screens/TextInputEvents';
-import { ScrollViewEvents } from './screens/ScrollViewEvents';
-import { FlatListEvents } from './screens/FlatListEvents';
-import { SectionListEvents } from './screens/SectionListEvents';
 
 export type Experiment = (typeof experiments)[number];
 

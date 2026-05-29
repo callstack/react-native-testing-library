@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { UserProvider } from './providers/user-provider';
+
 import { ThemeProvider } from './providers/theme-provider';
+import { UserProvider } from './providers/user-provider';
 import WelcomeScreen from './WelcomeScreen';
 
 export default function Example() {

@@ -1,8 +1,9 @@
-import * as React from 'react';
 import { render, screen, userEvent } from '@testing-library/react-native';
+import * as React from 'react';
+
+import { addTask, getAllTasks, newTaskTitleAtom, store, tasksAtom } from '../state';
 import { TaskList } from '../TaskList';
 import { Task } from '../types';
-import { addTask, getAllTasks, newTaskTitleAtom, store, tasksAtom } from '../state';
 import { renderWithAtoms } from './test-utils';
 
 jest.useFakeTimers();
