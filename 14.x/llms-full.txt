@@ -424,7 +424,7 @@ test('User can sign in with correct credentials', async () => {
 
   // Follow-up assertions do not need to be async, as we already waited for sign in operation to complete
   expect(
-    screen.queryByRole('header', { name: 'Sign in to Hello World App' })
+    screen.queryByRole('header', { name: 'Sign in to Hello World App' }),
   ).not.toBeOnTheScreen();
   expect(screen.queryByLabelText('Username')).not.toBeOnTheScreen();
   expect(screen.queryByLabelText('Password')).not.toBeOnTheScreen();
@@ -463,7 +463,7 @@ Each query has a default `timeout` value of 1000 ms and a default `interval` of 
 const button = await screen.findByRole(
   'button',
   { name: 'Start' },
-  { timeout: 1000, interval: 50 }
+  { timeout: 1000, interval: 50 },
 );
 ```
 
@@ -483,7 +483,7 @@ function waitFor<T>(
   options?: {
     timeout: number;
     interval: number;
-  }
+  },
 ): Promise<T>;
 ```
 
@@ -507,7 +507,7 @@ function waitForElementToBeRemoved<T>(
   options?: {
     timeout: number;
     interval: number;
-  }
+  },
 ): Promise<T> {}
 ```
 
@@ -561,12 +561,12 @@ interface RenderWithProvidersProps {
 
 export async function renderWithProviders<T>(
   ui: React.ReactElement<T>,
-  options?: RenderWithProvidersProps
+  options?: RenderWithProvidersProps,
 ) {
   return await render(
     <UserProvider.Provider value={options?.user ?? null}>
       <ThemeProvider.Provider value={options?.theme ?? 'light'}>{ui}</ThemeProvider.Provider>
-    </UserProvider.Provider>
+    </UserProvider.Provider>,
   );
 }
 ```
@@ -781,10 +781,10 @@ export interface RenderWithAtomsOptions {
  */
 export async function renderWithAtoms<T>(
   component: React.ReactElement,
-  options: RenderWithAtomsOptions
+  options: RenderWithAtomsOptions,
 ) {
   return await render(
-    <HydrateAtomsWrapper initialValues={options.initialValues}>{component}</HydrateAtomsWrapper>
+    <HydrateAtomsWrapper initialValues={options.initialValues}>{component}</HydrateAtomsWrapper>,
   );
 }
 
@@ -1350,7 +1350,7 @@ test('fire changeText event', async () => {
   await render(
     // MyComponent renders TextInput which has a placeholder 'Enter details'
     // and with `onChangeText` bound to handleChangeText
-    <MyComponent handleChangeText={onEventMock} />
+    <MyComponent handleChangeText={onEventMock} />,
   );
 
   await fireEvent(screen.getByPlaceholderText('change'), 'onChangeText', 'ab');
@@ -1373,7 +1373,7 @@ const onBlurMock = jest.fn();
 await render(
   <View>
     <TextInput placeholder="my placeholder" onBlur={onBlurMock} />
-  </View>
+  </View>,
 );
 
 // you can omit the `on` prefix
@@ -1414,7 +1414,7 @@ await render(
     <TouchableOpacity onPress={onPressMock}>
       <Text>Press me</Text>
     </TouchableOpacity>
-  </View>
+  </View>,
 );
 
 await fireEvent.press(screen.getByText('Press me'), eventData);
@@ -1446,7 +1446,7 @@ const CHANGE_TEXT = 'content';
 await render(
   <View>
     <TextInput placeholder="Enter data" onChangeText={onChangeTextMock} />
-  </View>
+  </View>,
 );
 
 await fireEvent.changeText(screen.getByPlaceholderText('Enter data'), CHANGE_TEXT);
@@ -1485,7 +1485,7 @@ const eventData = {
 await render(
   <ScrollView testID="scroll-view" onScroll={onScrollMock}>
     <Text>Content</Text>
-  </ScrollView>
+  </ScrollView>,
 );
 
 await fireEvent.scroll(screen.getByTestId('scroll-view'), eventData);
@@ -2059,7 +2059,7 @@ function waitFor<T>(
     timeout?: number;
     interval?: number;
     onTimeout?: (error: Error) => Error;
-  }
+  },
 ): Promise<T>;
 ```
 
@@ -2139,7 +2139,7 @@ await waitFor(
   () => {
     expect(someFunction).toHaveBeenCalledWith();
   },
-  { timeout: 10000 }
+  { timeout: 10000 },
 );
 ```
 
@@ -2162,7 +2162,7 @@ function waitForElementToBeRemoved<T>(
     timeout?: number;
     interval?: number;
     onTimeout?: (error: Error) => Error;
-  }
+  },
 ): Promise<T>;
 ```
 
@@ -2370,7 +2370,7 @@ url: /react-native-testing-library/14.x/docs/api/misc/render-hook.md
 ```ts
 async function renderHook<Result, Props>(
   hookFn: (props: Props) => Result,
-  options?: RenderHookOptions<Props>
+  options?: RenderHookOptions<Props>,
 ): Promise<RenderHookResult<Result, Props>>;
 ```
 
@@ -2731,7 +2731,7 @@ import { render, screen } from '@testing-library/react-native';
 await render(
   <Pressable accessibilityRole="button" disabled>
     <Text>Hello</Text>
-  </Pressable>
+  </Pressable>,
 );
 const element = screen.getByRole('button');
 const element2 = screen.getByRole('button', { name: 'Hello' });
@@ -2949,12 +2949,14 @@ await render(<Text style={{ display: 'none' }}>Hidden from accessibility</Text>)
 expect(
   screen.queryByText('Hidden from accessibility', {
     includeHiddenElements: false,
-  })
+  }),
 ).not.toBeOnTheScreen();
 
 // Include hidden elements
 expect(
-  screen.getByText('Hidden from accessibility', { includeHiddenElements: true })
+  screen.getByText('Hidden from accessibility', {
+    includeHiddenElements: true,
+  }),
 ).toBeOnTheScreen();
 ```
 
@@ -3067,7 +3069,7 @@ url: /react-native-testing-library/14.x/docs/api/render.md
 ```ts
 async function render<T>(
   element: React.ReactElement<T>,
-  options?: RenderOptions
+  options?: RenderOptions,
 ): Promise<RenderResult>;
 ```
 
@@ -3248,7 +3250,10 @@ You can also transform prop values so that they are more readable (e.g., flatten
 import { StyleSheet } from 'react-native';
 
 screen.debug({
-  mapProps: ({ style, ...props }) => ({ style: StyleSheet.flatten(style), ...props }),
+  mapProps: ({ style, ...props }) => ({
+    style: StyleSheet.flatten(style),
+    ...props,
+  }),
 });
 ```
 
@@ -3310,7 +3315,7 @@ test('example', async () => {
   await render(
     <View testID="root-view">
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
   // root is the View element you rendered
   expect(screen.root.props.testID).toBe('root-view');
@@ -3359,7 +3364,7 @@ test('finds input by label', async () => {
   await render(
     <View>
       <TextInput aria-label="Username" placeholder="Enter username" value="" />
-    </View>
+    </View>,
   );
 
   // ✅ Good - uses accessible label
@@ -3390,7 +3395,7 @@ test('uses role queries', async () => {
         <Text>Submit</Text>
       </Pressable>
       <TextInput role="searchbox" aria-label="Search" placeholder="Search..." />
-    </View>
+    </View>,
   );
 
   // ✅ Good - uses role query
@@ -3429,7 +3434,7 @@ test('button is disabled', async () => {
   await render(
     <Pressable role="button" aria-disabled>
       <Text>Submit</Text>
-    </Pressable>
+    </Pressable>,
   );
 
   const button = screen.getByRole('button', { name: 'Submit' });
@@ -3464,7 +3469,7 @@ test('checks non-existence', async () => {
   await render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   // ✅ Good - uses queryBy for non-existence check
@@ -3568,7 +3573,7 @@ test('finds element incorrectly', async () => {
   const { container } = await render(
     <View>
       <Text testID="message">Hello</Text>
-    </View>
+    </View>,
   );
 
   // ❌ Bad - using container.queryAll directly
@@ -3618,7 +3623,7 @@ test('renders component', async () => {
   const { getByText } = await render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   expect(getByText('Hello')).toBeOnTheScreen();
@@ -3635,7 +3640,7 @@ test('renders component', async () => {
   await render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   expect(screen.getByText('Hello')).toBeOnTheScreen();
@@ -3747,7 +3752,7 @@ test('finds text correctly', async () => {
   await render(
     <View>
       <Text>Hello World</Text>
-    </View>
+    </View>,
   );
 
   // ✅ Good - queries by visible text
@@ -3814,7 +3819,7 @@ test('uses getBy as assertion', async () => {
   await render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   // ✅ Good - getBy throws if not found, so it's an assertion
@@ -4758,7 +4763,7 @@ await fireEvent.press(screen.getByText('Press me'), {
 expect(onPress).toHaveBeenCalledWith(
   expect.objectContaining({
     nativeEvent: expect.objectContaining({ pageX: 20, pageY: 30 }),
-  })
+  }),
 );
 ```
 

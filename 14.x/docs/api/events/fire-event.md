@@ -28,7 +28,7 @@ test('fire changeText event', async () => {
   await render(
     // MyComponent renders TextInput which has a placeholder 'Enter details'
     // and with `onChangeText` bound to handleChangeText
-    <MyComponent handleChangeText={onEventMock} />
+    <MyComponent handleChangeText={onEventMock} />,
   );
 
   await fireEvent(screen.getByPlaceholderText('change'), 'onChangeText', 'ab');
@@ -51,7 +51,7 @@ const onBlurMock = jest.fn();
 await render(
   <View>
     <TextInput placeholder="my placeholder" onBlur={onBlurMock} />
-  </View>
+  </View>,
 );
 
 // you can omit the `on` prefix
@@ -92,7 +92,7 @@ await render(
     <TouchableOpacity onPress={onPressMock}>
       <Text>Press me</Text>
     </TouchableOpacity>
-  </View>
+  </View>,
 );
 
 await fireEvent.press(screen.getByText('Press me'), eventData);
@@ -124,7 +124,7 @@ const CHANGE_TEXT = 'content';
 await render(
   <View>
     <TextInput placeholder="Enter data" onChangeText={onChangeTextMock} />
-  </View>
+  </View>,
 );
 
 await fireEvent.changeText(screen.getByPlaceholderText('Enter data'), CHANGE_TEXT);
@@ -163,7 +163,7 @@ const eventData = {
 await render(
   <ScrollView testID="scroll-view" onScroll={onScrollMock}>
     <Text>Content</Text>
-  </ScrollView>
+  </ScrollView>,
 );
 
 await fireEvent.scroll(screen.getByTestId('scroll-view'), eventData);

@@ -185,7 +185,7 @@ This API requires RNTL v13.3.0 or later.
 ```tsx
 async function renderAsync(
   component: React.Element<any>,
-  options?: RenderAsyncOptions
+  options?: RenderAsyncOptions,
 ): Promise<RenderAsyncResult>;
 ```
 
@@ -602,7 +602,7 @@ import { render, screen } from '@testing-library/react-native';
 render(
   <Pressable accessibilityRole="button" disabled>
     <Text>Hello</Text>
-  </Pressable>
+  </Pressable>,
 );
 const element = screen.getByRole('button');
 const element2 = screen.getByRole('button', { name: 'Hello' });
@@ -817,13 +817,15 @@ render(<Text style={{ display: 'none' }}>Hidden from accessibility</Text>);
 expect(
   screen.queryByText('Hidden from accessibility', {
     includeHiddenElements: false,
-  })
+  }),
 ).not.toBeOnTheScreen();
 
 // Include hidden elements
 expect(screen.getByText('Hidden from accessibility')).toBeOnTheScreen();
 expect(
-  screen.getByText('Hidden from accessibility', { includeHiddenElements: true })
+  screen.getByText('Hidden from accessibility', {
+    includeHiddenElements: true,
+  }),
 ).toBeOnTheScreen();
 ```
 
@@ -1194,7 +1196,7 @@ test('fire changeText event', () => {
   render(
     // MyComponent renders TextInput which has a placeholder 'Enter details'
     // and with `onChangeText` bound to handleChangeText
-    <MyComponent handleChangeText={onEventMock} />
+    <MyComponent handleChangeText={onEventMock} />,
   );
 
   fireEvent(screen.getByPlaceholderText('change'), 'onChangeText', 'ab');
@@ -1217,7 +1219,7 @@ const onBlurMock = jest.fn();
 render(
   <View>
     <TextInput placeholder="my placeholder" onBlur={onBlurMock} />
-  </View>
+  </View>,
 );
 
 // you can omit the `on` prefix
@@ -1258,7 +1260,7 @@ render(
     <TouchableOpacity onPress={onPressMock}>
       <Text>Press me</Text>
     </TouchableOpacity>
-  </View>
+  </View>,
 );
 
 fireEvent.press(screen.getByText('Press me'), eventData);
@@ -1290,7 +1292,7 @@ const CHANGE_TEXT = 'content';
 render(
   <View>
     <TextInput placeholder="Enter data" onChangeText={onChangeTextMock} />
-  </View>
+  </View>,
 );
 
 fireEvent.changeText(screen.getByPlaceholderText('Enter data'), CHANGE_TEXT);
@@ -1329,7 +1331,7 @@ const eventData = {
 render(
   <ScrollView onScroll={onScrollMock}>
     <Text>XD</Text>
-  </ScrollView>
+  </ScrollView>,
 );
 
 fireEvent.scroll(screen.getByText('scroll-view'), eventData);
@@ -1766,7 +1768,7 @@ The `findBy*` queries are used to find elements that are not instantly available
 ```tsx
 function waitFor<T>(
   expectation: () => T,
-  options?: { timeout: number; interval: number }
+  options?: { timeout: number; interval: number },
 ): Promise<T>;
 ```
 
@@ -1856,7 +1858,7 @@ If you receive warnings related to `act()` function consult our [Understanding A
 ```ts
 function waitForElementToBeRemoved<T>(
   expectation: () => T,
-  options?: { timeout: number; interval: number }
+  options?: { timeout: number; interval: number },
 ): Promise<T>;
 ```
 
@@ -2039,7 +2041,7 @@ url: /react-native-testing-library/docs/api/misc/render-hook.md
 ```ts
 function renderHook<Result, Props>(
   hookFn: (props?: Props) => Result,
-  options?: RenderHookOptions<Props>
+  options?: RenderHookOptions<Props>,
 ): RenderHookResult<Result, Props>;
 ```
 
@@ -2171,7 +2173,7 @@ it('should use context value', () => {
 ```ts
 async function renderHookAsync<Result, Props>(
   hookFn: (props?: Props) => Result,
-  options?: RenderHookOptions<Props>
+  options?: RenderHookOptions<Props>,
 ): Promise<RenderHookAsyncResult<Result, Props>>;
 ```
 
@@ -2389,7 +2391,7 @@ test('finds input by label', () => {
   render(
     <View>
       <TextInput aria-label="Username" placeholder="Enter username" value="" />
-    </View>
+    </View>,
   );
 
   // ✅ Good - uses accessible label
@@ -2420,7 +2422,7 @@ test('uses role queries', () => {
         <Text>Submit</Text>
       </Pressable>
       <TextInput role="searchbox" aria-label="Search" placeholder="Search..." />
-    </View>
+    </View>,
   );
 
   // ✅ Good - uses role query
@@ -2459,7 +2461,7 @@ test('button is disabled', () => {
   render(
     <Pressable role="button" aria-disabled>
       <Text>Submit</Text>
-    </Pressable>
+    </Pressable>,
   );
 
   const button = screen.getByRole('button', { name: 'Submit' });
@@ -2494,7 +2496,7 @@ test('checks non-existence', () => {
   render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   // ✅ Good - uses queryBy for non-existence check
@@ -2598,7 +2600,7 @@ test('finds element incorrectly', () => {
   const { UNSAFE_root } = render(
     <View>
       <Text testID="message">Hello</Text>
-    </View>
+    </View>,
   );
 
   // ❌ Bad - using UNSAFE_root directly
@@ -2648,7 +2650,7 @@ test('renders component', () => {
   const { getByText } = render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   expect(getByText('Hello')).toBeOnTheScreen();
@@ -2665,7 +2667,7 @@ test('renders component', () => {
   render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   expect(screen.getByText('Hello')).toBeOnTheScreen();
@@ -2777,7 +2779,7 @@ test('finds text correctly', () => {
   render(
     <View>
       <Text>Hello World</Text>
-    </View>
+    </View>,
   );
 
   // ✅ Good - queries by visible text
@@ -2844,7 +2846,7 @@ test('uses getBy as assertion', () => {
   render(
     <View>
       <Text>Hello</Text>
-    </View>
+    </View>,
   );
 
   // ✅ Good - getBy throws if not found, so it's an assertion
@@ -4153,7 +4155,7 @@ function findByText(text: TextMatch, options?: TextMatchOptions, waitForOptions?
 function findAllByText(
   text: TextMatch,
   options?: TextMatchOptions,
-  waitForOptions?: WaitForOptions
+  waitForOptions?: WaitForOptions,
 );
 ```
 
@@ -4226,7 +4228,7 @@ In v1.14 we've introduced a feature allowing to match text when it's spread acro
 const { getByText } = render(
   <Text>
     Hello <Text>world</Text>
-  </Text>
+  </Text>,
 );
 getByText('Hello world'); // matches
 ```
@@ -4606,7 +4608,7 @@ test('User can sign in with correct credentials', async () => {
 
   // Follow-up assertions do not need to be async, as we already waited for sign in operation to complete
   expect(
-    screen.queryByRole('header', { name: 'Sign in to Hello World App' })
+    screen.queryByRole('header', { name: 'Sign in to Hello World App' }),
   ).not.toBeOnTheScreen();
   expect(screen.queryByLabelText('Username')).not.toBeOnTheScreen();
   expect(screen.queryByLabelText('Password')).not.toBeOnTheScreen();
@@ -4661,7 +4663,7 @@ function waitFor<T>(
   options?: {
     timeout: number;
     interval: number;
-  }
+  },
 ): Promise<T>;
 ```
 
@@ -4685,7 +4687,7 @@ function waitForElementToBeRemoved<T>(
   options?: {
     timeout: number;
     interval: number;
-  }
+  },
 ): Promise<T> {}
 ```
 
@@ -4739,12 +4741,12 @@ interface RenderWithProvidersProps {
 
 export function renderWithProviders<T>(
   ui: React.ReactElement<T>,
-  options?: RenderWithProvidersProps
+  options?: RenderWithProvidersProps,
 ) {
   return render(
     <UserProvider.Provider value={options?.user ?? null}>
       <ThemeProvider.Provider value={options?.theme ?? 'light'}>{ui}</ThemeProvider.Provider>
-    </UserProvider.Provider>
+    </UserProvider.Provider>,
   );
 }
 ```
@@ -5304,10 +5306,10 @@ export interface RenderWithAtomsOptions {
  */
 export const renderWithAtoms = <T,>(
   component: React.ReactElement,
-  options: RenderWithAtomsOptions
+  options: RenderWithAtomsOptions,
 ) => {
   return render(
-    <HydrateAtomsWrapper initialValues={options.initialValues}>{component}</HydrateAtomsWrapper>
+    <HydrateAtomsWrapper initialValues={options.initialValues}>{component}</HydrateAtomsWrapper>,
   );
 };
 

@@ -32,7 +32,7 @@ test('User can sign in with correct credentials', async () => {
 
   // Follow-up assertions do not need to be async, as we already waited for sign in operation to complete
   expect(
-    screen.queryByRole('header', { name: 'Sign in to Hello World App' })
+    screen.queryByRole('header', { name: 'Sign in to Hello World App' }),
   ).not.toBeOnTheScreen();
   expect(screen.queryByLabelText('Username')).not.toBeOnTheScreen();
   expect(screen.queryByLabelText('Password')).not.toBeOnTheScreen();
@@ -87,7 +87,7 @@ function waitFor<T>(
   options?: {
     timeout: number;
     interval: number;
-  }
+  },
 ): Promise<T>;
 ```
 
@@ -111,7 +111,7 @@ function waitForElementToBeRemoved<T>(
   options?: {
     timeout: number;
     interval: number;
-  }
+  },
 ): Promise<T> {}
 ```
 
