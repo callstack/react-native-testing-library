@@ -28,7 +28,7 @@ jobs:
         run: yarn lint
 
       - name: Format
-        run: yarn format
+        run: yarn format:check
 
   typecheck:
     runs-on: ubuntu-latest
