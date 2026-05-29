@@ -27,8 +27,8 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      - name: Prettier
-        run: yarn prettier
+      - name: Format
+        run: yarn format
 
   typecheck:
     runs-on: ubuntu-latest
