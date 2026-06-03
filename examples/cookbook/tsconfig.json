@@ -4,6 +4,7 @@
     "strict": true,
     "allowJs": false,
     "module": "NodeNext",
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "NodeNext",
+    "types": ["jest"]
   }
 }
