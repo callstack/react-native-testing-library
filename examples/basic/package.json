@@ -2,6 +2,27 @@
   "name": "rntl-example-basic",
   "version": "1.0.0",
   "main": "index.ts",
+  "dependencies": {
+    "expo": "~56.0.8",
+    "expo-status-bar": "~56.0.4",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.85.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-web": "^0.21.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@testing-library/react-native": "14.0.0-rc.3",
+    "@types/jest": "^29.5.12",
+    "@types/react": "~19.2.2",
+    "eslint": "^10.2.0",
+    "eslint-plugin-testing-library": "^7.16.2",
+    "jest": "~29.7.0",
+    "test-renderer": "1.2.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.58.1"
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -11,27 +32,6 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "validate": "yarn expo install --check && yarn lint && yarn typecheck && yarn test --watchman=false"
-  },
-  "dependencies": {
-    "expo": "~54.0.33",
-    "expo-status-bar": "~3.0.9",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-native": "0.81.5",
-    "react-native-safe-area-context": "^5.6.2",
-    "react-native-web": "^0.21.2"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@testing-library/react-native": "^14.0.0-beta.0",
-    "@types/jest": "^29.5.12",
-    "@types/react": "~19.1.10",
-    "eslint": "^10.2.0",
-    "eslint-plugin-testing-library": "^7.16.2",
-    "jest": "~29.7.0",
-    "test-renderer": "0.16.0",
-    "typescript": "~5.9.2",
-    "typescript-eslint": "^8.58.1"
   },
   "private": true,
   "packageManager": "yarn@4.11.0"

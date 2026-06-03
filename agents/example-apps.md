@@ -4,6 +4,7 @@
 
 - Regenerate Expo example apps in a temporary directory, then copy the fresh scaffold into place.
 - Before replacing an example app, move the current app directory to `/tmp` so repo-specific files can be restored selectively.
+- Avoid image churn: preserve existing tracked image assets unless the task explicitly asks to update them or the new SDK requires an asset change.
 - After copying a generated app into `examples/`, remove the generated `.git` directory and `node_modules`, then reinstall from inside the repo workspace.
 
 ## `examples/basic`
@@ -20,9 +21,10 @@
   - `babel.config.js`
   - `eslint.config.mjs`
   - `README.md`
+  - existing tracked image assets in `assets/`
   - `.expo-shared/assets.json` if it existed before
 - Keep the fresh Expo entrypoint `index.ts`.
-- Update `package.json` and `app.json` to match repo naming and scripts.
+- Update `package.json` and `app.json` to match repo naming and scripts. Keep `app.json` pointing at the restored existing image assets unless changing them is intentional.
 
 ## `examples/cookbook`
 
@@ -39,9 +41,10 @@
   - `.eslintignore`
   - `README.md`
   - custom assets not present in the scaffold, such as `assets/gradientRNBanner.png`
+  - existing tracked image assets in `assets/`
   - `.expo-shared/assets.json` if it existed before
 - Keep the fresh Expo Router entry setup.
-- Reapply the cookbook-specific dependency set in `package.json` and `app.json`.
+- Reapply the cookbook-specific dependency set in `package.json` and `app.json`. Keep `app.json` pointing at the restored existing image assets unless changing them is intentional.
 
 ## Validation after regeneration
 
