@@ -21,6 +21,7 @@
   - `babel.config.js`
   - `eslint.config.mjs`
   - `README.md`
+  - `AGENTS.md`
   - existing tracked image assets in `assets/`
   - `.expo-shared/assets.json` if it existed before
 - Keep the fresh Expo entrypoint `index.ts`.
@@ -40,6 +41,7 @@
   - `.eslintrc`
   - `.eslintignore`
   - `README.md`
+  - `AGENTS.md`
   - custom assets not present in the scaffold, such as `assets/gradientRNBanner.png`
   - existing tracked image assets in `assets/`
   - `.expo-shared/assets.json` if it existed before
