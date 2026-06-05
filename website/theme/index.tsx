@@ -1,15 +1,7 @@
 import { useLocation } from '@rspress/core/runtime';
 import { Link, Layout as RspressLayout } from '@rspress/core/theme-original';
 
-const LATEST_VERSION = '13.x';
-
-const PreReleaseBanner = () => (
-  <div className="pre-release-banner">
-    <span>
-      You are viewing documentation for <strong>v14 RC</strong>.
-    </span>
-  </div>
-);
+const LATEST_VERSION = '14.x';
 
 const OldVersionBanner = ({ version }: { version: string }) => (
   <div className="old-version-banner">
@@ -26,12 +18,9 @@ const OldVersionBanner = ({ version }: { version: string }) => (
 const AnnouncementBanner = () => {
   const { pathname } = useLocation();
 
-  if (pathname.includes('/14.x/')) {
-    return <PreReleaseBanner />;
-  }
-
-  if (pathname.includes('/12.x/')) {
-    return <OldVersionBanner version="12.x" />;
+  if (pathname.includes('/12.x/') || pathname.includes('/13.x/')) {
+    const version = pathname.includes('/12.x/') ? '12.x' : '13.x';
+    return <OldVersionBanner version={version} />;
   }
 
   return null;
