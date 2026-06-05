@@ -2,30 +2,11 @@
 
 This guide describes common issues found by users when integrating React Native Test Library to their projects:
 
-## Matching React Native, React & React Test Renderer versions
-
-Check that you have matching versions of core dependencies:
-
-- React Native
-- React
-- React Test Renderer
-
-React Native uses different versioning scheme from React, you can use [React Native Upgrade Helper](https://react-native-community.github.io/upgrade-helper/) to find the correct matching between React Native & React versions. In case you use Expo, run `npx expo install --fix` in your project to validate and install compatible versions of these dependencies.
-
-React Test Renderer usually has same major & minor version as React, as they are closely related and React Test Renderer is part of [React monorepo](https://github.com/facebook/react).
-
-Related issues: [#1061](https://github.com/callstack/react-native-testing-library/issues/1061), [#938](https://github.com/callstack/react-native-testing-library/issues/938), [#920](https://github.com/callstack/react-native-testing-library/issues/920)
-
-Errors that might indicate that you are facing this issue:
-
-- `TypeError: Cannot read property 'current' of undefined` when calling `render()`
-- `TypeError: Cannot read property 'isBatchingLegacy' of undefined` when calling `render()`
-
 ## Example repository
 
-We maintain an [example repository](https://github.com/callstack/react-native-testing-library/tree/main/examples/basic) that showcases a modern React Native Testing Library setup with TypeScript, etc.
+We maintain an [example repository](https://github.com/callstack/react-native-testing-library/tree/main/examples/basic) with a React Native Testing Library setup using TypeScript.
 
-In case something does not work in your setup you can refer to this repository for recommended configuration.
+If something doesn't work in your setup, check this repository for configuration examples.
 
 ## Undefined component error
 
@@ -43,7 +24,7 @@ jest.mock('@react-navigation/native', () => {
 
 The above mock will mock `useNavigation` hook as intended, but at the same time all other exports from `@react-navigation/native` package are now `undefined`. If you want to use `NavigationContainer` component from the same package it will be `undefined` and result in the error above.
 
-In order to mock only a part of given package you should re-export all other exports using `jest.requireActual` helper:
+To mock only part of a package, re-export all other exports using `jest.requireActual`:
 
 ```ts
 jest.mock('@react-navigation/native', () => {
@@ -60,7 +41,7 @@ Alternatively, you can use `jest.spyOn` to mock package exports selectively.
 
 ### Mocking React Native
 
-In case of mocking `react-native` package you should not mock the whole package at once, as this approach has issues with `jest.requireActual` call. In this case it is recommended to mock particular library paths inside the package, e.g.:
+When mocking the `react-native` package, don't mock the whole package at once, as this has issues with `jest.requireActual`. Mock specific library paths inside the package instead, e.g.:
 
 ```ts title=jest-setup.ts
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');

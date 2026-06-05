@@ -5,36 +5,86 @@
 Open a Terminal in your project's folder and run:
 
 
-```sh [yarn]
-yarn add -D @testing-library/react-native
-```
-
 ```sh [npm]
 npm install -D @testing-library/react-native
 ```
 
-This library has a peer dependency for `react-test-renderer` package. Make sure that your `react-test-renderer` version matches exactly your `react` version.
+```sh [yarn]
+yarn add -D @testing-library/react-native
+```
+
+```sh [pnpm]
+pnpm add -D @testing-library/react-native
+```
+
+```sh [bun]
+bun add -D @testing-library/react-native
+```
+
+This library has a peer dependency on [Test Renderer](https://github.com/mdjastrzebski/test-renderer). Make sure to install it:
+
+
+```sh [npm]
+npm install -D test-renderer
+```
+
+```sh [yarn]
+yarn add -D test-renderer
+```
+
+```sh [pnpm]
+pnpm add -D test-renderer
+```
+
+```sh [bun]
+bun add -D test-renderer
+```
+
+Test Renderer has better compatibility with React 19 and improved type safety compared to the deprecated [React Test Renderer](https://reactjs.org/docs/test-renderer.html).
+
+## Agent docs in the package
+
+RNTL ships package-specific documentation for coding agents in `node_modules/@testing-library/react-native/docs/`.
+Add this snippet to your project's `AGENTS.md` or `CLAUDE.md` file so agents use the docs for the installed package version:
+
+```md
+# React Native Testing Library in this project
+
+This project uses `@testing-library/react-native`. Its APIs and testing conventions can differ from your training data.
+Before writing or changing RNTL tests, read the relevant guide in
+`node_modules/@testing-library/react-native/docs/`, starting with
+`node_modules/@testing-library/react-native/docs/guides/llm-guidelines.md`.
+Prefer those package docs over stale assumptions, and follow deprecation notices.
+```
 
 ### Jest matchers
 
-RNTL v13 automatically extends Jest with React Native-specific matchers. The only thing you need to do is to import anything from `@testing-library/react-native` which you already need to do to access the `render` function.
+RNTL automatically extends Jest with React Native-specific matchers. The only thing you need to do is to import anything from `@testing-library/react-native` which you already need to do to access the `render` function.
 
 ### ESLint plugin
 
-We recommend setting up [`eslint-plugin-testing-library`](https://github.com/testing-library/eslint-plugin-testing-library) package to help you avoid common Testing Library mistakes and bad practices.
+Set up [`eslint-plugin-testing-library`](https://github.com/testing-library/eslint-plugin-testing-library) to avoid common Testing Library mistakes and bad practices.
 
 Install the plugin (assuming you already have `eslint` installed & configured):
 
-
-```sh [yarn]
-yarn add -D eslint-plugin-testing-library
-```
 
 ```sh [npm]
 npm install -D eslint-plugin-testing-library
 ```
 
-Then, add relevant entry to your ESLint config (e.g., `.eslintrc.js`). We recommend extending the `react` plugin:
+```sh [yarn]
+yarn add -D eslint-plugin-testing-library
+```
+
+```sh [pnpm]
+pnpm add -D eslint-plugin-testing-library
+```
+
+```sh [bun]
+bun add -D eslint-plugin-testing-library
+```
+
+Then, add this to your ESLint config (e.g., `.eslintrc.js`). Extend the `react` plugin:
 
 ```js title=.eslintrc.js
 module.exports = {

@@ -4,13 +4,22 @@
 
 ```ts
 type Config = {
+  /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
-  defaultHidden: boolean;
-  defaultDebugOptions: Partial<DebugOptions>;
-  concurrentRoot: boolean;
+
+  /** Default value for `includeHiddenElements` query option. */
+  defaultIncludeHiddenElements: boolean;
+
+  /** Default options for `debug` helper. */
+  defaultDebugOptions?: Partial<DebugOptions>;
 };
 
-function configure(options: Partial<Config>) {}
+type ConfigAliasOptions = {
+  /** RTL-compatibility alias for `defaultIncludeHiddenElements`. */
+  defaultHidden: boolean;
+};
+
+function configure(options: Partial<Config & ConfigAliasOptions>) {}
 ```
 
 ### `asyncUtilTimeout` option
@@ -19,18 +28,13 @@ Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementTo
 
 ### `defaultIncludeHiddenElements` option
 
-Default value for [includeHiddenElements](/react-native-testing-library/docs/api/queries.md#includehiddenelements-option) query option for all queries. The default value is `false`, so all queries won't match [elements hidden from accessibility](#ishiddenfromaccessibility). This is because users of the app wouldn't be able to see such elements.
+Default value for [includeHiddenElements](/react-native-testing-library/docs/api/queries.md#includehiddenelements-option) query option for all queries. The default value is set to `false`, so all queries will not match [elements hidden from accessibility](#ishiddenfromaccessibility). This is because the users of the app would not be able to see such elements.
 
 This option is also available as `defaultHidden` alias for compatibility with [React Testing Library](https://testing-library.com/docs/dom-testing-library/api-configuration/#defaulthidden).
 
 ### `defaultDebugOptions` option
 
-Default [debug options](#debug) used when calling `debug()`. These default options are overridden by the ones you specify directly when calling `debug()`.
-
-### `concurrentRoot` option \{#concurrent-root}
-
-Set to `false` to disable concurrent rendering.
-Otherwise, `render` defaults to using concurrent rendering used in the React Native New Architecture.
+Default [debug options](#debug) to be used when calling `debug()`. These default options will be overridden by the ones you specify directly when calling `debug()`.
 
 ## `resetToDefaults()`
 
@@ -42,7 +46,7 @@ function resetToDefaults() {}
 
 ### `RNTL_SKIP_AUTO_CLEANUP`
 
-Set to `true` to disable automatic `cleanup()` after each test. This works the same as importing `react-native-testing-library/dont-cleanup-after-each` or using `react-native-testing-library/pure`.
+Set to `true` to disable automatic `cleanup()` after each test. It works the same as importing `react-native-testing-library/dont-cleanup-after-each` or using `react-native-testing-library/pure`.
 
 ```shell
 $ RNTL_SKIP_AUTO_CLEANUP=true jest

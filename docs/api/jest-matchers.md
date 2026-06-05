@@ -1,14 +1,10 @@
 # Jest matchers
 
-This guide describes built-in Jest matchers. These matchers provide readable assertions with accessibility support.
+This guide covers the built-in Jest matchers. These matchers make your tests easier to read and work better with accessibility features.
 
 ## Setup
 
 No setup needed. Matchers are available when you import from `@testing-library/react-native`.
-
-## Migration from legacy Jest Native matchers
-
-If you use legacy Jest Native matchers, see the [migration guide](/react-native-testing-library/docs/migration/jest-matchers.md).
 
 ## Checking element existence
 
@@ -18,7 +14,7 @@ If you use legacy Jest Native matchers, see the [migration guide](/react-native-
 expect(element).toBeOnTheScreen();
 ```
 
-Checks if an element is attached to the element tree. If a referenced element gets unmounted during the test, this assertion fails.
+Checks if an element is attached to the element tree. If you have a reference to an element and it gets unmounted during the test, this assertion will fail.
 
 ## Element Content
 
@@ -34,13 +30,13 @@ expect(element).toHaveTextContent(
 )
 ```
 
-Checks if the element has the specified text content. Accepts `string` or `RegExp`, with optional [text match options](/react-native-testing-library/docs/api/queries.md#text-match-options) `exact` and `normalizer`.
+Checks if an element has the specified text content. Accepts `string` or `RegExp`, with optional [text match options](/react-native-testing-library/docs/api/queries.md#text-match-options) like `exact` and `normalizer`.
 
 ### `toContainElement()`
 
 ```ts
 expect(container).toContainElement(
-  element: ReactTestInstance | null,
+  instance: TestInstance | null,
 )
 ```
 
@@ -52,7 +48,7 @@ Checks if a container element contains another element.
 expect(element).toBeEmptyElement();
 ```
 
-Checks if the element has no child elements or text content.
+Checks if an element has no child elements or text content.
 
 ## Checking element state
 
@@ -68,7 +64,7 @@ expect(element).toHaveDisplayValue(
 )
 ```
 
-Checks if a `TextInput` has the specified display value. Accepts `string` or `RegExp`, with optional [text match options](/react-native-testing-library/docs/api/queries.md#text-match-options) `exact` and `normalizer`.
+Checks if a `TextInput` has the specified display value. Accepts `string` or `RegExp`, with optional [text match options](/react-native-testing-library/docs/api/queries.md#text-match-options) like `exact` and `normalizer`.
 
 ### `toHaveAccessibilityValue()`
 
@@ -83,11 +79,11 @@ expect(element).toHaveAccessibilityValue(
 )
 ```
 
-Checks if the element has a specified accessible value.
+Checks if an element has the specified accessible value.
 
-Reads from `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext`, and `accessibilityValue` props. Only the values you specify are checked, so the element can have other accessibility value entries and still match.
+The matcher reads accessibility values from `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext`, and `accessibilityValue` props. It only checks the values you specify, so the element can have other accessibility value entries and still match.
 
-For the `text` entry, you can use `string` or `RegExp`.
+For the `text` entry, you can use a string or `RegExp`.
 
 ### `toBeEnabled()` / `toBeDisabled` \{#tobeenabled}
 
@@ -96,10 +92,10 @@ expect(element).toBeEnabled();
 expect(element).toBeDisabled();
 ```
 
-Checks if the element is enabled or disabled based on `aria-disabled` or `accessibilityState.disabled` props. An element is disabled when it or any ancestor is disabled.
+Checks if an element is enabled or disabled from `aria-disabled` or `accessibilityState.disabled` props. An element is disabled if it or any ancestor is disabled.
 
 :::note
-These matchers are opposites. Both are provided to avoid double negations in assertions.
+These matchers are opposites. Both are available so you can avoid double negations like `expect(element).not.toBeDisabled()`.
 :::
 
 ### `toBeSelected()`
@@ -108,7 +104,7 @@ These matchers are opposites. Both are provided to avoid double negations in ass
 expect(element).toBeSelected();
 ```
 
-Checks if the element is selected based on `aria-selected` or `accessibilityState.selected` props.
+Checks if an element is selected from `aria-selected` or `accessibilityState.selected` props.
 
 ### `toBeChecked()` / `toBePartiallyChecked()` \{#tobechecked}
 
@@ -117,12 +113,12 @@ expect(element).toBeChecked();
 expect(element).toBePartiallyChecked();
 ```
 
-Checks if the element is checked or partially checked based on `aria-checked` or `accessibilityState.checked` props.
+Checks if an element is checked or partially checked from `aria-checked` or `accessibilityState.checked` props.
 
 :::note
 
-- `toBeChecked()` works only on `Switch` elements and elements with `checkbox`, `radio`, or `switch` role.
-- `toBePartiallyChecked()` works only on elements with `checkbox` role.
+- `toBeChecked()` only works on `Switch` host elements and elements with `checkbox`, `radio`, or `switch` role.
+- `toBePartiallyChecked()` only works on elements with `checkbox` role.
 
 :::
 
@@ -133,10 +129,10 @@ expect(element).toBeExpanded();
 expect(element).toBeCollapsed();
 ```
 
-Checks if the element is expanded or collapsed based on `aria-expanded` or `accessibilityState.expanded` props.
+Checks if an element is expanded or collapsed from `aria-expanded` or `accessibilityState.expanded` props.
 
 :::note
-These matchers are opposites for expandable elements (those with explicit `aria-expanded` or `accessibilityState.expanded` props). For non-expandable elements, neither matcher passes.
+These matchers are opposites for expandable elements (those with explicit `aria-expanded` or `accessibilityState.expanded` props). For non-expandable elements, neither matcher will pass.
 :::
 
 ### `toBeBusy()`
@@ -145,7 +141,7 @@ These matchers are opposites for expandable elements (those with explicit `aria-
 expect(element).toBeBusy();
 ```
 
-Checks if the element is busy based on `aria-busy` or `accessibilityState.busy` props.
+Checks if an element is busy from `aria-busy` or `accessibilityState.busy` props.
 
 ## Checking element style
 
@@ -155,9 +151,9 @@ Checks if the element is busy based on `aria-busy` or `accessibilityState.busy` 
 expect(element).toBeVisible();
 ```
 
-Checks if the element is visible.
+Checks if an element is visible.
 
-An element is invisible when it or any ancestor has `display: none` or `opacity: 0` styles, or when it's hidden from accessibility.
+An element is invisible if it or any ancestor has `display: none` or `opacity: 0` styles, or if it's hidden from accessibility.
 
 ### `toHaveStyle()`
 
@@ -167,7 +163,7 @@ expect(element).toHaveStyle(
 )
 ```
 
-Checks if the element has specific styles.
+Checks if an element has specific styles.
 
 ## Other matchers
 
@@ -183,11 +179,13 @@ expect(element).toHaveAccessibleName(
 )
 ```
 
-Checks if the element has the specified accessible name. Accepts `string` or `RegExp`, with optional [text match options](/react-native-testing-library/docs/api/queries.md#text-match-options) `exact` and `normalizer`.
+Checks if an element has the specified accessible name. Accepts `string` or `RegExp`, with optional [text match options](/react-native-testing-library/docs/api/queries.md#text-match-options) like `exact` and `normalizer`.
 
-The accessible name comes from `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props. If none are present, the element's text content is used.
+The accessible name comes from `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props. For `Image` elements, the `alt` prop is also used. If none are present, the element's text content is used.
 
-Without a `name` parameter (or with `undefined`), it only checks if the element has any accessible name.
+When `accessibilityLabelledBy` references multiple elements with an array, their text content is joined with spaces in the referenced order and matched as a single accessible name. `aria-labelledby` follows React Native's single `nativeID` value behavior.
+
+Without a `name` parameter (or with `undefined`), it only checks whether the element has any accessible name.
 
 ### `toHaveProp()`
 
@@ -198,7 +196,7 @@ expect(element).toHaveProp(
 )
 ```
 
-Checks if the element has a prop. Without a `value` (or with `undefined`), it only checks if the prop exists. With a `value`, it checks if the prop's value matches.
+Checks if an element has a prop. Without a `value` (or with `undefined`), it only checks if the prop exists. With a `value`, it checks if the prop's value matches.
 
 :::note
 Use this matcher as a last resort when other matchers don't fit your needs.

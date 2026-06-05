@@ -2,18 +2,18 @@
 
 ## Comparison with Fire Event API
 
-Fire Event is our original event simulation API. It can invoke **any event handler** declared on **either host or composite elements**. If the element doesn't have an `onEventName` event handler for the passed `eventName` event, or the element is disabled, Fire Event will traverse up the component tree, looking for an event handler on both host and composite elements along the way. By default, it will **not pass any event data**, but you can provide it in the last argument.
+Fire Event is our original event simulation API. It can invoke **any event handler** declared on **either host or composite elements**. Suppose the element does not have `onEventName` event handler for the passed `eventName` event, or the element is disabled. In that case, Fire Event will traverse up the component tree, looking for an event handler on both host and composite elements along the way. By default, it will **not pass any event data**, but the user might provide it in the last argument.
 
-In contrast, User Event provides realistic event simulation for user interactions like `press` or `type`. Each interaction triggers a **sequence of events** corresponding to React Native runtime behavior. These events are invoked **only on host elements**, and **automatically receive event data** corresponding to each event.
+In contrast, User Event provides realistic event simulation for user interactions like `press` or `type`. Each interaction will trigger a **sequence of events** corresponding to React Native runtime behavior. These events will be invoked **only on host elements**, and **will automatically receive event data** corresponding to each event.
 
-If User Event supports a given interaction, prefer it over the Fire Event counterpart, as it makes your tests more realistic and reliable. In other cases, e.g., when User Event doesn't support the given event or when invoking event handlers on composite elements, use Fire Event as the only available option.
+If User Event supports a given interaction, prefer it over the Fire Event counterpart. It makes tests more realistic and reliable. When User Event doesn't support the event or you need to invoke event handlers on composite elements, use Fire Event.
 
 ## `setup()`
 
 ```ts
 userEvent.setup(options?: {
-  delay: number;
-  advanceTimers: (delay: number) => Promise<void> | void;
+  delay?: number;
+  advanceTimers?: (delay: number) => Promise<void> | void;
 })
 ```
 
@@ -34,7 +34,7 @@ Creates a User Event object instance, which can be used to trigger events.
 
 ```ts
 press(
-  element: ReactTestInstance,
+  instance: TestInstance,
 ): Promise<void>
 ```
 
@@ -45,7 +45,7 @@ const user = userEvent.setup();
 await user.press(element);
 ```
 
-This helper simulates a press on any pressable element, e.g. `Pressable`, `TouchableOpacity`, `Text`, `TextInput`, etc. Unlike `fireEvent.press()`, which only calls the `onPress` prop, this function simulates the entire press interaction by reproducing the event sequence emitted by React Native runtime. This helper triggers additional events like `pressIn` and `pressOut`.
+Simulates a press on any pressable element, e.g. `Pressable`, `TouchableOpacity`, `Text`, `TextInput`, etc. Unlike `fireEvent.press()`, which only calls the `onPress` prop, this function simulates the entire press interaction by reproducing the event sequence emitted by React Native runtime. It triggers additional events like `pressIn` and `pressOut`.
 
 This event will take a minimum of 130 ms to run due to the internal React Native logic. Consider using fake timers to speed up test execution for tests involving `press` and `longPress` interactions.
 
@@ -53,8 +53,8 @@ This event will take a minimum of 130 ms to run due to the internal React Native
 
 ```ts
 longPress(
-  element: ReactTestInstance,
-  options: { duration: number } = { duration: 500 }
+  instance: TestInstance,
+  options?: { duration?: number }
 ): Promise<void>
 ```
 
@@ -65,7 +65,7 @@ const user = userEvent.setup();
 await user.longPress(element);
 ```
 
-Simulates a long press user interaction. In React Native, the `longPress` event is emitted when the press duration exceeds the long press threshold (by default, 500 ms). In other aspects, this action behaves like regular `press` action, e.g., by emitting `pressIn` and `pressOut` events. The press duration is customizable through the options. This is useful if you use the `delayLongPress` prop.
+Simulates a long press user interaction. In React Native, the `longPress` event is emitted when the press duration exceeds the long press threshold (by default, 500 ms). In other aspects, this action behaves similarly to regular `press` action, e.g., by emitting `pressIn` and `pressOut` events. The press duration is customizable through the options, which is useful when using the `delayLongPress` prop.
 
 This event will, by default, take 500 ms to run. Due to internal React Native logic, it will take at least 130 ms regardless of the duration option passed. Consider using fake timers to speed up test execution for tests involving `press` and `longPress` interactions.
 
@@ -77,13 +77,14 @@ This event will, by default, take 500 ms to run. Due to internal React Native lo
 
 ```ts
 type(
-  element: ReactTestInstance,
+  instance: TestInstance,
   text: string,
   options?: {
     skipPress?: boolean;
     skipBlur?: boolean;
     submitEditing?: boolean;
   }
+): Promise<void>
 ```
 
 Example
@@ -93,9 +94,9 @@ const user = userEvent.setup();
 await user.type(textInput, 'Hello world!');
 ```
 
-This helper simulates the user focusing on a `TextInput` element, typing `text` one character at a time, and leaving the element.
+Simulates focusing on a `TextInput` element, typing `text` one character at a time, and leaving the element.
 
-This function supports only host `TextInput` elements. Passing other element types will throw an error.
+This function supports only host `TextInput` elements. Passing other element types will result in throwing an error.
 
 :::note
 This function will add text to the text already present in the text input (as specified by `value` or `defaultValue` props). To replace existing text, use [`clear()`](#clear) helper first.
@@ -142,8 +143,8 @@ The `endEditing` and `blur` events can be skipped by passing the `skipBlur: true
 
 ```ts
 clear(
-  element: ReactTestInstance,
-)
+  instance: TestInstance,
+): Promise<void>
 ```
 
 Example
@@ -153,9 +154,9 @@ const user = userEvent.setup();
 await user.clear(textInput);
 ```
 
-This helper simulates the user clearing the content of a `TextInput` element.
+Simulates clearing the content of a `TextInput` element.
 
-This function supports only host `TextInput` elements. Passing other element types will throw an error.
+This function supports only host `TextInput` elements. Passing other element types will result in throwing an error.
 
 ### Sequence of events \{#clear-sequence}
 
@@ -185,9 +186,9 @@ Events will not be emitted if the `editable` prop is set to `false`.
 
 ```ts
 paste(
-  element: ReactTestInstance,
+  instance: TestInstance,
   text: string,
-)
+): Promise<void>
 ```
 
 Example
@@ -197,9 +198,9 @@ const user = userEvent.setup();
 await user.paste(textInput, 'Text to paste');
 ```
 
-This helper simulates the user pasting given text to a `TextInput` element.
+Simulates pasting text into a `TextInput` element.
 
-This function supports only host `TextInput` elements. Passing other element types will throw an error.
+This function supports only host `TextInput` elements. Passing other element types will result in throwing an error.
 
 ### Sequence of events \{#paste-sequence}
 
@@ -218,6 +219,7 @@ Events will not be emitted if the `editable` prop is set to `false`.
 - `change`
 - `changeText`
 - `selectionChange`
+- `contentSizeChange` (only multiline)
 
 **Leaving the element**:
 
@@ -228,18 +230,19 @@ Events will not be emitted if the `editable` prop is set to `false`.
 
 ```ts
 scrollTo(
-  element: ReactTestInstance,
+  instance: TestInstance,
   options: {
-    y: number,
-    momentumY?: number,
-    contentSize?: { width: number, height: number },
-    layoutMeasurement?: { width: number, height: number },
+    y: number;
+    momentumY?: number;
+    contentSize?: { width: number; height: number };
+    layoutMeasurement?: { width: number; height: number };
   } | {
-    x: number,
-    momentumX?: number,
-    contentSize?: { width: number, height: number },
-    layoutMeasurement?: { width: number, height: number },
+    x: number;
+    momentumX?: number;
+    contentSize?: { width: number; height: number };
+    layoutMeasurement?: { width: number; height: number };
   }
+): Promise<void>
 ```
 
 Example
@@ -249,9 +252,9 @@ const user = userEvent.setup();
 await user.scrollTo(scrollView, { y: 100, momentumY: 200 });
 ```
 
-This helper simulates the user scrolling a host `ScrollView` element.
+Simulates scrolling a host `ScrollView` element.
 
-This function supports only host `ScrollView` elements. Passing other element types will throw an error. Note that `FlatList` is accepted as it renders to a host `ScrollView` element.
+This function supports only host `ScrollView` elements, passing other element types will result in an error. Note that `FlatList` is accepted as it renders to a host `ScrollView` element.
 
 Scroll interaction should match the `ScrollView` element direction:
 

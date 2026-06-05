@@ -2,7 +2,7 @@
 
 > The more your tests resemble the way your software is used, the more confidence they can give you.<br/>— Kent C. Dodds
 
-[Quick Start](/docs/start/quick-start) | [Explore API](/docs/api)
+[Quick Start](/14.x/docs/start/quick-start) | [Explore API](/14.x/docs/api)
 
 ## Features
 

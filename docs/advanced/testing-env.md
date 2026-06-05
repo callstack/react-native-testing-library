@@ -6,7 +6,7 @@ This document is intended for a more advanced audience who want to understand th
 
 :::
 
-React Native Testing Library allows you to write integration and component tests for your React Native app or library. While the JSX code used in tests closely resembles your React Native app, things aren't as simple as they might appear. This document describes the key elements of our testing environment and highlights things to be aware of when writing more advanced tests or diagnosing issues.
+React Native Testing Library lets you write integration and component tests for your React Native app or library. While the JSX code in tests closely resembles your React Native app, the underlying environment differs. This document describes the key elements of our testing environment and highlights things to be aware of when writing advanced tests or diagnosing issues.
 
 ## React renderers
 
@@ -18,59 +18,59 @@ React allows you to write declarative code using JSX, write function or class co
 
 When you run your tests in the React Native Testing Library, somewhat contrary to what the name suggests, they are actually **not** using React Native renderer. This is because this renderer needs to be run on an iOS or Android operating system, so it would need to run on a device or simulator.
 
-## React Test Renderer
+## Test Renderer
 
-Instead, RNTL uses React Test Renderer, a specialized renderer that allows rendering to pure JavaScript objects without access to mobile OS and can run in a Node.js environment using Jest (or any other JavaScript test runner).
+Instead, RNTL uses [Test Renderer](https://github.com/mdjastrzebski/test-renderer), a modern, actively maintained renderer that renders to pure JavaScript objects without access to mobile OS and runs in a Node.js environment using Jest (or any other JavaScript test runner). Test Renderer replaces the deprecated `react-test-renderer` package and has better compatibility with React 19 and improved type safety.
 
-Using React Test Renderer has pros and cons.
+Using Test Renderer has trade-offs:
 
 Benefits:
 
-- tests can run on most CIs (Linux, etc) and do not require a mobile device or emulator
-- faster test execution
-- light runtime environment
+- Tests run on most CIs (Linux, etc) without a mobile device or emulator
+- Faster test execution
+- Light runtime environment
 
-Disadvantages:
+Limitations:
 
-- Tests do not execute native code
-- Tests are unaware of the view state that would be managed by native components, e.g., focus, unmanaged text boxes, etc.
-- Assertions do not operate on native view hierarchy
+- Tests don't execute native code
+- Tests are unaware of view state managed by native components, e.g., focus, unmanaged text boxes, etc.
+- Assertions don't operate on native view hierarchy
 - Runtime behaviors are simulated, sometimes imperfectly
 
-The React Testing Library (web one) works differently. While RTL also runs in Jest, it has access to a simulated browser DOM environment from the `jsdom` package, which allows it to use a regular React DOM renderer. Unfortunately, there's no similar React Native runtime environment package. This is probably because while the browser environment is well-defined and highly standardized, the React Native environment constantly evolves in sync with the evolution of underlying OS-es. Maintaining such an environment would require duplicating countless React Native behaviors and keeping them in sync as React Native develops.
+It's worth noting that the React Testing Library (web one) works a bit differently. While RTL also runs in Jest, it has access to a simulated browser DOM environment from the `jsdom` package, which allows it to use a regular React DOM renderer. Unfortunately, there is no similar React Native runtime environment package. This is probably because while the browser environment is well-defined and highly standardized, the React Native environment constantly evolves in sync with the evolution of underlying OS-es. Maintaining such an environment would require duplicating countless React Native behaviors and keeping them in sync as React Native develops.
 
 ## Element tree
 
-Calling the `render()` function creates an element tree. This is done internally by invoking `TestRenderer.create()` method. The output tree represents your React Native component tree, and each node of that tree is an "instance" of some React component (to be more precise, each node represents a React fiber, and only class components have instances, while function components store the hook state using fibers).
+Calling the `render()` function creates an element tree. This is done internally by invoking the `createRoot()` function from Test Renderer. The output tree represents your React Native component tree, containing only host elements. Each node of that tree corresponds to a host component that would have a counterpart in the native view hierarchy.
 
-These tree elements are represented by `ReactTestInstance` type:
+These tree elements are represented by `TestInstance` type from Test Renderer:
 
 ```tsx
-interface ReactTestInstance {
+interface TestInstance {
   type: ElementType;
   props: { [propName: string]: any };
-  parent: ReactTestInstance | null;
-  children: Array<ReactTestInstance | string>;
+  parent: TestInstance | null;
+  children: Array<TestInstance | string>;
 
   // Other props and methods
 }
 ```
 
-Based on: [https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-test-renderer/index.d.ts](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-test-renderer/index.d.ts)
+For more details, see the [Test Renderer documentation](https://github.com/mdjastrzebski/test-renderer).
 
 ## Host and composite components
 
-One of the most important aspects of the element tree is that it is composed of both host and composite components:
+To understand RNTL's element tree, it's important to know the difference between host and composite components in React Native:
 
-- [Host components](https://reactnative.dev/architecture/glossary#react-host-components-or-host-components) will have direct counterparts in the native view tree. Typical examples are `<View>`, `<Text>` , `<TextInput>`, and `<Image>` from React Native. You can think of these as an analog of `<div>`, `<span>` etc on the Web. You can also create custom host views as native modules or import them from 3rd party libraries, like React Navigation or React Native Gesture Handler.
+- [Host components](https://reactnative.dev/architecture/glossary#react-host-components-or-host-components) have direct counterparts in the native view tree. Typical examples are `<View>`, `<Text>`, `<TextInput>`, and `<Image>` from React Native. You can think of these as an analog of `<div>`, `<span>` etc on the Web. You can also create custom host views as native modules or import them from 3rd party libraries, like React Navigation or React Native Gesture Handler.
 - [Composite components](https://reactnative.dev/architecture/glossary#react-composite-components) are React code organization units that exist only on the JavaScript side of your app. Typical examples are components you create (function and class components), components imported from React Native (`View`, `Text`, etc.), or 3rd party packages.
 
 That might initially sound confusing since we put React Native's `View` in both categories. There are two `View` components: composite and host. The relation between them is as follows:
 
-- composite `View` is the type imported from the `react-native` package. It is a JavaScript component that renders the host `View` as its only child in the element tree.
-- host `View`, which you do not render directly. React Native takes the props you pass to the composite `View`, does some processing on them and passes them to the host `View`.
+- Composite `View` is the type imported from the `react-native` package. It is a JavaScript component that renders the host `View` as its only child.
+- Host `View`, which you do not render directly. React Native takes the props you pass to the composite `View`, does some processing on them and passes them to the host `View`.
 
-The part of the tree looks as follows:
+In a full React tree, this would look like:
 
 ```jsx
 * <View> (composite)
@@ -78,13 +78,7 @@ The part of the tree looks as follows:
     * children prop passed in JSX
 ```
 
-A similar relation exists between other composite and host pairs: e.g. `Text` , `TextInput`, and `Image` components:
-
-```jsx
-* <Text> (composite)
-  * <Text> (host)
-    * string (or mixed) content
-```
+A similar relation exists between other composite and host pairs: e.g. `Text`, `TextInput`, and `Image` components.
 
 Not all React Native components are organized this way, e.g., when you use `Pressable` (or `TouchableOpacity`), there is no host `Pressable`, but composite `Pressable` is rendering a host `View` with specific props being set:
 
@@ -94,28 +88,19 @@ Not all React Native components are organized this way, e.g., when you use `Pres
     * children prop passed in JSX
 ```
 
-### Differentiating between host and composite elements
+### Host-only element tree
 
-Any easy way to differentiate between host and composite elements is the `type` prop of `ReactTestInstance`:
+In RNTL v14, [Test Renderer](https://github.com/mdjastrzebski/test-renderer) only exposes host elements in the element tree. Composite components aren't visible in the tree—you only see their host element output. This aligns with Testing Library's philosophy: tests should focus on what users can see and interact with (host elements), not implementation details (composite components).
 
-- for host components, it's always a string value representing a component name, e.g., `"View"`
-- for composite components, it's a function or class corresponding to the component
-
-You can use the following code to check if a given element is a host one:
-
-```jsx
-function isHostElement(element: ReactTestInstance) {
-  return typeof element.type === 'string';
-}
-```
+For a `TestInstance`, the `type` prop is always a string value representing the host component name, e.g., `"View"`, `"Text"`, `"TextInput"`.
 
 ## Tree nodes
 
-We encourage you to only assert values on host views in your tests because they represent the user interface view and controls that users can see and interact with. Users can't see or interact with composite views as they exist purely in the JavaScript domain and don't generate any visible UI.
+RNTL v14 queries and the element tree only expose host elements. Tests assert on what users can see and interact with. Host elements represent the actual UI controls users interact with, while composite components exist purely in the JavaScript domain.
 
-### Asserting props
+### Understanding props
 
-For example, suppose you assert a `style` prop of a composite element. In that case, there is no guarantee that the style will be visible to the user, as the component author can forget to pass this prop to some underlying `View` or other host component. Similarly `onPress` event handler on a composite prop can be unreachable by the user.
+When asserting props on host elements, you're verifying what actually reaches the native view. This is important because composite components may process, transform, or even forget to pass props to their host children.
 
 ```jsx
 function ForgotToPassPropsButton({ title, onPress, style }) {
@@ -127,7 +112,7 @@ function ForgotToPassPropsButton({ title, onPress, style }) {
 }
 ```
 
-In the above example, user-defined components accept both `onPress` and `style` props but do not pass them (through `Pressable`) to host views, so they will not affect the user interface. Additionally, React Native and other libraries might pass some of the props under different names or transform their values between composite and host components.
+In the above example, the component accepts `onPress` and `style` props but doesn't pass them to host views, so they won't affect the user interface. By testing host elements, RNTL helps you catch these issues: if a prop doesn't reach a host element, users won't see or interact with it.
 
 ## Tree navigation
 
@@ -135,12 +120,8 @@ In the above example, user-defined components accept both `onPress` and `style` 
 You should avoid navigating over the element tree, as this makes your testing code fragile and may result in false positives. This section is more relevant for people who want to contribute to our codebase.
 :::
 
-You will encounter host and composite elements when navigating a tree of react elements using `parent` or `children` props of a `ReactTestInstance` element. You should be careful when navigating the element tree, as the tree structure for third-party components can change independently from your code and cause unexpected test failures.
-
-Inside RNTL, we have various tree navigation helpers: `getHostParent`, `getHostChildren`, etc. These are intentionally not exported, as using them is not recommended.
+You can navigate the tree of host elements using `parent` or `children` props of a `TestInstance`. Be careful when doing this, as the tree structure for third-party components can change independently from your code and cause unexpected test failures.
 
 ## Queries
 
-All recommended Testing Library queries return host components to encourage the best practices described above.
-
-Only `UNSAFE_*ByType` and `UNSAFE_*ByProps` queries can return both host and composite components depending on used predicates. They are marked as unsafe precisely because testing composite components makes your test more fragile.
+All Testing Library queries return host components to encourage the best practices described above. Since v14, RNTL uses [Test Renderer](https://github.com/mdjastrzebski/test-renderer), which only renders host elements, making it impossible to query composite components directly.

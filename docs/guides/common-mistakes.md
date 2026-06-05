@@ -1,6 +1,6 @@
 # Common Mistakes with React Native Testing Library
 
-> **Note:** This guide is adapted from Kent C. Dodds' article ["Common mistakes with React Testing Library"](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library) for React Native Testing Library v13. The original article focuses on web React, but the principles apply to React Native as well. This adaptation includes React Native-specific examples and ARIA-compatible accessibility attributes.
+> **Note:** This guide is adapted from Kent C. Dodds' article ["Common mistakes with React Testing Library"](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library) for React Native Testing Library v14. The original article focuses on web React, but the principles apply to React Native as well. This adaptation includes React Native-specific examples, async API usage (v14), and ARIA-compatible accessibility attributes.
 
 React Native Testing Library guiding principle is:
 
@@ -30,8 +30,8 @@ Here's an example of using the right query:
 import { TextInput, View } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
-test('finds input by label', () => {
-  render(
+test('finds input by label', async () => {
+  await render(
     <View>
       <TextInput aria-label="Username" placeholder="Enter username" value="" />
     </View>,
@@ -58,8 +58,8 @@ Importance: high
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
-test('uses role queries', () => {
-  render(
+test('uses role queries', async () => {
+  await render(
     <View>
       <Pressable role="button">
         <Text>Submit</Text>
@@ -100,8 +100,8 @@ React Native Testing Library provides built-in Jest matchers. Make sure you're u
 import { Pressable, Text } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
-test('button is disabled', () => {
-  render(
+test('button is disabled', async () => {
+  await render(
     <Pressable role="button" aria-disabled>
       <Text>Submit</Text>
     </Pressable>,
@@ -135,8 +135,8 @@ Use `queryBy*` only when checking that an element doesn't exist:
 import { View, Text } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
-test('checks non-existence', () => {
-  render(
+test('checks non-existence', async () => {
+  await render(
     <View>
       <Text>Hello</Text>
     </View>,
@@ -175,7 +175,7 @@ test('waits for element', async () => {
     return <View>{show && <Text>Loaded</Text>}</View>;
   };
 
-  render(<Component />);
+  await render(<Component />);
 
   // ✅ Good - uses findBy query
   const element = await screen.findByText('Loaded');
@@ -211,50 +211,50 @@ test('avoids side effects in waitFor', async () => {
     );
   };
 
-  render(<Component />);
+  await render(<Component />);
 
   const button = screen.getByRole('button');
 
   // ❌ Bad - side effect in waitFor
-  // await waitFor(() => {
-  //   fireEvent.press(button);
+  // await waitFor(async () => {
+  //   await fireEvent.press(button);
   //   expect(screen.getByText('Count: 1')).toBeOnTheScreen();
   // });
 
   // ✅ Good - side effect outside waitFor
-  fireEvent.press(button);
+  await fireEvent.press(button);
   await waitFor(() => {
     expect(screen.getByText('Count: 1')).toBeOnTheScreen();
   });
 });
 ```
 
-## Using `UNSAFE_root` to query for elements \{#using-unsafe-root-to-query-for-elements}
+## Using `container` to query for elements \{#using-container-to-query-for-elements}
 
 Importance: high
 
-React Native Testing Library provides an `UNSAFE_root` object that gives access to the root element, but you should avoid using it directly:
+React Native Testing Library provides a `container` object that has a `queryAll` method, but you should avoid using it directly:
 
 ```tsx
 import { View, Text } from 'react-native';
 import { render } from '@testing-library/react-native';
 
-test('finds element incorrectly', () => {
-  const { UNSAFE_root } = render(
+test('finds element incorrectly', async () => {
+  const { container } = await render(
     <View>
       <Text testID="message">Hello</Text>
     </View>,
   );
 
-  // ❌ Bad - using UNSAFE_root directly
-  const element = UNSAFE_root.findAll((node) => node.props.testID === 'message')[0];
+  // ❌ Bad - using container.queryAll directly
+  const element = container.queryAll((node) => node.props.testID === 'message')[0];
 
   // ✅ Good - use proper queries
   // const element = screen.getByTestId('message');
 });
 ```
 
-Instead, use the proper query methods from `screen` or the `render` result. The `UNSAFE_root` is a low-level API that you rarely need.
+Instead, use the proper query methods from `screen` or the `render` result. The `container` is a low-level API that you rarely need.
 
 ## Passing an empty callback to `waitFor` \{#passing-an-empty-callback-to-waitfor}
 
@@ -267,7 +267,7 @@ import { View } from 'react-native';
 import { render, waitFor } from '@testing-library/react-native';
 
 test('waits correctly', async () => {
-  render(<View testID="test" />);
+  await render(<View testID="test" />);
 
   // ❌ Bad - empty callback
   // await waitFor(() => {});
@@ -289,8 +289,8 @@ You can get all the queries from the `render` result:
 import { View, Text } from 'react-native';
 import { render } from '@testing-library/react-native';
 
-test('renders component', () => {
-  const { getByText } = render(
+test('renders component', async () => {
+  const { getByText } = await render(
     <View>
       <Text>Hello</Text>
     </View>,
@@ -306,8 +306,8 @@ But you can also get them from the `screen` object:
 import { View, Text } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
-test('renders component', () => {
-  render(
+test('renders component', async () => {
+  await render(
     <View>
       <Text>Hello</Text>
     </View>,
@@ -326,13 +326,13 @@ Using `screen` has several benefits:
 
 Importance: medium
 
-React Native Testing Library's `userEvent` methods are already wrapped in `act`, so you don't need to wrap them yourself:
+React Native Testing Library's `render`, `renderHook`, `userEvent`, and `fireEvent` are already wrapped in `act`, so you don't need to wrap them yourself:
 
 ```tsx
 import { Pressable, Text, View } from 'react-native';
 import { render, fireEvent, screen } from '@testing-library/react-native';
 
-test('updates on press', () => {
+test('updates on press', async () => {
   const Component = () => {
     const [count, setCount] = React.useState(0);
     return (
@@ -344,18 +344,18 @@ test('updates on press', () => {
     );
   };
 
-  render(<Component />);
+  await render(<Component />);
 
   const button = screen.getByRole('button');
 
   // ✅ Good - fireEvent is already wrapped in act
-  fireEvent.press(button);
+  await fireEvent.press(button);
 
   expect(screen.getByText('Count: 1')).toBeOnTheScreen();
 
   // ❌ Bad - unnecessary act wrapper
-  // act(() => {
-  //   fireEvent.press(button);
+  // await act(async () => {
+  //   await fireEvent.press(button);
   // });
 });
 ```
@@ -385,7 +385,7 @@ test('uses userEvent', async () => {
     );
   };
 
-  render(<Component />);
+  await render(<Component />);
 
   const input = screen.getByLabelText('Name');
   const button = screen.getByRole('button', { name: 'Clear' });
@@ -418,8 +418,8 @@ In React Native, text is rendered in `<Text>` components. You should query by th
 import { Text, View } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
-test('finds text correctly', () => {
-  render(
+test('finds text correctly', async () => {
+  await render(
     <View>
       <Text>Hello World</Text>
     </View>,
@@ -466,9 +466,9 @@ If you want to disable automatic cleanup for a specific test, you can use:
 ```tsx
 import { render } from '@testing-library/react-native/pure';
 
-test('does not cleanup', () => {
+test('does not cleanup', async () => {
   // This test won't cleanup automatically
-  render(<MyComponent />);
+  await render(<MyComponent />);
   // ... your test
 });
 ```
@@ -485,8 +485,8 @@ Importance: low
 import { View, Text } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
-test('uses getBy as assertion', () => {
-  render(
+test('uses getBy as assertion', async () => {
+  await render(
     <View>
       <Text>Hello</Text>
     </View>,
@@ -530,7 +530,7 @@ test('waits with single assertion', async () => {
     );
   };
 
-  render(<Component />);
+  await render(<Component />);
 
   // ✅ Good - single assertion per waitFor
   await waitFor(() => {
@@ -558,12 +558,12 @@ This is not really a "mistake" per se, but it's a common pattern that can be imp
 import { View } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
-test('renders with wrapper', () => {
+test('renders with wrapper', async () => {
   const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <View testID="wrapper">{children}</View>
   );
 
-  render(<View testID="content">Content</View>, {
+  await render(<View testID="content">Content</View>, {
     wrapper: Wrapper,
   });
 
@@ -579,7 +579,7 @@ The key principles to remember:
 
 1. **Use the right query** - Prefer `getByRole` as your first choice, use `findBy*` for async elements, and `queryBy*` only for checking non-existence
 2. **Use proper assertions** - Use RNTL's built-in matchers (`toBeOnTheScreen()`, `toBeDisabled()`, etc.) instead of asserting on props directly
-3. **Handle async operations correctly** - `userEvent` methods are async and must be awaited; `render()` and `fireEvent` are synchronous
+3. **Handle async operations correctly** - Always `await` `render()`, `renderHook`, `fireEvent`,and `userEvent` methods
 4. **Use `waitFor` correctly** - Avoid side-effects in callbacks, use `findBy*` instead when possible, and keep callbacks focused
 5. **Follow accessibility best practices** - Prefer ARIA attributes (`role`, `aria-label`) over `accessibility*` props
 6. **Organize code well** - Use `screen` over destructuring, prefer `userEvent` over `fireEvent`, and don't use `cleanup()`

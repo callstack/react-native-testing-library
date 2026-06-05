@@ -1,41 +1,41 @@
 # LLM Guidelines for React Native Testing Library
 
-Actionable guidelines for writing tests with React Native Testing Library (RNTL) v13.
+Actionable guidelines for writing tests with React Native Testing Library (RNTL) v14.
 
 ## Core APIs
 
 ### render
 
 ```tsx
-const result = render(<Component />, options?);  // Sync in v13
+const result = await render(<Component />, options?);
 ```
 
-| Option           | Description                                                      |
-| ---------------- | ---------------------------------------------------------------- |
-| `wrapper`        | React component to wrap the rendered component (e.g., providers) |
-| `createNodeMock` | Function to create mock refs                                     |
+| Option    | Description                                                      |
+| --------- | ---------------------------------------------------------------- |
+| `wrapper` | React component to wrap the rendered component (e.g., providers) |
 
-| Return                | Description                            |
-| --------------------- | -------------------------------------- |
-| `rerender(component)` | Re-render with a new component         |
-| `unmount()`           | Unmount the rendered component         |
-| `toJSON()`            | Get JSON representation for snapshots  |
-| `debug(options?)`     | Print the component tree to console    |
-| `root`                | Root element of the rendered component |
+| Return                | Description                                      |
+| --------------------- | ------------------------------------------------ |
+| `rerender(component)` | Re-render with a new component (async)           |
+| `unmount()`           | Unmount the rendered component (async)           |
+| `toJSON()`            | Get JSON representation for snapshots            |
+| `debug(options?)`     | Print the component tree to console              |
+| `container`           | Root host element of the rendered tree           |
+| `root`                | First child host element (your component's root) |
 
 ### screen
 
 **Prefer `screen`** over destructuring from `render()`. Provides all query methods after `render()` is called.
 
 ```tsx
-render(<Component />);
+await render(<Component />);
 screen.getByRole('button'); // Access queries via screen
 ```
 
 ### renderHook
 
 ```tsx
-const { result, rerender, unmount } = renderHook(() => useMyHook(), options?);  // Sync in v13
+const { result, rerender, unmount } = await renderHook(() => useMyHook(), options?);
 ```
 
 | Option         | Description                                        |
@@ -43,11 +43,11 @@ const { result, rerender, unmount } = renderHook(() => useMyHook(), options?);  
 | `initialProps` | Initial props passed to the hook                   |
 | `wrapper`      | React component to wrap the hook (e.g., providers) |
 
-| Return             | Description                      |
-| ------------------ | -------------------------------- |
-| `result.current`   | Current return value of the hook |
-| `rerender(props?)` | Re-render hook with new props    |
-| `unmount()`        | Unmount the hook                 |
+| Return             | Description                           |
+| ------------------ | ------------------------------------- |
+| `result.current`   | Current return value of the hook      |
+| `rerender(props?)` | Re-render hook with new props (async) |
+| `unmount()`        | Unmount the hook (async)              |
 
 ## Query Selection
 
@@ -92,22 +92,22 @@ const { result, rerender, unmount } = renderHook(() => useMyHook(), options?);  
 
 **Prefer `userEvent`** over `fireEvent` for realistic user interaction simulation. `userEvent` triggers the complete event sequence that real users would produce.
 
-### userEvent (Preferred, Async)
+### userEvent (Preferred)
 
 ```tsx
 const user = userEvent.setup();
 ```
 
-| Method                                     | Description                                                                         |
-| ------------------------------------------ | ----------------------------------------------------------------------------------- |
-| `await user.press(element)`                | Press an element (triggers `pressIn`, `pressOut`, `press`)                          |
-| `await user.longPress(element, options?)`  | Long press with optional `{ duration }`                                             |
-| `await user.type(element, text, options?)` | Type into TextInput (triggers `focus`, `keyPress`, `change`, `changeText` per char) |
-| `await user.clear(element)`                | Clear TextInput (select all + backspace)                                            |
-| `await user.paste(element, text)`          | Paste text into TextInput                                                           |
-| `await user.scrollTo(element, options)`    | Scroll a ScrollView with `{ y }` or `{ x }` offset                                  |
+| Method                               | Description                                                                         |
+| ------------------------------------ | ----------------------------------------------------------------------------------- |
+| `user.press(element)`                | Press an element (triggers `pressIn`, `pressOut`, `press`)                          |
+| `user.longPress(element, options?)`  | Long press with optional `{ duration }`                                             |
+| `user.type(element, text, options?)` | Type into TextInput (triggers `focus`, `keyPress`, `change`, `changeText` per char) |
+| `user.clear(element)`                | Clear TextInput (select all + backspace)                                            |
+| `user.paste(element, text)`          | Paste text into TextInput                                                           |
+| `user.scrollTo(element, options)`    | Scroll a ScrollView with `{ y }` or `{ x }` offset                                  |
 
-### fireEvent (Low-level, Sync in v13)
+### fireEvent (Low-level)
 
 Use only when `userEvent` doesn't support the event or when you need direct control.
 
@@ -118,12 +118,11 @@ Use only when `userEvent` doesn't support the event or when you need direct cont
 | `fireEvent.changeText(element, text)`    | Fire `onChangeText` directly                  |
 | `fireEvent.scroll(element, eventData)`   | Fire `onScroll` with event data               |
 
-## Sync vs Async APIs (v13)
+## Async/Await (v14)
 
-- **`render()`, `fireEvent.*`, `renderHook()` are synchronous** - no `await` needed
-- **`userEvent.*` is asynchronous** - requires `await`
+- **Always `await`**: `render()`, `fireEvent.*`, `renderHook()`, `userEvent.*`
+- **Make test functions `async`**: `test('name', async () => { ... })`
 - **Don't wrap in `act()`** - `render` and `fireEvent` handle it internally
-- **For React 19**: use async variants: `renderAsync()`, `fireEventAsync.*()` with `await`.
 
 ## waitFor Usage
 
@@ -143,13 +142,14 @@ Use only when `userEvent` doesn't support the event or when you need direct cont
 
 ## Quick Checklist
 
-- Using `getByRole` as first choice?
-- Using `findBy*` for async elements (not `waitFor` + `getBy*`)?
-- Using `queryBy*` only for non-existence?
-- Using RNTL matchers (`toBeOnTheScreen()`, `toBeDisabled()`, etc.)?
-- Using `screen` not destructuring from `render()`?
-- Avoiding side-effects in `waitFor`?
-- Using `userEvent` when appropriate?
+- ✅ Using `getByRole` as first choice?
+- ✅ Using `await` for all async operations?
+- ✅ Using `findBy*` for async elements (not `waitFor` + `getBy*`)?
+- ✅ Using `queryBy*` only for non-existence?
+- ✅ Using RNTL matchers (`toBeOnTheScreen()`, `toBeDisabled()`, etc.)?
+- ✅ Using `screen` not destructuring from `render()`?
+- ✅ Avoiding side-effects in `waitFor`?
+- ✅ Using `userEvent` when appropriate?
 
 ## Example: Good Pattern
 
@@ -176,20 +176,20 @@ test('user can submit form', async () => {
     );
   };
 
-  render(<Component />);
+  await render(<Component />);
 
-  // getByRole as first choice
+  // ✅ getByRole as first choice
   const input = screen.getByRole('textbox', { name: 'Name' });
   const button = screen.getByRole('button', { name: 'Submit' });
 
-  // userEvent for realistic interactions (async)
+  // ✅ userEvent for realistic interactions
   await user.type(input, 'John Doe');
   await user.press(button);
 
-  // findBy* for async elements
+  // ✅ findBy* for async elements
   const successMessage = await screen.findByRole('alert');
 
-  // RNTL matchers
+  // ✅ RNTL matchers
   expect(successMessage).toBeOnTheScreen();
   expect(successMessage).toHaveTextContent('Form submitted!');
 });
@@ -198,25 +198,31 @@ test('user can submit form', async () => {
 ## Example: Anti-Patterns
 
 ```tsx
-// getBy* for non-existence
+// ❌ Missing await
+test('bad', () => {
+  render(<Component />);
+  fireEvent.press(screen.getByText('Submit'));
+});
+
+// ❌ getBy* for non-existence
 expect(screen.getByText('Error')).not.toBeOnTheScreen();
 
-// waitFor + getBy* instead of findBy*
+// ❌ waitFor + getBy* instead of findBy*
 await waitFor(() => {
   expect(screen.getByText('Loaded')).toBeOnTheScreen();
 });
 
-// Side-effect in waitFor
+// ❌ Side-effect in waitFor
 await waitFor(async () => {
-  fireEvent.press(button);
+  await fireEvent.press(button);
   expect(screen.getByText('Result')).toBeOnTheScreen();
 });
 
-// accessibility* props instead of ARIA
+// ❌ accessibility* props instead of ARIA
 <Pressable accessibilityRole="button" accessibilityLabel="Submit" />;
 
-// Destructuring from render
-const { getByText } = render(<Component />);
+// ❌ Destructuring from render
+const { getByText } = await render(<Component />);
 ```
 
 By following these guidelines, your tests will be more maintainable, accessible, and reliable.

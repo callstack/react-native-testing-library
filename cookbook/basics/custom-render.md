@@ -14,11 +14,11 @@ interface RenderWithProvidersProps {
   theme?: Theme;
 }
 
-export function renderWithProviders<T>(
+export async function renderWithProviders<T>(
   ui: React.ReactElement<T>,
   options?: RenderWithProvidersProps,
 ) {
-  return render(
+  return await render(
     <UserProvider.Provider value={options?.user ?? null}>
       <ThemeProvider.Provider value={options?.theme ?? 'light'}>{ui}</ThemeProvider.Provider>
     </UserProvider.Provider>,
@@ -31,13 +31,13 @@ import { screen } from '@testing-library/react-native';
 import { renderWithProviders } from '../test-utils';
 // ...
 
-test('renders WelcomeScreen with user', () => {
-  renderWithProviders(<WelcomeScreen />, { user: { name: 'Jar-Jar' } });
+test('renders WelcomeScreen with user', async () => {
+  await renderWithProviders(<WelcomeScreen />, { user: { name: 'Jar-Jar' } });
   expect(screen.getByText(/hello Jar-Jar/i)).toBeOnTheScreen();
 });
 
-test('renders WelcomeScreen without user', () => {
-  renderWithProviders(<WelcomeScreen />, { user: null });
+test('renders WelcomeScreen without user', async () => {
+  await renderWithProviders(<WelcomeScreen />, { user: null });
   expect(screen.getByText(/hello stranger/i)).toBeOnTheScreen();
 });
 ```
@@ -51,8 +51,8 @@ Example [full source code](https://github.com/callstack/react-native-testing-lib
 A custom render function might accept additional parameters to allow for setting up different start conditions for a test, e.g., the initial state for global state management.
 
 ```tsx title=SomeScreen.test.tsx
-test('renders SomeScreen for logged in user', () => {
-  renderScreen(<SomeScreen />, { state: loggedInState });
+test('renders SomeScreen for logged in user', async () => {
+  await renderScreen(<SomeScreen />, { state: loggedInState });
   // ...
 });
 ```
@@ -66,13 +66,18 @@ function renderNavigator(ui, options);
 function renderScreen(ui, options);
 ```
 
-#### Async function
+#### Async setup
 
-Make it async if you want to put some async setup in your custom render function.
+Since `render` is async, your custom render function should be marked as `async` and use `await render()`. This pattern also makes it easy to add additional async setup if needed:
 
 ```tsx title=SomeScreen.test.tsx
+async function renderWithData<T>(ui: React.ReactElement<T>) {
+  const data = await fetchTestData();
+  return await render(<DataProvider value={data}>{ui}</DataProvider>);
+}
+
 test('renders SomeScreen', async () => {
-  await renderWithAsync(<SomeScreen />);
+  await renderWithData(<SomeScreen />);
   // ...
 });
 ```
