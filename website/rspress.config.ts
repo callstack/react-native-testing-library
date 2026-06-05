@@ -208,7 +208,7 @@ const sidebar14x = {
   ],
 };
 
-// Default version (13.x) sidebar without version prefix
+// Default version (14.x) sidebar without version prefix
 const sidebarDefault = {
   '/docs/': [
     {
@@ -216,6 +216,7 @@ const sidebarDefault = {
       items: [
         { text: 'Introduction', link: '/docs/start/intro' },
         { text: 'Quick Start', link: '/docs/start/quick-start' },
+        { text: 'v14 Migration', link: '/docs/start/migration-v14' },
       ],
     },
     {
@@ -250,7 +251,6 @@ const sidebarDefault = {
         { text: 'How to Query', link: '/docs/guides/how-to-query' },
         { text: 'Common Mistakes', link: '/docs/guides/common-mistakes' },
         { text: 'LLM Guidelines', link: '/docs/guides/llm-guidelines' },
-        { text: 'React 19', link: '/docs/guides/react-19' },
         { text: 'Troubleshooting', link: '/docs/guides/troubleshooting' },
         { text: 'FAQ', link: '/docs/guides/faq' },
         {
@@ -270,32 +270,13 @@ const sidebarDefault = {
         { text: 'Understanding Act', link: '/docs/advanced/understanding-act' },
       ],
     },
-    {
-      text: 'Migration Guides',
-      collapsed: true,
-      items: [
-        { text: 'v13 Migration', link: '/docs/migration/v13' },
-        { text: 'Jest Matchers', link: '/docs/migration/jest-matchers' },
-        {
-          text: 'Previous versions',
-          collapsed: true,
-          items: [
-            { text: 'v12', link: '/docs/migration/previous/v12' },
-            { text: 'v11', link: '/docs/migration/previous/v11' },
-            { text: 'v9', link: '/docs/migration/previous/v9' },
-            { text: 'v7', link: '/docs/migration/previous/v7' },
-            { text: 'v2', link: '/docs/migration/previous/v2' },
-          ],
-        },
-      ],
-    },
   ],
   '/cookbook/': [
     { text: 'Cookbook', link: '/cookbook/' },
     {
       text: 'Basic Recipes',
       items: [
-        { text: 'Async Tests', link: '/cookbook/basics/async-tests' },
+        { text: 'Async Events', link: '/cookbook/basics/async-events' },
         { text: 'Custom Render', link: '/cookbook/basics/custom-render' },
       ],
     },
@@ -332,7 +313,7 @@ export default defineConfig({
     // Shiki is now the default code highlighter
   },
   multiVersion: {
-    default: '13.x',
+    default: '14.x',
     versions: ['12.x', '13.x', '14.x'],
   },
   route: {
