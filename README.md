@@ -94,7 +94,7 @@ React Native Testing Library consists of following APIs:
 
 ## Migration Guides
 
-- **[Migration to 14.0](https://oss.callstack.com/react-native-testing-library/docs/migration/v14)** - Drops React 18, async APIs by default
+- **[Migration to 14.0](https://oss.callstack.com/react-native-testing-library/docs/start/migration-v14)** - Drops React 18, async APIs by default
 
 ## Troubleshooting
 
