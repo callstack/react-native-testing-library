@@ -1,5 +1,6 @@
 /* globals jest */
 import { act } from './act';
+import { addToCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import { flushMicroTasks } from './flush-micro-tasks';
 import { copyStackTraceIfNeeded, ErrorWithStack } from './helpers/errors';
@@ -94,18 +95,29 @@ function waitForInternal<T>(
     } else {
       overallTimeoutTimer = setTimeout(handleTimeout, timeout);
       intervalId = setInterval(checkRealTimersCallback, interval);
+      addToCleanupQueue(cleanupWaitFor);
       checkExpectation();
     }
 
-    function onDone(done: { type: 'result'; result: T } | { type: 'error'; error: unknown }) {
+    function cleanupWaitFor() {
       finished = true;
+
       if (overallTimeoutTimer) {
         clearTimeout(overallTimeoutTimer);
+        overallTimeoutTimer = null;
       }
 
       if (!fakeTimersType) {
         clearInterval(intervalId);
       }
+    }
+
+    function onDone(done: { type: 'result'; result: T } | { type: 'error'; error: unknown }) {
+      if (finished) {
+        return;
+      }
+
+      cleanupWaitFor();
 
       if (done.type === 'error') {
         reject(done.error);
@@ -120,7 +132,7 @@ function waitForInternal<T>(
           `Changed from using real timers to fake timers while using waitFor. This is not allowed and will result in very strange behavior. Please ensure you're awaiting all async things your test is doing before changing to fake timers. For more info, please go to https://github.com/testing-library/dom-testing-library/issues/830`,
         );
         copyStackTraceIfNeeded(error, stackTraceError);
-        return reject(error);
+        return onDone({ type: 'error', error });
       } else {
         return checkExpectation();
       }
@@ -176,13 +188,19 @@ function waitForInternal<T>(
         error = new Error('Timed out in waitFor.');
         copyStackTraceIfNeeded(error, stackTraceError);
       }
+
+      let errorForRejection: unknown = error;
       if (typeof onTimeout === 'function') {
-        const result = onTimeout(error);
-        if (result) {
-          error = result;
+        try {
+          const result = onTimeout(error);
+          if (result) {
+            errorForRejection = result;
+          }
+        } catch (onTimeoutError) {
+          errorForRejection = onTimeoutError;
         }
       }
-      onDone({ type: 'error', error });
+      onDone({ type: 'error', error: errorForRejection });
     }
   });
 }

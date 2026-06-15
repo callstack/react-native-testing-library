@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 
 import { configure, fireEvent, render, screen, waitFor } from '..';
+import { cleanup } from '../pure';
 import type { TimerType } from '../test-utils/timers';
 import { setupTimeType } from '../test-utils/timers';
 
@@ -175,6 +176,24 @@ describe('timeout errors', () => {
       }),
     ).rejects.toThrow('Unable to find an element with text: Never appears');
   });
+
+  test('rejects with error thrown by onTimeout callback', async () => {
+    const onTimeoutError = new Error('onTimeout failed');
+
+    await expect(
+      waitFor(
+        () => {
+          throw new Error('Original timeout error');
+        },
+        {
+          timeout: 10,
+          onTimeout: () => {
+            throw onTimeoutError;
+          },
+        },
+      ),
+    ).rejects.toBe(onTimeoutError);
+  });
 });
 
 describe('error handling', () => {
@@ -234,6 +253,31 @@ describe('error handling', () => {
     await expect(waitForPromise).rejects.toThrow(
       'Changed from using fake timers to real timers while using waitFor',
     );
+  });
+
+  test('cleanup stops real timer polling for pending waitFor calls', async () => {
+    const expectation = jest.fn(() => {
+      throw new Error('Not ready yet');
+    });
+
+    async function ignoreWaitForRejection() {
+      try {
+        await waitFor(expectation, { timeout: 300, interval: 20 });
+      } catch {
+        // This waitFor call is intentionally abandoned in the test.
+      }
+    }
+
+    void ignoreWaitForRejection();
+
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    expect(expectation).toHaveBeenCalled();
+
+    await cleanup();
+    const callsAfterCleanup = expectation.mock.calls.length;
+
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    expect(expectation).toHaveBeenCalledTimes(callsAfterCleanup);
   });
 });
 
