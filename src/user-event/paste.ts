@@ -42,10 +42,10 @@ export async function paste(
 
   // 3. Paste the text
   nativeState.valueForInstance.set(instance, text);
-  await dispatchEvent(instance, 'change', buildTextChangeEvent(text));
-  await dispatchEvent(instance, 'changeText', text);
 
   const rangeAfter = { start: text.length, end: text.length };
+  await dispatchEvent(instance, 'change', buildTextChangeEvent(text, rangeAfter));
+  await dispatchEvent(instance, 'changeText', text);
   await dispatchEvent(instance, 'selectionChange', buildTextSelectionChangeEvent(rangeAfter));
 
   // According to the docs only multiline TextInput emits contentSizeChange event

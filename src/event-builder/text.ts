@@ -6,10 +6,10 @@ import { baseSyntheticEvent } from './base';
  * - iOS: `{"eventCount": 4, "target": 75, "text": "Test"}`
  * - Android: `{"eventCount": 6, "target": 53, "text": "Tes"}`
  */
-export function buildTextChangeEvent(text: string) {
+export function buildTextChangeEvent(text: string, { start, end }: TextRange) {
   return {
     ...baseSyntheticEvent(),
-    nativeEvent: { text, target: 0, eventCount: 0 },
+    nativeEvent: { text, target: 0, eventCount: 0, selection: { start, end } },
   };
 }
 

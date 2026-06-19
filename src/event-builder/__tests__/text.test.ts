@@ -7,13 +7,14 @@ import {
   buildTextSelectionChangeEvent,
 } from '../text';
 
-test('buildTextChangeEvent returns event with text', () => {
-  const event = buildTextChangeEvent('Hello');
+test('buildTextChangeEvent returns event with text and selection', () => {
+  const event = buildTextChangeEvent('Hello', { start: 5, end: 5 });
 
   expect(event.nativeEvent).toEqual({
     text: 'Hello',
     target: 0,
     eventCount: 0,
+    selection: { start: 5, end: 5 },
   });
 });
 

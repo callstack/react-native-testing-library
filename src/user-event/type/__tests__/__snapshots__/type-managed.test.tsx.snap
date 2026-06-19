@@ -99,6 +99,10 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 1,
+          "start": 1,
+        },
         "target": 0,
         "text": "W",
       },
@@ -159,6 +163,10 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 2,
+          "start": 2,
+        },
         "target": 0,
         "text": "Wo",
       },
@@ -219,6 +227,10 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
         "target": 0,
         "text": "Wow",
       },
@@ -390,6 +402,10 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 4,
+          "start": 4,
+        },
         "target": 0,
         "text": "XXXA",
       },
@@ -450,6 +466,10 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 4,
+          "start": 4,
+        },
         "target": 0,
         "text": "XXXB",
       },
@@ -510,6 +530,10 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 4,
+          "start": 4,
+        },
         "target": 0,
         "text": "XXXC",
       },

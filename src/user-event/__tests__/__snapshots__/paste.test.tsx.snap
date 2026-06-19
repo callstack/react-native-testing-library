@@ -48,6 +48,10 @@ exports[`paste() paste on empty text input 1`] = `
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
         "target": 0,
         "text": "Hi!",
       },
@@ -168,6 +172,10 @@ exports[`paste() paste on filled text input 1`] = `
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
         "target": 0,
         "text": "Hi!",
       },
@@ -288,6 +296,10 @@ exports[`paste() supports defaultValue prop: defaultValue: "Hello Default!" 1`] 
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
         "target": 0,
         "text": "Hi!",
       },
@@ -408,6 +420,10 @@ exports[`paste() supports multiline: value: "Hello World!\\nHow are you?" multil
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
         "target": 0,
         "text": "Hi!",
       },
