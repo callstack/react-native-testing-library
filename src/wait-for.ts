@@ -209,14 +209,9 @@ function waitForInternal<T>(
             errorForRejection = result;
           }
         } catch (onTimeoutError) {
-          const onTimeoutMessage =
-            onTimeoutError instanceof Error ? onTimeoutError.message : String(onTimeoutError);
-
           errorForRejection = new Error(
-            `\`onTimeout\` threw while handling \`waitFor\` timeout: ${onTimeoutMessage}`,
-            {
-              cause: error,
-            },
+            `\`onTimeout\` threw while handling \`waitFor\` timeout: ${onTimeoutError instanceof Error ? onTimeoutError.message : String(onTimeoutError)}`,
+            { cause: error },
           );
         }
       }
