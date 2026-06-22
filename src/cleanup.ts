@@ -21,7 +21,3 @@ export function addToCleanupQueue(fn: CleanUpFunction) {
 export function removeFromCleanupQueue(fn: CleanUpFunction) {
   cleanupQueue.delete(fn);
 }
-
-export function getCleanupQueueSize() {
-  return cleanupQueue.size;
-}
