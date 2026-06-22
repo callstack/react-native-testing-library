@@ -220,8 +220,7 @@ describe('timeout errors', () => {
         },
       ),
     ).rejects.toMatchObject({
-      message:
-        '`onTimeout` threw while handling `waitFor` timeout: onTimeout failed with string',
+      message: '`onTimeout` threw while handling `waitFor` timeout: onTimeout failed with string',
       cause: expect.objectContaining({
         message: 'Original timeout error',
       }),
