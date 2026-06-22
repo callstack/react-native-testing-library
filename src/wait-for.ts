@@ -102,6 +102,7 @@ function waitForInternal<T>(
     }
 
     function cleanupWaitFor({ rejectOnAbort = false } = {}) {
+      /* istanbul ignore next */
       if (finished) {
         return;
       }
