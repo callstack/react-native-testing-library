@@ -210,10 +210,7 @@ function waitForInternal<T>(
             errorForRejection = result;
           }
         } catch (onTimeoutError) {
-          errorForRejection = new Error(
-            `\`onTimeout\` threw while handling \`waitFor\` timeout: ${onTimeoutError instanceof Error ? onTimeoutError.message : String(onTimeoutError)}`,
-            { cause: error },
-          );
+          errorForRejection = onTimeoutError;
         }
       }
       onDone({ type: 'error', error: errorForRejection });

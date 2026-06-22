@@ -184,7 +184,7 @@ describe('timeout errors', () => {
     ).rejects.toThrow('Unable to find an element with text: Never appears');
   });
 
-  test('chains original timeout error when onTimeout callback throws', async () => {
+  test('rejects with onTimeout error when onTimeout callback throws', async () => {
     await expect(
       waitFor(
         () => {
@@ -197,15 +197,10 @@ describe('timeout errors', () => {
           },
         },
       ),
-    ).rejects.toMatchObject({
-      message: '`onTimeout` threw while handling `waitFor` timeout: onTimeout failed',
-      cause: expect.objectContaining({
-        message: 'Original timeout error',
-      }),
-    });
+    ).rejects.toThrow('onTimeout failed');
   });
 
-  test('chains original timeout error when onTimeout throws a non-Error value', async () => {
+  test('rejects with onTimeout value when onTimeout throws a non-Error value', async () => {
     await expect(
       waitFor(
         () => {
@@ -219,12 +214,7 @@ describe('timeout errors', () => {
           },
         },
       ),
-    ).rejects.toMatchObject({
-      message: '`onTimeout` threw while handling `waitFor` timeout: onTimeout failed with string',
-      cause: expect.objectContaining({
-        message: 'Original timeout error',
-      }),
-    });
+    ).rejects.toBe('onTimeout failed with string');
   });
 });
 
