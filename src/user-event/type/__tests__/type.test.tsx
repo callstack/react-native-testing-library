@@ -67,6 +67,56 @@ describe('type()', () => {
     expect(events).toMatchSnapshot('input: "abc"');
   });
 
+  it('includes caret selection in the change event nativeEvent', async () => {
+    const { events } = await renderTextInputWithToolkit();
+
+    const user = userEvent.setup();
+    await user.type(screen.getByTestId('input'), 'Hello');
+
+    const changeEvents = events.filter((event) => event.name === 'change');
+    const lastChangeEvent = changeEvents[changeEvents.length - 1];
+
+    // React Native (>=0.85) reports the caret position via `onChange`'s
+    // `nativeEvent.selection` on all platforms.
+    expect(lastChangeEvent.payload.nativeEvent.selection).toEqual({
+      start: 'Hello'.length,
+      end: 'Hello'.length,
+    });
+  });
+
+  it('drives components that read the caret from change event (regression)', async () => {
+    const onChange = jest.fn();
+
+    function MaskedInput() {
+      const [value, setValue] = React.useState('');
+      return (
+        <TextInput
+          testID="masked-input"
+          value={value}
+          onChange={(event) => {
+            // RN (>=0.85) reports the caret position via `nativeEvent.selection`
+            // on all platforms; the bundled RN types may not declare it yet.
+            const { selection, text } = event.nativeEvent as typeof event.nativeEvent & {
+              selection: { start: number; end: number };
+            };
+            onChange(selection);
+            // Mimic an input-mask library that relies on the caret position
+            // reported inside the `change` event to update the value.
+            setValue(text.slice(0, selection.end));
+          }}
+        />
+      );
+    }
+
+    await render(<MaskedInput />);
+
+    const user = userEvent.setup();
+    await user.type(screen.getByTestId('masked-input'), 'abc');
+
+    expect(onChange).toHaveBeenLastCalledWith({ start: 3, end: 3 });
+    expect(screen.getByTestId('masked-input').props.value).toBe('abc');
+  });
+
   it.each(['modern', 'legacy'])('works with %s fake timers', async (type) => {
     jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
     const { events } = await renderTextInputWithToolkit();

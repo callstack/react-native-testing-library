@@ -108,13 +108,14 @@ export async function emitTypingEvents(
   }
 
   nativeState.valueForInstance.set(instance, text);
-  await dispatchEvent(instance, 'change', buildTextChangeEvent(text));
-  await dispatchEvent(instance, 'changeText', text);
 
   const selectionRange = {
     start: text.length,
     end: text.length,
   };
+
+  await dispatchEvent(instance, 'change', buildTextChangeEvent(text, selectionRange));
+  await dispatchEvent(instance, 'changeText', text);
   await dispatchEvent(instance, 'selectionChange', buildTextSelectionChangeEvent(selectionRange));
 
   // According to the docs only multiline TextInput emits contentSizeChange event

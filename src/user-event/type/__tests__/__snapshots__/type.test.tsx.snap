@@ -99,6 +99,10 @@ exports[`type() supports backspace: input: "{Backspace}a", defaultValue: "xxx" 1
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 2,
+          "start": 2,
+        },
         "target": 0,
         "text": "xx",
       },
@@ -159,6 +163,10 @@ exports[`type() supports backspace: input: "{Backspace}a", defaultValue: "xxx" 1
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
         "target": 0,
         "text": "xxa",
       },
@@ -330,6 +338,10 @@ exports[`type() supports basic case: input: "abc" 1`] = `
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 1,
+          "start": 1,
+        },
         "target": 0,
         "text": "a",
       },
@@ -390,6 +402,10 @@ exports[`type() supports basic case: input: "abc" 1`] = `
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 2,
+          "start": 2,
+        },
         "target": 0,
         "text": "ab",
       },
@@ -450,6 +466,10 @@ exports[`type() supports basic case: input: "abc" 1`] = `
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 3,
+          "start": 3,
+        },
         "target": 0,
         "text": "abc",
       },
@@ -621,6 +641,10 @@ exports[`type() supports defaultValue prop: input: "ab", defaultValue: "xxx" 1`]
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 4,
+          "start": 4,
+        },
         "target": 0,
         "text": "xxxa",
       },
@@ -681,6 +705,10 @@ exports[`type() supports defaultValue prop: input: "ab", defaultValue: "xxx" 1`]
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 5,
+          "start": 5,
+        },
         "target": 0,
         "text": "xxxab",
       },
@@ -852,6 +880,10 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 1,
+          "start": 1,
+        },
         "target": 0,
         "text": "
 ",
@@ -935,6 +967,10 @@ exports[`type() supports multiline: input: "{Enter}\\n", multiline: true 1`] = `
       "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
+        "selection": {
+          "end": 2,
+          "start": 2,
+        },
         "target": 0,
         "text": "
 
