@@ -42,7 +42,7 @@ function waitForInternal<T>(
     let promiseStatus = 'idle';
 
     let overallTimeoutTimer: ReturnType<typeof setTimeout> | null = null;
-    const cleanupQueueCallback = () => cleanupWaitFor({ rejectOnAbort: true });
+    const cleanupQueueCallback = () => finalizeWaitFor({ rejectOnAbort: true });
 
     const fakeTimersType = getJestFakeTimersType();
 
@@ -101,7 +101,7 @@ function waitForInternal<T>(
       checkExpectation();
     }
 
-    function cleanupWaitFor({ rejectOnAbort = false } = {}) {
+    function finalizeWaitFor({ rejectOnAbort = false } = {}) {
       /* istanbul ignore next */
       if (finished) {
         return;
@@ -129,7 +129,7 @@ function waitForInternal<T>(
         return;
       }
 
-      cleanupWaitFor();
+      finalizeWaitFor();
       removeFromCleanupQueue(cleanupQueueCallback);
 
       if (done.type === 'error') {
