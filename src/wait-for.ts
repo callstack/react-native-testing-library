@@ -36,11 +36,12 @@ function waitForInternal<T>(
 
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
-    let lastError: unknown, intervalId: ReturnType<typeof setTimeout>;
+    let lastError: unknown;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
     let finished = false;
     let promiseStatus = 'idle';
 
-    let overallTimeoutTimer: NodeJS.Timeout | null = null;
+    let overallTimeoutTimer: ReturnType<typeof setTimeout> | null = null;
     const cleanupQueueCallback = () => cleanupWaitFor({ rejectOnAbort: true });
 
     const fakeTimersType = getJestFakeTimersType();
@@ -101,19 +102,24 @@ function waitForInternal<T>(
     }
 
     function cleanupWaitFor({ rejectOnAbort = false } = {}) {
-      if (rejectOnAbort && !finished) {
-        reject(new Error('waitFor was aborted by cleanup'));
+      if (finished) {
+        return;
       }
 
       finished = true;
+
+      if (rejectOnAbort) {
+        reject(new Error('waitFor was aborted by cleanup'));
+      }
 
       if (overallTimeoutTimer) {
         clearTimeout(overallTimeoutTimer);
         overallTimeoutTimer = null;
       }
 
-      if (!fakeTimersType) {
+      if (intervalId) {
         clearInterval(intervalId);
+        intervalId = null;
       }
     }
 
