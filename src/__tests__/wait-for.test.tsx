@@ -258,25 +258,19 @@ describe('error handling', () => {
     );
   });
 
-  test('cleanup stops real timer polling for pending waitFor calls', async () => {
+  test('cleanup rejects pending waitFor calls and stops real timer polling', async () => {
     const expectation = jest.fn(() => {
       throw new Error('Not ready yet');
     });
 
-    async function ignoreWaitForRejection() {
-      try {
-        await waitFor(expectation, { timeout: 300, interval: 20 });
-      } catch {
-        // This waitFor call is intentionally abandoned in the test.
-      }
-    }
-
-    void ignoreWaitForRejection();
+    const waitForPromise = waitFor(expectation, { timeout: 300, interval: 20 });
 
     await new Promise((resolve) => setTimeout(resolve, 60));
     expect(expectation).toHaveBeenCalled();
 
     await cleanup();
+    await expect(waitForPromise).rejects.toThrow('waitFor was aborted by cleanup');
+
     const callsAfterCleanup = expectation.mock.calls.length;
 
     await new Promise((resolve) => setTimeout(resolve, 60));

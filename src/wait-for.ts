@@ -95,11 +95,15 @@ function waitForInternal<T>(
     } else {
       overallTimeoutTimer = setTimeout(handleTimeout, timeout);
       intervalId = setInterval(checkRealTimersCallback, interval);
-      addToCleanupQueue(cleanupWaitFor);
+      addToCleanupQueue(() => cleanupWaitFor({ rejectOnAbort: true }));
       checkExpectation();
     }
 
-    function cleanupWaitFor() {
+    function cleanupWaitFor({ rejectOnAbort = false } = {}) {
+      if (rejectOnAbort && !finished) {
+        reject(new Error('waitFor was aborted by cleanup'));
+      }
+
       finished = true;
 
       if (overallTimeoutTimer) {
