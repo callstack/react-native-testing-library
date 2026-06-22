@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 
 import { configure, fireEvent, render, screen, waitFor } from '..';
-import { getCleanupQueueSize } from '../cleanup';
+import { addToCleanupQueue, getCleanupQueueSize } from '../cleanup';
 import { cleanup } from '../pure';
 import type { TimerType } from '../test-utils/timers';
 import { setupTimeType } from '../test-utils/timers';
@@ -294,6 +294,26 @@ describe('error handling', () => {
 
     await new Promise((resolve) => setTimeout(resolve, 60));
     expect(expectation).toHaveBeenCalledTimes(callsAfterCleanup);
+  });
+
+  test('cleanup abort removes pending waitFor callback before cleanup queue is cleared', async () => {
+    const expectation = jest.fn(() => {
+      throw new Error('Not ready yet');
+    });
+
+    const waitForPromise = waitFor(expectation, { timeout: 300, interval: 20 });
+
+    await new Promise((resolve) => setTimeout(resolve, 30));
+
+    const queueSizes: number[] = [];
+    addToCleanupQueue(() => {
+      queueSizes.push(getCleanupQueueSize());
+    });
+
+    await cleanup();
+    await expect(waitForPromise).rejects.toThrow('waitFor was aborted by cleanup');
+
+    expect(queueSizes).toEqual([1]);
   });
 
   test('async expectation resolving after cleanup abort has no effect', async () => {

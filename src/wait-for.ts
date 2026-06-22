@@ -109,6 +109,8 @@ function waitForInternal<T>(
 
       finished = true;
 
+      removeFromCleanupQueue(cleanupQueueCallback);
+
       if (rejectOnAbort) {
         reject(new Error('waitFor was aborted by cleanup'));
       }
@@ -130,7 +132,6 @@ function waitForInternal<T>(
       }
 
       finalizeWaitFor();
-      removeFromCleanupQueue(cleanupQueueCallback);
 
       if (done.type === 'error') {
         reject(done.error);
