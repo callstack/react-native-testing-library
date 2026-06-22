@@ -1,6 +1,6 @@
 /* globals jest */
 import { act } from './act';
-import { addToCleanupQueue } from './cleanup';
+import { addToCleanupQueue, removeFromCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import { flushMicroTasks } from './flush-micro-tasks';
 import { copyStackTraceIfNeeded, ErrorWithStack } from './helpers/errors';
@@ -41,6 +41,7 @@ function waitForInternal<T>(
     let promiseStatus = 'idle';
 
     let overallTimeoutTimer: NodeJS.Timeout | null = null;
+    const cleanupQueueCallback = () => cleanupWaitFor({ rejectOnAbort: true });
 
     const fakeTimersType = getJestFakeTimersType();
 
@@ -95,7 +96,7 @@ function waitForInternal<T>(
     } else {
       overallTimeoutTimer = setTimeout(handleTimeout, timeout);
       intervalId = setInterval(checkRealTimersCallback, interval);
-      addToCleanupQueue(() => cleanupWaitFor({ rejectOnAbort: true }));
+      addToCleanupQueue(cleanupQueueCallback);
       checkExpectation();
     }
 
@@ -122,6 +123,7 @@ function waitForInternal<T>(
       }
 
       cleanupWaitFor();
+      removeFromCleanupQueue(cleanupQueueCallback);
 
       if (done.type === 'error') {
         reject(done.error);

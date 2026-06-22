@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 
 import { configure, fireEvent, render, screen, waitFor } from '..';
+import { getCleanupQueueSize } from '../cleanup';
 import { cleanup } from '../pure';
 import type { TimerType } from '../test-utils/timers';
 import { setupTimeType } from '../test-utils/timers';
@@ -70,6 +71,12 @@ describe('successful waiting', () => {
     await waitFor(() => {
       expect(onDelayedPress).toHaveBeenCalled();
     });
+  });
+
+  test('does not retain cleanup callback after waitFor settles', async () => {
+    await waitFor(() => true);
+
+    expect(getCleanupQueueSize()).toBe(0);
   });
 
   test.each(['real', 'fake', 'fake-legacy'] as const)(
