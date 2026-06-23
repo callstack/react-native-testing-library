@@ -202,7 +202,6 @@ describe('timeout errors', () => {
         {
           timeout: 10,
           onTimeout: () => {
-            // eslint-disable-next-line @typescript-eslint/only-throw-error
             throw 'onTimeout failed with string';
           },
         },
