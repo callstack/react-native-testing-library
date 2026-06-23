@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 
 import { configure, fireEvent, render, screen, waitFor } from '..';
+import { cleanup } from '../pure';
 import type { TimerType } from '../test-utils/timers';
 import { setupTimeType } from '../test-utils/timers';
 
@@ -175,6 +176,39 @@ describe('timeout errors', () => {
       }),
     ).rejects.toThrow('Unable to find an element with text: Never appears');
   });
+
+  test('rejects with onTimeout error when onTimeout callback throws', async () => {
+    await expect(
+      waitFor(
+        () => {
+          throw new Error('Original timeout error');
+        },
+        {
+          timeout: 10,
+          onTimeout: () => {
+            throw new Error('onTimeout failed');
+          },
+        },
+      ),
+    ).rejects.toThrow('onTimeout failed');
+  });
+
+  test('rejects with onTimeout value when onTimeout throws a non-Error value', async () => {
+    await expect(
+      waitFor(
+        () => {
+          throw new Error('Original timeout error');
+        },
+        {
+          timeout: 10,
+          onTimeout: () => {
+            // eslint-disable-next-line @typescript-eslint/only-throw-error
+            throw 'onTimeout failed with string';
+          },
+        },
+      ),
+    ).rejects.toBe('onTimeout failed with string');
+  });
 });
 
 describe('error handling', () => {
@@ -234,6 +268,46 @@ describe('error handling', () => {
     await expect(waitForPromise).rejects.toThrow(
       'Changed from using fake timers to real timers while using waitFor',
     );
+  });
+
+  test('cleanup rejects pending waitFor calls and stops real timer polling', async () => {
+    const expectation = jest.fn(() => {
+      throw new Error('Not ready yet');
+    });
+
+    const waitForPromise = waitFor(expectation, { timeout: 300, interval: 20 });
+
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    expect(expectation).toHaveBeenCalled();
+
+    await cleanup();
+    await expect(waitForPromise).rejects.toThrow('waitFor was aborted by cleanup');
+
+    const callsAfterCleanup = expectation.mock.calls.length;
+
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    expect(expectation).toHaveBeenCalledTimes(callsAfterCleanup);
+  });
+
+  test('async expectation resolving after cleanup abort has no effect', async () => {
+    let resolveExpectation!: (value: string) => void;
+    const expectationPromise = new Promise<string>((resolve) => {
+      resolveExpectation = resolve;
+    });
+
+    const waitForPromise = waitFor(() => expectationPromise, { timeout: 300, interval: 20 });
+
+    // Wait for at least one interval tick so the expectation is called and its promise is pending
+    await new Promise((resolve) => setTimeout(resolve, 30));
+
+    // Start cleanup while the expectation promise is still pending
+    const cleanupPromise = cleanup();
+
+    // Resolve the expectation promise while cleanup is in progress
+    resolveExpectation('success');
+
+    await cleanupPromise;
+    await expect(waitForPromise).rejects.toThrow('waitFor was aborted by cleanup');
   });
 });
 

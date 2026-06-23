@@ -17,3 +17,7 @@ export async function cleanup() {
 export function addToCleanupQueue(fn: CleanUpFunction) {
   cleanupQueue.add(fn);
 }
+
+export function removeFromCleanupQueue(fn: CleanUpFunction) {
+  cleanupQueue.delete(fn);
+}

@@ -1,5 +1,6 @@
 /* globals jest */
 import { act } from './act';
+import { addToCleanupQueue, removeFromCleanupQueue } from './cleanup';
 import { getConfig } from './config';
 import { flushMicroTasks } from './flush-micro-tasks';
 import { copyStackTraceIfNeeded, ErrorWithStack } from './helpers/errors';
@@ -35,11 +36,13 @@ function waitForInternal<T>(
 
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
-    let lastError: unknown, intervalId: ReturnType<typeof setTimeout>;
+    let lastError: unknown;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
     let finished = false;
     let promiseStatus = 'idle';
 
-    let overallTimeoutTimer: NodeJS.Timeout | null = null;
+    let overallTimeoutTimer: ReturnType<typeof setTimeout> | null = null;
+    const cleanupQueueCallback = () => finalizeWaitFor({ rejectOnAbort: true });
 
     const fakeTimersType = getJestFakeTimersType();
 
@@ -94,18 +97,41 @@ function waitForInternal<T>(
     } else {
       overallTimeoutTimer = setTimeout(handleTimeout, timeout);
       intervalId = setInterval(checkRealTimersCallback, interval);
+      addToCleanupQueue(cleanupQueueCallback);
       checkExpectation();
     }
 
-    function onDone(done: { type: 'result'; result: T } | { type: 'error'; error: unknown }) {
-      finished = true;
-      if (overallTimeoutTimer) {
-        clearTimeout(overallTimeoutTimer);
+    function finalizeWaitFor({ rejectOnAbort = false } = {}) {
+      /* istanbul ignore next */
+      if (finished) {
+        return;
       }
 
-      if (!fakeTimersType) {
-        clearInterval(intervalId);
+      finished = true;
+
+      removeFromCleanupQueue(cleanupQueueCallback);
+
+      if (rejectOnAbort) {
+        reject(new Error('waitFor was aborted by cleanup'));
       }
+
+      if (overallTimeoutTimer) {
+        clearTimeout(overallTimeoutTimer);
+        overallTimeoutTimer = null;
+      }
+
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    }
+
+    function onDone(done: { type: 'result'; result: T } | { type: 'error'; error: unknown }) {
+      if (finished) {
+        return;
+      }
+
+      finalizeWaitFor();
 
       if (done.type === 'error') {
         reject(done.error);
@@ -120,7 +146,7 @@ function waitForInternal<T>(
           `Changed from using real timers to fake timers while using waitFor. This is not allowed and will result in very strange behavior. Please ensure you're awaiting all async things your test is doing before changing to fake timers. For more info, please go to https://github.com/testing-library/dom-testing-library/issues/830`,
         );
         copyStackTraceIfNeeded(error, stackTraceError);
-        return reject(error);
+        return onDone({ type: 'error', error });
       } else {
         return checkExpectation();
       }
@@ -176,13 +202,19 @@ function waitForInternal<T>(
         error = new Error('Timed out in waitFor.');
         copyStackTraceIfNeeded(error, stackTraceError);
       }
+
+      let errorForRejection: unknown = error;
       if (typeof onTimeout === 'function') {
-        const result = onTimeout(error);
-        if (result) {
-          error = result;
+        try {
+          const result = onTimeout(error);
+          if (result) {
+            errorForRejection = result;
+          }
+        } catch (onTimeoutError) {
+          errorForRejection = onTimeoutError;
         }
       }
-      onDone({ type: 'error', error });
+      onDone({ type: 'error', error: errorForRejection });
     }
   });
 }
