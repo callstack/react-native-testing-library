@@ -188,7 +188,27 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 
 #### Options
 
-- `name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (= accessability label or text content).
+- `name`: Finds an element with the given `role`/`accessibilityRole` and
+  [accessible name](https://reactnative.dev/docs/accessibility#accessibilitylabel). The name is
+  computed in the same priority order used by React Native accessibility:
+  1. `aria-labelledby` or `accessibilityLabelledBy`
+  2. `aria-label` or `accessibilityLabel`
+  3. `alt` for `Image`, a root `TextInput`'s `placeholder`, or the element's text content
+
+  Sources earlier in the list take precedence. For example, when a button has both an
+  `accessibilityLabel` and child text, query it by the label because the child text is not part of
+  its accessible name:
+
+  ```tsx
+  await render(
+    <Pressable accessibilityRole="button" accessibilityLabel="Submit form">
+      <Text>Submit</Text>
+    </Pressable>,
+  );
+
+  screen.getByRole('button', { name: 'Submit form' }); // matches
+  screen.queryByRole('button', { name: 'Submit' }); // returns null
+  ```
 
 - `disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessbilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
