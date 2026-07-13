@@ -61,7 +61,10 @@ runs:
         if (( RN_MINOR >= 85 )); then
           deps+=("@react-native/jest-preset@${RN_VERSION}")
         else
+          # RN 0.84 and older ship the Jest preset inside the `react-native`
+          # package, so drop the standalone package and point the config at it.
           yarn remove @react-native/jest-preset
+          sed -i "s|preset: '@react-native/jest-preset'|preset: 'react-native'|" jest.config.js
         fi
 
         yarn add -D "${deps[@]}"
