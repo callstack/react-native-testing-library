@@ -70,7 +70,7 @@ export function defaultMapProps(props: Record<string, unknown>): Record<string, 
   return result;
 }
 
-function extractStyle(style: ViewStyle | undefined) {
+function extractStyle(style: ViewStyle | null | undefined) {
   if (style == null) {
     return undefined;
   }

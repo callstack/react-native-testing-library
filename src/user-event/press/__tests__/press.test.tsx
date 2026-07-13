@@ -353,12 +353,11 @@ describe('userEvent.press with fake timers', () => {
     const user = userEvent.setup();
 
     const compositeView = screen.getByTestId('view').parent as ReactTestInstance;
-    await expect(user.press(compositeView)).rejects.toThrowErrorMatchingInlineSnapshot(`
-      "press() works only with host elements. Passed element has type "function Component() {
-            (0, _classCallCheck2.default)(this, Component);
-            return _callSuper(this, Component, arguments);
-          }"."
-    `);
+    // The stringified component type varies across React Native versions, so we
+    // only assert the stable prefix of the error message.
+    await expect(user.press(compositeView)).rejects.toThrow(
+      /^press\(\) works only with host elements\. Passed element has type/,
+    );
   });
 
   test('disables act environmennt', async () => {
