@@ -63,11 +63,6 @@ function getFakeTimersConfigFromType(type: FakeTimersTypes) {
 
 const jestFakeTimersAreEnabled = (): boolean => Boolean(getJestFakeTimersType());
 
-// we only run our tests in node, and setImmediate is supported in node.
-function setImmediatePolyfill(fn: () => void) {
-  return globalObj.setTimeout(fn, 0);
-}
-
 type BindTimeFunctions = {
   clearTimeoutFn: typeof clearTimeout;
   setImmediateFn: typeof setImmediate;
@@ -75,10 +70,21 @@ type BindTimeFunctions = {
 };
 
 function bindTimeFunctions(): BindTimeFunctions {
+  // Capture the current (real) `setTimeout` so the `setImmediate` polyfill keeps
+  // using real timers even after fake timers are re-applied. Reading
+  // `globalObj.setTimeout` lazily inside the polyfill would pick up fake timers.
+  const realSetTimeout = globalObj.setTimeout;
+
+  // `setImmediate` exists in Node, but not in environments such as jsdom, so we
+  // fall back to a `setTimeout`-based polyfill there (see #1767).
+  function setImmediatePolyfill(fn: () => void) {
+    return realSetTimeout(fn, 0);
+  }
+
   return {
     clearTimeoutFn: globalObj.clearTimeout,
     setImmediateFn: globalObj.setImmediate || setImmediatePolyfill,
-    setTimeoutFn: globalObj.setTimeout,
+    setTimeoutFn: realSetTimeout,
   };
 }
 
