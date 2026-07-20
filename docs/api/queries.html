@@ -9,7 +9,7 @@
 <script defer src="/react-native-testing-library/static/js/lib-react.49604bf759.js"></script>
 <script defer src="/react-native-testing-library/static/js/lib-router.a0df4de158.js"></script>
 <script defer src="/react-native-testing-library/static/js/2482.4740a55c68.js"></script>
-<script defer src="/react-native-testing-library/static/js/index.0fb4d535ea.js"></script>
+<script defer src="/react-native-testing-library/static/js/index.51844dab3a.js"></script>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Rspress v2.0.9">
 <meta property="og:url" content="https://oss.callstack.com/react-native-testing-library/">
@@ -134,7 +134,7 @@ In order for <code>*ByRole</code> queries to match an element it needs to be con
 <h4 class="rp-toc-include" id="by-role-options"><a href="#by-role-options" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Options</h4>
 <ul>
 <li>
-<p><code>name</code>: Finds an element with given <code>role</code>/<code>accessibilityRole</code> and an accessible name (= accessability label or text content).</p>
+<p><code>name</code>: Finds an element with given <code>role</code>/<code>accessibilityRole</code> and a matching <a href="/react-native-testing-library/docs/api/misc/accessibility#accessible-name" class="rp-link">accessible name</a>. The accessible name is the text a screen reader would announce for the element, derived from its label props or text content. See <a href="/react-native-testing-library/docs/api/misc/accessibility#accessible-name" class="rp-link">Accessible name</a> for the details.</p>
 </li>
 <li>
 <p><code>disabled</code>: You can filter elements by their disabled state (coming either from <code>aria-disabled</code> prop or <code>accessbilityState.disabled</code> prop). The possible values are <code>true</code> or <code>false</code>. Querying <code>disabled: false</code> will also match elements with <code>disabled: undefined</code> (see the <a href="https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State" target="_blank" rel="noopener noreferrer" class="rp-link">wiki</a> for more details).</p>

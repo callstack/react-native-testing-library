@@ -179,11 +179,9 @@ expect(element).toHaveAccessibleName(
 )
 ```
 
-Checks if an element has the specified accessible name. Accepts `string` or `RegExp`, with optional [text match options](/react-native-testing-library/docs/api/queries.md#text-match-options) like `exact` and `normalizer`.
+Checks if an element has the specified [accessible name](/react-native-testing-library/docs/api/misc/accessibility.md#accessible-name). Accepts `string` or `RegExp`, with optional [text match options](/react-native-testing-library/docs/api/queries.md#text-match-options) like `exact` and `normalizer`.
 
-The accessible name comes from `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props. For `Image` elements, the `alt` prop is also used. If none are present, the element's text content is used.
-
-When `accessibilityLabelledBy` references multiple elements with an array, their text content is joined with spaces in the referenced order and matched as a single accessible name. `aria-labelledby` follows React Native's single `nativeID` value behavior.
+See [Accessible name](/react-native-testing-library/docs/api/misc/accessibility.md#accessible-name) for how the accessible name is derived from an element's label props and text content.
 
 Without a `name` parameter (or with `undefined`), it only checks whether the element has any accessible name.
 

@@ -1262,7 +1262,7 @@ const element3 = screen.getByRole('button', { name: 'Hello', disabled: true });
 
 #### Options \{#by-role-options}
 
-- `name`: Finds an element with given `role`/`accessibilityRole` and an accessible name (= accessability label or text content).
+- `name`: Finds an element with given `role`/`accessibilityRole` and a matching [accessible name](/react-native-testing-library/docs/api/misc/accessibility.md#accessible-name). The accessible name is the text a screen reader would announce for the element, derived from its label props or text content. See [Accessible name](/react-native-testing-library/docs/api/misc/accessibility.md#accessible-name) for the details.
 
 - `disabled`: You can filter elements by their disabled state (coming either from `aria-disabled` prop or `accessbilityState.disabled` prop). The possible values are `true` or `false`. Querying `disabled: false` will also match elements with `disabled: undefined` (see the [wiki](https://github.com/callstack/react-native-testing-library/wiki/Accessibility:-State) for more details).
   - See [React Native's accessibilityState](https://reactnative.dev/docs/accessibility#accessibilitystate) docs to learn more about the `disabled` state.
@@ -1765,11 +1765,9 @@ expect(element).toHaveAccessibleName(
 )
 ```
 
-Checks if an element has the specified accessible name. Accepts `string` or `RegExp`, with optional [text match options](/react-native-testing-library/docs/api/queries.md#text-match-options) like `exact` and `normalizer`.
+Checks if an element has the specified [accessible name](/react-native-testing-library/docs/api/misc/accessibility.md#accessible-name). Accepts `string` or `RegExp`, with optional [text match options](/react-native-testing-library/docs/api/queries.md#text-match-options) like `exact` and `normalizer`.
 
-The accessible name comes from `aria-labelledby`, `accessibilityLabelledBy`, `aria-label`, and `accessibilityLabel` props. For `Image` elements, the `alt` prop is also used. If none are present, the element's text content is used.
-
-When `accessibilityLabelledBy` references multiple elements with an array, their text content is joined with spaces in the referenced order and matched as a single accessible name. `aria-labelledby` follows React Native's single `nativeID` value behavior.
+See [Accessible name](/react-native-testing-library/docs/api/misc/accessibility.md#accessible-name) for how the accessible name is derived from an element's label props and text content.
 
 Without a `name` parameter (or with `undefined`), it only checks whether the element has any accessible name.
 
@@ -2275,6 +2273,57 @@ url: /react-native-testing-library/docs/api/misc/accessibility.md
 ---
 
 # Accessibility
+
+## Accessible name \{#accessible-name}
+
+The **accessible name** is the text that assistive technologies (like screen readers) announce for an element. It answers the question: _"what would a screen reader call this element?"_. For instance, a button showing a trash icon might have the accessible name `"Delete"`, so a screen reader user knows what it does.
+
+Testing Library uses the accessible name in the [`*ByRole`](/react-native-testing-library/docs/api/queries.md#by-role) queries `name` option and in the [`toHaveAccessibleName()`](/react-native-testing-library/docs/api/jest-matchers.md#tohaveaccessiblename) matcher. Combining a role with an accessible name is a **semantic query**: it finds an element by what it is (`button`) and what it is called (`"Delete"`), rather than by its implementation details. This matches how users experience your UI.
+
+### How the accessible name is computed \{#how-it-is-computed}
+
+The accessible name is the **first** of these sources to produce a non-empty value. The sources are ordered from highest to lowest importance. An explicit accessibility label that the developer assigned always takes precedence, and the element's own text content is only used when no such label is present.
+
+1. **`aria-labelledby` / `accessibilityLabelledBy`**: the [`nativeID`](https://reactnative.dev/docs/view#nativeid) (or array of IDs) of other elements, whose text content is joined with spaces in the referenced order.
+2. **`aria-label` / `accessibilityLabel`**: an explicit label string on the element.
+3. **`alt`** (`Image` only): the image's alternative text.
+4. **`placeholder`** (`TextInput` only).
+5. **Text content**: the element's own text, collected recursively from its children (see [Text content](#text-content) below). This is the fallback when none of the label sources above are set.
+
+### Text content \{#text-content}
+
+When falling back to text content, child text is joined as follows:
+
+- Adjacent inline text (directly inside `Text` elements) is concatenated **without** a separator, matching how it renders on screen.
+- Text from separate, non-inline elements, such as sibling `View`s, is joined with a **single space**.
+
+For example:
+
+```jsx
+render(
+  <Pressable accessibilityRole="button">
+    <Text>Hello</Text>
+    <Text> World</Text>
+  </Pressable>,
+);
+// Accessible name: "Hello World"
+```
+
+### Examples \{#accessible-name-examples}
+
+```jsx
+// Explicit label wins over text content
+<Pressable accessibilityRole="button" accessibilityLabel="Close dialog">
+  <Text>X</Text>
+</Pressable>
+// Accessible name: "Close dialog"
+
+// Text content is used when no explicit label is set
+<Pressable accessibilityRole="button">
+  <Text>Submit</Text>
+</Pressable>
+// Accessible name: "Submit"
+```
 
 ## `isHiddenFromAccessibility`
 
@@ -4317,7 +4366,7 @@ React Native Testing Library consists of following APIs:
   - [`renderHook` function](/react-native-testing-library/docs/api/misc/render-hook.md) - render hooks for testing
   - [Async utils](/react-native-testing-library/docs/api/misc/async.md): `findBy*` queries, `waitFor`, `waitForElementToBeRemoved`
   - [Configuration](/react-native-testing-library/docs/api/misc/config.md): `configure`, `resetToDefaults`
-  - [Accessibility](/react-native-testing-library/docs/api/misc/accessibility.md): `isHiddenFromAccessibility`
+  - [Accessibility](/react-native-testing-library/docs/api/misc/accessibility.md): accessible name, `isHiddenFromAccessibility`
   - [Other](/react-native-testing-library/docs/api/misc/other.md): `within`, `act`, `cleanup`
 
 
