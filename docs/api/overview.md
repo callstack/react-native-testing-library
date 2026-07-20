@@ -14,5 +14,5 @@ React Native Testing Library consists of following APIs:
   - [`renderHook` function](./render-hook.md) - render hooks for testing
   - [Async utils](./async-utilities.md): `findBy*` queries, `waitFor`, `waitForElementToBeRemoved`
   - [Configuration](./configuration.md): `configure`, `resetToDefaults`
-  - [Accessibility](./accessibility.md): `isHiddenFromAccessibility`
+  - [Accessibility](./accessibility.md): accessible name, `isHiddenFromAccessibility`
   - [Other](./other-helpers.md): `within`, `act`, `cleanup`
