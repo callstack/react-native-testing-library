@@ -4,7 +4,7 @@ import { FlatList, RefreshControl, ScrollView, SectionList, Text, View } from 'r
 import { render, screen, userEvent } from '../../..';
 
 describe('pullToRefresh()', () => {
-  it('supports ScrollView', async () => {
+  test('supports ScrollView', async () => {
     const onRefreshMock = jest.fn();
     await render(
       <ScrollView
@@ -18,7 +18,7 @@ describe('pullToRefresh()', () => {
     expect(onRefreshMock).toHaveBeenCalled();
   });
 
-  it('supports FlatList', async () => {
+  test('supports FlatList', async () => {
     const onRefreshMock = jest.fn();
     await render(
       <FlatList
@@ -34,7 +34,7 @@ describe('pullToRefresh()', () => {
     expect(onRefreshMock).toHaveBeenCalled();
   });
 
-  it('supports SectionList', async () => {
+  test('supports SectionList', async () => {
     const onRefreshMock = jest.fn();
     await render(
       <SectionList
@@ -53,14 +53,14 @@ describe('pullToRefresh()', () => {
     expect(onRefreshMock).toHaveBeenCalled();
   });
 
-  it('does not throw when RefreshControl is not set', async () => {
+  test('does not throw when RefreshControl is not set', async () => {
     await render(<ScrollView testID="view" />);
     const user = userEvent.setup();
 
     await expect(user.pullToRefresh(screen.getByTestId('view'))).resolves.toBeUndefined();
   });
 
-  it('does not throw when RefreshControl onRefresh is not set', async () => {
+  test('does not throw when RefreshControl onRefresh is not set', async () => {
     await render(
       <ScrollView testID="view" refreshControl={<RefreshControl refreshing={false} />} />,
     );
@@ -69,12 +69,12 @@ describe('pullToRefresh()', () => {
     await expect(user.pullToRefresh(screen.getByTestId('view'))).resolves.toBeUndefined();
   });
 
-  it('throws when passed a non-ScrollView element', async () => {
+  test('throws when passed a non-ScrollView element', async () => {
     await render(<View testID="view" />);
     const user = userEvent.setup();
 
     await expect(user.pullToRefresh(screen.getByTestId('view'))).rejects.toThrow(
-      /pullToRefresh\(\) works only with host "ScrollView" elements/,
+      /pullToRefresh\(\) works only with host "ScrollView" instances/,
     );
   });
 });

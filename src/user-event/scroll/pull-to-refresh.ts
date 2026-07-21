@@ -11,7 +11,7 @@ export async function pullToRefresh(
 ): Promise<void> {
   if (!isHostScrollView(instance)) {
     throw new ErrorWithStack(
-      `pullToRefresh() works only with host "ScrollView" elements. Passed element has type "${instance.type}".`,
+      `pullToRefresh() works only with host "ScrollView" instances. Passed instance has type "${instance.type}".`,
       pullToRefresh,
     );
   }
@@ -21,8 +21,7 @@ export async function pullToRefresh(
     return;
   }
 
-  // eslint-disable-next-line require-await
-  await act(async () => {
+  await act(() => {
     refreshControl.props.onRefresh();
   });
 }

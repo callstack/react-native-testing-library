@@ -11,6 +11,8 @@ with v14.
   `onLayout` handler with a synthetic layout event.
 - Added `userEvent.accessibilityAction()` to dispatch a named accessibility action to an
   element, invoking its `onAccessibilityAction` handler.
+- Added `userEvent.pullToRefresh()` to simulate the pull-to-refresh gesture on a host
+  `ScrollView` element, invoking the `onRefresh` handler of its `refreshControl` prop.
 
 ## 14.0.0
 

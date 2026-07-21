@@ -294,7 +294,7 @@ The sequence of events depends on whether the scroll includes an optional moment
 - `scroll` (multiple events)
 - `momentumScrollEnd`
 
-## `pullToRefresh()`
+## `pullToRefresh()` \
 
 > [!NOTE]
 > Available since React Native Testing Library 14.1.0.
