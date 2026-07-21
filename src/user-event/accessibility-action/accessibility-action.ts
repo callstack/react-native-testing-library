@@ -53,22 +53,22 @@ export async function accessibilityAction(
 
   if (!actions?.length) {
     throw new ErrorWithStack(
-      `accessibilityAction() called with action "${actionName}", but the element declares no accessibility actions in the "accessibilityActions" prop.`,
+      `The element has no accessibility actions. Add them using the "accessibilityActions" prop.`,
       accessibilityAction,
     );
   }
 
   if (!actions.some((action) => action.name === actionName)) {
-    const declared = actions.map((action) => `"${action.name}"`).join(', ');
+    const available = actions.map((action) => `"${action.name}"`).join(', ');
     throw new ErrorWithStack(
-      `accessibilityAction() called with action "${actionName}", but the element does not declare it in the "accessibilityActions" prop. Declared actions: ${declared}.`,
+      `The element has no "${actionName}" accessibility action. Available actions: ${available}.`,
       accessibilityAction,
     );
   }
 
   if (computeAriaDisabled(instance)) {
     throw new ErrorWithStack(
-      `accessibilityAction() called with action "${actionName}" on a disabled element. Assistive technologies cannot trigger actions on disabled elements.`,
+      `Cannot trigger the "${actionName}" accessibility action on a disabled element.`,
       accessibilityAction,
     );
   }

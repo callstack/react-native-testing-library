@@ -51,7 +51,7 @@ describe('userEvent.accessibilityAction', () => {
     await renderViewWithActions();
 
     await expect(user.accessibilityAction(screen.getByTestId('view'), 'decrement')).rejects.toThrow(
-      /does not declare it in the "accessibilityActions" prop.*"increment", "activate"/s,
+      /has no "decrement" accessibility action.*"increment", "activate"/s,
     );
   });
 
@@ -60,7 +60,7 @@ describe('userEvent.accessibilityAction', () => {
     await renderViewWithActions({ accessibilityActions: undefined });
 
     await expect(user.accessibilityAction(screen.getByTestId('view'), 'increment')).rejects.toThrow(
-      /declares no accessibility actions/,
+      /has no accessibility actions/,
     );
   });
 
