@@ -3,6 +3,15 @@
 All notable changes to React Native Testing Library will be documented in this file, starting
 with v14.
 
+## 14.1.0
+
+### Features
+
+- Added `fireEvent.layout()` to simulate the layout engine measuring an element, invoking the
+  `onLayout` handler with a synthetic layout event.
+- Added `userEvent.accessibilityAction()` to dispatch a named accessibility action to an
+  element, invoking its `onAccessibilityAction` handler.
+
 ## 14.0.0
 
 ### Migration guide
