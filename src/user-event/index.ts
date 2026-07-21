@@ -1,5 +1,6 @@
 import type { TestInstance } from 'test-renderer';
 
+import type { AccessibilityActionName } from './accessibility-action';
 import type { PressOptions } from './press';
 import type { ScrollToOptions } from './scroll';
 import { setup } from './setup';
@@ -20,4 +21,6 @@ export const userEvent = {
   paste: (instance: TestInstance, text: string) => setup().paste(instance, text),
   scrollTo: (instance: TestInstance, options: ScrollToOptions) =>
     setup().scrollTo(instance, options),
+  accessibilityAction: (instance: TestInstance, actionName: AccessibilityActionName) =>
+    setup().accessibilityAction(instance, actionName),
 };

@@ -3,6 +3,8 @@ import type { TestInstance } from 'test-renderer';
 import { jestFakeTimersAreEnabled } from '../../helpers/timers';
 import { validateOptions } from '../../helpers/validate-options';
 import { wrapAsync } from '../../helpers/wrap-async';
+import type { AccessibilityActionName } from '../accessibility-action';
+import { accessibilityAction } from '../accessibility-action';
 import { clear } from '../clear';
 import { paste } from '../paste';
 import type { PressOptions } from '../press';
@@ -153,6 +155,21 @@ export interface UserEventInstance {
    * @returns
    */
   scrollTo: (instance: TestInstance, options: ScrollToOptions) => Promise<void>;
+
+  /**
+   * Simulate an assistive technology (e.g. screen reader) triggering an
+   * accessibility action on a given element.
+   *
+   * The action must be declared in the element's `accessibilityActions` prop and
+   * the element must not be disabled, otherwise an error is thrown.
+   *
+   * @param instance element to trigger the action on
+   * @param actionName name of the accessibility action to trigger
+   */
+  accessibilityAction: (
+    instance: TestInstance,
+    actionName: AccessibilityActionName,
+  ) => Promise<void>;
 }
 
 function createInstance(config: UserEventConfig): UserEventInstance {
@@ -168,6 +185,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
     clear: wrapAndBindImpl(instance, clear),
     paste: wrapAndBindImpl(instance, paste),
     scrollTo: wrapAndBindImpl(instance, scrollTo),
+    accessibilityAction: wrapAndBindImpl(instance, accessibilityAction),
   };
 
   Object.assign(instance, api);
