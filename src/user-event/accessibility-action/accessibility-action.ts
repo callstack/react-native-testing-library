@@ -15,7 +15,14 @@ import { dispatchEvent } from '../utils';
  * @see https://reactnative.dev/docs/accessibility#accessibility-actions
  */
 export type AccessibilityActionName = StringWithAutocomplete<
-  'activate' | 'increment' | 'decrement' | 'longpress' | 'magicTap' | 'escape' | 'expand' | 'collapse'
+  | 'activate'
+  | 'increment'
+  | 'decrement'
+  | 'longpress'
+  | 'magicTap'
+  | 'escape'
+  | 'expand'
+  | 'collapse'
 >;
 
 /**
