@@ -1,4 +1,7 @@
-import type { AccessibilityActionInfo } from 'react-native';
+import type {
+  AccessibilityActionInfo,
+  AccessibilityActionName as ReactNativeAccessibilityActionName,
+} from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
 import { buildAccessibilityActionEvent } from '../../event-builder';
@@ -9,21 +12,13 @@ import type { UserEventInstance } from '../setup';
 import { dispatchEvent } from '../utils';
 
 /**
- * Standard accessibility action names recognized by React Native. Custom action
+ * Standard accessibility action names recognized by React Native (`activate`,
+ * `increment`, `decrement`, `longpress`, `magicTap`, `escape`). Custom action
  * names are supported as well, hence the `string` fallback.
  *
  * @see https://reactnative.dev/docs/accessibility#accessibility-actions
  */
-export type AccessibilityActionName = StringWithAutocomplete<
-  | 'activate'
-  | 'increment'
-  | 'decrement'
-  | 'longpress'
-  | 'magicTap'
-  | 'escape'
-  | 'expand'
-  | 'collapse'
->;
+export type AccessibilityActionName = StringWithAutocomplete<ReactNativeAccessibilityActionName>;
 
 /**
  * Simulate an assistive technology (e.g. screen reader) triggering an
