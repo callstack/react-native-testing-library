@@ -6,6 +6,7 @@ import type { TestInstance } from 'test-renderer';
 
 import { buildAccessibilityActionEvent } from '../../event-builder';
 import { computeAriaDisabled } from '../../helpers/accessibility';
+import { isTestInstance } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
 import type { StringWithAutocomplete } from '../../types';
 import type { UserEventInstance } from '../setup';
@@ -39,18 +40,28 @@ export async function accessibilityAction(
   instance: TestInstance,
   actionName: AccessibilityActionName,
 ): Promise<void> {
+  if (!isTestInstance(instance)) {
+    throw new ErrorWithStack(
+      `accessibilityAction() works only with host instances.`,
+      accessibilityAction,
+    );
+  }
+
   const actions = instance.props.accessibilityActions as
     | ReadonlyArray<AccessibilityActionInfo>
     | undefined;
 
-  if (!actions?.some((action) => action.name === actionName)) {
-    const declared = actions?.map((action) => action.name);
+  if (!actions?.length) {
     throw new ErrorWithStack(
-      `accessibilityAction() called with action "${actionName}", but the element does not declare it in the "accessibilityActions" prop. ${
-        declared?.length
-          ? `Declared actions: ${declared.map((name) => `"${name}"`).join(', ')}.`
-          : 'The element declares no accessibility actions.'
-      }`,
+      `accessibilityAction() called with action "${actionName}", but the element declares no accessibility actions in the "accessibilityActions" prop.`,
+      accessibilityAction,
+    );
+  }
+
+  if (!actions.some((action) => action.name === actionName)) {
+    const declared = actions.map((action) => `"${action.name}"`).join(', ');
+    throw new ErrorWithStack(
+      `accessibilityAction() called with action "${actionName}", but the element does not declare it in the "accessibilityActions" prop. Declared actions: ${declared}.`,
       accessibilityAction,
     );
   }

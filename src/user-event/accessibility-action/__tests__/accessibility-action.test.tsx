@@ -24,7 +24,7 @@ async function renderViewWithActions(props: React.ComponentProps<typeof View> = 
 }
 
 describe('userEvent.accessibilityAction', () => {
-  it('triggers the onAccessibilityAction handler with the given action name', async () => {
+  test('triggers the onAccessibilityAction handler with the given action name', async () => {
     const user = userEvent.setup();
     const { events } = await renderViewWithActions();
 
@@ -37,7 +37,7 @@ describe('userEvent.accessibilityAction', () => {
     });
   });
 
-  it('supports the direct (setup-less) call form', async () => {
+  test('supports the direct (setup-less) call form', async () => {
     const { events } = await renderViewWithActions();
 
     await userEvent.accessibilityAction(screen.getByTestId('view'), 'activate');
@@ -46,7 +46,7 @@ describe('userEvent.accessibilityAction', () => {
     expect(lastEventPayload(events, 'accessibilityAction').nativeEvent.actionName).toBe('activate');
   });
 
-  it('throws when the action is not declared in accessibilityActions', async () => {
+  test('throws when the action is not declared in accessibilityActions', async () => {
     const user = userEvent.setup();
     await renderViewWithActions();
 
@@ -55,7 +55,7 @@ describe('userEvent.accessibilityAction', () => {
     );
   });
 
-  it('throws when the element declares no accessibility actions', async () => {
+  test('throws when the element declares no accessibility actions', async () => {
     const user = userEvent.setup();
     await renderViewWithActions({ accessibilityActions: undefined });
 
@@ -64,7 +64,7 @@ describe('userEvent.accessibilityAction', () => {
     );
   });
 
-  it('throws when the element is disabled', async () => {
+  test('throws when the element is disabled', async () => {
     const user = userEvent.setup();
     await renderViewWithActions({ 'aria-disabled': true });
 
@@ -73,7 +73,7 @@ describe('userEvent.accessibilityAction', () => {
     );
   });
 
-  it('throws when the element is disabled via accessibilityState', async () => {
+  test('throws when the element is disabled via accessibilityState', async () => {
     const user = userEvent.setup();
     await renderViewWithActions({ accessibilityState: { disabled: true } });
 
