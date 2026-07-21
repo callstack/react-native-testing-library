@@ -296,6 +296,9 @@ The sequence of events depends on whether the scroll includes an optional moment
 
 ## `accessibilityAction()`
 
+> [!NOTE]
+> Available since React Native Testing Library 14.1.0.
+
 ```ts
 accessibilityAction(
   instance: TestInstance,

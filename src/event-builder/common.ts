@@ -82,3 +82,30 @@ export function buildAccessibilityActionEvent(actionName: string) {
     },
   };
 }
+
+/**
+ * Layout rectangle of an element, as measured by the layout engine.
+ */
+export interface LayoutRectangle {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/**
+ * Builds a layout event, as delivered to the `onLayout` handler when an element's
+ * size or position is measured by the layout engine.
+ *
+ * The passed `layout` values are merged onto a zeroed rectangle, so only the
+ * fields relevant to the test need to be provided.
+ */
+export function buildLayoutEvent(layout?: Partial<LayoutRectangle>) {
+  return {
+    ...baseSyntheticEvent(),
+    nativeEvent: {
+      layout: { x: 0, y: 0, width: 0, height: 0, ...layout },
+      target: 0,
+    },
+  };
+}

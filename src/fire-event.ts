@@ -8,7 +8,8 @@ import type {
 import type { Fiber, TestInstance } from 'test-renderer';
 
 import { act } from './act';
-import { buildScrollEvent, buildTouchEvent } from './event-builder';
+import type { LayoutRectangle } from './event-builder';
+import { buildLayoutEvent, buildScrollEvent, buildTouchEvent } from './event-builder';
 import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
 import { isInstanceMounted } from './helpers/component-tree';
@@ -166,6 +167,10 @@ fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
   }
 
   await fireEvent(instance, 'scroll', event);
+};
+
+fireEvent.layout = async (instance: TestInstance, layout?: Partial<LayoutRectangle>) => {
+  await fireEvent(instance, 'layout', buildLayoutEvent(layout));
 };
 
 export { fireEvent };

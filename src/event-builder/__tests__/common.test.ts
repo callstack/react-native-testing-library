@@ -1,6 +1,7 @@
 import {
   buildBlurEvent,
   buildFocusEvent,
+  buildLayoutEvent,
   buildResponderGrantEvent,
   buildResponderReleaseEvent,
   buildTouchEvent,
@@ -53,5 +54,15 @@ test('buildBlurEvent returns event with target', () => {
   const event = buildBlurEvent();
 
   expect(event.nativeEvent).toEqual({ target: 0 });
+  expect(event).toHaveProperty('preventDefault');
+});
+
+test('buildLayoutEvent returns event with zeroed layout rectangle', () => {
+  const event = buildLayoutEvent();
+
+  expect(event.nativeEvent).toEqual({
+    layout: { x: 0, y: 0, width: 0, height: 0 },
+    target: 0,
+  });
   expect(event).toHaveProperty('preventDefault');
 });

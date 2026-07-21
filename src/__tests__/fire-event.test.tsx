@@ -425,6 +425,64 @@ describe('fireEvent.scroll', () => {
   });
 });
 
+describe('fireEvent.layout', () => {
+  test('passes default layout event object to handler', async () => {
+    const onLayout = jest.fn();
+    await render(<View testID="view" onLayout={onLayout} />);
+
+    await fireEvent.layout(screen.getByTestId('view'));
+
+    expect(onLayout.mock.calls[0][0]).toMatchInlineSnapshot(`
+      {
+        "currentTarget": {},
+        "isDefaultPrevented": [Function],
+        "isPersistent": [Function],
+        "isPropagationStopped": [Function],
+        "nativeEvent": {
+          "layout": {
+            "height": 0,
+            "width": 0,
+            "x": 0,
+            "y": 0,
+          },
+          "target": 0,
+        },
+        "persist": [Function],
+        "preventDefault": [Function],
+        "stopPropagation": [Function],
+        "target": {},
+        "timeStamp": 0,
+      }
+    `);
+  });
+
+  test('merges the passed layout onto the zeroed rectangle', async () => {
+    const onLayout = jest.fn();
+    await render(<View testID="view" onLayout={onLayout} />);
+
+    await fireEvent.layout(screen.getByTestId('view'), { width: 200, height: 80 });
+
+    expect(onLayout.mock.calls[0][0].nativeEvent).toEqual({
+      layout: { x: 0, y: 0, width: 200, height: 80 },
+      target: 0,
+    });
+  });
+
+  test('bubbles up to find the handler on an ancestor element', async () => {
+    const onLayout = jest.fn();
+    await render(
+      <View testID="view" onLayout={onLayout}>
+        <Text>Content</Text>
+      </View>,
+    );
+
+    await fireEvent.layout(screen.getByText('Content'), { height: 80 });
+
+    expect(onLayout).toHaveBeenCalledTimes(1);
+    expect(onLayout.mock.calls[0][0].nativeEvent.layout.height).toBe(80);
+  });
+});
+
 test('fireEvent fires custom event (onCustomEvent) on composite component', async () => {
   const CustomComponent = ({ onCustomEvent }: { onCustomEvent: (data: string) => void }) => (
     <TouchableOpacity onPress={() => onCustomEvent('event data')}>
