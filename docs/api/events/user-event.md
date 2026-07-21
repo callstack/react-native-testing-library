@@ -294,3 +294,32 @@ The sequence of events depends on whether the scroll includes an optional moment
 - `momentumScrollBegin`
 - `scroll` (multiple events)
 - `momentumScrollEnd`
+
+## `accessibilityAction()`
+
+```ts
+accessibilityAction(
+  instance: TestInstance,
+  actionName: string,
+): Promise<void>
+```
+
+Example
+
+```ts
+const user = userEvent.setup();
+await user.accessibilityAction(slider, 'increment');
+```
+
+Simulates an assistive technology (e.g. a screen reader) triggering the named accessibility action on a given element, invoking its `onAccessibilityAction` handler.
+
+The `actionName` autocompletes the [standard React Native actions](https://reactnative.dev/docs/accessibility#accessibility-actions) (`activate`, `increment`, `decrement`, `longpress`, `magicTap`, `escape`, `expand`, `collapse`), but any custom action name is accepted.
+
+Just like a real assistive technology, the action must be reachable by the user, otherwise an error is thrown:
+
+- the action must be declared in the element's `accessibilityActions` prop,
+- the element must not be disabled (via `aria-disabled` or `accessibilityState={{ disabled: true }}`).
+
+### Sequence of events
+
+- `accessibilityAction`
