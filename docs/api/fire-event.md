@@ -56,7 +56,7 @@ await render(
 await fireEvent(screen.getByPlaceholderText('my placeholder'), 'blur');
 ```
 
-FireEvent exposes convenience methods for common events like: `press`, `changeText`, `scroll`.
+FireEvent exposes convenience methods for common events like: `press`, `changeText`, `scroll`, `layout`.
 
 ### `fireEvent.press`
 
@@ -162,4 +162,28 @@ await render(
 );
 
 await fireEvent.scroll(screen.getByTestId('scroll-view'), eventData);
+```
+
+### `fireEvent.layout`
+
+```tsx
+fireEvent.layout: (
+  instance: TestInstance,
+  layout?: Partial<{ x: number; y: number; width: number; height: number }>,
+) => Promise<void>
+```
+
+Builds a layout event carrying the given `layout` rectangle and invokes the `layout` handler on the element or nearest eligible parent. Use it to simulate the layout engine measuring an element, e.g. to test components that adapt to a measured size.
+
+The `layout` values are merged onto a zeroed rectangle (`{ x: 0, y: 0, width: 0, height: 0 }`), so pass only the fields your component reads.
+
+```jsx
+import { View } from 'react-native';
+import { render, screen, fireEvent } from '@testing-library/react-native';
+
+const onLayoutMock = jest.fn();
+
+await render(<View testID="box" onLayout={onLayoutMock} />);
+
+await fireEvent.layout(screen.getByTestId('box'), { width: 320, height: 80 });
 ```
