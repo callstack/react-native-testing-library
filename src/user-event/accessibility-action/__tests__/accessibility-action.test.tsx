@@ -46,6 +46,16 @@ describe('userEvent.accessibilityAction', () => {
     expect(lastEventPayload(events, 'accessibilityAction').nativeEvent.actionName).toBe('activate');
   });
 
+  test('throws when passed a non-host instance', async () => {
+    const user = userEvent.setup();
+    await renderViewWithActions();
+
+    // @ts-expect-error intentionally passing a non-host instance
+    await expect(user.accessibilityAction('not a host instance', 'increment')).rejects.toThrow(
+      /works only with host instances/,
+    );
+  });
+
   test('throws when the action is not declared in accessibilityActions', async () => {
     const user = userEvent.setup();
     await renderViewWithActions();
