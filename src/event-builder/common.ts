@@ -66,3 +66,19 @@ export function buildBlurEvent() {
     },
   };
 }
+
+/**
+ * Builds an accessibility action event, as delivered to the `onAccessibilityAction`
+ * handler when an assistive technology triggers an action.
+ *
+ * Experimental values:
+ * - `{"actionName": "increment"}`
+ */
+export function buildAccessibilityActionEvent(actionName: string) {
+  return {
+    ...baseSyntheticEvent(),
+    nativeEvent: {
+      actionName,
+    },
+  };
+}
