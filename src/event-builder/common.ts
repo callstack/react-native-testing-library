@@ -99,10 +99,6 @@ export interface LayoutRectangle {
  *
  * The passed `layout` values are merged onto a zeroed rectangle, so only the
  * fields relevant to the test need to be provided.
- *
- * Experimental values:
- * - iOS: `{"layout": {"height": 100, "width": 200, "x": 0, "y": 0}, "target": 75}`
- * - Android: `{"layout": {"height": 100, "width": 200, "x": 0, "y": 0}, "target": 53}`
  */
 export function buildLayoutEvent(layout?: Partial<LayoutRectangle>) {
   return {
