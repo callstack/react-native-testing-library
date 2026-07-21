@@ -17,7 +17,7 @@ export async function pullToRefresh(
   }
 
   const refreshControl = instance.props.refreshControl;
-  if (refreshControl == null || typeof refreshControl.props.onRefresh !== 'function') {
+  if (typeof refreshControl?.props?.onRefresh !== 'function') {
     return;
   }
 
