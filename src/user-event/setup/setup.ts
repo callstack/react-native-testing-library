@@ -11,6 +11,7 @@ import type { PressOptions } from '../press';
 import { longPress, press } from '../press';
 import type { ScrollToOptions } from '../scroll';
 import { scrollTo } from '../scroll';
+import { pullToRefresh } from '../scroll/pull-to-refresh';
 import type { TypeOptions } from '../type';
 import { type } from '../type';
 import { wait } from '../utils';
@@ -149,12 +150,24 @@ export interface UserEventInstance {
   paste: (instance: TestInstance, text: string) => Promise<void>;
 
   /**
-   * Simlate user scorlling a ScrollView element.
+   * Simlate user scorlling a given `ScrollView`-like element.
    *
-   * @param instance ScrollView instance
+   * Supported components: ScrollView, FlatList, SectionList
+   *
+   * @param instance ScrollView-like instance
    * @returns
    */
   scrollTo: (instance: TestInstance, options: ScrollToOptions) => Promise<void>;
+
+  /**
+   * Simulate using pull-to-refresh gesture on a given `ScrollView`-like element.
+   *
+   * Supported components: ScrollView, FlatList, SectionList
+   *
+   * @param instance ScrollView-like instance
+   * @returns
+   */
+  pullToRefresh: (instance: TestInstance) => Promise<void>;
 
   /**
    * Simulate an assistive technology (e.g. screen reader) triggering an
@@ -185,6 +198,7 @@ function createInstance(config: UserEventConfig): UserEventInstance {
     clear: wrapAndBindImpl(instance, clear),
     paste: wrapAndBindImpl(instance, paste),
     scrollTo: wrapAndBindImpl(instance, scrollTo),
+    pullToRefresh: wrapAndBindImpl(instance, pullToRefresh),
     accessibilityAction: wrapAndBindImpl(instance, accessibilityAction),
   };
 
