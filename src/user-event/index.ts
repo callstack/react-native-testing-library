@@ -21,6 +21,7 @@ export const userEvent = {
   paste: (instance: TestInstance, text: string) => setup().paste(instance, text),
   scrollTo: (instance: TestInstance, options: ScrollToOptions) =>
     setup().scrollTo(instance, options),
+  pullToRefresh: (instance: TestInstance) => setup().pullToRefresh(instance),
   accessibilityAction: (instance: TestInstance, actionName: AccessibilityActionName) =>
     setup().accessibilityAction(instance, actionName),
 };

@@ -294,6 +294,30 @@ The sequence of events depends on whether the scroll includes an optional moment
 - `scroll` (multiple events)
 - `momentumScrollEnd`
 
+## `pullToRefresh()` \
+
+> [!NOTE]
+> Available since React Native Testing Library 14.1.0.
+
+```ts
+pullToRefresh(
+  instance: TestInstance,
+): Promise<void>
+```
+
+Example
+
+```ts
+const user = userEvent.setup();
+await user.pullToRefresh(scrollView);
+```
+
+Simulates a user performing the pull-to-refresh gesture on a host `ScrollView` element, invoking the `onRefresh` handler of its `refreshControl` prop.
+
+This function supports only host `ScrollView` elements, passing other element types will result in an error. Note that `FlatList` and `SectionList` are accepted as they render to a host `ScrollView` element.
+
+If the element has no `refreshControl` prop, or its `RefreshControl` has no `onRefresh` handler, the call resolves without doing anything.
+
 ## `accessibilityAction()`
 
 > [!NOTE]
