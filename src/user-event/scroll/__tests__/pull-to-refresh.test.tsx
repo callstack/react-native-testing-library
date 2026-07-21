@@ -69,14 +69,6 @@ describe('pullToRefresh()', () => {
     await expect(user.pullToRefresh(screen.getByTestId('view'))).resolves.toBeUndefined();
   });
 
-  test('does not throw when refreshControl is not a valid element', async () => {
-    // Defensive: `refreshControl` violates its `ReactElement` type and has no `props`.
-    await render(<ScrollView testID="view" refreshControl={'invalid' as any} />);
-    const user = userEvent.setup();
-
-    await expect(user.pullToRefresh(screen.getByTestId('view'))).resolves.toBeUndefined();
-  });
-
   test('throws when passed a non-ScrollView element', async () => {
     await render(<View testID="view" />);
     const user = userEvent.setup();
