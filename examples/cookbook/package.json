@@ -27,7 +27,8 @@
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.25.2",
     "react-native-web": "^0.21.0",
-    "react-strict-dom": "^0.0.55"
+    "react-strict-dom": "^0.0.55",
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
