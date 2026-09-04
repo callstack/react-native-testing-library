@@ -296,8 +296,7 @@ The sequence of events depends on whether the scroll includes an optional moment
 
 ## `pullToRefresh()` \
 
-> [!NOTE]
-> Available since React Native Testing Library 14.1.0.
+_Added in v14.1.0_
 
 ```ts
 pullToRefresh(
@@ -320,8 +319,7 @@ If the element has no `refreshControl` prop, or its `RefreshControl` has no `onR
 
 ## `accessibilityAction()`
 
-> [!NOTE]
-> Available since React Native Testing Library 14.1.0.
+_Added in v14.1.0_
 
 ```ts
 accessibilityAction(

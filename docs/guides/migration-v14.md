@@ -76,6 +76,7 @@ Choose the Test Renderer version that matches your React 19 minor version:
 
 | React version | Recommended Test Renderer version | Notable React features                            |
 | ------------- | --------------------------------- | ------------------------------------------------- |
+| `19.3`        | `test-renderer@1.3`               | `<ViewTransition />`, Fragment Refs               |
 | `19.2`        | `test-renderer@1.2`               | `<Activity />`, `useEffectEvent`                  |
 | `19.1`        | `test-renderer@1.1`               | Owner Stack support, updated `useId()` format     |
 | `19.0`        | `test-renderer@1.0`               | Actions, `useActionState`, `useOptimistic`, `use` |
@@ -112,7 +113,7 @@ command={{
   }}
 />
 
-The commands above use `test-renderer@1.2` for React 19.2. Use `test-renderer@1.1` for React 19.1, or `test-renderer@1.0` for React 19.0.
+The commands above use `test-renderer@1.2` for React 19.2. Use `test-renderer@1.3` for React 19.3, `test-renderer@1.1` for React 19.1, or `test-renderer@1.0` for React 19.0.
 
 #### 2. Update type imports (if needed)
 

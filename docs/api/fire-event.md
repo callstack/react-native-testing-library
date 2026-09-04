@@ -179,8 +179,7 @@ await fireEvent.scroll(screen.getByTestId('scroll-view'), eventData);
 
 ### `fireEvent.layout`
 
-> [!NOTE]
-> Available since React Native Testing Library 14.1.0.
+_Added in v14.1.0_
 
 ```tsx
 fireEvent.layout: (

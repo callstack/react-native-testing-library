@@ -16,6 +16,18 @@ with v14.
   element, invoking its `onAccessibilityAction` handler.
 - Added `userEvent.pullToRefresh()` to simulate the pull-to-refresh gesture on a host
   `ScrollView` element, invoking the `onRefresh` handler of its `refreshControl` prop.
+- Added the `eventDiagnostics` configuration option. When enabled, `fireEvent` and `userEvent`
+  log a warning when no handler is called, e.g. because the target is disabled, blocked by
+  `pointerEvents`, or has no handler for the event. Off by default. See the
+  [configuration docs](./website/docs/14.x/docs/api/misc/config.mdx#eventdiagnostics-option).
+- Added support for React 19.3 (with `test-renderer@1.3`) and React Native 0.88.
+
+### Bug fixes
+
+- `userEvent.scrollTo()` emits a `scroll` event for the last step of a drag scroll, matching
+  native behavior, and no longer emits `scroll` events when the scroll offset does not change.
+- Fixed the `setImmediate` fallback in environments without it (e.g. jsdom) picking up Jest
+  fake timers, which could make async utilities hang.
 
 ### Deprecations
 
@@ -24,6 +36,15 @@ with v14.
   bubbling in the next major version. See the
   [`fireEvent` docs](./website/docs/14.x/docs/api/events/fire-event.mdx) for the list of direct
   events.
+
+## 14.0.1
+
+### Bug fixes
+
+- `waitFor` cleans up its timers when an error is thrown while printing the `onTimeout`
+  output.
+- `userEvent.type()`, `userEvent.clear()`, and `userEvent.paste()` include `selection` in the
+  `TextInput` `change` event.
 
 ## 14.0.0
 

@@ -37,6 +37,8 @@ This option is also available as `defaultHidden` alias for compatibility with [R
 
 ### `eventDiagnostics` option
 
+_Added in v14.1.0_
+
 Logs a warning when `fireEvent` or `userEvent` doesn't call any handler, so a test doesn't silently do nothing. Defaults to `false`.
 
 A warning is logged in these cases:
