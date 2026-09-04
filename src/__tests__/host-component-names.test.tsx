@@ -38,6 +38,13 @@ test('detects host Switch component', async () => {
   expect(isHostSwitch(screen.root)).toBe(true);
 });
 
+// The iOS native component spec codegens under the name `Switch`, so the bare
+// name has to be recognised alongside the legacy `RCTSwitch` one.
+test('detects raw Switch component', async () => {
+  await render(React.createElement('Switch', { testID: 'switch' }));
+  expect(isHostSwitch(screen.root)).toBe(true);
+});
+
 test('detects host ScrollView component', async () => {
   await render(<ScrollView />);
   expect(isHostScrollView(screen.root)).toBe(true);
