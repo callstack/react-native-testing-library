@@ -3259,6 +3259,7 @@ __metadata:
     pretty-format: "npm:^30.4.1"
     react: "npm:19.2.3"
     react-native: "npm:0.85.3"
+    react-native-plain-text: "npm:^0.8.2"
     redent: "npm:^3.0.0"
     release-it: "npm:^20.0.1"
     test-renderer: "npm:1.2.0"
@@ -9451,6 +9452,16 @@ __metadata:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: 10c0/33977da7a5f1a287936a0c85639fec6ca74f4f15ef1e59a6bc20338fc73dc69555381e211f7a3529b8150a1f71e4225525b41b60b52965bda53ce7d47377ada1
+  languageName: node
+  linkType: hard
+
+"react-native-plain-text@npm:^0.8.2":
+  version: 0.8.2
+  resolution: "react-native-plain-text@npm:0.8.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/1be4bbd466fa6326b87c7605a3def1ab88748e79fb0f6c66a670166b18770f6d0c7d069afd86dfab1bcc2772d3de99644a99f06421f3d8c3f52a846fe84d1db2
   languageName: node
   linkType: hard
 

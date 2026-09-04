@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Image, Text, TextInput, View } from 'react-native';
+import { PlainText } from 'react-native-plain-text';
 
 import { render, screen } from '../..';
 
@@ -136,4 +137,12 @@ it('toHaveAccessibleName() rejects non-host element', () => {
     Received has type:  string
     Received has value: "This is not a TestInstance""
   `);
+});
+
+test('toHaveAccessibleName() handles plain text element', async () => {
+  await render(<PlainText testID="text">Hello</PlainText>);
+  const element = screen.getByTestId('text');
+  expect(element).toHaveAccessibleName('Hello');
+  expect(element).toHaveAccessibleName();
+  expect(element).not.toHaveAccessibleName('World');
 });

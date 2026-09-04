@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { Image, Modal, ScrollView, Switch, Text, TextInput } from 'react-native';
+import { PlainText } from 'react-native-plain-text';
 
 import { render, screen } from '..';
 import {
   isHostImage,
   isHostModal,
+  isHostPlainText,
   isHostScrollView,
   isHostSwitch,
   isHostText,
@@ -21,6 +23,19 @@ test('detects host Text component', async () => {
 test('detects raw RCTText component', async () => {
   await render(React.createElement('RCTText', { testID: 'text' }, 'Hello'));
   expect(isHostText(screen.root)).toBe(true);
+});
+
+// Plain text components, e.g. `<PlainText>` from `react-native-plain-text`,
+// hold their content in the `text` prop instead of string children.
+test('detects host plain text component', async () => {
+  await render(<PlainText>Hello</PlainText>);
+  expect(isHostText(screen.root)).toBe(true);
+  expect(isHostPlainText(screen.root)).toBe(true);
+});
+
+test('does not detect host Text component as plain text', async () => {
+  await render(<Text>Hello</Text>);
+  expect(isHostPlainText(screen.root)).toBe(false);
 });
 
 test('detects host TextInput component', async () => {

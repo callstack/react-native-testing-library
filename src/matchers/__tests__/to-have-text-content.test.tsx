@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
+import { PlainText } from 'react-native-plain-text';
 
 import { render, screen } from '../..';
 
@@ -79,4 +80,16 @@ test('toHaveTextContent() on null element', () => {
     received value must be a host instance.
     Received has value: null"
   `);
+});
+
+test('toHaveTextContent() supports plain text', async () => {
+  await render(
+    <View testID="view">
+      <PlainText>Hello</PlainText>
+      <PlainText text=" World" />
+    </View>,
+  );
+
+  expect(screen.getByTestId('view')).toHaveTextContent('Hello World');
+  expect(screen.getByTestId('view')).not.toHaveTextContent('Hello there');
 });

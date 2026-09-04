@@ -318,6 +318,8 @@ await render(<MyComponent />);
 const element = screen.getByText('banana');
 ```
 
+Besides RN's `<Text>`, this query also matches `<PlainText>` from [`react-native-plain-text`](https://github.com/mdjastrzebski/react-native-plain-text), which holds its content in the `text` prop instead of string children.
+
 ### `*ByHintText`
 
 > getByA11yHint, getAllByA11yHint, queryByA11yHint, queryAllByA11yHint, findByA11yHint, findAllByA11yHint

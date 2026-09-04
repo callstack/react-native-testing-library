@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { PlainText } from 'react-native-plain-text';
 
 import { render, screen } from '../..';
 
@@ -993,4 +994,12 @@ test('error message renders the element tree, preserving only helpful props', as
       accessibilityRole="button"
     />"
   `);
+});
+
+test('supports plain text elements', async () => {
+  await render(<PlainText testID="text">Hello</PlainText>);
+
+  expect(screen.getByRole('text').props.testID).toBe('text');
+  expect(screen.getByRole('text', { name: 'Hello' }).props.testID).toBe('text');
+  expect(screen.queryByRole('text', { name: 'World' })).toBeNull();
 });
