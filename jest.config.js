@@ -3,7 +3,9 @@ module.exports = {
   setupFilesAfterEnv: ['./jest-setup.ts'],
   testPathIgnorePatterns: ['dist/', 'examples/', 'experiments-app/', 'codemods/'],
   testTimeout: 60000,
-  transformIgnorePatterns: ['/node_modules/(?!(@react-native|react-native)/).*/'],
+  transformIgnorePatterns: [
+    '/node_modules/(?!(@react-native|react-native|react-native-plain-text)/).*/',
+  ],
   snapshotSerializers: ['@relmify/jest-serializer-strip-ansi/always'],
   clearMocks: true,
   collectCoverageFrom: [

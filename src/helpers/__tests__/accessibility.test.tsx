@@ -1,5 +1,6 @@
 import React from 'react';
 import { Image, Pressable, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { PlainText } from 'react-native-plain-text';
 
 import { isHiddenFromAccessibility, isInaccessible, render, screen } from '../..';
 import {
@@ -913,5 +914,46 @@ describe('computeAccessibleName', () => {
     expect(computeAccessibleName(screen.getByTestId('text-input'))).toBe('Placeholder');
     expect(computeAccessibleName(screen.getByTestId('parent'))).toBe('Hello');
     expect(computeAccessibleName(screen.getByTestId('parent-no-text'))).toBe('');
+  });
+});
+
+describe('plain text elements', () => {
+  test('isAccessibilityElement() returns true', async () => {
+    await render(<PlainText testID="text">Hello</PlainText>);
+    expect(isAccessibilityElement(screen.getByTestId('text'))).toBe(true);
+  });
+
+  test('getRole() returns "text"', async () => {
+    await render(<PlainText testID="text">Hello</PlainText>);
+    expect(getRole(screen.getByTestId('text'))).toBe('text');
+  });
+
+  test('computeAccessibleName() uses the text content', async () => {
+    await render(<PlainText testID="text">Hello</PlainText>);
+    expect(computeAccessibleName(screen.getByTestId('text'))).toBe('Hello');
+  });
+
+  test('computeAccessibleName() prefers explicit accessibility label', async () => {
+    await render(
+      <PlainText testID="text" accessibilityLabel="Label">
+        Hello
+      </PlainText>,
+    );
+    expect(computeAccessibleName(screen.getByTestId('text'))).toBe('Label');
+  });
+
+  test('computeAccessibleName() returns empty string for empty text', async () => {
+    await render(<PlainText testID="text" />);
+    expect(computeAccessibleName(screen.getByTestId('text'))).toBe('');
+  });
+
+  test('computeAccessibleName() includes plain text children', async () => {
+    await render(
+      <View testID="view" accessible>
+        <PlainText>Hello</PlainText>
+        <PlainText text="World" />
+      </View>,
+    );
+    expect(computeAccessibleName(screen.getByTestId('view'))).toBe('Hello World');
   });
 });

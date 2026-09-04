@@ -4,7 +4,13 @@ import type { TestInstance } from 'test-renderer';
 
 import { getContainerInstance, getInstanceSiblings, isTestInstance } from './component-tree';
 import { findAll } from './find-all';
-import { isHostImage, isHostSwitch, isHostText, isHostTextInput } from './host-component-names';
+import {
+  getCustomTextValue,
+  isHostImage,
+  isHostSwitch,
+  isHostText,
+  isHostTextInput,
+} from './host-component-names';
 import { getTextContent } from './text-content';
 import { isEditableTextInput } from './text-input';
 
@@ -284,6 +290,12 @@ export function computeAccessibleName(
 
   if (isHostTextInput(instance) && instance.props.placeholder && options?.root !== false) {
     return instance.props.placeholder;
+  }
+
+  // Custom host text elements have no children, their content is in a prop.
+  const customText = getCustomTextValue(instance);
+  if (customText !== undefined) {
+    return customText;
   }
 
   const parts: AccessibleNamePart[] = [];

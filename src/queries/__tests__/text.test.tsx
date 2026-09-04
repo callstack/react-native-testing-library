@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Button, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { PlainText } from 'react-native-plain-text';
 
 import { getDefaultNormalizer, render, screen, within } from '../..';
 
@@ -539,4 +540,26 @@ test('error message renders the element tree, preserving only helpful props', as
 test('byText should return host component', async () => {
   await render(<Text>hello</Text>);
   expect(screen.getByText('hello').type).toBe('Text');
+});
+
+test('byText matches plain text', async () => {
+  await render(<PlainText testID="text">Hello World</PlainText>);
+  expect(screen.getByText('Hello World').props.testID).toBe('text');
+});
+
+test('byText matches plain text passed by `text` prop', async () => {
+  await render(<PlainText testID="text" text="Hello World" />);
+  expect(screen.getByText('Hello World').props.testID).toBe('text');
+});
+
+test('byText supports text match options for plain text', async () => {
+  await render(<PlainText testID="text">Hello World</PlainText>);
+  expect(screen.getByText('hello world', { exact: false }).props.testID).toBe('text');
+  expect(screen.getByText(/hello/i).props.testID).toBe('text');
+  expect(screen.queryByText('Hello')).toBeNull();
+});
+
+test('byText does not match plain text without content', async () => {
+  await render(<PlainText testID="text" />);
+  expect(screen.queryByText('Hello World')).toBeNull();
 });
