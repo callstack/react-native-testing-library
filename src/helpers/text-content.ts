@@ -1,6 +1,6 @@
 import type { TestInstance } from 'test-renderer';
 
-import { getHostPlainTextValue } from './host-component-names';
+import { getCustomTextValue } from './host-component-names';
 
 export function getTextContent(instance: TestInstance | string | null): string {
   if (!instance) {
@@ -11,11 +11,11 @@ export function getTextContent(instance: TestInstance | string | null): string {
     return instance;
   }
 
-  // Plain text host elements, e.g. `<PlainText>` from `react-native-plain-text`,
-  // hold their content in the `text` prop rather than as string children.
-  const plainText = getHostPlainTextValue(instance);
-  if (plainText !== undefined) {
-    return plainText;
+  // Custom host text elements, e.g. `<PlainText>` from `react-native-plain-text`,
+  // hold their content in a prop rather than as string children.
+  const customText = getCustomTextValue(instance);
+  if (customText !== undefined) {
+    return customText;
   }
 
   const result: string[] = [];

@@ -5,7 +5,7 @@ import type { TestInstance } from 'test-renderer';
 import { getContainerInstance, getInstanceSiblings, isTestInstance } from './component-tree';
 import { findAll } from './find-all';
 import {
-  getHostPlainTextValue,
+  getCustomTextValue,
   isHostImage,
   isHostSwitch,
   isHostText,
@@ -292,10 +292,10 @@ export function computeAccessibleName(
     return instance.props.placeholder;
   }
 
-  // Plain text host elements have no children, their content is in `text` prop.
-  const plainText = getHostPlainTextValue(instance);
-  if (plainText !== undefined) {
-    return plainText;
+  // Custom host text elements have no children, their content is in a prop.
+  const customText = getCustomTextValue(instance);
+  if (customText !== undefined) {
+    return customText;
   }
 
   const parts: AccessibleNamePart[] = [];
