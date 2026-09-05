@@ -1,0 +1,48 @@
+import { render, screen, userEvent } from '@testing-library/react-native';
+import * as React from 'react';
+
+import { addTask, getAllTasks, useTaskStore } from '../state';
+import { TaskList } from '../TaskList';
+import { Task } from '../types';
+import { renderWithStore } from './test-utils';
+
+jest.useFakeTimers();
+
+afterEach(() => {
+  useTaskStore.getState().reset();
+});
+
+test('renders an empty task list', async () => {
+  await render(<TaskList />);
+  expect(screen.getByText(/no tasks, start by adding one/i)).toBeOnTheScreen();
+});
+
+const INITIAL_TASKS: Task[] = [{ id: '1', title: 'Buy bread' }];
+
+test('renders a to do list with 1 items initially, and adds a new item', async () => {
+  await renderWithStore(<TaskList />, {
+    initialState: {
+      tasks: INITIAL_TASKS,
+      newTaskTitle: '',
+    },
+  });
+
+  expect(screen.getByText(/buy bread/i)).toBeOnTheScreen();
+  expect(screen.getAllByTestId('task-item')).toHaveLength(1);
+
+  const user = userEvent.setup();
+  await user.type(screen.getByPlaceholderText(/new task/i), 'Buy almond milk');
+  await user.press(screen.getByRole('button', { name: /add task/i }));
+
+  expect(screen.getByText(/buy almond milk/i)).toBeOnTheScreen();
+  expect(screen.getAllByTestId('task-item')).toHaveLength(2);
+});
+
+test('modify store outside of components', () => {
+  useTaskStore.setState({ tasks: INITIAL_TASKS });
+  expect(getAllTasks()).toEqual(INITIAL_TASKS);
+
+  const NEW_TASK = { id: '2', title: 'Buy almond milk' };
+  addTask(NEW_TASK);
+  expect(getAllTasks()).toEqual([...INITIAL_TASKS, NEW_TASK]);
+});
