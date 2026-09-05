@@ -8,12 +8,15 @@ import type {
 import type { Fiber, TestInstance } from 'test-renderer';
 
 import { act } from './act';
+import { getConfig } from './config';
 import type { LayoutRectangle } from './event-builder';
 import { buildLayoutEvent, buildScrollEvent, buildTouchEvent } from './event-builder';
 import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
+import { computeAriaDisabled } from './helpers/accessibility';
 import { isInstanceMounted } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
+import { logger } from './helpers/logger';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
@@ -113,6 +116,51 @@ function findEventHandlerFromFiber(fiber: Fiber | null, eventName: string): Even
   return findEventHandlerFromFiber(fiber.return, eventName);
 }
 
+/**
+ * Walks up from the target to the nearest element that can respond to touches
+ * (a touch responder or a host `TextInput`), mirroring `findEventHandler`.
+ */
+function getNearestTouchResponder(instance: TestInstance): TestInstance | null {
+  let current: TestInstance | null = instance;
+  while (current != null) {
+    if (isTouchResponder(current)) {
+      return current;
+    }
+
+    current = current.parent;
+  }
+
+  return null;
+}
+
+/**
+ * Warns when an event did not trigger any handler because the responding
+ * element is disabled. Helps debug tests that silently do nothing.
+ * Can be opted out via `configure({ disabledEventWarning: false })`.
+ */
+function warnAboutDisabledEventTarget(instance: TestInstance, eventName: string) {
+  if (!getConfig().disabledEventWarning) {
+    return;
+  }
+
+  const target = getNearestTouchResponder(instance) ?? instance;
+
+  // `TextInput` editability (`editable={false}`) is a separate concern from
+  // disabled state, so we don't warn about it here to avoid false positives.
+  if (isHostTextInput(target)) {
+    return;
+  }
+
+  if (!computeAriaDisabled(target)) {
+    return;
+  }
+
+  logger.warn(
+    `Tried to fire the "${eventName}" event on a disabled element, so no handler was called.\n` +
+      'If this is intentional, you can disable this warning via `configure({ disabledEventWarning: false })`.',
+  );
+}
+
 // String union type of keys of T that start with on, stripped of 'on'
 type EventNameExtractor<T> = keyof {
   [K in keyof T as K extends `on${infer Rest}` ? Uncapitalize<Rest> : never]: T[K];
@@ -135,6 +183,7 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
 
   const handler = findEventHandler(instance, eventName);
   if (!handler) {
+    warnAboutDisabledEventTarget(instance, eventName);
     return;
   }
 

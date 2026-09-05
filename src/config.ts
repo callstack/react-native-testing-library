@@ -12,6 +12,12 @@ export type Config = {
   /** Default value for `includeHiddenElements` query option. */
   defaultIncludeHiddenElements: boolean;
 
+  /**
+   * Warn when an event is fired on a disabled element and no handler is
+   * triggered as a result. Set to `false` to opt out.
+   */
+  disabledEventWarning: boolean;
+
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
 };
@@ -24,6 +30,7 @@ export type ConfigAliasOptions = {
 const defaultConfig: Config = {
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: false,
+  disabledEventWarning: true,
 };
 
 let config = { ...defaultConfig };
@@ -37,6 +44,7 @@ export function configure(options: Partial<Config & ConfigAliasOptions>) {
     defaultDebugOptions,
     defaultHidden,
     defaultIncludeHiddenElements,
+    disabledEventWarning,
     ...rest
   } = options;
 
@@ -50,6 +58,7 @@ export function configure(options: Partial<Config & ConfigAliasOptions>) {
     asyncUtilTimeout: asyncUtilTimeout ?? config.asyncUtilTimeout,
     defaultDebugOptions,
     defaultIncludeHiddenElements: resolvedDefaultIncludeHiddenElements,
+    disabledEventWarning: disabledEventWarning ?? config.disabledEventWarning,
   };
 }
 
