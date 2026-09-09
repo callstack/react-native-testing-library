@@ -146,8 +146,8 @@ function warnAboutDisabledEventTarget(instance: TestInstance, eventName: string)
   const target = getNearestTouchResponder(instance) ?? instance;
 
   // `TextInput` editability (`editable={false}`) is a separate concern from
-  // disabled state, so we don't warn about it here to avoid false positives.
-  if (isHostTextInput(target)) {
+  // disabled state, so we don't warn about non-editable TextInput here to avoid false positives.
+  if (isHostTextInput(target) && !isEditableTextInput(target)) {
     return;
   }
 
