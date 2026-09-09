@@ -6,6 +6,7 @@ import { computeAriaDisabled } from '../helpers/accessibility';
 import { isInstanceMounted } from '../helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from '../helpers/host-component-names';
 import { logger } from '../helpers/logger';
+import { isEditableTextInput } from '../helpers/text-input';
 import { buildLayoutEvent, buildTouchEvent } from './builders/common';
 import { mergeEventProps } from './builders/merge';
 import { buildScrollEvent } from './builders/scroll';
@@ -46,8 +47,8 @@ function warnAboutDisabledEventTarget(instance: TestInstance, eventName: string)
   const target = getNearestTouchResponder(instance) ?? instance;
 
   // `TextInput` editability (`editable={false}`) is a separate concern from
-  // disabled state, so we don't warn about it here to avoid false positives.
-  if (isHostTextInput(target)) {
+  // disabled state, so we don't warn about non-editable TextInput here to avoid false positives.
+  if (isHostTextInput(target) && !isEditableTextInput(target)) {
     return;
   }
 
