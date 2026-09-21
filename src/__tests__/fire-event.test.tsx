@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 
 import { fireEvent, render, screen } from '..';
+import { configure, resetToDefaults } from '../config';
+import { logger } from '../helpers/logger';
 import { nativeState } from '../native-state';
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
@@ -560,6 +562,17 @@ test('fireEvent handles handler that throws gracefully', async () => {
 });
 
 describe('disabled elements', () => {
+  let warnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+    resetToDefaults();
+  });
+
   test('does not fire on disabled Pressable', async () => {
     const onPress = jest.fn();
     await render(
@@ -622,6 +635,61 @@ describe('disabled elements', () => {
     await render(<TestComponent onPress={handlePress} disabled={true} />);
     await fireEvent.press(screen.getByText('Trigger Test'));
     expect(handlePress).toHaveBeenCalledTimes(1);
+  });
+
+  test('warns when firing an event on a disabled element', async () => {
+    await render(
+      <Pressable onPress={jest.fn()} disabled={true}>
+        <Text>Trigger</Text>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Tried to fire the "press" event on a disabled element, so no handler was called.
+      If this is intentional, you can disable this warning via \`configure({ warnOnDisabledElementEvent: false })\`."
+    `);
+  });
+
+  test('does not warn when the event bubbles to an enabled parent', async () => {
+    await render(
+      <Pressable onPress={jest.fn()}>
+        <Pressable onPress={jest.fn()} disabled={true}>
+          <Text>Inner Trigger</Text>
+        </Pressable>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Inner Trigger'));
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn when the element is not disabled (e.g. pointerEvents="none")', async () => {
+    await render(
+      <View pointerEvents="none">
+        <Pressable testID="btn" onPress={jest.fn()} />
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByTestId('btn'));
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn when warnOnDisabledElementEvent is turned off', async () => {
+    configure({ warnOnDisabledElementEvent: false });
+    await render(
+      <Pressable onPress={jest.fn()} disabled={true}>
+        <Text>Trigger</Text>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(warnSpy).not.toHaveBeenCalled();
   });
 });
 
@@ -831,6 +899,16 @@ describe('non-editable TextInput', () => {
 });
 
 describe('responder system', () => {
+  let warnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
   test('respects disabled prop through composite wrappers', async () => {
     function TestChildTouchableComponent({
       onPress,
