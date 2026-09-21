@@ -3,7 +3,7 @@ import type { TestInstance } from 'test-renderer';
 export const HOST_TEXT_NAMES = ['Text', 'RCTText'];
 const HOST_TEXT_INPUT_NAMES = ['TextInput'];
 const HOST_IMAGE_NAMES = ['Image'];
-const HOST_SWITCH_NAMES = ['RCTSwitch'];
+const HOST_SWITCH_NAMES = ['Switch', 'RCTSwitch'];
 const HOST_SCROLL_VIEW_NAMES = ['RCTScrollView'];
 const HOST_MODAL_NAMES = ['Modal'];
 
