@@ -11,7 +11,7 @@ type Config = {
   defaultIncludeHiddenElements: boolean;
 
   /** Warn when firing an event on a disabled element triggers no handler. */
-  disabledEventWarning: boolean;
+  warnOnDisabledElementEvent: boolean;
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
@@ -35,12 +35,12 @@ Default value for [includeHiddenElements](/docs/api/queries#includehiddenelement
 
 This option is also available as `defaultHidden` alias for compatibility with [React Testing Library](https://testing-library.com/docs/dom-testing-library/api-configuration/#defaulthidden).
 
-### `disabledEventWarning` option
+### `warnOnDisabledElementEvent` option
 
 When `fireEvent` is used on a disabled element (e.g. a `Pressable` with `disabled={true}`) the event is not dispatched to any handler, which can be surprising while debugging tests. When this option is enabled (the default), a warning is logged in that case. Set it to `false` to opt out:
 
 ```ts
-configure({ disabledEventWarning: false });
+configure({ warnOnDisabledElementEvent: false });
 ```
 
 ### `defaultDebugOptions` option
