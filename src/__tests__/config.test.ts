@@ -22,7 +22,7 @@ test('configure() overrides existing config values', () => {
     asyncUtilTimeout: 5000,
     defaultDebugOptions: { message: 'debug message' },
     defaultIncludeHiddenElements: false,
-    disabledEventWarning: true,
+    warnOnDisabledElementEvent: true,
   });
 });
 

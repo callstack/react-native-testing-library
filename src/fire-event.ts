@@ -136,10 +136,10 @@ function getNearestTouchResponder(instance: TestInstance): TestInstance | null {
 /**
  * Warns when an event did not trigger any handler because the responding
  * element is disabled. Helps debug tests that silently do nothing.
- * Can be opted out via `configure({ disabledEventWarning: false })`.
+ * Can be opted out via `configure({ warnOnDisabledElementEvent: false })`.
  */
 function warnAboutDisabledEventTarget(instance: TestInstance, eventName: string) {
-  if (!getConfig().disabledEventWarning) {
+  if (!getConfig().warnOnDisabledElementEvent) {
     return;
   }
 
@@ -157,7 +157,7 @@ function warnAboutDisabledEventTarget(instance: TestInstance, eventName: string)
 
   logger.warn(
     `Tried to fire the "${eventName}" event on a disabled element, so no handler was called.\n` +
-      'If this is intentional, you can disable this warning via `configure({ disabledEventWarning: false })`.',
+      'If this is intentional, you can disable this warning via `configure({ warnOnDisabledElementEvent: false })`.',
   );
 }
 

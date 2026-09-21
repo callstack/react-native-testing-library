@@ -649,7 +649,7 @@ describe('disabled elements', () => {
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Tried to fire the "press" event on a disabled element, so no handler was called.
-      If this is intentional, you can disable this warning via \`configure({ disabledEventWarning: false })\`."
+      If this is intentional, you can disable this warning via \`configure({ warnOnDisabledElementEvent: false })\`."
     `);
   });
 
@@ -679,8 +679,8 @@ describe('disabled elements', () => {
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  test('does not warn when disabledEventWarning is turned off', async () => {
-    configure({ disabledEventWarning: false });
+  test('does not warn when warnOnDisabledElementEvent is turned off', async () => {
+    configure({ warnOnDisabledElementEvent: false });
     await render(
       <Pressable onPress={jest.fn()} disabled={true}>
         <Text>Trigger</Text>
