@@ -1,3 +1,4 @@
+import redent from 'redent';
 import type {
   PressableProps,
   ScrollViewProps,
@@ -15,6 +16,7 @@ import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
 import { computeAriaDisabled } from './helpers/accessibility';
 import { isInstanceMounted } from './helpers/component-tree';
+import { formatJson } from './helpers/format-element';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { logger } from './helpers/logger';
 import { isPointerEventEnabled } from './helpers/pointer-events';
@@ -158,9 +160,11 @@ function warnAboutDisabledEventTarget(target: TestInstance | null, eventName: st
     return;
   }
 
+  const targetJson = target.toJSON();
   logger.warn(
     `Tried to fire the "${eventName}" event on a disabled element, so no handler was called.\n` +
-      'If this is intentional, you can disable this warning via `configure({ warnOnDisabledElementEvent: false })`.',
+      'If this is intentional, you can disable this warning via `configure({ warnOnDisabledElementEvent: false })`.\n\n' +
+      redent(targetJson ? formatJson(targetJson) : '(hidden)', 2),
   );
 }
 
