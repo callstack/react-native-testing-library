@@ -65,6 +65,25 @@ jobs:
       - name: Validate website docs
         run: yarn --cwd website validate
 
+  typecheck-rn-0-88:
+    runs-on: ubuntu-latest
+    name: Typecheck → RN 0.88
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps
+        with:
+          react-version: 19.3.0
+          react-native-version: ~0.88.0-rc.1
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Typecheck React 19.2-only tests
+        run: yarn typecheck:react-19_2
+
   typecheck-rn-0-87:
     runs-on: ubuntu-latest
     name: Typecheck → RN 0.87
@@ -309,6 +328,23 @@ jobs:
 
       - name: Test
         run: yarn test:codemods
+
+  test-rn-0-88:
+    runs-on: ubuntu-latest
+    name: Test → RN 0.88
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup Node.js and deps
+        uses: ./.github/actions/setup-deps
+        with:
+          react-version: 19.3.0
+          react-native-version: ~0.88.0-rc.1
+          test-renderer-version: ~1.3.0
+
+      - name: Test
+        run: yarn test:ci
 
   test-rn-0-87:
     runs-on: ubuntu-latest

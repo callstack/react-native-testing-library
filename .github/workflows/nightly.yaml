@@ -81,6 +81,7 @@ jobs:
       matrix:
         rn-lane:
           [
+            '0.88',
             '0.87',
             '0.86',
             '0.85',
@@ -95,8 +96,12 @@ jobs:
             next,
             nightly,
           ]
-        test-renderer-version: ['~1.0', '~1.1', '~1.2']
+        test-renderer-version: ['~1.0', '~1.1', '~1.2', '~1.3']
         include:
+          - rn-lane: '0.88'
+            setup-kind: stable
+            react-version: '19.3.0'
+            react-native-version: '~0.88.0-rc.1'
           - rn-lane: '0.87'
             setup-kind: stable
             react-version: '19.2.3'
