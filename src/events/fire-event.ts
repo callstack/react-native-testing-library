@@ -11,48 +11,32 @@ import { buildLayoutEvent, buildTouchEvent } from './builders/common';
 import { mergeEventProps } from './builders/merge';
 import { buildScrollEvent } from './builders/scroll';
 import { normalizeEventName } from './handler';
-import { isTouchResponder } from './is-enabled';
 import { nativeState } from './native-state';
+import type { FindEventHandlerContext } from './propagation';
 import { findEventHandler } from './propagation';
 import type { EventName, EventProps, LayoutRectangle } from './types';
 import { updateNativeStateFromEvent } from './update-native-state';
 
-/**
- * Walks up from the target to the nearest element that can respond to touches
- * (a touch responder or a host `TextInput`), mirroring `findEventHandler`.
- */
-function getNearestTouchResponder(instance: TestInstance): TestInstance | null {
-  let current: TestInstance | null = instance;
-  while (current != null) {
-    if (isTouchResponder(current)) {
-      return current;
-    }
-
-    current = current.parent;
+function isWarnableDisabledTarget(target: TestInstance): boolean {
+  // `computeAriaDisabled` treats non-editable TextInput as disabled for a11y purposes,
+  // but firing events on it is expected, not a bug worth warning about.
+  if (isHostTextInput(target) && !isEditableTextInput(target)) {
+    return false;
   }
 
-  return null;
+  return computeAriaDisabled(target);
 }
 
 /**
- * Warns when an event did not trigger any handler because the responding
- * element is disabled. Helps debug tests that silently do nothing.
- * Can be opted out via `configure({ warnOnDisabledElementEvent: false })`.
+ * Warns when no handler ran because the target is disabled.
+ * Opt out via `configure({ warnOnDisabledElementEvent: false })`.
  */
-function warnAboutDisabledEventTarget(instance: TestInstance, eventName: string) {
-  if (!getConfig().warnOnDisabledElementEvent) {
+function warnAboutDisabledEventTarget(target: TestInstance | null, eventName: string) {
+  if (!getConfig().warnOnDisabledElementEvent || target == null) {
     return;
   }
 
-  const target = getNearestTouchResponder(instance) ?? instance;
-
-  // `TextInput` editability (`editable={false}`) is a separate concern from
-  // disabled state, so we don't warn about non-editable TextInput here to avoid false positives.
-  if (isHostTextInput(target) && !isEditableTextInput(target)) {
-    return;
-  }
-
-  if (!computeAriaDisabled(target)) {
+  if (!isWarnableDisabledTarget(target)) {
     return;
   }
 
@@ -70,9 +54,10 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
   // `fireEvent` accepts event names with and without the `on*` prefix.
   updateNativeStateFromEvent(instance, normalizeEventName(eventName), data[0]);
 
-  const handler = findEventHandler(instance, eventName);
+  const context: FindEventHandlerContext = { rejectedTargetRef: { current: null } };
+  const handler = findEventHandler(instance, eventName, context);
   if (!handler) {
-    warnAboutDisabledEventTarget(instance, eventName);
+    warnAboutDisabledEventTarget(context.rejectedTargetRef.current, eventName);
     return;
   }
 
