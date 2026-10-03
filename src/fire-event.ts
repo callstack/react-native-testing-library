@@ -11,9 +11,10 @@ import { act } from './act';
 import type { LayoutRectangle } from './event-builder';
 import { buildLayoutEvent, buildScrollEvent, buildTouchEvent } from './event-builder';
 import type { EventHandler } from './event-handler';
-import { getEventHandlerFromProps } from './event-handler';
+import { getEventHandlerFromProps, getEventHandlerName } from './event-handler';
 import { isInstanceMounted } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
+import { logger } from './helpers/logger';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
@@ -146,6 +147,31 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
   return returnValue;
 }
 
+/**
+ * Fires a direct (non-bubbling) event, invoking only the handler of the given element.
+ * Used for events that React Native emits straight to the target element, e.g. `layout`.
+ */
+async function fireDirectEvent(instance: TestInstance, eventName: EventName, ...data: unknown[]) {
+  if (!isInstanceMounted(instance)) {
+    return;
+  }
+
+  const handler = getEventHandlerFromProps(instance.props, eventName);
+  if (!handler) {
+    logger.warn(
+      `fireEvent.${eventName}: element has no "${getEventHandlerName(eventName)}" handler.`,
+    );
+    return;
+  }
+
+  let returnValue;
+  await act(() => {
+    returnValue = handler(...data);
+  });
+
+  return returnValue;
+}
+
 type EventProps = Record<string, unknown>;
 
 fireEvent.changeText = async (instance: TestInstance, text: string) =>
@@ -169,8 +195,13 @@ fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
   await fireEvent(instance, 'scroll', event);
 };
 
+/**
+ * Layout events are emitted by the native layout engine directly to the measured element
+ * and do not bubble, so unlike other `fireEvent` calls this one does not look for the
+ * handler on ancestor elements.
+ */
 fireEvent.layout = async (instance: TestInstance, layout?: Partial<LayoutRectangle>) => {
-  await fireEvent(instance, 'layout', buildLayoutEvent(layout));
+  await fireDirectEvent(instance, 'layout', buildLayoutEvent(layout));
 };
 
 export { fireEvent };

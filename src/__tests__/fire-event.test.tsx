@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 
 import { fireEvent, render, screen } from '..';
+import { _console } from '../helpers/logger';
 import { nativeState } from '../native-state';
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
@@ -468,18 +469,50 @@ describe('fireEvent.layout', () => {
     });
   });
 
-  test('bubbles up to find the handler on an ancestor element', async () => {
+  test('does not bubble to the handler on an ancestor element', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onLayout = jest.fn();
     await render(
-      <View testID="view" onLayout={onLayout}>
-        <Text>Content</Text>
+      <View testID="parent" onLayout={onLayout}>
+        <View testID="child" />
       </View>,
     );
 
-    await fireEvent.layout(screen.getByText('Content'), { height: 80 });
+    await fireEvent.layout(screen.getByTestId('child'), { height: 80 });
 
-    expect(onLayout).toHaveBeenCalledTimes(1);
-    expect(onLayout.mock.calls[0][0].nativeEvent.layout.height).toBe(80);
+    expect(onLayout).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    warnSpy.mockRestore();
+  });
+
+  test('warns when element has no onLayout handler', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    await render(<View testID="view" />);
+
+    await fireEvent.layout(screen.getByTestId('view'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toContain(
+      'fireEvent.layout: element has no "onLayout" handler.',
+    );
+    warnSpy.mockRestore();
+  });
+
+  test('is not blocked by pointerEvents or non-editable TextInput', async () => {
+    const onViewLayout = jest.fn();
+    const onInputLayout = jest.fn();
+    await render(
+      <View pointerEvents="none">
+        <View testID="view" onLayout={onViewLayout} />
+        <TextInput testID="input" editable={false} onLayout={onInputLayout} />
+      </View>,
+    );
+
+    await fireEvent.layout(screen.getByTestId('view'));
+    await fireEvent.layout(screen.getByTestId('input'));
+
+    expect(onViewLayout).toHaveBeenCalledTimes(1);
+    expect(onInputLayout).toHaveBeenCalledTimes(1);
   });
 });
 
