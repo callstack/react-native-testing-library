@@ -35,30 +35,18 @@ export function isTouchResponder(instance: TestInstance) {
 
 /**
  * List of events affected by `pointerEvents` prop.
- *
- * Note: `fireEvent` is accepting both `press` and `onPress` for event names,
- * so we need cover both forms.
  */
-const eventsAffectedByPointerEventsProp = new Set(['press', 'onPress']);
+const eventsAffectedByPointerEventsProp = new Set(['press']);
 
 /**
  * List of `TextInput` events not affected by `editable` prop.
- *
- * Note: `fireEvent` accepts event names with and without the `on` prefix
- * (e.g. `layout` and `onLayout`), so we need to cover both forms.
  */
-const textInputEventsIgnoringEditableProp = new Set([
-  'contentSizeChange',
-  'onContentSizeChange',
-  'layout',
-  'onLayout',
-  'scroll',
-  'onScroll',
-]);
+const textInputEventsIgnoringEditableProp = new Set(['contentSizeChange', 'layout', 'scroll']);
 
 /**
  * Checks whether a device would deliver the event to the instance, taking into account
  * `pointerEvents`, non-editable `TextInput` and touch responders that decline the touch.
+ * Expects event name without the `on*` prefix (see `normalizeEventName`).
  */
 export function isEventEnabled(
   instance: TestInstance,

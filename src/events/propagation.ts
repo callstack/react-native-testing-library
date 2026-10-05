@@ -8,15 +8,15 @@ import type { EventHandler } from './types';
 
 /**
  * Direct events are delivered by React Native only to the emitting element and do not bubble.
- * Note: `fireEvent` accepts both `layout` and `onLayout` event names, so check both forms.
  */
 export function isDirectEvent(eventName: string) {
-  return eventName === 'layout' || eventName === 'onLayout';
+  return eventName === 'layout';
 }
 
 /**
  * Finds the handler that should receive the event, as `fireEvent` does: direct events only
  * check the target, other events bubble up the tree until an enabled handler is found.
+ * Expects event name without the `on*` prefix (see `normalizeEventName`).
  */
 export function findEventHandler(instance: TestInstance, eventName: string): EventHandler | null {
   return isDirectEvent(eventName)

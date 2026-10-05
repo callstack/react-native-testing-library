@@ -4,6 +4,7 @@ import { act } from '../act';
 import { isInstanceMounted } from '../helpers/component-tree';
 import { isHostScrollView } from '../helpers/host-component-names';
 import { buildLayoutEvent, buildScrollEvent, buildTouchEvent, mergeEventProps } from './builders';
+import { normalizeEventName } from './handler';
 import { nativeState } from './native-state';
 import { findEventHandler } from './propagation';
 import type { EventName, EventProps, LayoutRectangle } from './types';
@@ -14,9 +15,11 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
     return;
   }
 
-  updateNativeStateFromEvent(instance, eventName, data[0]);
+  // `fireEvent` accepts event names with and without the `on*` prefix.
+  const normalizedEventName = normalizeEventName(eventName);
+  updateNativeStateFromEvent(instance, normalizedEventName, data[0]);
 
-  const handler = findEventHandler(instance, eventName);
+  const handler = findEventHandler(instance, normalizedEventName);
   if (!handler) {
     return;
   }

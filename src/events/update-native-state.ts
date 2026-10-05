@@ -15,6 +15,7 @@ const scrollEventNames = new Set([
 
 /**
  * Updates native state the way a device would have before emitting the event.
+ * Expects event name without the `on*` prefix (see `normalizeEventName`).
  */
 export function updateNativeStateFromEvent(
   instance: TestInstance,
@@ -32,7 +33,7 @@ export function updateNativeStateFromEvent(
     }
   }
 
-  if (eventName === 'layout' || eventName === 'onLayout') {
+  if (eventName === 'layout') {
     const layoutSize = tryGetLayoutSize(value);
     if (layoutSize) {
       nativeState.layoutSizeForInstance.set(instance, layoutSize);

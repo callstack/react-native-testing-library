@@ -30,6 +30,19 @@ export function getEventHandlerFromProps(
   return undefined;
 }
 
+/**
+ * Returns the event name without the `on*` prefix, e.g. `onLayout` -> `layout`.
+ * Note: `fireEvent` accepts event names with and without the prefix, so use this
+ * before comparing event names.
+ */
+export function normalizeEventName(eventName: string) {
+  if (/^on[A-Z]/.test(eventName)) {
+    return eventName.charAt(2).toLowerCase() + eventName.slice(3);
+  }
+
+  return eventName;
+}
+
 function getEventHandlerName(eventName: string) {
   if (/^on[A-Z]/.test(eventName)) {
     return eventName;

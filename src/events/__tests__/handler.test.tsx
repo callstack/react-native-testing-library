@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 
 import { render, screen } from '../..';
-import { getEventHandlerFromProps } from '../handler';
+import { getEventHandlerFromProps, normalizeEventName } from '../handler';
 
 test('getEventHandlerFromProps strict mode', async () => {
   const onPress = jest.fn();
@@ -66,4 +66,13 @@ test('getEventHandlerFromProps loose mode', async () => {
     testOnlyOnPress,
   );
   expect(getEventHandlerFromProps(both.props, 'onPress', { loose: true })).toBe(onPress);
+});
+
+test('normalizeEventName strips the `on*` prefix', () => {
+  expect(normalizeEventName('onLayout')).toBe('layout');
+  expect(normalizeEventName('onChangeText')).toBe('changeText');
+  expect(normalizeEventName('layout')).toBe('layout');
+  expect(normalizeEventName('changeText')).toBe('changeText');
+  expect(normalizeEventName('once')).toBe('once');
+  expect(normalizeEventName('on')).toBe('on');
 });
