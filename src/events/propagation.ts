@@ -2,7 +2,7 @@ import type { Fiber, TestInstance } from 'test-renderer';
 
 import { formatElement } from '../helpers/format-element';
 import { logger } from '../helpers/logger';
-import { getEventHandlerFromProps } from './handler';
+import { getEventHandlerFromProps, normalizeEventName } from './handler';
 import { isEventEnabled, isTouchResponder } from './is-enabled';
 import type { EventHandler } from './types';
 
@@ -16,10 +16,12 @@ export function isDirectEvent(eventName: string) {
 /**
  * Finds the handler that should receive the event, as `fireEvent` does: direct events only
  * check the target, other events bubble up the tree until an enabled handler is found.
- * Expects event name without the `on*` prefix (see `normalizeEventName`).
+ *
+ * Note: handlers are looked up by the event name as passed, while event rules (direct events,
+ * `isEventEnabled`) use the name without the `on*` prefix.
  */
 export function findEventHandler(instance: TestInstance, eventName: string): EventHandler | null {
-  return isDirectEvent(eventName)
+  return isDirectEvent(normalizeEventName(eventName))
     ? getOwnEventHandler(instance, eventName)
     : findBubblingEventHandler(instance, eventName);
 }
@@ -47,7 +49,7 @@ function findBubblingEventHandler(
   const handler =
     getEventHandlerFromProps(instance.props, eventName, { loose: true }) ??
     findEventHandlerFromFiber(instance.unstable_fiber, eventName);
-  if (handler && isEventEnabled(instance, eventName, touchResponder)) {
+  if (handler && isEventEnabled(instance, normalizeEventName(eventName), touchResponder)) {
     return handler;
   }
 

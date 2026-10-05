@@ -37,6 +37,20 @@ test('fireEvent accepts event name with or without "on" prefix', async () => {
   expect(onPress).toHaveBeenCalledTimes(2);
 });
 
+test('fireEvent with "on" prefixed name does not call unprefixed handler props', async () => {
+  const press = jest.fn();
+  const testOnlyPress = jest.fn();
+  // @ts-expect-error Intentionally passing such props
+  await render(<View testID="view" press={press} testOnly_press={testOnlyPress} />);
+
+  await fireEvent(screen.getByTestId('view'), 'onPress');
+  expect(press).not.toHaveBeenCalled();
+  expect(testOnlyPress).not.toHaveBeenCalled();
+
+  await fireEvent(screen.getByTestId('view'), 'press');
+  expect(press).toHaveBeenCalledTimes(1);
+});
+
 test('fireEvent passes event data to handler', async () => {
   const onPress = jest.fn();
   await render(<Pressable testID="btn" onPress={onPress} />);

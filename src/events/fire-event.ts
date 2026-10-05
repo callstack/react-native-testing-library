@@ -18,10 +18,9 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
   }
 
   // `fireEvent` accepts event names with and without the `on*` prefix.
-  const normalizedEventName = normalizeEventName(eventName);
-  updateNativeStateFromEvent(instance, normalizedEventName, data[0]);
+  updateNativeStateFromEvent(instance, normalizeEventName(eventName), data[0]);
 
-  const handler = findEventHandler(instance, normalizedEventName);
+  const handler = findEventHandler(instance, eventName);
   if (!handler) {
     return;
   }
