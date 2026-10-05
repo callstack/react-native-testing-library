@@ -14,8 +14,8 @@ import {
 } from 'react-native';
 
 import { fireEvent, render, screen } from '..';
+import { nativeState } from '../events';
 import { _console } from '../helpers/logger';
-import { nativeState } from '../native-state';
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
 const verticalScrollEvent = { nativeEvent: { contentOffset: { y: 200 } } };

@@ -1,6 +1,6 @@
 import type { TestInstance } from 'test-renderer';
 
-import type { Point, Size } from './types';
+import type { Point, Size } from '../types';
 
 /**
  * Simulated native state for unmanaged controls.

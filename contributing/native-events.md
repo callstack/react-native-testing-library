@@ -2,7 +2,7 @@
 
 In React Native, some events **bubble** up to parent elements and others are **direct**, meaning only the element that emitted them receives them. `fireEvent` should behave the same way.
 
-Today, `fireEvent` treats every event as bubbling except `layout`. The list of direct events lives in `isDirectEvent()` in `src/fire-event.ts`.
+Today, `fireEvent` treats every event as bubbling except `layout`. The list of direct events lives in `isDirectEvent()` in `src/events/propagation.ts`.
 
 ## Which events are which
 

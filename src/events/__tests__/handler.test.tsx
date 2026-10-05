@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
-import { render, screen } from '..';
-import { getEventHandlerFromProps } from '../event-handler';
+import { render, screen } from '../..';
+import { getEventHandlerFromProps } from '../handler';
 
 test('getEventHandler strict mode', async () => {
   const onPress = jest.fn();

@@ -5,14 +5,15 @@ import {
   buildResponderGrantEvent,
   buildResponderReleaseEvent,
   buildTouchEvent,
-} from '../../event-builder';
-import { getEventHandlerFromProps } from '../../event-handler';
+  dispatchEvent,
+  getEventHandlerFromProps,
+  isPointerEventEnabled,
+} from '../../events';
 import { isTestInstance } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
-import { isPointerEventEnabled } from '../../helpers/pointer-events';
 import type { UserEventConfig, UserEventInstance } from '../setup';
-import { dispatchEvent, wait } from '../utils';
+import { wait } from '../utils';
 
 // These are constants defined in the React Native repo
 // See: https://github.com/facebook/react-native/blob/50e38cc9f1e6713228a91ad50f426c4f65e65e1a/packages/react-native/Libraries/Pressability/Pressability.js#L264
