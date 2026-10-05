@@ -7,18 +7,15 @@ import type {
 } from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
-import type { LayoutRectangle } from './events';
-import {
-  buildLayoutEvent,
-  buildScrollEvent,
-  buildTouchEvent,
-  nativeState,
-  propagateEvent,
-  updateNativeStateFromEvent,
-} from './events';
-import { isInstanceMounted } from './helpers/component-tree';
-import { isHostScrollView } from './helpers/host-component-names';
-import type { StringWithAutocomplete } from './types';
+import { act } from '../act';
+import { isInstanceMounted } from '../helpers/component-tree';
+import { isHostScrollView } from '../helpers/host-component-names';
+import type { StringWithAutocomplete } from '../types';
+import type { LayoutRectangle } from './builders';
+import { buildLayoutEvent, buildScrollEvent, buildTouchEvent, mergeEventProps } from './builders';
+import { nativeState } from './native-state';
+import { findEventHandler } from './propagation';
+import { updateNativeStateFromEvent } from './update-native-state';
 
 // String union type of keys of T that start with on, stripped of 'on'
 type EventNameExtractor<T> = keyof {
@@ -39,7 +36,18 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
   }
 
   updateNativeStateFromEvent(instance, eventName, data[0]);
-  return await propagateEvent(instance, eventName, ...data);
+
+  const handler = findEventHandler(instance, eventName);
+  if (!handler) {
+    return;
+  }
+
+  let returnValue;
+  await act(() => {
+    returnValue = handler(...data);
+  });
+
+  return returnValue;
 }
 
 type EventProps = Record<string, unknown>;
@@ -48,12 +56,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string) =>
   await fireEvent(instance, 'changeText', text);
 
 fireEvent.press = async (instance: TestInstance, eventProps?: EventProps) => {
-  const event = buildTouchEvent();
-  if (eventProps) {
-    mergeEventProps(event, eventProps);
-  }
-
-  await fireEvent(instance, 'press', event);
+  await fireEvent(instance, 'press', mergeEventProps(buildTouchEvent(), eventProps));
 };
 
 fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
@@ -61,11 +64,7 @@ fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
     ? nativeState.layoutSizeForInstance.get(instance)
     : undefined;
   const event = buildScrollEvent(undefined, { layoutMeasurement });
-  if (eventProps) {
-    mergeEventProps(event, eventProps);
-  }
-
-  await fireEvent(instance, 'scroll', event);
+  await fireEvent(instance, 'scroll', mergeEventProps(event, eventProps));
 };
 
 fireEvent.layout = async (instance: TestInstance, layout?: Partial<LayoutRectangle>) => {
@@ -73,25 +72,3 @@ fireEvent.layout = async (instance: TestInstance, layout?: Partial<LayoutRectang
 };
 
 export { fireEvent };
-
-function mergeEventProps(target: Record<string, unknown>, source: Record<string, unknown>) {
-  for (const key of Object.keys(source)) {
-    const sourceValue = source[key];
-    const targetValue = target[key];
-    if (
-      sourceValue != null &&
-      typeof sourceValue === 'object' &&
-      !Array.isArray(sourceValue) &&
-      targetValue &&
-      typeof targetValue === 'object' &&
-      !Array.isArray(targetValue)
-    ) {
-      mergeEventProps(
-        targetValue as Record<string, unknown>,
-        sourceValue as Record<string, unknown>,
-      );
-    } else {
-      target[key] = sourceValue;
-    }
-  }
-}

@@ -1,6 +1,6 @@
 export { act } from './act';
 export { cleanup } from './cleanup';
-export { fireEvent } from './fire-event';
+export { fireEvent } from './events/fire-event';
 export { render } from './render';
 export { waitFor } from './wait-for';
 export { waitForElementToBeRemoved } from './wait-for-element-to-be-removed';

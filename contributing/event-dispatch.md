@@ -2,22 +2,23 @@
 
 RNTL has two ways to trigger events. Neither goes through React Native's native event system. Both find `on*` props in the rendered tree and call them inside `act()`.
 
-Both are built on the shared event subsystem in `src/events/`:
+Both are built on the shared event subsystem in `src/events/`, which also holds `fireEvent` itself:
 
-| File                                        | Contents                                                                                             |
-| ------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `handler.ts`                                | Finding the `on*` handler for an event name in props                                                 |
-| `propagation.ts`                            | Bubbling vs direct events, walking up host and composite elements                                    |
-| `is-enabled.ts`                             | Whether a device would deliver the event: `pointerEvents`, `editable`, touch responders              |
-| `dispatch.ts`                               | `dispatchEvent()` (own handler only) and `propagateEvent()` (`fireEvent` rules), both run in `act()` |
-| `builders/`                                 | Event payloads, matching what React Native sends on a device                                         |
-| `native-state.ts`, `update-native-state.ts` | [Native state](native-state.md) and how `fireEvent` updates it                                       |
+| File                                        | Contents                                                                                |
+| ------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `fire-event.ts`                             | Public `fireEvent` API                                                                  |
+| `handler.ts`                                | Finding the `on*` handler for an event name in props                                    |
+| `propagation.ts`                            | Bubbling vs direct events, walking up host and composite elements                       |
+| `is-enabled.ts`                             | Whether a device would deliver the event: `pointerEvents`, `editable`, touch responders |
+| `dispatch.ts`                               | `dispatchEvent()`: calls the target's own handler in `act()`, used by `userEvent`       |
+| `builders/`                                 | Event payloads, matching what React Native sends on a device                            |
+| `native-state.ts`, `update-native-state.ts` | [Native state](native-state.md) and how `fireEvent` updates it                          |
 
 `src/user-event/` is a separate module on top of `src/events/` and imports it only through `src/events/index.ts`.
 
 ## `fireEvent`
 
-`src/fire-event.ts` is the public API. It calls a single handler for a single event using `propagateEvent()`. The work is in finding the right handler:
+`src/events/fire-event.ts` is the public API. It calls a single handler for a single event, found with `findEventHandler()` from `src/events/propagation.ts`. The work is in finding the right handler:
 
 - It starts at the target and moves up the tree until it finds a handler. It also checks props of composite components, not only host elements.
 - Direct events (see [Native event propagation](native-events.md)) only check the target.
