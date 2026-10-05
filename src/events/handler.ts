@@ -36,7 +36,7 @@ export function getEventHandlerFromProps(
  * before comparing event names.
  */
 export function normalizeEventName(eventName: string) {
-  if (/^on[A-Z]/.test(eventName)) {
+  if (hasOnPrefix(eventName)) {
     return eventName.charAt(2).toLowerCase() + eventName.slice(3);
   }
 
@@ -44,11 +44,15 @@ export function normalizeEventName(eventName: string) {
 }
 
 function getEventHandlerName(eventName: string) {
-  if (/^on[A-Z]/.test(eventName)) {
+  if (hasOnPrefix(eventName)) {
     return eventName;
   }
 
   return `on${capitalizeFirstLetter(eventName)}`;
+}
+
+function hasOnPrefix(eventName: string) {
+  return /^on[A-Z]/.test(eventName);
 }
 
 function capitalizeFirstLetter(str: string) {

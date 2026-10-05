@@ -194,6 +194,15 @@ describe('fireEvent.changeText', () => {
     expect(nativeState.valueForInstance.get(input)).toBe('new text');
   });
 
+  test('updates native state when fired with `on*` prefixed name', async () => {
+    const onChangeText = jest.fn();
+    await render(<TextInput testID="input" onChangeText={onChangeText} />);
+    const input = screen.getByTestId('input');
+    await fireEvent(input, 'onChangeText', 'new text');
+    expect(onChangeText).toHaveBeenCalledWith('new text');
+    expect(nativeState.valueForInstance.get(input)).toBe('new text');
+  });
+
   test('does not fire on non-editable TextInput', async () => {
     const onChangeText = jest.fn();
     await render(<TextInput testID="input" editable={false} onChangeText={onChangeText} />);
@@ -318,6 +327,18 @@ describe('fireEvent.scroll', () => {
     const scrollView = screen.getByTestId('scroll');
     await fireEvent.scroll(scrollView, verticalScrollEvent);
     expect(onScroll.mock.calls[0][0]).toMatchObject(verticalScrollEvent);
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
+      x: 0,
+      y: 200,
+    });
+  });
+
+  test('updates native state when fired with `on*` prefixed name', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+    const scrollView = screen.getByTestId('scroll');
+    await fireEvent(scrollView, 'onScroll', verticalScrollEvent);
+    expect(onScroll).toHaveBeenCalledWith(verticalScrollEvent);
     expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
       x: 0,
       y: 200,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text } from 'react-native';
 
 import { render, screen } from '../..';
-import { buildTouchEvent } from '../builders';
+import { buildTouchEvent } from '../builders/common';
 import { dispatchEvent } from '../dispatch';
 
 const TOUCH_EVENT = buildTouchEvent();
