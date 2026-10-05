@@ -81,7 +81,7 @@ function isDirectEvent(eventName: string) {
   return eventName === 'layout' || eventName === 'onLayout';
 }
 
-function getDirectEventHandler(instance: TestInstance, eventName: string): EventHandler | null {
+function getOwnEventHandler(instance: TestInstance, eventName: string): EventHandler | null {
   const handler = getEventHandlerFromProps(instance.props, eventName, { loose: true });
   if (!handler) {
     logger.warn(
@@ -157,7 +157,7 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
   setNativeStateIfNeeded(instance, eventName, data[0]);
 
   const handler = isDirectEvent(eventName)
-    ? getDirectEventHandler(instance, eventName)
+    ? getOwnEventHandler(instance, eventName)
     : findEventHandler(instance, eventName);
   if (!handler) {
     return;
