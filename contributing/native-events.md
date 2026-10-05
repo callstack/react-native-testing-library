@@ -2,7 +2,7 @@
 
 In React Native, some events **bubble** up to parent elements and others are **direct**, meaning only the element that emitted them receives them. `fireEvent` should behave the same way.
 
-Today, `fireEvent` treats only some of the direct events below as direct. The rest still bubble (see [Known gaps](#known-gaps)). The rules live in `isDirectEvent()` in `src/events/propagation.ts`.
+Today, `fireEvent` still bubbles direct events, with a warning (see [Known gaps](#known-gaps)). Only `fireEvent.layout()` does not bubble. The rules live in `isDirectEvent()` in `src/events/propagation.ts`.
 
 ## Which events are which
 
@@ -26,30 +26,17 @@ This is simplified. A few events differ between iOS and Android. Check the sourc
 
 ## Known gaps
 
-`fireEvent` treats these events as direct, based on the host element type (see `isDirectEvent()`):
+`fireEvent` still bubbles the direct events above for backward compatibility, as tests fire them on nested elements, e.g. `scroll` on `ScrollView` content. Making them direct is a breaking change.
 
-- `layout` on all elements
-- `Text`: `textLayout`
-- `TextInput`: `selectionChange`, `contentSizeChange`
-- `Image`: `loadStart`, `progress`, `load`, `error`, `loadEnd`
-- `ScrollView`: `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`, `momentumScrollEnd`
+`isDirectEvent()` checks whether an event is direct based on the host element type. `fireEvent` logs a warning when a direct event bubbles from a nested element to the handler of an ancestor that emits it, e.g. `scroll` from `ScrollView` content to the `ScrollView`'s `onScroll`. Handlers with the same name elsewhere, like an `onLoad` prop of a custom composite component, receive bubbled events without a warning. Only the type of the element with the handler is checked, so a handler further up on an element that doesn't emit the event gets no warning, although it will stop receiving the event too.
 
-A direct event fired on its emitting element only checks that element. Fired on a nested element, it bubbles as usual but stops at the first ancestor that emits it, as React Native never delivers it there from a child. Handlers with the same name elsewhere, like an `onLoad` prop of a custom composite component, still receive bubbled events.
+`fireEvent.layout()` is the exception: it only checks the handler of the given element, while `fireEvent(element, 'layout')` bubbles with a warning like other direct events.
 
-These were chosen because tests rarely fire them on a nested element: `TextInput` and `Image` have no children, `Text` queries usually match the `Text` that owns the handler, and the drag and momentum events are usually fired on the `ScrollView` itself.
-
-The other direct events still bubble for backward compatibility (see `isDeprecatedBubblingEvent()`), as tests fire them on nested elements, e.g. `scroll` on `ScrollView` content:
-
-- `accessibilityAction` on all elements
-- `TextInput`: `scroll`
-- `ScrollView`: `scroll`, `refresh`, `contentSizeChange`
-- `Modal`: `requestClose`, `show`, `dismiss`, `orientationChange`
-
-`fireEvent` logs a warning when one of these events bubbles from a nested element to the handler of an ancestor that emits it, e.g. `scroll` from `ScrollView` content to the `ScrollView`'s `onScroll`. Only the type of the element with the handler is checked, so a handler further up on an element that doesn't emit the event gets no warning, although it will stop receiving the event too. In the next major release, move these events to the direct lists and remove the warning.
+In the next major release, stop bubbling direct events in `fireEvent` and remove the warning.
 
 `refresh` is emitted by `RefreshControl`, but the Jest `ScrollView` mock doesn't render the `refreshControl` element. `FlatList` and `SectionList` pass `onRefresh` to the host `ScrollView`, so the rule uses `ScrollView` as the emitting element.
 
-`contentSizeChange` is not a native `ScrollView` event, so the table above doesn't list it. The `ScrollView` component calls `onContentSizeChange` from the `onLayout` of its content view and passes `onContentSizeChange: null` to the host element. The Jest `ScrollView` mock passes the prop to the host element instead, so the rule uses `ScrollView` as the emitting element. `FlatList` and `SectionList` always set this handler, and tests fire the event on list items, so it bubbles with a warning instead of being direct.
+`contentSizeChange` is not a native `ScrollView` event, so the table above doesn't list it. The `ScrollView` component calls `onContentSizeChange` from the `onLayout` of its content view and passes `onContentSizeChange: null` to the host element. The Jest `ScrollView` mock passes the prop to the host element instead, so the rule uses `ScrollView` as the emitting element. `FlatList` and `SectionList` always set this handler, and tests fire the event on list items, so making it direct will break more tests than other events.
 
 ## Sources
 

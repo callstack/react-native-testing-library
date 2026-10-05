@@ -13,22 +13,28 @@ import { getEventHandlerFromProps, normalizeEventName } from './handler';
 import { isEventEnabled, isTouchResponder } from './is-enabled';
 import type { EventHandler } from './types';
 
-/** Intentionally incomplete, see `*_DEPRECATED_BUBBLING_EVENTS` below. */
-const COMMON_DIRECT_EVENTS = ['layout'];
+const COMMON_DIRECT_EVENTS = ['layout', 'accessibilityAction'];
 const TEXT_DIRECT_EVENTS = ['textLayout'];
-const TEXT_INPUT_DIRECT_EVENTS = ['selectionChange', 'contentSizeChange'];
+const TEXT_INPUT_DIRECT_EVENTS = ['scroll', 'selectionChange', 'contentSizeChange'];
 const IMAGE_DIRECT_EVENTS = ['loadStart', 'progress', 'load', 'error', 'loadEnd'];
 const SCROLL_VIEW_DIRECT_EVENTS = [
+  'scroll',
   'scrollBeginDrag',
   'scrollEndDrag',
   'momentumScrollBegin',
   'momentumScrollEnd',
+  'refresh',
+  'contentSizeChange',
 ];
+const MODAL_DIRECT_EVENTS = ['requestClose', 'show', 'dismiss', 'orientationChange'];
 
 /**
  * Direct events are delivered by React Native only to the host element that emitted them and do
  * not bubble. Whether an event is direct depends on the host element type, e.g. `load` is direct
  * for `Image` elements, while custom `onLoad` props of composite components still bubble.
+ *
+ * Note: `fireEvent` still bubbles these events for backward compatibility, with a warning.
+ * Stop bubbling them in the next major version. See `contributing/native-events.md`.
  */
 export function isDirectEvent(instance: TestInstance, eventName: string) {
   if (COMMON_DIRECT_EVENTS.includes(eventName)) {
@@ -51,37 +57,17 @@ export function isDirectEvent(instance: TestInstance, eventName: string) {
     return SCROLL_VIEW_DIRECT_EVENTS.includes(eventName);
   }
 
-  return false;
-}
-
-/**
- * Direct in React Native, but still bubble with a deprecation warning for backward compatibility.
- * Make them direct in the next major version. See `contributing/native-events.md`.
- */
-const COMMON_DEPRECATED_BUBBLING_EVENTS = ['accessibilityAction'];
-const TEXT_INPUT_DEPRECATED_BUBBLING_EVENTS = ['scroll'];
-const SCROLL_VIEW_DEPRECATED_BUBBLING_EVENTS = ['scroll', 'refresh', 'contentSizeChange'];
-const MODAL_DEPRECATED_BUBBLING_EVENTS = ['requestClose', 'show', 'dismiss', 'orientationChange'];
-
-function isDeprecatedBubblingEvent(instance: TestInstance, eventName: string) {
-  if (COMMON_DEPRECATED_BUBBLING_EVENTS.includes(eventName)) {
-    return true;
-  }
-
-  if (isHostTextInput(instance)) {
-    return TEXT_INPUT_DEPRECATED_BUBBLING_EVENTS.includes(eventName);
-  }
-
-  if (isHostScrollView(instance)) {
-    return SCROLL_VIEW_DEPRECATED_BUBBLING_EVENTS.includes(eventName);
-  }
-
   if (isHostModal(instance)) {
-    return MODAL_DEPRECATED_BUBBLING_EVENTS.includes(eventName);
+    return MODAL_DIRECT_EVENTS.includes(eventName);
   }
 
   return false;
 }
+
+type FindEventHandlerOptions = {
+  /** Only check the handler of the given element, e.g. for `fireEvent.layout`. */
+  direct?: boolean;
+};
 
 type FindEventHandlerResult = {
   handler: EventHandler | null;
@@ -93,9 +79,8 @@ type FindEventHandlerResult = {
 };
 
 /**
- * Finds the handler that should receive the event, as `fireEvent` does: direct events only
- * check the target, other events bubble up the tree until an enabled handler is found. Bubbling
- * stops at an ancestor that emits the event as direct, as such events never come from children.
+ * Finds the handler that should receive the event, as `fireEvent` does: events bubble up the
+ * tree until an enabled handler is found, unless `direct` option is set.
  *
  * Note: handlers are looked up by the event name as passed, while event rules (direct events,
  * `isEventEnabled`) use the name without the `on*` prefix.
@@ -103,9 +88,9 @@ type FindEventHandlerResult = {
 export function findEventHandler(
   instance: TestInstance,
   eventName: string,
+  options?: FindEventHandlerOptions,
 ): FindEventHandlerResult {
-  const normalizedEventName = normalizeEventName(eventName);
-  if (isDirectEvent(instance, normalizedEventName)) {
+  if (options?.direct) {
     const handler = getEventHandlerFromProps(instance.props, eventName, { loose: true });
     return { handler: handler ?? null, skippedTargets: [] };
   }
@@ -115,11 +100,8 @@ export function findEventHandler(
     return { handler: null, skippedTargets };
   }
 
-  // React Native delivers these events only to elements that emit them, never from children.
-  if (
-    owner.instance !== instance &&
-    isDeprecatedBubblingEvent(owner.instance, normalizedEventName)
-  ) {
+  // React Native delivers direct events only to elements that emit them, never from children.
+  if (owner.instance !== instance && isDirectEvent(owner.instance, normalizeEventName(eventName))) {
     logger.warn(
       `fireEvent: "${eventName}" event bubbled to the handler of an ancestor element. React Native does not bubble this event, and fireEvent will stop bubbling it in the next major version. Fire it on the element that has the handler instead.`,
       formatElement(owner.instance),
@@ -146,25 +128,12 @@ function findBubblingHandlerOwner(
   skippedTargets: TestInstance[],
 ): FindHandlerOwnerResult {
   const touchResponder = isTouchResponder(instance) ? instance : nearestTouchResponder;
-  const normalizedEventName = normalizeEventName(eventName);
 
   const handler =
     getEventHandlerFromProps(instance.props, eventName, { loose: true }) ??
     findEventHandlerFromFiber(instance.unstable_fiber, eventName);
-
-  if (isDirectEvent(instance, normalizedEventName)) {
-    if (handler) {
-      logger.warn(
-        `fireEvent: "${eventName}" event does not bubble, fire it on the element that has the handler instead.`,
-        formatElement(instance),
-      );
-    }
-
-    return { owner: null, skippedTargets };
-  }
-
   if (handler) {
-    if (isEventEnabled(instance, normalizedEventName, touchResponder)) {
+    if (isEventEnabled(instance, normalizeEventName(eventName), touchResponder)) {
       return { owner: { handler, instance }, skippedTargets };
     }
 

@@ -22,7 +22,7 @@ Both are built on the shared event subsystem in `src/events/`, which also holds 
 `src/events/fire-event.ts` is the public API. It calls a single handler for a single event, found with `findEventHandler()` from `src/events/propagation.ts`. The work is in finding the right handler:
 
 - It starts at the target and moves up the tree until it finds a handler. It also checks props of composite components, not only host elements.
-- Direct events (see [Native event propagation](native-events.md)) only check the target.
+- Direct events (see [Native event propagation](native-events.md)) still bubble, with a warning when they reach an ancestor that emits them. `fireEvent.layout()` only checks the target.
 - It mimics cases where a device would not deliver the event, like `pointerEvents`, a non-editable `TextInput`, or a touch responder that declines.
 
 ## `userEvent`

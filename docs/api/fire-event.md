@@ -13,22 +13,16 @@ function fireEvent(instance: TestInstance, eventName: string, ...data: unknown[]
 
 The `fireEvent` API triggers event handlers on both host and composite components. It traverses the component tree bottom-up from the passed element to find an enabled event handler named `onXxx` where `xxx` is the event name.
 
-Some events are direct in React Native: they are delivered only to the host element that emitted them. When you fire such an event on its emitting element, `fireEvent` only checks that element. When you fire it on a nested element, `fireEvent` stops looking for handlers at the emitting element. These events are:
+Some events are direct in React Native: they are delivered only to the host element that emitted them. `fireEvent` still bubbles them for backward compatibility, but logs a warning when they bubble from a nested element to the handler of an ancestor that emits them, e.g. `scroll` from `ScrollView` content to the `ScrollView`. They will stop bubbling in the next major version, so fire them on the element that has the handler. These events are:
 
-- `layout` on all elements
+- `layout` and `accessibilityAction` on all elements
 - `textLayout` on `Text`
-- `selectionChange` and `contentSizeChange` on `TextInput`
+- `scroll`, `selectionChange` and `contentSizeChange` on `TextInput`
 - `loadStart`, `progress`, `load`, `error` and `loadEnd` on `Image`
-- `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin` and `momentumScrollEnd` on `ScrollView`
-
-Events with these names still bubble to other handlers, such as an `onLoad` prop of your own composite component.
-
-These direct events still bubble for backward compatibility, but `fireEvent` logs a warning when they bubble from a nested element to the handler of an ancestor that emits them, e.g. `scroll` from `ScrollView` content to the `ScrollView`. They will stop bubbling in the next major version, so fire them on the element that has the handler:
-
-- `accessibilityAction` on all elements
-- `scroll` on `TextInput`
-- `scroll`, `refresh` and `contentSizeChange` on `ScrollView`
+- `scroll`, `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`, `momentumScrollEnd`, `refresh` and `contentSizeChange` on `ScrollView`
 - `requestClose`, `show`, `dismiss` and `orientationChange` on `Modal`
+
+Events with these names bubble without a warning to other handlers, such as an `onLoad` prop of your own composite component.
 
 Unlike User Event, this API does not automatically pass event object to event handler, this is responsibility of the user to construct such object.
 
@@ -197,7 +191,7 @@ fireEvent.layout: (
 
 Builds a layout event carrying the given `layout` rectangle and invokes the `onLayout` handler of the given element. Use it to simulate the layout engine measuring an element, e.g. to test components that adapt to a measured size.
 
-Layout events do not bubble: React Native delivers them only to the measured element, so the handler is not looked up on parent elements.
+Unlike `fireEvent(element, 'layout')`, layout events fired with this helper do not bubble: React Native delivers them only to the measured element, so the handler is not looked up on parent elements.
 
 The `layout` values are merged onto a zeroed rectangle (`{ x: 0, y: 0, width: 0, height: 0 }`), so pass only the fields your component reads.
 

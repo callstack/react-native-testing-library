@@ -9,7 +9,6 @@ import { logger } from '../helpers/logger';
 import { isEditableTextInput } from '../helpers/text-input';
 import { getEventHandlerName, normalizeEventName } from './handler';
 import { getPointerEventsBlocker, isEventBlockableByPointerEvents } from './is-enabled';
-import { isDirectEvent } from './propagation';
 
 type UnhandledEventInfo = {
   skippedTargets: TestInstance[];
@@ -103,13 +102,6 @@ function getUnhandledEventWarning(
     }
 
     const handlerName = getEventHandlerName(eventName);
-    if (isDirectEvent(instance, normalizeEventName(eventName))) {
-      return {
-        message: `No "${handlerName}" handler found on the element. "${eventName}" events do not bubble to ancestors.`,
-        elements: [instance],
-      };
-    }
-
     return {
       message: `No "${handlerName}" handler found on the element or its ancestors.`,
       elements: [instance],
