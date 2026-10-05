@@ -14,46 +14,21 @@ The core team works directly on GitHub and all work is public.
 
 1. Fork the repo and create your branch from `main` (a guide on [how to fork a repository](https://help.github.com/articles/fork-a-repo/)).
 2. Run `yarn` to setup the development environment.
-3. Do the changes you want and test them out in the example app before sending a pull request.
+3. Make your changes, add tests, and try them out in the example app.
+4. Run `yarn validate` to type check, test, lint, and check formatting. CI runs the same checks on your pull request.
+5. Open a pull request following the [pull request guidelines](contributing/git-workflow.md#pull-requests).
 
-### Commit message convention
+### Contributor guides
 
-We prefix our commit messages with one of the following to signify the kind of change:
+Detailed guides live in [`contributing/`](contributing/). They are written for both human contributors and AI coding agents:
 
-- `fix`: bug fixes, e.g. fix incorrect error message.
-- `feat`: new features, e.g. add useful API.
-- `refactor`: code/structure refactor, e.g. new folder structure.
-- `docs`: changes into documentation, e.g. add usage example for `getByText`.
-- `test`: adding or updating tests, eg unit, snapshot testing.
-- `chore`: tooling changes, e.g. change circle ci config.
-- `BREAKING`: for changes that break existing usage, e.g. change API.
-
-Our pre-commit hooks verify that your commit message matches this format when committing.
-
-### Linting and tests
-
-We use TypeScript for type checking, `eslint` and `oxfmt` for linting and formatting the code, and `jest` for testing. Our pre-commit hooks verify that the linter and tests pass when committing. You can also run the following commands manually:
-
-- `yarn typecheck`: run TypeScript compiler on all files.
-- `yarn lint`: run eslint.
-- `yarn test`: run tests.
-
-### Sending a pull request
-
-When you're sending a pull request:
-
-- Prefer small pull requests focused on one change.
-- Verify that `typecheck`, `eslint` and tests are passing.
-- Preview the documentation to make sure it looks good.
-- Follow the pull request template when opening a pull request.
-
-### Publishing a release
-
-We use [release-it](https://github.com/release-it/release-it) to publish a release. It takes care of versioning, changelog generation, and publishing to NPM.
-
-```sh
-yarn release
-```
+- [Architecture and API design](contributing/architecture.md): project goals and API design principles
+- [Build, validation, and repo layout](contributing/build-and-validation.md): commands, package docs generation, folder structure
+- [TypeScript and code style](contributing/code-style.md): lint and formatting rules
+- [Testing conventions](contributing/testing.md): how the library's own tests are organized
+- [Native event propagation](contributing/native-events.md): which React Native events bubble and which are direct
+- [Example app regeneration](contributing/example-apps.md): upgrading the Expo apps in `examples/`
+- [Git, releases, and PR workflow](contributing/git-workflow.md): commit message convention, pull requests, releases
 
 ## Reporting issues
 
