@@ -15,6 +15,7 @@ import type { LayoutRectangle } from './builders';
 import { buildLayoutEvent, buildScrollEvent, buildTouchEvent, mergeEventProps } from './builders';
 import { nativeState } from './native-state';
 import { findEventHandler } from './propagation';
+import type { EventProps } from './types';
 import { updateNativeStateFromEvent } from './update-native-state';
 
 // String union type of keys of T that start with on, stripped of 'on'
@@ -49,8 +50,6 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
 
   return returnValue;
 }
-
-type EventProps = Record<string, unknown>;
 
 fireEvent.changeText = async (instance: TestInstance, text: string) =>
   await fireEvent(instance, 'changeText', text);

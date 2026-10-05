@@ -34,5 +34,5 @@ Each step uses `dispatchEvent()`, which only calls the target's own handler. It 
 
 - To change which handler gets a single event, change `fireEvent`. To make an interaction more realistic, change the `userEvent` action.
 - Keep `dispatchEvent()` simple.
-- Put rules that both need, like `pointerEvents` or `editable`, in `src/events/`. Code used only by `userEvent`, like delays and scroll steps, stays in `src/user-event/`.
+- Put event rules that both need, like the `pointerEvents` and `editable` checks, in `src/events/`. They may build on general helpers from `src/helpers/` (for example `isEditableTextInput`). Code used only by `userEvent`, like delays and scroll steps, stays in `src/user-event/`.
 - Event sequences should match a real device. Check on a device before changing one, and keep the code comments explaining the observed behavior.

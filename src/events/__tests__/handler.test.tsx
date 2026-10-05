@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 import { render, screen } from '../..';
 import { getEventHandlerFromProps } from '../handler';
 
-test('getEventHandler strict mode', async () => {
+test('getEventHandlerFromProps strict mode', async () => {
   const onPress = jest.fn();
   const testOnlyOnPress = jest.fn();
 
@@ -31,7 +31,7 @@ test('getEventHandler strict mode', async () => {
   expect(getEventHandlerFromProps(both.props, 'onPress')).toBe(onPress);
 });
 
-test('getEventHandler does not treat event names starting with "on" as prefixed', async () => {
+test('getEventHandlerFromProps does not treat event names starting with "on" as prefixed', async () => {
   const onOnline = jest.fn();
   // @ts-expect-error Intentionally passing such props
   await render(<View testID="view" onOnline={onOnline} />);
@@ -39,7 +39,7 @@ test('getEventHandler does not treat event names starting with "on" as prefixed'
   expect(getEventHandlerFromProps(screen.getByTestId('view').props, 'online')).toBe(onOnline);
 });
 
-test('getEventHandler loose mode', async () => {
+test('getEventHandlerFromProps loose mode', async () => {
   const onPress = jest.fn();
   const testOnlyOnPress = jest.fn();
 

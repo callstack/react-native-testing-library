@@ -1,4 +1,4 @@
-type EventProps = Record<string, unknown>;
+import type { EventProps } from '../types';
 
 /**
  * Deep merges custom props into a built event, so tests can override only the fields they need.

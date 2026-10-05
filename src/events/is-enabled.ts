@@ -44,8 +44,8 @@ const eventsAffectedByPointerEventsProp = new Set(['press', 'onPress']);
 /**
  * List of `TextInput` events not affected by `editable` prop.
  *
- * Note: `fireEvent` is accepting both `press` and `onPress` for event names,
- * so we need cover both forms.
+ * Note: `fireEvent` accepts event names with and without the `on` prefix
+ * (e.g. `layout` and `onLayout`), so we need to cover both forms.
  */
 const textInputEventsIgnoringEditableProp = new Set([
   'contentSizeChange',
