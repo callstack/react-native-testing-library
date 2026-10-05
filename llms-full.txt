@@ -1939,6 +1939,8 @@ fireEvent.scroll: (
 
 Builds a scroll event object, merges `eventProps` into it, and invokes the `scroll` handler on the element or nearest eligible parent.
 
+The scroll event will include the layout size from the most recent [`fireEvent.layout()`](#layout) call on the same `ScrollView` as its `layoutMeasurement`, unless you pass one in `eventProps`.
+
 #### On a `ScrollView`
 
 ```jsx
@@ -1976,9 +1978,13 @@ fireEvent.layout: (
 ) => Promise<void>
 ```
 
-Builds a layout event carrying the given `layout` rectangle and invokes the `layout` handler on the element or nearest eligible parent. Use it to simulate the layout engine measuring an element, e.g. to test components that adapt to a measured size.
+Builds a layout event carrying the given `layout` rectangle and invokes the `onLayout` handler of the given element. Use it to simulate the layout engine measuring an element, e.g. to test components that adapt to a measured size.
+
+Unlike other `fireEvent` calls, layout events do not bubble: React Native delivers them only to the measured element, so the handler is not looked up on parent elements.
 
 The `layout` values are merged onto a zeroed rectangle (`{ x: 0, y: 0, width: 0, height: 0 }`), so pass only the fields your component reads.
+
+The element's layout size is remembered, so later [scroll events](#scroll) and [`userEvent.scrollTo()`](/react-native-testing-library/docs/api/events/user-event.md#scroll-to) calls on the same `ScrollView` use it as their `layoutMeasurement`.
 
 ```jsx
 import { View } from 'react-native';
@@ -2269,7 +2275,7 @@ Each scroll interaction consists of a mandatory drag scroll part, which simulate
 - `momentumY` - target vertical momentum scroll offset
 - `momentumX` - target horizontal momentum scroll offset
 - `contentSize` - passed to `ScrollView` events and enabling `FlatList` updates
-- `layoutMeasurement` - passed to `ScrollView` events and enabling `FlatList` updates
+- `layoutMeasurement` - passed to `ScrollView` events and enabling `FlatList` updates. Defaults to the size from the last [`fireEvent.layout()`](/react-native-testing-library/docs/api/events/fire-event.md#layout) on the `ScrollView`, if any.
 
 User Event will generate several intermediate scroll steps to simulate user scroll interaction. You should not rely on exact number or values of these scrolls steps as they might be change in the future version.
 

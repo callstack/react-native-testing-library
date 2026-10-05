@@ -270,7 +270,7 @@ Each scroll interaction consists of a mandatory drag scroll part, which simulate
 - `momentumY` - target vertical momentum scroll offset
 - `momentumX` - target horizontal momentum scroll offset
 - `contentSize` - passed to `ScrollView` events and enabling `FlatList` updates
-- `layoutMeasurement` - passed to `ScrollView` events and enabling `FlatList` updates
+- `layoutMeasurement` - passed to `ScrollView` events and enabling `FlatList` updates. Defaults to the size from the last [`fireEvent.layout()`](/react-native-testing-library/docs/api/events/fire-event.md#layout) on the `ScrollView`, if any.
 
 User Event will generate several intermediate scroll steps to simulate user scroll interaction. You should not rely on exact number or values of these scrolls steps as they might be change in the future version.
 
