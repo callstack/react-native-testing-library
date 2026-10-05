@@ -1,7 +1,5 @@
 import type { Fiber, TestInstance } from 'test-renderer';
 
-import { formatElement } from '../helpers/format-element';
-import { logger } from '../helpers/logger';
 import { getEventHandlerFromProps, normalizeEventName } from './handler';
 import { isEventEnabled, isTouchResponder } from './is-enabled';
 import type { EventHandler } from './types';
@@ -13,12 +11,13 @@ export function isDirectEvent(eventName: string) {
   return eventName === 'layout';
 }
 
-// Carries state across the recursive `findEventHandler` walk. `rejectedTargetRef` is
-// filled in with the element that owned the nearest handler rejected by `isEventEnabled`,
-// so callers can report *why* no handler ran without re-walking the tree themselves.
-export type FindEventHandlerContext = {
-  nearestTouchResponder?: TestInstance;
-  rejectedTargetRef: { current: TestInstance | null };
+export type FindEventHandlerResult = {
+  handler: EventHandler | null;
+  /**
+   * Nearest element (to the fired instance) whose handler was found but rejected by
+   * `isEventEnabled`. Lets callers tell "blocked handler" apart from "no handler at all".
+   */
+  rejectedTarget: TestInstance | null;
 };
 
 /**
@@ -31,32 +30,22 @@ export type FindEventHandlerContext = {
 export function findEventHandler(
   instance: TestInstance,
   eventName: string,
-  context: FindEventHandlerContext,
-): EventHandler | null {
-  return isDirectEvent(normalizeEventName(eventName))
-    ? getOwnEventHandler(instance, eventName)
-    : findBubblingEventHandler(instance, eventName, context);
-}
-
-function getOwnEventHandler(instance: TestInstance, eventName: string): EventHandler | null {
-  const handler = getEventHandlerFromProps(instance.props, eventName, { loose: true });
-  if (!handler) {
-    logger.warn(
-      `fireEvent: element has no handler for "${eventName}" event.`,
-      formatElement(instance),
-    );
-    return null;
+): FindEventHandlerResult {
+  if (isDirectEvent(normalizeEventName(eventName))) {
+    const handler = getEventHandlerFromProps(instance.props, eventName, { loose: true });
+    return { handler: handler ?? null, rejectedTarget: null };
   }
 
-  return handler;
+  return findBubblingEventHandler(instance, eventName, undefined, null);
 }
 
 function findBubblingEventHandler(
   instance: TestInstance,
   eventName: string,
-  context: FindEventHandlerContext,
-): EventHandler | null {
-  const touchResponder = isTouchResponder(instance) ? instance : context.nearestTouchResponder;
+  nearestTouchResponder: TestInstance | undefined,
+  rejectedTarget: TestInstance | null,
+): FindEventHandlerResult {
+  const touchResponder = isTouchResponder(instance) ? instance : nearestTouchResponder;
 
   const handler =
     getEventHandlerFromProps(instance.props, eventName, { loose: true }) ??
@@ -64,23 +53,18 @@ function findBubblingEventHandler(
 
   if (handler) {
     if (isEventEnabled(instance, normalizeEventName(eventName), touchResponder)) {
-      return handler;
+      return { handler, rejectedTarget: null };
     }
 
     // Keep only the first (nearest to the fired instance) rejection.
-    if (context.rejectedTargetRef.current == null) {
-      context.rejectedTargetRef.current = touchResponder ?? instance;
-    }
+    rejectedTarget ??= touchResponder ?? instance;
   }
 
   if (instance.parent === null) {
-    return null;
+    return { handler: null, rejectedTarget };
   }
 
-  return findBubblingEventHandler(instance.parent, eventName, {
-    ...context,
-    nearestTouchResponder: touchResponder,
-  });
+  return findBubblingEventHandler(instance.parent, eventName, touchResponder, rejectedTarget);
 }
 
 function findEventHandlerFromFiber(fiber: Fiber | null, eventName: string): EventHandler | null {

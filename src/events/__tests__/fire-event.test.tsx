@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 import { fireEvent, render, screen } from '../..';
-import { configure, resetToDefaults } from '../../config';
+import { configure } from '../../config';
 import { _console, logger } from '../../helpers/logger';
 import { nativeState } from '../native-state';
 
@@ -39,6 +39,7 @@ test('fireEvent accepts event name with or without "on" prefix', async () => {
 });
 
 test('fireEvent with "on" prefixed name does not call unprefixed handler props', async () => {
+  const warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
   const press = jest.fn();
   const testOnlyPress = jest.fn();
   // @ts-expect-error Intentionally passing such props
@@ -50,6 +51,8 @@ test('fireEvent with "on" prefixed name does not call unprefixed handler props',
 
   await fireEvent(screen.getByTestId('view'), 'press');
   expect(press).toHaveBeenCalledTimes(1);
+  expect(warnSpy).toHaveBeenCalledTimes(1);
+  warnSpy.mockRestore();
 });
 
 test('fireEvent passes event data to handler', async () => {
@@ -594,9 +597,12 @@ describe('fireEvent.layout', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "  ▲ fireEvent: element has no handler for "layout" event. <View
-            testID="view"
-          />
+      "  ▲ No handler found for the "layout" event on the element. "layout" events do not bubble to ancestors.
+          If this is intentional, you can disable this warning via \`configure({ warnOnUnhandledEvent: false })\`.
+
+            <View
+              testID="view"
+            />
       "
     `);
     warnSpy.mockRestore();
@@ -710,9 +716,12 @@ test('fireEvent does nothing when element is unmounted', async () => {
 });
 
 test('fireEvent does not throw when called with non-existent event name', async () => {
+  const warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
   await render(<Pressable testID="btn" />);
   const element = screen.getByTestId('btn');
   await expect(fireEvent(element, 'nonExistentEvent' as any)).resolves.toBeUndefined();
+  expect(warnSpy).toHaveBeenCalledTimes(1);
+  warnSpy.mockRestore();
 });
 
 test('fireEvent handles handler that throws gracefully', async () => {
@@ -734,7 +743,6 @@ describe('disabled elements', () => {
 
   afterEach(() => {
     warnSpy.mockRestore();
-    resetToDefaults();
   });
 
   test('does not fire on disabled Pressable', async () => {
@@ -800,8 +808,20 @@ describe('disabled elements', () => {
     await fireEvent.press(screen.getByText('Trigger Test'));
     expect(handlePress).toHaveBeenCalledTimes(1);
   });
+});
 
-  test('warns when firing an event on a disabled element', async () => {
+describe('unhandled event warning', () => {
+  let warnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
+  test('warns when the handler is on a disabled element', async () => {
     await render(
       <Pressable onPress={jest.fn()} disabled={true}>
         <Text>Trigger</Text>
@@ -812,8 +832,8 @@ describe('disabled elements', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "Tried to fire the "press" event on a disabled element, so no handler was called.
-      If this is intentional, you can disable this warning via \`configure({ warnOnDisabledElementEvent: false })\`.
+      "Tried to fire the "press" event on a disabled element, so its handler was not called.
+      If this is intentional, you can disable this warning via \`configure({ warnOnUnhandledEvent: false })\`.
 
         <View
           accessibilityState={
@@ -827,6 +847,26 @@ describe('disabled elements', () => {
             Trigger
           </Text>
         </View>"
+    `);
+  });
+
+  test('warns when no element handles the event', async () => {
+    await render(
+      <View>
+        <Text>Trigger</Text>
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "No handler found for the "press" event on the element or any of its ancestors.
+      If this is intentional, you can disable this warning via \`configure({ warnOnUnhandledEvent: false })\`.
+
+        <Text>
+          Trigger
+        </Text>"
     `);
   });
 
@@ -844,7 +884,7 @@ describe('disabled elements', () => {
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  test('does not warn when the element is not disabled (e.g. pointerEvents="none")', async () => {
+  test('does not warn when the handler is blocked by pointerEvents="none"', async () => {
     await render(
       <View pointerEvents="none">
         <Pressable testID="btn" onPress={jest.fn()} />
@@ -856,15 +896,36 @@ describe('disabled elements', () => {
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  test('does not warn when warnOnDisabledElementEvent is turned off', async () => {
-    configure({ warnOnDisabledElementEvent: false });
+  test('does not warn when the handler is blocked by non-editable TextInput', async () => {
+    await render(<TextInput testID="input" editable={false} onChangeText={jest.fn()} />);
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn when the event updates native state (uncontrolled TextInput)', async () => {
+    await render(<TextInput testID="input" />);
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn when warnOnUnhandledEvent is turned off', async () => {
+    configure({ warnOnUnhandledEvent: false });
     await render(
-      <Pressable onPress={jest.fn()} disabled={true}>
-        <Text>Trigger</Text>
-      </Pressable>,
+      <View>
+        <Pressable onPress={jest.fn()} disabled={true}>
+          <Text>Disabled</Text>
+        </Pressable>
+        <Text>No handler</Text>
+      </View>,
     );
 
-    await fireEvent.press(screen.getByText('Trigger'));
+    await fireEvent.press(screen.getByText('Disabled'));
+    await fireEvent.press(screen.getByText('No handler'));
+    await fireEvent.layout(screen.getByText('No handler'));
 
     expect(warnSpy).not.toHaveBeenCalled();
   });

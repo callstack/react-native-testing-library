@@ -1,54 +1,17 @@
-import redent from 'redent';
 import type { TestInstance } from 'test-renderer';
 
 import { act } from '../act';
-import { getConfig } from '../config';
-import { computeAriaDisabled } from '../helpers/accessibility';
 import { isInstanceMounted } from '../helpers/component-tree';
-import { formatJson } from '../helpers/format-element';
-import { isHostScrollView, isHostTextInput } from '../helpers/host-component-names';
-import { logger } from '../helpers/logger';
-import { isEditableTextInput } from '../helpers/text-input';
+import { isHostScrollView } from '../helpers/host-component-names';
 import { buildLayoutEvent, buildTouchEvent } from './builders/common';
 import { mergeEventProps } from './builders/merge';
 import { buildScrollEvent } from './builders/scroll';
 import { normalizeEventName } from './handler';
 import { nativeState } from './native-state';
-import type { FindEventHandlerContext } from './propagation';
 import { findEventHandler } from './propagation';
 import type { EventName, EventProps, LayoutRectangle } from './types';
+import { warnAboutUnhandledEvent } from './warnings';
 import { updateNativeStateFromEvent } from './update-native-state';
-
-function isWarnableDisabledTarget(target: TestInstance): boolean {
-  // `computeAriaDisabled` treats non-editable TextInput as disabled for a11y purposes,
-  // but firing events on it is expected, not a bug worth warning about.
-  if (isHostTextInput(target) && !isEditableTextInput(target)) {
-    return false;
-  }
-
-  return computeAriaDisabled(target);
-}
-
-/**
- * Warns when no handler ran because the target is disabled.
- * Opt out via `configure({ warnOnDisabledElementEvent: false })`.
- */
-function warnAboutDisabledEventTarget(target: TestInstance | null, eventName: string) {
-  if (!getConfig().warnOnDisabledElementEvent || target == null) {
-    return;
-  }
-
-  if (!isWarnableDisabledTarget(target)) {
-    return;
-  }
-
-  const targetJson = target.toJSON();
-  logger.warn(
-    `Tried to fire the "${eventName}" event on a disabled element, so no handler was called.\n` +
-      'If this is intentional, you can disable this warning via `configure({ warnOnDisabledElementEvent: false })`.\n\n' +
-      redent(targetJson ? formatJson(targetJson) : '(hidden)', 2),
-  );
-}
 
 async function fireEvent(instance: TestInstance, eventName: EventName, ...data: unknown[]) {
   if (!isInstanceMounted(instance)) {
@@ -56,12 +19,15 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
   }
 
   // `fireEvent` accepts event names with and without the `on*` prefix.
-  updateNativeStateFromEvent(instance, normalizeEventName(eventName), data[0]);
+  const didUpdateNativeState = updateNativeStateFromEvent(
+    instance,
+    normalizeEventName(eventName),
+    data[0],
+  );
 
-  const context: FindEventHandlerContext = { rejectedTargetRef: { current: null } };
-  const handler = findEventHandler(instance, eventName, context);
+  const { handler, rejectedTarget } = findEventHandler(instance, eventName);
   if (!handler) {
-    warnAboutDisabledEventTarget(context.rejectedTargetRef.current, eventName);
+    warnAboutUnhandledEvent(instance, eventName, { rejectedTarget, didUpdateNativeState });
     return;
   }
 

@@ -16,20 +16,24 @@ const scrollEventNames = new Set([
 /**
  * Updates native state the way a device would have before emitting the event.
  * Expects event name without the `on*` prefix (see `normalizeEventName`).
+ *
+ * @returns `true` if native state was updated.
  */
 export function updateNativeStateFromEvent(
   instance: TestInstance,
   eventName: string,
   value: unknown,
-) {
+): boolean {
   if (eventName === 'changeText' && typeof value === 'string' && isEditableTextInput(instance)) {
     nativeState.valueForInstance.set(instance, value);
+    return true;
   }
 
   if (scrollEventNames.has(eventName) && isHostScrollView(instance)) {
     const contentOffset = tryGetContentOffset(value);
     if (contentOffset) {
       nativeState.contentOffsetForInstance.set(instance, contentOffset);
+      return true;
     }
   }
 
@@ -37,8 +41,11 @@ export function updateNativeStateFromEvent(
     const layoutSize = tryGetLayoutSize(value);
     if (layoutSize) {
       nativeState.layoutSizeForInstance.set(instance, layoutSize);
+      return true;
     }
   }
+
+  return false;
 }
 
 function tryGetContentOffset(event: unknown): Point | null {

@@ -10,8 +10,8 @@ type Config = {
   /** Default value for `includeHiddenElements` query option. */
   defaultIncludeHiddenElements: boolean;
 
-  /** Warn when firing an event on a disabled element triggers no handler. */
-  warnOnDisabledElementEvent: boolean;
+  /** Warn when `fireEvent` calls no handler (disabled element or no handler found). */
+  warnOnUnhandledEvent: boolean;
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
@@ -35,12 +35,17 @@ Default value for [includeHiddenElements](/docs/api/queries#includehiddenelement
 
 This option is also available as `defaultHidden` alias for compatibility with [React Testing Library](https://testing-library.com/docs/dom-testing-library/api-configuration/#defaulthidden).
 
-### `warnOnDisabledElementEvent` option
+### `warnOnUnhandledEvent` option
 
-When `fireEvent` is used on a disabled element (e.g. a `Pressable` with `disabled={true}`) the event is not dispatched to any handler, which can be surprising while debugging tests. When this option is enabled (the default), a warning is logged in that case. Set it to `false` to opt out:
+When `fireEvent` doesn't call any handler, the test can silently do nothing, which can be confusing while debugging. When this option is enabled (the default), a warning is logged in these cases:
+
+- The handler is on a disabled element (e.g. a `Pressable` with `disabled={true}`).
+- Neither the element nor any of its ancestors has a handler for the event. For direct events like `layout`, which don't bubble, only the element itself is checked.
+
+No warning is logged when the event is blocked on purpose (`pointerEvents="none"`, non-editable `TextInput`), or when it updates native state, e.g. `fireEvent.changeText` on an uncontrolled `TextInput`. Set it to `false` to opt out:
 
 ```ts
-configure({ warnOnDisabledElementEvent: false });
+configure({ warnOnUnhandledEvent: false });
 ```
 
 ### `defaultDebugOptions` option
