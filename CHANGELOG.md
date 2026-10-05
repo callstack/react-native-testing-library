@@ -8,7 +8,10 @@ with v14.
 ### Features
 
 - Added `fireEvent.layout()` to simulate the layout engine measuring an element, invoking the
-  `onLayout` handler with a synthetic layout event.
+  `onLayout` handler with a synthetic layout event. Layout events do not bubble to parent
+  elements.
+- `fireEvent.scroll()` and `userEvent.scrollTo()` use the size from the last layout event on the
+  same `ScrollView` as the default `layoutMeasurement`.
 - Added `userEvent.accessibilityAction()` to dispatch a named accessibility action to an
   element, invoking its `onAccessibilityAction` handler.
 - Added `userEvent.pullToRefresh()` to simulate the pull-to-refresh gesture on a host

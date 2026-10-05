@@ -217,6 +217,34 @@ describe('scrollTo()', () => {
     );
   });
 
+  test('uses layout size from previous layout event as layoutMeasurement', async () => {
+    const { events } = await renderScrollViewWithToolkit({ onLayout: () => {} });
+    const user = userEvent.setup();
+    const scrollView = screen.getByTestId('scrollView');
+
+    await fireEvent.layout(scrollView, { width: 390, height: 750 });
+    await user.scrollTo(scrollView, { y: 100 });
+
+    expect(events.length).toBeGreaterThan(0);
+    for (const event of events) {
+      expect(event.payload.nativeEvent.layoutMeasurement).toEqual({ width: 390, height: 750 });
+    }
+  });
+
+  test('prefers layoutMeasurement option over layout size from layout event', async () => {
+    const { events } = await renderScrollViewWithToolkit({ onLayout: () => {} });
+    const user = userEvent.setup();
+    const scrollView = screen.getByTestId('scrollView');
+
+    await fireEvent.layout(scrollView, { width: 390, height: 750 });
+    await user.scrollTo(scrollView, { y: 100, layoutMeasurement: { width: 100, height: 200 } });
+
+    expect(events.length).toBeGreaterThan(0);
+    for (const event of events) {
+      expect(event.payload.nativeEvent.layoutMeasurement).toEqual({ width: 100, height: 200 });
+    }
+  });
+
   test('is accessible directly in userEvent', async () => {
     const { events } = await renderScrollViewWithToolkit();
 

@@ -31,6 +31,10 @@ export function getEventHandlerFromProps(
 }
 
 function getEventHandlerName(eventName: string) {
+  if (/^on[A-Z]/.test(eventName)) {
+    return eventName;
+  }
+
   return `on${capitalizeFirstLetter(eventName)}`;
 }
 

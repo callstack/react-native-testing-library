@@ -26,9 +26,17 @@ test('getEventHandler strict mode', async () => {
   expect(getEventHandlerFromProps(testOnly.props, 'press')).toBe(testOnlyOnPress);
   expect(getEventHandlerFromProps(both.props, 'press')).toBe(onPress);
 
-  expect(getEventHandlerFromProps(regular.props, 'onPress')).toBe(undefined);
-  expect(getEventHandlerFromProps(testOnly.props, 'onPress')).toBe(undefined);
-  expect(getEventHandlerFromProps(both.props, 'onPress')).toBe(undefined);
+  expect(getEventHandlerFromProps(regular.props, 'onPress')).toBe(onPress);
+  expect(getEventHandlerFromProps(testOnly.props, 'onPress')).toBe(testOnlyOnPress);
+  expect(getEventHandlerFromProps(both.props, 'onPress')).toBe(onPress);
+});
+
+test('getEventHandler does not treat event names starting with "on" as prefixed', async () => {
+  const onOnline = jest.fn();
+  // @ts-expect-error Intentionally passing such props
+  await render(<View testID="view" onOnline={onOnline} />);
+
+  expect(getEventHandlerFromProps(screen.getByTestId('view').props, 'online')).toBe(onOnline);
 });
 
 test('getEventHandler loose mode', async () => {

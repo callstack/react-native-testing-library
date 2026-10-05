@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 
 import { fireEvent, render, screen } from '..';
+import { _console } from '../helpers/logger';
 import { nativeState } from '../native-state';
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
@@ -423,6 +424,54 @@ describe('fireEvent.scroll', () => {
       y: 0,
     });
   });
+
+  test('uses layout size from previous layout event as layoutMeasurement', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} onLayout={() => {}} />);
+    const scrollView = screen.getByTestId('scroll');
+
+    await fireEvent.layout(scrollView, { width: 390, height: 750 });
+    await fireEvent.scroll(scrollView);
+
+    expect(onScroll.mock.calls[0][0].nativeEvent.layoutMeasurement).toEqual({
+      width: 390,
+      height: 750,
+    });
+  });
+
+  test('prefers passed layoutMeasurement over layout size from layout event', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} onLayout={() => {}} />);
+    const scrollView = screen.getByTestId('scroll');
+
+    await fireEvent.layout(scrollView, { width: 390, height: 750 });
+    await fireEvent.scroll(scrollView, {
+      nativeEvent: { layoutMeasurement: { width: 100, height: 200 } },
+    });
+
+    expect(onScroll.mock.calls[0][0].nativeEvent.layoutMeasurement).toEqual({
+      width: 100,
+      height: 200,
+    });
+  });
+
+  test('does not use layout size of non-ScrollView element as layoutMeasurement', async () => {
+    const onScroll = jest.fn();
+    await render(
+      <ScrollView onScroll={onScroll}>
+        <View testID="content" onLayout={() => {}} />
+      </ScrollView>,
+    );
+    const content = screen.getByTestId('content');
+
+    await fireEvent.layout(content, { width: 390, height: 750 });
+    await fireEvent.scroll(content);
+
+    expect(onScroll.mock.calls[0][0].nativeEvent.layoutMeasurement).toEqual({
+      width: 0,
+      height: 0,
+    });
+  });
 });
 
 describe('fireEvent.layout', () => {
@@ -468,18 +517,99 @@ describe('fireEvent.layout', () => {
     });
   });
 
-  test('bubbles up to find the handler on an ancestor element', async () => {
+  test('does not bubble to the handler on an ancestor element', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onLayout = jest.fn();
     await render(
-      <View testID="view" onLayout={onLayout}>
-        <Text>Content</Text>
+      <View testID="parent" onLayout={onLayout}>
+        <View testID="child" />
       </View>,
     );
 
-    await fireEvent.layout(screen.getByText('Content'), { height: 80 });
+    await fireEvent.layout(screen.getByTestId('child'), { height: 80 });
+
+    expect(onLayout).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    warnSpy.mockRestore();
+  });
+
+  test('does not bubble when fired as generic layout event', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    const onLayout = jest.fn();
+    await render(
+      <View testID="parent" onLayout={onLayout}>
+        <View testID="child" />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('child'), 'layout', layoutEvent);
+    await fireEvent(screen.getByTestId('child'), 'onLayout', layoutEvent);
+
+    expect(onLayout).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(2);
+    warnSpy.mockRestore();
+  });
+
+  test('warns when element has no onLayout handler', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    await render(<View testID="view" />);
+
+    await fireEvent.layout(screen.getByTestId('view'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "  ▲ fireEvent: element has no handler for "layout" event. <View
+            testID="view"
+          />
+      "
+    `);
+    warnSpy.mockRestore();
+  });
+
+  test('is not blocked by element responder rejecting touches', async () => {
+    const onLayout = jest.fn();
+    await render(
+      <View testID="view" onLayout={onLayout} onStartShouldSetResponder={() => false} />,
+    );
+
+    await fireEvent.layout(screen.getByTestId('view'));
 
     expect(onLayout).toHaveBeenCalledTimes(1);
-    expect(onLayout.mock.calls[0][0].nativeEvent.layout.height).toBe(80);
+  });
+
+  test('saves layout size in native state', async () => {
+    await render(<View testID="view" onLayout={() => {}} />);
+    const view = screen.getByTestId('view');
+
+    await fireEvent.layout(view, { x: 10, y: 20, width: 100, height: 80 });
+    expect(nativeState.layoutSizeForInstance.get(view)).toEqual({ width: 100, height: 80 });
+
+    await fireEvent(view, 'layout', { nativeEvent: { layout: { width: 50, height: NaN } } });
+    expect(nativeState.layoutSizeForInstance.get(view)).toEqual({ width: 50, height: 0 });
+  });
+
+  test('saves layout size in native state even without onLayout handler', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    await render(<View testID="view" />);
+    const view = screen.getByTestId('view');
+
+    await fireEvent.layout(view, { width: 100, height: 80 });
+
+    expect(nativeState.layoutSizeForInstance.get(view)).toEqual({ width: 100, height: 80 });
+    warnSpy.mockRestore();
+  });
+
+  test('does not call onLayout of composite component that does not forward it', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    const onLayout = jest.fn();
+    const Box = (_props: { onLayout: () => void }) => <View testID="view" />;
+    await render(<Box onLayout={onLayout} />);
+
+    await fireEvent.layout(screen.getByTestId('view'));
+
+    expect(onLayout).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    warnSpy.mockRestore();
   });
 });
 
@@ -745,6 +875,7 @@ describe('non-editable TextInput', () => {
   });
 
   test('blocks touch-related events when firing on nested Text child', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onFocus = jest.fn();
     const onChangeText = jest.fn();
     const onSubmitEditing = jest.fn();
@@ -779,8 +910,10 @@ describe('non-editable TextInput', () => {
     expect(onFocus).not.toHaveBeenCalled();
     expect(onChangeText).not.toHaveBeenCalled();
     expect(onSubmitEditing).not.toHaveBeenCalled();
-    expect(onLayout).toHaveBeenCalledTimes(2);
-    expect(onLayout).toHaveBeenCalledWith(layoutEvent);
+    // Layout is a direct event, so it does not bubble to the parent TextInput
+    expect(onLayout).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(2);
+    warnSpy.mockRestore();
   });
 
   test.each([

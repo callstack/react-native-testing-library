@@ -13,11 +13,13 @@ import { buildLayoutEvent, buildScrollEvent, buildTouchEvent } from './event-bui
 import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
 import { isInstanceMounted } from './helpers/component-tree';
+import { formatElement } from './helpers/format-element';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
+import { logger } from './helpers/logger';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
-import type { Point, StringWithAutocomplete } from './types';
+import type { Point, Size, StringWithAutocomplete } from './types';
 
 function isTouchResponder(instance: TestInstance) {
   return Boolean(instance.props.onStartShouldSetResponder) || isHostTextInput(instance);
@@ -69,6 +71,27 @@ function isEventEnabled(
   }
 
   return touchStart === undefined && touchMove === undefined;
+}
+
+/**
+ * Direct events are delivered by React Native only to the emitting element and do not bubble.
+ * Note: `fireEvent` accepts both `layout` and `onLayout` event names, so check both forms.
+ */
+function isDirectEvent(eventName: string) {
+  return eventName === 'layout' || eventName === 'onLayout';
+}
+
+function getOwnEventHandler(instance: TestInstance, eventName: string): EventHandler | null {
+  const handler = getEventHandlerFromProps(instance.props, eventName, { loose: true });
+  if (!handler) {
+    logger.warn(
+      `fireEvent: element has no handler for "${eventName}" event.`,
+      formatElement(instance),
+    );
+    return null;
+  }
+
+  return handler;
 }
 
 function findEventHandler(
@@ -133,7 +156,9 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
 
   setNativeStateIfNeeded(instance, eventName, data[0]);
 
-  const handler = findEventHandler(instance, eventName);
+  const handler = isDirectEvent(eventName)
+    ? getOwnEventHandler(instance, eventName)
+    : findEventHandler(instance, eventName);
   if (!handler) {
     return;
   }
@@ -161,7 +186,10 @@ fireEvent.press = async (instance: TestInstance, eventProps?: EventProps) => {
 };
 
 fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
-  const event = buildScrollEvent();
+  const layoutMeasurement = isHostScrollView(instance)
+    ? nativeState.layoutSizeForInstance.get(instance)
+    : undefined;
+  const event = buildScrollEvent(undefined, { layoutMeasurement });
   if (eventProps) {
     mergeEventProps(event, eventProps);
   }
@@ -194,6 +222,13 @@ function setNativeStateIfNeeded(instance: TestInstance, eventName: string, value
       nativeState.contentOffsetForInstance.set(instance, contentOffset);
     }
   }
+
+  if (eventName === 'layout' || eventName === 'onLayout') {
+    const layoutSize = tryGetLayoutSize(value);
+    if (layoutSize) {
+      nativeState.layoutSizeForInstance.set(instance, layoutSize);
+    }
+  }
 }
 
 function tryGetContentOffset(event: unknown): Point | null {
@@ -207,6 +242,26 @@ function tryGetContentOffset(event: unknown): Point | null {
       return {
         x: Number.isFinite(x) ? x : 0,
         y: Number.isFinite(y) ? y : 0,
+      };
+    }
+  } catch {
+    // Do nothing
+  }
+
+  return null;
+}
+
+function tryGetLayoutSize(event: unknown): Size | null {
+  try {
+    // @ts-expect-error: try to extract layout from the event value
+    const layout = event?.nativeEvent?.layout;
+    const width = layout?.width;
+    const height = layout?.height;
+
+    if (typeof width === 'number' || typeof height === 'number') {
+      return {
+        width: Number.isFinite(width) ? width : 0,
+        height: Number.isFinite(height) ? height : 0,
       };
     }
   } catch {

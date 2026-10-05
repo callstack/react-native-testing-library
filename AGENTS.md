@@ -19,5 +19,6 @@
   - [Build, validation, and repo layout](agents/build-and-validation.md)
   - [TypeScript and code style](agents/code-style.md)
   - [Testing conventions](agents/testing.md)
+  - [Native event propagation (bubbling vs direct)](agents/native-events.md)
   - [Example app regeneration](agents/example-apps.md)
   - [Git, releases, and PR workflow](agents/git-workflow.md)

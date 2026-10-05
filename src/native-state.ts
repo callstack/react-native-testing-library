@@ -1,6 +1,6 @@
 import type { TestInstance } from 'test-renderer';
 
-import type { Point } from './types';
+import type { Point, Size } from './types';
 
 /**
  * Simulated native state for unmanaged controls.
@@ -10,9 +10,11 @@ import type { Point } from './types';
 export type NativeState = {
   valueForInstance: WeakMap<TestInstance, string>;
   contentOffsetForInstance: WeakMap<TestInstance, Point>;
+  layoutSizeForInstance: WeakMap<TestInstance, Size>;
 };
 
 export const nativeState: NativeState = {
   valueForInstance: new WeakMap(),
   contentOffsetForInstance: new WeakMap(),
+  layoutSizeForInstance: new WeakMap(),
 };

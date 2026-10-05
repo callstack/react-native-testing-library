@@ -50,6 +50,11 @@ export async function scrollTo(
 
   ensureScrollViewDirection(instance, options);
 
+  const eventOptions: ScrollToOptions = {
+    ...options,
+    layoutMeasurement: options.layoutMeasurement ?? nativeState.layoutSizeForInstance.get(instance),
+  };
+
   await dispatchEvent(
     instance,
     'contentSizeChange',
@@ -66,7 +71,7 @@ export async function scrollTo(
     initialOffset,
     linearInterpolator,
   );
-  await emitDragScrollEvents(this.config, instance, dragSteps, options);
+  await emitDragScrollEvents(this.config, instance, dragSteps, eventOptions);
 
   const momentumStart = dragSteps.at(-1) ?? initialOffset;
   const momentumSteps = createScrollSteps(
@@ -74,7 +79,7 @@ export async function scrollTo(
     momentumStart,
     inertialInterpolator,
   );
-  await emitMomentumScrollEvents(this.config, instance, momentumSteps, options);
+  await emitMomentumScrollEvents(this.config, instance, momentumSteps, eventOptions);
 
   const finalOffset = momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialOffset;
   nativeState.contentOffsetForInstance.set(instance, finalOffset);
