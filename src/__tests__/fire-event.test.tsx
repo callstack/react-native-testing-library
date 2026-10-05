@@ -485,6 +485,23 @@ describe('fireEvent.layout', () => {
     warnSpy.mockRestore();
   });
 
+  test('does not bubble when fired as generic layout event', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    const onLayout = jest.fn();
+    await render(
+      <View testID="parent" onLayout={onLayout}>
+        <View testID="child" />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('child'), 'layout', layoutEvent);
+    await fireEvent(screen.getByTestId('child'), 'onLayout', layoutEvent);
+
+    expect(onLayout).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(2);
+    warnSpy.mockRestore();
+  });
+
   test('warns when element has no onLayout handler', async () => {
     const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     await render(<View testID="view" />);
@@ -493,26 +510,33 @@ describe('fireEvent.layout', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toContain(
-      'fireEvent.layout: element has no "onLayout" handler.',
+      'fireEvent: element has no handler for "layout" event.',
     );
     warnSpy.mockRestore();
   });
 
-  test('is not blocked by pointerEvents or non-editable TextInput', async () => {
-    const onViewLayout = jest.fn();
-    const onInputLayout = jest.fn();
+  test('is not blocked by element responder rejecting touches', async () => {
+    const onLayout = jest.fn();
     await render(
-      <View pointerEvents="none">
-        <View testID="view" onLayout={onViewLayout} />
-        <TextInput testID="input" editable={false} onLayout={onInputLayout} />
-      </View>,
+      <View testID="view" onLayout={onLayout} onStartShouldSetResponder={() => false} />,
     );
 
     await fireEvent.layout(screen.getByTestId('view'));
-    await fireEvent.layout(screen.getByTestId('input'));
 
-    expect(onViewLayout).toHaveBeenCalledTimes(1);
-    expect(onInputLayout).toHaveBeenCalledTimes(1);
+    expect(onLayout).toHaveBeenCalledTimes(1);
+  });
+
+  test('does not call onLayout of composite component that does not forward it', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    const onLayout = jest.fn();
+    const Box = (_props: { onLayout: () => void }) => <View testID="view" />;
+    await render(<Box onLayout={onLayout} />);
+
+    await fireEvent.layout(screen.getByTestId('view'));
+
+    expect(onLayout).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    warnSpy.mockRestore();
   });
 });
 
@@ -778,6 +802,7 @@ describe('non-editable TextInput', () => {
   });
 
   test('blocks touch-related events when firing on nested Text child', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onFocus = jest.fn();
     const onChangeText = jest.fn();
     const onSubmitEditing = jest.fn();
@@ -812,8 +837,10 @@ describe('non-editable TextInput', () => {
     expect(onFocus).not.toHaveBeenCalled();
     expect(onChangeText).not.toHaveBeenCalled();
     expect(onSubmitEditing).not.toHaveBeenCalled();
-    expect(onLayout).toHaveBeenCalledTimes(2);
-    expect(onLayout).toHaveBeenCalledWith(layoutEvent);
+    // Layout is a direct event, so it does not bubble to the parent TextInput
+    expect(onLayout).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(2);
+    warnSpy.mockRestore();
   });
 
   test.each([

@@ -11,7 +11,7 @@ import { act } from './act';
 import type { LayoutRectangle } from './event-builder';
 import { buildLayoutEvent, buildScrollEvent, buildTouchEvent } from './event-builder';
 import type { EventHandler } from './event-handler';
-import { getEventHandlerFromProps, getEventHandlerName } from './event-handler';
+import { getEventHandlerFromProps } from './event-handler';
 import { isInstanceMounted } from './helpers/component-tree';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { logger } from './helpers/logger';
@@ -70,6 +70,29 @@ function isEventEnabled(
   }
 
   return touchStart === undefined && touchMove === undefined;
+}
+
+/**
+ * Checks if the event is a direct event, which React Native delivers only to the element
+ * that emitted it, without bubbling to its ancestors.
+ *
+ * Note: `fireEvent` is accepting both `layout` and `onLayout` for event names,
+ * so we need cover both forms.
+ */
+function isDirectEvent(eventName: string) {
+  return eventName === 'layout' || eventName === 'onLayout';
+}
+
+function getDirectEventHandler(instance: TestInstance, eventName: string): EventHandler | null {
+  const handler = getEventHandlerFromProps(instance.props, eventName, { loose: true });
+  if (!handler) {
+    logger.warn(
+      `fireEvent: element has no handler for "${eventName}" event. Direct events are not looked up on ancestor elements.`,
+    );
+    return null;
+  }
+
+  return handler;
 }
 
 function findEventHandler(
@@ -134,33 +157,10 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
 
   setNativeStateIfNeeded(instance, eventName, data[0]);
 
-  const handler = findEventHandler(instance, eventName);
+  const handler = isDirectEvent(eventName)
+    ? getDirectEventHandler(instance, eventName)
+    : findEventHandler(instance, eventName);
   if (!handler) {
-    return;
-  }
-
-  let returnValue;
-  await act(() => {
-    returnValue = handler(...data);
-  });
-
-  return returnValue;
-}
-
-/**
- * Fires a direct (non-bubbling) event, invoking only the handler of the given element.
- * Used for events that React Native emits straight to the target element, e.g. `layout`.
- */
-async function fireDirectEvent(instance: TestInstance, eventName: EventName, ...data: unknown[]) {
-  if (!isInstanceMounted(instance)) {
-    return;
-  }
-
-  const handler = getEventHandlerFromProps(instance.props, eventName);
-  if (!handler) {
-    logger.warn(
-      `fireEvent.${eventName}: element has no "${getEventHandlerName(eventName)}" handler.`,
-    );
     return;
   }
 
@@ -195,13 +195,8 @@ fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
   await fireEvent(instance, 'scroll', event);
 };
 
-/**
- * Layout events are emitted by the native layout engine directly to the measured element
- * and do not bubble, so unlike other `fireEvent` calls this one does not look for the
- * handler on ancestor elements.
- */
 fireEvent.layout = async (instance: TestInstance, layout?: Partial<LayoutRectangle>) => {
-  await fireDirectEvent(instance, 'layout', buildLayoutEvent(layout));
+  await fireEvent(instance, 'layout', buildLayoutEvent(layout));
 };
 
 export { fireEvent };

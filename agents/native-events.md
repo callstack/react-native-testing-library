@@ -6,7 +6,7 @@ React Native declares, for each native (host) component, which events **bubble**
 
 - Native event names use a `top` prefix that maps to the `on*` prop: `topLayout` → `onLayout`. The tables below use the short name (`layout`).
 - Every host component inherits the **base view config** events and adds its own component-specific events on top of them.
-- `fireEvent` walks up the tree to find a handler, which matches bubbling events. Direct events should go through `fireDirectEvent` in `src/fire-event.ts`, which invokes only the target element's handler. Today only `fireEvent.layout` uses it.
+- `fireEvent` walks up the tree to find a handler, which matches bubbling events. Events for which `isDirectEvent()` in `src/fire-event.ts` returns `true` skip that walk and invoke only the target element's handler. Today only `layout` is treated as direct.
 - Snapshot taken from `react-native@0.88.0-rc.1`. See [Sources](#sources) to re-check after RN upgrades.
 
 ## Base view config (all host components)
