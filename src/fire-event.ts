@@ -73,11 +73,8 @@ function isEventEnabled(
 }
 
 /**
- * Checks if the event is a direct event, which React Native delivers only to the element
- * that emitted it, without bubbling to its ancestors.
- *
- * Note: `fireEvent` is accepting both `layout` and `onLayout` for event names,
- * so we need cover both forms.
+ * Direct events are delivered by React Native only to the emitting element and do not bubble.
+ * Note: `fireEvent` accepts both `layout` and `onLayout` event names, so check both forms.
  */
 function isDirectEvent(eventName: string) {
   return eventName === 'layout' || eventName === 'onLayout';
