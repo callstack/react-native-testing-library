@@ -13,6 +13,10 @@ import { userEvent } from '../..';
 import { render, screen } from '../../..';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 
+// Typical event order is pressIn, pressOut, press
+// But sometimes due to a race condition, the order is pressIn, press, pressOut.
+const VALID_PRESS_ORDERS = ['pressIn, pressOut, press', 'pressIn, press, pressOut'];
+
 describe('userEvent.press with real timers', () => {
   beforeEach(() => {
     jest.useRealTimers();
@@ -34,12 +38,8 @@ describe('userEvent.press with real timers', () => {
     );
 
     await user.press(screen.getByTestId('pressable'));
-    // Typical event order is pressIn, pressOut, press
-    // But sometimes due to a race condition, the order is pressIn, press, pressOut.
     const eventSequence = getEventsNames(events).join(', ');
-    expect(
-      eventSequence === 'pressIn, pressOut, press' || eventSequence === 'pressIn, press, pressOut',
-    ).toBe(true);
+    expect(VALID_PRESS_ORDERS).toContain(eventSequence);
   });
 
   test('works on TouchableOpacity', async () => {
@@ -204,11 +204,7 @@ describe('userEvent.press with real timers', () => {
     await user.press(screen.getByTestId('pressable'));
 
     const eventSequence = getEventsNames(events).join(', ');
-    // Typical event order is pressIn, pressOut, press
-    // But sometimes due to a race condition, the order is pressIn, press, pressOut.
-    expect(
-      eventSequence === 'pressIn, pressOut, press' || eventSequence === 'pressIn, press, pressOut',
-    ).toBe(true);
+    expect(VALID_PRESS_ORDERS).toContain(eventSequence);
   });
 
   test('crawls up in the tree to find an element that responds to touch events', async () => {
