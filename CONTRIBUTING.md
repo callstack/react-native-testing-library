@@ -22,11 +22,15 @@ The core team works directly on GitHub and all work is public.
 
 Detailed guides live in [`contributing/`](contributing/). They are written for both human contributors and AI coding agents:
 
-- [Architecture and API design](contributing/architecture.md): project goals and API design principles
+- [Architecture and API design](contributing/architecture.md): project goals, API design principles, and host component detection
 - [Build, validation, and repo layout](contributing/build-and-validation.md): commands, package docs generation, folder structure
 - [TypeScript and code style](contributing/code-style.md): lint and formatting rules
 - [Testing conventions](contributing/testing.md): how the library's own tests are organized
 - [Native event propagation](contributing/native-events.md): which React Native events bubble and which are direct
+- [Native state](contributing/native-state.md): how RNTL simulates state that lives in native views, like `TextInput` text and scroll position
+- [Event dispatch](contributing/event-dispatch.md): how `fireEvent` and `userEvent` find handlers and which events they send
+- [Accessibility model](contributing/accessibility.md): hidden elements, roles, accessible names, and state used by queries and matchers
+- [Async, `act`, and timers](contributing/async-and-timers.md): `act` environment, fake timer detection, `waitFor`, `userEvent` delays, and cleanup
 - [Example app regeneration](contributing/example-apps.md): upgrading the Expo apps in `examples/`
 - [Git, releases, and PR workflow](contributing/git-workflow.md): commit message convention, pull requests, releases
 

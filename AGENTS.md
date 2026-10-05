@@ -20,6 +20,10 @@
   - [TypeScript and code style](contributing/code-style.md)
   - [Testing conventions](contributing/testing.md)
   - [Native event propagation (bubbling vs direct)](contributing/native-events.md)
+  - [Native state for uncontrolled components](contributing/native-state.md)
+  - [Event dispatch (`fireEvent` vs `userEvent`)](contributing/event-dispatch.md)
+  - [Accessibility model](contributing/accessibility.md)
+  - [Async, `act`, and timers](contributing/async-and-timers.md)
   - [Example app regeneration](contributing/example-apps.md)
   - [Git, releases, and PR workflow](contributing/git-workflow.md)
 
