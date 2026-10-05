@@ -1,7 +1,6 @@
 import { stringify } from 'jest-matcher-utils';
 import type { TestInstance } from 'test-renderer';
 
-import type { ScrollEventOptions } from '../../event-builder';
 import { buildScrollEvent } from '../../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
@@ -51,8 +50,8 @@ export async function scrollTo(
 
   ensureScrollViewDirection(instance, options);
 
-  const eventOptions: ScrollEventOptions = {
-    contentSize: options.contentSize,
+  const eventOptions: ScrollToOptions = {
+    ...options,
     layoutMeasurement: options.layoutMeasurement ?? nativeState.layoutSizeForInstance.get(instance),
   };
 
@@ -90,7 +89,7 @@ async function emitDragScrollEvents(
   config: UserEventConfig,
   instance: TestInstance,
   scrollSteps: Point[],
-  scrollOptions: ScrollEventOptions,
+  scrollOptions: ScrollToOptions,
 ) {
   if (scrollSteps.length === 0) {
     return;
@@ -116,7 +115,7 @@ async function emitMomentumScrollEvents(
   config: UserEventConfig,
   instance: TestInstance,
   scrollSteps: Point[],
-  scrollOptions: ScrollEventOptions,
+  scrollOptions: ScrollToOptions,
 ) {
   if (scrollSteps.length === 0) {
     return;

@@ -557,9 +557,12 @@ describe('fireEvent.layout', () => {
     await fireEvent.layout(screen.getByTestId('view'));
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
-    expect(warnSpy.mock.calls[0][0]).toContain(
-      'fireEvent: element has no handler for "layout" event.',
-    );
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "  ▲ fireEvent: element has no handler for "layout" event. <View
+            testID="view"
+          />
+      "
+    `);
     warnSpy.mockRestore();
   });
 
