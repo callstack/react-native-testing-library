@@ -29,16 +29,25 @@ This is simplified. A few events differ between iOS and Android. Check the sourc
 `fireEvent` treats these events as direct, based on the host element type (see `isDirectEvent()`):
 
 - `layout` on all elements
-- `ScrollView`: `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`, `momentumScrollEnd`, `contentSizeChange`
-- `TextInput`: `selectionChange`, `contentSizeChange`
 - `Text`: `textLayout`
+- `TextInput`: `selectionChange`, `contentSizeChange`
 - `Image`: `loadStart`, `progress`, `load`, `error`, `loadEnd`
+- `ScrollView`: `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`, `momentumScrollEnd`, `contentSizeChange`
 
 A direct event fired on its emitting element only checks that element. Fired on a nested element, it bubbles as usual but stops at the first ancestor that emits it, as React Native never delivers it there from a child. Handlers with the same name elsewhere, like an `onLoad` prop of a custom composite component, still receive bubbled events.
 
 These were chosen because tests rarely fire them on a nested element: `TextInput` and `Image` have no children, `Text` queries usually match the `Text` that owns the handler, and the drag and momentum events are usually fired on the `ScrollView` itself.
 
-The other direct events in the table above still bubble in `fireEvent`: `scroll`, accessibility actions, `Modal` events, and `refresh`. Changing them is a breaking change, as tests fire them on nested elements, e.g. `scroll` on `ScrollView` content. Leave these for a major release.
+The other direct events still bubble for backward compatibility (see `isLeakyDirectEvent()`), as tests fire them on nested elements, e.g. `scroll` on `ScrollView` content:
+
+- `accessibilityAction` on all elements
+- `TextInput`: `scroll`
+- `ScrollView`: `scroll`, `refresh`
+- `Modal`: `requestClose`, `show`, `dismiss`, `orientationChange`
+
+`fireEvent` logs a warning when one of these events bubbles from a nested element to the handler of an ancestor that emits it, e.g. `scroll` from `ScrollView` content to the `ScrollView`'s `onScroll`. Only the type of the element with the handler is checked, so a handler further up on an element that doesn't emit the event gets no warning, although it will stop receiving the event too. In the next major release, move these events to the direct lists and remove the warning.
+
+`refresh` is emitted by `RefreshControl`, but the Jest `ScrollView` mock doesn't render the `refreshControl` element. `FlatList` and `SectionList` pass `onRefresh` to the host `ScrollView`, so the rule uses `ScrollView` as the emitting element.
 
 ## Sources
 

@@ -3,6 +3,7 @@ import type { Fiber, TestInstance } from 'test-renderer';
 import { formatElement } from '../helpers/format-element';
 import {
   isHostImage,
+  isHostModal,
   isHostScrollView,
   isHostText,
   isHostTextInput,
@@ -12,13 +13,7 @@ import { getEventHandlerFromProps, normalizeEventName } from './handler';
 import { isEventEnabled, isTouchResponder } from './is-enabled';
 import type { EventHandler } from './types';
 
-/**
- * Direct events emitted by specific host components.
- *
- * Note: these lists are intentionally incomplete. Remaining direct events (e.g. `scroll`, `Modal`
- * events, `refresh`, `accessibilityAction`) still bubble, as changing them is a breaking change.
- * See `contributing/native-events.md`.
- */
+/** Intentionally incomplete, see `*_LEAKY_DIRECT_EVENTS` below. */
 const COMMON_DIRECT_EVENTS = ['layout'];
 const TEXT_DIRECT_EVENTS = ['textLayout'];
 const TEXT_INPUT_DIRECT_EVENTS = ['selectionChange', 'contentSizeChange'];
@@ -60,6 +55,35 @@ export function isDirectEvent(instance: TestInstance, eventName: string) {
   return false;
 }
 
+/**
+ * Direct in React Native, but still bubble (leak) with a warning for backward compatibility.
+ * Make them direct in the next major version. See `contributing/native-events.md`.
+ */
+const COMMON_LEAKY_DIRECT_EVENTS = ['accessibilityAction'];
+const TEXT_INPUT_LEAKY_DIRECT_EVENTS = ['scroll'];
+const SCROLL_VIEW_LEAKY_DIRECT_EVENTS = ['scroll', 'refresh'];
+const MODAL_LEAKY_DIRECT_EVENTS = ['requestClose', 'show', 'dismiss', 'orientationChange'];
+
+function isLeakyDirectEvent(instance: TestInstance, eventName: string) {
+  if (COMMON_LEAKY_DIRECT_EVENTS.includes(eventName)) {
+    return true;
+  }
+
+  if (isHostTextInput(instance)) {
+    return TEXT_INPUT_LEAKY_DIRECT_EVENTS.includes(eventName);
+  }
+
+  if (isHostScrollView(instance)) {
+    return SCROLL_VIEW_LEAKY_DIRECT_EVENTS.includes(eventName);
+  }
+
+  if (isHostModal(instance)) {
+    return MODAL_LEAKY_DIRECT_EVENTS.includes(eventName);
+  }
+
+  return false;
+}
+
 type FindEventHandlerResult = {
   handler: EventHandler | null;
   /**
@@ -81,28 +105,52 @@ export function findEventHandler(
   instance: TestInstance,
   eventName: string,
 ): FindEventHandlerResult {
-  if (isDirectEvent(instance, normalizeEventName(eventName))) {
+  const normalizedEventName = normalizeEventName(eventName);
+  if (isDirectEvent(instance, normalizedEventName)) {
     const handler = getEventHandlerFromProps(instance.props, eventName, { loose: true });
     return { handler: handler ?? null, skippedTargets: [] };
   }
 
-  return findBubblingEventHandler(instance, eventName, undefined, []);
+  const { owner, skippedTargets } = findBubblingHandlerOwner(instance, eventName, undefined, []);
+  if (!owner) {
+    return { handler: null, skippedTargets };
+  }
+
+  // React Native delivers leaky direct events only to elements that emit them, never from children.
+  if (owner.instance !== instance && isLeakyDirectEvent(owner.instance, normalizedEventName)) {
+    logger.warn(
+      `fireEvent: "${eventName}" event bubbled to the handler of an ancestor element. React Native does not bubble this event, and fireEvent will stop bubbling it in the next major version. Fire it on the element that has the handler instead.`,
+      formatElement(owner.instance),
+    );
+  }
+
+  return { handler: owner.handler, skippedTargets };
 }
 
-function findBubblingEventHandler(
+type HandlerOwner = {
+  handler: EventHandler;
+  instance: TestInstance;
+};
+
+type FindHandlerOwnerResult = {
+  owner: HandlerOwner | null;
+  skippedTargets: TestInstance[];
+};
+
+function findBubblingHandlerOwner(
   instance: TestInstance,
   eventName: string,
   nearestTouchResponder: TestInstance | undefined,
   skippedTargets: TestInstance[],
-): FindEventHandlerResult {
+): FindHandlerOwnerResult {
   const touchResponder = isTouchResponder(instance) ? instance : nearestTouchResponder;
+  const normalizedEventName = normalizeEventName(eventName);
 
   const handler =
     getEventHandlerFromProps(instance.props, eventName, { loose: true }) ??
     findEventHandlerFromFiber(instance.unstable_fiber, eventName);
 
-  // Direct events emitted by this ancestor never come from its children.
-  if (isDirectEvent(instance, normalizeEventName(eventName))) {
+  if (isDirectEvent(instance, normalizedEventName)) {
     if (handler) {
       logger.warn(
         `fireEvent: "${eventName}" event does not bubble, fire it on the element that has the handler instead.`,
@@ -110,12 +158,12 @@ function findBubblingEventHandler(
       );
     }
 
-    return { handler: null, skippedTargets };
+    return { owner: null, skippedTargets };
   }
 
   if (handler) {
-    if (isEventEnabled(instance, normalizeEventName(eventName), touchResponder)) {
-      return { handler, skippedTargets };
+    if (isEventEnabled(instance, normalizedEventName, touchResponder)) {
+      return { owner: { handler, instance }, skippedTargets };
     }
 
     // Handlers on the same touch responder report it only once.
@@ -126,10 +174,10 @@ function findBubblingEventHandler(
   }
 
   if (instance.parent === null) {
-    return { handler: null, skippedTargets };
+    return { owner: null, skippedTargets };
   }
 
-  return findBubblingEventHandler(instance.parent, eventName, touchResponder, skippedTargets);
+  return findBubblingHandlerOwner(instance.parent, eventName, touchResponder, skippedTargets);
 }
 
 function findEventHandlerFromFiber(fiber: Fiber | null, eventName: string): EventHandler | null {
