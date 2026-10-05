@@ -103,7 +103,7 @@ function getUnhandledEventWarning(
     }
 
     const handlerName = getEventHandlerName(eventName);
-    if (isDirectEvent(normalizeEventName(eventName))) {
+    if (isDirectEvent(instance, normalizeEventName(eventName))) {
       return {
         message: `No "${handlerName}" handler found on the element. "${eventName}" events do not bubble to ancestors.`,
         elements: [instance],

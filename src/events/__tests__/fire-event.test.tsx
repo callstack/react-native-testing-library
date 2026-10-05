@@ -1,6 +1,8 @@
 import * as React from 'react';
 import type { TextInputProps } from 'react-native';
 import {
+  Image,
+  ImageBackground,
   PanResponder,
   Pressable,
   ScrollView,
@@ -650,6 +652,200 @@ describe('fireEvent.layout', () => {
     await fireEvent.layout(screen.getByTestId('view'));
 
     expect(onLayout).not.toHaveBeenCalled();
+  });
+});
+
+describe('direct events', () => {
+  const directEventCases: Array<{
+    eventName: string;
+    renderTarget: (handler: jest.Mock) => React.ReactElement;
+  }> = [
+    {
+      eventName: 'scrollBeginDrag',
+      renderTarget: (handler) => <ScrollView testID="target" onScrollBeginDrag={handler} />,
+    },
+    {
+      eventName: 'scrollEndDrag',
+      renderTarget: (handler) => <ScrollView testID="target" onScrollEndDrag={handler} />,
+    },
+    {
+      eventName: 'momentumScrollBegin',
+      renderTarget: (handler) => <ScrollView testID="target" onMomentumScrollBegin={handler} />,
+    },
+    {
+      eventName: 'momentumScrollEnd',
+      renderTarget: (handler) => <ScrollView testID="target" onMomentumScrollEnd={handler} />,
+    },
+    {
+      eventName: 'contentSizeChange',
+      renderTarget: (handler) => <ScrollView testID="target" onContentSizeChange={handler} />,
+    },
+    {
+      eventName: 'contentSizeChange',
+      renderTarget: (handler) => <TextInput testID="target" onContentSizeChange={handler} />,
+    },
+    {
+      eventName: 'selectionChange',
+      renderTarget: (handler) => <TextInput testID="target" onSelectionChange={handler} />,
+    },
+    {
+      eventName: 'textLayout',
+      renderTarget: (handler) => (
+        <Text testID="target" onTextLayout={handler}>
+          Text
+        </Text>
+      ),
+    },
+    ...(['loadStart', 'progress', 'load', 'error', 'loadEnd'] as const).map((eventName) => ({
+      eventName,
+      renderTarget: (handler: jest.Mock) => (
+        <Image
+          testID="target"
+          source={{ uri: 'https://example.com/image.png' }}
+          {...{ [`on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`]: handler }}
+        />
+      ),
+    })),
+  ];
+
+  test.each(directEventCases)(
+    'calls "$eventName" handler on the target element',
+    async ({ eventName, renderTarget }) => {
+      const handler = jest.fn();
+      await render(renderTarget(handler));
+
+      await fireEvent(screen.getByTestId('target'), eventName);
+
+      expect(handler).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  test.each(directEventCases)(
+    'does not bubble "$eventName" from a nested element to the emitting element',
+    async ({ eventName, renderTarget }) => {
+      const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+      const handler = jest.fn();
+      await render(
+        React.cloneElement(renderTarget(handler), {}, <Text testID="nested">Nested</Text>),
+      );
+
+      await fireEvent(screen.getByTestId('nested'), eventName);
+
+      expect(handler).not.toHaveBeenCalled();
+      warnSpy.mockRestore();
+    },
+  );
+
+  test('does not bubble when fired with "on" prefixed event name', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    const onMomentumScrollEnd = jest.fn();
+    await render(
+      <ScrollView onMomentumScrollEnd={onMomentumScrollEnd}>
+        <View testID="child" />
+      </ScrollView>,
+    );
+
+    await fireEvent(screen.getByTestId('child'), 'onMomentumScrollEnd');
+
+    expect(onMomentumScrollEnd).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    warnSpy.mockRestore();
+  });
+
+  test('warns when direct event would bubble to the emitting element', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    await render(
+      <ScrollView testID="scroll" onMomentumScrollEnd={() => {}}>
+        <View testID="child" />
+      </ScrollView>,
+    );
+
+    await fireEvent(screen.getByTestId('child'), 'momentumScrollEnd');
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "  ▲ fireEvent: "momentumScrollEnd" event does not bubble, fire it on the element that has the handler instead. <RCTScrollView
+            testID="scroll"
+          />
+      "
+    `);
+    warnSpy.mockRestore();
+  });
+
+  test('stops bubbling at the emitting element', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    const onMomentumScrollEnd = jest.fn();
+    const Screen = (_props: { onMomentumScrollEnd: () => void }) => (
+      <View>
+        <ScrollView>
+          <View testID="child" />
+        </ScrollView>
+      </View>
+    );
+    await render(<Screen onMomentumScrollEnd={onMomentumScrollEnd} />);
+
+    await fireEvent(screen.getByTestId('child'), 'momentumScrollEnd');
+
+    expect(onMomentumScrollEnd).not.toHaveBeenCalled();
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  test('bubbles event with direct event name to composite component handler', async () => {
+    const onLoad = jest.fn();
+    const onError = jest.fn();
+    const Card = (_props: { onLoad: () => void; onError: () => void }) => (
+      <View>
+        <Text>Card</Text>
+      </View>
+    );
+    await render(<Card onLoad={onLoad} onError={onError} />);
+
+    await fireEvent(screen.getByText('Card'), 'load');
+    await fireEvent(screen.getByText('Card'), 'error');
+
+    expect(onLoad).toHaveBeenCalledTimes(1);
+    expect(onError).toHaveBeenCalledTimes(1);
+  });
+
+  test('bubbles event with direct event name to host element that does not emit it', async () => {
+    const onLoad = jest.fn();
+    await render(
+      // @ts-expect-error View does not have onLoad prop
+      <View onLoad={onLoad}>
+        <Text>Content</Text>
+      </View>,
+    );
+
+    await fireEvent(screen.getByText('Content'), 'load');
+
+    expect(onLoad).toHaveBeenCalledTimes(1);
+  });
+
+  test('bubbles load event from ImageBackground children to ImageBackground handler', async () => {
+    const onLoad = jest.fn();
+    await render(
+      <ImageBackground source={{ uri: 'https://example.com/image.png' }} onLoad={onLoad}>
+        <Text>Caption</Text>
+      </ImageBackground>,
+    );
+
+    await fireEvent(screen.getByText('Caption'), 'load');
+
+    expect(onLoad).toHaveBeenCalledTimes(1);
+  });
+
+  test('still bubbles scroll event to ancestor ScrollView', async () => {
+    const onScroll = jest.fn();
+    await render(
+      <ScrollView onScroll={onScroll}>
+        <View testID="child" />
+      </ScrollView>,
+    );
+
+    await fireEvent.scroll(screen.getByTestId('child'));
+
+    expect(onScroll).toHaveBeenCalledTimes(1);
   });
 });
 

@@ -2,7 +2,7 @@
 
 In React Native, some events **bubble** up to parent elements and others are **direct**, meaning only the element that emitted them receives them. `fireEvent` should behave the same way.
 
-Today, `fireEvent` treats every event as bubbling except `layout`. The list of direct events lives in `isDirectEvent()` in `src/events/propagation.ts`.
+Today, `fireEvent` treats only some of the direct events below as direct. The rest still bubble (see [Known gaps](#known-gaps)). The rules live in `isDirectEvent()` in `src/events/propagation.ts`.
 
 ## Which events are which
 
@@ -26,7 +26,19 @@ This is simplified. A few events differ between iOS and Android. Check the sourc
 
 ## Known gaps
 
-All the direct events above except `layout` still bubble in `fireEvent`. Fixing that is a breaking change: tests that fire these events on a child element would stop reaching the parent's handler.
+`fireEvent` treats these events as direct, based on the host element type (see `isDirectEvent()`):
+
+- `layout` on all elements
+- `ScrollView`: `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`, `momentumScrollEnd`, `contentSizeChange`
+- `TextInput`: `selectionChange`, `contentSizeChange`
+- `Text`: `textLayout`
+- `Image`: `loadStart`, `progress`, `load`, `error`, `loadEnd`
+
+A direct event fired on its emitting element only checks that element. Fired on a nested element, it bubbles as usual but stops at the first ancestor that emits it, as React Native never delivers it there from a child. Handlers with the same name elsewhere, like an `onLoad` prop of a custom composite component, still receive bubbled events.
+
+These were chosen because tests rarely fire them on a nested element: `TextInput` and `Image` have no children, `Text` queries usually match the `Text` that owns the handler, and the drag and momentum events are usually fired on the `ScrollView` itself.
+
+The other direct events in the table above still bubble in `fireEvent`: `scroll`, accessibility actions, `Modal` events, and `refresh`. Changing them is a breaking change, as tests fire them on nested elements, e.g. `scroll` on `ScrollView` content. Leave these for a major release.
 
 ## Sources
 

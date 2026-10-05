@@ -17,6 +17,15 @@ with v14.
 - Added `userEvent.pullToRefresh()` to simulate the pull-to-refresh gesture on a host
   `ScrollView` element, invoking the `onRefresh` handler of its `refreshControl` prop.
 
+### Fixes
+
+- `fireEvent` no longer bubbles events to the host element that emits them directly in React
+  Native: `ScrollView` `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`,
+  `momentumScrollEnd` and `contentSizeChange`; `TextInput` `selectionChange` and
+  `contentSizeChange`; `Text` `textLayout`; and `Image` `loadStart`, `progress`, `load`, `error`
+  and `loadEnd`. Fire these events on the emitting element instead. Handlers with the same name on
+  other components still receive bubbled events.
+
 ## 14.0.0
 
 ### Migration guide
