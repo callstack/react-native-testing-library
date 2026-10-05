@@ -38,7 +38,7 @@ A direct event fired on its emitting element only checks that element. Fired on 
 
 These were chosen because tests rarely fire them on a nested element: `TextInput` and `Image` have no children, `Text` queries usually match the `Text` that owns the handler, and the drag and momentum events are usually fired on the `ScrollView` itself.
 
-The other direct events still bubble for backward compatibility (see `isLeakyDirectEvent()`), as tests fire them on nested elements, e.g. `scroll` on `ScrollView` content:
+The other direct events still bubble for backward compatibility (see `isDeprecatedBubblingEvent()`), as tests fire them on nested elements, e.g. `scroll` on `ScrollView` content:
 
 - `accessibilityAction` on all elements
 - `TextInput`: `scroll`

@@ -13,7 +13,7 @@ import { getEventHandlerFromProps, normalizeEventName } from './handler';
 import { isEventEnabled, isTouchResponder } from './is-enabled';
 import type { EventHandler } from './types';
 
-/** Intentionally incomplete, see `*_LEAKY_DIRECT_EVENTS` below. */
+/** Intentionally incomplete, see `*_DEPRECATED_BUBBLING_EVENTS` below. */
 const COMMON_DIRECT_EVENTS = ['layout'];
 const TEXT_DIRECT_EVENTS = ['textLayout'];
 const TEXT_INPUT_DIRECT_EVENTS = ['selectionChange', 'contentSizeChange'];
@@ -56,29 +56,29 @@ export function isDirectEvent(instance: TestInstance, eventName: string) {
 }
 
 /**
- * Direct in React Native, but still bubble (leak) with a warning for backward compatibility.
+ * Direct in React Native, but still bubble with a deprecation warning for backward compatibility.
  * Make them direct in the next major version. See `contributing/native-events.md`.
  */
-const COMMON_LEAKY_DIRECT_EVENTS = ['accessibilityAction'];
-const TEXT_INPUT_LEAKY_DIRECT_EVENTS = ['scroll'];
-const SCROLL_VIEW_LEAKY_DIRECT_EVENTS = ['scroll', 'refresh'];
-const MODAL_LEAKY_DIRECT_EVENTS = ['requestClose', 'show', 'dismiss', 'orientationChange'];
+const COMMON_DEPRECATED_BUBBLING_EVENTS = ['accessibilityAction'];
+const TEXT_INPUT_DEPRECATED_BUBBLING_EVENTS = ['scroll'];
+const SCROLL_VIEW_DEPRECATED_BUBBLING_EVENTS = ['scroll', 'refresh'];
+const MODAL_DEPRECATED_BUBBLING_EVENTS = ['requestClose', 'show', 'dismiss', 'orientationChange'];
 
-function isLeakyDirectEvent(instance: TestInstance, eventName: string) {
-  if (COMMON_LEAKY_DIRECT_EVENTS.includes(eventName)) {
+function isDeprecatedBubblingEvent(instance: TestInstance, eventName: string) {
+  if (COMMON_DEPRECATED_BUBBLING_EVENTS.includes(eventName)) {
     return true;
   }
 
   if (isHostTextInput(instance)) {
-    return TEXT_INPUT_LEAKY_DIRECT_EVENTS.includes(eventName);
+    return TEXT_INPUT_DEPRECATED_BUBBLING_EVENTS.includes(eventName);
   }
 
   if (isHostScrollView(instance)) {
-    return SCROLL_VIEW_LEAKY_DIRECT_EVENTS.includes(eventName);
+    return SCROLL_VIEW_DEPRECATED_BUBBLING_EVENTS.includes(eventName);
   }
 
   if (isHostModal(instance)) {
-    return MODAL_LEAKY_DIRECT_EVENTS.includes(eventName);
+    return MODAL_DEPRECATED_BUBBLING_EVENTS.includes(eventName);
   }
 
   return false;
@@ -116,8 +116,11 @@ export function findEventHandler(
     return { handler: null, skippedTargets };
   }
 
-  // React Native delivers leaky direct events only to elements that emit them, never from children.
-  if (owner.instance !== instance && isLeakyDirectEvent(owner.instance, normalizedEventName)) {
+  // React Native delivers these events only to elements that emit them, never from children.
+  if (
+    owner.instance !== instance &&
+    isDeprecatedBubblingEvent(owner.instance, normalizedEventName)
+  ) {
     logger.warn(
       `fireEvent: "${eventName}" event bubbled to the handler of an ancestor element. React Native does not bubble this event, and fireEvent will stop bubbling it in the next major version. Fire it on the element that has the handler instead.`,
       formatElement(owner.instance),

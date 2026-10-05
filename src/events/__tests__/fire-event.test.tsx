@@ -20,6 +20,7 @@ import {
 import { fireEvent, render, screen } from '../..';
 import { configure } from '../../config';
 import { _console, logger } from '../../helpers/logger';
+import { getEventHandlerName } from '../handler';
 import { nativeState } from '../native-state';
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
@@ -660,6 +661,16 @@ describe('fireEvent.layout', () => {
 });
 
 describe('direct events', () => {
+  let warnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
   const directEventCases: Array<{
     eventName: string;
     ui: (handler: jest.Mock) => React.ReactElement;
@@ -706,7 +717,7 @@ describe('direct events', () => {
         <Image
           testID="target"
           source={{ uri: 'https://example.com/image.png' }}
-          {...{ [`on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`]: handler }}
+          {...{ [getEventHandlerName(eventName)]: handler }}
         />
       ),
     })),
@@ -727,19 +738,16 @@ describe('direct events', () => {
   test.each(directEventCases)(
     'does not bubble "$eventName" from a nested element to the emitting element',
     async ({ eventName, ui }) => {
-      const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
       const handler = jest.fn();
       await render(React.cloneElement(ui(handler), {}, <Text testID="nested">Nested</Text>));
 
       await fireEvent(screen.getByTestId('nested'), eventName);
 
       expect(handler).not.toHaveBeenCalled();
-      warnSpy.mockRestore();
     },
   );
 
   test('does not bubble when fired with "on" prefixed event name', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onMomentumScrollEnd = jest.fn();
     await render(
       <ScrollView onMomentumScrollEnd={onMomentumScrollEnd}>
@@ -751,11 +759,9 @@ describe('direct events', () => {
 
     expect(onMomentumScrollEnd).not.toHaveBeenCalled();
     expect(warnSpy).toHaveBeenCalledTimes(1);
-    warnSpy.mockRestore();
   });
 
   test('warns when direct event would bubble to the emitting element', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     await render(
       <ScrollView testID="scroll" onMomentumScrollEnd={() => {}}>
         <View testID="child" />
@@ -771,11 +777,9 @@ describe('direct events', () => {
           />
       "
     `);
-    warnSpy.mockRestore();
   });
 
   test('stops bubbling at the emitting element', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onMomentumScrollEnd = jest.fn();
     const Screen = (_props: { onMomentumScrollEnd: () => void }) => (
       <View>
@@ -790,7 +794,6 @@ describe('direct events', () => {
 
     expect(onMomentumScrollEnd).not.toHaveBeenCalled();
     expect(warnSpy).not.toHaveBeenCalled();
-    warnSpy.mockRestore();
   });
 
   test('bubbles event with direct event name to composite component handler', async () => {
@@ -838,8 +841,18 @@ describe('direct events', () => {
   });
 });
 
-describe('leaky direct events', () => {
-  const leakyEventCases: Array<{
+describe('deprecated bubbling events', () => {
+  let warnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
+  const deprecatedBubblingEventCases: Array<{
     name: string;
     eventName: string;
     ui: (handler: jest.Mock) => React.ReactElement;
@@ -892,33 +905,29 @@ describe('leaky direct events', () => {
       name: `${eventName} from Modal content`,
       eventName,
       ui: (handler: jest.Mock) => (
-        <Modal
-          testID="emitter"
-          visible
-          {...{ [`on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`]: handler }}
-        >
+        <Modal testID="emitter" visible {...{ [getEventHandlerName(eventName)]: handler }}>
           <Text testID="target">Content</Text>
         </Modal>
       ),
     })),
   ];
 
-  test.each(leakyEventCases)('bubbles $name with a warning', async ({ eventName, ui }) => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
-    const handler = jest.fn();
-    await render(ui(handler));
+  test.each(deprecatedBubblingEventCases)(
+    'bubbles $name with a warning',
+    async ({ eventName, ui }) => {
+      const handler = jest.fn();
+      await render(ui(handler));
 
-    await fireEvent(screen.getByTestId('target'), eventName);
+      await fireEvent(screen.getByTestId('target'), eventName);
 
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(warnSpy).toHaveBeenCalledTimes(1);
-    warnSpy.mockRestore();
-  });
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+    },
+  );
 
-  test.each(leakyEventCases)(
+  test.each(deprecatedBubblingEventCases)(
     'does not warn for $name when fired on the emitting element',
     async ({ eventName, ui }) => {
-      const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
       const handler = jest.fn();
       await render(ui(handler));
 
@@ -926,12 +935,10 @@ describe('leaky direct events', () => {
 
       expect(handler).toHaveBeenCalledTimes(1);
       expect(warnSpy).not.toHaveBeenCalled();
-      warnSpy.mockRestore();
     },
   );
 
   test('warns about stopping bubbling in the next major version', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     await render(
       <ScrollView testID="scroll" onScroll={() => {}}>
         <View testID="child" />
@@ -946,11 +953,9 @@ describe('leaky direct events', () => {
           />
       "
     `);
-    warnSpy.mockRestore();
   });
 
   test('warns when handler is on composite component above the emitting element', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onScroll = jest.fn();
     const Screen = (_props: { onScroll: () => void }) => (
       <ScrollView>
@@ -963,12 +968,10 @@ describe('leaky direct events', () => {
 
     expect(onScroll).toHaveBeenCalledTimes(1);
     expect(warnSpy).toHaveBeenCalledTimes(1);
-    warnSpy.mockRestore();
   });
 
   // Known gap: only the type of the element with the handler is checked.
   test('does not warn when handler is on an element that does not emit the event', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onScroll = jest.fn();
     const Screen = (_props: { onScroll: () => void }) => (
       <View>
@@ -983,11 +986,9 @@ describe('leaky direct events', () => {
 
     expect(onScroll).toHaveBeenCalledTimes(1);
     expect(warnSpy).not.toHaveBeenCalled();
-    warnSpy.mockRestore();
   });
 
   test('does not warn when bubbling to composite component handler', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onShow = jest.fn();
     const onDismiss = jest.fn();
     const Toast = (_props: { onShow: () => void; onDismiss: () => void }) => (
@@ -1003,7 +1004,6 @@ describe('leaky direct events', () => {
     expect(onShow).toHaveBeenCalledTimes(1);
     expect(onDismiss).toHaveBeenCalledTimes(1);
     expect(warnSpy).not.toHaveBeenCalled();
-    warnSpy.mockRestore();
   });
 });
 
