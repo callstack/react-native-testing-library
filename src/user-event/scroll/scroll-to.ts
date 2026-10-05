@@ -1,6 +1,7 @@
 import { stringify } from 'jest-matcher-utils';
 import type { TestInstance } from 'test-renderer';
 
+import type { ScrollEventOptions } from '../../event-builder';
 import { buildScrollEvent } from '../../event-builder';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
@@ -50,6 +51,11 @@ export async function scrollTo(
 
   ensureScrollViewDirection(instance, options);
 
+  const eventOptions: ScrollEventOptions = {
+    contentSize: options.contentSize,
+    layoutMeasurement: options.layoutMeasurement ?? nativeState.layoutSizeForInstance.get(instance),
+  };
+
   await dispatchEvent(
     instance,
     'contentSizeChange',
@@ -66,7 +72,7 @@ export async function scrollTo(
     initialOffset,
     linearInterpolator,
   );
-  await emitDragScrollEvents(this.config, instance, dragSteps, options);
+  await emitDragScrollEvents(this.config, instance, dragSteps, eventOptions);
 
   const momentumStart = dragSteps.at(-1) ?? initialOffset;
   const momentumSteps = createScrollSteps(
@@ -74,7 +80,7 @@ export async function scrollTo(
     momentumStart,
     inertialInterpolator,
   );
-  await emitMomentumScrollEvents(this.config, instance, momentumSteps, options);
+  await emitMomentumScrollEvents(this.config, instance, momentumSteps, eventOptions);
 
   const finalOffset = momentumSteps.at(-1) ?? dragSteps.at(-1) ?? initialOffset;
   nativeState.contentOffsetForInstance.set(instance, finalOffset);
@@ -84,7 +90,7 @@ async function emitDragScrollEvents(
   config: UserEventConfig,
   instance: TestInstance,
   scrollSteps: Point[],
-  scrollOptions: ScrollToOptions,
+  scrollOptions: ScrollEventOptions,
 ) {
   if (scrollSteps.length === 0) {
     return;
@@ -110,7 +116,7 @@ async function emitMomentumScrollEvents(
   config: UserEventConfig,
   instance: TestInstance,
   scrollSteps: Point[],
-  scrollOptions: ScrollToOptions,
+  scrollOptions: ScrollEventOptions,
 ) {
   if (scrollSteps.length === 0) {
     return;

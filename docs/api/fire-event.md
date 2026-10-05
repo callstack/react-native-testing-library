@@ -140,6 +140,8 @@ fireEvent.scroll: (
 
 Builds a scroll event object, merges `eventProps` into it, and invokes the `scroll` handler on the element or nearest eligible parent.
 
+When fired on a host `ScrollView` that received a [layout event](#layout) before, the event's `layoutMeasurement` defaults to the size from that layout event. Values passed in `eventProps` take precedence.
+
 #### On a `ScrollView`
 
 ```jsx
@@ -181,6 +183,8 @@ Builds a layout event carrying the given `layout` rectangle and invokes the `onL
 Unlike other `fireEvent` calls, layout events do not bubble: React Native delivers them only to the measured element, so the handler is not looked up on parent elements. If the element has no `onLayout` handler, a warning is logged and nothing is called. The handler is called even if the element's own `onStartShouldSetResponder` returns `false`. An `onLayout` prop on a composite component is only called if the component passes it down to a host element.
 
 The `layout` values are merged onto a zeroed rectangle (`{ x: 0, y: 0, width: 0, height: 0 }`), so pass only the fields your component reads.
+
+The element's layout size is remembered, so later [scroll events](#scroll) and [`userEvent.scrollTo()`](./user-event.md#scroll-to) calls on the same `ScrollView` use it as their `layoutMeasurement`.
 
 ```jsx
 import { View } from 'react-native';

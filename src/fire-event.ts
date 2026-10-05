@@ -18,7 +18,7 @@ import { logger } from './helpers/logger';
 import { isPointerEventEnabled } from './helpers/pointer-events';
 import { isEditableTextInput } from './helpers/text-input';
 import { nativeState } from './native-state';
-import type { Point, StringWithAutocomplete } from './types';
+import type { Point, Size, StringWithAutocomplete } from './types';
 
 function isTouchResponder(instance: TestInstance) {
   return Boolean(instance.props.onStartShouldSetResponder) || isHostTextInput(instance);
@@ -184,7 +184,10 @@ fireEvent.press = async (instance: TestInstance, eventProps?: EventProps) => {
 };
 
 fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
-  const event = buildScrollEvent();
+  const layoutMeasurement = isHostScrollView(instance)
+    ? nativeState.layoutSizeForInstance.get(instance)
+    : undefined;
+  const event = buildScrollEvent(undefined, { layoutMeasurement });
   if (eventProps) {
     mergeEventProps(event, eventProps);
   }
@@ -217,6 +220,13 @@ function setNativeStateIfNeeded(instance: TestInstance, eventName: string, value
       nativeState.contentOffsetForInstance.set(instance, contentOffset);
     }
   }
+
+  if (eventName === 'layout' || eventName === 'onLayout') {
+    const layoutSize = tryGetLayoutSize(value);
+    if (layoutSize) {
+      nativeState.layoutSizeForInstance.set(instance, layoutSize);
+    }
+  }
 }
 
 function tryGetContentOffset(event: unknown): Point | null {
@@ -230,6 +240,26 @@ function tryGetContentOffset(event: unknown): Point | null {
       return {
         x: Number.isFinite(x) ? x : 0,
         y: Number.isFinite(y) ? y : 0,
+      };
+    }
+  } catch {
+    // Do nothing
+  }
+
+  return null;
+}
+
+function tryGetLayoutSize(event: unknown): Size | null {
+  try {
+    // @ts-expect-error: try to extract layout from the event value
+    const layout = event?.nativeEvent?.layout;
+    const width = layout?.width;
+    const height = layout?.height;
+
+    if (typeof width === 'number' || typeof height === 'number') {
+      return {
+        width: Number.isFinite(width) ? width : 0,
+        height: Number.isFinite(height) ? height : 0,
       };
     }
   } catch {

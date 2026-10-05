@@ -424,6 +424,54 @@ describe('fireEvent.scroll', () => {
       y: 0,
     });
   });
+
+  test('uses layout size from previous layout event as layoutMeasurement', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} onLayout={() => {}} />);
+    const scrollView = screen.getByTestId('scroll');
+
+    await fireEvent.layout(scrollView, { width: 390, height: 750 });
+    await fireEvent.scroll(scrollView);
+
+    expect(onScroll.mock.calls[0][0].nativeEvent.layoutMeasurement).toEqual({
+      width: 390,
+      height: 750,
+    });
+  });
+
+  test('prefers passed layoutMeasurement over layout size from layout event', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} onLayout={() => {}} />);
+    const scrollView = screen.getByTestId('scroll');
+
+    await fireEvent.layout(scrollView, { width: 390, height: 750 });
+    await fireEvent.scroll(scrollView, {
+      nativeEvent: { layoutMeasurement: { width: 100, height: 200 } },
+    });
+
+    expect(onScroll.mock.calls[0][0].nativeEvent.layoutMeasurement).toEqual({
+      width: 100,
+      height: 200,
+    });
+  });
+
+  test('does not use layout size of non-ScrollView element as layoutMeasurement', async () => {
+    const onScroll = jest.fn();
+    await render(
+      <ScrollView onScroll={onScroll}>
+        <View testID="content" onLayout={() => {}} />
+      </ScrollView>,
+    );
+    const content = screen.getByTestId('content');
+
+    await fireEvent.layout(content, { width: 390, height: 750 });
+    await fireEvent.scroll(content);
+
+    expect(onScroll.mock.calls[0][0].nativeEvent.layoutMeasurement).toEqual({
+      width: 0,
+      height: 0,
+    });
+  });
 });
 
 describe('fireEvent.layout', () => {
@@ -524,6 +572,28 @@ describe('fireEvent.layout', () => {
     await fireEvent.layout(screen.getByTestId('view'));
 
     expect(onLayout).toHaveBeenCalledTimes(1);
+  });
+
+  test('saves layout size in native state', async () => {
+    await render(<View testID="view" onLayout={() => {}} />);
+    const view = screen.getByTestId('view');
+
+    await fireEvent.layout(view, { x: 10, y: 20, width: 100, height: 80 });
+    expect(nativeState.layoutSizeForInstance.get(view)).toEqual({ width: 100, height: 80 });
+
+    await fireEvent(view, 'layout', { nativeEvent: { layout: { width: 50, height: NaN } } });
+    expect(nativeState.layoutSizeForInstance.get(view)).toEqual({ width: 50, height: 0 });
+  });
+
+  test('saves layout size in native state even without onLayout handler', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    await render(<View testID="view" />);
+    const view = screen.getByTestId('view');
+
+    await fireEvent.layout(view, { width: 100, height: 80 });
+
+    expect(nativeState.layoutSizeForInstance.get(view)).toEqual({ width: 100, height: 80 });
+    warnSpy.mockRestore();
   });
 
   test('does not call onLayout of composite component that does not forward it', async () => {
