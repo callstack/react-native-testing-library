@@ -2,9 +2,9 @@ import type { Fiber, TestInstance } from 'test-renderer';
 
 import { formatElement } from '../helpers/format-element';
 import { logger } from '../helpers/logger';
-import type { EventHandler } from './handler';
 import { getEventHandlerFromProps } from './handler';
 import { isEventEnabled, isTouchResponder } from './is-enabled';
+import type { EventHandler } from './types';
 
 /**
  * Direct events are delivered by React Native only to the emitting element and do not bubble.

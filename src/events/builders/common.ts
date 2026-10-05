@@ -1,3 +1,4 @@
+import type { LayoutRectangle } from '../types';
 import { baseSyntheticEvent } from './base';
 
 /**
@@ -81,16 +82,6 @@ export function buildAccessibilityActionEvent(actionName: string) {
       actionName,
     },
   };
-}
-
-/**
- * Layout rectangle of an element, as measured by the layout engine.
- */
-export interface LayoutRectangle {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
 }
 
 /**

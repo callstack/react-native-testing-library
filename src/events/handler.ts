@@ -1,4 +1,4 @@
-export type EventHandler = (...args: unknown[]) => unknown;
+import type { EventHandler } from './types';
 
 export type EventHandlerOptions = {
   /** Include check for event handler named without adding `on*` prefix. */
