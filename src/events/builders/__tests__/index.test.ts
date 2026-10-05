@@ -13,4 +13,5 @@ test('re-exports all event builders', () => {
   expect(eventBuilder.buildEndEditingEvent).toBeInstanceOf(Function);
   expect(eventBuilder.buildTextSelectionChangeEvent).toBeInstanceOf(Function);
   expect(eventBuilder.buildContentSizeChangeEvent).toBeInstanceOf(Function);
+  expect(eventBuilder.mergeEventProps).toBeInstanceOf(Function);
 });

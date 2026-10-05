@@ -1,4 +1,4 @@
-export type EventHandler = (...args: unknown[]) => unknown;
+import type { EventHandler } from './types';
 
 export type EventHandlerOptions = {
   /** Include check for event handler named without adding `on*` prefix. */
@@ -30,12 +30,29 @@ export function getEventHandlerFromProps(
   return undefined;
 }
 
+/**
+ * Returns the event name without the `on*` prefix, e.g. `onLayout` -> `layout`.
+ * Note: `fireEvent` accepts event names with and without the prefix, so use this
+ * before comparing event names.
+ */
+export function normalizeEventName(eventName: string) {
+  if (hasOnPrefix(eventName)) {
+    return eventName.charAt(2).toLowerCase() + eventName.slice(3);
+  }
+
+  return eventName;
+}
+
 function getEventHandlerName(eventName: string) {
-  if (/^on[A-Z]/.test(eventName)) {
+  if (hasOnPrefix(eventName)) {
     return eventName;
   }
 
   return `on${capitalizeFirstLetter(eventName)}`;
+}
+
+function hasOnPrefix(eventName: string) {
+  return /^on[A-Z]/.test(eventName);
 }
 
 function capitalizeFirstLetter(str: string) {

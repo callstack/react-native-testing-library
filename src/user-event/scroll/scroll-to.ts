@@ -1,14 +1,13 @@
 import { stringify } from 'jest-matcher-utils';
 import type { TestInstance } from 'test-renderer';
 
-import { buildScrollEvent } from '../../event-builder';
+import { buildScrollEvent, dispatchEvent, nativeState } from '../../events';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';
-import { nativeState } from '../../native-state';
 import type { Point, Size } from '../../types';
 import type { UserEventConfig, UserEventInstance } from '../setup';
-import { dispatchEvent, wait } from '../utils';
+import { wait } from '../utils';
 import { createScrollSteps, inertialInterpolator, linearInterpolator } from './utils';
 
 interface CommonScrollToOptions {

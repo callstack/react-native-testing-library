@@ -13,8 +13,8 @@ import {
   View,
 } from 'react-native';
 
-import { fireEvent, render, screen } from '..';
-import { _console } from '../helpers/logger';
+import { fireEvent, render, screen } from '../..';
+import { _console } from '../../helpers/logger';
 import { nativeState } from '../native-state';
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
@@ -35,6 +35,20 @@ test('fireEvent accepts event name with or without "on" prefix', async () => {
 
   await fireEvent(screen.getByTestId('btn'), 'onPress');
   expect(onPress).toHaveBeenCalledTimes(2);
+});
+
+test('fireEvent with "on" prefixed name does not call unprefixed handler props', async () => {
+  const press = jest.fn();
+  const testOnlyPress = jest.fn();
+  // @ts-expect-error Intentionally passing such props
+  await render(<View testID="view" press={press} testOnly_press={testOnlyPress} />);
+
+  await fireEvent(screen.getByTestId('view'), 'onPress');
+  expect(press).not.toHaveBeenCalled();
+  expect(testOnlyPress).not.toHaveBeenCalled();
+
+  await fireEvent(screen.getByTestId('view'), 'press');
+  expect(press).toHaveBeenCalledTimes(1);
 });
 
 test('fireEvent passes event data to handler', async () => {
@@ -194,6 +208,15 @@ describe('fireEvent.changeText', () => {
     expect(nativeState.valueForInstance.get(input)).toBe('new text');
   });
 
+  test('updates native state when fired with `on*` prefixed name', async () => {
+    const onChangeText = jest.fn();
+    await render(<TextInput testID="input" onChangeText={onChangeText} />);
+    const input = screen.getByTestId('input');
+    await fireEvent(input, 'onChangeText', 'new text');
+    expect(onChangeText).toHaveBeenCalledWith('new text');
+    expect(nativeState.valueForInstance.get(input)).toBe('new text');
+  });
+
   test('does not fire on non-editable TextInput', async () => {
     const onChangeText = jest.fn();
     await render(<TextInput testID="input" editable={false} onChangeText={onChangeText} />);
@@ -318,6 +341,18 @@ describe('fireEvent.scroll', () => {
     const scrollView = screen.getByTestId('scroll');
     await fireEvent.scroll(scrollView, verticalScrollEvent);
     expect(onScroll.mock.calls[0][0]).toMatchObject(verticalScrollEvent);
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
+      x: 0,
+      y: 200,
+    });
+  });
+
+  test('updates native state when fired with `on*` prefixed name', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+    const scrollView = screen.getByTestId('scroll');
+    await fireEvent(scrollView, 'onScroll', verticalScrollEvent);
+    expect(onScroll).toHaveBeenCalledWith(verticalScrollEvent);
     expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
       x: 0,
       y: 200,
