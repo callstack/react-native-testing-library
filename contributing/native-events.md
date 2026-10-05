@@ -26,13 +26,9 @@ This is simplified. A few events differ between iOS and Android. Check the sourc
 
 ## Known gaps
 
-`fireEvent` still bubbles the direct events above for backward compatibility, as tests fire them on nested elements, e.g. `scroll` on `ScrollView` content. Making them direct is a breaking change.
+`fireEvent` still bubbles the direct events above for backward compatibility, as tests fire them on nested elements, e.g. `scroll` on `ScrollView` content. Making them direct is a breaking change, planned for the next major release, which should also remove the warning.
 
-`isDirectEvent()` checks whether an event is direct based on the host element type. `fireEvent` logs a warning when a direct event bubbles from a nested element to the handler of an ancestor that emits it, e.g. `scroll` from `ScrollView` content to the `ScrollView`'s `onScroll`. Handlers with the same name elsewhere, like an `onLoad` prop of a custom composite component, receive bubbled events without a warning. Only the type of the element with the handler is checked, so a handler further up on an element that doesn't emit the event gets no warning, although it will stop receiving the event too.
-
-`fireEvent.layout()` is the exception: it only checks the handler of the given element, while `fireEvent(element, 'layout')` bubbles with a warning like other direct events.
-
-In the next major release, stop bubbling direct events in `fireEvent` and remove the warning.
+Until then, `fireEvent` logs a warning when a direct event bubbles from a nested element to the handler of an ancestor that emits it, based on the host element type, e.g. `scroll` from `ScrollView` content to the `ScrollView`'s `onScroll`. Handlers with the same name elsewhere, like an `onLoad` prop of a custom composite component, receive bubbled events without a warning. Only the type of the element with the handler is checked, so a handler further up on an element that doesn't emit the event gets no warning, although it will stop receiving the event too.
 
 `refresh` is emitted by `RefreshControl`, but the Jest `ScrollView` mock doesn't render the `refreshControl` element. `FlatList` and `SectionList` pass `onRefresh` to the host `ScrollView`, so the rule uses `ScrollView` as the emitting element.
 

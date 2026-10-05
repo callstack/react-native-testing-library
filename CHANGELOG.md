@@ -20,12 +20,10 @@ with v14.
 ### Deprecations
 
 - `fireEvent` warns when a direct event bubbles from a nested element to the host element that
-  emits it, e.g. `scroll` from `ScrollView` content to the `ScrollView`: `layout` and
-  `accessibilityAction`; `Text` `textLayout`; `TextInput` `scroll`, `selectionChange` and
-  `contentSizeChange`; `Image` `loadStart`, `progress`, `load`, `error` and `loadEnd`;
-  `ScrollView` `scroll`, `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`,
-  `momentumScrollEnd`, `refresh` and `contentSizeChange`; and `Modal` `requestClose`, `show`,
-  `dismiss` and `orientationChange`. They will stop bubbling in the next major version.
+  emits it, e.g. `scroll` from `ScrollView` content to the `ScrollView`. These events will stop
+  bubbling in the next major version. See the
+  [`fireEvent` docs](./website/docs/14.x/docs/api/events/fire-event.mdx) for the list of direct
+  events.
 
 ## 14.0.0
 

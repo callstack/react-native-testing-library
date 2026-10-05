@@ -8,7 +8,7 @@ import { mergeEventProps } from './builders/merge';
 import { buildScrollEvent } from './builders/scroll';
 import { normalizeEventName } from './handler';
 import { nativeState } from './native-state';
-import { findEventHandler } from './propagation';
+import { findEventHandler, type FindEventHandlerOptions } from './propagation';
 import type { EventName, EventProps, LayoutRectangle } from './types';
 import { updateNativeStateFromEvent } from './update-native-state';
 import { warnAboutUnhandledEvent } from './warnings';
@@ -17,16 +17,11 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
   return await fireEventWithOptions(instance, eventName, data);
 }
 
-type FireEventOptions = {
-  /** Only check the handler of the given element, without bubbling. */
-  direct?: boolean;
-};
-
 async function fireEventWithOptions(
   instance: TestInstance,
   eventName: EventName,
   data: unknown[],
-  options?: FireEventOptions,
+  options?: FindEventHandlerOptions,
 ) {
   if (!isInstanceMounted(instance)) {
     return;

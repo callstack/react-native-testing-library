@@ -33,10 +33,10 @@ const MODAL_DIRECT_EVENTS = ['requestClose', 'show', 'dismiss', 'orientationChan
  * not bubble. Whether an event is direct depends on the host element type, e.g. `load` is direct
  * for `Image` elements, while custom `onLoad` props of composite components still bubble.
  *
- * Note: `fireEvent` still bubbles these events for backward compatibility, with a warning.
- * Stop bubbling them in the next major version. See `contributing/native-events.md`.
+ * `fireEvent` still bubbles these events with a warning, until the next major version. See
+ * `contributing/native-events.md`.
  */
-export function isDirectEvent(instance: TestInstance, eventName: string) {
+function isDirectEvent(instance: TestInstance, eventName: string) {
   if (COMMON_DIRECT_EVENTS.includes(eventName)) {
     return true;
   }
@@ -64,7 +64,7 @@ export function isDirectEvent(instance: TestInstance, eventName: string) {
   return false;
 }
 
-type FindEventHandlerOptions = {
+export type FindEventHandlerOptions = {
   /** Only check the handler of the given element, e.g. for `fireEvent.layout`. */
   direct?: boolean;
 };
@@ -100,7 +100,6 @@ export function findEventHandler(
     return { handler: null, skippedTargets };
   }
 
-  // React Native delivers direct events only to elements that emit them, never from children.
   if (owner.instance !== instance && isDirectEvent(owner.instance, normalizeEventName(eventName))) {
     logger.warn(
       `fireEvent: "${eventName}" event bubbled to the handler of an ancestor element. React Native does not bubble this event, and fireEvent will stop bubbling it in the next major version. Fire it on the element that has the handler instead.`,

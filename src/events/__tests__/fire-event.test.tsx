@@ -1595,7 +1595,7 @@ describe('non-editable TextInput', () => {
     expect(onFocus).not.toHaveBeenCalled();
     expect(onChangeText).not.toHaveBeenCalled();
     expect(onSubmitEditing).not.toHaveBeenCalled();
-    // Layout is a direct event, so it bubbles to the parent TextInput with a warning
+    // Layout is a direct event, but still bubbles to the parent TextInput with a warning
     expect(onLayout).toHaveBeenCalledTimes(2);
     expect(onLayout).toHaveBeenCalledWith(layoutEvent);
     expect(warnSpy).toHaveBeenCalledTimes(2);
