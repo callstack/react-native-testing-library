@@ -180,7 +180,7 @@ fireEvent.layout: (
 
 Builds a layout event carrying the given `layout` rectangle and invokes the `onLayout` handler of the given element. Use it to simulate the layout engine measuring an element, e.g. to test components that adapt to a measured size.
 
-Unlike other `fireEvent` calls, layout events do not bubble: React Native delivers them only to the measured element, so the handler is not looked up on parent elements. If the element has no `onLayout` handler, a warning is logged and nothing is called. The handler is called even if the element's own `onStartShouldSetResponder` returns `false`. An `onLayout` prop on a composite component is only called if the component passes it down to a host element.
+Unlike other `fireEvent` calls, layout events do not bubble: React Native delivers them only to the measured element, so the handler is not looked up on parent elements.
 
 The `layout` values are merged onto a zeroed rectangle (`{ x: 0, y: 0, width: 0, height: 0 }`), so pass only the fields your component reads.
 
