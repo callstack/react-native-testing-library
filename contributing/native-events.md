@@ -6,7 +6,7 @@ Today, `fireEvent` treats every event as bubbling except `layout`. The list of d
 
 ## Which events are which
 
-Roughly speaking, events from user input bubble, and events that report a component's own state are direct.
+There is no simple rule for which events bubble. Coming from user input doesn't make an event bubble: `scroll` and `refresh` start with a user gesture but are direct. Check the lists below rather than guessing.
 
 **Bubbling:** `press`, `change`, `focus`, `blur`, `submitEditing`, `endEditing`, `keyPress`, and touch and pointer events (`touchStart`, `pointerDown`, etc.).
 

@@ -19,7 +19,7 @@ Keep the existing image assets unless the new SDK requires different ones.
 yarn create expo-app /tmp/rntl-basic-fresh --template blank-typescript --yes
 ```
 
-Restore: `App.tsx`, `components/`, `__tests__/`, `theme.ts`, `jest.config.js`, `jest-setup.ts`, `babel.config.js`, `eslint.config.mjs`, `README.md`, `AGENTS.md`, and `assets/`. Keep the new `index.ts`.
+Restore: `App.tsx`, `components/`, `__tests__/`, `theme.ts`, `jest.config.js`, `jest-setup.ts`, `babel.config.js`, `eslint.config.mjs`, `README.md`, `AGENTS.md`, `.expo-shared/assets.json`, and `assets/`. Keep the new `index.ts`.
 
 ## `examples/cookbook`
 
@@ -27,7 +27,7 @@ Restore: `App.tsx`, `components/`, `__tests__/`, `theme.ts`, `jest.config.js`, `
 yarn create expo-app /tmp/rntl-cookbook-fresh --example with-router --yes
 ```
 
-Restore: `app/`, the tutorial folders (`basics-tutorial/`, `basics-tutorial-react-strict-dom/`), `theme.ts`, `jest.config.js`, `jest-setup.ts`, `babel.config.js`, `.eslintrc`, `.eslintignore`, `README.md`, `AGENTS.md`, and `assets/`. Keep the new Expo Router setup.
+Restore: `app/`, the tutorial folders (`basics-tutorial/`, `basics-tutorial-react-strict-dom/`), `theme.ts`, `jest.config.js`, `jest-setup.ts`, `babel.config.js`, `eslint.config.mjs`, `README.md`, `AGENTS.md`, `.expo-shared/assets.json`, and `assets/`. Keep the new Expo Router setup.
 
 ## Validate
 

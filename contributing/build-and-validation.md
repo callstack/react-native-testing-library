@@ -4,16 +4,16 @@ Run `yarn install` once, then `yarn validate` before you push. It runs the same 
 
 ## Commands
 
-| Command                                 | What it does                                            |
-| --------------------------------------- | ------------------------------------------------------- |
-| `yarn test`                             | Run tests                                               |
-| `yarn typecheck`                        | Type check                                              |
-| `yarn lint`                             | Run ESLint on `src/`                                    |
-| `yarn format:check` / `yarn format:fix` | Check or fix formatting                                 |
-| `yarn validate`                         | All of the above                                        |
-| `yarn validate:all`                     | Also validate the examples, website, and generated docs |
-| `yarn build`                            | Build the package into `dist/`                          |
-| `yarn docs:generate`                    | Regenerate package docs from the website                |
+| Command                                 | What it does                                                   |
+| --------------------------------------- | -------------------------------------------------------------- |
+| `yarn test`                             | Run tests                                                      |
+| `yarn typecheck`                        | Type check                                                     |
+| `yarn lint`                             | Run ESLint on `src/`                                           |
+| `yarn format:check` / `yarn format:fix` | Check or fix formatting                                        |
+| `yarn validate`                         | All of the above                                               |
+| `yarn validate:all`                     | Also validate the examples, website, and generated docs        |
+| `yarn build`                            | Clean `dist/`, compile with Babel, then emit type declarations |
+| `yarn docs:generate`                    | Regenerate package docs from the website                       |
 
 ## Documentation
 

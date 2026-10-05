@@ -12,3 +12,4 @@ Every change in `src/` should come with tests. Tests use Jest and live next to t
 
 - Shared setup lives in `jest-setup.ts`.
 - Auto-cleanup between tests comes from `src/index.ts`.
+- Coverage is collected from `src/`, excluding tests and `src/test-utils/`.
