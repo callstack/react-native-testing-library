@@ -13,6 +13,7 @@ import { buildLayoutEvent, buildScrollEvent, buildTouchEvent } from './event-bui
 import type { EventHandler } from './event-handler';
 import { getEventHandlerFromProps } from './event-handler';
 import { isInstanceMounted } from './helpers/component-tree';
+import { formatElement } from './helpers/format-element';
 import { isHostScrollView, isHostTextInput } from './helpers/host-component-names';
 import { logger } from './helpers/logger';
 import { isPointerEventEnabled } from './helpers/pointer-events';
@@ -84,7 +85,8 @@ function getDirectEventHandler(instance: TestInstance, eventName: string): Event
   const handler = getEventHandlerFromProps(instance.props, eventName, { loose: true });
   if (!handler) {
     logger.warn(
-      `fireEvent: element has no handler for "${eventName}" event. Direct events are not looked up on ancestor elements.`,
+      `fireEvent: element has no handler for "${eventName}" event.`,
+      formatElement(instance),
     );
     return null;
   }
