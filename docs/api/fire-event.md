@@ -140,7 +140,7 @@ fireEvent.scroll: (
 
 Builds a scroll event object, merges `eventProps` into it, and invokes the `scroll` handler on the element or nearest eligible parent.
 
-When fired on a host `ScrollView` that received a [layout event](#layout) before, the event's `layoutMeasurement` defaults to the size from that layout event. Values passed in `eventProps` take precedence.
+The scroll event will include the layout size from the most recent [`fireEvent.layout()`](#layout) call on the same `ScrollView` as its `layoutMeasurement`, unless you pass one in `eventProps`.
 
 #### On a `ScrollView`
 
