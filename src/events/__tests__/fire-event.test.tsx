@@ -693,10 +693,6 @@ describe('direct events', () => {
     },
     {
       eventName: 'contentSizeChange',
-      ui: (handler) => <ScrollView testID="target" onContentSizeChange={handler} />,
-    },
-    {
-      eventName: 'contentSizeChange',
       ui: (handler) => <TextInput testID="target" onContentSizeChange={handler} />,
     },
     {
@@ -885,6 +881,27 @@ describe('deprecated bubbling events', () => {
           renderItem={({ item }) => <Text testID="target">{item}</Text>}
           refreshing={false}
           onRefresh={handler}
+        />
+      ),
+    },
+    {
+      name: 'contentSizeChange from ScrollView content',
+      eventName: 'contentSizeChange',
+      ui: (handler) => (
+        <ScrollView testID="emitter" onContentSizeChange={handler}>
+          <View testID="target" />
+        </ScrollView>
+      ),
+    },
+    {
+      name: 'contentSizeChange from FlatList item',
+      eventName: 'contentSizeChange',
+      ui: (handler) => (
+        <FlatList
+          testID="emitter"
+          data={['Item']}
+          renderItem={({ item }) => <Text testID="target">{item}</Text>}
+          onContentSizeChange={handler}
         />
       ),
     },

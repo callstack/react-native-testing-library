@@ -23,7 +23,6 @@ const SCROLL_VIEW_DIRECT_EVENTS = [
   'scrollEndDrag',
   'momentumScrollBegin',
   'momentumScrollEnd',
-  'contentSizeChange',
 ];
 
 /**
@@ -61,7 +60,7 @@ export function isDirectEvent(instance: TestInstance, eventName: string) {
  */
 const COMMON_DEPRECATED_BUBBLING_EVENTS = ['accessibilityAction'];
 const TEXT_INPUT_DEPRECATED_BUBBLING_EVENTS = ['scroll'];
-const SCROLL_VIEW_DEPRECATED_BUBBLING_EVENTS = ['scroll', 'refresh'];
+const SCROLL_VIEW_DEPRECATED_BUBBLING_EVENTS = ['scroll', 'refresh', 'contentSizeChange'];
 const MODAL_DEPRECATED_BUBBLING_EVENTS = ['requestClose', 'show', 'dismiss', 'orientationChange'];
 
 function isDeprecatedBubblingEvent(instance: TestInstance, eventName: string) {

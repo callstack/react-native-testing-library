@@ -22,16 +22,15 @@ with v14.
 - `fireEvent` no longer bubbles events to the host element that emits them directly in React
   Native: `Text` `textLayout`; `TextInput` `selectionChange` and `contentSizeChange`; `Image`
   `loadStart`, `progress`, `load`, `error` and `loadEnd`; and `ScrollView` `scrollBeginDrag`,
-  `scrollEndDrag`, `momentumScrollBegin`, `momentumScrollEnd` and `contentSizeChange`. Fire these
-  events on the emitting element instead. Handlers with the same name on other components still
-  receive bubbled events.
+  `scrollEndDrag`, `momentumScrollBegin` and `momentumScrollEnd`. Fire these events on the emitting
+  element instead. Handlers with the same name on other components still receive bubbled events.
 
 ### Deprecations
 
 - `fireEvent` warns when other direct events bubble from a nested element to their emitting
-  element or past it: `accessibilityAction`; `TextInput` `scroll`; `ScrollView` `scroll` and
-  `refresh`; and `Modal` `requestClose`, `show`, `dismiss` and `orientationChange`. They will stop
-  bubbling in the next major version.
+  element or past it: `accessibilityAction`; `TextInput` `scroll`; `ScrollView` `scroll`,
+  `refresh` and `contentSizeChange`; and `Modal` `requestClose`, `show`, `dismiss` and
+  `orientationChange`. They will stop bubbling in the next major version.
 
 ## 14.0.0
 

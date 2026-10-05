@@ -19,7 +19,7 @@ Some events are direct in React Native: they are delivered only to the host elem
 - `textLayout` on `Text`
 - `selectionChange` and `contentSizeChange` on `TextInput`
 - `loadStart`, `progress`, `load`, `error` and `loadEnd` on `Image`
-- `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`, `momentumScrollEnd` and `contentSizeChange` on `ScrollView`
+- `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin` and `momentumScrollEnd` on `ScrollView`
 
 Events with these names still bubble to other handlers, such as an `onLoad` prop of your own composite component.
 
@@ -27,7 +27,7 @@ These direct events still bubble for backward compatibility, but `fireEvent` log
 
 - `accessibilityAction` on all elements
 - `scroll` on `TextInput`
-- `scroll` and `refresh` on `ScrollView`
+- `scroll`, `refresh` and `contentSizeChange` on `ScrollView`
 - `requestClose`, `show`, `dismiss` and `orientationChange` on `Modal`
 
 Unlike User Event, this API does not automatically pass event object to event handler, this is responsibility of the user to construct such object.
