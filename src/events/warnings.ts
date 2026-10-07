@@ -40,6 +40,17 @@ export function warnAboutUnhandledEvent(
   }
 }
 
+/**
+ * Warns when `fireEvent` bubbles a direct event from the fired element up to `owner`. React Native
+ * delivers direct events only to the emitting element, so the event should be fired on `owner`.
+ */
+export function warnAboutBubblingDirectEvent(eventType: string, owner: TestInstance) {
+  logger.warn(
+    `fireEvent: "${eventType}" does not bubble in React Native. fireEvent will stop bubbling it in the next major version. ` +
+      `Fire it on:\n\n${redent(formatElement(owner), 2)}`,
+  );
+}
+
 export function logEventWarning({ message, elements, pointerEventsBlockers = [] }: EventWarning) {
   const header =
     `${message}\n` +

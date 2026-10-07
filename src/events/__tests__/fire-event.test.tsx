@@ -371,11 +371,11 @@ describe('fireEvent.scroll', () => {
     ['onScrollEndDrag', 'scrollEndDrag'],
     ['onMomentumScrollBegin', 'momentumScrollBegin'],
     ['onMomentumScrollEnd', 'momentumScrollEnd'],
-  ])('fires %s on ScrollView', async (propName, eventName) => {
+  ])('fires %s on ScrollView', async (propName, eventType) => {
     const handler = jest.fn();
     await render(<ScrollView testID="scroll" {...{ [propName]: handler }} />);
     const scrollView = screen.getByTestId('scroll');
-    await fireEvent(scrollView, eventName, verticalScrollEvent);
+    await fireEvent(scrollView, eventType, verticalScrollEvent);
     expect(handler).toHaveBeenCalledWith(verticalScrollEvent);
     expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
       x: 0,
@@ -676,12 +676,12 @@ describe('direct events', () => {
 
   const directEventCases: Array<{
     name: string;
-    eventName: string;
+    eventType: string;
     ui: (handler: jest.Mock) => React.ReactElement;
   }> = [
     {
       name: 'layout from View content',
-      eventName: 'layout',
+      eventType: 'layout',
       ui: (handler) => (
         <View testID="emitter" onLayout={handler}>
           <View testID="target" />
@@ -690,7 +690,7 @@ describe('direct events', () => {
     },
     {
       name: 'accessibilityAction from Pressable content',
-      eventName: 'accessibilityAction',
+      eventType: 'accessibilityAction',
       ui: (handler) => (
         <Pressable
           testID="emitter"
@@ -703,32 +703,32 @@ describe('direct events', () => {
     },
     {
       name: 'textLayout from nested Text',
-      eventName: 'textLayout',
+      eventType: 'textLayout',
       ui: (handler) => (
         <Text testID="emitter" onTextLayout={handler}>
           <Text testID="target">Nested</Text>
         </Text>
       ),
     },
-    ...(['scroll', 'selectionChange', 'contentSizeChange'] as const).map((eventName) => ({
-      name: `${eventName} from TextInput content`,
-      eventName,
+    ...(['scroll', 'selectionChange', 'contentSizeChange'] as const).map((eventType) => ({
+      name: `${eventType} from TextInput content`,
+      eventType,
       ui: (handler: jest.Mock) => (
-        <TextInput testID="emitter" {...{ [getEventHandlerName(eventName)]: handler }}>
+        <TextInput testID="emitter" {...{ [getEventHandlerName(eventType)]: handler }}>
           <Text testID="target">Nested</Text>
         </TextInput>
       ),
     })),
-    ...(['loadStart', 'progress', 'load', 'error', 'loadEnd'] as const).map((eventName) => ({
-      name: `${eventName} from Image content`,
-      eventName,
+    ...(['loadStart', 'progress', 'load', 'error', 'loadEnd'] as const).map((eventType) => ({
+      name: `${eventType} from Image content`,
+      eventType,
       // Image does not accept children, clone it to fire the event on a nested element.
       ui: (handler: jest.Mock) =>
         React.cloneElement(
           <Image
             testID="emitter"
             source={{ uri: 'https://example.com/image.png' }}
-            {...{ [getEventHandlerName(eventName)]: handler }}
+            {...{ [getEventHandlerName(eventType)]: handler }}
           />,
           {},
           <Text testID="target">Nested</Text>,
@@ -743,18 +743,18 @@ describe('direct events', () => {
         'momentumScrollEnd',
         'contentSizeChange',
       ] as const
-    ).map((eventName) => ({
-      name: `${eventName} from ScrollView content`,
-      eventName,
+    ).map((eventType) => ({
+      name: `${eventType} from ScrollView content`,
+      eventType,
       ui: (handler: jest.Mock) => (
-        <ScrollView testID="emitter" {...{ [getEventHandlerName(eventName)]: handler }}>
+        <ScrollView testID="emitter" {...{ [getEventHandlerName(eventType)]: handler }}>
           <View testID="target" />
         </ScrollView>
       ),
     })),
     {
       name: 'scroll from TextInput to ancestor ScrollView',
-      eventName: 'scroll',
+      eventType: 'scroll',
       ui: (handler) => (
         <ScrollView testID="emitter" onScroll={handler}>
           <TextInput testID="target" />
@@ -763,7 +763,7 @@ describe('direct events', () => {
     },
     {
       name: 'refresh from FlatList item',
-      eventName: 'refresh',
+      eventType: 'refresh',
       ui: (handler) => (
         <FlatList
           testID="emitter"
@@ -776,7 +776,7 @@ describe('direct events', () => {
     },
     {
       name: 'contentSizeChange from FlatList item',
-      eventName: 'contentSizeChange',
+      eventType: 'contentSizeChange',
       ui: (handler) => (
         <FlatList
           testID="emitter"
@@ -786,22 +786,22 @@ describe('direct events', () => {
         />
       ),
     },
-    ...(['requestClose', 'show', 'dismiss', 'orientationChange'] as const).map((eventName) => ({
-      name: `${eventName} from Modal content`,
-      eventName,
+    ...(['requestClose', 'show', 'dismiss', 'orientationChange'] as const).map((eventType) => ({
+      name: `${eventType} from Modal content`,
+      eventType,
       ui: (handler: jest.Mock) => (
-        <Modal testID="emitter" visible {...{ [getEventHandlerName(eventName)]: handler }}>
+        <Modal testID="emitter" visible {...{ [getEventHandlerName(eventType)]: handler }}>
           <Text testID="target">Content</Text>
         </Modal>
       ),
     })),
   ];
 
-  test.each(directEventCases)('bubbles $name with a warning', async ({ eventName, ui }) => {
+  test.each(directEventCases)('bubbles $name with a warning', async ({ eventType, ui }) => {
     const handler = jest.fn();
     await render(ui(handler));
 
-    await fireEvent(screen.getByTestId('target'), eventName);
+    await fireEvent(screen.getByTestId('target'), eventType);
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(warnSpy).toHaveBeenCalledTimes(1);
@@ -809,11 +809,11 @@ describe('direct events', () => {
 
   test.each(directEventCases)(
     'does not warn for $name when fired on the emitting element',
-    async ({ eventName, ui }) => {
+    async ({ eventType, ui }) => {
       const handler = jest.fn();
       await render(ui(handler));
 
-      await fireEvent(screen.getByTestId('emitter'), eventName);
+      await fireEvent(screen.getByTestId('emitter'), eventType);
 
       expect(handler).toHaveBeenCalledTimes(1);
       expect(warnSpy).not.toHaveBeenCalled();
@@ -1382,14 +1382,14 @@ describe('unhandled event warning', () => {
     ['focus', 'onFocus'],
     ['blur', 'onBlur'],
     ['press', 'onPress'],
-  ])('warns when "%s" is blocked by non-editable TextInput', async (eventName, handlerName) => {
+  ])('warns when "%s" is blocked by non-editable TextInput', async (eventType, handlerName) => {
     await render(<TextInput testID="input" editable={false} {...{ [handlerName]: jest.fn() }} />);
 
-    await fireEvent(screen.getByTestId('input'), eventName);
+    await fireEvent(screen.getByTestId('input'), eventType);
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatch(
-      new RegExp(`^Cannot fire the "${eventName}" event on a non-editable TextInput\\.`),
+      new RegExp(`^Cannot fire the "${eventType}" event on a non-editable TextInput\\.`),
     );
   });
 
