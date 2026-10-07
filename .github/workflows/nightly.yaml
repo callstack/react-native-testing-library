@@ -19,6 +19,7 @@ concurrency:
 
 jobs:
   lint:
+    if: github.repository == 'callstack/react-native-testing-library' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     name: Lint → RN ${{ matrix.rn-version }}
     strategy:
@@ -45,6 +46,7 @@ jobs:
         run: yarn lint
 
   typecheck:
+    if: github.repository == 'callstack/react-native-testing-library' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     name: Typecheck → RN ${{ matrix.rn-version }}
     strategy:
@@ -74,6 +76,7 @@ jobs:
         uses: ./.github/actions/typecheck-react-19_2-if-supported
 
   test:
+    if: github.repository == 'callstack/react-native-testing-library' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     name: Test → RN ${{ matrix.rn-lane }} x TR ${{ matrix.test-renderer-version }}
     strategy:

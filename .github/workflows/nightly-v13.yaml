@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   lint:
+    if: github.repository == 'callstack/react-native-testing-library' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     name: Lint → ${{ matrix.rn-version }}
     strategy:
@@ -44,6 +45,7 @@ jobs:
         run: yarn lint
 
   typecheck:
+    if: github.repository == 'callstack/react-native-testing-library' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     name: Typecheck → ${{ matrix.rn-version }}
     strategy:
@@ -72,6 +74,7 @@ jobs:
         run: yarn typecheck
 
   test:
+    if: github.repository == 'callstack/react-native-testing-library' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     name: Test → ${{ matrix.rn-version }}
     strategy:
