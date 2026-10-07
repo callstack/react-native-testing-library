@@ -14,10 +14,10 @@ export function isDirectEvent(eventName: string) {
 export type FindEventHandlerResult = {
   handler: EventHandler | null;
   /**
-   * Nearest element (to the fired instance) whose handler was found but rejected by
-   * `isEventEnabled`. Lets callers tell "blocked handler" apart from "no handler at all".
+   * Elements whose handler was found but rejected by `isEventEnabled`, nearest to the fired
+   * instance first. Lets callers tell "blocked handler" apart from "no handler at all".
    */
-  rejectedTarget: TestInstance | null;
+  skippedTargets: TestInstance[];
 };
 
 /**
@@ -33,17 +33,17 @@ export function findEventHandler(
 ): FindEventHandlerResult {
   if (isDirectEvent(normalizeEventName(eventName))) {
     const handler = getEventHandlerFromProps(instance.props, eventName, { loose: true });
-    return { handler: handler ?? null, rejectedTarget: null };
+    return { handler: handler ?? null, skippedTargets: [] };
   }
 
-  return findBubblingEventHandler(instance, eventName, undefined, null);
+  return findBubblingEventHandler(instance, eventName, undefined, []);
 }
 
 function findBubblingEventHandler(
   instance: TestInstance,
   eventName: string,
   nearestTouchResponder: TestInstance | undefined,
-  rejectedTarget: TestInstance | null,
+  skippedTargets: TestInstance[],
 ): FindEventHandlerResult {
   const touchResponder = isTouchResponder(instance) ? instance : nearestTouchResponder;
 
@@ -53,18 +53,21 @@ function findBubblingEventHandler(
 
   if (handler) {
     if (isEventEnabled(instance, normalizeEventName(eventName), touchResponder)) {
-      return { handler, rejectedTarget: null };
+      return { handler, skippedTargets };
     }
 
-    // Keep only the first (nearest to the fired instance) rejection.
-    rejectedTarget ??= touchResponder ?? instance;
+    // Handlers on the same touch responder report it only once.
+    const skippedTarget = touchResponder ?? instance;
+    if (!skippedTargets.includes(skippedTarget)) {
+      skippedTargets.push(skippedTarget);
+    }
   }
 
   if (instance.parent === null) {
-    return { handler: null, rejectedTarget };
+    return { handler: null, skippedTargets };
   }
 
-  return findBubblingEventHandler(instance.parent, eventName, touchResponder, rejectedTarget);
+  return findBubblingEventHandler(instance.parent, eventName, touchResponder, skippedTargets);
 }
 
 function findEventHandlerFromFiber(fiber: Fiber | null, eventName: string): EventHandler | null {

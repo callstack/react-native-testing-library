@@ -11,14 +11,14 @@ import { normalizeEventName } from './handler';
 import { isDirectEvent } from './propagation';
 
 export type UnhandledEventInfo = {
-  /** Nearest element whose handler was rejected by `isEventEnabled`, if any. */
-  rejectedTarget: TestInstance | null;
+  /** Elements whose handler was rejected by `isEventEnabled`, nearest first. */
+  skippedTargets: TestInstance[];
   didUpdateNativeState: boolean;
 };
 
 /**
  * Warns when no handler ran because the target is disabled or nothing handles the event.
- * Opt out via `configure({ eventDiagnostics: false })`.
+ * Enabled via `configure({ eventDiagnostics: true })`.
  */
 export function warnAboutUnhandledEvent(
   instance: TestInstance,
@@ -34,24 +34,26 @@ export function warnAboutUnhandledEvent(
     return;
   }
 
-  const elementJson = warning.element.toJSON();
-  logger.warn(
+  const header =
     `${warning.message}\n` +
-      'If this is intentional, you can disable this warning via `configure({ eventDiagnostics: false })`.\n\n' +
-      redent(elementJson ? formatJson(elementJson) : '(hidden)', 2),
-  );
+    'If this is intentional, you can disable this warning via `configure({ eventDiagnostics: false })`.';
+  const elementBlocks = warning.elements
+    .map((element) => element.toJSON())
+    .filter((json) => json != null)
+    .map((json) => redent(formatJson(json), 2));
+  logger.warn([header, ...elementBlocks].join('\n\n'));
 }
 
 function getUnhandledEventWarning(
   instance: TestInstance,
   eventName: string,
-  { rejectedTarget, didUpdateNativeState }: UnhandledEventInfo,
-): { message: string; element: TestInstance } | null {
-  if (rejectedTarget == null) {
+  { skippedTargets, didUpdateNativeState }: UnhandledEventInfo,
+): { message: string; elements: TestInstance[] } | null {
+  if (skippedTargets.length === 0) {
     if (isDirectEvent(normalizeEventName(eventName))) {
       return {
         message: `No handler found for the "${eventName}" event on the element. "${eventName}" events do not bubble to ancestors.`,
-        element: instance,
+        elements: [instance],
       };
     }
 
@@ -62,20 +64,24 @@ function getUnhandledEventWarning(
 
     return {
       message: `No handler found for the "${eventName}" event on the element or any of its ancestors.`,
-      element: instance,
+      elements: [instance],
     };
   }
 
-  // Other rejections (`pointerEvents`, non-editable `TextInput`, responder declining the touch)
-  // are deliberate ways of blocking events, so they are not reported.
-  if (isWarnableDisabledTarget(rejectedTarget)) {
-    return {
-      message: `Tried to fire the "${eventName}" event on a disabled element, so its handler was not called.`,
-      element: rejectedTarget,
-    };
+  // Only disabled elements are reported. Other rejections (`pointerEvents`, non-editable
+  // `TextInput`, responder declining the touch) are deliberate ways of blocking events.
+  const disabledTargets = skippedTargets.filter(isWarnableDisabledTarget);
+  if (disabledTargets.length === 0) {
+    return null;
   }
 
-  return null;
+  return {
+    message:
+      disabledTargets.length === 1
+        ? `Tried to fire the "${eventName}" event on a disabled element, so its handler was not called.`
+        : `Tried to fire the "${eventName}" event on ${disabledTargets.length} disabled elements, so their handlers were not called.`,
+    elements: disabledTargets,
+  };
 }
 
 function isWarnableDisabledTarget(target: TestInstance): boolean {

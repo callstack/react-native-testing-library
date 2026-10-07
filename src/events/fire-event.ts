@@ -25,9 +25,9 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
     data[0],
   );
 
-  const { handler, rejectedTarget } = findEventHandler(instance, eventName);
+  const { handler, skippedTargets } = findEventHandler(instance, eventName);
   if (!handler) {
-    warnAboutUnhandledEvent(instance, eventName, { rejectedTarget, didUpdateNativeState });
+    warnAboutUnhandledEvent(instance, eventName, { skippedTargets, didUpdateNativeState });
     return;
   }
 
