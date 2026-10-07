@@ -10,7 +10,7 @@ type Config = {
   /** Default value for `includeHiddenElements` query option. */
   defaultIncludeHiddenElements: boolean;
 
-  /** Warn when `fireEvent` calls no handler (disabled element or no handler found). */
+  /** Warn when `fireEvent` calls no handler (disabled element or no handler found). Off by default. */
   eventDiagnostics: boolean;
 
   /** Default options for `debug` helper. */
@@ -37,15 +37,15 @@ This option is also available as `defaultHidden` alias for compatibility with [R
 
 ### `eventDiagnostics` option
 
-When `fireEvent` doesn't call any handler, the test can silently do nothing, which can be confusing while debugging. When this option is enabled (the default), a warning is logged in these cases:
+When `fireEvent` doesn't call any handler, the test can silently do nothing, which can be confusing while debugging. When this option is enabled, a warning is logged in these cases:
 
 - The handler is on a disabled element (e.g. a `Pressable` with `disabled={true}`).
 - Neither the element nor any of its ancestors has a handler for the event. For direct events like `layout`, which don't bubble, only the element itself is checked.
 
-No warning is logged when the event is blocked on purpose (`pointerEvents="none"`, non-editable `TextInput`), or when it updates native state, e.g. `fireEvent.changeText` on an uncontrolled `TextInput`. Set it to `false` to opt out:
+No warning is logged when the event is blocked on purpose (`pointerEvents="none"`, non-editable `TextInput`), or when it updates native state, e.g. `fireEvent.changeText` on an uncontrolled `TextInput`. Defaults to `false`. Turn it on while debugging a test, or for the whole test suite in your Jest setup file:
 
 ```ts
-configure({ eventDiagnostics: false });
+configure({ eventDiagnostics: true });
 ```
 
 ### `defaultDebugOptions` option

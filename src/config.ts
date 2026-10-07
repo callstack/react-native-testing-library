@@ -14,7 +14,7 @@ export type Config = {
 
   /**
    * Warn when `fireEvent` calls no handler, because the target is disabled or
-   * no element handles the event. Set to `false` to opt out.
+   * no element handles the event. Off by default.
    */
   eventDiagnostics: boolean;
 
