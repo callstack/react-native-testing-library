@@ -1098,7 +1098,8 @@ describe('unhandled event warning', () => {
   test('names the non-editable TextInput when the handler is on its parent', async () => {
     const onFocus = jest.fn();
     await render(
-      <View testID="parent" onFocus={onFocus}>
+      // Spread because `View` types include `onFocus` only since RN 0.88.
+      <View testID="parent" {...{ onFocus }}>
         <TextInput testID="input" editable={false} />
       </View>,
     );
