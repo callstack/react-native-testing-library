@@ -13,8 +13,8 @@ export type Config = {
   defaultIncludeHiddenElements: boolean;
 
   /**
-   * Warn when `fireEvent` or a `userEvent` interaction calls no handler, because the
-   * target is disabled or no element handles the event. Off by default.
+   * Warn when `fireEvent` or a `userEvent` interaction calls no handler, because the target
+   * is disabled, blocked by `pointerEvents`, or no element handles the event. Off by default.
    */
   eventDiagnostics: boolean;
 

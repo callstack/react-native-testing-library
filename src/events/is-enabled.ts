@@ -11,7 +11,19 @@ import { isEditableTextInput } from '../helpers/text-input';
  * 'box-none': The View is never the target of touch events but its subviews can be
  * 'box-only': The view can be the target of touch events but its subviews cannot be
  * see the official react native doc https://reactnative.dev/docs/view#pointerevents */
-export const isPointerEventEnabled = (instance: TestInstance, isParent?: boolean): boolean => {
+export function isPointerEventEnabled(instance: TestInstance): boolean {
+  return getPointerEventsBlocker(instance) == null;
+}
+
+/**
+ * Returns the element whose `pointerEvents` prevents the instance from being the target of
+ * touch events: the instance itself or one of its ancestors. Returns `null` if nothing blocks it.
+ */
+export function getPointerEventsBlocker(instance: TestInstance): TestInstance | null {
+  return findPointerEventsBlocker(instance, false);
+}
+
+function findPointerEventsBlocker(instance: TestInstance, isParent: boolean): TestInstance | null {
   // Check both props.pointerEvents and props.style.pointerEvents
   const pointerEvents =
     instance?.props.pointerEvents ?? StyleSheet.flatten(instance?.props.style)?.pointerEvents;
@@ -19,15 +31,15 @@ export const isPointerEventEnabled = (instance: TestInstance, isParent?: boolean
   const parentCondition = isParent ? pointerEvents === 'box-only' : pointerEvents === 'box-none';
 
   if (pointerEvents === 'none' || parentCondition) {
-    return false;
+    return instance;
   }
 
   if (!instance.parent) {
-    return true;
+    return null;
   }
 
-  return isPointerEventEnabled(instance.parent, true);
-};
+  return findPointerEventsBlocker(instance.parent, true);
+}
 
 export function isTouchResponder(instance: TestInstance) {
   return Boolean(instance.props.onStartShouldSetResponder) || isHostTextInput(instance);
@@ -37,6 +49,19 @@ export function isTouchResponder(instance: TestInstance) {
  * List of events affected by `pointerEvents` prop.
  */
 const eventsAffectedByPointerEventsProp = new Set(['press']);
+
+/**
+ * Like `getPointerEventsBlocker`, but only for events affected by `pointerEvents`.
+ * Expects event name without the `on*` prefix (see `normalizeEventName`).
+ */
+export function getPointerEventsBlockerForEvent(
+  instance: TestInstance,
+  eventName: string,
+): TestInstance | null {
+  return eventsAffectedByPointerEventsProp.has(eventName)
+    ? getPointerEventsBlocker(instance)
+    : null;
+}
 
 /**
  * List of `TextInput` events not affected by `editable` prop.
@@ -60,7 +85,7 @@ export function isEventEnabled(
     );
   }
 
-  if (eventsAffectedByPointerEventsProp.has(eventName) && !isPointerEventEnabled(instance)) {
+  if (getPointerEventsBlockerForEvent(instance, eventName) != null) {
     return false;
   }
 

@@ -1,6 +1,6 @@
 import { getConfig } from '../../config';
 import type { EventWarning } from '../../events';
-import { logEventWarning } from '../../events';
+import { getPointerEventsBlocker, getPointerEventsWarning, logEventWarning } from '../../events';
 import { computeAriaDisabled } from '../../helpers/accessibility';
 import type { Interaction } from './interaction';
 
@@ -31,6 +31,19 @@ function getUnhandledInteractionWarning({
   skippedTargets,
 }: Interaction): EventWarning | null {
   const summary = `${name}() did not call any event handlers.`;
+
+  // `pointerEvents` is checked first: it blocks the interaction even if the element is enabled.
+  const pointerEventsWarning = getPointerEventsWarning(
+    skippedTargets,
+    getPointerEventsBlocker,
+    (count) =>
+      count === 1
+        ? `${summary} The element is blocked by pointerEvents.`
+        : `${summary} The elements are blocked by pointerEvents.`,
+  );
+  if (pointerEventsWarning != null) {
+    return pointerEventsWarning;
+  }
 
   // `computeAriaDisabled` also covers non-editable `TextInput`.
   const disabledTargets = skippedTargets.filter(computeAriaDisabled);

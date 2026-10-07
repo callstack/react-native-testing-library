@@ -182,9 +182,9 @@ test('warns when clearing or pasting into a non-editable TextInput', async () =>
   );
 });
 
-test('does not warn when typing into a TextInput blocked by pointerEvents="none"', async () => {
+test('warns when typing into a TextInput blocked by pointerEvents="none"', async () => {
   await render(
-    <View pointerEvents="none">
+    <View testID="overlay" pointerEvents="none">
       <TextInput testID="input" onChangeText={jest.fn()} />
     </View>,
   );
@@ -192,12 +192,27 @@ test('does not warn when typing into a TextInput blocked by pointerEvents="none"
 
   await user.type(screen.getByTestId('input'), 'Hello');
 
-  expect(warnSpy).not.toHaveBeenCalled();
+  expect(warnSpy).toHaveBeenCalledTimes(1);
+  expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+    "type() did not call any event handlers. The element is blocked by pointerEvents.
+    If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+      <TextInput
+        testID="input"
+      />
+
+    Blocked by:
+
+      <View
+        pointerEvents="none"
+        testID="overlay"
+      />"
+  `);
 });
 
-test('does not warn when the press is blocked by pointerEvents="none"', async () => {
+test('warns when the press is blocked by pointerEvents="none"', async () => {
   await render(
-    <View pointerEvents="none">
+    <View testID="overlay" pointerEvents="none">
       <Pressable onPress={jest.fn()}>
         <Text>Trigger</Text>
       </Pressable>
@@ -206,6 +221,75 @@ test('does not warn when the press is blocked by pointerEvents="none"', async ()
   const user = userEvent.setup();
 
   await user.press(screen.getByText('Trigger'));
+
+  expect(warnSpy).toHaveBeenCalledTimes(1);
+  expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+    "press() did not call any event handlers. The element is blocked by pointerEvents.
+    If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+      <View
+        accessible={true}
+      >
+        <Text>
+          Trigger
+        </Text>
+      </View>
+
+    Blocked by:
+
+      <View
+        pointerEvents="none"
+        testID="overlay"
+      />"
+  `);
+});
+
+test('reports pointerEvents rather than disabled when both block the interaction', async () => {
+  await render(
+    <View testID="overlay" pointerEvents="none">
+      <Pressable onPress={jest.fn()} disabled={true}>
+        <Text>Trigger</Text>
+      </Pressable>
+      <TextInput testID="input" editable={false} onChangeText={jest.fn()} />
+    </View>,
+  );
+  const user = userEvent.setup();
+
+  await user.press(screen.getByText('Trigger'));
+  await user.type(screen.getByTestId('input'), 'Hello');
+
+  expect(warnSpy).toHaveBeenCalledTimes(2);
+  expect(warnSpy.mock.calls[0][0]).toMatch(
+    /^press\(\) did not call any event handlers\. The element is blocked by pointerEvents\./,
+  );
+  expect(warnSpy.mock.calls[1][0]).toMatch(
+    /^type\(\) did not call any event handlers\. The element is blocked by pointerEvents\./,
+  );
+});
+
+test('does not warn when the responder declines the touch', async () => {
+  const onResponderGrant = jest.fn();
+  await render(
+    <View
+      testID="view"
+      onStartShouldSetResponder={() => false}
+      onResponderGrant={onResponderGrant}
+    />,
+  );
+  const user = userEvent.setup();
+
+  await user.press(screen.getByTestId('view'));
+
+  expect(onResponderGrant).not.toHaveBeenCalled();
+  expect(warnSpy).not.toHaveBeenCalled();
+});
+
+test('does not warn when scrolling a ScrollView without scroll handlers', async () => {
+  // `scrollTo` always updates the content offset in native state.
+  await render(<ScrollView testID="view" />);
+  const user = userEvent.setup();
+
+  await user.scrollTo(screen.getByTestId('view'), { y: 100 });
 
   expect(warnSpy).not.toHaveBeenCalled();
 });
