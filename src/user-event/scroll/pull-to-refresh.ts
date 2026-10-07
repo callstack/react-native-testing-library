@@ -4,6 +4,7 @@ import { act } from '../../act';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import type { UserEventInstance } from '../setup';
+import { Interaction, warnAboutUnhandledInteraction } from '../utils';
 
 export async function pullToRefresh(
   this: UserEventInstance,
@@ -16,12 +17,16 @@ export async function pullToRefresh(
     );
   }
 
+  const interaction = new Interaction('pullToRefresh', instance);
+  interaction.eventNames.push('refresh');
+
   const refreshControl = instance.props.refreshControl;
-  if (typeof refreshControl?.props?.onRefresh !== 'function') {
-    return;
+  if (typeof refreshControl?.props?.onRefresh === 'function') {
+    await act(() => {
+      refreshControl.props.onRefresh();
+    });
+    interaction.hasCalledHandler = true;
   }
 
-  await act(() => {
-    refreshControl.props.onRefresh();
-  });
+  warnAboutUnhandledInteraction(interaction);
 }

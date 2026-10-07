@@ -7,7 +7,6 @@ import {
   buildFocusEvent,
   buildTextChangeEvent,
   buildTextSelectionChangeEvent,
-  dispatchEvent,
   isPointerEventEnabled,
   nativeState,
 } from '../events';
@@ -15,7 +14,7 @@ import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { getTextInputValue, isEditableTextInput } from '../helpers/text-input';
 import type { UserEventInstance } from './setup';
-import { getTextContentSize, wait } from './utils';
+import { Interaction, getTextContentSize, wait, warnAboutUnhandledInteraction } from './utils';
 
 export async function paste(
   this: UserEventInstance,
@@ -33,32 +32,37 @@ export async function paste(
     return;
   }
 
+  const interaction = new Interaction('paste', instance);
+
   // 1. Enter instance
-  await dispatchEvent(instance, 'focus', buildFocusEvent());
+  await interaction.dispatchEvent('focus', buildFocusEvent());
 
   // 2. Select all
   const textToClear = getTextInputValue(instance);
   const rangeToClear = { start: 0, end: textToClear.length };
-  await dispatchEvent(instance, 'selectionChange', buildTextSelectionChangeEvent(rangeToClear));
+  await interaction.dispatchEvent('selectionChange', buildTextSelectionChangeEvent(rangeToClear));
 
   // 3. Paste the text
   nativeState.valueForInstance.set(instance, text);
+  interaction.hasUpdatedNativeState = true;
 
   const rangeAfter = { start: text.length, end: text.length };
-  await dispatchEvent(instance, 'change', buildTextChangeEvent(text, rangeAfter));
-  await dispatchEvent(instance, 'changeText', text);
-  await dispatchEvent(instance, 'selectionChange', buildTextSelectionChangeEvent(rangeAfter));
+  await interaction.dispatchEvent('change', buildTextChangeEvent(text, rangeAfter));
+  await interaction.dispatchEvent('changeText', text);
+  await interaction.dispatchEvent('selectionChange', buildTextSelectionChangeEvent(rangeAfter));
 
   // According to the docs only multiline TextInput emits contentSizeChange event
   // @see: https://reactnative.dev/docs/textinput#oncontentsizechange
   const isMultiline = instance.props.multiline === true;
   if (isMultiline) {
     const contentSize = getTextContentSize(text);
-    await dispatchEvent(instance, 'contentSizeChange', buildContentSizeChangeEvent(contentSize));
+    await interaction.dispatchEvent('contentSizeChange', buildContentSizeChangeEvent(contentSize));
   }
 
   // 4. Exit instance
   await wait(this.config);
-  await dispatchEvent(instance, 'endEditing', buildEndEditingEvent(text));
-  await dispatchEvent(instance, 'blur', buildBlurEvent());
+  await interaction.dispatchEvent('endEditing', buildEndEditingEvent(text));
+  await interaction.dispatchEvent('blur', buildBlurEvent());
+
+  warnAboutUnhandledInteraction(interaction);
 }

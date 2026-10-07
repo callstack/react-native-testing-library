@@ -10,10 +10,15 @@ import { isEditableTextInput } from '../helpers/text-input';
 import { normalizeEventName } from './handler';
 import { isDirectEvent } from './propagation';
 
-export type UnhandledEventInfo = {
+type UnhandledEventInfo = {
   /** Elements whose handler was rejected by `isEventEnabled`, nearest first. */
   skippedTargets: TestInstance[];
   didUpdateNativeState: boolean;
+};
+
+export type EventWarning = {
+  message: string;
+  elements: TestInstance[];
 };
 
 /**
@@ -30,25 +35,40 @@ export function warnAboutUnhandledEvent(
   }
 
   const warning = getUnhandledEventWarning(instance, eventName, info);
-  if (warning == null) {
-    return;
+  if (warning != null) {
+    logEventWarning(warning);
   }
+}
 
+/**
+ * Logs the warning with the opt-out hint and the elements it is about.
+ */
+export function logEventWarning({ message, elements }: EventWarning) {
   const header =
-    `${warning.message}\n` +
+    `${message}\n` +
     'If this is intentional, you can disable this warning via `configure({ eventDiagnostics: false })`.';
-  const elementBlocks = warning.elements
+  const elementBlocks = elements
     .map((element) => element.toJSON())
     .filter((json) => json != null)
     .map((json) => redent(formatJson(json), 2));
   logger.warn([header, ...elementBlocks].join('\n\n'));
 }
 
+export function isWarnableDisabledTarget(target: TestInstance): boolean {
+  // `computeAriaDisabled` treats non-editable TextInput as disabled for a11y purposes,
+  // but firing events on it is expected, not a bug worth warning about.
+  if (isHostTextInput(target) && !isEditableTextInput(target)) {
+    return false;
+  }
+
+  return computeAriaDisabled(target);
+}
+
 function getUnhandledEventWarning(
   instance: TestInstance,
   eventName: string,
   { skippedTargets, didUpdateNativeState }: UnhandledEventInfo,
-): { message: string; elements: TestInstance[] } | null {
+): EventWarning | null {
   if (skippedTargets.length === 0) {
     if (isDirectEvent(normalizeEventName(eventName))) {
       return {
@@ -82,14 +102,4 @@ function getUnhandledEventWarning(
         : `Cannot fire the "${eventName}" event on disabled elements.`,
     elements: disabledTargets,
   };
-}
-
-function isWarnableDisabledTarget(target: TestInstance): boolean {
-  // `computeAriaDisabled` treats non-editable TextInput as disabled for a11y purposes,
-  // but firing events on it is expected, not a bug worth warning about.
-  if (isHostTextInput(target) && !isEditableTextInput(target)) {
-    return false;
-  }
-
-  return computeAriaDisabled(target);
 }

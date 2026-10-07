@@ -11,7 +11,7 @@ export function isDirectEvent(eventName: string) {
   return eventName === 'layout';
 }
 
-export type FindEventHandlerResult = {
+type FindEventHandlerResult = {
   handler: EventHandler | null;
   /**
    * Elements whose handler was found but rejected by `isEventEnabled`, nearest to the fired
