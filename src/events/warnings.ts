@@ -7,7 +7,7 @@ import { formatElement, formatJson } from '../helpers/format-element';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { logger } from '../helpers/logger';
 import { isEditableTextInput } from '../helpers/text-input';
-import { getEventHandlerName, normalizeEventName } from './handler';
+import { getEventHandlerName, normalizeEventType } from './handler';
 import { getPointerEventsBlocker, isEventBlockableByPointerEvents } from './is-enabled';
 
 type UnhandledEventInfo = {
@@ -27,14 +27,14 @@ export type EventWarning = {
  */
 export function warnAboutUnhandledEvent(
   instance: TestInstance,
-  eventName: string,
+  eventType: string,
   info: UnhandledEventInfo,
 ) {
   if (!getConfig().eventDiagnostics) {
     return;
   }
 
-  const warning = getUnhandledEventWarning(instance, eventName, info);
+  const warning = getUnhandledEventWarning(instance, eventType, info);
   if (warning != null) {
     logEventWarning(warning);
   }
@@ -92,7 +92,7 @@ export function formatDisabledTargets(targets: TestInstance[]): string {
 
 function getUnhandledEventWarning(
   instance: TestInstance,
-  eventName: string,
+  eventType: string,
   { skippedTargets, hasUpdatedNativeState }: UnhandledEventInfo,
 ): EventWarning | null {
   if (skippedTargets.length === 0) {
@@ -101,7 +101,7 @@ function getUnhandledEventWarning(
       return null;
     }
 
-    const handlerName = getEventHandlerName(eventName);
+    const handlerName = getEventHandlerName(eventType);
     return {
       message: `No "${handlerName}" handler found on the element or its ancestors.`,
       elements: [instance],
@@ -109,15 +109,15 @@ function getUnhandledEventWarning(
   }
 
   // `pointerEvents` is checked first: it blocks the event even if the element is enabled.
-  const blocked = isEventBlockableByPointerEvents(normalizeEventName(eventName))
+  const blocked = isEventBlockableByPointerEvents(normalizeEventType(eventType))
     ? getPointerEventsBlockedTargets(skippedTargets)
     : null;
   if (blocked != null) {
     return {
       message:
         blocked.elements.length === 1
-          ? `Cannot fire the "${eventName}" event on an element blocked by pointerEvents.`
-          : `Cannot fire the "${eventName}" event on elements blocked by pointerEvents.`,
+          ? `Cannot fire the "${eventType}" event on an element blocked by pointerEvents.`
+          : `Cannot fire the "${eventType}" event on elements blocked by pointerEvents.`,
       ...blocked,
     };
   }
@@ -130,7 +130,7 @@ function getUnhandledEventWarning(
   }
 
   return {
-    message: `Cannot fire the "${eventName}" event on ${formatDisabledTargets(disabledTargets)}.`,
+    message: `Cannot fire the "${eventType}" event on ${formatDisabledTargets(disabledTargets)}.`,
     elements: disabledTargets,
   };
 }

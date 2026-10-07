@@ -5,7 +5,7 @@ import { isEditableTextInput } from '../helpers/text-input';
 import type { Point, Size } from '../types';
 import { nativeState } from './native-state';
 
-const scrollEventNames = new Set([
+const scrollEventTypes = new Set([
   'scroll',
   'scrollBeginDrag',
   'scrollEndDrag',
@@ -15,21 +15,21 @@ const scrollEventNames = new Set([
 
 /**
  * Updates native state the way a device would have before emitting the event.
- * Expects event name without the `on*` prefix (see `normalizeEventName`).
+ * Expects event type without the `on*` prefix (see `normalizeEventType`).
  *
  * @returns `true` if native state was updated.
  */
 export function updateNativeStateFromEvent(
   instance: TestInstance,
-  eventName: string,
+  eventType: string,
   value: unknown,
 ): boolean {
-  if (eventName === 'changeText' && typeof value === 'string' && isEditableTextInput(instance)) {
+  if (eventType === 'changeText' && typeof value === 'string' && isEditableTextInput(instance)) {
     nativeState.valueForInstance.set(instance, value);
     return true;
   }
 
-  if (scrollEventNames.has(eventName) && isHostScrollView(instance)) {
+  if (scrollEventTypes.has(eventType) && isHostScrollView(instance)) {
     const contentOffset = tryGetContentOffset(value);
     if (contentOffset) {
       nativeState.contentOffsetForInstance.set(instance, contentOffset);
@@ -37,7 +37,7 @@ export function updateNativeStateFromEvent(
     }
   }
 
-  if (eventName === 'layout') {
+  if (eventType === 'layout') {
     const layoutSize = tryGetLayoutSize(value);
     if (layoutSize) {
       nativeState.layoutSizeForInstance.set(instance, layoutSize);

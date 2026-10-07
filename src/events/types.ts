@@ -13,16 +13,16 @@ export type EventHandler = (...args: unknown[]) => unknown;
 export type EventProps = Record<string, unknown>;
 
 // String union type of keys of T that start with on, stripped of 'on'
-type EventNameExtractor<T> = keyof {
+type EventTypeExtractor<T> = keyof {
   [K in keyof T as K extends `on${infer Rest}` ? Uncapitalize<Rest> : never]: T[K];
 };
 
-export type EventName = StringWithAutocomplete<
-  | EventNameExtractor<ViewProps>
-  | EventNameExtractor<TextProps>
-  | EventNameExtractor<TextInputProps>
-  | EventNameExtractor<PressableProps>
-  | EventNameExtractor<ScrollViewProps>
+export type EventType = StringWithAutocomplete<
+  | EventTypeExtractor<ViewProps>
+  | EventTypeExtractor<TextProps>
+  | EventTypeExtractor<TextInputProps>
+  | EventTypeExtractor<PressableProps>
+  | EventTypeExtractor<ScrollViewProps>
 >;
 
 /**

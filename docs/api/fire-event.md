@@ -8,7 +8,7 @@
 > Use Fire Event for cases not supported by User Event and for triggering event handlers on composite components.
 
 ```ts
-function fireEvent(instance: TestInstance, eventName: string, ...data: unknown[]): Promise<unknown>;
+function fireEvent(instance: TestInstance, eventType: string, ...data: unknown[]): Promise<unknown>;
 ```
 
 The `fireEvent` API triggers event handlers on both host and composite components. It traverses the component tree bottom-up from the passed element to find an enabled event handler named `onXxx` where `xxx` is the event name.
@@ -26,7 +26,7 @@ Events with these names bubble without a warning to other handlers, such as an `
 
 Unlike User Event, this API does not automatically pass event object to event handler, this is responsibility of the user to construct such object.
 
-The base `fireEvent(instance, eventName, ...data)` API can pass multiple custom arguments to the handler. Convenience helpers such as `fireEvent.press` and `fireEvent.scroll` are different: they create a default event object and accept one optional object to merge into it.
+The base `fireEvent(instance, eventType, ...data)` API can pass multiple custom arguments to the handler. Convenience helpers such as `fireEvent.press` and `fireEvent.scroll` are different: they create a default event object and accept one optional object to merge into it.
 
 This function uses async `act` internally to execute all pending React updates during event handling.
 

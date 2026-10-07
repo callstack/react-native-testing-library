@@ -7,52 +7,52 @@ export type EventHandlerOptions = {
 
 export function getEventHandlerFromProps(
   props: Record<string, unknown>,
-  eventName: string,
+  eventType: string,
   options?: EventHandlerOptions,
 ): EventHandler | undefined {
-  const handlerName = getEventHandlerName(eventName);
+  const handlerName = getEventHandlerName(eventType);
   if (typeof props[handlerName] === 'function') {
     return props[handlerName] as EventHandler;
   }
 
-  if (options?.loose && typeof props[eventName] === 'function') {
-    return props[eventName] as EventHandler;
+  if (options?.loose && typeof props[eventType] === 'function') {
+    return props[eventType] as EventHandler;
   }
 
   if (typeof props[`testOnly_${handlerName}`] === 'function') {
     return props[`testOnly_${handlerName}`] as EventHandler;
   }
 
-  if (options?.loose && typeof props[`testOnly_${eventName}`] === 'function') {
-    return props[`testOnly_${eventName}`] as EventHandler;
+  if (options?.loose && typeof props[`testOnly_${eventType}`] === 'function') {
+    return props[`testOnly_${eventType}`] as EventHandler;
   }
 
   return undefined;
 }
 
 /**
- * Returns the event name without the `on*` prefix, e.g. `onLayout` -> `layout`.
- * Note: `fireEvent` accepts event names with and without the prefix, so use this
- * before comparing event names.
+ * Returns the event type without the `on*` prefix, e.g. `onLayout` -> `layout`.
+ * Note: `fireEvent` accepts event types with and without the prefix, so use this
+ * before comparing event types.
  */
-export function normalizeEventName(eventName: string) {
-  if (hasOnPrefix(eventName)) {
-    return eventName.charAt(2).toLowerCase() + eventName.slice(3);
+export function normalizeEventType(eventType: string) {
+  if (hasOnPrefix(eventType)) {
+    return eventType.charAt(2).toLowerCase() + eventType.slice(3);
   }
 
-  return eventName;
+  return eventType;
 }
 
-export function getEventHandlerName(eventName: string) {
-  if (hasOnPrefix(eventName)) {
-    return eventName;
+export function getEventHandlerName(eventType: string) {
+  if (hasOnPrefix(eventType)) {
+    return eventType;
   }
 
-  return `on${capitalizeFirstLetter(eventName)}`;
+  return `on${capitalizeFirstLetter(eventType)}`;
 }
 
-function hasOnPrefix(eventName: string) {
-  return /^on[A-Z]/.test(eventName);
+function hasOnPrefix(eventType: string) {
+  return /^on[A-Z]/.test(eventType);
 }
 
 function capitalizeFirstLetter(str: string) {

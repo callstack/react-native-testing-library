@@ -8,20 +8,20 @@ import { getEventHandlerFromProps } from './handler';
  * Basic dispatch event function used by User Event module.
  *
  * @param instance instance to trigger event on
- * @param eventName name of the event
+ * @param eventType type of the event
  * @param event event payload(s)
  * @returns `true` if a handler was called.
  */
 export async function dispatchEvent(
   instance: TestInstance,
-  eventName: string,
+  eventType: string,
   ...event: unknown[]
 ): Promise<boolean> {
   if (!isInstanceMounted(instance)) {
     return false;
   }
 
-  const handler = getEventHandlerFromProps(instance.props, eventName);
+  const handler = getEventHandlerFromProps(instance.props, eventType);
   if (!handler) {
     return false;
   }

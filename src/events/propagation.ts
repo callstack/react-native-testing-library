@@ -9,7 +9,7 @@ import {
   isHostTextInput,
 } from '../helpers/host-component-names';
 import { logger } from '../helpers/logger';
-import { getEventHandlerFromProps, normalizeEventName } from './handler';
+import { getEventHandlerFromProps, normalizeEventType } from './handler';
 import { isEventEnabled, isTouchResponder } from './is-enabled';
 import type { EventHandler } from './types';
 
@@ -36,37 +36,37 @@ const MODAL_DIRECT_EVENTS = ['requestClose', 'show', 'dismiss', 'orientationChan
  * `fireEvent` still bubbles these events with a warning, until the next major version. See
  * `contributing/native-events.md`.
  */
-function isDirectEvent(instance: TestInstance, eventName: string) {
-  if (COMMON_DIRECT_EVENTS.includes(eventName)) {
+function isDirectEvent(instance: TestInstance, eventType: string) {
+  if (COMMON_DIRECT_EVENTS.includes(eventType)) {
     return true;
   }
 
   if (isHostText(instance)) {
-    return TEXT_DIRECT_EVENTS.includes(eventName);
+    return TEXT_DIRECT_EVENTS.includes(eventType);
   }
 
   if (isHostTextInput(instance)) {
-    return TEXT_INPUT_DIRECT_EVENTS.includes(eventName);
+    return TEXT_INPUT_DIRECT_EVENTS.includes(eventType);
   }
 
   if (isHostImage(instance)) {
-    return IMAGE_DIRECT_EVENTS.includes(eventName);
+    return IMAGE_DIRECT_EVENTS.includes(eventType);
   }
 
   if (isHostScrollView(instance)) {
-    return SCROLL_VIEW_DIRECT_EVENTS.includes(eventName);
+    return SCROLL_VIEW_DIRECT_EVENTS.includes(eventType);
   }
 
   if (isHostModal(instance)) {
-    return MODAL_DIRECT_EVENTS.includes(eventName);
+    return MODAL_DIRECT_EVENTS.includes(eventType);
   }
 
   return false;
 }
 
 export type FindEventHandlerOptions = {
-  /** Only check the handler of the given element, e.g. for `fireEvent.layout`. */
-  direct?: boolean;
+  /** When `false`, only checks the handler of the given element, e.g. for `fireEvent.layout`. */
+  bubbles: boolean;
 };
 
 type FindEventHandlerResult = {
@@ -80,29 +80,29 @@ type FindEventHandlerResult = {
 
 /**
  * Finds the handler that should receive the event, as `fireEvent` does: events bubble up the
- * tree until an enabled handler is found, unless `direct` option is set.
+ * tree until an enabled handler is found, unless `bubbles` option is `false`.
  *
- * Note: handlers are looked up by the event name as passed, while event rules (direct events,
+ * Note: handlers are looked up by the event type as passed, while event rules (direct events,
  * `isEventEnabled`) use the name without the `on*` prefix.
  */
 export function findEventHandler(
   instance: TestInstance,
-  eventName: string,
-  options?: FindEventHandlerOptions,
+  eventType: string,
+  options: FindEventHandlerOptions,
 ): FindEventHandlerResult {
-  if (options?.direct) {
-    const handler = getEventHandlerFromProps(instance.props, eventName, { loose: true });
+  if (!options.bubbles) {
+    const handler = getEventHandlerFromProps(instance.props, eventType, { loose: true });
     return { handler: handler ?? null, skippedTargets: [] };
   }
 
-  const { owner, skippedTargets } = findBubblingHandlerOwner(instance, eventName, undefined, []);
+  const { owner, skippedTargets } = findBubblingHandlerOwner(instance, eventType, undefined, []);
   if (!owner) {
     return { handler: null, skippedTargets };
   }
 
-  if (owner.instance !== instance && isDirectEvent(owner.instance, normalizeEventName(eventName))) {
+  if (owner.instance !== instance && isDirectEvent(owner.instance, normalizeEventType(eventType))) {
     logger.warn(
-      `fireEvent: "${eventName}" event bubbled to the handler of an ancestor element. React Native does not bubble this event, and fireEvent will stop bubbling it in the next major version. Fire it on the element that has the handler instead.`,
+      `fireEvent: "${eventType}" event bubbled to the handler of an ancestor element. React Native does not bubble this event, and fireEvent will stop bubbling it in the next major version. Fire it on the element that has the handler instead.`,
       formatElement(owner.instance),
     );
   }
@@ -122,17 +122,17 @@ type FindHandlerOwnerResult = {
 
 function findBubblingHandlerOwner(
   instance: TestInstance,
-  eventName: string,
+  eventType: string,
   nearestTouchResponder: TestInstance | undefined,
   skippedTargets: TestInstance[],
 ): FindHandlerOwnerResult {
   const touchResponder = isTouchResponder(instance) ? instance : nearestTouchResponder;
 
   const handler =
-    getEventHandlerFromProps(instance.props, eventName, { loose: true }) ??
-    findEventHandlerFromFiber(instance.unstable_fiber, eventName);
+    getEventHandlerFromProps(instance.props, eventType, { loose: true }) ??
+    findEventHandlerFromFiber(instance.unstable_fiber, eventType);
   if (handler) {
-    if (isEventEnabled(instance, normalizeEventName(eventName), touchResponder)) {
+    if (isEventEnabled(instance, normalizeEventType(eventType), touchResponder)) {
       return { owner: { handler, instance }, skippedTargets };
     }
 
@@ -147,16 +147,16 @@ function findBubblingHandlerOwner(
     return { owner: null, skippedTargets };
   }
 
-  return findBubblingHandlerOwner(instance.parent, eventName, touchResponder, skippedTargets);
+  return findBubblingHandlerOwner(instance.parent, eventType, touchResponder, skippedTargets);
 }
 
-function findEventHandlerFromFiber(fiber: Fiber | null, eventName: string): EventHandler | null {
+function findEventHandlerFromFiber(fiber: Fiber | null, eventType: string): EventHandler | null {
   // Container fibers have memoizedProps set to null
   if (!fiber?.memoizedProps) {
     return null;
   }
 
-  const handler = getEventHandlerFromProps(fiber.memoizedProps, eventName, {
+  const handler = getEventHandlerFromProps(fiber.memoizedProps, eventType, {
     loose: true,
   });
   if (handler) {
@@ -168,5 +168,5 @@ function findEventHandlerFromFiber(fiber: Fiber | null, eventName: string): Even
     return null;
   }
 
-  return findEventHandlerFromFiber(fiber.return, eventName);
+  return findEventHandlerFromFiber(fiber.return, eventType);
 }
