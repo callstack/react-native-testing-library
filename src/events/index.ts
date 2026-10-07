@@ -6,4 +6,4 @@ export * from './handler';
 export { getPointerEventsBlocker, isPointerEventEnabled } from './is-enabled';
 export * from './native-state';
 export type { EventWarning } from './warnings';
-export { getPointerEventsWarning, logEventWarning } from './warnings';
+export { formatDisabledTargets, getPointerEventsWarning, logEventWarning } from './warnings';

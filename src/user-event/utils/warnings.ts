@@ -1,6 +1,11 @@
 import { getConfig } from '../../config';
 import type { EventWarning } from '../../events';
-import { getPointerEventsBlocker, getPointerEventsWarning, logEventWarning } from '../../events';
+import {
+  formatDisabledTargets,
+  getPointerEventsBlocker,
+  getPointerEventsWarning,
+  logEventWarning,
+} from '../../events';
 import { computeAriaDisabled } from '../../helpers/accessibility';
 import type { Interaction } from './interaction';
 
@@ -45,14 +50,11 @@ function getUnhandledInteractionWarning({
     return pointerEventsWarning;
   }
 
-  // `computeAriaDisabled` also covers non-editable `TextInput`.
+  // `computeAriaDisabled` also covers non-editable `TextInput`, which the message calls non-editable.
   const disabledTargets = skippedTargets.filter(computeAriaDisabled);
   if (disabledTargets.length > 0) {
     return {
-      message:
-        disabledTargets.length === 1
-          ? `${summary} The element is disabled.`
-          : `${summary} The elements are disabled.`,
+      message: `${summary} Cannot interact with ${formatDisabledTargets(disabledTargets)}.`,
       elements: disabledTargets,
     };
   }

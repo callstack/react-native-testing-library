@@ -37,15 +37,18 @@ This option is also available as `defaultHidden` alias for compatibility with [R
 
 ### `eventDiagnostics` option
 
-When `fireEvent` or `userEvent` doesn't call any handler, the test can silently do nothing, which can be confusing while debugging. When this option is enabled, a warning is logged in these cases:
+Logs a warning when `fireEvent` or `userEvent` doesn't call any handler, so a test doesn't silently do nothing. Defaults to `false`.
 
-- The handler is on a disabled element (e.g. a `Pressable` with `disabled={true}`, or a `TextInput` with `editable={false}`).
+A warning is logged in these cases:
+
+- The handler is on a disabled element, e.g. a `Pressable` with `disabled={true}`.
+- The element is a non-editable `TextInput` (`editable={false}`). It blocks most events, including `changeText`, `focus`, `blur`, `press` and `submitEditing`, also when the handler is on one of its ancestors. The warning shows the `TextInput`.
 - The element is blocked by `pointerEvents`, e.g. it is inside a `View` with `pointerEvents="none"`. The warning shows the element that sets `pointerEvents`. This takes precedence over the disabled warning, because the event wouldn't reach the element even if it were enabled.
 - Neither the element nor any of its ancestors has a handler for the event. For direct events like `layout`, which don't bubble, only the element itself is checked.
 
 A `userEvent` interaction, like `press()` or `type()`, dispatches several events. It warns only when none of them called a handler. For example, `longPress()` on an element that has only `onPress` warns, because `longPress()` doesn't dispatch a `press` event.
 
-No warning is logged when the event updates native state, e.g. `fireEvent.changeText` or `userEvent.type` on an uncontrolled `TextInput`. Defaults to `false`. Turn it on while debugging a test, or for the whole test suite in your Jest setup file:
+No warning is logged when the event updates native state, e.g. `fireEvent.changeText` or `userEvent.type` on an uncontrolled `TextInput`. Turn it on while debugging a test, or for the whole test suite in your Jest setup file:
 
 ```ts
 configure({ eventDiagnostics: true });

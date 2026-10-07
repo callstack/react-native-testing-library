@@ -1009,7 +1009,7 @@ describe('unhandled event warning', () => {
     );
   });
 
-  test('reports non-editable TextInput as disabled for events not affected by pointerEvents', async () => {
+  test('reports non-editable TextInput for events not affected by pointerEvents', async () => {
     await render(
       <View pointerEvents="none">
         <TextInput testID="input" editable={false} onChangeText={jest.fn()} />
@@ -1020,7 +1020,7 @@ describe('unhandled event warning', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatch(
-      /^Cannot fire the "changeText" event on a disabled element\./,
+      /^Cannot fire the "changeText" event on a non-editable TextInput\./,
     );
   });
 
@@ -1042,7 +1042,7 @@ describe('unhandled event warning', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "Cannot fire the "changeText" event on a disabled element.
+      "Cannot fire the "changeText" event on a non-editable TextInput.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
         <TextInput
@@ -1063,7 +1063,45 @@ describe('unhandled event warning', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatch(
-      new RegExp(`^Cannot fire the "${eventName}" event on a disabled element\\.`),
+      new RegExp(`^Cannot fire the "${eventName}" event on a non-editable TextInput\\.`),
+    );
+  });
+
+  test('names the non-editable TextInput when the handler is on its parent', async () => {
+    const onFocus = jest.fn();
+    await render(
+      <View testID="parent" onFocus={onFocus}>
+        <TextInput testID="input" editable={false} />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('input'), 'focus');
+
+    expect(onFocus).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "focus" event on a non-editable TextInput.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <TextInput
+          editable={false}
+          testID="input"
+        />"
+    `);
+  });
+
+  test('reports disabled elements when they include a non-editable TextInput', async () => {
+    await render(
+      <Pressable onPress={jest.fn()} disabled={true}>
+        <TextInput testID="input" editable={false} onPress={jest.fn()} />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByTestId('input'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatch(
+      /^Cannot fire the "press" event on disabled elements\./,
     );
   });
 

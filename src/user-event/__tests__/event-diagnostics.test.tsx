@@ -28,7 +28,7 @@ test('warns when pressing a disabled element', async () => {
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-    "press() did not call any event handlers. The element is disabled.
+    "press() did not call any event handlers. Cannot interact with a disabled element.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
       <View
@@ -156,7 +156,7 @@ test('warns when typing into a non-editable TextInput', async () => {
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-    "type() did not call any event handlers. The element is disabled.
+    "type() did not call any event handlers. Cannot interact with a non-editable TextInput.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
       <TextInput
@@ -175,10 +175,10 @@ test('warns when clearing or pasting into a non-editable TextInput', async () =>
 
   expect(warnSpy).toHaveBeenCalledTimes(2);
   expect(warnSpy.mock.calls[0][0]).toMatch(
-    /^clear\(\) did not call any event handlers\. The element is disabled\./,
+    /^clear\(\) did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
   );
   expect(warnSpy.mock.calls[1][0]).toMatch(
-    /^paste\(\) did not call any event handlers\. The element is disabled\./,
+    /^paste\(\) did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
   );
 });
 
@@ -192,7 +192,7 @@ test('warns when pressing a non-editable TextInput', async () => {
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatch(
-    /^press\(\) did not call any event handlers\. The element is disabled\./,
+    /^press\(\) did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
   );
 });
 

@@ -4,7 +4,9 @@ import type { TestInstance } from 'test-renderer';
 import { getConfig } from '../config';
 import { computeAriaDisabled } from '../helpers/accessibility';
 import { formatElement, formatJson } from '../helpers/format-element';
+import { isHostTextInput } from '../helpers/host-component-names';
 import { logger } from '../helpers/logger';
+import { isEditableTextInput } from '../helpers/text-input';
 import { normalizeEventName } from './handler';
 import { getPointerEventsBlockerForEvent } from './is-enabled';
 import { isDirectEvent } from './propagation';
@@ -89,6 +91,18 @@ export function getPointerEventsWarning(
   };
 }
 
+/**
+ * Describes the elements that `computeAriaDisabled` treats as disabled, e.g. "a disabled element".
+ * Non-editable `TextInput`s are called non-editable, which is what users set (`editable={false}`).
+ */
+export function formatDisabledTargets(targets: TestInstance[]): string {
+  if (targets.every((target) => isHostTextInput(target) && !isEditableTextInput(target))) {
+    return targets.length === 1 ? 'a non-editable TextInput' : 'non-editable TextInputs';
+  }
+
+  return targets.length === 1 ? 'a disabled element' : 'disabled elements';
+}
+
 function getUnhandledEventWarning(
   instance: TestInstance,
   eventName: string,
@@ -126,18 +140,16 @@ function getUnhandledEventWarning(
     return pointerEventsWarning;
   }
 
-  // `computeAriaDisabled` also covers non-editable `TextInput`. A responder declining the touch
-  // is a deliberate way of blocking events, so it doesn't warn.
+  // `computeAriaDisabled` also covers non-editable `TextInput`, which the message calls
+  // non-editable. A responder declining the touch is a deliberate way of blocking events, so it
+  // doesn't warn.
   const disabledTargets = skippedTargets.filter(computeAriaDisabled);
   if (disabledTargets.length === 0) {
     return null;
   }
 
   return {
-    message:
-      disabledTargets.length === 1
-        ? `Cannot fire the "${eventName}" event on a disabled element.`
-        : `Cannot fire the "${eventName}" event on disabled elements.`,
+    message: `Cannot fire the "${eventName}" event on ${formatDisabledTargets(disabledTargets)}.`,
     elements: disabledTargets,
   };
 }
