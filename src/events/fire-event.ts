@@ -10,8 +10,8 @@ import { normalizeEventName } from './handler';
 import { nativeState } from './native-state';
 import { findEventHandler } from './propagation';
 import type { EventName, EventProps, LayoutRectangle } from './types';
-import { warnAboutUnhandledEvent } from './warnings';
 import { updateNativeStateFromEvent } from './update-native-state';
+import { warnAboutUnhandledEvent } from './warnings';
 
 async function fireEvent(instance: TestInstance, eventName: EventName, ...data: unknown[]) {
   if (!isInstanceMounted(instance)) {

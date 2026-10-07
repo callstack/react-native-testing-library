@@ -18,14 +18,14 @@ export type UnhandledEventInfo = {
 
 /**
  * Warns when no handler ran because the target is disabled or nothing handles the event.
- * Opt out via `configure({ warnOnUnhandledEvent: false })`.
+ * Opt out via `configure({ eventDiagnostics: false })`.
  */
 export function warnAboutUnhandledEvent(
   instance: TestInstance,
   eventName: string,
   info: UnhandledEventInfo,
 ) {
-  if (!getConfig().warnOnUnhandledEvent) {
+  if (!getConfig().eventDiagnostics) {
     return;
   }
 
@@ -37,7 +37,7 @@ export function warnAboutUnhandledEvent(
   const elementJson = warning.element.toJSON();
   logger.warn(
     `${warning.message}\n` +
-      'If this is intentional, you can disable this warning via `configure({ warnOnUnhandledEvent: false })`.\n\n' +
+      'If this is intentional, you can disable this warning via `configure({ eventDiagnostics: false })`.\n\n' +
       redent(elementJson ? formatJson(elementJson) : '(hidden)', 2),
   );
 }

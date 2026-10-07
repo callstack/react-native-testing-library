@@ -598,7 +598,7 @@ describe('fireEvent.layout', () => {
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "  ▲ No handler found for the "layout" event on the element. "layout" events do not bubble to ancestors.
-          If this is intentional, you can disable this warning via \`configure({ warnOnUnhandledEvent: false })\`.
+          If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
             <View
               testID="view"
@@ -833,7 +833,7 @@ describe('unhandled event warning', () => {
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Tried to fire the "press" event on a disabled element, so its handler was not called.
-      If this is intentional, you can disable this warning via \`configure({ warnOnUnhandledEvent: false })\`.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
         <View
           accessibilityState={
@@ -862,7 +862,7 @@ describe('unhandled event warning', () => {
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "No handler found for the "press" event on the element or any of its ancestors.
-      If this is intentional, you can disable this warning via \`configure({ warnOnUnhandledEvent: false })\`.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
         <Text>
           Trigger
@@ -912,8 +912,8 @@ describe('unhandled event warning', () => {
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  test('does not warn when warnOnUnhandledEvent is turned off', async () => {
-    configure({ warnOnUnhandledEvent: false });
+  test('does not warn when eventDiagnostics is turned off', async () => {
+    configure({ eventDiagnostics: false });
     await render(
       <View>
         <Pressable onPress={jest.fn()} disabled={true}>
