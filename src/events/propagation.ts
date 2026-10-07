@@ -1,3 +1,4 @@
+import redent from 'redent';
 import type { Fiber, TestInstance } from 'test-renderer';
 
 import { formatElement } from '../helpers/format-element';
@@ -102,8 +103,8 @@ export function findEventHandler(
 
   if (owner.instance !== instance && isDirectEvent(owner.instance, normalizeEventType(eventType))) {
     logger.warn(
-      `fireEvent: "${eventType}" event bubbled to the handler of an ancestor element. React Native does not bubble this event, and fireEvent will stop bubbling it in the next major version. Fire it on the element that has the handler instead.`,
-      formatElement(owner.instance),
+      `fireEvent: "${eventType}" does not bubble in React Native. fireEvent will stop bubbling it in the next major version. ` +
+        `Fire it on:\n\n${redent(formatElement(owner.instance), 2)}`,
     );
   }
 

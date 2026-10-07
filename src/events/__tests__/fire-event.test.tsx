@@ -844,9 +844,11 @@ describe('direct events', () => {
     await fireEvent.scroll(screen.getByTestId('child'));
 
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "  ▲ fireEvent: "scroll" event bubbled to the handler of an ancestor element. React Native does not bubble this event, and fireEvent will stop bubbling it in the next major version. Fire it on the element that has the handler instead. <RCTScrollView
-            testID="scroll"
-          />
+      "  ▲ fireEvent: "scroll" does not bubble in React Native. fireEvent will stop bubbling it in the next major version. Fire it on:
+
+            <RCTScrollView
+              testID="scroll"
+            />
       "
     `);
   });
