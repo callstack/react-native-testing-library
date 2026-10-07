@@ -12,7 +12,6 @@ import { getPointerEventsBlockerForEvent } from './is-enabled';
 import { isDirectEvent } from './propagation';
 
 type UnhandledEventInfo = {
-  /** Elements whose handler was rejected by `isEventEnabled`, nearest first. */
   skippedTargets: TestInstance[];
   hasUpdatedNativeState: boolean;
 };
@@ -20,13 +19,12 @@ type UnhandledEventInfo = {
 export type EventWarning = {
   message: string;
   elements: TestInstance[];
-  /** Elements whose `pointerEvents` blocked the event. Printed without their children. */
+  /** Elements whose `pointerEvents` blocked the event. */
   pointerEventsBlockers?: TestInstance[];
 };
 
 /**
  * Warns when no handler ran because the target is disabled or nothing handles the event.
- * Enabled via `configure({ eventDiagnostics: true })`.
  */
 export function warnAboutUnhandledEvent(
   instance: TestInstance,
@@ -43,9 +41,6 @@ export function warnAboutUnhandledEvent(
   }
 }
 
-/**
- * Logs the warning with the opt-out hint, the elements it is about and what blocked them.
- */
 export function logEventWarning({ message, elements, pointerEventsBlockers = [] }: EventWarning) {
   const header =
     `${message}\n` +
@@ -67,8 +62,6 @@ export function logEventWarning({ message, elements, pointerEventsBlockers = [] 
  * blocked none of them.
  *
  * @param targets Skipped elements, nearest first.
- * @param getBlocker Returns the element whose `pointerEvents` blocked the target, if any.
- * @param formatMessage Builds the message from the number of blocked elements.
  */
 export function getPointerEventsWarning(
   targets: TestInstance[],
@@ -140,9 +133,8 @@ function getUnhandledEventWarning(
     return pointerEventsWarning;
   }
 
-  // `computeAriaDisabled` also covers non-editable `TextInput`, which the message calls
-  // non-editable. A responder declining the touch is a deliberate way of blocking events, so it
-  // doesn't warn.
+  // `computeAriaDisabled` also covers non-editable `TextInput`. A responder declining the touch
+  // is a deliberate way of blocking events, so it doesn't warn.
   const disabledTargets = skippedTargets.filter(computeAriaDisabled);
   if (disabledTargets.length === 0) {
     return null;

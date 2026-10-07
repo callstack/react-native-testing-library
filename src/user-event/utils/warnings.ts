@@ -11,7 +11,7 @@ import type { Interaction } from './interaction';
 
 /**
  * Warns when none of the events of a `userEvent` interaction called a handler or updated
- * native state. Enabled via `configure({ eventDiagnostics: true })`.
+ * native state.
  */
 export function warnAboutUnhandledInteraction(interaction: Interaction) {
   if (!getConfig().eventDiagnostics) {
@@ -50,7 +50,7 @@ function getUnhandledInteractionWarning({
     return pointerEventsWarning;
   }
 
-  // `computeAriaDisabled` also covers non-editable `TextInput`, which the message calls non-editable.
+  // `computeAriaDisabled` also covers non-editable `TextInput`.
   const disabledTargets = skippedTargets.filter(computeAriaDisabled);
   if (disabledTargets.length > 0) {
     return {

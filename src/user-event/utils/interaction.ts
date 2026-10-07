@@ -23,9 +23,6 @@ export class Interaction {
     public target: TestInstance,
   ) {}
 
-  /**
-   * Dispatches the event to `target` with `dispatchEvent` and records it.
-   */
   async dispatchEvent(eventName: string, ...event: unknown[]) {
     const hasCalledHandler = await dispatchEvent(this.target, eventName, ...event);
     this.recordEvent(eventName, hasCalledHandler);
