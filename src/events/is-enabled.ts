@@ -35,7 +35,7 @@ const eventsAffectedByPointerEventsProp = new Set(['press']);
 /**
  * Expects event name without the `on*` prefix (see `normalizeEventName`).
  */
-export function isBlockableByPointerEvents(eventName: string): boolean {
+export function isEventBlockableByPointerEvents(eventName: string): boolean {
   return eventsAffectedByPointerEventsProp.has(eventName);
 }
 
@@ -61,7 +61,7 @@ export function isEventEnabled(
     );
   }
 
-  if (isBlockableByPointerEvents(eventName) && !isPointerEventEnabled(instance)) {
+  if (isEventBlockableByPointerEvents(eventName) && !isPointerEventEnabled(instance)) {
     return false;
   }
 

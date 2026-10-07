@@ -1001,12 +1001,40 @@ describe('unhandled event warning', () => {
     await fireEvent.press(screen.getByTestId('box-none'));
 
     expect(warnSpy).toHaveBeenCalledTimes(2);
-    expect(warnSpy.mock.calls[0][0]).toMatch(
-      /Blocked by:\n\n {2}<View\n {4}pointerEvents="box-only"\n {4}testID="box-only"\n {2}\/>$/,
-    );
-    expect(warnSpy.mock.calls[1][0]).toMatch(
-      /Blocked by:\n\n {2}<View\n {4}accessible=\{true\}\n {4}pointerEvents="box-none"\n {4}testID="box-none"\n {2}\/>$/,
-    );
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "press" event on an element blocked by pointerEvents.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <View
+          accessible={true}
+          testID="inside-box-only"
+        />
+
+      Blocked by:
+
+        <View
+          pointerEvents="box-only"
+          testID="box-only"
+        />"
+    `);
+    expect(warnSpy.mock.calls[1][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "press" event on an element blocked by pointerEvents.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <View
+          accessible={true}
+          pointerEvents="box-none"
+          testID="box-none"
+        />
+
+      Blocked by:
+
+        <View
+          accessible={true}
+          pointerEvents="box-none"
+          testID="box-none"
+        />"
+    `);
   });
 
   test('reports non-editable TextInput for events not affected by pointerEvents', async () => {

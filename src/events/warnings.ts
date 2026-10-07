@@ -8,7 +8,7 @@ import { isHostTextInput } from '../helpers/host-component-names';
 import { logger } from '../helpers/logger';
 import { isEditableTextInput } from '../helpers/text-input';
 import { normalizeEventName } from './handler';
-import { getPointerEventsBlocker, isBlockableByPointerEvents } from './is-enabled';
+import { getPointerEventsBlocker, isEventBlockableByPointerEvents } from './is-enabled';
 import { isDirectEvent } from './propagation';
 
 type UnhandledEventInfo = {
@@ -51,7 +51,7 @@ export function logEventWarning({ message, elements, pointerEventsBlockers = [] 
     .map((json) => redent(formatJson(json), 2));
   // Blockers are often large containers, so they are printed without their children.
   const blockerBlocks = [...new Set(pointerEventsBlockers)].map((blocker) =>
-    redent(formatElement(blocker, { highlight: false }), 2),
+    redent(formatElement(blocker), 2),
   );
   const blockerSection = blockerBlocks.length > 0 ? ['Blocked by:', ...blockerBlocks] : [];
   logger.warn([header, ...elementBlocks, ...blockerSection].join('\n\n'));
@@ -116,7 +116,7 @@ function getUnhandledEventWarning(
   }
 
   // `pointerEvents` is checked first: it blocks the event even if the element is enabled.
-  const blocked = isBlockableByPointerEvents(normalizeEventName(eventName))
+  const blocked = isEventBlockableByPointerEvents(normalizeEventName(eventName))
     ? getPointerEventsBlockedTargets(skippedTargets)
     : null;
   if (blocked != null) {
