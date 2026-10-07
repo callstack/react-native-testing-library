@@ -8,7 +8,7 @@ import { mergeEventProps } from './builders/merge';
 import { buildScrollEvent } from './builders/scroll';
 import { normalizeEventType } from './handler';
 import { nativeState } from './native-state';
-import { findEventHandler, type FindEventHandlerOptions } from './propagation';
+import { findEventHandler } from './propagation';
 import type { EventProps, EventType, LayoutRectangle } from './types';
 import { updateNativeStateFromEvent } from './update-native-state';
 import { warnAboutUnhandledEvent } from './warnings';
@@ -17,13 +17,14 @@ async function fireEvent(instance: TestInstance, eventType: EventType, ...data: 
   return await fireEventInternal(instance, { type: eventType, data, bubbles: true });
 }
 
-type FireEventOptions = FindEventHandlerOptions & {
+type FireEventOptions = {
   type: EventType;
   data: unknown[];
+  bubbles: boolean;
 };
 
 async function fireEventInternal(instance: TestInstance, options: FireEventOptions) {
-  const { type, data } = options;
+  const { type, data, bubbles } = options;
   if (!isInstanceMounted(instance)) {
     return;
   }
@@ -35,7 +36,7 @@ async function fireEventInternal(instance: TestInstance, options: FireEventOptio
     data[0],
   );
 
-  const { handler, skippedTargets } = findEventHandler(instance, type, options);
+  const { handler, skippedTargets } = findEventHandler(instance, type, { bubbles });
   if (!handler) {
     warnAboutUnhandledEvent(instance, type, { skippedTargets, hasUpdatedNativeState });
     return;
