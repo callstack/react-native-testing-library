@@ -700,11 +700,13 @@ describe('direct events', () => {
     warnSpy.mockRestore();
   });
 
-  const directEventCases: Array<{
+  type DirectEventCase = {
     name: string;
     eventType: string;
     ui: (handler: jest.Mock) => React.ReactElement;
-  }> = [
+  };
+
+  const directEventCases: DirectEventCase[] = [
     {
       name: 'layout from View content',
       eventType: 'layout',
@@ -727,15 +729,15 @@ describe('direct events', () => {
         </Pressable>
       ),
     },
-    ...(['accessibilityTap', 'magicTap', 'accessibilityEscape'] as const).map((eventType) => ({
-      name: `${eventType} from View content`,
-      eventType,
-      ui: (handler: jest.Mock) => (
-        <View testID="emitter" accessible {...{ [getEventHandlerName(eventType)]: handler }}>
+    ...buildDirectEventCases(
+      'View content',
+      ['accessibilityTap', 'magicTap', 'accessibilityEscape'],
+      (handlerProps) => (
+        <View testID="emitter" accessible {...handlerProps}>
           <View testID="target" />
         </View>
       ),
-    })),
+    ),
     {
       name: 'textLayout from nested Text',
       eventType: 'textLayout',
@@ -745,33 +747,32 @@ describe('direct events', () => {
         </Text>
       ),
     },
-    ...(['scroll', 'selectionChange', 'contentSizeChange'] as const).map((eventType) => ({
-      name: `${eventType} from TextInput content`,
-      eventType,
-      ui: (handler: jest.Mock) => (
-        <TextInput testID="emitter" {...{ [getEventHandlerName(eventType)]: handler }}>
+    ...buildDirectEventCases(
+      'TextInput content',
+      ['scroll', 'selectionChange', 'contentSizeChange'],
+      (handlerProps) => (
+        <TextInput testID="emitter" {...handlerProps}>
           <Text testID="target">Nested</Text>
         </TextInput>
       ),
-    })),
-    ...(['loadStart', 'progress', 'partialLoad', 'load', 'error', 'loadEnd'] as const).map(
-      (eventType) => ({
-        name: `${eventType} from Image content`,
-        eventType,
-        // Image does not accept children, clone it to fire the event on a nested element.
-        ui: (handler: jest.Mock) =>
-          React.cloneElement(
-            <Image
-              testID="emitter"
-              source={{ uri: 'https://example.com/image.png' }}
-              {...{ [getEventHandlerName(eventType)]: handler }}
-            />,
-            {},
-            <Text testID="target">Nested</Text>,
-          ),
-      }),
     ),
-    ...(
+    ...buildDirectEventCases(
+      'Image content',
+      ['loadStart', 'progress', 'partialLoad', 'load', 'error', 'loadEnd'],
+      // Image does not accept children, clone it to fire the event on a nested element.
+      (handlerProps) =>
+        React.cloneElement(
+          <Image
+            testID="emitter"
+            source={{ uri: 'https://example.com/image.png' }}
+            {...handlerProps}
+          />,
+          {},
+          <Text testID="target">Nested</Text>,
+        ),
+    ),
+    ...buildDirectEventCases(
+      'ScrollView content',
       [
         'scroll',
         'scrollBeginDrag',
@@ -780,16 +781,13 @@ describe('direct events', () => {
         'momentumScrollEnd',
         'scrollToTop',
         'contentSizeChange',
-      ] as const
-    ).map((eventType) => ({
-      name: `${eventType} from ScrollView content`,
-      eventType,
-      ui: (handler: jest.Mock) => (
-        <ScrollView testID="emitter" {...{ [getEventHandlerName(eventType)]: handler }}>
+      ],
+      (handlerProps) => (
+        <ScrollView testID="emitter" {...handlerProps}>
           <View testID="target" />
         </ScrollView>
       ),
-    })),
+    ),
     {
       name: 'scroll from TextInput to ancestor ScrollView',
       eventType: 'scroll',
@@ -824,16 +822,29 @@ describe('direct events', () => {
         />
       ),
     },
-    ...(['requestClose', 'show', 'dismiss', 'orientationChange'] as const).map((eventType) => ({
-      name: `${eventType} from Modal content`,
-      eventType,
-      ui: (handler: jest.Mock) => (
-        <Modal testID="emitter" visible {...{ [getEventHandlerName(eventType)]: handler }}>
+    ...buildDirectEventCases(
+      'Modal content',
+      ['requestClose', 'show', 'dismiss', 'orientationChange'],
+      (handlerProps) => (
+        <Modal testID="emitter" visible {...handlerProps}>
           <Text testID="target">Content</Text>
         </Modal>
       ),
-    })),
+    ),
   ];
+
+  // Builds one case per event type, passing the matching `on*` handler prop to `ui`.
+  function buildDirectEventCases(
+    source: string,
+    eventTypes: string[],
+    ui: (handlerProps: Record<string, jest.Mock>) => React.ReactElement,
+  ): DirectEventCase[] {
+    return eventTypes.map((eventType) => ({
+      name: `${eventType} from ${source}`,
+      eventType,
+      ui: (handler) => ui({ [getEventHandlerName(eventType)]: handler }),
+    }));
+  }
 
   test.each(directEventCases)('bubbles $name with a warning', async ({ eventType, ui }) => {
     const handler = jest.fn();

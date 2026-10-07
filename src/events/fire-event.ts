@@ -17,6 +17,31 @@ async function fireEvent(instance: TestInstance, eventType: EventType, ...data: 
   return await fireEventInternal(instance, { type: eventType, data, bubbles: true });
 }
 
+fireEvent.changeText = async (instance: TestInstance, text: string) =>
+  await fireEvent(instance, 'changeText', text);
+
+fireEvent.press = async (instance: TestInstance, eventProps?: EventProps) => {
+  await fireEvent(instance, 'press', mergeEventProps(buildTouchEvent(), eventProps));
+};
+
+fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
+  const layoutMeasurement = isHostScrollView(instance)
+    ? nativeState.layoutSizeForInstance.get(instance)
+    : undefined;
+  const event = buildScrollEvent(undefined, { layoutMeasurement });
+  await fireEvent(instance, 'scroll', mergeEventProps(event, eventProps));
+};
+
+// Unlike `fireEvent(instance, 'layout')`, does not bubble, as React Native delivers layout events
+// only to the measured element.
+fireEvent.layout = async (instance: TestInstance, layout?: Partial<LayoutRectangle>) => {
+  await fireEventInternal(instance, {
+    type: 'layout',
+    data: [buildLayoutEvent(layout)],
+    bubbles: false,
+  });
+};
+
 type FireEventOptions = {
   type: EventType;
   data: unknown[];
@@ -49,30 +74,5 @@ async function fireEventInternal(instance: TestInstance, options: FireEventOptio
 
   return returnValue;
 }
-
-fireEvent.changeText = async (instance: TestInstance, text: string) =>
-  await fireEvent(instance, 'changeText', text);
-
-fireEvent.press = async (instance: TestInstance, eventProps?: EventProps) => {
-  await fireEvent(instance, 'press', mergeEventProps(buildTouchEvent(), eventProps));
-};
-
-fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
-  const layoutMeasurement = isHostScrollView(instance)
-    ? nativeState.layoutSizeForInstance.get(instance)
-    : undefined;
-  const event = buildScrollEvent(undefined, { layoutMeasurement });
-  await fireEvent(instance, 'scroll', mergeEventProps(event, eventProps));
-};
-
-// Unlike `fireEvent(instance, 'layout')`, does not bubble, as React Native delivers layout events
-// only to the measured element.
-fireEvent.layout = async (instance: TestInstance, layout?: Partial<LayoutRectangle>) => {
-  await fireEventInternal(instance, {
-    type: 'layout',
-    data: [buildLayoutEvent(layout)],
-    bubbles: false,
-  });
-};
 
 export { fireEvent };
