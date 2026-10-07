@@ -22,11 +22,12 @@ export async function clear(this: UserEventInstance, instance: TestInstance): Pr
     );
   }
 
+  const interaction = new Interaction('clear', instance);
   if (!isEditableTextInput(instance) || !isPointerEventEnabled(instance)) {
+    interaction.skippedTargets.push(instance);
+    warnAboutUnhandledInteraction(interaction);
     return;
   }
-
-  const interaction = new Interaction('clear', instance);
 
   // 1. Enter instance
   await interaction.dispatchEvent('focus', buildFocusEvent());

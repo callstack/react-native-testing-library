@@ -148,6 +148,53 @@ test('does not warn when the interaction updates native state (uncontrolled Text
   expect(warnSpy).not.toHaveBeenCalled();
 });
 
+test('warns when typing into a non-editable TextInput', async () => {
+  await render(<TextInput testID="input" editable={false} onChangeText={jest.fn()} />);
+  const user = userEvent.setup();
+
+  await user.type(screen.getByTestId('input'), 'Hello');
+
+  expect(warnSpy).toHaveBeenCalledTimes(1);
+  expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+    "type() did not call any event handlers. The element is disabled.
+    If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+      <TextInput
+        editable={false}
+        testID="input"
+      />"
+  `);
+});
+
+test('warns when clearing or pasting into a non-editable TextInput', async () => {
+  await render(<TextInput testID="input" editable={false} onChangeText={jest.fn()} />);
+  const user = userEvent.setup();
+
+  await user.clear(screen.getByTestId('input'));
+  await user.paste(screen.getByTestId('input'), 'Hello');
+
+  expect(warnSpy).toHaveBeenCalledTimes(2);
+  expect(warnSpy.mock.calls[0][0]).toMatch(
+    /^clear\(\) did not call any event handlers\. The element is disabled\./,
+  );
+  expect(warnSpy.mock.calls[1][0]).toMatch(
+    /^paste\(\) did not call any event handlers\. The element is disabled\./,
+  );
+});
+
+test('does not warn when typing into a TextInput blocked by pointerEvents="none"', async () => {
+  await render(
+    <View pointerEvents="none">
+      <TextInput testID="input" onChangeText={jest.fn()} />
+    </View>,
+  );
+  const user = userEvent.setup();
+
+  await user.type(screen.getByTestId('input'), 'Hello');
+
+  expect(warnSpy).not.toHaveBeenCalled();
+});
+
 test('does not warn when the press is blocked by pointerEvents="none"', async () => {
   await render(
     <View pointerEvents="none">

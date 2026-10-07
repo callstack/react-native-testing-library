@@ -39,12 +39,12 @@ This option is also available as `defaultHidden` alias for compatibility with [R
 
 When `fireEvent` or `userEvent` doesn't call any handler, the test can silently do nothing, which can be confusing while debugging. When this option is enabled, a warning is logged in these cases:
 
-- The handler is on a disabled element (e.g. a `Pressable` with `disabled={true}`).
+- The handler is on a disabled element (e.g. a `Pressable` with `disabled={true}`, or a `TextInput` with `editable={false}`).
 - Neither the element nor any of its ancestors has a handler for the event. For direct events like `layout`, which don't bubble, only the element itself is checked.
 
 A `userEvent` interaction, like `press()` or `type()`, dispatches several events. It warns only when none of them called a handler. For example, `longPress()` on an element that has only `onPress` warns, because `longPress()` doesn't dispatch a `press` event.
 
-No warning is logged when the event is blocked on purpose (`pointerEvents="none"`, non-editable `TextInput`), or when it updates native state, e.g. `fireEvent.changeText` or `userEvent.type` on an uncontrolled `TextInput`. Defaults to `false`. Turn it on while debugging a test, or for the whole test suite in your Jest setup file:
+No warning is logged when the event is blocked by `pointerEvents="none"`, or when it updates native state, e.g. `fireEvent.changeText` or `userEvent.type` on an uncontrolled `TextInput`. Defaults to `false`. Turn it on while debugging a test, or for the whole test suite in your Jest setup file:
 
 ```ts
 configure({ eventDiagnostics: true });

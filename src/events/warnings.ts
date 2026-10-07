@@ -4,9 +4,7 @@ import type { TestInstance } from 'test-renderer';
 import { getConfig } from '../config';
 import { computeAriaDisabled } from '../helpers/accessibility';
 import { formatJson } from '../helpers/format-element';
-import { isHostTextInput } from '../helpers/host-component-names';
 import { logger } from '../helpers/logger';
-import { isEditableTextInput } from '../helpers/text-input';
 import { normalizeEventName } from './handler';
 import { isDirectEvent } from './propagation';
 
@@ -54,16 +52,6 @@ export function logEventWarning({ message, elements }: EventWarning) {
   logger.warn([header, ...elementBlocks].join('\n\n'));
 }
 
-export function isWarnableDisabledTarget(target: TestInstance): boolean {
-  // `computeAriaDisabled` treats non-editable TextInput as disabled for a11y purposes,
-  // but firing events on it is expected, not a bug worth warning about.
-  if (isHostTextInput(target) && !isEditableTextInput(target)) {
-    return false;
-  }
-
-  return computeAriaDisabled(target);
-}
-
 function getUnhandledEventWarning(
   instance: TestInstance,
   eventName: string,
@@ -88,9 +76,9 @@ function getUnhandledEventWarning(
     };
   }
 
-  // Only disabled elements are reported. Other rejections (`pointerEvents`, non-editable
-  // `TextInput`, responder declining the touch) are deliberate ways of blocking events.
-  const disabledTargets = skippedTargets.filter(isWarnableDisabledTarget);
+  // `computeAriaDisabled` also covers non-editable `TextInput`. Other rejections (`pointerEvents`,
+  // responder declining the touch) are deliberate ways of blocking events.
+  const disabledTargets = skippedTargets.filter(computeAriaDisabled);
   if (disabledTargets.length === 0) {
     return null;
   }

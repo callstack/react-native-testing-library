@@ -927,12 +927,21 @@ describe('unhandled event warning', () => {
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  test('does not warn when the handler is blocked by non-editable TextInput', async () => {
+  test('warns when the handler is blocked by non-editable TextInput', async () => {
     await render(<TextInput testID="input" editable={false} onChangeText={jest.fn()} />);
 
     await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
 
-    expect(warnSpy).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "changeText" event on a disabled element.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <TextInput
+          editable={false}
+          testID="input"
+        />"
+    `);
   });
 
   test('does not warn when the event updates native state (uncontrolled TextInput)', async () => {

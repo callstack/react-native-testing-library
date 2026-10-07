@@ -1,6 +1,7 @@
 import { getConfig } from '../../config';
 import type { EventWarning } from '../../events';
-import { isWarnableDisabledTarget, logEventWarning } from '../../events';
+import { logEventWarning } from '../../events';
+import { computeAriaDisabled } from '../../helpers/accessibility';
 import type { Interaction } from './interaction';
 
 /**
@@ -31,7 +32,8 @@ function getUnhandledInteractionWarning({
 }: Interaction): EventWarning | null {
   const summary = `${name}() did not call any event handlers.`;
 
-  const disabledTargets = skippedTargets.filter(isWarnableDisabledTarget);
+  // `computeAriaDisabled` also covers non-editable `TextInput`.
+  const disabledTargets = skippedTargets.filter(computeAriaDisabled);
   if (disabledTargets.length > 0) {
     return {
       message:

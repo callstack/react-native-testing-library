@@ -39,12 +39,13 @@ export async function type(
     );
   }
 
-  // Skip events if the instance is disabled
+  const interaction = new Interaction('type', instance);
   if (!isEditableTextInput(instance) || !isPointerEventEnabled(instance)) {
+    interaction.skippedTargets.push(instance);
+    warnAboutUnhandledInteraction(interaction);
     return;
   }
 
-  const interaction = new Interaction('type', instance);
   const keys = parseKeys(text);
 
   if (!options?.skipPress) {
