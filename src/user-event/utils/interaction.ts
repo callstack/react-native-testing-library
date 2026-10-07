@@ -27,8 +27,17 @@ export class Interaction {
    * Dispatches the event to `target` with `dispatchEvent` and records it.
    */
   async dispatchEvent(eventName: string, ...event: unknown[]) {
+    const hasCalledHandler = await dispatchEvent(this.target, eventName, ...event);
+    this.recordEvent(eventName, hasCalledHandler);
+  }
+
+  /**
+   * Records an event whose handler the action called itself instead of using `dispatchEvent`,
+   * e.g. `pullToRefresh()` calling `onRefresh` from the `refreshControl` prop.
+   */
+  recordEvent(eventName: string, hasCalledHandler: boolean) {
     this.eventNames.push(eventName);
-    if (await dispatchEvent(this.target, eventName, ...event)) {
+    if (hasCalledHandler) {
       this.hasCalledHandler = true;
     }
   }

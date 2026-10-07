@@ -13,7 +13,7 @@ import { isDirectEvent } from './propagation';
 type UnhandledEventInfo = {
   /** Elements whose handler was rejected by `isEventEnabled`, nearest first. */
   skippedTargets: TestInstance[];
-  didUpdateNativeState: boolean;
+  hasUpdatedNativeState: boolean;
 };
 
 export type EventWarning = {
@@ -67,7 +67,7 @@ export function isWarnableDisabledTarget(target: TestInstance): boolean {
 function getUnhandledEventWarning(
   instance: TestInstance,
   eventName: string,
-  { skippedTargets, didUpdateNativeState }: UnhandledEventInfo,
+  { skippedTargets, hasUpdatedNativeState }: UnhandledEventInfo,
 ): EventWarning | null {
   if (skippedTargets.length === 0) {
     if (isDirectEvent(normalizeEventName(eventName))) {
@@ -78,7 +78,7 @@ function getUnhandledEventWarning(
     }
 
     // The event still had an effect, e.g. `changeText` on an uncontrolled TextInput updates its value.
-    if (didUpdateNativeState) {
+    if (hasUpdatedNativeState) {
       return null;
     }
 

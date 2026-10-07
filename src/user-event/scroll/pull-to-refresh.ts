@@ -18,15 +18,17 @@ export async function pullToRefresh(
   }
 
   const interaction = new Interaction('pullToRefresh', instance);
-  interaction.eventNames.push('refresh');
 
-  const refreshControl = instance.props.refreshControl;
-  if (typeof refreshControl?.props?.onRefresh === 'function') {
+  // `refreshControl` is an element prop, not a rendered host instance, so `dispatchEvent`
+  // can't reach its `onRefresh` handler.
+  const onRefresh = instance.props.refreshControl?.props?.onRefresh;
+  const hasHandler = typeof onRefresh === 'function';
+  if (hasHandler) {
     await act(() => {
-      refreshControl.props.onRefresh();
+      onRefresh();
     });
-    interaction.hasCalledHandler = true;
   }
 
+  interaction.recordEvent('refresh', hasHandler);
   warnAboutUnhandledInteraction(interaction);
 }

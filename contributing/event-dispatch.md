@@ -33,9 +33,9 @@ Each step uses `dispatchEvent()`, which only calls the target's own handler. It 
 
 For the `eventDiagnostics` warning, each action tracks itself with an `Interaction` from `src/user-event/utils/interaction.ts`:
 
-- Dispatch events with `interaction.dispatchEvent()`, so it records whether any handler ran. Events go to `interaction.target`, which is the element the action was called with, unless the action moves it (as `press()` does when an ancestor handles the press).
+- Dispatch events with `interaction.dispatchEvent()`, so it records whether any handler ran. Events go to `interaction.target`, which is the element the action was called with, unless the action moves it (as `press()` does when an ancestor handles the press). If the action has to call a handler itself, record it with `interaction.recordEvent()` (as `pullToRefresh()` does for `onRefresh` on the `refreshControl` prop).
 - Set `hasUpdatedNativeState` when the action writes to `nativeState`.
-- Add elements that could handle the action but are disabled to `skippedTargets`.
+- Add elements that could handle the action but don't accept it to `skippedTargets`: disabled, blocked by `pointerEvents`, or with a responder that declines the touch. The warning names only the disabled ones, and skips the warning if every skipped element blocked the action on purpose.
 - Call `warnAboutUnhandledInteraction()` from `src/user-event/utils/warnings.ts` at the end. It warns only if no handler ran and native state didn't change.
 
 ## Guidelines

@@ -19,7 +19,7 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
   }
 
   // `fireEvent` accepts event names with and without the `on*` prefix.
-  const didUpdateNativeState = updateNativeStateFromEvent(
+  const hasUpdatedNativeState = updateNativeStateFromEvent(
     instance,
     normalizeEventName(eventName),
     data[0],
@@ -27,7 +27,7 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
 
   const { handler, skippedTargets } = findEventHandler(instance, eventName);
   if (!handler) {
-    warnAboutUnhandledEvent(instance, eventName, { skippedTargets, didUpdateNativeState });
+    warnAboutUnhandledEvent(instance, eventName, { skippedTargets, hasUpdatedNativeState });
     return;
   }
 

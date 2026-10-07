@@ -10,6 +10,9 @@ type Config = {
   /** Default value for `includeHiddenElements` query option. */
   defaultIncludeHiddenElements: boolean;
 
+  /** Warn when `fireEvent` or a `userEvent` interaction calls no handler. Off by default. */
+  eventDiagnostics: boolean;
+
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
 };
@@ -31,6 +34,21 @@ Default timeout, in ms, for async helper functions (`waitFor`, `waitForElementTo
 Default value for [includeHiddenElements](./queries.md#includehiddenelements-option) query option for all queries. The default value is set to `false`, so all queries will not match [elements hidden from accessibility](#ishiddenfromaccessibility). This is because the users of the app would not be able to see such elements.
 
 This option is also available as `defaultHidden` alias for compatibility with [React Testing Library](https://testing-library.com/docs/dom-testing-library/api-configuration/#defaulthidden).
+
+### `eventDiagnostics` option
+
+When `fireEvent` or `userEvent` doesn't call any handler, the test can silently do nothing, which can be confusing while debugging. When this option is enabled, a warning is logged in these cases:
+
+- The handler is on a disabled element (e.g. a `Pressable` with `disabled={true}`).
+- Neither the element nor any of its ancestors has a handler for the event. For direct events like `layout`, which don't bubble, only the element itself is checked.
+
+A `userEvent` interaction, like `press()` or `type()`, dispatches several events. It warns only when none of them called a handler. For example, `longPress()` on an element that has only `onPress` warns, because `longPress()` doesn't dispatch a `press` event.
+
+No warning is logged when the event is blocked on purpose (`pointerEvents="none"`, non-editable `TextInput`), or when it updates native state, e.g. `fireEvent.changeText` or `userEvent.type` on an uncontrolled `TextInput`. Defaults to `false`. Turn it on while debugging a test, or for the whole test suite in your Jest setup file:
+
+```ts
+configure({ eventDiagnostics: true });
+```
 
 ### `defaultDebugOptions` option
 
