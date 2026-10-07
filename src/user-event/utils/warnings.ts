@@ -34,7 +34,7 @@ function getUnhandledInteractionWarning({
   eventNames,
   skippedTargets,
 }: Interaction): EventWarning | null {
-  const summary = `${name}() did not call any event handlers.`;
+  const summary = `${name}() interaction did not call any event handlers.`;
 
   // `pointerEvents` is checked first: it blocks the interaction even if the element is enabled.
   const blocked = getPointerEventsBlockedTargets(skippedTargets);

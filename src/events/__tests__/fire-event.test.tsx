@@ -600,7 +600,7 @@ describe('fireEvent.layout', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "  ▲ The element has no handler for the "layout" event. "layout" events do not bubble to ancestors.
+      "  ▲ No "onLayout" handler found on the element. "layout" events do not bubble to ancestors.
           If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
             <View
@@ -903,7 +903,7 @@ describe('unhandled event warning', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "The element and its ancestors have no handler for the "press" event.
+      "No "onPress" handler found on the element or its ancestors.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
         <Text>

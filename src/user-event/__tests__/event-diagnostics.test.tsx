@@ -28,7 +28,7 @@ test('warns when pressing a disabled element', async () => {
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-    "press() did not call any event handlers. Cannot interact with a disabled element.
+    "press() interaction did not call any event handlers. Cannot interact with a disabled element.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
       <View
@@ -58,7 +58,7 @@ test('warns when no element handles the press', async () => {
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-    "press() did not call any event handlers. The element and its ancestors have no handlers for this interaction.
+    "press() interaction did not call any event handlers. The element and its ancestors have no handlers for this interaction.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
       <Text>
@@ -77,7 +77,7 @@ test('warns when none of the dispatched events has a handler', async () => {
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-    "longPress() did not call any event handlers. The element has no handler for the "pressIn", "longPress" or "pressOut" events.
+    "longPress() interaction did not call any event handlers. The element has no handler for the "pressIn", "longPress" or "pressOut" events.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
       <View
@@ -94,7 +94,7 @@ test('warns when pulling to refresh without an onRefresh handler', async () => {
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-    "pullToRefresh() did not call any event handlers. The element has no handler for the "refresh" event.
+    "pullToRefresh() interaction did not call any event handlers. The element has no handler for the "refresh" event.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
       <RCTScrollView
@@ -115,7 +115,7 @@ test('warns when triggering an accessibility action without a handler', async ()
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-    "accessibilityAction() did not call any event handlers. The element has no handler for the "accessibilityAction" event.
+    "accessibilityAction() interaction did not call any event handlers. The element has no handler for the "accessibilityAction" event.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
       <View
@@ -156,7 +156,7 @@ test('warns when typing into a non-editable TextInput', async () => {
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-    "type() did not call any event handlers. Cannot interact with a non-editable TextInput.
+    "type() interaction did not call any event handlers. Cannot interact with a non-editable TextInput.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
       <TextInput
@@ -175,10 +175,10 @@ test('warns when clearing or pasting into a non-editable TextInput', async () =>
 
   expect(warnSpy).toHaveBeenCalledTimes(2);
   expect(warnSpy.mock.calls[0][0]).toMatch(
-    /^clear\(\) did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
+    /^clear\(\) interaction did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
   );
   expect(warnSpy.mock.calls[1][0]).toMatch(
-    /^paste\(\) did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
+    /^paste\(\) interaction did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
   );
 });
 
@@ -192,7 +192,7 @@ test('warns when pressing a non-editable TextInput', async () => {
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatch(
-    /^press\(\) did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
+    /^press\(\) interaction did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
   );
 });
 
@@ -208,7 +208,7 @@ test('warns when typing into a TextInput blocked by pointerEvents="none"', async
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-    "type() did not call any event handlers. The element is blocked by pointerEvents.
+    "type() interaction did not call any event handlers. The element is blocked by pointerEvents.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
       <TextInput
@@ -238,7 +238,7 @@ test('warns when the press is blocked by pointerEvents="none"', async () => {
 
   expect(warnSpy).toHaveBeenCalledTimes(1);
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-    "press() did not call any event handlers. The element is blocked by pointerEvents.
+    "press() interaction did not call any event handlers. The element is blocked by pointerEvents.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
       <View
@@ -274,10 +274,10 @@ test('reports pointerEvents rather than disabled when both block the interaction
 
   expect(warnSpy).toHaveBeenCalledTimes(2);
   expect(warnSpy.mock.calls[0][0]).toMatch(
-    /^press\(\) did not call any event handlers\. The element is blocked by pointerEvents\./,
+    /^press\(\) interaction did not call any event handlers\. The element is blocked by pointerEvents\./,
   );
   expect(warnSpy.mock.calls[1][0]).toMatch(
-    /^type\(\) did not call any event handlers\. The element is blocked by pointerEvents\./,
+    /^type\(\) interaction did not call any event handlers\. The element is blocked by pointerEvents\./,
   );
 });
 

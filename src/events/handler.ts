@@ -43,7 +43,7 @@ export function normalizeEventName(eventName: string) {
   return eventName;
 }
 
-function getEventHandlerName(eventName: string) {
+export function getEventHandlerName(eventName: string) {
   if (hasOnPrefix(eventName)) {
     return eventName;
   }

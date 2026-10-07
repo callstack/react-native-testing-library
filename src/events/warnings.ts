@@ -7,7 +7,7 @@ import { formatElement, formatJson } from '../helpers/format-element';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { logger } from '../helpers/logger';
 import { isEditableTextInput } from '../helpers/text-input';
-import { normalizeEventName } from './handler';
+import { getEventHandlerName, normalizeEventName } from './handler';
 import { getPointerEventsBlocker, isEventBlockableByPointerEvents } from './is-enabled';
 import { isDirectEvent } from './propagation';
 
@@ -102,15 +102,16 @@ function getUnhandledEventWarning(
       return null;
     }
 
+    const handlerName = getEventHandlerName(eventName);
     if (isDirectEvent(normalizeEventName(eventName))) {
       return {
-        message: `The element has no handler for the "${eventName}" event. "${eventName}" events do not bubble to ancestors.`,
+        message: `No "${handlerName}" handler found on the element. "${eventName}" events do not bubble to ancestors.`,
         elements: [instance],
       };
     }
 
     return {
-      message: `The element and its ancestors have no handler for the "${eventName}" event.`,
+      message: `No "${handlerName}" handler found on the element or its ancestors.`,
       elements: [instance],
     };
   }
