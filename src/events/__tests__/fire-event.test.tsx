@@ -853,6 +853,23 @@ describe('direct events', () => {
     `);
   });
 
+  test.each([true, false])(
+    'warns about bubbling regardless of eventDiagnostics (%s)',
+    async (eventDiagnostics) => {
+      configure({ eventDiagnostics });
+      await render(
+        <ScrollView onScroll={() => {}}>
+          <View testID="child" />
+        </ScrollView>,
+      );
+
+      await fireEvent.scroll(screen.getByTestId('child'));
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy.mock.calls[0][0]).toContain('"scroll" does not bubble in React Native');
+    },
+  );
+
   test('warns when handler is on composite component above the emitting element', async () => {
     const onScroll = jest.fn();
     const Screen = (_props: { onScroll: () => void }) => (
