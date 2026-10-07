@@ -5,13 +5,13 @@ import { isEditableTextInput } from '../helpers/text-input';
 import type { Point, Size } from '../types';
 import { nativeState } from './native-state';
 
-const scrollEventTypes = new Set([
+const SCROLL_EVENTS = [
   'scroll',
   'scrollBeginDrag',
   'scrollEndDrag',
   'momentumScrollBegin',
   'momentumScrollEnd',
-]);
+];
 
 /**
  * Updates native state the way a device would have before emitting the event.
@@ -29,7 +29,7 @@ export function updateNativeStateFromEvent(
     return true;
   }
 
-  if (scrollEventTypes.has(eventType) && isHostScrollView(instance)) {
+  if (SCROLL_EVENTS.includes(eventType) && isHostScrollView(instance)) {
     const contentOffset = tryGetContentOffset(value);
     if (contentOffset) {
       nativeState.contentOffsetForInstance.set(instance, contentOffset);

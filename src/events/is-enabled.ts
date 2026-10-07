@@ -30,19 +30,19 @@ export function isTouchResponder(instance: TestInstance) {
 /**
  * List of events affected by `pointerEvents` prop.
  */
-const eventsAffectedByPointerEventsProp = new Set(['press']);
+const EVENTS_AFFECTED_BY_POINTER_EVENTS = ['press'];
 
 /**
  * Expects event type without the `on*` prefix (see `normalizeEventType`).
  */
 export function isEventBlockableByPointerEvents(eventType: string): boolean {
-  return eventsAffectedByPointerEventsProp.has(eventType);
+  return EVENTS_AFFECTED_BY_POINTER_EVENTS.includes(eventType);
 }
 
 /**
  * List of `TextInput` events not affected by `editable` prop.
  */
-const textInputEventsIgnoringEditableProp = new Set(['contentSizeChange', 'layout', 'scroll']);
+const TEXT_INPUT_EVENTS_IGNORING_EDITABLE = ['contentSizeChange', 'layout', 'scroll'];
 
 /**
  * Checks whether a device would deliver the event to the instance, taking into account
@@ -57,7 +57,7 @@ export function isEventEnabled(
   if (nearestTouchResponder != null && isHostTextInput(nearestTouchResponder)) {
     return (
       isEditableTextInput(nearestTouchResponder) ||
-      textInputEventsIgnoringEditableProp.has(eventType)
+      TEXT_INPUT_EVENTS_IGNORING_EDITABLE.includes(eventType)
     );
   }
 
