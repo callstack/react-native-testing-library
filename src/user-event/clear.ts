@@ -5,7 +5,6 @@ import {
   buildEndEditingEvent,
   buildFocusEvent,
   buildTextSelectionChangeEvent,
-  dispatchEvent,
   isPointerEventEnabled,
 } from '../events';
 import { ErrorWithStack } from '../helpers/errors';
@@ -13,7 +12,7 @@ import { isHostTextInput } from '../helpers/host-component-names';
 import { getTextInputValue, isEditableTextInput } from '../helpers/text-input';
 import type { UserEventInstance } from './setup';
 import { emitTypingEvents } from './type/type';
-import { wait } from './utils';
+import { Interaction, wait, warnAboutUnhandledInteraction } from './utils';
 
 export async function clear(this: UserEventInstance, instance: TestInstance): Promise<void> {
   if (!isHostTextInput(instance)) {
@@ -23,12 +22,15 @@ export async function clear(this: UserEventInstance, instance: TestInstance): Pr
     );
   }
 
+  const interaction = new Interaction('clear', instance);
   if (!isEditableTextInput(instance) || !isPointerEventEnabled(instance)) {
+    interaction.skippedTargets.push(instance);
+    warnAboutUnhandledInteraction(interaction);
     return;
   }
 
   // 1. Enter instance
-  await dispatchEvent(instance, 'focus', buildFocusEvent());
+  await interaction.dispatchEvent('focus', buildFocusEvent());
 
   // 2. Select all
   const textToClear = getTextInputValue(instance);
@@ -36,18 +38,21 @@ export async function clear(this: UserEventInstance, instance: TestInstance): Pr
     start: 0,
     end: textToClear.length,
   };
-  await dispatchEvent(instance, 'selectionChange', buildTextSelectionChangeEvent(selectionRange));
+  await interaction.dispatchEvent('selectionChange', buildTextSelectionChangeEvent(selectionRange));
 
   // 3. Press backspace with selected text
   const emptyText = '';
   await emitTypingEvents(instance, {
     config: this.config,
+    interaction,
     key: 'Backspace',
     text: emptyText,
   });
 
   // 4. Exit instance
   await wait(this.config);
-  await dispatchEvent(instance, 'endEditing', buildEndEditingEvent(emptyText));
-  await dispatchEvent(instance, 'blur', buildBlurEvent());
+  await interaction.dispatchEvent('endEditing', buildEndEditingEvent(emptyText));
+  await interaction.dispatchEvent('blur', buildBlurEvent());
+
+  warnAboutUnhandledInteraction(interaction);
 }

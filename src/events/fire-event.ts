@@ -11,6 +11,7 @@ import { nativeState } from './native-state';
 import { findEventHandler } from './propagation';
 import type { EventName, EventProps, LayoutRectangle } from './types';
 import { updateNativeStateFromEvent } from './update-native-state';
+import { warnAboutUnhandledEvent } from './warnings';
 
 async function fireEvent(instance: TestInstance, eventName: EventName, ...data: unknown[]) {
   if (!isInstanceMounted(instance)) {
@@ -18,10 +19,15 @@ async function fireEvent(instance: TestInstance, eventName: EventName, ...data: 
   }
 
   // `fireEvent` accepts event names with and without the `on*` prefix.
-  updateNativeStateFromEvent(instance, normalizeEventName(eventName), data[0]);
+  const hasUpdatedNativeState = updateNativeStateFromEvent(
+    instance,
+    normalizeEventName(eventName),
+    data[0],
+  );
 
-  const handler = findEventHandler(instance, eventName);
+  const { handler, skippedTargets } = findEventHandler(instance, eventName);
   if (!handler) {
+    warnAboutUnhandledEvent(instance, eventName, { skippedTargets, hasUpdatedNativeState });
     return;
   }
 

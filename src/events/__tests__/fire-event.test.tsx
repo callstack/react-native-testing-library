@@ -14,7 +14,8 @@ import {
 } from 'react-native';
 
 import { fireEvent, render, screen } from '../..';
-import { _console } from '../../helpers/logger';
+import { configure } from '../../config';
+import { _console, logger } from '../../helpers/logger';
 import { nativeState } from '../native-state';
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
@@ -553,7 +554,6 @@ describe('fireEvent.layout', () => {
   });
 
   test('does not bubble to the handler on an ancestor element', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onLayout = jest.fn();
     await render(
       <View testID="parent" onLayout={onLayout}>
@@ -564,12 +564,9 @@ describe('fireEvent.layout', () => {
     await fireEvent.layout(screen.getByTestId('child'), { height: 80 });
 
     expect(onLayout).not.toHaveBeenCalled();
-    expect(warnSpy).toHaveBeenCalledTimes(1);
-    warnSpy.mockRestore();
   });
 
   test('does not bubble when fired as generic layout event', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onLayout = jest.fn();
     await render(
       <View testID="parent" onLayout={onLayout}>
@@ -581,21 +578,34 @@ describe('fireEvent.layout', () => {
     await fireEvent(screen.getByTestId('child'), 'onLayout', layoutEvent);
 
     expect(onLayout).not.toHaveBeenCalled();
-    expect(warnSpy).toHaveBeenCalledTimes(2);
-    warnSpy.mockRestore();
   });
 
-  test('warns when element has no onLayout handler', async () => {
+  test('does not warn when layout size is saved in native state without onLayout handler', async () => {
+    configure({ eventDiagnostics: true });
     const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     await render(<View testID="view" />);
 
     await fireEvent.layout(screen.getByTestId('view'));
 
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  test('warns when element has no onLayout handler and event has no layout', async () => {
+    configure({ eventDiagnostics: true });
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    await render(<View testID="view" />);
+
+    await fireEvent(screen.getByTestId('view'), 'layout', { nativeEvent: {} });
+
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "  ▲ fireEvent: element has no handler for "layout" event. <View
-            testID="view"
-          />
+      "  ▲ No "onLayout" handler found on the element. "layout" events do not bubble to ancestors.
+          If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+            <View
+              testID="view"
+            />
       "
     `);
     warnSpy.mockRestore();
@@ -624,18 +634,15 @@ describe('fireEvent.layout', () => {
   });
 
   test('saves layout size in native state even without onLayout handler', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     await render(<View testID="view" />);
     const view = screen.getByTestId('view');
 
     await fireEvent.layout(view, { width: 100, height: 80 });
 
     expect(nativeState.layoutSizeForInstance.get(view)).toEqual({ width: 100, height: 80 });
-    warnSpy.mockRestore();
   });
 
   test('does not call onLayout of composite component that does not forward it', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onLayout = jest.fn();
     const Box = (_props: { onLayout: () => void }) => <View testID="view" />;
     await render(<Box onLayout={onLayout} />);
@@ -643,8 +650,6 @@ describe('fireEvent.layout', () => {
     await fireEvent.layout(screen.getByTestId('view'));
 
     expect(onLayout).not.toHaveBeenCalled();
-    expect(warnSpy).toHaveBeenCalledTimes(1);
-    warnSpy.mockRestore();
   });
 });
 
@@ -790,6 +795,372 @@ describe('disabled elements', () => {
   });
 });
 
+describe('unhandled event warning', () => {
+  let warnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    configure({ eventDiagnostics: true });
+    warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
+  test('warns when the handler is on a disabled element', async () => {
+    await render(
+      <Pressable onPress={jest.fn()} disabled={true}>
+        <Text>Trigger</Text>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "press" event on a disabled element.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <View
+          accessibilityState={
+            {
+              "disabled": true,
+            }
+          }
+          accessible={true}
+        >
+          <Text>
+            Trigger
+          </Text>
+        </View>"
+    `);
+  });
+
+  test('lists every disabled element the event skipped', async () => {
+    await render(
+      <Pressable testID="outer" onPress={jest.fn()} disabled={true}>
+        <Pressable testID="inner" onPress={jest.fn()} disabled={true}>
+          <Text>Trigger</Text>
+        </Pressable>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "press" event on disabled elements.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <View
+          accessibilityState={
+            {
+              "disabled": true,
+            }
+          }
+          accessible={true}
+          testID="inner"
+        >
+          <Text>
+            Trigger
+          </Text>
+        </View>
+
+        <View
+          accessibilityState={
+            {
+              "disabled": true,
+            }
+          }
+          accessible={true}
+          testID="outer"
+        >
+          <View
+            accessibilityState={
+              {
+                "disabled": true,
+              }
+            }
+            accessible={true}
+            testID="inner"
+          >
+            <Text>
+              Trigger
+            </Text>
+          </View>
+        </View>"
+    `);
+  });
+
+  test('warns when no element handles the event', async () => {
+    await render(
+      <View>
+        <Text>Trigger</Text>
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "No "onPress" handler found on the element or its ancestors.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <Text>
+          Trigger
+        </Text>"
+    `);
+  });
+
+  test('does not warn when the event bubbles to an enabled parent', async () => {
+    await render(
+      <Pressable onPress={jest.fn()}>
+        <Pressable onPress={jest.fn()} disabled={true}>
+          <Text>Inner Trigger</Text>
+        </Pressable>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Inner Trigger'));
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('warns when the handler is blocked by pointerEvents="none" on an ancestor', async () => {
+    await render(
+      <View testID="overlay" pointerEvents="none">
+        <Pressable testID="btn" onPress={jest.fn()} />
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByTestId('btn'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "press" event on an element blocked by pointerEvents.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <View
+          accessible={true}
+          testID="btn"
+        />
+
+      Blocked by:
+
+        <View
+          pointerEvents="none"
+          testID="overlay"
+        />"
+    `);
+  });
+
+  test('reports pointerEvents rather than disabled when both block the handler', async () => {
+    await render(
+      <View testID="overlay" pointerEvents="none">
+        <Pressable testID="btn" onPress={jest.fn()} disabled={true} />
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByTestId('btn'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "press" event on an element blocked by pointerEvents.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <View
+          accessibilityState={
+            {
+              "disabled": true,
+            }
+          }
+          accessible={true}
+          testID="btn"
+        />
+
+      Blocked by:
+
+        <View
+          pointerEvents="none"
+          testID="overlay"
+        />"
+    `);
+  });
+
+  test('reports the element that blocks with pointerEvents', async () => {
+    await render(
+      <View testID="box-only" pointerEvents="box-only">
+        <View>
+          <Pressable testID="inside-box-only" onPress={jest.fn()} />
+        </View>
+        <Pressable testID="box-none" pointerEvents="box-none" onPress={jest.fn()} />
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByTestId('inside-box-only'));
+    await fireEvent.press(screen.getByTestId('box-none'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(2);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "press" event on an element blocked by pointerEvents.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <View
+          accessible={true}
+          testID="inside-box-only"
+        />
+
+      Blocked by:
+
+        <View
+          pointerEvents="box-only"
+          testID="box-only"
+        />"
+    `);
+    expect(warnSpy.mock.calls[1][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "press" event on an element blocked by pointerEvents.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <View
+          accessible={true}
+          pointerEvents="box-none"
+          testID="box-none"
+        />
+
+      Blocked by:
+
+        <View
+          accessible={true}
+          pointerEvents="box-none"
+          testID="box-none"
+        />"
+    `);
+  });
+
+  test('reports non-editable TextInput for events not affected by pointerEvents', async () => {
+    await render(
+      <View pointerEvents="none">
+        <TextInput testID="input" editable={false} onChangeText={jest.fn()} />
+      </View>,
+    );
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatch(
+      /^Cannot fire the "changeText" event on a non-editable TextInput\./,
+    );
+  });
+
+  test('does not warn when the responder declines the touch', async () => {
+    const onPress = jest.fn();
+    // @ts-expect-error Host View does not declare `onPress`.
+    await render(<View testID="view" onStartShouldSetResponder={() => false} onPress={onPress} />);
+
+    await fireEvent.press(screen.getByTestId('view'));
+
+    expect(onPress).not.toHaveBeenCalled();
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('warns when the handler is blocked by non-editable TextInput', async () => {
+    await render(<TextInput testID="input" editable={false} onChangeText={jest.fn()} />);
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "changeText" event on a non-editable TextInput.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <TextInput
+          editable={false}
+          testID="input"
+        />"
+    `);
+  });
+
+  test.each([
+    ['focus', 'onFocus'],
+    ['blur', 'onBlur'],
+    ['press', 'onPress'],
+  ])('warns when "%s" is blocked by non-editable TextInput', async (eventName, handlerName) => {
+    await render(<TextInput testID="input" editable={false} {...{ [handlerName]: jest.fn() }} />);
+
+    await fireEvent(screen.getByTestId('input'), eventName);
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatch(
+      new RegExp(`^Cannot fire the "${eventName}" event on a non-editable TextInput\\.`),
+    );
+  });
+
+  test('names the non-editable TextInput when the handler is on its parent', async () => {
+    const onFocus = jest.fn();
+    await render(
+      // Spread because `View` types include `onFocus` only since RN 0.88.
+      <View testID="parent" {...{ onFocus }}>
+        <TextInput testID="input" editable={false} />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('input'), 'focus');
+
+    expect(onFocus).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "focus" event on a non-editable TextInput.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <TextInput
+          editable={false}
+          testID="input"
+        />"
+    `);
+  });
+
+  test('reports disabled elements when they include a non-editable TextInput', async () => {
+    await render(
+      <Pressable onPress={jest.fn()} disabled={true}>
+        <TextInput testID="input" editable={false} onPress={jest.fn()} />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByTestId('input'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatch(
+      /^Cannot fire the "press" event on disabled elements\./,
+    );
+  });
+
+  test('does not warn when the event updates native state (uncontrolled TextInput)', async () => {
+    await render(<TextInput testID="input" />);
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn when eventDiagnostics is turned off', async () => {
+    configure({ eventDiagnostics: false });
+    await render(
+      <View>
+        <Pressable onPress={jest.fn()} disabled={true}>
+          <Text>Disabled</Text>
+        </Pressable>
+        <Text>No handler</Text>
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByText('Disabled'));
+    await fireEvent.press(screen.getByText('No handler'));
+    await fireEvent.layout(screen.getByText('No handler'));
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+});
+
 describe('pointerEvents prop', () => {
   test('does not fire inside View with pointerEvents="none"', async () => {
     const onPress = jest.fn();
@@ -910,7 +1281,6 @@ describe('non-editable TextInput', () => {
   });
 
   test('blocks touch-related events when firing on nested Text child', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onFocus = jest.fn();
     const onChangeText = jest.fn();
     const onSubmitEditing = jest.fn();
@@ -947,8 +1317,6 @@ describe('non-editable TextInput', () => {
     expect(onSubmitEditing).not.toHaveBeenCalled();
     // Layout is a direct event, so it does not bubble to the parent TextInput
     expect(onLayout).not.toHaveBeenCalled();
-    expect(warnSpy).toHaveBeenCalledTimes(2);
-    warnSpy.mockRestore();
   });
 
   test.each([

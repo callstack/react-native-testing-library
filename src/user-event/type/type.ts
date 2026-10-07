@@ -10,7 +10,6 @@ import {
   buildTextChangeEvent,
   buildTextSelectionChangeEvent,
   buildTouchEvent,
-  dispatchEvent,
   isPointerEventEnabled,
   nativeState,
 } from '../../events';
@@ -18,7 +17,7 @@ import { ErrorWithStack } from '../../helpers/errors';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import { getTextInputValue, isEditableTextInput } from '../../helpers/text-input';
 import type { UserEventConfig, UserEventInstance } from '../setup';
-import { getTextContentSize, wait } from '../utils';
+import { Interaction, getTextContentSize, wait, warnAboutUnhandledInteraction } from '../utils';
 import { parseKeys } from './parse-keys';
 
 export interface TypeOptions {
@@ -40,22 +39,24 @@ export async function type(
     );
   }
 
-  // Skip events if the instance is disabled
+  const interaction = new Interaction('type', instance);
   if (!isEditableTextInput(instance) || !isPointerEventEnabled(instance)) {
+    interaction.skippedTargets.push(instance);
+    warnAboutUnhandledInteraction(interaction);
     return;
   }
 
   const keys = parseKeys(text);
 
   if (!options?.skipPress) {
-    await dispatchEvent(instance, 'pressIn', buildTouchEvent());
+    await interaction.dispatchEvent('pressIn', buildTouchEvent());
   }
 
-  await dispatchEvent(instance, 'focus', buildFocusEvent());
+  await interaction.dispatchEvent('focus', buildFocusEvent());
 
   if (!options?.skipPress) {
     await wait(this.config);
-    await dispatchEvent(instance, 'pressOut', buildTouchEvent());
+    await interaction.dispatchEvent('pressOut', buildTouchEvent());
   }
 
   for (const key of keys) {
@@ -66,6 +67,7 @@ export async function type(
 
     await emitTypingEvents(instance, {
       config: this.config,
+      interaction,
       key,
       text: currentText,
       isAccepted,
@@ -76,17 +78,20 @@ export async function type(
   await wait(this.config);
 
   if (options?.submitEditing) {
-    await dispatchEvent(instance, 'submitEditing', buildSubmitEditingEvent(finalText));
+    await interaction.dispatchEvent('submitEditing', buildSubmitEditingEvent(finalText));
   }
 
   if (!options?.skipBlur) {
-    await dispatchEvent(instance, 'endEditing', buildEndEditingEvent(finalText));
-    await dispatchEvent(instance, 'blur', buildBlurEvent());
+    await interaction.dispatchEvent('endEditing', buildEndEditingEvent(finalText));
+    await interaction.dispatchEvent('blur', buildBlurEvent());
   }
+
+  warnAboutUnhandledInteraction(interaction);
 }
 
 type EmitTypingEventsContext = {
   config: UserEventConfig;
+  interaction: Interaction;
   key: string;
   text: string;
   isAccepted?: boolean;
@@ -94,12 +99,12 @@ type EmitTypingEventsContext = {
 
 export async function emitTypingEvents(
   instance: TestInstance,
-  { config, key, text, isAccepted }: EmitTypingEventsContext,
+  { config, interaction, key, text, isAccepted }: EmitTypingEventsContext,
 ) {
   const isMultiline = instance.props.multiline === true;
 
   await wait(config);
-  await dispatchEvent(instance, 'keyPress', buildKeyPressEvent(key));
+  await interaction.dispatchEvent('keyPress', buildKeyPressEvent(key));
 
   // Platform difference (based on experiments):
   // - iOS and RN Web: TextInput emits only `keyPress` event when max length has been reached
@@ -109,21 +114,22 @@ export async function emitTypingEvents(
   }
 
   nativeState.valueForInstance.set(instance, text);
+  interaction.hasUpdatedNativeState = true;
 
   const selectionRange = {
     start: text.length,
     end: text.length,
   };
 
-  await dispatchEvent(instance, 'change', buildTextChangeEvent(text, selectionRange));
-  await dispatchEvent(instance, 'changeText', text);
-  await dispatchEvent(instance, 'selectionChange', buildTextSelectionChangeEvent(selectionRange));
+  await interaction.dispatchEvent('change', buildTextChangeEvent(text, selectionRange));
+  await interaction.dispatchEvent('changeText', text);
+  await interaction.dispatchEvent('selectionChange', buildTextSelectionChangeEvent(selectionRange));
 
   // According to the docs only multiline TextInput emits contentSizeChange event
   // @see: https://reactnative.dev/docs/textinput#oncontentsizechange
   if (isMultiline) {
     const contentSize = getTextContentSize(text);
-    await dispatchEvent(instance, 'contentSizeChange', buildContentSizeChangeEvent(contentSize));
+    await interaction.dispatchEvent('contentSizeChange', buildContentSizeChangeEvent(contentSize));
   }
 }
 

@@ -11,6 +11,7 @@ Both are built on the shared event subsystem in `src/events/`, which also holds 
 | `propagation.ts`                            | Bubbling vs direct events, walking up host and composite elements                       |
 | `is-enabled.ts`                             | Whether a device would deliver the event: `pointerEvents`, `editable`, touch responders |
 | `dispatch.ts`                               | `dispatchEvent()`: calls the target's own handler in `act()`, used by `userEvent`       |
+| `warnings.ts`                               | `eventDiagnostics` warnings for `fireEvent`, and helpers shared with `userEvent`        |
 | `builders/`                                 | Event payloads, matching what React Native sends on a device                            |
 | `native-state.ts`, `update-native-state.ts` | [Native state](native-state.md) and how `fireEvent` updates it                          |
 
@@ -29,6 +30,13 @@ Both are built on the shared event subsystem in `src/events/`, which also holds 
 `src/user-event/` simulates a whole interaction (press, type, scroll, …) as a realistic sequence of events with delays between them. The sequences are based on how React Native behaves on real devices.
 
 Each step uses `dispatchEvent()`, which only calls the target's own handler. It doesn't bubble or check whether the element is enabled. Each action does those checks itself, so the rules for an interaction live in one place.
+
+For the `eventDiagnostics` warning, each action tracks itself with an `Interaction` from `src/user-event/utils/interaction.ts`:
+
+- Dispatch events with `interaction.dispatchEvent()`, so it records whether any handler ran. Events go to `interaction.target`, which is the element the action was called with, unless the action moves it (as `press()` does when an ancestor handles the press). If the action has to call a handler itself, record it with `interaction.recordEvent()` (as `pullToRefresh()` does for `onRefresh` on the `refreshControl` prop).
+- Set `hasUpdatedNativeState` when the action writes to `nativeState`.
+- Add elements that could handle the action but don't accept it to `skippedTargets`: disabled, non-editable `TextInput`, blocked by `pointerEvents`, or with a responder that declines the touch. The warning first reports the ones blocked by `pointerEvents`, with the element that blocks them (`getPointerEventsBlocker()`). Otherwise it reports the disabled ones (`computeAriaDisabled()`, which includes non-editable `TextInput`; when all of them are non-editable `TextInput`, the message calls them non-editable, see `formatDisabledTargets()`), and skips the warning if every skipped element has a responder that declines the touch. Text actions (`type()`, `clear()`, `paste()`) add the `TextInput` when it is non-editable or blocked by `pointerEvents`.
+- Call `warnAboutUnhandledInteraction()` from `src/user-event/utils/warnings.ts` at the end. It warns only if no handler ran and native state didn't change.
 
 ## Guidelines
 

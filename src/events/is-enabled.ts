@@ -11,23 +11,17 @@ import { isEditableTextInput } from '../helpers/text-input';
  * 'box-none': The View is never the target of touch events but its subviews can be
  * 'box-only': The view can be the target of touch events but its subviews cannot be
  * see the official react native doc https://reactnative.dev/docs/view#pointerevents */
-export const isPointerEventEnabled = (instance: TestInstance, isParent?: boolean): boolean => {
-  // Check both props.pointerEvents and props.style.pointerEvents
-  const pointerEvents =
-    instance?.props.pointerEvents ?? StyleSheet.flatten(instance?.props.style)?.pointerEvents;
+export function isPointerEventEnabled(instance: TestInstance): boolean {
+  return getPointerEventsBlocker(instance) == null;
+}
 
-  const parentCondition = isParent ? pointerEvents === 'box-only' : pointerEvents === 'box-none';
-
-  if (pointerEvents === 'none' || parentCondition) {
-    return false;
-  }
-
-  if (!instance.parent) {
-    return true;
-  }
-
-  return isPointerEventEnabled(instance.parent, true);
-};
+/**
+ * Returns the element whose `pointerEvents` prevents the instance from being the target of
+ * touch events: the instance itself or one of its ancestors. Returns `null` if nothing blocks it.
+ */
+export function getPointerEventsBlocker(instance: TestInstance): TestInstance | null {
+  return findPointerEventsBlocker(instance, false);
+}
 
 export function isTouchResponder(instance: TestInstance) {
   return Boolean(instance.props.onStartShouldSetResponder) || isHostTextInput(instance);
@@ -37,6 +31,13 @@ export function isTouchResponder(instance: TestInstance) {
  * List of events affected by `pointerEvents` prop.
  */
 const eventsAffectedByPointerEventsProp = new Set(['press']);
+
+/**
+ * Expects event name without the `on*` prefix (see `normalizeEventName`).
+ */
+export function isEventBlockableByPointerEvents(eventName: string): boolean {
+  return eventsAffectedByPointerEventsProp.has(eventName);
+}
 
 /**
  * List of `TextInput` events not affected by `editable` prop.
@@ -60,7 +61,7 @@ export function isEventEnabled(
     );
   }
 
-  if (eventsAffectedByPointerEventsProp.has(eventName) && !isPointerEventEnabled(instance)) {
+  if (isEventBlockableByPointerEvents(eventName) && !isPointerEventEnabled(instance)) {
     return false;
   }
 
@@ -71,4 +72,22 @@ export function isEventEnabled(
   }
 
   return touchStart === undefined && touchMove === undefined;
+}
+
+function findPointerEventsBlocker(instance: TestInstance, isParent: boolean): TestInstance | null {
+  // Check both props.pointerEvents and props.style.pointerEvents
+  const pointerEvents =
+    instance?.props.pointerEvents ?? StyleSheet.flatten(instance?.props.style)?.pointerEvents;
+
+  const parentCondition = isParent ? pointerEvents === 'box-only' : pointerEvents === 'box-none';
+
+  if (pointerEvents === 'none' || parentCondition) {
+    return instance;
+  }
+
+  if (!instance.parent) {
+    return null;
+  }
+
+  return findPointerEventsBlocker(instance.parent, true);
 }

@@ -1,12 +1,13 @@
 import type { AccessibilityActionInfo } from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
-import { buildAccessibilityActionEvent, dispatchEvent } from '../../events';
+import { buildAccessibilityActionEvent } from '../../events';
 import { computeAriaDisabled } from '../../helpers/accessibility';
 import { isTestInstance } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
 import type { StringWithAutocomplete } from '../../types';
 import type { UserEventInstance } from '../setup';
+import { Interaction, warnAboutUnhandledInteraction } from '../utils';
 
 /**
  * Standard accessibility action names recognized by React Native (`activate`,
@@ -79,5 +80,7 @@ export async function accessibilityAction(
     );
   }
 
-  await dispatchEvent(instance, 'accessibilityAction', buildAccessibilityActionEvent(actionName));
+  const interaction = new Interaction('accessibilityAction', instance);
+  await interaction.dispatchEvent('accessibilityAction', buildAccessibilityActionEvent(actionName));
+  warnAboutUnhandledInteraction(interaction);
 }
