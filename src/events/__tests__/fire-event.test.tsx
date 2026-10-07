@@ -1052,6 +1052,21 @@ describe('unhandled event warning', () => {
     `);
   });
 
+  test.each([
+    ['focus', 'onFocus'],
+    ['blur', 'onBlur'],
+    ['press', 'onPress'],
+  ])('warns when "%s" is blocked by non-editable TextInput', async (eventName, handlerName) => {
+    await render(<TextInput testID="input" editable={false} {...{ [handlerName]: jest.fn() }} />);
+
+    await fireEvent(screen.getByTestId('input'), eventName);
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatch(
+      new RegExp(`^Cannot fire the "${eventName}" event on a disabled element\\.`),
+    );
+  });
+
   test('does not warn when the event updates native state (uncontrolled TextInput)', async () => {
     await render(<TextInput testID="input" />);
 

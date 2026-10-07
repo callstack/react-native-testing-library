@@ -182,6 +182,20 @@ test('warns when clearing or pasting into a non-editable TextInput', async () =>
   );
 });
 
+test('warns when pressing a non-editable TextInput', async () => {
+  await render(
+    <TextInput testID="input" editable={false} onPressIn={jest.fn()} onPressOut={jest.fn()} />,
+  );
+  const user = userEvent.setup();
+
+  await user.press(screen.getByTestId('input'));
+
+  expect(warnSpy).toHaveBeenCalledTimes(1);
+  expect(warnSpy.mock.calls[0][0]).toMatch(
+    /^press\(\) did not call any event handlers\. The element is disabled\./,
+  );
+});
+
 test('warns when typing into a TextInput blocked by pointerEvents="none"', async () => {
   await render(
     <View testID="overlay" pointerEvents="none">
