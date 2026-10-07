@@ -95,7 +95,13 @@ export function buildLayoutEvent(layout?: Partial<LayoutRectangle>) {
   return {
     ...baseSyntheticEvent(),
     nativeEvent: {
-      layout: { x: 0, y: 0, width: 0, height: 0, ...layout },
+      // `??` rather than spread, so that explicit `undefined` values fall back to `0`.
+      layout: {
+        x: layout?.x ?? 0,
+        y: layout?.y ?? 0,
+        width: layout?.width ?? 0,
+        height: layout?.height ?? 0,
+      },
       target: 0,
     },
   };

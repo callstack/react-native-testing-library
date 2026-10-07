@@ -560,6 +560,32 @@ describe('fireEvent.layout', () => {
     });
   });
 
+  test('uses zero for layout fields passed as undefined', async () => {
+    configure({ eventDiagnostics: true });
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    const onLayout = jest.fn();
+    await render(
+      <View>
+        <View testID="with-handler" onLayout={onLayout} />
+        <View testID="without-handler" />
+      </View>,
+    );
+    const withoutHandler = screen.getByTestId('without-handler');
+
+    await fireEvent.layout(screen.getByTestId('with-handler'), { x: undefined, width: undefined });
+    await fireEvent.layout(withoutHandler, { width: undefined, height: undefined });
+
+    expect(onLayout.mock.calls[0][0].nativeEvent.layout).toEqual({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    });
+    expect(nativeState.layoutSizeForInstance.get(withoutHandler)).toEqual({ width: 0, height: 0 });
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
   test('does not bubble to the handler on an ancestor element', async () => {
     const onLayout = jest.fn();
     await render(
