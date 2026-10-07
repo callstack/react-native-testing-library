@@ -52,7 +52,7 @@ function getUnhandledEventWarning(
   if (skippedTargets.length === 0) {
     if (isDirectEvent(normalizeEventName(eventName))) {
       return {
-        message: `No handler found for the "${eventName}" event on the element. "${eventName}" events do not bubble to ancestors.`,
+        message: `The element has no handler for the "${eventName}" event. "${eventName}" events do not bubble to ancestors.`,
         elements: [instance],
       };
     }
@@ -63,7 +63,7 @@ function getUnhandledEventWarning(
     }
 
     return {
-      message: `No handler found for the "${eventName}" event on the element or any of its ancestors.`,
+      message: `The element and its ancestors have no handler for the "${eventName}" event.`,
       elements: [instance],
     };
   }
@@ -78,8 +78,8 @@ function getUnhandledEventWarning(
   return {
     message:
       disabledTargets.length === 1
-        ? `Tried to fire the "${eventName}" event on a disabled element, so its handler was not called.`
-        : `Tried to fire the "${eventName}" event on ${disabledTargets.length} disabled elements, so their handlers were not called.`,
+        ? `Cannot fire the "${eventName}" event on a disabled element.`
+        : `Cannot fire the "${eventName}" event on disabled elements.`,
     elements: disabledTargets,
   };
 }

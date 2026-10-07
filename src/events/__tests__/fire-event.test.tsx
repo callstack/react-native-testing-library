@@ -589,7 +589,7 @@ describe('fireEvent.layout', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "  ▲ No handler found for the "layout" event on the element. "layout" events do not bubble to ancestors.
+      "  ▲ The element has no handler for the "layout" event. "layout" events do not bubble to ancestors.
           If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
             <View
@@ -807,7 +807,7 @@ describe('unhandled event warning', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "Tried to fire the "press" event on a disabled element, so its handler was not called.
+      "Cannot fire the "press" event on a disabled element.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
         <View
@@ -838,7 +838,7 @@ describe('unhandled event warning', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "Tried to fire the "press" event on 2 disabled elements, so their handlers were not called.
+      "Cannot fire the "press" event on disabled elements.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
         <View
@@ -892,7 +892,7 @@ describe('unhandled event warning', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "No handler found for the "press" event on the element or any of its ancestors.
+      "The element and its ancestors have no handler for the "press" event.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
         <Text>
