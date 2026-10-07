@@ -701,6 +701,15 @@ describe('direct events', () => {
         </Pressable>
       ),
     },
+    ...(['accessibilityTap', 'magicTap', 'accessibilityEscape'] as const).map((eventType) => ({
+      name: `${eventType} from View content`,
+      eventType,
+      ui: (handler: jest.Mock) => (
+        <View testID="emitter" accessible {...{ [getEventHandlerName(eventType)]: handler }}>
+          <View testID="target" />
+        </View>
+      ),
+    })),
     {
       name: 'textLayout from nested Text',
       eventType: 'textLayout',
@@ -719,21 +728,23 @@ describe('direct events', () => {
         </TextInput>
       ),
     })),
-    ...(['loadStart', 'progress', 'load', 'error', 'loadEnd'] as const).map((eventType) => ({
-      name: `${eventType} from Image content`,
-      eventType,
-      // Image does not accept children, clone it to fire the event on a nested element.
-      ui: (handler: jest.Mock) =>
-        React.cloneElement(
-          <Image
-            testID="emitter"
-            source={{ uri: 'https://example.com/image.png' }}
-            {...{ [getEventHandlerName(eventType)]: handler }}
-          />,
-          {},
-          <Text testID="target">Nested</Text>,
-        ),
-    })),
+    ...(['loadStart', 'progress', 'partialLoad', 'load', 'error', 'loadEnd'] as const).map(
+      (eventType) => ({
+        name: `${eventType} from Image content`,
+        eventType,
+        // Image does not accept children, clone it to fire the event on a nested element.
+        ui: (handler: jest.Mock) =>
+          React.cloneElement(
+            <Image
+              testID="emitter"
+              source={{ uri: 'https://example.com/image.png' }}
+              {...{ [getEventHandlerName(eventType)]: handler }}
+            />,
+            {},
+            <Text testID="target">Nested</Text>,
+          ),
+      }),
+    ),
     ...(
       [
         'scroll',
@@ -741,6 +752,7 @@ describe('direct events', () => {
         'scrollEndDrag',
         'momentumScrollBegin',
         'momentumScrollEnd',
+        'scrollToTop',
         'contentSizeChange',
       ] as const
     ).map((eventType) => ({

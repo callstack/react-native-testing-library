@@ -15,11 +15,11 @@ The `fireEvent` API triggers event handlers on both host and composite component
 
 Some events are direct in React Native: they are delivered only to the host element that emitted them. `fireEvent` still bubbles them for backward compatibility, but logs a warning when they bubble from a nested element to the handler of an ancestor that emits them, e.g. `scroll` from `ScrollView` content to the `ScrollView`. They will stop bubbling in the next major version, so fire them on the element that has the handler. These events are:
 
-- `layout` and `accessibilityAction` on all elements
+- `layout`, `accessibilityAction`, `accessibilityTap`, `magicTap` and `accessibilityEscape` on all elements
 - `textLayout` on `Text`
 - `scroll`, `selectionChange` and `contentSizeChange` on `TextInput`
-- `loadStart`, `progress`, `load`, `error` and `loadEnd` on `Image`
-- `scroll`, `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`, `momentumScrollEnd`, `refresh` and `contentSizeChange` on `ScrollView`
+- `loadStart`, `progress`, `partialLoad`, `load`, `error` and `loadEnd` on `Image`
+- `scroll`, `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`, `momentumScrollEnd`, `scrollToTop`, `refresh` and `contentSizeChange` on `ScrollView`
 - `requestClose`, `show`, `dismiss` and `orientationChange` on `Modal`
 
 Events with these names bubble without a warning to other handlers, such as an `onLoad` prop of your own composite component.

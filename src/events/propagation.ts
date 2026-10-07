@@ -95,16 +95,23 @@ function findBubblingHandlerOwner(
   return findBubblingHandlerOwner(instance.parent, eventType, touchResponder, skippedTargets);
 }
 
-const COMMON_DIRECT_EVENTS = ['layout', 'accessibilityAction'];
+const COMMON_DIRECT_EVENTS = [
+  'layout',
+  'accessibilityAction',
+  'accessibilityTap',
+  'magicTap',
+  'accessibilityEscape',
+];
 const TEXT_DIRECT_EVENTS = ['textLayout'];
 const TEXT_INPUT_DIRECT_EVENTS = ['scroll', 'selectionChange', 'contentSizeChange'];
-const IMAGE_DIRECT_EVENTS = ['loadStart', 'progress', 'load', 'error', 'loadEnd'];
+const IMAGE_DIRECT_EVENTS = ['loadStart', 'progress', 'partialLoad', 'load', 'error', 'loadEnd'];
 const SCROLL_VIEW_DIRECT_EVENTS = [
   'scroll',
   'scrollBeginDrag',
   'scrollEndDrag',
   'momentumScrollBegin',
   'momentumScrollEnd',
+  'scrollToTop',
   'refresh',
   'contentSizeChange',
 ];
