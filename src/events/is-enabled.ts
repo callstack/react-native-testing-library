@@ -23,24 +23,6 @@ export function getPointerEventsBlocker(instance: TestInstance): TestInstance | 
   return findPointerEventsBlocker(instance, false);
 }
 
-function findPointerEventsBlocker(instance: TestInstance, isParent: boolean): TestInstance | null {
-  // Check both props.pointerEvents and props.style.pointerEvents
-  const pointerEvents =
-    instance?.props.pointerEvents ?? StyleSheet.flatten(instance?.props.style)?.pointerEvents;
-
-  const parentCondition = isParent ? pointerEvents === 'box-only' : pointerEvents === 'box-none';
-
-  if (pointerEvents === 'none' || parentCondition) {
-    return instance;
-  }
-
-  if (!instance.parent) {
-    return null;
-  }
-
-  return findPointerEventsBlocker(instance.parent, true);
-}
-
 export function isTouchResponder(instance: TestInstance) {
   return Boolean(instance.props.onStartShouldSetResponder) || isHostTextInput(instance);
 }
@@ -51,16 +33,10 @@ export function isTouchResponder(instance: TestInstance) {
 const eventsAffectedByPointerEventsProp = new Set(['press']);
 
 /**
- * Like `getPointerEventsBlocker`, but only for events affected by `pointerEvents`.
  * Expects event name without the `on*` prefix (see `normalizeEventName`).
  */
-export function getPointerEventsBlockerForEvent(
-  instance: TestInstance,
-  eventName: string,
-): TestInstance | null {
-  return eventsAffectedByPointerEventsProp.has(eventName)
-    ? getPointerEventsBlocker(instance)
-    : null;
+export function isBlockableByPointerEvents(eventName: string): boolean {
+  return eventsAffectedByPointerEventsProp.has(eventName);
 }
 
 /**
@@ -85,7 +61,7 @@ export function isEventEnabled(
     );
   }
 
-  if (getPointerEventsBlockerForEvent(instance, eventName) != null) {
+  if (isBlockableByPointerEvents(eventName) && !isPointerEventEnabled(instance)) {
     return false;
   }
 
@@ -96,4 +72,22 @@ export function isEventEnabled(
   }
 
   return touchStart === undefined && touchMove === undefined;
+}
+
+function findPointerEventsBlocker(instance: TestInstance, isParent: boolean): TestInstance | null {
+  // Check both props.pointerEvents and props.style.pointerEvents
+  const pointerEvents =
+    instance?.props.pointerEvents ?? StyleSheet.flatten(instance?.props.style)?.pointerEvents;
+
+  const parentCondition = isParent ? pointerEvents === 'box-only' : pointerEvents === 'box-none';
+
+  if (pointerEvents === 'none' || parentCondition) {
+    return instance;
+  }
+
+  if (!instance.parent) {
+    return null;
+  }
+
+  return findPointerEventsBlocker(instance.parent, true);
 }

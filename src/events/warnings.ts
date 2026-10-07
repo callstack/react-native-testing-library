@@ -8,7 +8,7 @@ import { isHostTextInput } from '../helpers/host-component-names';
 import { logger } from '../helpers/logger';
 import { isEditableTextInput } from '../helpers/text-input';
 import { normalizeEventName } from './handler';
-import { getPointerEventsBlockerForEvent } from './is-enabled';
+import { getPointerEventsBlocker, isBlockableByPointerEvents } from './is-enabled';
 import { isDirectEvent } from './propagation';
 
 type UnhandledEventInfo = {
@@ -58,30 +58,25 @@ export function logEventWarning({ message, elements, pointerEventsBlockers = [] 
 }
 
 /**
- * Builds the warning for elements that `pointerEvents` blocked, or returns `null` if it
- * blocked none of them.
+ * Returns the targets that `pointerEvents` blocks along with their blockers, or `null` if it
+ * blocks none of them.
  *
  * @param targets Skipped elements, nearest first.
  */
-export function getPointerEventsWarning(
+export function getPointerEventsBlockedTargets(
   targets: TestInstance[],
-  getBlocker: (target: TestInstance) => TestInstance | null,
-  formatMessage: (count: number) => string,
-): EventWarning | null {
-  const blocked = targets
-    .map((target) => ({ target, blocker: getBlocker(target) }))
-    .filter(
-      (entry): entry is { target: TestInstance; blocker: TestInstance } => entry.blocker != null,
-    );
-  if (blocked.length === 0) {
-    return null;
+): Pick<EventWarning, 'elements' | 'pointerEventsBlockers'> | null {
+  const elements: TestInstance[] = [];
+  const pointerEventsBlockers: TestInstance[] = [];
+  for (const target of targets) {
+    const blocker = getPointerEventsBlocker(target);
+    if (blocker != null) {
+      elements.push(target);
+      pointerEventsBlockers.push(blocker);
+    }
   }
 
-  return {
-    message: formatMessage(blocked.length),
-    elements: blocked.map(({ target }) => target),
-    pointerEventsBlockers: blocked.map(({ blocker }) => blocker),
-  };
+  return elements.length > 0 ? { elements, pointerEventsBlockers } : null;
 }
 
 /**
@@ -121,16 +116,17 @@ function getUnhandledEventWarning(
   }
 
   // `pointerEvents` is checked first: it blocks the event even if the element is enabled.
-  const pointerEventsWarning = getPointerEventsWarning(
-    skippedTargets,
-    (target) => getPointerEventsBlockerForEvent(target, normalizeEventName(eventName)),
-    (count) =>
-      count === 1
-        ? `Cannot fire the "${eventName}" event on an element blocked by pointerEvents.`
-        : `Cannot fire the "${eventName}" event on elements blocked by pointerEvents.`,
-  );
-  if (pointerEventsWarning != null) {
-    return pointerEventsWarning;
+  const blocked = isBlockableByPointerEvents(normalizeEventName(eventName))
+    ? getPointerEventsBlockedTargets(skippedTargets)
+    : null;
+  if (blocked != null) {
+    return {
+      message:
+        blocked.elements.length === 1
+          ? `Cannot fire the "${eventName}" event on an element blocked by pointerEvents.`
+          : `Cannot fire the "${eventName}" event on elements blocked by pointerEvents.`,
+      ...blocked,
+    };
   }
 
   // `computeAriaDisabled` also covers non-editable `TextInput`. A responder declining the touch
