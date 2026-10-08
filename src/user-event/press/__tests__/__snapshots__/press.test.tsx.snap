@@ -5,15 +5,6 @@ exports[`userEvent.press with fake timers works on Pressable 1`] = `
   {
     "name": "pressIn",
     "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "dispatchConfig": {
-        "registrationName": "onResponderGrant",
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -25,25 +16,11 @@ exports[`userEvent.press with fake timers works on Pressable 1`] = `
         "timestamp": 0,
         "touches": [],
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "pressOut",
     "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "dispatchConfig": {
-        "registrationName": "onResponderRelease",
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -55,25 +32,11 @@ exports[`userEvent.press with fake timers works on Pressable 1`] = `
         "timestamp": 130,
         "touches": [],
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "press",
     "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "dispatchConfig": {
-        "registrationName": "onResponderRelease",
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -85,11 +48,6 @@ exports[`userEvent.press with fake timers works on Pressable 1`] = `
         "timestamp": 130,
         "touches": [],
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
 ]

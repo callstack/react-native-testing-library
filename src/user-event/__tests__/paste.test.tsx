@@ -3,6 +3,7 @@ import type { TextInputProps } from 'react-native';
 import { TextInput, View } from 'react-native';
 
 import { render, screen, userEvent } from '../..';
+import { getConfig } from '../../config';
 import { createEventLogger, getEventsNames } from '../../test-utils/events';
 
 beforeEach(() => {
@@ -201,19 +202,19 @@ describe('paste()', () => {
   // View that ignores props type checking
   const AnyView = View as React.ComponentType<any>;
 
-  it('does NOT bubble up', async () => {
-    const parentHandler = jest.fn();
+  it('bubbles up only native bubbling events, in the modern event system', async () => {
+    const { events, logEvent } = createEventLogger();
     await render(
       <AnyView
-        onChangeText={parentHandler}
-        onChange={parentHandler}
-        onKeyPress={parentHandler}
-        onTextInput={parentHandler}
-        onFocus={parentHandler}
-        onBlur={parentHandler}
-        onEndEditing={parentHandler}
-        onPressIn={parentHandler}
-        onPressOut={parentHandler}
+        onChangeText={logEvent('changeText')}
+        onChange={logEvent('change')}
+        onKeyPress={logEvent('keyPress')}
+        onTextInput={logEvent('textInput')}
+        onFocus={logEvent('focus')}
+        onBlur={logEvent('blur')}
+        onEndEditing={logEvent('endEditing')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
       >
         <TextInput testID="input" />
       </AnyView>,
@@ -221,7 +222,11 @@ describe('paste()', () => {
 
     const user = userEvent.setup();
     await user.paste(screen.getByTestId('input'), 'Hi!');
-    expect(parentHandler).not.toHaveBeenCalled();
+    // `focus`, `keyPress`, `change`, `endEditing` and `blur` are bubbling events in React Native.
+    const modernEvents = ['focus', 'change', 'endEditing', 'blur'];
+    expect(getEventsNames(events)).toEqual(
+      getConfig().eventSystem === 'modern' ? modernEvents : [],
+    );
   });
 
   it('sets native state value for unmanaged text inputs', async () => {

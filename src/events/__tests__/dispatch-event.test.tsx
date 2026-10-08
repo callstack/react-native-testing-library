@@ -56,6 +56,17 @@ describe('modern event system', () => {
     expect(calls).toEqual(['parent.onFocusCapture', 'input.onFocus', 'parent.onFocus']);
   });
 
+  test('keeps the event timeStamp', async () => {
+    const onFocus = jest.fn();
+    await render(<TextInput testID="input" onFocus={onFocus} />);
+
+    await dispatchEvent(screen.getByTestId('input'), 'focus', {
+      ...buildFocusEvent(),
+      timeStamp: 42,
+    });
+    expect(onFocus.mock.calls[0][0].timeStamp).toBe(42);
+  });
+
   test('returns true when only an ancestor handles the event', async () => {
     const onParentFocus = jest.fn();
     await render(

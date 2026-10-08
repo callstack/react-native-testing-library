@@ -4,6 +4,7 @@ import { TextInput, View } from 'react-native';
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
+import { getConfig } from '../../../config';
 import { createEventLogger, getEventsNames, lastEventPayload } from '../../../test-utils/events';
 
 beforeEach(() => {
@@ -330,19 +331,19 @@ describe('type()', () => {
   // View that ignores props type checking
   const AnyView = View as React.ComponentType<any>;
 
-  it('does NOT bubble up', async () => {
-    const parentHandler = jest.fn();
+  it('bubbles up only native bubbling events, in the modern event system', async () => {
+    const { events, logEvent } = createEventLogger();
     await render(
       <AnyView
-        onChangeText={parentHandler}
-        onChange={parentHandler}
-        onKeyPress={parentHandler}
-        onTextInput={parentHandler}
-        onFocus={parentHandler}
-        onBlur={parentHandler}
-        onEndEditing={parentHandler}
-        onPressIn={parentHandler}
-        onPressOut={parentHandler}
+        onChangeText={logEvent('changeText')}
+        onChange={logEvent('change')}
+        onKeyPress={logEvent('keyPress')}
+        onTextInput={logEvent('textInput')}
+        onFocus={logEvent('focus')}
+        onBlur={logEvent('blur')}
+        onEndEditing={logEvent('endEditing')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
       >
         <TextInput testID="input" />
       </AnyView>,
@@ -350,7 +351,16 @@ describe('type()', () => {
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abc');
-    expect(parentHandler).not.toHaveBeenCalled();
+    // `focus`, `keyPress`, `change`, `endEditing` and `blur` are bubbling events in React Native.
+    const modernEvents = [
+      'focus',
+      ...['keyPress', 'change', 'keyPress', 'change', 'keyPress', 'change'],
+      'endEditing',
+      'blur',
+    ];
+    expect(getEventsNames(events)).toEqual(
+      getConfig().eventSystem === 'modern' ? modernEvents : [],
+    );
   });
 
   it('supports direct access', async () => {

@@ -15,7 +15,7 @@ import { invokeEventHandler } from './shared/invoke-event-handler';
  *
  * - `legacy`: calls the element's own `on*` prop with `event` as it is.
  * - `modern`: native events (`focus`, `change`, `scroll`, ...) get a `SyntheticEvent` created from
- *   `event.nativeEvent`, dispatched as React Native does, through the capture and bubble phases
+ *   `event.nativeEvent` and `event.timeStamp`, dispatched as React Native does, through the capture and bubble phases
  *   for bubbling events. Callbacks that components call from JavaScript (`changeText`, `pressIn`,
  *   `responderGrant`, ...) call the element's own `on*` prop with `event` as it is, as in
  *   `legacy`. `press` is a native event type (`topPress`), so it reaches host `onPress` props
@@ -36,7 +36,10 @@ export async function dispatchEvent(
   }
 
   const nativeEvent = extractNativeEvent(eventType, event);
-  const syntheticEvent = nativeEvent != null ? createEvent(eventType, { nativeEvent }) : null;
+  const syntheticEvent =
+    nativeEvent != null
+      ? createEvent(eventType, { nativeEvent, timeStamp: extractTimeStamp(event) })
+      : null;
   if (syntheticEvent == null) {
     // JavaScript callbacks, e.g. `changeText`, are called as in the legacy event system.
     return await invokeEventHandler(instance, eventType, event);
@@ -59,4 +62,9 @@ function extractNativeEvent(eventType: string, event: unknown): NativeEventPaylo
   }
 
   return event.nativeEvent;
+}
+
+/** Returns the event's top-level `timeStamp`, e.g. `0` from the event builders. */
+function extractTimeStamp(event: unknown): number | undefined {
+  return isObject(event) && typeof event.timeStamp === 'number' ? event.timeStamp : undefined;
 }

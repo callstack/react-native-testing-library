@@ -5,12 +5,6 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
   {
     "name": "pressIn",
     "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -22,39 +16,19 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "focus",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "pressOut",
     "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -66,37 +40,19 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "keyPress",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "key": "W",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "change",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
         "selection": {
@@ -106,11 +62,6 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
         "target": 0,
         "text": "W",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
@@ -120,47 +71,25 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 1,
           "start": 1,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "keyPress",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "key": "o",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "change",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
         "selection": {
@@ -170,11 +99,6 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
         "target": 0,
         "text": "Wo",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
@@ -184,47 +108,25 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 2,
           "start": 2,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "keyPress",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "key": "w",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "change",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
         "selection": {
@@ -234,11 +136,6 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
         "target": 0,
         "text": "Wow",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
@@ -248,56 +145,29 @@ exports[`type() for managed TextInput supports basic case: input: "Wow" 1`] = `
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 3,
           "start": 3,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "endEditing",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
         "text": "Wow",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "blur",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
 ]
@@ -308,12 +178,6 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
   {
     "name": "pressIn",
     "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -325,39 +189,19 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "focus",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "pressOut",
     "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -369,37 +213,19 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
         "timestamp": 100100100100,
         "touches": [],
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "keyPress",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "key": "A",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "change",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
         "selection": {
@@ -409,11 +235,6 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
         "target": 0,
         "text": "XXXA",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
@@ -423,47 +244,25 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 4,
           "start": 4,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "keyPress",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "key": "B",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "change",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
         "selection": {
@@ -473,11 +272,6 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
         "target": 0,
         "text": "XXXB",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
@@ -487,47 +281,25 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 4,
           "start": 4,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "keyPress",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "key": "C",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "change",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
         "selection": {
@@ -537,11 +309,6 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
         "target": 0,
         "text": "XXXC",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
@@ -551,56 +318,29 @@ exports[`type() for managed TextInput supports rejecting TextInput: input: "ABC"
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 4,
           "start": 4,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "endEditing",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
         "text": "XXX",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "blur",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
 ]
