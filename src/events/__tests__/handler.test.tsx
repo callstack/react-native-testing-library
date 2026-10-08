@@ -68,6 +68,29 @@ test('getEventHandlerFromProps loose mode', async () => {
   expect(getEventHandlerFromProps(both.props, 'onPress', { loose: true })).toBe(onPress);
 });
 
+test('getEventHandlerFromProps loose mode matches handlers named without the `on*` prefix', async () => {
+  const press = jest.fn();
+  const testOnlyPress = jest.fn();
+
+  await render(
+    <View>
+      {/* @ts-expect-error Intentionally passing such props */}
+      <View testID="regular" press={press} />
+      {/* @ts-expect-error Intentionally passing such props */}
+      <View testID="testOnly" testOnly_press={testOnlyPress} />
+    </View>,
+  );
+
+  const regular = screen.getByTestId('regular');
+  const testOnly = screen.getByTestId('testOnly');
+
+  expect(getEventHandlerFromProps(regular.props, 'press', { loose: true })).toBe(press);
+  expect(getEventHandlerFromProps(testOnly.props, 'press', { loose: true })).toBe(testOnlyPress);
+
+  expect(getEventHandlerFromProps(regular.props, 'press')).toBeUndefined();
+  expect(getEventHandlerFromProps(testOnly.props, 'press')).toBeUndefined();
+});
+
 test('normalizeEventType strips the `on*` prefix', () => {
   expect(normalizeEventType('onLayout')).toBe('layout');
   expect(normalizeEventType('onChangeText')).toBe('changeText');

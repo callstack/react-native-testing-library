@@ -1301,6 +1301,46 @@ describe('unhandled event warning', () => {
     `);
   });
 
+  test('warns when multiple handlers are blocked by pointerEvents="none" on an ancestor', async () => {
+    await render(
+      <View testID="overlay" pointerEvents="none">
+        <Pressable testID="outer" onPress={jest.fn()}>
+          <Pressable testID="inner" onPress={jest.fn()} />
+        </Pressable>
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByTestId('inner'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "press" event on elements blocked by pointerEvents.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <View
+          accessible={true}
+          testID="inner"
+        />
+
+        <View
+          accessible={true}
+          testID="outer"
+        >
+          <View
+            accessible={true}
+            testID="inner"
+          />
+        </View>
+
+      Blocked by:
+
+        <View
+          pointerEvents="none"
+          testID="overlay"
+        />"
+    `);
+  });
+
   test('reports pointerEvents rather than disabled when both block the handler', async () => {
     await render(
       <View testID="overlay" pointerEvents="none">
