@@ -15,7 +15,6 @@ type Call = {
   eventPhase: number;
 };
 
-/** Returns handler props for the given prop names that log each call to `calls`. */
 function logHandlers(calls: Call[], id: string, propNames: string[]): HandlerProps {
   return Object.fromEntries(
     propNames.map((propName) => [
@@ -41,7 +40,6 @@ function getProps(calls: Call[]) {
   return calls.map((call) => call.prop);
 }
 
-// Handler props are spread, because `View` types don't include all of them.
 function renderNestedViews(propNames: string[], calls: Call[]) {
   return render(
     <View testID="root" {...logHandlers(calls, 'root', propNames)}>

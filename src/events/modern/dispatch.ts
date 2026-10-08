@@ -8,29 +8,25 @@ import { eventInternals, SyntheticEvent } from './event';
 import { getEventTypeConfig } from './event-types';
 
 /**
- * Dispatches an event the way React Native dispatches events from native
+ * Dispatches an event as React Native does for native events
  * (`src/private/renderer/events/dispatchNativeEvent.js`, then `dispatch()` in
  * `src/private/webapis/dom/events/EventTarget.js`):
  *
- * - Bubbling events run the capture phase from the root to the target (`on*Capture` props), then the
- *   bubble phase from the target to the root (`on*` props). Events with `skipBubbling` run the capture
- *   phase as usual, but the bubble phase calls only the target.
- * - Direct events call only the target's `on*` prop.
+ * - Bubbling events: capture phase from the root to the target (`on*Capture`), then bubble phase
+ *   back to the root (`on*`). `skipBubbling` events call only the target when bubbling.
+ * - Direct events: only the target's `on*` prop.
  * - Events unknown to React Native are dropped.
  *
- * Only host elements are on the event path, so props of composite components are never called.
- * Every handler on the path runs until one stops propagation. The first error thrown by a handler is
- * rethrown after the whole dispatch. The dispatch runs in a single `act()`, as React Native batches
- * updates for the whole event.
+ * Only host elements are on the path, so composite props are never called. Every handler on the
+ * path runs until one stops propagation. The first handler error is rethrown after all handlers
+ * ran. One `act()` wraps the dispatch, as React Native batches updates for the whole event.
  *
- * Not implemented yet: responder negotiation, which React Native runs before the dispatch for touch,
- * scroll and selection change events.
+ * Not implemented yet: responder negotiation, which React Native runs first for touch, scroll and
+ * selection change events.
  *
- * @param target host element that receives the event
- * @param eventType event type, e.g. `focus` or `pointerUp`
- * @param payload native event payload, passed to handlers as `event.nativeEvent`
- * @returns `false` if a handler called `preventDefault()`, `true` otherwise, as `dispatchEvent()`
- * of the DOM does.
+ * @param eventType e.g. `focus` or `pointerUp`
+ * @param payload passed to handlers as `event.nativeEvent`
+ * @returns `false` if a handler called `preventDefault()`, like DOM `dispatchEvent()`.
  */
 export async function dispatchEvent(
   target: TestInstance,
@@ -47,7 +43,6 @@ export async function dispatchEvent(
   }
 
   await act(() => {
-    eventInternals.setIsTrusted(event, true);
     dispatch(target, event);
   });
 
@@ -86,7 +81,7 @@ function dispatch(target: TestInstance, event: SyntheticEvent) {
   const errorState: ErrorState = { hasError: false, error: undefined };
 
   for (let i = path.length - 1; i >= 0; i -= 1) {
-    if (eventInternals.getStopPropagationFlag(event)) {
+    if (event.isPropagationStopped()) {
       break;
     }
 
@@ -99,11 +94,10 @@ function dispatch(target: TestInstance, event: SyntheticEvent) {
   }
 
   for (const node of path) {
-    if (eventInternals.getStopPropagationFlag(event)) {
+    if (event.isPropagationStopped()) {
       break;
     }
 
-    // Events that don't bubble call only the target in the bubble phase.
     if (!event.bubbles && node !== target) {
       break;
     }
@@ -125,10 +119,7 @@ function dispatch(target: TestInstance, event: SyntheticEvent) {
   }
 }
 
-/**
- * Returns the target followed by its host ancestors. The root container is not an element, so it is
- * not on the path. Direct events have only the target on the path.
- */
+/** Target first, then host ancestors. The root container is not an element, so it's excluded. */
 function getEventPath(target: TestInstance, event: SyntheticEvent): TestInstance[] {
   if (event.rnIsDirect) {
     return [target];
@@ -170,10 +161,6 @@ function invoke(
 
 function getPropName(event: SyntheticEvent, isCapture: boolean): string | null {
   const config = event.dispatchConfig;
-  if (config == null) {
-    return null;
-  }
-
   if ('registrationName' in config) {
     return isCapture ? null : config.registrationName;
   }

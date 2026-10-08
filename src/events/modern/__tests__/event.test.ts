@@ -1,8 +1,9 @@
 import { SyntheticEvent } from '../event';
 
+const dispatchConfig = { registrationName: 'onFocus' };
+
 test('exposes init values', () => {
   const nativeEvent = { target: 1 };
-  const dispatchConfig = { registrationName: 'onLayout' };
   const event = new SyntheticEvent(
     'layout',
     { cancelable: true, rnIsDirect: true, timeStamp: 123 },
@@ -13,40 +14,32 @@ test('exposes init values', () => {
   expect(event.type).toBe('layout');
   expect(event.bubbles).toBe(false);
   expect(event.cancelable).toBe(true);
-  expect(event.composed).toBe(false);
   expect(event.rnIsDirect).toBe(true);
   expect(event.timeStamp).toBe(123);
   expect(event.nativeEvent).toBe(nativeEvent);
   expect(event.dispatchConfig).toBe(dispatchConfig);
+  expect(event.isTrusted).toBe(true);
 });
 
 test('has no target and phase outside of dispatch', () => {
-  const event = new SyntheticEvent('focus', { bubbles: true }, {});
+  const event = new SyntheticEvent('focus', { bubbles: true }, {}, dispatchConfig);
 
   expect(event.target).toBeNull();
   expect(event.currentTarget).toBeNull();
   expect(event.eventPhase).toBe(SyntheticEvent.NONE);
   expect(event.composedPath()).toEqual([]);
-  expect(event.isTrusted).toBe(false);
-  expect(event.dispatchConfig).toBeNull();
 });
 
 test('defaults timeStamp to performance.now()', () => {
   jest.spyOn(performance, 'now').mockReturnValue(456);
 
-  const event = new SyntheticEvent('focus', {}, {});
+  const event = new SyntheticEvent('focus', {}, {}, dispatchConfig);
 
   expect(event.timeStamp).toBe(456);
 });
 
-test('throws when direct event bubbles', () => {
-  expect(() => new SyntheticEvent('layout', { bubbles: true, rnIsDirect: true }, {})).toThrow(
-    "'rnIsDirect' cannot be true when 'bubbles' is also true",
-  );
-});
-
 test('preventDefault() marks cancelable event as default prevented', () => {
-  const event = new SyntheticEvent('focus', { cancelable: true }, {});
+  const event = new SyntheticEvent('focus', { cancelable: true }, {}, dispatchConfig);
 
   event.preventDefault();
 
@@ -55,7 +48,7 @@ test('preventDefault() marks cancelable event as default prevented', () => {
 });
 
 test('preventDefault() does nothing on non-cancelable event', () => {
-  const event = new SyntheticEvent('focus', {}, {});
+  const event = new SyntheticEvent('focus', {}, {}, dispatchConfig);
 
   event.preventDefault();
 
@@ -66,7 +59,7 @@ test('preventDefault() does nothing on non-cancelable event', () => {
 test.each(['stopPropagation', 'stopImmediatePropagation'] as const)(
   '%s() stops propagation',
   (method) => {
-    const event = new SyntheticEvent('focus', {}, {});
+    const event = new SyntheticEvent('focus', {}, {}, dispatchConfig);
     expect(event.isPropagationStopped()).toBe(false);
 
     event[method]();
@@ -77,7 +70,7 @@ test.each(['stopPropagation', 'stopImmediatePropagation'] as const)(
 );
 
 test('cancelBubble can only be set to true', () => {
-  const event = new SyntheticEvent('focus', {}, {});
+  const event = new SyntheticEvent('focus', {}, {}, dispatchConfig);
 
   event.cancelBubble = true;
   event.cancelBubble = false;
@@ -86,13 +79,13 @@ test('cancelBubble can only be set to true', () => {
 });
 
 test('persist() is a no-op', () => {
-  const event = new SyntheticEvent('focus', {}, {});
+  const event = new SyntheticEvent('focus', {}, {}, dispatchConfig);
 
   expect(() => event.persist()).not.toThrow();
 });
 
 test('defines event phase constants on class and prototype', () => {
-  const event = new SyntheticEvent('focus', {}, {});
+  const event = new SyntheticEvent('focus', {}, {}, dispatchConfig);
 
   expect([
     SyntheticEvent.NONE,

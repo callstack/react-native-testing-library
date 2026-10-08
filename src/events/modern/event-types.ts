@@ -1,17 +1,15 @@
 import { getEventHandlerName } from '../shared/handler';
 
 /**
- * Event types known to React Native.
+ * Event types known to React Native, keyed by event type (`focus`, not `topFocus`).
  *
- * React Native fills its view config registry at runtime from the view configs of native
- * components, but `@react-native/jest-preset` mocks native components, so the registry stays empty
- * in Jest. These are static copies of the union of `BaseViewConfig.{ios,android}.js` and the view
- * configs of built-in components, keyed by event type instead of React Native's top-level type
- * (`focus` instead of `topFocus`). `__tests__/event-types.test.ts` checks them against the installed
- * `react-native`.
+ * `@react-native/jest-preset` mocks native components, so React Native's view config registry stays
+ * empty in Jest. These are static copies of the union of `BaseViewConfig.{ios,android}.js` and the
+ * built-in components' view configs. `__tests__/event-types.test.ts` checks them against the
+ * installed `react-native`.
  *
- * Prop names follow from the event type: `onFocus` for the bubble phase and direct events,
- * `onFocusCapture` for the capture phase.
+ * Prop names follow from the event type: `onFocus` (bubble phase, direct events) and
+ * `onFocusCapture`.
  */
 
 export const bubblingEventTypes: ReadonlySet<string> = new Set([
@@ -88,14 +86,14 @@ export const directEventTypes: ReadonlySet<string> = new Set([
   'textLayout',
 ]);
 
-/** Same shape as React Native's `DispatchConfig`, exposed as `event.dispatchConfig`. */
+// React Native's `DispatchConfig` shape: `TouchableOpacity` reads its `registrationName`.
 export type DispatchConfig =
   | {
       phasedRegistrationNames: { bubbled: string; captured: string; skipBubbling?: boolean };
     }
   | { registrationName: string };
 
-export type EventTypeConfig =
+type EventTypeConfig =
   | { kind: 'bubbling'; skipBubbling: boolean; dispatchConfig: DispatchConfig }
   | { kind: 'direct'; dispatchConfig: DispatchConfig };
 

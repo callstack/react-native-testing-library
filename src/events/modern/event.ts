@@ -4,13 +4,11 @@ import type { DispatchConfig } from './event-types';
 
 export type NativeEventPayload = Record<string, unknown>;
 
-export type SyntheticEventInit = {
+type SyntheticEventInit = {
   bubbles?: boolean;
   cancelable?: boolean;
-  composed?: boolean;
   /** Direct events are dispatched only to the target, without the capture phase. */
   rnIsDirect?: boolean;
-  /** Defaults to `performance.now()`. */
   timeStamp?: number;
 };
 
@@ -19,19 +17,14 @@ const CAPTURING_PHASE = 1;
 const AT_TARGET = 2;
 const BUBBLING_PHASE = 3;
 
-export type EventPhase =
-  | typeof NONE
-  | typeof CAPTURING_PHASE
-  | typeof AT_TARGET
-  | typeof BUBBLING_PHASE;
+type EventPhase = typeof NONE | typeof CAPTURING_PHASE | typeof AT_TARGET | typeof BUBBLING_PHASE;
 
-/** State changed by the dispatch, hidden from the event's own properties. */
+/** Kept off the event's own properties, so printed events don't include the element tree. */
 type DispatchState = {
   target: TestInstance | null;
   currentTarget: TestInstance | null;
   eventPhase: EventPhase;
   composedPath: TestInstance[];
-  isTrusted: boolean;
   stopPropagation: boolean;
 };
 
@@ -50,7 +43,8 @@ function getDispatchState(event: SyntheticEvent): DispatchState {
  * Event object passed to handlers by the modern event system.
  *
  * Mirrors React Native's `LegacySyntheticEvent`, which extends the W3C `Event`
- * (`src/private/renderer/events/LegacySyntheticEvent.js` and `src/private/webapis/dom/events/Event.js`).
+ * (`src/private/renderer/events/LegacySyntheticEvent.js`,
+ * `src/private/webapis/dom/events/Event.js`).
  * `target` and `currentTarget` are host elements, the same objects that queries return.
  */
 export class SyntheticEvent {
@@ -62,40 +56,31 @@ export class SyntheticEvent {
   private readonly _type: string;
   private readonly _bubbles: boolean;
   private readonly _cancelable: boolean;
-  private readonly _composed: boolean;
   private readonly _rnIsDirect: boolean;
   private readonly _timeStamp: number;
   private readonly _nativeEvent: NativeEventPayload;
-  private readonly _dispatchConfig: DispatchConfig | null;
+  private readonly _dispatchConfig: DispatchConfig;
   private _defaultPrevented = false;
 
   constructor(
     type: string,
     init: SyntheticEventInit,
     nativeEvent: NativeEventPayload,
-    dispatchConfig?: DispatchConfig | null,
+    dispatchConfig: DispatchConfig,
   ) {
-    if (init.rnIsDirect && init.bubbles) {
-      throw new TypeError(
-        "Failed to construct 'Event': 'rnIsDirect' cannot be true when 'bubbles' is also true.",
-      );
-    }
-
     this._type = type;
     this._bubbles = Boolean(init.bubbles);
     this._cancelable = Boolean(init.cancelable);
-    this._composed = Boolean(init.composed);
     this._rnIsDirect = Boolean(init.rnIsDirect);
     this._timeStamp = init.timeStamp ?? performance.now();
     this._nativeEvent = nativeEvent;
-    this._dispatchConfig = dispatchConfig ?? null;
+    this._dispatchConfig = dispatchConfig;
 
     dispatchStates.set(this, {
       target: null,
       currentTarget: null,
       eventPhase: NONE,
       composedPath: [],
-      isTrusted: false,
       stopPropagation: false,
     });
   }
@@ -129,10 +114,6 @@ export class SyntheticEvent {
     return this._cancelable;
   }
 
-  get composed(): boolean {
-    return this._composed;
-  }
-
   get rnIsDirect(): boolean {
     return this._rnIsDirect;
   }
@@ -145,7 +126,7 @@ export class SyntheticEvent {
     return this._nativeEvent;
   }
 
-  get dispatchConfig(): DispatchConfig | null {
+  get dispatchConfig(): DispatchConfig {
     return this._dispatchConfig;
   }
 
@@ -165,8 +146,9 @@ export class SyntheticEvent {
     return getDispatchState(this).eventPhase;
   }
 
+  /** Only the native event dispatch creates events, and React Native marks those as trusted. */
   get isTrusted(): boolean {
-    return getDispatchState(this).isTrusted;
+    return true;
   }
 
   get cancelBubble(): boolean {
@@ -226,14 +208,6 @@ export const eventInternals = {
 
   setComposedPath(event: SyntheticEvent, composedPath: TestInstance[]) {
     getDispatchState(event).composedPath = composedPath;
-  },
-
-  setIsTrusted(event: SyntheticEvent, isTrusted: boolean) {
-    getDispatchState(event).isTrusted = isTrusted;
-  },
-
-  getStopPropagationFlag(event: SyntheticEvent): boolean {
-    return getDispatchState(event).stopPropagation;
   },
 
   resetStopPropagationFlag(event: SyntheticEvent) {

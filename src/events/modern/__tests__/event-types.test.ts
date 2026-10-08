@@ -13,7 +13,7 @@ type ViewConfig = {
   directEventTypes?: Record<string, { registrationName: string }>;
 };
 
-// Base view configs and built-in components with events in their view configs.
+// Base view configs plus the built-in components that declare events.
 const viewConfigModules = [
   'react-native/Libraries/NativeComponent/BaseViewConfig.ios',
   'react-native/Libraries/NativeComponent/BaseViewConfig.android',
@@ -60,7 +60,7 @@ function loadReactNativeEventTypes() {
     }
 
     for (const [topLevelType, config] of Object.entries(viewConfig.directEventTypes ?? {})) {
-      // Gesture handler events are registered without the `top` prefix and not dispatched by React Native.
+      // Gesture handler events: registered without `top`, not dispatched by React Native.
       if (!topLevelType.startsWith('top')) {
         continue;
       }
