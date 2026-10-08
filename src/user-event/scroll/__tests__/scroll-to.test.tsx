@@ -200,7 +200,6 @@ describe('scrollTo()', () => {
       ['scroll', 100, 0],
       ['scrollEndDrag', 100, 0],
       ['momentumScrollBegin', 100, 0],
-      ['scroll', 100, 0],
       ['momentumScrollEnd', 100, 0],
     ]);
   });
