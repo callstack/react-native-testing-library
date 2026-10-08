@@ -1803,14 +1803,25 @@ Use Fire Event for cases not supported by User Event and for triggering event ha
 :::
 
 ```ts
-function fireEvent(instance: TestInstance, eventName: string, ...data: unknown[]): Promise<unknown>;
+function fireEvent(instance: TestInstance, eventType: string, ...data: unknown[]): Promise<unknown>;
 ```
 
 The `fireEvent` API triggers event handlers on both host and composite components. It traverses the component tree bottom-up from the passed element to find an enabled event handler named `onXxx` where `xxx` is the event name.
 
+Some events are direct in React Native: they are delivered only to the host element that emitted them. `fireEvent` still bubbles them for backward compatibility, but logs a warning when they bubble from a nested element to the handler of an ancestor that emits them, e.g. `scroll` from `ScrollView` content to the `ScrollView`. They will stop bubbling in the next major version, so fire them on the element that has the handler. These events are:
+
+- `layout`, `accessibilityAction`, `accessibilityTap`, `magicTap` and `accessibilityEscape` on all elements
+- `textLayout` on `Text`
+- `scroll`, `selectionChange` and `contentSizeChange` on `TextInput`
+- `loadStart`, `progress`, `partialLoad`, `load`, `error` and `loadEnd` on `Image`
+- `scroll`, `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`, `momentumScrollEnd`, `scrollToTop`, `refresh` and `contentSizeChange` on `ScrollView`
+- `requestClose`, `show`, `dismiss` and `orientationChange` on `Modal`
+
+Events with these names bubble without a warning to other handlers, such as an `onLoad` prop of your own composite component.
+
 Unlike User Event, this API does not automatically pass event object to event handler, this is responsibility of the user to construct such object.
 
-The base `fireEvent(instance, eventName, ...data)` API can pass multiple custom arguments to the handler. Convenience helpers such as `fireEvent.press` and `fireEvent.scroll` are different: they create a default event object and accept one optional object to merge into it.
+The base `fireEvent(instance, eventType, ...data)` API can pass multiple custom arguments to the handler. Convenience helpers such as `fireEvent.press` and `fireEvent.scroll` are different: they create a default event object and accept one optional object to merge into it.
 
 This function uses async `act` internally to execute all pending React updates during event handling.
 
@@ -1980,7 +1991,7 @@ fireEvent.layout: (
 
 Builds a layout event carrying the given `layout` rectangle and invokes the `onLayout` handler of the given element. Use it to simulate the layout engine measuring an element, e.g. to test components that adapt to a measured size.
 
-Unlike other `fireEvent` calls, layout events do not bubble: React Native delivers them only to the measured element, so the handler is not looked up on parent elements.
+Layout events fired with this helper do not bubble: React Native delivers them only to the measured element, so only that element's own `onLayout` prop is called, not handlers on its parent elements or composite components. This is the intended behavior. `fireEvent(element, 'layout')` still bubbles for backward compatibility, with a deprecation warning, and will stop bubbling like `fireEvent.layout()` in the next major version.
 
 The `layout` values are merged onto a zeroed rectangle (`{ x: 0, y: 0, width: 0, height: 0 }`), so pass only the fields your component reads.
 
@@ -2007,7 +2018,7 @@ url: /react-native-testing-library/docs/api/events/user-event.md
 
 ## Comparison with Fire Event API
 
-Fire Event is our original event simulation API. It can invoke **any event handler** declared on **either host or composite elements**. Suppose the element does not have `onEventName` event handler for the passed `eventName` event, or the element is disabled. In that case, Fire Event will traverse up the component tree, looking for an event handler on both host and composite elements along the way. By default, it will **not pass any event data**, but the user might provide it in the last argument.
+Fire Event is our original event simulation API. It can invoke **any event handler** declared on **either host or composite elements**. Suppose the element does not have `onEventName` event handler for the passed `eventType` event, or the element is disabled. In that case, Fire Event will traverse up the component tree, looking for an event handler on both host and composite elements along the way. By default, it will **not pass any event data**, but the user might provide it in the last argument.
 
 In contrast, User Event provides realistic event simulation for user interactions like `press` or `type`. Each interaction will trigger a **sequence of events** corresponding to React Native runtime behavior. These events will be invoked **only on host elements**, and **will automatically receive event data** corresponding to each event.
 
@@ -3814,7 +3825,7 @@ Use only when `userEvent` doesn't support the event or when you need direct cont
 
 | Method                                   | Description                                   |
 | ---------------------------------------- | --------------------------------------------- |
-| `fireEvent(element, eventName, ...data)` | Fire any event by name                        |
+| `fireEvent(element, eventType, ...data)` | Fire any event by name                        |
 | `fireEvent.press(element)`               | Fire `onPress` only (no `pressIn`/`pressOut`) |
 | `fireEvent.changeText(element, text)`    | Fire `onChangeText` directly                  |
 | `fireEvent.scroll(element, eventData)`   | Fire `onScroll` with event data               |

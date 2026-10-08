@@ -9,7 +9,7 @@
 <script defer src="/react-native-testing-library/static/js/lib-react.49604bf759.js"></script>
 <script defer src="/react-native-testing-library/static/js/lib-router.a0df4de158.js"></script>
 <script defer src="/react-native-testing-library/static/js/2482.4740a55c68.js"></script>
-<script defer src="/react-native-testing-library/static/js/index.b728949ba5.js"></script>
+<script defer src="/react-native-testing-library/static/js/index.c9f9dc2986.js"></script>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Rspress v2.0.9">
 <meta property="og:url" content="https://oss.callstack.com/react-native-testing-library/">
@@ -60,7 +60,7 @@
 <div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody><tr><td><code>user.press(element)</code></td><td>Press an element (triggers <code>pressIn</code>, <code>pressOut</code>, <code>press</code>)</td></tr><tr><td><code>user.longPress(element, options?)</code></td><td>Long press with optional <code>{ duration }</code></td></tr><tr><td><code>user.type(element, text, options?)</code></td><td>Type into TextInput (triggers <code>focus</code>, <code>keyPress</code>, <code>change</code>, <code>changeText</code> per char)</td></tr><tr><td><code>user.clear(element)</code></td><td>Clear TextInput (select all + backspace)</td></tr><tr><td><code>user.paste(element, text)</code></td><td>Paste text into TextInput</td></tr><tr><td><code>user.scrollTo(element, options)</code></td><td>Scroll a ScrollView with <code>{ y }</code> or <code>{ x }</code> offset</td></tr></tbody></table></div>
 <h3 class="rp-toc-include" id="fireevent-low-level"><a href="#fireevent-low-level" class="rp-header-anchor rp-link" aria-hidden="true">#</a>fireEvent (Low-level)</h3>
 <p>Use only when <code>userEvent</code> doesn&#x27;t support the event or when you need direct control.</p>
-<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody><tr><td><code>fireEvent(element, eventName, ...data)</code></td><td>Fire any event by name</td></tr><tr><td><code>fireEvent.press(element)</code></td><td>Fire <code>onPress</code> only (no <code>pressIn</code>/<code>pressOut</code>)</td></tr><tr><td><code>fireEvent.changeText(element, text)</code></td><td>Fire <code>onChangeText</code> directly</td></tr><tr><td><code>fireEvent.scroll(element, eventData)</code></td><td>Fire <code>onScroll</code> with event data</td></tr></tbody></table></div>
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody><tr><td><code>fireEvent(element, eventType, ...data)</code></td><td>Fire any event by name</td></tr><tr><td><code>fireEvent.press(element)</code></td><td>Fire <code>onPress</code> only (no <code>pressIn</code>/<code>pressOut</code>)</td></tr><tr><td><code>fireEvent.changeText(element, text)</code></td><td>Fire <code>onChangeText</code> directly</td></tr><tr><td><code>fireEvent.scroll(element, eventData)</code></td><td>Fire <code>onScroll</code> with event data</td></tr></tbody></table></div>
 <h2 class="rp-toc-include" id="asyncawait-v14"><a href="#asyncawait-v14" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Async/Await (v14)</h2>
 <ul>
 <li><strong>Always <code>await</code></strong>: <code>render()</code>, <code>fireEvent.*</code>, <code>renderHook()</code>, <code>userEvent.*</code></li>
