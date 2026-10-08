@@ -32,8 +32,10 @@ fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
   await fireEvent(instance, 'scroll', mergeEventProps(event, eventProps));
 };
 
-// Unlike `fireEvent(instance, 'layout')`, does not bubble, as React Native delivers layout events
-// only to the measured element.
+// Does not bubble and checks only the element's own props, as React Native delivers layout events
+// only to the measured element. This is the intended behavior: `fireEvent(instance, 'layout')`
+// still bubbles (with a deprecation warning) for compatibility, and will match this in the next
+// major version.
 fireEvent.layout = async (instance: TestInstance, layout?: Partial<LayoutRectangle>) => {
   await fireEventInternal(instance, {
     type: 'layout',
