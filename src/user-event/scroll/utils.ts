@@ -31,7 +31,7 @@ export function createScrollSteps(
  */
 export function linearInterpolator(end: number, start: number, steps: number): number[] {
   if (end === start) {
-    return [end, start];
+    return [start];
   }
 
   const result = [];

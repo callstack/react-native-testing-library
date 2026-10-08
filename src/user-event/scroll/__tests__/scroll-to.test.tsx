@@ -49,6 +49,7 @@ describe('scrollTo()', () => {
       ['scroll', 25, 0],
       ['scroll', 50, 0],
       ['scroll', 75, 0],
+      ['scroll', 100, 0],
       ['scrollEndDrag', 100, 0],
     ]);
     expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
@@ -64,6 +65,7 @@ describe('scrollTo()', () => {
       ['scroll', 0, 25],
       ['scroll', 0, 50],
       ['scroll', 0, 75],
+      ['scroll', 0, 100],
       ['scrollEndDrag', 0, 100],
     ]);
   });
@@ -81,6 +83,7 @@ describe('scrollTo()', () => {
       ['scroll', 25, 0],
       ['scroll', 50, 0],
       ['scroll', 75, 0],
+      ['scroll', 100, 0],
       ['scrollEndDrag', 100, 0],
       ['momentumScrollBegin', 100, 0],
       ['scroll', 110, 0],
@@ -102,6 +105,7 @@ describe('scrollTo()', () => {
       ['scroll', 25, 0],
       ['scroll', 50, 0],
       ['scroll', 75, 0],
+      ['scroll', 100, 0],
       ['scrollEndDrag', 100, 0],
     ]);
   });
@@ -117,11 +121,13 @@ describe('scrollTo()', () => {
       ['scroll', 25, 0],
       ['scroll', 50, 0],
       ['scroll', 75, 0],
+      ['scroll', 100, 0],
       ['scrollEndDrag', 100, 0],
       ['scrollBeginDrag', 100, 0],
       ['scroll', 125, 0],
       ['scroll', 150, 0],
       ['scroll', 175, 0],
+      ['scroll', 200, 0],
       ['scrollEndDrag', 200, 0],
     ]);
   });
@@ -140,6 +146,7 @@ describe('scrollTo()', () => {
       ['scroll', 125, 0],
       ['scroll', 150, 0],
       ['scroll', 175, 0],
+      ['scroll', 200, 0],
       ['scrollEndDrag', 200, 0],
     ]);
   });
@@ -190,6 +197,7 @@ describe('scrollTo()', () => {
       ['scroll', 25, 0],
       ['scroll', 50, 0],
       ['scroll', 75, 0],
+      ['scroll', 100, 0],
       ['scrollEndDrag', 100, 0],
       ['momentumScrollBegin', 100, 0],
       ['scroll', 100, 0],
@@ -254,6 +262,7 @@ describe('scrollTo()', () => {
       ['scroll', 25, 0],
       ['scroll', 50, 0],
       ['scroll', 75, 0],
+      ['scroll', 100, 0],
       ['scrollEndDrag', 100, 0],
     ]);
   });
