@@ -295,12 +295,6 @@ The sequence of events depends on whether the scroll includes an optional moment
 - `scroll` (multiple events)
 - `momentumScrollEnd`
 
-### Final scroll offset {#scroll-final-offset}
-
-As in native `ScrollView`, the last drag step does not trigger a `scroll` event. A drag-only scroll (no `momentumY` or `momentumX`) delivers the target offset only in `scrollEndDrag`, so `onScroll` never sees it. For example, `scrollTo(scrollView, { y: 100 })` calls `onScroll` with offsets below 100, then calls `onScrollEndDrag` with 100. With momentum, the last `scroll` event and `momentumScrollEnd` both carry the final momentum offset.
-
-This matters when UI depends on the `onScroll` offset, like sticky headers, "scroll to top" buttons, or paging indicators. To have `onScroll` receive the target offset, add a momentum part, e.g. `scrollTo(scrollView, { y: 50, momentumY: 100 })`. If your component needs the resting position, also handle `onScrollEndDrag` and `onMomentumScrollEnd`, as on a real device.
-
 ## `pullToRefresh()` \{#pull-to-refresh}
 
 :::note

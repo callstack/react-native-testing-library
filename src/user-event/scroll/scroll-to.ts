@@ -97,10 +97,9 @@ async function emitDragScrollEvents(
   await wait(config);
   await dispatchEvent(instance, 'scrollBeginDrag', buildScrollEvent(scrollSteps[0], scrollOptions));
 
-  // Note: experimentally, in case of drag scroll the last scroll step
-  // will not trigger `scroll` event.
-  // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
-  for (let i = 1; i < scrollSteps.length - 1; i += 1) {
+  // Note: native emits `scroll` for every offset change while dragging, including the last one,
+  // and `scrollEndDrag` reports that same offset.
+  for (let i = 1; i < scrollSteps.length; i += 1) {
     await wait(config);
     await dispatchEvent(instance, 'scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
   }
