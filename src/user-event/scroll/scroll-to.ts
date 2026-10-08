@@ -103,8 +103,7 @@ async function emitDragScrollEvents(
     buildScrollEvent(scrollSteps[0], scrollOptions),
   );
 
-  // Note: native emits `scroll` for every offset change while dragging, including the last one,
-  // and `scrollEndDrag` reports that same offset.
+  // Native emits `scroll` for every drag step, including the last; `scrollEndDrag` repeats its offset.
   for (let i = 1; i < scrollSteps.length; i += 1) {
     await wait(config);
     await interaction.dispatchEvent('scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
