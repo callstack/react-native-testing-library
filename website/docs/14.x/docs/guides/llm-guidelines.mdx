@@ -113,7 +113,7 @@ Use only when `userEvent` doesn't support the event or when you need direct cont
 
 | Method                                   | Description                                   |
 | ---------------------------------------- | --------------------------------------------- |
-| `fireEvent(element, eventName, ...data)` | Fire any event by name                        |
+| `fireEvent(element, eventType, ...data)` | Fire any event by name                        |
 | `fireEvent.press(element)`               | Fire `onPress` only (no `pressIn`/`pressOut`) |
 | `fireEvent.changeText(element, text)`    | Fire `onChangeText` directly                  |
 | `fireEvent.scroll(element, eventData)`   | Fire `onScroll` with event data               |

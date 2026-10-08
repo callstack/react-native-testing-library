@@ -1,6 +1,10 @@
 import * as React from 'react';
 import type { TextInputProps } from 'react-native';
 import {
+  FlatList,
+  Image,
+  ImageBackground,
+  Modal,
   PanResponder,
   Pressable,
   ScrollView,
@@ -16,6 +20,7 @@ import {
 import { fireEvent, render, screen } from '../..';
 import { configure } from '../../config';
 import { _console, logger } from '../../helpers/logger';
+import { getEventHandlerName } from '../handler';
 import { nativeState } from '../native-state';
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
@@ -366,11 +371,11 @@ describe('fireEvent.scroll', () => {
     ['onScrollEndDrag', 'scrollEndDrag'],
     ['onMomentumScrollBegin', 'momentumScrollBegin'],
     ['onMomentumScrollEnd', 'momentumScrollEnd'],
-  ])('fires %s on ScrollView', async (propName, eventName) => {
+  ])('fires %s on ScrollView', async (propName, eventType) => {
     const handler = jest.fn();
     await render(<ScrollView testID="scroll" {...{ [propName]: handler }} />);
     const scrollView = screen.getByTestId('scroll');
-    await fireEvent(scrollView, eventName, verticalScrollEvent);
+    await fireEvent(scrollView, eventType, verticalScrollEvent);
     expect(handler).toHaveBeenCalledWith(verticalScrollEvent);
     expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
       x: 0,
@@ -492,6 +497,7 @@ describe('fireEvent.scroll', () => {
   });
 
   test('does not use layout size of non-ScrollView element as layoutMeasurement', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onScroll = jest.fn();
     await render(
       <ScrollView onScroll={onScroll}>
@@ -507,6 +513,7 @@ describe('fireEvent.scroll', () => {
       width: 0,
       height: 0,
     });
+    warnSpy.mockRestore();
   });
 });
 
@@ -553,6 +560,32 @@ describe('fireEvent.layout', () => {
     });
   });
 
+  test('uses zero for layout fields passed as undefined', async () => {
+    configure({ eventDiagnostics: true });
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+    const onLayout = jest.fn();
+    await render(
+      <View>
+        <View testID="with-handler" onLayout={onLayout} />
+        <View testID="without-handler" />
+      </View>,
+    );
+    const withoutHandler = screen.getByTestId('without-handler');
+
+    await fireEvent.layout(screen.getByTestId('with-handler'), { x: undefined, width: undefined });
+    await fireEvent.layout(withoutHandler, { width: undefined, height: undefined });
+
+    expect(onLayout.mock.calls[0][0].nativeEvent.layout).toEqual({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    });
+    expect(nativeState.layoutSizeForInstance.get(withoutHandler)).toEqual({ width: 0, height: 0 });
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
   test('does not bubble to the handler on an ancestor element', async () => {
     const onLayout = jest.fn();
     await render(
@@ -566,7 +599,8 @@ describe('fireEvent.layout', () => {
     expect(onLayout).not.toHaveBeenCalled();
   });
 
-  test('does not bubble when fired as generic layout event', async () => {
+  test('bubbles with a warning when fired as generic layout event', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onLayout = jest.fn();
     await render(
       <View testID="parent" onLayout={onLayout}>
@@ -577,7 +611,9 @@ describe('fireEvent.layout', () => {
     await fireEvent(screen.getByTestId('child'), 'layout', layoutEvent);
     await fireEvent(screen.getByTestId('child'), 'onLayout', layoutEvent);
 
-    expect(onLayout).not.toHaveBeenCalled();
+    expect(onLayout).toHaveBeenCalledTimes(2);
+    expect(warnSpy).toHaveBeenCalledTimes(2);
+    warnSpy.mockRestore();
   });
 
   test('does not warn when layout size is saved in native state without onLayout handler', async () => {
@@ -600,7 +636,7 @@ describe('fireEvent.layout', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "  ▲ No "onLayout" handler found on the element. "layout" events do not bubble to ancestors.
+      "  ▲ No "onLayout" handler found on the element or its ancestors.
           If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
 
             <View
@@ -650,6 +686,317 @@ describe('fireEvent.layout', () => {
     await fireEvent.layout(screen.getByTestId('view'));
 
     expect(onLayout).not.toHaveBeenCalled();
+  });
+});
+
+describe('direct events', () => {
+  let warnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
+  type DirectEventCase = {
+    name: string;
+    eventType: string;
+    ui: (handler: jest.Mock) => React.ReactElement;
+  };
+
+  const directEventCases: DirectEventCase[] = [
+    {
+      name: 'layout from View content',
+      eventType: 'layout',
+      ui: (handler) => (
+        <View testID="emitter" onLayout={handler}>
+          <View testID="target" />
+        </View>
+      ),
+    },
+    {
+      name: 'accessibilityAction from Pressable content',
+      eventType: 'accessibilityAction',
+      ui: (handler) => (
+        <Pressable
+          testID="emitter"
+          accessibilityActions={[{ name: 'activate' }]}
+          onAccessibilityAction={handler}
+        >
+          <Text testID="target">Button</Text>
+        </Pressable>
+      ),
+    },
+    ...buildDirectEventCases(
+      'View content',
+      ['accessibilityTap', 'magicTap', 'accessibilityEscape'],
+      (handlerProps) => (
+        <View testID="emitter" accessible {...handlerProps}>
+          <View testID="target" />
+        </View>
+      ),
+    ),
+    {
+      name: 'textLayout from nested Text',
+      eventType: 'textLayout',
+      ui: (handler) => (
+        <Text testID="emitter" onTextLayout={handler}>
+          <Text testID="target">Nested</Text>
+        </Text>
+      ),
+    },
+    ...buildDirectEventCases(
+      'TextInput content',
+      ['scroll', 'selectionChange', 'contentSizeChange'],
+      (handlerProps) => (
+        <TextInput testID="emitter" {...handlerProps}>
+          <Text testID="target">Nested</Text>
+        </TextInput>
+      ),
+    ),
+    ...buildDirectEventCases(
+      'Image content',
+      ['loadStart', 'progress', 'partialLoad', 'load', 'error', 'loadEnd'],
+      // Image does not accept children, clone it to fire the event on a nested element.
+      (handlerProps) =>
+        React.cloneElement(
+          <Image
+            testID="emitter"
+            source={{ uri: 'https://example.com/image.png' }}
+            {...handlerProps}
+          />,
+          {},
+          <Text testID="target">Nested</Text>,
+        ),
+    ),
+    ...buildDirectEventCases(
+      'ScrollView content',
+      [
+        'scroll',
+        'scrollBeginDrag',
+        'scrollEndDrag',
+        'momentumScrollBegin',
+        'momentumScrollEnd',
+        'scrollToTop',
+        'contentSizeChange',
+      ],
+      (handlerProps) => (
+        <ScrollView testID="emitter" {...handlerProps}>
+          <View testID="target" />
+        </ScrollView>
+      ),
+    ),
+    {
+      name: 'scroll from TextInput to ancestor ScrollView',
+      eventType: 'scroll',
+      ui: (handler) => (
+        <ScrollView testID="emitter" onScroll={handler}>
+          <TextInput testID="target" />
+        </ScrollView>
+      ),
+    },
+    {
+      name: 'refresh from FlatList item',
+      eventType: 'refresh',
+      ui: (handler) => (
+        <FlatList
+          testID="emitter"
+          data={['Item']}
+          renderItem={({ item }) => <Text testID="target">{item}</Text>}
+          refreshing={false}
+          onRefresh={handler}
+        />
+      ),
+    },
+    {
+      name: 'contentSizeChange from FlatList item',
+      eventType: 'contentSizeChange',
+      ui: (handler) => (
+        <FlatList
+          testID="emitter"
+          data={['Item']}
+          renderItem={({ item }) => <Text testID="target">{item}</Text>}
+          onContentSizeChange={handler}
+        />
+      ),
+    },
+    ...buildDirectEventCases(
+      'Modal content',
+      ['requestClose', 'show', 'dismiss', 'orientationChange'],
+      (handlerProps) => (
+        <Modal testID="emitter" visible {...handlerProps}>
+          <Text testID="target">Content</Text>
+        </Modal>
+      ),
+    ),
+  ];
+
+  // Builds one case per event type, passing the matching `on*` handler prop to `ui`.
+  function buildDirectEventCases(
+    source: string,
+    eventTypes: string[],
+    ui: (handlerProps: Record<string, jest.Mock>) => React.ReactElement,
+  ): DirectEventCase[] {
+    return eventTypes.map((eventType) => ({
+      name: `${eventType} from ${source}`,
+      eventType,
+      ui: (handler) => ui({ [getEventHandlerName(eventType)]: handler }),
+    }));
+  }
+
+  test.each(directEventCases)('bubbles $name with a warning', async ({ eventType, ui }) => {
+    const handler = jest.fn();
+    await render(ui(handler));
+
+    await fireEvent(screen.getByTestId('target'), eventType);
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test.each(directEventCases)(
+    'does not warn for $name when fired on the emitting element',
+    async ({ eventType, ui }) => {
+      const handler = jest.fn();
+      await render(ui(handler));
+
+      await fireEvent(screen.getByTestId('emitter'), eventType);
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect(warnSpy).not.toHaveBeenCalled();
+    },
+  );
+
+  test('warns when fired with "on" prefixed event name', async () => {
+    const onMomentumScrollEnd = jest.fn();
+    await render(
+      <ScrollView onMomentumScrollEnd={onMomentumScrollEnd}>
+        <View testID="child" />
+      </ScrollView>,
+    );
+
+    await fireEvent(screen.getByTestId('child'), 'onMomentumScrollEnd');
+
+    expect(onMomentumScrollEnd).toHaveBeenCalledTimes(1);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test('warns about stopping bubbling in the next major version', async () => {
+    await render(
+      <ScrollView testID="scroll" onScroll={() => {}}>
+        <View testID="child" />
+      </ScrollView>,
+    );
+
+    await fireEvent.scroll(screen.getByTestId('child'));
+
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "  ▲ fireEvent: "scroll" does not bubble in React Native. fireEvent will stop bubbling it in the next major version. Fire it on:
+
+            <RCTScrollView
+              testID="scroll"
+            />
+      "
+    `);
+  });
+
+  test.each([true, false])(
+    'warns about bubbling regardless of eventDiagnostics (%s)',
+    async (eventDiagnostics) => {
+      configure({ eventDiagnostics });
+      await render(
+        <ScrollView onScroll={() => {}}>
+          <View testID="child" />
+        </ScrollView>,
+      );
+
+      await fireEvent.scroll(screen.getByTestId('child'));
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy.mock.calls[0][0]).toContain('"scroll" does not bubble in React Native');
+    },
+  );
+
+  test('warns when handler is on composite component above the emitting element', async () => {
+    const onScroll = jest.fn();
+    const Screen = (_props: { onScroll: () => void }) => (
+      <ScrollView>
+        <View testID="child" />
+      </ScrollView>
+    );
+    await render(<Screen onScroll={onScroll} />);
+
+    await fireEvent.scroll(screen.getByTestId('child'));
+
+    expect(onScroll).toHaveBeenCalledTimes(1);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+  });
+
+  // Known gap: only the type of the element with the handler is checked.
+  test('does not warn when handler is on an element that does not emit the event', async () => {
+    const onScroll = jest.fn();
+    const Screen = (_props: { onScroll: () => void }) => (
+      <View>
+        <ScrollView>
+          <View testID="child" />
+        </ScrollView>
+      </View>
+    );
+    await render(<Screen onScroll={onScroll} />);
+
+    await fireEvent.scroll(screen.getByTestId('child'));
+
+    expect(onScroll).toHaveBeenCalledTimes(1);
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn when bubbling to composite component handler', async () => {
+    const onLoad = jest.fn();
+    const onShow = jest.fn();
+    const Card = (_props: { onLoad: () => void; onShow: () => void }) => (
+      <View>
+        <Text>Card</Text>
+      </View>
+    );
+    await render(<Card onLoad={onLoad} onShow={onShow} />);
+
+    await fireEvent(screen.getByText('Card'), 'load');
+    await fireEvent(screen.getByText('Card'), 'show');
+
+    expect(onLoad).toHaveBeenCalledTimes(1);
+    expect(onShow).toHaveBeenCalledTimes(1);
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn when bubbling to host element that does not emit the event', async () => {
+    const onLoad = jest.fn();
+    await render(
+      // @ts-expect-error View does not have onLoad prop
+      <View onLoad={onLoad}>
+        <Text>Content</Text>
+      </View>,
+    );
+
+    await fireEvent(screen.getByText('Content'), 'load');
+
+    expect(onLoad).toHaveBeenCalledTimes(1);
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn when bubbling load event to ImageBackground handler', async () => {
+    const onLoad = jest.fn();
+    await render(
+      <ImageBackground source={{ uri: 'https://example.com/image.png' }} onLoad={onLoad}>
+        <Text>Caption</Text>
+      </ImageBackground>,
+    );
+
+    await fireEvent(screen.getByText('Caption'), 'load');
+
+    expect(onLoad).toHaveBeenCalledTimes(1);
+    expect(warnSpy).not.toHaveBeenCalled();
   });
 });
 
@@ -954,6 +1301,46 @@ describe('unhandled event warning', () => {
     `);
   });
 
+  test('warns when multiple handlers are blocked by pointerEvents="none" on an ancestor', async () => {
+    await render(
+      <View testID="overlay" pointerEvents="none">
+        <Pressable testID="outer" onPress={jest.fn()}>
+          <Pressable testID="inner" onPress={jest.fn()} />
+        </Pressable>
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByTestId('inner'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "Cannot fire the "press" event on elements blocked by pointerEvents.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <View
+          accessible={true}
+          testID="inner"
+        />
+
+        <View
+          accessible={true}
+          testID="outer"
+        >
+          <View
+            accessible={true}
+            testID="inner"
+          />
+        </View>
+
+      Blocked by:
+
+        <View
+          pointerEvents="none"
+          testID="overlay"
+        />"
+    `);
+  });
+
   test('reports pointerEvents rather than disabled when both block the handler', async () => {
     await render(
       <View testID="overlay" pointerEvents="none">
@@ -1084,14 +1471,14 @@ describe('unhandled event warning', () => {
     ['focus', 'onFocus'],
     ['blur', 'onBlur'],
     ['press', 'onPress'],
-  ])('warns when "%s" is blocked by non-editable TextInput', async (eventName, handlerName) => {
+  ])('warns when "%s" is blocked by non-editable TextInput', async (eventType, handlerName) => {
     await render(<TextInput testID="input" editable={false} {...{ [handlerName]: jest.fn() }} />);
 
-    await fireEvent(screen.getByTestId('input'), eventName);
+    await fireEvent(screen.getByTestId('input'), eventType);
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatch(
-      new RegExp(`^Cannot fire the "${eventName}" event on a non-editable TextInput\\.`),
+      new RegExp(`^Cannot fire the "${eventType}" event on a non-editable TextInput\\.`),
     );
   });
 
@@ -1281,6 +1668,7 @@ describe('non-editable TextInput', () => {
   });
 
   test('blocks touch-related events when firing on nested Text child', async () => {
+    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onFocus = jest.fn();
     const onChangeText = jest.fn();
     const onSubmitEditing = jest.fn();
@@ -1315,8 +1703,11 @@ describe('non-editable TextInput', () => {
     expect(onFocus).not.toHaveBeenCalled();
     expect(onChangeText).not.toHaveBeenCalled();
     expect(onSubmitEditing).not.toHaveBeenCalled();
-    // Layout is a direct event, so it does not bubble to the parent TextInput
-    expect(onLayout).not.toHaveBeenCalled();
+    // Layout is a direct event, but still bubbles to the parent TextInput with a warning
+    expect(onLayout).toHaveBeenCalledTimes(2);
+    expect(onLayout).toHaveBeenCalledWith(layoutEvent);
+    expect(warnSpy).toHaveBeenCalledTimes(2);
+    warnSpy.mockRestore();
   });
 
   test.each([

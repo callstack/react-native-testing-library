@@ -21,11 +21,11 @@ export async function pullToRefresh(
 
   // `refreshControl` is an element prop, not a rendered host instance, so `dispatchEvent`
   // can't reach its `onRefresh` handler.
-  const onRefresh = instance.props.refreshControl?.props?.onRefresh;
-  const hasHandler = typeof onRefresh === 'function';
+  const refreshControl = instance.props.refreshControl;
+  const hasHandler = typeof refreshControl?.props?.onRefresh === 'function';
   if (hasHandler) {
     await act(() => {
-      onRefresh();
+      refreshControl.props.onRefresh();
     });
   }
 

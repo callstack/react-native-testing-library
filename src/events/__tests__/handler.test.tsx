@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 
 import { render, screen } from '../..';
-import { getEventHandlerFromProps, normalizeEventName } from '../handler';
+import { getEventHandlerFromProps, normalizeEventType } from '../handler';
 
 test('getEventHandlerFromProps strict mode', async () => {
   const onPress = jest.fn();
@@ -68,11 +68,34 @@ test('getEventHandlerFromProps loose mode', async () => {
   expect(getEventHandlerFromProps(both.props, 'onPress', { loose: true })).toBe(onPress);
 });
 
-test('normalizeEventName strips the `on*` prefix', () => {
-  expect(normalizeEventName('onLayout')).toBe('layout');
-  expect(normalizeEventName('onChangeText')).toBe('changeText');
-  expect(normalizeEventName('layout')).toBe('layout');
-  expect(normalizeEventName('changeText')).toBe('changeText');
-  expect(normalizeEventName('once')).toBe('once');
-  expect(normalizeEventName('on')).toBe('on');
+test('getEventHandlerFromProps loose mode matches handlers named without the `on*` prefix', async () => {
+  const press = jest.fn();
+  const testOnlyPress = jest.fn();
+
+  await render(
+    <View>
+      {/* @ts-expect-error Intentionally passing such props */}
+      <View testID="regular" press={press} />
+      {/* @ts-expect-error Intentionally passing such props */}
+      <View testID="testOnly" testOnly_press={testOnlyPress} />
+    </View>,
+  );
+
+  const regular = screen.getByTestId('regular');
+  const testOnly = screen.getByTestId('testOnly');
+
+  expect(getEventHandlerFromProps(regular.props, 'press', { loose: true })).toBe(press);
+  expect(getEventHandlerFromProps(testOnly.props, 'press', { loose: true })).toBe(testOnlyPress);
+
+  expect(getEventHandlerFromProps(regular.props, 'press')).toBeUndefined();
+  expect(getEventHandlerFromProps(testOnly.props, 'press')).toBeUndefined();
+});
+
+test('normalizeEventType strips the `on*` prefix', () => {
+  expect(normalizeEventType('onLayout')).toBe('layout');
+  expect(normalizeEventType('onChangeText')).toBe('changeText');
+  expect(normalizeEventType('layout')).toBe('layout');
+  expect(normalizeEventType('changeText')).toBe('changeText');
+  expect(normalizeEventType('once')).toBe('once');
+  expect(normalizeEventType('on')).toBe('on');
 });

@@ -8,14 +8,22 @@ with v14.
 ### Features
 
 - Added `fireEvent.layout()` to simulate the layout engine measuring an element, invoking the
-  `onLayout` handler with a synthetic layout event. Layout events do not bubble to parent
-  elements.
+  `onLayout` handler with a synthetic layout event. Unlike `fireEvent(element, 'layout')`, it
+  does not bubble to parent elements.
 - `fireEvent.scroll()` and `userEvent.scrollTo()` use the size from the last layout event on the
   same `ScrollView` as the default `layoutMeasurement`.
 - Added `userEvent.accessibilityAction()` to dispatch a named accessibility action to an
   element, invoking its `onAccessibilityAction` handler.
 - Added `userEvent.pullToRefresh()` to simulate the pull-to-refresh gesture on a host
   `ScrollView` element, invoking the `onRefresh` handler of its `refreshControl` prop.
+
+### Deprecations
+
+- `fireEvent` warns when a direct event bubbles from a nested element to the host element that
+  emits it, e.g. `scroll` from `ScrollView` content to the `ScrollView`. These events will stop
+  bubbling in the next major version. See the
+  [`fireEvent` docs](./website/docs/14.x/docs/api/events/fire-event.mdx) for the list of direct
+  events.
 
 ## 14.0.0
 

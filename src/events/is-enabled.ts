@@ -30,38 +30,38 @@ export function isTouchResponder(instance: TestInstance) {
 /**
  * List of events affected by `pointerEvents` prop.
  */
-const eventsAffectedByPointerEventsProp = new Set(['press']);
+const EVENTS_AFFECTED_BY_POINTER_EVENTS = ['press'];
 
 /**
- * Expects event name without the `on*` prefix (see `normalizeEventName`).
+ * Expects event type without the `on*` prefix (see `normalizeEventType`).
  */
-export function isEventBlockableByPointerEvents(eventName: string): boolean {
-  return eventsAffectedByPointerEventsProp.has(eventName);
+export function isEventBlockableByPointerEvents(eventType: string): boolean {
+  return EVENTS_AFFECTED_BY_POINTER_EVENTS.includes(eventType);
 }
 
 /**
  * List of `TextInput` events not affected by `editable` prop.
  */
-const textInputEventsIgnoringEditableProp = new Set(['contentSizeChange', 'layout', 'scroll']);
+const TEXT_INPUT_EVENTS_IGNORING_EDITABLE = ['contentSizeChange', 'layout', 'scroll'];
 
 /**
  * Checks whether a device would deliver the event to the instance, taking into account
  * `pointerEvents`, non-editable `TextInput` and touch responders that decline the touch.
- * Expects event name without the `on*` prefix (see `normalizeEventName`).
+ * Expects event type without the `on*` prefix (see `normalizeEventType`).
  */
 export function isEventEnabled(
   instance: TestInstance,
-  eventName: string,
+  eventType: string,
   nearestTouchResponder?: TestInstance,
 ) {
   if (nearestTouchResponder != null && isHostTextInput(nearestTouchResponder)) {
     return (
       isEditableTextInput(nearestTouchResponder) ||
-      textInputEventsIgnoringEditableProp.has(eventName)
+      TEXT_INPUT_EVENTS_IGNORING_EDITABLE.includes(eventType)
     );
   }
 
-  if (isEventBlockableByPointerEvents(eventName) && !isPointerEventEnabled(instance)) {
+  if (isEventBlockableByPointerEvents(eventType) && !isPointerEventEnabled(instance)) {
     return false;
   }
 

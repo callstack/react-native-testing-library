@@ -6,37 +6,15 @@ import { isHostScrollView } from '../helpers/host-component-names';
 import { buildLayoutEvent, buildTouchEvent } from './builders/common';
 import { mergeEventProps } from './builders/merge';
 import { buildScrollEvent } from './builders/scroll';
-import { normalizeEventName } from './handler';
+import { normalizeEventType } from './handler';
 import { nativeState } from './native-state';
 import { findEventHandler } from './propagation';
-import type { EventName, EventProps, LayoutRectangle } from './types';
+import type { EventProps, EventType, LayoutRectangle } from './types';
 import { updateNativeStateFromEvent } from './update-native-state';
 import { warnAboutUnhandledEvent } from './warnings';
 
-async function fireEvent(instance: TestInstance, eventName: EventName, ...data: unknown[]) {
-  if (!isInstanceMounted(instance)) {
-    return;
-  }
-
-  // `fireEvent` accepts event names with and without the `on*` prefix.
-  const hasUpdatedNativeState = updateNativeStateFromEvent(
-    instance,
-    normalizeEventName(eventName),
-    data[0],
-  );
-
-  const { handler, skippedTargets } = findEventHandler(instance, eventName);
-  if (!handler) {
-    warnAboutUnhandledEvent(instance, eventName, { skippedTargets, hasUpdatedNativeState });
-    return;
-  }
-
-  let returnValue;
-  await act(() => {
-    returnValue = handler(...data);
-  });
-
-  return returnValue;
+async function fireEvent(instance: TestInstance, eventType: EventType, ...data: unknown[]) {
+  return await fireEventInternal(instance, { type: eventType, data, bubbles: true });
 }
 
 fireEvent.changeText = async (instance: TestInstance, text: string) =>
@@ -54,8 +32,49 @@ fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
   await fireEvent(instance, 'scroll', mergeEventProps(event, eventProps));
 };
 
+// Does not bubble and checks only the element's own props, as React Native delivers layout events
+// only to the measured element. This is the intended behavior: `fireEvent(instance, 'layout')`
+// still bubbles (with a deprecation warning) for compatibility, and will match this in the next
+// major version.
 fireEvent.layout = async (instance: TestInstance, layout?: Partial<LayoutRectangle>) => {
-  await fireEvent(instance, 'layout', buildLayoutEvent(layout));
+  await fireEventInternal(instance, {
+    type: 'layout',
+    data: [buildLayoutEvent(layout)],
+    bubbles: false,
+  });
 };
+
+type FireEventOptions = {
+  type: EventType;
+  data: unknown[];
+  bubbles: boolean;
+};
+
+async function fireEventInternal(instance: TestInstance, options: FireEventOptions) {
+  const { type, data, bubbles } = options;
+  if (!isInstanceMounted(instance)) {
+    return;
+  }
+
+  // `fireEvent` accepts event types with and without the `on*` prefix.
+  const hasUpdatedNativeState = updateNativeStateFromEvent(
+    instance,
+    normalizeEventType(type),
+    data[0],
+  );
+
+  const { handler, skippedTargets } = findEventHandler(instance, type, { bubbles });
+  if (!handler) {
+    warnAboutUnhandledEvent(instance, type, { skippedTargets, hasUpdatedNativeState });
+    return;
+  }
+
+  let returnValue;
+  await act(() => {
+    returnValue = handler(...data);
+  });
+
+  return returnValue;
+}
 
 export { fireEvent };
