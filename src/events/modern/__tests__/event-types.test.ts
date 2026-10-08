@@ -1,8 +1,8 @@
 import {
-  bubblingEventTypes,
-  directEventTypes,
+  BUBBLING_EVENT_TYPES,
+  DIRECT_EVENT_TYPES,
   getEventTypeConfig,
-  skipBubblingEventTypes,
+  SKIP_BUBBLING_EVENT_TYPES,
 } from '../event-types';
 
 type ViewConfig = {
@@ -79,9 +79,9 @@ function loadReactNativeEventTypes() {
 test('event types match React Native view configs', () => {
   const reactNative = loadReactNativeEventTypes();
 
-  expect([...bubblingEventTypes].sort()).toEqual([...reactNative.bubbling].sort());
-  expect([...skipBubblingEventTypes].sort()).toEqual([...reactNative.skipBubbling].sort());
-  expect([...directEventTypes].sort()).toEqual([...reactNative.direct].sort());
+  expect([...BUBBLING_EVENT_TYPES].sort()).toEqual([...reactNative.bubbling].sort());
+  expect([...SKIP_BUBBLING_EVENT_TYPES].sort()).toEqual([...reactNative.skipBubbling].sort());
+  expect([...DIRECT_EVENT_TYPES].sort()).toEqual([...reactNative.direct].sort());
 });
 
 test('getEventTypeConfig() returns config of bubbling event', () => {
