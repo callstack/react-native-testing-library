@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
-import { render, screen } from '../..';
+import { render, screen } from '../../..';
 import { getEventHandlerFromProps, normalizeEventType } from '../handler';
 
 test('getEventHandlerFromProps strict mode', async () => {

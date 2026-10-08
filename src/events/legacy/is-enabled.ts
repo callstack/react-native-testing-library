@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
-import { isHostTextInput } from '../helpers/host-component-names';
-import { isEditableTextInput } from '../helpers/text-input';
+import { isHostTextInput } from '../../helpers/host-component-names';
+import { isEditableTextInput } from '../../helpers/text-input';
 
 /**
  * pointerEvents controls whether the View can be the target of touch events.

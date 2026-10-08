@@ -1,6 +1,6 @@
 import type { TestInstance } from 'test-renderer';
 
-import { dispatchEvent } from '../../events';
+import { dispatchEvent } from '../../events/legacy';
 
 /**
  * Tracks what a single `userEvent` interaction did, so `warnAboutUnhandledInteraction`

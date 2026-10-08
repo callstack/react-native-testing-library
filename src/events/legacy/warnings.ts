@@ -1,12 +1,12 @@
 import redent from 'redent';
 import type { TestInstance } from 'test-renderer';
 
-import { getConfig } from '../config';
-import { computeAriaDisabled } from '../helpers/accessibility';
-import { formatElement, formatJson } from '../helpers/format-element';
-import { isHostTextInput } from '../helpers/host-component-names';
-import { logger } from '../helpers/logger';
-import { isEditableTextInput } from '../helpers/text-input';
+import { getConfig } from '../../config';
+import { computeAriaDisabled } from '../../helpers/accessibility';
+import { formatElement, formatJson } from '../../helpers/format-element';
+import { isHostTextInput } from '../../helpers/host-component-names';
+import { logger } from '../../helpers/logger';
+import { isEditableTextInput } from '../../helpers/text-input';
 import { getEventHandlerName, normalizeEventType } from './handler';
 import { getPointerEventsBlocker, isEventBlockableByPointerEvents } from './is-enabled';
 

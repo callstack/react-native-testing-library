@@ -1,6 +1,6 @@
 # Native State
 
-On a device, some component state lives in native views, not in React. Jest has no native views, so RNTL keeps this state itself in `src/events/native-state.ts`.
+On a device, some component state lives in native views, not in React. Jest has no native views, so RNTL keeps this state itself in `src/events/legacy/native-state.ts`.
 
 ## What is stored
 
@@ -10,7 +10,7 @@ On a device, some component state lives in native views, not in React. Jest has 
 
 ## Key points
 
-- **Writes.** `fireEvent` and `userEvent` update native state when they simulate a change that a native view would make. `fireEvent` does it through `updateNativeStateFromEvent()` in `src/events/update-native-state.ts`. Each `userEvent` action writes it directly.
+- **Writes.** `fireEvent` and `userEvent` update native state when they simulate a change that a native view would make. `fireEvent` does it through `updateNativeStateFromEvent()` in `src/events/legacy/update-native-state.ts`. Each `userEvent` action writes it directly.
 - **Reads.** Helpers read native state, like `getTextInputValue()` in `src/helpers/text-input.ts`. Queries and matchers use those helpers instead of reading native state directly.
 - **Props win.** A controlled prop (like `value`) always takes precedence over native state.
 - **No reset.** State is stored in `WeakMap`s keyed by host instance. It disappears when the instance is unmounted, so `cleanup()` doesn't need to clear it.

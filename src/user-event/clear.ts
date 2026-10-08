@@ -6,7 +6,7 @@ import {
   buildFocusEvent,
   buildTextSelectionChangeEvent,
   isPointerEventEnabled,
-} from '../events';
+} from '../events/legacy';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { getTextInputValue, isEditableTextInput } from '../helpers/text-input';

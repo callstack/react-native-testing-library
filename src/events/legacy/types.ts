@@ -6,7 +6,7 @@ import type {
   ViewProps,
 } from 'react-native';
 
-import type { StringWithAutocomplete } from '../types';
+import type { StringWithAutocomplete } from '../../types';
 
 export type EventHandler = (...args: unknown[]) => unknown;
 

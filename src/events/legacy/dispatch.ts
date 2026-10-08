@@ -1,7 +1,7 @@
 import type { TestInstance } from 'test-renderer';
 
-import { act } from '../act';
-import { isInstanceMounted } from '../helpers/component-tree';
+import { act } from '../../act';
+import { isInstanceMounted } from '../../helpers/component-tree';
 import { getEventHandlerFromProps } from './handler';
 
 /**

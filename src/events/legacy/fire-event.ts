@@ -1,8 +1,8 @@
 import type { TestInstance } from 'test-renderer';
 
-import { act } from '../act';
-import { isInstanceMounted } from '../helpers/component-tree';
-import { isHostScrollView } from '../helpers/host-component-names';
+import { act } from '../../act';
+import { isInstanceMounted } from '../../helpers/component-tree';
+import { isHostScrollView } from '../../helpers/host-component-names';
 import { buildLayoutEvent, buildTouchEvent } from './builders/common';
 import { mergeEventProps } from './builders/merge';
 import { buildScrollEvent } from './builders/scroll';

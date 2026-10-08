@@ -1,8 +1,8 @@
 import type { TestInstance } from 'test-renderer';
 
-import { isHostScrollView } from '../helpers/host-component-names';
-import { isEditableTextInput } from '../helpers/text-input';
-import type { Point, Size } from '../types';
+import { isHostScrollView } from '../../helpers/host-component-names';
+import { isEditableTextInput } from '../../helpers/text-input';
+import type { Point, Size } from '../../types';
 import { nativeState } from './native-state';
 
 const SCROLL_EVENTS = [

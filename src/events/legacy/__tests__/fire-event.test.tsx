@@ -17,9 +17,9 @@ import {
   View,
 } from 'react-native';
 
-import { fireEvent, render, screen } from '../..';
-import { configure } from '../../config';
-import { _console, logger } from '../../helpers/logger';
+import { fireEvent, render, screen } from '../../..';
+import { configure } from '../../../config';
+import { _console, logger } from '../../../helpers/logger';
 import { getEventHandlerName } from '../handler';
 import { nativeState } from '../native-state';
 

@@ -2,7 +2,9 @@
 
 RNTL has two ways to trigger events. Neither goes through React Native's native event system. Both find `on*` props in the rendered tree and call them inside `act()`.
 
-Both are built on the shared event subsystem in `src/events/`, which also holds `fireEvent` itself:
+Both are built on the shared event subsystem in `src/events/legacy/`, which also holds `fireEvent` itself. This is the `'legacy'` event system, the default for the `eventSystem` config option. A `'modern'` event system that follows React Native's event dispatch is in progress.
+
+The files in `src/events/legacy/`:
 
 | File                                        | Contents                                                                                |
 | ------------------------------------------- | --------------------------------------------------------------------------------------- |
@@ -15,11 +17,11 @@ Both are built on the shared event subsystem in `src/events/`, which also holds 
 | `builders/`                                 | Event payloads, matching what React Native sends on a device                            |
 | `native-state.ts`, `update-native-state.ts` | [Native state](native-state.md) and how `fireEvent` updates it                          |
 
-`src/user-event/` is a separate module on top of `src/events/` and imports it only through `src/events/index.ts`.
+`src/user-event/` is a separate module on top of `src/events/legacy/` and imports it only through `src/events/legacy/index.ts`.
 
 ## `fireEvent`
 
-`src/events/fire-event.ts` is the public API. It calls a single handler for a single event, found with `findEventHandler()` from `src/events/propagation.ts`. The work is in finding the right handler:
+`src/events/legacy/fire-event.ts` is the public API. It calls a single handler for a single event, found with `findEventHandler()` from `src/events/legacy/propagation.ts`. The work is in finding the right handler:
 
 - It starts at the target and moves up the tree until it finds a handler. It also checks props of composite components, not only host elements.
 - Direct events (see [Native event propagation](native-events.md)) still bubble, with a warning when they reach an ancestor that emits them. `fireEvent.layout()` only checks the target.
@@ -42,5 +44,5 @@ For the `eventDiagnostics` warning, each action tracks itself with an `Interacti
 
 - To change which handler gets a single event, change `fireEvent`. To make an interaction more realistic, change the `userEvent` action.
 - Keep `dispatchEvent()` simple.
-- Put event rules that both need, like the `pointerEvents` and `editable` checks, in `src/events/`. They may build on general helpers from `src/helpers/` (for example `isEditableTextInput`). Code used only by `userEvent`, like delays and scroll steps, stays in `src/user-event/`.
+- Put event rules that both need, like the `pointerEvents` and `editable` checks, in `src/events/legacy/`. They may build on general helpers from `src/helpers/` (for example `isEditableTextInput`). Code used only by `userEvent`, like delays and scroll steps, stays in `src/user-event/`.
 - Event sequences should match a real device. Check on a device before changing one, and keep the code comments explaining the observed behavior.

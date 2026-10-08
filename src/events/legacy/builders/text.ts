@@ -1,4 +1,4 @@
-import type { Size, TextRange } from '../../types';
+import type { Size, TextRange } from '../../../types';
 import { baseSyntheticEvent } from './base';
 
 /**

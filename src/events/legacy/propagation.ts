@@ -6,7 +6,7 @@ import {
   isHostScrollView,
   isHostText,
   isHostTextInput,
-} from '../helpers/host-component-names';
+} from '../../helpers/host-component-names';
 import { getEventHandlerFromProps, normalizeEventType } from './handler';
 import { isEventEnabled, isTouchResponder } from './is-enabled';
 import type { EventHandler } from './types';

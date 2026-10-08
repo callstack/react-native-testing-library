@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text } from 'react-native';
 
-import { render, screen } from '../..';
+import { render, screen } from '../../..';
 import { buildTouchEvent } from '../builders/common';
 import { dispatchEvent } from '../dispatch';
 

@@ -1,7 +1,7 @@
 import { stringify } from 'jest-matcher-utils';
 import type { TestInstance } from 'test-renderer';
 
-import { buildScrollEvent, nativeState } from '../../events';
+import { buildScrollEvent, nativeState } from '../../events/legacy';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';

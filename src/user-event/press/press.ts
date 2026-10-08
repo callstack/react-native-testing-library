@@ -7,7 +7,7 @@ import {
   buildTouchEvent,
   getEventHandlerFromProps,
   isPointerEventEnabled,
-} from '../../events';
+} from '../../events/legacy';
 import { isTestInstance } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
