@@ -53,18 +53,30 @@ describe('event object', () => {
     expect(onFocus).not.toHaveBeenCalled();
   });
 
-  test('throws on keys other than nativeEvent', async () => {
-    await render(<TextInput testID="input" />);
+  test.each([
+    [{ target: 1 }, '"target". "target" is set by the dispatch.'],
+    [
+      { target: {}, currentTarget: { measure: () => {} } },
+      '"target", "currentTarget". "target", "currentTarget" are set by the dispatch.',
+    ],
+    [{ persist: () => {} }, '"persist". "persist" is provided by the event.'],
+    [
+      { preventDefault: () => {}, dispatchConfig: {} },
+      '"preventDefault", "dispatchConfig". "preventDefault", "dispatchConfig" are provided by the event.',
+    ],
+    [{ text: 'Hello' }, '"text". Pass "text" in "nativeEvent" instead.'],
+    [
+      { text: 'Hello', target: 1, persist: () => {} },
+      '"text", "target", "persist". "target" is set by the dispatch. "persist" is provided by the event. Pass "text" in "nativeEvent" instead.',
+    ],
+  ])('throws on unsupported keys %p', async (event, message) => {
+    const onFocus = jest.fn();
+    await render(<TextInput testID="input" onFocus={onFocus} />);
 
     await expect(
-      fireEventUntyped(screen.getByTestId('input'), 'focus', {
-        nativeEvent: {},
-        target: 1,
-        persist: jest.fn(),
-      }),
-    ).rejects.toThrow(
-      'Unable to fire a "focus" event - unsupported event object keys: "target", "persist". Pass the event data as "nativeEvent".',
-    );
+      fireEventUntyped(screen.getByTestId('input'), 'focus', { nativeEvent: {}, ...event }),
+    ).rejects.toThrow(`Unable to fire a "focus" event - unsupported event object keys: ${message}`);
+    expect(onFocus).not.toHaveBeenCalled();
   });
 
   test('throws when nativeEvent is not an object', async () => {
@@ -75,6 +87,36 @@ describe('event object', () => {
     ).rejects.toThrow(
       'Unable to fire a "focus" event - expected "nativeEvent" to be an object, received string "text".',
     );
+  });
+
+  test.each([
+    ['123', 'string "123"'],
+    [Number.NaN, 'number NaN'],
+    [Infinity, 'number Infinity'],
+    [null, 'null'],
+  ])('throws when timeStamp is %p', async (timeStamp, description) => {
+    const onFocus = jest.fn();
+    await render(<TextInput testID="input" onFocus={onFocus} />);
+
+    await expect(
+      fireEventUntyped(screen.getByTestId('input'), 'focus', { timeStamp }),
+    ).rejects.toThrow(
+      `Unable to fire a "focus" event - expected "timeStamp" to be a finite number, received ${description}.`,
+    );
+    expect(onFocus).not.toHaveBeenCalled();
+  });
+
+  test('passes timeStamp to handlers as event.timeStamp', async () => {
+    const onFocus = jest.fn();
+    await render(<TextInput testID="input" onFocus={onFocus} />);
+
+    const nativeEvent = { timestamp: 100 };
+    await fireEvent(screen.getByTestId('input'), 'focus', { nativeEvent, timeStamp: 42 });
+
+    const event: SyntheticEvent = onFocus.mock.calls[0][0];
+    expect(event.timeStamp).toBe(42);
+    expect(event.nativeEvent).toBe(nativeEvent);
+    expect(nativeEvent).toEqual({ timestamp: 100 });
   });
 
   test('passes nativeEvent to handlers as event.nativeEvent', async () => {

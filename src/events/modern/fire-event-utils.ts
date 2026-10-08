@@ -1,11 +1,20 @@
 import { ErrorWithStack } from '../../helpers/errors';
 import type { CreateEventInit } from './event';
+import { SyntheticEvent } from './event';
 
-const ALLOWED_INIT_KEYS = ['nativeEvent'];
+const ALLOWED_INIT_KEYS = ['nativeEvent', 'timeStamp'];
+
+/** Legacy events carried these as stubs. The dispatch sets them to host elements. */
+const DISPATCH_KEYS = ['target', 'currentTarget'];
+
+/** Members of the event itself, such as `persist` or `preventDefault`. */
+const EVENT_KEYS = new Set(
+  Object.getOwnPropertyNames(SyntheticEvent.prototype).filter((key) => key !== 'constructor'),
+);
 
 /**
  * Validates the arguments following the event type in modern `fireEvent`: exactly one plain
- * object, with only a `nativeEvent` key, which must be a plain object if set.
+ * object, with only `nativeEvent` (a plain object) and `timeStamp` (a finite number) keys.
  *
  * @param callsite the function to remove from the error stack, e.g. `fireEvent`
  */
@@ -44,8 +53,7 @@ export function validateEventInit(
   if (unknownKeys.length > 0) {
     throw new ErrorWithStack(
       `Unable to fire a "${eventType}" event - unsupported event object keys: ` +
-        `${unknownKeys.map((key) => `"${key}"`).join(', ')}. ` +
-        `Pass the event data as "nativeEvent".`,
+        `${formatKeys(unknownKeys)}. ${describeUnknownKeys(unknownKeys)}`,
       callsite,
     );
   }
@@ -58,7 +66,51 @@ export function validateEventInit(
     );
   }
 
+  if (
+    init.timeStamp !== undefined &&
+    (typeof init.timeStamp !== 'number' || !Number.isFinite(init.timeStamp))
+  ) {
+    throw new ErrorWithStack(
+      `Unable to fire a "${eventType}" event - expected "timeStamp" to be a finite number, ` +
+        `received ${describeValue(init.timeStamp)}.`,
+      callsite,
+    );
+  }
+
   return init as CreateEventInit;
+}
+
+/**
+ * Explains why each key can't be passed. Dropping keys silently, as DOM event constructors do,
+ * would leave handlers reading `undefined` with no explanation.
+ */
+function describeUnknownKeys(keys: string[]): string {
+  const dispatchKeys = keys.filter((key) => DISPATCH_KEYS.includes(key));
+  const eventKeys = keys.filter((key) => !dispatchKeys.includes(key) && EVENT_KEYS.has(key));
+  const otherKeys = keys.filter((key) => !dispatchKeys.includes(key) && !eventKeys.includes(key));
+
+  const reasons: string[] = [];
+  if (dispatchKeys.length > 0) {
+    reasons.push(`${formatKeys(dispatchKeys)} ${isOrAre(dispatchKeys)} set by the dispatch.`);
+  }
+
+  if (eventKeys.length > 0) {
+    reasons.push(`${formatKeys(eventKeys)} ${isOrAre(eventKeys)} provided by the event.`);
+  }
+
+  if (otherKeys.length > 0) {
+    reasons.push(`Pass ${formatKeys(otherKeys)} in "nativeEvent" instead.`);
+  }
+
+  return reasons.join(' ');
+}
+
+function formatKeys(keys: string[]): string {
+  return keys.map((key) => `"${key}"`).join(', ');
+}
+
+function isOrAre(keys: string[]): string {
+  return keys.length === 1 ? 'is' : 'are';
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

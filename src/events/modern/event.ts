@@ -8,6 +8,11 @@ export type NativeEventPayload = Record<string, unknown>;
 export type CreateEventInit = {
   /** Passed to handlers as `event.nativeEvent`. Defaults to `{}`. */
   nativeEvent?: NativeEventPayload;
+  /**
+   * The event's `timeStamp`. Defaults to the native timestamp, as in React Native
+   * (`nativeEvent.timeStamp ?? nativeEvent.timestamp`), then to `performance.now()`.
+   */
+  timeStamp?: number;
 };
 
 type SyntheticEventInit = {
@@ -237,6 +242,8 @@ export function createEvent(eventType: string, init: CreateEventInit = {}): Synt
   const nativeEvent = init.nativeEvent ?? {};
   // React Native keeps the native timestamp as the event's `timeStamp`.
   const nativeTimeStamp = nativeEvent.timeStamp ?? nativeEvent.timestamp;
+  const timeStamp =
+    init.timeStamp ?? (typeof nativeTimeStamp === 'number' ? nativeTimeStamp : undefined);
   return new SyntheticEvent(
     // React Native's event type is the lowercased name, e.g. `pointerup`.
     eventType.toLowerCase(),
@@ -244,7 +251,7 @@ export function createEvent(eventType: string, init: CreateEventInit = {}): Synt
       bubbles: config.kind === 'bubbling' && !config.skipBubbling,
       cancelable: true,
       rnIsDirect: config.kind === 'direct',
-      timeStamp: typeof nativeTimeStamp === 'number' ? nativeTimeStamp : undefined,
+      timeStamp,
     },
     nativeEvent,
     config.dispatchConfig,

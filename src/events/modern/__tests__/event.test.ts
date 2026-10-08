@@ -2,6 +2,10 @@ import { createEvent, SyntheticEvent } from '../event';
 
 const dispatchConfig = { registrationName: 'onFocus' };
 
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
 test('exposes init values', () => {
   const nativeEvent = { target: 1 };
   const event = new SyntheticEvent(
@@ -135,6 +139,18 @@ describe('createEvent()', () => {
 
   test('defaults nativeEvent to an empty object', () => {
     expect(createEvent('focus')?.nativeEvent).toEqual({});
+  });
+
+  test.each([
+    [{ nativeEvent: { timeStamp: 1 } }, 1],
+    [{ nativeEvent: { timestamp: 2 } }, 2],
+    [{ nativeEvent: { timeStamp: 1, timestamp: 2 } }, 1],
+    [{ nativeEvent: { timeStamp: 1, timestamp: 2 }, timeStamp: 3 }, 3],
+    [{ nativeEvent: { timestamp: 'later' } }, 456],
+  ])('takes timeStamp from %p', (init, timeStamp) => {
+    jest.spyOn(performance, 'now').mockReturnValue(456);
+
+    expect(createEvent('focus', init)?.timeStamp).toBe(timeStamp);
   });
 
   test('returns null for events unknown to React Native', () => {
