@@ -10,14 +10,14 @@ export function createScrollSteps(
   interpolator: InterpolatorFn,
 ): Point[] {
   if (target.y != null) {
-    return interpolator(target.y, initialOffset.y, DEFAULT_STEPS_COUNT).map((y) => ({
+    return interpolate(target.y, initialOffset.y, interpolator).map((y) => ({
       y,
       x: initialOffset.x,
     }));
   }
 
   if (target.x != null) {
-    return interpolator(target.x, initialOffset.x, DEFAULT_STEPS_COUNT).map((x) => ({
+    return interpolate(target.x, initialOffset.x, interpolator).map((x) => ({
       x,
       y: initialOffset.y,
     }));
@@ -26,14 +26,19 @@ export function createScrollSteps(
   return [];
 }
 
+function interpolate(end: number, start: number, interpolator: InterpolatorFn): number[] {
+  // No movement: a single step, so no `scroll` event is emitted for an unchanged offset.
+  if (end === start) {
+    return [start];
+  }
+
+  return interpolator(end, start, DEFAULT_STEPS_COUNT);
+}
+
 /**
  * Generate linear scroll values (with equal steps).
  */
 export function linearInterpolator(end: number, start: number, steps: number): number[] {
-  if (end === start) {
-    return [end, start];
-  }
-
   const result = [];
   for (let i = 0; i < steps; i += 1) {
     result.push(lerp(start, end, i / (steps - 1)));
@@ -46,10 +51,6 @@ export function linearInterpolator(end: number, start: number, steps: number): n
  * Generate inertial scroll values (exponentially slowing down).
  */
 export function inertialInterpolator(end: number, start: number, steps: number): number[] {
-  if (end === start) {
-    return [end, start];
-  }
-
   const result = [];
   let factor = 1;
   for (let i = 0; i < steps - 1; i += 1) {

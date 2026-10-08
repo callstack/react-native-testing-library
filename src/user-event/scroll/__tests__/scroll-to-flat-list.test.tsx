@@ -23,7 +23,7 @@ async function renderFlatListWithToolkit(props: ScrollViewProps = {}) {
   const renderItem = (title: string) => <Text>{title}</Text>;
   await render(
     <FlatList
-      testID="flatList"
+      testID="flat-list"
       onScroll={logEvent('scroll')}
       onScrollBeginDrag={logEvent('scrollBeginDrag')}
       onScrollEndDrag={logEvent('scrollEndDrag')}
@@ -46,12 +46,13 @@ describe('scrollTo() with FlatList', () => {
     const { events } = await renderFlatListWithToolkit();
     const user = userEvent.setup();
 
-    await user.scrollTo(screen.getByTestId('flatList'), { y: 100 });
+    await user.scrollTo(screen.getByTestId('flat-list'), { y: 100 });
     expect(mapEventsToShortForm(events)).toEqual([
       ['scrollBeginDrag', 0, 0],
       ['scroll', 25, 0],
       ['scroll', 50, 0],
       ['scroll', 75, 0],
+      ['scroll', 100, 0],
       ['scrollEndDrag', 100, 0],
     ]);
     expect(events).toMatchSnapshot('scrollTo({ y: 100 })');
@@ -61,12 +62,13 @@ describe('scrollTo() with FlatList', () => {
     const { events } = await renderFlatListWithToolkit({ horizontal: true });
     const user = userEvent.setup();
 
-    await user.scrollTo(screen.getByTestId('flatList'), { x: 100 });
+    await user.scrollTo(screen.getByTestId('flat-list'), { x: 100 });
     expect(mapEventsToShortForm(events)).toEqual([
       ['scrollBeginDrag', 0, 0],
       ['scroll', 0, 25],
       ['scroll', 0, 50],
       ['scroll', 0, 75],
+      ['scroll', 0, 100],
       ['scrollEndDrag', 0, 100],
     ]);
   });
@@ -113,6 +115,31 @@ test('scrollTo with contentSize and layoutMeasurement update FlatList content', 
   expect(screen.getByText('Item 0')).toBeOnTheScreen();
   expect(screen.getByText('Item 7')).toBeOnTheScreen();
   expect(screen.getByText('Item 15')).toBeOnTheScreen();
+
+  // Prevent act warning by unmounting the component
+  await screen.unmount();
+});
+
+test('drag scroll delivers final offset to FlatList', async () => {
+  const onEndReached = jest.fn();
+  await render(
+    <FlatList
+      testID="flat-list"
+      data={data}
+      renderItem={(x) => <Item title={x.item} />}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0}
+    />,
+  );
+  const user = userEvent.setup();
+
+  await user.scrollTo(screen.getByTestId('flat-list'), {
+    y: 520,
+    contentSize: { width: 240, height: 1000 },
+    layoutMeasurement: { width: 240, height: 480 },
+  });
+
+  expect(onEndReached).toHaveBeenCalledTimes(1);
 
   // Prevent act warning by unmounting the component
   await screen.unmount();

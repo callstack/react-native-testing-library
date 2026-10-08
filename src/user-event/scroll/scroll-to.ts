@@ -103,10 +103,8 @@ async function emitDragScrollEvents(
     buildScrollEvent(scrollSteps[0], scrollOptions),
   );
 
-  // Note: experimentally, in case of drag scroll the last scroll step
-  // will not trigger `scroll` event.
-  // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
-  for (let i = 1; i < scrollSteps.length - 1; i += 1) {
+  // Native emits `scroll` for every drag step, including the last; `scrollEndDrag` repeats its offset.
+  for (let i = 1; i < scrollSteps.length; i += 1) {
     await wait(config);
     await interaction.dispatchEvent('scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
   }
@@ -132,9 +130,7 @@ async function emitMomentumScrollEvents(
     buildScrollEvent(scrollSteps[0], scrollOptions),
   );
 
-  // Note: experimentally, in case of momentum scroll the last scroll step
-  // will trigger `scroll` event.
-  // See: https://github.com/callstack/react-native-testing-library/wiki/ScrollView-Events
+  // Native emits `scroll` for every momentum step, including the last; `momentumScrollEnd` repeats its offset.
   for (let i = 1; i < scrollSteps.length; i += 1) {
     await wait(config);
     await interaction.dispatchEvent('scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
