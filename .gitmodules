@@ -14,3 +14,7 @@
 	path = refs/react
 	url = https://github.com/facebook/react.git
 	shallow = true
+[submodule "refs/expensify-app"]
+	path = refs/expensify-app
+	url = https://github.com/Expensify/App.git
+	shallow = true

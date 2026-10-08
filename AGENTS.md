@@ -35,6 +35,7 @@ Upstream sources are checked out as shallow git submodules under `refs/` for cod
 - `refs/react/`: [facebook/react](https://github.com/facebook/react) (reconciler, test renderer, and RN renderer in `packages/`)
 - `refs/dom-testing-library/`: [testing-library/dom-testing-library](https://github.com/testing-library/dom-testing-library) (queries, `fireEvent`, `waitFor`)
 - `refs/react-testing-library/`: [testing-library/react-testing-library](https://github.com/testing-library/react-testing-library) (`render`, `act` integration)
+- `refs/expensify-app/`: [Expensify/App](https://github.com/Expensify/App), a large production React Native app with about 1,000 test files that use this library (in `tests/ui/`, `tests/unit/`, `tests/perf-test/`). Use it to see how real-world tests call the API and to judge the impact of behavior or API changes. Check its `package.json` for the version it uses.
 
 Notes:
 
