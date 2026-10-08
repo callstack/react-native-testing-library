@@ -3,19 +3,16 @@ import type { TestInstance } from 'test-renderer';
 import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { getHandlerProp } from '../shared/handler';
-import type { NativeEventPayload } from './event';
 import { eventInternals, SyntheticEvent } from './event';
-import { getEventTypeConfig } from './event-types';
 
 /**
- * Dispatches an event as React Native does for native events
+ * Dispatches an event from `createEvent()` as React Native does for native events
  * (`src/private/renderer/events/dispatchNativeEvent.js`, then `dispatch()` in
  * `src/private/webapis/dom/events/EventTarget.js`):
  *
  * - Bubbling events: capture phase from the root to the target (`on*Capture`), then bubble phase
  *   back to the root (`on*`). `skipBubbling` events call only the target when bubbling.
  * - Direct events: only the target's `on*` prop.
- * - Events unknown to React Native are dropped.
  *
  * Only host elements are on the path, so composite props are never called. Every handler on the
  * path runs until one stops propagation. The first handler error is rethrown after all handlers
@@ -24,21 +21,10 @@ import { getEventTypeConfig } from './event-types';
  * Not implemented yet: responder negotiation, which React Native runs first for touch, scroll and
  * selection change events.
  *
- * @param eventType e.g. `focus` or `pointerUp`
- * @param payload passed to handlers as `event.nativeEvent`
  * @returns `false` if a handler called `preventDefault()`, like DOM `dispatchEvent()`.
  */
-export async function dispatchEvent(
-  target: TestInstance,
-  eventType: string,
-  payload: NativeEventPayload = {},
-): Promise<boolean> {
+export async function dispatchEvent(target: TestInstance, event: SyntheticEvent): Promise<boolean> {
   if (!isInstanceMounted(target)) {
-    return true;
-  }
-
-  const event = createEvent(eventType, payload);
-  if (event == null) {
     return true;
   }
 
@@ -47,28 +33,6 @@ export async function dispatchEvent(
   });
 
   return !event.defaultPrevented;
-}
-
-function createEvent(eventType: string, payload: NativeEventPayload): SyntheticEvent | null {
-  const config = getEventTypeConfig(eventType);
-  if (config == null) {
-    return null;
-  }
-
-  // React Native keeps the native timestamp as the event's `timeStamp`.
-  const nativeTimeStamp = payload.timeStamp ?? payload.timestamp;
-  return new SyntheticEvent(
-    // React Native's event type is the lowercased name, e.g. `pointerup`.
-    eventType.toLowerCase(),
-    {
-      bubbles: config.kind === 'bubbling' && !config.skipBubbling,
-      cancelable: true,
-      rnIsDirect: config.kind === 'direct',
-      timeStamp: typeof nativeTimeStamp === 'number' ? nativeTimeStamp : undefined,
-    },
-    payload,
-    config.dispatchConfig,
-  );
 }
 
 type ErrorState = { hasError: boolean; error: unknown };

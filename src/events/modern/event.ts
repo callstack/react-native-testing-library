@@ -1,8 +1,14 @@
 import type { TestInstance } from 'test-renderer';
 
 import type { DispatchConfig } from './event-types';
+import { getEventTypeConfig } from './event-types';
 
 export type NativeEventPayload = Record<string, unknown>;
+
+export type CreateEventInit = {
+  /** Passed to handlers as `event.nativeEvent`. Defaults to `{}`. */
+  nativeEvent?: NativeEventPayload;
+};
 
 type SyntheticEventInit = {
   bubbles?: boolean;
@@ -214,3 +220,33 @@ export const eventInternals = {
     getDispatchState(event).stopPropagation = false;
   },
 };
+
+/**
+ * Creates the event React Native would create for a native event of this type, ready for
+ * `dispatchEvent()`. Like Testing Library's DOM `createEvent()`.
+ *
+ * @param eventType e.g. `focus` or `pointerUp`
+ * @returns `null` for events unknown to React Native, as React Native drops them.
+ */
+export function createEvent(eventType: string, init: CreateEventInit = {}): SyntheticEvent | null {
+  const config = getEventTypeConfig(eventType);
+  if (config == null) {
+    return null;
+  }
+
+  const nativeEvent = init.nativeEvent ?? {};
+  // React Native keeps the native timestamp as the event's `timeStamp`.
+  const nativeTimeStamp = nativeEvent.timeStamp ?? nativeEvent.timestamp;
+  return new SyntheticEvent(
+    // React Native's event type is the lowercased name, e.g. `pointerup`.
+    eventType.toLowerCase(),
+    {
+      bubbles: config.kind === 'bubbling' && !config.skipBubbling,
+      cancelable: true,
+      rnIsDirect: config.kind === 'direct',
+      timeStamp: typeof nativeTimeStamp === 'number' ? nativeTimeStamp : undefined,
+    },
+    nativeEvent,
+    config.dispatchConfig,
+  );
+}

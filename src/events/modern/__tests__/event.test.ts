@@ -1,4 +1,4 @@
-import { SyntheticEvent } from '../event';
+import { createEvent, SyntheticEvent } from '../event';
 
 const dispatchConfig = { registrationName: 'onFocus' };
 
@@ -97,4 +97,47 @@ test('defines event phase constants on class and prototype', () => {
     0, 1, 2, 3,
   ]);
   expect(Object.keys(event)).not.toContain('NONE');
+});
+
+describe('createEvent()', () => {
+  test('creates bubbling event', () => {
+    const nativeEvent = { pageX: 10, timestamp: 1234 };
+
+    const event = createEvent('pointerUp', { nativeEvent });
+
+    expect(event).toBeInstanceOf(SyntheticEvent);
+    expect(event?.type).toBe('pointerup');
+    expect(event?.bubbles).toBe(true);
+    expect(event?.cancelable).toBe(true);
+    expect(event?.rnIsDirect).toBe(false);
+    expect(event?.nativeEvent).toBe(nativeEvent);
+    expect(event?.timeStamp).toBe(1234);
+    expect(event?.dispatchConfig).toEqual({
+      phasedRegistrationNames: { bubbled: 'onPointerUp', captured: 'onPointerUpCapture' },
+    });
+  });
+
+  test('creates non-bubbling event for skipBubbling event types', () => {
+    const event = createEvent('pointerEnter');
+
+    expect(event?.bubbles).toBe(false);
+    expect(event?.rnIsDirect).toBe(false);
+  });
+
+  test('creates direct event', () => {
+    const event = createEvent('layout');
+
+    expect(event?.type).toBe('layout');
+    expect(event?.bubbles).toBe(false);
+    expect(event?.rnIsDirect).toBe(true);
+    expect(event?.dispatchConfig).toEqual({ registrationName: 'onLayout' });
+  });
+
+  test('defaults nativeEvent to an empty object', () => {
+    expect(createEvent('focus')?.nativeEvent).toEqual({});
+  });
+
+  test('returns null for events unknown to React Native', () => {
+    expect(createEvent('changeText', { nativeEvent: { text: 'Hello' } })).toBeNull();
+  });
 });
