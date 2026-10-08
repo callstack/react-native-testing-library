@@ -1,7 +1,8 @@
 module.exports = {
   preset: '@react-native/jest-preset',
   setupFilesAfterEnv: ['./jest-setup.ts'],
-  testPathIgnorePatterns: ['dist/', 'examples/', 'experiments-app/', 'codemods/'],
+  testPathIgnorePatterns: ['dist/', 'examples/', 'experiments-app/', 'codemods/', 'refs/'],
+  modulePathIgnorePatterns: ['<rootDir>/refs/'],
   testTimeout: 60000,
   transformIgnorePatterns: ['/node_modules/(?!(@react-native|react-native)/).*/'],
   snapshotSerializers: ['@relmify/jest-serializer-strip-ansi/always'],

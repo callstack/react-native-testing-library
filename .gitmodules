@@ -1,0 +1,16 @@
+[submodule "refs/dom-testing-library"]
+	path = refs/dom-testing-library
+	url = https://github.com/testing-library/dom-testing-library.git
+	shallow = true
+[submodule "refs/react-testing-library"]
+	path = refs/react-testing-library
+	url = https://github.com/testing-library/react-testing-library.git
+	shallow = true
+[submodule "refs/react-native"]
+	path = refs/react-native
+	url = https://github.com/facebook/react-native.git
+	shallow = true
+[submodule "refs/react"]
+	path = refs/react
+	url = https://github.com/facebook/react.git
+	shallow = true
