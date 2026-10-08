@@ -173,16 +173,20 @@ test('dispatches bubbling events through capture and bubble phases', async () =>
   const calls: string[] = [];
   await render(
     <View
-      onFocusCapture={() => calls.push('parent.onFocusCapture')}
-      onFocus={() => calls.push('parent.onFocus')}
+      onPointerDownCapture={() => calls.push('parent.onPointerDownCapture')}
+      onPointerDown={() => calls.push('parent.onPointerDown')}
     >
-      <TextInput testID="input" onFocus={() => calls.push('input.onFocus')} />
+      <View testID="target" onPointerDown={() => calls.push('target.onPointerDown')} />
     </View>,
   );
 
-  await fireEvent(screen.getByTestId('input'), 'focus', {});
+  await fireEvent(screen.getByTestId('target'), 'pointerDown', {});
 
-  expect(calls).toEqual(['parent.onFocusCapture', 'input.onFocus', 'parent.onFocus']);
+  expect(calls).toEqual([
+    'parent.onPointerDownCapture',
+    'target.onPointerDown',
+    'parent.onPointerDown',
+  ]);
 });
 
 test('dispatches direct events to the target only', async () => {

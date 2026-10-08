@@ -8,18 +8,18 @@ import { SyntheticEvent } from '../modern/event';
 
 describe('legacy event system', () => {
   test('calls only the target prop with the event as it is', async () => {
-    const onFocus = jest.fn();
-    const onParentFocus = jest.fn();
+    const onPointerDown = jest.fn();
+    const onParentPointerDown = jest.fn();
     await render(
-      <View onFocus={onParentFocus}>
-        <TextInput testID="input" onFocus={onFocus} />
+      <View onPointerDown={onParentPointerDown}>
+        <View testID="target" onPointerDown={onPointerDown} />
       </View>,
     );
 
-    const event = buildFocusEvent();
-    expect(await dispatchEvent(screen.getByTestId('input'), 'focus', event)).toBe(true);
-    expect(onFocus).toHaveBeenCalledWith(event);
-    expect(onParentFocus).not.toHaveBeenCalled();
+    const event = { nativeEvent: { pointerId: 1 } };
+    expect(await dispatchEvent(screen.getByTestId('target'), 'pointerDown', event)).toBe(true);
+    expect(onPointerDown).toHaveBeenCalledWith(event);
+    expect(onParentPointerDown).not.toHaveBeenCalled();
   });
 
   test('returns false without a handler', async () => {
@@ -40,20 +40,25 @@ describe('modern event system', () => {
     await render(
       <View
         testID="parent"
-        onFocusCapture={() => calls.push('parent.onFocusCapture')}
-        onFocus={(event) => {
-          calls.push('parent.onFocus');
+        onPointerDownCapture={() => calls.push('parent.onPointerDownCapture')}
+        onPointerDown={(event) => {
+          calls.push('parent.onPointerDown');
           expect(event).toBeInstanceOf(SyntheticEvent);
-          expect(event.nativeEvent).toEqual({ target: 0 });
-          expect(event.target).toBe(screen.getByTestId('input'));
+          expect(event.nativeEvent).toEqual({ pointerId: 1 });
+          expect(event.target).toBe(screen.getByTestId('target'));
         }}
       >
-        <TextInput testID="input" onFocus={() => calls.push('input.onFocus')} />
+        <View testID="target" onPointerDown={() => calls.push('target.onPointerDown')} />
       </View>,
     );
 
-    expect(await dispatchEvent(screen.getByTestId('input'), 'focus', buildFocusEvent())).toBe(true);
-    expect(calls).toEqual(['parent.onFocusCapture', 'input.onFocus', 'parent.onFocus']);
+    const event = { nativeEvent: { pointerId: 1 } };
+    expect(await dispatchEvent(screen.getByTestId('target'), 'pointerDown', event)).toBe(true);
+    expect(calls).toEqual([
+      'parent.onPointerDownCapture',
+      'target.onPointerDown',
+      'parent.onPointerDown',
+    ]);
   });
 
   test('keeps the event timeStamp', async () => {
@@ -68,15 +73,16 @@ describe('modern event system', () => {
   });
 
   test('returns true when only an ancestor handles the event', async () => {
-    const onParentFocus = jest.fn();
+    const onParentPointerDown = jest.fn();
     await render(
-      <View onFocus={onParentFocus}>
-        <TextInput testID="input" />
+      <View onPointerDown={onParentPointerDown}>
+        <View testID="target" />
       </View>,
     );
 
-    expect(await dispatchEvent(screen.getByTestId('input'), 'focus', buildFocusEvent())).toBe(true);
-    expect(onParentFocus).toHaveBeenCalledTimes(1);
+    const event = { nativeEvent: { pointerId: 1 } };
+    expect(await dispatchEvent(screen.getByTestId('target'), 'pointerDown', event)).toBe(true);
+    expect(onParentPointerDown).toHaveBeenCalledTimes(1);
   });
 
   test('returns false without a handler on the path', async () => {

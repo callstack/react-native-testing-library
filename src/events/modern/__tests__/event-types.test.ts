@@ -28,6 +28,11 @@ const viewConfigModules = [
   'react-native/Libraries/Components/TextInput/RCTSingelineTextInputNativeComponent',
   'react-native/Libraries/Image/ImageViewNativeComponent',
   'react-native/Libraries/Modal/RCTModalHostViewNativeComponent',
+];
+
+// Missing in older React Native versions.
+const optionalViewConfigModules = [
+  // Added in React Native 0.81.
   'react-native/src/private/components/virtualview/VirtualViewNativeComponent',
 ];
 
@@ -38,15 +43,25 @@ function toEventType(topLevelType: string) {
   return topLevelType.charAt(3).toLowerCase() + topLevelType.slice(4);
 }
 
+function loadViewConfigs(): ViewConfig[] {
+  const modules = viewConfigModules.map((modulePath) => jest.requireActual(modulePath));
+  for (const modulePath of optionalViewConfigModules) {
+    try {
+      modules.push(jest.requireActual(modulePath));
+    } catch {
+      // Not available in the installed React Native version.
+    }
+  }
+
+  return modules.map((module) => module.__INTERNAL_VIEW_CONFIG ?? module.default);
+}
+
 function loadReactNativeEventTypes() {
   const bubbling = new Set<string>();
   const skipBubbling = new Set<string>();
   const direct = new Set<string>(manualDirectEventTypes);
 
-  for (const modulePath of viewConfigModules) {
-    const module = jest.requireActual(modulePath);
-    const viewConfig: ViewConfig = module.__INTERNAL_VIEW_CONFIG ?? module.default;
-
+  for (const viewConfig of loadViewConfigs()) {
     for (const [topLevelType, config] of Object.entries(viewConfig.bubblingEventTypes ?? {})) {
       const eventType = toEventType(topLevelType);
       // `getEventTypeConfig()` derives prop names from the event type.
@@ -76,12 +91,14 @@ function loadReactNativeEventTypes() {
   return { bubbling, skipBubbling, direct };
 }
 
-test('event types match React Native view configs', () => {
+// The lists are the union across supported React Native versions, so older versions declare only a
+// subset of them (e.g. `keyDown` and `keyUp` were added in React Native 0.84).
+test('event types cover React Native view configs', () => {
   const reactNative = loadReactNativeEventTypes();
 
-  expect([...BUBBLING_EVENT_TYPES].sort()).toEqual([...reactNative.bubbling].sort());
-  expect([...SKIP_BUBBLING_EVENT_TYPES].sort()).toEqual([...reactNative.skipBubbling].sort());
-  expect([...DIRECT_EVENT_TYPES].sort()).toEqual([...reactNative.direct].sort());
+  expect(BUBBLING_EVENT_TYPES).toEqual(expect.arrayContaining([...reactNative.bubbling]));
+  expect(SKIP_BUBBLING_EVENT_TYPES).toEqual(expect.arrayContaining([...reactNative.skipBubbling]));
+  expect(DIRECT_EVENT_TYPES).toEqual(expect.arrayContaining([...reactNative.direct]));
 });
 
 test('getEventTypeConfig() returns config of bubbling event', () => {
