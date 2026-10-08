@@ -286,13 +286,13 @@ The sequence of events depends on whether the scroll includes an optional moment
 
 - `contentSizeChange`
 - `scrollBeginDrag`
-- `scroll` (multiple events)
+- `scroll` (zero or more events; none if the scroll offset does not change)
 - `scrollEndDrag`
 
 **Momentum scroll (optional)**:
 
 - `momentumScrollBegin`
-- `scroll` (multiple events)
+- `scroll` (zero or more events; none if the scroll offset does not change)
 - `momentumScrollEnd`
 
 ## `pullToRefresh()` \{#pull-to-refresh}
