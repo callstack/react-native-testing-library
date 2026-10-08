@@ -57,7 +57,7 @@ export async function scrollTo(
 
   // `ScrollView` calls `onContentSizeChange(width, height)` from JavaScript, with two arguments
   // instead of an event object, so `dispatchEvent` can't call it.
-  await interaction.invokeHandler(
+  await interaction.invokeEventHandler(
     'contentSizeChange',
     options.contentSize?.width ?? 0,
     options.contentSize?.height ?? 0,

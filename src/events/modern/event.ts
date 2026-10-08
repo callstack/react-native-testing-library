@@ -28,10 +28,17 @@ const CAPTURING_PHASE = 1;
 const AT_TARGET = 2;
 const BUBBLING_PHASE = 3;
 
-type EventPhase = typeof NONE | typeof CAPTURING_PHASE | typeof AT_TARGET | typeof BUBBLING_PHASE;
+export type EventPhase =
+  | typeof NONE
+  | typeof CAPTURING_PHASE
+  | typeof AT_TARGET
+  | typeof BUBBLING_PHASE;
 
-/** Kept off the event's own properties, so printed events don't include the element tree. */
-type DispatchState = {
+/**
+ * Event fields that the dispatch updates, as in React Native's `EventInternals`. Kept off the
+ * event's own properties, so printed events don't include the element tree.
+ */
+type EventInternals = {
   target: TestInstance | null;
   currentTarget: TestInstance | null;
   eventPhase: EventPhase;
@@ -39,15 +46,15 @@ type DispatchState = {
   stopPropagation: boolean;
 };
 
-const dispatchStates = new WeakMap<SyntheticEvent, DispatchState>();
+const eventInternalsMap = new WeakMap<SyntheticEvent, EventInternals>();
 
-function getDispatchState(event: SyntheticEvent): DispatchState {
-  const state = dispatchStates.get(event);
-  if (state == null) {
+function getEventInternals(event: SyntheticEvent): EventInternals {
+  const internals = eventInternalsMap.get(event);
+  if (internals == null) {
     throw new TypeError('Illegal invocation');
   }
 
-  return state;
+  return internals;
 }
 
 /**
@@ -87,7 +94,7 @@ export class SyntheticEvent {
     this._nativeEvent = nativeEvent;
     this._dispatchConfig = dispatchConfig;
 
-    dispatchStates.set(this, {
+    eventInternalsMap.set(this, {
       target: null,
       currentTarget: null,
       eventPhase: NONE,
@@ -146,15 +153,15 @@ export class SyntheticEvent {
   }
 
   get target(): TestInstance | null {
-    return getDispatchState(this).target;
+    return getEventInternals(this).target;
   }
 
   get currentTarget(): TestInstance | null {
-    return getDispatchState(this).currentTarget;
+    return getEventInternals(this).currentTarget;
   }
 
   get eventPhase(): EventPhase {
-    return getDispatchState(this).eventPhase;
+    return getEventInternals(this).eventPhase;
   }
 
   /** Only the native event dispatch creates events, and React Native marks those as trusted. */
@@ -163,17 +170,17 @@ export class SyntheticEvent {
   }
 
   get cancelBubble(): boolean {
-    return getDispatchState(this).stopPropagation;
+    return getEventInternals(this).stopPropagation;
   }
 
   set cancelBubble(value: boolean) {
     if (value) {
-      getDispatchState(this).stopPropagation = true;
+      getEventInternals(this).stopPropagation = true;
     }
   }
 
   composedPath(): TestInstance[] {
-    return getDispatchState(this).composedPath.slice();
+    return getEventInternals(this).composedPath.slice();
   }
 
   preventDefault(): void {
@@ -183,12 +190,12 @@ export class SyntheticEvent {
   }
 
   stopPropagation(): void {
-    getDispatchState(this).stopPropagation = true;
+    getEventInternals(this).stopPropagation = true;
   }
 
   /** Same as `stopPropagation()`, as each element has a single prop handler per phase. */
   stopImmediatePropagation(): void {
-    getDispatchState(this).stopPropagation = true;
+    getEventInternals(this).stopPropagation = true;
   }
 
   /** No-op: React Native no longer pools events. */
@@ -206,23 +213,23 @@ export class SyntheticEvent {
 /** @internal Lets the dispatch update the event, as React Native's `EventInternals` does. */
 export const eventInternals = {
   setTarget(event: SyntheticEvent, target: TestInstance | null) {
-    getDispatchState(event).target = target;
+    getEventInternals(event).target = target;
   },
 
   setCurrentTarget(event: SyntheticEvent, currentTarget: TestInstance | null) {
-    getDispatchState(event).currentTarget = currentTarget;
+    getEventInternals(event).currentTarget = currentTarget;
   },
 
   setEventPhase(event: SyntheticEvent, eventPhase: EventPhase) {
-    getDispatchState(event).eventPhase = eventPhase;
+    getEventInternals(event).eventPhase = eventPhase;
   },
 
   setComposedPath(event: SyntheticEvent, composedPath: TestInstance[]) {
-    getDispatchState(event).composedPath = composedPath;
+    getEventInternals(event).composedPath = composedPath;
   },
 
   resetStopPropagationFlag(event: SyntheticEvent) {
-    getDispatchState(event).stopPropagation = false;
+    getEventInternals(event).stopPropagation = false;
   },
 };
 

@@ -51,5 +51,6 @@ export async function fireEvent(
     return true;
   }
 
-  return await dispatchEvent(instance, event);
+  await dispatchEvent(instance, event);
+  return !event.defaultPrevented;
 }

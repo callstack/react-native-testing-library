@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 
 import { render, screen } from '../../..';
-import { getEventHandlerFromProps, getHandlerProp, normalizeEventType } from '../handler';
+import { getEventHandlerFromProps, getHandlerByName, normalizeEventType } from '../handler';
 
 test('getEventHandlerFromProps strict mode', async () => {
   const onPress = jest.fn();
@@ -100,12 +100,18 @@ test('normalizeEventType strips the `on*` prefix', () => {
   expect(normalizeEventType('on')).toBe('on');
 });
 
-test('getHandlerProp returns only function props with the exact name', () => {
+test('getHandlerByName returns function props with the exact name or its testOnly_ variant', () => {
   const onFocus = jest.fn();
-  const props = { onFocus, testOnly_onBlur: jest.fn(), onLayout: 'not a function' };
+  const testOnlyOnBlur = jest.fn();
+  const props = {
+    onFocus,
+    testOnly_onFocus: jest.fn(),
+    testOnly_onBlur: testOnlyOnBlur,
+    onLayout: 'not a function',
+  };
 
-  expect(getHandlerProp(props, 'onFocus')).toBe(onFocus);
-  expect(getHandlerProp(props, 'focus')).toBeUndefined();
-  expect(getHandlerProp(props, 'onBlur')).toBeUndefined();
-  expect(getHandlerProp(props, 'onLayout')).toBeUndefined();
+  expect(getHandlerByName(props, 'onFocus')).toBe(onFocus);
+  expect(getHandlerByName(props, 'onBlur')).toBe(testOnlyOnBlur);
+  expect(getHandlerByName(props, 'focus')).toBeUndefined();
+  expect(getHandlerByName(props, 'onLayout')).toBeUndefined();
 });

@@ -1,7 +1,7 @@
 import type { TestInstance } from 'test-renderer';
 
 import { dispatchEvent } from '../../events/dispatch-event';
-import { invokeHandler } from '../../events/shared/invoke-handler';
+import { invokeEventHandler } from '../../events/shared/invoke-event-handler';
 
 /**
  * Tracks what a single `userEvent` interaction did, so `warnAboutUnhandledInteraction`
@@ -34,8 +34,8 @@ export class Interaction {
    * from JavaScript instead of dispatching events, e.g. `ScrollView`'s
    * `onContentSizeChange(width, height)`.
    */
-  async invokeHandler(eventName: string, ...params: unknown[]) {
-    const hasCalledHandler = await invokeHandler(this.target, eventName, ...params);
+  async invokeEventHandler(eventName: string, ...params: unknown[]) {
+    const hasCalledHandler = await invokeEventHandler(this.target, eventName, ...params);
     this.recordEvent(eventName, hasCalledHandler);
   }
 

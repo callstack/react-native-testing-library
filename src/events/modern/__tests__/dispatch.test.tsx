@@ -196,6 +196,23 @@ test('does not call props of composite components', async () => {
   expect(onFocus).not.toHaveBeenCalled();
 });
 
+test('calls testOnly_ props in both phases when there is no regular prop', async () => {
+  const calls: Call[] = [];
+  await render(
+    <View testID="parent" {...logHandlers(calls, 'parent', ['testOnly_onFocusCapture'])}>
+      <View
+        testID="target"
+        {...logHandlers(calls, 'target', ['testOnly_onFocus', 'onBlur'])}
+        {...logHandlers(calls, 'target', ['onFocus'])}
+      />
+    </View>,
+  );
+
+  await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'));
+
+  expect(getProps(calls)).toEqual(['parent.testOnly_onFocusCapture', 'target.onFocus']);
+});
+
 test('does nothing when the target is unmounted', async () => {
   const onFocus = jest.fn();
   await render(<View testID="target" {...handlerProps({ onFocus })} />);
@@ -204,7 +221,7 @@ test('does nothing when the target is unmounted', async () => {
 
   const result = await dispatchEvent(target, createKnownEvent('focus'));
 
-  expect(result).toBe(true);
+  expect(result).toBe(false);
   expect(onFocus).not.toHaveBeenCalled();
 });
 
@@ -276,17 +293,32 @@ test('calls handlers with the current element as `this`', async () => {
   expect(onFocus.mock.contexts[0]).toBe(screen.getByTestId('target'));
 });
 
-test('returns false when a handler prevents default', async () => {
+test('returns whether a handler on the path was called', async () => {
+  await render(
+    <View {...handlerProps({ onFocus: () => {} })}>
+      <View testID="target" />
+      <View testID="other">
+        <View testID="nested" />
+      </View>
+    </View>,
+  );
+
+  expect(await dispatchEvent(screen.getByTestId('nested'), createKnownEvent('focus'))).toBe(true);
+  expect(await dispatchEvent(screen.getByTestId('target'), createKnownEvent('layout'))).toBe(false);
+});
+
+test('keeps defaultPrevented after a handler prevents default', async () => {
   await render(
     <View
       testID="target"
       {...handlerProps({ onFocus: (event: SyntheticEvent) => event.preventDefault() })}
     />,
   );
+  const event = createKnownEvent('focus');
 
-  const result = await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'));
+  await dispatchEvent(screen.getByTestId('target'), event);
 
-  expect(result).toBe(false);
+  expect(event.defaultPrevented).toBe(true);
 });
 
 test('rethrows the first handler error after calling all handlers', async () => {
@@ -316,6 +348,31 @@ test('rethrows the first handler error after calling all handlers', async () => 
     dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus')),
   ).rejects.toThrow('Target error');
   expect(onRootFocus).toHaveBeenCalledTimes(1);
+});
+
+test('renders state updates from other handlers when a handler throws', async () => {
+  function Subject() {
+    const [count, setCount] = React.useState(0);
+    return (
+      <View {...handlerProps({ onFocus: () => setCount((value) => value + 1) })}>
+        <View
+          testID="target"
+          {...handlerProps({
+            onFocus: () => {
+              throw new Error('Target error');
+            },
+          })}
+        />
+        <Text>Count: {count}</Text>
+      </View>
+    );
+  }
+  await render(<Subject />);
+
+  await expect(
+    dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus')),
+  ).rejects.toThrow('Target error');
+  expect(screen.getByText('Count: 1')).toBeOnTheScreen();
 });
 
 test('renders state updates from all handlers once', async () => {

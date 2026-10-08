@@ -1,6 +1,6 @@
 import type { TestInstance } from 'test-renderer';
 
-import { invokeHandler } from '../shared/invoke-handler';
+import { invokeEventHandler } from '../shared/invoke-event-handler';
 
 /**
  * Basic dispatch event function used by User Event module.
@@ -15,5 +15,5 @@ export async function dispatchEvent(
   eventType: string,
   event: unknown,
 ): Promise<boolean> {
-  return await invokeHandler(instance, eventType, event);
+  return await invokeEventHandler(instance, eventType, event);
 }

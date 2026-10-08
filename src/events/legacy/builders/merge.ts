@@ -1,3 +1,4 @@
+import { isObject } from '../../../helpers/object';
 import type { EventProps } from '../../shared/types';
 
 /**
@@ -23,8 +24,4 @@ function mergeInto(target: EventProps, source: EventProps) {
       target[key] = sourceValue;
     }
   }
-}
-
-function isObject(value: unknown): value is EventProps {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
 }

@@ -13,7 +13,7 @@ import { getEventHandlerFromProps } from './handler';
  * @param eventType without the `on*` prefix, e.g. `changeText`
  * @returns `true` if a handler was called.
  */
-export async function invokeHandler(
+export async function invokeEventHandler(
   instance: TestInstance,
   eventType: string,
   ...params: unknown[]
