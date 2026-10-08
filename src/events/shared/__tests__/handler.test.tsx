@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 
 import { render, screen } from '../../..';
-import { getEventHandlerFromProps, normalizeEventType } from '../handler';
+import { getEventHandlerFromProps, getHandlerProp, normalizeEventType } from '../handler';
 
 test('getEventHandlerFromProps strict mode', async () => {
   const onPress = jest.fn();
@@ -98,4 +98,14 @@ test('normalizeEventType strips the `on*` prefix', () => {
   expect(normalizeEventType('changeText')).toBe('changeText');
   expect(normalizeEventType('once')).toBe('once');
   expect(normalizeEventType('on')).toBe('on');
+});
+
+test('getHandlerProp returns only function props with the exact name', () => {
+  const onFocus = jest.fn();
+  const props = { onFocus, testOnly_onBlur: jest.fn(), onLayout: 'not a function' };
+
+  expect(getHandlerProp(props, 'onFocus')).toBe(onFocus);
+  expect(getHandlerProp(props, 'focus')).toBeUndefined();
+  expect(getHandlerProp(props, 'onBlur')).toBeUndefined();
+  expect(getHandlerProp(props, 'onLayout')).toBeUndefined();
 });

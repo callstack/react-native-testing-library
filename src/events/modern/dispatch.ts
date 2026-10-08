@@ -2,6 +2,7 @@ import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
+import { getHandlerProp } from '../shared/handler';
 import type { NativeEventPayload } from './event';
 import { eventInternals, SyntheticEvent } from './event';
 import { getEventTypeConfig } from './event-types';
@@ -152,8 +153,8 @@ function invoke(
   eventInternals.setCurrentTarget(event, node);
 
   const propName = getPropName(event, isCapture);
-  const handler = propName != null ? node.props[propName] : undefined;
-  if (typeof handler !== 'function') {
+  const handler = propName != null ? getHandlerProp(node.props, propName) : undefined;
+  if (handler == null) {
     return;
   }
 

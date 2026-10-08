@@ -7,7 +7,7 @@ import { formatElement, formatJson } from '../../helpers/format-element';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import { logger } from '../../helpers/logger';
 import { isEditableTextInput } from '../../helpers/text-input';
-import { getEventHandlerName, normalizeEventType } from './handler';
+import { getEventHandlerName, normalizeEventType } from '../shared/handler';
 import { getPointerEventsBlocker, isEventBlockableByPointerEvents } from './is-enabled';
 
 type UnhandledEventInfo = {

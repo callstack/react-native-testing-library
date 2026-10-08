@@ -1,3 +1,5 @@
+import { getEventHandlerName } from '../shared/handler';
+
 /**
  * Event types known to React Native.
  *
@@ -102,9 +104,8 @@ export type EventTypeConfig =
  * doesn't know it.
  */
 export function getEventTypeConfig(eventType: string): EventTypeConfig | null {
-  const propName = `on${eventType.charAt(0).toUpperCase()}${eventType.slice(1)}`;
-
   if (bubblingEventTypes.has(eventType)) {
+    const propName = getEventHandlerName(eventType);
     const skipBubbling = skipBubblingEventTypes.has(eventType);
     return {
       kind: 'bubbling',
@@ -120,7 +121,7 @@ export function getEventTypeConfig(eventType: string): EventTypeConfig | null {
   }
 
   if (directEventTypes.has(eventType)) {
-    return { kind: 'direct', dispatchConfig: { registrationName: propName } };
+    return { kind: 'direct', dispatchConfig: { registrationName: getEventHandlerName(eventType) } };
   }
 
   return null;

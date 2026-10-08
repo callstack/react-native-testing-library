@@ -1,4 +1,4 @@
-import type { LayoutRectangle } from '../types';
+import type { LayoutRectangle } from '../../shared/types';
 import { baseSyntheticEvent } from './base';
 
 /**

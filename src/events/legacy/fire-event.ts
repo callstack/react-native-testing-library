@@ -3,13 +3,13 @@ import type { TestInstance } from 'test-renderer';
 import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { isHostScrollView } from '../../helpers/host-component-names';
+import { normalizeEventType } from '../shared/handler';
+import type { EventProps, EventType, LayoutRectangle } from '../shared/types';
 import { buildLayoutEvent, buildTouchEvent } from './builders/common';
 import { mergeEventProps } from './builders/merge';
 import { buildScrollEvent } from './builders/scroll';
-import { normalizeEventType } from './handler';
 import { nativeState } from './native-state';
 import { findEventHandler } from './propagation';
-import type { EventProps, EventType, LayoutRectangle } from './types';
 import { updateNativeStateFromEvent } from './update-native-state';
 import { warnAboutUnhandledEvent } from './warnings';
 

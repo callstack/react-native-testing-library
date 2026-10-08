@@ -11,23 +11,23 @@ export function getEventHandlerFromProps(
   options?: EventHandlerOptions,
 ): EventHandler | undefined {
   const handlerName = getEventHandlerName(eventType);
-  if (typeof props[handlerName] === 'function') {
-    return props[handlerName] as EventHandler;
-  }
+  return (
+    getHandlerProp(props, handlerName) ??
+    (options?.loose ? getHandlerProp(props, eventType) : undefined) ??
+    getHandlerProp(props, `testOnly_${handlerName}`) ??
+    (options?.loose ? getHandlerProp(props, `testOnly_${eventType}`) : undefined)
+  );
+}
 
-  if (options?.loose && typeof props[eventType] === 'function') {
-    return props[eventType] as EventHandler;
-  }
-
-  if (typeof props[`testOnly_${handlerName}`] === 'function') {
-    return props[`testOnly_${handlerName}`] as EventHandler;
-  }
-
-  if (options?.loose && typeof props[`testOnly_${eventType}`] === 'function') {
-    return props[`testOnly_${eventType}`] as EventHandler;
-  }
-
-  return undefined;
+/**
+ * Returns the prop with exactly the given name (e.g. `onFocusCapture`) if it is a function.
+ */
+export function getHandlerProp(
+  props: Record<string, unknown>,
+  propName: string,
+): EventHandler | undefined {
+  const handler = props[propName];
+  return typeof handler === 'function' ? (handler as EventHandler) : undefined;
 }
 
 /**

@@ -2,7 +2,7 @@ import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
-import { getEventHandlerFromProps } from './handler';
+import { getEventHandlerFromProps } from '../shared/handler';
 
 /**
  * Basic dispatch event function used by User Event module.

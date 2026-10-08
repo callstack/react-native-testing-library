@@ -7,9 +7,9 @@ import {
   isHostText,
   isHostTextInput,
 } from '../../helpers/host-component-names';
-import { getEventHandlerFromProps, normalizeEventType } from './handler';
+import { getEventHandlerFromProps, normalizeEventType } from '../shared/handler';
+import type { EventHandler } from '../shared/types';
 import { isEventEnabled, isTouchResponder } from './is-enabled';
-import type { EventHandler } from './types';
 import { warnAboutBubblingDirectEvent } from './warnings';
 
 export type FindEventHandlerOptions = {

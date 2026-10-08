@@ -1,4 +1,4 @@
-import type { EventProps } from '../types';
+import type { EventProps } from '../../shared/types';
 
 /**
  * Deep merges custom props into a built event, so tests can override only the fields they need.

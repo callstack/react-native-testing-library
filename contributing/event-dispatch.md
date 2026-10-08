@@ -9,7 +9,6 @@ The files in `src/events/legacy/`:
 | File                                        | Contents                                                                                |
 | ------------------------------------------- | --------------------------------------------------------------------------------------- |
 | `fire-event.ts`                             | Public `fireEvent` API                                                                  |
-| `handler.ts`                                | Finding the `on*` handler for an event name in props                                    |
 | `propagation.ts`                            | Bubbling vs direct events, walking up host and composite elements                       |
 | `is-enabled.ts`                             | Whether a device would deliver the event: `pointerEvents`, `editable`, touch responders |
 | `dispatch.ts`                               | `dispatchEvent()`: calls the target's own handler in `act()`, used by `userEvent`       |
@@ -17,7 +16,9 @@ The files in `src/events/legacy/`:
 | `builders/`                                 | Event payloads, matching what React Native sends on a device                            |
 | `native-state.ts`, `update-native-state.ts` | [Native state](native-state.md) and how `fireEvent` updates it                          |
 
-`src/user-event/` is a separate module on top of `src/events/legacy/` and imports it only through `src/events/legacy/index.ts`.
+Code used by both event systems lives in `src/events/shared/`: `handler.ts` (finding the `on*` handler for an event name in props) and `types.ts`.
+
+`src/user-event/` is a separate module on top of `src/events/legacy/` and imports it only through `src/events/legacy/index.ts`, which also re-exports `src/events/shared/handler.ts`.
 
 ## `fireEvent`
 

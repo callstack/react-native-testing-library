@@ -20,7 +20,7 @@ import {
 import { fireEvent, render, screen } from '../../..';
 import { configure } from '../../../config';
 import { _console, logger } from '../../../helpers/logger';
-import { getEventHandlerName } from '../handler';
+import { getEventHandlerName } from '../../shared/handler';
 import { nativeState } from '../native-state';
 
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
