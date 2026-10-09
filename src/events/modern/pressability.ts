@@ -98,10 +98,7 @@ export async function dispatchPressabilityEvent(
   }
 }
 
-/**
- * The hit target first, then its host ancestors. The hit target is the element, or its nearest
- * ancestor when `pointerEvents` blocks it. Empty when `pointerEvents` blocks every element.
- */
+/** The hit target, then its host ancestors. Empty when `pointerEvents` blocks every element. */
 function getTouchPath(target: TestInstance): TestInstance[] {
   let hitTarget: TestInstance | null = target;
   while (hitTarget?.parent != null && getPointerEventsBlocker(hitTarget) != null) {

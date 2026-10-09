@@ -9,7 +9,6 @@ import {
   buildLayoutNativeEvent,
   buildScrollNativeEvent,
   buildTextChangeNativeEvent,
-  buildTouchNativeEvent,
 } from '../shared/payloads';
 import type { LayoutRectangle } from '../shared/types';
 import {
@@ -46,14 +45,16 @@ export type FireEventInit = CreateEventInit;
  * Exactly one event object is required, as React Native handlers receive a single event. Other
  * event types React Native doesn't dispatch natively (`changeText`, custom prop names) throw.
  *
+ * Resolves to nothing, unlike DOM `fireEvent`: React Native has no default actions that
+ * `preventDefault()` could cancel. Handlers can read `event.defaultPrevented` themselves.
+ *
  * @param eventType with or without the `on*` prefix, e.g. `focus` or `onFocus`
- * @returns `false` if a handler called `preventDefault()`, otherwise `true`.
  */
 export async function fireEvent(
   instance: TestInstance,
   eventType: string,
   ...args: [event: FireEventInit]
-): Promise<boolean> {
+): Promise<void> {
   const normalizedType = normalizeEventType(eventType);
   ensureInstance(instance, normalizedType, fireEvent);
   // Before the event object, as `fireEvent(input, 'changeText', 'Hello')` needs the hint more.
@@ -61,10 +62,11 @@ export async function fireEvent(
   ensureSingleEventArg(normalizedType, args, fireEvent);
   const init = validateEventInit(normalizedType, args[0], fireEvent);
   if (isPressabilityEventType(normalizedType)) {
-    return await firePressabilityEvent(instance, normalizedType, init);
+    await firePressabilityEvent(instance, normalizedType, init);
+    return;
   }
 
-  return await fireEventInternal(instance, normalizedType, init);
+  await fireEventInternal(instance, normalizedType, init);
 }
 
 /**
@@ -72,14 +74,12 @@ export async function fireEvent(
  * and calls `onChangeText(text)` right after the input's own `onChange`, as `TextInput` does from
  * its `onChange` wrapper. Ancestors receive the bubbling `onChange`, but never `onChangeText`.
  * A non-editable `TextInput` receives no events, as on a device.
- *
- * @returns `false` if a handler called `preventDefault()`, otherwise `true`.
  */
-fireEvent.changeText = async (instance: TestInstance, text: string): Promise<boolean> => {
+fireEvent.changeText = async (instance: TestInstance, text: string): Promise<void> => {
   ensureInstance(instance, 'changeText', fireEvent.changeText);
   validateChangeTextArgs(instance, text, fireEvent.changeText);
   if (!isEditableTextInput(instance)) {
-    return true;
+    return;
   }
 
   const selection = { start: text.length, end: text.length };
@@ -90,7 +90,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<boo
     },
   };
 
-  return await fireEventInternal(instance, 'change', {}, payload, dispatchOptions);
+  await fireEventInternal(instance, 'change', {}, payload, dispatchOptions);
 };
 
 /**
@@ -103,32 +103,30 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<boo
  * Only `onPress` is called. Use `userEvent.press()` for `onPressIn`, `onPressOut` and timing.
  *
  * The passed `nativeEvent` is deep merged onto a default touch payload.
- *
- * @returns `false` if `onPress` called `preventDefault()`, otherwise `true`.
  */
-fireEvent.press = async (instance: TestInstance, event: FireEventInit = {}): Promise<boolean> => {
+fireEvent.press = async (instance: TestInstance, event: FireEventInit = {}): Promise<void> => {
   ensureInstance(instance, 'press', fireEvent.press);
   const init = validateEventInit('press', event, fireEvent.press);
-  return await firePressabilityEvent(instance, 'press', init);
+  await firePressabilityEvent(instance, 'press', init);
 };
 
 /**
  * Fires a `scroll` event. The passed `nativeEvent` is deep merged onto a default scroll payload,
  * whose `layoutMeasurement` is the `ScrollView`'s size from its last `layout` event.
  */
-fireEvent.scroll = async (instance: TestInstance, event: FireEventInit = {}): Promise<boolean> => {
+fireEvent.scroll = async (instance: TestInstance, event: FireEventInit = {}): Promise<void> => {
   ensureInstance(instance, 'scroll', fireEvent.scroll);
   const init = validateEventInit('scroll', event, fireEvent.scroll);
-  return await fireEventInternal(instance, 'scroll', init, buildScrollNativeEvent());
+  await fireEventInternal(instance, 'scroll', init, buildScrollNativeEvent());
 };
 
 /** Fires a `layout` event. The passed `layout` is merged onto a zeroed rectangle. */
 fireEvent.layout = async (
   instance: TestInstance,
   layout?: Partial<LayoutRectangle>,
-): Promise<boolean> => {
+): Promise<void> => {
   ensureInstance(instance, 'layout', fireEvent.layout);
-  return await fireEventInternal(instance, 'layout', {}, buildLayoutNativeEvent(layout));
+  await fireEventInternal(instance, 'layout', {}, buildLayoutNativeEvent(layout));
 };
 
 /**
@@ -144,13 +142,13 @@ async function fireEventInternal(
   init: CreateEventInit,
   basePayload?: NativeEventPayload,
   dispatchOptions?: DispatchOptions,
-): Promise<boolean> {
+): Promise<void> {
   const nativeEvent = basePayload
     ? mergeEventProps(basePayload, getNativeStateEventProps(instance, eventType), init.nativeEvent)
     : init.nativeEvent;
   const event = createEvent(eventType, { ...init, nativeEvent });
   if (event == null) {
-    return true;
+    return;
   }
 
   // Before the dispatch, as a device updates its native views before emitting the event.
@@ -159,19 +157,15 @@ async function fireEventInternal(
   }
 
   await dispatchEvent(instance, event, dispatchOptions);
-  return !event.defaultPrevented;
 }
 
-/** The passed `nativeEvent` is deep merged onto a default touch payload. */
 async function firePressabilityEvent(
   instance: TestInstance,
   eventType: PressabilityEventType,
   init: CreateEventInit,
-): Promise<boolean> {
-  const nativeEvent = mergeEventProps(buildTouchNativeEvent(), init.nativeEvent);
-  const event = createPressabilityEvent(eventType, { ...init, nativeEvent });
+): Promise<void> {
+  const event = createPressabilityEvent(eventType, init);
   await dispatchPressabilityEvent(instance, eventType, event);
-  return !event.defaultPrevented;
 }
 
 function ensureInstance(
