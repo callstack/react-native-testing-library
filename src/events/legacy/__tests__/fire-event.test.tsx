@@ -950,12 +950,16 @@ describe('direct events', () => {
       await fireEvent.scroll(screen.getByTestId('child'));
 
       // Modern matches React Native: direct events don't bubble. Legacy still bubbles them, with
-      // a warning.
+      // a warning. Modern warns that the child has no handler, when `eventDiagnostics` is on.
       const bubblingWarnings = warnSpy.mock.calls.filter(([message]) =>
         message.includes('"scroll" does not bubble in React Native'),
       );
+      const unhandledWarnings = warnSpy.mock.calls.filter(([message]) =>
+        message.includes('No "onScroll" handler found on the element.'),
+      );
       expect(bubblingWarnings).toHaveLength(isModern() ? 0 : 1);
-      expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+      expect(unhandledWarnings).toHaveLength(isModern() && eventDiagnostics ? 1 : 0);
+      expect(warnSpy).toHaveBeenCalledTimes(isModern() && !eventDiagnostics ? 0 : 1);
     },
   );
 
@@ -1212,9 +1216,7 @@ describe('disabled elements', () => {
   });
 });
 
-// `eventDiagnostics` warnings exist only in legacy so far. Modern doesn't warn, and calls no
-// handler either.
-describe('unhandled event warning (legacy only)', () => {
+describe('unhandled event warning', () => {
   let warnSpy: jest.SpyInstance;
 
   beforeEach(() => {
@@ -1235,8 +1237,7 @@ describe('unhandled event warning (legacy only)', () => {
 
     await fireEvent.press(screen.getByText('Trigger'));
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Cannot fire the "press" event on a disabled element.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
@@ -1267,8 +1268,7 @@ describe('unhandled event warning (legacy only)', () => {
 
     await fireEvent.press(screen.getByText('Trigger'));
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Cannot fire the "press" event on disabled elements.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
@@ -1322,8 +1322,7 @@ describe('unhandled event warning (legacy only)', () => {
 
     await fireEvent.press(screen.getByText('Trigger'));
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "No "onPress" handler found on the element or its ancestors.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
@@ -1357,8 +1356,7 @@ describe('unhandled event warning (legacy only)', () => {
 
     await fireEvent.press(screen.getByTestId('btn'));
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Cannot fire the "press" event on an element blocked by pointerEvents.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
@@ -1388,8 +1386,7 @@ describe('unhandled event warning (legacy only)', () => {
 
     await fireEvent.press(screen.getByTestId('inner'));
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Cannot fire the "press" event on elements blocked by pointerEvents.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
@@ -1427,8 +1424,7 @@ describe('unhandled event warning (legacy only)', () => {
 
     await fireEvent.press(screen.getByTestId('btn'));
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Cannot fire the "press" event on an element blocked by pointerEvents.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
@@ -1465,8 +1461,7 @@ describe('unhandled event warning (legacy only)', () => {
     await fireEvent.press(screen.getByTestId('inside-box-only'));
     await fireEvent.press(screen.getByTestId('box-none'));
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 2);
-    if (isModern()) return;
+    expect(warnSpy).toHaveBeenCalledTimes(2);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Cannot fire the "press" event on an element blocked by pointerEvents.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
@@ -1512,8 +1507,7 @@ describe('unhandled event warning (legacy only)', () => {
 
     await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatch(
       /^Cannot fire the "changeText" event on a non-editable TextInput\./,
     );
@@ -1535,8 +1529,7 @@ describe('unhandled event warning (legacy only)', () => {
 
     await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Cannot fire the "changeText" event on a non-editable TextInput.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
@@ -1548,21 +1541,38 @@ describe('unhandled event warning (legacy only)', () => {
     `);
   });
 
+  test('warns when "press" is blocked by non-editable TextInput', async () => {
+    await render(<TextInput testID="input" editable={false} onPress={jest.fn()} />);
+
+    await fireEvent(screen.getByTestId('input'), 'press', emptyEvent);
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatch(
+      /^Cannot fire the "press" event on a non-editable TextInput\./,
+    );
+  });
+
   test.each([
     ['focus', 'onFocus'],
     ['blur', 'onBlur'],
-    ['press', 'onPress'],
-  ])('warns when "%s" is blocked by non-editable TextInput', async (eventType, handlerName) => {
-    await render(<TextInput testID="input" editable={false} {...{ [handlerName]: jest.fn() }} />);
+  ])(
+    'does not warn when "%s" is fired on non-editable TextInput (legacy: warns it is blocked)',
+    async (eventType, handlerName) => {
+      const handler = jest.fn();
+      await render(<TextInput testID="input" editable={false} {...{ [handlerName]: handler }} />);
 
-    await fireEvent(screen.getByTestId('input'), eventType, emptyEvent);
+      await fireEvent(screen.getByTestId('input'), eventType, emptyEvent);
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
-    expect(warnSpy.mock.calls[0][0]).toMatch(
-      new RegExp(`^Cannot fire the "${eventType}" event on a non-editable TextInput\\.`),
-    );
-  });
+      // Legacy matches a device, where a non-editable TextInput can't be focused. Modern
+      // `fireEvent()` dispatches the event as given, without checking `editable`.
+      expect(handler).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+      expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+      if (isModern()) return;
+      expect(warnSpy.mock.calls[0][0]).toMatch(
+        new RegExp(`^Cannot fire the "${eventType}" event on a non-editable TextInput\\.`),
+      );
+    },
+  );
 
   test('names the non-editable TextInput when the handler is on its parent', async () => {
     const onFocus = jest.fn();
@@ -1600,8 +1610,7 @@ describe('unhandled event warning (legacy only)', () => {
 
     await fireEvent.press(screen.getByTestId('input'));
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatch(
       /^Cannot fire the "press" event on disabled elements\./,
     );
@@ -1612,7 +1621,13 @@ describe('unhandled event warning (legacy only)', () => {
 
     await fireEvent(screen.getByTestId('view'), 'layout', { nativeEvent: {} });
 
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    // Modern matches React Native: layout is a direct event, so ancestors aren't checked.
+    expect(warnSpy.mock.calls[0][0].split('\n')[0]).toBe(
+      isModern()
+        ? 'No "onLayout" handler found on the element.'
+        : 'No "onLayout" handler found on the element or its ancestors.',
+    );
     if (isModern()) return;
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "No "onLayout" handler found on the element or its ancestors.

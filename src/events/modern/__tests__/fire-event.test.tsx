@@ -14,6 +14,8 @@ import {
 import type { TestInstance } from 'test-renderer';
 
 import { render, screen } from '../../..';
+import { configure } from '../../../config';
+import { logger } from '../../../helpers/logger';
 import { nativeState } from '../../shared/native-state';
 import type { SyntheticEvent } from '../event';
 import type { FireEventInit } from '../fire-event';
@@ -1300,5 +1302,173 @@ describe('fireEvent.layout', () => {
     await expect(fireEvent.layout(null as unknown as TestInstance)).rejects.toThrow(
       'Unable to fire a "layout" event. Please provide a host element.',
     );
+  });
+});
+
+// The warnings shared with legacy are tested through the public `fireEvent` in
+// `legacy/__tests__/fire-event.test.tsx`. These cover modern-only paths.
+describe('unhandled event warning', () => {
+  let warnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    configure({ eventDiagnostics: true });
+    warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
+  function getWarnings(): string[] {
+    return warnSpy.mock.calls.map(([message]) => message.split('\n')[0]);
+  }
+
+  test('warns when no element on the path handles a bubbling event', async () => {
+    await render(
+      <View>
+        <View testID="view" />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('view'), 'focus', {});
+
+    expect(getWarnings()).toEqual(['No "onFocus" handler found on the element or its ancestors.']);
+  });
+
+  test('warns that only the element is checked for direct events', async () => {
+    await render(
+      <ScrollView onScroll={jest.fn()}>
+        <View testID="child" />
+      </ScrollView>,
+    );
+
+    await fireEvent(screen.getByTestId('child'), 'scroll', { nativeEvent: {} });
+
+    expect(getWarnings()).toEqual(['No "onScroll" handler found on the element.']);
+  });
+
+  test('does not warn when only a capture handler is called', async () => {
+    await render(
+      // Spread because `View` types include `onFocusCapture` only since RN 0.88.
+      <View {...{ onFocusCapture: jest.fn() }}>
+        <View testID="view" />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('view'), 'focus', {});
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn when the event updates native state', async () => {
+    await render(<ScrollView testID="scroll" />);
+
+    await fireEvent.scroll(screen.getByTestId('scroll'), {
+      nativeEvent: { contentOffset: { y: 100 } },
+    });
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  // Not `pressIn` or `pressOut`: `Pressable` always passes its own, which update the pressed state.
+  test('warns when no element has the longPress callback', async () => {
+    await render(<Pressable testID="pressable" onPress={jest.fn()} />);
+
+    await fireEvent(screen.getByTestId('pressable'), 'longPress', {});
+
+    expect(getWarnings()).toEqual([
+      'No "onLongPress" handler found on the element or its ancestors.',
+    ]);
+  });
+
+  test('warns when the pressIn callback is on a disabled element', async () => {
+    await render(<Pressable testID="pressable" onPressIn={jest.fn()} disabled />);
+
+    await fireEvent(screen.getByTestId('pressable'), 'pressIn', {});
+
+    expect(getWarnings()).toEqual(['Cannot fire the "pressIn" event on a disabled element.']);
+  });
+
+  test('warns when the onPress of a disabled TouchableOpacity is skipped', async () => {
+    await render(
+      <TouchableOpacity onPress={jest.fn()} disabled>
+        <Text>Trigger</Text>
+      </TouchableOpacity>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(getWarnings()).toEqual(['Cannot fire the "press" event on a disabled element.']);
+  });
+
+  test('warns when the onPress of a disabled Text is skipped', async () => {
+    await render(
+      <Text onPress={jest.fn()} disabled>
+        Trigger
+      </Text>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(getWarnings()).toEqual(['Cannot fire the "press" event on a disabled element.']);
+  });
+
+  test('does not warn when a responder without Pressability claims the touch', async () => {
+    function Draggable() {
+      const { panHandlers } = PanResponder.create({ onStartShouldSetPanResponder: () => true });
+      return (
+        <View {...panHandlers}>
+          <Text>Trigger</Text>
+        </View>
+      );
+    }
+    await render(
+      <Pressable onPress={jest.fn()}>
+        <Draggable />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn on an unmounted element', async () => {
+    await render(
+      <View>
+        <Pressable testID="pressable" onPress={jest.fn()} disabled />
+        <TextInput testID="input" editable={false} />
+        <View testID="view" />
+      </View>,
+    );
+    const pressable = screen.getByTestId('pressable');
+    const input = screen.getByTestId('input');
+    const view = screen.getByTestId('view');
+    await screen.rerender(<View />);
+
+    await fireEvent.press(pressable);
+    await fireEvent.changeText(input, 'Hello');
+    await fireEvent(view, 'focus', {});
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn when eventDiagnostics is turned off', async () => {
+    configure({ eventDiagnostics: false });
+    await render(
+      <View>
+        <Pressable testID="pressable" onPress={jest.fn()} disabled />
+        <TextInput testID="input" editable={false} />
+        <View testID="view" />
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByTestId('pressable'));
+    await fireEvent(screen.getByTestId('pressable'), 'pressIn', {});
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+    await fireEvent(screen.getByTestId('view'), 'focus', {});
+    await fireEvent.scroll(screen.getByTestId('view'));
+
+    expect(warnSpy).not.toHaveBeenCalled();
   });
 });
