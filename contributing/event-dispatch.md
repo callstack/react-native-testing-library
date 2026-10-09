@@ -31,7 +31,7 @@ Code used by both event systems lives in `src/events/shared/`: `handler.ts` (fin
 
 `src/user-event/` simulates a whole interaction (press, type, scroll, …) as a realistic sequence of events with delays between them. The sequences are based on how React Native behaves on real devices.
 
-Each step dispatches a native event, created for the configured event system by `createEvent()` (`src/events/create-event.ts`: a legacy event object or a `SyntheticEvent`) and dispatched by `dispatchEvent()` (`src/events/dispatch-event.ts`), or calls a JavaScript callback (`changeText`, `pressIn`, ...) with `invokeEventHandler()`, which only calls the target's own handler. Neither checks whether the element is enabled. Each action does those checks itself, so the rules for an interaction live in one place.
+Each step dispatches a native event, created for the configured event system by `createEvent()` (`src/events/create-event.ts`: a legacy event object or a `SyntheticEvent`) and dispatched by `dispatchEvent()` (`src/events/dispatch-event.ts`), or calls a JavaScript callback (`changeText`, `pressIn`, ...) with `invokeEventHandler()`, which only calls the target's own handler. Modern `fireEvent.changeText()` instead calls `onChangeText` from the `change` dispatch, through `dispatchEvent()`'s `afterTargetHandler` option, right after the input's own `onChange`, where `TextInput` calls it. Neither checks whether the element is enabled. Each action does those checks itself, so the rules for an interaction live in one place.
 
 For the `eventDiagnostics` warning, each action tracks itself with an `Interaction` from `src/user-event/utils/interaction.ts`:
 

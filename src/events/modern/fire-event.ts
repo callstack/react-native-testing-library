@@ -2,18 +2,29 @@ import type { TestInstance } from 'test-renderer';
 
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
-import { normalizeEventType } from '../shared/handler';
+import { isEditableTextInput } from '../../helpers/text-input';
+import { getEventHandlerFromProps, normalizeEventType } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
-import { buildLayoutNativeEvent, buildScrollNativeEvent } from '../shared/payloads';
+import {
+  buildLayoutNativeEvent,
+  buildScrollNativeEvent,
+  buildTextChangeNativeEvent,
+} from '../shared/payloads';
 import type { LayoutRectangle } from '../shared/types';
 import {
   getNativeStateEventProps,
   updateNativeStateFromEvent,
 } from '../shared/update-native-state';
+import type { DispatchOptions } from './dispatch';
 import { dispatchEvent } from './dispatch';
 import type { CreateEventInit, NativeEventPayload } from './event';
 import { createEvent } from './event';
-import { ensureEventType, validateEventInit } from './fire-event-utils';
+import {
+  ensureEventType,
+  ensureSingleEventArg,
+  validateChangeTextArgs,
+  validateEventInit,
+} from './fire-event-utils';
 
 /**
  * Event object passed to modern `fireEvent`. Handlers receive a `SyntheticEvent` from
@@ -40,20 +51,44 @@ export async function fireEvent(
   ensureInstance(instance, normalizedType, fireEvent);
   // Before the event object, as `fireEvent(input, 'changeText', 'Hello')` needs the hint more.
   ensureEventType(normalizedType, fireEvent);
-  const init = validateEventInit(normalizedType, args, fireEvent);
+  ensureSingleEventArg(normalizedType, args, fireEvent);
+  const init = validateEventInit(normalizedType, args[0], fireEvent);
   return await fireEventInternal(instance, normalizedType, init);
 }
+
+/**
+ * Changes the text of a `TextInput` as a device does: fires a `change` event with the new text,
+ * and calls `onChangeText(text)` right after the input's own `onChange`, as `TextInput` does from
+ * its `onChange` wrapper. Ancestors receive the bubbling `onChange`, but never `onChangeText`.
+ * A non-editable `TextInput` receives no events, as on a device.
+ *
+ * @returns `false` if a handler called `preventDefault()`, otherwise `true`.
+ */
+fireEvent.changeText = async (instance: TestInstance, text: string): Promise<boolean> => {
+  ensureInstance(instance, 'changeText', fireEvent.changeText);
+  validateChangeTextArgs(instance, text, fireEvent.changeText);
+  if (!isEditableTextInput(instance)) {
+    return true;
+  }
+
+  const selection = { start: text.length, end: text.length };
+  const payload = buildTextChangeNativeEvent(text, selection);
+  const dispatchOptions: DispatchOptions = {
+    afterTargetHandler: (target) => {
+      getEventHandlerFromProps(target.props, 'changeText')?.(text);
+    },
+  };
+
+  return await fireEventInternal(instance, 'change', {}, payload, dispatchOptions);
+};
 
 /**
  * Fires a `scroll` event. The passed `nativeEvent` is deep merged onto a default scroll payload,
  * whose `layoutMeasurement` is the `ScrollView`'s size from its last `layout` event.
  */
-fireEvent.scroll = async (
-  instance: TestInstance,
-  ...args: [event?: FireEventInit]
-): Promise<boolean> => {
+fireEvent.scroll = async (instance: TestInstance, event: FireEventInit = {}): Promise<boolean> => {
   ensureInstance(instance, 'scroll', fireEvent.scroll);
-  const init = validateEventInit('scroll', args.length > 0 ? args : [{}], fireEvent.scroll);
+  const init = validateEventInit('scroll', event, fireEvent.scroll);
   return await fireEventInternal(instance, 'scroll', init, buildScrollNativeEvent());
 };
 
@@ -78,6 +113,7 @@ async function fireEventInternal(
   eventType: string,
   init: CreateEventInit,
   basePayload?: NativeEventPayload,
+  dispatchOptions?: DispatchOptions,
 ): Promise<boolean> {
   const nativeEvent = basePayload
     ? mergeEventProps(basePayload, getNativeStateEventProps(instance, eventType), init.nativeEvent)
@@ -92,7 +128,7 @@ async function fireEventInternal(
     updateNativeStateFromEvent(instance, eventType, event);
   }
 
-  await dispatchEvent(instance, event);
+  await dispatchEvent(instance, event, dispatchOptions);
   return !event.defaultPrevented;
 }
 

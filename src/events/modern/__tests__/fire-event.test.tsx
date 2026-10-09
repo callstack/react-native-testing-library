@@ -369,6 +369,32 @@ describe('native state', () => {
     expect(nativeState.layoutSizeForInstance.get(view)).toEqual({ width: 50, height: 0 });
   });
 
+  test.each(['change', 'onChange'])('saves value of TextInput from %s event', async (eventType) => {
+    await render(<TextInput testID="input" />);
+    const input = screen.getByTestId('input');
+
+    await fireEvent(input, eventType, { nativeEvent: { text: 'Hello' } });
+
+    expect(nativeState.valueForInstance.get(input)).toBe('Hello');
+  });
+
+  test('does not save value from change event without text or on non-editable TextInput', async () => {
+    await render(
+      <>
+        <TextInput testID="input" />
+        <TextInput testID="non-editable" editable={false} />
+      </>,
+    );
+    const input = screen.getByTestId('input');
+    const nonEditable = screen.getByTestId('non-editable');
+
+    await fireEvent(input, 'change', { nativeEvent: {} });
+    await fireEvent(nonEditable, 'change', { nativeEvent: { text: 'Hello' } });
+
+    expect(nativeState.valueForInstance.get(input)).toBeUndefined();
+    expect(nativeState.valueForInstance.get(nonEditable)).toBeUndefined();
+  });
+
   test('is saved before handlers run', async () => {
     let contentOffset;
     const onScroll = jest.fn(() => {
@@ -391,6 +417,205 @@ describe('native state', () => {
     await fireEvent(scrollView, 'scroll', { nativeEvent: { contentOffset: { y: 200 } } });
 
     expect(nativeState.contentOffsetForInstance.get(scrollView)).toBeUndefined();
+  });
+});
+
+describe('fireEvent.changeText', () => {
+  function logChangeHandlers(calls: string[], id: string) {
+    return {
+      onChange: () => calls.push(`${id}.onChange`),
+      onChangeCapture: () => calls.push(`${id}.onChangeCapture`),
+    };
+  }
+
+  test('fires change event with the text, then calls onChangeText', async () => {
+    const calls: string[] = [];
+    const onChange = jest.fn((_event: unknown) => calls.push('onChange'));
+    const onChangeText = jest.fn((_text: string) => calls.push('onChangeText'));
+    await render(<TextInput testID="input" onChange={onChange} onChangeText={onChangeText} />);
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(calls).toEqual(['onChange', 'onChangeText']);
+    expect(onChangeText).toHaveBeenCalledWith('Hello');
+    const event = onChange.mock.calls[0][0] as SyntheticEvent;
+    expect(event.type).toBe('change');
+    expect(event.target).toBe(screen.getByTestId('input'));
+    expect(event.nativeEvent).toEqual({
+      text: 'Hello',
+      target: 0,
+      eventCount: 0,
+      selection: { start: 5, end: 5 },
+    });
+  });
+
+  test('calls onChangeText after the input onChange, before ancestors onChange', async () => {
+    const calls: string[] = [];
+    await render(
+      <View {...logChangeHandlers(calls, 'parent')}>
+        <TextInput
+          testID="input"
+          {...logChangeHandlers(calls, 'input')}
+          onChangeText={() => calls.push('input.onChangeText')}
+        />
+      </View>,
+    );
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(calls).toEqual([
+      'parent.onChangeCapture',
+      'input.onChangeCapture',
+      'input.onChange',
+      'input.onChangeText',
+      'parent.onChange',
+    ]);
+  });
+
+  test('does not call onChangeText of an ancestor', async () => {
+    const onChangeText = jest.fn();
+    await render(
+      <View {...{ onChangeText }}>
+        <TextInput testID="input" />
+      </View>,
+    );
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(onChangeText).not.toHaveBeenCalled();
+  });
+
+  test('does not call onChange or onChangeText when a capture handler stops propagation', async () => {
+    const onChange = jest.fn();
+    const onChangeText = jest.fn();
+    await render(
+      <View {...{ onChangeCapture: (event: SyntheticEvent) => event.stopPropagation() }}>
+        <TextInput testID="input" onChange={onChange} onChangeText={onChangeText} />
+      </View>,
+    );
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(onChangeText).not.toHaveBeenCalled();
+  });
+
+  test('calls onChangeText when the input onChange stops propagation', async () => {
+    const onParentChange = jest.fn();
+    const onChangeText = jest.fn();
+    await render(
+      <View {...{ onChange: onParentChange }}>
+        <TextInput
+          testID="input"
+          onChange={(event) => event.stopPropagation()}
+          onChangeText={onChangeText}
+        />
+      </View>,
+    );
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(onChangeText).toHaveBeenCalledWith('Hello');
+    expect(onParentChange).not.toHaveBeenCalled();
+  });
+
+  test('does not call onChangeText when the input onChange throws', async () => {
+    const onChangeText = jest.fn();
+    await render(
+      <TextInput
+        testID="input"
+        onChange={() => {
+          throw new Error('Change error');
+        }}
+        onChangeText={onChangeText}
+      />,
+    );
+
+    await expect(fireEvent.changeText(screen.getByTestId('input'), 'Hello')).rejects.toThrow(
+      'Change error',
+    );
+    expect(onChangeText).not.toHaveBeenCalled();
+  });
+
+  test('calls onChangeText without onChange', async () => {
+    const onChangeText = jest.fn();
+    await render(<TextInput testID="input" onChangeText={onChangeText} />);
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(onChangeText).toHaveBeenCalledWith('Hello');
+  });
+
+  test('saves value of uncontrolled TextInput before handlers run', async () => {
+    let value;
+    const onChangeText = jest.fn(() => {
+      value = nativeState.valueForInstance.get(screen.getByTestId('input'));
+    });
+    await render(<TextInput testID="input" onChangeText={onChangeText} />);
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(value).toBe('Hello');
+    expect(screen.getByTestId('input')).toHaveDisplayValue('Hello');
+  });
+
+  test('renders state updates from handlers', async () => {
+    function Subject() {
+      const [value, setValue] = React.useState('');
+      return <TextInput testID="input" value={value} onChangeText={setValue} />;
+    }
+
+    await render(<Subject />);
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(screen.getByTestId('input')).toHaveDisplayValue('Hello');
+  });
+
+  test('returns false when a handler calls preventDefault()', async () => {
+    await render(<TextInput testID="input" onChange={(event) => event.preventDefault()} />);
+
+    expect(await fireEvent.changeText(screen.getByTestId('input'), 'Hello')).toBe(false);
+  });
+
+  test('does nothing on non-editable TextInput', async () => {
+    const onChange = jest.fn();
+    const onChangeText = jest.fn();
+    await render(
+      <TextInput testID="input" editable={false} onChange={onChange} onChangeText={onChangeText} />,
+    );
+    const input = screen.getByTestId('input');
+
+    expect(await fireEvent.changeText(input, 'Hello')).toBe(true);
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(onChangeText).not.toHaveBeenCalled();
+    expect(nativeState.valueForInstance.get(input)).toBeUndefined();
+  });
+
+  test('throws on elements other than TextInput', async () => {
+    const onChangeText = jest.fn();
+    await render(<View testID="view" {...{ onChangeText }} />);
+
+    await expect(fireEvent.changeText(screen.getByTestId('view'), 'Hello')).rejects.toThrow(
+      'Unable to fire a "changeText" event. Expected a host "TextInput" element, received "View".',
+    );
+    expect(onChangeText).not.toHaveBeenCalled();
+  });
+
+  test('throws when text is not a string', async () => {
+    await render(<TextInput testID="input" />);
+
+    await expect(
+      fireEvent.changeText(screen.getByTestId('input'), 5 as unknown as string),
+    ).rejects.toThrow(
+      'Unable to fire a "changeText" event. Expected text to be a string, received number 5.',
+    );
+  });
+
+  test('throws without an element', async () => {
+    await expect(fireEvent.changeText(null as unknown as TestInstance, 'Hello')).rejects.toThrow(
+      'Unable to fire a "changeText" event. Please provide a host element.',
+    );
   });
 });
 
@@ -488,6 +713,15 @@ describe('fireEvent.scroll', () => {
     await fireEvent.scroll(screen.getByTestId('content'));
 
     expect(onScroll).not.toHaveBeenCalled();
+  });
+
+  test('uses default payload when the event object is undefined', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+
+    await fireEvent.scroll(screen.getByTestId('scroll'), undefined);
+
+    expect(onScroll.mock.calls[0][0].nativeEvent).toEqual(defaultScrollPayload);
   });
 
   test('validates the event object', async () => {

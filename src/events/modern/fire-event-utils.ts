@@ -1,4 +1,7 @@
+import type { TestInstance } from 'test-renderer';
+
 import { ErrorWithStack } from '../../helpers/errors';
+import { isHostTextInput } from '../../helpers/host-component-names';
 import type { CreateEventInit } from './event';
 import { SyntheticEvent } from './event';
 import { getEventTypeConfig } from './event-types';
@@ -45,17 +48,17 @@ export function ensureEventType(
 }
 
 /**
- * Validates the arguments following the event type in modern `fireEvent`: exactly one plain
- * object, with only `nativeEvent` (a plain object) and `timeStamp` (a finite number) keys.
+ * Throws unless exactly one argument follows the event type in modern `fireEvent`, as React Native
+ * handlers receive a single event. Catches legacy calls passing several handler arguments.
  *
  * @param callsite the function to remove from the error stack, e.g. `fireEvent`
  */
-export function validateEventInit(
+export function ensureSingleEventArg(
   eventType: string,
   args: unknown[],
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   callsite: Function,
-): CreateEventInit {
+): void {
   if (args.length === 0) {
     throw new ErrorWithStack(
       `Unable to fire a "${eventType}" event. Please provide an event object, ` +
@@ -71,8 +74,20 @@ export function validateEventInit(
       callsite,
     );
   }
+}
 
-  const [init] = args;
+/**
+ * Validates an event object of modern `fireEvent`: a plain object, with only `nativeEvent`
+ * (a plain object) and `timeStamp` (a finite number) keys.
+ *
+ * @param callsite the function to remove from the error stack, e.g. `fireEvent`
+ */
+export function validateEventInit(
+  eventType: string,
+  init: unknown,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  callsite: Function,
+): CreateEventInit {
   if (!isPlainObject(init)) {
     throw new ErrorWithStack(
       `Unable to fire a "${eventType}" event. Expected an event object, ` +
@@ -110,6 +125,35 @@ export function validateEventInit(
   }
 
   return init as CreateEventInit;
+}
+
+/**
+ * Validates the arguments of `fireEvent.changeText`: a host `TextInput`, as only `TextInput` calls
+ * `onChangeText`, and a string.
+ *
+ * @param callsite the function to remove from the error stack, e.g. `fireEvent.changeText`
+ */
+export function validateChangeTextArgs(
+  instance: TestInstance,
+  text: unknown,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  callsite: Function,
+): asserts text is string {
+  if (!isHostTextInput(instance)) {
+    throw new ErrorWithStack(
+      `Unable to fire a "changeText" event. Expected a host "TextInput" element, ` +
+        `received "${instance.type}".`,
+      callsite,
+    );
+  }
+
+  if (typeof text !== 'string') {
+    throw new ErrorWithStack(
+      `Unable to fire a "changeText" event. Expected text to be a string, ` +
+        `received ${describeValue(text)}.`,
+      callsite,
+    );
+  }
 }
 
 /**

@@ -186,6 +186,130 @@ describe('direct events', () => {
   });
 });
 
+describe('afterTargetHandler', () => {
+  test('runs at the target right after its bubble handler, before ancestors', async () => {
+    const calls: Call[] = [];
+    await renderNestedViews(['onFocus', 'onFocusCapture'], calls);
+    const target = screen.getByTestId('target');
+    const afterTargetHandler = jest.fn((_target: TestInstance, event: SyntheticEvent) => {
+      calls.push({
+        prop: 'afterTargetHandler',
+        currentTarget: event.currentTarget?.props.testID,
+        target: event.target?.props.testID,
+        eventPhase: event.eventPhase,
+      });
+    });
+
+    await dispatchEvent(target, createKnownEvent('focus'), { afterTargetHandler });
+
+    expect(getProps(calls)).toEqual([
+      'root.onFocusCapture',
+      'parent.onFocusCapture',
+      'target.onFocusCapture',
+      'target.onFocus',
+      'afterTargetHandler',
+      'parent.onFocus',
+      'root.onFocus',
+    ]);
+    expect(calls[4]).toEqual({
+      prop: 'afterTargetHandler',
+      currentTarget: 'target',
+      target: 'target',
+      eventPhase: 2,
+    });
+    expect(afterTargetHandler.mock.calls[0][0]).toBe(target);
+  });
+
+  test('runs for direct events and when the target has no handler', async () => {
+    await render(<View testID="target" />);
+    const afterTargetHandler = jest.fn();
+
+    await dispatchEvent(screen.getByTestId('target'), createKnownEvent('layout'), {
+      afterTargetHandler,
+    });
+
+    expect(afterTargetHandler).toHaveBeenCalledTimes(1);
+  });
+
+  test('is skipped when a capture handler stops propagation', async () => {
+    await render(
+      <View {...handlerProps({ onFocusCapture: (event) => event.stopPropagation() })}>
+        <View testID="target" />
+      </View>,
+    );
+    const afterTargetHandler = jest.fn();
+
+    await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'), {
+      afterTargetHandler,
+    });
+
+    expect(afterTargetHandler).not.toHaveBeenCalled();
+  });
+
+  test('runs when the target bubble handler stops propagation', async () => {
+    const onParentFocus = jest.fn();
+    await render(
+      <View {...handlerProps({ onFocus: onParentFocus })}>
+        <View
+          testID="target"
+          {...handlerProps({ onFocus: (event) => event.stopImmediatePropagation() })}
+        />
+      </View>,
+    );
+    const afterTargetHandler = jest.fn();
+
+    await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'), {
+      afterTargetHandler,
+    });
+
+    expect(afterTargetHandler).toHaveBeenCalledTimes(1);
+    expect(onParentFocus).not.toHaveBeenCalled();
+  });
+
+  test('is skipped when the target handler throws, and its own error is rethrown', async () => {
+    const onParentFocus = jest.fn();
+    await render(
+      <View {...handlerProps({ onFocus: onParentFocus })}>
+        <View
+          testID="target"
+          {...handlerProps({
+            onFocus: () => {
+              throw new Error('Target error');
+            },
+          })}
+        />
+      </View>,
+    );
+    const afterTargetHandler = jest.fn();
+
+    await expect(
+      dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'), {
+        afterTargetHandler,
+      }),
+    ).rejects.toThrow('Target error');
+    expect(afterTargetHandler).not.toHaveBeenCalled();
+    expect(onParentFocus).toHaveBeenCalledTimes(1);
+
+    await expect(
+      dispatchEvent(screen.getByTestId('target'), createKnownEvent('blur'), {
+        afterTargetHandler: () => {
+          throw new Error('After target error');
+        },
+      }),
+    ).rejects.toThrow('After target error');
+  });
+
+  test('does not count as a called handler', async () => {
+    await render(<View testID="target" />);
+
+    expect(
+      await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'), {
+        afterTargetHandler: () => {},
+      }),
+    ).toBe(false);
+  });
+});
+
 test('does not call props of composite components', async () => {
   const onFocus = jest.fn();
   const Box = (_props: { onFocus: () => void }) => <View testID="target" />;

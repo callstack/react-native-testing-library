@@ -233,6 +233,15 @@ describe('fireEvent.changeText', () => {
   });
 });
 
+test('change event saves value of TextInput in native state', async () => {
+  await render(<TextInput testID="input" />);
+  const input = screen.getByTestId('input');
+
+  await fireEvent(input, 'change', { nativeEvent: { text: 'new text' } });
+
+  expect(nativeState.valueForInstance.get(input)).toBe('new text');
+});
+
 describe('fireEvent.scroll', () => {
   test('passes default scroll event object to handler', async () => {
     const onScroll = jest.fn();

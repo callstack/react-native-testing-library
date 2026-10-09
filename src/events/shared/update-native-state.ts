@@ -30,6 +30,14 @@ export function updateNativeStateFromEvent(
     return true;
   }
 
+  if (eventType === 'change' && isEditableTextInput(instance)) {
+    const text = tryGetText(value);
+    if (text != null) {
+      nativeState.valueForInstance.set(instance, text);
+      return true;
+    }
+  }
+
   if (SCROLL_EVENTS.includes(eventType) && isHostScrollView(instance)) {
     const contentOffset = tryGetContentOffset(value);
     if (contentOffset) {
@@ -64,6 +72,18 @@ export function getNativeStateEventProps(
   }
 
   return undefined;
+}
+
+function tryGetText(event: unknown): string | null {
+  try {
+    // @ts-expect-error: try to extract text from the event value
+    const text = event?.nativeEvent?.text;
+    return typeof text === 'string' ? text : null;
+  } catch {
+    // Do nothing
+  }
+
+  return null;
 }
 
 function tryGetContentOffset(event: unknown): Point | null {
