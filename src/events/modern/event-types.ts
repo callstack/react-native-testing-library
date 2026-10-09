@@ -82,6 +82,20 @@ export const DIRECT_EVENT_TYPES: readonly string[] = [
 ];
 
 /**
+ * Pressability callbacks (`onPress`, `onPressIn`, ...) that modern `fireEvent` calls. They are not
+ * native events: Pressability calls them on the touch responder from responder events, so
+ * `dispatchPressabilityEvent()` calls them instead of `dispatchEvent()`. `press` is also a native
+ * event type, but `fireEvent` calls Pressability's `onPress` for it.
+ */
+export const PRESSABILITY_EVENT_TYPES = ['press', 'pressIn', 'pressOut', 'longPress'] as const;
+
+export type PressabilityEventType = (typeof PRESSABILITY_EVENT_TYPES)[number];
+
+export function isPressabilityEventType(eventType: string): eventType is PressabilityEventType {
+  return (PRESSABILITY_EVENT_TYPES as readonly string[]).includes(eventType);
+}
+
+/**
  * Direct events whose handler prop doesn't follow the `on` + event type pattern.
  */
 const DIRECT_EVENT_HANDLER_NAMES: Readonly<Record<string, string>> = {

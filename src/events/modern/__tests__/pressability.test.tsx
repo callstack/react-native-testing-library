@@ -2,24 +2,18 @@ import * as React from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 
 import { render, screen } from '../../..';
+import { getEventHandlerName } from '../../shared/handler';
 import type { SyntheticEvent } from '../event';
 import { createEvent } from '../event';
-import type { PressabilityCallbackName } from '../pressability';
+import { PRESSABILITY_EVENT_TYPES } from '../event-types';
 import { dispatchPressabilityEvent } from '../pressability';
-
-const callbackNames: PressabilityCallbackName[] = [
-  'onPress',
-  'onPressIn',
-  'onPressOut',
-  'onLongPress',
-];
 
 function createTouchEvent() {
   return createEvent('touchEnd', { nativeEvent: { pageX: 10 } }) as SyntheticEvent;
 }
 
 function logCallbacks(calls: string[], id: string) {
-  const log = (name: PressabilityCallbackName) => () => {
+  const log = (name: string) => () => {
     calls.push(`${id}.${name}`);
   };
   return {
@@ -30,42 +24,50 @@ function logCallbacks(calls: string[], id: string) {
   };
 }
 
-test.each(callbackNames)('calls only %s of Pressable and TouchableOpacity', async (name) => {
-  const calls: string[] = [];
-  await render(
-    <>
-      <Pressable {...logCallbacks(calls, 'pressable')}>
-        <Text>Pressable</Text>
-      </Pressable>
-      <TouchableOpacity {...logCallbacks(calls, 'touchable')}>
-        <Text>Touchable</Text>
-      </TouchableOpacity>
-    </>,
-  );
+test.each(PRESSABILITY_EVENT_TYPES)(
+  '%s calls only Pressable and TouchableOpacity callback',
+  async (eventType) => {
+    const name = getEventHandlerName(eventType);
+    const calls: string[] = [];
+    await render(
+      <>
+        <Pressable {...logCallbacks(calls, 'pressable')}>
+          <Text>Pressable</Text>
+        </Pressable>
+        <TouchableOpacity {...logCallbacks(calls, 'touchable')}>
+          <Text>Touchable</Text>
+        </TouchableOpacity>
+      </>,
+    );
 
-  await dispatchPressabilityEvent(screen.getByText('Pressable'), name, createTouchEvent());
-  await dispatchPressabilityEvent(screen.getByText('Touchable'), name, createTouchEvent());
+    await dispatchPressabilityEvent(screen.getByText('Pressable'), eventType, createTouchEvent());
+    await dispatchPressabilityEvent(screen.getByText('Touchable'), eventType, createTouchEvent());
 
-  expect(calls).toEqual([`pressable.${name}`, `touchable.${name}`]);
-});
+    expect(calls).toEqual([`pressable.${name}`, `touchable.${name}`]);
+  },
+);
 
-test.each(callbackNames)('calls only %s of host elements, incl. testOnly_ props', async (name) => {
-  const calls: string[] = [];
-  await render(
-    <>
-      <Text {...logCallbacks(calls, 'text')}>Text</Text>
-      <View
-        testID="view"
-        {...{ [`testOnly_${name}`]: () => calls.push(`view.testOnly_${name}`) }}
-      />
-    </>,
-  );
+test.each(PRESSABILITY_EVENT_TYPES)(
+  '%s calls only host callback, incl. testOnly_ props',
+  async (eventType) => {
+    const name = getEventHandlerName(eventType);
+    const calls: string[] = [];
+    await render(
+      <>
+        <Text {...logCallbacks(calls, 'text')}>Text</Text>
+        <View
+          testID="view"
+          {...{ [`testOnly_${name}`]: () => calls.push(`view.testOnly_${name}`) }}
+        />
+      </>,
+    );
 
-  await dispatchPressabilityEvent(screen.getByText('Text'), name, createTouchEvent());
-  await dispatchPressabilityEvent(screen.getByTestId('view'), name, createTouchEvent());
+    await dispatchPressabilityEvent(screen.getByText('Text'), eventType, createTouchEvent());
+    await dispatchPressabilityEvent(screen.getByTestId('view'), eventType, createTouchEvent());
 
-  expect(calls).toEqual([`text.${name}`, `view.testOnly_${name}`]);
-});
+    expect(calls).toEqual([`text.${name}`, `view.testOnly_${name}`]);
+  },
+);
 
 test('passes the event, with the hit target and the responder', async () => {
   const onPressIn = jest.fn((event) => ({
@@ -79,9 +81,7 @@ test('passes the event, with the hit target and the responder', async () => {
   );
   const event = createTouchEvent();
 
-  expect(await dispatchPressabilityEvent(screen.getByText('Press me'), 'onPressIn', event)).toBe(
-    true,
-  );
+  await dispatchPressabilityEvent(screen.getByText('Press me'), 'pressIn', event);
 
   expect(onPressIn).toHaveBeenCalledWith(event);
   expect(onPressIn.mock.results[0].value).toEqual({
@@ -98,26 +98,24 @@ test('host element with another press callback claims the touch, but gets nothin
     </Pressable>,
   );
 
-  expect(
-    await dispatchPressabilityEvent(screen.getByText('Press me'), 'onPressIn', createTouchEvent()),
-  ).toBe(false);
+  await dispatchPressabilityEvent(screen.getByText('Press me'), 'pressIn', createTouchEvent());
+
   expect(onPressIn).not.toHaveBeenCalled();
 });
 
-test('returns false when the responder has no such callback', async () => {
+test('responder without the callback keeps the touch from its ancestors', async () => {
+  const onLongPress = jest.fn();
   await render(
-    <Pressable onPress={jest.fn()}>
-      <Text>Press me</Text>
+    <Pressable onLongPress={onLongPress}>
+      <Pressable onPress={jest.fn()}>
+        <Text>Press me</Text>
+      </Pressable>
     </Pressable>,
   );
 
-  expect(
-    await dispatchPressabilityEvent(
-      screen.getByText('Press me'),
-      'onLongPress',
-      createTouchEvent(),
-    ),
-  ).toBe(false);
+  await dispatchPressabilityEvent(screen.getByText('Press me'), 'longPress', createTouchEvent());
+
+  expect(onLongPress).not.toHaveBeenCalled();
 });
 
 test('does not call callbacks of disabled Pressable', async () => {
@@ -128,8 +126,8 @@ test('does not call callbacks of disabled Pressable', async () => {
     </Pressable>,
   );
 
-  for (const name of callbackNames) {
-    await dispatchPressabilityEvent(screen.getByText('Press me'), name, createTouchEvent());
+  for (const eventType of PRESSABILITY_EVENT_TYPES) {
+    await dispatchPressabilityEvent(screen.getByText('Press me'), eventType, createTouchEvent());
   }
 
   expect(calls).toEqual([]);

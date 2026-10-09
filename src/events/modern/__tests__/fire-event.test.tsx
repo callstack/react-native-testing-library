@@ -29,6 +29,18 @@ const defaultScrollPayload = {
   velocity: { x: 0, y: 0 },
 };
 
+const defaultTouchPayload = {
+  changedTouches: [],
+  identifier: 0,
+  locationX: 0,
+  locationY: 0,
+  pageX: 0,
+  pageY: 0,
+  target: 0,
+  timestamp: expect.any(Number),
+  touches: [],
+};
+
 /** Calls `fireEvent` with arguments its types don't allow, as JavaScript callers can. */
 function fireEventUntyped(instance: TestInstance, eventType: string, ...args: unknown[]) {
   return fireEvent(instance, eventType, ...(args as [FireEventInit]));
@@ -249,19 +261,10 @@ describe('event types unknown to React Native', () => {
   test.each([
     ['changeText', 'changeText', '. Use fireEvent.changeText() or userEvent.type() instead.'],
     ['onChangeText', 'changeText', '. Use fireEvent.changeText() or userEvent.type() instead.'],
-    ['pressIn', 'pressIn', '. Use userEvent.press() instead.'],
-    ['pressOut', 'pressOut', '. Use userEvent.press() instead.'],
-    ['longPress', 'longPress', '. Use userEvent.longPress() instead.'],
     ['customEvent', 'customEvent', ', so no handler would be called.'],
   ])('"%s" throws', async (eventType, normalizedType, hint) => {
     const handler = jest.fn();
-    const handlerProps = {
-      onChangeText: handler,
-      onPressIn: handler,
-      onPressOut: handler,
-      onLongPress: handler,
-      onCustomEvent: handler,
-    };
+    const handlerProps = { onChangeText: handler, onCustomEvent: handler };
     await render(<TextInput testID="input" {...handlerProps} />);
 
     await expect(
@@ -279,6 +282,83 @@ describe('event types unknown to React Native', () => {
     await expect(
       fireEventUntyped(screen.getByTestId('input'), 'changeText', 'Hello'),
     ).rejects.toThrow(`React Native doesn't dispatch "changeText" natively`);
+  });
+});
+
+describe('Pressability event types', () => {
+  function logCallbacks(calls: string[], id: string) {
+    const log = (name: string) => () => {
+      calls.push(`${id}.${name}`);
+    };
+    return {
+      onPress: log('onPress'),
+      onPressIn: log('onPressIn'),
+      onPressOut: log('onPressOut'),
+      onLongPress: log('onLongPress'),
+    };
+  }
+
+  test.each([
+    ['press', 'onPress'],
+    ['pressIn', 'onPressIn'],
+    ['pressOut', 'onPressOut'],
+    ['longPress', 'onLongPress'],
+    ['onPressIn', 'onPressIn'],
+  ])('"%s" calls only %s of the responder', async (eventType, name) => {
+    const calls: string[] = [];
+    await render(
+      <>
+        <Pressable {...logCallbacks(calls, 'pressable')}>
+          <Text>Pressable</Text>
+        </Pressable>
+        <TouchableOpacity {...logCallbacks(calls, 'touchable')}>
+          <Text>Touchable</Text>
+        </TouchableOpacity>
+      </>,
+    );
+
+    await fireEvent(screen.getByText('Pressable'), eventType, {});
+    await fireEvent(screen.getByText('Touchable'), eventType, {});
+
+    expect(calls).toEqual([`pressable.${name}`, `touchable.${name}`]);
+  });
+
+  test('passes a direct event with default touch payload', async () => {
+    const onPressIn = jest.fn();
+    await render(
+      <Pressable testID="pressable" onPressIn={onPressIn}>
+        <Text>Press me</Text>
+      </Pressable>,
+    );
+
+    await fireEvent(screen.getByText('Press me'), 'pressIn', {
+      nativeEvent: { pageX: 20 },
+      timeStamp: 123,
+    });
+
+    const event: SyntheticEvent = onPressIn.mock.calls[0][0];
+    expect(event.type).toBe('pressin');
+    expect(event.bubbles).toBe(false);
+    expect(event.rnIsDirect).toBe(true);
+    expect(event.nativeEvent).toEqual({ ...defaultTouchPayload, pageX: 20 });
+    expect(event.timeStamp).toBe(123);
+    expect(event.target).toBe(screen.getByText('Press me'));
+  });
+
+  test('requires an event object', async () => {
+    const onPressIn = jest.fn();
+    await render(<Pressable testID="pressable" onPressIn={onPressIn} />);
+
+    await expect(fireEventUntyped(screen.getByTestId('pressable'), 'pressIn')).rejects.toThrow(
+      'Unable to fire a "pressIn" event. Please provide an event object',
+    );
+    expect(onPressIn).not.toHaveBeenCalled();
+  });
+
+  test('returns false when the callback calls preventDefault()', async () => {
+    await render(<Pressable testID="pressable" onLongPress={(event) => event.preventDefault()} />);
+
+    expect(await fireEvent(screen.getByTestId('pressable'), 'longPress', {})).toBe(false);
   });
 });
 
@@ -631,18 +711,6 @@ describe('fireEvent.changeText', () => {
 });
 
 describe('fireEvent.press', () => {
-  const defaultTouchPayload = {
-    changedTouches: [],
-    identifier: 0,
-    locationX: 0,
-    locationY: 0,
-    pageX: 0,
-    pageY: 0,
-    target: 0,
-    timestamp: expect.any(Number),
-    touches: [],
-  };
-
   test.each([
     ['Pressable', Pressable],
     ['TouchableOpacity', TouchableOpacity],

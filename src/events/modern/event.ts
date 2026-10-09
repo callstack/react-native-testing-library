@@ -1,6 +1,7 @@
 import type { TestInstance } from 'test-renderer';
 
-import type { EventTypeConfig } from './event-types';
+import { getEventHandlerName } from '../shared/handler';
+import type { EventTypeConfig, PressabilityEventType } from './event-types';
 import { getEventTypeConfig } from './event-types';
 
 export type NativeEventPayload = Record<string, unknown>;
@@ -223,6 +224,28 @@ export function createEvent(eventType: string, init: CreateEventInit = {}): Synt
     return null;
   }
 
+  return createEventWithConfig(eventType, init, config);
+}
+
+/**
+ * Creates the event passed to a Pressability callback, ready for `dispatchPressabilityEvent()`.
+ * Pressability calls only the touch responder's callback, so the event is direct.
+ *
+ * @param eventType e.g. `press` or `pressIn`
+ */
+export function createPressabilityEvent(
+  eventType: PressabilityEventType,
+  init: CreateEventInit,
+): SyntheticEvent {
+  const config: EventTypeConfig = { kind: 'direct', handlerName: getEventHandlerName(eventType) };
+  return createEventWithConfig(eventType, init, config);
+}
+
+function createEventWithConfig(
+  eventType: string,
+  init: CreateEventInit,
+  config: EventTypeConfig,
+): SyntheticEvent {
   const nativeEvent = init.nativeEvent ?? {};
   // React Native keeps the native timestamp as the event's `timeStamp`.
   const nativeTimeStamp = nativeEvent.timeStamp ?? nativeEvent.timestamp;
