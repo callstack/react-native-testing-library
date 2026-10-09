@@ -1,5 +1,5 @@
-import { isObject } from '../../../helpers/object';
-import type { EventProps } from '../../shared/types';
+import { isObject } from '../../helpers/object';
+import type { EventProps } from './types';
 
 /**
  * Deep merges custom props into a built event, so tests can override only the fields they need.

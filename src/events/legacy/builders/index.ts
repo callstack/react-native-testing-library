@@ -1,4 +1,3 @@
+export * from './base';
 export * from './common';
-export * from './merge';
-export * from './scroll';
-export * from './text';
+export * from '../../shared/merge';

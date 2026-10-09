@@ -7,9 +7,8 @@ import {
   buildFocusEvent,
   buildTextChangeEvent,
   buildTextSelectionChangeEvent,
-  isPointerEventEnabled,
-  nativeState,
-} from '../events/legacy';
+} from '../events/create-event';
+import { isPointerEventEnabled, nativeState } from '../events/legacy';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { getTextInputValue, isEditableTextInput } from '../helpers/text-input';
@@ -49,7 +48,7 @@ export async function paste(
 
   const rangeAfter = { start: text.length, end: text.length };
   await interaction.dispatchEvent('change', buildTextChangeEvent(text, rangeAfter));
-  await interaction.dispatchEvent('changeText', text);
+  await interaction.invokeEventHandler('changeText', text);
   await interaction.dispatchEvent('selectionChange', buildTextSelectionChangeEvent(rangeAfter));
 
   // According to the docs only multiline TextInput emits contentSizeChange event

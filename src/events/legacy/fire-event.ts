@@ -4,12 +4,13 @@ import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { normalizeEventType } from '../shared/handler';
+import { mergeEventProps } from '../shared/merge';
 import { nativeState } from '../shared/native-state';
+import { buildLayoutNativeEvent, buildScrollNativeEvent } from '../shared/payloads';
 import type { EventProps, EventType, LayoutRectangle } from '../shared/types';
 import { updateNativeStateFromEvent } from '../shared/update-native-state';
-import { buildLayoutEvent, buildTouchEvent } from './builders/common';
-import { mergeEventProps } from './builders/merge';
-import { buildScrollEvent } from './builders/scroll';
+import { wrapNativeEvent } from './builders/base';
+import { buildTouchEvent } from './builders/common';
 import { findEventHandler } from './propagation';
 import { warnAboutUnhandledEvent } from './warnings';
 
@@ -28,7 +29,7 @@ fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
   const layoutMeasurement = isHostScrollView(instance)
     ? nativeState.layoutSizeForInstance.get(instance)
     : undefined;
-  const event = buildScrollEvent(undefined, { layoutMeasurement });
+  const event = wrapNativeEvent(buildScrollNativeEvent(undefined, { layoutMeasurement }));
   await fireEvent(instance, 'scroll', mergeEventProps(event, eventProps));
 };
 
@@ -39,7 +40,7 @@ fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
 fireEvent.layout = async (instance: TestInstance, layout?: Partial<LayoutRectangle>) => {
   await fireEventInternal(instance, {
     type: 'layout',
-    data: [buildLayoutEvent(layout)],
+    data: [wrapNativeEvent(buildLayoutNativeEvent(layout))],
     bubbles: false,
   });
 };

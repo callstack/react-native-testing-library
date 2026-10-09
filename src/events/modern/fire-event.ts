@@ -3,11 +3,10 @@ import type { TestInstance } from 'test-renderer';
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
-import { buildLayoutEvent } from '../legacy/builders/common';
-import { mergeEventProps } from '../legacy/builders/merge';
-import { buildScrollEvent } from '../legacy/builders/scroll';
 import { normalizeEventType } from '../shared/handler';
+import { mergeEventProps } from '../shared/merge';
 import { nativeState } from '../shared/native-state';
+import { buildLayoutNativeEvent, buildScrollNativeEvent } from '../shared/payloads';
 import type { LayoutRectangle } from '../shared/types';
 import { updateNativeStateFromEvent } from '../shared/update-native-state';
 import { dispatchEvent } from './dispatch';
@@ -57,7 +56,7 @@ fireEvent.scroll = async (
   const layoutMeasurement = isHostScrollView(instance)
     ? nativeState.layoutSizeForInstance.get(instance)
     : undefined;
-  const { nativeEvent } = buildScrollEvent(undefined, { layoutMeasurement });
+  const nativeEvent = buildScrollNativeEvent(undefined, { layoutMeasurement });
   return await fireEventInternal(instance, 'scroll', {
     ...init,
     nativeEvent: mergeEventProps(nativeEvent, init.nativeEvent),
@@ -70,8 +69,9 @@ fireEvent.layout = async (
   layout?: Partial<LayoutRectangle>,
 ): Promise<boolean> => {
   ensureInstance(instance, 'layout', fireEvent.layout);
-  const { nativeEvent } = buildLayoutEvent(layout);
-  return await fireEventInternal(instance, 'layout', { nativeEvent });
+  return await fireEventInternal(instance, 'layout', {
+    nativeEvent: buildLayoutNativeEvent(layout),
+  });
 };
 
 /** Expects an event type React Native dispatches natively, without the `on*` prefix. */

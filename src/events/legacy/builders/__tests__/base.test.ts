@@ -1,4 +1,4 @@
-import { baseSyntheticEvent } from '../base';
+import { baseSyntheticEvent, wrapNativeEvent } from '../base';
 
 test('returns object with all required properties and default values', () => {
   const event = baseSyntheticEvent();
@@ -32,4 +32,13 @@ test('can be spread into other objects', () => {
   expect(extendedEvent).toHaveProperty('currentTarget');
   expect(extendedEvent).toHaveProperty('preventDefault');
   expect(extendedEvent.nativeEvent).toEqual({ test: 'value' });
+});
+
+test('wrapNativeEvent adds base stubs around the native event', () => {
+  const nativeEvent = { target: 0 };
+  const event = wrapNativeEvent(nativeEvent);
+
+  expect(event.nativeEvent).toBe(nativeEvent);
+  expect(event.timeStamp).toBe(0);
+  expect(typeof event.preventDefault).toBe('function');
 });

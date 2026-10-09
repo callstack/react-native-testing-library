@@ -1,7 +1,7 @@
 import type { AccessibilityActionInfo } from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
-import { buildAccessibilityActionEvent } from '../../events/legacy';
+import { buildAccessibilityActionEvent } from '../../events/create-event';
 import { computeAriaDisabled } from '../../helpers/accessibility';
 import { isTestInstance } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
