@@ -9,6 +9,7 @@ import {
   buildLayoutNativeEvent,
   buildScrollNativeEvent,
   buildTextChangeNativeEvent,
+  buildTouchNativeEvent,
 } from '../shared/payloads';
 import type { LayoutRectangle } from '../shared/types';
 import {
@@ -19,6 +20,7 @@ import type { DispatchOptions } from './dispatch';
 import { dispatchEvent } from './dispatch';
 import type { CreateEventInit, NativeEventPayload } from './event';
 import { createEvent } from './event';
+import { dispatchPress } from './press';
 import {
   ensureEventType,
   ensureSingleEventArg,
@@ -80,6 +82,32 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<boo
   };
 
   return await fireEventInternal(instance, 'change', {}, payload, dispatchOptions);
+};
+
+/**
+ * Presses the element: calls `onPress` of the element that becomes the touch responder, as a tap
+ * on a device does. `Pressable` and `Touchable*` get it from their Pressability config, hosts with
+ * their own `onPress` (mocked `Text`, `testOnly_onPress`) directly. Disabled elements and
+ * responders that decline the touch pass it on to their ancestors. `pointerEvents` moves the touch
+ * to the nearest ancestor it doesn't block. See `dispatchPress()`.
+ *
+ * Only `onPress` is called. Use `userEvent.press()` for `onPressIn`, `onPressOut` and timing.
+ *
+ * The passed `nativeEvent` is deep merged onto a default touch payload.
+ *
+ * @returns `false` if `onPress` called `preventDefault()`, otherwise `true`.
+ */
+fireEvent.press = async (instance: TestInstance, event: FireEventInit = {}): Promise<boolean> => {
+  ensureInstance(instance, 'press', fireEvent.press);
+  const init = validateEventInit('press', event, fireEvent.press);
+  const nativeEvent = mergeEventProps(buildTouchNativeEvent(), init.nativeEvent);
+  const pressEvent = createEvent('press', { ...init, nativeEvent });
+  if (pressEvent == null) {
+    return true;
+  }
+
+  await dispatchPress(instance, pressEvent);
+  return !pressEvent.defaultPrevented;
 };
 
 /**

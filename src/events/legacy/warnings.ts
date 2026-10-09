@@ -8,7 +8,8 @@ import { isHostTextInput } from '../../helpers/host-component-names';
 import { logger } from '../../helpers/logger';
 import { isEditableTextInput } from '../../helpers/text-input';
 import { getEventHandlerName, normalizeEventType } from '../shared/handler';
-import { getPointerEventsBlocker, isEventBlockableByPointerEvents } from './is-enabled';
+import { getPointerEventsBlocker } from '../shared/pointer-events';
+import { isEventBlockableByPointerEvents } from './is-enabled';
 
 type UnhandledEventInfo = {
   skippedTargets: TestInstance[];

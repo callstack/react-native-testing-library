@@ -1,5 +1,16 @@
 import * as React from 'react';
-import { ScrollView, Text, TextInput, View } from 'react-native';
+import {
+  PanResponder,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
 import { render, screen } from '../../..';
@@ -615,6 +626,466 @@ describe('fireEvent.changeText', () => {
   test('throws without an element', async () => {
     await expect(fireEvent.changeText(null as unknown as TestInstance, 'Hello')).rejects.toThrow(
       'Unable to fire a "changeText" event. Please provide a host element.',
+    );
+  });
+});
+
+describe('fireEvent.press', () => {
+  const defaultTouchPayload = {
+    changedTouches: [],
+    identifier: 0,
+    locationX: 0,
+    locationY: 0,
+    pageX: 0,
+    pageY: 0,
+    target: 0,
+    timestamp: expect.any(Number),
+    touches: [],
+  };
+
+  test.each([
+    ['Pressable', Pressable],
+    ['TouchableOpacity', TouchableOpacity],
+    ['TouchableHighlight', TouchableHighlight],
+    ['TouchableWithoutFeedback', TouchableWithoutFeedback],
+    ['TouchableNativeFeedback', TouchableNativeFeedback],
+  ])('calls onPress of %s', async (_, Component) => {
+    const onPress = jest.fn();
+    await render(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - Component is a valid React component - but some RN versions have incorrect type definitions
+      <Component testID="subject" onPress={onPress}>
+        <Text>Press me</Text>
+      </Component>,
+    );
+
+    expect(await fireEvent.press(screen.getByTestId('subject'))).toBe(true);
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('passes a press event with default touch payload, from the pressed element to the responder', async () => {
+    let event: SyntheticEvent | undefined;
+    let currentTarget: unknown;
+    let eventPhase: number | undefined;
+    await render(
+      <Pressable
+        testID="pressable"
+        onPress={(e) => {
+          event = e as unknown as SyntheticEvent;
+          currentTarget = event.currentTarget;
+          eventPhase = event.eventPhase;
+        }}
+      >
+        <Text>Press me</Text>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Press me'));
+
+    expect(event?.type).toBe('press');
+    expect(event?.nativeEvent).toEqual(defaultTouchPayload);
+    expect(event?.target).toBe(screen.getByText('Press me'));
+    expect(currentTarget).toBe(screen.getByTestId('pressable'));
+    expect(eventPhase).toBe(event?.BUBBLING_PHASE);
+    // Reset after the dispatch.
+    expect(event?.currentTarget).toBeNull();
+  });
+
+  test('deep merges passed nativeEvent onto default touch payload', async () => {
+    const onPress = jest.fn();
+    await render(<Pressable testID="pressable" onPress={onPress} />);
+
+    await fireEvent.press(screen.getByTestId('pressable'), {
+      nativeEvent: { pageX: 20, locationY: 30 },
+      timeStamp: 123,
+    });
+
+    const event: SyntheticEvent = onPress.mock.calls[0][0];
+    expect(event.nativeEvent).toEqual({ ...defaultTouchPayload, pageX: 20, locationY: 30 });
+    expect(event.timeStamp).toBe(123);
+  });
+
+  test('validates the event object', async () => {
+    const onPress = jest.fn();
+    await render(<Pressable testID="pressable" onPress={onPress} />);
+    const pressable = screen.getByTestId('pressable');
+
+    await expect(
+      fireEvent.press(pressable, { persist: jest.fn() } as unknown as FireEventInit),
+    ).rejects.toThrow(
+      'Unable to fire a "press" event. Unsupported event object keys: "persist". "persist" is provided by the event.',
+    );
+    expect(onPress).not.toHaveBeenCalled();
+
+    await fireEvent.press(pressable, undefined);
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('calls only onPress, not onPressIn, onPressOut or onLongPress', async () => {
+    const calls: string[] = [];
+    await render(
+      <Pressable
+        testID="pressable"
+        onPress={() => calls.push('onPress')}
+        onPressIn={() => calls.push('onPressIn')}
+        onPressOut={() => calls.push('onPressOut')}
+        onLongPress={() => calls.push('onLongPress')}
+      />,
+    );
+
+    await fireEvent.press(screen.getByTestId('pressable'));
+
+    expect(calls).toEqual(['onPress']);
+  });
+
+  test('calls only onPress of the innermost Pressable', async () => {
+    const onInnerPress = jest.fn();
+    const onOuterPress = jest.fn();
+    await render(
+      <Pressable onPress={onOuterPress}>
+        <Pressable onPress={onInnerPress}>
+          <Text>Press me</Text>
+        </Pressable>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Press me'));
+
+    expect(onInnerPress).toHaveBeenCalledTimes(1);
+    expect(onOuterPress).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    ['Pressable', Pressable],
+    ['TouchableOpacity', TouchableOpacity],
+  ])('does not call onPress of disabled %s', async (_, Component) => {
+    const onPress = jest.fn();
+    await render(
+      <Component onPress={onPress} disabled>
+        <Text>Press me</Text>
+      </Component>,
+    );
+
+    await fireEvent.press(screen.getByText('Press me'));
+
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    ['Pressable', Pressable],
+    ['TouchableOpacity', TouchableOpacity],
+  ])('passes the touch past disabled inner to enabled outer %s', async (_, Component) => {
+    const onInnerPress = jest.fn();
+    const onOuterPress = jest.fn();
+    await render(
+      <Component onPress={onOuterPress}>
+        <Component onPress={onInnerPress} disabled>
+          <Text>Press me</Text>
+        </Component>
+      </Component>,
+    );
+
+    await fireEvent.press(screen.getByText('Press me'));
+
+    expect(onInnerPress).not.toHaveBeenCalled();
+    expect(onOuterPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('respects disabled through composite wrappers, ignoring disabled on composites', async () => {
+    const Button = ({ onPress, isDisabled }: { onPress: () => void; isDisabled: boolean }) => (
+      <View>
+        <TouchableOpacity onPress={onPress} disabled={isDisabled}>
+          <Text>{isDisabled ? 'Disabled' : 'Enabled'}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+    const NotForwarding = ({ onPress }: { onPress: () => void; disabled: boolean }) => (
+      <Button onPress={onPress} isDisabled={false} />
+    );
+    const onDisabledPress = jest.fn();
+    const onEnabledPress = jest.fn();
+    await render(
+      <>
+        <Button onPress={onDisabledPress} isDisabled />
+        <NotForwarding onPress={onEnabledPress} disabled />
+      </>,
+    );
+
+    await fireEvent.press(screen.getByText('Disabled'));
+    await fireEvent.press(screen.getByText('Enabled'));
+
+    expect(onDisabledPress).not.toHaveBeenCalled();
+    expect(onEnabledPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('calls onPress of host elements that have it, the innermost only', async () => {
+    const onInnerPress = jest.fn();
+    const onOuterPress = jest.fn();
+    await render(
+      <Text onPress={onOuterPress}>
+        Outer <Text onPress={onInnerPress}>Inner</Text>
+      </Text>,
+    );
+
+    await fireEvent.press(screen.getByText('Inner'));
+
+    expect(onInnerPress).toHaveBeenCalledTimes(1);
+    expect(onInnerPress.mock.calls[0][0].currentTarget).toBeNull();
+    expect(onOuterPress).not.toHaveBeenCalled();
+  });
+
+  test('calls testOnly_onPress of host elements', async () => {
+    const onPress = jest.fn();
+    await render(<View testID="view" {...{ testOnly_onPress: onPress }} />);
+
+    await fireEvent.press(screen.getByTestId('view'));
+
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('passes the touch past disabled Text and non-editable TextInput to the Pressable', async () => {
+    const onTextPress = jest.fn();
+    const onInputPress = jest.fn();
+    const onPress = jest.fn();
+    await render(
+      <Pressable onPress={onPress}>
+        <Text onPress={onTextPress} disabled>
+          Disabled
+        </Text>
+        <TextInput testID="input" onPress={onInputPress} editable={false} />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Disabled'));
+    await fireEvent.press(screen.getByTestId('input'));
+
+    expect(onTextPress).not.toHaveBeenCalled();
+    expect(onInputPress).not.toHaveBeenCalled();
+    expect(onPress).toHaveBeenCalledTimes(2);
+  });
+
+  test('calls onPress of editable TextInput', async () => {
+    const onPress = jest.fn();
+    await render(<TextInput testID="input" onPress={onPress} />);
+
+    await fireEvent.press(screen.getByTestId('input'));
+
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('passes the touch to an ancestor when the responder declines it', async () => {
+    const onViewPress = jest.fn();
+    const onPress = jest.fn();
+    await render(
+      <Pressable onPress={onPress}>
+        <View
+          testID="view"
+          onStartShouldSetResponder={() => false}
+          {...{ testOnly_onPress: onViewPress }}
+        />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByTestId('view'));
+
+    expect(onViewPress).not.toHaveBeenCalled();
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('does not call onPress when a responder without Pressability claims the touch', async () => {
+    const onPress = jest.fn();
+    const onPanResponderGrant = jest.fn();
+    const Draggable = () => {
+      const panResponder = React.useRef(
+        PanResponder.create({ onStartShouldSetPanResponder: () => true, onPanResponderGrant }),
+      ).current;
+      return <View testID="draggable" {...panResponder.panHandlers} />;
+    };
+    await render(
+      <Pressable onPress={onPress}>
+        <Draggable />
+      </Pressable>,
+    );
+
+    expect(await fireEvent.press(screen.getByTestId('draggable'))).toBe(true);
+
+    expect(onPress).not.toHaveBeenCalled();
+    expect(onPanResponderGrant).not.toHaveBeenCalled();
+  });
+
+  test('lets an ancestor claim the touch in the capture phase', async () => {
+    const calls: string[] = [];
+    await render(
+      <View
+        testID="parent"
+        onStartShouldSetResponderCapture={(event) => {
+          calls.push(`capture: ${event.currentTarget === screen.getByTestId('parent')}`);
+          return true;
+        }}
+      >
+        <Pressable onPress={() => calls.push('onPress')}>
+          <Text>Press me</Text>
+        </Pressable>
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByText('Press me'));
+
+    expect(calls).toEqual(['capture: true']);
+  });
+
+  test('asks capture responders from the root, then responders from the target', async () => {
+    const calls: string[] = [];
+    const responderProps = (name: string) => ({
+      onStartShouldSetResponderCapture: (event: unknown) => {
+        calls.push(`${name} capture, phase ${(event as SyntheticEvent).eventPhase}`);
+        return false;
+      },
+      onStartShouldSetResponder: (event: unknown) => {
+        calls.push(`${name} bubble, phase ${(event as SyntheticEvent).eventPhase}`);
+        return false;
+      },
+    });
+    await render(
+      <View {...responderProps('parent')}>
+        <View testID="child" {...responderProps('child')} />
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByTestId('child'));
+
+    expect(calls).toEqual([
+      'parent capture, phase 1',
+      'child capture, phase 2',
+      'child bubble, phase 2',
+      'parent bubble, phase 3',
+    ]);
+  });
+
+  describe('pointerEvents', () => {
+    test.each(['none', 'box-only'] as const)(
+      'does not call onPress inside View with pointerEvents="%s"',
+      async (pointerEvents) => {
+        const onPress = jest.fn();
+        await render(
+          <View pointerEvents={pointerEvents}>
+            <View>
+              <Pressable onPress={onPress}>
+                <Text>Press me</Text>
+              </Pressable>
+            </View>
+          </View>,
+        );
+
+        await fireEvent.press(screen.getByText('Press me'));
+
+        expect(onPress).not.toHaveBeenCalled();
+      },
+    );
+
+    test.each(['box-none', 'auto'] as const)(
+      'calls onPress inside View with pointerEvents="%s"',
+      async (pointerEvents) => {
+        const onPress = jest.fn();
+        await render(
+          <View pointerEvents={pointerEvents}>
+            <Pressable onPress={onPress}>
+              <Text>Press me</Text>
+            </Pressable>
+          </View>,
+        );
+
+        await fireEvent.press(screen.getByText('Press me'));
+
+        expect(onPress).toHaveBeenCalledTimes(1);
+      },
+    );
+
+    test('reads pointerEvents from style', async () => {
+      const onPress = jest.fn();
+      await render(
+        <View style={{ pointerEvents: 'none' }}>
+          <Pressable testID="pressable" onPress={onPress} />
+        </View>,
+      );
+
+      await fireEvent.press(screen.getByTestId('pressable'));
+
+      expect(onPress).not.toHaveBeenCalled();
+    });
+
+    test('moves the touch to Pressable with pointerEvents="box-only" from its child', async () => {
+      const onTextPress = jest.fn();
+      const onPress = jest.fn();
+      await render(
+        <Pressable testID="pressable" pointerEvents="box-only" onPress={onPress}>
+          <Text onPress={onTextPress}>Press me</Text>
+        </Pressable>,
+      );
+
+      await fireEvent.press(screen.getByText('Press me'));
+
+      expect(onTextPress).not.toHaveBeenCalled();
+      expect(onPress).toHaveBeenCalledTimes(1);
+      expect(onPress.mock.calls[0][0].target).toBe(screen.getByTestId('pressable'));
+    });
+  });
+
+  test('returns false when onPress calls preventDefault()', async () => {
+    await render(<Pressable testID="pressable" onPress={(event) => event.preventDefault()} />);
+
+    expect(await fireEvent.press(screen.getByTestId('pressable'))).toBe(false);
+  });
+
+  test('renders state updates from onPress', async () => {
+    const Counter = () => {
+      const [count, setCount] = React.useState(0);
+      return (
+        <Pressable onPress={() => setCount(count + 1)}>
+          <Text>Count: {count}</Text>
+        </Pressable>
+      );
+    };
+    await render(<Counter />);
+
+    await fireEvent.press(screen.getByText('Count: 0'));
+
+    expect(screen.getByText('Count: 1')).toBeOnTheScreen();
+  });
+
+  test('rethrows onPress error after rendering state updates', async () => {
+    const Counter = () => {
+      const [count, setCount] = React.useState(0);
+      return (
+        <Pressable
+          onPress={() => {
+            setCount(count + 1);
+            throw new Error('Press error');
+          }}
+        >
+          <Text>Count: {count}</Text>
+        </Pressable>
+      );
+    };
+    await render(<Counter />);
+
+    await expect(fireEvent.press(screen.getByText('Count: 0'))).rejects.toThrow('Press error');
+    expect(screen.getByText('Count: 1')).toBeOnTheScreen();
+  });
+
+  test('does nothing on unmounted element', async () => {
+    const onPress = jest.fn();
+    await render(<Pressable testID="pressable" onPress={onPress} />);
+    const pressable = screen.getByTestId('pressable');
+    await screen.unmount();
+
+    expect(await fireEvent.press(pressable)).toBe(true);
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  test('throws without an element', async () => {
+    await expect(fireEvent.press(null as unknown as TestInstance)).rejects.toThrow(
+      'Unable to fire a "press" event. Please provide a host element.',
     );
   });
 });
