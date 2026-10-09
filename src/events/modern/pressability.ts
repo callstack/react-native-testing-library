@@ -21,6 +21,7 @@ type PressabilityConfig = { disabled?: boolean | null } & {
 };
 
 type DispatchState = {
+  hasCalledCallback: boolean;
   /** Wrapped, so a thrown `undefined` is rethrown too. */
   firstError: { error: unknown } | null;
 };
@@ -56,23 +57,24 @@ type DispatchState = {
  * @param event from `createPressabilityEvent()`, passed to the callback. React Native passes the
  * responder event derived from `touchStart` to `onPressIn`, and from `touchEnd` to `onPress` and
  * `onPressOut`.
+ * @returns `true` if a callback was called.
  */
 export async function dispatchPressabilityEvent(
   target: TestInstance,
   eventType: PressabilityEventType,
   event: SyntheticEvent,
-): Promise<void> {
+): Promise<boolean> {
   if (!isInstanceMounted(target)) {
-    return;
+    return false;
   }
 
   const path = getTouchPath(target);
   if (path.length === 0) {
-    return;
+    return false;
   }
 
   const callbackName = getEventHandlerName(eventType) as PressabilityCallbackName;
-  const state: DispatchState = { firstError: null };
+  const state: DispatchState = { hasCalledCallback: false, firstError: null };
   await act(() => {
     getEventInternals(event).target = path[0];
     getEventInternals(event).composedPath = path;
@@ -83,6 +85,7 @@ export async function dispatchPressabilityEvent(
         const phase = responder === path[0] ? event.AT_TARGET : event.BUBBLING_PHASE;
         getEventInternals(event).eventPhase = phase;
         getEventInternals(event).currentTarget = responder;
+        state.hasCalledCallback = true;
         callback.call(responder, event);
       }
     } catch (error) {
@@ -96,6 +99,34 @@ export async function dispatchPressabilityEvent(
   if (state.firstError != null) {
     throw state.firstError.error;
   }
+
+  return state.hasCalledCallback;
+}
+
+/**
+ * Elements with the callback for the event type, from the target up to the root, whether or not
+ * they are disabled or blocked by `pointerEvents`. When `dispatchPressabilityEvent()` called no
+ * callback, these are the elements it skipped.
+ */
+export function getPressabilityCallbackOwners(
+  target: TestInstance,
+  eventType: PressabilityEventType,
+): TestInstance[] {
+  const callbackName = getEventHandlerName(eventType) as PressabilityCallbackName;
+  const owners: TestInstance[] = [];
+  let current: TestInstance | null = target;
+  while (current?.parent != null) {
+    const config = getPressabilityConfig(current);
+    const callback =
+      config != null ? config[callbackName] : getHandlerByName(current.props, callbackName);
+    if (callback != null) {
+      owners.push(current);
+    }
+
+    current = current.parent;
+  }
+
+  return owners;
 }
 
 /** The hit target, then its host ancestors. Empty when `pointerEvents` blocks every element. */
@@ -130,13 +161,18 @@ function getCallback(
   responder: TestInstance,
   callbackName: PressabilityCallbackName,
 ): EventHandler | undefined {
-  const getConfig: unknown = responder.props.onStartShouldSetResponder?.testOnly_pressabilityConfig;
-  if (typeof getConfig !== 'function') {
+  const config = getPressabilityConfig(responder);
+  if (config == null) {
     return getHostCallback(responder, callbackName);
   }
 
-  const config = getConfig() as PressabilityConfig;
   return config.disabled !== true ? (config[callbackName] ?? undefined) : undefined;
+}
+
+/** Config of `Pressable` and `Touchable*`, or `null` for elements without Pressability. */
+function getPressabilityConfig(instance: TestInstance): PressabilityConfig | null {
+  const getConfig: unknown = instance.props.onStartShouldSetResponder?.testOnly_pressabilityConfig;
+  return typeof getConfig === 'function' ? (getConfig() as PressabilityConfig) : null;
 }
 
 function hasHostCallback(instance: TestInstance): boolean {
