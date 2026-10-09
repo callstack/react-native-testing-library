@@ -15,7 +15,9 @@ The files in `src/events/legacy/`:
 | `warnings.ts`    | `eventDiagnostics` warnings for `fireEvent`, and helpers shared with `userEvent`                          |
 | `builders/`      | Legacy event objects: `wrapNativeEvent()` (stubs from `baseSyntheticEvent()`), touch and responder events |
 
-Code used by both event systems lives in `src/events/shared/`: `handler.ts` (finding the `on*` handler for an event name in props), `native-state.ts` and `update-native-state.ts` ([native state](native-state.md) and how `fireEvent` updates it), `payloads.ts` (`nativeEvent` payloads matching what React Native sends on a device), `merge.ts` (deep merging custom props into them), and `types.ts`.
+Code used by both event systems lives in `src/events/shared/`: `handler.ts` (finding the `on*` handler for an event name in props), `native-state.ts` and `update-native-state.ts` ([native state](native-state.md) and how `fireEvent` updates it), `payloads.ts` (`nativeEvent` payloads matching what React Native sends on a device), `merge.ts` (deep merging custom props into them), `pointer-events.ts` (whether `pointerEvents` lets an element be the target of touches), and `types.ts`.
+
+In the modern event system, `src/events/modern/pressability.ts` calls the `onPress`, `onPressIn`, `onPressOut` or `onLongPress` callback of the element that becomes the touch responder, reading `Pressable` and `Touchable*` callbacks from Pressability's `testOnly_pressabilityConfig()`. Modern `fireEvent.press()` uses it.
 
 `src/user-event/` is a separate module on top of the event subsystem. It creates and dispatches native events through the facades `src/events/create-event.ts` and `src/events/dispatch-event.ts`, and imports the rest only through `src/events/legacy/index.ts`, which also re-exports `src/events/shared/handler.ts` and `src/events/shared/native-state.ts`.
 

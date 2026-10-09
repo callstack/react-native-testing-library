@@ -913,53 +913,23 @@ describe('fireEvent.press', () => {
     expect(onPanResponderGrant).not.toHaveBeenCalled();
   });
 
-  test('lets an ancestor claim the touch in the capture phase', async () => {
+  test('asks responders from the target to the root, without arguments', async () => {
     const calls: string[] = [];
-    await render(
-      <View
-        testID="parent"
-        onStartShouldSetResponderCapture={(event) => {
-          calls.push(`capture: ${event.currentTarget === screen.getByTestId('parent')}`);
-          return true;
-        }}
-      >
-        <Pressable onPress={() => calls.push('onPress')}>
-          <Text>Press me</Text>
-        </Pressable>
-      </View>,
-    );
-
-    await fireEvent.press(screen.getByText('Press me'));
-
-    expect(calls).toEqual(['capture: true']);
-  });
-
-  test('asks capture responders from the root, then responders from the target', async () => {
-    const calls: string[] = [];
-    const responderProps = (name: string) => ({
-      onStartShouldSetResponderCapture: (event: unknown) => {
-        calls.push(`${name} capture, phase ${(event as SyntheticEvent).eventPhase}`);
+    const onStartShouldSetResponder =
+      (name: string) =>
+      (...args: unknown[]) => {
+        calls.push(`${name} (${args.length} args)`);
         return false;
-      },
-      onStartShouldSetResponder: (event: unknown) => {
-        calls.push(`${name} bubble, phase ${(event as SyntheticEvent).eventPhase}`);
-        return false;
-      },
-    });
+      };
     await render(
-      <View {...responderProps('parent')}>
-        <View testID="child" {...responderProps('child')} />
+      <View onStartShouldSetResponder={onStartShouldSetResponder('parent')}>
+        <View testID="child" onStartShouldSetResponder={onStartShouldSetResponder('child')} />
       </View>,
     );
 
     await fireEvent.press(screen.getByTestId('child'));
 
-    expect(calls).toEqual([
-      'parent capture, phase 1',
-      'child capture, phase 2',
-      'child bubble, phase 2',
-      'parent bubble, phase 3',
-    ]);
+    expect(calls).toEqual(['child (0 args)', 'parent (0 args)']);
   });
 
   describe('pointerEvents', () => {
@@ -1077,7 +1047,7 @@ describe('fireEvent.press', () => {
     const onPress = jest.fn();
     await render(<Pressable testID="pressable" onPress={onPress} />);
     const pressable = screen.getByTestId('pressable');
-    await screen.unmount();
+    await screen.rerender(<View />);
 
     expect(await fireEvent.press(pressable)).toBe(true);
     expect(onPress).not.toHaveBeenCalled();
