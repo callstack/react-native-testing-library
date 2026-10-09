@@ -5,64 +5,33 @@ exports[`clear() supports basic case: value: "Hello! 1`] = `
   {
     "name": "focus",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 6,
           "start": 0,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "keyPress",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "key": "Backspace",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "change",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
         "selection": {
@@ -72,11 +41,6 @@ exports[`clear() supports basic case: value: "Hello! 1`] = `
         "target": 0,
         "text": "",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
@@ -86,56 +50,29 @@ exports[`clear() supports basic case: value: "Hello! 1`] = `
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 0,
           "start": 0,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "endEditing",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
         "text": "",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "blur",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
 ]
@@ -146,64 +83,33 @@ exports[`clear() supports defaultValue prop: defaultValue: "Hello Default!" 1`] 
   {
     "name": "focus",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 14,
           "start": 0,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "keyPress",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "key": "Backspace",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "change",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
         "selection": {
@@ -213,11 +119,6 @@ exports[`clear() supports defaultValue prop: defaultValue: "Hello Default!" 1`] 
         "target": 0,
         "text": "",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
@@ -227,56 +128,29 @@ exports[`clear() supports defaultValue prop: defaultValue: "Hello Default!" 1`] 
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 0,
           "start": 0,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "endEditing",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
         "text": "",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "blur",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
 ]
@@ -287,64 +161,33 @@ exports[`clear() supports multiline: value: "Hello World!\\nHow are you?" multil
   {
     "name": "focus",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 25,
           "start": 0,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "keyPress",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "key": "Backspace",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "change",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "eventCount": 0,
         "selection": {
@@ -354,11 +197,6 @@ exports[`clear() supports multiline: value: "Hello World!\\nHow are you?" multil
         "target": 0,
         "text": "",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
@@ -368,30 +206,17 @@ exports[`clear() supports multiline: value: "Hello World!\\nHow are you?" multil
   {
     "name": "selectionChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "selection": {
           "end": 0,
           "start": 0,
         },
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "contentSizeChange",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "contentSize": {
           "height": 16,
@@ -399,46 +224,23 @@ exports[`clear() supports multiline: value: "Hello World!\\nHow are you?" multil
         },
         "target": 0,
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "endEditing",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
         "text": "",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "blur",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
 ]
@@ -453,19 +255,10 @@ exports[`clear() works when not all events have handlers 1`] = `
   {
     "name": "endEditing",
     "payload": {
-      "currentTarget": {},
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "target": 0,
         "text": "",
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
 ]

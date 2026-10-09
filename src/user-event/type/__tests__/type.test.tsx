@@ -4,6 +4,7 @@ import { TextInput, View } from 'react-native';
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
+import { getConfig } from '../../../config';
 import { createEventLogger, getEventsNames, lastEventPayload } from '../../../test-utils/events';
 
 beforeEach(() => {
@@ -37,7 +38,7 @@ async function renderTextInputWithToolkit(props: TextInputProps = {}) {
 }
 
 describe('type()', () => {
-  it('supports basic case', async () => {
+  test('supports basic case', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
     const { events } = await renderTextInputWithToolkit();
 
@@ -67,7 +68,7 @@ describe('type()', () => {
     expect(events).toMatchSnapshot('input: "abc"');
   });
 
-  it('includes caret selection in the change event nativeEvent', async () => {
+  test('includes caret selection in the change event nativeEvent', async () => {
     const { events } = await renderTextInputWithToolkit();
 
     const user = userEvent.setup();
@@ -84,7 +85,7 @@ describe('type()', () => {
     });
   });
 
-  it('drives components that read the caret from change event (regression)', async () => {
+  test('drives components that read the caret from change event (regression)', async () => {
     const onChange = jest.fn();
 
     function MaskedInput() {
@@ -117,7 +118,7 @@ describe('type()', () => {
     expect(screen.getByTestId('masked-input').props.value).toBe('abc');
   });
 
-  it.each(['modern', 'legacy'])('works with %s fake timers', async (type) => {
+  test.each(['modern', 'legacy'])('works with %s fake timers', async (type) => {
     jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
     const { events } = await renderTextInputWithToolkit();
 
@@ -145,7 +146,7 @@ describe('type()', () => {
     ]);
   });
 
-  it('supports defaultValue prop', async () => {
+  test('supports defaultValue prop', async () => {
     const { events } = await renderTextInputWithToolkit({
       defaultValue: 'xxx',
     });
@@ -172,7 +173,7 @@ describe('type()', () => {
     expect(events).toMatchSnapshot('input: "ab", defaultValue: "xxx"');
   });
 
-  it('does respect editable prop', async () => {
+  test('does respect editable prop', async () => {
     const { events } = await renderTextInputWithToolkit({
       editable: false,
     });
@@ -183,7 +184,7 @@ describe('type()', () => {
     expect(getEventsNames(events)).toEqual([]);
   });
 
-  it('does respect readOnly prop', async () => {
+  test('does respect readOnly prop', async () => {
     const { events } = await renderTextInputWithToolkit({
       readOnly: true,
     });
@@ -194,7 +195,7 @@ describe('type()', () => {
     expect(getEventsNames(events)).toEqual([]);
   });
 
-  it('supports backspace', async () => {
+  test('supports backspace', async () => {
     const { events } = await renderTextInputWithToolkit({
       defaultValue: 'xxx',
     });
@@ -221,7 +222,7 @@ describe('type()', () => {
     expect(events).toMatchSnapshot('input: "{Backspace}a", defaultValue: "xxx"');
   });
 
-  it('supports multiline', async () => {
+  test('supports multiline', async () => {
     const { events } = await renderTextInputWithToolkit({
       multiline: true,
     });
@@ -276,7 +277,7 @@ describe('type()', () => {
     });
   });
 
-  it('triggers submit event with `submitEditing: true`', async () => {
+  test('triggers submit event with `submitEditing: true`', async () => {
     const { events } = await renderTextInputWithToolkit();
 
     const user = userEvent.setup();
@@ -304,7 +305,7 @@ describe('type()', () => {
     });
   });
 
-  it('works when not all events have handlers', async () => {
+  test('works when not all events have handlers', async () => {
     const { events, logEvent } = createEventLogger();
     await render(
       <TextInput
@@ -327,7 +328,7 @@ describe('type()', () => {
     expect(events).toMatchSnapshot('input: "abc"');
   });
 
-  it('does NOT work on View', async () => {
+  test('does NOT work on View', async () => {
     await render(<View testID="input" />);
 
     const user = userEvent.setup();
@@ -341,19 +342,19 @@ describe('type()', () => {
   // View that ignores props type checking
   const AnyView = View as React.ComponentType<any>;
 
-  it('does NOT bubble up', async () => {
-    const parentHandler = jest.fn();
+  test('bubbles up only native bubbling events, in the modern event system', async () => {
+    const { events, logEvent } = createEventLogger();
     await render(
       <AnyView
-        onChangeText={parentHandler}
-        onChange={parentHandler}
-        onKeyPress={parentHandler}
-        onTextInput={parentHandler}
-        onFocus={parentHandler}
-        onBlur={parentHandler}
-        onEndEditing={parentHandler}
-        onPressIn={parentHandler}
-        onPressOut={parentHandler}
+        onChangeText={logEvent('changeText')}
+        onChange={logEvent('change')}
+        onKeyPress={logEvent('keyPress')}
+        onTextInput={logEvent('textInput')}
+        onFocus={logEvent('focus')}
+        onBlur={logEvent('blur')}
+        onEndEditing={logEvent('endEditing')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
       >
         <TextInput testID="input" />
       </AnyView>,
@@ -361,10 +362,19 @@ describe('type()', () => {
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abc');
-    expect(parentHandler).not.toHaveBeenCalled();
+    // `focus`, `keyPress`, `change`, `endEditing` and `blur` are bubbling events in React Native.
+    const modernEvents = [
+      'focus',
+      ...['keyPress', 'change', 'keyPress', 'change', 'keyPress', 'change'],
+      'endEditing',
+      'blur',
+    ];
+    expect(getEventsNames(events)).toEqual(
+      getConfig().unstable_eventSystem === 'modern' ? modernEvents : [],
+    );
   });
 
-  it('supports direct access', async () => {
+  test('supports direct access', async () => {
     const { events, logEvent } = createEventLogger();
     await render(
       <TextInput
@@ -387,7 +397,7 @@ describe('type()', () => {
   });
 
   // See: https://github.com/callstack/react-native-testing-library/issues/1588
-  it('can call "persist()" on "onKeyPress" event handler', async () => {
+  test('can call "persist()" on "onKeyPress" event handler', async () => {
     const handleKeyPress = jest.fn();
     await render(
       <TextInput
@@ -403,7 +413,7 @@ describe('type()', () => {
     expect(handleKeyPress).toHaveBeenCalledTimes(3);
   });
 
-  it('respects the "maxLength" prop', async () => {
+  test('respects the "maxLength" prop', async () => {
     const { events } = await renderTextInputWithToolkit({ maxLength: 2 });
 
     const user = userEvent.setup();
@@ -436,7 +446,7 @@ describe('type()', () => {
     });
   });
 
-  it('unmanaged text inputs preserve their native state', async () => {
+  test('unmanaged text inputs preserve their native state', async () => {
     await render(<TextInput testID="input" />);
 
     const user = userEvent.setup();
@@ -450,7 +460,7 @@ describe('type()', () => {
     expect(input).toHaveDisplayValue('Hello World');
   });
 
-  it('skips blur and endEditing events when `skipBlur: true`', async () => {
+  test('skips blur and endEditing events when `skipBlur: true`', async () => {
     const { events } = await renderTextInputWithToolkit();
 
     const user = userEvent.setup();

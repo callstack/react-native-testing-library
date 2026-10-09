@@ -1,7 +1,8 @@
 import { stringify } from 'jest-matcher-utils';
 import type { TestInstance } from 'test-renderer';
 
-import { buildScrollEvent, nativeState } from '../../events';
+import { buildScrollEvent } from '../../events/create-event';
+import { nativeState } from '../../events/legacy';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';
@@ -55,7 +56,9 @@ export async function scrollTo(
     layoutMeasurement: options.layoutMeasurement ?? nativeState.layoutSizeForInstance.get(instance),
   };
 
-  await interaction.dispatchEvent(
+  // `ScrollView` calls `onContentSizeChange(width, height)` from JavaScript, with two arguments
+  // instead of an event object, so `dispatchEvent` can't call it.
+  await interaction.invokeEventHandler(
     'contentSizeChange',
     options.contentSize?.width ?? 0,
     options.contentSize?.height ?? 0,
@@ -100,18 +103,24 @@ async function emitDragScrollEvents(
   await wait(config);
   await interaction.dispatchEvent(
     'scrollBeginDrag',
-    buildScrollEvent(scrollSteps[0], scrollOptions),
+    buildScrollEvent('scrollBeginDrag', scrollSteps[0], scrollOptions),
   );
 
   // Native emits `scroll` for every drag step, including the last; `scrollEndDrag` repeats its offset.
   for (let i = 1; i < scrollSteps.length; i += 1) {
     await wait(config);
-    await interaction.dispatchEvent('scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
+    await interaction.dispatchEvent(
+      'scroll',
+      buildScrollEvent('scroll', scrollSteps[i], scrollOptions),
+    );
   }
 
   await wait(config);
   const lastStep = scrollSteps.at(-1);
-  await interaction.dispatchEvent('scrollEndDrag', buildScrollEvent(lastStep, scrollOptions));
+  await interaction.dispatchEvent(
+    'scrollEndDrag',
+    buildScrollEvent('scrollEndDrag', lastStep, scrollOptions),
+  );
 }
 
 async function emitMomentumScrollEvents(
@@ -127,18 +136,24 @@ async function emitMomentumScrollEvents(
   await wait(config);
   await interaction.dispatchEvent(
     'momentumScrollBegin',
-    buildScrollEvent(scrollSteps[0], scrollOptions),
+    buildScrollEvent('momentumScrollBegin', scrollSteps[0], scrollOptions),
   );
 
   // Native emits `scroll` for every momentum step, including the last; `momentumScrollEnd` repeats its offset.
   for (let i = 1; i < scrollSteps.length; i += 1) {
     await wait(config);
-    await interaction.dispatchEvent('scroll', buildScrollEvent(scrollSteps[i], scrollOptions));
+    await interaction.dispatchEvent(
+      'scroll',
+      buildScrollEvent('scroll', scrollSteps[i], scrollOptions),
+    );
   }
 
   await wait(config);
   const lastStep = scrollSteps.at(-1);
-  await interaction.dispatchEvent('momentumScrollEnd', buildScrollEvent(lastStep, scrollOptions));
+  await interaction.dispatchEvent(
+    'momentumScrollEnd',
+    buildScrollEvent('momentumScrollEnd', lastStep, scrollOptions),
+  );
 }
 
 function ensureScrollViewDirection(instance: TestInstance, options: ScrollToOptions) {
