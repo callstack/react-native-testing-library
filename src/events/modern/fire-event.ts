@@ -1,7 +1,15 @@
 import type { TestInstance } from 'test-renderer';
 
+import { isInstanceMounted } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
+import { isHostScrollView } from '../../helpers/host-component-names';
+import { buildLayoutEvent } from '../legacy/builders/common';
+import { mergeEventProps } from '../legacy/builders/merge';
+import { buildScrollEvent } from '../legacy/builders/scroll';
 import { normalizeEventType } from '../shared/handler';
+import { nativeState } from '../shared/native-state';
+import type { LayoutRectangle } from '../shared/types';
+import { updateNativeStateFromEvent } from '../shared/update-native-state';
 import { dispatchEvent } from './dispatch';
 import type { CreateEventInit } from './event';
 import { createEvent } from './event';
@@ -29,21 +37,73 @@ export async function fireEvent(
   ...args: [event: FireEventInit]
 ): Promise<boolean> {
   const normalizedType = normalizeEventType(eventType);
-  if (instance == null) {
-    throw new ErrorWithStack(
-      `Unable to fire a "${normalizedType}" event - please provide a host element.`,
-      fireEvent,
-    );
-  }
-
+  ensureInstance(instance, normalizedType, fireEvent);
   // Before the event object, as `fireEvent(input, 'changeText', 'Hello')` needs the hint more.
   ensureEventType(normalizedType, fireEvent);
   const init = validateEventInit(normalizedType, args, fireEvent);
-  const event = createEvent(normalizedType, init);
+  return await fireEventInternal(instance, normalizedType, init);
+}
+
+/**
+ * Fires a `scroll` event. The passed `nativeEvent` is deep merged onto a default scroll payload,
+ * whose `layoutMeasurement` is the `ScrollView`'s size from its last `layout` event.
+ */
+fireEvent.scroll = async (
+  instance: TestInstance,
+  ...args: [event?: FireEventInit]
+): Promise<boolean> => {
+  ensureInstance(instance, 'scroll', fireEvent.scroll);
+  const init = validateEventInit('scroll', args.length > 0 ? args : [{}], fireEvent.scroll);
+  const layoutMeasurement = isHostScrollView(instance)
+    ? nativeState.layoutSizeForInstance.get(instance)
+    : undefined;
+  const { nativeEvent } = buildScrollEvent(undefined, { layoutMeasurement });
+  return await fireEventInternal(instance, 'scroll', {
+    ...init,
+    nativeEvent: mergeEventProps(nativeEvent, init.nativeEvent),
+  });
+};
+
+/** Fires a `layout` event. The passed `layout` is merged onto a zeroed rectangle. */
+fireEvent.layout = async (
+  instance: TestInstance,
+  layout?: Partial<LayoutRectangle>,
+): Promise<boolean> => {
+  ensureInstance(instance, 'layout', fireEvent.layout);
+  const { nativeEvent } = buildLayoutEvent(layout);
+  return await fireEventInternal(instance, 'layout', { nativeEvent });
+};
+
+/** Expects an event type React Native dispatches natively, without the `on*` prefix. */
+async function fireEventInternal(
+  instance: TestInstance,
+  eventType: string,
+  init: CreateEventInit,
+): Promise<boolean> {
+  const event = createEvent(eventType, init);
   if (event == null) {
     return true;
   }
 
+  // Before the dispatch, as a device updates its native views before emitting the event.
+  if (isInstanceMounted(instance)) {
+    updateNativeStateFromEvent(instance, eventType, event);
+  }
+
   await dispatchEvent(instance, event);
   return !event.defaultPrevented;
+}
+
+function ensureInstance(
+  instance: TestInstance,
+  eventType: string,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  callsite: Function,
+) {
+  if (instance == null) {
+    throw new ErrorWithStack(
+      `Unable to fire a "${eventType}" event - please provide a host element.`,
+      callsite,
+    );
+  }
 }

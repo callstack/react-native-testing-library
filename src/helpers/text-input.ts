@@ -1,6 +1,6 @@
 import type { TestInstance } from 'test-renderer';
 
-import { nativeState } from '../events/legacy/native-state';
+import { nativeState } from '../events/shared/native-state';
 import { isHostTextInput } from './host-component-names';
 
 export function isEditableTextInput(instance: TestInstance) {

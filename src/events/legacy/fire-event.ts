@@ -4,13 +4,13 @@ import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { normalizeEventType } from '../shared/handler';
+import { nativeState } from '../shared/native-state';
 import type { EventProps, EventType, LayoutRectangle } from '../shared/types';
+import { updateNativeStateFromEvent } from '../shared/update-native-state';
 import { buildLayoutEvent, buildTouchEvent } from './builders/common';
 import { mergeEventProps } from './builders/merge';
 import { buildScrollEvent } from './builders/scroll';
-import { nativeState } from './native-state';
 import { findEventHandler } from './propagation';
-import { updateNativeStateFromEvent } from './update-native-state';
 import { warnAboutUnhandledEvent } from './warnings';
 
 async function fireEvent(instance: TestInstance, eventType: EventType, ...data: unknown[]) {

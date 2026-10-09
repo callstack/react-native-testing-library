@@ -1,11 +1,22 @@
 import * as React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { ScrollView, Text, TextInput, View } from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
 import { render, screen } from '../../..';
+import { nativeState } from '../../shared/native-state';
 import type { SyntheticEvent } from '../event';
 import type { FireEventInit } from '../fire-event';
 import { fireEvent } from '../fire-event';
+
+const defaultScrollPayload = {
+  contentInset: { bottom: 0, left: 0, right: 0, top: 0 },
+  contentOffset: { x: 0, y: 0 },
+  contentSize: { height: 0, width: 0 },
+  layoutMeasurement: { height: 0, width: 0 },
+  responderIgnoreScroll: true,
+  target: 0,
+  velocity: { x: 0, y: 0 },
+};
 
 /** Calls `fireEvent` with arguments its types don't allow, as JavaScript callers can. */
 function fireEventUntyped(instance: TestInstance, eventType: string, ...args: unknown[]) {
@@ -321,4 +332,243 @@ test('renders state updates from the handler', async () => {
   await fireEvent(screen.getByTestId('text'), 'press', {});
 
   expect(screen.getByText('Count: 1')).toBeOnTheScreen();
+});
+
+describe('native state', () => {
+  test.each([
+    'scroll',
+    'onScroll',
+    'scrollBeginDrag',
+    'scrollEndDrag',
+    'momentumScrollBegin',
+    'momentumScrollEnd',
+  ])('saves content offset of ScrollView from %s event', async (eventType) => {
+    await render(<ScrollView testID="scroll" />);
+    const scrollView = screen.getByTestId('scroll');
+
+    await fireEvent(scrollView, eventType, { nativeEvent: { contentOffset: { y: 200 } } });
+
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({ x: 0, y: 200 });
+  });
+
+  test('does not save content offset from scroll event without one', async () => {
+    await render(<ScrollView testID="scroll" />);
+    const scrollView = screen.getByTestId('scroll');
+
+    await fireEvent(scrollView, 'scroll', { nativeEvent: {} });
+
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toBeUndefined();
+  });
+
+  test('saves layout size from layout event, with non-finite values as 0', async () => {
+    await render(<View testID="view" />);
+    const view = screen.getByTestId('view');
+
+    await fireEvent(view, 'layout', { nativeEvent: { layout: { width: 50, height: NaN } } });
+
+    expect(nativeState.layoutSizeForInstance.get(view)).toEqual({ width: 50, height: 0 });
+  });
+
+  test('is saved before handlers run', async () => {
+    let contentOffset;
+    const onScroll = jest.fn(() => {
+      contentOffset = nativeState.contentOffsetForInstance.get(screen.getByTestId('scroll'));
+    });
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+
+    await fireEvent(screen.getByTestId('scroll'), 'scroll', {
+      nativeEvent: { contentOffset: { y: 200 } },
+    });
+
+    expect(contentOffset).toEqual({ x: 0, y: 200 });
+  });
+
+  test('is not saved for unmounted element', async () => {
+    await render(<ScrollView testID="scroll" />);
+    const scrollView = screen.getByTestId('scroll');
+    await screen.rerender(<View />);
+
+    await fireEvent(scrollView, 'scroll', { nativeEvent: { contentOffset: { y: 200 } } });
+
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toBeUndefined();
+  });
+});
+
+describe('fireEvent.scroll', () => {
+  test('passes default scroll payload as nativeEvent of a direct event', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+
+    await fireEvent.scroll(screen.getByTestId('scroll'));
+
+    const event: SyntheticEvent = onScroll.mock.calls[0][0];
+    expect(event.type).toBe('scroll');
+    expect(event.rnIsDirect).toBe(true);
+    expect(event.nativeEvent).toEqual(defaultScrollPayload);
+  });
+
+  test('deep merges passed nativeEvent onto default payload', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+
+    await fireEvent.scroll(screen.getByTestId('scroll'), {
+      nativeEvent: { contentOffset: { y: 200 }, zoomScale: 2 },
+    });
+
+    expect(onScroll.mock.calls[0][0].nativeEvent).toEqual({
+      ...defaultScrollPayload,
+      contentOffset: { x: 0, y: 200 },
+      zoomScale: 2,
+    });
+  });
+
+  test('passes timeStamp to handlers', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+
+    await fireEvent.scroll(screen.getByTestId('scroll'), { timeStamp: 123 });
+
+    expect(onScroll.mock.calls[0][0].timeStamp).toBe(123);
+  });
+
+  test('saves content offset of ScrollView in native state', async () => {
+    await render(<ScrollView testID="scroll" />);
+    const scrollView = screen.getByTestId('scroll');
+
+    await fireEvent.scroll(scrollView, { nativeEvent: { contentOffset: { x: 50 } } });
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({ x: 50, y: 0 });
+
+    await fireEvent.scroll(scrollView, { nativeEvent: { contentOffset: { y: Infinity } } });
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({ x: 0, y: 0 });
+  });
+
+  test('uses layout size of ScrollView as default layoutMeasurement', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+    const scrollView = screen.getByTestId('scroll');
+
+    await fireEvent.layout(scrollView, { width: 390, height: 750 });
+    await fireEvent.scroll(scrollView);
+    await fireEvent.scroll(scrollView, {
+      nativeEvent: { layoutMeasurement: { width: 100, height: 200 } },
+    });
+
+    expect(onScroll.mock.calls[0][0].nativeEvent.layoutMeasurement).toEqual({
+      width: 390,
+      height: 750,
+    });
+    expect(onScroll.mock.calls[1][0].nativeEvent.layoutMeasurement).toEqual({
+      width: 100,
+      height: 200,
+    });
+  });
+
+  test('does not use layout size of other elements as layoutMeasurement', async () => {
+    const onScroll = jest.fn();
+    await render(<View testID="view" {...{ onScroll }} />);
+    const view = screen.getByTestId('view');
+
+    await fireEvent.layout(view, { width: 390, height: 750 });
+    await fireEvent.scroll(view);
+
+    expect(onScroll.mock.calls[0][0].nativeEvent.layoutMeasurement).toEqual({
+      width: 0,
+      height: 0,
+    });
+  });
+
+  test('does not call onScroll of an ancestor ScrollView', async () => {
+    const onScroll = jest.fn();
+    await render(
+      <ScrollView onScroll={onScroll}>
+        <View testID="content" />
+      </ScrollView>,
+    );
+
+    await fireEvent.scroll(screen.getByTestId('content'));
+
+    expect(onScroll).not.toHaveBeenCalled();
+  });
+
+  test('validates the event object', async () => {
+    await render(<ScrollView testID="scroll" />);
+
+    await expect(
+      fireEvent.scroll(screen.getByTestId('scroll'), { persist: () => {} } as FireEventInit),
+    ).rejects.toThrow(
+      'Unable to fire a "scroll" event - unsupported event object keys: "persist".',
+    );
+  });
+
+  test('throws without an element', async () => {
+    await expect(fireEvent.scroll(null as unknown as TestInstance)).rejects.toThrow(
+      'Unable to fire a "scroll" event - please provide a host element.',
+    );
+  });
+});
+
+describe('fireEvent.layout', () => {
+  test('passes zeroed layout as nativeEvent of a direct event', async () => {
+    const onLayout = jest.fn();
+    await render(<View testID="view" onLayout={onLayout} />);
+
+    await fireEvent.layout(screen.getByTestId('view'));
+
+    const event: SyntheticEvent = onLayout.mock.calls[0][0];
+    expect(event.type).toBe('layout');
+    expect(event.rnIsDirect).toBe(true);
+    expect(event.nativeEvent).toEqual({ layout: { x: 0, y: 0, width: 0, height: 0 }, target: 0 });
+  });
+
+  test('merges passed layout onto zeroed rectangle, with undefined fields as 0', async () => {
+    const onLayout = jest.fn();
+    await render(<View testID="view" onLayout={onLayout} />);
+
+    await fireEvent.layout(screen.getByTestId('view'), { width: 200, height: 80, x: undefined });
+
+    expect(onLayout.mock.calls[0][0].nativeEvent.layout).toEqual({
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 80,
+    });
+  });
+
+  test('saves layout size in native state, also without onLayout handler', async () => {
+    await render(<View testID="view" />);
+    const view = screen.getByTestId('view');
+
+    await fireEvent.layout(view, { x: 10, y: 20, width: 100, height: 80 });
+
+    expect(nativeState.layoutSizeForInstance.get(view)).toEqual({ width: 100, height: 80 });
+  });
+
+  test('does not call onLayout of an ancestor', async () => {
+    const onLayout = jest.fn();
+    await render(
+      <View onLayout={onLayout}>
+        <View testID="child" />
+      </View>,
+    );
+
+    await fireEvent.layout(screen.getByTestId('child'), { height: 80 });
+
+    expect(onLayout).not.toHaveBeenCalled();
+  });
+
+  test('does not call onLayout of composite component that does not forward it', async () => {
+    const onLayout = jest.fn();
+    const Box = (_props: { onLayout: () => void }) => <View testID="view" />;
+    await render(<Box onLayout={onLayout} />);
+
+    await fireEvent.layout(screen.getByTestId('view'));
+
+    expect(onLayout).not.toHaveBeenCalled();
+  });
+
+  test('throws without an element', async () => {
+    await expect(fireEvent.layout(null as unknown as TestInstance)).rejects.toThrow(
+      'Unable to fire a "layout" event - please provide a host element.',
+    );
+  });
 });
