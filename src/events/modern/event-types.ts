@@ -1,18 +1,15 @@
 import { getEventHandlerName } from '../shared/handler';
 
 /**
- * Event types known to React Native, keyed by event type (`focus`, not `topFocus`).
+ * Event types known to React Native, without the `top` prefix (`focus`, not `topFocus`).
  *
  * `@react-native/jest-preset` mocks native components, so React Native's view config registry stays
  * empty in Jest. These are static copies of the union of `BaseViewConfig.{ios,android}.js` and the
  * built-in components' view configs. `__tests__/event-types.test.ts` checks them against the
  * installed `react-native`.
- *
- * Prop names follow from the event type: `onFocus` (bubble phase, direct events) and
- * `onFocusCapture`.
  */
 
-export const BUBBLING_EVENT_TYPES = [
+export const BUBBLING_EVENT_TYPES: readonly string[] = [
   'blur',
   'change',
   'click',
@@ -38,12 +35,12 @@ export const BUBBLING_EVENT_TYPES = [
   'touchEnd',
   'touchMove',
   'touchStart',
-] as const;
+];
 
 /** Bubbling events that run the capture phase as usual, but call only the target when bubbling. */
-export const SKIP_BUBBLING_EVENT_TYPES = ['pointerEnter', 'pointerLeave'] as const;
+export const SKIP_BUBBLING_EVENT_TYPES: readonly string[] = ['pointerEnter', 'pointerLeave'];
 
-export const DIRECT_EVENT_TYPES = [
+export const DIRECT_EVENT_TYPES: readonly string[] = [
   'accessibilityAction',
   'accessibilityEscape',
   'accessibilityTap',
@@ -81,51 +78,46 @@ export const DIRECT_EVENT_TYPES = [
   'show',
   // From the inline view config in `TextNativeComponent.js`, which is not exported.
   'textLayout',
-] as const;
+];
 
-/** Event type React Native dispatches natively, e.g. `focus` or `layout`. */
-export type NativeEventType =
-  | (typeof BUBBLING_EVENT_TYPES)[number]
-  | (typeof DIRECT_EVENT_TYPES)[number];
+/** Capture phase from the root to the target, then bubble phase back to the root. */
+type BubblingEventTypeConfig = {
+  kind: 'bubbling';
+  /** Bubble phase prop, e.g. `onFocus`. */
+  handlerName: string;
+  /** Capture phase prop, e.g. `onFocusCapture`. */
+  captureHandlerName: string;
+  /** Runs the capture phase as usual, but calls only the target when bubbling. */
+  skipBubbling: boolean;
+};
 
-const bubblingEventTypes: readonly string[] = BUBBLING_EVENT_TYPES;
-const skipBubblingEventTypes: readonly string[] = SKIP_BUBBLING_EVENT_TYPES;
-const directEventTypes: readonly string[] = DIRECT_EVENT_TYPES;
+/** Calls only the target's prop, without the capture phase. */
+type DirectEventTypeConfig = {
+  kind: 'direct';
+  /** e.g. `onLayout` */
+  handlerName: string;
+};
 
-// React Native's `DispatchConfig` shape: `TouchableOpacity` reads its `registrationName`.
-export type DispatchConfig =
-  | {
-      phasedRegistrationNames: { bubbled: string; captured: string; skipBubbling?: boolean };
-    }
-  | { registrationName: string };
-
-type EventTypeConfig =
-  | { kind: 'bubbling'; skipBubbling: boolean; dispatchConfig: DispatchConfig }
-  | { kind: 'direct'; dispatchConfig: DispatchConfig };
+/** How React Native dispatches an event type, and which handler props it calls. */
+export type EventTypeConfig = BubblingEventTypeConfig | DirectEventTypeConfig;
 
 /**
  * Returns how React Native dispatches the event type (e.g. `focus`), or `null` if React Native
  * doesn't know it.
  */
 export function getEventTypeConfig(eventType: string): EventTypeConfig | null {
-  if (bubblingEventTypes.includes(eventType)) {
-    const propName = getEventHandlerName(eventType);
-    const skipBubbling = skipBubblingEventTypes.includes(eventType);
+  if (BUBBLING_EVENT_TYPES.includes(eventType)) {
+    const handlerName = getEventHandlerName(eventType);
     return {
       kind: 'bubbling',
-      skipBubbling,
-      dispatchConfig: {
-        phasedRegistrationNames: {
-          bubbled: propName,
-          captured: `${propName}Capture`,
-          ...(skipBubbling ? { skipBubbling } : {}),
-        },
-      },
+      handlerName,
+      captureHandlerName: `${handlerName}Capture`,
+      skipBubbling: SKIP_BUBBLING_EVENT_TYPES.includes(eventType),
     };
   }
 
-  if (directEventTypes.includes(eventType)) {
-    return { kind: 'direct', dispatchConfig: { registrationName: getEventHandlerName(eventType) } };
+  if (DIRECT_EVENT_TYPES.includes(eventType)) {
+    return { kind: 'direct', handlerName: getEventHandlerName(eventType) };
   }
 
   return null;

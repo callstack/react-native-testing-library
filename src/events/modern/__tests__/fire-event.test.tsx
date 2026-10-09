@@ -4,12 +4,12 @@ import type { TestInstance } from 'test-renderer';
 
 import { render, screen } from '../../..';
 import type { SyntheticEvent } from '../event';
-import type { FireEventInit, FireEventType } from '../fire-event';
+import type { FireEventInit } from '../fire-event';
 import { fireEvent } from '../fire-event';
 
 /** Calls `fireEvent` with arguments its types don't allow, as JavaScript callers can. */
 function fireEventUntyped(instance: TestInstance, eventType: string, ...args: unknown[]) {
-  return fireEvent(instance, eventType as FireEventType, ...(args as [FireEventInit]));
+  return fireEvent(instance, eventType, ...(args as [FireEventInit]));
 }
 
 describe('event object', () => {
@@ -249,16 +249,6 @@ describe('event types unknown to React Native', () => {
         `"${normalizedType}" natively, ${hint}`,
     );
     expect(handler).not.toHaveBeenCalled();
-  });
-
-  test('are type errors', async () => {
-    await render(<TextInput testID="input" />);
-    const input = screen.getByTestId('input');
-
-    // @ts-expect-error `changeText` isn't dispatched natively.
-    await expect(fireEvent(input, 'changeText', {})).rejects.toThrow();
-    // @ts-expect-error `onChangeText` isn't dispatched natively.
-    await expect(fireEvent(input, 'onChangeText', {})).rejects.toThrow();
   });
 
   test('throws before checking the event object', async () => {

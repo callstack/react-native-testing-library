@@ -1,9 +1,17 @@
 import type { TestInstance } from 'test-renderer';
 
-import type { DispatchConfig } from './event-types';
+import type { EventTypeConfig } from './event-types';
 import { getEventTypeConfig } from './event-types';
 
 export type NativeEventPayload = Record<string, unknown>;
+
+/**
+ * React Native's `DispatchConfig`, exposed as `event.dispatchConfig`. React's legacy event system
+ * calls handler props "registration names".
+ */
+export type DispatchConfig =
+  | { phasedRegistrationNames: { bubbled: string; captured: string; skipBubbling?: boolean } }
+  | { registrationName: string };
 
 export type CreateEventInit = {
   /** Passed to handlers as `event.nativeEvent`. Defaults to `{}`. */
@@ -16,10 +24,7 @@ export type CreateEventInit = {
 };
 
 type SyntheticEventInit = {
-  bubbles?: boolean;
   cancelable?: boolean;
-  /** Direct events are dispatched only to the target, without the capture phase. */
-  rnIsDirect?: boolean;
   timeStamp?: number;
 };
 
@@ -35,10 +40,11 @@ export type EventPhase =
   | typeof BUBBLING_PHASE;
 
 /**
- * Event fields that the dispatch updates, as in React Native's `EventInternals`. Kept off the
- * event's own properties, so printed events don't include the element tree.
+ * Event fields that the dispatch reads or updates, as in React Native's `EventInternals`. Stored
+ * under a non-enumerable symbol key, so printed and compared events don't include the element tree.
  */
 type EventInternals = {
+  readonly typeConfig: EventTypeConfig;
   target: TestInstance | null;
   currentTarget: TestInstance | null;
   eventPhase: EventPhase;
@@ -46,16 +52,7 @@ type EventInternals = {
   stopPropagation: boolean;
 };
 
-const eventInternalsMap = new WeakMap<SyntheticEvent, EventInternals>();
-
-function getEventInternals(event: SyntheticEvent): EventInternals {
-  const internals = eventInternalsMap.get(event);
-  if (internals == null) {
-    throw new TypeError('Illegal invocation');
-  }
-
-  return internals;
-}
+const EVENT_INTERNALS = Symbol('eventInternals');
 
 /**
  * Event object passed to handlers by the modern event system.
@@ -84,22 +81,24 @@ export class SyntheticEvent {
     type: string,
     init: SyntheticEventInit,
     nativeEvent: NativeEventPayload,
-    dispatchConfig: DispatchConfig,
+    typeConfig: EventTypeConfig,
   ) {
     this._type = type;
-    this._bubbles = Boolean(init.bubbles);
+    this._bubbles = typeConfig.kind === 'bubbling' && !typeConfig.skipBubbling;
     this._cancelable = Boolean(init.cancelable);
-    this._rnIsDirect = Boolean(init.rnIsDirect);
+    this._rnIsDirect = typeConfig.kind === 'direct';
     this._timeStamp = init.timeStamp ?? performance.now();
     this._nativeEvent = nativeEvent;
-    this._dispatchConfig = dispatchConfig;
-
-    eventInternalsMap.set(this, {
-      target: null,
-      currentTarget: null,
-      eventPhase: NONE,
-      composedPath: [],
-      stopPropagation: false,
+    this._dispatchConfig = toDispatchConfig(typeConfig);
+    Object.defineProperty(this, EVENT_INTERNALS, {
+      value: {
+        typeConfig,
+        target: null,
+        currentTarget: null,
+        eventPhase: NONE,
+        composedPath: [],
+        stopPropagation: false,
+      } satisfies EventInternals,
     });
   }
 
@@ -132,6 +131,7 @@ export class SyntheticEvent {
     return this._cancelable;
   }
 
+  /** Direct events are dispatched only to the target, without the capture phase. */
   get rnIsDirect(): boolean {
     return this._rnIsDirect;
   }
@@ -210,29 +210,6 @@ export class SyntheticEvent {
   }
 }
 
-/** @internal Lets the dispatch update the event, as React Native's `EventInternals` does. */
-export const eventInternals = {
-  setTarget(event: SyntheticEvent, target: TestInstance | null) {
-    getEventInternals(event).target = target;
-  },
-
-  setCurrentTarget(event: SyntheticEvent, currentTarget: TestInstance | null) {
-    getEventInternals(event).currentTarget = currentTarget;
-  },
-
-  setEventPhase(event: SyntheticEvent, eventPhase: EventPhase) {
-    getEventInternals(event).eventPhase = eventPhase;
-  },
-
-  setComposedPath(event: SyntheticEvent, composedPath: TestInstance[]) {
-    getEventInternals(event).composedPath = composedPath;
-  },
-
-  resetStopPropagationFlag(event: SyntheticEvent) {
-    getEventInternals(event).stopPropagation = false;
-  },
-};
-
 /**
  * Creates the event React Native would create for a native event of this type, ready for
  * `dispatchEvent()`. Like Testing Library's DOM `createEvent()`.
@@ -254,13 +231,27 @@ export function createEvent(eventType: string, init: CreateEventInit = {}): Synt
   return new SyntheticEvent(
     // React Native's event type is the lowercased name, e.g. `pointerup`.
     eventType.toLowerCase(),
-    {
-      bubbles: config.kind === 'bubbling' && !config.skipBubbling,
-      cancelable: true,
-      rnIsDirect: config.kind === 'direct',
-      timeStamp,
-    },
+    { cancelable: true, timeStamp },
     nativeEvent,
-    config.dispatchConfig,
+    config,
   );
+}
+
+/** @internal */
+export function getEventInternals(event: SyntheticEvent): EventInternals {
+  return (event as unknown as { [EVENT_INTERNALS]: EventInternals })[EVENT_INTERNALS];
+}
+
+function toDispatchConfig(config: EventTypeConfig): DispatchConfig {
+  if (config.kind === 'direct') {
+    return { registrationName: config.handlerName };
+  }
+
+  return {
+    phasedRegistrationNames: {
+      bubbled: config.handlerName,
+      captured: config.captureHandlerName,
+      ...(config.skipBubbling ? { skipBubbling: true } : {}),
+    },
+  };
 }

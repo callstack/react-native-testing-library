@@ -4,7 +4,7 @@ import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { getHandlerByName } from '../shared/handler';
 import type { EventPhase } from './event';
-import { eventInternals, SyntheticEvent } from './event';
+import { getEventInternals, SyntheticEvent } from './event';
 
 /**
  * Dispatches an event from `createEvent()` as React Native does for native events
@@ -34,8 +34,8 @@ export async function dispatchEvent(target: TestInstance, event: SyntheticEvent)
   const state: DispatchState = { hasCalledHandler: false, firstError: null };
 
   await act(() => {
-    eventInternals.setTarget(event, target);
-    eventInternals.setComposedPath(event, path);
+    getEventInternals(event).target = target;
+    getEventInternals(event).composedPath = path;
 
     runCapturePhase(event, path, state);
     runBubblePhase(event, path, state);
@@ -50,7 +50,6 @@ export async function dispatchEvent(target: TestInstance, event: SyntheticEvent)
   return state.hasCalledHandler;
 }
 
-/** What the handlers did during one dispatch. */
 type DispatchState = {
   hasCalledHandler: boolean;
   /** Wrapped, so a thrown `undefined` is rethrown too. */
@@ -75,20 +74,20 @@ function getEventPath(target: TestInstance, event: SyntheticEvent): TestInstance
 
 /** From the root down to the target, calling `on*Capture` props. Direct events skip it. */
 function runCapturePhase(event: SyntheticEvent, path: TestInstance[], state: DispatchState) {
-  const handlerName = getCaptureHandlerName(event);
-  if (handlerName == null) {
+  const config = getEventInternals(event).typeConfig;
+  if (config.kind === 'direct') {
     return;
   }
 
   for (let i = path.length - 1; i >= 0 && !event.isPropagationStopped(); i -= 1) {
     const phase = i === 0 ? SyntheticEvent.AT_TARGET : SyntheticEvent.CAPTURING_PHASE;
-    callHandler(event, path[i], handlerName, phase, state);
+    callHandler(event, path[i], config.captureHandlerName, phase, state);
   }
 }
 
 /** From the target up to the root, calling `on*` props. Non-bubbling events stop at the target. */
 function runBubblePhase(event: SyntheticEvent, path: TestInstance[], state: DispatchState) {
-  const handlerName = getBubbleHandlerName(event);
+  const handlerName = getEventInternals(event).typeConfig.handlerName;
   const nodes = event.bubbles ? path : path.slice(0, 1);
   for (let i = 0; i < nodes.length && !event.isPropagationStopped(); i += 1) {
     const phase = i === 0 ? SyntheticEvent.AT_TARGET : SyntheticEvent.BUBBLING_PHASE;
@@ -103,8 +102,8 @@ function callHandler(
   phase: EventPhase,
   state: DispatchState,
 ) {
-  eventInternals.setEventPhase(event, phase);
-  eventInternals.setCurrentTarget(event, node);
+  getEventInternals(event).eventPhase = phase;
+  getEventInternals(event).currentTarget = node;
 
   const handler = getHandlerByName(node.props, handlerName);
   if (handler == null) {
@@ -124,23 +123,10 @@ function callHandler(
   }
 }
 
-/** Direct events have no capture phase. */
-function getCaptureHandlerName(event: SyntheticEvent): string | null {
-  const config = event.dispatchConfig;
-  return 'registrationName' in config ? null : config.phasedRegistrationNames.captured;
-}
-
-function getBubbleHandlerName(event: SyntheticEvent): string {
-  const config = event.dispatchConfig;
-  return 'registrationName' in config
-    ? config.registrationName
-    : config.phasedRegistrationNames.bubbled;
-}
-
 /** Clears the event's internals, as the event can still be read after the dispatch. */
 function resetEvent(event: SyntheticEvent) {
-  eventInternals.setEventPhase(event, SyntheticEvent.NONE);
-  eventInternals.setCurrentTarget(event, null);
-  eventInternals.setComposedPath(event, []);
-  eventInternals.resetStopPropagationFlag(event);
+  getEventInternals(event).eventPhase = SyntheticEvent.NONE;
+  getEventInternals(event).currentTarget = null;
+  getEventInternals(event).composedPath = [];
+  getEventInternals(event).stopPropagation = false;
 }

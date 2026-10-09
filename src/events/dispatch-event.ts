@@ -14,16 +14,15 @@ import { invokeEventHandler } from './shared/invoke-event-handler';
  * `configure({ eventSystem })`. Used by `userEvent`.
  *
  * - `legacy`: calls the element's own `on*` prop with `event` as it is.
- * - `modern`: native events (`focus`, `change`, `scroll`, ...) get a `SyntheticEvent` created from
- *   `event.nativeEvent` and `event.timeStamp`, dispatched as React Native does, through the capture and bubble phases
- *   for bubbling events. Callbacks that components call from JavaScript (`changeText`, `pressIn`,
- *   `responderGrant`, ...) call the element's own `on*` prop with `event` as it is, as in
- *   `legacy`. `press` is a native event type (`topPress`), so it reaches host `onPress` props
- *   only, not `Pressable`'s `onPress`.
+ * - `modern`: native events (`focus`, `change`, `scroll`, ...) get a `SyntheticEvent` from
+ *   `event.nativeEvent` and `event.timeStamp`, dispatched as React Native does (capture and bubble
+ *   phases for bubbling events). Callbacks that components call from JavaScript (`changeText`,
+ *   `pressIn`, `responderGrant`, ...) are called as in `legacy`. `press` is a native event type
+ *   (`topPress`), so it reaches host `onPress` props only, not `Pressable`'s `onPress`.
  *
  * @param eventType without the `on*` prefix, e.g. `focus`
- * @param event the event object, e.g. from `buildFocusEvent()`, or the callback's argument, e.g. the
- * text for `changeText`
+ * @param event the event object, e.g. from `buildFocusEvent()`, or the callback's argument, e.g.
+ * the text for `changeText`
  * @returns `true` if a handler was called.
  */
 export async function dispatchEvent(
@@ -41,17 +40,12 @@ export async function dispatchEvent(
       ? createEvent(eventType, { nativeEvent, timeStamp: extractTimeStamp(event) })
       : null;
   if (syntheticEvent == null) {
-    // JavaScript callbacks, e.g. `changeText`, are called as in the legacy event system.
     return await invokeEventHandler(instance, eventType, event);
   }
 
   return await dispatchModernEvent(instance, syntheticEvent);
 }
 
-/**
- * Returns the `nativeEvent` payload if this is a native event: an event type React Native
- * dispatches natively, with an event object that has a `nativeEvent`.
- */
 function extractNativeEvent(eventType: string, event: unknown): NativeEventPayload | null {
   if (getEventTypeConfig(eventType) == null) {
     return null;

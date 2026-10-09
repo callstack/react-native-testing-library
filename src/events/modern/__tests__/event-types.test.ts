@@ -1,3 +1,4 @@
+import { createEvent } from '../event';
 import {
   BUBBLING_EVENT_TYPES,
   DIRECT_EVENT_TYPES,
@@ -13,7 +14,6 @@ type ViewConfig = {
   directEventTypes?: Record<string, { registrationName: string }>;
 };
 
-// Base view configs plus the built-in components that declare events.
 const viewConfigModules = [
   'react-native/Libraries/NativeComponent/BaseViewConfig.ios',
   'react-native/Libraries/NativeComponent/BaseViewConfig.android',
@@ -39,23 +39,6 @@ const optionalViewConfigModules = [
 // Not exported by React Native, so listed by hand in `event-types.ts`.
 const manualDirectEventTypes = ['textLayout'];
 
-function toEventType(topLevelType: string) {
-  return topLevelType.charAt(3).toLowerCase() + topLevelType.slice(4);
-}
-
-function loadViewConfigs(): ViewConfig[] {
-  const modules = viewConfigModules.map((modulePath) => jest.requireActual(modulePath));
-  for (const modulePath of optionalViewConfigModules) {
-    try {
-      modules.push(jest.requireActual(modulePath));
-    } catch {
-      // Not available in the installed React Native version.
-    }
-  }
-
-  return modules.map((module) => module.__INTERNAL_VIEW_CONFIG ?? module.default);
-}
-
 function loadReactNativeEventTypes() {
   const bubbling = new Set<string>();
   const skipBubbling = new Set<string>();
@@ -64,8 +47,8 @@ function loadReactNativeEventTypes() {
   for (const viewConfig of loadViewConfigs()) {
     for (const [topLevelType, config] of Object.entries(viewConfig.bubblingEventTypes ?? {})) {
       const eventType = toEventType(topLevelType);
-      // `getEventTypeConfig()` derives prop names from the event type.
-      expect(getEventTypeConfig(eventType)?.dispatchConfig).toEqual({
+      // Prop names derived from the event type match React Native's.
+      expect(getDispatchConfig(eventType)).toEqual({
         phasedRegistrationNames: config.phasedRegistrationNames,
       });
       bubbling.add(eventType);
@@ -81,7 +64,7 @@ function loadReactNativeEventTypes() {
       }
 
       const eventType = toEventType(topLevelType);
-      expect(getEventTypeConfig(eventType)?.dispatchConfig).toEqual({
+      expect(getDispatchConfig(eventType)).toEqual({
         registrationName: config.registrationName,
       });
       direct.add(eventType);
@@ -89,6 +72,27 @@ function loadReactNativeEventTypes() {
   }
 
   return { bubbling, skipBubbling, direct };
+}
+
+function loadViewConfigs(): ViewConfig[] {
+  const modules = viewConfigModules.map((modulePath) => jest.requireActual(modulePath));
+  for (const modulePath of optionalViewConfigModules) {
+    try {
+      modules.push(jest.requireActual(modulePath));
+    } catch {
+      // Not available in the installed React Native version.
+    }
+  }
+
+  return modules.map((module) => module.__INTERNAL_VIEW_CONFIG ?? module.default);
+}
+
+function toEventType(topLevelType: string) {
+  return topLevelType.charAt(3).toLowerCase() + topLevelType.slice(4);
+}
+
+function getDispatchConfig(eventType: string) {
+  return createEvent(eventType)?.dispatchConfig;
 }
 
 // The lists are the union across supported React Native versions, so older versions declare only a
@@ -104,32 +108,23 @@ test('event types cover React Native view configs', () => {
 test('getEventTypeConfig() returns config of bubbling event', () => {
   expect(getEventTypeConfig('pointerUp')).toEqual({
     kind: 'bubbling',
+    handlerName: 'onPointerUp',
+    captureHandlerName: 'onPointerUpCapture',
     skipBubbling: false,
-    dispatchConfig: {
-      phasedRegistrationNames: { bubbled: 'onPointerUp', captured: 'onPointerUpCapture' },
-    },
   });
 });
 
 test('getEventTypeConfig() returns config of bubbling event with skipBubbling', () => {
   expect(getEventTypeConfig('pointerEnter')).toEqual({
     kind: 'bubbling',
+    handlerName: 'onPointerEnter',
+    captureHandlerName: 'onPointerEnterCapture',
     skipBubbling: true,
-    dispatchConfig: {
-      phasedRegistrationNames: {
-        bubbled: 'onPointerEnter',
-        captured: 'onPointerEnterCapture',
-        skipBubbling: true,
-      },
-    },
   });
 });
 
 test('getEventTypeConfig() returns config of direct event', () => {
-  expect(getEventTypeConfig('layout')).toEqual({
-    kind: 'direct',
-    dispatchConfig: { registrationName: 'onLayout' },
-  });
+  expect(getEventTypeConfig('layout')).toEqual({ kind: 'direct', handlerName: 'onLayout' });
 });
 
 test('getEventTypeConfig() returns null for events unknown to React Native', () => {

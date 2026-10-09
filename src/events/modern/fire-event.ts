@@ -5,7 +5,6 @@ import { normalizeEventType } from '../shared/handler';
 import { dispatchEvent } from './dispatch';
 import type { CreateEventInit } from './event';
 import { createEvent } from './event';
-import type { NativeEventType } from './event-types';
 import { ensureEventType, validateEventInit } from './fire-event-utils';
 
 /**
@@ -13,12 +12,6 @@ import { ensureEventType, validateEventInit } from './fire-event-utils';
  * `createEvent()`, with `nativeEvent` as its `nativeEvent`.
  */
 export type FireEventInit = CreateEventInit;
-
-/**
- * Event type React Native dispatches natively, with or without the `on*` prefix. JavaScript
- * callers can pass any string, so `fireEvent()` still checks it at runtime.
- */
-export type FireEventType = NativeEventType | `on${Capitalize<NativeEventType>}`;
 
 /**
  * Fires an event on a host element: `createEvent()`, then `dispatchEvent()`, like Testing Library's
@@ -32,7 +25,7 @@ export type FireEventType = NativeEventType | `on${Capitalize<NativeEventType>}`
  */
 export async function fireEvent(
   instance: TestInstance,
-  eventType: FireEventType,
+  eventType: string,
   ...args: [event: FireEventInit]
 ): Promise<boolean> {
   const normalizedType = normalizeEventType(eventType);

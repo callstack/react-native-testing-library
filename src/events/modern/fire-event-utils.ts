@@ -8,7 +8,6 @@ const ALLOWED_INIT_KEYS = ['nativeEvent', 'timeStamp'];
 /** Legacy events carried these as stubs. The dispatch sets them to host elements. */
 const DISPATCH_KEYS = ['target', 'currentTarget'];
 
-/** Members of the event itself, such as `persist` or `preventDefault`. */
 const EVENT_KEYS = new Set(
   Object.getOwnPropertyNames(SyntheticEvent.prototype).filter((key) => key !== 'constructor'),
 );
