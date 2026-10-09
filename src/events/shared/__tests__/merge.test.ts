@@ -51,3 +51,13 @@ test('merges multiple props in order, skipping undefined ones', () => {
 
   expect(event.nativeEvent).toMatchObject({ pageX: 30, pageY: 20, locationX: 0 });
 });
+
+test('does not pollute Object.prototype through a __proto__ key', () => {
+  const props = JSON.parse(
+    '{"__proto__": {"polluted": true}, "nativeEvent": {"__proto__": {"polluted": true}}}',
+  );
+
+  mergeEventProps(buildEvent(), props);
+
+  expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+});

@@ -23,7 +23,8 @@ function mergeInto(target: EventProps, source: EventProps) {
   for (const key of Object.keys(source)) {
     const sourceValue = source[key];
     const targetValue = target[key];
-    if (isObject(sourceValue) && isObject(targetValue)) {
+    // Only recurse into the target's own objects, so a `__proto__` key can't reach `Object.prototype`.
+    if (Object.hasOwn(target, key) && isObject(sourceValue) && isObject(targetValue)) {
       mergeInto(targetValue, sourceValue);
     } else {
       target[key] = sourceValue;
