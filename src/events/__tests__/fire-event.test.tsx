@@ -60,7 +60,7 @@ test('fireEvent.changeText', async () => {
   );
 });
 
-test('fireEvent.press uses the legacy implementation', async () => {
+test('fireEvent.press calls onPress of Pressable with the event of the selected event system', async () => {
   const onPress = jest.fn();
   await render(
     <Pressable testID="pressable" onPress={onPress}>
@@ -68,9 +68,11 @@ test('fireEvent.press uses the legacy implementation', async () => {
     </Pressable>,
   );
 
-  expect(await fireEvent.press(screen.getByText('Press me'))).toBeUndefined();
+  const result = await fireEvent.press(screen.getByText('Press me'));
+  const isModern = getConfig().unstable_eventSystem === 'modern';
+  expect(result).toBe(isModern ? true : undefined);
   expect(onPress).toHaveBeenCalledTimes(1);
-  expect(onPress.mock.calls[0][0]).not.toBeInstanceOf(SyntheticEvent);
+  expect(onPress.mock.calls[0][0] instanceof SyntheticEvent).toBe(isModern);
 });
 
 test('fireEvent.scroll and fireEvent.layout pass events of the selected event system', async () => {
