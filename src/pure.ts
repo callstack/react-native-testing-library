@@ -15,5 +15,5 @@ export { userEvent } from './user-event';
 
 export type { RenderOptions, RenderResult, DebugFunction } from './render';
 export type { RenderHookOptions, RenderHookResult } from './render-hook';
-export type { Config } from './config';
+export type { Config, EventSystem } from './config';
 export type { UserEventConfig } from './user-event';
