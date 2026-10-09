@@ -2,13 +2,14 @@ import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
-import { isHostScrollView } from '../../helpers/host-component-names';
 import { normalizeEventType } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
-import { nativeState } from '../shared/native-state';
 import { buildLayoutNativeEvent, buildScrollNativeEvent } from '../shared/payloads';
 import type { EventProps, EventType, LayoutRectangle } from '../shared/types';
-import { updateNativeStateFromEvent } from '../shared/update-native-state';
+import {
+  getNativeStateEventProps,
+  updateNativeStateFromEvent,
+} from '../shared/update-native-state';
 import { wrapNativeEvent } from './builders/base';
 import { buildTouchEvent } from './builders/common';
 import { findEventHandler } from './propagation';
@@ -26,11 +27,11 @@ fireEvent.press = async (instance: TestInstance, eventProps?: EventProps) => {
 };
 
 fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
-  const layoutMeasurement = isHostScrollView(instance)
-    ? nativeState.layoutSizeForInstance.get(instance)
-    : undefined;
-  const event = wrapNativeEvent(buildScrollNativeEvent(undefined, { layoutMeasurement }));
-  await fireEvent(instance, 'scroll', mergeEventProps(event, eventProps));
+  const nativeEvent = mergeEventProps(
+    buildScrollNativeEvent(),
+    getNativeStateEventProps(instance, 'scroll'),
+  );
+  await fireEvent(instance, 'scroll', mergeEventProps(wrapNativeEvent(nativeEvent), eventProps));
 };
 
 // Does not bubble and checks only the element's own props, as React Native delivers layout events

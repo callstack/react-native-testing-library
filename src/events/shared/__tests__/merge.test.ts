@@ -40,3 +40,14 @@ test('adds props that the event does not have', () => {
 
   expect(event).toMatchObject({ custom: { value: 1 } });
 });
+
+test('merges multiple props in order, skipping undefined ones', () => {
+  const event = mergeEventProps(
+    buildEvent(),
+    { nativeEvent: { pageX: 10, pageY: 20 } },
+    undefined,
+    { nativeEvent: { pageX: 30 } },
+  );
+
+  expect(event.nativeEvent).toMatchObject({ pageX: 30, pageY: 20, locationX: 0 });
+});

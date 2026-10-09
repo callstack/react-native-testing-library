@@ -11,7 +11,7 @@ On a device, some component state lives in native views, not in React. Jest has 
 ## Key points
 
 - **Writes.** `fireEvent` and `userEvent` update native state when they simulate a change that a native view would make. Both `fireEvent` implementations do it through `updateNativeStateFromEvent()` in `src/events/shared/update-native-state.ts`. Each `userEvent` action writes it directly.
-- **Reads.** Helpers read native state, like `getTextInputValue()` in `src/helpers/text-input.ts`. Queries and matchers use those helpers instead of reading native state directly.
+- **Reads.** Helpers read native state, like `getTextInputValue()` in `src/helpers/text-input.ts`. Queries and matchers use those helpers instead of reading native state directly. Event payloads read it through `getNativeStateEventProps()`, next to `updateNativeStateFromEvent()`. Modern `fireEvent` applies it centrally, in `fireEventInternal()`, to the default payload of `fireEvent.scroll()` and `fireEvent.layout()`.
 - **Props win.** A controlled prop (like `value`) always takes precedence over native state.
 - **No reset.** State is stored in `WeakMap`s keyed by host instance. It disappears when the instance is unmounted, so `cleanup()` doesn't need to clear it.
 - **Internal.** Native state isn't part of the public API.

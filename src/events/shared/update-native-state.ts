@@ -4,6 +4,7 @@ import { isHostScrollView } from '../../helpers/host-component-names';
 import { isEditableTextInput } from '../../helpers/text-input';
 import type { Point, Size } from '../../types';
 import { nativeState } from './native-state';
+import type { EventProps } from './types';
 
 const SCROLL_EVENTS = [
   'scroll',
@@ -46,6 +47,23 @@ export function updateNativeStateFromEvent(
   }
 
   return false;
+}
+
+/**
+ * Returns `nativeEvent` fields a device fills from native state, to merge onto a default payload.
+ * Expects event type without the `on*` prefix (see `normalizeEventType`).
+ */
+export function getNativeStateEventProps(
+  instance: TestInstance,
+  eventType: string,
+): EventProps | undefined {
+  if (SCROLL_EVENTS.includes(eventType) && isHostScrollView(instance)) {
+    const layoutSize = nativeState.layoutSizeForInstance.get(instance);
+    // Copied, so that merging passed props onto the payload doesn't change native state.
+    return layoutSize ? { layoutMeasurement: { ...layoutSize } } : undefined;
+  }
+
+  return undefined;
 }
 
 function tryGetContentOffset(event: unknown): Point | null {
