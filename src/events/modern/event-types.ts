@@ -70,6 +70,7 @@ export const DIRECT_EVENT_TYPES: readonly string[] = [
   'progress',
   'refresh',
   'requestClose',
+  'safeAreaInsetsChange',
   'scroll',
   'scrollBeginDrag',
   'scrollEndDrag',
@@ -79,6 +80,14 @@ export const DIRECT_EVENT_TYPES: readonly string[] = [
   // From the inline view config in `TextNativeComponent.js`, which is not exported.
   'textLayout',
 ];
+
+/**
+ * Direct events whose handler prop doesn't follow the `on` + event type pattern.
+ */
+const DIRECT_EVENT_HANDLER_NAMES: Readonly<Record<string, string>> = {
+  // Added in React Native 0.89.
+  safeAreaInsetsChange: 'experimental_onSafeAreaInsetsChange',
+};
 
 /** Capture phase from the root to the target, then bubble phase back to the root. */
 type BubblingEventTypeConfig = {
@@ -117,7 +126,10 @@ export function getEventTypeConfig(eventType: string): EventTypeConfig | null {
   }
 
   if (DIRECT_EVENT_TYPES.includes(eventType)) {
-    return { kind: 'direct', handlerName: getEventHandlerName(eventType) };
+    return {
+      kind: 'direct',
+      handlerName: DIRECT_EVENT_HANDLER_NAMES[eventType] ?? getEventHandlerName(eventType),
+    };
   }
 
   return null;

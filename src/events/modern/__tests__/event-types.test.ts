@@ -127,6 +127,13 @@ test('getEventTypeConfig() returns config of direct event', () => {
   expect(getEventTypeConfig('layout')).toEqual({ kind: 'direct', handlerName: 'onLayout' });
 });
 
+test('getEventTypeConfig() returns config of direct event with non-standard handler name', () => {
+  expect(getEventTypeConfig('safeAreaInsetsChange')).toEqual({
+    kind: 'direct',
+    handlerName: 'experimental_onSafeAreaInsetsChange',
+  });
+});
+
 test('getEventTypeConfig() returns null for events unknown to React Native', () => {
   expect(getEventTypeConfig('changeText')).toBeNull();
   expect(getEventTypeConfig('pressIn')).toBeNull();
