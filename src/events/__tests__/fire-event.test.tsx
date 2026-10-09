@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { ScrollView, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { configure, fireEvent, render, screen } from '../..';
 import { SyntheticEvent } from '../modern/event';
 
 describe('legacy event system', () => {
+  beforeEach(() => {
+    configure({ eventSystem: 'legacy' });
+  });
+
   test('fireEvent calls only the target prop with the passed arguments', async () => {
     const onPointerDown = jest.fn();
     const onParentPointerDownCapture = jest.fn();
@@ -97,14 +101,17 @@ describe('modern event system', () => {
     expect(calls).toEqual(['onChange: Hello', 'onChangeText: Hello']);
   });
 
-  test('fireEvent.press throws as not supported', async () => {
+  test('fireEvent.press uses the legacy implementation', async () => {
     const onPress = jest.fn();
-    await render(<Text testID="text" onPress={onPress} />);
-
-    await expect(fireEvent.press(screen.getByTestId('text'))).rejects.toThrow(
-      'fireEvent.press() is not supported yet in the modern event system.',
+    await render(
+      <Pressable testID="pressable" onPress={onPress}>
+        <Text>Press me</Text>
+      </Pressable>,
     );
-    expect(onPress).not.toHaveBeenCalled();
+
+    expect(await fireEvent.press(screen.getByText('Press me'))).toBeUndefined();
+    expect(onPress).toHaveBeenCalledTimes(1);
+    expect(onPress.mock.calls[0][0]).not.toBeInstanceOf(SyntheticEvent);
   });
 
   test('fireEvent.scroll and fireEvent.layout pass SyntheticEvents', async () => {
@@ -120,11 +127,13 @@ describe('modern event system', () => {
 });
 
 test('reads the event system on each call', async () => {
-  const onPress = jest.fn();
-  await render(<Text testID="text" onPress={onPress} />);
+  const onLayout = jest.fn();
+  await render(<View testID="view" onLayout={onLayout} />);
 
-  await fireEvent.press(screen.getByTestId('text'));
+  configure({ eventSystem: 'legacy' });
+  await fireEvent.layout(screen.getByTestId('view'));
   configure({ eventSystem: 'modern' });
-  await expect(fireEvent.press(screen.getByTestId('text'))).rejects.toThrow('not supported');
-  expect(onPress).toHaveBeenCalledTimes(1);
+  await fireEvent.layout(screen.getByTestId('view'));
+  expect(onLayout.mock.calls[0][0]).not.toBeInstanceOf(SyntheticEvent);
+  expect(onLayout.mock.calls[1][0]).toBeInstanceOf(SyntheticEvent);
 });

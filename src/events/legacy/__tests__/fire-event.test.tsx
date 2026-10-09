@@ -20,6 +20,7 @@ import {
 import { fireEvent, render, screen } from '../../..';
 import { configure } from '../../../config';
 import { _console, logger } from '../../../helpers/logger';
+import { runInLegacyEventSystem } from '../../../test-utils/event-system';
 import { getEventHandlerName } from '../../shared/handler';
 import { nativeState } from '../../shared/native-state';
 
@@ -27,6 +28,8 @@ const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
 const verticalScrollEvent = { nativeEvent: { contentOffset: { y: 200 } } };
 const horizontalScrollEvent = { nativeEvent: { contentOffset: { x: 50 } } };
 const pressEventData = { nativeEvent: { pageX: 20, pageY: 30 } };
+
+runInLegacyEventSystem();
 
 beforeEach(() => {
   jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);

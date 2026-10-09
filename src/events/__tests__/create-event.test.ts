@@ -20,6 +20,7 @@ afterEach(() => {
 });
 
 test('builds a legacy event object in the legacy event system', () => {
+  configure({ eventSystem: 'legacy' });
   const nativeEvent = { target: 0 };
 
   const event = createEvent('focus', nativeEvent);
@@ -65,6 +66,7 @@ test.each([
 ])('builds %s event for the configured event system', (type, build) => {
   // The touch payload has a `Date.now()` timestamp.
   jest.spyOn(Date, 'now').mockReturnValue(1);
+  configure({ eventSystem: 'legacy' });
   const legacyEvent = build();
   configure({ eventSystem: 'modern' });
   const modernEvent = build();

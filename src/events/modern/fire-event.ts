@@ -83,19 +83,6 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<boo
 };
 
 /**
- * Not supported yet. `press` needs the responder system, which `Pressable` and `Touchable*` use
- * to get touches, as their host `View` has no `onPress`. Throws, so tests don't pass without the
- * handler being called.
- */
-fireEvent.press = (_instance: TestInstance, _event?: FireEventInit): Promise<boolean> =>
-  Promise.reject(
-    new ErrorWithStack(
-      'fireEvent.press() is not supported yet in the modern event system. Use userEvent.press() instead.',
-      fireEvent.press,
-    ),
-  );
-
-/**
  * Fires a `scroll` event. The passed `nativeEvent` is deep merged onto a default scroll payload,
  * whose `layoutMeasurement` is the `ScrollView`'s size from its last `layout` event.
  */

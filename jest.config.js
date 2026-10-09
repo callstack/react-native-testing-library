@@ -22,12 +22,11 @@ module.exports = {
   ],
   projects: [
     { ...baseProject, displayName: 'legacy' },
-    // `userEvent` tests again with `configure({ eventSystem: 'modern' })`. They share snapshots with
-    // the legacy run, so both event systems must call the same handlers with the same native events.
+    // All tests again with `configure({ eventSystem: 'modern' })`. They share snapshots with the
+    // legacy run, so both event systems must call the same handlers with the same native events.
     {
       ...baseProject,
       displayName: 'modern',
-      roots: ['<rootDir>/src/user-event'],
       setupFilesAfterEnv: [...baseProject.setupFilesAfterEnv, './jest-setup-modern.ts'],
     },
   ],

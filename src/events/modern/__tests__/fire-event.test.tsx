@@ -619,18 +619,6 @@ describe('fireEvent.changeText', () => {
   });
 });
 
-describe('fireEvent.press', () => {
-  test('throws as not supported and calls nothing', async () => {
-    const onPress = jest.fn();
-    await render(<Text testID="text" onPress={onPress} />);
-
-    await expect(fireEvent.press(screen.getByTestId('text'))).rejects.toThrow(
-      'fireEvent.press() is not supported yet in the modern event system. Use userEvent.press() instead.',
-    );
-    expect(onPress).not.toHaveBeenCalled();
-  });
-});
-
 describe('fireEvent.scroll', () => {
   test('passes default scroll payload as nativeEvent of a direct event', async () => {
     const onScroll = jest.fn();

@@ -8,6 +8,10 @@ import { SyntheticEvent } from '../modern/event';
 import { buildFocusNativeEvent } from '../shared/payloads';
 
 describe('legacy event system', () => {
+  beforeEach(() => {
+    configure({ eventSystem: 'legacy' });
+  });
+
   test('calls only the target prop with the legacy event object', async () => {
     const onPointerDown = jest.fn();
     const onParentPointerDown = jest.fn();
