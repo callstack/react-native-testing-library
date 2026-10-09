@@ -1,0 +1,165 @@
+import type { TestInstance } from 'test-renderer';
+
+import { act } from '../../act';
+import { isInstanceMounted } from '../../helpers/component-tree';
+import { getHandlerByName } from '../shared/handler';
+import type { EventPhase } from './event';
+import { getEventInternals, SyntheticEvent } from './event';
+
+/**
+ * Dispatches an event from `createEvent()` as React Native does for native events
+ * (`src/private/renderer/events/dispatchNativeEvent.js`, then `dispatch()` in
+ * `src/private/webapis/dom/events/EventTarget.js`):
+ *
+ * - Bubbling events: capture phase from the root to the target (`on*Capture`), then bubble phase
+ *   back to the root (`on*`). `skipBubbling` events call only the target when bubbling.
+ * - Direct events: only the target's `on*` prop.
+ *
+ * Only host elements are on the path, so composite props are never called. A `testOnly_` prop
+ * (`testOnly_onFocus`) is used when the element has no regular one. Every handler on the
+ * path runs until one stops propagation. The first handler error is rethrown after all handlers
+ * ran. One `act()` wraps the dispatch, as React Native batches updates for the whole event.
+ *
+ * Not implemented yet: responder negotiation, which React Native runs first for touch, scroll and
+ * selection change events.
+ *
+ * @returns `true` if a handler was called. Check `event.defaultPrevented` for `preventDefault()`.
+ */
+export async function dispatchEvent(
+  target: TestInstance,
+  event: SyntheticEvent,
+  options?: DispatchOptions,
+): Promise<boolean> {
+  if (!isInstanceMounted(target)) {
+    return false;
+  }
+
+  const path = getEventPath(target, event);
+  const state: DispatchState = { hasCalledHandler: false, firstError: null };
+
+  await act(() => {
+    getEventInternals(event).target = target;
+    getEventInternals(event).composedPath = path;
+
+    runCapturePhase(event, path, state);
+    runBubblePhase(event, path, state, options?.afterTargetHandler);
+    resetEvent(event);
+  });
+
+  // After `act()`, which would skip rendering other handlers' updates if its callback threw.
+  if (state.firstError != null) {
+    throw state.firstError.error;
+  }
+
+  return state.hasCalledHandler;
+}
+
+export type DispatchOptions = {
+  /**
+   * Runs at the target in the bubble phase, right after the target's own handler, like a composite
+   * component wrapping the host prop: `TextInput` passes `onChange={_onChange}`, which calls
+   * `props.onChange(event)`, then `props.onChangeText(text)`. Skipped when propagation stopped
+   * before the target, or when the target's handler threw. Runs when the target has no handler.
+   */
+  afterTargetHandler?: (target: TestInstance, event: SyntheticEvent) => void;
+};
+
+type DispatchState = {
+  hasCalledHandler: boolean;
+  /** Wrapped, so a thrown `undefined` is rethrown too. */
+  firstError: { error: unknown } | null;
+};
+
+/** Target first, then host ancestors. The root container is not an element, so it's excluded. */
+function getEventPath(target: TestInstance, event: SyntheticEvent): TestInstance[] {
+  if (event.rnIsDirect) {
+    return [target];
+  }
+
+  const path: TestInstance[] = [];
+  let current: TestInstance | null = target;
+  while (current?.parent != null) {
+    path.push(current);
+    current = current.parent;
+  }
+
+  return path;
+}
+
+/** From the root down to the target, calling `on*Capture` props. Direct events skip it. */
+function runCapturePhase(event: SyntheticEvent, path: TestInstance[], state: DispatchState) {
+  const config = getEventInternals(event).typeConfig;
+  if (config.kind === 'direct') {
+    return;
+  }
+
+  for (let i = path.length - 1; i >= 0 && !event.isPropagationStopped(); i -= 1) {
+    const phase = i === 0 ? SyntheticEvent.AT_TARGET : SyntheticEvent.CAPTURING_PHASE;
+    callHandler(event, path[i], config.captureHandlerName, phase, state);
+  }
+}
+
+/** From the target up to the root, calling `on*` props. Non-bubbling events stop at the target. */
+function runBubblePhase(
+  event: SyntheticEvent,
+  path: TestInstance[],
+  state: DispatchState,
+  afterTargetHandler: DispatchOptions['afterTargetHandler'],
+) {
+  const handlerName = getEventInternals(event).typeConfig.handlerName;
+  const nodes = event.bubbles ? path : path.slice(0, 1);
+  for (let i = 0; i < nodes.length && !event.isPropagationStopped(); i += 1) {
+    const isTarget = i === 0;
+    const phase = isTarget ? SyntheticEvent.AT_TARGET : SyntheticEvent.BUBBLING_PHASE;
+    callHandler(
+      event,
+      nodes[i],
+      handlerName,
+      phase,
+      state,
+      isTarget ? afterTargetHandler : undefined,
+    );
+  }
+}
+
+function callHandler(
+  event: SyntheticEvent,
+  node: TestInstance,
+  handlerName: string,
+  phase: EventPhase,
+  state: DispatchState,
+  afterHandler?: DispatchOptions['afterTargetHandler'],
+) {
+  getEventInternals(event).eventPhase = phase;
+  getEventInternals(event).currentTarget = node;
+
+  const handler = getHandlerByName(node.props, handlerName);
+  if (handler == null && afterHandler == null) {
+    return;
+  }
+
+  try {
+    if (handler != null) {
+      state.hasCalledHandler = true;
+      handler.call(node, event);
+    }
+
+    // In the same `try`, as a component's wrapper doesn't reach its own code after the prop throws.
+    afterHandler?.(node, event);
+  } catch (error) {
+    // Keep dispatching: one failing handler doesn't stop handlers on other elements, as in React
+    // Native (`handleListenerError()` in `EventTarget.js`) and the DOM. `dispatchEvent()` rethrows
+    // the first error once the whole dispatch is done.
+    if (state.firstError == null) {
+      state.firstError = { error };
+    }
+  }
+}
+
+/** Clears the event's internals, as the event can still be read after the dispatch. */
+function resetEvent(event: SyntheticEvent) {
+  getEventInternals(event).eventPhase = SyntheticEvent.NONE;
+  getEventInternals(event).currentTarget = null;
+  getEventInternals(event).composedPath = [];
+  getEventInternals(event).stopPropagation = false;
+}

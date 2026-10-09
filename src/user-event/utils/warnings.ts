@@ -1,10 +1,10 @@
 import { getConfig } from '../../config';
-import type { EventWarning } from '../../events';
+import type { EventWarning } from '../../events/legacy';
 import {
   formatDisabledTargets,
   getPointerEventsBlockedTargets,
   logEventWarning,
-} from '../../events';
+} from '../../events/legacy';
 import { computeAriaDisabled } from '../../helpers/accessibility';
 import type { Interaction } from './interaction';
 

@@ -2,7 +2,7 @@
 
 In React Native, some events **bubble** up to parent elements and others are **direct**, meaning only the element that emitted them receives them. `fireEvent` should behave the same way.
 
-Today, `fireEvent` still bubbles direct events, with a warning (see [Known gaps](#known-gaps)). Only `fireEvent.layout()` does not bubble. The rules live in `isDirectEvent()` in `src/events/propagation.ts`.
+Today, `fireEvent` still bubbles direct events, with a warning (see [Known gaps](#known-gaps)). Only `fireEvent.layout()` does not bubble. The rules live in `isDirectEvent()` in `src/events/legacy/propagation.ts`.
 
 ## Which events are which
 
@@ -34,7 +34,7 @@ Until then, `fireEvent` logs a warning when a direct event bubbles from a nested
 
 `contentSizeChange` is not a native `ScrollView` event, so the table above doesn't list it. The `ScrollView` component calls `onContentSizeChange` from the `onLayout` of its content view and passes `onContentSizeChange: null` to the host element. The Jest `ScrollView` mock passes the prop to the host element instead, so the rule uses `ScrollView` as the emitting element. `FlatList` and `SectionList` always set this handler, and tests fire the event on list items, so making it direct will break more tests than other events.
 
-Both rules depend on the Jest mock. The `FlatList` cases in `src/events/__tests__/fire-event.test.tsx` cover both, so a mock change that moves these handlers fails them.
+Both rules depend on the Jest mock. The `FlatList` cases in `src/events/legacy/__tests__/fire-event.test.tsx` cover both, so a mock change that moves these handlers fails them.
 
 ## Sources
 

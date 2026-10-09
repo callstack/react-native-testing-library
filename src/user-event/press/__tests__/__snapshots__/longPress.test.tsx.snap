@@ -5,15 +5,6 @@ exports[`userEvent.longPress with fake timers calls onLongPress if the delayLong
   {
     "name": "longPress",
     "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "dispatchConfig": {
-        "registrationName": "onResponderGrant",
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -25,11 +16,6 @@ exports[`userEvent.longPress with fake timers calls onLongPress if the delayLong
         "timestamp": 0,
         "touches": [],
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
 ]
@@ -40,15 +26,6 @@ exports[`userEvent.longPress with fake timers works on Pressable 1`] = `
   {
     "name": "pressIn",
     "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "dispatchConfig": {
-        "registrationName": "onResponderGrant",
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -60,25 +37,11 @@ exports[`userEvent.longPress with fake timers works on Pressable 1`] = `
         "timestamp": 0,
         "touches": [],
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "longPress",
     "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "dispatchConfig": {
-        "registrationName": "onResponderGrant",
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -90,25 +53,11 @@ exports[`userEvent.longPress with fake timers works on Pressable 1`] = `
         "timestamp": 0,
         "touches": [],
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
   {
     "name": "pressOut",
     "payload": {
-      "currentTarget": {
-        "measure": [Function],
-      },
-      "dispatchConfig": {
-        "registrationName": "onResponderRelease",
-      },
-      "isDefaultPrevented": [Function],
-      "isPersistent": [Function],
-      "isPropagationStopped": [Function],
       "nativeEvent": {
         "changedTouches": [],
         "identifier": 0,
@@ -120,11 +69,6 @@ exports[`userEvent.longPress with fake timers works on Pressable 1`] = `
         "timestamp": 500,
         "touches": [],
       },
-      "persist": [Function],
-      "preventDefault": [Function],
-      "stopPropagation": [Function],
-      "target": {},
-      "timeStamp": 0,
     },
   },
 ]
