@@ -7,7 +7,7 @@ import type { Point, Size } from '../../types';
  *
  * Values from `value` props (managed controls) should take precedence over these values.
  */
-export type NativeState = {
+type NativeState = {
   valueForInstance: WeakMap<TestInstance, string>;
   contentOffsetForInstance: WeakMap<TestInstance, Point>;
   layoutSizeForInstance: WeakMap<TestInstance, Size>;

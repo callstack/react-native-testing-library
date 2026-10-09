@@ -7,7 +7,6 @@ import {
   createEvent,
   buildFocusEvent,
   buildKeyPressEvent,
-  buildLayoutEvent,
   buildPressEvent,
   buildScrollEvent,
   buildSubmitEditingEvent,
@@ -56,7 +55,6 @@ test.each([
   ['focus', () => buildFocusEvent()],
   ['blur', () => buildBlurEvent()],
   ['accessibilityaction', () => buildAccessibilityActionEvent('increment')],
-  ['layout', () => buildLayoutEvent({ width: 100 })],
   ['momentumscrollend', () => buildScrollEvent('momentumScrollEnd', { x: 0, y: 100 })],
   ['change', () => buildTextChangeEvent('Hello', { start: 5, end: 5 })],
   ['keypress', () => buildKeyPressEvent('a')],
@@ -77,11 +75,7 @@ test.each([
   expect(modernEvent.nativeEvent).toEqual(legacyEvent.nativeEvent);
 });
 
-test('buildLayoutEvent and buildScrollEvent pass their arguments to the native event', () => {
-  expect(buildLayoutEvent({ width: 100 }).nativeEvent).toEqual({
-    layout: { x: 0, y: 0, width: 100, height: 0 },
-    target: 0,
-  });
+test('buildScrollEvent passes its arguments to the native event', () => {
   expect(buildScrollEvent('scroll', { x: 0, y: 100 }).nativeEvent).toMatchObject({
     contentOffset: { x: 0, y: 100 },
   });

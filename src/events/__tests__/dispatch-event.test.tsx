@@ -4,8 +4,8 @@ import { TextInput, View } from 'react-native';
 import { configure, render, screen } from '../..';
 import { createEvent } from '../create-event';
 import { dispatchEvent } from '../dispatch-event';
-import { buildFocusNativeEvent } from '../legacy';
 import { SyntheticEvent } from '../modern/event';
+import { buildFocusNativeEvent } from '../shared/payloads';
 
 describe('legacy event system', () => {
   test('calls only the target prop with the legacy event object', async () => {

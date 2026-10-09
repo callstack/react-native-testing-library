@@ -8,8 +8,6 @@ export function buildTouchEvent() {
   };
 }
 
-export type TouchEvent = ReturnType<typeof buildTouchEvent>;
-
 export function buildResponderGrantEvent() {
   return {
     ...buildTouchEvent(),

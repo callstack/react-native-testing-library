@@ -12,14 +12,12 @@ import {
   buildEndEditingNativeEvent,
   buildFocusNativeEvent,
   buildKeyPressNativeEvent,
-  buildLayoutNativeEvent,
   buildScrollNativeEvent,
   buildSubmitEditingNativeEvent,
   buildTextChangeNativeEvent,
   buildTextSelectionChangeNativeEvent,
   buildTouchNativeEvent,
 } from './shared/payloads';
-import type { LayoutRectangle } from './shared/types';
 
 export type LegacyEvent = ReturnType<typeof wrapNativeEvent<NativeEventPayload>>;
 
@@ -50,7 +48,7 @@ export function createEvent(
   return createModernEvent(eventType, { nativeEvent }) as SyntheticEvent;
 }
 
-export type ScrollEventType =
+type ScrollEventType =
   | 'scroll'
   | 'scrollBeginDrag'
   | 'scrollEndDrag'
@@ -71,10 +69,6 @@ export function buildBlurEvent() {
 
 export function buildAccessibilityActionEvent(actionName: string) {
   return createEvent('accessibilityAction', buildAccessibilityActionNativeEvent(actionName));
-}
-
-export function buildLayoutEvent(layout?: Partial<LayoutRectangle>) {
-  return createEvent('layout', buildLayoutNativeEvent(layout));
 }
 
 export function buildScrollEvent(
