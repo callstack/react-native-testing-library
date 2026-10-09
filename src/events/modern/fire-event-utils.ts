@@ -4,7 +4,7 @@ import { ErrorWithStack } from '../../helpers/errors';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import type { CreateEventInit } from './event';
 import { SyntheticEvent } from './event';
-import { getEventTypeConfig } from './event-types';
+import { getEventTypeConfig, isPressabilityEventType } from './event-types';
 
 const ALLOWED_INIT_KEYS = ['nativeEvent', 'timeStamp'];
 
@@ -18,15 +18,13 @@ const EVENT_KEYS = new Set(
 /** What to use instead of event types that only the legacy system or `userEvent` can fire. */
 const UNKNOWN_EVENT_TYPE_ALTERNATIVES: Record<string, string> = {
   changeText: 'fireEvent.changeText() or userEvent.type()',
-  pressIn: 'userEvent.press()',
-  pressOut: 'userEvent.press()',
-  longPress: 'userEvent.longPress()',
 };
 
 /**
  * Throws for event types React Native doesn't dispatch natively, such as `changeText` or custom
- * prop names. React Native drops them, so dropping them here would call no handler, and a test
- * asserting that a handler wasn't called would pass for the wrong reason.
+ * prop names, except Pressability event types (`pressIn`, ...). React Native drops them, so
+ * dropping them here would call no handler, and a test asserting that a handler wasn't called
+ * would pass for the wrong reason.
  *
  * @param callsite the function to remove from the error stack, e.g. `fireEvent`
  */
@@ -35,7 +33,7 @@ export function ensureEventType(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   callsite: Function,
 ): void {
-  if (getEventTypeConfig(eventType) != null) {
+  if (getEventTypeConfig(eventType) != null || isPressabilityEventType(eventType)) {
     return;
   }
 

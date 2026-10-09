@@ -3,17 +3,17 @@ import type { TestInstance } from 'test-renderer';
 import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
-import { getHandlerByName } from '../shared/handler';
+import { getEventHandlerName, getHandlerByName } from '../shared/handler';
 import { getPointerEventsBlocker } from '../shared/pointer-events';
 import type { EventHandler } from '../shared/types';
 import { resetEvent } from './dispatch';
 import type { SyntheticEvent } from './event';
 import { getEventInternals } from './event';
-
-const PRESSABILITY_CALLBACK_NAMES = ['onPress', 'onPressIn', 'onPressOut', 'onLongPress'] as const;
+import type { PressabilityEventType } from './event-types';
+import { PRESSABILITY_EVENT_TYPES } from './event-types';
 
 /** Callbacks of React Native's `PressabilityConfig` that `dispatchPressabilityEvent()` calls. */
-export type PressabilityCallbackName = (typeof PRESSABILITY_CALLBACK_NAMES)[number];
+type PressabilityCallbackName = `on${Capitalize<PressabilityEventType>}`;
 
 /** The part of React Native's `PressabilityConfig` that `dispatchPressabilityEvent()` reads. */
 type PressabilityConfig = { disabled?: boolean | null } & {
@@ -21,14 +21,13 @@ type PressabilityConfig = { disabled?: boolean | null } & {
 };
 
 type DispatchState = {
-  hasCalledHandler: boolean;
   /** Wrapped, so a thrown `undefined` is rethrown too. */
   firstError: { error: unknown } | null;
 };
 
 /**
- * Touches the element as on a device, and calls one Pressability callback (`onPress`,
- * `onPressIn`, ...) of the element that becomes the touch responder:
+ * Touches the element as on a device, and calls one Pressability callback (`onPress` for `press`,
+ * `onPressIn` for `pressIn`, ...) of the element that becomes the touch responder:
  *
  * 1. Hit testing: the touch targets the element, or its nearest ancestor when `pointerEvents`
  *    blocks it.
@@ -54,25 +53,26 @@ type DispatchState = {
  * Known limitation: `testOnly_pressabilityConfig` exists only when `NODE_ENV` is `test`, which
  * Jest sets by default. Without it, `Pressable` and `Touchable*` claim the touch but get nothing.
  *
- * @param event passed to the callback. React Native passes the responder event derived from
- * `touchStart` to `onPressIn`, and from `touchEnd` to `onPress` and `onPressOut`.
- * @returns `true` if a callback was called.
+ * @param event from `createPressabilityEvent()`, passed to the callback. React Native passes the
+ * responder event derived from `touchStart` to `onPressIn`, and from `touchEnd` to `onPress` and
+ * `onPressOut`.
  */
 export async function dispatchPressabilityEvent(
   target: TestInstance,
-  callbackName: PressabilityCallbackName,
+  eventType: PressabilityEventType,
   event: SyntheticEvent,
-): Promise<boolean> {
+): Promise<void> {
   if (!isInstanceMounted(target)) {
-    return false;
+    return;
   }
 
   const path = getTouchPath(target);
   if (path.length === 0) {
-    return false;
+    return;
   }
 
-  const state: DispatchState = { hasCalledHandler: false, firstError: null };
+  const callbackName = getEventHandlerName(eventType) as PressabilityCallbackName;
+  const state: DispatchState = { firstError: null };
   await act(() => {
     getEventInternals(event).target = path[0];
     getEventInternals(event).composedPath = path;
@@ -83,7 +83,6 @@ export async function dispatchPressabilityEvent(
         const phase = responder === path[0] ? event.AT_TARGET : event.BUBBLING_PHASE;
         getEventInternals(event).eventPhase = phase;
         getEventInternals(event).currentTarget = responder;
-        state.hasCalledHandler = true;
         callback.call(responder, event);
       }
     } catch (error) {
@@ -97,8 +96,6 @@ export async function dispatchPressabilityEvent(
   if (state.firstError != null) {
     throw state.firstError.error;
   }
-
-  return state.hasCalledHandler;
 }
 
 /**
@@ -146,14 +143,13 @@ function getCallback(
 }
 
 function hasHostCallback(instance: TestInstance): boolean {
-  return PRESSABILITY_CALLBACK_NAMES.some((name) => getHostCallback(instance, name) != null);
+  return PRESSABILITY_EVENT_TYPES.some(
+    (eventType) => getHostCallback(instance, getEventHandlerName(eventType)) != null,
+  );
 }
 
 /** Callback prop of a mocked `Text` or `TextInput` host, or a `testOnly_` prop. */
-function getHostCallback(
-  instance: TestInstance,
-  callbackName: PressabilityCallbackName,
-): EventHandler | undefined {
+function getHostCallback(instance: TestInstance, callbackName: string): EventHandler | undefined {
   if (isHostText(instance) && instance.props.disabled === true) {
     return undefined;
   }

@@ -19,7 +19,9 @@ import {
 import type { DispatchOptions } from './dispatch';
 import { dispatchEvent } from './dispatch';
 import type { CreateEventInit, NativeEventPayload } from './event';
-import { createEvent } from './event';
+import { createEvent, createPressabilityEvent } from './event';
+import type { PressabilityEventType } from './event-types';
+import { isPressabilityEventType } from './event-types';
 import {
   ensureEventType,
   ensureSingleEventArg,
@@ -38,8 +40,11 @@ export type FireEventInit = CreateEventInit;
  * Fires an event on a host element: `createEvent()`, then `dispatchEvent()`, like Testing Library's
  * DOM `fireEvent(element, event)`. The event type is needed to find the event's dispatch config.
  *
- * Exactly one event object is required, as React Native handlers receive a single event. Event
- * types React Native doesn't dispatch natively (`changeText`, custom prop names) throw.
+ * Pressability event types (`press`, `pressIn`, `pressOut`, `longPress`) call the callback of the
+ * element that becomes the touch responder instead, as `fireEvent.press()` does.
+ *
+ * Exactly one event object is required, as React Native handlers receive a single event. Other
+ * event types React Native doesn't dispatch natively (`changeText`, custom prop names) throw.
  *
  * @param eventType with or without the `on*` prefix, e.g. `focus` or `onFocus`
  * @returns `false` if a handler called `preventDefault()`, otherwise `true`.
@@ -55,6 +60,10 @@ export async function fireEvent(
   ensureEventType(normalizedType, fireEvent);
   ensureSingleEventArg(normalizedType, args, fireEvent);
   const init = validateEventInit(normalizedType, args[0], fireEvent);
+  if (isPressabilityEventType(normalizedType)) {
+    return await firePressabilityEvent(instance, normalizedType, init);
+  }
+
   return await fireEventInternal(instance, normalizedType, init);
 }
 
@@ -100,14 +109,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<boo
 fireEvent.press = async (instance: TestInstance, event: FireEventInit = {}): Promise<boolean> => {
   ensureInstance(instance, 'press', fireEvent.press);
   const init = validateEventInit('press', event, fireEvent.press);
-  const nativeEvent = mergeEventProps(buildTouchNativeEvent(), init.nativeEvent);
-  const pressEvent = createEvent('press', { ...init, nativeEvent });
-  if (pressEvent == null) {
-    return true;
-  }
-
-  await dispatchPressabilityEvent(instance, 'onPress', pressEvent);
-  return !pressEvent.defaultPrevented;
+  return await firePressabilityEvent(instance, 'press', init);
 };
 
 /**
@@ -157,6 +159,18 @@ async function fireEventInternal(
   }
 
   await dispatchEvent(instance, event, dispatchOptions);
+  return !event.defaultPrevented;
+}
+
+/** The passed `nativeEvent` is deep merged onto a default touch payload. */
+async function firePressabilityEvent(
+  instance: TestInstance,
+  eventType: PressabilityEventType,
+  init: CreateEventInit,
+): Promise<boolean> {
+  const nativeEvent = mergeEventProps(buildTouchNativeEvent(), init.nativeEvent);
+  const event = createPressabilityEvent(eventType, { ...init, nativeEvent });
+  await dispatchPressabilityEvent(instance, eventType, event);
   return !event.defaultPrevented;
 }
 
