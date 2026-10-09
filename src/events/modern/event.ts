@@ -1,6 +1,8 @@
 import type { TestInstance } from 'test-renderer';
 
 import { getEventHandlerName } from '../shared/handler';
+import { mergeEventProps } from '../shared/merge';
+import { buildTouchNativeEvent } from '../shared/payloads';
 import type { EventTypeConfig, PressabilityEventType } from './event-types';
 import { getEventTypeConfig } from './event-types';
 
@@ -229,7 +231,9 @@ export function createEvent(eventType: string, init: CreateEventInit = {}): Synt
 
 /**
  * Creates the event passed to a Pressability callback, ready for `dispatchPressabilityEvent()`.
- * Pressability calls only the touch responder's callback, so the event is direct.
+ * React Native passes the responder event derived from a touch, so the passed `nativeEvent` is
+ * deep merged onto a default touch payload. Pressability calls only the touch responder's
+ * callback, so the event is direct.
  *
  * @param eventType e.g. `press` or `pressIn`
  */
@@ -237,8 +241,9 @@ export function createPressabilityEvent(
   eventType: PressabilityEventType,
   init: CreateEventInit,
 ): SyntheticEvent {
+  const nativeEvent = mergeEventProps(buildTouchNativeEvent(), init.nativeEvent);
   const config: EventTypeConfig = { kind: 'direct', handlerName: getEventHandlerName(eventType) };
-  return createEventWithConfig(eventType, init, config);
+  return createEventWithConfig(eventType, { timeStamp: init.timeStamp, nativeEvent }, config);
 }
 
 function createEventWithConfig(

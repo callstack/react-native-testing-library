@@ -355,33 +355,20 @@ describe('Pressability event types', () => {
     expect(onPressIn).not.toHaveBeenCalled();
   });
 
-  test('returns false when the callback calls preventDefault()', async () => {
+  test('resolves to undefined when the callback calls preventDefault()', async () => {
     await render(<Pressable testID="pressable" onLongPress={(event) => event.preventDefault()} />);
 
-    expect(await fireEvent(screen.getByTestId('pressable'), 'longPress', {})).toBe(false);
+    await expect(
+      fireEvent(screen.getByTestId('pressable'), 'longPress', {}),
+    ).resolves.toBeUndefined();
   });
 });
 
-test('returns false when a handler calls preventDefault()', async () => {
-  await render(
-    <Text testID="text" onPress={(event) => event.preventDefault()}>
-      Press me
-    </Text>,
-  );
+// React Native has no default actions for `preventDefault()` to cancel, so there is nothing to return.
+test('resolves to undefined when a handler calls preventDefault()', async () => {
+  await render(<TextInput testID="input" onFocus={(event) => event.preventDefault()} />);
 
-  expect(await fireEvent(screen.getByTestId('text'), 'press', {})).toBe(false);
-});
-
-test('returns true when no handler calls preventDefault()', async () => {
-  const onPress = jest.fn();
-  await render(
-    <Text testID="text" onPress={onPress}>
-      Press me
-    </Text>,
-  );
-
-  expect(await fireEvent(screen.getByTestId('text'), 'press', {})).toBe(true);
-  expect(onPress).toHaveBeenCalledTimes(1);
+  await expect(fireEvent(screen.getByTestId('input'), 'focus', {})).resolves.toBeUndefined();
 });
 
 test('is a no-op on an unmounted element', async () => {
@@ -390,7 +377,7 @@ test('is a no-op on an unmounted element', async () => {
   const input = screen.getByTestId('input');
   await screen.rerender(<View />);
 
-  expect(await fireEvent(input, 'focus', {})).toBe(true);
+  await fireEvent(input, 'focus', {});
   expect(onFocus).not.toHaveBeenCalled();
 });
 
@@ -662,10 +649,12 @@ describe('fireEvent.changeText', () => {
     expect(screen.getByTestId('input')).toHaveDisplayValue('Hello');
   });
 
-  test('returns false when a handler calls preventDefault()', async () => {
+  test('resolves to undefined when a handler calls preventDefault()', async () => {
     await render(<TextInput testID="input" onChange={(event) => event.preventDefault()} />);
 
-    expect(await fireEvent.changeText(screen.getByTestId('input'), 'Hello')).toBe(false);
+    await expect(
+      fireEvent.changeText(screen.getByTestId('input'), 'Hello'),
+    ).resolves.toBeUndefined();
   });
 
   test('does nothing on non-editable TextInput', async () => {
@@ -676,7 +665,7 @@ describe('fireEvent.changeText', () => {
     );
     const input = screen.getByTestId('input');
 
-    expect(await fireEvent.changeText(input, 'Hello')).toBe(true);
+    await fireEvent.changeText(input, 'Hello');
 
     expect(onChange).not.toHaveBeenCalled();
     expect(onChangeText).not.toHaveBeenCalled();
@@ -727,7 +716,7 @@ describe('fireEvent.press', () => {
       </Component>,
     );
 
-    expect(await fireEvent.press(screen.getByTestId('subject'))).toBe(true);
+    await fireEvent.press(screen.getByTestId('subject'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
@@ -975,7 +964,7 @@ describe('fireEvent.press', () => {
       </Pressable>,
     );
 
-    expect(await fireEvent.press(screen.getByTestId('draggable'))).toBe(true);
+    await fireEvent.press(screen.getByTestId('draggable'));
 
     expect(onPress).not.toHaveBeenCalled();
     expect(onPanResponderGrant).not.toHaveBeenCalled();
@@ -1069,10 +1058,10 @@ describe('fireEvent.press', () => {
     });
   });
 
-  test('returns false when onPress calls preventDefault()', async () => {
+  test('resolves to undefined when onPress calls preventDefault()', async () => {
     await render(<Pressable testID="pressable" onPress={(event) => event.preventDefault()} />);
 
-    expect(await fireEvent.press(screen.getByTestId('pressable'))).toBe(false);
+    await expect(fireEvent.press(screen.getByTestId('pressable'))).resolves.toBeUndefined();
   });
 
   test('renders state updates from onPress', async () => {
@@ -1117,7 +1106,7 @@ describe('fireEvent.press', () => {
     const pressable = screen.getByTestId('pressable');
     await screen.rerender(<View />);
 
-    expect(await fireEvent.press(pressable)).toBe(true);
+    await fireEvent.press(pressable);
     expect(onPress).not.toHaveBeenCalled();
   });
 

@@ -15,11 +15,10 @@ test('fireEvent calls handlers of the selected event system', async () => {
   );
 
   const init = { nativeEvent: { pointerId: 1 } };
-  const result = await fireEvent(screen.getByTestId('target'), 'pointerDown', init);
+  await fireEvent(screen.getByTestId('target'), 'pointerDown', init);
   const isModern = getConfig().unstable_eventSystem === 'modern';
   // Modern dispatches a `SyntheticEvent` through capture and bubble phases. Legacy calls only the
   // target prop with the passed arguments.
-  expect(result).toBe(isModern ? true : undefined);
   expect(onParentPointerDownCapture).toHaveBeenCalledTimes(isModern ? 1 : 0);
   expect(onPointerDown.mock.calls[0][0] instanceof SyntheticEvent).toBe(isModern);
   expect(onPointerDown.mock.calls[0][0].nativeEvent).toEqual({ pointerId: 1 });
@@ -68,9 +67,8 @@ test('fireEvent.press calls onPress of Pressable with the event of the selected 
     </Pressable>,
   );
 
-  const result = await fireEvent.press(screen.getByText('Press me'));
+  await fireEvent.press(screen.getByText('Press me'));
   const isModern = getConfig().unstable_eventSystem === 'modern';
-  expect(result).toBe(isModern ? true : undefined);
   expect(onPress).toHaveBeenCalledTimes(1);
   expect(onPress.mock.calls[0][0] instanceof SyntheticEvent).toBe(isModern);
 });
@@ -80,11 +78,9 @@ test('fireEvent.scroll and fireEvent.layout pass events of the selected event sy
   const onLayout = jest.fn();
   await render(<ScrollView testID="scrollView" onScroll={onScroll} onLayout={onLayout} />);
 
-  const scrollResult = await fireEvent.scroll(screen.getByTestId('scrollView'));
-  const layoutResult = await fireEvent.layout(screen.getByTestId('scrollView'));
+  await fireEvent.scroll(screen.getByTestId('scrollView'));
+  await fireEvent.layout(screen.getByTestId('scrollView'));
   const isModern = getConfig().unstable_eventSystem === 'modern';
-  expect(scrollResult).toBe(isModern ? true : undefined);
-  expect(layoutResult).toBe(isModern ? true : undefined);
   expect(onScroll.mock.calls[0][0] instanceof SyntheticEvent).toBe(isModern);
   expect(onLayout.mock.calls[0][0] instanceof SyntheticEvent).toBe(isModern);
 });
