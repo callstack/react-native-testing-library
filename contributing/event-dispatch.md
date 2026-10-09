@@ -2,7 +2,7 @@
 
 RNTL has two ways to trigger events. Neither goes through React Native's native event system. Both find `on*` props in the rendered tree and call them inside `act()`.
 
-Both are built on the shared event subsystem in `src/events/legacy/`, which also holds `fireEvent` itself. This is the `'legacy'` event system, the default for the `eventSystem` config option. A `'modern'` event system that follows React Native's event dispatch is in progress.
+Both are built on the shared event subsystem in `src/events/legacy/`, which also holds `fireEvent` itself. This is the `'legacy'` event system, the default for the `unstable_eventSystem` config option. A `'modern'` event system that follows React Native's event dispatch is in progress.
 
 The files in `src/events/legacy/`:
 

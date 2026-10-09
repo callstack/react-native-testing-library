@@ -9,7 +9,7 @@ import { buildFocusNativeEvent } from '../shared/payloads';
 
 describe('legacy event system', () => {
   beforeEach(() => {
-    configure({ eventSystem: 'legacy' });
+    configure({ unstable_eventSystem: 'legacy' });
   });
 
   test('calls only the target prop with the legacy event object', async () => {
@@ -37,7 +37,7 @@ describe('legacy event system', () => {
 
 describe('modern event system', () => {
   beforeEach(() => {
-    configure({ eventSystem: 'modern' });
+    configure({ unstable_eventSystem: 'modern' });
   });
 
   test('dispatches SyntheticEvent through capture and bubble phases', async () => {

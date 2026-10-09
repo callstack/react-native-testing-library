@@ -6,6 +6,6 @@ import { configure } from '../config';
  */
 export function runInLegacyEventSystem() {
   beforeEach(() => {
-    configure({ eventSystem: 'legacy' });
+    configure({ unstable_eventSystem: 'legacy' });
   });
 }

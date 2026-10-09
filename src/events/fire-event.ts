@@ -6,13 +6,9 @@ import type { FireEventInit } from './modern/fire-event';
 import { fireEvent as modernFireEvent } from './modern/fire-event';
 import type { EventProps, EventType, LayoutRectangle } from './shared/types';
 
-function isModern() {
-  return getConfig().eventSystem === 'modern';
-}
-
 /**
  * Public `fireEvent`. Calls the implementation of the event system selected by
- * `configure({ eventSystem })`, read on each call, so `configure()` inside a test applies.
+ * `configure({ unstable_eventSystem })`, read on each call, so `configure()` inside a test applies.
  *
  * Types follow the legacy signatures. The modern implementation checks its arguments at runtime.
  */
@@ -65,5 +61,9 @@ fireEvent.layout = async (
   await legacyFireEvent.layout(instance, layout);
   return undefined;
 };
+
+function isModern() {
+  return getConfig().unstable_eventSystem === 'modern';
+}
 
 export { fireEvent };

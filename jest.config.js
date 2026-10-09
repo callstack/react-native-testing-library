@@ -22,7 +22,7 @@ module.exports = {
   ],
   projects: [
     { ...baseProject, displayName: 'legacy' },
-    // All tests again with `configure({ eventSystem: 'modern' })`. They share snapshots with the
+    // All tests again with `configure({ unstable_eventSystem: 'modern' })`. They share snapshots with the
     // legacy run, so both event systems must call the same handlers with the same native events.
     {
       ...baseProject,

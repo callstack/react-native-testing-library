@@ -16,13 +16,13 @@ Every change in `src/` should come with tests. Tests use Jest and live next to t
 
 ## Event systems
 
-`fireEvent` and `userEvent` work with both event systems (`configure({ eventSystem })`), so `jest.config.js` has two projects:
+`fireEvent` and `userEvent` work with both event systems (`configure({ unstable_eventSystem })`), so `jest.config.js` has two projects:
 
 - `legacy` runs all tests with the default `'legacy'` event system.
 - `modern` runs all tests again with `'modern'` (`jest-setup-modern.ts`).
 
 Both projects share the same snapshots. `createEventLogger()` entries print only the `nativeEvent` of event payloads (`src/test-utils/event-serializer.ts`), so a snapshot is the same for a legacy event object and a modern `SyntheticEvent`, and a difference between the two systems fails the snapshot. Use `--selectProjects legacy` or `--selectProjects modern` to run one of them.
 
-When a test expects different behavior in the two systems, e.g. events bubbling to a parent, branch on `getConfig().eventSystem` inside the test instead of skipping it.
+When a test expects different behavior in the two systems, e.g. events bubbling to a parent, branch on `getConfig().unstable_eventSystem` inside the test instead of skipping it.
 
 Tests of legacy behavior the modern event system doesn't have (several handler arguments, bubbling to composite props, direct events bubbling with a warning, ...) call `runInLegacyEventSystem()` from `src/test-utils/event-system.ts` at the top of the file (or in a `describe()`). They run in the legacy event system in both projects, e.g. `src/events/legacy/__tests__/fire-event.test.tsx`.

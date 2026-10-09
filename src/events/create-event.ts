@@ -23,7 +23,7 @@ export type LegacyEvent = ReturnType<typeof wrapNativeEvent<NativeEventPayload>>
 
 /**
  * Creates the event object for a native event (`focus`, `change`, `scroll`, ...) in the event
- * system selected by `configure({ eventSystem })`: a legacy event object with stubs, or a
+ * system selected by `configure({ unstable_eventSystem })`: a legacy event object with stubs, or a
  * `SyntheticEvent`. Used by `userEvent`, with `dispatchEvent()`. Unlike modern `createEvent()`,
  * takes the `nativeEvent` itself, not an init object.
  *
@@ -40,20 +40,13 @@ export function createEvent(
     throw new Error(`"${eventType}" is not a native event type. Use invokeEventHandler() instead.`);
   }
 
-  if (getConfig().eventSystem === 'legacy') {
+  if (getConfig().unstable_eventSystem === 'legacy') {
     return wrapNativeEvent(nativeEvent);
   }
 
   // Not `null`: the event type is known.
   return createModernEvent(eventType, { nativeEvent }) as SyntheticEvent;
 }
-
-type ScrollEventType =
-  | 'scroll'
-  | 'scrollBeginDrag'
-  | 'scrollEndDrag'
-  | 'momentumScrollBegin'
-  | 'momentumScrollEnd';
 
 export function buildPressEvent() {
   return createEvent('press', buildTouchNativeEvent());
@@ -102,3 +95,10 @@ export function buildTextSelectionChangeEvent(range: TextRange) {
 export function buildContentSizeChangeEvent(size: Size) {
   return createEvent('contentSizeChange', buildContentSizeChangeNativeEvent(size));
 }
+
+type ScrollEventType =
+  | 'scroll'
+  | 'scrollBeginDrag'
+  | 'scrollEndDrag'
+  | 'momentumScrollBegin'
+  | 'momentumScrollEnd';

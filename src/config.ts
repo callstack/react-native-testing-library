@@ -21,10 +21,11 @@ export type Config = {
   eventDiagnostics: boolean;
 
   /**
-   * Event system used by `fireEvent` and `userEvent`. `'legacy'` is the current simplified
-   * implementation. `'modern'` follows React Native's event dispatch. Defaults to `'legacy'`.
+   * Experimental, may change or be removed in any release. Event system used by `fireEvent` and
+   * `userEvent`. `'legacy'` is the current simplified implementation. `'modern'` follows React
+   * Native's event dispatch. Defaults to `'legacy'`.
    */
-  eventSystem: EventSystem;
+  unstable_eventSystem: EventSystem;
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
@@ -39,7 +40,7 @@ const defaultConfig: Config = {
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: false,
   eventDiagnostics: false,
-  eventSystem: 'legacy',
+  unstable_eventSystem: 'legacy',
 };
 
 let config = { ...defaultConfig };
@@ -54,7 +55,7 @@ export function configure(options: Partial<Config & ConfigAliasOptions>) {
     defaultHidden,
     defaultIncludeHiddenElements,
     eventDiagnostics,
-    eventSystem,
+    unstable_eventSystem,
     ...rest
   } = options;
 
@@ -69,7 +70,7 @@ export function configure(options: Partial<Config & ConfigAliasOptions>) {
     defaultDebugOptions,
     defaultIncludeHiddenElements: resolvedDefaultIncludeHiddenElements,
     eventDiagnostics: eventDiagnostics ?? config.eventDiagnostics,
-    eventSystem: eventSystem ?? config.eventSystem,
+    unstable_eventSystem: unstable_eventSystem ?? config.unstable_eventSystem,
   };
 }
 

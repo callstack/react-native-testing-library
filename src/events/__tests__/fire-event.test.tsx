@@ -6,7 +6,7 @@ import { SyntheticEvent } from '../modern/event';
 
 describe('legacy event system', () => {
   beforeEach(() => {
-    configure({ eventSystem: 'legacy' });
+    configure({ unstable_eventSystem: 'legacy' });
   });
 
   test('fireEvent calls only the target prop with the passed arguments', async () => {
@@ -55,7 +55,7 @@ describe('legacy event system', () => {
 
 describe('modern event system', () => {
   beforeEach(() => {
-    configure({ eventSystem: 'modern' });
+    configure({ unstable_eventSystem: 'modern' });
   });
 
   test('fireEvent dispatches a SyntheticEvent through capture and bubble phases', async () => {
@@ -130,9 +130,9 @@ test('reads the event system on each call', async () => {
   const onLayout = jest.fn();
   await render(<View testID="view" onLayout={onLayout} />);
 
-  configure({ eventSystem: 'legacy' });
+  configure({ unstable_eventSystem: 'legacy' });
   await fireEvent.layout(screen.getByTestId('view'));
-  configure({ eventSystem: 'modern' });
+  configure({ unstable_eventSystem: 'modern' });
   await fireEvent.layout(screen.getByTestId('view'));
   expect(onLayout.mock.calls[0][0]).not.toBeInstanceOf(SyntheticEvent);
   expect(onLayout.mock.calls[1][0]).toBeInstanceOf(SyntheticEvent);

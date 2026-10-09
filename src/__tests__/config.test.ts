@@ -13,7 +13,7 @@ afterEach(() => {
 test('getConfig() returns existing configuration', () => {
   expect(getConfig().asyncUtilTimeout).toEqual(1000);
   expect(getConfig().defaultIncludeHiddenElements).toEqual(false);
-  expect(getConfig().eventSystem).toEqual('legacy');
+  expect(getConfig().unstable_eventSystem).toEqual('legacy');
 });
 
 test('configure() overrides existing config values', () => {
@@ -24,19 +24,19 @@ test('configure() overrides existing config values', () => {
     defaultDebugOptions: { message: 'debug message' },
     defaultIncludeHiddenElements: false,
     eventDiagnostics: false,
-    eventSystem: 'legacy',
+    unstable_eventSystem: 'legacy',
   });
 });
 
-test('configure() sets eventSystem', () => {
-  configure({ eventSystem: 'modern' });
-  expect(getConfig().eventSystem).toEqual('modern');
+test('configure() sets unstable_eventSystem', () => {
+  configure({ unstable_eventSystem: 'modern' });
+  expect(getConfig().unstable_eventSystem).toEqual('modern');
 
   configure({ asyncUtilTimeout: 2000 });
-  expect(getConfig().eventSystem).toEqual('modern');
+  expect(getConfig().unstable_eventSystem).toEqual('modern');
 
   resetToDefaults();
-  expect(getConfig().eventSystem).toEqual('legacy');
+  expect(getConfig().unstable_eventSystem).toEqual('legacy');
 });
 
 test('resetToDefaults() resets config to defaults', () => {
@@ -79,7 +79,7 @@ test('does not warn when only valid options are passed', () => {
     defaultIncludeHiddenElements: true,
     defaultDebugOptions: { message: 'test' },
     defaultHidden: false,
-    eventSystem: 'modern',
+    unstable_eventSystem: 'modern',
   });
 
   expect(_console.warn).not.toHaveBeenCalled();
