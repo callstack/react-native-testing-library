@@ -20,13 +20,13 @@ import type { DispatchOptions } from './dispatch';
 import { dispatchEvent } from './dispatch';
 import type { CreateEventInit, NativeEventPayload } from './event';
 import { createEvent } from './event';
-import { dispatchPress } from './press';
 import {
   ensureEventType,
   ensureSingleEventArg,
   validateChangeTextArgs,
   validateEventInit,
 } from './fire-event-utils';
+import { dispatchPressabilityEvent } from './pressability';
 
 /**
  * Event object passed to modern `fireEvent`. Handlers receive a `SyntheticEvent` from
@@ -89,7 +89,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<boo
  * on a device does. `Pressable` and `Touchable*` get it from their Pressability config, hosts with
  * their own `onPress` (mocked `Text`, `testOnly_onPress`) directly. Disabled elements and
  * responders that decline the touch pass it on to their ancestors. `pointerEvents` moves the touch
- * to the nearest ancestor it doesn't block. See `dispatchPress()`.
+ * to the nearest ancestor it doesn't block. See `dispatchPressabilityEvent()`.
  *
  * Only `onPress` is called. Use `userEvent.press()` for `onPressIn`, `onPressOut` and timing.
  *
@@ -106,7 +106,7 @@ fireEvent.press = async (instance: TestInstance, event: FireEventInit = {}): Pro
     return true;
   }
 
-  await dispatchPress(instance, pressEvent);
+  await dispatchPressabilityEvent(instance, 'onPress', pressEvent);
   return !pressEvent.defaultPrevented;
 };
 
