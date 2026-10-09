@@ -3,6 +3,7 @@ import type { TextInputProps } from 'react-native';
 import { TextInput, View } from 'react-native';
 
 import { render, screen, userEvent } from '../..';
+import { getConfig } from '../../config';
 import { createEventLogger, getEventsNames } from '../../test-utils/events';
 
 beforeEach(() => {
@@ -39,7 +40,7 @@ async function renderTextInputWithToolkit(props: TextInputProps = {}) {
 }
 
 describe('clear()', () => {
-  it('supports basic case', async () => {
+  test('supports basic case', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
     const { textInput, events } = await renderTextInputWithToolkit({
       value: 'Hello!',
@@ -62,7 +63,7 @@ describe('clear()', () => {
     expect(events).toMatchSnapshot('value: "Hello!');
   });
 
-  it.each(['modern', 'legacy'])('works with %s fake timers', async (type) => {
+  test.each(['modern', 'legacy'])('works with %s fake timers', async (type) => {
     jest.useFakeTimers({ legacyFakeTimers: type === 'legacy' });
     const { textInput, events } = await renderTextInputWithToolkit({
       value: 'Hello!',
@@ -83,7 +84,7 @@ describe('clear()', () => {
     ]);
   });
 
-  it('supports defaultValue prop', async () => {
+  test('supports defaultValue prop', async () => {
     const { textInput, events } = await renderTextInputWithToolkit({
       defaultValue: 'Hello Default!',
     });
@@ -105,7 +106,7 @@ describe('clear()', () => {
     expect(events).toMatchSnapshot('defaultValue: "Hello Default!"');
   });
 
-  it('does respect editable prop', async () => {
+  test('does respect editable prop', async () => {
     const { textInput } = await renderTextInputWithToolkit({
       value: 'Hello!',
       editable: false,
@@ -117,7 +118,7 @@ describe('clear()', () => {
     expect(textInput).toHaveDisplayValue('Hello!');
   });
 
-  it('does respect pointer-events prop', async () => {
+  test('does respect pointer-events prop', async () => {
     const { textInput } = await renderTextInputWithToolkit({
       value: 'Hello!',
       pointerEvents: 'none',
@@ -129,7 +130,7 @@ describe('clear()', () => {
     expect(textInput).toHaveDisplayValue('Hello!');
   });
 
-  it('supports multiline', async () => {
+  test('supports multiline', async () => {
     const { textInput, events } = await renderTextInputWithToolkit({
       value: 'Hello World!\nHow are you?',
       multiline: true,
@@ -153,7 +154,7 @@ describe('clear()', () => {
     expect(events).toMatchSnapshot('value: "Hello World!\nHow are you?" multiline: true,');
   });
 
-  it('works when not all events have handlers', async () => {
+  test('works when not all events have handlers', async () => {
     const { events, logEvent } = createEventLogger();
     await render(
       <TextInput
@@ -171,7 +172,7 @@ describe('clear()', () => {
     expect(events).toMatchSnapshot();
   });
 
-  it('does NOT work on View', async () => {
+  test('does NOT work on View', async () => {
     await render(<View testID="input" />);
 
     const user = userEvent.setup();
@@ -185,19 +186,19 @@ describe('clear()', () => {
   // View that ignores props type checking
   const AnyView = View as React.ComponentType<any>;
 
-  it('does NOT bubble up', async () => {
-    const parentHandler = jest.fn();
+  test('bubbles up only native bubbling events, in the modern event system', async () => {
+    const { events, logEvent } = createEventLogger();
     await render(
       <AnyView
-        onChangeText={parentHandler}
-        onChange={parentHandler}
-        onKeyPress={parentHandler}
-        onTextInput={parentHandler}
-        onFocus={parentHandler}
-        onBlur={parentHandler}
-        onEndEditing={parentHandler}
-        onPressIn={parentHandler}
-        onPressOut={parentHandler}
+        onChangeText={logEvent('changeText')}
+        onChange={logEvent('change')}
+        onKeyPress={logEvent('keyPress')}
+        onTextInput={logEvent('textInput')}
+        onFocus={logEvent('focus')}
+        onBlur={logEvent('blur')}
+        onEndEditing={logEvent('endEditing')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
       >
         <TextInput testID="input" />
       </AnyView>,
@@ -205,10 +206,14 @@ describe('clear()', () => {
 
     const user = userEvent.setup();
     await user.clear(screen.getByTestId('input'));
-    expect(parentHandler).not.toHaveBeenCalled();
+    // `focus`, `keyPress`, `change`, `endEditing` and `blur` are bubbling events in React Native.
+    const modernEvents = ['focus', 'keyPress', 'change', 'endEditing', 'blur'];
+    expect(getEventsNames(events)).toEqual(
+      getConfig().unstable_eventSystem === 'modern' ? modernEvents : [],
+    );
   });
 
-  it('sets native state value for unmanaged text inputs', async () => {
+  test('sets native state value for unmanaged text inputs', async () => {
     await render(<TextInput testID="input" />);
 
     const user = userEvent.setup();

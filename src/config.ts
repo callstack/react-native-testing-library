@@ -5,6 +5,8 @@ import { validateOptions } from './helpers/validate-options';
  * Global configuration options for React Native Testing Library.
  */
 
+export type EventSystem = 'legacy' | 'modern';
+
 export type Config = {
   /** Default timeout, in ms, for `waitFor` and `findBy*` queries. */
   asyncUtilTimeout: number;
@@ -17,6 +19,13 @@ export type Config = {
    * is disabled, blocked by `pointerEvents`, or no element handles the event. Off by default.
    */
   eventDiagnostics: boolean;
+
+  /**
+   * Experimental, may change or be removed in any release. Event system used by `fireEvent` and
+   * `userEvent`. `'legacy'` is the current simplified implementation. `'modern'` follows React
+   * Native's event dispatch. Defaults to `'legacy'`.
+   */
+  unstable_eventSystem: EventSystem;
 
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
@@ -31,6 +40,7 @@ const defaultConfig: Config = {
   asyncUtilTimeout: 1000,
   defaultIncludeHiddenElements: false,
   eventDiagnostics: false,
+  unstable_eventSystem: 'legacy',
 };
 
 let config = { ...defaultConfig };
@@ -45,6 +55,7 @@ export function configure(options: Partial<Config & ConfigAliasOptions>) {
     defaultHidden,
     defaultIncludeHiddenElements,
     eventDiagnostics,
+    unstable_eventSystem,
     ...rest
   } = options;
 
@@ -59,6 +70,7 @@ export function configure(options: Partial<Config & ConfigAliasOptions>) {
     defaultDebugOptions,
     defaultIncludeHiddenElements: resolvedDefaultIncludeHiddenElements,
     eventDiagnostics: eventDiagnostics ?? config.eventDiagnostics,
+    unstable_eventSystem: unstable_eventSystem ?? config.unstable_eventSystem,
   };
 }
 

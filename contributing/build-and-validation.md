@@ -29,3 +29,4 @@ After changing docs, run `yarn docs:generate` and commit the result together wit
 - `examples/`: example Expo apps
 - `codemods/`: codemods for upgrading user code
 - `contributing/`: these guides
+- `refs/`: upstream sources (React, React Native, Testing Library) and the Expensify app as a real-world test suite, as shallow git submodules, for reading only. Fetch them with `git submodule update --init --depth 1`.
