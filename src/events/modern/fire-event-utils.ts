@@ -38,8 +38,8 @@ export function ensureEventType(
 
   const alternative = UNKNOWN_EVENT_TYPE_ALTERNATIVES[eventType];
   throw new ErrorWithStack(
-    `Unable to fire a "${eventType}" event - React Native doesn't dispatch "${eventType}" natively` +
-      (alternative != null ? `, use ${alternative} instead.` : ', so no handler would be called.'),
+    `Unable to fire a "${eventType}" event. React Native doesn't dispatch "${eventType}" natively` +
+      (alternative != null ? `. Use ${alternative} instead.` : ', so no handler would be called.'),
     callsite,
   );
 }
@@ -58,7 +58,7 @@ export function validateEventInit(
 ): CreateEventInit {
   if (args.length === 0) {
     throw new ErrorWithStack(
-      `Unable to fire a "${eventType}" event - please provide an event object, ` +
+      `Unable to fire a "${eventType}" event. Please provide an event object, ` +
         `e.g. fireEvent(element, '${eventType}', { nativeEvent: {} }).`,
       callsite,
     );
@@ -66,7 +66,7 @@ export function validateEventInit(
 
   if (args.length > 1) {
     throw new ErrorWithStack(
-      `Unable to fire a "${eventType}" event - expected a single event object, ` +
+      `Unable to fire a "${eventType}" event. Expected a single event object, ` +
         `received ${args.length} arguments.`,
       callsite,
     );
@@ -75,7 +75,7 @@ export function validateEventInit(
   const [init] = args;
   if (!isPlainObject(init)) {
     throw new ErrorWithStack(
-      `Unable to fire a "${eventType}" event - expected an event object, ` +
+      `Unable to fire a "${eventType}" event. Expected an event object, ` +
         `received ${describeValue(init)}.`,
       callsite,
     );
@@ -84,7 +84,7 @@ export function validateEventInit(
   const unknownKeys = Object.keys(init).filter((key) => !ALLOWED_INIT_KEYS.includes(key));
   if (unknownKeys.length > 0) {
     throw new ErrorWithStack(
-      `Unable to fire a "${eventType}" event - unsupported event object keys: ` +
+      `Unable to fire a "${eventType}" event. Unsupported event object keys: ` +
         `${formatKeys(unknownKeys)}. ${describeUnknownKeys(unknownKeys)}`,
       callsite,
     );
@@ -92,7 +92,7 @@ export function validateEventInit(
 
   if (init.nativeEvent !== undefined && !isPlainObject(init.nativeEvent)) {
     throw new ErrorWithStack(
-      `Unable to fire a "${eventType}" event - expected "nativeEvent" to be an object, ` +
+      `Unable to fire a "${eventType}" event. Expected "nativeEvent" to be an object, ` +
         `received ${describeValue(init.nativeEvent)}.`,
       callsite,
     );
@@ -103,7 +103,7 @@ export function validateEventInit(
     (typeof init.timeStamp !== 'number' || !Number.isFinite(init.timeStamp))
   ) {
     throw new ErrorWithStack(
-      `Unable to fire a "${eventType}" event - expected "timeStamp" to be a finite number, ` +
+      `Unable to fire a "${eventType}" event. Expected "timeStamp" to be a finite number, ` +
         `received ${describeValue(init.timeStamp)}.`,
       callsite,
     );

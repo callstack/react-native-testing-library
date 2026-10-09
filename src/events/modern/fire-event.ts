@@ -102,7 +102,7 @@ function ensureInstance(
 ) {
   if (instance == null) {
     throw new ErrorWithStack(
-      `Unable to fire a "${eventType}" event - please provide a host element.`,
+      `Unable to fire a "${eventType}" event. Please provide a host element.`,
       callsite,
     );
   }

@@ -45,7 +45,7 @@ test.each(['legacy', 'modern'] as const)(
     configure({ eventSystem });
 
     expect(() => createEvent('changeText', {})).toThrow(
-      '"changeText" is not a native event type, use invokeEventHandler() instead.',
+      '"changeText" is not a native event type. Use invokeEventHandler() instead.',
     );
   },
 );

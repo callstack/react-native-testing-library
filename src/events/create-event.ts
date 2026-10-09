@@ -37,7 +37,7 @@ export function createEvent(
   nativeEvent: NativeEventPayload,
 ): LegacyEvent | SyntheticEvent {
   if (getEventTypeConfig(eventType) == null) {
-    throw new Error(`"${eventType}" is not a native event type, use invokeEventHandler() instead.`);
+    throw new Error(`"${eventType}" is not a native event type. Use invokeEventHandler() instead.`);
   }
 
   if (getConfig().eventSystem === 'legacy') {

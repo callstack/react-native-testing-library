@@ -29,7 +29,7 @@ describe('event object', () => {
     await render(<TextInput testID="input" onFocus={onFocus} />);
 
     await expect(fireEventUntyped(screen.getByTestId('input'), 'focus')).rejects.toThrow(
-      `Unable to fire a "focus" event - please provide an event object, e.g. fireEvent(element, 'focus', { nativeEvent: {} }).`,
+      `Unable to fire a "focus" event. Please provide an event object, e.g. fireEvent(element, 'focus', { nativeEvent: {} }).`,
     );
     expect(onFocus).not.toHaveBeenCalled();
   });
@@ -41,7 +41,7 @@ describe('event object', () => {
     await expect(
       fireEventUntyped(screen.getByTestId('input'), 'focus', { nativeEvent: {} }, {}),
     ).rejects.toThrow(
-      'Unable to fire a "focus" event - expected a single event object, received 2 arguments.',
+      'Unable to fire a "focus" event. Expected a single event object, received 2 arguments.',
     );
     expect(onFocus).not.toHaveBeenCalled();
   });
@@ -59,7 +59,7 @@ describe('event object', () => {
     await render(<TextInput testID="input" onFocus={onFocus} />);
 
     await expect(fireEventUntyped(screen.getByTestId('input'), 'focus', event)).rejects.toThrow(
-      `Unable to fire a "focus" event - expected an event object, received ${description}.`,
+      `Unable to fire a "focus" event. Expected an event object, received ${description}.`,
     );
     expect(onFocus).not.toHaveBeenCalled();
   });
@@ -86,7 +86,7 @@ describe('event object', () => {
 
     await expect(
       fireEventUntyped(screen.getByTestId('input'), 'focus', { nativeEvent: {}, ...event }),
-    ).rejects.toThrow(`Unable to fire a "focus" event - unsupported event object keys: ${message}`);
+    ).rejects.toThrow(`Unable to fire a "focus" event. Unsupported event object keys: ${message}`);
     expect(onFocus).not.toHaveBeenCalled();
   });
 
@@ -96,7 +96,7 @@ describe('event object', () => {
     await expect(
       fireEventUntyped(screen.getByTestId('input'), 'focus', { nativeEvent: 'text' }),
     ).rejects.toThrow(
-      'Unable to fire a "focus" event - expected "nativeEvent" to be an object, received string "text".',
+      'Unable to fire a "focus" event. Expected "nativeEvent" to be an object, received string "text".',
     );
   });
 
@@ -112,7 +112,7 @@ describe('event object', () => {
     await expect(
       fireEventUntyped(screen.getByTestId('input'), 'focus', { timeStamp }),
     ).rejects.toThrow(
-      `Unable to fire a "focus" event - expected "timeStamp" to be a finite number, received ${description}.`,
+      `Unable to fire a "focus" event. Expected "timeStamp" to be a finite number, received ${description}.`,
     );
     expect(onFocus).not.toHaveBeenCalled();
   });
@@ -166,7 +166,7 @@ describe('event object', () => {
 test('throws without an element', async () => {
   await expect(
     fireEventUntyped(null as unknown as TestInstance, 'focus', { nativeEvent: {} }),
-  ).rejects.toThrow('Unable to fire a "focus" event - please provide a host element.');
+  ).rejects.toThrow('Unable to fire a "focus" event. Please provide a host element.');
 });
 
 test('accepts event type with or without the "on" prefix', async () => {
@@ -236,12 +236,12 @@ test('does not call props of composite components', async () => {
 
 describe('event types unknown to React Native', () => {
   test.each([
-    ['changeText', 'changeText', 'use fireEvent.changeText() or userEvent.type() instead.'],
-    ['onChangeText', 'changeText', 'use fireEvent.changeText() or userEvent.type() instead.'],
-    ['pressIn', 'pressIn', 'use userEvent.press() instead.'],
-    ['pressOut', 'pressOut', 'use userEvent.press() instead.'],
-    ['longPress', 'longPress', 'use userEvent.longPress() instead.'],
-    ['customEvent', 'customEvent', 'so no handler would be called.'],
+    ['changeText', 'changeText', '. Use fireEvent.changeText() or userEvent.type() instead.'],
+    ['onChangeText', 'changeText', '. Use fireEvent.changeText() or userEvent.type() instead.'],
+    ['pressIn', 'pressIn', '. Use userEvent.press() instead.'],
+    ['pressOut', 'pressOut', '. Use userEvent.press() instead.'],
+    ['longPress', 'longPress', '. Use userEvent.longPress() instead.'],
+    ['customEvent', 'customEvent', ', so no handler would be called.'],
   ])('"%s" throws', async (eventType, normalizedType, hint) => {
     const handler = jest.fn();
     const handlerProps = {
@@ -256,8 +256,8 @@ describe('event types unknown to React Native', () => {
     await expect(
       fireEventUntyped(screen.getByTestId('input'), eventType, { nativeEvent: {} }),
     ).rejects.toThrow(
-      `Unable to fire a "${normalizedType}" event - React Native doesn't dispatch ` +
-        `"${normalizedType}" natively, ${hint}`,
+      `Unable to fire a "${normalizedType}" event. React Native doesn't dispatch ` +
+        `"${normalizedType}" natively${hint}`,
     );
     expect(handler).not.toHaveBeenCalled();
   });
@@ -495,14 +495,12 @@ describe('fireEvent.scroll', () => {
 
     await expect(
       fireEvent.scroll(screen.getByTestId('scroll'), { persist: () => {} } as FireEventInit),
-    ).rejects.toThrow(
-      'Unable to fire a "scroll" event - unsupported event object keys: "persist".',
-    );
+    ).rejects.toThrow('Unable to fire a "scroll" event. Unsupported event object keys: "persist".');
   });
 
   test('throws without an element', async () => {
     await expect(fireEvent.scroll(null as unknown as TestInstance)).rejects.toThrow(
-      'Unable to fire a "scroll" event - please provide a host element.',
+      'Unable to fire a "scroll" event. Please provide a host element.',
     );
   });
 });
@@ -568,7 +566,7 @@ describe('fireEvent.layout', () => {
 
   test('throws without an element', async () => {
     await expect(fireEvent.layout(null as unknown as TestInstance)).rejects.toThrow(
-      'Unable to fire a "layout" event - please provide a host element.',
+      'Unable to fire a "layout" event. Please provide a host element.',
     );
   });
 });
