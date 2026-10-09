@@ -32,34 +32,34 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<unk
   return await legacyFireEvent.changeText(instance, text);
 };
 
-// Legacy in both event systems for now: `Pressable` and `Touchable*` get touches through the
-// responder system, which the modern event system doesn't implement yet.
 fireEvent.press = async (instance: TestInstance, eventProps?: EventProps): Promise<void> => {
+  if (isModern()) {
+    await modernFireEvent.press(instance, eventProps as FireEventInit);
+    return;
+  }
+
   await legacyFireEvent.press(instance, eventProps);
 };
 
-fireEvent.scroll = async (
-  instance: TestInstance,
-  eventProps?: EventProps,
-): Promise<boolean | undefined> => {
+fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps): Promise<void> => {
   if (isModern()) {
-    return await modernFireEvent.scroll(instance, eventProps as FireEventInit);
+    await modernFireEvent.scroll(instance, eventProps as FireEventInit);
+    return;
   }
 
   await legacyFireEvent.scroll(instance, eventProps);
-  return undefined;
 };
 
 fireEvent.layout = async (
   instance: TestInstance,
   layout?: Partial<LayoutRectangle>,
-): Promise<boolean | undefined> => {
+): Promise<void> => {
   if (isModern()) {
-    return await modernFireEvent.layout(instance, layout);
+    await modernFireEvent.layout(instance, layout);
+    return;
   }
 
   await legacyFireEvent.layout(instance, layout);
-  return undefined;
 };
 
 function isModern() {
