@@ -95,9 +95,7 @@ export function isPressabilityEventType(eventType: string): eventType is Pressab
   return (PRESSABILITY_EVENT_TYPES as readonly string[]).includes(eventType);
 }
 
-/**
- * Direct events whose handler prop doesn't follow the `on` + event type pattern.
- */
+/** Direct events whose handler prop doesn't follow the `on` + event type pattern. */
 const DIRECT_EVENT_HANDLER_NAMES: Readonly<Record<string, string>> = {
   // Added in React Native 0.89.
   safeAreaInsetsChange: 'experimental_onSafeAreaInsetsChange',

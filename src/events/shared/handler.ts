@@ -18,6 +18,16 @@ export function getEventHandlerByEventType(
 }
 
 /**
+ * Whether the props include a Pressability callback (`onPress`, `onPressIn`, `onPressOut` or
+ * `onLongPress`), or its `testOnly_` variant.
+ */
+export function hasPressEventHandler(props: Record<string, unknown>): boolean {
+  return ['press', 'pressIn', 'pressOut', 'longPress'].some(
+    (eventType) => getEventHandlerByEventType(props, eventType) != null,
+  );
+}
+
+/**
  * Returns the handler prop with exactly the given name (e.g. `onFocusCapture`), or else its
  * `testOnly_` variant (`testOnly_onFocusCapture`), which lets tests handle events on host elements.
  */

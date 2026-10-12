@@ -4,14 +4,17 @@ import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import { isDisabledHostText } from '../../helpers/text';
-import { getEventHandlerName, getEventHandlerByName } from '../shared/handler';
+import {
+  getEventHandlerByName,
+  getEventHandlerName,
+  hasPressEventHandler,
+} from '../shared/handler';
 import { getPointerEventsBlocker } from '../shared/pointer-events';
 import type { EventHandler } from '../shared/types';
 import { resetEvent } from './dispatch';
 import type { SyntheticEvent } from './event';
 import { getEventInternals } from './event';
 import type { PressabilityEventType } from './event-types';
-import { PRESSABILITY_EVENT_TYPES } from './event-types';
 
 /** Callbacks of React Native's `PressabilityConfig` that `dispatchPressabilityEvent()` calls. */
 type PressabilityCallbackName = `on${Capitalize<PressabilityEventType>}`;
@@ -134,7 +137,7 @@ export function getPressabilityCallbackOwners(
 }
 
 /** The hit target, then its host ancestors. Empty when `pointerEvents` blocks every element. */
-function getTouchPath(target: TestInstance): TestInstance[] {
+export function getTouchPath(target: TestInstance): TestInstance[] {
   let hitTarget: TestInstance | null = target;
   while (hitTarget?.parent != null && getPointerEventsBlocker(hitTarget) != null) {
     hitTarget = hitTarget.parent;
@@ -150,7 +153,8 @@ function getTouchPath(target: TestInstance): TestInstance[] {
   return path;
 }
 
-function findResponder(path: TestInstance[]): TestInstance | null {
+/** The first element on the touch path that claims the touch, or `null` when none does. */
+export function findResponder(path: TestInstance[]): TestInstance | null {
   for (const node of path) {
     const handler = getEventHandlerByName(node.props, 'onStartShouldSetResponder');
     if (handler != null ? handler.call(node) : claimsTouchWithoutResponder(node)) {
@@ -189,9 +193,7 @@ function claimsTouchWithoutResponder(instance: TestInstance): boolean {
 
 /** Whether `getPressabilityEventHandler()` finds any of the Pressability event handlers. */
 function hasPressabilityEventHandler(instance: TestInstance): boolean {
-  return PRESSABILITY_EVENT_TYPES.some(
-    (eventType) => getPressabilityEventHandler(instance, getEventHandlerName(eventType)) != null,
-  );
+  return !isDisabledHostText(instance) && hasPressEventHandler(instance.props);
 }
 
 /**

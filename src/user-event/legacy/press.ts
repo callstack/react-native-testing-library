@@ -1,6 +1,6 @@
 import type { TestInstance } from 'test-renderer';
 
-import { getEventHandlerByEventType, isPointerEventEnabled } from '../../events/legacy';
+import { hasPressEventHandler, isPointerEventEnabled } from '../../events/legacy';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
 import type { Interaction } from '../utils';
 
@@ -21,7 +21,7 @@ export function findPressTarget(
 ): 'host' | 'responder' | null {
   let current: TestInstance | null = instance;
   while (current != null) {
-    if (isEnabledHostElement(current) && hasPressEventHandler(current)) {
+    if (isEnabledHostElement(current) && hasPressEventHandler(current.props)) {
       interaction.target = current;
       return 'host';
     }
@@ -32,7 +32,7 @@ export function findPressTarget(
     }
 
     // The element could handle the press, but is disabled or blocks touches.
-    if (hasPressEventHandler(current) || current.props.onStartShouldSetResponder) {
+    if (hasPressEventHandler(current.props) || current.props.onStartShouldSetResponder) {
       interaction.skippedTargets.push(current);
     }
 
@@ -60,13 +60,4 @@ function isEnabledHostElement(instance: TestInstance) {
 
 function isEnabledTouchResponder(instance: TestInstance) {
   return isPointerEventEnabled(instance) && instance.props.onStartShouldSetResponder?.();
-}
-
-function hasPressEventHandler(instance: TestInstance) {
-  return (
-    getEventHandlerByEventType(instance.props, 'press') ||
-    getEventHandlerByEventType(instance.props, 'longPress') ||
-    getEventHandlerByEventType(instance.props, 'pressIn') ||
-    getEventHandlerByEventType(instance.props, 'pressOut')
-  );
 }

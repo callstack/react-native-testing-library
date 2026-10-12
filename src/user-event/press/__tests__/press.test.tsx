@@ -219,6 +219,29 @@ describe('userEvent.press with fake timers', () => {
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
+  test('calls press on pressable with pointer events box-none from its child (legacy: does not call)', async () => {
+    const { events, logEvent } = createEventLogger();
+    const user = userEvent.setup();
+
+    await render(
+      <Pressable
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+        pointerEvents="box-none"
+      >
+        <Text>Trigger</Text>
+      </Pressable>,
+    );
+    await user.press(screen.getByText('Trigger'));
+
+    // Modern matches React Native: `box-none` only stops hit testing on the `Pressable` itself, so
+    // its child is the hit target and the `Pressable` still claims the touch as the responder.
+    expect(getEventsNames(events)).toEqual(
+      isModernEventSystem() ? ['pressIn', 'pressOut', 'press'] : [],
+    );
+  });
+
   test('crawls up in the tree to find an element that responds to touch events', async () => {
     const mockOnPress = jest.fn();
 
