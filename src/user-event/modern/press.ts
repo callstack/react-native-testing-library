@@ -59,7 +59,7 @@ export async function emitPressEvents(
   };
 
   await wait(config);
-  const touchStartEvent = createPressabilityEvent('pressIn', {});
+  const touchStartEvent = createPressabilityEvent('pressIn');
   await dispatch('pressIn', touchStartEvent);
 
   await wait(config, options.duration);
@@ -68,7 +68,7 @@ export async function emitPressEvents(
     await dispatch('longPress', touchStartEvent);
   }
 
-  const touchEndEvent = createPressabilityEvent('pressOut', {});
+  const touchEndEvent = createPressabilityEvent('pressOut');
   await dispatch('pressOut', touchEndEvent);
 
   // Pressability skips `onPress` after a long press only when there is an `onLongPress`.

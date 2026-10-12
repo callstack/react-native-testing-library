@@ -239,7 +239,7 @@ export function createEvent(eventType: string, init: CreateEventInit = {}): Synt
  */
 export function createPressabilityEvent(
   eventType: PressabilityEventType,
-  init: CreateEventInit,
+  init: CreateEventInit = {},
 ): SyntheticEvent {
   const nativeEvent = mergeEventProps(buildTouchNativeEvent(), init.nativeEvent);
   const config: EventTypeConfig = { kind: 'direct', handlerName: getEventHandlerName(eventType) };
