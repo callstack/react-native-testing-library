@@ -6,7 +6,6 @@ import type { PressabilityEventType } from '../../events/modern/event-types';
 import {
   dispatchPressabilityEvent,
   findResponder,
-  getLongPressDelay,
   getPressabilityCallback,
   getTouchPath,
 } from '../../events/modern/pressability';
@@ -27,7 +26,7 @@ export type EmitPressOptions = {
  * callbacks in the order Pressability calls them, each with a `SyntheticEvent`:
  *
  * 1. `onPressIn` on touch start.
- * 2. `onLongPress` once the touch has lasted the responder's `delayLongPress` (500 ms by default).
+ * 2. `onLongPress`, for `longPress()`.
  * 3. `onPressOut` on touch end.
  * 4. `onPress`, unless `onLongPress` was called.
  *
@@ -35,9 +34,12 @@ export type EmitPressOptions = {
  * `onPress` the touch end event.
  *
  * Calls the callbacks directly instead of the responder's `onResponderGrant` and
- * `onResponderRelease`, so Pressability's timers aren't run: `onPressOut` comes right on touch end,
- * even for touches shorter than `minPressDuration` (130 ms), and `delayPressIn` and
- * `delayPressOut` are ignored. Responders without Pressability, like `PanResponder`, get nothing.
+ * `onResponderRelease`, so Pressability's timers aren't run. The action, not the touch duration,
+ * decides whether it is a long press: `longPress()` calls `onLongPress` whatever the responder's
+ * `delayLongPress`, and `press()` never does. The touch lasts `duration`, only so timers in the
+ * component can run. `onPressOut` comes right on touch end, even for touches shorter than
+ * `minPressDuration` (130 ms), and `delayPressIn` and `delayPressOut` are ignored. Responders
+ * without Pressability, like `PanResponder`, get nothing.
  */
 export async function emitPressEvents(
   config: UserEventConfig,
@@ -60,15 +62,10 @@ export async function emitPressEvents(
   const touchStartEvent = createPressabilityEvent('pressIn', {});
   await dispatch('pressIn', touchStartEvent);
 
-  const duration = options.duration ?? config.delay;
-  const longPressDelay = getLongPressDelay(responder);
-  const isLongPress = duration >= longPressDelay;
+  await wait(config, options.duration);
+  const isLongPress = options.type === 'longPress';
   if (isLongPress) {
-    await wait(config, longPressDelay);
     await dispatch('longPress', touchStartEvent);
-    await wait(config, duration - longPressDelay);
-  } else {
-    await wait(config, duration);
   }
 
   const touchEndEvent = createPressabilityEvent('pressOut', {});

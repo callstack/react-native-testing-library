@@ -20,7 +20,7 @@ import type { PressabilityEventType } from './event-types';
 type PressabilityCallbackName = `on${Capitalize<PressabilityEventType>}`;
 
 /** The part of React Native's `PressabilityConfig` that RNTL reads. */
-type PressabilityConfig = { disabled?: boolean | null; delayLongPress?: number | null } & {
+type PressabilityConfig = { disabled?: boolean | null } & {
   [Name in PressabilityCallbackName]?: EventHandler | null;
 };
 
@@ -28,10 +28,6 @@ type DispatchState = {
   /** Wrapped, so a thrown `undefined` is rethrown too. */
   firstError: { error: unknown } | null;
 };
-
-// Constants from React Native's `Pressability.js`.
-const DEFAULT_LONG_PRESS_DELAY_MS = 500;
-const MIN_LONG_PRESS_DELAY_MS = 10;
 
 /**
  * Calls one Pressability callback (`onPress` for `press`, `onPressIn` for `pressIn`, ...) of the
@@ -156,15 +152,6 @@ export function getPressabilityCallback(
   eventType: PressabilityEventType,
 ): EventHandler | undefined {
   return getCallback(responder, getEventHandlerName(eventType) as PressabilityCallbackName);
-}
-
-/**
- * How long the touch must last before the responder calls `onLongPress`: its `delayLongPress`,
- * at least 10 ms, or 500 ms by default, as Pressability computes it.
- */
-export function getLongPressDelay(responder: TestInstance): number {
-  const delayLongPress = getPressabilityConfig(responder)?.delayLongPress;
-  return Math.max(MIN_LONG_PRESS_DELAY_MS, delayLongPress ?? DEFAULT_LONG_PRESS_DELAY_MS);
 }
 
 function getCallback(

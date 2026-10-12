@@ -43,7 +43,7 @@ export async function longPress(
   const interaction = new Interaction('longPress', instance);
   await basePress(this.config, interaction, instance, {
     type: 'longPress',
-    duration: options?.duration ?? DEFAULT_LONG_PRESS_DELAY_MS,
+    duration: options?.duration,
   });
   warnAboutUnhandledInteraction(interaction);
 }
@@ -64,11 +64,16 @@ const basePress = async (
     return;
   }
 
+  // Legacy holds a long press for Pressability's long press delay, so its timer calls `onLongPress`.
+  const legacyOptions =
+    options.type === 'longPress'
+      ? { ...options, duration: options.duration ?? DEFAULT_LONG_PRESS_DELAY_MS }
+      : options;
   const targetKind = findPressTarget(interaction, instance);
   if (targetKind === 'host') {
-    await emitDirectPressEvents(config, interaction, options);
+    await emitDirectPressEvents(config, interaction, legacyOptions);
   } else if (targetKind === 'responder') {
-    await emitPressabilityPressEvents(config, interaction, options);
+    await emitPressabilityPressEvents(config, interaction, legacyOptions);
   }
 };
 
