@@ -14,9 +14,12 @@ runs:
       with:
         node-version-file: .nvmrc
 
-    - name: Cache deps
+    # Restore and save are split so the cache is saved right after a clean
+    # install. Later steps switch dependency versions in place, and a post-job
+    # save would leak those changes into the cache shared by every job.
+    - name: Restore deps cache
       id: yarn-cache
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: |
           ./node_modules
@@ -30,6 +33,15 @@ runs:
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
       shell: bash
+
+    - name: Save deps cache
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ./node_modules
+          .yarn/install-state.gz
+        key: ${{ steps.yarn-cache.outputs.cache-primary-key }}
 
     - name: Switch to React Native Nightly
       run: |
