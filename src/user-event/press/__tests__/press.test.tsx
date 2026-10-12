@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { GestureResponderEvent } from 'react-native';
 import {
   Button,
   Pressable,
@@ -11,6 +12,8 @@ import {
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
+import { SyntheticEvent } from '../../../events/modern/event';
+import { buildTouchNativeEvent } from '../../../events/shared/payloads';
 import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 
@@ -20,7 +23,7 @@ describe('userEvent.press with fake timers', () => {
     jest.setSystemTime(0);
   });
 
-  test('works on Pressable', async () => {
+  test('works on Pressable without holding the touch (legacy: holds it for 130 ms)', async () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
@@ -36,7 +39,14 @@ describe('userEvent.press with fake timers', () => {
 
     await user.press(screen.getByTestId('pressable'));
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
-    expect(events).toMatchSnapshot();
+    expect(events[0].payload.nativeEvent).toEqual({ ...buildTouchNativeEvent(), timestamp: 0 });
+    // Legacy holds the touch for Pressability's `minPressDuration`.
+    const releaseTime = isModernEventSystem() ? 0 : 130;
+    expect(events.map((event) => event.payload.nativeEvent.timestamp)).toEqual([
+      0,
+      releaseTime,
+      releaseTime,
+    ]);
   });
 
   test('works on TouchableOpacity', async () => {
@@ -83,7 +93,7 @@ describe('userEvent.press with fake timers', () => {
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
-  test('passes the same touch event to onPress of Text as to onPressIn', async () => {
+  test('passes a SyntheticEvent with the nativeEvent of onPressIn to onPress of Text (legacy: a stub event)', async () => {
     const { events, logEvent } = createEventLogger();
 
     await render(
@@ -94,11 +104,38 @@ describe('userEvent.press with fake timers', () => {
 
     await userEvent.press(screen.getByText('press me'));
     const [pressInEvent, pressEvent] = events.map((event) => event.payload);
+    expect(pressEvent.nativeEvent).toEqual(pressInEvent.nativeEvent);
+    expect(pressEvent instanceof SyntheticEvent).toBe(isModernEventSystem());
+    if (isModernEventSystem()) return;
+
     expect(pressEvent).toMatchObject({
       target: {},
       currentTarget: { measure: expect.any(Function) },
-      nativeEvent: pressInEvent.nativeEvent,
     });
+  });
+
+  test('passes events with the Pressable as currentTarget to its callbacks (legacy: stub events)', async () => {
+    const currentTargets: unknown[] = [];
+    const logCurrentTarget = (event: GestureResponderEvent) => {
+      currentTargets.push(event.currentTarget);
+    };
+
+    await render(
+      <Pressable
+        testID="pressable"
+        onPressIn={logCurrentTarget}
+        onPressOut={logCurrentTarget}
+        onPress={logCurrentTarget}
+      >
+        <Text>press me</Text>
+      </Pressable>,
+    );
+
+    await userEvent.press(screen.getByText('press me'));
+    const pressable = screen.getByTestId('pressable');
+    expect(currentTargets.map((target) => target === pressable)).toEqual(
+      Array(3).fill(isModernEventSystem()),
+    );
   });
 
   test('does not call onPress of the Text around pressed Text', async () => {

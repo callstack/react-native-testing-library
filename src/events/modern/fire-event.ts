@@ -27,7 +27,7 @@ import {
   validateChangeTextArgs,
   validateEventInit,
 } from './fire-event-utils';
-import { dispatchPressabilityEvent } from './pressability';
+import { dispatchPressabilityEvent, findResponder, getTouchPath } from './pressability';
 
 /**
  * Event object passed to modern `fireEvent`. Handlers receive a `SyntheticEvent` from
@@ -99,7 +99,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
  * their own `onPress` (mocked `Text`, `testOnly_onPress`) directly. Disabled elements and
  * responders that decline the touch pass it on to their ancestors. A `TextInput` always keeps the
  * touch, even without `onPress`. `pointerEvents` moves the touch to the nearest ancestor it doesn't
- * block. See `dispatchPressabilityEvent()`.
+ * block. See `getTouchPath()`, `findResponder()` and `dispatchPressabilityEvent()`.
  *
  * Only `onPress` is called. Use `userEvent.press()` for `onPressIn`, `onPressOut` and timing.
  *
@@ -157,13 +157,22 @@ async function fireEventInternal(
   await dispatchEvent(instance, event, dispatchOptions);
 }
 
+/** Touches the element and calls one Pressability callback of the touch responder. */
 async function firePressabilityEvent(
   instance: TestInstance,
   eventType: PressabilityEventType,
   init: CreateEventInit,
 ): Promise<void> {
   const event = createPressabilityEvent(eventType, init);
-  await dispatchPressabilityEvent(instance, eventType, event);
+  if (!isInstanceMounted(instance)) {
+    return;
+  }
+
+  const path = getTouchPath(instance);
+  const responder = findResponder(path);
+  if (responder != null) {
+    await dispatchPressabilityEvent(responder, eventType, event, path);
+  }
 }
 
 function ensureInstance(

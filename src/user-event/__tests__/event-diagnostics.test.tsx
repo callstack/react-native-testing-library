@@ -68,15 +68,20 @@ test('warns when no element handles the press', async () => {
   `);
 });
 
-test('warns when none of the dispatched events has a handler', async () => {
-  // `longPress` dispatches `pressIn`, `longPress` and `pressOut`, but not `press`.
+test('calls onPress on long press without onLongPress (legacy: warns that none of the dispatched events has a handler)', async () => {
+  // Legacy `longPress` dispatches `pressIn`, `longPress` and `pressOut`, but not `press`. As
+  // Pressability, modern `longPress` calls `onPress` when there is no `onLongPress`.
+  const onPress = jest.fn();
   // @ts-expect-error Host View does not declare `onPress`.
-  await render(<View testID="view" onPress={jest.fn()} />);
+  await render(<View testID="view" onPress={onPress} />);
   const user = userEvent.setup();
 
   await user.longPress(screen.getByTestId('view'));
 
-  expect(warnSpy).toHaveBeenCalledTimes(1);
+  expect(onPress).toHaveBeenCalledTimes(isModernEventSystem() ? 1 : 0);
+  expect(warnSpy).toHaveBeenCalledTimes(isModernEventSystem() ? 0 : 1);
+  if (isModernEventSystem()) return;
+
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
     "longPress() interaction did not call any event handlers. The element has no handler for the "pressIn", "longPress" or "pressOut" events.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.

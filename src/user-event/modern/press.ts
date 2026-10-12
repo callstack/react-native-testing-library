@@ -1,24 +1,100 @@
 import type { TestInstance } from 'test-renderer';
 
-import { findResponder, getTouchPath } from '../../events/modern/pressability';
-import { getEventHandlerByName, hasPressEventHandler } from '../../events/shared/handler';
+import type { SyntheticEvent } from '../../events/modern/event';
+import { createPressabilityEvent } from '../../events/modern/event';
+import type { PressabilityEventType } from '../../events/modern/event-types';
+import {
+  dispatchPressabilityEvent,
+  findResponder,
+  getLongPressDelay,
+  getPressabilityCallback,
+  getTouchPath,
+} from '../../events/modern/pressability';
+import { hasPressEventHandler } from '../../events/shared/handler';
+import type { UserEventConfig } from '../setup';
 import type { Interaction } from '../utils';
+import { wait } from '../utils';
+
+export type EmitPressOptions = {
+  type: 'press' | 'longPress';
+  /** How long the touch lasts. Defaults to the `delay` option of `userEvent.setup()`. */
+  duration?: number;
+};
 
 /**
- * Sets `interaction.target` to the touch responder, the element modern `fireEvent.press()` calls
- * (see `dispatchPressabilityEvent()`). A responder with `onStartShouldSetResponder` (`Pressable`,
- * `Touchable*`, `PanResponder`) is pressed with responder events (`'responder'`); a mocked host
- * without one, like `Text` or `TextInput`, gets its `onPress*` props called (`'host'`). Elements
- * between the pressed element and the responder that could handle the press, but are disabled or
- * block touches, are added to `interaction.skippedTargets`.
+ * Presses the element as a touch on a device does: finds the touch responder as modern
+ * `fireEvent.press()` does (`getTouchPath()` and `findResponder()`), then calls its Pressability
+ * callbacks in the order Pressability calls them, each with a `SyntheticEvent`:
  *
- * @returns how to press the target, or `null` when no element receives the press.
+ * 1. `onPressIn` on touch start.
+ * 2. `onLongPress` once the touch has lasted the responder's `delayLongPress` (500 ms by default).
+ * 3. `onPressOut` on touch end.
+ * 4. `onPress`, unless `onLongPress` was called.
+ *
+ * As in React Native, `onPressIn` and `onLongPress` get the touch start event, `onPressOut` and
+ * `onPress` the touch end event.
+ *
+ * Calls the callbacks directly instead of the responder's `onResponderGrant` and
+ * `onResponderRelease`, so Pressability's timers aren't run: `onPressOut` comes right on touch end,
+ * even for touches shorter than `minPressDuration` (130 ms), and `delayPressIn` and
+ * `delayPressOut` are ignored. Responders without Pressability, like `PanResponder`, get nothing.
  */
-export function findPressTarget(
+export async function emitPressEvents(
+  config: UserEventConfig,
   interaction: Interaction,
   instance: TestInstance,
-): 'host' | 'responder' | null {
-  const touchResponder = findResponder(getTouchPath(instance));
+  options: EmitPressOptions,
+) {
+  const path = getTouchPath(instance);
+  const responder = findPressTarget(interaction, instance, path);
+  if (responder == null) {
+    return;
+  }
+
+  const dispatch = async (eventType: PressabilityEventType, event: SyntheticEvent) => {
+    const hasCalledHandler = await dispatchPressabilityEvent(responder, eventType, event, path);
+    interaction.recordEvent(eventType, hasCalledHandler);
+  };
+
+  await wait(config);
+  const touchStartEvent = createPressabilityEvent('pressIn', {});
+  await dispatch('pressIn', touchStartEvent);
+
+  const duration = options.duration ?? config.delay;
+  const longPressDelay = getLongPressDelay(responder);
+  const isLongPress = duration >= longPressDelay;
+  if (isLongPress) {
+    await wait(config, longPressDelay);
+    await dispatch('longPress', touchStartEvent);
+    await wait(config, duration - longPressDelay);
+  } else {
+    await wait(config, duration);
+  }
+
+  const touchEndEvent = createPressabilityEvent('pressOut', {});
+  await dispatch('pressOut', touchEndEvent);
+
+  // Pressability skips `onPress` after a long press only when there is an `onLongPress`.
+  const isPressCanceledByLongPress =
+    isLongPress && getPressabilityCallback(responder, 'longPress') != null;
+  if (!isPressCanceledByLongPress) {
+    await dispatch('press', touchEndEvent);
+  }
+}
+
+/**
+ * Sets `interaction.target` to the touch responder, the element modern `fireEvent.press()` calls.
+ * Elements between the pressed element and the responder that could handle the press, but are
+ * disabled or block touches, are added to `interaction.skippedTargets`.
+ *
+ * @returns the responder, or `null` when no element receives the press.
+ */
+function findPressTarget(
+  interaction: Interaction,
+  instance: TestInstance,
+  path: TestInstance[],
+): TestInstance | null {
+  const touchResponder = findResponder(path);
 
   let current: TestInstance | null = instance;
   while (current != null && current !== touchResponder) {
@@ -29,12 +105,9 @@ export function findPressTarget(
     current = current.parent;
   }
 
-  if (touchResponder == null) {
-    return null;
+  if (touchResponder != null) {
+    interaction.target = touchResponder;
   }
 
-  interaction.target = touchResponder;
-  return getEventHandlerByName(touchResponder.props, 'onStartShouldSetResponder') != null
-    ? 'responder'
-    : 'host';
+  return touchResponder;
 }

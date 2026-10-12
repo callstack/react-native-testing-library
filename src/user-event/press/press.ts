@@ -5,8 +5,8 @@ import { getConfig } from '../../config';
 import { buildResponderGrantEvent, buildResponderReleaseEvent } from '../../events/legacy';
 import { isTestInstance } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
-import { findPressTarget as findLegacyPressTarget } from '../legacy/press';
-import { findPressTarget as findModernPressTarget } from '../modern/press';
+import { findPressTarget } from '../legacy/press';
+import { emitPressEvents } from '../modern/press';
 import type { UserEventConfig, UserEventInstance } from '../setup';
 import { Interaction, wait, warnAboutUnhandledInteraction } from '../utils';
 
@@ -59,8 +59,11 @@ const basePress = async (
   instance: TestInstance,
   options: BasePressOptions,
 ): Promise<void> => {
-  const findPressTarget =
-    getConfig().unstable_eventSystem === 'modern' ? findModernPressTarget : findLegacyPressTarget;
+  if (getConfig().unstable_eventSystem === 'modern') {
+    await emitPressEvents(config, interaction, instance, options);
+    return;
+  }
+
   const targetKind = findPressTarget(interaction, instance);
   if (targetKind === 'host') {
     await emitDirectPressEvents(config, interaction, options);

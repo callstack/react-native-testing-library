@@ -19,8 +19,8 @@ import type { PressabilityEventType } from './event-types';
 /** Callbacks of React Native's `PressabilityConfig` that `dispatchPressabilityEvent()` calls. */
 type PressabilityCallbackName = `on${Capitalize<PressabilityEventType>}`;
 
-/** The part of React Native's `PressabilityConfig` that `dispatchPressabilityEvent()` reads. */
-type PressabilityConfig = { disabled?: boolean | null } & {
+/** The part of React Native's `PressabilityConfig` that RNTL reads. */
+type PressabilityConfig = { disabled?: boolean | null; delayLongPress?: number | null } & {
   [Name in PressabilityCallbackName]?: EventHandler | null;
 };
 
@@ -29,69 +29,57 @@ type DispatchState = {
   firstError: { error: unknown } | null;
 };
 
+// Constants from React Native's `Pressability.js`.
+const DEFAULT_LONG_PRESS_DELAY_MS = 500;
+const MIN_LONG_PRESS_DELAY_MS = 10;
+
 /**
- * Touches the element as on a device, and calls one Pressability callback (`onPress` for `press`,
- * `onPressIn` for `pressIn`, ...) of the element that becomes the touch responder:
+ * Calls one Pressability callback (`onPress` for `press`, `onPressIn` for `pressIn`, ...) of the
+ * touch responder from `findResponder()`: from its `PressabilityConfig` for `Pressable` and
+ * `Touchable*`, which Pressability exposes in tests as
+ * `onStartShouldSetResponder.testOnly_pressabilityConfig()`, or its own `onPress*` prop (or the
+ * `testOnly_` variant) for mocked hosts. Responders without Pressability, like `PanResponder`, and
+ * disabled ones get nothing.
  *
- * 1. Hit testing: the touch targets the element, or its nearest ancestor when `pointerEvents`
- *    blocks it.
- * 2. Responder negotiation, as React Native's `ResponderEventPlugin` does on touch start:
- *    `onStartShouldSetResponder` from the target to the root. The first one returning `true` wins.
- *    A disabled `Pressable` declines, so the touch goes on to its ancestors. Called without
- *    arguments, as in legacy `fireEvent` and `userEvent`.
- * 3. The responder's callback: from its `PressabilityConfig` for `Pressable` and `Touchable*`,
- *    which Pressability exposes in tests as `onStartShouldSetResponder.testOnly_pressabilityConfig()`.
- *    Responders without Pressability, like `PanResponder`, get nothing.
+ * Doesn't negotiate the responder: callers do it once per touch, as React Native does on touch
+ * start, so a touch's callbacks all go to the same responder.
  *
- * The Jest preset mocks `Text` and `TextInput`, so their host elements get `onPress*` props
- * instead of responder props. A host element with any of these props (or their `testOnly_`
- * variants) takes part in the negotiation as if it had Pressability. A host `TextInput` always
- * claims the touch, as its Pressability does on a device, even without these props. It calls its
- * callbacks even when not editable, as on iOS, where `editable={false}` only stops it from
- * focusing. Known difference from Android: there, a non-editable `TextInput` is disabled and never
- * the touch target, so the touch goes to its ancestors. A disabled `Text` declines the touch.
- *
- * One `act()` wraps it all, and a callback error is rethrown after it. During the call,
+ * One `act()` wraps the call, and a callback error is rethrown after it. During the call,
  * `event.target` is the hit target and `event.currentTarget` the responder.
- *
- * Not implemented yet: the capture phase (`onStartShouldSetResponderCapture`), as `PanResponder`
- * reads `touchHistory` there, which only the responder system's events have.
  *
  * Known limitation: `testOnly_pressabilityConfig` exists only when `NODE_ENV` is `test`, which
  * Jest sets by default. Without it, `Pressable` and `Touchable*` claim the touch but get nothing.
  *
  * @param event from `createPressabilityEvent()`, passed to the callback. React Native passes the
- * responder event derived from `touchStart` to `onPressIn`, and from `touchEnd` to `onPress` and
- * `onPressOut`.
+ * responder event derived from `touchStart` to `onPressIn` and `onLongPress`, and from `touchEnd`
+ * to `onPressOut` and `onPress`.
+ * @param path the touch path from `getTouchPath()`, which includes the responder.
+ * @returns `true` if a callback was called.
  */
 export async function dispatchPressabilityEvent(
-  target: TestInstance,
+  responder: TestInstance,
   eventType: PressabilityEventType,
   event: SyntheticEvent,
-): Promise<void> {
-  if (!isInstanceMounted(target)) {
-    return;
+  path: TestInstance[],
+): Promise<boolean> {
+  if (!isInstanceMounted(responder)) {
+    return false;
   }
 
-  const path = getTouchPath(target);
-  if (path.length === 0) {
-    return;
+  const callback = getPressabilityCallback(responder, eventType);
+  if (callback == null) {
+    return false;
   }
 
-  const callbackName = getEventHandlerName(eventType) as PressabilityCallbackName;
   const state: DispatchState = { firstError: null };
   await act(() => {
     getEventInternals(event).target = path[0];
     getEventInternals(event).composedPath = path;
+    getEventInternals(event).eventPhase =
+      responder === path[0] ? event.AT_TARGET : event.BUBBLING_PHASE;
+    getEventInternals(event).currentTarget = responder;
     try {
-      const responder = findResponder(path);
-      const callback = responder != null ? getCallback(responder, callbackName) : undefined;
-      if (responder != null && callback != null) {
-        const phase = responder === path[0] ? event.AT_TARGET : event.BUBBLING_PHASE;
-        getEventInternals(event).eventPhase = phase;
-        getEventInternals(event).currentTarget = responder;
-        callback.call(responder, event);
-      }
+      callback.call(responder, event);
     } catch (error) {
       state.firstError = { error };
     }
@@ -103,9 +91,15 @@ export async function dispatchPressabilityEvent(
   if (state.firstError != null) {
     throw state.firstError.error;
   }
+
+  return true;
 }
 
-/** The hit target, then its host ancestors. Empty when `pointerEvents` blocks every element. */
+/**
+ * Hit testing: the elements a touch on the element goes through, from the hit target to the root.
+ * The hit target is the element, or its nearest ancestor when `pointerEvents` blocks it. Empty
+ * when `pointerEvents` blocks every element.
+ */
 export function getTouchPath(target: TestInstance): TestInstance[] {
   let hitTarget: TestInstance | null = target;
   while (hitTarget?.parent != null && getPointerEventsBlocker(hitTarget) != null) {
@@ -122,7 +116,26 @@ export function getTouchPath(target: TestInstance): TestInstance[] {
   return path;
 }
 
-/** The first element on the touch path that claims the touch, or `null` when none does. */
+/**
+ * Responder negotiation, as React Native's `ResponderEventPlugin` does on touch start:
+ * `onStartShouldSetResponder` from the hit target to the root. The first one returning `true` wins.
+ * A disabled `Pressable` declines, so the touch goes on to its ancestors. Called without
+ * arguments, as in legacy `fireEvent` and `userEvent`.
+ *
+ * The Jest preset mocks `Text` and `TextInput`, so their host elements get `onPress*` props
+ * instead of responder props. A host element with any of these props (or their `testOnly_`
+ * variants) takes part in the negotiation as if it had Pressability. A host `TextInput` always
+ * claims the touch, as its Pressability does on a device, even without these props. It calls its
+ * callbacks even when not editable, as on iOS, where `editable={false}` only stops it from
+ * focusing. Known difference from Android: there, a non-editable `TextInput` is disabled and never
+ * the touch target, so the touch goes to its ancestors. A disabled `Text` declines the touch.
+ *
+ * Not implemented yet: the capture phase (`onStartShouldSetResponderCapture`), as `PanResponder`
+ * reads `touchHistory` there, which only the responder system's events have.
+ *
+ * @param path the touch path from `getTouchPath()`.
+ * @returns the first element on the path that claims the touch, or `null` when none does.
+ */
 export function findResponder(path: TestInstance[]): TestInstance | null {
   for (const node of path) {
     const handler = getEventHandlerByName(node.props, 'onStartShouldSetResponder');
@@ -132,6 +145,26 @@ export function findResponder(path: TestInstance[]): TestInstance | null {
   }
 
   return null;
+}
+
+/**
+ * The responder's Pressability callback for the event type, e.g. `onLongPress` for `longPress`, or
+ * `undefined` when it has none or is disabled.
+ */
+export function getPressabilityCallback(
+  responder: TestInstance,
+  eventType: PressabilityEventType,
+): EventHandler | undefined {
+  return getCallback(responder, getEventHandlerName(eventType) as PressabilityCallbackName);
+}
+
+/**
+ * How long the touch must last before the responder calls `onLongPress`: its `delayLongPress`,
+ * at least 10 ms, or 500 ms by default, as Pressability computes it.
+ */
+export function getLongPressDelay(responder: TestInstance): number {
+  const delayLongPress = getPressabilityConfig(responder)?.delayLongPress;
+  return Math.max(MIN_LONG_PRESS_DELAY_MS, delayLongPress ?? DEFAULT_LONG_PRESS_DELAY_MS);
 }
 
 function getCallback(

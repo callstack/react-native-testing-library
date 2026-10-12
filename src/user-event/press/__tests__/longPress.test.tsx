@@ -3,6 +3,7 @@ import { Pressable, Text, TouchableHighlight, TouchableOpacity, View } from 'rea
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
+import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 
 describe('userEvent.longPress with fake timers', () => {
@@ -169,7 +170,7 @@ describe('userEvent.longPress with fake timers', () => {
     expect(mockOnLongPress).toHaveBeenCalled();
   });
 
-  test('longPress accepts custom duration', async () => {
+  test('longPress accepts custom duration (legacy: calls onPress before onPressOut)', async () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
@@ -184,6 +185,10 @@ describe('userEvent.longPress with fake timers', () => {
     );
 
     await user.longPress(screen.getByTestId('pressable'), { duration: 50 });
-    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    // Legacy runs Pressability, which delays `onPressOut` for touches shorter than its
+    // `minPressDuration` (130 ms).
+    expect(getEventsNames(events)).toEqual(
+      isModernEventSystem() ? ['pressIn', 'pressOut', 'press'] : ['pressIn', 'press', 'pressOut'],
+    );
   });
 });
