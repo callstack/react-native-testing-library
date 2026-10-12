@@ -19,9 +19,7 @@ type UnhandledEventInfo = {
   hasUpdatedNativeState: boolean;
 };
 
-/**
- * Warns when no handler ran because the target is disabled or nothing handles the event.
- */
+/** Warns when no handler ran because the target is disabled or nothing handles the event. */
 export function warnAboutUnhandledEvent(
   instance: TestInstance,
   eventType: string,
