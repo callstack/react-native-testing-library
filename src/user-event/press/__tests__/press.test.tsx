@@ -83,6 +83,36 @@ describe('userEvent.press with fake timers', () => {
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
+  test('does not call onPress of the Text around pressed Text', async () => {
+    const onPressOuter = jest.fn();
+    const onPressInner = jest.fn();
+
+    await render(
+      <Text onPress={onPressOuter}>
+        outer <Text onPress={onPressInner}>inner</Text>
+      </Text>,
+    );
+
+    await userEvent.press(screen.getByText('inner'));
+    expect(onPressInner).toHaveBeenCalledTimes(1);
+    expect(onPressOuter).not.toHaveBeenCalled();
+  });
+
+  test('does not call testOnly_onPress of the View around pressed View', async () => {
+    const onPressOuter = jest.fn();
+    const onPressInner = jest.fn();
+
+    await render(
+      <View {...{ testOnly_onPress: onPressOuter }}>
+        <View testID="inner" {...{ testOnly_onPress: onPressInner }} />
+      </View>,
+    );
+
+    await userEvent.press(screen.getByTestId('inner'));
+    expect(onPressInner).toHaveBeenCalledTimes(1);
+    expect(onPressOuter).not.toHaveBeenCalled();
+  });
+
   test('works on TextInput', async () => {
     const { events, logEvent } = createEventLogger();
 
