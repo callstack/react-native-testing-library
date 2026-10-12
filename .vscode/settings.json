@@ -8,5 +8,8 @@
     "Uncapitalize",
     "valuenow",
     "valuetext"
-  ]
+  ],
+  "search.exclude": {
+    "refs/**": true
+  }
 }

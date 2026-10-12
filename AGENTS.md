@@ -27,6 +27,24 @@
   - [Example app regeneration](contributing/example-apps.md)
   - [Git, releases, and PR workflow](contributing/git-workflow.md)
 
+## Reference sources
+
+`refs/` holds upstream sources as shallow git submodules. Search them to see how upstream implements something (event dispatch, renderer internals, query semantics) instead of guessing or fetching from the web.
+
+- `refs/react-native/`: [facebook/react-native](https://github.com/facebook/react-native) (core components in `packages/react-native/Libraries/`)
+- `refs/react/`: [facebook/react](https://github.com/facebook/react) (reconciler and RN renderer in `packages/`). RNTL renders through [`test-renderer`](https://github.com/mdjastrzebski/test-renderer), not the deprecated `react-test-renderer` found here.
+- `refs/dom-testing-library/`: [testing-library/dom-testing-library](https://github.com/testing-library/dom-testing-library) (queries, `fireEvent`, `waitFor`)
+- `refs/react-testing-library/`: [testing-library/react-testing-library](https://github.com/testing-library/react-testing-library) (`render`, `act` integration)
+- `refs/expensify-app/`: [Expensify/App](https://github.com/Expensify/App), about 1,000 test files using this library (`tests/ui/`, `tests/unit/`, `tests/perf-test/`). Use it to see real-world API usage and judge the impact of changes. It is on RNTL v13 (see its `package.json`), so syntax differs from v14: `render` and `fireEvent` are sync there.
+
+Notes:
+
+- `refs/` is read-only. Never edit it or import from it in `src/`.
+- Submodules are pinned to fixed commits and can differ from `node_modules/`. For behavior this library runs against, check `node_modules/`.
+- Refresh with `git submodule update --remote --depth 1`. Moved refs show as modified pointers in `git status`. Bump them in their own PR, never in unrelated work.
+- If `refs/` is empty, ask the human to run `git submodule update --init --depth 1`.
+- Tooling ignores `refs/` (Jest, ESLint, oxfmt, `tsc`). Keep it that way when changing configs.
+
 ## Agent rules
 
 ### Git restrictions

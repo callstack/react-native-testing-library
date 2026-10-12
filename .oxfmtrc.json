@@ -11,5 +11,5 @@
     ]
   },
   "sortPackageJson": false,
-  "ignorePatterns": ["node_modules/", ".yarn", "codemods/**/tests/fixtures/**"]
+  "ignorePatterns": ["node_modules/", ".yarn", "refs/", "codemods/**/tests/fixtures/**"]
 }

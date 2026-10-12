@@ -29,3 +29,4 @@ After changing docs, run `yarn docs:generate` and commit the result together wit
 - `examples/`: example Expo apps
 - `codemods/`: codemods for upgrading user code
 - `contributing/`: these guides
+- `refs/`: read-only git submodules of upstream sources and the Expensify app. Fetch with `git submodule update --init --depth 1`.
