@@ -108,7 +108,6 @@ type BubblingEventTypeConfig = {
   handlerName: string;
   /** Capture phase prop, e.g. `onFocusCapture`. */
   captureHandlerName: string;
-  /** Runs the capture phase as usual, but calls only the target when bubbling. */
   skipBubbling: boolean;
 };
 

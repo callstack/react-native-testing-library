@@ -75,9 +75,6 @@ export function ensureSingleEventArg(
 }
 
 /**
- * Validates an event object of modern `fireEvent`: a plain object, with only `nativeEvent`
- * (a plain object) and `timeStamp` (a finite number) keys.
- *
  * @param callsite the function to remove from the error stack, e.g. `fireEvent`
  */
 export function validateEventInit(

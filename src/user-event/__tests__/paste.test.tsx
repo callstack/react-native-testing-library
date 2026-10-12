@@ -222,7 +222,7 @@ describe('paste()', () => {
 
     const user = userEvent.setup();
     await user.paste(screen.getByTestId('input'), 'Hi!');
-    // `focus`, `keyPress`, `change`, `endEditing` and `blur` are bubbling events in React Native.
+    // These bubble to the parent in React Native.
     const modernEvents = ['focus', 'change', 'endEditing', 'blur'];
     expect(getEventsNames(events)).toEqual(
       getConfig().unstable_eventSystem === 'modern' ? modernEvents : [],

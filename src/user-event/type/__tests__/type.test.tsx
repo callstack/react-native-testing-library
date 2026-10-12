@@ -351,7 +351,7 @@ describe('type()', () => {
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abc');
-    // `focus`, `keyPress`, `change`, `endEditing` and `blur` are bubbling events in React Native.
+    // These bubble to the parent in React Native.
     const modernEvents = [
       'focus',
       ...['keyPress', 'change', 'keyPress', 'change', 'keyPress', 'change'],

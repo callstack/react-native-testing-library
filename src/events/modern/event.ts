@@ -252,7 +252,6 @@ function createEventWithConfig(
   config: EventTypeConfig,
 ): SyntheticEvent {
   const nativeEvent = init.nativeEvent ?? {};
-  // React Native keeps the native timestamp as the event's `timeStamp`.
   const nativeTimeStamp = nativeEvent.timeStamp ?? nativeEvent.timestamp;
   const timeStamp =
     init.timeStamp ?? (typeof nativeTimeStamp === 'number' ? nativeTimeStamp : undefined);

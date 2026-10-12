@@ -21,6 +21,7 @@ import type { TestInstance } from 'test-renderer';
 import { fireEvent, render, screen } from '../..';
 import { configure, getConfig } from '../../config';
 import { _console, logger } from '../../helpers/logger';
+import { runInLegacyEventSystem } from '../../test-utils/event-system';
 import { SyntheticEvent } from '../modern/event';
 import { getEventHandlerName } from '../shared/handler';
 import { nativeState } from '../shared/native-state';
@@ -1665,16 +1666,10 @@ describe('direct events', () => {
       await fireEvent.scroll(screen.getByTestId('child'));
 
       // Modern matches React Native: direct events don't bubble. Legacy still bubbles them, with
-      // a warning. Modern warns that the child has no handler, when `eventDiagnostics` is on.
-      const bubblingWarnings = warnSpy.mock.calls.filter(([message]) =>
-        message.includes('"scroll" does not bubble in React Native'),
-      );
-      const unhandledWarnings = warnSpy.mock.calls.filter(([message]) =>
-        message.includes('No "onScroll" handler found on the element.'),
-      );
-      expect(bubblingWarnings).toHaveLength(isModern() ? 0 : 1);
-      expect(unhandledWarnings).toHaveLength(isModern() && eventDiagnostics ? 1 : 0);
-      expect(warnSpy).toHaveBeenCalledTimes(isModern() && !eventDiagnostics ? 0 : 1);
+      // a warning.
+      expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+      if (isModern()) return;
+      expect(warnSpy.mock.calls[0][0]).toContain('"scroll" does not bubble in React Native');
     },
   );
 
@@ -2127,6 +2122,9 @@ describe('disabled elements', () => {
 });
 
 describe('unhandled event warning', () => {
+  // Modern `fireEvent` doesn't warn about unhandled events.
+  runInLegacyEventSystem();
+
   let warnSpy: jest.SpyInstance;
 
   beforeEach(() => {
@@ -2181,23 +2179,6 @@ describe('unhandled event warning', () => {
     await fireEvent.press(screen.getByText('Trigger'));
 
     expect(getWarnings()).toEqual(['Cannot fire the "press" event on a disabled element.']);
-  });
-
-  test('warns when the handler is on a disabled Text (legacy: calls it)', async () => {
-    const onPress = jest.fn();
-    await render(
-      <Text onPress={onPress} disabled>
-        Trigger
-      </Text>,
-    );
-
-    await fireEvent.press(screen.getByText('Trigger'));
-
-    // Modern matches `userEvent.press()`, which skips disabled Text.
-    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    expect(getWarnings()).toEqual(
-      isModern() ? ['Cannot fire the "press" event on a disabled element.'] : [],
-    );
   });
 
   test('warns when the pressIn callback is on a disabled element', async () => {
@@ -2307,7 +2288,7 @@ describe('unhandled event warning', () => {
     ]);
   });
 
-  test('does not warn when only a capture handler is called (legacy: warns, as it calls no capture handlers)', async () => {
+  test('warns when an ancestor has only a capture handler, as no capture handlers are called', async () => {
     await render(
       // Spread because `View` types include `onFocusCapture` only since RN 0.88.
       <View {...{ onFocusCapture: jest.fn() }}>
@@ -2317,10 +2298,7 @@ describe('unhandled event warning', () => {
 
     await fireEvent(screen.getByTestId('view'), 'focus', emptyEvent);
 
-    // Modern matches React Native, which dispatches through the capture phase.
-    expect(getWarnings()).toEqual(
-      isModern() ? [] : ['No "onFocus" handler found on the element or its ancestors.'],
-    );
+    expect(getWarnings()).toEqual(['No "onFocus" handler found on the element or its ancestors.']);
   });
 
   test('does not warn when the event bubbles to an enabled parent', async () => {
@@ -2534,23 +2512,6 @@ describe('unhandled event warning', () => {
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  test('does not warn when TextInput without onPress keeps the press from the Pressable (legacy: calls onPress of the Pressable)', async () => {
-    const onPress = jest.fn();
-    await render(
-      <Pressable onPress={onPress}>
-        <TextInput testID="input" />
-      </Pressable>,
-    );
-
-    await fireEvent.press(screen.getByTestId('input'));
-
-    // Modern matches React Native, where the TextInput claims the touch.
-    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    // Known gap in modern: nothing is called, but there is no warning either. As with a
-    // `PanResponder`, a responder claiming the touch without the callback counts as deliberate.
-    expect(warnSpy).not.toHaveBeenCalled();
-  });
-
   test('warns when the handler is blocked by non-editable TextInput', async () => {
     await render(<TextInput testID="input" editable={false} onChangeText={jest.fn()} />);
 
@@ -2568,16 +2529,14 @@ describe('unhandled event warning', () => {
     `);
   });
 
-  test('does not warn when "press" is fired on non-editable TextInput (legacy: warns it is blocked)', async () => {
+  test('warns when "press" is fired on non-editable TextInput', async () => {
     const onPress = jest.fn();
     await render(<TextInput testID="input" editable={false} onPress={onPress} />);
 
     await fireEvent(screen.getByTestId('input'), 'press', emptyEvent);
 
-    // Modern matches iOS, where `editable={false}` only stops TextInput from focusing.
-    expect(onPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(onPress).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatch(
       /^Cannot fire the "press" event on a non-editable TextInput\./,
     );
@@ -2586,24 +2545,18 @@ describe('unhandled event warning', () => {
   test.each([
     ['focus', 'onFocus'],
     ['blur', 'onBlur'],
-  ])(
-    'does not warn when "%s" is fired on non-editable TextInput (legacy: warns it is blocked)',
-    async (eventType, handlerName) => {
-      const handler = jest.fn();
-      await render(<TextInput testID="input" editable={false} {...{ [handlerName]: handler }} />);
+  ])('warns when "%s" is fired on non-editable TextInput', async (eventType, handlerName) => {
+    const handler = jest.fn();
+    await render(<TextInput testID="input" editable={false} {...{ [handlerName]: handler }} />);
 
-      await fireEvent(screen.getByTestId('input'), eventType, emptyEvent);
+    await fireEvent(screen.getByTestId('input'), eventType, emptyEvent);
 
-      // Legacy matches a device, where a non-editable TextInput can't be focused. Modern
-      // `fireEvent()` dispatches the event as given, without checking `editable`.
-      expect(handler).toHaveBeenCalledTimes(isModern() ? 1 : 0);
-      expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-      if (isModern()) return;
-      expect(warnSpy.mock.calls[0][0]).toMatch(
-        new RegExp(`^Cannot fire the "${eventType}" event on a non-editable TextInput\\.`),
-      );
-    },
-  );
+    expect(handler).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatch(
+      new RegExp(`^Cannot fire the "${eventType}" event on a non-editable TextInput\\.`),
+    );
+  });
 
   test('names the non-editable TextInput when the handler is on its parent', async () => {
     const onFocus = jest.fn();
@@ -2616,11 +2569,8 @@ describe('unhandled event warning', () => {
 
     await fireEvent(screen.getByTestId('input'), 'focus', emptyEvent);
 
-    // Legacy matches a device, where a non-editable TextInput can't be focused. Modern
-    // `fireEvent()` dispatches the event as given, without checking `editable`.
-    expect(onFocus).toHaveBeenCalledTimes(isModern() ? 1 : 0);
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(onFocus).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Cannot fire the "focus" event on a non-editable TextInput.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
@@ -2632,7 +2582,7 @@ describe('unhandled event warning', () => {
     `);
   });
 
-  test('reports disabled elements when they include a non-editable TextInput (modern: calls onPress)', async () => {
+  test('reports disabled elements when they include a non-editable TextInput', async () => {
     const onInputPress = jest.fn();
     await render(
       <Pressable onPress={jest.fn()} disabled={true}>
@@ -2642,10 +2592,8 @@ describe('unhandled event warning', () => {
 
     await fireEvent.press(screen.getByTestId('input'));
 
-    // Modern matches iOS, where `editable={false}` only stops TextInput from focusing.
-    expect(onInputPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
-    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    if (isModern()) return;
+    expect(onInputPress).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatch(
       /^Cannot fire the "press" event on disabled elements\./,
     );
@@ -2657,13 +2605,6 @@ describe('unhandled event warning', () => {
     await fireEvent(screen.getByTestId('view'), 'layout', { nativeEvent: {} });
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
-    // Modern matches React Native: layout is a direct event, so ancestors aren't checked.
-    expect(warnSpy.mock.calls[0][0].split('\n')[0]).toBe(
-      isModern()
-        ? 'No "onLayout" handler found on the element.'
-        : 'No "onLayout" handler found on the element or its ancestors.',
-    );
-    if (isModern()) return;
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "No "onLayout" handler found on the element or its ancestors.
       If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
@@ -3054,6 +2995,63 @@ describe('responder system', () => {
     expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     expect(onPanResponderGrant).not.toHaveBeenCalled();
   });
+
+  test.each(['press', 'pressIn', 'pressOut', 'longPress'] as const)(
+    'does not call the Pressable handler when TextInput without one claims "%s" (legacy: calls it)',
+    async (eventType) => {
+      const handler = jest.fn();
+      await render(
+        <Pressable {...{ [getEventHandlerName(eventType)]: handler }}>
+          <TextInput testID="input" />
+        </Pressable>,
+      );
+
+      await fireEvent(screen.getByTestId('input'), eventType, emptyEvent);
+
+      // Modern matches React Native, where the TextInput claims the touch.
+      expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
+
+  test.each(['press', 'pressIn', 'pressOut', 'longPress'] as const)(
+    'does not call the Pressable handler when Text without one claims "%s" (legacy: calls it)',
+    async (eventType) => {
+      const handler = jest.fn();
+      const textHandlerName = eventType === 'press' ? 'onLongPress' : 'onPress';
+      await render(
+        <Pressable {...{ [getEventHandlerName(eventType)]: handler }}>
+          <Text {...{ [textHandlerName]: jest.fn() }}>Trigger</Text>
+        </Pressable>,
+      );
+
+      await fireEvent(screen.getByText('Trigger'), eventType, emptyEvent);
+
+      // Modern matches React Native, where a Text with a press handler claims the touch.
+      expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
+
+  test.each([
+    ['press', 'onLongPress'],
+    ['longPress', 'onPress'],
+  ] as const)(
+    'does not call the parent handler when Pressable without one claims "%s" (legacy: calls it)',
+    async (eventType, innerHandlerName) => {
+      const handler = jest.fn();
+      await render(
+        <Pressable {...{ [getEventHandlerName(eventType)]: handler }}>
+          <Pressable {...{ [innerHandlerName]: jest.fn() }}>
+            <Text>Trigger</Text>
+          </Pressable>
+        </Pressable>,
+      );
+
+      await fireEvent(screen.getByText('Trigger'), eventType, emptyEvent);
+
+      // Modern matches React Native, where the inner Pressable claims the touch.
+      expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
 
   test('asks responders from the target to the root, without arguments (legacy: asks only responders with a handler)', async () => {
     const calls: string[] = [];

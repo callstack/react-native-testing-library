@@ -86,7 +86,6 @@ function getEventPath(target: TestInstance, event: SyntheticEvent): TestInstance
   return path;
 }
 
-/** From the root down to the target, calling `on*Capture` props. Direct events skip it. */
 function runCapturePhase(event: SyntheticEvent, path: TestInstance[], state: DispatchState) {
   const config = getEventInternals(event).typeConfig;
   if (config.kind === 'direct') {
@@ -99,7 +98,6 @@ function runCapturePhase(event: SyntheticEvent, path: TestInstance[], state: Dis
   }
 }
 
-/** From the target up to the root, calling `on*` props. Non-bubbling events stop at the target. */
 function runBubblePhase(
   event: SyntheticEvent,
   path: TestInstance[],
@@ -147,9 +145,8 @@ function callHandler(
     // In the same `try`, as a component's wrapper doesn't reach its own code after the prop throws.
     afterHandler?.(node, event);
   } catch (error) {
-    // Keep dispatching: one failing handler doesn't stop handlers on other elements, as in React
-    // Native (`handleListenerError()` in `EventTarget.js`) and the DOM. `dispatchEvent()` rethrows
-    // the first error once the whole dispatch is done.
+    // Keep dispatching, as React Native (`handleListenerError()` in `EventTarget.js`) and the DOM
+    // do. `dispatchEvent()` rethrows the first error once the dispatch is done.
     if (state.firstError == null) {
       state.firstError = { error };
     }

@@ -28,11 +28,6 @@ import {
   validateEventInit,
 } from './fire-event-utils';
 import { dispatchPressabilityEvent } from './pressability';
-import {
-  warnAboutNonEditableTextInput,
-  warnAboutUnhandledEvent,
-  warnAboutUnhandledPressabilityEvent,
-} from './warnings';
 
 /**
  * Event object passed to modern `fireEvent`. Handlers receive a `SyntheticEvent` from
@@ -84,9 +79,6 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
   ensureInstance(instance, 'changeText', fireEvent.changeText);
   validateChangeTextArgs(instance, text, fireEvent.changeText);
   if (!isEditableTextInput(instance)) {
-    if (isInstanceMounted(instance)) {
-      warnAboutNonEditableTextInput(instance);
-    }
     return;
   }
 
@@ -161,12 +153,8 @@ async function fireEventInternal(
   }
 
   // Before the dispatch, as a device updates its native views before emitting the event.
-  const hasUpdatedNativeState = updateNativeStateFromEvent(instance, eventType, event);
-  const hasCalledHandler = await dispatchEvent(instance, event, dispatchOptions);
-  // The event still had an effect, e.g. `changeText` on an uncontrolled TextInput updates its value.
-  if (!hasCalledHandler && !hasUpdatedNativeState) {
-    warnAboutUnhandledEvent(instance, event);
-  }
+  updateNativeStateFromEvent(instance, eventType, event);
+  await dispatchEvent(instance, event, dispatchOptions);
 }
 
 async function firePressabilityEvent(
@@ -175,14 +163,7 @@ async function firePressabilityEvent(
   init: CreateEventInit,
 ): Promise<void> {
   const event = createPressabilityEvent(eventType, init);
-  if (!isInstanceMounted(instance)) {
-    return;
-  }
-
-  const hasCalledCallback = await dispatchPressabilityEvent(instance, eventType, event);
-  if (!hasCalledCallback) {
-    warnAboutUnhandledPressabilityEvent(instance, eventType);
-  }
+  await dispatchPressabilityEvent(instance, eventType, event);
 }
 
 function ensureInstance(
