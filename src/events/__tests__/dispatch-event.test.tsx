@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TextInput, View } from 'react-native';
 
 import { render, screen } from '../..';
-import { getConfig } from '../../config';
+import { isModernEventSystem } from '../../test-utils/event-system';
 import { createEvent } from '../create-event';
 import { dispatchEvent } from '../dispatch-event';
 import { SyntheticEvent } from '../modern/event';
@@ -23,7 +23,7 @@ test('dispatches the event of the selected event system', async () => {
   const event = createEvent('pointerDown', { pointerId: 1 });
   expect(await dispatchEvent(screen.getByTestId('target'), 'pointerDown', event)).toBe(true);
   expect(onTargetPointerDown).toHaveBeenCalledWith(event);
-  const isModern = getConfig().unstable_eventSystem === 'modern';
+  const isModern = isModernEventSystem();
   expect(event instanceof SyntheticEvent).toBe(isModern);
   // Modern goes through capture and bubble phases. Legacy calls only the target prop.
   expect(calls).toEqual(
@@ -43,7 +43,7 @@ test('returns whether an ancestor handled the event', async () => {
 
   const event = createEvent('pointerDown', { pointerId: 1 });
   const result = await dispatchEvent(screen.getByTestId('target'), 'pointerDown', event);
-  const isModern = getConfig().unstable_eventSystem === 'modern';
+  const isModern = isModernEventSystem();
   expect(result).toBe(isModern);
   expect(onParentPointerDown).toHaveBeenCalledTimes(isModern ? 1 : 0);
 });

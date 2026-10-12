@@ -44,8 +44,6 @@ export function buildBlurNativeEvent() {
 }
 
 /**
- * Delivered to `onAccessibilityAction` when an assistive technology triggers an action.
- *
  * Experimental values:
  * - `{"actionName": "increment"}`
  */

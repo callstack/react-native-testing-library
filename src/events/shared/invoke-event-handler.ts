@@ -2,7 +2,7 @@ import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
-import { getEventHandlerFromProps } from './handler';
+import { getEventHandlerByEventType } from './handler';
 
 /**
  * Calls the element's own handler prop for the event type (`onChangeText`, or
@@ -22,7 +22,7 @@ export async function invokeEventHandler(
     return false;
   }
 
-  const handler = getEventHandlerFromProps(instance.props, eventType);
+  const handler = getEventHandlerByEventType(instance.props, eventType);
   if (!handler) {
     return false;
   }

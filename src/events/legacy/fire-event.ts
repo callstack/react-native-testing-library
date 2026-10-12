@@ -58,7 +58,6 @@ async function fireEventInternal(instance: TestInstance, options: FireEventOptio
     return;
   }
 
-  // `fireEvent` accepts event types with and without the `on*` prefix.
   const hasUpdatedNativeState = updateNativeStateFromEvent(
     instance,
     normalizeEventType(type),

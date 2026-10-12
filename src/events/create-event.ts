@@ -16,7 +16,6 @@ import {
   buildSubmitEditingNativeEvent,
   buildTextChangeNativeEvent,
   buildTextSelectionChangeNativeEvent,
-  buildTouchNativeEvent,
 } from './shared/payloads';
 
 export type LegacyEvent = ReturnType<typeof wrapNativeEvent<NativeEventPayload>>;
@@ -46,10 +45,6 @@ export function createEvent(
 
   // Not `null`: the event type is known.
   return createModernEvent(eventType, { nativeEvent }) as SyntheticEvent;
-}
-
-export function buildPressEvent() {
-  return createEvent('press', buildTouchNativeEvent());
 }
 
 export function buildFocusEvent() {
