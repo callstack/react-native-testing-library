@@ -2,7 +2,7 @@ import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
-import { getHandlerByName } from '../shared/handler';
+import { getEventHandlerByName } from '../shared/handler';
 import type { EventPhase } from './event';
 import { getEventInternals, SyntheticEvent } from './event';
 
@@ -133,7 +133,7 @@ function callHandler(
   getEventInternals(event).eventPhase = phase;
   getEventInternals(event).currentTarget = node;
 
-  const handler = getHandlerByName(node.props, handlerName);
+  const handler = getEventHandlerByName(node.props, handlerName);
   if (handler == null && afterHandler == null) {
     return;
   }

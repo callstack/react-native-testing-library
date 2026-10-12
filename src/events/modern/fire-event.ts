@@ -3,7 +3,7 @@ import type { TestInstance } from 'test-renderer';
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isEditableTextInput } from '../../helpers/text-input';
-import { getEventHandlerFromProps, normalizeEventType } from '../shared/handler';
+import { getEventHandlerByEventType, normalizeEventType } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
 import {
   buildLayoutNativeEvent,
@@ -94,7 +94,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
   const payload = buildTextChangeNativeEvent(text, selection);
   const dispatchOptions: DispatchOptions = {
     afterTargetHandler: (target) => {
-      getEventHandlerFromProps(target.props, 'changeText')?.(text);
+      getEventHandlerByEventType(target.props, 'changeText')?.(text);
     },
   };
 
@@ -105,8 +105,9 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
  * Presses the element: calls `onPress` of the element that becomes the touch responder, as a tap
  * on a device does. `Pressable` and `Touchable*` get it from their Pressability config, hosts with
  * their own `onPress` (mocked `Text`, `testOnly_onPress`) directly. Disabled elements and
- * responders that decline the touch pass it on to their ancestors. `pointerEvents` moves the touch
- * to the nearest ancestor it doesn't block. See `dispatchPressabilityEvent()`.
+ * responders that decline the touch pass it on to their ancestors. A `TextInput` always keeps the
+ * touch, even without `onPress`. `pointerEvents` moves the touch to the nearest ancestor it doesn't
+ * block. See `dispatchPressabilityEvent()`.
  *
  * Only `onPress` is called. Use `userEvent.press()` for `onPressIn`, `onPressOut` and timing.
  *

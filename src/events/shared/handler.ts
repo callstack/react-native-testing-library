@@ -5,14 +5,15 @@ type EventHandlerOptions = {
   loose?: boolean;
 };
 
-export function getEventHandlerFromProps(
+export function getEventHandlerByEventType(
   props: Record<string, unknown>,
   eventType: string,
   options?: EventHandlerOptions,
 ): EventHandler | undefined {
+  const eventHandlerName = getEventHandlerName(eventType);
   return (
-    getHandlerByName(props, getEventHandlerName(eventType)) ??
-    (options?.loose ? getHandlerByName(props, eventType) : undefined)
+    getEventHandlerByName(props, eventHandlerName) ??
+    (options?.loose ? getEventHandlerByName(props, eventType) : undefined)
   );
 }
 
@@ -20,14 +21,17 @@ export function getEventHandlerFromProps(
  * Returns the handler prop with exactly the given name (e.g. `onFocusCapture`), or else its
  * `testOnly_` variant (`testOnly_onFocusCapture`), which lets tests handle events on host elements.
  */
-export function getHandlerByName(
+export function getEventHandlerByName(
   props: Record<string, unknown>,
-  handlerName: string,
+  eventHandlerName: string,
 ): EventHandler | undefined {
-  return getHandlerProp(props, handlerName) ?? getHandlerProp(props, `testOnly_${handlerName}`);
+  return (
+    getFunctionProp(props, eventHandlerName) ??
+    getFunctionProp(props, `testOnly_${eventHandlerName}`)
+  );
 }
 
-function getHandlerProp(
+function getFunctionProp(
   props: Record<string, unknown>,
   propName: string,
 ): EventHandler | undefined {

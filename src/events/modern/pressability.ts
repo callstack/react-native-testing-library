@@ -3,7 +3,7 @@ import type { TestInstance } from 'test-renderer';
 import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
-import { getEventHandlerName, getHandlerByName } from '../shared/handler';
+import { getEventHandlerName, getEventHandlerByName } from '../shared/handler';
 import { getPointerEventsBlocker } from '../shared/pointer-events';
 import type { EventHandler } from '../shared/types';
 import { resetEvent } from './dispatch';
@@ -42,8 +42,10 @@ type DispatchState = {
  *
  * The Jest preset mocks `Text` and `TextInput`, so their host elements get `onPress*` props
  * instead of responder props. A host element with any of these props (or their `testOnly_`
- * variants) takes part in the negotiation as if it had Pressability, unless it is a disabled `Text`
- * or a non-editable `TextInput`, as in `userEvent.press()`.
+ * variants) takes part in the negotiation as if it had Pressability. A host `TextInput` always
+ * claims the touch, as its Pressability does on a device, even without these props. A disabled
+ * `Text` declines it, and a non-editable `TextInput` claims it without calling its callbacks, as in
+ * `userEvent.press()`.
  *
  * One `act()` wraps it all, and a callback error is rethrown after it. During the call,
  * `event.target` is the hit target and `event.currentTarget` the responder.
@@ -118,7 +120,7 @@ export function getPressabilityCallbackOwners(
   while (current?.parent != null) {
     const config = getPressabilityConfig(current);
     const callback =
-      config != null ? config[callbackName] : getHandlerByName(current.props, callbackName);
+      config != null ? config[callbackName] : getEventHandlerByName(current.props, callbackName);
     if (callback != null) {
       owners.push(current);
     }
@@ -148,8 +150,8 @@ function getTouchPath(target: TestInstance): TestInstance[] {
 
 function findResponder(path: TestInstance[]): TestInstance | null {
   for (const node of path) {
-    const handler = getHandlerByName(node.props, 'onStartShouldSetResponder');
-    if (handler != null ? handler.call(node) : hasHostCallback(node)) {
+    const handler = getEventHandlerByName(node.props, 'onStartShouldSetResponder');
+    if (handler != null ? handler.call(node) : claimsTouchWithoutResponder(node)) {
       return node;
     }
   }
@@ -163,7 +165,7 @@ function getCallback(
 ): EventHandler | undefined {
   const config = getPressabilityConfig(responder);
   if (config == null) {
-    return getHostCallback(responder, callbackName);
+    return getPressabilityEventHandler(responder, callbackName);
   }
 
   return config.disabled !== true ? (config[callbackName] ?? undefined) : undefined;
@@ -175,14 +177,30 @@ function getPressabilityConfig(instance: TestInstance): PressabilityConfig | nul
   return typeof getConfig === 'function' ? (getConfig() as PressabilityConfig) : null;
 }
 
-function hasHostCallback(instance: TestInstance): boolean {
+/**
+ * For mocked hosts. `TextInput` claims the touch whatever its props, as on a device, where its
+ * Pressability config has no `disabled`.
+ */
+function claimsTouchWithoutResponder(instance: TestInstance): boolean {
+  return isHostTextInput(instance) || hasPressabilityEventHandler(instance);
+}
+
+/** Whether `getPressabilityEventHandler()` finds any of the Pressability event handlers. */
+function hasPressabilityEventHandler(instance: TestInstance): boolean {
   return PRESSABILITY_EVENT_TYPES.some(
-    (eventType) => getHostCallback(instance, getEventHandlerName(eventType)) != null,
+    (eventType) => getPressabilityEventHandler(instance, getEventHandlerName(eventType)) != null,
   );
 }
 
-/** Callback prop of a mocked `Text` or `TextInput` host, or a `testOnly_` prop. */
-function getHostCallback(instance: TestInstance, callbackName: string): EventHandler | undefined {
+/**
+ * Own `onPress*` prop (or its `testOnly_` variant) of an element without a Pressability config,
+ * like a mocked `Text` or `TextInput` host. `undefined` for a disabled `Text` or a non-editable
+ * `TextInput`.
+ */
+function getPressabilityEventHandler(
+  instance: TestInstance,
+  eventHandlerName: string,
+): EventHandler | undefined {
   if (isHostText(instance) && instance.props.disabled === true) {
     return undefined;
   }
@@ -191,5 +209,5 @@ function getHostCallback(instance: TestInstance, callbackName: string): EventHan
     return undefined;
   }
 
-  return getHandlerByName(instance.props, callbackName);
+  return getEventHandlerByName(instance.props, eventHandlerName);
 }

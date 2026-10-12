@@ -563,6 +563,43 @@ describe('fireEvent.press', () => {
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
+  test('calls onPress of TextInput, not of the Pressable around it', async () => {
+    const onInputPress = jest.fn();
+    const onPress = jest.fn();
+    await render(
+      <Pressable onPress={onPress}>
+        <TextInput testID="input" onPress={onInputPress} />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByTestId('input'));
+
+    expect(onInputPress).toHaveBeenCalledTimes(1);
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    ['without onPress* props', {}],
+    ['with only onPressIn', { onPressIn: () => {} }],
+  ])(
+    'does not call onPress of the Pressable around TextInput %s (legacy: calls it)',
+    async (_, inputProps) => {
+      const onPress = jest.fn();
+      await render(
+        <Pressable onPress={onPress}>
+          <TextInput testID="input" {...inputProps} />
+        </Pressable>,
+      );
+
+      await fireEvent.press(screen.getByTestId('input'));
+
+      // Modern matches React Native: TextInput's Pressability always claims the touch, so it
+      // never reaches the Pressable. The Jest mock of TextInput has no responder props, so legacy
+      // goes on to the nearest ancestor with `onPress`.
+      expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
+
   test('works with testOnly_onPress handlers', async () => {
     const onPress = jest.fn();
     const onPressIn = jest.fn();
@@ -2000,27 +2037,43 @@ describe('disabled elements', () => {
     expect(handleOuterPress).toHaveBeenCalledTimes(1);
   });
 
-  test('bubbles event past disabled Text and non-editable TextInput to the Pressable (legacy: calls onPress of disabled Text)', async () => {
+  test('bubbles event past disabled Text to the Pressable (legacy: calls onPress of disabled Text)', async () => {
     const onTextPress = jest.fn();
-    const onInputPress = jest.fn();
     const onPress = jest.fn();
     await render(
       <Pressable onPress={onPress}>
         <Text onPress={onTextPress} disabled>
           Disabled
         </Text>
-        <TextInput testID="input" onPress={onInputPress} editable={false} />
       </Pressable>,
     );
 
     await fireEvent.press(screen.getByText('Disabled'));
-    await fireEvent.press(screen.getByTestId('input'));
 
     // Modern matches `userEvent.press()`, which skips disabled Text. Legacy checks only
     // responders, and the mocked Text has none.
     expect(onTextPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+  });
+
+  test('does not bubble event past non-editable TextInput to the Pressable (legacy: bubbles)', async () => {
+    const onInputPress = jest.fn();
+    const onPress = jest.fn();
+    await render(
+      <Pressable onPress={onPress}>
+        <TextInput testID="input" onPress={onInputPress} editable={false} />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByTestId('input'));
+
+    // Modern matches React Native: TextInput's Pressability claims the touch even when not
+    // editable, so it never reaches the Pressable.
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    // Known difference from React Native in both systems: `editable={false}` only stops
+    // TextInput from focusing, so a device still calls its `onPress`. Both skip it, as
+    // `userEvent.press()` does.
     expect(onInputPress).not.toHaveBeenCalled();
-    expect(onPress).toHaveBeenCalledTimes(isModern() ? 2 : 1);
   });
 
   test('ignores custom disabled prop on composite component (only respects native disabled)', async () => {
@@ -2441,6 +2494,23 @@ describe('unhandled event warning', () => {
 
     await fireEvent.press(screen.getByText('Trigger'));
 
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn when TextInput without onPress keeps the press from the Pressable (legacy: calls onPress of the Pressable)', async () => {
+    const onPress = jest.fn();
+    await render(
+      <Pressable onPress={onPress}>
+        <TextInput testID="input" />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByTestId('input'));
+
+    // Modern matches React Native, where the TextInput claims the touch.
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    // Known gap in modern: nothing is called, but there is no warning either. As with a
+    // `PanResponder`, a responder claiming the touch without the callback counts as deliberate.
     expect(warnSpy).not.toHaveBeenCalled();
   });
 

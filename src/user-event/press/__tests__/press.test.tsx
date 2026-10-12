@@ -301,6 +301,38 @@ describe('userEvent.press with fake timers', () => {
     expect(events).toEqual([]);
   });
 
+  test('does not call onPress of the Pressable around TextInput', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    await render(
+      <Pressable onPress={logEvent('press')}>
+        <TextInput placeholder="plain" />
+        <TextInput placeholder="with pressIn" onPressIn={logEvent('inputPressIn')} />
+      </Pressable>,
+    );
+
+    // Matches React Native: TextInput's Pressability always claims the touch, even without
+    // `onPress*` props, so it never reaches the Pressable.
+    await userEvent.press(screen.getByPlaceholderText('plain'));
+    await userEvent.press(screen.getByPlaceholderText('with pressIn'));
+    expect(getEventsNames(events)).toEqual(['inputPressIn']);
+  });
+
+  test('does not call onPress of the Pressable around non editable TextInput', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    await render(
+      <Pressable onPress={logEvent('press')}>
+        <TextInput placeholder="email" editable={false} onPressIn={logEvent('inputPressIn')} />
+      </Pressable>,
+    );
+
+    await userEvent.press(screen.getByPlaceholderText('email'));
+    // Matches React Native: a non-editable TextInput claims the touch too. Known difference: a
+    // device still calls its `onPressIn`, as `editable={false}` only stops it from focusing.
+    expect(events).toEqual([]);
+  });
+
   test('does not call onPressIn and onPressOut on non editable TextInput', async () => {
     const { events, logEvent } = createEventLogger();
 

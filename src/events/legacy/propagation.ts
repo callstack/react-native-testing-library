@@ -7,7 +7,7 @@ import {
   isHostText,
   isHostTextInput,
 } from '../../helpers/host-component-names';
-import { getEventHandlerFromProps, normalizeEventType } from '../shared/handler';
+import { getEventHandlerByEventType, normalizeEventType } from '../shared/handler';
 import type { EventHandler } from '../shared/types';
 import { isEventEnabled, isTouchResponder } from './is-enabled';
 import { warnAboutBubblingDirectEvent } from './warnings';
@@ -39,7 +39,7 @@ export function findEventHandler(
   options: FindEventHandlerOptions,
 ): FindEventHandlerResult {
   if (!options.bubbles) {
-    const handler = getEventHandlerFromProps(instance.props, eventType, { loose: true });
+    const handler = getEventHandlerByEventType(instance.props, eventType, { loose: true });
     return { handler: handler ?? null, skippedTargets: [] };
   }
 
@@ -74,7 +74,7 @@ function findBubblingHandlerOwner(
   const touchResponder = isTouchResponder(instance) ? instance : nearestTouchResponder;
 
   const handler =
-    getEventHandlerFromProps(instance.props, eventType, { loose: true }) ??
+    getEventHandlerByEventType(instance.props, eventType, { loose: true }) ??
     findEventHandlerFromFiber(instance.unstable_fiber, eventType);
   if (handler) {
     if (isEventEnabled(instance, normalizeEventType(eventType), touchResponder)) {
@@ -159,7 +159,7 @@ function findEventHandlerFromFiber(fiber: Fiber | null, eventType: string): Even
     return null;
   }
 
-  const handler = getEventHandlerFromProps(fiber.memoizedProps, eventType, {
+  const handler = getEventHandlerByEventType(fiber.memoizedProps, eventType, {
     loose: true,
   });
   if (handler) {

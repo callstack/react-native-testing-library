@@ -5,7 +5,7 @@ import { buildPressEvent } from '../../events/create-event';
 import {
   buildResponderGrantEvent,
   buildResponderReleaseEvent,
-  getEventHandlerFromProps,
+  getEventHandlerByEventType,
   isPointerEventEnabled,
 } from '../../events/legacy';
 import { isTestInstance } from '../../helpers/component-tree';
@@ -63,6 +63,19 @@ const basePress = async (
   instance: TestInstance,
   options: BasePressOptions,
 ): Promise<void> => {
+  // On a device, TextInput's Pressability always claims the touch, so the press never reaches its
+  // ancestors. A non-editable TextInput claims it too, but its callbacks aren't called here.
+  if (isHostTextInput(instance) && isPointerEventEnabled(instance)) {
+    if (instance.props.editable === false) {
+      interaction.skippedTargets.push(instance);
+      return;
+    }
+
+    interaction.target = instance;
+    await emitDirectPressEvents(config, interaction, options);
+    return;
+  }
+
   if (isEnabledHostElement(instance) && hasPressEventHandler(instance)) {
     interaction.target = instance;
     await emitDirectPressEvents(config, interaction, options);
@@ -96,10 +109,6 @@ function isEnabledHostElement(instance: TestInstance) {
     return instance.props.disabled !== true;
   }
 
-  if (isHostTextInput(instance)) {
-    return instance.props.editable !== false;
-  }
-
   return true;
 }
 
@@ -109,10 +118,10 @@ function isEnabledTouchResponder(instance: TestInstance) {
 
 function hasPressEventHandler(instance: TestInstance) {
   return (
-    getEventHandlerFromProps(instance.props, 'press') ||
-    getEventHandlerFromProps(instance.props, 'longPress') ||
-    getEventHandlerFromProps(instance.props, 'pressIn') ||
-    getEventHandlerFromProps(instance.props, 'pressOut')
+    getEventHandlerByEventType(instance.props, 'press') ||
+    getEventHandlerByEventType(instance.props, 'longPress') ||
+    getEventHandlerByEventType(instance.props, 'pressIn') ||
+    getEventHandlerByEventType(instance.props, 'pressOut')
   );
 }
 

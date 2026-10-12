@@ -196,6 +196,48 @@ test('warns when pressing a non-editable TextInput', async () => {
   );
 });
 
+test('warns when pressing a TextInput without handlers inside a Pressable', async () => {
+  const onPress = jest.fn();
+  await render(
+    <Pressable onPress={onPress}>
+      <TextInput testID="input" />
+    </Pressable>,
+  );
+  const user = userEvent.setup();
+
+  await user.press(screen.getByTestId('input'));
+
+  // The TextInput claims the touch, as on a device, so the warning names it, not the Pressable.
+  expect(onPress).not.toHaveBeenCalled();
+  expect(warnSpy).toHaveBeenCalledTimes(1);
+  expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+    "press() interaction did not call any event handlers. The element has no handler for the "pressIn", "pressOut" or "press" events.
+    If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+      <TextInput
+        testID="input"
+      />"
+  `);
+});
+
+test('warns when pressing a non-editable TextInput inside a Pressable', async () => {
+  const onPress = jest.fn();
+  await render(
+    <Pressable onPress={onPress}>
+      <TextInput testID="input" editable={false} />
+    </Pressable>,
+  );
+  const user = userEvent.setup();
+
+  await user.press(screen.getByTestId('input'));
+
+  expect(onPress).not.toHaveBeenCalled();
+  expect(warnSpy).toHaveBeenCalledTimes(1);
+  expect(warnSpy.mock.calls[0][0]).toMatch(
+    /^press\(\) interaction did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
+  );
+});
+
 test('warns when typing into a TextInput blocked by pointerEvents="none"', async () => {
   await render(
     <View testID="overlay" pointerEvents="none">
