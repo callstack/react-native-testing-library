@@ -282,6 +282,46 @@ describe('userEvent.press with fake timers', () => {
     expect(events).toEqual([]);
   });
 
+  test.each([
+    ['aria-disabled', { 'aria-disabled': true }],
+    ['accessibilityState.disabled', { accessibilityState: { disabled: true } }],
+  ])('does not trigger on Text disabled by %s (legacy: triggers)', async (_, disabledProps) => {
+    const { events, logEvent } = createEventLogger();
+
+    await render(
+      <Text
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
+        {...disabledProps}
+      >
+        press me
+      </Text>,
+    );
+    await userEvent.press(screen.getByText('press me'));
+
+    // Modern matches React Native's `Text`, which falls back to these props when `disabled` is
+    // not set. Legacy checks only `disabled`.
+    expect(getEventsNames(events)).toEqual(
+      isModernEventSystem() ? [] : ['pressIn', 'pressOut', 'press'],
+    );
+  });
+
+  test('triggers on Text with disabled={false} over aria-disabled', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    await render(
+      <Text onPress={logEvent('press')} disabled={false} aria-disabled>
+        press me
+      </Text>,
+    );
+    await userEvent.press(screen.getByText('press me'));
+
+    // React Native's `Text` reads `disabled` first.
+    expect(getEventsNames(events)).toEqual(['press']);
+  });
+
   test('does not trigger on Text with disabled pointer events', async () => {
     const { events, logEvent } = createEventLogger();
 

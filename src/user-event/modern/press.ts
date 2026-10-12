@@ -1,7 +1,8 @@
 import type { TestInstance } from 'test-renderer';
 
 import { getEventHandlerByEventType, isPointerEventEnabled } from '../../events/legacy';
-import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
+import { isHostTextInput } from '../../helpers/host-component-names';
+import { isDisabledHostText } from '../../helpers/text';
 import type { Interaction } from '../utils';
 
 /**
@@ -54,11 +55,7 @@ function isEnabledHostElement(instance: TestInstance) {
     return false;
   }
 
-  if (isHostText(instance)) {
-    return instance.props.disabled !== true;
-  }
-
-  return true;
+  return !isDisabledHostText(instance);
 }
 
 function isEnabledTouchResponder(instance: TestInstance) {

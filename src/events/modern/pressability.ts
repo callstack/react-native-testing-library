@@ -2,7 +2,8 @@ import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
 import { isInstanceMounted } from '../../helpers/component-tree';
-import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
+import { isHostTextInput } from '../../helpers/host-component-names';
+import { isDisabledHostText } from '../../helpers/text';
 import { getEventHandlerName, getEventHandlerByName } from '../shared/handler';
 import { getPointerEventsBlocker } from '../shared/pointer-events';
 import type { EventHandler } from '../shared/types';
@@ -201,7 +202,7 @@ function getPressabilityEventHandler(
   instance: TestInstance,
   eventHandlerName: string,
 ): EventHandler | undefined {
-  if (isHostText(instance) && instance.props.disabled === true) {
+  if (isDisabledHostText(instance)) {
     return undefined;
   }
 

@@ -2056,6 +2056,45 @@ describe('disabled elements', () => {
     expect(onPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
   });
 
+  test.each([
+    ['aria-disabled', { 'aria-disabled': true }],
+    ['accessibilityState.disabled', { accessibilityState: { disabled: true } }],
+  ])(
+    'bubbles event past Text disabled by %s to the Pressable (legacy: calls onPress of Text)',
+    async (_, disabledProps) => {
+      const onTextPress = jest.fn();
+      const onPress = jest.fn();
+      await render(
+        <Pressable onPress={onPress}>
+          <Text onPress={onTextPress} {...disabledProps}>
+            Disabled
+          </Text>
+        </Pressable>,
+      );
+
+      await fireEvent.press(screen.getByText('Disabled'));
+
+      // Modern matches React Native's `Text`, which falls back to these props when `disabled` is
+      // not set. Legacy checks only responders, and the mocked Text has none.
+      expect(onTextPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+      expect(onPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+    },
+  );
+
+  test('calls onPress of Text with disabled={false} over aria-disabled', async () => {
+    const onPress = jest.fn();
+    await render(
+      <Text onPress={onPress} disabled={false} aria-disabled>
+        Enabled
+      </Text>,
+    );
+
+    await fireEvent.press(screen.getByText('Enabled'));
+
+    // React Native's `Text` reads `disabled` first.
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
   test('calls onPress of non-editable TextInput without bubbling to the Pressable (legacy: bubbles)', async () => {
     const onInputPress = jest.fn();
     const onPress = jest.fn();
