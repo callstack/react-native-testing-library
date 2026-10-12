@@ -246,6 +246,11 @@ export function createPressabilityEvent(
   return createEventWithConfig(eventType, { timeStamp: init.timeStamp, nativeEvent }, config);
 }
 
+/** @internal */
+export function getEventInternals(event: SyntheticEvent): EventInternals {
+  return (event as unknown as { [EVENT_INTERNALS]: EventInternals })[EVENT_INTERNALS];
+}
+
 function createEventWithConfig(
   eventType: string,
   init: CreateEventInit,
@@ -262,11 +267,6 @@ function createEventWithConfig(
     nativeEvent,
     config,
   );
-}
-
-/** @internal */
-export function getEventInternals(event: SyntheticEvent): EventInternals {
-  return (event as unknown as { [EVENT_INTERNALS]: EventInternals })[EVENT_INTERNALS];
 }
 
 function toDispatchConfig(config: EventTypeConfig): DispatchConfig {

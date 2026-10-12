@@ -41,14 +41,6 @@ export function getEventHandlerByName(
   );
 }
 
-function getFunctionProp(
-  props: Record<string, unknown>,
-  propName: string,
-): EventHandler | undefined {
-  const handler = props[propName];
-  return typeof handler === 'function' ? (handler as EventHandler) : undefined;
-}
-
 /**
  * Returns the event type without the `on*` prefix, e.g. `onLayout` -> `layout`.
  * Note: `fireEvent` accepts event types with and without the prefix, so use this
@@ -68,6 +60,14 @@ export function getEventHandlerName(eventType: string) {
   }
 
   return `on${capitalizeFirstLetter(eventType)}`;
+}
+
+function getFunctionProp(
+  props: Record<string, unknown>,
+  propName: string,
+): EventHandler | undefined {
+  const handler = props[propName];
+  return typeof handler === 'function' ? (handler as EventHandler) : undefined;
 }
 
 function hasOnPrefix(eventType: string) {
