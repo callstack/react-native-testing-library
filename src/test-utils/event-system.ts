@@ -1,4 +1,9 @@
-import { configure } from '../config';
+import { configure, getConfig } from '../config';
+
+/** Whether the test runs in the modern event system, for tests that branch on it. */
+export function isModernEventSystem() {
+  return getConfig().unstable_eventSystem === 'modern';
+}
 
 /**
  * Runs tests in the legacy event system in both Jest projects, for legacy behavior the modern

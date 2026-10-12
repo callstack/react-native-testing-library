@@ -43,9 +43,10 @@ type DispatchState = {
  * The Jest preset mocks `Text` and `TextInput`, so their host elements get `onPress*` props
  * instead of responder props. A host element with any of these props (or their `testOnly_`
  * variants) takes part in the negotiation as if it had Pressability. A host `TextInput` always
- * claims the touch, as its Pressability does on a device, even without these props. A disabled
- * `Text` declines it, and a non-editable `TextInput` claims it without calling its callbacks, as in
- * `userEvent.press()`.
+ * claims the touch, as its Pressability does on a device, even without these props. It calls its
+ * callbacks even when not editable, as on iOS, where `editable={false}` only stops it from
+ * focusing. Known difference from Android: there, a non-editable `TextInput` is disabled and never
+ * the touch target, so the touch goes to its ancestors. A disabled `Text` declines the touch.
  *
  * One `act()` wraps it all, and a callback error is rethrown after it. During the call,
  * `event.target` is the hit target and `event.currentTarget` the responder.
@@ -194,18 +195,13 @@ function hasPressabilityEventHandler(instance: TestInstance): boolean {
 
 /**
  * Own `onPress*` prop (or its `testOnly_` variant) of an element without a Pressability config,
- * like a mocked `Text` or `TextInput` host. `undefined` for a disabled `Text` or a non-editable
- * `TextInput`.
+ * like a mocked `Text` or `TextInput` host. `undefined` for a disabled `Text`.
  */
 function getPressabilityEventHandler(
   instance: TestInstance,
   eventHandlerName: string,
 ): EventHandler | undefined {
   if (isHostText(instance) && instance.props.disabled === true) {
-    return undefined;
-  }
-
-  if (isHostTextInput(instance) && instance.props.editable === false) {
     return undefined;
   }
 

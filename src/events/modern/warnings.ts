@@ -87,8 +87,8 @@ function getUnhandledPressabilityEventWarning(
     };
   }
 
-  // `computeAriaDisabled` also covers non-editable `TextInput`. A responder declining the touch,
-  // or claiming it without the callback (`PanResponder`), is deliberate, so it doesn't warn.
+  // A responder declining the touch, or claiming it without the callback (`PanResponder`), is
+  // deliberate, so it doesn't warn.
   const disabledTargets = skippedTargets.filter(computeAriaDisabled);
   if (disabledTargets.length === 0) {
     return null;

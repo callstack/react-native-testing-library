@@ -11,6 +11,7 @@ import {
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
+import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 
 describe('userEvent.press with fake timers', () => {
@@ -301,7 +302,7 @@ describe('userEvent.press with fake timers', () => {
     expect(events).toEqual([]);
   });
 
-  test('does not call onPress of the Pressable around TextInput', async () => {
+  test('does not call onPress of the Pressable around TextInput (legacy: calls it for TextInput without onPress* props)', async () => {
     const { events, logEvent } = createEventLogger();
 
     await render(
@@ -311,14 +312,16 @@ describe('userEvent.press with fake timers', () => {
       </Pressable>,
     );
 
-    // Matches React Native: TextInput's Pressability always claims the touch, even without
+    // Modern matches React Native: TextInput's Pressability always claims the touch, even without
     // `onPress*` props, so it never reaches the Pressable.
     await userEvent.press(screen.getByPlaceholderText('plain'));
     await userEvent.press(screen.getByPlaceholderText('with pressIn'));
-    expect(getEventsNames(events)).toEqual(['inputPressIn']);
+    expect(getEventsNames(events)).toEqual(
+      isModernEventSystem() ? ['inputPressIn'] : ['press', 'inputPressIn'],
+    );
   });
 
-  test('does not call onPress of the Pressable around non editable TextInput', async () => {
+  test('calls onPressIn of non editable TextInput, not onPress of the Pressable around it (legacy: the reverse)', async () => {
     const { events, logEvent } = createEventLogger();
 
     await render(
@@ -328,12 +331,12 @@ describe('userEvent.press with fake timers', () => {
     );
 
     await userEvent.press(screen.getByPlaceholderText('email'));
-    // Matches React Native: a non-editable TextInput claims the touch too. Known difference: a
-    // device still calls its `onPressIn`, as `editable={false}` only stops it from focusing.
-    expect(events).toEqual([]);
+    // Modern matches iOS: a non-editable TextInput claims the touch too, and calls its callbacks,
+    // as `editable={false}` only stops it from focusing. Legacy skips it, as Android does.
+    expect(getEventsNames(events)).toEqual(isModernEventSystem() ? ['inputPressIn'] : ['press']);
   });
 
-  test('does not call onPressIn and onPressOut on non editable TextInput', async () => {
+  test('calls onPressIn and onPressOut on non editable TextInput (legacy: calls nothing)', async () => {
     const { events, logEvent } = createEventLogger();
 
     await render(
@@ -346,7 +349,8 @@ describe('userEvent.press with fake timers', () => {
     );
 
     await userEvent.press(screen.getByPlaceholderText('email'));
-    expect(events).toEqual([]);
+    // Modern matches iOS, where `editable={false}` only stops TextInput from focusing.
+    expect(getEventsNames(events)).toEqual(isModernEventSystem() ? ['pressIn', 'pressOut'] : []);
   });
 
   test('does not call onPressIn and onPressOut on TextInput with pointer events disabled', async () => {

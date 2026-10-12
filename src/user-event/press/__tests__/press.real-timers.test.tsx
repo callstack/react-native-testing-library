@@ -11,6 +11,7 @@ import {
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
+import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 
 // Typical event order is pressIn, pressOut, press
@@ -272,7 +273,7 @@ describe('userEvent.press with real timers', () => {
     expect(events).toEqual([]);
   });
 
-  test('does not call onPressIn and onPressOut on non editable TextInput', async () => {
+  test('calls onPressIn and onPressOut on non editable TextInput (legacy: calls nothing)', async () => {
     const { events, logEvent } = createEventLogger();
 
     await render(
@@ -284,7 +285,8 @@ describe('userEvent.press with real timers', () => {
       />,
     );
     await userEvent.press(screen.getByPlaceholderText('email'));
-    expect(events).toEqual([]);
+    // Modern matches iOS, where `editable={false}` only stops TextInput from focusing.
+    expect(getEventsNames(events)).toEqual(isModernEventSystem() ? ['pressIn', 'pressOut'] : []);
   });
 
   test('does not call onPressIn and onPressOut on TextInput with pointer events disabled', async () => {

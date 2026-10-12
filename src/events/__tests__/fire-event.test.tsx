@@ -2056,7 +2056,7 @@ describe('disabled elements', () => {
     expect(onPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
   });
 
-  test('does not bubble event past non-editable TextInput to the Pressable (legacy: bubbles)', async () => {
+  test('calls onPress of non-editable TextInput without bubbling to the Pressable (legacy: bubbles)', async () => {
     const onInputPress = jest.fn();
     const onPress = jest.fn();
     await render(
@@ -2067,13 +2067,11 @@ describe('disabled elements', () => {
 
     await fireEvent.press(screen.getByTestId('input'));
 
-    // Modern matches React Native: TextInput's Pressability claims the touch even when not
-    // editable, so it never reaches the Pressable.
+    // Modern matches iOS: TextInput's Pressability claims the touch even when not editable, and
+    // calls its `onPress`, as `editable={false}` only stops it from focusing. Legacy skips the
+    // non-editable TextInput and bubbles to the Pressable, as Android does.
+    expect(onInputPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
     expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
-    // Known difference from React Native in both systems: `editable={false}` only stops
-    // TextInput from focusing, so a device still calls its `onPress`. Both skip it, as
-    // `userEvent.press()` does.
-    expect(onInputPress).not.toHaveBeenCalled();
   });
 
   test('ignores custom disabled prop on composite component (only respects native disabled)', async () => {
@@ -2531,12 +2529,16 @@ describe('unhandled event warning', () => {
     `);
   });
 
-  test('warns when "press" is blocked by non-editable TextInput', async () => {
-    await render(<TextInput testID="input" editable={false} onPress={jest.fn()} />);
+  test('does not warn when "press" is fired on non-editable TextInput (legacy: warns it is blocked)', async () => {
+    const onPress = jest.fn();
+    await render(<TextInput testID="input" editable={false} onPress={onPress} />);
 
     await fireEvent(screen.getByTestId('input'), 'press', emptyEvent);
 
-    expect(warnSpy).toHaveBeenCalledTimes(1);
+    // Modern matches iOS, where `editable={false}` only stops TextInput from focusing.
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    if (isModern()) return;
     expect(warnSpy.mock.calls[0][0]).toMatch(
       /^Cannot fire the "press" event on a non-editable TextInput\./,
     );
@@ -2591,16 +2593,20 @@ describe('unhandled event warning', () => {
     `);
   });
 
-  test('reports disabled elements when they include a non-editable TextInput', async () => {
+  test('reports disabled elements when they include a non-editable TextInput (modern: calls onPress)', async () => {
+    const onInputPress = jest.fn();
     await render(
       <Pressable onPress={jest.fn()} disabled={true}>
-        <TextInput testID="input" editable={false} onPress={jest.fn()} />
+        <TextInput testID="input" editable={false} onPress={onInputPress} />
       </Pressable>,
     );
 
     await fireEvent.press(screen.getByTestId('input'));
 
-    expect(warnSpy).toHaveBeenCalledTimes(1);
+    // Modern matches iOS, where `editable={false}` only stops TextInput from focusing.
+    expect(onInputPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    if (isModern()) return;
     expect(warnSpy.mock.calls[0][0]).toMatch(
       /^Cannot fire the "press" event on disabled elements\./,
     );

@@ -1,16 +1,13 @@
 import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
+import { getConfig } from '../../config';
 import { buildPressEvent } from '../../events/create-event';
-import {
-  buildResponderGrantEvent,
-  buildResponderReleaseEvent,
-  getEventHandlerByEventType,
-  isPointerEventEnabled,
-} from '../../events/legacy';
+import { buildResponderGrantEvent, buildResponderReleaseEvent } from '../../events/legacy';
 import { isTestInstance } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
-import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
+import { findPressTarget as findLegacyPressTarget } from '../legacy/press';
+import { findPressTarget as findModernPressTarget } from '../modern/press';
 import type { UserEventConfig, UserEventInstance } from '../setup';
 import { Interaction, wait, warnAboutUnhandledInteraction } from '../utils';
 
@@ -63,67 +60,15 @@ const basePress = async (
   instance: TestInstance,
   options: BasePressOptions,
 ): Promise<void> => {
-  // On a device, TextInput's Pressability always claims the touch, so the press never reaches its
-  // ancestors. A non-editable TextInput claims it too, but its callbacks aren't called here.
-  if (isHostTextInput(instance) && isPointerEventEnabled(instance)) {
-    if (instance.props.editable === false) {
-      interaction.skippedTargets.push(instance);
-      return;
-    }
-
-    interaction.target = instance;
+  const findPressTarget =
+    getConfig().unstable_eventSystem === 'modern' ? findModernPressTarget : findLegacyPressTarget;
+  const targetKind = findPressTarget(interaction, instance);
+  if (targetKind === 'host') {
     await emitDirectPressEvents(config, interaction, options);
-    return;
-  }
-
-  if (isEnabledHostElement(instance) && hasPressEventHandler(instance)) {
-    interaction.target = instance;
-    await emitDirectPressEvents(config, interaction, options);
-    return;
-  }
-
-  if (isEnabledTouchResponder(instance)) {
-    interaction.target = instance;
+  } else if (targetKind === 'responder') {
     await emitPressabilityPressEvents(config, interaction, options);
-    return;
   }
-
-  // The element could handle the press, but is disabled or blocks touches.
-  if (hasPressEventHandler(instance) || instance.props.onStartShouldSetResponder) {
-    interaction.skippedTargets.push(instance);
-  }
-
-  if (!instance.parent) {
-    return;
-  }
-
-  await basePress(config, interaction, instance.parent, options);
 };
-
-function isEnabledHostElement(instance: TestInstance) {
-  if (!isPointerEventEnabled(instance)) {
-    return false;
-  }
-
-  if (isHostText(instance)) {
-    return instance.props.disabled !== true;
-  }
-
-  return true;
-}
-
-function isEnabledTouchResponder(instance: TestInstance) {
-  return isPointerEventEnabled(instance) && instance.props.onStartShouldSetResponder?.();
-}
-
-function hasPressEventHandler(instance: TestInstance) {
-  return (
-    getEventHandlerByEventType(instance.props, 'press') ||
-    getEventHandlerByEventType(instance.props, 'longPress') ||
-    getEventHandlerByEventType(instance.props, 'pressIn') ||
-    getEventHandlerByEventType(instance.props, 'pressOut')
-  );
-}
 
 /**
  * Dispatches a press event sequence for host instances that have `onPress*` event handlers.
