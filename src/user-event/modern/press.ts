@@ -30,8 +30,9 @@ export type EmitPressOptions = {
  * 3. `onPressOut` on touch end.
  * 4. `onPress`, unless `onLongPress` was called.
  *
- * As in React Native, `onPressIn` and `onLongPress` get the touch start event, `onPressOut` and
- * `onPress` the touch end event.
+ * As in React Native, `onPressIn` and `onLongPress` get the same event (`responderGrant`, created
+ * when the touch starts), and `onPressOut` and `onPress` another one (`responderRelease`, created
+ * when it ends).
  *
  * Calls the callbacks directly instead of the responder's `onResponderGrant` and
  * `onResponderRelease`, so Pressability's timers aren't run. The action, not the touch duration,
@@ -59,23 +60,23 @@ export async function emitPressEvents(
   };
 
   await wait(config);
-  const touchStartEvent = createPressabilityEvent('pressIn');
-  await dispatch('pressIn', touchStartEvent);
+  const pressStartEvent = createPressabilityEvent('pressIn');
+  await dispatch('pressIn', pressStartEvent);
 
   await wait(config, options.duration);
   const isLongPress = options.type === 'longPress';
   if (isLongPress) {
-    await dispatch('longPress', touchStartEvent);
+    await dispatch('longPress', pressStartEvent);
   }
 
-  const touchEndEvent = createPressabilityEvent('pressOut');
-  await dispatch('pressOut', touchEndEvent);
+  const pressEndEvent = createPressabilityEvent('pressOut');
+  await dispatch('pressOut', pressEndEvent);
 
   // Pressability skips `onPress` after a long press only when there is an `onLongPress`.
   const isPressCanceledByLongPress =
     isLongPress && getPressabilityCallback(responder, 'longPress') != null;
   if (!isPressCanceledByLongPress) {
-    await dispatch('press', touchEndEvent);
+    await dispatch('press', pressEndEvent);
   }
 }
 

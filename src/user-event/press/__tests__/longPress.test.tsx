@@ -38,6 +38,29 @@ describe('userEvent.longPress with fake timers', () => {
     ]);
   });
 
+  test('passes the responder grant event to onPressIn and onLongPress, the release event to onPressOut and onPress', async () => {
+    const { events, logEvent } = createEventLogger();
+    const user = userEvent.setup();
+
+    await render(
+      <Pressable
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
+        testID="pressable"
+      />,
+    );
+
+    await user.longPress(screen.getByTestId('pressable'));
+    await user.press(screen.getByTestId('pressable'));
+    const [pressIn, longPress, pressOut, , pressOut2, press] = events.map((e) => e.payload);
+    expect(longPress).toBe(pressIn);
+    expect(pressIn.dispatchConfig).toEqual({ registrationName: 'onResponderGrant' });
+    expect(pressOut.dispatchConfig).toEqual({ registrationName: 'onResponderRelease' });
+    expect(press).toBe(pressOut2);
+  });
+
   test('works on TouchableOpacity', async () => {
     const mockOnPress = jest.fn();
 

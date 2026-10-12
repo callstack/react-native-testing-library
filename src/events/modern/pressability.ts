@@ -47,8 +47,7 @@ type DispatchState = {
  * Jest sets by default. Without it, `Pressable` and `Touchable*` claim the touch but get nothing.
  *
  * @param event from `createPressabilityEvent()`, passed to the callback. React Native passes the
- * responder event derived from `touchStart` to `onPressIn` and `onLongPress`, and from `touchEnd`
- * to `onPressOut` and `onPress`.
+ * same event to `onPressIn` and `onLongPress`, and another one to `onPressOut` and `onPress`.
  * @param path the touch path from `getTouchPath()`, which includes the responder.
  * @returns `true` if a callback was called.
  */

@@ -484,7 +484,8 @@ describe('fireEvent.press', () => {
     // Modern matches React Native: the event targets the pressed element, and Pressability calls
     // `onPress` of the responder. Legacy passes stubs as `target` and `currentTarget`.
     if (!isModern()) return;
-    expect(event?.type).toBe('press');
+    expect(event?.type).toBe('responderrelease');
+    expect(event?.dispatchConfig).toEqual({ registrationName: 'onResponderRelease' });
     expect(event?.target).toBe(screen.getByText('Press me'));
     expect(currentTarget).toBe(screen.getByTestId('pressable'));
     expect(eventPhase).toBe(event?.BUBBLING_PHASE);
@@ -1895,7 +1896,8 @@ describe('Pressability event types', () => {
     );
     expect(event.timeStamp).toBe(123);
     if (!isModern()) return;
-    expect(event.type).toBe('pressin');
+    expect(event.type).toBe('respondergrant');
+    expect(event.dispatchConfig).toEqual({ registrationName: 'onResponderGrant' });
     expect(event.bubbles).toBe(false);
     expect(event.rnIsDirect).toBe(true);
     expect(event.target).toBe(screen.getByText('Press me'));
