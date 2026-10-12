@@ -3,7 +3,7 @@ import type { TextInputProps } from 'react-native';
 import { TextInput, View } from 'react-native';
 
 import { render, screen, userEvent } from '../..';
-import { getConfig } from '../../config';
+import { isModernEventSystem } from '../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../test-utils/events';
 
 beforeEach(() => {
@@ -208,9 +208,7 @@ describe('clear()', () => {
     await user.clear(screen.getByTestId('input'));
     // These bubble to the parent in React Native.
     const modernEvents = ['focus', 'keyPress', 'change', 'endEditing', 'blur'];
-    expect(getEventsNames(events)).toEqual(
-      getConfig().unstable_eventSystem === 'modern' ? modernEvents : [],
-    );
+    expect(getEventsNames(events)).toEqual(isModernEventSystem() ? modernEvents : []);
   });
 
   test('sets native state value for unmanaged text inputs', async () => {

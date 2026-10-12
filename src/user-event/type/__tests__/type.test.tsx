@@ -4,7 +4,7 @@ import { TextInput, View } from 'react-native';
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
-import { getConfig } from '../../../config';
+import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames, lastEventPayload } from '../../../test-utils/events';
 
 beforeEach(() => {
@@ -358,9 +358,7 @@ describe('type()', () => {
       'endEditing',
       'blur',
     ];
-    expect(getEventsNames(events)).toEqual(
-      getConfig().unstable_eventSystem === 'modern' ? modernEvents : [],
-    );
+    expect(getEventsNames(events)).toEqual(isModernEventSystem() ? modernEvents : []);
   });
 
   test('supports direct access', async () => {

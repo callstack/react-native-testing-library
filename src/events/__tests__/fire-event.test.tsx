@@ -19,9 +19,12 @@ import {
 import type { TestInstance } from 'test-renderer';
 
 import { fireEvent, render, screen } from '../..';
-import { configure, getConfig } from '../../config';
+import { configure } from '../../config';
 import { _console, logger } from '../../helpers/logger';
-import { runInLegacyEventSystem } from '../../test-utils/event-system';
+import {
+  isModernEventSystem as isModern,
+  runInLegacyEventSystem,
+} from '../../test-utils/event-system';
 import { SyntheticEvent } from '../modern/event';
 import { getEventHandlerName } from '../shared/handler';
 import { nativeState } from '../shared/native-state';
@@ -50,10 +53,6 @@ const defaultTouchPayload = {
 beforeEach(() => {
   jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
 });
-
-function isModern() {
-  return getConfig().unstable_eventSystem === 'modern';
-}
 
 /** Error message `fireEvent` rejects with, or `undefined` when it resolves. */
 async function getErrorMessage(promise: Promise<unknown>) {
