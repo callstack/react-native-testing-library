@@ -2,7 +2,6 @@ import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
 import { getConfig } from '../../config';
-import { buildPressEvent } from '../../events/create-event';
 import { buildResponderGrantEvent, buildResponderReleaseEvent } from '../../events/legacy';
 import { isTestInstance } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
@@ -94,10 +93,10 @@ async function emitDirectPressEvents(
   // See: https://reactnative.dev/docs/pressable#onpress
   // Experimentally for very short presses (< 130ms) `press` events are actually emitted before `onPressOut`, but
   // we will ignore that as in reality most pressed would be above the 130ms threshold.
-  // Like the touch callbacks above, `press` is called only on the target. Dispatching it would
-  // bubble it to `onPress` of ancestors, which the responder system doesn't do.
+  // Like the touch callbacks above, `press` is called only on the target, with a touch event.
+  // Dispatching it would bubble it to `onPress` of ancestors, which the responder system doesn't do.
   if (options.type === 'press') {
-    await interaction.invokeEventHandler('press', buildPressEvent());
+    await interaction.dispatchTouchEvent('press');
   }
 }
 

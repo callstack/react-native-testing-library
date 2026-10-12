@@ -7,7 +7,6 @@ import {
   createEvent,
   buildFocusEvent,
   buildKeyPressEvent,
-  buildPressEvent,
   buildScrollEvent,
   buildSubmitEditingEvent,
   buildTextChangeEvent,
@@ -52,7 +51,6 @@ test.each(['legacy', 'modern'] as const)(
 );
 
 test.each([
-  ['press', () => buildPressEvent()],
   ['focus', () => buildFocusEvent()],
   ['blur', () => buildBlurEvent()],
   ['accessibilityaction', () => buildAccessibilityActionEvent('increment')],

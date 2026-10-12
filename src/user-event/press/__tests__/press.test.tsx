@@ -83,6 +83,24 @@ describe('userEvent.press with fake timers', () => {
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
+  test('passes the same touch event to onPress of Text as to onPressIn', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    await render(
+      <Text onPress={logEvent('press')} onPressIn={logEvent('pressIn')}>
+        press me
+      </Text>,
+    );
+
+    await userEvent.press(screen.getByText('press me'));
+    const [pressInEvent, pressEvent] = events.map((event) => event.payload);
+    expect(pressEvent).toMatchObject({
+      target: {},
+      currentTarget: { measure: expect.any(Function) },
+      nativeEvent: pressInEvent.nativeEvent,
+    });
+  });
+
   test('does not call onPress of the Text around pressed Text', async () => {
     const onPressOuter = jest.fn();
     const onPressInner = jest.fn();
