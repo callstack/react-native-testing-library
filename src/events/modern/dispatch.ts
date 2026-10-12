@@ -64,6 +64,14 @@ export type DispatchOptions = {
   afterTargetHandler?: (target: TestInstance, event: SyntheticEvent) => void;
 };
 
+/** Clears the event's internals, as the event can still be read after the dispatch. */
+export function resetEvent(event: SyntheticEvent) {
+  getEventInternals(event).eventPhase = SyntheticEvent.NONE;
+  getEventInternals(event).currentTarget = null;
+  getEventInternals(event).composedPath = [];
+  getEventInternals(event).stopPropagation = false;
+}
+
 type DispatchState = {
   hasCalledHandler: boolean;
   /** Wrapped, so a thrown `undefined` is rethrown too. */
@@ -151,12 +159,4 @@ function callHandler(
       state.firstError = { error };
     }
   }
-}
-
-/** Clears the event's internals, as the event can still be read after the dispatch. */
-export function resetEvent(event: SyntheticEvent) {
-  getEventInternals(event).eventPhase = SyntheticEvent.NONE;
-  getEventInternals(event).currentTarget = null;
-  getEventInternals(event).composedPath = [];
-  getEventInternals(event).stopPropagation = false;
 }

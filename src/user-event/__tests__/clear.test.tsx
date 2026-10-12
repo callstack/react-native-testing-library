@@ -186,7 +186,7 @@ describe('clear()', () => {
   // View that ignores props type checking
   const AnyView = View as React.ComponentType<any>;
 
-  test('bubbles up only native bubbling events, in the modern event system', async () => {
+  test('bubbles up only native bubbling events (legacy: bubbles none)', async () => {
     const { events, logEvent } = createEventLogger();
     await render(
       <AnyView
