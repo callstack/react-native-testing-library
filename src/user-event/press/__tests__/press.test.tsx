@@ -11,6 +11,7 @@ import {
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
+import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 
 describe('userEvent.press with fake timers', () => {
@@ -80,6 +81,54 @@ describe('userEvent.press with fake timers', () => {
 
     await userEvent.press(screen.getByText('press me'));
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
+  });
+
+  test('passes the same touch event to onPress of Text as to onPressIn', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    await render(
+      <Text onPress={logEvent('press')} onPressIn={logEvent('pressIn')}>
+        press me
+      </Text>,
+    );
+
+    await userEvent.press(screen.getByText('press me'));
+    const [pressInEvent, pressEvent] = events.map((event) => event.payload);
+    expect(pressEvent).toMatchObject({
+      target: {},
+      currentTarget: { measure: expect.any(Function) },
+      nativeEvent: pressInEvent.nativeEvent,
+    });
+  });
+
+  test('does not call onPress of the Text around pressed Text', async () => {
+    const onPressOuter = jest.fn();
+    const onPressInner = jest.fn();
+
+    await render(
+      <Text onPress={onPressOuter}>
+        outer <Text onPress={onPressInner}>inner</Text>
+      </Text>,
+    );
+
+    await userEvent.press(screen.getByText('inner'));
+    expect(onPressInner).toHaveBeenCalledTimes(1);
+    expect(onPressOuter).not.toHaveBeenCalled();
+  });
+
+  test('does not call testOnly_onPress of the View around pressed View', async () => {
+    const onPressOuter = jest.fn();
+    const onPressInner = jest.fn();
+
+    await render(
+      <View {...{ testOnly_onPress: onPressOuter }}>
+        <View testID="inner" {...{ testOnly_onPress: onPressInner }} />
+      </View>,
+    );
+
+    await userEvent.press(screen.getByTestId('inner'));
+    expect(onPressInner).toHaveBeenCalledTimes(1);
+    expect(onPressOuter).not.toHaveBeenCalled();
   });
 
   test('works on TextInput', async () => {
@@ -218,6 +267,29 @@ describe('userEvent.press with fake timers', () => {
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
+  test('calls press on pressable with pointer events box-none from its child (legacy: does not call)', async () => {
+    const { events, logEvent } = createEventLogger();
+    const user = userEvent.setup();
+
+    await render(
+      <Pressable
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+        pointerEvents="box-none"
+      >
+        <Text>Trigger</Text>
+      </Pressable>,
+    );
+    await user.press(screen.getByText('Trigger'));
+
+    // Modern matches React Native: `box-none` only stops hit testing on the `Pressable` itself, so
+    // its child is the hit target and the `Pressable` still claims the touch as the responder.
+    expect(getEventsNames(events)).toEqual(
+      isModernEventSystem() ? ['pressIn', 'pressOut', 'press'] : [],
+    );
+  });
+
   test('crawls up in the tree to find an element that responds to touch events', async () => {
     const mockOnPress = jest.fn();
 
@@ -281,6 +353,46 @@ describe('userEvent.press with fake timers', () => {
     expect(events).toEqual([]);
   });
 
+  test.each([
+    ['aria-disabled', { 'aria-disabled': true }],
+    ['accessibilityState.disabled', { accessibilityState: { disabled: true } }],
+  ])('does not trigger on Text disabled by %s (legacy: triggers)', async (_, disabledProps) => {
+    const { events, logEvent } = createEventLogger();
+
+    await render(
+      <Text
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
+        {...disabledProps}
+      >
+        press me
+      </Text>,
+    );
+    await userEvent.press(screen.getByText('press me'));
+
+    // Modern matches React Native's `Text`, which falls back to these props when `disabled` is
+    // not set. Legacy checks only `disabled`.
+    expect(getEventsNames(events)).toEqual(
+      isModernEventSystem() ? [] : ['pressIn', 'pressOut', 'press'],
+    );
+  });
+
+  test('triggers on Text with disabled={false} over aria-disabled', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    await render(
+      <Text onPress={logEvent('press')} disabled={false} aria-disabled>
+        press me
+      </Text>,
+    );
+    await userEvent.press(screen.getByText('press me'));
+
+    // React Native's `Text` reads `disabled` first.
+    expect(getEventsNames(events)).toEqual(['press']);
+  });
+
   test('does not trigger on Text with disabled pointer events', async () => {
     const { events, logEvent } = createEventLogger();
 
@@ -301,7 +413,41 @@ describe('userEvent.press with fake timers', () => {
     expect(events).toEqual([]);
   });
 
-  test('does not call onPressIn and onPressOut on non editable TextInput', async () => {
+  test('does not call onPress of the Pressable around TextInput (legacy: calls it for TextInput without onPress* props)', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    await render(
+      <Pressable onPress={logEvent('press')}>
+        <TextInput placeholder="plain" />
+        <TextInput placeholder="with pressIn" onPressIn={logEvent('inputPressIn')} />
+      </Pressable>,
+    );
+
+    // Modern matches React Native: TextInput's Pressability always claims the touch, even without
+    // `onPress*` props, so it never reaches the Pressable.
+    await userEvent.press(screen.getByPlaceholderText('plain'));
+    await userEvent.press(screen.getByPlaceholderText('with pressIn'));
+    expect(getEventsNames(events)).toEqual(
+      isModernEventSystem() ? ['inputPressIn'] : ['press', 'inputPressIn'],
+    );
+  });
+
+  test('calls onPressIn of non editable TextInput, not onPress of the Pressable around it (legacy: the reverse)', async () => {
+    const { events, logEvent } = createEventLogger();
+
+    await render(
+      <Pressable onPress={logEvent('press')}>
+        <TextInput placeholder="email" editable={false} onPressIn={logEvent('inputPressIn')} />
+      </Pressable>,
+    );
+
+    await userEvent.press(screen.getByPlaceholderText('email'));
+    // Modern matches iOS: a non-editable TextInput claims the touch too, and calls its callbacks,
+    // as `editable={false}` only stops it from focusing. Legacy skips it, as Android does.
+    expect(getEventsNames(events)).toEqual(isModernEventSystem() ? ['inputPressIn'] : ['press']);
+  });
+
+  test('calls onPressIn and onPressOut on non editable TextInput (legacy: calls nothing)', async () => {
     const { events, logEvent } = createEventLogger();
 
     await render(
@@ -314,7 +460,8 @@ describe('userEvent.press with fake timers', () => {
     );
 
     await userEvent.press(screen.getByPlaceholderText('email'));
-    expect(events).toEqual([]);
+    // Modern matches iOS, where `editable={false}` only stops TextInput from focusing.
+    expect(getEventsNames(events)).toEqual(isModernEventSystem() ? ['pressIn', 'pressOut'] : []);
   });
 
   test('does not call onPressIn and onPressOut on TextInput with pointer events disabled', async () => {

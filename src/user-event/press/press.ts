@@ -1,16 +1,12 @@
 import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
-import { buildPressEvent } from '../../events/create-event';
-import {
-  buildResponderGrantEvent,
-  buildResponderReleaseEvent,
-  getEventHandlerFromProps,
-  isPointerEventEnabled,
-} from '../../events/legacy';
+import { getConfig } from '../../config';
+import { buildResponderGrantEvent, buildResponderReleaseEvent } from '../../events/legacy';
 import { isTestInstance } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
-import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
+import { findPressTarget as findLegacyPressTarget } from '../legacy/press';
+import { findPressTarget as findModernPressTarget } from '../modern/press';
 import type { UserEventConfig, UserEventInstance } from '../setup';
 import { Interaction, wait, warnAboutUnhandledInteraction } from '../utils';
 
@@ -63,58 +59,15 @@ const basePress = async (
   instance: TestInstance,
   options: BasePressOptions,
 ): Promise<void> => {
-  if (isEnabledHostElement(instance) && hasPressEventHandler(instance)) {
-    interaction.target = instance;
+  const findPressTarget =
+    getConfig().unstable_eventSystem === 'modern' ? findModernPressTarget : findLegacyPressTarget;
+  const targetKind = findPressTarget(interaction, instance);
+  if (targetKind === 'host') {
     await emitDirectPressEvents(config, interaction, options);
-    return;
-  }
-
-  if (isEnabledTouchResponder(instance)) {
-    interaction.target = instance;
+  } else if (targetKind === 'responder') {
     await emitPressabilityPressEvents(config, interaction, options);
-    return;
   }
-
-  // The element could handle the press, but is disabled or blocks touches.
-  if (hasPressEventHandler(instance) || instance.props.onStartShouldSetResponder) {
-    interaction.skippedTargets.push(instance);
-  }
-
-  if (!instance.parent) {
-    return;
-  }
-
-  await basePress(config, interaction, instance.parent, options);
 };
-
-function isEnabledHostElement(instance: TestInstance) {
-  if (!isPointerEventEnabled(instance)) {
-    return false;
-  }
-
-  if (isHostText(instance)) {
-    return instance.props.disabled !== true;
-  }
-
-  if (isHostTextInput(instance)) {
-    return instance.props.editable !== false;
-  }
-
-  return true;
-}
-
-function isEnabledTouchResponder(instance: TestInstance) {
-  return isPointerEventEnabled(instance) && instance.props.onStartShouldSetResponder?.();
-}
-
-function hasPressEventHandler(instance: TestInstance) {
-  return (
-    getEventHandlerFromProps(instance.props, 'press') ||
-    getEventHandlerFromProps(instance.props, 'longPress') ||
-    getEventHandlerFromProps(instance.props, 'pressIn') ||
-    getEventHandlerFromProps(instance.props, 'pressOut')
-  );
-}
 
 /**
  * Dispatches a press event sequence for host instances that have `onPress*` event handlers.
@@ -140,8 +93,10 @@ async function emitDirectPressEvents(
   // See: https://reactnative.dev/docs/pressable#onpress
   // Experimentally for very short presses (< 130ms) `press` events are actually emitted before `onPressOut`, but
   // we will ignore that as in reality most pressed would be above the 130ms threshold.
+  // Like the touch callbacks above, `press` is called only on the target, with a touch event.
+  // Dispatching it would bubble it to `onPress` of ancestors, which the responder system doesn't do.
   if (options.type === 'press') {
-    await interaction.dispatchEvent('press', buildPressEvent());
+    await interaction.dispatchTouchEvent('press');
   }
 }
 

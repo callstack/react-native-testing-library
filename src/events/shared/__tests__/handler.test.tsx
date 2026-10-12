@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 
 import { render, screen } from '../../..';
-import { getEventHandlerFromProps, getHandlerByName, normalizeEventType } from '../handler';
+import { getEventHandlerByEventType, getEventHandlerByName, normalizeEventType } from '../handler';
 
-test('getEventHandlerFromProps strict mode', async () => {
+test('getEventHandlerByEventType strict mode', async () => {
   const onPress = jest.fn();
   const testOnlyOnPress = jest.fn();
 
@@ -22,24 +22,24 @@ test('getEventHandlerFromProps strict mode', async () => {
   const testOnly = screen.getByTestId('testOnly');
   const both = screen.getByTestId('both');
 
-  expect(getEventHandlerFromProps(regular.props, 'press')).toBe(onPress);
-  expect(getEventHandlerFromProps(testOnly.props, 'press')).toBe(testOnlyOnPress);
-  expect(getEventHandlerFromProps(both.props, 'press')).toBe(onPress);
+  expect(getEventHandlerByEventType(regular.props, 'press')).toBe(onPress);
+  expect(getEventHandlerByEventType(testOnly.props, 'press')).toBe(testOnlyOnPress);
+  expect(getEventHandlerByEventType(both.props, 'press')).toBe(onPress);
 
-  expect(getEventHandlerFromProps(regular.props, 'onPress')).toBe(onPress);
-  expect(getEventHandlerFromProps(testOnly.props, 'onPress')).toBe(testOnlyOnPress);
-  expect(getEventHandlerFromProps(both.props, 'onPress')).toBe(onPress);
+  expect(getEventHandlerByEventType(regular.props, 'onPress')).toBe(onPress);
+  expect(getEventHandlerByEventType(testOnly.props, 'onPress')).toBe(testOnlyOnPress);
+  expect(getEventHandlerByEventType(both.props, 'onPress')).toBe(onPress);
 });
 
-test('getEventHandlerFromProps does not treat event names starting with "on" as prefixed', async () => {
+test('getEventHandlerByEventType does not treat event names starting with "on" as prefixed', async () => {
   const onOnline = jest.fn();
   // @ts-expect-error Intentionally passing such props
   await render(<View testID="view" onOnline={onOnline} />);
 
-  expect(getEventHandlerFromProps(screen.getByTestId('view').props, 'online')).toBe(onOnline);
+  expect(getEventHandlerByEventType(screen.getByTestId('view').props, 'online')).toBe(onOnline);
 });
 
-test('getEventHandlerFromProps loose mode', async () => {
+test('getEventHandlerByEventType loose mode', async () => {
   const onPress = jest.fn();
   const testOnlyOnPress = jest.fn();
 
@@ -57,18 +57,20 @@ test('getEventHandlerFromProps loose mode', async () => {
   const testOnly = screen.getByTestId('testOnly');
   const both = screen.getByTestId('both');
 
-  expect(getEventHandlerFromProps(regular.props, 'press', { loose: true })).toBe(onPress);
-  expect(getEventHandlerFromProps(testOnly.props, 'press', { loose: true })).toBe(testOnlyOnPress);
-  expect(getEventHandlerFromProps(both.props, 'press', { loose: true })).toBe(onPress);
-
-  expect(getEventHandlerFromProps(regular.props, 'onPress', { loose: true })).toBe(onPress);
-  expect(getEventHandlerFromProps(testOnly.props, 'onPress', { loose: true })).toBe(
+  expect(getEventHandlerByEventType(regular.props, 'press', { loose: true })).toBe(onPress);
+  expect(getEventHandlerByEventType(testOnly.props, 'press', { loose: true })).toBe(
     testOnlyOnPress,
   );
-  expect(getEventHandlerFromProps(both.props, 'onPress', { loose: true })).toBe(onPress);
+  expect(getEventHandlerByEventType(both.props, 'press', { loose: true })).toBe(onPress);
+
+  expect(getEventHandlerByEventType(regular.props, 'onPress', { loose: true })).toBe(onPress);
+  expect(getEventHandlerByEventType(testOnly.props, 'onPress', { loose: true })).toBe(
+    testOnlyOnPress,
+  );
+  expect(getEventHandlerByEventType(both.props, 'onPress', { loose: true })).toBe(onPress);
 });
 
-test('getEventHandlerFromProps loose mode matches handlers named without the `on*` prefix', async () => {
+test('getEventHandlerByEventType loose mode matches handlers named without the `on*` prefix', async () => {
   const press = jest.fn();
   const testOnlyPress = jest.fn();
 
@@ -84,11 +86,11 @@ test('getEventHandlerFromProps loose mode matches handlers named without the `on
   const regular = screen.getByTestId('regular');
   const testOnly = screen.getByTestId('testOnly');
 
-  expect(getEventHandlerFromProps(regular.props, 'press', { loose: true })).toBe(press);
-  expect(getEventHandlerFromProps(testOnly.props, 'press', { loose: true })).toBe(testOnlyPress);
+  expect(getEventHandlerByEventType(regular.props, 'press', { loose: true })).toBe(press);
+  expect(getEventHandlerByEventType(testOnly.props, 'press', { loose: true })).toBe(testOnlyPress);
 
-  expect(getEventHandlerFromProps(regular.props, 'press')).toBeUndefined();
-  expect(getEventHandlerFromProps(testOnly.props, 'press')).toBeUndefined();
+  expect(getEventHandlerByEventType(regular.props, 'press')).toBeUndefined();
+  expect(getEventHandlerByEventType(testOnly.props, 'press')).toBeUndefined();
 });
 
 test('normalizeEventType strips the `on*` prefix', () => {
@@ -100,7 +102,7 @@ test('normalizeEventType strips the `on*` prefix', () => {
   expect(normalizeEventType('on')).toBe('on');
 });
 
-test('getHandlerByName returns function props with the exact name or its testOnly_ variant', () => {
+test('getEventHandlerByName returns function props with the exact name or its testOnly_ variant', () => {
   const onFocus = jest.fn();
   const testOnlyOnBlur = jest.fn();
   const props = {
@@ -110,8 +112,8 @@ test('getHandlerByName returns function props with the exact name or its testOnl
     onLayout: 'not a function',
   };
 
-  expect(getHandlerByName(props, 'onFocus')).toBe(onFocus);
-  expect(getHandlerByName(props, 'onBlur')).toBe(testOnlyOnBlur);
-  expect(getHandlerByName(props, 'focus')).toBeUndefined();
-  expect(getHandlerByName(props, 'onLayout')).toBeUndefined();
+  expect(getEventHandlerByName(props, 'onFocus')).toBe(onFocus);
+  expect(getEventHandlerByName(props, 'onBlur')).toBe(testOnlyOnBlur);
+  expect(getEventHandlerByName(props, 'focus')).toBeUndefined();
+  expect(getEventHandlerByName(props, 'onLayout')).toBeUndefined();
 });

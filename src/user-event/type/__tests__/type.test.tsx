@@ -4,7 +4,7 @@ import { TextInput, View } from 'react-native';
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
-import { getConfig } from '../../../config';
+import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames, lastEventPayload } from '../../../test-utils/events';
 
 beforeEach(() => {
@@ -362,16 +362,14 @@ describe('type()', () => {
 
     const user = userEvent.setup();
     await user.type(screen.getByTestId('input'), 'abc');
-    // `focus`, `keyPress`, `change`, `endEditing` and `blur` are bubbling events in React Native.
+    // These bubble to the parent in React Native.
     const modernEvents = [
       'focus',
       ...['keyPress', 'change', 'keyPress', 'change', 'keyPress', 'change'],
       'endEditing',
       'blur',
     ];
-    expect(getEventsNames(events)).toEqual(
-      getConfig().unstable_eventSystem === 'modern' ? modernEvents : [],
-    );
+    expect(getEventsNames(events)).toEqual(isModernEventSystem() ? modernEvents : []);
   });
 
   test('supports direct access', async () => {

@@ -35,7 +35,7 @@ export class Interaction {
 
   /**
    * Calls a touch callback that `Pressable` calls from JavaScript (`pressIn`, `pressOut`,
-   * `longPress`) with a touch event, the way Pressability does.
+   * `longPress`, `press`) with a touch event, the way Pressability does.
    */
   async dispatchTouchEvent(eventName: string) {
     await this.invokeEventHandler(eventName, buildTouchEvent());

@@ -3,7 +3,7 @@ import type { TextInputProps } from 'react-native';
 import { TextInput, View } from 'react-native';
 
 import { render, screen, userEvent } from '../..';
-import { getConfig } from '../../config';
+import { isModernEventSystem } from '../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../test-utils/events';
 
 beforeEach(() => {
@@ -222,11 +222,9 @@ describe('paste()', () => {
 
     const user = userEvent.setup();
     await user.paste(screen.getByTestId('input'), 'Hi!');
-    // `focus`, `keyPress`, `change`, `endEditing` and `blur` are bubbling events in React Native.
+    // These bubble to the parent in React Native.
     const modernEvents = ['focus', 'change', 'endEditing', 'blur'];
-    expect(getEventsNames(events)).toEqual(
-      getConfig().unstable_eventSystem === 'modern' ? modernEvents : [],
-    );
+    expect(getEventsNames(events)).toEqual(isModernEventSystem() ? modernEvents : []);
   });
 
   test('sets native state value for unmanaged text inputs', async () => {
