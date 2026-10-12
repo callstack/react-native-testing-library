@@ -21,7 +21,14 @@ const patchedCallstackConfig = callstackConfig.map((configItem) => {
 
 export default [
   {
-    ignores: ['dist/', 'experiments-rtl/', 'website/', 'eslint.config.mjs', 'jest-setup.ts'],
+    ignores: [
+      'dist/',
+      'refs/',
+      'experiments-rtl/',
+      'website/',
+      'eslint.config.mjs',
+      'jest-setup.ts',
+    ],
   },
   ...patchedCallstackConfig,
   ...tseslint.configs.strict,
