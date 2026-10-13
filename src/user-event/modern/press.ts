@@ -1,7 +1,6 @@
 import type { TestInstance } from 'test-renderer';
 
 import type { SyntheticEvent } from '../../events/modern/event';
-import { createPressabilityEvent } from '../../events/modern/event';
 import type { PressabilityEventType } from '../../events/modern/event-types';
 import {
   dispatchPressabilityEvent,
@@ -9,6 +8,7 @@ import {
   getPressabilityCallback,
   getTouchPath,
 } from '../../events/modern/pressability';
+import { createPressabilityEvent, createTouchHistory } from '../../events/modern/responder-event';
 import { hasPressEventHandler } from '../../events/shared/handler';
 import type { UserEventConfig } from '../setup';
 import type { Interaction } from '../utils';
@@ -32,7 +32,7 @@ export type EmitPressOptions = {
  *
  * As in React Native, `onPressIn` and `onLongPress` get the same event (`responderGrant`, created
  * when the touch starts), and `onPressOut` and `onPress` another one (`responderRelease`, created
- * when it ends).
+ * when it ends). Both events share the touch's `touchHistory`.
  *
  * Calls the callbacks directly instead of the responder's `onResponderGrant` and
  * `onResponderRelease`, so Pressability's timers aren't run. The action, not the touch duration,
@@ -55,12 +55,13 @@ export async function emitPressEvents(
   }
 
   const dispatch = async (eventType: PressabilityEventType, event: SyntheticEvent) => {
-    const hasCalledHandler = await dispatchPressabilityEvent(responder, eventType, event, path);
+    const hasCalledHandler = await dispatchPressabilityEvent(responder, eventType, event, path[0]);
     interaction.recordEvent(eventType, hasCalledHandler);
   };
 
   await wait(config);
-  const pressStartEvent = createPressabilityEvent('pressIn');
+  const touchHistory = createTouchHistory();
+  const pressStartEvent = createPressabilityEvent('pressIn', {}, touchHistory);
   await dispatch('pressIn', pressStartEvent);
 
   await wait(config, options.duration);
@@ -69,7 +70,7 @@ export async function emitPressEvents(
     await dispatch('longPress', pressStartEvent);
   }
 
-  const pressEndEvent = createPressabilityEvent('pressOut');
+  const pressEndEvent = createPressabilityEvent('pressOut', {}, touchHistory);
   await dispatch('pressOut', pressEndEvent);
 
   // Pressability skips `onPress` after a long press only when there is an `onLongPress`.

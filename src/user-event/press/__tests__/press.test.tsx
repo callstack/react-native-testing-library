@@ -13,7 +13,6 @@ import {
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
 import { SyntheticEvent } from '../../../events/modern/event';
-import { buildTouchNativeEvent } from '../../../events/shared/payloads';
 import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 
@@ -39,7 +38,21 @@ describe('userEvent.press with fake timers', () => {
 
     await user.press(screen.getByTestId('pressable'));
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
-    expect(events[0].payload.nativeEvent).toEqual({ ...buildTouchNativeEvent(), timestamp: 0 });
+    const touch = {
+      identifier: 0,
+      locationX: 0,
+      locationY: 0,
+      pageX: 0,
+      pageY: 0,
+      target: 0,
+      timestamp: 0,
+    };
+    // Modern matches React Native, which passes the touch in the touch arrays.
+    expect(events[0].payload.nativeEvent).toEqual({
+      ...touch,
+      changedTouches: isModernEventSystem() ? [touch] : [],
+      touches: isModernEventSystem() ? [touch] : [],
+    });
     // Legacy holds the touch for Pressability's `minPressDuration`.
     const releaseTime = isModernEventSystem() ? 0 : 130;
     expect(events.map((event) => event.payload.nativeEvent.timestamp)).toEqual([
@@ -93,7 +106,7 @@ describe('userEvent.press with fake timers', () => {
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
-  test('passes a SyntheticEvent with the nativeEvent of onPressIn to onPress of Text (legacy: a stub event)', async () => {
+  test('passes a SyntheticEvent with the touch of onPressIn to onPress of Text (legacy: a stub event)', async () => {
     const { events, logEvent } = createEventLogger();
 
     await render(
@@ -104,7 +117,8 @@ describe('userEvent.press with fake timers', () => {
 
     await userEvent.press(screen.getByText('press me'));
     const [pressInEvent, pressEvent] = events.map((event) => event.payload);
-    expect(pressEvent.nativeEvent).toEqual(pressInEvent.nativeEvent);
+    // The touch has ended by `onPress`, so it's no longer in `touches`.
+    expect(pressEvent.nativeEvent).toEqual({ ...pressInEvent.nativeEvent, touches: [] });
     expect(pressEvent instanceof SyntheticEvent).toBe(isModernEventSystem());
     if (isModernEventSystem()) return;
 

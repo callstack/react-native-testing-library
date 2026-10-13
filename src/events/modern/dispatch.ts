@@ -38,6 +38,7 @@ export async function dispatchEvent(
   const state: DispatchState = { hasCalledHandler: false, firstError: null };
 
   await act(() => {
+    getEventInternals(event).isTrusted = true;
     getEventInternals(event).target = target;
     getEventInternals(event).composedPath = path;
 

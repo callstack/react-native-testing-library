@@ -11,7 +11,6 @@ import {
 } from '../shared/handler';
 import { getPointerEventsBlocker } from '../shared/pointer-events';
 import type { EventHandler } from '../shared/types';
-import { resetEvent } from './dispatch';
 import type { SyntheticEvent } from './event';
 import { getEventInternals } from './event';
 import type { PressabilityEventType } from './event-types';
@@ -40,22 +39,25 @@ type DispatchState = {
  * Doesn't negotiate the responder: callers do it once per touch, as React Native does on touch
  * start, so a touch's callbacks all go to the same responder.
  *
- * One `act()` wraps the call, and a callback error is rethrown after it. During the call,
- * `event.target` is the hit target and `event.currentTarget` the responder.
+ * One `act()` wraps the call, and a callback error is rethrown after it. As in React Native's
+ * responder system, which calls handlers directly instead of dispatching the event, `event.target`
+ * is the hit target, `event.currentTarget` is the responder during the call, and `eventPhase` and
+ * `composedPath()` stay unset. `onLongPress` gets a `null` `currentTarget`, as Pressability calls
+ * it from a timer, after the dispatch.
  *
  * Known limitation: `testOnly_pressabilityConfig` exists only when `NODE_ENV` is `test`, which
  * Jest sets by default. Without it, `Pressable` and `Touchable*` claim the touch but get nothing.
  *
  * @param event from `createPressabilityEvent()`, passed to the callback. React Native passes the
  * same event to `onPressIn` and `onLongPress`, and another one to `onPressOut` and `onPress`.
- * @param path the touch path from `getTouchPath()`, which includes the responder.
+ * @param hitTarget the first element of the touch path from `getTouchPath()`.
  * @returns `true` if a callback was called.
  */
 export async function dispatchPressabilityEvent(
   responder: TestInstance,
   eventType: PressabilityEventType,
   event: SyntheticEvent,
-  path: TestInstance[],
+  hitTarget: TestInstance,
 ): Promise<boolean> {
   if (!isInstanceMounted(responder)) {
     return false;
@@ -68,18 +70,15 @@ export async function dispatchPressabilityEvent(
 
   const state: DispatchState = { firstError: null };
   await act(() => {
-    getEventInternals(event).target = path[0];
-    getEventInternals(event).composedPath = path;
-    getEventInternals(event).eventPhase =
-      responder === path[0] ? event.AT_TARGET : event.BUBBLING_PHASE;
-    getEventInternals(event).currentTarget = responder;
+    getEventInternals(event).target = hitTarget;
+    getEventInternals(event).currentTarget = eventType === 'longPress' ? null : responder;
     try {
       callback.call(responder, event);
     } catch (error) {
       state.firstError = { error };
     }
 
-    resetEvent(event);
+    getEventInternals(event).currentTarget = null;
   });
 
   // After `act()`, which would skip rendering state updates if its callback threw.

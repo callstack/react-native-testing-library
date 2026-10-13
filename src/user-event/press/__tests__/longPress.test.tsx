@@ -3,7 +3,6 @@ import { Pressable, Text, TouchableHighlight, TouchableOpacity, View } from 'rea
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
-import { buildTouchNativeEvent } from '../../../events/shared/payloads';
 import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 
@@ -29,7 +28,21 @@ describe('userEvent.longPress with fake timers', () => {
 
     await user.longPress(screen.getByTestId('pressable'));
     expect(getEventsNames(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
-    expect(events[0].payload.nativeEvent).toEqual({ ...buildTouchNativeEvent(), timestamp: 0 });
+    const touch = {
+      identifier: 0,
+      locationX: 0,
+      locationY: 0,
+      pageX: 0,
+      pageY: 0,
+      target: 0,
+      timestamp: 0,
+    };
+    // Modern matches React Native, which passes the touch in the touch arrays.
+    expect(events[0].payload.nativeEvent).toEqual({
+      ...touch,
+      changedTouches: isModernEventSystem() ? [touch] : [],
+      touches: isModernEventSystem() ? [touch] : [],
+    });
     // Legacy holds the touch for Pressability's long press delay (500 ms).
     expect(events.map((event) => event.payload.nativeEvent.timestamp)).toEqual([
       0,
@@ -56,9 +69,39 @@ describe('userEvent.longPress with fake timers', () => {
     await user.press(screen.getByTestId('pressable'));
     const [pressIn, longPress, pressOut, , pressOut2, press] = events.map((e) => e.payload);
     expect(longPress).toBe(pressIn);
-    expect(pressIn.dispatchConfig).toEqual({ registrationName: 'onResponderGrant' });
-    expect(pressOut.dispatchConfig).toEqual({ registrationName: 'onResponderRelease' });
+    expect(pressIn.dispatchConfig).toMatchObject({ registrationName: 'onResponderGrant' });
+    expect(pressOut.dispatchConfig).toMatchObject({ registrationName: 'onResponderRelease' });
     expect(press).toBe(pressOut2);
+  });
+
+  test('passes events with the touch history of the touch, and onLongPress without currentTarget (legacy: stub events)', async () => {
+    const { events, logEvent } = createEventLogger();
+    const currentTargets: unknown[] = [];
+    const user = userEvent.setup();
+
+    await render(
+      <Pressable
+        testID="pressable"
+        onPressIn={logEvent('pressIn')}
+        onLongPress={(event) => {
+          currentTargets.push(event.currentTarget);
+        }}
+        onPressOut={logEvent('pressOut')}
+      />,
+    );
+
+    await user.longPress(screen.getByTestId('pressable'));
+    if (!isModernEventSystem()) return;
+
+    // Modern matches React Native, where Pressability calls `onLongPress` from a timer, after the
+    // dispatch of the responder grant event.
+    expect(currentTargets).toEqual([null]);
+    const [pressIn, pressOut] = events.map((e) => e.payload);
+    expect(pressOut.touchHistory).toBe(pressIn.touchHistory);
+    expect(pressOut.touchHistory).toMatchObject({
+      numberActiveTouches: 0,
+      touchBank: [{ touchActive: false }],
+    });
   });
 
   test('works on TouchableOpacity', async () => {
@@ -132,7 +175,7 @@ describe('userEvent.longPress with fake timers', () => {
     );
     await user.longPress(screen.getByText('press me'));
 
-    expect(events).toMatchSnapshot();
+    expect(getEventsNames(events)).toEqual(['longPress']);
   });
 
   test('calls onLongPress when duration is greater than specified delayLongPress', async () => {

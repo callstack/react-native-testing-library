@@ -18,7 +18,7 @@ import {
 import type { DispatchOptions } from './dispatch';
 import { dispatchEvent } from './dispatch';
 import type { CreateEventInit, NativeEventPayload } from './event';
-import { createEvent, createPressabilityEvent } from './event';
+import { createEvent } from './event';
 import type { PressabilityEventType } from './event-types';
 import { isPressabilityEventType } from './event-types';
 import {
@@ -28,6 +28,7 @@ import {
   validateEventInit,
 } from './fire-event-utils';
 import { dispatchPressabilityEvent, findResponder, getTouchPath } from './pressability';
+import { createPressabilityEvent } from './responder-event';
 
 /**
  * Event object passed to modern `fireEvent`. Handlers receive a `SyntheticEvent` from
@@ -171,7 +172,7 @@ async function firePressabilityEvent(
   const path = getTouchPath(instance);
   const responder = findResponder(path);
   if (responder != null) {
-    await dispatchPressabilityEvent(responder, eventType, event, path);
+    await dispatchPressabilityEvent(responder, eventType, event, path[0]);
   }
 }
 
