@@ -8,7 +8,8 @@ import {
   buildTextChangeEvent,
   buildTextSelectionChangeEvent,
 } from '../events/create-event';
-import { isPointerEventEnabled, nativeState } from '../events/legacy';
+import { nativeState } from '../events/shared/native-state';
+import { isPointerEventEnabled } from '../events/shared/pointer-events';
 import { ErrorWithStack } from '../helpers/errors';
 import { isHostTextInput } from '../helpers/host-component-names';
 import { getTextInputValue, isEditableTextInput } from '../helpers/text-input';

@@ -26,7 +26,24 @@ test('exposes init values', () => {
   expect(event.timeStamp).toBe(123);
   expect(event.nativeEvent).toBe(nativeEvent);
   expect(event.dispatchConfig).toEqual({ registrationName: 'onFocus' });
-  expect(event.isTrusted).toBe(true);
+  expect(event.composed).toBe(false);
+  // Only `dispatchEvent()` marks events as trusted.
+  expect(event.isTrusted).toBe(false);
+});
+
+test('takes bubbles, rnIsDirect and dispatchConfig over the type config', () => {
+  const dispatchConfig = { registrationName: 'onResponderGrant', dependencies: [] };
+  const event = new SyntheticEvent(
+    'responderGrant',
+    { bubbles: false, rnIsDirect: false },
+    {},
+    typeConfig,
+    dispatchConfig,
+  );
+
+  expect(event.bubbles).toBe(false);
+  expect(event.rnIsDirect).toBe(false);
+  expect(event.dispatchConfig).toBe(dispatchConfig);
 });
 
 test('has no target and phase outside of dispatch', () => {

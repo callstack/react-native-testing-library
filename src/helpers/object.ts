@@ -9,7 +9,6 @@ export function pick<T extends object>(object: T, keys: (keyof T)[]): Partial<T>
   return result;
 }
 
-/** Returns `true` for non-null objects that are not arrays. */
 export function isObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }

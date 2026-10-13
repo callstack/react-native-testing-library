@@ -38,6 +38,7 @@ export async function dispatchEvent(
   const state: DispatchState = { hasCalledHandler: false, firstError: null };
 
   await act(() => {
+    getEventInternals(event).isTrusted = true;
     getEventInternals(event).target = target;
     getEventInternals(event).composedPath = path;
 
@@ -65,7 +66,7 @@ export type DispatchOptions = {
 };
 
 /** Clears the event's internals, as the event can still be read after the dispatch. */
-export function resetEvent(event: SyntheticEvent) {
+function resetEvent(event: SyntheticEvent) {
   getEventInternals(event).eventPhase = SyntheticEvent.NONE;
   getEventInternals(event).currentTarget = null;
   getEventInternals(event).composedPath = [];
@@ -153,8 +154,7 @@ function callHandler(
     // In the same `try`, as a component's wrapper doesn't reach its own code after the prop throws.
     afterHandler?.(node, event);
   } catch (error) {
-    // Keep dispatching, as React Native (`handleListenerError()` in `EventTarget.js`) and the DOM
-    // do. `dispatchEvent()` rethrows the first error once the dispatch is done.
+    // Keep dispatching, as React Native (`handleListenerError()` in `EventTarget.js`) and DOM do.
     if (state.firstError == null) {
       state.firstError = { error };
     }

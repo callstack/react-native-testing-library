@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { GestureResponderEvent } from 'react-native';
 import {
   Button,
   Pressable,
@@ -11,6 +12,7 @@ import {
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
+import { SyntheticEvent } from '../../../events/modern/event';
 import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 
@@ -20,7 +22,7 @@ describe('userEvent.press with fake timers', () => {
     jest.setSystemTime(0);
   });
 
-  test('works on Pressable', async () => {
+  test('works on Pressable without holding the touch (legacy: holds it for 130 ms)', async () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
@@ -36,7 +38,53 @@ describe('userEvent.press with fake timers', () => {
 
     await user.press(screen.getByTestId('pressable'));
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
-    expect(events).toMatchSnapshot();
+    const touch = {
+      identifier: 0,
+      locationX: 0,
+      locationY: 0,
+      pageX: 0,
+      pageY: 0,
+      target: 0,
+      timestamp: 0,
+    };
+    // Modern matches React Native, which passes the touch in the touch arrays.
+    expect(events[0].payload.nativeEvent).toEqual({
+      ...touch,
+      changedTouches: isModernEventSystem() ? [touch] : [],
+      touches: isModernEventSystem() ? [touch] : [],
+    });
+    // Legacy holds the touch for Pressability's `minPressDuration`.
+    const releaseTime = isModernEventSystem() ? 0 : 130;
+    expect(events.map((event) => event.payload.nativeEvent.timestamp)).toEqual([
+      0,
+      releaseTime,
+      releaseTime,
+    ]);
+  });
+
+  test('renders state updates from onPressOut after onPress, as one touch end', async () => {
+    const calls: string[] = [];
+    function Counter() {
+      const [count, setCount] = React.useState(0);
+      calls.push(`render ${count}`);
+      return (
+        <Pressable
+          onPressOut={() => {
+            calls.push('pressOut');
+            setCount((value) => value + 1);
+          }}
+          onPress={() => calls.push(`press sees ${count}`)}
+          testID="pressable"
+        />
+      );
+    }
+
+    const user = userEvent.setup();
+    await render(<Counter />);
+    calls.length = 0;
+
+    await user.press(screen.getByTestId('pressable'));
+    expect(calls).toEqual(['pressOut', 'press sees 0', 'render 1']);
   });
 
   test('works on TouchableOpacity', async () => {
@@ -83,7 +131,7 @@ describe('userEvent.press with fake timers', () => {
     expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
-  test('passes the same touch event to onPress of Text as to onPressIn', async () => {
+  test('passes a SyntheticEvent with the touch of onPressIn to onPress of Text (legacy: a stub event)', async () => {
     const { events, logEvent } = createEventLogger();
 
     await render(
@@ -94,11 +142,39 @@ describe('userEvent.press with fake timers', () => {
 
     await userEvent.press(screen.getByText('press me'));
     const [pressInEvent, pressEvent] = events.map((event) => event.payload);
+    // The touch has ended by `onPress`, so it's no longer in `touches`.
+    expect(pressEvent.nativeEvent).toEqual({ ...pressInEvent.nativeEvent, touches: [] });
+    expect(pressEvent instanceof SyntheticEvent).toBe(isModernEventSystem());
+    if (isModernEventSystem()) return;
+
     expect(pressEvent).toMatchObject({
       target: {},
       currentTarget: { measure: expect.any(Function) },
-      nativeEvent: pressInEvent.nativeEvent,
     });
+  });
+
+  test('passes events with the Pressable as currentTarget to its callbacks (legacy: stub events)', async () => {
+    const currentTargets: unknown[] = [];
+    const logCurrentTarget = (event: GestureResponderEvent) => {
+      currentTargets.push(event.currentTarget);
+    };
+
+    await render(
+      <Pressable
+        testID="pressable"
+        onPressIn={logCurrentTarget}
+        onPressOut={logCurrentTarget}
+        onPress={logCurrentTarget}
+      >
+        <Text>press me</Text>
+      </Pressable>,
+    );
+
+    await userEvent.press(screen.getByText('press me'));
+    const pressable = screen.getByTestId('pressable');
+    expect(currentTargets.map((target) => target === pressable)).toEqual(
+      Array(3).fill(isModernEventSystem()),
+    );
   });
 
   test('does not call onPress of the Text around pressed Text', async () => {
@@ -188,6 +264,32 @@ describe('userEvent.press with fake timers', () => {
     await user.press(screen.getByTestId('pressable'));
 
     expect(events).toEqual([]);
+  });
+
+  test('finishes the press on Pressable disabled by onPressIn', async () => {
+    const { events, logEvent } = createEventLogger();
+    function BusyPressable() {
+      const [busy, setBusy] = React.useState(false);
+      return (
+        <Pressable
+          disabled={busy}
+          onPressIn={(event) => {
+            logEvent('pressIn')(event);
+            setBusy(true);
+          }}
+          onPressOut={logEvent('pressOut')}
+          onPress={logEvent('press')}
+          testID="pressable"
+        />
+      );
+    }
+
+    const user = userEvent.setup();
+    await render(<BusyPressable />);
+    await user.press(screen.getByTestId('pressable'));
+
+    // React Native checks `disabled` only when the touch starts.
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
   });
 
   test('does not call press when pointer events is none', async () => {
@@ -442,8 +544,8 @@ describe('userEvent.press with fake timers', () => {
     );
 
     await userEvent.press(screen.getByPlaceholderText('email'));
-    // Modern matches iOS: a non-editable TextInput claims the touch too, and calls its callbacks,
-    // as `editable={false}` only stops it from focusing. Legacy skips it, as Android does.
+    // Modern matches iOS, where `editable={false}` only stops TextInput from focusing. Legacy
+    // skips it, as Android does.
     expect(getEventsNames(events)).toEqual(isModernEventSystem() ? ['inputPressIn'] : ['press']);
   });
 

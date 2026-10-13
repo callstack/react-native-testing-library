@@ -3,6 +3,7 @@ import { Pressable, Text, TouchableHighlight, TouchableOpacity, View } from 'rea
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
+import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 
 describe('userEvent.longPress with fake timers', () => {
@@ -11,7 +12,7 @@ describe('userEvent.longPress with fake timers', () => {
     jest.setSystemTime(0);
   });
 
-  test('works on Pressable', async () => {
+  test('works on Pressable without holding the touch (legacy: holds it for 500 ms)', async () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
@@ -27,7 +28,71 @@ describe('userEvent.longPress with fake timers', () => {
 
     await user.longPress(screen.getByTestId('pressable'));
     expect(getEventsNames(events)).toEqual(['pressIn', 'longPress', 'pressOut']);
-    expect(events).toMatchSnapshot();
+    const touch = {
+      identifier: 0,
+      locationX: 0,
+      locationY: 0,
+      pageX: 0,
+      pageY: 0,
+      target: 0,
+      timestamp: 0,
+    };
+    // Modern matches React Native, which passes the touch in the touch arrays.
+    expect(events[0].payload.nativeEvent).toEqual({
+      ...touch,
+      changedTouches: isModernEventSystem() ? [touch] : [],
+      touches: isModernEventSystem() ? [touch] : [],
+    });
+    // Legacy holds the touch for Pressability's long press delay (500 ms).
+    expect(events.map((event) => event.payload.nativeEvent.timestamp)).toEqual([
+      0,
+      0,
+      isModernEventSystem() ? 0 : 500,
+    ]);
+  });
+
+  test('passes the responder grant event to onPressIn and onLongPress, the release event to onPressOut and onPress', async () => {
+    const { events, logEvent } = createEventLogger();
+    const user = userEvent.setup();
+
+    await render(
+      <Pressable
+        onPress={logEvent('press')}
+        onPressIn={logEvent('pressIn')}
+        onPressOut={logEvent('pressOut')}
+        onLongPress={logEvent('longPress')}
+        testID="pressable"
+      />,
+    );
+
+    await user.longPress(screen.getByTestId('pressable'));
+    await user.press(screen.getByTestId('pressable'));
+    const [pressIn, longPress, pressOut, , pressOut2, press] = events.map((e) => e.payload);
+    expect(longPress).toBe(pressIn);
+    expect(pressIn.dispatchConfig).toMatchObject({ registrationName: 'onResponderGrant' });
+    expect(pressOut.dispatchConfig).toMatchObject({ registrationName: 'onResponderRelease' });
+    expect(press).toBe(pressOut2);
+  });
+
+  test('calls onLongPress without currentTarget (legacy: stub events)', async () => {
+    const currentTargets: unknown[] = [];
+    const user = userEvent.setup();
+
+    await render(
+      <Pressable
+        testID="pressable"
+        onLongPress={(event) => {
+          currentTargets.push(event.currentTarget);
+        }}
+      />,
+    );
+
+    await user.longPress(screen.getByTestId('pressable'));
+    if (!isModernEventSystem()) return;
+
+    // Modern matches React Native, where Pressability calls `onLongPress` from a timer, after the
+    // dispatch of the responder grant event.
+    expect(currentTargets).toEqual([null]);
   });
 
   test('works on TouchableOpacity', async () => {
@@ -101,7 +166,7 @@ describe('userEvent.longPress with fake timers', () => {
     );
     await user.longPress(screen.getByText('press me'));
 
-    expect(events).toMatchSnapshot();
+    expect(getEventsNames(events)).toEqual(['longPress']);
   });
 
   test('calls onLongPress when duration is greater than specified delayLongPress', async () => {
@@ -123,7 +188,7 @@ describe('userEvent.longPress with fake timers', () => {
     expect(mockOnPress).not.toHaveBeenCalled();
   });
 
-  test('does not calls onLongPress when duration is lesser than specified delayLongPress', async () => {
+  test('calls onLongPress whatever the delayLongPress (legacy: does not call it when duration is lesser than delayLongPress)', async () => {
     const mockOnLongPress = jest.fn();
     const mockOnPress = jest.fn();
     const user = userEvent.setup();
@@ -135,8 +200,9 @@ describe('userEvent.longPress with fake timers', () => {
     );
     await user.longPress(screen.getByText('press me'));
 
-    expect(mockOnLongPress).not.toHaveBeenCalled();
-    expect(mockOnPress).toHaveBeenCalledTimes(1);
+    // Modern `longPress()` doesn't wait for Pressability's long press timer.
+    expect(mockOnLongPress).toHaveBeenCalledTimes(isModernEventSystem() ? 1 : 0);
+    expect(mockOnPress).toHaveBeenCalledTimes(isModernEventSystem() ? 0 : 1);
   });
 
   test('does not calls onPress when onLongPress is called', async () => {
@@ -169,7 +235,7 @@ describe('userEvent.longPress with fake timers', () => {
     expect(mockOnLongPress).toHaveBeenCalled();
   });
 
-  test('longPress accepts custom duration', async () => {
+  test('calls onLongPress after custom duration (legacy: calls onPress instead when shorter than delayLongPress)', async () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
 
@@ -184,6 +250,13 @@ describe('userEvent.longPress with fake timers', () => {
     );
 
     await user.longPress(screen.getByTestId('pressable'), { duration: 50 });
-    expect(getEventsNames(events)).toEqual(['pressIn', 'press', 'pressOut']);
+    // Legacy runs Pressability, whose long press timer doesn't fire within 50 ms, and which delays
+    // `onPressOut` for touches shorter than its `minPressDuration` (130 ms).
+    expect(getEventsNames(events)).toEqual(
+      isModernEventSystem()
+        ? ['pressIn', 'longPress', 'pressOut']
+        : ['pressIn', 'press', 'pressOut'],
+    );
+    expect(events.at(-1)?.payload.nativeEvent.timestamp).toBe(50);
   });
 });
