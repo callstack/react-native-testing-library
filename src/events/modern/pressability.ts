@@ -151,8 +151,11 @@ export function getPressabilityCallback(
 ): EventHandler | undefined {
   const callbackName = getEventHandlerName(eventType) as PressabilityCallbackName;
   const config = getPressabilityConfig(responder);
+  // Mocked hosts, like `Text` and `TextInput`, have their own `onPress*` props instead.
   if (config == null) {
-    return getPressabilityEventHandler(responder, callbackName);
+    return isDisabledHostText(responder)
+      ? undefined
+      : getEventHandlerByName(responder.props, callbackName);
   }
 
   return config.disabled !== true ? (config[callbackName] ?? undefined) : undefined;
@@ -169,24 +172,13 @@ function getPressabilityConfig(instance: TestInstance): PressabilityConfig | nul
  * Pressability config has no `disabled`.
  */
 function claimsTouchWithoutResponder(instance: TestInstance): boolean {
-  return isHostTextInput(instance) || hasPressabilityEventHandler(instance);
-}
-
-function hasPressabilityEventHandler(instance: TestInstance): boolean {
-  return !isDisabledHostText(instance) && hasPressEventHandler(instance.props);
-}
-
-/**
- * Own `onPress*` prop (or its `testOnly_` variant) of an element without a Pressability config,
- * like a mocked `Text` or `TextInput` host. `undefined` for a disabled `Text`.
- */
-function getPressabilityEventHandler(
-  instance: TestInstance,
-  eventHandlerName: string,
-): EventHandler | undefined {
-  if (isDisabledHostText(instance)) {
-    return undefined;
+  if (isHostTextInput(instance)) {
+    return true;
   }
 
-  return getEventHandlerByName(instance.props, eventHandlerName);
+  if (isDisabledHostText(instance)) {
+    return false;
+  }
+
+  return hasPressEventHandler(instance.props);
 }

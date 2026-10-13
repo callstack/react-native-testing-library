@@ -66,7 +66,7 @@ export type DispatchOptions = {
 };
 
 /** Clears the event's internals, as the event can still be read after the dispatch. */
-export function resetEvent(event: SyntheticEvent) {
+function resetEvent(event: SyntheticEvent) {
   getEventInternals(event).eventPhase = SyntheticEvent.NONE;
   getEventInternals(event).currentTarget = null;
   getEventInternals(event).composedPath = [];

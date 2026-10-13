@@ -234,19 +234,6 @@ export function createEvent(eventType: string, init: CreateEventInit = {}): Synt
     return null;
   }
 
-  return createEventWithConfig(eventType, init, config);
-}
-
-/** @internal */
-export function getEventInternals(event: SyntheticEvent): EventInternals {
-  return (event as unknown as { [EVENT_INTERNALS]: EventInternals })[EVENT_INTERNALS];
-}
-
-function createEventWithConfig(
-  eventType: string,
-  init: CreateEventInit,
-  config: EventTypeConfig,
-): SyntheticEvent {
   const nativeEvent = init.nativeEvent ?? {};
   const nativeTimeStamp = nativeEvent.timeStamp ?? nativeEvent.timestamp;
   const timeStamp =
@@ -258,6 +245,11 @@ function createEventWithConfig(
     nativeEvent,
     config,
   );
+}
+
+/** @internal */
+export function getEventInternals(event: SyntheticEvent): EventInternals {
+  return (event as unknown as { [EVENT_INTERNALS]: EventInternals })[EVENT_INTERNALS];
 }
 
 function toDispatchConfig(config: EventTypeConfig): DispatchConfig {

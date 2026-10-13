@@ -1,9 +1,9 @@
-import type { TestInstance } from "test-renderer";
+import type { TestInstance } from 'test-renderer';
 
-import type { LegacyEvent } from "./create-event";
-import { dispatchEvent as dispatchModernEvent } from "./modern/dispatch";
-import { SyntheticEvent } from "./modern/event";
-import { invokeEventHandler } from "./shared/invoke-event-handler";
+import type { LegacyEvent } from './create-event';
+import { dispatchEvent as dispatchModernEvent } from './modern/dispatch';
+import { SyntheticEvent } from './modern/event';
+import { invokeEventHandler } from './shared/invoke-event-handler';
 
 /**
  * Dispatches an event from `createEvent()` to a host element. Used by `userEvent`.
