@@ -172,7 +172,7 @@ async function firePressabilityEvent(
   const path = getTouchPath(instance);
   const responder = findResponder(path);
   if (responder != null) {
-    await dispatchPressabilityEvent(responder, eventType, event, path[0]);
+    await dispatchPressabilityEvent(responder, [eventType], event, path[0]);
   }
 }
 

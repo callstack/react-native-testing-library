@@ -29,8 +29,8 @@ type DispatchState = {
 };
 
 /**
- * Calls one Pressability callback (`onPress` for `press`, `onPressIn` for `pressIn`, ...) of the
- * touch responder from `findResponder()`: from its `PressabilityConfig` for `Pressable` and
+ * Calls Pressability callbacks (`onPress` for `press`, `onPressIn` for `pressIn`, ...) of the
+ * touch responder from `findResponder()`, in order: from its `PressabilityConfig` for `Pressable` and
  * `Touchable*`, which Pressability exposes in tests as
  * `onStartShouldSetResponder.testOnly_pressabilityConfig()`, or its own `onPress*` prop (or the
  * `testOnly_` variant) for mocked hosts. Responders without Pressability, like `PanResponder`, and
@@ -39,43 +39,54 @@ type DispatchState = {
  * Doesn't negotiate the responder: callers do it once per touch, as React Native does on touch
  * start, so a touch's callbacks all go to the same responder.
  *
- * One `act()` wraps the call, and a callback error is rethrown after it. As in React Native's
- * responder system, which calls handlers directly instead of dispatching the event, `event.target`
- * is the hit target, `event.currentTarget` is the responder during the call, and `eventPhase` and
- * `composedPath()` stay unset. `onLongPress` gets a `null` `currentTarget`, as Pressability calls
- * it from a timer, after the dispatch.
+ * One `act()` wraps the calls, as React Native batches updates for the whole responder event, so
+ * `onPress` sees the state from before `onPressOut`, not its updates. The callbacks are looked up
+ * before the first call. A callback error stops the calls and is rethrown after `act()`. As in
+ * React Native's responder system, which calls handlers directly instead of dispatching the event,
+ * `event.target` is the hit target, `event.currentTarget` is the responder during each call, and
+ * `eventPhase` and `composedPath()` stay unset. `onLongPress` gets a `null` `currentTarget`, as
+ * Pressability calls it from a timer, after the dispatch.
  *
  * Known limitation: `testOnly_pressabilityConfig` exists only when `NODE_ENV` is `test`, which
  * Jest sets by default. Without it, `Pressable` and `Touchable*` claim the touch but get nothing.
  *
- * @param event from `createPressabilityEvent()`, passed to the callback. React Native passes the
+ * @param eventTypes the callbacks to call, in order, e.g. `['pressOut', 'press']` on touch end.
+ * @param event from `createPressabilityEvent()`, passed to each callback. React Native passes the
  * same event to `onPressIn` and `onLongPress`, and another one to `onPressOut` and `onPress`.
  * @param hitTarget the first element of the touch path from `getTouchPath()`.
- * @returns `true` if a callback was called.
+ * @returns the event types whose callback was called.
  */
 export async function dispatchPressabilityEvent(
   responder: TestInstance,
-  eventType: PressabilityEventType,
+  eventTypes: readonly PressabilityEventType[],
   event: SyntheticEvent,
   hitTarget: TestInstance,
-): Promise<boolean> {
+): Promise<PressabilityEventType[]> {
   if (!isInstanceMounted(responder)) {
-    return false;
+    return [];
   }
 
-  const callback = getPressabilityCallback(responder, eventType);
-  if (callback == null) {
-    return false;
+  const calls = eventTypes.flatMap((eventType) => {
+    const callback = getPressabilityCallback(responder, eventType);
+    return callback != null ? [{ eventType, callback }] : [];
+  });
+  if (calls.length === 0) {
+    return [];
   }
 
   const state: DispatchState = { firstError: null };
+  const calledEventTypes: PressabilityEventType[] = [];
   await act(() => {
     getEventInternals(event).target = hitTarget;
-    getEventInternals(event).currentTarget = eventType === 'longPress' ? null : responder;
-    try {
-      callback.call(responder, event);
-    } catch (error) {
-      state.firstError = { error };
+    for (const { eventType, callback } of calls) {
+      getEventInternals(event).currentTarget = eventType === 'longPress' ? null : responder;
+      calledEventTypes.push(eventType);
+      try {
+        callback.call(responder, event);
+      } catch (error) {
+        state.firstError = { error };
+        break;
+      }
     }
 
     getEventInternals(event).currentTarget = null;
@@ -86,7 +97,7 @@ export async function dispatchPressabilityEvent(
     throw state.firstError.error;
   }
 
-  return true;
+  return calledEventTypes;
 }
 
 /**

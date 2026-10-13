@@ -54,30 +54,29 @@ export async function emitPressEvents(
     return;
   }
 
-  const dispatch = async (eventType: PressabilityEventType, event: SyntheticEvent) => {
-    const hasCalledHandler = await dispatchPressabilityEvent(responder, eventType, event, path[0]);
-    interaction.recordEvent(eventType, hasCalledHandler);
+  /** Calls the callbacks in one `act()`, as React Native calls them from one responder event. */
+  const dispatch = async (eventTypes: PressabilityEventType[], event: SyntheticEvent) => {
+    const calledEventTypes = await dispatchPressabilityEvent(responder, eventTypes, event, path[0]);
+    for (const eventType of eventTypes) {
+      interaction.recordEvent(eventType, calledEventTypes.includes(eventType));
+    }
   };
 
   await wait(config);
   const pressStartEvent = createPressabilityEvent('pressIn');
-  await dispatch('pressIn', pressStartEvent);
+  await dispatch(['pressIn'], pressStartEvent);
 
   await wait(config, options.duration);
   const isLongPress = options.type === 'longPress';
   if (isLongPress) {
-    await dispatch('longPress', pressStartEvent);
+    await dispatch(['longPress'], pressStartEvent);
   }
-
-  const pressEndEvent = createPressabilityEvent('pressOut');
-  await dispatch('pressOut', pressEndEvent);
 
   // Pressability skips `onPress` after a long press only when there is an `onLongPress`.
   const isPressCanceledByLongPress =
     isLongPress && getPressabilityCallback(responder, 'longPress') != null;
-  if (!isPressCanceledByLongPress) {
-    await dispatch('press', pressEndEvent);
-  }
+  const pressEndEvent = createPressabilityEvent('pressOut');
+  await dispatch(isPressCanceledByLongPress ? ['pressOut'] : ['pressOut', 'press'], pressEndEvent);
 }
 
 /**

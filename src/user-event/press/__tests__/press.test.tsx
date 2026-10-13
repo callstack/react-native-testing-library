@@ -62,6 +62,31 @@ describe('userEvent.press with fake timers', () => {
     ]);
   });
 
+  test('renders state updates from onPressOut after onPress, as one touch end', async () => {
+    const calls: string[] = [];
+    function Counter() {
+      const [count, setCount] = React.useState(0);
+      calls.push(`render ${count}`);
+      return (
+        <Pressable
+          onPressOut={() => {
+            calls.push('pressOut');
+            setCount((value) => value + 1);
+          }}
+          onPress={() => calls.push(`press sees ${count}`)}
+          testID="pressable"
+        />
+      );
+    }
+
+    const user = userEvent.setup();
+    await render(<Counter />);
+    calls.length = 0;
+
+    await user.press(screen.getByTestId('pressable'));
+    expect(calls).toEqual(['pressOut', 'press sees 0', 'render 1']);
+  });
+
   test('works on TouchableOpacity', async () => {
     const mockOnPress = jest.fn();
 

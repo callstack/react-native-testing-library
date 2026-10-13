@@ -23,7 +23,7 @@ async function touch(
   const path = getTouchPath(instance);
   const responder = findResponder(path);
   return responder != null
-    ? await dispatchPressabilityEvent(responder, eventType, event, path[0])
+    ? (await dispatchPressabilityEvent(responder, [eventType], event, path[0])).length > 0
     : false;
 }
 
