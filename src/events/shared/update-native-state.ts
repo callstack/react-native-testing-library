@@ -78,7 +78,9 @@ function tryGetText(event: unknown): string | null {
   try {
     // @ts-expect-error: try to extract text from the event value
     const text = event?.nativeEvent?.text;
-    return typeof text === 'string' ? text : null;
+    if (typeof text === 'string') {
+      return text;
+    }
   } catch {
     // Do nothing
   }

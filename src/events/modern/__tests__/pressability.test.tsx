@@ -148,6 +148,27 @@ test('does not call callbacks of disabled Pressable', async () => {
   expect(calls).toEqual([]);
 });
 
+test('does not call callbacks of Text disabled during the touch', async () => {
+  const onPress = jest.fn();
+  function DisabledOnPressIn() {
+    const [disabled, setDisabled] = React.useState(false);
+    return (
+      <Text disabled={disabled} onPressIn={() => setDisabled(true)} onPress={onPress}>
+        Press me
+      </Text>
+    );
+  }
+  await render(<DisabledOnPressIn />);
+  const path = getTouchPath(screen.getByText('Press me'));
+  const responder = findResponder(path) as TestInstance;
+
+  await dispatchPressabilityEvent(responder, ['pressIn'], createTouchEvent(), path[0]);
+  const result = await dispatchPressabilityEvent(responder, ['press'], createTouchEvent(), path[0]);
+
+  expect(result).toEqual([]);
+  expect(onPress).not.toHaveBeenCalled();
+});
+
 test('returns whether the responder had the callback', async () => {
   await render(
     <Pressable onPress={jest.fn()}>
