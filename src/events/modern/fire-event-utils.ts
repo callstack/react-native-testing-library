@@ -8,9 +8,6 @@ import { getEventTypeConfig, isPressabilityEventType } from './event-types';
 
 const ALLOWED_INIT_KEYS = ['nativeEvent', 'timeStamp'];
 
-/** Legacy events carried these as stubs. The dispatch sets them to host elements. */
-const DISPATCH_KEYS = ['target', 'currentTarget'];
-
 const EVENT_KEYS = new Set(
   Object.getOwnPropertyNames(SyntheticEvent.prototype).filter((key) => key !== 'constructor'),
 );
@@ -156,15 +153,10 @@ export function validateChangeTextArgs(
  * would leave handlers reading `undefined` with no explanation.
  */
 function describeUnknownKeys(keys: string[]): string {
-  const dispatchKeys = keys.filter((key) => DISPATCH_KEYS.includes(key));
-  const eventKeys = keys.filter((key) => !dispatchKeys.includes(key) && EVENT_KEYS.has(key));
-  const otherKeys = keys.filter((key) => !dispatchKeys.includes(key) && !eventKeys.includes(key));
+  const eventKeys = keys.filter((key) => EVENT_KEYS.has(key));
+  const otherKeys = keys.filter((key) => !EVENT_KEYS.has(key));
 
   const reasons: string[] = [];
-  if (dispatchKeys.length > 0) {
-    reasons.push(`${formatKeys(dispatchKeys)} ${isOrAre(dispatchKeys)} set by the dispatch.`);
-  }
-
   if (eventKeys.length > 0) {
     reasons.push(`${formatKeys(eventKeys)} ${isOrAre(eventKeys)} provided by the event.`);
   }

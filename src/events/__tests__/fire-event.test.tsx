@@ -309,10 +309,10 @@ describe('event object', () => {
   );
 
   test.each([
-    [{ target: 1 }, '"target". "target" is set by the dispatch.'],
+    [{ target: 1 }, '"target". "target" is provided by the event.'],
     [
       { target: {}, currentTarget: { measure: () => {} } },
-      '"target", "currentTarget". "target", "currentTarget" are set by the dispatch.',
+      '"target", "currentTarget". "target", "currentTarget" are provided by the event.',
     ],
     [{ persist: () => {} }, '"persist". "persist" is provided by the event.'],
     [
@@ -322,7 +322,7 @@ describe('event object', () => {
     [{ text: 'Hello' }, '"text". Pass "text" in "nativeEvent" instead.'],
     [
       { text: 'Hello', target: 1, persist: () => {} },
-      '"text", "target", "persist". "target" is set by the dispatch. "persist" is provided by the event. Pass "text" in "nativeEvent" instead.',
+      '"text", "target", "persist". "target", "persist" are provided by the event. Pass "text" in "nativeEvent" instead.',
     ],
   ])(
     'throws on unsupported keys %p (legacy: passes them to the handler)',
