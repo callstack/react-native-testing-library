@@ -1630,7 +1630,6 @@ describe('direct events', () => {
     ),
   ];
 
-  // Builds one case per event type, passing the matching `on*` handler prop to `ui`.
   function buildDirectEventCases(
     source: string,
     eventTypes: string[],
@@ -1651,8 +1650,7 @@ describe('direct events', () => {
 
       await fireEvent(screen.getByTestId('target'), eventType, emptyEvent);
 
-      // Modern matches React Native: direct events don't bubble. Legacy still bubbles them, with a
-      // warning.
+      // Modern matches React Native: direct events don't bubble.
       expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
       expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     },
@@ -1698,8 +1696,7 @@ describe('direct events', () => {
 
     await fireEvent(screen.getByTestId('child'), 'onMomentumScrollEnd', emptyEvent);
 
-    // Modern matches React Native: direct events don't bubble. Legacy still bubbles them, with a
-    // warning.
+    // Modern matches React Native: direct events don't bubble.
     expect(onMomentumScrollEnd).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
   });
@@ -1714,8 +1711,7 @@ describe('direct events', () => {
 
     await fireEvent.scroll(screen.getByTestId('child'));
 
-    // Modern matches React Native: direct events don't bubble. Legacy still bubbles them, with a
-    // warning.
+    // Modern matches React Native: direct events don't bubble.
     expect(onScroll).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     if (isModern()) return;
@@ -1761,7 +1757,6 @@ describe('direct events', () => {
     await fireEvent.scroll(screen.getByTestId('child'));
 
     // Modern matches React Native: scroll doesn't bubble, and composite props are never called.
-    // Legacy calls the composite prop, with a warning.
     expect(onScroll).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
   });

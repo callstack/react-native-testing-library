@@ -216,8 +216,7 @@ test('warns when pressing a TextInput without handlers inside a Pressable (legac
 
   await user.press(screen.getByTestId('input'));
 
-  // Modern matches React Native: the TextInput claims the touch, so the warning names it, not the
-  // Pressable. Legacy passes the press on to the Pressable.
+  // Modern matches React Native: the TextInput claims the touch, so the warning names it.
   const isModern = isModernEventSystem();
   expect(onPress).toHaveBeenCalledTimes(isModern ? 0 : 1);
   expect(warnSpy).toHaveBeenCalledTimes(isModern ? 1 : 0);
@@ -243,8 +242,7 @@ test('warns when pressing a non-editable TextInput without handlers inside a Pre
 
   await user.press(screen.getByTestId('input'));
 
-  // Modern matches iOS: same as an editable TextInput, it claims the touch, so the warning names
-  // it. Legacy skips the non-editable TextInput and passes the press on to the Pressable.
+  // Modern matches iOS, where a non-editable TextInput claims the touch too.
   const isModern = isModernEventSystem();
   expect(onPress).toHaveBeenCalledTimes(isModern ? 0 : 1);
   expect(warnSpy).toHaveBeenCalledTimes(isModern ? 1 : 0);

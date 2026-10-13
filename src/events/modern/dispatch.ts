@@ -153,8 +153,7 @@ function callHandler(
     // In the same `try`, as a component's wrapper doesn't reach its own code after the prop throws.
     afterHandler?.(node, event);
   } catch (error) {
-    // Keep dispatching, as React Native (`handleListenerError()` in `EventTarget.js`) and the DOM
-    // do. `dispatchEvent()` rethrows the first error once the dispatch is done.
+    // Keep dispatching, as React Native (`handleListenerError()` in `EventTarget.js`) and DOM do.
     if (state.firstError == null) {
       state.firstError = { error };
     }

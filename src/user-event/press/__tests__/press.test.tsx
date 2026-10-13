@@ -479,8 +479,8 @@ describe('userEvent.press with fake timers', () => {
     );
 
     await userEvent.press(screen.getByPlaceholderText('email'));
-    // Modern matches iOS: a non-editable TextInput claims the touch too, and calls its callbacks,
-    // as `editable={false}` only stops it from focusing. Legacy skips it, as Android does.
+    // Modern matches iOS, where `editable={false}` only stops TextInput from focusing. Legacy
+    // skips it, as Android does.
     expect(getEventsNames(events)).toEqual(isModernEventSystem() ? ['inputPressIn'] : ['press']);
   });
 

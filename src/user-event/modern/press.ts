@@ -22,8 +22,8 @@ export type EmitPressOptions = {
 
 /**
  * Presses the element as a touch on a device does: finds the touch responder as modern
- * `fireEvent.press()` does (`getTouchPath()` and `findResponder()`), then calls its Pressability
- * callbacks in the order Pressability calls them, each with a `SyntheticEvent`:
+ * `fireEvent.press()` does, then calls its Pressability callbacks in the order Pressability calls
+ * them, each with a `SyntheticEvent`:
  *
  * 1. `onPressIn` on touch start.
  * 2. `onLongPress`, for `longPress()`.

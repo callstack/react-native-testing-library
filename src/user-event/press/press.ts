@@ -1,19 +1,12 @@
 import type { TestInstance } from 'test-renderer';
 
-import { act } from '../../act';
 import { getConfig } from '../../config';
-import { buildResponderGrantEvent, buildResponderReleaseEvent } from '../../events/legacy';
 import { isTestInstance } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
-import { findPressTarget } from '../legacy/press';
-import { emitPressEvents } from '../modern/press';
+import { emitPressEvents as emitLegacyPressEvents } from '../legacy/press';
+import { emitPressEvents as emitModernPressEvents } from '../modern/press';
 import type { UserEventConfig, UserEventInstance } from '../setup';
-import { Interaction, wait, warnAboutUnhandledInteraction } from '../utils';
-
-// These are constants defined in the React Native repo
-// See: https://github.com/facebook/react-native/blob/50e38cc9f1e6713228a91ad50f426c4f65e65e1a/packages/react-native/Libraries/Pressability/Pressability.js#L264
-export const DEFAULT_MIN_PRESS_DURATION = 130;
-export const DEFAULT_LONG_PRESS_DELAY_MS = 500;
+import { Interaction, warnAboutUnhandledInteraction } from '../utils';
 
 export interface PressOptions {
   duration?: number;
@@ -60,72 +53,8 @@ const basePress = async (
   options: BasePressOptions,
 ): Promise<void> => {
   if (getConfig().unstable_eventSystem === 'modern') {
-    await emitPressEvents(config, interaction, instance, options);
-    return;
-  }
-
-  // Legacy holds a long press for Pressability's long press delay, so its timer calls `onLongPress`.
-  const legacyOptions =
-    options.type === 'longPress'
-      ? { ...options, duration: options.duration ?? DEFAULT_LONG_PRESS_DELAY_MS }
-      : options;
-  const targetKind = findPressTarget(interaction, instance);
-  if (targetKind === 'host') {
-    await emitDirectPressEvents(config, interaction, legacyOptions);
-  } else if (targetKind === 'responder') {
-    await emitPressabilityPressEvents(config, interaction, legacyOptions);
+    await emitModernPressEvents(config, interaction, instance, options);
+  } else {
+    await emitLegacyPressEvents(config, interaction, instance, options);
   }
 };
-
-/**
- * Dispatches a press event sequence for host instances that have `onPress*` event handlers.
- */
-async function emitDirectPressEvents(
-  config: UserEventConfig,
-  interaction: Interaction,
-  options: BasePressOptions,
-) {
-  await wait(config);
-  await interaction.dispatchTouchEvent('pressIn');
-
-  await wait(config, options.duration);
-
-  // Long press events are emitted before `pressOut`.
-  if (options.type === 'longPress') {
-    await interaction.dispatchTouchEvent('longPress');
-  }
-
-  await interaction.dispatchTouchEvent('pressOut');
-
-  // Regular press events are emitted after `pressOut` according to the React Native docs.
-  // See: https://reactnative.dev/docs/pressable#onpress
-  // Experimentally for very short presses (< 130ms) `press` events are actually emitted before `onPressOut`, but
-  // we will ignore that as in reality most pressed would be above the 130ms threshold.
-  // Like the touch callbacks above, `press` is called only on the target, with a touch event.
-  // Dispatching it would bubble it to `onPress` of ancestors, which the responder system doesn't do.
-  if (options.type === 'press') {
-    await interaction.dispatchTouchEvent('press');
-  }
-}
-
-async function emitPressabilityPressEvents(
-  config: UserEventConfig,
-  interaction: Interaction,
-  options: BasePressOptions,
-) {
-  await wait(config);
-
-  await interaction.invokeEventHandler('responderGrant', buildResponderGrantEvent());
-
-  const duration = options.duration ?? DEFAULT_MIN_PRESS_DURATION;
-  await wait(config, duration);
-
-  await interaction.invokeEventHandler('responderRelease', buildResponderReleaseEvent());
-
-  // React Native will wait for minimal delay of DEFAULT_MIN_PRESS_DURATION
-  // before emitting the `pressOut` event. We need to wait here, so that
-  // `press()` function does not return before that.
-  if (DEFAULT_MIN_PRESS_DURATION - duration > 0) {
-    await act(() => wait(config, DEFAULT_MIN_PRESS_DURATION - duration));
-  }
-}

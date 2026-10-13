@@ -230,12 +230,11 @@ export function createEvent(eventType: string, init: CreateEventInit = {}): Synt
 }
 
 /**
- * Creates the event Pressability passes to the callback for the event type. React Native's
- * `ResponderEventPlugin` creates responder events from a touch, and Pressability passes them on:
- * the `responderGrant` event, created when the touch starts, to `onPressIn` and `onLongPress`, and
- * the `responderRelease` event, created when it ends, to `onPressOut` and `onPress`. Ready for
- * `dispatchPressabilityEvent()`. The passed `nativeEvent` is deep merged onto a default touch
- * payload. Pressability calls only the touch responder's callback, so the event is direct.
+ * Creates the event Pressability passes to the callback, ready for `dispatchPressabilityEvent()`.
+ * As in React Native, `onPressIn` and `onLongPress` get the `responderGrant` event (touch start),
+ * and `onPressOut` and `onPress` the `responderRelease` event (touch end). `nativeEvent` is deep
+ * merged onto a default touch payload. The event is direct, as Pressability calls only the touch
+ * responder's callback.
  *
  * @param eventType e.g. `press` or `pressIn`
  */

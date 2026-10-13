@@ -56,8 +56,7 @@ export async function scrollTo(
     layoutMeasurement: options.layoutMeasurement ?? nativeState.layoutSizeForInstance.get(instance),
   };
 
-  // `ScrollView` calls `onContentSizeChange(width, height)` from JavaScript, with two arguments
-  // instead of an event object, so `dispatchEvent` can't call it.
+  // Not dispatched: `ScrollView` calls `onContentSizeChange(width, height)` from JavaScript.
   await interaction.invokeEventHandler(
     'contentSizeChange',
     options.contentSize?.width ?? 0,
