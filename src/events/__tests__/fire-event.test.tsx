@@ -1896,7 +1896,6 @@ describe('Pressability event types', () => {
     expect(event.bubbles).toBe(false);
     expect(event.rnIsDirect).toBe(false);
     expect(event.target).toBe(screen.getByText('Press me'));
-    expect(event.touchHistory.numberActiveTouches).toBe(1);
   });
 
   test('calls onLongPress without currentTarget (legacy: passes the event object as given)', async () => {

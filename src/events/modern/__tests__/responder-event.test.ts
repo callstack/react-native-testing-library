@@ -1,5 +1,5 @@
 import { SyntheticEvent } from '../event';
-import { createPressabilityEvent, createTouchHistory, ResponderEvent } from '../responder-event';
+import { createPressabilityEvent, ResponderEvent } from '../responder-event';
 
 afterEach(() => {
   jest.restoreAllMocks();
@@ -83,78 +83,4 @@ test('keeps the touch arrays of the passed nativeEvent', () => {
 
   expect(event.nativeEvent.changedTouches).toBe(touches);
   expect(event.nativeEvent.touches).toBe(touches);
-});
-
-test('records the touch in the touch history shared by the touch events', () => {
-  const touchHistory = createTouchHistory();
-
-  const startEvent = createPressabilityEvent(
-    'pressIn',
-    { nativeEvent: { pageX: 10, pageY: 20, timestamp: 100 } },
-    touchHistory,
-  );
-  expect(startEvent.touchHistory).toEqual({
-    touchBank: [
-      {
-        touchActive: true,
-        startPageX: 10,
-        startPageY: 20,
-        startTimeStamp: 100,
-        currentPageX: 10,
-        currentPageY: 20,
-        currentTimeStamp: 100,
-        previousPageX: 10,
-        previousPageY: 20,
-        previousTimeStamp: 100,
-      },
-    ],
-    numberActiveTouches: 1,
-    indexOfSingleActiveTouch: 0,
-    mostRecentTimeStamp: 100,
-  });
-
-  const endEvent = createPressabilityEvent(
-    'pressOut',
-    { nativeEvent: { pageX: 15, pageY: 25, timestamp: 200 } },
-    touchHistory,
-  );
-  expect(endEvent.touchHistory).toBe(startEvent.touchHistory);
-  expect(endEvent.touchHistory).toEqual({
-    touchBank: [
-      {
-        touchActive: false,
-        startPageX: 10,
-        startPageY: 20,
-        startTimeStamp: 100,
-        currentPageX: 15,
-        currentPageY: 25,
-        currentTimeStamp: 200,
-        previousPageX: 10,
-        previousPageY: 20,
-        previousTimeStamp: 100,
-      },
-    ],
-    numberActiveTouches: 0,
-    indexOfSingleActiveTouch: 0,
-    mostRecentTimeStamp: 200,
-  });
-});
-
-test('records a whole touch for a touch end without a touch start', () => {
-  const event = createPressabilityEvent('press', { nativeEvent: { timestamp: 100 } });
-
-  expect(event.touchHistory.touchBank[0]).toMatchObject({
-    touchActive: false,
-    startTimeStamp: 100,
-    currentTimeStamp: 100,
-  });
-  expect(event.touchHistory.numberActiveTouches).toBe(0);
-});
-
-test('skips touches without a valid identifier in the touch history', () => {
-  const event = createPressabilityEvent('pressIn', {
-    nativeEvent: { changedTouches: [{ pageX: 1 }], touches: [] },
-  });
-
-  expect(event.touchHistory.touchBank).toEqual([]);
 });

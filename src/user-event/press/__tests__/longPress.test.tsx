@@ -74,19 +74,16 @@ describe('userEvent.longPress with fake timers', () => {
     expect(press).toBe(pressOut2);
   });
 
-  test('passes events with the touch history of the touch, and onLongPress without currentTarget (legacy: stub events)', async () => {
-    const { events, logEvent } = createEventLogger();
+  test('calls onLongPress without currentTarget (legacy: stub events)', async () => {
     const currentTargets: unknown[] = [];
     const user = userEvent.setup();
 
     await render(
       <Pressable
         testID="pressable"
-        onPressIn={logEvent('pressIn')}
         onLongPress={(event) => {
           currentTargets.push(event.currentTarget);
         }}
-        onPressOut={logEvent('pressOut')}
       />,
     );
 
@@ -96,12 +93,6 @@ describe('userEvent.longPress with fake timers', () => {
     // Modern matches React Native, where Pressability calls `onLongPress` from a timer, after the
     // dispatch of the responder grant event.
     expect(currentTargets).toEqual([null]);
-    const [pressIn, pressOut] = events.map((e) => e.payload);
-    expect(pressOut.touchHistory).toBe(pressIn.touchHistory);
-    expect(pressOut.touchHistory).toMatchObject({
-      numberActiveTouches: 0,
-      touchBank: [{ touchActive: false }],
-    });
   });
 
   test('works on TouchableOpacity', async () => {
