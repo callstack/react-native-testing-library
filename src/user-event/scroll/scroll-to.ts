@@ -2,7 +2,7 @@ import { stringify } from 'jest-matcher-utils';
 import type { TestInstance } from 'test-renderer';
 
 import { buildScrollEvent } from '../../events/create-event';
-import { nativeState } from '../../events/legacy';
+import { nativeState } from '../../events/shared/native-state';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { pick } from '../../helpers/object';
@@ -56,8 +56,7 @@ export async function scrollTo(
     layoutMeasurement: options.layoutMeasurement ?? nativeState.layoutSizeForInstance.get(instance),
   };
 
-  // `ScrollView` calls `onContentSizeChange(width, height)` from JavaScript, with two arguments
-  // instead of an event object, so `dispatchEvent` can't call it.
+  // Not dispatched: `ScrollView` calls `onContentSizeChange(width, height)` from JavaScript.
   await interaction.invokeEventHandler(
     'contentSizeChange',
     options.contentSize?.width ?? 0,

@@ -1,4 +1,4 @@
-/** A logged handler call. `event-serializer.ts` prints it the same way in both event systems. */
+/** Logged handler call. A class, so `event-serializer.ts` can recognize it with `instanceof`. */
 export class EventEntry {
   constructor(
     readonly name: string,

@@ -1,9 +1,6 @@
 import type { TestInstance } from 'test-renderer';
 
-import { getEventHandlerName } from '../shared/handler';
-import { mergeEventProps } from '../shared/merge';
-import { buildTouchNativeEvent } from '../shared/payloads';
-import type { EventTypeConfig, PressabilityEventType } from './event-types';
+import type { EventTypeConfig } from './event-types';
 import { getEventTypeConfig } from './event-types';
 
 export type NativeEventPayload = Record<string, unknown>;
@@ -14,7 +11,7 @@ export type NativeEventPayload = Record<string, unknown>;
  */
 export type DispatchConfig =
   | { phasedRegistrationNames: { bubbled: string; captured: string; skipBubbling?: boolean } }
-  | { registrationName: string };
+  | { registrationName: string; dependencies?: readonly string[] };
 
 export type CreateEventInit = {
   /** Passed to handlers as `event.nativeEvent`. Defaults to `{}`. */
@@ -26,8 +23,11 @@ export type CreateEventInit = {
   timeStamp?: number;
 };
 
+/** `bubbles` and `rnIsDirect` default to what the type config says. */
 type SyntheticEventInit = {
+  bubbles?: boolean;
   cancelable?: boolean;
+  rnIsDirect?: boolean;
   timeStamp?: number;
 };
 
@@ -53,6 +53,7 @@ type EventInternals = {
   eventPhase: EventPhase;
   composedPath: TestInstance[];
   stopPropagation: boolean;
+  isTrusted: boolean;
 };
 
 const EVENT_INTERNALS = Symbol('eventInternals');
@@ -85,14 +86,15 @@ export class SyntheticEvent {
     init: SyntheticEventInit,
     nativeEvent: NativeEventPayload,
     typeConfig: EventTypeConfig,
+    dispatchConfig: DispatchConfig = toDispatchConfig(typeConfig),
   ) {
     this._type = type;
-    this._bubbles = typeConfig.kind === 'bubbling' && !typeConfig.skipBubbling;
+    this._bubbles = init.bubbles ?? (typeConfig.kind === 'bubbling' && !typeConfig.skipBubbling);
     this._cancelable = Boolean(init.cancelable);
-    this._rnIsDirect = typeConfig.kind === 'direct';
+    this._rnIsDirect = init.rnIsDirect ?? typeConfig.kind === 'direct';
     this._timeStamp = init.timeStamp ?? performance.now();
     this._nativeEvent = nativeEvent;
-    this._dispatchConfig = toDispatchConfig(typeConfig);
+    this._dispatchConfig = dispatchConfig;
     Object.defineProperty(this, EVENT_INTERNALS, {
       value: {
         typeConfig,
@@ -101,6 +103,7 @@ export class SyntheticEvent {
         eventPhase: NONE,
         composedPath: [],
         stopPropagation: false,
+        isTrusted: false,
       } satisfies EventInternals,
     });
   }
@@ -128,6 +131,11 @@ export class SyntheticEvent {
 
   get bubbles(): boolean {
     return this._bubbles;
+  }
+
+  /** React Native never creates composed events. */
+  get composed(): boolean {
+    return false;
   }
 
   get cancelable(): boolean {
@@ -167,9 +175,9 @@ export class SyntheticEvent {
     return getEventInternals(this).eventPhase;
   }
 
-  /** Only the native event dispatch creates events, and React Native marks those as trusted. */
+  /** Set by `dispatchEvent()`, as React Native's native event dispatch marks events as trusted. */
   get isTrusted(): boolean {
-    return true;
+    return getEventInternals(this).isTrusted;
   }
 
   get cancelBubble(): boolean {
@@ -226,36 +234,6 @@ export function createEvent(eventType: string, init: CreateEventInit = {}): Synt
     return null;
   }
 
-  return createEventWithConfig(eventType, init, config);
-}
-
-/**
- * Creates the event passed to a Pressability callback, ready for `dispatchPressabilityEvent()`.
- * React Native passes the responder event derived from a touch, so the passed `nativeEvent` is
- * deep merged onto a default touch payload. Pressability calls only the touch responder's
- * callback, so the event is direct.
- *
- * @param eventType e.g. `press` or `pressIn`
- */
-export function createPressabilityEvent(
-  eventType: PressabilityEventType,
-  init: CreateEventInit,
-): SyntheticEvent {
-  const nativeEvent = mergeEventProps(buildTouchNativeEvent(), init.nativeEvent);
-  const config: EventTypeConfig = { kind: 'direct', handlerName: getEventHandlerName(eventType) };
-  return createEventWithConfig(eventType, { timeStamp: init.timeStamp, nativeEvent }, config);
-}
-
-/** @internal */
-export function getEventInternals(event: SyntheticEvent): EventInternals {
-  return (event as unknown as { [EVENT_INTERNALS]: EventInternals })[EVENT_INTERNALS];
-}
-
-function createEventWithConfig(
-  eventType: string,
-  init: CreateEventInit,
-  config: EventTypeConfig,
-): SyntheticEvent {
   const nativeEvent = init.nativeEvent ?? {};
   const nativeTimeStamp = nativeEvent.timeStamp ?? nativeEvent.timestamp;
   const timeStamp =
@@ -267,6 +245,11 @@ function createEventWithConfig(
     nativeEvent,
     config,
   );
+}
+
+/** @internal */
+export function getEventInternals(event: SyntheticEvent): EventInternals {
+  return (event as unknown as { [EVENT_INTERNALS]: EventInternals })[EVENT_INTERNALS];
 }
 
 function toDispatchConfig(config: EventTypeConfig): DispatchConfig {

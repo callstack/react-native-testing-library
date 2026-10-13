@@ -341,7 +341,8 @@ test('does nothing when the target is unmounted', async () => {
   const onFocus = jest.fn();
   await render(<View testID="target" {...handlerProps({ onFocus })} />);
   const target = screen.getByTestId('target');
-  await screen.rerender(<View />);
+  // A new key remounts the host element, so `target` is detached.
+  await screen.rerender(<View key="new" />);
 
   const result = await dispatchEvent(target, createKnownEvent('focus'));
 

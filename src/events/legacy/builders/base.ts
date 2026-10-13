@@ -20,7 +20,6 @@ export function baseSyntheticEvent(): BaseEvent {
   };
 }
 
-/** Wraps a `nativeEvent` in a legacy event object with `baseSyntheticEvent()` stubs. */
 export function wrapNativeEvent<T extends object>(nativeEvent: T) {
   return { ...baseSyntheticEvent(), nativeEvent };
 }

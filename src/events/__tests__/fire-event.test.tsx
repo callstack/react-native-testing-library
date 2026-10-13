@@ -39,8 +39,7 @@ const horizontalScrollEvent = { nativeEvent: { contentOffset: { x: 50 } } };
 const pressEventData = { nativeEvent: { pageX: 20, pageY: 30 } };
 const anySyntheticEvent = expect.any(SyntheticEvent);
 
-const defaultTouchPayload = {
-  changedTouches: [],
+const defaultTouch = {
   identifier: 0,
   locationX: 0,
   locationY: 0,
@@ -48,8 +47,17 @@ const defaultTouchPayload = {
   pageY: 0,
   target: 0,
   timestamp: expect.any(Number),
-  touches: [],
 };
+const defaultTouchPayload = { ...defaultTouch, changedTouches: [], touches: [] };
+
+/**
+ * Modern touch payload, as on a device: `changedTouches` has the touch, and so does `touches` until
+ * the touch ends.
+ */
+function getTouchPayload(isTouchStart: boolean, touchProps?: object) {
+  const touch = { ...defaultTouch, ...touchProps };
+  return { ...touch, changedTouches: [touch], touches: isTouchStart ? [touch] : [] };
+}
 
 beforeEach(() => {
   jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
@@ -301,10 +309,10 @@ describe('event object', () => {
   );
 
   test.each([
-    [{ target: 1 }, '"target". "target" is set by the dispatch.'],
+    [{ target: 1 }, '"target". "target" is provided by the event.'],
     [
       { target: {}, currentTarget: { measure: () => {} } },
-      '"target", "currentTarget". "target", "currentTarget" are set by the dispatch.',
+      '"target", "currentTarget". "target", "currentTarget" are provided by the event.',
     ],
     [{ persist: () => {} }, '"persist". "persist" is provided by the event.'],
     [
@@ -314,7 +322,7 @@ describe('event object', () => {
     [{ text: 'Hello' }, '"text". Pass "text" in "nativeEvent" instead.'],
     [
       { text: 'Hello', target: 1, persist: () => {} },
-      '"text", "target", "persist". "target" is set by the dispatch. "persist" is provided by the event. Pass "text" in "nativeEvent" instead.',
+      '"text", "target", "persist". "target", "persist" are provided by the event. Pass "text" in "nativeEvent" instead.',
     ],
   ])(
     'throws on unsupported keys %p (legacy: passes them to the handler)',
@@ -426,19 +434,10 @@ describe('fireEvent.press', () => {
     const onPress = jest.fn();
     await render(<Pressable testID="btn" onPress={onPress} />);
     await fireEvent.press(screen.getByTestId('btn'));
-    expect(onPress.mock.calls[0][0].nativeEvent).toMatchInlineSnapshot(`
-      {
-        "changedTouches": [],
-        "identifier": 0,
-        "locationX": 0,
-        "locationY": 0,
-        "pageX": 0,
-        "pageY": 0,
-        "target": 0,
-        "timestamp": 100100100100,
-        "touches": [],
-      }
-    `);
+    // Modern matches React Native, which fills the touch arrays. Legacy leaves them empty.
+    expect(onPress.mock.calls[0][0].nativeEvent).toEqual(
+      isModern() ? getTouchPayload(false) : { ...defaultTouchPayload, timestamp: 100100100100 },
+    );
     // Modern matches React Native, which passes a `SyntheticEvent`. Legacy passes a plain object
     // with stubs of its methods.
     expect(onPress.mock.calls[0][0] instanceof SyntheticEvent).toBe(isModern());
@@ -480,14 +479,20 @@ describe('fireEvent.press', () => {
 
     await fireEvent.press(screen.getByText('Press me'));
 
-    expect(event?.nativeEvent).toEqual(defaultTouchPayload);
+    expect(event?.nativeEvent).toEqual(isModern() ? getTouchPayload(false) : defaultTouchPayload);
     // Modern matches React Native: the event targets the pressed element, and Pressability calls
     // `onPress` of the responder. Legacy passes stubs as `target` and `currentTarget`.
     if (!isModern()) return;
-    expect(event?.type).toBe('press');
+    expect(event?.type).toBe('responderRelease');
+    expect(event?.dispatchConfig).toEqual({
+      registrationName: 'onResponderRelease',
+      dependencies: ['topTouchCancel', 'topTouchEnd'],
+    });
     expect(event?.target).toBe(screen.getByText('Press me'));
     expect(currentTarget).toBe(screen.getByTestId('pressable'));
-    expect(eventPhase).toBe(event?.BUBBLING_PHASE);
+    // The responder system calls the handler directly, without an event dispatch.
+    expect(eventPhase).toBe(event?.NONE);
+    expect(event?.isTrusted).toBe(false);
     // Reset after the dispatch.
     expect(event?.currentTarget).toBeNull();
   });
@@ -497,19 +502,11 @@ describe('fireEvent.press', () => {
     await render(<Pressable testID="btn" onPress={onPress} />);
     const customEventData = { nativeEvent: { pageX: 20, pageY: 30 }, timeStamp: 123 };
     await fireEvent.press(screen.getByTestId('btn'), customEventData);
-    expect(onPress.mock.calls[0][0].nativeEvent).toMatchInlineSnapshot(`
-      {
-        "changedTouches": [],
-        "identifier": 0,
-        "locationX": 0,
-        "locationY": 0,
-        "pageX": 20,
-        "pageY": 30,
-        "target": 0,
-        "timestamp": 100100100100,
-        "touches": [],
-      }
-    `);
+    expect(onPress.mock.calls[0][0].nativeEvent).toEqual(
+      isModern()
+        ? getTouchPayload(false, { pageX: 20, pageY: 30 })
+        : { ...defaultTouchPayload, pageX: 20, pageY: 30, timestamp: 100100100100 },
+    );
     expect(onPress.mock.calls[0][0].timeStamp).toBe(123);
     // Legacy merges the passed props into a plain event object.
     if (isModern()) return;
@@ -1644,7 +1641,6 @@ describe('direct events', () => {
     ),
   ];
 
-  // Builds one case per event type, passing the matching `on*` handler prop to `ui`.
   function buildDirectEventCases(
     source: string,
     eventTypes: string[],
@@ -1665,8 +1661,7 @@ describe('direct events', () => {
 
       await fireEvent(screen.getByTestId('target'), eventType, emptyEvent);
 
-      // Modern matches React Native: direct events don't bubble. Legacy still bubbles them, with a
-      // warning.
+      // Modern matches React Native: direct events don't bubble.
       expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
       expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     },
@@ -1712,8 +1707,7 @@ describe('direct events', () => {
 
     await fireEvent(screen.getByTestId('child'), 'onMomentumScrollEnd', emptyEvent);
 
-    // Modern matches React Native: direct events don't bubble. Legacy still bubbles them, with a
-    // warning.
+    // Modern matches React Native: direct events don't bubble.
     expect(onMomentumScrollEnd).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
   });
@@ -1728,8 +1722,7 @@ describe('direct events', () => {
 
     await fireEvent.scroll(screen.getByTestId('child'));
 
-    // Modern matches React Native: direct events don't bubble. Legacy still bubbles them, with a
-    // warning.
+    // Modern matches React Native: direct events don't bubble.
     expect(onScroll).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     if (isModern()) return;
@@ -1775,7 +1768,6 @@ describe('direct events', () => {
     await fireEvent.scroll(screen.getByTestId('child'));
 
     // Modern matches React Native: scroll doesn't bubble, and composite props are never called.
-    // Legacy calls the composite prop, with a warning.
     expect(onScroll).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
   });
@@ -1890,7 +1882,7 @@ describe('Pressability event types', () => {
     expect(calls).toEqual([`pressable.${name}`, `touchable.${name}`]);
   });
 
-  test('passes a direct event with default touch payload (legacy: passes the event object as given)', async () => {
+  test('passes a responder event with default touch payload (legacy: passes the event object as given)', async () => {
     const onPressIn = jest.fn();
     await render(
       <Pressable testID="pressable" onPressIn={onPressIn}>
@@ -1906,14 +1898,38 @@ describe('Pressability event types', () => {
     const event = onPressIn.mock.calls[0][0];
     // Modern matches React Native, which derives Pressability events from a touch.
     expect(event.nativeEvent).toEqual(
-      isModern() ? { ...defaultTouchPayload, pageX: 20 } : { pageX: 20 },
+      isModern() ? getTouchPayload(true, { pageX: 20 }) : { pageX: 20 },
     );
     expect(event.timeStamp).toBe(123);
     if (!isModern()) return;
-    expect(event.type).toBe('pressin');
+    expect(event.type).toBe('responderGrant');
+    expect(event.dispatchConfig).toEqual({
+      registrationName: 'onResponderGrant',
+      dependencies: [],
+    });
+    // Not a direct event: the responder system calls the handler without an event dispatch.
     expect(event.bubbles).toBe(false);
-    expect(event.rnIsDirect).toBe(true);
+    expect(event.rnIsDirect).toBe(false);
     expect(event.target).toBe(screen.getByText('Press me'));
+  });
+
+  test('calls onLongPress without currentTarget (legacy: passes the event object as given)', async () => {
+    let currentTarget: unknown;
+    await render(
+      <Pressable
+        onLongPress={(event) => {
+          currentTarget = event.currentTarget;
+        }}
+      >
+        <Text>Press me</Text>
+      </Pressable>,
+    );
+
+    await fireEvent(screen.getByText('Press me'), 'longPress', emptyEvent);
+
+    // Modern matches React Native, where Pressability calls `onLongPress` from a timer, after the
+    // dispatch of the responder grant event.
+    expect(currentTarget).toBe(isModern() ? null : undefined);
   });
 });
 
