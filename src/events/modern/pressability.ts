@@ -150,13 +150,7 @@ export function getPressabilityCallback(
   responder: TestInstance,
   eventType: PressabilityEventType,
 ): EventHandler | undefined {
-  return getCallback(responder, getEventHandlerName(eventType) as PressabilityCallbackName);
-}
-
-function getCallback(
-  responder: TestInstance,
-  callbackName: PressabilityCallbackName,
-): EventHandler | undefined {
+  const callbackName = getEventHandlerName(eventType) as PressabilityCallbackName;
   const config = getPressabilityConfig(responder);
   if (config == null) {
     return getPressabilityEventHandler(responder, callbackName);

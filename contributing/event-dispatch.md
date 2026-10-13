@@ -11,7 +11,6 @@ The files in `src/events/legacy/`:
 | `fire-event.ts`  | Public `fireEvent` API                                                                                    |
 | `propagation.ts` | Bubbling vs direct events, walking up host and composite elements                                         |
 | `is-enabled.ts`  | Whether a device would deliver the event: `pointerEvents`, `editable`, touch responders                   |
-| `dispatch.ts`    | `dispatchEvent()`: calls the target's own handler in `act()`, used by `userEvent`                         |
 | `warnings.ts`    | `eventDiagnostics` warnings for `fireEvent`                                                               |
 | `builders/`      | Legacy event objects: `wrapNativeEvent()` (stubs from `baseSyntheticEvent()`), touch and responder events |
 
@@ -21,7 +20,7 @@ In the modern event system, `src/events/modern/pressability.ts` calls the `onPre
 
 Modern `fireEvent` doesn't log `eventDiagnostics` warnings yet. Only legacy `fireEvent` and `userEvent` do.
 
-`src/user-event/` is a separate module on top of the event subsystem. It creates and dispatches native events through the facades `src/events/create-event.ts` and `src/events/dispatch-event.ts`. Legacy helpers (touch and responder event builders) come from `src/events/legacy/index.ts`, which also re-exports `src/events/shared/handler.ts`, `src/events/shared/native-state.ts` and `isPointerEventEnabled()`. Other code imports `src/events/modern/` and `src/events/shared/` modules directly: `src/user-event/modern/press.ts` (hit testing and responder negotiation from `pressability.ts`, handler lookup from `handler.ts`) and `src/user-event/utils/` (`invokeEventHandler()`, the `SyntheticEvent` type and the warning helpers from `warnings.ts`).
+`src/user-event/` is a separate module on top of the event subsystem. It creates and dispatches native events through the facades `src/events/create-event.ts` and `src/events/dispatch-event.ts`. For a legacy event object, `dispatchEvent()` calls the target's own handler with `invokeEventHandler()` from `src/events/shared/invoke-event-handler.ts`. Other modules are imported directly: legacy touch and responder event builders from `src/events/legacy/builders/common.ts`, and `src/events/modern/` and `src/events/shared/` modules, e.g. `src/user-event/modern/press.ts` (hit testing and responder negotiation from `pressability.ts`, handler lookup from `handler.ts`) and `src/user-event/utils/` (`invokeEventHandler()`, the `SyntheticEvent` type and the warning helpers from `warnings.ts`).
 
 ## `fireEvent`
 

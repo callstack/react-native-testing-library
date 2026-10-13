@@ -4,9 +4,9 @@ import { act } from '../../act';
 import {
   buildResponderGrantEvent,
   buildResponderReleaseEvent,
-  hasPressEventHandler,
-  isPointerEventEnabled,
-} from '../../events/legacy';
+} from '../../events/legacy/builders/common';
+import { hasPressEventHandler } from '../../events/shared/handler';
+import { isPointerEventEnabled } from '../../events/shared/pointer-events';
 import { isHostText, isHostTextInput } from '../../helpers/host-component-names';
 import type { UserEventConfig } from '../setup';
 import type { Interaction } from '../utils';

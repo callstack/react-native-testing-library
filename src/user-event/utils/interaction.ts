@@ -2,7 +2,7 @@ import type { TestInstance } from 'test-renderer';
 
 import type { LegacyEvent } from '../../events/create-event';
 import { dispatchEvent } from '../../events/dispatch-event';
-import { buildTouchEvent } from '../../events/legacy';
+import { buildTouchEvent } from '../../events/legacy/builders/common';
 import type { SyntheticEvent } from '../../events/modern/event';
 import { invokeEventHandler } from '../../events/shared/invoke-event-handler';
 
