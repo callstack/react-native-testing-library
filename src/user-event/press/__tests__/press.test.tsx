@@ -266,6 +266,32 @@ describe('userEvent.press with fake timers', () => {
     expect(events).toEqual([]);
   });
 
+  test('finishes the press on Pressable disabled by onPressIn', async () => {
+    const { events, logEvent } = createEventLogger();
+    function BusyPressable() {
+      const [busy, setBusy] = React.useState(false);
+      return (
+        <Pressable
+          disabled={busy}
+          onPressIn={(event) => {
+            logEvent('pressIn')(event);
+            setBusy(true);
+          }}
+          onPressOut={logEvent('pressOut')}
+          onPress={logEvent('press')}
+          testID="pressable"
+        />
+      );
+    }
+
+    const user = userEvent.setup();
+    await render(<BusyPressable />);
+    await user.press(screen.getByTestId('pressable'));
+
+    // React Native checks `disabled` only when the touch starts.
+    expect(getEventsNames(events)).toEqual(['pressIn', 'pressOut', 'press']);
+  });
+
   test('does not call press when pointer events is none', async () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();

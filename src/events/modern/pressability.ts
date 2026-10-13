@@ -19,7 +19,7 @@ import type { PressabilityEventType } from './event-types';
 type PressabilityCallbackName = `on${Capitalize<PressabilityEventType>}`;
 
 /** The part of React Native's `PressabilityConfig` that RNTL reads. */
-type PressabilityConfig = { disabled?: boolean | null } & {
+type PressabilityConfig = {
   [Name in PressabilityCallbackName]?: EventHandler | null;
 };
 
@@ -33,8 +33,8 @@ type DispatchState = {
  * touch responder from `findResponder()`, in order: from its `PressabilityConfig` for `Pressable` and
  * `Touchable*`, which Pressability exposes in tests as
  * `onStartShouldSetResponder.testOnly_pressabilityConfig()`, or its own `onPress*` prop (or the
- * `testOnly_` variant) for mocked hosts. Responders without Pressability, like `PanResponder`, and
- * disabled ones get nothing.
+ * `testOnly_` variant) for mocked hosts. Responders without Pressability, like `PanResponder`, get
+ * nothing.
  *
  * Doesn't negotiate the responder: callers do it once per touch, as React Native does on touch
  * start, so a touch's callbacks all go to the same responder.
@@ -154,7 +154,12 @@ export function findResponder(path: TestInstance[]): TestInstance | null {
 
 /**
  * The responder's Pressability callback for the event type, e.g. `onLongPress` for `longPress`, or
- * `undefined` when it has none or is disabled.
+ * `undefined` when it has none.
+ *
+ * Ignores `disabled` of `Pressable` and `Touchable*`: Pressability checks it only in
+ * `onStartShouldSetResponder`, so one disabled during a touch, e.g. by `onPressIn`, still gets
+ * `onPressOut` and `onPress`. A disabled `Text` gets nothing, as on a device, where it stops
+ * rendering its Pressability handlers.
  */
 export function getPressabilityCallback(
   responder: TestInstance,
@@ -169,7 +174,7 @@ export function getPressabilityCallback(
       : getEventHandlerByName(responder.props, callbackName);
   }
 
-  return config.disabled !== true ? (config[callbackName] ?? undefined) : undefined;
+  return config[callbackName] ?? undefined;
 }
 
 /** Config of `Pressable` and `Touchable*`, or `null` for elements without Pressability. */
