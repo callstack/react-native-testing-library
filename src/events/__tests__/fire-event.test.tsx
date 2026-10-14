@@ -127,7 +127,8 @@ test('fireEvent throws with more than one event argument (legacy: passes them al
   // Modern matches React Native, where handlers receive a single event.
   expect(error).toBe(
     isModern()
-      ? 'Unable to fire a "press" event. Expected a single event object, received 3 arguments.'
+      ? 'Unable to fire a "press" event. Expected a single event object, received 3 arguments. ' +
+          'To call a handler prop with custom arguments, use UNSAFE_invokeHandler().'
       : undefined,
   );
   expect(handlePress.mock.calls).toEqual(isModern() ? [] : [['param1', 'param2', 'param3']]);
@@ -1933,7 +1934,7 @@ test('fireEvent throws for custom event (onCustomEvent) on composite component (
   // calls any matching prop, also on composite components.
   expect(error).toBe(
     isModern()
-      ? `Unable to fire a "customEvent" event. React Native doesn't dispatch "customEvent" natively, so no handler would be called.`
+      ? `Unable to fire a "customEvent" event. React Native doesn't dispatch "customEvent" natively, so no handler would be called. To call a handler prop directly, use UNSAFE_invokeHandler().`
       : undefined,
   );
   expect(handler.mock.calls).toEqual(isModern() ? [] : [['event data']]);
@@ -1952,7 +1953,7 @@ test('fireEvent throws for custom prop name (handlePress) on composite component
   // calls any matching prop, also on composite components.
   expect(error).toBe(
     isModern()
-      ? `Unable to fire a "handlePress" event. React Native doesn't dispatch "handlePress" natively, so no handler would be called.`
+      ? `Unable to fire a "handlePress" event. React Native doesn't dispatch "handlePress" natively, so no handler would be called. To call a handler prop directly, use UNSAFE_invokeHandler().`
       : undefined,
   );
   expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
@@ -2031,7 +2032,7 @@ test('fireEvent throws with non-existent event name (legacy: does nothing)', asy
   expect(outcome).toStrictEqual(
     isModern()
       ? {
-          error: `Unable to fire a "nonExistentEvent" event. React Native doesn't dispatch "nonExistentEvent" natively, so no handler would be called.`,
+          error: `Unable to fire a "nonExistentEvent" event. React Native doesn't dispatch "nonExistentEvent" natively, so no handler would be called. To call a handler prop directly, use UNSAFE_invokeHandler().`,
         }
       : { result: undefined },
   );
@@ -3199,7 +3200,7 @@ describe('responder system', () => {
     // responder system's touch history, which modern doesn't simulate, so modern throws.
     expect(error).toBe(
       isModern()
-        ? `Unable to fire a "responderMove" event. React Native doesn't dispatch "responderMove" natively, so no handler would be called.`
+        ? `Unable to fire a "responderMove" event. React Native doesn't dispatch "responderMove" natively, so no handler would be called. To call a handler prop directly, use UNSAFE_invokeHandler().`
         : undefined,
     );
     expect(onDrag).toHaveBeenCalledTimes(isModern() ? 0 : 1);
