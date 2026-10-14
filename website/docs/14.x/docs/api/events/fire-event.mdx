@@ -234,21 +234,24 @@ Calls the handler prop named `handlerName` with the given arguments, inside asyn
 This API doesn't simulate anything a device does. It doesn't check whether the element is disabled, blocked by `pointerEvents` or non-editable, so a test can pass for behavior that can't happen on a device. Use [User Event](/docs/api/events/user-event) or [`fireEvent`](#fire-event) when they support your case.
 :::
 
-`handlerName` is the exact prop name, e.g. `onHoverIn`, not `hoverIn`. Any function prop can be called, not only `on*` handlers. The prop is looked up on the given element first, then on the composite components that render it, nearest first, up to the next host element. Handlers of parent host elements are never called. If no function prop with that name is found, or the element is unmounted, it throws.
+`handlerName` is the exact prop name, e.g. `onContentSizeChange`, not `contentSizeChange`. Any function prop can be called, not only `on*` handlers. The prop is looked up on the given element first, then on the composite components that render it, nearest first, up to the next host element. Handlers of parent host elements are never called. If no function prop with that name is found, or the element is unmounted, it throws.
 
 ```jsx
-import { Pressable, Text } from 'react-native';
+import { FlatList, Text } from 'react-native';
 import { render, screen, UNSAFE_invokeHandler } from '@testing-library/react-native';
 
-const onHoverInMock = jest.fn();
+const onContentSizeChangeMock = jest.fn();
 
 await render(
-  <Pressable role="button" onHoverIn={onHoverInMock}>
-    <Text>Hover me</Text>
-  </Pressable>,
+  <FlatList
+    testID="list"
+    data={['a', 'b']}
+    renderItem={({ item }) => <Text>{item}</Text>}
+    onContentSizeChange={onContentSizeChangeMock}
+  />,
 );
 
-// `onHoverIn` is a prop of the `Pressable` component that renders the button element.
-await UNSAFE_invokeHandler(screen.getByRole('button'), 'onHoverIn');
-expect(onHoverInMock).toHaveBeenCalled();
+// `FlatList` calls `onContentSizeChange` from JavaScript, so no event reaches it.
+await UNSAFE_invokeHandler(screen.getByTestId('list'), 'onContentSizeChange', 320, 1200);
+expect(onContentSizeChangeMock).toHaveBeenCalledWith(320, 1200);
 ```

@@ -13,7 +13,7 @@ import { ErrorWithStack } from '../helpers/errors';
  * first, up to the next host element. Doesn't check whether a device would call the handler:
  * disabled elements, `pointerEvents` and `editable` are ignored.
  *
- * @param handlerName the exact prop name, e.g. `onHoverIn`
+ * @param handlerName the exact prop name, e.g. `onContentSizeChange`
  */
 export async function UNSAFE_invokeHandler(
   instance: TestInstance,
@@ -29,7 +29,7 @@ export async function UNSAFE_invokeHandler(
 
   if (typeof handlerName !== 'string' || handlerName === '') {
     throw new ErrorWithStack(
-      'Unable to invoke a handler. Please provide a handler prop name, e.g. "onHoverIn".',
+      'Unable to invoke a handler. Please provide a handler prop name, e.g. "onContentSizeChange".',
       UNSAFE_invokeHandler,
     );
   }

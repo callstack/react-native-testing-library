@@ -216,13 +216,15 @@ test('throws when the prop is not a function', async () => {
 });
 
 test('throws for an event type instead of a handler prop name', async () => {
-  const onHoverIn = jest.fn();
-  await render(<Pressable role="button" onHoverIn={onHoverIn} />);
+  const onContentSizeChange = jest.fn();
+  await render(<ScrollView testID="scroll" onContentSizeChange={onContentSizeChange} />);
 
-  await expect(UNSAFE_invokeHandler(screen.getByRole('button'), 'hoverIn')).rejects.toThrow(
-    'Unable to invoke "hoverIn". No "hoverIn" function prop found',
+  await expect(
+    UNSAFE_invokeHandler(screen.getByTestId('scroll'), 'contentSizeChange', 100, 200),
+  ).rejects.toThrow(
+    'Unable to invoke "contentSizeChange". No "contentSizeChange" function prop found',
   );
-  expect(onHoverIn).not.toHaveBeenCalled();
+  expect(onContentSizeChange).not.toHaveBeenCalled();
 });
 
 test('throws when the element is unmounted', async () => {
@@ -250,6 +252,6 @@ test('throws without a handler name', async () => {
 
   // @ts-expect-error Testing invalid input
   await expect(UNSAFE_invokeHandler(screen.getByTestId('view'))).rejects.toThrow(
-    'Unable to invoke a handler. Please provide a handler prop name, e.g. "onHoverIn".',
+    'Unable to invoke a handler. Please provide a handler prop name, e.g. "onContentSizeChange".',
   );
 });
