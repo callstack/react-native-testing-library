@@ -1901,6 +1901,38 @@ describe('custom event types', () => {
     expect(onPageSelected.mock.calls[0][0].nativeEvent).toEqual({ position: 2 });
   });
 
+  test('reaches the user callback through a wrapper that adapts the host prop', async () => {
+    // Shaped like `react-native-pager-view`: the composite passes its own handler to the host,
+    // which then calls the user's prop.
+    type PageSelectedEvent = { nativeEvent: { position: number } };
+    class PagerView extends React.Component<{
+      testID?: string;
+      onPageSelected?: (event: PageSelectedEvent) => void;
+    }> {
+      _onPageSelected = (event: PageSelectedEvent) => {
+        this.props.onPageSelected?.(event);
+      };
+
+      render() {
+        return React.createElement('RNCViewPager', {
+          testID: this.props.testID,
+          onPageSelected: this._onPageSelected,
+        });
+      }
+    }
+
+    const onPageSelected = jest.fn();
+    await render(<PagerView testID="pager" onPageSelected={onPageSelected} />);
+
+    await fireEvent(screen.getByTestId('pager'), 'pageSelected', {
+      nativeEvent: { position: 3 },
+      dispatch: 'direct',
+    });
+
+    expect(onPageSelected).toHaveBeenCalledTimes(1);
+    expect(onPageSelected.mock.calls[0][0].nativeEvent).toEqual({ position: 3 });
+  });
+
   test('throws for a custom event type without dispatch (legacy: calls the handler)', async () => {
     const onEndReached = jest.fn();
     // The Jest mock of `ScrollView` puts `FlatList`'s JavaScript callbacks, like `onEndReached`,
