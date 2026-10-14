@@ -32,7 +32,8 @@ import { createPressabilityEvent } from './responder-event';
 
 /**
  * Event object passed to modern `fireEvent`. Handlers receive a `SyntheticEvent` from
- * `createEvent()`, with `nativeEvent` as its `nativeEvent`.
+ * `createEvent()`, with `nativeEvent` as its `nativeEvent`. `dispatch` is required for event types
+ * React Native doesn't know, and not allowed for the others.
  */
 export type FireEventInit = CreateEventInit;
 
@@ -43,8 +44,10 @@ export type FireEventInit = CreateEventInit;
  * Pressability event types (`press`, `pressIn`, `pressOut`, `longPress`) call the callback of the
  * element that becomes the touch responder instead, as `fireEvent.press()` does.
  *
- * Exactly one event object is required, as React Native handlers receive a single event. Other
- * event types React Native doesn't dispatch natively (`changeText`, custom prop names) throw.
+ * Exactly one event object is required, as React Native handlers receive a single event. Event
+ * types React Native doesn't know need `dispatch: 'direct' | 'bubbling'` in the event object, as
+ * declared by the native component, e.g. a third-party component's `pageSelected`. Without it they
+ * throw, as do `changeText` and custom prop names.
  *
  * Resolves to nothing, unlike DOM `fireEvent`: React Native has no default actions that
  * `preventDefault()` could cancel. Handlers can read `event.defaultPrevented` themselves.
@@ -59,7 +62,7 @@ export async function fireEvent(
   const normalizedType = normalizeEventType(eventType);
   ensureInstance(instance, normalizedType, fireEvent);
   // Before the event object, as `fireEvent(input, 'changeText', 'Hello')` needs the hint more.
-  ensureEventType(normalizedType, fireEvent);
+  ensureEventType(normalizedType, args[0], fireEvent);
   ensureSingleEventArg(normalizedType, args, fireEvent);
   const init = validateEventInit(normalizedType, args[0], fireEvent);
   if (isPressabilityEventType(normalizedType)) {

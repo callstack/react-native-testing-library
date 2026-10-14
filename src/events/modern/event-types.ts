@@ -122,18 +122,20 @@ type DirectEventTypeConfig = {
 export type EventTypeConfig = BubblingEventTypeConfig | DirectEventTypeConfig;
 
 /**
+ * How a native component dispatches an event type React Native doesn't know, as its codegen spec
+ * declares the handler prop: `DirectEventHandler` or `BubblingEventHandler`.
+ */
+export type CustomEventDispatch = 'direct' | 'bubbling';
+
+export const CUSTOM_EVENT_DISPATCHES: readonly CustomEventDispatch[] = ['direct', 'bubbling'];
+
+/**
  * Returns how React Native dispatches the event type (e.g. `focus`), or `null` if React Native
  * doesn't know it.
  */
 export function getEventTypeConfig(eventType: string): EventTypeConfig | null {
   if (BUBBLING_EVENT_TYPES.includes(eventType)) {
-    const handlerName = getEventHandlerName(eventType);
-    return {
-      kind: 'bubbling',
-      handlerName,
-      captureHandlerName: `${handlerName}Capture`,
-      skipBubbling: SKIP_BUBBLING_EVENT_TYPES.includes(eventType),
-    };
+    return getBubblingEventTypeConfig(eventType, SKIP_BUBBLING_EVENT_TYPES.includes(eventType));
   }
 
   if (DIRECT_EVENT_TYPES.includes(eventType)) {
@@ -144,4 +146,31 @@ export function getEventTypeConfig(eventType: string): EventTypeConfig | null {
   }
 
   return null;
+}
+
+/**
+ * Returns the config React Native builds for an event type a native component declares, e.g. a
+ * third-party component's `pageSelected`. As codegen generates it (`GenerateViewConfigJs.js`), the
+ * handler props follow the event type (`onPageSelected`, `onPageSelectedCapture`), and bubbling
+ * events always bubble.
+ */
+export function getCustomEventTypeConfig(
+  eventType: string,
+  dispatch: CustomEventDispatch,
+): EventTypeConfig {
+  if (dispatch === 'bubbling') {
+    return getBubblingEventTypeConfig(eventType, false);
+  }
+
+  return { kind: 'direct', handlerName: getEventHandlerName(eventType) };
+}
+
+function getBubblingEventTypeConfig(eventType: string, skipBubbling: boolean): EventTypeConfig {
+  const handlerName = getEventHandlerName(eventType);
+  return {
+    kind: 'bubbling',
+    handlerName,
+    captureHandlerName: `${handlerName}Capture`,
+    skipBubbling,
+  };
 }

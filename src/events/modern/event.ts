@@ -1,7 +1,7 @@
 import type { TestInstance } from 'test-renderer';
 
-import type { EventTypeConfig } from './event-types';
-import { getEventTypeConfig } from './event-types';
+import type { CustomEventDispatch, EventTypeConfig } from './event-types';
+import { getCustomEventTypeConfig, getEventTypeConfig } from './event-types';
 
 export type NativeEventPayload = Record<string, unknown>;
 
@@ -21,6 +21,11 @@ export type CreateEventInit = {
    * (`nativeEvent.timeStamp ?? nativeEvent.timestamp`), then to `performance.now()`.
    */
   timeStamp?: number;
+  /**
+   * How to dispatch an event type React Native doesn't know, e.g. a third-party component's
+   * `pageSelected`. Ignored for event types React Native knows.
+   */
+  dispatch?: CustomEventDispatch;
 };
 
 /** `bubbles` and `rnIsDirect` default to what the type config says. */
@@ -226,10 +231,13 @@ export class SyntheticEvent {
  * `dispatchEvent()`. Like Testing Library's DOM `createEvent()`.
  *
  * @param eventType e.g. `focus` or `pointerUp`
- * @returns `null` for events unknown to React Native, as React Native drops them.
+ * @returns `null` for events unknown to React Native without `init.dispatch`, as React Native drops
+ * them.
  */
 export function createEvent(eventType: string, init: CreateEventInit = {}): SyntheticEvent | null {
-  const config = getEventTypeConfig(eventType);
+  const config =
+    getEventTypeConfig(eventType) ??
+    (init.dispatch != null ? getCustomEventTypeConfig(eventType, init.dispatch) : null);
   if (config == null) {
     return null;
   }
