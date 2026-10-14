@@ -65,10 +65,14 @@ function findHandler(instance: TestInstance, handlerName: string): EventHandler 
   return null;
 }
 
-/** E.g. `View, Pressable, MyButton`. */
+/**
+ * E.g. `View, Pressable, MyButton`. Collapses adjacent duplicates, e.g. `memo(forwardRef(Pressable))`
+ * in older React Native versions renders two fibers named `Pressable`.
+ */
 function formatCompositeNames(instance: TestInstance): string {
   const names = getCompositeOwnerFibers(instance)
     .map((fiber) => getComponentName(fiber.type))
-    .filter((name) => name != null);
+    .filter((name) => name != null)
+    .filter((name, index, all) => name !== all[index - 1]);
   return names.length > 0 ? names.join(', ') : 'none';
 }
