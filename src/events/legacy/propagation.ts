@@ -1,5 +1,6 @@
-import type { Fiber, TestInstance } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
+import { getCompositeOwnerFibers } from '../../helpers/fiber';
 import {
   isHostImage,
   isHostModal,
@@ -75,7 +76,7 @@ function findBubblingHandlerOwner(
 
   const handler =
     getEventHandlerByEventType(instance.props, eventType, { loose: true }) ??
-    findEventHandlerFromFiber(instance.unstable_fiber, eventType);
+    findCompositeEventHandler(instance, eventType);
   if (handler) {
     if (isEventEnabled(instance, normalizeEventType(eventType), touchResponder)) {
       return { owner: { handler, instance }, skippedTargets };
@@ -153,23 +154,16 @@ function isDirectEvent(instance: TestInstance, eventType: string) {
   return false;
 }
 
-function findEventHandlerFromFiber(fiber: Fiber | null, eventType: string): EventHandler | null {
-  // Container fibers have memoizedProps set to null
-  if (!fiber?.memoizedProps) {
-    return null;
+/** Checks the props of the composite components that render the element, nearest first. */
+function findCompositeEventHandler(instance: TestInstance, eventType: string): EventHandler | null {
+  for (const fiber of getCompositeOwnerFibers(instance)) {
+    const handler = getEventHandlerByEventType(fiber.memoizedProps ?? {}, eventType, {
+      loose: true,
+    });
+    if (handler) {
+      return handler;
+    }
   }
 
-  const handler = getEventHandlerByEventType(fiber.memoizedProps, eventType, {
-    loose: true,
-  });
-  if (handler) {
-    return handler;
-  }
-
-  // No parent fiber or we reached another host element
-  if (fiber.return === null || typeof fiber.return.type === 'string') {
-    return null;
-  }
-
-  return findEventHandlerFromFiber(fiber.return, eventType);
+  return null;
 }

@@ -37,7 +37,9 @@ export function ensureEventType(
   const alternative = UNKNOWN_EVENT_TYPE_ALTERNATIVES[eventType];
   throw new ErrorWithStack(
     `Unable to fire a "${eventType}" event. React Native doesn't dispatch "${eventType}" natively` +
-      (alternative != null ? `. Use ${alternative} instead.` : ', so no handler would be called.'),
+      (alternative != null
+        ? `. Use ${alternative} instead.`
+        : ', so no handler would be called. To call a handler prop directly, use UNSAFE_invokeHandler().'),
     callsite,
   );
 }
@@ -65,7 +67,8 @@ export function ensureSingleEventArg(
   if (args.length > 1) {
     throw new ErrorWithStack(
       `Unable to fire a "${eventType}" event. Expected a single event object, ` +
-        `received ${args.length} arguments.`,
+        `received ${args.length} arguments. To call a handler prop with custom arguments, ` +
+        'use UNSAFE_invokeHandler().',
       callsite,
     );
   }
