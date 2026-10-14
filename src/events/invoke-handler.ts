@@ -1,8 +1,10 @@
-import type { Fiber, TestInstance } from 'test-renderer';
+import type { TestInstance } from 'test-renderer';
 
 import { act } from '../act';
 import { isInstanceMounted } from '../helpers/component-tree';
 import { ErrorWithStack } from '../helpers/errors';
+import { getComponentName, getCompositeOwnerFibers } from '../helpers/fiber';
+import type { EventHandler } from './shared/types';
 
 /**
  * Calls a handler prop with the given arguments, in `act()`, and resolves to its return value.
@@ -46,36 +48,21 @@ export async function UNSAFE_invokeHandler(
   return await act(() => handler(...args));
 }
 
-type Handler = (...args: unknown[]) => unknown;
-
 /** Checks the element's props, then its composite owners' props, up to the next host element. */
-function findHandler(instance: TestInstance, handlerName: string): Handler | null {
+function findHandler(instance: TestInstance, handlerName: string): EventHandler | null {
   const ownHandler = instance.props[handlerName];
   if (typeof ownHandler === 'function') {
-    return ownHandler as Handler;
+    return ownHandler as EventHandler;
   }
 
   for (const fiber of getCompositeOwnerFibers(instance)) {
     const handler: unknown = fiber.memoizedProps?.[handlerName];
     if (typeof handler === 'function') {
-      return handler as Handler;
+      return handler as EventHandler;
     }
   }
 
   return null;
-}
-
-/** Fibers of the composite components that render the element, nearest first. */
-function getCompositeOwnerFibers(instance: TestInstance): Fiber[] {
-  const fibers: Fiber[] = [];
-  let fiber = instance.unstable_fiber?.return ?? null;
-  // Stops at the next host element, or at the root container, which has no parent.
-  while (fiber?.return != null && typeof fiber.type !== 'string') {
-    fibers.push(fiber);
-    fiber = fiber.return;
-  }
-
-  return fibers;
 }
 
 /** E.g. `View, Pressable, MyButton`. */
@@ -84,19 +71,4 @@ function formatCompositeNames(instance: TestInstance): string {
     .map((fiber) => getComponentName(fiber.type))
     .filter((name) => name != null);
   return names.length > 0 ? names.join(', ') : 'none';
-}
-
-function getComponentName(type: unknown): string | null {
-  if (typeof type === 'function') {
-    const component = type as { displayName?: string; name?: string };
-    return component.displayName || component.name || null;
-  }
-
-  if (type != null && typeof type === 'object') {
-    // `memo()` and `forwardRef()` wrap the component in `type` or `render`.
-    const wrapper = type as { displayName?: string; type?: unknown; render?: unknown };
-    return wrapper.displayName || getComponentName(wrapper.type ?? wrapper.render);
-  }
-
-  return null;
 }
