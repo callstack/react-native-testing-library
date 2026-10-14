@@ -246,12 +246,3 @@ test('throws without an element', async () => {
     'Unable to invoke "onCustom". Please provide a host element.',
   );
 });
-
-test('throws without a handler name', async () => {
-  await render(<View testID="view" />);
-
-  // @ts-expect-error Testing invalid input
-  await expect(UNSAFE_invokeHandler(screen.getByTestId('view'))).rejects.toThrow(
-    'Unable to invoke a handler. Please provide a handler prop name, e.g. "onContentSizeChange".',
-  );
-});

@@ -27,13 +27,6 @@ export async function UNSAFE_invokeHandler(
     );
   }
 
-  if (typeof handlerName !== 'string' || handlerName === '') {
-    throw new ErrorWithStack(
-      'Unable to invoke a handler. Please provide a handler prop name, e.g. "onContentSizeChange".',
-      UNSAFE_invokeHandler,
-    );
-  }
-
   if (!isInstanceMounted(instance)) {
     throw new ErrorWithStack(
       `Unable to invoke "${handlerName}". The element is unmounted.`,
@@ -55,6 +48,7 @@ export async function UNSAFE_invokeHandler(
 
 type Handler = (...args: unknown[]) => unknown;
 
+/** Checks the element's props, then its composite owners' props, up to the next host element. */
 function findHandler(instance: TestInstance, handlerName: string): Handler | null {
   const ownHandler = instance.props[handlerName];
   if (typeof ownHandler === 'function') {
