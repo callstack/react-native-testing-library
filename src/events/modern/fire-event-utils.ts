@@ -23,7 +23,7 @@ const UNKNOWN_EVENT_TYPE_ALTERNATIVES: Record<string, string> = {
 
 /**
  * Throws for event types React Native doesn't know, such as `changeText` or custom prop names,
- * except Pressability event types (`pressIn`, ...), and custom event types passed with `dispatch`.
+ * except Pressability event types (`pressIn`, ...), and event types passed with `dispatch`.
  * React Native drops unknown events, so dropping them here would call no handler, and a test
  * asserting that a handler wasn't called would pass for the wrong reason.
  *
@@ -44,6 +44,12 @@ export function ensureEventType(
     return;
   }
 
+  // Custom event type: the caller declares how it dispatches.
+  const hasDispatch = isPlainObject(init) && init.dispatch !== undefined;
+  if (hasDispatch) {
+    return;
+  }
+
   const alternative = UNKNOWN_EVENT_TYPE_ALTERNATIVES[eventType];
   if (alternative != null) {
     throw new ErrorWithStack(
@@ -51,10 +57,6 @@ export function ensureEventType(
         `natively. Use ${alternative} instead.`,
       callsite,
     );
-  }
-
-  if (isPlainObject(init) && init.dispatch !== undefined) {
-    return;
   }
 
   throw new ErrorWithStack(
@@ -154,14 +156,6 @@ function validateDispatch(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   callsite: Function,
 ) {
-  if (isKnownEventType(eventType)) {
-    throw new ErrorWithStack(
-      `Unable to fire a "${eventType}" event. Remove "dispatch": it's only for event types ` +
-        "React Native doesn't know.",
-      callsite,
-    );
-  }
-
   if (!(CUSTOM_EVENT_DISPATCHES as readonly unknown[]).includes(dispatch)) {
     throw new ErrorWithStack(
       `Unable to fire a "${eventType}" event. Expected "dispatch" to be "direct" or "bubbling", ` +

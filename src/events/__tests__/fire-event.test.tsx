@@ -1960,47 +1960,123 @@ describe('custom event types', () => {
     expect(onEndReached).toHaveBeenCalledTimes(isModern() ? 0 : 1);
   });
 
-  test.each([
-    [
-      'fireEvent() with focus',
-      'focus',
-      () => <TextInput testID="target" onFocus={jest.fn()} />,
-      (instance: TestInstance) =>
-        fireEvent(instance, 'focus', { nativeEvent: {}, dispatch: 'direct' }),
-    ],
-    [
-      'fireEvent() with press',
-      'press',
-      () => <Pressable testID="target" onPress={jest.fn()} />,
-      (instance: TestInstance) =>
-        fireEvent(instance, 'press', { nativeEvent: {}, dispatch: 'bubbling' }),
-    ],
-    [
-      'fireEvent.press()',
-      'press',
-      () => <Pressable testID="target" onPress={jest.fn()} />,
-      (instance: TestInstance) => fireEvent.press(instance, { dispatch: 'bubbling' }),
-    ],
-    [
-      'fireEvent.scroll()',
-      'scroll',
-      () => <ScrollView testID="target" onScroll={jest.fn()} />,
-      (instance: TestInstance) => fireEvent.scroll(instance, { dispatch: 'direct' }),
-    ],
-  ])(
-    '%s throws with dispatch for a known event type (legacy: passes it to the handler)',
-    async (_, eventType, renderElement, fire) => {
-      await render(renderElement());
+  test('dispatch overrides a bubbling built-in event type, skipping Pressability (legacy: calls only the nearest handler)', async () => {
+    // Shaped like `react-native-maps`: the native map declares `onPress` as a
+    // `BubblingEventHandler`, so a tap reaches it as a native `press` event, not from Pressability.
+    const calls: string[] = [];
+    const getHandlers = (id: string) => ({
+      onPressCapture: () => calls.push(`${id}.onPressCapture`),
+      onPress: () => calls.push(`${id}.onPress`),
+    });
+    await render(
+      <Pressable onPress={() => calls.push('pressable.onPress')}>
+        {React.createElement(
+          'AIRMapContainer',
+          getHandlers('parent'),
+          React.createElement('AIRMap', { testID: 'map', ...getHandlers('map') }),
+        )}
+      </Pressable>,
+    );
 
-      const error = await getErrorMessage(fire(screen.getByTestId('target')));
+    await fireEvent(screen.getByTestId('map'), 'press', {
+      nativeEvent: { coordinate: { latitude: 1, longitude: 2 } },
+      dispatch: 'bubbling',
+    });
 
-      expect(error).toBe(
-        isModern()
-          ? `Unable to fire a "${eventType}" event. Remove "dispatch": it's only for event types React Native doesn't know.`
-          : undefined,
-      );
-    },
-  );
+    expect(calls).toEqual(
+      isModern()
+        ? ['parent.onPressCapture', 'map.onPressCapture', 'map.onPress', 'parent.onPress']
+        : ['map.onPress'],
+    );
+  });
+
+  test('dispatch overrides a Pressability event type with a direct native event', async () => {
+    const onLongPress = jest.fn();
+    const onParentLongPress = jest.fn();
+    await render(
+      React.createElement(
+        'AIRMapContainer',
+        { onLongPress: onParentLongPress },
+        React.createElement('AIRMap', { testID: 'map', onLongPress }),
+      ),
+    );
+    const map = screen.getByTestId('map');
+
+    await fireEvent(map, 'longPress', { nativeEvent: { x: 1 }, dispatch: 'direct' });
+
+    expect(onParentLongPress).not.toHaveBeenCalled();
+    expect(onLongPress).toHaveBeenCalledTimes(1);
+    const received = onLongPress.mock.calls[0][0] as SyntheticEvent;
+    expect(received.nativeEvent).toEqual({ x: 1 });
+    expect(received.rnIsDirect).toBe(isModern() ? true : undefined);
+    expect(received.target).toBe(isModern() ? map : undefined);
+  });
+
+  test('dispatch overrides a bubbling built-in event type with a direct one', async () => {
+    const onFocus = jest.fn();
+    const onParentFocus = jest.fn();
+    await render(
+      React.createElement(
+        'RNCustomView',
+        { onFocus: onParentFocus },
+        React.createElement('RNCustomView', { testID: 'target', onFocus }),
+      ),
+    );
+
+    await fireEvent(screen.getByTestId('target'), 'focus', { nativeEvent: {}, dispatch: 'direct' });
+
+    expect(onFocus).toHaveBeenCalledTimes(1);
+    expect(onParentFocus).not.toHaveBeenCalled();
+  });
+
+  test('dispatch overrides a direct built-in event type with a bubbling one (legacy: calls only the nearest handler)', async () => {
+    const onLayout = jest.fn();
+    const onParentLayout = jest.fn();
+    await render(
+      React.createElement(
+        'RNCustomView',
+        { onLayout: onParentLayout },
+        React.createElement('RNCustomView', { testID: 'target', onLayout }),
+      ),
+    );
+
+    await fireEvent(screen.getByTestId('target'), 'layout', {
+      nativeEvent: {},
+      dispatch: 'bubbling',
+    });
+
+    expect(onLayout).toHaveBeenCalledTimes(1);
+    expect(onParentLayout).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+  });
+
+  test('fireEvent.press() with dispatch fires a native press event with the passed payload', async () => {
+    const onPress = jest.fn();
+    await render(React.createElement('AIRMap', { testID: 'map', onPress }));
+
+    await fireEvent.press(screen.getByTestId('map'), {
+      nativeEvent: { coordinate: { latitude: 1, longitude: 2 } },
+      dispatch: 'bubbling',
+    });
+
+    expect(onPress).toHaveBeenCalledTimes(1);
+    // Modern skips the default touch payload, as the event is the component's own.
+    const { nativeEvent } = onPress.mock.calls[0][0];
+    expect(nativeEvent).toMatchObject({ coordinate: { latitude: 1, longitude: 2 } });
+    expect('pageX' in nativeEvent).toBe(!isModern());
+  });
+
+  test('dispatch on a Pressable calls no Pressability callback (legacy: calls onPress)', async () => {
+    const onPress = jest.fn();
+    await render(<Pressable testID="target" onPress={onPress} />);
+
+    await fireEvent(screen.getByTestId('target'), 'press', {
+      nativeEvent: {},
+      dispatch: 'bubbling',
+    });
+
+    // Modern dispatches a native `press` event, which `Pressable`'s host has no prop for.
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
 
   test.each([
     ['capture', 'string "capture"'],
@@ -2025,21 +2101,17 @@ describe('custom event types', () => {
     },
   );
 
-  test('throws for changeText with dispatch (legacy: calls the handler)', async () => {
+  test('dispatches changeText with dispatch as a native event of the component', async () => {
     const onChangeText = jest.fn();
-    await render(<TextInput testID="input" onChangeText={onChangeText} />);
+    await render(React.createElement('RNCustomInput', { testID: 'input', onChangeText }));
 
-    const error = await getErrorMessage(
-      fireEvent(screen.getByTestId('input'), 'changeText', { nativeEvent: {}, dispatch: 'direct' }),
-    );
+    await fireEvent(screen.getByTestId('input'), 'changeText', {
+      nativeEvent: { text: 'Hello' },
+      dispatch: 'direct',
+    });
 
-    // `onChangeText` isn't a native event: `TextInput` calls it from its `onChange` handler.
-    expect(error).toBe(
-      isModern()
-        ? `Unable to fire a "changeText" event. React Native doesn't dispatch "changeText" natively. Use fireEvent.changeText() or userEvent.type() instead.`
-        : undefined,
-    );
-    expect(onChangeText).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(onChangeText).toHaveBeenCalledTimes(1);
+    expect(onChangeText.mock.calls[0][0].nativeEvent).toEqual({ text: 'Hello' });
   });
 });
 

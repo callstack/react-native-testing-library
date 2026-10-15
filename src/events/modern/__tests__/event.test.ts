@@ -217,10 +217,11 @@ describe('createEvent()', () => {
     });
   });
 
-  test('ignores dispatch for events known to React Native', () => {
+  test('overrides the dispatch of events known to React Native with dispatch', () => {
     const event = createEvent('focus', { dispatch: 'direct' });
 
-    expect(event?.bubbles).toBe(true);
-    expect(event?.rnIsDirect).toBe(false);
+    expect(event?.bubbles).toBe(false);
+    expect(event?.rnIsDirect).toBe(true);
+    expect(event?.dispatchConfig).toEqual({ registrationName: 'onFocus' });
   });
 });
