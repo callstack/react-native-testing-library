@@ -22,6 +22,85 @@ configure({ unstable_eventSystem: 'modern' });
 
 Make sure your `tsconfig.json` includes the setup file. If it doesn't, TypeScript won't see the import, and you won't get the stricter checks.
 
-## Event types
+## Key differences
+
+|                 | Legacy                                                    | Modern                                                                      |
+| --------------- | --------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Event dispatch  | Calls the first handler found, walking up from the target | Bubbling and direct events, as in React Native                              |
+| Event object    | What you pass                                             | `SyntheticEvent`, as in React Native                                        |
+| Handlers called | Props of host and composite components                    | Props of host elements, and press callbacks of `Pressable` and `Touchable*` |
+
+## API differences
+
+### `fireEvent`
+
+```ts
+// Legacy
+function fireEvent(instance: TestInstance, eventType: string, ...data: unknown[]): Promise<unknown>;
+
+// Modern
+function fireEvent(instance: TestInstance, eventType: string, event: FireEventInit): Promise<void>;
+
+type FireEventInit = {
+  nativeEvent?: Record<string, unknown>;
+  timeStamp?: number;
+  dispatch?: 'direct' | 'bubbling';
+};
+```
+
+#### Event type
 
 Pass event types without the `on` prefix: `'focus'`, not `'onFocus'`. The prefix still works but logs a deprecation warning, and will stop working in the next major release.
+
+The event type must be one React Native dispatches natively. `changeText` isn't one, as `TextInput` calls `onChangeText` from JavaScript. Use [`fireEvent.changeText()`](/docs/api/events/fire-event#change-text) or [`userEvent.type()`](/docs/api/events/user-event#type) instead.
+
+#### Event object
+
+Legacy `fireEvent` passes all its arguments to the handler as they are. Modern `fireEvent` takes exactly one event object, creates a `SyntheticEvent` from it, and passes that to the handler. The event object can only have `nativeEvent`, `timeStamp` and `dispatch`. Other keys throw: `target`, `currentTarget` and the event methods come from the `SyntheticEvent`, and payload fields belong in `nativeEvent`.
+
+```ts
+// Legacy
+await fireEvent(input, 'focus');
+await fireEvent(view, 'layout', { nativeEvent: { layout: { width: 100 } } });
+
+// Modern
+await fireEvent(input, 'focus', {});
+await fireEvent(view, 'layout', { nativeEvent: { layout: { width: 100 } } });
+```
+
+#### Dispatch
+
+Modern `fireEvent` dispatches the event as React Native does, based on the event type:
+
+- Bubbling events (`press`, `focus`, `change`, ...) call `on*Capture` handlers from the root down to the target, then `on*` handlers from the target up to the root, until one calls `stopPropagation()`.
+- Direct events (`scroll`, `layout`, ...) call only the target's handler.
+
+Legacy `fireEvent` calls only the first handler it finds, walking up from the target, for both kinds of events.
+
+For event types React Native doesn't know, like native events of third-party components, pass `dispatch`. Match the component's prop type: `'direct'` for `DirectEventHandler`, `'bubbling'` for `BubblingEventHandler`. Without `dispatch`, such event types throw.
+
+```ts
+await fireEvent(pager, 'pageSelected', { nativeEvent: { position: 1 }, dispatch: 'direct' });
+```
+
+#### Composite components
+
+Modern `fireEvent` calls only props of host elements, as React Native does. It doesn't call props of composite components, like your own `onInputChange`, or JavaScript callbacks with custom arguments, like `onContentSizeChange(width, height)` of `FlatList`. This is the change most likely to break existing tests. Use [`UNSAFE_invokeHandler`](/docs/api/events/fire-event#unsafe-invoke-handler) for these:
+
+```ts
+// Legacy
+await fireEvent(list, 'contentSizeChange', 320, 1200);
+
+// Modern
+await UNSAFE_invokeHandler(list, 'onContentSizeChange', 320, 1200);
+```
+
+The exceptions are the press callbacks of `Pressable` and `Touchable*` components: `onPress`, `onPressIn`, `onPressOut` and `onLongPress`. React Native calls them from its Pressability logic, not from a native event, and modern `fireEvent` does the same. Firing `press`, `pressIn`, `pressOut` or `longPress` calls the callback of the element that becomes the touch responder, read from its `testOnly_pressabilityConfig()`.
+
+```ts
+await fireEvent(screen.getByText('Submit'), 'pressIn', {});
+```
+
+#### Return value
+
+Legacy `fireEvent` resolves to the handler's return value. Modern `fireEvent` resolves to `undefined`.
