@@ -2,6 +2,7 @@ import { createEvent } from '../event';
 import {
   BUBBLING_EVENT_TYPES,
   DIRECT_EVENT_TYPES,
+  getCustomEventTypeConfig,
   getEventTypeConfig,
   SKIP_BUBBLING_EVENT_TYPES,
 } from '../event-types';
@@ -139,4 +140,20 @@ test('getEventTypeConfig() returns null for events unknown to React Native', () 
   expect(getEventTypeConfig('pressIn')).toBeNull();
   expect(getEventTypeConfig('onFocus')).toBeNull();
   expect(getEventTypeConfig('toString')).toBeNull();
+});
+
+test('getCustomEventTypeConfig() returns config of direct custom event', () => {
+  expect(getCustomEventTypeConfig('pageSelected', 'direct')).toEqual({
+    kind: 'direct',
+    handlerName: 'onPageSelected',
+  });
+});
+
+test('getCustomEventTypeConfig() returns config of bubbling custom event', () => {
+  expect(getCustomEventTypeConfig('customGesture', 'bubbling')).toEqual({
+    kind: 'bubbling',
+    handlerName: 'onCustomGesture',
+    captureHandlerName: 'onCustomGestureCapture',
+    skipBubbling: false,
+  });
 });

@@ -32,7 +32,8 @@ import { createPressabilityEvent } from './responder-event';
 
 /**
  * Event object passed to modern `fireEvent`. Handlers receive a `SyntheticEvent` from
- * `createEvent()`, with `nativeEvent` as its `nativeEvent`.
+ * `createEvent()`, with `nativeEvent` as its `nativeEvent`. `dispatch` is required for event types
+ * React Native doesn't know, and overrides React Native's dispatch for the others.
  */
 export type FireEventInit = CreateEventInit;
 
@@ -43,8 +44,14 @@ export type FireEventInit = CreateEventInit;
  * Pressability event types (`press`, `pressIn`, `pressOut`, `longPress`) call the callback of the
  * element that becomes the touch responder instead, as `fireEvent.press()` does.
  *
- * Exactly one event object is required, as React Native handlers receive a single event. Other
- * event types React Native doesn't dispatch natively (`changeText`, custom prop names) throw.
+ * Exactly one event object is required, as React Native handlers receive a single event. Event
+ * types React Native doesn't know need `dispatch: 'direct' | 'bubbling'` in the event object, as
+ * declared by the native component, e.g. a third-party component's `pageSelected`. Without it they
+ * throw, as do `changeText` and custom prop names.
+ *
+ * `dispatch` also overrides React Native's dispatch for known event types, for a native component
+ * that declares its own event with a built-in name, e.g. a map's `BubblingEventHandler` `onPress`.
+ * Pressability event types are then dispatched as native events, skipping Pressability.
  *
  * Resolves to nothing, unlike DOM `fireEvent`: React Native has no default actions that
  * `preventDefault()` could cancel. Handlers can read `event.defaultPrevented` themselves.
@@ -59,10 +66,10 @@ export async function fireEvent(
   const normalizedType = normalizeEventType(eventType);
   ensureInstance(instance, normalizedType, fireEvent);
   // Before the event object, as `fireEvent(input, 'changeText', 'Hello')` needs the hint more.
-  ensureEventType(normalizedType, fireEvent);
+  ensureEventType(normalizedType, args[0], fireEvent);
   ensureSingleEventArg(normalizedType, args, fireEvent);
   const init = validateEventInit(normalizedType, args[0], fireEvent);
-  if (isPressabilityEventType(normalizedType)) {
+  if (isPressabilityEventType(normalizedType) && init.dispatch == null) {
     await firePressabilityEvent(instance, normalizedType, init);
     return;
   }
@@ -104,11 +111,17 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
  *
  * Only `onPress` is called. Use `userEvent.press()` for `onPressIn`, `onPressOut` and timing.
  *
- * The passed `nativeEvent` is deep merged onto a default touch payload.
+ * The passed `nativeEvent` is deep merged onto a default touch payload. With `dispatch`, fires a
+ * native `press` event with the passed `nativeEvent` instead, as `fireEvent()` does.
  */
 fireEvent.press = async (instance: TestInstance, event: FireEventInit = {}): Promise<void> => {
   ensureInstance(instance, 'press', fireEvent.press);
   const init = validateEventInit('press', event, fireEvent.press);
+  if (init.dispatch != null) {
+    await fireEventInternal(instance, 'press', init);
+    return;
+  }
+
   await firePressabilityEvent(instance, 'press', init);
 };
 
@@ -132,7 +145,7 @@ fireEvent.layout = async (
 };
 
 /**
- * Expects an event type React Native dispatches natively, without the `on*` prefix.
+ * Expects an event type without the `on*` prefix, that React Native knows or that has `dispatch`.
  *
  * @param basePayload the payload a device would send. Native state, like a `ScrollView`'s
  * size, is merged onto it, then the passed `nativeEvent` is deep merged on top. Without it, the
