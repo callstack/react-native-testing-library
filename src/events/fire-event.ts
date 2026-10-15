@@ -1,18 +1,59 @@
 import type { TestInstance } from 'test-renderer';
 
+import type { EventSystem } from '../config';
 import { getConfig } from '../config';
 import { fireEvent as legacyFireEvent } from './legacy/fire-event';
+import type { CustomEventDispatch, KnownEventType } from './modern/event-types';
 import type { FireEventInit } from './modern/fire-event';
 import { fireEvent as modernFireEvent } from './modern/fire-event';
 import type { EventProps, EventType, LayoutRectangle } from './shared/types';
 
 /**
+ * Settings that users augment to change RNTL's types. `@testing-library/react-native/modern-types`
+ * sets `eventSystem: 'modern'`, so `fireEvent` takes the modern signatures.
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface Register {}
+
+/** Event system whose signatures `fireEvent` takes. Defaults to `'legacy'`. */
+type RegisteredEventSystem = Register extends { eventSystem: infer S extends EventSystem }
+  ? S
+  : 'legacy';
+
+type LegacyFireEvent = {
+  (instance: TestInstance, eventType: EventType, ...data: unknown[]): Promise<unknown>;
+  changeText: (instance: TestInstance, text: string) => Promise<unknown>;
+  press: (instance: TestInstance, eventProps?: EventProps) => Promise<void>;
+  scroll: (instance: TestInstance, eventProps?: EventProps) => Promise<void>;
+  layout: (instance: TestInstance, layout?: Partial<LayoutRectangle>) => Promise<void>;
+};
+
+/**
+ * Arguments that modern `fireEvent` accepts at runtime: exactly one event object, and `dispatch`
+ * for event types React Native doesn't know.
+ */
+type ModernFireEventArgs =
+  | [eventType: KnownEventType | `on${Capitalize<KnownEventType>}`, event: FireEventInit]
+  | [eventType: string & {}, event: FireEventInit & { dispatch: CustomEventDispatch }];
+
+type ModernFireEvent = {
+  (instance: TestInstance, ...args: ModernFireEventArgs): Promise<void>;
+  changeText: (instance: TestInstance, text: string) => Promise<void>;
+  press: (instance: TestInstance, event?: FireEventInit) => Promise<void>;
+  scroll: (instance: TestInstance, event?: FireEventInit) => Promise<void>;
+  layout: (instance: TestInstance, layout?: Partial<LayoutRectangle>) => Promise<void>;
+};
+
+export type FireEvent = RegisteredEventSystem extends 'modern' ? ModernFireEvent : LegacyFireEvent;
+
+/**
  * Public `fireEvent`. Calls the implementation of the event system selected by
  * `configure({ unstable_eventSystem })`, read on each call, so `configure()` inside a test applies.
  *
- * Types follow the legacy signatures. The modern implementation checks its arguments at runtime.
+ * Types follow the legacy signatures, or the modern ones when `Register` sets `eventSystem`. The
+ * modern implementation also checks its arguments at runtime.
  */
-async function fireEvent(
+async function fireEventImpl(
   instance: TestInstance,
   eventType: EventType,
   ...data: unknown[]
@@ -24,7 +65,7 @@ async function fireEvent(
   return await legacyFireEvent(instance, eventType, ...data);
 }
 
-fireEvent.changeText = async (instance: TestInstance, text: string): Promise<unknown> => {
+fireEventImpl.changeText = async (instance: TestInstance, text: string): Promise<unknown> => {
   if (isModern()) {
     return await modernFireEvent.changeText(instance, text);
   }
@@ -32,7 +73,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<unk
   return await legacyFireEvent.changeText(instance, text);
 };
 
-fireEvent.press = async (instance: TestInstance, eventProps?: EventProps): Promise<void> => {
+fireEventImpl.press = async (instance: TestInstance, eventProps?: EventProps): Promise<void> => {
   if (isModern()) {
     await modernFireEvent.press(instance, eventProps as FireEventInit);
     return;
@@ -41,7 +82,7 @@ fireEvent.press = async (instance: TestInstance, eventProps?: EventProps): Promi
   await legacyFireEvent.press(instance, eventProps);
 };
 
-fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps): Promise<void> => {
+fireEventImpl.scroll = async (instance: TestInstance, eventProps?: EventProps): Promise<void> => {
   if (isModern()) {
     await modernFireEvent.scroll(instance, eventProps as FireEventInit);
     return;
@@ -50,7 +91,7 @@ fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps): Prom
   await legacyFireEvent.scroll(instance, eventProps);
 };
 
-fireEvent.layout = async (
+fireEventImpl.layout = async (
   instance: TestInstance,
   layout?: Partial<LayoutRectangle>,
 ): Promise<void> => {
@@ -65,5 +106,7 @@ fireEvent.layout = async (
 function isModern() {
   return getConfig().unstable_eventSystem === 'modern';
 }
+
+const fireEvent = fireEventImpl as FireEvent;
 
 export { fireEvent };
