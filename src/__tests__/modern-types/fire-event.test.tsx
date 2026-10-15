@@ -20,11 +20,11 @@ test('accepts known event types, with or without the deprecated "on" prefix', as
   const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
   const onFocus = jest.fn();
   const onLayout = jest.fn();
-  await render(<View testID="view" onFocus={onFocus} onLayout={onLayout} />);
-  const view = screen.getByTestId('view');
+  await render(<TextInput testID="input" onFocus={onFocus} onLayout={onLayout} />);
+  const input = screen.getByTestId('input');
 
-  await fireEvent(view, 'focus', emptyEvent);
-  await fireEvent(view, 'onLayout', { nativeEvent: { layout: { width: 100 } }, timeStamp: 1 });
+  await fireEvent(input, 'focus', emptyEvent);
+  await fireEvent(input, 'onLayout', { nativeEvent: { layout: { width: 100 } }, timeStamp: 1 });
 
   expect(onFocus).toHaveBeenCalledTimes(1);
   expect(onLayout).toHaveBeenCalledTimes(1);
