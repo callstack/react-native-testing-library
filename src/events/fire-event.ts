@@ -28,16 +28,29 @@ type LegacyFireEvent = {
   layout: (instance: TestInstance, layout?: Partial<LayoutRectangle>) => Promise<void>;
 };
 
+type KnownEventName = KnownEventType | `on${Capitalize<KnownEventType>}`;
+
+type CustomFireEventInit = FireEventInit & { dispatch: CustomEventDispatch };
+
+/** Shown in the type error of `fireEvent(input, 'changeText', 'Hello')`, as the runtime error. */
+type ChangeTextHint = 'Use fireEvent.changeText() or userEvent.type() instead.';
+
 /**
- * Arguments that modern `fireEvent` accepts at runtime: exactly one event object, and `dispatch`
- * for event types React Native doesn't know.
+ * Event object that modern `fireEvent` accepts at runtime: `dispatch` is required for event types
+ * React Native doesn't know. Not distributive, so a union with an unknown event type requires it.
  */
-type ModernFireEventArgs =
-  | [eventType: KnownEventType | `on${Capitalize<KnownEventType>}`, event: FireEventInit]
-  | [eventType: string & {}, event: FireEventInit & { dispatch: CustomEventDispatch }];
+type ModernFireEventInit<T extends string> = [T] extends [KnownEventName]
+  ? FireEventInit
+  : [T] extends ['changeText' | 'onChangeText']
+    ? ChangeTextHint | CustomFireEventInit
+    : CustomFireEventInit;
 
 type ModernFireEvent = {
-  (instance: TestInstance, ...args: ModernFireEventArgs): Promise<void>;
+  <T extends KnownEventName | (string & {})>(
+    instance: TestInstance,
+    eventType: T,
+    event: ModernFireEventInit<T>,
+  ): Promise<void>;
   changeText: (instance: TestInstance, text: string) => Promise<void>;
   press: (instance: TestInstance, event?: FireEventInit) => Promise<void>;
   scroll: (instance: TestInstance, event?: FireEventInit) => Promise<void>;

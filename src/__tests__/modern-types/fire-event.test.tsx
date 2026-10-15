@@ -30,14 +30,16 @@ test('accepts known event types, with or without the "on" prefix', async () => {
 
 test('accepts custom event types with dispatch', async () => {
   const onPageSelected = jest.fn();
-  await render(<View testID="pager" {...{ onPageSelected }} />);
+  const onChangeText = jest.fn();
+  await render(<View testID="native" {...{ onPageSelected, onChangeText }} />);
+  const native = screen.getByTestId('native');
 
-  await fireEvent(screen.getByTestId('pager'), 'pageSelected', {
-    nativeEvent: { position: 1 },
-    dispatch: 'direct',
-  });
+  await fireEvent(native, 'pageSelected', { nativeEvent: { position: 1 }, dispatch: 'direct' });
+  // A native component's own `changeText` event.
+  await fireEvent(native, 'changeText', { nativeEvent: { text: 'Hello' }, dispatch: 'direct' });
 
   expect(onPageSelected).toHaveBeenCalledTimes(1);
+  expect(onChangeText).toHaveBeenCalledTimes(1);
 });
 
 test('accepts the helper signatures', async () => {
@@ -72,8 +74,10 @@ test('rejects custom event types without dispatch', async () => {
 
   // @ts-expect-error `dispatch` is required for event types React Native doesn't know
   await expect(fireEvent(pager, 'pageSelected', emptyEvent)).rejects.toThrow();
-  // @ts-expect-error `changeText` is not a native event type
+  // @ts-expect-error `changeText` is not a native event type, the type error suggests alternatives
   await expect(fireEvent(pager, 'changeText', 'Hello')).rejects.toThrow();
+  // @ts-expect-error `changeText` is not a native event type, the type error suggests alternatives
+  await expect(fireEvent(pager, 'onChangeText', emptyEvent)).rejects.toThrow();
   // @ts-expect-error unsupported `dispatch` value
   await expect(fireEvent(pager, 'pageSelected', { dispatch: 'capture' })).rejects.toThrow();
 });
