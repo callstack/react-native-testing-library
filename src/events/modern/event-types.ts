@@ -102,7 +102,7 @@ const DIRECT_EVENT_HANDLER_NAMES: Readonly<Record<string, string>> = {
 };
 
 /** Capture phase from the root to the target, then bubble phase back to the root. */
-type BubblingEventTypeConfig = {
+export type BubblingEventTypeConfig = {
   kind: 'bubbling';
   /** Bubble phase prop, e.g. `onFocus`. */
   handlerName: string;
@@ -112,7 +112,7 @@ type BubblingEventTypeConfig = {
 };
 
 /** Calls only the target's prop, without the capture phase. */
-type DirectEventTypeConfig = {
+export type DirectEventTypeConfig = {
   kind: 'direct';
   /** e.g. `onLayout` */
   handlerName: string;
