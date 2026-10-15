@@ -15,7 +15,6 @@ import type { EventProps, EventType, LayoutRectangle } from './shared/types';
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Register {}
 
-/** Event system whose signatures `fireEvent` takes. Defaults to `'legacy'`. */
 type RegisteredEventSystem = Register extends { eventSystem: infer S extends EventSystem }
   ? S
   : 'legacy';

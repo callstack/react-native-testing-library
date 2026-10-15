@@ -24,9 +24,8 @@ const UNKNOWN_EVENT_TYPE_ALTERNATIVES: Record<string, string> = {
 };
 
 /**
- * Warns for handler prop names (`onPress`), which modern `fireEvent` strips to event types
- * (`press`), as legacy `fireEvent` does. Deprecated, as React Native names event types without the
- * prefix. To be removed in the next major release.
+ * Warns for the deprecated `on` prefix (`onPress`), which modern `fireEvent` still strips, as legacy
+ * `fireEvent` does. To be removed in the next major release.
  */
 export function warnOnPrefix(eventType: string): void {
   if (!hasOnPrefix(eventType)) {

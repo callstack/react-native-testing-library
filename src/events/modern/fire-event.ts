@@ -45,9 +45,6 @@ export type FireEventInit = CreateEventInit;
  * Pressability event types (`press`, `pressIn`, `pressOut`, `longPress`) call the callback of the
  * element that becomes the touch responder instead, as `fireEvent.press()` does.
  *
- * The event type has no `on*` prefix (`press`, not `onPress`), as in React Native's events. Handler
- * prop names still work, as in legacy `fireEvent`, but log a warning.
- *
  * Exactly one event object is required, as React Native handlers receive a single event. Event
  * types React Native doesn't know need `dispatch: 'direct' | 'bubbling'` in the event object, as
  * declared by the native component, e.g. a third-party component's `pageSelected`. Without it they
@@ -60,7 +57,8 @@ export type FireEventInit = CreateEventInit;
  * Resolves to nothing, unlike DOM `fireEvent`: React Native has no default actions that
  * `preventDefault()` could cancel. Handlers can read `event.defaultPrevented` themselves.
  *
- * @param eventType without the `on*` prefix, e.g. `focus`. With it (`onFocus`), it logs a warning.
+ * @param eventType without the `on*` prefix, as React Native names it, e.g. `focus`. The prefix
+ * (`onFocus`) is deprecated and logs a warning.
  */
 export async function fireEvent(
   instance: TestInstance,

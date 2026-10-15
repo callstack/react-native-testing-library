@@ -131,13 +131,12 @@ describe('"on" prefixed event types', () => {
 
       expect(handler).toHaveBeenCalledTimes(1);
       // Modern takes event types as React Native names them, and deprecates the "on" prefix.
-      const warnings = getDeprecationWarnings();
-      expect(warnings).toHaveLength(isModern() ? 1 : 0);
       const message =
         `Passing event types with the "on" prefix ("${eventType}") to fireEvent is deprecated and ` +
         'will be removed in the next major release. ' +
         `Use "${unprefixedType}" instead, e.g. fireEvent(element, '${unprefixedType}', { nativeEvent: {} }).`;
-      expect(warnings.every((warning) => warning.includes(message))).toBe(true);
+      const warning = expect.stringContaining(message);
+      expect(getDeprecationWarnings()).toEqual(isModern() ? [warning] : []);
     },
   );
 
