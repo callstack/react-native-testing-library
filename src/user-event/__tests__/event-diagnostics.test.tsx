@@ -4,6 +4,7 @@ import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { render, screen, userEvent } from '../..';
 import { configure } from '../../config';
 import { logger } from '../../helpers/logger';
+import { isModernEventSystem } from '../../test-utils/event-system';
 
 let warnSpy: jest.SpyInstance;
 
@@ -67,15 +68,20 @@ test('warns when no element handles the press', async () => {
   `);
 });
 
-test('warns when none of the dispatched events has a handler', async () => {
-  // `longPress` dispatches `pressIn`, `longPress` and `pressOut`, but not `press`.
+test('calls onPress on long press without onLongPress (legacy: warns that none of the dispatched events has a handler)', async () => {
+  // Legacy `longPress` dispatches `pressIn`, `longPress` and `pressOut`, but not `press`. As
+  // Pressability, modern `longPress` calls `onPress` when there is no `onLongPress`.
+  const onPress = jest.fn();
   // @ts-expect-error Host View does not declare `onPress`.
-  await render(<View testID="view" onPress={jest.fn()} />);
+  await render(<View testID="view" onPress={onPress} />);
   const user = userEvent.setup();
 
   await user.longPress(screen.getByTestId('view'));
 
-  expect(warnSpy).toHaveBeenCalledTimes(1);
+  expect(onPress).toHaveBeenCalledTimes(isModernEventSystem() ? 1 : 0);
+  expect(warnSpy).toHaveBeenCalledTimes(isModernEventSystem() ? 0 : 1);
+  if (isModernEventSystem()) return;
+
   expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
     "longPress() interaction did not call any event handlers. The element has no handler for the "pressIn", "longPress" or "pressOut" events.
     If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
@@ -182,17 +188,67 @@ test('warns when clearing or pasting into a non-editable TextInput', async () =>
   );
 });
 
-test('warns when pressing a non-editable TextInput', async () => {
+test('does not warn when pressing a non-editable TextInput (legacy: warns it is non-editable)', async () => {
+  const onPressIn = jest.fn();
+  await render(<TextInput testID="input" editable={false} onPressIn={onPressIn} />);
+  const user = userEvent.setup();
+
+  await user.press(screen.getByTestId('input'));
+
+  // Modern matches iOS, where `editable={false}` only stops TextInput from focusing.
+  const isModern = isModernEventSystem();
+  expect(onPressIn).toHaveBeenCalledTimes(isModern ? 1 : 0);
+  expect(warnSpy).toHaveBeenCalledTimes(isModern ? 0 : 1);
+  if (isModern) return;
+  expect(warnSpy.mock.calls[0][0]).toMatch(
+    /^press\(\) interaction did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
+  );
+});
+
+test('warns when pressing a TextInput without handlers inside a Pressable (legacy: calls onPress of the Pressable)', async () => {
+  const onPress = jest.fn();
   await render(
-    <TextInput testID="input" editable={false} onPressIn={jest.fn()} onPressOut={jest.fn()} />,
+    <Pressable onPress={onPress}>
+      <TextInput testID="input" />
+    </Pressable>,
   );
   const user = userEvent.setup();
 
   await user.press(screen.getByTestId('input'));
 
-  expect(warnSpy).toHaveBeenCalledTimes(1);
+  // Modern matches React Native: the TextInput claims the touch, so the warning names it.
+  const isModern = isModernEventSystem();
+  expect(onPress).toHaveBeenCalledTimes(isModern ? 0 : 1);
+  expect(warnSpy).toHaveBeenCalledTimes(isModern ? 1 : 0);
+  if (!isModern) return;
+  expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+    "press() interaction did not call any event handlers. The element has no handler for the "pressIn", "pressOut" or "press" events.
+    If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+      <TextInput
+        testID="input"
+      />"
+  `);
+});
+
+test('warns when pressing a non-editable TextInput without handlers inside a Pressable (legacy: calls onPress of the Pressable)', async () => {
+  const onPress = jest.fn();
+  await render(
+    <Pressable onPress={onPress}>
+      <TextInput testID="input" editable={false} />
+    </Pressable>,
+  );
+  const user = userEvent.setup();
+
+  await user.press(screen.getByTestId('input'));
+
+  // Modern matches iOS, where a non-editable TextInput claims the touch too.
+  const isModern = isModernEventSystem();
+  expect(onPress).toHaveBeenCalledTimes(isModern ? 0 : 1);
+  expect(warnSpy).toHaveBeenCalledTimes(isModern ? 1 : 0);
+  if (!isModern) return;
   expect(warnSpy.mock.calls[0][0]).toMatch(
-    /^press\(\) interaction did not call any event handlers\. Cannot interact with a non-editable TextInput\./,
+    /^press\(\) interaction did not call any event handlers\. The element has no handler for the "pressIn", "pressOut" or "press" events\./,
   );
 });
 

@@ -16,5 +16,9 @@
     "outDir": "dist"
   },
   "include": ["src/**/*"],
-  "exclude": ["src/__tests__/react-19_2/**/*"]
+  "exclude": [
+    "src/__tests__/react-19_2/**/*",
+    "src/__tests__/modern-types/**/*",
+    "src/modern-types.ts"
+  ]
 }

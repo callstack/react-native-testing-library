@@ -206,3 +206,46 @@ await render(<View testID="box" onLayout={onLayoutMock} />);
 
 await fireEvent.layout(screen.getByTestId('box'), { width: 320, height: 80 });
 ```
+
+## `UNSAFE_invokeHandler`
+
+_Added in v14.2.0_
+
+```ts
+function UNSAFE_invokeHandler(
+  instance: TestInstance,
+  handlerName: string,
+  ...args: unknown[]
+): Promise<unknown>;
+```
+
+Calls the handler prop named `handlerName` with the given arguments, inside async `act`, and resolves to the handler's return value. Use it as an escape hatch for callbacks that no event reaches in a test, for example:
+
+- callbacks that components call from JavaScript with custom arguments, like `onContentSizeChange(width, height)` of `ScrollView` and `FlatList`,
+- props of your own composite components, like `onInputChange(value)` of a date picker,
+- `onHoverIn` and `onHoverOut` of `Pressable`, which React Native doesn't call on iOS and Android by default, but which you might want to test for React Native Web.
+
+> [!WARNING]
+> This API doesn't simulate anything a device does. It doesn't check whether the element is disabled, blocked by `pointerEvents` or non-editable, so a test can pass for behavior that can't happen on a device. Use [User Event](./user-event.md) or [`fireEvent`](#fire-event) when they support your case.
+
+`handlerName` is the exact prop name, e.g. `onContentSizeChange`, not `contentSizeChange`. Any function prop can be called, not only `on*` handlers. The prop is looked up on the given element first, then on the composite components that render it, nearest first, up to the next host element. Handlers of parent host elements are never called. If no function prop with that name is found, or the element is unmounted, it throws.
+
+```jsx
+import { FlatList, Text } from 'react-native';
+import { render, screen, UNSAFE_invokeHandler } from '@testing-library/react-native';
+
+const onContentSizeChangeMock = jest.fn();
+
+await render(
+  <FlatList
+    testID="list"
+    data={['a', 'b']}
+    renderItem={({ item }) => <Text>{item}</Text>}
+    onContentSizeChange={onContentSizeChangeMock}
+  />,
+);
+
+// `FlatList` calls `onContentSizeChange` from JavaScript, so no event reaches it.
+await UNSAFE_invokeHandler(screen.getByTestId('list'), 'onContentSizeChange', 320, 1200);
+expect(onContentSizeChangeMock).toHaveBeenCalledWith(320, 1200);
+```
