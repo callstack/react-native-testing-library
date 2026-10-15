@@ -83,6 +83,16 @@ For event types React Native doesn't know, like native events of third-party com
 await fireEvent(pager, 'pageSelected', { nativeEvent: { position: 1 }, dispatch: 'direct' });
 ```
 
+#### Device checks
+
+Modern `fireEvent` doesn't call handlers for events a device wouldn't emit from the element:
+
+- Touch and pointer events (`touchStart`, `pointerDown`, ...) go to the element a touch would hit. `pointerEvents` moves them to an ancestor, or drops them when it blocks every element, as it does for `press`. `disabled` doesn't block them, as on iOS.
+- A non-editable `TextInput` doesn't emit `focus`, `blur`, `change`, `submitEditing`, `endEditing` or `keyPress`. It still emits `selectionChange`, `layout`, `scroll` and `contentSizeChange`. A `Text` nested in a `TextInput` emits these events from the `TextInput`.
+- A disabled `Switch` doesn't emit `change`.
+
+Events fired with `dispatch` skip these checks.
+
 #### Composite components
 
 Modern `fireEvent` calls only props of host elements, as React Native does. It doesn't call props of composite components, like your own `onInputChange`, or JavaScript callbacks with custom arguments, like `onContentSizeChange(width, height)` of `FlatList`. This is the change most likely to break existing tests. Use [`UNSAFE_invokeHandler`](/docs/api/events/fire-event#unsafe-invoke-handler) for these:
