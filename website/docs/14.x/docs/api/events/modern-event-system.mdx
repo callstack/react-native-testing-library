@@ -1,5 +1,12 @@
 # Modern Event System
 
+RNTL has two event systems:
+
+- **Legacy** (default): the simplified system RNTL has used from the beginning, tweaked and improved over time.
+- **Modern** (recommended): a realistic simulation of the React Native event system, with direct and bubbling events and event objects shaped like the ones React Native creates. We plan to make it the default in the next major release.
+
+The event system controls how [`fireEvent`](/docs/api/events/fire-event), [`userEvent`](/docs/api/events/user-event) and [`UNSAFE_invokeHandler`](/docs/api/events/fire-event#unsafe-invoke-handler) dispatch events.
+
 ## How to enable the modern event system
 
 Add these two lines to your Jest setup file:
