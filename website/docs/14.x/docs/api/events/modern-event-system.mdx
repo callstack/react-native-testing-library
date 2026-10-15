@@ -111,3 +111,21 @@ The `userEvent` API stays the same. The difference is in how each event of an in
 
 - Native events, like `focus`, `change` or `scroll`, get a `SyntheticEvent` and are dispatched as in React Native, so bubbling events also reach handlers of ancestors. Legacy `userEvent` calls only the target's own handler, with a stub event.
 - `press()` and `longPress()` no longer wait 130 ms and 500 ms. Legacy `userEvent` runs Pressability through the responder's touch handlers, with its timers. Modern `userEvent` reads the press callbacks from `testOnly_pressabilityConfig()` and calls `onPressIn`, `onLongPress`, `onPressOut` and `onPress` directly. So `longPress()` always calls `onLongPress`, Pressability timing props like `delayLongPress` are ignored, and `duration` only sets how long the touch lasts. Both press the same element as modern `fireEvent.press()`: the touch responder.
+
+### `UNSAFE_invokeHandler`
+
+```ts
+function UNSAFE_invokeHandler(
+  instance: TestInstance,
+  handlerName: string,
+  ...args: unknown[]
+): Promise<unknown>;
+```
+
+An escape hatch, mostly for legacy `fireEvent` calls that modern `fireEvent` no longer supports. Calls the handler prop directly, without simulating any event, so the test no longer follows how a user interacts with the app. Prefer `fireEvent` or `userEvent` where they work.
+
+- `instance`: the element whose handler to call. The prop is looked up on the element, then on the composite components that render it.
+- `handlerName`: the exact prop name, e.g. `onContentSizeChange`.
+- `args`: passed to the handler as they are.
+
+Resolves to the handler's return value. Works the same in both event systems. See [`UNSAFE_invokeHandler`](/docs/api/events/fire-event#unsafe-invoke-handler) for details.
