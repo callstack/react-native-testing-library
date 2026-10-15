@@ -4,9 +4,13 @@ import { ErrorWithStack } from '../../helpers/errors';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import type { CreateEventInit } from './event';
 import { SyntheticEvent } from './event';
-import { getEventTypeConfig, isPressabilityEventType } from './event-types';
+import {
+  CUSTOM_EVENT_DISPATCHES,
+  getEventTypeConfig,
+  isPressabilityEventType,
+} from './event-types';
 
-const ALLOWED_INIT_KEYS = ['nativeEvent', 'timeStamp'];
+const ALLOWED_INIT_KEYS = ['nativeEvent', 'timeStamp', 'dispatch'];
 
 const EVENT_KEYS = new Set(
   Object.getOwnPropertyNames(SyntheticEvent.prototype).filter((key) => key !== 'constructor'),
@@ -18,28 +22,47 @@ const UNKNOWN_EVENT_TYPE_ALTERNATIVES: Record<string, string> = {
 };
 
 /**
- * Throws for event types React Native doesn't dispatch natively, such as `changeText` or custom
- * prop names, except Pressability event types (`pressIn`, ...). React Native drops them, so
- * dropping them here would call no handler, and a test asserting that a handler wasn't called
- * would pass for the wrong reason.
+ * Throws for event types React Native doesn't know, such as `changeText` or custom prop names,
+ * except Pressability event types (`pressIn`, ...), and event types passed with `dispatch`.
+ * React Native drops unknown events, so dropping them here would call no handler, and a test
+ * asserting that a handler wasn't called would pass for the wrong reason.
  *
+ * `dispatch` is required, not defaulted to `direct`: a legacy call such as
+ * `fireEvent(list, 'endReached', ...)` would otherwise pass a `SyntheticEvent` to `onEndReached`,
+ * which `FlatList` calls from JavaScript, but the Jest mock of `ScrollView` puts on the host.
+ *
+ * @param init the event object, checked by `validateEventInit()` afterwards
  * @param callsite the function to remove from the error stack, e.g. `fireEvent`
  */
 export function ensureEventType(
   eventType: string,
+  init: unknown,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   callsite: Function,
 ): void {
-  if (getEventTypeConfig(eventType) != null || isPressabilityEventType(eventType)) {
+  if (isKnownEventType(eventType)) {
+    return;
+  }
+
+  // Custom event type: the caller declares how it dispatches.
+  if (isPlainObject(init) && init.dispatch !== undefined) {
     return;
   }
 
   const alternative = UNKNOWN_EVENT_TYPE_ALTERNATIVES[eventType];
+  if (alternative != null) {
+    throw new ErrorWithStack(
+      `Unable to fire a "${eventType}" event. React Native doesn't dispatch "${eventType}" ` +
+        `natively. Use ${alternative} instead.`,
+      callsite,
+    );
+  }
+
   throw new ErrorWithStack(
-    `Unable to fire a "${eventType}" event. React Native doesn't dispatch "${eventType}" natively` +
-      (alternative != null
-        ? `. Use ${alternative} instead.`
-        : ', so no handler would be called. To call a handler prop directly, use UNSAFE_invokeHandler().'),
+    `Unable to fire a "${eventType}" event. React Native doesn't know "${eventType}". ` +
+      `For a native event of a third-party component, pass dispatch: "direct" or "bubbling" ` +
+      'in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. ' +
+      'To call a handler prop directly, use UNSAFE_invokeHandler().',
     callsite,
   );
 }
@@ -119,6 +142,17 @@ export function validateEventInit(
     );
   }
 
+  if (
+    init.dispatch !== undefined &&
+    !(CUSTOM_EVENT_DISPATCHES as readonly unknown[]).includes(init.dispatch)
+  ) {
+    throw new ErrorWithStack(
+      `Unable to fire a "${eventType}" event. Expected "dispatch" to be "direct" or "bubbling", ` +
+        `received ${describeValue(init.dispatch)}.`,
+      callsite,
+    );
+  }
+
   return init as CreateEventInit;
 }
 
@@ -149,6 +183,10 @@ export function validateChangeTextArgs(
       callsite,
     );
   }
+}
+
+function isKnownEventType(eventType: string): boolean {
+  return getEventTypeConfig(eventType) != null || isPressabilityEventType(eventType);
 }
 
 /**

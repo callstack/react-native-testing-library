@@ -1830,6 +1830,291 @@ describe('direct events', () => {
   });
 });
 
+describe('custom event types', () => {
+  // Third-party native components render as host elements with all their props in Jest, as
+  // `@react-native/jest-preset` mocks `requireNativeComponent()` and `NativeComponentRegistry`.
+  test('dispatches a direct custom event to the target only (legacy: passes the event object as given)', async () => {
+    const onPageSelected = jest.fn();
+    const onParentPageSelected = jest.fn();
+    await render(
+      React.createElement(
+        'RNCViewPager',
+        { onPageSelected: onParentPageSelected },
+        React.createElement('RNCViewPager', { testID: 'pager', onPageSelected }),
+      ),
+    );
+    const pager = screen.getByTestId('pager');
+
+    const event = { nativeEvent: { position: 1 }, dispatch: 'direct' };
+    await fireEvent(pager, 'pageSelected', event);
+
+    // Modern matches React Native, which calls only the target's prop for direct events.
+    expect(onParentPageSelected).not.toHaveBeenCalled();
+    expect(onPageSelected).toHaveBeenCalledTimes(1);
+    const received = (onPageSelected.mock.calls[0] as unknown[])[0] as SyntheticEvent;
+    expect(received).toEqual(isModern() ? anySyntheticEvent : event);
+    expect(received.nativeEvent).toEqual({ position: 1 });
+    expect(received.type).toBe(isModern() ? 'pageselected' : undefined);
+    expect(received.rnIsDirect).toBe(isModern() ? true : undefined);
+    expect(received.target).toBe(isModern() ? pager : undefined);
+  });
+
+  test('dispatches a bubbling custom event through capture and bubble phases (legacy: calls only the nearest handler)', async () => {
+    const calls: string[] = [];
+    const getHandlers = (id: string) => ({
+      onCustomGestureCapture: () => calls.push(`${id}.onCustomGestureCapture`),
+      onCustomGesture: () => calls.push(`${id}.onCustomGesture`),
+    });
+    await render(
+      <View {...getHandlers('parent')}>
+        {React.createElement('RNCustomView', { testID: 'target', ...getHandlers('target') })}
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('target'), 'customGesture', {
+      nativeEvent: {},
+      dispatch: 'bubbling',
+    });
+
+    expect(calls).toEqual(
+      isModern()
+        ? [
+            'parent.onCustomGestureCapture',
+            'target.onCustomGestureCapture',
+            'target.onCustomGesture',
+            'parent.onCustomGesture',
+          ]
+        : ['target.onCustomGesture'],
+    );
+  });
+
+  test('accepts a custom event type with the "on" prefix', async () => {
+    const onPageSelected = jest.fn();
+    await render(React.createElement('RNCViewPager', { testID: 'pager', onPageSelected }));
+
+    await fireEvent(screen.getByTestId('pager'), 'onPageSelected', {
+      nativeEvent: { position: 2 },
+      dispatch: 'direct',
+    });
+
+    expect(onPageSelected).toHaveBeenCalledTimes(1);
+    expect(onPageSelected.mock.calls[0][0].nativeEvent).toEqual({ position: 2 });
+  });
+
+  test('reaches the user callback through a wrapper that adapts the host prop', async () => {
+    // Shaped like `react-native-pager-view`: the composite passes its own handler to the host,
+    // which then calls the user's prop.
+    type PageSelectedEvent = { nativeEvent: { position: number } };
+    class PagerView extends React.Component<{
+      testID?: string;
+      onPageSelected?: (event: PageSelectedEvent) => void;
+    }> {
+      _onPageSelected = (event: PageSelectedEvent) => {
+        this.props.onPageSelected?.(event);
+      };
+
+      render() {
+        return React.createElement('RNCViewPager', {
+          testID: this.props.testID,
+          onPageSelected: this._onPageSelected,
+        });
+      }
+    }
+
+    const onPageSelected = jest.fn();
+    await render(<PagerView testID="pager" onPageSelected={onPageSelected} />);
+
+    await fireEvent(screen.getByTestId('pager'), 'pageSelected', {
+      nativeEvent: { position: 3 },
+      dispatch: 'direct',
+    });
+
+    expect(onPageSelected).toHaveBeenCalledTimes(1);
+    expect(onPageSelected.mock.calls[0][0].nativeEvent).toEqual({ position: 3 });
+  });
+
+  test('throws for a custom event type without dispatch (legacy: calls the handler)', async () => {
+    const onEndReached = jest.fn();
+    // The Jest mock of `ScrollView` puts `FlatList`'s JavaScript callbacks, like `onEndReached`,
+    // on the host element.
+    await render(
+      <FlatList
+        testID="list"
+        data={['a']}
+        renderItem={({ item }) => <Text>{item}</Text>}
+        onEndReached={onEndReached}
+      />,
+    );
+
+    const error = await getErrorMessage(
+      fireEvent(screen.getByTestId('list'), 'endReached', {
+        nativeEvent: { distanceFromEnd: 0 },
+      }),
+    );
+
+    expect(error).toBe(
+      isModern()
+        ? 'Unable to fire a "endReached" event. React Native doesn\'t know "endReached". For a native event of a third-party component, pass dispatch: "direct" or "bubbling" in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. To call a handler prop directly, use UNSAFE_invokeHandler().'
+        : undefined,
+    );
+    expect(onEndReached).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test('dispatch overrides a bubbling built-in event type, skipping Pressability (legacy: calls only the nearest handler)', async () => {
+    // Shaped like `react-native-maps`: the native map declares `onPress` as a
+    // `BubblingEventHandler`, so a tap reaches it as a native `press` event, not from Pressability.
+    const calls: string[] = [];
+    const getHandlers = (id: string) => ({
+      onPressCapture: () => calls.push(`${id}.onPressCapture`),
+      onPress: () => calls.push(`${id}.onPress`),
+    });
+    await render(
+      <Pressable onPress={() => calls.push('pressable.onPress')}>
+        {React.createElement(
+          'AIRMapContainer',
+          getHandlers('parent'),
+          React.createElement('AIRMap', { testID: 'map', ...getHandlers('map') }),
+        )}
+      </Pressable>,
+    );
+
+    await fireEvent(screen.getByTestId('map'), 'press', {
+      nativeEvent: { coordinate: { latitude: 1, longitude: 2 } },
+      dispatch: 'bubbling',
+    });
+
+    expect(calls).toEqual(
+      isModern()
+        ? ['parent.onPressCapture', 'map.onPressCapture', 'map.onPress', 'parent.onPress']
+        : ['map.onPress'],
+    );
+  });
+
+  test('dispatch overrides a Pressability event type with a direct native event', async () => {
+    const onLongPress = jest.fn();
+    const onParentLongPress = jest.fn();
+    await render(
+      React.createElement(
+        'AIRMapContainer',
+        { onLongPress: onParentLongPress },
+        React.createElement('AIRMap', { testID: 'map', onLongPress }),
+      ),
+    );
+    const map = screen.getByTestId('map');
+
+    await fireEvent(map, 'longPress', { nativeEvent: { x: 1 }, dispatch: 'direct' });
+
+    expect(onParentLongPress).not.toHaveBeenCalled();
+    expect(onLongPress).toHaveBeenCalledTimes(1);
+    const received = onLongPress.mock.calls[0][0] as SyntheticEvent;
+    expect(received.nativeEvent).toEqual({ x: 1 });
+    expect(received.rnIsDirect).toBe(isModern() ? true : undefined);
+    expect(received.target).toBe(isModern() ? map : undefined);
+  });
+
+  test('dispatch overrides a bubbling built-in event type with a direct one', async () => {
+    const onFocus = jest.fn();
+    const onParentFocus = jest.fn();
+    await render(
+      React.createElement(
+        'RNCustomView',
+        { onFocus: onParentFocus },
+        React.createElement('RNCustomView', { testID: 'target', onFocus }),
+      ),
+    );
+
+    await fireEvent(screen.getByTestId('target'), 'focus', { nativeEvent: {}, dispatch: 'direct' });
+
+    expect(onFocus).toHaveBeenCalledTimes(1);
+    expect(onParentFocus).not.toHaveBeenCalled();
+  });
+
+  test('dispatch overrides a direct built-in event type with a bubbling one (legacy: calls only the nearest handler)', async () => {
+    const onLayout = jest.fn();
+    const onParentLayout = jest.fn();
+    await render(
+      React.createElement(
+        'RNCustomView',
+        { onLayout: onParentLayout },
+        React.createElement('RNCustomView', { testID: 'target', onLayout }),
+      ),
+    );
+
+    await fireEvent(screen.getByTestId('target'), 'layout', {
+      nativeEvent: {},
+      dispatch: 'bubbling',
+    });
+
+    expect(onLayout).toHaveBeenCalledTimes(1);
+    expect(onParentLayout).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+  });
+
+  test('fireEvent.press() with dispatch fires a native press event with the passed payload', async () => {
+    const onPress = jest.fn();
+    await render(React.createElement('AIRMap', { testID: 'map', onPress }));
+
+    await fireEvent.press(screen.getByTestId('map'), {
+      nativeEvent: { coordinate: { latitude: 1, longitude: 2 } },
+      dispatch: 'bubbling',
+    });
+
+    expect(onPress).toHaveBeenCalledTimes(1);
+    // Modern skips the default touch payload, as the event is the component's own.
+    const { nativeEvent } = onPress.mock.calls[0][0];
+    expect(nativeEvent).toMatchObject({ coordinate: { latitude: 1, longitude: 2 } });
+    expect('pageX' in nativeEvent).toBe(!isModern());
+  });
+
+  test('dispatch on a Pressable calls no Pressability callback (legacy: calls onPress)', async () => {
+    const onPress = jest.fn();
+    await render(<Pressable testID="target" onPress={onPress} />);
+
+    await fireEvent(screen.getByTestId('target'), 'press', {
+      nativeEvent: {},
+      dispatch: 'bubbling',
+    });
+
+    // Modern dispatches a native `press` event, which `Pressable`'s host has no prop for.
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test.each([
+    ['capture', 'string "capture"'],
+    [null, 'null'],
+    [true, 'boolean true'],
+  ])(
+    'throws when dispatch is %p (legacy: passes it to the handler)',
+    async (dispatch, description) => {
+      const onPageSelected = jest.fn();
+      await render(React.createElement('RNCViewPager', { testID: 'pager', onPageSelected }));
+
+      const error = await getErrorMessage(
+        fireEvent(screen.getByTestId('pager'), 'pageSelected', { nativeEvent: {}, dispatch }),
+      );
+
+      expect(error).toBe(
+        isModern()
+          ? `Unable to fire a "pageSelected" event. Expected "dispatch" to be "direct" or "bubbling", received ${description}.`
+          : undefined,
+      );
+      expect(onPageSelected).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
+
+  test('dispatches changeText with dispatch as a native event of the component', async () => {
+    const onChangeText = jest.fn();
+    await render(React.createElement('RNCustomInput', { testID: 'input', onChangeText }));
+
+    await fireEvent(screen.getByTestId('input'), 'changeText', {
+      nativeEvent: { text: 'Hello' },
+      dispatch: 'direct',
+    });
+
+    expect(onChangeText).toHaveBeenCalledTimes(1);
+    expect(onChangeText.mock.calls[0][0].nativeEvent).toEqual({ text: 'Hello' });
+  });
+});
+
 describe('Pressability event types', () => {
   function logCallbacks(calls: string[], id: string) {
     const log = (name: string) => () => {
@@ -1934,7 +2219,7 @@ test('fireEvent throws for custom event (onCustomEvent) on composite component (
   // calls any matching prop, also on composite components.
   expect(error).toBe(
     isModern()
-      ? `Unable to fire a "customEvent" event. React Native doesn't dispatch "customEvent" natively, so no handler would be called. To call a handler prop directly, use UNSAFE_invokeHandler().`
+      ? `Unable to fire a "customEvent" event. React Native doesn't know "customEvent". For a native event of a third-party component, pass dispatch: "direct" or "bubbling" in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. To call a handler prop directly, use UNSAFE_invokeHandler().`
       : undefined,
   );
   expect(handler.mock.calls).toEqual(isModern() ? [] : [['event data']]);
@@ -1953,7 +2238,7 @@ test('fireEvent throws for custom prop name (handlePress) on composite component
   // calls any matching prop, also on composite components.
   expect(error).toBe(
     isModern()
-      ? `Unable to fire a "handlePress" event. React Native doesn't dispatch "handlePress" natively, so no handler would be called. To call a handler prop directly, use UNSAFE_invokeHandler().`
+      ? `Unable to fire a "handlePress" event. React Native doesn't know "handlePress". For a native event of a third-party component, pass dispatch: "direct" or "bubbling" in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. To call a handler prop directly, use UNSAFE_invokeHandler().`
       : undefined,
   );
   expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
@@ -2032,7 +2317,7 @@ test('fireEvent throws with non-existent event name (legacy: does nothing)', asy
   expect(outcome).toStrictEqual(
     isModern()
       ? {
-          error: `Unable to fire a "nonExistentEvent" event. React Native doesn't dispatch "nonExistentEvent" natively, so no handler would be called. To call a handler prop directly, use UNSAFE_invokeHandler().`,
+          error: `Unable to fire a "nonExistentEvent" event. React Native doesn't know "nonExistentEvent". For a native event of a third-party component, pass dispatch: "direct" or "bubbling" in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. To call a handler prop directly, use UNSAFE_invokeHandler().`,
         }
       : { result: undefined },
   );
@@ -3200,7 +3485,7 @@ describe('responder system', () => {
     // responder system's touch history, which modern doesn't simulate, so modern throws.
     expect(error).toBe(
       isModern()
-        ? `Unable to fire a "responderMove" event. React Native doesn't dispatch "responderMove" natively, so no handler would be called. To call a handler prop directly, use UNSAFE_invokeHandler().`
+        ? `Unable to fire a "responderMove" event. React Native doesn't know "responderMove". For a native event of a third-party component, pass dispatch: "direct" or "bubbling" in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. To call a handler prop directly, use UNSAFE_invokeHandler().`
         : undefined,
     );
     expect(onDrag).toHaveBeenCalledTimes(isModern() ? 0 : 1);

@@ -194,4 +194,34 @@ describe('createEvent()', () => {
   test('returns null for events unknown to React Native', () => {
     expect(createEvent('changeText', { nativeEvent: { text: 'Hello' } })).toBeNull();
   });
+
+  test('creates direct custom event with dispatch', () => {
+    const nativeEvent = { position: 1 };
+
+    const event = createEvent('pageSelected', { nativeEvent, dispatch: 'direct' });
+
+    expect(event?.type).toBe('pageselected');
+    expect(event?.bubbles).toBe(false);
+    expect(event?.rnIsDirect).toBe(true);
+    expect(event?.nativeEvent).toBe(nativeEvent);
+    expect(event?.dispatchConfig).toEqual({ registrationName: 'onPageSelected' });
+  });
+
+  test('creates bubbling custom event with dispatch', () => {
+    const event = createEvent('customGesture', { dispatch: 'bubbling' });
+
+    expect(event?.bubbles).toBe(true);
+    expect(event?.rnIsDirect).toBe(false);
+    expect(event?.dispatchConfig).toEqual({
+      phasedRegistrationNames: { bubbled: 'onCustomGesture', captured: 'onCustomGestureCapture' },
+    });
+  });
+
+  test('overrides the dispatch of events known to React Native with dispatch', () => {
+    const event = createEvent('focus', { dispatch: 'direct' });
+
+    expect(event?.bubbles).toBe(false);
+    expect(event?.rnIsDirect).toBe(true);
+    expect(event?.dispatchConfig).toEqual({ registrationName: 'onFocus' });
+  });
 });
