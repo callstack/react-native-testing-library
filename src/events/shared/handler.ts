@@ -70,7 +70,8 @@ function getFunctionProp(
   return typeof handler === 'function' ? (handler as EventHandler) : undefined;
 }
 
-function hasOnPrefix(eventType: string) {
+/** Whether the event type is a handler prop name, e.g. `onLayout`, not `layout` or `once`. */
+export function hasOnPrefix(eventType: string) {
   return /^on[A-Z]/.test(eventType);
 }
 

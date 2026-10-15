@@ -9,7 +9,7 @@ import { getEventHandlerName } from '../shared/handler';
  * installed `react-native`.
  */
 
-export const BUBBLING_EVENT_TYPES: readonly string[] = [
+export const BUBBLING_EVENT_TYPES = [
   'blur',
   'change',
   'click',
@@ -35,12 +35,17 @@ export const BUBBLING_EVENT_TYPES: readonly string[] = [
   'touchEnd',
   'touchMove',
   'touchStart',
-];
+] as const;
+
+export type BubblingEventType = (typeof BUBBLING_EVENT_TYPES)[number];
 
 /** Bubbling events that run the capture phase as usual, but call only the target when bubbling. */
-export const SKIP_BUBBLING_EVENT_TYPES: readonly string[] = ['pointerEnter', 'pointerLeave'];
+export const SKIP_BUBBLING_EVENT_TYPES: readonly BubblingEventType[] = [
+  'pointerEnter',
+  'pointerLeave',
+];
 
-export const DIRECT_EVENT_TYPES: readonly string[] = [
+export const DIRECT_EVENT_TYPES = [
   'accessibilityAction',
   'accessibilityEscape',
   'accessibilityTap',
@@ -79,7 +84,9 @@ export const DIRECT_EVENT_TYPES: readonly string[] = [
   'show',
   // From the inline view config in `TextNativeComponent.js`, which is not exported.
   'textLayout',
-];
+] as const;
+
+export type DirectEventType = (typeof DIRECT_EVENT_TYPES)[number];
 
 /**
  * Pressability callbacks (`onPress`, `onPressIn`, ...) that modern `fireEvent` calls. They are not
@@ -92,8 +99,11 @@ export const PRESSABILITY_EVENT_TYPES = ['press', 'pressIn', 'pressOut', 'longPr
 export type PressabilityEventType = (typeof PRESSABILITY_EVENT_TYPES)[number];
 
 export function isPressabilityEventType(eventType: string): eventType is PressabilityEventType {
-  return (PRESSABILITY_EVENT_TYPES as readonly string[]).includes(eventType);
+  return includes(PRESSABILITY_EVENT_TYPES, eventType);
 }
+
+/** Event types modern `fireEvent` fires without `dispatch`. */
+export type KnownEventType = BubblingEventType | DirectEventType | PressabilityEventType;
 
 /** Direct events whose handler prop doesn't follow the `on` + event type pattern. */
 const DIRECT_EVENT_HANDLER_NAMES: Readonly<Record<string, string>> = {
@@ -134,11 +144,11 @@ export type CustomEventDispatch = (typeof CUSTOM_EVENT_DISPATCHES)[number];
  * doesn't know it.
  */
 export function getEventTypeConfig(eventType: string): EventTypeConfig | null {
-  if (BUBBLING_EVENT_TYPES.includes(eventType)) {
-    return getBubblingEventTypeConfig(eventType, SKIP_BUBBLING_EVENT_TYPES.includes(eventType));
+  if (includes(BUBBLING_EVENT_TYPES, eventType)) {
+    return getBubblingEventTypeConfig(eventType, includes(SKIP_BUBBLING_EVENT_TYPES, eventType));
   }
 
-  if (DIRECT_EVENT_TYPES.includes(eventType)) {
+  if (includes(DIRECT_EVENT_TYPES, eventType)) {
     return {
       kind: 'direct',
       handlerName: DIRECT_EVENT_HANDLER_NAMES[eventType] ?? getEventHandlerName(eventType),
@@ -176,4 +186,8 @@ function getBubblingEventTypeConfig(
     captureHandlerName: `${handlerName}Capture`,
     skipBubbling,
   };
+}
+
+function includes(eventTypes: readonly string[], eventType: string): boolean {
+  return eventTypes.includes(eventType);
 }

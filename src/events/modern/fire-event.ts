@@ -26,6 +26,7 @@ import {
   ensureSingleEventArg,
   validateChangeTextArgs,
   validateEventInit,
+  warnOnPrefix,
 } from './fire-event-utils';
 import { dispatchPressabilityEvent, findResponder, getTouchPath } from './pressability';
 import { createPressabilityEvent } from './responder-event';
@@ -56,7 +57,8 @@ export type FireEventInit = CreateEventInit;
  * Resolves to nothing, unlike DOM `fireEvent`: React Native has no default actions that
  * `preventDefault()` could cancel. Handlers can read `event.defaultPrevented` themselves.
  *
- * @param eventType with or without the `on*` prefix, e.g. `focus` or `onFocus`
+ * @param eventType without the `on*` prefix, as React Native names it, e.g. `focus`. The prefix
+ * (`onFocus`) is deprecated and logs a warning.
  */
 export async function fireEvent(
   instance: TestInstance,
@@ -69,6 +71,8 @@ export async function fireEvent(
   ensureEventType(normalizedType, args[0], fireEvent);
   ensureSingleEventArg(normalizedType, args, fireEvent);
   const init = validateEventInit(normalizedType, args[0], fireEvent);
+  // After the checks, so a call that throws doesn't also warn.
+  warnOnPrefix(eventType);
   if (isPressabilityEventType(normalizedType) && init.dispatch == null) {
     await firePressabilityEvent(instance, normalizedType, init);
     return;
