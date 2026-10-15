@@ -230,10 +230,10 @@ export class SyntheticEvent {
  * Creates the event React Native would create for a native event of this type, ready for
  * `dispatchEvent()`. Like Testing Library's DOM `createEvent()`.
  *
- * @param eventType e.g. `focus` or `pointerUp`
  * `init.dispatch` overrides React Native's config for the event type, as a native component can
  * declare its own event with a built-in name, e.g. a direct `press`.
  *
+ * @param eventType e.g. `focus` or `pointerUp`
  * @returns `null` for events unknown to React Native without `init.dispatch`, as React Native drops
  * them.
  */

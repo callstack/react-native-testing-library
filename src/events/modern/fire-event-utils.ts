@@ -45,8 +45,7 @@ export function ensureEventType(
   }
 
   // Custom event type: the caller declares how it dispatches.
-  const hasDispatch = isPlainObject(init) && init.dispatch !== undefined;
-  if (hasDispatch) {
+  if (isPlainObject(init) && init.dispatch !== undefined) {
     return;
   }
 
@@ -143,26 +142,18 @@ export function validateEventInit(
     );
   }
 
-  if (init.dispatch !== undefined) {
-    validateDispatch(eventType, init.dispatch, callsite);
-  }
-
-  return init as CreateEventInit;
-}
-
-function validateDispatch(
-  eventType: string,
-  dispatch: unknown,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  callsite: Function,
-) {
-  if (!(CUSTOM_EVENT_DISPATCHES as readonly unknown[]).includes(dispatch)) {
+  if (
+    init.dispatch !== undefined &&
+    !(CUSTOM_EVENT_DISPATCHES as readonly unknown[]).includes(init.dispatch)
+  ) {
     throw new ErrorWithStack(
       `Unable to fire a "${eventType}" event. Expected "dispatch" to be "direct" or "bubbling", ` +
-        `received ${describeValue(dispatch)}.`,
+        `received ${describeValue(init.dispatch)}.`,
       callsite,
     );
   }
+
+  return init as CreateEventInit;
 }
 
 /**

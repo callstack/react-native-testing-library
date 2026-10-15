@@ -51,8 +51,7 @@ export type FireEventInit = CreateEventInit;
  *
  * `dispatch` also overrides React Native's dispatch for known event types, for a native component
  * that declares its own event with a built-in name, e.g. a map's `BubblingEventHandler` `onPress`.
- * The event is then dispatched as a native event: Pressability event types skip Pressability, and
- * no native state (e.g. a `ScrollView`'s offset) is updated.
+ * Pressability event types are then dispatched as native events, skipping Pressability.
  *
  * Resolves to nothing, unlike DOM `fireEvent`: React Native has no default actions that
  * `preventDefault()` could cancel. Handlers can read `event.defaultPrevented` themselves.
@@ -146,7 +145,7 @@ fireEvent.layout = async (
 };
 
 /**
- * Expects an event type React Native dispatches natively, without the `on*` prefix.
+ * Expects an event type without the `on*` prefix, that React Native knows or that has `dispatch`.
  *
  * @param basePayload the payload a device would send. Native state, like a `ScrollView`'s
  * size, is merged onto it, then the passed `nativeEvent` is deep merged on top. Without it, the
@@ -159,14 +158,8 @@ async function fireEventInternal(
   basePayload?: NativeEventPayload,
   dispatchOptions?: DispatchOptions,
 ): Promise<void> {
-  // With `dispatch`, the event is the component's own, so React Native's native state doesn't apply.
-  const hasExplicitDispatch = init.dispatch != null;
   const nativeEvent = basePayload
-    ? mergeEventProps(
-        basePayload,
-        hasExplicitDispatch ? undefined : getNativeStateEventProps(instance, eventType),
-        init.nativeEvent,
-      )
+    ? mergeEventProps(basePayload, getNativeStateEventProps(instance, eventType), init.nativeEvent)
     : init.nativeEvent;
   const event = createEvent(eventType, { ...init, nativeEvent });
   if (event == null || !isInstanceMounted(instance)) {
@@ -174,9 +167,7 @@ async function fireEventInternal(
   }
 
   // Before the dispatch, as a device updates its native views before emitting the event.
-  if (!hasExplicitDispatch) {
-    updateNativeStateFromEvent(instance, eventType, event);
-  }
+  updateNativeStateFromEvent(instance, eventType, event);
   await dispatchEvent(instance, event, dispatchOptions);
 }
 

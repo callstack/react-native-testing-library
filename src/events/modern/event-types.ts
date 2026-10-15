@@ -125,9 +125,9 @@ export type EventTypeConfig = BubblingEventTypeConfig | DirectEventTypeConfig;
  * How a native component dispatches an event type React Native doesn't know, as its codegen spec
  * declares the handler prop: `DirectEventHandler` or `BubblingEventHandler`.
  */
-export type CustomEventDispatch = 'direct' | 'bubbling';
+export const CUSTOM_EVENT_DISPATCHES = ['direct', 'bubbling'] as const;
 
-export const CUSTOM_EVENT_DISPATCHES: readonly CustomEventDispatch[] = ['direct', 'bubbling'];
+export type CustomEventDispatch = (typeof CUSTOM_EVENT_DISPATCHES)[number];
 
 /**
  * Returns how React Native dispatches the event type (e.g. `focus`), or `null` if React Native
@@ -165,7 +165,10 @@ export function getCustomEventTypeConfig(
   return { kind: 'direct', handlerName: getEventHandlerName(eventType) };
 }
 
-function getBubblingEventTypeConfig(eventType: string, skipBubbling: boolean): EventTypeConfig {
+function getBubblingEventTypeConfig(
+  eventType: string,
+  skipBubbling: boolean,
+): BubblingEventTypeConfig {
   const handlerName = getEventHandlerName(eventType);
   return {
     kind: 'bubbling',
