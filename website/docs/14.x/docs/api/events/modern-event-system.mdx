@@ -17,4 +17,4 @@ Make sure your `tsconfig.json` includes the setup file. If it doesn't, TypeScrip
 
 ## Event types
 
-Pass event types as React Native names them, without the `on` prefix: `fireEvent(input, 'focus', event)`, not `fireEvent(input, 'onFocus', event)`. Modern `fireEvent` still accepts event types with the prefix, but logs a warning: the prefix is deprecated and support for it will be removed in the next major release.
+Pass event types without the `on` prefix: `'focus'`, not `'onFocus'`. The prefix still works but logs a deprecation warning, and will stop working in the next major release.
