@@ -1,4 +1,5 @@
 [
   { "type": "file", "name": "user-event", "label": "User Event" },
-  { "type": "file", "name": "fire-event", "label": "Fire Event" }
+  { "type": "file", "name": "fire-event", "label": "Fire Event" },
+  { "type": "file", "name": "modern-event-system", "label": "Modern Event System" }
 ]

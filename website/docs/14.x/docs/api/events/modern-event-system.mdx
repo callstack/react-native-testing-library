@@ -1,0 +1,20 @@
+# Modern Event System
+
+## How to enable the modern event system
+
+Add these two lines to your Jest setup file:
+
+```ts title=jest-setup.ts
+import { configure } from '@testing-library/react-native';
+// Type-checks `fireEvent` arguments for the modern event system.
+import '@testing-library/react-native/modern-types';
+
+// Switches `fireEvent` and `userEvent` to the modern event system.
+configure({ unstable_eventSystem: 'modern' });
+```
+
+Make sure your `tsconfig.json` includes the setup file. If it doesn't, TypeScript won't see the import, and you won't get the stricter checks.
+
+## Event types
+
+Pass event types without the `on` prefix: `'focus'`, not `'onFocus'`. The prefix still works but logs a deprecation warning, and will stop working in the next major release.
