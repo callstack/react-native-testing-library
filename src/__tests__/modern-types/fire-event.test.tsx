@@ -5,6 +5,7 @@ import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { fireEvent, render, screen } from '../..';
 import { configure } from '../../config';
+import { _console } from '../../helpers/logger';
 
 // Type-checked by `tsconfig.modern-types.json`, where `modern-types` switches `fireEvent` to the
 // modern signatures. Calls the types reject also throw at runtime.
@@ -15,7 +16,8 @@ beforeEach(() => {
 
 const emptyEvent = { nativeEvent: {} };
 
-test('accepts known event types, with or without the "on" prefix', async () => {
+test('accepts known event types, with or without the deprecated "on" prefix', async () => {
+  const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
   const onFocus = jest.fn();
   const onLayout = jest.fn();
   await render(<View testID="view" onFocus={onFocus} onLayout={onLayout} />);
@@ -26,6 +28,8 @@ test('accepts known event types, with or without the "on" prefix', async () => {
 
   expect(onFocus).toHaveBeenCalledTimes(1);
   expect(onLayout).toHaveBeenCalledTimes(1);
+  expect(warnSpy).toHaveBeenCalledTimes(1);
+  warnSpy.mockRestore();
 });
 
 test('accepts custom event types with dispatch', async () => {
