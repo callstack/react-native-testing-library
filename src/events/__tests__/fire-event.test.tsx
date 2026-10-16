@@ -3377,6 +3377,62 @@ describe('touch event hit testing', () => {
   });
 });
 
+describe('display: none', () => {
+  test('does not press inside View with display: none (legacy: presses)', async () => {
+    const onPress = jest.fn();
+    await render(
+      <View style={{ display: 'none' }}>
+        <Pressable testID="pressable" onPress={onPress} />
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByTestId('pressable', { includeHiddenElements: true }));
+
+    // Modern matches React Native, where a hidden view has no frame, so nothing in it can be
+    // touched. Legacy doesn't check `display`.
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test('drops touchStart on View with display: none instead of moving it to the parent (legacy: fires on the View)', async () => {
+    const onParentTouchStart = jest.fn();
+    const onTouchStart = jest.fn();
+    await render(
+      <View onTouchStart={onParentTouchStart}>
+        <View testID="view" style={{ display: 'none' }} onTouchStart={onTouchStart} />
+      </View>,
+    );
+
+    await fireEvent(
+      screen.getByTestId('view', { includeHiddenElements: true }),
+      'touchStart',
+      emptyEvent,
+    );
+
+    // Unlike `pointerEvents="none"`, the hidden View covers no area of its parent to touch.
+    expect(onTouchStart).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(onParentTouchStart).not.toHaveBeenCalled();
+  });
+
+  test('does not press an element that became hidden after it was queried (legacy: presses)', async () => {
+    const onPress = jest.fn();
+    function Screen({ hidden }: { hidden: boolean }) {
+      return (
+        <View style={hidden ? { display: 'none' } : undefined}>
+          <Pressable testID="pressable" onPress={onPress} />
+        </View>
+      );
+    }
+
+    await render(<Screen hidden={false} />);
+    const pressable = screen.getByTestId('pressable');
+    await screen.rerender(<Screen hidden />);
+
+    await fireEvent.press(pressable);
+
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+});
+
 describe('disabled Switch', () => {
   test('does not dispatch change (legacy: dispatches change)', async () => {
     // Legacy calls `Switch`'s `onChange`, whose native value command logs an error in Jest.

@@ -110,7 +110,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
  * their own `onPress` (mocked `Text`, `testOnly_onPress`) directly. Disabled elements and
  * responders that decline the touch pass it on to their ancestors. A `TextInput` always keeps the
  * touch, even without `onPress`. `pointerEvents` moves the touch to the nearest ancestor it doesn't
- * block. See `getTouchPath()`, `findResponder()` and `dispatchPressabilityEvent()`.
+ * block. Nothing is called when `display: none` hides the element. See `getTouchPath()`, `findResponder()` and `dispatchPressabilityEvent()`.
  *
  * Only `onPress` is called. Use `userEvent.press()` for `onPressIn`, `onPressOut` and timing.
  *

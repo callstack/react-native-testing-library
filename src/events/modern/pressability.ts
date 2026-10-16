@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import type { TestInstance } from 'test-renderer';
 
 import { act } from '../../act';
@@ -103,9 +104,13 @@ export async function dispatchPressabilityEvent(
 /**
  * Hit testing: the elements a touch on the element goes through, from the hit target to the root.
  * The hit target is the element, or its nearest ancestor when `pointerEvents` blocks it. Empty
- * when `pointerEvents` blocks every element.
+ * when `pointerEvents` blocks every element, or when `display: none` hides the element.
  */
 export function getTouchPath(target: TestInstance): TestInstance[] {
+  if (isHiddenByDisplayNone(target)) {
+    return [];
+  }
+
   let hitTarget: TestInstance | null = target;
   while (hitTarget?.parent != null && getPointerEventsBlocker(hitTarget) != null) {
     hitTarget = hitTarget.parent;
@@ -119,6 +124,20 @@ export function getTouchPath(target: TestInstance): TestInstance[] {
   }
 
   return path;
+}
+
+/**
+ * Whether `display: none` on the element or an ancestor hides it. A device lays out a hidden view
+ * with no frame (iOS doesn't even mount it), so no touch can land on it or its subtree.
+ */
+function isHiddenByDisplayNone(instance: TestInstance): boolean {
+  for (let current: TestInstance | null = instance; current != null; current = current.parent) {
+    if (StyleSheet.flatten(current.props.style)?.display === 'none') {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**

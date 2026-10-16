@@ -46,7 +46,7 @@ const TEXT_EDITING_EVENT_TYPES = new Set([
  *
  * - Touch and pointer events: the hit target, as for `press` (`getTouchPath()`). `pointerEvents`
  *   moves them to the nearest ancestor it doesn't block, and drops them when it blocks every
- *   element.
+ *   element. Dropped when `display: none` hides the element.
  * - Text editing events: the nearest host `TextInput`, as a `Text` nested in a `TextInput` isn't a
  *   native view on a device. Dropped when it isn't editable.
  * - `change` of a disabled `Switch`: dropped, as it can't be toggled.
