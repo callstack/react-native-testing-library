@@ -39,7 +39,7 @@ Make sure your `tsconfig.json` includes the setup file. If it doesn't, TypeScrip
 function fireEvent(instance: TestInstance, eventType: string, ...data: unknown[]): Promise<unknown>;
 
 // Modern
-function fireEvent(instance: TestInstance, eventType: string, event: FireEventInit): Promise<void>;
+function fireEvent(instance: TestInstance, eventType: string, event?: FireEventInit): Promise<void>;
 
 type FireEventInit = {
   nativeEvent?: Record<string, unknown>;
@@ -56,7 +56,7 @@ The event type must be one React Native dispatches natively. `changeText` isn't 
 
 #### Event object
 
-Legacy `fireEvent` passes all its arguments to the handler as they are. Modern `fireEvent` takes exactly one event object, creates a `SyntheticEvent` from it, and passes that to the handler. The event object can only have `nativeEvent`, `timeStamp` and `dispatch`. Other keys throw: `target`, `currentTarget` and the event methods come from the `SyntheticEvent`, and payload fields belong in `nativeEvent`.
+Legacy `fireEvent` passes all its arguments to the handler as they are. Modern `fireEvent` takes at most one event object, creates a `SyntheticEvent` from it, and passes that to the handler. Without an event object, the handler still gets a `SyntheticEvent`, with an empty `nativeEvent`. The event object can only have `nativeEvent`, `timeStamp` and `dispatch`. Other keys throw: `target`, `currentTarget` and the event methods come from the `SyntheticEvent`, and payload fields belong in `nativeEvent`.
 
 ```ts
 // Legacy
@@ -64,8 +64,16 @@ await fireEvent(input, 'focus');
 await fireEvent(view, 'layout', { nativeEvent: { layout: { width: 100 } } });
 
 // Modern
-await fireEvent(input, 'focus', {});
+await fireEvent(input, 'focus');
 await fireEvent(view, 'layout', { nativeEvent: { layout: { width: 100 } } });
+```
+
+Touch events (`touchStart`, `touchMove`, `touchEnd` and `touchCancel`) get a default touch payload, as on a device, with the `nativeEvent` you pass deep merged onto it. `changedTouches` has the touch, and `touches` has it until the touch ends, unless you pass them. Other event types, and events fired with `dispatch`, get `nativeEvent` as you pass it.
+
+```ts
+await fireEvent(button, 'touchStart', { nativeEvent: { pageX: 100, pageY: 100 } });
+await fireEvent(button, 'touchMove', { nativeEvent: { pageX: 110, pageY: 110 } });
+await fireEvent(button, 'touchEnd');
 ```
 
 #### Dispatch

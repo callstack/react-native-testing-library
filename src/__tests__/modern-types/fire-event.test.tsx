@@ -25,10 +25,13 @@ test('accepts known event types, with or without the deprecated "on" prefix', as
 
   await fireEvent(input, 'focus', emptyEvent);
   await fireEvent(input, 'onLayout', { nativeEvent: { layout: { width: 100 } }, timeStamp: 1 });
+  // The event object is optional.
+  await fireEvent(input, 'focus');
+  await fireEvent(input, 'onLayout');
 
-  expect(onFocus).toHaveBeenCalledTimes(1);
-  expect(onLayout).toHaveBeenCalledTimes(1);
-  expect(warnSpy).toHaveBeenCalledTimes(1);
+  expect(onFocus).toHaveBeenCalledTimes(2);
+  expect(onLayout).toHaveBeenCalledTimes(2);
+  expect(warnSpy).toHaveBeenCalledTimes(2);
   warnSpy.mockRestore();
 });
 
@@ -78,6 +81,8 @@ test('rejects custom event types without dispatch', async () => {
 
   // @ts-expect-error `dispatch` is required for event types React Native doesn't know
   await expect(fireEvent(pager, 'pageSelected', emptyEvent)).rejects.toThrow();
+  // @ts-expect-error the event object with `dispatch` is required for these event types
+  await expect(fireEvent(pager, 'pageSelected')).rejects.toThrow();
   // @ts-expect-error `changeText` is not a native event type, the type error suggests alternatives
   await expect(fireEvent(pager, 'changeText', 'Hello')).rejects.toThrow();
   // @ts-expect-error `changeText` is not a native event type, the type error suggests alternatives
@@ -86,12 +91,10 @@ test('rejects custom event types without dispatch', async () => {
   await expect(fireEvent(pager, 'pageSelected', { dispatch: 'capture' })).rejects.toThrow();
 });
 
-test('rejects anything but a single event object', async () => {
+test('rejects anything but at most one event object', async () => {
   await render(<View testID="view" />);
   const view = screen.getByTestId('view');
 
-  // @ts-expect-error missing event object
-  await expect(fireEvent(view, 'focus')).rejects.toThrow();
   // @ts-expect-error more than one argument
   await expect(fireEvent(view, 'focus', emptyEvent, emptyEvent)).rejects.toThrow();
   // @ts-expect-error not an event object

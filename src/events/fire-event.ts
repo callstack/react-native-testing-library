@@ -35,20 +35,21 @@ type CustomFireEventInit = FireEventInit & { dispatch: CustomEventDispatch };
 type ChangeTextHint = 'Use fireEvent.changeText() or userEvent.type() instead.';
 
 /**
- * Event object that modern `fireEvent` accepts at runtime: `dispatch` is required for event types
- * React Native doesn't know. Not distributive, so a union with an unknown event type requires it.
+ * Event object that modern `fireEvent` accepts at runtime: optional for event types React Native
+ * knows, and required with `dispatch` for the others. Not distributive, so a union with an unknown
+ * event type requires it.
  */
-type ModernFireEventInit<T extends string> = [T] extends [KnownEventName]
-  ? FireEventInit
+type ModernFireEventArgs<T extends string> = [T] extends [KnownEventName]
+  ? [event?: FireEventInit]
   : [T] extends ['changeText' | 'onChangeText']
-    ? ChangeTextHint | CustomFireEventInit
-    : CustomFireEventInit;
+    ? [event: ChangeTextHint | CustomFireEventInit]
+    : [event: CustomFireEventInit];
 
 type ModernFireEvent = {
   <T extends KnownEventName | (string & {})>(
     instance: TestInstance,
     eventType: T,
-    event: ModernFireEventInit<T>,
+    ...args: ModernFireEventArgs<T>
   ): Promise<void>;
   changeText: (instance: TestInstance, text: string) => Promise<void>;
   press: (instance: TestInstance, event?: FireEventInit) => Promise<void>;

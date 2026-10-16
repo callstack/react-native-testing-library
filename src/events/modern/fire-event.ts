@@ -22,14 +22,15 @@ import { createEvent } from './event';
 import type { PressabilityEventType } from './event-types';
 import { isPressabilityEventType } from './event-types';
 import {
+  ensureAtMostOneEventArg,
   ensureEventType,
-  ensureSingleEventArg,
   validateChangeTextArgs,
   validateEventInit,
   warnOnPrefix,
 } from './fire-event-utils';
 import { dispatchPressabilityEvent, findResponder, getTouchPath } from './pressability';
 import { createPressabilityEvent } from './responder-event';
+import { buildTouchPayload, isActiveTouchEventType, isTouchEventType } from './touch-payload';
 
 /**
  * Event object passed to modern `fireEvent`. Handlers receive a `SyntheticEvent` from
@@ -45,10 +46,15 @@ export type FireEventInit = CreateEventInit;
  * Pressability event types (`press`, `pressIn`, `pressOut`, `longPress`) call the callback of the
  * element that becomes the touch responder instead, as `fireEvent.press()` does.
  *
- * Exactly one event object is required, as React Native handlers receive a single event. Event
- * types React Native doesn't know need `dispatch: 'direct' | 'bubbling'` in the event object, as
- * declared by the native component, e.g. a third-party component's `pageSelected`. Without it they
- * throw, as do `changeText` and custom prop names.
+ * The event object is optional and defaults to `{}`. At most one is accepted, as React Native
+ * handlers receive a single event. Event types React Native doesn't know need
+ * `dispatch: 'direct' | 'bubbling'` in the event object, as declared by the native component, e.g.
+ * a third-party component's `pageSelected`. Without it they throw, as do `changeText` and custom
+ * prop names.
+ *
+ * Touch events (`touchStart`, `touchMove`, `touchEnd`, `touchCancel`) get a default touch payload,
+ * with the passed `nativeEvent` deep merged onto it, as `fireEvent.press()` does. Other event types
+ * get the passed `nativeEvent` as is.
  *
  * `dispatch` also overrides React Native's dispatch for known event types, for a native component
  * that declares its own event with a built-in name, e.g. a map's `BubblingEventHandler` `onPress`.
@@ -66,18 +72,26 @@ export type FireEventInit = CreateEventInit;
 export async function fireEvent(
   instance: TestInstance,
   eventType: string,
-  ...args: [event: FireEventInit]
+  ...args: [event?: FireEventInit]
 ): Promise<void> {
   const normalizedType = normalizeEventType(eventType);
   ensureInstance(instance, normalizedType, fireEvent);
   // Before the event object, as `fireEvent(input, 'changeText', 'Hello')` needs the hint more.
   ensureEventType(normalizedType, args[0], fireEvent);
-  ensureSingleEventArg(normalizedType, args, fireEvent);
-  const init = validateEventInit(normalizedType, args[0], fireEvent);
+  ensureAtMostOneEventArg(normalizedType, args, fireEvent);
+  // Explicit `undefined` too, as for an omitted optional parameter. `null` still throws.
+  const event = args[0] === undefined ? {} : args[0];
+  const init = validateEventInit(normalizedType, event, fireEvent);
   // After the checks, so a call that throws doesn't also warn.
   warnOnPrefix(eventType);
   if (isPressabilityEventType(normalizedType) && init.dispatch == null) {
     await firePressabilityEvent(instance, normalizedType, init);
+    return;
+  }
+
+  if (isTouchEventType(normalizedType) && init.dispatch == null) {
+    const nativeEvent = buildTouchPayload(isActiveTouchEventType(normalizedType), init.nativeEvent);
+    await fireEventInternal(instance, normalizedType, { ...init, nativeEvent });
     return;
   }
 
