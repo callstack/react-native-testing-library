@@ -2,7 +2,6 @@ import type { TestInstance } from 'test-renderer';
 
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
-import { isEditableTextInput } from '../../helpers/text-input';
 import { getEventHandlerByEventType, normalizeEventType } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
 import {
@@ -17,6 +16,7 @@ import {
 } from '../shared/update-native-state';
 import type { DispatchOptions } from './dispatch';
 import { dispatchEvent } from './dispatch';
+import { getEmittingTarget } from './emitting-target';
 import type { CreateEventInit, NativeEventPayload } from './event';
 import { createEvent } from './event';
 import type { PressabilityEventType } from './event-types';
@@ -54,6 +54,9 @@ export type FireEventInit = CreateEventInit;
  * that declares its own event with a built-in name, e.g. a map's `BubblingEventHandler` `onPress`.
  * Pressability event types are then dispatched as native events, skipping Pressability.
  *
+ * Like a device, drops events the element can't emit, and moves touch and pointer events to the
+ * hit target. See `getEmittingTarget()`.
+ *
  * Resolves to nothing, unlike DOM `fireEvent`: React Native has no default actions that
  * `preventDefault()` could cancel. Handlers can read `event.defaultPrevented` themselves.
  *
@@ -85,15 +88,11 @@ export async function fireEvent(
  * Changes the text of a `TextInput` as a device does: fires a `change` event with the new text,
  * and calls `onChangeText(text)` right after the input's own `onChange`, as `TextInput` does from
  * its `onChange` wrapper. Ancestors receive the bubbling `onChange`, but never `onChangeText`.
- * A non-editable `TextInput` receives no events, as on a device.
+ * A non-editable `TextInput` receives no events, as on a device (see `getEmittingTarget()`).
  */
 fireEvent.changeText = async (instance: TestInstance, text: string): Promise<void> => {
   ensureInstance(instance, 'changeText', fireEvent.changeText);
   validateChangeTextArgs(instance, text, fireEvent.changeText);
-  if (!isEditableTextInput(instance)) {
-    return;
-  }
-
   const selection = { start: text.length, end: text.length };
   const payload = buildTextChangeNativeEvent(text, selection);
   const dispatchOptions: DispatchOptions = {
@@ -111,7 +110,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
  * their own `onPress` (mocked `Text`, `testOnly_onPress`) directly. Disabled elements and
  * responders that decline the touch pass it on to their ancestors. A `TextInput` always keeps the
  * touch, even without `onPress`. `pointerEvents` moves the touch to the nearest ancestor it doesn't
- * block. See `getTouchPath()`, `findResponder()` and `dispatchPressabilityEvent()`.
+ * block. Nothing is called when `display: none` hides the element. See `getTouchPath()`, `findResponder()` and `dispatchPressabilityEvent()`.
  *
  * Only `onPress` is called. Use `userEvent.press()` for `onPressIn`, `onPressOut` and timing.
  *
@@ -162,17 +161,27 @@ async function fireEventInternal(
   basePayload?: NativeEventPayload,
   dispatchOptions?: DispatchOptions,
 ): Promise<void> {
+  if (!isInstanceMounted(instance)) {
+    return;
+  }
+
+  // Before native state, so a dropped `change` leaves it alone.
+  const target = getEmittingTarget(instance, eventType, init);
+  if (target == null) {
+    return;
+  }
+
   const nativeEvent = basePayload
-    ? mergeEventProps(basePayload, getNativeStateEventProps(instance, eventType), init.nativeEvent)
+    ? mergeEventProps(basePayload, getNativeStateEventProps(target, eventType), init.nativeEvent)
     : init.nativeEvent;
   const event = createEvent(eventType, { ...init, nativeEvent });
-  if (event == null || !isInstanceMounted(instance)) {
+  if (event == null) {
     return;
   }
 
   // Before the dispatch, as a device updates its native views before emitting the event.
-  updateNativeStateFromEvent(instance, eventType, event);
-  await dispatchEvent(instance, event, dispatchOptions);
+  updateNativeStateFromEvent(target, eventType, event);
+  await dispatchEvent(target, event, dispatchOptions);
 }
 
 /** Touches the element and calls one Pressability callback of the touch responder. */
