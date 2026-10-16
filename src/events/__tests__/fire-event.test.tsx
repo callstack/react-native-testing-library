@@ -379,40 +379,51 @@ test('fireEvent does not call props of composite components (legacy: calls them)
 });
 
 describe('event object', () => {
-  test('throws without an event object (legacy: calls the handler without arguments)', async () => {
+  test.each([
+    ['without an event object', []],
+    ['with an undefined event object', [undefined]],
+  ])('fires %s (legacy: calls the handler without arguments)', async (_, args) => {
     const onFocus = jest.fn();
     await render(<TextInput testID="input" onFocus={onFocus} />);
 
-    const error = await getErrorMessage(fireEvent(screen.getByTestId('input'), 'focus'));
+    await fireEvent(screen.getByTestId('input'), 'focus', ...args);
 
     // Modern matches React Native, where handlers always receive an event.
-    expect(error).toBe(
-      isModern()
-        ? `Unable to fire a "focus" event. Please provide an event object, e.g. fireEvent(element, 'focus', { nativeEvent: {} }).`
-        : undefined,
-    );
-    expect(onFocus.mock.calls).toEqual(isModern() ? [] : [[]]);
+    expect(onFocus.mock.calls).toEqual(isModern() ? [[anySyntheticEvent]] : [args]);
+    expect(onFocus.mock.calls[0][0]?.nativeEvent).toEqual(isModern() ? {} : undefined);
   });
 
-  test('throws without an event object for Pressability events (legacy: calls the callback without arguments)', async () => {
+  test('fires Pressability events without an event object (legacy: calls the callback without arguments)', async () => {
     const onPressIn = jest.fn();
     await render(<Pressable testID="pressable" onPressIn={onPressIn} />);
 
-    const error = await getErrorMessage(fireEvent(screen.getByTestId('pressable'), 'pressIn'));
+    await fireEvent(screen.getByTestId('pressable'), 'pressIn');
 
+    expect(onPressIn.mock.calls).toEqual(isModern() ? [[anySyntheticEvent]] : [[]]);
+  });
+
+  test('throws without an event object for unknown event types (legacy: calls the handler without arguments)', async () => {
+    const onPageSelected = jest.fn();
+    await render(<View testID="pager" {...{ onPageSelected }} />);
+
+    const error = await getErrorMessage(fireEvent(screen.getByTestId('pager'), 'pageSelected'));
+
+    // Modern needs `dispatch` in the event object to know how to dispatch the event.
     expect(error).toBe(
       isModern()
-        ? `Unable to fire a "pressIn" event. Please provide an event object, e.g. fireEvent(element, 'pressIn', { nativeEvent: {} }).`
+        ? `Unable to fire a "pageSelected" event. React Native doesn't know "pageSelected". ` +
+            'For a native event of a third-party component, pass dispatch: "direct" or "bubbling" ' +
+            'in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. ' +
+            'To call a handler prop directly, use UNSAFE_invokeHandler().'
         : undefined,
     );
-    expect(onPressIn.mock.calls).toEqual(isModern() ? [] : [[]]);
+    expect(onPageSelected.mock.calls).toEqual(isModern() ? [] : [[]]);
   });
 
   test.each([
     ['text', 'string "text"'],
     [42, 'number 42'],
     [null, 'null'],
-    [undefined, 'undefined'],
     [[{ nativeEvent: {} }], 'an array'],
     [new Date(0), 'an instance of Date'],
     [() => {}, 'a function'],
@@ -3239,6 +3250,132 @@ describe('pointerEvents prop', () => {
     expect(onPress.mock.calls[0][0].target).toEqual(
       isModern() ? screen.getByTestId('pressable') : {},
     );
+  });
+});
+
+describe('touch events', () => {
+  test.each([
+    ['touchStart', true],
+    ['touchMove', true],
+    ['touchEnd', false],
+    ['touchCancel', false],
+  ] as const)(
+    '"%s" gets a default touch payload (legacy: passes the event object as given)',
+    async (eventType, isActive) => {
+      const handler = jest.fn();
+      await render(<View testID="view" {...{ [getEventHandlerName(eventType)]: handler }} />);
+
+      await fireEvent(screen.getByTestId('view'), eventType);
+
+      // Modern matches React Native, where `touches` has the touch until it ends.
+      expect(handler.mock.calls).toEqual(isModern() ? [[anySyntheticEvent]] : [[]]);
+      expect(handler.mock.calls[0][0]?.nativeEvent).toEqual(
+        isModern() ? getTouchPayload(isActive) : undefined,
+      );
+    },
+  );
+
+  test('deep merges the passed nativeEvent onto the default touch payload (legacy: passes it as given)', async () => {
+    const onTouchMove = jest.fn();
+    await render(<View testID="view" onTouchMove={onTouchMove} />);
+
+    await fireEvent(screen.getByTestId('view'), 'touchMove', {
+      nativeEvent: { pageX: 110, pageY: 120 },
+    });
+
+    expect(onTouchMove.mock.calls[0][0].nativeEvent).toEqual(
+      isModern() ? getTouchPayload(true, { pageX: 110, pageY: 120 }) : { pageX: 110, pageY: 120 },
+    );
+  });
+
+  test('keeps touch arrays of the passed nativeEvent', async () => {
+    const onTouchEnd = jest.fn();
+    await render(<View testID="view" onTouchEnd={onTouchEnd} />);
+    const touches = [{ identifier: 1, pageX: 5, pageY: 5 }];
+
+    await fireEvent(screen.getByTestId('view'), 'touchEnd', { nativeEvent: { touches } });
+
+    expect(onTouchEnd.mock.calls[0][0].nativeEvent.touches).toEqual(touches);
+    expect(onTouchEnd.mock.calls[0][0].nativeEvent.changedTouches).toEqual(
+      isModern() ? [defaultTouch] : undefined,
+    );
+  });
+
+  test('takes timeStamp from the touch timestamp', async () => {
+    const onTouchStart = jest.fn();
+    await render(<View testID="view" onTouchStart={onTouchStart} />);
+
+    const nowSpy = jest.spyOn(performance, 'now').mockReturnValue(456);
+    await fireEvent(screen.getByTestId('view'), 'touchStart', {});
+    nowSpy.mockRestore();
+
+    // Legacy passes the event object as given.
+    expect(onTouchStart.mock.calls[0][0].nativeEvent?.timestamp).toBe(isModern() ? 456 : undefined);
+    expect(onTouchStart.mock.calls[0][0].timeStamp).toBe(isModern() ? 456 : undefined);
+  });
+
+  test('passes the nativeEvent as given with dispatch', async () => {
+    const onTouchStart = jest.fn();
+    await render(<View testID="view" onTouchStart={onTouchStart} />);
+
+    await fireEvent(screen.getByTestId('view'), 'touchStart', {
+      nativeEvent: { pageX: 1 },
+      dispatch: 'direct',
+    });
+
+    expect(onTouchStart.mock.calls[0][0].nativeEvent).toEqual({ pageX: 1 });
+  });
+
+  // Drag detection from the touch handlers of a `Pressable`, as in Expensify's
+  // `ToggleDistanceUnitButton`. Its tests fire `touchEnd` without an event object.
+  function DragAwareButton({ onPress }: { onPress: () => void }) {
+    const start = React.useRef<{ x: number; y: number } | null>(null);
+    return (
+      <Pressable
+        testID="button"
+        onTouchStart={(event) => {
+          start.current = { x: event.nativeEvent.pageX, y: event.nativeEvent.pageY };
+        }}
+        onTouchMove={(event) => {
+          if (
+            start.current != null &&
+            (Math.abs(event.nativeEvent.pageX - start.current.x) > 1 ||
+              Math.abs(event.nativeEvent.pageY - start.current.y) > 1)
+          ) {
+            start.current = null;
+          }
+        }}
+        onTouchEnd={() => {
+          if (start.current != null) {
+            onPress();
+          }
+          start.current = null;
+        }}
+      />
+    );
+  }
+
+  test('runs a tap from touch handlers', async () => {
+    const onPress = jest.fn();
+    await render(<DragAwareButton onPress={onPress} />);
+    const button = screen.getByTestId('button');
+
+    await fireEvent(button, 'touchStart', { nativeEvent: { pageX: 100, pageY: 100 } });
+    await fireEvent(button, 'touchEnd');
+
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('runs a drag from touch handlers', async () => {
+    const onPress = jest.fn();
+    await render(<DragAwareButton onPress={onPress} />);
+    const button = screen.getByTestId('button');
+
+    await fireEvent(button, 'touchStart', { nativeEvent: { pageX: 100, pageY: 100 } });
+    await fireEvent(button, 'touchMove', { nativeEvent: { pageX: 110, pageY: 110 } });
+    await fireEvent(button, 'touchEnd');
+
+    expect(onPress).not.toHaveBeenCalled();
   });
 });
 
