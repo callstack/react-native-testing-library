@@ -9,7 +9,7 @@
 <script defer src="/react-native-testing-library/static/js/lib-react.49604bf759.js"></script>
 <script defer src="/react-native-testing-library/static/js/lib-router.a0df4de158.js"></script>
 <script defer src="/react-native-testing-library/static/js/2482.4740a55c68.js"></script>
-<script defer src="/react-native-testing-library/static/js/index.f9c8c7721f.js"></script>
+<script defer src="/react-native-testing-library/static/js/index.e55e25bfd7.js"></script>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Rspress v2.0.9">
 <meta property="og:url" content="https://oss.callstack.com/react-native-testing-library/">
@@ -86,7 +86,7 @@ This function will add text to the text already present in the text input (as sp
 </ul>
 <h3 class="rp-toc-include" id="type-sequence"><a href="#type-sequence" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Sequence of events</h3>
 <p>The sequence of events depends on the <code>multiline</code> prop and the passed options.</p>
-<p>Events will not be emitted if the <code>editable</code> prop is set to <code>false</code>.</p>
+<p>Events will not be emitted if the <code>editable</code> prop is set to <code>false</code> or the <code>readOnly</code> prop is set to <code>true</code>.</p>
 <p><strong>Entering the element</strong>:</p>
 <ul>
 <li><code>pressIn</code> (optional)</li>
@@ -120,7 +120,7 @@ The <code>endEditing</code> and <code>blur</code> events can be skipped by passi
 <p>Simulates clearing the content of a <code>TextInput</code> element.</p>
 <p>This function supports only host <code>TextInput</code> elements. Passing other element types will result in throwing an error.</p>
 <h3 class="rp-toc-include" id="clear-sequence"><a href="#clear-sequence" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Sequence of events</h3>
-<p>Events will not be emitted if the <code>editable</code> prop is set to <code>false</code>.</p>
+<p>Events will not be emitted if the <code>editable</code> prop is set to <code>false</code> or the <code>readOnly</code> prop is set to <code>true</code>.</p>
 <p><strong>Entering the element</strong>:</p>
 <ul>
 <li><code>focus</code></li>
@@ -152,7 +152,7 @@ The <code>endEditing</code> and <code>blur</code> events can be skipped by passi
 <p>Simulates pasting text into a <code>TextInput</code> element.</p>
 <p>This function supports only host <code>TextInput</code> elements. Passing other element types will result in throwing an error.</p>
 <h3 class="rp-toc-include" id="paste-sequence"><a href="#paste-sequence" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Sequence of events</h3>
-<p>Events will not be emitted if the <code>editable</code> prop is set to <code>false</code>.</p>
+<p>Events will not be emitted if the <code>editable</code> prop is set to <code>false</code> or the <code>readOnly</code> prop is set to <code>true</code>.</p>
 <p><strong>Entering the element</strong>:</p>
 <ul>
 <li><code>focus</code></li>

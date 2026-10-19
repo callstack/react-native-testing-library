@@ -112,7 +112,7 @@ This function will add text to the text already present in the text input (as sp
 
 The sequence of events depends on the `multiline` prop and the passed options.
 
-Events will not be emitted if the `editable` prop is set to `false`.
+Events will not be emitted if the `editable` prop is set to `false` or the `readOnly` prop is set to `true`.
 
 **Entering the element**:
 
@@ -160,7 +160,7 @@ This function supports only host `TextInput` elements. Passing other element typ
 
 ### Sequence of events \{#clear-sequence}
 
-Events will not be emitted if the `editable` prop is set to `false`.
+Events will not be emitted if the `editable` prop is set to `false` or the `readOnly` prop is set to `true`.
 
 **Entering the element**:
 
@@ -204,7 +204,7 @@ This function supports only host `TextInput` elements. Passing other element typ
 
 ### Sequence of events \{#paste-sequence}
 
-Events will not be emitted if the `editable` prop is set to `false`.
+Events will not be emitted if the `editable` prop is set to `false` or the `readOnly` prop is set to `true`.
 
 **Entering the element**:
 

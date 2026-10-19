@@ -1679,7 +1679,17 @@ expect(element).toBeEnabled();
 expect(element).toBeDisabled();
 ```
 
-Checks if an element is enabled or disabled from `aria-disabled` or `accessibilityState.disabled` props. An element is disabled if it or any ancestor is disabled.
+Checks if an element is enabled or disabled from `aria-disabled` or `accessibilityState.disabled` props. These host elements are also disabled:
+
+- `TextInput` with `editable={false}` or `readOnly`
+- `Text` with `disabled`
+- `Switch` with `disabled`
+
+As in React Native, an element doesn't inherit the disabled state from its ancestors. Check the element that has the state, e.g. the button, not the text inside it:
+
+```tsx
+expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+```
 
 :::note
 These matchers are opposites. Both are available so you can avoid double negations like `expect(element).not.toBeDisabled()`.
@@ -2127,7 +2137,7 @@ This function will add text to the text already present in the text input (as sp
 
 The sequence of events depends on the `multiline` prop and the passed options.
 
-Events will not be emitted if the `editable` prop is set to `false`.
+Events will not be emitted if the `editable` prop is set to `false` or the `readOnly` prop is set to `true`.
 
 **Entering the element**:
 
@@ -2175,7 +2185,7 @@ This function supports only host `TextInput` elements. Passing other element typ
 
 ### Sequence of events \{#clear-sequence}
 
-Events will not be emitted if the `editable` prop is set to `false`.
+Events will not be emitted if the `editable` prop is set to `false` or the `readOnly` prop is set to `true`.
 
 **Entering the element**:
 
@@ -2219,7 +2229,7 @@ This function supports only host `TextInput` elements. Passing other element typ
 
 ### Sequence of events \{#paste-sequence}
 
-Events will not be emitted if the `editable` prop is set to `false`.
+Events will not be emitted if the `editable` prop is set to `false` or the `readOnly` prop is set to `true`.
 
 **Entering the element**:
 
@@ -3782,8 +3792,8 @@ const { result, rerender, unmount } = await renderHook(() => useMyHook(), option
 | `toBeVisible()`                   | Element is visible (checks style, `aria-hidden`, `accessibilityElementsHidden`, ancestors)  |
 | `toBeEmptyElement()`              | Element has no children or text content                                                     |
 | `toContainElement(element)`       | Element contains another element                                                            |
-| `toBeEnabled()`                   | Element is not disabled (checks `aria-disabled`, `accessibilityState`, ancestors)           |
-| `toBeDisabled()`                  | Element has `aria-disabled` or `accessibilityState={{ disabled: true }}` (checks ancestors) |
+| `toBeEnabled()`                   | Element is not disabled (checks `aria-disabled`, `accessibilityState`)                      |
+| `toBeDisabled()`                  | Element has `aria-disabled` or `accessibilityState={{ disabled: true }}` (not from parents) |
 | `toBeBusy()`                      | Element has `aria-busy` or `accessibilityState={{ busy: true }}`                            |
 | `toBeChecked()`                   | Element has `aria-checked` or `accessibilityState={{ checked: true }}`                      |
 | `toBePartiallyChecked()`          | Element has `aria-checked="mixed"` or `accessibilityState={{ checked: 'mixed' }}`           |
