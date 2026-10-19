@@ -1,8 +1,7 @@
-import { mergeEventProps } from '../shared/merge';
-import { buildTouchNativeEvent } from '../shared/payloads';
 import type { CreateEventInit, NativeEventPayload } from './event';
 import { SyntheticEvent } from './event';
 import type { PressabilityEventType } from './event-types';
+import { buildTouchPayload } from './touch-payload';
 
 /** The dispatch configs React Native's responder system passes to `ResponderEvent`. */
 const RESPONDER_DISPATCH_CONFIGS = {
@@ -53,38 +52,10 @@ export function createPressabilityEvent(
   init: CreateEventInit = {},
 ): ResponderEvent {
   const isTouchStart = eventType === 'pressIn' || eventType === 'longPress';
-  const nativeEvent = buildResponderNativeEvent(isTouchStart, init.nativeEvent);
+  const nativeEvent = buildTouchPayload(isTouchStart, init.nativeEvent);
   return new ResponderEvent(
     isTouchStart ? 'responderGrant' : 'responderRelease',
     { timeStamp: init.timeStamp },
     nativeEvent,
   );
-}
-
-/**
- * React Native's touch payload (`touchEventPayload()` in `TouchEventEmitter.cpp`): the changed
- * touch's fields, plus the touch arrays. On the New Architecture, `timestamp` uses the clock of
- * `performance.now()`.
- */
-function buildResponderNativeEvent(
-  isTouchStart: boolean,
-  init: NativeEventPayload | undefined,
-): NativeEventPayload {
-  const nativeEvent: NativeEventPayload = mergeEventProps(
-    buildTouchNativeEvent(),
-    { timestamp: performance.now() },
-    init,
-  );
-
-  const touch = { ...nativeEvent };
-  delete touch.changedTouches;
-  delete touch.touches;
-  if (init == null || !Object.hasOwn(init, 'changedTouches')) {
-    nativeEvent.changedTouches = [{ ...touch }];
-  }
-  if (init == null || !Object.hasOwn(init, 'touches')) {
-    nativeEvent.touches = isTouchStart ? [{ ...touch }] : [];
-  }
-
-  return nativeEvent;
 }

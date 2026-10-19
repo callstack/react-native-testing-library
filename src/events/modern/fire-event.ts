@@ -2,7 +2,6 @@ import type { TestInstance } from 'test-renderer';
 
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
-import { isEditableTextInput } from '../../helpers/text-input';
 import { getEventHandlerByEventType, normalizeEventType } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
 import {
@@ -17,19 +16,21 @@ import {
 } from '../shared/update-native-state';
 import type { DispatchOptions } from './dispatch';
 import { dispatchEvent } from './dispatch';
+import { getEmittingTarget } from './emitting-target';
 import type { CreateEventInit, NativeEventPayload } from './event';
 import { createEvent } from './event';
 import type { PressabilityEventType } from './event-types';
 import { isPressabilityEventType } from './event-types';
 import {
+  ensureAtMostOneEventArg,
   ensureEventType,
-  ensureSingleEventArg,
   validateChangeTextArgs,
   validateEventInit,
   warnOnPrefix,
 } from './fire-event-utils';
 import { dispatchPressabilityEvent, findResponder, getTouchPath } from './pressability';
 import { createPressabilityEvent } from './responder-event';
+import { buildTouchPayload, isActiveTouchEventType, isTouchEventType } from './touch-payload';
 
 /**
  * Event object passed to modern `fireEvent`. Handlers receive a `SyntheticEvent` from
@@ -45,14 +46,22 @@ export type FireEventInit = CreateEventInit;
  * Pressability event types (`press`, `pressIn`, `pressOut`, `longPress`) call the callback of the
  * element that becomes the touch responder instead, as `fireEvent.press()` does.
  *
- * Exactly one event object is required, as React Native handlers receive a single event. Event
- * types React Native doesn't know need `dispatch: 'direct' | 'bubbling'` in the event object, as
- * declared by the native component, e.g. a third-party component's `pageSelected`. Without it they
- * throw, as do `changeText` and custom prop names.
+ * The event object is optional and defaults to `{}`. At most one is accepted, as React Native
+ * handlers receive a single event. Event types React Native doesn't know need
+ * `dispatch: 'direct' | 'bubbling'` in the event object, as declared by the native component, e.g.
+ * a third-party component's `pageSelected`. Without it they throw, as do `changeText` and custom
+ * prop names.
+ *
+ * Touch events (`touchStart`, `touchMove`, `touchEnd`, `touchCancel`) get a default touch payload,
+ * with the passed `nativeEvent` deep merged onto it, as `fireEvent.press()` does. Other event types
+ * get the passed `nativeEvent` as is.
  *
  * `dispatch` also overrides React Native's dispatch for known event types, for a native component
  * that declares its own event with a built-in name, e.g. a map's `BubblingEventHandler` `onPress`.
  * Pressability event types are then dispatched as native events, skipping Pressability.
+ *
+ * Like a device, drops events the element can't emit, and moves touch and pointer events to the
+ * hit target. See `getEmittingTarget()`.
  *
  * Resolves to nothing, unlike DOM `fireEvent`: React Native has no default actions that
  * `preventDefault()` could cancel. Handlers can read `event.defaultPrevented` themselves.
@@ -63,18 +72,26 @@ export type FireEventInit = CreateEventInit;
 export async function fireEvent(
   instance: TestInstance,
   eventType: string,
-  ...args: [event: FireEventInit]
+  ...args: [event?: FireEventInit]
 ): Promise<void> {
   const normalizedType = normalizeEventType(eventType);
   ensureInstance(instance, normalizedType, fireEvent);
   // Before the event object, as `fireEvent(input, 'changeText', 'Hello')` needs the hint more.
   ensureEventType(normalizedType, args[0], fireEvent);
-  ensureSingleEventArg(normalizedType, args, fireEvent);
-  const init = validateEventInit(normalizedType, args[0], fireEvent);
+  ensureAtMostOneEventArg(normalizedType, args, fireEvent);
+  // Explicit `undefined` too, as for an omitted optional parameter. `null` still throws.
+  const event = args[0] === undefined ? {} : args[0];
+  const init = validateEventInit(normalizedType, event, fireEvent);
   // After the checks, so a call that throws doesn't also warn.
   warnOnPrefix(eventType);
   if (isPressabilityEventType(normalizedType) && init.dispatch == null) {
     await firePressabilityEvent(instance, normalizedType, init);
+    return;
+  }
+
+  if (isTouchEventType(normalizedType) && init.dispatch == null) {
+    const nativeEvent = buildTouchPayload(isActiveTouchEventType(normalizedType), init.nativeEvent);
+    await fireEventInternal(instance, normalizedType, { ...init, nativeEvent });
     return;
   }
 
@@ -85,15 +102,11 @@ export async function fireEvent(
  * Changes the text of a `TextInput` as a device does: fires a `change` event with the new text,
  * and calls `onChangeText(text)` right after the input's own `onChange`, as `TextInput` does from
  * its `onChange` wrapper. Ancestors receive the bubbling `onChange`, but never `onChangeText`.
- * A non-editable `TextInput` receives no events, as on a device.
+ * A non-editable `TextInput` receives no events, as on a device (see `getEmittingTarget()`).
  */
 fireEvent.changeText = async (instance: TestInstance, text: string): Promise<void> => {
   ensureInstance(instance, 'changeText', fireEvent.changeText);
   validateChangeTextArgs(instance, text, fireEvent.changeText);
-  if (!isEditableTextInput(instance)) {
-    return;
-  }
-
   const selection = { start: text.length, end: text.length };
   const payload = buildTextChangeNativeEvent(text, selection);
   const dispatchOptions: DispatchOptions = {
@@ -111,7 +124,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
  * their own `onPress` (mocked `Text`, `testOnly_onPress`) directly. Disabled elements and
  * responders that decline the touch pass it on to their ancestors. A `TextInput` always keeps the
  * touch, even without `onPress`. `pointerEvents` moves the touch to the nearest ancestor it doesn't
- * block. See `getTouchPath()`, `findResponder()` and `dispatchPressabilityEvent()`.
+ * block. Nothing is called when `display: none` hides the element. See `getTouchPath()`, `findResponder()` and `dispatchPressabilityEvent()`.
  *
  * Only `onPress` is called. Use `userEvent.press()` for `onPressIn`, `onPressOut` and timing.
  *
@@ -162,17 +175,27 @@ async function fireEventInternal(
   basePayload?: NativeEventPayload,
   dispatchOptions?: DispatchOptions,
 ): Promise<void> {
+  if (!isInstanceMounted(instance)) {
+    return;
+  }
+
+  // Before native state, so a dropped `change` leaves it alone.
+  const target = getEmittingTarget(instance, eventType, init);
+  if (target == null) {
+    return;
+  }
+
   const nativeEvent = basePayload
-    ? mergeEventProps(basePayload, getNativeStateEventProps(instance, eventType), init.nativeEvent)
+    ? mergeEventProps(basePayload, getNativeStateEventProps(target, eventType), init.nativeEvent)
     : init.nativeEvent;
   const event = createEvent(eventType, { ...init, nativeEvent });
-  if (event == null || !isInstanceMounted(instance)) {
+  if (event == null) {
     return;
   }
 
   // Before the dispatch, as a device updates its native views before emitting the event.
-  updateNativeStateFromEvent(instance, eventType, event);
-  await dispatchEvent(instance, event, dispatchOptions);
+  updateNativeStateFromEvent(target, eventType, event);
+  await dispatchEvent(target, event, dispatchOptions);
 }
 
 /** Touches the element and calls one Pressability callback of the touch responder. */

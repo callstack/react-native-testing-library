@@ -87,25 +87,18 @@ export function ensureEventType(
 }
 
 /**
- * Throws unless exactly one argument follows the event type in modern `fireEvent`, as React Native
- * handlers receive a single event. Catches legacy calls passing several handler arguments.
+ * Throws when more than one argument follows the event type in modern `fireEvent`, as React Native
+ * handlers receive a single event. Catches legacy calls passing several handler arguments. No
+ * argument is fine: the event object is optional.
  *
  * @param callsite the function to remove from the error stack, e.g. `fireEvent`
  */
-export function ensureSingleEventArg(
+export function ensureAtMostOneEventArg(
   eventType: string,
   args: unknown[],
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   callsite: Function,
 ): void {
-  if (args.length === 0) {
-    throw new ErrorWithStack(
-      `Unable to fire a "${eventType}" event. Please provide an event object, ` +
-        `e.g. fireEvent(element, '${eventType}', { nativeEvent: {} }).`,
-      callsite,
-    );
-  }
-
   if (args.length > 1) {
     throw new ErrorWithStack(
       `Unable to fire a "${eventType}" event. Expected a single event object, ` +

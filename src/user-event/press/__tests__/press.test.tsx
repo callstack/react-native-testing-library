@@ -350,6 +350,28 @@ describe('userEvent.press with fake timers', () => {
     expect(events).toEqual([]);
   });
 
+  test('does not call press when parent has display: none (legacy: calls it)', async () => {
+    const { events, logEvent } = createEventLogger();
+    const user = userEvent.setup();
+
+    await render(
+      <View style={{ display: 'none' }}>
+        <Pressable
+          onPress={logEvent('press')}
+          onPressIn={logEvent('pressIn')}
+          onPressOut={logEvent('pressOut')}
+          testID="pressable"
+        />
+      </View>,
+    );
+    await user.press(screen.getByTestId('pressable', { includeHiddenElements: true }));
+
+    // Modern matches React Native, where nothing inside a hidden view can be touched.
+    expect(getEventsNames(events)).toEqual(
+      isModernEventSystem() ? [] : ['pressIn', 'pressOut', 'press'],
+    );
+  });
+
   test('calls press when pressable has pointer events box-only', async () => {
     const { events, logEvent } = createEventLogger();
     const user = userEvent.setup();
