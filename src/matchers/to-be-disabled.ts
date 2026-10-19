@@ -9,7 +9,7 @@ import { checkHostElement } from './utils';
 export function toBeDisabled(this: jest.MatcherContext, instance: TestInstance) {
   checkHostElement(instance, toBeDisabled, this);
 
-  const isDisabled = computeAriaDisabled(instance) || isAncestorDisabled(instance);
+  const isDisabled = computeAriaDisabled(instance);
 
   return {
     pass: isDisabled,
@@ -28,7 +28,7 @@ export function toBeDisabled(this: jest.MatcherContext, instance: TestInstance) 
 export function toBeEnabled(this: jest.MatcherContext, instance: TestInstance) {
   checkHostElement(instance, toBeEnabled, this);
 
-  const isEnabled = !computeAriaDisabled(instance) && !isAncestorDisabled(instance);
+  const isEnabled = !computeAriaDisabled(instance);
 
   return {
     pass: isEnabled,
@@ -42,13 +42,4 @@ export function toBeEnabled(this: jest.MatcherContext, instance: TestInstance) {
       ].join('\n');
     },
   };
-}
-
-function isAncestorDisabled(instance: TestInstance): boolean {
-  const parent = instance.parent;
-  if (parent == null) {
-    return false;
-  }
-
-  return computeAriaDisabled(parent) || isAncestorDisabled(parent);
 }

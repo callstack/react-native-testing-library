@@ -230,7 +230,16 @@ export function computeAriaDisabled(instance: TestInstance): boolean {
 
   const { props } = instance;
 
-  if (isHostText(instance) && props.disabled) {
+  // React Native's `Text` prefers `disabled` over `aria-disabled` and `accessibilityState`. The Jest
+  // preset mocks `Text`, so its host element gets these props unchanged.
+  if (isHostText(instance)) {
+    return (
+      (props.disabled ?? props['aria-disabled'] ?? props.accessibilityState?.disabled) === true
+    );
+  }
+
+  // On iOS, `Switch` passes `disabled` to its host element instead of `accessibilityState`.
+  if (isHostSwitch(instance) && props.disabled === true) {
     return true;
   }
 

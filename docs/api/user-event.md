@@ -111,7 +111,7 @@ This function supports only host `TextInput` elements. Passing other element typ
 
 The sequence of events depends on the `multiline` prop and the passed options.
 
-Events will not be emitted if the `editable` prop is set to `false`.
+Events will not be emitted if the `editable` prop is set to `false` or the `readOnly` prop is set to `true`.
 
 **Entering the element**:
 
@@ -159,7 +159,7 @@ This function supports only host `TextInput` elements. Passing other element typ
 
 ### Sequence of events
 
-Events will not be emitted if the `editable` prop is set to `false`.
+Events will not be emitted if the `editable` prop is set to `false` or the `readOnly` prop is set to `true`.
 
 **Entering the element**:
 
@@ -203,7 +203,7 @@ This function supports only host `TextInput` elements. Passing other element typ
 
 ### Sequence of events
 
-Events will not be emitted if the `editable` prop is set to `false`.
+Events will not be emitted if the `editable` prop is set to `false` or the `readOnly` prop is set to `true`.
 
 **Entering the element**:
 

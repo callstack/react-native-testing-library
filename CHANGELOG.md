@@ -3,6 +3,25 @@
 All notable changes to React Native Testing Library will be documented in this file, starting
 with v14.
 
+## Unreleased
+
+### Bug fixes
+
+- `toBeDisabled()` and `toBeEnabled()` incorrectly reported an element as disabled when one of
+  its ancestors was disabled. This is not how React Native works: it doesn't pass the disabled
+  state down to children, so a `Pressable` inside a disabled `View` or `Pressable` still responds
+  to presses and isn't reported as disabled to assistive technologies. The matchers now check
+  only the element's own props, as the `disabled` option of `*ByRole` queries already did.
+  Assert on the element that has the state, e.g. the button instead of the text inside it.
+- A `TextInput` with `readOnly` is treated as non-editable, as React Native does: `fireEvent`
+  and `userEvent` don't change its text, and `toBeDisabled()` and `*ByRole` queries with
+  `disabled: true` match it. `readOnly` wins over `editable`.
+- `toBeDisabled()` and `*ByRole` queries with `disabled: true` match a `Switch` with `disabled` on
+  iOS.
+- `toBeDisabled()` and `*ByRole` queries prefer `disabled` over `aria-disabled` and
+  `accessibilityState.disabled` on `Text`, as React Native does. A `Text` with
+  `disabled={false}` and `aria-disabled` is enabled.
+
 ## 14.1.0
 
 ### Features

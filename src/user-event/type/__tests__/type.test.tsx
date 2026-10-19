@@ -183,6 +183,17 @@ describe('type()', () => {
     expect(getEventsNames(events)).toEqual([]);
   });
 
+  it('does respect readOnly prop', async () => {
+    const { events } = await renderTextInputWithToolkit({
+      readOnly: true,
+    });
+
+    const user = userEvent.setup();
+    await user.type(screen.getByTestId('input'), 'ab');
+
+    expect(getEventsNames(events)).toEqual([]);
+  });
+
   it('supports backspace', async () => {
     const { events } = await renderTextInputWithToolkit({
       defaultValue: 'xxx',

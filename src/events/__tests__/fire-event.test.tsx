@@ -231,6 +231,15 @@ describe('fireEvent.changeText', () => {
     expect(onChangeText).not.toHaveBeenCalled();
     expect(nativeState.valueForInstance.get(input)).toBeUndefined();
   });
+
+  test('does not fire on read-only TextInput', async () => {
+    const onChangeText = jest.fn();
+    await render(<TextInput testID="input" readOnly onChangeText={onChangeText} />);
+    const input = screen.getByTestId('input');
+    await fireEvent.changeText(input, 'new text');
+    expect(onChangeText).not.toHaveBeenCalled();
+    expect(nativeState.valueForInstance.get(input)).toBeUndefined();
+  });
 });
 
 describe('fireEvent.scroll', () => {

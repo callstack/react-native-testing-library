@@ -37,3 +37,20 @@ test('isEditableTextInput basic test', async () => {
   expect(isEditableTextInput(screen.getByTestId('non-editable'))).toBe(false);
   expect(isEditableTextInput(screen.getByTestId('view'))).toBe(false);
 });
+
+test('isEditableTextInput supports readOnly prop', async () => {
+  await render(
+    <View>
+      <TextInput testID="read-only" readOnly />
+      <TextInput testID="read-only-false" readOnly={false} />
+      <TextInput testID="read-only-false-non-editable" readOnly={false} editable={false} />
+      <TextInput testID="read-only-editable" readOnly editable />
+    </View>,
+  );
+
+  expect(isEditableTextInput(screen.getByTestId('read-only'))).toBe(false);
+  expect(isEditableTextInput(screen.getByTestId('read-only-false'))).toBe(true);
+  // React Native's `TextInput` prefers `readOnly` over `editable`.
+  expect(isEditableTextInput(screen.getByTestId('read-only-false-non-editable'))).toBe(true);
+  expect(isEditableTextInput(screen.getByTestId('read-only-editable'))).toBe(false);
+});

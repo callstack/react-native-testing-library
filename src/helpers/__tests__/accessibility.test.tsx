@@ -543,6 +543,34 @@ describe('computeAriaDisabled', () => {
     expect(computeAriaDisabled(screen.getByTestId('editable-false'))).toBe(true);
   });
 
+  test('supports TextInput with "readOnly" prop', async () => {
+    await render(
+      <View>
+        <TextInput testID="read-only" readOnly />
+        <TextInput testID="read-only-false" readOnly={false} />
+        <TextInput testID="read-only-false-non-editable" readOnly={false} editable={false} />
+      </View>,
+    );
+
+    expect(computeAriaDisabled(screen.getByTestId('read-only'))).toBe(true);
+    expect(computeAriaDisabled(screen.getByTestId('read-only-false'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByTestId('read-only-false-non-editable'))).toBe(false);
+  });
+
+  test('supports Switch', async () => {
+    await render(
+      <View>
+        <Switch testID="default" />
+        <Switch testID="disabled" disabled />
+        <Switch testID="disabled-false" disabled={false} />
+      </View>,
+    );
+
+    expect(computeAriaDisabled(screen.getByTestId('default'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByTestId('disabled'))).toBe(true);
+    expect(computeAriaDisabled(screen.getByTestId('disabled-false'))).toBe(false);
+  });
+
   test('supports Button', async () => {
     await render(
       <View>
@@ -569,12 +597,23 @@ describe('computeAriaDisabled', () => {
         <Text>Default Text</Text>
         <Text disabled>Disabled Text</Text>
         <Text aria-disabled>ARIA Disabled Text</Text>
+        <Text accessibilityState={{ disabled: true }}>State Disabled Text</Text>
+        <Text disabled={false} aria-disabled>
+          Disabled False ARIA Disabled Text
+        </Text>
+        <Text disabled={false} accessibilityState={{ disabled: true }}>
+          Disabled False State Disabled Text
+        </Text>
       </View>,
     );
 
     expect(computeAriaDisabled(screen.getByText('Default Text'))).toBe(false);
     expect(computeAriaDisabled(screen.getByText('Disabled Text'))).toBe(true);
     expect(computeAriaDisabled(screen.getByText('ARIA Disabled Text'))).toBe(true);
+    expect(computeAriaDisabled(screen.getByText('State Disabled Text'))).toBe(true);
+    // React Native's `Text` prefers `disabled` over `aria-disabled` and `accessibilityState`.
+    expect(computeAriaDisabled(screen.getByText('Disabled False ARIA Disabled Text'))).toBe(false);
+    expect(computeAriaDisabled(screen.getByText('Disabled False State Disabled Text'))).toBe(false);
   });
 });
 
