@@ -73,8 +73,8 @@ const { result, rerender, unmount } = await renderHook(() => useMyHook(), option
 | `toBeVisible()`                   | Element is visible (checks style, `aria-hidden`, `accessibilityElementsHidden`, ancestors)  |
 | `toBeEmptyElement()`              | Element has no children or text content                                                     |
 | `toContainElement(element)`       | Element contains another element                                                            |
-| `toBeEnabled()`                   | Element is not disabled (checks `aria-disabled`, `accessibilityState`, ancestors)           |
-| `toBeDisabled()`                  | Element has `aria-disabled` or `accessibilityState={{ disabled: true }}` (checks ancestors) |
+| `toBeEnabled()`                   | Element is not disabled (checks `aria-disabled`, `accessibilityState`)                      |
+| `toBeDisabled()`                  | Element has `aria-disabled` or `accessibilityState={{ disabled: true }}` (not from parents) |
 | `toBeBusy()`                      | Element has `aria-busy` or `accessibilityState={{ busy: true }}`                            |
 | `toBeChecked()`                   | Element has `aria-checked` or `accessibilityState={{ checked: true }}`                      |
 | `toBePartiallyChecked()`          | Element has `aria-checked="mixed"` or `accessibilityState={{ checked: 'mixed' }}`           |

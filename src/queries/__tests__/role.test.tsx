@@ -370,6 +370,28 @@ describe('supports accessibility states', () => {
       expect(screen.getByRole('button', { name: 'RNButton', disabled: true })).toBeTruthy();
     });
 
+    test('supports disabled prop on Switch', async () => {
+      await render(<Switch disabled />);
+      expect(screen.getByRole('switch', { disabled: true })).toBeTruthy();
+      expect(screen.queryByRole('switch', { disabled: false })).toBeNull();
+    });
+
+    test('supports readOnly prop on TextInput', async () => {
+      await render(<TextInput role="searchbox" readOnly />);
+      expect(screen.getByRole('searchbox', { disabled: true })).toBeTruthy();
+      expect(screen.queryByRole('searchbox', { disabled: false })).toBeNull();
+    });
+
+    test('does not inherit disabled state from ancestors', async () => {
+      await render(
+        <View aria-disabled>
+          <Pressable role="button" />
+        </View>,
+      );
+      expect(screen.getByRole('button', { disabled: false })).toBeTruthy();
+      expect(screen.queryByRole('button', { disabled: true })).toBeNull();
+    });
+
     test('supports aria-disabled={true} prop', async () => {
       await render(<View accessible accessibilityRole="button" aria-disabled={true} />);
       expect(screen.getByRole('button', { disabled: true })).toBeTruthy();

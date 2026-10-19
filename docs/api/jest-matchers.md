@@ -92,7 +92,17 @@ expect(element).toBeEnabled();
 expect(element).toBeDisabled();
 ```
 
-Checks if an element is enabled or disabled from `aria-disabled` or `accessibilityState.disabled` props. An element is disabled if it or any ancestor is disabled.
+Checks if an element is enabled or disabled from `aria-disabled` or `accessibilityState.disabled` props. These host elements are also disabled:
+
+- `TextInput` with `editable={false}` or `readOnly`
+- `Text` with `disabled`
+- `Switch` with `disabled`
+
+As in React Native, an element doesn't inherit the disabled state from its ancestors. Check the element that has the state, e.g. the button, not the text inside it:
+
+```tsx
+expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+```
 
 > [!NOTE]
 > These matchers are opposites. Both are available so you can avoid double negations like `expect(element).not.toBeDisabled()`.
