@@ -65,13 +65,12 @@ export type FireEventInit = CreateEventInit;
 export async function fireEvent(
   instance: TestInstance,
   eventType: string,
-  event?: FireEventInit,
+  event: FireEventInit = {},
 ): Promise<void> {
   ensureInstanceForEvent(instance, eventType, fireEvent);
-  // Before the event object, as `fireEvent(input, 'changeText', 'Hello')` needs the hint more.
   ensureEventType(eventType, event, fireEvent);
-  // `null` throws, unlike an omitted event.
-  const init = validateEventInit(eventType, event === undefined ? {} : event, fireEvent);
+
+  const init = validateEventInit(eventType, event, fireEvent);
   if (isPressabilityEventType(eventType) && init.dispatch == null) {
     await firePressabilityEvent(instance, eventType, init);
     return;
