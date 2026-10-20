@@ -5,6 +5,7 @@ import type { TestInstance } from 'test-renderer';
 import { getContainerInstance, getInstanceSiblings, isTestInstance } from './component-tree';
 import { findAll } from './find-all';
 import { isHostImage, isHostSwitch, isHostText, isHostTextInput } from './host-component-names';
+import { isDisabledHostText } from './text';
 import { getTextContent } from './text-content';
 import { isEditableTextInput } from './text-input';
 
@@ -228,15 +229,11 @@ export function computeAriaDisabled(instance: TestInstance): boolean {
     return true;
   }
 
-  const { props } = instance;
-
-  // React Native's `Text` prefers `disabled` over `aria-disabled` and `accessibilityState`. The Jest
-  // preset mocks `Text`, so its host element gets these props unchanged.
   if (isHostText(instance)) {
-    return (
-      (props.disabled ?? props['aria-disabled'] ?? props.accessibilityState?.disabled) === true
-    );
+    return isDisabledHostText(instance);
   }
+
+  const { props } = instance;
 
   // On iOS, `Switch` passes `disabled` to its host element instead of `accessibilityState`.
   if (isHostSwitch(instance) && props.disabled === true) {

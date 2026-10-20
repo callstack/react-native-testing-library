@@ -9,10 +9,9 @@ import {
   buildSubmitEditingEvent,
   buildTextChangeEvent,
   buildTextSelectionChangeEvent,
-  buildTouchEvent,
-  isPointerEventEnabled,
-  nativeState,
-} from '../../events';
+} from '../../events/create-event';
+import { nativeState } from '../../events/shared/native-state';
+import { isPointerEventEnabled } from '../../events/shared/pointer-events';
 import { ErrorWithStack } from '../../helpers/errors';
 import { isHostTextInput } from '../../helpers/host-component-names';
 import { getTextInputValue, isEditableTextInput } from '../../helpers/text-input';
@@ -49,14 +48,14 @@ export async function type(
   const keys = parseKeys(text);
 
   if (!options?.skipPress) {
-    await interaction.dispatchEvent('pressIn', buildTouchEvent());
+    await interaction.dispatchTouchEvent('pressIn');
   }
 
   await interaction.dispatchEvent('focus', buildFocusEvent());
 
   if (!options?.skipPress) {
     await wait(this.config);
-    await interaction.dispatchEvent('pressOut', buildTouchEvent());
+    await interaction.dispatchTouchEvent('pressOut');
   }
 
   for (const key of keys) {
@@ -122,7 +121,7 @@ export async function emitTypingEvents(
   };
 
   await interaction.dispatchEvent('change', buildTextChangeEvent(text, selectionRange));
-  await interaction.dispatchEvent('changeText', text);
+  await interaction.invokeEventHandler('changeText', text);
   await interaction.dispatchEvent('selectionChange', buildTextSelectionChangeEvent(selectionRange));
 
   // According to the docs only multiline TextInput emits contentSizeChange event

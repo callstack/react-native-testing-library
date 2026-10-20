@@ -3,6 +3,7 @@ import { Pressable, Text, TouchableHighlight, TouchableOpacity } from 'react-nat
 
 import { userEvent } from '../..';
 import { render, screen } from '../../..';
+import { isModernEventSystem } from '../../../test-utils/event-system';
 import { createEventLogger, getEventsNames } from '../../../test-utils/events';
 
 describe('userEvent.longPress with real timers', () => {
@@ -106,7 +107,7 @@ describe('userEvent.longPress with real timers', () => {
     expect(mockOnPress).not.toHaveBeenCalled();
   });
 
-  test('does not calls onLongPress when duration is lesser than specified delayLongPress', async () => {
+  test('calls onLongPress whatever the delayLongPress (legacy: does not call it when duration is lesser than delayLongPress)', async () => {
     const mockOnLongPress = jest.fn();
     const mockOnPress = jest.fn();
     const user = userEvent.setup();
@@ -118,8 +119,9 @@ describe('userEvent.longPress with real timers', () => {
     );
     await user.longPress(screen.getByText('press me'));
 
-    expect(mockOnLongPress).not.toHaveBeenCalled();
-    expect(mockOnPress).toHaveBeenCalledTimes(1);
+    // Modern `longPress()` doesn't wait for Pressability's long press timer.
+    expect(mockOnLongPress).toHaveBeenCalledTimes(isModernEventSystem() ? 1 : 0);
+    expect(mockOnPress).toHaveBeenCalledTimes(isModernEventSystem() ? 0 : 1);
   });
 
   test('does not calls onPress when onLongPress is called', async () => {

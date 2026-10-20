@@ -8,6 +8,7 @@ import {
   PanResponder,
   Pressable,
   ScrollView,
+  Switch,
   Text,
   TextInput,
   TouchableHighlight,
@@ -16,45 +17,222 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import type { TestInstance } from 'test-renderer';
 
 import { fireEvent, render, screen } from '../..';
 import { configure } from '../../config';
 import { _console, logger } from '../../helpers/logger';
-import { getEventHandlerName } from '../handler';
-import { nativeState } from '../native-state';
+import {
+  isModernEventSystem as isModern,
+  runInLegacyEventSystem,
+} from '../../test-utils/event-system';
+import { SyntheticEvent } from '../modern/event';
+import { getEventHandlerName } from '../shared/handler';
+import { nativeState } from '../shared/native-state';
 
+// Runs in both event systems, through the public `fireEvent`. Where they differ, tests branch on
+// `isModern()`, with a comment saying which one matches React Native.
+
+const emptyEvent = { nativeEvent: {} };
 const layoutEvent = { nativeEvent: { layout: { width: 100, height: 100 } } };
 const verticalScrollEvent = { nativeEvent: { contentOffset: { y: 200 } } };
 const horizontalScrollEvent = { nativeEvent: { contentOffset: { x: 50 } } };
 const pressEventData = { nativeEvent: { pageX: 20, pageY: 30 } };
+const anySyntheticEvent = expect.any(SyntheticEvent);
+
+const defaultTouch = {
+  identifier: 0,
+  locationX: 0,
+  locationY: 0,
+  pageX: 0,
+  pageY: 0,
+  target: 0,
+  timestamp: expect.any(Number),
+};
+const defaultTouchPayload = { ...defaultTouch, changedTouches: [], touches: [] };
+
+/**
+ * Modern touch payload, as on a device: `changedTouches` has the touch, and so does `touches` until
+ * the touch ends.
+ */
+function getTouchPayload(isTouchStart: boolean, touchProps?: object) {
+  const touch = { ...defaultTouch, ...touchProps };
+  return { ...touch, changedTouches: [touch], touches: isTouchStart ? [touch] : [] };
+}
 
 beforeEach(() => {
   jest.spyOn(Date, 'now').mockImplementation(() => 100100100100);
 });
 
-test('fireEvent accepts event name with or without "on" prefix', async () => {
-  const onPress = jest.fn();
-  await render(<Pressable testID="btn" onPress={onPress} />);
+/** Error message `fireEvent` rejects with, or `undefined` when it resolves. */
+async function getErrorMessage(promise: Promise<unknown>) {
+  try {
+    await promise;
+    return undefined;
+  } catch (error) {
+    return (error as Error).message;
+  }
+}
 
-  await fireEvent(screen.getByTestId('btn'), 'press');
-  expect(onPress).toHaveBeenCalledTimes(1);
+test('fireEvent sets event type (legacy: passes the event object as given)', async () => {
+  const onFocus = jest.fn();
+  await render(<TextInput testID="input" onFocus={onFocus} />);
 
-  await fireEvent(screen.getByTestId('btn'), 'onPress');
-  expect(onPress).toHaveBeenCalledTimes(2);
+  await fireEvent(screen.getByTestId('input'), 'focus', emptyEvent);
+
+  // Modern matches React Native, where handlers receive an event with a type. Legacy passes the
+  // event object as given, without a type.
+  expect(onFocus.mock.calls[0][0].type).toBe(isModern() ? 'focus' : undefined);
 });
 
-test('fireEvent with "on" prefixed name does not call unprefixed handler props', async () => {
+test('fireEvent does not call handler props without the "on" prefix (legacy: calls them for unprefixed event names)', async () => {
   const press = jest.fn();
-  const testOnlyPress = jest.fn();
   // @ts-expect-error Intentionally passing such props
-  await render(<View testID="view" press={press} testOnly_press={testOnlyPress} />);
+  await render(<View testID="view" press={press} />);
 
-  await fireEvent(screen.getByTestId('view'), 'onPress');
-  expect(press).not.toHaveBeenCalled();
-  expect(testOnlyPress).not.toHaveBeenCalled();
+  // Modern matches React Native, where only Pressability calls press callbacks. Legacy calls any
+  // `press` prop.
+  await fireEvent(screen.getByTestId('view'), 'press', emptyEvent);
+  expect(press).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+});
 
-  await fireEvent(screen.getByTestId('view'), 'press');
-  expect(press).toHaveBeenCalledTimes(1);
+describe('"on" prefixed event types', () => {
+  let warnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
+  function getDeprecationWarnings() {
+    return warnSpy.mock.calls
+      .map(([message]) => String(message))
+      .filter((message) => message.includes('"on" prefix'));
+  }
+
+  test.each([
+    ['onPress', 'press', (onPress: jest.Mock) => <Pressable testID="target" onPress={onPress} />],
+    [
+      'onPressIn',
+      'pressIn',
+      (onPressIn: jest.Mock) => <Pressable testID="target" onPressIn={onPressIn} />,
+    ],
+    ['onFocus', 'focus', (onFocus: jest.Mock) => <TextInput testID="target" onFocus={onFocus} />],
+    ['onLayout', 'layout', (onLayout: jest.Mock) => <View testID="target" onLayout={onLayout} />],
+  ])(
+    'fires "%s" as "%s" with a deprecation warning (legacy: no warning)',
+    async (eventType, unprefixedType, ui) => {
+      const handler = jest.fn();
+      await render(ui(handler));
+
+      await fireEvent(screen.getByTestId('target'), eventType, emptyEvent);
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      // Modern takes event types as React Native names them, and deprecates the "on" prefix.
+      const message =
+        `Passing event types with the "on" prefix ("${eventType}") to fireEvent is deprecated and ` +
+        'will be removed in the next major release. ' +
+        `Use "${unprefixedType}" instead, e.g. fireEvent(element, '${unprefixedType}', { nativeEvent: {} }).`;
+      const warning = expect.stringContaining(message);
+      expect(getDeprecationWarnings()).toEqual(isModern() ? [warning] : []);
+    },
+  );
+
+  test('fires a custom event type with dispatch, with a deprecation warning (legacy: no warning)', async () => {
+    const onPageSelected = jest.fn();
+    await render(React.createElement('RNCViewPager', { testID: 'pager', onPageSelected }));
+    const event = { nativeEvent: { position: 2 }, dispatch: 'direct' };
+
+    await fireEvent(screen.getByTestId('pager'), 'onPageSelected', event);
+
+    // Modern calls `onPageSelected` for `pageSelected`, as codegen names handler props after event
+    // types. Legacy passes the event object as given.
+    expect(onPageSelected.mock.calls).toEqual([[isModern() ? anySyntheticEvent : event]]);
+    expect(onPageSelected.mock.calls[0][0].nativeEvent).toEqual({ position: 2 });
+    expect(getDeprecationWarnings()).toHaveLength(isModern() ? 1 : 0);
+  });
+
+  test('does not warn when the call throws', async () => {
+    await render(<TextInput testID="input" />);
+
+    const error = await getErrorMessage(
+      fireEvent(screen.getByTestId('input'), 'onChangeText', 'new text'),
+    );
+
+    expect(error).toBe(
+      isModern()
+        ? `Unable to fire a "changeText" event. React Native doesn't dispatch "changeText" natively. Use fireEvent.changeText() or userEvent.type() instead.`
+        : undefined,
+    );
+    expect(getDeprecationWarnings()).toHaveLength(0);
+  });
+
+  test('accepts event types starting with "on" but without the "on" prefix, without a warning', async () => {
+    const onOnline = jest.fn();
+    await render(React.createElement('RNCNetInfo', { testID: 'net', onOnline }));
+
+    await fireEvent(screen.getByTestId('net'), 'online', { nativeEvent: {}, dispatch: 'direct' });
+
+    expect(onOnline).toHaveBeenCalledTimes(1);
+    expect(getDeprecationWarnings()).toHaveLength(0);
+  });
+
+  describe('legacy', () => {
+    runInLegacyEventSystem();
+
+    test('does not call handler props without the "on" prefix', async () => {
+      const press = jest.fn();
+      const testOnlyPress = jest.fn();
+      // @ts-expect-error Intentionally passing such props
+      await render(<View testID="view" press={press} testOnly_press={testOnlyPress} />);
+
+      await fireEvent(screen.getByTestId('view'), 'onPress', emptyEvent);
+
+      expect(press).not.toHaveBeenCalled();
+      expect(testOnlyPress).not.toHaveBeenCalled();
+    });
+
+    test('onChange saves value of TextInput in native state', async () => {
+      await render(<TextInput testID="input" />);
+      const input = screen.getByTestId('input');
+
+      await fireEvent(input, 'onChange', { nativeEvent: { text: 'new text' } });
+
+      expect(nativeState.valueForInstance.get(input)).toBe('new text');
+    });
+
+    test('onScroll updates native state', async () => {
+      const onScroll = jest.fn();
+      await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+      const scrollView = screen.getByTestId('scroll');
+
+      await fireEvent(scrollView, 'onScroll', verticalScrollEvent);
+
+      expect(onScroll.mock.calls).toEqual([[verticalScrollEvent]]);
+      expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({ x: 0, y: 200 });
+    });
+
+    test.each([
+      ['onLayout', (onLayout: jest.Mock) => <View onLayout={onLayout} />],
+      [
+        'onMomentumScrollEnd',
+        (onMomentumScrollEnd: jest.Mock) => (
+          <ScrollView onMomentumScrollEnd={onMomentumScrollEnd} />
+        ),
+      ],
+    ])('%s bubbles with a warning, as unprefixed direct events do', async (eventType, ui) => {
+      const handler = jest.fn();
+      await render(React.cloneElement(ui(handler), {}, <View testID="child" />));
+
+      await fireEvent(screen.getByTestId('child'), eventType, emptyEvent);
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+    });
+  });
 });
 
 test('fireEvent passes event data to handler', async () => {
@@ -64,18 +242,85 @@ test('fireEvent passes event data to handler', async () => {
   expect(onPress.mock.calls[0][0]).toMatchObject(pressEventData);
 });
 
-test('fireEvent passes multiple parameters to handler', async () => {
+test('fireEvent throws with more than one event argument (legacy: passes them all to the handler)', async () => {
   const handlePress = jest.fn();
   await render(<Pressable testID="btn" onPress={handlePress} />);
-  await fireEvent(screen.getByTestId('btn'), 'press', 'param1', 'param2', 'param3');
-  expect(handlePress).toHaveBeenCalledWith('param1', 'param2', 'param3');
+  const error = await getErrorMessage(
+    fireEvent(screen.getByTestId('btn'), 'press', 'param1', 'param2', 'param3'),
+  );
+  // Modern matches React Native, where handlers receive a single event.
+  expect(error).toBe(
+    isModern()
+      ? 'Unable to fire a "press" event. Expected a single event object, received 3 arguments. ' +
+          'To call a handler prop with custom arguments, use UNSAFE_invokeHandler().'
+      : undefined,
+  );
+  expect(handlePress.mock.calls).toEqual(isModern() ? [] : [['param1', 'param2', 'param3']]);
 });
 
-test('fireEvent.press returns undefined when event handler returns a value', async () => {
-  const handler = jest.fn().mockReturnValue('result');
-  await render(<Pressable testID="btn" onPress={handler} />);
-  const result = await fireEvent.press(screen.getByTestId('btn'));
-  expect(result).toBe(undefined);
+// React Native has no default actions for `preventDefault()` to cancel, so modern has nothing to
+// resolve to.
+test.each([
+  {
+    name: 'fireEvent.press()',
+    ui: (handler: jest.Mock) => <Pressable testID="subject" onPress={handler} />,
+    fire: (subject: TestInstance) => fireEvent.press(subject),
+    legacyResult: undefined,
+  },
+  {
+    name: 'fireEvent() with a native event',
+    ui: (handler: jest.Mock) => <TextInput testID="subject" onFocus={handler} />,
+    fire: (subject: TestInstance) => fireEvent(subject, 'focus', emptyEvent),
+    legacyResult: 'result',
+  },
+  {
+    name: 'fireEvent() with a Pressability event',
+    ui: (handler: jest.Mock) => <Pressable testID="subject" onLongPress={handler} />,
+    fire: (subject: TestInstance) => fireEvent(subject, 'longPress', emptyEvent),
+    legacyResult: 'result',
+  },
+  {
+    name: 'fireEvent.changeText()',
+    ui: (handler: jest.Mock) => (
+      <TextInput testID="subject" onChange={handler} onChangeText={handler} />
+    ),
+    fire: (subject: TestInstance) => fireEvent.changeText(subject, 'Hello'),
+    legacyResult: 'result',
+  },
+])(
+  '$name resolves to undefined when the handler calls preventDefault() and returns a value (legacy: to the handler result)',
+  async ({ ui, fire, legacyResult }) => {
+    // Legacy passes event objects as given, which may have no `preventDefault()`.
+    const handler = jest.fn((event: unknown) => {
+      (event as Partial<SyntheticEvent> | undefined)?.preventDefault?.();
+      return 'result';
+    });
+    await render(ui(handler));
+
+    await expect(fire(screen.getByTestId('subject'))).resolves.toBe(
+      isModern() ? undefined : legacyResult,
+    );
+    expect(handler).toHaveBeenCalled();
+  },
+);
+
+test.each([
+  {
+    name: 'fireEvent.press()',
+    ui: (handler: jest.Mock) => <Pressable testID="subject" onPress={handler} />,
+    fire: (subject: TestInstance) => fireEvent.press(subject),
+  },
+  {
+    name: 'fireEvent()',
+    ui: (handler: jest.Mock) => <TextInput testID="subject" onFocus={handler} />,
+    fire: (subject: TestInstance) => fireEvent(subject, 'focus', emptyEvent),
+  },
+])('$name resolves to undefined when the handler returns nothing', async ({ ui, fire }) => {
+  const handler = jest.fn();
+  await render(ui(handler));
+
+  await expect(fire(screen.getByTestId('subject'))).resolves.toBeUndefined();
+  expect(handler).toHaveBeenCalledTimes(1);
 });
 
 test('fireEvent bubbles event to parent handler', async () => {
@@ -89,12 +334,251 @@ test('fireEvent bubbles event to parent handler', async () => {
   expect(onPress).toHaveBeenCalled();
 });
 
+test('fireEvent dispatches bubbling events through capture and bubble phases (legacy: calls only the nearest handler)', async () => {
+  const calls: string[] = [];
+  const onPointerDown = jest.fn(() => calls.push('target.onPointerDown'));
+  await render(
+    <View
+      onPointerDownCapture={() => calls.push('parent.onPointerDownCapture')}
+      onPointerDown={() => calls.push('parent.onPointerDown')}
+    >
+      <View testID="target" onPointerDown={onPointerDown} />
+    </View>,
+  );
+
+  await fireEvent(screen.getByTestId('target'), 'pointerDown', { nativeEvent: { pointerId: 1 } });
+
+  // Modern matches React Native, which dispatches a `SyntheticEvent` through capture and bubble
+  // phases. Legacy calls only the target prop with the passed arguments.
+  expect(calls).toEqual(
+    isModern()
+      ? ['parent.onPointerDownCapture', 'target.onPointerDown', 'parent.onPointerDown']
+      : ['target.onPointerDown'],
+  );
+  const event = (onPointerDown.mock.calls[0] as unknown[])[0] as SyntheticEvent;
+  expect(event instanceof SyntheticEvent).toBe(isModern());
+  expect(event.nativeEvent).toEqual({ pointerId: 1 });
+});
+
+test('fireEvent does not call props of composite components (legacy: calls them)', async () => {
+  const onCompositeFocus = jest.fn();
+  function Wrapper({ children }: { children: React.ReactNode; onFocus: () => void }) {
+    return <View>{children}</View>;
+  }
+
+  await render(
+    <Wrapper onFocus={onCompositeFocus}>
+      <TextInput testID="input" />
+    </Wrapper>,
+  );
+
+  await fireEvent(screen.getByTestId('input'), 'focus', emptyEvent);
+
+  // Modern matches React Native, which dispatches events only to host elements.
+  expect(onCompositeFocus).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+});
+
+describe('event object', () => {
+  test.each([
+    ['without an event object', []],
+    ['with an undefined event object', [undefined]],
+  ])('fires %s (legacy: calls the handler without arguments)', async (_, args) => {
+    const onFocus = jest.fn();
+    await render(<TextInput testID="input" onFocus={onFocus} />);
+
+    await fireEvent(screen.getByTestId('input'), 'focus', ...args);
+
+    // Modern matches React Native, where handlers always receive an event.
+    expect(onFocus.mock.calls).toEqual(isModern() ? [[anySyntheticEvent]] : [args]);
+    expect(onFocus.mock.calls[0][0]?.nativeEvent).toEqual(isModern() ? {} : undefined);
+  });
+
+  test('fires Pressability events without an event object (legacy: calls the callback without arguments)', async () => {
+    const onPressIn = jest.fn();
+    await render(<Pressable testID="pressable" onPressIn={onPressIn} />);
+
+    await fireEvent(screen.getByTestId('pressable'), 'pressIn');
+
+    expect(onPressIn.mock.calls).toEqual(isModern() ? [[anySyntheticEvent]] : [[]]);
+  });
+
+  test('throws without an event object for unknown event types (legacy: calls the handler without arguments)', async () => {
+    const onPageSelected = jest.fn();
+    await render(<View testID="pager" {...{ onPageSelected }} />);
+
+    const error = await getErrorMessage(fireEvent(screen.getByTestId('pager'), 'pageSelected'));
+
+    // Modern needs `dispatch` in the event object to know how to dispatch the event.
+    expect(error).toBe(
+      isModern()
+        ? `Unable to fire a "pageSelected" event. React Native doesn't know "pageSelected". ` +
+            'For a native event of a third-party component, pass dispatch: "direct" or "bubbling" ' +
+            'in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. ' +
+            'To call a handler prop directly, use UNSAFE_invokeHandler().'
+        : undefined,
+    );
+    expect(onPageSelected.mock.calls).toEqual(isModern() ? [] : [[]]);
+  });
+
+  test.each([
+    ['text', 'string "text"'],
+    [42, 'number 42'],
+    [null, 'null'],
+    [[{ nativeEvent: {} }], 'an array'],
+    [new Date(0), 'an instance of Date'],
+    [() => {}, 'a function'],
+  ])(
+    'throws when the event is %p (legacy: passes it to the handler)',
+    async (event, description) => {
+      const onFocus = jest.fn();
+      await render(<TextInput testID="input" onFocus={onFocus} />);
+
+      const error = await getErrorMessage(fireEvent(screen.getByTestId('input'), 'focus', event));
+
+      expect(error).toBe(
+        isModern()
+          ? `Unable to fire a "focus" event. Expected an event object, received ${description}.`
+          : undefined,
+      );
+      expect(onFocus.mock.calls).toEqual(isModern() ? [] : [[event]]);
+    },
+  );
+
+  test.each([
+    [{ target: 1 }, '"target". "target" is provided by the event.'],
+    [
+      { target: {}, currentTarget: { measure: () => {} } },
+      '"target", "currentTarget". "target", "currentTarget" are provided by the event.',
+    ],
+    [{ persist: () => {} }, '"persist". "persist" is provided by the event.'],
+    [
+      { preventDefault: () => {}, dispatchConfig: {} },
+      '"preventDefault", "dispatchConfig". "preventDefault", "dispatchConfig" are provided by the event.',
+    ],
+    [{ text: 'Hello' }, '"text". Pass "text" in "nativeEvent" instead.'],
+    [
+      { text: 'Hello', target: 1, persist: () => {} },
+      '"text", "target", "persist". "target", "persist" are provided by the event. Pass "text" in "nativeEvent" instead.',
+    ],
+  ])(
+    'throws on unsupported keys %p (legacy: passes them to the handler)',
+    async (keys, message) => {
+      const onFocus = jest.fn();
+      await render(<TextInput testID="input" onFocus={onFocus} />);
+
+      const event = { nativeEvent: {}, ...keys };
+      const error = await getErrorMessage(fireEvent(screen.getByTestId('input'), 'focus', event));
+
+      expect(error).toBe(
+        isModern()
+          ? `Unable to fire a "focus" event. Unsupported event object keys: ${message}`
+          : undefined,
+      );
+      expect(onFocus.mock.calls).toEqual(isModern() ? [] : [[event]]);
+    },
+  );
+
+  test('throws when nativeEvent is not an object (legacy: passes it to the handler)', async () => {
+    const onFocus = jest.fn();
+    await render(<TextInput testID="input" onFocus={onFocus} />);
+
+    const error = await getErrorMessage(
+      fireEvent(screen.getByTestId('input'), 'focus', { nativeEvent: 'text' }),
+    );
+
+    expect(error).toBe(
+      isModern()
+        ? 'Unable to fire a "focus" event. Expected "nativeEvent" to be an object, received string "text".'
+        : undefined,
+    );
+    expect(onFocus).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test.each([
+    ['123', 'string "123"'],
+    [Number.NaN, 'number NaN'],
+    [Infinity, 'number Infinity'],
+    [null, 'null'],
+  ])(
+    'throws when timeStamp is %p (legacy: passes it to the handler)',
+    async (timeStamp, description) => {
+      const onFocus = jest.fn();
+      await render(<TextInput testID="input" onFocus={onFocus} />);
+
+      const error = await getErrorMessage(
+        fireEvent(screen.getByTestId('input'), 'focus', { timeStamp }),
+      );
+
+      expect(error).toBe(
+        isModern()
+          ? `Unable to fire a "focus" event. Expected "timeStamp" to be a finite number, received ${description}.`
+          : undefined,
+      );
+      expect(onFocus).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
+
+  test('passes timeStamp to handlers as event.timeStamp', async () => {
+    const onFocus = jest.fn();
+    await render(<TextInput testID="input" onFocus={onFocus} />);
+
+    const nativeEvent = { timestamp: 100 };
+    await fireEvent(screen.getByTestId('input'), 'focus', { nativeEvent, timeStamp: 42 });
+
+    const event = onFocus.mock.calls[0][0];
+    expect(event.timeStamp).toBe(42);
+    expect(event.nativeEvent).toBe(nativeEvent);
+    expect(nativeEvent).toEqual({ timestamp: 100 });
+  });
+
+  test('passes nativeEvent to handlers in an event targeting the element (legacy: passes the event object as given)', async () => {
+    const onSubmitEditing = jest.fn();
+    await render(<TextInput testID="input" onSubmitEditing={onSubmitEditing} />);
+
+    const nativeEvent = { text: 'Hello', target: 1 };
+    await fireEvent(screen.getByTestId('input'), 'submitEditing', { nativeEvent });
+
+    expect(onSubmitEditing).toHaveBeenCalledTimes(1);
+    const event = onSubmitEditing.mock.calls[0][0];
+    expect(event.nativeEvent).toBe(nativeEvent);
+    // Modern matches React Native, which passes a `SyntheticEvent`.
+    expect(event.type).toBe(isModern() ? 'submitediting' : undefined);
+    expect(event.target).toBe(isModern() ? screen.getByTestId('input') : undefined);
+  });
+
+  test('uses an empty nativeEvent when the event object has none (legacy: passes the event object as given)', async () => {
+    const onFocus = jest.fn();
+    await render(<TextInput testID="input" onFocus={onFocus} />);
+
+    await fireEvent(screen.getByTestId('input'), 'focus', {});
+
+    expect(onFocus.mock.calls[0][0].nativeEvent).toEqual(isModern() ? {} : undefined);
+  });
+
+  test('accepts an event object without a prototype', async () => {
+    const onFocus = jest.fn();
+    await render(<TextInput testID="input" onFocus={onFocus} />);
+
+    await fireEvent(screen.getByTestId('input'), 'focus', Object.create(null));
+
+    expect(onFocus).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('fireEvent.press', () => {
-  test('passes default press event object to handler', async () => {
+  test('passes a SyntheticEvent with default touch payload to handler (legacy: a plain event object)', async () => {
     const onPress = jest.fn();
     await render(<Pressable testID="btn" onPress={onPress} />);
     await fireEvent.press(screen.getByTestId('btn'));
-    expect(onPress.mock.calls[0][0]).toMatchInlineSnapshot(`
+    // Modern matches React Native, which fills the touch arrays. Legacy leaves them empty.
+    expect(onPress.mock.calls[0][0].nativeEvent).toEqual(
+      isModern() ? getTouchPayload(false) : { ...defaultTouchPayload, timestamp: 100100100100 },
+    );
+    // Modern matches React Native, which passes a `SyntheticEvent`. Legacy passes a plain object
+    // with stubs of its methods.
+    expect(onPress.mock.calls[0][0] instanceof SyntheticEvent).toBe(isModern());
+    if (isModern()) return;
+    expect({ ...onPress.mock.calls[0][0], nativeEvent: undefined }).toMatchInlineSnapshot(`
       {
         "currentTarget": {
           "measure": [Function],
@@ -102,17 +586,7 @@ describe('fireEvent.press', () => {
         "isDefaultPrevented": [Function],
         "isPersistent": [Function],
         "isPropagationStopped": [Function],
-        "nativeEvent": {
-          "changedTouches": [],
-          "identifier": 0,
-          "locationX": 0,
-          "locationY": 0,
-          "pageX": 0,
-          "pageY": 0,
-          "target": 0,
-          "timestamp": 100100100100,
-          "touches": [],
-        },
+        "nativeEvent": undefined,
         "persist": [Function],
         "preventDefault": [Function],
         "stopPropagation": [Function],
@@ -122,11 +596,56 @@ describe('fireEvent.press', () => {
     `);
   });
 
+  test('passes a press event from the pressed element to the responder (legacy: a plain event object)', async () => {
+    let event: SyntheticEvent | undefined;
+    let currentTarget: unknown;
+    let eventPhase: number | undefined;
+    await render(
+      <Pressable
+        testID="pressable"
+        onPress={(e) => {
+          event = e as unknown as SyntheticEvent;
+          currentTarget = event.currentTarget;
+          eventPhase = event.eventPhase;
+        }}
+      >
+        <Text>Press me</Text>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Press me'));
+
+    expect(event?.nativeEvent).toEqual(isModern() ? getTouchPayload(false) : defaultTouchPayload);
+    // Modern matches React Native: the event targets the pressed element, and Pressability calls
+    // `onPress` of the responder. Legacy passes stubs as `target` and `currentTarget`.
+    if (!isModern()) return;
+    expect(event?.type).toBe('responderRelease');
+    expect(event?.dispatchConfig).toEqual({
+      registrationName: 'onResponderRelease',
+      dependencies: ['topTouchCancel', 'topTouchEnd'],
+    });
+    expect(event?.target).toBe(screen.getByText('Press me'));
+    expect(currentTarget).toBe(screen.getByTestId('pressable'));
+    // The responder system calls the handler directly, without an event dispatch.
+    expect(eventPhase).toBe(event?.NONE);
+    expect(event?.isTrusted).toBe(false);
+    // Reset after the dispatch.
+    expect(event?.currentTarget).toBeNull();
+  });
+
   test('overrides default event properties with passed event props', async () => {
     const onPress = jest.fn();
     await render(<Pressable testID="btn" onPress={onPress} />);
-    const customEventData = { nativeEvent: { pageX: 20, pageY: 30 } };
+    const customEventData = { nativeEvent: { pageX: 20, pageY: 30 }, timeStamp: 123 };
     await fireEvent.press(screen.getByTestId('btn'), customEventData);
+    expect(onPress.mock.calls[0][0].nativeEvent).toEqual(
+      isModern()
+        ? getTouchPayload(false, { pageX: 20, pageY: 30 })
+        : { ...defaultTouchPayload, pageX: 20, pageY: 30, timestamp: 100100100100 },
+    );
+    expect(onPress.mock.calls[0][0].timeStamp).toBe(123);
+    // Legacy merges the passed props into a plain event object.
+    if (isModern()) return;
     expect(onPress.mock.calls[0][0]).toMatchInlineSnapshot(`
       {
         "currentTarget": {
@@ -150,9 +669,27 @@ describe('fireEvent.press', () => {
         "preventDefault": [Function],
         "stopPropagation": [Function],
         "target": {},
-        "timeStamp": 0,
+        "timeStamp": 123,
       }
     `);
+  });
+
+  test('throws on unsupported event object keys (legacy: merges them into the event)', async () => {
+    const onPress = jest.fn();
+    await render(<Pressable testID="pressable" onPress={onPress} />);
+    const pressable = screen.getByTestId('pressable');
+
+    const error = await getErrorMessage(fireEvent.press(pressable, { persist: jest.fn() }));
+    // Modern matches React Native, where the event provides its own methods.
+    expect(error).toBe(
+      isModern()
+        ? 'Unable to fire a "press" event. Unsupported event object keys: "persist". "persist" is provided by the event.'
+        : undefined,
+    );
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+
+    await fireEvent.press(pressable, undefined);
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 1 : 2);
   });
 
   test.each([
@@ -174,6 +711,87 @@ describe('fireEvent.press', () => {
     expect(onPress).toHaveBeenCalled();
   });
 
+  test('calls only onPress, not onPressIn, onPressOut or onLongPress', async () => {
+    const calls: string[] = [];
+    await render(
+      <Pressable
+        testID="pressable"
+        onPress={() => calls.push('onPress')}
+        onPressIn={() => calls.push('onPressIn')}
+        onPressOut={() => calls.push('onPressOut')}
+        onLongPress={() => calls.push('onLongPress')}
+      />,
+    );
+
+    await fireEvent.press(screen.getByTestId('pressable'));
+
+    expect(calls).toEqual(['onPress']);
+  });
+
+  test('calls onPress of host elements that have it, the innermost only', async () => {
+    const onInnerPress = jest.fn();
+    const onOuterPress = jest.fn();
+    await render(
+      <Text onPress={onOuterPress}>
+        Outer <Text onPress={onInnerPress}>Inner</Text>
+      </Text>,
+    );
+
+    await fireEvent.press(screen.getByText('Inner'));
+
+    expect(onInnerPress).toHaveBeenCalledTimes(1);
+    expect(onOuterPress).not.toHaveBeenCalled();
+    // Modern resets the event after the dispatch, as React Native does.
+    if (!isModern()) return;
+    expect(onInnerPress.mock.calls[0][0].currentTarget).toBeNull();
+  });
+
+  test('calls onPress of editable TextInput', async () => {
+    const onPress = jest.fn();
+    await render(<TextInput testID="input" onPress={onPress} />);
+
+    await fireEvent.press(screen.getByTestId('input'));
+
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('calls onPress of TextInput, not of the Pressable around it', async () => {
+    const onInputPress = jest.fn();
+    const onPress = jest.fn();
+    await render(
+      <Pressable onPress={onPress}>
+        <TextInput testID="input" onPress={onInputPress} />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByTestId('input'));
+
+    expect(onInputPress).toHaveBeenCalledTimes(1);
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    ['without onPress* props', {}],
+    ['with only onPressIn', { onPressIn: () => {} }],
+  ])(
+    'does not call onPress of the Pressable around TextInput %s (legacy: calls it)',
+    async (_, inputProps) => {
+      const onPress = jest.fn();
+      await render(
+        <Pressable onPress={onPress}>
+          <TextInput testID="input" {...inputProps} />
+        </Pressable>,
+      );
+
+      await fireEvent.press(screen.getByTestId('input'));
+
+      // Modern matches React Native: TextInput's Pressability always claims the touch, so it
+      // never reaches the Pressable. The Jest mock of TextInput has no responder props, so legacy
+      // goes on to the nearest ancestor with `onPress`.
+      expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
+
   test('works with testOnly_onPress handlers', async () => {
     const onPress = jest.fn();
     const onPressIn = jest.fn();
@@ -193,57 +811,345 @@ describe('fireEvent.press', () => {
     await fireEvent.press(subject);
     expect(onPress).toHaveBeenCalledTimes(1);
 
-    await fireEvent(subject, 'pressIn');
+    await fireEvent(subject, 'pressIn', emptyEvent);
     expect(onPressIn).toHaveBeenCalledTimes(1);
 
-    await fireEvent(subject, 'pressOut');
+    await fireEvent(subject, 'pressOut', emptyEvent);
     expect(onPressOut).toHaveBeenCalledTimes(1);
 
-    await fireEvent(subject, 'longPress');
+    await fireEvent(subject, 'longPress', emptyEvent);
     expect(onLongPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('renders state updates from onPress', async () => {
+    const Counter = () => {
+      const [count, setCount] = React.useState(0);
+      return (
+        <Pressable onPress={() => setCount(count + 1)}>
+          <Text>Count: {count}</Text>
+        </Pressable>
+      );
+    };
+    await render(<Counter />);
+
+    await fireEvent.press(screen.getByText('Count: 0'));
+
+    expect(screen.getByText('Count: 1')).toBeOnTheScreen();
+  });
+
+  test('rethrows onPress error after rendering state updates (legacy: without rendering them)', async () => {
+    const Counter = () => {
+      const [count, setCount] = React.useState(0);
+      return (
+        <Pressable
+          onPress={() => {
+            setCount(count + 1);
+            throw new Error('Press error');
+          }}
+        >
+          <Text>Count: {count}</Text>
+        </Pressable>
+      );
+    };
+    await render(<Counter />);
+
+    await expect(fireEvent.press(screen.getByText('Count: 0'))).rejects.toThrow('Press error');
+    // Modern rethrows after `act()`, so React renders the update first. Legacy throws inside it.
+    expect(screen.getByText(isModern() ? 'Count: 1' : 'Count: 0')).toBeOnTheScreen();
   });
 });
 
 describe('fireEvent.changeText', () => {
-  test('works on TextInput', async () => {
-    const onChangeText = jest.fn();
-    await render(<TextInput testID="input" onChangeText={onChangeText} />);
+  function logChangeHandlers(calls: string[], id: string) {
+    return {
+      onChange: () => calls.push(`${id}.onChange`),
+      onChangeCapture: () => calls.push(`${id}.onChangeCapture`),
+    };
+  }
+
+  test('fires change event with the text, then calls onChangeText (legacy: calls only onChangeText)', async () => {
+    const calls: string[] = [];
+    const onChange = jest.fn((_event: unknown) => calls.push('onChange'));
+    const onChangeText = jest.fn((_text: string) => calls.push('onChangeText'));
+    await render(<TextInput testID="input" onChange={onChange} onChangeText={onChangeText} />);
     const input = screen.getByTestId('input');
-    await fireEvent.changeText(input, 'new text');
-    expect(onChangeText).toHaveBeenCalledWith('new text');
-    expect(nativeState.valueForInstance.get(input)).toBe('new text');
+
+    await fireEvent.changeText(input, 'Hello');
+
+    // Modern matches React Native, where TextInput calls `onChangeText` from its `onChange`.
+    expect(calls).toEqual(isModern() ? ['onChange', 'onChangeText'] : ['onChangeText']);
+    expect(onChangeText).toHaveBeenCalledWith('Hello');
+    expect(nativeState.valueForInstance.get(input)).toBe('Hello');
+    if (!isModern()) return;
+    const event = onChange.mock.calls[0][0] as SyntheticEvent;
+    expect(event.type).toBe('change');
+    expect(event.target).toBe(input);
+    expect(event.nativeEvent).toEqual({
+      text: 'Hello',
+      target: 0,
+      eventCount: 0,
+      selection: { start: 5, end: 5 },
+    });
   });
 
-  test('updates native state when fired with `on*` prefixed name', async () => {
+  test('calls onChangeText after the input onChange, before ancestors onChange (legacy: calls only onChangeText)', async () => {
+    const calls: string[] = [];
+    await render(
+      <View {...logChangeHandlers(calls, 'parent')}>
+        <TextInput
+          testID="input"
+          {...logChangeHandlers(calls, 'input')}
+          onChangeText={() => calls.push('input.onChangeText')}
+        />
+      </View>,
+    );
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    // Modern matches React Native, where `change` goes through capture and bubble phases, and
+    // TextInput calls `onChangeText` from its `onChange`.
+    expect(calls).toEqual(
+      isModern()
+        ? [
+            'parent.onChangeCapture',
+            'input.onChangeCapture',
+            'input.onChange',
+            'input.onChangeText',
+            'parent.onChange',
+          ]
+        : ['input.onChangeText'],
+    );
+  });
+
+  test('does not call onChangeText of an ancestor (legacy: calls it)', async () => {
     const onChangeText = jest.fn();
+    await render(
+      <View {...{ onChangeText }}>
+        <TextInput testID="input" />
+      </View>,
+    );
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    // Modern matches React Native, where only TextInput calls its own `onChangeText`.
+    expect(onChangeText).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test('does not call onChange or onChangeText when a capture handler stops propagation (legacy: calls onChangeText)', async () => {
+    const onChange = jest.fn();
+    const onChangeText = jest.fn();
+    await render(
+      <View {...{ onChangeCapture: (event: SyntheticEvent) => event.stopPropagation() }}>
+        <TextInput testID="input" onChange={onChange} onChangeText={onChangeText} />
+      </View>,
+    );
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    // Modern matches React Native. Legacy calls no capture handlers.
+    expect(onChange).not.toHaveBeenCalled();
+    expect(onChangeText).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test('calls onChangeText when the input onChange stops propagation', async () => {
+    const onParentChange = jest.fn();
+    const onChangeText = jest.fn();
+    await render(
+      <View {...{ onChange: onParentChange }}>
+        <TextInput
+          testID="input"
+          onChange={(event) => event.stopPropagation()}
+          onChangeText={onChangeText}
+        />
+      </View>,
+    );
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(onChangeText).toHaveBeenCalledWith('Hello');
+    expect(onParentChange).not.toHaveBeenCalled();
+  });
+
+  test('does not call onChangeText when the input onChange throws (legacy: does not call onChange)', async () => {
+    const onChangeText = jest.fn();
+    await render(
+      <TextInput
+        testID="input"
+        onChange={() => {
+          throw new Error('Change error');
+        }}
+        onChangeText={onChangeText}
+      />,
+    );
+
+    const error = await getErrorMessage(fireEvent.changeText(screen.getByTestId('input'), 'Hello'));
+
+    expect(error).toBe(isModern() ? 'Change error' : undefined);
+    expect(onChangeText).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test('saves value of uncontrolled TextInput before handlers run', async () => {
+    let value;
+    const onChangeText = jest.fn(() => {
+      value = nativeState.valueForInstance.get(screen.getByTestId('input'));
+    });
     await render(<TextInput testID="input" onChangeText={onChangeText} />);
-    const input = screen.getByTestId('input');
-    await fireEvent(input, 'onChangeText', 'new text');
-    expect(onChangeText).toHaveBeenCalledWith('new text');
-    expect(nativeState.valueForInstance.get(input)).toBe('new text');
+
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(value).toBe('Hello');
+    expect(screen.getByTestId('input')).toHaveDisplayValue('Hello');
+  });
+
+  test('renders state updates from handlers', async () => {
+    function Subject() {
+      const [value, setValue] = React.useState('');
+      return <TextInput testID="input" value={value} onChangeText={setValue} />;
+    }
+
+    await render(<Subject />);
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+
+    expect(screen.getByTestId('input')).toHaveDisplayValue('Hello');
   });
 
   test('does not fire on non-editable TextInput', async () => {
+    const onChange = jest.fn();
     const onChangeText = jest.fn();
-    await render(<TextInput testID="input" editable={false} onChangeText={onChangeText} />);
+    await render(
+      <TextInput testID="input" editable={false} onChange={onChange} onChangeText={onChangeText} />,
+    );
     const input = screen.getByTestId('input');
-    await fireEvent.changeText(input, 'new text');
+
+    await fireEvent.changeText(input, 'Hello');
+
+    expect(onChange).not.toHaveBeenCalled();
     expect(onChangeText).not.toHaveBeenCalled();
     expect(nativeState.valueForInstance.get(input)).toBeUndefined();
   });
 
   test('does not fire on read-only TextInput', async () => {
+    const onChange = jest.fn();
     const onChangeText = jest.fn();
-    await render(<TextInput testID="input" readOnly onChangeText={onChangeText} />);
+    await render(
+      <TextInput testID="input" readOnly onChange={onChange} onChangeText={onChangeText} />,
+    );
     const input = screen.getByTestId('input');
-    await fireEvent.changeText(input, 'new text');
+
+    await fireEvent.changeText(input, 'Hello');
+
+    expect(onChange).not.toHaveBeenCalled();
     expect(onChangeText).not.toHaveBeenCalled();
     expect(nativeState.valueForInstance.get(input)).toBeUndefined();
+  });
+
+  test('throws on elements other than TextInput (legacy: calls onChangeText of any element)', async () => {
+    const onChangeText = jest.fn();
+    await render(<View testID="view" {...{ onChangeText }} />);
+
+    const error = await getErrorMessage(fireEvent.changeText(screen.getByTestId('view'), 'Hello'));
+
+    // Modern matches React Native, where only TextInput calls `onChangeText`.
+    expect(error).toBe(
+      isModern()
+        ? 'Unable to fire a "changeText" event. Expected a host "TextInput" element, received "View".'
+        : undefined,
+    );
+    expect(onChangeText).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test('throws when text is not a string (legacy: passes it to onChangeText)', async () => {
+    const onChangeText = jest.fn();
+    await render(<TextInput testID="input" onChangeText={onChangeText} />);
+
+    const error = await getErrorMessage(
+      fireEvent.changeText(screen.getByTestId('input'), 5 as unknown as string),
+    );
+
+    expect(error).toBe(
+      isModern()
+        ? 'Unable to fire a "changeText" event. Expected text to be a string, received number 5.'
+        : undefined,
+    );
+    expect(onChangeText.mock.calls).toEqual(isModern() ? [] : [[5]]);
+  });
+
+  test('throws when fired as `onChangeText` (legacy: calls it and updates native state)', async () => {
+    const onChangeText = jest.fn();
+    await render(<TextInput testID="input" onChangeText={onChangeText} />);
+    const input = screen.getByTestId('input');
+    const error = await getErrorMessage(fireEvent(input, 'onChangeText', 'new text'));
+    // Modern matches React Native: `changeText` isn't a native event, TextInput calls
+    // `onChangeText` from its `onChange`. Use `fireEvent.changeText()` in both.
+    expect(error).toBe(
+      isModern()
+        ? `Unable to fire a "changeText" event. React Native doesn't dispatch "changeText" natively. Use fireEvent.changeText() or userEvent.type() instead.`
+        : undefined,
+    );
+    expect(onChangeText.mock.calls).toEqual(isModern() ? [] : [['new text']]);
+    expect(nativeState.valueForInstance.get(input)).toBe(isModern() ? undefined : 'new text');
+  });
+
+  test('throws when fired as `changeText` with an event object (legacy: calls onChangeText)', async () => {
+    const onChangeText = jest.fn();
+    await render(<TextInput testID="input" onChangeText={onChangeText} />);
+
+    const error = await getErrorMessage(
+      fireEvent(screen.getByTestId('input'), 'changeText', emptyEvent),
+    );
+
+    // Modern checks the event type before the event object, to point to `fireEvent.changeText()`.
+    expect(error).toBe(
+      isModern()
+        ? `Unable to fire a "changeText" event. React Native doesn't dispatch "changeText" natively. Use fireEvent.changeText() or userEvent.type() instead.`
+        : undefined,
+    );
+    expect(onChangeText.mock.calls).toEqual(isModern() ? [] : [[emptyEvent]]);
+  });
+});
+
+describe('native state', () => {
+  test('change event saves value of TextInput in native state', async () => {
+    await render(<TextInput testID="input" />);
+    const input = screen.getByTestId('input');
+
+    await fireEvent(input, 'change', { nativeEvent: { text: 'new text' } });
+
+    expect(nativeState.valueForInstance.get(input)).toBe('new text');
+  });
+
+  test('change event without text or on non-editable TextInput does not save value', async () => {
+    await render(
+      <>
+        <TextInput testID="input" />
+        <TextInput testID="non-editable" editable={false} />
+      </>,
+    );
+    const input = screen.getByTestId('input');
+    const nonEditable = screen.getByTestId('non-editable');
+
+    await fireEvent(input, 'change', emptyEvent);
+    await fireEvent(nonEditable, 'change', { nativeEvent: { text: 'Hello' } });
+
+    expect(nativeState.valueForInstance.get(input)).toBeUndefined();
+    expect(nativeState.valueForInstance.get(nonEditable)).toBeUndefined();
+  });
+
+  test('is saved before handlers run', async () => {
+    let contentOffset;
+    const onScroll = jest.fn(() => {
+      contentOffset = nativeState.contentOffsetForInstance.get(screen.getByTestId('scroll'));
+    });
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+
+    await fireEvent(screen.getByTestId('scroll'), 'scroll', verticalScrollEvent);
+
+    expect(contentOffset).toEqual({ x: 0, y: 200 });
   });
 });
 
 describe('fireEvent.scroll', () => {
-  test('passes default scroll event object to handler', async () => {
+  test('passes a SyntheticEvent with default scroll payload to handler (legacy: a plain event object)', async () => {
     const onScroll = jest.fn();
     await render(
       <ScrollView testID="scroll" onScroll={onScroll}>
@@ -252,38 +1158,47 @@ describe('fireEvent.scroll', () => {
     );
     const scrollView = screen.getByTestId('scroll');
     await fireEvent.scroll(scrollView);
-    expect(onScroll.mock.calls[0][0]).toMatchInlineSnapshot(`
+    expect(onScroll.mock.calls[0][0].nativeEvent).toMatchInlineSnapshot(`
+      {
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
+        },
+        "contentOffset": {
+          "x": 0,
+          "y": 0,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+      }
+    `);
+    // Modern matches React Native, which passes a direct `SyntheticEvent`. Legacy passes a plain
+    // object with stubs of its methods.
+    expect(onScroll.mock.calls[0][0] instanceof SyntheticEvent).toBe(isModern());
+    expect(onScroll.mock.calls[0][0].type).toBe(isModern() ? 'scroll' : undefined);
+    expect(onScroll.mock.calls[0][0].rnIsDirect).toBe(isModern() ? true : undefined);
+    if (isModern()) return;
+    expect({ ...onScroll.mock.calls[0][0], nativeEvent: undefined }).toMatchInlineSnapshot(`
       {
         "currentTarget": {},
         "isDefaultPrevented": [Function],
         "isPersistent": [Function],
         "isPropagationStopped": [Function],
-        "nativeEvent": {
-          "contentInset": {
-            "bottom": 0,
-            "left": 0,
-            "right": 0,
-            "top": 0,
-          },
-          "contentOffset": {
-            "x": 0,
-            "y": 0,
-          },
-          "contentSize": {
-            "height": 0,
-            "width": 0,
-          },
-          "layoutMeasurement": {
-            "height": 0,
-            "width": 0,
-          },
-          "responderIgnoreScroll": true,
-          "target": 0,
-          "velocity": {
-            "x": 0,
-            "y": 0,
-          },
-        },
+        "nativeEvent": undefined,
         "persist": [Function],
         "preventDefault": [Function],
         "stopPropagation": [Function],
@@ -302,48 +1217,57 @@ describe('fireEvent.scroll', () => {
     );
     const scrollView = screen.getByTestId('scroll');
     const customEventData = {
-      nativeEvent: { contentOffset: { x: 50, y: 200 } },
+      nativeEvent: { contentOffset: { x: 50, y: 200 }, zoomScale: 2 },
+      timeStamp: 123,
     };
     await fireEvent.scroll(scrollView, customEventData);
-    expect(onScroll.mock.calls[0][0]).toMatchInlineSnapshot(`
+    expect(onScroll.mock.calls[0][0].nativeEvent).toMatchInlineSnapshot(`
       {
-        "currentTarget": {},
-        "isDefaultPrevented": [Function],
-        "isPersistent": [Function],
-        "isPropagationStopped": [Function],
-        "nativeEvent": {
-          "contentInset": {
-            "bottom": 0,
-            "left": 0,
-            "right": 0,
-            "top": 0,
-          },
-          "contentOffset": {
-            "x": 50,
-            "y": 200,
-          },
-          "contentSize": {
-            "height": 0,
-            "width": 0,
-          },
-          "layoutMeasurement": {
-            "height": 0,
-            "width": 0,
-          },
-          "responderIgnoreScroll": true,
-          "target": 0,
-          "velocity": {
-            "x": 0,
-            "y": 0,
-          },
+        "contentInset": {
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "top": 0,
         },
-        "persist": [Function],
-        "preventDefault": [Function],
-        "stopPropagation": [Function],
-        "target": {},
-        "timeStamp": 0,
+        "contentOffset": {
+          "x": 50,
+          "y": 200,
+        },
+        "contentSize": {
+          "height": 0,
+          "width": 0,
+        },
+        "layoutMeasurement": {
+          "height": 0,
+          "width": 0,
+        },
+        "responderIgnoreScroll": true,
+        "target": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+        },
+        "zoomScale": 2,
       }
     `);
+    expect(onScroll.mock.calls[0][0].timeStamp).toBe(123);
+  });
+
+  test('throws on unsupported event object keys (legacy: merges them into the event)', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+
+    const error = await getErrorMessage(
+      fireEvent.scroll(screen.getByTestId('scroll'), { persist: () => {} }),
+    );
+
+    // Modern matches React Native, where the event provides its own methods.
+    expect(error).toBe(
+      isModern()
+        ? 'Unable to fire a "scroll" event. Unsupported event object keys: "persist". "persist" is provided by the event.'
+        : undefined,
+    );
+    expect(onScroll).toHaveBeenCalledTimes(isModern() ? 0 : 1);
   });
 
   test('works on ScrollView', async () => {
@@ -362,18 +1286,6 @@ describe('fireEvent.scroll', () => {
     });
   });
 
-  test('updates native state when fired with `on*` prefixed name', async () => {
-    const onScroll = jest.fn();
-    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
-    const scrollView = screen.getByTestId('scroll');
-    await fireEvent(scrollView, 'onScroll', verticalScrollEvent);
-    expect(onScroll).toHaveBeenCalledWith(verticalScrollEvent);
-    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
-      x: 0,
-      y: 200,
-    });
-  });
-
   test.each([
     ['onScroll', 'scroll'],
     ['onScrollBeginDrag', 'scrollBeginDrag'],
@@ -385,7 +1297,10 @@ describe('fireEvent.scroll', () => {
     await render(<ScrollView testID="scroll" {...{ [propName]: handler }} />);
     const scrollView = screen.getByTestId('scroll');
     await fireEvent(scrollView, eventType, verticalScrollEvent);
-    expect(handler).toHaveBeenCalledWith(verticalScrollEvent);
+    // Modern matches React Native, which passes a `SyntheticEvent`. Legacy passes the event object
+    // as given.
+    expect(handler.mock.calls).toEqual([[isModern() ? anySyntheticEvent : verticalScrollEvent]]);
+    expect(handler.mock.calls[0][0]).toMatchObject(verticalScrollEvent);
     expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual({
       x: 0,
       y: 200,
@@ -408,6 +1323,18 @@ describe('fireEvent.scroll', () => {
       x: 0,
       y: 0,
     });
+  });
+
+  test('uses default payload when the event object is undefined', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+    const scrollView = screen.getByTestId('scroll');
+
+    await fireEvent.scroll(scrollView, undefined);
+    await fireEvent.scroll(scrollView);
+
+    expect(onScroll).toHaveBeenCalledTimes(2);
+    expect(onScroll.mock.calls[0][0].nativeEvent).toEqual(onScroll.mock.calls[1][0].nativeEvent);
   });
 
   test('with non-finite contentOffset values uses 0', async () => {
@@ -506,11 +1433,11 @@ describe('fireEvent.scroll', () => {
   });
 
   test('does not use layout size of non-ScrollView element as layoutMeasurement', async () => {
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onScroll = jest.fn();
     await render(
-      <ScrollView onScroll={onScroll}>
-        <View testID="content" onLayout={() => {}} />
+      <ScrollView>
+        {/* Spread because `View` types don't include `onScroll`. */}
+        <View testID="content" onLayout={() => {}} {...{ onScroll }} />
       </ScrollView>,
     );
     const content = screen.getByTestId('content');
@@ -522,32 +1449,40 @@ describe('fireEvent.scroll', () => {
       width: 0,
       height: 0,
     });
-    warnSpy.mockRestore();
   });
 });
 
 describe('fireEvent.layout', () => {
-  test('passes default layout event object to handler', async () => {
+  test('passes a SyntheticEvent with default layout payload to handler (legacy: a plain event object)', async () => {
     const onLayout = jest.fn();
     await render(<View testID="view" onLayout={onLayout} />);
 
     await fireEvent.layout(screen.getByTestId('view'));
 
-    expect(onLayout.mock.calls[0][0]).toMatchInlineSnapshot(`
+    expect(onLayout.mock.calls[0][0].nativeEvent).toMatchInlineSnapshot(`
+      {
+        "layout": {
+          "height": 0,
+          "width": 0,
+          "x": 0,
+          "y": 0,
+        },
+        "target": 0,
+      }
+    `);
+    // Modern matches React Native, which passes a direct `SyntheticEvent`. Legacy passes a plain
+    // object with stubs of its methods.
+    expect(onLayout.mock.calls[0][0] instanceof SyntheticEvent).toBe(isModern());
+    expect(onLayout.mock.calls[0][0].type).toBe(isModern() ? 'layout' : undefined);
+    expect(onLayout.mock.calls[0][0].rnIsDirect).toBe(isModern() ? true : undefined);
+    if (isModern()) return;
+    expect({ ...onLayout.mock.calls[0][0], nativeEvent: undefined }).toMatchInlineSnapshot(`
       {
         "currentTarget": {},
         "isDefaultPrevented": [Function],
         "isPersistent": [Function],
         "isPropagationStopped": [Function],
-        "nativeEvent": {
-          "layout": {
-            "height": 0,
-            "width": 0,
-            "x": 0,
-            "y": 0,
-          },
-          "target": 0,
-        },
+        "nativeEvent": undefined,
         "persist": [Function],
         "preventDefault": [Function],
         "stopPropagation": [Function],
@@ -608,7 +1543,7 @@ describe('fireEvent.layout', () => {
     expect(onLayout).not.toHaveBeenCalled();
   });
 
-  test('bubbles with a warning when fired as generic layout event', async () => {
+  test('does not bubble when fired as generic layout event (legacy: bubbles with a warning)', async () => {
     const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onLayout = jest.fn();
     await render(
@@ -618,10 +1553,11 @@ describe('fireEvent.layout', () => {
     );
 
     await fireEvent(screen.getByTestId('child'), 'layout', layoutEvent);
-    await fireEvent(screen.getByTestId('child'), 'onLayout', layoutEvent);
 
-    expect(onLayout).toHaveBeenCalledTimes(2);
-    expect(warnSpy).toHaveBeenCalledTimes(2);
+    // Modern matches React Native: layout is a direct event, so it doesn't bubble. Legacy still
+    // bubbles it, with a warning.
+    expect(onLayout).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     warnSpy.mockRestore();
   });
 
@@ -633,26 +1569,6 @@ describe('fireEvent.layout', () => {
     await fireEvent.layout(screen.getByTestId('view'));
 
     expect(warnSpy).not.toHaveBeenCalled();
-    warnSpy.mockRestore();
-  });
-
-  test('warns when element has no onLayout handler and event has no layout', async () => {
-    configure({ eventDiagnostics: true });
-    const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
-    await render(<View testID="view" />);
-
-    await fireEvent(screen.getByTestId('view'), 'layout', { nativeEvent: {} });
-
-    expect(warnSpy).toHaveBeenCalledTimes(1);
-    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "  ▲ No "onLayout" handler found on the element or its ancestors.
-          If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
-
-            <View
-              testID="view"
-            />
-      "
-    `);
     warnSpy.mockRestore();
   });
 
@@ -842,7 +1758,6 @@ describe('direct events', () => {
     ),
   ];
 
-  // Builds one case per event type, passing the matching `on*` handler prop to `ui`.
   function buildDirectEventCases(
     source: string,
     eventTypes: string[],
@@ -855,15 +1770,19 @@ describe('direct events', () => {
     }));
   }
 
-  test.each(directEventCases)('bubbles $name with a warning', async ({ eventType, ui }) => {
-    const handler = jest.fn();
-    await render(ui(handler));
+  test.each(directEventCases)(
+    'does not bubble $name (legacy: bubbles with a warning)',
+    async ({ eventType, ui }) => {
+      const handler = jest.fn();
+      await render(ui(handler));
 
-    await fireEvent(screen.getByTestId('target'), eventType);
+      await fireEvent(screen.getByTestId('target'), eventType, emptyEvent);
 
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(warnSpy).toHaveBeenCalledTimes(1);
-  });
+      // Modern matches React Native: direct events don't bubble.
+      expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+      expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
 
   test.each(directEventCases)(
     'does not warn for $name when fired on the emitting element',
@@ -871,36 +1790,44 @@ describe('direct events', () => {
       const handler = jest.fn();
       await render(ui(handler));
 
-      await fireEvent(screen.getByTestId('emitter'), eventType);
+      await fireEvent(screen.getByTestId('emitter'), eventType, emptyEvent);
 
       expect(handler).toHaveBeenCalledTimes(1);
       expect(warnSpy).not.toHaveBeenCalled();
     },
   );
 
-  test('warns when fired with "on" prefixed event name', async () => {
-    const onMomentumScrollEnd = jest.fn();
+  test('calls only the handler of the target when its ancestor has one too', async () => {
+    const onParentLayout = jest.fn();
+    const onLayout = jest.fn();
     await render(
-      <ScrollView onMomentumScrollEnd={onMomentumScrollEnd}>
-        <View testID="child" />
-      </ScrollView>,
+      <View onLayout={onParentLayout}>
+        <View testID="target" onLayout={onLayout} />
+      </View>,
     );
 
-    await fireEvent(screen.getByTestId('child'), 'onMomentumScrollEnd');
+    const nativeEvent = { layout: { x: 0, y: 0, width: 100, height: 50 } };
+    await fireEvent(screen.getByTestId('target'), 'layout', { nativeEvent });
 
-    expect(onMomentumScrollEnd).toHaveBeenCalledTimes(1);
-    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(onLayout).toHaveBeenCalledTimes(1);
+    expect(onLayout.mock.calls[0][0].nativeEvent).toBe(nativeEvent);
+    expect(onParentLayout).not.toHaveBeenCalled();
   });
 
-  test('warns about stopping bubbling in the next major version', async () => {
+  test('does not bubble scroll (legacy: warns about stopping bubbling in the next major version)', async () => {
+    const onScroll = jest.fn();
     await render(
-      <ScrollView testID="scroll" onScroll={() => {}}>
+      <ScrollView testID="scroll" onScroll={onScroll}>
         <View testID="child" />
       </ScrollView>,
     );
 
     await fireEvent.scroll(screen.getByTestId('child'));
 
+    // Modern matches React Native: direct events don't bubble.
+    expect(onScroll).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    if (isModern()) return;
     expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "  ▲ fireEvent: "scroll" does not bubble in React Native. fireEvent will stop bubbling it in the next major version. Fire it on:
 
@@ -912,7 +1839,7 @@ describe('direct events', () => {
   });
 
   test.each([true, false])(
-    'warns about bubbling regardless of eventDiagnostics (%s)',
+    'does not bubble regardless of eventDiagnostics (%s) (legacy: always warns about bubbling)',
     async (eventDiagnostics) => {
       configure({ eventDiagnostics });
       await render(
@@ -923,12 +1850,15 @@ describe('direct events', () => {
 
       await fireEvent.scroll(screen.getByTestId('child'));
 
-      expect(warnSpy).toHaveBeenCalledTimes(1);
+      // Modern matches React Native: direct events don't bubble. Legacy still bubbles them, with
+      // a warning.
+      expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+      if (isModern()) return;
       expect(warnSpy.mock.calls[0][0]).toContain('"scroll" does not bubble in React Native');
     },
   );
 
-  test('warns when handler is on composite component above the emitting element', async () => {
+  test('does not call handler on composite component above the emitting element (legacy: calls it with a warning)', async () => {
     const onScroll = jest.fn();
     const Screen = (_props: { onScroll: () => void }) => (
       <ScrollView>
@@ -939,12 +1869,13 @@ describe('direct events', () => {
 
     await fireEvent.scroll(screen.getByTestId('child'));
 
-    expect(onScroll).toHaveBeenCalledTimes(1);
-    expect(warnSpy).toHaveBeenCalledTimes(1);
+    // Modern matches React Native: scroll doesn't bubble, and composite props are never called.
+    expect(onScroll).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
   });
 
   // Known gap: only the type of the element with the handler is checked.
-  test('does not warn when handler is on an element that does not emit the event', async () => {
+  test('does not call handler on an element that does not emit the event (legacy: calls it without a warning)', async () => {
     const onScroll = jest.fn();
     const Screen = (_props: { onScroll: () => void }) => (
       <View>
@@ -957,11 +1888,12 @@ describe('direct events', () => {
 
     await fireEvent.scroll(screen.getByTestId('child'));
 
-    expect(onScroll).toHaveBeenCalledTimes(1);
+    // Modern matches React Native: scroll doesn't bubble, and composite props are never called.
+    expect(onScroll).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  test('does not warn when bubbling to composite component handler', async () => {
+  test('does not call composite component handlers (legacy: calls them without a warning)', async () => {
     const onLoad = jest.fn();
     const onShow = jest.fn();
     const Card = (_props: { onLoad: () => void; onShow: () => void }) => (
@@ -971,15 +1903,17 @@ describe('direct events', () => {
     );
     await render(<Card onLoad={onLoad} onShow={onShow} />);
 
-    await fireEvent(screen.getByText('Card'), 'load');
-    await fireEvent(screen.getByText('Card'), 'show');
+    await fireEvent(screen.getByText('Card'), 'load', emptyEvent);
+    await fireEvent(screen.getByText('Card'), 'show', emptyEvent);
 
-    expect(onLoad).toHaveBeenCalledTimes(1);
-    expect(onShow).toHaveBeenCalledTimes(1);
+    // Modern matches React Native: composite props are never called, and these events don't
+    // bubble.
+    expect(onLoad).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(onShow).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  test('does not warn when bubbling to host element that does not emit the event', async () => {
+  test('does not bubble to host element that does not emit the event (legacy: bubbles without a warning)', async () => {
     const onLoad = jest.fn();
     await render(
       // @ts-expect-error View does not have onLoad prop
@@ -988,13 +1922,14 @@ describe('direct events', () => {
       </View>,
     );
 
-    await fireEvent(screen.getByText('Content'), 'load');
+    await fireEvent(screen.getByText('Content'), 'load', emptyEvent);
 
-    expect(onLoad).toHaveBeenCalledTimes(1);
+    // Modern matches React Native: load is a direct event, so it doesn't bubble.
+    expect(onLoad).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  test('does not warn when bubbling load event to ImageBackground handler', async () => {
+  test('does not bubble load event to ImageBackground handler (legacy: bubbles without a warning)', async () => {
     const onLoad = jest.fn();
     await render(
       <ImageBackground source={{ uri: 'https://example.com/image.png' }} onLoad={onLoad}>
@@ -1002,14 +1937,376 @@ describe('direct events', () => {
       </ImageBackground>,
     );
 
-    await fireEvent(screen.getByText('Caption'), 'load');
+    await fireEvent(screen.getByText('Caption'), 'load', emptyEvent);
 
-    expect(onLoad).toHaveBeenCalledTimes(1);
+    // Modern matches React Native: load doesn't bubble, and ImageBackground passes `onLoad` to its
+    // Image, which isn't an ancestor of the caption.
+    expect(onLoad).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     expect(warnSpy).not.toHaveBeenCalled();
   });
 });
 
-test('fireEvent fires custom event (onCustomEvent) on composite component', async () => {
+describe('custom event types', () => {
+  // Third-party native components render as host elements with all their props in Jest, as
+  // `@react-native/jest-preset` mocks `requireNativeComponent()` and `NativeComponentRegistry`.
+  test('dispatches a direct custom event to the target only (legacy: passes the event object as given)', async () => {
+    const onPageSelected = jest.fn();
+    const onParentPageSelected = jest.fn();
+    await render(
+      React.createElement(
+        'RNCViewPager',
+        { onPageSelected: onParentPageSelected },
+        React.createElement('RNCViewPager', { testID: 'pager', onPageSelected }),
+      ),
+    );
+    const pager = screen.getByTestId('pager');
+
+    const event = { nativeEvent: { position: 1 }, dispatch: 'direct' };
+    await fireEvent(pager, 'pageSelected', event);
+
+    // Modern matches React Native, which calls only the target's prop for direct events.
+    expect(onParentPageSelected).not.toHaveBeenCalled();
+    expect(onPageSelected).toHaveBeenCalledTimes(1);
+    const received = (onPageSelected.mock.calls[0] as unknown[])[0] as SyntheticEvent;
+    expect(received).toEqual(isModern() ? anySyntheticEvent : event);
+    expect(received.nativeEvent).toEqual({ position: 1 });
+    expect(received.type).toBe(isModern() ? 'pageselected' : undefined);
+    expect(received.rnIsDirect).toBe(isModern() ? true : undefined);
+    expect(received.target).toBe(isModern() ? pager : undefined);
+  });
+
+  test('dispatches a bubbling custom event through capture and bubble phases (legacy: calls only the nearest handler)', async () => {
+    const calls: string[] = [];
+    const getHandlers = (id: string) => ({
+      onCustomGestureCapture: () => calls.push(`${id}.onCustomGestureCapture`),
+      onCustomGesture: () => calls.push(`${id}.onCustomGesture`),
+    });
+    await render(
+      <View {...getHandlers('parent')}>
+        {React.createElement('RNCustomView', { testID: 'target', ...getHandlers('target') })}
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('target'), 'customGesture', {
+      nativeEvent: {},
+      dispatch: 'bubbling',
+    });
+
+    expect(calls).toEqual(
+      isModern()
+        ? [
+            'parent.onCustomGestureCapture',
+            'target.onCustomGestureCapture',
+            'target.onCustomGesture',
+            'parent.onCustomGesture',
+          ]
+        : ['target.onCustomGesture'],
+    );
+  });
+
+  test('reaches the user callback through a wrapper that adapts the host prop', async () => {
+    // Shaped like `react-native-pager-view`: the composite passes its own handler to the host,
+    // which then calls the user's prop.
+    type PageSelectedEvent = { nativeEvent: { position: number } };
+    class PagerView extends React.Component<{
+      testID?: string;
+      onPageSelected?: (event: PageSelectedEvent) => void;
+    }> {
+      _onPageSelected = (event: PageSelectedEvent) => {
+        this.props.onPageSelected?.(event);
+      };
+
+      render() {
+        return React.createElement('RNCViewPager', {
+          testID: this.props.testID,
+          onPageSelected: this._onPageSelected,
+        });
+      }
+    }
+
+    const onPageSelected = jest.fn();
+    await render(<PagerView testID="pager" onPageSelected={onPageSelected} />);
+
+    await fireEvent(screen.getByTestId('pager'), 'pageSelected', {
+      nativeEvent: { position: 3 },
+      dispatch: 'direct',
+    });
+
+    expect(onPageSelected).toHaveBeenCalledTimes(1);
+    expect(onPageSelected.mock.calls[0][0].nativeEvent).toEqual({ position: 3 });
+  });
+
+  test('throws for a custom event type without dispatch (legacy: calls the handler)', async () => {
+    const onEndReached = jest.fn();
+    // The Jest mock of `ScrollView` puts `FlatList`'s JavaScript callbacks, like `onEndReached`,
+    // on the host element.
+    await render(
+      <FlatList
+        testID="list"
+        data={['a']}
+        renderItem={({ item }) => <Text>{item}</Text>}
+        onEndReached={onEndReached}
+      />,
+    );
+
+    const error = await getErrorMessage(
+      fireEvent(screen.getByTestId('list'), 'endReached', {
+        nativeEvent: { distanceFromEnd: 0 },
+      }),
+    );
+
+    expect(error).toBe(
+      isModern()
+        ? 'Unable to fire a "endReached" event. React Native doesn\'t know "endReached". For a native event of a third-party component, pass dispatch: "direct" or "bubbling" in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. To call a handler prop directly, use UNSAFE_invokeHandler().'
+        : undefined,
+    );
+    expect(onEndReached).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test('dispatch overrides a bubbling built-in event type, skipping Pressability (legacy: calls only the nearest handler)', async () => {
+    // Shaped like `react-native-maps`: the native map declares `onPress` as a
+    // `BubblingEventHandler`, so a tap reaches it as a native `press` event, not from Pressability.
+    const calls: string[] = [];
+    const getHandlers = (id: string) => ({
+      onPressCapture: () => calls.push(`${id}.onPressCapture`),
+      onPress: () => calls.push(`${id}.onPress`),
+    });
+    await render(
+      <Pressable onPress={() => calls.push('pressable.onPress')}>
+        {React.createElement(
+          'AIRMapContainer',
+          getHandlers('parent'),
+          React.createElement('AIRMap', { testID: 'map', ...getHandlers('map') }),
+        )}
+      </Pressable>,
+    );
+
+    await fireEvent(screen.getByTestId('map'), 'press', {
+      nativeEvent: { coordinate: { latitude: 1, longitude: 2 } },
+      dispatch: 'bubbling',
+    });
+
+    expect(calls).toEqual(
+      isModern()
+        ? ['parent.onPressCapture', 'map.onPressCapture', 'map.onPress', 'parent.onPress']
+        : ['map.onPress'],
+    );
+  });
+
+  test('dispatch overrides a Pressability event type with a direct native event', async () => {
+    const onLongPress = jest.fn();
+    const onParentLongPress = jest.fn();
+    await render(
+      React.createElement(
+        'AIRMapContainer',
+        { onLongPress: onParentLongPress },
+        React.createElement('AIRMap', { testID: 'map', onLongPress }),
+      ),
+    );
+    const map = screen.getByTestId('map');
+
+    await fireEvent(map, 'longPress', { nativeEvent: { x: 1 }, dispatch: 'direct' });
+
+    expect(onParentLongPress).not.toHaveBeenCalled();
+    expect(onLongPress).toHaveBeenCalledTimes(1);
+    const received = onLongPress.mock.calls[0][0] as SyntheticEvent;
+    expect(received.nativeEvent).toEqual({ x: 1 });
+    expect(received.rnIsDirect).toBe(isModern() ? true : undefined);
+    expect(received.target).toBe(isModern() ? map : undefined);
+  });
+
+  test('dispatch overrides a bubbling built-in event type with a direct one', async () => {
+    const onFocus = jest.fn();
+    const onParentFocus = jest.fn();
+    await render(
+      React.createElement(
+        'RNCustomView',
+        { onFocus: onParentFocus },
+        React.createElement('RNCustomView', { testID: 'target', onFocus }),
+      ),
+    );
+
+    await fireEvent(screen.getByTestId('target'), 'focus', { nativeEvent: {}, dispatch: 'direct' });
+
+    expect(onFocus).toHaveBeenCalledTimes(1);
+    expect(onParentFocus).not.toHaveBeenCalled();
+  });
+
+  test('dispatch overrides a direct built-in event type with a bubbling one (legacy: calls only the nearest handler)', async () => {
+    const onLayout = jest.fn();
+    const onParentLayout = jest.fn();
+    await render(
+      React.createElement(
+        'RNCustomView',
+        { onLayout: onParentLayout },
+        React.createElement('RNCustomView', { testID: 'target', onLayout }),
+      ),
+    );
+
+    await fireEvent(screen.getByTestId('target'), 'layout', {
+      nativeEvent: {},
+      dispatch: 'bubbling',
+    });
+
+    expect(onLayout).toHaveBeenCalledTimes(1);
+    expect(onParentLayout).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+  });
+
+  test('fireEvent.press() with dispatch fires a native press event with the passed payload', async () => {
+    const onPress = jest.fn();
+    await render(React.createElement('AIRMap', { testID: 'map', onPress }));
+
+    await fireEvent.press(screen.getByTestId('map'), {
+      nativeEvent: { coordinate: { latitude: 1, longitude: 2 } },
+      dispatch: 'bubbling',
+    });
+
+    expect(onPress).toHaveBeenCalledTimes(1);
+    // Modern skips the default touch payload, as the event is the component's own.
+    const { nativeEvent } = onPress.mock.calls[0][0];
+    expect(nativeEvent).toMatchObject({ coordinate: { latitude: 1, longitude: 2 } });
+    expect('pageX' in nativeEvent).toBe(!isModern());
+  });
+
+  test('dispatch on a Pressable calls no Pressability callback (legacy: calls onPress)', async () => {
+    const onPress = jest.fn();
+    await render(<Pressable testID="target" onPress={onPress} />);
+
+    await fireEvent(screen.getByTestId('target'), 'press', {
+      nativeEvent: {},
+      dispatch: 'bubbling',
+    });
+
+    // Modern dispatches a native `press` event, which `Pressable`'s host has no prop for.
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test.each([
+    ['capture', 'string "capture"'],
+    [null, 'null'],
+    [true, 'boolean true'],
+  ])(
+    'throws when dispatch is %p (legacy: passes it to the handler)',
+    async (dispatch, description) => {
+      const onPageSelected = jest.fn();
+      await render(React.createElement('RNCViewPager', { testID: 'pager', onPageSelected }));
+
+      const error = await getErrorMessage(
+        fireEvent(screen.getByTestId('pager'), 'pageSelected', { nativeEvent: {}, dispatch }),
+      );
+
+      expect(error).toBe(
+        isModern()
+          ? `Unable to fire a "pageSelected" event. Expected "dispatch" to be "direct" or "bubbling", received ${description}.`
+          : undefined,
+      );
+      expect(onPageSelected).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
+
+  test('dispatches changeText with dispatch as a native event of the component', async () => {
+    const onChangeText = jest.fn();
+    await render(React.createElement('RNCustomInput', { testID: 'input', onChangeText }));
+
+    await fireEvent(screen.getByTestId('input'), 'changeText', {
+      nativeEvent: { text: 'Hello' },
+      dispatch: 'direct',
+    });
+
+    expect(onChangeText).toHaveBeenCalledTimes(1);
+    expect(onChangeText.mock.calls[0][0].nativeEvent).toEqual({ text: 'Hello' });
+  });
+});
+
+describe('Pressability event types', () => {
+  function logCallbacks(calls: string[], id: string) {
+    const log = (name: string) => () => {
+      calls.push(`${id}.${name}`);
+    };
+    return {
+      onPress: log('onPress'),
+      onPressIn: log('onPressIn'),
+      onPressOut: log('onPressOut'),
+      onLongPress: log('onLongPress'),
+    };
+  }
+
+  test.each([
+    ['press', 'onPress'],
+    ['pressIn', 'onPressIn'],
+    ['pressOut', 'onPressOut'],
+    ['longPress', 'onLongPress'],
+  ])('"%s" calls only %s of the responder', async (eventType, name) => {
+    const calls: string[] = [];
+    await render(
+      <>
+        <Pressable {...logCallbacks(calls, 'pressable')}>
+          <Text>Pressable</Text>
+        </Pressable>
+        <TouchableOpacity {...logCallbacks(calls, 'touchable')}>
+          <Text>Touchable</Text>
+        </TouchableOpacity>
+      </>,
+    );
+
+    await fireEvent(screen.getByText('Pressable'), eventType, emptyEvent);
+    await fireEvent(screen.getByText('Touchable'), eventType, emptyEvent);
+
+    expect(calls).toEqual([`pressable.${name}`, `touchable.${name}`]);
+  });
+
+  test('passes a responder event with default touch payload (legacy: passes the event object as given)', async () => {
+    const onPressIn = jest.fn();
+    await render(
+      <Pressable testID="pressable" onPressIn={onPressIn}>
+        <Text>Press me</Text>
+      </Pressable>,
+    );
+
+    await fireEvent(screen.getByText('Press me'), 'pressIn', {
+      nativeEvent: { pageX: 20 },
+      timeStamp: 123,
+    });
+
+    const event = onPressIn.mock.calls[0][0];
+    // Modern matches React Native, which derives Pressability events from a touch.
+    expect(event.nativeEvent).toEqual(
+      isModern() ? getTouchPayload(true, { pageX: 20 }) : { pageX: 20 },
+    );
+    expect(event.timeStamp).toBe(123);
+    if (!isModern()) return;
+    expect(event.type).toBe('responderGrant');
+    expect(event.dispatchConfig).toEqual({
+      registrationName: 'onResponderGrant',
+      dependencies: [],
+    });
+    // Not a direct event: the responder system calls the handler without an event dispatch.
+    expect(event.bubbles).toBe(false);
+    expect(event.rnIsDirect).toBe(false);
+    expect(event.target).toBe(screen.getByText('Press me'));
+  });
+
+  test('calls onLongPress without currentTarget (legacy: passes the event object as given)', async () => {
+    let currentTarget: unknown;
+    await render(
+      <Pressable
+        onLongPress={(event) => {
+          currentTarget = event.currentTarget;
+        }}
+      >
+        <Text>Press me</Text>
+      </Pressable>,
+    );
+
+    await fireEvent(screen.getByText('Press me'), 'longPress', emptyEvent);
+
+    // Modern matches React Native, where Pressability calls `onLongPress` from a timer, after the
+    // dispatch of the responder grant event.
+    expect(currentTarget).toBe(isModern() ? null : undefined);
+  });
+});
+
+test('fireEvent throws for custom event (onCustomEvent) on composite component (legacy: calls it)', async () => {
   const CustomComponent = ({ onCustomEvent }: { onCustomEvent: (data: string) => void }) => (
     <TouchableOpacity onPress={() => onCustomEvent('event data')}>
       <Text>Custom</Text>
@@ -1017,11 +2314,20 @@ test('fireEvent fires custom event (onCustomEvent) on composite component', asyn
   );
   const handler = jest.fn();
   await render(<CustomComponent onCustomEvent={handler} />);
-  await fireEvent(screen.getByText('Custom'), 'customEvent', 'event data');
-  expect(handler).toHaveBeenCalledWith('event data');
+  const error = await getErrorMessage(
+    fireEvent(screen.getByText('Custom'), 'customEvent', 'event data'),
+  );
+  // Modern matches React Native, which dispatches only native events, to host elements. Legacy
+  // calls any matching prop, also on composite components.
+  expect(error).toBe(
+    isModern()
+      ? `Unable to fire a "customEvent" event. React Native doesn't know "customEvent". For a native event of a third-party component, pass dispatch: "direct" or "bubbling" in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. To call a handler prop directly, use UNSAFE_invokeHandler().`
+      : undefined,
+  );
+  expect(handler.mock.calls).toEqual(isModern() ? [] : [['event data']]);
 });
 
-test('fireEvent fires event with custom prop name (handlePress) on composite component', async () => {
+test('fireEvent throws for custom prop name (handlePress) on composite component (legacy: calls it)', async () => {
   const MyButton = ({ handlePress }: { handlePress: () => void }) => (
     <TouchableOpacity onPress={handlePress}>
       <Text>Button</Text>
@@ -1029,15 +2335,15 @@ test('fireEvent fires event with custom prop name (handlePress) on composite com
   );
   const handler = jest.fn();
   await render(<MyButton handlePress={handler} />);
-  await fireEvent(screen.getByText('Button'), 'handlePress');
-  expect(handler).toHaveBeenCalled();
-});
-
-test('fireEvent returns undefined when handler does not return a value', async () => {
-  const handler = jest.fn();
-  await render(<Pressable testID="btn" onPress={handler} />);
-  const result = await fireEvent.press(screen.getByTestId('btn'));
-  expect(result).toBeUndefined();
+  const error = await getErrorMessage(fireEvent(screen.getByText('Button'), 'handlePress'));
+  // Modern matches React Native, which dispatches only native events, to host elements. Legacy
+  // calls any matching prop, also on composite components.
+  expect(error).toBe(
+    isModern()
+      ? `Unable to fire a "handlePress" event. React Native doesn't know "handlePress". For a native event of a third-party component, pass dispatch: "direct" or "bubbling" in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. To call a handler prop directly, use UNSAFE_invokeHandler().`
+      : undefined,
+  );
+  expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
 });
 
 test('fireEvent calls handler on element when both element and parent have handlers', async () => {
@@ -1057,32 +2363,104 @@ test('fireEvent calls handler on element when both element and parent have handl
 
 test('fireEvent does nothing when element is unmounted', async () => {
   const onPress = jest.fn();
+  const onFocus = jest.fn();
+  const onChangeText = jest.fn();
   await render(
     <View>
       <Pressable testID="btn" onPress={onPress} />
+      <TextInput testID="input" onFocus={onFocus} onChangeText={onChangeText} />
+      <ScrollView testID="scroll" />
     </View>,
   );
-  const element = screen.getByTestId('btn');
+  const button = screen.getByTestId('btn');
+  const input = screen.getByTestId('input');
+  const scrollView = screen.getByTestId('scroll');
 
   await screen.rerender(<View />);
-  await fireEvent.press(element);
+  await fireEvent.press(button);
+  await fireEvent(input, 'focus', emptyEvent);
+  await fireEvent.changeText(input, 'Hello');
+  await fireEvent.scroll(scrollView, verticalScrollEvent);
+
   expect(onPress).not.toHaveBeenCalled();
+  expect(onFocus).not.toHaveBeenCalled();
+  expect(onChangeText).not.toHaveBeenCalled();
+  expect(nativeState.contentOffsetForInstance.get(scrollView)).toBeUndefined();
 });
 
-test('fireEvent does not throw when called with non-existent event name', async () => {
+test.each([
+  ['fireEvent()', (instance: TestInstance) => fireEvent(instance, 'focus', emptyEvent), 'focus'],
+  ['fireEvent.press()', (instance: TestInstance) => fireEvent.press(instance), 'press'],
+  [
+    'fireEvent.changeText()',
+    (instance: TestInstance) => fireEvent.changeText(instance, 'Hello'),
+    'changeText',
+  ],
+  ['fireEvent.scroll()', (instance: TestInstance) => fireEvent.scroll(instance), 'scroll'],
+  ['fireEvent.layout()', (instance: TestInstance) => fireEvent.layout(instance), 'layout'],
+])('%s throws without an element', async (_, fire, eventType) => {
+  const error = await getErrorMessage(fire(null as unknown as TestInstance));
+  expect(error).toBe(
+    isModern()
+      ? `Unable to fire a "${eventType}" event. Please provide a host element.`
+      : "Cannot read properties of null (reading 'parent')",
+  );
+});
+
+test('fireEvent throws with non-existent event name (legacy: does nothing)', async () => {
   await render(<Pressable testID="btn" />);
   const element = screen.getByTestId('btn');
-  await expect(fireEvent(element, 'nonExistentEvent' as any)).resolves.toBeUndefined();
+  const outcome = await fireEvent(element, 'nonExistentEvent' as any).then(
+    (result) => ({ result }),
+    (error: Error) => ({ error: error.message }),
+  );
+  // React Native never dispatches it, so no handler runs in either. Modern throws to point out
+  // the mistake.
+  expect(outcome).toStrictEqual(
+    isModern()
+      ? {
+          error: `Unable to fire a "nonExistentEvent" event. React Native doesn't know "nonExistentEvent". For a native event of a third-party component, pass dispatch: "direct" or "bubbling" in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. To call a handler prop directly, use UNSAFE_invokeHandler().`,
+        }
+      : { result: undefined },
+  );
 });
 
-test('fireEvent handles handler that throws gracefully', async () => {
+test('fireEvent rejects with the handler error', async () => {
   const error = new Error('Handler error');
   const onPress = jest.fn(() => {
     throw error;
   });
-  await render(<Pressable testID="btn" onPress={onPress} />);
+  const onFocus = jest.fn(() => {
+    throw error;
+  });
+  await render(
+    <>
+      <Pressable testID="btn" onPress={onPress} />
+      <TextInput testID="input" onFocus={onFocus} />
+    </>,
+  );
   await expect(fireEvent.press(screen.getByTestId('btn'))).rejects.toThrow('Handler error');
+  await expect(fireEvent(screen.getByTestId('input'), 'focus', emptyEvent)).rejects.toThrow(
+    'Handler error',
+  );
   expect(onPress).toHaveBeenCalledTimes(1);
+  expect(onFocus).toHaveBeenCalledTimes(1);
+});
+
+test('fireEvent renders state updates from the handler', async () => {
+  function Counter() {
+    const [count, setCount] = React.useState(0);
+    return (
+      <Text testID="text" onPress={() => setCount((value) => value + 1)}>
+        Count: {count}
+      </Text>
+    );
+  }
+
+  await render(<Counter />);
+  await fireEvent(screen.getByTestId('text'), 'press', emptyEvent);
+
+  expect(screen.getByText('Count: 1')).toBeOnTheScreen();
 });
 
 describe('disabled elements', () => {
@@ -1138,6 +2516,82 @@ describe('disabled elements', () => {
     expect(handleOuterPress).toHaveBeenCalledTimes(1);
   });
 
+  test('bubbles event past disabled Text to the Pressable (legacy: calls onPress of disabled Text)', async () => {
+    const onTextPress = jest.fn();
+    const onPress = jest.fn();
+    await render(
+      <Pressable onPress={onPress}>
+        <Text onPress={onTextPress} disabled>
+          Disabled
+        </Text>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Disabled'));
+
+    // Modern matches `userEvent.press()`, which skips disabled Text. Legacy checks only
+    // responders, and the mocked Text has none.
+    expect(onTextPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+  });
+
+  test.each([
+    ['aria-disabled', { 'aria-disabled': true }],
+    ['accessibilityState.disabled', { accessibilityState: { disabled: true } }],
+  ])(
+    'bubbles event past Text disabled by %s to the Pressable (legacy: calls onPress of Text)',
+    async (_, disabledProps) => {
+      const onTextPress = jest.fn();
+      const onPress = jest.fn();
+      await render(
+        <Pressable onPress={onPress}>
+          <Text onPress={onTextPress} {...disabledProps}>
+            Disabled
+          </Text>
+        </Pressable>,
+      );
+
+      await fireEvent.press(screen.getByText('Disabled'));
+
+      // Modern matches React Native's `Text`, which falls back to these props when `disabled` is
+      // not set. Legacy checks only responders, and the mocked Text has none.
+      expect(onTextPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+      expect(onPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+    },
+  );
+
+  test('calls onPress of Text with disabled={false} over aria-disabled', async () => {
+    const onPress = jest.fn();
+    await render(
+      <Text onPress={onPress} disabled={false} aria-disabled>
+        Enabled
+      </Text>,
+    );
+
+    await fireEvent.press(screen.getByText('Enabled'));
+
+    // React Native's `Text` reads `disabled` first.
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('calls onPress of non-editable TextInput without bubbling to the Pressable (legacy: bubbles)', async () => {
+    const onInputPress = jest.fn();
+    const onPress = jest.fn();
+    await render(
+      <Pressable onPress={onPress}>
+        <TextInput testID="input" onPress={onInputPress} editable={false} />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByTestId('input'));
+
+    // Modern matches iOS: TextInput's Pressability claims the touch even when not editable, and
+    // calls its `onPress`, as `editable={false}` only stops it from focusing. Legacy skips the
+    // non-editable TextInput and bubbles to the Pressable, as Android does.
+    expect(onInputPress).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
   test('ignores custom disabled prop on composite component (only respects native disabled)', async () => {
     const TestComponent = ({ onPress }: { onPress: () => void; disabled?: boolean }) => (
       <TouchableOpacity onPress={onPress}>
@@ -1152,6 +2606,9 @@ describe('disabled elements', () => {
 });
 
 describe('unhandled event warning', () => {
+  // Modern `fireEvent` doesn't warn about unhandled events.
+  runInLegacyEventSystem();
+
   let warnSpy: jest.SpyInstance;
 
   beforeEach(() => {
@@ -1162,6 +2619,10 @@ describe('unhandled event warning', () => {
   afterEach(() => {
     warnSpy.mockRestore();
   });
+
+  function getWarnings(): string[] {
+    return warnSpy.mock.calls.map(([message]) => message.split('\n')[0]);
+  }
 
   test('warns when the handler is on a disabled element', async () => {
     await render(
@@ -1190,6 +2651,26 @@ describe('unhandled event warning', () => {
           </Text>
         </View>"
     `);
+  });
+
+  test('warns when the handler is on a disabled TouchableOpacity', async () => {
+    await render(
+      <TouchableOpacity onPress={jest.fn()} disabled>
+        <Text>Trigger</Text>
+      </TouchableOpacity>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(getWarnings()).toEqual(['Cannot fire the "press" event on a disabled element.']);
+  });
+
+  test('warns when the pressIn callback is on a disabled element', async () => {
+    await render(<Pressable testID="pressable" onPressIn={jest.fn()} disabled />);
+
+    await fireEvent(screen.getByTestId('pressable'), 'pressIn', emptyEvent);
+
+    expect(getWarnings()).toEqual(['Cannot fire the "pressIn" event on a disabled element.']);
   });
 
   test('lists every disabled element the event skipped', async () => {
@@ -1266,6 +2747,42 @@ describe('unhandled event warning', () => {
           Trigger
         </Text>"
     `);
+  });
+
+  test('warns when no element handles a native event', async () => {
+    await render(
+      <View>
+        <View testID="view" />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('view'), 'focus', emptyEvent);
+
+    expect(getWarnings()).toEqual(['No "onFocus" handler found on the element or its ancestors.']);
+  });
+
+  // Not `pressIn` or `pressOut`: `Pressable` always passes its own, which update the pressed state.
+  test('warns when no element has the longPress callback', async () => {
+    await render(<Pressable testID="pressable" onPress={jest.fn()} />);
+
+    await fireEvent(screen.getByTestId('pressable'), 'longPress', emptyEvent);
+
+    expect(getWarnings()).toEqual([
+      'No "onLongPress" handler found on the element or its ancestors.',
+    ]);
+  });
+
+  test('warns when an ancestor has only a capture handler, as no capture handlers are called', async () => {
+    await render(
+      // Spread because `View` types include `onFocusCapture` only since RN 0.88.
+      <View {...{ onFocusCapture: jest.fn() }}>
+        <View testID="view" />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('view'), 'focus', emptyEvent);
+
+    expect(getWarnings()).toEqual(['No "onFocus" handler found on the element or its ancestors.']);
   });
 
   test('does not warn when the event bubbles to an enabled parent', async () => {
@@ -1459,6 +2976,26 @@ describe('unhandled event warning', () => {
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
+  test('does not warn when a responder without Pressability claims the touch', async () => {
+    function Draggable() {
+      const { panHandlers } = PanResponder.create({ onStartShouldSetPanResponder: () => true });
+      return (
+        <View {...panHandlers}>
+          <Text>Trigger</Text>
+        </View>
+      );
+    }
+    await render(
+      <Pressable onPress={jest.fn()}>
+        <Draggable />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Trigger'));
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
   test('warns when the handler is blocked by non-editable TextInput', async () => {
     await render(<TextInput testID="input" editable={false} onChangeText={jest.fn()} />);
 
@@ -1476,15 +3013,29 @@ describe('unhandled event warning', () => {
     `);
   });
 
+  test('warns when "press" is fired on non-editable TextInput', async () => {
+    const onPress = jest.fn();
+    await render(<TextInput testID="input" editable={false} onPress={onPress} />);
+
+    await fireEvent(screen.getByTestId('input'), 'press', emptyEvent);
+
+    expect(onPress).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatch(
+      /^Cannot fire the "press" event on a non-editable TextInput\./,
+    );
+  });
+
   test.each([
     ['focus', 'onFocus'],
     ['blur', 'onBlur'],
-    ['press', 'onPress'],
-  ])('warns when "%s" is blocked by non-editable TextInput', async (eventType, handlerName) => {
-    await render(<TextInput testID="input" editable={false} {...{ [handlerName]: jest.fn() }} />);
+  ])('warns when "%s" is fired on non-editable TextInput', async (eventType, handlerName) => {
+    const handler = jest.fn();
+    await render(<TextInput testID="input" editable={false} {...{ [handlerName]: handler }} />);
 
-    await fireEvent(screen.getByTestId('input'), eventType);
+    await fireEvent(screen.getByTestId('input'), eventType, emptyEvent);
 
+    expect(handler).not.toHaveBeenCalled();
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatch(
       new RegExp(`^Cannot fire the "${eventType}" event on a non-editable TextInput\\.`),
@@ -1500,7 +3051,7 @@ describe('unhandled event warning', () => {
       </View>,
     );
 
-    await fireEvent(screen.getByTestId('input'), 'focus');
+    await fireEvent(screen.getByTestId('input'), 'focus', emptyEvent);
 
     expect(onFocus).not.toHaveBeenCalled();
     expect(warnSpy).toHaveBeenCalledTimes(1);
@@ -1516,24 +3067,68 @@ describe('unhandled event warning', () => {
   });
 
   test('reports disabled elements when they include a non-editable TextInput', async () => {
+    const onInputPress = jest.fn();
     await render(
       <Pressable onPress={jest.fn()} disabled={true}>
-        <TextInput testID="input" editable={false} onPress={jest.fn()} />
+        <TextInput testID="input" editable={false} onPress={onInputPress} />
       </Pressable>,
     );
 
     await fireEvent.press(screen.getByTestId('input'));
 
+    expect(onInputPress).not.toHaveBeenCalled();
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy.mock.calls[0][0]).toMatch(
       /^Cannot fire the "press" event on disabled elements\./,
     );
   });
 
-  test('does not warn when the event updates native state (uncontrolled TextInput)', async () => {
-    await render(<TextInput testID="input" />);
+  test('warns when element has no onLayout handler and layout event has no layout', async () => {
+    await render(<View testID="view" />);
+
+    await fireEvent(screen.getByTestId('view'), 'layout', { nativeEvent: {} });
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toMatchInlineSnapshot(`
+      "No "onLayout" handler found on the element or its ancestors.
+      If this is intentional, you can disable this warning via \`configure({ eventDiagnostics: false })\`.
+
+        <View
+          testID="view"
+        />"
+    `);
+  });
+
+  test('does not warn when the event updates native state', async () => {
+    await render(
+      <>
+        <TextInput testID="input" />
+        <ScrollView testID="scroll" />
+      </>,
+    );
 
     await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
+    await fireEvent.scroll(screen.getByTestId('scroll'), verticalScrollEvent);
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  test('does not warn on an unmounted element', async () => {
+    await render(
+      <View>
+        <Pressable testID="pressable" onPress={jest.fn()} disabled />
+        <TextInput testID="input" editable={false} />
+        <View testID="view" />
+      </View>,
+    );
+    const pressable = screen.getByTestId('pressable');
+    const input = screen.getByTestId('input');
+    const view = screen.getByTestId('view');
+    await screen.rerender(<View />);
+
+    await fireEvent.press(pressable);
+    await fireEvent.changeText(input, 'Hello');
+    await fireEvent(view, 'focus', emptyEvent);
 
     expect(warnSpy).not.toHaveBeenCalled();
   });
@@ -1542,16 +3137,21 @@ describe('unhandled event warning', () => {
     configure({ eventDiagnostics: false });
     await render(
       <View>
-        <Pressable onPress={jest.fn()} disabled={true}>
+        <Pressable testID="disabled" onPress={jest.fn()} disabled={true}>
           <Text>Disabled</Text>
         </Pressable>
         <Text>No handler</Text>
+        <TextInput testID="input" editable={false} />
       </View>,
     );
 
     await fireEvent.press(screen.getByText('Disabled'));
+    await fireEvent(screen.getByTestId('disabled'), 'pressIn', emptyEvent);
     await fireEvent.press(screen.getByText('No handler'));
+    await fireEvent(screen.getByText('No handler'), 'focus', emptyEvent);
     await fireEvent.layout(screen.getByText('No handler'));
+    await fireEvent.scroll(screen.getByText('No handler'));
+    await fireEvent.changeText(screen.getByTestId('input'), 'Hello');
 
     expect(warnSpy).not.toHaveBeenCalled();
   });
@@ -1562,6 +3162,17 @@ describe('pointerEvents prop', () => {
     const onPress = jest.fn();
     await render(
       <View pointerEvents="none">
+        <Pressable testID="btn" onPress={onPress} />
+      </View>,
+    );
+    await fireEvent.press(screen.getByTestId('btn'));
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  test('does not fire inside View with pointerEvents="none" set in style', async () => {
+    const onPress = jest.fn();
+    await render(
+      <View style={{ pointerEvents: 'none' }}>
         <Pressable testID="btn" onPress={onPress} />
       </View>,
     );
@@ -1626,7 +3237,7 @@ describe('pointerEvents prop', () => {
   test('fires non-pointer events inside View with pointerEvents="box-none"', async () => {
     const onLayout = jest.fn();
     await render(<View testID="view" pointerEvents="box-none" onLayout={onLayout} />);
-    await fireEvent(screen.getByTestId('view'), 'layout');
+    await fireEvent(screen.getByTestId('view'), 'layout', layoutEvent);
     expect(onLayout).toHaveBeenCalled();
   });
 
@@ -1635,6 +3246,361 @@ describe('pointerEvents prop', () => {
     await render(<Pressable testID="pressable" pointerEvents="box-only" onPress={onPress} />);
     await fireEvent.press(screen.getByTestId('pressable'));
     expect(onPress).toHaveBeenCalled();
+  });
+
+  test('moves the touch from a child to the Pressable with pointerEvents="box-only" (legacy: passes a stub target)', async () => {
+    const onTextPress = jest.fn();
+    const onPress = jest.fn();
+    await render(
+      <Pressable testID="pressable" pointerEvents="box-only" onPress={onPress}>
+        <Text onPress={onTextPress}>Press me</Text>
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByText('Press me'));
+
+    expect(onTextPress).not.toHaveBeenCalled();
+    expect(onPress).toHaveBeenCalledTimes(1);
+    // Modern matches React Native, where the touch targets the Pressable.
+    expect(onPress.mock.calls[0][0].target).toEqual(
+      isModern() ? screen.getByTestId('pressable') : {},
+    );
+  });
+});
+
+describe('touch events', () => {
+  test.each([
+    ['touchStart', true],
+    ['touchMove', true],
+    ['touchEnd', false],
+    ['touchCancel', false],
+  ] as const)(
+    '"%s" gets a default touch payload (legacy: passes the event object as given)',
+    async (eventType, isActive) => {
+      const handler = jest.fn();
+      await render(<View testID="view" {...{ [getEventHandlerName(eventType)]: handler }} />);
+
+      await fireEvent(screen.getByTestId('view'), eventType);
+
+      // Modern matches React Native, where `touches` has the touch until it ends.
+      expect(handler.mock.calls).toEqual(isModern() ? [[anySyntheticEvent]] : [[]]);
+      expect(handler.mock.calls[0][0]?.nativeEvent).toEqual(
+        isModern() ? getTouchPayload(isActive) : undefined,
+      );
+    },
+  );
+
+  test('deep merges the passed nativeEvent onto the default touch payload (legacy: passes it as given)', async () => {
+    const onTouchMove = jest.fn();
+    await render(<View testID="view" onTouchMove={onTouchMove} />);
+
+    await fireEvent(screen.getByTestId('view'), 'touchMove', {
+      nativeEvent: { pageX: 110, pageY: 120 },
+    });
+
+    expect(onTouchMove.mock.calls[0][0].nativeEvent).toEqual(
+      isModern() ? getTouchPayload(true, { pageX: 110, pageY: 120 }) : { pageX: 110, pageY: 120 },
+    );
+  });
+
+  test('keeps touch arrays of the passed nativeEvent', async () => {
+    const onTouchEnd = jest.fn();
+    await render(<View testID="view" onTouchEnd={onTouchEnd} />);
+    const touches = [{ identifier: 1, pageX: 5, pageY: 5 }];
+
+    await fireEvent(screen.getByTestId('view'), 'touchEnd', { nativeEvent: { touches } });
+
+    expect(onTouchEnd.mock.calls[0][0].nativeEvent.touches).toEqual(touches);
+    expect(onTouchEnd.mock.calls[0][0].nativeEvent.changedTouches).toEqual(
+      isModern() ? [defaultTouch] : undefined,
+    );
+  });
+
+  test('takes timeStamp from the touch timestamp', async () => {
+    const onTouchStart = jest.fn();
+    await render(<View testID="view" onTouchStart={onTouchStart} />);
+
+    const nowSpy = jest.spyOn(performance, 'now').mockReturnValue(456);
+    await fireEvent(screen.getByTestId('view'), 'touchStart', {});
+    nowSpy.mockRestore();
+
+    // Legacy passes the event object as given.
+    expect(onTouchStart.mock.calls[0][0].nativeEvent?.timestamp).toBe(isModern() ? 456 : undefined);
+    expect(onTouchStart.mock.calls[0][0].timeStamp).toBe(isModern() ? 456 : undefined);
+  });
+
+  test('passes the nativeEvent as given with dispatch', async () => {
+    const onTouchStart = jest.fn();
+    await render(<View testID="view" onTouchStart={onTouchStart} />);
+
+    await fireEvent(screen.getByTestId('view'), 'touchStart', {
+      nativeEvent: { pageX: 1 },
+      dispatch: 'direct',
+    });
+
+    expect(onTouchStart.mock.calls[0][0].nativeEvent).toEqual({ pageX: 1 });
+  });
+
+  // Drag detection from the touch handlers of a `Pressable`, as in Expensify's
+  // `ToggleDistanceUnitButton`. Its tests fire `touchEnd` without an event object.
+  function DragAwareButton({ onPress }: { onPress: () => void }) {
+    const start = React.useRef<{ x: number; y: number } | null>(null);
+    return (
+      <Pressable
+        testID="button"
+        onTouchStart={(event) => {
+          start.current = { x: event.nativeEvent.pageX, y: event.nativeEvent.pageY };
+        }}
+        onTouchMove={(event) => {
+          if (
+            start.current != null &&
+            (Math.abs(event.nativeEvent.pageX - start.current.x) > 1 ||
+              Math.abs(event.nativeEvent.pageY - start.current.y) > 1)
+          ) {
+            start.current = null;
+          }
+        }}
+        onTouchEnd={() => {
+          if (start.current != null) {
+            onPress();
+          }
+          start.current = null;
+        }}
+      />
+    );
+  }
+
+  test('runs a tap from touch handlers', async () => {
+    const onPress = jest.fn();
+    await render(<DragAwareButton onPress={onPress} />);
+    const button = screen.getByTestId('button');
+
+    await fireEvent(button, 'touchStart', { nativeEvent: { pageX: 100, pageY: 100 } });
+    await fireEvent(button, 'touchEnd');
+
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('runs a drag from touch handlers', async () => {
+    const onPress = jest.fn();
+    await render(<DragAwareButton onPress={onPress} />);
+    const button = screen.getByTestId('button');
+
+    await fireEvent(button, 'touchStart', { nativeEvent: { pageX: 100, pageY: 100 } });
+    await fireEvent(button, 'touchMove', { nativeEvent: { pageX: 110, pageY: 110 } });
+    await fireEvent(button, 'touchEnd');
+
+    expect(onPress).not.toHaveBeenCalled();
+  });
+});
+
+describe('touch event hit testing', () => {
+  test('moves touchStart from View with pointerEvents="none" to its parent (legacy: fires on the View)', async () => {
+    const onParentTouchStart = jest.fn();
+    const onTouchStart = jest.fn();
+    await render(
+      <View testID="parent" onTouchStart={onParentTouchStart}>
+        <View testID="view" pointerEvents="none" onTouchStart={onTouchStart} />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('view'), 'touchStart', emptyEvent);
+
+    // Modern matches React Native, where hit testing skips the View, so the touch targets its
+    // parent. Legacy blocks only `press`.
+    expect(onTouchStart).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(onParentTouchStart).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+    expect(onParentTouchStart.mock.calls[0]?.[0].target).toBe(
+      isModern() ? screen.getByTestId('parent') : undefined,
+    );
+  });
+
+  test('drops touchStart when pointerEvents="none" blocks every element (legacy: fires on the View)', async () => {
+    const onTouchStart = jest.fn();
+    await render(<View testID="view" pointerEvents="none" onTouchStart={onTouchStart} />);
+
+    await fireEvent(screen.getByTestId('view'), 'touchStart', emptyEvent);
+
+    expect(onTouchStart).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test('drops touchStart on View with pointerEvents="box-none" (legacy: fires on the View)', async () => {
+    const onTouchStart = jest.fn();
+    await render(<View testID="view" pointerEvents="box-none" onTouchStart={onTouchStart} />);
+
+    await fireEvent(screen.getByTestId('view'), 'touchStart', emptyEvent);
+
+    // Modern matches React Native: the View is never the touch target, and has no ancestor.
+    expect(onTouchStart).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test('fires touchStart on child of View with pointerEvents="box-none" (legacy: calls only the child)', async () => {
+    const onParentTouchStart = jest.fn();
+    const onTouchStart = jest.fn();
+    await render(
+      <View pointerEvents="box-none" onTouchStart={onParentTouchStart}>
+        <View testID="child" onTouchStart={onTouchStart} />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('child'), 'touchStart', emptyEvent);
+
+    // Modern matches React Native: the child is the target, and the event bubbles to the parent.
+    expect(onTouchStart).toHaveBeenCalledTimes(1);
+    expect(onParentTouchStart).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+    expect(onTouchStart.mock.calls[0]?.[0].target).toBe(
+      isModern() ? screen.getByTestId('child') : undefined,
+    );
+  });
+
+  test('moves touchStart from child to View with pointerEvents="box-only" (legacy: fires on the child)', async () => {
+    const onParentTouchStart = jest.fn();
+    const onTouchStart = jest.fn();
+    await render(
+      <View testID="parent" pointerEvents="box-only" onTouchStart={onParentTouchStart}>
+        <View testID="child" onTouchStart={onTouchStart} />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('child'), 'touchStart', emptyEvent);
+
+    expect(onTouchStart).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(onParentTouchStart).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+    expect(onParentTouchStart.mock.calls[0]?.[0].target).toBe(
+      isModern() ? screen.getByTestId('parent') : undefined,
+    );
+  });
+
+  test('moves pointerDown from View with pointerEvents="none" to its parent (legacy: fires on the View)', async () => {
+    const onParentPointerDown = jest.fn();
+    const onPointerDown = jest.fn();
+    await render(
+      <View onPointerDown={onParentPointerDown}>
+        <View testID="view" pointerEvents="none" onPointerDown={onPointerDown} />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('view'), 'pointerDown', emptyEvent);
+
+    expect(onPointerDown).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(onParentPointerDown).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+  });
+
+  test('fires touch event with dispatch on View with pointerEvents="none"', async () => {
+    const onTouchStart = jest.fn();
+    await render(<View testID="view" pointerEvents="none" onTouchStart={onTouchStart} />);
+
+    // A native component declaring its own event decides when to emit it.
+    await fireEvent(screen.getByTestId('view'), 'touchStart', {
+      nativeEvent: {},
+      dispatch: 'bubbling',
+    });
+
+    expect(onTouchStart).toHaveBeenCalledTimes(1);
+  });
+
+  test('fires focus inside View with pointerEvents="none"', async () => {
+    const onFocus = jest.fn();
+    await render(
+      <View pointerEvents="none">
+        <TextInput testID="input" onFocus={onFocus} />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('input'), 'focus', emptyEvent);
+
+    // `pointerEvents` only affects touches. The input can still be focused, e.g. from a keyboard.
+    expect(onFocus).toHaveBeenCalledTimes(1);
+  });
+
+  test('fires touchStart on disabled Pressable (legacy: blocks it)', async () => {
+    const onPress = jest.fn();
+    const onTouchStart = jest.fn();
+    await render(
+      <Pressable testID="pressable" disabled onPress={onPress} onTouchStart={onTouchStart} />,
+    );
+
+    await fireEvent(screen.getByTestId('pressable'), 'touchStart', emptyEvent);
+
+    // Modern matches iOS, where only Pressability checks `disabled`. Legacy blocks events whose
+    // touch responder declines the touch.
+    expect(onTouchStart).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+    expect(onPress).not.toHaveBeenCalled();
+  });
+});
+
+describe('display: none', () => {
+  test('does not press inside View with display: none (legacy: presses)', async () => {
+    const onPress = jest.fn();
+    await render(
+      <View style={{ display: 'none' }}>
+        <Pressable testID="pressable" onPress={onPress} />
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByTestId('pressable', { includeHiddenElements: true }));
+
+    // Modern matches React Native, where a hidden view has no frame, so nothing in it can be
+    // touched. Legacy doesn't check `display`.
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+
+  test('drops touchStart on View with display: none instead of moving it to the parent (legacy: fires on the View)', async () => {
+    const onParentTouchStart = jest.fn();
+    const onTouchStart = jest.fn();
+    await render(
+      <View onTouchStart={onParentTouchStart}>
+        <View testID="view" style={{ display: 'none' }} onTouchStart={onTouchStart} />
+      </View>,
+    );
+
+    await fireEvent(
+      screen.getByTestId('view', { includeHiddenElements: true }),
+      'touchStart',
+      emptyEvent,
+    );
+
+    // Unlike `pointerEvents="none"`, the hidden View covers no area of its parent to touch.
+    expect(onTouchStart).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(onParentTouchStart).not.toHaveBeenCalled();
+  });
+
+  test('does not press an element that became hidden after it was queried (legacy: presses)', async () => {
+    const onPress = jest.fn();
+    function Screen({ hidden }: { hidden: boolean }) {
+      return (
+        <View style={hidden ? { display: 'none' } : undefined}>
+          <Pressable testID="pressable" onPress={onPress} />
+        </View>
+      );
+    }
+
+    await render(<Screen hidden={false} />);
+    const pressable = screen.getByTestId('pressable');
+    await screen.rerender(<Screen hidden />);
+
+    await fireEvent.press(pressable);
+
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+  });
+});
+
+describe('disabled Switch', () => {
+  test('does not dispatch change (legacy: dispatches change)', async () => {
+    // Legacy calls `Switch`'s `onChange`, whose native value command logs an error in Jest.
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const onChange = jest.fn();
+    const onValueChange = jest.fn();
+    await render(
+      <Switch testID="switch" disabled onChange={onChange} onValueChange={onValueChange} />,
+    );
+
+    await fireEvent(screen.getByTestId('switch'), 'change', { nativeEvent: { value: true } });
+
+    // Modern matches a device, where a disabled Switch can't be toggled.
+    expect(onChange).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(onValueChange).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    errorSpy.mockRestore();
   });
 });
 
@@ -1647,7 +3613,7 @@ describe('non-editable TextInput', () => {
     return <WrappedTextInput {...props} />;
   }
 
-  test('blocks touch-related events but allows non-touch events', async () => {
+  test('does not dispatch focus, changeText or submitEditing, but dispatches layout', async () => {
     const onFocus = jest.fn();
     const onChangeText = jest.fn();
     const onSubmitEditing = jest.fn();
@@ -1665,18 +3631,22 @@ describe('non-editable TextInput', () => {
     );
 
     const input = screen.getByTestId('input');
-    await fireEvent(input, 'focus');
+    await fireEvent(input, 'focus', emptyEvent);
     await fireEvent.changeText(input, 'Text');
     await fireEvent(input, 'submitEditing', { nativeEvent: { text: 'Text' } });
     await fireEvent(input, 'layout', layoutEvent);
 
+    // As on a device, where a non-editable TextInput can't be focused or submitted.
     expect(onFocus).not.toHaveBeenCalled();
     expect(onChangeText).not.toHaveBeenCalled();
     expect(onSubmitEditing).not.toHaveBeenCalled();
-    expect(onLayout).toHaveBeenCalledWith(layoutEvent);
+    // Modern matches React Native, which passes a `SyntheticEvent`. Legacy passes the event object
+    // as given.
+    expect(onLayout.mock.calls).toEqual([[isModern() ? anySyntheticEvent : layoutEvent]]);
+    expect(onLayout.mock.calls[0][0]).toMatchObject(layoutEvent);
   });
 
-  test('blocks touch-related events when firing on nested Text child', async () => {
+  test('does not dispatch focus or submitEditing from nested Text child, nor bubble layout (legacy: bubbles layout)', async () => {
     const warnSpy = jest.spyOn(_console, 'warn').mockImplementation(() => {});
     const onFocus = jest.fn();
     const onChangeText = jest.fn();
@@ -1697,32 +3667,35 @@ describe('non-editable TextInput', () => {
     );
 
     const subject = screen.getByText('Nested Text');
-    await fireEvent(subject, 'focus');
-    await fireEvent(subject, 'onFocus');
-    await fireEvent.changeText(subject, 'Text');
+    await fireEvent(subject, 'focus', emptyEvent);
+    const changeTextError = await getErrorMessage(fireEvent.changeText(subject, 'Text'));
     await fireEvent(subject, 'submitEditing', {
       nativeEvent: { text: 'Text' },
     });
-    await fireEvent(subject, 'onSubmitEditing', {
-      nativeEvent: { text: 'Text' },
-    });
     await fireEvent(subject, 'layout', layoutEvent);
-    await fireEvent(subject, 'onLayout', layoutEvent);
 
+    // As on a device, where a non-editable TextInput can't be focused or submitted. Modern emits
+    // them from the TextInput, as the nested Text isn't a native view.
     expect(onFocus).not.toHaveBeenCalled();
-    expect(onChangeText).not.toHaveBeenCalled();
     expect(onSubmitEditing).not.toHaveBeenCalled();
-    // Layout is a direct event, but still bubbles to the parent TextInput with a warning
-    expect(onLayout).toHaveBeenCalledTimes(2);
-    expect(onLayout).toHaveBeenCalledWith(layoutEvent);
-    expect(warnSpy).toHaveBeenCalledTimes(2);
+    // Modern `changeText` accepts only a host TextInput. Legacy walks up to it, and skips it.
+    expect(changeTextError).toBe(
+      isModern()
+        ? 'Unable to fire a "changeText" event. Expected a host "TextInput" element, received "Text".'
+        : undefined,
+    );
+    expect(onChangeText).not.toHaveBeenCalled();
+    // Modern matches React Native: layout is a direct event, so it doesn't reach the parent
+    // TextInput. Legacy still bubbles it, with a warning.
+    expect(onLayout.mock.calls).toEqual(isModern() ? [] : [[layoutEvent]]);
+    expect(warnSpy).toHaveBeenCalledTimes(isModern() ? 0 : 1);
     warnSpy.mockRestore();
   });
 
   test.each([
     ['WrappedTextInput', WrappedTextInput],
     ['DoubleWrappedTextInput', DoubleWrappedTextInput],
-  ])('blocks touch-related events on %s', async (_, Component) => {
+  ])('does not dispatch focus, changeText or submitEditing on %s', async (_, Component) => {
     const onFocus = jest.fn();
     const onChangeText = jest.fn();
     const onSubmitEditing = jest.fn();
@@ -1740,29 +3713,66 @@ describe('non-editable TextInput', () => {
     );
 
     const input = screen.getByTestId('input');
-    await fireEvent(input, 'focus');
+    await fireEvent(input, 'focus', emptyEvent);
     await fireEvent.changeText(input, 'Text');
     await fireEvent(input, 'submitEditing', { nativeEvent: { text: 'Text' } });
     await fireEvent(input, 'layout', layoutEvent);
 
+    // As on a device, where a non-editable TextInput can't be focused or submitted.
     expect(onFocus).not.toHaveBeenCalled();
     expect(onChangeText).not.toHaveBeenCalled();
     expect(onSubmitEditing).not.toHaveBeenCalled();
-    expect(onLayout).toHaveBeenCalledWith(layoutEvent);
+    // Modern matches React Native, which passes a `SyntheticEvent`. Legacy passes the event
+    // object as given.
+    expect(onLayout.mock.calls).toEqual([[isModern() ? anySyntheticEvent : layoutEvent]]);
+    expect(onLayout.mock.calls[0][0]).toMatchObject(layoutEvent);
   });
 
   test('fires layout event', async () => {
     const onLayout = jest.fn();
     await render(<TextInput testID="input" editable={false} onLayout={onLayout} />);
-    await fireEvent(screen.getByTestId('input'), 'layout');
+    await fireEvent(screen.getByTestId('input'), 'layout', layoutEvent);
     expect(onLayout).toHaveBeenCalled();
   });
 
   test('fires scroll event', async () => {
     const onScroll = jest.fn();
     await render(<TextInput testID="input" editable={false} onScroll={onScroll} />);
-    await fireEvent(screen.getByTestId('input'), 'scroll');
+    await fireEvent(screen.getByTestId('input'), 'scroll', verticalScrollEvent);
     expect(onScroll).toHaveBeenCalled();
+  });
+
+  test('fires selectionChange (legacy: blocks it)', async () => {
+    const onSelectionChange = jest.fn();
+    await render(
+      <TextInput testID="input" editable={false} multiline onSelectionChange={onSelectionChange} />,
+    );
+
+    await fireEvent(screen.getByTestId('input'), 'selectionChange', {
+      nativeEvent: { selection: { start: 0, end: 4 } },
+    });
+
+    // Modern matches iOS, where a non-editable multiline TextInput emits selection changes.
+    expect(onSelectionChange).toHaveBeenCalledTimes(isModern() ? 1 : 0);
+  });
+});
+
+describe('editable TextInput with nested Text', () => {
+  test('emits focus from the TextInput (legacy: passes the event object as given)', async () => {
+    const onFocus = jest.fn();
+    await render(
+      <TextInput testID="input" onFocus={onFocus}>
+        <Text>Nested Text</Text>
+      </TextInput>,
+    );
+
+    await fireEvent(screen.getByText('Nested Text'), 'focus', emptyEvent);
+
+    expect(onFocus).toHaveBeenCalledTimes(1);
+    // Modern matches React Native, where the nested Text isn't a native view.
+    expect(onFocus.mock.calls[0][0].target).toEqual(
+      isModern() ? screen.getByTestId('input') : undefined,
+    );
   });
 });
 
@@ -1793,7 +3803,126 @@ describe('responder system', () => {
     expect(handlePress).not.toHaveBeenCalled();
   });
 
-  test('fires responderMove on PanResponder component', async () => {
+  test('passes the touch to an ancestor when the responder declines it', async () => {
+    const onViewPress = jest.fn();
+    const onPress = jest.fn();
+    await render(
+      <Pressable onPress={onPress}>
+        <View
+          testID="view"
+          onStartShouldSetResponder={() => false}
+          {...{ testOnly_onPress: onViewPress }}
+        />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByTestId('view'));
+
+    expect(onViewPress).not.toHaveBeenCalled();
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  test('does not call onPress when a responder without Pressability claims the touch (legacy: calls onPress of the ancestor)', async () => {
+    const onPress = jest.fn();
+    const onPanResponderGrant = jest.fn();
+    const Draggable = () => {
+      const panResponder = React.useRef(
+        PanResponder.create({ onStartShouldSetPanResponder: () => true, onPanResponderGrant }),
+      ).current;
+      return <View testID="draggable" {...panResponder.panHandlers} />;
+    };
+    await render(
+      <Pressable onPress={onPress}>
+        <Draggable />
+      </Pressable>,
+    );
+
+    await fireEvent.press(screen.getByTestId('draggable'));
+
+    // Modern matches React Native, where the `PanResponder` keeps the touch from its ancestors.
+    expect(onPress).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    expect(onPanResponderGrant).not.toHaveBeenCalled();
+  });
+
+  test.each(['press', 'pressIn', 'pressOut', 'longPress'] as const)(
+    'does not call the Pressable handler when TextInput without one claims "%s" (legacy: calls it)',
+    async (eventType) => {
+      const handler = jest.fn();
+      await render(
+        <Pressable {...{ [getEventHandlerName(eventType)]: handler }}>
+          <TextInput testID="input" />
+        </Pressable>,
+      );
+
+      await fireEvent(screen.getByTestId('input'), eventType, emptyEvent);
+
+      // Modern matches React Native, where the TextInput claims the touch.
+      expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
+
+  test.each(['press', 'pressIn', 'pressOut', 'longPress'] as const)(
+    'does not call the Pressable handler when Text without one claims "%s" (legacy: calls it)',
+    async (eventType) => {
+      const handler = jest.fn();
+      const textHandlerName = eventType === 'press' ? 'onLongPress' : 'onPress';
+      await render(
+        <Pressable {...{ [getEventHandlerName(eventType)]: handler }}>
+          <Text {...{ [textHandlerName]: jest.fn() }}>Trigger</Text>
+        </Pressable>,
+      );
+
+      await fireEvent(screen.getByText('Trigger'), eventType, emptyEvent);
+
+      // Modern matches React Native, where a Text with a press handler claims the touch.
+      expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
+
+  test.each([
+    ['press', 'onLongPress'],
+    ['longPress', 'onPress'],
+  ] as const)(
+    'does not call the parent handler when Pressable without one claims "%s" (legacy: calls it)',
+    async (eventType, innerHandlerName) => {
+      const handler = jest.fn();
+      await render(
+        <Pressable {...{ [getEventHandlerName(eventType)]: handler }}>
+          <Pressable {...{ [innerHandlerName]: jest.fn() }}>
+            <Text>Trigger</Text>
+          </Pressable>
+        </Pressable>,
+      );
+
+      await fireEvent(screen.getByText('Trigger'), eventType, emptyEvent);
+
+      // Modern matches React Native, where the inner Pressable claims the touch.
+      expect(handler).toHaveBeenCalledTimes(isModern() ? 0 : 1);
+    },
+  );
+
+  test('asks responders from the target to the root, without arguments (legacy: asks only responders with a handler)', async () => {
+    const calls: string[] = [];
+    const onStartShouldSetResponder =
+      (name: string) =>
+      (...args: unknown[]) => {
+        calls.push(`${name} (${args.length} args)`);
+        return false;
+      };
+    await render(
+      <View onStartShouldSetResponder={onStartShouldSetResponder('parent')}>
+        <View testID="child" onStartShouldSetResponder={onStartShouldSetResponder('child')} />
+      </View>,
+    );
+
+    await fireEvent.press(screen.getByTestId('child'));
+
+    // Modern matches React Native's responder negotiation. Legacy asks only the responder of the
+    // element with the handler, and neither has one.
+    expect(calls).toEqual(isModern() ? ['child (0 args)', 'parent (0 args)'] : []);
+  });
+
+  test('throws for responderMove on PanResponder component (legacy: calls the handler)', async () => {
     const onDrag = jest.fn();
     function TestDraggableComponent({ onDrag }: { onDrag: () => void }) {
       const responderHandlers = PanResponder.create({
@@ -1807,9 +3936,30 @@ describe('responder system', () => {
       );
     }
     await render(<TestDraggableComponent onDrag={onDrag} />);
-    await fireEvent(screen.getByText('Trigger'), 'responderMove', {
-      touchHistory: { mostRecentTimeStamp: '2', touchBank: [] },
-    });
-    expect(onDrag).toHaveBeenCalled();
+    const error = await getErrorMessage(
+      fireEvent(screen.getByText('Trigger'), 'responderMove', {
+        touchHistory: { mostRecentTimeStamp: '2', touchBank: [] },
+      }),
+    );
+    // Legacy calls `onResponderMove` directly. On a device, it follows a granted touch with the
+    // responder system's touch history, which modern doesn't simulate, so modern throws.
+    expect(error).toBe(
+      isModern()
+        ? `Unable to fire a "responderMove" event. React Native doesn't know "responderMove". For a native event of a third-party component, pass dispatch: "direct" or "bubbling" in the event object, matching its DirectEventHandler or BubblingEventHandler prop type. To call a handler prop directly, use UNSAFE_invokeHandler().`
+        : undefined,
+    );
+    expect(onDrag).toHaveBeenCalledTimes(isModern() ? 0 : 1);
   });
+});
+
+test('fireEvent reads the event system on each call', async () => {
+  const onLayout = jest.fn();
+  await render(<View testID="view" onLayout={onLayout} />);
+
+  configure({ eventSystem: 'legacy' });
+  await fireEvent.layout(screen.getByTestId('view'));
+  configure({ eventSystem: 'modern' });
+  await fireEvent.layout(screen.getByTestId('view'));
+  expect(onLayout.mock.calls[0][0]).not.toBeInstanceOf(SyntheticEvent);
+  expect(onLayout.mock.calls[1][0]).toBeInstanceOf(SyntheticEvent);
 });

@@ -49,6 +49,14 @@ export default [
     },
   },
   {
+    files: ['src/__tests__/modern-types/**/*.{ts,tsx}', 'src/modern-types.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.modern-types.json',
+      },
+    },
+  },
+  {
     files: ['**/*.test.{ts,tsx}', 'src/test-utils/**'],
     plugins: {
       jest: pluginJest,

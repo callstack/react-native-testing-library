@@ -1,0 +1,193 @@
+import { getEventHandlerName } from '../shared/handler';
+
+/**
+ * Event types known to React Native, without the `top` prefix (`focus`, not `topFocus`).
+ *
+ * `@react-native/jest-preset` mocks native components, so React Native's view config registry stays
+ * empty in Jest. These are static copies of the union of `BaseViewConfig.{ios,android}.js` and the
+ * built-in components' view configs. `__tests__/event-types.test.ts` checks them against the
+ * installed `react-native`.
+ */
+
+export const BUBBLING_EVENT_TYPES = [
+  'blur',
+  'change',
+  'click',
+  'endEditing',
+  'focus',
+  'gotPointerCapture',
+  'keyDown',
+  'keyPress',
+  'keyUp',
+  'lostPointerCapture',
+  'pointerCancel',
+  'pointerDown',
+  'pointerEnter',
+  'pointerLeave',
+  'pointerMove',
+  'pointerOut',
+  'pointerOver',
+  'pointerUp',
+  'press',
+  'select',
+  'submitEditing',
+  'touchCancel',
+  'touchEnd',
+  'touchMove',
+  'touchStart',
+] as const;
+
+export type BubblingEventType = (typeof BUBBLING_EVENT_TYPES)[number];
+
+/** Bubbling events that run the capture phase as usual, but call only the target when bubbling. */
+export const SKIP_BUBBLING_EVENT_TYPES: readonly BubblingEventType[] = [
+  'pointerEnter',
+  'pointerLeave',
+];
+
+export const DIRECT_EVENT_TYPES = [
+  'accessibilityAction',
+  'accessibilityEscape',
+  'accessibilityTap',
+  'changeSync',
+  'contentSizeChange',
+  'dismiss',
+  'drawerClose',
+  'drawerOpen',
+  'drawerSlide',
+  'drawerStateChanged',
+  'error',
+  'keyPressSync',
+  'layout',
+  'load',
+  'loadEnd',
+  'loadStart',
+  'loadingError',
+  'loadingFinish',
+  'loadingStart',
+  'magicTap',
+  'message',
+  'modeChange',
+  'momentumScrollBegin',
+  'momentumScrollEnd',
+  'orientationChange',
+  'partialLoad',
+  'progress',
+  'refresh',
+  'requestClose',
+  'safeAreaInsetsChange',
+  'scroll',
+  'scrollBeginDrag',
+  'scrollEndDrag',
+  'scrollToTop',
+  'selectionChange',
+  'show',
+  // From the inline view config in `TextNativeComponent.js`, which is not exported.
+  'textLayout',
+] as const;
+
+export type DirectEventType = (typeof DIRECT_EVENT_TYPES)[number];
+
+/**
+ * Pressability callbacks (`onPress`, `onPressIn`, ...) that modern `fireEvent` calls. They are not
+ * native events: Pressability calls them on the touch responder from responder events, so
+ * `dispatchPressabilityEvent()` calls them instead of `dispatchEvent()`. `press` is also a native
+ * event type, but `fireEvent` calls Pressability's `onPress` for it.
+ */
+export const PRESSABILITY_EVENT_TYPES = ['press', 'pressIn', 'pressOut', 'longPress'] as const;
+
+export type PressabilityEventType = (typeof PRESSABILITY_EVENT_TYPES)[number];
+
+export function isPressabilityEventType(eventType: string): eventType is PressabilityEventType {
+  return includes(PRESSABILITY_EVENT_TYPES, eventType);
+}
+
+/** Event types modern `fireEvent` fires without `dispatch`. */
+export type KnownEventType = BubblingEventType | DirectEventType | PressabilityEventType;
+
+/** Direct events whose handler prop doesn't follow the `on` + event type pattern. */
+const DIRECT_EVENT_HANDLER_NAMES: Readonly<Record<string, string>> = {
+  // Added in React Native 0.89.
+  safeAreaInsetsChange: 'experimental_onSafeAreaInsetsChange',
+};
+
+/** Capture phase from the root to the target, then bubble phase back to the root. */
+export type BubblingEventTypeConfig = {
+  kind: 'bubbling';
+  /** Bubble phase prop, e.g. `onFocus`. */
+  handlerName: string;
+  /** Capture phase prop, e.g. `onFocusCapture`. */
+  captureHandlerName: string;
+  skipBubbling: boolean;
+};
+
+/** Calls only the target's prop, without the capture phase. */
+export type DirectEventTypeConfig = {
+  kind: 'direct';
+  /** e.g. `onLayout` */
+  handlerName: string;
+};
+
+/** How React Native dispatches an event type, and which handler props it calls. */
+export type EventTypeConfig = BubblingEventTypeConfig | DirectEventTypeConfig;
+
+/**
+ * How a native component dispatches an event type React Native doesn't know, as its codegen spec
+ * declares the handler prop: `DirectEventHandler` or `BubblingEventHandler`.
+ */
+export const CUSTOM_EVENT_DISPATCHES = ['direct', 'bubbling'] as const;
+
+export type CustomEventDispatch = (typeof CUSTOM_EVENT_DISPATCHES)[number];
+
+/**
+ * Returns how React Native dispatches the event type (e.g. `focus`), or `null` if React Native
+ * doesn't know it.
+ */
+export function getEventTypeConfig(eventType: string): EventTypeConfig | null {
+  if (includes(BUBBLING_EVENT_TYPES, eventType)) {
+    return getBubblingEventTypeConfig(eventType, includes(SKIP_BUBBLING_EVENT_TYPES, eventType));
+  }
+
+  if (includes(DIRECT_EVENT_TYPES, eventType)) {
+    return {
+      kind: 'direct',
+      handlerName: DIRECT_EVENT_HANDLER_NAMES[eventType] ?? getEventHandlerName(eventType),
+    };
+  }
+
+  return null;
+}
+
+/**
+ * Returns the config React Native builds for an event type a native component declares, e.g. a
+ * third-party component's `pageSelected`. As codegen generates it (`GenerateViewConfigJs.js`), the
+ * handler props follow the event type (`onPageSelected`, `onPageSelectedCapture`), and bubbling
+ * events always bubble.
+ */
+export function getCustomEventTypeConfig(
+  eventType: string,
+  dispatch: CustomEventDispatch,
+): EventTypeConfig {
+  if (dispatch === 'bubbling') {
+    return getBubblingEventTypeConfig(eventType, false);
+  }
+
+  return { kind: 'direct', handlerName: getEventHandlerName(eventType) };
+}
+
+function getBubblingEventTypeConfig(
+  eventType: string,
+  skipBubbling: boolean,
+): BubblingEventTypeConfig {
+  const handlerName = getEventHandlerName(eventType);
+  return {
+    kind: 'bubbling',
+    handlerName,
+    captureHandlerName: `${handlerName}Capture`,
+    skipBubbling,
+  };
+}
+
+function includes(eventTypes: readonly string[], eventType: string): boolean {
+  return eventTypes.includes(eventType);
+}

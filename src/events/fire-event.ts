@@ -1,80 +1,125 @@
 import type { TestInstance } from 'test-renderer';
 
-import { act } from '../act';
-import { isInstanceMounted } from '../helpers/component-tree';
-import { isHostScrollView } from '../helpers/host-component-names';
-import { buildLayoutEvent, buildTouchEvent } from './builders/common';
-import { mergeEventProps } from './builders/merge';
-import { buildScrollEvent } from './builders/scroll';
-import { normalizeEventType } from './handler';
-import { nativeState } from './native-state';
-import { findEventHandler } from './propagation';
-import type { EventProps, EventType, LayoutRectangle } from './types';
-import { updateNativeStateFromEvent } from './update-native-state';
-import { warnAboutUnhandledEvent } from './warnings';
+import type { EventSystem } from '../config';
+import { getConfig } from '../config';
+import { fireEvent as legacyFireEvent } from './legacy/fire-event';
+import type { CustomEventDispatch, KnownEventType } from './modern/event-types';
+import type { FireEventInit } from './modern/fire-event';
+import { fireEvent as modernFireEvent } from './modern/fire-event';
+import type { EventProps, EventType, LayoutRectangle } from './shared/types';
 
-async function fireEvent(instance: TestInstance, eventType: EventType, ...data: unknown[]) {
-  return await fireEventInternal(instance, { type: eventType, data, bubbles: true });
+/**
+ * Settings that users augment to change RNTL's types. `@testing-library/react-native/modern-types`
+ * sets `eventSystem: 'modern'`, so `fireEvent` takes the modern signatures.
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface Register {}
+
+type RegisteredEventSystem = Register extends { eventSystem: infer S extends EventSystem }
+  ? S
+  : 'legacy';
+
+type LegacyFireEvent = {
+  (instance: TestInstance, eventType: EventType, ...data: unknown[]): Promise<unknown>;
+  changeText: (instance: TestInstance, text: string) => Promise<unknown>;
+  press: (instance: TestInstance, eventProps?: EventProps) => Promise<void>;
+  scroll: (instance: TestInstance, eventProps?: EventProps) => Promise<void>;
+  layout: (instance: TestInstance, layout?: Partial<LayoutRectangle>) => Promise<void>;
+};
+
+type KnownEventName = KnownEventType | `on${Capitalize<KnownEventType>}`;
+
+type CustomFireEventInit = FireEventInit & { dispatch: CustomEventDispatch };
+
+/** Shown in the type error of `fireEvent(input, 'changeText', 'Hello')`, as the runtime error. */
+type ChangeTextHint = 'Use fireEvent.changeText() or userEvent.type() instead.';
+
+/**
+ * Event object that modern `fireEvent` accepts at runtime: optional for event types React Native
+ * knows, and required with `dispatch` for the others. Not distributive, so a union with an unknown
+ * event type requires it.
+ */
+type ModernFireEventArgs<T extends string> = [T] extends [KnownEventName]
+  ? [event?: FireEventInit]
+  : [T] extends ['changeText' | 'onChangeText']
+    ? [event: ChangeTextHint | CustomFireEventInit]
+    : [event: CustomFireEventInit];
+
+type ModernFireEvent = {
+  <T extends KnownEventName | (string & {})>(
+    instance: TestInstance,
+    eventType: T,
+    ...args: ModernFireEventArgs<T>
+  ): Promise<void>;
+  changeText: (instance: TestInstance, text: string) => Promise<void>;
+  press: (instance: TestInstance, event?: FireEventInit) => Promise<void>;
+  scroll: (instance: TestInstance, event?: FireEventInit) => Promise<void>;
+  layout: (instance: TestInstance, layout?: Partial<LayoutRectangle>) => Promise<void>;
+};
+
+export type FireEvent = RegisteredEventSystem extends 'modern' ? ModernFireEvent : LegacyFireEvent;
+
+/**
+ * Public `fireEvent`. Calls the implementation of the event system selected by
+ * `configure({ eventSystem })`, read on each call, so `configure()` inside a test applies.
+ *
+ * Types follow the legacy signatures, or the modern ones when `Register` sets `eventSystem`. The
+ * modern implementation also checks its arguments at runtime.
+ */
+async function fireEventImpl(
+  instance: TestInstance,
+  eventType: EventType,
+  ...data: unknown[]
+): Promise<unknown> {
+  if (isModern()) {
+    return await modernFireEvent(instance, eventType, ...(data as [FireEventInit]));
+  }
+
+  return await legacyFireEvent(instance, eventType, ...data);
 }
 
-fireEvent.changeText = async (instance: TestInstance, text: string) =>
-  await fireEvent(instance, 'changeText', text);
+fireEventImpl.changeText = async (instance: TestInstance, text: string): Promise<unknown> => {
+  if (isModern()) {
+    return await modernFireEvent.changeText(instance, text);
+  }
 
-fireEvent.press = async (instance: TestInstance, eventProps?: EventProps) => {
-  await fireEvent(instance, 'press', mergeEventProps(buildTouchEvent(), eventProps));
+  return await legacyFireEvent.changeText(instance, text);
 };
 
-fireEvent.scroll = async (instance: TestInstance, eventProps?: EventProps) => {
-  const layoutMeasurement = isHostScrollView(instance)
-    ? nativeState.layoutSizeForInstance.get(instance)
-    : undefined;
-  const event = buildScrollEvent(undefined, { layoutMeasurement });
-  await fireEvent(instance, 'scroll', mergeEventProps(event, eventProps));
-};
-
-// Does not bubble and checks only the element's own props, as React Native delivers layout events
-// only to the measured element. This is the intended behavior: `fireEvent(instance, 'layout')`
-// still bubbles (with a deprecation warning) for compatibility, and will match this in the next
-// major version.
-fireEvent.layout = async (instance: TestInstance, layout?: Partial<LayoutRectangle>) => {
-  await fireEventInternal(instance, {
-    type: 'layout',
-    data: [buildLayoutEvent(layout)],
-    bubbles: false,
-  });
-};
-
-type FireEventOptions = {
-  type: EventType;
-  data: unknown[];
-  bubbles: boolean;
-};
-
-async function fireEventInternal(instance: TestInstance, options: FireEventOptions) {
-  const { type, data, bubbles } = options;
-  if (!isInstanceMounted(instance)) {
+fireEventImpl.press = async (instance: TestInstance, eventProps?: EventProps): Promise<void> => {
+  if (isModern()) {
+    await modernFireEvent.press(instance, eventProps as FireEventInit);
     return;
   }
 
-  // `fireEvent` accepts event types with and without the `on*` prefix.
-  const hasUpdatedNativeState = updateNativeStateFromEvent(
-    instance,
-    normalizeEventType(type),
-    data[0],
-  );
+  await legacyFireEvent.press(instance, eventProps);
+};
 
-  const { handler, skippedTargets } = findEventHandler(instance, type, { bubbles });
-  if (!handler) {
-    warnAboutUnhandledEvent(instance, type, { skippedTargets, hasUpdatedNativeState });
+fireEventImpl.scroll = async (instance: TestInstance, eventProps?: EventProps): Promise<void> => {
+  if (isModern()) {
+    await modernFireEvent.scroll(instance, eventProps as FireEventInit);
     return;
   }
 
-  let returnValue;
-  await act(() => {
-    returnValue = handler(...data);
-  });
+  await legacyFireEvent.scroll(instance, eventProps);
+};
 
-  return returnValue;
+fireEventImpl.layout = async (
+  instance: TestInstance,
+  layout?: Partial<LayoutRectangle>,
+): Promise<void> => {
+  if (isModern()) {
+    await modernFireEvent.layout(instance, layout);
+    return;
+  }
+
+  await legacyFireEvent.layout(instance, layout);
+};
+
+function isModern() {
+  return getConfig().eventSystem === 'modern';
 }
+
+const fireEvent = fireEventImpl as FireEvent;
 
 export { fireEvent };

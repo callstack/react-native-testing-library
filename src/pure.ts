@@ -1,6 +1,7 @@
 export { act } from './act';
 export { cleanup } from './cleanup';
 export { fireEvent } from './events/fire-event';
+export { UNSAFE_invokeHandler } from './events/invoke-handler';
 export { render } from './render';
 export { waitFor } from './wait-for';
 export { waitForElementToBeRemoved } from './wait-for-element-to-be-removed';
@@ -15,5 +16,5 @@ export { userEvent } from './user-event';
 
 export type { RenderOptions, RenderResult, DebugFunction } from './render';
 export type { RenderHookOptions, RenderHookResult } from './render-hook';
-export type { Config } from './config';
+export type { Config, EventSystem } from './config';
 export type { UserEventConfig } from './user-event';

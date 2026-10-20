@@ -1,18 +1,16 @@
-export interface EventEntry {
-  name: string;
-  payload: any;
+/** Logged handler call. A class, so `event-serializer.ts` can recognize it with `instanceof`. */
+export class EventEntry {
+  constructor(
+    readonly name: string,
+    readonly payload: any,
+  ) {}
 }
 
 export function createEventLogger() {
   const events: EventEntry[] = [];
   const logEvent = (name: string) => {
     return (event: unknown) => {
-      const eventEntry: EventEntry = {
-        name,
-        payload: event,
-      };
-
-      events.push(eventEntry);
+      events.push(new EventEntry(name, event));
     };
   };
 
