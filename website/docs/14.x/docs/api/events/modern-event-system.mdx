@@ -17,7 +17,7 @@ import { configure } from '@testing-library/react-native';
 import '@testing-library/react-native/modern-types';
 
 // Switches `fireEvent` and `userEvent` to the modern event system.
-configure({ unstable_eventSystem: 'modern' });
+configure({ eventSystem: 'modern' });
 ```
 
 Make sure your `tsconfig.json` includes the setup file. If it doesn't, TypeScript won't see the import, and you won't get the stricter checks.

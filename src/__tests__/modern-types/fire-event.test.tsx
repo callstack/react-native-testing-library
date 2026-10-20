@@ -11,7 +11,7 @@ import { _console } from '../../helpers/logger';
 // modern signatures. Calls the types reject also throw at runtime.
 
 beforeEach(() => {
-  configure({ unstable_eventSystem: 'modern' });
+  configure({ eventSystem: 'modern' });
 });
 
 const emptyEvent = { nativeEvent: {} };

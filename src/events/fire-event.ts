@@ -61,7 +61,7 @@ export type FireEvent = RegisteredEventSystem extends 'modern' ? ModernFireEvent
 
 /**
  * Public `fireEvent`. Calls the implementation of the event system selected by
- * `configure({ unstable_eventSystem })`, read on each call, so `configure()` inside a test applies.
+ * `configure({ eventSystem })`, read on each call, so `configure()` inside a test applies.
  *
  * Types follow the legacy signatures, or the modern ones when `Register` sets `eventSystem`. The
  * modern implementation also checks its arguments at runtime.
@@ -117,7 +117,7 @@ fireEventImpl.layout = async (
 };
 
 function isModern() {
-  return getConfig().unstable_eventSystem === 'modern';
+  return getConfig().eventSystem === 'modern';
 }
 
 const fireEvent = fireEventImpl as FireEvent;

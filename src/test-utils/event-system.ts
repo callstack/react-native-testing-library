@@ -1,7 +1,7 @@
 import { configure, getConfig } from '../config';
 
 export function isModernEventSystem() {
-  return getConfig().unstable_eventSystem === 'modern';
+  return getConfig().eventSystem === 'modern';
 }
 
 /**
@@ -10,6 +10,6 @@ export function isModernEventSystem() {
  */
 export function runInLegacyEventSystem() {
   beforeEach(() => {
-    configure({ unstable_eventSystem: 'legacy' });
+    configure({ eventSystem: 'legacy' });
   });
 }

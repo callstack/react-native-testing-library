@@ -46,7 +46,7 @@ async function emitPressEvents(
   instance: TestInstance,
   options: EmitPressOptions,
 ): Promise<void> {
-  if (getConfig().unstable_eventSystem === 'modern') {
+  if (getConfig().eventSystem === 'modern') {
     await emitModernPressEvents(config, interaction, instance, options);
   } else {
     await emitLegacyPressEvents(config, interaction, instance, options);
