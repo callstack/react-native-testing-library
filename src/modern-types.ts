@@ -1,6 +1,6 @@
 /**
  * Switches `fireEvent` types to the modern event system. Users import it as
- * `@testing-library/react-native/modern-types`, next to `configure({ unstable_eventSystem: 'modern' })`.
+ * `@testing-library/react-native/modern-types`, next to `configure({ eventSystem: 'modern' })`.
  *
  * Not part of the main tsconfig program, as the augmentation would apply to all tests.
  */

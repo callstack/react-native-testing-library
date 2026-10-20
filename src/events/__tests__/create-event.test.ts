@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 test('builds a legacy event object in the legacy event system', () => {
-  configure({ unstable_eventSystem: 'legacy' });
+  configure({ eventSystem: 'legacy' });
   const nativeEvent = { target: 0 };
 
   const event = createEvent('focus', nativeEvent);
@@ -29,7 +29,7 @@ test('builds a legacy event object in the legacy event system', () => {
 });
 
 test('builds a SyntheticEvent in the modern event system', () => {
-  configure({ unstable_eventSystem: 'modern' });
+  configure({ eventSystem: 'modern' });
   const nativeEvent = { target: 0 };
 
   const event = createEvent('focus', nativeEvent);
@@ -42,7 +42,7 @@ test('builds a SyntheticEvent in the modern event system', () => {
 test.each(['legacy', 'modern'] as const)(
   'throws for event types that are not native in the %s event system',
   (eventSystem) => {
-    configure({ unstable_eventSystem: eventSystem });
+    configure({ eventSystem: eventSystem });
 
     expect(() => createEvent('changeText', {})).toThrow(
       '"changeText" is not a native event type. Use invokeEventHandler() instead.',
@@ -64,9 +64,9 @@ test.each([
 ])('builds %s event for the configured event system', (type, build) => {
   // The touch payload has a `Date.now()` timestamp.
   jest.spyOn(Date, 'now').mockReturnValue(1);
-  configure({ unstable_eventSystem: 'legacy' });
+  configure({ eventSystem: 'legacy' });
   const legacyEvent = build();
-  configure({ unstable_eventSystem: 'modern' });
+  configure({ eventSystem: 'modern' });
   const modernEvent = build();
 
   expect(legacyEvent).not.toBeInstanceOf(SyntheticEvent);

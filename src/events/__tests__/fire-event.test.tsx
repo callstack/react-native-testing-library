@@ -3956,9 +3956,9 @@ test('fireEvent reads the event system on each call', async () => {
   const onLayout = jest.fn();
   await render(<View testID="view" onLayout={onLayout} />);
 
-  configure({ unstable_eventSystem: 'legacy' });
+  configure({ eventSystem: 'legacy' });
   await fireEvent.layout(screen.getByTestId('view'));
-  configure({ unstable_eventSystem: 'modern' });
+  configure({ eventSystem: 'modern' });
   await fireEvent.layout(screen.getByTestId('view'));
   expect(onLayout.mock.calls[0][0]).not.toBeInstanceOf(SyntheticEvent);
   expect(onLayout.mock.calls[1][0]).toBeInstanceOf(SyntheticEvent);

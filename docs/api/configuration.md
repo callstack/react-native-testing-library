@@ -13,6 +13,9 @@ type Config = {
   /** Warn when `fireEvent` or a `userEvent` interaction calls no handler. Off by default. */
   eventDiagnostics: boolean;
 
+  /** Event system used by `fireEvent` and `userEvent`. Defaults to `'legacy'`. */
+  eventSystem: 'legacy' | 'modern';
+
   /** Default options for `debug` helper. */
   defaultDebugOptions?: Partial<DebugOptions>;
 };
@@ -55,6 +58,19 @@ No warning is logged when the event updates native state, e.g. `fireEvent.change
 ```ts
 configure({ eventDiagnostics: true });
 ```
+
+### `eventSystem` option
+
+Event system used by [`fireEvent`](./fire-event.md), [`userEvent`](./user-event.md) and [`UNSAFE_invokeHandler`](./fire-event.md#unsafe-invoke-handler). Defaults to `'legacy'`.
+
+- `'legacy'`: the simplified event system RNTL has used from the beginning.
+- `'modern'` (recommended): simulates React Native's event dispatch, with direct and bubbling events and `SyntheticEvent` objects.
+
+```ts
+configure({ eventSystem: 'modern' });
+```
+
+See [Modern Event System](/docs/api/events/modern-event-system) for the differences and how to enable it.
 
 ### `defaultDebugOptions` option
 
