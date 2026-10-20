@@ -189,9 +189,6 @@ async function fireEventInternal(
     ? mergeEventProps(basePayload, getNativeStateEventProps(target, eventType), init.nativeEvent)
     : init.nativeEvent;
   const event = createEvent(eventType, { ...init, nativeEvent });
-  if (event == null) {
-    return;
-  }
 
   // Before the dispatch, as a device updates its native views before emitting the event.
   updateNativeStateFromEvent(target, eventType, event);
