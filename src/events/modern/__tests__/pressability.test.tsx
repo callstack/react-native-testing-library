@@ -11,7 +11,7 @@ import { PRESSABILITY_EVENT_TYPES } from '../event-types';
 import { dispatchPressabilityEvent, findResponder, getTouchPath } from '../pressability';
 
 function createTouchEvent() {
-  return createEvent('touchEnd', { nativeEvent: { pageX: 10 } }) as SyntheticEvent;
+  return createEvent('touchEnd', { nativeEvent: { pageX: 10 } });
 }
 
 /** Touches the element and calls one callback of the touch responder, as modern `fireEvent`. */

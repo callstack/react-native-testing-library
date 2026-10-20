@@ -4,17 +4,8 @@ import type { TestInstance } from 'test-renderer';
 
 import { render, screen } from '../../..';
 import { dispatchEvent } from '../dispatch';
-import type { NativeEventPayload, SyntheticEvent } from '../event';
+import type { SyntheticEvent } from '../event';
 import { createEvent } from '../event';
-
-function createKnownEvent(eventType: string, nativeEvent?: NativeEventPayload): SyntheticEvent {
-  const event = createEvent(eventType, { nativeEvent });
-  if (event == null) {
-    throw new Error(`Unknown event type: ${eventType}`);
-  }
-
-  return event;
-}
 
 type HandlerProps = Record<string, (event: SyntheticEvent) => void>;
 
@@ -65,7 +56,7 @@ describe('bubbling events', () => {
     const calls: Call[] = [];
     await renderNestedViews(['onFocus', 'onFocusCapture'], calls);
 
-    await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'));
+    await dispatchEvent(screen.getByTestId('target'), createEvent('focus'));
 
     expect(calls).toEqual([
       { prop: 'root.onFocusCapture', currentTarget: 'root', target: 'target', eventPhase: 1 },
@@ -89,7 +80,7 @@ describe('bubbling events', () => {
 
     await dispatchEvent(
       screen.getByTestId('input'),
-      createKnownEvent('submitEditing', { text: 'Hello' }),
+      createEvent('submitEditing', { nativeEvent: { text: 'Hello' } }),
     );
 
     expect(onSubmitEditing).toHaveBeenCalledTimes(1);
@@ -114,7 +105,7 @@ describe('bubbling events', () => {
       </View>,
     );
 
-    await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'));
+    await dispatchEvent(screen.getByTestId('target'), createEvent('focus'));
 
     expect(getProps(calls)).toEqual(['parent.onFocusCapture']);
   });
@@ -139,7 +130,7 @@ describe('bubbling events', () => {
         </View>,
       );
 
-      await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'));
+      await dispatchEvent(screen.getByTestId('target'), createEvent('focus'));
 
       expect(getProps(calls)).toEqual(['target.onFocus', 'parent.onFocus']);
     },
@@ -149,7 +140,7 @@ describe('bubbling events', () => {
     const calls: Call[] = [];
     await renderNestedViews(['onPointerEnter', 'onPointerEnterCapture'], calls);
 
-    await dispatchEvent(screen.getByTestId('target'), createKnownEvent('pointerEnter'));
+    await dispatchEvent(screen.getByTestId('target'), createEvent('pointerEnter'));
 
     expect(getProps(calls)).toEqual([
       'root.onPointerEnterCapture',
@@ -165,7 +156,7 @@ describe('direct events', () => {
     const calls: Call[] = [];
     await renderNestedViews(['onLayout', 'onLayoutCapture'], calls);
 
-    await dispatchEvent(screen.getByTestId('target'), createKnownEvent('layout'));
+    await dispatchEvent(screen.getByTestId('target'), createEvent('layout'));
 
     expect(calls).toEqual([
       { prop: 'target.onLayout', currentTarget: 'target', target: 'target', eventPhase: 2 },
@@ -180,7 +171,7 @@ describe('direct events', () => {
       </View>,
     );
 
-    await dispatchEvent(screen.getByTestId('target'), createKnownEvent('scroll'));
+    await dispatchEvent(screen.getByTestId('target'), createEvent('scroll'));
 
     expect(onScroll).not.toHaveBeenCalled();
   });
@@ -200,7 +191,7 @@ describe('afterTargetHandler', () => {
       });
     });
 
-    await dispatchEvent(target, createKnownEvent('focus'), { afterTargetHandler });
+    await dispatchEvent(target, createEvent('focus'), { afterTargetHandler });
 
     expect(getProps(calls)).toEqual([
       'root.onFocusCapture',
@@ -224,7 +215,7 @@ describe('afterTargetHandler', () => {
     await render(<View testID="target" />);
     const afterTargetHandler = jest.fn();
 
-    await dispatchEvent(screen.getByTestId('target'), createKnownEvent('layout'), {
+    await dispatchEvent(screen.getByTestId('target'), createEvent('layout'), {
       afterTargetHandler,
     });
 
@@ -239,7 +230,7 @@ describe('afterTargetHandler', () => {
     );
     const afterTargetHandler = jest.fn();
 
-    await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'), {
+    await dispatchEvent(screen.getByTestId('target'), createEvent('focus'), {
       afterTargetHandler,
     });
 
@@ -258,7 +249,7 @@ describe('afterTargetHandler', () => {
     );
     const afterTargetHandler = jest.fn();
 
-    await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'), {
+    await dispatchEvent(screen.getByTestId('target'), createEvent('focus'), {
       afterTargetHandler,
     });
 
@@ -283,7 +274,7 @@ describe('afterTargetHandler', () => {
     const afterTargetHandler = jest.fn();
 
     await expect(
-      dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'), {
+      dispatchEvent(screen.getByTestId('target'), createEvent('focus'), {
         afterTargetHandler,
       }),
     ).rejects.toThrow('Target error');
@@ -291,7 +282,7 @@ describe('afterTargetHandler', () => {
     expect(onParentFocus).toHaveBeenCalledTimes(1);
 
     await expect(
-      dispatchEvent(screen.getByTestId('target'), createKnownEvent('blur'), {
+      dispatchEvent(screen.getByTestId('target'), createEvent('blur'), {
         afterTargetHandler: () => {
           throw new Error('After target error');
         },
@@ -303,7 +294,7 @@ describe('afterTargetHandler', () => {
     await render(<View testID="target" />);
 
     expect(
-      await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'), {
+      await dispatchEvent(screen.getByTestId('target'), createEvent('focus'), {
         afterTargetHandler: () => {},
       }),
     ).toBe(false);
@@ -315,7 +306,7 @@ test('does not call props of composite components', async () => {
   const Box = (_props: { onFocus: () => void }) => <View testID="target" />;
   await render(<Box onFocus={onFocus} />);
 
-  await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'));
+  await dispatchEvent(screen.getByTestId('target'), createEvent('focus'));
 
   expect(onFocus).not.toHaveBeenCalled();
 });
@@ -332,7 +323,7 @@ test('calls testOnly_ props in both phases when there is no regular prop', async
     </View>,
   );
 
-  await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'));
+  await dispatchEvent(screen.getByTestId('target'), createEvent('focus'));
 
   expect(getProps(calls)).toEqual(['parent.testOnly_onFocusCapture', 'target.onFocus']);
 });
@@ -344,7 +335,7 @@ test('does nothing when the target is unmounted', async () => {
   // A new key remounts the host element, so `target` is detached.
   await screen.rerender(<View key="new" />);
 
-  const result = await dispatchEvent(target, createKnownEvent('focus'));
+  const result = await dispatchEvent(target, createEvent('focus'));
 
   expect(result).toBe(false);
   expect(onFocus).not.toHaveBeenCalled();
@@ -356,7 +347,7 @@ test('passes React Native event object to handlers', async () => {
   const target = screen.getByTestId('target');
   const payload = { pageX: 10, pageY: 20, timestamp: 1234 };
 
-  await dispatchEvent(target, createKnownEvent('pointerUp', payload));
+  await dispatchEvent(target, createEvent('pointerUp', { nativeEvent: payload }));
 
   const event: SyntheticEvent = onPointerUp.mock.calls[0][0];
   expect(event.type).toBe('pointerup');
@@ -377,7 +368,7 @@ test('passes direct event object to handlers', async () => {
 
   await dispatchEvent(
     screen.getByTestId('target'),
-    createKnownEvent('layout', { layout: { width: 100 } }),
+    createEvent('layout', { nativeEvent: { layout: { width: 100 } } }),
   );
 
   const event: SyntheticEvent = onLayout.mock.calls[0][0];
@@ -398,7 +389,7 @@ test('exposes composed path during dispatch and resets the event after it', asyn
     </View>,
   );
 
-  await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'));
+  await dispatchEvent(screen.getByTestId('target'), createEvent('focus'));
 
   expect(composedPath.map((node) => node.props.testID)).toEqual(['target', 'root']);
   const event: SyntheticEvent = onFocus.mock.calls[0][0];
@@ -413,7 +404,7 @@ test('calls handlers with the current element as `this`', async () => {
   const onFocus = jest.fn();
   await render(<View testID="target" {...handlerProps({ onFocus })} />);
 
-  await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'));
+  await dispatchEvent(screen.getByTestId('target'), createEvent('focus'));
 
   expect(onFocus.mock.contexts[0]).toBe(screen.getByTestId('target'));
 });
@@ -428,8 +419,8 @@ test('returns whether a handler on the path was called', async () => {
     </View>,
   );
 
-  expect(await dispatchEvent(screen.getByTestId('nested'), createKnownEvent('focus'))).toBe(true);
-  expect(await dispatchEvent(screen.getByTestId('target'), createKnownEvent('layout'))).toBe(false);
+  expect(await dispatchEvent(screen.getByTestId('nested'), createEvent('focus'))).toBe(true);
+  expect(await dispatchEvent(screen.getByTestId('target'), createEvent('layout'))).toBe(false);
 });
 
 test('keeps defaultPrevented after a handler prevents default', async () => {
@@ -439,7 +430,7 @@ test('keeps defaultPrevented after a handler prevents default', async () => {
       {...handlerProps({ onFocus: (event: SyntheticEvent) => event.preventDefault() })}
     />,
   );
-  const event = createKnownEvent('focus');
+  const event = createEvent('focus');
 
   await dispatchEvent(screen.getByTestId('target'), event);
 
@@ -469,9 +460,9 @@ test('rethrows the first handler error after calling all handlers', async () => 
     </View>,
   );
 
-  await expect(
-    dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus')),
-  ).rejects.toThrow('Target error');
+  await expect(dispatchEvent(screen.getByTestId('target'), createEvent('focus'))).rejects.toThrow(
+    'Target error',
+  );
   expect(onRootFocus).toHaveBeenCalledTimes(1);
 });
 
@@ -494,9 +485,9 @@ test('renders state updates from other handlers when a handler throws', async ()
   }
   await render(<Subject />);
 
-  await expect(
-    dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus')),
-  ).rejects.toThrow('Target error');
+  await expect(dispatchEvent(screen.getByTestId('target'), createEvent('focus'))).rejects.toThrow(
+    'Target error',
+  );
   expect(screen.getByText('Count: 1')).toBeOnTheScreen();
 });
 
@@ -521,7 +512,7 @@ test('renders state updates from all handlers once', async () => {
   await render(<Counter />);
   const initialRenderCount = renderCount;
 
-  await dispatchEvent(screen.getByTestId('target'), createKnownEvent('focus'));
+  await dispatchEvent(screen.getByTestId('target'), createEvent('focus'));
 
   expect(screen.getByText('1:1')).toBeTruthy();
   expect(renderCount - initialRenderCount).toBe(1);

@@ -43,8 +43,7 @@ export function createEvent(
     return wrapNativeEvent(nativeEvent);
   }
 
-  // Not `null`: the event type is known.
-  return createModernEvent(eventType, { nativeEvent }) as SyntheticEvent;
+  return createModernEvent(eventType, { nativeEvent });
 }
 
 export function buildFocusEvent() {
