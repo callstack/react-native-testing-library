@@ -6,7 +6,9 @@ import { fireEvent as legacyFireEvent } from './legacy/fire-event';
 import type { CustomEventDispatch, KnownEventType } from './modern/event-types';
 import type { FireEventInit } from './modern/fire-event';
 import { fireEvent as modernFireEvent } from './modern/fire-event';
+import { normalizeEventType } from './shared/handler';
 import type { EventProps, EventType, LayoutRectangle } from './shared/types';
+import { ensureAtMostOneEventArg } from './utils';
 
 /**
  * Settings that users augment to change RNTL's types. `@testing-library/react-native/modern-types`
@@ -64,7 +66,8 @@ export type FireEvent = RegisteredEventSystem extends 'modern' ? ModernFireEvent
  * `configure({ unstable_eventSystem })`, read on each call, so `configure()` inside a test applies.
  *
  * Types follow the legacy signatures, or the modern ones when `Register` sets `eventSystem`. The
- * modern implementation also checks its arguments at runtime.
+ * modern implementation also checks its arguments at runtime. Modern takes a single event object,
+ * as React Native handlers receive a single event. Legacy passes all arguments to the handler.
  */
 async function fireEventImpl(
   instance: TestInstance,
@@ -72,7 +75,8 @@ async function fireEventImpl(
   ...data: unknown[]
 ): Promise<unknown> {
   if (isModern()) {
-    return await modernFireEvent(instance, eventType, ...(data as [FireEventInit]));
+    ensureAtMostOneEventArg(normalizeEventType(eventType), data, fireEventImpl);
+    return await modernFireEvent(instance, eventType, data[0] as FireEventInit | undefined);
   }
 
   return await legacyFireEvent(instance, eventType, ...data);

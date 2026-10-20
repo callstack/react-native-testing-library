@@ -22,7 +22,6 @@ import { createEvent } from './event';
 import type { PressabilityEventType } from './event-types';
 import { isPressabilityEventType } from './event-types';
 import {
-  ensureAtMostOneEventArg,
   ensureEventType,
   validateChangeTextArgs,
   validateEventInit,
@@ -46,8 +45,7 @@ export type FireEventInit = CreateEventInit;
  * Pressability event types (`press`, `pressIn`, `pressOut`, `longPress`) call the callback of the
  * element that becomes the touch responder instead, as `fireEvent.press()` does.
  *
- * The event object is optional and defaults to `{}`. At most one is accepted, as React Native
- * handlers receive a single event. Event types React Native doesn't know need
+ * The event object is optional and defaults to `{}`. Event types React Native doesn't know need
  * `dispatch: 'direct' | 'bubbling'` in the event object, as declared by the native component, e.g.
  * a third-party component's `pageSelected`. Without it they throw, as do `changeText` and custom
  * prop names.
@@ -72,16 +70,14 @@ export type FireEventInit = CreateEventInit;
 export async function fireEvent(
   instance: TestInstance,
   eventType: string,
-  ...args: [event?: FireEventInit]
+  event?: FireEventInit,
 ): Promise<void> {
   const normalizedType = normalizeEventType(eventType);
   ensureInstance(instance, normalizedType, fireEvent);
   // Before the event object, as `fireEvent(input, 'changeText', 'Hello')` needs the hint more.
-  ensureEventType(normalizedType, args[0], fireEvent);
-  ensureAtMostOneEventArg(normalizedType, args, fireEvent);
-  // Explicit `undefined` too, as for an omitted optional parameter. `null` still throws.
-  const event = args[0] === undefined ? {} : args[0];
-  const init = validateEventInit(normalizedType, event, fireEvent);
+  ensureEventType(normalizedType, event, fireEvent);
+  // `null` throws, unlike an omitted event.
+  const init = validateEventInit(normalizedType, event === undefined ? {} : event, fireEvent);
   // After the checks, so a call that throws doesn't also warn.
   warnOnPrefix(eventType);
   if (isPressabilityEventType(normalizedType) && init.dispatch == null) {
