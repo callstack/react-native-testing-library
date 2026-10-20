@@ -3,16 +3,9 @@ import type { TestInstance } from 'test-renderer';
 import { isHostScrollView } from '../../helpers/host-component-names';
 import { isEditableTextInput } from '../../helpers/text-input';
 import type { Point, Size } from '../../types';
+import { isScrollEventType } from './event-types';
 import { nativeState } from './native-state';
 import type { EventProps } from './types';
-
-const SCROLL_EVENTS = [
-  'scroll',
-  'scrollBeginDrag',
-  'scrollEndDrag',
-  'momentumScrollBegin',
-  'momentumScrollEnd',
-];
 
 /**
  * Updates native state the way a device would have before emitting the event.
@@ -38,7 +31,7 @@ export function updateNativeStateFromEvent(
     }
   }
 
-  if (SCROLL_EVENTS.includes(eventType) && isHostScrollView(instance)) {
+  if (isScrollEventType(eventType) && isHostScrollView(instance)) {
     const contentOffset = tryGetContentOffset(value);
     if (contentOffset) {
       nativeState.contentOffsetForInstance.set(instance, contentOffset);
@@ -65,7 +58,7 @@ export function getNativeStateEventProps(
   instance: TestInstance,
   eventType: string,
 ): EventProps | undefined {
-  if (SCROLL_EVENTS.includes(eventType) && isHostScrollView(instance)) {
+  if (isScrollEventType(eventType) && isHostScrollView(instance)) {
     const layoutSize = nativeState.layoutSizeForInstance.get(instance);
     // Copied, so that merging passed props onto the payload doesn't change native state.
     return layoutSize ? { layoutMeasurement: { ...layoutSize } } : undefined;

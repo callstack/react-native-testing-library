@@ -36,21 +36,3 @@ export function buildTouchPayload(
 
   return nativeEvent;
 }
-
-/** Touch event types, with whether the touch is still active after each. */
-const TOUCH_EVENT_TYPES: Readonly<Record<string, boolean>> = {
-  touchStart: true,
-  touchMove: true,
-  touchEnd: false,
-  touchCancel: false,
-};
-
-/** Whether the event type is a native touch event (`touchStart`, `touchMove`, ...). */
-export function isTouchEventType(eventType: string): boolean {
-  return Object.hasOwn(TOUCH_EVENT_TYPES, eventType);
-}
-
-/** Whether the touch is still active after a touch event of this type. */
-export function isActiveTouchEventType(eventType: string): boolean {
-  return TOUCH_EVENT_TYPES[eventType] === true;
-}

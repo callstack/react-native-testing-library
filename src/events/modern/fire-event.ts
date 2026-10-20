@@ -2,6 +2,7 @@ import type { TestInstance } from 'test-renderer';
 
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { ensureInstanceForEvent } from '../shared/assertions';
+import { isActiveTouchEventType, isScrollEventType, isTouchEventType } from '../shared/event-types';
 import { getEventHandlerByEventType } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
 import {
@@ -10,10 +11,7 @@ import {
   buildTextChangeNativeEvent,
 } from '../shared/payloads';
 import type { LayoutRectangle } from '../shared/types';
-import {
-  getNativeStateEventProps,
-  updateNativeStateFromEvent,
-} from '../shared/update-native-state';
+import { getNativeStateEventProps, updateNativeStateFromEvent } from '../shared/update-native-state';
 import type { DispatchOptions } from './dispatch';
 import { dispatchEvent } from './dispatch';
 import { getEmittingTarget } from './emitting-target';
@@ -24,7 +22,7 @@ import { isPressabilityEventType } from './event-types';
 import { ensureEventType, validateChangeTextArgs, validateEventInit } from './fire-event-utils';
 import { dispatchPressabilityEvent, findResponder, getTouchPath } from './pressability';
 import { createPressabilityEvent } from './responder-event';
-import { buildTouchPayload, isActiveTouchEventType, isTouchEventType } from './touch-payload';
+import { buildTouchPayload } from './touch-payload';
 
 /**
  * Event object passed to modern `fireEvent`. Handlers receive a `SyntheticEvent` from
@@ -45,9 +43,8 @@ export type FireEventInit = CreateEventInit;
  * a third-party component's `pageSelected`. Without it they throw, as do `changeText` and custom
  * prop names.
  *
- * Touch events (`touchStart`, `touchMove`, `touchEnd`, `touchCancel`) get a default touch payload,
- * with the passed `nativeEvent` deep merged onto it, as `fireEvent.press()` does. Other event types
- * get the passed `nativeEvent` as is.
+ * Some event types get the payload a device would send, with the passed `nativeEvent` deep merged
+ * onto it. Other event types get the passed `nativeEvent` as is. See `buildNativeEvent()`.
  *
  * `dispatch` also overrides React Native's dispatch for known event types, for a native component
  * that declares its own event with a built-in name, e.g. a map's `BubblingEventHandler` `onPress`.
@@ -76,12 +73,6 @@ export async function fireEvent(
     return;
   }
 
-  if (isTouchEventType(eventType) && init.dispatch == null) {
-    const nativeEvent = buildTouchPayload(isActiveTouchEventType(eventType), init.nativeEvent);
-    await fireEventInternal(instance, eventType, { ...init, nativeEvent });
-    return;
-  }
-
   await fireEventInternal(instance, eventType, init);
 }
 
@@ -94,6 +85,7 @@ export async function fireEvent(
 fireEvent.changeText = async (instance: TestInstance, text: string): Promise<void> => {
   ensureInstanceForEvent(instance, 'changeText', fireEvent.changeText);
   validateChangeTextArgs(instance, text, fireEvent.changeText);
+
   const selection = { start: text.length, end: text.length };
   const payload = buildTextChangeNativeEvent(text, selection);
   const dispatchOptions: DispatchOptions = {
@@ -102,7 +94,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
     },
   };
 
-  await fireEventInternal(instance, 'change', {}, payload, dispatchOptions);
+  await fireEventInternal(instance, 'change', { nativeEvent: payload }, dispatchOptions);
 };
 
 /**
@@ -120,6 +112,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
  */
 fireEvent.press = async (instance: TestInstance, event: FireEventInit = {}): Promise<void> => {
   ensureInstanceForEvent(instance, 'press', fireEvent.press);
+
   const init = validateEventInit('press', event, fireEvent.press);
   if (init.dispatch != null) {
     await fireEventInternal(instance, 'press', init);
@@ -129,14 +122,12 @@ fireEvent.press = async (instance: TestInstance, event: FireEventInit = {}): Pro
   await firePressabilityEvent(instance, 'press', init);
 };
 
-/**
- * Fires a `scroll` event. The passed `nativeEvent` is deep merged onto a default scroll payload,
- * whose `layoutMeasurement` is the `ScrollView`'s size from its last `layout` event.
- */
+/** Fires a `scroll` event, as `fireEvent(instance, 'scroll', event)` does. */
 fireEvent.scroll = async (instance: TestInstance, event: FireEventInit = {}): Promise<void> => {
   ensureInstanceForEvent(instance, 'scroll', fireEvent.scroll);
+
   const init = validateEventInit('scroll', event, fireEvent.scroll);
-  await fireEventInternal(instance, 'scroll', init, buildScrollNativeEvent());
+  await fireEventInternal(instance, 'scroll', init);
 };
 
 /** Fires a `layout` event. The passed `layout` is merged onto a zeroed rectangle. */
@@ -145,21 +136,14 @@ fireEvent.layout = async (
   layout?: Partial<LayoutRectangle>,
 ): Promise<void> => {
   ensureInstanceForEvent(instance, 'layout', fireEvent.layout);
-  await fireEventInternal(instance, 'layout', {}, buildLayoutNativeEvent(layout));
+  await fireEventInternal(instance, 'layout', { nativeEvent: buildLayoutNativeEvent(layout) });
 };
 
-/**
- * Expects an event type without the `on*` prefix, that React Native knows or that has `dispatch`.
- *
- * @param basePayload the payload a device would send. Native state, like a `ScrollView`'s
- * size, is merged onto it, then the passed `nativeEvent` is deep merged on top. Without it, the
- * passed `nativeEvent` is used as is.
- */
+/** Expects an event type without the `on*` prefix, that React Native knows or that has `dispatch`. */
 async function fireEventInternal(
   instance: TestInstance,
   eventType: string,
   init: CreateEventInit,
-  basePayload?: NativeEventPayload,
   dispatchOptions?: DispatchOptions,
 ): Promise<void> {
   if (!isInstanceMounted(instance)) {
@@ -172,14 +156,49 @@ async function fireEventInternal(
     return;
   }
 
-  const nativeEvent = basePayload
-    ? mergeEventProps(basePayload, getNativeStateEventProps(target, eventType), init.nativeEvent)
-    : init.nativeEvent;
+  const nativeEvent = buildNativeEvent(target, eventType, init);
   const event = createEvent(eventType, { ...init, nativeEvent });
 
   // Before the dispatch, as a device updates its native views before emitting the event.
   updateNativeStateFromEvent(target, eventType, event);
   await dispatchEvent(target, event, dispatchOptions);
+}
+
+/**
+ * The payload a device would send from the target, with the passed `nativeEvent` deep merged onto
+ * it:
+ *
+ * - Touch events (`touchStart`, `touchMove`, `touchEnd`, `touchCancel`): a default touch payload,
+ *   as `fireEvent.press()` uses.
+ * - Scroll events (`scroll`, `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin`,
+ *   `momentumScrollEnd`): a default scroll payload, whose `layoutMeasurement` is the `ScrollView`'s
+ *   size from its last `layout` event.
+ *
+ * Other event types, and events with `dispatch`, whose native component decides the payload, get
+ * the passed `nativeEvent` as is.
+ */
+function buildNativeEvent(
+  target: TestInstance,
+  eventType: string,
+  init: CreateEventInit,
+): NativeEventPayload | undefined {
+  if (init.dispatch != null) {
+    return init.nativeEvent;
+  }
+
+  if (isTouchEventType(eventType)) {
+    return buildTouchPayload(isActiveTouchEventType(eventType), init.nativeEvent);
+  }
+
+  if (isScrollEventType(eventType)) {
+    return mergeEventProps(
+      buildScrollNativeEvent(),
+      getNativeStateEventProps(target, eventType),
+      init.nativeEvent,
+    );
+  }
+
+  return init.nativeEvent;
 }
 
 /** Touches the element and calls one Pressability callback of the touch responder. */

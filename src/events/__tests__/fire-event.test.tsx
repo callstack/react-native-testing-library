@@ -29,6 +29,7 @@ import {
 import { SyntheticEvent } from '../modern/event';
 import { getEventHandlerName } from '../shared/handler';
 import { nativeState } from '../shared/native-state';
+import { buildScrollNativeEvent } from '../shared/payloads';
 
 // Runs in both event systems, through the public `fireEvent`. Where they differ, tests branch on
 // `isModern()`, with a comment saying which one matches React Native.
@@ -1371,7 +1372,7 @@ describe('fireEvent.scroll', () => {
     });
   });
 
-  test('without contentOffset via fireEvent() does not update native state', async () => {
+  test('without contentOffset via fireEvent() scrolls to (0, 0) (legacy: does not update native state)', async () => {
     const onScroll = jest.fn();
     await render(
       <ScrollView testID="scroll" onScroll={onScroll}>
@@ -1381,7 +1382,61 @@ describe('fireEvent.scroll', () => {
     const scrollView = screen.getByTestId('scroll');
     await fireEvent(scrollView, 'scroll', { nativeEvent: {} });
     expect(onScroll).toHaveBeenCalled();
-    expect(nativeState.contentOffsetForInstance.get(scrollView)).toBeUndefined();
+    // Modern matches a device, which always sends `contentOffset`. Legacy passes the event object
+    // as given.
+    expect(nativeState.contentOffsetForInstance.get(scrollView)).toEqual(
+      isModern() ? { x: 0, y: 0 } : undefined,
+    );
+  });
+
+  test.each([
+    'scroll',
+    'scrollBeginDrag',
+    'scrollEndDrag',
+    'momentumScrollBegin',
+    'momentumScrollEnd',
+  ])(
+    'fireEvent() with %s passes the payload of fireEvent.scroll() (legacy: the event object as given)',
+    async (eventType) => {
+      const handler = jest.fn();
+      await render(
+        <ScrollView
+          testID="scroll"
+          onLayout={() => {}}
+          {...{ [getEventHandlerName(eventType)]: handler }}
+        />,
+      );
+      const scrollView = screen.getByTestId('scroll');
+      const event = { nativeEvent: { contentOffset: { x: 0, y: 200 } } };
+
+      await fireEvent.layout(scrollView, { width: 390, height: 750 });
+      await fireEvent(scrollView, eventType, event);
+
+      // Modern matches a device, which sends the full scroll payload for every scroll event.
+      // Legacy passes the event object as given.
+      expect(handler.mock.calls[0][0].nativeEvent).toEqual(
+        isModern()
+          ? {
+              ...buildScrollNativeEvent({ x: 0, y: 200 }),
+              layoutMeasurement: { width: 390, height: 750 },
+            }
+          : event.nativeEvent,
+      );
+    },
+  );
+
+  test('fireEvent() with scroll event and dispatch passes nativeEvent as given', async () => {
+    const onScroll = jest.fn();
+    await render(<ScrollView testID="scroll" onScroll={onScroll} />);
+
+    await fireEvent(screen.getByTestId('scroll'), 'scroll', {
+      nativeEvent: { contentOffset: { x: 0, y: 200 } },
+      dispatch: 'direct',
+    });
+
+    // Modern: the native component that declares the event decides its payload. Legacy passes the
+    // event object as given.
+    expect(onScroll.mock.calls[0][0].nativeEvent).toEqual({ contentOffset: { x: 0, y: 200 } });
   });
 
   test('with non-finite x contentOffset value uses 0', async () => {
