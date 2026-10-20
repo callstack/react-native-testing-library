@@ -68,12 +68,19 @@ await fireEvent(input, 'focus');
 await fireEvent(view, 'layout', { nativeEvent: { layout: { width: 100 } } });
 ```
 
-Touch events (`touchStart`, `touchMove`, `touchEnd` and `touchCancel`) get a default touch payload, as on a device, with the `nativeEvent` you pass deep merged onto it. `changedTouches` has the touch, and `touches` has it until the touch ends, unless you pass them. Other event types, and events fired with `dispatch`, get `nativeEvent` as you pass it.
+Some event types get a default payload, as on a device, with the `nativeEvent` you pass deep merged onto it:
+
+- Touch events (`touchStart`, `touchMove`, `touchEnd` and `touchCancel`) get a touch payload. `changedTouches` has the touch, and `touches` has it until the touch ends, unless you pass them.
+- Scroll events (`scroll`, `scrollBeginDrag`, `scrollEndDrag`, `momentumScrollBegin` and `momentumScrollEnd`) get the same scroll payload as [`fireEvent.scroll()`](/docs/api/events/fire-event#scroll), with the `ScrollView`'s size from its last `layout` event as `layoutMeasurement`. Legacy `fireEvent()` passes only the `nativeEvent` you pass for these, unlike legacy `fireEvent.scroll()`.
+
+Other event types, and events fired with `dispatch`, get `nativeEvent` as you pass it.
 
 ```ts
 await fireEvent(button, 'touchStart', { nativeEvent: { pageX: 100, pageY: 100 } });
 await fireEvent(button, 'touchMove', { nativeEvent: { pageX: 110, pageY: 110 } });
 await fireEvent(button, 'touchEnd');
+
+await fireEvent(scrollView, 'scrollEndDrag', { nativeEvent: { contentOffset: { y: 200 } } });
 ```
 
 #### Dispatch
