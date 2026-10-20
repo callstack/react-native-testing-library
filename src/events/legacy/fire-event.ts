@@ -5,12 +5,9 @@ import { isInstanceMounted } from '../../helpers/component-tree';
 import { ensureInstanceForEvent } from '../shared/assertions';
 import { normalizeEventType } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
+import { getNativeStateEventProps, updateNativeStateFromEvent } from '../shared/native-state';
 import { buildLayoutNativeEvent, buildScrollNativeEvent } from '../shared/payloads';
 import type { EventProps, EventType, LayoutRectangle } from '../shared/types';
-import {
-  getNativeStateEventProps,
-  updateNativeStateFromEvent,
-} from '../shared/update-native-state';
 import { wrapNativeEvent } from './builders/base';
 import { buildTouchEvent } from './builders/common';
 import { findEventHandler } from './propagation';

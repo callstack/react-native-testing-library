@@ -5,13 +5,13 @@ import { ensureInstanceForEvent } from '../shared/assertions';
 import { isActiveTouchEventType, isScrollEventType, isTouchEventType } from '../shared/event-types';
 import { getEventHandlerByEventType } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
+import { getNativeStateEventProps, updateNativeStateFromEvent } from '../shared/native-state';
 import {
   buildLayoutNativeEvent,
   buildScrollNativeEvent,
   buildTextChangeNativeEvent,
 } from '../shared/payloads';
 import type { LayoutRectangle } from '../shared/types';
-import { getNativeStateEventProps, updateNativeStateFromEvent } from '../shared/update-native-state';
 import type { DispatchOptions } from './dispatch';
 import { dispatchEvent } from './dispatch';
 import { getEmittingTarget } from './emitting-target';

@@ -1,5 +1,6 @@
 import type { TestInstance } from 'test-renderer';
 
+import { findClosestInstance } from '../../helpers/component-tree';
 import { isHostSwitch, isHostTextInput } from '../../helpers/host-component-names';
 import { isEditableTextInput } from '../../helpers/text-input';
 import type { CreateEventInit } from './event';
@@ -72,7 +73,7 @@ export function getEmittingTarget(
   }
 
   if (TEXT_EDITING_EVENT_TYPES.has(eventType)) {
-    const textInput = findHostTextInput(target);
+    const textInput = findClosestInstance(target, isHostTextInput);
     if (textInput != null) {
       return isEditableTextInput(textInput) ? textInput : null;
     }
@@ -83,14 +84,4 @@ export function getEmittingTarget(
   }
 
   return target;
-}
-
-/** The element or its nearest host `TextInput` ancestor, or `null` when there is none. */
-function findHostTextInput(instance: TestInstance): TestInstance | null {
-  let current: TestInstance | null = instance;
-  while (current != null && !isHostTextInput(current)) {
-    current = current.parent;
-  }
-
-  return current;
 }
