@@ -66,8 +66,7 @@ export type FireEvent = RegisteredEventSystem extends 'modern' ? ModernFireEvent
  * `configure({ unstable_eventSystem })`, read on each call, so `configure()` inside a test applies.
  *
  * Types follow the legacy signatures, or the modern ones when `Register` sets `eventSystem`. The
- * modern implementation also checks its arguments at runtime. Modern takes a single event object,
- * as React Native handlers receive a single event. Legacy passes all arguments to the handler.
+ * modern implementation also checks its arguments at runtime.
  */
 async function fireEventImpl(
   instance: TestInstance,

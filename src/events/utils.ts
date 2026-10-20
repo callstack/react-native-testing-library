@@ -4,8 +4,7 @@ import { hasOnPrefix, normalizeEventType } from './shared/handler';
 
 /**
  * Throws when more than one argument follows the event type in modern `fireEvent`, as React Native
- * handlers receive a single event. Catches legacy calls passing several handler arguments. No
- * argument is fine: the event object is optional.
+ * handlers receive a single event. Catches legacy calls passing several handler arguments.
  *
  * @param callsite the function to remove from the error stack, e.g. `fireEvent`
  */
