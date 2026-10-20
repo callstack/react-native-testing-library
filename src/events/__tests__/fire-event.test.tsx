@@ -2400,11 +2400,7 @@ test.each([
   ['fireEvent.layout()', (instance: TestInstance) => fireEvent.layout(instance), 'layout'],
 ])('%s throws without an element', async (_, fire, eventType) => {
   const error = await getErrorMessage(fire(null as unknown as TestInstance));
-  expect(error).toBe(
-    isModern()
-      ? `Unable to fire a "${eventType}" event. Please provide a host element.`
-      : "Cannot read properties of null (reading 'parent')",
-  );
+  expect(error).toBe(`Unable to fire a "${eventType}" event. Please provide a host element.`);
 });
 
 test('fireEvent throws with non-existent event name (legacy: does nothing)', async () => {

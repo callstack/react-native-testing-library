@@ -1,7 +1,7 @@
 import type { TestInstance } from 'test-renderer';
 
 import { isInstanceMounted } from '../../helpers/component-tree';
-import { ErrorWithStack } from '../../helpers/errors';
+import { ensureInstanceForEvent } from '../shared/assertions';
 import { getEventHandlerByEventType } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
 import {
@@ -67,7 +67,7 @@ export async function fireEvent(
   eventType: string,
   event?: FireEventInit,
 ): Promise<void> {
-  ensureInstance(instance, eventType, fireEvent);
+  ensureInstanceForEvent(instance, eventType, fireEvent);
   // Before the event object, as `fireEvent(input, 'changeText', 'Hello')` needs the hint more.
   ensureEventType(eventType, event, fireEvent);
   // `null` throws, unlike an omitted event.
@@ -93,7 +93,7 @@ export async function fireEvent(
  * A non-editable `TextInput` receives no events, as on a device (see `getEmittingTarget()`).
  */
 fireEvent.changeText = async (instance: TestInstance, text: string): Promise<void> => {
-  ensureInstance(instance, 'changeText', fireEvent.changeText);
+  ensureInstanceForEvent(instance, 'changeText', fireEvent.changeText);
   validateChangeTextArgs(instance, text, fireEvent.changeText);
   const selection = { start: text.length, end: text.length };
   const payload = buildTextChangeNativeEvent(text, selection);
@@ -120,7 +120,7 @@ fireEvent.changeText = async (instance: TestInstance, text: string): Promise<voi
  * native `press` event with the passed `nativeEvent` instead, as `fireEvent()` does.
  */
 fireEvent.press = async (instance: TestInstance, event: FireEventInit = {}): Promise<void> => {
-  ensureInstance(instance, 'press', fireEvent.press);
+  ensureInstanceForEvent(instance, 'press', fireEvent.press);
   const init = validateEventInit('press', event, fireEvent.press);
   if (init.dispatch != null) {
     await fireEventInternal(instance, 'press', init);
@@ -135,7 +135,7 @@ fireEvent.press = async (instance: TestInstance, event: FireEventInit = {}): Pro
  * whose `layoutMeasurement` is the `ScrollView`'s size from its last `layout` event.
  */
 fireEvent.scroll = async (instance: TestInstance, event: FireEventInit = {}): Promise<void> => {
-  ensureInstance(instance, 'scroll', fireEvent.scroll);
+  ensureInstanceForEvent(instance, 'scroll', fireEvent.scroll);
   const init = validateEventInit('scroll', event, fireEvent.scroll);
   await fireEventInternal(instance, 'scroll', init, buildScrollNativeEvent());
 };
@@ -145,7 +145,7 @@ fireEvent.layout = async (
   instance: TestInstance,
   layout?: Partial<LayoutRectangle>,
 ): Promise<void> => {
-  ensureInstance(instance, 'layout', fireEvent.layout);
+  ensureInstanceForEvent(instance, 'layout', fireEvent.layout);
   await fireEventInternal(instance, 'layout', {}, buildLayoutNativeEvent(layout));
 };
 
@@ -198,19 +198,5 @@ async function firePressabilityEvent(
   const responder = findResponder(path);
   if (responder != null) {
     await dispatchPressabilityEvent(responder, [eventType], event, path[0]);
-  }
-}
-
-function ensureInstance(
-  instance: TestInstance,
-  eventType: string,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  callsite: Function,
-) {
-  if (instance == null) {
-    throw new ErrorWithStack(
-      `Unable to fire a "${eventType}" event. Please provide a host element.`,
-      callsite,
-    );
   }
 }
