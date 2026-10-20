@@ -155,7 +155,7 @@ describe('"on" prefixed event types', () => {
     expect(getDeprecationWarnings()).toHaveLength(isModern() ? 1 : 0);
   });
 
-  test('does not warn when the call throws', async () => {
+  test('warns when the call throws (legacy: no warning)', async () => {
     await render(<TextInput testID="input" />);
 
     const error = await getErrorMessage(
@@ -167,7 +167,7 @@ describe('"on" prefixed event types', () => {
         ? `Unable to fire a "changeText" event. React Native doesn't dispatch "changeText" natively. Use fireEvent.changeText() or userEvent.type() instead.`
         : undefined,
     );
-    expect(getDeprecationWarnings()).toHaveLength(0);
+    expect(getDeprecationWarnings()).toHaveLength(isModern() ? 1 : 0);
   });
 
   test('accepts event types starting with "on" but without the "on" prefix, without a warning', async () => {

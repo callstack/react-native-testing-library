@@ -2,7 +2,7 @@ import type { TestInstance } from 'test-renderer';
 
 import { isInstanceMounted } from '../../helpers/component-tree';
 import { ErrorWithStack } from '../../helpers/errors';
-import { getEventHandlerByEventType, normalizeEventType } from '../shared/handler';
+import { getEventHandlerByEventType } from '../shared/handler';
 import { mergeEventProps } from '../shared/merge';
 import {
   buildLayoutNativeEvent,
@@ -21,12 +21,7 @@ import type { CreateEventInit, NativeEventPayload } from './event';
 import { createEvent } from './event';
 import type { PressabilityEventType } from './event-types';
 import { isPressabilityEventType } from './event-types';
-import {
-  ensureEventType,
-  validateChangeTextArgs,
-  validateEventInit,
-  warnOnPrefix,
-} from './fire-event-utils';
+import { ensureEventType, validateChangeTextArgs, validateEventInit } from './fire-event-utils';
 import { dispatchPressabilityEvent, findResponder, getTouchPath } from './pressability';
 import { createPressabilityEvent } from './responder-event';
 import { buildTouchPayload, isActiveTouchEventType, isTouchEventType } from './touch-payload';
@@ -64,34 +59,31 @@ export type FireEventInit = CreateEventInit;
  * Resolves to nothing, unlike DOM `fireEvent`: React Native has no default actions that
  * `preventDefault()` could cancel. Handlers can read `event.defaultPrevented` themselves.
  *
- * @param eventType without the `on*` prefix, as React Native names it, e.g. `focus`. The prefix
- * (`onFocus`) is deprecated and logs a warning.
+ * @param eventType without the `on*` prefix, as React Native names it, e.g. `focus`. The public
+ * `fireEvent` strips the deprecated prefix (`onFocus`).
  */
 export async function fireEvent(
   instance: TestInstance,
   eventType: string,
   event?: FireEventInit,
 ): Promise<void> {
-  const normalizedType = normalizeEventType(eventType);
-  ensureInstance(instance, normalizedType, fireEvent);
+  ensureInstance(instance, eventType, fireEvent);
   // Before the event object, as `fireEvent(input, 'changeText', 'Hello')` needs the hint more.
-  ensureEventType(normalizedType, event, fireEvent);
+  ensureEventType(eventType, event, fireEvent);
   // `null` throws, unlike an omitted event.
-  const init = validateEventInit(normalizedType, event === undefined ? {} : event, fireEvent);
-  // After the checks, so a call that throws doesn't also warn.
-  warnOnPrefix(eventType);
-  if (isPressabilityEventType(normalizedType) && init.dispatch == null) {
-    await firePressabilityEvent(instance, normalizedType, init);
+  const init = validateEventInit(eventType, event === undefined ? {} : event, fireEvent);
+  if (isPressabilityEventType(eventType) && init.dispatch == null) {
+    await firePressabilityEvent(instance, eventType, init);
     return;
   }
 
-  if (isTouchEventType(normalizedType) && init.dispatch == null) {
-    const nativeEvent = buildTouchPayload(isActiveTouchEventType(normalizedType), init.nativeEvent);
-    await fireEventInternal(instance, normalizedType, { ...init, nativeEvent });
+  if (isTouchEventType(eventType) && init.dispatch == null) {
+    const nativeEvent = buildTouchPayload(isActiveTouchEventType(eventType), init.nativeEvent);
+    await fireEventInternal(instance, eventType, { ...init, nativeEvent });
     return;
   }
 
-  await fireEventInternal(instance, normalizedType, init);
+  await fireEventInternal(instance, eventType, init);
 }
 
 /**
