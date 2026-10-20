@@ -12,6 +12,7 @@ import {
 } from '../shared/handler';
 import { getPointerEventsBlocker } from '../shared/pointer-events';
 import type { EventHandler } from '../shared/types';
+import { getAncestorPath } from './dispatch';
 import type { SyntheticEvent } from './event';
 import { getEventInternals } from './event';
 import type { PressabilityEventType } from './event-types';
@@ -111,19 +112,12 @@ export function getTouchPath(target: TestInstance): TestInstance[] {
     return [];
   }
 
-  let hitTarget: TestInstance | null = target;
-  while (hitTarget?.parent != null && getPointerEventsBlocker(hitTarget) != null) {
+  let hitTarget = target;
+  while (hitTarget.parent != null && getPointerEventsBlocker(hitTarget) != null) {
     hitTarget = hitTarget.parent;
   }
 
-  const path: TestInstance[] = [];
-  let current = hitTarget;
-  while (current?.parent != null) {
-    path.push(current);
-    current = current.parent;
-  }
-
-  return path;
+  return getAncestorPath(hitTarget);
 }
 
 /**

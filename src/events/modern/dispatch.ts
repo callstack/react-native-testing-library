@@ -138,7 +138,7 @@ function dispatchBubblingEvent(
 }
 
 /** Target first, then host ancestors. The root container is not an element, so it's excluded. */
-function getAncestorPath(target: TestInstance): TestInstance[] {
+export function getAncestorPath(target: TestInstance): TestInstance[] {
   const path: TestInstance[] = [];
   let current: TestInstance | null = target;
   while (current?.parent != null) {
