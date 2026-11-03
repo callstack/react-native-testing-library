@@ -45,6 +45,12 @@ export function isEventBlockableByPointerEvents(eventType: string): boolean {
 const TEXT_INPUT_EVENTS_IGNORING_EDITABLE = ['contentSizeChange', 'layout', 'scroll'];
 
 /**
+ * List of raw touch events. A device delivers them to every ancestor of the touched view, whether
+ * or not a touch responder accepts the touch.
+ */
+const TOUCH_EVENTS_IGNORING_RESPONDER = ['touchStart', 'touchMove', 'touchEnd', 'touchCancel'];
+
+/**
  * Checks whether a device would deliver the event to the instance, taking into account
  * `pointerEvents`, non-editable `TextInput` and touch responders that decline the touch.
  * Expects event type without the `on*` prefix (see `normalizeEventType`).
@@ -63,6 +69,10 @@ export function isEventEnabled(
 
   if (isEventBlockableByPointerEvents(eventType) && !isPointerEventEnabled(instance)) {
     return false;
+  }
+
+  if (TOUCH_EVENTS_IGNORING_RESPONDER.includes(eventType)) {
+    return true;
   }
 
   const touchStart = nearestTouchResponder?.props.onStartShouldSetResponder?.();

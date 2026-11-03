@@ -21,6 +21,11 @@ with v14.
 - `toBeDisabled()` and `*ByRole` queries prefer `disabled` over `aria-disabled` and
   `accessibilityState.disabled` on `Text`, as React Native does. A `Text` with
   `disabled={false}` and `aria-disabled` is enabled.
+- `fireEvent` delivers raw touch events (`touchStart`, `touchMove`, `touchEnd`, `touchCancel`)
+  to a handler even when the nearest touch responder declines the touch, as a device does. Before,
+  a child with `onStartShouldSetResponder` returning `false` stopped these events from reaching
+  the `onTouchStart` of its ancestors. Responder-driven events like `press` still respect the
+  responder.
 
 ## 14.1.0
 

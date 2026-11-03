@@ -1812,4 +1812,37 @@ describe('responder system', () => {
     });
     expect(onDrag).toHaveBeenCalled();
   });
+
+  test.each([
+    ['touchStart', 'onTouchStart'],
+    ['touchMove', 'onTouchMove'],
+    ['touchEnd', 'onTouchEnd'],
+    ['touchCancel', 'onTouchCancel'],
+  ])('fires %s on parent when child declines the responder', async (eventName, handlerName) => {
+    const onTouch = jest.fn();
+    await render(
+      <View {...{ [handlerName]: onTouch }}>
+        <View
+          testID="child"
+          onStartShouldSetResponder={() => false}
+          onMoveShouldSetResponder={() => false}
+        />
+      </View>,
+    );
+
+    await fireEvent(screen.getByTestId('child'), eventName);
+
+    expect(onTouch).toHaveBeenCalledTimes(1);
+  });
+
+  test('fires touchStart on element that declines the responder', async () => {
+    const onTouchStart = jest.fn();
+    await render(
+      <View testID="view" onTouchStart={onTouchStart} onStartShouldSetResponder={() => false} />,
+    );
+
+    await fireEvent(screen.getByTestId('view'), 'touchStart');
+
+    expect(onTouchStart).toHaveBeenCalledTimes(1);
+  });
 });
